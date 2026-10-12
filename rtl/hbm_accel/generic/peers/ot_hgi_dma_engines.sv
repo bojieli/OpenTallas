@@ -22,6 +22,10 @@ module ot_hgi_dma_engines #(
     parameter integer FRONT = 1,
     parameter integer VR2 = 0,            // 1: the mover's VM-source reads on the VM DMA wide read group (vr2q / vr2r)
     parameter integer KVW = 0,            // 1 (needs VR2 = 1): the mover's KV write-back engine ot_hgi_dma_kvw (hbm-fq 2026-10-11)
+    parameter integer BACK = 0,           // 1: ot_hgi_dma_back takes every raw VM -> HBM STORE of whole 8-sector-aligned rows (VM
+                                          //    base / stride multiples of 64 words, linear or STRIPE4) on the VM read group and the
+                                          //    svc WRITE stream (wd / wd_cr / wa; [tputx-mtp] 2026-10-12)
+    parameter integer MUT_BK = 0,         // bench: the back engine's MUT
     parameter integer MUT_IL = 0,
     parameter integer MUT_MV = 0,         // bench: the mover's MUT (5 = the KV write-back engine mutant, hbm-fq)
     parameter integer SBIT = 35,
@@ -84,7 +88,11 @@ module ot_hgi_dma_engines #(
     output wire [31:0]         dd_cr,
     // the VM wide write port
     output wire [32*280-1:0]   wl,
-    input  wire [31:0]         wl_done
+    input  wire [31:0]         wl_done,
+    // the svc WRITE stream (BACK = 1): per stack x lane {v, sector address 32, data 256}; lane credits; written counts
+    output wire [32*289-1:0]   wd,
+    input  wire [31:0]         wd_cr,
+    input  wire [15:0]         wa
 );
     wire [2:0] sf = mv[4:2];
     wire elig = mv[1:0] == 2'd0 && mv[94:93] == 2'd1 && mv[92:77] == 16'd1 && mv[185:170] == 16'd1 &&
@@ -92,7 +100,16 @@ module ot_hgi_dma_engines #(
                 mv[9:5] == 5'd0 && mv[49:45] == 5'd0 && mv[100:98] == 3'd0 && mv[140:138] == 3'd0 &&
                 ((sf == 3'd0 || sf == 3'd5) ? mv[208:206] == 3'd0 : (sf == 3'd1) ? mv[209:206] == 4'd0 : mv[210:206] == 5'd0) &&
                 mv[205:186] != 20'd0 && mv[226:206] != 21'd0;
-    wire to_f = (FRONT != 0) && elig;
+    wire to_f = (FRONT != 0) && elig && mv[44:43] == 2'd0;      // source code 0 / 1 (STRIPE4); others: the mover faults
+    // BACK: a raw FP32 / U32 VM -> HBM STORE of whole sectors, VM rows 64-word aligned, HBM rows 32 B aligned, code 0 / 1
+    wire [2:0] df = mv[97:95];
+    wire to_b = (BACK != 0) && mv[1:0] == 2'd1 && mv[94:93] == 2'd0 && mv[92:77] == 16'd1 && mv[185:170] == 16'd1 &&
+                (sf == 3'd0 || sf == 3'd5) && (df == 3'd0 || df == 3'd5) && mv[10:5] == 6'd0 && mv[50:45] == 6'd0 &&
+                mv[208:206] == 3'd0 && mv[102:98] == 5'd0 && mv[142:138] == 5'd0 && mv[137:136] == 2'd0 &&
+                mv[205:186] != 20'd0 && mv[226:206] != 21'd0;
+    wire b_rdy, b_src, b_done, b_fault, b_quiet; wire [512:0] b_vr2q, m_vr2q;
+    reg  m_pend;                                // a move sent to the mover / front not yet done (BACK waits for it)
+    reg  b_own;                                 // the back engine owns the VM read group (registered: !b_quiet)
     // ---------------------------------------------------------------- I-list reader state
     reg rd_act; reg [31:0] rd_w; reg [19:0] rd_left;           // next id word to request, ids not yet requested
     reg [2:0] rd_out; reg [5:0] rd_fl;                         // sector reads in flight, ids in flight + buffered
@@ -115,13 +132,30 @@ module ot_hgi_dma_engines #(
     reg [175:0] sc; reg sq_act, sq_last, sq_mv_v, sq_wait; reg [226:0] sq_mv; reg [19:0] sq_e;
     reg sq_p0v; reg [59:0] sq_p0; reg [1:0] sq_ph; reg [59:0] sq_p; reg [42:0] sq_lo, sq_hi; reg [31:0] sq_id;
     assign vmq = rd_act ? r_vmq : m_vmq;
-    wire f_rdy, f_done, f_fault, m_rdy, m_done, m_fault, m_src; wire [279:0] m_wl; wire [32*280-1:0] f_wl;
-    assign mv_rdy = !rd_act && !sq_act && (to_f ? f_rdy : m_rdy);
-    assign mv_done = f_done | (m_done && (!sq_act || sq_last));
-    assign mv_fault = f_fault | m_fault;
-    assign mv_src = m_src && !sq_act; assign mv_pdone = m_done && (!sq_act || sq_last); assign mv_fdone = f_done;
+    wire f_rdy, f_done, f_fault, m_rdy, m_done, m_fault, m_src, m_fence_rdy;
+    assign fence_rdy = m_fence_rdy && b_quiet; wire [279:0] m_wl; wire [32*280-1:0] f_wl;
+    assign mv_rdy = !rd_act && !sq_act && (to_b ? (b_rdy && !m_pend) : (b_quiet && (to_f ? f_rdy : m_rdy)));
+    assign mv_done = f_done | (m_done && (!sq_act || sq_last)) | b_done;
+    assign mv_fault = f_fault | m_fault | b_fault;
+    assign mv_src = (m_src && !sq_act) | b_src; assign mv_pdone = (m_done && (!sq_act || sq_last)) | b_done; assign mv_fdone = f_done;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin m_pend <= 1'b0; b_own <= 1'b0; end
+        else begin
+            b_own <= (BACK != 0) && !b_quiet;
+            if (f_done || m_done) m_pend <= 1'b0;
+            if ((mv_v && mv_rdy && !to_b) || (is_v && is_rdy)) m_pend <= 1'b1;
+        end
+    assign vr2q = b_own ? b_vr2q : m_vr2q;
+    generate if (BACK != 0) begin : g_back
+        ot_hgi_dma_back #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES), .MUT(MUT_BK)) u_back (.clk(clk), .rst_n(rst_n),
+            .mv_v(mv_v && to_b && !rd_act && !sq_act && !m_pend), .mv_rdy(b_rdy), .mv(mv), .mv_src(b_src), .mv_done(b_done),
+            .mv_fault(b_fault), .quiet(b_quiet), .vr2q(b_vr2q), .vr2r(b_own ? vr2r : 8257'd0), .wd(wd), .wd_cr(wd_cr), .wa(wa));
+    end else begin : g_noback
+        assign b_rdy = 1'b0; assign b_src = 1'b0; assign b_done = 1'b0; assign b_fault = 1'b0; assign b_quiet = 1'b1;
+        assign b_vr2q = '0; assign wd = '0;
+    end endgenerate
     generate if (FRONT != 0) begin : g_front
-        ot_hgi_dma_front #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES)) u_front (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && to_f),
+        ot_hgi_dma_front #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES)) u_front (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && to_f && !to_b && b_quiet),
             .mv_rdy(f_rdy), .mv(mv), .mv_done(f_done), .mv_fault(f_fault),
             .ix_v(ixf_v), .ix_rdy(ix_rdy_f), .ix_cmd(ixf_cmd), .id_v(s_id_v), .id_rdy(id_rdy_f), .id(idf[idf_h]),
             .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
@@ -140,17 +174,17 @@ module ot_hgi_dma_engines #(
         assign wl[gl*280 +: 280] = f_wl[gl*280 + 279] ? f_wl[gl*280 +: 280] : m_wlx[gl*280 +: 280];
     end endgenerate
     // hbm-fq/dma 10-11: with the KV engine the sector engine reads VM sources through the packet client (SVR2 0)
-    ot_hgi_dma_mover #(.MUT(MUT_MV), .VR2(VR2), .SVR2((KVW != 0) ? 0 : -1), .KVW(KVW)) u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !rd_act)), .mv_rdy(m_rdy),
+    ot_hgi_dma_mover #(.MUT(MUT_MV), .VR2(VR2), .SVR2((KVW != 0) ? 0 : -1), .KVW(KVW)) u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !to_b && !rd_act && b_quiet)), .mv_rdy(m_rdy),
         .mv(sq_act ? sq_mv : mv), .mv_done(m_done),
-        .mv_fault(m_fault), .mv_src(m_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
+        .mv_fault(m_fault), .mv_src(m_src), .fence_v(fence_v && b_quiet), .fence_rdy(m_fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data), .k_fault(1'b0),
         .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
-        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(vr2q), .vr2r(vr2r),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(m_vr2q), .vr2r(b_own ? 8257'd0 : vr2r),
         .vmq(m_vmq), .vmr(rd_act ? 274'd0 : vmr), .wl(m_wl), .wl_done(|wl_done));
     // ---------------------------------------------------------------- stream command, I-list reader, row sequencer
-    assign is_rdy = !rd_act && !sq_act && m_rdy && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
+    assign is_rdy = !rd_act && !sq_act && m_rdy && b_quiet && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
     assign s_id_take = (FRONT != 0) ? (s_id_v && id_rdy_f) : (sq_act && !sq_wait && sq_ph == 2'd0 && s_id_v);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -227,7 +261,7 @@ module ot_hgi_dma_engines #(
     reg trc; initial trc = $test$plusargs("DMA_TRACE");
     always @(posedge clk) if (trc && rst_n && mv_v && mv_rdy)
         $display("ENGINES move -> %s ssp %0d sf %0d src %h sst %0d sis %0d dsp %0d df %0d dst %h dstr %0d dis %0d m %0d n %0d",
-                 to_f ? "front" : "mover", mv[1:0], mv[4:2], mv[44:5], mv[76:45], mv[92:77], mv[94:93], mv[97:95], mv[137:98],
+                 to_b ? "back" : to_f ? "front" : "mover", mv[1:0], mv[4:2], mv[44:5], mv[76:45], mv[92:77], mv[94:93], mv[97:95], mv[137:98],
                  mv[169:138], mv[185:170], mv[205:186], mv[226:206]);
 `endif
 endmodule

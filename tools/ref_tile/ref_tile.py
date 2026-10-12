@@ -441,7 +441,17 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             f"set_input_delay {833.333 * fin:.3f} -clock core_clk [all_inputs -no_clocks]\n"
             f"set_output_delay {833.333 * fout:.3f} -clock core_clk [all_outputs]\n"
             "set_max_fanout 32 [current_design]\nset_load 80 [all_outputs]\n"
-            "set_input_transition 150 [all_inputs -no_clocks]\nset_max_transition 260 [current_design]\n")
+            "set_input_transition 150 [all_inputs -no_clocks]\nset_max_transition 260 [current_design]\n"
+            + sdc_extra(s))
+
+
+def sdc_extra(s: dict) -> str:
+    """spec 'sdc_extra': repo SDC files appended (inlined) to clock.sdc and signoff.sdc -- a second clock domain
+    (e.g. a CDC adapter's controller clock) after core_clk exists"""
+    out = ""
+    for f in s.get("sdc_extra", []):
+        out += f"# ---- sdc_extra {f}\n" + (ROOT / f).read_text()
+    return out
 
 
 def gen_signoff(s: dict, refglob: str, inter: str) -> str:
@@ -453,7 +463,7 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             "set_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\n"
             "set_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\n"
             f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
-            + io)
+            + io + sdc_extra(s))
 
 
 def child_insertions(s: dict) -> dict:
@@ -531,7 +541,22 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     r = s["route"]
     srcs = " ".join(s["sources"])
     params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
-    pins = " ".join(f"--pin-region {shq(pin_regex(v) + '=' + FACES[f])}" for f, v in s["pins"].items() if v and f != "ANY")
+    # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
+    # a face tile's bus pins sit at the end facing their die neighbour and >= the given margin off the tile corners
+    # ([vm8cp] corner-pin DRT-0255 class); ports without a range keep the whole face.
+    rng = s.get("pin_ranges") or {}
+    regs = []
+    for f, v in s["pins"].items():
+        if not v or f == "ANY":
+            continue
+        plain = [n for n in v if n not in rng]
+        if plain:
+            regs.append(pin_regex(plain) + "=" + FACES[f])
+        for n in v:
+            if n in rng:
+                lo, hi = rng[n]
+                regs.append(pin_regex([n]) + "=" + FACES[f] + f":{float(lo):g}-{float(hi):g}")
+    pins = " ".join(f"--pin-region {shq(r)}" for r in regs)
     views = sorted({b["view"] for b in blocks})
     extra = ["--orfs-var ADDER_MAP_FILE=", f"--orfs-var PDN_TCL=/src/{kd}/pdn.tcl",
              f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}",
@@ -552,6 +577,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
+    if s.get("inhold"):
+        # spec 'inhold': one dont_touch hold buffer between every data input port and its single capture flop, inserted
+        # before global placement (owner 10-10: a hold-only miss on input captures -> delay stage at the inputs, no ECO)
+        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -561,9 +590,18 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(r.get('pin_h', 'M4 M6'))}",
         f"PIN_V={shq(r.get('pin_v', 'M5'))}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})",
-        *([f"export OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H={shq(r.get('pin_h', 'M4 M6'))} OT_PIN_BALANCE_V={shq(r.get('pin_v', 'M5'))}"]
-          if r.get("pin_balance") else []), ""])
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r), ""])
+
+
+def pin_balance_env(r: dict) -> list:
+    """optional route.pin_balance {group_max, h, v}: run_abi3_physical's balanced pin placer (place_pin, uniform over each
+    port's range, layer alternating every group_max pins) instead of PPL ordered groups, which put a whole port on ONE
+    layer ([vm8cp] 2k-bit relay buses: PPL-0107 / PPL-0093).  Needs disjoint per-port pin_ranges on a face."""
+    pb = r.get("pin_balance")
+    if not pb:
+        return []
+    return [f"export OT_PIN_GROUP_MAX={int(pb.get('group_max', 1))}",
+            f"export OT_PIN_BALANCE_H={shq(pb.get('h', 'M4 M6'))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', 'M3 M5'))}"]
 
 
 def referenced_paths(s: dict, kd: str) -> list:
@@ -575,6 +613,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
+    if s.get("inhold"):
+        out.append("physical/dsrom_window_source/leaf_inhold.tcl")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
@@ -608,7 +648,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         "name": name, "block": s["top"], "ref_tile": True,
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),
-        "hosts": j.get("hosts", ["ot-epyc1tb", "ot-epyc2", "ot-epyc3", "ot-pve1"]),
+        **({"hosts": j["hosts"]} if j.get("hosts") else {}),   # no default host list: the loop places jobs (EPYC2/3 retired 10-12)
         "threads": int(r.get("threads", 8)), "peak_ram_gb": int(r.get("peak_ram_gb", 32)),
         "source": {"branch": j.get("branch", "main"), "commit": commit or "COMMIT",
                    **({"extra_paths": j["extra_paths"]} if j.get("extra_paths") else {})},

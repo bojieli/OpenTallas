@@ -147,12 +147,10 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     reg  [SFW-1:0] r_d;
     always @(posedge ck or negedge erst_n) if (!erst_n) r_v <= 1'b0; else r_v <= o_red;
     always @(posedge ck) begin r_d <= o_rdat; r_last <= o_last; r_err <= o_err; end
-    reg  signed [7:0] cred;
     // room2 = (cred - w_r) >= 2, registered from the next values: w_r = reduce words popped and not yet emitted, each
     // holding a reserved output slot (reduce words are not back-pressured at the output); also the engine's reduce-pop
     // gate (red_hold).  Slow-VM-drain fix (1-in-8 take overflowed the remote queue in the flat and the split designs).
     reg          room2;
-    reg  [7:0]   w_r;
     wire         in_red = r_v && !hm;
     always @(*) o_rdy = hm && (pk_n == 0) && room2;
     wire         in_gat = o_v && !o_red && hm && o_rdy;
@@ -203,18 +201,36 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     wire         pe = pk_emit ? pk_err : 1'b0;
     wire [50:0]  hdr = {rank, fv_q, fault, b_cr, pe, in_gat && !pk_emit, pt_push ? ptw[PTW-1] : 1'b0, b_last, b_mask,
                         pt_push ? pt_l : 3'd0, b_type};
+`ifdef OT_S81PH_MUT_ORC
+    reg  signed [7:0] cred;
+    reg  [7:0]   w_r;
     wire [7:0]   cred_nx = cred - (oq_push ? 8'sd1 : 8'sd0) + (bcr_q ? 8'sd1 : 8'sd0);
     wire [7:0]   w_nx = w_r + (e_rpop ? 8'd1 : 8'd0) - (pk_emit ? {5'd0, pk_n} : 8'd0);
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin cred <= OQX_D; room2 <= 1'b1; w_r <= 8'd0; end
         else begin
             cred <= cred_nx; w_r <= w_nx;
-`ifdef OT_S81PH_MUT_ORC
             room2 <= $signed(cred_nx) >= 8'sd2;                              // negative control: no reservation
-`else
-            room2 <= ($signed({cred_nx[7], cred_nx}) - $signed({1'b0, w_nx})) >= 9'sd2;
-`endif
         end
+`else
+    // ces0 pb TT -46.34 (SS -109.3): qc -> st_need -> st_push -> oq_push -> cred_nx adder -> (cred_nx - w_nx) 9-bit
+    // subtract -> >= 2 -> room2, one cycle.  Restructured as ONE available-slot counter av = cred - w_r (identical
+    // value, 10-bit signed) whose early part av_e = av + bcr_q + emit-release is computed from flops, while the two
+    // late decrements (oq_push, e_rpop: k = 0..2) only SELECT among precomputed av_e - k and (av_e >= 2 + k)
+    // (carry-select).  Cycle-exact: room2 / red_hold are the same bits every cycle as before.
+    reg  signed [9:0] av;
+    wire signed [9:0] av_e = av + $signed({9'd0, bcr_q}) + (pk_emit ? $signed({7'd0, pk_n}) : 10'sd0);
+    wire signed [9:0] av_m1 = av_e - 10'sd1;
+    wire signed [9:0] av_m2 = av_e - 10'sd2;
+    wire         ge2 = av_e >= 10'sd2, ge3 = av_e >= 10'sd3, ge4 = av_e >= 10'sd4;
+    wire         dk1 = oq_push ^ e_rpop, dk2 = oq_push & e_rpop;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin av <= OQX_D; room2 <= 1'b1; end
+        else begin
+            av <= dk2 ? av_m2 : dk1 ? av_m1 : av_e;
+            room2 <= dk2 ? ge4 : dk1 ? ge3 : ge2;
+        end
+`endif
     always @(posedge ck) if (in_red) pk_d[(pk_emit ? 0 : pk_n) * SFW +: SFW] <= r_d;
     always @(posedge ck or negedge erst_n) begin
         if (!erst_n) begin

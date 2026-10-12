@@ -34,6 +34,8 @@ module ot_hgi_fused_station #(
     parameter integer LQ = 32,                // lane-group credits a lane (the VM unit's lane queue depth)
     parameter integer QWIDE = 0,              // 1: the quant unit's WIDE body (ot_hgi_quant_wide, 2628ec01a) on the same lgE
                                               //    slot (FUSED forwards one QDQ and waits: the three sources never overlap)
+    parameter integer HCE = 0,                // 2 (the die): d = 5120 HC_POST / HC_PRE_NORM go to hfd_hc_eng over ne_o / ne_i
+    parameter integer HLL = 0,                //   (ot_hgi_fused_record HCE 2; the lane-local engine's compiler rules apply)
     parameter integer MUT = 0                 // bench mutants: 1 the wl lane index from sector bits [5:1] (wrong bank)
 ) (
     input  wire          clk,
@@ -51,7 +53,9 @@ module ot_hgi_fused_station #(
     output wire [8960:0] lg_wup,
     input  wire [64:0]   lg_wdn,
     output wire [37:0]   xq,                  // remote kport read lane
-    input  wire [256:0]  xr
+    input  wire [256:0]  xr,
+    output wire [150:0]  ne_o,                // die net fused_ne:   {g_rdy, job_v, job 149} to hfd_hc_eng
+    input  wire [2:0]    ne_i                 // die net fused_ne_r: {job_rdy, fault, done}
 );
     // ---- FUSED front
     wire f_rdy, f_done, f_fault, mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv;
@@ -65,7 +69,7 @@ module ot_hgi_fused_station #(
     wire [32*257-1:0] f_rr = f_rown ? lg_rdn[8256:33] : '0;
     wire [31:0] f_wcr = f_wown ? lg_wdn[32:1] : 32'd0;
     wire [31:0] f_wdone = f_wown ? lg_wdn[64:33] : 32'd0;
-    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM), .UWIDE(UWIDE), .ULWB(ULWB), .SCR_WORDS(SCR_WORDS)) u_f (.clk(clk), .rst_n(rst_n),
+    ot_hgi_fused_record #(.UNIT(1), .UN(UN), .UM(UM), .UWIDE(UWIDE), .ULWB(ULWB), .SCR_WORDS(SCR_WORDS), .HCE(HCE), .HLL(HLL)) u_f (.clk(clk), .rst_n(rst_n),
         .cfg_scratch(18'(SCRATCH)), .rec_v(rec[0]), .rec_rdy(f_rdy), .rec_hdr(rec[128:1]), .rec_a(rec[384:129]),
         .rec_b(rec[640:385]), .rec_c(rec[896:641]), .rec_o(rec[1152:897]), .rec_n_a(rec[1173:1153]),
         .rec_n_b(rec[1194:1174]), .rec_n_o(rec[1215:1195]), .rec_done(f_done), .rec_fault(f_fault), .halted(),
@@ -73,7 +77,7 @@ module ot_hgi_fused_station #(
         .op_v(), .op_rdy(1'b0), .op_w(), .su_idle(1'b1), .su_fault(1'b0), .vmq(f_vmq), .vmr(f_vmr),
         .wrq(f_wrq), .wrq_cr(f_rcr), .wrr(f_rr), .wwq(f_wwq), .wwq_cr(f_wcr),
         .wwq_done(f_wdone), .rg_req(f_rg_req), .rg_gnt(lg_rdn[0] && !qsel), .wg_req(f_wg_req), .wg_gnt(f_wg_gnt),
-        .ne_v(), .ne_rdy(1'b0), .ne_job(), .ne_done(1'b0), .ne_fault(1'b0), .q_rec(q_rec), .q_done(q_ret[1]),
+        .ne_v(ne_o[149]), .ne_rdy(ne_i[2]), .ne_job(ne_o[148:0]), .ne_g(ne_o[150]), .ne_done(ne_i[0]), .ne_fault(ne_i[1]), .q_rec(q_rec), .q_done(q_ret[1]),
         .q_fault(q_ret[2]));
     assign ret = {f_fault, f_done, f_rdy};
     assign lg_rup = qsel ? {q_wrq, q_rg_req} : {f_wrq, f_rg_req};
