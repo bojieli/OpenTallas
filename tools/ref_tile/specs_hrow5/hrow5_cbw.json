@@ -40,7 +40,7 @@
  "job": {
   "owner": "Claude:el1011-ds-mtp",
   "branch": "claude/el1011-ds-mtp-hrow",
-  "tag": "r5d",
+  "tag": "r5e",
   "purpose": "el1011-ds-mtp 2026-10-12 cbw r5d: hrow5_cbw-r5c-4829659c5 TT +116.41 / DRC 0 (GRT hook worked), NEEDS_RTL FF -22.14 only (hold ECO rc=9, pre-b1e49e8f1 config). FF classes (path_summary, signoff SDC + routed IO ref): reg2reg chain stage u_c.wi -> u_c.t_w -22.14 (33 D; pin flop -> out flop across the 216-um tile, no logic, capture leaf late) and u_c.di -> u_c.t_d -6.13 (24); outputs t_w -10.53 (101) / t_d -7.68 (62) / t_r -4.96; inputs f_w -> wi -5.18 (56) / f_d -> di -3.91 (108). Fix: outhold + inhold (delay stages at the ports, by construction) and hold margin 0.01 -> 0.03 for the reg2reg chain stage; scalar ck/rst (die clock pin). On main >= b1e49e8f1.",
   "benches": [
    {
