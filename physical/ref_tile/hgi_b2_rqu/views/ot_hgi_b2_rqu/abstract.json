@@ -1,0 +1,85 @@
+{
+  "name": "ot_hgi_b2_rqu",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/routes/hgi_b2_rqu_v2_95d79be75/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -8.760425718179476e-11 min -6.1884858348904e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/routes/hgi_b2_rqu_v2_95d79be75/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/record/views/ot_hgi_b2_rqu:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/src/physical/ref_tile/hgi_b2_rqu/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.714454689327738e-10 min -6.516241712883897e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/routes/hgi_b2_rqu_v2_95d79be75/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/record/views/ot_hgi_b2_rqu:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/src/physical/ref_tile/hgi_b2_rqu/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 8.963813025175682e-11 min -5.7986948576171926e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/routes/hgi_b2_rqu_v2_95d79be75/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/record/views/ot_hgi_b2_rqu:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/src/physical/ref_tile/hgi_b2_rqu/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/hgi_b2_rqu-v2-95d79be75/src/physical/ref_tile/hgi_b2_rqu/signoff.sdc",
+    "sha256": "39a6558cdb09b2b958ac6edce8c687ea6596c3797d3bb6764bebc40a5303f0d4",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "ot_hgi_b2_rqu.lef": "2479d63377f1ec500ed1f0cbc52dec9824d2f8143eebcd8a8f954c2ef305542d",
+    "ot_hgi_b2_rqu_ff.lib": "128dc230334101ffc49ad144a2d54882c1e1914d87cada868fd8a997eccb93d9",
+    "ot_hgi_b2_rqu_ss.lib": "3201674e8c4d7822fe6c19ecc64ddc46ae75be39eb8140174697528f03a33097",
+    "ot_hgi_b2_rqu_tt.lib": "46ab513b2868306e5b40d23af4a63643b291d430ff4b871d2a01a30dc51de4cc"
+  },
+  "ok": true
+}
