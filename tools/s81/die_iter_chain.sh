@@ -47,3 +47,6 @@ cd $M && /srv/opentallas-scratch/admit.sh 120 -- $M/dietop_grt_sta.sh a_real grt
 grep -q OT_SPEF $M/grt/sta_tt.log || { st STA_NO_SPEF; exit 1; }
 for c in tt ff ss; do echo "$c $(grep -E "^(worst slack|tns)" $M/grt/sta_$c.log | tr "\n" " ")"; done > $M/grt/summary.txt
 st "CHAIN_DONE $(tr '\n' ' ' < $M/grt/summary.txt)"
+# post-GRT (2026-10-12 s81-die-iter): relay/station clock-pin check, OCV bound, GRT-vs-DRT cap error bar (x1.40 / x2.44),
+# region DRT staged when the die GRT has 0 overflow
+bash $S/tools/s81/die_sens.sh $M $S $TAG; st "SENS_DONE"
