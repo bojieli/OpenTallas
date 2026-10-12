@@ -1,20 +1,14 @@
 {
- "name": "smh_fcbc_ref_p45-r1-COMMIT",
+ "name": "smh_fcbc_ref_p45-r1-a9afd2404",
  "block": "ot_hbm_accel_smh_fc_bc",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-smh",
  "purpose": "[idle1012] ot_hbm_accel_smh_fc_bc re-route through tools/ref_tile (child_lint (f)/(c) FAIL on the hand-kit view: no above-only pin keepout / M7 signals); same RTL, outline, defines and exact abutment pins (io_tcl) as the closed hand route; ring macros moved 2.16 um inward (W/S/E) and the ring pitch 91.26 -> 90.72 um (21.06 um channels) to the kit's 20 um core-edge channel",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-hbm-smh",
-  "commit": "COMMIT"
+  "commit": "a9afd2404"
  },
  "stages": {
   "bench": [
@@ -79,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_fcbc_ref_p45/smh_fcbc_ref_p45-r1-COMMIT"
+   "to": "results/rtl/ref_tile/smh_fcbc_ref_p45/smh_fcbc_ref_p45-r1-a9afd2404"
   }
  ],
  "cycles_added": 0,
