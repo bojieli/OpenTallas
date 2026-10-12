@@ -46,6 +46,9 @@ module tb_hgi_e2e;
     // selector + 4 stack scorers + 4 svc IKS stripes on a DRAM controller model of the HBM model (hgi_e2e_idxn.sv);
     // IDX_MUT = the unit's bench mutant (2: the next head's weight, 3: R from the wrong lane; must FAIL)
     parameter integer IDX_NATIVE = 0, IDX_MUT = 0, IDX_LEG = 24;
+    // el1011-hbm-idxs: IDX_IXW = 1 (with IDX_NATIVE) runs IDX.INDEX on ot_hgi_idx_index_w over a dedicated 32-lane VM wide
+    // read / write group (hgi_e2e_vmlanes, grants tied high); the packet client stays for the other IDX ops
+    parameter integer IDX_IXW = 0;
     // hgi-1010/h (2026-10-10) MTP=1: the DS DSpark job through the die -- the real native controller hgi_mtp_native, the MX1
     // MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job / provider / emit queue / transaction join) and ot_hgi_cp_die MTP=1
     // (the backend translator: one KERNEL doorbell per launch, G23 entries / G26 per-layer bodies).  The host starts a
@@ -372,9 +375,14 @@ module tb_hgi_e2e;
         wire [337:0] vq; wire [273:0] vr;
         wire [89:0] s_fs; wire [1047:0] s_qb; wire s_qbr; wire [344:0] s_kin; wire [611:0] s_to; wire s_toc;
         wire [71:0] s_co; wire s_coc; wire [1:0] s_ev; wire [511:0] s_iks;
-        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
+        wire [32*16-1:0] i_wrq; wire [31:0] i_wrq_cr, i_wwq_cr, i_wwq_done; wire [32*257-1:0] i_wrr; wire [32*280-1:0] i_wwq;
+        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1), .IXW(IDX_IXW)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
             .vmq(vq), .vmr(vr), .sel_fs(s_fs), .sel_qb(s_qb), .sel_qbr(s_qbr), .sel_kin(s_kin), .sel_to(s_to),
-            .sel_toc(s_toc), .sel_co(s_co), .sel_coc(s_coc), .sel_ev(s_ev), .iks_e(s_iks));
+            .sel_toc(s_toc), .sel_co(s_co), .sel_coc(s_coc), .sel_ev(s_ev), .iks_e(s_iks),
+            .wrq(i_wrq), .wrq_cr(i_wrq_cr), .wrr(i_wrr), .rg_req(), .rg_gnt(1'b1),
+            .wwq(i_wwq), .wwq_cr(i_wwq_cr), .wwq_done(i_wwq_done), .wg_req(), .wg_gnt(1'b1));
+        hgi_e2e_vmlanes #(.UNIT(9), .LAT(VLATE)) u_vml (.clk(clk), .rst_n(rst_n), .rq(i_wrq), .rq_cr(i_wrq_cr), .rr(i_wrr),
+            .wq(i_wwq), .wq_cr(i_wwq_cr), .wq_done(i_wwq_done));
         hgi_e2e_vmc #(.UNIT(9), .LAT(VLATE)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
         hgi_e2e_idxn #(.LEG(IDX_LEG)) u_idxn (.clk(clk), .rst_n(rst_n), .fs(s_fs), .qb(s_qb), .qbr(s_qbr), .kin(s_kin),
             .to(s_to), .toc(s_toc), .co(s_co), .coc(s_coc), .ev(s_ev), .iks_e(s_iks), .ik_fault_seen(idxn_fault));
