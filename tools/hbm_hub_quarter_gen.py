@@ -268,6 +268,13 @@ def emit_rtl(P, neg=False):
     for j, k, g, s_, i in P.lanes():
         b = f'bc_{k}_{g}'
         lc = ck(P.lane_y.get(j, band_y))
+        if getattr(P, 'lin_reg', False):
+            # BIG-MISSES 2026-10-08: the closed lane's inputs are NOT register-direct (TT lib setup ~264 ps, SS 361 ps on
+            # y/r*), so the group bank (fanout 4 lanes + next bank, up to ~500 um of wire) could not drive them in one
+            # cycle (r24p TT -460 bc_0_6 -> u_lane_26/y).  Lane-local capture bank: one register copy per lane, on the
+            # lane's segment clock, placed at its pins; +1 cycle on every lane input (uniform: steady-state unchanged).
+            L_.append(f'    (* keep *) reg [{P.LB}:0] li_{j};  always @(posedge {lc}) li_{j} <= {b};')
+            b = f'li_{j}'
         conns = [f'.clk({lc})', f'.rst_n(~{b}[{P.LB}])']
         bi = 0
         pi = 0
@@ -380,7 +387,7 @@ def emit_tb(P, nvec, seed, out):
     (out / 'tb_out.mem').write_text('\n'.join(f'{int(vec(d), 2):0{(P.WO + 3) // 4}x}' for d in vout) + '\n')
     q = P.q
     m = q['master']
-    hold = 2 * P.G + 2 * P.DMAX + 14
+    hold = 2 * P.G + 2 * P.DMAX + 14 + (1 if getattr(P, 'lin_reg', False) else 0)
     cks = ', '.join(f'.{c}(clk)' for c in P.cks) if P.cks else '.ck(clk)'
     ports = ', '.join(f'.{p}(din[{o + w - 1}:{o}])' for (p, w), o in zip(P.din, _offs(P.din))) + ', ' + \
         ', '.join(f'.{p}(dout[{o + w - 1}:{o}])' for (p, w), o in zip(P.dout, _offs(P.dout)))
@@ -490,9 +497,12 @@ def main():
     ap.add_argument('--lane-size', nargs=2, type=float, metavar=('W', 'H'),
                     help='also write macro_place.tcl / floorplan.json for lanes of this footprint')
     ap.add_argument('--two-sided', action='store_true', help='lanes with pins on both edges (su/io_lr.tcl)')
+    ap.add_argument('--lane-in-reg', action='store_true',
+                    help='lane-local input capture bank li_<j> (one register copy of the group bank per lane, +1 cycle)')
     a = ap.parse_args()
     q = QUARTERS[a.quarter]
     P = Plan(q, json.loads(Path(a.ports).read_text()))
+    P.lin_reg = a.lane_in_reg
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     m = q['master']
@@ -510,7 +520,9 @@ def main():
                 groups_per_chain=P.G, lanes_per_column_group=P.L, WI=P.WI, WO=P.WO, lane_broadcast_bits=P.LB,
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
                 face_stages=P.dp, flops=dict(boundary=sum(w * P.dp[p] for p, w in P.din + P.dout) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC,
-                                                                     lane_output_stage=P.N * P.LO))
+                                                                     lane_output_stage=P.N * P.LO,
+                                                                     lane_input_stage=P.N * (P.LB + 1) if a.lane_in_reg else 0),
+                lane_in_reg=bool(a.lane_in_reg))
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
     (out / 'face_stages.tcl').write_text('# tools/hbm_hub_quarter_gen.py: die port -> face chain depth (common/face_chain_place.tcl)\n' +
         ''.join(f'set fc_ps({p}) {P.dp[p]}\n' for p, _ in P.dout) + ''.join(f'set fc_psi({p}) {P.dp[p]}\n' for p, _ in P.din))
