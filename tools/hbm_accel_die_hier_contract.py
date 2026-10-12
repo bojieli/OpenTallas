@@ -41,22 +41,30 @@ IO_DEFAULT = dict(input_delay_T=0.2, output_delay_T=0.2, period_ps=PERIOD_PS,
 # Per-slot hierarchy decision (owner TWO-LEVEL rule 21:00 + AMENDMENT 21:30: clusters instantiated >= 4x keep ONE
 # hardened level, harden once / replicate; unique parents are two-level, tiles + hub placed by the die).
 HIER = {
-    'hfd_hc': dict(decision='hardened_cluster', count_rule='4 quarters (R0/MY/MX/R180)', owner='conservative-1011/B',
-                   tiles='88 x hfd_hc_tile_xl (135.648 x 156.33), 4 serpentine chains x 22; GLUE RULE: no hfd_hc_hub element -- the chain-head glue (band capture, 3 head relays each way, per-chain XOR broadcast fold slice, rst sync) goes INTO the head tiles (head variant of the tile) / the quarter face stages; quarter = tiles only',
-                   slot_change='v1: 2,032.944 x 1,684.8 (asked 2,263.68 x 1,499.04: the W hub has 18.6 um x slack, the '
-                               'HC column has 3.1 mm free below the quarter -> same 3.425 mm2 as a TALLER slot)',
-                   layers='CLUSTER: quarter PG = M7 stripes (pins), quarter straps M7; die straps M8 (M7-M8 join like every '
-                          'block). Tiles: PG M6 stripes, signals <= M6. hfd_hc_tile_xl @5c35b1a6e (PG M7 + M7 signals, '
-                          'bc_in 69 M7 pins) must be re-routed / re-exported to M6 PG, signals <= M6 (pins on M4-M6). The '
-                          'M8-PG quarter (pdn_qt.tcl, a0bda978e..87e02e7ad) is NOT accepted: M8 is die-only.',
-                   seams='inside the cluster (half-cycle negedge chain seams, abutted <= 45 um; head relays x3 per chain '
-                         'each way on the head-tile clock) -- closed by the quarter route, not the die'),
+    'hfd_hc': dict(decision='two_level_die_region_array', count_rule='4 quarters (R0/MY/MX/R180), 4 identical die regions',
+                   owner='conservative-1011/B (tile) / hbmdie-1011 (region)',
+                   tiles='88 x hfd_hc_tile_xl (135.648 x 156.33, CLOSED TT +10.37 / FF +4.70 / DRC 0, 5c35b1a6e) per quarter '
+                         'in the 8 x 11 serpentine grid (pitch 179.136 x 187.38, physical/hbm_accel_die_views/hcp/rtl_qt/'
+                         'macro_place.tcl @87e02e7ad re-fit to the slot); GLUE RULE: no hfd_hc_hub -- chain-head glue '
+                         '(band capture, 3 head relays each way, XOR fold slice, rst sync) into head tiles / die-region relays',
+                   slot_change='v1: region 2,032.944 x 1,684.8 (asked 2,263.68 x 1,499.04: the W hub has 18.6 um x slack, '
+                               'the HC column 3.1 mm free below -> same 3.425 mm2 TALLER)',
+                   layers='v1.1: tiles placed by the die (closed tile as-is: PG M7 stripes, signals <= M7), die region straps '
+                          'M8 (die-only layer, legal at the die top). No quarter cluster / no M8-PG quarter (pdn_qt '
+                          'quarter routes finish as evidence only).',
+                   seams='DIE closure, in the HC region route: half-cycle negedge chain seams abutted (<= 45 um), head '
+                         'relays 3 posedge stages each way on the head-tile clock (first hq stage <= 50 um from the head), '
+                         'clock entry = tile clk (M4 W), insertion max 267 / min 233 ps SS (FF 141/134)'),
     'hfd_su': dict(decision='hardened_cluster', count_rule='4 quarters', owner='el1011-hbm-sfu / hcvm',
                    tiles='SU lane tiles + su_ctlw slices inside the quarter cluster'),
-    'hfd_sfu': dict(decision='hardened_cluster', count_rule='4 quarters', owner='el1011-hbm-sfu',
-                    tiles='SFU lane / chain-sub-tile / ctlw slices inside the quarter cluster',
+    'hfd_sfu': dict(decision='two_level', count_rule='4 quarters', owner='el1011-hbm-sfu',
+                    tiles='v1.1 (sfu 19:00 GLUE handoff): lanes = hardened lane CLUSTERS ot_su12_sfu SFUT=2 '
+                          '-DOT_SFU_CHAIN_HARD (lane + hard chain macro inside 159.84 x 330.48, W-face pins, PG M6 -> die '
+                          'straps M7 locally; chain PG M5 under lane M6 straps); ctlw = ONE hard tile (4 slices stacked '
+                          'N-S, edge-registered links, control as -DOT_CTLW_HEAD_EXT), no hub; face/broadcast glue = die '
+                          'relays; composition physical/hbm_accel_die_views/sfu/rtl_tiled_r25gq',
                     params='SFUT: die vec controller (ot_hdc_v41x_vec from vec_c12 inside ot_su13_ctl64) = routed lanes: '
-                           'DENR=1 now; SFUT=1 only when the chain-macro lane closes (switch on main 30f68c704, default 0)'),
+                           'DENR=1 now; SFUT=2 when the lane cluster closes (controller formula 2*SFUT = +4 cycles exp/sigmoid/SiLU; bench hbm_su_c12.py --sfut 2)'),
     'hfd_sm': dict(decision='hardened_cluster', count_rule='32 SMs', owner='el1011-hbm-smh',
                    tiles='per SM: tile_eg / tile_wg each = pt_w + pt_e + 2 leaves (xs, bdc, 2 tcl, tct); the G1 select (gsel) goes INTO the '
                          'leaf tile (no gsel hub), gather relays = die/cluster relays; sm_pub 8:1 arbitration -> per-slice '
@@ -99,11 +107,14 @@ HIER = {
 # elements handed off with no R25GQ die master today (recorded, not placed)
 UNPLACED = {
     'ot_hbm_native_frame_station_rb_NO2/NO3/NO3_SAFE (hbm-no3)': dict(
-        status='no r25gq die master instantiates the W2 native frame station (generator / view index / explorer '
-               'compose); handoff results/arch/hier_contract_1011/handoff/hbm_no3_station.json @2cf685462 recorded. '
-               'GLUE rule: the station = ONE hardened cluster (4-5 slices + the station control, one-cycle '
-               'hub<->slice loops, slices within 450 um of the control), replicated if >= 4x; no separate hub element.',
-        ask='hbm-no3 / hgi-1010: which r25gq block hosts the W2 rb stations (svc segment? hgi_vm W2 path?)'),
+        status='handoff f5799aff4 (claude/el1011-hbm-no3-ph25): each station = ONE hardened cluster (4 x slice8 + 1 x '
+               'slice5 in a row + control strip; NO3_split 630 x 196 variant a, first CLOSED route sets it; S face '
+               'clk_sm/in_*/release_*, N face out_*/ACK_*/fclk_o). RECORDED, NOT PLACED: no r25gq die master '
+               'instantiates the W2 native frame station. LAYER NON-CONFORMANT: cluster straps M8 over slice M7 '
+               'stripes (pdn_hier_m8.tcl) -- M8 is die-only; a cluster must top out at M7 (slices PG M6 / signals <= '
+               'M6, cluster M7 straps = its PG pins), or the station becomes a die region of its tiles with the '
+               'control strip as its own hard tile.',
+        ask='hbm-no3 / hgi-1010: which r25gq block hosts the W2 rb stations; hbm-no3: M7-top cluster PDN'),
     'ot_hbm_norm_engine_view (conservative-1011/F)': dict(
         status='8 x ot_hbm_norm_gtile8 (440x440, PG M7 stripes); the split-core glue is relay stages only (XI/YO 4, '
                'BD 4, RBD 3, OD 3, RR 3) -> GLUE rule: into the gtiles (edge stages) + die-top relays, no norm hub; '
@@ -245,14 +256,14 @@ def main(argv=None):
         deltas=[
             dict(id='D1', slot='hfd_hc', change='2,032.944 x 1,499.04 -> 2,032.944 x 1,684.8 (equator edge fixed, grows '
                  'away from the equator); N tr row-1 att->SU relays move up 185.76 um with it', status='decided v1'),
-            dict(id='D2', slot='hfd_hc', change='PG M8 (pg_m8_masters) -> M7 cluster PG, die straps M8; tile_xl PG M6',
-                 status='decided v1'),
+            dict(id='D2', slot='hfd_hc', change='v1.1: no quarter cluster / no M8-PG quarter; the 88 closed tiles (PG M7) '
+                 'are placed by the die in an HC region, die straps M8 (supersedes v1 "tile_xl PG M6")', status='decided v1.1'),
             dict(id='D3', slot='hfd_coll', change='1,399.656 x 1,561.68 (c07156bbc)', status='in place'),
             dict(id='D4', slot='hfd_attn_half_lo/hi', change='v10 lo 1,778.52 x 1,263.6 / hi 689.04 (c07156bbc)',
                  status='in place'),
             dict(id='D5', slot='hfd_hgi_vm', change='VM tunit (TUNIT=1) switch on main 30f68c704, default 0: blocked, '
                  'tunit elaborates NC<=8/RP0/W2 0/AP0 only, die VM is NC9/RP96/W2 96/AP1 (hcvm)', status='open'),
-            dict(id='D6', slot='hfd_sfu/su ctl', change='SFUT=1 when the chain-macro lane closes; DENR=1 now', status='open'),
+            dict(id='D6', slot='hfd_sfu/su ctl', change='DENR=1 now; SFUT=2 when the lane cluster closes', status='open'),
         ],
         versions=[dict(version=a.version, by='hbmdie-1011', note=a.note or 'v1 provisional')],
     )
