@@ -78,7 +78,7 @@ def abstract_tcls(work: Path, name):
              "create_clock -name core_clk -period 833 [get_ports clk]", "set_propagated_clock [all_clocks]",
              f"write_timing_model -library_name {name}_{c} /work/views/{name}_{c}.lib"]
         if c == "ss":
-            t.append(f"write_abstract_lef -bloat_occupied_layers /work/views/{name}.lef")
+            t.append(f"write_abstract_lef /work/views/{name}.lef")
         t.append("exit")
         (work / f"abstract_{c}.tcl").write_text("\n".join(t) + "\n")
     (work / "abstract.tcl").write_text("source /work/abstract_ss.tcl\n")
@@ -100,6 +100,16 @@ def cmd_tile(a):
     lines.insert(3, "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in SLICE_RTL))
     params = dict(p, NO=a.no)
     lines.append(f"export VERILOG_TOP_PARAMS = NO {a.no}")
+    if a.pin_access:   # child_lint (f): edge pins covered by the tile's own metal on pin layer +-1 -> parent DRT-0073
+        # pin-access plan (ds-coll bf0080873): adjacent-layer keepout over the outer pin column before GRT, removed after DRT
+        lines += ["export PRE_GLOBAL_ROUTE_TCL = /src/physical/redesign_ds/coll_split/pin_access_pregrt.tcl",
+                  "export POST_DETAIL_ROUTE_TCL = /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+                  f"export OT_PK_FRAC = {a.pin_access}",
+                  # above-only (preamble PIN-ACCESS KEEPOUT, cons c95527ec0): keep only the layer ABOVE each edge pin clear
+                  # (the parent's access side, what child_lint f checks); blocking below too starved dense faces (hfd_hc)
+                  "export OT_PK_ABOVE_ONLY = 1"]
+    if a.pdn == "m7":   # second line: the tile owns M7 power stripes (its pins); the station joins them from M8
+        lines.append(f"export PDN_TCL = /src/{STN}/pdn_slice_m7.tcl")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
     (work / "pins.tcl").write_text(pins_tcl(a.piece, a.no))
     bi, bo, to, nb, nt = ports(a.piece, a.no)
@@ -195,6 +205,16 @@ def cmd_top(a):
     lines = [l for l in cfg.splitlines() if not l.startswith(("export VERILOG_FILES", "export SDC_FILE"))]
     lines.insert(3, "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in TOP_RTL))
     lines.append("export SDC_FILE = /work/station.sdc")
+    # hard slice tiles expose M6 power pins: parent grid with M5/M6 stripes + M7 straps, slices strapped M6-M7
+    lines.append(f"export PDN_TCL = /src/{STN}/" + ("pdn_hier_m8.tcl" if a.pdn == "m8" else "pdn_hier.tcl"))
+    # forwarded clock (ot_fwd_clk_inv u_clk0..3 -> fclk_o): keep ORFS repair_clock_inverters from cloning the forwarding
+    # inverters into the register tree (as run_owned.py's flat station).  Without it (stnh-top-*-60091125e-m8) the
+    # forwarded generated clocks lose their master (STA-1062 forwarded3 at clkbuf_regs_0_clk_sm/Y), ~1,000 control
+    # registers have no clock path (CTS-0179), latency balancing against the slice macros' insertion delay
+    # (min/max_clock_tree_path in the tile ETMs) fails -> NO3 hold -200 ps at slice pins / RSZ-0060, NO2 setup -264.
+    lines.append(f"export PRE_CTS_TCL = /src/{STN}/forwarded_subtree.tcl")
+    # the hardened slices are liberty cells (no parameters): the station instantiates them without #(.NO())
+    lines = [l + " -DOT_STN_HARD" if l.startswith("export VERILOG_DEFINES") else l for l in lines]
     lines.append(f"export VERILOG_TOP_PARAMS = ENABLE 1 NO {a.no} REL_REG 1 SAFE 1 GRANT_SEAT 1 HIER 1")
     lines.append(f"export GDS_ALLOW_EMPTY = (ot_hbm_w2_stn_slice8|ot_hbm_w2_stn_slice5)")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
@@ -238,6 +258,52 @@ def cmd_top(a):
     print(f"wrote {work}: {TOP} HIER NO={a.no} die {die} slices at y {y} x {xs}")
 
 
+def cmd_hub(a):
+    """Station hub element (owner TWO-LEVEL HIERARCHY 10-11 ~21:00): the station glue extracted by
+    tools/hbm_w2_station_hub_extract.py (same RTL as the bit-exact HIER station, slices everted to seam ports), hardened as
+    its own small tile that the die places next to its 5 slice tiles.  Faces: slice seam ports (sl0..sl4, data-bit order
+    left -> right) on the top face toward the slice row; station control pins (ACK / release / in_v / out_v / status,
+    clk_sm, por_n) on the bottom.  Every port timed against the die-level neighbour clock (nbr_clk, as the slice tiles);
+    PG = own full-length M7 stripes (pdn_slice_m7.tcl, die straps M8)."""
+    a.hold_margin = route_hold_margin(a.hold_margin)
+    work = Path(a.out)
+    work.mkdir(parents=True, exist_ok=True)
+    name = f"ot_hbm_w2_stn_hub_no{a.no}"
+    die = [a.width, a.height]
+    nick = f"stnh_hub_no{a.no}_{a.label}"
+    extra = {"PLACE_DENSITY": a.pd, "HOLD_SLACK_MARGIN": a.hold_margin, "CTS_BUF_DISTANCE": 60,
+             "PLACE_PINS_ARGS": "-min_distance 1 -min_distance_in_tracks", "IO_PLACER_H": "M4 M6", "IO_PLACER_V": "M5 M7",
+             "MIN_ROUTING_LAYER": "M2", "MAX_ROUTING_LAYER": "M7"}
+    cfg = smh.config_mk(name, nick, die, [], extra)
+    lines = [l for l in cfg.splitlines() if not l.startswith("export VERILOG_FILES")]
+    lines.insert(3, f"export VERILOG_FILES = /src/{STN}/hub/{name}.v")
+    lines.append(f"export PDN_TCL = /src/{STN}/pdn_slice_m7.tcl")
+    (work / "config.mk").write_text("\n".join(lines) + "\n")
+    seam = " ".join(f"sl{k}_*" for k in range(5))
+    (work / "pins.tcl").write_text(
+        "# hub faces: slice seams on top (toward the slice row), station control pins on the bottom\n"
+        f"set_io_pin_constraint -region top:* -pin_names {{{seam}}}\n"
+        "set_io_pin_constraint -region bottom:* -pin_names {clk_sm por_n release_held in_v in_r out_v* out_r* ACK_* "
+        "release_v release_r release_owner* release_frame* fclk_o drained paused fault}\n")
+    v = (ROOT / STN / "hub" / f"{name}.v").read_text().split(f"module {name}(")[1].split("endmodule")[0]
+    ins = sorted(set(re.findall(r"^  input\s+(?:\[\d+:\d+\]\s+)?(\S+)\s*;", v, re.M)) - {"clk_sm", "por_n"})
+    sdc = smh.sdc_block(a.lat, nbr_in=" ".join(f"{x}*" if x.endswith(("owner", "frame", "_q", "_o", "_v", "_r")) else x for x in ins),
+                        lat_ff=a.lat_ff, period=a.period, skew=a.skew)
+    sdc = sdc.replace("[get_ports clk]", "[get_ports clk_sm]").replace("set_false_path -from [get_ports rst_n]",
+                      "set_false_path -from [get_ports por_n]   ;# async power-on reset, synchronised in the hub")
+    (work / "constraint.sdc").write_text(sdc)
+    abstract_tcls(work, name)
+    for c in ("ss", "ff", "tt"):
+        f = work / f"abstract_{c}.tcl"
+        f.write_text(f.read_text().replace("[get_ports clk]", "[get_ports clk_sm]"))
+    smh.run_sh(work, a.label, a.src, a.need, a.cores, [], target="finish", admit=not a.no_admit, make_extra="")
+    rs = (work / "run.sh").read_text().replace("for c in ss ff; do", "for c in ss ff tt; do")
+    (work / "run.sh").write_text(rs)
+    geo = dict(hub=name, no=a.no, die=die, pd=a.pd, seam_ports_top=seam, inputs=len(ins))
+    (work / "geometry.json").write_text(json.dumps(geo, indent=1) + "\n")
+    print(f"wrote {work}: {name} die {die}")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
@@ -260,6 +326,7 @@ def main(argv=None):
     tp.add_argument("--l-ff-min", type=float, default=280.0)
     tp.add_argument("--l-ff-max", type=float, default=330.0)
     tp.add_argument("--hold-margin", default="10")
+    tp.add_argument("--pdn", choices=("m7", "m8"), default="m7", help="m7: slices with M6 pins (default grid); m8: slices built --pdn m7")
     tp.add_argument("--src", required=True)
     tp.add_argument("--label", required=True)
     tp.add_argument("--out", required=True)
@@ -267,6 +334,22 @@ def main(argv=None):
     tp.add_argument("--cores", default="16")
     tp.add_argument("--no-admit", action="store_true")
     t = sp.add_parser("tile")
+    h = sp.add_parser("hub")
+    h.add_argument("--no", type=int, choices=(2, 3), required=True)
+    h.add_argument("--width", type=float, required=True)
+    h.add_argument("--height", type=float, required=True)
+    h.add_argument("--pd", type=float, default=0.55)
+    h.add_argument("--period", type=float, default=770)
+    h.add_argument("--skew", type=float, default=60)
+    h.add_argument("--lat", type=float, default=250)
+    h.add_argument("--lat-ff", type=float, default=150)
+    h.add_argument("--hold-margin", default="10")
+    h.add_argument("--src", required=True)
+    h.add_argument("--label", required=True)
+    h.add_argument("--out", required=True)
+    h.add_argument("--need", default="32")
+    h.add_argument("--cores", default="16")
+    h.add_argument("--no-admit", action="store_true")
     t.add_argument("--piece", choices=sorted(PIECES), required=True)
     t.add_argument("--no", type=int, choices=(2, 3), required=True)
     t.add_argument("--width", type=float, required=True)
@@ -278,6 +361,8 @@ def main(argv=None):
     t.add_argument("--lat-ff", type=float, default=150)
     t.add_argument("--hold-margin", default="10")
     t.add_argument("--make-var", action="append")
+    t.add_argument("--pdn", choices=("default", "m7"), default="default")
+    t.add_argument("--pin-access", default=None, help="OT_PK_FRAC: pin-access keepout hook (child_lint f)")
     t.add_argument("--stop-after", default=None)
     t.add_argument("--src", required=True)
     t.add_argument("--label", required=True)
@@ -288,6 +373,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "tile":
         cmd_tile(a)
+    elif a.cmd == "hub":
+        cmd_hub(a)
     elif a.cmd == "top":
         cmd_top(a)
     elif a.cmd == "signoff-sdc":

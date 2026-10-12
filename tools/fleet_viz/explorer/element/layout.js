@@ -29,7 +29,8 @@ const PAL = {
     V0: ['#7fb8d8', 0], V1: ['#eaae7f', 0], V2: ['#7fcfb9', 0], V3: ['#f2cf7f', 0], V4: ['#aad9f4', 0], V5: ['#e5bcd3', 0], V6: ['#f7f1a0', 0], V7: ['#c390aa', 0], V8: ['#a1d4cc', 0], V9: ['#cccccc', 0]}};
 const KINDS = [ // id, label, default visible
   [0, 'Signal wires', 1], [1, 'Power stripes', 1], [2, 'Follow-pin rails', 1], [3, 'Other special wires', 1], [4, 'Block pins', 1], [5, 'Routing obstructions', 1],
-  [6, 'Metal fill', 1], [7, 'Macro pins', 1], [8, 'Macro OBS', 1], [9, 'Signal vias', 1], [10, 'Power vias', 1], [11, 'Cell pins', 1], [12, 'Cell OBS', 1], [13, 'Cell outlines', 1], [14, 'Filler / tap outlines', 0]];
+  [6, 'Metal fill', 1], [7, 'Macro pins', 1], [8, 'Macro OBS', 1], [9, 'Signal vias', 1], [10, 'Power vias', 1], [11, 'Cell pins', 1], [12, 'Cell OBS', 1], [13, 'Cell outlines', 1], [14, 'Filler / tap outlines', 0],
+  [15, 'Via arrays (merged)', 1], [16, 'Via array cuts', 1]];
 const KIND_NAME = Object.fromEntries(KINDS.map(k => [k[0], k[1].replace(/s$/, '')]));
 const HEAT = ['#2c7bb6', '#7fbfdc', '#e6f5c9', '#fee08b', '#fc8d59', '#d7191c'];
 const ARR = ['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725'];
@@ -43,7 +44,7 @@ attribute vec3 instanceMeta;
 uniform vec4 uColor[48];
 uniform float uAlpha[48];
 uniform float uPat[48];
-uniform float uKind[16];
+uniform float uKind[20];
 uniform float uHl;
 uniform float uPx;
 varying vec4 vColor; varying vec2 vPx; varying vec2 vSz; varying float vClip; varying float vPat;
@@ -230,14 +231,17 @@ async function start(){
   if (u.o) u.o.split('.').forEach(k => V.ov[k] = true);
   V.hl = +u.n || 0; V.lintSel = u.f != null && u.f !== '' ? +u.f : null;
   V.phys = V.L[nl + 1].vis;
+  // layers a via / a std cell can put shapes on (a solo metal layer still needs the vias' enclosures and the cells' pins)
+  V.viaLayers = [...new Set(H.vias.flatMap(v => v.boxes.map(b => b[0])))];
+  V.cellLayers = [...new Set(H.masters.filter(m => !m.block).flatMap(m => m.boxes.map(b => b[0])))];
   applyPalette();
   // workers
   const NW = Math.max(2, Math.min(4, (navigator.hardwareConcurrency || 4) - 1));
   V.workers = []; V.wnext = 0; V.tiles = new Map(); V.rasters = new Map(); V.pending = new Map(); V.rulers = []; V.gpuBytes = 0;
   for (let i = 0; i < NW; i++){ const w = new Worker('/explorer/element/lv_worker.js'); w.onmessage = onWorker; w.postMessage({op: 'init', header: H}); V.workers.push(w); }
   updateUniforms();   // pushes the raster style to the workers
-  V.budget = PHONE() ? 1.6e6 : 5e6;
-  V.gpuCap = 300e6;
+  V.budget = PHONE() ? 1.2e6 : 3e6;
+  V.gpuCap = PHONE() ? 150e6 : 300e6;
   // DOM
   if (SOLID){ V.root.style.background = '#000'; document.documentElement.classList.add('lv-solid'); }
   V.root.innerHTML = `
@@ -305,10 +309,11 @@ function applyPalette(){
   updateUniforms();
 }
 function updateUniforms(){
-  const col = new Float32Array(48 * 4), al = new Float32Array(48), pat = new Float32Array(48), kd = new Float32Array(16);
+  const col = new Float32Array(48 * 4), al = new Float32Array(48), pat = new Float32Array(48), kd = new Float32Array(20);
   V.L.forEach(l => { const c = hex(l.color); col.set([c[0] / 255, c[1] / 255, c[2] / 255, 1], l.i * 4); al[l.i] = l.vis ? l.op : 0; pat[l.i] = l.pat; });
   KINDS.forEach(k => kd[k[0]] = V.kindVis[k[0]] ? 1 : 0);
   kd[14] = V.L[V.L.length - 1].vis ? 1 : 0;   // physical-only outlines follow their layer row
+  kd[15] = kd[16] = V.kindVis[10] ? 1 : 0;    // via arrays follow 'Power vias'
   V.uni = {uColor: col, uAlpha: al, uPat: pat, uKind: kd, uHl: V.hl || 0, uFill: SOLID ? 1 : themeBg() === 'light' ? 0.32 : 0.22, uPx: 1};
   V.styleVer = (V.styleVer || 0) + 1;
   if (V.workers){
@@ -351,12 +356,19 @@ function update(){
   const upx = ppu * Math.min(2, window.devicePixelRatio || 1); if (V.uni.uPx !== upx) V.uni = Object.assign({}, V.uni, {uPx: upx});
   const TI = tileIndex();
   const vis = tilesIn(b, 0).map(([x, y]) => x + '_' + y).filter(k => TI.has(k));
-  let cost = 0; vis.forEach(k => cost += shapeCost(TI.get(k)));
+  // the header's per-tile counts estimate the instances a tile becomes; loaded tiles calibrate the estimate
+  let est = 0, act = 0; for (const [k, t] of V.tiles){ if (t.n && TI.has(k)){ est += shapeCost(TI.get(k)); act += t.n; } }
+  const scale = est > 0 ? Math.max(0.5, Math.min(20, act / est)) : 1;
+  let cost = 0; vis.forEach(k => cost += shapeCost(TI.get(k)) * scale);
   const geo = cost <= V.budget && ppu * 1000 >= 0.25;   // >= 0.25 px per um and within the shape budget
   V.mode = geo ? 'geometry' : 'raster';
   const want = new Set();
+  if (geo && V.lastArrDetail !== arrDetail()){ V.lastArrDetail = arrDetail(); refreshTiles(); }
   if (geo){
-    const near = tilesIn(b, 1).map(([x, y]) => x + '_' + y).filter(k => TI.has(k));
+    // a one-tile prefetch ring, unless tiles are heavy (dense via arrays at full detail): then only what is on screen
+    const perTile = vis.length ? cost / vis.length : 0;
+    const heavy = perTile > 4e5 || (arrDetail() && [...V.tiles.values()].some(t => t.hasArr));   // via arrays cut by cut: on-screen only
+    const near = tilesIn(b, heavy ? 0 : 1).map(([x, y]) => x + '_' + y).filter(k => TI.has(k));
     const cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, G = V.header.grid;
     near.sort((p, q) => dist(p) - dist(q));
     function dist(k){ const [x, y] = k.split('_').map(Number); return (G.ox + (x + .5) * G.size - cx) ** 2 + (G.oy + (y + .5) * G.size - cy) ** 2; }
@@ -376,6 +388,7 @@ function update(){
       for (let y = ny0; y <= ny1; y++) for (let x = nx0; x <= nx1; x++){ const k = level + '/' + x + '_' + y; if (have.has(x + '_' + y) && !V.rasters.has(k) && !V.pending.has('r/' + k)) requestRaster(k); }
     }
   }
+  V.want = want;
   // GPU memory: evict least-recently-wanted tiles beyond the cap
   if (V.gpuBytes > V.gpuCap){
     const lru = [...V.tiles.entries()].filter(([k]) => !want.has(k)).sort((a, b2) => a[1].used - b2[1].used);
@@ -391,8 +404,8 @@ function neededSecs(k){
   const secs = t.s || [];
   for (const s of secs){
     if (s[0] === 'L'){ const li = +s.slice(1); if (L[li] && L[li].vis) out.push(s); }
-    else if (s === 'v'){ if ((V.kindVis[9] || V.kindVis[10]) && L.some(l => l.type === 'CUT' && l.vis)) out.push(s); }
-    else if (s === 'c'){ if (L[nl].vis || L[nl + 1].vis || L.some(l => /^(M1|V0|M2)$/.test(l.name) && l.vis)) out.push(s); }
+    else if (s === 'v'){ if ((V.kindVis[9] || V.kindVis[10]) && V.viaLayers.some(li => L[li].vis)) out.push(s); }   // cut AND enclosure layers
+    else if (s === 'c'){ if (L[nl].vis || L[nl + 1].vis || V.cellLayers.some(li => L[li].vis)) out.push(s); }
   }
   return out;
 }
@@ -401,11 +414,15 @@ function requestTile(k){
   if (!secs.length){ V.tiles.set(k, {n: 0, empty: true, secs: [], bytes: 0, used: performance.now()}); return; }
   const w = V.workers[V.wnext++ % V.workers.length];
   V.pending.set('t/' + k, performance.now());
-  w.postMessage({op: 'tile', key: k, parts: secs.map(s => ({name: s, url: location.origin + blobUrl('t/' + k + '/' + s)})), phys: V.phys});
+  w.postMessage({op: 'tile', key: k, parts: secs.map(s => ({name: s, url: location.origin + blobUrl('t/' + k + '/' + s)})), phys: V.phys, arrDetail: arrDetail()});
 }
 function refreshTiles(){   // a layer switched on: tiles that lack its section are fetched again (cached sections are reused)
-  for (const [k, t] of V.tiles){ const need = neededSecs(k); if (need.some(s => !(t.secs || []).includes(s)) && !V.pending.has('t/' + k)) requestTile(k); }
+  const ad = arrDetail();
+  for (const [k, t] of V.tiles){ const need = neededSecs(k);
+    if ((need.some(s => !(t.secs || []).includes(s)) || (t.hasArr && t.arrDetail !== ad)) && !V.pending.has('t/' + k)) requestTile(k); }
 }
+// via-array cuts become individual shapes once a cut is ~4 device pixels (ASAP7 power-via cuts are 18-24 nm)
+function arrDetail(){ return Math.pow(2, V.vs.zoom) * Math.min(2, window.devicePixelRatio || 1) >= 0.2; }
 function requestRaster(k){
   const w = V.workers[V.wnext++ % V.workers.length];
   V.pending.set('r/' + k, performance.now());
@@ -417,9 +434,10 @@ function onWorker(ev){
   if (m.op === 'tile'){
     V.pending.delete('t/' + m.key);
     if (!V.header) return;
+    if (V.want && !V.want.has(m.key) && V.gpuBytes > V.gpuCap * 0.6){ requestUpdate(); return; }   // no longer needed: drop
     const bytes = m.n * 28, old = V.tiles.get(m.key);
     if (old) V.gpuBytes -= old.bytes || 0;
-    V.tiles.set(m.key, {n: m.n, rects: m.rects, meta: m.meta, pick: m.pick, ox: m.ox, oy: m.oy, bytes, secs: m.secs, used: performance.now(), layer: null});
+    V.tiles.set(m.key, {n: m.n, rects: m.rects, meta: m.meta, pick: m.pick, ox: m.ox, oy: m.oy, bytes, secs: m.secs, hasArr: m.hasArr, arrDetail: m.arrDetail, used: performance.now(), layer: null});
     V.gpuBytes += bytes;
     V.stats = V.stats || {tiles: 0, ms: 0, bytes: 0}; V.stats.tiles++; V.stats.ms += m.ms[1]; V.stats.bytes += m.bytes;
     if (!V.firstGeo){ V.firstGeo = performance.now() - V.t0; }
@@ -455,7 +473,8 @@ function render(b, geo, want, level){
   const allLoaded = geo && [...want].every(k => V.tiles.has(k) || !tileIndex().has(k));
   if (!allLoaded){ rl(0); if (level !== 0) rl(level); }
   if (geo){
-    for (const k of want){ const t = V.tiles.get(k); if (!t || t.empty || !t.n) continue;
+    const vis = new Set(tilesIn(b, 0).map(([x, y]) => x + '_' + y));   // margin tiles stay loaded but are not drawn
+    for (const k of want){ if (!vis.has(k)) continue; const t = V.tiles.get(k); if (!t || t.empty || !t.n) continue;
       layers.push(new RectLayer({id: 't' + k, data: {length: t.n, attributes: {instanceRects: {value: t.rects, size: 4}, instanceMeta: {value: t.meta, size: 3}}},
         coordinateSystem: C, lv: V.uni})); }
   }
@@ -790,7 +809,7 @@ function renderSide(){
       <small>${l.type === 'CUT' ? 'via' : l.type === 'ROUTING' ? (l.dir === 'HORIZONTAL' ? 'H' : 'V') : ''}</small>
       <input type="range" min="0" max="100" value="${Math.round(l.op * 100)}" data-lo="${l.i}" aria-label="${esc(l.name)} opacity">
       <button class="lv-solo" data-solo="${l.i}" title="Show only ${esc(l.name)}">solo</button></div>`).join('');
-  const kinds = KINDS.filter(k => k[0] !== 14).map(k => `<label class="lv-chk"><input type="checkbox" ${V.kindVis[k[0]] ? 'checked' : ''} data-kind="${k[0]}"> ${esc(k[1])}</label>`).join('');
+  const kinds = KINDS.filter(k => k[0] < 14).map(k => `<label class="lv-chk"><input type="checkbox" ${V.kindVis[k[0]] ? 'checked' : ''} data-kind="${k[0]}"> ${esc(k[1])}</label>`).join('');
   const lint = V.lint || {}, F = lint.findings || [];
   const fsel = V.lintSel != null ? F[V.lintSel] : null;
   const lintHtml = lint.error ? `<p class="note">Contract lint could not run: ${esc(lint.error)}</p>` : !F.length ? `<p class="note ok">No findings: this element passes the hierarchy-contract checks on its routed abstract${(lint.summary && lint.summary.macros && lint.summary.macros.length) ? ' and every placed macro is on grid' : ''}.</p>` :

@@ -73,6 +73,13 @@ def apply_cts_fix_hooks(config, case):
             continue
         kept.append(line)
     body = ["# Written by tools/run_abi3_physical.py (OT_CTS_FIX_HOOKS, tt_overlay backport)."]
+    # Forward OT_SPINE_* / OT_CG_* job-shell knobs into the hook (main 225badfab): the hooks read ::env, which only
+    # carries config.mk exports.  This backport REPLACES main's function, so without this block every overlaid job
+    # silently dropped the knobs (w8c-a/b-225badfab: 'OT_SPINE skipped: no port ck[0]', plain TritonCTS, TT -1,8xx).
+    knobs = sorted(k for k in os.environ if re.match(r"OT_(SPINE|CG)_[A-Z0-9_]+$", k))
+    for k in knobs:
+        v = os.environ[k].replace("\\", "\\\\").replace("{", "\\{").replace("}", "\\}")
+        body.append(f"if {{![info exists ::env({k})] || $::env({k}) eq \"\"}} {{ set ::env({k}) {{{v}}} }}")
     if orig:
         body.append(f"source {orig}")
     record = []
@@ -92,7 +99,7 @@ def apply_cts_fix_hooks(config, case):
         body.append(f"source /work/hooks/{name}")
         record.append({"path": fix, "name": name, "sha256": _h.sha256(source.read_bytes()).hexdigest()})
     (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
-    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record}, indent=1) + "\n",
+    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record, "env_knobs": {k: os.environ[k] for k in knobs}}, indent=1) + "\n",
                                                encoding="utf-8")
     kept.append("export PRE_CTS_TCL = /work/hooks/pre_cts_ot_cts_fix.tcl")
     return kept
