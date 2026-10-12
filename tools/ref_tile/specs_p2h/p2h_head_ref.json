@@ -64,7 +64,8 @@
    "rtl/experimental/mtp_p2_ordered_20261009",
    "tools/mtp_p2_rootpipe_gate.py",
    "tools/mtp_p2_prefix_fixture.py",
-   "rtl/model/hbm_pc40_native_sim_20261003"
+   "rtl/model/hbm_pc40_native_sim_20261003",
+   "rtl/common/ot_secded_cols.svh"
   ],
   "benches": [
    {
@@ -121,5 +122,8 @@
   ],
   "views_to": "physical/ref_tile/p2h_head_ref/views",
   "record_to": "results/rtl/ref_tile/p2h_head_ref"
+ },
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/common"
  }
 }
