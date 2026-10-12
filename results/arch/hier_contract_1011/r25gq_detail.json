@@ -2,8 +2,8 @@
  "schema": "hbmdie-1011 detail (sidecar of the opentallas.hier_contract.v1 file r25gq.json)",
  "die": "hbm_r25gq",
  "variant": "r25gqn_pr",
- "version": 4,
- "source": "tools/hbm_accel_die_fp.py r25gqn_pr @ ac0f5d2fe (claude/hrl-die-1011)",
+ "version": 5,
+ "source": "tools/hbm_accel_die_fp.py r25gqn_pr @ ca7ca4fff (claude/hrl-die-1011)",
  "owner": "hbmdie-1011 (log /home/ubuntu/claude-takeover-20261007/el1011-hbmdie.log)",
  "period_ps": 833.333,
  "die_outline_um": [
@@ -1613,16 +1613,16 @@
    "kind": "hub",
    "count": 4,
    "outline_um": [
-    2032.944,
-    1684.8
+    2263.68,
+    1499.04
    ],
-   "area_mm2": 3.4251,
+   "area_mm2": 3.3933,
    "instances": [
     {
      "name": "hb_hc_SW",
      "xy": [
-      8794.656,
-      10955.52
+      8563.92,
+      11141.28
      ],
      "orient": "R0"
     },
@@ -1630,14 +1630,14 @@
      "name": "hb_hc_SE",
      "xy": [
       21293.264,
-      10955.52
+      11141.28
      ],
      "orient": "MY"
     },
     {
      "name": "hb_hc_NW",
      "xy": [
-      8794.656,
+      8563.92,
       13340.208
      ],
      "orient": "MX"
@@ -1656,7 +1656,7 @@
     "count_rule": "4 quarters (R0/MY/MX/R180), 4 identical die regions",
     "owner": "conservative-1011/B (tile) / hbmdie-1011 (region)",
     "tiles": "88 x hfd_hc_tile_xl (135.648 x 156.33, CLOSED TT +10.37 / FF +4.70 / DRC 0, 5c35b1a6e) per quarter in the 8 x 11 serpentine grid (pitch 179.136 x 187.38, physical/hbm_accel_die_views/hcp/rtl_qt/macro_place.tcl @87e02e7ad re-fit to the slot); GLUE RULE: no hfd_hc_hub -- chain-head glue (band capture, 3 head relays each way, XOR fold slice, rst sync) into head tiles / die-region relays",
-    "slot_change": "v1: region 2,032.944 x 1,684.8 (asked 2,263.68 x 1,499.04: the W hub has 18.6 um x slack, the HC column 3.1 mm free below -> same 3.425 mm2 TALLER)",
+    "slot_change": "v5: region 2,263.68 x 1,499.04 = the CLOSED tiled quarter (r25gqw ports; the die adapts to the closed element): SU-facing edge fixed, grows away from the spine into the HC | attention channel (345.6 -> 114.96 um); supersedes the v1 2,032.944 x 1,684.8 taller slot",
     "layers": "v1.1: tiles placed by the die (closed tile as-is: PG M7 stripes, signals <= M7), die region straps M8 (die-only layer, legal at the die top). No quarter cluster / no M8-PG quarter (pdn_qt quarter routes finish as evidence only).",
     "seams": "DIE closure, in the HC region route: half-cycle negedge chain seams abutted (<= 45 um), head relays 3 posedge stages each way on the head-tile clock (first hq stage <= 50 um from the head), clock entry = tile clk (M4 W), insertion max 267 / min 233 ps SS (FF 141/134)"
    },
@@ -1667,8 +1667,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      43.74,
-      141.948
+      36.588,
+      134.796
      ]
     },
     "t_sfu": {
@@ -1676,8 +1676,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      185.148,
-      283.356
+      170.892,
+      269.1
      ]
     },
     "t_hgi_vmap": {
@@ -1685,8 +1685,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      326.604,
-      328.044
+      305.148,
+      306.588
      ]
     },
     "f_hgi_vmap": {
@@ -1694,8 +1694,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      371.244,
-      584.652
+      342.684,
+      556.092
      ]
     },
     "f_hgi_vmr": {
@@ -1703,8 +1703,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      627.852,
-      654.06
+      592.14,
+      618.348
      ]
     },
     "t_hgi_vmq": {
@@ -1712,8 +1712,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      697.308,
-      729.66
+      654.444,
+      686.796
      ]
     },
     "rst": {
@@ -1721,8 +1721,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      772.86,
-      772.86
+      722.844,
+      722.844
      ]
     },
     "f_hgi_cmdproc": {
@@ -1730,8 +1730,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      1507.548,
-      1597.596
+      1336.092,
+      1426.14
      ]
     },
     "t_hgi_cmdproc": {
@@ -1739,8 +1739,8 @@
      "face": "E",
      "layer": "M4",
      "span_um": [
-      1640.796,
-      1640.988
+      1462.188,
+      1462.38
      ]
     },
     "f_lgW_rdn": {
@@ -1748,8 +1748,8 @@
      "face": "N",
      "layer": "M5",
      "span_um": [
-      65.292,
-      857.868
+      111.42,
+      903.996
      ]
     },
     "f_lgW_wdn": {
@@ -1757,8 +1757,8 @@
      "face": "N",
      "layer": "M5",
      "span_um": [
-      922.62,
-      928.764
+      1014.924,
+      1021.068
      ]
     },
     "t_lgW_rup": {
@@ -1766,8 +1766,8 @@
      "face": "N",
      "layer": "M5",
      "span_um": [
-      993.516,
-      1042.668
+      1131.996,
+      1181.148
      ]
     },
     "t_lgW_wup": {
@@ -1775,8 +1775,8 @@
      "face": "N",
      "layer": "M5",
      "span_um": [
-      1107.468,
-      1967.628
+      1292.028,
+      2152.188
      ]
     },
     "ck0e": {
@@ -12513,8 +12513,8 @@
   {
    "id": "D1",
    "slot": "hfd_hc",
-   "change": "2,032.944 x 1,499.04 -> 2,032.944 x 1,684.8 (equator edge fixed, grows away from the equator); N tr row-1 att->SU relays move up 185.76 um with it",
-   "status": "decided v1"
+   "change": "v5: 2,032.944 x 1,684.8 -> 2,263.68 x 1,499.04 = the CLOSED tiled quarter (88 hfd_hc_tile_xl 8 x 11, pka10 view; r25gqw ports): SU-facing edge fixed, grows away from the spine into the HC | attention channel (345.6 -> 114.96 um); N tr row-1 att->SU relays back at their 1,499.04 positions, rly_N[WE]_1_1 re-centred in the narrowed channel (hops 480 / 480 um); tile sub-slots unchanged in the quarter frame (the 2,263.68 quarter = rtl_qt @9c9c1a34b, same grid)",
+   "status": "decided v5"
   },
   {
    "id": "D2",
@@ -12549,7 +12549,7 @@
   {
    "id": "D7",
    "slot": "hfd_hc",
-   "change": "v3: 88 tile sub-slots per quarter from macro_place.tcl @87e02e7ad (8 x 11 serpentine, all inside 2,032.944 x 1,684.8; top 201 um band for head relays); region gate waits on tile child_lint (f)",
+   "change": "v3: 88 tile sub-slots per quarter from macro_place.tcl @87e02e7ad (8 x 11 serpentine, v5: all inside 2,263.68 x 1,499.04, the closed quarter frame; the 316 um SU-side band x 1,947-2,263 holds the head relays / glue as in the closed quarter); region gate waits on tile child_lint (f)",
    "status": "contract v3"
   },
   {
@@ -12615,9 +12615,9 @@
  ],
  "versions": [
   {
-   "version": 4,
+   "version": 5,
    "by": "hbmdie-1011",
-   "note": "v4: physical-relay variant r25gqn_pr, hgi_idx w8 slot, spine moved, views wrappers"
+   "note": "v5: hfd_hc slot 2,263.68 x 1,499.04 = the closed tiled quarter (die adapts to the closed element; D1)"
   }
  ]
 }

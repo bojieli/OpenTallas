@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "hbm_r25gq",
- "version": 4,
+ "version": 5,
  "owner": "hbmdie-1011",
- "updated": "2026-10-11T23:40-07:00",
+ "updated": "2026-10-11T23:55-07:00",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -12,75 +12,75 @@
  },
  "changelog": [
   {
-   "version": 4,
-   "change": "v4: physical-relay variant r25gqn_pr, hgi_idx w8 slot, spine moved, views wrappers"
+   "version": 5,
+   "change": "v5: hfd_hc slot 2,263.68 x 1,499.04 = the closed tiled quarter (die adapts to the closed element; D1)"
   },
   {
-   "version": 4,
-   "change": "D1 hfd_hc: 2,032.944 x 1,499.04 -> 2,032.944 x 1,684.8 (equator edge fixed, grows away from the equator); N tr row-1 att->SU relays move up 185.76 um with it [decided v1]"
+   "version": 5,
+   "change": "D1 hfd_hc: v5: 2,032.944 x 1,684.8 -> 2,263.68 x 1,499.04 = the CLOSED tiled quarter (88 hfd_hc_tile_xl 8 x 11, pka10 view; r25gqw ports): SU-facing edge fixed, grows away from the spine into the HC | attention channel (345.6 -> 114.96 um); N tr row-1 att->SU relays back at their 1,499.04 positions, rly_N[WE]_1_1 re-centred in the narrowed channel (hops 480 / 480 um); tile sub-slots unchanged in the quarter frame (the 2,263.68 quarter = rtl_qt @9c9c1a34b, same grid) [decided v5]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D2 hfd_hc: v1.1: no quarter cluster / no M8-PG quarter; the 88 closed tiles (PG M7) are placed by the die in an HC region, die straps M8 (supersedes v1 \"tile_xl PG M6\") [decided v1.1]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D3 hfd_coll: 1,399.656 x 1,561.68 (c07156bbc) [in place]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D4 hfd_attn_half_lo/hi: v10 lo 1,778.52 x 1,263.6 / hi 689.04 (c07156bbc) [in place]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D5 hfd_hgi_vm: v3: VM tunit builds at the die config (main 20730548c) + ot_hgi_vm_btile.sv; latency contract request->response +12, rq->rr +8, rq->credit +6, w2q->credit +6 / ->done +8, wq->done +8, ap RTT +2, reset +3 (vm_tunit record); TUNIT stays 0 until the btile + VM parent close [contract v3]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D6 hfd_sfu/su ctl: DENR=1 now; SFUT=2 when the lane cluster closes [open]"
   },
   {
-   "version": 4,
-   "change": "D7 hfd_hc: v3: 88 tile sub-slots per quarter from macro_place.tcl @87e02e7ad (8 x 11 serpentine, all inside 2,032.944 x 1,684.8; top 201 um band for head relays); region gate waits on tile child_lint (f) [contract v3]"
+   "version": 5,
+   "change": "D7 hfd_hc: v3: 88 tile sub-slots per quarter from macro_place.tcl @87e02e7ad (8 x 11 serpentine, v5: all inside 2,263.68 x 1,499.04, the closed quarter frame; the 316 um SU-side band x 1,947-2,263 holds the head relays / glue as in the closed quarter); region gate waits on tile child_lint (f) [contract v3]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D8 hfd_vm_sw/se/nw/ne: v3: 36 VM8 tile sub-slots (6 open halves x 6, 9adc3c44e); e half at x 349.056; clock entry ckt<k> M7 area pin; +1 cycle on the listed half seams [contract v3]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D9 hfd_sfu: v3: 16 lane-cluster sub-slots 159.84 x 330.48 per quarter on the old lane lattice (173-um channels = face/broadcast relay stages); ctlw tile moves to hfd_su [contract v3]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D10 hfd_hgi_idx: w8 cluster slot growth (rf2) + IXW=1 lane-station request (idxs 20:45): accepted in principle -- lgE KE 4 -> 5 once the IXW adapter passes its bench [open]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D11 hfd_idx_score_native_grid: v3: two-level, 32 r2 hslice sub-slots per grid (no chunk cluster) [contract v3]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D12 NO3 station: v3: not a R25GQ element (R24W W2 publication chain); recorded only [decided v3]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D13 die: v4: contract on r25gqn_pr (b4638437b): data segments > 504 um 985 -> 0, 0 overlaps, die 856.95 mm2 (svc channels +108 um); residual check rc 3 = 8 clock/reset tree segments > 504 um + 7 far-side data relays, all at the lk_ep S row (84-um gaps full) -> D16 [v4 (residual open)]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D14 hfd_cmdproc / hfd_coll: coll_recx 554 b (TOPK_MERGE sideband): t_hgi_coll widens by 554 b when the TKM tiles compose on the die (die coll view TKM=0 today); lgEcp / lgEatt / t_hgi_e2* classed OPEN with owners (main 04dad4b3a) [open]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D15 hfd_hgi_idx: v4: 640.008 x 600.48 -> 1,270.08 x 1,719.36 at (14,800.32, 7,112.88) for the w8 cluster (43.2 um to idx_selector); spine above moves up: idx_selector y 8,875, coll 10,902, hgi_vm 12,506, cmdproc 14,623 [v4]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D16 hfd_lk_ep S row: re-grant pending: the 84-um inter-ep channels carry every N-S crossing of the row; widen to >= 200 um (pitch 2,800) or move the S row [open]"
   },
   {
-   "version": 4,
+   "version": 5,
    "change": "D17 hfd_hc_eng: lane-major N-face re-pin accepted; needs per-lane ports in the die bus model (generator places each port contiguous) and the lgE station spanning the full 4,384.8 face [open]"
   }
  ],
@@ -2725,12 +2725,12 @@
    "kind": "element",
    "parent": "die",
    "outline": {
-    "w": 2032.944,
-    "h": 1684.8
+    "w": 2263.68,
+    "h": 1499.04
    },
    "origin": {
-    "x": 8794.656,
-    "y": 10955.52,
+    "x": 8563.92,
+    "y": 11141.28,
     "orient": "R0"
    },
    "io_budget": {
@@ -2747,86 +2747,86 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 4,
+   "version": 5,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees)",
    "pins": [
     {
      "name": "f_sfu[1023:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 92.844
+     "offset": 85.692
     },
     {
      "name": "t_sfu[1023:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 234.252
+     "offset": 219.996
     },
     {
      "name": "t_hgi_vmap[15:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 327.324
+     "offset": 305.868
     },
     {
      "name": "f_hgi_vmap[2223:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 477.948
+     "offset": 449.388
     },
     {
      "name": "f_hgi_vmr[273:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 640.956
+     "offset": 605.244
     },
     {
      "name": "t_hgi_vmq[337:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 713.484
+     "offset": 670.62
     },
     {
      "name": "rst",
      "face": "E",
      "layer": "M4",
-     "offset": 772.86
+     "offset": 722.844
     },
     {
      "name": "f_hgi_cmdproc[938:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 1552.572
+     "offset": 1381.116
     },
     {
      "name": "t_hgi_cmdproc[2:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 1640.892
+     "offset": 1462.284
     },
     {
      "name": "f_lgW_rdn[8256:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 461.58
+     "offset": 507.708
     },
     {
      "name": "f_lgW_wdn[64:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 925.692
+     "offset": 1017.996
     },
     {
      "name": "t_lgW_rup[512:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 1018.092
+     "offset": 1156.572
     },
     {
      "name": "t_lgW_wup[8960:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 1537.548
+     "offset": 1722.108
     },
     {
      "name": "ck0e",
@@ -5660,12 +5660,12 @@
    "kind": "element",
    "parent": "die",
    "outline": {
-    "w": 2032.944,
-    "h": 1684.8
+    "w": 2263.68,
+    "h": 1499.04
    },
    "origin": {
     "x": 21293.264,
-    "y": 10955.52,
+    "y": 11141.28,
     "orient": "MY"
    },
    "io_budget": {
@@ -5682,7 +5682,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 4,
+   "version": 5,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {
@@ -8419,11 +8419,11 @@
    "kind": "element",
    "parent": "die",
    "outline": {
-    "w": 2032.944,
-    "h": 1684.8
+    "w": 2263.68,
+    "h": 1499.04
    },
    "origin": {
-    "x": 8794.656,
+    "x": 8563.92,
     "y": 13340.208,
     "orient": "MX"
    },
@@ -8441,7 +8441,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 4,
+   "version": 5,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {
@@ -11178,8 +11178,8 @@
    "kind": "element",
    "parent": "die",
    "outline": {
-    "w": 2032.944,
-    "h": 1684.8
+    "w": 2263.68,
+    "h": 1499.04
    },
    "origin": {
     "x": 21293.264,
@@ -11200,7 +11200,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 4,
+   "version": 5,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {
