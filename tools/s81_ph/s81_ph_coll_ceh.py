@@ -5,7 +5,7 @@
                                      q + broadcasts on N (from ceq), remote landings on W (FIFO tiles), tx / credits /
                                      pass-through landings on E (lane tiles)
     dsfd_coll_cef                    405.6 x 280    remote FIFO tile (6 macros 256x256, 2 x 3): rx on W, slice links N
-    dsfd_coll_cele / dsfd_coll_celp  113.4 x 340.2  lane link: lane face W, core side E
+    dsfd_coll_cele 113.4 x 170.1 / dsfd_coll_celp 64.8 x 170.1  lane link: lane face W, core side E
     dsfd_coll_ceq                    300 x 680.4    VM queues (18 macros 128x256, 2 x 9): fvm_u S, streams E, rest W
     s81_ph_coll_ceh.py   -> physical/s81_ph_views/ports/contract_ceh/<master>/{ports.json, io_place.tcl, ports.svh}"""
 import sys
@@ -71,7 +71,7 @@ def main():
     pf.emit('ceh remote-source receive FIFO tile (2 parities x 3 macros)')
 
     for m, ep in (('dsfd_coll_cele', 1), ('dsfd_coll_celp', 0)):
-        pl = T.Plan(m, 113.4, 340.2)
+        pl = T.Plan(m, 113.4 if ep else 64.8, 170.1)   # el1011 21:40: util 27% / 16% at 340.2 tall (textbook util_channel) -> 54% each
         lay(pl, 'W', [('f_lo_v', 1, 'output'), ('f_lo_r', 1, 'input'), ('f_lo_d', 553, 'output'), ('f_li_v', 1, 'input'),
                       ('f_li_r', 1, 'output'), ('f_li_d', 553, 'input'), ('x_flt', 3, 'input')], start=4.8)
         if ep:
