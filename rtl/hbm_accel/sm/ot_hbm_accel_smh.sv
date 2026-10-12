@@ -2482,13 +2482,54 @@ module ot_hbm_accel_smh_leaf #(
     // on constant selects split in two (9 mux levels across the 2048-bit beat do not fit one cycle with their wires).
     localparam integer RH = 6;                                   // low bits rotated in W2
     localparam integer NBK = LBS * 266, NBF = LSB * 16;
-    wire [10:0]   a1 = {xs_a1, {G1S{1'b0}}};
-    wire [10:0]   a2 = {xs_a2, {G2S{1'b0}}};
+    // STRAP FAN-OUT TREE (el1011-hbm-smmv-b 2026-10-12; smh_xs ref_tile FLOORPLAN_MARGIN refusal: port xs_a1[6] drove
+    // 3,567 loads, xs_a2[5] 3,139 -- every rotation shifter of the beat hung on the raw strap pins).  The offsets are
+    // STATIC straps, so they are pin-flopped (a?p) and fanned out through a registered tree: pin flop -> 8 kept mid
+    // copies -> one kept copy per 64-bit output chunk of each rotation stage (stage 0, h, l, carry mask) => <= ~64 mux
+    // loads a copy, <= 8 / <= 7 flop loads on the tree levels.  The data path latency is UNCHANGED (no beat stage
+    // added); the straps settle 3 edges after power-up, long before reset releases the first beat.
+    localparam integer CK  = 64;
+    localparam integer N0K = (NBK + 255 + CK - 1) / CK, N0F = (NBF + 255 + CK - 1) / CK;
+    localparam integer NHK = (NBK + 63 + CK - 1) / CK,  NHF = (NBF + 63 + CK - 1) / CK;
+    localparam integer NLK = (NBK + CK - 1) / CK,       NLF = (NBF + CK - 1) / CK;
+    localparam integer NA1 = N0K + NHK + 2 * NLK, NA2 = N0F + NHF + 2 * NLF;
+    (* keep *) reg [10:0] a1p;
+    (* keep *) reg [10:0] a2p;
+    always @(posedge clk) begin a1p <= {xs_a1, {G1S{1'b0}}}; a2p <= {xs_a2, {G2S{1'b0}}}; end
+    wire [8*11-1:0] a1m, a2m;
+    wire [NA1*11-1:0] a1c;
+    wire [NA2*11-1:0] a2c;
+    genvar sk;
+    generate for (sk = 0; sk < 8; sk = sk + 1) begin : g_sm
+        (* keep *) reg [10:0] q1;
+        (* keep *) reg [10:0] q2;
+        always @(posedge clk) begin q1 <= a1p; q2 <= a2p; end
+        assign a1m[sk*11 +: 11] = q1; assign a2m[sk*11 +: 11] = q2;
+    end endgenerate
+    generate for (sk = 0; sk < NA1; sk = sk + 1) begin : g_s1
+        (* keep *) reg [10:0] q;
+        always @(posedge clk) q <= a1m[(sk % 8)*11 +: 11];
+        assign a1c[sk*11 +: 11] = q;
+    end endgenerate
+    generate for (sk = 0; sk < NA2; sk = sk + 1) begin : g_s2
+        (* keep *) reg [10:0] q;
+        always @(posedge clk) q <= a2m[(sk % 8)*11 +: 11];
+        assign a2c[sk*11 +: 11] = q;
+    end endgenerate
     wire [4095:0] dd = {b_d, b_d};
     // (round 5) W0: rotate by a[10:8]; W1: by a[7:6]; W2: by a[5:0] (each stage <= 8:1 / 4:1 / 64:1 muxes)
     localparam integer RM = 8;
-    wire [4095:0] blk_0 = dd >> {a1[10:RM], {RM{1'b0}}};
-    wire [4095:0] bf_0  = dd >> {a2[10:RM], {RM{1'b0}}};
+    // stage 0 (a[10:8]): chunk c of the output from its own strap copy (dd is 4,096 b: every index stays in range)
+    wire [N0K*CK-1:0] blk_0;
+    wire [N0F*CK-1:0] bf_0;
+    generate for (sk = 0; sk < N0K; sk = sk + 1) begin : g_r0k
+        wire [10:0] a = a1c[sk*11 +: 11];
+        assign blk_0[sk*CK +: CK] = dd[sk*CK + {a[10:RM], {RM{1'b0}}} +: CK];
+    end endgenerate
+    generate for (sk = 0; sk < N0F; sk = sk + 1) begin : g_r0f
+        wire [10:0] a = a2c[sk*11 +: 11];
+        assign bf_0[sk*CK +: CK] = dd[sk*CK + {a[10:RM], {RM{1'b0}}} +: CK];
+    end endgenerate
     reg  [NBK+(1<<RM)-2:0] blk0;
     reg  [NBF+(1<<RM)-2:0] bf0;
     reg            we0;
@@ -2501,8 +2542,19 @@ module ot_hbm_accel_smh_leaf #(
         bf0  <= bf_0[NBF+(1<<RM)-2:0];
         wa0  <= b_a;
     end
-    wire [NBK+(1<<RM)-2:0] blk_h = blk0 >> {a1[RM-1:RH], {RH{1'b0}}};
-    wire [NBF+(1<<RM)-2:0] bf_h  = bf0 >> {a2[RM-1:RH], {RH{1'b0}}};
+    // stage h (a[7:6]) on zero-padded sources (the shift's zero fill), chunked as stage 0
+    wire [NHK*CK+255:0] blk0x = {{(NHK*CK+256-(NBK+255)){1'b0}}, blk0};
+    wire [NHF*CK+255:0] bf0x  = {{(NHF*CK+256-(NBF+255)){1'b0}}, bf0};
+    wire [NHK*CK-1:0] blk_h;
+    wire [NHF*CK-1:0] bf_h;
+    generate for (sk = 0; sk < NHK; sk = sk + 1) begin : g_rhk
+        wire [10:0] a = a1c[(N0K + sk)*11 +: 11];
+        assign blk_h[sk*CK +: CK] = blk0x[sk*CK + {a[RM-1:RH], {RH{1'b0}}} +: CK];
+    end endgenerate
+    generate for (sk = 0; sk < NHF; sk = sk + 1) begin : g_rhf
+        wire [10:0] a = a2c[(N0F + sk)*11 +: 11];
+        assign bf_h[sk*CK +: CK] = bf0x[sk*CK + {a[RM-1:RH], {RH{1'b0}}} +: CK];
+    end endgenerate
     reg  [NBK+(1<<RH)-2:0] blk1;
     reg  [NBF+(1<<RH)-2:0] bf1;
     reg            we1;
@@ -2528,10 +2580,24 @@ module ot_hbm_accel_smh_leaf #(
         bf1  <= bf_h[NBF+(1<<RH)-2:0];
         wa1  <= wa0;
     end
-    wire [NBK+(1<<RH)-2:0] blk_l = blk1 >> a1[RH-1:0];
-    wire [NBF+(1<<RH)-2:0] bf_l  = bf1 >> a2[RH-1:0];
-    wire [4095:0] blk_c = {{2048{1'b1}}, {2048{1'b0}}} >> a1;    // 1 where the field bit is in beat g1 + 1
-    wire [4095:0] bf_c  = {{2048{1'b1}}, {2048{1'b0}}} >> a2;
+    // stage l (a[5:0]) and the carry mask (1 where the field bit is in beat g + 1), chunked as stage 0
+    wire [NLK*CK+63:0] blk1x = {{(NLK*CK+64-(NBK+63)){1'b0}}, blk1};
+    wire [NLF*CK+63:0] bf1x  = {{(NLF*CK+64-(NBF+63)){1'b0}}, bf1};
+    wire [4095:0] cpat = {{2048{1'b1}}, {2048{1'b0}}};
+    wire [NLK*CK-1:0] blk_l, blk_c;
+    wire [NLF*CK-1:0] bf_l, bf_c;
+    generate for (sk = 0; sk < NLK; sk = sk + 1) begin : g_rlk
+        wire [10:0] a = a1c[(N0K + NHK + sk)*11 +: 11];
+        wire [10:0] ac = a1c[(N0K + NHK + NLK + sk)*11 +: 11];
+        assign blk_l[sk*CK +: CK] = blk1x[sk*CK + a[RH-1:0] +: CK];
+        assign blk_c[sk*CK +: CK] = cpat[sk*CK + ac +: CK];
+    end endgenerate
+    generate for (sk = 0; sk < NLF; sk = sk + 1) begin : g_rlf
+        wire [10:0] a = a2c[(N0F + NHF + sk)*11 +: 11];
+        wire [10:0] ac = a2c[(N0F + NHF + NLF + sk)*11 +: 11];
+        assign bf_l[sk*CK +: CK] = bf1x[sk*CK + a[RH-1:0] +: CK];
+        assign bf_c[sk*CK +: CK] = cpat[sk*CK + ac +: CK];
+    end endgenerate
     wire [SLW-1:0] wd_n = {bf_l[NBF-1:0], blk_l[NBK-1:0]};
     wire [SLW-1:0] car  = {bf_c[NBF-1:0], blk_c[NBK-1:0]};
     reg  [SLW-1:0] wd_q, wm_q;
