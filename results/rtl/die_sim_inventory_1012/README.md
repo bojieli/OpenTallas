@@ -65,7 +65,7 @@ Qwen3-8B: one decoder layer type (L0 with real history; L1-L2 chain) + head.
 | Qwen ROM die | LM head @ P8191 | no (src `f6e9a6e92`) | **launched** (Q3) |
 | Qwen KV die | layer step @ ctx 8192 (+ mutant) | **yes** (`2269e5375`) | none |
 | Qwen ROM die r22ko4 top (`qfd_tile_nk` array + hardened clusters) | layer @ P8191 through the r22ko4 seams | **missing — no vehicle** | plan below |
-| S81 (MTP, VM, collective, engram, PQC) | one layer per type + head @ 1M on the S81 die | **missing — no vehicle**; element benches only, no PQC bench | plan below |
+| S81 (MTP, VM, collective, engram, PQC) | one layer per type + head @ 1M on the S81 die | **missing — no vehicle**; element benches only (PQC: element benches exist, see section 4) | plan below |
 | HBM die (DS) | L0, L1, L2, L3, L14, L20, L21, L24, L37 @ 1M (+ IDX / DMA mutants) | no (harness changed since `9d5abe71a`) | **launched** (H1-H4) |
 | HBM die (DS) | head (L39 + LM head, COLL.ARGMAX_MERGE) + mutant | no (`coll_ep` changed since `1113269a1`) | **launched** (H5) |
 | HBM die (Qwen) | L0 @ P8191 TP4 + DMA mutant | no (`18685d362`) | **launched** (H6) |
@@ -114,7 +114,7 @@ Smallest vehicle: one S81 layer at P 1,048,575 on rank 0 — `tb_s81_layer` inst
 `dsfd_vm_bgq28` bank group, `dsfd_engram_lkp` (L1/L14 only), with the ROM stage datapath and HBM KV as replay stubs fed
 by the HGI native exporter's per-layer vectors (`export ds --layer N`, which already carries rank-0 records at 1M);
 MTP via the existing `tb_mtp_rom_s0_rtt` sequencer hooked to the same VM. Layer types: L0, L1, L2, L20, L37 + head.
-PQC: write an element bench first (none exists; only `rtl/v41die/ot_v41_{spine,fieldtop}_pqc_w17w10.sv`).
+PQC (corrected 2026-10-12, s81lv): the closed PQC elements have bit-exact benches with failing mutants on main -- `ot_v41_pqc_spine_screen` (9 tiles `ot_pqc_t_*` + `ot_dsrom_aq12t`) via `tools/s81/pqc_xrv_bench.py` (golden `tools/hdc_golden_v41`, mutants `OT_PQC_MUT_{QB,IX,RET,BC,CTL}`), `ot_dsrom_aq12t` via `physical/s81_pq_tiles/bench_aq12t.sh` (`OT_AQ12T_MUT_RA`), `ot_s81_pq_ret_root_cam_p` via `tools/s81/pq_root_cam_p_gate.py` (`wrong_sibling`). Gap: tiles prom/srom/xin have no in-tile mutant. The layer vehicle: `results/rtl/s81_layer_vehicle_1012/SPEC.md` (a die-layer bench existed unmerged on claude/el1011-s81dbench).
 Estimate: ~3-4 agent-days (tb + replay adapter 1.5 d, vectors/golden binding 1 d, per-type runs + mutants 1 d; PQC bench +0.5 d).
 
 **Qwen r22ko4 die seams.** The split-partition vehicle (Q1-Q3) covers the sequencer/tree/SU split and stations but not
