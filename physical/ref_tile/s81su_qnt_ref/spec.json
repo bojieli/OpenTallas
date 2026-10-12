@@ -12,10 +12,9 @@
  ],
  "outline": {
   "w": 36.72,
-  "h": 345.6
+  "h": 453.6
  },
  "util": 0.52,
- "pg_layer": "M6",
  "pins": {
   "W": [
    "ck",
@@ -52,19 +51,19 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01,
   "pin_v": "M3 M5",
-  "pin_h": "M4 M6",
+  "pin_h": "M4",
   "pin_balance": {
    "group_max": 1,
-   "h": "M4 M6",
+   "h": "M4",
    "v": "M3 M5"
   }
  },
  "aspect": 1.0,
  "job": {
-  "owner": "Claude:el1011-s81su-qn",
-  "branch": "claude/el1011-s81su-qn",
-  "tag": "v1",
-  "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the QN tap (x2, data halves): pin flops, row numbering, registered rotation of the operand rows into 16 positions x 256 b (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow",
+  "owner": "Claude:el1011-s81su",
+  "branch": "claude/el1011-s81su",
+  "tag": "v2",
+  "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the QN tap (x2, data halves): pin flops, row numbering, registered rotation of the operand rows into 16 positions x 256 b (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow [M5 layer cap re-kit 10-12]",
   "no_bench_reason": "bit-exactness is gated on the slab dsfd_sp_su_h (tools/s81_suhc/su_gate.py --hier full m0 PASS + m1/m5 FAIL, reduced m0 PASS + mutants FAIL; el1011-s81-suhc-hier-1011.log [su]); the sub-tile alone has no golden",
   "views_to": "physical/ref_tile/s81su_qnt_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_qnt_ref"
@@ -72,99 +71,99 @@
  "pin_ranges": {
   "dn_d": [
    4.0,
-   290.0
+   400.0
   ],
   "e_d": [
    4.0,
-   290.0
+   400.0
   ],
   "ck": [
-   292.0,
-   293.0
+   402.0,
+   403.0
   ],
   "rst": [
-   293.5,
-   294.5
+   403.5,
+   404.5
   ],
   "dn_st": [
-   295.0,
-   296.0
+   405.0,
+   406.0
   ],
   "dn_kind": [
-   296.5,
-   297.5
+   406.5,
+   407.5
   ],
   "dn_gsel": [
-   298.0,
-   299.0
+   408.0,
+   409.0
   ],
   "dn_jid": [
-   299.5,
-   300.7
+   409.5,
+   410.7
   ],
   "dn_v": [
-   301.2,
-   303.6
+   411.2,
+   413.6
   ],
   "i_f": [
-   304.1,
-   309.1
+   414.1,
+   419.1
   ],
   "e_v": [
-   292.0,
-   294.4
+   402.0,
+   404.4
   ],
   "e_t": [
-   294.9,
-   314.1
+   404.9,
+   424.1
   ],
   "e_gq": [
-   314.6,
-   315.6
+   424.6,
+   425.6
   ],
   "e_gr": [
-   316.1,
-   317.1
+   426.1,
+   427.1
   ],
   "e_gw": [
-   317.6,
-   318.6
+   427.6,
+   428.6
   ],
   "e_go": [
-   319.1,
-   320.1
+   429.1,
+   430.1
   ],
   "e_ob": [
-   320.6,
-   322.7
+   430.6,
+   432.7
   ],
   "e_eps": [
-   323.2,
-   328.0
+   433.2,
+   438.0
   ],
   "o_fu": [
-   328.5,
-   329.5
+   438.5,
+   439.5
   ],
   "o_fo": [
-   330.0,
-   331.0
+   440.0,
+   441.0
   ],
   "o_alive": [
-   331.5,
-   332.5
+   441.5,
+   442.5
   ],
   "o_den": [
-   333.0,
-   334.0
+   443.0,
+   444.0
   ],
   "o_rdy": [
-   334.5,
-   335.5
+   444.5,
+   445.5
   ],
   "o_rjid": [
-   336.0,
-   337.2
+   446.0,
+   447.2
   ]
  },
  "orfs_vars": {
