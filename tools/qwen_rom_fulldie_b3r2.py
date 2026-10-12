@@ -260,6 +260,7 @@ def _tp8b_f2(v, m):
             v.SPINE_CHANNEL_X = sorted(v.SPINE_CHANNEL_X + [round(k0 + 320.0, 3), round(k0 + 650.0, 3)])
             v.SPINE_LANE_PRELOAD = {round(k0 + 320.0, 3): 1000.0, round(k0 + 650.0, 3): 2500.0}
     # (3) IO band S: the core moves up by IO_DEPTH + the IO word channel; the IO blocks go to the S edge
+    v.IO_SOUTH_BAND = True
     io = [i for i in m['insts'] if i.kind in ('io', 'xfifo')]
     ion = {i.name for i in io}
     y_io_old = min(i.y for i in io)
@@ -1432,9 +1433,20 @@ def _io_south(v):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
-        for mn, port, centre in (('qfd_io_xfifo', 'o_serdes_tx', 300.0), ('qfd_io_xfifo', 'i_serdes_rx', 360.0),
-                                 ('qfd_io_serdes', 'c', 30.0), ('qfd_io_serdes', 'r', 90.0),
-                                 ('qfd_io_embedding_rom', 'o', None), ('qfd_io_embedding_rom', 'a', -1.0)):
+        at_s = getattr(v, 'IO_SOUTH_BAND', False)
+        lst = [('qfd_io_xfifo', 'o_serdes_tx', 300.0), ('qfd_io_xfifo', 'i_serdes_rx', 360.0),
+               ('qfd_io_serdes', 'c', 30.0), ('qfd_io_serdes', 'r', 90.0),
+               ('qfd_io_embedding_rom', 'o', None), ('qfd_io_embedding_rom', 'a', -1.0)]
+        if at_s:
+            # qwen-tp8/die it4 (tp8b: IO band at the S edge, core to the N): every SerDes word leaves its CDC cluster /
+            # SerDes on the core-facing N face into the IO word channel (the S face is the die edge; the xfifo's
+            # tx1/tx2/rx1/rx2 sat on its W face in the 4-um gap abutting the collective) -- serdes 1/2 words at the
+            # xfifo's W end (toward serdes 1/2), serdes 0 words toward its E end (clear of the seq/coll pins at 630+)
+            lst = [('qfd_io_xfifo', 'o_serdes_tx2', 40.0), ('qfd_io_xfifo', 'i_serdes_rx2', 100.0),
+                   ('qfd_io_xfifo', 'o_serdes_tx1', 160.0), ('qfd_io_xfifo', 'i_serdes_rx1', 220.0),
+                   ('qfd_io_xfifo', 'o_serdes_tx', 450.0), ('qfd_io_xfifo', 'i_serdes_rx', 510.0),
+                   ('qfd_io_serdes', 'c', 30.0), ('qfd_io_serdes', 'r', 90.0)]
+        for mn, port, centre in lst:
             M = o.get(mn)
             if M is None or port not in M.ports:
                 continue
@@ -1443,7 +1455,7 @@ def _io_south(v):
             if centre == -1.0:
                 c = M.w - 60.0 - M.ports['o'][1] * 0.048 - 40.0     # beside the word, west of it
             mx = any(it.master == mn and it.orient in ('MX', 'R180') for it in model['insts'])
-            M.ports[port] = ('face', bits, 'N' if mx else 'S', 'M5', c, 1)
+            M.ports[port] = ('face', bits, ('S' if mx else 'N') if at_s else ('N' if mx else 'S'), 'M5', c, 1)
         # spine blocks whose words sat as area pins inside the body (a relay can only be beside a macro): the tree
         # top's port-slab words, its result word and done to its E face (the vertical channel), the sequencer's
         # collective / embedding-address / done words to its W face (the channel), the VM's tree-result word to E
@@ -1638,8 +1650,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for dx, dy in sorted(cands, key=lambda t: abs(t[0]) + abs(t[1])):
                 x0 = v.dn(x - w / 2 + dx, v.GX)
                 y0 = v.dn(y - h / 2 + dy, v.GY)
-                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None:
-                    continue           # never over a tile body
+                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None and not cur_tight[0]:
+                    continue           # never over a tile body (it4: a KV row-run relay may sit in a row gap; free()
+                    #                    still refuses any tile overlap)
                 if free((x0, y0, x0 + w, y0 + h)):
                     return x0, y0
         return None
@@ -1661,7 +1674,25 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if x_ in lane_bits:
             lane_bits[x_] = [b_] * len(lane_bits[x_])
     cur_bits = [0]
-    io_sub = [0.0, 0.0, 0.0]
+    io_sub = [0.0, 0.0, 0.0, 0.0]
+    IO_SUB_F = (0.1, 0.37, 0.63, 0.9)
+    # it4 (fine cuts): KV-half words (KV centre <-> W / E KV strip) run in a row gap across the field, not via the IO
+    # channel (pass-2 search sent kvn_* down to the IO channel and back up: 80 relays, 1 kb stacked on the serdes words)
+    KVC_NAMES = ('pll', 'embgw', 'seq', 'ahub', 'host')
+    gap_bits = {}
+    kv_gaps = []
+    gap_set = set()
+    cur_tight = [False]
+    tight_stride = set()     # it4: buses on the KV row-run rule place relays at pitch - 70 (frame snapping at the field /
+    #                          strip edges overshot RMAX by 10-70 um, and the pass-2 search then rerouted them via the IO channel)
+    if getattr(v, 'SPINE_LANE_BALANCE', False) and g.get('row_y'):
+        ry = sorted(g['row_y'])
+        th = v.TILE_SLOT[1]
+        kv_gaps = [round((a + th + b) / 2, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0]
+        # over-tile runs too (M6+ over the M5-capped tiles, relays in the corridors): the KV strips' head stacks leave
+        # crossing heights only below / between / above their stacks, which are mostly over tile rows
+        gap_set = set(kv_gaps)
+        kv_gaps = sorted(kv_gaps + [round(a + th * f, 3) for a in ry for f in (0.25, 0.5, 0.75)])
     io_ch = next(((r['rect'][1], r['rect'][3]) for r in m['regions'] if r['name'] == 'io_chan'), None) \
         if getattr(v, 'SPINE_LANE_BALANCE', False) else None
 
@@ -1684,7 +1715,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             lb[x][k] += cur_bits[0]
         return x
 
-    def poly_of(cl, P0, P1):
+    def poly_of(cl, P0, P1, bid=None, eps=None):
         f0, f1 = in_field(*P0), in_field(*P1)
         if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0):
             return [P0, P1]
@@ -1709,11 +1740,70 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if any(a < hi_ - 1.0 and lo_ + 1.0 < c and b < min(P0[1], P1[1]) + 1.0 < d for a, b, c, d in big):
                 # two sub-lanes over the channel height, least-loaded first (one centre line stacked every word
                 # in one 260-um window)
+                # it4: four sub-lanes (one word per lane where possible: shared lanes stacked relays at the faces)
                 hch = io_ch[1] - io_ch[0]
-                subs = [io_ch[0] + hch * f for f in (0.2, 0.8)]
-                k_ = min(range(2), key=lambda j: io_sub[j])
+                subs = [io_ch[0] + hch * f for f in IO_SUB_F]
+                k_ = min(range(len(subs)), key=lambda j: io_sub[j])
                 io_sub[k_] += cur_bits[0]
                 return [P0, (P0[0], subs[k_]), (P1[0], subs[k_]), P1]
+        if io_ch is not None and bid is not None and bid.split('__r')[0] == 'host_fdi' and abs(P0[0] - P1[0]) > 500.0 \
+                and (P0[1] < io_ch[0]) != (P1[1] < io_ch[0]):
+            # it4: the KV host link drops down a spine lane into its own IO-channel sub-lane, then along it to the host
+            # SerDes face (it staircased across the field's bottom row into the serdes words' window)
+            Pa, Pi = (P0, P1) if P1[1] < io_ch[0] else (P1, P0)
+            hch = io_ch[1] - io_ch[0]
+            subs = [io_ch[0] + hch * f for f in IO_SUB_F]
+            k_ = min(range(len(subs)), key=lambda j: io_sub[j])
+            io_sub[k_] += cur_bits[0]
+            chx = getattr(v, 'SPINE_CHANNEL_X', None)
+            xl = lane_pick(chx, Pa, (Pa[0], subs[k_]), lane_bits) if chx else Pa[0]
+            path = [Pa, (xl, Pa[1]), (xl, subs[k_]), (Pi[0], subs[k_]), Pi]
+            return path if Pa is P0 else path[::-1]
+        if kv_gaps and eps is not None and len(eps) == 2:
+            n0, n1 = eps[0][0], eps[1][0]
+            strip = lambda P: P[0] < fw[0] - 1.0 or P[0] > fe[2] + v.CORR + 1.0      # noqa: E731
+            kc0, kc1 = n0 in KVC_NAMES, n1 in KVC_NAMES
+            if (kc0 and strip(P1)) or (kc1 and strip(P0)):
+                Pc, Ps = (P0, P1) if kc0 else (P1, P0)
+                F = fw if Ps[0] < Pc[0] else fe
+                chx = getattr(v, 'SPINE_CHANNEL_X', None) or [Pc[0]]
+                kvl = [x for x in chx if abs(x - Pc[0]) < 1500.0] or [Pc[0]]
+                best = None
+                for yg in kv_gaps:
+                    lo_, hi_ = sorted((Pc[0], Ps[0]))
+                    if any(a < hi_ - 1.0 and lo_ + 1.0 < c and b < yg + 35.0 and yg - 35.0 < d and c - a > 350.0
+                           and not (a <= Ps[0] <= c)
+                           and not (a <= Pc[0] <= c and b <= Pc[1] <= d) and not (F[0] - 1 <= a and c <= F[2] + v.CORR + 1)
+                           for a, b, c, d in big):
+                        continue
+                    det = abs(yg - Pc[1]) + abs(yg - Ps[1])
+                    cost = det + 1500.0 * (gap_bits.get(yg, 0.0) + cur_bits[0]) / 1000.0 + (0.0 if yg in gap_set else 600.0)
+                    if best is None or cost < best[0]:
+                        best = (cost, yg)
+                if best is not None:
+                    yg = best[1]
+                    gap_bits[yg] = gap_bits.get(yg, 0.0) + cur_bits[0]
+                    tight_stride.add(bid)
+                    if Ps[0] > Pc[0]:
+                        # E-bound: the KV centre's E face is next to the E field: run up / down its first corridor
+                        xl = min((x for x in cx_list if x > Pc[0]), default=Pc[0])
+                    else:
+                        xl = lane_pick(kvl, Pc, (Pc[0], yg), lane_bits) if all(x in lane_bits for x in kvl) else kvl[0]
+                    fa, fb = (F[2] + v.CORR, F[0]) if Ps[0] < Pc[0] else (xl, F[2] + v.CORR)
+                    path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg), (Ps[0], yg), Ps]
+                    bs = by.get(eps[1][0] if kc0 else eps[0][0])
+                    if bs is not None and abs(Ps[1] - yg) > 1.0:
+                        # it4: approach a strip pin from its own face: a pin on the N / S face of a block between the
+                        # run height and the pin (wctl: the kvn leg ran up through its 518-um body, hop 575 um) is
+                        # reached from a side channel beside the block, then along the face
+                        top, bot = bs.y + bs.h, bs.y
+                        face_n = abs(Ps[1] - top) < 2.0
+                        face_s = abs(Ps[1] - bot) < 2.0
+                        if (face_n and yg < bot) or (face_s and yg > top):
+                            xs = bs.x + bs.w + 65.0 if Ps[0] < Pc[0] else bs.x - 65.0
+                            ya = Ps[1] + (60.0 if face_n else -60.0)
+                            path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg), (xs, yg), (xs, ya), (Ps[0], ya), Ps]
+                    return path if Pc is P0 else path[::-1]
         chx = getattr(v, 'SPINE_CHANNEL_X', None)
         if chx and abs(P0[1] - P1[1]) > 1000.0 and min(chx) - 1500.0 < P0[0] < max(chx) + 1500.0 \
                 and min(chx) - 1500.0 < P1[0] < max(chx) + 1500.0 and lane_bits is not None:
@@ -1820,8 +1910,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             pre_pads[idx] = [(q[0], q[1], w, h) for q in reversed(best[1])]
             pre_far[idx] = best[2][-1]
     plans = {}
+    import os as _os
+    _only = tuple(q for q in _os.environ.get('OT_RELAY_ONLY', '').split(',') if q)   # debug: relay only these buses
+    _dbg = set(q for q in _os.environ.get('OT_RELAY_DBG', '').split(',') if q)
     for idx, (bid, cl, bits, eps) in buses:
-        if cl in RELAY_SKIP or len(eps) != 2:
+        if cl in RELAY_SKIP or len(eps) != 2 or (_only and not bid.startswith(_only)):
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         P0, P1 = pos(*eps[0]), pre_far.get(idx) or pos(*eps[1])
@@ -1830,7 +1923,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         cur_bits[0] = bits
-        path = poly_of(cl, P0, P1)
+        path = poly_of(cl, P0, P1, bid=bid, eps=eps)
         cands, L = candidates(path)
         span1 = bits * 0.048 + 4.0
         span2 = bits * 0.096 + 4.0
@@ -1852,8 +1945,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         tt_ = getattr(v, 'TERMINAL_TIGHT', {})
         tight0 = tt_.get(tuple(eps[0]))
         tight1 = tt_.get(tuple(eps[-1]))
-        while L - s_last > (tight1 if tight1 and len(frames) else pitch) or (tight0 and not frames and L > tight0):
-            hi_ = tight0 if (tight0 and not frames) else pitch
+        pitch_b = pitch - 70.0 if bid in tight_stride else pitch
+        cur_tight[0] = bid in tight_stride
+        while L - s_last > (tight1 if tight1 and len(frames) else pitch_b) or (tight0 and not frames and L > tight0):
+            hi_ = tight0 if (tight0 and not frames) else pitch_b
             reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + hi_]
             if not reach:
                 nxt = [c for c in cands if c[0] > s_last + 1.0]
@@ -1861,8 +1956,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     break
                 reach = nxt[:1]
             if ycur is not None:      # a horizontal run keeps the height of its previous relay (no zig-zag)
-                reach = [(c[0], c[1], ycur, c[3], c[4]) if c[4] == 'h' and abs(ycur - c[2]) < 400.0 else c
-                         for c in reach]
+                reach = [(c[0], c[1], ycur, c[3], c[4]) if (c[4] == 'h' or (c[4] == 'o' and bid in tight_stride))
+                         and abs(ycur - c[2]) < 400.0 else c for c in reach]
             got = None
             for tol in (20.0, 80.0, 200.0):
                 for c in reach[::-1]:
@@ -1884,9 +1979,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if cc_ is not None:
                 corr_used.setdefault(cc_, []).append((y0, y0 + h))
             frames.append((x0, y0, w, h))
-            ycur = y0 + h / 2 if got[0][4] == 'h' else None
+            ycur = y0 + h / 2 if (got[0][4] == 'h' or (got[0][4] == 'o' and bid in tight_stride and ycur is not None)) else None
             s_last = got[0][0]
-        plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=frames, d=d)
+            if _dbg and bid in _dbg:
+                print('DBG', bid, 'L', round(L), 'path', [(round(a), round(b)) for a, b in path] if len(frames) == 1 else '',
+                      'c', [round(q) if isinstance(q, float) else q for q in got[0]], 'at', (round(x0), round(y0)))
+        plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=frames, d=d, path=path)
 
     def hops_of(pl):
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
@@ -1914,10 +2012,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         return False
         return True
 
-    def sites(w, h):
+    def sites(w, h, gaps=False):
         """lower-left corners where a w x h relay frame fits: every corridor slot (32.4 um steps) and a 21.6 um grid
-        over the free area outside the tile arrays."""
-        key = (round(w, 3), round(h, 3))
+        over the free area outside the tile arrays (gaps: also the free in-field area, i.e. the row gaps)."""
+        key = (round(w, 3), round(h, 3), gaps)
         if key in site_cache:
             return site_cache[key]
         pts = []
@@ -1933,7 +2031,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for x in np.arange(0.0, m['die']['w'] - w, step):
             for y in np.arange(0.0, m['die']['h'] - h, step):
                 x0, y0 = v.up(float(x), v.GX), v.up(float(y), v.GY)
-                if in_field(x0 + w / 2, y0 + h / 2) and y0 + h <= die_top + 1.0:
+                if in_field(x0 + w / 2, y0 + h / 2) and y0 + h <= die_top + 1.0 and not gaps:
                     continue
                 if free0((x0, y0, x0 + w, y0 + h)):
                     pts.append((x0, y0))
@@ -1956,7 +2054,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         bits = pl['bits']
         w, h = relay_frame(bits, pl['cl'])
         W, H = w + v.SHAVE, h + v.SHAVE
-        arr, tree = sites(W, H)
+        arr, tree = sites(W, H, pl['bid'] in tight_stride)
         if tree is None:
             unrepaired.append(pl['bid'])
             continue
@@ -1975,10 +2073,29 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         dP1 = np.abs(ctr[:, 0] - P1[0]) + np.abs(ctr[:, 1] - P1[1])
         ok_cache = {}
 
+        near = None
+        if pl['bid'] in tight_stride:
+            # it4: a KV row-run word is repaired within 450 um of its planned path (the unconstrained search wandered
+            # down to the IO channel and back: 80-140 relays on words planned at 50-90)
+            near = np.full(len(ctr), np.inf)
+            arcp = np.zeros(len(ctr))
+            s0_ = 0.0
+            for (xa_, ya_), (xb_, yb_) in zip(pl['path'], pl['path'][1:]):
+                qx = np.clip(ctr[:, 0], min(xa_, xb_), max(xa_, xb_))
+                qy = np.clip(ctr[:, 1], min(ya_, yb_), max(ya_, yb_))
+                dd = np.abs(ctr[:, 0] - qx) + np.abs(ctr[:, 1] - qy)
+                better = dd < near
+                arcp = np.where(better, s0_ + np.abs(qx - xa_) + np.abs(qy - ya_), arcp)
+                near = np.minimum(near, dd)
+                s0_ += abs(xb_ - xa_) + abs(yb_ - ya_)
+            near = near <= 450.0
+            # progress along the planned path (not toward the load: the run detours by design)
+            dP1 = s0_ - arcp
+
         def ok(i):
             if i not in ok_cache:
                 x0, y0 = arr[i]
-                ok_cache[i] = free((x0, y0, x0 + W, y0 + H))
+                ok_cache[i] = (near is None or bool(near[i])) and free((x0, y0, x0 + W, y0 + H))
             return ok_cache[i]
         def bfs(De, mono):
             start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i)]
@@ -1997,7 +2114,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j):
                             par[j] = i
                             nxt.append(j)
-                nxt.sort(key=lambda j: abs(ctr[j][0] - P1[0]) + abs(ctr[j][1] - P1[1]))
+                nxt.sort(key=lambda j: dP1[j])
                 front = nxt[:4000]
             return hit, par, start
 
