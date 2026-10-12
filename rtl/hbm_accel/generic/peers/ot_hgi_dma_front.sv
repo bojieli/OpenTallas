@@ -154,7 +154,11 @@ module ot_hgi_dma_front #(
     reg [1:0] rq_h, rq_t; reg [2:0] rq_n;
     wire [3:0] ix_inflight = {1'b0, rq_n} + {3'd0, i1_v} + {3'd0, i2_v} + {3'd0, i3_v} + {3'd0, i4_v};
     assign ix_rdy = rc && !busy && !cv_q && !ixc_q && !mv_fault;
-    assign id_rdy = busy && ixm && !mv_fault && ids_left != 20'd0 && ix_inflight < 4'd4;
+    reg idok_r;                                             // XQ: ids left and pipeline room, registered (conservative by one take)
+    assign id_rdy = busy && ixm && !mv_fault && ((XQ != 0) ? idok_r : (ids_left != 20'd0 && ix_inflight < 4'd4));
+    // XQ: per-stack request skid behind the dq output register; the request generators decide on the registered !sk_v
+    // (dq_rdy only steers the output / skid registers: no logic between the dq_rdy pins and the issue decision)
+    reg [NS-1:0] sk_v; reg [50:0] sk_d [0:NS-1]; reg pu; reg [1:0] pu_s; reg [50:0] pu_d;
     wire id_take = id_v && id_rdy;
     // ---------------------------------------------------------------- tags
     reg [15:0] tag_busy;
@@ -357,7 +361,7 @@ module ot_hgi_dma_front #(
         ix_st = ix_a[SBIT +: 2];
         ix_bad = ix_try && (e[SBIT +: 2] != ix_st ||
                             ({1'b0, ix_a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, ix_rn, 5'd0}) > (SBIT+1)'(STACK_BYTES));
-        ix_go = ix_try && !ix_bad && (!dq[ix_st*51 + 50] || dq_rdy[ix_st]);
+        ix_go = ix_try && !ix_bad && ((XQ != 0) ? !sk_v[ix_st] : (!dq[ix_st*51 + 50] || dq_rdy[ix_st]));
         ix_pop = r_off + {15'd0, ix_rn} == rsec;
     end
     // ---------------------------------------------------------------- sequential
@@ -368,10 +372,11 @@ module ot_hgi_dma_front #(
             tag_busy <= 16'd0; rr <= '0; r_done <= 1'b1;
             issued <= 32'd0; wrote <= 32'd0;
             ixc_q <= 1'b0; ixm <= 1'b0; ids_left <= 20'd0; i1_v <= 1'b0; i2_v <= 1'b0; i3_v <= 1'b0; i4_v <= 1'b0; ix_first <= 1'b0;
-            rq_h <= 2'd0; rq_t <= 2'd0; rq_n <= 3'd0;
+            rq_h <= 2'd0; rq_t <= 2'd0; rq_n <= 3'd0; sk_v <= '0; idok_r <= 1'b0;
         end else begin
             mv_done <= 1'b0;
             for (s = 0; s < NS; s = s + 1) if (dq_rdy[s]) dq[s*51 + 50] <= 1'b0;
+            pu = 1'b0; pu_s = 2'd0; pu_d = 51'd0;
             // ---- accept (command station, then the decode)
             if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
             if (ix_v && ix_rdy && !(mv_v && mv_rdy)) begin ixc_q <= 1'b1; ixm_q <= ix_cmd; end
@@ -430,7 +435,8 @@ module ot_hgi_dma_front #(
             if (ix_try) begin
                 if (ix_bad) mv_fault <= 1'b1;
                 else if (ix_go) begin
-                    dq[ix_st*51 +: 51] <= {1'b1, ft[3:0], ix_rn, ix_a};
+                    if (XQ != 0) begin pu = 1'b1; pu_s = ix_st; pu_d = {1'b1, ft[3:0], ix_rn, ix_a}; end
+                    else dq[ix_st*51 +: 51] <= {1'b1, ft[3:0], ix_rn, ix_a};
                     tag_busy[ft[3:0]] <= 1'b1;
                     tg_dsec[ft[3:0]] <= rq_ds[rq_h] + (18'(r_off) << ks);
                     tg_left[ft[3:0]] <= ix_rn;
@@ -451,8 +457,9 @@ module ot_hgi_dma_front #(
                 st = a[SBIT +: 2];
                 if (e[SBIT +: 2] != st || ({1'b0, a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, rn, 5'd0}) > (SBIT+1)'(STACK_BYTES))
                     mv_fault <= 1'b1;
-                else if (!dq[st*51 + 50] || dq_rdy[st]) begin
-                    dq[st*51 +: 51] <= {1'b1, ft[3:0], rn, a};
+                else if ((XQ != 0) ? !sk_v[st] : (!dq[st*51 + 50] || dq_rdy[st])) begin
+                    if (XQ != 0) begin pu = 1'b1; pu_s = st; pu_d = {1'b1, ft[3:0], rn, a}; end
+                    else dq[st*51 +: 51] <= {1'b1, ft[3:0], rn, a};
                     tag_busy[ft[3:0]] <= 1'b1;
                     tg_dsec[ft[3:0]] <= 18'(wd >> 3) + (18'(r_off) << ks);
                     tg_left[ft[3:0]] <= rn;
@@ -489,6 +496,15 @@ module ot_hgi_dma_front #(
                     if ({23'd0, tg_left[t]} <= ((MUT == 2) ? k + 8 : k)) tag_busy[t] <= 1'b0;
                 end
             end
+            // ---- XQ: the dq output register and its skid (one push a cycle; a stack with a held skid takes no push)
+            if (XQ != 0) for (s = 0; s < NS; s = s + 1) begin
+                if (sk_v[s] && (!dq[s*51 + 50] || dq_rdy[s])) begin dq[s*51 +: 51] <= sk_d[s]; sk_v[s] <= 1'b0; end
+                else if (pu && pu_s == 2'(s)) begin
+                    if (!dq[s*51 + 50] || dq_rdy[s]) dq[s*51 +: 51] <= pu_d;
+                    else begin sk_d[s] <= pu_d; sk_v[s] <= 1'b1; end
+                end
+            end
+            idok_r <= !ixc_q && (id_take ? (ids_left > 20'd1 && ix_inflight < 4'd3) : (ids_left != 20'd0 && ix_inflight < 4'd4));
             // ---- crossbar
             x_v <= bsel_v; x2_v <= x_v; x3_v <= x2_v; wo_v <= wl_v; wl_v <= (XQ != 0) ? x3_v : (XP != 0) ? x2_v : x_v;
             rr <= (rr == RW'(NIN - 1)) ? '0 : rr + 1'b1;
