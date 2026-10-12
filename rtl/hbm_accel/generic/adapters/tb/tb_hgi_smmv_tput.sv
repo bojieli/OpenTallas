@@ -6,7 +6,8 @@
 // ot_hbm_accel_smh + 30 shadows) -> ot_hgi_smmv_pub (record-pipelined) -> ot_hgi_vm_unit.
 // Shadows: SM s replays real SM (s mod 2); per record r it is active iff M_r > s Q_r, emits rows < R_s(r) of the op the
 // real SM is emitting (row pointer) and toggles its own arrive only for ops it is active in (arrive pointer).
-// Mutants (must FAIL): MUT_ROW (pub drops s Q), MUT_SLOT (every x at slot 0), MUT_EARLY (retire on issue).
+// Mutants (must FAIL): MUT_ROW (pub drops s Q), MUT_SLOT (every x at slot 0), MUT_EARLY (retire on issue),
+// MUT_XRS (an XR hit reads the previous load's slot), MUT_B8E (BW8: a fragment emits before its last wave lands).
 // B2 (+define+NCL=4): NCL cluster engines of NSM/NCL SMs each (strap sm_base = c NSM/NCL), each with its own x loader
 // and record-pipelined pub on the VM; every record goes to all clusters (accepted when all are ready) and retires when
 // the last cluster retires it.  Real SMs 0/1 sit in cluster 0; x writes of clusters > 0 reach shadows only.
@@ -31,6 +32,16 @@ module tb_hgi_smmv_tput;
     localparam integer ME = 1;
 `else
     localparam integer ME = 0;
+`endif
+`ifdef MUT_B8E
+    localparam integer MB8E = 1;
+`else
+    localparam integer MB8E = 0;
+`endif
+`ifdef MUT_XRS
+    localparam integer MXR = 1;
+`else
+    localparam integer MXR = 0;
 `endif
 `ifndef WIN
 `define WIN 4
@@ -116,7 +127,7 @@ module tb_hgi_smmv_tput;
         wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
         wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q; wire [6:0] x_xb;
         wire l_en; wire [6:0] l_addr, l_grp; wire [2047:0] l_data;
-        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
+        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .MUT_XRS(MXR), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
             .rec_v(rec_v && rec_rdy), .rec_rdy(c_rdy[cl]),
             .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
             .rec_n_b(cur[937:917]), .rec_done(c_done[cl]), .rec_fault(c_fault[cl]), .halted(c_halt[cl]), .x_v(x_v), .x_rdy(x_rdy),
@@ -126,7 +137,7 @@ module tb_hgi_smmv_tput;
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
             .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]), .sm_cr(rv[cl*NSL +: NSL]));
         wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
-        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
             .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
             .x_fault(x_fault), .xw_en(l_en), .xw_addr(l_addr), .xw_grp(l_grp), .xw_data(l_data),
             .vmq(xq[cl*NXC*338 +: NXC*338]), .vmr(xr[cl*NXC*274 +: NXC*274]),
@@ -261,17 +272,17 @@ module tb_hgi_smmv_tput;
         end
     endtask
     // per-record trace of cluster 0
-    integer nxp = 0, nip = 0, npd = 0, xlq [0:NREC-1], xlh = 0, xlt = 0; reg [2:0] xp_q = 0, ip_q = 0;
+    integer nxp = 0, nip = 0, npd = 0, xlq [0:NREC-1], xlh = 0, xlt = 0; reg [7:0] xp_q = 0, ip_q = 0; reg ld_q = 0;
     initial for (integer z = 0; z < NREC; z = z + 1) begin xi_c[z] = -1; xd_c[z] = -1; is_c[z] = -1; a0_c[z] = -1; pd_c[z] = -1; end
     always @(posedge clk) if (rst_n) begin
-        xp_q <= g_cl[0].u_a.xp; ip_q <= g_cl[0].u_a.ip;
-        if (g_cl[0].u_a.xp != xp_q && nxp < NREC) begin
+        xp_q <= 8'(g_cl[0].u_a.xp); ip_q <= 8'(g_cl[0].u_a.ip); ld_q <= g_cl[0].u_a.x_ld_go;
+        if (8'(g_cl[0].u_a.xp) != xp_q && nxp < NREC) begin
             xi_c[nxp] = cyc;
-            if (g_cl[0].x_v) begin xlq[xlt] = nxp; xlt = xlt + 1; end else xd_c[nxp] = cyc;   // load / XR hit
+            if (ld_q) begin xlq[xlt] = nxp; xlt = xlt + 1; end else xd_c[nxp] = cyc;   // load / XR hit
             nxp = nxp + 1;
         end
         if (g_cl[0].x_done && xlh < xlt) begin xd_c[xlq[xlh]] = cyc; xlh = xlh + 1; end
-        if (g_cl[0].u_a.ip != ip_q && nip < NREC) begin is_c[nip] = cyc; nip = nip + 1; end
+        if (8'(g_cl[0].u_a.ip) != ip_q && nip < NREC) begin is_c[nip] = cyc; nip = nip + 1; end
         if (g_cl[0].pub_done && npd < NREC) begin pd_c[npd] = cyc; npd = npd + 1; end
     end
     integer j, t, k, nf, r, prev_ret, busy_sum;
