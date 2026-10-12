@@ -24,6 +24,15 @@ import dsrom_s81_fulldie as S  # noqa: E402
 
 CLK_NAMES = ('ck', 'clk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
 K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=32.0, su=10.0, ho=15.0))
+# s81-die-iter 2026-10-12 (FF hold -103.7 ps, r4f: hco_SW -> xsco_SW): a glue master whose input register sits beside
+# a closed block's boundary output flops (a few um of wire) gets a hold pad INSIDE the master: a delay chain between the
+# input pin and its capture register, sized at FF and costing PAD_SCALE x at TT / SS (ASAP7 BUF chains, as
+# tools/hbm_die_relay_sta.py).  The SEL_XSTG crossing stage is always placed beside its end block (beside_blk; the
+# hco_SW m2l block's boundary flops ride an ~80 ps branch vs its 152 ps mean, + 50 ps die hold uncertainty), so its
+# write-side input `i` (captured by `cw`, the end block's clock -- not `ck`) carries a 120 ps FF pad: -103.7 -> ~+16 ps.
+# {master prefix: {input pin: (related clock pin, FF pad ps)}}; outputs not listed stay on the master's first clock.
+PAD_SCALE = dict(ff=1.0, tt=1.4, ss=1.9)
+INPUT_PAD = {'dsfd_xstg': {'i': ('cw', 120.0)}}
 # owner option B (2026-10-07): die setup at TT, hold at FF, SS as sensitivity.  TT planned clock arrival = mean of the
 # CTS-validated SS and FF insertions (the plan's CTS ran SS / FF libraries only): an estimate, marked in kit.json
 
@@ -422,8 +431,10 @@ def interim_lib(cells, corner):
             if p == ck or (d == 'input' and p in CLK_NAMES):     # every clock pin of a multi-clock glue master
                 body.append('   clock : true;')
             elif ck and d == 'input':
-                for tt, v in (('setup_rising', k['su']), ('hold_rising', k['ho'])):
-                    body.append(f'   timing () {{ related_pin : "{ck}"; timing_type : {tt}; '
+                pad_ = next((v_[p] for m_, v_ in INPUT_PAD.items() if name.startswith(m_) and p in v_), None)
+                rck, pps = (pad_[0] if pad_[0] in ports else ck, pad_[1]) if pad_ else (ck, 0.0)
+                for tt, v in (('setup_rising', k['su'] + pps * PAD_SCALE[corner]), ('hold_rising', k['ho'] - pps)):
+                    body.append(f'   timing () {{ related_pin : "{rck}"; timing_type : {tt}; '
                                 f'rise_constraint (scalar) {{ values ("{v}"); }} fall_constraint (scalar) {{ values ("{v}"); }} }}')
             elif ck and d == 'output':
                 body.append(f'   timing () {{ related_pin : "{ck}"; timing_type : rising_edge; '
