@@ -51,6 +51,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | parameters on hard children | gate `rtl` check: `#()` on a hard child outside `ifndef <hard_define>` FAILs |
 | missing TT/FF/SS libs | export writes ss/ff/tt; gate + child_lint (d) |
 | child clock insertion not in its view | export: write_timing_model clock-tree arcs + `insertion.json` (ck_insertion.py, routed); child_lint (g) |
+| cluster skew between parent flops and hard tiles (ds-vm be hold -532 ps; attention halves 1,634 ps leaf spread) | clusters: the pre-placed balanced clock spine (physical/common_flow/clock_spine.tcl, c11a6e02a) replaces TritonCTS by default (`"clock": "cts"` opts out); each leaf's target adds the hard child's own TT-lib clock insertion, so flops inside the children balance against the cluster's flops; `--cts` reports the final leaf spread. Leaf tiles keep local TritonCTS |
 | forwarded-clock subtree hook missing | `forwarded_clock: true` composes forwarded_subtree.tcl into PRE_CTS |
 | route script default overriding the kit's layers | ref_route.sh passes the kit's explicit `RLAYERS`; nothing else sets routing layers |
 | macro clock pins on unbuffered wires | loop default macro_cts_cluster.tcl (shipped; the remote gate ships it too) |

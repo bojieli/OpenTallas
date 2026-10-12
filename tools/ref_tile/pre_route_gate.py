@@ -297,6 +297,7 @@ grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/nul
 if [ "{CTS}" = 1 ]; then
   docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
   grep -h "\[ERROR" $R/cts.log | head -3 | sed 's/^/GATE_CTSERR /'
+  grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   python3 tools/closure_loop/ck_insertion.py --base $B --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+json.dumps({{k:v for k,v in d.items() if k in ('corners','boundary','all','macro_clk','summary')}})[:3000])" 2>/dev/null
   docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
@@ -401,6 +402,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         ck = re.search(r"^GATE_CK (.*)$", out, re.M)
         g.add("INFO" if ck else "WARN", "cts_calibration", (ck.group(1)[:900] if ck else
               f"CTS rc={kv.get('GATE_CTS_RC')} ck_insertion rc={kv.get('GATE_CK_RC')}"))
+        for line in re.findall(r"^GATE_SPINE (.*)$", out, re.M):
+            g.add("INFO", "clock_spine", line[:300])
         for line in re.findall(r"^GATE_PC (.*)$", out, re.M):
             g.add("INFO", "path_classes", line)
 

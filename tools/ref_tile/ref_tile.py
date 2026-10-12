@@ -456,11 +456,60 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + io)
 
 
+def child_insertions(s: dict) -> dict:
+    """{child master: clock-pin insertion ps} from each hard child's TT lib (max_clock_tree_path), 0 when absent"""
+    out = {}
+    for ch in s["children"]:
+        v = ch["view"]
+        p = ROOT / v / f"{view_name(v)}_tt.lib"
+        ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+        vals = [x["max_ps"] for x in ins.values() if x]
+        out[view_name(v)] = round(max(vals), 1) if vals else 0.0
+    return out
+
+
+SPINE_INS = """# ref_tile cluster clock: the pre-placed balanced clock SPINE (physical/common_flow/clock_spine.tcl, el1011-hbm-attn
+# c11a6e02a: attention halves leaf spread 1,634 -> 24 ps; idx w8 cluster 518 ps skew) replaces TritonCTS for the cluster
+# clock.  Leaf target = arrival at the sink pin PLUS the hard child's own clock insertion (its TT lib max_clock_tree_path),
+# so the spine balances the flops INSIDE the children against the cluster's own flops (CLOCK LATENCY ACROSS THE HIERARCHY).
+set ::ot_ref_child_ins [dict create {ins}]
+proc ot_sp_leaf_arrivals {{}} {{
+  estimate_parasitics -placement
+  sta::find_timing_paths -path_delay max -group_path_count 1
+  set a [dict create]
+  dict for {{n net}} $::ot_sp_leafnet {{
+    set v 0.0
+    foreach pin [get_pins -quiet -of_objects [get_nets -quiet [$net getName]] -filter "direction==input"] {{
+      set x [get_property $pin arrival_max_rise]
+      if {{$x eq "" || $x eq "INF" || $x eq "-INF"}} continue
+      set c [get_cells -quiet -of_objects $pin]
+      if {{[llength $c]}} {{
+        set m [get_property $c ref_name]
+        if {{[dict exists $::ot_ref_child_ins $m]}} {{ set x [expr {{$x + [dict get $::ot_ref_child_ins $m]}}] }}
+      }}
+      if {{$x > $v}} {{ set v $x }}
+    }}
+    dict set a $n $v
+  }}
+  return $a
+}}
+puts "REF_TILE spine: child insertion targets $::ot_ref_child_ins"
+"""
+
+
 def gen_hooks(s: dict, kd: str) -> dict:
     fwd = bool(s.get("forwarded_clock"))
+    spine = s["kind"] == "cluster" and s.get("clock", "spine") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
-               + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else ""),
-               f"source /src/{QDM}/pre_cts_skew.tcl"]
+               + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
+               + ("; cluster: balanced clock spine with child-insertion leaf targets (sourced FIRST, so the io_ref wrapper"
+                  " below wraps it)" if spine else "")]
+    files = {}
+    if spine:
+        pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
+        ins = child_insertions(s)
+        files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())))
+    pre_cts.append(f"source /src/{QDM}/pre_cts_skew.tcl")
     if fwd:
         pre_cts.append("source /src/physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
@@ -471,7 +520,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"]
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
-            "post_drt.tcl": "\n".join(post_drt) + "\n"}
+            "post_drt.tcl": "\n".join(post_drt) + "\n", **files}
 
 
 def shq(v: str) -> str:
@@ -493,6 +542,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--orfs-var MACRO_PLACEMENT_TCL=/src/{kd}/place.tcl")
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
         extra.append(f"--macro-place-halo {HALO_UM} {HALO_UM}")
+    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+        extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -514,6 +565,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
+    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+        out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
