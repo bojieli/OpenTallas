@@ -5,10 +5,10 @@
 // fill enable).  A wrapper, not --param: yosys 0.68 asserts on a re-processed parameterised ctlm_i top (kit note).
 // Same ports, same pins as ot_qfd_tt_ctlm_i (module defaults DCU_M = DUC_M = 2, XW 24, IS = OS = 1).
 module ot_qfd_tt_ctlm_i_fpm #(
-    parameter integer MEREG = 1,   // el1011-q-seq: registered engine clock enable (me_mem_ok 2 edges ahead)
+    parameter integer MEREG = 3,   // el1011-q-seq: registered REGIONAL engine clock enable (me_mem_ok 3 edges ahead; engine wakes +1)
     parameter integer RRG = 1,     // el1011-q-seq: replicated tile reset
     parameter integer PCUT = 1,    // el1011-q-seq: exact controller path cuts
-    parameter integer AUD = 1      // el1011-q-seq: textbook-audit rebuild (no x_addr, SRAM tag delays, kv pin flops)
+    parameter integer AUD = 55     // el1011-q-seq: textbook-audit rebuild (no x_addr, SRAM tag delays, kv pin flops)
 ) (
     input  wire clk, input wire rst_n,
     // token start, program writes (the program-store copy), the SU snapshot, KV / supply readiness

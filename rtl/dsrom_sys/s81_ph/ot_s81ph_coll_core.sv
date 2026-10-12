@@ -87,7 +87,12 @@ module ot_s81ph_coll_core #(
     // register has consumed 1 cycle after it; a reduce pop needs the gather beat accepted (g_stall), as before.
     parameter integer EPSL = 1,
     parameter integer ELQW = 1,
-    parameter integer ORX = 0
+    parameter integer ORX = 0,
+    // ORC (el1011-ds-coll 2026-10-11, default 0): output-credit reservation for reduce words (OQX only).  Reduce words
+    // reach the output unthrottled, so a slowly draining VM overflowed the remote queue (wrong results at 1-in-8 take).
+    // w_r = reduce words popped by the engine and not yet emitted; every push other than a reduce emit and every reduce
+    // pop (engine red_hold) needs ok2 = (cred - w_r) >= 2 (registered from the next values), so cred - w_r >= 0 always.
+    parameter integer ORC = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -218,12 +223,13 @@ module ot_s81ph_coll_core #(
     wire [3:1]    sk_flt_v;
     wire          o_v, o_last, o_err; wire [1:0] o_rank; wire [4*FW-1:0] o_d;
     wire          o_red; wire [FW-1:0] o_rdat; wire [4*FW-1:0] o_gdat;
+    wire          e_rhold, e_rpop;
     reg           o_rdy;
     wire          e_flt; wire [2:0] e_code;
     assign q_pop[0] = e_iv && e_ir;
     ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(0), .LANES(16), .TAGW(TAGW),
         .DEPTH(EDEPTH), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1),
-        .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW)) u_eng (
+        .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
         .clk(clk), .rst_n(erst_n),
         .in_valid(e_iv), .in_ready(e_ir), .in_data(q_hd[0][FW-1:0]), .in_last(q_hd[0][W+33]),
         .in_mode(q_hd[0][W+32]), .in_tag(q_hd[0][W +: TAGW]),
@@ -231,7 +237,8 @@ module ot_s81ph_coll_core #(
         .rx_valid(rx_valid), .rx_rec(rx_rec_f), .cr_out(cr_out),
         .rl_tx_valid(), .rl_tx_rec(), .rl_rx_valid(4'd0), .rl_rx_rec({4*PW{1'b0}}),
         .out_valid(o_v), .out_ready(o_rdy), .out_data(o_d), .out_last(o_last), .out_rank(o_rank), .out_err(o_err),
-        .out_red(o_red), .out_rdat(o_rdat), .out_gdat(o_gdat),
+        .out_red(o_red), .out_rdat(o_rdat), .out_gdat(o_gdat), .red_hold(e_rhold), .out_rpop(e_rpop),
+        .xl_v(8'd0), .xl_d({8*PW{1'b0}}), .xl_cr(),
         .fault(e_flt), .fault_code(e_code));
     assign tx_ready[0] = 1'b1;
     assign cr_in[1:0] = 2'b00;
@@ -418,15 +425,36 @@ module ot_s81ph_coll_core #(
                 bw_v <= oq_push;
             end
         always @(posedge clk) bw_d <= b_word;
-        assign oq_room2 = cred >= 8'sd2;
+        if (ORC != 0) begin : g_orc
+            reg [7:0] w_r; reg ok2;
+            wire [7:0] w_nx = w_r + (e_rpop ? 8'd1 : 8'd0) - (pk_emit ? {5'd0, pk_n} : 8'd0);
+            wire signed [8:0] c_nx = cred - (oq_push ? 9'sd1 : 9'sd0) + (bw_cr ? 9'sd1 : 9'sd0);
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin w_r <= 8'd0; ok2 <= 1'b1; end
+                else begin
+                    w_r <= w_nx;
+`ifdef OT_S81PH_MUT_ORC
+                    ok2 <= c_nx >= 9'sd2;                                   // negative control: no reservation
+`else
+                    ok2 <= (c_nx - $signed({1'b0, w_nx})) >= 9'sd2;
+`endif
+                end
+            assign oq_room2 = ok2;
+            assign e_rhold = !ok2;
+        end else begin : g_norc
+            assign oq_room2 = cred >= 8'sd2;
+            assign e_rhold = 1'b0;
+        end
         assign oq_hv = 1'b0;
         assign oq_hd = {2099{1'b0}};
         assign oq_flt = bw_flt;
     end else if (OQPIPE == 0) begin : g_oq0
+        assign e_rhold = 1'b0;
         always @(*) begin bw_v = 1'b0; bw_d = {2099{1'b0}}; end
         ot_s81ph_rfifo #(.W(2099), .D(4)) u_oq (.clk(clk), .rst_n(rst_n), .push(oq_push), .wd(b_word),
             .pop(oq_hv && ts[0]), .hv(oq_hv), .hd(oq_hd), .room(), .room2(oq_room2), .fault(oq_flt));
     end else begin : g_oqp
+        assign e_rhold = 1'b0;
         always @(*) begin bw_v = 1'b0; bw_d = {2099{1'b0}}; end
         localparam integer OSW = 256, ONS = (2099 + OSW - 1) / OSW;     // 9 queue slices (the last one 51 b)
         reg  [2099:1]  wq;                                              // registered packer word

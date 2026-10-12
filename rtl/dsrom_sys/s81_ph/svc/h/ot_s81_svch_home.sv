@@ -25,7 +25,7 @@ module ot_s81_svch_home #(
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter integer P = 8,
-    parameter integer NG = 12,
+    parameter integer NG = 13,
     parameter integer DRB = 64,
     parameter integer DW0 = 22, DW1 = 14, DW2 = 4, DW3 = 14,     // per-destination credit-lane depths (2 NR + 4)
     parameter bit SRAM_MACRO = 0
@@ -83,6 +83,11 @@ module ot_s81_svch_home #(
     output wire                 pv_r,
     input  wire [512:0]         pv_d,
     input  wire                 qfault,        // any quadrant / combine / lane fault (registered, relayed)
+    // per-stack host writes (dsfd_host_sd hw<s> without v: {cls 2, we, addr 32, d 256}) and their completions
+    input  wire                 hw_v,
+    input  wire [290:0]         hw_d,
+    output reg                  hc_cr,
+    output reg  [7:0]           hc_ack,
     // results
     output reg                  a0_v,
     output reg  [511:0]         a0_d,
@@ -232,6 +237,39 @@ module ot_s81_svch_home #(
     reg b_ovf;
     always @(posedge clk or negedge rst_n) if (!rst_n) b_ovf <= 0; else if (|b_ovfv) b_ovf <= 1'b1;
 
+    // ---------------- host writes (dsfd_host_sd contract: SCRED 8 credits, one cr pulse per word taken) ----------------
+    // KV (cls 0) / RoPE (cls 1) sector writes -> HBM sector addr[29:0] of this stack through G port 12 (the PHY map picks
+    // the PC); markers (addr ffffffff) are consumed without a write and without an ack; Engram (cls 2) / reserved class /
+    // a read (we 0) is a sticky fault, dropped.  ack = this cycle's completed host sector writes (wd of port 12).
+    localparam integer HQD = 16;
+    reg [290:0] hq [0:HQD-1]; reg [4:0] hqw, hqr; reg h_ovf, h_bad;
+    wire hq_v = hqw != hqr;
+    wire [290:0] hq_d = hq[hqr[3:0]];
+    wire hq_mark = hq_d[287:256] == 32'hffffffff;
+    wire hq_sec = hq_d[288] && hq_d[290:289] < 2'd2 && !hq_mark;
+    wire hq_pop = hq_v && (hq_sec ? (p_v[12] && p_rdy[12]) : 1'b1);
+    always @(posedge clk) if (hw_v) hq[hqw[3:0]] <= hw_d;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin hqw <= 0; hqr <= 0; h_ovf <= 0; h_bad <= 0; hc_cr <= 0; end
+        else begin
+            if (hw_v) begin hqw <= hqw + 1'b1; if (hqw - hqr >= 5'(HQD)) h_ovf <= 1'b1; end
+            if (hq_pop) hqr <= hqr + 1'b1;
+            if (hq_pop && !hq_sec && !(hq_mark && hq_d[288] && hq_d[290:289] < 2'd2)) h_bad <= 1'b1;
+            hc_cr <= hq_pop;
+        end
+    reg [2:0] hk_add; integer hk_n;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin hc_ack <= 0; hk_n = 0; end
+        else begin
+            hk_add = 3'(gwd[12]) + 3'(gwd[NG + 12]) + 3'(gwd[2*NG + 12]) + 3'(gwd[3*NG + 12]);
+`ifdef SVCH_MUT_HACK
+            hk_n = hk_n + 32'(hk_add);
+            hc_ack <= (hk_add != 0 && hk_n % 7 == 0) ? 8'(hk_add) - 8'd1 : 8'(hk_add);   // MUTANT: every 7th ack lost
+`else
+            hc_ack <= 8'(hk_add);
+`endif
+        end
+
     // ---------------- G router: per-port registered slots -> per-quadrant round robin ----------------
     reg [NG-1:0] sl_v;
     reg [343:0] sl_d [0:NG-1];
@@ -246,10 +284,15 @@ module ot_s81_svch_home #(
             assign a0 = wm_addr[gk*HAW +: HAW]; assign ln = wm_len[gk*4 +: 4]; assign we = wm_we[gk];
             assign tg = wm_tag[gk*12 +: 12]; assign stb = wm_wstrb[gk*32 +: 32]; assign wdat = wm_wdata[gk*256 +: 256];
             assign p_v[gk] = wm_v[gk];
-        end else begin : g_f
+        end else if (gk < 12) begin : g_f
             assign a0 = f_maddr[(gk-4)*HAW +: HAW]; assign ln = 4'd1; assign we = 1'b0;
             assign tg = 12'(f_mtag[(gk-4)*FTAGW +: FTAGW]); assign stb = 32'd0; assign wdat = 256'd0;
             assign p_v[gk] = f_mv[gk-4];
+        end else begin : g_h
+            // port 12: host sector writes (one 32-B sector, all bytes)
+            assign a0 = hq_d[285:256]; assign ln = 4'd1; assign we = 1'b1;
+            assign tg = 12'd0; assign stb = 32'hffffffff; assign wdat = hq_d[255:0];
+            assign p_v[gk] = hq_v && hq_sec;
         end
         wire [HAW-1:0] al = a0 + HAW'(ln) - 1'b1;
         assign p_bad[gk] = !we && (ln == 0 || pc_of(al) != pc_of(a0) || (a0 >> 2) != (al >> 2));
@@ -257,7 +300,7 @@ module ot_s81_svch_home #(
     end endgenerate
     wire [NG-1:0] p_rdy = ~sl_v | taken;
     assign wm_rdy = p_rdy[3:0];
-    assign f_mrdy = p_rdy[NG-1:4];
+    assign f_mrdy = p_rdy[11:4];
     reg [3:0] grr [0:3];
     reg [3:0] gsel_v; reg [3:0] gsel [0:3];
     integer d, s;
@@ -322,7 +365,7 @@ module ot_s81_svch_home #(
         if (gk < 4) begin : g_w
             assign ws_v[gk] = po_v[gk]; assign ws_tag[gk*12 +: 12] = po_d[gk][271:260];
             assign ws_beat[gk*4 +: 4] = po_d[gk][259:256]; assign ws_data[gk*256 +: 256] = po_d[gk][255:0];
-        end else begin : g_f
+        end else if (gk < 12) begin : g_f
             assign f_sv[gk-4] = po_v[gk]; assign f_stag[(gk-4)*FTAGW +: FTAGW] = po_d[gk][260 +: FTAGW];
             assign f_sbeat[(gk-4)*4 +: 4] = po_d[gk][259:256]; assign f_sdata[(gk-4)*256 +: 256] = po_d[gk][255:0];
         end
@@ -342,7 +385,7 @@ module ot_s81_svch_home #(
     reg gwd_bad;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) gwd_bad <= 0;
-        else for (k = 4; k < NG; k = k + 1) if (gwd[k] | gwd[NG + k] | gwd[2*NG + k] | gwd[3*NG + k]) gwd_bad <= 1'b1;
+        else for (k = 4; k < 12; k = k + 1) if (gwd[k] | gwd[NG + k] | gwd[2*NG + k] | gwd[3*NG + k]) gwd_bad <= 1'b1;
 
     // ---------------- result emitter (ot_s81_svcq_attn's, re-plumbed) ----------------
     localparam integer SCB = 2132;
@@ -440,6 +483,6 @@ module ot_s81_svch_home #(
         end
     end
     wire [3:0] fflt = {f_fault, w_fault, bq_ovf, w_fmt_bad};
-    assign fault_code = {6'd0, emit_flt, gwd_bad, |grx_ovf, b_ovf, g_bad, f_fc, w_fc, fflt, 8'd0};
+    assign fault_code = {4'd0, h_ovf, h_bad, emit_flt, gwd_bad, |grx_ovf, b_ovf, g_bad, f_fc, w_fc, fflt, 8'd0};
     assign fault = |fault_code;
 endmodule
