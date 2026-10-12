@@ -59,8 +59,8 @@
  "job": {
   "owner": "Claude:el1011-s81su",
   "branch": "claude/el1011-s81su",
-  "tag": "v1",
-  "purpose": "el1011-s81su PHYSICAL SPEC QB v3: ot_s81_su_qbt, the QB down-spine tap (pin flops + registered 16-row rotation to the 8 engines); reference tile flow",
+  "tag": "v2",
+  "purpose": "el1011-s81su PHYSICAL SPEC QB v3b: ot_s81_su_qbt, the QB down-spine tap, aligned at the source (S_RD == L): one 8,192 b data register + tags/obase to the 8 engines, no rotation/hold (~8.45k flops); outline pin-bound (8,192 + 8,192 data pins on 4 edges ~11 pins/um), util WARN accepted; reference tile flow",
   "no_bench_reason": "bit-exactness is gated on the slab dsfd_sp_su_h (tools/s81_suhc/su_gate.py --hier full m0 PASS + m1/m5 FAIL, reduced m0 PASS + mutants FAIL; el1011-s81-suhc-hier-1011.log [su]); the sub-tile alone has no golden",
   "views_to": "physical/ref_tile/s81su_qbt_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_qbt_ref"
