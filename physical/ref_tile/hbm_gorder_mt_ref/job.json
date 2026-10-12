@@ -1,5 +1,5 @@
 {
- "name": "hbm_gorder_mt_ref-v1-COMMIT",
+ "name": "hbm_gorder_mt_ref-v1-23c517d1e",
  "block": "ot_hbm_index_global_order_mt",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-tputx/tputx-gord",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-hbm-tputx-gord",
-  "commit": "COMMIT",
+  "commit": "23c517d1e",
   "extra_paths": [
    "physical/struct_close/regbound",
    "physical/strip_protect",
@@ -120,7 +120,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_gorder_mt_ref/hbm_gorder_mt_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_gorder_mt_ref/hbm_gorder_mt_ref-v1-23c517d1e"
   }
  ],
  "cycles_added": 0,
