@@ -776,6 +776,85 @@ def emit_tile_xl(p):
 endmodule''')
     return s
 
+
+def emit_hub(P):
+    """conservative-1011 TWO-LEVEL (owner 10-11 21:00): hfd_hc_hub = the quarter's band glue as its own hard element.
+    One clock, every boundary registered: die-face pin flops fi <= f_sfu, the per-chain 7-way XOR broadcast fold with the
+    chain's head rotation into out-flops hb<c> (bit LB = synchronised reset), head accumulators hq<c> -> pin flops ->
+    t_sfu out-flops.  The die places it at the port band; band <-> chain-head relays are die-level seams."""
+    LB, KC, WCT = P.LB, P.KC, P.WCT
+    (pn, W), = P.din_m
+    (po, WO_), = P.dout_m
+    L_ = ['// tools/hbm_hub_quarter_gen.py --hub: hfd_hc_hub (band glue of the tiled hfd_hc quarter, conservative-1011)',
+          '`timescale 1ns/1ps', 'module hfd_hc_hub (', '    input  wire clk,', '    input  wire rst,',
+          f'    input  wire [{W - 1}:0] {pn},', f'    output wire [{WO_ - 1}:0] {po},']
+    L_ += [f'    output wire [{LB}:0] hb{c},' for c in range(KC)]
+    L_ += [f'    input  wire [{WCT - 1}:0] hq{c}' + (',' if c < KC - 1 else '') for c in range(KC)]
+    L_ += [');', '    (* keep *) reg [1:0] rst_q;  always @(posedge clk) rst_q <= {rst_q[0], rst};',
+           f'    (* keep *) reg [{W - 1}:0] fi;  always @(posedge clk) fi <= {pn};',
+           f'    wire [{LB}:0] bsrc;', '    assign bsrc[%d] = rst_q[1];' % LB]
+    fold = {}
+    for u in range(W):
+        fold.setdefault(u % LB, []).append(f'fi[{u}]')
+    for t in range(LB):
+        L_.append(f'    assign bsrc[{t}] = ' + (' ^ '.join(fold.get(t, [])) or "1'b0") + ';')
+    for c in range(KC):
+        rc_ = (11 * c) % LB
+        e = (f'{{bsrc[{LB}], bsrc[{LB - 1 - rc_}:0], bsrc[{LB - 1}:{LB - rc_}]}}' if rc_ else 'bsrc')
+        L_.append(f'    wire [{LB}:0] hs{c} = {e};')
+        mut = (f'\n`ifdef OT_HC_HUB_MUT\n    always @(posedge clk) hbr{c} <= {{hs{c}[{LB}:1], ~hs{c}[0]}};   // MUTANT: chain {c} fold bit 0 inverted\n`else\n'
+               if c == 1 else '\n')
+        L_.append(f'    (* keep *) reg [{LB}:0] hbr{c};{mut}    always @(posedge clk) hbr{c} <= hs{c};' + ('\n`endif' if c == 1 else ''))
+        L_.append(f'    assign hb{c} = hbr{c};')
+    for c in range(KC):
+        L_.append(f'    (* keep *) reg [{WCT - 1}:0] hqi{c};  always @(posedge clk) hqi{c} <= hq{c};')
+    L_.append(f'    (* keep *) reg [{WO_ - 1}:0] to;  always @(posedge clk) to <= {{' + ', '.join(f'hqi{c}' for c in reversed(range(KC))) + '};')
+    L_ += [f'    assign {po} = to;', 'endmodule', '']
+    return '\n'.join(L_)
+
+
+def emit_hub_comp(P, quarter_rtl, neg=False):
+    """the hardened composition hfd_hc = hfd_hc_hub + die-level head relays (HR stages each way on the chain-head clock)
+    + the 88 tiles exactly as the die places them (tile lines taken from the quarter emission)."""
+    HR = max(1, getattr(P, 'head_relay', 0) or 3)
+    keep = [l for l in quarter_rtl.split('\n')
+            if re.match(r'^\s*(wire clk|wire \[\d+:0\] t[ab]_|assign ta_\d+_%d |hfd_hc_tile_xl |[a-z_]+ u_tile_)' % P.NT, l)]
+    head = quarter_rtl.split('\n')
+    i0 = next(i for i, l in enumerate(head) if l.startswith('module '))
+    i1 = next(i for i, l in enumerate(head) if l.startswith(');'))
+    hck = {}
+    for l in keep:
+        m = re.search(r'\.clk\((\w+)\), \.bc_in\(tb_(\d+)_0\)', l)
+        if m:
+            hck[int(m.group(2))] = m.group(1)
+    (pn, W), = P.din_m
+    (po, WO_), = P.dout_m
+    L_ = ['// tools/hbm_hub_quarter_gen.py --hub: hardened composition of hfd_hc (hub + die head relays + 88 tiles)',
+          '`timescale 1ns/1ps'] + head[i0:i1 + 1]
+    L_ += [l for l in keep if 'wire clk' in l]
+    L_ += [f'    wire [{P.LB}:0] hbo_{c}; wire [{P.WCT - 1}:0] hqo_{c};' for c in range(P.KC)]
+    band = 'clk4e' if 'wire clk4e' in quarter_rtl else hck[0]
+    L_.append(f'    hfd_hc_hub u_hub (.clk({band}), .rst(rst[0]), .{pn}({pn}), .{po}({po}), '
+              + ', '.join(f'.hb{c}(hbo_{c})' for c in range(P.KC)) + ', ' + ', '.join(f'.hq{c}(hqo_{c})' for c in range(P.KC)) + ');')
+    L_ += [l for l in keep if 'wire clk' not in l and 'u_tile_' not in l]
+    for c in range(P.KC):
+        hc = hck[c]
+        for s2 in range(HR):
+            src = f'hbo_{c}' if s2 == 0 else f'hb_{c}_{s2 - 1}'
+            L_.append(f'    (* keep *) reg [{P.LB}:0] hb_{c}_{s2};  always @(posedge {hc}) hb_{c}_{s2} <= {src};   // die seam relay')
+        last = f'hb_{c}_{HR - 1}'
+        if neg and c == 0:
+            L_.append(f'    assign tb_{c}_0 = {{{last}[{P.LB}:1], ~{last}[0]}};   // NEGATIVE CONTROL')
+        else:
+            L_.append(f'    assign tb_{c}_0 = {last};')
+        for s2 in range(HR):
+            src = f'ta_{c}_0' if s2 == 0 else f'hq_{c}_{s2 - 1}'
+            L_.append(f'    (* keep *) reg [{P.WCT - 1}:0] hq_{c}_{s2};  always @(posedge {hc}) hq_{c}_{s2} <= {src};   // die seam relay')
+        L_.append(f'    assign hqo_{c} = hq_{c}_{HR - 1};')
+    L_ += [l for l in keep if 'u_tile_' in l]
+    L_ += ['endmodule', '']
+    return '\n'.join(L_)
+
 def emit_stub(P):
     """simulation stand-in of the lane (same module name / ports): registered fixed bit function of its inputs."""
     q = P.q
@@ -985,6 +1064,7 @@ def main():
                     'registers), no standard-cell sea in the channels (hbm-forks 2026-10-10)')
     ap.add_argument('--tile-master', help='--tiled: the hardened tile master (default hfd_su_tile[_xl]); conservative-1011: hfd_hc_tile_xl')
     ap.add_argument('--tile-grid', nargs=2, type=int, metavar=('ROWS', 'COLS'), help='--tiled: grid_place (one row per clock segment, serpentine chains)')
+    ap.add_argument('--hub', help='--tiled: conservative-1011 TWO-LEVEL: also write hfd_hc_hub + its hardened composition (hub + die head relays + tiles) into this dir')
     ap.add_argument('--head-relay', type=int, default=0, help='--tiled: conservative-1011 per-chain head relay: N registered stages on the '
                     'chain root between the band and each chain head, both directions (textbook class 4: band -> head up to ~0.8 mm)')
     ap.add_argument('--tile-pitch-x', type=float, help='--tile-grid: column pitch um (default tile + 20.4)')
@@ -1068,6 +1148,15 @@ def main():
                                                       lane=q['lane'], lane_xy=[TILE_SW, TILE_LANE_Y], LB=P.LB, WCT=P.WCT,
                                                       RB=P.RB, RA=P.RA, LO=P.LO), indent=1) + '\n')
     (out / f'tb_{m}.sv').write_text(emit_tb(P, a.nvec, a.seed, out, cg=a.cg))
+    if a.tiled and a.hub:
+        hd_ = Path(a.hub)
+        hd_.mkdir(parents=True, exist_ok=True)
+        (hd_ / 'hfd_hc_hub.sv').write_text(emit_hub(P))
+        qr = emit_rtl(P, xroot=xr, cg=a.cg)
+        (hd_ / f'{m}.sv').write_text(emit_hub_comp(P, qr))
+        (hd_ / f'{m}_neg.sv').write_text(emit_hub_comp(P, qr, neg=True))
+        for f_ in ('tb_in.mem', 'tb_out.mem', f'tb_{m}.sv', f'{q["lane"]}_simstub.sv'):
+            (hd_ / f_).write_text((out / f_).read_text())
     if a.tiled:
         tiled_info = dict(head_relay=P.head_relay, tiles=P.N, chains=P.KC, tiles_per_chain=P.NT, acc_bits_per_chain=P.WCT,
                           flops_in_tiles=P.N * (P.LB + 1 + P.LO + P.WCT + ((P.LB + 1 + P.WCT) if xr else 0)),
