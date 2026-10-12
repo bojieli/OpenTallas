@@ -105,15 +105,31 @@ module ot_s81_su_hctl #(
     reg  [4:0]  rs_n, up_n;
     reg         rs_any;
     reg  [29:0] rs_pn;
+    // first-response descriptor select as a balanced binary tree (lower slot wins at every node): log2(S_RD) 2:1
+    // mux levels on the data and an OR tree on the selects.  Was a 16-deep priority ripple (rs_v[14] -> 13 AO/OA
+    // levels -> rs_pn, TT -57 ps in route dsfd_su_t_ctl_rt-rt-77e72f74a).  Same function: lowest set slot, 0 if none.
+    localparam integer SRP = (S_RD <= 1) ? 1 : (1 << $clog2(S_RD));
     always @(posedge clk) begin : acct
-        integer i;
+        integer i, w;
         reg [4:0] a, b;
         reg [29:0] f;
         reg any;
-        a = 0; b = 0; f = 0; any = 1'b0;
+        reg [29:0] tf [0:SRP-1];
+        reg        ta [0:SRP-1];
+        a = 0; b = 0;
         for (i = 0; i < S_RD; i = i + 1) a = a + rs_v[i];
         for (i = 0; i < S_WR; i = i + 1) b = b + up_v[i];
-        for (i = S_RD - 1; i >= 0; i = i - 1) if (rs_v[i]) begin f = rs_f[30 * i +: 30]; any = 1'b1; end
+        for (i = 0; i < SRP; i = i + 1) begin
+            tf[i] = (i < S_RD) ? rs_f[30 * i +: 30] : 30'd0;
+            ta[i] = (i < S_RD) ? rs_v[i] : 1'b0;
+        end
+        for (w = SRP; w > 1; w = w / 2)
+            for (i = 0; i < w / 2; i = i + 1) begin
+                tf[i] = ta[2 * i] ? tf[2 * i] : tf[2 * i + 1];
+                ta[i] = ta[2 * i] | ta[2 * i + 1];
+            end
+        any = ta[0];
+        f = any ? tf[0] : 30'd0;
         if (!rst_n || !rst_q) begin rs_n <= 0; up_n <= 0; rs_any <= 0; end
         else begin rs_n <= a; up_n <= b; rs_any <= any; end
         rs_pn <= f;

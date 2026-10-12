@@ -19,7 +19,7 @@
  "pg_layer": "M7",
  "children": [
   {
-   "view": "physical/ref_tile/hgi_topk_heap_rt_a/views/ot_hgi_topk_heap_tile",
+   "view": "physical/ref_tile/hgi_topk_heap_rt_b/views/ot_hgi_topk_heap_tile",
    "inst": "u_t0",
    "at": [
     43.2,
@@ -37,7 +37,7 @@
    "orient": "R0"
   },
   {
-   "view": "physical/ref_tile/hgi_topk_heap_rt_a/views/ot_hgi_topk_heap_tile",
+   "view": "physical/ref_tile/hgi_topk_heap_rt_b/views/ot_hgi_topk_heap_tile",
    "inst": "u_t1",
    "at": [
     345.59999999999997,
@@ -55,7 +55,7 @@
    "orient": "R0"
   },
   {
-   "view": "physical/ref_tile/hgi_topk_heap_rt_a/views/ot_hgi_topk_heap_tile",
+   "view": "physical/ref_tile/hgi_topk_heap_rt_b/views/ot_hgi_topk_heap_tile",
    "inst": "u_t2",
    "at": [
     648.0,
@@ -73,7 +73,7 @@
    "orient": "R0"
   },
   {
-   "view": "physical/ref_tile/hgi_topk_heap_rt_a/views/ot_hgi_topk_heap_tile",
+   "view": "physical/ref_tile/hgi_topk_heap_rt_b/views/ot_hgi_topk_heap_tile",
    "inst": "u_t3",
    "at": [
     950.4,
@@ -100,7 +100,7 @@
    "orient": "MX"
   },
   {
-   "view": "physical/ref_tile/hgi_topk_heap_rt_a/views/ot_hgi_topk_heap_tile",
+   "view": "physical/ref_tile/hgi_topk_heap_rt_b/views/ot_hgi_topk_heap_tile",
    "inst": "u_t4",
    "at": [
     43.2,
@@ -118,7 +118,7 @@
    "orient": "MX"
   },
   {
-   "view": "physical/ref_tile/hgi_topk_heap_rt_a/views/ot_hgi_topk_heap_tile",
+   "view": "physical/ref_tile/hgi_topk_heap_rt_b/views/ot_hgi_topk_heap_tile",
    "inst": "u_t5",
    "at": [
     345.59999999999997,
@@ -136,7 +136,7 @@
    "orient": "MX"
   },
   {
-   "view": "physical/ref_tile/hgi_topk_heap_rt_a/views/ot_hgi_topk_heap_tile",
+   "view": "physical/ref_tile/hgi_topk_heap_rt_b/views/ot_hgi_topk_heap_tile",
    "inst": "u_t6",
    "at": [
     648.0,
@@ -154,7 +154,7 @@
    "orient": "MX"
   },
   {
-   "view": "physical/ref_tile/hgi_topk_heap_rt_a/views/ot_hgi_topk_heap_tile",
+   "view": "physical/ref_tile/hgi_topk_heap_rt_b/views/ot_hgi_topk_heap_tile",
    "inst": "u_t7",
    "at": [
     950.4,
@@ -203,7 +203,7 @@
   "owner": "Claude:el1011-hbm-idx",
   "branch": "claude/el1011-hbm-idx",
   "tag": "w8s",
-  "purpose": "el1011-hbm-idx w8 split (textbook class 1: w8c-b-2b6959c44 23,739 glue flops on one root, spine insertion 1.9 ns, IO fails): hard cluster ot_hgi_idx_topk_w8_cluster = glue only (bfifos, wreg, F1/F2, relay stage 0, status/tournament/merge trees, per-lane merge credit FIFOs) + 16 hard children: 8 lane tiles (hgi_topk_lane_rt_a) + 8 heap tiles (hgi_topk_heap_rt_a), 4 columns of 302.4 um, S row R0 / N row MX, lane tile abutting its heap tile, glue in the 216-um centre band; 1296 x 1252.8",
+  "purpose": "el1011-hbm-idx w8 split (textbook class 1: w8c-b-2b6959c44 23,739 glue flops on one root, spine insertion 1.9 ns, IO fails): hard cluster ot_hgi_idx_topk_w8_cluster = glue only (bfifos, wreg, F1/F2, relay stage 0, status/tournament/merge trees, per-lane merge credit FIFOs) + 16 hard children: 8 lane tiles (hgi_topk_lane_rt_a) + 8 heap tiles (hgi_topk_heap_rt_b, 259.2 sq), 4 columns of 302.4 um, S row R0 / N row MX, lane tile abutting its heap tile, glue in the 216-um centre band; 1296 x 1252.8",
   "benches": [
    {
     "name": "heap_iw8w8_short_exact",
@@ -262,5 +262,6 @@
   ],
   "views_to": "physical/ref_tile/hgi_topk_w8c_rt_a/views",
   "record_to": "results/rtl/ref_tile/hgi_topk_w8c_rt_a"
- }
+ },
+ "hard_define": "OT_TOPK_TILE_HARD"
 }

@@ -2035,15 +2035,109 @@ def _gen_pg_lef(mst):
     return '\n'.join(L)
 
 
+IR_GUARD = 2           # IR window guard band, in VDD bump pitches (case_irm)
+PG_TILE = 43.2         # current-sink tile of a generated block in the IR model: 4 M7 PG pitches (10.8 um), < 1 bump pitch
+PDN_THIN_OFF = 0.5     # local die-M8 strap offset inside a thin block (its M7 stripes span 0.3 .. h-0.3)
+
+
+def pdn_thin_pitch(h, p8):
+    """Local die-M8 per-net pitch for a block of height h whose M7 stripes the die M8 lattice (per-net pitch p8) cannot
+    cross twice per net (span h-0.6 < 2 p8 + 0.48), else None.  Four straps (VDD,VSS,VDD,VSS) must fit in
+    [0.5, h-0.5]: 0.5 + 1.5 p + 0.48 <= h - 0.5; capped at p8 (never sparser than the die grid)."""
+    if h - 0.6 >= 2 * p8 + 0.48:
+        return None
+    p = math.floor((h - 1.48) / 1.5 / 0.008) * 0.008
+    if p < 2 * (0.48 + 0.24):
+        raise SystemExit(f'pdn_thin_pitch: block height {h} too thin for two M8 straps per net')
+    return round(min(p, p8), 3)
+
+
+def _lef_pg_m7(text):
+    """{macro: {'VDD'|'VSS': [(x0, y0, x1, y1)]}} of the M7 PG rects of a LEF (after _pg_only_m7)."""
+    out = {}
+    for mm in re.finditer(r'^MACRO (\S+)\n(.*?)^END \1', text, flags=re.S | re.M):
+        d = out.setdefault(mm.group(1), {})
+        for pm in re.finditer(r'  PIN (VDD|VSS)\n(.*?)\n  END \1', mm.group(2), flags=re.S):
+            cur = None
+            for line in pm.group(2).splitlines():
+                st = line.strip().rstrip(';').split()
+                if st and st[0] == 'LAYER':
+                    cur = st[1]
+                elif st and st[0] == 'RECT' and cur == 'M7':
+                    d.setdefault(pm.group(1), []).append(tuple(float(v) for v in st[1:5]))
+    return out
+
+
+def _pgt_lef(nm, tw, th, rects):
+    """A real abstract's PG current tile: SIZE tw x th, PG pins = the real M7 PG rects clipped to the tile."""
+    L = [f'MACRO {nm}', '  CLASS BLOCK ;', f'  FOREIGN {nm} 0 0 ;', f'  SIZE {tw:.3f} BY {th:.3f} ;', '  SYMMETRY X Y ;']
+    for net in ('VDD', 'VSS'):
+        L += [f'  PIN {net}', '    DIRECTION INOUT ;', f'    USE {"POWER" if net == "VDD" else "GROUND"} ;', '    PORT',
+              '      LAYER M7 ;']
+        L += [f'        RECT {a:.3f} {b:.3f} {c:.3f} {e:.3f} ;' for a, b, c, e in rects.get(net, [])]
+        L += ['    END', f'  END {net}']
+    return '\n'.join(L + [f'END {nm}', ''])
+
+
+def pg_tile_split(ins, power, M, keep=(), real_pg=None, pgt_lef=None):
+    """Every block larger than 1.5 PG_TILE as PG_TILE current tiles, each carrying its area share of the block power,
+    so PSM injects the block current over its area as the block's cells draw it (PSM puts an instance's whole current
+    on one node).  Generated blocks (incl. window clips): sub-tiles on the same M7 (or PG_M8 M8) lattice phase (tile
+    sides are multiples of 10.8 um).  Real abstracts in real_pg ({master: {net: M7 rects}}): the instance is replaced
+    by tiles whose PG pins are its own M7 PG rects clipped to the tile (LEF text into pgt_lef), placed through the
+    instance orientation -- the same metal, the current spread over it."""
+    out, pw = [], {}
+    real_pg = real_pg or {}
+
+    def cuts(L):
+        n = max(1, round(L / PG_TILE))
+        e = [0.0] + [round(k * PG_TILE, 3) for k in range(1, n)] + [L]
+        return [(a, round(b - a, 3)) for a, b in zip(e, e[1:])]
+    for it in ins:
+        real = it.master in REAL_FILES
+        if it.master in keep or (real and it.master not in real_pg) or (it.w <= 1.5 * PG_TILE and it.h <= 1.5 * PG_TILE):
+            out.append(it); pw[it.name] = power[it.name]; continue
+        base = it.master.split('_clip_')[0]
+        for i, (dx, tw) in enumerate(cuts(it.w)):
+            for j, (dy, th) in enumerate(cuts(it.h)):
+                if real:
+                    nm = f'{base}_pgt{i}_{j}'
+                    if nm not in M:
+                        rc = {net: [(max(a, dx) - dx, max(b, dy) - dy, min(c, dx + tw) - dx, min(e, dy + th) - dy)
+                                    for a, b, c, e in rr if min(c, dx + tw) - max(a, dx) > 0.05 and
+                                    min(e, dy + th) - max(b, dy) > 0.05] for net, rr in real_pg[it.master].items()}
+                        M[nm] = Q.Master(nm, tw, th, 'M7', 'PG current tile of real ' + base)
+                        pgt_lef[nm] = _pgt_lef(nm, tw, th, rc)
+                    px = it.x + (it.w - dx - tw if it.orient in ('MY', 'R180') else dx)
+                    py = it.y + (it.h - dy - th if it.orient in ('MX', 'R180') else dy)
+                else:
+                    nm = f'{base}_clip_t{round(tw * 1000)}x{round(th * 1000)}'
+                    if nm not in M:
+                        M[nm] = Q.Master(nm, tw, th, M[it.master].obs_top, 'PG current tile of ' + base)
+                    px, py = it.x + dx, it.y + dy
+                t = Inst(f'{it.name}__t{i}_{j}', nm, round(px, 3), round(py, 3), tw, th, it.orient, it.kind, it.region,
+                         it.domain)
+                out.append(t); pw[t.name] = power[it.name] * tw * th / (it.w * it.h)
+    return out, pw
+
+
 def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     """IR window with the REAL element abstracts: pdngen builds the bump-aligned M8/M9 die grid, connects it to the
     q element's and every generated abstract's M7 PG stripes (M7-M8 vias) and to the cfg ROMs' M4 rails through an
     M5 macro grid (M4-M5, M5-M8 via stacks); PSM solves the grid with each instance's power on its own pins."""
     work.mkdir(parents=True, exist_ok=True)
-    x0, y0, x1, y1 = windows(m)[window]
-    x0, y0 = max(0.0, dn(x0, GX)), max(0.0, dn(y0, GY))
-    W, H = round(x1 - x0, 3), round(y1 - y0, 3)
     vp = vdd_pitch or BUMP_PITCH / math.sqrt(0.5)
+    # guard band (el1012-s81pdn): the window is solved with IR_GUARD bump pitches of the surrounding die (its blocks,
+    # its bumps, its grid) on every side and judged on the inner window only.  Without it the window edge is an
+    # open boundary -- the first VSS bump column sits a full pitch (63.6 um) in from the cut, and the field's
+    # edge-column q elements read 40.2 mV against 29.7 mV one column in (v4).
+    ix0, iy0, ix1, iy1 = windows(m)[window]
+    g = IR_GUARD * vp
+    x0, y0 = max(0.0, dn(ix0 - g, GX)), max(0.0, dn(iy0 - g, GY))
+    x1, y1 = min(DIE[0], ix1 + g), min(DIE[1], iy1 + g)
+    inner = (round(max(ix0, x0) - x0, 3), round(max(iy0, y0) - y0, 3), round(min(ix1, x1) - x0, 3),
+             round(min(iy1, y1) - y0, 3))
+    W, H = round(x1 - x0, 3), round(y1 - y0, 3)
     p = cov['field']
     raw = dn(0.48 / p, 0.160)
     n = math.ceil(vp / raw - 1e-9)
@@ -2069,11 +2163,22 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
             c = Inst(it.name, nm, a, b, w_, h_, 'R0', it.kind, it.region, it.domain)
             clip_pw[it.name] = inst_power(it) * (w_ * h_) / (it.w * it.h)
             ins.append(c)
+    # PDN contract v2 (el1012-s81pdn): (1) every generated block's current is drawn where its cells are -- the block
+    # is modelled as PG_TILE-sized sub-tiles on the same M7 lattice, each carrying its area share (PSM injects a
+    # macro instance's whole current at ONE node: the 63.6/73.4 mV sp_vm / station "drop" of ir_m948 was that
+    # single-node injection, case_psmt measured 54.8 vs 2.4 mV); (2) blocks too thin for the die M8 lattice to
+    # cross them twice per net get a local die-M8 strap set (pdn_thin_pitch), joined M7-M8 and M8-M9.
+    power0 = {it.name: (clip_pw[it.name] if it.name in clip_pw else inst_power(it)) for it in ins}
+    q_pg = _pg_only_m7(_lef_text(Q_LEF))
+    pgt = {}
+    ins, power0 = pg_tile_split(ins, power0, M, keep={real_lef(CFG_LEF)['name']}, real_pg=_lef_pg_m7(q_pg), pgt_lef=pgt)
     masters_used = sorted({it.master for it in ins})
-    gen = [M[n_] for n_ in masters_used if n_ not in REAL_FILES]
+    (work / 'pgt.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' +
+                                  '\n'.join(pgt[n_] for n_ in masters_used if n_ in pgt) + 'END LIBRARY\n')
+    gen = [M[n_] for n_ in masters_used if n_ not in REAL_FILES and n_ not in pgt]
     (work / 'gen_pg.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' +
                                      '\n'.join(_gen_pg_lef(g_) for g_ in gen) + 'END LIBRARY\n')
-    (work / 'q_pg.lef').write_text(_pg_only_m7(_lef_text(Q_LEF)))
+    (work / 'q_pg.lef').write_text(q_pg)
     (work / 'cfg.lef').write_text(_lef_text(CFG_LEF))
     o = {'R0': 'N', 'MY': 'FN', 'MX': 'FS'}
     d = ['VERSION 5.8 ;', 'DIVIDERCHAR "/" ;', 'BUSBITCHARS "[]" ;', 'DESIGN qirm ;', 'UNITS DISTANCE MICRONS 1000 ;',
@@ -2097,10 +2202,24 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     off = round((vp / 2) % pitch, 3)
     cfgm = real_lef(CFG_LEF)['name']
     m8m = [x for x in masters_used if x.split('_clip_')[0] in PG_M8_MASTERS]
-    other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m)
-    m8grid = ('define_pdn_grid -macro -name m8 -cells {' + ' '.join(m8m) + '} -halo {0 0 0 0} -voltage_domains CORE\n'
+    thin = defaultdict(list)
+    for x in masters_used:
+        if x != cfgm and x not in m8m and x not in REAL_FILES:
+            pl = pdn_thin_pitch(M[x].h, pitch)
+            if pl:
+                thin[pl].append(x)
+    thin_set = {x for v in thin.values() for x in v}
+    # pdngen -cells is an unanchored regex search: 'dsfd_rstg' (m7) claimed the dsfd_rstg_pq66_* tiles of a thin grid
+    other = ' '.join(f'^{x}$' for x in masters_used if x != cfgm and x not in m8m and x not in thin_set)
+    m8grid = ('define_pdn_grid -macro -name m8 -cells {' + ' '.join(f'^{x}$' for x in m8m) + '} -halo {0 0 0 0} -voltage_domains CORE\n'
               'add_pdn_connect -grid m8 -layers {M8 M9}\n') if m8m else ''
-    power = {it.name: (clip_pw[it.name] if it.name in clip_pw else inst_power(it)) * (1.0 if peak else 0.25) for it in ins}
+    for k, (pl, xs) in enumerate(sorted(thin.items())):
+        m8grid += (f'define_pdn_grid -macro -name m7thin{k} -cells {{{" ".join(f"^{x}$" for x in sorted(xs))}}} -halo {{0 0 0 0}} '
+                   f'-voltage_domains CORE\n'
+                   f'add_pdn_stripe -grid m7thin{k} -layer M8 -width 0.48 -pitch {pl:.3f} -spacing {pl / 2 - 0.48:.3f} '
+                   f'-offset {PDN_THIN_OFF:.3f}\n'
+                   f'add_pdn_connect -grid m7thin{k} -layers {{M7 M8}}\nadd_pdn_connect -grid m7thin{k} -layers {{M8 M9}}\n')
+    power = {n_: p_ * (1.0 if peak else 0.25) for n_, p_ in power0.items()}
     tcl = f"""
 set t0 [clock seconds]
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
@@ -2108,6 +2227,7 @@ read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 read_lef /work/q_pg.lef
 read_lef /work/cfg.lef
 read_lef /work/gen_pg.lef
+read_lef /work/pgt.lef
 read_def /work/win.def
 add_global_connection -net {{VDD}} -inst_pattern {{.*}} -pin_pattern {{^VDD$}} -power
 add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -ground
@@ -2137,6 +2257,16 @@ foreach net {{VDD VSS}} {{
   set_pdnsim_net_voltage -net $net -voltage [expr {{$net eq "VDD" ? {VDD_V} : 0.0}}]
   if {{[catch {{analyze_power_grid -net $net -vsrc /work/vsrc_$net.loc -voltage_file /work/ir_$net.rpt -error_file /work/ir_err_$net.rpt}} err]}} {{
     puts "OT_IR net=$net status=FAIL err=$err" }} else {{ puts "OT_IR net=$net status=PASS" }}
+  set f [open /work/ir_$net.rpt r]; gets $f; set w 0.0; set wl ""
+  while {{[gets $f line] >= 0}} {{
+    set c [split $line ,]; set x [lindex $c 3]; set y [lindex $c 4]; set v [lindex $c 5]
+    if {{$x >= {inner[0]} && $x <= {inner[2]} && $y >= {inner[1]} && $y <= {inner[3]}}} {{
+      set d [expr {{$net eq "VDD" ? {VDD_V} - $v : $v}}]
+      if {{$d > $w}} {{ set w $d; set wl $line }}
+    }}
+  }}
+  close $f
+  puts "OT_IR_INNER net=$net worst_mv=[format %.2f [expr {{$w * 1000.0}}]] budget_mv=35 at=$wl"
 }}
 puts "OT_TIME psm_s=[expr {{[clock seconds]-$t0}}]"
 exit
@@ -2145,9 +2275,11 @@ exit
     kinds = {it.name: it.kind for it in ins}
     (work / 'kinds.json').write_text(json.dumps(kinds))
     meta = dict(case='c', method='real element abstracts + pdngen + PSM', window=window, window_um=[x0, y0, x1, y1],
+                inner_um=[ix0, iy0, ix1, iy1], inner_local_um=list(inner), guard_um=round(g, 3),
                 size_um=[W, H], instances=len(ins), clipped=sorted(clip_pw), power_w=round(sum(power.values()), 4),
                 power_w_per_mm2=round(sum(power.values()) / (W * H / 1e6), 4), coverage=cov,
-                strap_pitch_um=pitch, strap_offset_um=off, masters=masters_used,
+                strap_pitch_um=pitch, strap_offset_um=off, masters=masters_used, pg_tile_um=PG_TILE,
+                thin_local_m8={f'{k:.3f}': v for k, v in sorted(thin.items())},
                 bumps=dict(array_pitch_um=BUMP_PITCH, vdd_pitch_um=round(vp, 2), size_um=BUMP_SIZE),
                 vdd_v=VDD_V, budget_mv=35.0)
     (work / 'manifest.json').write_text(json.dumps(meta, indent=1))
@@ -3505,7 +3637,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH, rt_strip=RT_STRIP,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -4163,6 +4295,12 @@ SSTN_CCPAD = False              # --sstn-ccpad (hbmdie-1011, compact199): a --la
 RELAY_PROGRESS = False          # --relay-progress (hbmdie-1011, compact199 die fit): a column relay must advance toward its
                                 # next chain point (mh(relay, nxt) <= mh(driver, nxt) + 15 um, inside the margin lint's 20 um
                                 # far-side slack) in EVERY placement attempt incl. the TT and last-resort fallbacks; no site -> assert
+RT_STRIP = 0.0                  # --rt-strip UM (s81-die-iter 2026-10-12): return-tree relays ('rt' nets) may also take relay
+                                # sites in the UM-high channel strip just above their column frame.  Root cause of the last
+                                # 128 SS-reach hops (bn<c> -> y_rt_<c>_<n>b_0, 515.0 um, one per column): the top slot's
+                                # L-lane qbank bn<c> sits on the frame's top edge and its return leaf runs east along that
+                                # edge to the trunk, but the frame under it is packed (q element, then the cfg / sstn row
+                                # 262 um down, saturated with relays), so relay 0 fell to the TT tier in the cfg row.
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
 # MTP-DIE hub buses (a, b, bits, port at a, port at b).  WFC (ot_rom_pkg_ctrl_wfc ports): VM write xa_we/waddr15/wdata512
@@ -4239,7 +4377,7 @@ HSRC_BUSES = (('wfc', 'hrsrc', 36, 't_hep', 'f_hep'),
               ('hrsrc', 'collective', 515, 't_hp', 'f_mhs'), ('collective', 'hrsrc', 1, 't_mhsg', 'f_hpg'))
 HSRC_HOST_BUSES = (('hrsrc', 'host', 2, 't_flt', 'f_hsrc_flt'),)
 HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
-HROW_UM = (2998.08, 1438.56)     #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
+HROW_UM = (2998.08, 1769.04)     #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
 HROW_TOP_REF = 950.4            # el1011-ds-mtp rev 3 (30 hardened banks): the store grows DOWN into the slot's free PHY / ctrl
                                 #   space; its N face (pins, the end-block corridor above it) stays where the 950.4 um store had it
 # the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes
@@ -5235,6 +5373,9 @@ def _col_relays(m, P):
             # column FIFO) may take relay sites between its endpoints there, not only inside the frame box
             ends_ = [by[eps[0][0]]] + [by[e[0]] for e in eps[1:] if e[0] in by]
             fr = (fr[0], min([fr[1]] + [i_.y for i_ in ends_]), fr[2], max([fr[3]] + [i_.y + i_.h for i_ in ends_]))
+        if RT_STRIP and RSV_ALLOW == 'rt':
+            # --rt-strip: the channel strip above the frame top (the return leaves of the top slot run along that edge)
+            fr = (fr[0], fr[1], fr[2], max(fr[3], min(f['y'] + column_height() + RT_STRIP, DIE[1] - EDGE)))
         a0 = ep_pt(eps[0])
         fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e, True)), default=None)
         far = by[fe[0]] if fe is not None else None
@@ -7020,6 +7161,8 @@ def die_options(ap):
                     'real LEF pin centroid (not the element centre)')
     ap.add_argument('--sstn-ccpad', action='store_true', help='--lane-equal cc padding as extra cc registers in the '
                     'driving slot station (no floating pad relay)')
+    ap.add_argument('--rt-strip', type=float, default=0.0, help='return-tree relays may use a UM-high strip above their '
+                    'column frame (the top-edge return leaves run there; s81-die-iter 10-12)')
     ap.add_argument('--relay-progress', action='store_true', help='column relays only on sites that advance toward the next '
                     'chain point (no far-side relay); a packed frame without such a site fails loudly')
     ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
@@ -7213,8 +7356,9 @@ def apply_options(a):
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
-    global RELAY_PROGRESS
+    global RELAY_PROGRESS, RT_STRIP
     RELAY_PROGRESS = bool(getattr(a, 'relay_progress', False))
+    RT_STRIP = float(getattr(a, 'rt_strip', 0.0) or 0.0)
     global SSTN_CCPAD
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     global PIN_NEED

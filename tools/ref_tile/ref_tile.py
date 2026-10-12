@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import re
 import sys
 from pathlib import Path
@@ -136,31 +137,84 @@ def track_macro(view: str) -> dict:
 
 
 # --------------------------------------------------------------------------------------------- layer contract
+LEGACY_KITS = json.loads((Path(__file__).resolve().parent / "legacy_layer_kits.json").read_text())["kits"]
+PIN_LAYERS = {"M5": ("M4", "M5"), "M6": ("M4 M6", "M5")}     # default (IO_PLACER_H, IO_PLACER_V) per tile cap
+
+
+def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
+    """(cap, why) for a leaf tile under the 2026-10-12 layer contract (results/arch/hier_contract_1011/layer_usage_1012.md):
+    signals AND PG stop at layer_cap = M5 (PG stripes on M5 as pins, pins on M4/M5, parent straps M6, die signals M6/M7
+    over the tile, M8/M9 die power + global); M6 only by a die-lead exception (spec or slot layer_cap M6 + layer_cap_grant);
+    kits generated before the cut (legacy_layer_kits.json) keep their old PG layer (M6/M7, signals <= M6)."""
+    slot = slot or {}
+    cap = s.get("layer_cap") or slot.get("layer_cap")
+    if cap is None and s["name"] in LEGACY_KITS:
+        return LEGACY_KITS[s["name"]], "legacy"
+    if cap is None and s.get("pg_layer") not in (None, "M5"):
+        raise SpecError(f"layer contract: a NEW leaf tile caps signals and PG at M5 (coordinator 2026-10-12): drop "
+                        f"pg_layer {s['pg_layer']}, or set layer_cap M6 with the die lead's layer_cap_grant")
+    cap = cap or "M5"
+    if cap == "M6":
+        if not (s.get("layer_cap_grant") or slot.get("layer_cap_grant")):
+            raise SpecError("layer contract: layer_cap M6 is a per-tile exception the die lead grants (pin-dense edge "
+                            "relays / stations): give layer_cap_grant '<lead>: <reason>' in the spec or the contract slot")
+        return "M6", "granted"
+    if cap != "M5":
+        raise SpecError(f"layer contract: a leaf tile's layer_cap is M5 (default) or M6 (granted exception), not {cap}")
+    return "M5", "contract"
+
+
 def layer_contract(s: dict, slot: dict | None) -> dict:
-    """leaf tile: signals M2-M6 (explicit RLAYERS), PG = full-length stripes on pg_layer (M6 default, or M7) as pins.
+    """leaf tile: signals AND PG <= layer_cap (M5 default, M6 granted), PG = full-length stripes on the cap layer as pins,
+    parent strap = cap + 1; legacy kits: signals M2-M6, PG M6 or M7.
     cluster: children's PG layer L <= M6 each strapped from L+1; cluster PG = M7 stripes as pins; signals M2-M7."""
     pg = s.get("pg_layer") or (slot or {}).get("pg_layer")
     out = {"children": {}}
     if s["kind"] == "tile":
-        pg = pg or "M6"
-        if pg not in ("M6", "M7"):
-            raise SpecError(f"layer contract: a leaf tile's PG layer is M6 or M7, not {pg}")
-        out.update(pg_layer=pg, rlayers=("M2", "M6"), strap_layer=f"M{metal(pg) + 1}")
-    else:
-        for ch in s["children"]:
-            m = read_view_lef(ch["view"])
-            top = child_lint.check_pg(m)["top_layer"]
-            if metal(top) is None or metal(top) > 6:
-                raise SpecError(f"layer contract: child {view_name(ch['view'])} PG top layer {top}: a cluster child must "
-                                f"expose PG on M5/M6 (the cluster straps one layer up on M7; M8/M9 are the die's)")
-            out["children"][view_name(ch["view"])] = top
-        pg = pg or "M7"
-        if pg != "M7":
-            raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
-        out.update(pg_layer="M7", rlayers=("M2", s.get("signal_max_layer", "M7")), strap_layer="M8")
+        cap, why = tile_cap(s, slot)
+        if why == "legacy":
+            out.update(pg_layer=cap, rlayers=("M2", "M6"), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap,
+                       cap_basis="legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)")
+        else:
+            out.update(pg_layer=cap, rlayers=("M2", cap), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap, cap_basis=why)
+        if slot:
+            ok = {slot.get("layer_cap") or slot.get("pg_layer"), slot.get("view_cap") if why == "legacy" else None}
+            if out["pg_layer"] not in ok:
+                raise SpecError(f"layer contract: tile cap/PG {out['pg_layer']} != contract slot layer_cap "
+                                f"{slot.get('layer_cap') or slot.get('pg_layer')}")
+        return out
+    for ch in s["children"]:
+        m = read_view_lef(ch["view"])
+        top = child_lint.check_pg(m)["top_layer"]
+        if metal(top) is None or metal(top) > 6:
+            raise SpecError(f"layer contract: child {view_name(ch['view'])} PG top layer {top}: a cluster child must "
+                            f"expose PG on M5/M6 (the cluster straps one layer up on M7; M8/M9 are the die's)")
+        out["children"][view_name(ch["view"])] = top
+    pg = pg or "M7"
+    if pg != "M7":
+        raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
+    out.update(pg_layer="M7", rlayers=("M2", s.get("signal_max_layer", "M7")), strap_layer="M8")
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
         raise SpecError(f"layer contract: spec PG {out['pg_layer']} != contract slot PG {slot['pg_layer']}")
     return out
+
+
+def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
+    """(IO_PLACER_H, IO_PLACER_V) for the kit; every pin layer must be <= the tile's cap (no pin on the parent strap)."""
+    r = s["route"]
+    cap = lc.get("layer_cap")
+    dh, dv = PIN_LAYERS.get(cap if cap in PIN_LAYERS else "M6")
+    if lc.get("cap_basis", "").startswith("legacy"):
+        dh, dv = PIN_LAYERS["M6"]
+    h, v = r.get("pin_h", dh), r.get("pin_v", dv)
+    if s["kind"] == "tile":
+        pb = r.get("pin_balance") or {}
+        used = (h + " " + v + " " + pb.get("h", "") + " " + pb.get("v", "")).split()
+        over = sorted({x for x in used if (metal(x) or 0) > metal(lc["rlayers"][1])})
+        if over:
+            raise SpecError(f"layer contract: pin layers {over} above the tile's signal cap {lc['rlayers'][1]} "
+                            f"(pins on M4/M5 under the M5 cap; the parent reaches them from M6)")
+    return h, v
 
 
 PDN_HEAD = """# generated by tools/ref_tile/ref_tile.py ({name}, {kind}): layer contract PG top {pg} as full-length stripes = the
@@ -192,9 +246,17 @@ proc ot_ref_present {cells} { set out {}; foreach c $cells { if {[ot_ref_has_mas
 
 def gen_pdn(s: dict, lc: dict) -> str:
     pg = lc["pg_layer"]
-    if s["kind"] == "tile" and pg == "M6":
+    if s["kind"] == "tile" and pg == "M5":
+        note = ("layer cap M5: signals M2-M5 route around the M5 stripes (pins); the parent straps M6, die signals use "
+                "M6/M7 over the tile (coordinator 2026-10-12).")
+        body = "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
+    elif s["kind"] == "tile" and pg == "M6":
         note = "signals M2-M6 route around the M6 stripes; the parent straps M7 (recipe pdn_qkvd_tile_m6.tcl)."
-        body = ("add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {10.8} -offset {2.0}\n"
+        # route.pg_pitch (5.4 or 10.8, both on the strap lattice): short tiles (< ~3 pitches tall) need 5.4 so the M6
+        # PG pins span >= 50% of the height (child_lint (b); dsfd_vm_fsr r4 at 25.92 um: 2 stripes per net = 42%)
+        pp = float(s.get("route", {}).get("pg_pitch", 10.8))
+        assert pp in (5.4, 10.8), "route.pg_pitch must be 5.4 or 10.8"
+        body = (f"add_pdn_stripe -grid {{top}} -layer {{M6}} -width {{0.288}} -spacing {{0.096}} -pitch {{{pp}}} -offset {{2.0}}\n"
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
                 "add_pdn_connect -grid {top} -layers {M5 M6}\n")
     elif s["kind"] == "tile":
@@ -416,7 +478,9 @@ def gen_place(s: dict, blocks: list) -> str:
              "  foreach i [dict get $by $master] {",
              "    set n [ot_ref_strip [$i getName]]",
              "    if {[lsearch -exact $used $n] >= 0} continue",
-             "    if {$pat ne \"\" && ![string match [ot_ref_strip $pat] $n]} continue",
+             "    set sp [ot_ref_strip $pat]",
+             "    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)",
+             "    if {$pat ne \"\" && $sp ne $n && ![string match $sp $n]} continue",
              "    lappend used $n; return $i", "  }",
              "  error \"ref_tile place: no unplaced instance of $master matching '$pat'\"", "}",
              "set ot_ref_n 0"]
@@ -523,15 +587,19 @@ def gen_hooks(s: dict, kd: str) -> dict:
         ins = child_insertions(s)
         files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())))
     pre_cts.append(f"source /src/{QDM}/pre_cts_skew.tcl")
+    # spec "boundary_tcl": repo Tcl files that re-apply a second-domain boundary after every io_ref switch (post-CTS
+    # wrapper, pre-GRT, post-DRT), so the route times those ports against their own propagated clock, not only sign-off
+    btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])]
+    pre_cts += btcl
     if fwd:
         pre_cts.append("source /src/physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
                "# column; created here, removed by post_drt.tcl, so the abstract carries only real metal: DRT-0073 at the parent)",
                f"source /src/{QDM}/pre_ref_skew.tcl",
-               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
+               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"] + btcl
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
-                f"source /src/{QDM}/post_plain.tcl"]
+                f"source /src/{QDM}/post_plain.tcl"] + btcl
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
             "post_drt.tcl": "\n".join(post_drt) + "\n", **files}
 
@@ -542,6 +610,7 @@ def shq(v: str) -> str:
 
 def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str:
     r = s["route"]
+    ph, pv = pin_layers(s, lc)
     srcs = " ".join(s["sources"])
     params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
     # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
@@ -560,6 +629,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
                 lo, hi = rng[n]
                 regs.append(pin_regex([n]) + "=" + FACES[f] + f":{float(lo):g}-{float(hi):g}")
     pins = " ".join(f"--pin-region {shq(r)}" for r in regs)
+    if s.get("io_tcl"):
+        # el1011-hbm-smh 2026-10-12: run_abi3_physical writes its own IO_CONSTRAINTS (/work/io_constraints.tcl) for any
+        # --pin-region, AFTER the --orfs-var one, so the region groups of OT_PIN_GROUP_MAX replaced io_tcl at 3_2: with the
+        # M5 cap (one horizontal pin layer) smh_pt_w_ref_p45h's 3,705 W pins at 2 tracks left max 22 contiguous slots and
+        # place_pins aborted (PPL-0093, group of 25).  io_tcl alone places every port; the spec "pins" faces still drive
+        # the gate's checks.
+        pins = ""
     views = sorted({b["view"] for b in blocks})
     extra = ["--orfs-var ADDER_MAP_FILE=", f"--orfs-var PDN_TCL=/src/{kd}/pdn.tcl",
              f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}",
@@ -573,16 +649,32 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--macro-place-halo {h} {h}")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
+        # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
+        # child's internal insertion, so the flops next to it ran one insertion EARLY: qkd_d2d_ref (sbuf 505 ps) left 499
+        # sbuf read-data flops r_d at TT 1,050 vs 1,560 ps -> R2O FF hold -318 ps that hold repair cannot move.
+        if views and s.get("spine_macro_leaf", True):
+            extra.append("--orfs-var OT_SPINE_MACRO_LEAF=1")
     # spec "defines": RTL defines the top's synthesis needs (e.g. the hardened-child body selected by `ifdef); written after
     # run_abi3's own "VERILOG_DEFINES = -DSYNTHESIS", so it keeps -DSYNTHESIS explicitly (the lint bench uses the same set).
     if s.get("defines"):
         extra.append("--orfs-var " + shq("VERILOG_DEFINES=" + " ".join(["-DSYNTHESIS"] + [f"-D{d}" for d in s["defines"]])))
-    # spec "orfs_vars" {NAME: value}: extra ORFS variables the RTL needs (e.g. VERILOG_INCLUDE_DIRS=/src/rtl/common for a
-    # source with `include); flow-mechanics knobs stay owned by the kit
-    for k, v in s.get("orfs_vars", {}).items():
+    # spec "io_tcl" (el1011-hbm-smh): a repo place_pin file for a tile whose pins must sit at exact abutment tracks; it
+    # replaces the face-region IO_CONSTRAINTS (the face groups in "pins" still drive the gate's checks and the keepout).
+    if s.get("io_tcl"):
+        extra.append(f"--orfs-var IO_CONSTRAINTS=/src/{s['io_tcl']}")
+    # spec "orfs_vars" {NAME: value}: extra ORFS variables the RTL / structure needs; a value that is a repo file path
+    # (el1011-hbm-smh POST_TAPCELL hooks) is passed as /src/<path>, anything else verbatim
+    for k, v in sorted(s.get("orfs_vars", {}).items()):
         if not re.fullmatch(r"[A-Z][A-Z0-9_]*", k) or re.search(r"\s", str(v)):
             raise SpecError(f"spec: orfs_vars {k}={v!r}: NAME=[A-Z0-9_]+, value without whitespace")
-        extra.append(f"--orfs-var {k}={v}")
+        vv = f"/src/{v}" if (not str(v).startswith("/") and os.path.isfile(str(v))) else v
+        if k == "POST_TAPCELL_TCL" and s.get("io_tcl"):
+            # io_tcl + a POST_TAPCELL pin-flop hook: ORFS sources IO_CONSTRAINTS only at 3_2_place_iop, so the hook saw
+            # unplaced ports and FIRM-placed every boundary flop on the W face (smh_pt_e_ref_p40-lf: W 7410 / E 0, both
+            # register stages + 6,860 hold buffers in one 24-um strip, GRT stuck at ~3,000 markers; the closed hand kit
+            # placed pins at floorplan: W 3705 / E 3705).  The kit's post_tapcell.tcl places the exact pins first.
+            vv = f"/src/{kd}/post_tapcell.tcl"
+        extra.append(f"--orfs-var {k}={vv}")
     if s["route"].get("hold_delay"):
         # deterministic hold fix by construction (owner 10-10): the RTL's *u_hdly_* HB delay cells are dont_touch'ed at
         # PRE_FLOORPLAN so remove_buffers / repair passes keep them (tputx-cpf hgi_seq v2.3)
@@ -594,10 +686,18 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
+    if s.get("outhold"):
+        # spec 'outhold' (hc-cpin 2026-10-12): flop-driven outputs get lead BUF -> HB4 -> BUF FIRM at the pin (R2O hold-only
+        # miss at the routed IO ref); with 'inhold' the same hook first runs leaf_inhold.tcl (one PRE_GLOBAL_PLACE hook)
+        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_iohold.tcl")
+        extra.append(f"--orfs-var OT_IOHOLD_IN={1 if s.get('inhold') else 0}")
+        if not s.get("inhold"):
+            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     if s.get("inhold"):
         # spec 'inhold': one dont_touch hold buffer between every data input port and its single capture flop, inserted
         # before global placement (owner 10-10: a hold-only miss on input captures -> delay stage at the inputs, no ECO)
-        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
+        if not s.get("outhold"):
+            extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
         # the hold cell sits AT its input pin with a strong resizable driver after it (vm8 181753c60), FIRM through GPL and
         # released before DPL: seeding it at the capture flop left a long dont_touch-loaded port net -> GPL repair_design
         # RSZ-3006 (s81hc crootrw/crootre d02b035e3), and a bare HB4 driving the long wire costs ~400 ps (vm8 r9)
@@ -610,14 +710,24 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     return "\n".join([
         f"# generated by tools/ref_tile/ref_tile.py from {kd}/spec.json -- do not edit; re-run gen",
         f"TOP={s['top']}", f"SRCS={shq(srcs)}", f"PARAMS=({params})", f"FW={W}", f"FH={H}", f"PINS=({pins})",
-        f"PINEX={0 if s['pins'].get('ANY') else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
-        f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(r.get('pin_h', 'M4 M6'))}",
-        f"PIN_V={shq(r.get('pin_v', 'M5'))}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
+        f"PINEX={0 if (s['pins'].get('ANY') or s.get('io_tcl')) else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
+        f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r), ""])
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
+        *cts_sink_env(r), ""])
 
 
-def pin_balance_env(r: dict) -> list:
+def cts_sink_env(r: dict) -> list:
+    """optional route.cts_sink {size, diameter_um}: explicit TritonCTS register-sink clustering (CTSA -> ref_route.sh
+    CTS_ARGS).  ORFS CTS_CLUSTER_* are ignored once CTS_ARGS is set, and the automatic choice on small macro tiles
+    (qfd_vm_bank_t: 32 sinks / 82 um, 2 buffers per path) leaves long leaf nets: TT insertion 243-403 ps."""
+    cs = r.get("cts_sink")
+    if not cs:
+        return []
+    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size ' + str(int(cs['size'])) + ' -sink_clustering_max_diameter ' + str(int(cs['diameter_um'])))}"]
+
+
+def pin_balance_env(r: dict, lc: dict | None = None) -> list:
     """optional route.pin_balance {group_max, h, v}: run_abi3_physical's balanced pin placer (place_pin, uniform over each
     port's range, layer alternating every group_max pins) instead of PPL ordered groups, which put a whole port on ONE
     layer ([vm8cp] 2k-bit relay buses: PPL-0107 / PPL-0093).  Needs disjoint per-port pin_ranges on a face."""
@@ -625,18 +735,23 @@ def pin_balance_env(r: dict) -> list:
     if not pb:
         return []
     return [f"export OT_PIN_GROUP_MAX={int(pb.get('group_max', 1))}",
-            f"export OT_PIN_BALANCE_H={shq(pb.get('h', 'M4 M6'))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', 'M3 M5'))}"]
+            f"export OT_PIN_BALANCE_H={shq(pb.get('h', 'M4' if (lc or {}).get('rlayers', ('', 'M6'))[1] == 'M5' else 'M4 M6'))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', 'M3 M5'))}"]
 
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
+    if s.get("io_tcl"):
+        out.append(s["io_tcl"])
+    out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and os.path.isfile(str(v)))
+    if s.get("outhold"):
+        out += ["physical/dsrom_window_source/leaf_iohold.tcl", "physical/dsrom_window_source/leaf_inhold_release.tcl"]
     if s.get("inhold"):
         out.append("physical/dsrom_window_source/leaf_inhold.tcl")
         if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R"):
@@ -760,6 +875,15 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
              "spec.json": json.dumps({k: v for k, v in s.items()}, indent=1) + "\n"}
     if blocks:
         files["place.tcl"] = gen_place(s, blocks)
+    if s.get("io_tcl") and s.get("orfs_vars", {}).get("POST_TAPCELL_TCL"):
+        files["post_tapcell.tcl"] = (
+            "# ref_tile: exact abutment pins first (IO_CONSTRAINTS is otherwise sourced only at 3_2_place_iop, where it\n"
+            "# re-applies the same placement), then the spec's POST_TAPCELL hook (boundary flops FIRM at their pins)\n"
+            f"source /src/{s['io_tcl']}\n"
+            f"source /src/{s['orfs_vars']['POST_TAPCELL_TCL']}\n"
+            "# then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when\n"
+            "# a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)\n"
+            "foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
     job = gen_job(s, kd, commit, blocks)
     files["job.json"] = json.dumps(job, indent=1) + "\n"
     if write:
