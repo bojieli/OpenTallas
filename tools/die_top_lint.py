@@ -2531,7 +2531,7 @@ def main(argv=None):
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
-                                                              'r21c', 'r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv'])
+                                                              'r21c', 'r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '
