@@ -31,6 +31,9 @@ if [ "${OT_RM_PK:-0}" = 1 ]; then
   GRT_PRE=physical/qwen_die_masters/pre_ref_skew_pk.tcl; DRT_POST=physical/qwen_die_masters/post_plain_pk.tcl
   PKV=(--orfs-var OT_PK_FRAC=${OT_PK_FRAC:-0} --orfs-var OT_PK_HALO=${OT_PK_HALO:-0.072})
   [ -n "${OT_PK_FACES:-}" ] && PKV+=(--orfs-var "OT_PK_FACES=$OT_PK_FACES")
+  # OT_PK_ABOVE_ONLY=1 (main 405ed7382): keep only the layer ABOVE each face pin clear (child_lint (f) side); the layer
+  # below stays open for the tile's own via access to dense pin faces.
+  [ "${OT_PK_ABOVE_ONLY:-0}" = 1 ] && PKV+=(--orfs-var OT_PK_ABOVE_ONLY=1)
 fi
 XA=(${OT_RM_XARGS:-})
 # drive-1143: a macro view lives only inside the ORFS image, so run_abi3_physical refuses host synth with
