@@ -68,13 +68,24 @@ LCP_BITS, CPL_BITS = 419, 222
 QID = dict(SW=0, NW=1, SE=2, NE=3)       # hfd_su inject-ownership strap values           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
 
 
-def fields(unit, units=None):
+# hgi-1010/c2 (AUDIT N5, variant key 'hgi_fused'): unit 4's record bus carries the FUSED front's field set (the FUSED
+# station ot_hgi_fused_station in the quant block: ROW_NORM / HC_PRE_NORM / HC_POST, QDQ forwarded to the quant unit;
+# ot_hgi_cp_die FUSED 1): A, B, C, O and n_A, n_B, n_O (1,216 b, was the QDQ-only A / O 683 b)
+FUSED_DESC, FUSED_NSET = 'ABCO', 'ABO'
+FUSED_VM_CLIENTS = ('fused', 'fmv')      # the FUSED body's and the FUSED mover's VM packet clients (quant block)
+FMK_Q_BITS, FMK_R_BITS = 38, 257         # the FUSED mover's remote kport read lane {addr 37, v} / {data 256, v}
+
+
+def fields(unit, units=None, fused=False):
     code, _, desc, side = UNITS[unit]
+    nset = NSET.get(unit, desc)
+    if fused and unit == 'quant':
+        desc, nset = FUSED_DESC, FUSED_NSET
     f = [('valid', 1), ('header', HDR_BITS)]
     if unit in SUT_UNITS:
         f += [('sut', 256)]
     f += [(f'desc_{d}', DESC_BITS) for d in desc]
-    f += [(f'n_{d}', N_BITS) for d in NSET.get(unit, desc)]
+    f += [(f'n_{d}', N_BITS) for d in nset]
     single = units is not None and 'cp' in units
     f += [x for x in side if single or x[0] not in SINGLE_CP_ONLY.get(unit, ())]
     return f
@@ -88,7 +99,7 @@ def layout(fs):
     return rows, off
 
 
-def model(hub, units, reach_um=504.0, unit_block=None):
+def model(hub, units, reach_um=504.0, unit_block=None, fused=False):
     rows = []
     unit_block = unit_block or {}     # mtp-lead: variant 'hgi_unit_block' (e.g. argmax -> 'mtp_am' in a split slot)
     for u in [x for x in units if x in UNITS]:
@@ -96,7 +107,7 @@ def model(hub, units, reach_um=504.0, unit_block=None):
         blk = unit_block.get(u, blk)
         if blk not in hub:
             raise ValueError(f'hgi_dispatch: hub block {blk} for unit {u} not on this die')
-        cmd, cbits = layout(fields(u, units))
+        cmd, cbits = layout(fields(u, units, fused))
         ret, rbits = layout(RETURN_FIELDS + RETURN_EXTRA.get(u, []))
         s, t = hub['cmdproc'], hub[blk]
         dist = abs(s.x + s.w / 2 - t.x - t.w / 2) + abs(s.y + s.h / 2 - t.y - t.h / 2)
@@ -170,7 +181,8 @@ def variant(base, units):
 
 def install(m, buses, paths, units):
     hub = m['hub']
-    rec = model(hub, units, unit_block=(m.get('variant') or {}).get('hgi_unit_block'))
+    fused = bool((m.get('variant') or {}).get('hgi_fused')) and 'quant' in units
+    rec = model(hub, units, unit_block=(m.get('variant') or {}).get('hgi_unit_block'), fused=fused)
     names = {b[0] for b in buses}
     cp = hub['cmdproc'].name
     for r in rec['units']:
@@ -210,6 +222,14 @@ def install(m, buses, paths, units):
             for name, bits, eps in ((f'hgi_vmq_{u}', VMQ_BITS, [(peer, 't_hgi_vmq'), (vm, f'f_hgi_{u}')]),
                                     (f'hgi_vmr_{u}', VMR_BITS, [(vm, f't_hgi_{u}'), (peer, 'f_hgi_vmr')])):
                 buses.append((name, 'hub', bits, eps)); paths[name] = [name]
+        if fused:
+            # hgi-1010/c2 (AUDIT N5): the FUSED station's two more VM packet clients in the quant block (its body, its mover)
+            qb = hub[UNITS['quant'][1]].name
+            for u in FUSED_VM_CLIENTS:
+                for name, bits, eps in ((f'hgi_vmq_{u}', VMQ_BITS, [(qb, f't_hgi_vmq_{u}'), (vm, f'f_hgi_{u}')]),
+                                        (f'hgi_vmr_{u}', VMR_BITS, [(vm, f't_hgi_{u}'), (qb, f'f_hgi_vmr_{u}')])):
+                    buses.append((name, 'hub', bits, eps)); paths[name] = [name]
+            rec['fused_vm_clients'] = list(FUSED_VM_CLIENTS)
         if 'dma' in vm_cl:
             # the VM wide write port of the DMA unit (coordinator 2026-10-10): VMW_LANES x 280 b loader -> VM (lane b
             # writes bank b: the DMA front routes by bank), one done a lane back
@@ -252,6 +272,14 @@ def install(m, buses, paths, units):
                                     ('hgi_vmw2_coll', VMW_LANES * VMW_BITS + 1, [(co, 't_hgi_vmw2'), (vm, 'f_hgi_vmw2_coll')]),
                                     ('hgi_vmw2_coll_r', 2 * VMW_LANES + 1, [(vm, 't_hgi_vmw2_coll'), (co, 'f_hgi_vmw2')])):
                 buses.append((name, 'hub', bits, eps)); paths[name] = [name]
+    if fused and 'loader' in hub:
+        # hgi-1010/c2 (AUDIT N5): the FUSED mover's remote kport read lane (ot_hgi_hbm_rdq_client in the quant block ->
+        # ot_hgi_hbm_rdq_server on the loader kport lane after the mover HBM lanes: 7 without RGX, 11 with RGX)
+        qb, ld = hub[UNITS['quant'][1]].name, hub['loader'].name
+        for name, bits, eps in (('hgi_fmk_q', FMK_Q_BITS, [(qb, 't_hgi_fmkq'), (ld, 'f_hgi_fmkq')]),
+                                ('hgi_fmk_r', FMK_R_BITS, [(ld, 't_hgi_fmkr'), (qb, 'f_hgi_fmkr')])):
+            buses.append((name, 'hub', bits, eps)); paths[name] = [name]
+        rec['fused_kport_lane'] = dict(q_bits=FMK_Q_BITS, r_bits=FMK_R_BITS, lane='after the mover HBM lanes (7 / RGX 11)')
     if 'cp' in units and 'loader' in hub:
         ld = hub['loader'].name
         buses.append(('hgi_lcp', 'hub', LCP_BITS, [(ld, 't_hgi_cp'), (cp, 'f_hgi_loader')])); paths['hgi_lcp'] = ['hgi_lcp']

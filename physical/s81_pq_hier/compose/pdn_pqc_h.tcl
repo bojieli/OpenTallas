@@ -19,5 +19,5 @@ add_pdn_connect -grid {top} -layers {M5 M6}
 add_pdn_connect -grid {top} -layers {M6 M7}
 add_pdn_stripe -grid {top} -layer {M8} -width {0.32} -spacing {5.08} -pitch {10.8} -offset {2.0}
 add_pdn_connect -grid {top} -layers {M7 M8}
-define_pdn_grid -macro -cells {ot_dsrom_aq12t ot_pqc_t_ix ot_pqc_t_qb ot_pqc_t_ret ot_pqc_t_bc ot_pqc_t_ctl16 ot_pqc_t_srom ot_pqc_t_prom} -halo {2 2 2 2} -voltage_domains {CORE} -name {pqc_tiles}
+define_pdn_grid -macro -cells {ot_dsrom_aq12t ot_pqc_t_ix ot_pqc_t_qb ot_pqc_t_ret ot_pqc_t_bc ot_pqc_t_ctl16 ot_pqc_t_srom ot_pqc_t_prom ot_pqc_t_xin} -halo {2 2 2 2} -voltage_domains {CORE} -name {pqc_tiles}
 add_pdn_connect -grid {pqc_tiles} -layers {M7 M8}
