@@ -1,0 +1,136 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_vm8st11_nwwt4_181753c60-tc-rvt-pka-cl/cl/eco-vtswap-t10/pass1/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design hfd_vm_nw_w_t4\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 \\\n    [list [get_ports {ck[0]}]\\\n          [get_ports {cke10[0]}]\\\n          [get_ports {cke11[0]}]\\\n          [get_ports {cke12[0]}]\\\n          [get_ports {cke1",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 12.15,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 90.43,
+  "worst_reg_to_reg_slack_ps": 142.52,
+  "worst_input_to_reg_slack_ps": 90.43,
+  "worst_output_port_slack_ps": 12.15,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "1b0ad6ea254030389ce0aa8077f11a73d9875799b4ce6a58f521abbb91a04f46",
+  "spef_sha256": "14f45137bd9d262acef7820dc9607c5ae931ccff8df7796ca288c25802ca8f07",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "ecffca27c6e2391ccdcced8ed191b5144f998eb7d2fb4289d15d47c16df89bb5",
+  "vt_flavours_added": [
+   "LVT"
+  ],
+  "libraries": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_AO_LVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_LVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_LVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -117.64,
+  "tns_ps": -4071.4,
+  "worst_register_d_slack_ps": -2.14,
+  "worst_reg_to_reg_slack_ps": 23.95,
+  "worst_input_to_reg_slack_ps": -2.14,
+  "worst_output_port_slack_ps": -117.64,
+  "violating_d_pins": 1,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "1b0ad6ea254030389ce0aa8077f11a73d9875799b4ce6a58f521abbb91a04f46",
+  "spef_sha256": "14f45137bd9d262acef7820dc9607c5ae931ccff8df7796ca288c25802ca8f07",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "ecffca27c6e2391ccdcced8ed191b5144f998eb7d2fb4289d15d47c16df89bb5",
+  "vt_flavours_added": [
+   "LVT"
+  ],
+  "libraries": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_AO_LVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_LVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_LVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_LVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_LVT_SS_nldm_211120.lib.gz"
+  ]
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 8.02,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 9.98,
+  "worst_reg_to_reg_slack_ps": 398.37,
+  "worst_input_to_reg_slack_ps": 9.98,
+  "worst_output_port_slack_ps": 8.02,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "1b0ad6ea254030389ce0aa8077f11a73d9875799b4ce6a58f521abbb91a04f46",
+  "spef_sha256": "14f45137bd9d262acef7820dc9607c5ae931ccff8df7796ca288c25802ca8f07",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "ecffca27c6e2391ccdcced8ed191b5144f998eb7d2fb4289d15d47c16df89bb5",
+  "vt_flavours_added": [
+   "LVT"
+  ],
+  "libraries": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_AO_LVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_LVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_LVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_LVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "post_sdc": {
+  "physical/hbm_accel_die_views/vm/vcut8/fclat.sdc": "6f267bade41dc80099c13ec39e391ffd0cc71413ddc6de0d2d743cde6107090b",
+  "physical/hbm_accel_die_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+  "physical/hbm_accel_die_views/common/vclk_corner_true.sdc": "3f3f9b793318432209bd04277091a4d17ff1816859ceb48c0ee886c3f5ebf128",
+  "physical/hbm_accel_die_views/vm/vcut8/st/hfd_vm_nw_w_t4_fwd_clk.sdc": "9c6a7ee6caf8a0f428750c978436ddb19ff77ac0e581c139e5c0d82e4ed84bfc",
+  "physical/common_flow/io_ref_routed.sdc": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f",
+ "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+ "ss_sensitivity": -117.64,
+ "closes_signoff": true
+}
