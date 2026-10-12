@@ -1,5 +1,5 @@
 {
- "name": "sfu_chain_rta-a-COMMIT",
+ "name": "sfu_chain_rta-a-0f45936e3",
  "block": "ot_hdc_v41x_sfu_chain",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-sfu",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/el1011-hbm-sfu",
-  "commit": "COMMIT",
+  "commit": "0f45936e3fd13b540e76ed8c7598cbdb6eaa5455",
   "extra_paths": [
    "tests/rtl/hub_reset"
   ]
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/sfu_chain_rta/sfu_chain_rta-a-COMMIT"
+   "to": "results/rtl/ref_tile/sfu_chain_rta/sfu_chain_rta-a-0f45936e3"
   }
  ],
  "cycles_added": 0,
