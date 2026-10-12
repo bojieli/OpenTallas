@@ -4,12 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:s81-suhc-hier-1011",
  "purpose": "s81-suhc-hier-1011 HC crootr C=2 via the reference tile flow (die slot contract_hcs_e outline + faces): a860089b7 rw-pd40 hand view NEEDS_RTL TT -31.83 / FF -4.97 (input s_fd -> fd_c capture hold) -> uniform input hold stage (inhold) + ref_tile io_ref; ",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
