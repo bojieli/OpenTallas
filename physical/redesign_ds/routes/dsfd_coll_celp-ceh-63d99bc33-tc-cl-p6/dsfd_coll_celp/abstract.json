@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_coll_celp",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/dsfd_coll_celp-ceh-63d99bc33-tc-cl-p6/routes/dsfd_coll_celp_ceh_63d99bc33_tc_cl_p6/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_celp-ceh-63d99bc33-tc-cl-p6/routes/dsfd_coll_celp_ceh_63d99bc33_tc_cl_p6/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_celp-ceh-63d99bc33-tc-cl-p6/routes/dsfd_coll_celp_ceh_63d99bc33_tc_cl_p6/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_celp-ceh-63d99bc33-tc-cl-p6/routes/dsfd_coll_celp_ceh_63d99bc33_tc_cl_p6/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_celp-ceh-63d99bc33-tc-cl-p6/routes/dsfd_coll_celp_ceh_63d99bc33_tc_cl_p6/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_celp-ceh-63d99bc33-tc-cl-p6/routes/dsfd_coll_celp_ceh_63d99bc33_tc_cl_p6/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_celp-ceh-63d99bc33-tc-cl-p6/routes/dsfd_coll_celp_ceh_63d99bc33_tc_cl_p6/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_coll_celp.lef": "ebc68067c4c118b709f71d84d4074de541075780520e20ad91cbd4f7ac12842c",
+    "dsfd_coll_celp_ff.lib": "2567ef1444e69bcef01cdfbfbe5a20b0946d00b70e8df14aab5b12346d4d45e3",
+    "dsfd_coll_celp_ss.lib": "57364ff8b6f43cd8b6ff9f808a2fe3034aca2472b07134ddeb0bddd2809a5ec4"
+  },
+  "ok": true
+}

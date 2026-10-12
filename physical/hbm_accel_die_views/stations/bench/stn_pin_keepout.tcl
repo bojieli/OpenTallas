@@ -59,7 +59,11 @@ foreach k [array names ext] {
   }
   }
   set lv [[$pk_tech findLayer $ln] getRoutingLevel]
-  foreach adj [list [expr {$lv - 1}] [expr {$lv + 1}]] {
+  # OT_PK_ABOVE_ONLY=1 (conservative-1011 2026-10-11): keep only the layer ABOVE the pin layer clear (the parent's
+  # access side, child_lint check (f)); the layer below stays open for the block's own via access to its dense face
+  # (hfd_hc_tile_xl: a both-sides keepout over 512 W-face M4 pins left 268 M3/V3/M4 EOL/spacing DRCs at x 0.23-0.35).
+  set pk_adjs [expr {([info exists ::env(OT_PK_ABOVE_ONLY)] && $::env(OT_PK_ABOVE_ONLY)) ? [list [expr {$lv + 1}]] : [list [expr {$lv - 1}] [expr {$lv + 1}]]}]
+  foreach adj $pk_adjs {
     if {$adj < 2} continue
     set al [$pk_tech findRoutingLayer $adj]
     if {$al eq "NULL"} continue

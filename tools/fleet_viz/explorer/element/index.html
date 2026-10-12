@@ -126,6 +126,8 @@ svg.hist{width:100%;display:block}
 .dots i.on{background:var(--story)}
 body.story .side{opacity:.55}
 body.story .lensbar{opacity:.5;pointer-events:none}
+body.tab-geo .stagewrap{height:auto;min-height:0}
+body.tab-geo .side{max-height:calc(100vh - 90px)}
 @media (max-width: 980px){
   body.tab-rtl .main{grid-template-columns:minmax(0,1fr)}
   .main{grid-template-columns:minmax(0,1fr)}
@@ -183,23 +185,98 @@ body.tab-rtl .main{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
 @media (max-width: 980px){ .tabbar{position:relative;top:0} .tabs button{font-size:14px;padding:7px 10px}
 
   body.tab-rtl .main{grid-template-columns:minmax(0,1fr)} }
+
+/* layout viewer (Layout tab: layout.js) */
+.geo{position:relative;background:var(--canvas);height:calc(100vh - 90px);min-height:480px;min-width:0;overflow:hidden;outline:none}
+.geo .lv-canvas{position:absolute;inset:0}
+.geo .lv-busy{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font:13px/1.6 var(--sans);color:var(--dim);flex-direction:column;gap:12px}
+.lv-dim{color:var(--faint)}
+.lv-spin{width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:lvspin 1s linear infinite}
+@keyframes lvspin{to{transform:rotate(360deg)}}
+.lv-top{position:absolute;left:8px;top:8px;right:8px;display:flex;gap:6px;align-items:flex-start;z-index:4;flex-wrap:wrap;pointer-events:none}
+.lv-top>*{pointer-events:auto}
+.lv-search{position:relative;flex:0 1 300px;min-width:150px}
+.lv-search input{width:100%;background:var(--tipbg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font:12px var(--mono)}
+.lv-res{position:absolute;left:0;right:0;top:34px;background:var(--panel);border:1px solid var(--line);border-radius:8px;max-height:320px;overflow:auto;box-shadow:0 10px 30px #0006}
+.lv-res button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--rowline);padding:5px 8px;font:11.5px var(--mono);color:var(--ink);cursor:pointer;overflow-wrap:anywhere}
+.lv-res button:hover{background:var(--hover)}
+.lv-res small{color:var(--faint)}
+.lv-tag{display:inline-block;font:700 9.5px var(--mono);text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:4px;padding:0 3px;margin-right:4px}
+.lv-info{position:absolute;left:8px;bottom:34px;z-index:3;font:10.5px var(--mono);color:var(--dim);background:var(--tipbg);border:1px solid var(--line);border-radius:6px;padding:2px 7px;max-width:calc(100% - 210px)}
+.lv-coord{position:absolute;right:196px;bottom:8px;z-index:3;font:10.5px var(--mono);color:var(--dim);background:var(--tipbg);border:1px solid var(--line);border-radius:6px;padding:2px 7px;min-height:1em}
+.lv-coord:empty{display:none}
+.lv-scale{position:absolute;left:8px;bottom:8px;z-index:3;font:10.5px var(--mono);color:var(--dim);background:var(--tipbg);border:1px solid var(--line);border-radius:6px;padding:2px 7px;display:flex;align-items:center;gap:6px}
+.lv-scale i{display:inline-block;height:6px;border:1.5px solid var(--ink);border-top:0}
+.lv-mini{position:absolute;right:8px;bottom:8px;z-index:3;width:180px;height:120px;border:1px solid var(--line);border-radius:8px;background:var(--canvas);cursor:crosshair;touch-action:none}
+.lv-tip{position:absolute;z-index:6;pointer-events:none;background:var(--tipbg);border:1px solid var(--line);border-radius:9px;padding:7px 9px;font:12px var(--sans);max-width:380px;box-shadow:0 10px 30px #0006;color:var(--ink)}
+.lv-tip .n{font:700 12px var(--mono);word-break:break-all}
+.lv-tip .m{color:var(--dim);font:11.5px var(--mono);margin-top:2px;word-break:break-all;line-height:1.45}
+.lv-pre{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.lv-pre .btn{padding:4px 8px;font-size:11.5px}
+.lv-layers{display:flex;flex-direction:column;gap:1px;font:12px var(--mono)}
+.lv-row{display:grid;grid-template-columns:minmax(0,1fr) 22px 84px 40px;align-items:center;gap:6px;padding:2px 4px;border-radius:5px}
+.lv-row:hover{background:var(--hover)}
+.lv-row.off .lv-ln{opacity:.4}
+.lv-vis{display:flex;align-items:center;gap:6px;cursor:pointer;min-width:0}
+.lv-vis input{margin:0}
+.lv-ln{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv-row small{color:var(--faint);font-size:10px;text-align:center}
+.lv-row input[type=range]{width:84px;accent-color:var(--accent)}
+.lv-solo{font:600 10px var(--mono);background:none;border:1px solid var(--line);border-radius:5px;color:var(--dim);cursor:pointer;padding:1px 4px}
+.lv-solo:hover{color:var(--ink);border-color:var(--faint)}
+.lv-sw{width:16px;height:12px;border:1.5px solid var(--c);border-radius:2px;flex:none;display:inline-block;background:color-mix(in srgb,var(--c) 30%,transparent)}
+.lv-sw[data-pat="0"]{background:var(--c)}
+.lv-sw[data-pat="1"],.lv-sw[data-pat="7"]{background:repeating-linear-gradient(-45deg,var(--c) 0 1.5px,transparent 1.5px 4px)}
+.lv-sw[data-pat="2"],.lv-sw[data-pat="8"]{background:repeating-linear-gradient(45deg,var(--c) 0 1.5px,transparent 1.5px 4px)}
+.lv-sw[data-pat="3"],.lv-sw[data-pat="9"]{background:repeating-linear-gradient(45deg,var(--c) 0 1px,transparent 1px 4px),repeating-linear-gradient(-45deg,var(--c) 0 1px,transparent 1px 4px)}
+.lv-sw[data-pat="5"]{background:repeating-linear-gradient(0deg,var(--c) 0 1.5px,transparent 1.5px 4px)}
+.lv-sw[data-pat="6"]{background:repeating-linear-gradient(90deg,var(--c) 0 1.5px,transparent 1.5px 4px)}
+.lv-sw[data-pat="4"]{background:radial-gradient(var(--c) 1px,transparent 1.3px) 0 0/4px 4px}
+.lv-sw[data-pat="10"]{background:none}
+.lv-kinds{margin-top:8px;font-size:12px}
+.lv-kinds summary{cursor:pointer;color:var(--dim)}
+.lv-kgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;margin-top:6px}
+.lv-chk{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink);cursor:pointer}
+.lv-ovt{margin-bottom:8px;color:var(--dim)}
+.lv-list{display:flex;flex-direction:column;gap:3px}
+.lv-f{display:block;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:12px var(--sans);color:var(--ink);cursor:pointer;overflow-wrap:anywhere}
+.lv-f:hover,.lv-f.on{border-color:var(--hot)}
+.lv-f small{float:right;color:var(--faint);font:10.5px var(--mono);margin-left:6px}
+.lv-sev{font:700 10px var(--mono);border:1px solid currentColor;border-radius:4px;padding:0 4px}
+.lv-fd{margin-top:8px;border:1px solid var(--hot);border-radius:8px;padding:8px 10px;background:color-mix(in srgb,var(--hot) 6%,var(--panel))}
+.lv-fd h4{margin:0 0 6px;font:700 12.5px var(--sans)}
+.lv-fd p{font-size:12px;color:var(--ink);overflow-wrap:anywhere}
+.lv-ramp{height:10px;border-radius:3px;margin:4px 0 2px}
+.lv-solid .lv-top,.lv-solid .lv-info,.lv-solid .lv-mini,.lv-solid .lv-scale,.lv-solid .lv-coord{display:none!important}
+.lv-net{margin-top:10px;padding:7px 9px;border:1px solid var(--accent);border-radius:8px;font:12px var(--mono);overflow-wrap:anywhere}
+@media (max-width: 980px){
+  .geo{height:62vh;min-height:360px}
+  .lv-mini{width:120px;height:80px}
+  .lv-coord{display:none}
+  .lv-info{bottom:34px;max-width:calc(100% - 140px)}
+}
 </style>
+<link rel="stylesheet" href="/explorer/element/shell.css">
 </head>
 <body>
 <div class="top">
-  <a class="back" href="/explorer">&larr; Chip Explorer</a>
-  <h1 id="title">Element</h1>
+  <nav class="crumbs-top" id="crumbs" aria-label="Breadcrumb"><a href="/explorer">Chip Explorer</a></nav>
   <span class="sp"></span>
   <button class="btn" id="theme" type="button" title="Switch light / dark">Theme</button>
 </div>
-<nav class="tabbar" aria-label="Element views"><div class="tabs" role="tablist" id="tabs"></div><p class="tabdesc" id="tabdesc"></p></nav>
+<header class="ehead" id="ehead"><h1 id="title">Element</h1><p class="eh-sub" id="ehsub"></p><div class="eh-desc" id="ehdesc" hidden></div><div class="eh-chips" id="ehchips"></div></header>
+<nav class="tabbar" aria-label="Element views"><div class="tabs" role="tablist" id="tabs"></div><p class="tabdesc" id="tabdesc"></p><p class="tabna" id="tabna" hidden></p></nav>
 <div class="summary"><p id="sum">Loading&hellip;</p></div>
 <div class="pills" id="pills"></div>
 <div class="main" id="main">
-  <div class="stagewrap"><div class="stage" id="stage"></div></div>
+  <div class="stagewrap"><div class="stage" id="stage"></div><div class="geo" id="geo" hidden></div></div>
   <aside class="side" id="side" aria-label="Detail"></aside>
+  <aside class="side" id="geoside" aria-label="Layers and overlays" hidden></aside>
 </div>
+<div class="shellview" id="shellview" hidden></div>
 <div id="tip" hidden></div>
-<script src="elem.js"></script>
+<script src="/explorer/element/shell.js"></script>
+<script src="/explorer/element/lv_decode.js"></script>
+<script src="/explorer/element/elem.js"></script>
 </body>
 </html>

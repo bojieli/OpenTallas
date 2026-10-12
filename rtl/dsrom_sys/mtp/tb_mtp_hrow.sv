@@ -70,6 +70,9 @@ module tb_mtp_hrow;
             evk[nev] = 1; evu[nev] = 0; eva[nev] = 5; evn[nev] = 3; evy[nev] = 101; eve[nev] = 0; nev = nev + 1;
             eq[ne] = {UW'(0), NW'(5), NW'(101), 4'(0)};                  // (never completes: seed waits at row 4)
             rq_exp[nr] = {4'(0), UW'(0), NW'(3)}; nr = nr + 1;        // row 3 is served, row 4 must NOT be
+            // the seed client reaches row 4 before the ring wraps, whatever the store's read latency (a part-only check
+            // must be caught serving row 4's part-0 beats; el1011-ds-mtp rev 3: the wrap used to race the row-4 reads)
+            evk[nev] = 3; evn[nev] = 6000; nev = nev + 1;
             rows(0, 9, 20, 0);                                        // the ring wraps: pos 20 lands on row 4's slot
             exp_sf = 1;                                               // store fault[0] overrun
         end
@@ -120,6 +123,8 @@ module tb_mtp_hrow;
                     if (!evd[ei][k2]) begin
                         pq[k2][pqw[k2]] = {UW'(evu[ei]), NW'(evp[ei]), 4'(eve[ei]), 2'(k2)}; pqw[k2] = pqw[k2] + 1;
                     end
+            end else if (evk[ei] == 3) begin
+                repeat (evn[ei]) @(posedge clk);                       // pause (no row, no descriptor)
             end else begin
                 if (evk[ei] == 1) begin
                     while (pqr[0] < pqw[0] || pqr[1] < pqw[1] || pqr[2] < pqw[2] || g_tx[0].busy || g_tx[1].busy || g_tx[2].busy)
@@ -137,7 +142,12 @@ module tb_mtp_hrow;
     tb_hrow_relay #(.W(AW + 1), .HOPS(QF)) u_qf (.clk(clk), .rst_n(rst_n), .i(t_vrq), .o(vrq_far));
     tb_hrow_relay #(.W(1), .HOPS(QR)) u_qg (.clk(clk), .rst_n(rst_n), .i(vg_far), .o(vg_near));
     tb_hrow_relay #(.W(1025), .HOPS(QR)) u_qs (.clk(clk), .rst_n(rst_n), .i(t_vrs), .o(vrs_near));
-    dsfd_mtp_hrow #(.NW(NW), .USER_W(UW), .AW(AW), .FWD_P(PF), .RET_P(PR), .FWD_Q(QF), .RET_Q(QR)) u_st (
+`ifdef OT_HROW_TILES
+    dsfd_mtp_hrow_tc #(.NW(NW)
+`else
+    dsfd_mtp_hrow #(.NW(NW)
+`endif
+           , .USER_W(UW), .AW(AW), .FWD_P(PF), .RET_P(PR), .FWD_Q(QF), .RET_Q(QR)) u_st (
         .ck(clk), .rst(rst_n), .f_hp0(link_far[0]), .f_hp1(link_far[1]), .f_hp2(link_far[2]), .t_hpg(g_far),
         .f_vrq(vrq_far), .t_vrq(vg_far), .t_vrs(t_vrs), .f_clr({UW'(0), 1'b0}), .t_flt(st_flt));
     wire [1024:0] t_x, x_far; wire [1:0] f_x; reg [1:0] x_join; wire [PW:0] t_ps; wire [3:0] l_flt;

@@ -1,0 +1,46 @@
+{
+  "name": "ot_engc_t_pbc",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/el1011-engc-pbc-a-abf1f1d70-tc-cl/routes/el1011_engc_pbc_a_abf1f1d70_tc_cl/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -6.918932093924468e-11 min -1.6715995254656946e-10",
+      "image": "openroad/orfs:asap7lock",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/el1011-engc-pbc-a-abf1f1d70-tc-cl/routes/el1011_engc_pbc_a_abf1f1d70_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/el1011-engc/srcgate/physical/s81_engc_tiles/views/ot_engc_t_pbc:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/el1011-engc/srcgate/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "files": {
+    "ot_engc_t_pbc.lef": "be726bb2ac8f77efea3dbf69c67d09d58d98b2dcffc48d5ba8cc6af77bf0bfa5",
+    "ot_engc_t_pbc_ff.lib": "3ead27264d84d33ceda8bfc6afc239fc6f26baed88599d4d6ee3214286fef5ec",
+    "ot_engc_t_pbc_ss.lib": "82eb1280d671d76cebcf93fef12dee5310d2c4148539479854be249a600c2623",
+    "ot_engc_t_pbc_tt.lib": "cbfcc13bf86d7d4bfff92e966ba17af555633d107670d8b5f33cbb44501aa66b"
+  },
+  "ok": true
+}
