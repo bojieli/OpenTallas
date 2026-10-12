@@ -54,16 +54,39 @@ module ot_hgi_qw_dbq (
     wire bv, bf; wire [511:0] by;
     ot_hgi_fp4qdq #(.PIPE(1), .XEXT(1)) bq (.clk(clk), .rst_n(rr_n[0]), .v(take && op == 6), .x(xs), .vo(bv), .y(by),
         .fault(bf), .packed_word(), .x4_ext(xc));
+    // NB-cycle latency match (byo = by delayed NB edges).  Data is a ring of ND = NB-1 enabled 512-bit entries plus
+    // one output register, NOT an NB-deep shift register: the shift register was 5,120 back-to-back flop->flop pairs
+    // with no logic between them, so CTS/GRT hold repair flooded (b2: ~27k hold buffers, DPL-0033 at 4_1_cts).
+    // Every ring path is flop -> enable mux / one-hot read AO-tree -> flop.  Read-before-overwrite at the write slot:
+    // o(edge t) = mem[wp] = by(edge t-ND), so byo(edge t) = by(edge t-NB), identical to the shift register.
+    // The one-hot pointer is replicated per 64-bit lane group (8 x ND flops) so no select net fans out to 512 bits.
     localparam integer NB = 11;
-    reg [NB-1:0] vp, fp; reg [511:0] yp [0:NB-1]; integer i;
+    localparam integer ND = NB - 1;
+    localparam integer NG = 8, GW = 512 / NG;
+    reg [NB-1:0] vp, fp;
     always @(posedge clk or negedge rr_n[0])
         if (!rr_n[0]) begin vp <= 0; fp <= 0; end
         else begin vp <= {vp[NB-2:0], bv}; fp <= {fp[NB-2:0], bf}; end
-    always @(posedge clk) begin
-        yp[0] <= by;
-        for (i = 1; i < NB; i = i + 1) yp[i] <= yp[i-1];
-    end
-    assign bvo = vp[NB-1]; assign bfo = fp[NB-1]; assign byo = yp[NB-1];
+    genvar g;
+    generate for (g = 0; g < NG; g = g + 1) begin : g_ring
+        reg [ND-1:0] wp;
+        reg [GW-1:0] mem [0:ND-1];
+        reg [GW-1:0] rd, o;
+        integer k;
+        always @(posedge clk or negedge rr_n[0])
+            if (!rr_n[0]) wp <= {{(ND-1){1'b0}}, 1'b1};
+            else wp <= {wp[ND-2:0], wp[ND-1]};
+        always @(*) begin
+            rd = {GW{1'b0}};
+            for (k = 0; k < ND; k = k + 1) rd = rd | ({GW{wp[k]}} & mem[k]);
+        end
+        always @(posedge clk) begin
+            for (k = 0; k < ND; k = k + 1) if (wp[k]) mem[k] <= by[g*GW +: GW];
+            o <= rd;
+        end
+        assign byo[g*GW +: GW] = o;
+    end endgenerate
+    assign bvo = vp[NB-1]; assign bfo = fp[NB-1];
 endmodule
 
 module ot_hgi_qw_daq #(parameter integer MUTANT = 0) (

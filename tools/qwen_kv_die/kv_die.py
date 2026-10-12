@@ -625,6 +625,7 @@ def _relays(m):
             c = prev[c]
         return path[::-1]
     nb, stages, lengths = [], {}, {}
+    rly_ends = {}                                  # relay inst -> (driver inst, load inst) of the bus it stages
     for bid, cl, bits, eps in m['buses']:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
@@ -694,6 +695,7 @@ def _relays(m):
             nm = f'rly_{bid}_{k}'
             it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, 'R0', kind='relay', region='relay')
             m['insts'].append(it)
+            rly_ends[nm] = (a, b)
             for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
                 for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
                     rocc.setdefault((gx, gy), []).append((it.x, it.y, it.x + fw, it.y + fh))
@@ -705,6 +707,22 @@ def _relays(m):
             nb.append((bid, cl, bits, eps))
             continue
         nb.append((f'{bid}__r{n}', cl, bits, [prev_ep, (b, pb)]))
+    # el1011-q-kvd 2026-10-12 (region-DRT pilot, results/physical/die_region_drt_1012/README.md): a relay is a register
+    # stage on the core clock, but its ck was on no bus, so the auto-pin pass never drew it -> qkd_rly_* LEF/odb masters
+    # had only a/b, the element lib (pins from the LEF) carried no arcs, and the die STA could not time a single relay hop.
+    # Each relay now joins the core clock trunk of the instance that drives its bus (else its load's, else the centre).
+    trunk = {}
+    for i, (bid_, cl_, _b, eps_) in enumerate(nb):
+        if cl_ == 'clock_trunk' and bid_.startswith('clk_core_'):
+            for inst_, _p in eps_[1:]:
+                trunk.setdefault(inst_, i)
+    adds = {}
+    for nm_, (drv, rcv) in rly_ends.items():
+        i = trunk.get(drv, trunk.get(rcv, next(j for j, e in enumerate(nb) if e[0] == 'clk_core_c')))
+        adds.setdefault(i, []).append((nm_, 'ck'))
+    for i, extra in adds.items():
+        bid_, cl_, bits_, eps_ = nb[i]
+        nb[i] = (bid_, cl_, bits_, list(eps_) + extra)
     m['buses'] = nb
     m['relay_stages'] = stages
     m['route_um'] = lengths

@@ -344,6 +344,7 @@ body.nol #lcol,body.nor #rcol{visibility:hidden;border:0}
     <header class="ehead" id="ehead"><h1 id="title">Element</h1><p class="eh-sub" id="ehsub"></p><div class="eh-chips" id="ehchips"></div><div class="eh-desc" id="ehdesc" hidden></div></header>
     <div class="summary"><p id="sum">Loading&hellip;</p></div>
     <div class="pills" id="pills"></div>
+    <div class="side fvf-box" id="flowside" aria-label="Flow and progress"></div>
     <div class="side" id="side" aria-label="Detail"></div>
     <div class="side" id="geoside" aria-label="Layout details" hidden></div>
   </aside>
@@ -353,5 +354,8 @@ body.nol #lcol,body.nor #rcol{visibility:hidden;border:0}
 <script src="/explorer/element/shell.js"></script>
 <script src="/explorer/element/lv_decode.js"></script>
 <script src="/explorer/element/elem.js"></script>
+<script src="/fv_flow.js"></script>
+<script>(function(){ var m = location.pathname.match(/^\/explorer\/element\/([^/]+)$/), q = new URLSearchParams(location.search);
+  var el = m && m[1] !== "index.html" ? decodeURIComponent(m[1]) : q.get("e"); if (window.FVFlow) FVFlow.mount("flowside", {element: el}); })();</script>
 </body>
 </html>
