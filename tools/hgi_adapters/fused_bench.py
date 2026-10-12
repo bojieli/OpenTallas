@@ -78,7 +78,9 @@ def main():
         vmi.extend(sorted((vm_in or {}).items()))
         vme.extend(sorted((vm_out or {}).items()))
         hbm.extend(sorted((hb or {}).items()))
-    for v, tr, cpl, vm in C.conformance(lambda v: v['row'] == 'CF-NORM'):
+    import os
+    hc_only = os.environ.get('FUSED_HC_ONLY', '0') == '1'       # debug / unit-rate: only the DS HC cases
+    for v, tr, cpl, vm in ([] if hc_only else C.conformance(lambda v: v['row'] == 'CF-NORM')):
         hb = {}
         for base, hexs in v['dies'][0].get('hbm_in', []):
             b = bytes.fromhex(hexs)
@@ -88,9 +90,9 @@ def main():
         add([d for d in tr if C.unit_of(d) == 4], vm, C.vm_out_of(v['expect']['dies'][0]), hb)
     # Qwen token ROW_NORM records with random data (hgi_sim lib.row_norm = the expected VM)
     rng = np.random.default_rng(5)
-    tr, _ = C.qwen_dispatch()
+    tr, _ = C.qwen_dispatch() if not hc_only else ([], None)
     seen = set()
-    for d in tr:
+    for d in ([] if hc_only else tr):
         if C.unit_of(d) != 4 or C.fld(d['hdr'], 'op', C.UOP) != 1:
             continue
         A, B, O = d['eff'][0], d['eff'][1], d['eff'][4]
@@ -131,7 +133,7 @@ def main():
         x = GV.to_bf16(GV.seqsum([GV.mul(pre[j], h[j]) for j in range(4)]))
         y = GV.rmsnorm_bf16(x, w, eps)
         # pre must not overlap h (4 D words at 0): at D 5120 the old cb 20000 overwrote h[3][4640..4643] (bench bug)
-        ab, cb, ob, bb = 0, (20000 if 4 * D <= 20000 else 4 * D + 64), 30000, 0x4_0000_0000
+        ab, cb, ob, bb = 0, (20000 if 4 * D <= 20000 else 4 * D + 64), 30720, 0x4_0000_0000   # ob bank phase 0 (= ab's): lane-local rule
         vin = {ab + i: int(v) for i, v in enumerate(f32w(h.reshape(-1)))}
         vin.update({cb + j: int(f32w(pre)[j]) for j in range(4)})
         gb = (f32w(w) >> 16).astype(np.uint32)
@@ -145,7 +147,7 @@ def main():
         comb = (rng.random((4, 4)) * 0.5).astype(np.float32)
         mix = [GV.seqsum([GV.mul(comb[j, k], res[j]) for j in range(4)]) for k in range(4)]
         hout = GV.to_bf16(np.stack([GV.add(GV.mul(post[k], yv), mix[k]) for k in range(4)]))
-        yb, rb, mb, ob2 = 0, 8192, 40000, 50000
+        yb, rb, mb, ob2 = 0, 8192, 40000, 51200   # y / res / out at bank phase 0 (lane-local rule)
         vin = {yb + i: int(v) for i, v in enumerate(f32w(yv))}
         vin.update({rb + i: int(v) for i, v in enumerate(f32w(res.reshape(-1)))})
         mixv = np.concatenate([post, comb.reshape(-1)])
