@@ -11,15 +11,18 @@
 // fault, NORM issue complete); the write-count done goes back as a pulse (wdone), as do the return's event bits
 // (POST outbound, fault codes 1 / 4).  MUT 3 / 4 as ot_s81_hc_hroot.
 // ---------------------------------------------------------------------------------------------------------------------
+// comb v2b (2026-10-12): the rows' 4 x 512 b data part is bit-sliced into ot_s81_hc_caq u (capture + OR + the write
+// slot u data flop there); crx keeps the 108-b headers, the writer control and slots 4-7 (codes / exps) -- it was
+// pin-bound at 14,197 IO pins (PPL-0024 on the 117 um outline).
 module ot_s81_hc_crx #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW
 ) (
     input  wire                 sk, srs,
     input  wire [RVW-1:0]       w_rv, e_rv,
-    input  wire [RDW-1:0]       w_rd, e_rd,
+    input  wire [P_D-1:0]       w_rd, e_rd,     // header part only (the data part is bit-sliced into ot_s81_hc_caq)
     input  wire [RVW-1:0]       c_rv,           // centre valids (ot_s81_hc_ccr, stage RP-1)
-    input  wire [RDW-1:0]       c_rd,           // centre rows (ot_s81_hc_cpad, stage RP-1)
+    input  wire [P_D-1:0]       c_rd,           // centre row headers (ot_s81_hc_cpad, stage RP-1)
     input  wire                 j_v,            // job state from ot_s81_hc_cseq
     input  wire [2:0]           j_kind,
     input  wire [13:0]          j_base,
@@ -29,10 +32,10 @@ module ot_s81_hc_crx #(
     input  wire [S_RT*10-1:0]   a_e,
     input  wire [S_RT*24-1:0]   a_iq,
     output wire [S_RT-1:0]      o_rv,           // to the act-quant tiles (stage-2 flops)
-    output wire [RDW-1:0]       o_rd,
+    output wire [P_D-1:0]       o_rd,
     output reg                  o_run,
     output reg  [2:0]           o_kind,
-    output wire [4*WSL-1:0]     w_w,
+    output wire [4*HSL-1:0]     w_h,            // west slots 0-3 {mask, row, v}; data = caq wd (same cycle)
     output wire [4*WSL-1:0]     e_w,
     output reg                  x_wdone, x_pob, x_f1, x_f4
 );
@@ -46,7 +49,7 @@ module ot_s81_hc_crx #(
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FSW = O_D + S_RD * 512, FDW = O_D + FDD;
     localparam integer P_T = 0, P_I = S_RT, P_Q = P_I + 8 * S_RT, P_PI = P_Q + 16 * S_RT, P_D = P_PI + 8,
                        RDW = P_D + 512 * S_RT;
-    localparam integer WSL = 1 + 14 + 16 + 512;
+    localparam integer WSL = 1 + 14 + 16 + 512, HSL = WSL - 512;
     localparam integer YS1 = (L1 > 0) ? L1 * GS * 32 : 1;
     localparam integer HOP = 2 + RLY;                             // registers a sub-tile hop (each bus)
     localparam integer PAD = HOP * (NP - L1) * (HALF ? 2 : 1);    // the centre chain is short by NP - L1 octets
@@ -66,15 +69,15 @@ module ot_s81_hc_crx #(
     localparam [2:0] K_HSTORE = 1, K_NORM = 4;
     // ---------------------------------------------------------------- captures
     reg  [RVW-1:0] wrv, erv, crv;
-    reg  [RDW-1:0] wrd, erd, crd;
+    reg  [P_D-1:0] wrd, erd, crd;
     always @(posedge sk or negedge rs_n)
         if (!rs_n) begin wrv <= 0; erv <= 0; crv <= 0; end
         else begin wrv <= w_rv; erv <= e_rv; crv <= c_rv; end
     always @(posedge sk) begin wrd <= w_rd; erd <= e_rd; crd <= c_rd; end
     reg [RVW-1:0] rv;
-    reg [RDW-1:0] rd;
+    reg [P_D-1:0] rd;
     always @(posedge sk or negedge rs_n) if (!rs_n) rv <= 0; else rv <= wrv | erv | ((L1 > 0) ? crv : {RVW{1'b0}});
-    always @(posedge sk) rd <= wrd | erd | ((L1 > 0) ? crd : {RDW{1'b0}});
+    always @(posedge sk) rd <= wrd | erd | ((L1 > 0) ? crd : {P_D{1'b0}});
     assign o_rv = rv[S_RT-1:0];
     assign o_rd = rd;
     reg                 jv, je, jflt, jciv, jfq, jfy;
@@ -126,7 +129,7 @@ module ot_s81_hc_crx #(
                     if (rv[s] && run && (rd[P_T + s] || f_y)) begin : one
                         reg [7:0] v; reg [15:0] q;
                         v = rd[P_I + 8 * s +: 8]; q = rd[P_Q + 16 * s +: 16];
-                        wq_v[s] <= 1'b1; wq_mask[16 * s +: 16] <= 16'hFFFF; wq_d[512 * s +: 512] <= rd[P_D + 512 * s +: 512];
+                        wq_v[s] <= 1'b1; wq_mask[16 * s +: 16] <= 16'hFFFF;   // data: ot_s81_hc_caq u = s (wd)
                         wq_row[14 * s +: 14] <= rd[P_T + s] ? base + q : base + (f_q ? NV * (CR + ER) : 0) + v * YR + q;
                         n_w = n_w + 1;
                     end
@@ -168,7 +171,7 @@ module ot_s81_hc_crx #(
     // the write slots: the slot registers are the output flops (slots 0-3 west, 4-7 east)
     genvar g;
     generate for (g = 0; g < 4; g = g + 1) begin : g_w
-        assign w_w[WSL * g +: WSL] = {wq_d[512 * g +: 512], wq_mask[16 * g +: 16], wq_row[14 * g +: 14], wq_v[g]};
+        assign w_h[HSL * g +: HSL] = {wq_mask[16 * g +: 16], wq_row[14 * g +: 14], wq_v[g]};   // + caq g's wd
         assign e_w[WSL * g +: WSL] = {wq_d[512 * (g + 4) +: 512], wq_mask[16 * (g + 4) +: 16], wq_row[14 * (g + 4) +: 14], wq_v[g + 4]};
     end endgenerate
 endmodule
