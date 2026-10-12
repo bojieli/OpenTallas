@@ -1,0 +1,220 @@
+# HBM die B2: quadrant-local VM slices (spec, 2026-10-12)
+
+Owner direction 2026-10-12: make the HBM die easier to close by putting compute next to its data (ROM-die and
+GPU/DaVinci practice), with no central hub carrying the main traffic. The study `results/arch/hbm_die_phy_study_1012/STUDY.md`
+recommends B2. B2 keeps 4 PHYs and splits the central VM (`hb_hgi_vm`, 32 banks, 2.07 x 2.07 mm, about 62 kb of wide
+ports on the spine) into 4 quadrant slices. This file is the B2 spec of record. Branch: `claude/el1011-hbm-b2`. Log:
+`claude-takeover-20261007/el1011-hbm-b2.log`.
+
+The current r25gq track stays live as the fallback until B2 is proven.
+
+## 0. Gate: windowed hub GRT (step 1)
+
+Generator preset `r25gqn_b2` in `tools/hbm_accel_die_fp.py` is v8 (`r25gqn_pr8`) with these changes:
+- **Removed:** `hb_hgi_vm`, lgE/lgW, `hgi_vmw_dma`, `hgi_vmr2_dma`, `hgi_vmw2_coll` and the central `hgi_vmap`.
+- **Added:** the slices, local lane groups, ring, COLL broadcast, ring-client taps, x-load and per-quarter `vmap`
+  (sections 1-3).
+
+The GRT settings are identical to the v8 window tests (`w_a`): window 11-19 x 9-17 mm, k = 16, 5 iterations, M4/M5
+channel adjustment 0.5, `PYTHONHASHSEED=0`. Results are in section 7.
+
+## 1. Floorplan (physical spec before RTL)
+
+**Slices.** Four `hfd_hgi_vms` slices, each 950.4 x 1,684.8 um (1.60 mm2):
+
+| slice | position (lower-left) | placement |
+|---|---|---|
+| SW | (13,400, 9,000) | beside its quadrant's SU \| SFU column, inner side |
+| NW | (13,400, 15,200) | beside its quadrant's SU \| SFU column, inner side |
+| SE | (17,770, 9,000) | mirrored about the SU columns' centre line x = 16,060 |
+| NE | (17,770, 15,200) | mirrored about the SU columns' centre line x = 16,060 |
+
+- The spine keeps `hgi_idx`, `idx_sel`, `mtp`, `loader`, `coll`, `cmdproc`, `quant` and `vm8`. The old VM site
+  (14,399-16,472 x 12,506-14,580) becomes a free channel.
+- Each slice holds:
+  - 8 banks of the 32-bank `ot_hgi_vm_wide_bank` design (8 x 8,192 own words + a 4,096-word mirror window a bank);
+  - its loader quarter;
+  - its ring stop;
+  - its local lane-group head.
+
+  Utilisation target 50-60 %. Macro channels ≥ 20 um. Pins on the faces toward their peers:
+  - local group: the SU-column face;
+  - ring: the N/S face for the vertical link and the spine face for the horizontal link;
+  - ring clients: the spine face.
+
+**Local lane group** (replaces lgW/lgE). One per quadrant:
+- 8 lanes, lane b ↔ local bank b;
+- chain: slice → station at the SU face → station at the SFU face → station at the HC quarter face;
+- chain hop bits: rdn 2,067, wdn 19, rup 131, wup 2,243 = 4,460 b, against 17.8 kb for a 32-lane group;
+- client tap bits: 2,065 / 17 / 129 / 2,241;
+- stations: `hfd_stn_lg<q>{0,1,2}`, 64.8-um banks, 1,036.8 um long;
+- every hop is ≤ 504 um a stage, registered.
+
+**Ring** (`ot_hgi_vm_ring`, a 2 x 2 bidirectional ring):
+- links SW-NW, SE-NE, SW-SE and NW-NE, each 2,148 b each way plus a 4-b credit return;
+- `ot_fwd_link_stage` relays at ≤ 500 um;
+- stage counts (generator relay count + 2 face flops) are in section 7.
+
+**COLL broadcast** (replaces `hgi_vmw2_coll`, 8,961 b): a tree `coll` → SW, SE → NW, NE. Each edge is 1,088 b
+(an 8-lane sector group + header) plus a 2-b credit.
+
+**Ring clients.** The central units are 8-lane ring clients of one slice's ring stop (tap 4,452 b):
+
+| client | slice |
+|---|---|
+| cmdproc CP | NW |
+| cmdproc ATT adapter | NE |
+| quant | NW |
+| hc_eng | SE |
+
+**SM.MATVEC x load and attention.** D19 used to put the x load on lgE slot 0. Now each slice feeds its own
+quadrant's `hb_vm_<q>` (x read, 2,065 + 129 b), and attention q / p reads attach to the local slice.
+
+**HC aperture.** Each slice → its own HC quarter: 556 + 4 b (the 2,224-b aperture split by quarter).
+
+**DMA.** The loader becomes per-quadrant: `lq_<q>` / `lr_<q>` from its svc band end at slice q. The wide 8,992-b
+`vmw` and 8,257-b `vmr2` buses disappear from the spine. Their bandwidth is unchanged at 8 lanes x 4 slices.
+
+**Wire reach.** No single-cycle path is longer than 500 um. The longest ring link (SW-NW, about 4.5 mm) is about
+10 relay stages.
+
+**Clock.** Each slice is its own hard tile with a local tree (≤ 15k sinks a root) and a clock entry on its spine face.
+The die STA follows the view-insertion rule:
+- each view's entry is tapped at the region target minus the view's insertion;
+- every pin arrival is written as the real arrival plus the view's insertion. `tools/hbm_die_relay_sta.py` already
+  works this way: clocks are created at the sink pins in propagated mode, with -source latency = target minus
+  insertion, and the ETM arcs carry the insertion. The ideal-mode `set_clock_latency` error found on the Qwen die
+  (main 092d3e600) does not apply. The B2 die STA reuses `clock_plan.py balance` for early taps.
+
+## 2. Address map and VM semantics
+
+HGI-1 is unchanged, apart from the additive REPL window below. The VM is still one address space chosen by the
+compiler. Slices and mirrors are microarchitecture: a remote access is slower but legal.
+
+| word address range | owner |
+|---|---|
+| 0 .. 262,143 | slice `addr[17:16]` (q = 0 SW, 1 SE, 2 NW, 3 NE), 65,536 words each; inside a slice, sector s is in bank `s[2:0]`, row `s[15:3]` |
+| 262,144 .. 294,911 | **REPL window** (32,768 words), mirrored in every slice |
+
+The REPL window uses the mirror storage, so each slice has 98,304 physical words = 1.5x.
+- **REPL writes.** A write to REPL commits to the local mirror and streams to the other 3 slices over the ring.
+- **REPL reads.** Always local.
+- **REPL ordering.** It is per writer, and it is complete only when all 4 copies are written. A consumer in another
+  quadrant waits only on the sectors it reads (per-sector valid scoreboard in the mirror, section 4). It never waits
+  on a global flag.
+- **Capacity check.** The DS HC residual is 20,480 FP32 words and fits the 32,768-word window.
+
+**cmdproc and record adapters.**
+- The record's VM operand addresses select the slice (high bits), or REPL.
+- Each record is dispatched to the units of the slice(s) its operands live in:
+  - SU / SFU / HC / attention records go to the quadrant unit that owns the operand;
+  - a record whose operand spans quadrants is split by the compiler into per-quadrant sub-records (STRIPE4) that the
+    cmdproc issues to all 4 quadrants in one dispatch beat.
+- `cmdproc` routes a packet request (cq/cr) to the owning slice: local ports, or ring forwarding for remote ones.
+
+**Compiler / exporter.**
+- The VM allocator places quadrant q's TP slice in slice q: the outputs of SMs 8q..8q+7, its heads, and its SU operands.
+- Vectors read by all quadrants (layer inputs x, norms, residual, HC state) go in REPL.
+- SU templates are issued per slice.
+
+## 3. Hard rules (owner, binding)
+
+**R1. No global barrier.**
+- Every cross-slice exchange (ring traffic, REPL mirror streams, COLL broadcast, reduction partials) is
+  compiler-scheduled, streamed and credit-based.
+- No record, unit or slice waits for "all slices": there is no barrier, no all-done flag and no die-wide fence in the
+  datapath.
+- Consumers start on local data while remote segments arrive. Each consumer gates on per-sector valid (mirror
+  scoreboard) or per-partial arrival (reduction carry), never on a collective completion.
+- The only die-wide synchronisation left is the existing DMA.FENCE record against HBM, which is unchanged.
+
+**R2. Balanced MoE by construction.** Every expert's weight rows (and every dense matrix's rows) are split across all
+4 quadrants/clusters:
+- rows `[q*R/4, (q+1)*R/4)` sit in quadrant q's HBM stack;
+- they are computed by quadrant q's SMs;
+- the output segment lands in slice q (or streams into REPL if the next op needs it everywhere).
+
+Any routed expert set therefore loads every quadrant equally. The exporter refuses a placement that puts an expert's
+rows in fewer than 4 quadrants.
+
+**R3. Exchange-latency budget per layer.** The budget is in section 5. Every layer's exposed exchange cycles must stay
+within it, and the exporter reports the per-layer number.
+
+**R4. Measured, not modelled.** The native die e2e bench (DS L2 / L20 / L24 + Qwen L0) records the actual
+cross-slice cycles for every record with a remote operand: first-remote-sector arrival, last-remote-sector arrival,
+and exposed cycles (consumer stall waiting on remote data). They are reported next to the budget in section 7.
+
+## 4. Bit-exact cross-slice reductions
+
+- A reduction over a vector spread across slices (norm sum of squares, softmax max/sum, dot partials) is combined in
+  **the golden's order**:
+  - if the golden reduces in a fixed chunk sequence, slice q computes the partial over its chunks in that sequence, and
+    the partials are folded in chunk order by a serial carry around the ring (q0 → q1 → q2 → q3: one ring hop of
+    latency a fold, streamed);
+  - if the golden's order is a balanced tree whose level-2 subtrees coincide with the slices' chunk ranges, the
+    partials combine as `((P0 + P1) + (P2 + P3))`.
+- The RTL owner reads the frame reference for every reduction op and records which case applies.
+- Re-association is never used.
+- No reduction waits for all partials before starting (R1): the carry starts at q0 as soon as q0's local partial is
+  done, and each slice folds the incoming carry as soon as its own partial is ready.
+- Mirror scoreboard: every REPL sector has a valid bit per slice, cleared by the writer's `epoch` field. A read of an
+  invalid sector stalls only that read.
+
+## 5. Exchange-latency budget (R3)
+
+**Hop costs.**
+- Ring hop = relay stages (≤ 500 um each) + 2 face flops + 1 ring-stop arbitration.
+- The planned values (confirmed from the generator's relay counts in section 7):
+  - SW-NW / SE-NE about 12 cycles;
+  - SW-SE / NW-NE about 11 cycles;
+  - the diagonal (2 hops) about 23 cycles.
+- A remote read round trip is at most 2 x 23 + 4 (slice pipeline) = 50 cycles.
+
+**Exposure.** An exchange costs at most one farthest hop of exposure, because consumers start locally and the tail is
+streamed. The study's bound is 16 cycles a record with a remote operand.
+
+| | DeepSeek-V4.1 @ 1M (HBM AR) | Qwen3-8B @ 8K (HBM AR) |
+|---|---:|---:|
+| token cycles (S2) | 565,569 | 1,269,120 |
+| layers (ATT records / token) | 40 | 36 |
+| cycles / layer | 14,139 | 35,253 |
+| records with a cross-slice operand / token | 722: ALL_GATHER 584, GROUP_REDUCE_MCAST 40, HC_PRE_NORM 81, TOPK_MERGE 9, ROW_GATHER 8 | 217: ALL_REDUCE_SUM 72, MATVEC output to REPL 145 |
+| ... / layer | 18.1 | 6.0 |
+| exposure budget / record | 16 cycles | 16 cycles |
+| exposed exchange / layer, budget | 289 cycles = **2.0 %** of layer time | 96 cycles = **0.27 %** |
+| no-overlap worst case (23 cycles / record) | 415 = 2.9 % | 139 = 0.39 % |
+| overlap credit (SU local lanes, 8 cycles x 1,356 SU.VOP x 0.78 share) | -212 / layer (-1.5 %) | n/a |
+
+The budget passes when the measured exposed cycles a layer (R4) are ≤ 2.0 % of layer time on DS and ≤ 0.3 % on Qwen.
+
+## 6. Contract v9 delta (proposal to the HBM die lead)
+
+**D-B2-1.** Slot `hb_hgi_vm` is removed. The new slots are `hb_vms_{SW,SE,NW,NE}`, `hfd_hgi_vms`, 950.4 x 1,684.8 at
+the section 1 positions, with clock entry on the spine face.
+
+**D-B2-2.** The lgE/lgW nets and their stations are removed (`hb_stn_lgE_*` and `hb_stn_lgW_*`, plus the relays).
+In their place:
+- 4 local groups `hgi_lg<q>_*` (chain 4,460 b) with stations `hb_stn_lg<q>_{su,sfu,hc}`;
+- ring nets `vring_<a>_<b>` (2,148 b plus a 4-b credit, 8 directed links);
+- COLL broadcast `vcb_*` (1,088 + 2 b, 4 edges);
+- ring-client taps `vrc_{cp,att,q,hce}_*` (4,452 b);
+- x-load `vxl_<q>` (2,065 + 129 b);
+- `vmap_<q>` (556 + 4 b).
+
+**D-B2-3.** Removed: `hgi_vmw_dma` (+ rdy / done), `hgi_vmr2_dma` (+ _r) and `hgi_vmw2_coll` (+ _r). `lq_<q>` /
+`lr_<q>` re-terminate at `hb_vms_<q>`.
+
+**D-B2-4.** The packet clients' `hgi_vmq_*` / `hgi_vmr_*` go to their nearest slice, and that slice forwards remote
+addresses over the ring.
+
+**D-B2-5.** Client port re-facing:
+- SU / SFU / HC quarters each gain their local-group tap; the lgW tap was on SW only;
+- cmdproc's `f/t_lgE{cp,att}_*` become `f/t_rc{cp,att}_*` (4,452 b, down from 17.8 kb);
+- quant and hc_eng: likewise;
+- `hb_vm_<q>` gains `f_xl_rdn` / `t_xl_rup`.
+
+**D-B2-6.** HGI-1 (additive): the REPL window, word addresses 262,144-294,911.
+
+## 7. Results
+
+(filled in as they land: GRT, ring stage counts, benches, routes)
