@@ -184,22 +184,25 @@ body.tab-rtl .main{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
 
   body.tab-rtl .main{grid-template-columns:minmax(0,1fr)} }
 </style>
+<link rel="stylesheet" href="/explorer/element/shell.css">
 </head>
 <body>
 <div class="top">
-  <a class="back" href="/explorer">&larr; Chip Explorer</a>
-  <h1 id="title">Element</h1>
+  <nav class="crumbs-top" id="crumbs" aria-label="Breadcrumb"><a href="/explorer">Chip Explorer</a></nav>
   <span class="sp"></span>
   <button class="btn" id="theme" type="button" title="Switch light / dark">Theme</button>
 </div>
-<nav class="tabbar" aria-label="Element views"><div class="tabs" role="tablist" id="tabs"></div><p class="tabdesc" id="tabdesc"></p></nav>
+<header class="ehead" id="ehead"><h1 id="title">Element</h1><p class="eh-sub" id="ehsub"></p><div class="eh-desc" id="ehdesc" hidden></div><div class="eh-chips" id="ehchips"></div></header>
+<nav class="tabbar" aria-label="Element views"><div class="tabs" role="tablist" id="tabs"></div><p class="tabdesc" id="tabdesc"></p><p class="tabna" id="tabna" hidden></p></nav>
 <div class="summary"><p id="sum">Loading&hellip;</p></div>
 <div class="pills" id="pills"></div>
 <div class="main" id="main">
   <div class="stagewrap"><div class="stage" id="stage"></div></div>
   <aside class="side" id="side" aria-label="Detail"></aside>
 </div>
+<div class="shellview" id="shellview" hidden></div>
 <div id="tip" hidden></div>
-<script src="elem.js"></script>
+<script src="/explorer/element/shell.js"></script>
+<script src="/explorer/element/elem.js"></script>
 </body>
 </html>
