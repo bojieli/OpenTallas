@@ -911,6 +911,11 @@ module ot_hgi_su_unit #(
     // WIDE = 2: the production engine's 32 lmem sector lanes
     wire [31:0] x_sw_v, x_sr_v, x_sr_rv; wire [32*256-1:0] x_sw_data, x_sr_data; wire [3:0] x_sw_g, x_use_p; wire [1:0] x_sr_g;
     wire [32*LWB-1:0] x_sw_addr, x_sr_addr; wire [32*8-1:0] x_sw_mask; wire x_a_str, x_cfault, x_sl_pend;
+    // the vec's EXT chaining inputs: driven by the WIDE = 1 controller's stage engine (STRM), idle otherwise
+    wire [7:0] w_xseq, w_xdseq; wire [15:0] w_xcnt;
+    generate if (WIDE != 1) begin : g_noxc
+        assign w_xseq = 8'd0; assign w_xdseq = 8'hFF; assign w_xcnt = 16'd0;
+    end endgenerate
     generate if (WIDE == 2) begin : g_xctl
     ot_hgi_su_ctlx #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET),
         .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO), .RWB(RWB), .LQ(LQ), .DF(DF), .MUT_X(MUT_X)) u_ctl (.clk(clk),
@@ -936,7 +941,8 @@ module ot_hgi_su_unit #(
         .sw_sec(sw_sec), .sw_data(sw_data), .dc_v(dc_v), .dc_sec(dc_sec), .sr_v(sr_v), .sr_sec(sr_sec),
         .sr_data(sr_data), .sr_dm(sr_dm),
         .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .rg_req(rg_req), .rg_gnt(rg_gnt),
-        .wg_req(wg_req), .wg_gnt(wg_gnt), .ldr_rv(ldr_rv), .sr_rv(sr_rv), .lsw_v(lsw_v), .lsw_sec(lsw_sec),
+        .wg_req(wg_req), .wg_gnt(wg_gnt), .ldr_rv(ldr_rv), .sr_rv(sr_rv), .x_seq(w_xseq), .x_dseq(w_xdseq), .x_cnt(w_xcnt),
+        .lsw_v(lsw_v), .lsw_sec(lsw_sec),
         .lsw_d(lsw_d), .ldc_v(ldc_v), .ldc_sec(ldc_sec), .ldr_v(ldr_v), .ldr_sec(ldr_sec), .ldr_d(ldr_d), .ldr_dm(ldr_dm));
     end else begin : g_ctl
     ot_hgi_su_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET), .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO), .RWB(RWB)) u_ctl (.clk(clk),
@@ -967,7 +973,7 @@ module ot_hgi_su_unit #(
         .i_redsq(wl[480]), .i_redwhole(wl[481]), .i_redtree(wl[482]), .i_redrnd(wl[483]), .i_rbase(wl[484 +: 24]),
         .i_rso(wl[508 +: 24]), .i_imm1(wl[532 +: 32]), .i_imm2(wl[564 +: 32]), .i_imm3(wl[596 +: 32]),
         .i_ch_src(wl[628 +: 2]), .i_ch_seq(wl[630 +: 8]), .i_ch_lead(wl[638 +: 16]), .i_ch_mul(wl[654 +: 16]),
-        .x_seq(8'd0), .x_dseq(8'hFF), .x_cnt(16'd0), .cr_seq(cr_seq), .cr_dseq(cr_dseq), .cr_rseq(cr_rseq),
+        .x_seq(w_xseq), .x_dseq(w_xdseq), .x_cnt(w_xcnt), .cr_seq(cr_seq), .cr_dseq(cr_dseq), .cr_rseq(cr_rseq),
         .cr_cnt(cr_cnt), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re),
         .rd_src(rd_src), .rd_q(rd_q), .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .kv_we(kv_we),
         .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .res_we(res_we), .res_addr(res_addr), .res_data(res_data),
@@ -1036,8 +1042,10 @@ module ot_hgi_su_ctlw #(
                                           //   (a record stages an operand an older record has not drained yet)
     parameter integer SLICES = 0,         // el1011-hbm-sfu: 1 = 4 hardened 8-lane slices + 2-stage reduction hub, 2 = and
                                           //   the lanes' landing FIFOs in 64x16 SRAM (default 0: flat)
-    parameter integer OVL = 1             // 1: three-slot record pipeline (span + stage | run | drain overlap); 0: one
+    parameter integer OVL = 1,            // 1: three-slot record pipeline (span + stage | run | drain overlap); 0: one
                                           //   record at a time (each slot waits for the younger ones to empty)
+    parameter integer STRM = 1            // el1011-sutput: 1 = streamed stage -> compute -> drain + sector hazard + 2-deep
+                                          //   drain queue (flat lanes, SLICES = 0 only); 0 = the three-slot pipeline
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -1103,7 +1111,11 @@ module ot_hgi_su_ctlw #(
     input  wire [`OT_CTLW_NLP*256-1:0] ldr_d,
     input  wire [`OT_CTLW_NLP*8-1:0]   ldr_dm,
     input  wire [`OT_CTLW_NLP-1:0]       ldr_rv,       // the lane's drain read data is valid (any latency, in request order)
-    input  wire              sr_rv         // the STREAM-out sector read data is valid
+    input  wire              sr_rv,        // the STREAM-out sector read data is valid
+    // STRM: the vec's EXT chaining inputs (this unit's stage engine is the producer; x_cnt = staged prefix, sectors)
+    output reg  [7:0]        x_seq,
+    output reg  [7:0]        x_dseq,
+    output reg  [15:0]       x_cnt
 `ifdef OT_CTLW_HEAD_EXT
     // the edge-registered nearest-neighbour link to slice tile 1 (descriptor / go forward from slice 0's pin registers,
     // the done / overflow combine back into slice 0's pin flops)
@@ -1214,83 +1226,161 @@ module ot_hgi_su_ctlw #(
     always @(posedge clk) begin ldr_d_q <= ldr_d; ldr_dm_q <= ldr_dm; end
     always @(posedge clk or negedge rst_n) if (!rst_n) ldr_rv_q <= '0; else ldr_rv_q <= ldr_rv;
     // drain reads are VALID-driven: each lane keeps the VM sector of every read in flight (in order); a returned
-    // {data, dirty} (ldr_rv, pin-flopped) pops it, whatever the memory latency
-    reg [20:0] dq_s [0:31][0:LQ-1]; reg [QB-1:0] dq_h [0:31], dq_t [0:31]; reg [QB:0] dq_n [0:31];
+    // {data, dirty} (ldr_rv, pin-flopped) pops it, whatever the memory latency.  Entry {region 4, live read, sector}.
+    reg [22:0] dq_s [0:31][0:LQ-1]; reg [QB-1:0] dq_h [0:31], dq_t [0:31]; reg [QB:0] dq_n [0:31];
+    // =================================================================================================================
+    // STREAMING (STRM, el1011-sutput 10-11; flat lanes only).  Throughput spec: el1011-hbm-sfu.log 10-11 23:40.
+    //  * stage -> compute: the vec op goes at stage START with ch_src EXT; x_cnt = the staged prefix in sectors of the
+    //    record's dense streamed regions (sources with si 1 / so = ni, and the dense O's dirty-clear walk) = min over
+    //    those regions and lanes of (offset_b + 32 landed_b), 0 until every other piece (non-dense sources, LATE
+    //    regions, the R clears) is in.  The op asks need(v) = Sb/8 + 1 + v Sb/8 sectors (Sb = 2^lvw >= elements a
+    //    vector), so it never reads an unlanded word.  Lanes interleave their regions round robin.
+    //  * compute -> drain: a record with a dense O enters DRAIN at go (when the queue head is free); while it computes
+    //    (live) a lane drains an O sector only when its dirty mask is FULL (all its O words written, each exactly once)
+    //    and replays from the first non-full return (reads are tagged live at issue).  R and the rest after idle.
+    //  * sector hazard: a source region over the youngest older record Y's dense O stages each sector once lane b's
+    //    drain watermark (first + 32 x region-4 writes DONE) passes it; over any other undrained sink it is LATE (its
+    //    lanes issue it once the owning records are gone).
+    // =================================================================================================================
+    localparam integer STR = (STRM != 0 && SLICES == 0 && OVL != 0 && N <= 1024) ? 1 : 0;
+    localparam integer LN_ = $clog2(N), LM_ = $clog2(M);
+    reg [3:0] fs_str, fs_late, fs_sw; reg fs_odense, fs_on;
+    reg [3:0] fs_wm [0:3];
+    reg [1:0] fs_ytag; reg [20:0] fs_ylo, fs_yhi;
+    reg [3:0] lv_tag;                                     // records computing (by tag)
+    reg [3:0] late_open; reg y_live;
+    reg [1:0] wm_tag; reg wm_v;
+    reg [1:0] d_tag; reg d_str;
+    wire d_live = lv_tag[d_tag];
+    wire dlive_s = STR != 0 && d_live && d_str;           // the drain head streams its O
     // per-lane state
-    reg [2:0]  sg_r [0:31]; reg sg_on [0:31]; reg [20:0] sg_nx [0:31]; reg [20:0] sg_end [0:31];
+    reg [3:0]  sg_on [0:31]; reg [20:0] sg_nx [0:31][0:3]; reg [20:0] sg_end [0:31][0:3]; reg [1:0] sg_rr [0:31];
+    reg [11:0] sg_lc [0:31][0:3]; reg [4:0] sg_off [0:31][0:3]; reg [5:0] sg_out [0:31][0:3];
     // landing FIFO: LQ queued at the VM + the accepted-not-landed pipe (VM core + relays): power of two >= 2 LQ + 32
     localparam integer LFB = $clog2(2 * LQ + 32), LFD = 1 << LFB;
-    reg [QB:0] cr [0:31]; reg [LSW-1:0] lq [0:31][0:LFD-1]; reg [LFB-1:0] lqh [0:31], lqt [0:31]; reg [LFB:0] lqn [0:31];
+    reg [QB:0] cr [0:31]; reg [LSW-1:0] lq [0:31][0:LFD-1]; reg [1:0] lq_r [0:31][0:LFD-1];
+    reg [LFB-1:0] lqh [0:31], lqt [0:31]; reg [LFB:0] lqn [0:31];
     reg [5:0] wpend [0:31]; reg lane_ovf_f;
     reg [2:0]  cl_r [0:31]; reg cl_on [0:31]; reg [LSW-1:0] cl_nx [0:31]; reg [LSW-1:0] cl_end [0:31];
+    reg [11:0] cl_c4 [0:31]; reg [4:0] cl_off4 [0:31];
     reg [2:0]  dg_r [0:31]; reg dg_on [0:31]; reg [LSW-1:0] dg_nx [0:31]; reg [LSW-1:0] dg_end [0:31];
+    reg fl [0:31]; reg [5:0] o4o [0:31]; reg [11:0] dn4 [0:31];
     reg [QB:0] wcr [0:31]; reg [31:0] dp1, dp2, dp3; reg [20:0] dp1_s [0:31]; reg [20:0] dp2_s [0:31]; reg [20:0] dp3_s [0:31];
     reg [31:0] wst_ldone, wdr_ldone;
+    reg [31:0] ln_ns; reg [15:0] ln_p [0:31];             // lane: non-streamed pieces in / streamed prefix (FFFF: all)
     wire wst_done_f = &wst_ldone, wdr_done_f = &wdr_ldone;
     function automatic [20:0] first_of(input [20:0] lo_s, input integer b);
         first_of = lo_s + 21'((5'(b) - lo_s[4:0]) & 5'd31);
+    endfunction
+    function automatic [15:0] pre16(input [4:0] off, input [11:0] n);
+        reg [17:0] t;
+        t = 18'(off) + {1'b0, n, 5'd0};
+        pre16 = (t > 18'h0FFFE) ? 16'hFFFE : t[15:0];
+    endfunction
+    // the O words of VM sector s (region 4 of the drain head): the full dirty mask of that sector
+    function automatic [7:0] o_mask(input [20:0] s);
+        reg [7:0] m;
+        m = 8'hFF;
+        if (s == 21'(d_lo[4] >> 3)) m = m & (8'hFF << d_lo[4][2:0]);
+        if (s == 21'(d_hi[4] >> 3)) m = m & (8'hFF >> (3'd7 - d_hi[4][2:0]));
+        o_mask = m;
     endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             wrq_f <= '0; wwq_f <= '0; lsw_v_f <= '0; ldc_v_f <= '0; ldr_v_f <= '0; dp1 <= '0; dp2 <= '0; dp3 <= '0;
             for (integer b = 0; b < 32; b = b + 1) begin dq_h[b] <= '0; dq_t[b] <= '0; dq_n[b] <= '0; end
-            wst_ldone <= '1; wdr_ldone <= '1; lane_ovf_f <= 1'b0;
+            wst_ldone <= '1; wdr_ldone <= '1; lane_ovf_f <= 1'b0; ln_ns <= '0;
             for (integer b = 0; b < 32; b = b + 1) begin
-                sg_r[b] <= 3'd7; sg_on[b] <= 1'b0; cl_r[b] <= 3'd7; cl_on[b] <= 1'b0; dg_r[b] <= 3'd7; dg_on[b] <= 1'b0;
+                sg_on[b] <= 4'd0; sg_rr[b] <= 2'd0; cl_r[b] <= 3'd7; cl_on[b] <= 1'b0; dg_r[b] <= 3'd7; dg_on[b] <= 1'b0;
                 cr[b] <= (QB+1)'(LQ); wcr[b] <= (QB+1)'(LQ); lqh[b] <= '0; lqt[b] <= '0; lqn[b] <= '0; wpend[b] <= '0;
+                fl[b] <= 1'b0; o4o[b] <= '0; dn4[b] <= '0; cl_c4[b] <= '0; ln_p[b] <= '0;
+                for (integer q = 0; q < 4; q = q + 1) begin sg_lc[b][q] <= '0; sg_out[b][q] <= '0; end
             end
         end else begin
             for (integer b = 0; b < 32; b = b + 1) begin : lane
-                reg iss, land, dr_iss, wsend, wfree;
-                reg [20:0] f;
-                iss = 1'b0; land = 1'b0; dr_iss = 1'b0; wsend = 1'b0; wfree = 1'b0;
+                reg iss, land, dr_iss, wsend, wfree, rw, found;
+                reg [20:0] f, s;
+                reg [1:0] qi, qq, lr;
+                reg [3:0] cmp;
+                reg [15:0] pm;
+                reg ns;
+                iss = 1'b0; land = 1'b0; dr_iss = 1'b0; wsend = 1'b0; wfree = 1'b0; rw = 1'b0; found = 1'b0; qi = 2'd0;
                 wrq_f[b*16 + 15] <= 1'b0; lsw_v_f[b] <= 1'b0; ldc_v_f[b] <= 1'b0; ldr_v_f[b] <= 1'b0; wwq_f[b*280 + 279] <= 1'b0;
-                // ---------------- stage: source region walk (regions 0..3)
-                if (wst_go) begin sg_r[b] <= 3'd0; sg_on[b] <= 1'b0; cl_r[b] <= 3'd4; cl_on[b] <= 1'b0; wst_ldone[b] <= 1'b0; end
-                else if (sg_r[b] < 3'd4) begin
-                    if (!sg_on[b]) begin
-                        f = first_of(21'(lo[sg_r[b]] >> 3), b);
-                        if (rv[sg_r[b]] && f <= 21'(hi[sg_r[b]] >> 3)) begin
-                            sg_nx[b] <= f; sg_end[b] <= 21'(hi[sg_r[b]] >> 3); sg_on[b] <= 1'b1;
-                        end else sg_r[b] <= sg_r[b] + 3'd1;
-                    end else if (cr[b] != 0) begin
+                // ---------------- stage: every source region (0..3) walked at once, one issue an edge, round robin
+                if (wst_go) begin
+                    for (integer q = 0; q < 4; q = q + 1) begin
+                        f = first_of(21'(lo[q] >> 3), b);
+                        sg_on[b][q] <= rv[q] && f <= 21'(hi[q] >> 3);
+                        sg_nx[b][q] <= f; sg_end[b][q] <= 21'(hi[q] >> 3); sg_lc[b][q] <= '0;
+                        sg_off[b][q] <= 5'((5'(b) - lo[q][7:3]) & 5'd31);
+                    end
+                    cl_r[b] <= 3'd5; cl_on[b] <= 1'b0; cl_c4[b] <= '0; wst_ldone[b] <= 1'b0;
+                    cl_off4[b] <= 5'((5'(b) - lb[4][7:3]) & 5'd31);
+                end else if (sg_on[b] != 4'd0 && cr[b] != 0) begin
+                    for (integer k = 0; k < 4; k = k + 1) begin
+                        qq = sg_rr[b] + 2'(k); s = sg_nx[b][qq];
+                        if (!found && sg_on[b][qq] &&
+                            (MUT_W == 4 || (fs_late[qq] ? late_open[qq] :
+                             !(fs_sw[qq] && s >= fs_ylo && s <= fs_yhi) || !y_live ||
+                             (wm_v && wm_tag == fs_ytag && s < first_of(21'(d_lo[4] >> 3), b) + {dn4[b], 5'd0})))) begin
+                            found = 1'b1; qi = qq;
+                        end
+                    end
+                    if (found) begin
                         iss = 1'b1;
-                        wrq_f[b*16 +: 16] <= {1'b1, sg_nx[b][14:0]};
-                        lq[b][lqt[b]] <= LSW'(sg_nx[b] + dsec[sg_r[b]]);
+                        wrq_f[b*16 +: 16] <= {1'b1, sg_nx[b][qi][14:0]};
+                        lq[b][lqt[b]] <= LSW'(sg_nx[b][qi] + dsec[qi]); lq_r[b][lqt[b]] <= qi;
                         lqt[b] <= lqt[b] + 1'b1;
-                        if (sg_nx[b] + 21'd32 > sg_end[b]) begin sg_on[b] <= 1'b0; sg_r[b] <= sg_r[b] + 3'd1; end
-                        else sg_nx[b] <= sg_nx[b] + 21'd32;
+                        if (sg_nx[b][qi] + 21'd32 > sg_end[b][qi]) sg_on[b][qi] <= 1'b0;
+                        else sg_nx[b][qi] <= sg_nx[b][qi] + 21'd32;
+                        sg_rr[b] <= qi + 2'd1;
                     end
                 end
                 // responses land in request order
+                lr = lq_r[b][lqh[b]];
                 if (wrr_q[b*257 + 256]) begin
                     land = 1'b1;
                     lsw_v_f[b] <= 1'b1; lsw_sec_f[b*LSW +: LSW] <= (MUT_W == 1) ? lq[b][0] : lq[b][lqh[b]];
                     lsw_d_f[b*256 +: 256] <= wrr_q[b*257 +: 256];
                     lqh[b] <= lqh[b] + 1'b1;
+                    if (!wst_go) sg_lc[b][lr] <= sg_lc[b][lr] + 12'd1;
                 end
+                for (integer q = 0; q < 4; q = q + 1)
+                    if (!wst_go) sg_out[b][q] <= sg_out[b][q] + 6'(iss && qi == 2'(q)) - 6'(land && lr == 2'(q));
+                    else sg_out[b][q] <= '0;
                 lqn[b] <= lqn[b] + iss - land;
                 if (lqn[b] == (LFB+1)'(LFD) && iss && !land) lane_ovf_f <= 1'b1;
                 cr[b] <= cr[b] - iss + wrq_cr_q[b];
-                // sink dirty-mask clears (regions 4, 5; the local span), one sector a lane an edge
-                if (!wst_go && cl_r[b] < 3'd6) begin
+                // sink dirty-mask clears: R (5) first, then O (4) (the dense O's clear walk is a streamed prefix)
+                if (!wst_go && (cl_r[b] == 3'd5 || cl_r[b] == 3'd4)) begin
                     if (!cl_on[b]) begin
                         f = first_of(21'(lb[cl_r[b]] >> 3), b);
                         if (rv[cl_r[b]] && f <= 21'((lb[cl_r[b]] + (hi[cl_r[b]] - lo[cl_r[b]])) >> 3)) begin
                             cl_nx[b] <= LSW'(f); cl_end[b] <= LSW'((lb[cl_r[b]] + (hi[cl_r[b]] - lo[cl_r[b]])) >> 3);
                             cl_on[b] <= 1'b1;
-                        end else cl_r[b] <= cl_r[b] + 3'd1;
+                        end else cl_r[b] <= (cl_r[b] == 3'd5) ? 3'd4 : 3'd6;
                     end else begin
                         ldc_v_f[b] <= 1'b1; ldc_sec_f[b*LSW +: LSW] <= cl_nx[b];
-                        if (21'(cl_nx[b]) + 21'd32 > 21'(cl_end[b])) begin cl_on[b] <= 1'b0; cl_r[b] <= cl_r[b] + 3'd1; end
+                        if (cl_r[b] == 3'd4) cl_c4[b] <= cl_c4[b] + 12'd1;
+                        if (21'(cl_nx[b]) + 21'd32 > 21'(cl_end[b])) begin cl_on[b] <= 1'b0; cl_r[b] <= (cl_r[b] == 3'd5) ? 3'd4 : 3'd6; end
                         else cl_nx[b] <= cl_nx[b] + LSW'(32);
                     end
                 end
-                if (!wst_go && sg_r[b] >= 3'd4 && sg_r[b] != 3'd7 && cl_r[b] >= 3'd6 &&
+                if (!wst_go && sg_on[b] == 4'd0 && cl_r[b] == 3'd6 &&
                     ((lqn[b] + iss - land) == 0 && (cr[b] - iss + wrq_cr_q[b]) == (QB+1)'(LQ))) wst_ldone[b] <= 1'b1;
-                // ---------------- drain: sink regions 4 (O, unless STREAM) and 5 (R)
-                if (wdr_go) begin dg_r[b] <= 3'd4; dg_on[b] <= 1'b0; wdr_ldone[b] <= 1'b0; end
-                else if (dg_r[b] < 3'd6) begin
+                // streamed-prefix credit of this lane (pre-edge state: one edge stale, so never ahead of the memory)
+                ns = (cl_r[b] == 3'd6) || (fs_odense && cl_r[b] == 3'd4);
+                pm = 16'hFFFF;
+                for (integer q = 0; q < 4; q = q + 1) begin
+                    if (!fs_str[q] && (sg_on[b][q] || sg_out[b][q] != 0)) ns = 1'b0;
+                    if (fs_str[q] && (sg_on[b][q] || sg_out[b][q] != 0) && pre16(sg_off[b][q], sg_lc[b][q]) < pm)
+                        pm = pre16(sg_off[b][q], sg_lc[b][q]);
+                end
+                if (fs_odense && cl_r[b] != 3'd6 && pre16(cl_off4[b], cl_c4[b]) < pm) pm = pre16(cl_off4[b], cl_c4[b]);
+                ln_ns[b] <= ns && !wst_go; ln_p[b] <= wst_go ? 16'd0 : pm;
+                // ---------------- drain: sink regions 4 (O, unless STREAM) and 5 (R); R waits while the head computes
+                if (wdr_go) begin dg_r[b] <= 3'd4; dg_on[b] <= 1'b0; wdr_ldone[b] <= 1'b0; dn4[b] <= '0; end
+                else if (dg_r[b] < 3'd6 && !fl[b] && !(dg_r[b] == 3'd5 && dlive_s)) begin
                     if (!dg_on[b]) begin
                         f = first_of(21'(d_lb[dg_r[b]] >> 3), b);
                         if (d_rv[dg_r[b]] && !(dg_r[b] == 3'd4 && d_os) &&
@@ -1302,7 +1392,8 @@ module ot_hgi_su_ctlw #(
                         if (!(MUT_W == 2 && 21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b]))) begin
                             dr_iss = 1'b1;
                             ldr_v_f[b] <= 1'b1; ldr_sec_f[b*LSW +: LSW] <= dg_nx[b];
-                            dq_s[b][dq_t[b]] <= 21'(dg_nx[b]) - d_dsec[dg_r[b]]; dq_t[b] <= dq_t[b] + 1'b1;
+                            dq_s[b][dq_t[b]] <= {dg_r[b] == 3'd4, dlive_s && dg_r[b] == 3'd4, 21'(dg_nx[b]) - d_dsec[dg_r[b]]};
+                            dq_t[b] <= dq_t[b] + 1'b1;
                         end
                         if (21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b])) begin dg_on[b] <= 1'b0; dg_r[b] <= dg_r[b] + 3'd1; end
                         else dg_nx[b] <= dg_nx[b] + LSW'(32);
@@ -1310,21 +1401,31 @@ module ot_hgi_su_ctlw #(
                 end
                 // read return: valid-driven (ldr_rv pin flop), the sector identity from the lane's in-flight FIFO
                 begin : wpub
-                    reg [7:0] mk; reg v3; reg [20:0] s3;
+                    reg [7:0] mk, em; reg v3, l3, r3; reg [20:0] s3;
                     mk = MUT_DIRTY ? 8'hFF : ldr_dm_q[b*8 +: 8];
-                    v3 = ldr_rv_q[b]; s3 = dq_s[b][dq_h[b]];
+                    v3 = ldr_rv_q[b]; {r3, l3, s3} = dq_s[b][dq_h[b]]; em = o_mask(s3);
                     if (v3) dq_h[b] <= dq_h[b] + 1'b1;
                     dq_n[b] <= dq_n[b] + dr_iss - v3;
                     if (v3) begin
-                        if (mk != 8'd0) begin
+                        if (fl[b]) wfree = 1'b1;                                    // flushed behind a replay
+                        else if (l3 && (ldr_dm_q[b*8 +: 8] & em) != em) begin       // live read, sector not full yet
+                            wfree = 1'b1; rw = 1'b1;
+                        end else if (mk != 8'd0) begin
                             wsend = 1'b1;
                             wwq_f[b*280 +: 280] <= {1'b1, s3[14:0], ldr_d_q[b*256 +: 256], mk};
                         end else wfree = 1'b1;
                     end
+                    if (rw) begin                                                   // replay from this sector
+                        dg_r[b] <= 3'd4; dg_on[b] <= 1'b1; dg_nx[b] <= LSW'(s3 + d_dsec[4]);
+                        dg_end[b] <= LSW'((d_lb[4] + (d_hi[4] - d_lo[4])) >> 3);
+                    end
+                    fl[b] <= (fl[b] || rw) && (dq_n[b] + dr_iss - v3) != 0;
+                    o4o[b] <= o4o[b] + 6'(wsend && r3) - 6'(wwq_done_q[b] && o4o[b] != 0);
+                    if (!wdr_go && wwq_done_q[b] && o4o[b] != 0) dn4[b] <= dn4[b] + 12'd1;
                 end
                 wcr[b] <= wcr[b] - dr_iss + wfree + wwq_cr_q[b];
                 wpend[b] <= wpend[b] + wsend - wwq_done_q[b];
-                if (!wdr_go && dg_r[b] >= 3'd6 && dg_r[b] != 3'd7 && !dr_iss && (dq_n[b] - ldr_rv_q[b]) == 0 &&
+                if (!wdr_go && dg_r[b] >= 3'd6 && dg_r[b] != 3'd7 && !dr_iss && !rw && !fl[b] && (dq_n[b] - ldr_rv_q[b]) == 0 &&
                     (MUT_W == 3 || ((wpend[b] + wsend - wwq_done_q[b]) == 0 && (wcr[b] - dr_iss + wfree + wwq_cr_q[b]) == (QB+1)'(LQ)))) wdr_ldone[b] <= 1'b1;
             end
         end
@@ -1423,11 +1524,43 @@ module ot_hgi_su_ctlw #(
     reg vf_seen; reg [1:0] idle_ph;
     reg [669:0] fw;                                       // FRONT: the relocated op word being built
     reg [LWB:0] f_rs, ap; reg [LWB+1:0] fsize; reg f_ser;
+    // STRM: record tags (unique among the live FRONT / RUN / DRAIN records), RUN hand-off state, the second DRAIN entry
+    reg [3:0] stg_busy;                                  // records whose stage burst (incl. sink dirty clears) is running
+    reg [1:0] f_tag, tag_ctr, r_tag; reg r_str, r_hand, f_hand; reg [7:0] f_seq; reg [15:0] f_lead, f_mul;
+    reg q1_v, q1_as, q1_os, q1_ser, q1_str; reg [1:0] q1_tag; reg [15:0] q1_no, q1_ni; reg [LWB:0] q1_rs, q1_re;
+    reg [23:0] q1_lo [4:5]; reg [23:0] q1_hi [4:5]; reg [LWB:0] q1_lb [4:5]; reg q1_rv [4:5]; reg [20:0] q1_dsec [4:5];
     // census (bench): which slots are busy this edge
-    wire a_span = (st == S_SPAN || st == S_MUL || st == S_NEXTR || st == S_STAGE);
+    localparam [3:0] S_PMUL = 4'd15;
+    wire a_span = (st == S_SPAN || st == S_MUL || st == S_NEXTR || st == S_STAGE || st == S_PMUL);
     wire a_stage = (st == S_STW);
     wire a_run = r_v && !r_cdone;
     wire a_drain = d_v;
+    // STRM span: the six regions' extents (nr - 1) so + (ni - 1) si at once (4 edges, 24 partial products of 8 x 24)
+    reg [23:0] c_base [0:5]; reg [23:0] c_so [0:5]; reg [23:0] c_si [0:5]; reg [15:0] c_nr [0:5]; reg [15:0] c_ni [0:5];
+    reg [5:0] c_used;
+    always @* begin
+        for (integer k = 0; k < 6; k = k + 1) begin
+            case (k)
+                0: begin c_base[k] = w[40 +: 24];  c_so[k] = w[64 +: 24];  c_si[k] = w[88 +: 24];  c_used[k] = 1'b1; end
+                1: begin c_base[k] = w[138 +: 24]; c_so[k] = w[162 +: 24]; c_si[k] = w[186 +: 24]; c_used[k] = use_b; end
+                2: begin c_base[k] = w[211 +: 24]; c_so[k] = w[235 +: 24]; c_si[k] = w[259 +: 24]; c_used[k] = use_c; end
+                3: begin c_base[k] = w[284 +: 24]; c_so[k] = w[308 +: 24]; c_si[k] = w[332 +: 24]; c_used[k] = use_d; end
+                4: begin c_base[k] = w[382 +: 24]; c_so[k] = w[406 +: 24]; c_si[k] = w[430 +: 24]; c_used[k] = (dst == 2'd1); end
+                default: begin c_base[k] = w[484 +: 24]; c_so[k] = w[508 +: 24]; c_si[k] = 24'd0; c_used[k] = (red != 2'd0); end
+            endcase
+            c_nr[k] = (k == 5) ? ((redwhole || redtree) ? 16'd1 : no) : no;
+            c_ni[k] = (k == 5) ? 16'd1 : ((bhalf && (k == 1 || k == 3)) ? ((ni + 16'd1) >> 1) : ni);
+        end
+    end
+    reg [15:0] pa [0:5]; reg [15:0] pc [0:5]; reg [23:0] pb [0:5]; reg [23:0] pd [0:5];
+    reg [31:0] pq0 [0:5]; reg [31:0] pq1 [0:5]; reg [31:0] pq2 [0:5]; reg [31:0] pq3 [0:5]; reg [39:0] pacc [0:5]; reg [1:0] pph;
+    reg [LWB+1:0] c_fsize;
+    always @* begin
+        c_fsize = '0;
+        for (integer k = 0; k < 6; k = k + 1)
+            if (c_used[k]) c_fsize = c_fsize + (LWB+2)'((k == 0 && cpair) ? (((c_base[0] + pacc[0][23:0]) | 24'd1) - (c_base[0] & ~24'd1))
+                                                                         : pacc[k][23:0]) + 265;
+    end
     // live-range / hazard predicates for the FRONT record
     function automatic ovl_r(input [LWB:0] a0, input [LWB:0] a1, input [LWB:0] b0, input [LWB:0] b1);
         ovl_r = (a0 < b1) && (b0 < a1);
@@ -1438,8 +1571,11 @@ module ot_hgi_su_ctlw #(
     wire [LWB:0] fb_try = ({1'b0, ap} + fsize <= {2'b0, SBASE}) ? ap : '0;
     wire alloc_ok = !(r_v && ovl_r(fb_try, LWB'(fb_try + fsize), r_rs, r_re)) &&
                     !(d_v && ovl_r(fb_try, LWB'(fb_try + fsize), d_rs, d_re)) &&
+                    !(q1_v && ovl_r(fb_try, LWB'(fb_try + fsize), q1_rs, q1_re)) &&
                     ({1'b0, fb_try} + fsize <= {2'b0, SBASE}) &&
-                    (!f_ser || (!r_v && !d_v)) && !(r_v && r_ser) && !(d_v && d_ser) && (OVL != 0 || (!r_v && !d_v));
+                    (!f_ser || (!r_v && !d_v && !q1_v)) && !(r_v && r_ser) && !(d_v && d_ser) && !(q1_v && q1_ser) &&
+                    (OVL != 0 || (!r_v && !d_v && !q1_v));
+    // record-level hazard (STREAM records and STRM = 0): a source over any older undrained sink waits for its drain
     reg haz;
     always @* begin
         haz = 1'b0;
@@ -1447,10 +1583,89 @@ module ot_hgi_su_ctlw #(
             for (integer k = 4; k < 6; k = k + 1) begin
                 if (r_v && r_rv[k] && !(k == 4 && r_os) && ovl_v(lo[q], hi[q], r_lo[k], r_hi[k])) haz = 1'b1;
                 if (d_v && d_rv[k] && !(k == 4 && d_os) && ovl_v(lo[q], hi[q], d_lo[k], d_hi[k])) haz = 1'b1;
+                if (q1_v && q1_rv[k] && !(k == 4 && q1_os) && ovl_v(lo[q], hi[q], q1_lo[k], q1_hi[k])) haz = 1'b1;
             end
         end
         if (MUT_W == 4) haz = 1'b0;
     end
+    // STRM classification of the FRONT record's source regions against the older records (Y = the youngest: RUN, else
+    // the second DRAIN entry, else the head).  A record handed to DRAIN early sits in RUN and DRAIN under one tag.
+    wire [1:0] y_tg = r_v ? r_tag : q1_v ? q1_tag : d_tag;
+    wire y_v = r_v || q1_v || d_v;
+    wire [23:0] y_olo = r_v ? r_lo[4] : q1_v ? q1_lo[4] : d_lo[4];
+    wire [23:0] y_ohi = r_v ? r_hi[4] : q1_v ? q1_hi[4] : d_hi[4];
+    wire y_orv = r_v ? (r_rv[4] && !r_os) : q1_v ? (q1_rv[4] && !q1_os) : (d_rv[4] && !d_os);
+    wire y_rrv = r_v ? r_rv[5] : q1_v ? q1_rv[5] : d_rv[5];
+    wire [23:0] y_rlo = r_v ? r_lo[5] : q1_v ? q1_lo[5] : d_lo[5];
+    wire [23:0] y_rhi = r_v ? r_hi[5] : q1_v ? q1_hi[5] : d_hi[5];
+    wire y_str = r_v ? r_str : q1_v ? q1_str : d_str;
+    reg [3:0] c_str, c_late, c_sw; reg [3:0] c_wm [0:3]; reg c_odense; reg [3:0] c_lvw;
+    always @* begin
+        for (integer q = 0; q < 4; q = q + 1) begin : cq
+            reg [23:0] so_q, si_q; reg ovo, ovr, oth; reg [3:0] wmk;
+            case (q)
+                0: begin so_q = w[64 +: 24];  si_q = w[88 +: 24]; end
+                1: begin so_q = w[162 +: 24]; si_q = w[186 +: 24]; end
+                2: begin so_q = w[235 +: 24]; si_q = w[259 +: 24]; end
+                default: begin so_q = w[308 +: 24]; si_q = w[332 +: 24]; end
+            endcase
+            // dense: element e = o ni + i of the op at word base + e (the vec reads it in increasing e)
+            c_str[q] = rv[q] && si_q == 24'd1 && (so_q == {8'd0, ni} || no == 16'd1) &&
+                       !((q == 1 || q == 3) && bhalf) && !((q == 0 || q == 2) && cpair);
+            ovo = y_v && y_orv && ovl_v(lo[q], hi[q], y_olo, y_ohi);
+            ovr = y_v && y_rrv && ovl_v(lo[q], hi[q], y_rlo, y_rhi);
+            wmk = 4'd0;
+            // the other older records (any entry whose tag is not Y's)
+            if (r_v && r_tag != y_tg) for (integer k = 4; k < 6; k = k + 1)
+                if (r_rv[k] && !(k == 4 && r_os) && ovl_v(lo[q], hi[q], r_lo[k], r_hi[k])) wmk[r_tag] = 1'b1;
+            if (q1_v && q1_tag != y_tg) for (integer k = 4; k < 6; k = k + 1)
+                if (q1_rv[k] && !(k == 4 && q1_os) && ovl_v(lo[q], hi[q], q1_lo[k], q1_hi[k])) wmk[q1_tag] = 1'b1;
+            if (d_v && d_tag != y_tg) for (integer k = 4; k < 6; k = k + 1)
+                if (d_rv[k] && !(k == 4 && d_os) && ovl_v(lo[q], hi[q], d_lo[k], d_hi[k])) wmk[d_tag] = 1'b1;
+            oth = wmk != 4'd0;
+            if (ovr || (ovo && (!y_str || oth))) wmk[y_tg] = 1'b1;   // Y's R, a non-dense O, or mixed: wait for Y too
+            c_late[q] = rv[q] && wmk != 4'd0;
+            c_sw[q] = rv[q] && !c_late[q] && ovo;
+            c_wm[q] = wmk;
+        end
+        c_odense = (dst == 2'd1) && !o_s && w[430 +: 24] == 24'd1 && (w[406 +: 24] == {8'd0, ni} || no == 16'd1);
+        // the vec's lane width for the op (ot_hdc_v41x_vec c_lvw): scalar SFU 1, SFU / divide M, else N
+        c_lvw = (w[371 +: 3] == 3'd2 || w[371 +: 3] == 3'd3 || w[371 +: 3] == 3'd6 || w[371 +: 3] == 3'd7) ? 4'd0 :
+                (w[371 +: 3] == 3'd1 || w[371 +: 3] == 3'd4 || w[371 +: 3] == 3'd5 || m1 == 3'd4 || m1 == 3'd5) ? 4'(LM_) : 4'(LN_);
+    end
+    wire str_rec = STR != 0 && !f_ser;
+    // live tags, LATE gates, Y liveness (registered: one edge stale keeps them closed longer, never open early)
+    reg [3:0] live_t;
+    always @* begin
+        live_t = 4'd0;
+        if (r_v) live_t[r_tag] = 1'b1;
+        if (d_v) live_t[d_tag] = 1'b1;
+        if (q1_v) live_t[q1_tag] = 1'b1;
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin late_open <= 4'd0; y_live <= 1'b1; end
+        else begin
+            for (integer q = 0; q < 4; q = q + 1) late_open[q] <= (fs_wm[q] & live_t) == 4'd0 && !wst_go;
+            y_live <= live_t[fs_ytag] || wst_go;
+        end
+    // the streamed-prefix credit: 32 lanes -> 4 -> 1, registered; blanked for 5 edges after a stage go
+    reg [15:0] pm1 [0:3]; reg [3:0] ns1; reg [15:0] pm2; reg ns2; reg [2:0] xbl;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin ns1 <= '0; ns2 <= 1'b0; pm2 <= '0; xbl <= '0; x_cnt <= '0; for (integer g = 0; g < 4; g = g + 1) pm1[g] <= '0; end
+        else begin
+            for (integer g = 0; g < 4; g = g + 1) begin : t1
+                reg [15:0] m; m = 16'hFFFF;
+                for (integer b = 0; b < 8; b = b + 1) if (ln_p[g*8 + b] < m) m = ln_p[g*8 + b];
+                pm1[g] <= m; ns1[g] <= &ln_ns[g*8 +: 8];
+            end
+            begin : t2
+                reg [15:0] m; m = 16'hFFFF;
+                for (integer g = 0; g < 4; g = g + 1) if (pm1[g] < m) m = pm1[g];
+                pm2 <= m; ns2 <= &ns1;
+            end
+            xbl <= wst_go ? 3'd5 : (xbl != 0 ? xbl - 3'd1 : 3'd0);
+            x_cnt <= (fs_on && !wst_go && xbl == 0 && ns2) ? pm2 : 16'd0;
+        end
     wire [LWB:0] lbk = alloc + (LWB+1)'((lo[rk][7:0] - alloc[7:0]) & 8'hFF);   // lb == lo (mod 256 words): bank-aligned
     localparam [3:0] S_WAITA = 4'd13, S_RDY = 4'd14;
     integer k2;
@@ -1461,6 +1676,11 @@ module ot_hgi_su_ctlw #(
             outst <= 3'd0; q_h <= 2'd0; q_t <= 2'd0; vf_seen <= 1'b0; scount <= 21'd0; s_clr <= 1'b0; am_stream <= 523'd0;
             r_v <= 1'b0; r_gop <= 1'b0; r_cdone <= 1'b0; d_v <= 1'b0; d_go <= 1'b0; ap <= '0; r_ser <= 1'b0; d_ser <= 1'b0;
             rg_req <= 1'b0; wg_req <= 1'b0;
+            q1_v <= 1'b0; q1_ser <= 1'b0; tag_ctr <= 2'd0; f_tag <= 2'd0; r_tag <= 2'd0; d_tag <= 2'd0; lv_tag <= 4'd0;
+            r_hand <= 1'b0; f_hand <= 1'b0; f_seq <= 8'd0; x_seq <= 8'hFF; x_dseq <= 8'hFF; fs_on <= 1'b0;
+            fs_str <= '0; fs_late <= '0; fs_sw <= '0; fs_odense <= 1'b0; wm_v <= 1'b0; wm_tag <= 2'd0; d_str <= 1'b0;
+            r_str <= 1'b0; q1_str <= 1'b0; fs_ytag <= 2'd0; stg_busy <= 4'd0;
+            for (k2 = 0; k2 < 4; k2 = k2 + 1) fs_wm[k2] <= 4'd0;
         end else begin
             vmq[337] <= 1'b0; su_fault_r <= 1'b0; am_stream[0] <= 1'b0; am_stream[1] <= 1'b0; su_ret <= 1'b0;
             sl_v <= s0v_q && s0i_q < SW; sl_addr <= SBASE + s0i_q; sl_data <= s0d_q;
@@ -1469,13 +1689,60 @@ module ot_hgi_su_ctlw #(
             if (s_clr) scount <= {20'd0, s0v_q}; else if (s0v_q) scount <= scount + 21'd1;
             s_clr <= 1'b0;
             if (vfault_q && r_v && !r_gop) vf_seen <= 1'b1;
-            su_idle_r <= (st == S_IDLE) && !r_v && !d_v;
+            su_idle_r <= (st == S_IDLE) && !r_v && !d_v && !q1_v;
+            // ------------------------------------------------------------------ DRAIN (head d_*, second entry q1_*)
+            if (d_v && st != S_FAULT) begin
+                case (d_ph)
+                    2'd0: if ((d_rv[4] && !d_os) || d_rv[5]) begin
+                              if (!d_live || (d_str && !stg_busy[d_tag])) begin   // a live head: dense O, sinks cleared
+                                  wg_req <= 1'b1;                       // the write lane group for the drain burst
+                                  if (wg_req && wg_q) begin wdr_go <= 1'b1; d_ph <= 2'd1; wm_v <= 1'b1; wm_tag <= d_tag; end
+                              end
+                          end
+                          else if (d_live) ;                            // nothing to stream: wait for the compute
+                          else if (d_os) begin etot <= {5'd0, d_no} * {5'd0, d_ni}; ebeat <= 21'd0; o_lb <= d_lb[4]; rp <= 4'd0;
+                                               so_w <= 1'b0; d_ph <= 2'd2; end
+                          else begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; wm_v <= 1'b0; if (d_as) s_clr <= 1'b1; end
+                    2'd1: if (!wdr_go && wdr_done && !d_live) begin
+                              wg_req <= 1'b0;
+                              if (d_os) begin etot <= {5'd0, d_no} * {5'd0, d_ni}; ebeat <= 21'd0; o_lb <= d_lb[4]; rp <= 4'd0;
+                                              so_w <= 1'b0; d_ph <= 2'd2; end
+                              else begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; wm_v <= 1'b0; if (d_as) s_clr <= 1'b1; end
+                          end
+                    default: begin                                  // STREAM out: 8 elements a beat, in element order
+                        // one sector read in flight; its data is taken on the memory's valid (any latency)
+                        if (amr_q && !so_w) begin
+                            sr_v <= 1'b1; sr_sec <= (o_lb + ebeat) >> 3; so_w <= 1'b1;
+                        end else if (so_w && sr_rv_q) begin
+                            begin : so
+                                reg [7:0] mk; integer q;
+                                for (q = 0; q < 8; q = q + 1) mk[q] = (ebeat + q < etot);
+                                am_stream <= {1'b0, 256'd0, sr_data_q, mk, (ebeat + 21'd8 >= etot), 1'b1};
+                            end
+                            so_w <= 1'b0;
+                            if (ebeat + 21'd8 >= etot) begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; wm_v <= 1'b0; if (d_as) s_clr <= 1'b1; end
+                            else ebeat <= ebeat + 21'd8;
+                        end
+                    end
+                endcase
+            end
+            // the second entry moves up when the head is free (or retires this edge)
+            if (q1_v && !d_v && st != S_FAULT) begin
+                d_v <= 1'b1; d_ph <= 2'd0; d_as <= q1_as; d_os <= q1_os; d_ser <= q1_ser; d_no <= q1_no; d_ni <= q1_ni;
+                d_rs <= q1_rs; d_re <= q1_re; d_tag <= q1_tag; d_str <= q1_str;
+                for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
+                    d_lo[k2] <= q1_lo[k2]; d_hi[k2] <= q1_hi[k2]; d_lb[k2] <= q1_lb[k2]; d_rv[k2] <= q1_rv[k2]; d_dsec[k2] <= q1_dsec[k2];
+                end
+                q1_v <= 1'b0; q1_ser <= 1'b0;
+            end
             // ------------------------------------------------------------------ FRONT
             case (st)
                 S_IDLE: begin
                     if (op_v && op_rdy_r) begin
                         w <= op_w; fw <= op_w; op_rdy_r <= 1'b0; rk <= 3'd0; fsize <= '0;
-                        a_s <= strm[0]; o_s <= strm[1]; f_ser <= strm[0] | strm[1]; st <= S_SPAN;
+                        a_s <= strm[0]; o_s <= strm[1]; f_ser <= strm[0] | strm[1];
+                        st <= (STR != 0 && strm == 2'd0) ? S_PMUL : S_SPAN; pph <= 2'd0;
+                        f_tag <= tag_ctr; tag_ctr <= tag_ctr + 2'd1;
                         for (k2 = 0; k2 < 6; k2 = k2 + 1) rv[k2] <= 1'b0;
                     end
                 end
@@ -1521,6 +1788,29 @@ module ot_hgi_su_ctlw #(
                         if (rk == 3'd5) st <= S_WAITA; else begin rk <= rk + 3'd1; st <= S_SPAN; end
                     end
                 end
+                S_PMUL: begin                                       // STRM: every region's extent at once
+                    case (pph)
+                        2'd0: for (k2 = 0; k2 < 6; k2 = k2 + 1) begin
+                                  pa[k2] <= c_nr[k2] - 16'd1; pb[k2] <= c_so[k2]; pc[k2] <= c_ni[k2] - 16'd1; pd[k2] <= c_si[k2];
+                              end
+                        2'd1: for (k2 = 0; k2 < 6; k2 = k2 + 1) begin
+                                  pq0[k2] <= pa[k2][7:0] * pb[k2]; pq1[k2] <= pa[k2][15:8] * pb[k2];
+                                  pq2[k2] <= pc[k2][7:0] * pd[k2]; pq3[k2] <= pc[k2][15:8] * pd[k2];
+                              end
+                        2'd2: for (k2 = 0; k2 < 6; k2 = k2 + 1)
+                                  pacc[k2] <= {8'd0, pq0[k2]} + {pq1[k2], 8'd0} + {8'd0, pq2[k2]} + {pq3[k2], 8'd0};
+                        default: begin
+                            for (k2 = 0; k2 < 6; k2 = k2 + 1) begin
+                                rv[k2] <= c_used[k2];
+                                if (k2 == 0 && cpair) begin lo[0] <= c_base[0] & ~24'd1; hi[0] <= (c_base[0] + pacc[0][23:0]) | 24'd1; end
+                                else begin lo[k2] <= c_base[k2]; hi[k2] <= c_base[k2] + pacc[k2][23:0]; end
+                            end
+                            fsize <= c_fsize; st <= S_WAITA;
+                            if (aind != 2'd0 || w[32 +: 8] != 8'd0) begin su_fault_r <= 1'b1; st <= S_FAULT; end
+                        end
+                    endcase
+                    pph <= pph + 2'd1;
+                end
                 S_WAITA: if (alloc_ok) begin                         // a free local range for the whole record
                     alloc <= fb_try; f_rs <= fb_try; rk <= 3'd0; st <= S_NEXTR;
                 end
@@ -1545,13 +1835,38 @@ module ot_hgi_su_ctlw #(
                 end
                 S_STAGE: begin                                      // sources clear of every older undrained sink?
                     for (k2 = 0; k2 < 6; k2 = k2 + 1) dsec[k2] <= 21'((lb[k2] >> 3) - (lo[k2] >> 3));
-                    if (!haz) rg_req <= 1'b1;                       // the read lane group for the stage burst
-                    if (!haz && rg_req && rg_q) begin st <= S_STW; wst_go <= 1'b1; ap <= alloc; end
+                    if (str_rec || !haz) rg_req <= 1'b1;            // the read lane group for the stage burst
+                    if ((str_rec || !haz) && rg_req && rg_q) begin
+                        st <= S_STW; wst_go <= 1'b1; ap <= alloc; f_hand <= 1'b0; stg_busy[f_tag] <= 1'b1;
+                        fs_on <= str_rec; fs_str <= str_rec ? c_str : 4'd0; fs_late <= str_rec ? c_late : 4'd0;
+                        fs_sw <= str_rec ? c_sw : 4'd0; fs_odense <= str_rec && c_odense; fs_ytag <= y_tg;
+                        fs_ylo <= 21'(y_olo >> 3); fs_yhi <= 21'(y_ohi >> 3);
+                        for (k2 = 0; k2 < 4; k2 = k2 + 1) fs_wm[k2] <= str_rec ? c_wm[k2] : 4'd0;
+                        if (str_rec) begin x_seq <= f_seq; f_seq <= f_seq + 8'd1; end
+                        f_lead <= (c_lvw >= 4'd3) ? 16'((1 << (c_lvw - 4'd3)) + 1) : 16'd2;
+                        f_mul <= 16'(32 << c_lvw);
+                    end
                 end
-                S_STW: if (!wst_go && wst_done) begin st <= S_RDY; rg_req <= 1'b0; end
-                S_RDY: if (!r_v) begin                              // into RUN
+                S_STW: begin
+                    if (fs_on && !f_hand && !r_v && !wst_go) begin   // into RUN at the stage start (EXT credits)
+                        f_hand <= 1'b1;
+                        r_v <= 1'b1; r_gop <= 1'b1; r_cdone <= 1'b0; r_as <= a_s; r_os <= o_s; r_ser <= f_ser;
+                        wl <= {f_mul, f_lead, x_seq, 2'd3, fw[627:0]};
+                        r_no <= no; r_ni <= ni; r_rs <= f_rs; r_re <= ap; r_tag <= f_tag; r_str <= fs_odense; r_hand <= 1'b0;
+                        for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
+                            r_lo[k2] <= lo[k2]; r_hi[k2] <= hi[k2]; r_lb[k2] <= lb[k2]; r_rv[k2] <= rv[k2]; r_dsec[k2] <= dsec[k2];
+                        end
+                    end
+                    if (!wst_go && wst_done) begin
+                        rg_req <= 1'b0; stg_busy[f_tag] <= 1'b0;
+                        if (fs_on) x_dseq <= x_seq;
+                        if (f_hand || (fs_on && !r_v)) begin op_rdy_r <= 1'b1; st <= S_IDLE; end
+                        else st <= S_RDY;
+                    end
+                end
+                S_RDY: if (!r_v) begin                              // into RUN (stage complete)
                     r_v <= 1'b1; r_gop <= 1'b1; r_cdone <= 1'b0; wl <= fw; r_as <= a_s; r_os <= o_s; r_ser <= f_ser;
-                    r_no <= no; r_ni <= ni; r_rs <= f_rs; r_re <= ap;
+                    r_no <= no; r_ni <= ni; r_rs <= f_rs; r_re <= ap; r_tag <= f_tag; r_str <= fs_odense; r_hand <= 1'b0;
                     for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                         r_lo[k2] <= lo[k2]; r_hi[k2] <= hi[k2]; r_lb[k2] <= lb[k2]; r_rv[k2] <= rv[k2]; r_dsec[k2] <= dsec[k2];
                     end
@@ -1564,55 +1879,47 @@ module ot_hgi_su_ctlw #(
             if (r_v && st != S_FAULT) begin
                 if (r_gop) begin
                     if (ready_q && (!r_as || scount >= {5'd0, r_no} * {5'd0, r_ni})) begin
-                        go <= 1'b1; r_gop <= 1'b0; idle_ph <= 2'd0; vf_seen <= 1'b0;
+                        go <= 1'b1; r_gop <= 1'b0; idle_ph <= 2'd0; vf_seen <= 1'b0; lv_tag[r_tag] <= 1'b1;
+                        if (STR != 0 && !r_ser) begin                // into DRAIN at go: the O drains as it is written
+                            if (!d_v && !q1_v) begin
+                                r_hand <= 1'b1; d_v <= 1'b1; d_ph <= 2'd0; d_as <= r_as; d_os <= r_os; d_ser <= r_ser;
+                                d_no <= r_no; d_ni <= r_ni; d_rs <= r_rs; d_re <= r_re; d_tag <= r_tag; d_str <= r_str;
+                                for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
+                                    d_lo[k2] <= r_lo[k2]; d_hi[k2] <= r_hi[k2]; d_lb[k2] <= r_lb[k2]; d_rv[k2] <= r_rv[k2]; d_dsec[k2] <= r_dsec[k2];
+                                end
+                            end else if (d_v && !q1_v) begin
+                                r_hand <= 1'b1; q1_v <= 1'b1; q1_as <= r_as; q1_os <= r_os; q1_ser <= r_ser;
+                                q1_no <= r_no; q1_ni <= r_ni; q1_rs <= r_rs; q1_re <= r_re; q1_tag <= r_tag; q1_str <= r_str;
+                                for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
+                                    q1_lo[k2] <= r_lo[k2]; q1_hi[k2] <= r_hi[k2]; q1_lb[k2] <= r_lb[k2]; q1_rv[k2] <= r_rv[k2]; q1_dsec[k2] <= r_dsec[k2];
+                                end
+                            end
+                        end
                     end
                 end else if (!r_cdone) begin
                     if (idle_ph != 2'd3) idle_ph <= idle_ph + 2'd1;
                     else if (idle_q) begin
                         if (vf_seen || vfault_q) begin su_fault_r <= 1'b1; st <= S_FAULT; end
-                        else r_cdone <= 1'b1;
+                        else begin
+                            r_cdone <= 1'b1; lv_tag[r_tag] <= 1'b0;
+                            if (r_hand) begin r_v <= 1'b0; r_ser <= 1'b0; end
+                        end
                     end
-                end else if (!d_v) begin                            // into DRAIN
+                end else if (!r_hand && !d_v && !q1_v) begin       // into DRAIN (compute done)
                     d_v <= 1'b1; d_ph <= 2'd0; d_as <= r_as; d_os <= r_os; d_ser <= r_ser; d_no <= r_no; d_ni <= r_ni;
-                    d_rs <= r_rs; d_re <= r_re;
+                    d_rs <= r_rs; d_re <= r_re; d_tag <= r_tag; d_str <= r_str;
                     for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
                         d_lo[k2] <= r_lo[k2]; d_hi[k2] <= r_hi[k2]; d_lb[k2] <= r_lb[k2]; d_rv[k2] <= r_rv[k2]; d_dsec[k2] <= r_dsec[k2];
                     end
                     r_v <= 1'b0; r_ser <= 1'b0;
-                end
-            end
-            // ------------------------------------------------------------------ DRAIN
-            if (d_v && st != S_FAULT) begin
-                case (d_ph)
-                    2'd0: if ((d_rv[4] && !d_os) || d_rv[5]) begin
-                              wg_req <= 1'b1;                       // the write lane group for the drain burst
-                              if (wg_req && wg_q) begin wdr_go <= 1'b1; d_ph <= 2'd1; end
-                          end
-                          else if (d_os) begin etot <= {5'd0, d_no} * {5'd0, d_ni}; ebeat <= 21'd0; o_lb <= d_lb[4]; rp <= 4'd0;
-                                               so_w <= 1'b0; d_ph <= 2'd2; end
-                          else begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; if (d_as) s_clr <= 1'b1; end
-                    2'd1: if (!wdr_go && wdr_done) begin
-                              wg_req <= 1'b0;
-                              if (d_os) begin etot <= {5'd0, d_no} * {5'd0, d_ni}; ebeat <= 21'd0; o_lb <= d_lb[4]; rp <= 4'd0;
-                                              so_w <= 1'b0; d_ph <= 2'd2; end
-                              else begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; if (d_as) s_clr <= 1'b1; end
-                          end
-                    default: begin                                  // STREAM out: 8 elements a beat, in element order
-                        // one sector read in flight; its data is taken on the memory's valid (any latency)
-                        if (amr_q && !so_w) begin
-                            sr_v <= 1'b1; sr_sec <= (o_lb + ebeat) >> 3; so_w <= 1'b1;
-                        end else if (so_w && sr_rv_q) begin
-                            begin : so
-                                reg [7:0] mk; integer q;
-                                for (q = 0; q < 8; q = q + 1) mk[q] = (ebeat + q < etot);
-                                am_stream <= {1'b0, 256'd0, sr_data_q, mk, (ebeat + 21'd8 >= etot), 1'b1};
-                            end
-                            so_w <= 1'b0;
-                            if (ebeat + 21'd8 >= etot) begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; if (d_as) s_clr <= 1'b1; end
-                            else ebeat <= ebeat + 21'd8;
-                        end
+                end else if (!r_hand && STR != 0 && d_v && !q1_v) begin
+                    q1_v <= 1'b1; q1_as <= r_as; q1_os <= r_os; q1_ser <= r_ser;
+                    q1_no <= r_no; q1_ni <= r_ni; q1_rs <= r_rs; q1_re <= r_re; q1_tag <= r_tag; q1_str <= r_str;
+                    for (k2 = 4; k2 < 6; k2 = k2 + 1) begin
+                        q1_lo[k2] <= r_lo[k2]; q1_hi[k2] <= r_hi[k2]; q1_lb[k2] <= r_lb[k2]; q1_rv[k2] <= r_rv[k2]; q1_dsec[k2] <= r_dsec[k2];
                     end
-                endcase
+                    r_v <= 1'b0; r_ser <= 1'b0;
+                end
             end
         end
     end
