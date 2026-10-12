@@ -201,7 +201,8 @@ module ot_hgi_dma_mover #(
     reg  sel_s;                                                         // the serial engine owns the ports
     wire s_mv_rdy, s_mv_done, s_mv_fault, s_fence_rdy, s_fence_done;
     wire s_kv, s_kwe; wire [36:0] s_ka;
-    wire b2_kx;                                                         // B2: the serial engine's lane request is off stack QID wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
+    wire b2_kx;                                                         // B2: the serial engine's lane request is off stack QID
+    wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
     reg  f_fault;
     assign mv_rdy = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
     ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_go && !fast_cmd && cm_q[94:93] != 2'd0),

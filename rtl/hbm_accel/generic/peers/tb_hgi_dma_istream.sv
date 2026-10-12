@@ -19,8 +19,12 @@ module tb_hgi_dma_istream;
     parameter integer MUT_IL = 0;
     parameter integer B2 = 0;
     parameter integer MUT_B2 = 0;
+    parameter integer QSTRAP = 0;    // B2: every cluster is the SAME core (QID 0) behind ot_hgi_b2_qrot (qid strap = gq), as ot_hgi_b2_dma_q
     localparam integer NQ = (B2 != 0) ? 4 : 1;
-    localparam integer SBIT = 20;
+    // FRONT 1: the front takes SBIT (20: 1 MiB stacks keep the model small); FRONT 0: the mover's stack field is the
+    // production [36:35], so SBIT 35 and the row strides scale by SC to keep the rows spread over the four stacks
+    localparam integer SBIT = (FRONT == 0) ? 35 : 20;
+    localparam longint SC = longint'(1) << (SBIT - 20);
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     function automatic [7:0] hb(input longint a);
@@ -33,15 +37,21 @@ module tb_hgi_dma_istream;
     function automatic longint lo(input longint a, input integer s);    // lane s = stack s's memory (local address)
         lo = (a & ~(longint'(3) << SBIT)) | (longint'(s) << SBIT);
     endfunction
-    always @(posedge clk) for (integer q = 0; q < NQ; q = q + 1) if (u_done[q]) dn[q] = 1'b1;
+    reg [NQ-1:0] fl = '0;                                               // fault pulses, latched like done
+    always @(posedge clk) for (integer q = 0; q < NQ; q = q + 1) begin if (u_done[q]) dn[q] = 1'b1; if (u_fault[q]) fl[q] = 1'b1; end
     wire rec_rdy = &u_rdy; wire done = &dn; wire fault = |u_fault; wire [273:0] vmr1 = u_vmr1[vsel];
     genvar gq;
     generate for (gq = 0; gq < NQ; gq = gq + 1) begin : u
     wire rec_rdy, done, fault, halted, wq;
     wire mv_v, mv_rdy, mv_done, mv_fault, mv_src, mv_pdone, mv_fdone, fence_v, fence_rdy, fence_done, is_v, is_rdy;
     wire [226:0] mv; wire [207:0] is_cmd;
-    ot_hgi_dma_record #(.LEGACY(0), .B2(B2), .QID(gq), .SBIT(SBIT)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
-        .rec_hdr(hdr), .rec_a(ra), .rec_o(ro), .rec_n_a(nA), .rec_n_o(nO), .rec_pos1(21'd1), .rec_ilist(il),
+    localparam integer CQ = (QSTRAP != 0) ? 0 : gq;              // the core's QID
+    localparam integer RS = (QSTRAP != 0) ? gq : 0;              // lane rotation: bench lane l = core lane (l - RS) mod 4
+    wire [255:0] ra_g, ro_g;
+    ot_hgi_b2_qrot_d #(.SBIT(SBIT)) u_rqa (.qid(2'(RS)), .d(ra), .r(ra_g));
+    ot_hgi_b2_qrot_d #(.SBIT(SBIT)) u_rqo (.qid(2'(RS)), .d(ro), .r(ro_g));
+    ot_hgi_dma_record #(.LEGACY(0), .B2(B2), .QID(CQ), .SBIT(SBIT)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
+        .rec_hdr(hdr), .rec_a(ra_g), .rec_o(ro_g), .rec_n_a(nA), .rec_n_o(nO), .rec_pos1(21'd1), .rec_ilist(il),
         .rec_done(done), .rec_fault(fault), .halted(halted), .wr_quiet(wq),
         .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(),
         .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_pdone),
@@ -52,14 +62,27 @@ module tb_hgi_dma_istream;
     wire [337:0] vmq; wire [273:0] vmr0, vmr1;
     wire [4*51-1:0] dq; reg [3:0] dq_rdy = 4'hF; reg [32*270-1:0] dd = 0; wire [31:0] dd_cr;
     wire [32*280-1:0] wl; wire [31:0] wl_done;
-    ot_hgi_dma_engines #(.FRONT(FRONT), .SBIT(SBIT), .STACK_BYTES(36'd1048576), .MUT_IL(MUT_IL), .B2(B2), .QID(gq), .MUT_B2(MUT_B2)) u_eng (.clk(clk), .rst_n(rst_n),
+    ot_hgi_dma_engines #(.FRONT(FRONT), .SBIT(SBIT), .STACK_BYTES(36'd1048576), .MUT_IL(MUT_IL), .B2(B2), .QID(CQ), .MUT_B2(MUT_B2)) u_eng (.clk(clk), .rst_n(rst_n),
         .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_pdone),
         .mv_fdone(mv_fdone), .is_v(is_v), .is_rdy(is_rdy), .is_cmd(is_cmd), .fence_v(fence_v), .fence_rdy(fence_rdy),
         .fence_done(fence_done), .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_a),
         .k_req_wdata(k_wd), .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(1'b0),
-        .k_rsp_data(k_rsp_d), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
-        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(), .vr2r(8257'd0),
+        .k_rsp_data(k_rsp_d), .r_req_v(e_req_v), .r_req_rdy(e_req_rdy), .r_req_addr(e_req_addr), .r_req_len(e_req_len), .r_req_tag(e_req_tag), .r_req_we(e_req_we), .r_req_wdata(e_req_wdata), .r_req_wstrb(e_req_wstrb),
+        .r_rsp_v(e_rsp_v), .r_rsp_we(e_rsp_we), .r_rsp_rdy(e_rsp_rdy), .r_rsp_tag(e_rsp_tag), .r_rsp_last(e_rsp_last), .r_rsp_data(e_rsp_data), .vr2q(), .vr2r(8257'd0),
         .vmq(vmq), .vmr(vmr0), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr), .wl(wl), .wl_done(wl_done));
+    wire [3:0] e_req_v, e_req_rdy, e_req_we, e_rsp_v, e_rsp_we, e_rsp_rdy, e_rsp_last; wire [4*37-1:0] e_req_addr;
+    wire [15:0] e_req_len; wire [63:0] e_req_tag, e_rsp_tag; wire [1023:0] e_req_wdata, e_rsp_data; wire [127:0] e_req_wstrb;
+    for (genvar l = 0; l < 4; l = l + 1) begin : lr
+        localparam integer EL = (l - RS + 4) % 4;                 // core lane feeding bench lane l
+        assign r_req_v[l] = e_req_v[EL]; assign r_req_we[l] = e_req_we[EL]; 
+        assign r_req_len[l*4 +: 4] = e_req_len[EL*4 +: 4]; assign r_req_tag[l*16 +: 16] = e_req_tag[EL*16 +: 16];
+        assign r_req_wdata[l*256 +: 256] = e_req_wdata[EL*256 +: 256]; assign r_req_wstrb[l*32 +: 32] = e_req_wstrb[EL*32 +: 32];
+        assign r_rsp_rdy[l] = e_rsp_rdy[EL];
+        ot_hgi_b2_qrot_a #(.SBIT(SBIT)) u_rqr (.qid(2'(RS)), .a(e_req_addr[EL*37 +: 37]), .r(r_req_addr[l*37 +: 37]));   // stack field + qid
+        assign e_req_rdy[EL] = r_req_rdy[l]; assign e_rsp_v[EL] = r_rsp_v[l]; assign e_rsp_we[EL] = r_rsp_we[l];
+        assign e_rsp_tag[EL*16 +: 16] = r_rsp_tag[l*16 +: 16]; assign e_rsp_last[EL] = r_rsp_last[l];
+        assign e_rsp_data[EL*256 +: 256] = r_rsp_data[l*256 +: 256];
+    end
     ot_hgi_vm_unit #(.NC(2), .WP(32), .WDIRECT(1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, vmq}), .cr({vmr1, vmr0}), .status(),
         .wq(wl), .wq_done(wl_done));
     // ---- kport lane model (the mover): in order, latency 6, reads only (a stream is a LOAD)
@@ -195,23 +218,23 @@ module tb_hgi_dma_istream;
     endtask
     initial begin
         repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
-        run(0, 64'h40, 32, 8, 4096, 16, 21, 1003, 30000);          // FP32 one-sector rows, ids up to 2^15, list at an odd word
-        run(1, 64'h0, 128, 64, 8192, 64, 12, 2048 + 5, 6000);      // BF16 4-sector rows, row gap 0
-        run(2, 64'h400, 1024, 512, 16384, 512, 6, 3000, 900);      // FP8 16-sector rows -> 4 x 16 VM sectors
+        run(0, 64'h40, 32 * SC, 8, 4096, 16, 21, 1003, 30000);          // FP32 one-sector rows, ids up to 2^15, list at an odd word
+        run(1, 64'h0, 128 * SC, 64, 8192, 64, 12, 2048 + 5, 6000);      // BF16 4-sector rows, row gap 0
+        run(2, 64'h400, 1024 * SC, 512, 16384, 512, 6, 3000, 900);      // FP8 16-sector rows -> 4 x 16 VM sectors
         if (B2 != 0) begin : b2flt                                     // a linear LOAD on stack 1 sent to all four
             integer t0; reg [31:0] qd;
             hdr = 0; hdr[127:124] = 4'd8; hdr[123:118] = 6'd0; hdr[93] = 1; hdr[97] = 1;
             ra = 0; ra[1:0] = 2'd0; ra[4:2] = 3'd0; ra[47:8] = 40'((longint'(1) << SBIT) + 64'h200); ra[67:48] = 20'd8; ra[87:68] = 20'd1; ra[119:88] = 32'd32;
             ro = 0; ro[1:0] = 2'd1; ro[4:2] = 3'd0; ro[47:8] = 40'd40000; ro[67:48] = 20'd8; ro[87:68] = 20'd1; ro[119:88] = 32'd8;
-            nA = 21'd8; nO = 21'd8; dn = '0;
+            nA = 21'd8; nO = 21'd8; dn = '0; fl = '0;
             @(negedge clk); rec_v = 1; t0 = cyc; while (!rec_rdy && cyc - t0 < 20000) @(negedge clk);
             @(posedge clk); #0.1 rec_v = 0; t0 = cyc;
-            while (!(dn[1] && u_fault[0] && u_fault[2] && u_fault[3]) && cyc - t0 < 20000) @(posedge clk);
-            if (!(dn[1] && !u_fault[1] && u_fault[0] && u_fault[2] && u_fault[3])) begin
-                $display("FATAL: B2 linear record: done %b fault %b (want cluster 1 done, 0 / 2 / 3 fault)", dn, u_fault); errs = errs + 1; end
+            while (!(dn[1] && fl[0] && fl[2] && fl[3]) && cyc - t0 < 20000) @(posedge clk);
+            if (!(dn[1] && !fl[1] && fl[0] && fl[2] && fl[3])) begin
+                $display("FATAL: B2 linear record: done %b fault %b (want cluster 1 done, 0 / 2 / 3 fault)", dn, fl); errs = errs + 1; end
             else begin
                 vsel = 1; vm_req(0, 40000 + 3, 0, qd); vsel = 0;
-                if (qd !== {hb(64'h10020F), hb(64'h10020E), hb(64'h10020D), hb(64'h10020C)}) begin $display("FATAL: B2 linear record data %h", qd); errs = errs + 1; end
+                if (qd !== {hb((longint'(1) << SBIT) + 64'h20F), hb((longint'(1) << SBIT) + 64'h20E), hb((longint'(1) << SBIT) + 64'h20D), hb((longint'(1) << SBIT) + 64'h20C)}) begin $display("FATAL: B2 linear record data %h", qd); errs = errs + 1; end
                 else $display("ISTREAM B2: a linear record faults in the three clusters off its stack, loads in its own");
             end
         end

@@ -155,7 +155,12 @@ module ot_hgi_dma_engines #(
         end
     assign vr2q = b_own ? b_vr2q : m_vr2q;
     generate if (BACK != 0) begin : g_back
-        ot_hgi_dma_back #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES), .MUT(MUT_BK), .B2(B2), .QID(QID), .MUT_B2(MUT_B2)) u_back (.clk(clk), .rst_n(rst_n),
+        // B2: the swapout BACK is its own per-cluster instance (ot_hgi_dma_back NS 1 / STK / NB 8 on the local slice, main
+        // aa02aad65), not inside the engines: B2 with BACK != 0 is refused at elaboration
+        if (B2 != 0) begin : g_b2_back_refused
+            initial begin $error("ot_hgi_dma_engines: B2 = 1 needs BACK = 0 (per-cluster ot_hgi_dma_back NS 1)"); $finish; end
+        end
+        ot_hgi_dma_back #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES), .MUT(MUT_BK)) u_back (.clk(clk), .rst_n(rst_n),
             .mv_v(mv_v && to_b && !rd_act && !sq_act && !m_pend), .mv_rdy(b_rdy), .mv(mv), .mv_src(b_src), .mv_done(b_done),
             .mv_fault(b_fault), .quiet(b_quiet), .vr2q(b_vr2q), .vr2r(b_own ? vr2r : 8257'd0), .wd(wd), .wd_cr(wd_cr), .wa(wa));
     end else begin : g_noback
