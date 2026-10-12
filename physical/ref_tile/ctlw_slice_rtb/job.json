@@ -1,5 +1,5 @@
 {
- "name": "ctlw_slice_rtb-b-COMMIT",
+ "name": "ctlw_slice_rtb-b-2628e8740",
  "block": "ot_hgi_su_ctlw_slice",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-sfu",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-sfu",
-  "commit": "COMMIT",
+  "commit": "2628e8740",
   "extra_paths": [
    "compiler",
    "results/arch/hgi_sim_20261009/conformance",
@@ -109,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ctlw_slice_rtb/ctlw_slice_rtb-b-COMMIT"
+   "to": "results/rtl/ref_tile/ctlw_slice_rtb/ctlw_slice_rtb-b-2628e8740"
   }
  ],
  "cycles_added": 0,
