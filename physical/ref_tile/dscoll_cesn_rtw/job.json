@@ -1,5 +1,5 @@
 {
- "name": "dscoll_cesn_rtw-rtw-COMMIT",
+ "name": "dscoll_cesn_rtw-rtw-bdce12658",
  "block": "dsfd_coll_cesn",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-coll",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/el1011-ds-coll",
-  "commit": "COMMIT"
+  "commit": "bdce12658"
  },
  "stages": {
   "bench": [
@@ -158,7 +158,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_cesn_rtw/dscoll_cesn_rtw-rtw-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_cesn_rtw/dscoll_cesn_rtw-rtw-bdce12658"
   }
  ],
  "cycles_added": 0,
