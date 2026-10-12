@@ -770,6 +770,14 @@ module ot_hdc_v41x_vec_lane #(
                 assign ch_silu = so_si; assign ch_r = so_r;
                 assign ci_ye = ch_y_exp; assign ci_yd = ch_y_div; assign ci_fe = ch_f_e; assign ci_fden = ch_f_den;
                 assign ci_fdiv = ch_f_div;
+`elsif OT_SFU_CHAIN_HARD
+                // LANE CLUSTER (GLUE PLACEMENT rule 2): the chain is a hard child of the lane: no parameter overrides
+                if (MLAT != 6 || ALAT != 6 || DDIV != 21 || DENR != 1 || DRING != 4 || K != 1) begin : g_chain_cfg_err2
+                    OT_SFU_CHAIN_HARD_VIEW_IS_MLAT6_ALAT6_DDIV21_DENR1_DRING4_K1 u_cfg_err ();   // undefined: elaboration stops
+                end
+                ot_hdc_v41x_sfu_chain u_chain (
+                    .clk(clk), .rst_n(so_rst), .v(so_v), .is_exp(so_ie), .is_sig(so_is), .silu(so_si), .r(so_r),
+                    .y_exp(ci_ye), .y_div(ci_yd), .f_e(ci_fe), .f_den(ci_fden), .f_div(ci_fdiv));
 `else
                 ot_hdc_v41x_sfu_chain #(.MLAT(MLAT), .ALAT(ALAT), .DDIV(DDIV), .DENR(DENR), .DRING(DRING), .K(K)) u_chain (
                     .clk(clk), .rst_n(so_rst), .v(so_v), .is_exp(so_ie), .is_sig(so_is), .silu(so_si), .r(so_r),

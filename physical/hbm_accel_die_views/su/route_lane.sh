@@ -32,9 +32,9 @@ S=""; for s in $SRCS; do S="$S --source $s"; done
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
-python3 tools/w18/corner_sta.py ${MACROV:+--macro $MACROV} --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
+python3 tools/w18/corner_sta.py $(for m in ${MACROV:-}; do printf -- "--macro %s " $m; done) --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
-python3 tools/w18/corner_sta.py ${MACROV:+--macro $MACROV} --orfs-dir $W/work/orfs --post-sdc physical/hbm_accel_die_views/su/signoff833_clk.sdc --output $W/corner_sta_833.json > $W/corner833.log 2>&1
+python3 tools/w18/corner_sta.py $(for m in ${MACROV:-}; do printf -- "--macro %s " $m; done) --orfs-dir $W/work/orfs --post-sdc physical/hbm_accel_die_views/su/signoff833_clk.sdc --output $W/corner_sta_833.json > $W/corner833.log 2>&1
 python3 physical/hbm_accel_die_views/su/outcheck.py $W/work/orfs > $W/outcheck.txt 2>&1
 echo "post_rc=$?" >> $W/exit
 # lane view (LEF + SS/FF ETM) with the interface constraints of Carson's adopted real SU lane view (ot_su12_full, same
