@@ -271,8 +271,11 @@ module ot_hgi_qdq_q #(
             resv <= resv + (OW+1)'(l_fire) - (OW+1)'(w_fire);
             if (w_fire) begin
                 for (b = 0; b < 8; b = b + 1) if (w_hit[b]) begin : wr
-                    reg [255:0] d; reg [1:0] s; s = 2'(3'(b - w_sec0[2:0]));
-                    for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {od_head[({3'd0, s} * 8 + k) * 16 +: 16], 16'd0};
+                    reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));
+                    // decoded constant-index sector select (one-hot AND-OR, no runtime part-select)
+                    c = ({128{s == 2'd0}} & od_head[127:0]) | ({128{s == 2'd1}} & od_head[255:128]) |
+                        ({128{s == 2'd2}} & od_head[383:256]) | ({128{s == 2'd3}} & od_head[511:384]);
+                    for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};
                     wwq[b*280 +: 280] <= {1'b1, 15'(w_sec0 + 15'(s)), d, 8'hff};
                 end
                 mq_h <= mq_h + 1'b1;
