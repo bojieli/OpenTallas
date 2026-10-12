@@ -31,7 +31,9 @@ Sources: ~/.local/state/closure_loop/jobs/*.json (mtime-cached), <repo>/results/
 and tt_restatus_*.json (latest by name), per-job revocations from $FLEET_VIZ_REVOKED (default
 ~/claude-takeover-20261007/revoked_closures.json, {job: {reason, ff_ps, by, at}}; applies to any CLOSED job), descriptions from the repo (die-master .env headers, RTL module headers,
 abstract manifests) falling back to the cleaned job purpose, cached in <state>/element_descriptions.json (entries with
-"src": "manual" are never regenerated). Throughput qualification (AGENTS.md, owner 2026-10-10) comes from the latest
+"src": "manual" are never regenerated). Hand-written descriptions in <repo>/results/fleet_viz/element_descriptions_manual.json
+({families: {name: blurb}, elements: {el: {summary, about, family}}}) load first and override the cache; rows carry summary, about,
+family and family_about (empty about/family when no manual entry). Throughput qualification (AGENTS.md, owner 2026-10-10) comes from the latest
 <repo>/results/arch/throughput_budget_*/budget.json (working tree, else origin/main): each row gets `throughput`
 (status QUALIFIED / UNQUALIFIED / UNQUALIFIED_NO_BENCH, worst measured/price ratio, limiting op, owner) and `gate`
 ('CLOSED-TIMING, THROUGHPUT-UNQUALIFIED' until the unit's production-shape bench is within 1.10 of its price). Area comes from the best job's ORFS report (6_report.json, else the route
@@ -125,6 +127,39 @@ class Describer:
         self.repo = pathlib.Path(repo); self.cache_path = pathlib.Path(cache); self.idx = None; self.idx_t = 0
         try: self.cache = json.loads(self.cache_path.read_text())
         except Exception: self.cache = {}
+        # hand-written descriptions committed to the repo (element-desc-1011): loaded first, survive redeploys
+        self.manual_path = self.repo / 'results/fleet_viz/element_descriptions_manual.json'
+        self.manual_t = None; self.manual = {}; self.families = {}
+        self.load_manual()
+
+    def load_manual(self):
+        # working tree first, else origin/main (the shared checkout can lag main)
+        try: t = self.manual_path.stat().st_mtime; src = None
+        except OSError:
+            rel = str(self.manual_path.relative_to(self.repo))
+            try: t = subprocess.run(['git', '-C', str(self.repo), 'rev-parse', 'origin/main:' + rel],
+                                    capture_output=True, text=True, timeout=20).stdout.strip(); src = rel
+            except Exception: return
+            if not t: return
+        if t == self.manual_t: return
+        try:
+            d = json.loads(self.manual_path.read_text() if src is None else subprocess.run(
+                ['git', '-C', str(self.repo), 'show', 'origin/main:' + src], capture_output=True, text=True, timeout=30).stdout)
+        except Exception: return
+        self.manual_t = t; self.manual = d.get('elements', {}); self.families = d.get('families', {})
+        for m, e in self.manual.items():
+            if e.get('summary'):
+                self.cache[m] = dict(text=e['summary'], src='manual', summary=e['summary'],
+                                     about=e.get('about', ''), family=e.get('family', ''))
+
+    def info(self, mname):
+        self.load_manual()
+        c = self.cache.get(mname) or {}
+        if c.get('src') != 'manual': return dict(summary=c.get('text', ''), about='', family='', family_about='')
+        f = c.get('family', '')
+        return dict(summary=c.get('summary') or c.get('text', ''), about=c.get('about', ''), family=f,
+                    family_about=self.families.get(f, ''))
+
 
     def index(self):
         if self.idx is not None and time.time() - self.idx_t < 3600: return self.idx
@@ -580,6 +615,7 @@ class Elements:
         return dict(element=m, target=target(m, *(next(((j['owner'], j['branch']) for j in g), ('', '')))),
                     variants=[b for b in blocks if b != m], category=cat, via=via,
                     purpose=self.desc.get(m, blocks, [j['purpose'] for j in sorted(g, key=lambda j: j['created'])]),
+                    **self.desc.info(m),
                     jobs=len(g), live=len(live), failed=len(failed), closed_jobs=len(closed),
                     best=tm, area=dict(die=a.get('die'), core=a.get('core'), util=a.get('util')) if 'err' not in a and a else None,
                     revoked=revd, latest=latest,
