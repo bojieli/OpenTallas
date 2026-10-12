@@ -17,33 +17,33 @@
     "src": "G25 DS rank-0 program (results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json) priced by hgi_sim.ds_native_timing.NativeCost / ds_hgi.WalkCost: COLL.TOPK_MERGE indexer record (k 512, A 512 a rank, 96 ranks) = 2,680.6 cyc = select:96x512 0.349 us (419.0 cyc, l20_index_topk RTL) + coll:96x512 index merge 1.735 us (2,081.6 cyc, TU endpoint + port pacing + TU budget) + tail 0.15 us; IDX.INDEX indexer records 658.9 (512K keys) .. 1,212.0 cyc (1M keys)"
    },
    "measured": {
-    "cycles": 727,
+    "cycles": 728,
     "reads": 704,
     "tuples": 512,
     "variant": "ot_hbm_index_global_order_mt (tputx-gord 2026-10-11): per-rank 2-entry head FIFOs, one outstanding read per rank (up to 96 in flight, no read past last), 8x12 grouped round-robin read issue (empty-leaf refills first), 7-level 2:1 merge tree with lower-bound keys, 1 tuple/cycle; registered-boundary wrapper physical/struct_close/regbound/ot_hbm_index_global_order_mt_rb.sv",
     "bench": "tools/throughput_budget/tput_gorder_mt.py case tput_n512_l3 (golden tb_hbm_index_global_order checks unchanged; provider = in-order pipelined read port, lat 3 + wrapper 2; sink always ready)",
-    "breakdown": "read-port bound: 704 reads at 1/cycle + ~23 cycles of pipeline fill/drain (outputs overlap the reads; first output ~cycle 110)",
+    "breakdown": "read-port bound: 704 reads at 1/cycle + 24 cycles of start (ARM clear cycle), pipeline fill and drain (outputs overlap the reads; first output ~cycle 110)",
     "scaling": {
-     "n512_lat3": 727,
-     "n512_lat0": 725,
-     "n2048_lat3": 2263,
-     "n2048_lat0": 2261,
-     "n4096_lat3": 4311,
-     "n4096_lat0": 4309
+     "n512_lat3": 728,
+     "n512_lat0": 726,
+     "n2048_lat3": 2264,
+     "n2048_lat0": 2262,
+     "n4096_lat3": 4312,
+     "n4096_lat0": 4310
     },
     "sparse_info": {
-     "random 512 ids, random invalid slots, lat3, no stall (767 reads)": 939,
-     "same, sink stall 3/8 (772 reads)": 1191,
-     "12288 ids stall 1/8 (14,201 reads)": 14538
+     "random 512 ids, random invalid slots, lat3, no stall (767 reads)": 940,
+     "same, sink stall 3/8 (772 reads)": 1192,
+     "12288 ids stall 1/8 (14,201 reads)": 14559
     },
     "summary": "results/rtl/tput_map_1011/hbm_index_glue/gorder_mt_summary.json"
    },
-   "ratio": 0.271,
-   "ratio_vs_node_share": 1.735,
-   "status": "QUALIFIED",
+   "ratio": 0.272,
+   "ratio_vs_node_share": 1.737,
+   "status": "QUALIFIED (exact + mutant FAIL + tput 0.272x + routed CLOSED)",
    "exact": true,
    "mutant": "RTL mutant out_tuple^2 FAIL on golden n12288 (single-outstanding throttled provider, throttled sink), tput n512/2048/4096 lat 0/3 and 4 sparse random cases; +MUT_RANK and +FUTURE_ID fault as required",
-   "why": "50.7x -> 0.271x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Against the 419-cyc select node share it is 1.74x, which a single 1-read/cycle provider port cannot beat (704 reads > 419 cycles).",
+   "why": "50.7x -> 0.272x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Against the 419-cyc select node share it is 1.74x, which a single 1-read/cycle provider port cannot beat (704 reads > 419 cycles).",
    "caveat": "no die RTL instantiates this element (git grep: only its benches); the G25 design of record prices this step with the l20_index_topk selector, and its COLL.TOPK_MERGE record path is NOT_BUILT (build gate). The successor module is likewise not yet instantiated by die RTL (coordination noted in el1011-hbm-idx via el1011-hbm-tputx.log).",
    "previous_adopted": {
     "measured": {
@@ -71,7 +71,14 @@
     "note": "tput-map-1011/F6 measurement of the adopted closed variant STATIC_SCAN=1 FAST=2 (gorderscan_fast2_a)"
    },
    "interface_change": "new module ot_hbm_index_global_order_mt, same ports: several reads outstanding (one per rank, rank-interleaved order); responses always accepted while running (a mismatching response faults instead of back-pressuring); done is held behind the output pin FIFO by the wrapper (gen_regbound out_after)",
-   "route": "ref_tile kit physical/ref_tile/hbm_gorder_mt_ref (spec physical/struct_close/regbound/gorder_mt_ref.json); see el1011-hbm-tputx.log [tputx-gord] for the job"
+   "route": {
+    "job": "hbm_gorder_mt_ref-v1-23c517d1e",
+    "flow": "ref_tile physical/ref_tile/hbm_gorder_mt_ref",
+    "source_commit": "23c517d1e",
+    "verdict": "CLOSED TT +27.33 / FF +4.92 ps DRC 0 @833.333 ps; SS sensitivity -300.67 ps",
+    "record_commit": "a56508a64"
+   },
+   "pre_route_gate": "ref_tile pre_route_gate --remote ot-epyc4: WARN (0 fail): clock_domain 19,628 flops on one root (> 15k), boundary in->reg 6 levels inside the generated pin FIFOs; reg->reg depth 543 ps; std area 15,157 um2"
   },
   {
    "element": "ot_hbm_native_candidate_format",
