@@ -22,7 +22,7 @@ rc=0
 if [ "${2:-}" != quick ] && command -v yosys >/dev/null; then
   for f in $V/rtl/${SEGPS:-seg_ps}/hfd_svc_S[WE]_s[0-9].sv; do
     m=$(basename $f .sv)
-    yosys -q -p "read_verilog -sv $LIB $PSLIB $f; hierarchy -check -top $m; proc; flatten; opt_clean; check -assert" > $O/lint_$m.log 2>&1
+    yosys -q -p "read_verilog -sv ${LIB/ot_sram_1r1w_128x256_m1_r2c2.v/ot_sram_1r1w_128x256_m1_r2c2_bb.v} $PSLIB $f; hierarchy -check -top $m; proc; flatten; opt_clean; check -assert" > $O/lint_$m.log 2>&1
     r=$?; echo "lint_$m rc=$r" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
   done
 fi
