@@ -2783,8 +2783,14 @@ module ot_hbm_accel_smh_xs #(parameter integer TAGW = 16, parameter integer NBEA
     // hop 21.6 um from pt_w's posedge launch flops on a DIFFERENT clock tree; a NEGEDGE stage at the pins gives every bit a
     // half-cycle hold window whatever the tree skew (posedge t -> negedge t + 0.5 -> posedge t + 1: 0 cycles; setup has
     // ~385 ps for the 22 um hop).  Data-only registers (the posedge stage behind them keeps the valid resets).
-    reg [RBW-1:0] rl1_n; reg [BBW-1:0] bk1_n; reg [NBEAT-1:0] ohl1_n;
-    always @(negedge clk) begin rl1_n <= rl1; bk1_n <= bk1; ohl1_n <= ohl1; end
+    // (round 4, xs ilk route b911713a2: TT -104.8 ps) the negedge lockups cost half a cycle and their 2,900-sink branch
+    // clocked ~170 ps after the capture flops -> replaced by a deterministic hold-delay stage on each landing bit
+    // (ot_hdly, 2 x HB4xp67 ~76 ps FF, dont_touch'ed by physical/qwen_die_masters/hdly_dont_touch.tcl at PRE_FLOORPLAN):
+    // full-cycle setup, hold window independent of the neighbour's tree; a wire in simulation (0 cycles)
+    wire [RBW-1:0] rl1_n; wire [BBW-1:0] bk1_n; wire [NBEAT-1:0] ohl1_n;
+    ot_hdly #(.W(RBW), .N(2)) u_hdly_rl (.a(rl1), .y(rl1_n));
+    ot_hdly #(.W(BBW), .N(2)) u_hdly_bk (.a(bk1), .y(bk1_n));
+    ot_hdly #(.W(NBEAT), .N(2)) u_hdly_oh (.a(ohl1), .y(ohl1_n));
     // the input pin flops (the tile's second landing: u_rl2 / u_bkv2 / u_bkd2 / u_ohl2 + the one-hot replicas)
     wire [RBW-1:0] rl;
     ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rl2 (.clk(clk), .rst_n(rl_n), .d(rl1_n), .q(rl));
