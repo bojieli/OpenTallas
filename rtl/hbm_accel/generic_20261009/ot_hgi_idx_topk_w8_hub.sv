@@ -96,9 +96,15 @@ module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integ
  ot_hgi_w8_bfifo #(.W(98)) u_bo (.clk(clk), .rst_n(rst_n), .i_v(ho_v), .i_r(ho_r),
   .i_d({ho_id, ho_score, ho_row, ho_last, ho_vv}), .o_v(out_valid), .o_r(out_ready),
   .o_d({out_id, out_score, out_row, out_last, out_values_valid}));
- reg done_q; reg [3:0] err_q;
- always @(posedge clk or negedge rst_n) if (!rst_n) begin done_q <= 1'b0; err_q <= 4'd0; end
-  else begin done_q <= h_done; err_q <= h_err; end
+ // done is the core's one-cycle completion pulse: hold it pending until the registered out FIFO has drained, so the
+ // pulse still follows the last delivered beat (as it did at the unbuffered boundary).
+ reg done_q, done_p; reg [3:0] err_q;
+ always @(posedge clk or negedge rst_n) if (!rst_n) begin done_q <= 1'b0; done_p <= 1'b0; err_q <= 4'd0; end
+  else begin
+   err_q <= h_err;
+   done_q <= done_p && !out_valid && !ho_v;
+   if (h_done) done_p <= 1'b1; else if (done_p && !out_valid && !ho_v) done_p <= 1'b0;
+  end
  assign done = done_q; assign error = err_q;
  ot_hgi_idx_topk_w8_hub u_hub (.clk(clk), .rst_n(rst_n), .cmd_valid(hc_v), .cmd_ready(hc_r),
   .cmd_unit(hc_unit), .cmd_op(hc_op), .cmd_param(hc_param), .cmd_n(hc_n), .cmd_m(hc_m), .cmd_values(hc_values),
