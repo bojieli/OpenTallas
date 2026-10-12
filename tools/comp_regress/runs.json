@@ -37,10 +37,10 @@
   "hgi_collmut":  {"kind": "hgi", "args": "--real coll", "define": "OT_COLL_AMX_MUT_MIN", "mem_gb": 150},
   "hgi_qall":     {"kind": "hgi", "args": "--real coll,dma,fused,sfu,su @SUP", "mem_gb": 420},
   "hgi_qallmut":  {"kind": "hgi", "args": "--real coll,dma,fused,sfu,su @SUP --g DMA_MUT=5", "mem_gb": 420},
-  "qrom_pos":     {"kind": "qrom", "args": "--variant part --dcu 2 --duc 2 --su-ml 7 --comp 1", "mem_gb": 128,
-                   "cover_extra": ["tools/qwen_missing/*.py", "tools/exactness/*.py"], "fixture": true},
-  "qrom_neg":     {"kind": "qrom", "args": "--variant part --dcu 2 --duc 2 --su-ml 7 --comp 0", "mem_gb": 128,
-                   "cover_extra": ["tools/qwen_missing/*.py", "tools/exactness/*.py"], "fixture": true}
+  "qrom_pos":     {"kind": "qrom", "args": "--variant part --dcu 2 --duc 2 --su-ml 7 --comp 1", "mem_gb": 48,
+                   "cover_extra": ["tools/qwen_missing/*.py", "tools/exactness/*.py", "rtl/hdc/kv/ot_qwen_hbm_stream4_*.sv", "rtl/hdc/ot_hdc_isa.svh", "rtl/qwen_sys/baseline_ar_stream4/**", "rtl/qwen_sys/missing_masters_20261007/**", "rtl/test/tb_qfd_constants_sequencer.sv"], "fixture": true},
+  "qrom_neg":     {"kind": "qrom", "args": "--variant part --dcu 2 --duc 2 --su-ml 7 --comp 0", "mem_gb": 48,
+                   "cover_extra": ["tools/qwen_missing/*.py", "tools/exactness/*.py", "rtl/hdc/kv/ot_qwen_hbm_stream4_*.sv", "rtl/hdc/ot_hdc_isa.svh", "rtl/qwen_sys/baseline_ar_stream4/**", "rtl/qwen_sys/missing_masters_20261007/**", "rtl/test/tb_qfd_constants_sequencer.sv"], "fixture": true}
  },
  "macros": {"@SUP": "--g SU_N=512 --g SU_M=128 --g SU_LV=6 --g SU_WIDE=1 --g FUSED_UWIDE=1 --g FUSED_UN=64 --g FUSED_UM=16"},
  "runs": [

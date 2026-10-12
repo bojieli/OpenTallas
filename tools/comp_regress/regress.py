@@ -78,7 +78,7 @@ def plan(R, base, head):
     hit_b, why = set(), {}
     for b, spec in R["builds"].items():
         files = cov["builds"].get(b, {}).get("files")
-        globs = spec.get("cover_extra", []) + ["tools/comp_regress/*"]
+        globs = spec.get("cover_extra", [])
         if files is None:
             hit_b.add(b)
             why[b] = "no recorded coverage"
