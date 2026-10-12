@@ -421,12 +421,11 @@ module ot_hgi_att_unit #(
                     l2_bad[cs] = 1'b1;
             end
             for (ce = 0; ce < D; ce = ce + 1) if (ce < hd) begin : one
-                reg [8:0] c; reg [31:0] lane0; integer bi;
-                bi = (ce << es_b);                                   // byte offset of element ce in the row
-                if (MUT_LANE != 0 && (bi >> 5) == 1) lane0 = 32'd0;
-                if (es_b == 2'd0) c = {1'b0, l2_head[(cs * SPRL + (MUT_LANE != 0 && (bi >> 5) == 1 ? 0 : (bi >> 5))) * 256 + 8 * (bi % 32) +: 8]};
-                else if (es_b == 2'd1) c = e4m3({l2_head[(cs * SPRL + (MUT_LANE != 0 && (bi >> 5) == 1 ? 0 : (bi >> 5))) * 256 + 8 * (bi % 32) +: 16], 16'd0});
-                else c = e4m3(l2_head[(cs * SPRL + (MUT_LANE != 0 && (bi >> 5) == 1 ? 0 : (bi >> 5))) * 256 + 8 * (bi % 32) +: 32]);
+                // static wiring per element format (byte offset ce, 2ce, 4ce are elaboration constants), then a 3:1 select:
+                // no runtime-indexed part-select into the NL x KVL x 256-b landing word
+                reg [8:0] c; reg [31:0] x_;
+                x_ = (es_b == 2'd1) ? {l2_head[(cs * SPRL + (((MUT_LANE != 0 && ((2 * ce) >> 5) == 1) ? 0 : ((2 * ce) >> 5)) % SPRL)) * 256 + 8 * ((2 * ce) % 32) +: 16], 16'd0} : l2_head[(cs * SPRL + (((MUT_LANE != 0 && ((4 * ce) >> 5) == 1) ? 0 : ((4 * ce) >> 5)) % SPRL)) * 256 + 8 * ((4 * ce) % 32) +: 32];
+                c = (es_b == 2'd0) ? {1'b0, l2_head[(cs * SPRL + (((MUT_LANE != 0 && ((ce) >> 5) == 1) ? 0 : ((ce) >> 5)) % SPRL)) * 256 + 8 * ((ce) % 32) +: 8]} : e4m3(x_);
                 l2_row[cs * ROWW + (ce / 32) * 265 + 8 * (ce % 32) +: 8] = c[7:0];
                 if (l2_pmask[cs] && c[8]) l2_bad[cs] = 1'b1;
             end
