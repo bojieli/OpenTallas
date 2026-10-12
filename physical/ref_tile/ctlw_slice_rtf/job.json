@@ -1,14 +1,14 @@
 {
- "name": "ctlw_slice_rtf-f-c4a66f13b",
+ "name": "ctlw_slice_rtf-f-COMMIT",
  "block": "ot_hgi_su_ctlw_slice",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-sfu",
- "purpose": "[hbm-sfu/slice] ot_hgi_su_ctlw_slice after ctlw_slice_rtd TT -153.54 (classes: S-face pin flops driving N-face outputs 7-9 lv; region walk 25-30 lv): RTL 11f60269d FWD2 forward registers (+1 edge/hop, BL 18) + PRE two-stage region precompute; M5 leaf (M4-only W/E pins): 97.2x475.2 so the 4,552-bit E face is 9.6 b/um on M4",
+ "purpose": "[hbm-sfu/slice] ot_hgi_su_ctlw_slice after ctlw_slice_rtd TT -153.54 (classes: S-face pin flops driving N-face outputs 7-9 lv; region walk 25-30 lv): RTL 11f60269d FWD2 forward registers (+1 edge/hop, BL 18) + PRE two-stage region precompute; M5 leaf (M4-only W/E pins): 97.2x475.2 ; pin_ranges re-spread proportionally over the FULL face (coordinator: rte/rtf refused E/M4 13.9 b/um in 100-um windows from rtd ranges ending at 341.6) so the 4,552-bit E face is 9.6 b/um on M4",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-sfu",
-  "commit": "c4a66f13b",
+  "commit": "COMMIT",
   "extra_paths": [
    "compiler",
    "results/arch/hgi_sim_20261009/conformance",
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ctlw_slice_rtd/ctlw_slice_rtf-f-c4a66f13b"
+   "to": "results/rtl/ref_tile/ctlw_slice_rtd/ctlw_slice_rtf-f-COMMIT"
   }
  ],
  "cycles_added": 0,
