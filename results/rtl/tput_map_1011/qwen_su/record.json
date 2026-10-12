@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tput-class-bench.v1",
+ "class": "SU.VOP",
+ "model": "Qwen AR 8K (HBM)",
+ "elements": ["ot_hgi_su_record", "ot_hgi_su_ctl", "ot_hgi_su_ctlw", "hfd_su_tile", "hfd_su_tile_xl", "hfd_su_result_ingress"],
+ "price": {"cycles": 1548.0, "per": "layer (11 SU records back to back)", "src": "hbm-sim Qwen3-8B TP4 P8191 rank 0 layer 0 SU chain (tools/hgi_unitrate/su_prod_vec.py --unit su --chain): embedding.dequant 67, row_scale_qkv 62, rope 62, round_q 61, softmax.max 302, softmax.exp_sum 524, softmax.bf16_p 187, pv_normalize 78, row_scale_o+residual 67, row_scale_gu 71, row_scale_down+residual 67; 21,331 sectors in / 10,082 out"},
+ "measured": {"cycles": 3012, "records": 11, "span": 334, "stage": 1101, "compute": 1327, "drain": 850, "compute_vs_price": 0.857},
+ "ratio": 1.946,
+ "exact": true,
+ "exactness": "HGI_SU_PROD PASS: 80,656 sink-sector words = golden, rest = pre-op (su_run.log)",
+ "mutant": "MUT_DIRTY on the same tb/unit (results/rtl/hgi_unitrate_20261010/su_wide/mut_dirty.log): HGI_SU_PROD FAIL errors=90; not rebuilt (60 GB / 27 min Verilator build, 1.9 h sim on a load-680 host); unit and tb sources hash-identical to 6c4677c53",
+ "bench": "N=512 M=128 LV=7 WIDE=1 bash rtl/hbm_accel/generic/adapters/tb/run_su_prod.sh <out> (Verilator 5.050, tb_hgi_su_prod, chain vectors)",
+ "host": "ot-epyc2:/srv/opentallas-scratch/claude/tput-map-1011/f3/qsu",
+ "source_commit": "6c4677c53",
+ "verdict": "UNQUALIFIED",
+ "notes": "Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max -> exp_sum -> bf16_p; a record whose source overlaps an older undrained sink waits for that drain), so stage/drain serialise (REC 5 softmax.exp_sum retires at 2,009, 1,234 cycles after REC 4). The DS L0 27-record chain is 1.067 because its records are long. Fix (owner hbm-sfu / hgi-1010/b): per-lane-group streaming (stage g overlaps compute < g, drain per group) plus sink->source forwarding so a dependent record need not wait for the full drain."
+}
