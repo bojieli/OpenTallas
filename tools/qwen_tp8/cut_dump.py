@@ -9,6 +9,7 @@ D.QWEN_RECIPE='tp8b'; D._QW.clear(); D.QSRC=None
 m=D.load_qwen()[1]
 ins=[dict(n=i.name, m=getattr(i,'master',''), x=i.x, y=i.y, w=i.w, h=i.h) for i in m['insts']]
 json.dump(dict(insts=ins, buses=[(b,c,bits,[e[0] for e in eps]) for b,c,bits,eps in m['buses']]), open(out/'rom_tp8b.json','w'))
+r_=m.get('r21_relays',{}); print('relays', r_.get('relays'), 'repaired', r_.get('repaired'), 'unrepaired', len(r_.get('unrepaired',[])), 'off_plan', r_.get('off_plan'), 'feedback', r_.get('feedback'))
 print('built', round(time.time()-t), 'die', m['die'].get('w'), m['die'].get('h'), 'pads', json.dumps(m.get('tp8_tree_pads'))[:200])
 A=C.Net(out/'rom_tp8b.json'); R=C.rom_cuts(A)
 json.dump(R, open(out/'tp8b_cuts.json','w'), indent=1)

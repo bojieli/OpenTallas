@@ -48,13 +48,36 @@ def dump(out):
         wr(D.load_qwen()[1], name)
 
 
+def block_model(insts):
+    """(blocks, cap5, clB) of an instance list (dicts with x/y/w/h/m) under the current CAP_MODE / CLUSTER_PLAN: the
+    capacity side of the cut model, shared with the die generator's field allocator (qwen-tp8/die it24: its per-window
+    caps are usable(...) x ~0.58, not a flat number)."""
+    bl = [i for i in insts if i['w'] * i['h'] > 4e4]
+    return (np.array([(i['x'], i['y'], i['x'] + i['w'], i['y'] + i['h']) for i in bl]).reshape(-1, 4),
+            np.array([CAP_MODE == 'v3' and i.get('m', '') not in HARD_IP + CLUSTER for i in bl], dtype=bool),
+            np.array([CLUSTER_PLAN == 'B' and i.get('m', '') in CLUSTER for i in bl], dtype=bool))
+
+
+def usable(ax, cp, edges, blocks, cap5, clB):
+    """usable tracks per window (edges along the cut line ax = cp) and the hard-block coverage per window."""
+    p0, o0 = (0, 1) if ax == 'x' else (1, 0)
+    sel = (blocks[:, p0] < cp) & (cp < blocks[:, p0 + 2])
+    B = blocks[sel]
+    K5 = cap5[sel] | (clB[sel] & (ax == 'y'))   # plan B: die M7 over the cluster serves vertical wires only
+    cov = np.zeros(len(edges) - 1); cov5 = np.zeros(len(edges) - 1)
+    for b, k5 in zip(B, K5):
+        o = np.clip(np.minimum(edges[1:], b[o0 + 2]) - np.maximum(edges[:-1], b[o0]), 0, None)
+        cov += o
+        if k5: cov5 += o
+    L = np.diff(edges); cov = np.minimum(cov, L); cov5 = np.minimum(cov5, cov)
+    hi, lo, lw = ('M8', 'M6', 'M4') if ax == 'x' else ('M9', 'M7', 'M5')
+    return 0.75 * L * TPU[hi] + cov5 * 0.75 * TPU[lo] + (L - cov) * (0.75 * TPU[lo] + 0.5 * TPU[lw]), cov
+
+
 class Net:
     def __init__(self, path, drop=('clock_trunk',)):
         d = json.load(open(path)); self.I = I = {i['n']: i for i in d['insts']}
-        bl = [i for i in d['insts'] if i['w'] * i['h'] > 4e4]
-        self.blocks = np.array([(i['x'], i['y'], i['x'] + i['w'], i['y'] + i['h']) for i in bl])
-        self.cap5 = np.array([CAP_MODE == 'v3' and i.get('m', '') not in HARD_IP + CLUSTER for i in bl])
-        self.clB = np.array([CLUSTER_PLAN == 'B' and i.get('m', '') in CLUSTER for i in bl])
+        self.blocks, self.cap5, self.clB = block_model(d['insts'])
         self.W = max(i['x'] + i['w'] for i in d['insts']); self.H = max(i['y'] + i['h'] for i in d['insts'])
         cen = lambda i: (i['x'] + i['w'] / 2, i['y'] + i['h'] / 2)
         cl = lambda i, P: (min(max(P[0], i['x']), i['x'] + i['w']), min(max(P[1], i['y']), i['y'] + i['h']))
@@ -75,17 +98,7 @@ class Net:
         oc = T[:, o0] + (T[:, o1] - T[:, o0]) * (cp - T[:, p0]) / (T[:, p1] - T[:, p0])
         k = np.digitize(oc, edges) - 1
         bits = np.bincount(np.clip(k, 0, len(edges) - 2), weights=T[:, 4] * ((k >= 0) & (k < len(edges) - 1)), minlength=len(edges) - 1)
-        B = self.blocks[(self.blocks[:, p0] < cp) & (cp < self.blocks[:, p0 + 2])]
-        sel = (self.blocks[:, p0] < cp) & (cp < self.blocks[:, p0 + 2])
-        K5 = self.cap5[sel] | (self.clB[sel] & (ax == 'y'))   # plan B: die M7 over the cluster serves vertical wires only
-        cov = np.zeros(len(edges) - 1); cov5 = np.zeros(len(edges) - 1)
-        for b, k5 in zip(B, K5):
-            o = np.clip(np.minimum(edges[1:], b[o0 + 2]) - np.maximum(edges[:-1], b[o0]), 0, None)
-            cov += o
-            if k5: cov5 += o
-        L = np.diff(edges); cov = np.minimum(cov, L); cov5 = np.minimum(cov5, cov)
-        hi, lo, lw = ('M8', 'M6', 'M4') if ax == 'x' else ('M9', 'M7', 'M5')
-        cap = 0.75 * L * TPU[hi] + cov5 * 0.75 * TPU[lo] + (L - cov) * (0.75 * TPU[lo] + 0.5 * TPU[lw])
+        cap, cov = usable(ax, cp, edges, self.blocks, self.cap5, self.clB)
         return bits, cap, cov, k, C, T[:, 4]
 
     def window(self, ax, cp, lo, hi):
