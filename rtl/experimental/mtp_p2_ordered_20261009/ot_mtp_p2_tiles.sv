@@ -120,9 +120,9 @@ module ot_mtp_p2_prefix_path_hub(
  output wire [3:0] t_s,        // die: {start_r, done, fault, corrected}
  output wire [594:0] t_out,    // die: {out_v, out_data[511:0], out_identity[73:0], out_word[6:0], out_last}
  input wire [0:0] f_outr,      // die: out_ready
- output reg [102:0] t_xc,      // -> xport f_c {start_v, abort, identity, ids}
+ output wire [102:0] t_xc,      // -> xport f_c {start_v, abort, identity, ids}
  input wire [1:0] f_xc,        // <- xport t_c {start_r, fault}
- output reg [102:0] t_ac,      // -> arith f_c
+ output wire [102:0] t_ac,      // -> arith f_c
  input wire [2:0] f_ac,        // <- arith t_c {start_r, fault, corrected}
  input wire [658:0] f_a,       // <- arith t_o {out_v, identity74, word7, last, code576}
  output wire [0:0] t_ar        // -> arith f_or (registered PINREG in_ready)
@@ -130,7 +130,7 @@ module ot_mtp_p2_prefix_path_hub(
  wire clk=ck[0];wire rn;
  ot_dsrom_mtp_rstsync u_rs(.clk(clk),.rst_n_async(rst[0]),.rst_n(rn));
  wire start_v=f_s[102],abort=f_s[101];wire [73:0] start_identity=f_s[100:27];wire [26:0] start_ids=f_s[26:0];
- reg busy,busy_copy,done_q,abort_q,sr_q,sv_q,fault_q,corrected_q,lost_q,poison_t;
+ reg busy,busy_copy,done_q,abort_q,sr_q,sv_q,fault_q,corrected_q,lost_q;
  reg [73:0] sid_q;reg [26:0] sids_q;
  reg tr_sr,tr_fault,ar_sr,ar_fault,ar_ce;     // seam pin flops
  always @(posedge clk or negedge rn)if(!rn)begin tr_sr<=0;tr_fault<=0;ar_sr<=0;ar_fault<=0;ar_ce<=0;end
@@ -160,13 +160,15 @@ module ot_mtp_p2_prefix_path_hub(
  wire last_pop=out_v&&f_outr[0]&&out_last&&!poison;
  wire busy_nx=(busy||fire)&&!last_pop;
  always @(posedge clk)begin sid_q<=start_identity;sids_q<=start_ids;end   // free-running pin capture
- always @(posedge clk)begin t_xc[100:0]<={sid_q,sids_q};t_ac[100:0]<={sid_q,sids_q};end
+ reg [1:0] xc_c,ac_c;reg [100:0] xc_d,ac_d;               // seam output registers (control reset, data not)
+ assign t_xc={xc_c,xc_d};assign t_ac={ac_c,ac_d};
+ always @(posedge clk)begin xc_d<={sid_q,sids_q};ac_d<={sid_q,sids_q};end
  always @(posedge clk or negedge rn)begin
- if(!rn)begin busy<=0;busy_copy<=0;done_q<=0;abort_q<=0;sr_q<=0;sv_q<=0;fault_q<=0;corrected_q<=0;lost_q<=0;poison_t<=0;
-  t_xc[102:101]<=2'b0;t_ac[102:101]<=2'b0;end
+ if(!rn)begin busy<=0;busy_copy<=0;done_q<=0;abort_q<=0;sr_q<=0;sv_q<=0;fault_q<=0;corrected_q<=0;lost_q<=0;
+  xc_c<=2'b0;ac_c<=2'b0;end
  else begin done_q<=0;abort_q<=abort;sv_q<=fire_ext;
  // tile start / abort leave on a register (fault terms from the tiles are already one seam later)
- t_xc[102:101]<={sv_q,poison};t_ac[102:101]<={sv_q,poison};
+ xc_c<={sv_q,poison};ac_c<={sv_q,poison};
  if(sv_q&&!(tr_sr&&ar_sr))lost_q<=1;
  fault_q<=fault_i;corrected_q<=ar_ce||pub_ce;
  sr_q<=!busy_nx&&!poison&&tr_sr&&ar_sr&&!fire_ext&&!fire;
