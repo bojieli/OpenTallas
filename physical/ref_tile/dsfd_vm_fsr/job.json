@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_fsr-r3-COMMIT",
+ "name": "dsfd_vm_fsr-r3-86b3e1edd",
  "block": "dsfd_vm_fsr",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/fe6",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-vm-fe",
-  "commit": "COMMIT"
+  "commit": "86b3e1edd"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_fsr/dsfd_vm_fsr-r3-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_fsr/dsfd_vm_fsr-r3-86b3e1edd"
   }
  ],
  "cycles_added": 0,
