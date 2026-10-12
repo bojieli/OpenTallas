@@ -939,7 +939,8 @@ module ot_qfd_vm_grp #(
     parameter integer LAWS = 10,
     parameter integer USE_MACRO = 0,
     parameter integer NPP = 6,
-    parameter integer MEREG = 1          // 1: me_in is me_en one edge early (registered here: the tile's replica)
+    parameter integer MEREG = 1,         // 1: me_in is me_en one edge early (registered here: the tile's replica)
+    parameter integer FSW = 128          // x FIFO slice width: each FSW-bit slice owns kept one-hot wp/rp + push/pop replicas
 ) (
     input  wire                      clk,
     input  wire                      rst_n,
@@ -1030,20 +1031,49 @@ module ot_qfd_vm_grp #(
         always @(posedge clk) if (sv2[c]) so[c*NSB*512 +: NSB*512] <= sq[c*NSB*512 +: NSB*512];
     end endgenerate
     // ---- x beat FIFO: push on the clock, pop on engine edges ----
-    reg [NPP*NBK*512-1:0] fm;               // flat (entry-major)
-    reg [LP-1:0] wp, rp;
+    // el1011-q-sp 2026-10-11: qfd_vm_grp_a-6b30117c7 PREROUTE_MARGIN -1,183.6 ps, worst rp[0] -> xo[*]: ONE binary read
+    // pointer selected 7 x 4,096 b through a mux tree (rp[0] fanout ~16k across the 561.6 um pin face), and one binary wp
+    // decoded into 28,672 write enables.  Now every FSW-bit slice owns its own one-hot wp / rp and its own push / pop
+    // replicas (kept registers, same next state as the central counters), so a select drives FSW x NPP flops, the read
+    // is one AND-OR level, and no pointer net crosses the tile.  Cycle behaviour unchanged.
+    localparam integer NSL = (NBK * 512) / FSW;
     reg [LP:0]   cnt;
     wire push = xv2;
     wire popn = me_t && p_pop;
-    always @(posedge clk) if (push) fm[wp*NBK*512 +: NBK*512] <= bq;
-    always @(posedge clk) if (popn) xo <= fm[rp*NBK*512 +: NBK*512];
     always @(posedge clk or negedge rt) begin
-        if (!rt) begin wp <= 0; rp <= 0; cnt <= 0; ovf <= 1'b0; end
+        if (!rt) begin cnt <= 0; ovf <= 1'b0; end
         else begin
-            if (push) wp <= (wp == NPP - 1) ? 0 : wp + 1'b1;
-            if (popn) rp <= (rp == NPP - 1) ? 0 : rp + 1'b1;
             cnt <= cnt + (push ? 1'b1 : 1'b0) - (popn ? 1'b1 : 1'b0);
             if ((push && !popn && cnt == NPP) || (popn && cnt == 0)) ovf <= 1'b1;
         end
     end
+    genvar k, e;
+    generate for (k = 0; k < NSL; k = k + 1) begin : g_fs
+        (* keep = "true", dont_touch = "true" *) reg mr_k;       // me_t replica
+        (* keep = "true", dont_touch = "true" *) reg pp_k;       // p_pop replica
+        (* keep = "true", dont_touch = "true" *) reg xv_k;       // xv2 replica (push)
+        (* keep = "true", dont_touch = "true" *) reg [NPP-1:0] wpo, rpo;
+        wire me_k = (MEREG != 0) ? mr_k : me_in;
+        wire pop_k = me_k && pp_k;
+        always @(posedge clk) mr_k <= me_in;
+        always @(posedge clk or negedge rt)
+            if (!rt) begin pp_k <= 1'b0; xv_k <= 1'b0; wpo <= {{(NPP-1){1'b0}}, 1'b1}; rpo <= {{(NPP-1){1'b0}}, 1'b1}; end
+            else begin
+                if (me_k) pp_k <= pop;
+                xv_k <= p_xv;
+                if (xv_k) wpo <= (NPP > 1) ? {wpo[NPP-2:0], wpo[NPP-1]} : wpo;
+                if (pop_k) rpo <= (NPP > 1) ? {rpo[NPP-2:0], rpo[NPP-1]} : rpo;
+            end
+        reg [FSW-1:0] fe [0:NPP-1];
+        for (e = 0; e < NPP; e = e + 1) begin : g_fe
+            always @(posedge clk) if (xv_k && wpo[e]) fe[e] <= bq[k*FSW +: FSW];
+        end
+        reg [FSW-1:0] rd;
+        integer i;
+        always @* begin
+            rd = {FSW{1'b0}};
+            for (i = 0; i < NPP; i = i + 1) rd = rd | (fe[i] & {FSW{rpo[i]}});
+        end
+        always @(posedge clk) if (pop_k) xo[k*FSW +: FSW] <= rd;
+    end endgenerate
 endmodule
