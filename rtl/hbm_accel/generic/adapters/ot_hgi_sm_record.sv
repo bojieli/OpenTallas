@@ -165,7 +165,10 @@ module ot_hgi_sm_record #(
     reg  [NSM-1:0] st_pend, d_pend, arr_want, arr_seen;
     reg  [NSM-1:0] rel;                  // release_in a SM (the adapter echoes arrive at retire)
     // row-credit chunking (CR): rows / lines still to describe, the next chunk's base, credits; chunk lines = LPR x CH
-    localparam integer LCH = $clog2(CH), CRW = $clog2(AD + 1);
+    // the chunk never exceeds the credits (CH > AD would wait for credits that can never exist: deadlock)
+    localparam integer CHE = (CH < AD) ? CH : AD;
+    localparam integer LCH = $clog2(CHE), CRW = $clog2(AD + 1);
+    initial if ((1 << LCH) != CHE) $fatal(1, "ot_hgi_sm_record: min(CH, AD) must be a power of two");
     localparam integer NOCR = (CR == 0 || MUT_NOCR != 0) ? 1 : 0;
     reg  [NSM*13-1:0] rr_s; reg [NSM*24-1:0] lr_s; reg [NSM*32-1:0] nb_s; reg [NSM*CRW-1:0] cr_s;
     reg  [23:0] chl;                     // lines a full chunk
@@ -292,8 +295,8 @@ module ot_hgi_sm_record #(
             begin : g_chunk
                 reg [12:0] n; reg [23:0] ln; reg [CRW-1:0] c; reg go;
                 for (s = 0; s < NSM; s = s + 1) begin
-                    n  = (NOCR || rr_s[s*13 +: 13] <= CH) ? rr_s[s*13 +: 13] : 13'(CH);
-                    ln = (NOCR || rr_s[s*13 +: 13] <= CH) ? lr_s[s*24 +: 24] : chl;
+                    n  = (NOCR || rr_s[s*13 +: 13] <= CHE) ? rr_s[s*13 +: 13] : 13'(CHE);
+                    ln = (NOCR || rr_s[s*13 +: 13] <= CHE) ? lr_s[s*24 +: 24] : chl;
                     c  = cr_s[s*CRW +: CRW];
                     go = busy && fld_ph == 2'd3 && !d_pend[s] && rr_nz[s] && (NOCR || {{(32-CRW){1'b0}}, c} >= {19'd0, n});
                     if (go) begin
