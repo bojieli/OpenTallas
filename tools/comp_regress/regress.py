@@ -249,7 +249,7 @@ def launch(R, a, run_ids):
     ssh(a.host, f"cat > {root}/drive.sh && chmod +x {root}/drive.sh", inp=script)
     meta = dict(sha=a.sha, host=a.host, root=root, runs=run_ids, launched=time.strftime("%F %T %Z"))
     ssh(a.host, f"cat > {root}/launch.json", inp=json.dumps(meta, indent=1))
-    ssh(a.host, f"cd {root} && nohup setsid bash drive.sh > drive.out 2>&1 < /dev/null & echo started")
+    ssh(a.host, f"cd {root} && (nohup setsid bash drive.sh > drive.out 2>&1 < /dev/null &); echo started")
     print(json.dumps(meta))
 
 
