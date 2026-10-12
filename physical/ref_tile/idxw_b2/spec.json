@@ -1,0 +1,85 @@
+{
+ "name": "idxw_b2",
+ "top": "ot_hgi_idx_index_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/idx/ot_hgi_idx_index_w.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pg_layer": "M6",
+ "macros": [],
+ "pins": {
+  "W": [
+   "wrq",
+   "wrq_cr",
+   "wrr",
+   "rg_req",
+   "rg_gnt"
+  ],
+  "E": [
+   "wwq",
+   "wwq_cr",
+   "wwq_done",
+   "wg_req",
+   "wg_gnt"
+  ],
+  "N": [
+   "fs",
+   "qb",
+   "qbr",
+   "kin",
+   "to",
+   "toc",
+   "co",
+   "coc",
+   "ev"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "go_i",
+   "k_i",
+   "cand_en_i",
+   "keep_en_i",
+   "n_i",
+   "rank_i",
+   "pos_i",
+   "a_base_i",
+   "b_base_i",
+   "c_base_i",
+   "o_base_i",
+   "r_base_i",
+   "d_base_i",
+   "d_stride_i",
+   "c_stride_i",
+   "c_n_i",
+   "has_r_i",
+   "done",
+   "fault"
+  ]
+ },
+ "refglob": "*rcr_q*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-hbm-idxs",
+  "branch": "claude/el1011-hbm-idxs",
+  "tag": "v1",
+  "purpose": "el1011-hbm-idxs: IDX.INDEX wide-lane frame adapter ot_hgi_idx_index_w (HBM B2, 8-lane slice-local wide read/write client): structural throughput redesign of the 8.60x IDX.INDEX record (serial packet-client keep walk / query stream / 1-lane compaction). ~30k flops, every port registered, sync reset from a local flop, no datapath reset.",
+  "no_bench_reason": "new tile; the bit-exact gate is the die e2e tb_hgi_e2e IDX_NATIVE=1 IDX_IXW=1 on the DS-V4.1 AR 1M rank-0 vectors (L24 PASS, IDX_MUT=2 FAIL), hand-run on ot-epyc4 /srv/opentallas-scratch2/claude/idxs-1012 (vectors not in the tree); adoption waits for it",
+  "benches": [],
+  "views_to": "physical/ref_tile/idxw_b2/views",
+  "record_to": "results/rtl/ref_tile/idxw_b2"
+ },
+ "std_area_um2": 22000,
+ "params": {},
+ "children": [],
+ "inter": []
+}
