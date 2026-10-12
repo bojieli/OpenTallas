@@ -541,9 +541,16 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     if blocks:
         extra.append(f"--orfs-var MACRO_PLACEMENT_TCL=/src/{kd}/place.tcl")
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
-        extra.append(f"--macro-place-halo {HALO_UM} {HALO_UM}")
+        h = float(s["route"].get("macro_halo_um", HALO_UM))
+        extra.append(f"--macro-place-halo {h} {h}")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
+    # macro-dominated tile (macros > 1/3 of the core): global placement at the fixed PLACE_DENSITY, not lower-bound + 0.05
+    # (pbst: std cells 3% of the core -> target density 0.11 -> RePlAce GPL-0305 divergence in 3 of 4 runs, ref gate)
+    core = (W - 2 * CORE_MARGIN) * (H - 2 * CORE_MARGIN)
+    fixed = s["route"].get("fixed_density", sum(b["w"] * b["h"] for b in blocks) > core / 3)
+    if fixed:
+        extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
