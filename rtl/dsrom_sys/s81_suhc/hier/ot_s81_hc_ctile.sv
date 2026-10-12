@@ -75,7 +75,7 @@ module ot_s81_hc_ctile #(
     initial begin
         if (GS < 8 || (GS & (GS - 1)) != 0 || NG % GS != 0) $fatal(1, "ot_s81_hc_ctile: GS a power of two >= 8 dividing NG");
         if (GS != 8) $fatal(1, "ot_s81_hc_ctile: decoded row writes assume octet groups (GS 8)");
-        if (NG % 32 != 0) $fatal(1, "ot_s81_hc_ctile: NG a multiple of 32 (y rows inside one quadrant)");
+        if (NG % 32 != 0 && 32 % NG != 0) $fatal(1, "ot_s81_hc_ctile: NG a multiple or a divisor of 32 (y row decode)");
         if (HALF && GS != 8) $fatal(1, "ot_s81_hc_ctile: HALF splits an octet (GS 8)");
         if (NP * 128 > S_RT * 512) $fatal(1, "ot_s81_hc_ctile: the partial packet must fit the return data field");
         if (D % N != 0) $fatal(1, "ot_s81_hc_ctile: D a multiple of 4 NG");
@@ -411,7 +411,10 @@ module ot_s81_hc_ctile #(
                     g = ((32 * qx) % NG) / GT; b = (32 * qx) / NG;            // first tile-group, lane quadrant
                     for (k = 0; k < 32; k = k + 1)
                         for (qd = 0; qd < N / NG; qd = qd + 1)
-                            if (g + k / GT == tid && b == qd) o[P_D + 512 * s + 16 * k +: 16] = yr[16 * (qd * GT + k % GT) +: 16];
+                            // NG >= 32: the row sits in one quadrant; NG < 32 (32 % NG == 0): lane k is group k % NG
+                            // of quadrant 32 qx / NG + k / NG
+                            if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tid && (NG >= 32 ? b : b + k / NG) == qd)
+                                o[P_D + 512 * s + 16 * k +: 16] = yr[16 * (qd * GT + k % GT) +: 16];
                 end else begin                                               // h row qx: 8 groups of resident row b
                     g0 = ((8 * qx) % NG) / 8; b = (8 * qx) / NG;
                     hr = hb[(b % 4) * 2 * NV + hs_sl * NV + b / 4];          // one row read a slot
