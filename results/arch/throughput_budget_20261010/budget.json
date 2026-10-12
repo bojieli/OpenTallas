@@ -5,7 +5,7 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-12T03:25:37Z",
+ "generated_utc": "2026-10-12T03:54:45Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -2100,6 +2100,21 @@
    "accept_spaced": true,
    "dense": true
   },
+  "ot_dsrom_aq12t": {
+   "job": "el1011-pqc-aq12t-a-cc60cd537-tc-cl",
+   "commit": "cc60cd537",
+   "bench": "bench_aq12t_lockstep_exact",
+   "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
+   "cycles": 40000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-ds-misc",
+   "target": null,
+   "t": "2026-10-11T20:32:13-07:00",
+   "adopted": true
+  },
   "qfd_seq_su_bi_fea": {
    "job": "qfd_seq_su_bi-fearl-19fe61d1d-tc-hm0-cl",
    "commit": "19fe61d1d",
@@ -2636,6 +2651,11 @@
    "why": "per-stack decode of the host ingest sector stream (dsfd_host o_* -> hw<s>): no per-token price row",
    "applied": true
   },
+  "qfd_sysctl_stn_pb2": {
+   "kind": "control_glue",
+   "why": "station of the package-controller sysctl ring (ot_qfd_pkgctl host_if control packets; one-entry packet queue): system control, no per-token datapath",
+   "applied": true
+  },
   "qfd_kv_row": {
    "kind": "not_in_design",
    "why": "older KV-on-ROM-die path: not instantiated in the adopted r22ko4 ROM die or the KV die; no price row (the KV-die class bench results/rtl/tput_map_1011/qwen_kv_die covers the adopted path); supersede candidate",
@@ -2839,6 +2859,7 @@
   "ot_p2h_xport": "ot_mtp_p2_prefix_path",
   "ot_qkh_ktree": "ot_qwen_nearhbm_head_h",
   "ot_qkh_lane8": "ot_qwen_nearhbm_head_h",
+  "ot_qwen_nearhbm_attn_hub_t": "ot_qwen_nearhbm_attn_hub_p",
   "qfd_tile_lsl": "qfd_tile",
   "qfd_vm_grp": "qfd_sp_vector_memory"
  },
@@ -2886,8 +2907,8 @@
    {
     "id": "wfc_kit.ar_pass",
     "price": 160.53,
-    "measured": 177.46,
-    "ratio": 1.1055,
+    "measured": 172.46,
+    "ratio": 1.0743,
     "elements": [
      "ot_dsrom_wfc_tokpipe_stg",
      "dsfd_wfc_lnk",
@@ -3337,7 +3358,7 @@
   "ot_qkvd_rom_end": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_sbuf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_attn_hub_p": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
-  "ot_qwen_nearhbm_attn_hub_t": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qwen_nearhbm_attn_hub_t": "tile of ot_qwen_nearhbm_attn_hub_p",
   "ot_qwen_nearhbm_ectl_h": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_head_h": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_rom_core_core_kv_banked": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
@@ -3427,6 +3448,7 @@
   "qfd_sysctl_sram": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_sysctl_stn": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_tile_lsl": "tile of qfd_tile",
+  "qfd_tile_nk": null,
   "qfd_tt_ctl": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_ctlm": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_up4": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
@@ -7859,24 +7881,24 @@
    }
   },
   "dsfd_vm_wfc_ep": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "limiting": {
     "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED",
-    "ratio": 1.1055,
+    "status": "QUALIFIED",
+    "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
      "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED",
-     "ratio": 1.1055,
+     "status": "QUALIFIED",
+     "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -7896,24 +7918,24 @@
    }
   },
   "dsfd_wfc_crp": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "limiting": {
     "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED",
-    "ratio": 1.1055,
+    "status": "QUALIFIED",
+    "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
      "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED",
-     "ratio": 1.1055,
+     "status": "QUALIFIED",
+     "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -7933,24 +7955,24 @@
    }
   },
   "dsfd_wfc_lnk": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "limiting": {
     "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED",
-    "ratio": 1.1055,
+    "status": "QUALIFIED",
+    "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
      "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED",
-     "ratio": 1.1055,
+     "status": "QUALIFIED",
+     "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -7992,24 +8014,24 @@
    ]
   },
   "dsfd_wfc_vmx": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "limiting": {
     "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED",
-    "ratio": 1.1055,
+    "status": "QUALIFIED",
+    "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
      "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED",
-     "ratio": 1.1055,
+     "status": "QUALIFIED",
+     "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -9667,6 +9689,43 @@
     }
    ]
   },
+  "ot_dsrom_aq12t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:el1011-ds-misc",
+    "src": "closure job el1011-pqc-aq12t-a-cc60cd537-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:el1011-ds-misc",
+     "src": "closure job el1011-pqc-aq12t-a-cc60cd537-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "el1011-pqc-aq12t-a-cc60cd537-tc-cl",
+    "commit": "cc60cd537",
+    "bench": "bench_aq12t_lockstep_exact",
+    "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
+    "cycles": 40000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-ds-misc",
+    "target": null,
+    "t": "2026-10-11T20:32:13-07:00",
+    "adopted": true
+   }
+  },
   "ot_dsrom_engram_idwin": {
    "status": "QUALIFIED",
    "ratio": 1.017,
@@ -10389,24 +10448,24 @@
    }
   },
   "ot_dsrom_wfc_tokpipe_stg": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "limiting": {
     "op": "class:wave (wave bench)",
     "model": "ds_rom_mtp",
-    "status": "UNQUALIFIED",
-    "ratio": 1.1055,
+    "status": "QUALIFIED",
+    "ratio": 1.0743,
     "owner": "el1011-ds-mtp",
-    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
    },
    "ops": [
     {
      "op": "class:wave (wave bench)",
      "model": "ds_rom_mtp",
-     "status": "UNQUALIFIED",
-     "ratio": 1.1055,
+     "status": "QUALIFIED",
+     "ratio": 1.0743,
      "owner": "el1011-ds-mtp",
-     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.1055"
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json @ 766396b41: charge wfc_kit.ar_pass measured / price 1.0743"
     }
    ],
    "bench_ii": {
@@ -12488,24 +12547,24 @@
    ]
   },
   "ot_qwen_nearhbm_attn_hub_t": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0099,
    "limiting": {
-    "op": "class:kv_die",
+    "op": "tile of ot_qwen_nearhbm_attn_hub_p: class:kv_die",
     "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "qwen-1010/b",
-    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    "status": "QUALIFIED",
+    "ratio": 1.0099,
+    "owner": "tput-map-1011",
+    "src": "tput-map-1011 TILE_OF ^ot_qwen_nearhbm_attn_hub_t -> ot_qwen_nearhbm_attn_hub_p: results/rtl/tput_map_1011/qwen_kv_die/record.json @ 2269e5375: Composed KV-die attention layer step (ROM faces -> r22k relays -> ROM end -> UCIe pair (fbuf8 / sbuf hard link buffers, HT=1 SBD=16) -> KV end -> qkd_seq -> near-HBM re-cut H stack (ectl_h + 4 head_h tiles per engine, R 8) + hub_p (harde"
    },
    "ops": [
     {
-     "op": "class:kv_die",
+     "op": "tile of ot_qwen_nearhbm_attn_hub_p: class:kv_die",
      "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "qwen-1010/b",
-     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+     "status": "QUALIFIED",
+     "ratio": 1.0099,
+     "owner": "tput-map-1011",
+     "src": "tput-map-1011 TILE_OF ^ot_qwen_nearhbm_attn_hub_t -> ot_qwen_nearhbm_attn_hub_p: results/rtl/tput_map_1011/qwen_kv_die/record.json @ 2269e5375: Composed KV-die attention layer step (ROM faces -> r22k relays -> ROM end -> UCIe pair (fbuf8 / sbuf hard link buffers, HT=1 SBD=16) -> KV end -> qkd_seq -> near-HBM re-cut H stack (ectl_h + 4 head_h tiles per engine, R 8) + hub_p (harde"
     }
    ]
   },
@@ -15914,15 +15973,15 @@
    ]
   },
   "qfd_sysctl_stn_pb2": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "EXEMPT",
    "ratio": null,
    "limiting": {
-    "op": "bench II (no items)",
+    "op": "exempt:control_glue",
     "model": "rom",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "EXEMPT",
     "ratio": null,
-    "owner": "Claude:drive-0158",
-    "src": "closure job qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl: s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    "owner": "tput-map-1011",
+    "src": "station of the package-controller sysctl ring (ot_qfd_pkgctl host_if control packets; one-entry packet queue): system control, no per-token datapath"
    },
    "ops": [
     {
@@ -15934,21 +15993,7 @@
      "src": "closure job qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl: s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309 (II None > 1.10 or stalled stimulus: budget not mapped)"
     }
    ],
-   "bench_ii": {
-    "job": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
-    "commit": "d4760be45",
-    "bench": "bench_ctl_pb2_cl_campaign",
-    "line": "s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309",
-    "cycles": 6226309,
-    "item": null,
-    "items": null,
-    "ii": null,
-    "stalled": false,
-    "owner": "Claude:drive-0158",
-    "target": null,
-    "t": "2026-10-10T19:21:56-07:00",
-    "adopted": true
-   }
+   "exempt": "control_glue"
   },
   "qfd_tile": {
    "status": "QUALIFIED",
@@ -16053,6 +16098,28 @@
     "t": "2026-10-11T20:18:49-07:00",
     "adopted": true
    }
+  },
+  "qfd_tile_nk": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
   },
   "qfd_tt_ctl": {
    "status": "QUALIFIED",
