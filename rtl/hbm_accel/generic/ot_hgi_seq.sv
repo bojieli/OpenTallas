@@ -55,7 +55,7 @@ module ot_hgi_seq #(
     parameter integer DS_SCAN = 16384,   //   scan cap
     parameter integer DS_TOPK = 512,     //   top-k
     parameter integer DS_HDL = 9,        //   log2 head dim (512)
-    parameter integer QD = 8,            // record queue entries (a power of two, 2..8)
+    parameter integer QD = 4,            // record queue entries (a power of two, 2..8; 8 measured 0.747x vs 4 0.789x)
     parameter integer FD = 12            // FE word FIFO depth (>= 8)
 ) (
     input  wire          clk,
@@ -120,9 +120,14 @@ module ot_hgi_seq #(
     reg [159:0] md_d_r; reg [11*32-1:0] md_k_r; reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg [7:0] rank_r; reg hold_r;
     reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r; reg f_rsp_v_r; reg [255:0] f_rsp_data_r;
     // reset: asynchronous assert, synchronous release through two flops; every other control register resets on rn
-    reg [1:0] rs_q;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
-    wire rn = rs_q[1];
+    reg [1:0] rs_q, rs_f, rs_m, rs_u;   // one release synchronizer per region (reset fanout <= ~256 a copy)
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rs_q <= 2'b00; rs_f <= 2'b00; rs_m <= 2'b00; rs_u <= 2'b00; end
+        else begin rs_q <= {rs_q[0], 1'b1}; rs_f <= {rs_f[0], 1'b1}; rs_m <= {rs_m[0], 1'b1}; rs_u <= {rs_u[0], 1'b1}; end
+    wire rn = rs_q[1];                   // boundary / small control
+    wire rn_f = rs_f[1];                 // FE
+    wire rn_m = rs_m[1];                 // BE / job FSM
+    wire rn_u = rs_u[1];                 // per-unit outstanding counters
     always @(posedge clk or negedge rn)
         if (!rn) begin hold_r <= 1'b1; vr_rsp_v_r <= 1'b0; u_done_r <= 16'd0; u_fault_r <= 16'd0; wr_quiet_r <= 1'b0; f_rsp_v_r <= 1'b0; end
         else begin hold_r <= hold; vr_rsp_v_r <= vr_rsp_v; u_done_r <= u_done; u_fault_r <= u_fault; wr_quiet_r <= wr_quiet; f_rsp_v_r <= f_rsp_v; end
@@ -432,8 +437,8 @@ module ot_hgi_seq #(
     end endgenerate
     // ---- FE sequential
     integer fk;
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin
+    always @(posedge clk or negedge rn_f) begin
+        if (!rn_f) begin
             fs <= F_HALT; rp <= 0; rdp <= 0; frp <= 0; ep <= 1'b0; rv <= 3'b000; rodd <= 3'b000; rep <= 3'b000;
             fq_n <= 5'd0; fcred <= FD; depth <= 2'd0; Lc <= 16'd0; L1c <= 16'd0; settle <= 2'd0; pi <= 4'd0;
             rd_ptr <= 0; rcl <= RC_DISC; rskip <= 1'b0;
@@ -721,23 +726,26 @@ module ot_hgi_seq #(
         assign all_ina[ge*18 +: 18] = e_ina; assign all_ixb[ge] = e_ixb; assign all_inb[ge] = e_inb; assign all_rdy[ge] = e_rdy;
         assign all_flt[ge] = e_flt; assign all_L[ge*16 +: 16] = e_L; assign all_L1[ge*16 +: 16] = e_L1; assign all_ps1[ge*21 +: 21] = e_ps1;
     end endgenerate
-    // the head entry (qh)
-    reg [127:0] hd_hdr; reg [2:0] hd_kind; reg [255:0] hd_sut; reg [EW_D-1:0] hd_dsc; reg [EW_N-1:0] hd_n; reg [EW_PH-1:0] hd_ph;
-    reg [5:0] hd_px, hd_pn; reg [17:0] hd_ixa, hd_ina; reg hd_ixb, hd_inb, hd_rdy, hd_flt; reg [15:0] hd_L, hd_L1; reg [20:0] hd_ps1;
-    integer qe;
-    always @* begin
-        hd_hdr = all_hdr[0 +: 128]; hd_kind = all_kind[0 +: 3]; hd_sut = all_sut[0 +: 256]; hd_dsc = all_dsc[0 +: EW_D];
-        hd_n = all_n[0 +: EW_N]; hd_ph = all_ph[0 +: EW_PH]; hd_px = all_px[0 +: 6]; hd_pn = all_pn[0 +: 6];
-        hd_ixa = all_ixa[0 +: 18]; hd_ina = all_ina[0 +: 18]; hd_ixb = all_ixb[0]; hd_inb = all_inb[0]; hd_rdy = all_rdy[0];
-        hd_flt = all_flt[0]; hd_L = all_L[0 +: 16]; hd_L1 = all_L1[0 +: 16]; hd_ps1 = all_ps1[0 +: 21];
-        for (qe = 1; qe < QD; qe = qe + 1) if (qh == qe) begin
-            hd_hdr = all_hdr[qe*128 +: 128]; hd_kind = all_kind[qe*3 +: 3]; hd_sut = all_sut[qe*256 +: 256];
-            hd_dsc = all_dsc[qe*EW_D +: EW_D]; hd_n = all_n[qe*EW_N +: EW_N]; hd_ph = all_ph[qe*EW_PH +: EW_PH];
-            hd_px = all_px[qe*6 +: 6]; hd_pn = all_pn[qe*6 +: 6]; hd_ixa = all_ixa[qe*18 +: 18]; hd_ina = all_ina[qe*18 +: 18];
-            hd_ixb = all_ixb[qe]; hd_inb = all_inb[qe]; hd_rdy = all_rdy[qe]; hd_flt = all_flt[qe];
-            hd_L = all_L[qe*16 +: 16]; hd_L1 = all_L1[qe*16 +: 16]; hd_ps1 = all_ps1[qe*21 +: 21];
-        end
+    // the head entry: each 64-bit chunk of the packed entry is selected by its own head-pointer copy (qh_cp)
+    reg [127:0] hd_hdr; reg [2:0] hd_kind; reg [255:0] hd_sut; reg [EW_D-1:0] hd_dsc; reg [EW_N-1:0] hd_n;
+    reg [5:0] hd_px, hd_pn; reg hd_rdy, hd_flt; reg [15:0] hd_L, hd_L1; reg [20:0] hd_ps1;
+    wire [QD*NQC*64-1:0] ent_all;
+    wire [NQC*64-1:0] hd_vec;
+    genvar gv, gc;
+    generate for (gv = 0; gv < QD; gv = gv + 1) begin : g_ev
+        assign ent_all[gv*NQC*64 +: NQC*64] = {{(NQC*64 - HVW){1'b0}}, all_ps1[gv*21 +: 21], all_L1[gv*16 +: 16], all_L[gv*16 +: 16],
+            all_flt[gv], all_rdy[gv], all_pn[gv*6 +: 6], all_px[gv*6 +: 6], all_n[gv*EW_N +: EW_N], all_dsc[gv*EW_D +: EW_D],
+            all_sut[gv*256 +: 256], all_kind[gv*3 +: 3], all_hdr[gv*128 +: 128]};
     end
+    for (gc = 0; gc < NQC; gc = gc + 1) begin : g_hc
+        reg [63:0] m; integer qe;
+        always @* begin
+            m = ent_all[gc*64 +: 64];
+            for (qe = 1; qe < QD; qe = qe + 1) if (qh_cp[gc*QB +: QB] == qe) m = ent_all[(qe*NQC + gc)*64 +: 64];
+        end
+        assign hd_vec[gc*64 +: 64] = m;
+    end endgenerate
+    always @* {hd_ps1, hd_L1, hd_L, hd_flt, hd_rdy, hd_pn, hd_px, hd_n, hd_dsc, hd_sut, hd_kind, hd_hdr} = hd_vec[HVW-1:0];
     // ================================================================== IR: the indexed resolver
     // An entry's I-table reads (ONE X read at I_eff + L, ONE N read at I_eff + I.stride + L) are made as soon as the
     // entry's wait mask is met with every OLDER queued dispatch counted busy (those dispatch before it, so its wait
@@ -751,15 +759,17 @@ module ot_hgi_seq #(
     reg [1:0] ir_st, jst; reg ir_sv; reg [QB-1:0] ir_se; reg [31:0] rXv; reg [20:0] rNv;
     reg [5:0] rem; reg [3:0] ninj, nres;
     // per-entry scan inputs
+    // the per-entry scan inputs are registered (one cycle stale is conservative: an entry only becomes ready /
+    // resolved / faulted, busy only drops apart from dispatches of entries still in the queue, which the scan counts)
     reg [QD-1:0] en_blk, en_pend, en_disp; reg [QD*16-1:0] en_um, en_w; integer qa;
-    always @* for (qa = 0; qa < QD; qa = qa + 1) begin
-        en_blk[qa] = !all_rdy[qa] || all_flt[qa] || all_kind[qa*3 +: 3] == K_FLT || all_kind[qa*3 +: 3] == K_FENCE ||
+    always @(posedge clk) for (qa = 0; qa < QD; qa = qa + 1) begin
+        en_blk[qa] <= !all_rdy[qa] || all_flt[qa] || all_kind[qa*3 +: 3] == K_FLT || all_kind[qa*3 +: 3] == K_FENCE ||
                      all_kind[qa*3 +: 3] == K_LVM;
-        en_pend[qa] = (all_px[qa*6 +: 6] | all_pn[qa*6 +: 6]) != 6'd0 && !(ir_st != I_IDLE && rd_e == qa) &&
+        en_pend[qa] <= (all_px[qa*6 +: 6] | all_pn[qa*6 +: 6]) != 6'd0 && !(ir_st != I_IDLE && rd_e == qa) &&
                       !(jst != J_IDLE && inj_e == qa);         // an entry the resolver holds counts as resolved
-        en_disp[qa] = all_kind[qa*3 +: 3] == K_DISP;
-        en_um[qa*16 +: 16] = 16'd1 << all_hdr[qa*128 + H_UNIT +: 4];
-        en_w[qa*16 +: 16] = all_hdr[qa*128 + H_WAIT +: 16];
+        en_disp[qa] <= all_kind[qa*3 +: 3] == K_DISP;
+        en_um[qa*16 +: 16] <= 16'd1 << all_hdr[qa*128 + H_UNIT +: 4];
+        en_w[qa*16 +: 16] <= all_hdr[qa*128 + H_WAIT +: 16];
     end
     reg ir_cv, sblk; reg [QB-1:0] ir_ce, se; reg [15:0] om, ir_cm, ir_cw; integer si, sj;
     always @* begin
@@ -774,24 +784,29 @@ module ot_hgi_seq #(
                 end
         end
     end
-    // the resolver's entry view
-    reg [EW_D-1:0] ir_dsc; reg [EW_PH-1:0] ir_ph; reg [5:0] ir_px, ir_pn; reg [17:0] ir_ixa, ir_ina; reg ir_ixb, ir_inb;
-    integer qr;
+    // the injector's source: {ph 24, dmul 27, base 40, space 2} of each slot 0..5 of entry inj_e, and its pending bits
+    localparam integer IJW = 93;
+    wire [QD*6*IJW-1:0] inj_all;
+    genvar gi2, gs2;
+    generate for (gi2 = 0; gi2 < QD; gi2 = gi2 + 1) begin : g_ij
+        for (gs2 = 0; gs2 < 6; gs2 = gs2 + 1) begin : g_ijs
+            assign inj_all[(gi2*6 + gs2)*IJW +: IJW] = {all_ph[gi2*EW_PH + gs2*24 +: 24], all_dsc[gi2*EW_D + gs2*256 + M_DMUL +: 27],
+                                                        all_dsc[gi2*EW_D + gs2*256 + M_BASE +: 40], all_dsc[gi2*EW_D + gs2*256 + M_SPACE +: 2]};
+        end
+    end endgenerate
+    reg [6*IJW-1:0] ij_e; reg [5:0] ir_px, ir_pn; integer qr;
     always @* begin
-        ir_dsc = all_dsc[0 +: EW_D]; ir_ph = all_ph[0 +: EW_PH]; ir_px = all_px[0 +: 6]; ir_pn = all_pn[0 +: 6];
-        ir_ixa = all_ixa[0 +: 18]; ir_ina = all_ina[0 +: 18]; ir_ixb = all_ixb[0]; ir_inb = all_inb[0];
+        ij_e = inj_all[0 +: 6*IJW]; ir_px = all_px[0 +: 6]; ir_pn = all_pn[0 +: 6];
         for (qr = 1; qr < QD; qr = qr + 1) if (inj_e == qr) begin
-            ir_dsc = all_dsc[qr*EW_D +: EW_D]; ir_ph = all_ph[qr*EW_PH +: EW_PH]; ir_px = all_px[qr*6 +: 6]; ir_pn = all_pn[qr*6 +: 6];
-            ir_ixa = all_ixa[qr*18 +: 18]; ir_ina = all_ina[qr*18 +: 18]; ir_ixb = all_ixb[qr]; ir_inb = all_inb[qr];
+            ij_e = inj_all[qr*6*IJW +: 6*IJW]; ir_px = all_px[qr*6 +: 6]; ir_pn = all_pn[qr*6 +: 6];
         end
     end
     reg [2:0] bj; integer qj;
     always @* begin bj = 3'd0; for (qj = 5; qj >= 0; qj = qj - 1) if (rem[qj]) bj = qj[2:0]; end
-    reg [255:0] bd; reg [23:0] bph; integer qk;
-    always @* begin
-        bd = ir_dsc[0 +: 256]; bph = ir_ph[0 +: 24];
-        for (qk = 1; qk < 6; qk = qk + 1) if (bj == qk) begin bd = ir_dsc[qk*256 +: 256]; bph = ir_ph[qk*24 +: 24]; end
-    end
+    reg [IJW-1:0] bsel; integer qk;
+    always @* begin bsel = ij_e[0 +: IJW]; for (qk = 1; qk < 6; qk = qk + 1) if (bj == qk) bsel = ij_e[qk*IJW +: IJW]; end
+    wire [255:0] bd = {{(256 - M_DMUL - 27){1'b0}}, bsel[42 +: 27], {(M_DMUL - M_BASE - 40){1'b0}}, bsel[2 +: 40], {(M_BASE - 2){1'b0}}, bsel[0 +: 2]};
+    wire [23:0] bph = bsel[69 +: 24];
     assign be_j = bj; assign be_d = bd; assign be_ph = bph; assign be_xj = ir_px[bj];
     assign be_inj = run_q && (jst == J_INJ) && (rem != 6'd0);
     // ---- dispatch payload: loaded from the head entry when the BE dispatches it (absent operands read 0)
@@ -868,20 +883,38 @@ module ot_hgi_seq #(
         begin st <= S_CPL; run_q <= 1'b0; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_vr <= 16'd0;
               vr_vr <= 1'b0; end
     endtask
-    reg q_pop;
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin
+    // the BE frees the head (one comb term per pop site; mirrors the FSM below)
+    wire be_abort = |(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL;
+    wire q_pop = !be_abort && ((st == S_DSP && |u_tk) || (st == S_FEN && (busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) ||
+                 (st == S_LVR && vr_rsp_v_r && !(vr_rsp_data_r == 32'd0 || vr_rsp_data_r[31:16] != 16'd0)) ||
+                 (st == S_TKB && cpl_hs_q && tk_i == tk_n));
+    // outstanding records per unit: +1 at the dispatch decision (iss_q, registered), -1 on retire (done or fault)
+    always @(posedge clk or negedge rn_u)
+        if (!rn_u) for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
+        else for (k = 0; k < 16; k = k + 1)
+            if (iss_q[k] && !(u_done_r[k] | u_fault_r[k])) outst[k] <= outst[k] + 8'd1;
+            else if (!iss_q[k] && (u_done_r[k] | u_fault_r[k]) && outst[k] != 8'd0) outst[k] <= outst[k] - 8'd1;
+    // head-pointer copies: one per 64-bit chunk of the head mux (qh alone drove 7.7k mux loads)
+    localparam integer HVW = 128 + 3 + 256 + EW_D + EW_N + 6 + 6 + 1 + 1 + 16 + 16 + 21;
+    localparam integer NQC = (HVW + 63) / 64;
+    wire [NQC*QB-1:0] qh_cp;
+    genvar gk;
+    generate for (gk = 0; gk < NQC; gk = gk + 1) begin : g_qc
+        (* keep = 1 *) reg [QB-1:0] qc;
+        always @(posedge clk or negedge rn_m)
+            if (!rn_m) qc <= {QB{1'b0}};
+            else if (job_start) qc <= {QB{1'b0}};
+            else if (q_pop) qc <= qc + 1'b1;
+        assign qh_cp[gk*QB +: QB] = qc;
+    end endgenerate
+    always @(posedge clk or negedge rn_m) begin
+        if (!rn_m) begin
             st <= S_IDLE; run_q <= 1'b0; wp <= 0; wv <= 1'b0; inflight <= 0; drop <= 0; fetching <= 1'b0;
             u_vr <= 16'd0; iss_q <= 16'd0; vr_vr <= 1'b0; vr_new <= 1'b0; tbc <= 7'd0; av <= 6'd0;
             ir_st <= I_IDLE; jst <= J_IDLE; ir_sv <= 1'b0; ir_flt <= 1'b0; rd_e <= {QB{1'b0}}; inj_e <= {QB{1'b0}};
-            cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; faddr <= 0; faddr_n <= 40'd32;
+            cpl_status <= 0; cpl_token <= 0; cc_c <= 0;
             qh <= 0; qt <= 0; q_cnt <= 0; lv_rsp <= 1'b0; rem <= 6'd0; ninj <= 4'd0; nres <= 4'd0;
-            for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
-            // outstanding records per unit: +1 at the dispatch decision (iss_q, registered), -1 on retire (done or fault)
-            for (k = 0; k < 16; k = k + 1)
-                if (iss_q[k] && !(u_done_r[k] | u_fault_r[k])) outst[k] <= outst[k] + 8'd1;
-                else if (!iss_q[k] && (u_done_r[k] | u_fault_r[k]) && outst[k] != 8'd0) outst[k] <= outst[k] - 8'd1;
             iss_q <= 16'd0;
             if (st != S_IDLE && st != S_CPL) {cc_c, cc_lo} <= {1'b0, cc_lo} + 17'd1; else cc_c <= 1'b0;
             if (cc_c) cc_hi <= cc_hi + 16'd1;
@@ -902,7 +935,8 @@ module ot_hgi_seq #(
             if (!run_q || job_start) begin ir_st <= I_IDLE; jst <= J_IDLE; end
             else begin
                 case (ir_st)                                          // reader
-                    I_IDLE: if (ir_sv && st != S_ENDRD && st != S_TOKX && st != S_TKB && st != S_LVR) begin
+                    I_IDLE: if (ir_sv && (all_px[ir_se*6 +: 6] | all_pn[ir_se*6 +: 6]) != 6'd0 && !(jst != J_IDLE && inj_e == ir_se) &&
+                                st != S_ENDRD && st != S_TOKX && st != S_TKB && st != S_LVR) begin
                         rd_e <= ir_se;
                         if (|all_px[ir_se*6 +: 6]) begin
                             if (all_ixb[ir_se]) ir_flt <= 1'b1;
@@ -938,8 +972,6 @@ module ot_hgi_seq #(
                     end
                 endcase
             end
-            // record queue: the FE allocates at qt, the BE frees qh (q_pop below)
-            q_pop = 1'b0;
             if (|(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL) begin
                 st <= S_CPL; run_q <= 1'b0; cpl_status <= 4'd1; cpl_token <= 0; u_vr <= 0; vr_vr <= 1'b0; fetching <= 1'b0;
             end else case (st)
@@ -997,12 +1029,12 @@ module ot_hgi_seq #(
                         end
                     end
                 end
-                S_DSP: if (|u_tk) begin q_pop = 1'b1; u_vr <= 16'd0; st <= S_HD; end
-                S_FEN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) begin q_pop = 1'b1; st <= S_HD; end
+                S_DSP: if (|u_tk) begin u_vr <= 16'd0; st <= S_HD; end
+                S_FEN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) st <= S_HD;
                 S_LVW: if (hd_wok && vm_free) begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= hd_hdr[49:32]; st <= S_LVR; end
                 S_LVR: if (vr_rsp_v_r) begin
                     if (vr_rsp_data_r == 32'd0 || vr_rsp_data_r[31:16] != 16'd0) fault3;
-                    else begin lv_rsp <= 1'b1; lv_rcnt <= vr_rsp_data_r[15:0]; q_pop = 1'b1; st <= S_HD; end
+                    else begin lv_rsp <= 1'b1; lv_rcnt <= vr_rsp_data_r[15:0]; st <= S_HD; end
                 end
                 S_ENDRD: if (vr_rsp_v_r) begin
                     st <= S_CPL; run_q <= 1'b0; fetching <= 1'b0; cpl_pos <= pos;
@@ -1022,7 +1054,7 @@ module ot_hgi_seq #(
                 end
                 S_TKB: if (cpl_hs_q) begin
                     tk_pos <= tk_pos + 20'd1;
-                    if (tk_i == tk_n) begin q_pop = 1'b1; st <= S_HD; end
+                    if (tk_i == tk_n) st <= S_HD;
                     else begin
                         tk_i <= tk_i + 5'd1; vr_vr <= 1'b1; vr_new <= 1'b1; st <= S_TOKX;
 `ifdef OT_HGI_SEQ_MUT_TOKX
