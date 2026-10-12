@@ -1,20 +1,18 @@
 {
- "name": "nhb_pvlg_ref-v2-d84d29ac5",
+ "name": "nhb_pvlg_ref-q5-91021dbc3",
  "block": "ot_nhb_pvlg",
  "ref_tile": true,
- "owner": "Claude:ref-flow-1011",
- "purpose": "ref-flow-1011 validation (a): ot_nhb_pvlg (closed hand-kit 0d1615f2c) through the reference tile flow",
+ "owner": "Claude:el1011-q-kvd",
+ "purpose": "q-kvd RELAUNCH5: re-run of nhb_pvlg_ref (prior job's 128 GB hubt bench was pinned to AGIdock whose per-job RAM limit is 110 GB -> bench never admitted for 9 h); hosts = the two hosts whose per-job limit fits the 128 GB bench",
  "hosts": [
   "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
+  "ot-epyc4"
  ],
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/ref-flow-1011",
-  "commit": "d84d29ac5",
+  "branch": "claude/el1011-q-kvd",
+  "commit": "91021dbc3",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
   ]
@@ -100,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/nhb_pvlg_ref/nhb_pvlg_ref-v2-d84d29ac5"
+   "to": "results/rtl/ref_tile/nhb_pvlg_ref/nhb_pvlg_ref-q5-91021dbc3"
   }
  ],
  "cycles_added": 0,
