@@ -152,13 +152,13 @@ async function blobJSON(name){ const u = blobUrl(name); if (!u) throw new Error(
 async function blobBuf(name){ const u = blobUrl(name); if (!u) throw new Error('no ' + name); const r = await fetch(u); if (!r.ok) throw new Error(r.status + ' ' + name); return r.arrayBuffer(); }
 
 function open(o){
-  // o: {root, side, el, d (element JSON), E (elem.js prepped element or null), safe, onFallback}
-  Object.assign(V, {open: true, root: o.root, side: o.side, el: o.el, d: o.d, E: o.E, safe: o.safe, onFallback: o.onFallback, base: '/api/layout/' + encodeURIComponent(o.el) + '/'});
-  if (V.loadedFor === o.el && deckgl){ V.root.hidden = false; V.side.hidden = false; renderSide(); requestUpdate(); return; }
+  // o: {root, side, nav (optional: layers + overlay toggles go here, read-outs stay in side), el, d (element JSON), E (elem.js prepped element or null), safe, onFallback}
+  Object.assign(V, {open: true, root: o.root, side: o.side, nav: o.nav || null, el: o.el, d: o.d, E: o.E, safe: o.safe, onFallback: o.onFallback, base: '/api/layout/' + encodeURIComponent(o.el) + '/'});
+  if (V.loadedFor === o.el && deckgl){ V.root.hidden = false; V.side.hidden = false; if (V.nav) V.nav.hidden = false; renderSide(); requestUpdate(); return; }
   close(true);
   V.loadedFor = o.el;
   V.root.innerHTML = `<div class="lv-busy" data-busy><div class="lv-spin"></div><div data-msg>Checking the routed geometry&hellip;</div></div>`;
-  V.side.innerHTML = '';
+  V.side.innerHTML = ''; if (V.nav) V.nav.innerHTML = '';
   poll();
 }
 function close(keep){
@@ -829,18 +829,19 @@ function renderSide(){
       ${V.netSel.bbox ? `<br><span class="lv-dim">extent ${fmt((V.netSel.bbox[2] - V.netSel.bbox[0]) / V.dbu, 2)} × ${fmt((V.netSel.bbox[3] - V.netSel.bbox[1]) / V.dbu, 2)} \u00b5m</span> <button class="rl" data-netzoom>zoom to net</button>` : ''} <button class="rl" data-netclear>clear</button></div>` : '';
   const T = H.truth ? H.truth.reduce((s, t) => s + t.n, 0) : null;
   const ovt = (k, t) => `<label class="lv-chk lv-ovt"><input type="checkbox" data-ov="${k}" ${V.ov[k] ? 'checked' : ''}> ${t}</label>`;
-  V.side.innerHTML = `
+  const navHtml = `
     <div class="sec"><h3>Layers <span class="u">${fmt(H.counts.rects + H.counts.vias, 0)} shapes + ${fmt(H.counts.insts, 0)} instances</span></h3>
       <div class="lv-pre"><button class="btn" data-pre="all">All</button><button class="btn" data-pre="signals">Signals only</button><button class="btn" data-pre="power">Power grid</button><button class="btn" data-pre="m6">M6+ die contract</button></div>
       <div class="lv-layers">${layersHtml}</div>
       <details class="lv-kinds"><summary>Shape kinds</summary><div class="lv-kgrid">${kinds}</div></details>
       <div class="ctl" style="margin-top:8px"><label>palette <select data-pal><option value="classic" ${V.palette === 'classic' ? 'selected' : ''}>Classic layout</option><option value="cvd" ${V.palette === 'cvd' ? 'selected' : ''}>Colour-blind safe</option></select></label></div>
-      ${net}</div>
-    <div class="sec"><h3>Contract findings <span class="u">child_lint on this routed DB</span></h3>${ovt('lint', 'draw on the layout')}${lintHtml}</div>
-    <div class="sec"><h3>Timing paths</h3>${ovt('paths', 'draw worst paths')}${paths}</div>
-    <div class="sec"><h3>Clock tree</h3>${ovt('clock', 'draw the tree, arrival-coloured')}${clk}</div>
-    <div class="sec"><h3>Congestion</h3>${ovt('cong', 'per-layer heatmap')}${cong}</div>
-    <div class="sec"><h3>Structure</h3>${ovt('macros', 'macro outlines')}${ovt('mods', 'module outlines' + (V.mods ? ` (${V.mods.length} blocks)` : ' (placement data needed)'))}</div>
+      </div>
+    <div class="sec"><h3>Overlays</h3>${ovt('lint', 'contract findings' + (F.length ? ` <small class="lv-dim">(${F.length})</small>` : ''))}${ovt('paths', 'worst timing paths')}${ovt('clock', 'clock tree, arrival-coloured')}${ovt('cong', 'congestion heatmap')}${ovt('macros', 'macro outlines')}${ovt('mods', 'module outlines' + (V.mods ? ` (${V.mods.length} blocks)` : ' (placement data needed)'))}</div>`;
+  const metaHtml = `${net ? `<div class="sec">${net}</div>` : ''}
+    <div class="sec"><h3>Contract findings <span class="u">child_lint on this routed DB</span></h3>${lintHtml}</div>
+    <div class="sec"><h3>Timing paths</h3>${paths}</div>
+    <div class="sec"><h3>Clock tree</h3>${clk}</div>
+    <div class="sec"><h3>Congestion</h3>${cong}</div>
     ${V.manifest ? (() => { const c = V.manifest.closure || {}, m = c.metrics || {};
       return `<div class="sec"><h3>Closure <span class="u">static export</span></h3><dl class="kv">
       <dt>job</dt><dd>${esc(c.job || V.manifest.job)}${c.status ? ' · ' + esc(c.status) : ''}</dd>
@@ -857,10 +858,13 @@ function renderSide(){
       <dt>DB truth</dt><dd>${T != null ? fmt(T, 0) + ' shapes; round-trip: tools/layout_viewer/lv_verify.js' : 'not recorded'}</dd>
       <dt>cut</dt><dd>${esc(H.made || '')}</dd>
       ${V.firstPaint ? `<dt>first paint</dt><dd>${fmt(V.firstPaint, 0)} ms${V.firstGeo ? ` · first geometry ${fmt(V.firstGeo, 0)} ms` : ''}</dd>` : ''}</dl></div>`;
+  if (V.nav){ V.nav.innerHTML = navHtml; V.side.innerHTML = metaHtml; } else V.side.innerHTML = navHtml + metaHtml;
   bindSide();
 }
 function bindSide(){
-  const S = V.side, nl = V.header.layers.length;
+  const both = [V.side, V.nav].filter(Boolean);
+  const S = {querySelectorAll: q => both.flatMap(c => [...c.querySelectorAll(q)]), querySelector: q => { for (const c of both){ const e = c.querySelector(q); if (e) return e; } return null; }};
+  const nl = V.header.layers.length;
   S.querySelectorAll('[data-lv]').forEach(c => c.onchange = () => { const l = V.L[+c.dataset.lv]; l.vis = c.checked; if (l.i === nl + 1){ V.phys = l.vis; V.tiles.clear(); V.gpuBytes = 0; }
     c.closest('.lv-row').classList.toggle('off', !l.vis); updateUniforms(); refreshTiles(); requestUpdate(); saveUrl(); });
   S.querySelectorAll('[data-lo]').forEach(c => c.oninput = () => { V.L[+c.dataset.lo].op = c.value / 100; updateUniforms(); requestUpdate(); });
@@ -869,7 +873,7 @@ function bindSide(){
   S.querySelectorAll('[data-kind]').forEach(c => c.onchange = () => { V.kindVis[+c.dataset.kind] = c.checked; updateUniforms(); refreshTiles(); requestUpdate(); saveUrl(); });
   S.querySelectorAll('[data-pre]').forEach(b => b.onclick = () => presets(b.dataset.pre));
   const pal = S.querySelector('[data-pal]'); if (pal) pal.onchange = () => { V.palette = pal.value; lsSet('pal', pal.value); applyPalette(); renderSide(); V.miniDirty = true; requestUpdate(); };
-  S.querySelectorAll('[data-ov]').forEach(c => c.onchange = () => { V.ov[c.dataset.ov] = c.checked; requestUpdate(); saveUrl(); });
+  S.querySelectorAll('[data-ov]').forEach(c => c.onchange = () => { V.ov[c.dataset.ov] = c.checked; requestUpdate(); saveUrl(); });   // left column only
   S.querySelectorAll('[data-f]').forEach(b => b.onclick = () => selectFinding(+b.dataset.f, true));
   const cg = S.querySelector('[data-cong]'); if (cg) cg.onchange = () => { V.congLayer = cg.value; V.ov.cong = true; renderSide(); requestUpdate(); };
   const pc = S.querySelector('[data-pc]'); if (pc) pc.onchange = () => { V.pcorner = pc.value; V.psel = 0; V.ov.paths = true; renderSide(); requestUpdate(); };
@@ -892,7 +896,7 @@ function selectFinding(id, zoom){
 
 /* ------------------------------------------------------------------ public */
 window.LayoutViewer = {
-  open, close: () => { V.open = false; if (V.root) V.root.hidden = true; if (V.side) V.side.hidden = true; },
+  open, close: () => { V.open = false; if (V.root) V.root.hidden = true; if (V.side) V.side.hidden = true; if (V.nav) V.nav.hidden = true; },
   theme: () => { if (V.header){ applyPalette(); renderSide(); V.miniDirty = true; V.congIm = null; requestUpdate(); } },
   state: () => V,
   _update: () => update(),

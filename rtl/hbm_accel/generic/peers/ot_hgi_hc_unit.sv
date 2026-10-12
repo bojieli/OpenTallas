@@ -59,6 +59,15 @@ module ot_hgi_hc_unit #(
                                             //   parameter fetch rides lane 0), 8 windows fill in parallel
     parameter integer MUT_WV = 0,           // mutants: 1 the wide landing rotates one lane too far, 2 the client delivers
                                             //   lane 1 one wave late (ot_hgi_vm_wrd MUT 1)
+    // el1011-hcvm-hc SYSTOLIC bank tiles (opt-in, default off; adds 2 DRLY + 8 cycles to the HCP pipe and a
+    // 2 XRLY + 6 cycle hold a row): 8 ot_hgi_hc_tile (bank k: x + weight-window macros, its SPL HBM lanes, W lanes of
+    // HCP stage k) chained by registered partial-sum seams; no 8x8 bank->group rotation.  Needs HSRC 0, HL = 8 SPL,
+    // XMACRO 1.
+    parameter integer SYS = 0,
+    parameter integer XRLY = 4,             // relay stages ctl -> tile (window control, x writes) and back
+    parameter integer DRLY = 2,             // relay stages ctl <-> tile 0 / tile 7 (descriptor, chunk sums)
+    parameter integer SLM = 8,              // SYS lane multiply / add pipeline depths (1.2 GHz)
+    parameter integer SLA = 7,
     parameter integer TW = $clog2(RMAX),
     // a window word is W / 8 sectors; one HBM request carries at most 4 (the 3-bit length of the HBM lane protocol), so
     // a W > 32 word is fetched in W / 32 segments and the window tag grows by their index (hgi-1010/d W sweep)
@@ -103,6 +112,7 @@ module ot_hgi_hc_unit #(
     output reg  [31:0]       ap_done
 );
     localparam integer SPW = W / 8, LW = $clog2(W), LS = $clog2(SPW), AW = 16, CWW = $clog2(RMAX + 1);
+    localparam integer TSOR = 1, TTML = 3;            // = ot_hgi_hc_tile defaults (SOR, TML): the SYS stage hop and memory latency
     // ---- the record adapter
     wire job_v; reg job_rdy, job_done, job_fault; wire [228:0] job; wire [3:0] j_np; wire [17:0] j_as, j_os;
     ot_hgi_hc_record #(.LEGACY(0), .PMAX(PMAX)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .cfg_hc_eps(cfg_norm_eps),
@@ -159,7 +169,13 @@ module ot_hgi_hc_unit #(
         for (integer ll = 15; ll >= 0; ll = ll - 1) if (xv_l[mm*16 + ll]) xl_f[mm] = 4'(ll);
     end
     localparam integer USE_XM = XMACRO && ((W * 16) % 256 == 0) && XD <= 1024;
-    generate for (g = 0; g < 8; g = g + 1) begin : g_xr
+    // el1011-hcvm-hc SYS: the per-tile x write bundles, the HCP stage-chain ports, HBM lane mux
+    localparam integer NXM = W / 16;
+    wire [8*NXM-1:0] xw_ce; wire [8*NXM*10-1:0] xw_a; wire [8*NXM*256-1:0] xw_d; wire [8*NXM*16-1:0] xw_m;
+    wire sd_v, sd_ss; wire [LW:0] sd_nv; wire [AW-1:0] sd_wa, sd_xa; wire [W*32-1:0] sys_sum; wire sys_fault;
+    wire p_iss;
+    generate if (SYS == 0) begin : g_xflat
+    for (g = 0; g < 8; g = g + 1) begin : g_xr
         wire [2:0] qk = g[2:0] + xrow[2:0];                     // the sector word whose element lands in bank g
         wire [29:0] ek = {rsec, qk} - {12'd0, xrow};
         wire ok = x_land && ek < {9'd0, nchunk, 3'b000};
@@ -202,16 +218,50 @@ module ot_hgi_hc_unit #(
                 end
             end
         end
+    end
+    end else begin : g_xsys
+        // SYS: the x write of bank g macro gm is formed here exactly as the flat macro port would see it, registered,
+        // carried XRLY stages (<= ~560 um each) to tile g, which pin-flops it into its macro
+        for (g = 0; g < 8; g = g + 1) begin : g_xr
+            wire [2:0] qk = g[2:0] + xrow[2:0];
+            wire [29:0] ek = {rsec, qk} - {12'd0, xrow};
+            wire ok = x_land && ek < {9'd0, nchunk, 3'b000};
+            wire [XAW-1:0] wa = xwo + ((ek >> 3) >> LW);
+            wire [LW-1:0] wl = (ek >> 3) & (W - 1);
+            for (genvar gm = 0; gm < W / 16; gm = gm + 1) begin : g_mm
+                wire we = ok && (wl >> 4) == gm;
+                wire [14:0] wcw = xs_l[((gm % 2)*16 + xl_f[gm % 2])*15 +: 15] - w_s0;
+                wire ww = (WVM != 0) && |xv_l[(gm % 2)*16 +: 16] && ((W <= 32) || ((wcw >> 5) % (W / 32)) == (gm >> 1));
+                wire [255:0] wwd;
+                for (genvar ll = 0; ll < 16; ll = ll + 1) begin : g_wl
+                    assign wwd[ll*16 +: 16] = xd_l[((gm % 2)*16 + ll)*256 + 32*g + 16 +: 16];
+                end
+                reg ce [0:XRLY-1]; reg [9:0] a [0:XRLY-1]; reg [255:0] d [0:XRLY-1]; reg [15:0] m [0:XRLY-1];
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) for (integer j = 0; j < XRLY; j = j + 1) ce[j] <= 1'b0;
+                    else begin ce[0] <= we || ww; for (integer j = 1; j < XRLY; j = j + 1) ce[j] <= ce[j-1]; end
+                always @(posedge clk) begin
+                    a[0] <= ww ? 10'(xwo + XAW'(wcw >> LW)) : 10'(wa);
+                    d[0] <= ww ? wwd : {16{vr[32*qk + 16 +: 16]}};
+                    m[0] <= ww ? xv_l[(gm % 2)*16 +: 16] : (16'd1 << wl[3:0]);
+                    for (integer j = 1; j < XRLY; j = j + 1) begin a[j] <= a[j-1]; d[j] <= d[j-1]; m[j] <= m[j-1]; end
+                end
+                assign xw_ce[g*NXM + gm] = ce[XRLY-1]; assign xw_a[(g*NXM + gm)*10 +: 10] = a[XRLY-1];
+                assign xw_d[(g*NXM + gm)*256 +: 256] = d[XRLY-1]; assign xw_m[(g*NXM + gm)*16 +: 16] = m[XRLY-1];
+            end
+        end
+        always @* xq1 = '0;
     end endgenerate
     always @(posedge clk) begin xd <= xq1; wd <= wq; end
     reg h_cv; wire h_cr, h_ov, h_last, h_fault, h_idle; wire [31:0] h_od;
     wire [$clog2(PMAX)-1:0] h_opos;
-    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2)) u_hcp (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_hcp #(.W(W), .TL(TW), .PMAX(PMAX), .OMAX(2), .AW(AW), .CW(16), .ML(2), .SYS(SYS), .SYS_LAT(2*DRLY + 1 + 7*(SLA + 1 + TSOR) + 3 + 2 + (TTML - 2) + SLM + SLA + TSOR)) u_hcp (.clk(clk), .rst_n(rst_n),
         .cmd_valid(h_cv), .cmd_ready(h_cr), .cmd_npos(npos[$clog2(PMAX):0]), .cmd_nout(2'd1), .cmd_nchunk(nchunk[15:0]),
         .cmd_scale(1'b1), .cmd_nf(nf), .cmd_eps(eps), .cmd_wbase(16'd0), .cmd_xbase(16'd0),
         .w_re(w_re), .w_addr(w_addr), .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd),
         .o_valid(h_ov), .o_ready(1'b1), .o_pos(h_opos), .o_idx(), .o_data(h_od), .o_last(h_last), .fault(h_fault),
-        .idle(h_idle));
+        .idle(h_idle), .sd_v(sd_v), .sd_ss(sd_ss), .sd_nv(sd_nv), .sd_wa(sd_wa), .sd_xa(sd_xa), .sys_sum(sys_sum),
+        .sys_fault(sys_fault));
 
     // ---- the weight APERTURE (HSRC = 1): slot s, bank k, sector position q: one 128x256 SRAM, row = word r
     localparam integer BSEC = RMAX * W / 8;                // sectors a bank in a slot (the aperture layout fixes 512)
@@ -289,7 +339,8 @@ module ot_hgi_hc_unit #(
     always @(posedge clk or negedge rst_n) if (!rst_n) hr_vl <= '0; else hr_vl <= hr_v;
     wire hr_vq = hr_vl[0]; wire [TG-1:0] hr_tq = hr_tl[TG-1:0]; wire [1:0] hr_bq = hr_bl[1:0]; wire [255:0] hr_dq = hr_dl[255:0];
     wire [NW*W*32-1:0] wqs;
-    generate for (g = 0; g < NW; g = g + 1) begin : g_win
+    generate if (SYS == 0) begin : g_wflat
+    for (g = 0; g < NW; g = g + 1) begin : g_win
         wire [3:0] why; wire [CWW-1:0] fetched; wire [31:0] rcv; wire rdy_i;
         localparam integer GB = g / SPL, GK = g % SPL;   // bank, sub-window
         // this window's HBM lane (mutant: window 3 listens on lane 4, whose sectors it never asked for); with one lane
@@ -306,7 +357,7 @@ module ot_hgi_hc_unit #(
             .hr_data(hr_dl[LN*256 +: 256]), .rom_re(w_re[GB] && wsel[GB] == GK && !ap_job), .rom_addr(la),
             .rom_q(wqs[g*W*32 +: W*32]), .fault(w_flt[g]), .fault_why(why), .fetched_words(fetched), .received_sectors(rcv));
         assign w_rdy0[g] = empty || rdy_i;
-    end endgenerate
+    end
     // the HCP's read of bank g: sub-window wsel = w / RS (comparators against k RS), its rom_q one edge later
     reg [3:0] wsel [0:7]; reg [3:0] wsel_q [0:7];
     always @* for (integer gg = 0; gg < 8; gg = gg + 1) begin
@@ -321,7 +372,9 @@ module ot_hgi_hc_unit #(
         end
         assign wq[g*W*32 +: W*32] = (HSRC != 0 && ap_job) ? apw : wqs[(g*SPL + wsel_q[g])*W*32 +: W*32];
     end
+    end endgenerate
     reg p_req; reg [31:0] pw [0:31]; reg [3:0] p_got;
+    generate if (SYS == 0) begin : g_pflat
     // request register a lane: lowest-index window of the lane first, then (lane 0) the parameter fetch (source 8)
     integer k, l;
     function automatic on_lane(input integer win, input integer ln);
@@ -352,7 +405,69 @@ module ot_hgi_hc_unit #(
                 for (k = 0; k < NW; k = k + 1) if (!ack_f && wq_v[k] && on_lane(k, l)) begin ack_f = 1'b1; wq_ack[k] = 1'b1; end
         end
     end
-    wire p_iss = (!hq_v[0] || hq_rdy[0]) && p_req && !(|(wq_v & ((HL == 1) ? {NW{1'b1}} : {{(NW-1){1'b0}}, 1'b1})));
+    assign p_iss = (!hq_v[0] || hq_rdy[0]) && p_req && !(|(wq_v & ((HL == 1) ? {NW{1'b1}} : {{(NW-1){1'b0}}, 1'b1})));
+    end else begin : g_psys
+        // SYS: 8 hardened bank tiles in a chain (tile g = bank g, HBM lanes g SPL ..), HCP control here
+        wire [8:0] cv; wire [8:0] css; wire [9*(LW+1)-1:0] cnv; wire [9*AW-1:0] cwa, cxa; wire [9*W*32-1:0] csum;
+        wire [8:0] cf;
+        // descriptor -> tile 0 through DRLY relays; tile 7's sums / fault -> the HCP through DRLY relays
+        reg dv_r [0:DRLY-1]; reg [1+(LW+1)+2*AW-1:0] dd_r [0:DRLY-1];
+        reg [W*32-1:0] sr [0:DRLY-1]; reg fr [0:DRLY-1];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) for (integer j = 0; j < DRLY; j = j + 1) begin dv_r[j] <= 1'b0; fr[j] <= 1'b0; end
+            else begin
+                dv_r[0] <= sd_v; fr[0] <= cf[8];
+                for (integer j = 1; j < DRLY; j = j + 1) begin dv_r[j] <= dv_r[j-1]; fr[j] <= fr[j-1]; end
+            end
+        always @(posedge clk) begin
+            dd_r[0] <= {sd_ss, sd_nv, sd_wa, sd_xa}; sr[0] <= csum[8*W*32 +: W*32];
+            for (integer j = 1; j < DRLY; j = j + 1) begin dd_r[j] <= dd_r[j-1]; sr[j] <= sr[j-1]; end
+        end
+        assign cv[0] = dv_r[DRLY-1]; assign {css[0], cnv[0 +: LW+1], cwa[0 +: AW], cxa[0 +: AW]} = dd_r[DRLY-1];
+        assign csum[0 +: W*32] = '0; assign cf[0] = 1'b0;
+        assign sys_sum = sr[DRLY-1]; assign sys_fault = fr[DRLY-1];
+        // window control + geometry to tile g through XRLY relays; ready / fault back through XRLY relays
+        wire [7:0] t_rdy, t_flt;
+        wire [HL-1:0] t_hqv; wire [HL*HAW-1:0] t_hqa; wire [HL*3-1:0] t_hql; wire [HL*TG-1:0] t_hqt;
+        localparam integer DB = HAW + SPL*HAW + SPL*CWW + SPL*AW + HAW;   // base, soff, nwk, bnd, pbase
+        for (g = 0; g < 8; g = g + 1) begin : g_t
+            reg [2:0] cc [0:XRLY-1]; reg [DB-1:0] cd [0:XRLY-1]; reg [1:0] rb [0:XRLY-1];
+            wire [SPL*HAW-1:0] so; wire [SPL*CWW-1:0] nw; wire [SPL*AW-1:0] bn;
+            for (genvar q3 = 0; q3 < SPL; q3 = q3 + 1) begin : g_c
+                assign so[q3*HAW +: HAW] = soff[q3]; assign nw[q3*CWW +: CWW] = nwk[q3]; assign bn[q3*AW +: AW] = bnd[q3];
+            end
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) for (integer j = 0; j < XRLY; j = j + 1) begin cc[j] <= 3'b000; rb[j] <= 2'b00; end
+                else begin
+                    cc[0] <= {(g == 0) && p_req, w_rel, w_start}; rb[0] <= {t_flt[g], t_rdy[g]};
+                    for (integer j = 1; j < XRLY; j = j + 1) begin cc[j] <= cc[j-1]; rb[j] <= rb[j-1]; end
+                end
+            always @(posedge clk) begin
+                cd[0] <= {pbase, bn, nw, so, HAW'(rowbase + boff[g])};
+                for (integer j = 1; j < XRLY; j = j + 1) cd[j] <= cd[j-1];
+            end
+            wire [2:0] c = cc[XRLY-1]; wire [DB-1:0] e = cd[XRLY-1];
+            assign w_rdy0[g*SPL +: SPL] = {SPL{rb[XRLY-1][0]}};
+            assign w_flt[g*SPL +: SPL] = {{(SPL-1){1'b0}}, rb[XRLY-1][1]};
+            ot_hgi_hc_tile #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .LM(SLM), .LA(SLA)) u_t (
+                .clk(clk), .rst_n(rst_n), .first(g == 0),
+                .d_v(cv[g]), .d_ss(css[g]), .d_nv(cnv[g*(LW+1) +: LW+1]), .d_wa(cwa[g*AW +: AW]), .d_xa(cxa[g*AW +: AW]),
+                .o_v(cv[g+1]), .o_ss(css[g+1]), .o_nv(cnv[(g+1)*(LW+1) +: LW+1]), .o_wa(cwa[(g+1)*AW +: AW]),
+                .o_xa(cxa[(g+1)*AW +: AW]), .sum_in(csum[g*W*32 +: W*32]), .sum_out(csum[(g+1)*W*32 +: W*32]),
+                .f_in(cf[g]), .f_out(cf[g+1]),
+                .c_start(c[0]), .c_rel(c[1]), .c_base(e[0 +: HAW]), .c_soff(e[HAW +: SPL*HAW]),
+                .c_nwk(e[HAW+SPL*HAW +: SPL*CWW]), .c_bnd(e[HAW+SPL*HAW+SPL*CWW +: SPL*AW]),
+                .c_pbase(e[HAW+SPL*HAW+SPL*CWW+SPL*AW +: HAW]), .c_pgo(c[2]), .t_rdy(t_rdy[g]), .t_flt(t_flt[g]),
+                .xw_ce(xw_ce[g*NXM +: NXM]), .xw_a(xw_a[g*NXM*10 +: NXM*10]), .xw_d(xw_d[g*NXM*256 +: NXM*256]),
+                .xw_m(xw_m[g*NXM*16 +: NXM*16]),
+                .hq_v(t_hqv[g*SPL +: SPL]), .hq_rdy(hq_rdy[g*SPL +: SPL]), .hq_addr(t_hqa[g*SPL*HAW +: SPL*HAW]),
+                .hq_len(t_hql[g*SPL*3 +: SPL*3]), .hq_tag(t_hqt[g*SPL*TG +: SPL*TG]), .hr_v(hr_v[g*SPL +: SPL]),
+                .hr_tag(hr_tag[g*SPL*TG +: SPL*TG]), .hr_beat(hr_beat[g*SPL*2 +: SPL*2]), .hr_data(hr_data[g*SPL*256 +: SPL*256]));
+        end
+        always @* begin hq_v = t_hqv; hq_addr = t_hqa; hq_len = t_hql; hq_tag = t_hqt; wq_ack = '0; end
+        assign p_iss = p_req;                                  // a one-cycle pulse; tile 0 latches and issues it
+        assign wq = '0; assign wqs = '0; assign wq_v = '0;
+    end endgenerate
 
     // ---- post-processing units
     reg mu_v, ad_v, ex_v, dv_v; reg [31:0] mu_a, mu_b, ad_a, ad_b, ex_a, dv_a, dv_b;
@@ -387,6 +502,13 @@ module ot_hgi_hc_unit #(
     function automatic isnan(input [31:0] a); isnan = a[30:23] == 8'hFF && a[22:0] != 0; endfunction
     integer q, e2;
     reg [3:0] wb_n;
+    // SYS: S_RW waits 2 XRLY + 6 edges after S_ROW (the window start reaches the tiles and their ready comes back; the
+    // row's last x writes land in the tiles' macros)
+    reg [5:0] rw_hold;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) rw_hold <= 6'd0;
+        else if (SYS != 0 && st == S_ROW) rw_hold <= 6'(2 * XRLY + 6);
+        else if (rw_hold != 6'd0) rw_hold <= rw_hold - 6'd1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; job_rdy <= 1'b1; job_done <= 1'b0; job_fault <= 1'b0; vmq <= 338'd0; w_start <= 1'b0;
@@ -517,7 +639,7 @@ module ot_hgi_hc_unit #(
                 S_ROW: if (ap_job) begin                                // the aperture: wait for the slot's row
                     if (ap_cnt[ap_slot] >= ap_need) st <= S_RW;
                 end else if (p_got == 4'd4 || op == 2'd1) begin w_start <= !wst; wst <= 1'b0; st <= S_RW; end
-                S_RW: if ((ap_job || &w_rdy) && h_cr) begin h_cv <= 1'b1; st <= S_RC; end
+                S_RW: if ((ap_job || &w_rdy) && h_cr && rw_hold == 6'd0) begin h_cv <= 1'b1; st <= S_RC; end
                 S_RC: begin
                     if (h_cv && h_cr) h_cv <= 1'b0;
                     if (h_ov) begin                                    // one result a position, positions in order
@@ -624,3 +746,191 @@ module ot_hgi_hc_unit #(
     end
 endmodule
 `default_nettype wire
+
+// el1011-hcvm-hc: the hardened BANK TILE of the systolic HC unit (ot_hgi_hc_unit SYS = 1).  One per bank k, replicated
+// 8x, every instance identical (bank identity only through the `first` strap and which wires the parent connects):
+//   * HCP stage k (W FP32 MAC lanes, ot_hdc_v41x_hcp_stage) -- partial chunk sums in/out through registered seams;
+//   * bank k's x memory: W/16 ot_sram_1r1w_1024x256 macros, written from the parent's registered write bundle;
+//   * bank k's SPL weight windows (sub-windows k RS .. of the striped fetch), each on its own HBM read lane, with a
+//     2-entry request FIFO a lane (the lane's hq_rdy only moves FIFO pointer flops; the window sees a registered ack)
+//     and pin-flopped responses; lane 0 also carries the parameter fetch (p_go pulse, tile 0 only);
+//   * its own reset relay (rst_n drives only the relay).
+// Window control (start/release + geometry) and the x writes arrive through the parent's relays; ready / fault go back
+// through relays (the parent holds S_RW long enough for both).
+module ot_hgi_hc_tile #(
+    parameter integer W = 32,
+    parameter integer RMAX = 128,
+    parameter integer SPL = 4,
+    parameter integer AW = 16,
+    parameter integer HAW = 35,
+    parameter integer RTW = 7,
+    parameter integer TG = 11,
+    parameter integer WMACRO = 1,
+    parameter integer LM = 8,
+    parameter integer LA = 7,
+    // round 3 (hc_tile-sys-048ca3d9e-b EARLY_FAIL_SETUP -1068 ps: the 4 weight windows' macro outputs (4 x 1024 b, 16
+    // macros) went through the wsel 4:1 mux into wd with no capture flop, 637 ps of wire + 1.1 ns of mux/buffer):
+    // TML 3 = raw capture register per window next to its macros, then a one-hot AND-OR select (replicated kept select
+    // copies per 128-b slice) into wd; x data captured raw likewise (memory latency 2 -> 3 for both).  SOR 1 registers
+    // sum_out at the seam.  These are the hardened defaults (the parent instantiates the tile without overrides).
+    parameter integer TML = 3,
+    parameter integer SOR = 1,
+    // round 4 (hc_tile-sys-faa39cbe9-{a,b}: one clock root over ~57k sinks, FF insertion 415..765 ps, CTS hold stuck at
+    // -165/-247 ps in the u_mul pipes): TLG 8 = the 32 lanes in 4 HARD lane-group leaves ot_hdc_v41x_hcp_lanes (own
+    // clock trees, ~13k sinks each); the tile becomes a replicated cluster (8 per die). Latency unchanged.
+    parameter integer TLG = 8,
+    parameter integer NVW = $clog2(W) + 1,
+    parameter integer CWW = $clog2(RMAX + 1),
+    parameter integer NXM = W / 16
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,
+    input  wire                 first,
+    input  wire                 d_v, d_ss,
+    input  wire [NVW-1:0]       d_nv,
+    input  wire [AW-1:0]        d_wa, d_xa,
+    output wire                 o_v, o_ss,
+    output wire [NVW-1:0]       o_nv,
+    output wire [AW-1:0]        o_wa, o_xa,
+    input  wire [W*32-1:0]      sum_in,
+    output wire [W*32-1:0]      sum_out,
+    input  wire                 f_in,
+    output wire                 f_out,
+    // window control (relayed)
+    input  wire                 c_start, c_rel,
+    input  wire [HAW-1:0]       c_base,                 // rowbase + boff[k]
+    input  wire [SPL*HAW-1:0]   c_soff,
+    input  wire [SPL*CWW-1:0]   c_nwk,
+    input  wire [SPL*AW-1:0]    c_bnd,
+    input  wire                 c_pgo,
+    input  wire [HAW-1:0]       c_pbase,
+    output reg                  t_rdy,
+    output reg                  t_flt,
+    // x writes (relayed)
+    input  wire [NXM-1:0]       xw_ce,
+    input  wire [NXM*10-1:0]    xw_a,
+    input  wire [NXM*256-1:0]   xw_d,
+    input  wire [NXM*16-1:0]    xw_m,
+    // HBM read lanes
+    output wire [SPL-1:0]       hq_v,
+    input  wire [SPL-1:0]       hq_rdy,
+    output wire [SPL*HAW-1:0]   hq_addr,
+    output wire [SPL*3-1:0]     hq_len,
+    output wire [SPL*TG-1:0]    hq_tag,
+    input  wire [SPL-1:0]       hr_v,
+    input  wire [SPL*TG-1:0]    hr_tag,
+    input  wire [SPL*2-1:0]     hr_beat,
+    input  wire [SPL*256-1:0]   hr_data
+);
+    localparam integer SWD = (RMAX + SPL - 1) / SPL;
+    wire [3:0] rl;
+    ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    // ---- the lane stage
+    wire w_re, x_re; wire [AW-1:0] w_addr, x_addr; reg [W*32-1:0] wd; reg [W*16-1:0] xd;
+    ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(TML), .NVW(NVW), .LM(LM), .LA(LA), .SOR(SOR), .LRST(1), .ADRST(0), .LG(TLG)) u_st (.clk(clk), .rst_n(rl[0]), .first(first),
+        .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv), .o_wa(o_wa),
+        .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out), .w_re(w_re), .w_addr(w_addr),
+        .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd));
+    // ---- x memory (registered write bundle in, read data captured into xd: address reg -> macro -> xd = ML 2)
+    wire [W*16-1:0] xq1;
+    genvar gm, gk, ll;
+    generate for (gm = 0; gm < NXM; gm = gm + 1) begin : g_xm
+        reg ce_q; reg [9:0] a_q; reg [255:0] d_q; reg [15:0] m_q; wire [255:0] wm;
+        always @(posedge clk or negedge rl[1]) if (!rl[1]) ce_q <= 1'b0; else ce_q <= xw_ce[gm];
+        always @(posedge clk) begin a_q <= xw_a[gm*10 +: 10]; d_q <= xw_d[gm*256 +: 256]; m_q <= xw_m[gm*16 +: 16]; end
+        for (ll = 0; ll < 16; ll = ll + 1) begin : g_m
+            assign wm[ll*16 +: 16] = {16{m_q[ll]}};
+        end
+        ot_sram_1r1w_1024x256_m2_r2c2 u_x (.clk(clk), .r_ce_in(x_re), .r_addr_in(x_addr[9:0]), .rd_out(xq1[gm*256 +: 256]),
+            .w_ce_in(ce_q), .w_addr_in(a_q), .wd_in(d_q), .w_mask_in(wm), .rr_en(2'b00), .rr_addr(18'd0),
+            .cr_en(2'b00), .cr_sel(16'd0));
+    end endgenerate
+    // ---- control pin flops
+    reg cs_q, cr_q, pg_q, pend; reg [HAW-1:0] base_q, pb_q; reg [SPL*HAW-1:0] soff_q; reg [SPL*CWW-1:0] nwk_q;
+    reg [SPL*AW-1:0] bnd_q;
+    always @(posedge clk or negedge rl[2]) begin
+        if (!rl[2]) begin cs_q <= 1'b0; cr_q <= 1'b0; pg_q <= 1'b0; end
+        else begin cs_q <= c_start; cr_q <= c_rel; pg_q <= c_pgo; end
+    end
+    always @(posedge clk) begin base_q <= c_base; pb_q <= c_pbase; soff_q <= c_soff; nwk_q <= c_nwk; bnd_q <= c_bnd; end
+    // ---- responses (pin flops)
+    reg [SPL-1:0] hr_vl; reg [SPL*TG-1:0] hr_tl; reg [SPL*2-1:0] hr_bl; reg [SPL*256-1:0] hr_dl;
+    always @(posedge clk) begin hr_tl <= hr_tag; hr_bl <= hr_beat; hr_dl <= hr_data; end
+    always @(posedge clk or negedge rl[2]) if (!rl[2]) hr_vl <= '0; else hr_vl <= hr_v;
+    // ---- windows, sub-window select, request FIFOs
+    reg [3:0] wsel, wsel_q;
+    always @* begin
+        wsel = 4'd0;
+        for (integer kk = 1; kk < SPL; kk = kk + 1) if (w_addr >= bnd_q[kk*AW +: AW]) wsel = 4'(kk);
+    end
+    always @(posedge clk) if (w_re) wsel_q <= wsel;
+    wire [SPL*W*32-1:0] wqs; wire [SPL-1:0] rdy, flt, wq_v; wire [SPL*HAW-1:0] wq_a; wire [SPL*3-1:0] wq_l;
+    wire [SPL*RTW-1:0] wq_t; wire [SPL-1:0] room;
+    wire pw_push0 = pend && !wq_v[0] && room[0];
+    generate for (gk = 0; gk < SPL; gk = gk + 1) begin : g_win
+        wire [3:0] why; wire [CWW-1:0] fetched; wire [31:0] rcv; wire rdy_i;
+        wire empty = (nwk_q[gk*CWW +: CWW] == 0);
+        wire src_ok = (hr_tl[gk*TG + TG-1 -: 4] != 4'd8);
+        ot_hdc_v41x_weight_window #(.WB(W*32), .SB(256), .WORDS(SWD), .AW(AW), .HAW(HAW), .NPC(1), .LENW(3),
+            .BURST_MAX((W / 8 > 4) ? 4 : W / 8), .MACRO(WMACRO)) u_w (
+            .clk(clk), .rst_n(rl[3]), .start(cs_q && !empty), .release_window(cr_q && !empty), .rom_base(16'd0),
+            .hbm_base(base_q + soff_q[gk*HAW +: HAW]), .nwords(nwk_q[gk*CWW +: CWW]), .ready(rdy_i), .hq_v(wq_v[gk]),
+            .hq_rdy(wq_v[gk] && room[gk]), .hq_addr(wq_a[gk*HAW +: HAW]), .hq_len(wq_l[gk*3 +: 3]),
+            .hq_tag(wq_t[gk*RTW +: RTW]), .hr_v(hr_vl[gk] && src_ok), .hr_rdy(), .hr_tag(hr_tl[gk*TG +: RTW]),
+            .hr_beat(hr_bl[gk*2 +: 2]), .hr_data(hr_dl[gk*256 +: 256]), .rom_re(w_re && wsel == gk),
+            .rom_addr(w_addr - bnd_q[gk*AW +: AW]), .rom_q(wqs[gk*W*32 +: W*32]), .fault(flt[gk]), .fault_why(why),
+            .fetched_words(fetched), .received_sectors(rcv));
+        assign rdy[gk] = empty || rdy_i;
+        // request FIFO (2 entries, registered head); lane 0: the parameter fetch when its window has no request
+        reg [1:0] cnt; reg hv, rm; assign room[gk] = rm; reg [HAW+3+TG-1:0] e0, e1;
+        wire pw_push = (gk == 0) && pw_push0;
+        wire push = (wq_v[gk] && room[gk]) || pw_push;
+        wire [HAW+3+TG-1:0] din = pw_push ? {pb_q, 3'd4, 4'd8, {RTW{1'b0}}}
+                                          : {wq_a[gk*HAW +: HAW], wq_l[gk*3 +: 3], 4'd0, wq_t[gk*RTW +: RTW]};
+        wire pop = hv && hq_rdy[gk];
+        always @(posedge clk or negedge rl[2]) begin
+            if (!rl[2]) begin cnt <= 2'd0; hv <= 1'b0; rm <= 1'b1; end
+            else begin
+                cnt <= cnt + push - pop;
+                hv <= (cnt + push - pop) != 2'd0;
+                rm <= (cnt + push - pop) < 2'd2;
+            end
+        end
+        always @(posedge clk) begin
+            if (push && !pop) begin if (cnt == 2'd0) e0 <= din; else e1 <= din; end
+            else if (!push && pop) e0 <= e1;
+            else if (push && pop) begin if (cnt == 2'd1) e0 <= din; else begin e0 <= e1; e1 <= din; end end
+        end
+        assign hq_v[gk] = hv;
+        assign {hq_addr[gk*HAW +: HAW], hq_len[gk*3 +: 3], hq_tag[gk*TG +: TG]} = e0;
+    end endgenerate
+    // the parameter fetch request: latched on the pulse, issued once on lane 0
+    always @(posedge clk or negedge rl[2]) begin
+        if (!rl[2]) pend <= 1'b0;
+        else if (pg_q) pend <= 1'b1;
+        else if (pw_push0) pend <= 1'b0;
+    end
+    // ---- the weight read (sub-window select registered) -> wd; x read -> xd
+    generate if (TML == 2) begin : g_ml2
+        always @(posedge clk) begin wd <= wqs[wsel_q*W*32 +: W*32]; xd <= xq1; end
+    end else begin : g_ml3
+        // raw capture beside each window's macros (no logic before it), select one edge later
+        localparam integer NSL = (W*32) / 128;
+        reg [SPL*W*32-1:0] wcap; reg [W*16-1:0] xcap;
+        always @(posedge clk) begin wcap <= wqs; xcap <= xq1; xd <= xcap; end
+        for (genvar sl = 0; sl < NSL; sl = sl + 1) begin : g_sl
+            (* keep = "true" *) reg [SPL-1:0] oh;
+            always @(posedge clk) for (integer kk = 0; kk < SPL; kk = kk + 1) oh[kk] <= (wsel_q == 4'(kk));
+            always @(posedge clk) begin : mx
+                reg [127:0] o; o = '0;
+                for (integer kk = 0; kk < SPL; kk = kk + 1) o = o | (wcap[kk*W*32 + sl*128 +: 128] & {128{oh[kk]}});
+                wd[sl*128 +: 128] <= o;
+            end
+        end
+    end endgenerate
+    // ---- ready / fault (registered)
+    always @(posedge clk or negedge rl[2]) begin
+        if (!rl[2]) begin t_rdy <= 1'b0; t_flt <= 1'b0; end
+        else begin t_rdy <= &rdy; t_flt <= |flt; end
+    end
+endmodule

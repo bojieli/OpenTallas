@@ -21,8 +21,13 @@ T.CONTRACT = 'contract_vm28'
 W, H, NT, NS = 345.6, 500.04, 4, 4    # W = 32 x the 10.8-um M7 PG pitch (tile M7 pins stay clear of every block's stripes)
 SLAB_W = 1520.064                  # ds-1010 hub-column VM slab width (FE / BE span it; the 4 tile columns are centred)
 X0 = 0.0                            # tile columns from the slab's W edge (M7 / M5 / PG grids coincide)
+CH = 43.2                           # s81die-1011 contract v3: channel between tile columns so every tile W-face pin (ck / rs /
+                                    # grp, M4) is reachable from die-level routing (abutted columns 1-3 buried them);
+                                    # 43.2 = 4 x the 10.8 M7 PG pitch = 675 x 0.064 (M7) = 450 x 0.096 (M5 pin grid) = 800 sites
+PX = W + CH                         # column pitch 388.8; 4 columns + 3 channels = 1,512.0 <= SLAB_W
+assert X0 + 4 * W + 3 * CH <= SLAB_W, "VM tile columns + channels exceed the slab"
 NP, NPR, RA, DW = 28, 10, 14, 128
-FE_H, BE_H = 473.04, 108.0         # el1011-ds-vm/fe 10-11: FE 311.04 -> 473.04 (hierarchical FE: 16 x dsfd_vm_clt 230.04-um tiles under the N face + landing macros / parent band below); was         # slab height 2,419.2 (ds-1010: 2.42 mm)          # FE / BE outline heights (first estimate: FE ~125k flops + 16.8k die pins; BE ~10k)
+FE_H, BE_H = 594.0, 108.0          # el1011-ds-vm/fe 10-11 v5 (3c93919d3): 473.04 -> 594.00 (FLOORPLAN_MARGIN 68.1% -> ~54.2%); earlier FE 311.04 -> 473.04 (hierarchical FE: 16 x dsfd_vm_clt 230.04-um tiles under the N face + landing macros / parent band below); was         # slab height 2,419.2 (ds-1010: 2.42 mm)          # FE / BE outline heights (first estimate: FE ~125k flops + 16.8k die pins; BE ~10k)
 
 
 M7P, M7O = 0.064, 0.016            # ORFS asap7 make_tracks M7 x pitch / offset
@@ -32,15 +37,18 @@ M7S = (1.0, 10.8, 0.288)            # view PDN M7 stripes (pdn_coll.tcl): offset
 class Plan2(T.Plan):
     """T.Plan with M7 pins on their own track grid (0.064 / 0.016), kept clear of the M7 PG stripes"""
     def put(self, port, bit, face, layer, coord):
-        if layer != 'M7':
+        if layer not in ('M6', 'M7') or face not in 'NS':
             return super().put(port, bit, face, layer, coord)
         t = round((coord - M7O) / M7P)
         pos = M7O + t * M7P
         key = (face, layer, t)
         assert key not in self.used, (self.m, port, bit, face, coord)
         self.used.add(key)
-        if face == 'S': r = (pos - 0.016, 0.0, pos + 0.016, 0.256)
-        else: r = (pos - 0.016, self.h - 0.256, pos + 0.016, self.h)
+        # M6 (tile-signal layer contract <= M6, el1011-ds-vm 10-12): the former M7 pin at the same x, 0.064 wide so it spans
+        # >= 1 M5 track (0.048 pitch) for a V5 access, 0.32 deep (clear of the M6 PG straps at y 0.456 / H - 0.456 - ...)
+        hw, d = (0.032, 0.32) if layer == 'M6' else (0.016, 0.256)
+        if face == 'S': r = (pos - hw, 0.0, pos + hw, d)
+        else: r = (pos - hw, self.h - d, pos + hw, self.h)
         self.pins.append((f'{port}[{bit}]', layer) + tuple(T.r4(v) for v in r))
 
 
@@ -63,7 +71,9 @@ def tile():
     pl = Plan2('dsfd_vm_bgq28', W, H)
     pairs = [('i_v', 'f_v', NP), ('i_we', 'f_we', NP), ('i_row', 'f_row', NP * RA), ('i_mask', 'f_mask', NP * DW // 32),
              ('i_d', 'f_d', NP * DW), ('r_v', 'o_v', NPR), ('r_d', 'o_d', NPR * DW), ('r_f', 'o_f', 4), ('r_o', 'o_o', 3)]
-    tr = tracks(W)
+    # tile signal pins <= M6 (contract layer_defaults signal_max M6 under the parent's M8 straps; the tile's own M7 is PG):
+    # the second pin set keeps its M7-grid x (clear of the tile M7 stripes) on M6, so FE S / BE N / BE-slice N follow by x
+    tr = [('M6' if ly == 'M7' else ly, x) for ly, x in tracks(W)]
     need = sum(b for _, _, b in pairs)
     assert need <= len(tr), (need, len(tr))
     k = 0
@@ -105,7 +115,7 @@ def place_die_face(pl, ports, face, w):
 
 def put_t(pl, port, bit, face, h, xs, tname):
     ly, x = xs[tname]
-    pl.put(port, bit, face, ly, X0 + h * W + x)
+    pl.put(port, bit, face, ly, X0 + h * PX + x)
 
 
 def fe(xs):
@@ -185,7 +195,7 @@ def main():
         source='rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv module dsfd_sp_vm_m (the exact composition netlist; gate '
                'tools/s81_vm/s81_vm_gate.py)',
         instances=[dict(inst='u_fe', master='dsfd_vm_fe', xy=[0.0, T.r4(BE_H + NT * H)], orient='R0', um=[SLAB_W, FE_H])]
-        + [dict(inst=f'g_h[{h}].g_t[{t}].u_bg', master='dsfd_vm_bgq28', xy=[T.r4(X0 + h * W), T.r4(BE_H + (NT - 1 - t) * H)],
+        + [dict(inst=f'g_h[{h}].g_t[{t}].u_bg', master='dsfd_vm_bgq28', xy=[T.r4(X0 + h * PX), T.r4(BE_H + (NT - 1 - t) * H)],
                 orient='R0', grp=t, slice=h) for h in range(NS) for t in range(NT)]
         + [dict(inst='u_be', master='dsfd_vm_be', xy=[0.0, 0.0], orient='R0', um=[SLAB_W, BE_H])],
         nets=dict(chain='per slice h: g_t[t].f_* -> g_t[t+1].i_*, g_t[t].o_* -> g_t[t+1].r_* by abutment; FE m_* slice h -> '

@@ -63,6 +63,13 @@ DIES = {
         note=f'kv-die chain {SCR}/kv-die/die_r22k4 (r22k-channel-paths: real case -> PDN PASS -> full-die GRT writing '
              'die_grt.spef -> STA reading it); the current r22k recipe. die-evidence-2/qwen_r22k (EPYC3, 12,869 inst) '
              'carries the clock plan / IR / regions for the same recipe'),
+    'qwen_r22ko4_e6': dict(
+        name='Qwen3-8B ROM die r22ko4 e6 (near-square VM, 13,089 inst)', host='ot-epyc3',
+        note=f'die-evidence-2 chain {SCR}/die-evidence-2/qwen_r22ko4_e6 (contract v3 source 21fdd3100): real case -> PDN '
+             '-> full-die GRT -> STA TT/FF on GRT SPEF + CTS clock plan -> pads'),
+    'qwen_r22ko4_e7': dict(
+        name='Qwen3-8B ROM die r22ko4 e7 (contract v4: + io_collective M7 straps)', host='ot-epyc3',
+        note=f'die-evidence-2 chain {SCR}/die-evidence-2/qwen_r22ko4_e7 (src 22760e79f, 265-region CTS plan)'),
     'qwen_kv': dict(
         name='Qwen3-8B KV die (die_kv5: PHY PDN fix, 988 inst)', host='ot-epyc1tb',
         note=f'kv-die chain {SCR}/kv-die/die_kv5 (GRT + STA owned by kv-die) + die-evidence-2 clock plan / re-STA on '
@@ -690,6 +697,12 @@ def probe_qwen_r22k4():
                           f'{R}/ir', f'{R}/clock', f'{R}/regions/gw22k_*')
 
 
+def probe_qwen_r22ko4(e):
+    R = f'{SCR}/die-evidence-2/qwen_r22ko4_{e}'
+    return probe_qwen_run(R, f'{R}/case_r22k', f'{R}/grt_r22k', lambda c: [f'{R}/sta_r22k_{c}'], f'{R}/libs',
+                          f'{R}/ir', f'{R}/clock', f'{R}/regions/gw22k_*')
+
+
 def probe_qwen_kv():
     K, E = f'{SCR}/kv-die/die_kv5', f'{SCR}/die-evidence-2/qwen_kv5'
     return probe_qwen_run(K, f'{K}/case_kv', f'{K}/grt_kv', lambda c: [f'{E}/sta_kv_{c}', f'{K}/sta_kv_{c}'], f'{K}/libs',
@@ -767,7 +780,8 @@ def probe_s81_l1e():
 PROBES = dict(qwen=probe_qwen, hbm=probe_hbm, s81=probe_s81, s81scan=probe_s81scan, s81head=probe_s81head,
               qwen_r22k=probe_qwen_r22k, qwen_kv=probe_qwen_kv, hbm_r25g=probe_hbm_r25g,
               qwen_r22k4=probe_qwen_r22k4, hbm_r25gp=probe_hbm_r25gp, s81_l1full=probe_s81_l1full, s81_l1e=probe_s81_l1e,
-              s81_r4f=probe_s81_r4f, qwen_kv11=probe_qwen_kv11)
+              s81_r4f=probe_s81_r4f, qwen_kv11=probe_qwen_kv11,
+              qwen_r22ko4_e6=lambda: probe_qwen_r22ko4('e6'), qwen_r22ko4_e7=lambda: probe_qwen_r22ko4('e7'))
 
 
 # ----------------------------------------------------------------------------------------------- local driver
