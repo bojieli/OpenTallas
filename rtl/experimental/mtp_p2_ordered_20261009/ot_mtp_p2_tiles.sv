@@ -39,7 +39,7 @@ module ot_p2h_xport #(parameter integer MUT_ORDER=0)(
  .out_valid(li_v[l]),.out_ready(li_r[l]),.out_data(li_d[l]));
  end
  wire tr_sr,tr_fault,tr_v,tr_r,tr_shared,tr_last,tr_tlast;wire [73:0] tr_id;wire [8:0] tr_expert;wire [6:0] tr_word;wire [575:0] tr_code;
- ot_mtp_p2_ordered_rows #(.ENABLE(1),.PRIMARY_SHARED(1),.SB_REG(1),.ACC_REG(1),.PRE_DEC(1),.MUT_ORDER(MUT_ORDER)) rows(
+ ot_mtp_p2_ordered_rows #(.ENABLE(1),.PRIMARY_SHARED(1),.SB_REG(1),.ACC_REG(1),.PRE_DEC(1),.BSEL_REP(1),.MUT_ORDER(MUT_ORDER)) rows(
  .clk(clk),.rst_n(rn),.start_v(c_sv),.start_r(tr_sr),
  .start_identity(c_id),.start_ids(c_ids),
  .in_v(li_v),.in_r(li_r),.in_identity({li_d[1][603:530],li_d[0][603:530]}),
@@ -50,11 +50,17 @@ module ot_p2h_xport #(parameter integer MUT_ORDER=0)(
  .out_shared(tr_shared),.out_row_last(tr_last),.out_transaction_last(tr_tlast),
  .out_word(tr_word),.out_secded(tr_code),.sink_abort(c_ab),.done(),.fault(tr_fault));
  // registered output station (the rows queue read is an 8:1 mux)
- wire o_v;wire [668:0] o_d;
+ // READY-LATENCY seam to arith (el1011-ds-mtp 2026-10-12, mtp-p2h-xp-50b05596a TT class f_or -> opin pop -> 84 pointer
+ // copies, -79 ps under the die-link budget): f_or (arith's registered in_ready) lands in ONE pin flop rq; the station
+ // pops on rq (flops only) into registered outputs t_o = {t_v, t_d} (pin flops); arith's xfer receiver (PINREG=2) captures
+ // every valid beat and reserves room for the two in_ready values in flight.  +1 cycle on the seam, exact.
+ wire o_v;wire [668:0] o_d;reg rq,t_v;reg [668:0] t_d;
  ot_sc_pfifo #(.W(669),.S(2),.G(32)) opin(.clk(clk),.rst_n(rn),
  .in_valid(tr_v),.in_ready(tr_r),.in_data({tr_id,tr_expert,tr_shared,tr_last,tr_tlast,tr_word,tr_code}),
- .out_valid(o_v),.out_ready(f_or[0]),.out_data(o_d));
- assign t_o={o_v,o_d};
+ .out_valid(o_v),.out_ready(rq),.out_data(o_d));
+ always @(posedge clk or negedge rn)if(!rn)begin rq<=1'b0;t_v<=1'b0;end else begin rq<=f_or[0];t_v<=o_v&&rq;end
+ always @(posedge clk)t_d<=o_d;
+ assign t_o={t_v,t_d};
  always @(posedge clk or negedge rn)if(!rn)t_c<=2'b0;else t_c<={tr_sr,tr_fault};
 endmodule
 
@@ -75,7 +81,8 @@ module ot_p2h_arith #(parameter integer MUT_COPY_FIRST=0)(
  always @(posedge clk or negedge rn)if(!rn)begin c_sv<=0;c_ab<=0;end else begin c_sv<=f_c[102];c_ab<=f_c[101];end
  always @(posedge clk)begin c_id<=f_c[100:27];c_ids<=f_c[26:0];end
  wire xa_v,xa_r;wire [668:0] xa_d;
- ot_sc_pfifo #(.W(669),.S(3),.G(32),.PINREG(1)) xfer(.clk(clk),.rst_n(rn),
+ // READY-LATENCY receiver (PINREG=2, S=6): xport registers this in_ready before using it (see ot_p2h_xport)
+ ot_sc_pfifo #(.W(669),.S(6),.G(32),.PINREG(2)) xfer(.clk(clk),.rst_n(rn),
  .in_valid(f_x[669]),.in_ready(t_xr[0]),.in_data(f_x[668:0]),
  .out_valid(xa_v),.out_ready(xa_r),.out_data(xa_d));
  wire ar_sr,ar_fault,ar_ce,ar_v,ar_r,ar_last;wire [73:0] ar_id;wire [6:0] ar_word;wire [575:0] ar_code;

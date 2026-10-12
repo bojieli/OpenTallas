@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "hbm_r25gq",
- "version": 5,
+ "version": 7,
  "owner": "hbmdie-1011",
- "updated": "2026-10-11T23:59-07:00",
+ "updated": "2026-10-12T01:20-07:00",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -12,12 +12,16 @@
  },
  "changelog": [
   {
+   "version": 6,
+   "change": "v6: hfd_hc slot 2,263.68 x 1,499.04 = the closed tiled quarter (die adapts to the closed element; D1); only the four hb_hc_* slots change"
+  },
+  {
    "version": 5,
    "change": "v5 (D18, closes D16): hfd_lk_ep S row re-granted as a 3 + 2 brick (row 1 y 6,016: ep_S0 x 7,886 / ep_S2 11,500 / ep_S3 16,270; row 2 y 7,046: ep_S1 7,886 / ep_S4 16,270), all channels >= 200 um; check r25gqn_pr rc 0 (0 data/clock/reset segments > 504 um, 0 far-side relays, 0 overlaps, 856.95 mm2)"
   },
   {
-   "version": 5,
-   "change": "D1 hfd_hc: 2,032.944 x 1,499.04 -> 2,032.944 x 1,684.8 (equator edge fixed, grows away from the equator); N tr row-1 att->SU relays move up 185.76 um with it [decided v1]"
+   "version": 6,
+   "change": "D1 hfd_hc: v6: 2,032.944 x 1,684.8 -> 2,263.68 x 1,499.04 = the CLOSED tiled quarter (88 hfd_hc_tile_xl 8 x 11, pka10 view; r25gqw ports): SU-facing edge fixed, grows away from the spine into the HC | attention channel (345.6 -> 114.96 um); N tr row-1 att->SU relays back at their 1,499.04 positions, rly_N[WE]_1_1 re-centred in the narrowed channel (hops 480 / 480 um); tile sub-slots unchanged in the quarter frame (the 2,263.68 quarter = rtl_qt @9c9c1a34b, same grid) [decided v6]"
   },
   {
    "version": 5,
@@ -40,8 +44,8 @@
    "change": "D6 hfd_sfu/su ctl: DENR=1 now; SFUT=2 when the lane cluster closes [open]"
   },
   {
-   "version": 5,
-   "change": "D7 hfd_hc: v3: 88 tile sub-slots per quarter from macro_place.tcl @87e02e7ad (8 x 11 serpentine, all inside 2,032.944 x 1,684.8; top 201 um band for head relays); region gate waits on tile child_lint (f) [contract v3]"
+   "version": 6,
+   "change": "D7 hfd_hc: v3: 88 tile sub-slots per quarter from macro_place.tcl @87e02e7ad (8 x 11 serpentine, v6: all inside 2,263.68 x 1,499.04, the closed quarter frame; the 316 um SU-side band x 1,947-2,263 holds the head relays / glue as in the closed quarter); region gate waits on tile child_lint (f) [contract v3]"
   },
   {
    "version": 5,
@@ -86,6 +90,10 @@
   {
    "version": 5,
    "change": "D17 hfd_hc_eng: lane-major N-face re-pin accepted; needs per-lane ports in the die bus model (generator places each port contiguous) and the lgE station spanning the full 4,384.8 face [open]"
+  },
+  {
+   "version": 7,
+   "change": "D19 SM.MATVEC x load (step 3b) = client of the E lane group lgE (hgi_vm E face, 32 lanes, KE = 4), slot 0 \"cp\", which has no wide client today (views 10-11 21:22: lgEcp OPEN). ot_hgi_sm_xload (in hfd_cmdproc) binds the EXISTING cmdproc N-face ports: f_lgEcp_rdn 8,257 b (wrr 32 x 257 + wrq_cr 32 + 1) and t_lgEcp_rup 513 b (wrq 32 x 16 + rg_req); f_lgEcp_wdn / t_lgEcp_wup stay with CP (x load is read-only). No new die pins. Seam: hgi_vm E face -> hb_stn_lgE_hce (hc_eng N) -> hb_stn_lgE_cp (abuts cmdproc N face), every hop a registered station <= 504 um (r25gqn_pr check: data segments > 504 um = 0); x load registers its tap at the cmdproc N-face pins (pin flops in/out). Why E: physically nearest the SM adapter (cmdproc abuts hgi_vm) and slot 0 is idle; the other E clients (ATT, quant, HC_ENG) do not run during SM.MATVEC; lgW serves SU/SFU/HC on the far W quarter [v7]"
   }
  ],
  "slots": [
@@ -2169,8 +2177,8 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 5,
-   "notes": "hierarchy hardened_block",
+   "version": 7,
+   "notes": "hierarchy hardened_block; v7 D19: lgE slot 0 (f_lgEcp_rdn / t_lgEcp_rup) = SM.MATVEC x load client",
    "pins": [
     {
      "name": "f_hgi_su[2:0]",
@@ -2729,12 +2737,12 @@
    "kind": "element",
    "parent": "die",
    "outline": {
-    "w": 2032.944,
-    "h": 1684.8
+    "w": 2263.68,
+    "h": 1499.04
    },
    "origin": {
-    "x": 8794.656,
-    "y": 10955.52,
+    "x": 8563.92,
+    "y": 11141.28,
     "orient": "R0"
    },
    "io_budget": {
@@ -2751,86 +2759,86 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 5,
+   "version": 6,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees)",
    "pins": [
     {
      "name": "f_sfu[1023:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 92.844
+     "offset": 85.692
     },
     {
      "name": "t_sfu[1023:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 234.252
+     "offset": 219.996
     },
     {
      "name": "t_hgi_vmap[15:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 327.324
+     "offset": 305.868
     },
     {
      "name": "f_hgi_vmap[2223:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 477.948
+     "offset": 449.388
     },
     {
      "name": "f_hgi_vmr[273:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 640.956
+     "offset": 605.244
     },
     {
      "name": "t_hgi_vmq[337:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 713.484
+     "offset": 670.62
     },
     {
      "name": "rst",
      "face": "E",
      "layer": "M4",
-     "offset": 772.86
+     "offset": 722.844
     },
     {
      "name": "f_hgi_cmdproc[938:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 1552.572
+     "offset": 1381.116
     },
     {
      "name": "t_hgi_cmdproc[2:0]",
      "face": "E",
      "layer": "M4",
-     "offset": 1640.892
+     "offset": 1462.284
     },
     {
      "name": "f_lgW_rdn[8256:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 461.58
+     "offset": 507.708
     },
     {
      "name": "f_lgW_wdn[64:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 925.692
+     "offset": 1017.996
     },
     {
      "name": "t_lgW_rup[512:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 1018.092
+     "offset": 1156.572
     },
     {
      "name": "t_lgW_wup[8960:0]",
      "face": "N",
      "layer": "M5",
-     "offset": 1537.548
+     "offset": 1722.108
     },
     {
      "name": "ck0e",
@@ -5664,12 +5672,12 @@
    "kind": "element",
    "parent": "die",
    "outline": {
-    "w": 2032.944,
-    "h": 1684.8
+    "w": 2263.68,
+    "h": 1499.04
    },
    "origin": {
     "x": 21293.264,
-    "y": 10955.52,
+    "y": 11141.28,
     "orient": "MY"
    },
    "io_budget": {
@@ -5686,7 +5694,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 5,
+   "version": 6,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {
@@ -8423,11 +8431,11 @@
    "kind": "element",
    "parent": "die",
    "outline": {
-    "w": 2032.944,
-    "h": 1684.8
+    "w": 2263.68,
+    "h": 1499.04
    },
    "origin": {
-    "x": 8794.656,
+    "x": 8563.92,
     "y": 13340.208,
     "orient": "MX"
    },
@@ -8445,7 +8453,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 5,
+   "version": 6,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {
@@ -11182,8 +11190,8 @@
    "kind": "element",
    "parent": "die",
    "outline": {
-    "w": 2032.944,
-    "h": 1684.8
+    "w": 2263.68,
+    "h": 1499.04
    },
    "origin": {
     "x": 21293.264,
@@ -11204,7 +11212,7 @@
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M7",
-   "version": 5,
+   "version": 6,
    "notes": "hierarchy two_level_die_region_array; clock entry = die H-tree leaf at the block ck pin (phys_trees); pins as hb_hc_SW"
   },
   {

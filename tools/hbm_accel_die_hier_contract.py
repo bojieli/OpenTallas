@@ -47,8 +47,9 @@ HIER = {
                          'in the 8 x 11 serpentine grid (pitch 179.136 x 187.38, physical/hbm_accel_die_views/hcp/rtl_qt/'
                          'macro_place.tcl @87e02e7ad re-fit to the slot); GLUE RULE: no hfd_hc_hub -- chain-head glue '
                          '(band capture, 3 head relays each way, XOR fold slice, rst sync) into head tiles / die-region relays',
-                   slot_change='v1: region 2,032.944 x 1,684.8 (asked 2,263.68 x 1,499.04: the W hub has 18.6 um x slack, '
-                               'the HC column 3.1 mm free below -> same 3.425 mm2 TALLER)',
+                   slot_change='v6: region 2,263.68 x 1,499.04 = the CLOSED tiled quarter (r25gqw ports; the die adapts '
+                               'to the closed element): SU-facing edge fixed, grows away from the spine into the HC | '
+                               'attention channel (345.6 -> 114.96 um); supersedes the v1 2,032.944 x 1,684.8 taller slot',
                    layers='v1.1: tiles placed by the die (closed tile as-is: PG M7 stripes, signals <= M7), die region straps '
                           'M8 (die-only layer, legal at the die top). No quarter cluster / no M8-PG quarter (pdn_qt '
                           'quarter routes finish as evidence only).',
@@ -452,8 +453,11 @@ def main(argv=None):
                  'for multicast) implemented but OFF: relay_tree on r25gqn = 17,650 overlaps -> channels too narrow; '
                  'next = data-flow re-floorplan / relay banks (v2)'),
         deltas=[
-            dict(id='D1', slot='hfd_hc', change='2,032.944 x 1,499.04 -> 2,032.944 x 1,684.8 (equator edge fixed, grows '
-                 'away from the equator); N tr row-1 att->SU relays move up 185.76 um with it', status='decided v1'),
+            dict(id='D1', slot='hfd_hc', change='v6: 2,032.944 x 1,684.8 -> 2,263.68 x 1,499.04 = the CLOSED tiled quarter '
+                 '(88 hfd_hc_tile_xl 8 x 11, pka10 view; r25gqw ports): SU-facing edge fixed, grows away from the spine into '
+                 'the HC | attention channel (345.6 -> 114.96 um); N tr row-1 att->SU relays back at their 1,499.04 '
+                 'positions, rly_N[WE]_1_1 re-centred in the narrowed channel (hops 480 / 480 um); tile sub-slots '
+                 'unchanged in the quarter frame (the 2,263.68 quarter = rtl_qt @9c9c1a34b, same grid)', status='decided v6'),
             dict(id='D2', slot='hfd_hc', change='v1.1: no quarter cluster / no M8-PG quarter; the 88 closed tiles (PG M7) '
                  'are placed by the die in an HC region, die straps M8 (supersedes v1 "tile_xl PG M6")', status='decided v1.1'),
             dict(id='D3', slot='hfd_coll', change='1,399.656 x 1,561.68 (c07156bbc)', status='in place'),
@@ -464,7 +468,7 @@ def main(argv=None):
                  'ap RTT +2, reset +3 (vm_tunit record); TUNIT stays 0 until the btile + VM parent close', status='contract v3'),
             dict(id='D6', slot='hfd_sfu/su ctl', change='DENR=1 now; SFUT=2 when the lane cluster closes', status='open'),
             dict(id='D7', slot='hfd_hc', change='v3: 88 tile sub-slots per quarter from macro_place.tcl @87e02e7ad (8 x 11 '
-                 'serpentine, all inside 2,032.944 x 1,684.8; top 201 um band for head relays); region gate waits on tile '
+                 'serpentine, v6: all inside 2,263.68 x 1,499.04, the closed quarter frame; the 316 um SU-side band x 1,947-2,263 holds the head relays / glue as in the closed quarter); region gate waits on tile '
                  'child_lint (f)', status='contract v3'),
             dict(id='D8', slot='hfd_vm_sw/se/nw/ne', change='v3: 36 VM8 tile sub-slots (6 open halves x 6, 9adc3c44e); '
                  'e half at x 349.056; clock entry ckt<k> M7 area pin; +1 cycle on the listed half seams', status='contract v3'),

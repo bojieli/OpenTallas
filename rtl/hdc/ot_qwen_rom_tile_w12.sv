@@ -604,6 +604,7 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer TOREG = 0,
     parameter integer TIDR = 0,
     parameter integer LRR = 0,
+    parameter integer KV_SLICE = 1,       // 0 (el1011-q-tile, r22ko4 qfd_tile_nk): no KV slice macros / write port (attention on the KV die)
     parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
     input  wire              clk,
@@ -634,7 +635,7 @@ module ot_qwen_rom_tile_w12 #(
     wire                  kvs_r_ce;
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
-    ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
+    ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
         .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .ANR(ANR), .BAW(BAW)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
@@ -684,7 +685,8 @@ module ot_qwen_rom_tile_w12 #(
     ot_hdc_delay #(.W(7 + 1024), .D(KWD)) u_kwd (.clk(clk), .rst_n(rst_n), .d({kvw_addr_q, kvw_data_q, kvw_mask_q}),
         .q({kvw_addr_r, kvw_data_r, kvw_mask_r}));
     generate
-        for (p = 0; p < 2; p = p + 1) begin : g_kv
+        //: KV_SLICE 0: zero-trip (no slice macros), the slice path keeps g_kv[p].u_kv for the floorplan scripts
+        for (p = 0; p < ((KV_SLICE != 0) ? 2 : 0); p = p + 1) begin : g_kv
             ot_sram_1r1w_128x256_m1_r2c2 u_kv (
                 .clk(clk), .r_ce_in(kvs_r_ce), .r_addr_in(kvs_r_addr), .rd_out(kvs_rd[256*p +: 256]),
                 .w_ce_in(kvw_ce_r), .w_addr_in(kvw_addr_r), .wd_in(kvw_data_r[256*p +: 256]),
@@ -692,6 +694,9 @@ module ot_qwen_rom_tile_w12 #(
                 .rr_en(2'b0), .rr_addr(14'd0), .cr_en(2'b0), .cr_sel(16'd0));
         end
     endgenerate
+    generate if (KV_SLICE == 0) begin : g_nokvs
+        assign kvs_rd = 512'd0;
+    end endgenerate
 endmodule
 
 
