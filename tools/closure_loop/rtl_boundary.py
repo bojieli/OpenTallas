@@ -13,7 +13,8 @@ and the gate-level netlist (write_json) is scanned (no abc, no timing; a cheap s
 Clocks and asynchronous resets (ports that reach a flop clock / async-reset pin) are excluded.  Black boxes (macros)
 break paths like flops.  Gate levels count every 2-input-equivalent gate ($_NOT_ / $_BUF_ count 0); techmap leaves
 adders as ripple chains, so arithmetic at a boundary reads deep, by design.
-Verdict: findings are WARNINGS by default; a spec with "registered_io": true is REFUSED on any in->out path or a depth
+Verdict: findings are WARNINGS by default; a spec with "registered_io": true -- and (review-0443 X4) every spec whose name
+ends in -cl / -cx unless it sets "registered_io": false or "rtl_boundary": {"waive": "<reason>"} -- is REFUSED on any in->out path or a depth
 > N (spec "rtl_boundary": {"levels": N}, default 16).  SKIP when the recipe's sources / top are not readable, the
 sources exceed the size cap, or yosys fails / times out (never blocks intake on its own failure).
 
@@ -58,10 +59,46 @@ def _params(tokens: list[str]) -> dict:
     return p
 
 
+WFC_TOKPIPE_RE = re.compile(r"tools/dsrom_wfc_tokpipe_physical\.py\s+prep\b.*?--inst\s+(src|stg)\b")
+WFC_MACRO_BB = "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v"
+
+
+def _module_params(text: str, top: str) -> set:
+    """parameter names declared in the #( ... ) header of module `top`"""
+    m = re.search(r"\bmodule\s+" + re.escape(top) + r"\s*#\s*\((.*?)\)\s*\(", text, re.S)
+    return set(re.findall(r"\bparameter\b(?:\s+(?:integer|int|logic|bit|signed|unsigned|\[[^\]]*\]))*\s+([A-Za-z_]\w*)",
+                          m.group(1))) if m else set()
+
+
 def recipe(spec: dict, show) -> dict | None:
-    """{"top", "sources", "params", "incdirs"} from the job's route command at its source commit, or None"""
+    """{"top", "sources", "params", "incdirs"} from the job's route command at its source commit, or None.
+    drive-resume (review-0542 AC1): an explicit spec "rtl_boundary": {"top": ..., "sources": [...], "params": {...}}
+    wins; tools/dsrom_wfc_tokpipe_physical.py prep --inst src|stg (the WFC SOURCE / STAGE masters) is read from its
+    basis json (physical/dsrom_wfc_tokpipe/<inst>_basis.json params that the top declares)."""
+    cfg = spec.get("rtl_boundary") if isinstance(spec.get("rtl_boundary"), dict) else {}
+    if cfg.get("top") and cfg.get("sources"):
+        return {"top": cfg["top"], "sources": list(cfg["sources"]), "params": {k: str(v) for k, v in (cfg.get("params") or {}).items()},
+                "incdirs": list(cfg.get("incdirs") or ["rtl/common"])}
     cmd = ((spec.get("stages") or {}).get("route") or {}).get("cmd") or ""
     commit = spec["source"]["commit"]
+    w = WFC_TOKPIPE_RE.search(cmd)
+    if w:
+        inst = w.group(1)
+        top = f"ot_dsrom_wfc_tokpipe_{inst}"
+        top_src = f"rtl/dsrom_sys/mtp/{top}.sv"
+        basis, text = show(commit, f"physical/dsrom_wfc_tokpipe/{inst}_basis.json"), show(commit, top_src)
+        if basis is None or text is None:
+            return None
+        try:
+            bp = json.loads(basis).get("params") or {}
+        except ValueError:
+            return None
+        declared = _module_params(text, top)
+        srcs = [top_src, "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv"]
+        if inst == "src" and int(bp.get("REC_SRAM", 0)):
+            srcs.append(WFC_MACRO_BB)
+        return {"top": top, "sources": srcs, "params": {k: str(v) for k, v in bp.items() if k in declared},
+                "incdirs": ["rtl/common"]}
     m = MASTER_RE.search(cmd)
     if m:
         text = show(commit, f"physical/qwen_die_masters/cfg/{m.group(1)}.env")
@@ -189,10 +226,18 @@ def check(spec: dict, show, repo: str | None = None) -> dict:
     if cfg is False or (isinstance(cfg, dict) and cfg.get("skip")):
         return {"verdict": "SKIP", "message": "rtl_boundary opted out"}
     levels = int((cfg or {}).get("levels", LEVELS)) if isinstance(cfg, dict) else LEVELS
-    strict = bool(spec.get("registered_io"))
+    # review-0443 X4: REFUSE by default for new dual-track structural specs (name ending -cl / -cx, the registered-boundary
+    # rule's own lines); WARN for everything else.  "registered_io": false or "rtl_boundary": {"waive": "<reason>"} downgrades
+    # a -cl/-cx spec to WARN (a documented, intentional unregistered port, e.g. TA15's immediate-drop ready).
+    name = str(spec.get("name", ""))
+    waived = isinstance(cfg, dict) and bool(cfg.get("waive"))
+    if "registered_io" in spec:
+        strict = bool(spec.get("registered_io"))
+    else:
+        strict = bool(re.search(r"-c[lx]$", name)) and not waived
     r = recipe(spec, show)
     if not r:
-        return {"verdict": "SKIP", "message": "rtl_boundary: sources / top not readable from the recipe"}
+        return _cannot_run(spec, "sources / top not readable from the recipe")
     commit = spec["source"]["commit"]
     import hashlib
     ckey = hashlib.sha256(json.dumps([commit, r, levels], sort_keys=True).encode()).hexdigest()[:24]
@@ -209,14 +254,18 @@ def check(spec: dict, show, repo: str | None = None) -> dict:
         for s in r["sources"]:
             t = show(commit, s)
             if t is None:
-                return {"verdict": "SKIP", "message": f"rtl_boundary: {s} not at {commit[:12]}"}
+                return _cannot_run(spec, f"{s} not at {commit[:12]}")
             total += len(t)
+            # yosys cannot elaborate procedural $fatal / $error (an `initial if (bad) $fatal(...)` parameter guard): the
+            # scan only needs structure, so such calls become $display (review-0542 AC1: the WFC SOURCE ctrl has them)
+            t = re.sub(r"\$(fatal|error)\s*\(\s*\d+\s*,", "$display(", t)
+            t = re.sub(r"\$(fatal|error)\b", "$display", t)
             f = tdp / s
             f.parent.mkdir(parents=True, exist_ok=True)
             f.write_text(t)
             files.append(str(f))
         if total > SRC_CAP:
-            return {"verdict": "SKIP", "message": f"rtl_boundary: {total} B of RTL > cap {SRC_CAP}"}
+            return _cannot_run(spec, f"{total} B of RTL > cap {SRC_CAP}")
         for inc in r["incdirs"]:                       # include files the sources pull in (`include "x.svh")
             for s in r["sources"]:
                 for name in re.findall(r'`include\s+"([^"]+)"', (tdp / s).read_text()):
@@ -232,9 +281,9 @@ def check(spec: dict, show, repo: str | None = None) -> dict:
         try:
             p = subprocess.run([YOSYS, "-q", "-p", script], capture_output=True, text=True, timeout=TIMEOUT)
         except subprocess.TimeoutExpired:
-            return {"verdict": "SKIP", "message": f"rtl_boundary: yosys > {TIMEOUT} s"}
+            return _cannot_run(spec, f"yosys > {TIMEOUT} s")
         if p.returncode or not (tdp / "n.json").exists():
-            return {"verdict": "SKIP", "message": "rtl_boundary: yosys failed: " + (p.stderr or p.stdout)[-300:]}
+            return _cannot_run(spec, "yosys failed: " + (p.stderr or p.stdout)[-300:])
         res = analyse(json.loads((tdp / "n.json").read_text()), r["top"])
     try:
         cache[ckey] = res
@@ -242,6 +291,20 @@ def check(spec: dict, show, repo: str | None = None) -> dict:
     except Exception:  # noqa: BLE001
         pass
     return _verdict(res, r, levels, strict)
+
+
+def _cannot_run(spec: dict, why: str) -> dict:
+    """review-0542 AC1: a spec that explicitly asks for the check ("registered_io": true) is REFUSED when the check
+    cannot run -- never a silent SKIP.  Fix: give "rtl_boundary": {"top", "sources", "params"} or a waiver
+    ("rtl_boundary": {"waive": "<reason>"}).  Default-strict -cl/-cx names without the flag keep SKIP."""
+    cfg = spec.get("rtl_boundary") if isinstance(spec.get("rtl_boundary"), dict) else {}
+    if spec.get("registered_io") is True and not cfg.get("waive"):
+        return {"verdict": "REFUSE", "message": f"rtl_boundary: registered_io:true requested but the check cannot run "
+                                                f"({why}); add \"rtl_boundary\": {{\"top\": ..., \"sources\": [...], "
+                                                f"\"params\": {{...}}}} or \"rtl_boundary\": {{\"waive\": \"<reason>\"}}"}
+    if spec.get("registered_io") is True:
+        return {"verdict": "WARN", "message": f"rtl_boundary: check could not run ({why}); waived: {cfg['waive']}"}
+    return {"verdict": "SKIP", "message": f"rtl_boundary: {why}"}
 
 
 def _verdict(res: dict, r: dict, levels: int, strict: bool) -> dict:

@@ -274,6 +274,51 @@ proc ot_hm_guard {rt_args} {
   }
   return [lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] $new]
 }
+# HOLD-STOP (drive-resume 2026-10-09, coordinator APPROVED).  A hold repair that stalls already within a small margin
+# (stuckscan: real FF hold WNS >= -15 ps, setup not hopeless) is NOT early-failed: the route continues and the
+# post-route hold ECO repairs the residue.  repair_timing cannot be interrupted, so the closure loop stops the stage and
+# resumes it from its checkpoint with OT_HOLD_STOP = "<stage>:<buffers> ..." (stage cts | grt).  For that stage the hold
+# repair runs once with -max_buffer_percent set to <buffers> over the instance count -- the stalled run's buffer count
+# when it reached its final WNS, so the converging part replays and the flat tail is cut -- and <buffers> = 0 skips the
+# hold repair.  Setup repair is unchanged.  The cap ends the call with RSZ-0060; the stage continues on the repaired
+# design ("OT_HOLD_MM after repair" lets tolerate_flow_errors zero that one error).
+proc ot_hold_stage {} {
+  expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}
+}
+proc ot_hold_stop_cap {stage} {
+  # -> "" (no stop for this stage) or the buffer cap (0 = skip the hold repair)
+  if {![info exists ::env(OT_HOLD_STOP)]} { return "" }
+  foreach e [split $::env(OT_HOLD_STOP) " ,;"] {
+    if {[regexp {^(cts|grt):([0-9]+)$} $e -> s n] && $s eq $stage} { return $n }
+  }
+  return ""
+}
+proc ot_hold_stop_args {rt_args pct} {
+  set i [lsearch -exact $rt_args -max_buffer_percent]
+  if {$i >= 0} { return [lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] $pct] }
+  return [concat $rt_args [list -max_buffer_percent $pct]]
+}
+proc ot_hold_stop {rt_args} {
+  # 1 when OT_HOLD_STOP handled this stage's hold repair (skipped or capped), else 0
+  set stage [ot_hold_stage]
+  set n [ot_hold_stop_cap $stage]
+  if {$n eq ""} { return 0 }
+  if {$n == 0} {
+    puts "OT_HOLD_STOP stage=$stage: hold repair skipped (near-miss stall; the post-route hold ECO repairs the residue)"
+    return 1
+  }
+  set inst 0
+  catch { set inst [llength [[ord::get_db_block] getInsts]] }
+  if {$inst <= 0} { puts "OT_HOLD_STOP stage=$stage: instance count unavailable; hold repair skipped"; return 1 }
+  set pct [format %.6f [expr {100.0 * $n / $inst}]]
+  puts "OT_HOLD_STOP stage=$stage: hold repair capped at $n buffers (-max_buffer_percent $pct of $inst instances)"
+  if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold} err]} {
+    if {![regexp {RSZ-0060|Max buffer count} $err]} { error $err }
+    puts "OT_HOLD_MM after repair: OT_HOLD_STOP cap of $n buffers reached (RSZ-0060); continuing to route"
+  }
+  catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_STOP stage=%s done: hold ws %.2f tns %.1f viol %d" $stage $w $t $v] }
+  return 1
+}
 proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on] || [lsearch -exact $rt_args -setup] >= 0 || [lsearch -exact $rt_args -hold] >= 0} {
     if {[lsearch -exact $rt_args -setup] < 0} { set rt_args [ot_hm_guard $rt_args] }
@@ -287,6 +332,7 @@ proc ot_repair_timing {rt_args} {
   log_cmd repair_timing {*}$rt_args -setup
   set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
+  if {[ot_hold_stop $rt_args]} { return }
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
   if {[catch {set prev [ot_hold_stats]} msg]} {
     puts "OT_HOLD_GUARD: hold stats unavailable ($msg); unguarded hold repair"
