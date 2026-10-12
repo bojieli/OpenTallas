@@ -115,7 +115,13 @@ module ot_hgi_fused_record #(
     always @(posedge clk) begin in_mvd <= mv_done; in_mvf <= mv_fault; in_ned <= (HCE != 0) ? e_done : ne_done;
                                 in_nef <= (HCE != 0) ? e_fault : ne_fault;
                                 in_qd <= q_done; in_qf <= q_fault; end
-    assign rec_rdy = (st == S_IDLE);
+    // el1011-hbm-fused (textbook class 2): the port reset drove ~4.2k flops directly; it now enters through a local
+    // reset relay (synchronised release, one region per consumer: FSM / HC engine / stream unit); rec_rdy waits for
+    // the FSM region's release (a record offered while the relay still holds the FSM in reset is not taken)
+    wire [2:0] rr; wire rst_f = rr[0];
+    ot_rst_relay #(.REGIONS(3)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    reg up_q; always @(posedge clk or negedge rst_f) if (!rst_f) up_q <= 1'b0; else up_q <= 1'b1;
+    assign rec_rdy = (st == S_IDLE) && up_q;
     assign halted = (st == S_HALT);
     // ---- ROW_NORM geometry
     wire [5:0]  op  = hdr[123:118];
@@ -162,7 +168,7 @@ module ot_hgi_fused_record #(
     generate if (HCE != 0 && UNIT != 0 && UWIDE != 0) begin : g_hce
         assign wrq = own ? e_wrq : u_wrq; assign wwq = own ? e_wwq : u_wwq;
         assign rg_req = own ? e_rg : u_rg; assign wg_req = own ? e_wg : u_wg;
-        ot_hgi_hc_eng #(.D(HCD), .LQ(ULQ), .MUT(HMUT), .LL(HLL), .RL(HRL)) u_hce (.clk(clk), .rst_n(rst_n), .job_v(ne_v), .job_rdy(e_rdy),
+        ot_hgi_hc_eng #(.D(HCD), .LQ(ULQ), .MUT(HMUT), .LL(HLL), .RL(HRL)) u_hce (.clk(clk), .rst_n(rr[1]), .job_v(ne_v), .job_rdy(e_rdy),
             .job(ne_job), .g_rdy(hg_rdy), .done(e_done), .fault(e_fault), .idle(), .wrq(e_wrq), .wrq_cr(own ? wrq_cr : 32'd0), .wrr(own ? wrr : '0),
             .wwq(e_wwq), .wwq_cr(own ? wwq_cr : 32'd0), .wwq_done(own ? wwq_done : 32'd0), .rg_req(e_rg), .rg_gnt(rg_gnt),
             .wg_req(e_wg), .wg_gnt(wg_gnt));
@@ -175,7 +181,7 @@ module ot_hgi_fused_record #(
     reg s_v; reg [127:0] s_hdr; reg [255:0] s_sut, s_a, s_b, s_c, s_o, s_r; reg [20:0] s_n;
     wire s_rdy, s_done, s_fault, s_halt, s_drained;
     generate if (UNIT) begin : g_unit
-        ot_hgi_su_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV), .WIDE(UWIDE), .LWB(ULWB), .RWB(URWB), .LQ(ULQ)) u_su (.clk(clk), .rst_n(rst_n), .rec_v(s_v), .rec_rdy(s_rdy),
+        ot_hgi_su_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV), .WIDE(UWIDE), .LWB(ULWB), .RWB(URWB), .LQ(ULQ)) u_su (.clk(clk), .rst_n(rr[2]), .rec_v(s_v), .rec_rdy(s_rdy),
             .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o),
             .rec_r(s_r), .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt),
             .vmq(vmq), .vmr(vmr), .s0_v(1'b0), .s0_idx(20'd0), .s0_data(32'd0), .am_stream(), .am_rdy(1'b0),
@@ -183,7 +189,7 @@ module ot_hgi_fused_record #(
             .wwq_done(own ? 32'd0 : wwq_done), .rg_req(u_rg), .rg_gnt(rg_gnt), .wg_req(u_wg), .wg_gnt(wg_gnt));
         assign s_drained = 1'b1; assign op_v = 1'b0; assign op_w = 670'd0;
     end else begin : g_port
-        ot_hgi_su_record #(.LEGACY(0)) u_su (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(s_v), .rec_rdy(s_rdy),
+        ot_hgi_su_record #(.LEGACY(0)) u_su (.clk(clk), .rst_n(rr[2]), .hgi_en(1'b1), .rec_v(s_v), .rec_rdy(s_rdy),
             .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o), .rec_r(s_r),
             .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt), .drained(s_drained),
             .lg_v(1'b0), .lg_rdy(), .lg_w(670'd0), .op_v(op_v), .op_rdy(op_rdy), .op_w(op_w), .su_idle(su_idle),
@@ -211,8 +217,8 @@ module ot_hgi_fused_record #(
     wire [17:0] g_b = scr_q;
     reg k_bad, k_hq, k_nm, k_scr, k_hce, k_hgp;   // S_DEC decisions, registered at S_G4
     reg [1:0] sudone;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_f) begin
+        if (!rst_f) begin
             st <= S_IDLE; mixed <= 1'b0; hk <= 3'd0; ce <= 21'd0; cea <= 18'd0; x_b <= 18'd0; rec_done <= 1'b0; rec_fault <= 1'b0; mv_v <= 1'b0; mv <= 0; hg_rdy <= 1'b0; s_v <= 1'b0; ne_v <= 1'b0;
             ne_job <= 0; q_rec <= 0; hdr <= 0; dA <= 0; dB <= 0; dC <= 0; dO <= 0; nA <= 0; nB <= 0; nO <= 0; sudone <= 0;
             s_hdr <= 0; s_sut <= 0; s_a <= 0; s_b <= 0; s_c <= 0; s_o <= 0; s_r <= 0; s_n <= 0;
