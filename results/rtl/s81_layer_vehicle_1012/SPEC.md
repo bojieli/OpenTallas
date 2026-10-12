@@ -80,3 +80,8 @@ cycles, rows checked; per mutant: FAIL reason; source sha256s; commit).
 - hcx coefficient producers (fn / sumsq / rsqrt / pre_post / sinkhorn) have no S81 master RTL in the HC slab yet;
   they stay behavioural ports writing golden rows until the HC owner adds them.
 - `dsfd_sp_pq` / `dsfd_pq_root` (PQC slab masters) are unowned in the die contract (`rep/pqc` assembly pending_owner).
+- PQC claim checked (2026-10-12): every closed PQC element has a bit-exact element bench + failing mutant on main
+  (`tools/s81/pqc_xrv_bench.py` for `ot_v41_pqc_spine_screen` = 9 `ot_pqc_t_*` tiles + `ot_dsrom_aq12t`;
+  `physical/s81_pq_tiles/bench_aq12t.sh`; `tools/s81/pq_root_cam_p_gate.py` for `ot_s81_pq_ret_root_cam_p`). Their
+  vectors are seeded synthetic, not the 1M token: S9 in this vehicle is the first PQC run on production data.
+  Tiles prom / srom / xin have no in-tile mutant (only the bench-level legacy-read negative).
