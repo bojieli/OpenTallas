@@ -1,14 +1,14 @@
 {
- "name": "hgi_seq_v2-v23-8447139d1",
+ "name": "hgi_seq_v2-v24-acb7765d9",
  "block": "ot_hgi_seq",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-b2-cp",
- "purpose": "ot_hgi_seq v2.3 (prefetching fetch sequencer for CP.FETCH, 0.794x of price; B2 dispatch path 0.828x): v2.2 route 905100ec5 TT -186.91 fixed structurally (registered header alloc, thermometer FIFO control, staged writes, registered DYN row / resolver operands, hold-delay cells on inputs)",
+ "purpose": "ot_hgi_seq v2.4 (CP.FETCH prefetching sequencer, cycle-identical to v2.3 on the 43-case bench): v2.3 route 8447139d1 TT -48.25 (run_q -> be_inj -> pop count pc -> 1.5k FIFO data flops, 22-24 lv, pc ~4.6k selects) fixed structurally by a LAZY-SHIFT FIFO (storage lags the view by the registered pop count, replicated per entry/reader; fq_th moved by a 5-way shift select); FF -15.5 (flop->ring macro wd/we, input pins) by 2 kept HB4 stages on inputs and macro write data/enables; M5 layer cap; main flow fixes (hold measured after parasitics)",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-hbm-b2-cp",
-  "commit": "8447139d1",
+  "commit": "acb7765d9",
   "extra_paths": [
    "rtl/hbm_accel/generic/tb",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_seq_v2/hgi_seq_v2-v23-8447139d1"
+   "to": "results/rtl/ref_tile/hgi_seq_v2/hgi_seq_v2-v24-acb7765d9"
   }
  ],
  "cycles_added": 0,

@@ -385,6 +385,8 @@ def main(argv=None):
     ap.add_argument('--version', type=int, default=1)
     ap.add_argument('--note', default='')
     ap.add_argument('--relays', action='store_true', help='also count segments over reach with no physical relay')
+    ap.add_argument('--pins', choices=['pinned', 'gen'], default='pinned',
+                    help='gen: every slot from the generator masters (B2 / v10: the ports_r25gqn records are pre-B2)')
     ap.add_argument('--variant', default='r25gqn', help='hbm_accel_die_fp ds-var preset (r25gqn; r25gqn_pr = physical relays)')
     a = ap.parse_args(argv)
     sys.argv = [sys.argv[0]]
@@ -401,7 +403,7 @@ def main(argv=None):
             wp[mn] += len(its)
             continue
         mst = M.get(mn)
-        pins = pinned_ports(mn) or (gen_ports(mst) if mst else {})
+        pins = (pinned_ports(mn) if a.pins == 'pinned' else None) or (gen_ports(mst) if mst else {})
         ck = {p: v for p, v in pins.items() if re.fullmatch(r'(ck|clk|ckt?)\d*|ck[wens]\d*|clk_\w+', p)}
         obs = getattr(mst, 'obs_top', 7) if mst else 7
         h = HIER.get(mn, dict(decision='hard_macro_ip' if its[0].kind in ('phy', 'serdes_slab') or mn.startswith('ot_')
@@ -418,7 +420,7 @@ def main(argv=None):
             hierarchy=h,
             clock_entry=[dict(pin=p, **v) for p, v in ck.items()] or 'die H-tree leaf at the block ck pin (phys_trees)',
             pins=pins,
-            pin_source='ports_r25gqn (pinned)' if (PINNED / mn / 'ports.json').exists() else 'generator masters()',
+            pin_source='ports_r25gqn (pinned)' if a.pins == 'pinned' and (PINNED / mn / 'ports.json').exists() else 'generator masters()',
             io_budget=dict(IO_DEFAULT),
             layers=dict(signal_top=f'M{min(obs, 7)}', pg='M7 stripes (PG pins)', die_strap='M8', violations=viol),
         )

@@ -1,0 +1,125 @@
+{
+ "name": "ot_hgi_topk_heap_tile_m5",
+ "top": "ot_hgi_topk_heap_tile",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "MAX_K": 2048
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 260.0,
+  "h": 260.0
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 3
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1
+  }
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "clr_go",
+   "k",
+   "op_ext",
+   "op_v",
+   "op_x",
+   "rst_n"
+  ],
+  "E": [
+   "ext_d",
+   "ext_v",
+   "idle",
+   "op_cr",
+   "root_key"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed hgi-idx-topk-tile-a-f87bdf90d-tc-cl (ot_hgi_topk_heap_tile, RTL f87bdf90d, snapshot of 2 drifted files): same RTL, outline 260.0x260.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-hbm-idx",
+  "benches": [
+   {
+    "name": "heap_iw8w8_short_exact",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hgi_topk_heap_tile_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/. $B/ && cd $B && { bash tools/hgi_topk_heap_bench.sh {RUN}/bench/dropin -DIW=8 -DHW=8 -DSHORT\n}",
+    "expect": "pass",
+    "pass_regex": "^HGI_TOPK_HEAP PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200,
+    "note": "[m5rr: run on the f87bdf90d snapshot overlay of physical/ref_tile/ot_hgi_topk_heap_tile_m5/src]"
+   },
+   {
+    "name": "heap_iw8w8_full_exact",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hgi_topk_heap_tile_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/. $B/ && cd $B && { bash tools/hgi_topk_heap_bench.sh {RUN}/bench/w2 -DIW=8 -DHW=8\n}",
+    "expect": "pass",
+    "pass_regex": "^HGI_TOPK_HEAP PASS \\(16 cases\\)",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200,
+    "note": "[m5rr: run on the f87bdf90d snapshot overlay of physical/ref_tile/ot_hgi_topk_heap_tile_m5/src]"
+   },
+   {
+    "name": "heap_bypass_mutant",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hgi_topk_heap_tile_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/. $B/ && cd $B && { bash tools/hgi_topk_heap_bench.sh {RUN}/bench/mbyp -DIW=8 -DHW=8 -DSHORT -DOT_TOPK_HEAP_MUT_BYP\n}",
+    "expect": "fail",
+    "fail_regex": "HGI_TOPK_HEAP FAIL errors",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200,
+    "note": "[m5rr: run on the f87bdf90d snapshot overlay of physical/ref_tile/ot_hgi_topk_heap_tile_m5/src]"
+   },
+   {
+    "name": "heap_clear_mutant",
+    "cmd": "B={RUN}/bsrc_m5_3; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_hgi_topk_heap_tile_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/. $B/ && cd $B && { bash tools/hgi_topk_heap_bench.sh {RUN}/bench/mclr -DIW=8 -DHW=8 -DSHORT -DOT_TOPK_HEAP_MUT_CLR\n}",
+    "expect": "fail",
+    "fail_regex": "HGI_TOPK_HEAP FAIL errors",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200,
+    "note": "[m5rr: run on the f87bdf90d snapshot overlay of physical/ref_tile/ot_hgi_topk_heap_tile_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "ot_hgi_topk_heap_tile",
+  "closed_job": "hgi-idx-topk-tile-a-f87bdf90d-tc-cl",
+  "closed_commit": "f87bdf90d6c99aac3ee4567a8a41e729c28dee25",
+  "snapshot": [
+   "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv",
+   "tools/hgi_topk_heap_bench.sh"
+  ],
+  "orig_owner": "Claude:el1011-hbm-idx"
+ }
+}
