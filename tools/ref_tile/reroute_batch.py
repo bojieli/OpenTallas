@@ -474,6 +474,11 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
             b["cmd"] = ov + "{ " + b["cmd"] + "\n}"
             b["note"] = (b.get("note", "") + f" [m5rr: run on the {commit[:9]} snapshot overlay of {kd}/src]").strip()
     W, H = lef["W"], lef["H"]
+    # vertical-face pin capacity at the M5 cap: PPL keeps PIN_MIN_TRACKS=2 on the vertical pin layer (M5, 48 nm pitch),
+    # so a N/S face holds ~W/0.096 pins on M5 alone; a face fuller than 90% of that gets M3 too (M3 M5, both under the
+    # cap; ot_pqc_t_ix: 1,024 xw pins on a 97.2-um N face, PPL-0111 with M5 only, its closed view had M3 + M5)
+    ns = {fc: sum(faces[b].get(fc, 0) for b in faces) for fc in ("N", "S")}
+    route_x = {"pin_v": "M3 M5"} if max(ns.values()) > 0.9 * W / 0.096 else {}
     contract = None
     for f_, d in contracts():
         for sl in d["slots"]:
@@ -488,7 +493,7 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
         "clock_port": clk, "reset_ports": rst, **({"contract": contract} if contract else {"outline": {"w": W, "h": H}}), "macros": macros, "pins": pins,
         **({"defines": defines} if defines else {}), **({"orfs_vars": orfs_vars} if orfs_vars else {}),
         **({"post_synth_tcl": post_synth} if post_synth else {}), **({"sdc_extra": sdc_x} if sdc_x else {}),
-        "route": {"pd": float(v.get("PLACE_DENSITY", 0.55) or 0.55), "threads": 8,
+        "route": {"pd": float(v.get("PLACE_DENSITY", 0.55) or 0.55), "threads": 8, **route_x,
                   "peak_ram_gb": int((rec["spec"].get("stages") or {}).get("route", {}).get("peak_ram_gb") or 32)},
         "job": {"owner": OWNER, "branch": BRANCH, "tag": "m5",
                 "purpose": (f"M5 re-route (reroute_batch.py) of closed {rec['job']} ({cell}, RTL {commit[:9]}"
