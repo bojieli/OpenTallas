@@ -49,6 +49,10 @@ DB=${ECO_RB_DB:-5_2_route.odb}; [ -f $RB/$DB ] || DB=6_final.odb   # ECO_RB_DB=6
 # (pre-fill route db; the tcl removes fillers otherwise)
 CUR_DIR=$RB; CUR_DB=$DB; CUR_SPEF=$OB/6_final.spef; [ -f $CUR_SPEF ] || CUR_SPEF=$RB/6_final.spef
 PS=""; for p in "$@"; do PS="$PS /src/$p"; done
+MACROS=${MACROS:-}
+if [ -n "$MACROS" ]; then  # MACRO-VIEW (2026-10-11): a bare SRAM master in verdict.macros crashed every ECO (ORD-0001)
+  MACROS=$(python3 "$CLD/macro_views.py" --root "$PWD" $MACROS) || { echo "MACROS unresolvable against the source snapshot: refusing to run without the macro LEF/lib"; exit 2; }
+fi
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 CS_ARGS=$(for p in "$@"; do echo -n " --post-sdc $p"; done; for m in ${MACROS:-}; do echo -n " --macro $m"; done)
 ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
