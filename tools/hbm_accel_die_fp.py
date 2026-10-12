@@ -594,8 +594,10 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # wire chain (stations <= 67 um); die routes cross the tiles on M8 / M9. face_coll 1,560 (el1011-hbm-coll: 9 tiles +
              # core SRAMs, hierarchical hfd_coll): the spine stack re-gaps evenly (cross gap loader -> coll 302.4 kept)
              coll_h=1560.0,
-             hc_wh=(2032.944, 1684.8),    # hbmdie-1011 contract v1: tiled HC quarter 3.425 mm2 (55 % at 88 tiles); cons asked 2,263.68 x 1,499.04 but the
-             # W hub has 18.6 um x slack and 3.1 mm of empty HC column below the quarter -> same area as a TALLER slot
+             hc_wh=(2263.68, 1499.04), hc_col_w=2032.944,    # hbmdie-1011 contract v6: the CLOSED tiled hfd_hc quarter (88
+             # hfd_hc_tile_xl 8 x 11, pka10 view; r25gqw ports, E-face pins +230.736) -- the die adapts to the closed element.
+             # Wider than its column, it keeps its SU-facing edge (ix_x + hc_col_w, the v1 slot's) and grows AWAY from the
+             # spine into the HC | attention channel (345.6 -> 114.96 um); the v1 2,032.944 x 1,684.8 taller slot is retired
              phys_trees=True,
              pg_m8_masters=(),   # hbmdie-1011 contract v1 (layer rule: M8/M9 die top only): the hfd_hc quarter cluster takes M7 PG
              # stripes (its tiles PG M6 / signals <= M6, quarter straps M7), die joins M7-M8 like every block; 7c875ca6c's M8 PG path kept off.   # conservative-1011 a0bda978e: tiled hfd_hc PG pins on M8 (die M9 straps join by via89)      # hbmdie-1011 textbook audit rows 2-3: regional pipelined reset tree + clock H-tree per domain
@@ -834,7 +836,8 @@ def build_r25gq(variant):
         # hfd_hc_tile_xl at ~55 %).  The column cannot widen (W slack 18.6 um to the die edge channel) but the R25GQ HC
         # column is empty below the HC (the index stack left it), so the quarter grows in HEIGHT, its equator-side edge fixed
         assert V.get('att_su_relays'), 'hc_wh needs the R25GQ hub (no index stack in the HC column)'
-        assert V['hc_wh'][0] <= ix_w + 1e-6, ('HC wider than its column', V['hc_wh'][0], ix_w)
+        # contract v6: a quarter wider than the column overhangs it on the attention side (one row-1 station + 2 x 20 um left)
+        assert V['hc_wh'][0] - ix_w <= V['hub_col_gap'] - 43.2 - 2 * 20.0, ('HC overhang closes the channel', V['hc_wh'][0], ix_w)
     ix_x = dn(su_x - V['hub_col_gap'] - ix_w, GX)
     tw = B['at_SW_00_lo'].w
     at_w = V['attn_cols'] * tw + (V['attn_cols'] - 1) * V['attn_col_gap']
@@ -889,7 +892,11 @@ def build_r25gq(variant):
             hc_y = min(dn(hc_y + up(V['hc_mm2'] * 1e6 / ix_w, GY) - hc_h, GY), dn(qy + qh - hc_h, GY))
             assert hc_y >= qy, ('taller HC leaves its column', hc_y, qy)
         assert hc_y + hc_h <= qy + qh, ('HC over the index stack overflows', hc_y + hc_h, qy + qh)
-        put(f'hb_hc_{q}', 'hb_hc_SW', ix_x, hc_y, V['hc_wh'][0] if V.get('hc_wh') else ix_w, hc_h)
+        hc_w = V['hc_wh'][0] if V.get('hc_wh') else ix_w
+        # v6: the SU-facing edge stays where the v1 slot had it (ix_x + hc_col_w): the mirrored E copies keep their 0.432-grid
+        # origin, the W copies land on the 0.048 track grid (as the v1 slot's E edge did)
+        hc_x = ix_x if hc_w <= ix_w + 1e-6 else round(ix_x + V.get('hc_col_w', ix_w) - hc_w, 6)
+        put(f'hb_hc_{q}', 'hb_hc_SW', hc_x, hc_y, hc_w, hc_h)
         rmap[f'hb_hc_{q}'] = f'hb_hc_{q}'
         ty0 = up(qy + (qh - at_h0) / 2, GY)
         if V.get('attn_tall'):      # S top below the die equator with half the >= 346 um central corridor
@@ -930,13 +937,33 @@ def build_r25gq(variant):
         regions.append(dict(name=f'grp_{st}', kind='field', rect=[xa_, y0_, xb_, y1_]))
     regions.append(dict(name='hub', kind='hub', rect=[g0['x0'], hb0, g0['x0'] + g0['core_w'], hb1]))
     if V.get('att_su_relays'):
-        for r_ in json.loads((ROOT / V['att_su_relays']).read_text())['relays']:
+        rl_ = json.loads((ROOT / V['att_su_relays']).read_text())['relays']
+        rby_ = {q_['name']: q_ for q_ in rl_}
+        for r_ in rl_:
             y_r = r_['y'] + V.get('svc_ch_dh', 0.0)    # rf2: the hub band moves up by svc_ch_dh
             if V.get('hc_wh') and re.fullmatch(r'rly_N[WE]_1_\d+', r_['name']):
                 # hbmdie-1011: the N tr row-1 chain runs just above the N HC quarter; the taller quarter pushes the whole
                 # row (all 8 stations, so every hop keeps its length but the tile -> first relay hop) up by the growth
                 y_r = round(y_r + up(V['hc_wh'][1], GY) - up(V['hc_mm2'] * 1e6 / (2 * B['hb_index_SW_b0'].w + V['idx_col_gap']), GY), 6)
-            insts.append(Inst(r_['name'], r_['master'], r_['x'], y_r, r_['w'], r_['h'], r_['orient'], kind='waypoint',
+            x_r = r_['x']
+            if V.get('hc_wh') and V['hc_wh'][0] > 2 * B['hb_index_SW_b0'].w + V['idx_col_gap'] + 1e-6 and \
+                    re.fullmatch(r'rly_N[WE]_1_1', r_['name']):
+                # contract v6: the wider N HC quarter takes the channel column this station sat in; it moves to the centre
+                # of the narrowed HC | attention channel, at the height that balances its hops 1_0 -> 1_1 -> 1_2 (<= 504 um)
+                hq_ = next(i for i in insts if i.name == f"hb_hc_N{r_['name'][5]}")
+                at_ = [i for i in insts if i.kind == 'attn_tile' and i.name.startswith(f"at_N{r_['name'][5]}")]
+                if r_['name'][5] == 'W':
+                    c0_, c1_ = max(i.x + i.w for i in at_ if i.x < hq_.x), hq_.x
+                else:
+                    c0_, c1_ = hq_.x + hq_.w, min(i.x for i in at_ if i.x > hq_.x)
+                assert c1_ - c0_ >= r_['w'] + 40.0, ('HC | attention channel too narrow for the row-1 station', c0_, c1_)
+                x_r = round(dn((c0_ + c1_ - r_['w']) / 2, GX), 6)
+                p0_, p2_ = rby_[r_['name'][:-1] + '0'], rby_[r_['name'][:-1] + '2']     # same y shift as this station
+                y0_, y2_ = p0_['y'] + y_r - r_['y'], p2_['y'] + y_r - r_['y']
+                y_r = round(up((y0_ + y2_ + abs(p2_['x'] - x_r) - abs(x_r - p0_['x'])) / 2, GY), 6)
+                h0_, h2_ = abs(x_r - p0_['x']) + abs(y_r - y0_), abs(p2_['x'] - x_r) + abs(y2_ - y_r)
+                assert max(h0_, h2_) <= 504.0, ('row-1 station hops over reach', r_['name'], h0_, h2_)
+            insts.append(Inst(r_['name'], r_['master'], x_r, y_r, r_['w'], r_['h'], r_['orient'], kind='waypoint',
                               region='channel', domain='stream_1p2'))
     notes.append(f'R25GQ: SM rows at {row_y} (S), hub blocks {hb0:.2f}-{hb1:.2f} um, quadrant {qh:.2f} um; spine gap '
                  f'{g_:.2f} um (+ abut 43.2 / cross {V["spine_cross_um"]})')
