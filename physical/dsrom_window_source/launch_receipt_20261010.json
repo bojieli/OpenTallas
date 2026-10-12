@@ -1,0 +1,32 @@
+{
+  "name": "s81b-wsrc-pinroot-605d751a5-hm10",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-wsrc-pinroot-605d751a5-hm10",
+  "status": "RUNNING",
+  "stage_key": "route",
+  "commit_full": "605d751a5cfc0935aa87b1b81d584a126779d3be",
+  "benches": {
+    "bench_request-skid-exact-mutant": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "source manifest verified 27\nPASS source-manifest and production W339 skid positive/mutant\n",
+      "track": "parallel"
+    }
+  },
+  "calibration": null,
+  "events": [
+    "2026-10-10T05:01:27-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81b-wsrc-pinroot-605d751a5-hm10.json",
+    "2026-10-10T05:01:38-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+    "2026-10-10T05:02:26-07:00 NEEDS_HUMAN: source commit 605d751a5cfc is not on origin/codex/wsrc-root-20261010",
+    "2026-10-10T05:02:47-07:00 human retry: re-queued from stage None",
+    "2026-10-10T05:04:16-07:00 source 605d751a5cfc synced to ot-epyc3:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81b-wsrc-pinroot-605d751a5-hm10/src",
+    "2026-10-10T05:05:37-07:00 bench track: launched bench_request-skid-exact-mutant (bench_request-skid-exact-mutant.a2b1) beside None",
+    "2026-10-10T05:05:37-07:00 calibrate in PARALLEL: route starts now on the assumed insertion (measured_insertion.json TT (routed, s81b-wsrc-m2-tc-3ee14f399-hm10-d2056, 2026-10-09T07:16:22-07:00): SS 538 / FF 433); the measurement is checked at the verdict",
+    "2026-10-10T05:06:12-07:00 bench track: bench_request-skid-exact-mutant PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-10T05:06:16-07:00 bench track: launched bench_late-payload-mutant (bench_late-payload-mutant.a2b1) beside calibrate",
+    "2026-10-10T05:06:21-07:00 parallel calibrate launched (calibrate.a2c1) beside calibrate",
+    "2026-10-10T05:06:26-07:00 launched route (attempt 2) on ot-epyc3"
+  ],
+  "scope": "Immutable launch receipt only, not final physical verdict; successor source605d751a5 uses ordinary measured closure-loop admission, existing progressing attempts preserved."
+}
