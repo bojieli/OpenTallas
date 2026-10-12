@@ -19,8 +19,20 @@ add_pdn_connect -grid {top} -layers {M1 M2}
 add_pdn_connect -grid {top} -layers {M2 M5}
 add_pdn_connect -grid {top} -layers {M5 M6}
 add_pdn_connect -grid {top} -layers {M6 M7}
-define_pdn_grid -name {hard_m6} -voltage_domains {CORE} -macro \
-  -cells {ot_coll_fold_slice} -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
-add_pdn_connect -grid {hard_m6} -layers {M6 M7}
-define_pdn_grid -name {sram} -voltage_domains {CORE} -macro -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0} -default
-add_pdn_connect -grid {sram} -layers {M4 M5}
+# el1011-q-coll: each macro grid only when the block holds that master (hbm-idx 8d848821f: an unused macro grid aborts
+# with PDN-0217).
+proc ot_hier_has_master {pats} {
+  foreach inst [[ord::get_db_block] getInsts] {
+    set m [[$inst getMaster] getName]
+    foreach p $pats { if {[string match $p $m]} { return 1 } }
+  }
+  return 0
+}
+if {[ot_hier_has_master {ot_coll_fold_slice}]} {
+  define_pdn_grid -name {hard_m6} -voltage_domains {CORE} -macro -cells {ot_coll_fold_slice} -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
+  add_pdn_connect -grid {hard_m6} -layers {M6 M7}
+}
+if {[ot_hier_has_master {ot_sram_*}]} {
+  define_pdn_grid -name {sram} -voltage_domains {CORE} -macro -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0} -default
+  add_pdn_connect -grid {sram} -layers {M4 M5}
+}

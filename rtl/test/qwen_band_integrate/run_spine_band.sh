@@ -11,7 +11,7 @@ F="rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.s
    rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv
    rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv
    rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv rtl/qwen_sys/band_integrate_20261008/ot_qfd_spine_band.sv
-   rtl/test/qwen_band_integrate/tb_qfd_spine_band.sv"
+   rtl/test/qwen_band_integrate/tb_qfd_spine_band.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
 mkdir -p $out
 $V --binary --timing -j ${JOBS:-8} -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTH -Wno-MULTIDRIVEN \
    --x-assign 0 --x-initial 0 --top-module tb_qfd_spine_band --Mdir $out/obj "$@" $F > $out/build.log 2>&1 \
