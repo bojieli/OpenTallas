@@ -1,0 +1,122 @@
+{
+ "name": "qfd_embed_ingress_scale_rt",
+ "top": "qfd_embed_ingress_scale",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/qfd_embed_ingress_scale_rt/src/qfd_embed_ingress_scale.sv",
+  "rtl/physical/ot_qwen_embedding_ingress_island.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 15.12,
+  "h": 15.12
+ },
+ "pg_layer": "M6",
+ "pins": {
+  "W": [
+   "address",
+   "valid",
+   "credit"
+  ],
+  "E": [
+   "address_q",
+   "address_n",
+   "valid_q",
+   "valid_n",
+   "credit_q",
+   "credit_n"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "inter": [
+  "address*",
+  "valid*",
+  "credit*"
+ ],
+ "refglob": "*valid_q*",
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-rr1012-emb",
+  "branch": "claude/el1011-rr1012-emb",
+  "tag": "rr1012",
+  "purpose": "rr1012: child_lint (c) fix of closed qfd_embed_ingress_scale-0e025d03c (signal OBS on M7 over M6 PG): same RTL/outline/pin faces/benches through tools/ref_tile (RLAYERS M2-M6, PG M6, parent straps M7); cell = qfd_embed_ingress_scale as the scale bank parents instantiate",
+  "benches": [
+   {
+    "name": "exact0",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_island -Ptb_qwen_embed_scale_bank_island.BANK_ID=0 -o {RUN}/bench/exact0 rtl/test/tb_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/exact0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS scale bank=0 rows="
+   },
+   {
+    "name": "exact1",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_island -Ptb_qwen_embed_scale_bank_island.BANK_ID=1 -o {RUN}/bench/exact1 rtl/test/tb_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/exact1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS scale bank=1 rows="
+   },
+   {
+    "name": "exact2",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_island -Ptb_qwen_embed_scale_bank_island.BANK_ID=2 -o {RUN}/bench/exact2 rtl/test/tb_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/exact2",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS scale bank=2 rows="
+   },
+   {
+    "name": "bad_address",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_island -DSCALE_NEG_ADDRESS -o {RUN}/bench/bad_ADDRESS rtl/test/tb_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/bad_ADDRESS",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FAIL scale payload/order"
+   },
+   {
+    "name": "bad_lane",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_embed_scale_bank_island -DSCALE_NEG_LANE -o {RUN}/bench/bad_LANE rtl/test/tb_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embed_scale_bank_island.sv rtl/physical/ot_qwen_embedding_ingress_island.sv && vvp {RUN}/bench/bad_LANE",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FAIL scale payload/order"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_embed_ingress_scale_rt/views",
+  "record_to": "results/rtl/ref_tile/qfd_embed_ingress_scale_rt"
+ },
+ "closed_ref": {
+  "job": "qfd_embed_ingress_scale-0e025d03c",
+  "commit": "0e025d03ce6f1a2ca970bbcc8e337ce8cb8a2409",
+  "archive": "/home/ubuntu/closed_archive/qfd_embed_ingress_scale/qfd_embed_ingress_scale-0e025d03c"
+ },
+ "params": {},
+ "macros": [],
+ "children": []
+}
