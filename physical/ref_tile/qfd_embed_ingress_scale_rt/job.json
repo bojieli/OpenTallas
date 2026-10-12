@@ -1,5 +1,5 @@
 {
- "name": "qfd_embed_ingress_scale_rt-rr1012-COMMIT",
+ "name": "qfd_embed_ingress_scale_rt-rr1012-c3e1d43b0",
  "block": "qfd_embed_ingress_scale",
  "ref_tile": true,
  "owner": "Claude:el1011-rr1012-emb",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/el1011-rr1012-emb",
-  "commit": "COMMIT"
+  "commit": "c3e1d43b0"
  },
  "stages": {
   "bench": [
@@ -132,7 +132,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_embed_ingress_scale_rt/qfd_embed_ingress_scale_rt-rr1012-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_embed_ingress_scale_rt/qfd_embed_ingress_scale_rt-rr1012-c3e1d43b0"
   }
  ],
  "cycles_added": 0,
