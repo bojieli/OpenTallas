@@ -940,7 +940,8 @@ module ot_qfd_vm_grp #(
     parameter integer USE_MACRO = 0,
     parameter integer NPP = 6,
     parameter integer MEREG = 1,         // 1: me_in is me_en one edge early (registered here: the tile's replica)
-    parameter integer FSW = 128          // x FIFO slice width: each FSW-bit slice owns kept one-hot wp/rp + push/pop replicas
+    parameter integer FSW = 32           // x FIFO slice width: each FSW-bit slice owns kept one-hot wp/rp + push/pop replicas
+                                         // (128 -> 32 after e39fac4f9: pp_k -> 128 xo enables across the pin face was -1,068.9 ps)
 ) (
     input  wire                      clk,
     input  wire                      rst_n,
