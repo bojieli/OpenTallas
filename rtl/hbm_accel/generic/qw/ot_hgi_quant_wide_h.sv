@@ -111,11 +111,16 @@ module ot_hgi_quant_wide_h #(
             .wwq_done(f_wwq_done[q*4 +: 4]), .c_y(q < 4 ? wy2a : wy2b), .c_v(wv2[q*4 +: 4]), .c_slot(wsl_b), .c_sec(wsec_b),
             .e_wcr(e_wcr[q*4 +: 4]), .e_done(e_done[q*4 +: 4]));
     end endgenerate
-    // event relays (tile face -> centre)
-    reg [31:0] ev_push, ev_rcr, ev_wcr, ev_done;
+    // event relays (tile face -> centre): two stages (a corner quad of the 778 x 691 cluster is ~560 um from the centre
+    // counters); a later event only returns a credit / count later, so every decision stays conservative and exact.
+    reg [31:0] e1_push, e1_rcr, e1_wcr, e1_done, ev_push, ev_rcr, ev_wcr, ev_done;
     always @(posedge clk or negedge rr_n[1])
-        if (!rr_n[1]) begin ev_push <= 0; ev_rcr <= 0; ev_wcr <= 0; ev_done <= 0; end
-        else begin ev_push <= e_push; ev_rcr <= e_rcr; ev_wcr <= e_wcr; ev_done <= e_done; end
+        if (!rr_n[1]) begin
+            e1_push <= 0; e1_rcr <= 0; e1_wcr <= 0; e1_done <= 0; ev_push <= 0; ev_rcr <= 0; ev_wcr <= 0; ev_done <= 0;
+        end else begin
+            e1_push <= e_push; e1_rcr <= e_rcr; e1_wcr <= e_wcr; e1_done <= e_done;
+            ev_push <= e1_push; ev_rcr <= e1_rcr; ev_wcr <= e1_wcr; ev_done <= e1_done;
+        end
     // ---------------------------------------------------------------- counters (take last cycle's hit vectors)
     reg [CW-1:0] rcr [0:31], wcr [0:31];
     reg [LW:0] lf_n [0:31], lf_r [0:31];
