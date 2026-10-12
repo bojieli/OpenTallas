@@ -226,7 +226,12 @@ proc ot_clock_spine {} {
       lappend ::ot_sp_obs [list [expr {[$b xMin] - $halo}] [expr {[$b yMin] - $halo}] [expr {[$b xMax] + $halo}] [expr {[$b yMax] + $halo}]]
     }
   }
+  # only HARD placement blockages exclude spine cells: soft / partial-density blockages are global-placer guidance (e.g. the
+  # hcoll pin-flop channel guides cover every face strip beside the SRAM columns; treating them as hard left no legal site
+  # for the west-face leaves -> 'no legal site', hcoll-port-tile10 g10a/g10b).  Spine cells are FIRM, so legal there.
   foreach g [$blk getBlockages] {
+    if {[$g isSoft]} continue
+    if {[catch {$g getMaxDensity} md] == 0 && $md > 0 && $md < 100} continue
     set b [$g getBBox]; lappend ::ot_sp_obs [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
   }
   set ::ot_sp_rowor [dict create]; set ::ot_sp_ry0 ""; set ::ot_sp_rx0 ""
