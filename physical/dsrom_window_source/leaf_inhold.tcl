@@ -38,8 +38,8 @@ foreach bt [$ot_ih_blk getBTerms] {
   [$cell findITerm A] connect $net
   [$cell findITerm Y] connect $n2
   if {$ot_ih_dm ne "NULL"} {
-    set drv [odb::dbInst_create $ot_ih_blk $ot_ih_dm [format "ot_inhold_drv_%05d" $ot_ih_n]]
-    set n3 [odb::dbNet_create $ot_ih_blk [format "ot_inhold_nd%05d" $ot_ih_n]]
+    set drv [odb::dbInst_create $ot_ih_blk $ot_ih_dm [format "ot_ihdrv_%05d" $ot_ih_n]]
+    set n3 [odb::dbNet_create $ot_ih_blk [format "ot_ihdrv_n%05d" $ot_ih_n]]
     [$drv findITerm A] connect $n2
     [$drv findITerm Y] connect $n3
     $d connect $n3
