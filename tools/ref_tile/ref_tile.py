@@ -531,7 +531,22 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     r = s["route"]
     srcs = " ".join(s["sources"])
     params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
-    pins = " ".join(f"--pin-region {shq(pin_regex(v) + '=' + FACES[f])}" for f, v in s["pins"].items() if v and f != "ANY")
+    # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
+    # a face tile's bus pins sit at the end facing their die neighbour and >= the given margin off the tile corners
+    # ([vm8cp] corner-pin DRT-0255 class); ports without a range keep the whole face.
+    rng = s.get("pin_ranges") or {}
+    regs = []
+    for f, v in s["pins"].items():
+        if not v or f == "ANY":
+            continue
+        plain = [n for n in v if n not in rng]
+        if plain:
+            regs.append(pin_regex(plain) + "=" + FACES[f])
+        for n in v:
+            if n in rng:
+                lo, hi = rng[n]
+                regs.append(pin_regex([n]) + "=" + FACES[f] + f":{float(lo):g}-{float(hi):g}")
+    pins = " ".join(f"--pin-region {shq(r)}" for r in regs)
     views = sorted({b["view"] for b in blocks})
     extra = ["--orfs-var ADDER_MAP_FILE=", f"--orfs-var PDN_TCL=/src/{kd}/pdn.tcl",
              f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}",

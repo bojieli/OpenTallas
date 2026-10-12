@@ -1,0 +1,58 @@
+{
+ "name": "vm_cp_fe2",
+ "top": "vm_cp_fe2",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_fwd_link_stage.sv",
+  "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_fe2.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 16.2,
+  "h": 500.028
+ },
+ "pg_layer": "M7",
+ "pins": {
+  "E": [
+   "t_su_NE",
+   "xNE"
+  ],
+  "W": [
+   "ck",
+   "ph",
+   "tap"
+  ]
+ },
+ "pin_ranges": {
+  "t_su_NE": [
+   2.0,
+   498.028
+  ],
+  "xNE": [
+   2.0,
+   498.028
+  ],
+  "ph": [
+   250,
+   498
+  ],
+  "tap": [
+   2,
+   250
+  ],
+  "ck": [
+   249.014,
+   251.014
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4 M6"
+ },
+ "forwarded_clock": true
+}

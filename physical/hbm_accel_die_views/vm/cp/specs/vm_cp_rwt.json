@@ -1,0 +1,62 @@
+{
+ "name": "vm_cp_rwt",
+ "top": "vm_cp_rwt",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_fwd_link_stage.sv",
+  "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rwt.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 16.2,
+  "h": 518.4
+ },
+ "pg_layer": "M7",
+ "pins": {
+  "E": [
+   "tap",
+   "st"
+  ],
+  "W": [
+   "ck",
+   "sw",
+   "nw",
+   "sto"
+  ]
+ },
+ "pin_ranges": {
+  "tap": [
+   244,
+   444
+  ],
+  "st": [
+   244,
+   444
+  ],
+  "sw": [
+   2,
+   264
+  ],
+  "nw": [
+   268,
+   516
+  ],
+  "sto": [
+   2,
+   264
+  ],
+  "ck": [
+   258.2,
+   260.2
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4 M6"
+ }
+}

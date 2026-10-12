@@ -1,0 +1,58 @@
+{
+ "name": "vm_cp_fe3",
+ "top": "vm_cp_fe3",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_fwd_link_stage.sv",
+  "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_fe3.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 10.8,
+  "h": 500.028
+ },
+ "pg_layer": "M7",
+ "pins": {
+  "E": [
+   "f_su_NE",
+   "iNE",
+   "qNE"
+  ],
+  "W": [
+   "ck",
+   "ph"
+  ]
+ },
+ "pin_ranges": {
+  "f_su_NE": [
+   2.0,
+   498.028
+  ],
+  "iNE": [
+   2.0,
+   498.028
+  ],
+  "qNE": [
+   2.0,
+   498.028
+  ],
+  "ph": [
+   12,
+   400
+  ],
+  "ck": [
+   249.014,
+   251.014
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4 M6"
+ },
+ "forwarded_clock": true
+}
