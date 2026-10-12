@@ -7,12 +7,22 @@
 // fe-h: U1_HQ2 = 1 (two-word FIFO head, register-only fill enable) must also match; U1_HQ2 = 2 (overwrite mutant) must FAIL.
 module tb_qfd_seq_su_bi_psram;
     parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50;
-    parameter integer U1_PSRAM = 1, U1_HQ2 = 0;      // the instance under test (u0 = PSRAM 0, HQ2 0); fe-h: HQ2 1, mutant HQ2 2
+    parameter integer U1_PSRAM = 1, U1_HQ2 = 0;
+    parameter integer U1_OLAG = 0;                  // el1011-q-seq: lagged other-unit counter (2 = mutant)
+    parameter integer U1_PCUT = 0;                  // el1011-q-seq: exact controller path cuts (2 = mutant)
+    parameter integer U1_RRG = 0;                   // el1011-q-seq: replicated tile reset (2 = vm_wdata mutant, must FAIL)      // the instance under test (u0 = PSRAM 0, HQ2 0); fe-h: HQ2 1, mutant HQ2 2
     localparam integer W = 16, G = 6144, AW = 24, NW = 18, SW = 64;
     reg clk = 0, rst_n = 1;
     initial #0.1 rst_n = 0;                          // a real negedge: every async reset fires (4-state sim)
     always #0.5 clk = ~clk;
     integer seed = SEED, cyc = 0, bad = 0, nrd = 0, nld = 0, k, i;
+    reg [15:0] xp = 0;
+    integer nceq = 0;
+    integer ncd = 0, ncw = 0, ncol = 0, nvw = 0;   // el1011-q-seq coverage: core_done, S_CWAIT / S_COLL cycles, vm_wdata writes (vm_we)
+    parameter integer MINVW = 0;
+    parameter integer PCOV = 0;                   // el1011-q-seq: 1 = small chase targets + a climbing x_oprog (PCUT chase coverage)
+    parameter integer ARCOV = 0;                  // el1011-q-seq: 1 = programs reach their end word (UNIT 0, p 1/2) and descriptors are
+                                                  //   mostly AR with 1-8 words, so the sequencer runs the collective and writes vm_wdata                  // el1011-q-seq: minimum vm_wdata writes for a PASS (the AR receive path)
     reg [23:0] xacc = 0;
     reg  [1-1:0] h_start = 0;
     reg  [NW-1:0] tp_token = 0;
@@ -203,7 +213,7 @@ module tb_qfd_seq_su_bi_psram;
         .su_idle_o(su_idle_o_0),
         .su_prog_o(su_prog_o_0),
         .su_rows_o(su_rows_o_0));
-    ot_qfd_seq_su_bi #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2)) u1 (
+    ot_qfd_seq_su_bi #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .RRG(U1_RRG), .PCUT(U1_PCUT), .OLAG(U1_OLAG)) u1 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
@@ -342,6 +352,8 @@ module tb_qfd_seq_su_bi_psram;
             @(negedge clk); pw_v = 1; pw_addr = k; pw_data = {$random(seed), $random(seed)};
             if (k % 16 == 0) begin         // slice 0: unit / barrier / chase / waits biased toward progress (mostly ME / SU ops)
                 pw_data[1:0] = (($random(seed) & 15) == 0) ? 2'd0 : (($random(seed) & 1) ? 2'd1 : 2'd2);
+                if (ARCOV != 0 && ($random(seed) & 1)) pw_data[1:0] = 2'd0;
+                if (PCOV != 0) begin pw_data[3] = $random(seed) & 1; pw_data[19:4] = 16'(1 + ($random(seed) & 3)); end
                 pw_data[3:2] = (($random(seed) & 7) == 0) ? 2'($random(seed)) : 2'd0;
                 pw_data[21:20] = (($random(seed) & 7) == 0) ? 2'($random(seed)) : 2'd0;
             end
@@ -349,6 +361,7 @@ module tb_qfd_seq_su_bi_psram;
         for (k = 0; k < 8; k = k + 1) begin
             @(negedge clk); pw_v = 0; dw_v = 1; dw_addr = k;
             dw_data = {20'($random(seed)), 6'd0, 6'(k * 7 % 48), 32'($random(seed))};   // program base [43:32] inside the store
+            if (ARCOV != 0) begin dw_data[1:0] = (k == 7) ? 2'd0 : ((($random(seed) & 3) != 0) ? 2'd1 : 2'd2); dw_data[17:10] = 8'd1 + 8'($random(seed) & 7); end
         end
         @(negedge clk); dw_v = 0;
         repeat (8) @(posedge clk);
@@ -360,14 +373,15 @@ module tb_qfd_seq_su_bi_psram;
             pi_su_ready = 1; pi_su_idle = 1; kv_write_drained = 1; x_oidle = 1; c_ready = 1; pi_su_rt_active = 0;
             pi_su_rt_inflight = 0;
             x_oacc = 24'd0;                          // the other unit never advances: ME ops without a dependency skip
+            if (PCOV != 0) begin xp = ((i % 400) == 0) ? 16'd0 : xp + 16'(($random(seed) & 7) == 0); x_oprog = xp; end
             x_ofin = ($random(seed) & 3) == 0;
             rst_n = (i % 400) != 399;                // a reset every 400 cycles restarts the sequencer (store kept)
             h_start = (i % 400) == 12;
         end
         @(negedge clk); h_start = 0;
         repeat (20) @(posedge clk);
-        if (bad == 0 && nrd >= MINRD) $display("PASS seq_su_bi_psram cycles=%0d program_reads=%0d loads=%0d", cyc, nrd, nld);
-        else $display("FAIL seq_su_bi_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d", bad, nrd, MINRD, nld);
+        if (bad == 0 && nrd >= MINRD && nvw >= MINVW) $display("PASS seq_su_bi_psram cycles=%0d program_reads=%0d loads=%0d core_done=%0d cwait=%0d coll=%0d vm_writes=%0d chase_eq=%0d", cyc, nrd, nld, ncd, ncw, ncol, nvw, nceq);
+        else $display("FAIL seq_su_bi_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d core_done=%0d cwait=%0d coll=%0d vm_writes=%0d (min %0d)", bad, nrd, MINRD, nld, ncd, ncw, ncol, nvw, MINVW);
         $finish;
     end
     always @(posedge clk) if (rst_n) begin
@@ -379,6 +393,11 @@ module tb_qfd_seq_su_bi_psram;
             if (bad <= 5) $display("XSTATE cyc=%0d", cyc);
         end
         if (u0.u_ctrl.load) nld = nld + 1;
+        if (u0.core_done) ncd = ncd + 1;
+        if (u0.u_seq.st == 3'd4) ncw = ncw + 1;
+        if (u0.u_seq.st == 3'd5) ncol = ncol + 1;
+        if (vm_we_0) nvw = nvw + 1;
+        if (u0.u_ctrl.osync && u0.u_ctrl.d_chase && u0.u_ctrl.x_och == u0.u_ctrl.d_chase_n) nceq = nceq + 1;
         if (out_mismatch || pq_mismatch) begin
             bad = bad + 1;
             if (bad <= 5) $display("MISMATCH cyc=%0d outputs=%b prog_q=%b", cyc, out_mismatch, pq_mismatch);

@@ -21,6 +21,7 @@ SAME ordered row-write transactions per op (address, data) as the reference and 
 from __future__ import annotations
 
 import argparse
+import os
 import concurrent.futures as cf
 import hashlib
 import json
@@ -44,7 +45,10 @@ from rtl_v41_rom_array import Mat  # noqa: E402
 
 I._place = _LPT
 
-PIN = ROOT / "physical/s81_pq_xrv/pinned"
+# el1011-ds-misc/pqc 2026-10-11: OT_PQC_PIN selects another pinned set (physical/s81_pq_hier/pinned: the v15
+# hierarchical spine, the same ports and timing) and OT_PQC_DEFINES adds Verilator defines (tile mutants).
+PIN = ROOT / os.environ.get("OT_PQC_PIN", "physical/s81_pq_xrv/pinned")
+DEFINES = os.environ.get("OT_PQC_DEFINES", "").split()
 SPINE = PIN / "rtl/v41die/ot_v41_spine_pqc_w17w10.sv"
 TOP = "ot_v41_fieldtop_pqc_xrv"
 VEH = ROOT / "rtl/test/dsrom_sys/ot_v41_fieldtop_pqc_xrv.sv"
@@ -92,7 +96,7 @@ def cmd_build(a):
         steps = []
         for nm, cmd in (
                 ("verilate", [F1.VERILATOR, "--cc", "-O3", "-Wno-fatal", "-Wno-lint", "-Wno-style",
-                              "-Wno-TIMESCALEMOD", "--top-module", TOP, "--prefix", "Vpq", "--Mdir", str(mdir),
+                              "-Wno-TIMESCALEMOD", *DEFINES, "--top-module", TOP, "--prefix", "Vpq", "--Mdir", str(mdir),
                               *params, *map(str, srcs)]),
                 ("make", ["make", "-C", str(mdir), "-f", "Vpq.mk", f"-j{a.jobs}", "Vpq__ALL.a", "OPT_FAST=-O2",
                           "OPT_SLOW=-O1"]),

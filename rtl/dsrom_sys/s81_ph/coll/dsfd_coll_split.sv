@@ -37,8 +37,13 @@ endmodule
 // stops opt_merge from folding equal copies (a plain (* keep *) reg does NOT: see ot_dsrom_window_keep_reg), so two pin
 // flops with the same D each anchor at their own pin.  Synthesise with SYNTH_KEEP_MODULES=ot_s81ph_keep_ff.
 (* keep_hierarchy = "yes" *)
-module ot_s81ph_keep_ff (input wire clk, input wire rst_n, input wire d, output reg q);
-    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+// el1011-ds-coll 2026-10-11: the copy is also a (* keep *) register, so physical/common_flow/ot_keep_regs.tcl keeps the
+// flop even when the route omits SYNTH_KEEP_MODULES (rsltrep: u_lcr / u_lv of u_lo4 both register `send`, were merged
+// into one flop driving lo4_r AND elo_v on two faces, io_flop_at_pins could not anchor it: TT -40.5 / -90.2 out-port).
+module ot_s81ph_keep_ff (input wire clk, input wire rst_n, input wire d, output wire q);
+    (* keep = "true" *) reg q_k;
+    always @(posedge clk or negedge rst_n) if (!rst_n) q_k <= 1'b0; else q_k <= d;
+    assign q = q_k;
 endmodule
 
 // ---- credit relay (redesign-ds 2026-10-10, split3 CR mode): link -> credit rx (pin flops + FIFO + OREG) -> credit tx -> link
@@ -56,7 +61,11 @@ endmodule
 // tx data register loads every cycle (l_data is only sampled with l_valid), so no pointer / enable flop drives more than
 // ~W/S x D loads.  Same cycle behaviour as RSL 0 for every valid beat and credit (exact; 0 cycles).
 module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8, parameter integer PS = 0,
-    parameter integer RSL = 0) (
+    parameter integer RSL = 0,
+    // PCR (el1011-ds-coll 2026-10-11, RSL only, default 0): the upstream credit pulse leaves a SECOND kept flop (a relay
+    // station at the i_cr pin, anchored by io_flop_at_pins), so `send` -> the far-face pin is a full reg -> reg cycle
+    // and the pin flop -> port is a few um.  +1 cycle on the credit return only (landing D covers it).
+    parameter integer PCR = 0) (
     input  wire clk, input wire rst_n,
     input  wire i_v, output wire i_cr, input wire [W-1:0] i_d,     // upstream link (valid / data in, credit pulse out)
     output wire o_v, input wire o_cr, output wire [W-1:0] o_d      // downstream link (valid / data out, credit pulse in)
@@ -114,7 +123,19 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8, par
             end
         // l_cr (credit out, upstream face) and l_v (valid out, downstream face) both = send one cycle late: kept separate
         // instances so each can sit at its own pin (a plain reg pair is merged by opt_merge; cb RSL has no PS stations)
-        ot_s81ph_keep_ff u_lcr (.clk(clk), .rst_n(rst_n), .d(send), .q(l_cr));
+        wire l_cr0;
+        ot_s81ph_keep_ff u_lcr (.clk(clk), .rst_n(rst_n), .d(send), .q(l_cr0));
+        if (PCR != 0) begin : g_pcr
+            wire l_cr1;
+            ot_s81ph_keep_ff u_lcr2 (.clk(clk), .rst_n(rst_n), .d(l_cr0), .q(l_cr1));
+`ifdef OT_S81PH_MUT_PCR
+            assign l_cr = l_cr1 || l_cr0;                     // negative control: each credit returned twice
+`else
+            assign l_cr = l_cr1;
+`endif
+        end else begin : g_npcr
+            assign l_cr = l_cr0;
+        end
 `ifdef OT_S81PH_MUT_KPS
         // negative control: the kept valid copy is fed one cycle late (valid lags its data word; must be caught)
         reg send_m; always @(posedge clk or negedge rst_n) if (!rst_n) send_m <= 1'b0; else send_m <= send;
@@ -177,7 +198,12 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
     // along the 680 um S face (cb crpa post-CTS ts_r -> pop -> t_vm[1902] -140 ps, 560 um).  +1 cycle take -> t_vm.
     parameter integer TREP = `ifdef OT_S81PH_COLL_TREP 1 `else 0 `endif,
     // RSL (hardcore-1010 fe G, opt-in): one-hot pointer slices in every credit relay (ot_s81ph_cr_relay RSL), 0 cycles
-    parameter integer RSL = `ifdef OT_S81PH_COLL_RSL 8 `else 0 `endif
+    parameter integer RSL = `ifdef OT_S81PH_COLL_RSL 8 `else 0 `endif,
+    parameter integer PCR = `ifdef OT_S81PH_COLL_PCR 1 `else 0 `endif,
+    // TVR (el1011-ds-coll 2026-10-11, default 0): t_vm leaves a pure relay register (no logic in front of the pin flop):
+    // the queue read mux lands in t_vq beside the slices, t_vq -> t_vm is a full-cycle wire to the S-face pins
+    // (kps: u_oq.rp -> 16:1 mux -> anchored t_vm[1287] -47; t_vm[0] pin flop 270 ps from its pin).  +1 cycle on t_vm.
+    parameter integer TVR = `ifdef OT_S81PH_COLL_TVR 1 `else 0 `endif
 ) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rs,
@@ -233,10 +259,10 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
         else begin fv_r <= f_vm; fvm_u <= fv_rel; ts_r <= ts; flt_r <= {eflt, wflt}; flt_u <= flt_r; end
     // lane relays (lane-face skid + seam-face skid; CR: credit relays, the *_r pins carry credit pulses)
     generate if (CR != 0) begin : g_cr
-    ot_s81ph_cr_relay #(.W(553), .RSL(RSL)) u_lo0 (.clk(clk), .rst_n(rst_n), .i_v(lo0_v), .i_cr(lo0_r), .i_d(lo0_d), .o_v(wlo_v), .o_cr(wlo_r), .o_d(wlo_d));
-    ot_s81ph_cr_relay #(.W(553), .RSL(RSL)) u_li0 (.clk(clk), .rst_n(rst_n), .i_v(wli_v), .i_cr(wli_r), .i_d(wli_d), .o_v(li0_v), .o_cr(li0_r), .o_d(li0_d));
-    ot_s81ph_cr_relay #(.W(553), .RSL(RSL)) u_lo4 (.clk(clk), .rst_n(rst_n), .i_v(lo4_v), .i_cr(lo4_r), .i_d(lo4_d), .o_v(elo_v), .o_cr(elo_r), .o_d(elo_d));
-    ot_s81ph_cr_relay #(.W(553), .RSL(RSL)) u_li4 (.clk(clk), .rst_n(rst_n), .i_v(eli_v), .i_cr(eli_r), .i_d(eli_d), .o_v(li4_v), .o_cr(li4_r), .o_d(li4_d));
+    ot_s81ph_cr_relay #(.W(553), .RSL(RSL), .PCR(PCR)) u_lo0 (.clk(clk), .rst_n(rst_n), .i_v(lo0_v), .i_cr(lo0_r), .i_d(lo0_d), .o_v(wlo_v), .o_cr(wlo_r), .o_d(wlo_d));
+    ot_s81ph_cr_relay #(.W(553), .RSL(RSL), .PCR(PCR)) u_li0 (.clk(clk), .rst_n(rst_n), .i_v(wli_v), .i_cr(wli_r), .i_d(wli_d), .o_v(li0_v), .o_cr(li0_r), .o_d(li0_d));
+    ot_s81ph_cr_relay #(.W(553), .RSL(RSL), .PCR(PCR)) u_lo4 (.clk(clk), .rst_n(rst_n), .i_v(lo4_v), .i_cr(lo4_r), .i_d(lo4_d), .o_v(elo_v), .o_cr(elo_r), .o_d(elo_d));
+    ot_s81ph_cr_relay #(.W(553), .RSL(RSL), .PCR(PCR)) u_li4 (.clk(clk), .rst_n(rst_n), .i_v(eli_v), .i_cr(eli_r), .i_d(eli_d), .o_v(li4_v), .o_cr(li4_r), .o_d(li4_d));
     end else begin : g_sk
     ot_s81ph_relay2 #(.W(553)) u_lo0 (.clk(clk), .rst_n(rst_n), .in_v(lo0_v), .in_r(lo0_r), .in_d(lo0_d), .out_v(wlo_v), .out_r(wlo_r), .out_d(wlo_d));
     ot_s81ph_relay2 #(.W(553)) u_li0 (.clk(clk), .rst_n(rst_n), .in_v(wli_v), .in_r(wli_r), .in_d(wli_d), .out_v(li0_v), .out_r(li0_r), .out_d(li0_d));
@@ -256,6 +282,7 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
     localparam integer OSW = 256, ONS = (2099 + OSW - 1) / OSW;
     (* keep *) reg [ONS-1:0] pq;
     reg [2099:1] wq;
+    reg [2099:0] t_vq;                                   // the t_vm word before the optional TVR pin relay
     always @(posedge clk or negedge rst_n) if (!rst_n) pq <= {ONS{1'b0}}; else pq <= {ONS{bw_vq}};
     always @(posedge clk) wq <= bw_dq;
     wire [ONS-1:0] s_hv, s_flt, s_pop; wire [2099:1] oq_hd;
@@ -273,8 +300,8 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
             ot_s81ph_rfifo #(.W(WS), .D(OD)) u_oq (.clk(clk), .rst_n(rst_n), .push(pq[j]), .wd(wq[1 + LO +: WS]),
                 .pop(sp), .hv(s_hv[j]), .hd(oq_hd[1 + LO +: WS]), .room(), .room2(), .fault(s_flt[j]));
             always @(posedge clk or negedge rst_n)
-                if (!rst_n) t_vm[1 + LO +: WS] <= {WS{1'b0}};
-                else t_vm[1 + LO +: WS] <= sp ? oq_hd[1 + LO +: WS] : {WS{1'b0}};
+                if (!rst_n) t_vq[1 + LO +: WS] <= {WS{1'b0}};
+                else t_vq[1 + LO +: WS] <= sp ? oq_hd[1 + LO +: WS] : {WS{1'b0}};
             assign s_pop[j] = sp;
         end else begin : g_one
             ot_s81ph_rfifo #(.W(WS), .D(OD)) u_oq (.clk(clk), .rst_n(rst_n), .push(pq[j]), .wd(wq[1 + LO +: WS]),
@@ -283,6 +310,17 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
         end
     end endgenerate
     wire pop = s_pop[0];
+    generate if (TVR != 0) begin : g_tvr
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) t_vm <= 2100'd0;
+`ifdef OT_S81PH_MUT_TVR
+            else t_vm <= {t_vq[2099:1288], t_vm[1287], t_vq[1286:0]};   // negative control: one data bit sticks
+`else
+            else t_vm <= t_vq;
+`endif
+    end else begin : g_tvn
+        always @(*) t_vm = t_vq;
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin bw_cr <= 1'b0; bw_flt <= 1'b0; end
         else begin
@@ -290,11 +328,11 @@ module `OT_S81PH_CB_MASTER #(parameter integer OD = 16,
             if (|s_flt) bw_flt <= 1'b1;
         end
     generate if (TREP != 0) begin : g_tv0
-        always @(posedge clk or negedge rst_n) if (!rst_n) t_vm[0] <= 1'b0; else t_vm[0] <= pop;
+        always @(posedge clk or negedge rst_n) if (!rst_n) t_vq[0] <= 1'b0; else t_vq[0] <= pop;
     end else begin : g_tvall
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) t_vm <= 0;
-            else t_vm <= pop ? {oq_hd, 1'b1} : 2100'd0;
+            if (!rst_n) t_vq <= 0;
+            else t_vq <= pop ? {oq_hd, 1'b1} : 2100'd0;
     end endgenerate
     wire unused_ok = &{1'b0, ts_r[2:1]};
 endmodule
@@ -316,7 +354,10 @@ module dsfd_coll_ce #(
     //  PCOPY : engine per-source (* keep *) pop copies (ot_w15 PCOPY): each source's landing queues, head mux and s0
     //          load enables follow a local pop_k[r] instead of one pop / ppar net across the tile.  0 cycles.
     parameter integer RSTR = `ifdef OT_S81PH_COLL_RSTR 1 `else 0 `endif,
-    parameter integer PCOPY = `ifdef OT_S81PH_COLL_PCOPY 1 `else 0 `endif
+    parameter integer PCOPY = `ifdef OT_S81PH_COLL_PCOPY 1 `else 0 `endif,
+    // CEX (el1011-ds-coll 2026-10-11, opt-in, needs PULL + PCOPY): engine pop control copied per 128-bit s0 slice
+    // (PSL 4), registered-flag landing queues (WFREE 2), registered reduce word + per-slice packer select (core ORX)
+    parameter integer CEX = `ifdef OT_S81PH_COLL_CEX 1 `else 0 `endif
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rs,
@@ -413,7 +454,8 @@ module dsfd_coll_ce #(
       end
     end endgenerate
     wire c_bw_v; wire [2099:1] c_bw_d;
-    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD), .EPULL(PULL), .EPCOPY(PCOPY)) u_core (.clk(clk), .rst_n(rst_cn),
+    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(1), .QPIPE(QPIPE), .OQX(1), .OQX_D(OD), .EPULL(PULL), .EPCOPY(PCOPY),
+        .EPSL(CEX ? 4 : 1), .ELQW(CEX ? 2 : 1), .ORX(CEX)) u_core (.clk(clk), .rst_n(rst_cn),
         .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r), .ts(3'd0), .t_vm(), .fault(), .rank(), .eng_en(),
         .x_lo_v(x_lo_v), .x_lo_r(x_lo_r), .x_lo_d(x_lo_d), .x_lo_l(x_lo_l),
         .x_li_v(x_li_v), .x_li_r(x_li_r), .x_li_d(x_li_d), .x_li_l(x_li_l), .x_lflt(flt_r),

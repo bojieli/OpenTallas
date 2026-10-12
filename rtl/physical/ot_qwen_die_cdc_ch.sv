@@ -24,6 +24,9 @@ module ot_qwen_die_cdc_ch #(
     // AFW = 1 (safe-qwen S-A4 rx128, 2026-10-08): with PIPE = 0, use the wide FIFO's per-slice read-pointer copies
     // (ot_qwen_async_fifo_w, registered write: +1 wclk before visibility) and nothing else of PIPE = 1.
     parameter integer AFW = 0,
+    // MEMM = 1 (el1011-q-coll 2026-10-11): the async FIFO body is a dual-clock 1R1W macro (ot_qwen_async_fifo_w MEMM);
+    // needs PIPE = 2 (RSEL2 read timing, o_v re-timed with the popped word).
+    parameter integer MEMM = 0,
     // RXP = 1 (sys-takeover 2026-10-09, opt-in; qfd_emb_far92 IBUF 128 x 523: ir -> 128:1 receive-buffer mux -> FIFO
     // write, -620 ps at 770 / PREROUTE -941): the receive buffer is written and read through replicated ONE-HOT pointers
     // (one 128-bit copy per 32-bit slice: select fanout 32, no binary decode), and the read is a registered 2-stage
@@ -169,7 +172,7 @@ module ot_qwen_die_cdc_ch #(
     wire         af_drained;              // bench view: both FIFO pointers equal (whichever FIFO is built)
 `endif
     generate if (PIPE != 0 || AFW != 0) begin : g_afw
-        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0)) u_af (
+        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0), .MEMM(MEMM)) u_af (
             .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS

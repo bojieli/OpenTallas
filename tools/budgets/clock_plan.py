@@ -236,7 +236,7 @@ def clock_nets(d, trees, groups, group):
                 l.append((inst, port, x, y))
             nets.append((t, (rx, ry), l))
         return nets
-    R = plan_regions(d, trees)
+    R = plan_regions(d, trees, max_ext=MAX_REGION_UM)
     fam_root = {}
     if (d.get('die') == 'hbm' and FAMILY_ROOTS[0]) or (S81_LOCAL_FAMILIES and d.get('die', '').startswith('s81')):
         # HBM r23 (die 30.6 mm wide, stream trunk 3.1 ns: sibling regions of one SM group (G<q>w / G<q>e) or one scan
@@ -584,13 +584,18 @@ def main():
     ap.add_argument('--group', default='trunk', choices=['trunk', 'region', 'htop', 'hreg'])
     ap.add_argument('--buffer-um', type=float, default=150.0)
     ap.add_argument('--case', action='append', default=[])
+    ap.add_argument('--max-region-um', type=float, default=None,
+                    help='region sink-bbox side limit (default MAX_REGION_UM 4000); qwendie-1011: the Qwen ROM die region '
+                         'trees at 4 mm are ~650 ps deep, so 5%% OCV on unshared insertion breaks the intra budget')
     ap.add_argument('--max-merge-um', type=float, default=None,
                     help='merged-region sink-bbox side limit (default MAX_MERGE_UM 5250); die-gaps 2026-10-08: S81 r3 '
                          'serial spine merged to 5.23 mm gave a 65.2 ps intra bound (+25 margin > 90)')
     ap.add_argument('--s81-local-families', action='store_true', help='opt-in: selector/collector plus local crossing stages share band trunk roots')
     a = ap.parse_args()
-    global MAX_MERGE_UM, S81_LOCAL_FAMILIES
+    global MAX_MERGE_UM, MAX_REGION_UM, S81_LOCAL_FAMILIES
     S81_LOCAL_FAMILIES = a.s81_local_families
+    if a.max_region_um:
+        MAX_REGION_UM = a.max_region_um
     if a.max_merge_um:
         MAX_MERGE_UM = a.max_merge_um
     emit(a) if a.mode == 'emit' else record(a)
