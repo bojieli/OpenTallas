@@ -1,20 +1,14 @@
 {
- "name": "hgi_smmv_eng_rt-r1-COMMIT",
+ "name": "hgi_smmv_eng_rt-r1-6e530654e",
  "block": "ot_hgi_smmv",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-smmv-b",
  "purpose": "SM.MATVEC track B per-cluster record engine (B2, NSM 8): record window W4, pipelined decode + exact divide, HW x-slot ring + verified XR reuse, two-edge SM stations, in-order retire",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-hbm-smmv-b",
-  "commit": "COMMIT"
+  "commit": "6e530654e"
  },
  "stages": {
   "bench": [
@@ -77,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_smmv_eng_rt/hgi_smmv_eng_rt-r1-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_smmv_eng_rt/hgi_smmv_eng_rt-r1-6e530654e"
   }
  ],
  "cycles_added": 0,
