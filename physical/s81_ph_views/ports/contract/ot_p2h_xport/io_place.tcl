@@ -1,5 +1,5 @@
 # ot_p2h_xport (contract pin plan, tools/s81_ph/s81_ph_pinplan.py)
-place_pin -pin_name {ck[0]} -layer M5 -location {322.5240 211.5840} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck} -layer M5 -location {322.5240 211.5840} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_c[0]} -layer M5 -location {196.6680 211.5840} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_c[1]} -layer M5 -location {196.7640 211.5840} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_c[2]} -layer M5 -location {196.8600 211.5840} -pin_size {0.0240 0.1920}
@@ -1313,8 +1313,8 @@ place_pin -pin_name {f_in[1206]} -layer M4 -location {0.0960 134.6520} -pin_size
 place_pin -pin_name {f_in[1207]} -layer M4 -location {0.0960 134.7000} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_in[1208]} -layer M4 -location {0.0960 134.7480} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_in[1209]} -layer M4 -location {0.0960 134.7960} -pin_size {0.1920 0.0240}
-place_pin -pin_name {f_or[0]} -layer M4 -location {403.1040 190.4760} -pin_size {0.1920 0.0240}
-place_pin -pin_name {rst[0]} -layer M5 -location {324.5400 211.5840} -pin_size {0.0240 0.1920}
+place_pin -pin_name {f_or} -layer M4 -location {403.1040 190.4760} -pin_size {0.1920 0.0240}
+place_pin -pin_name {rst} -layer M5 -location {324.5400 211.5840} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_c[0]} -layer M5 -location {302.3160 211.5840} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_c[1]} -layer M5 -location {302.4120 211.5840} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_inr[0]} -layer M5 -location {40.2360 211.5840} -pin_size {0.0240 0.1920}

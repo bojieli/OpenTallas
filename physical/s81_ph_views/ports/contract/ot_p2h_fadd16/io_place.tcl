@@ -1,5 +1,5 @@
 # ot_p2h_fadd16 (contract pin plan, tools/s81_ph/s81_ph_pinplan.py)
-place_pin -pin_name {ck[0]} -layer M5 -location {2.9880 66.0540} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck} -layer M5 -location {2.9880 66.0540} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_ab[0]} -layer M5 -location {50.4120 66.0540} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_ab[1]} -layer M5 -location {50.4600 66.0540} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_ab[2]} -layer M5 -location {50.5080 66.0540} -pin_size {0.0240 0.1920}
@@ -1025,7 +1025,7 @@ place_pin -pin_name {f_ab[1021]} -layer M5 -location {99.4200 66.0540} -pin_size
 place_pin -pin_name {f_ab[1022]} -layer M5 -location {99.4680 66.0540} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_ab[1023]} -layer M5 -location {99.5160 66.0540} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_ab[1024]} -layer M5 -location {99.5640 66.0540} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rst[0]} -layer M5 -location {3.7560 66.0540} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst} -layer M5 -location {3.7560 66.0540} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_y[0]} -layer M5 -location {48.1560 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_y[1]} -layer M5 -location {48.2520 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_y[2]} -layer M5 -location {48.3480 0.0960} -pin_size {0.0240 0.1920}

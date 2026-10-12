@@ -1,5 +1,5 @@
 # ot_p2h_arith (contract pin plan, tools/s81_ph/s81_ph_pinplan.py)
-place_pin -pin_name {ck[0]} -layer M5 -location {14.9400 124.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck} -layer M5 -location {14.9400 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_c[0]} -layer M5 -location {334.4760 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_c[1]} -layer M5 -location {334.5240 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_c[2]} -layer M5 -location {334.5720 124.1040} -pin_size {0.0240 0.1920}
@@ -103,7 +103,7 @@ place_pin -pin_name {f_c[99]} -layer M5 -location {339.2280 124.1040} -pin_size 
 place_pin -pin_name {f_c[100]} -layer M5 -location {339.2760 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_c[101]} -layer M5 -location {339.3240 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_c[102]} -layer M5 -location {339.3720 124.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {f_or[0]} -layer M4 -location {374.3040 120.4440} -pin_size {0.1920 0.0240}
+place_pin -pin_name {f_or} -layer M4 -location {374.3040 120.4440} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_x[0]} -layer M4 -location {0.0960 52.3320} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_x[1]} -layer M4 -location {0.0960 52.4280} -pin_size {0.1920 0.0240}
 place_pin -pin_name {f_x[2]} -layer M4 -location {0.0960 52.5240} -pin_size {0.1920 0.0240}
@@ -1334,7 +1334,7 @@ place_pin -pin_name {f_y[556]} -layer M5 -location {282.7800 124.1040} -pin_size
 place_pin -pin_name {f_y[557]} -layer M5 -location {282.8280 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_y[558]} -layer M5 -location {282.8760 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {f_y[559]} -layer M5 -location {282.9240 124.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rst[0]} -layer M5 -location {16.8120 124.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst} -layer M5 -location {16.8120 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_ab[0]} -layer M5 -location {106.4280 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_ab[1]} -layer M5 -location {106.4760 124.1040} -pin_size {0.0240 0.1920}
 place_pin -pin_name {t_ab[2]} -layer M5 -location {106.5240 124.1040} -pin_size {0.0240 0.1920}
@@ -3022,4 +3022,4 @@ place_pin -pin_name {t_o[655]} -layer M4 -location {374.3040 115.7400} -pin_size
 place_pin -pin_name {t_o[656]} -layer M4 -location {374.3040 115.8360} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_o[657]} -layer M4 -location {374.3040 115.9320} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_o[658]} -layer M4 -location {374.3040 116.0280} -pin_size {0.1920 0.0240}
-place_pin -pin_name {t_xr[0]} -layer M4 -location {0.0960 120.4440} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_xr} -layer M4 -location {0.0960 120.4440} -pin_size {0.1920 0.0240}
