@@ -463,7 +463,9 @@ module ot_qwen_nearhbm_ectl_h #(
     parameter integer DQ = 32,           // row / e FIFO depth = outstanding-request credit
     parameter [31:0]  SCALE = 32'h3DB504F3,
     parameter integer LFB = 4,           // re-cut D: node beats
-    parameter integer ND = 1             // re-cut D: staged nodes a engine at the aggregator (= the engine's credits)
+    parameter integer ND = 1,            // re-cut D: staged nodes a engine at the aggregator (= the engine's credits)
+    parameter integer HXK = 0,           // el1011-q-kvd-head: extra head score latency (hierarchical head, KVD_HSUB)
+    parameter integer HXN = 0            // el1011-q-kvd-head: extra head node-slice latency
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -529,7 +531,7 @@ module ot_qwen_nearhbm_ectl_h #(
     localparam integer LN = 4 * HD;
     localparam integer LV = $clog2(HD);
     localparam integer KDRAIN = (LV - 1) * ADD_LAT + 1;   // a K row's tree leaves the lane adders
-    localparam integer KDEPTH = 4 + LV * ADD_LAT + MUL_LAT;     // product, lane adder (level 1), levels 2..LV, scale
+    localparam integer KDEPTH = 4 + LV * ADD_LAT + MUL_LAT + HXK;     // product, lane adder (level 1), levels 2..LV, scale
     localparam [1:0]   SB = S;
 
     localparam integer LANE_D = 4;                         // issue -> lane inputs (S1, S1b, S2 at the tile pin, S3)
@@ -889,7 +891,7 @@ module ot_qwen_nearhbm_ectl_h #(
         if (!rc) nbv_n <= 1'b0;
         else nbv_n <= ob_send;
     always @(posedge clk) begin nbb_n <= ob_b; nbg_n <= ob_g; nbgam_n <= ob_gam; end
-    ot_hdc_delay #(.W(10), .D(7), .RESET(1)) u_nbt (.clk(clk), .rst_n(rc), .d({nbv_n, nbb_n, nbg_n, nbgam_n}), .q(nbt));
+    ot_hdc_delay #(.W(10), .D(7 + HXN), .RESET(1)) u_nbt (.clk(clk), .rst_n(rc), .d({nbv_n, nbb_n, nbg_n, nbgam_n}), .q(nbt));
     always @(posedge clk or negedge rc) begin
         if (!rc) begin
             lt_rho <= 3'd0; LPv <= 0; lt_infl <= 0; lt_fault <= 1'b0; ob_busy <= 1'b0; ob_b <= 4'd0; ob_wait <= 4'd0;
@@ -1021,8 +1023,17 @@ module ot_qwen_nearhbm_row_engine_h #(
     wire [2*512-1:0]  t_qd;
     wire [4*32-1:0]   t_sc;
     wire [3:0]        t_sf, t_gf;
+    // el1011-q-kvd-head: KVD_HSUB selects the hierarchical head tile (ot_qwen_nearhbm_head_hs; default off)
+`ifdef KVD_HSUB
+    localparam integer HSUB = 1;
+`else
+    localparam integer HSUB = 0;
+`endif
+    localparam integer NRI = 2, NRK = 2, NRN = 2;          // head_hs parent relay stages: inputs, K partials, node slice
+    localparam integer HXK = HSUB ? NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
+    localparam integer HXN = HSUB ? NRI + NRN : 0;
     ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
-                             .LFB(LFB), .ND(ND)) u_ctl (
+                             .LFB(LFB), .ND(ND), .HXK(HXK), .HXN(HXN)) u_ctl (
         .clk(clk), .rst_n(rst_n), .start_in(start_in), .T_in(T_in), .cyc8_in(cyc8_in), .q_valid_in(q_valid_in),
         .q_beat_in(q_beat_in), .q_data_in(q_data_in), .exp_done(exp_done), .req_valid(req_valid), .req_v(req_v),
         .req_g(req_g), .req_t(req_t), .rsp_valid_in(rsp_valid_in), .rsp_data_in(rsp_data_in), .er_valid(er_valid),
@@ -1037,11 +1048,20 @@ module ot_qwen_nearhbm_row_engine_h #(
     genvar h;
     generate for (h = 0; h < 4; h = h + 1) begin : g_head
         localparam integer P = h / 2;          // the S1b copy of this head's tile pair
+        if (HSUB != 0) begin : g_hs
+        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRI(NRI),
+                                  .NRK(NRK), .NRN(NRN)) u_head (
+            .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
+            .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));
+        end else begin : g_hh
         ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
             .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
             .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
             .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
             .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));
+        end
     end endgenerate
 endmodule
 
