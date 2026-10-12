@@ -252,7 +252,10 @@ module ot_qwen_me_spctl_w12 #(
     // compare / multiply -> scale_active -> scale_addr add, tree-top TT -1,584 / -1,592) is cut by one register stage:
     // the tags are delayed PD - 1 (balanced-OR ring read), the per-group request is registered, and scale_re / gre / addr
     // are formed from it on the edge the base forms them.  0 cycles, same outputs every edge.
-    parameter integer SPRE = 0
+    parameter integer SPRE = 0,
+    parameter integer XADDR = 1,         // el1011-q-seq: 0 = no per-port x_re / x_addr (callers on the descriptor form x_dv/x_dc/x_dcs;
+                                         //   62.7 k flops + shared CSA rows of fan-out 2-4 k in ctlm_i, all unobserved)
+    parameter integer RDMEM = 0          // el1011-q-seq: 1 = the long tag delay lines (u_tag / u_pretag) in SRAM (rdelay MEM)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -607,13 +610,17 @@ end endgenerate
         if (go_acc)
             for (gi = 0; gi < NPX; gi = gi + 1)
                 xre_en[gi] <= (((gb + gi) >> i_split) < (GT >> i_split));
+    generate if (XADDR != 0) begin : g_xre
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) x_re <= 0;
-        else if (!active) x_re <= 0;
-        else
-            for (gi = 0; gi < NX; gi = gi + 1)
-                x_re[gi] <= (gi < NPX) && xre_en[gi];
-    end
+            if (!rst_n) x_re <= 0;
+            else if (!active) x_re <= 0;
+            else
+                for (gi = 0; gi < NX; gi = gi + 1)
+                    x_re[gi] <= (gi < NPX) && xre_en[gi];
+        end
+    end else begin : g_noxre
+        always @(*) x_re = '0;
+    end endgenerate
     //: descriptor form of the same read (registered on the same edges as x_re / x_addr)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) x_dv <= 1'b0;
@@ -630,7 +637,9 @@ end endgenerate
         begin pc_below = 0; for (i = 0; i < b; i = i + 1) pc_below = pc_below + ((v >> i) & 1); end
     endfunction
     genvar xg, xb;
-    generate
+    generate if (XADDR == 0) begin : g_noxa
+        always @(*) x_addr = '0;
+    end else begin : g_xaddr
         for (xg = 0; xg < NX; xg = xg + 1) begin : g_xa
             localparam integer NB = pc_below(xg, 16);
             if (xg >= NPX) begin : g_none
@@ -655,7 +664,7 @@ end endgenerate
                 always @(posedge clk) x_addr[xg*AW +: AW] <= a_y;
             end
         end
-    endgenerate
+    end endgenerate
 
     // -- element tags (as ot_qwen_w12_matvec_part; no lanes here) -----------------------------------------
     reg          e_v, e_first, e_last, e_oen, e_amax, e_wsrc, e_round, e_mmode;
@@ -704,7 +713,7 @@ end endgenerate
     localparam integer AD = SD + OD + XDD + RX;
     wire [TW-1:0] a_tag_e2;
     reg  [TW-1:0] a_tag_e1, a_tag;
-    ot_qwen_me_rdelay_w12 #(.W(TW), .D(AD - 2)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag_e2));
+    ot_qwen_me_rdelay_w12 #(.W(TW), .D(AD - 2), .MEM(RDMEM)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag_e2));
     always @(posedge clk) begin a_tag_e1 <= a_tag_e2; a_tag <= a_tag_e1; end
     wire [AD:0] vline;
     ot_hdc_vline #(.D(AD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
@@ -756,7 +765,7 @@ end endgenerate
     localparam integer PDX = (SPRE >= 2) ? PD - 2 : (SPRE != 0) ? PD - 1 : PD;   // SPRE: request registered 1 (2) edges before use
     wire [TW-1:0] pre_tag;
     wire [PD:0]   pre_vline;
-    ot_qwen_me_rdelay_w12 #(.W(TW), .D(PDX), .TREE(SPRE)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
+    ot_qwen_me_rdelay_w12 #(.W(TW), .D(PDX), .TREE(SPRE), .MEM(RDMEM)) u_pretag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(pre_tag));
     ot_hdc_vline #(.D(PD)) u_prev (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(pre_vline));
     wire [NW-1:0] pre_t;
     generate if (SCALE_LOCAL != 0) begin : g_pret
@@ -1451,14 +1460,53 @@ module ot_qwen_me_rdelay_w12 #(
     parameter integer W = 32,
     parameter integer D = 1,
     parameter integer SL = 64,
-    parameter integer TREE = 0          // redesign-qwen: 1 = the ring read as a balanced OR tree (same value)
+    parameter integer TREE = 0,         // redesign-qwen: 1 = the ring read as a balanced OR tree (same value)
+    parameter integer MEM = 0           // el1011-q-seq: 1 = SRAM-backed when 4 <= D <= 130 (exact q(t) = d(t - D))
 ) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire [W-1:0] d,
     output wire [W-1:0] q
 );
-    generate if (D <= 1) begin : g_short
+    // el1011-q-seq MEM: input register -> 1r1w SRAM ring (write pointer wp, read address wp - (D - 3)) -> the macro's
+    // registered read -> a capture flop next to each macro.  d of cycle c: registered at c+1, written at the end of c+1,
+    // read in cycle c+D-2 (registered read out in c+D-1), captured -> q in cycle c+D.  The read never meets the write
+    // address (D - 3 < ring depth).  ot_sram_1r1w_128x256 macros (2.65 k um2 each; the 64 x 512 is 13.3 k um2), NB banks
+    // of 128 in depth (bank = address top bits; its select registered with the read, the mux after the capture flops).
+    localparam integer NB = (D - 3 < 128) ? 1 : (D - 3 < 256) ? 2 : 4;
+    localparam integer BB = (NB == 1) ? 1 : $clog2(NB);
+    localparam integer MA = 7 + ((NB == 1) ? 0 : BB);
+    localparam integer MW = 256;
+    localparam integer NMM = (W + MW - 1) / MW;
+    generate if (MEM != 0 && D >= 4 && D <= 514) begin : g_mem
+        reg  [W-1:0] d_r;
+        reg  [MA-1:0] wp;
+        always @(posedge clk) d_r <= d;
+        always @(posedge clk or negedge rst_n) if (!rst_n) wp <= {MA{1'b0}}; else wp <= wp + 1'b1;
+        wire [MA-1:0] ra = wp - MA'((MEM == 2) ? D - 4 : D - 3);   // MEM 2: one edge short (negative control)
+        wire [NMM*MW-1:0] wpad = {{(NMM*MW-W){1'b0}}, d_r};
+        wire [NB*W-1:0] qb;
+        genvar mm, bk;
+        for (bk = 0; bk < NB; bk = bk + 1) begin : g_b
+            wire [NMM*MW-1:0] rd;
+            wire wsel = (NB == 1) ? 1'b1 : ((wp >> 7) == bk);
+            for (mm = 0; mm < NMM; mm = mm + 1) begin : g_m
+                ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra[6:0]), .rd_out(rd[mm*MW +: MW]),
+                    .w_ce_in(wsel), .w_addr_in(wp[6:0]), .wd_in(wpad[mm*MW +: MW]), .w_mask_in({MW{1'b1}}),
+                    .rr_en(2'b0), .rr_addr('0), .cr_en(2'b0), .cr_sel('0));
+            end
+            reg [W-1:0] q_r;                     // capture flop next to the bank's macros (no logic before it)
+            always @(posedge clk) q_r <= rd[W-1:0];
+            assign qb[bk*W +: W] = q_r;
+        end
+        if (NB == 1) begin : g_one
+            assign q = qb[W-1:0];
+        end else begin : g_sel
+            reg [BB-1:0] s1, s2;                 // the read's bank: with the registered read, then with the capture
+            always @(posedge clk) begin s1 <= BB'(ra >> 7); s2 <= s1; end
+            assign q = qb[s2*W +: W];
+        end
+    end else if (D <= 1) begin : g_short
         ot_hdc_delay #(.W(W), .D(D)) u_d (.clk(clk), .rst_n(rst_n), .d(d), .q(q));
     end else begin : g_ring
         localparam integer NS = (W + SL - 1) / SL;

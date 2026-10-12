@@ -72,6 +72,10 @@ module ot_qwen_rom_tile_logic_w12 #(
     // flop-to-flop hop beside the macro cluster: the rp1pc CTS hold stall sat on cap -> cap2) and cap2 -> gs is only the
     // 5:1 group OR.  Same edge, same word, same latency as ROM_CAP2 = 1 (cap2 is 2x wider: BF16).
     parameter integer ROM_CAPX = 0,
+    // ROM_CAPX = 2 (el1011-q-tile 2026-10-11; needs ROM_CAP2 = 1): the INT8 -> BF16 expansion in TWO register rungs
+    // (fba TT -51: cap -> cap2x was 20 levels: negate + leading-one + shift + mask in one stage).  Rung A (cx1, beside
+    // cap): sign, magnitude, leading-one position, masked nonzero; rung B (cap2x): normalising shift + exponent.
+    // +1 memory cycle per matvec fill (RX + 1; KV and x follow RX).
     // BAW: bank address width (12: ot_rom_4096x266_m8 banks; 11: ot_rom_2048x266_m8 half-depth banks, SS clk->q
     // 604 ps, twice CODE_BANKS for the same words -- the single-cycle capture then closes with a balanced clock)
     parameter integer BAW = 12,
@@ -87,6 +91,15 @@ module ot_qwen_rom_tile_logic_w12 #(
     // ANR = 1 (hardcore-1010 D, 2026-10-10; 0 = unchanged): every lane / tree / node FP32 adder as ot_hdc_fp32_add_lat_nr
     // (cut bundles reset only their valid bit; HSPLIT kept copy for the B2a pass-through).  Bit-identical, 0 cycles.
     parameter integer ANR = 0,
+    // MPR = 1 (el1011-q-tile 2026-10-11; needs ROM_PIPE and ARPB; 0 = unchanged): the last request-relay stage as ONE kept
+    // {ce, address} register PER MACRO (rom_req_m, 2 columns x CODE_BANKS), placed at that macro's pins (rom_cap_at_pins.tcl
+    // OT_PREQ=1).  The per-bank copy drove its bank's macro in BOTH columns across the frame (fba TT -59: rom_ce -> ce_in
+    // 10 levels).  rom_ce / rom_addr_b keep the same stream (bench ROM model); same edge, same value: 0 cycles.
+    parameter integer MPR = 0,
+    // HIER = NPL > 0 (el1011-q-tile): the engine's lanes + tree as hardened lane-slice leaves (ot_qwen_w12_matvec_part HIER)
+    parameter integer HIER = 0,
+    parameter integer HIER_HARD = 0,      // the slices as the hardened leaf ot_qwen_tile_lsl (round 2)
+    // TMUT 3 = column 1 / bank 0's MPR copy one edge stale
     parameter integer TMUT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
@@ -124,6 +137,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     output wire [11:0]       rom_addr,
     output wire [11:0]       rom_addr_n,          // north banks' address (ROM_PIPE; else == rom_addr)
     output wire [CODE_BANKS*12-1:0] rom_addr_b,   // per-bank address (ARPB; else each bank's group address)
+    output wire [2*CODE_BANKS*13-1:0] rom_req_m,  // MPR: per-macro {ce, addr[11:0]}, macro (column p, bank b) at p*CODE_BANKS+b
     input  wire [2*CODE_BANKS*266-1:0] rom_rd,
     // KV slice macro pins (KV_LOCAL = 1)
     output wire              kvs_r_ce,
@@ -135,7 +149,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     input  wire [TG*W*32-1:0] kv_q
 );
     localparam integer IBW = 3 * NW + 13 * AW + 13;
-    localparam integer RX = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2) : 0;   // extra memory cycles of the ROM pipeline
+    localparam integer RX = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0)) : 0;   // extra memory cycles of the ROM pipeline
     localparam integer ME_EXTRA = MEM_EXTRA + RX;
     localparam integer SB = (CODE_BANKS + 1) / 2;                      // south group: banks [0, SB)
     generate if (ROM_PIPE != 0 && (MEM_EXTRA != 1 || ROM_ARELAY < 1)) begin : g_rp_bad
@@ -171,7 +185,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire [TG*W*32-1:0] me_kv_q;
     wire              me_fault;
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR),
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
@@ -209,6 +223,10 @@ module ot_qwen_rom_tile_logic_w12 #(
             int8_bf16 = (mag == 0) ? 16'd0 :
                         {code[7], (8'd127 + {5'd0, msb}), norm[6:0]};
         end
+    endfunction
+    function automatic [2:0] lead1(input [7:0] m);           // leading-one position (0 when m == 0)
+        integer i;
+        begin lead1 = 0; for (i = 0; i < 8; i = i + 1) if (m[i]) lead1 = i[2:0]; end
     endfunction
     // -- code ROM: bank select -----------------------------------------------------
     localparam integer PWB = 2 * W * 8;      // a group pair's slice of the code word (256 of the macro's 266 bits)
@@ -316,6 +334,45 @@ module ot_qwen_rom_tile_logic_w12 #(
                 assign rom_addr_b[12*b +: 12] = (b < SB) ? rq_ad_s[ROM_ARELAY] : rq_ad_n[ROM_ARELAY];
             end
         end
+        if (MPR != 0) begin : g_mpr
+            //: MPR: one kept {ce, address} register per macro, the pre-stage of the last relay as its D
+            wire [CODE_BANKS-1:0] ce_pre;
+            wire [11:0] adm_pre;
+            if (ROM_ARELAY == 1) begin : g_mp1
+                assign ce_pre = ce0;
+                assign adm_pre = {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]};
+            end else begin : g_mpn
+                for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_cp
+                    assign ce_pre[b] = (b < SB) ? rq_ce_s[ROM_ARELAY-1][b] : rq_ce_n[ROM_ARELAY-1][b];
+                end
+                assign adm_pre = rq_ad_s[ROM_ARELAY-1];
+            end
+            genvar mc;
+            for (mc = 0; mc < 2; mc = mc + 1) begin : g_mc
+                for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_mb
+                    if (TMUT == 3 && mc == 1 && b == 0) begin : g_mut
+                        wire [12:0] stale;
+                        ot_qwen_mpr_reg u_s (.clk(clk), .rst_n(rst_n), .d({ce_pre[b], adm_pre}), .q(stale));
+                        ot_qwen_mpr_reg u_r (.clk(clk), .rst_n(rst_n), .d(stale), .q(rom_req_m[13*(mc*CODE_BANKS+b) +: 13]));
+                    end else begin : g_ok
+                        ot_qwen_mpr_reg u_r (.clk(clk), .rst_n(rst_n), .d({ce_pre[b], adm_pre}), .q(rom_req_m[13*(mc*CODE_BANKS+b) +: 13]));
+                    end
+                end
+            end
+`ifndef SYNTHESIS
+            //: every macro's copy must equal its bank's request stream (ce; address when enabled), every edge
+            integer mk;
+            always @(negedge clk) if (rst_n) for (mk = 0; mk < 2*CODE_BANKS; mk = mk + 1)
+                if (rom_req_m[13*mk+12] !== rom_ce[mk % CODE_BANKS] ||
+                    (rom_ce[mk % CODE_BANKS] && rom_req_m[13*mk +: 12] !== rom_addr_b[12*(mk % CODE_BANKS) +: 12])) begin
+                    $display("FAIL mpr macro %0d request copy %h != ce %b addr %h", mk, rom_req_m[13*mk +: 13],
+                             rom_ce[mk % CODE_BANKS], rom_addr_b[12*(mk % CODE_BANKS) +: 12]);
+                    $finish;
+                end
+`endif
+        end else begin : g_nmpr
+            assign rom_req_m = {2*CODE_BANKS*13{1'b0}};
+        end
         //: bank select of the word in the capture registers (held when no read: the macros hold their output)
         reg [CODE_BANKS-1:0] sel_1, sel_c, sel_c2;
         always @(posedge clk or negedge rst_n) begin
@@ -339,7 +396,34 @@ module ot_qwen_rom_tile_logic_w12 #(
                 wire [PWB-1:0] cx;                     // the word the expansion reads
                 wire           sx, sx_early;           // its bank select (and the mutant's one-edge-early select)
                 wire [2*PWB-1:0] cxw;                  // ROM_CAPX: the registered masked expansion
-                if (ROM_CAP2 != 0 && ROM_CAPX != 0) begin : g_capx
+                if (ROM_CAP2 != 0 && ROM_CAPX == 2) begin : g_capx2
+                    //: rung A (beside cap): sign, magnitude, leading-one position, masked nonzero, per byte
+                    (* keep *) reg [PWB/8-1:0] xa_s, xa_nz;
+                    (* keep *) reg [PWB-1:0]   xa_m;
+                    (* keep *) reg [3*PWB/8-1:0] xa_p;
+                    (* keep *) reg [2*PWB-1:0] cap2x;
+                    (* keep *) reg [PWB/32-1:0] sel_r;          // the select, one kept copy per 4 bytes
+                    genvar ex, er;
+                    for (er = 0; er < PWB / 32; er = er + 1) begin : g_selr
+                        always @(posedge clk) sel_r[er] <= (ROM_MUT != 0) ? sel_1[b] : sel_c[b];
+                    end
+                    for (ex = 0; ex < PWB / 8; ex = ex + 1) begin : g_cvx
+                        wire [7:0] cb = cap[8*ex +: 8];
+                        wire [7:0] mg = cb[7] ? (~cb + 8'd1) : cb;
+                        always @(posedge clk) begin
+                            xa_s[ex] <= cb[7];
+                            xa_m[8*ex +: 8] <= mg;
+                            xa_p[3*ex +: 3] <= lead1(mg);
+                            xa_nz[ex] <= (mg != 8'd0);
+                        end
+                        //: rung B: normalising shift + exponent, masked by the select of the edge rung A holds
+                        wire [7:0] nm = xa_m[8*ex +: 8] << (3'd7 - xa_p[3*ex +: 3]);
+                        always @(posedge clk)
+                            cap2x[16*ex +: 16] <= (xa_nz[ex] && sel_r[ex / 4]) ?
+                                {xa_s[ex], 8'd127 + {5'd0, xa_p[3*ex +: 3]}, nm[6:0]} : 16'd0;
+                    end
+                    assign cx = {PWB{1'b0}}; assign sx = 1'b0; assign sx_early = 1'b0; assign cxw = cap2x;
+                end else if (ROM_CAP2 != 0 && ROM_CAPX != 0) begin : g_capx
                     //: cap2 = the masked BF16 expansion of cap (select of the edge cap holds the word: sel_c)
                     (* keep *) reg [2*PWB-1:0] cap2x;
                     genvar ex;
@@ -480,6 +564,9 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer LRST = 0,
     parameter integer ANR = 0,            // ot_qwen_rom_tile_logic_w12 ANR (hardcore-1010 D)
     parameter integer ARPB = 0,           // ot_qwen_rom_tile_logic_w12 ARPB (qwen-1010/c): per-bank address register
+    parameter integer MPR = 0,            // ot_qwen_rom_tile_logic_w12 MPR (el1011-q-tile): per-macro request register
+    parameter integer HIER = 0,           // ot_qwen_rom_tile_logic_w12 HIER (el1011-q-tile): lane-slice leaves
+    parameter integer HIER_HARD = 0,
     parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
     input  wire              clk,
@@ -506,14 +593,15 @@ module ot_qwen_rom_tile_w12 #(
     wire [11:0]           rom_addr, rom_addr_n;
     wire [CODE_BANKS*12-1:0] rom_addr_b;
     wire [2*CODE_BANKS*266-1:0] rom_rd;
+    wire [2*CODE_BANKS*13-1:0]  rom_req_m;
     wire                  kvs_r_ce;
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .ANR(ANR), .BAW(BAW)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .ANR(ANR), .BAW(BAW)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
-        .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_rd(rom_rd),
+        .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
         .kvs_r_ce(kvs_r_ce), .kvs_r_addr(kvs_r_addr), .kvs_rd(kvs_rd),
         .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}));
     genvar p, b;
@@ -522,15 +610,15 @@ module ot_qwen_rom_tile_w12 #(
         //: array binding); BAW 11 half-depth banks live under g_colh (zero-trip loops, no extra scope level)
         for (p = 0; p < ((BAW == 12) ? 2 : 0); p = p + 1) begin : g_col
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
-                ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]),
-                    .addr_in((ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
+                ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]),
+                    .addr_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b) +: 12] : (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
                     .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end
         end
         for (p = 0; p < ((BAW == 11) ? 2 : 0); p = p + 1) begin : g_colh
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
-                wire [11:0] ra = (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr;
-                ot_rom_2048x266_m8 u_rom (.clk(clk), .ce_in(rom_ce[b]), .addr_in(ra[10:0]),
+                wire [11:0] ra = (MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b) +: 12] : (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr;
+                ot_rom_2048x266_m8 u_rom (.clk(clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]), .addr_in(ra[10:0]),
                     .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end
         end
@@ -575,4 +663,12 @@ endmodule
 (* keep_hierarchy *)
 module ot_qwen_arpb_reg (input wire clk, input wire [11:0] d, output reg [11:0] q);
     always @(posedge clk) q <= d;
+endmodule
+
+
+// el1011-q-tile 2026-10-11: one kept per-macro {ce, address} request register (ot_qwen_rom_tile_logic_w12 MPR); ce resets.
+(* keep_hierarchy *)
+module ot_qwen_mpr_reg (input wire clk, input wire rst_n, input wire [12:0] d, output reg [12:0] q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q[12] <= 1'b0; else q[12] <= d[12];
+    always @(posedge clk) q[11:0] <= d[11:0];
 endmodule
