@@ -22,11 +22,3 @@ endmodule
     output [3:0] vrel_o, output [17:0] jn_o, input [15:0] wn_i, input jf_i, werr_i, output [5:0] r0_oh, r1_oh, r2_oh,
     output [7:0] r0_a, r1_a, r2_a, input [255:0] rd0, rd1, input [63:0] rd2);
 endmodule
-(* blackbox *) module ot_engc_t_pth (input ck, rst, input [1:0] pos, input [5:0] wi_oh, input [7:0] wi_a, input [255:0] wi_d,
-    input [319:0] xi_d, output [5:0] wo_oh, output [7:0] wo_a, output [255:0] wo_d, output [319:0] xo_d, input [5:0] rq_oh,
-    input [7:0] rq_a, output [5:0] rqo_oh, output [7:0] rqo_a, input [255:0] rd_in, output [255:0] r_d);
-endmodule
-(* blackbox *) module ot_engc_t_ptb (input ck, rst, input [1:0] pos, input [5:0] wi_oh, input [7:0] wi_a, input [255:0] wi_d,
-    input [319:0] xi_d, output [5:0] wo_oh, output [7:0] wo_a, output [255:0] wo_d, output [319:0] xo_d, input [5:0] rq_oh,
-    input [7:0] rq_a, output [5:0] rqo_oh, output [7:0] rqo_a, input [255:0] rd_in, output [255:0] r_d);
-endmodule

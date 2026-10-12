@@ -1,11 +1,9 @@
 `timescale 1ns/1ps
-// el1011-ds-misc/engram 2026-10-11: LOCKSTEP bench of the all-tile prefetch path {T_WS write side -> pair chain P0 -> P1 -> P2 (bank 1,
+// el1011-ds-misc/engram 2026-10-11: LOCKSTEP bench of the all-tile prefetch path {T_WS write side -> T_PBB (bank 1,
 // write transit) -> T_PBC (bank 0) -> T_PBC (bank 2); T_IO read request / decode / t_vm} against the HIER sub-function
 // ot_dsrom_engram_prefetch_h, same write / read stimulus, VM read stream (out_v / data / ce / ue) compared in order,
 // sticky fault compared at the end.  Phases: full sequential fill, then random write bursts / read bursts / mixed
-// slot-disjoint traffic.  Reads never target a row written in the last 24 cycles and writes never target a row read in
-// the last 24 cycles (the engine protocol separates a slot's refill from its reads by a release + a whole HBM window; the
-// tile chain reorders a same-row read/write pair closer than ~10 cycles, which that protocol never issues).
+// slot-disjoint traffic (reads never target a row written in the last 16 cycles: the tile write commit is later).
 module tb_engc_pf_eq;
     reg ck = 0, rst = 0; always #0.5 ck = ~ck;
     reg wr_v = 0, rd_v = 0; reg [10:0] wr_addr = 0, rd_addr = 0; reg [511:0] wr_data = 0;
@@ -24,17 +22,8 @@ module tb_engc_pf_eq;
     ot_engc_t_ws u_ws (.ck(ck), .rst(rst), .wr_v(wr_v), .wr_addr(wr_addr), .wr_data(wr_data), .werr(werr),
         .w_oh(w_oh), .w_a(w_a), .b1_d(b1_d), .x_d(x_d), .lk_hqv(1'b0), .lk_hqa(31'd0), .lk_hqt(3'd0), .t_hq(t_hq),
         .f_hr(265'd0), .lk_hr(lk_hr));
-    wire [5:0] p0_oh, p1_oh, q2_oh, q1_oh; wire [7:0] p0_a, p1_a, q2_a, q1_a;
-    wire [255:0] p0_d, p1_d, p0_r, p1_r; wire [319:0] p0_x, p1_x;
-    ot_engc_t_pth u_p0 (.ck(ck), .rst(rst), .pos(2'd2), .wi_oh(w_oh), .wi_a(w_a), .wi_d(b1_d), .xi_d(x_d),
-        .wo_oh(p0_oh), .wo_a(p0_a), .wo_d(p0_d), .xo_d(p0_x), .rq_oh(q1_oh), .rq_a(q1_a), .rqo_oh(), .rqo_a(),
-        .rd_in(256'd0), .r_d(p0_r));
-    ot_engc_t_ptb u_p1 (.ck(ck), .rst(rst), .pos(2'd1), .wi_oh(p0_oh), .wi_a(p0_a), .wi_d(p0_d), .xi_d(p0_x),
-        .wo_oh(p1_oh), .wo_a(p1_a), .wo_d(p1_d), .xo_d(p1_x), .rq_oh(q2_oh), .rq_a(q2_a), .rqo_oh(q1_oh), .rqo_a(q1_a),
-        .rd_in(p0_r), .r_d(p1_r));
-    ot_engc_t_ptb u_p2 (.ck(ck), .rst(rst), .pos(2'd0), .wi_oh(p1_oh), .wi_a(p1_a), .wi_d(p1_d), .xi_d(p1_x),
-        .wo_oh(x0_oh), .wo_a(x0_a), .wo_d(), .xo_d(x0_d), .rq_oh(r1_oh), .rq_a(r1_a), .rqo_oh(q2_oh), .rqo_a(q2_a),
-        .rd_in(p1_r), .r_d(rd1));
+    ot_engc_t_pbb u_pb1 (.ck(ck), .rst(rst), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
+        .x_oh(x0_oh), .x_a(x0_a), .x_do(x0_d), .r_oh(r1_oh), .r_a(r1_a), .r_d(rd1));
     ot_engc_t_pbc u_pb0 (.ck(ck), .rst(rst), .w_oh(x0_oh), .w_a(x0_a), .w_d(x0_d[255:0]), .x_d(x0_d[319:256]),
         .x_oh(x1_oh), .x_a(x1_a), .x_do(x1_d), .r_oh(r0_oh), .r_a(r0_a), .r_d(rd0));
     ot_engc_t_pbc u_pb2 (.ck(ck), .rst(rst), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
@@ -54,11 +43,11 @@ module tb_engc_pf_eq;
             qh = qh + 1; n = n + 1;
         end
     end
-    integer i, ph, cyc, last_w [0:2047], last_r [0:2047]; reg [10:0] a;
+    integer i, ph, cyc, last_w [0:2047]; reg [10:0] a;
     function [10:0] ra(input integer x); ra = {x[10:8], 5'(x % 24), x[2:0]}; endfunction
     task tick; begin @(negedge ck); cyc = cyc + 1; end endtask
     initial begin
-        cyc = 0; for (i = 0; i < 2048; i = i + 1) begin last_w[i] = -100; last_r[i] = -100; end
+        cyc = 0; for (i = 0; i < 2048; i = i + 1) last_w[i] = -100;
         repeat (4) tick; rst = 1; repeat (6) tick;
         // fill
         for (i = 0; i < 1536; i = i + 1) begin
@@ -75,12 +64,11 @@ module tb_engc_pf_eq;
                     wr_v = 1; wr_addr = ra($urandom); if (($urandom % 500) == 0) wr_addr[7:3] = 5'd27;   // rare address fault
                     wr_data = {$urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom,
                                $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom, $urandom};
-                    if (cyc - last_r[wr_addr] <= 24) wr_v = 0;          // no write to a row read < 24 cycles ago
-                    else if (wr_addr[7:3] < 24) last_w[wr_addr] = cyc;
+                    if (wr_addr[7:3] < 24) last_w[wr_addr] = cyc;
                 end
                 if ((ph % 3) != 0 && ($urandom % 3) != 0) begin       // read (never a row written < 16 cycles ago)
                     a = ra($urandom);
-                    if (cyc - last_w[a] > 24 && !(wr_v && wr_addr == a)) begin rd_v = 1; rd_addr = a; last_r[a] = cyc; end
+                    if (cyc - last_w[a] > 16 && !(wr_v && wr_addr == a)) begin rd_v = 1; rd_addr = a; end
                 end
                 tick;
             end

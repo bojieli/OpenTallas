@@ -3,7 +3,7 @@
 set -eu
 O=${1:?outdir}; shift; DEF=${1:-}; mkdir -p "$O"
 E=rtl/dsrom_sys/engram
-F="physical/s81_engc_tiles/tb/tb_engc_pf_eq.sv $E/ot_dsrom_engram_prefetch_h.sv $E/tiles/ot_engc_pbank.sv $E/tiles/ot_engc_pt.sv $E/tiles/ot_engc_t_ws.sv
+F="physical/s81_engc_tiles/tb/tb_engc_pf_eq.sv $E/ot_dsrom_engram_prefetch_h.sv $E/tiles/ot_engc_pbank.sv $E/tiles/ot_engc_t_ws.sv
    $E/tiles/ot_engc_t_io.sv rtl/v41rom/ot_v41_kreg.sv rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv rtl/lib/ot_reset_sync.sv
    rtl/lib/ot_async_fifo.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv
    physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
