@@ -504,17 +504,28 @@ def write_snapshot(kd: str, commit: str, files: list):
 
 
 # ------------------------------------------------------------------------------------------------------ gate
+ASSIGNED: dict[str, int] = {}
+AVAIL: dict[str, int] = {}
+
+
 def pick_host(mem: int) -> str:
-    best, bv = HOSTS[0], -1e9
-    for h in HOSTS:
-        try:
-            o = ssh(h, "awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo", timeout=20).strip()
-            free = int(o) - HEADROOM[h]
-        except Exception:  # noqa: BLE001
-            continue
-        if free > bv:
-            best, bv = h, free
-    return best
+    """the host with the most free memory after this batch's own assignments (ot-heavy then admits by memory there);
+    MemAvailable is read once per host per batch so concurrent picks spread instead of piling on one host"""
+    with LOCK:
+        for h in HOSTS:
+            if h not in AVAIL:
+                try:   # MemAvailable minus the growth ot-heavy still reserves for running jobs (its admission rule)
+                    o = ssh(h, "awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo; "
+                               "tail -1 /var/tmp/ot-heavy/admit.log 2>/dev/null", timeout=20)
+                    g = re.search(r"grow (\d+)G", o)
+                    AVAIL[h] = int(o.split()[0]) - (int(g.group(1)) if g else 0)
+                except Exception:  # noqa: BLE001
+                    AVAIL[h] = -10 ** 6
+        fits = [h for h in HOSTS if AVAIL[h] - HEADROOM[h] - ASSIGNED.get(h, 0) >= mem] or \
+            [h for h in HOSTS if h in ("ot-epyc1tb", "ot-epyc4")]          # big hosts queue in ot-heavy
+        best = max(fits, key=lambda h: AVAIL[h] - HEADROOM[h] - ASSIGNED.get(h, 0))
+        ASSIGNED[best] = ASSIGNED.get(best, 0) + mem
+        return best
 
 
 def gate(kd: str, mem: int, remote=True) -> tuple[str, str, str]:
@@ -598,7 +609,7 @@ def prepare(row, rec, st) -> dict | None:
         RT.gen(str(sp))
         t.update(state="kit", kit=kd, spec=str(sp.relative_to(ROOT)), closed_job=rec["job"], priority=row["priority"],
                  owner=rec["spec"].get("owner"), at=now())
-        return {"cell": row["cell"], "kd": kd, "spec": sp, "mem": max(16, min(96, spec["route"]["peak_ram_gb"]))}
+        return {"cell": row["cell"], "kd": kd, "spec": sp, "mem": max(24, min(64, spec["route"]["peak_ram_gb"] // 2))}
     except (SpecSkip, Exception) as ex:  # noqa: BLE001
         kind = "skip" if isinstance(ex, SpecSkip) else "error"
         t.update(state=kind, reason=f"{type(ex).__name__}: {ex}"[:400], closed_job=rec["job"], at=now())
@@ -633,6 +644,8 @@ def run(a, rows, closed, st):
             else:
                 t.update(state="gate_fail", reason=why)
                 log(t.get("owner"), f"{p['cell']}: M5 re-route kit {p['kd']} pre-route gate {v} on {host}: {why[:300]}")
+                if re.search(r"PPL-0111|slots for the pins|pin_capacity|pin density", why):
+                    propose_grant(p["cell"], t, f"pin placement fails at M4/M5 ({why[:160]})")
             save_state(st)
     if not ok or a.no_submit:
         return
@@ -653,24 +666,34 @@ def run(a, rows, closed, st):
     git("commit", "-q", "-m", f"m5rr: job specs for {len(ok)} M5 re-route kits at {c1}\n\n"
         f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>")
     git("push", "-q", "origin", f"HEAD:{BRANCH}")
-    _, live, pending = records()
     for p in ok:
-        job = json.loads((ROOT / p["kd"] / "job.json").read_text())
-        t = st["tiles"][p["cell"]]
+        st["tiles"][p["cell"]].update(state="committed", commit=c1)
+    save_state(st)
+    submit(st)
+
+
+def submit(st: dict):
+    """drop every committed (gated, pushed) kit's job spec into the loop intake once; re-checks live jobs first"""
+    _, live, pending = records()
+    for cell, t in sorted(st["tiles"].items()):
+        if t.get("state") != "committed":
+            continue
+        jp = ROOT / t["kit"] / "job.json"
+        job = json.loads(jp.read_text())
         if job["block"] in live or job["block"] in pending:
             t.update(state="skip", reason="live job appeared before submit")
             continue
-        sub = subprocess.run([sys.executable, str(ROOT / "tools/closure_loop/submit_lint.py"),
-                              str(ROOT / p["kd"] / "job.json")], cwd=ROOT, capture_output=True, text=True)
+        sub = subprocess.run([sys.executable, str(ROOT / "tools/closure_loop/submit_lint.py"), "check", str(jp)],
+                             cwd=ROOT, capture_output=True, text=True)
         if sub.returncode:
             t.update(state="gate_fail", reason="submit_lint: " + (sub.stdout + sub.stderr)[-300:])
-            log(t.get("owner"), f"{p['cell']}: M5 re-route submit_lint FAIL: {t['reason']}")
+            log(t.get("owner"), f"{cell}: M5 re-route submit_lint FAIL: {t['reason']}")
             continue
-        shutil.copy(ROOT / p["kd"] / "job.json", INTAKE / f"{job['name']}.json")
-        t.update(state="submitted", job=job["name"], commit=c1, submitted_at=now())
-        log(t.get("owner"), f"{p['cell']}: M5 re-route SUBMITTED {job['name']} (kit {p['kd']}, closed {t['closed_job']}, "
-                            f"gate {t['gate']} on {t['gate_host']}, priority {t['priority']})")
-    save_state(st)
+        shutil.copy(jp, INTAKE / f"{job['name']}.json")
+        t.update(state="submitted", job=job["name"], submitted_at=now())
+        log(t.get("owner"), f"{cell}: M5 re-route SUBMITTED {job['name']} (kit {t['kit']}, closed {t['closed_job']}, "
+                            f"gate {t.get('gate')} on {t.get('gate_host')}, priority {t.get('priority')})")
+        save_state(st)
 
 
 # ------------------------------------------------------------------------------------------------------ compare
@@ -742,6 +765,18 @@ def pin_density(kd: str) -> float | None:
     return round(n / (2 * (W + H)), 3)
 
 
+def propose_grant(cell: str, t: dict, why: str):
+    """pin-dense edge tile worse / infeasible at M5: propose an M6 layer_cap_grant in the die lead's log (no M5 iteration)"""
+    for f_, d in contracts():
+        if any(sl.get("cell") == cell for sl in d["slots"]) and f_.name in DIE_LOG and \
+                t.get("grant_proposed") != DIE_LOG[f_.name]:
+            with LOCK, open(TAKE / DIE_LOG[f_.name], "a") as fh:
+                fh.write(f"{dt.datetime.now().strftime('%m-%d %H:%M')} [reroute_m5] PROPOSAL to the {d.get('die')} die "
+                         f"lead: layer_cap_grant M6 for {cell} (pin-dense edge tile; {why}). Not iterating at M5; "
+                         f"grant -> set slot layer_cap M6 + layer_cap_grant, then reroute_batch.py re-generates.\n")
+            t["grant_proposed"] = DIE_LOG[f_.name]
+
+
 def compare(st: dict):
     for cell, t in sorted(st["tiles"].items()):
         if t.get("state") != "submitted" or (t.get("compare") or {}).get("final"):
@@ -771,19 +806,13 @@ def compare(st: dict):
                 + (f" -> WORSE: {'; '.join(flags)}" if flags else ""))
         log(t.get("owner"), line)
         if flags and dens is not None and dens >= PIN_DENSE:
-            for f_, d in contracts():
-                if any(sl.get("cell") == cell for sl in d["slots"]) and f_.name in DIE_LOG:
-                    with LOCK, open(TAKE / DIE_LOG[f_.name], "a") as fh:
-                        fh.write(f"{dt.datetime.now().strftime('%m-%d %H:%M')} [reroute_m5] PROPOSAL to the {d.get('die')} "
-                                 f"die lead: layer_cap_grant M6 for {cell} (pin-dense edge tile, {dens} signal pins/um; "
-                                 f"M5 re-route {t['job']} worse: {'; '.join(flags)}). Not iterating at M5.\n")
-                    t["compare"]["grant_proposed"] = DIE_LOG[f_.name]
+            propose_grant(cell, t, f"{dens} signal pins/um; M5 re-route {t['job']} worse: {'; '.join(flags)}")
         save_state(st)
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", nargs="?", default="plan", choices=["plan", "run", "status", "compare"])
+    ap.add_argument("cmd", nargs="?", default="plan", choices=["plan", "run", "status", "compare", "submit"])
     ap.add_argument("--priorities", type=lambda s: [int(x) for x in s.split(",")], default=[1, 2, 3, 4])
     ap.add_argument("--only", nargs="*")
     ap.add_argument("--limit", type=int, default=0)
@@ -792,6 +821,9 @@ def main(argv=None) -> int:
     ap.add_argument("--no-submit", action="store_true")
     a = ap.parse_args(argv)
     st = load_state()
+    if a.cmd == "submit":
+        submit(st)
+        return 0
     if a.cmd == "compare":
         compare(st)
         return 0
