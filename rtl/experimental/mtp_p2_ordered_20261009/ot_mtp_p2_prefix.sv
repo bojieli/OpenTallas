@@ -19,7 +19,10 @@
 // native-bad, adder err, accumulator UE, abort, the duplicated-control compare); MUT_COPY_FIRST copies E0 instead of
 // adding it to +0.  BREG keeps its meaning (registered duplicate-state gating); DSTAGE / ROOTPIPE are now no-ops (every
 // verdict is registered).  The probe names state (11 = write stage), expert_index, word_index, sum_q describe stage 15.
-module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, DSTAGE=0, ROOTPIPE=0)(
+// EXT_ADD=1 (el1011-ds-mtp [p2pfx] hierarchical rebuild 2026-10-11): the 16-lane adder array is the separate hard tile
+// ot_p2h_fadd16 (its own clock tree; input pin flops + LAT8 ot_v41_fadd, registered outputs), driven from the add_a /
+// add_b / issue-valid registers through the x_add_* ports; FL = 9 (tile input register + 8).
+module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, DSTAGE=0, ROOTPIPE=0, EXT_ADD=0)(
  input wire clk,rst_n,start_v, output wire start_r,
  input wire [73:0] start_identity,input wire [26:0] start_ids,
  input wire in_v,output wire in_r,input wire [73:0] in_identity,
@@ -27,15 +30,18 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, 
  input wire [6:0] in_word,input wire [575:0] in_secded,
  output wire out_v,input wire out_r,output wire [73:0] out_identity,
  output wire [6:0] out_word,output wire out_last,output wire [575:0] out_secded,
- input wire abort,output wire done,fault,corrected
+ input wire abort,output wire done,fault,corrected,
+ output wire x_add_v,output wire [511:0] x_add_a,x_add_b,
+ input wire [511:0] x_add_y,input wire [31:0] x_add_err,input wire [15:0] x_add_vo
 );
  generate if(!ENABLE) begin: disabled
  assign start_r=0;assign in_r=0;assign out_v=0;assign out_identity=0;
  assign out_word=0;assign out_last=0;assign out_secded=0;
  assign done=0;assign fault=0;assign corrected=0;
+ assign x_add_v=0;assign x_add_a=0;assign x_add_b=0;
  end else begin: enabled
  localparam [1:0] P_IDLE=0,P_ACC=1,P_DRAIN=2;
- localparam integer FL=8;          // ot_v41_fadd LATENCY at CUT 1_0111_1011 (checked: add_v vs tag valid)
+ localparam integer FL=EXT_ADD?9:8; // ot_v41_fadd LATENCY at CUT 1_0111_1011 (+1: ot_p2h_fadd16 input pin flops) (checked: add_v vs tag valid)
  localparam integer S_ADD=6, S_SUM=S_ADD+FL, S_WR=S_SUM+2;   // 6, 14, 16
  localparam integer QD=4;          // output queue entries = drain credits
  // ---------------- control (duplicated) ----------------
@@ -93,10 +99,16 @@ module ot_mtp_p2_prefix #(parameter integer ENABLE=0, MUT_COPY_FIRST=0, BREG=0, 
  ot_secded_enc #(.K(64),.R(8)) enc(.clk(clk),.d(sum_q[64*slice+:64]),.q(encoded[72*slice+:72]));
  ot_secded_enc #(.K(64),.R(8)) denc(.clk(clk),.d(add_a[64*slice+:64]),.q(d_encoded[72*slice+:72]));
  end
+ if(EXT_ADD)begin: ext_adds
+ assign x_add_v=t_v[S_ADD]&&!t_dr[S_ADD];assign x_add_a=add_a;assign x_add_b=add_b;
+ assign add_data=x_add_y;assign add_err=x_add_err;assign add_v=x_add_vo;
+ end else begin: int_adds
+ assign x_add_v=0;assign x_add_a=0;assign x_add_b=0;
  for(genvar lane=0;lane<16;lane=lane+1)begin: adds
  ot_v41_fadd #(.CUT(9'b1_0111_1011),.SPLIT9(0)) a(.clk(clk),.rst_n(rst_n),
  .valid_in(t_v[S_ADD]&&!t_dr[S_ADD]),.a(add_a[32*lane+:32]),.b(add_b[32*lane+:32]),
  .y(add_data[32*lane+:32]),.err(add_err[2*lane+:2]),.valid_out(add_v[lane]));
+ end
  end
  for(genvar mi=0;mi<3;mi=mi+1)begin: memories
  wire [767:0] mw={192'd0,encoded};
