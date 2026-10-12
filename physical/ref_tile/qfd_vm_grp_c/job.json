@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_grp_c-r6c-COMMIT",
+ "name": "qfd_vm_grp_c-r6c-da28dc03e",
  "block": "ot_qfd_vm_grp",
  "ref_tile": true,
  "owner": "Claude:el1011-q-sp",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/el1011-q-sp",
-  "commit": "COMMIT"
+  "commit": "da28dc03eb72c086612503f5a30affa8995f6da2"
  },
  "stages": {
   "bench": [
@@ -144,7 +144,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_grp_c/qfd_vm_grp_c-r6c-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_grp_c/qfd_vm_grp_c-r6c-da28dc03e"
   }
  ],
  "cycles_added": 0,
