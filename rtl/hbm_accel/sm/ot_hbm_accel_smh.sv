@@ -2508,7 +2508,12 @@ module ot_hbm_accel_smh_leaf #(
     end endgenerate
     generate for (sk = 0; sk < NA1; sk = sk + 1) begin : g_s1
         (* keep *) reg [10:0] q;
+`ifdef OT_SMH_MUT_SFAN
+        // negative control: stage-0 chunk 0's copy rotates by one 256-b step too far
+        always @(posedge clk) q <= a1m[(sk % 8)*11 +: 11] + ((sk == 0) ? 11'd256 : 11'd0);
+`else
         always @(posedge clk) q <= a1m[(sk % 8)*11 +: 11];
+`endif
         assign a1c[sk*11 +: 11] = q;
     end endgenerate
     generate for (sk = 0; sk < NA2; sk = sk + 1) begin : g_s2
