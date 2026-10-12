@@ -1,3 +1,4 @@
+# el1011-ds-vm/fe6 2026-10-12 FE v6: + 4 x dsfd_vm_fsr slice relay hard tiles (g_sl[s].u_fr) at (388.8 s, 259.2).
 # el1011-ds-vm/fe 2026-10-11 23:30 v5 outline 1,520.064 x 594.00 (was 473.04: feh3 FLOORPLAN_MARGIN util 68.1% ->
 #  ~54.2% = 488,251 um2 std+macro / 901,277 um2 core).  +120.96 um (14 x 8.64 lattice) in height: N-face pins, the clt
 #  tile row (y 226.80 -> 347.76) and the E svc column (+120.96) move up together; S row / row 2 stay; the added band is
@@ -25,7 +26,7 @@ set ot_pos(2) [list [lindex $ot_xs 6] 30.24]
 set ot_pos(4) [list [lindex $ot_xs 3] 128.52]
 set ot_pos(0) [list 1328.4 369.36]
 set ot_pos(1) [list 1328.4 467.64]
-set ot_n 0; set ot_t 0
+set ot_n 0; set ot_t 0; set ot_f 0
 foreach ot_i [$ot_blk getInsts] {
   set ot_nm [$ot_i getName]
   if {[regexp {g_ll\\?\[(\d+)\\?\]\.u_ll\.g_m\.u_m$} $ot_nm -> ot_l]} {
@@ -35,9 +36,14 @@ foreach ot_i [$ot_blk getInsts] {
   } elseif {[regexp {g_cl\\?\[(\d+)\\?\]\.u_l$} $ot_nm -> ot_g] && [[$ot_i getMaster] isBlock]} {
     place_macro -macro_name $ot_nm -location [list [expr {0.432 + 80.64 * $ot_g}] 347.76] -orientation R0
     incr ot_t
+  } elseif {[regexp {g_sl\\?\[(\d+)\\?\]\.u_fr$} $ot_nm -> ot_s] && [[$ot_i getMaster] isBlock]} {
+    # FE v6 (el1011-ds-vm/fe6): slice relay tile dsfd_vm_fsr s directly above bgq column s (x = 388.8 s, the column's
+    # S-face pin range), y 259.2 (43.2 lattice): >= 20 um above row 2 (w2 top 206.30) and below the clt tile wall (347.76)
+    place_macro -macro_name $ot_nm -location [list [expr {388.8 * $ot_s}] 259.2] -orientation R0
+    incr ot_f
   }
 }
-if {$ot_n != 10 || $ot_t != 16} { error "place_macros_vmfe_h: $ot_n landing macros / $ot_t clt tiles (expected 10 / 16)" }
+if {$ot_n != 10 || $ot_t != 16 || $ot_f != 4} { error "place_macros_vmfe_h: $ot_n landing macros / $ot_t clt tiles / $ot_f fsr tiles (expected 10 / 16 / 4)" }
 foreach ot_i [$ot_blk getInsts] {
   if {![[$ot_i getMaster] isBlock]} { continue }
   if {[[$ot_i getMaster] getName] ne "ot_sram_1r1w_64x512_m1_r2c2"} { continue }
