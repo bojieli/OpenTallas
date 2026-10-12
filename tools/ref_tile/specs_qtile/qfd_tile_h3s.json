@@ -314,7 +314,7 @@
  "job": {
   "owner": "Claude:el1011-q-tile",
   "branch": "claude/el1011-q-tile",
-  "tag": "r1",
+  "tag": "r2",
   "purpose": "q-tile structural fix of qfd_tile_h3-8c1e8805e EARLY_FAIL_CONGESTION (GRT-0116, 134 overflow gcells, all at x 30-40 / 120-130 / 180-190, y 590-880 = the W/E face pin bands (n_a/n_b/t_out/n_y 300-880, ib/xl 450-850) sat abreast the hard leaf columns, whose OBS M1-M6 leave only M7 (vertical) over them, so ~3,000 face pins escaped through 29 um side gaps; ROM banks split top/bottom also sent the south group up through the leaf band). Redesign: ref_tile cluster at the TP8 slot width 311.04 x 1291.656; ROM 2x5 rows + KV in ONE central band (y 445-927) with the W/E pin bands (pin_ranges 356-946) abreast it (M5-M7 free over ROM/SRAM -> M6 horizontal escape across the tile, li->lo straight across); 8 lsl leaves on the 43.2 lattice in two rows below and two above, so each leaf half only carries its own 4 leaves' traffic to the centre; leaf pin faces toward the spine (left R0 / right MY, the TP8 kit / h3 orientation). Same RTL/params/benches as h3 (lsl6 keepout-ECO views 8c1e8805e). Pins: balanced placer (32-pin layer alternation M4/M6, min 1 track; h3 placed li at 4.9 pins/um this way), ~5.1 pins/um = ~0.56 of M4+M6 face capacity. M5 TILE CAP (main 7e582db75): face pins on M4 only (W/E faces: M4 is the only horizontal pin layer <= M5), ~5.1 pins/um = ~0.25-0.3 of M4 face tracks; cluster internals stay at the contract-v6 cluster rule (signals <= M7, PG M7, children <= M6) pending the die lead's recorded M6/M7 grant (ROM/SRAM OBS M1-M4 over the 268-um central band leave M6 as the only horizontal layer across it).",
   "benches": [
    {
