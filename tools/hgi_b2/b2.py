@@ -192,8 +192,11 @@ def split_of(M, r, die, L):
             a_ = M.vm_addrs(d, die, L)
             if nm in outs:
                 s.ops.append((nm, "out", "grid", {q: a_ for q in range(NQ)}))
-            if nm not in outs or (u == "SU" and nm == "O"):
+            if nm not in outs:
                 s.ops.append((nm, "in", "whole", a_))
+            elif u == "SU" and nm == "O":           # MIRROR assertion only: SU.VOP never READS O (machine.u_su_vop),
+                s.ops.append((nm, "own", "whole", a_))   # so liveness must see a pure write (was "in": every REPLX
+                                                    # output became live-in, DS L14 34,420 mirror words held from -1)
         for q in range(NQ):
             s.part[q] = ((0, 1), (0, s.grid[1]))
         return s
@@ -665,18 +668,25 @@ def allocate(cls, subs, s_w, e_w):
         np.maximum.at(be, bid, ew)
         blo = np.nonzero(newblk)[0]
         bsz = np.diff(np.concatenate([blo, [n]]))
-        placed = []                                  # (off, size, start, end)
-        off_of = np.zeros(nb, np.int64)
-        for i in sorted(range(nb), key=lambda i: (bs[i], -bsz[i])):
-            s0, e0, z = bs[i], be[i], int(bsz[i])
-            busy = sorted((o, o + zz) for o, zz, ss, ee in placed if not (ee < s0 or e0 < ss))
-            off = 0
-            for o, oe in busy:
-                if off + z <= o:
-                    break
-                off = max(off, oe)
-            placed.append((off, z, s0, e0))
-            off_of[i] = off
+        best = None                                  # first fit in several orders; keep the smallest extent
+        for key in (lambda i: (bs[i], -bsz[i]), lambda i: (-bsz[i], bs[i]),
+                    lambda i: (-(min(be[i], 1 << 40) - bs[i]) * bsz[i], bs[i]), lambda i: (-be[i], -bsz[i])):
+            placed = []                              # (off, size, start, end)
+            off_of = np.zeros(nb, np.int64)
+            for i in sorted(range(nb), key=key):
+                s0, e0, z = bs[i], be[i], int(bsz[i])
+                busy = sorted((o, o + zz) for o, zz, ss, ee in placed if not (ee < s0 or e0 < ss))
+                off = 0
+                for o, oe in busy:
+                    if off + z <= o:
+                        break
+                    off = max(off, oe)
+                placed.append((off, z, s0, e0))
+                off_of[i] = off
+            x = max(o + z for o, z, _, _ in placed)
+            if best is None or x < best[0]:
+                best = (x, placed, off_of)
+        _, placed, off_of = best
         phys[w] = (LOCAL_W if c == MIR else 0) + off_of[bid] + (np.arange(n) - blo[bid])
         ext[c] = int(max(o + z for o, z, _, _ in placed))
         ev = [(int(ss), z) for _, z, ss, _ in placed] + [(int(ee) + 1 if ee < END else 1 << 62, -z)
