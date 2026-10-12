@@ -49,7 +49,8 @@ module ot_hgi_sm_record #(
     parameter integer CR = 1,
     parameter integer AD = 32,
     parameter integer CH = 8,             // rows a chunk (power of two)
-    parameter integer MUT_NOCR = 0        // mutant: describe the whole slice at once, ignore the credits (overrun returns)
+    parameter integer MUT_NOCR = 0,       // mutant: describe the whole slice at once, ignore the credits (overrun returns)
+    parameter integer MUT_XB = 0          // mutant (smmv 3a): the SMs read x from slot 0 whatever the record's slot
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -72,6 +73,7 @@ module ot_hgi_sm_record #(
     output reg  [31:0]        x_stride,
     output reg  [1:0]         x_space,
     output reg  [1:0]         x_fmt,
+    output reg  [6:0]         x_xb,          // smmv 3a: x-store slot (fragment address base) the load writes
     input  wire               x_done,
     input  wire               x_fault,
     // result publication (to O)
@@ -128,6 +130,12 @@ module ot_hgi_sm_record #(
     wire [3:0]  pp = {1'b0, hdr_q[68:66]} + 4'd1;
     wire [1:0]  pf1 = h1[65:64];
     wire [3:0]  pp1 = {1'b0, h1[68:66]} + 4'd1;
+    // smmv 3a X REUSE (compiler-allocated x slots): header param[5] = XR ("x of this record is already in slot xb: the
+    // record that loaded slot xb had the same A and format, and no load since overwrote it"), param[12:6] = xb (x-store
+    // fragment address base).  XR = 1 issues no x load (xs_done at once); every SM reads x at xb + fragment address.
+    wire        xr1 = h1[69];
+    wire [6:0]  xb1 = h1[76:70];
+    reg  [6:0]  xb_r;
     wire [2:0]  bfmt = b_q[4:2];
     wire [2:0]  want = (pf == 2'd0) ? 3'd1 : (pf == 2'd1) ? 3'd2 : (pf == 2'd2) ? 3'd3 : 3'd4;
     wire [3:0]  lw8 = (pf == 2'd1) ? 4'd10 : (pf == 2'd2) ? 4'd11 : 4'd9;        // log2(8 W)
@@ -192,7 +200,7 @@ module ot_hgi_sm_record #(
     integer s2;
     always @(posedge clk)                                    // datapath flops: no reset tree (start / d_valid are gated
         for (s2 = 0; s2 < NSM; s2 = s2 + 1)                  //  by the registered reset rst_i, synchronously)
-            cmd_h[s2*CW +: CW] <= {rel[s2], dl_s[s2*24 +: 24], dbase_s[s2*32 +: 32], d_n[s2] & rst_i, 7'd0,
+            cmd_h[s2*CW +: CW] <= {rel[s2], dl_s[s2*24 +: 24], dbase_s[s2*32 +: 32], d_n[s2] & rst_i, (MUT_XB ? 7'd0 : xb_r),
                                    fmt_r, 1'b1, g_r, 16'd8, rows_s[s2*13 +: 13], st_n[s2] & go_ok & rst_i};
     assign sm_cmd = hen ? cmd_h : lg_cmd;
     assign lg_ret = hen ? {NSM*4{1'b0}} : sm_ret;
@@ -219,7 +227,7 @@ module ot_hgi_sm_record #(
             dig <= 0; hdr_q <= 0; a_q <= 0; b_q <= 0; o_q <= 0; na_q <= 0; nb_q <= 0; dec_ok <= 1'b0;
             rows_s <= 0; dbase_s <= 0; dl_s <= 0; g_r <= 0; fmt_r <= 0; rr_s <= 0; lr_s <= 0; nb_s <= 0; rr_nz <= 0;
             for (s = 0; s < NSM; s = s + 1) cr_s[s*CRW +: CRW] <= CRW'(AD);
-            x_base <= 0; x_n <= 0; x_p <= 0; x_stride <= 0; x_space <= 0; x_fmt <= 0;
+            x_base <= 0; x_xb <= 0; xb_r <= 0; x_n <= 0; x_p <= 0; x_stride <= 0; x_space <= 0; x_fmt <= 0;
             pub_base <= 0; pub_stride <= 0; pub_space <= 0; pub_m <= 0; pub_q <= 0; pub_p <= 0; pub_bf16 <= 1'b0;
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
@@ -241,7 +249,7 @@ module ot_hgi_sm_record #(
                     q_r <= {4'd0, q1}; q_sh <= {4'd0, q1}; m_sh <= b1[87:68]; g_r <= g1; lpr_r <= lpr1; lby_r <= lb1; dv_n <= b1[47:8]; dv_q <= 40'd0; dv_r <= 9'd0; dv_k <= 6'd20; dv_chk <= 1'b1; m_r <= b1[87:68];
                     base_r <= b1[47:8]; str_r <= b1[119:88]; fmt_r <= pf1; chl <= {13'd0, lpr1} << LCH;
                     qs <= 45'd0; lq <= 24'd0; ml <= 31'd0; dig <= 3'd5; prod_v <= 1'b0; pd_seen <= 1'b0;
-                    x_v <= 1'b1; x_base <= a1[47:8]; x_n <= na1; x_p <= pp1; x_stride <= a1[119:88];
+                    x_v <= !xr1; xs_done <= xr1; xb_r <= xb1; x_xb <= xb1; x_base <= a1[47:8]; x_n <= na1; x_p <= pp1; x_stride <= a1[119:88];
                     x_space <= a1[1:0]; x_fmt <= pf1;
                     pub_v <= 1'b1; pub_base <= o1[47:8]; pub_stride <= o1[119:88]; pub_space <= o1[1:0]; pub_bf16 <= (o1[4:2] == 3'd1); pub_m <= b1[87:68];
                     pub_q <= q1[12:0]; pub_p <= pp1;

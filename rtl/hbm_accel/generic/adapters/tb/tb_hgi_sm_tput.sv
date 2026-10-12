@@ -59,12 +59,12 @@ module tb_hgi_sm_tput;
     wire rec_rdy, done, fault, halted;
     wire x_v, x_rdy, x_done, x_fault, pub_v, pub_rdy, pub_done, pub_fault;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
-    wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
+    wire [1:0] x_space, x_fmt, pub_space; wire [6:0] x_xb; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret;
     ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME), .AD(ADP), .MUT_NOCR(NOCR)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
         .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
-        .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done),
+        .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
         .x_fault(x_fault), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
         .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done), .pub_fault(pub_fault), .sm_cr(acr),
         .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd), .sm_ret(sm_ret), .sm_cg_en());
@@ -86,7 +86,7 @@ module tb_hgi_sm_tput;
     wire [NXC*338-1:0] xq; wire [NXC*274-1:0] xr; wire [NPC*338-1:0] pq; wire [NPC*274-1:0] pr;
     wire [273:0] tr; reg [337:0] tq = 0;
     ot_hgi_sm_xload #(.NXC(NXC), .BD(XB)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
-        .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(proxy_f ? 2'd0 : x_fmt), .x_done(x_done),
+        .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(proxy_f ? 2'd0 : x_fmt), .x_xb(x_xb), .x_done(x_done),
         .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr));
     wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
     ot_hgi_sm_pub #(.NSM(NSM), .NPC(NPC), .MUT_ROW(MW), .AD(ADP)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
@@ -192,7 +192,7 @@ module tb_hgi_sm_tput;
     always @(posedge clk) begin
         tx_en <= 1'b0;
         if (px_go && pxi < pxn) begin
-            tx_en <= 1'b1; tx_addr <= xwm[px0 + pxi][2062:2056]; tx_grp <= xwm[px0 + pxi][2054:2048]; tx_data <= xwm[px0 + pxi][2047:0];
+            tx_en <= 1'b1; tx_addr <= xwm[px0 + pxi][2062:2056] + x_xb; tx_grp <= xwm[px0 + pxi][2054:2048]; tx_data <= xwm[px0 + pxi][2047:0];
             pxi <= pxi + 1;
         end
         if (px_go && x_done && pxi < pxn) begin $display("ERR proxy fragments not written before x_done"); errors = errors + 1; end
