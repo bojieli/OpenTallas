@@ -234,29 +234,38 @@ module ot_s81_hc_ctq #(
     localparam integer FXW = O_D + S_RD * 512;
     localparam integer N = 4 * NG, NV = D / N, LM = ML, LA = AL;
     localparam integer DM = LM + 3 * LA + 1, DS = LM + 7 * LA, DY = 2 * LM + 1;
+    // vector indices are < NV (5 at NG 256): the wait lines carry IW bits, not 8 (the root never sends nv_i >= NV)
+    localparam integer IW = (NV > 1) ? $clog2(NV) : 1;
     wire ng_v = fv[S_RD+1], nv_v = fv[S_RD+2], r_v = fv[S_RD+3];
     always @(posedge clk) if (ng_v) begin n_hs <= fdx[O_NG]; n_cs <= fdx[O_NG + 1]; n_gs <= fdx[O_NG + 2 +: 2]; end
-    reg [7:0] mx_i;
+    reg [IW-1:0] mx_i;
     always @(posedge clk or negedge rst_n) if (!rst_n) mx_v <= 1'b0; else mx_v <= nv_v;
-    always @(posedge clk) if (nv_v) mx_i <= fdx[O_NV +: 8];
+    always @(posedge clk) if (nv_v) mx_i <= fdx[O_NV +: IW];
     wire [DM:0] vm;
+    wire [IW-1:0] xn, sn, wn, yn;
     ot_hdc_vline #(.D(DM)) u_vm (.clk(clk), .rst_n(rst_n), .v(mx_v), .vd(vm));
-    ot_hdc_delay #(.W(8), .D(DM)) u_xi (.clk(clk), .rst_n(rst_n), .d(mx_i), .q(xi));
+    ot_hdc_delay #(.W(IW), .D(DM)) u_xi (.clk(clk), .rst_n(rst_n), .d(mx_i), .q(xn));
     assign x_v = vm[DM];
     ot_hdc_vline #(.D(DS)) u_vs (.clk(clk), .rst_n(rst_n), .v(x_v), .vd(vs));
-    ot_hdc_delay #(.W(8), .D(DS)) u_si (.clk(clk), .rst_n(rst_n), .d(xi), .q(si));
-    reg sc_run;
+    ot_hdc_delay #(.W(IW), .D(DS)) u_si (.clk(clk), .rst_n(rst_n), .d(xn), .q(sn));
+    reg          sc_run;
+    reg [IW-1:0] sc;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin sc_run <= 1'b0; sc_i <= 8'd0; end
-        else if (r_v) begin sc_run <= 1'b1; sc_i <= 8'd0; end
-        else if (sc_run) begin if (sc_i == NV - 1) sc_run <= 1'b0; sc_i <= sc_i + 8'd1; end
+        if (!rst_n) begin sc_run <= 1'b0; sc <= 0; end
+        else if (r_v) begin sc_run <= 1'b1; sc <= 0; end
+        else if (sc_run) begin if (sc == NV - 1) sc_run <= 1'b0; sc <= sc + 1'b1; end
+    always @(*) sc_i = {{(8 - IW){1'b0}}, sc};
     always @(posedge clk) if (r_v) rh <= fdx[O_R +: 32];
     always @(posedge clk or negedge rst_n) if (!rst_n) b_v <= 1'b0; else b_v <= sc_run;
     ot_hdc_vline #(.D(DY)) u_vy (.clk(clk), .rst_n(rst_n), .v(b_v), .vd(vy));
-    ot_hdc_delay #(.W(8), .D(LM)) u_wi (.clk(clk), .rst_n(rst_n), .d(sc_i), .q(wi));
-    reg [7:0] bi;
-    always @(posedge clk) bi <= sc_i;
-    ot_hdc_delay #(.W(8), .D(DY)) u_yi (.clk(clk), .rst_n(rst_n), .d(bi), .q(yi));
+    ot_hdc_delay #(.W(IW), .D(LM)) u_wi (.clk(clk), .rst_n(rst_n), .d(sc), .q(wn));
+    reg [IW-1:0] bi;
+    always @(posedge clk) bi <= sc;
+    ot_hdc_delay #(.W(IW), .D(DY)) u_yi (.clk(clk), .rst_n(rst_n), .d(bi), .q(yn));
+    assign xi = {{(8 - IW){1'b0}}, xn};
+    assign si = {{(8 - IW){1'b0}}, sn};
+    assign wi = {{(8 - IW){1'b0}}, wn};
+    assign yi = {{(8 - IW){1'b0}}, yn};
 endmodule
 
 // ------------------------------------------------------------------------------------------------ norm lane tile
@@ -384,19 +393,19 @@ module ot_s81_hc_ctnl #(
     always @(posedge clk) yr <= bf16(qq);
     assign yb = yr[31:16];
     assign sq_out = sq;
-    // chain adder kk = lq: tapped delay lines (taps LA lq near, LA (lq + 3) far)
-    reg  [31:0] dnl [1:2*LA];
-    reg  [31:0] dfl [1:6*LA];
+    // chain adder kk = lq: ONE tapped delay line (the half is a static strap, so near and far never both run): its input
+    // is the next lane's square (near, taps LA lq) or the own square (far, taps LA (lq + 3)).  Same operand, same cycle
+    // as two separate lines (2 LA + 6 LA stages); 6 LA stages.
+    reg  [31:0] dl [1:6*LA];
     integer t;
     always @(posedge clk) begin
-        dnl[1] <= sqn_in; for (t = 2; t <= 2 * LA; t = t + 1) dnl[t] <= dnl[t - 1];
-        dfl[1] <= sq;     for (t = 2; t <= 6 * LA; t = t + 1) dfl[t] <= dfl[t - 1];
+        dl[1] <= farq ? sq : sqn_in; for (t = 2; t <= 6 * LA; t = t + 1) dl[t] <= dl[t - 1];
     end
     reg [31:0] dn, df;
     reg        fire;
     always @(*) begin
-        case (lq) 2'd0: dn = sqn_in; 2'd1: dn = dnl[LA]; 2'd2: dn = dnl[2 * LA]; default: dn = 32'd0; endcase
-        case (lq) 2'd0: df = dfl[3 * LA]; 2'd1: df = dfl[4 * LA]; 2'd2: df = dfl[5 * LA]; default: df = dfl[6 * LA]; endcase
+        case (lq) 2'd0: dn = sqn_in; 2'd1: dn = dl[LA]; 2'd2: dn = dl[2 * LA]; default: dn = 32'd0; endcase
+        case (lq) 2'd0: df = dl[3 * LA]; 2'd1: df = dl[4 * LA]; 2'd2: df = dl[5 * LA]; default: df = dl[6 * LA]; endcase
         case (lq) 2'd0: fire = farq ? vs[LM + 3 * LA] : vs[LM];
                   2'd1: fire = farq ? vs[LM + 4 * LA] : vs[LM + LA];
                   2'd2: fire = farq ? vs[LM + 5 * LA] : vs[LM + 2 * LA];
@@ -460,29 +469,52 @@ module ot_s81_hc_ctpl #(
                 end else
                     cf_post[rd_s] <= hq ? fdx[O_D + 512 * s + 128 + 64 +: 64] : fdx[O_D + 512 * s + 128 +: 64];
             end
-    reg            hp_go, hp_in_v;
+    reg            hp_go, hp_in_v, hp_cs;
     reg [31:0]     hp_y;
-    reg [8*32-1:0] hp_comb;
-    reg [2*32-1:0] hp_post;
     always @(posedge clk or negedge rst_n) if (!rst_n) hp_in_v <= 1'b0; else hp_in_v <= pb_v;
     always @(posedge clk) begin
         hp_go <= pb_v && pb_go;
         if (pb_v) begin
             case (gq) 2'd0: hp_y <= fdx[O_D +: 32]; 2'd1: hp_y <= fdx[O_D + 32 +: 32];
                       2'd2: hp_y <= fdx[O_D + 64 +: 32]; default: hp_y <= fdx[O_D + 96 +: 32]; endcase
-            hp_comb <= cf_comb[pb_cs]; hp_post <= cf_post[pb_cs];
+            hp_cs <= pb_cs;
             if (pb_go) begin pwb <= pb_wb; phs <= pb_hs; pob <= 16'd0; end
         end
         if (hov) pob <= pob + 16'd1;
     end
-    // op words: WIN traverse with go, latched (ot_dsrom_su_hcpost u_wop / c_r / p_r)
+    // op words (ot_dsrom_su_hcpost u_wop / c_r / p_r): in the single tile the go's comb / post words traverse the WIN
+    // hub stages as 320 data bits.  Here the coefficient words are already resident in this tile, so only the go and
+    // its 1-bit slot select traverse WIN; c_r / p_r latch the selected slot at the same cycle.  Identical as long as
+    // the selected slot is not rewritten between the go and the latch (WIN + 1 cycles; the root double-buffers the
+    // two slots, so a write targets the idle one) -- checked below in simulation.
     wire           w_v;
-    wire [10*32-1:0] w_d;
-    ot_dsrom_su_hcpost_wire #(.W(10*32), .D(WIN)) u_wop (.clk(clk), .rst_n(rst_n), .v(hp_go), .d({hp_post, hp_comb}),
-                                                         .vq(w_v), .q(w_d));
+    wire           w_cs;
+    ot_dsrom_su_hcpost_wire #(.W(1), .D(WIN)) u_wop (.clk(clk), .rst_n(rst_n), .v(hp_go), .d(hp_cs), .vq(w_v), .q(w_cs));
     reg [8*32-1:0] c_r;
     reg [2*32-1:0] p_r;
-    always @(posedge clk) if (w_v) begin c_r <= w_d[8*32-1:0]; p_r <= w_d[10*32-1:8*32]; end
+    always @(posedge clk) if (w_v) begin c_r <= cf_comb[w_cs]; p_r <= cf_post[w_cs]; end
+`ifndef SYNTHESIS
+    // the latch-time read equals the go-time read unless the selected slot is written in between
+    reg [WIN:0] pend_v;
+    reg [WIN:0] pend_s;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pend_v <= 0; pend_s <= 0; end
+        else begin
+            pend_v <= {pend_v[WIN-1:0], pb_v && pb_go};
+            pend_s <= {pend_s[WIN-1:0], pb_cs};
+        end
+    integer ck;
+    always @(posedge clk)                    // writes at the go edge and the WIN edges after it change the latched words
+        if (rst_n)
+            for (s = 0; s < S_RD; s = s + 1)
+                if (rd_v[s] && rd_k == 2'd2) begin
+                    if (pb_v && pb_go && pb_cs == rd_s)
+                        $error("ot_s81_hc_ctpl: coefficient slot %0d written at its go", rd_s);
+                    for (ck = 0; ck < WIN; ck = ck + 1)
+                        if (pend_v[ck] && pend_s[ck] == rd_s)
+                            $error("ot_s81_hc_ctpl: coefficient slot %0d written %0d cycles after its go", rd_s, ck + 1);
+                end
+`endif
     // the group (ot_dsrom_su_hcpost_group, lanes k0, k0 + 1)
     wire [63:0]  hr = hpr[0 +: 64] | hpr[64 +: 64] | hpr[128 +: 64] | hpr[192 +: 64];
     wire [127:0] r  = {hr[48 +: 16], 16'h0000, hr[32 +: 16], 16'h0000, hr[16 +: 16], 16'h0000, hr[0 +: 16], 16'h0000};
