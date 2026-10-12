@@ -1,5 +1,5 @@
 {
- "name": "pqc_aq12t_rt-rt-COMMIT",
+ "name": "pqc_aq12t_rt-rt-f7ebf3290",
  "block": "ot_dsrom_aq12t",
  "ref_tile": true,
  "owner": "Claude:rr1012",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-rr1012-pqc",
-  "commit": "COMMIT"
+  "commit": "f7ebf3290"
  },
  "stages": {
   "bench": [
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/pqc_aq12t_rt/pqc_aq12t_rt-rt-COMMIT"
+   "to": "results/rtl/ref_tile/pqc_aq12t_rt/pqc_aq12t_rt-rt-f7ebf3290"
   }
  ],
  "cycles_added": 0,
