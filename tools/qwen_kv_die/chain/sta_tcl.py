@@ -38,6 +38,8 @@ rd = '\n'.join(f'read_liberty {x}' for x in libs)
 # die-evidence-2 2026-10-09: ETM-bound element views (tools/qwen_die_etm_map.py: routed sign-off ETMs of slab_m8 /
 # cst / chead) are read FIRST when the run's libs carry them; qfd_elements_<c>.lib then holds only the ASSUMED rest
 rd = f'if {{[file exists /work/libs/qfd_etm_{c}.lib]}} {{ read_liberty /work/libs/qfd_etm_{c}.lib }}\n' + rd
+# kv-die lead 2026-10-12 (die_iter_1012): per-view ETMs bound by tools/qwen_kv_die/bind_views.py (one lib per master)
+rd = f'foreach f [lsort [glob -nocomplain /work/libs/qfd_etm_*_{c}.lib]] {{ read_liberty $f }}\n' + rd
 tcl = f"""proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag rss_mb=[expr {{$r/1024}}] t=[clock seconds]"; flush stdout }}
 proc step {{name body}} {{ set t0 [clock milliseconds]
