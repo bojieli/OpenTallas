@@ -25,8 +25,9 @@
 // is seen through the face flops).
 // MUT (bench): 1 = assembly takes sector j from lane j ^ 1 (lane-to-sector map; must FAIL); 2 = hazard masks ignored.
 module ot_hgi_qdq_q #(
-    parameter integer LQ  = 4,      // lane credits a lane (= the slice bank's wide-lane queue depth)
-    parameter integer LD  = 8,      // per-lane response FIFO (read round trip at 0.5 sector / lane / cycle)
+    parameter integer LQ  = 10,     // lane credits a lane (= the slice bank's wide-lane queue depth, 4 + 2 x 3 relay stages,
+                                    // B2 SPEC v0.8 D-B2-12; 4 credits at 3 relays measured 1.29x)
+    parameter integer LD  = 16,     // per-lane response FIFO (read round trip at 0.5 sector / lane / cycle; >= LQ)
     parameter integer NB  = 32,     // issued-beat FIFO (>= read round trip in beats; 16 caps S=3 at 18 cyc a 16-beat record)
     parameter integer OD  = 64,     // result FIFO beats (>= decode latency 26 + write round trip at S=3)
     parameter integer RQ  = 16,     // record queue
