@@ -636,6 +636,11 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--macro-place-halo {h} {h}")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
+        # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
+        # child's internal insertion, so the flops next to it ran one insertion EARLY: qkd_d2d_ref (sbuf 505 ps) left 499
+        # sbuf read-data flops r_d at TT 1,050 vs 1,560 ps -> R2O FF hold -318 ps that hold repair cannot move.
+        if views and s.get("spine_macro_leaf", True):
+            extra.append("--orfs-var OT_SPINE_MACRO_LEAF=1")
     # spec "defines": RTL defines the top's synthesis needs (e.g. the hardened-child body selected by `ifdef); written after
     # run_abi3's own "VERILOG_DEFINES = -DSYNTHESIS", so it keeps -DSYNTHESIS explicitly (the lint bench uses the same set).
     if s.get("defines"):
