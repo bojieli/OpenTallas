@@ -1,7 +1,7 @@
 {
  "schema": "qwen-hier-contract/0 (provisional; migrate to tools/hier_contract/)",
  "die": "qwen_rom",
- "version": 2,
+ "version": 3,
  "source": "r22ko4 e7 case (e6 21fdd3100 + qfd_io_collective M7 straps)",
  "period_ps": 833.333,
  "die_outline": {
@@ -15041,7 +15041,7 @@
     "source_commit": "2a4340a331e4368003917bce03c26f73453c1abd"
    },
    "hierarchy": {
-    "kind": "two-level (unique parent): die places 4 slices + 4 FIFO SRAMs + hub in the slot; no parent route (pr2h-8d0cb6a8b r2 may finish, first to close wins)",
+    "kind": "HARDENED CLUSTER (GLUE PLACEMENT 19:15: substantial coupled logic -> one hierarchical hard block, built top-down to this slot by el1011-q-coll; no standalone hub)",
     "children": [
      {
       "name": "coll_slice0",
@@ -15189,9 +15189,9 @@
      },
      {
       "name": "coll_hub",
-      "master": "qfd_io_collective_hub",
+      "master": "(cluster-internal glue, not a separate element)",
       "outline_um": "slot area east of x+500 um (q-coll cuts it; fixed outline issued in the next contract version before its route)",
-      "status": "to build (el1011-q-coll)"
+      "status": "inside the cluster"
      }
     ],
     "seams": [
@@ -15216,7 +15216,9 @@
       "bits": 2184
      }
     ],
-    "seam_budget": "registered both sides; slice lib TT setup -182..-130 / hold 150..205 / clk->out <= 536 ps; FF setup -146..-110 / hold 126..164 / clk->out <= 392 ps; slice clock insertion TT 179-228 / FF 143+"
+    "seam_budget": "registered both sides; slice lib TT setup -182..-130 / hold 150..205 / clk->out <= 536 ps; FF setup -146..-110 / hold 126..164 / clk->out <= 392 ps; slice clock insertion TT 179-228 / FF 143+",
+    "cluster_rules": "slot outline/pins/PG M7 straps fixed by this contract; children: 4 ot_coll_fold_slice (closed) + 4 ot_sram_1r1w_32x546_m1 at the listed in-slot positions; the former hub logic sits inside the cluster beside the slices with registered seams; children signals <= M6 (slice M7 wires must go), exact-shape abstracts, no parameters on hard children",
+    "seams_owner": "cluster-internal seams = q-coll cluster route; die seams = the slot pins (die closure)"
    }
   },
   "qfd_io_serdes": {
@@ -124345,7 +124347,7 @@
    },
    "evidence": null,
    "hierarchy": {
-    "kind": "replicated hardened cluster (x1536 >= 4: harden once, replicate; AMENDMENT 21:30)",
+    "kind": "HARDENED REPLICATED CLUSTER (x1536): lsl4 leaves + ROM/KV macros + the hub_s/hub_n logic INSIDE the cluster (no standalone hubs), hardened once and stepped",
     "build": "el1011-q-tile h2 line (7e60104b6): leaves lsl4 (lsl3 routes M7 signals over its PG -> not admissible) + qfd_tile_hub_s / qfd_tile_hub_n + ROM/KV macros; positions macro_place_tile_h2.tcl",
     "variant": "r22ko4 needs the NK variant: no li/lo, no KV slice (D2)",
     "target_clock_insertion_ps": {
@@ -125397,6 +125399,12 @@
    "date": "2026-10-11 21:45 PDT",
    "by": "qwendie-1011",
    "note": "two-level hierarchy per slot (io_collective two-level with sub-slots; qfd_tile replicated cluster); seam_check spec; ctlm pending outline; tile target clock insertion"
+  },
+  {
+   "version": 3,
+   "date": "2026-10-11 19:20 PDT",
+   "by": "qwendie-1011",
+   "note": "GLUE PLACEMENT: io_collective + qfd_tile are hardened clusters (glue inside); seams = die closure; die_closure section"
   }
  ],
  "seam_check": {
@@ -125422,5 +125430,11 @@
    "hops_over_504um": 0
   },
   "evidence_rule": "estimate-only seam checks are not closure evidence; a seam passes only on the routed die region"
+ },
+ "die_closure": {
+  "seam_check": "part of DIE closure (ELEMENT CLOSURE UNDER TWO-LEVEL 19:45), not element closure",
+  "regions": "die top routed per region with slots as fixed macros, relays as the only logic; region list + routes tracked here",
+  "region_routes": [],
+  "status": "pending: per-region die-top DRT flow to be added; current evidence = GRT + STA (r22ko4 e6/e7 chains), not closure"
  }
 }
