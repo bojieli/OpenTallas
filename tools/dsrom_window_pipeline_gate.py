@@ -15,7 +15,7 @@ PIPELINE = [f'rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_{name}_pipeli
 CTL_MANIFEST = Path('rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/source_manifest.json')
 
 
-def controller_sources(mutant=False):
+def controller_sources(mutant=False, core=False):
     """Select the isolated, byte-identical controller campaign sources."""
     manifest = json.loads((gate.ROOT / CTL_MANIFEST).read_text())
     sources = []
@@ -29,6 +29,12 @@ def controller_sources(mutant=False):
     # Preserve the original campaign's definition-before-controller ordering.
     if mutant:
         sources.sort(key=lambda s: Path(s).name != 'mutant_window_ctl_late_payload.sv')
+    if core:
+        # el1012-wsrc die-placed landing cut: the controller file elaborates as ot_dsrom_window_source_core and
+        # ot_dsrom_window_source_ctl_h.sv rebuilds ot_dsrom_window_source_ctl from it + four land8 tiles.
+        d = 'rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/'
+        sources.insert(0, d + 'ot_wsrc_core_define.sv')
+        sources.append(d + 'ot_dsrom_window_source_ctl_h.sv')
     return sources
 
 
@@ -43,17 +49,21 @@ def main():
                    help='ot_dsrom_window_stage_pipeline MARGIN (default off)')
     p.add_argument('--ctl-leaf', type=int, default=0, choices=(0, 1, 2, 3, 4, 5),
                    help='isolated pinned controller leaf with MARGIN 0/1/2 (4: MARGIN 2 + replicated reset tree; 5: MARGIN 3 textbook rebuild)')
+    p.add_argument('--ctl-core', action='store_true',
+                   help='with --ctl-leaf 5: controller = ot_dsrom_window_source_core + 4 land8 (die-placed landing cut)')
     p.add_argument('--mutant-late-payload', action='store_true',
                    help='controller negative: capture K-port request payload one edge late')
     a = p.parse_args()
     if a.ctl_leaf and a.stage_margin:
         p.error('controller recovery and newer stage-margin are separate source vehicles')
+    if a.ctl_core and a.ctl_leaf != 5:
+        p.error('--ctl-core requires --ctl-leaf 5')
     if a.mutant_late_payload and not a.ctl_leaf:
         p.error('--mutant-late-payload requires --ctl-leaf')
     a.plan = json.dumps({0:['lf','lf_cold'], 20:['lf_scan','lf_bg'],
                         24:['lf','lf_kg_p1','lf_kg_p2','lf_kgcon_p2']})
     if a.ctl_leaf:
-        gate.SOURCES[:] = controller_sources(a.mutant_late_payload)
+        gate.SOURCES[:] = controller_sources(a.mutant_late_payload, a.ctl_core)
     else:
         gate.SOURCES.extend(PIPELINE)
     for name in a.only.split(','):

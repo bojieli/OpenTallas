@@ -90,7 +90,18 @@ module ot_dsrom_window_skid #(parameter integer W = 1, parameter bit ZERO_IDLE =
     end endgenerate
 endmodule
 
+// OT_WSRC_CORE (el1012-wsrc, die-placed landing tiles): defined before this file, the same text elaborates as
+// ot_dsrom_window_source_core = this controller WITHOUT its four ot_dsrom_wsrc_land8 landing tiles (MARGIN 3 only).
+// The 8,704 acc_* pins then end on the land8 tiles, which the die places at the staging faces; the core keeps the
+// tiles' reset relays (land_rst_n) and takes their registered results (land_bad / land_nb / land_simbad).  The tiles
+// are feed-forward (acc_* -> registered bad / nb; b feeds only the simulation ownership check), so the cut adds no
+// loop.  ot_dsrom_window_source_ctl_h.sv rebuilds ot_dsrom_window_source_ctl from core + 4 land8 for the exactness
+// gate (tools/dsrom_window_pipeline_gate.py --ctl-leaf 5 --ctl-core).  Without the define nothing changes.
+`ifdef OT_WSRC_CORE
+module ot_dsrom_window_source_core #(
+`else
 module ot_dsrom_window_source_ctl #(
+`endif
     // 0: original body; 1: margin-first boundary; 2: MARGIN 1 + the 2026-10-07 class fixes (takeover-ds, route_r2
     // post-CTS classes at 770 ps): pointer-FIFO skids, kept idle copies for the ready paths, FSM data registers
     // outside the fault priority, five-stage mirror check, predecoded mirror writes, the writer's dead refill
@@ -163,10 +174,18 @@ module ot_dsrom_window_source_ctl #(
     output wire [NPC*WLENW-1:0] wl_req_len,
     output wire [NPC*WTAGW-1:0] wl_req_tag,
     // staging array neighbour
+`ifdef OT_WSRC_CORE
+    // die-placed landing tiles (see OT_WSRC_CORE above)
+    output wire [HAW-1:0] la_b,
+    output wire [3:0] land_rst_n,
+    input wire [3:0] land_bad, land_simbad,
+    input wire [15:0] land_nb,
+`else
     input wire [NPC-1:0] acc_v,
     input wire [NPC*WTAGW-1:0] acc_tag,
     input wire [NPC*BEATW-1:0] acc_beat,
     input wire [NPC*256-1:0] acc_data,
+`endif
     output wire stage_job_v,
     output wire [USER_W-1:0] stage_job_user,
     output wire [POS_W-1:0] stage_job_first,
@@ -479,6 +498,15 @@ module ot_dsrom_window_source_ctl #(
     reg la_start, stage_job;
     // MARGIN: accepted beats from the staging neighbour are flopped at the pin.
     wire [NPC-1:0] a_v; wire [NPC*WTAGW-1:0] a_tag; wire [NPC*BEATW-1:0] a_beat; wire [NPC*256-1:0] a_data;
+`ifdef OT_WSRC_CORE
+    generate if (1) begin : g_land_core
+`ifndef SYNTHESIS
+        initial if (MARGIN < 3) $fatal(1, "ot_dsrom_window_source_core: MARGIN 3 only");
+`endif
+        assign land_rst_n = rst_g[13:10];
+        assign a_v = '0; assign a_tag = '0; assign a_beat = '0; assign a_data = '0;
+    end endgenerate
+`else
     wire [3:0] land_bad, land_simbad; wire [15:0] land_nb; wire [HAW-1:0] la_b;
     generate if (MARGIN >= 3) begin : g_land     // four hardened 8-lane landing sub-tiles (they capture at the pin)
 `ifndef SYNTHESIS
@@ -509,6 +537,7 @@ module ot_dsrom_window_source_ctl #(
     end else begin : g_acc_direct
         assign a_v = acc_v; assign a_tag = acc_tag; assign a_beat = acc_beat; assign a_data = acc_data;
     end endgenerate
+`endif
     ot_dsrom_window_stream_la_s81 #(.NPC(NPC), .AW(HAW), .TAGW(WTAGW), .LENW(WLENW), .BEATW(BEATW), .IW(LA_IW),
         .ISSUE_PC(LA_ISSUE_PC), .MARGIN(MARGIN != 0), .MARGIN2(MARGIN >= 2), .MARGIN3(MARGIN >= 3)) u_la (
         .clk(clk), .rst_n(rst_g[7]), .start(la_start), .base(HAW'(j_base)), .busy(la_busy), .fault(la_fault),
