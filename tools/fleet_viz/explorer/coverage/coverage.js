@@ -231,9 +231,9 @@ function drawer() {
     g.why ? h('span', { class: 'chip dim', style: 'white-space:normal' }, g.why + (g.proposed ? ' → ' + g.proposed : '')) : null));
   if (c.live && c.live.length) {
     kids.push(h('div', { class: 'node' }, h('b', {}, 'Elements (live closure status)'),
-      ...c.live.map((e) => h('div', { style: 'font:11px ui-monospace,Menlo,monospace;color:#c3cbe0;margin:3px 0' }, h('a', { class: 'el', href: '/explorer#element=' + encodeURIComponent(e.element) }, e.element),
+      ...c.live.map((e) => h('div', { style: 'font:11px ui-monospace,Menlo,monospace;color:#c3cbe0;margin:3px 0' }, h('a', { class: 'el', href: '/explorer/element/' + encodeURIComponent(e.element), title: 'open the element page' }, e.element),
         ` ${e.category}`, e.tt != null ? ` · TT ${e.tt >= 0 ? '+' : ''}${e.tt}` : '', e.ff != null ? ` FF ${e.ff >= 0 ? '+' : ''}${e.ff}` : '', e.live ? ` · ${e.live} live` : '', e.latest ? ` · latest ${e.latest}` : ''))));
-  } else if ((c.elements || []).length) kids.push(h('div', { class: 'node' }, h('b', {}, 'Elements'), ...c.elements.map((e) => h('a', { class: 'el', href: '/explorer#element=' + encodeURIComponent(e) }, e))));
+  } else if ((c.elements || []).length) kids.push(h('div', { class: 'node' }, h('b', {}, 'Elements'), ...c.elements.map((e) => h('a', { class: 'el', href: '/explorer/element/' + encodeURIComponent(e), title: 'open the element page' }, e))));
   (c.nodes || []).forEach((id, i) => kids.push(h('div', { class: 'node' }, h('b', {}, id + ': '), (c.function || [])[i] || '',
     h('div', { class: 'kv' }, h('span', {}, 'element'), h('b', {}, (c.hw_element || [])[i] || '—'), h('span', {}, 'die'), h('b', {}, (c.die || [])[i] || '—'),
       h('span', {}, 'closure'), h('b', {}, (c.closure_text || [])[i] || '—'), h('span', {}, 'token path'), h('b', {}, String((c.in_token_path || [])[i] ?? '—'))),

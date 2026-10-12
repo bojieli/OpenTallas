@@ -109,7 +109,8 @@ class Layout:
         names = [nm for nm in self.SIZES if nm not in ("ea", "eg_kv", "eg_rows")] + self.ALIAS_SPAN
         for nm in names:
             n = self.SIZES.get(nm, 2304 if nm.endswith((".g", ".u")) else D)
-            cur = -(-cur // 64) * 64
+            al = HC_BANK_WORDS if nm in HC_BANK_BUFS else 64       # rule (A): the HC buffers at bank phase 0
+            cur = -(-cur // al) * al
             self.vm[nm] = cur
             cur += n
         assert cur <= MC.VM_WORDS, cur
@@ -156,6 +157,70 @@ MAN_END = 94 << 30                   # the weight manifest must end below the HC
 HC_SLOT = 32768                      # aperture slot stride (words); bank k of a slot at + 4,096 k (spec db9ef1603)
 HC_BANK = 4096
 HC_DB = [True]                       # HC_MIX_ROWS weight row prefetched into the HC aperture (2 slots); --hc-hbm = off
+# el1011-hbm-fused: the FUSED record (ot_hgi_fused_record HCE / HLL) runs HC_PRE_NORM / HC_POST at d = HCD on the
+# lane-local one-pass HC engine only when hce_ok / hgp_ok hold; otherwise it silently takes the ~20x micro-op path.
+# The compiler rules for that build (HGI_FUSED_HLL=1, the qualified target; 0 = a die without HCE / HLL, where the
+# GPK gain below would be WRONG on the micro-op path):
+#   (A) bank phase: A, B (HC_POST) / the FUSED scratch (HC_PRE_NORM: the gain lands at cfg_scratch) and O start at the
+#       same VM bank (word base [7:3], sector mod 32) and are sector aligned (word base [2:0] = 0)
+#   (B) the HC_PRE_NORM gain (HBM BF16, d elements) is in the packed lane-local layout GPK and 4-byte aligned
+FUSED_HLL = os.environ.get("HGI_FUSED_HLL", "1") == "1"
+FUSED_HCD = 5120                     # ot_hgi_fused_record HCD
+HC_BANK_WORDS = 256                  # 32 banks x 8-word sectors: a base multiple of this is bank phase 0
+HC_BANK_BUFS = ("h", "RES", "x", "y", "yf")      # the HC_PRE_NORM / HC_POST A / B / O buffers: all at phase 0
+HC_GPK_GAINS = ("attn_norm.weight", "ffn_norm.weight", "norm.weight")   # HC_PRE_NORM / final_norm gains (suffixes)
+
+
+def gpk_index(d):
+    """GPK (ec208ff3a): data sector s (8 BF16) -> packed sector (s mod 32) + 32 floor(s / 64), half (s / 32) mod 2;
+    returns p with packed BF16 element p[e] holding data element e (d % 512 == 0)"""
+    assert d % 512 == 0, d
+    e = np.arange(d)
+    s = e // 8
+    return 16 * ((s % 32) + 32 * (s // 64)) + 8 * ((s // 32) % 2) + e % 8
+
+
+def vm_phase(desc):
+    return (desc.base >> 3) & 31
+
+
+def fused_fast_path_violations(rec, scratch=None, gain_layout=None, check_gain=True):
+    """Why a FUSED HC_PRE_NORM / HC_POST record of d = FUSED_HCD would miss the lane-local fast path (empty = it
+    takes it; records of another d, other ops, or a non-HLL target are not checked).  scratch: the cfg_scratch word
+    base when known; gain_layout: the layout of the HC_PRE_NORM gain image at B ("GPK" required unless check_gain is
+    False: a consumer that holds the records but not the table map, e.g. hgi_e2e/run.py placing the scratch)."""
+    if not FUSED_HLL or rec.unit != "FUSED" or rec.op not in ("HC_PRE_NORM", "HC_POST"):
+        return []
+    A, B, O = rec.desc.get("A"), rec.desc.get("B"), rec.desc.get("O")
+    if A is None or B is None or O is None:
+        return ["missing A / B / O descriptor"]
+    pre = rec.op == "HC_PRE_NORM"
+    d = A.n // 4 if pre else A.n
+    if d != FUSED_HCD:
+        return []
+    bad = []
+    vms = [("A", A), ("O", O)] + ([] if pre else [("B", B)])
+    for k, v in vms:
+        if v.space != "VM" or v.base % 8:
+            bad.append(f"{k} not a sector-aligned VM base ({v.space} {v.base})")
+    for k, v in vms[1:]:
+        if v.space == "VM" and vm_phase(v) != vm_phase(A):
+            bad.append(f"{k} bank phase {vm_phase(v)} != A's {vm_phase(A)}")
+    if pre:
+        if scratch is not None and (scratch % 8 or (scratch >> 3) & 31 != vm_phase(O)):
+            bad.append(f"scratch {scratch} not sector aligned at O's bank phase {vm_phase(O)}")
+        if B.space != "HBM" or B.fmt != "BF16" or B.base % 4 or B.n != d or FUSED_HCD % 512:
+            bad.append(f"gain B not a 4-byte aligned HBM BF16 row of d ({B.space} {B.fmt} {B.base} n {B.n})")
+        if check_gain and gain_layout != "GPK":
+            bad.append(f"gain image layout {gain_layout!r}, not GPK")
+    return bad
+
+
+def assert_fused_fast_path(rec, scratch=None, gain_layout=None, check_gain=True):
+    """Exporter-side refusal: a d = FUSED_HCD HC_PRE_NORM / HC_POST record that would silently take the slow path."""
+    bad = fused_fast_path_violations(rec, scratch, gain_layout, check_gain)
+    if bad:
+        raise ValueError(f"FUSED.{rec.op} {rec.tag!r} misses the lane-local fast path: " + "; ".join(bad))
 
 
 def hc_row_words(fn_row):
@@ -285,6 +350,10 @@ class Lower:
         head = rank < HEADS
 
         def add(rec, rd, wr, run=True):
+            if run and rec.unit == "FUSED" and rec.op == "HC_PRE_NORM":
+                assert_fused_fast_path(rec, gain_layout=table_layout_at(rec.desc["B"].base))
+            elif run:
+                assert_fused_fast_path(rec)
             if not run:
                 rec = Rec("CTL", "NOP", tag=rec.tag, family=rec.family)
             rec.src = (L, self.cur_op.get("id")) if self.cur_op else None     # timing: the w19 op it lowers
@@ -428,7 +497,7 @@ class Lower:
                 elif fn == "attend":
                     self.attend(add, su, L, head, op.get("yarn"))
                 elif fn == "router_act":
-                    r0, r1 = W.even(384)[rank]
+                    r0, r1 = W.even(m.n_exp)[rank]              # (hgi-1010/h: the DSpark stages route over 128)
                     su("router_act", "router_act", dict(A=V("gsc", r1 - r0, off=r0), O=V("gsc", r1 - r0, off=r0)),
                        ["gsc"], ["gsc"], sfu=I.SFU_SPSQRT, dst=I.DST_VM)
                 elif fn == "route":
@@ -905,11 +974,11 @@ class Lower:
         if self.fuse:                 # the shared slot's route weight (FUSION 4)
             su("route.one", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["ONE"], n=1),
                                           O=V("route_w", 1, off=m.k_exp)), [], ["route_w"], dst=I.DST_VM)
-        su("route.bias", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["BIAS"], n=384),
-                                       O=V("BIAS", 384)), [], ["BIAS"], dst=I.DST_VM)
-        su("route.scores_bias", "route", dict(A=V("gsc", 384), C=V("BIAS", 384), O=V("router", 384)),
+        su("route.bias", "route", dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF["BIAS"], n=m.n_exp),
+                                       O=V("BIAS", m.n_exp)), [], ["BIAS"], dst=I.DST_VM)
+        su("route.scores_bias", "route", dict(A=V("gsc", m.n_exp), C=V("BIAS", m.n_exp), O=V("router", m.n_exp)),
            ["gsc", "BIAS"], ["router"], ad=I.AD_C, dst=I.DST_VM)
-        add(Rec("IDX", "TOPK", param=m.k_exp | MC.TOPK_ASC, desc=dict(A=V("router", 384), O=U32V(
+        add(Rec("IDX", "TOPK", param=m.k_exp | MC.TOPK_ASC, desc=dict(A=V("router", m.n_exp), O=U32V(
             self.lay.vm["rid"], m.k_exp)), tag="route.top6", family="route"), ["router"], ["rid"])
         for j in range(m.k_exp):                 # gather the selected scores: indexed descriptors (C3b)
             su(f"route.gather{j}", "route", dict(
@@ -934,6 +1003,17 @@ GALL_NAMES = ["GALL", "ea", "eg_kv", "eg_rows"] + [f"ea.s{e}" for e in range(7)]
 TABLE_N = {}
 TABLE_OFF = {}
 TABLE_FMT = {}
+TABLE_LAYOUT = {}        # name -> "GPK" for a gain stored packed lane-local (rule B), else absent (linear)
+
+
+def table_layout_at(base):
+    """the layout of the table at HBM byte base (None = linear or not a table)"""
+    for nm, off in TABLE_OFF.items():
+        if TBASE + off == base:
+            return TABLE_LAYOUT.get(nm)
+    return None
+
+
 CK_CAP = [0, 0]          # per-die row-store bytes per KV source; index-key rows per source (set in main)
 
 
@@ -999,6 +1079,12 @@ def build_tables(m, st, L, pos, rank):
         if fmt == "BF16":
             if not np.array_equal(MC.A.to_bf16(a).view(np.uint32), a.view(np.uint32)):
                 raise ValueError(f"table {name}: not exactly BF16")
+            TABLE_LAYOUT.pop(name, None)
+            if FUSED_HLL and a.size == FUSED_HCD and name.endswith(HC_GPK_GAINS):
+                pk = np.empty_like(a)               # rule (B): the HC_PRE_NORM gain in the packed lane-local layout
+                pk[gpk_index(a.size)] = a
+                a = pk
+                TABLE_LAYOUT[name] = "GPK"
             raw = MC.encode_fmt(a, "BF16")
         else:
             raw = a.view(np.uint8)
@@ -1121,6 +1207,8 @@ def ds_units(m, man, golib):
         for die in M.dies:
             h = M.read(r.desc["A"], die, L).reshape(HC, D)
             g = M.read(r.desc["B"], die, L)
+            if table_layout_at(r.desc["B"].base) == "GPK":      # the lane-local engine unpacks the GPK gain
+                g = np.asarray(g)[gpk_index(g.size)]
             pre = M.read(r.desc["C"], die, L)
             M.vm_write(r.desc["O"], die, L, V_.rmsnorm_fold(m.hc_pre(h, pre), g, m.eps))
 
@@ -1198,6 +1286,8 @@ def ds_units(m, man, golib):
         a = r.desc["A"]
         if a.space == "HBM" and EG_TBASE <= a.base < EG_TBASE + (1 << 35) and a.indexed:
             return eg_home_rows(M, r, L)
+        if a.space == "HBM" and a.base >> 37 == 1 and (a.base & ((1 << 35) - 1)) not in HC_STRIPE:
+            return base_load(M, r, L)               # a STRIPE4 data row (the MTP column swap), not an HC weight row
         if not (a.space == "HBM" and a.base >= WBASE):
             return base_load(M, r, L)
         for die in M.dies:

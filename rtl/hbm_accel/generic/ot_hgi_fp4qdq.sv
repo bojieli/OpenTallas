@@ -221,25 +221,38 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
             cnt7 = ({1'b0, a} + {1'b0, b2}) + ({1'b0, c} + {2'b0, p[6]});
         end
     endfunction
+    // hgi-1010/c (route f589c9afa: s4_t -> s5_c 28 levels = seven 31-bit compares + the count in one edge): S5A registers
+    // the predicates, S5B counts them (+1 edge; ot_hgi_quant_decode's alignment pipe is one shorter)
+    reg              s5a_v, s5a_nf;
+    reg [6:0]        s5a_p [0:31];
+    reg [31:0]       s5a_sgn;
+    reg [4:0]        s5a_n [0:1];
+    reg signed [9:0] s5a_qs [0:1];
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s5_v <= 1'b0;
-        else s5_v <= s4_v;
+        if (!rst_n) begin s5a_v <= 1'b0; s5_v <= 1'b0; end
+        else begin s5a_v <= s4_v; s5_v <= s5a_v; end
     end
     always @(posedge clk) begin
-        s5_nf <= s4_nf;
-        for (b = 0; b < 2; b = b + 1) begin s5_n[b] <= s4_n[b]; s5_qs[b] <= s4_qs[b]; end
+        s5a_nf <= s4_nf;
+        for (b = 0; b < 2; b = b + 1) begin s5a_n[b] <= s4_n[b]; s5a_qs[b] <= s4_qs[b]; end
         for (i = 0; i < 32; i = i + 1) begin
             xm = x4[32*i +: 31];
             b = i / 16;
             //: the thresholds increase, so the code is the number passed; on a
             //: threshold the even code wins (midpoint j sits below code j+1)
-            //: hgi-takeover: the seven predicates are evaluated in parallel and counted by a
-            //: balanced tree (same count as the former serial cc = cc + 1 chain)
             for (j = 0; j < 7; j = j + 1)
                 qp = {(!s4_big[7*b + j] && (xm > s4_t[7*b + j] || (xm == s4_t[7*b + j] && (j % 2) == 1))), qp[6:1]};
-            cc = cnt7(qp);
+            s5a_p[i] <= qp;
+            s5a_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
+        end
+    end
+    always @(posedge clk) begin
+        s5_nf <= s5a_nf; s5_sgn <= s5a_sgn;
+        for (b = 0; b < 2; b = b + 1) begin s5_n[b] <= s5a_n[b]; s5_qs[b] <= s5a_qs[b]; end
+        for (i = 0; i < 32; i = i + 1) begin
+            //: balanced count of the seven predicates (same count as the former serial cc = cc + 1 chain)
+            cc = cnt7(s5a_p[i]);
             s5_c[i] <= cc;
-            s5_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
         end
     end
 

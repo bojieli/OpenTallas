@@ -6,7 +6,7 @@ UCIe macros face each other; the four HBM3E stacks sit beside its E and W edges 
 r21c ROM die.  Per side, outward to inward, the r21c HBM band re-placed with the SAME masters and pins
 (tools/qwen_kv_die/r21c_band.json, dumped from the r21c generator):
 
-    PHY (ot_hbm3e_phy 833.5 x 12,000.1) | controller (qkd_ctrl = qfd_ctrl) | 32 per-PC CDC (qkd_cdc = qfd_cdc) |
+    PHY (ot_hbm3e_phy 833.5 x 12,000.1) | controller (qkd_ctrl / qkd_ctrl_n = qfd_ctrl) | 32 per-PC CDC (qkd_cdc = qfd_cdc) |
     KV landing qkd_land (qfd_kvc successor: CDC core sides -> the stack's row engines, the KV merges, the KVN posted
     write, the embedding strip) | the stack's attention group:
         [ 4 row engines qkd_reng | stack aggregator qkd_astk | 4 row engines ]   (engine long faces abut the
@@ -80,7 +80,8 @@ T_E = 16                        # a head's e word
 T_RET = 32 + 1 + 1              # a head's scaled score + scale fault + lane fault
 ABUT = {'stack_local', 'phy_dfi', 'd2d_fdi', 'hbm_cdc', 'cdc_core'}    # abutted / band buses: no relays
 RTL = dict(qkd_ctrl='qfd_ctrl element (rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv + per-PC leaves; '
-                    'ot_qfd_emb_pcport KVW 2: KV writes carry the HBM ECC side-band, data = the CDC completion h_cv / h_cdata)',
+                    'ot_qfd_emb_pcport KVW 2: KV writes carry the HBM ECC side-band, data = the CDC completion h_cv / h_cdata; '
+                    'kc: stream-command word -> ot_async_fifo -> hclk ot_qkvd_kcmd_tap chain -> the 32 ot_qwen_ctrl_pc_head cmd ports)',
            qkd_cdc='rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv ot_qwen_stream4_cdc_pc (route r11a)',
            qkd_land='qfd_kvc successor (landing crossbar) + ot_qkvd_kv_seq KV-merge slices + ot_qfd_emb_strip',
            qkd_ectl='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv ot_qwen_nearhbm_ectl_h (re-cut H control tile)',
@@ -88,6 +89,7 @@ RTL = dict(qkd_ctrl='qfd_ctrl element (rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctr
            qkd_astk='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv ot_qwen_nearhbm_attn_stack_d minus its engines',
            qkd_astk_n='as qkd_astk (N stacks: hub words on the S face)',
            qkd_land_n='as qkd_land (N stacks: pin plan level with the N-stack peers)',
+           qkd_ctrl_n='as qkd_ctrl (N stacks: the kc stream-command port on the N face)',
            qkd_ahub='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv ot_qwen_nearhbm_attn_hub_p',
            qkd_seq='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv ot_qkvd_kv_seq',
            qkd_d2d='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv ot_qkvd_kv_end (ot_qkvd_d2d NT 3 / NR 4)',
@@ -127,13 +129,13 @@ BINDINGS = dict(
                             aq_WS=['a_start', 'a_T', 'a_layer', 'a_q_valid', 'a_q_beat', 'a_q_data'],
                             ar=['a_out_valid', 'a_out_g', 'a_out_beat', 'a_out_data'], hf=['a_hub_fault'],
                             af_WS=['a_stk_fault'], mf_WS=['m_fault'],
-                            kvn_WS=['kvw_v', 'kvw_vg', 'kvw_t', 'kvw_layer', 'kvw_d', 'kvw_cr'],
+                            kvn_WS=['kvw_v', 'kvw_vg', 'kvw_t', 'kvw_layer', 'kvw_d', 'kvw_cr'], kc_WS=['kc_v', 'kc_d'],
                             gq=['emb_req_v', 'emb_req_d', 'emb_req_cr'], gr=['emb_q_v', 'emb_q_d', 'emb_q_cr'],
                             hc=['hc_v', 'hc_d', 'hc_cr'], tk=['tok_v', 'tok_d', 'tok_cr'], hs=['a_start'],
                             d2df=['d2d_fault', 'd2d_cause'], kst=['fault', 'fault_cause'], ck=['clk'], rst_n=['rst_n']),
                  sliced=dict(aq_WN='aq_WS', aq_ES='aq_WS', aq_EN='aq_WS', af_WN='af_WS', af_ES='af_WS', af_EN='af_WS',
                              mf_WN='mf_WS', mf_ES='mf_WS', mf_EN='mf_WS', kvn_WN='kvn_WS', kvn_ES='kvn_WS',
-                             kvn_EN='kvn_WS'),
+                             kvn_EN='kvn_WS', kc_WN='kc_WS', kc_ES='kc_WS', kc_EN='kc_WS'),
                  classed={}),
     qkd_d2d=dict(module='ot_qkvd_kv_end', file='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv',
                  ports=dict(rf=['r_v', 'r_d', 'r_cr'], tf=['t_v', 't_d', 't_cr'],
@@ -148,7 +150,9 @@ FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_d minus its engines (re-c
                   qkd_land='qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip',
                   qkd_embgw='ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)',
                   qkd_host='qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter', qkd_pll='vendor PLL + '
-                  'ot_qwen_sys_rst_seq', qkd_ctrl='qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion, no new die port)',
+                  'ot_qwen_sys_rst_seq', qkd_ctrl='qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion; kc: the stream-command '
+                  'word from qkd_seq -> async FIFO -> hclk ot_qkvd_kcmd_tap chain -> the 32 per-PC heads)',
+                  qkd_ctrl_n='as qkd_ctrl, N-stack pin plan (kc on the N face)',
                   qkd_ckbump='clock / reset bump pair to the ROM die (pad cell, no logic: by design)')
 
 
@@ -325,7 +329,7 @@ def _band(T, side, Wk):
         if d['kind'] == 'link_fifo':
             continue
         x = d['x'] if side == 'W' else d['x'] - xs
-        master = dict(qfd_ctrl='qkd_ctrl', qfd_cdc='qkd_cdc').get(d['master'], d['master'])
+        master = dict(qfd_ctrl='qkd_ctrl_n' if half == 'N' else 'qkd_ctrl', qfd_cdc='qkd_cdc').get(d['master'], d['master'])
         out.append((n, master, x, d['y'] + dy[half], d['w'], d['h'], d['orient'], d['kind'], d['domain']))
     return out, dy
 
@@ -473,7 +477,8 @@ def _buses(m, T, r):
         grp = [(f'land_{st}', 'ck'), (f'astk_{st}', 'ck')] + [(f'ectl_{st}_{e}', 'ck') for e in range(r)] + \
               [(f'head_{st}_{e}_{h}', 'ck') for e in range(r) for h in range(4)] + \
               [(c, 'clk') for c in cdcs[st]]
-        add((f'clk_core_{st}', 'clock_trunk', 1, [('pll', f'pll_{st}')] + grp))
+        add((f'clk_core_{st}', 'clock_trunk', 1, [('pll', f'pll_{st}')] + grp +
+             [(f'ctrl_{st}', 'ck')]))   # qwen-1010/b: the kc stream-command FIFO's write side (reset: rsi, below)
         add((f'rst_core_{st}', 'reset', 1, [('pll', f'rso_{st}'), (f'ctrl_{st}', 'rsi')] +
              [(n, 'rst_n') for n, _ in grp if not n.startswith('cdc_')]))   # the CDC core resets come from land.crst (r21c rst_kv)
     cen = ['d2d_kv', 'seq', 'embgw', 'ahub', 'host']
@@ -508,6 +513,11 @@ def _buses(m, T, r):
             add((f'krq_{st}_{e}', 'spine_local', 16, [(c_, 'rq'), (f'land_{st}', f'rq{e}')]))
             add((f'krs_{st}_{e}', 'spine_local', 1 + 1024, [(f'land_{st}', f'rs{e}'), (c_, 'rs')]))
         add((f'kvn_{st}', 'kvn', 1024 + 2 + 14 + 6 + 1 + 1, [('seq', f'kvn_{st}'), (f'land_{st}', 'kvn')]))
+        # qwen-1010/b 2026-10-11: stream-command net -- the descriptor issuer in qkd_seq (ot_qkvd_kv_desc, KDESC 1) posts
+        # DESC / GO words ~320 hclk ahead of each layer's go; one registered copy per stack runs on relays (core clock) to
+        # the stack's controller element, whose W-face kc port enters the async FIFO and the hclk tap chain to the 32
+        # per-PC heads (ot_qkvd_kcmd_tap).  No ready: the issuer bounds its outstanding layers.
+        add((f'kc_{st}', 'kvn', 1 + 32, [('seq', f'kc_{st}'), (f'ctrl_{st}', 'kc')]))
         add((f'emf_{st}', 'kvn', W + 2, [('embgw', f'emf_{st}'), (f'land_{st}', 'emf')]))
         add((f'emr_{st}', 'kvn', W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
         add((f'ing_{st}', 'kvn', W + 2, [('host', f'ing_{st}'), (f'land_{st}', 'ing')]))
@@ -721,7 +731,7 @@ def masters(m, k=1, port_bits=None):
         for g in range(4):
             used['qkd_kvwq_ctl_bin_h' if m['geo'].get('kv_wq_head') else 'qkd_kvwq_ctl_bin'][f'f{g}'] = 298
     M = {}
-    tmap = dict(qkd_ctrl='qfd_ctrl', qkd_cdc='qfd_cdc', qkd_land='qfd_kvc', qkd_land_n='qfd_kvc')
+    tmap = dict(qkd_ctrl='qfd_ctrl', qkd_ctrl_n='qfd_ctrl', qkd_cdc='qfd_cdc', qkd_land='qfd_kvc', qkd_land_n='qfd_kvc')
     if m['geo'].get('kv_wq_leaves'):
         tmap['qkd_cdc_wleaf'] = 'qfd_cdc'     # ot_hbm3e_phy: the real LEF (k = 1)
     for name, src in tmap.items():
@@ -756,6 +766,13 @@ def masters(m, k=1, port_bits=None):
                 else:
                     mm.ports[p] = tuple(t['ports'][p])
                     mm.order.append(p)
+            if name in ('qkd_ctrl', 'qkd_ctrl_n') and 'kc' in used.get(name, {}):
+                # the stream-command word enters the controller column's OUTER end (S face on the S stacks, N face on
+                # the N stacks = qkd_ctrl_n, the only difference between the two masters): the W face abuts the CDC
+                # column, the E face the PHY and the inner end the other band, so the outer edge channel is the one
+                # face a relay chain reaches
+                mm.ports['kc'] = ('face', 33, 'N' if name == 'qkd_ctrl_n' else 'S', 'M5', round(t['w'] / 2, 4), 1)
+                mm.order.append('kc')
         M[name] = mm
     sizes = {i.master: (i.w, i.h) for i in m['insts']}
     for mst, (w, h) in sizes.items():
@@ -789,6 +806,12 @@ def masters(m, k=1, port_bits=None):
                 # the mirrored origin needs H = 12 mod 30 nm, which no 2.16-um frame - 0.024 meets (die_kv9: 'site grid
                 # never meets the legal residues mod 240'); M4 alone needs H = 0 mod 6 nm (453.576 is)
                 mm.face(p, 1, 'W', 'M4', mm.h / 2 + (8.0 if p == 'ck' else -8.0), 1)
+                continue
+            if mst in ('qkd_kvwq_leaf_s_w129', 'qkd_kvwq_leaf_s_w129_m') and p in ('ck', 'rst_n'):
+                # qwen-1010/b 2026-10-11 (die_kv15 real case: 'leaf_s_w129_m MX y: site grid never meets the legal residues
+                # mod 240' with M8 area pins): the closed leaf's clock / reset are E-face M4 pins at y 86-97 (its route
+                # cfg), so the MX origin only meets the M4 / M5 grids, as the rhead's W-face M4 clock does
+                mm.face(p, 1, 'E', 'M4', 88.0 if p == 'ck' else 95.0, 1)
                 continue
             if bits == 1 and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n', 'rs') or p.startswith(('pll', 'rso'))):
                 j = len([q for q in mm.order if mm.ports[q][0] == 'area'])
@@ -1159,7 +1182,9 @@ def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
     generator's writer with this die's masters and port widths."""
-    if m['geo'].get('kv_wq_leaves'):
+    # qwen-1010/b 2026-10-11: the mirror leaf plan is the ADOPTED write queue (ctl_bin + leaf_s_w129(_m) closed, bound
+    # in superseded_elements.json); the other leaf candidates stay plan-only
+    if m['geo'].get('kv_wq_leaves') and not m['geo'].get('kv_wq_mirror'):
         raise ValueError('per-PC leaf candidate is plan-only until encoder/pin/context gates pass')
     saved = F.masters, F.port_widths
     F.masters, F.port_widths = masters, port_widths
@@ -1185,6 +1210,26 @@ if {[llength $phy_cells]} {
   add_pdn_connect -grid {phy} -layers {M4 M5}
   add_pdn_connect -grid {phy} -layers {M5 M8}
 }
+# kv-die it2 (die_iter_1012): bound real element views (exact LEFs) carry their PG pins as full-length horizontal M6
+# stripes (layer contract: leaf PG on M6, parent straps one layer up).  M6 and the die's M8 are both horizontal, so the
+# die grid never reaches them (it1 die_kvi1: all 132 bound views PSM-0039 unconnected, PSM-0069).  Vertical M7 straps
+# over every block master whose VDD pin is on M6: M6 -> M7 at each crossing, M7 -> M8 onto the core grid.
+set hv6_cells {}
+foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] {
+  if {![$c isBlock]} { continue }
+  set t [$c findMTerm VDD]
+  if {$t eq "NULL"} { continue }
+  foreach mp [$t getMPins] { foreach b [$mp getGeometry] {
+    if {[$b getTechLayer] ne "NULL" && [[$b getTechLayer] getName] eq "M6"} { lappend hv6_cells [$c getName] } } }
+} }
+set hv6_cells [lsort -unique $hv6_cells]
+puts "OT_HV6 masters [llength $hv6_cells]: $hv6_cells"
+if {[llength $hv6_cells]} {
+  define_pdn_grid -macro -cells $hv6_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {hv6}
+  add_pdn_stripe -grid {hv6} -layer {M7} -width {0.288} -pitch {10.88} -offset {2.0}
+  add_pdn_connect -grid {hv6} -layers {M6 M7}
+  add_pdn_connect -grid {hv6} -layers {M7 M8}
+}
 ''')
     man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
@@ -1207,7 +1252,7 @@ def main(argv=None):
     a.kv_wq_leaf_s = a.kv_wq_leaf_s or a.kv_wq_head or a.kv_wq_wide
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
-    if a.mode == 'case' and a.kv_wq_leaves:
+    if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
     m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror)
     if a.mode == 'case':

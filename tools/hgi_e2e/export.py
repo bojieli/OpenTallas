@@ -19,6 +19,7 @@ keeps rank 0's view:
   vmw.bin        per record: {u32 addr, u32 value} for every VM word the record writes (diff U output footprint)
   hbmw.bin       per record: {u64 addr, u64 len, bytes} for every HBM range the record changes
   coll_<k>.bin   per COLL record: every rank's A operand as FP32 words, rank-major (the collective model's peers)
+  collb_<k>.bin  per COLL.TOPK_MERGE record: every rank's B operand (the ids, U32), rank-major (hgi-1010/k)
 """
 from __future__ import annotations
 
@@ -73,6 +74,7 @@ class Capture:
         self.touch = []                      # HBM byte intervals read or written by rank 0
         self.ik_touch = []                   # IDX.INDEX operand-I spans (the --iks key image supplies their bytes)
         self.coll = {}
+        self.collb = {}
 
     def wrap(self, key, fn):
         def run(M, r, L):
@@ -101,14 +103,19 @@ class Capture:
                     elif d.space == "HBM" and r0.unit == "SM":
                         pass
                 coll_parts = None
+                coll_b = None
                 if r0.unit == "COLL":
                     coll_parts = []
+                    coll_b = [] if (r0.op == "TOPK_MERGE" and "B" in r0.desc) else None
                     for dd in dies_save:
                         rr = M.rec_of(dd, r)
                         M.dies, M.cur = [dd], rr
                         a = rr.desc["A"]
                         coll_parts.append(np.asarray(M.read(a, dd, L), dtype=np.float32).view(np.uint32).copy()
                                           if a.space == "VM" else np.zeros(0, np.uint32))
+                        if coll_b is not None:
+                            b0, nb, _, _, _ = M.eff(rr.desc["B"], dd, L)
+                            coll_b.append(dd.vm[b0:b0 + nb].astype(np.uint32).copy())
                 # footprint of the VM outputs
                 M.dies, M.cur = [die0], r0
                 fp = []
@@ -145,6 +152,8 @@ class Capture:
             k = len(self.recs)
             if coll_parts is not None:
                 self.coll[k] = coll_parts
+            if coll_b is not None:
+                self.collb[k] = coll_b
             self.recs.append(dict(k=k, unit=r0.unit, op=r0.op, tag=getattr(r0, "tag", ""), L=int(L),
                                   hdr=f"{r0.encode()[:16][::-1].hex()}", eff=eff, vm_off=off_vm // 8,
                                   vm_n=int(len(addrs)), hbm_off=off_h, hbm_n=nh))
@@ -181,6 +190,8 @@ def write_out(out, cap, M_dies, die0, image, words, dyn, meta, hbm_pre):
     (out / "vm_final.bin").write_bytes(die0.vm.astype("<u4").tobytes())
     for k, parts in cap.coll.items():
         (out / f"coll_{k}.bin").write_bytes(b"".join(p.astype("<u4").tobytes() for p in parts))
+    for k, parts in getattr(cap, "collb", {}).items():
+        (out / f"collb_{k}.bin").write_bytes(b"".join(p.astype("<u4").tobytes() for p in parts))
     meta.update(md_words=words, dyn=dyn, records=cap.recs, image_bytes=len(image),
                 image_sha256=hashlib.sha256(image).hexdigest(), image_base_bytes=IMAGE_PAGE * 4096)
     (out / "meta.json").write_text(json.dumps(meta, indent=1, default=int) + "\n")
@@ -200,12 +211,20 @@ def export_qwen(a):
     layer, pos = a.layer, a.position
     g = QC.Geometry(cfg, 8192)
     md = QC.qwen_params(cfg)
-    Kc, Vc = R.synthetic_kv(model, layer, pos)
-    x = R.synthetic_x(model, layer)
     tr = {}
-    x_out = model.layer(layer, x, pos, Kc.copy(), Vc.copy(), tr)
-    hbms, _ = QC.build_images(model, g, [layer], kv_state={layer: (Kc, Vc)}.get)
-    recs = QC.program(g, md, 1, parts=("layers",))
+    if a.head:
+        # diesim-1012: the LM head vehicle (final RMSNorm -> head MATVEC -> SU row scale -> ARGMAX.LOCAL ->
+        # COLL.ARGMAX_MERGE -> CTL.END token), input = the realistic deep residual qwen_proof's head stage uses
+        x = R.synthetic_x(model, 1)
+        _, gold_tok = model.head(x, tr)
+        hbms, _ = QC.build_images(model, g, [])
+        recs = QC.program(g, md, 0, parts=("head",))
+    else:
+        Kc, Vc = R.synthetic_kv(model, layer, pos)
+        x = R.synthetic_x(model, layer)
+        x_out = model.layer(layer, x, pos, Kc.copy(), Vc.copy(), tr)
+        hbms, _ = QC.build_images(model, g, [layer], kv_state={layer: (Kc, Vc)}.get)
+        recs = QC.program(g, md, 1, parts=("layers",))
     image = encode_program(recs)
     dies = [Die(d, hbms[d]) for d in range(QC.TP)]
     words = md_words(cfg["vocab_size"], 40960, QC.TP, len(image))
@@ -226,8 +245,11 @@ def export_qwen(a):
     tok, trace = M.run(image, 0, pos, hash_bufs=False, recs=dr)
     wall = time.time() - t0
     # golden check: the layer output on rank 0 equals qwen_r25
-    xo = die0.vm[g.vm["X"]:g.vm["X"] + g.H]
-    ok = bool(np.array_equal(xo, np.asarray(x_out, np.float32).view(np.uint32)))
+    if a.head:                                       # every rank's merged token == the CPU golden's argmax
+        ok = int(tok) == gold_tok and all(int(d.vm[g.vm["TOK"]]) == gold_tok for d in dies)
+    else:
+        xo = die0.vm[g.vm["X"]:g.vm["X"] + g.H]
+        ok = bool(np.array_equal(xo, np.asarray(x_out, np.float32).view(np.uint32)))
     sch = T.schedule(recs, pos, "S2")
     sch_nw = T.schedule(recs, pos, "S2", wires=False)
     ex = sch["ex"]
@@ -247,8 +269,9 @@ def export_qwen(a):
     vm0_path = a.out / "vm0.bin"
     a.out.mkdir(parents=True, exist_ok=True)
     vm0_path.write_bytes(vm0.astype("<u4").tobytes())
-    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="Qwen3-8B", vehicle=f"qwen_L{layer}_P{pos}", layer=layer,
-                position=pos, rank=0, group=QC.TP, token=0, layer_out_exact_vs_qwen_r25=ok,
+    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="Qwen3-8B", vehicle=(f"qwen_head_P{pos}" if a.head else f"qwen_L{layer}_P{pos}"),
+                layer=(None if a.head else layer), position=pos, rank=0, group=QC.TP,
+                token=(gold_tok if a.head else 0), layer_out_exact_vs_qwen_r25=ok,
                 layer_out_vm=[g.vm["X"], g.H], sim_wall_s=round(wall, 1),
                 s2_cycles=round(sch["total_cycles"], 1), s2_no_wires_cycles=round(sch_nw["total_cycles"], 1),
                 timing_grade="hgi_sim.timing S2 (calibration.json; SM / SU / HBM first access measured, rest estimates)",
@@ -257,12 +280,18 @@ def export_qwen(a):
                     "hgi_sim/machine.py", "hgi_sim/qwen_compiler.py", "hgi_sim/records.py", "hgi_sim/lib.py",
                     "hgi_sim/timing.py", "qwen_r25_golden.py", "hgi_e2e/export.py")})
     write_out(a.out, cap, dies, die0, image, words, [0, pos, pos + 1, 0, 0, 0, 0, pos], meta, hbm_pre)
-    print(f"qwen L{layer} P{pos}: {len(cap.recs)} dispatched records, layer out exact {ok}, S2 {sch['total_cycles']:.0f}")
+    print(f"qwen {'head' if a.head else f'L{layer}'} P{pos}: {len(cap.recs)} dispatched records, layer out exact {ok}, S2 {sch['total_cycles']:.0f}")
     return 0 if ok else 1
 
 
 # --------------------------------------------------------------------------------------------------------------- DS
 def export_ds(a):
+    # el1011-hbm-fused: the e2e FUSED slot (rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv hgi_e2e_fused_slot) runs the
+    # micro-op lowering, not the lane-local HC engine, so it reads the d = 5120 gain LINEAR: export without the GPK /
+    # bank-phase rules unless the harness builds the slot with the engine (then HGI_FUSED_HLL=1).  The die (hfd_quant
+    # HCE 2 + hfd_hc_eng) and its die-master bench use HLL 1.
+    import os
+    os.environ.setdefault("HGI_FUSED_HLL", "0")
     from hgi_sim import ds_native as DN
     from hgi_sim import timing as T
     from hgi_sim.ds_native_timing import NativeCost
@@ -365,7 +394,7 @@ def export_ds(a):
     # --iks (hgi-1010/g3): the rank-0 index-key image of every IDX.INDEX frame in the IKS layout the issuer streams
     # (ot_hgi_idx_iks_issue): die-local key k (ascending owned id) -> stack q = (k div 8) div 342, slot s = k - 2,736 q, at
     # HBM byte (q << 35) | I.base + 68 s, the 544-b key word {4 UE8M0 scale bytes, 128 FP4 codes} little-endian (the
-    # scorer's line = 2 keys); a stack's image covers its B_q blocks x 544 B (pad keys zero)
+    # scorer's line = 2 keys); a stack's image covers its B_q blocks (rounded up to even) x 544 B (pad keys zero)
     if not st.get("ik"):
         cap.touch += cap.ik_touch                # no key image: keep the sim's own operand-I bytes
     for rd, ids, keys in st.get("ik", []):
@@ -378,6 +407,7 @@ def export_ds(a):
         nb = -(-n // 8)
         for q in range(4):
             bq = max(0, min(342, nb - 342 * q))
+            bq += bq & 1                          # the issuer's EVEN rule: whole scorer beats (2 blocks), pad keys zero
             if bq == 0:
                 continue
             img = bytearray(bq * 544)
@@ -549,7 +579,7 @@ def main():
     ap.add_argument("--layer", type=int, default=0)
     ap.add_argument("--position", type=int, default=8191)
     ap.add_argument("--sm-weights", action="store_true", help="also export the SM weight bytes (real SM runs)")
-    ap.add_argument("--head", action="store_true", help="ds: the vehicle is the LM head (+ ARGMAX.LOCAL / COLL.ARGMAX_MERGE); "
+    ap.add_argument("--head", action="store_true", help="ds / qwen: the vehicle is the LM head (+ ARGMAX.LOCAL / COLL.ARGMAX_MERGE); ds: "
                     "--layer 39 is run first to enter it")
     ap.add_argument("--iks", action="store_true", help="ds: IKS key regions + IDX.INDEX operand I, and the rank-0 key image "
                     "in the IKS layout (native IDX.INDEX runs)")

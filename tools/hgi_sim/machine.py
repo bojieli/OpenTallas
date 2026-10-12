@@ -748,12 +748,14 @@ def u_idx_index(M: Machine, r: Rec, L):
                 bs[blocks == (n - 1) // INDEX_BLOCK] = np.inf          # the newest block is pinned
                 d = rd.desc["D"]
                 db, dn, _, dst, _ = M.eff(d, die, L)
-                kc = min(dn, len(blocks))
-                order = np.lexsort((blocks, -bs))[:kc]
-                if kc != dn:
-                    raise Fault(3, f"INDEX D.n {dn} > owned blocks {len(blocks)}")
-                die.vm[db:db + kc] = blocks[order].astype(np.uint32)
-                die.vm[db + dst:db + dst + kc] = bs[order].astype(F).view(np.uint32)
+                # D = EVERY owned block in ascending block id (the native selector's quarter order: hfd_idx_sel co
+                # beats), row 1 its block maximum (the newest block pinned +inf).  The only consumer, COLL.TOPK_MERGE
+                # (candidate merge), takes the group's top by (value desc, id asc) over all contributions, which is
+                # independent of a rank's input order; a value-sorted D (the pre-1011 rule) is not built in hardware.
+                if dn != len(blocks):
+                    raise Fault(3, f"INDEX D.n {dn} != owned blocks {len(blocks)}")
+                die.vm[db:db + dn] = blocks.astype(np.uint32)
+                die.vm[db + dst:db + dst + dn] = bs.astype(F).view(np.uint32)
             if keep_en:
                 c = rd.desc["C"]
                 cb, cn, _, cst, _ = M.eff(c, die, L)

@@ -127,7 +127,9 @@ module ot_hgi_vm_die #(
     parameter integer LQ = 32,             // every lane client's credits (power of two; >= the longest chain's round trip)
     parameter integer K = 3,               // lgW slots: 0 SU, 1 SFU, 2 HC
     parameter integer KE = 4,              // lgE slots (hbm-phys 2026-10-11): 0 CP (SM x-load), 1 ATT, 2 quant (FUSED), 3 HC_ENG
-    parameter integer AP = 1               // the HC weight aperture route (ot_hgi_vm_unit AP): DMA lanes 281 b, ap_* to hfd_hc
+    parameter integer AP = 1,              // the HC weight aperture route (ot_hgi_vm_unit AP): DMA lanes 281 b, ap_* to hfd_hc
+    parameter integer TUNIT = 0            // hbmdie-1011/vmt: 1 = ot_hgi_vm_tunit (el1011-hbm-hcvm floorplanned tile array, drop-in
+                                           // ports; responses +7, wq_done +4, status +8, reset release +3 edges); 0 = ot_hgi_vm_unit
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -155,8 +157,13 @@ module ot_hgi_vm_die #(
 );
     wire [96*16-1:0] rq; wire [95:0] rq_cr; wire [96*257-1:0] rr;
     wire [96*280-1:0] w2q; wire [95:0] w2_cr, w2_done;
+    generate if (TUNIT != 0) begin : g_tu
+    ot_hgi_vm_tunit #(.NC(NC), .WP(32), .WDIRECT(1), .RP(96), .W2(96), .LQ(LQ), .AP(AP)) u_vmu (.clk(clk), .rst_n(rst_n), .cq(cq),
+        .cr(cr), .status(status), .wq(wq), .wq_done(wq_done), .wq_rdy(wq_rdy), .ap_q(ap_q), .ap_cr(ap_cr), .ap_done(ap_done), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q), .w2q_cr(w2_cr), .w2q_done(w2_done));
+    end else begin : g_u
     ot_hgi_vm_unit #(.NC(NC), .WP(32), .WDIRECT(1), .RP(96), .W2(96), .LQ(LQ), .AP(AP)) u_vmu (.clk(clk), .rst_n(rst_n), .cq(cq),
         .cr(cr), .status(status), .wq(wq), .wq_done(wq_done), .wq_rdy(wq_rdy), .ap_q(ap_q), .ap_cr(ap_cr), .ap_done(ap_done), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q), .w2q_cr(w2_cr), .w2q_done(w2_done));
+    end endgenerate
     // read chains
     ot_hgi_vm_lanehead #(.K(K), .REQW(16), .RSPW(257)) u_hrw (.clk(clk), .rst_n(rst_n), .c_req(lgw_r_up[32*16 +: K]), .c_q(lgw_r_up[0 +: 32*16]),
         .c_gnt(lgw_r_dn[32+32*257 +: K]), .c_cr(lgw_r_dn[32*257 +: 32]), .c_rsp(lgw_r_dn[0 +: 32*257]),

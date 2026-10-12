@@ -55,6 +55,10 @@ module ot_hgi_dma_front #(
                                           //   bit {v, ap, sector 15, data, mask} (ap = the 18-bit VM sector >= 32,768; sector =
                                           //   that minus 32,768); a sector past the two slots (>= 40,960) faults; bank b picks
                                           //   only while wl_rdy[b] (the VM unit's aperture queue stop, pin-flopped here)
+    parameter integer XP = 0,             // hbm-fq/dma textbook rebuild (10-11, audit classes 5): 1 = X1 from per-lane registered bank
+                                          //   request vectors and a two-level (4 x 8) rotating pick; X2 split into the AND-OR rung
+                                          //   (registered) and the conversion rung; tag beat counts and the done count in
+                                          //   registered rungs (match matrix -> popcount -> update).  +1 cycle out, +2 on tag free.
     parameter integer MUT = 0
 ) (
     input  wire                  clk,
@@ -120,7 +124,8 @@ module ot_hgi_dma_front #(
     // ---------------------------------------------------------------- command station (registered)
     reg cv_q; reg [226:0] cm_q;
     reg busy; reg [2:0] sf; reg [1:0] ks;                  // ks = log2 K (destination sectors per source sector)
-    reg [36:0] ra; reg [31:0] sst;                          // the current row's source byte address, row stride
+    reg [36:0] ra; reg [36:0] sst;                          // the current row's source byte address, row step (STRIPE4:
+                                                            // stride + one stack, mod 2^37 = row o on stack s0 + o)
     reg [31:0] rdw; reg [31:0] dst_w;                       // the current row's VM word address, row stride
     // rows are issued in windows of up to 4 (round robin chunk by chunk: rows striped over the stacks keep all stacks busy)
     reg [19:0] r_left;                                      // rows left after the current window
@@ -153,6 +158,23 @@ module ot_hgi_dma_front #(
     reg [8:0]  tg_left [0:15];                              // beats still to land
     reg [4:0] ft;
     always @* begin ft = 5'd16; for (integer t = 15; t >= 0; t = t - 1) if (!tag_busy[t]) ft = 5'(t); end
+    // ---------------------------------------------------------------- XP count rungs: beat-tag match matrix -> popcount
+    //   (registered each), the VM's write dones pin-flopped -> popcount (registered)
+    reg [NIN-1:0] tmx [0:15]; reg [6:0] tk [0:15]; reg [NB-1:0] wdq; reg [6:0] ndq;
+    always @(posedge clk) begin : xpc
+        for (integer t2 = 0; t2 < 16; t2 = t2 + 1) begin
+            reg [6:0] c; c = 7'd0;
+            for (integer i2 = 0; i2 < NIN; i2 = i2 + 1) tmx[t2][i2] <= rc && dv_w[i2] && dtag_w[i2*4 +: 4] == 4'(t2);
+            for (integer i2 = 0; i2 < NIN; i2 = i2 + 1) c = c + 7'(tmx[t2][i2]);
+            tk[t2] <= rc ? c : 7'd0;
+        end
+        begin : nd2
+            reg [6:0] c; c = 7'd0;
+            wdq <= rc ? wl_done : '0;
+            for (integer i2 = 0; i2 < NB; i2 = i2 + 1) c = c + 7'(wdq[i2]);
+            ndq <= rc ? c : 7'd0;
+        end
+    end
     // ---------------------------------------------------------------- lanes
     // L  pin flop -> lane FIFO: the source sector in an ot_sram_1r1w_128x256 macro a lane (LD of its 128 rows), the beat's
     //    VM sector in flops -> read (the macro's output register) -> 3-entry skid (a read issues on registered occupancy
@@ -187,7 +209,24 @@ module ot_hgi_dma_front #(
         end
     endfunction
     // ---------------------------------------------------------------- X1: per bank, rotating priority from rr
-    reg [RW-1:0] rr;
+    reg [RW-1:0] rr; reg [NIN-1:0] rr_ge;                   // XP: rr_ge = lanes >= rr (registered with rr)
+    wire [NIN*NB-1:0] rqv_w;                                // XP: lane i's requested banks (registered a lane)
+    // lowest set bit of NIN bits as groups of 8: the first non-empty group, its lowest bit
+    function automatic [NIN-1:0] lsb2(input [NIN-1:0] x);
+        reg found; reg [7:0] g8, o8;
+        begin
+            lsb2 = '0; found = 1'b0;
+            for (integer gg = 0; gg < NIN / 8; gg = gg + 1) begin
+                g8 = x[gg*8 +: 8]; o8 = g8 & (~g8 + 8'd1);
+                if (!found && g8 != 8'd0) begin lsb2[gg*8 +: 8] = o8; found = 1'b1; end
+            end
+        end
+    endfunction
+    // the banks a buffer with VM sector s requests (slots j < K, bank s + j)
+    function automatic [NB-1:0] bmask(input [17:0] sv, input [3:0] km);
+        bmask = '0;
+        for (integer j = 0; j < 4; j = j + 1) if (km[j]) bmask[BW'(sv[BW-1:0] + BW'(j))] = 1'b1;
+    endfunction
     reg [NIN-1:0] req [0:NB-1]; reg [NIN-1:0] oh [0:NB-1]; reg [1:0] rslot [0:NB-1][0:NIN-1];
     reg [3:0] gnt [0:NIN-1]; reg [NB-1:0] bsel_v;
     always @* begin
@@ -197,16 +236,22 @@ module ot_hgi_dma_front #(
             for (integer i = 0; i < NIN; i = i + 1) begin
                 reg [BW-1:0] d; reg [3:0] v; d = BW'(b) - ob_w[i*18 +: BW]; v = ov_w[i*4 +: 4];
                 rslot[b][i] = d[1:0];
-                req[b][i] = d < BW'(4) && v[d[1:0]] && (AP == 0 || MUT == 6 || wl_rdy_q[b]);
+                req[b][i] = ((XP != 0) ? rqv_w[i*NB + b] : (d < BW'(4) && v[d[1:0]])) && (AP == 0 || MUT == 6 || wl_rdy_q[b]);
             end
-            hi = req[b] & ~((NIN'(1) << rr) - NIN'(1));
-            pk = (hi != '0) ? hi : req[b];
-            oh[b] = pk & (~pk + NIN'(1));                       // lowest set bit
+            if (XP != 0) begin                                  // registered thermometer, two-level lowest-set-bit tree
+                hi = req[b] & rr_ge;
+                pk = (hi != '0) ? hi : req[b];
+                oh[b] = lsb2(pk);
+            end else begin
+                hi = req[b] & ~((NIN'(1) << rr) - NIN'(1));
+                pk = (hi != '0) ? hi : req[b];
+                oh[b] = pk & (~pk + NIN'(1));                   // lowest set bit
+            end
             bsel_v[b] = req[b] != '0;
             for (integer i = 0; i < NIN; i = i + 1) if (oh[b][i]) gnt[i][rslot[b][i]] = 1'b1;
         end
     end
-    reg [NIN-1:0] x_oh [0:NB-1]; reg [NB-1:0] x_v;          // the registered pick
+    reg [NIN-1:0] x_oh [0:NB-1]; reg [NB-1:0] x_v, x2_v;    // the registered pick (x2_v: XP's AND-OR rung)
     wire [3:0] kmask = (ks == 2'd0) ? 4'b0001 : (ks == 2'd1) ? 4'b0011 : 4'b1111;
     genvar g;
     generate for (g = 0; g < NIN; g = g + 1) begin : lg
@@ -218,6 +263,10 @@ module ot_hgi_dma_front #(
         reg [1:0] sh, st, sn; reg [273:0] sk [0:2];           // skid
         reg ap, pa; reg [273:0] bf [0:1];                     // out buffers
         reg [3:0] ov; reg [17:0] ob; reg cr;
+        reg [NB-1:0] rqv; reg [NB-1:0] skm [0:2];             // XP: the active buffer's requested banks; a skid entry's
+        reg [NB-1:0] gb;                                      //     the banks that granted this lane this cycle
+        always @* begin gb = '0; for (integer b = 0; b < NB; b = b + 1) gb[b] = oh[b][g]; end
+        assign rqv_w[g*NB +: NB] = rqv;
         wire rdi  = n != '0 && ({1'b0, sn} + {2'd0, rv}) < 3'd3;
         wire full = n == (LW+1)'(LD) && !rdi;
         wire ok   = dv && !full;
@@ -235,13 +284,13 @@ module ot_hgi_dma_front #(
             dd_q <= dd[g*270 +: 270];
             if (ok) qs[t] <= tg_dsec[dd_q[267:264]] + (18'(dd_q[263:256]) << ks);
             if (rdi) rs <= qs[h];
-            if (rv) sk[st] <= {rs, rd};
+            if (rv) begin sk[st] <= {rs, rd}; skm[st] <= bmask(rs, kmask); end
             if (ld) begin bf[!ap] <= sk[sh]; ob <= sk[sh][273:256]; end
         end
         always @(posedge clk or negedge lr) begin
             if (!lr) begin
                 dv <= 1'b0; h <= '0; t <= '0; n <= '0; rv <= 1'b0; sh <= 2'd0; st <= 2'd0; sn <= 2'd0;
-                ap <= 1'b0; pa <= 1'b0; ov <= 4'd0; cr <= 1'b0;
+                ap <= 1'b0; pa <= 1'b0; ov <= 4'd0; cr <= 1'b0; rqv <= '0;
             end else begin
                 dv <= dd[g*270 + 269];
                 if (ok) t <= t + 1'b1;
@@ -253,8 +302,8 @@ module ot_hgi_dma_front #(
                 if (ld) sh <= (sh == 2'd2) ? 2'd0 : sh + 2'd1;
                 sn <= sn + 2'(rv) - 2'(ld);
                 pa <= ap;
-                if (ld) begin ap <= !ap; ov <= kmask; end
-                else ov <= ov & ~gnt[g];
+                if (ld) begin ap <= !ap; ov <= kmask; rqv <= skm[sh]; end
+                else begin ov <= ov & ~gnt[g]; rqv <= rqv & ~gb; end
             end
         end
     end endgenerate
@@ -262,16 +311,19 @@ module ot_hgi_dma_front #(
     genvar xb;
     generate for (xb = 0; xb < NB; xb = xb + 1) begin : xg
         assign wl[xb*(280+AP) +: 280+AP] = {wl_v[xb], wl_d[xb]};
+        reg [273:0] x2s;                                      // XP: the AND-OR rung's register
         always @(posedge clk) begin : x2
             reg [273:0] sv; reg [BW-1:0] d; reg [17:0] s18;
             x_oh[xb] <= oh[xb];
             sv = 274'd0;
             for (integer i = 0; i < NIN; i = i + 1) if (x_oh[xb][i]) sv = sv | ls_w[i*274 +: 274];
+            x2s <= sv;
+            if (XP != 0) sv = x2s;
             d = BW'(xb) - sv[256 +: BW];
             s18 = sv[273:256] + {16'd0, d[1:0]};
             if (AP != 0) wl_d[xb] <= (279+AP)'({s18[17:15] == 3'd1 && MUT != 7, s18[14:0], conv(sv[255:0], sf, d[1:0]), 8'hFF});
             else         wl_d[xb] <= (279+AP)'({s18[14:0], conv(sv[255:0], sf, d[1:0]), 8'hFF});
-            ap_bad[xb] <= (AP != 0) && x_v[xb] && (s18 >= 18'd40960);       // past the aperture's two slots
+            ap_bad[xb] <= (AP != 0) && ((XP != 0) ? x2_v[xb] : x_v[xb]) && (s18 >= 18'd40960);       // past the aperture's two slots
         end
     end endgenerate
     // the indexed request of this cycle (head row of the queue, its next run of <= 256 sectors)
@@ -293,7 +345,7 @@ module ot_hgi_dma_front #(
     integer i, s, t;
     always @(posedge clk or negedge rc) begin
         if (!rc) begin
-            cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; wl_v <= '0; x_v <= '0;
+            cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; wl_v <= '0; x_v <= '0; x2_v <= '0; rr_ge <= '1;
             tag_busy <= 16'd0; rr <= '0; r_done <= 1'b1;
             issued <= 32'd0; wrote <= 32'd0;
             ixc_q <= 1'b0; ixm <= 1'b0; ids_left <= 20'd0; i1_v <= 1'b0; i2_v <= 1'b0; i3_v <= 1'b0; i4_v <= 1'b0; ix_first <= 1'b0;
@@ -345,7 +397,7 @@ module ot_hgi_dma_front #(
             if (cv_q) begin
                 cv_q <= 1'b0; busy <= 1'b1; sf <= cm_q[4:2];
                 ks <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 2'd0 : (cm_q[4:2] == 3'd1) ? 2'd1 : 2'd2;
-                ra <= cm_q[41:5]; sst <= cm_q[76:45]; rdw <= cm_q[129:98]; dst_w <= cm_q[169:138];
+                ra <= cm_q[41:5]; sst <= {5'd0, cm_q[76:45]} + ((cm_q[44:42] == 3'd1) ? (37'd1 << SBIT) : 37'd0); rdw <= cm_q[129:98]; dst_w <= cm_q[169:138];
                 // sectors a row = n x esize / 32
                 rsec <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 24'(cm_q[226:206] >> 3) :
                         (cm_q[4:2] == 3'd1) ? 24'(cm_q[226:206] >> 4) : 24'(cm_q[226:206] >> 5);
@@ -386,12 +438,12 @@ module ot_hgi_dma_front #(
                     tg_dsec[ft[3:0]] <= 18'(wd >> 3) + (18'(r_off) << ks);
                     tg_left[ft[3:0]] <= rn;
                     issued <= issued + ({23'd0, rn} << ks);
-                    if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + {5'd0, sst}; wd <= wd + dst_w; end
+                    if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + sst; wd <= wd + dst_w; end
                     else if (r_off + {15'd0, rn} != rsec) begin            // next chunk of the window
                         wi <= 2'd0; wa <= ra; wd <= rdw; r_off <= r_off + {15'd0, rn};
                     end else begin                                         // next window
-                        wi <= 2'd0; r_off <= 24'd0; ra <= wa + {5'd0, sst}; rdw <= wd + dst_w;
-                        wa <= wa + {5'd0, sst}; wd <= wd + dst_w;
+                        wi <= 2'd0; r_off <= 24'd0; ra <= wa + sst; rdw <= wd + dst_w;
+                        wa <= wa + sst; wd <= wd + dst_w;
                         if (r_left == 20'd0) r_done <= 1'b1;
                         else begin
                             wn <= (r_left >= 20'd4) ? 2'd3 : 2'(r_left - 20'd1);
@@ -411,19 +463,25 @@ module ot_hgi_dma_front #(
             // ---- tags: free once every beat landed
             for (t = 0; t < 16; t = t + 1) begin : tg
                 integer k; k = 0;
-                for (i = 0; i < NIN; i = i + 1) if (dv_w[i] && dtag_w[i*4 +: 4] == 4'(t)) k = k + 1;
+                if (XP != 0) k = int'(tk[t]);                  // the registered popcount rung
+                else for (i = 0; i < NIN; i = i + 1) if (dv_w[i] && dtag_w[i*4 +: 4] == 4'(t)) k = k + 1;
                 if (k != 0) begin
                     tg_left[t] <= tg_left[t] - 9'(k);
                     if ({23'd0, tg_left[t]} <= ((MUT == 2) ? k + 8 : k)) tag_busy[t] <= 1'b0;
                 end
             end
             // ---- crossbar
-            x_v <= bsel_v; wl_v <= x_v;
+            x_v <= bsel_v; x2_v <= x_v; wl_v <= (XP != 0) ? x2_v : x_v;
             rr <= (rr == RW'(NIN - 1)) ? '0 : rr + 1'b1;
+            begin : rrg
+                reg [RW-1:0] nr; nr = (rr == RW'(NIN - 1)) ? '0 : rr + 1'b1;
+                for (i = 0; i < NIN; i = i + 1) rr_ge[i] <= RW'(i) >= nr;
+            end
             // ---- completion
             begin : cnt
                 integer nd; nd = 0;
-                for (t = 0; t < NB; t = t + 1) if (wl_done[t]) nd = nd + 1;
+                if (XP != 0) nd = int'(ndq);
+                else for (t = 0; t < NB; t = t + 1) if (wl_done[t]) nd = nd + 1;
                 if (busy && r_done && wrote + 32'(nd) == issued) begin busy <= 1'b0; ixm <= 1'b0; mv_done <= 1'b1; wrote <= 32'd0; end
                 else wrote <= busy ? wrote + 32'(nd) : 32'd0;    // (idle: the mover's acknowledgements)
             end
