@@ -1790,6 +1790,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     hb, vb = {}, {}
     HCAP, GCAP, VCAP = 1400.0, 4000.0, 1800.0
     FIELD_ALLOC = bool(getattr(v, 'TILE_CLUSTER', False)) and bool(kv_gaps)
+    if FIELD_ALLOC:
+        # it19: 480-um IO channel (tp8b): SerDes words on the two bottom sub-lanes (frames inside the 1,560-1,820
+        # fine window), the 2,085-b host_fdi relay frame (106 um) on a top sub-lane low enough to fit under the
+        # channel top (at 0.9 it was pushed down into the SerDes window: 0.754)
+        IO_SUB_F = (0.08, 0.30, 0.55, 0.85)
     ry_ = sorted(g.get('row_y') or [])
     th_ = v.TILE_SLOT[1]
 
@@ -1797,17 +1802,22 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         k = bisect.bisect_right(ry_, y) - 1
         return k >= 0 and ry_[k] - 1.0 <= y <= ry_[k] + th_ + 1.0
 
-    def _bins(a, b):
+    ABIN = 50.0     # it19: along-the-leg resolution = the fine-cut line spacing (a 260-um bin at a pin end charged
+    #                 every leg the full load of the pin stubs that only cross part of it: phantom 1.9 kb)
+
+    def _bins(a, b, st=ABIN):
         a, b = sorted((a, b))
-        return range(int(a // FBIN), int(b // FBIN) + 1)
+        return range(int(a // st), int(b // st) + 1)
 
     def hload(y, xa, xb):
         yb_ = int(y // FBIN)
-        return max((hb.get((yb_, k), 0.0) for k in _bins(xa, xb)), default=0.0)
+        xa, xb = sorted((xa, xb))
+        return max((hb.get((yb_, k), 0.0) for k in _bins(xa + 1.0, xb - 1.0)), default=0.0) if xb - xa > 2.0 else 0.0
 
     def vload(x, ya, yb):
         xb_ = int(x // FBIN)
-        return max((vb.get((xb_, k), 0.0) for k in _bins(ya, yb)), default=0.0)
+        ya, yb = sorted((ya, yb))
+        return max((vb.get((xb_, k), 0.0) for k in _bins(ya + 1.0, yb - 1.0)), default=0.0) if yb - ya > 2.0 else 0.0
 
     def book(path, bits):
         for (xa, ya), (xb, yb) in zip(path, path[1:]):
@@ -1830,7 +1840,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         xa, ya = P
         if abs(xt - xa) < 1.0:
             return [], 0.0
-        if not over_tile(ya) or abs(xt - xa) < 420.0 or hload(ya, xa, xt) + bits <= HCAP:
+        if not over_tile(ya) or abs(xt - xa) < 480.0 or hload(ya, xa, xt) + bits <= HCAP:
             return [(xt, ya)], 0.0
         xn = near_corr(xa, xt)
         best = None
@@ -1841,14 +1851,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if best is None or c_ < best[0]:
                 best = (c_, yg)
         if best is None:
-            return [(xt, ya)], 5000.0
+            # it19: graded (a flat 5000 kept tree words out of a free neighbour corridor: 0.72)
+            return [(xt, ya)], 1500.0 + 3000.0 * max(0.0, hload(ya, xa, xt) + bits - HCAP) / HCAP
         yg = best[1]
         return [(xn, ya), (xn, yg), (xt, yg)], best[0]
 
     def field_route(P0, P1, bits):
         lo, hi = sorted((P0[0], P1[0]))
         sc = side_cols(P0[0])
-        cs = [c for c in sc if lo - 800.0 <= cx_list[c] <= hi + 800.0] or \
+        cs = [c for c in sc if lo - 1200.0 <= cx_list[c] <= hi + 1200.0] or \
             [min(sc, key=lambda c: abs(cx_list[c] - (lo + hi) / 2))]
         best = None
         for c in cs:
@@ -1858,11 +1869,43 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             ya_ = la[-1][1] if la else P0[1]
             yb_ = lb[-1][1] if lb else P1[1]
             vl = vload(xc, ya_, yb_)
-            cost = ca + cb + 2.0 * max(0.0, lo - xc, xc - hi) + 4000.0 * max(0.0, vl + bits - VCAP) / VCAP + 600.0 * vl / VCAP
+            cost = ca + cb + 2.0 * max(0.0, lo - xc, xc - hi) + 20000.0 * max(0.0, vl + bits - VCAP) / VCAP + 600.0 * vl / VCAP
+            if _os.environ.get('OT_FA_DBG') and _dbg_cur[0].startswith(_os.environ['OT_FA_DBG']):
+                print('FA_C', _dbg_cur[0], xc, round(ca), round(cb), round(vl), round(cost), la, lb, flush=True)
+                _pf = [(k * ABIN, round(vb.get((int(xc // FBIN), k), 0))) for k in _bins(ya_ + 1, yb_ - 1)]
+                print('FA_V', xc, [q for q in _pf if q[1] >= vl - 1][:3], [q for q in _pf if q[1] > 0][::6], flush=True)
             if best is None or cost < best[0]:
                 best = (cost, la, lb)
         _, la, lb = best
         return [P0] + la + lb[::-1] + [P1]
+
+    def exit_jog(Pf, Po, xc, ya_, bits):
+        """it19: a field-exit tail that would run over a tile body at Po's height into a full window (4 words over
+        the first E-field tile next to the KV-centre face: 0.92) drops to a true row gap instead, runs it to the strip
+        just outside the field on Po's side and climbs there to Po. -> (tail, cost, vload) or None"""
+        if not gap_set or not over_tile(Po[1]) or abs(xc - Po[0]) < 200.0 or hload(Po[1], xc, Po[0]) + bits <= HCAP:
+            return None
+        F = fw if Pf[0] < (fw[2] + fe[0]) / 2 else fe
+        if F[0] - 1.0 <= Po[0] <= F[2] + v.CORR + 1.0:
+            return None
+        xg = F[0] - 60.0 if Po[0] < F[0] else F[2] + v.CORR + 60.0
+        if (xg - Po[0]) * (xg - xc) > 0:
+            return None
+        best = None
+        for yg in gap_set:
+            if any(a < xg < c and min(yg, Po[1]) < d and b < max(yg, Po[1]) for a, b, c, d in big):
+                continue
+            hl = hload(yg, xc, xg)
+            if hl + bits > GCAP:
+                continue
+            vl = max(vload(xc, ya_, yg), vload(xg, yg, Po[1]))
+            c_ = 2.0 * (abs(yg - ya_) + abs(yg - Po[1])) + 3000.0 * hl / GCAP
+            if best is None or c_ < best[0]:
+                best = (c_, yg, vl)
+        if best is None:
+            return None
+        _, yg, vl = best
+        return [(xc, yg), (xg, yg), (xg, Po[1])], best[0], vl
 
     def field_exit(Pf, Po, bits):
         """a field pin to a block outside the field (spine / KV centre): vertical in the column corridor whose windows
@@ -1885,15 +1928,27 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             else:
                 tail, cb = [(xc, Po[1])], 0.0
                 vl = vload(xc, ya_, Po[1])
-            cost = ca + cb + abs(xc - Po[0]) / 4.0 + 4000.0 * max(0.0, vl + bits - VCAP) / VCAP + 600.0 * vl / VCAP
+                tj = exit_jog(Pf, Po, xc, ya_, bits)
+                if tj is not None:
+                    tail, cb, vl = tj
+            cost = ca + cb + abs(xc - Po[0]) / 4.0 + 20000.0 * max(0.0, vl + bits - VCAP) / VCAP + 600.0 * vl / VCAP
             if best is None or cost < best[0]:
                 best = (cost, la, tail)
         _, la, tail = best
+        if _os.environ.get('OT_FA_DBG') and _dbg_cur[0].startswith(_os.environ['OT_FA_DBG']):
+            print('FA_X', _dbg_cur[0], Pf, Po, best[0], la, tail, flush=True)
         return [Pf] + la + tail + [Po]
 
+    _dbg_cur = ['']
+
     def poly_of(cl, P0, P1, bid=None, eps=None):
+        _dbg_cur[0] = bid or ''
         f0, f1 = in_field(*P0), in_field(*P1)
-        if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0):
+        if _os.environ.get('OT_FA_DBG') and bid and bid.startswith(_os.environ['OT_FA_DBG']):
+            print('FA_DBG', bid, cl, P0, P1, f0, f1, FIELD_ALLOC, list(side_cols(P0[0]))[:2], flush=True)
+        if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0 and not (FIELD_ALLOC and f0 and f1 and not cl.startswith('kvn'))):
+            # it19: under FIELD_ALLOC a same-x field word goes through field_route too (the straight vertical
+            # shortcut stacked 3 x 512-b tree words + a corridor word in one column channel: 0.72 / 0.68 / 0.65)
             return [P0, P1]
         if FIELD_ALLOC and cl != 'corridor' and not cl.startswith('kvn') and f0 and f1 and side_cols(P0[0]) == side_cols(P1[0]):
             return field_route(P0, P1, cur_bits[0])
@@ -1995,6 +2050,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         # stacked 3.2 kb in one window (0.69)
                         xl = round((Pc[0] + F[0]) / 2, 3) if 0.0 < F[0] - Pc[0] < 200.0 else \
                             min((x for x in cx_list if x > Pc[0]), default=Pc[0])
+                        if FIELD_ALLOC:
+                            # it19: E-bound kvn words pick, by booked vertical load, among the KVc|E-field gap and
+                            # the first two E-field corridors (all on the fixed gap crowded the KV-centre E face:
+                            # 0.69 / 0.67)
+                            xo = [xl] + sorted(x for x in cx_list if x > Pc[0] + 1.0 and abs(x - xl) > 1.0)[:2]
+                            xl = min(xo, key=lambda q: (vload(q, Pc[1], yg) + cur_bits[0] > VCAP, vload(q, Pc[1], yg) + 0.3 * abs(q - Pc[0])))
                     else:
                         xl = lane_pick(kvl, Pc, (Pc[0], yg), lane_bits) if all(x in lane_bits for x in kvl) else kvl[0]
                     fa, fb = (F[2] + v.CORR, F[0]) if Ps[0] < Pc[0] else (xl, F[2] + v.CORR)
