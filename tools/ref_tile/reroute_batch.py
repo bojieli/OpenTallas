@@ -775,6 +775,16 @@ def propose_grant(cell: str, t: dict, why: str):
                          f"lead: layer_cap_grant M6 for {cell} (pin-dense edge tile; {why}). Not iterating at M5; "
                          f"grant -> set slot layer_cap M6 + layer_cap_grant, then reroute_batch.py re-generates.\n")
             t["grant_proposed"] = DIE_LOG[f_.name]
+    if not t.get("grant_proposed"):          # placed through a parent cfg (cluster child): the die by name prefix
+        lg = next((v for k, v in (("hgi_", "el1011-hbmdie.log"), ("ot_hgi", "el1011-hbmdie.log"), ("hfd_", "el1011-hbmdie.log"),
+                                  ("qkd_", "el1011-q-kvd.log"), ("qfd_", "el1011-qwendie.log"), ("dsfd_", "el1011-s81die.log"),
+                                  ("ot_dsrom", "el1011-s81die.log"), ("ot_pqc", "el1011-s81die.log"))
+                   if cell.startswith(k) or any(str(x).startswith("cfg:" + k) for x in t.get("dies", []))), None)
+        if lg:
+            with LOCK, open(TAKE / lg, "a") as fh:
+                fh.write(f"{dt.datetime.now().strftime('%m-%d %H:%M')} [reroute_m5] PROPOSAL to the die lead: "
+                         f"layer_cap_grant M6 for {cell} (pin-dense edge tile; {why}). Not iterating at M5.\n")
+            t["grant_proposed"] = lg
 
 
 def compare(st: dict):
