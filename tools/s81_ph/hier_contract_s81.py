@@ -28,6 +28,9 @@ CLUS_CHILD_L = dict(pg_layer='M6', strap_layer='M7', signal_max_layer='M5')
 IO = dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True)
 TINS = 250.0   # provisional target clock insertion at each tile clock pin (ps): the closed cb tiles measure 217-302 ps (TT lib);
                # re-budgeted per slot from each closed route's lib (child_lint (g))
+# contract v3 (s81die-1011): >= 20-um channels at every column boundary of an abutted array whose tiles carry W/E-face pins
+# (43.2 = 4 x the 10.8 M7 PG pitch, on the 0.064 M7 / 0.096 M5 / 0.054 site grids); SU 86.4 for its spine jogs
+SU_CH, HC_CH, VM_CH = 86.4, 43.2, 43.2
 MEAS_INS = dict(dsfd_coll_cbr=297.0, dsfd_coll_cbf=217.0, dsfd_coll_cbq0=291.0, dsfd_coll_cbq=302.0)   # child_lint 2026-10-11 c2e836720-p2
 
 
@@ -77,18 +80,21 @@ def main():
         'tiles from physical/s81_ph_views/su_hier/su_slab_composition.json; the slab outline is the die region they fill')
     su = json.loads((ROOT / 'physical/s81_ph_views/su_hier/su_slab_composition.json').read_text())
     for t in su['tiles']:
-        S.append(slot('sp_su_s/' + t['inst'], 'sp_su_s', t['master'], 'tile', t['w'], t['h'], t['x'], t['y']))
+        S.append(slot('sp_su_s/' + t['inst'], 'sp_su_s', t['master'], 'tile', t['w'], t['h'], t['col'] * (t['w'] + SU_CH), t['y']))
+    S[-len(su['tiles']) - 1]['outline']['w'] = round(3 * 572.4 + 2 * SU_CH, 4)
     # ---- HC: one instance -> tiles direct, N-S split variant (HALF=1 CSPLIT=1, crooty closed 5b78b9d3b), H_half 400
     i = hub('sp_hc_s', 'tiles_direct', 'el1011 s81 suhc-hier (claude/s81-suhc-hier-1011-hc)',
             'split variant outline 1,727.976 x (22 H_half + 840), H_half 400 -> 9,640; roots on the N edge')
     h, cw, hh = i['outline_um'][1], 575.992, 400.0
+    S[-1]['outline']['w'] = round(3 * cw + 2 * HC_CH, 4)
+    cw_ = cw + HC_CH   # column pitch
     for nm, ms, x, y, w, th in (('crooty_c0', 'ot_s81_hc_crooty', 0, h - 200, cw, 200), ('crootr_c0', 'ot_s81_hc_crootr', 0, h - 840, cw, 640),
-                                ('cpin', 'ot_s81_hc_cpin', cw, h - 200, cw, 200), ('comb', 'ot_s81_hc_comb', cw, h - 840, cw, 640),
-                                ('crooty_c2', 'ot_s81_hc_crooty', 2 * cw, h - 200, cw, 200), ('crootr_c2', 'ot_s81_hc_crootr', 2 * cw, h - 840, cw, 640)):
+                                ('cpin', 'ot_s81_hc_cpin', cw_, h - 200, cw, 200), ('comb', 'ot_s81_hc_comb', cw_, h - 840, cw, 640),
+                                ('crooty_c2', 'ot_s81_hc_crooty', 2 * cw_, h - 200, cw, 200), ('crootr_c2', 'ot_s81_hc_crootr', 2 * cw_, h - 840, cw, 640)):
         S.append(slot('sp_hc_s/' + nm, 'sp_hc_s', ms, 'tile', w, th, x, y))
     for c, (lo, hi) in enumerate(((0, 22), (22, 42), (42, 64))):
         for p in range(hi - lo):
-            S.append(slot('sp_hc_s/ctile_%d' % (lo + p), 'sp_hc_s', 'ot_s81_hc_ctile_half', 'tile', cw, hh, c * cw, h - 840 - hh * (p + 1)))
+            S.append(slot('sp_hc_s/ctile_%d' % (lo + p), 'sp_hc_s', 'ot_s81_hc_ctile_half', 'tile', cw, hh, c * cw_, h - 840 - hh * (p + 1)))
     # ---- collective: lane tiles W (8 x 345.6 x 340.2 stacked), core column x 367.2..1,727.976 = 1,360.776:
     #      cb tiles direct (no glue) at the S of the core column, ce region above (tile list pending), ct at the N
     i = hub('sp_collective', 'tiles_direct', 'el1011-ds-coll',

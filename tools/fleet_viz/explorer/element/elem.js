@@ -1,7 +1,8 @@
 /* Chip Explorer element page (/explorer/element/): one closed element (or a side-by-side pair), from its final routed
    DB (tools/explorer_elem_export.py: OpenROAD in the ORFS container with the closure loop's own sign-off STA setup) and
    its RTL at the closure's source commit (tools/explorer_elem/rtl_export.py: yosys elaboration of the exact synthesis
-   inputs).  Tabs: Layout (landing) · Timing · Clock arrival · Clock tree · Density · RTL (structure diagram, reference
+   inputs).  Tabs: Layout (landing: the routed-geometry viewer, layout.js + /api/layout) · Placement · Timing · Clock arrival ·
+   Clock tree · Density · RTL (structure diagram, reference
    model, source) · Facts (key numbers, throughput qualification, every fact with its record).
    URL: ?p=<page id> | ?e=<element id>; #tab=<tab>; ?safe=1 hides raw names. */
 (function(){
@@ -21,13 +22,17 @@ function hex2rgb(h){ h = h.replace('#', ''); if (h.length === 3) h = h.split('')
 
 const F = {flop: 1, clk: 2, lvt: 4, hold: 8, repair: 16, infer: 32, slvt: 64, icg: 128};
 const TABS = [
-  ['layout', 'Layout', 'Every placed cell of the routed layout, coloured by the RTL block it implements.'],
+  ['geo', 'Layout', 'The routed geometry from the final DB, per metal layer: every wire, via, pin and cell shape, with contract findings, timing paths, the clock tree and congestion drawn on it.'],
+  ['layout', 'Placement', 'Every placed cell of the routed layout, coloured by the RTL block it implements.'],
   ['timing', 'Timing', 'The worst setup (TT) and hold (FF) paths, drawn through their placed pins, with per-stage delays.'],
   ['arrival', 'Clock arrival', 'When the clock edge reaches each flop, on one colour scale for every element shown.'],
   ['tree', 'Clock tree', 'How one clock pin feeds every flop: each buffer level and clock gate, on the layout and as a level diagram.'],
   ['density', 'Density', 'Cell density, pin density and routed-wire demand per bin.'],
   ['rtl', 'RTL', 'Structure from the elaborated RTL, the reference model the bench names, and the source at the closure\u2019s commit. Select a module to light its cells.'],
   ['facts', 'Facts', 'Key numbers, throughput qualification against the budget, and every sign-off and layout fact with its record.']];
+TABS.push(['how', 'How it works', 'What the element does and how, step by step: the curated stories that walk its datapath (shell.js).']);
+const SHELL = window.ElemShell || null;   // header, breadcrumb, tab availability (shell.js + /api/explorer/elem_shell)
+const PATH_EL = (() => { const m = location.pathname.match(/^\/explorer\/element\/([^/]+)$/); return m && m[1] !== 'index.html' ? decodeURIComponent(m[1]) : null; })();
 const LAYOUT_TABS = new Set(['layout', 'timing', 'arrival', 'tree', 'density']);
 const PAL = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#17becf', '#bcbd22', '#8c6bb1'];
 const OTHER = '#7c86a6', UNATTR = '#4a5678';
@@ -45,7 +50,65 @@ const S = {page: null, pages: null, els: [], tab: 'layout', depth: null, iso: {}
 /* ------------------------------------------------------------------ theme */
 function applyTheme(){ const t = lsGet('theme', ''); if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
 applyTheme();
-$('theme').onclick = () => { const dark = cssv('color-scheme') !== 'light'; lsSet('theme', dark ? 'light' : 'dark'); applyTheme(); S.els.forEach(E => E.raster = {}); render(); };
+$('theme').onclick = () => { const dark = cssv('color-scheme') !== 'light'; lsSet('theme', dark ? 'light' : 'dark'); applyTheme(); S.els.forEach(E => E.raster = {}); render(); if (window.LayoutViewer) LayoutViewer.theme(); };
+
+/* ------------------------------------------------------------------ app shell: columns, drawers, help, element jump */
+const NARROW = () => matchMedia('(max-width: 900px)').matches;
+function colState(){
+  const B = document.body.classList, n = NARROW();
+  const lOpen = n ? B.contains('dl') : !B.contains('nol'), rOpen = n ? B.contains('dr') : !B.contains('nor');
+  $('lbtn').setAttribute('aria-expanded', String(lOpen)); $('rbtn').setAttribute('aria-expanded', String(rOpen));
+  $('scrim').hidden = !(n && (lOpen || rOpen));
+}
+function toggleCol(side, force){
+  const B = document.body.classList;
+  if (NARROW()){ const c = side === 'l' ? 'dl' : 'dr', on = force == null ? !B.contains(c) : force; B.remove('dl', 'dr'); if (on) B.add(c); }
+  else { const c = side === 'l' ? 'nol' : 'nor', on = force == null ? B.contains(c) : force; B.toggle(c, !on); lsSet(c, on ? '' : '1'); }
+  colState();
+}
+if (lsGet('nol', '')) document.body.classList.add('nol');
+if (lsGet('nor', '')) document.body.classList.add('nor');
+$('lbtn').onclick = () => toggleCol('l'); $('rbtn').onclick = () => toggleCol('r');
+$('scrim').onclick = () => { document.body.classList.remove('dl', 'dr'); colState(); };
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => toggleCol(b.dataset.close, false));
+matchMedia('(max-width: 900px)').addEventListener('change', () => { document.body.classList.remove('dl', 'dr'); colState(); });
+colState();
+document.addEventListener('keydown', e => {
+  const t = e.target; if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === '[') toggleCol('l'); else if (e.key === ']') toggleCol('r');
+  else if (e.key === 'Escape'){ helpOpen(false); if (NARROW()){ document.body.classList.remove('dl', 'dr'); colState(); } }
+});
+function helpOpen(on){ const h = $('tabhelp').parentNode; h.classList.toggle('open', on); $('tabhelp').setAttribute('aria-expanded', String(on)); }
+$('ehdesc').addEventListener('click', e => { const a = e.target.closest('.eh-about'); if (a) a.classList.add('full'); });
+$('tabhelp').onclick = e => { e.stopPropagation(); helpOpen(!$('tabhelp').parentNode.classList.contains('open')); };
+document.addEventListener('click', e => { if (!e.target.closest('.help')) helpOpen(false); if (!e.target.closest('.es')) $('esres').hidden = true; });
+function hierHtml(sh){
+  const sf = SAFE ? '?safe=1' : '', c = sh && sh.crumbs && sh.crumbs[0], name = sh ? sh.element : (S.page && S.page.elements.join(' vs ')) || '';
+  const H = [`<a data-d="0" href="/explorer${sf}">Chip Explorer</a>`]; let d = 1;
+  if (c){ H.push(`<a data-d="${d++}" href="/explorer${sf}#die=${encodeURIComponent(c.die)}">${esc(c.label)}</a>`);
+    if (c.region) H.push(`<a data-d="${d++}" href="/explorer${sf}#die=${encodeURIComponent(c.die)}&element=${encodeURIComponent(sh.registry || sh.element)}" title="show it on the die map">${esc(c.region)}</a>`); }
+  else if (sh && sh.target) H.push(`<span data-d="${d++}">${esc(sh.target)}</span>`);
+  H.push(`<span data-d="${d}" class="cur" aria-current="page" title="${esc(name)}">${esc(name)}</span>`);
+  return H.join('');
+}
+let ES = null;
+async function esLoad(){ if (ES) return ES; try { const r = await getJSON('/api/explorer/elem_summaries' + QS); ES = Object.entries(r.summaries || {}).sort((a, b) => a[0].localeCompare(b[0])); } catch (e) { ES = []; } return ES; }
+function esRender(q){
+  const box = $('esres'); q = q.trim().toLowerCase();
+  if (!q){ box.hidden = true; return; }
+  const words = q.split(/\s+/), hit = (ES || []).filter(([k, v]) => words.every(w => k.toLowerCase().includes(w) || String(v || '').toLowerCase().includes(w)));
+  hit.sort((a, b) => (b[0].toLowerCase().includes(q) - a[0].toLowerCase().includes(q)) || a[0].length - b[0].length);
+  box.innerHTML = hit.length ? hit.slice(0, 40).map(([k, v], i) => `<a href="/explorer/element/${encodeURIComponent(k)}${QS}" class="${i ? '' : 'on'}"><b>${esc(k)}</b>${v ? `<span>${esc(v)}</span>` : ''}</a>`).join('') : '<p>No element matches.</p>';
+  box.hidden = false;
+}
+$('esq').addEventListener('focus', () => esLoad());
+$('esq').addEventListener('input', async e => { await esLoad(); esRender(e.target.value); });
+$('esq').addEventListener('keydown', e => {
+  const as = [...$('esres').querySelectorAll('a')], i = as.findIndex(a => a.classList.contains('on'));
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); if (!as.length) return; const j = (i + (e.key === 'ArrowDown' ? 1 : -1) + as.length) % as.length; as.forEach((a, k) => a.classList.toggle('on', k === j)); as[j].scrollIntoView({block: 'nearest'}); }
+  else if (e.key === 'Enter' && i >= 0){ e.preventDefault(); location.href = as[i].href; }
+  else if (e.key === 'Escape'){ $('esres').hidden = true; e.target.blur(); }
+});
 
 /* ------------------------------------------------------------------ load */
 async function getJSON(u){ const r = await fetch(u, {cache: 'no-store'}); if (!r.ok) throw new Error(r.status + ' ' + u); return r.json(); }
@@ -58,18 +121,23 @@ async function init(){
   let pages = {pages: [], elements: {}};
   try { pages = await getJSON('pages.json' + QS); } catch (e) {}
   S.pages = pages;
-  let pid = QP.get('p'), eid = QP.get('e');
+  let pid = QP.get('p'), eid = QP.get('e') || PATH_EL;
   let page = pages.pages.find(p => p.id === pid);
-  if (!page && eid) page = pages.pages.find(p => p.elements.length === 1 && p.elements[0] === eid) || {id: eid, elements: [eid], title: null, summary: null, blocks: []};
+  // one element: the shell resolves the data id (an export may sit under the closing job's block name) and fills the header
+  S.shell = !page && eid && SHELL ? await SHELL.load(eid) : null;
+  const did = S.shell && S.shell.data ? S.shell.data : eid;
+  if (!page && eid) page = pages.pages.find(p => p.elements.length === 1 && p.elements[0] === did) || {id: did, elements: [did], title: null, summary: null, blocks: []};
   if (!page) page = pages.pages[0];
   if (!page){ $('sum').textContent = 'No element pages are installed yet.'; return; }
   S.page = page;
-  document.title = (page.title || 'Element Layout').slice(0, 40);
-  $('title').textContent = page.title || page.elements.join(' vs ');
-  S.tab = hashTab() || 'layout';
+  if (!S.shell) document.title = (page.title || 'Element Layout').slice(0, 40);
+  if (!S.shell) $('title').textContent = page.title || page.elements.join(' vs ');
+  S.tab = hashTab() || 'geo';
+  $('ehier').innerHTML = hierHtml(S.shell);
   renderTabs();
   buildStage();
   const els = await Promise.all(page.elements.map(async (id, k) => {
+    if (S.shell && !S.shell.data) return {id, err: S.shell.missing || 'no routed data', k, pane: S.panes[k]};
     try {
       const d = await getJSON('data/' + encodeURIComponent(id) + '.json' + QS);
       if (!d.geom) return {id, d, k, pane: S.panes[k], nolayout: true, M: {status: (d.facts.find(f => f.k === 'status') || {}).v, recTT: factv(d, /setup WNS \(sign-off/), recFF: factv(d, /^FF hold WNS \(sign-off/), drc: factv(d, /^DRC$/)}};
@@ -79,12 +147,14 @@ async function init(){
     } catch (e) { return {id, err: String(e), k, pane: S.panes[k]}; }
   }));
   S.els = els;
-  if (!page.title) $('title').textContent = els.map(E => E.d ? E.d.label + (E.d.target ? ' · ' + E.d.target : '') : E.id).join(' vs ');
+  if (!page.title && !S.shell) $('title').textContent = els.map(E => E.d ? E.d.label + (E.d.target ? ' · ' + E.d.target : '') : E.id).join(' vs ');
   document.title = ($('title').textContent || 'Element').slice(0, 40);
   const sumtxt = page.summary || els.filter(E => E.d).map(E => [E.d.category, E.d.role && E.d.role !== E.d.category ? E.d.role : null, E.d.nosta && E.d.layout ? 'timing not re-run (sources released)' : null].filter(Boolean).join(' · ')).join(' | ');
   $('sum').textContent = sumtxt; $('sum').parentNode.hidden = !sumtxt;
   els.forEach(E => { const p = E.pane; p.busy.textContent = E.err ? 'Could not load ' + E.id + ': ' + E.err : E.nolayout ? 'Layout data released: the closure loop deleted this job\u2019s routed DB before the page existed. RTL and Facts remain.' : ''; p.busy.hidden = !(E.err || E.nolayout); });
   if (LAYOUT_TABS.has(S.tab) && els.every(E => E.nolayout || E.err)){ S.tab = 'facts'; renderTabs(); }
+  if (SHELL && !SHELL.tab(S.tab, S).ok){ S.tab = 'facts'; }
+  renderTabs();
   chooseLayout();
   S.depth = +lsGet('depth.' + page.id, 0) || null;
   regroup();
@@ -243,9 +313,22 @@ function resolveReg(E, name){
 
 /* ------------------------------------------------------------------ tabs */
 function renderTabs(){
-  $('tabs').innerHTML = TABS.map(([k, t]) => `<button type="button" role="tab" data-tab="${k}" aria-selected="${S.tab === k}">${t}</button>`).join('');
-  $('tabs').querySelectorAll('[data-tab]').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  const av = k => SHELL ? SHELL.tab(k, S) : {ok: true};
+  $('tabs').innerHTML = TABS.map(([k, t]) => { const a = av(k);
+    return `<button type="button" role="tab" data-tab="${k}" aria-selected="${S.tab === k}" tabindex="${S.tab === k ? 0 : -1}"${a.ok ? '' : ` aria-disabled="true" title="${esc(a.why)}"`}>${t}</button>`; }).join('');
+  $('tabs').querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { const a = av(b.dataset.tab);
+    if (a.ok) setTab(b.dataset.tab); else { $('tabdesc').textContent = (TABS.find(t => t[0] === b.dataset.tab) || [])[1] + ' is unavailable: ' + a.why + '.'; helpOpen(true); } });
+  // roving focus: arrow keys move along the tab bar, Home / End jump
+  $('tabs').onkeydown = e => { const bs = [...$('tabs').querySelectorAll('[data-tab]')], i = bs.indexOf(document.activeElement); if (i < 0) return;
+    const j = e.key === 'ArrowRight' ? (i + 1) % bs.length : e.key === 'ArrowLeft' ? (i - 1 + bs.length) % bs.length : e.key === 'Home' ? 0 : e.key === 'End' ? bs.length - 1 : -1;
+    if (j >= 0){ e.preventDefault(); bs[j].focus(); } };
   $('tabdesc').textContent = (TABS.find(t => t[0] === S.tab) || [])[2] || '';
+  const sel = $('tabs').querySelector('[aria-selected="true"]'); if (sel && sel.scrollIntoView) sel.scrollIntoView({block: 'nearest', inline: 'nearest'});
+  const na = TABS.map(([k, t]) => [t, av(k)]).filter(([, a]) => !a.ok);
+  // one line per distinct reason, naming the tabs it greys out
+  const by = new Map(); na.forEach(([t, a]) => by.set(a.why, (by.get(a.why) || []).concat(t)));
+  $('tabna').innerHTML = [...by].map(([why, ts]) => `<b>${esc(ts.join(', '))}</b>: ${esc(why)}`).join('<br>');
+  $('tabna').hidden = !na.length;
 }
 function setTab(k){
   S.tab = k; renderTabs();
@@ -253,8 +336,35 @@ function setTab(k){
   render();
 }
 window.addEventListener('hashchange', () => { if (/^#(story-|overview)/.test(location.hash)){ setTab('layout'); return; } const t = hashTab(); if (t && t !== S.tab) setTab(t); });
+/* ------------------------------------------------------------------ Layout tab: the routed-geometry viewer (layout.js) */
+let lvLoading = null;
+function renderGeo(){
+  const on = S.tab === 'geo';
+  $('stage').hidden = on; $('side').hidden = on; $('geo').hidden = !on; $('geoside').hidden = !on; $('geonav').hidden = !on;
+  if (!on){ if (window.LayoutViewer) LayoutViewer.close(); return false; }
+  $('nav').innerHTML = '';
+  const ok = S.els.filter(E => E.d);
+  if (!ok.length){ $('geo').innerHTML = '<div class="lv-busy">' + esc(S.els.map(E => E.err || '').join(' ') || 'No element data.') + '</div>'; return true; }
+  const k = Math.min(S.geoEl || 0, ok.length - 1), E = ok[k];
+  if (ok.length > 1){
+    $('nav').innerHTML = sec('Element', '<div class="seg">' + ok.map((x, i) => `<button type="button" data-ge="${i}" aria-pressed="${i === k}">${esc(short(x))}</button>`).join('') + '</div>');
+    $('nav').querySelectorAll('[data-ge]').forEach(b => b.onclick = () => { S.geoEl = +b.dataset.ge; render(); });
+  }
+  const go = () => LayoutViewer.open({root: $('geo'), side: $('geoside'), nav: $('geonav'), el: E.id, d: E.d, E: E.nolayout || E.err ? null : E, safe: SAFE,
+    onFallback: () => setTab('layout')});
+  if (window.LayoutViewer) go();
+  else {
+    lvLoading = lvLoading || new Promise((res, rej) => { const s = document.createElement('script'); s.src = '/explorer/element/layout.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    lvLoading.then(go).catch(e => { $('geo').innerHTML = '<div class="lv-busy">Layout viewer failed to load: ' + esc(String(e)) + '</div>'; });
+  }
+  return true;
+}
 function render(){
-  document.body.className = 'tab-' + S.tab;
+  [...document.body.classList].filter(c => /^tab-/.test(c)).forEach(c => document.body.classList.remove(c));
+  document.body.classList.add('tab-' + S.tab);
+  $('shellview').hidden = true; $('main').hidden = false;   // the shell re-shows its view below when it owns the tab
+  if (renderGeo()) return;
+  if (SHELL && SHELL.render(S)){ $('nav').innerHTML = ''; $('side').innerHTML = ''; return; }
   S.els.forEach(E => { if (!E.err && !E.nolayout && (!E.view || E.view.auto)) fit(E); });
   renderSide(); redrawAll();
 }
@@ -392,10 +502,10 @@ function draw(E){
     c.globalAlpha = 1;
   }
   for (const o of spec.overlays || []) OVER[o] && OVER[o](E, c, r, spec);
-  P.lab.innerHTML = `<b>${esc(E.d.label + (E.d.role ? ' · ' + E.d.role : ''))}</b><br>${esc(SAFE ? '' : E.d.block + ' · ')}${fmt(E.W, 1)} × ${fmt(E.H, 1)} µm · ${fmt(E.n, 0)} cells` +
+  P.lab.innerHTML = `<b>${esc(E.d.label + (E.d.role ? ' · ' + E.d.role : ''))}</b><br>${esc(SAFE ? '' : E.d.block + ' · ')}${fmt(E.W, 1)} × ${fmt(E.H, 1)} \u00b5m · ${fmt(E.n, 0)} cells` +
     (S.tab === 'tree' ? `<br>${E.cw && S.tview === 'wires' ? `routed clock wires from the DB (${fmt(E.cw.n, 0)} segments)` : 'tree topology: straight lines driver → driven buffer'}` : '') +
     (S.tab === 'rtl' && S.rtlEl === E.k && S.rtlSel != null ? `<br>lit: ${esc(SAFE ? 'selected module' : (S.rtlSel || '(top)'))} · <span style="color:var(--accent)">&#9632;</span> named <span style="color:var(--warn)">&#9632;</span> inferred` : '');
-  const bar = niceStep(80 / s); P.scale.textContent = `${bar >= 1 ? fmt(bar, 0) : fmt(bar, 2)} µm ≈ ${fmt(bar * s, 0)} px`;
+  const bar = niceStep(80 / s); P.scale.textContent = `${bar >= 1 ? fmt(bar, 0) : fmt(bar, 2)} \u00b5m ≈ ${fmt(bar * s, 0)} px`;
 }
 function niceStep(v){ const m = Math.pow(10, Math.floor(Math.log10(v))), e = v / m; return (e >= 5 ? 5 : e >= 2 ? 2 : 1) * m; }
 function drawCells(E, c, r, mode){
@@ -493,7 +603,7 @@ function hover(E, e){
     if (best >= 0){ const n = N[best]; html = `<div class="n">${esc(SAFE ? n[4] : n[6])}</div><div class="m">${esc(n[4])} · level ${n[3]}${/ICG/.test(n[4]) ? ' · clock gate' : ''} · clock arrival TT ${fmt(n[5], 1)} ps</div>`; }
   }
   if (!html && S.tab === 'density'){ const g = E.d.geom.grid, bx = Math.floor(x / g.bin_um), by = Math.floor(y / g.bin_um), k = by * g.nx + bx;
-    html = `<div class="n">bin ${bx},${by} (${fmt(g.bin_um, 1)} µm)</div><div class="m">cell density ${fmt(100 * g.density[k], 1)} % · signal pins ${fmt(g.pins[k], 0)} · routed-wire RUDY ${fmt(g.rudy[k], 2)} µm/µm²</div>`; }
+    html = `<div class="n">bin ${bx},${by} (${fmt(g.bin_um, 1)} \u00b5m)</div><div class="m">cell density ${fmt(100 * g.density[k], 1)} % · signal pins ${fmt(g.pins[k], 0)} · routed-wire RUDY ${fmt(g.rudy[k], 2)} \u00b5m/\u00b5m²</div>`; }
   if (!html){
     const m = E.d.geom.macros.find(q => x >= q.x0 && x <= q.x1 && y >= q.y0 && y <= q.y1);
     const i = hit(E, x, y, 0);
@@ -505,8 +615,8 @@ function hover(E, e){
       html = `<div class="n">${esc(SAFE ? 'cell #' + i : (j >= 0 ? L[j][4] : 'cell #' + i + ' (synthesis-named)'))}</div>
         <div class="m">master ${esc(E.d.geom.masters[E.mas[i]])}${tags.length ? ' · ' + tags.join(' · ') : ''}<br>
         block <span style="color:${E.groups[E.grp[i]].color}">&#9632;</span> ${esc(SAFE ? 'block ' + (E.grp[i] + 1) : E.groups[E.grp[i]].name)}${SAFE ? '' : `<br>module ${esc(mod)}`}${f & F.infer ? ' <i>(inferred: from the flops it connects to)</i>' : ''}${rl}<br>
-        at (${fmt(E.x[i], 2)}, ${fmt(E.y[i], 2)}) µm${j >= 0 ? ` · clock TT ${fmt(L[j][3], 1)} ps${E.d.clock_ff_match && E.d.clock_ff_leaves ? ` / FF ${fmt(E.d.clock_ff_leaves[j], 1)} ps` : ''}` : ''}</div>`;
-    } else if (m) html = `<div class="n">${esc(SAFE ? 'macro' : m.name)}</div><div class="m">${esc(m.master)} · ${fmt(m.x1 - m.x0, 2)} × ${fmt(m.y1 - m.y0, 2)} µm</div>`;
+        at (${fmt(E.x[i], 2)}, ${fmt(E.y[i], 2)}) \u00b5m${j >= 0 ? ` · clock TT ${fmt(L[j][3], 1)} ps${E.d.clock_ff_match && E.d.clock_ff_leaves ? ` / FF ${fmt(E.d.clock_ff_leaves[j], 1)} ps` : ''}` : ''}</div>`;
+    } else if (m) html = `<div class="n">${esc(SAFE ? 'macro' : m.name)}</div><div class="m">${esc(m.master)} · ${fmt(m.x1 - m.x0, 2)} × ${fmt(m.y1 - m.y0, 2)} \u00b5m</div>`;
   }
   if (!html){ tip.hidden = true; return; }
   tip.innerHTML = html; tip.hidden = false;
@@ -517,6 +627,7 @@ function hover(E, e){
 
 /* ------------------------------------------------------------------ pills */
 function renderPills(){
+  if (S.shell && S.els.length < 2){ $('pills').innerHTML = ''; return; }
   $('pills').innerHTML = S.els.map(E => {
     if (E.err) return `<span class="bd ng"><i></i>${esc(E.id)}: not loaded</span>`;
     const M = E.M, st = (M.status || '').toUpperCase();
@@ -557,8 +668,8 @@ function keyNumbersHtml(E){
     ['clocks (sign-off SDC)', cl.length ? cl.join('<br>') : (d.layout ? 'not read (geometry-only export)' : '—')],
     [setupK.replace(' (sign-off record)', '') + ' / FF hold', `<span class="${f(/setup WNS \(sign-off/) >= 0 ? 'ok' : 'ng'}">${fx(f(/setup WNS \(sign-off/), '', 2)}</span> / <span class="${f(/^FF hold WNS \(sign-off/) >= 0 ? 'ok' : 'ng'}">${fx(f(/^FF hold WNS \(sign-off/), '', 2)}</span> ps · DRC ${fx(f(/^DRC$/))}`],
     ['cycles added', fx(f(/^cycles added/))],
-    ['std-cell area', fx(f(/^std-cell area/), 'µm²', 0) + (f(/^macro area/) ? ' + macros ' + fx(f(/^macro area/), 'µm²', 0) : '')],
-    ['die · utilisation', fx(f(/^die$/), 'µm') + ' · ' + fx(f(/^utilisation/), '%', 1)],
+    ['std-cell area', fx(f(/^std-cell area/), '\u00b5m²', 0) + (f(/^macro area/) ? ' + macros ' + fx(f(/^macro area/), '\u00b5m²', 0) : '')],
+    ['die · utilisation', fx(f(/^die$/), '\u00b5m') + ' · ' + fx(f(/^utilisation/), '%', 1)],
     ['cells · flops', fx(f(/^std cells$/)) + ' · ' + fx(f(/^flops$/))],
     ['LVT / SLVT cells', fx(f(/^LVT cells/), '%', 2) + ' / ' + fx(f(/^SLVT cells/), '%', 2)],
     ['power (vectorless, TT)', fx(f(/^power/), 'mW', 1)]];
@@ -768,7 +879,7 @@ function refHtml(E){
     ${SAFE ? '' : `<details style="margin-top:6px"><summary style="cursor:pointer;font:600 12.5px var(--sans);color:var(--dim)">${esc(R.path)} (${R.text.split('\n').length} lines, exact file at ${esc((R.commit || '').slice(0, 10))})</summary>${codeHtml(R.text, /\.py$/.test(R.path), null, 'ref' + E.k)}</details>`}`;
 }
 function bindRtlSide(){
-  const side = $('side');
+  const side = $('app');
   S.els.filter(E => !E.err && E.rtl && document.querySelector(`[data-diag="${E.k}"]`)).forEach(E => renderDiagram(E));
   side.querySelectorAll('[data-rel]').forEach(b => b.onclick = () => { S.rtlEl = +b.dataset.rel; S.rtlFile = null; S.rtlSel = null; renderSide(); redrawAll(); });
   side.querySelectorAll('.mtree [data-tog]').forEach(t => t.onclick = e => { e.stopPropagation(); const p = t.dataset.tog; if (TREE_OPEN.has(p)) TREE_OPEN.delete(p); else TREE_OPEN.add(p); renderSide(); });
@@ -786,20 +897,21 @@ function bindRtlSide(){
 function short(E){ return ((S.page.short || {})[E.id]) || E.d.label; }
 function sec(t, body, sub){ return `<div class="sec"><h3>${t}${sub ? ` <span class="u">${sub}</span>` : ''}</h3>${body}</div>`; }
 function renderSide(){
-  const T = S.tab, H = [], ok = S.els.filter(E => !E.err && (!LAYOUT_TABS.has(T) || !E.nolayout));
+  $('nav').innerHTML = '';
+  const T = S.tab, H = [], N = [], ok = S.els.filter(E => !E.err && (!LAYOUT_TABS.has(T) || !E.nolayout));
   if (T === 'layout'){
-    H.push(sec('Hierarchy', `<div class="ctl"><label for="dep">Depth</label><select id="dep">${[1, 2, 3, 4, 5, 6].map(d => `<option value="${d}" ${ok[0] && ok[0].depth === d ? 'selected' : ''}>${d}</option>`).join('')}</select>
+    N.push(sec('Hierarchy', `<div class="ctl"><label for="dep">Depth</label><select id="dep">${[1, 2, 3, 4, 5, 6].map(d => `<option value="${d}" ${ok[0] && ok[0].depth === d ? 'selected' : ''}>${d}</option>`).join('')}</select>
       <span class="note" style="margin:0">Cells coloured by RTL block (module path below the common prefix). Click a block to isolate it.</span></div>`));
     ok.forEach(E => { const st = E.d.geom.stats;
-      H.push(sec(esc(E.d.label), `<div class="lg">${E.groups.map((g, i) => `<button type="button" data-g="${i}" data-e="${esc(E.id)}" class="${S.iso[E.id].size ? (S.iso[E.id].has(i) ? 'on' : 'off') : ''}"><i class="sw" style="background:${g.color}"></i><span class="n" title="${esc(g.name)}">${esc(SAFE ? 'block ' + (i + 1) : g.name)}</span><small>${fmt(g.count, 0)} · ${fmt(100 * g.count / E.n, 1)}%</small></button>`).join('')}</div>
+      N.push(sec(esc(E.d.label), `<div class="lg">${E.groups.map((g, i) => `<button type="button" data-g="${i}" data-e="${esc(E.id)}" class="${S.iso[E.id].size ? (S.iso[E.id].has(i) ? 'on' : 'off') : ''}"><i class="sw" style="background:${g.color}"></i><span class="n" title="${esc(g.name)}">${esc(SAFE ? 'block ' + (i + 1) : g.name)}</span><small>${fmt(g.count, 0)} · ${fmt(100 * g.count / E.n, 1)}%</small></button>`).join('')}</div>
         <p class="note" style="margin-top:6px">${SAFE ? '' : `prefix <code>${esc(E.prefix || '(none)')}</code> · `}${fmt(st.named_cells, 0)} cells carry their RTL path in their name (flops); ${fmt(st.inferred_cells, 0)} synthesis-named cells are <b>inferred</b>: they take the block of the flops they connect to (nets ≤ 24 pins); ${fmt(st.unattributed_cells, 0)} unattributed. Filler / tap / decap (${fmt(st.filler_tap_decap, 0)}) not drawn.</p>`, `${fmt(E.n, 0)} cells`)); });
   } else if (T === 'timing'){
-    H.push(sec('Worst paths', `<div class="seg" role="group"><button type="button" data-pc="setup" aria-pressed="${S.pcorner === 'setup'}">Setup · TT</button><button type="button" data-pc="hold" aria-pressed="${S.pcorner === 'hold'}">Hold · FF</button></div>
+    N.push(sec('Worst paths', `<div class="seg" role="group"><button type="button" data-pc="setup" aria-pressed="${S.pcorner === 'setup'}">Setup · TT</button><button type="button" data-pc="hold" aria-pressed="${S.pcorner === 'hold'}">Hold · FF</button></div>
       <p class="note" style="margin-top:6px">Re-timed by the exporter with the closure loop's own sign-off setup (same odb, SPEF, 6_final.sdc and post-SDCs). One worst path per endpoint, worst first.</p>`));
     ok.forEach(E => {
       const P = (S.pcorner === 'hold' ? E.d.hold_paths : E.d.setup_paths) || [], key = E.id + S.pcorner, sel = S.psel[key] || 0, p = P[sel];
       const shortN = s => SAFE ? '' : s.replace(/^.*\.(?=[^.]+\.[^.]+$)/, '…');
-      H.push(sec(esc(E.d.label), `<div class="tw"><table class="t"><thead><tr><th>#</th><th class="n">slack ps</th><th>endpoint</th><th class="n">stages</th></tr></thead><tbody>${P.slice(0, 15).map((q, k) =>
+      N.push(sec(esc(E.d.label), `<div class="tw"><table class="t"><thead><tr><th>#</th><th class="n">slack ps</th><th>endpoint</th><th class="n">stages</th></tr></thead><tbody>${P.slice(0, 15).map((q, k) =>
         `<tr class="cl ${k === sel ? 'on' : ''}" data-p="${k}" data-e="${esc(E.id)}"><td class="n">${k + 1}</td><td class="n ${q.slack >= 0 ? 'ok' : 'ng'}">${sgn(q.slack)}</td><td class="m">${esc(shortN(q.end))}</td><td class="n">${q.points.filter(t => t[4] === 'o').length}</td></tr>`).join('')}</tbody></table></div>`, `${P.length} paths`));
       if (p){
         const skew = p.capture_clk_ps != null && p.launch_clk_ps != null ? p.capture_clk_ps - p.launch_clk_ps : null;
@@ -811,7 +923,7 @@ function renderSide(){
       }
     });
   } else if (T === 'arrival'){
-    H.push(sec('Clock arrival', `<div class="seg" role="group"><button type="button" data-cc="tt" aria-pressed="${S.ccorner === 'tt'}">TT (setup corner)</button><button type="button" data-cc="ff" aria-pressed="${S.ccorner === 'ff'}">FF (hold corner)</button></div>
+    N.push(sec('Clock arrival', `<div class="seg" role="group"><button type="button" data-cc="tt" aria-pressed="${S.ccorner === 'tt'}">TT (setup corner)</button><button type="button" data-cc="ff" aria-pressed="${S.ccorner === 'ff'}">FF (hold corner)</button></div>
       <div class="ramp" style="background:linear-gradient(90deg,${RAMP.join(',')})"></div><div class="rampl"><span>${fmt(clockRange(S.ccorner)[0], 0)} ps</span><span>one scale for every element (1st–99th pct)</span><span>${fmt(clockRange(S.ccorner)[1], 0)} ps</span></div>
       <p class="note" style="margin-top:6px">Each flop is coloured by when the clock edge reaches its clock pin (propagated clock, extracted parasitics).</p>`));
     H.push(sec('Distribution', histSVG(), 'flops per arrival bin'));
@@ -830,17 +942,17 @@ function renderSide(){
     });
   } else if (T === 'tree'){
     const anyW = ok.some(E => E.cw);
-    H.push(sec('Clock tree', `<div class="seg" role="group"><button type="button" data-tv="wires" aria-pressed="${S.tview === 'wires'}" ${anyW ? '' : 'disabled'}>Routed wires</button><button type="button" data-tv="topo" aria-pressed="${S.tview === 'topo'}">Topology</button></div>
+    N.push(sec('Clock tree', `<div class="seg" role="group"><button type="button" data-tv="wires" aria-pressed="${S.tview === 'wires'}" ${anyW ? '' : 'disabled'}>Routed wires</button><button type="button" data-tv="topo" aria-pressed="${S.tview === 'topo'}">Topology</button></div>
       <p class="note" style="margin-top:6px"><b>Routed wires</b> are the clock nets' wire segments read from the final DB. <b>Topology</b> draws a straight line from each driver to each driven buffer (connectivity only, not geometry). Colour = buffer level from the clock pin (level 0 = the pin's net); red diamonds are clock gates (ICG). Click a level to light only it.</p>
       <div style="display:flex;height:10px;border-radius:3px;overflow:hidden;margin-top:6px">${LVL.map(c => `<i style="flex:1;background:${c}"></i>`).join('')}</div><div class="rampl"><span>level 0 (pin)</span><span>deepest level</span></div>`));
     ok.forEach(E => H.push(sec(esc(E.d.label), dendroHtml(E), `${fmt(E.tree.lv.reduce((a, r) => a + r.bufs, 0), 0)} buffers / gates · ${E.tree.D} levels · ${fmt(E.M.leaves, 0)} flops`)));
   } else if (T === 'density'){
     const mx = heatMax(S.dmetric);
-    H.push(sec('Density / congestion', `<div class="seg" role="group"><button type="button" data-dm="density" aria-pressed="${S.dmetric === 'density'}">Cell density</button><button type="button" data-dm="pins" aria-pressed="${S.dmetric === 'pins'}">Pin density</button><button type="button" data-dm="rudy" aria-pressed="${S.dmetric === 'rudy'}">Routed-wire RUDY</button></div>
-      <div class="ramp" style="background:linear-gradient(90deg,${HEAT.join(',')})"></div><div class="rampl"><span>0</span><span>sqrt scale, shared</span><span>${S.dmetric === 'density' ? fmt(100 * mx, 0) + ' %' : S.dmetric === 'pins' ? fmt(mx, 0) + ' pins' : fmt(mx, 2) + ' µm/µm²'}</span></div>
+    N.push(sec('Density / congestion', `<div class="seg" role="group"><button type="button" data-dm="density" aria-pressed="${S.dmetric === 'density'}">Cell density</button><button type="button" data-dm="pins" aria-pressed="${S.dmetric === 'pins'}">Pin density</button><button type="button" data-dm="rudy" aria-pressed="${S.dmetric === 'rudy'}">Routed-wire RUDY</button></div>
+      <div class="ramp" style="background:linear-gradient(90deg,${HEAT.join(',')})"></div><div class="rampl"><span>0</span><span>sqrt scale, shared</span><span>${S.dmetric === 'density' ? fmt(100 * mx, 0) + ' %' : S.dmetric === 'pins' ? fmt(mx, 0) + ' pins' : fmt(mx, 2) + ' \u00b5m/\u00b5m²'}</span></div>
       <p class="note" style="margin-top:6px">${S.dmetric === 'density' ? 'Placed std-cell area per bin over bin area (macros excluded).' : S.dmetric === 'pins' ? 'Signal pins of placed cells per bin.' : 'Each net\'s final routed wire length spread evenly over its pin bounding box (RUDY with routed length): an estimate of routing demand, not global-route overflow; the routed DBs carry no GRT congestion map.'}</p>`));
-    ok.forEach(E => { const a = E.d.geom.grid[S.dmetric], s = a.slice().sort((x, y) => x - y), f = v => S.dmetric === 'density' ? fmt(100 * v, 1) + ' %' : S.dmetric === 'pins' ? fmt(v, 0) : fmt(v, 2) + ' µm/µm²';
-      H.push(sec(esc(E.d.label), `<dl class="kv"><dt>median bin</dt><dd>${f(pct(s, .5))}</dd><dt>99th pct bin</dt><dd>${f(pct(s, .99))}</dd><dt>max bin</dt><dd>${f(s[s.length - 1])}</dd><dt>bin</dt><dd>${fmt(E.d.geom.grid.bin_um, 1)} µm</dd></dl>`)); });
+    ok.forEach(E => { const a = E.d.geom.grid[S.dmetric], s = a.slice().sort((x, y) => x - y), f = v => S.dmetric === 'density' ? fmt(100 * v, 1) + ' %' : S.dmetric === 'pins' ? fmt(v, 0) : fmt(v, 2) + ' \u00b5m/\u00b5m²';
+      H.push(sec(esc(E.d.label), `<dl class="kv"><dt>median bin</dt><dd>${f(pct(s, .5))}</dd><dt>99th pct bin</dt><dd>${f(pct(s, .99))}</dd><dt>max bin</dt><dd>${f(s[s.length - 1])}</dd><dt>bin</dt><dd>${fmt(E.d.geom.grid.bin_um, 1)} \u00b5m</dd></dl>`)); });
   } else if (T === 'rtl'){
     H.push(rtlSideHtml());
   } else if (T === 'facts'){
@@ -853,6 +965,7 @@ function renderSide(){
   if (!SAFE && T !== 'rtl') H.push(sec('Source', ok.map(E => `<dl class="kv"><dt>${esc(E.d.label)}</dt><dd>${esc(E.d.db)}<br>job ${esc(E.d.job)} on ${esc(E.d.host)} · exported ${esc((E.d.exported_at || '').slice(0, 16).replace('T', ' '))}${E.d.note ? '<br>' + esc(E.d.note) : ''}</dd></dl>`).join('') +
     `<p class="note" style="margin-top:6px">Exporters: tools/explorer_elem_export.py, tools/explorer_elem/or_export.py (OpenROAD, the job's own w18_sta_tt/ff.tcl setup), tools/explorer_elem/rtl_export.py (yosys, the route's config.mk).</p>`));
   $('side').innerHTML = H.join('');
+  $('nav').innerHTML = N.join('');
   bindSide();
 }
 function dendroHtml(E){
@@ -871,7 +984,7 @@ function dendroHtml(E){
     <p class="note">Each row is one level below the clock pin: bar = buffers / gates at that level (log scale), thin bar = flops whose clock pin hangs off a buffer of the level above, fo = fanout avg/max of that level's buffers. ${T.icgNodes.length} clock gates in total.</p>`;
 }
 function bindSide(){
-  const side = $('side');
+  const side = $('app');
   const dep = $('dep'); if (dep) dep.onchange = () => { S.depth = +dep.value; lsSet('depth.' + S.page.id, S.depth); S.iso = {}; regroup(); renderSide(); redrawAll(); };
   side.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { const s = S.iso[b.dataset.e], i = +b.dataset.g; if (s.has(i)) s.delete(i); else s.add(i); renderSide(); redrawAll(); });
   side.querySelectorAll('[data-pc]').forEach(b => b.onclick = () => { S.pcorner = b.dataset.pc; lsSet('pcorner', S.pcorner); renderSide(); redrawAll(); });

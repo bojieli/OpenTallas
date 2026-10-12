@@ -129,25 +129,25 @@ module tb_hgi_seq;
         reg signed [41:0] w; begin w = ($signed({2'b0, a}) - $signed({2'b0, IMG})) / 16;
             word_at = (w >= 0 && w < NW) ? img[w] : 128'hDEAD; end
     endfunction
-    reg [39:0] fq [0:63]; integer fqh = 0, fqn = 0, fdel = 0, fql = 0;
+    reg [39:0] fq [0:255]; integer fqh = 0, fqn = 0, fdel = 0, fql = 0;
     always @(posedge clk) begin
 `ifdef CP_FQ_LOCAL
         // [cp] FQ_LOCAL: every f_req_v is a send; the loader queue holds 16 (a send beyond the returned credits is a
         // protocol violation); a slot returns (f_req_ack) when the memory lane takes the request, 0..3 cycles later
         f_req_ack <= 1'b0;
-        if (f_req_v) begin fq[(fqh + fqn) % 64] = f_req_addr; fqn = fqn + 1; fql = fql + 1;
+        if (f_req_v) begin fq[(fqh + fqn) % 256] = f_req_addr; fqn = fqn + 1; fql = fql + 1;
             if (fql > 16) begin $display("FAIL fetch credit: %0d requests in the 16-slot loader queue", fql); $display("HGI_SEQ FAIL fetch credit"); $finish; end
         end
         if (fql > 0 && ($urandom % 4) != 0) begin f_req_ack <= 1'b1; fql = fql - 1; end
 `else
         f_req_rdy <= ($urandom % 3) != 0;
-        if (f_req_v && f_req_rdy) begin fq[(fqh + fqn) % 64] = f_req_addr; fqn = fqn + 1; end
+        if (f_req_v && f_req_rdy) begin fq[(fqh + fqn) % 256] = f_req_addr; fqn = fqn + 1; end
 `endif
         f_rsp_v <= 1'b0;
         if (fqn > 0) begin
             if (fdel > 0) fdel = fdel - 1;
             else begin
-                f_rsp_v <= 1'b1; f_rsp_data <= {word_at(fq[fqh] + 16), word_at(fq[fqh])}; fqh = (fqh + 1) % 64; fqn = fqn - 1;
+                f_rsp_v <= 1'b1; f_rsp_data <= {word_at(fq[fqh] + 16), word_at(fq[fqh])}; fqh = (fqh + 1) % 256; fqn = fqn - 1;
                 fdel = $urandom % 3;
             end
         end
