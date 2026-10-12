@@ -77,14 +77,21 @@ MEASURED = {
     "IDX.TOPK": dict(ratio=4.286, grade="unit_bench", src=U + "idx/ds_L0_tput/report.json",
                      interim=dict(ratio=None, src="hgi-1010.log 20:50 g2: TOPKW=1 heap IW4/W4 under test (heap n49152 IW4 23.3k)")),
     "IDX.OWNED": dict(ratio=1.004, grade="unit_bench", src=U + "idx/ds_L0_tput/report.json"),
-    "IDX.INDEX": dict(ratio=None, grade=None, src=None,
-                      interim=dict(ratio=1.36, src=U + "iks/README.md: key-stream issuer q0 460 vs 339 priced (one stack; not the whole record)")),
+    "IDX.INDEX": dict(ratio=8.603, grade="e2e", src=U + "idx_index/report.json",
+                      note="native idxn die e2e (4959a3820, idx unit == main): L24-type exact 9,291 vs 1,080 (4 rec/token); L20 3.15x NOT exact; "
+                           "L2-type hangs (never retires); token >= 5.72x; IDX_MUT=2 FAILS. Owner el1011-hbm-idxs"),
     "ATT.QK": dict(ratio=None, grade=None, src=None,
                    interim=dict(ratio=None, src="main a7613320f ATT PIPE=2: H4 D128 NL2 vehicle QK T512 1,951 cyc (not DS production shape hd512 / 1M)")),
     "ATT.PV": dict(ratio=None, grade=None, src=None,
                    interim=dict(ratio=None, src="main a7613320f ATT PIPE=2: PV T512 2,968 cyc (vehicle, not production shape)")),
-    "SM.MATVEC": dict(ratio=None, grade=None, src=None,
-                      interim=dict(ratio=None, src="hgi-1010.log 20:04: SM DS ratio rerun with tb_hgi_sm_tput on exp_2c9860e12 -> d (pending)")),
+    "SM.MATVEC": dict(ratio=32.903, grade="unit_bench", src=U + "sm/report.json",
+                      note="tb_hgi_sm_tput (32 SMs + xload BD + sm_pub + real VM) on the priced g25 DS records: 1,015/1,095 rec; >= 23.0x full token; "
+                           "wq_b / wo_a fail closed (sm_pub arrival overrun); MUT_ROW FAILS. Owner el1011-hbm-smmv"),
+    "COLL.TOPK_MERGE": dict(ratio=round(2834 / 2680.6, 3), grade="unit_bench", src=U + "coll/tkm_tput_480f631d5.json",
+                            note="ot_hgi_coll_tkm r2 (32 hardened 64-position tiles) via ot_hgi_coll_ep TKM 1: syn_sel G8 k512 2,834 vs 2,680.6 per merge; "
+                                 "candidate merge priced 0"),
+    "COLL.ARGMAX_MERGE": dict(ratio=round(614 / 765.4, 3), grade="e2e", src=U + "argmax_merge/report.json",
+                              note="DS head G96 rank 0 native die e2e (1 record/token), byte-exact, AMX_MUT_MIN fails"),
 }
 # Qwen-on-HBM ops: the audit's measured rows (Qwen-shape benches) where they exist
 # HAND-ENTERED (main 10-10): these Qwen ratios were copied from budget_audit rows, not from a committed bench record of
@@ -111,16 +118,16 @@ OWNERS = {
     "FUSED.QDQ_FP4_E8M0": "tput-gate-1010 (with QDQ_FP8)",
     "FUSED.QDQ_FP4_E4M3": "tput-gate-1010 (with QDQ_FP8)",
     "IDX.TOPK": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
-    "IDX.INDEX": "hgi-1010/g2 (idx chunk) + hbm-phys-1010 (IKS svc stripe) + e (IKS compiler c9d5c8dea)",
+    "IDX.INDEX": "el1011-hbm-idxs",
     "DMA.KVWB_DS": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)",
     "ATT.QK": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
     "ATT.PV": "hgi-1010/g2",
-    "SM.MATVEC": "hgi-1010/d (tb_hgi_sm_tput) + fe-push-hgi-1010 (sm_xload SRAM + FP8 x-path)",
+    "SM.MATVEC": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "SU.VOP": "hgi-1010/b",
     "COLL.ALL_GATHER": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
     "COLL.ROW_GATHER": "hgi-1010/c",
-    "COLL.TOPK_MERGE": "tput-gate-1010 (taken 10-10: production-shape bench)",
-    "COLL.ARGMAX_MERGE": "UNOWNED",
+    "COLL.TOPK_MERGE": "el1011-hbm-idx (ot_hgi_coll_tkm r2 tile chain) / hbm-coll",
+    "COLL.ARGMAX_MERGE": "hbm-coll",
     "ARGMAX.LOCAL": "UNOWNED",
     "CP.FETCH": "hbm-phys-1010 [svc] (native burst, NATIVE_NO 16 bee505fe4; loader routes) + hgi-1010/e (e2e model)",
 }
@@ -348,8 +355,8 @@ CURATED = {
     "SM.MATVEC|FP8": ("NOT_BUILT", "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv refuses x fmt 1 / 2 (x_fault): no FP8 block-dot x path "
                       "(audit ds_sm_xload_fp8_fp4_no_peer; FP8 x-path rebase = fe-push-hgi-1010 / hgi-1010/d)"),
     "SM.MATVEC|FP4": ("NOT_BUILT", "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv refuses x fmt 2"),
-    "COLL.TOPK_MERGE": ("NOT_BUILT", "rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv refuses op 2 ('merge stage not installed yet'); "
-                        "the IDX.MERGE engine (ot_hgi_idx_merge) is not reachable from the record path"),
+    "COLL.TOPK_MERGE": ("BUILT", "rtl/hbm_accel/generic/collective/tkm/run_tkm_bench.sh matrix (ot_hgi_coll_record op 2 -> ot_hgi_coll_ep TKM 1 -> "
+                        "ot_hgi_coll_tkm r2 480f631d5): HGI_TKM PASS, no-id mutant FAILS (results/rtl/hgi_unit_tput_20261010/coll/tkm_tput_480f631d5.json)"),
     "COLL.ARGMAX_MERGE": ("NO_NATIVE_EVIDENCE", "ot_hgi_coll_record op 3 + ot_hgi_coll_amerge exist; tb_hgi_coll_record checks only the endpoint "
                           "control with a stubbed endpoint (no exact native data run committed)"),
     "IDX.INDEX": ("NO_NATIVE_EVIDENCE", "ot_hgi_idx_index / _native exist; every committed die e2e runs IDX.INDEX as a stub (DS L2 with IDX stub); "
