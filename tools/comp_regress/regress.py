@@ -231,8 +231,11 @@ def record(a):
                         "--log", str(lg), "--out", str(rp)], capture_output=True, text=True)
             if rp.exists():
                 j = json.loads(rp.read_text())
-                d.update(ratio=j.get("ratio"), rtl_service=j.get("rtl_service"), sim_cost=j.get("sim_cost"),
-                         qualified=(j.get("ratio") is not None and j["ratio"] <= 1.10))
+                pu = j.get("per_unit") or {}
+                busy, cost = sum(v.get("rtl_busy", 0) for v in pu.values()), sum(v.get("sim_cost", 0) for v in pu.values())
+                ratio = j.get("ratio") or (round(busy / cost, 3) if cost else None)
+                d.update(ratio=ratio, rtl_service=busy, sim_cost=cost, per_op=j.get("per_op"),
+                         qualified=(ratio is not None and ratio <= 1.10))
             else:
                 d["report_err"] = q.stderr[-400:]
     else:
