@@ -775,6 +775,10 @@ module ot_hgi_hc_tile #(
     // sum_out at the seam.  These are the hardened defaults (the parent instantiates the tile without overrides).
     parameter integer TML = 3,
     parameter integer SOR = 1,
+    // round 4 (hc_tile-sys-faa39cbe9-{a,b}: one clock root over ~57k sinks, FF insertion 415..765 ps, CTS hold stuck at
+    // -165/-247 ps in the u_mul pipes): TLG 8 = the 32 lanes in 4 HARD lane-group leaves ot_hdc_v41x_hcp_lanes (own
+    // clock trees, ~13k sinks each); the tile becomes a replicated cluster (8 per die). Latency unchanged.
+    parameter integer TLG = 8,
     parameter integer NVW = $clog2(W) + 1,
     parameter integer CWW = $clog2(RMAX + 1),
     parameter integer NXM = W / 16
@@ -823,7 +827,7 @@ module ot_hgi_hc_tile #(
     ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
     // ---- the lane stage
     wire w_re, x_re; wire [AW-1:0] w_addr, x_addr; reg [W*32-1:0] wd; reg [W*16-1:0] xd;
-    ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(TML), .NVW(NVW), .LM(LM), .LA(LA), .SOR(SOR), .LRST(1), .ADRST(0)) u_st (.clk(clk), .rst_n(rl[0]), .first(first),
+    ot_hdc_v41x_hcp_stage #(.W(W), .AW(AW), .ML(TML), .NVW(NVW), .LM(LM), .LA(LA), .SOR(SOR), .LRST(1), .ADRST(0), .LG(TLG)) u_st (.clk(clk), .rst_n(rl[0]), .first(first),
         .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv), .o_wa(o_wa),
         .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out), .w_re(w_re), .w_addr(w_addr),
         .w_data(wd), .x_re(x_re), .x_addr(x_addr), .x_data(xd));

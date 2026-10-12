@@ -623,7 +623,13 @@ module ot_hdc_v41x_hcp_stage #(
     // reset flop (no rst_n net over 32 lanes' fp pipes); ADRST 0 builds the adders with data-bit reset off (valid only)
     parameter integer SOR = 0,
     parameter integer LRST = 0,
-    parameter integer ADRST = 1
+    parameter integer ADRST = 1,
+    // el1011-hbm-hcvm/hc round 4 (hc_tile-sys-faa39cbe9-b EARLY_FAIL_HOLD: ONE clock root over 56,560 sinks, avg sink wire
+    // 538 um, FF insertion 415..682 ps -> hold stuck at -165 ps inside u_mul pipes; textbook REFUSE > 15k sinks/root):
+    // LG 8 = the lanes live in W/8 HARD lane-group leaves (ot_hdc_v41x_hcp_lanes, own clock tree, ~13k sinks each);
+    // the leaf's pin flops ARE the old input registers (w_in, x_in, sum_q, lv_r/ss_r, gov, fst_q) and its outputs are
+    // the adder/seam registers + the registered group fault, so every latency is unchanged (SYS_LAT unchanged).
+    parameter integer LG = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -653,7 +659,8 @@ module ot_hdc_v41x_hcp_stage #(
     localparam integer DW = 2 + NVW + 2 * AW;
     reg  [NC:0]      cv;                                         // valid, taps 0..NC (reset)
     reg  [DW-2:0]    cd [0:NC];                                  // other fields (no reset)
-    reg              fst_q, fin_q, gov, lf_q;
+    reg              fin_q;
+    wire             lf_any;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin cv <= '0; w_re <= 1'b0; x_re <= 1'b0; fin_q <= 1'b0; f_out <= 1'b0; end
         else begin
@@ -661,17 +668,20 @@ module ot_hdc_v41x_hcp_stage #(
             w_re <= cv[0] && !cd[0][DW-2];
             x_re <= cv[0];
             fin_q <= f_in;
-            f_out <= fin_q || lf_q;
+            f_out <= fin_q || lf_any;
         end
     end
     always @(posedge clk) begin
-        fst_q <= first;
         cd[0] <= {d_ss, d_nv, d_wa, d_xa};
         for (integer j = 1; j <= NC; j = j + 1) cd[j] <= cd[j-1];
         w_addr <= cd[0][2*AW-1:AW];
         x_addr <= cd[0][AW-1:0];
     end
     assign o_v = cv[LA + SOR]; assign {o_ss, o_nv, o_wa, o_xa} = cd[LA + SOR]; // tap j = local j: out at local LA + SOR
+    generate if (LG == 0) begin : g_flat
+    reg fst_q, gov, lf_q;
+    assign lf_any = lf_q;
+    always @(posedge clk) fst_q <= first;
     // input registers (local 2 + ML) and the per-lane enables of that task (computed a cycle early, replicated)
     reg [W*32-1:0] w_in; reg [W*16-1:0] x_in;
     (* keep = "true" *) reg [W-1:0] lv_r, ss_r;
@@ -688,14 +698,13 @@ module ot_hdc_v41x_hcp_stage #(
     reg [W*32-1:0] sum_q;
     always @(posedge clk) sum_q <= sum_in;
     wire [W-1:0] lfl;
-    genvar gl;
     wire [W*32-1:0] y_l;
-    generate if (SOR != 0) begin : g_sor
+    if (SOR != 0) begin : g_sor
         reg [W*32-1:0] so_q; always @(posedge clk) so_q <= y_l; assign sum_out = so_q;
     end else begin : g_nsor
         assign sum_out = y_l;
-    end endgenerate
-    generate for (gl = 0; gl < W; gl = gl + 1) begin : g_lane
+    end
+    for (genvar gl = 0; gl < W; gl = gl + 1) begin : g_lane
         wire lrn;
         if (LRST != 0) begin : g_lr
             (* keep = "true" *) reg r; always @(posedge clk or negedge rst_n) if (!rst_n) r <= 1'b0; else r <= 1'b1;
@@ -715,7 +724,95 @@ module ot_hdc_v41x_hcp_stage #(
         ot_hdc_fp32_add_lat #(.LAT(LA), .DRST(ADRST)) u_add (.clk(clk), .rst_n(lrn), .valid_in(v0), .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]),
                                     .b(prod), .y(y_l[32*gl +: 32]), .err(e1), .valid_out(v1));
         assign lfl[gl] = (v0 && (|e0)) || (v1 && (|e1));
-    end endgenerate
+    end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin gov <= 1'b0; lf_q <= 1'b0; end else begin gov <= ov_r; lf_q <= |lfl; end
+    end else begin : g_lg
+        // enables one cycle earlier (task at local ML) in the shell; the leaf's pin flops hold them at local 2 + ML
+        localparam integer NG = W / LG;
+        (* keep = "true" *) reg [W-1:0] lvs, sss;
+        reg ov_r;
+        wire [NVW-1:0] nv_p = cd[ML][DW-3 -: NVW];
+        always @(posedge clk) for (integer l = 0; l < W; l = l + 1) begin
+            lvs[l] <= cv[ML] && (l < nv_p);
+            sss[l] <= cd[ML][DW-2];
+        end
+        always @(posedge clk or negedge rst_n) if (!rst_n) ov_r <= 1'b0; else ov_r <= cv[1 + ML];
+        wire [NG-1:0] lfg;
+        for (genvar gg = 0; gg < NG; gg = gg + 1) begin : g_grp
+            // hard child: instantiated WITHOUT parameter overrides (its defaults are the hardened configuration)
+            ot_hdc_v41x_hcp_lanes u_lg (.clk(clk), .rst_n(rst_n), .fst(first), .gov_i(ov_r), .lv_i(lvs[gg*LG +: LG]),
+                .ss_i(sss[gg*LG +: LG]), .w_i(w_data[gg*LG*32 +: LG*32]), .x_i(x_data[gg*LG*16 +: LG*16]),
+                .s_i(sum_in[gg*LG*32 +: LG*32]), .y(sum_out[gg*LG*32 +: LG*32]), .lf(lfg[gg]));
+        end
+        // the leaves' registered group faults stand in for lf_q (same cycle)
+        assign lf_any = |lfg;
+    end endgenerate
 endmodule
+
+// el1011-hbm-hcvm/hc round 4: HARD LANE-GROUP LEAF of the systolic HC bank tile (ot_hdc_v41x_hcp_stage LG = 8).  G FP32
+// MAC lanes (product = w * x, partial chunk sum + product) exactly as the stage's flat g_lane, with its own clock tree.
+// Every input lands in a pin flop that is the flat stage's input register (w_in, x_in, sum_q, lv_r, ss_r, gov, fst_q),
+// every output is a flop (the seam register so_q when SOR, the adder output otherwise; lf = the flat lf_q), so the
+// stage latency is bit-for-bit and cycle-for-cycle the flat one.  The defaults ARE the hardened configuration (the
+// stage instantiates it without overrides).
+module ot_hdc_v41x_hcp_lanes #(
+    parameter integer G     = 8,
+    parameter integer LM    = 8,
+    parameter integer LA    = 7,
+    parameter integer SOR   = 1,
+    parameter integer LRST  = 1,
+    parameter integer ADRST = 0
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire            fst,
+    input  wire            gov_i,
+    input  wire [G-1:0]    lv_i,
+    input  wire [G-1:0]    ss_i,
+    input  wire [G*32-1:0] w_i,
+    input  wire [G*16-1:0] x_i,
+    input  wire [G*32-1:0] s_i,
+    output wire [G*32-1:0] y,
+    output reg             lf
+);
+    reg [G*32-1:0] w_in, sum_q; reg [G*16-1:0] x_in;
+    (* keep = "true" *) reg [G-1:0] lv_r, ss_r;
+    reg fst_q, gov;
+    always @(posedge clk) begin
+        w_in <= w_i; x_in <= x_i; sum_q <= s_i; lv_r <= lv_i; ss_r <= ss_i; fst_q <= fst;
+    end
+    wire [G-1:0] lfl;
+    wire [G*32-1:0] y_l;
+    generate if (SOR != 0) begin : g_sor
+        reg [G*32-1:0] so_q; always @(posedge clk) so_q <= y_l; assign y = so_q;
+    end else begin : g_nsor
+        assign y = y_l;
+    end endgenerate
+    genvar gl;
+    generate for (gl = 0; gl < G; gl = gl + 1) begin : g_lane
+        wire lrn;
+        if (LRST != 0) begin : g_lr
+            (* keep = "true" *) reg r; always @(posedge clk or negedge rst_n) if (!rst_n) r <= 1'b0; else r <= 1'b1;
+            assign lrn = r;
+        end else begin : g_nlr
+            assign lrn = rst_n;
+        end
+        wire [31:0] xw = {x_in[16*gl +: 16], 16'h0000};
+        reg  [31:0] gx, gw;
+        always @(posedge clk) begin
+            gx <= lv_r[gl] ? xw : 32'd0;
+            gw <= lv_r[gl] ? (ss_r[gl] ? xw : w_in[32*gl +: 32]) : 32'd0;
+        end
+        wire [31:0] prod; wire [1:0] e0, e1; wire v0, v1;
+        ot_hdc_fp32_mul_lat #(.LAT(LM)) u_mul (.clk(clk), .rst_n(lrn), .valid_in(gov), .a(gw), .b(gx), .y(prod),
+                                    .err(e0), .valid_out(v0));
+        ot_hdc_fp32_add_lat #(.LAT(LA), .DRST(ADRST)) u_add (.clk(clk), .rst_n(lrn), .valid_in(v0),
+                                    .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]), .b(prod), .y(y_l[32*gl +: 32]), .err(e1),
+                                    .valid_out(v1));
+        assign lfl[gl] = (v0 && (|e0)) || (v1 && (|e1));
+    end endgenerate
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin gov <= 1'b0; lf <= 1'b0; end else begin gov <= gov_i; lf <= |lfl; end
+endmodule
+
