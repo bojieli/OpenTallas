@@ -16,10 +16,14 @@ QUADDIR=${QUADDIR:-$D/quad_b_cts/ot_attn_tile_m6h1q}
 IOFLAGS=--false-path-io
 case " ${PARAMS:-} " in *" CG=1 "*)
   IOFLAGS="" # gated successor times its real registered boundary; no blanket IO exceptions
-  case "$QUADDIR" in *c891a57cf_cg_hm10*) ;; *)
+  case "$QUADDIR" in *c891a57cf_cg_hm10*|*quad_b_tc/*_pk*) ;; *)
     echo "CG1 requires the qualified gated quad hard view" >&2; exit 2 ;; esac
 ;; esac
 POSTPDN=$D/die_tile/quad_m7_link.tcl
+if [ -n "${SPINE_INS:-}" ]; then   # el1011-hbm-attn v12: spine leaf targets = sink arrival + child TT insertion
+  export OT_SPINE_MACRO_LEAF=1 OT_SPINE_CHILD_INS="$(python3 tools/closure_loop/child_ins_env.py $QUADDIR ${BV_sn544:-${BANKD:-$D/bank}/ot_attn_bank_sn544} ${BV_ew544:-${BANKD:-$D/bank}/ot_attn_bank_ew544} ${BV_sn136:-${BANKD:-$D/bank}/ot_attn_bank_sn136} ${BV_ew136:-${BANKD:-$D/bank}/ot_attn_bank_ew136})" || exit 3
+  [ -n "$OT_SPINE_CHILD_INS" ] || { echo "SPINE_INS: no child insertion" >&2; exit 3; }
+fi
 SLIVER=${SLIVER-12}
 if [ -n "$SLIVER" ]; then
   POSTPDN=$PWD/$W/post_pdn_sliver.tcl; case "$W" in /*) POSTPDN=$W/post_pdn_sliver.tcl ;; esac
@@ -32,13 +36,13 @@ fi
 PADV=""; [ -n "${PADG:-}" ] && PADV="$PADV --orfs-var CELL_PAD_IN_SITES_GLOBAL_PLACEMENT=$PADG"
 [ -n "${PADD:-}" ] && PADV="$PADV --orfs-var CELL_PAD_IN_SITES_DETAIL_PLACEMENT=$PADD"
 P=""; for kv in ${PARAMS:-}; do P="$P --param $kv"; done
-echo "TOP=$TOP DW=$DW DH=$DH PARAMS=${PARAMS:-} HALO=${HALO:-1} SLIVER=$SLIVER PADG=${PADG:-} PADD=${PADD:-} CTSA=${CTSA:-} PD=${PD:-0.40} HM=${HM:-0.020} PER=${PER:-0.770} $*" > $W/args
+echo "SPINE_CHILD_INS=${OT_SPINE_CHILD_INS:-} TOP=$TOP DW=$DW DH=$DH PARAMS=${PARAMS:-} HALO=${HALO:-1} SLIVER=$SLIVER PADG=${PADG:-} PADD=${PADD:-} CTSA=${CTSA:-} PD=${PD:-0.40} HM=${HM:-0.020} PER=${PER:-0.770} $*" > $W/args
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --source rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv --source rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv \
   --source rtl/common/ot_fwd_link_stage.sv --source $D/quad_parent_phys.sv --source $D/quad_bb.sv --source $D/die_tile/bank_bb.sv \
   --macro-view ot_attn_tile_m6h1q=$QUADDIR \
-  --macro-view ot_attn_bank_sn544=${BANKD:-$D/bank}/ot_attn_bank_sn544 --macro-view ot_attn_bank_ew544=${BANKD:-$D/bank}/ot_attn_bank_ew544 \
-  --macro-view ot_attn_bank_sn136=${BANKD:-$D/bank}/ot_attn_bank_sn136 --macro-view ot_attn_bank_ew136=${BANKD:-$D/bank}/ot_attn_bank_ew136 \
+  --macro-view ot_attn_bank_sn544=${BV_sn544:-${BANKD:-$D/bank}/ot_attn_bank_sn544} --macro-view ot_attn_bank_ew544=${BV_ew544:-${BANKD:-$D/bank}/ot_attn_bank_ew544} \
+  --macro-view ot_attn_bank_sn136=${BV_sn136:-${BANKD:-$D/bank}/ot_attn_bank_sn136} --macro-view ot_attn_bank_ew136=${BV_ew136:-${BANKD:-$D/bank}/ot_attn_bank_ew136} \
   --macro-place-halo 1 1 \
   --clock-port ck --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 $IOFLAGS --stages pnr \
@@ -53,7 +57,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP $P \
   --keep-workdir $W/work --force --output $W/physical.json "$@" > $W/run.log 2>&1
 rc=$?; echo "rc=$rc" > $W/exit
 case " $* " in *"stop-after"*) exit $rc ;; esac
-M="--macro $QUADDIR --macro ${BANKD:-$D/bank}/ot_attn_bank_sn544 --macro ${BANKD:-$D/bank}/ot_attn_bank_ew544 --macro ${BANKD:-$D/bank}/ot_attn_bank_sn136 --macro ${BANKD:-$D/bank}/ot_attn_bank_ew136"
+M="--macro $QUADDIR --macro ${BV_sn544:-${BANKD:-$D/bank}/ot_attn_bank_sn544} --macro ${BV_ew544:-${BANKD:-$D/bank}/ot_attn_bank_ew544} --macro ${BV_sn136:-${BANKD:-$D/bank}/ot_attn_bank_sn136} --macro ${BV_ew136:-${BANKD:-$D/bank}/ot_attn_bank_ew136}"
 python3 tools/w18/corner_sta.py $M --orfs-dir $W/work/orfs --post-sdc $D/half/signoff_833_half.sdc --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
 exit $rc
