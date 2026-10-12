@@ -43,6 +43,11 @@ module ot_s81_hc_ccf #(
     localparam integer YB = $clog2(YD + FP);
     localparam integer YDC = 1 << YB;
     assign ch_rst = rs_n;
+    // the POST pop selects the y slice into ch_fd: one kept copy of the pop bit per 256-bit slice of the data field
+    // (no 3,600-load select net; textbook high_fanout class 2)
+    localparam integer NPS = (FDD + 255) / 256;
+    reg [NPS-1:0] pop_s;
+    always @(posedge sk or negedge rs_n) if (!rs_n) pop_s <= 0; else pop_s <= {NPS{fv_i[S_RD]}};
     reg [FVW-1:0] fv_p;
     reg [FSW-1:0] fd_p;
     reg           ya;
@@ -55,7 +60,7 @@ module ot_s81_hc_ccf #(
     wire [YS1-1:0] yf_head;
     wire           yf_hv, yf_ovf;
     generate if (L1 > 0) begin : g_yf
-        ot_fifo_sram_fwft #(.W(YS1), .DEPTH(YDC), .MACRO(0)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(y1),
+        ot_fifo_sram_fwft #(.W(YS1), .DEPTH(YDC), .MACRO(0), .ESL(256)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(y1),
             .pop(pop), .hv(yf_hv), .head(yf_head), .ovf(yf_ovf));
     end else begin : g_nyf
         assign yf_head = {YS1{1'b0}}; assign yf_hv = 1'b0; assign yf_ovf = 1'b0;
@@ -72,10 +77,12 @@ module ot_s81_hc_ccf #(
     always @(posedge sk) begin
         ch_fd[O_D-1:0] <= fd_p[O_D-1:0];
         begin : dfield
-            reg [FDD-1:0] t;
-            t = {FDD{1'b0}};
-            if (pop) t[YS1-1:0] = yf_head;
-            else t[S_RD*512-1:0] = fd_p[O_D +: S_RD * 512];
+            reg [FDD-1:0] t, ty, tf;
+            integer k;
+            ty = {FDD{1'b0}}; tf = {FDD{1'b0}};
+            ty[YS1-1:0] = yf_head;
+            tf[S_RD*512-1:0] = fd_p[O_D +: S_RD * 512];
+            for (k = 0; k < FDD; k = k + 1) t[k] = pop_s[k / 256] ? ty[k] : tf[k];
             ch_fd[O_D +: FDD] <= t;
         end
     end
