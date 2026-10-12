@@ -198,7 +198,10 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer SX = (VMT != 0) ? RV + RO + 1 + TLS : 0;  // extra edges, SU answers
     localparam integer RL = (VMT != 0) ? RV + RO + 5 + TLR : 3;  // row read: r_qr at r_v + 2 (+ RV + RO + 2 + TLR)
     localparam integer NPP = RV + 6 + TLX;                       // tile x FIFO: beats in flight between push and pop
-    localparam integer XPOP = 4 + RV - RO + TLX;                 // the x stage whose valid becomes the tiles' pop
+    // r6: the tile distributes pop through one more engine-edge stage (pin flop per bank -> per-slice replica), so the
+    // pop source is one x stage earlier (TPP) and lands on the same edge as before; XS / NPP unchanged.
+    localparam integer TPP = (VMT != 0) ? 1 : 0;
+    localparam integer XPOP = 4 + RV - RO + TLX - TPP;           // the x stage whose valid becomes the tiles' pop
     localparam integer NG = (NRB >= 8) ? NRB / 8 : 1;
     localparam integer NSB = NRBS / NG;
     localparam integer NWR = (SW + 30) / 16;           // rows an SU vector can span
@@ -921,6 +924,81 @@ module ot_qfd_sp_vector_memory_bv #(
 endmodule
 
 
+
+// ---------------------------------------------------------------------------------------------------------------------
+// el1011-q-sp 2026-10-12 r6 (qfd_vm_grp_b-4f52a5999 EARLY_FAIL_SETUP -655 ps / 6,588 ep; grp_a PREROUTE -1,270): the
+// flat tile had ONE TritonCTS tree over 96,573 flops + 28 macros on 993.6 x 648 um (insertion ~1.06 ns, 390 ps of it
+// pin-to-root wire), pop fanned from the pin to 128 slice replicas across the 648-um face, and one reset flop drove 3,690
+// async flops.  r6 splits the macro side into hard leaf children (registered boundaries, own local clock tree):
+//   ot_qfd_vm_bank_t  one copy-0 row bank: pin flops -> 2 macros -> capture beside the macros -> registered q
+//   ot_qfd_vm_su_t    one SU copy (NSB row banks): pin flops -> 2*NSB macros -> capture -> registered q
+// Each child = one input relay + macro + capture + one output relay of r5, so every path keeps the r5 latency
+// (the grp carries NRI - 1 / NRX - 1 / NRS - 1 relays around them).  Defaults = TP4 production; TP8 sets params.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_qfd_vm_bank_t #(
+    parameter integer DEPTH = 174,
+    parameter integer LAW = 8,
+    parameter integer USE_MACRO = 1
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire            re,
+    input  wire [LAW-1:0]  ra,
+    input  wire            we,
+    input  wire [LAW-1:0]  wl,
+    input  wire [15:0]     wm,
+    input  wire [511:0]    wd,
+    output reg  [511:0]    q
+);
+    reg rr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rr <= 1'b0; else rr <= 1'b1;
+    reg p_re, p_we;
+    always @(posedge clk or negedge rr) if (!rr) begin p_re <= 1'b0; p_we <= 1'b0; end else begin p_re <= re; p_we <= we; end
+    reg [LAW-1:0] p_ra, p_wl;
+    reg [15:0]    p_wm;
+    reg [511:0]   p_wd;
+    always @(posedge clk) begin p_ra <= ra; p_wl <= wl; p_wm <= wm; p_wd <= wd; end
+    wire [511:0] bq;
+    ot_qfd_vm_rowbank #(.DEPTH(DEPTH), .LAW(LAW), .USE_MACRO(USE_MACRO)) u_b (.clk(clk),
+        .re(p_re), .raddr(p_ra), .q(bq), .we(p_we), .waddr(p_wl), .wmask(p_wm), .wdata(p_wd));
+    reg [511:0] cq;                       // capture beside the macros: no logic, no reset, no enable
+    always @(posedge clk) begin cq <= bq; q <= cq; end
+endmodule
+
+module ot_qfd_vm_su_t #(
+    parameter integer NSB = 2,
+    parameter integer DEPTHS = 695,
+    parameter integer LAWS = 10,
+    parameter integer USE_MACRO = 1
+) (
+    input  wire                  clk,
+    input  wire                  rst_n,
+    input  wire [NSB-1:0]        sre,
+    input  wire [NSB*LAWS-1:0]   sra,
+    input  wire [NSB-1:0]        swe,
+    input  wire [NSB*LAWS-1:0]   swl,
+    input  wire [NSB*16-1:0]     swm,
+    input  wire [NSB*512-1:0]    swd,
+    output reg  [NSB*512-1:0]    q
+);
+    reg rr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rr <= 1'b0; else rr <= 1'b1;
+    reg [NSB-1:0] p_sre, p_swe;
+    always @(posedge clk or negedge rr) if (!rr) begin p_sre <= 0; p_swe <= 0; end else begin p_sre <= sre; p_swe <= swe; end
+    reg [NSB*LAWS-1:0] p_sra, p_swl;
+    reg [NSB*16-1:0]   p_swm;
+    reg [NSB*512-1:0]  p_swd;
+    always @(posedge clk) begin p_sra <= sra; p_swl <= swl; p_swm <= swm; p_swd <= swd; end
+    wire [NSB*512-1:0] sq;
+    genvar j;
+    generate for (j = 0; j < NSB; j = j + 1) begin : g_s
+        ot_qfd_vm_rowbank_s #(.DEPTH(DEPTHS), .LAW(LAWS), .USE_MACRO(USE_MACRO)) u_s (.clk(clk),
+            .re(p_sre[j]), .raddr(p_sra[j*LAWS +: LAWS]), .q(sq[j*512 +: 512]),
+            .we(p_swe[j]), .waddr(p_swl[j*LAWS +: LAWS]), .wmask(p_swm[j*16 +: 16]), .wdata(p_swd[j*512 +: 512]));
+    end endgenerate
+    reg [NSB*512-1:0] cq;
+    always @(posedge clk) begin cq <= sq; q <= cq; end
+endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 // el1011-q-sp 2026-10-11 (owner textbook audit; main decision: near-square VM slot, x rate unchanged, me_en one edge
 // early with regional replicas): ot_qfd_vm_grp, the HARDENED BANK-GROUP TILE of ot_qfd_sp_vector_memory_bv VMT = 1.
@@ -989,6 +1067,19 @@ module ot_qfd_vm_grp #(
     // ---- reset relay, me_en replica ----
     reg rt;
     always @(posedge clk or negedge rst_n) if (!rst_n) rt <= 1'b0; else rt <= 1'b1;
+    // r6: per-bank reset relays (one flop drove 3,690 async flops: recovery -254 ps) and per-bank pop pin flops
+    //     (pop -> 128 slice replicas across the face was -745 ps): pop gains one engine edge (parent TPP).
+    wire [NBK-1:0] rtg, pgw;
+    generate for (g = 0; g < NBK; g = g + 1) begin : g_rg
+        (* keep = "true", dont_touch = "true" *) reg r;
+        (* keep = "true", dont_touch = "true" *) reg mg;
+        (* keep = "true", dont_touch = "true" *) reg pg;
+        always @(posedge clk or negedge rst_n) if (!rst_n) r <= 1'b0; else r <= rt;
+        always @(posedge clk) mg <= me_in;
+        always @(posedge clk or negedge rt) if (!rt) pg <= 1'b0; else if ((MEREG != 0) ? mg : me_in) pg <= pop;
+        assign rtg[g] = r;
+        assign pgw[g] = pg;
+    end endgenerate
     wire me_t;
     generate if (MEREG != 0) begin : g_mer
         reg mr;
@@ -1006,7 +1097,9 @@ module ot_qfd_vm_grp #(
     always @(posedge clk or negedge rt)
         if (!rt) begin p_re <= 0; p_we <= 0; p_xv <= 1'b0; p_rq <= 1'b0; p_sre <= 0; p_sv <= 0; p_swe <= 0; end
         else begin p_re <= re; p_we <= we; p_xv <= xv; p_rq <= rq; p_sre <= sre; p_sv <= sv; p_swe <= swe; end
-    always @(posedge clk or negedge rt) if (!rt) p_pop <= 1'b0; else if (me_t) p_pop <= pop;
+    reg p_pop2;                           // central copy of the per-bank pop stage (occupancy / ovf)
+    always @(posedge clk or negedge rt) if (!rt) begin p_pop <= 1'b0; p_pop2 <= 1'b0; end
+        else if (me_t) begin p_pop <= pop; p_pop2 <= p_pop; end
     reg [NBK*LAW-1:0] p_ra, p_wl;
     reg [NBK*16-1:0]  p_wm;
     reg [NBK*512-1:0] p_wd;
@@ -1032,33 +1125,32 @@ module ot_qfd_vm_grp #(
     wire [NSB*LAWS-1:0]     m_swl;
     wire [NSB*16-1:0]       m_swm;
     wire [NSB*512-1:0]      m_swd;
-    ot_hdc_delay #(.W(2*NBK + NSU*NSB + NSB), .D(NRI), .RESET(1)) u_ic (.clk(clk), .rst_n(rt),
+    ot_hdc_delay #(.W(2*NBK + NSU*NSB + NSB), .D(NRI - 1), .RESET(1)) u_ic (.clk(clk), .rst_n(rt),
         .d({p_re, p_we, p_sre, p_swe}), .q({m_re, m_we, m_sre, m_swe}));
-    ot_hdc_delay #(.W(2*NBK*LAW + NBK*16 + NBK*512 + NSU*NSB*LAWS + NSB*LAWS + NSB*16 + NSB*512), .D(NRI)) u_id (
+    ot_hdc_delay #(.W(2*NBK*LAW + NBK*16 + NBK*512 + NSU*NSB*LAWS + NSB*LAWS + NSB*16 + NSB*512), .D(NRI - 1)) u_id (
         .clk(clk), .rst_n(rt), .d({p_ra, p_wl, p_wm, p_wd, p_sra, p_swl, p_swm, p_swd}),
         .q({m_ra, m_wl, m_wm, m_wd, m_sra, m_swl, m_swm, m_swd}));
     // ---- copy-0 banks ----
+    //      r6: hard leaf children (pin flop + macros + capture + registered q = 1 input + 1 + 1 + 1 output relay of r5)
     wire [NBK*512-1:0] bq;
     generate for (g = 0; g < NBK; g = g + 1) begin : g_b
-        ot_qfd_vm_rowbank #(.DEPTH(DEPTH), .LAW(LAW), .USE_MACRO(USE_MACRO)) u_b (.clk(clk),
-            .re(m_re[g]), .raddr(m_ra[g*LAW +: LAW]), .q(bq[g*512 +: 512]),
-            .we(m_we[g]), .waddr(m_wl[g*LAW +: LAW]), .wmask(m_wm[g*16 +: 16]), .wdata(m_wd[g*512 +: 512]));
+        ot_qfd_vm_bank_t #(.DEPTH(DEPTH), .LAW(LAW), .USE_MACRO(USE_MACRO)) u_bt (.clk(clk), .rst_n(rtg[g]),
+            .re(m_re[g]), .ra(m_ra[g*LAW +: LAW]), .q(bq[g*512 +: 512]),
+            .we(m_we[g]), .wl(m_wl[g*LAW +: LAW]), .wm(m_wm[g*16 +: 16]), .wd(m_wd[g*512 +: 512]));
     end endgenerate
     // ---- SU copy banks ----
     wire [NSU*NSB*512-1:0] sq;
     generate for (c = 0; c < NSU; c = c + 1) begin : g_c
-        for (j = 0; j < NSB; j = j + 1) begin : g_s
-            ot_qfd_vm_rowbank_s #(.DEPTH(DEPTHS), .LAW(LAWS), .USE_MACRO(USE_MACRO)) u_s (.clk(clk),
-                .re(m_sre[c*NSB + j]), .raddr(m_sra[(c*NSB + j)*LAWS +: LAWS]), .q(sq[(c*NSB + j)*512 +: 512]),
-                .we(m_swe[j]), .waddr(m_swl[j*LAWS +: LAWS]), .wmask(m_swm[j*16 +: 16]), .wdata(m_swd[j*512 +: 512]));
-        end
+        ot_qfd_vm_su_t #(.NSB(NSB), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(USE_MACRO)) u_st (.clk(clk),
+            .rst_n(rtg[c % NBK]), .sre(m_sre[c*NSB +: NSB]), .sra(m_sra[c*NSB*LAWS +: NSB*LAWS]),
+            .swe(m_swe), .swl(m_swl), .swm(m_swm), .swd(m_swd), .q(sq[c*NSB*512 +: NSB*512]));
     end endgenerate
     // ---- output data path: capture register beside every macro (no logic before it), then NRX (copy-0) / NRS (SU)
     //      clock relays toward the E face.  Datapath registers carry no reset and no enable. ----
     wire [NBK*512-1:0]     bx;          // copy-0 words at the E region: bq + 1 + NRX edges
     wire [NSU*NSB*512-1:0] sx;          // SU words at the E region:     sq + 1 + NRS edges
-    ot_hdc_delay #(.W(NBK*512), .D(1 + NRX)) u_bx (.clk(clk), .rst_n(rt), .d(bq), .q(bx));
-    ot_hdc_delay #(.W(NSU*NSB*512), .D(1 + NRS)) u_sx (.clk(clk), .rst_n(rt), .d(sq), .q(sx));
+    ot_hdc_delay #(.W(NBK*512), .D(NRX - 1)) u_bx (.clk(clk), .rst_n(rt), .d(bq), .q(bx));
+    ot_hdc_delay #(.W(NSU*NSB*512), .D(NRS - 1)) u_sx (.clk(clk), .rst_n(rt), .d(sq), .q(sx));
     // ---- tags (pin flop -> central control chain -> per-region kept replicas -> per-slice kept replicas) ----
     //   x push:  p_xv + 2 + NRI + NRX edges (aligned with bx)   = central (NRI + NRX) + xg (bank) + xv_k (slice)
     //   row:     one-hot select of p_rqb, p_rqb[2], p_rq   + 2 + NRI + NRX = decode + central (NRI + NRX) + slice
@@ -1082,7 +1174,7 @@ module ot_qfd_vm_grp #(
         (* keep = "true", dont_touch = "true" *) reg [5:0] rs1;   // select replica, rung 1
         (* keep = "true", dont_touch = "true" *) reg [1:0] rs2;   // {en, half} replica, rung 2
         reg [2*FSW-1:0] t1, t1n;
-        always @(posedge clk or negedge rt) if (!rt) begin rs1 <= 6'd0; rs2 <= 2'd0; end
+        always @(posedge clk or negedge rtg[k % NBK]) if (!rtg[k % NBK]) begin rs1 <= 6'd0; rs2 <= 2'd0; end
             else begin rs1 <= rdc; rs2 <= rs1[5:4]; end
         integer h, i;
         always @* begin
@@ -1098,10 +1190,10 @@ module ot_qfd_vm_grp #(
     localparam integer SSL = (NSB * 512) / FSW;
     generate for (c = 0; c < NSU; c = c + 1) begin : g_sc
         (* keep = "true", dont_touch = "true" *) reg sg;
-        always @(posedge clk or negedge rt) if (!rt) sg <= 1'b0; else sg <= svc[c];
+        always @(posedge clk or negedge rtg[c % NBK]) if (!rtg[c % NBK]) sg <= 1'b0; else sg <= svc[c];
         for (k = 0; k < SSL; k = k + 1) begin : g_k
             (* keep = "true", dont_touch = "true" *) reg sv_k;
-            always @(posedge clk or negedge rt) if (!rt) sv_k <= 1'b0; else sv_k <= sg;
+            always @(posedge clk or negedge rtg[c % NBK]) if (!rtg[c % NBK]) sv_k <= 1'b0; else sv_k <= sg;
             always @(posedge clk) if (sv_k) so[c*NSB*512 + k*FSW +: FSW] <= sx[c*NSB*512 + k*FSW +: FSW];
         end
     end endgenerate
@@ -1111,7 +1203,7 @@ module ot_qfd_vm_grp #(
     localparam integer NSL = (NBK * 512) / FSW;
     localparam integer SPB = 512 / FSW;
     reg [LP:0]   cnt;
-    wire popn = me_t && p_pop;
+    wire popn = me_t && p_pop2;
     always @(posedge clk or negedge rt) begin
         if (!rt) begin cnt <= 0; ovf <= 1'b0; end
         else begin
@@ -1122,7 +1214,7 @@ module ot_qfd_vm_grp #(
     wire [NBK-1:0] xg;
     generate for (g = 0; g < NBK; g = g + 1) begin : g_xg
         (* keep = "true", dont_touch = "true" *) reg r;
-        always @(posedge clk or negedge rt) if (!rt) r <= 1'b0; else r <= xvc;
+        always @(posedge clk or negedge rtg[g]) if (!rtg[g]) r <= 1'b0; else r <= xvc;
         assign xg[g] = r;
     end endgenerate
     generate for (k = 0; k < NSL; k = k + 1) begin : g_fs
@@ -1133,10 +1225,10 @@ module ot_qfd_vm_grp #(
         wire me_k = (MEREG != 0) ? mr_k : me_in;
         wire pop_k = me_k && pp_k;
         always @(posedge clk) mr_k <= me_in;
-        always @(posedge clk or negedge rt)
-            if (!rt) begin pp_k <= 1'b0; xv_k <= 1'b0; wpo <= {{(NPP-1){1'b0}}, 1'b1}; rpo <= {{(NPP-1){1'b0}}, 1'b1}; end
+        always @(posedge clk or negedge rtg[k / SPB])
+            if (!rtg[k / SPB]) begin pp_k <= 1'b0; xv_k <= 1'b0; wpo <= {{(NPP-1){1'b0}}, 1'b1}; rpo <= {{(NPP-1){1'b0}}, 1'b1}; end
             else begin
-                if (me_k) pp_k <= pop;
+                if (me_k) pp_k <= pgw[k / SPB];
                 xv_k <= xg[k / SPB];
                 if (xv_k) wpo <= (NPP > 1) ? {wpo[NPP-2:0], wpo[NPP-1]} : wpo;
                 if (pop_k) rpo <= (NPP > 1) ? {rpo[NPP-2:0], rpo[NPP-1]} : rpo;
