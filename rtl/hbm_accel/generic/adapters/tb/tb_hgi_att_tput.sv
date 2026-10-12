@@ -21,6 +21,15 @@ module tb_hgi_att_tput;
 `ifndef ATT_PIPE
  `define ATT_PIPE 0
 `endif
+`ifndef ATT_KV8
+ `define ATT_KV8 0
+`endif
+`ifndef ATT_WV
+ `define ATT_WV 0
+`endif
+`ifndef ATT_RLY
+ `define ATT_RLY 7
+`endif
     `include "au_sizes.svh"
     reg clk = 0; always #1 clk = ~clk;
     reg [255:0] casem [0:NCASE-1]; reg [1215:0] recm [0:NREC-1]; reg [63:0] vmim [0:NVMI-1];
@@ -38,6 +47,12 @@ module tb_hgi_att_tput;
         $display("TRACE cyc %0d st %0d scn %0d tb %0d sc_hold %0d sfr %0d sfw %0d vo_n %0d so_h %0d so_r %0d fi_row %0d co_row %0d blk0 %0d kv_v %0d",
             cyc, u.st, u.scn, u.tb, u.sc_hold, u.sfr, u.sfw, u.vo_n, u.so_h, u.so_r, u.fi_row, u.co_row, u.blk0, u.kv_v); $fflush; end
 `endif
+`ifdef ATT_STH
+    // hbm-attt (10-12): cycles a record spends in each unit state (printed after every REC line)
+    longint sth [0:31]; integer sti;
+    initial for (sti = 0; sti < 32; sti = sti + 1) sth[sti] = 0;
+    always @(posedge clk) if (rst_n && u.busy) sth[u.st] = sth[u.st] + 1;
+`endif
 `ifdef MUT_RING
     localparam integer MR = 1;
 `else
@@ -47,6 +62,16 @@ module tb_hgi_att_tput;
     localparam integer MROW = 1;
 `else
     localparam integer MROW = 0;
+`endif
+`ifdef MUT_WV
+    localparam integer MWV = 1;
+`else
+    localparam integer MWV = 0;
+`endif
+`ifdef MUT_KV8
+    localparam integer MK8 = 1;
+`else
+    localparam integer MK8 = 0;
 `endif
 `ifdef MUT_LANE
     localparam integer MLANE = 1;
@@ -63,13 +88,26 @@ module tb_hgi_att_tput;
     // delivers at most BWS sectors a cycle (+BWS, default 99 = 3,166.7 B/cycle / 32 B).
     wire wq_v, wq_rdy = 1'b1; wire [`ATT_NL-1:0] wq_sv; wire [`ATT_NL*40-1:0] wq_row; wire [7:0] wq_nsec;
     reg [`ATT_NL*SPRL-1:0] wl_v = 0; reg [`ATT_NL*SPRL*256-1:0] wl_d = 0;
-    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE)) u (
+    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE), .KV8(`ATT_KV8), .MUT_KV8(MK8), .WV(`ATT_WV), .MUT_WV(MWV)) u (
+        .wrq(a_rq), .wrq_cr(a_rcr), .wrr(a_rr), .rg_req(a_rg), .rg_gnt(a_rgg), .wwq(a_wq), .wwq_cr(a_wcr), .wwq_done(a_wdn),
+        .wg_req(a_wg), .wg_gnt(a_wgg),
         .wq_v(wq_v), .wq_rdy(wq_rdy), .wq_sv(wq_sv), .wq_row(wq_row), .wq_nsec(wq_nsec), .wl_v(wl_v), .wl_d(wl_d),.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]), .rec_o(cur[1151:896]),
         .rec_n_b(cur[1172:1152]), .rec_n_c(cur[1193:1173]), .rec_pos1(cur[1214:1194]), .rec_done(done),
         .rec_fault(fault), .halted(halted), .vmq(uq), .vmr(ur), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr),
         .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_data(hr_data));
-    ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status());
+    // WV: the lgE 'att' slot -- the unit's read / write lane groups through ot_hgi_vm_lanearb (RLY = the die's registered
+    // stations each way, VM E face -> cmdproc W face) to the real VM's wide read lanes (RP 32) and second write group (W2 32)
+    wire [32*16-1:0] a_rq, g_rq; wire [31:0] a_rcr, g_rcr; wire [32*257-1:0] a_rr, g_rr; wire a_rg, a_rgg;
+    wire [32*280-1:0] a_wq, g_wq; wire [31:0] a_wcr, a_wdn, g_wcr, g_wdn; wire a_wg, a_wgg;
+    ot_hgi_vm_lanearb #(.K(1), .REQW(16), .RSPW(257), .RLY(`ATT_RLY)) u_rarb (.clk(clk), .rst_n(rst_n), .c_req(a_rg),
+        .c_gnt(a_rgg), .c_q(a_rq), .c_cr(a_rcr), .c_rsp(a_rr), .g_q(g_rq), .g_cr(g_rcr), .g_rsp(g_rr));
+    ot_hgi_vm_lanearb #(.K(1), .REQW(280), .RSPW(1), .RLY(`ATT_RLY)) u_warb (.clk(clk), .rst_n(rst_n), .c_req(a_wg),
+        .c_gnt(a_wgg), .c_q(a_wq), .c_cr(a_wcr), .c_rsp(a_wdn), .g_q(g_wq), .g_cr(g_wcr), .g_rsp(g_wdn));
+    ot_hgi_vm_unit #(.NC(2), .RP(`ATT_WV ? 32 : 0), .W2(`ATT_WV ? 32 : 0)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}),
+        .cr({tr, ur}), .status(), .wq(280'd0), .wq_done(), .wq_rdy(), .ap_q(), .ap_cr(8'd0), .ap_done(8'd0),
+        .rq(g_rq[(`ATT_WV ? 32 : 1)*16-1:0]), .rq_cr(g_rcr[(`ATT_WV ? 32 : 1)-1:0]), .rr(g_rr[(`ATT_WV ? 32 : 1)*257-1:0]),
+        .w2q(g_wq[(`ATT_WV ? 32 : 1)*280-1:0]), .w2q_cr(g_wcr[(`ATT_WV ? 32 : 1)-1:0]), .w2q_done(g_wdn[(`ATT_WV ? 32 : 1)-1:0]));
     reg [255:0] hbm [longint];
     // row-lane model state: a FIFO of beats {release cycle, slot mask, row addresses, nsec}
     longint bq_t [$]; reg [`ATT_NL-1:0] bq_m [$]; reg [`ATT_NL*40-1:0] bq_r [$]; reg [7:0] bq_n [$];
@@ -145,6 +183,9 @@ module tb_hgi_att_tput;
                 @(posedge clk); td = cyc; #0.1 rec_v = 0;
                 t = 0; while (nd <= j && nf == 0 && t < 40000000) begin @(posedge clk); t = t + 1; end
                 $display("REC %0d %0d op %0d disp %0d ret %0d", c, j, cur[123:118], td, cyc); $fflush;
+`ifdef ATT_STH
+                for (sti = 0; sti < 32; sti = sti + 1) if (sth[sti] != 0) begin $display("STH %0d %0d st %0d %0d", c, j, sti, sth[sti]); sth[sti] = 0; end
+`endif
             end
             if (nd != nr || nf != 0) begin $display("ERR case %0d: done %0d of %0d, faults %0d (state %0d)", c, nd, nr, nf, u.st); errors = errors + 1; end
             cerr = 0;

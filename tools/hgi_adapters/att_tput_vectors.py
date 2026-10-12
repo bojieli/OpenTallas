@@ -25,12 +25,12 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import common as C  # noqa: E402
-from att_unit_bench import pack, sectors  # noqa: E402
+from att_unit_bench import kv8_rows, pack, sectors  # noqa: E402
 from hgi_sim import lib as A  # noqa: E402
 from hgi_sim import machine as MC  # noqa: E402
 
 F = np.float32
-FMT = dict(FP32=0, BF16=1, FP8E4M3=2)
+FMT = dict(FP32=0, BF16=1, FP8E4M3=2, KV8=7)    # KV8 = fmt 7, the DS native FP8 KV row (hd codes + UE8M0 scale sector)
 FIRST_ACCESS, BW, ATT_FIXED = 104.0, 3166.7, 225.0      # hgi_sim.timing: MEAS hbm.first_access, hbm B/cyc, ATT.fixed
 DS_PRICE = {128: 147.144, 640: 339.144}                   # NativeCost ATT = walk(attend tile rows) / 2 (T128 / T640)
 
@@ -68,17 +68,33 @@ def main():
                  heads_kv=1):
         """records QK x heads_kv then PV x heads_kv; returns (records, vm, hbm, expected, record info)"""
         T = nb + nc
-        st = hd * (4 if fmt == 'FP32' else 1)
+        st = hd * (4 if fmt == 'FP32' else 1) + (32 if fmt == 'KV8' else 0)
         rs, vm, hb, ex, info = [], {}, [], {}, []
         prm = lanes | ((hd // 64 - 1) << 4) | ((1 << 8) if ring_m else 0)
         pending_pv = []
         for kv in range(heads_kv):
-            K = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
-            V = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
+            if fmt == 'KV8':                           # packed fmt 7 rows; golden = the rows' qdq_fp8 values
+                (Kp, K), (Vp, V) = kv8_rows(rng, T, hd), kv8_rows(rng, T, hd)
+                pk = {id(K): Kp, id(V): Vp}
+            else:
+                K = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
+                V = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
             q = A.to_bf16(rng.standard_normal((lanes, hd)).astype(F))
             p = A.to_bf16(rng.uniform(0, 1, (lanes, T)).astype(F))
             kb, vb = kbase + kv * (1 << 26), vbase + kv * (1 << 26)
             for base, M in ((kb, K), (vb, V)):
+                if fmt == 'KV8':
+                    P = pk[id(M)]
+                    if ring_m:
+                        ring = [bytes(st)] * ring_m
+                        for t in range(nb):
+                            ring[(pos1 - nb + t) % ring_m] = P[t]
+                        hb.append((base, b''.join(ring)))
+                    else:
+                        hb.append((base, b''.join(P[:nb])))
+                    if nc:
+                        hb.append((base + (cbk - kbase), b''.join(P[nb:])))
+                    continue
                 if ring_m:                             # list row t (t < nb) lives at slot (pos1 - nb + t) mod m
                     ring = np.zeros((ring_m, hd), F)
                     for t in range(nb):
@@ -130,6 +146,16 @@ def main():
             for i in info:
                 i.update(price=round(qwen_price(T), 1), price_at_8192=round(qwen_price(8192), 1))
             add(name, rs, vm, hb, ex, dict(vehicle='qwen', T=T, lanes=4, hd=128, fmt='FP8E4M3', ring=0, records=info))
+        elif name in ('ds_L0_k8', 'ring_wrap_k8', 'ds_L20_k8'):   # hbm-attt 10-12: the same DS shapes, native FP8 KV rows
+            l20 = name == 'ds_L20_k8'
+            pos1 = 1000 if name == 'ring_wrap_k8' else 1048576
+            rs, vm, hb, ex, info = att_pair(1, 512, 128, 512 if l20 else 0, 'KV8', 128, pos1, 1 << 34, (1 << 34) + (1 << 30),
+                                            (1 << 34) + (1 << 29) if l20 else 0, 0, 0, 4096, 8192, 12288,
+                                            648 if l20 else 136, name)
+            for i in info:
+                i.update(price=DS_PRICE[640 if l20 else 128])
+            add(name, rs, vm, hb, ex, dict(vehicle='ds', T=640 if l20 else 128, lanes=1, hd=512, fmt='KV8 (fmt 7)',
+                                           ring=128, pos1=pos1, nc=512 if l20 else 0, records=info))
         elif name in ('ds_L0', 'ring_wrap'):
             pos1 = 1048576 if name == 'ds_L0' else 1000
             rs, vm, hb, ex, info = att_pair(1, 512, 128, 0, 'FP32', 128, pos1, 1 << 34, (1 << 34) + (1 << 30), 0, 0,

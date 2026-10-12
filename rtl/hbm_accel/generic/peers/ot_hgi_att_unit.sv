@@ -59,7 +59,20 @@ module ot_hgi_att_unit #(
     // address, the closed codec element) instead of the inline e4m3 at the bank write.  fmt 7 with KV8 = 0 faults.
     // MUT_KV8 (bench): group g takes group g+1's scale -> must FAIL.
     parameter integer KV8 = 0,
-    parameter integer MUT_KV8 = 0
+    parameter integer MUT_KV8 = 0,
+    // WV (hbm-attt 2026-10-12, opt-in, requires PIPE = 2; default 0 = the as-built unit): VM WIDE LANE CLIENT.  q / p reads
+    // leave the VM packet port for one burst a head span on a 32-lane VM read group (ot_hgi_vm_wrd: wave = 32 sectors in
+    // one edge, lane b = VM bank b), QK scores and the PV output for burst-owned 32-lane write waves (lane b = bank b,
+    // WLQ credits a lane, the burst retires on its last done); die slot = lgE 'att' (hb_cmdproc W face, el1011-hbm-attt
+    // PHYSICAL SPEC 10-12 02:25).  Also: PV loads p at job start (before its rows), the job's row requests start during
+    // the q / p load (rows prefetch into the RIF landing FIFOs), and the PV job merge runs NA binary32 adders an edge.
+    // Same records, same golden values, same fault rules.  MUT_WV (bench): the landing rotation is off by one lane.
+    parameter integer WV = 0,
+    parameter integer WLQ = 8,              // WV: credits a write lane (= the VM lane queue depth)
+    parameter integer WRQ = 8,              // WV: credits a read lane
+    parameter integer WD = 8,               // WV: read waves outstanding
+    parameter integer NA = 32,              // WV: merge adders (hd a multiple of NA)
+    parameter integer MUT_WV = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -87,10 +100,23 @@ module ot_hgi_att_unit #(
     output reg  [NL*40-1:0] wq_row,
     output reg  [7:0]    wq_nsec,
     input  wire [NL*(D*4/32)-1:0]     wl_v,
-    input  wire [NL*(D*4/32)*256-1:0] wl_d
+    input  wire [NL*(D*4/32)*256-1:0] wl_d,
+    // WV = 1 VM wide lanes (tie off otherwise): read group {wrq lane b {v, sector 15}, wrq_cr, wrr lane b {v, data 256},
+    // rg_req / rg_gnt}, write group {wwq lane b {v, sector 15, wdata 256, word mask 8}, wwq_cr, wwq_done, wg_req / wg_gnt}
+    output wire [32*16-1:0]  wrq,
+    input  wire [31:0]       wrq_cr,
+    input  wire [32*257-1:0] wrr,
+    output wire              rg_req,
+    input  wire              rg_gnt,
+    output reg  [32*280-1:0] wwq,
+    input  wire [31:0]       wwq_cr,
+    input  wire [31:0]       wwq_done,
+    output reg               wg_req,
+    input  wire              wg_gnt
 );
     localparam integer S = D / TD, NT = NL * S, DPT = D / NT, G = D / 32, R = TD / H, ROWW = G * 265;
     localparam integer SPR = D * 4 / 32;              // max sectors a row (FP32)
+    initial if (WV != 0 && (PIPE != 2 || D % NA != 0)) $fatal(1, "ot_hgi_att_unit: WV needs PIPE = 2 and D a multiple of NA");
     initial if (PIPE != 0 && (RBD < 2 || RBD > 256 || (RBD & (RBD - 1)) != 0)) $fatal(1, "ot_hgi_att_unit: RBD a power of two <= 256");
     // ---- record pin flops
     reg [127:0] hdr; reg [255:0] da, db, dc, dout; reg [20:0] nb, nc, pos1; reg raw_v, busy, halt_q;
@@ -132,6 +158,8 @@ module ot_hgi_att_unit #(
     //   ck[k H + h][c]                the job's pv: tile k's head-h value of dim k DPT + c (one pv beat writes every bank)
     // (each bank is a memory local to its generate scope: one writer; reads leave through the flat wires below)
     wire [D*16-1:0] q_flat;                  // qb, element e at [16 e]
+    wire [D*16-1:0] q_flat_b;                // the packet-port banks (WV = 0)
+    wire [D*16-1:0] q_flat_w;                // WV: the wave-landed q store
     wire [D*8-1:0]  c_flat;                  // cb, code i at [8 i]
     wire [R*H*16-1:0] p_word;                // the p word of pw_i: row j, head h at [(j H + h) 16]
     wire [NT*H*32-1:0] ck_rd;                // every ck bank's word at ck_a
@@ -180,7 +208,7 @@ module ot_hgi_att_unit #(
         always @(posedge clk) if (land_q && e < hd) m[e >> 3] <= vr[32*qq + 16 +: 16];
         genvar gi;
         for (gi = 0; gi < D / 8; gi = gi + 1) begin : g_o
-            assign q_flat[16 * (gi * 8 + gb) +: 16] = m[gi];
+            assign q_flat_b[16 * (gi * 8 + gb) +: 16] = m[gi];
         end
     end endgenerate
     // p banks: head h, bank b = row mod PB (PB = max(8, R): a sector's 8 rows and a word's R rows hit distinct banks)
@@ -208,7 +236,9 @@ module ot_hgi_att_unit #(
         for (pbx = 0; pbx < H * PB; pbx = pbx + 1)
             if (pb_ok[pbx]) p_word_r[(pb_jj[pbx*5 +: 5] * H + pbx / PB) * 16 +: 16] = pb_val[pbx*16 +: 16];
     end
-    assign p_word = p_word_r;
+    wire [R*H*16-1:0] p_word_w;
+    assign p_word = (WV != 0) ? p_word_w : p_word_r;
+    assign q_flat = (WV != 0) ? q_flat_w : q_flat_b;
     reg [31:0] cflt;
     // KV8: the PIPE = 0 landing goes through the registered sector codec; a fmt 7 row's trailing sector (index
     // hd / 32) is the scale sector: it loads s8r, never the code banks.
@@ -236,12 +266,23 @@ module ot_hgi_att_unit #(
             assign c_flat[8 * (gi * 32 + gb) +: 8] = m[gi];
         end
     end endgenerate
+    wire [NT*H*DPT*32-1:0] ck_all;           // WV: every ck word (the merge reads / writes NA consecutive d an edge)
+    wire [NA-1:0] ma_o; wire [NA*32-1:0] ma_y; wire [4:0] mq_h; wire [9:0] mq_d;   // WV merge adders' outputs
     generate for (gb = 0; gb < NT * H; gb = gb + 1) begin : g_ck
         reg [31:0] m [0:DPT-1];
+        integer mi;
         always @(posedge clk)
             if (pv_v) m[pv_c] <= pv_y[gb * 32 +: 32];
+            else if (WV != 0 && ma_o[0]) begin
+                for (mi = 0; mi < NA; mi = mi + 1)
+                    if (((mq_d + mi) / DPT) * H + mq_h == gb) m[(mq_d + mi) % DPT] <= ma_y[mi * 32 +: 32];
+            end
             else if (ad_o && aq[ar][12:6] == gb) m[aq[ar][5:0]] <= ad_y;
         assign ck_rd[gb * 32 +: 32] = m[ck_a];
+        genvar gc;
+        for (gc = 0; gc < DPT; gc = gc + 1) begin : g_all
+            assign ck_all[(gb * DPT + gc) * 32 +: 32] = m[gc];
+        end
     end endgenerate
     integer qe;
     always @* for (qe = 0; qe < D; qe = qe + 1) q_w[16 * qe +: 16] = (qload && qe < hd) ? q_flat[16 * qe +: 16] : 16'd0;
@@ -286,6 +327,7 @@ module ot_hgi_att_unit #(
                 for (s8i = 0; s8i < 32; s8i = s8i + 1)
                     if (s8i < hd[9:5] && s8d[8 * s8i +: 8] == 8'hFF) s8f <= 1'b1;
         end
+
     // ---- PIPE row stream: issuer (fi_*) -> reorder slots (rob) -> in-order converter (co_*)
     reg [255:0] rob [0:RBD-1]; reg [RBD-1:0] rv; reg [7:0] fi_t, co_h; reg [8:0] occ;
     reg [20:0] fi_row, co_row; reg [7:0] fi_sec, co_sec; reg pend_row;
@@ -348,7 +390,7 @@ module ot_hgi_att_unit #(
     reg [7:0] l2_inf [0:NL-1];                          // rows in flight a slot (issued, not popped)
     wire [NL-1:0] l2_room, l2_rdy;
     wire [NL*SPRL*256-1:0] l2_head;
-    wire l2_iss = (PIPE == 2) && (st == S_KVS) && fi_row < l2_end && (!wq_v || wq_rdy) && (&l2_room);
+    wire l2_iss = (PIPE == 2) && (st == S_KVS || (WV != 0 && (st == S_QRD || st == S_QW || st == S_PRD))) && fi_row < l2_end && (!wq_v || wq_rdy) && (&l2_room);
     wire l2_pop = (PIPE == 2) && (st == S_KVS) && co_row < l2_end && (&(l2_rdy | ~l2_pmask)) && (!kv_v || kv_ready);
     if (PIPE == 2) begin : g_l2                          // the lanes exist only in the PIPE = 2 build
     for (ls = 0; ls < NL; ls = ls + 1) begin : g_l2s
@@ -404,6 +446,140 @@ module ot_hgi_att_unit #(
             end
         end
     end
+    // ---- WV: the VM wide lane client ---------------------------------------------------------------------------------
+    // READ: one ot_hgi_vm_wrd burst a span (q row of head hq, or p[hq][job rows]); a delivered wave is registered (w1),
+    // rotated into span order (w2: position k = lane (s0 + k) mod 32; one 32:1 mux level set), then lands in the flat
+    // q / p stores (element e at span word e + off: wave (e + off) >> 8, word (e + off) mod 256).
+    reg rd_go, rd_fin, rd_p; reg [14:0] rd_s0; reg [15:0] rd_ns; reg [2:0] rd_off; reg [20:0] rd_n; reg [4:0] rd_h;
+    wire rd_busy, rd_done, rd_flt; wire [31:0] rd_dv; wire [32*15-1:0] rd_dsec; wire [32*256-1:0] rd_dd;
+    generate if (WV != 0) begin : g_wrd
+        ot_hgi_vm_wrd #(.LQ(WRQ), .D(WD), .SW(15)) u_wrd (.clk(clk), .rst_n(rst_n), .start(rd_go), .s0(rd_s0),
+            .ns(rd_ns), .busy(rd_busy), .done(rd_done), .fault(rd_flt), .req(rg_req), .gnt(rg_gnt), .q(wrq), .cr(wrq_cr),
+            .rsp(wrr), .d_v(rd_dv), .d_sec(rd_dsec), .d_data(rd_dd));
+    end else begin : g_nowrd
+        assign rd_busy = 1'b0; assign rd_done = 1'b0; assign rd_flt = 1'b0; assign rd_dv = 32'd0; assign rd_dsec = '0;
+        assign rd_dd = '0; assign rg_req = 1'b0; assign wrq = '0;
+    end endgenerate
+    reg w1_v, w2_v; reg [32*256-1:0] w1_d, w2_d; reg [10:0] wcnt, w2_j; reg wv_bad;
+    integer wk;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin w1_v <= 1'b0; w2_v <= 1'b0; wcnt <= 11'd0; w2_j <= 11'd0; rd_fin <= 1'b0; end
+        else begin
+            w1_v <= (WV != 0) && (|rd_dv); w2_v <= w1_v;
+            if (rd_go) begin wcnt <= 11'd0; rd_fin <= 1'b0; end
+            else if (w1_v) wcnt <= wcnt + 11'd1;
+            if (w1_v) w2_j <= wcnt;
+            if (rd_done) rd_fin <= 1'b1;
+        end
+    always @(posedge clk) begin
+        w1_d <= rd_dd;
+        for (wk = 0; wk < 32; wk = wk + 1) w2_d[wk * 256 +: 256] <= w1_d[((rd_s0[4:0] + wk + MUT_WV) % 32) * 256 +: 256];
+    end
+    // the flat stores (flops: a wave writes up to 256 elements in one edge)
+    reg [15:0] qf [0:D-1]; reg [15:0] pf [0:H*BLK-1];
+    genvar gw;
+    generate if (WV != 0) begin : g_wst
+        for (gw = 0; gw < D; gw = gw + 1) begin : g_q
+            wire [10:0] sw = gw + rd_off;
+            always @(posedge clk) if (w2_v && !rd_p && sw[10:8] == w2_j[2:0] && gw < rd_n) qf[gw] <= w2_d[32 * sw[7:0] + 16 +: 16];
+            assign q_flat_w[16 * gw +: 16] = qf[gw];
+        end
+        for (gw = 0; gw < BLK; gw = gw + 1) begin : g_p
+            wire [10:0] sw = gw + rd_off;
+            integer hh;
+            always @(posedge clk) if (w2_v && rd_p && sw[10:8] == w2_j[2:0] && gw < rd_n) pf[rd_h * BLK + gw] <= w2_d[32 * sw[7:0] + 16 +: 16];
+        end
+        // the p word of pw_i: row j, head h at [(j H + h) 16] (rows >= tb / heads >= lanes are masked by S_PW)
+        for (gw = 0; gw < R * H; gw = gw + 1) begin : g_pw
+            assign p_word_w[16 * gw +: 16] = pf[(gw % H) * BLK + ((pw_i * R + gw / H) % BLK)];
+        end
+    end else begin : g_nwst
+        assign q_flat_w = '0; assign p_word_w = '0;
+    end endgenerate
+    // BF16 rule (q / p words carry BF16 values): a landed element with a nonzero low half faults
+    integer wf;
+    always @* begin
+        wv_bad = 1'b0;
+        if (WV != 0 && w2_v)
+            for (wf = 0; wf < 256; wf = wf + 1)
+                if ({w2_j[2:0], wf[7:0]} >= rd_off && {w2_j[2:0], wf[7:0]} - rd_off < rd_n && w2_d[32 * wf +: 16] != 16'd0)
+                    wv_bad = 1'b1;
+    end
+    // WRITE: one burst a span (scores of head wb_h, rows blk0 .. blk0 + tb - 1; or O row of head wb_h, hd words).
+    //   stage A: wave wb_j's 256-word window (span word 256 j + p = element p + 256 j - off), issued only while every
+    //            lane of the wave holds a credit; stage B: rotation onto the bank lanes (lane (s0 + k) mod 32 = chunk k).
+    reg rsub, wsub;                          // the FSM's span burst has been started
+    reg wb_go, wb_run, wb_src, wb_fin; reg [14:0] wb_s0; reg [2:0] wb_off; reg [20:0] wb_n; reg [4:0] wb_h;
+    reg [10:0] wb_j, wb_nw; reg [15:0] wb_ns;
+    reg wa_v; reg [10:0] wa_j; reg [32*256-1:0] wa_d; reg [255:0] wa_m;   // stage A (span order; wa_m word valid)
+    reg [7:0] wcr [0:31]; reg [15:0] wpend;
+    reg [31:0] wl_ok; reg wa_can; integer wb, wq2;
+    wire [11:0] wb_nsec = wb_ns[11:0];
+    always @* begin
+        wa_can = (WV != 0) && wb_run && wg_gnt && wb_j < wb_nw;
+        for (wb = 0; wb < 32; wb = wb + 1) begin
+            wl_ok[wb] = ({wb_j, 5'd0} + wb) < wb_ns;                     // chunk k of wave j inside the span
+            if (wl_ok[wb] && wcr[(wb_s0[4:0] + wb) % 32] == 8'd0) wa_can = 1'b0;
+        end
+    end
+    function automatic [31:0] wsrc(input [20:0] r);                    // element r of the span
+        if (!wb_src) wsrc = sbuf[wb_h * BLK + (r % BLK)];
+        else wsrc = ck_all[((((r % D) / DPT) * H + wb_h) * DPT + (r % D) % DPT) * 32 +: 32];
+    endfunction
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            wa_v <= 1'b0; wwq <= '0; wb_run <= 1'b0; wg_req <= 1'b0; wb_fin <= 1'b0; wpend <= 16'd0; wb_j <= 11'd0;
+            for (wb = 0; wb < 32; wb = wb + 1) wcr[wb] <= WLQ[7:0];
+        end else begin : wseq
+            reg [15:0] np; integer pp;
+            np = wpend;
+            for (wb = 0; wb < 32; wb = wb + 1) begin
+                wcr[wb] <= wcr[wb] + (wwq_cr[wb] ? 8'd1 : 8'd0) - ((wa_can && wl_ok[(wb + 32 - wb_s0[4:0]) % 32]) ? 8'd1 : 8'd0);
+                if (wwq_done[wb]) np = np - 16'd1;
+            end
+            if (wb_go) begin
+                wb_run <= 1'b1; wg_req <= 1'b1; wb_fin <= 1'b0; wb_j <= 11'd0;
+            end
+            // stage A: the window
+            wa_v <= wa_can;
+            if (wa_can) begin
+                wa_j <= wb_j; wb_j <= wb_j + 11'd1;
+                for (pp = 0; pp < 256; pp = pp + 1) begin
+                    wa_m[pp] <= ({wb_j, 8'd0} + pp) >= wb_off && ({wb_j, 8'd0} + pp - wb_off) < wb_n;
+                    wa_d[32 * pp +: 32] <= wsrc({wb_j, 8'd0} + pp - wb_off);
+                end
+            end
+            // stage B: onto the lanes (lane b carries chunk k = (b - s0) mod 32 of wave wa_j)
+            for (wb = 0; wb < 32; wb = wb + 1) begin : lb
+                reg [4:0] kk; reg [7:0] mk;
+                kk = 5'(wb - wb_s0[4:0]);
+                for (wq2 = 0; wq2 < 8; wq2 = wq2 + 1) mk[wq2] = wa_m[8 * kk + wq2];
+                wwq[wb * 280 +: 280] <= (wa_v && mk != 8'd0) ?
+                    {1'b1, 15'(wb_s0 + {wa_j, 5'd0} + kk), wa_d[256 * kk +: 256], mk} : 280'd0;
+                if (wa_v && mk != 8'd0) np = np + 16'd1;
+            end
+            wpend <= np;
+            if (wb_run && !wb_go && wb_j == wb_nw && !wa_v && wwq == '0 && np == 16'd0) begin : home
+                reg ok; ok = 1'b1;
+                for (wb = 0; wb < 32; wb = wb + 1) if (wcr[wb] != WLQ[7:0] || wwq_cr[wb]) ok = 1'b0;
+                if (ok) begin wb_run <= 1'b0; wg_req <= 1'b0; wb_fin <= 1'b1; end
+            end
+        end
+    end
+    // WV merge: NA binary32 adders over d = md .. md + NA - 1 (one chunk an edge), destinations in issue order
+    reg ma_v; reg [NA*32-1:0] ma_a, ma_b; wire [NA*2-1:0] ma_e; reg [14:0] maq [0:63]; reg [5:0] maw, mar;
+    generate if (WV != 0) begin : g_ma
+        for (gw = 0; gw < NA; gw = gw + 1) begin : g_a
+            ot_hdc_fp32_add_fast u_a (.clk(clk), .rst_n(rst_n), .valid_in(ma_v), .a(ma_a[gw * 32 +: 32]),
+                .b(ma_b[gw * 32 +: 32]), .y(ma_y[gw * 32 +: 32]), .err(ma_e[gw * 2 +: 2]), .valid_out(ma_o[gw]));
+        end
+    end else begin : g_nma
+        assign ma_o = '0; assign ma_y = '0; assign ma_e = '0;
+    end endgenerate
+    assign mq_h = maq[mar][14:10]; assign mq_d = maq[mar][9:0];
+    function automatic [31:0] ckv(input [4:0] h, input [9:0] d);
+        ckv = ck_all[((((d % D) / DPT) * H + h) * DPT + (d % D) % DPT) * 32 +: 32];
+    endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; raw_v <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
@@ -411,9 +587,13 @@ module ot_hgi_att_unit #(
             pv_cr <= 1'b0; flt <= 1'b0; vo_n <= 3'd0; sc_hold <= 1'b0; scn <= 21'd0; pvn <= 10'd0; ad_v <= 1'b0;
             sfw <= 5'd0; sfr <= 5'd0;
             aw <= 6'd0; ar <= 6'd0;
+            rd_go <= 1'b0; wb_go <= 1'b0; rsub <= 1'b0; wsub <= 1'b0; ma_v <= 1'b0; maw <= 6'd0; mar <= 6'd0;
             rv <= {RBD{1'b0}}; occ <= 9'd0; fi_t <= 8'd0; co_h <= 8'd0; pend_row <= 1'b0;
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0; vmq[337] <= 1'b0; job_v <= 1'b0; sc_cr <= 1'b0; pv_cr <= 1'b0;
+            rd_go <= 1'b0; wb_go <= 1'b0; ma_v <= 1'b0;
+            if (WV != 0 && (rd_flt || wv_bad)) flt <= 1'b1;
+            if (WV != 0 && ma_o[0]) begin mar <= mar + 6'd1; if (|ma_e) flt <= 1'b1; end
             ad_v <= 1'b0;
             if (|cflt || s8f) flt <= 1'b1;
             if (ad_o) begin ar <= ar + 6'd1; if (ad_e != 2'd0) flt <= 1'b1; end
@@ -538,7 +718,8 @@ module ot_hgi_att_unit #(
                     tb <= (tt - blk0 > BLK) ? BLK : tt - blk0;
                     if (job_ready && !job_v) begin
                         job_v <= 1'b1; job_t <= ((tt - blk0 > BLK) ? BLK : tt - blk0); hq <= 5'd0; scn <= 21'd0; pvn <= 10'd0;
-                        st <= S_QRD; 
+                        st <= (WV != 0 && !qk) ? S_PRD : S_QRD;      // WV: PV loads p first (rows prefetch meanwhile)
+                        if (WV != 0) begin fi_row <= blk0; co_row <= blk0; end
                         sec <= abase >> 3; sec_end <= ({9'd0, abase} + {17'd0, hd} - 27'd1) >> 3;
                         rsec <= abase >> 3; vo_n <= 3'd0;
                     end
@@ -546,6 +727,16 @@ module ot_hgi_att_unit #(
                 S_QRD: begin                                        // q[hq]: hd words of A row hq (QK, hq < lanes)
                     if (!qk || hq >= lanes) begin
                         if (!q_v || q_ready) begin q_v <= 1'b1; qload <= 1'b0; st <= S_QW; end
+                    end else if (WV != 0) begin : wq_ld                // one wide burst: A row hq
+                        reg [26:0] w0; w0 = {9'd0, abase} + hq * {9'd0, astr};
+                        if (!rsub) begin
+                            if (!rd_busy && !w1_v && !w2_v) begin
+                                rd_go <= 1'b1; rsub <= 1'b1; rd_p <= 1'b0; rd_s0 <= w0[17:3]; rd_off <= w0[2:0]; rd_n <= {11'd0, hd};
+                                rd_ns <= 16'((({24'd0, w0[2:0]} + {17'd0, hd} - 27'd1) >> 3) + 27'd1);
+                            end
+                        end else if (rd_fin && !rd_go && !w1_v && !w2_v && (!q_v || q_ready)) begin
+                            rsub <= 1'b0; q_v <= 1'b1; qload <= 1'b1; st <= S_QW;
+                        end
                     end else begin
                         if (vo_n < 3'd4 && sec <= sec_end) begin
                             vmq <= {1'b1, 1'b0, sec, 5'd0, 256'd0, 32'd0, 16'h4151}; sec <= sec + 27'd1;
@@ -566,7 +757,8 @@ module ot_hgi_att_unit #(
                         if (hq == H - 1) begin
                             row <= blk0; kl <= 4'd0; vo_n <= 3'd0;
                             st <= (PIPE != 0) ? S_KVS : S_KVF;
-                            fi_row <= blk0; fi_sec <= 8'd0; co_row <= blk0; co_sec <= 8'd0; pend_row <= 1'b0;
+                            if (WV == 0) begin fi_row <= blk0; co_row <= blk0; end
+                            fi_sec <= 8'd0; co_sec <= 8'd0; pend_row <= 1'b0;
                         end
                         else begin
                             hq <= hq + 5'd1; 
@@ -613,13 +805,23 @@ module ot_hgi_att_unit #(
                 S_SCW: if (scb && qk && scn == tb && !sc_hold) begin so_h <= 5'd0; so_r <= 21'd0; st <= S_SCO; end
                 else if (scn == tb && !sc_hold && vo_n == 3'd0) begin  // every score of the job written
                     hq <= 5'd0; pw_i <= 21'd0;
-                    if (qk) st <= S_PW;
+                    if (qk || WV != 0) st <= S_PW;
                     else begin
                         sec <= ({9'd0, abase} + {6'd0, blk0}) >> 3; rsec <= ({9'd0, abase} + {6'd0, blk0}) >> 3;
                         sec_end <= ({9'd0, abase} + {6'd0, blk0} + {6'd0, tb} - 27'd1) >> 3; st <= S_PRD;
                     end
                 end
-                S_SCO: begin                                        // PIPE = 2: the job's scores, sector writes
+                S_SCO: if (WV != 0) begin                           // WV: one wide write burst a head
+                    if (so_h == lanes) begin hq <= 5'd0; pw_i <= 21'd0; st <= S_PW; end
+                    else if (!wsub) begin
+                        if (!wb_run) begin
+                            wb_go <= 1'b1; wsub <= 1'b1; wb_src <= 1'b0; wb_h <= so_h; wb_n <= tb;
+                            wb_s0 <= so_wa[17:3]; wb_off <= so_wa[2:0];
+                            wb_ns <= 16'((({29'd0, so_wa[2:0]} + {11'd0, tb} - 32'd1) >> 3) + 32'd1);
+                            wb_nw <= 11'((((({29'd0, so_wa[2:0]} + {11'd0, tb} - 32'd1) >> 3) + 32'd1) + 32'd31) >> 5);
+                        end
+                    end else if (wb_fin && !wb_go) begin wsub <= 1'b0; so_h <= so_h + 5'd1; end
+                end else begin                                      // PIPE = 2: the job's scores, sector writes
                     if (so_h != lanes && vo_n < 3'd4) begin : sco
                         reg [255:0] wd; reg [31:0] wm; integer w, ix;
                         wd = 256'd0; wm = 32'd0;
@@ -633,7 +835,18 @@ module ot_hgi_att_unit #(
                     vo_n <= vo_n + ((so_h != lanes && vo_n < 3'd4) ? 3'd1 : 3'd0) - (vr[273] ? 3'd1 : 3'd0);
                     if (so_h == lanes && vo_n == 3'd0) begin hq <= 5'd0; pw_i <= 21'd0; st <= S_PW; end
                 end
-                S_PRD: begin                                        // p[hq][job rows] -> pb (PV)
+                S_PRD: if (WV != 0) begin : wp_ld                   // WV: p[hq][job rows], one wide burst a head
+                    reg [26:0] w0; w0 = {9'd0, abase} + hq * {9'd0, astr} + {6'd0, blk0};
+                    if (!rsub) begin
+                        if (!rd_busy && !w1_v && !w2_v) begin
+                            rd_go <= 1'b1; rsub <= 1'b1; rd_p <= 1'b1; rd_h <= hq; rd_s0 <= w0[17:3]; rd_off <= w0[2:0];
+                            rd_n <= tb; rd_ns <= 16'((({24'd0, w0[2:0]} + {6'd0, tb} - 27'd1) >> 3) + 27'd1);
+                        end
+                    end else if (rd_fin && !rd_go && !w1_v && !w2_v) begin
+                        rsub <= 1'b0;
+                        if (hq == lanes - 1) begin hq <= 5'd0; st <= S_QRD; end else hq <= hq + 5'd1;
+                    end
+                end else begin                                      // p[hq][job rows] -> pb (PV)
                     if (vo_n < 3'd4 && sec <= sec_end) begin
                         vmq <= {1'b1, 1'b0, sec, 5'd0, 256'd0, 32'd0, 16'h4150}; sec <= sec + 27'd1;
                     end
@@ -678,7 +891,20 @@ module ot_hgi_att_unit #(
                     else if (blk0 + tb >= tt) ml <= ml + 3'd1;      // last job: the padding sibling, cur + +0 = cur
                     else begin mh <= 5'd0; md <= 10'd0; st <= S_MST; end
                 end
-                S_MADD: begin                                       // cur = add(lvl[ml], cur), one value an edge
+                S_MADD: if (WV != 0) begin                          // WV: NA values an edge
+                    if (!miss) begin : mav
+                        integer i;
+                        ma_v <= 1'b1;
+                        for (i = 0; i < NA; i = i + 1) begin
+                            ma_a[i * 32 +: 32] <= lvl[ml * H * D + mh * D + md + i]; ma_b[i * 32 +: 32] <= ckv(mh, md + i[9:0]);
+                        end
+                        maq[maw] <= {mh, md}; maw <= maw + 6'd1;
+                        if (md + NA >= hd) begin
+                            md <= 10'd0;
+                            if (mh == lanes - 1) miss <= 1'b1; else mh <= mh + 5'd1;
+                        end else md <= md + 10'(NA);
+                    end else if (mar == maw && !ma_o[0] && !ma_v) begin ml <= ml + 3'd1; st <= S_MRG; end
+                end else begin                                      // cur = add(lvl[ml], cur), one value an edge
                     if (!miss) begin
                         ad_v <= 1'b1; ad_a <= lvl[ml * H * D + mh * D + md]; ad_b <= ck_q;
                         aq[aw] <= {7'((md / DPT) * H + mh), 6'(md % DPT)}; aw <= aw + 6'd1; mout <= mout + 12'd1;
@@ -688,7 +914,14 @@ module ot_hgi_att_unit #(
                         end else md <= md + 10'd1;
                     end else if (ar == aw && !ad_o) begin ml <= ml + 3'd1; st <= S_MRG; end
                 end
-                S_MST: begin                                        // lvl[ml] = cur; this job stops here
+                S_MST: if (WV != 0) begin : mstw                    // WV: NA values an edge
+                    integer i;
+                    for (i = 0; i < NA; i = i + 1) lvl[ml * H * D + mh * D + md + i] <= ckv(mh, md + i[9:0]);
+                    if (md + NA >= hd) begin
+                        md <= 10'd0;
+                        if (mh == lanes - 1) st <= S_NEXT; else mh <= mh + 5'd1;
+                    end else md <= md + 10'(NA);
+                end else begin                                      // lvl[ml] = cur; this job stops here
                     lvl[ml * H * D + mh * D + md] <= ck_q;
                     if (md == hd - 1) begin
                         md <= 10'd0;
@@ -701,7 +934,18 @@ module ot_hgi_att_unit #(
                         else begin hq <= 5'd0; dq <= 10'd0; vo_n <= 3'd0; st <= S_OUT; end
                     end else begin blk0 <= blk0 + tb; jb <= jb + 4'd1; st <= S_JOB; end
                 end
-                S_OUT: begin                                        // O[h][d] = the merged root, one word a write
+                S_OUT: if (WV != 0) begin : wo                      // WV: O row of head hq, one wide write burst
+                    reg [31:0] w0; w0 = {14'd0, obase} + hq * {14'd0, ostr};
+                    if (hq >= lanes) st <= S_DONE;
+                    else if (!wsub) begin
+                        if (!wb_run) begin
+                            wb_go <= 1'b1; wsub <= 1'b1; wb_src <= 1'b1; wb_h <= hq; wb_n <= {11'd0, hd};
+                            wb_s0 <= w0[17:3]; wb_off <= w0[2:0];
+                            wb_ns <= 16'((({29'd0, w0[2:0]} + {22'd0, hd} - 32'd1) >> 3) + 32'd1);
+                            wb_nw <= 11'((((({29'd0, w0[2:0]} + {22'd0, hd} - 32'd1) >> 3) + 32'd1) + 32'd31) >> 5);
+                        end
+                    end else if (wb_fin && !wb_go) begin wsub <= 1'b0; hq <= hq + 5'd1; end
+                end else begin                                      // O[h][d] = the merged root, one word a write
                     if (vo_n < 3'd4 && hq < lanes) begin : ow
                         reg [31:0] wa;
                         wa = {14'd0, obase} + hq * {14'd0, ostr} + dq;

@@ -11,11 +11,11 @@ python3 tools/hgi_adapters/att_tput_vectors.py --out "$OUT/vec" --cases "${CASES
 SRC="rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
   rtl/hbm_accel/generic/peers/ot_hgi_att_sector_codec.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv
   rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv rtl/hdc/v41x/ot_hdc_v41x_attn.sv rtl/hbm_accel/generic/peers/ot_hgi_att_unit.sv
-  rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
+  rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_lanearb.sv
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
 D="${DEFS:-}"; [ -n "$MUT" ] && D="$D -D$MUT"
 if [ ! -x "$OUT/obj/Vtb_hgi_att_tput" ]; then
-"$VL" --binary --timing -O3 -CFLAGS -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN $D \
+"$VL" --binary --timing -O3 -CFLAGS ${CFL:--O2} -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN $D \
   --top-module tb_hgi_att_tput -I"$OUT/vec" -Mdir "$OUT/obj" $SRC rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_tput.sv \
   -j ${J:-16} > "$OUT/build.log" 2>&1 || { tail -30 "$OUT/build.log"; exit 2; }
 fi
