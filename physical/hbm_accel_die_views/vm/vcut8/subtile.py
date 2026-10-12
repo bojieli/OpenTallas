@@ -650,7 +650,7 @@ def emit(g, out, m, h, mod, cells, rows, tiles, cr, tile, U, cuts, seam_of, port
             xm = round(round(((x1 - x0) - 94.824) / 2 / 0.054) * 0.054, 3)
             y0m = ((y1 - y0) - (6 * 41.04 + 5 * 28.08)) / 2          # 28.08 um channels, centred (>= 20 um to the edges)
             for j, cn in enumerate(sorted(mac_inst)):
-                y = round(round((y0m + j * (41.04 + 28.08)) / 0.27) * 0.27 + 0.54, 3)
+                y = round(round((y0m + j * (41.04 + 28.08) + 0.54) / 0.048) * 0.048, 3)   # r3: core row offset, SRAM pins on the M4 track (submit_lint MACRO_GRID)
                 ml.append(f'place_macro -macro_name {{{mac_inst[cn]}}} -location {{{xm} {y}}} -orientation R0')
             (out / f'{m}_t{k}_macro_place.tcl').write_text('\n'.join(ml) + '\n')
 
