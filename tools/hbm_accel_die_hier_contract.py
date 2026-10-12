@@ -236,6 +236,13 @@ def region_plan(m, slots, tiles):
             pdn='die M8 (H) / M9 (V) straps; local M7 straps over M6-PG tiles (sfu lanes, idx hslices); M9 over lk_ep (exception)',
             gate=[f'child_lint PASS on every macro/tile ({sum(mac.values())} slots + {nt} tiles)',
                   'region route: TT setup >= 0 / FF hold >= 0 / DRC 0 at 833.333 ps on the exact-shape abstracts'],
+            flow=['1 die GRT on the physical-relay variant with every macro/tile from its exact-shape LEF: '
+                  'python3 tools/hbm_accel_die_fp.py grt --ds-var r25gqn_pr --work <host scratch>/grt_<tag> (fleet host, not '
+                  'localhost/EPYC4)',
+                  '2 region DRT on the die-GRT guides: python3 tools/hbm_die_region_drt.py stage --case <grt case> --name '
+                  f"{r['name']} --window {' '.join(str(round(v, 1)) for v in r['rect'])}; run start_region.sh on the host",
+                  '3 sign-off: tools/hbm_die_region_drt.py compare (TT setup / FF hold on RCX, DRC 0; GRT-vs-DRT wire / slack '
+                  'correlation = the die error bar); seams per the seam_check criteria'],
             status='blocked: child_lint (see lint table) + physical relays (rf2)'))
     rest = [i for i in m['insts'] if i.name not in taken and not (WAYPOINT.match(i.master) or i.kind == 'waypoint')]
     regs.append(dict(name='periphery', kind='periphery', fixed_macros=dict(Counter(i.master for i in rest)),
@@ -469,8 +476,19 @@ def main(argv=None):
                  'cluster)', status='contract v3'),
             dict(id='D12', slot='NO3 station', change='v3: not a R25GQ element (R24W W2 publication chain); recorded only',
                  status='decided v3'),
-            dict(id='D13', slot='die', change='1,101 data segments > 504 um without a physical relay -> r25gqn_pr physical '
-                 'relays (rf2); contract re-issued on that variant when clean', status='open'),
+            dict(id='D13', slot='die', change='v4: contract on r25gqn_pr (b4638437b): data segments > 504 um 985 -> 0, 0 '
+                 'overlaps, die 856.95 mm2 (svc channels +108 um); residual check rc 3 = 8 clock/reset tree segments > 504 '
+                 'um + 7 far-side data relays, all at the lk_ep S row (84-um gaps full) -> D16', status='v4 (residual open)'),
+            dict(id='D14', slot='hfd_cmdproc / hfd_coll', change='coll_recx 554 b (TOPK_MERGE sideband): t_hgi_coll widens by '
+                 '554 b when the TKM tiles compose on the die (die coll view TKM=0 today); lgEcp / lgEatt / t_hgi_e2* classed '
+                 'OPEN with owners (main 04dad4b3a)', status='open'),
+            dict(id='D15', slot='hfd_hgi_idx', change='v4: 640.008 x 600.48 -> 1,270.08 x 1,719.36 at (14,800.32, 7,112.88) for '
+                 'the w8 cluster (43.2 um to idx_selector); spine above moves up: idx_selector y 8,875, coll 10,902, hgi_vm '
+                 '12,506, cmdproc 14,623', status='v4'),
+            dict(id='D16', slot='hfd_lk_ep S row', change='re-grant pending: the 84-um inter-ep channels carry every N-S crossing '
+                 'of the row; widen to >= 200 um (pitch 2,800) or move the S row', status='open'),
+            dict(id='D17', slot='hfd_hc_eng', change='lane-major N-face re-pin accepted; needs per-lane ports in the die bus model '
+                 '(generator places each port contiguous) and the lgE station spanning the full 4,384.8 face', status='open'),
         ],
         versions=[dict(version=a.version, by='hbmdie-1011', note=a.note or 'v1 provisional')],
     )
