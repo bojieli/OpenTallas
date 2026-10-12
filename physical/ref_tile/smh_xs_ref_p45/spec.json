@@ -35,6 +35,7 @@
   "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
   "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_hdly.sv",
   "rtl/lib/ot_rst_relay.sv"
  ],
  "defines": [
@@ -129,7 +130,7 @@
   "branch": "claude/el1011-hbm-smh",
   "tag": "r1",
   "purpose": "[idle1012] ot_hbm_accel_smh_xs re-route through tools/ref_tile (child_lint (f)/(c) FAIL on the hand-kit view: no above-only pin keepout / M7 signals); same RTL, outline, defines and exact abutment pins (io_tcl) as the closed hand route",
-  "no_bench_reason": "exactness is gated by the SM tile cluster lockstep bench under OT_SMH_HIER (ec948f1fc, ot-epyc4 w_hier2: 12 ops exact, CG_LOCKSTEP mismatches 0, PASS 8270 cycles) plus its late32/hold0 mutants, carried by the tile-cluster job; this child job re-routes unchanged RTL",
+  "no_bench_reason": "exactness is gated by the SM tile cluster lockstep bench under OT_SMH_HIER (ec948f1fc, ot-epyc4 w_hier2: 12 ops exact, CG_LOCKSTEP mismatches 0, PASS 8270 cycles) plus its late32/hold0 mutants, carried by the tile-cluster job; this child job re-routes unchanged RTL (xs round 4 be99a7db9: ot_hdly hold-delay landing stage)",
   "views_to": "physical/ref_tile/smh_xs_ref_p45/views",
   "record_to": "results/rtl/ref_tile/smh_xs_ref_p45"
  },
