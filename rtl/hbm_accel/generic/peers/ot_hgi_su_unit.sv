@@ -2471,7 +2471,12 @@ module ot_hgi_su_ctlw_slice #(
         initial if (LFD != 64 || LSW > 16) $error("ot_hgi_su_ctlw_slice LQSRAM: needs LFD 64 and LSW <= 16");
         for (genvar g = 0; g < NL; g = g + 1) begin : g_l
             wire push = !wst_go && sg_r[g] < 3'd4 && sg_on[g] && cr[g] != 0;
-            wire pop = wrr_q[g*257 + 256];
+            // MUT_W 4 (bench mutant, el1011-hbm-sfu 10-11): the SRAM FIFO pop one edge late -> a back-to-back landing
+            // reads the previous head (wrong sector); the only mutant that exercises this FIFO's read-ahead (MUT_DIRTY is
+            // unobservable on the production shapes: every drained sink sector is whole, dirty mask 8'hFF)
+            reg pop_d;
+            always @(posedge clk or negedge rst_l) if (!rst_l) pop_d <= 1'b0; else pop_d <= wrr_q[g*257 + 256];
+            wire pop = (MUT_W == 4) ? pop_d : wrr_q[g*257 + 256];
             wire hv, ovf_l;
             ot_fifo_sram_fwft #(.W(LSW), .DEPTH(64), .MACRO(3)) u_lq (.clk(clk), .rst_n(rst_l), .push(push),
                 .wdata(LSW'(sg_nx[g] + dsec[sg_r[g]])), .pop(pop), .hv(hv), .head(lq_head[g]), .ovf(ovf_l));
