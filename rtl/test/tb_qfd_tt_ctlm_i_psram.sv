@@ -17,6 +17,11 @@ module tb_qfd_tt_ctlm_i_psram;
     parameter integer DBGT = 0;     // el1011-q-seq debug: trace u1's MEREG 3 enable for DBGT cycles
     parameter integer DBGMX = 0;    // debug: print the first mx write of each window per DUT
     parameter integer DBGTX = 0;    // el1011-q-seq TXN debug: per-window stream counts and the cycles of mismatching events
+    parameter integer DBGS = 7, DBGW = 0;   // DBGTX 2: print stream DBGS of window DBGW (value low 64 b)
+    parameter integer TXT = 1;      // TXN: 1 = split-tree selects compared per level per wave (0 = the raw per-edge pattern, timing-dependent)
+    parameter integer TXPC = 1;     // TXN port model: 1 = shifts on the DUT's engine edges (the ICG enable before the edge, as the real ports on
+                                    // the exported gated clock); 0 = the earlier model (one edge late: its latency in engine edges then depends on
+                                    // whether the previous edge clocked the engine -- a gap-dependent p_am alignment, not the design's)
     parameter integer TXRST = 1;    // el1011-q-seq TXN: the port model's reply pipeline is reset like the real port's valid line
     parameter integer TXN = 0;      // el1011-q-seq: 1 = transaction-level compare (per-interface event streams, per reset window; MEREG 3 wakes +1)
     parameter integer PFMASK = 0;   // el1011-q-seq: 1 = p_f_e2 only while p_v_e2, scale_addr only while scale_re | scale_gre (valid/data): the
@@ -130,8 +135,8 @@ module tb_qfd_tt_ctlm_i_psram;
     always @(posedge clk) begin
         if (TXRST != 0 && !rst_n) begin for (ptk = 0; ptk < PL; ptk = ptk + 1) begin pt0[ptk] <= '0; pt1[ptk] <= '0; end end
         else begin
-        if (ck0_q) begin pt0[0] <= {p_v_e2_0, p_f_e2_0}; for (ptk = 1; ptk < PL; ptk = ptk + 1) pt0[ptk] <= pt0[ptk-1]; end
-        if (ck1_q) begin pt1[0] <= {p_v_e2_1, p_f_e2_1}; for (ptk = 1; ptk < PL; ptk = ptk + 1) pt1[ptk] <= pt1[ptk-1]; end
+        if ((TXPC != 0) ? me_clk_en_0 : ck0_q) begin pt0[0] <= {p_v_e2_0, p_f_e2_0}; for (ptk = 1; ptk < PL; ptk = ptk + 1) pt0[ptk] <= pt0[ptk-1]; end
+        if ((TXPC != 0) ? me_clk_en_1 : ck1_q) begin pt1[0] <= {p_v_e2_1, p_f_e2_1}; for (ptk = 1; ptk < PL; ptk = ptk + 1) pt1[ptk] <= pt1[ptk-1]; end
         end
     end
     function automatic [12*51-1:0] pam(input [113:0] tg);
@@ -300,7 +305,7 @@ module tb_qfd_tt_ctlm_i_psram;
     // the previous edge), controller outputs on their rising strobe / value change.  me_clk_en (the changed interface)
     // and me_idle_o (pure timing) are not compared.  Per reset window u1's stream must equal u0's up to the shorter one;
     // at the end u1 must have produced >= 80 % of u0's events.
-    localparam integer NS = 11, ME = 8192;
+    localparam integer NS = 25, ME = 8192;   // streams 11 + lv: the split-tree level lv's select, one event per wave (t_tv_e[lv])
     function automatic [16*32-1:0] mxm(input [15:0] m);   // lane mask -> data-bit mask (16 lanes x 32 b)
         integer k; begin for (k = 0; k < 16; k = k + 1) mxm[k*32 +: 32] = {32{m[k]}}; end
     endfunction
@@ -309,13 +314,13 @@ module tb_qfd_tt_ctlm_i_psram;
         begin h = 64'hcbf29ce484222325; for (k = 0; k < 32; k = k + 1) h = (h ^ v[k*64 +: 64]) * 64'h100000001b3; hv = h; end
     endfunction
     reg [63:0] tq0 [0:NS-1][0:ME-1]; reg [63:0] tq1 [0:NS-1][0:ME-1];
-    integer tc0 [0:NS-1]; integer tc1 [0:NS-1]; integer tt0 = 0, tt1 = 0, tbad = 0, tw = 0, ts, tk;
+    integer tlv, ttw = 0; integer tc0 [0:NS-1]; integer tc1 [0:NS-1]; integer tt0 = 0, tt1 = 0, tbad = 0, tw = 0, ts, tk;
     reg en0_q = 0, en1_q = 0, kv0_q = 0, kv1_q = 0, fin0_q = 0, fin1_q = 0;
     reg [23:0] acc0_q = 0, acc1_q = 0; reg [15:0] prg0_q = 0, prg1_q = 0; reg cf0_q = 0, cf1_q = 0;
     initial for (ts = 0; ts < NS; ts = ts + 1) begin tc0[ts] = 0; tc1[ts] = 0; end
     integer tcy0 [0:NS-1][0:ME-1]; integer tcy1 [0:NS-1][0:ME-1];
-    task automatic tpush0(input integer s, input [2047:0] v); begin if (tc0[s] < ME) begin tq0[s][tc0[s]] = hv(v); tcy0[s][tc0[s]] = cyc; end tc0[s] = tc0[s] + 1; tt0 = tt0 + 1; end endtask
-    task automatic tpush1(input integer s, input [2047:0] v); begin if (tc1[s] < ME) begin tq1[s][tc1[s]] = hv(v); tcy1[s][tc1[s]] = cyc; end tc1[s] = tc1[s] + 1; tt1 = tt1 + 1; end endtask
+    task automatic tpush0(input integer s, input [2047:0] v); begin if (DBGTX == 2 && s == DBGS && tw == DBGW) $display("EV0 k=%0d c=%0d v=%h", tc0[s], cyc, v[63:0]); if (tc0[s] < ME) begin tq0[s][tc0[s]] = hv(v); tcy0[s][tc0[s]] = cyc; end tc0[s] = tc0[s] + 1; tt0 = tt0 + 1; end endtask
+    task automatic tpush1(input integer s, input [2047:0] v); begin if (DBGTX == 2 && s == DBGS && tw == DBGW) $display("EV1 k=%0d c=%0d v=%h", tc1[s], cyc, v[63:0]); if (tc1[s] < ME) begin tq1[s][tc1[s]] = hv(v); tcy1[s][tc1[s]] = cyc; end tc1[s] = tc1[s] + 1; tt1 = tt1 + 1; end endtask
     task automatic twin;   // close a window: prefix-compare and clear
         integer s2, k2, m2;
         begin
@@ -332,7 +337,8 @@ module tb_qfd_tt_ctlm_i_psram;
     endtask
     always @(posedge clk) if (TXN != 0) begin
         if (!rst_n) begin
-            if (tc0[0] + tc0[1] + tc0[2] + tc0[3] + tc0[4] + tc0[5] + tc0[6] + tc0[7] + tc0[8] + tc0[9] + tc0[10] > 0) twin;
+            if (DBGTX == 2 && tw == DBGW) $display("RST c=%0d", cyc);
+            if (tt0 + tt1 > ttw) begin twin; ttw = tt0 + tt1; end
         end else begin
             if (kvd_v_0 && !kv0_q) tpush0(0, {kvd_wbase_0, kvd_ts_0, kvd_ks_0, kvd_js_0, kvd_wcs_0, kvd_split_0, kvd_jsh_0, kvd_tiles_0, kvd_k_0, kvd_nout_0, kvd_kindk_0, kvd_pos_0});
             if (kvd_v_1 && !kv1_q) tpush1(0, {kvd_wbase_1, kvd_ts_1, kvd_ks_1, kvd_js_1, kvd_wcs_1, kvd_split_1, kvd_jsh_1, kvd_tiles_1, kvd_k_1, kvd_nout_1, kvd_kindk_1, kvd_pos_1});
@@ -346,19 +352,23 @@ module tb_qfd_tt_ctlm_i_psram;
             if (en0_q) begin
                 if (scale_re_0 || |scale_gre_0) tpush0(5, {scale_re_0, scale_gre_0, scale_addr_0});
                 if (x_dv_0) tpush0(6, {x_dc_0, x_dcs_0, x_dsp_0});
-                if (|t_tv_e_0) tpush0(7, {t_sel_e_0, t_tv_e_0});
+                // t_tv_e / t_sel_e are per-edge wave valids / selects of the split tree: the edge PATTERN depends on the gaps
+                // between waves (timing), so TXN compares, per level, the select carried by each wave (stream 11 + lv)
+                if (TXT == 0 && |t_tv_e_0) tpush0(7, {t_sel_e_0, t_tv_e_0});
+                if (TXT != 0) for (tlv = 0; tlv < 14; tlv = tlv + 1) if (t_tv_e_0[tlv]) tpush0(11 + tlv, t_sel_e_0[tlv]);
                 if (p_v_e2_0) tpush0(8, p_f_e2_0);
                 if (ov_0) tpush0(9, 1'b1);
-                if (DBGMX != 0 && mx_we_0 && tc0[10] == 0) $display("MX0 c=%0d w=%0d a=%h m=%h d=%h", cyc, tw, mx_addr_0, mx_mask_0, mx_data_0[63:0]);
+                if (DBGMX != 0 && mx_we_0 && tc0[10] == 0) $display("MX0 c=%0d w=%0d a=%h m=%h d=%h", cyc, tw, mx_addr_0, mx_mask_0, mx_data_0 & mxm(mx_mask_0));
                 if (mx_we_0) tpush0(10, {mx_addr_0, mx_mask_0, mx_data_0 & mxm(mx_mask_0)});   // data under its lane mask
             end
             if (en1_q) begin
                 if (scale_re_1 || |scale_gre_1) tpush1(5, {scale_re_1, scale_gre_1, scale_addr_1});
                 if (x_dv_1) tpush1(6, {x_dc_1, x_dcs_1, x_dsp_1});
-                if (|t_tv_e_1) tpush1(7, {t_sel_e_1, t_tv_e_1});
+                if (TXT == 0 && |t_tv_e_1) tpush1(7, {t_sel_e_1, t_tv_e_1});
+                if (TXT != 0) for (tlv = 0; tlv < 14; tlv = tlv + 1) if (t_tv_e_1[tlv]) tpush1(11 + tlv, t_sel_e_1[tlv]);
                 if (p_v_e2_1) tpush1(8, p_f_e2_1);
                 if (ov_1) tpush1(9, 1'b1);
-                if (DBGMX != 0 && mx_we_1 && tc1[10] == 0) $display("MX1 c=%0d w=%0d a=%h m=%h d=%h", cyc, tw, mx_addr_1, mx_mask_1, mx_data_1[63:0]);
+                if (DBGMX != 0 && mx_we_1 && tc1[10] == 0) $display("MX1 c=%0d w=%0d a=%h m=%h d=%h", cyc, tw, mx_addr_1, mx_mask_1, mx_data_1 & mxm(mx_mask_1));
                 if (mx_we_1) tpush1(10, {mx_addr_1, mx_mask_1, mx_data_1 & mxm(mx_mask_1)});
             end
         end

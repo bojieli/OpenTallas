@@ -1062,7 +1062,13 @@ end endgenerate
     assign rk_ge = rk_c;
     wire [31:0] nk = (!top_v || (rseen[t_j] && rk_ge)) ? rk_j : top_key;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin rseen <= 0; mx_we <= 1'b0; end
+        if (!rst_n) begin rseen <= 0; mx_we <= 1'b0;
+`ifdef OT_TB_RK_RST
+            // bench diagnostic only (el1011-q-seq TXN): clear the per-slot maxima in reset, so an mx write after a reset
+            // cannot carry slot values left by an operation the reset aborted
+            for (rj = 0; rj < IL; rj = rj + 1) rk[rj] <= 32'd0;
+`endif
+        end
         else begin
             mx_we <= 1'b0;
             if (tv[LV] && t_rmax) begin
