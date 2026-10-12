@@ -9,10 +9,6 @@
  "reset_ports": [
   "rst_n"
  ],
- "outline": {
-  "w": 216.0,
-  "h": 216.0
- },
  "pg_layer": "M6",
  "pins": {
   "W": [
@@ -79,6 +75,8 @@
   "views_to": "physical/ref_tile/hgi_smmv_eng_rt/views",
   "record_to": "results/rtl/ref_tile/hgi_smmv_eng_rt"
  },
+ "std_area_um2": 4700,
+ "util": 0.5,
  "params": {},
  "macros": [],
  "children": [],

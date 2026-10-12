@@ -137,7 +137,7 @@ module ot_hgi_smmv #(
     // ================= issue stage + SM stations =================
     reg [NSM*CW-1:0] cmd_h;
     reg [NSM-1:0] st_pend, d_pend, rel, arr_prev; reg [NSM*4-1:0] iss_cnt, done_cnt;
-    reg go, fld_v, fp_v;
+    reg go, fld_v, fp_v, fq_v;
     reg [19:0] sq_p [0:NSM-1]; reg [31:0] slq_p [0:NSM-1];       // station products (smb + s) x Q, x LQ
     reg [19:0] f_m; reg [12:0] f_q; reg [23:0] f_lq; reg [30:0] f_ml; reg [31:0] f_l0;
     reg [NSM*13-1:0] rows_s; reg [NSM*32-1:0] dbase_s; reg [NSM*24-1:0] dl_s; reg [NSM-1:0] act_s;
@@ -188,12 +188,11 @@ module ot_hgi_smmv #(
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
             d0_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0; rdy_r <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
-            tail <= 0; xp <= 0; ip <= 0; rh <= 0; ppc <= 0; pdc <= 0; e_xd <= 0; used <= 0; ap <= 0; xbc <= 0;
-            x_busy <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; xo <= 0; xo_v <= 1'b0; xo_nf <= 0; st_pend <= 0; d_pend <= 0;
+            // control only (pointers, valids, counters); datapath / field registers carry no reset (gate: rst fanout)
+            tail <= 0; xp <= 0; ip <= 0; rh <= 0; ppc <= 0; pdc <= 0; e_xd <= 0; used <= 0; ap <= 0;
+            x_busy <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0;
+            xo <= 0; xo_v <= 1'b0; st_pend <= 0; d_pend <= 0;
             rel <= 0; arr_prev <= 0; iss_cnt <= 0; done_cnt <= 0; sm_cg_en <= 1'b0; rh_wait <= 1'b0;
-            x_base <= 0; x_xb <= 0; x_n <= 0; x_p <= 0; x_stride <= 0; x_space <= 0; x_fmt <= 0;
-            pub_base <= 0; pub_stride <= 0; pub_space <= 0; pub_m <= 0; pub_q <= 0; pub_p <= 0; pub_bf16 <= 1'b0;
-            rows_s <= 0; dbase_s <= 0; dl_s <= 0; act_s <= 0; fmt_i <= 0; g_i <= 0; xb_i <= 0;
         end else begin : main
             reg [7:0] used_n;
             rec_done <= 1'b0; rec_fault <= 1'b0;
@@ -259,16 +258,19 @@ module ot_hgi_smmv #(
             end
             if (x_busy && !x_v && in_xd) begin x_busy <= 1'b0; e_xd[ix(xp)] <= 1'b1; xp <= xp + 3'd1; end
             // ---- issue stage: fields (stations) one edge, then the start / descriptor handshakes of every active SM
-            if (!go && !fld_v && !fp_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
-                fp_v <= 1'b1;
+            if (!go && !fld_v && !fp_v && !fq_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
+                fq_v <= 1'b1;                                    // edge 1: select the issue entry's fields
                 fmt_i <= e_f[ix(ip)]; g_i <= e_g[ix(ip)]; xb_i <= e_xb[ix(ip)];
                 f_m <= e_m[ix(ip)]; f_q <= e_q[ix(ip)]; f_lq <= e_lq[ix(ip)]; f_ml <= e_ml[ix(ip)]; f_l0 <= e_l0[ix(ip)];
-                for (s = 0; s < NSM; s = s + 1) begin : stp       // station products: 5-b strapped index x Q / LQ
+            end
+            if (fq_v) begin
+                fq_v <= 1'b0; fp_v <= 1'b1;
+                for (s = 0; s < NSM; s = s + 1) begin : stp       // edge 2: station products, 5-b strapped index x Q / LQ
                     reg [4:0] sg; sg = smb_q + s[4:0];
-                    sq_p[s] <= sg * e_q[ix(ip)]; slq_p[s] <= sg * e_lq[ix(ip)];
+                    sq_p[s] <= sg * f_q; slq_p[s] <= sg * f_lq;
                 end
             end
-            if (fp_v) begin
+            if (fp_v) begin                                       // edge 3: clamps -> per-SM fields
                 fp_v <= 1'b0; fld_v <= 1'b1;
                 for (s = 0; s < NSM; s = s + 1) begin : stn
                     reg a_;
