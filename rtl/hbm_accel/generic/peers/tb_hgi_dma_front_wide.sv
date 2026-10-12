@@ -54,6 +54,7 @@ module tb_hgi_dma_front_wide;
          end
        end
     end
+    integer pc_lanes=0;initial pc_lanes=$test$plusargs("PC_LANES");
     // ---- svc model: per stack a request queue; per lane a beat queue in idx order; credit 4 a lane
     integer rq_n [0:NS-1]; reg [51:0] rq [0:NS-1][0:63]; integer rq_h [0:NS-1];
     integer cr [0:NIN-1]; integer nxt [0:NS-1];               // next idx of the head request to schedule
@@ -80,7 +81,7 @@ module tb_hgi_dma_front_wide;
                 r = rq[s][rq_h[s] % 64];
                 a = longint'(r[36:0]) + 32 * nxt[s];
                 for (integer b = 0; b < 32; b = b + 1) sd[8*b +: 8] = hb(a + b);
-                l = s * NL + (nxt[s] % 32);
+                l = s * NL + (pc_lanes ? (((a%SB)>>7)^((a%SB)>>12)^((a%SB)>>17))%32 : (nxt[s] % 32));
                 lb[l][lt[l] % 1024] = {1'b1, 1'b0, r[51:46], 8'(nxt[s]), sd}; lb_ready[l][lt[l] % 1024]=cyc+RESPONSE_LATENCY; lt[l] = lt[l] + 1;
                 nxt[s] = nxt[s] + 1;
                 if (nxt[s] == int'(r[45:37])) begin nxt[s] = 0; rq_h[s] = rq_h[s] + 1; rq_n[s] = rq_n[s] - 1; end

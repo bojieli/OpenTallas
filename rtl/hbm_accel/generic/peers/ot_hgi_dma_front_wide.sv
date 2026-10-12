@@ -117,6 +117,8 @@ module ot_hgi_dma_front_wide #(
             // ---- accept (command station, then the decode)
             if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
             if (cv_q) begin
+                if(cm_q[44:42]!=0 || cm_q[137:119]!=0 || cm_q[9:5]!=0 || cm_q[49:45]!=0 || cm_q[100:98]!=0 || cm_q[140:138]!=0 ||
+                ((cm_q[4:2]==0||cm_q[4:2]==5) && cm_q[208:206]!=0) || (cm_q[4:2]==1&&cm_q[209:206]!=0) || (cm_q[4:2]==2&&cm_q[210:206]!=0))mv_fault<=1;
                 if(cm_q[4:2]!=0 && cm_q[4:2]!=1 && cm_q[4:2]!=2 && cm_q[4:2]!=5)mv_fault<=1;
                 cv_q <= 1'b0; busy <= 1'b1; sf <= cm_q[4:2];
                 ks <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 2'd0 : (cm_q[4:2] == 3'd1) ? 2'd1 : 2'd2;
@@ -138,7 +140,7 @@ module ot_hgi_dma_front_wide #(
                 rn = (rem > 24'd256) ? 9'd256 : rem[8:0];
                 e = a + {19'd0, rn, 5'd0} - 37'd1;
                 st = a[SBIT +: 2];
-                if ((19'(wd>>3)+(19'(r_off)<<ks)+(19'(rn)<<ks))>19'd262144 || e[SBIT +: 2] != st || ({1'b0, a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, rn, 5'd0}) > (SBIT+1)'(STACK_BYTES))
+                if (wd[31:21]!=0 || (34'(wd>>3)+(34'(r_off)<<ks)+(34'(rn)<<ks))>34'd262144 || e[SBIT +: 2] != st || ({1'b0, a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, rn, 5'd0}) > (SBIT+1)'(STACK_BYTES))
                     mv_fault <= 1'b1;
                 else if (!dq[st*53 + 52] || dq_rdy[st]) begin
                     dq[st*53 +: 53] <= {1'b1, ft[5:0], rn, a};
