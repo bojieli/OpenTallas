@@ -6,10 +6,10 @@ MACRO-VIEW (el1011-ds-misc 2026-10-11): every consumer of verdict.macros (hold_e
 <m>/<basename m>.lef relative to the job's source snapshot.  A spec that named the SRAM by its bare master
 ("ot_sram_1r1w_128x256_m1_r2c2") made every hold ECO die at once with ORD-0001 ".../ot_sram_.../...lef does not
 exist" (el1011-pqc-aq12t-*, el1011-engc-pb*-*, qkd_ectl_f): hold fixing silently never ran.  An entry is accepted as
-  physical/.../NAME            (canonical; kept as is when NAME/NAME.lef exists)
+  physical/.../NAME            (canonical; kept as is, also when the tree does not hold it: installed views)
   /src/..., {SRC}/..., trailing '/', or a path to NAME.lef   (normalised)
   NAME (bare master)           -> the unique DIR/NAME/NAME.lef in the tree (physical/asap7_memory_macros preferred)
-An entry that cannot be resolved, or is ambiguous, raises MacroViewError: the caller fails loudly instead of running a
+A bare name that cannot be resolved, or is ambiguous, raises MacroViewError: the caller fails loudly instead of running a
 hold ECO without the macro's LEF/lib.
 
 CLI (remote side, cwd-independent):  macro_views.py --root SRC m1 m2 ...  -> resolved dirs on stdout (space separated),
@@ -50,8 +50,8 @@ def resolve(entries, lef_paths):
         name = PurePosixPath(m).name
         if not name:
             raise MacroViewError(f"verdict.macros entry {e!r} is empty")
-        if f"{m}/{name}.lef" in lefs:
-            r = m
+        if "/" in m or f"{m}/{name}.lef" in lefs:
+            r = m     # a path is the author's choice (views may be installed after the archive): normalised, kept
         else:
             cands = sorted(set(by_name.get(name, [])))
             pref = [c for c in cands if c.startswith(PREFERRED)]
@@ -85,7 +85,8 @@ def main(argv=None):
     if not a.macros:
         return 0
     direct = [f"{normalise(m)}/{os.path.basename(normalise(m))}.lef" for m in a.macros]
-    lefs = direct if all(os.path.isfile(os.path.join(a.root, f)) for f in direct) else tree_lefs(a.root)
+    need_walk = any("/" not in normalise(m) and not os.path.isfile(os.path.join(a.root, f)) for m, f in zip(a.macros, direct))
+    lefs = list(tree_lefs(a.root)) if need_walk else direct
     try:
         out, rw = resolve(a.macros, lefs)
     except MacroViewError as ex:

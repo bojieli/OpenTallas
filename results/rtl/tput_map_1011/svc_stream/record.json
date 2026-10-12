@@ -1,0 +1,172 @@
+{
+ "schema": "opentallas.tput-class-bench.v1",
+ "class": "SVC.STREAM",
+ "model": "Qwen AR 8K (HBM)",
+ "elements": [
+  "hfd_svc_SE_s0",
+  "hfd_svc_SE_s1",
+  "hfd_svc_SE_s2",
+  "hfd_svc_SE_s3",
+  "hfd_svc_SE_s4",
+  "hfd_svc_SE_s5",
+  "hfd_svc_SE_s6",
+  "hfd_svc_SE_s7",
+  "hfd_svc_SE_s8",
+  "hfd_svc_SW_s0",
+  "hfd_svc_SW_s1",
+  "hfd_svc_SW_s2",
+  "hfd_svc_SW_s3",
+  "hfd_svc_SW_s4",
+  "hfd_svc_SW_s5",
+  "hfd_svc_SW_s6",
+  "hfd_svc_SW_s7"
+ ],
+ "price": {
+  "cycles": null,
+  "per": "record stream term",
+  "frac_of_peak": 0.95,
+  "src": "tools/hgi_sim/timing.py cost(): SM record = fa + max(comp, stream), stream = bytes / hbm.bytes_per_cycle 3166.7 B per 1.2 GHz die cycle (tools/hgi_sim/calibration.json) = 0.950 of the 4.0 TB/s die peak = 0.950 of each stack's 1.0 TB/s",
+  "record_requirement": {
+   "frac_of_peak": 0.775,
+   "src": "budget_audit hbm_qwen_weight_stream: gu SM-issue bound 12,635 cyc for 31.5 MB/die -> 0.775 of peak; the token price holds while the stream >= 0.775"
+  }
+ },
+ "measured": {
+  "frac_of_peak_e2e_worst": 0.7862,
+  "frac_of_peak_e2e_mean": 0.8049,
+  "frac_of_peak_steady_worst": 0.7919,
+  "credited_frac_e2e_worst": 0.7263,
+  "shape": "one stack: 2 back-to-back PS stream descriptors x 4,092 sectors a PC x 32 PCs (8.38 MB a stack; gu record ~7.9 MB a stack), 5 refresh phases, no-credit and credited (consumer returns one credit a forwarded cycle per landed row)",
+  "runs": [
+   {
+    "build": "SW_seg_psfc_rw1",
+    "phase_ns": 2700,
+    "cred": 0,
+    "frac_e2e": 0.7995,
+    "frac_steady": 0.8053,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw1",
+    "phase_ns": 4100,
+    "cred": 0,
+    "frac_e2e": 0.8313,
+    "frac_steady": 0.8376,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw1",
+    "phase_ns": 0,
+    "cred": 0,
+    "frac_e2e": 0.8187,
+    "frac_steady": 0.8248,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw1",
+    "phase_ns": 0,
+    "cred": 1,
+    "frac_e2e": 0.7432,
+    "frac_steady": 0.7483,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw1",
+    "phase_ns": 1300,
+    "cred": 0,
+    "frac_e2e": 0.7866,
+    "frac_steady": 0.7923,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw1",
+    "phase_ns": 5500,
+    "cred": 0,
+    "frac_e2e": 0.7863,
+    "frac_steady": 0.7919,
+    "errors": 0
+   },
+   {
+    "build": "SW_seg_psfc_rw1",
+    "phase_ns": 2700,
+    "cred": 1,
+    "frac_e2e": 0.7263,
+    "frac_steady": 0.7311,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw1",
+    "phase_ns": 4100,
+    "cred": 0,
+    "frac_e2e": 0.8303,
+    "frac_steady": 0.8367,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw1",
+    "phase_ns": 2700,
+    "cred": 1,
+    "frac_e2e": 0.7264,
+    "frac_steady": 0.7313,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw1",
+    "phase_ns": 0,
+    "cred": 1,
+    "frac_e2e": 0.7406,
+    "frac_steady": 0.7458,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw1",
+    "phase_ns": 2700,
+    "cred": 0,
+    "frac_e2e": 0.7995,
+    "frac_steady": 0.8054,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw1",
+    "phase_ns": 5500,
+    "cred": 0,
+    "frac_e2e": 0.7863,
+    "frac_steady": 0.7921,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw1",
+    "phase_ns": 0,
+    "cred": 0,
+    "frac_e2e": 0.8246,
+    "frac_steady": 0.8309,
+    "errors": 0
+   },
+   {
+    "build": "NE_seg_psfc_rw1",
+    "phase_ns": 1300,
+    "cred": 0,
+    "frac_e2e": 0.7862,
+    "frac_steady": 0.792,
+    "errors": 0
+   }
+  ]
+ },
+ "ratio": 1.208,
+ "ratio_mean": 1.18,
+ "ratio_vs_record_requirement": 0.986,
+ "ratio_vs_record_requirement_credited": 1.067,
+ "exact": true,
+ "mutant": "slot (PS sector slot ignores the row's bank XOR, run_bench_ps.sh neg_slot) FAIL: 49,089 errors",
+ "bench": "physical/hbm_accel_die_views/svc/run_bench_stream_tput.sh <out> {SW|NE} seg_psfc [slot] with RW=1 (tb/tb_svc_ps_stream_tput.sv; Verilator 5.032)",
+ "host": "ot-epyc1tb:/srv/opentallas/claude/tput-map-1011/f1",
+ "source_commit": "6c4677c53 + new tb/run script (uncommitted at run time)",
+ "rtl": "physical/hbm_accel_die_views/svc/rtl/seg_psfc (all 17 segments + hfd_svc_{SW,NE}_seg joins; seg_ps gives identical rows/timing: SW p0 0.8187 / p2700 0.7995)",
+ "controller_model": "ot_hdc_v41x_idx_hbm NPC 32 REFPB 3 MEM_MODE 1, 1.0 TB/s a stack, RW 1 (in-order return per PC)",
+ "findings": [
+  "EXACTNESS DEPENDS ON IN-ORDER RETURNS: with the controller model of record (RW 16, FR-FCFS reorder window, as every other bench uses) the PS segments mis-assemble rows: a later read's beats land in an earlier row's buffer (slot 0 of rq 0 carries sector 4), rows go out with smask 0111; SW production run 49,420 of 65,472 rows, 16,053 errors (FAIL). The PS group unit (ot_svs_grp, 2 row buffers a PC) assumes per-PC in-order beats (the bench stub returns in order). Either the die controller must guarantee per-PC in-order returns, or ot_svs_grp needs a tag-indexed row buffer (KNO 15 = up to 15 rows outstanding a PC).",
+  "RATE: in-order, no-credit: 0.786-0.831 of stack peak (worst over 5 refresh phases, end-to-end incl. first access; steady 0.792-0.838); credited: 0.726-0.741. vs the simulator's 0.950 stream term -> ratio 1.208 worst / 1.176 mean (UNQUALIFIED); vs the gu record requirement 0.775 -> 0.986 no-credit / 1.067 credited (the token price holds, gu stays SM-bound).",
+  "7 of the 17 elements' adopted closures are LEGACY seg routes without per-PC streams (hfd_svc_SE_s0..s3, hfd_svc_SW_s0/s1/s5: best = tt_c10b5fc9a / tc_4aadc92bc jobs; every PS route of these is CANCELLED / EARLY_FAIL); the bench qualifies the PS RTL these segments must close in."
+ ],
+ "notes": "One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measures all its slices; SW and NE (SE segments) agree to <= 0.006."
+}

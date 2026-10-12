@@ -15524,6 +15524,50 @@ def hgi_token18_fullcore_model():
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
 
 
+def dsrom_window_source_pin_anchor_model():
+    """Same MARGIN2 byte-pinned controller; root pin access/anchor successor, +0 cycles."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        "physical/dsrom_window_source/model_pin_anchor.json").read_text())
+
+
+def dsrom_mtp_grant_rtt_model(forward_hops, return_hops, width=512, depth=None, output_pipe=False):
+    """Reserve every grant until the tx/rx pin stages and actual relays consume it."""
+    import math
+    if min(forward_hops, return_hops) < 0 or width <= 0:
+        raise ValueError("nonnegative actual relay hops and positive payload width required")
+    history = forward_hops + return_hops + 3
+    depth = history + 1 if depth is None else depth
+    if depth < 2:
+        raise ValueError("one-hot receiver FIFO requires depth>=2")
+    count_bits = math.ceil(math.log2(depth + history + 2))
+    rx_ff = width * (depth + 1) + 2 * depth + count_bits + history + 2 + (width + 1 if output_pipe else 0)
+    tx_ff = width + 3
+    relay_ff = forward_hops * (width + 1) + return_hops
+    return dict(block="ot_dsrom_mtp_lrx_rtt", default_ENABLE_RTT=0,
+        MACs_per_cycle=0, compute_intensity=0, communication_intensity_bits=width,
+        forward_hops=forward_hops, return_hops=return_hops,
+        grant_history_cycles=history, fifo_depth=depth,
+        full_rate_depth=history + 1, full_rate_capacity=depth >= history + 1,
+        payload_bytes_per_cycle=width / 8,
+        boundary_bits_per_cycle=width + 2,
+        routing_tracks_needed=width + 2,
+        unreserved_tracks=None, route_fit="pending parent floorplan/physical qualification",
+        replicas=1, mux_entries=depth, one_hot_read_mask_bits=width * depth,
+        receiver_FF=rx_ff, sender_FF=tx_ff, relay_FF=relay_ff,
+        FF_area_floor_um2=(rx_ff + tx_ff + relay_ff) * DFF_UM2,
+        slot_fit="parent slot not yet bound; no physical adoption",
+        first_payload_latency_cycles=forward_hops + 2 + int(output_pipe),
+        registered_elastic_output=bool(output_pipe), output_capacity_flits=int(output_pipe),
+        receiver_latency_added_cycles=int(output_pipe),
+        grant_history_unchanged_reason="Reservation ends at input-pin/queue admission; elastic output slot adds capacity and does not shorten in-flight grant history",
+        initial_grant_return_cycles=return_hops + 2,
+        reservation_roundtrip_cycles=history,
+        added_wire_latency_cycles=forward_hops,
+        total_latency_requires_parent_composition=True,
+        exactness="transaction order and payload preserved; existing module unchanged",
+        physical_closed=False, adopted=False)
 def hgi_idx_owned_g24_model(k=2048, group=96, batch=2):
     """G24 count/map block sizing before RTL; estimates pending physical closure."""
     if not 1 <= k <= 2048 or group not in (1, 2, 4, 8, 96) or not 0 <= batch <= 255:

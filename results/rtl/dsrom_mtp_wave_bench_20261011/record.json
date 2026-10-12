@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.mtp-wave-bench.v1",
  "owner": "Claude:el1011-ds-mtp [wave]",
- "generated_utc": "2026-10-11T17:17:34Z",
+ "generated_utc": "2026-10-12T03:47:07Z",
  "bench": "rtl/dsrom_sys/mtp/tb/tb_mtp_wave.sv (+ _dies, _parts, _fn.svh, _meas.svh); runner tools/mtp_wave_bench.py",
  "sim": "verilator",
- "source_commit": "1445f47e6 (record-time HEAD; run sources pinned by sha256)",
+ "source_commit": "854f55f7a (run sources: git archive of claude/el1011-ds-mtp 854f55f7a on EPYC3 wave3-854f55f7a, Verilator 5.050; pinned by sha256)",
  "source_sha256": {
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
@@ -21,7 +21,7 @@
   "rtl/dsrom_sys/mtp/dsfd_stage_seq.sv": "efc4f9e3e7fc18e0cd0862657ef4a55951630b119274203aa30e5726c7222b26",
   "rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv": "51fed325867636ce424100cc1581eed8f2778c6c07d183777253db82be049ce7",
   "rtl/dsrom_sys/mtp/dsfd_wfc_crp.sv": "aa2b972c4865716a23a4dc18faadf6a0d9cd308331fbb92469e0b1fb62cdb9c6",
-  "rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv": "5863df3ab99ec62f90c56aa00c033ffdeccb866074a2de08ce6828b9e3dfcb03",
+  "rtl/dsrom_sys/mtp/dsfd_wfc_kit.sv": "5b432f0338ae9b76cd1b685876bb7d081f23a69bc700b70e2d2871a293f10c9f",
   "rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv": "9224e96d47d0cf92e1c1cb5f88135e40ea326469f62cd07bcf4f2c68018fe971",
   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow.sv": "85aad401f97af3ac0e172fb926b4640d7062ed9e23043e4d44e61db859c8218a",
   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
@@ -36,9 +36,9 @@
   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv": "31f5d2f128a40e1ee13221276ca926a9e58661290316da25d5ae1527b963759b",
   "rtl/dsrom_sys/mtp/tb/tb_mtp_wave.sv": "6ab6f0f1990a2e23b44e005cf1ea05781df13858208117ce892caee8d79e86ea",
-  "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_dies.sv": "6a35b0feb6e99aa57db006e2a4aeba7f2fd6d5df2bce1fde5c7b176cfc5c0bd6",
+  "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_dies.sv": "304605251ed7f10947002a0272a744a07086a528818d02b810698b3e7cf5bd51",
   "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_fn.svh": "6fa568ff32b042224ee8e57a1e8ed5c7fba4702c8715761a8454bedf30f0a28d",
-  "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_meas.svh": "278d92122c8bf5ad40d06bb18e8d0bb245714ddd0d70c3149c1d998bf6c148c0",
+  "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_meas.svh": "8fc97120c10d3ea35c8b673cd67e00adae23ecd662b775b4a9cb85c04c4d3a02",
   "rtl/dsrom_sys/mtp/tb/tb_mtp_wave_parts.sv": "f3dd27e66ffc1456cb6d6362662c7959e3a90743a9be1f50a66607c91f8127fb",
   "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv": "8bd4679e04687735f967bd06a8c92e7bfc1d3fdedb0c9a10699b5409ab38878f",
   "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv": "5a4de71ff2db422bd5bdcbeee6796b9487f6ce032b7c5e31002df4e0de28a485",
@@ -62,9 +62,9 @@
   "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
   "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
   "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
-  "tools/mtp_wave_bench.py": "e8c53db7d9a348402db6c6930c15c693e43c906dd45c88ea40ce57918b8a49c0"
+  "tools/mtp_wave_bench.py": "5c395361bcc8a81fba4d0f99a14624debddbc8328667f0dcb6708d1fac0d5f68"
  },
- "host": "ot-epyc3",
+ "host": null,
  "prices": "results/arch/mtp_step_20261009/ds_rom_step.json charges (not re-priced)",
  "qualify_ratio": 1.1,
  "shape": {
@@ -157,8 +157,8 @@
   {
    "id": "wfc_kit.ar_pass",
    "price": 160.53,
-   "measured": 177.46,
-   "ratio": 1.1055,
+   "measured": 172.46,
+   "ratio": 1.0743,
    "n": 267,
    "unit": "cycles_per_stage_hop",
    "elements": [
@@ -169,7 +169,7 @@
     "dsfd_vm_wfc_ep"
    ],
    "price_source": "ds_rom_step.json charges[wfc_kit.ar_pass]",
-   "status": "UNQUALIFIED"
+   "status": "QUALIFIED"
   },
   {
    "id": "wfc_kit.intervals",
@@ -354,7 +354,7 @@
  ],
  "events": {
   "hop_done_to_start_mean": 240.46,
-  "ideal": 63.0,
+  "ideal": 68.0,
   "hops": 267.0,
   "jobs": 89.0,
   "interval_start_to_start_mean": 11477.22,
@@ -394,28 +394,28 @@
  },
  "elements": {
   "ot_dsrom_wfc_tokpipe_stg": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "charge": "wfc_kit.ar_pass"
   },
   "dsfd_wfc_lnk": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "charge": "wfc_kit.ar_pass"
   },
   "dsfd_wfc_vmx": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "charge": "wfc_kit.ar_pass"
   },
   "dsfd_wfc_crp": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "charge": "wfc_kit.ar_pass"
   },
   "dsfd_vm_wfc_ep": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.1055,
+   "status": "QUALIFIED",
+   "ratio": 1.0743,
    "charge": "wfc_kit.ar_pass"
   },
   "ot_dsrom_wfc_tokpipe_src": {
@@ -565,9 +565,9 @@
   }
  },
  "notes": [
-  "wfc_kit.ar_pass measured = stage core done -> next stage core command, minus the ideal hop (header + 41 words serialised + 2 x 10 die hub stations + the collective stub cycle); price 160.53 a hop, x 120 hops",
+  "wfc_kit.ar_pass measured = stage core done -> next stage core command, minus the ideal hop (header + 46 TXW words serialised + 2 x 10 die hub stations + the collective stub cycle); price 160.53 a hop, x 120 hops",
   "wfc_kit.intervals measured = same-pass start-to-start at the last stage - stage busy - the composed handoff 46",
-  "POSTED VM (the priced configuration): the kit's own t_hep is dead (k_start never pulses); the bench binds dsfd_wfc_hep to the endpoint START for the layer 37/38/39 row senders",
+  "POSTED VM (the priced configuration): the stage kits run HEP 1 and count the START doorbell write (fix cfe25038d); their t_hep feeds the layer 37/38/39 row senders",
   "coll.engine_endpoint (dsfd_coll_job) is not a wave-class element and is not in this bench"
  ]
 }

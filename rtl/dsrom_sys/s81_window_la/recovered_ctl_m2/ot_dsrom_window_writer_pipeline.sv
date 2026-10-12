@@ -37,7 +37,11 @@ module ot_dsrom_window_writer_pipeline #(
     // registered checked address (ADDR4 added); the K-port request (address, data, strobe) is a register loaded
     // before WC/WS; status-counter increments land one edge after their event; the live-region compare is two
     // registered 30-bit equalities.  +4 cycles per command (CHECK0, CHECK2B, 2 x ADDR4).
-    parameter bit MARGIN2 = 0
+    parameter bit MARGIN2 = 0,
+    // MARGIN3 (el1011-ds-misc 2026-10-11, needs MARGIN2): the metadata read is 16:1 (row[3:0]) -> 4:1 ([5:4]) ->
+    // 2:1 ([6]) over the same three edges (8 + 2 + 1 registers instead of a 32-entry copy stage), and the payload /
+    // config / address data registers carry no reset (each is loaded before it is read).
+    parameter bit MARGIN3 = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -266,7 +270,22 @@ module ot_dsrom_window_writer_pipeline #(
     // MARGIN2 metadata read pipeline (no enable: row_g / row_d / bidx / codes are stable from the accept edge
     // until the command ends, and the arrays only change at the edge after CHECK3 or WS_DONE).
     integer sk;
-    always @(posedge clk) if (MARGIN2) begin
+    reg [7:0] s3_active; reg [POS_W-1:0] s3_tag [0:7]; reg [USER_W-1:0] s3_user [0:7]; reg [15:0] s3_blocks [0:7];
+    reg [1:0] g3_active; reg [POS_W-1:0] g3_tag [0:1]; reg [USER_W-1:0] g3_user [0:1]; reg [15:0] g3_blocks [0:1];
+    always @(posedge clk) if (MARGIN2 && MARGIN3) begin
+        for (sk = 0; sk < 8; sk = sk + 1) begin                  // A: 16:1 by row_g[3:0]
+            s3_active[sk] <= row_active[{sk[2:0], row_g[3:0]}]; s3_tag[sk] <= row_tag[{sk[2:0], row_g[3:0]}];
+            s3_user[sk] <= row_user[{sk[2:0], row_g[3:0]}]; s3_blocks[sk] <= block_valid[{sk[2:0], row_g[3:0]}];
+        end
+        for (sk = 0; sk < 2; sk = sk + 1) begin                  // B: 4:1 by row_g[5:4]
+            g3_active[sk] <= s3_active[{sk[0], row_g[5:4]}]; g3_tag[sk] <= s3_tag[{sk[0], row_g[5:4]}];
+            g3_user[sk] <= s3_user[{sk[0], row_g[5:4]}]; g3_blocks[sk] <= s3_blocks[{sk[0], row_g[5:4]}];
+        end
+        cr_active <= g3_active[row_d[6]]; cr_tag <= g3_tag[row_d[6]];   // C: 2:1 by row_d[6]
+        cr_user <= g3_user[row_d[6]]; cr_blocks <= g3_blocks[row_d[6]];
+        slot_oh2 <= 128'h1 << row_d; bidx_oh2 <= 16'h1 << bidx;
+        pz_q <= poison_codes(codes);
+    end else if (MARGIN2) begin
         for (sk = 0; sk < 32; sk = sk + 1) begin
             sq_active[sk] <= row_active[{sk[4:0], row_g[1:0]}]; sq_tag[sk] <= row_tag[{sk[4:0], row_g[1:0]}];
             sq_user[sk] <= row_user[{sk[4:0], row_g[1:0]}]; sq_blocks[sk] <= block_valid[{sk[4:0], row_g[1:0]}];
@@ -409,8 +428,8 @@ module ot_dsrom_window_writer_pipeline #(
         if (!rst_n) begin
             refill_epoch <= 0; refill_issued <= 0; refill_received <= 0;
             refill_next <= 0; refill_pending <= 0;
-            command_prime <= 0; cfg_base <= 0; cfg_count <= 0; cfg_end <= 0; checked_addr <= 0;
-            state <= IDLE; row <= 0; bidx <= 0; sec <= 0; codes <= 0; scale <= 0;
+            command_prime <= 0; state <= IDLE; row <= 0; bidx <= 0; sec <= 0;
+            if (!MARGIN3) begin cfg_base <= 0; cfg_count <= 0; cfg_end <= 0; checked_addr <= 0; codes <= 0; scale <= 0; end
             user_id <= 0; active_row <= 0; active_user <= 0; q <= 0; fault <= 0; fault_code <= 0;
             st_rows_fetched <= 0; st_blocks_written <= 0;
             st_sectors_read <= 0; st_sectors_written <= 0;

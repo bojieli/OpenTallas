@@ -2318,10 +2318,10 @@ place_pin -pin_name {rx_d[543]} -layer M4 -location {113.3040 120.7800} -pin_siz
 place_pin -pin_name {rx_d[544]} -layer M4 -location {113.3040 120.8760} -pin_size {0.1920 0.0240}
 place_pin -pin_name {rx_d[545]} -layer M4 -location {113.3040 120.9720} -pin_size {0.1920 0.0240}
 place_pin -pin_name {rx_d[546]} -layer M4 -location {113.3040 121.0680} -pin_size {0.1920 0.0240}
-place_pin -pin_name {e_en} -layer M5 -location {2.4120 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {lf[0]} -layer M5 -location {2.6040 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {lf[1]} -layer M5 -location {2.7000 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {lf[2]} -layer M5 -location {2.7960 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {lf[3]} -layer M5 -location {2.8920 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {ck} -layer M5 -location {7.8840 340.1040} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rs} -layer M5 -location {10.3800 340.1040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {e_en} -layer M5 -location {2.4120 170.0040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {lf[0]} -layer M5 -location {2.6040 170.0040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {lf[1]} -layer M5 -location {2.7000 170.0040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {lf[2]} -layer M5 -location {2.7960 170.0040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {lf[3]} -layer M5 -location {2.8920 170.0040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck} -layer M5 -location {7.8840 170.0040} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rs} -layer M5 -location {10.3800 170.0040} -pin_size {0.0240 0.1920}

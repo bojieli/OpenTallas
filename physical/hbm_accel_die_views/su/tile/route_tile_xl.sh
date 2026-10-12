@@ -4,6 +4,8 @@
 # bcq -> bc_out wiring, acc_in -> rotate -> XOR -> acc_out), all rising/falling launch IO budgets are checked; no IO false paths;
 # corner STA, then the tile view (LEF + SS / FF ETM) for the quarter.  The negative-edge outputs are real clock-root lockups.
 #   route_tile.sh <label> [run_abi3_physical args]   env: OUT, SRC, CORES, NEED, PD, HM, CP, PDN
+# conservative-1011 2026-10-11 (child_lint check f): PK=<frac> PREGRT=physical/redesign_ds/coll_split/pin_access_pregrt.tcl
+# = pin-access plan (adjacent-layer keepout over the outer face-pin column before GRT, removed after DRT; bf0080873).
 set -u
 # R25GQ 2026-10-10: GPL_ROUTABILITY_DRIVEN=0 -- with 4,398 FIRM pin flops and 645 um2 movable the routability-driven
 # global placement inflated the movable area +400 % and diverged (GPL-0305, 212e3da48 / b280bf9a7 hm0); ENABLE_DPO=0 --
@@ -39,7 +41,8 @@ export OT_MM_FF_SDC="$G/signoff.sdc"
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag ${NICK}_$lab \
   --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var ENABLE_DPO=0 --orfs-var DONT_BUFFER_PORTS=1 --orfs-var OT_WS_PINREG_DENSITY=${PRD:-0.3} --orfs-var OT_WS_PINREG=1 --orfs-var OT_WS_INPUT_COMB=1 --orfs-var OT_WS_OUTPUT_PINREG=1 --orfs-var OT_IO_FILE=/src/$T/io_place.tcl \
   --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/common/wire_stage_fence.tcl \
-  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
+  --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=${PREGRT:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} \
+  ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 route_rc=$?
