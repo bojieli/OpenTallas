@@ -607,7 +607,18 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(r.get('pin_h', 'M4 M6'))}",
         f"PIN_V={shq(r.get('pin_v', 'M5'))}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r), ""])
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r),
+        *cts_sink_env(r), ""])
+
+
+def cts_sink_env(r: dict) -> list:
+    """optional route.cts_sink {size, diameter_um}: explicit TritonCTS register-sink clustering (CTSA -> ref_route.sh
+    CTS_ARGS).  ORFS CTS_CLUSTER_* are ignored once CTS_ARGS is set, and the automatic choice on small macro tiles
+    (qfd_vm_bank_t: 32 sinks / 82 um, 2 buffers per path) leaves long leaf nets: TT insertion 243-403 ps."""
+    cs = r.get("cts_sink")
+    if not cs:
+        return []
+    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size ' + str(int(cs['size'])) + ' -sink_clustering_max_diameter ' + str(int(cs['diameter_um'])))}"]
 
 
 def pin_balance_env(r: dict) -> list:

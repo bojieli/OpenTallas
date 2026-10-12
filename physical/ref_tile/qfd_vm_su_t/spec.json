@@ -45,7 +45,11 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "cts_sink": {
+   "size": 12,
+   "diameter_um": 20
+  }
  },
  "job": {
   "owner": "Claude:el1011-q-sp",
@@ -131,9 +135,15 @@
   "w": 432.0,
   "h": 237.6
  },
- "orfs_vars": {
-  "CTS_CLUSTER_SIZE": "12",
-  "CTS_CLUSTER_DIAMETER": "20"
+ "pin_ranges": {
+  "clk": [
+   211.0,
+   221.0
+  ],
+  "rst_n": [
+   150.0,
+   170.0
+  ]
  },
  "children": [],
  "inter": []

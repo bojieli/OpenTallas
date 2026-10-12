@@ -44,7 +44,11 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "cts_sink": {
+   "size": 12,
+   "diameter_um": 20
+  }
  },
  "job": {
   "owner": "Claude:el1011-q-sp",
@@ -127,8 +131,14 @@
   "record_to": "results/rtl/ref_tile/qfd_vm_bank_t"
  },
  "std_area_um2": 527,
- "orfs_vars": {
-  "CTS_CLUSTER_SIZE": "12",
-  "CTS_CLUSTER_DIAMETER": "20"
+ "pin_ranges": {
+  "clk": [
+   104.0,
+   114.0
+  ],
+  "rst_n": [
+   60.0,
+   80.0
+  ]
  }
 }
