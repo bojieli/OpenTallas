@@ -91,6 +91,11 @@ GATES = dict(
     hold_real_after_s=3600,      # ... after this long in repair ...
     hold_deep_it=2000,           # ... gaining < hold_deep_dwns ps over this many iterations
     hold_deep_dwns=5.0,
+    # HOLD-SKIP (coordinator-approved 2026-10-09, drive-0212): a hold repair that is not converging but already within
+    # this small margin (real WNS >= hold_skip_ws_ps) with setup not failing its gate is NOT killed: the loop stops the
+    # CTS/GRT hold repair and resumes the route from its checkpoint (closure_loop.hold_skip_resume); the post-route hold
+    # ECO fixes the residue.  qfd_tile_rp1p (the critical Qwen tile) was killed after 8.7 h at -3.6 ps, tile_e_rp1p at -7.8.
+    hold_skip_ws_ps=-15.0,
     grt_min_iter=20, grt_markers=1000, grt_flat=0.95,
     drt_min_iter=20, drt_k=8, drt_min_viol=100,
     stall_after_s=3 * 3600,
@@ -483,7 +488,13 @@ def hopeless(b, j, now):
     if cur.startswith(("4_1_cts", "5_1_grt")) and (hd.get("found") or hd.get("series")):
         hv = hold_verdict(hd, b, elapsed, bool(j and insertion_untrusted(j)))
         if hv:
-            out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} {hv}"))
+            ws = hold_ws(hd)
+            if ws is not None and ws >= GATES["hold_skip_ws_ps"] and not any(v == "EARLY_FAIL_SETUP" for v, _ in out):
+                out.append(("HOLD_SKIP_TO_ROUTE", f"{cur[:-8]} {hv}; within {GATES['hold_skip_ws_ps']:g} ps and setup "
+                                                  f"not failing: stop the hold repair, resume the route, post-route "
+                                                  f"hold ECO for the residue"))
+            else:
+                out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} {hv}"))
     cg = [c for c in b.get("congestion") or [] if c[1] is not None]
     gi = b.get("grt_iter")
     if cur.startswith("5_1_grt") and gi and gi[0] >= GATES["grt_min_iter"] and len(cg) >= 3:
@@ -504,6 +515,13 @@ def hopeless(b, j, now):
             out.append(("EARLY_FAIL_DRC", f"DRT iteration {dr[-1][0]}: {last[-1]} violations, no decrease over the "
                                           f"last {k} iterations (best before {min(before)}, since {min(last)})"))
     return out
+
+
+def hold_ws(hd):
+    """the current real hold WNS (ps) of a live hold repair: last series point, else the current repair's last row"""
+    ser = hd.get("series") or []
+    last = hd.get("cur_last")
+    return ser[-1][2] if ser else (last[2] if last else None)
 
 
 def hold_gain(series, window):
@@ -701,6 +719,11 @@ def diagnose(j, o, hist, jobs, closed, now):
     # 2) hopeless (route stage only: calibrate is CTS-only with no repair)
     if b and j.get("stage_key") == "route" and j["status"] == "RUNNING":
         hp = hopeless(b, j, now)
+        if hp and all(v == "HOLD_SKIP_TO_ROUTE" for v, _ in hp):
+            d.update(action="hold_skip", kind="hold_skip", verdict="HOLD_SKIP_TO_ROUTE", orfs=b["root"])
+            d["why"] += [w for _, w in hp]
+            return d
+        hp = [x for x in hp if x[0] != "HOLD_SKIP_TO_ROUTE"]
         if hp:
             d.update(action="early_fail", kind="hopeless", verdict=hp[0][0])
             d["why"] += [w for _, w in hp]
@@ -796,6 +819,8 @@ def apply(diags, log):
             cmd = ["early-fail", d["name"], "--verdict", d["verdict"], "--why", why, "--detail", str(det)]
         elif a == "kill_stage":
             cmd = ["kill-stage", d["name"], "--why", why]
+        elif a == "hold_skip":
+            cmd = ["hold-skip", d["name"], "--why", why]
         else:
             continue
         r = cl.sh([sys.executable, str(HERE / "closure_loop.py"), *cmd], timeout=900)
@@ -830,7 +855,7 @@ def main():
             print(f"history refresh failed: {ex}", file=sys.stderr)
     diags = scan(a.only, cpu=not a.no_cpu)
     rep = dict(at=cl.now_iso(), gates=GATES, jobs=diags,
-               counts={k: sum(1 for d in diags if d["action"] == k) for k in ("cancel", "early_fail", "kill_stage", "let_run")})
+               counts={k: sum(1 for d in diags if d["action"] == k) for k in ("cancel", "early_fail", "hold_skip", "kill_stage", "let_run")})
     if a.apply:
         log = []
         rep["applied"] = apply(diags, log)
