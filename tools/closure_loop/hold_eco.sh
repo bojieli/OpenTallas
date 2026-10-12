@@ -56,8 +56,44 @@ fi
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done
 CS_ARGS=$(for p in "$@"; do echo -n " --post-sdc $p"; done; for m in ${MACROS:-}; do echo -n " --macro $m"; done)
 ACC_SS=${ACC_SS:-15}; ACC_FF=${ACC_FF:-15}
+# el1011-q-tile 2026-10-11: the ECO re-route keeps the block's own routing-layer contract.  The hard default M7 re-routed
+# a hardened leaf (MAX_ROUTING_LAYER M6: M7 left free for its parent's straps) with ~1.8k signal shapes on M7 (qfd_tile_lsl4);
+# MAXL defaults to the route's config.mk MAX_ROUTING_LAYER, M7 only when the route sets none.
+if [ -z "${MAXL:-}" ]; then
+  CFGMK=$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk
+  [ -f "$CFGMK" ] && MAXL=$(sed -n 's/^export MAX_ROUTING_LAYER *= *//p' "$CFGMK" | tail -1 | tr -d ' ')
+  echo "OT_ECO max routing layer ${MAXL:-M7} (route config: $CFGMK)" | tee -a "$OUT/eco.log"
+fi
 # LOOP-GAPS 2026-10-08 (redesign-0315: hbm_smh_front_s m3f/m3g ECOs close at TT +100 / FF +20 but were scored at SS with
 # the planning neighbour clock): the ECO is timed and judged with the job's own sign-off SDC set.
+# FACE-PIN KEEPOUT IN THE ECO RE-ROUTE (el1011-ds-misc 2026-10-12).  The ECO strips and re-routes every signal net, but
+# the route's PRE_GLOBAL_ROUTE face-pin keepout (stn_pin_keepout.tcl via OT_RM_PK / *_pk.tcl / rm_chain / pinko) was
+# removed at POST_DETAIL_ROUTE, so the ECO DRT ran neighbouring nets on the layer above the face pins again: the 4
+# closed tiles with child_lint (f) blocked pins in blocked_pin_sweep.json (deb7208eb: engc pbc 187/684, ws 58/1717,
+# win 15/801, pqc qb 44/1105) are exactly the 4 that went through a hold ECO; the 9 without ECO have 0.  When the
+# route's config.mk hooks carried a keepout, the ECO session re-applies it ABOVE ONLY (OT_PK_FRAC / HALO / FACES from
+# the route) around its GRT/DRT and removes it before export.  ECO_PK=0 opts out, ECO_PK=1 forces it.
+RCFG=$(dirname $(dirname $(dirname $(dirname $RB))))/config.mk
+if [ -z "${ECO_PK:-}" ]; then
+  ECO_PK=0
+  if [ -f "$RCFG" ]; then
+    for hk in $(sed -n 's/^export \(PRE_GLOBAL_ROUTE_TCL\|POST_DETAIL_ROUTE_TCL\) *= *//p' "$RCFG"); do
+      case "$hk" in *_pk.tcl|*pinko*|*stn_pin_keepout*) ECO_PK=1;; esac
+      for hf in $(find "$(dirname "$RCFG")/.." -maxdepth 3 -name "$(basename "$hk")" 2>/dev/null); do  # chained hook (rm_chain_*)
+        grep -q -E 'stn_pin_keepout|pinko_add|_pk\.tcl' "$hf" && ECO_PK=1
+      done
+    done
+  fi
+fi
+PK_ENV=(-e OT_ECO_PK=$ECO_PK)
+if [ "$ECO_PK" = 1 ]; then
+  for v in OT_PK_FRAC OT_PK_HALO OT_PK_FACES; do
+    x=$( [ -f "$RCFG" ] && sed -n "s/^export $v *= *//p" "$RCFG" | tail -1 )
+    [ -n "$x" ] && PK_ENV+=(-e "$v=$x")
+  done
+  PK_ENV+=(-e OT_PK_ABOVE_ONLY=1)
+fi
+echo "OT_ECO face-pin keepout in the re-route: $ECO_PK (route config: $RCFG)" | tee -a "$OUT/eco.log"
 export SDC_NAME=${SDC_NAME:-6_final.sdc}
 [ -f "$OB/$SDC_NAME" ] || { echo "sign-off SDC $OB/$SDC_NAME missing"; exit 2; }
 SPS=""; for p in ${SETUP_POST_SDC:-}; do SPS="$SPS /src/$p"; done
@@ -107,7 +143,7 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
            -e OT_MAXL=${MAXL:-M7} -e OT_MAX_BUF_PCT=${BUF:-30} -e OT_WINDOW_ONLY=${WINDOW_ONLY:-0}
            -e OT_ALLOW_FRESH_GRT=${ALLOW_FRESH_GRT:-0} -e OT_FREEZE_MACRO_NETS=${FREEZE:-0} -e OT_KEEP_UNTOUCHED=${KEEPWIRES:-0}
            -e OT_REPAIR_DRV=${REPAIR_DRV:-0} -e OT_DRV_SLEW_MARGIN=${DRV_SLEW_MARGIN:-30} -e OT_DRV_CAP_MARGIN=${DRV_CAP_MARGIN:-20}
-           -e OT_DRV_MAX_WIRE=${DRV_MAX_WIRE:-0})
+           -e OT_DRV_MAX_WIRE=${DRV_MAX_WIRE:-0} "${PK_ENV[@]}")
   # Multi-mode must reproduce both sign-off corners or fall back to FF-only.
   # Legacy merged-corner selection remains an explicit request.
   SESSION=ff

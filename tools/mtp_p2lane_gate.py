@@ -14,6 +14,7 @@ transaction of tb_mtp_p2_fixlat (gold.hex from tools/mtp_p2_prefix_fixture.py), 
   neg_cred   FAIL    OT_P2L_MUT_CRED: one credit over the row / start class buffer + output register (overflow fault)
   neg_hol    FAIL    OT_P2L_MUT_DIRECT: no end-to-end class credits: the abort event waits behind the pending start (HOL)
   neg_lat1   FAIL    OT_FIXLAT_MUT_LAT1: coll_p2_ep / p2_lnk receivers sized for latency 1 on the stations
+  neg_p2ep   FAIL    OT_S81PH_MUT_P2EP_NOSLACK: dsfd_vm_p2_ep ready ignores the RL 4 in-flight beats (VM BE contract v3)
 
     python3 tools/mtp_p2lane_gate.py --out DIR [--cases a,b] [-j N]     (repo root, fleet host)
 """
@@ -42,7 +43,8 @@ DEF = ['OT_S81PH_GBX_FMT1', 'OT_S81PH_EP_PIPE2', 'OT_S81PH_COLL_OQPIPE', 'OT_S81
        'OT_S81PH_COLL_CR', 'OT_S81PH_LANE_CR', 'OT_S81PH_COLL_PULL', 'OT_S81PH_COLL_TREP', 'OT_S81PH_COLL_P2L', 'OT_S81PH_PLL_MODEL']
 CASES = dict(p2l_s1=('pass', [], dict(SEED=1)), p2l_s5=('pass', [], dict(SEED=5)),
              neg_seg=('fail', ['OT_P2L_MUT_SEG'], dict(SEED=1)), neg_cred=('fail', ['OT_P2L_MUT_CRED'], dict(SEED=1)),
-             neg_hol=('fail', ['OT_P2L_MUT_DIRECT'], dict(SEED=1)), neg_lat1=('fail', ['OT_FIXLAT_MUT_LAT1'], dict(SEED=1)))
+             neg_hol=('fail', ['OT_P2L_MUT_DIRECT'], dict(SEED=1)), neg_lat1=('fail', ['OT_FIXLAT_MUT_LAT1'], dict(SEED=1)),
+             neg_p2ep=('fail', ['OT_S81PH_MUT_P2EP_NOSLACK'], dict(SEED=1)))
 
 
 def run(out, name):
