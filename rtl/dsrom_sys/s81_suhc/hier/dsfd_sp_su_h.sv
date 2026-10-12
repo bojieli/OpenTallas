@@ -190,9 +190,19 @@ module dsfd_sp_su_h #(
         wire go, rf; wire [31:0] eps;
         ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_gv (.clk(sk), .rst_n(rst[0]), .d(qt_go), .q(go));
         ot_hdc_delay #(.W(32), .D(ERL)) u_gd (.clk(sk), .rst_n(rst[0]), .d(qt_eps), .q(eps));
-        ot_s81_su_qnr #(.NE(NQE), .NV(DQ_ / QN_N), .D(DQ_), .LM(LM), .LA(LA)) u_qnr (
-            .clk(sk), .rst_in(rst[0]), .i_go(go), .i_eps(eps), .p_v(qp_v), .p_p(qp_p), .p_d(qp_d), .r_v(qr_v), .r_d(qr_d),
-            .o_f(rf));
+        // two half trees (engines 0..NQE/2-1, NQE/2..NQE-1) -> the reduce (NE 2: the golden tree's top add, vector
+        // levels, / D, + eps, rsqrt); each half is its own hardened tile (<= 15k sinks)
+        wire [1:0] hv, hp, hf; wire [63:0] hd;
+        genvar hh;
+        for (hh = 0; hh < 2; hh = hh + 1) begin : g_qnh
+            ot_s81_su_qnh #(.NE(NQE / 2), .LA(LA)) u_qnh (
+                .clk(sk), .rst_in(rst[0]), .i_go(go), .p_v(qp_v[hh * (NQE / 2) +: NQE / 2]),
+                .p_p(qp_p[hh * (NQE / 2) +: NQE / 2]), .p_d(qp_d[hh * 16 * NQE +: 16 * NQE]), .s_v(hv[hh]), .s_p(hp[hh]),
+                .s_d(hd[32 * hh +: 32]), .o_f(hf[hh]));
+        end
+        ot_s81_su_qnr #(.NE(2), .NV(DQ_ / QN_N), .D(DQ_), .LM(LM), .LA(LA)) u_qnr (
+            .clk(sk), .rst_in(rst[0]), .i_go(go), .i_eps(eps), .p_v(hv), .p_p(hp), .p_d(hd), .p_f(hf), .r_v(qr_v),
+            .r_d(qr_d), .o_f(rf));
         ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rf (.clk(sk), .rst_n(rst[0]), .d(rf), .q(qn_f[NQE]));
     end endgenerate
 

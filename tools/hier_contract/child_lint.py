@@ -36,6 +36,7 @@ from pathlib import Path
 AREA_FRAC = 0.90          # (a) bloat threshold and (b) full-stripe span fraction
 MIN_STRIPES = 2           # (b) per net
 EPS_UM = 0.001            # 1 DBU: LEF microns are decimal, floats are not (43.2-um tile, 2.16-um insets: 38.88 < 0.9*43.2 in floats)
+EDGE_INSET_UM = 2.16      # (b) ref_tile stops PG stripes this far short of each edge; a stripe reaching within the inset of both edges is full-length (thin tiles < 43.2 um failed the 90% rule: ctfx 12.96 um tall = 67%)
 MIN_SPREAD = 0.50         # (b) first..last full stripe must span this fraction of the perpendicular dimension
 INSERTION_TOL_PS = 100.0  # (g)
 EPS = 0.0015              # um: boundary touch tolerance
@@ -130,8 +131,8 @@ def check_pg(m: dict) -> dict:
     rec["top_layer"] = f"M{top}" if top else None
     for n, p in sorted(nets.items()):
         sh = [r for r in p["rects"] if metal(r[0]) == top]
-        full_h = [r for r in sh if (r[3] - r[1]) + EPS_UM >= AREA_FRAC * W]       # horizontal stripes across the width
-        full_v = [r for r in sh if (r[4] - r[2]) + EPS_UM >= AREA_FRAC * H]
+        full_h = [r for r in sh if (r[3] - r[1]) + EPS_UM >= min(AREA_FRAC * W, W - 2 * EDGE_INSET_UM)]       # horizontal stripes across the width
+        full_v = [r for r in sh if (r[4] - r[2]) + EPS_UM >= min(AREA_FRAC * H, H - 2 * EDGE_INSET_UM)]
         full, horiz = (full_h, True) if len(full_h) >= len(full_v) else (full_v, False)
         area = sum((r[3] - r[1]) * (r[4] - r[2]) for r in sh) or 1.0
         cov = sum((r[3] - r[1]) * (r[4] - r[2]) for r in full) / area

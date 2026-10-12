@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  125.28,
-  125.28
+  155.52,
+  155.52
  ],
  "core": [
   2.16,
   2.16,
-  123.12,
-  123.12
+  153.36,
+  153.36
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -24,7 +24,9 @@
    "M2",
    "M6"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M7",
+  "layer_cap": "M6",
+  "cap_basis": "legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)"
  },
  "pins": {
   "W": [
