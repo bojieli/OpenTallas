@@ -294,7 +294,7 @@ module dsfd_coll_cel #(parameter integer KIND = 0, parameter integer XD = 6) (
     wire x_lo_v, x_lo_r, x_li_v, x_li_r; wire [552:0] x_lo_d, x_li_d; wire ff;
     ot_link_credit_tx #(.W(553), .CRED(8)) u_so (.clk(ck), .rst_n(rst_n), .i_valid(x_lo_v), .i_ready(x_lo_r),
         .i_data(x_lo_d), .l_valid(f_lo_v), .l_data(f_lo_d), .l_credit(f_lo_r));
-    ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(0), .WFREE(1)) u_si (.clk(ck), .rst_n(rst_n), .l_valid(f_li_v),
+    ot_link_credit_rx #(.W(553), .DEPTH(8), .OREG(0), .WFREE(1), .RREP(16)) u_si (.clk(ck), .rst_n(rst_n), .l_valid(f_li_v),
         .l_data(f_li_d), .l_credit(f_li_r), .o_valid(x_li_v), .o_ready(x_li_r), .o_data(x_li_d), .fault(ff));
     reg [2:0] xf_q; reg skf;
     always @(posedge ck or negedge rst_n)
@@ -314,7 +314,7 @@ module dsfd_coll_cel #(parameter integer KIND = 0, parameter integer XD = 6) (
         wire flit_go = x_lo_v && x_lo_r;
         reg [9:0] crx0, crx1, crs0, crs1;
         wire [1:0] cs0 = (crs0 > 3) ? 2'd3 : crs0[1:0], cs1 = (crs1 > 3) ? 2'd3 : crs1[1:0];
-        ot_s81ph_hfifo #(.W(PW), .D(16)) u_sk (.clk(ck), .rst_n(erst_n), .push(tv_q), .wd(rec), .pop(flit_go && sk_hv),
+        ot_s81ph_hfifo #(.W(PW), .D(16), .RREP(16)) u_sk (.clk(ck), .rst_n(erst_n), .push(tv_q), .wd(rec), .pop(flit_go && sk_hv),
             .hv(sk_hv), .hd(sk_hd), .fault(sk_f));
         // room flag for the slices: registered here, registered there; covers the pushes in flight (<= 4)
         reg [5:0] occ;
