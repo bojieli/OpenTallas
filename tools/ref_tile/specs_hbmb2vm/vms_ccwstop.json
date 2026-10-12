@@ -1,0 +1,120 @@
+{
+ "name": "vms_ccwstop",
+ "top": "ot_vms_ccwstop",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_ccwstop.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {
+  "HF": 2
+ },
+ "outline": {
+  "w": 129.6,
+  "h": 129.6
+ },
+ "pg_layer": "M6",
+ "pins": {
+  "E": [
+   "clk",
+   "rst_n",
+   "ccw_in",
+   "ccw_in_cr",
+   "sid"
+  ],
+  "W": [
+   "ccw_out",
+   "ccw_out_cr"
+  ],
+  "S": [
+   "cci",
+   "cci_cr",
+   "cco",
+   "hq",
+   "hr"
+  ],
+  "N": [
+   "wak",
+   "wak_cr",
+   "ack_out",
+   "rce",
+   "rce_cr"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-hbm-b2-vm",
+  "branch": "claude/el1011-hbm-b2-vm",
+  "tag": "v1",
+  "purpose": "HBM B2 VM slice CCW (narrow, 2 VC) ring stop + ring client",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm",
+   "rtl/link",
+   "physical/asap7_memory_macros"
+  ],
+  "benches": [
+   {
+    "name": "vms_slice_exact",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_slice_exact tb_vms_slice",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "readback (\\d+)"
+   },
+   {
+    "name": "vms_ring4_exact",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_exact tb_vms_ring4",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "readback (\\d+)"
+   },
+   {
+    "name": "vms_ring4_creditdrop",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_creditdrop tb_vms_ring4 -GCMUT=2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_ring4_lostbcast",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_lostbcast tb_vms_ring4 -GBMUT=1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_slice_wrongslice",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_slice_wrongslice tb_vms_slice -GHMUT=1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/vms_ccwstop/views",
+  "record_to": "results/rtl/ref_tile/vms_ccwstop"
+ }
+}

@@ -1,0 +1,124 @@
+{
+ "name": "vms_cwstop",
+ "top": "ot_vms_cwstop",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_cwstop.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {
+  "HF": 2,
+  "EGC": 1
+ },
+ "outline": {
+  "w": 259.2,
+  "h": 259.2
+ },
+ "pg_layer": "M6",
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "cw_in",
+   "cw_in_cr",
+   "sid"
+  ],
+  "E": [
+   "cw_out",
+   "cw_out_cr"
+  ],
+  "S": [
+   "eg",
+   "eg_cr",
+   "xq",
+   "xq_cr",
+   "xq_done"
+  ],
+  "N": [
+   "cwi",
+   "cwi_cr",
+   "rce",
+   "rce_cr",
+   "wak",
+   "wak_cr",
+   "ack_in",
+   "mirror_busy"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-hbm-b2-vm",
+  "branch": "claude/el1011-hbm-b2-vm",
+  "tag": "v1",
+  "purpose": "HBM B2 VM slice CW (wide) ring stop: bubble flow, broadcast forward/eject, WBC acks",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm",
+   "rtl/link",
+   "physical/asap7_memory_macros"
+  ],
+  "benches": [
+   {
+    "name": "vms_slice_exact",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_slice_exact tb_vms_slice",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "readback (\\d+)"
+   },
+   {
+    "name": "vms_ring4_exact",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_exact tb_vms_ring4",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "readback (\\d+)"
+   },
+   {
+    "name": "vms_ring4_creditdrop",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_creditdrop tb_vms_ring4 -GCMUT=2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_ring4_lostbcast",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_lostbcast tb_vms_ring4 -GBMUT=1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_slice_wrongslice",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_slice_wrongslice tb_vms_slice -GHMUT=1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/vms_cwstop/views",
+  "record_to": "results/rtl/ref_tile/vms_cwstop"
+ }
+}

@@ -13,4 +13,6 @@ $V --binary --timing -O2 -j ${JOBS:-8} -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BL
   physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v \
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v $D/$TB.sv > "$O/build_$T.log" 2>&1 \
   || { tail -30 "$O/build_$T.log"; exit 2; }
-"$O/obj_$T/V$TB" | tee "$O/run_$T.log" | tail -12
+"$O/obj_$T/V$TB" > "$O/run_$T.log" 2>&1 || true
+grep -E "VMS_|MISMATCH|TIMEOUT|FAULT" "$O/run_$T.log" | head -20
+grep -qE "^VMS_(SLICE|RING4)_BENCH PASS" "$O/run_$T.log"   # rc 0 only on PASS
