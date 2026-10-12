@@ -46,7 +46,7 @@ module ot_hgi_vm_tunit #(
     parameter integer APD = 16,
     parameter integer APC = 1,
     parameter integer APS = 8,
-    parameter integer XR = 1,     // extra relay stage on the down tree (r2) and on the return tree (u2): 1 for the die
+    parameter integer XR = 1,     // must be 1: relay r2 on the down tree (the bank tile pin flops) and u2 on the return tree
                                   // configuration's ~2 x 2 mm tile array (hub -> far bank = 3 hops of <= ~500 um)
     parameter integer MUT = 0     // 1 no correction, 2 bank index from sector[5:1], 3 responses one slot early,
                                   // 4 wide word mask ignored, 5 a wide read response to group 0, 6 a packet write does
@@ -79,8 +79,8 @@ module ot_hgi_vm_tunit #(
     localparam integer LRD = LQ + 8;                  // bank-local read-lane queue: LQ credits + 3 up + 2 down in flight
     localparam integer GW = 2 * CW + 8;               // per-bank decision {rv, rc, wv, wc, lv, lg 2, qv, qg 2}
     generate if (NC < 1 || NC > 16 || WP != 32 || WDIRECT != 1 || (RP % 32) != 0 || RP > 96 || (W2 % 32) != 0 ||
-                 W2 > 96 || AP > 1 || LQ < 2 || LQ > 32 || (1 << LQB) != LQ) begin : g_cfg_trap
-        ot_hgi_vm_tunit_needs_NC_le16_WP32_WDIRECT1_RP_W2_0_32_64_96_AP_0_1_LQ_pow2_2_32 u_trap ();
+                 W2 > 96 || AP > 1 || LQ < 2 || LQ > 32 || (1 << LQB) != LQ || XR != 1) begin : g_cfg_trap
+        ot_hgi_vm_tunit_needs_NC_le16_WP32_WDIRECT1_RP_W2_0_32_64_96_AP_0_1_LQ_pow2_2_32_XR1 u_trap ();
     end endgenerate
 
     function automatic integer grp(input integer b); grp = (b < 15) ? 0 : (b < 17) ? 1 : 2; endfunction
@@ -311,24 +311,17 @@ module ot_hgi_vm_tunit #(
     end
 
     // ---------------------------------------------------------------- down tree: one kept relay copy per group
-    // (XR: a second kept relay per group, r2, toward the group's far banks)
+    // (XR: the second relay r2 is each bank tile's own pin flop stage, next to the bank)
     wire [NC*LW-1:0] r1_l [0:2]; wire [NB*GW-1:0] r1_g [0:2];
     for (genvar g = 0; g < 3; g = g + 1) begin : g_r1
         (* keep = "true" *) reg [NC*LW-1:0] l; (* keep = "true" *) reg [NB*GW-1:0] gr;
         always @(posedge clk) l <= s0_l;
         always @(posedge clk or negedge rn[0]) if (!rn[0]) gr <= '0; else gr <= s0_g;
-        if (XR != 0) begin : g_r2
-            (* keep = "true" *) reg [NC*LW-1:0] l2; (* keep = "true" *) reg [NB*GW-1:0] gr2;
-            always @(posedge clk) l2 <= l;
-            always @(posedge clk or negedge rn[4 + g]) if (!rn[4 + g]) gr2 <= '0; else gr2 <= gr;
-            assign r1_l[g] = l2; assign r1_g[g] = gr2;
-        end else begin : g_nr2
-            assign r1_l[g] = l; assign r1_g[g] = gr;
-        end
+        assign r1_l[g] = l; assign r1_g[g] = gr;   // r2 (XR) = each bank tile's pin flops
     end
 
     // ---------------------------------------------------------------- DMA lanes (faces): pin flop, hub relays, data line
-    localparam integer WLN = 7 + XR;                       // data line p0 -> w1..wN -> m_* (= h1..h3 + hub + s0 + r1 (+ r2) + cs + c2)
+    localparam integer WLN = 7;                            // data line p0 -> w1..w7 -> tile pin flop -> m_* (= h1..h3 + hub + s0 + r1 + r2 + cs + c2)
     wire [NB-1:0] w7_hit; wire [NB*10-1:0] w7_row; wire [NB*312-1:0] w7_enc; wire [NB*8-1:0] w7_wm;
     wire [NB-1:0] av3; wire [NB*279-1:0] ad3;              // aperture relay line (AP): {v && ap}, {sector 15, wdata 256, mask 8}
     for (gl = 0; gl < NB; gl = gl + 1) begin : g_wl

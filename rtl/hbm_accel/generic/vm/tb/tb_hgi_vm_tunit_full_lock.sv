@@ -34,10 +34,14 @@ module tb_hgi_vm_tunit_full_lock;
  integer out [0:NC-1]; integer rqc [0:RPL-1]; integer w2c [0:W2L-1]; integer hcd [0:7];
  integer cyc = 0, nrsp = 0, nreq = 0, seed = 11, errs = 0, ovf = 0, nwr = 0, nrd = 0, nwq = 0, nap = 0, napq = 0;
  integer nrq = 0, nrr = 0, nw2 = 0, nw2d = 0;
+ reg [31:0] rs = 32'h2545F491;                               // xorshift32 (simulator-independent stimulus)
+ function automatic [31:0] rnd(input integer dummy);
+  begin rs = rs ^ (rs << 13); rs = rs ^ (rs >> 17); rs = rs ^ (rs << 5); rnd = rs; end
+ endfunction
  task automatic miss(input [8*12-1:0] what, input integer i);
   begin errs = errs + 1; if (errs < 8) $display("MISMATCH %0s cyc %0d idx %0d", what, cyc, i); end
  endtask
- initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; $display("SEED=%0d NC=%0d RP=%0d W2=%0d AP=%0d MUTS=%0d", seed, NC, RP, W2, AP, MUTS); end
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 11; rs = 32'h2545F491 ^ seed; $display("SEED=%0d NC=%0d RP=%0d W2=%0d AP=%0d MUTS=%0d", seed, NC, RP, W2, AP, MUTS); end
  initial begin
   for (integer c = 0; c < NC; c = c + 1) out[c] = 0;
   for (integer l = 0; l < RPL; l = l + 1) rqc[l] = LQ;
@@ -83,7 +87,7 @@ module tb_hgi_vm_tunit_full_lock;
   apcr = 0; apdn = 0;
   for (integer k = 0; k < 8; k = k + 1) begin
    if (hcd[k] > 0) begin hcd[k] = hcd[k] - 1; if (hcd[k] == 0) begin apcr[k] = 1'b1; apdn[k] = 1'b1; end end
-   if (AP != 0 && aq_a[k*278 + 277]) begin hcd[k] = 1 + ($unsigned($random(seed)) % 6); napq = napq + 1; end
+   if (AP != 0 && aq_a[k*278 + 277]) begin hcd[k] = 1 + ($unsigned(rnd(0)) % 6); napq = napq + 1; end
   end
   for (integer k = KQ; k > 1; k = k - 1) cqd[k] = cqd[k-1]; cqd[1] = cq;
   for (integer k = KW; k > 1; k = k - 1) begin wqd[k] = wqd[k-1]; rqd[k] = rqd[k-1]; w2qd[k] = w2qd[k-1]; end
@@ -92,38 +96,39 @@ module tb_hgi_vm_tunit_full_lock;
   if (cyc > 12 && cyc < NCYC) begin
    for (integer c = 0; c < NC; c = c + 1) begin
     integer lim; lim = (cyc > 3000 && cyc < 3100 && c == 5) ? 6 : 4;
-    if (out[c] < lim && ($random(seed) & 1)) begin : rqb
+    if (out[c] < lim && (rnd(0) & 1)) begin : rqb
      reg [336:0] q; reg [14:0] sec;
-     sec = $unsigned($random(seed)) % 2048;
-     q = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed),
-          $random(seed), $random(seed), $random(seed)};
+     sec = $unsigned(rnd(0)) % 2048;
+     q = {rnd(0), rnd(0), rnd(0), rnd(0), rnd(0), rnd(0), rnd(0), rnd(0),
+          rnd(0), rnd(0), rnd(0)};
      q[335:304] = {12'd0, sec, 5'd0};
-     if (cyc > NCYC - 400 && c == 2 && ($random(seed) & 7) == 0) q[335:324] = 12'h001;   // out of range (late)
-     q[47:16] = ($random(seed) & 1) ? 32'hFFFFFFFF : {$random(seed)} & 32'hF0F0FF0F;
+     q[336] = rnd(0) & 1;                                                       // half reads
+     if (cyc > NCYC - 400 && c == 2 && (rnd(0) & 7) == 0) q[335:324] = 12'h001;   // out of range (late)
+     q[47:16] = (rnd(0) & 1) ? 32'hFFFFFFFF : {rnd(0)} & 32'hF0F0FF0F;
      if (q[336]) nwr = nwr + 1; else nrd = nrd + 1;
      cq[c*338 +: 338] = {1'b1, q}; out[c] = out[c] + 1; nreq = nreq + 1;
      if (out[c] > 4) ovf = ovf + 1;
     end
    end
-   for (integer p = 0; p < WP; p = p + 1) if (($random(seed) & 3) == 0 && wr_a[p]) begin : dl
+   for (integer p = 0; p < WP; p = p + 1) if ((rnd(0) & 3) == 0 && wr_a[p]) begin : dl
     reg [WQW-1:0] w; reg isap;
-    isap = (AP != 0) && (($random(seed) & 3) == 0);
+    isap = (AP != 0) && ((rnd(0) & 15) == 0);
     w = '0;
-    w[0 +: 264] = {{8{$random(seed)}}, 8'($random(seed))};
-    w[264 +: 15] = isap ? 15'($unsigned($random(seed)) % 8192) : 15'(p + 32 * ($unsigned($random(seed)) % 64));
+    w[0 +: 264] = {{8{rnd(0)}}, 8'(rnd(0))};
+    w[264 +: 15] = isap ? 15'($unsigned(rnd(0)) % 8192) : 15'(p + 32 * ($unsigned(rnd(0)) % 64));
     if (AP != 0) w[279] = isap;
     w[WQW-1] = 1'b1;
     if (!isap && cyc > NCYC - 300 && p == 7 && cyc % 97 == 0) w[264 +: 5] = 5'd9;          // misrouted lane (late)
     wq[p*WQW +: WQW] = w; nwq = nwq + 1; if (isap) nap = nap + 1;
    end
-   for (integer l = 0; l < RP; l = l + 1) if (rqc[l] > 0 && ($random(seed) & 1)) begin
-    reg [14:0] s; s = 15'((l % 32) + 32 * ($unsigned($random(seed)) % 1024));
+   for (integer l = 0; l < RP; l = l + 1) if (rqc[l] > 0 && (rnd(0) & 1)) begin
+    reg [14:0] s; s = 15'((l % 32) + 32 * ($unsigned(rnd(0)) % 1024));
     if (cyc == NCYC - 200 && l == 40) s[4:0] = 5'd3;                                     // misrouted read lane (late)
     rq[l*16 +: 16] = {1'b1, s}; rqc[l] = rqc[l] - 1; nrq = nrq + 1;
    end
-   for (integer l = 0; l < W2; l = l + 1) if (w2c[l] > 0 && ($random(seed) & 3) == 0) begin
-    reg [14:0] s; s = 15'((l % 32) + 32 * ($unsigned($random(seed)) % 1024));
-    w2q[l*280 +: 280] = {1'b1, s, {8{$random(seed)}}, 8'($random(seed))}; w2c[l] = w2c[l] - 1; nw2 = nw2 + 1;
+   for (integer l = 0; l < W2; l = l + 1) if (w2c[l] > 0 && (rnd(0) & 3) == 0) begin
+    reg [14:0] s; s = 15'((l % 32) + 32 * ($unsigned(rnd(0)) % 1024));
+    w2q[l*280 +: 280] = {1'b1, s, {8{rnd(0)}}, 8'(rnd(0))}; w2c[l] = w2c[l] - 1; nw2 = nw2 + 1;
    end
   end
  end

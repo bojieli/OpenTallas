@@ -8,8 +8,9 @@
 // Contents: the bank's two VM macros (lo / hi, one column) + its read lanes g*32+b (pin flop, LQ+8-deep row queue) +
 // its W2 lanes g*32+b (pin flop, one 64x512 SRAM queue each, raw capture flop) + client select / SECDED encode (cs, c2)
 // + macro input registers + read raw capture / decode + client return (u) + lane responses (rr).
-// Timing (tile edge = the parent's down-tree decision gi, cycle T): lane pops at T, macro inputs at T+3, raw capture
-// T+5, decode T+6, u / rr T+7; rq_cr / w2q_cr T+1, w2q_done T+5; lane events (rqh / w2h) leave one edge after the pin
+// Timing (gi at the tile pins in cycle T-1 = the parent's r1; the tile's pin flop is the down tree's r2, cycle T): lane
+// pops at T, macro inputs at T+3, raw capture T+5, decode T+6, u / rr T+7; rq_cr / w2q_cr T+1, w2q_done T+5; the DMA
+// lane's encoded word arrives one edge before its pin flop (the data line's last stage); lane events (rqh / w2h) leave one edge after the pin
 // flop (the parent adds the remaining relays to the hub).
 module ot_hgi_vm_btile #(
     parameter integer NC = 9,
@@ -88,11 +89,16 @@ module ot_hgi_vm_btile #(
         end
     endfunction
 
-    wire          d_rv = gi[GW-1],  d_wv = gi[GW-2-CW];
-    wire [CW-1:0] d_rc = gi[GW-2 -: CW], d_wc = gi[GW-3-CW -: CW];
-    wire          d_lv = gi[5], d_qv = gi[2];
-    wire [1:0]    d_lg = gi[4:3], d_qg = gi[1:0];
-    wire [LW-1:0] lr = lanes[d_rc*LW +: LW], lw = lanes[d_wc*LW +: LW];
+    // pin flops: every tile input lands in a flop (the down tree's r2 stage and the DMA data line's last stage live
+    // here, next to the bank), no logic between a pin and its flop
+    reg [GW-1:0] gq; reg [NC*LW-1:0] lq; reg wh_q; reg [9:0] wr_q; reg [311:0] we_q; reg [7:0] wm_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin gq <= '0; wh_q <= 1'b0; end else begin gq <= gi; wh_q <= w_hit; end
+    always @(posedge clk) begin lq <= lanes; wr_q <= w_row; we_q <= w_enc; wm_q <= w_wm; end
+    wire          d_rv = gq[GW-1],  d_wv = gq[GW-2-CW];
+    wire [CW-1:0] d_rc = gq[GW-2 -: CW], d_wc = gq[GW-3-CW -: CW];
+    wire          d_lv = gq[5], d_qv = gq[2];
+    wire [1:0]    d_lg = gq[4:3], d_qg = gq[1:0];
+    wire [LW-1:0] lr = lq[d_rc*LW +: LW], lw = lq[d_wc*LW +: LW];
     // client path: select + encode (cs) -> c2
     reg cs_re, cs_we, c2_re, c2_we; reg [CW-1:0] cs_rc, c2_rc; reg [9:0] cs_ra, cs_wa, c2_ra, c2_wa;
     reg [311:0] cs_wd, c2_wd; reg [7:0] cs_wm, c2_wm;
@@ -178,12 +184,12 @@ module ot_hgi_vm_btile #(
     reg m_re, m_we; reg [9:0] m_ra, m_wa; reg [311:0] m_wd; reg [7:0] m_wm;
     reg rp1, rp2, rp3, d_v; reg k1, k2, k3, d_k; reg [CW-1:0] rc1, rc2, rc3, d_c; reg [1:0] rg1, rg2, rg3, d_g;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin m_re <= 1'b0; m_we <= 1'b0; rp1 <= 1'b0; end
-        else begin m_re <= c2_re | l2_v; m_we <= c2_we | w_hit | b2_v; rp1 <= c2_re | l2_v; end
+        else begin m_re <= c2_re | l2_v; m_we <= c2_we | wh_q | b2_v; rp1 <= c2_re | l2_v; end
     always @(posedge clk) begin
         m_ra <= c2_re ? c2_ra : l2_ra;
         k1 <= c2_re; rc1 <= c2_rc; rg1 <= l2_g;
         if (c2_we) begin m_wa <= c2_wa; m_wd <= c2_wd; m_wm <= c2_wm; end
-        else if (w_hit) begin m_wa <= w_row; m_wd <= w_enc; m_wm <= w_wm | {8{MUT == 4}}; end
+        else if (wh_q) begin m_wa <= wr_q; m_wd <= we_q; m_wm <= wm_q | {8{MUT == 4}}; end
         else begin m_wa <= qsel[264 +: 10]; m_wd <= enc8(qsel[8 +: 256]); m_wm <= qsel[7:0]; end
     end
     wire [311:0] wme;
