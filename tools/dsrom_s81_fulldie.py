@@ -2152,11 +2152,12 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
             if pl:
                 thin[pl].append(x)
     thin_set = {x for v in thin.values() for x in v}
-    other = ' '.join(x for x in masters_used if x != cfgm and x not in m8m and x not in thin_set)
-    m8grid = ('define_pdn_grid -macro -name m8 -cells {' + ' '.join(m8m) + '} -halo {0 0 0 0} -voltage_domains CORE\n'
+    # pdngen -cells is an unanchored regex search: 'dsfd_rstg' (m7) claimed the dsfd_rstg_pq66_* tiles of a thin grid
+    other = ' '.join(f'^{x}$' for x in masters_used if x != cfgm and x not in m8m and x not in thin_set)
+    m8grid = ('define_pdn_grid -macro -name m8 -cells {' + ' '.join(f'^{x}$' for x in m8m) + '} -halo {0 0 0 0} -voltage_domains CORE\n'
               'add_pdn_connect -grid m8 -layers {M8 M9}\n') if m8m else ''
     for k, (pl, xs) in enumerate(sorted(thin.items())):
-        m8grid += (f'define_pdn_grid -macro -name m7thin{k} -cells {{{" ".join(sorted(xs))}}} -halo {{0 0 0 0}} '
+        m8grid += (f'define_pdn_grid -macro -name m7thin{k} -cells {{{" ".join(f"^{x}$" for x in sorted(xs))}}} -halo {{0 0 0 0}} '
                    f'-voltage_domains CORE\n'
                    f'add_pdn_stripe -grid m7thin{k} -layer M8 -width 0.48 -pitch {pl:.3f} -spacing {pl / 2 - 0.48:.3f} '
                    f'-offset {PDN_THIN_OFF:.3f}\n'
