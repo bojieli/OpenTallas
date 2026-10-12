@@ -18,7 +18,8 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 from hier_contract_export import parse_lef  # noqa: E402
 import hier_contract_migrate as MG  # noqa: E402
 
-RELAY = re.compile(r'^qfd_rly')
+RELAY = re.compile(r'^q[fk]d_rly')
+HARD_IP = ('ot_hbm3e_phy', 'qfd_io_serdes', 'qfd_io_ucie', 'qkd_pll', 'qfd_clkrx', 'ot_qfd_serdes_112g_x12_phy')
 TP8_DELTAS = [
     dict(id='T1', slots=['qfd_tile_nk', 'qfd_cst_n', 'qfd_cst_s'], status='decided v1',
          change='tile count 1,536 -> 768 (G 6,144 -> 3,072 lane groups; 64 columns x 12 rows); same qfd_tile_nk master, '
@@ -54,6 +55,11 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--source', default='')
     ap.add_argument('--when', default='2026-10-12')
+    ap.add_argument('--version', type=int, default=1)
+    ap.add_argument('--recipe', default='tp8a')
+    ap.add_argument('--tile-cap', default=None, help='v3: tile layer cap (M5): slot signals + PG <= cap, strap cap+1; '
+                    'the die top owns cap+1 .. M9 (M6 / M7 over tiles, M8 / M9 die-only); hard IP keeps its layers')
+    ap.add_argument('--prev', default=None, help='the previous version of this contract (its changelog is kept)')
     a = ap.parse_args()
     C = json.load(open(a.v5))
     case = Path(a.case)
@@ -157,8 +163,23 @@ def main():
                 open_items[cell] = opn
         s = dict(name=inst, **{k: v for k, v in s.items() if k != 'parent'}, parent=die)
         s['origin'] = dict(x=x, y=y, orient=o if o in ('R0', 'MX', 'MY', 'R180') else 'R0')
-        s['version'] = 1
+        s['version'] = a.version
         s['parent'] = die
+        if a.tile_cap and cell not in HARD_IP:
+            # v3 layer cap: the slot is built to <= cap (signals and PG stripes on cap, parent strap cap+1); a slot whose
+            # current view (case LEF) uses a higher layer is flagged for re-route (closed tiles: congested regions first)
+            used = [sh[0] for p_ in lef[cell]['pins'].values() for sh in p_['shapes'] if sh[0]]
+            hi = max(used, key=MG.LN) if used else a.tile_cap
+            s.update(signal_max_layer=a.tile_cap, pg_layer=a.tile_cap, strap_layer=f'M{MG.LN(a.tile_cap) + 1}')
+            s['layer_cap'] = dict(cap=a.tile_cap, view_max_layer=hi, conforms=MG.LN(hi) <= MG.LN(a.tile_cap))
+            for pn in s.get('pins', []):
+                if MG.LN(pn.get('layer', a.tile_cap)) > MG.LN(a.tile_cap):
+                    pn['layer'] = a.tile_cap if MG.LN(a.tile_cap) % 2 == MG.LN(pn['layer']) % 2 else f'M{MG.LN(a.tile_cap) - 1}'
+            if s.get('clock_entry', {}).get('layer') and MG.LN(s['clock_entry']['layer']) > MG.LN(a.tile_cap):
+                s['clock_entry'] = dict(s['clock_entry'], layer=a.tile_cap)
+            if not s['layer_cap']['conforms']:
+                open_items.setdefault(cell, []).append(f'layer cap {a.tile_cap}: current view uses {hi}; re-route to '
+                                                       f'the v{a.version} cap (pins re-assigned on <= {a.tile_cap})')
         slots.append(s)
     cells = {s['cell'] for s in slots}
     for c, v in C.get('open_items', {}).items():
@@ -176,12 +197,20 @@ def main():
         area[s['cell']] += s['outline']['w'] * s['outline']['h'] / 1e6
     slot_mm2 = sum(area.values())
     die_mm2 = dw * dh / 1e6
-    out = {'schema': 'opentallas.hier_contract.v1', 'die': die, 'version': 1, 'updated': a.when,
+    if a.tile_cap:
+        slots[0].update(signal_max_layer='M9', notes=f'TP8 track-B single die (F2, ROM + merged KV halves, host SerDes '
+                        f'slot on every die), contract v{a.version}: slots capped at {a.tile_cap}; the die top routes '
+                        f'M{MG.LN(a.tile_cap) + 1}-M9 (M{MG.LN(a.tile_cap) + 1}/M{MG.LN(a.tile_cap) + 2} over tiles, '
+                        f'M8/M9 die-only); relays (die_top_logic) are its only logic')
+        slots[0]['version'] = a.version
+    prevlog = json.load(open(a.prev)).get('changelog', []) if a.prev else []
+    out = {'schema': 'opentallas.hier_contract.v1', 'die': die, 'version': a.version, 'updated': a.when,
            'owner': 'qwen-tp8/die (el1011-qwen-tp8-die)', 'clock_period_ps': C['clock_period_ps'],
            'layer_defaults': C['layer_defaults'],
-           'changelog': [dict(version=1, when=a.when, change='TP8 track-A ROM die from the tp8a generator case (' +
+           'changelog': prevlog + [dict(version=a.version, when=a.when, change=f'TP8 ROM die from the {a.recipe} generator case (' +
                               a.source + '): qwen_rom v5 slot templates for unchanged cells, LEF re-derived for '
-                              + ', '.join(sorted(rederived)) + '; v5 deltas D1-D6 inherited; TP8 deltas T1-T6')],
+                              + ', '.join(sorted(rederived)) + '; v5 deltas D1-D6 inherited; TP8 deltas T1-T6' +
+                              (f'; tile layer cap {a.tile_cap} (die M{MG.LN(a.tile_cap) + 1}-M9)' if a.tile_cap else ''))],
            'slots': slots, 'source': a.source, 'derived_from': dict(contract=a.v5, version=C['version']),
            'fixed': C.get('fixed'), 'deltas': deltas + TP8_DELTAS,
            'seam_check': C.get('seam_check'), 'die_closure': C.get('die_closure'),

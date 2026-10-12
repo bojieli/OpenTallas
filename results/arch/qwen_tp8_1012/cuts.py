@@ -18,6 +18,11 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 TPU = {'M4': 1 / 0.048, 'M5': 1 / 0.048, 'M6': 1 / 0.064, 'M7': 1 / 0.064, 'M8': 1 / 0.080, 'M9': 1 / 0.080}
 FINE = 260.0
+# contract v3 (qwen-tp8/die 2026-10-12, owner layer study): die slots are capped at M5 (signals + PG), so over an M5-capped
+# block the die also owns M6 / M7 (75 % after the die PDN).  CAP_MODE 'asbuilt' keeps the old rule (die layer only over
+# every block); 'v3' applies the cap to every block whose master is not hard IP (HBM PHY, SerDes, UCIe, PLL, clock rx).
+CAP_MODE = 'asbuilt'
+HARD_IP = ('ot_hbm3e_phy', 'qfd_io_serdes', 'qfd_io_ucie', 'qkd_pll', 'qfd_clkrx')
 
 
 def dump(out):
@@ -39,7 +44,9 @@ def dump(out):
 class Net:
     def __init__(self, path, drop=('clock_trunk',)):
         d = json.load(open(path)); self.I = I = {i['n']: i for i in d['insts']}
-        self.blocks = np.array([(i['x'], i['y'], i['x'] + i['w'], i['y'] + i['h']) for i in d['insts'] if i['w'] * i['h'] > 4e4])
+        bl = [i for i in d['insts'] if i['w'] * i['h'] > 4e4]
+        self.blocks = np.array([(i['x'], i['y'], i['x'] + i['w'], i['y'] + i['h']) for i in bl])
+        self.cap5 = np.array([CAP_MODE == 'v3' and i.get('m', '') not in HARD_IP for i in bl])
         self.W = max(i['x'] + i['w'] for i in d['insts']); self.H = max(i['y'] + i['h'] for i in d['insts'])
         cen = lambda i: (i['x'] + i['w'] / 2, i['y'] + i['h'] / 2)
         cl = lambda i, P: (min(max(P[0], i['x']), i['x'] + i['w']), min(max(P[1], i['y']), i['y'] + i['h']))
@@ -61,12 +68,15 @@ class Net:
         k = np.digitize(oc, edges) - 1
         bits = np.bincount(np.clip(k, 0, len(edges) - 2), weights=T[:, 4] * ((k >= 0) & (k < len(edges) - 1)), minlength=len(edges) - 1)
         B = self.blocks[(self.blocks[:, p0] < cp) & (cp < self.blocks[:, p0 + 2])]
-        cov = np.zeros(len(edges) - 1)
-        for b in B:
-            cov += np.clip(np.minimum(edges[1:], b[o0 + 2]) - np.maximum(edges[:-1], b[o0]), 0, None)
-        L = np.diff(edges); cov = np.minimum(cov, L)
+        K5 = self.cap5[(self.blocks[:, p0] < cp) & (cp < self.blocks[:, p0 + 2])]
+        cov = np.zeros(len(edges) - 1); cov5 = np.zeros(len(edges) - 1)
+        for b, k5 in zip(B, K5):
+            o = np.clip(np.minimum(edges[1:], b[o0 + 2]) - np.maximum(edges[:-1], b[o0]), 0, None)
+            cov += o
+            if k5: cov5 += o
+        L = np.diff(edges); cov = np.minimum(cov, L); cov5 = np.minimum(cov5, cov)
         hi, lo, lw = ('M8', 'M6', 'M4') if ax == 'x' else ('M9', 'M7', 'M5')
-        cap = 0.75 * L * TPU[hi] + (L - cov) * (0.75 * TPU[lo] + 0.5 * TPU[lw])
+        cap = 0.75 * L * TPU[hi] + cov5 * 0.75 * TPU[lo] + (L - cov) * (0.75 * TPU[lo] + 0.5 * TPU[lw])
         return bits, cap, cov, k, C, T[:, 4]
 
     def window(self, ax, cp, lo, hi):
