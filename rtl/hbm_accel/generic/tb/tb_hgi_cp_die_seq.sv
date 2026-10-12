@@ -245,7 +245,26 @@ module tb_hgi_cp_die_seq;
     integer prof [0:31]; integer pq;
     initial for (pq = 0; pq < 32; pq = pq + 1) prof[pq] = 0;
     always @(posedge clk) if (cpd.u_cp.u_seq.st != 0) prof[cpd.u_cp.u_seq.st] = prof[cpd.u_cp.u_seq.st] + 1;   // v2 states: 4 HD 5 XR 6 INJ 7 IW 8 DSP 9 FEN
-    final for (pq = 0; pq < 32; pq = pq + 1) if (prof[pq] != 0) $display("CPF_PROF st %0d cycles %0d", pq, prof[pq]);
+    // S_HD (4) split: queue empty (decode-bound) / head still in the AU / head pending indexed reads / wait mask
+    integer hd_e = 0, hd_r = 0, hd_p = 0, hd_w = 0, hd_o = 0, fe_h = 0, fe_p = 0, fe_s = 0;
+    always @(posedge clk) begin
+        if (cpd.u_cp.u_seq.st == 4) begin
+            if (cpd.u_cp.u_seq.q_cnt == 0) hd_e = hd_e + 1;
+            else if (!cpd.u_cp.u_seq.hd_rdy) hd_r = hd_r + 1;
+            else if (cpd.u_cp.u_seq.hd_pend) hd_p = hd_p + 1;
+            else if (!cpd.u_cp.u_seq.hd_wok) hd_w = hd_w + 1;
+            else hd_o = hd_o + 1;
+        end
+        if (cpd.u_cp.u_seq.run_q) begin
+            if (cpd.u_cp.u_seq.fe_hcap || cpd.u_cp.u_seq.fe_pop2) fe_p = fe_p + 1;
+            else if (cpd.u_cp.u_seq.fs <= 1 && cpd.u_cp.u_seq.q_cnt >= cpd.u_cp.u_seq.QD) fe_h = fe_h + 1;   // queue full
+            else if (cpd.u_cp.u_seq.fs <= 1) fe_s = fe_s + 1;                                              // FIFO / AU input starved
+        end
+    end
+    final begin
+        for (pq = 0; pq < 32; pq = pq + 1) if (prof[pq] != 0) $display("CPF_PROF st %0d cycles %0d", pq, prof[pq]);
+        $display("CPF_PROF HD empty %0d head_in_AU %0d pending %0d wait %0d other %0d | FE busy %0d queue_full %0d starved %0d", hd_e, hd_r, hd_p, hd_w, hd_o, fe_p, fe_h, fe_s);
+    end
 `endif
     integer c, n0, t, a, nbeat, tbad; reg [17:0] c_tok; reg [3:0] c_st; reg c_tx; reg [19:0] c_pos;
     initial begin

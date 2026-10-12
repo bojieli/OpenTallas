@@ -55,7 +55,7 @@ module ot_hgi_seq #(
     parameter integer DS_SCAN = 16384,   //   scan cap
     parameter integer DS_TOPK = 512,     //   top-k
     parameter integer DS_HDL = 9,        //   log2 head dim (512)
-    parameter integer QD = 4,            // record queue entries (a power of two, 2..8)
+    parameter integer QD = 8,            // record queue entries (a power of two, 2..8)
     parameter integer FD = 12            // FE word FIFO depth (>= 8)
 ) (
     input  wire          clk,
@@ -138,8 +138,8 @@ module ot_hgi_seq #(
     localparam integer M_SPACE = 0, M_IBC = 5, M_IDX = 6, M_BASE = 8, M_N = 48, M_M = 68, M_STRIDE = 88,
                        M_LSTR = 136, M_DSEL = 168, M_DMUL = 174, M_NSEL = 201, M_L1STR = 207;
     // ------------------------------------------------------------------ main (back-end) states
-    localparam [4:0] S_IDLE = 5'd0, S_DB = 5'd1, S_DB2 = 5'd2, S_DB3 = 5'd3, S_HD = 5'd4, S_XR = 5'd5, S_INJ = 5'd6,
-                     S_IW = 5'd7, S_DSP = 5'd8, S_FEN = 5'd9, S_LVW = 5'd10, S_LVR = 5'd11, S_ENDRD = 5'd12,
+    localparam [4:0] S_IDLE = 5'd0, S_DB = 5'd1, S_DB2 = 5'd2, S_DB3 = 5'd3, S_HD = 5'd4,
+                     S_DSP = 5'd8, S_FEN = 5'd9, S_LVW = 5'd10, S_LVR = 5'd11, S_ENDRD = 5'd12,
                      S_TOKX = 5'd13, S_TKB = 5'd14, S_CPL = 5'd15;
     // record queue entry kinds
     localparam [2:0] K_DISP = 3'd0, K_END = 3'd1, K_TOKX = 3'd2, K_FENCE = 3'd3, K_LVM = 3'd4, K_FLT = 3'd5;
@@ -383,7 +383,7 @@ module ot_hgi_seq #(
     reg [QB:0] q_cnt; reg [QB-1:0] qh, qt;
     // ---- FE control (combinational from flops)
     wire        job_start;               // S_DB3 with a good doorbell (main FSM)
-    wire        be_inj;                  // the BE owns the AU input this cycle
+    wire        be_inj;                  // the indexed resolver owns the AU input this cycle
     wire        fe_hcap  = run_q && fs == F_H && fq_n != 5'd0 && settle == 2'd0 && tbl_ok && q_cnt < QD;
     wire        fe_halloc = fe_hcap && hw_rc != RC_DISC;               // dispatch / END / TOKX / header fault entry
     wire        fe_inp   = run_q && fs == F_P && rcl != RC_FLT;
@@ -516,7 +516,7 @@ module ot_hgi_seq #(
     reg        a0_be, a0_idx, a0_last, a0_isI, a0_hi, a0_et;
     reg [63:0] a0_b64; reg [31:0] a0_lstr, a0_l1str, a0_str, a0_x; reg [26:0] a0_dmul; reg [5:0] a0_dsel, a0_nsel;
     reg [19:0] a0_n; reg [1:0] a0_sp; reg [15:0] a0_L, a0_L1; reg [2:0] a0_slot, a0_j; reg [QB-1:0] a0_tag;
-    // BE re-injection source (head entry, descriptor be_j): wires defined with the queue below
+    // re-injection source (the resolver's entry ir_e, descriptor be_j): wires defined with the queue below
     wire [2:0]  be_j; wire [255:0] be_d; wire [23:0] be_ph; wire be_xj;
     reg  [31:0] Xv; reg [20:0] Nv;
     always @(posedge clk) begin
@@ -524,7 +524,7 @@ module ot_hgi_seq #(
             a0_be <= 1'b1; a0_b64 <= {be_ph, be_d[M_BASE +: 40]}; a0_lstr <= 32'd0; a0_l1str <= 32'd0; a0_str <= 32'd0;
             a0_x <= be_xj ? Xv : 32'd0; a0_dmul <= be_d[M_DMUL +: 27]; a0_dsel <= 6'd0; a0_nsel <= 6'd0; a0_n <= 20'd0;
             a0_idx <= 1'b0; a0_sp <= be_d[M_SPACE +: 2]; a0_L <= 16'd0; a0_L1 <= 16'd0; a0_slot <= 3'd0; a0_j <= be_j;
-            a0_tag <= qh; a0_last <= 1'b0; a0_isI <= 1'b0; a0_hi <= 1'b0; a0_et <= 1'b0;
+            a0_tag <= inj_e; a0_last <= 1'b0; a0_isI <= 1'b0; a0_hi <= 1'b0; a0_et <= 1'b0;
         end else begin
             a0_be <= 1'b0; a0_b64 <= {24'd0, fe_it[M_BASE +: 40]}; a0_lstr <= fe_it[M_LSTR +: 32];
             a0_l1str <= fe_it[M_L1STR +: 32]; a0_str <= fe_it[M_STRIDE +: 32]; a0_x <= 32'd0; a0_dmul <= fe_it[M_DMUL +: 27];
@@ -669,7 +669,9 @@ module ot_hgi_seq #(
     wire [QD*128-1:0] all_hdr; wire [QD*3-1:0] all_kind; wire [QD*256-1:0] all_sut; wire [QD*EW_D-1:0] all_dsc;
     wire [QD*EW_N-1:0] all_n; wire [QD*EW_PH-1:0] all_ph; wire [QD*6-1:0] all_px, all_pn; wire [QD*18-1:0] all_ixa, all_ina;
     wire [QD-1:0] all_ixb, all_inb, all_rdy, all_flt; wire [QD*16-1:0] all_L, all_L1; wire [QD*21-1:0] all_ps1;
-    wire        be_pclr;                 // the head's pending-index state is resolved (BE)
+    wire        be_pclr;                 // the resolver's entry has every pending descriptor resolved
+    reg  [QB-1:0] rd_e, inj_e;         // the resolver's reader entry (VM reads) / injector entry (AU pass)
+    reg         ir_flt;                  // the reader found a fault in rd_e (reported when rd_e reaches the head)
     wire [TRW-1:0] hw_row = trow_of(trow, hw[H_SLOT +: 3]);
     genvar ge, gs;
     generate for (ge = 0; ge < QD; ge = ge + 1) begin : g_q
@@ -678,8 +680,8 @@ module ot_hgi_seq #(
         wire [EW_D-1:0] e_dsc; wire [EW_N-1:0] e_n; wire [EW_PH-1:0] e_ph; wire [6:0] e_px7, e_pn7;
         wire al = q_alloc && qt == ge;
         wire fw = a6_fe && a5_tag == ge;
-        wire bw = a6_be && qh == ge;
-        wire pclr = al || (be_pclr && qh == ge);
+        wire bw = a6_be && inj_e == ge;
+        wire pclr = al || (be_pclr && inj_e == ge);
         always @(posedge clk) begin
             if (al) begin
                 e_hdr <= fe_aalloc ? h : hw; e_kind <= q_akind; e_L <= Lc; e_L1 <= L1c;
@@ -692,6 +694,7 @@ module ot_hgi_seq #(
                 if (a6_flt) e_flt <= 1'b1;
                 if (a5_last) e_rdy <= 1'b1;
             end
+            if ((ir_flt && rd_e == ge) || (bw && a6_bad_d)) e_flt <= 1'b1;
         end
         // one descriptor slot: raw at the pop, base / n patched by the AU (FE pass) and by the BE (indexed pass)
         for (gs = 0; gs < 7; gs = gs + 1) begin : g_s
@@ -735,17 +738,62 @@ module ot_hgi_seq #(
             hd_L = all_L[qe*16 +: 16]; hd_L1 = all_L1[qe*16 +: 16]; hd_ps1 = all_ps1[qe*21 +: 21];
         end
     end
-    // BE re-injection: the lowest pending descriptor of the head
-    reg [5:0] rem; reg [3:0] ninj, nres; reg xr_n;
+    // ================================================================== IR: the indexed resolver
+    // An entry's I-table reads (ONE X read at I_eff + L, ONE N read at I_eff + I.stride + L) are made as soon as the
+    // entry's wait mask is met with every OLDER queued dispatch counted busy (those dispatch before it, so its wait
+    // would hold for them) -- the same producer-retired condition the head would see, earlier.  Its pending
+    // descriptors are then re-injected through the AU (X x dyn_mul + the pre-sum) and patched in place; a read or
+    // range fault marks the entry (status 3 when it reaches the head, after the records before it).  Oldest first;
+    // the scan stops at an entry still in the AU, a fault, FENCE or LOOP-from-VM.
+    // two halves, overlapped: the READER makes the VM reads of one entry while the INJECTOR re-injects the previous one
+    localparam [1:0] I_IDLE = 2'd0, I_XR = 2'd1, I_NR = 2'd2, I_HAND = 2'd3;     // reader
+    localparam [1:0] J_IDLE = 2'd0, J_INJ = 2'd1, J_IW = 2'd2;                   // injector
+    reg [1:0] ir_st, jst; reg ir_sv; reg [QB-1:0] ir_se; reg [31:0] rXv; reg [20:0] rNv;
+    reg [5:0] rem; reg [3:0] ninj, nres;
+    // per-entry scan inputs
+    reg [QD-1:0] en_blk, en_pend, en_disp; reg [QD*16-1:0] en_um, en_w; integer qa;
+    always @* for (qa = 0; qa < QD; qa = qa + 1) begin
+        en_blk[qa] = !all_rdy[qa] || all_flt[qa] || all_kind[qa*3 +: 3] == K_FLT || all_kind[qa*3 +: 3] == K_FENCE ||
+                     all_kind[qa*3 +: 3] == K_LVM;
+        en_pend[qa] = (all_px[qa*6 +: 6] | all_pn[qa*6 +: 6]) != 6'd0 && !(ir_st != I_IDLE && rd_e == qa) &&
+                      !(jst != J_IDLE && inj_e == qa);         // an entry the resolver holds counts as resolved
+        en_disp[qa] = all_kind[qa*3 +: 3] == K_DISP;
+        en_um[qa*16 +: 16] = 16'd1 << all_hdr[qa*128 + H_UNIT +: 4];
+        en_w[qa*16 +: 16] = all_hdr[qa*128 + H_WAIT +: 16];
+    end
+    reg ir_cv, sblk; reg [QB-1:0] ir_ce, se; reg [15:0] om, ir_cm, ir_cw; integer si, sj;
+    always @* begin
+        ir_cv = 1'b0; ir_ce = {QB{1'b0}}; ir_cm = 16'd0; ir_cw = 16'd0; sblk = 1'b0; om = 16'd0;
+        for (si = 0; si < QD; si = si + 1) begin
+            se = qh + si[QB-1:0];
+            if (si < q_cnt && !sblk && !ir_cv)
+                for (sj = 0; sj < QD; sj = sj + 1) if (se == sj[QB-1:0]) begin
+                    if (en_blk[sj]) sblk = 1'b1;
+                    else if (en_pend[sj]) begin ir_cv = 1'b1; ir_ce = se; ir_cm = om; ir_cw = en_w[sj*16 +: 16]; end
+                    else if (en_disp[sj]) om = om | en_um[sj*16 +: 16];
+                end
+        end
+    end
+    // the resolver's entry view
+    reg [EW_D-1:0] ir_dsc; reg [EW_PH-1:0] ir_ph; reg [5:0] ir_px, ir_pn; reg [17:0] ir_ixa, ir_ina; reg ir_ixb, ir_inb;
+    integer qr;
+    always @* begin
+        ir_dsc = all_dsc[0 +: EW_D]; ir_ph = all_ph[0 +: EW_PH]; ir_px = all_px[0 +: 6]; ir_pn = all_pn[0 +: 6];
+        ir_ixa = all_ixa[0 +: 18]; ir_ina = all_ina[0 +: 18]; ir_ixb = all_ixb[0]; ir_inb = all_inb[0];
+        for (qr = 1; qr < QD; qr = qr + 1) if (inj_e == qr) begin
+            ir_dsc = all_dsc[qr*EW_D +: EW_D]; ir_ph = all_ph[qr*EW_PH +: EW_PH]; ir_px = all_px[qr*6 +: 6]; ir_pn = all_pn[qr*6 +: 6];
+            ir_ixa = all_ixa[qr*18 +: 18]; ir_ina = all_ina[qr*18 +: 18]; ir_ixb = all_ixb[qr]; ir_inb = all_inb[qr];
+        end
+    end
     reg [2:0] bj; integer qj;
     always @* begin bj = 3'd0; for (qj = 5; qj >= 0; qj = qj - 1) if (rem[qj]) bj = qj[2:0]; end
     reg [255:0] bd; reg [23:0] bph; integer qk;
     always @* begin
-        bd = hd_dsc[0 +: 256]; bph = hd_ph[0 +: 24];
-        for (qk = 1; qk < 6; qk = qk + 1) if (bj == qk) begin bd = hd_dsc[qk*256 +: 256]; bph = hd_ph[qk*24 +: 24]; end
+        bd = ir_dsc[0 +: 256]; bph = ir_ph[0 +: 24];
+        for (qk = 1; qk < 6; qk = qk + 1) if (bj == qk) begin bd = ir_dsc[qk*256 +: 256]; bph = ir_ph[qk*24 +: 24]; end
     end
-    assign be_j = bj; assign be_d = bd; assign be_ph = bph; assign be_xj = hd_px[bj];
-    assign be_inj = run_q && (st == S_INJ) && (rem != 6'd0);
+    assign be_j = bj; assign be_d = bd; assign be_ph = bph; assign be_xj = ir_px[bj];
+    assign be_inj = run_q && (jst == J_INJ) && (rem != 6'd0);
     // ---- dispatch payload: loaded from the head entry when the BE dispatches it (absent operands read 0)
     wire        hd_wok = waitok(hd_hdr[H_WAIT +: 16], busy_u);
     wire        hd_pend = |(hd_px | hd_pn);
@@ -813,8 +861,9 @@ module ot_hgi_seq #(
     reg [4:0]  tk_i, tk_n; reg [17:0] tk_base; reg tk_k; reg [3:0] ncol; reg [19:0] tk_pos;
     assign job_start = (st == S_DB3) && !db_bad;
     wire [3:0] nres_n = nres + {3'd0, a6_be};
-    assign be_pclr = run_q && (st == S_IW) && (nres_n == ninj) && !(a6_be && a6_bad_d);
+    assign be_pclr = run_q && (jst == J_IW) && (nres_n == ninj);
     wire        hd_fault = |(u_fault_r & ~16'd1);
+    wire        vm_free = (ir_st == I_IDLE) && !ir_sv;      // the BE may issue its own VM read (reader idle, nothing selected)
     task fault3;
         begin st <= S_CPL; run_q <= 1'b0; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_vr <= 16'd0;
               vr_vr <= 1'b0; end
@@ -824,6 +873,7 @@ module ot_hgi_seq #(
         if (!rn) begin
             st <= S_IDLE; run_q <= 1'b0; wp <= 0; wv <= 1'b0; inflight <= 0; drop <= 0; fetching <= 1'b0;
             u_vr <= 16'd0; iss_q <= 16'd0; vr_vr <= 1'b0; vr_new <= 1'b0; tbc <= 7'd0; av <= 6'd0;
+            ir_st <= I_IDLE; jst <= J_IDLE; ir_sv <= 1'b0; ir_flt <= 1'b0; rd_e <= {QB{1'b0}}; inj_e <= {QB{1'b0}};
             cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; faddr <= 0; faddr_n <= 40'd32;
             qh <= 0; qt <= 0; q_cnt <= 0; lv_rsp <= 1'b0; rem <= 6'd0; ninj <= 4'd0; nres <= 4'd0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
@@ -845,6 +895,49 @@ module ot_hgi_seq #(
             end
             // AU stage valids (a job start flushes the pipe)
             av <= job_start ? 6'd0 : {av[4:0], be_inj | fe_item};
+            // ---- indexed resolver (owns the VM port while it works; the BE's own reads wait for vm_free)
+            ir_flt <= 1'b0;
+            ir_sv <= run_q && ir_cv && waitok(ir_cw, busy_u | ir_cm);
+            ir_se <= ir_ce;
+            if (!run_q || job_start) begin ir_st <= I_IDLE; jst <= J_IDLE; end
+            else begin
+                case (ir_st)                                          // reader
+                    I_IDLE: if (ir_sv && st != S_ENDRD && st != S_TOKX && st != S_TKB && st != S_LVR) begin
+                        rd_e <= ir_se;
+                        if (|all_px[ir_se*6 +: 6]) begin
+                            if (all_ixb[ir_se]) ir_flt <= 1'b1;
+                            else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= all_ixa[ir_se*18 +: 18]; ir_st <= I_XR; end
+                        end else begin
+                            if (all_inb[ir_se]) ir_flt <= 1'b1;
+                            else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= all_ina[ir_se*18 +: 18]; ir_st <= I_NR; end
+                        end
+                    end
+                    I_XR: if (vr_rsp_v_r) begin
+                        rXv <= vr_rsp_data_r;
+                        if (|all_pn[rd_e*6 +: 6]) begin
+                            if (all_inb[rd_e]) begin ir_flt <= 1'b1; ir_st <= I_IDLE; end
+                            else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= all_ina[rd_e*18 +: 18]; ir_st <= I_NR; end
+                        end else ir_st <= I_HAND;
+                    end
+                    I_NR: if (vr_rsp_v_r) begin
+                        if (vr_rsp_data_r[31:21] != 11'd0) begin ir_flt <= 1'b1; ir_st <= I_IDLE; end
+                        else begin rNv <= vr_rsp_data_r[20:0]; ir_st <= I_HAND; end
+                    end
+                    default: ;                                        // I_HAND: the injector takes it below
+                endcase
+                case (jst)                                            // injector
+                    J_IDLE: if (ir_st == I_HAND) begin
+                        inj_e <= rd_e; Xv <= rXv; Nv <= rNv; rem <= all_px[rd_e*6 +: 6] | all_pn[rd_e*6 +: 6];
+                        ninj <= 4'd0; nres <= 4'd0; jst <= J_INJ; ir_st <= I_IDLE;
+                    end
+                    default: begin                                    // J_INJ / J_IW: re-inject, collect, patch
+                        if (be_inj) begin rem <= rem & ~(6'd1 << bj); ninj <= ninj + 4'd1; end
+                        if (a6_be) nres <= nres_n;
+                        if (jst == J_INJ && be_inj && (rem & ~(6'd1 << bj)) == 6'd0) jst <= J_IW;
+                        if (be_pclr) jst <= J_IDLE;
+                    end
+                endcase
+            end
             // record queue: the FE allocates at qt, the BE frees qh (q_pop below)
             q_pop = 1'b0;
             if (|(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL) begin
@@ -888,17 +981,11 @@ module ot_hgi_seq #(
                         else if (hd_kind == K_FENCE) st <= S_FEN;
                         else if (hd_kind == K_LVM) st <= S_LVW;
                         else if (hd_wok) begin
-                            if (hd_pend) begin
-                                if (|hd_px) begin
-                                    if (hd_ixb) fault3;
-                                    else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= hd_ixa; xr_n <= 1'b0; st <= S_XR; end
-                                end else begin
-                                    if (hd_inb) fault3;
-                                    else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= hd_ina; xr_n <= 1'b1; st <= S_XR; end
-                                end
-                            end else if (hd_kind == K_DISP) begin
+                            if (hd_pend) ;                                  // the resolver patches it
+                            else if (hd_kind == K_DISP) begin
                                 u_vr <= 16'd1 << hd_hdr[H_UNIT +: 4]; iss_q <= 16'd1 << hd_hdr[H_UNIT +: 4]; st <= S_DSP;
-                            end else if (hd_kind == K_END) begin
+                            end else if (!vm_free) ;                        // the resolver owns the VM port
+                            else if (hd_kind == K_END) begin
                                 vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= hd_dsc[M_BASE +: 18]; st <= S_ENDRD;
                             end else begin                                  // TOKX: A[0] = k, then A[1..k]
                                 if ({3'd0, hd_dsc[M_BASE +: 18]} + 21'd17 > 21'h40000) fault3;
@@ -910,31 +997,9 @@ module ot_hgi_seq #(
                         end
                     end
                 end
-                // ---- indexed: ONE X read (I_eff + L) and ONE N read (I_eff + I.stride + L) a record
-                S_XR: if (vr_rsp_v_r) begin
-                    if (!xr_n) begin
-                        Xv <= vr_rsp_data_r;
-                        if (|hd_pn) begin
-                            if (hd_inb) fault3;
-                            else begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= hd_ina; xr_n <= 1'b1; end
-                        end else begin rem <= hd_px | hd_pn; ninj <= 4'd0; nres <= 4'd0; st <= S_INJ; end
-                    end else begin
-                        if (vr_rsp_data_r[31:21] != 11'd0) fault3;
-                        else begin Nv <= vr_rsp_data_r[20:0]; rem <= hd_px | hd_pn; ninj <= 4'd0; nres <= 4'd0; st <= S_INJ; end
-                    end
-                end
-                S_INJ, S_IW: begin
-                    if (be_inj) begin rem <= rem & ~(6'd1 << bj); ninj <= ninj + 4'd1; end
-                    if (a6_be) begin
-                        if (a6_bad_d) fault3;
-                        else nres <= nres_n;
-                    end
-                    if (st == S_INJ && be_inj && (rem & ~(6'd1 << bj)) == 6'd0) st <= S_IW;
-                    if (be_pclr) st <= S_HD;                        // every pending descriptor resolved
-                end
                 S_DSP: if (|u_tk) begin q_pop = 1'b1; u_vr <= 16'd0; st <= S_HD; end
                 S_FEN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) begin q_pop = 1'b1; st <= S_HD; end
-                S_LVW: if (hd_wok) begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= hd_hdr[49:32]; st <= S_LVR; end
+                S_LVW: if (hd_wok && vm_free) begin vr_vr <= 1'b1; vr_new <= 1'b1; vr_addr <= hd_hdr[49:32]; st <= S_LVR; end
                 S_LVR: if (vr_rsp_v_r) begin
                     if (vr_rsp_data_r == 32'd0 || vr_rsp_data_r[31:16] != 16'd0) fault3;
                     else begin lv_rsp <= 1'b1; lv_rcnt <= vr_rsp_data_r[15:0]; q_pop = 1'b1; st <= S_HD; end
