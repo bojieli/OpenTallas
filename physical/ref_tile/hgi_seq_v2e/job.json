@@ -1,5 +1,5 @@
 {
- "name": "hgi_seq_v2e-v24e-COMMIT",
+ "name": "hgi_seq_v2e-v24e-1d8a783b5",
  "block": "ot_hgi_seq",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-b2-cp",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-hbm-b2-cp",
-  "commit": "COMMIT",
+  "commit": "1d8a783b5",
   "extra_paths": [
    "rtl/hbm_accel/generic/tb",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_seq_v2e/hgi_seq_v2e-v24e-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_seq_v2e/hgi_seq_v2e-v24e-1d8a783b5"
   }
  ],
  "cycles_added": 0,
