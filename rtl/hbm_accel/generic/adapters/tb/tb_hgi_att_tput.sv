@@ -21,6 +21,15 @@ module tb_hgi_att_tput;
 `ifndef ATT_PIPE
  `define ATT_PIPE 0
 `endif
+`ifndef ATT_KVL
+ `define ATT_KVL (`ATT_D * 4 / 32)
+`endif
+`ifndef ATT_KV8
+ `define ATT_KV8 0
+`endif
+`ifndef ATT_RIF
+ `define ATT_RIF 64
+`endif
     `include "au_sizes.svh"
     reg clk = 0; always #1 clk = ~clk;
     reg [255:0] casem [0:NCASE-1]; reg [1215:0] recm [0:NREC-1]; reg [63:0] vmim [0:NVMI-1];
@@ -53,7 +62,13 @@ module tb_hgi_att_tput;
 `else
     localparam integer MLANE = 0;
 `endif
-    localparam integer SPRL = `ATT_D * 4 / 32;
+`ifdef MUT_W3
+    localparam integer MW3 = 1;
+`else
+    localparam integer MW3 = 0;
+`endif
+    localparam integer SPRL = `ATT_KVL;
+    localparam integer XW = (`ATT_PIPE == 3) ? 32 : 0;
     reg rst_n = 0; reg [1215:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
     wire hq_v; reg hq_rdy = 0; wire [34:0] hq_addr; wire [7:0] hq_tag;
@@ -63,13 +78,23 @@ module tb_hgi_att_tput;
     // delivers at most BWS sectors a cycle (+BWS, default 99 = 3,166.7 B/cycle / 32 B).
     wire wq_v, wq_rdy = 1'b1; wire [`ATT_NL-1:0] wq_sv; wire [`ATT_NL*40-1:0] wq_row; wire [7:0] wq_nsec;
     reg [`ATT_NL*SPRL-1:0] wl_v = 0; reg [`ATT_NL*SPRL*256-1:0] wl_d = 0;
-    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE)) u (
+    ot_hgi_att_unit #(.H(`ATT_H), .D(`ATT_D), .TD(`ATT_TD), .NL(`ATT_NL), .PIPE(`ATT_PIPE), .MUT_RING(MR), .MUT_ROW(MROW), .MUT_LANE(MLANE),
+        .KVL(`ATT_KVL), .KV8(`ATT_KV8), .RIF(`ATT_RIF), .MUT_W3(MW3)) u (
+        .xr_q(xr_q), .xr_cr(xr_cr), .xr_d(xr_d), .xw_q(xw_q), .xw_cr(xw_cr), .xw_done(xw_done),
         .wq_v(wq_v), .wq_rdy(wq_rdy), .wq_sv(wq_sv), .wq_row(wq_row), .wq_nsec(wq_nsec), .wl_v(wl_v), .wl_d(wl_d),.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_c(cur[895:640]), .rec_o(cur[1151:896]),
         .rec_n_b(cur[1172:1152]), .rec_n_c(cur[1193:1173]), .rec_pos1(cur[1214:1194]), .rec_done(done),
         .rec_fault(fault), .halted(halted), .vmq(uq), .vmr(ur), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr),
         .hq_tag(hq_tag), .hr_v(hr_v), .hr_tag(hr_tag), .hr_data(hr_data));
-    ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status());
+    // PIPE = 3: the unit's local-slice wide client on the VM's RP / W2 group (32 read + 32 write lanes)
+    wire [32*16-1:0] xr_q; wire [31:0] xr_cr; wire [32*257-1:0] xr_d; wire [32*280-1:0] xw_q; wire [31:0] xw_cr, xw_done;
+    generate if (`ATT_PIPE == 3) begin : g_vmw
+        ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status(),
+            .rq(xr_q), .rq_cr(xr_cr), .rr(xr_d), .w2q(xw_q), .w2q_cr(xw_cr), .w2q_done(xw_done));
+    end else begin : g_vm
+        assign xr_cr = '0; assign xr_d = '0; assign xw_cr = '0; assign xw_done = '0;
+        ot_hgi_vm_unit #(.NC(2)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}), .status());
+    end endgenerate
     reg [255:0] hbm [longint];
     // row-lane model state: a FIFO of beats {release cycle, slot mask, row addresses, nsec}
     longint bq_t [$]; reg [`ATT_NL-1:0] bq_m [$]; reg [`ATT_NL*40-1:0] bq_r [$]; reg [7:0] bq_n [$];
