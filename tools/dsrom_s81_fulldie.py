@@ -7258,8 +7258,10 @@ def apply_options(a):
                 CONTRACT_SLABS[n_] = _o(k_)
         if 'sp_vm' in cslots_:
             a.vm_slab = '%.3f,%.3f' % _o('sp_vm')
-        if 'hrow' in cslots_ and _o('hrow')[0] > 0:
-            HROW_UM = _o('hrow')
+        for k_ in ('rep/hrow', 'hrow'):      # v6: the replicated-slot key (the bare key never matched)
+            if k_ in cslots_ and _o(k_)[0] > 0:
+                HROW_UM = _o(k_)
+                break
     SUHC_1011 = bool(getattr(a, 'suhc_1011', False))
     SUHC_DOM, SUHC_HC_VM = ('stream_1p2', 2048) if SUHC_1011 else ('serial_0p9', 1024)
     global SU_E, HROW_TX

@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 5,
+ "version": 6,
  "owner": "s81die-1011",
- "updated": "2026-10-12T00:55-07:00",
+ "updated": "2026-10-12 02:20 PT",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -53,6 +53,11 @@
    "version": 5,
    "when": "2026-10-12 00:55 PT",
    "change": "s81-die-iter: VM FE v5 adopted, sp_vm h 2,609.256 -> 2,730.216, resolved by RE-STACKING the hub column in the full generator (not an overlay shift): dsrom_s81_fulldie --contract reads SU/HC/VM/centre outlines from this file, hub column 1,890 (SU width), centre hard elements centred at their contract outline; hub stations and relays are regenerated around the new stack. Slot origins of hub elements are re-derived from that plan (next version)."
+  },
+  {
+   "version": 6,
+   "when": "2026-10-12 02:20 PT",
+   "change": "s81-die-iter: rep/hrow outline 2,998.08 x 1,769.04 (el1011-ds-mtp fd01e9763: grows DOWN from the fixed N face, N-face ports unchanged); dsrom_s81_fulldie --contract now reads rep/hrow (the old key \"hrow\" never matched). Wide face-to-face hub groups centred on the span shared with the peer (--peer-span-centre): SU 1,890 (grown W) and VM 1,520 keep their wide rs_d/wq_d groups aligned across the 21.6 um abut gap."
   }
  ],
  "slots": [
@@ -5157,8 +5162,8 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 0,
-    "h": 0
+    "w": 2998.08,
+    "h": 1769.04
    },
    "origin": {
     "x": 0,
