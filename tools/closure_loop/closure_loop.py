@@ -780,6 +780,58 @@ def lint_at_submit(j):
         ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
 
 
+# HIER-LINT + MACRO-GRID (owner 2026-10-11, TOP-DOWN HIERARCHY CONTRACT; tools/hier_contract/):
+#  * hier lint: every hard-child view (LEF + libs) a parent job names must pass tools/hier_contract/child_lint.py
+#    (bloat / full-length PG stripes / strap layer clear / TT-FF-SS libs / face-pin access / clock insertion).  Mode
+#    from STATE/hier_lint.json {"mode": "warn"|"refuse"} (default warn: event + daemon log + j["submit_checks"]["hier_lint"],
+#    which the verdict carries), spec "hier_lint": false | {"mode", "skip"} per job; main flips it without a restart.
+#  * macro grid: macro placement scripts are executed against a mock OpenDB and every placed macro's signal pins must
+#    sit on the asap7 tracks (DRT-0419 -> DRT-0255: hcoll-port g4, hbm_sfu_lane r4mpa/b).  REFUSE by default
+#    (STATE/macro_grid_lint.json {"mode": "warn"|"refuse"}; spec "macro_grid_lint": false opts out).
+def _state_mode(fname, default):
+    try:
+        return str(json.loads((STATE / fname).read_text()).get("mode", default))
+    except (OSError, ValueError, AttributeError):
+        return default
+
+
+def hier_lint_at_submit(j):
+    """run the hierarchy-contract child lint and the macro-grid lint on a freshly ingested QUEUED job"""
+    try:
+        sys.path.insert(0, str(HERE.parent / "hier_contract"))
+        import hier_submit  # noqa: E402
+        import macro_grid_lint  # noqa: E402
+    except Exception as ex:  # noqa: BLE001  (never block intake on the hook's own failure)
+        event(j, f"hier lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    g = hier_submit.Git(REPO)
+    for key, fn, mode in (("macro_grid", macro_grid_lint.check, _state_mode("macro_grid_lint.json", "refuse")),
+                          ("hier_lint", hier_submit.check, _state_mode("hier_lint.json", "warn"))):
+        if j["status"] != "QUEUED" or mode == "off":
+            continue
+        try:
+            res = fn(j["spec"], g) if key == "macro_grid" else fn(j["spec"], g, mode)
+        except Exception as ex:  # noqa: BLE001
+            event(j, f"{key} lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+            continue
+        v = res.get("verdict")
+        if v == "SKIP":
+            continue
+        if v == "REFUSE" and key == "macro_grid" and mode != "refuse":
+            v = "WARN"
+        j.setdefault("submit_checks", {})[key] = {"verdict": v, "mode": mode, "message": res.get("message", "")[:1500]}
+        if v == "REFUSE":
+            j["status"] = "REFUSED"
+            j["reason"] = f"SUBMIT_LINT {'MACRO_GRID' if key == 'macro_grid' else 'HIER_LINT'}: {res['message']}"[:1500]
+            event(j, j["reason"])
+            ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+        elif v == "WARN":
+            event(j, f"{key.upper()} WARN ({mode}): {res['message'][:1200]}")
+            log(f"[{j['name']}] {key} WARN: {res['message'][:300]}")
+        else:
+            event(j, f"{key} PASS: {res.get('message', '')[:300]}")
+
+
 def ingest():
     try:
         gfetch("main", timeout=300)
@@ -836,6 +888,8 @@ def ingest():
             else:
                 event(j, f"ingested from {origin}")
                 lint_at_submit(j)
+                if j["status"] == "QUEUED":
+                    hier_lint_at_submit(j)
                 if j["status"] == "QUEUED":
                     bench_paths_at_submit(j)
         save_job(j)
@@ -2678,7 +2732,7 @@ def publish(j, metrics):
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "clock_periods_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
                        benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
-                       checks=j.get("checks", {}), calibration=j.get("calibration"), cycles_added=spec.get("cycles_added"), status="CLOSED",
+                       checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
