@@ -300,7 +300,7 @@ def emit(a):
             emit(b)
             names.append(f'sh{i // k:02d}')
         (out / 'run.sh').write_text(f"""#!/bin/bash
-# {a.name}: {len(names)} CTS shards in parallel (each: timeout, then a no-clustering retry)
+# {a.name}: {len(names)} CTS shards in parallel (each: timeout, then H-tree variant retries)
 D=$(cd "$(dirname "$0")" && pwd)
 printf '%s\\n' {' '.join(names)} | xargs -P ${{SHARD_PAR:-{len(names)}}} -I{{}} bash $D/{{}}/run.sh
 for s in {' '.join(names)}; do [ "$(cat $D/$s/exit 2>/dev/null)" = 0 ] || {{ echo "shard $s failed"; exit 1; }}; done
@@ -388,7 +388,8 @@ close $f
 exit
 """
     ct = (out / 'cts.tcl').read_text()
-    (out / 'cts_nc.tcl').write_text(ct.replace(' -sink_clustering_enable', ''))
+    for v, o in (('sl1', '-num_static_layers 1'), ('sl3', '-num_static_layers 3'), ('wu50', '-wire_unit 50')):
+        (out / f'cts_{v}.tcl').write_text(ct.replace(' -sink_clustering_enable', ' -sink_clustering_enable ' + o))
     for corner in ('SS', 'FF'):
         (out / f'meas_{corner}.tcl').write_text(common.replace('%C%', corner) + meas.replace('%PLAT%', PLAT)
                                                .replace('%LAY%', lay).replace('%C%', corner))
@@ -398,12 +399,14 @@ set -o pipefail
 D=$(cd "$(dirname "$0")" && pwd)
 IMG=${{IMG:-openroad/orfs:latest}}
 CPUS=${{CPUS:-8}}
-TO=${{CTS_TIMEOUT:-5400}}
+TO=${{CTS_TIMEOUT:-300}}
 run() {{ docker run --rm --name ckplan_{esc(a.name)}_$1 --cpus=$CPUS -v $D:/work -w /work $IMG bash -lc \\
   "timeout -k 60 $TO /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -threads $CPUS -no_init -exit /work/$1.tcl > /work/$1.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"; }}
 date -u +%FT%TZ > $D/start
-# qwendie-1011: a CTS that does not finish inside the timeout is retried once without sink clustering
-{{ run cts || {{ echo "cts rc=$? -> retry without sink clustering" >> $D/retry; run cts_nc; }}; }} && run meas_SS && run meas_FF
+# qwendie-1011: TritonCTS H-tree loops forever on some sparse ~60-sink region nets (r22ko4 e7: hangs after the
+# 2-sinks-per-sub-region level with or without clustering / any buffer distance).  Each CTS that does not finish inside
+# the timeout is retried with the next H-tree variant: -num_static_layers 1, -num_static_layers 3, -wire_unit 50.
+{{ run cts || {{ echo "cts rc=$? -> sl1" >> $D/retry; run cts_sl1; }} || {{ echo "sl1 rc=$? -> sl3" >> $D/retry; run cts_sl3; }} || {{ echo "sl3 rc=$? -> wu50" >> $D/retry; run cts_wu50; }}; }} && run meas_SS && run meas_FF
 echo $? > $D/exit
 date -u +%FT%TZ > $D/end
 """)
@@ -441,10 +444,27 @@ class Forest:
             c = Path(c)
             sj = json.loads((c / 'sinks.json').read_text())
             g = sj['group']
-            pfx = g + ':'
-            p1, a1 = read_tree(c / 'tree_SS.txt', pfx)
-            p2, a2 = read_tree(c / 'tree_FF.txt', pfx)
-            self.cases[g] = (sj, p1, a1, a2)
+            if g in self.cases:
+                # qwendie-1011: emit --shards writes one case per shard of the same group; CTS cell / sink names repeat
+                # across shards, so a shard's names get its directory as a prefix and the shards merge into one group
+                sh = c.name + '.'
+                sj['sinks'] = [[sh + x[0]] + list(x[1:]) for x in sj['sinks']]
+                p1, a1 = read_tree(c / 'tree_SS.txt', g + ':' + sh)
+                p2, a2 = read_tree(c / 'tree_FF.txt', g + ':' + sh)
+                o_sj, o_p1, o_a1, o_a2 = self.cases[g]
+                o_sj['sinks'] = o_sj['sinks'] + sj['sinks']
+                o_p1.update(p1); o_a1.update(a1); o_a2.update(a2)
+                sj = o_sj
+            else:
+                if (c / 'sinks.json').exists() and c.name.startswith('sh') and c.parent.joinpath('shards.json').exists():
+                    sh = c.name + '.'
+                    sj['sinks'] = [[sh + x[0]] + list(x[1:]) for x in sj['sinks']]
+                    pfx = g + ':' + sh
+                else:
+                    pfx = g + ':'
+                p1, a1 = read_tree(c / 'tree_SS.txt', pfx)
+                p2, a2 = read_tree(c / 'tree_FF.txt', pfx)
+                self.cases[g] = (sj, p1, a1, a2)
             log = (c / 'cts.log').read_text() if (c / 'cts.log').exists() else ''
             self.meta.append(dict(case=str(c), group=g, sinks=len(sj['sinks']), layers=sj['layers'],
                                   clock_buffers=sum(1 for k in a1 if not re.match(r'[a-z]+:s\d+$', k) and ':root_' not in k),

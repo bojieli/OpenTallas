@@ -6,7 +6,7 @@
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
         "hold_violations": 0.0,
-        "hold_wns_ns": 0.06133400000000001,
+        "hold_wns_ns": 0.0559306,
         "max_cap_violations": 0.0,
         "max_fanout_violations": 0.0,
         "max_slew_violations": 0.0,
@@ -14,7 +14,7 @@
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 0.0,
-        "setup_wns_ns": 0.188527,
+        "setup_wns_ns": 0.165549,
         "signal_integrity_clean": true,
         "stage": "place_and_route",
         "timing_met": true
@@ -26,7 +26,7 @@
     "status": "pass"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-10-09T14:29:32.840306+00:00",
+  "completed_at": "2026-10-12T04:58:59.697286+00:00",
   "corner": {
     "liberty": [
       {
@@ -65,9 +65,9 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 469.447,
+    "area_um2": 473.923,
     "block": "hgi_mtp_accept18_route",
-    "cells": 6032,
+    "cells": 6048,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 0.77,
     "clock_port": "clk",
@@ -81,11 +81,11 @@
     "false_path_from_ports": [],
     "false_path_io": false,
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 1719770000.0,
-    "hold_wns_ns": 0.06133400000000001,
+    "fmax_hz": 1654390000.0,
+    "hold_wns_ns": 0.0559306,
     "io_delay_fraction": 0.2,
     "parameters": {},
-    "setup_wns_ns": 0.188527,
+    "setup_wns_ns": 0.165549,
     "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
@@ -110,12 +110,12 @@
       }
     ],
     "top": "hgi_mtp_accept18_route",
-    "utilization_fraction": 0.019717
+    "utilization_fraction": 0.019905
   },
-  "elapsed_seconds": 233.528,
+  "elapsed_seconds": 216.836,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-10-09T14:25:39.312660+00:00",
+  "generated_at": "2026-10-12T04:55:22.861547+00:00",
   "git": {
     "commit": null,
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
@@ -125,7 +125,7 @@
   },
   "place_and_route": {
     "adder_map": "yosys_kogge_stone",
-    "artifact_dir": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc/physical_artifacts",
+    "artifact_dir": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc_arch/physical_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
@@ -139,38 +139,38 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "50e59bda65073fafd146065c6804c6ceecf7d6316bba296cc076081d5cfca355",
-        "size_bytes": 14567491
+        "sha256": "4bfa8e8b95dc94ef9cdd5e5c1138dd0c04dc9bc307315038079ddebaa0576370",
+        "size_bytes": 14307045
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "1defe4db99ae2aa570d01b1d59ed771f9d6fe92cf5ea81b8b2cb9ef60028950e",
-        "size_bytes": 13534806
+        "sha256": "c09002bebdfc643a5d929a8490b4fb4de62a4f3241de54840df3824142f759d2",
+        "size_bytes": 13227874
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "a2a3fb06ce2a3736b52af5ecddee0b5c46880b5204b3d1d28cfa459a1c92a3d7",
-        "size_bytes": 31103721
+        "sha256": "63e78a849eaf699df68c44b6cda9b06d4d80b6f93652895acc9acaf39152c122",
+        "size_bytes": 31000235
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "8e98a1f8f7b05f19ba1df1ad225afc2830d78b00b0c02e9c8fa23b345f2c4d44",
-        "size_bytes": 5326336
+        "sha256": "9662f17b0ceadfc0413af23082b48df3c03cd1c633d1ae71dbf4b8a78035bb09",
+        "size_bytes": 4901156
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "98d15b0ddd738aa4fa263866a4ce9ac772f05c2cedd2d2823a089a47bec2dee6",
-        "size_bytes": 307345
+        "sha256": "b8da723c9a0ff1e1de565e5eea0cefecf987e8215fb22a9538b0bdd5af4b8891",
+        "size_bytes": 308530
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "c3f4c4e20eaf621eb46f56095a2937011d637638890eaa5bb0131ca9ee13d083",
-        "size_bytes": 35805
+        "sha256": "280b35269fe6f89fb71e4a4a82bef459be41cde2168dc0f2d22e6e19328fc1aa",
+        "size_bytes": 34672
       },
       "config.mk": {
         "retained": true,
-        "sha256": "985847ebb5b45a6cf3a22003325d51c663e231e5ca03028395b31d18d2f1d34a",
-        "size_bytes": 2391
+        "sha256": "cd586747db4e81a767d46e0d96e48d82fc2d4bc02fca1a3a92fda36631a0fad4",
+        "size_bytes": 2396
       },
       "constraint.sdc": {
         "retained": true,
@@ -179,18 +179,18 @@
       },
       "io_constraints.tcl": {
         "retained": true,
-        "sha256": "ae84330379cc0d4fe6ff781b7a677e7c71f4319214c90bec6f843af0492462fd",
-        "size_bytes": 1549
+        "sha256": "de5d6aeb556e1654f97cea17e9c157bba982db394a5a1ab3dc0dbceb0ffd32df",
+        "size_bytes": 2698
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "84774e6651fd78b1fa7640b7499d904d3b01dffed301134f121503b802f0d229",
-        "size_bytes": 23954
+        "sha256": "f20ee80162867647964e9cb709dd2cf2b37d3229e60667b8e396ffdc3b08624c",
+        "size_bytes": 23966
       }
     },
     "clock_period_ns": 0.77,
     "core_utilization_percent": 35,
-    "design_nickname": "opentallas_hgi_mtp_accept18_route_asap7_qdm_hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc",
+    "design_nickname": "opentallas_hgi_mtp_accept18_route_asap7_qdm_hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc_arch",
     "extracted_spef_annotation": {
       "helper": "tools/orfs_allcorner_spef.py",
       "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
@@ -254,56 +254,56 @@
           "name": "pre_cts_pre_cts_skew.tcl",
           "path": "physical/qwen_die_masters/pre_cts_skew.tcl",
           "sha256": "3caa168485497265cb24ee7bc38734ab0ba826788dab97b2a230d491cb02d7c3",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/physical/qwen_die_masters/pre_cts_skew.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/physical/qwen_die_masters/pre_cts_skew.tcl"
         },
         {
           "hook": "POST_CTS",
           "name": "post_cts_post_plain.tcl",
           "path": "physical/qwen_die_masters/post_plain.tcl",
           "sha256": "c8ebde4f473d11a305e98d05faf5a494ad3bc8ebfaad985dd21c5422a6b9a214",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/physical/qwen_die_masters/post_plain.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/physical/qwen_die_masters/post_plain.tcl"
         },
         {
           "hook": "PRE_GLOBAL_ROUTE",
           "name": "pre_global_route_pre_ref_skew.tcl",
           "path": "physical/qwen_die_masters/pre_ref_skew.tcl",
           "sha256": "c48a1d2c1489fb90139636901bf0b1386fece2de712db8ee08791362ffa1a1b4",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/physical/qwen_die_masters/pre_ref_skew.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/physical/qwen_die_masters/pre_ref_skew.tcl"
         },
         {
           "hook": "POST_GLOBAL_ROUTE",
           "name": "post_global_route_post_plain.tcl",
           "path": "physical/qwen_die_masters/post_plain.tcl",
           "sha256": "c8ebde4f473d11a305e98d05faf5a494ad3bc8ebfaad985dd21c5422a6b9a214",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/physical/qwen_die_masters/post_plain.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/physical/qwen_die_masters/post_plain.tcl"
         },
         {
           "hook": "PRE_DETAIL_ROUTE",
           "name": "pre_detail_route_pre_ref_skew.tcl",
           "path": "physical/qwen_die_masters/pre_ref_skew.tcl",
           "sha256": "c48a1d2c1489fb90139636901bf0b1386fece2de712db8ee08791362ffa1a1b4",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/physical/qwen_die_masters/pre_ref_skew.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/physical/qwen_die_masters/pre_ref_skew.tcl"
         },
         {
           "hook": "POST_DETAIL_ROUTE",
           "name": "post_detail_route_post_plain.tcl",
           "path": "physical/qwen_die_masters/post_plain.tcl",
           "sha256": "c8ebde4f473d11a305e98d05faf5a494ad3bc8ebfaad985dd21c5422a6b9a214",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/physical/qwen_die_masters/post_plain.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/physical/qwen_die_masters/post_plain.tcl"
         },
         {
           "hook": "PRE_FILLCELL",
           "name": "pre_fillcell_pre_ref_skew.tcl",
           "path": "physical/qwen_die_masters/pre_ref_skew.tcl",
           "sha256": "c48a1d2c1489fb90139636901bf0b1386fece2de712db8ee08791362ffa1a1b4",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/physical/qwen_die_masters/pre_ref_skew.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/physical/qwen_die_masters/pre_ref_skew.tcl"
         },
         {
           "hook": "POST_FILLCELL",
           "name": "post_fillcell_post_plain.tcl",
           "path": "physical/qwen_die_masters/post_plain.tcl",
           "sha256": "c8ebde4f473d11a305e98d05faf5a494ad3bc8ebfaad985dd21c5422a6b9a214",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/physical/qwen_die_masters/post_plain.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/physical/qwen_die_masters/post_plain.tcl"
         }
       ]
     },
@@ -338,11 +338,11 @@
         "synth__flow__errors__count": 0
       },
       "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
-      "fmax_hz": 1719770000.0,
+      "fmax_hz": 1654390000.0,
       "hold_tns_ns": 0.0,
       "hold_violations": 0,
-      "hold_wns_ns": 0.06133400000000001,
-      "instance_count": 85422,
+      "hold_wns_ns": 0.0559306,
+      "instance_count": 85544,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
@@ -350,26 +350,26 @@
       "max_fanout_violations": 0,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "orfs_aggregate_fmax_hz": 1719770000.0,
+      "orfs_aggregate_fmax_hz": 1654390000.0,
       "per_clock_fmax_hz": {},
-      "power_total_w": 0.00346495,
+      "power_total_w": 0.00330828,
       "raw_timing_library_units": {
         "hold_tns_ns": 0,
-        "hold_wns_ns": 61.334,
+        "hold_wns_ns": 55.9306,
         "setup_tns_ns": 0,
-        "setup_wns_ns": 188.527
+        "setup_wns_ns": 165.549
       },
-      "routed_nets": 3304,
-      "routed_wirelength_um": 43521,
+      "routed_nets": 3322,
+      "routed_wirelength_um": 42688,
       "sequential_area_um2": 144.809,
       "sequential_cell_count": 382,
       "setup_tns_ns": 0.0,
       "setup_violations": 0,
-      "setup_wns_ns": 0.188527,
-      "standard_cell_area_um2": 469.447,
-      "standard_cell_count": 6032,
-      "utilization_fraction": 0.019717,
-      "vias": 29421
+      "setup_wns_ns": 0.165549,
+      "standard_cell_area_um2": 473.923,
+      "standard_cell_count": 6048,
+      "utilization_fraction": 0.019905,
+      "vias": 26572
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "fca8f75208165ea17d2683a97d1ef5f19af1654da576eaff4035123682a6065e",
@@ -664,26 +664,26 @@
       "--purpose",
       "signoff_target",
       "--nickname-tag",
-      "qdm_hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc",
+      "qdm_hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc_arch",
       "--keep-workdir",
-      "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc/work",
+      "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc_arch/work",
       "--force",
       "--output",
-      "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc/physical.json"
+      "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/routes/hgi_mtp_accept18_pinsep_pd55_f63ddf415_tc_arch/physical.json"
     ],
     "driver": {
       "commit": null,
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
-      "path": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src/tools/run_abi3_physical.py",
+      "path": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src/tools/run_abi3_physical.py",
       "same_tree_as_sources": true,
-      "sha256": "2952a24202d075e65fbf402e82abd2dbd7b072b3f2d98a817625305972d79307",
-      "tree": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src"
+      "sha256": "788bb6feb1800f09c1687ca63345dfbf2f8b5ad1909940b44f6b6fb7dd0494ff",
+      "tree": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src"
     },
     "orfs_num_cores": 8,
-    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
     "python": "3.14.4",
-    "source_root": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc/src"
+    "source_root": "/srv/opentallas-scratch/claude/closure-loop/hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc-arch/src"
   },
   "schema_version": 1,
   "stages_completed": [

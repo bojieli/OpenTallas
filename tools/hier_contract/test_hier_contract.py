@@ -151,6 +151,26 @@ class MacroGrid(unittest.TestCase):
         r = macro_grid_lint.check(place_spec("p.tcl"), g)
         self.assertEqual(r["verdict"], "REFUSE")
 
+    def test_hard_tile_via_sourced_cfg(self):
+        """route_master.sh CFG=$1 + source cfg/$CFG.env (EXTRA=(... MACRO_PLACEMENT_TCL=...)): a hard tile on a 1.08 um
+        grid is refused, on the 8.64 um grid it passes (qkd_d2d_h-305021c34 vs 04612c41b)"""
+        tile = lef(name="ot_tile_t", W=30.0, H=20.0, sig=(("d", "M5", 1.2, 0.0),))     # M5 x centre 1.212 = 0.012 + 0.048 * 25
+        tcl = """set b [ord::get_db_block]; set c [$b getCoreArea]
+set k 0
+foreach m [$b getInsts] { $m setOrient R0
+  $m setLocation [expr {round(%s * round(([$c xMin]/1000.0 + 40.0 + $k*50.0)/%s) * 1000)}] 21600; incr k }
+"""
+        spec = {"name": "j", "source": {"commit": "c"}, "stages": {"route": {
+            "cmd": "HM=0.01 bash physical/x/jobs/route_master.sh tq {LABEL} {RUN}/routes"}}}
+        for grid, want in (("1.08", "REFUSE"), ("8.64", "PASS")):
+            g = FakeGit({"physical/x/jobs/route_master.sh": "CFG=$1; NAME=$2\nsource physical/x/cfg/$CFG.env\n"
+                                                           "run --die-area 0 0 $FW $FH --core-area 2.16 2.16 x y\n",
+                         "physical/x/cfg/tq.env": "FW=200\nFH=200\nEXTRA=(--macro-view ot_tile_t=physical/v/ot_tile_t "
+                                                  "--orfs-var MACRO_PLACEMENT_TCL=/src/physical/x/p.tcl)\n",
+                         "physical/v/ot_tile_t/ot_tile_t.lef": tile, "physical/x/p.tcl": tcl % (grid, grid)})
+            r = macro_grid_lint.check(spec, g)
+            self.assertEqual(r["verdict"], want, r["message"])
+
     def test_opt_out(self):
         s = place_spec("p.tcl")
         s["macro_grid_lint"] = False

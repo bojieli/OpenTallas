@@ -30,9 +30,13 @@ module ot_hgi_cp_die #(
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
     parameter integer FQCR = 4,        // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
-    parameter integer MTP_PINREG = 0   // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
+    parameter integer MTP_PINREG = 0,  // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
                                        // FIFOs / flops on f_mtp, t_mtp, mh_* and the translator side; +1 cycle a crossing,
                                        // controller PRL 4); 0 = the unregistered collar (pinned views unchanged)
+    parameter integer FUSED = 0,       // hgi-1010/c2 (AUDIT N5): 1 = unit 4's record bus is the FUSED front's field set
+                                       //   {n_O, n_B, n_A, O, C, B, A, header, valid} (1,216 b; ot_hgi_fused_station in the
+                                       //   quant block forwards QDQ to the quant unit); 0 = the QDQ-only {n_O, n_A, O, A, header, valid}
+    parameter integer QRW = 683 + 533 * FUSED   // 1,216 with FUSED (FUSED in {0, 1})
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -44,7 +48,7 @@ module ot_hgi_cp_die #(
     output reg  [967:0]  coll_rec,      // unit 6
     output reg  [553:0]  coll_recx,     // unit 6, with coll_rec: {n_R, n_B, desc_R, desc_B} (TOPK_MERGE B / R operands, hgi-1010/k)
     input  wire [2:0]    coll_ret,      // {fault, done, ready}
-    output reg  [682:0]  quant_rec,     // unit 4
+    output reg  [QRW-1:0] quant_rec,    // unit 4 (FUSED: the FUSED front's record)
     input  wire [2:0]    quant_ret,
     output reg  [2074:0] idx_rec,       // unit 9 {I, die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid} (I: hgi-1010/g)
     input  wire [2:0]    idx_ret,
@@ -227,7 +231,7 @@ module ot_hgi_cp_die #(
     endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            credit <= 4'b1111; coll_rec <= 968'd0; coll_recx <= 554'd0; quant_rec <= 683'd0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
+            credit <= 4'b1111; coll_rec <= 968'd0; coll_recx <= 554'd0; quant_rec <= '0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
             sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 704'd0; hc_rec <= 939'd0;
             db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
@@ -237,7 +241,7 @@ module ot_hgi_cp_die #(
             sm_rec[0] <= 1'b0; su_rec[0] <= 1'b0; sfu_rec[0] <= 1'b0; att_rec[0] <= 1'b0; dma_rec[0] <= 1'b0; hc_rec[0] <= 1'b0;
             if (u_v[6] && u_rdy[6]) begin coll_rec <= {rank, nI, nO, nA, dI, dO, dA, d_hdr, 1'b1}; coll_recx <= {nR, nB, dR, dB}; credit[0] <= 1'b0; end
             else if (coll_ret[1] || coll_ret[2]) credit[0] <= 1'b1;
-            if (u_v[4] && u_rdy[4]) begin quant_rec <= {nO, nA, dO, dA, d_hdr, 1'b1}; credit[1] <= 1'b0; end
+            if (u_v[4] && u_rdy[4]) begin quant_rec <= (FUSED != 0) ? QRW'({nO, nB, nA, dO, dC, dB, dA, d_hdr, 1'b1}) : QRW'({nO, nA, dO, dA, d_hdr, 1'b1}); credit[1] <= 1'b0; end
             else if (quant_ret[1] || quant_ret[2]) credit[1] <= 1'b1;
             if (u_v[9] && u_rdy[9]) begin
                 idx_rec <= {dI, rank, 20'(d_pos1 - 21'd1), nR, nO, nD, nC, nB, nA, dR, dO, dD, dC, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0;

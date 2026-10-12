@@ -61,8 +61,13 @@ module ot_qkvd_d2d #(
     output reg  [4:0]      fault_cause
 );
     // ---- reset copy ----
-    reg rs0, rs;
+    // el1011-q-kvd 2026-10-11: two kept copies of the same 2-stage synchroniser (identical release cycle): rs for the
+    // parent control flops, rs_t for the hardened buffer tiles' rst_n pins (route qkd_d2d_h-305021c34: one rs net drove
+    // 747 loads).  tx_flit is no longer reset (datapath; tx_v qualifies it).
+    (* keep *) reg rs0, rs;
+    (* keep *) reg rs_t0, rs_t;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin rs0 <= 1'b0; rs <= 1'b0; end else begin rs0 <= 1'b1; rs <= rs0; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin rs_t0 <= 1'b0; rs_t <= 1'b0; end else begin rs_t0 <= 1'b1; rs_t <= rs_t0; end
     // ---- pin capture ----
     reg [NT-1:0]   ci_v;
     reg [NT*W-1:0] ci_d;
@@ -109,10 +114,10 @@ module ot_qkvd_d2d #(
             assign ib_full[i] = (oc == IBD[8*i +: 8]);
             assign cnt = oc[$clog2(IBD[8*i +: 8]+1)-1:0];
             if (IBD[8*i +: 8] > 8) begin : g_s
-                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs), .push(ci_v[i]), .din(ci_d[W*i +: W]), .pop(gnt[i]),
+                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs_t), .push(ci_v[i]), .din(ci_d[W*i +: W]), .pop(gnt[i]),
                     .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
             end else begin : g_f
-                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs), .push(ci_v[i]), .din(ci_d[W*i +: W]), .pop(gnt[i]),
+                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs_t), .push(ci_v[i]), .din(ci_d[W*i +: W]), .pop(gnt[i]),
                     .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
             end
         end else if (SBD != 0 && IBD[8*i +: 8] >= SBD) begin : g_sb
@@ -145,10 +150,10 @@ module ot_qkvd_d2d #(
             assign rb_full[j] = (oc == RBD[8*j +: 8]);
             assign cnt = oc[$clog2(RBD[8*j +: 8]+1)-1:0];
             if (RBD[8*j +: 8] > 8) begin : g_s
-                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(rx_word), .pop(rb_pop[j]),
+                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(rx_word), .pop(rb_pop[j]),
                     .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
             end else begin : g_f
-                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(rx_word), .pop(rb_pop[j]),
+                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(rx_word), .pop(rb_pop[j]),
                     .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
             end
         end else if (SBD != 0 && RBD[8*j +: 8] >= SBD) begin : g_sb
@@ -172,9 +177,10 @@ module ot_qkvd_d2d #(
         end
     end
     reg [7:0] tx_seq, rx_seq;
+    always @(posedge clk) tx_flit <= {tx_seq, cr_ret, any, sel_cls, sel_word};   // datapath: no reset
     always @(posedge clk or negedge rs) begin
         if (!rs) begin
-            tx_v <= 1'b0; tx_flit <= {FW{1'b0}}; tx_seq <= 8'd0; rx_seq <= 8'd0; rr <= 0;
+            tx_v <= 1'b0; tx_seq <= 8'd0; rx_seq <= 8'd0; rr <= 0;
             t_cr <= 0; r_v <= 0;
             f_die <= 1'b0; f_rb <= 1'b0; f_seq <= 1'b0; f_cred <= 1'b0; f_cls <= 1'b0;
             fault <= 1'b0; fault_cause <= 5'd0;
@@ -190,7 +196,6 @@ module ot_qkvd_d2d #(
             // link TX
             tx_v <= up_q;
             if (up_q) tx_seq <= tx_seq + 1'b1;
-            tx_flit <= {tx_seq, cr_ret, any, sel_cls, sel_word};
             if (any) rr <= ((rr + 1) % NT);
             for (k = 0; k < NT; k = k + 1) begin : upd_lc
                 reg [8:0] nxt;

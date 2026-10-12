@@ -5,7 +5,7 @@
 # adds the TT liberty from the SAME route (tools/tt_views/view_export.py --corners tt), as engram_c_h's leaves.
 set -euo pipefail
 job=$1; name=$2; mv=${3:-}
-RUN=/srv/opentallas-scratch/claude/closure-loop/$job
+RUN=${OT_CL_ROOT:-/srv/opentallas-scratch/claude/closure-loop}/$job
 orfs=$(ls -d $RUN/routes/*/work/orfs | head -1)
 out=physical/s81_engc_tiles/views/$name
 mkdir -p "$out"
