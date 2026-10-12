@@ -390,12 +390,19 @@ class Collect:
         D["wr"][wr] = True
         return a, np.isin(a, rd)
 
-    def _central(self, M, r, die, L):
+    def _central(self, M, r, die, L, seg=None):
+        """seg = (q, G): the die's index in its collective group: COLL.ALL_GATHER reads only its own even-split segment
+        A[q n / G, (q + 1) n / G) (machine.u_coll_all_gather); the rest of A (in place = O) is a pure write.  Counting
+        all of A as read made every gathered buffer live-in from -1 (DS L14: expert intermediate 15,960, eg_kv 9,974,
+        iq, qa, y, yf ... mirror words held through the whole layer)"""
         xs, rd, wr = [], [], []
         for nm, d in r.desc.items():
             if d.space == "VM":
                 try:
                     a = M.vm_addrs(d, die, L)
+                    if seg is not None and nm == "A" and (r.unit, r.op) == ("COLL", "ALL_GATHER"):
+                        q, G = seg
+                        a = a[q * a.size // G:(q + 1) * a.size // G]
                     a = a[(a >= 0) & (a < VMW)]
                     self._r(die.rank)["central"][a] = True
                     xs.append(a)
@@ -414,9 +421,10 @@ class Collect:
             t0 = None
             try:
                 if central(M, M.rec_of(dies[0], r), dies[0], L):
-                    for die in dies:
+                    g = max(1, int(M.cfg.get("coll_group_size") or len(dies)))
+                    for k, die in enumerate(dies):
                         M.dies, M.cur = [die], M.rec_of(die, r)
-                        a = self._central(M, M.cur, die, L)
+                        a = self._central(M, M.cur, die, L, seg=(k % g, min(g, len(dies))))
                         if die.rank == 0:
                             t0 = (die, a)
                     self.modes[(r.unit, "CENTRAL" if r.unit not in SPLIT_UNITS else "HOME")] += 1
