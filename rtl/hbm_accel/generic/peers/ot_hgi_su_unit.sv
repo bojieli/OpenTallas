@@ -1074,18 +1074,21 @@ module ot_hgi_su_ctlw #(
     input  wire [7:0]    sr_dm,
     // WIDE STAGE / DRAIN (hgi-unitrate 2026-10-10): 32 lanes, lane b <-> VM bank b <-> local bank b (every region is
     // placed with lb == lo mod 256 words, so a VM sector and its local copy share the bank: no crossbar)
+`ifndef OT_CTLW_HUB_EXT
     output wire  [32*16-1:0]  wrq,          // VM wide read lane b {v, sector 15}: LQ credits a lane
     input  wire [31:0]       wrq_cr,       // a credit back (the request reached its bank)
     input  wire [32*257-1:0] wrr,          // the sector {v, data 256}, in request order
     output wire  [32*280-1:0] wwq,          // VM wide write lane b {v, sector 15, wdata 256, word mask 8}
     input  wire [31:0]       wwq_cr,       // a credit back (the write reached its bank)
     input  wire [31:0]       wwq_done,     // a write in the macro (the record retires after the last)
+`endif
     // shared lane groups (ot_hgi_vm_lanearb): a burst (a record's stage / drain) holds its group from grant to release;
     // tie the grants high for a dedicated group
     output reg               rg_req,
     input  wire              rg_gnt,
     output reg               wg_req,
     input  wire              wg_gnt,
+`ifndef OT_CTLW_HUB_EXT
     output wire  [31:0]       lsw_v,        // local stage write lane b (sector, data)
     output wire  [32*(LWB-3)-1:0] lsw_sec,
     output wire  [32*256-1:0] lsw_d,
@@ -1096,9 +1099,31 @@ module ot_hgi_su_ctlw #(
     input  wire [32*256-1:0] ldr_d,
     input  wire [32*8-1:0]   ldr_dm,
     input  wire [31:0]       ldr_rv,       // the lane's drain read data is valid (any latency, in request order)
+`endif
+`ifdef OT_CTLW_HUB_EXT
+    // TWO-LEVEL hierarchy (el1011-hbm-sfu, owner 10-11 ~21:00): ctlw HUB element; the four 8-lane slices
+    // (ot_hgi_su_ctlw_slice) are die-placed tiles wired lane-side straight to VM / local memory.  Hub -> slice: the
+    // hub's descriptor / go registers (slices pin-register them); slice -> hub: the slices' registered done / ovf.
+    output wire              h_wst_go, h_wdr_go, h_d_os,
+    output wire [6*24-1:0]   h_lo, h_hi,
+    output wire [6*(LWB+1)-1:0] h_lb,
+    output wire [5:0]        h_rv,
+    output wire [6*21-1:0]   h_dsec,
+    output wire [2*24-1:0]   h_dlo, h_dhi,
+    output wire [2*(LWB+1)-1:0] h_dlb,
+    output wire [1:0]        h_drv,
+    output wire [2*21-1:0]   h_ddsec,
+    input  wire [3:0]        s_wst_i, s_wdr_i, s_ovf_i,
+`endif
     input  wire              sr_rv         // the STREAM-out sector read data is valid
 );
     localparam integer AW = 24, NR = N / 8, LW = 1 << LWB;
+`ifdef OT_CTLW_HUB_EXT
+    wire [32*16-1:0] wrq; wire [32*280-1:0] wwq; wire [31:0] lsw_v, ldc_v, ldr_v;
+    wire [32*(LWB-3)-1:0] lsw_sec, ldc_sec, ldr_sec; wire [32*256-1:0] lsw_d;
+    wire [31:0] wrq_cr = '0, wwq_cr = '0, wwq_done = '0, ldr_rv = '0; wire [32*257-1:0] wrr = '0;
+    wire [32*256-1:0] ldr_d = '0; wire [32*8-1:0] ldr_dm = '0;
+`endif
     // ---- the record adapter (decode) and the op it issues
     wire op_v; reg op_rdy_r; wire [669:0] op_w; reg su_idle_r, su_fault_r;
     wire [1:0] strm;
@@ -1326,6 +1351,12 @@ module ot_hgi_su_ctlw #(
             assign dlo_v[(q-4)*24 +: 24] = d_lo[q]; assign dhi_v[(q-4)*24 +: 24] = d_hi[q];
             assign dlb_v[(q-4)*(LWB+1) +: LWB+1] = d_lb[q]; assign drv_v[q-4] = d_rv[q]; assign ddsec_v[(q-4)*21 +: 21] = d_dsec[q];
         end
+`ifdef OT_CTLW_HUB_EXT
+        assign h_wst_go = wst_go; assign h_wdr_go = wdr_go; assign h_d_os = d_os;
+        assign h_lo = lo_v; assign h_hi = hi_v; assign h_lb = lb_v; assign h_rv = rv_v; assign h_dsec = dsec_v;
+        assign h_dlo = dlo_v; assign h_dhi = dhi_v; assign h_dlb = dlb_v; assign h_drv = drv_v; assign h_ddsec = ddsec_v;
+        assign s_wst = s_wst_i; assign s_wdr = s_wdr_i; assign s_ovf = s_ovf_i;
+`else
         for (genvar g = 0; g < 4; g = g + 1) begin : g_s
             ot_hgi_su_ctlw_slice #(.SL(g), .NL(8), .LWB(LWB), .LQ(LQ), .MUT_W(MUT_W), .MUT_DIRTY(MUT_DIRTY), .LQSRAM(SLICES >= 2 ? 1 : 0)) u_slice (
                 .clk(clk), .rst_n(rst_n), .wst_go_i(wst_go), .wdr_go_i(wdr_go),
@@ -1339,6 +1370,7 @@ module ot_hgi_su_ctlw #(
                 .ldr_d(ldr_d[g*8*256 +: 8*256]), .ldr_dm(ldr_dm[g*8*8 +: 8*8]), .ldr_rv(ldr_rv[g*8 +: 8]),
                 .wst_dn(s_wst[g]), .wdr_dn(s_wdr[g]), .ovf(s_ovf[g]));
         end
+`endif
         // hub stage 2 + go blanking: a done seen within BL edges of its go belongs to the previous burst (go reaches
         // the slices one edge late, their per-lane done one edge after that, the slice reduction one, this one more)
         localparam integer BL = 6;
