@@ -8,11 +8,13 @@
 //   phase 3  packet client 0 reads back every sector of every region on both
 // PASS = every packet response (tag, echo, data), every wide read and every read-back word equal; no fault status.
 // Mutants (-G): HMUT=1 wrong slice routing (S[13:12]) must FAIL (timeout or mismatch); BMUT/CMUT are ring mutants
-// (tb_vms_ring4).  Timeout = FAIL.
+// (tb_vms_ring4); BMUT=2 lane queues one entry short of the 4 + 2 RS credits (overrun -> bank fault) must FAIL.
+// Timeout = FAIL.
 module tb_vms_slice;
     parameter integer Q = 2, HMUT = 0, BMUT = 0, CMUT = 0, SEED = 1;
     parameter integer NPK = 300, NRG = 300, NWG = 300, NDM = 60;
-    localparam integer NC = 4, RG = 2, WG = 2;
+    parameter integer RS = 3;                       // contract relay stages a lane group: credits 4 + 2 RS a lane (SPEC v0.8)
+    localparam integer NC = 4, RG = 2, WG = 2, LQC = 4 + 2 * RS;
     reg clk = 1'b0, rst_n = 1'b0;
     always #1 clk = ~clk;
     // ---------------------------------------------------------------- DUTs
@@ -21,7 +23,7 @@ module tb_vms_slice;
     reg  [WG*8*281-1:0] nwq; wire [WG*8-1:0] nwq_cr, nwq_done;
     reg  [8*281-1:0] ndq; wire [7:0] ndq_done; wire nvcb_cr; wire [7:0] nkq_done;
     wire [2223:0] cwo, ccwo; wire [1:0] cwic, ccwic; wire [8*18-1:0] bst; wire [2:0] hst; wire [1:0] mb;
-    ot_vms_slice #(.NC(NC), .RG(RG), .WG(WG), .BMUT(BMUT), .HMUT(HMUT), .CMUT(CMUT)) dut (.clk(clk), .rst_n(rst_n), .sid(2'(Q)),
+    ot_vms_slice #(.NC(NC), .RG(RG), .WG(WG), .RRS({RG{4'(RS)}}), .WRS({WG{4'(RS)}}), .BMUT(BMUT), .HMUT(HMUT), .CMUT(CMUT)) dut (.clk(clk), .rst_n(rst_n), .sid(2'(Q)),
         .cq(ncq), .cr(ncr), .rq(nrq), .rq_cr(nrq_cr), .rr(nrr), .wq(nwq), .wq_cr(nwq_cr), .wq_done(nwq_done), .dq(ndq), .dq_done(ndq_done),
         .vcb('0), .vcb_cr(nvcb_cr), .kq_done(nkq_done), .cw_in('0), .cw_in_cr(cwic), .cw_out(cwo), .cw_out_cr(2'b00),
         .ccw_in('0), .ccw_in_cr(ccwic), .ccw_out(ccwo), .ccw_out_cr(2'b00), .bank_status(bst), .hub_status(hst), .mirror_busy(mb));
@@ -64,7 +66,7 @@ module tb_vms_slice;
     // phase 3 read-back (client 0)
     integer bi_n = 0, bi_o = 0, bo_n = 0, bo_o = 0, br_n = 0, br_o = 0; reg [255:0] bkN [0:NSEC-1]; reg [255:0] bkO [0:NSEC-1];
     // wide reads
-    integer ri_n [0:RG-1], ri_o [0:RG-1], rcr_n [0:RG*8-1], rcr_o [0:64-1]; integer rq_n [0:RG*8-1][0:15]; integer rq_o [0:63][0:15];
+    integer ri_n [0:RG-1], ri_o [0:RG-1], rcr_n [0:RG*8-1], rcr_o [0:64-1]; integer rq_n [0:RG*8-1][0:31]; integer rq_o [0:63][0:15];
     integer rh_n [0:RG*8-1], rt_n [0:RG*8-1], rh_o [0:63], rt_o [0:63]; reg [255:0] rdN [0:RG-1][0:NRG-1]; reg [255:0] rdO [0:RG-1][0:NRG-1];
     integer rgot_n = 0, rgot_o = 0;
     // wide writes
@@ -74,9 +76,9 @@ module tb_vms_slice;
         for (integer c = 0; c < NC; c = c + 1) begin pi_n[c] = 0; pi_o[c] = 0; po_n[c] = 0; po_o[c] = 0; pr_n[c] = 0; pr_o[c] = 0; end
         for (integer g = 0; g < RG; g = g + 1) begin ri_n[g] = 0; ri_o[g] = 0; end
         for (integer g = 0; g < WG; g = g + 1) begin wi_n[g] = 0; wi_o[g] = 0; end
-        for (integer l = 0; l < RG*8; l = l + 1) begin rcr_n[l] = 4; rh_n[l] = 0; rt_n[l] = 0; end
+        for (integer l = 0; l < RG*8; l = l + 1) begin rcr_n[l] = LQC; rh_n[l] = 0; rt_n[l] = 0; end
         for (integer l = 0; l < 64; l = l + 1) begin rcr_o[l] = 8; rh_o[l] = 0; rt_o[l] = 0; wcr_o[l] = 8; end
-        for (integer l = 0; l < WG*8; l = l + 1) wcr_n[l] = 4;
+        for (integer l = 0; l < WG*8; l = l + 1) wcr_n[l] = LQC;
     end
     function automatic [337:0] pkreq(input reg we, input [14:0] s, input [255:0] d, input [31:0] m, input [15:0] tag);
         pkreq = {1'b1, we, 11'd0, 1'b0, s, 5'd0, d, we ? m : 32'd0, tag};
@@ -100,7 +102,7 @@ module tb_vms_slice;
         end
         for (l = 0; l < RG*8; l = l + 1) begin
             if (nrq_cr[l]) rcr_n[l] = rcr_n[l] + 1;
-            if (nrr[l*257 + 256]) begin x = rq_n[l][rh_n[l]]; rh_n[l] = (rh_n[l] + 1) % 16; rdN[l/8][x] = nrr[l*257 +: 256]; rgot_n = rgot_n + 1; end
+            if (nrr[l*257 + 256]) begin x = rq_n[l][rh_n[l]]; rh_n[l] = (rh_n[l] + 1) % 32; rdN[l/8][x] = nrr[l*257 +: 256]; rgot_n = rgot_n + 1; end
         end
         for (l = 0; l < 64; l = l + 1) begin
             if (orq_cr[l]) rcr_o[l] = rcr_o[l] + 1;
@@ -139,7 +141,7 @@ module tb_vms_slice;
                     l = g*8 + rg_s[g][ri_n[g]][2:0];
                     if (rcr_n[l] > 0 && !usedN[l]) begin usedN[l] = 1'b1;
                         nrq[l*17 +: 17] <= {1'b1, 1'b0, rg_s[g][ri_n[g]]}; rcr_n[l] = rcr_n[l] - 1;
-                        rq_n[l][rt_n[l]] = ri_n[g]; rt_n[l] = (rt_n[l] + 1) % 16; ri_n[g] = ri_n[g] + 1;
+                        rq_n[l][rt_n[l]] = ri_n[g]; rt_n[l] = (rt_n[l] + 1) % 32; ri_n[g] = ri_n[g] + 1;
                     end else k = 4;
                 end
                 for (integer k = 0; k < 4; k = k + 1) if (ri_o[g] < NRG) begin

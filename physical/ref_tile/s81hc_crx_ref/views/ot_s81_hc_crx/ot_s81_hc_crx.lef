@@ -3184,6 +3184,10 @@ MACRO ot_s81_hc_crx
       LAYER M6 ;
         RECT  110.091 61.504 110.16 61.536 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  110.125 61.44 110.147 61.6 ;
+    END
   END e_rd[13]
   PIN e_rd[14]
     DIRECTION INPUT ;
@@ -3319,6 +3323,10 @@ MACRO ot_s81_hc_crx
     PORT
       LAYER M6 ;
         RECT  110.091 63.552 110.16 63.584 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  110.125 63.488 110.147 63.648 ;
     END
   END e_rd[29]
   PIN e_rd[2]
@@ -20442,8 +20450,6 @@ MACRO ot_s81_hc_crx
      RECT  110.003 52.16 110.053 64.224 ;
      RECT  110.053 52.16 110.125 64.352 ;
      RECT  110.125 58.88 110.147 59.168 ;
-     RECT  110.125 61.44 110.147 61.6 ;
-     RECT  110.125 63.488 110.147 63.648 ;
   END
 END ot_s81_hc_crx
 END LIBRARY

@@ -78,6 +78,27 @@ class ChildLint(unittest.TestCase):
         self.assertEqual(r["info"]["face"]["blocked_above"], 1)
         self.assertIn("pin_access_pregrt.tcl", " ".join(r["fails"]))
 
+    def test_face_pin_same_layer_stub_obs_fails(self):
+        # ot_qkvd_sbuf (73e17f447): the pin's own M5 route stub exported as OBS overlapping the pin -> no access point
+        r = self.run_lint(lef(obs=[("M5", 5.006, 0.05, 5.018, 0.6)]))
+        self.assertIn("f", self.checks(r))
+        self.assertEqual(r["info"]["face"]["blocked_same"], 1)
+        self.assertIn("abstract_pin_stub.py", " ".join(r["fails"]))
+
+    def test_face_pin_same_layer_edge_touch_is_fine(self):
+        # same-layer OBS that only abuts the pin edge (x 5.024) or its top (y 0.192) is not a block
+        r = self.run_lint(lef(obs=[("M5", 5.024, 0.0, 5.3, 0.5), ("M5", 4.9, 0.192, 5.1, 0.6)]))
+        self.assertEqual(r["info"]["face"]["blocked_same"], 0)
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+
+    def test_face_pin_same_layer_band_over_many_pins_warns(self):
+        # one same-layer OBS rect across two pins' inner ends = exporter edge-band decomposition: WARN, not FAIL
+        r = self.run_lint(lef(sig=(("a", "M5", 5.0, 0.0), ("b", "M5", 7.0, 0.0)), obs=[("M5", 4.0, 0.1, 9.0, 0.4)]))
+        self.assertEqual(r["info"]["face"]["blocked_same"], 0)
+        self.assertEqual(r["info"]["face"]["band_same"], 2)
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertTrue(any("several pins" in w for w in r["warns"]))
+
     def test_libs_and_insertion(self):
         r = self.run_lint(lef(), libs={"tt": TT_LIB, "ff": ""})
         self.assertIn("d", self.checks(r))

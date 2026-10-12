@@ -6,7 +6,7 @@
 // wq {v, sector 15, data 256, wmask 8} / wq_cr / wq_done, burst grant rg_req / rg_gnt, wg_req / wg_gnt).
 // Throughput fix (AGENTS throughput gate: the packet unit ran 13.7x its price ceil(n/32)+8, the 32-lane wide engines
 // 2.7-4.4x because every record waited for the previous one to drain):
-//   * rate: one 32-FP32 beat (4 sectors on 4 consecutive local banks) a cycle into ONE decode core (ot_hgi_qw_dec, the
+//   * rate: one 32-FP32 beat (4 sectors on 4 consecutive local banks) a cycle into ONE decode core (ot_hgi_qw_dec3 = dxl/dbq/daq, or ot_hgi_qw_dec; the
 //     closed hardened decode tile: same arithmetic as ot_hgi_quant_wide / the transport -> word-identical O);
 //   * record OVERLAP: an RQ-deep record queue; the read walk of record k+1 is loaded on the cycle record k issues its last
 //     beat (no drain between records); the header rides with each beat into the decode (the decode is per-beat clean);
@@ -25,11 +25,13 @@
 // is seen through the face flops).
 // MUT (bench): 1 = assembly takes sector j from lane j ^ 1 (lane-to-sector map; must FAIL); 2 = hazard masks ignored.
 module ot_hgi_qdq_q #(
-    parameter integer LQ  = 4,      // lane credits a lane (= the slice bank's wide-lane queue depth)
-    parameter integer LD  = 8,      // per-lane response FIFO (read round trip at 0.5 sector / lane / cycle)
-    parameter integer NB  = 16,     // issued-beat FIFO (>= read round trip in beats)
-    parameter integer OD  = 32,     // result FIFO beats (>= decode latency 26 + write slack)
+    parameter integer LQ  = 10,     // lane credits a lane (= the slice bank's wide-lane queue depth, 4 + 2 x 3 relay stages,
+                                    // B2 SPEC v0.8 D-B2-12; 4 credits at 3 relays measured 1.29x)
+    parameter integer LD  = 16,     // per-lane response FIFO (read round trip at 0.5 sector / lane / cycle; >= LQ)
+    parameter integer NB  = 32,     // issued-beat FIFO (>= read round trip in beats; 16 caps S=3 at 18 cyc a 16-beat record)
+    parameter integer OD  = 64,     // result FIFO beats (>= decode latency 26 + write round trip at S=3)
     parameter integer RQ  = 16,     // record queue
+    parameter integer DEC3 = 1,     // decoder: 1 = ot_hgi_qw_dec3 (track B: dxl / dbq / daq tiles), 0 = ot_hgi_qw_dec (one tile)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -144,6 +146,11 @@ module ot_hgi_qdq_q #(
     // ---------------------------------------------------------------- assembly -> decode
     wire [2:0] h_l = bq_l[b_h], h_n = bq_n[b_h];
     reg [7:0] h_hit; reg h_ok; reg [1023:0] h_x;
+    // lane heads: each lane selects its own head entry locally (16:1 x 256 on the lane's own pointer), then the 4 beat
+    // positions take a one-hot AND-OR over the 8 lane heads (textbook audit 10-12: lf[l][lf_h[l]] with a runtime lane l
+    // built a 128:1 x 256 select per position with 16,384-load decode nets)
+    reg [255:0] lh [0:7];
+    always @* for (integer b = 0; b < 8; b = b + 1) lh[b] = lf[b][lf_h[b]];
     always @* begin
         h_ok = b_used != 0; h_x = '0;
         for (integer b = 0; b < 8; b = b + 1) begin
@@ -152,19 +159,32 @@ module ot_hgi_qdq_q #(
         end
         for (integer j = 0; j < 4; j = j + 1) begin
             reg [2:0] l; l = 3'(h_l + ((MUT == 1) ? (j ^ 1) : j));
-            if (j < h_n) h_x[j*256 +: 256] = lf[l][lf_h[l]];
+            for (integer b = 0; b < 8; b = b + 1) h_x[j*256 +: 256] = h_x[j*256 +: 256] | ({256{j < h_n && l == 3'(b)}} & lh[b]);
         end
     end
     reg [OW:0] resv, od_n;
     wire l_fire = h_ok && resv != OD[OW:0];
     reg d_v; reg [127:0] d_h; reg [1023:0] d_x;
     wire vo, qfault, dfault; wire [511:0] y;
-    ot_hgi_qw_dec u_dec (.clk(clk), .rst_n(rr_n[2]), .v(d_v), .header(d_h), .x(d_x), .vo(vo), .y(y), .fault(qfault),
-        .decode_fault(dfault));
+    generate if (DEC3 != 0) begin : g_d3
+        // track B (decoder of record, coordinator 10-12): three hardened tiles dxl / dbq / daq, same ports and timing
+        ot_hgi_qw_dec3 u_dec (.clk(clk), .rst_n(rr_n[2]), .v(d_v), .header(d_h), .x(d_x), .vo(vo), .y(y), .fault(qfault),
+            .decode_fault(dfault));
+    end else begin : g_d1
+        ot_hgi_qw_dec u_dec (.clk(clk), .rst_n(rr_n[2]), .v(d_v), .header(d_h), .x(d_x), .vo(vo), .y(y), .fault(qfault),
+            .decode_fault(dfault));
+    end endgenerate
     // ---------------------------------------------------------------- result FIFO + write
     reg [14:0] mq_o [0:OD-1]; reg [2:0] mq_n [0:OD-1]; reg [QW-1:0] mq_e [0:OD-1]; reg mq_z [0:OD-1];
-    reg [511:0] od_y [0:OD-1]; reg [OW-1:0] od_h, od_t, mq_t;
-    wire [14:0] w_sec0 = mq_o[od_h]; wire [2:0] w_n = mq_n[od_h];
+    // result store (textbook audit 10-12, class 5/6: was a 64 x 512 flop array read 64:1 x 512 b in one cycle): one
+    // ot_sram_1r1w_64x512_m1_r2c2 macro behind a 2-entry registered prefetch buffer (ot_fifo_sram_fwft: synchronous macro
+    // read issued ahead into capture registers; an empty FIFO shows a push the next cycle, one pop a cycle sustained),
+    // so the write issue sees a 2:1 register head instead of the array.  ESL 128: the buffer in 4 x 128-b slices with
+    // their own control copies (one slice per sector of the write).  od_n keeps the pushed-not-written count (retire /
+    // drain accounting); the write issues on the buffer's head valid.
+    wire od_hv, od_ovf; wire [511:0] od_head;
+    reg [OW-1:0] mq_t, mq_h;
+    wire [14:0] w_sec0 = mq_o[mq_h]; wire [2:0] w_n = mq_n[mq_h];
     reg [7:0] w_hit; reg w_cr_ok;
     always @* begin
         w_cr_ok = 1'b1;
@@ -173,7 +193,9 @@ module ot_hgi_qdq_q #(
             if (w_hit[b] && wcr[b] == 0) w_cr_ok = 1'b0;
         end
     end
-    wire w_fire = wg_ok && !bad && od_n != 0 && w_cr_ok;
+    wire w_fire = wg_ok && !bad && od_hv && w_cr_ok;
+    ot_fifo_sram_fwft #(.W(512), .DEPTH(OD), .MACRO(0), .ESL(128)) u_od (.clk(clk), .rst_n(rr_n[1]), .push(vo),
+        .wdata(y), .pop(w_fire), .hv(od_hv), .head(od_head), .ovf(od_ovf));
     reg [7:0] wcnt [0:7], dcnt [0:7];
     // ---------------------------------------------------------------- retire (in record order)
     reg r_ready; reg h_fin;
@@ -204,10 +226,10 @@ module ot_hgi_qdq_q #(
             for (e = 0; e < RQ; e = e + 1) if (rt_ok) q_dep[e][hd] <= 1'b0;
             if (s3_v && rt_ok) q_dep[qt][hd] <= 1'b0;
             if (n_load || n_skip) rp <= rp + 1'b1;
-            if (w_fire && mq_z[od_h]) q_snv[mq_e[od_h]] <= 1'b1;
+            if (w_fire && mq_z[mq_h]) q_snv[mq_e[mq_h]] <= 1'b1;
             if (rt_ok) begin q_v[hd] <= 1'b0; hd <= hd + 1'b1; end
             if (vo && qfault) bad <= 1'b1;
-            if (dfault) bad <= 1'b1;
+            if (dfault || od_ovf) bad <= 1'b1;   // result-store overrun (bounded by resv; fail closed)
             occ <= occ + (QW+1)'(cmd[0]) - (QW+1)'(rt_ok);
             ret <= {rt_ok && rt_fault || nfault, rt_ok, (occ + (QW+1)'(cmd[0]) - (QW+1)'(rt_ok)) <= (QW+1)'(RQ - 4)};
         end
@@ -215,7 +237,7 @@ module ot_hgi_qdq_q #(
     always @(posedge clk or negedge rr_n[1]) begin
         if (!rr_n[1]) begin
             r_act <= 0; r_e <= 0; r_row <= 0; r_m <= 0; r_beat <= 0; r_bpr <= 0; r_nsl <= 0; r_rsec <= 0; r_osec <= 0;
-            r_rs <= 0; r_ws <= 0; b_t <= 0; b_h <= 0; b_used <= 0; resv <= 0; od_n <= 0; od_h <= 0; od_t <= 0; mq_t <= 0;
+            r_rs <= 0; r_ws <= 0; b_t <= 0; b_h <= 0; b_used <= 0; resv <= 0; od_n <= 0; mq_h <= 0; mq_t <= 0;
             d_v <= 0; wrq <= '0; wwq <= '0;
             for (b = 0; b < 8; b = b + 1) begin
                 rcr[b] <= LQ[CW-1:0]; wcr[b] <= LQ[CW-1:0]; lf_h[b] <= 0; lf_t[b] <= 0; lf_n[b] <= 0; lf_r[b] <= 0;
@@ -250,16 +272,18 @@ module ot_hgi_qdq_q #(
             b_used <= b_used + (SW+1)'(r_issue) - (SW+1)'(l_fire);
             if (l_fire) begin b_h <= b_h + 1'b1; mq_t <= mq_t + 1'b1; end
             // ---- decode results -> result FIFO; write the head result on its 1..4 lanes
-            if (vo) od_t <= od_t + 1'b1;
             od_n <= od_n + (OW+1)'(vo) - (OW+1)'(w_fire);
             resv <= resv + (OW+1)'(l_fire) - (OW+1)'(w_fire);
             if (w_fire) begin
                 for (b = 0; b < 8; b = b + 1) if (w_hit[b]) begin : wr
-                    reg [255:0] d; reg [1:0] s; s = 2'(3'(b - w_sec0[2:0]));
-                    for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {od_y[od_h][({3'd0, s} * 8 + k) * 16 +: 16], 16'd0};
+                    reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));
+                    // decoded constant-index sector select (one-hot AND-OR, no runtime part-select)
+                    c = ({128{s == 2'd0}} & od_head[127:0]) | ({128{s == 2'd1}} & od_head[255:128]) |
+                        ({128{s == 2'd2}} & od_head[383:256]) | ({128{s == 2'd3}} & od_head[511:384]);
+                    for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};
                     wwq[b*280 +: 280] <= {1'b1, 15'(w_sec0 + 15'(s)), d, 8'hff};
                 end
-                od_h <= od_h + 1'b1;
+                mq_h <= mq_h + 1'b1;
             end
         end
     end
@@ -278,9 +302,8 @@ module ot_hgi_qdq_q #(
             d_x <= h_x; d_h <= {q_hd[bq_e[b_h]][17:8], 46'd0, q_hd[bq_e[b_h]][7:0], 64'd0};
             mq_o[mq_t] <= bq_o[b_h]; mq_n[mq_t] <= h_n; mq_e[mq_t] <= bq_e[b_h]; mq_z[mq_t] <= bq_z[b_h];
         end
-        if (vo) od_y[od_t] <= y;
-        if (w_fire && mq_z[od_h])
-            for (integer q = 0; q < 8; q = q + 1) q_snap[mq_e[od_h]][q*8 +: 8] <= wcnt[q] + 8'(w_hit[q]);
+        if (w_fire && mq_z[mq_h])
+            for (integer q = 0; q < 8; q = q + 1) q_snap[mq_e[mq_h]][q*8 +: 8] <= wcnt[q] + 8'(w_hit[q]);
     end
     initial begin
         if ((RQ & (RQ - 1)) != 0 || RQ < 8) $fatal(1, "ot_hgi_qdq_q: RQ must be a power of two >= 8");

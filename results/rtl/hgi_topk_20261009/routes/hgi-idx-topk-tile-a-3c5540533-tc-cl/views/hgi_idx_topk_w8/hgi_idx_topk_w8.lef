@@ -16,6 +16,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 9.696 0.084 9.72 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 9.696 0.092 9.72 ;
+    END
   END clk
   PIN clr_go
     DIRECTION INPUT ;
@@ -23,6 +27,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 13.152 0.084 13.176 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 13.152 0.857 13.176 ;
     END
   END clr_go
   PIN ext_d[0]
@@ -32,6 +40,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 9.12 260 9.144 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.217 9.12 259.932 9.144 ;
+    END
   END ext_d[0]
   PIN ext_d[10]
     DIRECTION OUTPUT ;
@@ -39,6 +51,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 31.296 260 31.32 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 31.296 259.932 31.32 ;
     END
   END ext_d[10]
   PIN ext_d[11]
@@ -48,6 +64,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 33.504 260 33.528 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 33.504 259.932 33.528 ;
+    END
   END ext_d[11]
   PIN ext_d[12]
     DIRECTION OUTPUT ;
@@ -55,6 +75,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 35.712 260 35.736 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 35.712 259.932 35.736 ;
     END
   END ext_d[12]
   PIN ext_d[13]
@@ -64,6 +88,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 37.92 260 37.944 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 37.92 259.932 37.944 ;
+    END
   END ext_d[13]
   PIN ext_d[14]
     DIRECTION OUTPUT ;
@@ -71,6 +99,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 40.176 260 40.2 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 40.176 259.932 40.2 ;
     END
   END ext_d[14]
   PIN ext_d[15]
@@ -80,6 +112,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 42.384 260 42.408 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  257.821 42.384 259.932 42.408 ;
+    END
   END ext_d[15]
   PIN ext_d[16]
     DIRECTION OUTPUT ;
@@ -87,6 +123,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 44.592 260 44.616 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.577 44.592 259.932 44.616 ;
     END
   END ext_d[16]
   PIN ext_d[17]
@@ -96,6 +136,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 46.8 260 46.824 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.117 46.8 259.932 46.824 ;
+    END
   END ext_d[17]
   PIN ext_d[18]
     DIRECTION OUTPUT ;
@@ -103,6 +147,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 49.008 260 49.032 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.469 49.008 259.932 49.032 ;
     END
   END ext_d[18]
   PIN ext_d[19]
@@ -112,6 +160,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 51.264 260 51.288 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  257.713 51.264 259.932 51.288 ;
+    END
   END ext_d[19]
   PIN ext_d[1]
     DIRECTION OUTPUT ;
@@ -119,6 +171,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 11.328 260 11.352 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  257.533 11.328 259.932 11.352 ;
     END
   END ext_d[1]
   PIN ext_d[20]
@@ -128,6 +184,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 53.472 260 53.496 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.081 53.472 259.932 53.496 ;
+    END
   END ext_d[20]
   PIN ext_d[21]
     DIRECTION OUTPUT ;
@@ -135,6 +195,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 55.68 260 55.704 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.541 55.68 259.932 55.704 ;
     END
   END ext_d[21]
   PIN ext_d[22]
@@ -144,6 +208,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 57.888 260 57.912 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.217 57.888 259.932 57.912 ;
+    END
   END ext_d[22]
   PIN ext_d[23]
     DIRECTION OUTPUT ;
@@ -151,6 +219,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 60.096 260 60.12 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.181 60.096 259.932 60.12 ;
     END
   END ext_d[23]
   PIN ext_d[24]
@@ -160,6 +232,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 62.352 260 62.376 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.297 62.352 259.932 62.376 ;
+    END
   END ext_d[24]
   PIN ext_d[25]
     DIRECTION OUTPUT ;
@@ -167,6 +243,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 64.56 260 64.584 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 64.56 259.932 64.584 ;
     END
   END ext_d[25]
   PIN ext_d[26]
@@ -176,6 +256,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 66.768 260 66.792 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 66.768 259.932 66.792 ;
+    END
   END ext_d[26]
   PIN ext_d[27]
     DIRECTION OUTPUT ;
@@ -183,6 +267,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 68.976 260 69 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 68.976 259.932 69 ;
     END
   END ext_d[27]
   PIN ext_d[28]
@@ -192,6 +280,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 71.184 260 71.208 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 71.184 259.932 71.208 ;
+    END
   END ext_d[28]
   PIN ext_d[29]
     DIRECTION OUTPUT ;
@@ -199,6 +291,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 73.44 260 73.464 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 73.44 259.932 73.464 ;
     END
   END ext_d[29]
   PIN ext_d[2]
@@ -208,6 +304,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 13.536 260 13.56 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  257.713 13.536 259.932 13.56 ;
+    END
   END ext_d[2]
   PIN ext_d[30]
     DIRECTION OUTPUT ;
@@ -215,6 +315,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 75.648 260 75.672 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 75.648 259.932 75.672 ;
     END
   END ext_d[30]
   PIN ext_d[31]
@@ -224,6 +328,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 77.856 260 77.88 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 77.856 259.932 77.88 ;
+    END
   END ext_d[31]
   PIN ext_d[32]
     DIRECTION OUTPUT ;
@@ -231,6 +339,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 80.064 260 80.096 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 80.064 259.984 80.096 ;
     END
   END ext_d[32]
   PIN ext_d[33]
@@ -240,6 +352,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 82.304 260 82.336 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  258.805 82.304 259.984 82.336 ;
+    END
   END ext_d[33]
   PIN ext_d[34]
     DIRECTION OUTPUT ;
@@ -247,6 +363,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 84.48 260 84.512 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 84.48 259.984 84.512 ;
     END
   END ext_d[34]
   PIN ext_d[35]
@@ -256,6 +376,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 86.72 260 86.752 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 86.72 259.984 86.752 ;
+    END
   END ext_d[35]
   PIN ext_d[36]
     DIRECTION OUTPUT ;
@@ -263,6 +387,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 88.96 260 88.992 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 88.96 259.984 88.992 ;
     END
   END ext_d[36]
   PIN ext_d[37]
@@ -272,6 +400,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 91.136 260 91.168 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 91.136 259.984 91.168 ;
+    END
   END ext_d[37]
   PIN ext_d[38]
     DIRECTION OUTPUT ;
@@ -279,6 +411,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 93.376 260 93.408 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 93.376 259.984 93.408 ;
     END
   END ext_d[38]
   PIN ext_d[39]
@@ -288,6 +424,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 95.616 260 95.648 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.333 95.616 259.984 95.648 ;
+    END
   END ext_d[39]
   PIN ext_d[3]
     DIRECTION OUTPUT ;
@@ -295,6 +435,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 15.744 260 15.768 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.045 15.744 259.932 15.768 ;
     END
   END ext_d[3]
   PIN ext_d[40]
@@ -304,6 +448,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 97.792 260 97.824 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 97.792 259.984 97.824 ;
+    END
   END ext_d[40]
   PIN ext_d[41]
     DIRECTION OUTPUT ;
@@ -311,6 +459,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 100.032 260 100.064 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 100.032 259.984 100.064 ;
     END
   END ext_d[41]
   PIN ext_d[42]
@@ -320,6 +472,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 102.272 260 102.304 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 102.272 259.984 102.304 ;
+    END
   END ext_d[42]
   PIN ext_d[43]
     DIRECTION OUTPUT ;
@@ -327,6 +483,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 104.448 260 104.48 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 104.448 259.984 104.48 ;
     END
   END ext_d[43]
   PIN ext_d[44]
@@ -336,6 +496,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 106.688 260 106.72 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 106.688 259.984 106.72 ;
+    END
   END ext_d[44]
   PIN ext_d[45]
     DIRECTION OUTPUT ;
@@ -343,6 +507,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 108.928 260 108.96 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 108.928 259.984 108.96 ;
     END
   END ext_d[45]
   PIN ext_d[46]
@@ -352,6 +520,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 111.104 260 111.136 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 111.104 259.984 111.136 ;
+    END
   END ext_d[46]
   PIN ext_d[47]
     DIRECTION OUTPUT ;
@@ -359,6 +531,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 113.344 260 113.376 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 113.344 259.984 113.376 ;
     END
   END ext_d[47]
   PIN ext_d[48]
@@ -368,6 +544,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 115.584 260 115.616 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.333 115.584 259.984 115.616 ;
+    END
   END ext_d[48]
   PIN ext_d[49]
     DIRECTION OUTPUT ;
@@ -375,6 +555,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 117.76 260 117.792 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.333 117.76 259.984 117.792 ;
     END
   END ext_d[49]
   PIN ext_d[4]
@@ -384,6 +568,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 17.952 260 17.976 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.505 17.952 259.932 17.976 ;
+    END
   END ext_d[4]
   PIN ext_d[50]
     DIRECTION OUTPUT ;
@@ -391,6 +579,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 120 260 120.032 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.333 120 259.984 120.032 ;
     END
   END ext_d[50]
   PIN ext_d[51]
@@ -400,6 +592,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 122.24 260 122.272 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 122.24 259.984 122.272 ;
+    END
   END ext_d[51]
   PIN ext_d[52]
     DIRECTION OUTPUT ;
@@ -407,6 +603,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 124.416 260 124.448 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.333 124.416 259.984 124.448 ;
     END
   END ext_d[52]
   PIN ext_d[53]
@@ -416,6 +616,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 126.656 260 126.688 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 126.656 259.984 126.688 ;
+    END
   END ext_d[53]
   PIN ext_d[5]
     DIRECTION OUTPUT ;
@@ -423,6 +627,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 20.208 260 20.232 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.153 20.208 259.932 20.232 ;
     END
   END ext_d[5]
   PIN ext_d[6]
@@ -432,6 +640,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 22.416 260 22.44 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  257.677 22.416 259.932 22.44 ;
+    END
   END ext_d[6]
   PIN ext_d[7]
     DIRECTION OUTPUT ;
@@ -439,6 +651,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 24.624 260 24.648 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.873 24.624 259.932 25.08 ;
     END
   END ext_d[7]
   PIN ext_d[8]
@@ -448,6 +664,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 26.832 260 26.856 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  257.497 26.832 259.932 26.856 ;
+    END
   END ext_d[8]
   PIN ext_d[9]
     DIRECTION OUTPUT ;
@@ -455,6 +675,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 29.04 260 29.064 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 29.04 259.932 29.064 ;
     END
   END ext_d[9]
   PIN ext_v
@@ -464,6 +688,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 128.896 260 128.928 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 128.896 259.984 128.928 ;
+    END
   END ext_v
   PIN idle
     DIRECTION OUTPUT ;
@@ -471,6 +699,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 131.072 260 131.104 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 131.072 259.984 131.104 ;
     END
   END idle
   PIN k[0]
@@ -480,6 +712,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 16.56 0.084 16.584 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 16.56 2.408 16.584 ;
+    END
   END k[0]
   PIN k[10]
     DIRECTION INPUT ;
@@ -487,6 +723,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 50.928 0.084 50.952 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 50.928 2.408 50.952 ;
     END
   END k[10]
   PIN k[11]
@@ -496,6 +736,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 54.384 0.084 54.408 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 54.384 2.408 54.408 ;
+    END
   END k[11]
   PIN k[1]
     DIRECTION INPUT ;
@@ -503,6 +747,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 20.016 0.084 20.04 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 20.016 0.097 20.04 ;
     END
   END k[1]
   PIN k[2]
@@ -512,6 +760,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 23.472 0.084 23.496 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 23.472 2.408 23.496 ;
+    END
   END k[2]
   PIN k[3]
     DIRECTION INPUT ;
@@ -519,6 +771,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 26.88 0.084 26.904 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 26.88 2.408 26.904 ;
     END
   END k[3]
   PIN k[4]
@@ -528,6 +784,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 30.336 0.084 30.36 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 30.336 2.408 30.36 ;
+    END
   END k[4]
   PIN k[5]
     DIRECTION INPUT ;
@@ -535,6 +795,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 33.744 0.084 33.768 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 33.744 0.137 34.2 ;
     END
   END k[5]
   PIN k[6]
@@ -544,6 +808,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 37.2 0.084 37.224 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 37.2 2.408 37.224 ;
+    END
   END k[6]
   PIN k[7]
     DIRECTION INPUT ;
@@ -551,6 +819,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 40.656 0.084 40.68 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 40.656 2.408 40.68 ;
     END
   END k[7]
   PIN k[8]
@@ -560,6 +832,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 44.064 0.084 44.088 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 44.064 2.408 44.088 ;
+    END
   END k[8]
   PIN k[9]
     DIRECTION INPUT ;
@@ -567,6 +843,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 47.52 0.084 47.544 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 47.52 0.137 47.88 ;
     END
   END k[9]
   PIN op_cr
@@ -576,6 +856,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 133.312 260 133.344 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  258.805 133.312 259.984 133.344 ;
+    END
   END op_cr
   PIN op_ext
     DIRECTION INPUT ;
@@ -583,6 +867,14 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 57.84 0.084 57.864 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 57.84 0.061 57.864 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.061 57.84 0.173 57.96 ;
     END
   END op_ext
   PIN op_v
@@ -592,6 +884,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 61.248 0.084 61.272 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 61.248 1.433 61.272 ;
+    END
   END op_v
   PIN op_x[0]
     DIRECTION INPUT ;
@@ -599,6 +895,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 64.704 0.084 64.728 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 64.704 2.408 64.728 ;
     END
   END op_x[0]
   PIN op_x[10]
@@ -608,6 +908,14 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 99.072 0.084 99.096 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 99.072 0.061 99.096 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.061 99.072 0.173 99.192 ;
+    END
   END op_x[10]
   PIN op_x[11]
     DIRECTION INPUT ;
@@ -615,6 +923,14 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 102.48 0.084 102.504 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 102.48 0.061 102.504 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.061 102.48 0.137 103.272 ;
     END
   END op_x[11]
   PIN op_x[12]
@@ -624,6 +940,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 105.936 0.084 105.96 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 105.936 2.408 105.96 ;
+    END
   END op_x[12]
   PIN op_x[13]
     DIRECTION INPUT ;
@@ -631,6 +951,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 109.392 0.084 109.416 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 109.392 0.137 109.416 ;
     END
   END op_x[13]
   PIN op_x[14]
@@ -640,6 +964,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 112.8 0.084 112.824 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 112.8 2.408 112.824 ;
+    END
   END op_x[14]
   PIN op_x[15]
     DIRECTION INPUT ;
@@ -647,6 +975,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 116.256 0.084 116.28 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 116.256 0.173 116.28 ;
     END
   END op_x[15]
   PIN op_x[16]
@@ -656,6 +988,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 119.68 0.07 119.712 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 119.68 0.131 119.712 ;
+    END
   END op_x[16]
   PIN op_x[17]
     DIRECTION INPUT ;
@@ -663,6 +999,14 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 123.136 0.07 123.168 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 123.136 0.037 123.168 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.037 123.136 0.179 123.296 ;
     END
   END op_x[17]
   PIN op_x[18]
@@ -672,6 +1016,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 126.528 0.07 126.56 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 126.528 0.179 126.56 ;
+    END
   END op_x[18]
   PIN op_x[19]
     DIRECTION INPUT ;
@@ -679,6 +1027,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 129.984 0.07 130.016 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 129.984 2.003 130.016 ;
     END
   END op_x[19]
   PIN op_x[1]
@@ -688,6 +1040,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 68.112 0.084 68.136 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 68.112 2.408 68.136 ;
+    END
   END op_x[1]
   PIN op_x[20]
     DIRECTION INPUT ;
@@ -695,6 +1051,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 133.44 0.07 133.472 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 133.44 0.131 133.472 ;
     END
   END op_x[20]
   PIN op_x[21]
@@ -704,6 +1064,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 136.832 0.07 136.864 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 136.832 2.16 136.864 ;
+    END
   END op_x[21]
   PIN op_x[22]
     DIRECTION INPUT ;
@@ -711,6 +1075,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 140.288 0.07 140.32 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 140.288 4.019 140.32 ;
     END
   END op_x[22]
   PIN op_x[23]
@@ -720,6 +1088,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 143.744 0.07 143.776 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 143.744 2.16 143.776 ;
+    END
   END op_x[23]
   PIN op_x[24]
     DIRECTION INPUT ;
@@ -727,6 +1099,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 147.136 0.07 147.168 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 147.136 0.611 147.168 ;
     END
   END op_x[24]
   PIN op_x[25]
@@ -736,6 +1112,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 150.592 0.07 150.624 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 150.592 0.131 150.624 ;
+    END
   END op_x[25]
   PIN op_x[26]
     DIRECTION INPUT ;
@@ -743,6 +1123,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 154.048 0.07 154.08 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 154.048 2.16 154.08 ;
     END
   END op_x[26]
   PIN op_x[27]
@@ -752,6 +1136,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 157.504 0.07 157.536 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 157.504 0.131 157.536 ;
+    END
   END op_x[27]
   PIN op_x[28]
     DIRECTION INPUT ;
@@ -759,6 +1147,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 160.896 0.07 160.928 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 160.896 2.16 160.928 ;
     END
   END op_x[28]
   PIN op_x[29]
@@ -768,6 +1160,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 164.352 0.07 164.384 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 164.352 0.131 164.384 ;
+    END
   END op_x[29]
   PIN op_x[2]
     DIRECTION INPUT ;
@@ -775,6 +1171,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 71.568 0.084 71.592 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 71.568 2.408 71.592 ;
     END
   END op_x[2]
   PIN op_x[30]
@@ -784,6 +1184,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 167.808 0.07 167.84 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 167.808 1.763 167.84 ;
+    END
   END op_x[30]
   PIN op_x[31]
     DIRECTION INPUT ;
@@ -791,6 +1195,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 171.2 0.07 171.232 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 171.2 2.16 171.232 ;
     END
   END op_x[31]
   PIN op_x[32]
@@ -800,6 +1208,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 174.656 0.07 174.688 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 174.656 2.16 174.688 ;
+    END
   END op_x[32]
   PIN op_x[33]
     DIRECTION INPUT ;
@@ -807,6 +1219,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 178.112 0.07 178.144 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 178.112 2.291 178.144 ;
     END
   END op_x[33]
   PIN op_x[34]
@@ -816,6 +1232,14 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 181.504 0.07 181.536 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 181.504 0.037 181.536 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.037 181.504 0.179 181.664 ;
+    END
   END op_x[34]
   PIN op_x[35]
     DIRECTION INPUT ;
@@ -823,6 +1247,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 184.96 0.07 184.992 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 184.96 2.16 184.992 ;
     END
   END op_x[35]
   PIN op_x[36]
@@ -832,6 +1260,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 188.416 0.07 188.448 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 188.416 0.131 188.448 ;
+    END
   END op_x[36]
   PIN op_x[37]
     DIRECTION INPUT ;
@@ -839,6 +1271,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 191.872 0.07 191.904 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 191.872 2.16 191.904 ;
     END
   END op_x[37]
   PIN op_x[38]
@@ -848,6 +1284,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 195.264 0.07 195.296 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 195.264 3.443 195.296 ;
+    END
   END op_x[38]
   PIN op_x[39]
     DIRECTION INPUT ;
@@ -855,6 +1295,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 198.72 0.07 198.752 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 198.72 2.16 198.752 ;
     END
   END op_x[39]
   PIN op_x[3]
@@ -864,6 +1308,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 75.024 0.084 75.048 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 75.024 0.097 75.048 ;
+    END
   END op_x[3]
   PIN op_x[40]
     DIRECTION INPUT ;
@@ -871,6 +1319,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 202.176 0.07 202.208 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 202.176 1.763 202.208 ;
     END
   END op_x[40]
   PIN op_x[41]
@@ -880,6 +1332,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 205.568 0.07 205.6 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 205.568 1.763 205.6 ;
+    END
   END op_x[41]
   PIN op_x[42]
     DIRECTION INPUT ;
@@ -887,6 +1343,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 209.024 0.07 209.056 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 209.024 1.763 209.056 ;
     END
   END op_x[42]
   PIN op_x[43]
@@ -896,6 +1356,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 212.48 0.07 212.512 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 212.48 0.179 212.512 ;
+    END
   END op_x[43]
   PIN op_x[44]
     DIRECTION INPUT ;
@@ -903,6 +1367,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 215.872 0.07 215.904 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 215.872 1.763 215.904 ;
     END
   END op_x[44]
   PIN op_x[45]
@@ -912,6 +1380,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 219.328 0.07 219.36 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 219.328 2.16 219.36 ;
+    END
   END op_x[45]
   PIN op_x[46]
     DIRECTION INPUT ;
@@ -919,6 +1391,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  0 222.784 0.07 222.816 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 222.784 0.131 222.816 ;
     END
   END op_x[46]
   PIN op_x[47]
@@ -928,6 +1404,14 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  0 226.24 0.07 226.272 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 226.24 0.037 226.272 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.037 226.112 0.179 226.272 ;
+    END
   END op_x[47]
   PIN op_x[48]
     DIRECTION INPUT ;
@@ -935,6 +1419,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 229.632 0.084 229.656 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 229.152 0.137 229.656 ;
     END
   END op_x[48]
   PIN op_x[49]
@@ -944,6 +1432,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 233.088 0.084 233.112 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 233.088 2.408 233.112 ;
+    END
   END op_x[49]
   PIN op_x[4]
     DIRECTION INPUT ;
@@ -951,6 +1443,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 78.432 0.084 78.456 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 78.432 2.408 78.456 ;
     END
   END op_x[4]
   PIN op_x[50]
@@ -960,6 +1456,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 236.544 0.084 236.568 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 236.544 2.408 236.568 ;
+    END
   END op_x[50]
   PIN op_x[51]
     DIRECTION INPUT ;
@@ -967,6 +1467,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 239.952 0.084 239.976 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 239.952 2.408 239.976 ;
     END
   END op_x[51]
   PIN op_x[52]
@@ -976,6 +1480,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 243.408 0.084 243.432 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 243.408 2.408 243.432 ;
+    END
   END op_x[52]
   PIN op_x[53]
     DIRECTION INPUT ;
@@ -983,6 +1491,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 246.816 0.084 246.84 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 246.816 2.408 246.84 ;
     END
   END op_x[53]
   PIN op_x[5]
@@ -992,6 +1504,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 81.888 0.084 81.912 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 81.888 0.137 82.056 ;
+    END
   END op_x[5]
   PIN op_x[6]
     DIRECTION INPUT ;
@@ -999,6 +1515,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 85.296 0.084 85.32 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 85.296 0.137 85.32 ;
     END
   END op_x[6]
   PIN op_x[7]
@@ -1008,6 +1528,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 88.752 0.084 88.776 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 88.752 2.408 88.776 ;
+    END
   END op_x[7]
   PIN op_x[8]
     DIRECTION INPUT ;
@@ -1015,6 +1539,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 92.208 0.084 92.232 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 92.208 0.137 92.232 ;
     END
   END op_x[8]
   PIN op_x[9]
@@ -1024,6 +1552,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  0 95.616 0.084 95.64 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 95.616 0.097 95.736 ;
+    END
   END op_x[9]
   PIN root_key[0]
     DIRECTION OUTPUT ;
@@ -1031,6 +1563,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 135.552 260 135.584 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 135.552 259.984 135.584 ;
     END
   END root_key[0]
   PIN root_key[10]
@@ -1040,6 +1576,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 157.728 260 157.752 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.873 157.344 259.932 157.752 ;
+    END
   END root_key[10]
   PIN root_key[11]
     DIRECTION OUTPUT ;
@@ -1047,6 +1587,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 159.936 260 159.96 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 159.936 259.932 159.96 ;
     END
   END root_key[11]
   PIN root_key[12]
@@ -1056,6 +1600,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 162.144 260 162.168 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 162.144 259.932 162.168 ;
+    END
   END root_key[12]
   PIN root_key[13]
     DIRECTION OUTPUT ;
@@ -1063,6 +1611,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 164.352 260 164.376 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 164.352 259.932 164.376 ;
     END
   END root_key[13]
   PIN root_key[14]
@@ -1072,6 +1624,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 166.608 260 166.632 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 166.608 259.932 166.632 ;
+    END
   END root_key[14]
   PIN root_key[15]
     DIRECTION OUTPUT ;
@@ -1079,6 +1635,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 168.816 260 168.84 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 168.816 259.932 168.84 ;
     END
   END root_key[15]
   PIN root_key[16]
@@ -1088,6 +1648,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 171.024 260 171.048 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 171.024 259.932 171.048 ;
+    END
   END root_key[16]
   PIN root_key[17]
     DIRECTION OUTPUT ;
@@ -1095,6 +1659,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 173.232 260 173.256 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 173.232 259.932 173.256 ;
     END
   END root_key[17]
   PIN root_key[18]
@@ -1104,6 +1672,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 175.44 260 175.464 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 175.44 259.932 175.464 ;
+    END
   END root_key[18]
   PIN root_key[19]
     DIRECTION OUTPUT ;
@@ -1111,6 +1683,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 177.696 260 177.72 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 177.696 259.932 177.72 ;
     END
   END root_key[19]
   PIN root_key[1]
@@ -1120,6 +1696,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 137.728 260 137.76 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  257.796 137.728 259.984 137.76 ;
+    END
   END root_key[1]
   PIN root_key[20]
     DIRECTION OUTPUT ;
@@ -1127,6 +1707,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 179.904 260 179.928 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 179.904 259.932 179.928 ;
     END
   END root_key[20]
   PIN root_key[21]
@@ -1136,6 +1720,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 182.112 260 182.136 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 182.112 259.932 182.136 ;
+    END
   END root_key[21]
   PIN root_key[22]
     DIRECTION OUTPUT ;
@@ -1143,6 +1731,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 184.32 260 184.344 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 184.32 259.932 184.344 ;
     END
   END root_key[22]
   PIN root_key[23]
@@ -1152,6 +1744,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 186.576 260 186.6 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 186.576 259.932 186.6 ;
+    END
   END root_key[23]
   PIN root_key[24]
     DIRECTION OUTPUT ;
@@ -1159,6 +1755,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 188.784 260 188.808 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 188.784 259.932 188.808 ;
     END
   END root_key[24]
   PIN root_key[25]
@@ -1168,6 +1768,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 190.992 260 191.016 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 190.992 259.932 191.016 ;
+    END
   END root_key[25]
   PIN root_key[26]
     DIRECTION OUTPUT ;
@@ -1175,6 +1779,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 193.2 260 193.224 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 193.2 259.932 193.224 ;
     END
   END root_key[26]
   PIN root_key[27]
@@ -1184,6 +1792,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 195.408 260 195.432 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 195.408 259.932 195.432 ;
+    END
   END root_key[27]
   PIN root_key[28]
     DIRECTION OUTPUT ;
@@ -1191,6 +1803,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 197.664 260 197.688 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 197.664 259.932 197.688 ;
     END
   END root_key[28]
   PIN root_key[29]
@@ -1200,6 +1816,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 199.872 260 199.896 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  257.713 199.872 259.932 199.896 ;
+    END
   END root_key[29]
   PIN root_key[2]
     DIRECTION OUTPUT ;
@@ -1207,6 +1827,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 139.968 260 140 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 139.968 259.984 140 ;
     END
   END root_key[2]
   PIN root_key[30]
@@ -1216,6 +1840,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 202.08 260 202.104 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 202.08 259.932 202.104 ;
+    END
   END root_key[30]
   PIN root_key[31]
     DIRECTION OUTPUT ;
@@ -1223,6 +1851,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 204.288 260 204.312 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 204.288 259.932 204.312 ;
     END
   END root_key[31]
   PIN root_key[32]
@@ -1232,6 +1864,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 206.496 260 206.52 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 206.496 259.932 206.52 ;
+    END
   END root_key[32]
   PIN root_key[33]
     DIRECTION OUTPUT ;
@@ -1239,6 +1875,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 208.752 260 208.776 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 208.752 259.932 208.776 ;
     END
   END root_key[33]
   PIN root_key[34]
@@ -1248,6 +1888,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 210.96 260 210.984 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 210.96 259.932 210.984 ;
+    END
   END root_key[34]
   PIN root_key[35]
     DIRECTION OUTPUT ;
@@ -1255,6 +1899,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 213.168 260 213.192 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 213.168 259.932 213.192 ;
     END
   END root_key[35]
   PIN root_key[36]
@@ -1264,6 +1912,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 215.376 260 215.4 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  257.641 215.376 259.932 215.4 ;
+    END
   END root_key[36]
   PIN root_key[37]
     DIRECTION OUTPUT ;
@@ -1271,6 +1923,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 217.584 260 217.608 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 217.584 259.932 217.608 ;
     END
   END root_key[37]
   PIN root_key[38]
@@ -1280,6 +1936,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 219.84 260 219.864 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  258.793 219.84 259.932 219.864 ;
+    END
   END root_key[38]
   PIN root_key[39]
     DIRECTION OUTPUT ;
@@ -1287,6 +1947,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 222.016 260 222.048 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  258.805 222.016 259.984 222.048 ;
     END
   END root_key[39]
   PIN root_key[3]
@@ -1296,6 +1960,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 142.208 260 142.24 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.333 142.208 259.984 142.24 ;
+    END
   END root_key[3]
   PIN root_key[40]
     DIRECTION OUTPUT ;
@@ -1303,6 +1971,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 224.256 260 224.288 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 224.256 259.984 224.288 ;
     END
   END root_key[40]
   PIN root_key[41]
@@ -1312,6 +1984,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 226.496 260 226.528 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  258.805 226.496 259.984 226.528 ;
+    END
   END root_key[41]
   PIN root_key[42]
     DIRECTION OUTPUT ;
@@ -1319,6 +1995,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 228.672 260 228.704 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 228.672 259.984 228.704 ;
     END
   END root_key[42]
   PIN root_key[43]
@@ -1328,6 +2008,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 230.912 260 230.944 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  258.181 230.912 259.984 230.944 ;
+    END
   END root_key[43]
   PIN root_key[44]
     DIRECTION OUTPUT ;
@@ -1335,6 +2019,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 233.152 260 233.184 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 233.152 259.984 233.184 ;
     END
   END root_key[44]
   PIN root_key[45]
@@ -1344,6 +2032,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 235.328 260 235.36 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 235.328 259.984 235.36 ;
+    END
   END root_key[45]
   PIN root_key[46]
     DIRECTION OUTPUT ;
@@ -1351,6 +2043,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 237.568 260 237.6 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  258.805 237.568 259.984 237.6 ;
     END
   END root_key[46]
   PIN root_key[47]
@@ -1360,6 +2056,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 239.808 260 239.84 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 239.808 259.984 239.84 ;
+    END
   END root_key[47]
   PIN root_key[48]
     DIRECTION OUTPUT ;
@@ -1367,6 +2067,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 241.984 260 242.016 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 241.984 259.984 242.016 ;
     END
   END root_key[48]
   PIN root_key[49]
@@ -1376,6 +2080,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 244.224 260 244.256 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 244.224 259.984 244.256 ;
+    END
   END root_key[49]
   PIN root_key[4]
     DIRECTION OUTPUT ;
@@ -1383,6 +2091,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 144.384 260 144.416 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 144.384 259.984 144.416 ;
     END
   END root_key[4]
   PIN root_key[50]
@@ -1392,6 +2104,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 246.464 260 246.496 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  258.229 246.464 259.984 246.496 ;
+    END
   END root_key[50]
   PIN root_key[51]
     DIRECTION OUTPUT ;
@@ -1399,6 +2115,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 248.64 260 248.672 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  259.285 248.64 259.984 248.672 ;
     END
   END root_key[51]
   PIN root_key[52]
@@ -1408,6 +2128,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 250.88 260 250.912 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  259.861 250.88 259.984 250.912 ;
+    END
   END root_key[52]
   PIN root_key[5]
     DIRECTION OUTPUT ;
@@ -1415,6 +2139,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M6 ;
         RECT  259.93 146.624 260 146.656 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  258.181 146.624 259.984 146.656 ;
     END
   END root_key[5]
   PIN root_key[6]
@@ -1424,6 +2152,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M6 ;
         RECT  259.93 148.864 260 148.896 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  257.796 148.864 259.984 148.896 ;
+    END
   END root_key[6]
   PIN root_key[7]
     DIRECTION OUTPUT ;
@@ -1431,6 +2163,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  259.916 151.056 260 151.08 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  259.333 151.056 259.932 151.08 ;
     END
   END root_key[7]
   PIN root_key[8]
@@ -1440,6 +2176,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 153.264 260 153.288 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  259.873 152.784 259.932 153.288 ;
+    END
   END root_key[8]
   PIN root_key[9]
     DIRECTION OUTPUT ;
@@ -1448,6 +2188,10 @@ MACRO ot_hgi_topk_heap_tile
       LAYER M4 ;
         RECT  259.916 155.52 260 155.544 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  257.713 155.52 259.932 155.544 ;
+    END
   END root_key[9]
   PIN rst_n
     DIRECTION INPUT ;
@@ -1455,6 +2199,10 @@ MACRO ot_hgi_topk_heap_tile
     PORT
       LAYER M4 ;
         RECT  0 250.272 0.084 250.296 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 250.272 0.857 250.296 ;
     END
   END rst_n
   PIN VDD
@@ -15222,32 +15970,11 @@ MACRO ot_hgi_topk_heap_tile
      RECT  0.025 82.032 0.06 82.056 ;
      RECT  0.025 95.712 0.06 95.736 ;
      RECT  0.025 229.152 0.06 229.176 ;
-     RECT  0.06 57.84 0.061 57.864 ;
-     RECT  0.06 99.072 0.061 99.096 ;
-     RECT  0.06 102.48 0.061 102.504 ;
-     RECT  0.06 9.696 0.092 9.72 ;
-     RECT  0.06 20.016 0.097 20.04 ;
-     RECT  0.06 75.024 0.097 75.048 ;
-     RECT  0.06 95.616 0.097 95.736 ;
      RECT  0.097 20.016 0.137 20.136 ;
-     RECT  0.06 33.744 0.137 34.2 ;
-     RECT  0.06 47.52 0.137 47.88 ;
      RECT  0.097 75.024 0.137 75.144 ;
-     RECT  0.06 81.888 0.137 82.056 ;
-     RECT  0.06 85.296 0.137 85.32 ;
-     RECT  0.06 92.208 0.137 92.232 ;
      RECT  0.097 95.232 0.137 95.736 ;
-     RECT  0.061 102.48 0.137 103.272 ;
-     RECT  0.06 109.392 0.137 109.416 ;
-     RECT  0.06 229.152 0.137 229.656 ;
      RECT  0.092 9.696 0.173 9.864 ;
-     RECT  0.061 57.84 0.173 57.96 ;
-     RECT  0.061 99.072 0.173 99.192 ;
-     RECT  0.06 116.256 0.173 116.28 ;
      RECT  0.173 9.84 0.179 9.864 ;
-     RECT  0.06 13.152 0.857 13.176 ;
-     RECT  0.06 250.272 0.857 250.296 ;
-     RECT  0.06 61.248 1.433 61.272 ;
      RECT  0.037 191.52 1.717 191.544 ;
      RECT  0.133 202.32 1.717 202.344 ;
      RECT  0.085 204.576 1.717 204.6 ;
@@ -15255,27 +15982,11 @@ MACRO ot_hgi_topk_heap_tile
      RECT  0.085 134.016 1.957 134.04 ;
      RECT  0.085 153.456 2.005 153.48 ;
      RECT  0.137 95.232 2.401 95.256 ;
-     RECT  0.06 16.56 2.408 16.584 ;
      RECT  0.137 20.112 2.408 20.136 ;
-     RECT  0.06 23.472 2.408 23.496 ;
-     RECT  0.06 26.88 2.408 26.904 ;
-     RECT  0.06 30.336 2.408 30.36 ;
-     RECT  0.06 37.2 2.408 37.224 ;
-     RECT  0.06 40.656 2.408 40.68 ;
-     RECT  0.06 44.064 2.408 44.088 ;
-     RECT  0.06 50.928 2.408 50.952 ;
-     RECT  0.06 54.384 2.408 54.408 ;
-     RECT  0.06 64.704 2.408 64.728 ;
-     RECT  0.06 68.112 2.408 68.136 ;
-     RECT  0.06 71.568 2.408 71.592 ;
      RECT  0.137 75.12 2.408 75.144 ;
-     RECT  0.06 78.432 2.408 78.456 ;
      RECT  0.025 86.784 2.408 86.808 ;
-     RECT  0.06 88.752 2.408 88.776 ;
      RECT  2.401 95.232 2.408 95.688 ;
      RECT  0.137 103.248 2.408 103.272 ;
-     RECT  0.06 105.936 2.408 105.96 ;
-     RECT  0.06 112.8 2.408 112.824 ;
      RECT  0.085 127.824 2.408 127.848 ;
      RECT  0.133 131.088 2.408 131.112 ;
      RECT  0.037 132.24 2.408 132.264 ;
@@ -15293,11 +16004,6 @@ MACRO ot_hgi_topk_heap_tile
      RECT  1.717 206.88 2.408 207.48 ;
      RECT  1.717 215.856 2.408 215.88 ;
      RECT  2.245 218.88 2.408 218.904 ;
-     RECT  0.06 233.088 2.408 233.112 ;
-     RECT  0.06 236.544 2.408 236.568 ;
-     RECT  0.06 239.952 2.408 239.976 ;
-     RECT  0.06 243.408 2.408 243.432 ;
-     RECT  0.06 246.816 2.408 246.84 ;
      RECT  2.408 2.148 2.512 257.592 ;
      RECT  2.512 2.418 2.704 257.322 ;
      RECT  2.704 204.576 2.765 205.56 ;
@@ -37455,70 +38161,6 @@ MACRO ot_hgi_topk_heap_tile
      RECT  257.641 242.016 259.907 242.04 ;
      RECT  258.275 244.272 259.907 244.296 ;
      RECT  257.713 250.896 259.907 250.92 ;
-     RECT  258.217 9.12 259.932 9.144 ;
-     RECT  257.533 11.328 259.932 11.352 ;
-     RECT  257.713 13.536 259.932 13.56 ;
-     RECT  259.045 15.744 259.932 15.768 ;
-     RECT  258.505 17.952 259.932 17.976 ;
-     RECT  259.153 20.208 259.932 20.232 ;
-     RECT  257.677 22.416 259.932 22.44 ;
-     RECT  259.873 24.624 259.932 25.08 ;
-     RECT  257.497 26.832 259.932 26.856 ;
-     RECT  259.333 29.04 259.932 29.064 ;
-     RECT  258.793 31.296 259.932 31.32 ;
-     RECT  259.333 33.504 259.932 33.528 ;
-     RECT  258.793 35.712 259.932 35.736 ;
-     RECT  259.333 37.92 259.932 37.944 ;
-     RECT  259.333 40.176 259.932 40.2 ;
-     RECT  257.821 42.384 259.932 42.408 ;
-     RECT  258.577 44.592 259.932 44.616 ;
-     RECT  259.117 46.8 259.932 46.824 ;
-     RECT  258.469 49.008 259.932 49.032 ;
-     RECT  257.713 51.264 259.932 51.288 ;
-     RECT  259.081 53.472 259.932 53.496 ;
-     RECT  258.541 55.68 259.932 55.704 ;
-     RECT  258.217 57.888 259.932 57.912 ;
-     RECT  258.181 60.096 259.932 60.12 ;
-     RECT  259.297 62.352 259.932 62.376 ;
-     RECT  258.793 64.56 259.932 64.584 ;
-     RECT  258.793 66.768 259.932 66.792 ;
-     RECT  258.793 68.976 259.932 69 ;
-     RECT  258.793 71.184 259.932 71.208 ;
-     RECT  258.793 73.44 259.932 73.464 ;
-     RECT  258.793 75.648 259.932 75.672 ;
-     RECT  258.793 77.856 259.932 77.88 ;
-     RECT  259.333 151.056 259.932 151.08 ;
-     RECT  259.873 152.784 259.932 153.288 ;
-     RECT  257.713 155.52 259.932 155.544 ;
-     RECT  259.873 157.344 259.932 157.752 ;
-     RECT  259.333 159.936 259.932 159.96 ;
-     RECT  258.793 162.144 259.932 162.168 ;
-     RECT  258.793 164.352 259.932 164.376 ;
-     RECT  258.793 166.608 259.932 166.632 ;
-     RECT  259.333 168.816 259.932 168.84 ;
-     RECT  259.333 171.024 259.932 171.048 ;
-     RECT  258.793 173.232 259.932 173.256 ;
-     RECT  258.793 175.44 259.932 175.464 ;
-     RECT  258.793 177.696 259.932 177.72 ;
-     RECT  258.793 179.904 259.932 179.928 ;
-     RECT  258.793 182.112 259.932 182.136 ;
-     RECT  258.793 184.32 259.932 184.344 ;
-     RECT  259.333 186.576 259.932 186.6 ;
-     RECT  259.333 188.784 259.932 188.808 ;
-     RECT  259.333 190.992 259.932 191.016 ;
-     RECT  258.793 193.2 259.932 193.224 ;
-     RECT  258.793 195.408 259.932 195.432 ;
-     RECT  258.793 197.664 259.932 197.688 ;
-     RECT  257.713 199.872 259.932 199.896 ;
-     RECT  259.333 202.08 259.932 202.104 ;
-     RECT  258.793 204.288 259.932 204.312 ;
-     RECT  259.333 206.496 259.932 206.52 ;
-     RECT  259.333 208.752 259.932 208.776 ;
-     RECT  258.793 210.96 259.932 210.984 ;
-     RECT  258.793 213.168 259.932 213.192 ;
-     RECT  257.641 215.376 259.932 215.4 ;
-     RECT  258.793 217.584 259.932 217.608 ;
-     RECT  258.793 219.84 259.932 219.864 ;
      RECT  259.932 25.056 259.985 25.08 ;
      RECT  259.932 152.784 259.985 152.808 ;
      RECT  259.932 157.344 259.985 157.368 ;
@@ -49383,40 +50025,7 @@ MACRO ot_hgi_topk_heap_tile
      RECT  250.8 257.333 250.92 257.603 ;
      RECT  256.2 257.333 256.32 257.603 ;
     LAYER M6 ;
-     RECT  0.016 123.136 0.037 123.168 ;
-     RECT  0.016 181.504 0.037 181.536 ;
-     RECT  0.016 226.24 0.037 226.272 ;
-     RECT  0.016 119.68 0.131 119.712 ;
-     RECT  0.016 133.44 0.131 133.472 ;
-     RECT  0.016 150.592 0.131 150.624 ;
-     RECT  0.016 157.504 0.131 157.536 ;
-     RECT  0.016 164.352 0.131 164.384 ;
-     RECT  0.016 188.416 0.131 188.448 ;
-     RECT  0.016 222.784 0.131 222.816 ;
-     RECT  0.037 123.136 0.179 123.296 ;
-     RECT  0.016 126.528 0.179 126.56 ;
-     RECT  0.037 181.504 0.179 181.664 ;
-     RECT  0.016 212.48 0.179 212.512 ;
-     RECT  0.037 226.112 0.179 226.272 ;
-     RECT  0.016 147.136 0.611 147.168 ;
-     RECT  0.016 167.808 1.763 167.84 ;
-     RECT  0.016 202.176 1.763 202.208 ;
-     RECT  0.016 205.568 1.763 205.6 ;
-     RECT  0.016 209.024 1.763 209.056 ;
-     RECT  0.016 215.872 1.763 215.904 ;
-     RECT  0.016 129.984 2.003 130.016 ;
      RECT  0.133 9.728 2.16 9.76 ;
-     RECT  0.016 136.832 2.16 136.864 ;
-     RECT  0.016 143.744 2.16 143.776 ;
-     RECT  0.016 154.048 2.16 154.08 ;
-     RECT  0.016 160.896 2.16 160.928 ;
-     RECT  0.016 171.2 2.16 171.232 ;
-     RECT  0.016 174.656 2.16 174.688 ;
-     RECT  0.016 184.96 2.16 184.992 ;
-     RECT  0.016 191.872 2.16 191.904 ;
-     RECT  0.016 198.72 2.16 198.752 ;
-     RECT  0.016 219.328 2.16 219.36 ;
-     RECT  0.016 178.112 2.291 178.144 ;
      RECT  2.16 218.529 2.291 219.36 ;
      RECT  2.16 94.329 2.821 95.001 ;
      RECT  2.773 107.84 2.915 107.872 ;
@@ -49424,14 +50033,12 @@ MACRO ot_hgi_topk_heap_tile
      RECT  2.16 72.729 3.397 73.401 ;
      RECT  2.16 83.529 3.397 84.201 ;
      RECT  2.16 159.129 3.443 160.928 ;
-     RECT  0.016 195.264 3.443 195.296 ;
      RECT  2.16 196.929 3.587 198.752 ;
      RECT  2.16 24.129 3.925 24.801 ;
      RECT  3.397 64.32 3.925 64.352 ;
      RECT  2.16 207.729 3.925 208.401 ;
      RECT  2.16 213.129 3.925 213.801 ;
      RECT  2.16 136.832 4.019 138.201 ;
-     RECT  0.016 140.288 4.019 140.32 ;
      RECT  2.16 142.929 4.019 143.776 ;
      RECT  2.16 169.929 4.019 171.232 ;
      RECT  2.16 174.656 4.019 176.001 ;
@@ -54034,52 +54641,6 @@ MACRO ot_hgi_topk_heap_tile
      RECT  226.883 245.529 257.796 246.201 ;
      RECT  236.723 250.929 257.796 251.601 ;
      RECT  207.539 256.329 257.796 257.001 ;
-     RECT  259.285 80.064 259.984 80.096 ;
-     RECT  258.805 82.304 259.984 82.336 ;
-     RECT  259.285 84.48 259.984 84.512 ;
-     RECT  259.285 86.72 259.984 86.752 ;
-     RECT  259.861 88.96 259.984 88.992 ;
-     RECT  259.861 91.136 259.984 91.168 ;
-     RECT  259.861 93.376 259.984 93.408 ;
-     RECT  259.333 95.616 259.984 95.648 ;
-     RECT  259.861 97.792 259.984 97.824 ;
-     RECT  259.285 100.032 259.984 100.064 ;
-     RECT  259.285 102.272 259.984 102.304 ;
-     RECT  259.285 104.448 259.984 104.48 ;
-     RECT  259.285 106.688 259.984 106.72 ;
-     RECT  259.285 108.928 259.984 108.96 ;
-     RECT  259.285 111.104 259.984 111.136 ;
-     RECT  259.861 113.344 259.984 113.376 ;
-     RECT  259.333 115.584 259.984 115.616 ;
-     RECT  259.333 117.76 259.984 117.792 ;
-     RECT  259.333 120 259.984 120.032 ;
-     RECT  259.861 122.24 259.984 122.272 ;
-     RECT  259.333 124.416 259.984 124.448 ;
-     RECT  259.285 126.656 259.984 126.688 ;
-     RECT  259.285 128.896 259.984 128.928 ;
-     RECT  259.285 131.072 259.984 131.104 ;
-     RECT  258.805 133.312 259.984 133.344 ;
-     RECT  259.285 135.552 259.984 135.584 ;
-     RECT  257.796 137.728 259.984 137.76 ;
-     RECT  259.285 139.968 259.984 140 ;
-     RECT  259.333 142.208 259.984 142.24 ;
-     RECT  259.285 144.384 259.984 144.416 ;
-     RECT  258.181 146.624 259.984 146.656 ;
-     RECT  257.796 148.864 259.984 148.896 ;
-     RECT  258.805 222.016 259.984 222.048 ;
-     RECT  259.285 224.256 259.984 224.288 ;
-     RECT  258.805 226.496 259.984 226.528 ;
-     RECT  259.285 228.672 259.984 228.704 ;
-     RECT  258.181 230.912 259.984 230.944 ;
-     RECT  259.861 233.152 259.984 233.184 ;
-     RECT  259.285 235.328 259.984 235.36 ;
-     RECT  258.805 237.568 259.984 237.6 ;
-     RECT  259.861 239.808 259.984 239.84 ;
-     RECT  259.861 241.984 259.984 242.016 ;
-     RECT  259.861 244.224 259.984 244.256 ;
-     RECT  258.229 246.464 259.984 246.496 ;
-     RECT  259.285 248.64 259.984 248.672 ;
-     RECT  259.861 250.88 259.984 250.912 ;
   END
 END ot_hgi_topk_heap_tile
 END LIBRARY

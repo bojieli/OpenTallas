@@ -16,6 +16,10 @@ MACRO ot_attn_bank_ew544
       LAYER M5 ;
         RECT  5.904 0 5.928 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  5.904 0.144 5.928 0.517 ;
+    END
   END clk
   PIN d[0]
     DIRECTION INPUT ;
@@ -10959,7 +10963,6 @@ MACRO ot_attn_bank_ew544
      RECT  11.724 8.016 11.765 8.04 ;
      RECT  11.724 58.32 11.765 58.344 ;
     LAYER M5 ;
-     RECT  5.904 0.144 5.928 0.517 ;
      RECT  2.256 0.709 2.28 0.757 ;
      RECT  0.78 0.517 0.9 0.787 ;
      RECT  5.904 0.517 6.3 0.787 ;

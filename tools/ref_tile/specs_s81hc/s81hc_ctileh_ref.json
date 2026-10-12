@@ -37,10 +37,9 @@
  "reset_ports": [],
  "outline": {
   "w": 576.72,
-  "h": 572.4
+  "h": 531.36
  },
- "why_floorplan": "half-octet column sub-tile (HALF=1 RLY=2, std 169,703 um2 from ctileh-673aa90b0 synth): hand views h400/h450 FLOORPLAN_MARGIN util 74%/66%, h500 59%; width fixed by the contract_hch N/S chain faces (575.992), height grown to util 0.52 (572 um, one clock root < 600 um span). The full-octet ctile (std 319k) would need 576 x 1067 um on one root -> not built; HALF is the column tile.",
- "pg_layer": "M6",
+ "why_floorplan": "half-octet column sub-tile (HALF=1 RLY=2, std 169,703 um2 from ctileh-673aa90b0 synth): hand views h400/h450 FLOORPLAN_MARGIN util 74%/66%, h500 59%; width fixed by the contract_hch N/S chain faces (575.992), height grown to util 0.52 (572 um, one clock root < 600 um span). The full-octet ctile (std 319k) would need 576 x 1067 um on one root -> not built; HALF is the column tile. | 2026-10-12 contract v11 (main f13695e45): slot height 572.4 -> 531.36 (64 slots + root row were 877.6 um too tall above the corridor); util 0.52 -> ~0.56.",
  "macros": [],
  "pins": {
   "N": [
