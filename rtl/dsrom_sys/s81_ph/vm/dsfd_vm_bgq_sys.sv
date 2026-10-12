@@ -574,6 +574,517 @@ module dsfd_vm_bgq #(
         else begin o_f <= fm; o_o <= om; end
 endmodule
 
+// ---------------------------------------------------------------------------------------------------------------
+// dsfd_vm_bgr (el1011-ds-vm/bgq28 v4, 2026-10-12): the dsfd_vm_bgq bank tile re-planned from its CUT ANALYSIS
+// (log el1011-ds-vm.log 2026-10-12 "CUT ANALYSIS + PHYSICAL SPEC").  dsfd_vm_bgq EP 2 kept TWO vertical copies of the
+// 28-port request bundle in the tile: the forward relay bus rb_* and, per bus stage, the x1 / x2 enqueue-alignment
+// copies broadcast to the stage's 4 banks over ~250 um (4,144 + 3,976 + return 1,290 bits per horizontal cut = 0.79
+// of the ~12.5k derated vertical tracks before any crossbar wiring; every 96996fa45 / 803dc8b3a route overflowed GRT,
+// median usage 1.11).  Here there is ONE request bus and NO copies:
+//   * CONTROL LEAD.  The bus is re-registered once per bank PAIR (NSTG stages of SR banks) and carries 2 extra lead
+//     stages: rb[0] (pin flops) .. rb[NSTG+1] (= f_*).  Stage k's enqueue control (E1 bank match, E2 port-order prefix
+//     -> one-hot slot selects) reads the bus at rb[k]; its E3 slot data select reads the SAME op 2 cycles later at
+//     rb[k+2], where the bus itself has carried it (the bus moves one stage a cycle).  So the 2-cycle alignment that
+//     x1 / x2 provided comes free from the bus; only the small selects (QD x NP + count a bank) travel 2 stages.
+//   * READ HISTORY once.  Stage k's history is stage 0's delayed k cycles (its requests are), so the due vector at
+//     the history tail is computed once (at rb[0]) and relayed one stage a cycle (hz[k]), instead of NSTG copies of
+//     the HL-deep history.
+//   * RETURN BUS per stage, in lockstep, plus one exit relay (the request hop is NSTG + 2 = one more than the return
+//     bus's NSTG + 1 stages).  The tile's o_* -> f_* skew stays HL + 1, so the master's MD is unchanged.
+// Every bank behaves exactly as a dsfd_vm_bgq EP >= 1 stage-gs bank with gs = k (same ED = EP + 1, same queue / serve /
+// return FIFO / due-slot logic), so every bank sees every op in (issue cycle, port) order.  Tile hop: NSTG + 2 cycles
+// (dsfd_vm_bgq: NSTG + 1).  Requires EP >= 1 (the lead is the E1 + E2 rungs).
+// ---------------------------------------------------------------------------------------------------------------
+module dsfd_vm_bgr #(
+    parameter integer NP = 28,
+    parameter integer NB = 32,
+    parameter integer NBL = 8,
+    parameter integer QD = 4,
+    parameter integer RQ = 8,
+    parameter integer MACRO = 1,
+    parameter integer DW = 128,
+    parameter integer NSTG = 4,        // bank stages (SR = NBL / NSTG banks each); bus relays rb[0 .. NSTG+1]
+    parameter integer NPR = NP,
+    parameter integer EP = 2           // 1: E3 fused with the queue write, 2: E3 registered (dsfd_vm_bgq EP)
+) (
+    input  wire [0:0]          ck,
+    input  wire [0:0]          rs,
+    input  wire [$clog2(NB/NBL)-1:0] grp,
+    input  wire [NP-1:0]       i_v,
+    input  wire [NP-1:0]       i_we,
+    input  wire [NP*($clog2(NB)+9)-1:0] i_row,
+    input  wire [NP*(DW/32)-1:0] i_mask,
+    input  wire [NP*DW-1:0]    i_d,
+    output wire [NP-1:0]       f_v,
+    output wire [NP-1:0]       f_we,
+    output wire [NP*($clog2(NB)+9)-1:0] f_row,
+    output wire [NP*(DW/32)-1:0] f_mask,
+    output wire [NP*DW-1:0]    f_d,
+    input  wire [NPR-1:0]       r_v,
+    input  wire [NPR*DW-1:0]    r_d,
+    input  wire [3:0]          r_f,
+    input  wire [$clog2(QD):0] r_o,
+    output wire [NPR-1:0]       o_v,
+    output wire [NPR*DW-1:0]    o_d,
+    output reg  [3:0]          o_f,
+    output reg  [$clog2(QD):0] o_o
+);
+    localparam integer GW = $clog2(NB / NBL);
+    localparam integer BB = $clog2(NB);
+    localparam integer RA = BB + 9;
+    localparam integer PW = (NP > 1) ? $clog2(NP) : 1;
+    localparam integer QW = $clog2(QD);
+    localparam integer RW = $clog2(RQ);
+    localparam integer KQ = (NP < QD) ? NP : QD;
+    localparam integer KW = (KQ > 1) ? $clog2(KQ) : 1;
+    localparam integer LB = $clog2(NBL);
+    localparam integer ED = EP + 1;
+    localparam integer HL = QD + 4 + ED;
+    localparam integer MW = DW / 32, NC = DW / 128, NW = DW / 32;
+    localparam integer SR = NBL / NSTG;
+    localparam integer OW = $clog2(QD) + 1;
+    localparam integer NR = NSTG + 2;              // request relays rb[0 .. NR-1]; f_* = rb[NR-1]
+    localparam [NP-1:0] RMASK = {NP{1'b1}} >> (NP - NPR);
+    initial if (EP < 1 || EP > 2 || NBL % NSTG != 0) $error("dsfd_vm_bgr: EP 1 or 2, NSTG divides NBL");
+    wire clk = ck[0];
+
+    reg [1:0] rst_s;
+    always @(posedge clk or negedge rs[0]) if (!rs[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    wire rst_i = rst_s[1];
+    reg [GW-1:0] grp_q;
+    always @(posedge clk) grp_q <= grp;
+
+    // ------------------------------------------------------------------ the request bus (one copy)
+    reg [NP-1:0]    rb_v  [0:NR-1];
+    reg [NP-1:0]    rb_we [0:NR-1];
+    reg [NP*RA-1:0] rb_row[0:NR-1];
+    reg [NP*MW-1:0] rb_m  [0:NR-1];
+    reg [NP*DW-1:0] rb_d  [0:NR-1];
+    integer s;
+    always @(posedge clk or negedge rst_i)
+        if (!rst_i) for (s = 0; s < NR; s = s + 1) rb_v[s] <= {NP{1'b0}};
+        else begin
+            rb_v[0] <= i_v;
+            for (s = 1; s < NR; s = s + 1) rb_v[s] <= rb_v[s-1];
+        end
+    always @(posedge clk) begin : p_rb integer s;
+        rb_we[0] <= i_we; rb_row[0] <= i_row; rb_m[0] <= i_mask; rb_d[0] <= i_d;
+        for (s = 1; s < NR; s = s + 1) begin
+            rb_we[s] <= rb_we[s-1]; rb_row[s] <= rb_row[s-1]; rb_m[s] <= rb_m[s-1]; rb_d[s] <= rb_d[s-1];
+        end
+    end
+`ifdef OT_VM_SYS_MUT_SKEW
+    localparam integer FS = NR - 2;                // MUTANT: the forward output skips the last relay
+`else
+    localparam integer FS = NR - 1;
+`endif
+    wire wo_rd_any = |(rb_v[0] & ~rb_we[0] & ~RMASK);
+    assign f_v = rb_v[FS]; assign f_we = rb_we[FS]; assign f_row = rb_row[FS]; assign f_mask = rb_m[FS]; assign f_d = rb_d[FS];
+
+    // ------------------------------------------------------------------ read history, ONCE (stage 0's view rb[0])
+    reg [NP-1:0] h_v [0:HL-1];
+    reg [BB-1:0] h_b [0:HL-1][0:NP-1];
+    integer hh, hp;
+    always @(posedge clk or negedge rst_i)
+        if (!rst_i) for (hh = 0; hh < HL; hh = hh + 1) h_v[hh] <= {NP{1'b0}};
+        else begin
+            h_v[0] <= rb_v[0] & ~rb_we[0] & RMASK;
+            for (hh = 1; hh < HL; hh = hh + 1) h_v[hh] <= h_v[hh-1];
+        end
+    always @(posedge clk) begin
+        for (hp = 0; hp < NP; hp = hp + 1) h_b[0][hp] <= rb_row[0][hp*RA +: BB];
+        for (hh = 1; hh < HL; hh = hh + 1) for (hp = 0; hp < NP; hp = hp + 1) h_b[hh][hp] <= h_b[hh-1][hp];
+    end
+
+    // ------------------------------------------------------------------ read-return input pin registers
+    reg [NPR-1:0]    q_v;
+    reg [NPR*DW-1:0] q_d;
+    reg [3:0]        q_f;
+    reg [OW-1:0]     q_o;
+    always @(posedge clk or negedge rst_i)
+        if (!rst_i) begin q_v <= {NPR{1'b0}}; q_f <= 4'd0; q_o <= {OW{1'b0}}; end
+        else begin q_v <= r_v; q_f <= r_f; q_o <= r_o; end
+    always @(posedge clk) q_d <= r_d;
+
+    // return-bus exit relay (lockstep with the NSTG + 2 request hop)
+    reg [NPR-1:0]    x_v;
+    reg [NPR*DW-1:0] x_d;
+    always @(posedge clk or negedge rst_i)
+        if (!rst_i) x_v <= {NPR{1'b0}};
+        else x_v <= g_s[NSTG-1].rt_v;
+    always @(posedge clk) x_d <= g_s[NSTG-1].rt_d;
+    assign o_v = x_v;
+    assign o_d = x_d;
+
+    wire [NSTG-1:0] st_f;
+    wire [3*NSTG-1:0] st_c;
+    wire [OW*NSTG-1:0] st_o;
+
+    genvar gs, gb, gc;
+    generate for (gs = 0; gs < NSTG; gs = gs + 1) begin : g_s
+        // ---- control view (E1 / E2 / history) and data view (E3: the same op 2 cycles later, 2 relays on)
+        wire [NP-1:0] a_v = rb_v[gs];
+        wire [NP*RA-1:0] a_row = rb_row[gs];
+        wire [NP-1:0] z_we = rb_we[gs+2];
+        wire [NP*RA-1:0] z_row = rb_row[gs+2];
+        wire [NP*MW-1:0] z_m = rb_m[gs+2];
+        wire [NP*DW-1:0] z_d = rb_d[gs+2];
+        // per-stage group-id copy (register chain)
+        reg [GW-1:0] sg;
+        if (gs == 0) begin : g_sg0
+            always @(posedge clk) sg <= grp_q;
+        end else begin : g_sgn
+            always @(posedge clk) sg <= g_s[gs-1].sg;
+        end
+        // ---- the history tail of this stage: stage 0's, relayed gs cycles
+        reg [NP-1:0] hz_v;
+        reg [NP*BB-1:0] hz_b;               // flat (hierarchical refs across generate scopes)
+        integer p, q;
+        if (gs == 0) begin : g_hz0
+            always @* begin
+                hz_v = h_v[HL-1];
+                for (p = 0; p < NP; p = p + 1) hz_b[p*BB +: BB] = h_b[HL-1][p];
+            end
+        end else begin : g_hzn
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) hz_v <= {NP{1'b0}};
+                else hz_v <= g_s[gs-1].hz_v;
+            always @(posedge clk) hz_b <= g_s[gs-1].hz_b;
+        end
+        reg [NPR-1:0] d_v;
+        reg [BB-1:0] d_b [0:NPR-1];
+        reg [KW-1:0] d_j [0:NPR-1];
+        reg [KW-1:0] jc [0:NPR-1];
+        always @* begin
+            for (p = 0; p < NPR; p = p + 1) begin
+                jc[p] = {KW{1'b0}};
+                for (q = 0; q < p; q = q + 1)
+                    if (hz_v[q] && hz_b[q*BB +: BB] == hz_b[p*BB +: BB]) jc[p] = jc[p] + 1'b1;
+            end
+        end
+        always @(posedge clk or negedge rst_i)
+            if (!rst_i) d_v <= {NPR{1'b0}};
+            else d_v <= hz_v[NPR-1:0];
+        always @(posedge clk)
+            for (p = 0; p < NPR; p = p + 1) begin
+                d_b[p] <= hz_b[p*BB +: BB];
+`ifdef OT_S81PH_VM_MUT_J0
+                d_j[p] <= {KW{1'b0}};
+`else
+                d_j[p] <= jc[p];
+`endif
+            end
+
+        wire [SR-1:0] b_ovf, b_und;
+        wire [QW:0]   b_occ [0:SR-1];
+        wire [DW*KQ-1:0] b_ds [0:SR-1];
+        wire [PW*KQ-1:0] b_dp [0:SR-1];
+        for (gb = 0; gb < SR; gb = gb + 1) begin : g_bank
+            localparam integer LBI = gs * SR + gb;
+            reg [GW-1:0] gq;
+            if (gb == 0) begin : g_gq0
+                always @(posedge clk) gq <= sg;
+            end else begin : g_gqn
+                always @(posedge clk) gq <= g_bank[gb-1].gq;
+            end
+            wire [BB+GW:0] gqw = gq * NBL + LBI;
+            wire [BB-1:0] gidq = gqw[BB-1:0];
+            reg [QD-1:0] q_we;
+            reg [PW-1:0] q_p [0:QD-1];
+            reg [8:0]    q_r [0:QD-1];
+            reg [MW-1:0] q_m [0:QD-1];
+            reg [DW-1:0] q_dd [0:QD-1];
+            reg [QW-1:0] qh, qt;
+            reg [QW:0]   occ;
+            reg          ovf;
+            wire         serve = occ != 0;
+            wire [QW+PW:0] cnt_a;
+            wire [QW+PW+1:0] need = occ - serve + cnt_a;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) begin qh <= 0; qt <= 0; occ <= 0; ovf <= 1'b0; end
+                else begin
+                    if (need > QD) begin
+                        ovf <= 1'b1;
+                        qt <= qt + (QD - (occ - serve));
+                        occ <= QD;
+                    end else begin
+                        qt <= qt + cnt_a;
+                        occ <= need;
+                    end
+                    if (serve) qh <= qh + 1'b1;
+                end
+            reg [QW-1:0] qtr [0:NW-1];
+            reg [QW-1:0] qhr [0:NW-1];
+            integer wr;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) for (wr = 0; wr < NW; wr = wr + 1) begin qtr[wr] <= 0; qhr[wr] <= 0; end
+                else for (wr = 0; wr < NW; wr = wr + 1) begin
+                    if (need > QD) qtr[wr] <= qtr[wr] + (QD - (occ - serve));
+                    else qtr[wr] <= qtr[wr] + cnt_a;
+                    if (serve) qhr[wr] <= qhr[wr] + 1'b1;
+                end
+            // ---- E1: bank-match vector on the control view
+            reg [NP-1:0] e_hit;
+            integer i1;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) e_hit <= {NP{1'b0}};
+                else for (i1 = 0; i1 < NP; i1 = i1 + 1) e_hit[i1] <= a_v[i1] && a_row[i1*RA +: BB] == gidq;
+            // ---- E2: port-order prefix count (4 groups), one-hot slot selects, saturated count
+            localparam integer NG = 4, GZ = (NP + NG - 1) / NG, CW = $clog2(NP + 1);
+            reg [NP-1:0] ho;
+            reg [CW-1:0] lpre [0:NP-1];
+            reg [CW-1:0] gt [0:NG-1];
+            reg [CW-1:0] goff [0:NG-1];
+            reg [CW-1:0] opre [0:NP-1];
+            reg [CW-1:0] tot;
+            reg [NP-1:0] sel_c [0:QD-1];
+            integer g2, i2, j2;
+            always @* begin
+                for (i2 = 0; i2 < NP; i2 = i2 + 1)
+`ifdef OT_S81PH_VM_MUT_ORDER
+                    ho[i2] = e_hit[NP-1-i2];
+`else
+                    ho[i2] = e_hit[i2];
+`endif
+                for (g2 = 0; g2 < NG; g2 = g2 + 1) begin
+                    gt[g2] = {CW{1'b0}};
+                    for (i2 = g2 * GZ; i2 < (g2 + 1) * GZ && i2 < NP; i2 = i2 + 1) begin
+                        lpre[i2] = gt[g2];
+                        gt[g2] = gt[g2] + ho[i2];
+                    end
+                end
+                goff[0] = {CW{1'b0}};
+                for (g2 = 1; g2 < NG; g2 = g2 + 1) goff[g2] = goff[g2-1] + gt[g2-1];
+                tot = goff[NG-1] + gt[NG-1];
+                for (i2 = 0; i2 < NP; i2 = i2 + 1) opre[i2] = goff[i2 / GZ] + lpre[i2];
+                for (j2 = 0; j2 < QD; j2 = j2 + 1)
+                    for (i2 = 0; i2 < NP; i2 = i2 + 1)
+`ifdef OT_S81PH_VM_MUT_ORDER
+                        sel_c[j2][NP-1-i2] = ho[i2] && opre[i2] == j2;
+`else
+                        sel_c[j2][i2] = ho[i2] && opre[i2] == j2;
+`endif
+            end
+            reg [NP-1:0] e_sel [0:QD-1];
+            reg [QW+PW:0] e_cnt;
+            integer j3;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) begin
+                    e_cnt <= 0;
+                    for (j3 = 0; j3 < QD; j3 = j3 + 1) e_sel[j3] <= {NP{1'b0}};
+                end else begin
+                    e_cnt <= (tot > QD) ? QD + 1 : tot;
+                    for (j3 = 0; j3 < QD; j3 = j3 + 1) e_sel[j3] <= sel_c[j3];
+                end
+            // ---- E3: slot data select straight off the bus data view (one-hot NP-input AND-OR a slot)
+            reg [QD-1:0] w_v, w_we;
+            reg [PW-1:0] w_p [0:QD-1];
+            reg [8:0]    w_r [0:QD-1];
+            reg [MW-1:0] w_m [0:QD-1];
+            reg [DW-1:0] w_d [0:QD-1];
+            integer j4, p4;
+            always @* for (j4 = 0; j4 < QD; j4 = j4 + 1) begin
+                w_v[j4] = |e_sel[j4];
+                w_we[j4] = |(e_sel[j4] & z_we);
+                w_p[j4] = {PW{1'b0}}; w_r[j4] = 9'd0; w_m[j4] = {MW{1'b0}}; w_d[j4] = {DW{1'b0}};
+                for (p4 = 0; p4 < NP; p4 = p4 + 1) begin
+                    if (e_sel[j4][p4]) w_p[j4] = w_p[j4] | p4;
+                    w_r[j4] = w_r[j4] | ({9{e_sel[j4][p4]}} & z_row[p4*RA + BB +: 9]);
+                    w_m[j4] = w_m[j4] | ({MW{e_sel[j4][p4]}} & z_m[p4*MW +: MW]);
+                    w_d[j4] = w_d[j4] | ({DW{e_sel[j4][p4]}} & z_d[p4*DW +: DW]);
+                end
+            end
+            wire [QD-1:0] k_v, k_we;
+            wire [PW-1:0] k_p [0:QD-1];
+            wire [8:0]    k_r [0:QD-1];
+            wire [MW-1:0] k_m [0:QD-1];
+            wire [DW-1:0] k_d [0:QD-1];
+            if (EP == 1) begin : g_k1
+                assign k_v = w_v; assign k_we = w_we; assign cnt_a = e_cnt;
+                for (gc = 0; gc < QD; gc = gc + 1) begin : g_kw
+                    assign k_p[gc] = w_p[gc]; assign k_r[gc] = w_r[gc]; assign k_m[gc] = w_m[gc]; assign k_d[gc] = w_d[gc];
+                end
+            end else begin : g_k2
+                reg [QD-1:0] y_v, y_we;
+                reg [PW-1:0] y_p [0:QD-1];
+                reg [8:0]    y_r [0:QD-1];
+                reg [MW-1:0] y_m [0:QD-1];
+                reg [DW-1:0] y_d [0:QD-1];
+                reg [QW+PW:0] y_cnt;
+                integer j5;
+                always @(posedge clk or negedge rst_i)
+                    if (!rst_i) begin y_v <= {QD{1'b0}}; y_cnt <= 0; end
+                    else begin y_v <= w_v; y_cnt <= e_cnt; end
+                always @(posedge clk) begin
+                    y_we <= w_we;
+                    for (j5 = 0; j5 < QD; j5 = j5 + 1) begin
+                        y_p[j5] <= w_p[j5]; y_r[j5] <= w_r[j5]; y_m[j5] <= w_m[j5]; y_d[j5] <= w_d[j5];
+                    end
+                end
+                assign k_v = y_v; assign k_we = y_we; assign cnt_a = y_cnt;
+                for (gc = 0; gc < QD; gc = gc + 1) begin : g_kw
+                    assign k_p[gc] = y_p[gc]; assign k_r[gc] = y_r[gc]; assign k_m[gc] = y_m[gc]; assign k_d[gc] = y_d[gc];
+                end
+            end
+            integer j6, j7;
+            always @(posedge clk)
+                for (j6 = 0; j6 < QD; j6 = j6 + 1)
+                    if (k_v[j6] && occ - serve + j6 < QD) begin
+                        q_we[(qt + j6) & (QD-1)] <= k_we[j6];
+                        q_p [(qt + j6) & (QD-1)] <= k_p[j6];
+                        q_r [(qt + j6) & (QD-1)] <= k_r[j6];
+                        q_m [(qt + j6) & (QD-1)] <= k_m[j6];
+                        for (j7 = 0; j7 < NW; j7 = j7 + 1)
+                            q_dd[(qtr[j7] + j6) & (QD-1)][32*j7 +: 32] <= k_d[j6][32*j7 +: 32];
+                    end
+            assign b_ovf[gb] = ovf;
+            assign b_occ[gb] = occ;
+            // serve register -> macro pins
+            reg          s_we, s_re;
+            reg [PW-1:0] s_p;
+            reg [8:0]    s_r;
+            reg [DW-1:0] s_dd, s_bm;
+            integer e;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) begin s_we <= 1'b0; s_re <= 1'b0; end
+                else begin s_we <= serve & q_we[qh]; s_re <= serve & ~q_we[qh]; end
+            always @(posedge clk) begin
+                s_p <= q_p[qh]; s_r <= q_r[qh];
+                for (e = 0; e < NW; e = e + 1) s_dd[32*e +: 32] <= q_dd[qhr[e]][32*e +: 32];
+                for (e = 0; e < MW; e = e + 1)
+`ifdef OT_S81PH_VM_MUT_MASK
+                    s_bm[32*e +: 32] <= {32{1'b1}};
+`else
+                    s_bm[32*e +: 32] <= {32{q_m[qh][e]}};
+`endif
+            end
+            wire [DW-1:0] rd;
+            for (gc = 0; gc < NC; gc = gc + 1) begin : g_m
+                if (MACRO) begin : g_sram
+                    (* keep = 1 *) ot_sram_1r1w_512x128_m4_r2c2 u_m (
+                        .clk(clk), .r_ce_in(s_re), .r_addr_in(s_r), .rd_out(rd[128*gc +: 128]),
+                        .w_ce_in(s_we), .w_addr_in(s_r), .wd_in(s_dd[128*gc +: 128]), .w_mask_in(s_bm[128*gc +: 128]),
+                        .rr_en(2'd0), .rr_addr(14'd0), .cr_en(2'd0), .cr_sel(14'd0));
+                end else begin : g_flop
+                    reg [127:0] mem [0:511];
+                    reg [127:0] r_q;
+                    integer bi;
+                    always @(posedge clk) begin
+                        if (s_re) r_q <= mem[s_r];
+                        if (s_we) for (bi = 0; bi < 128; bi = bi + 1)
+                            if (s_bm[128*gc + bi]) mem[s_r][bi] <= s_dd[128*gc + bi];
+                    end
+                    assign rd[128*gc +: 128] = r_q;
+                end
+            end
+            reg          m_v, r_vv;
+            reg [PW-1:0] m_p, r_p;
+            reg [DW-1:0] r_dd;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) begin m_v <= 1'b0; r_vv <= 1'b0; end
+                else begin m_v <= s_re; r_vv <= m_v; end
+            always @(posedge clk) begin m_p <= s_p; r_p <= m_p; r_dd <= rd; end
+            reg [DW-1:0] f_dd [0:RQ-1];
+            reg [PW-1:0] f_p [0:RQ-1];
+            reg [RW-1:0] fh, ft;
+            reg [RW-1:0] fhr [0:NW-1];
+            integer wf, wf2;
+            reg [RW:0]   fn;
+            reg          und;
+            reg [PW:0] dcnt;
+            integer pd;
+            always @* begin
+                dcnt = 0;
+                for (pd = 0; pd < NP; pd = pd + 1) if (hz_v[pd] && hz_b[pd*BB +: BB] == gidq) dcnt = dcnt + 1'b1;
+            end
+            reg [DW-1:0] ds [0:KQ-1];
+            reg [PW-1:0] dsp [0:KQ-1];
+            integer kk;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) begin fh <= 0; ft <= 0; fn <= 0; und <= 1'b0; for (wf = 0; wf < NW; wf = wf + 1) fhr[wf] <= 0; end
+                else begin
+                    if (r_vv) ft <= ft + 1'b1;
+                    fh <= fh + dcnt;
+                    for (wf = 0; wf < NW; wf = wf + 1) fhr[wf] <= fhr[wf] + dcnt;
+                    fn <= fn + r_vv - dcnt;
+                    if (dcnt > fn) und <= 1'b1;
+                end
+            always @(posedge clk) begin
+                if (r_vv) begin f_dd[ft] <= r_dd; f_p[ft] <= r_p; end
+                for (kk = 0; kk < KQ; kk = kk + 1) begin
+                    for (wf2 = 0; wf2 < NW; wf2 = wf2 + 1)
+                        ds[kk][32*wf2 +: 32] <= f_dd[(fhr[wf2] + kk) & (RQ-1)][32*wf2 +: 32];
+                    dsp[kk] <= f_p[(fh + kk) & (RQ-1)];
+                end
+            end
+            for (gc = 0; gc < KQ; gc = gc + 1) begin : g_ds
+                assign b_ds[gb][DW*gc +: DW] = ds[gc];
+                assign b_dp[gb][PW*gc +: PW] = dsp[gc];
+            end
+            assign b_und[gb] = und;
+        end
+
+        // ---- this stage's contribution to the return bus
+        reg [NPR-1:0] own;
+        reg [LB-1:0] lb [0:NPR-1];
+        always @* for (p = 0; p < NPR; p = p + 1) begin
+            lb[p] = d_b[p][LB-1:0];
+            own[p] = d_v[p] && (d_b[p] >> LB) == sg && (lb[p] / SR) == gs;
+        end
+        reg [NPR*DW-1:0] part;
+        integer bb2;
+        always @* begin
+            part = {NPR*DW{1'b0}};
+            for (p = 0; p < NPR; p = p + 1)
+                for (bb2 = 0; bb2 < SR; bb2 = bb2 + 1)
+                    if (own[p] && (lb[p] % SR) == bb2) part[p*DW +: DW] = part[p*DW +: DW] | b_ds[bb2][DW*d_j[p] +: DW];
+        end
+        wire [NPR-1:0]    in_v;
+        wire [NPR*DW-1:0] in_d;
+        if (gs == 0) begin : g_in0
+            assign in_v = q_v | d_v;
+            assign in_d = q_d;
+        end else begin : g_inn
+            assign in_v = g_s[gs-1].rt_v;
+            assign in_d = g_s[gs-1].rt_d;
+        end
+        reg [NPR-1:0]    rt_v;
+        reg [NPR*DW-1:0] rt_d;
+        always @(posedge clk or negedge rst_i)
+            if (!rst_i) rt_v <= {NPR{1'b0}};
+            else rt_v <= in_v;
+        always @(posedge clk) rt_d <= in_d | part;
+        reg mis_r, stf;
+        reg [2:0] stc;
+        reg [OW-1:0] sto;
+        integer bo;
+        always @(posedge clk or negedge rst_i)
+            if (!rst_i) begin mis_r <= 1'b0; stf <= 1'b0; stc <= 3'd0; sto <= {OW{1'b0}}; end
+            else begin
+                for (p = 0; p < NPR; p = p + 1)
+                    if (own[p] && b_dp[lb[p] % SR][PW*d_j[p] +: PW] != p) mis_r <= 1'b1;
+                stc <= stc | {|b_und, mis_r, |b_ovf | (gs == 0 && wo_rd_any)};
+                stf <= stf | |b_und | mis_r | |b_ovf | (gs == 0 && wo_rd_any);
+                for (bo = 0; bo < SR; bo = bo + 1) if (b_occ[bo] > sto) sto <= b_occ[bo];
+            end
+        assign st_f[gs] = stf;
+        assign st_c[3*gs +: 3] = stc;
+        assign st_o[OW*gs +: OW] = sto;
+    end endgenerate
+
+    reg [3:0] fm; reg [OW-1:0] om; integer t;
+    always @* begin
+        fm = q_f; om = q_o;
+        for (t = 0; t < NSTG; t = t + 1) begin
+            fm = fm | {st_f[t], st_c[3*t +: 3]};
+            if (st_o[OW*t +: OW] > om) om = st_o[OW*t +: OW];
+        end
+    end
+    always @(posedge clk or negedge rst_i)
+        if (!rst_i) begin o_f <= 4'd0; o_o <= {OW{1'b0}}; end
+        else begin o_f <= fm; o_o <= om; end
+endmodule
+
 // dsfd_vm_mem_sys: NS bit-sliced chains of 4 systolic tiles (bench target; same ports as dsfd_vm_mem)
 module dsfd_vm_mem_sys #(parameter integer NS = 4, parameter integer NP = 8, parameter integer NB = 32,
                          parameter integer QD = 4, parameter integer RQ = 8, parameter integer MACRO = 1,
@@ -656,7 +1167,9 @@ module dsfd_vm_bgq28 (
 `else
     localparam integer EP = 2;
 `endif
-    dsfd_vm_bgq #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(1), .DW(128), .NSTG(2), .EP(EP)) u (
+    // v4 (2026-10-12, cut analysis): dsfd_vm_bgr -- one request bus with a 2-stage control lead, relays per bank pair
+    // (NSTG 4), no enqueue-alignment copies; hop 6 cycles (was 3), o_* -> f_* skew (MD) unchanged.
+    dsfd_vm_bgr #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(1), .DW(128), .NSTG(4), .EP(EP)) u (
         .ck(ck), .rs(rs), .grp(grp), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
         .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));

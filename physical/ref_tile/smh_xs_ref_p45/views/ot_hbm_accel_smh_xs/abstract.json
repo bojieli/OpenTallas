@@ -1,0 +1,93 @@
+{
+  "name": "ot_hbm_accel_smh_xs",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/routes/smh_xs_ref_p45_r1_0fbf9bc20/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -9.962530800322611e-11 min -8.968736864289895e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/routes/smh_xs_ref_p45_r1_0fbf9bc20/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/record/views/ot_hbm_accel_smh_xs:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/src/physical/ref_tile/smh_xs_ref_p45/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.3909817742074893e-10 min -8.871327283888064e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/routes/smh_xs_ref_p45_r1_0fbf9bc20/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/record/views/ot_hbm_accel_smh_xs:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/src/physical/ref_tile/smh_xs_ref_p45/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 6.563782850577127e-11 min -9.001072109882102e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/routes/smh_xs_ref_p45_r1_0fbf9bc20/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/record/views/ot_hbm_accel_smh_xs:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/src/physical/ref_tile/smh_xs_ref_p45/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/src/physical/ref_tile/smh_xs_ref_p45/signoff.sdc",
+    "sha256": "f86443e02f04eef6358047d6e616683958628e27f8d99ccab326d8ffe9ad15d6",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/smh_xs_ref_p45-r1-0fbf9bc20/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_hbm_accel_smh_xs.lef": "a2681bd71dc677b6dbabfc58313a7f61247a84541cf1603cd0fee92bfe1f96fd",
+    "ot_hbm_accel_smh_xs_ff.lib": "191a58fb98229bb775a3ccc3525694f71bdd3a2af3a6175a9c6d18dd7724922a",
+    "ot_hbm_accel_smh_xs_ss.lib": "f90615009787e8299604535cee1b71a4442b48c957126c3bf4eb41fac80267f7",
+    "ot_hbm_accel_smh_xs_tt.lib": "8b491fe2f7623cd0783db9d9a52026478f8ffcad09861210c907949d9dfd5db1"
+  },
+  "ok": true
+}

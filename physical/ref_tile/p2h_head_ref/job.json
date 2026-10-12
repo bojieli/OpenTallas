@@ -1,5 +1,5 @@
 {
- "name": "p2h_head_ref-r5-88a9c7283",
+ "name": "p2h_head_ref-r5-bc9de2c89",
  "block": "ot_p2h_head",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
@@ -8,19 +8,20 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-ds-mtp-p2pfx",
-  "commit": "88a9c7283",
+  "commit": "bc9de2c89",
   "extra_paths": [
    "rtl/experimental/mtp_p2_ordered_20261009",
    "tools/mtp_p2_rootpipe_gate.py",
    "tools/mtp_p2_prefix_fixture.py",
-   "rtl/model/hbm_pc40_native_sim_20261003"
+   "rtl/model/hbm_pc40_native_sim_20261003",
+   "rtl/common/ot_secded_cols.svh"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_p2h_head u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_native.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_path.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_tiles.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/common/ot_secded.sv rtl/common/ot_sc_pfifo.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_p2h_head u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/common --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_native.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_path.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_tiles.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/common/ot_secded.sv rtl/common/ot_sc_pfifo.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -130,7 +131,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/p2h_head_ref/p2h_head_ref-r5-88a9c7283"
+   "to": "results/rtl/ref_tile/p2h_head_ref/p2h_head_ref-r5-bc9de2c89"
   }
  ],
  "cycles_added": 0,
