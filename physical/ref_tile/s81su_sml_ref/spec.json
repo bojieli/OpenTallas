@@ -27,10 +27,6 @@
  "reset_ports": [
   "rst"
  ],
- "outline": {
-  "w": 158.76,
-  "h": 158.76
- },
  "util": 0.52,
  "pins": {
   "S": [
@@ -71,6 +67,7 @@
   "views_to": "physical/ref_tile/s81su_sml_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_sml_ref"
  },
+ "std_area_um2": 10949,
  "params": {},
  "macros": [],
  "children": [],

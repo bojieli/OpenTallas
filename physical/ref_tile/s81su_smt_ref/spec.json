@@ -88,7 +88,10 @@
   "views_to": "physical/ref_tile/s81su_smt_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_smt_ref"
  },
- "std_area_um2": 6161,
+ "std_area_um2": 5518,
+ "orfs_vars": {
+  "SYNTH_KEEP_MODULES": "ot_s81_su_sm_keep_ff"
+ },
  "params": {},
  "macros": [],
  "children": [],

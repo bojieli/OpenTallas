@@ -115,6 +115,13 @@ module ot_s81_su_smt #(
     reg  [511:0] prow0;                                // only its fields are used
     reg  [511:0] prow1, prow2, prow3, prow4;           // SE: prow1 the sinks; SO: cos lo / hi, sin lo / hi
     reg  [5:0]   cs_n;                                 // cos / sin pairs still to stream
+    reg          shr;                                  // streaming this cycle (cs_n != 0)
+    wire         shn = (pdone && jkind == K_SO) || (shr && cs_n != 6'd1);
+    wire [15:0]  shk;                                  // kept copies of shr, one a 64-b slice of cos and of sin
+    genvar gk;
+    generate for (gk = 0; gk < 16; gk = gk + 1) begin : g_shk
+        ot_s81_su_sm_keep_ff u_k (.clk(clk), .rst_n(rst_n), .d(shn), .q(shk[gk]));
+    end endgenerate
     always @(posedge clk) begin : pcap
         integer s;
         reg [15:0] j;
@@ -128,10 +135,21 @@ module ot_s81_su_smt #(
                 if (j == 4) prow4 <= dq_p[512 * s +: 512];
             end
         end
-        if (cs_n != 0 && !pdone) begin                 // stream: {prow2, prow1} and {prow4, prow3} shift a pair a cycle
-            {prow2, prow1} <= {32'd0, prow2, prow1[511:32]};
-            {prow4, prow3} <= {32'd0, prow4, prow3[511:32]};
-        end
+        // stream: {prow2, prow1} (cos) and {prow4, prow3} (sin) shift one pair a cycle; slice k (64 b of each) on its own
+        // kept copy of the shift enable (<= 128 loads a copy, not one 2,048-load net)
+        for (s = 0; s < 16; s = s + 1)
+            if (shk[s]) begin
+                if (s < 7) begin
+                    prow1[64 * s +: 64] <= prow1[64 * s + 32 +: 64]; prow3[64 * s +: 64] <= prow3[64 * s + 32 +: 64];
+                end else if (s == 7) begin
+                    prow1[448 +: 64] <= {prow2[31:0], prow1[480 +: 32]}; prow3[448 +: 64] <= {prow4[31:0], prow3[480 +: 32]};
+                end else if (s < 15) begin
+                    prow2[64 * (s - 8) +: 64] <= prow2[64 * (s - 8) + 32 +: 64];
+                    prow4[64 * (s - 8) +: 64] <= prow4[64 * (s - 8) + 32 +: 64];
+                end else begin
+                    prow2[448 +: 64] <= {32'd0, prow2[480 +: 32]}; prow4[448 +: 64] <= {32'd0, prow4[480 +: 32]};
+                end
+            end
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin jkind <= 0; mine <= 0; jid <= 0; np <= 0; rcnt <= 0; pdone <= 0; ofault <= 0; end
@@ -160,12 +178,13 @@ module ot_s81_su_smt #(
     reg [13:0] obase;
     always @(posedge clk) if (pdone) obase <= prow0[13:0];
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin s_v <= 0; p_v <= 0; c_v <= 0; cs_v <= 0; cs_n <= 0; end
+        if (!rst_n) begin s_v <= 0; p_v <= 0; c_v <= 0; cs_v <= 0; cs_n <= 0; shr <= 0; end
         else begin
             s_v <= ocyc && jkind == K_SE;
             p_v <= ocyc && jkind == K_SO;
             c_v <= pdone && jkind == K_SE;
-            cs_v <= (cs_n != 0 && !pdone);
+            cs_v <= shr;
+            shr <= shn;
             if (pdone && jkind == K_SO) cs_n <= 6'd32;
             else if (cs_n != 0) cs_n <= cs_n - 6'd1;
         end
@@ -239,6 +258,13 @@ module ot_s81_su_smt #(
             o_fu <= ufs; o_fo <= ovf || ofault; o_alive <= 1'b1; o_den <= dn; o_rdy <= 1'b0; o_rjid <= jid;
         end
     end
+endmodule
+
+// a kept flop (its own module, listed in SYNTH_KEEP_MODULES): replicated enables survive synthesis as separate drivers
+module ot_s81_su_sm_keep_ff (input wire clk, input wire rst_n, input wire d, output wire q);
+    (* keep = "true" *) reg q_k;
+    always @(posedge clk or negedge rst_n) if (!rst_n) q_k <= 1'b0; else q_k <= d;
+    assign q = q_k;
 endmodule
 
 // ======================================================================================================== LANE
