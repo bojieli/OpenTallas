@@ -122,7 +122,7 @@ module dsfd_sp_hc #(
     wire [NE0*32-1:0] w_ex;
     wire [NE2*32-1:0] e_ex;
     ot_s81_hc_comb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
-                     .MUT(MUT), .AMUT(AMUT), .HALF(HALF), .RLY(RLY), .RF(CSPLIT ? 4 : 1),
+                     .MUT(MUT), .AMUT(AMUT), .HALF(HALF), .RLY(RLY), .RF(CSPLIT ? 5 : 1),
                      .DW(CSPLIT ? 6 : 5)) u_cb (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
         .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
