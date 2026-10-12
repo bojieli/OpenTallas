@@ -5,7 +5,7 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-12T01:40:24Z",
+ "generated_utc": "2026-10-12T04:30:25Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -285,15 +285,15 @@
     "required_items_per_cycle_at_target": 32.824,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.0093,
-    "measured_ratio": 6.514,
+    "measured_ratio": 0.715,
     "measured_grade": "unit_bench",
-    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json",
     "measured_note": null,
     "interim": null,
-    "measured_cycles_per_record": 4229.7,
-    "status": "UNQUALIFIED",
-    "impact_cycles_per_token": 290013.7,
-    "impact_tok_s": -719.2,
+    "measured_cycles_per_record": 464.3,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": -12347.8,
+    "impact_tok_s": 47.4,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -305,8 +305,8 @@
      }
     },
     "measured_record": {
-     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
-     "commit": "57499aeea"
+     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json",
+     "commit": null
     }
    },
    {
@@ -475,15 +475,15 @@
     "required_items_per_cycle_at_target": 95.717,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.00307,
-    "measured_ratio": 20.085,
+    "measured_ratio": 1.096,
     "measured_grade": "unit_bench",
-    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
+    "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json",
     "measured_note": null,
     "interim": null,
-    "measured_cycles_per_record": 4472.4,
-    "status": "UNQUALIFIED",
-    "impact_cycles_per_token": 339233.8,
-    "impact_tok_s": -795.5,
+    "measured_cycles_per_record": 244.0,
+    "status": "QUALIFIED",
+    "impact_cycles_per_token": 1667.4,
+    "impact_tok_s": -6.2,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -495,8 +495,8 @@
      }
     },
     "measured_record": {
-     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
-     "commit": "57499aeea"
+     "path": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json",
+     "commit": null
     }
    },
    {
@@ -876,26 +876,6 @@
  "ds_bottleneck_ranking": [
   {
    "rank": 1,
-   "op": "FUSED.HC_POST",
-   "ratio": 20.085,
-   "impact_cycles_per_token": 339233.8,
-   "impact_tok_s": -795.5,
-   "budget_cycles_per_record": 222.7,
-   "budget_at_target": 214.0,
-   "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
-  },
-  {
-   "rank": 2,
-   "op": "FUSED.HC_PRE_NORM",
-   "ratio": 6.514,
-   "impact_cycles_per_token": 290013.7,
-   "impact_tok_s": -719.2,
-   "budget_cycles_per_record": 649.3,
-   "budget_at_target": 623.9,
-   "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)"
-  },
-  {
-   "rank": 3,
    "op": "IDX.TOPK",
    "ratio": 4.286,
    "impact_cycles_per_token": 37198.6,
@@ -905,7 +885,7 @@
    "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)"
   },
   {
-   "rank": 4,
+   "rank": 2,
    "op": "DMA.KVWB_DS",
    "ratio": 3.817,
    "impact_cycles_per_token": 5376.6,
@@ -915,7 +895,7 @@
    "owner": "hgi-1010/c (posted KVWB retire 87b97e35e merged; ratio predates it: regrade with DMA_POSTED) + e (e2e)"
   },
   {
-   "rank": 5,
+   "rank": 3,
    "op": "FUSED.QDQ_FP8",
    "ratio": 2.74,
    "impact_cycles_per_token": 1336.3,
@@ -925,7 +905,7 @@
    "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)"
   },
   {
-   "rank": 6,
+   "rank": 4,
    "op": "HC.HC_MIX_POST",
    "ratio": 1.282,
    "impact_cycles_per_token": 0.0,
@@ -1081,7 +1061,7 @@
     "op": "FUSED.HC_PRE_NORM",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json",
+    "evidence": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json",
     "records_per_token": 81,
     "price_cycles_per_token": 52595.9,
     "critical_cycles_if_zero": null,
@@ -1146,7 +1126,7 @@
     "op": "FUSED.HC_POST",
     "variant": null,
     "status": "BUILT",
-    "evidence": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json",
+    "evidence": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json; results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json",
     "records_per_token": 80,
     "price_cycles_per_token": 17813.8,
     "critical_cycles_if_zero": null,
@@ -1483,6 +1463,22 @@
   ]
  },
  "hand_entered": [
+  {
+   "model": "DS",
+   "op": "FUSED.HC_PRE_NORM",
+   "claimed_ratio": 0.715,
+   "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json",
+   "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
+   "why": "not a committed bench record of this op at this shape"
+  },
+  {
+   "model": "DS",
+   "op": "FUSED.HC_POST",
+   "claimed_ratio": 1.096,
+   "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json",
+   "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
+   "why": "not a committed bench record of this op at this shape"
+  },
   {
    "model": "Qwen",
    "op": "SM.MATVEC",
@@ -1849,7 +1845,7 @@
    "stalled": false,
    "owner": "Claude:struct-close",
    "target": null,
-   "t": "2026-10-10T19:14:24-07:00",
+   "t": "2026-10-11T21:23:35-07:00",
    "adopted": true
   },
   "dsfd_mtp_seq": {
@@ -1913,8 +1909,8 @@
    "adopted": true
   },
   "hfd_hc_tile_xl": {
-   "job": "hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl",
-   "commit": "5c35b1a6e",
+   "job": "hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl",
+   "commit": "c95527ec0",
    "bench": "bench_hc_tile_xl_pos",
    "line": "TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100",
    "cycles": 600,
@@ -1924,7 +1920,7 @@
    "stalled": false,
    "owner": "Claude:conservative-1011 [B hfd_hc]",
    "target": null,
-   "t": "2026-10-11T14:47:27-07:00",
+   "t": "2026-10-11T21:22:19-07:00",
    "adopted": true
   },
   "ot_dsrom_hc_seed_join": {
@@ -2059,7 +2055,7 @@
    "stalled": false,
    "owner": "Claude:drive-0158",
    "target": null,
-   "t": "2026-10-10T19:21:56-07:00",
+   "t": "2026-10-11T21:26:24-07:00",
    "adopted": true
   },
   "dsfd_colt_lane": {
@@ -2092,6 +2088,21 @@
    "t": "2026-10-09T19:48:12-07:00",
    "adopted": true
   },
+  "ot_qkvd_fbuf8": {
+   "job": "qkd_fbuf8-a-87a8d98ac-tc-hm10-ka",
+   "commit": "87a8d98ac",
+   "bench": "bench_fbuf8_d8",
+   "line": "PASS buf_tile D=8 cycles=200000 pops=70919 head_gap_cycles=13082",
+   "cycles": 200000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-kvd",
+   "target": null,
+   "t": "2026-10-11T21:14:11-07:00",
+   "adopted": true
+  },
   "qfd_embed_code_bank_retained": {
    "job": "qfd_embed_code_bank_retained-24bd6a53b-tt",
    "commit": "24bd6a53b",
@@ -2119,7 +2130,7 @@
    "stalled": false,
    "owner": "Claude:sys-takeover",
    "target": null,
-   "t": "2026-10-10T01:09:24-07:00",
+   "t": "2026-10-11T21:18:49-07:00",
    "adopted": true
   },
   "dsfd_svcio_job": {
@@ -2213,7 +2224,7 @@
    "stalled": false,
    "owner": "Claude:sys-takeover",
    "target": null,
-   "t": "2026-10-10T17:46:54-07:00",
+   "t": "2026-10-11T21:18:44-07:00",
    "adopted": true
   },
   "dsfd_svch_pcs": {
@@ -2273,7 +2284,7 @@
    "stalled": false,
    "owner": "Claude:el1011-ds-vm/be",
    "target": null,
-   "t": "2026-10-11T13:05:48-07:00",
+   "t": "2026-10-11T19:19:35-07:00",
    "adopted": true
   },
   "ot_hgi_coll_row_formatter": {
@@ -2307,6 +2318,21 @@
    "kind": "MEASURED_ACCEPT",
    "accept_spaced": true,
    "dense": true
+  },
+  "ot_dsrom_aq12t": {
+   "job": "el1011-pqc-aq12t-a-cc60cd537-tc-cl",
+   "commit": "cc60cd537",
+   "bench": "bench_aq12t_lockstep_exact",
+   "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
+   "cycles": 40000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-ds-misc",
+   "target": null,
+   "t": "2026-10-11T20:32:13-07:00",
+   "adopted": true
   },
   "qfd_seq_su_bi_fea": {
    "job": "qfd_seq_su_bi-fearl-19fe61d1d-tc-hm0-cl",
@@ -2395,7 +2421,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-coll",
    "target": null,
-   "t": "2026-10-11T16:34:46-07:00",
+   "t": "2026-10-11T19:56:26-07:00",
    "adopted": true
   },
   "dsfd_coll_p2_ep": {
@@ -2425,7 +2451,7 @@
    "stalled": false,
    "owner": "Claude:mtp-wfc-1010",
    "target": null,
-   "t": "2026-10-11T05:31:33-07:00",
+   "t": "2026-10-11T19:55:40-07:00",
    "adopted": true
   },
   "ot_attn_tile_m6h1q": {
@@ -2440,7 +2466,7 @@
    "stalled": false,
    "owner": "Claude:redesign-hbm",
    "target": null,
-   "t": "2026-10-10T06:26:00-07:00",
+   "t": "2026-10-11T20:57:47-07:00",
    "adopted": true
   },
   "qfd_seq_su_bi_feb": {
@@ -2455,7 +2481,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-seq",
    "target": null,
-   "t": "2026-10-11T12:50:34-07:00",
+   "t": "2026-10-11T18:52:40-07:00",
    "adopted": true
   },
   "hgi_att_rows_g12_120": {
@@ -2486,6 +2512,21 @@
    "owner": "Claude:sys-takeover",
    "target": null,
    "t": "2026-10-09T16:06:31-07:00",
+   "adopted": true
+  },
+  "qfd_tile_lsl": {
+   "job": "qfd_tile_lsl4-7e60104b6-tc-hm0-cl2",
+   "commit": "7e60104b6",
+   "bench": "bench_rom_pipe_exact_anr",
+   "line": "\"verdict\": \"PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=300 cycles=22937 result_writes=5632 maxima=24 argmax_changes=501 scale_reads=2444 latency_added=13 ACC_LAT=7 TREE_LAT=",
+   "cycles": 22937,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-tile",
+   "target": null,
+   "t": "2026-10-11T20:18:49-07:00",
    "adopted": true
   },
   "qfd_seq_su": {
@@ -2592,7 +2633,7 @@
    "stalled": false,
    "owner": "Claude:qwen-blocks",
    "target": null,
-   "t": "2026-10-10T02:57:06-07:00",
+   "t": "2026-10-11T21:21:27-07:00",
    "adopted": true
   },
   "ot_dsrom_hc_mean_capture": {
@@ -2640,21 +2681,6 @@
    "t": "2026-10-11T08:48:53-07:00",
    "adopted": true
   },
-  "ot_qkvd_fbuf8": {
-   "job": "qkd_fbuf8-a-0feeb971e-tc-hm10-cl",
-   "commit": "0feeb971e",
-   "bench": "bench_fbuf8_d8",
-   "line": "PASS buf_tile D=8 cycles=200000 pops=70919 head_gap_cycles=13082",
-   "cycles": 200000,
-   "item": null,
-   "items": null,
-   "ii": null,
-   "stalled": false,
-   "owner": "Claude:el1011-q-kvd",
-   "target": null,
-   "t": "2026-10-11T15:15:58-07:00",
-   "adopted": true
-  },
   "ot_qkvd_sbuf": {
    "job": "qkd_sbuf-b-0feeb971e-tc-hm10-cl",
    "commit": "0feeb971e",
@@ -2697,7 +2723,7 @@
    "stalled": false,
    "owner": "Claude:cont-takeover",
    "target": null,
-   "t": "2026-10-10T22:52:51-07:00",
+   "t": "2026-10-11T19:46:00-07:00",
    "adopted": true
   },
   "dsfd_mtp_seed_launch": {
@@ -3104,18 +3130,15 @@
  "rom_block_coverage": {
   "dsfd_cap_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_cb": "^dsfd_coll_",
-  "dsfd_coll_cbf": "^dsfd_coll_",
-  "dsfd_coll_cbfj": "^dsfd_coll_",
   "dsfd_coll_cbh": "^dsfd_coll_",
   "dsfd_coll_cbj": "^dsfd_coll_",
-  "dsfd_coll_cbq": "^dsfd_coll_",
-  "dsfd_coll_cbq0": "^dsfd_coll_",
-  "dsfd_coll_cbr": "^dsfd_coll_",
   "dsfd_coll_ce": "^dsfd_coll_",
   "dsfd_coll_cef": "^dsfd_coll_",
   "dsfd_coll_cele": "^dsfd_coll_",
   "dsfd_coll_celp": "^dsfd_coll_",
   "dsfd_coll_ceq": "^dsfd_coll_",
+  "dsfd_coll_ceq0": "^dsfd_coll_",
+  "dsfd_coll_ceqp": "^dsfd_coll_",
   "dsfd_coll_ces0": "^dsfd_coll_",
   "dsfd_coll_cesn": "^dsfd_coll_",
   "dsfd_coll_ct": "^dsfd_coll_",
@@ -3126,8 +3149,6 @@
   "dsfd_dw_ep_c": null,
   "dsfd_dw_ep_s": null,
   "dsfd_engram_c": "^(dsfd_engram_)",
-  "dsfd_engram_lkp": "^(dsfd_engram_)",
-  "dsfd_engram_sink": "^(dsfd_engram_)",
   "dsfd_host": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
   "dsfd_host_native": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
   "dsfd_host_protected": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
@@ -3193,7 +3214,6 @@
   "dsfd_wfc_tok_hard": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_wfc_vmx": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsrom_mtp_head_full340_A": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
-  "ot_dsrom_aq12t": null,
   "ot_dsrom_engram_lead_producer": null,
   "ot_dsrom_hc_input_reader": "^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)",
   "ot_dsrom_hc_mean_capture": "^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)",
@@ -3209,11 +3229,6 @@
   "ot_dsrom_su_hcpost_lane_pr": "^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)",
   "ot_dsrom_wfc_tokpipe_src": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_dsrom_wfc_tokpipe_stg": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
-  "ot_engc_t_io": null,
-  "ot_engc_t_pbb": null,
-  "ot_engc_t_pbc": null,
-  "ot_engc_t_win": null,
-  "ot_engc_t_ws": null,
   "ot_hdc_v41_fh_ctl": "^ot_hdc_v41_fh_",
   "ot_hdc_v41_fh_ep_view": "^ot_hdc_v41_fh_",
   "ot_hdc_v41_fh_hquad": "^ot_hdc_v41_fh_",
@@ -3224,19 +3239,21 @@
   "ot_mtp_hist_ring": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_mtp_hist_ring_p": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_mtp_p2_prefix_path": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
-  "ot_pqc_t_bc": null,
-  "ot_pqc_t_ctl16": null,
-  "ot_pqc_t_ix": null,
-  "ot_pqc_t_prom": null,
-  "ot_pqc_t_qb": null,
-  "ot_pqc_t_ret": null,
-  "ot_pqc_t_srom": null,
-  "ot_pqc_t_xin": null,
+  "ot_mtp_p2_prefix_path_hub": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
+  "ot_nhb_pbst": null,
+  "ot_nhb_pvlg": null,
+  "ot_nhb_zh": null,
+  "ot_p2h_arith": null,
+  "ot_p2h_fadd16": null,
+  "ot_p2h_xport": null,
+  "ot_qkh_ktree": null,
+  "ot_qkh_lane8": null,
   "ot_qkvd_fbuf8": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_kv_end": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_rom_end": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_sbuf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_attn_hub_p": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qwen_nearhbm_attn_hub_t": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_ectl_h": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_head_h": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_rom_core_core_kv_banked": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
@@ -3296,8 +3313,6 @@
   "qfd_ctrl_protected_00": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_ctrl_ready_00": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_ctrl_shift_00": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
-  "qfd_dspark_argmax_gather": "^qfd_dspark_",
-  "qfd_dspark_s7_control": "^qfd_dspark_",
   "qfd_emb_pc_00": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_emb_pcport": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_emb_pcport_kvw": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
@@ -3327,9 +3342,12 @@
   "qfd_su_kv624": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qfd_sysctl_sram": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
   "qfd_sysctl_stn": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
+  "qfd_tile_lsl": null,
+  "qfd_tile_nk": null,
   "qfd_tt_ctl": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_ctlm": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_up4": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
+  "qfd_vm_grp": null,
   "qkd_kvwq_ctl": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_grp": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_leaf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)"
@@ -4881,50 +4899,6 @@
     }
    ]
   },
-  "dsfd_coll_cbf": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:coll",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-   },
-   "ops": [
-    {
-     "op": "class:coll",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-    }
-   ]
-  },
-  "dsfd_coll_cbfj": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:coll",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-   },
-   "ops": [
-    {
-     "op": "class:coll",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-    }
-   ]
-  },
   "dsfd_coll_cbh": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -4948,72 +4922,6 @@
    ]
   },
   "dsfd_coll_cbj": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:coll",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-   },
-   "ops": [
-    {
-     "op": "class:coll",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-    }
-   ]
-  },
-  "dsfd_coll_cbq": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:coll",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-   },
-   "ops": [
-    {
-     "op": "class:coll",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-    }
-   ]
-  },
-  "dsfd_coll_cbq0": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:coll",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-   },
-   "ops": [
-    {
-     "op": "class:coll",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-    }
-   ]
-  },
-  "dsfd_coll_cbr": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -5124,6 +5032,50 @@
    ]
   },
   "dsfd_coll_ceq": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_ceq0": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_ceqp": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -5648,50 +5600,6 @@
    ]
   },
   "dsfd_engram_c": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "class:embed",
-    "model": "ds_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^(dsfd_engram_): ds-1010: engram lookup / sink (embed class)"
-   },
-   "ops": [
-    {
-     "op": "class:embed",
-     "model": "ds_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^(dsfd_engram_): ds-1010: engram lookup / sink (embed class)"
-    }
-   ]
-  },
-  "dsfd_engram_lkp": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "class:embed",
-    "model": "ds_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^(dsfd_engram_): ds-1010: engram lookup / sink (embed class)"
-   },
-   "ops": [
-    {
-     "op": "class:embed",
-     "model": "ds_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^(dsfd_engram_): ds-1010: engram lookup / sink (embed class)"
-    }
-   ]
-  },
-  "dsfd_engram_sink": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -7606,7 +7514,7 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-vm/be",
     "target": null,
-    "t": "2026-10-11T13:05:48-07:00",
+    "t": "2026-10-11T19:19:35-07:00",
     "adopted": true
    }
   },
@@ -7888,7 +7796,7 @@
     "stalled": false,
     "owner": "Claude:mtp-wfc-1010",
     "target": null,
-    "t": "2026-10-11T05:31:33-07:00",
+    "t": "2026-10-11T19:55:40-07:00",
     "adopted": true
    }
   },
@@ -8309,7 +8217,7 @@
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
     "owner": "Claude:conservative-1011 [B hfd_hc]",
-    "src": "closure job hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    "src": "closure job hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
    },
    "ops": [
     {
@@ -8318,12 +8226,12 @@
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
      "owner": "Claude:conservative-1011 [B hfd_hc]",
-     "src": "closure job hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
+     "src": "closure job hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl: TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100 (II None > 1.10 or stalled stimulus: budget not mapped)"
     }
    ],
    "bench_ii": {
-    "job": "hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl",
-    "commit": "5c35b1a6e",
+    "job": "hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl",
+    "commit": "c95527ec0",
     "bench": "bench_hc_tile_xl_pos",
     "line": "TILE_XL PASS cycles=600 active=583 rootskew_ns=0.100",
     "cycles": 600,
@@ -8333,7 +8241,7 @@
     "stalled": false,
     "owner": "Claude:conservative-1011 [B hfd_hc]",
     "target": null,
-    "t": "2026-10-11T14:47:27-07:00",
+    "t": "2026-10-11T21:22:19-07:00",
     "adopted": true
    }
   },
@@ -9594,7 +9502,7 @@
     "stalled": false,
     "owner": "Claude:redesign-hbm",
     "target": null,
-    "t": "2026-10-10T06:26:00-07:00",
+    "t": "2026-10-11T20:57:47-07:00",
     "adopted": true
    }
   },
@@ -9668,23 +9576,38 @@
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
-    "op": "unmapped",
+    "op": "bench II (no items)",
     "model": "rom",
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
-    "owner": "-",
-    "src": "no token-path class and no name rule"
+    "owner": "Claude:el1011-ds-misc",
+    "src": "closure job el1011-pqc-aq12t-a-cc60cd537-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
    },
    "ops": [
     {
-     "op": "unmapped",
+     "op": "bench II (no items)",
      "model": "rom",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "-",
-     "src": "no token-path class and no name rule"
+     "owner": "Claude:el1011-ds-misc",
+     "src": "closure job el1011-pqc-aq12t-a-cc60cd537-tc-cl: AQ12T_EQ PASS valid_outputs=26534 cycles=40000 (II None > 1.10 or stalled stimulus: budget not mapped)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "el1011-pqc-aq12t-a-cc60cd537-tc-cl",
+    "commit": "cc60cd537",
+    "bench": "bench_aq12t_lockstep_exact",
+    "line": "AQ12T_EQ PASS valid_outputs=26534 cycles=40000",
+    "cycles": 40000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-ds-misc",
+    "target": null,
+    "t": "2026-10-11T20:32:13-07:00",
+    "adopted": true
+   }
   },
   "ot_dsrom_engram_idwin": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -10590,116 +10513,6 @@
     }
    ]
   },
-  "ot_engc_t_io": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "unmapped",
-    "model": "rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "-",
-    "src": "no token-path class and no name rule"
-   },
-   "ops": [
-    {
-     "op": "unmapped",
-     "model": "rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "-",
-     "src": "no token-path class and no name rule"
-    }
-   ]
-  },
-  "ot_engc_t_pbb": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "unmapped",
-    "model": "rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "-",
-    "src": "no token-path class and no name rule"
-   },
-   "ops": [
-    {
-     "op": "unmapped",
-     "model": "rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "-",
-     "src": "no token-path class and no name rule"
-    }
-   ]
-  },
-  "ot_engc_t_pbc": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "unmapped",
-    "model": "rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "-",
-    "src": "no token-path class and no name rule"
-   },
-   "ops": [
-    {
-     "op": "unmapped",
-     "model": "rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "-",
-     "src": "no token-path class and no name rule"
-    }
-   ]
-  },
-  "ot_engc_t_win": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "unmapped",
-    "model": "rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "-",
-    "src": "no token-path class and no name rule"
-   },
-   "ops": [
-    {
-     "op": "unmapped",
-     "model": "rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "-",
-     "src": "no token-path class and no name rule"
-    }
-   ]
-  },
-  "ot_engc_t_ws": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "unmapped",
-    "model": "rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "-",
-    "src": "no token-path class and no name rule"
-   },
-   "ops": [
-    {
-     "op": "unmapped",
-     "model": "rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "-",
-     "src": "no token-path class and no name rule"
-    }
-   ]
-  },
   "ot_hbm_accel_smh_be_eg": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -11592,32 +11405,32 @@
    ]
   },
   "ot_hgi_fused_record": {
-   "status": "UNQUALIFIED",
-   "ratio": 20.085,
+   "status": "QUALIFIED",
+   "ratio": 1.096,
    "limiting": {
     "op": "FUSED.HC_POST",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 20.085,
+    "status": "QUALIFIED",
+    "ratio": 1.096,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
-    "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
+    "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json"
    },
    "ops": [
     {
      "op": "FUSED.HC_PRE_NORM",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 6.514,
+     "status": "QUALIFIED",
+     "ratio": 0.715,
      "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
-     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120/report.json"
+     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json"
     },
     {
      "op": "FUSED.HC_POST",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 20.085,
+     "status": "QUALIFIED",
+     "ratio": 1.096,
      "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
-     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120/report.json"
+     "src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json"
     }
    ]
   },
@@ -12156,7 +11969,29 @@
     "dense": false
    }
   },
-  "ot_pqc_t_bc": {
+  "ot_mtp_p2_prefix_path_hub": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:wave (wave bench)",
+    "model": "ds_rom_mtp",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "el1011-ds-mtp",
+    "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json: element not in the integrated wave bench"
+   },
+   "ops": [
+    {
+     "op": "class:wave (wave bench)",
+     "model": "ds_rom_mtp",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "el1011-ds-mtp",
+     "src": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json: element not in the integrated wave bench"
+    }
+   ]
+  },
+  "ot_nhb_pbst": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -12178,7 +12013,7 @@
     }
    ]
   },
-  "ot_pqc_t_ctl16": {
+  "ot_nhb_pvlg": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -12200,7 +12035,7 @@
     }
    ]
   },
-  "ot_pqc_t_ix": {
+  "ot_nhb_zh": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -12222,7 +12057,7 @@
     }
    ]
   },
-  "ot_pqc_t_prom": {
+  "ot_p2h_arith": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -12244,7 +12079,7 @@
     }
    ]
   },
-  "ot_pqc_t_qb": {
+  "ot_p2h_fadd16": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -12266,7 +12101,7 @@
     }
    ]
   },
-  "ot_pqc_t_ret": {
+  "ot_p2h_xport": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -12288,7 +12123,7 @@
     }
    ]
   },
-  "ot_pqc_t_srom": {
+  "ot_qkh_ktree": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -12310,7 +12145,7 @@
     }
    ]
   },
-  "ot_pqc_t_xin": {
+  "ot_qkh_lane8": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -12354,8 +12189,8 @@
     }
    ],
    "bench_ii": {
-    "job": "qkd_fbuf8-a-0feeb971e-tc-hm10-cl",
-    "commit": "0feeb971e",
+    "job": "qkd_fbuf8-a-87a8d98ac-tc-hm10-ka",
+    "commit": "87a8d98ac",
     "bench": "bench_fbuf8_d8",
     "line": "PASS buf_tile D=8 cycles=200000 pops=70919 head_gap_cycles=13082",
     "cycles": 200000,
@@ -12365,7 +12200,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-kvd",
     "target": null,
-    "t": "2026-10-11T15:15:58-07:00",
+    "t": "2026-10-11T21:14:11-07:00",
     "adopted": true
    }
   },
@@ -12495,6 +12330,28 @@
    ]
   },
   "ot_qwen_nearhbm_attn_hub_p": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "ot_qwen_nearhbm_attn_hub_t": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -13361,7 +13218,7 @@
     "stalled": false,
     "owner": "Claude:cont-takeover",
     "target": null,
-    "t": "2026-10-10T22:52:51-07:00",
+    "t": "2026-10-11T19:46:00-07:00",
     "adopted": true
    }
   },
@@ -13442,7 +13299,7 @@
     "stalled": false,
     "owner": "Claude:sys-takeover",
     "target": null,
-    "t": "2026-10-10T17:46:54-07:00",
+    "t": "2026-10-11T21:18:44-07:00",
     "adopted": true
    }
   },
@@ -13479,7 +13336,7 @@
     "stalled": false,
     "owner": "Claude:sys-takeover",
     "target": null,
-    "t": "2026-10-10T01:09:24-07:00",
+    "t": "2026-10-11T21:18:49-07:00",
     "adopted": true
    }
   },
@@ -14415,50 +14272,6 @@
     }
    ]
   },
-  "qfd_dspark_argmax_gather": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "class:mtp",
-    "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "qwen-1010",
-    "src": "name rule ^qfd_dspark_: qwen-1010: DSpark on Qwen ROM has no qualified composition"
-   },
-   "ops": [
-    {
-     "op": "class:mtp",
-     "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "qwen-1010",
-     "src": "name rule ^qfd_dspark_: qwen-1010: DSpark on Qwen ROM has no qualified composition"
-    }
-   ]
-  },
-  "qfd_dspark_s7_control": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
-   "limiting": {
-    "op": "class:mtp",
-    "model": "qwen_rom",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "qwen-1010",
-    "src": "name rule ^qfd_dspark_: qwen-1010: DSpark on Qwen ROM has no qualified composition"
-   },
-   "ops": [
-    {
-     "op": "class:mtp",
-     "model": "qwen_rom",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "qwen-1010",
-     "src": "name rule ^qfd_dspark_: qwen-1010: DSpark on Qwen ROM has no qualified composition"
-    }
-   ]
-  },
   "qfd_emb_pc_00": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -14750,7 +14563,7 @@
     "stalled": false,
     "owner": "Claude:qwen-blocks",
     "target": null,
-    "t": "2026-10-10T02:57:06-07:00",
+    "t": "2026-10-11T21:21:27-07:00",
     "adopted": true
    }
   },
@@ -14875,7 +14688,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-coll",
     "target": null,
-    "t": "2026-10-11T16:34:46-07:00",
+    "t": "2026-10-11T19:56:26-07:00",
     "adopted": true
    }
   },
@@ -15501,7 +15314,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-seq",
     "target": null,
-    "t": "2026-10-11T12:50:34-07:00",
+    "t": "2026-10-11T18:52:40-07:00",
     "adopted": true
    }
   },
@@ -15604,7 +15417,7 @@
     "stalled": false,
     "owner": "Claude:struct-close",
     "target": null,
-    "t": "2026-10-10T19:14:24-07:00",
+    "t": "2026-10-11T21:23:35-07:00",
     "adopted": true
    }
   },
@@ -15979,7 +15792,7 @@
     "stalled": false,
     "owner": "Claude:drive-0158",
     "target": null,
-    "t": "2026-10-10T19:21:56-07:00",
+    "t": "2026-10-11T21:26:24-07:00",
     "adopted": true
    }
   },
@@ -16047,6 +15860,65 @@
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_tile_lsl": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ],
+   "bench_ii": {
+    "job": "qfd_tile_lsl4-7e60104b6-tc-hm0-cl2",
+    "commit": "7e60104b6",
+    "bench": "bench_rom_pipe_exact_anr",
+    "line": "\"verdict\": \"PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=300 cycles=22937 result_writes=5632 maxima=24 argmax_changes=501 scale_reads=2444 latency_added=13 ACC_LAT=7 TREE_LAT=",
+    "cycles": 22937,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-tile",
+    "target": null,
+    "t": "2026-10-11T20:18:49-07:00",
+    "adopted": true
+   }
+  },
+  "qfd_tile_nk": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
     }
    ]
   },
@@ -16135,6 +16007,28 @@
      "ratio": null,
      "owner": "-",
      "src": "results/arch/token_path_20261009/qwen_rom.json"
+    }
+   ]
+  },
+  "qfd_vm_grp": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
     }
    ]
   },
