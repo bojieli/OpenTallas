@@ -252,6 +252,26 @@ proc ot_clock_spine {} {
   set bt [$blk findBTerm $port]
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
   set net0 [$bt getNet]
+  # OT_SPINE_THROUGH_ICG=1 (el1011-hbm-smt 2026-10-12): the port clock enters ONE tile clock gate (ICG*, e.g. the SM tile's
+  # ot_cg_tile) that clocks everything else.  A spine on the port net would see only the ICG and its few enable flops and
+  # leave the whole gated network without a tree; build the spine on the ICG's GCLK net instead, rooted at the ICG output.
+  # The port net keeps the ICG + its enable registers (local, beside the clk / cgi pins), so the ENA check stays balanced.
+  set ::ot_sp_root_xy ""
+  if {[ot_sp_env OT_SPINE_THROUGH_ICG 0] eq "1"} {
+    set icgs {}
+    foreach it [$net0 getITerms] {
+      if {[$it getIoType] ne "INPUT"} continue
+      if {[string match ICG* [[[$it getInst] getMaster] getName]]} { lappend icgs [$it getInst] }
+    }
+    if {[llength $icgs] != 1} { error "OT_SPINE_THROUGH_ICG: port $port drives [llength $icgs] ICG cells (need exactly 1)" }
+    set g [lindex $icgs 0]
+    set gt [$g findITerm GCLK]
+    set net0 [$gt getNet]
+    lassign [$gt getAvgXY] ok gx gy
+    if {!$ok} { lassign [$g getLocation] gx gy }
+    set ::ot_sp_root_xy [list $gx $gy]
+    puts "OT_SPINE through ICG [$g getName]: spine on net [$net0 getName]"
+  }
   set ::ot_sp_seg [expr {int([ot_sp_env OT_SPINE_SEG 150] * $u)}]
   set bin [expr {[ot_sp_env OT_SPINE_BIN 60] * $u}]
   set lmax [ot_sp_env OT_SPINE_LEAF_N 8]
@@ -333,6 +353,7 @@ proc ot_clock_spine {} {
   set root [ot_sp_split [dict keys $::ot_sp_members]]
   set pb [$bt getBBox]
   set px [expr {([$pb xMin] + [$pb xMax]) / 2}]; set py [expr {([$pb yMin] + [$pb yMax]) / 2}]
+  if {$::ot_sp_root_xy ne ""} { lassign $::ot_sp_root_xy px py }
   set ::ot_sp_leafnet [dict create]; set ::ot_sp_npad [dict create]
   foreach n [dict keys $::ot_sp_members] { dict set ::ot_sp_npad $n 0 }
   ot_sp_emit $root $net0 [expr {min(max($px, $::ot_sp_cx0), $::ot_sp_cx1 - $::ot_sp_cw)}] [expr {min(max($py, $::ot_sp_cy0), $::ot_sp_cy1 - $::ot_sp_rh)}]
