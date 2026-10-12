@@ -27,6 +27,7 @@ module tb_hgi_dma_front;
     parameter integer NB = 32;     // VM wide lanes (banks)
     parameter integer PCX4 = 0;
     parameter integer XP = 0;      // hbm-fq/dma 10-11: the textbook rebuild (registered X1 request vectors, X2 split, count rungs)
+    parameter integer XQ = 0;      // hbm-fq/mvf 10-11: X2 select rung + conversion rung + pin output register (needs XP)
     parameter integer AP = 0;      // hgi-1010 b: the weight aperture (VM words >= 2^18, 2 slots of 32,768): 281-b lanes, random
                                    //   per-bank wl_rdy stops (no lane may carry a sector 5+ edges into a stop), slot loads
     localparam integer VMW = AP ? 327680 : 262144, LWW = 280 + AP;    // HBM supply a stack in sectors per 4 cycles (99 = 3.80 TB/s a die at 1.2 GHz); 0 = unlimited
@@ -44,7 +45,7 @@ module tb_hgi_dma_front;
     wire id_all = &q_idrdy;
     genvar gq;
     generate for (gq = 0; gq < NQ; gq = gq + 1) begin : fq
-        ot_hgi_dma_front #(.NS(NS), .NL(NL), .SBIT(SBIT), .STACK_BYTES(36'(SB)), .NB(NB), .LD(LD), .AP(AP), .XP(XP), .MUT(MUT),
+        ot_hgi_dma_front #(.NS(NS), .NL(NL), .SBIT(SBIT), .STACK_BYTES(36'(SB)), .NB(NB), .LD(LD), .AP(AP), .XP(XP), .XQ(XQ), .MUT(MUT),
                            .B2(B2), .QID(gq), .MUT_B2(MUT_B2)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && tgt[gq]),
             .mv_rdy(q_rdy[gq]), .mv(mv), .mv_done(q_done[gq]), .mv_fault(q_fault[gq]),
             .ix_v(ix_v && tgt[gq]), .ix_rdy(q_ixrdy[gq]), .ix_cmd(ix_cmd), .id_v(id_v && ((B2 != 0) ? id_all : 1'b1)), .id_rdy(q_idrdy[gq]),

@@ -41,6 +41,7 @@ module tb_hgi_mover_kport;
     parameter integer KVB_N = 16;                       // records a KVWB burst
     parameter integer KVB_MAX = 0;                      // gate: posted cycles / record x 10 (0: report only)
     parameter integer ONLY_KVB = 0;                     // 1: the KVWB cases only
+    parameter integer PX = 0;                           // the mover's registered issue decisions + vmq output (hbm-fq/mvf)
     reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
     parameter integer B2 = 0;                           // 1: the B2 die's four quadrant movers (QID 0..3) behind the B2 dispatcher model
     parameter integer MUT_B2 = 0;                       // the quadrant movers' B2 mutant (1 rows off by one, 2 wrong lane)
@@ -107,7 +108,7 @@ module tb_hgi_mover_kport;
         wire [337:0] vmq; wire [279:0] wl; reg wl_done = 0; reg [273:0] vmr = 0;
         wire [512:0] vr2q; reg [8256:0] vr2r = '0;
         localparam integer B = 5 * qi;
-        ot_hgi_dma_mover #(.MUT(MUT), .VR2(VR2), .SVR2(SVR2), .KVW(KVW), .B2(B2), .QID(qi), .MUT_B2(MUT_B2)) u_m (.clk(clk), .rst_n(rst_n),
+        ot_hgi_dma_mover #(.MUT(MUT), .VR2(VR2), .SVR2(SVR2), .KVW(KVW), .PX(PX), .B2(B2), .QID(qi), .MUT_B2(MUT_B2)) u_m (.clk(clk), .rst_n(rst_n),
             .mv_v(i_v[qi]), .mv_rdy(i_rdy[qi]), .mv(mv), .mv_done(i_done[qi]),
             .mv_fault(i_fault[qi]), .mv_src(i_src[qi]), .fence_v(1'b0), .fence_rdy(), .fence_done(),
             .k_req_v(k_req_v), .k_req_rdy(kq_rdy[B]), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),

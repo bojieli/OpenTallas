@@ -1,7 +1,7 @@
 # HBM die B2: quadrant-local VM slices (spec, 2026-10-12)
 
-**Status: PROVISIONAL (v0.3, 10-12 05:30 PT; v0.3 = section 5.0 budget counts EXPOSED cycles + bandwidth sizing; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
-are marked TBD. The windowed hub GRT gate (section 7) is still running. Changes after the gate are versioned here and
+**Status: v0.4 (10-12 07:40 PT; v0.4 = GRT gate PASSED (section 7), ring physical channel settled against the built VM-slice RTL, coll_tkm kept, contract v9 proposal in section 6; v0.3 = section 5.0 budget counts EXPOSED cycles + bandwidth sizing; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
+are marked TBD. The windowed hub GRT gate PASSED (section 7: window overflow -89.7 % vs v8). Changes after the gate are versioned here and
 announced in `claude-takeover-20261007/el1011-hbm-b2.log`.
 
 Owner direction 2026-10-12: make the HBM die easier to close by putting compute next to its data (ROM-die and
@@ -169,10 +169,16 @@ protocols are unchanged; only the lane count goes 32 → 8.
 **Packet clients (cq / cr)** are unchanged: 338 / 274 b, OUT = 4, responses in order. A client is wired to its local
 slice, or the nearest one for central units. The slice forwards a non-local address over the ring.
 
-**Ring link** (each direction, `ot_hgi_vm_ring`), 2,148 b:
+**Ring link** (each direction, `ot_hgi_vm_ring`). **v0.4:** one wide physical channel a direction, ≤ 2,227 b
+(2,223 b as packed by the VM-slice stream's CW channel on `claude/el1011-hbm-b2-vm`, plus a 4-b per-VC credit return),
+carrying both VCs. The built RTL's CW-wide + CCW-narrow (292 b) split is replaced by the same wide channel in both
+directions: with a narrow CCW, a REPL mirror write reaches the third slice after 3 hops (about 34 cycles instead of
+12-23), which adds about 22 exposed cycles per x record (Qwen 0.44 %, DS 2.3 % of layer: over the R3 budget). Both VCs
+share the wide channel with per-VC credits; a REPL_WR goes CW to sid+1, CCW to sid+3, and either way to sid+2.
+Fields (v0.1 list, packing per the VM-slice RTL):
 - fields `{v, kind 3 (RD_REQ / RD_RSP / WR / REPL_WR / RED_CARRY / COLL_BC), src 2, dst 2, tag 16, sector_addr 15,
   data 2,048 (8 sectors x 256), word mask 64, epoch 4, …}`;
-- `kind`, `src`, `dst` and `epoch` are fixed. The exact field packing is TBD (VM slice stream) inside the 2,148 b;
+- `kind`, `src`, `dst` and `epoch` are fixed. The packing is the VM-slice RTL's (2,223 b);
 - credit return: 4 b a direction, credits = relay stages x 2 + 4 (TBD from the stage counts in section 7);
 - latency: the hop stages in section 5;
 - deadlock freedom: the ring is a 4-node cycle, so RD_REQ, RD_RSP and WR traffic use 2 virtual channels (request and
@@ -402,6 +408,36 @@ addresses over the ring.
 
 **D-B2-6.** HGI-1 (additive): the REPL window, word addresses 262,144-294,911.
 
+### 6a. Contract v9 proposal (v0.4, supersedes D-B2-2's ring and COLL widths)
+
+| item | v9 |
+|---|---|
+| D-B2-1 slices | as above; each slice = 8 `ot_vms_bank` tiles (lane b ↔ bank b) + `ot_vms_hub` + CW stop + CCW stop, ONE netlist for all 32 bank tiles (bid / sid straps) |
+| address | slice = `addr_word[17:16]` (= sec16 S[14:13]); REPL = `addr_word[18]` (byte bit 20), logical window 262,144-294,911 (MIRROR_W 32,768); the bank tiles hold 65,536 mirror words, so MIRROR_W can grow to 65,536 with no RTL change. The cmdproc slice map of `el1011-hbm-b2-cp` is confirmed |
+| D-B2-2 ring | `vring_<a>_<b>`: 8 directed links (4 neighbour pairs x 2 directions), each ≤ 2,227 b (wide channel + 4-b credit), 2 VCs, dateline at SW-SE; relays `ot_vms_relay` ≤ 500 um. Centre-line crossing 2 x 2 x 2,227 = 8.9 kb (8.6 kb in the GRT gate) |
+| D-B2-2 COLL | `vcb_<q>`: star coll → each slice, 4 edges x (2,112 + 2) b, cut-through (F3). Adds ≈ 2.1 kb over the gate's tree on the spine cut |
+| D-B2-7 coll_tkm | KEEP `ot_hgi_coll_tkm` (16 `hgi_coll_tkm_tile` chain) inside `hb_coll`; result to the slices over `vcb`. `ot_hbm_index_global_order_mt` is the IDX id-merge (no value key, no top-k, no -0 / NaN / tie-to-lower-id rules), so it cannot do COLL.TOPK_MERGE (DS 9 / token, cross-die) |
+| D-B2-8 wide lanes | slice-LOCAL only (RG 2 read groups, WG 2 write groups, DMA lane, COLL lane a bank tile). No remote wide reads: F1 (REPL x) and F2 (VOP partition alignment) make them unnecessary, and the exporter refuses a record that would need one. Packet clients (338 / 274 b) reach remote addresses through the ring |
+| D-B2-9 VM8 | `hb_vm_<q>` abuts slice q (fixes the 3 link-domain clock / reset reach FAILs at (14.8-15.6, 18.9-20.0) mm, where the x-load pins crowd the tree nodes) |
+| D-B2-10 harness | R4 records per-sector t_arrive / t_need; `bcast_bits` 2,048, `bcast_hops` 1, `ring_link_bits` 2,048 both directions, ring hop 12 / 11 |
+
+**Cut analysis (v9, study method of `hbm_die_phy_study_1012/cuts.py`).** The study's B2 spine cut (x = 15 mm, y 10-16)
+is 39,863 b at 0.55 with the v0.1 ring (8,592 b) and tree (2,176 b). v9 adds ≈ +0.3 kb (ring) and ≈ +2.1 kb (star):
+≈ 42.3 kb, **≈ 0.58**, inside the 0.55-0.60 target. Both full centre lines stay ≤ 0.08. The next die GRT runs with
+the star and the v9 ring to confirm.
+
 ## 7. Results
 
-(filled in as they land: GRT, ring stage counts, benches, routes)
+**Windowed hub GRT gate: PASS** (ot-epyc1tb `/srv/opentallas-scratch/claude/hbm-b2/w/`, same code bcf70d463 for both,
+window 11-19 x 9-17 mm, k 16, 5 iterations, M4 / M5 0.5, `PYTHONHASHSEED=0`; `winov.py` on `gcell_usage.txt`):
+
+| | r25gqn_pr8 (v8) | **r25gqn_b2** | change |
+|---|---:|---:|---:|
+| window overflow | 1,367,157 | **141,044** | **-89.7 %** (pass bar ≥ 50 %) |
+| die overflow | 1,419,450 | 149,209 | -89.5 % |
+| total wirelength (um) | 89,300,839 | 60,897,790 | -31.8 % |
+| window overflow M4 / M5 / M6 / M7 / M8 / M9 | 83.5k / 457k / 479k / 141k / 149k / 57.2k | 2.4k / 23.1k / 47.8k / 21.7k / 19.8k / 26.3k | |
+| hottest 2-mm bins (lower-left, mm) | (12,10) 309k, (14,12) 215k, (14,16) 177k | (14,14) 25.1k, (12,10) 21.6k, (14,16) 18.0k | |
+
+The residual 141k is local: the (14,14) bin is the old VM site, now crossed by the ring-client taps and the COLL
+tree, and (12,10) / (14,16) are the SW / NW slice faces. The die GRT with the v9 ring and star (section 6a) follows.
