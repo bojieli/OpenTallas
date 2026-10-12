@@ -1,7 +1,7 @@
 {
  "schema": "qwen-hier-contract/0 (provisional; migrate to tools/hier_contract/)",
  "die": "qwen_rom",
- "version": 1,
+ "version": 3,
  "source": "r22ko4 e7 case (e6 21fdd3100 + qfd_io_collective M7 straps)",
  "period_ps": 833.333,
  "die_outline": {
@@ -15039,6 +15039,186 @@
     "drc": 0,
     "job": "qfd_io_collective_pr2-4d8c7f487-f6-ecocont",
     "source_commit": "2a4340a331e4368003917bce03c26f73453c1abd"
+   },
+   "hierarchy": {
+    "kind": "HARDENED CLUSTER (GLUE PLACEMENT 19:15: substantial coupled logic -> one hierarchical hard block, built top-down to this slot by el1011-q-coll; no standalone hub)",
+    "children": [
+     {
+      "name": "coll_slice0",
+      "master": "ot_coll_fold_slice",
+      "outline_um": [
+       180,
+       180
+      ],
+      "xy": [
+       10422.0,
+       31256.55
+      ],
+      "orient": "MY",
+      "status": "CLOSED qfd_io_collective_fs-b760fc991 TT +231.10 / FF +2.85 DRC 0",
+      "view": "physical/qwen_die_masters/hard/ot_coll_fold_slice @8d0cb6a8b",
+      "pins": {
+       "src": "W 512 in (rank r lane bits s*128..+127)",
+       "sum": "E 128 out",
+       "clk": "N",
+       "other": "red_in, v_out, e_out, rst_n"
+      },
+      "pg": "M6 stripes; die straps M7"
+     },
+     {
+      "name": "coll_slice1",
+      "master": "ot_coll_fold_slice",
+      "outline_um": [
+       180,
+       180
+      ],
+      "xy": [
+       10422.0,
+       31456.35
+      ],
+      "orient": "MY",
+      "status": "CLOSED qfd_io_collective_fs-b760fc991 TT +231.10 / FF +2.85 DRC 0",
+      "view": "physical/qwen_die_masters/hard/ot_coll_fold_slice @8d0cb6a8b",
+      "pins": {
+       "src": "W 512 in (rank r lane bits s*128..+127)",
+       "sum": "E 128 out",
+       "clk": "N",
+       "other": "red_in, v_out, e_out, rst_n"
+      },
+      "pg": "M6 stripes; die straps M7"
+     },
+     {
+      "name": "coll_slice2",
+      "master": "ot_coll_fold_slice",
+      "outline_um": [
+       180,
+       180
+      ],
+      "xy": [
+       10422.0,
+       31656.15
+      ],
+      "orient": "MY",
+      "status": "CLOSED qfd_io_collective_fs-b760fc991 TT +231.10 / FF +2.85 DRC 0",
+      "view": "physical/qwen_die_masters/hard/ot_coll_fold_slice @8d0cb6a8b",
+      "pins": {
+       "src": "W 512 in (rank r lane bits s*128..+127)",
+       "sum": "E 128 out",
+       "clk": "N",
+       "other": "red_in, v_out, e_out, rst_n"
+      },
+      "pg": "M6 stripes; die straps M7"
+     },
+     {
+      "name": "coll_slice3",
+      "master": "ot_coll_fold_slice",
+      "outline_um": [
+       180,
+       180
+      ],
+      "xy": [
+       10422.0,
+       31855.95
+      ],
+      "orient": "MY",
+      "status": "CLOSED qfd_io_collective_fs-b760fc991 TT +231.10 / FF +2.85 DRC 0",
+      "view": "physical/qwen_die_masters/hard/ot_coll_fold_slice @8d0cb6a8b",
+      "pins": {
+       "src": "W 512 in (rank r lane bits s*128..+127)",
+       "sum": "E 128 out",
+       "clk": "N",
+       "other": "red_in, v_out, e_out, rst_n"
+      },
+      "pg": "M6 stripes; die straps M7"
+     },
+     {
+      "name": "coll_fifo0",
+      "master": "ot_sram_1r1w_32x546_m1",
+      "outline_um": [
+       177.768,
+       81.0
+      ],
+      "xy": [
+       10699.128,
+       31296.24
+      ],
+      "orient": "R0",
+      "pg": "M4-M5"
+     },
+     {
+      "name": "coll_fifo1",
+      "master": "ot_sram_1r1w_32x546_m1",
+      "outline_um": [
+       177.768,
+       81.0
+      ],
+      "xy": [
+       10699.128,
+       31496.31
+      ],
+      "orient": "R0",
+      "pg": "M4-M5"
+     },
+     {
+      "name": "coll_fifo2",
+      "master": "ot_sram_1r1w_32x546_m1",
+      "outline_um": [
+       177.768,
+       81.0
+      ],
+      "xy": [
+       10699.128,
+       31696.38
+      ],
+      "orient": "R0",
+      "pg": "M4-M5"
+     },
+     {
+      "name": "coll_fifo3",
+      "master": "ot_sram_1r1w_32x546_m1",
+      "outline_um": [
+       177.768,
+       81.0
+      ],
+      "xy": [
+       10699.128,
+       31896.45
+      ],
+      "orient": "R0",
+      "pg": "M4-M5"
+     },
+     {
+      "name": "coll_hub",
+      "master": "(cluster-internal glue, not a separate element)",
+      "outline_um": "slot area east of x+500 um (q-coll cuts it; fixed outline issued in the next contract version before its route)",
+      "status": "inside the cluster"
+     }
+    ],
+    "seams": [
+     {
+      "name": "hub head regs -> slice src",
+      "bits": 2048
+     },
+     {
+      "name": "slice sum -> hub fold out",
+      "bits": 512
+     },
+     {
+      "name": "red_in fan-out",
+      "bits": 4
+     },
+     {
+      "name": "v_out/e_out",
+      "bits": 8
+     },
+     {
+      "name": "fifo rd_out -> hub capture (no logic)",
+      "bits": 2184
+     }
+    ],
+    "seam_budget": "registered both sides; slice lib TT setup -182..-130 / hold 150..205 / clk->out <= 536 ps; FF setup -146..-110 / hold 126..164 / clk->out <= 392 ps; slice clock insertion TT 179-228 / FF 143+",
+    "cluster_rules": "slot outline/pins/PG M7 straps fixed by this contract; children: 4 ot_coll_fold_slice (closed) + 4 ot_sram_1r1w_32x546_m1 at the listed in-slot positions; the former hub logic sits inside the cluster beside the slices with registered seams; children signals <= M6 (slice M7 wires must go), exact-shape abstracts, no parameters on hard children",
+    "seams_owner": "cluster-internal seams = q-coll cluster route; die seams = the slot pins (die closure)"
    }
   },
   "qfd_io_serdes": {
@@ -124165,7 +124345,23 @@
      "signal on M8/M9"
     ]
    },
-   "evidence": null
+   "evidence": null,
+   "hierarchy": {
+    "kind": "HARDENED REPLICATED CLUSTER (x1536): lsl4 leaves + ROM/KV macros + the hub_s/hub_n logic INSIDE the cluster (no standalone hubs), hardened once and stepped",
+    "build": "el1011-q-tile h2 line (7e60104b6): leaves lsl4 (lsl3 routes M7 signals over its PG -> not admissible) + qfd_tile_hub_s / qfd_tile_hub_n + ROM/KV macros; positions macro_place_tile_h2.tcl",
+    "variant": "r22ko4 needs the NK variant: no li/lo, no KV slice (D2)",
+    "target_clock_insertion_ps": {
+     "leaf_TT": [
+      162,
+      187
+     ],
+     "leaf_FF": [
+      126,
+      149
+     ]
+    },
+    "pg": "M7 straps .288/.096/10.8/1.0 (cluster top); leaves PG M6 full stripes, signals <= M6"
+   }
   },
   "qfd_tt_ctlm": {
    "outline_um": [
@@ -124615,7 +124811,8 @@
     "drc": null,
     "job": null,
     "source_commit": null
-   }
+   },
+   "pending": "el1011-q-seq PK rebuild fp{a,b}pk-4e9afc303: outline 432 x 475.2 (from 777.576 x 1,814.376), faces/names/widths unchanged; slot updates when it closes"
   },
   "qfd_tt_up4": {
    "outline_um": [
@@ -125196,6 +125393,48 @@
    "date": "2026-10-11 18:45 PDT",
    "by": "qwendie-1011",
    "note": "provisional from r22ko4 e7 case (e6 21fdd3100 + qfd_io_collective M7 straps)"
+  },
+  {
+   "version": 2,
+   "date": "2026-10-11 21:45 PDT",
+   "by": "qwendie-1011",
+   "note": "two-level hierarchy per slot (io_collective two-level with sub-slots; qfd_tile replicated cluster); seam_check spec; ctlm pending outline; tile target clock insertion"
+  },
+  {
+   "version": 3,
+   "date": "2026-10-11 19:20 PDT",
+   "by": "qwendie-1011",
+   "note": "GLUE PLACEMENT: io_collective + qfd_tile are hardened clusters (glue inside); seams = die closure; die_closure section"
   }
- ]
+ ],
+ "seam_check": {
+  "definition": "every die-level net between two hard slots (tile<->tile, tile<->hub, element<->relay) is a SEAM",
+  "structure": [
+   "registered both sides (pin flop in, flop out; macro outputs captured with no logic)",
+   "<= 504 um of wire per stage (relays at discrete sites; last segment <= ~100 um into an unregistered input)",
+   "no seam net fanout > 64 without replication"
+  ],
+  "tools": [
+   "tools/qwen_kv_die/die_audit.py (structure: hops_over_reach, pin overlaps, region extents)",
+   "tools/budgets/clock_plan.py emit/record (die clock to every slot clock entry: intra/inter skew policy, 0 violations)",
+   "tools/qwen_kv_die/chain/die_chain.sh (case -> PDN check_power_grid -> GRT -> STA on slot libs with measured clock arrivals) + pad_chain.sh (rule-H1 hold pads)",
+   "per-REGION die-top detailed route (DRT) with slots as fixed macros, relays/hubs as the only logic: to be added (AMENDMENT 2)"
+  ],
+  "pass": {
+   "TT_setup_ps": ">= 0 @ 833.333 on the CTS clock",
+   "FF_hold_ps": ">= 0 after pads",
+   "GRT_overflow": 0,
+   "DRC": 0,
+   "PDN": "check_power_grid PASS",
+   "clock_plan": "0 intra / 0 inter violations",
+   "hops_over_504um": 0
+  },
+  "evidence_rule": "estimate-only seam checks are not closure evidence; a seam passes only on the routed die region"
+ },
+ "die_closure": {
+  "seam_check": "part of DIE closure (ELEMENT CLOSURE UNDER TWO-LEVEL 19:45), not element closure",
+  "regions": "die top routed per region with slots as fixed macros, relays as the only logic; region list + routes tracked here",
+  "region_routes": [],
+  "status": "pending: per-region die-top DRT flow to be added; current evidence = GRT + STA (r22ko4 e6/e7 chains), not closure"
+ }
 }
