@@ -14,6 +14,7 @@ export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_F
 DW=864; DH=643.2
 echo "kind=lkep_sub die=${DW}x${DH} PD=${PD:-0.5} HM=${HM:-0.050} MAXWIRE=${MAXWIRE:-} RVIEW=$RV $*" > $W/args
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
+GRTH=physical/abi3/v41x_karb_repair_buffer_cap.tcl; if [ -n "${MAXWIRE:-}" ]; then GRTH=$D/grt_drv_maxwire.tcl; fi
 python3 tools/run_abi3_physical.py --view asap7 --top ot_lkep_sub \
   --source rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv --source rtl/hbm_accel/tu/lk_ep_20261010/ot_crc_par.sv \
   --source rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv --source rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_sub.sv \
@@ -31,7 +32,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_lkep_sub \
   --step-tcl PRE_IO_PLACEMENT=$D/pins_sub.tcl \
   --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
-  --step-tcl PRE_GLOBAL_ROUTE=${MAXWIRE:+$D/grt_drv_maxwire.tcl}${MAXWIRE:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} ${MAXWIRE:+--orfs-var OT_MAXWIRE_UM=$MAXWIRE} \
+  --step-tcl PRE_GLOBAL_ROUTE=$GRTH ${MAXWIRE:+--orfs-var OT_MAXWIRE_UM=$MAXWIRE} \
   --slew-margin-percent 20 --hold-margin-ns ${HM:-0.050} --purpose signoff_target --nickname-tag lks_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
