@@ -631,18 +631,22 @@ module ot_hgi_hc_ctl_ll #(
             end
             if (blk_rdy && st == S_RUN) begin crp <= crp + 1'b1; bi <= bi + 1'b1; b0_v <= 1'b1; end
             if (g_rdy && st != S_IDLE) gpend <= 1'b1;
+            // el1011-hbm-fused: HC_PRE_NORM takes the lane WRITE group only once the gain has landed (g_rdy): on the die
+            // the FUSED mover streams that gain through the lgE write group, so an engine holding it from the job start
+            // would wait on a move that waits on it.  No PRE lane writes before the gain command (y needs w); r follows g.
+            if (!post && gpend && st == S_RUN) wg_req <= 1'b1;
             if (rr_v) begin r_pend <= 1'b1; r_hold <= rr; end
             if (f_div || f_eps || f_rsq || (|tf) || (|nf)) sfault <= 1'b1;
             case (st)
                 S_IDLE: if (job_v) begin
                     if (!job_ok) fault <= 1'b1;
                     else begin
-                        st <= S_GRP; rg_req <= 1'b1; wg_req <= 1'b1; post <= j_post; c_b <= job[75:58];
+                        st <= S_GRP; rg_req <= 1'b1; wg_req <= j_post; post <= j_post; c_b <= job[75:58];
                         eps_r <= job[146:115]; ph <= ja[4:0]; nexp <= j_post ? 13'(4 * SD) : 13'(SD);
                         gsent <= 1'b0; gpend <= 1'b0; r_pend <= 1'b0; sfault <= 1'b0; go_r <= 1'b1;
                     end
                 end
-                S_GRP: if (rg_q && wg_q) begin
+                S_GRP: if (rg_q && (wg_q || !post)) begin
                     st <= S_SC; scs <= '0; scl <= '0; ndone <= '0; crp <= '0; bi <= '0;
                     for (L = 0; L < 32; L = L + 1) cwp[L] <= '0;
                     nsc <= 3'(({3'd0, c_b[2:0]} + (post ? 6'd20 : 6'd4) + 6'd7) >> 3);
@@ -660,8 +664,8 @@ module ot_hgi_hc_ctl_ll #(
                 end
                 S_RUN: begin
                     if (!cv && cop == 3'd1) begin cv <= 1'b1; cop <= 3'd3; end                   // GO after the weights
-                    else if (!post && gpend && !gsent && cop != 3'd1) begin cv <= 1'b1; cop <= 3'd4; gsent <= 1'b1; end
-                    else if (!post && r_pend && cop != 3'd1) begin
+                    else if (!post && gpend && !gsent && wg_q && cop != 3'd1) begin cv <= 1'b1; cop <= 3'd4; gsent <= 1'b1; end
+                    else if (!post && r_pend && gsent && cop != 3'd1) begin
                         cv <= 1'b1; cop <= 3'd5; cd <= {96'd0, r_hold}; r_pend <= 1'b0;
                     end
                     if (ndone == nexp && fin_all && cop != 3'd1) st <= S_FIN;
