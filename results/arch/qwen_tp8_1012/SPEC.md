@@ -42,7 +42,10 @@ The merged die needs 4 HBM3E PHYs. Each is 0.83 x 12.0 mm, so the PHYs need 48 m
 - **F2 fits** at 31.2 x 25.8 mm, with 1.8 mm and 0.2 mm of margin on the 33-mm and 26-mm axes. Its slot share is 59.9% (≤ 60%).
   - The 83.5-um column channel is chosen to bring the slot share to 60%, and it is also the column-cut fix.
   - The 190-um row gap is what the 26-mm axis leaves after the S IO band (1,564 um) and the 400-um IO word channel.
-- **F2 keeps the KV region's internal geometry.** The KV die's W half (x 0-3.7 mm, 2 PHYs on its W edge) becomes the die's W strip. The E half becomes the E strip, unrotated. The cuts the KV die closed at GRT overflow 0 therefore stay as they were. Only the centre column moves: `qkd_seq`, `qkd_host`, `qkd_ahub` and `qkd_embgw` go into the ROM spine, while `qkd_d2d`, the UCIe pair, `qkd_pll` and the KV-side SerDes are removed.
+- **F2 keeps the KV region's internal geometry.** The KV die's W half (x 0-3.7 mm, 2 PHYs on its W edge) becomes the die's W strip. The E half becomes the E strip, unrotated. The cuts the KV die closed at GRT overflow 0 therefore stay as they were. Only the centre column moves: `qkd_seq`, `qkd_host`, `qkd_ahub`, `qkd_embgw` and `qkd_pll` go into the KV-centre sub-column of the ROM spine, while the UCIe pair and the clock/reset bump pair are removed.
+  - **Amendment (coord decisions 2026-10-12):**
+    - *Clock.* `qkd_pll` stays: it is the die's only clock and reset source. Before the merge, the ROM's `clk_rx` was fed by the KV PLL through `ckb_kv -> ckb_rom`, so removing the PLL would leave the die unclocked. Its `pll_fwd` / `rso_fwd` outputs now drive `clk_rx` directly. `ckb_kv`, `ckb_rom`, `rs_bump` and their `clk_d2d` / `rst_d2d` / `rst_fwd_s` nets are dropped, along with the bump-side reset synchroniser.
+    - *Host link.* The 2,085-b `host_fdi` word between `qkd_host` and its SerDes is kept. It ends on a dedicated host SerDes port in the S IO band: one more IO-band port, which the contract gives a slot. Its word counts in the IO-word-channel cut (`cuts.py`, next regeneration).
 
 **Chosen: F2.** Every cut is at or under 0.55 (table below), and F2 is the only candidate that fits the reticle.
 
@@ -290,8 +293,8 @@ KV is FP8 E4M3 K and V codes. At P8191 one user needs 36 x (1 KV head) x 128 x 2
   - 24 columns on each side of the spine column.
 - **Spine column (4.59 mm, mid-die):**
   - from tp8a: VM, SU, tt_ctlm, tt_up4, seq_su, 3 band_lanes, 3 res_ser, 6 port groups, crom/cbuf, clkrx;
-  - from the KV-die centre column: qkd_seq / host / ahub / embgw.
-- **S band (1,564 um):** UCIe peer PHY + adapter (in-package peer edge; the second die of the package is rotated 180°), the collective with xfifo, and 3 SerDes. Above it sits the 400-um IO word channel.
+  - from the KV-die centre column: qkd_seq / host / ahub / embgw / pll (the die's clock source, wired to clkrx).
+- **S band (1,564 um):** UCIe peer PHY + adapter (in-package peer edge; the second die of the package is rotated 180°), the collective with xfifo, 3 collective SerDes, and the host SerDes port (`host_fdi`, 2,085 b, to `qkd_host`). Above it sits the 400-um IO word channel.
 
 **Rules:**
 

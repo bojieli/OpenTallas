@@ -136,31 +136,84 @@ def track_macro(view: str) -> dict:
 
 
 # --------------------------------------------------------------------------------------------- layer contract
+LEGACY_KITS = json.loads((Path(__file__).resolve().parent / "legacy_layer_kits.json").read_text())["kits"]
+PIN_LAYERS = {"M5": ("M4", "M5"), "M6": ("M4 M6", "M5")}     # default (IO_PLACER_H, IO_PLACER_V) per tile cap
+
+
+def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
+    """(cap, why) for a leaf tile under the 2026-10-12 layer contract (results/arch/hier_contract_1011/layer_usage_1012.md):
+    signals AND PG stop at layer_cap = M5 (PG stripes on M5 as pins, pins on M4/M5, parent straps M6, die signals M6/M7
+    over the tile, M8/M9 die power + global); M6 only by a die-lead exception (spec or slot layer_cap M6 + layer_cap_grant);
+    kits generated before the cut (legacy_layer_kits.json) keep their old PG layer (M6/M7, signals <= M6)."""
+    slot = slot or {}
+    cap = s.get("layer_cap") or slot.get("layer_cap")
+    if cap is None and s["name"] in LEGACY_KITS:
+        return LEGACY_KITS[s["name"]], "legacy"
+    if cap is None and s.get("pg_layer") not in (None, "M5"):
+        raise SpecError(f"layer contract: a NEW leaf tile caps signals and PG at M5 (coordinator 2026-10-12): drop "
+                        f"pg_layer {s['pg_layer']}, or set layer_cap M6 with the die lead's layer_cap_grant")
+    cap = cap or "M5"
+    if cap == "M6":
+        if not (s.get("layer_cap_grant") or slot.get("layer_cap_grant")):
+            raise SpecError("layer contract: layer_cap M6 is a per-tile exception the die lead grants (pin-dense edge "
+                            "relays / stations): give layer_cap_grant '<lead>: <reason>' in the spec or the contract slot")
+        return "M6", "granted"
+    if cap != "M5":
+        raise SpecError(f"layer contract: a leaf tile's layer_cap is M5 (default) or M6 (granted exception), not {cap}")
+    return "M5", "contract"
+
+
 def layer_contract(s: dict, slot: dict | None) -> dict:
-    """leaf tile: signals M2-M6 (explicit RLAYERS), PG = full-length stripes on pg_layer (M6 default, or M7) as pins.
+    """leaf tile: signals AND PG <= layer_cap (M5 default, M6 granted), PG = full-length stripes on the cap layer as pins,
+    parent strap = cap + 1; legacy kits: signals M2-M6, PG M6 or M7.
     cluster: children's PG layer L <= M6 each strapped from L+1; cluster PG = M7 stripes as pins; signals M2-M7."""
     pg = s.get("pg_layer") or (slot or {}).get("pg_layer")
     out = {"children": {}}
     if s["kind"] == "tile":
-        pg = pg or "M6"
-        if pg not in ("M6", "M7"):
-            raise SpecError(f"layer contract: a leaf tile's PG layer is M6 or M7, not {pg}")
-        out.update(pg_layer=pg, rlayers=("M2", "M6"), strap_layer=f"M{metal(pg) + 1}")
-    else:
-        for ch in s["children"]:
-            m = read_view_lef(ch["view"])
-            top = child_lint.check_pg(m)["top_layer"]
-            if metal(top) is None or metal(top) > 6:
-                raise SpecError(f"layer contract: child {view_name(ch['view'])} PG top layer {top}: a cluster child must "
-                                f"expose PG on M5/M6 (the cluster straps one layer up on M7; M8/M9 are the die's)")
-            out["children"][view_name(ch["view"])] = top
-        pg = pg or "M7"
-        if pg != "M7":
-            raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
-        out.update(pg_layer="M7", rlayers=("M2", s.get("signal_max_layer", "M7")), strap_layer="M8")
+        cap, why = tile_cap(s, slot)
+        if why == "legacy":
+            out.update(pg_layer=cap, rlayers=("M2", "M6"), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap,
+                       cap_basis="legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)")
+        else:
+            out.update(pg_layer=cap, rlayers=("M2", cap), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap, cap_basis=why)
+        if slot:
+            ok = {slot.get("layer_cap") or slot.get("pg_layer"), slot.get("view_cap") if why == "legacy" else None}
+            if out["pg_layer"] not in ok:
+                raise SpecError(f"layer contract: tile cap/PG {out['pg_layer']} != contract slot layer_cap "
+                                f"{slot.get('layer_cap') or slot.get('pg_layer')}")
+        return out
+    for ch in s["children"]:
+        m = read_view_lef(ch["view"])
+        top = child_lint.check_pg(m)["top_layer"]
+        if metal(top) is None or metal(top) > 6:
+            raise SpecError(f"layer contract: child {view_name(ch['view'])} PG top layer {top}: a cluster child must "
+                            f"expose PG on M5/M6 (the cluster straps one layer up on M7; M8/M9 are the die's)")
+        out["children"][view_name(ch["view"])] = top
+    pg = pg or "M7"
+    if pg != "M7":
+        raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
+    out.update(pg_layer="M7", rlayers=("M2", s.get("signal_max_layer", "M7")), strap_layer="M8")
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
         raise SpecError(f"layer contract: spec PG {out['pg_layer']} != contract slot PG {slot['pg_layer']}")
     return out
+
+
+def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
+    """(IO_PLACER_H, IO_PLACER_V) for the kit; every pin layer must be <= the tile's cap (no pin on the parent strap)."""
+    r = s["route"]
+    cap = lc.get("layer_cap")
+    dh, dv = PIN_LAYERS.get(cap if cap in PIN_LAYERS else "M6")
+    if lc.get("cap_basis", "").startswith("legacy"):
+        dh, dv = PIN_LAYERS["M6"]
+    h, v = r.get("pin_h", dh), r.get("pin_v", dv)
+    if s["kind"] == "tile":
+        pb = r.get("pin_balance") or {}
+        used = (h + " " + v + " " + pb.get("h", "") + " " + pb.get("v", "")).split()
+        over = sorted({x for x in used if (metal(x) or 0) > metal(lc["rlayers"][1])})
+        if over:
+            raise SpecError(f"layer contract: pin layers {over} above the tile's signal cap {lc['rlayers'][1]} "
+                            f"(pins on M4/M5 under the M5 cap; the parent reaches them from M6)")
+    return h, v
 
 
 PDN_HEAD = """# generated by tools/ref_tile/ref_tile.py ({name}, {kind}): layer contract PG top {pg} as full-length stripes = the
@@ -192,7 +245,11 @@ proc ot_ref_present {cells} { set out {}; foreach c $cells { if {[ot_ref_has_mas
 
 def gen_pdn(s: dict, lc: dict) -> str:
     pg = lc["pg_layer"]
-    if s["kind"] == "tile" and pg == "M6":
+    if s["kind"] == "tile" and pg == "M5":
+        note = ("layer cap M5: signals M2-M5 route around the M5 stripes (pins); the parent straps M6, die signals use "
+                "M6/M7 over the tile (coordinator 2026-10-12).")
+        body = "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
+    elif s["kind"] == "tile" and pg == "M6":
         note = "signals M2-M6 route around the M6 stripes; the parent straps M7 (recipe pdn_qkvd_tile_m6.tcl)."
         body = ("add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {10.8} -offset {2.0}\n"
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
@@ -542,6 +599,7 @@ def shq(v: str) -> str:
 
 def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str:
     r = s["route"]
+    ph, pv = pin_layers(s, lc)
     srcs = " ".join(s["sources"])
     params = " ".join(f"--param {k}={v}" for k, v in s["params"].items())
     # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
@@ -611,13 +669,12 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"# generated by tools/ref_tile/ref_tile.py from {kd}/spec.json -- do not edit; re-run gen",
         f"TOP={s['top']}", f"SRCS={shq(srcs)}", f"PARAMS=({params})", f"FW={W}", f"FH={H}", f"PINS=({pins})",
         f"PINEX={0 if s['pins'].get('ANY') else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
-        f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(r.get('pin_h', 'M4 M6'))}",
-        f"PIN_V={shq(r.get('pin_v', 'M5'))}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
+        f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r), ""])
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc), ""])
 
 
-def pin_balance_env(r: dict) -> list:
+def pin_balance_env(r: dict, lc: dict | None = None) -> list:
     """optional route.pin_balance {group_max, h, v}: run_abi3_physical's balanced pin placer (place_pin, uniform over each
     port's range, layer alternating every group_max pins) instead of PPL ordered groups, which put a whole port on ONE
     layer ([vm8cp] 2k-bit relay buses: PPL-0107 / PPL-0093).  Needs disjoint per-port pin_ranges on a face."""
@@ -625,7 +682,7 @@ def pin_balance_env(r: dict) -> list:
     if not pb:
         return []
     return [f"export OT_PIN_GROUP_MAX={int(pb.get('group_max', 1))}",
-            f"export OT_PIN_BALANCE_H={shq(pb.get('h', 'M4 M6'))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', 'M3 M5'))}"]
+            f"export OT_PIN_BALANCE_H={shq(pb.get('h', 'M4' if (lc or {}).get('rlayers', ('', 'M6'))[1] == 'M5' else 'M4 M6'))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', 'M3 M5'))}"]
 
 
 def referenced_paths(s: dict, kd: str) -> list:

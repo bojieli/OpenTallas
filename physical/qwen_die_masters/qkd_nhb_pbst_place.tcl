@@ -7,7 +7,7 @@ foreach m [$b getInsts] { if {[[$m getMaster] isBlock]} { lappend ms [$m getName
 if {[llength $ms] != 2} { error "qkd_nhb_pbst_place: expected 2 macros, found [llength $ms]" }
 set core [$b getCoreArea]
 set cx [expr {([$core xMin] + [$core xMax]) / 2.0 / $dbu}]; set cy [expr {([$core yMin] + [$core yMax]) / 2.0 / $dbu}]
-set w 94.824; set h 41.064; set gap 20.52
+set w 94.824; set h 41.064; set gap 10.8
 set x [expr {1.08 * round(($cx - $w / 2.0) / 1.08)}]
 set y0 [expr {1.08 * round(($cy - $h - $gap / 2.0) / 1.08)}]
 set i 0
