@@ -1,51 +1,25 @@
 {
- "name": "vms_cwstop",
- "top": "ot_vms_cwstop",
+ "name": "vms_relay_ring",
+ "top": "ot_vms_relay",
  "kind": "tile",
  "sources": [
-  "rtl/hbm_accel/generic/vm/b2/ot_vms_cwstop.sv"
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_relay.sv"
  ],
  "clock_port": "clk",
  "reset_ports": [
   "rst_n"
  ],
- "params": {
-  "HF": 2,
-  "EGC": 1
- },
- "outline": {
-  "w": 259.2,
-  "h": 259.2
- },
  "pg_layer": "M6",
  "pins": {
   "W": [
    "clk",
    "rst_n",
-   "cw_in",
-   "cw_in_cr",
-   "sid"
+   "f_in",
+   "cr_out"
   ],
   "E": [
-   "cw_out",
-   "cw_out_cr"
-  ],
-  "S": [
-   "eg",
-   "eg_cr",
-   "xq",
-   "xq_cr",
-   "xq_done"
-  ],
-  "N": [
-   "cwi",
-   "cwi_cr",
-   "rce",
-   "rce_cr",
-   "wak",
-   "wak_cr",
-   "ack_in",
-   "mirror_busy"
+   "f_out",
+   "cr_in"
   ]
  },
  "route": {
@@ -54,11 +28,19 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01
  },
+ "params": {
+  "W": 2224,
+  "C": 2
+ },
+ "outline": {
+  "w": 43.2,
+  "h": 151.2
+ },
  "job": {
   "owner": "Claude:el1011-hbm-b2-vm",
   "branch": "claude/el1011-hbm-b2-vm",
-  "tag": "v1",
-  "purpose": "HBM B2 VM slice CW (wide) ring stop: bubble flow, broadcast forward/eject, WBC acks",
+  "tag": "v04",
+  "purpose": "HBM B2 VM ring relay stage (SPEC v0.4: wide 2,224-b channel + 2-b per-VC credit, both directions), <= 500 um a stage",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -88,8 +70,29 @@
     "min_count_regex": "readback (\\d+)"
    },
    {
+    "name": "vms_ring4_s6",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_s6 tb_vms_ring4 -GS=6 -GSEED=3",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "readback (\\d+)"
+   },
+   {
     "name": "vms_ring4_creditdrop",
     "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_creditdrop tb_vms_ring4 -GCMUT=2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_ring4_vcmix",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_vcmix tb_vms_ring4 -GCMUT=3",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -118,7 +121,7 @@
     ]
    }
   ],
-  "views_to": "physical/ref_tile/vms_cwstop/views",
-  "record_to": "results/rtl/ref_tile/vms_cwstop"
+  "views_to": "physical/ref_tile/vms_relay_ring/views",
+  "record_to": "results/rtl/ref_tile/vms_relay_ring"
  }
 }

@@ -1,35 +1,28 @@
 {
- "name": "vms_relay_ccw",
- "top": "ot_vms_relay",
+ "name": "vms_star",
+ "top": "ot_vms_star",
  "kind": "tile",
  "sources": [
-  "rtl/hbm_accel/generic/vm/b2/ot_vms_relay.sv"
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_star.sv"
  ],
  "clock_port": "clk",
  "reset_ports": [
   "rst_n"
  ],
- "params": {
-  "W": 292,
-  "C": 2
- },
- "outline": {
-  "w": 43.2,
-  "h": 43.2
- },
  "pg_layer": "M6",
  "pins": {
-  "S": [
-   "f_in",
-   "cr_out"
-  ],
-  "N": [
-   "f_out",
-   "cr_in"
-  ],
   "W": [
    "clk",
-   "rst_n"
+   "rst_n",
+   "vcb",
+   "vcb_cr"
+  ],
+  "E": [
+   "kq",
+   "kq_cr"
+  ],
+  "S": [
+   "epoch"
   ]
  },
  "route": {
@@ -38,11 +31,13 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01
  },
+ "std_area_um2": 4077,
+ "aspect": 0.35,
  "job": {
   "owner": "Claude:el1011-hbm-b2-vm",
   "branch": "claude/el1011-hbm-b2-vm",
-  "tag": "v1",
-  "purpose": "HBM B2 VM CCW ring relay stage (<=500 um a stage)",
+  "tag": "v04",
+  "purpose": "HBM B2 VM slice COLL star receiver (SPEC v0.4 F3): 2,130-b star edge -> 8 bank COLL lanes, cut-through, credit-based; reset only on control",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -72,8 +67,29 @@
     "min_count_regex": "readback (\\d+)"
    },
    {
+    "name": "vms_ring4_s6",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_s6 tb_vms_ring4 -GS=6 -GSEED=3",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "readback (\\d+)"
+   },
+   {
     "name": "vms_ring4_creditdrop",
     "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_creditdrop tb_vms_ring4 -GCMUT=2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_ring4_vcmix",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_vcmix tb_vms_ring4 -GCMUT=3",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -102,7 +118,7 @@
     ]
    }
   ],
-  "views_to": "physical/ref_tile/vms_relay_ccw/views",
-  "record_to": "results/rtl/ref_tile/vms_relay_ccw"
+  "views_to": "physical/ref_tile/vms_star/views",
+  "record_to": "results/rtl/ref_tile/vms_star"
  }
 }

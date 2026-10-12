@@ -21,34 +21,55 @@ module ot_vms_star #(
     output reg  [3:0]        epoch         // epoch of the last record delivered (for the consumer's sector scoreboard)
 );
     localparam integer SB = (SD > 1) ? $clog2(SD) : 1;
+    // Physical structure: the record FIFO is lane-sliced (8 x {data 256, mask 8} + the {sa, epoch} chunk), each chunk
+    // with its own kept copies of the write enable and pointers (no 2,129-b select / enable net); reset only on control.
     reg [2128:0] in_d; reg in_v; reg [7:0] kcr_r;
-    reg [2128:0] sb [0:SD-1]; reg [SB-1:0] sh, st; reg [SB:0] sn;
-    reg [2:0] kc [0:7];
+    reg [SB:0] sn; reg [2:0] kc [0:7];
     reg k_v; reg [8*281-1:0] k_d;
+    wire [263:0] hl [0:7]; wire [16:0] hh;               // head chunks: lane {data, mask}; {sa 13, epoch 4}
+    reg cred; always @* begin cred = 1'b1; for (integer l = 0; l < 8; l = l + 1) if (kc[l] == 3'd0) cred = 1'b0; end
+    wire pop = sn != 0 && cred;
     genvar gk;
+    for (gk = 0; gk < 9; gk = gk + 1) begin : g_ck
+        localparam integer CW = (gk < 8) ? 264 : 17;
+        (* keep = "true", dont_touch = "true" *) reg [SB-1:0] rp, wp;
+        (* keep = "true", dont_touch = "true" *) reg we;
+        reg [CW-1:0] m [0:SD-1];
+        wire [CW-1:0] din;
+        if (gk < 8) begin : g_l
+            assign din = {in_d[68 + gk*256 +: 256], in_d[4 + gk*8 +: 8]};
+            assign hl[gk] = m[rp];
+        end else begin : g_h
+            assign din = {in_d[2128:2116], in_d[3:0]};
+            assign hh = m[rp];
+        end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin rp <= '0; wp <= '0; we <= 1'b0; end
+            else begin
+                we <= vcb[2129];
+                if (we) wp <= (wp + 1'b1 == SB'(SD)) ? '0 : wp + 1'b1;
+                if (pop) rp <= (rp + 1'b1 == SB'(SD)) ? '0 : rp + 1'b1;
+            end
+        always @(posedge clk) if (we) m[wp] <= din;
+    end
     for (gk = 0; gk < 8; gk = gk + 1) begin : g_kq
         assign kq[gk*281 +: 281] = {k_v, k_d[gk*281 +: 280]};
     end
-    wire [2128:0] hd = sb[sh];
-    reg cred; always @* begin cred = 1'b1; for (integer l = 0; l < 8; l = l + 1) if (kc[l] == 3'd0) cred = 1'b0; end
-    wire pop = sn != 0 && cred;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            in_v <= 1'b0; kcr_r <= '0; sh <= '0; st <= '0; sn <= '0; vcb_cr <= 1'b0; k_v <= 1'b0; epoch <= 4'd0;
+            in_v <= 1'b0; kcr_r <= '0; sn <= '0; vcb_cr <= 1'b0; k_v <= 1'b0; epoch <= 4'd0;
             for (integer l = 0; l < 8; l = l + 1) kc[l] <= 3'(KQD);
         end else begin
             in_v <= vcb[2129]; kcr_r <= kq_cr;
-            if (in_v) st <= (st + 1'b1 == SB'(SD)) ? '0 : st + 1'b1;
             sn <= sn + (in_v ? 1 : 0) - (pop ? 1 : 0);
-            if (pop) begin sh <= (sh + 1'b1 == SB'(SD)) ? '0 : sh + 1'b1; epoch <= hd[3:0]; end
+            if (pop) epoch <= hh[3:0];
             vcb_cr <= pop; k_v <= pop;
             for (integer l = 0; l < 8; l = l + 1) kc[l] <= kc[l] - (pop ? 3'd1 : 3'd0) + (kcr_r[l] ? 3'd1 : 3'd0);
         end
     always @(posedge clk) begin
         in_d <= vcb[2128:0];
-        if (in_v) sb[st] <= in_d;
         for (integer l = 0; l < 8; l = l + 1)
-            k_d[l*281 +: 280] <= {hd[2128:2116], 3'(l), hd[68 + l*256 +: 256], hd[4 + l*8 +: 8]};
+            k_d[l*281 +: 280] <= {hh[16:4], 3'(l), hl[l][263:8], hl[l][7:0]};
     end
 endmodule
 `default_nettype wire

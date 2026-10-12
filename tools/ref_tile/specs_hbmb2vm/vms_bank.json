@@ -10,17 +10,7 @@
  "reset_ports": [
   "rst_n"
  ],
- "outline": {
-  "w": 324.0,
-  "h": 345.6
- },
  "pg_layer": "M6",
- "macros": [
-  {
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
-   "count": 3
-  }
- ],
  "pins": {
   "W": [
    "clk",
@@ -51,6 +41,9 @@
    "xq",
    "xq_cr",
    "xq_done",
+   "xq2",
+   "xq2_cr",
+   "xq2_done",
    "eg",
    "eg_cr"
   ]
@@ -61,11 +54,21 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01
  },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 3
+  }
+ ],
+ "params": {
+  "EGC": 1
+ },
+ "std_area_um2": 6000,
  "job": {
   "owner": "Claude:el1011-hbm-b2-vm",
   "branch": "claude/el1011-hbm-b2-vm",
-  "tag": "v1",
-  "purpose": "HBM B2 VM slice bank tile (8/slice, 32/die): 3 SRAM macros main+mirror, SECDED, credit lanes, mirror egress",
+  "tag": "v04",
+  "purpose": "HBM B2 VM slice bank tile (x32 on the die, bid/sid straps): 3 macros, main+mirror, SECDED, 2 ring-write lanes, dual egress; reset only on control",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -95,8 +98,29 @@
     "min_count_regex": "readback (\\d+)"
    },
    {
+    "name": "vms_ring4_s6",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_s6 tb_vms_ring4 -GS=6 -GSEED=3",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "readback (\\d+)"
+   },
+   {
     "name": "vms_ring4_creditdrop",
     "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_creditdrop tb_vms_ring4 -GCMUT=2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_ring4_vcmix",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_vcmix tb_vms_ring4 -GCMUT=3",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,

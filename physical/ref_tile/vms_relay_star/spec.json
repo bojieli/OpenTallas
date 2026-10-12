@@ -1,47 +1,25 @@
 {
- "name": "vms_ccwstop",
- "top": "ot_vms_ccwstop",
+ "name": "vms_relay_star",
+ "top": "ot_vms_relay",
  "kind": "tile",
  "sources": [
-  "rtl/hbm_accel/generic/vm/b2/ot_vms_ccwstop.sv"
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_relay.sv"
  ],
  "clock_port": "clk",
  "reset_ports": [
   "rst_n"
  ],
- "params": {
-  "HF": 2
- },
- "outline": {
-  "w": 129.6,
-  "h": 129.6
- },
  "pg_layer": "M6",
  "pins": {
-  "E": [
+  "W": [
    "clk",
    "rst_n",
-   "ccw_in",
-   "ccw_in_cr",
-   "sid"
+   "f_in",
+   "cr_out"
   ],
-  "W": [
-   "ccw_out",
-   "ccw_out_cr"
-  ],
-  "S": [
-   "cci",
-   "cci_cr",
-   "cco",
-   "hq",
-   "hr"
-  ],
-  "N": [
-   "wak",
-   "wak_cr",
-   "ack_out",
-   "rce",
-   "rce_cr"
+  "E": [
+   "f_out",
+   "cr_in"
   ]
  },
  "route": {
@@ -50,11 +28,19 @@
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.01
  },
+ "params": {
+  "W": 2130,
+  "C": 1
+ },
+ "outline": {
+  "w": 43.2,
+  "h": 151.2
+ },
  "job": {
   "owner": "Claude:el1011-hbm-b2-vm",
   "branch": "claude/el1011-hbm-b2-vm",
-  "tag": "v1",
-  "purpose": "HBM B2 VM slice CCW (narrow, 2 VC) ring stop + ring client",
+  "tag": "v04",
+  "purpose": "HBM B2 VM COLL star edge relay stage (2,130 b + 1-b credit), <= 500 um a stage",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -84,8 +70,29 @@
     "min_count_regex": "readback (\\d+)"
    },
    {
+    "name": "vms_ring4_s6",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_s6 tb_vms_ring4 -GS=6 -GSEED=3",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "readback (\\d+)"
+   },
+   {
     "name": "vms_ring4_creditdrop",
     "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_creditdrop tb_vms_ring4 -GCMUT=2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_ring4_vcmix",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_ring4_vcmix tb_vms_ring4 -GCMUT=3",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -114,7 +121,10 @@
     ]
    }
   ],
-  "views_to": "physical/ref_tile/vms_ccwstop/views",
-  "record_to": "results/rtl/ref_tile/vms_ccwstop"
- }
+  "views_to": "physical/ref_tile/vms_relay_star/views",
+  "record_to": "results/rtl/ref_tile/vms_relay_star"
+ },
+ "macros": [],
+ "children": [],
+ "inter": []
 }

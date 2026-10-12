@@ -18,6 +18,10 @@
 // WBC ack: a WBC ejected here is acked to its source (WACK, via the opposite stop) once every lane is in the macro
 //   (xq_done); mirror_busy = this stop's own broadcasts not yet acked (acks arrive at the OPPOSITE stop: ack_i).
 // Reset only on control (valids, pointers, counters, credits); payload flops and buffers have no reset.
+// Physical structure: the VC0 input buffer is lane-sliced (8 x 276-b lane chunks + the 15-b header chunk), each chunk
+// with its OWN kept copies of the write enable and the read / write pointers, so no pointer or enable net drives more
+// than one chunk (~800 loads) -- no 2,223-b-wide select net.  VC1 (PRSP / WACK) flits carry only the header and lane 0's
+// data, so the VC1 buffer stores 271 b an entry and the forwarded flit is rebuilt (the other lanes are zero).
 module ot_vms_rstop #(
     parameter integer FW  = 2224,   // flit width (fixed)
     parameter integer D   = 3,      // per-VC input buffer depth (= the upstream's credits a VC)
@@ -75,7 +79,7 @@ module ot_vms_rstop #(
     end
 
     // ------------------------------------------------------------------ buffers
-    reg [FW-2:0] ib [0:1][0:D-1]; reg [DB-1:0] ih [0:1], it [0:1]; reg [DB:0] inn [0:1];
+    reg [270:0]  ib1 [0:D-1]; reg [DB-1:0] ih [0:1], it [0:1]; reg [DB:0] inn [0:1];   // VC1: {header 15, lane-0 data 256}
     reg [288:0]  hb [0:HF-1]; reg [HB-1:0] hh, ht; reg [HB:0] hn;
     reg [264:0]  rb [0:RF-1]; reg [RB-1:0] rh, rt; reg [RB:0] rn;
     reg [1:0]    wb [0:WAK-1]; reg [WB-1:0] wh, wt; reg [WB:0] wn;
@@ -86,7 +90,9 @@ module ot_vms_rstop #(
     reg [7:0] mc; reg [2:0] crcnt; reg inj_pick, v1pick;
 
     // ------------------------------------------------------------------ decisions
-    wire [FW-2:0] h0 = ib[0][ih[0]], h1 = ib[1][ih[1]];
+    wire [FW-2:0] h0;                                 // VC0 head, assembled from the lane chunks (g_ck below)
+    wire [270:0] h1n = ib1[ih[1]];
+    wire [FW-2:0] h1 = {h1n[270:256], 1944'd0, h1n[255:0], 8'd0};
     wire hv0 = inn[0] != 0, hv1 = inn[1] != 0;
     wire k0 = h0[2221];                               // VC0 kind: 0 PREQ, 1 WBC
     wire [3:0] dm0 = h0[2220:2217], dm1 = h1[2220:2217];
@@ -122,6 +128,24 @@ module ot_vms_rstop #(
     wire [1:0] me1 = me + 2'd1, me2 = me + 2'd2, me3 = me + 2'd3;
     wire [3:0] wdm = dr ? (4'd1 << me3) : ((4'd1 << me1) | (4'd1 << me2));
     wire [7:0] wdn = dr ? 8'd1 : 8'd2;
+
+    // ------------------------------------------------------------------ VC0 input buffer: lane chunks
+    genvar gc;
+    for (gc = 0; gc < 9; gc = gc + 1) begin : g_ck
+        localparam integer LO = (gc < 8) ? gc * 276 : 2208, CW = (gc < 8) ? 276 : 15;
+        (* keep = "true", dont_touch = "true" *) reg [DB-1:0] rp, wp;
+        (* keep = "true", dont_touch = "true" *) reg we;
+        reg [CW-1:0] m [0:D-1];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin rp <= '0; wp <= '0; we <= 1'b0; end
+            else begin
+                we <= l_in[FW-1] && !l_in[2222];          // this chunk's copy of "a VC0 flit lands next cycle"
+                if (we) wp <= (wp + 1'b1 == DB'(D)) ? '0 : wp + 1'b1;
+                if (pop0) rp <= (rp + 1'b1 == DB'(D)) ? '0 : rp + 1'b1;
+            end
+        always @(posedge clk) if (we) m[wp] <= in_d[LO +: CW];
+        assign h0[LO +: CW] = m[rp];
+    end
 
     // ------------------------------------------------------------------ control (reset)
     always @(posedge clk or negedge rst_n)
@@ -210,10 +234,9 @@ module ot_vms_rstop #(
 
     // ------------------------------------------------------------------ payload (no reset)
     always @(posedge clk) begin : dat
-        reg [FW-1:0] f; reg [288:0] e; reg [264:0] r; reg [2:0] bk;
+        reg [FW-1:0] f; reg [288:0] e; reg [264:0] r; reg [2:0] bk; reg [274:0] sl;
         in_d <= l_in[FW-2:0]; pi_d <= pi[288:0]; eg_d <= eg; ri_d <= ri[264:0]; me <= sid; dr <= dir;
-        for (integer v = 0; v < 2; v = v + 1)
-            if (in_r[FW-1] && in_r[2222] == v[0]) ib[v][it[v]] <= in_r[FW-2:0];
+        if (in_r[FW-1] && in_r[2222]) ib1[it[1]] <= {in_r[2222:2208], in_r[263:8]};
         if (pi_r[289]) hb[ht] <= pi_r[288:0];
         if (ri_r[265]) rb[rt] <= ri_r[264:0];
         if (wki_r[2]) wb[wt] <= wki_r[1:0];
@@ -241,9 +264,10 @@ module ot_vms_rstop #(
         end
         lo_d <= f[FW-2:0];
         // ---- eject payloads
-        bk = 3'd0;
-        for (integer l = 0; l < 8; l = l + 1) if (h_lanes[l]) bk = 3'(l);
-        rce_d <= {h0[2216:2215], h0[2214:2211], h0[2210:2209], h0[2208], bk, h0[bk*276 + 264 +: 11], h0[bk*276 +: 8], h0[bk*276 + 8 +: 256]};
+        // a PREQ has exactly one lane: AND-OR select (no runtime part-select)
+        bk = 3'd0; sl = '0;
+        for (integer l = 0; l < 8; l = l + 1) if (h_lanes[l]) begin bk = 3'(l); sl = sl | h0[l*276 +: 275]; end
+        rce_d <= {h0[2216:2215], h0[2214:2211], h0[2210:2209], h0[2208], bk, sl[274:264], sl[7:0], sl[263:8]};
         for (integer l = 0; l < 8; l = l + 1) xq_d[l*276 +: 275] <= h0[l*276 +: 275];
         if (do_ej && k0) t_src[tt] <= h0[2216:2215];
         cco_d <= {h1[2214:2211], h1[2210:2209], h1[2208], h1[263:8]};
