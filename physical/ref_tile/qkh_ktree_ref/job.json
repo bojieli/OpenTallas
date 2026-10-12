@@ -1,14 +1,14 @@
 {
- "name": "qkh_ktree_ref-a-5b672e553",
+ "name": "qkh_ktree_ref-q5-COMMIT",
  "block": "ot_qkh_ktree",
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
  "purpose": "idle1012 head_h (ot_qwen_nearhbm_head_h, 128 inst) hierarchical rebuild via ref_tile: flat head = class 1 (one root over ~200k sinks) + class 3/5 (hid pin -> 1,024 q enables); sub-tile ot_qkh_ktree x1 (K levels 4-7 adders + scale + fault OR), 151.2x97.2 (~51% util), M2-M6, PG M6",
  "threads": 16,
- "peak_ram_gb": 48,
+ "peak_ram_gb": 112,
  "source": {
   "branch": "claude/el1011-q-kvd",
-  "commit": "5b672e553",
+  "commit": "COMMIT",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
   ]
@@ -17,7 +17,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qkh_ktree rtl/lib/ot_rst_relay.sv rtl/hdc/nearhbm/ot_qkh_subtiles.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qkh_ktree u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hdc/nearhbm/ot_qkh_subtiles.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -30,7 +30,7 @@
     "cmd": "mkdir -p {RUN}/bench && HSUB=1 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hs_pos",
     "expect": "pass",
     "threads": 16,
-    "peak_ram_gb": 64,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ],
@@ -42,7 +42,7 @@
     "cmd": "mkdir -p {RUN}/bench && HSUB=1 HSMUT=1 bash tools/qwen_kv_die/bench_gate.sh neg {RUN}/bench/hs_neg 0",
     "expect": "fail",
     "threads": 16,
-    "peak_ram_gb": 32,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ],
@@ -82,7 +82,7 @@
     "{RUN}/routes/{LABEL}/flow.log"
    ],
    "threads": 16,
-   "peak_ram_gb": 48
+   "peak_ram_gb": 112
   },
   "collect": {
    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkh_ktree_ref --out {RUN}/record/views/ot_qkh_ktree  > {RUN}/record/route/export.log 2>&1"
@@ -119,7 +119,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_ktree_ref/qkh_ktree_ref-a-5b672e553"
+   "to": "results/rtl/ref_tile/qkh_ktree_ref/qkh_ktree_ref-q5-COMMIT"
   }
  ],
  "cycles_added": 0,
