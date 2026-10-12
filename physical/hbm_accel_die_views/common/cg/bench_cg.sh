@@ -8,9 +8,10 @@
 #  4. MUTANT A: the wake reaches the gates 4 edges late -> the settle changes;  MUTANT B: the lane negative mismatches.
 set -u; q=$1; O=$2; RD=$3; m=hfd_$q; [ $q = hcp ] && m=hfd_hc; mkdir -p $O; V=physical/hbm_accel_die_views/$q
 fail(){ echo "HUB_CG_BENCH FAIL: $*"; exit 1; }
-python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $m --out $O/ports > /dev/null
-python3 tools/hbm_hub_quarter_gen.py --quarter $q --ports $O/ports/$m/ports.json --out $O/base --xroot lockup > /dev/null 2>&1
-python3 tools/hbm_hub_quarter_gen.py --quarter $q --ports $O/ports/$m/ports.json --out $O/cg --xroot lockup --cg > /dev/null 2>&1
+if [ -n "${PORTS_DIR:-}" ]; then mkdir -p $O/ports && cp -r $PORTS_DIR/$m $O/ports/   # [cg-hc] committed pin plan (reshaped block)
+else python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $m --out $O/ports > /dev/null; fi
+python3 tools/hbm_hub_quarter_gen.py --quarter $q --ports $O/ports/$m/ports.json --out $O/base ${GENARGS:-} --xroot lockup > /dev/null 2>&1
+python3 tools/hbm_hub_quarter_gen.py --quarter $q --ports $O/ports/$m/ports.json --out $O/cg --xroot lockup --cg ${GENARGS:-} ${CGARGS:-} > /dev/null 2>&1
 cmp -s $O/cg/$m.sv $V/$RD/$m.sv || fail "committed $V/$RD/$m.sv not reproduced"
 C="rtl/hdc/ot_hdc_cg.sv rtl/hbm_accel/cg/ot_cg_tile.sv"
 st(){ sed -n 's/.*mismatches=\([0-9]*\) settle_cycles=\([0-9]*\).*/\1 \2/p'; }

@@ -279,8 +279,18 @@ class Machine:
         ni = n if ni is None else ni
         es = ESIZE[d.fmt]
         rows = []
+        code = base >> 37                       # spec 6.4: HBM row-stripe code (DMA.LOAD A only); 0 = linear
+        if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "LOAD"))):
+            raise Fault(3, f"HBM stripe code {code} not allowed here")
+        if code == 1 and (base % 32 or st % 32 or ist != 1):
+            raise Fault(3, "STRIPE4: rows must start 32 B aligned and be contiguous")
         for o in range(no):
             ra = base + o * st
+            if code == 1:                       # STRIPE4: row o on stack (base[36:35] + o) mod 4, stack-local address
+                s0, loc = (base >> 35) & 3, (base & ((1 << 35) - 1)) + o * st
+                if loc >> 35:
+                    raise Fault(3, "STRIPE4: row beyond the stack-local space")
+                ra = (((s0 + o) & 3) << 35) | loc
             if ist == 1:
                 raw = die.hbm.view(ra, ni * es)
             else:
@@ -303,13 +313,24 @@ class Machine:
         base, n, m, st, ist = self.eff(d, die, L)
         es = ESIZE[d.fmt]
         v = np.asarray(vals, dtype=F).reshape(m, n)
+        code = base >> 37                       # spec 6.4: HBM row-stripe code (DMA.STORE O only); 0 = linear
+        if code not in (0, 1) or (code and (self.cur is None or (self.cur.unit, self.cur.op) != ("DMA", "STORE"))):
+            raise Fault(3, f"HBM stripe code {code} not allowed here")
+        if self.cur is not None and (self.cur.unit, self.cur.op) == ("DMA", "STORE") and (base % 32 or st % 32 or ist != 1 or (n * es) % 32):
+            raise Fault(3, "DMA.STORE: HBM rows must be whole 32-byte sectors (aligned start, stride, length; istride 1)")
         for o in range(m):
             raw = encode_fmt(v[o], d.fmt)
+            ra = base + o * st
+            if code == 1:                       # STRIPE4: row o on stack (base[36:35] + o) mod 4, stack-local address
+                s0, loc = (base >> 35) & 3, (base & ((1 << 35) - 1)) + o * st
+                if loc >> 35:
+                    raise Fault(3, "STRIPE4: row beyond the stack-local space")
+                ra = (((s0 + o) & 3) << 35) | loc
             if ist == 1:
-                die.hbm.view(base + o * st, n * es)[:] = raw
+                die.hbm.view(ra, n * es)[:] = raw
             else:
                 for i in range(n):
-                    die.hbm.view(base + o * st + i * ist * es, es)[:] = raw[i * es:(i + 1) * es]
+                    die.hbm.view(ra + i * ist * es, es)[:] = raw[i * es:(i + 1) * es]
             die.hbm.writes += n * es
 
     def read(self, d, die, L, no=None, ni=None):
@@ -727,12 +748,14 @@ def u_idx_index(M: Machine, r: Rec, L):
                 bs[blocks == (n - 1) // INDEX_BLOCK] = np.inf          # the newest block is pinned
                 d = rd.desc["D"]
                 db, dn, _, dst, _ = M.eff(d, die, L)
-                kc = min(dn, len(blocks))
-                order = np.lexsort((blocks, -bs))[:kc]
-                if kc != dn:
-                    raise Fault(3, f"INDEX D.n {dn} > owned blocks {len(blocks)}")
-                die.vm[db:db + kc] = blocks[order].astype(np.uint32)
-                die.vm[db + dst:db + dst + kc] = bs[order].astype(F).view(np.uint32)
+                # D = EVERY owned block in ascending block id (the native selector's quarter order: hfd_idx_sel co
+                # beats), row 1 its block maximum (the newest block pinned +inf).  The only consumer, COLL.TOPK_MERGE
+                # (candidate merge), takes the group's top by (value desc, id asc) over all contributions, which is
+                # independent of a rank's input order; a value-sorted D (the pre-1011 rule) is not built in hardware.
+                if dn != len(blocks):
+                    raise Fault(3, f"INDEX D.n {dn} != owned blocks {len(blocks)}")
+                die.vm[db:db + dn] = blocks.astype(np.uint32)
+                die.vm[db + dst:db + dst + dn] = bs.astype(F).view(np.uint32)
             if keep_en:
                 c = rd.desc["C"]
                 cb, cn, _, cst, _ = M.eff(c, die, L)

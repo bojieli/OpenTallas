@@ -12,6 +12,7 @@ module tb_qwen_w12_bmul_lat;
     localparam integer D = DLAT - 5 - NEG;
     reg [32:0] hist [0:15];
     integer i, k, mism = 0, checked = 0, seed = SEED;
+    initial begin seed = SEED; $display("SEED=%0d", seed); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     always #1 clk = ~clk;
     function [31:0] rnd_op(input integer s);
         reg [7:0] e; reg [31:0] r;

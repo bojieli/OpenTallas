@@ -24,7 +24,7 @@ module ot_hdc_v41x_weight_window #(
     parameter integer BW = (BURST_MAX > 1) ? $clog2(BURST_MAX) : 1,
     parameter integer IQW = $clog2(WORDS * SEGMENTS + 1),
     // hgi-1010/d: 1 = the window words in SRAM macros (one ot_sram_1r1w_128x256 per 256-bit sector position of a word,
-    // row = the word slot; needs WORDS = 128, SB = 256, NPC = 1: one sector lands an edge), 0 = flops (as before).
+    // row = the word slot; needs WORDS <= 128, SB = 256, NPC = 1: one sector lands an edge), 0 = flops (as before).
     // Same contract: a word lands sector by sector, rom_q is the read word one edge after rom_re.
     parameter integer MACRO = 0
 ) (
@@ -64,7 +64,7 @@ module ot_hdc_v41x_weight_window #(
     reg [SGW:0] issue_seg;
     reg [IQW-1:0] issued_reqs;
     reg [VB-1:0] valid;
-    localparam integer USE_M = MACRO && WORDS == 128 && SB == 256 && NPC == 1;
+    localparam integer USE_M = MACRO && WORDS <= 128 && SB == 256 && NPC == 1;   // rows past WORDS unused
     reg [WB-1:0] data [0:WORDS-1];
     reg [WB-1:0] rom_q_r;
     reg m_re; reg [6:0] m_ra; reg m_we; reg [6:0] m_wa; reg [SW-1:0] m_ws; reg [SB-1:0] m_wd;

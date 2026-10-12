@@ -27,6 +27,27 @@
 // the same cycle, cf in 1 + NFC, rf in 1 + NFR, every result word in NL + 1, the chain in 2 + NI): ZERO added cycles.
 // Lock-stepped against hfd_attn_tile_b by rtl/test/tb_hfd_attn_half_b.sv (physical/hbm_attn_tile_r/half/run_lockh.sh).
 // ---------------------------------------------------------------------------
+// hgi-1010/g2 2026-10-10 (audit N9): the attention entry's line credit to the svc PS group unit (ot_svs_grp kq):
+// v = the row's valid at the entry pin, registered (the entry consumes a row every cycle: fixed-latency pipe, no
+// buffer, so a credit is due the cycle a row lands); the forwarded clock is the inverted, kept tile clock (the
+// ot_svs_grp captures kq[0] on ~kq[1], as the e port).  Bench mutants: OT_ATTN_MUT_KQ_DROP (every 16th credit lost ->
+// the stream stalls), OT_ATTN_MUT_KQ_DUP (every 16th credit doubled).
+module ot_attn_ks_credit (input wire clk, input wire rst_n, input wire ks_v, output wire [1:0] kq);
+    reg v; reg [3:0] n;
+    always @(posedge clk) begin
+`ifdef OT_ATTN_MUT_KQ_DROP
+        v <= ks_v && rst_n && n != 4'd15;
+`elsif OT_ATTN_MUT_KQ_DUP
+        v <= (ks_v || n == 4'd15) && rst_n;
+`else
+        v <= ks_v && rst_n;
+`endif
+        n <= !rst_n ? 4'd0 : n + (ks_v ? 4'd1 : 4'd0);
+    end
+    wire fck; ot_fwd_clk_inv u_fck (.a(clk), .y(fck));
+    assign kq = {fck, v};
+endmodule
+
 module hfd_attn_half_lo #(
     parameter integer CG = 0, // must match half_hi for gated successor
     parameter integer ROWEW = 0,   // hbm-phys-1010 [att]: 1 = EW row banks (floorplan half_v2); 0 = SN (half / half_ps)
@@ -34,8 +55,14 @@ module hfd_attn_half_lo #(
     parameter integer NC = 2,
     parameter integer NR = 3,
     parameter integer PMID = 2,
+    parameter integer NXP = 0,   // el1011-hbm-attn v8: root -> xp pipe stages (0: xp = root_q, the root is the N pin bank).  The v8
+                                 // floorplan puts the merge root at the BOTTOM (where ci / k / ks / q / ri land) and moves 2 stages from
+                                 // every input pipe (NK/NC/NR -2) to every output pipe (NXP 2, PMID/NFR +2): same latency per path.
     parameter integer NFR = 3,
-    parameter integer NLL = 3       // result banks of quad row 0 in lo (2 side-channel EW + the N-face pin bank)
+    parameter integer NLL = 3,      // result banks of quad row 0 in lo (2 side-channel EW + the N-face pin bank)
+    parameter integer LDKR = 0      // el1011-hbm-attn v11: 0 = ldk pin drives the ld mux directly (2,076 loads behind a pin);
+                                    // > 0 = ldk registered at the pin into LDKR replicated copies + 1 relay stage, each copy
+                                    // selecting <= ceil(1038 / LDKR) mux bits.  ldk is a static strap: 2 cycles are exact after fill.
 ) (
     input  wire [1617:0] ci,
     input  wire [0:0]    ck,
@@ -46,6 +73,9 @@ module hfd_attn_half_lo #(
     input  wire [0:0]    ldk,      // hbm-forks 2026-10-09 (RQ-HF-4, 8 KV entry points a stack): STATIC die strap (by_design
                                    // tie, false path).  1: the ld half of the packet comes from this tile's own k port only
                                    // (the forward chains' ld field is ignored; they still carry the query); 0: today's OR
+    output wire [1:0]    kq,       // hgi-1010/g2 2026-10-10 (audit N9): the PS row port's LINE CREDIT back to the svc group
+                                   // unit, {forwarded clock, v}: one pulse per row consumed (the tile takes a row a cycle,
+                                   // so every row that lands at the pin is consumed); entry tiles only (others: open)
     input  wire [581:0]  q,
     output wire [1617:0] rf,
     input  wire [1617:0] ri,
@@ -72,13 +102,30 @@ module hfd_attn_half_lo #(
     // ld_w2v}; the row rides the same 1 + NK pin pipe as k, so its packet reaches ROOT in the same cycle k would (0 added)
     wire [1101:0] ks_s;
     ot_attn_bpipe #(.W(1102), .N(1 + NK)) u_pks (.clk(clk), .d(ks), .q(ks_s));
+    ot_attn_ks_credit u_kq (.clk(clk), .rst_n(rst[0]), .ks_v(ks[0]), .kq(kq));
     wire [63:0] ks_meta = ks_s[1098:1035];
     wire [1037:0] ks_ld = {ks_s[0] & ~ks_meta[19], ks_meta[32], ks_meta[31:29], ks_meta[28:21], ks_s[1034:11], ks_meta[20]};
-    wire [PW-1:0] pk = {q_s[582], ldk_s ? ks_ld : (k_s[1037:0] | fw[PK-1:580]), q_s[579:0] | fw[579:0]};
+    wire [1037:0] ld_sel;                                    // per-bit ld select (replicated strap copies when LDKR > 0)
+    generate if (LDKR == 0) begin : g_ldk0
+        assign ld_sel = {1038{ldk_s}};
+    end else begin : g_ldkr
+        wire [LDKR-1:0] ldk_r;
+        ot_attn_fpipe #(.W(LDKR), .N(2)) u_pldk (.clk(clk), .d({LDKR{ldk_s}}), .q(ldk_r));
+        genvar li;
+        for (li = 0; li < 1038; li = li + 1) begin : g_sel
+            assign ld_sel[li] = ldk_r[(li * LDKR) / 1038];
+        end
+    end endgenerate
+    wire [1037:0] ld_mux = (ld_sel & ks_ld) | (~ld_sel & (k_s[1037:0] | fw[PK-1:580]));
+    wire [PW-1:0] pk = {q_s[582], ld_mux, q_s[579:0] | fw[579:0]};
     wire [PW-1:0] root_q;
     // ROOT on the N face: its bank outputs are the xp pins
     ot_attn_bpipe #(.W(PW), .N(1)) u_root (.clk(clk), .d(pk), .q(root_q));
-    assign xp = root_q;
+    generate if (NXP == 0) begin : g_xp0
+        assign xp = root_q;
+    end else begin : g_xpp
+        ot_attn_bpipe #(.W(PW), .N(NXP)) u_xpp (.clk(clk), .d(root_q), .q(xp));
+    end endgenerate
     ot_attn_bpipe #(.W(PK), .N(NFR + 1), .EWN(1)) u_fr (.clk(clk), .d(root_q[PK-1:0]), .q(rf));
     genvar x;
     generate if (1) begin : g_y0

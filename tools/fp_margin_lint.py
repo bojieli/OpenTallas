@@ -179,14 +179,18 @@ def relay_lint(chains, reach_um=504.0, back_slack_um=20.0, metric="manhattan"):
     return bad
 
 
-def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, stages=None, sliver_um=0.0, limit=20, edges=False):
+def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, stages=None, sliver_um=0.0, limit=20, edges=False,
+               pin_pt=None):
     """Die generator lint (dsrom_s81_fulldie / hbm_accel_die_fp / die_top_lint).  insts: objects with name, kind, x, y,
     w, h; buses: (bid, cls, bits, [(inst, port), ...]) with eps[0] the driver.  Every driver -> relay ... -> load chain
     through instances of relay_kinds is checked:
       reach     a register-to-register segment (nearest points, Manhattan) longer than reach_um after the segment's
                 priced intermediate wire stages (stages(bid, L) -> register hops, None = 1 hop per bus)
       far_side  a relay farther from the next chain point than its own driver (+ back_slack_um)
-    and (sliver_um > 0) gaps 0 < g < sliver_um between die instances (reported, die tops place no std-cell rows)."""
+    and (sliver_um > 0) gaps 0 < g < sliver_um between die instances (reported, die tops place no std-cell rows).
+    pin_pt(inst, port) -> die (x, y) or None (hbmdie-1011 --pin-need): the far-side test's NEXT chain point is the centroid
+    of the load pins the relay's bus actually lands on (a 250 x 2,250 um link macro's tx half, a slab face), not the
+    load instance's centre; loads without a pin model keep the centre."""
     by = {it.name: it for it in insts}
 
     def c(it):
@@ -204,6 +208,7 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
         return abs(p[0] - q[0]) + abs(p[1] - q[1])
     succ = defaultdict(list)           # inst -> [(bid, load inst)]
     pred = defaultdict(set)            # inst -> driver insts
+    lports = defaultdict(set)          # (driver inst, load inst) -> load ports
     for bid, cls, bits, eps in buses:
         if len(eps) < 2 or eps[0][0] not in by:
             continue
@@ -211,6 +216,14 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
             if e[0] in by and e[0] != eps[0][0]:
                 succ[eps[0][0]].append((bid, e[0]))
                 pred[e[0]].add(eps[0][0])
+                lports[(eps[0][0], e[0])].add(e[1])
+
+    def nxt_pt(rly, nxt):
+        if pin_pt is not None:
+            ps = [q_ for q_ in (pin_pt(nxt, p_) for p_ in sorted(lports[(rly, nxt)])) if q_ is not None]
+            if ps:
+                return (sum(q_[0] for q_ in ps) / len(ps), sum(q_[1] for q_ in ps) / len(ps))
+        return c(by[nxt])
     reach_bad, far_bad, n_chains, done = [], [], 0, set()
     if edges:
         # s81-gen 2026-10-09 (edges=True): the same reach / far-side tests once per register segment instead of once per
@@ -234,7 +247,7 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                 if by[nx].kind in relay_kinds:
                     nxs = {x for _, x in succ.get(nx, ())}
                     if len(nxs) == 1 and len(pred[nx]) == 1:
-                        q = c(by[next(iter(nxs))])
+                        q = nxt_pt(nx, next(iter(nxs)))
                         if mh(c(by[nx]), q) > mh(c(by[cur]), q) + back_slack_um:
                             far_bad.append(dict(chain=f'{cur}->{next(iter(nxs))}', relay=nx,
                                                 back_um=round(mh(c(by[nx]), q) - mh(c(by[cur]), q), 1)))
@@ -270,7 +283,7 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
                 if i < len(path) - 1 and len({x for _, x in succ.get(path[i], ())}) == 1 and len(pred[path[i]]) == 1:
                     # far side (point-to-point relays only: a multicast / gather tree node serves several branches): the relay is farther from the NEXT chain point than its own driver (a ring / detour
                     # route still advances point to point; the s81 r3 hop relays did not)
-                    nx = c(by[path[i + 1]])
+                    nx = nxt_pt(path[i], path[i + 1])
                     if mh(c(b_), nx) > mh(c(a_), nx) + back_slack_um:
                         far_bad.append(dict(chain=f'{path[0]}->{path[-1]}', relay=path[i],
                                             back_um=round(mh(c(b_), nx) - mh(c(a_), nx), 1)))

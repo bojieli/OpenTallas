@@ -1945,6 +1945,14 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
             continue
         kept.append(line)
     body = ["# Written by tools/run_abi3_physical.py (OT_CTS_FIX_HOOKS)."]
+    # Hook knobs exported in the job shell (OT_SPINE_PORT=clk, ...) never reached the ORFS container: the hooks read
+    # ::env, which only carries config.mk exports, so clock_spine.tcl fell back to ck[0] and was SKIPPED (hgi-idx-topk
+    # w8c-a/b-fa1bc12bc ran plain TritonCTS, TT -1,913).  Forward every OT_SPINE_* / OT_CG_* knob into the hook; an
+    # explicit --orfs-var of the same name (already in ::env) wins.
+    knobs = sorted(k for k in os.environ if re.match(r"OT_(SPINE|CG)_[A-Z0-9_]+$", k))
+    for k in knobs:
+        v = os.environ[k].replace("\\", "\\\\").replace("{", "\\{").replace("}", "\\}")
+        body.append(f"if {{![info exists ::env({k})] || $::env({k}) eq \"\"}} {{ set ::env({k}) {{{v}}} }}")
     if orig:
         body.append(f"source {orig}")
     record = []
@@ -1959,7 +1967,7 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
         body.append(f"source /work/hooks/{name}")
         record.append({"path": fix, "name": name, "sha256": sha256_file(source)})
     (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
-    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record}, indent=1) + "\n",
+    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record, "env_knobs": {k: os.environ[k] for k in knobs}}, indent=1) + "\n",
                                                encoding="utf-8")
     kept.append("export PRE_CTS_TCL = /work/hooks/pre_cts_ot_cts_fix.tcl")
     return kept
@@ -1982,11 +1990,19 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
     # 'a[3]' -- ot_gpu_rf_visibility_fence_p left 4,105 pins without a face.  A pattern now matches a terminal when it
     # matches its full name OR its bus base name (trailing [n] stripped; a scalar and a bus can never share a base),
     # and every pin-region run checks that no bus is left partly assigned (ot_check_bus_complete, always on).
+    # ESCAPED BITS (hgi-1010 2026-10-11): a netlist whose top ports were bit-blasted to escaped scalars
+    # ('\\out_data[5] ', the W11 endpoint netlist) loads into odb as the terminal name 'out_data\\[5\\]' (OpenROAD
+    # keeps the escape on the brackets; PPL prints 'in_data\\[997\\]').  Neither the full name nor ot_pin_base (whose
+    # '[n]$' needs a bare ']') then matched a bit-indexed region such as '^(out_data\\[(...)\\])$', so
+    # w2-rb-safe-no3-nesw-43c045555 failed 'matches no port', and ot_check_bus_complete skipped every such bus.  Names
+    # are now compared in their plain bus spelling (ot_pin_plain); the escaped odb name is still what is placed.
     lines = [
         "# Written by tools/run_abi3_physical.py --pin-region.",
-        "proc ot_pin_base {name} { regsub {\\[[0-9]+\\]$} $name {} base; return $base }",
+        "proc ot_pin_plain {name} { return [string map {\\\\\\[ \\[ \\\\\\] \\]} $name] }",
+        "proc ot_pin_base {name} { regsub {\\[[0-9]+\\]$} [ot_pin_plain $name] {} base; return $base }",
         "proc ot_pin_matches {pattern name} {",
-        "  return [expr {[regexp -- $pattern $name] || [regexp -- $pattern [ot_pin_base $name]]}]",
+        "  return [expr {[regexp -- $pattern $name] || [regexp -- $pattern [ot_pin_plain $name]] ||",
+        "                [regexp -- $pattern [ot_pin_base $name]]}]",
         "}",
         "proc ot_match_pins {pattern} {",
         "  set names {}",
@@ -2003,7 +2019,7 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         "    if {[lsearch -exact {POWER GROUND} [$bterm getSigType]] >= 0} { continue }",
         "    set name [$bterm getName]",
         "    set base [ot_pin_base $name]",
-        "    if {$base eq $name} { continue }",
+        "    if {$base eq [ot_pin_plain $name]} { continue }",
         "    incr all($base)",
         "    foreach p $patterns { if {[ot_pin_matches $p $name]} { incr hit($base); break } }",
         "  }",

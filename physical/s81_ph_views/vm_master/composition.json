@@ -3,7 +3,7 @@
  "slab": "dsfd_sp_vm v2 (VM master, s81-vm-1011)",
  "slab_um": [
   1520.064,
-  2419.2000000000003
+  2702.16
  ],
  "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv module dsfd_sp_vm_m (the exact composition netlist; gate tools/s81_vm/s81_vm_gate.py)",
  "instances": [
@@ -17,7 +17,7 @@
    "orient": "R0",
    "um": [
     1520.064,
-    311.04
+    594.0
    ]
   },
   {
@@ -68,7 +68,7 @@
    "inst": "g_h[1].g_t[0].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    345.6,
+    388.8,
     1608.12
    ],
    "orient": "R0",
@@ -79,7 +79,7 @@
    "inst": "g_h[1].g_t[1].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    345.6,
+    388.8,
     1108.08
    ],
    "orient": "R0",
@@ -90,7 +90,7 @@
    "inst": "g_h[1].g_t[2].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    345.6,
+    388.8,
     608.04
    ],
    "orient": "R0",
@@ -101,7 +101,7 @@
    "inst": "g_h[1].g_t[3].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    345.6,
+    388.8,
     108.0
    ],
    "orient": "R0",
@@ -112,7 +112,7 @@
    "inst": "g_h[2].g_t[0].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    691.2,
+    777.6,
     1608.12
    ],
    "orient": "R0",
@@ -123,7 +123,7 @@
    "inst": "g_h[2].g_t[1].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    691.2,
+    777.6,
     1108.08
    ],
    "orient": "R0",
@@ -134,7 +134,7 @@
    "inst": "g_h[2].g_t[2].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    691.2,
+    777.6,
     608.04
    ],
    "orient": "R0",
@@ -145,7 +145,7 @@
    "inst": "g_h[2].g_t[3].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    691.2,
+    777.6,
     108.0
    ],
    "orient": "R0",
@@ -156,7 +156,7 @@
    "inst": "g_h[3].g_t[0].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    1036.8,
+    1166.4,
     1608.12
    ],
    "orient": "R0",
@@ -167,7 +167,7 @@
    "inst": "g_h[3].g_t[1].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    1036.8,
+    1166.4,
     1108.08
    ],
    "orient": "R0",
@@ -178,7 +178,7 @@
    "inst": "g_h[3].g_t[2].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    1036.8,
+    1166.4,
     608.04
    ],
    "orient": "R0",
@@ -189,7 +189,7 @@
    "inst": "g_h[3].g_t[3].u_bg",
    "master": "dsfd_vm_bgq28",
    "xy": [
-    1036.8,
+    1166.4,
     108.0
    ],
    "orient": "R0",

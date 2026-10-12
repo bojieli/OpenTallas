@@ -33,6 +33,12 @@ module ot_qkvd_d2d #(
     parameter [31:0]  RBD = {8'd8, 8'd8, 8'd8, 8'd8},   // receive buffer per RX class
     parameter [31:0]  OCR = {8'd8, 8'd8, 8'd8, 8'd8},   // die-face RX credits per RX class
     parameter integer MUT = 0,
+    // SBD (el1011-q-kvd 2026-10-11; 0 = unchanged): buffers of depth >= SBD use ot_qkvd_fifo_sb (64 x 512 SRAM body +
+    // registered head) instead of the flop array whose binary pointers fanned out to every bit (qkd_d2d_b TT -46.65)
+    parameter integer SBD = 0,
+    // HT (el1011-q-kvd 2026-10-11; 0 = unchanged): every link buffer is a hardened tile (ot_qkvd_buf_tiles.sv: depth > 8
+    // -> ot_qkvd_sbuf (SRAM), else ot_qkvd_fbuf8), own clock tree / reset relay / pin flops; occupancy kept here (W 528)
+    parameter integer HT  = 0,
     parameter integer FW  = 8 + 8 + 1 + 3 + W
 ) (
     input  wire            clk,
@@ -55,8 +61,13 @@ module ot_qkvd_d2d #(
     output reg  [4:0]      fault_cause
 );
     // ---- reset copy ----
-    reg rs0, rs;
+    // el1011-q-kvd 2026-10-11: two kept copies of the same 2-stage synchroniser (identical release cycle): rs for the
+    // parent control flops, rs_t for the hardened buffer tiles' rst_n pins (route qkd_d2d_h-305021c34: one rs net drove
+    // 747 loads).  tx_flit is no longer reset (datapath; tx_v qualifies it).
+    (* keep *) reg rs0, rs;
+    (* keep *) reg rs_t0, rs_t;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin rs0 <= 1'b0; rs <= 1'b0; end else begin rs0 <= 1'b1; rs <= rs0; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin rs_t0 <= 1'b0; rs_t <= 1'b0; end else begin rs_t0 <= 1'b1; rs_t <= rs_t0; end
     // ---- pin capture ----
     reg [NT-1:0]   ci_v;
     reg [NT*W-1:0] ci_d;
@@ -97,8 +108,25 @@ module ot_qkvd_d2d #(
     genvar i, j;
     generate for (i = 0; i < NT; i = i + 1) begin : g_tx
         wire [$clog2(IBD[8*i +: 8]+1)-1:0] cnt;
+        if (HT != 0) begin : g_ht
+            reg [7:0] oc;
+            always @(posedge clk or negedge rs) if (!rs) oc <= 8'd0; else oc <= oc + (ci_v[i] ? 8'd1 : 8'd0) - (gnt[i] ? 8'd1 : 8'd0);
+            assign ib_full[i] = (oc == IBD[8*i +: 8]);
+            assign cnt = oc[$clog2(IBD[8*i +: 8]+1)-1:0];
+            if (IBD[8*i +: 8] > 8) begin : g_s
+                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs_t), .push(ci_v[i]), .din(ci_d[W*i +: W]), .pop(gnt[i]),
+                    .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
+            end else begin : g_f
+                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs_t), .push(ci_v[i]), .din(ci_d[W*i +: W]), .pop(gnt[i]),
+                    .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
+            end
+        end else if (SBD != 0 && IBD[8*i +: 8] >= SBD) begin : g_sb
+        ot_qkvd_fifo_sb #(.W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ci_v[i]), .din(ci_d[W*i +: W]),
+            .pop(gnt[i]), .dout(ib_head[W*i +: W]), .empty(ib_empty[i]), .full(ib_full[i]), .count(cnt));
+        end else begin : g_ff
         ot_qkvd_fifo #(.RH(1), .W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ci_v[i]), .din(ci_d[W*i +: W]),
             .pop(gnt[i]), .dout(ib_head[W*i +: W]), .empty(ib_empty[i]), .full(ib_full[i]), .count(cnt));
+        end
     end endgenerate
     reg [W-1:0] sel_word;
     reg [2:0]   sel_cls;
@@ -116,8 +144,25 @@ module ot_qkvd_d2d #(
         wire [$clog2(RBD[8*j +: 8]+1)-1:0] cnt;
         assign rb_push[j] = rx_dv && (rx_cls == 3'(RXB + j));
         assign rb_pop[j]  = !rb_empty[j] && (ocred[j] != 0);
+        if (HT != 0) begin : g_ht
+            reg [7:0] oc;
+            always @(posedge clk or negedge rs) if (!rs) oc <= 8'd0; else oc <= oc + (rb_push[j] ? 8'd1 : 8'd0) - (rb_pop[j] ? 8'd1 : 8'd0);
+            assign rb_full[j] = (oc == RBD[8*j +: 8]);
+            assign cnt = oc[$clog2(RBD[8*j +: 8]+1)-1:0];
+            if (RBD[8*j +: 8] > 8) begin : g_s
+                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(rx_word), .pop(rb_pop[j]),
+                    .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
+            end else begin : g_f
+                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(rx_word), .pop(rb_pop[j]),
+                    .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
+            end
+        end else if (SBD != 0 && RBD[8*j +: 8] >= SBD) begin : g_sb
+        ot_qkvd_fifo_sb #(.W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(rx_word),
+            .pop(rb_pop[j]), .dout(rb_head[W*j +: W]), .empty(rb_empty[j]), .full(rb_full[j]), .count(cnt));
+        end else begin : g_ff
         ot_qkvd_fifo #(.RH(1), .W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(rx_word),
             .pop(rb_pop[j]), .dout(rb_head[W*j +: W]), .empty(rb_empty[j]), .full(rb_full[j]), .count(cnt));
+        end
     end endgenerate
     // credit return fields (2 b each, 4 fields; field j = this die's RX class j)
     reg [7:0] cr_ret;
@@ -132,9 +177,10 @@ module ot_qkvd_d2d #(
         end
     end
     reg [7:0] tx_seq, rx_seq;
+    always @(posedge clk) tx_flit <= {tx_seq, cr_ret, any, sel_cls, sel_word};   // datapath: no reset
     always @(posedge clk or negedge rs) begin
         if (!rs) begin
-            tx_v <= 1'b0; tx_flit <= {FW{1'b0}}; tx_seq <= 8'd0; rx_seq <= 8'd0; rr <= 0;
+            tx_v <= 1'b0; tx_seq <= 8'd0; rx_seq <= 8'd0; rr <= 0;
             t_cr <= 0; r_v <= 0;
             f_die <= 1'b0; f_rb <= 1'b0; f_seq <= 1'b0; f_cred <= 1'b0; f_cls <= 1'b0;
             fault <= 1'b0; fault_cause <= 5'd0;
@@ -150,7 +196,6 @@ module ot_qkvd_d2d #(
             // link TX
             tx_v <= up_q;
             if (up_q) tx_seq <= tx_seq + 1'b1;
-            tx_flit <= {tx_seq, cr_ret, any, sel_cls, sel_word};
             if (any) rr <= ((rr + 1) % NT);
             for (k = 0; k < NT; k = k + 1) begin : upd_lc
                 reg [8:0] nxt;

@@ -9,6 +9,26 @@
 //           first station captures on its falling edge as for every r9 start block).
 //   every die input is captured in a flop at the pin, every die output is launched from a flop (clock / reset
 //   outputs: kept cells / reset flops).
+// s81-ctl-1011: the VM-side core tile master (dsfd_coll_cbj with the coll command endpoint, +define+OT_S81PH_COLL_JOB)
+`ifndef OT_S81PH_CB_MASTER
+`ifdef OT_S81PH_COLL_JOB
+`define OT_S81PH_CB_MASTER dsfd_coll_cbj
+`else
+`define OT_S81PH_CB_MASTER dsfd_coll_cb
+`endif
+`endif
+// el1011-ds-coll 2026-10-11: OT_S81PH_COLL_CBH instantiates the hierarchical cb (dsfd_coll_cbh: hardened sub-elements)
+`ifdef OT_S81PH_COLL_CBH
+`define OT_S81PH_CB_INST dsfd_coll_cbh
+`else
+`define OT_S81PH_CB_INST `OT_S81PH_CB_MASTER
+`endif
+// el1011-ds-coll 2026-10-11: OT_S81PH_COLL_CEH instantiates the hierarchical ce (dsfd_coll_ceh)
+`ifdef OT_S81PH_COLL_CEH
+`define OT_S81PH_CE_INST dsfd_coll_ceh
+`else
+`define OT_S81PH_CE_INST dsfd_coll_ce
+`endif
 module dsfd_sp_collective (
     input  wire [0:0]    refclk,
     input  wire [0:0]    por,
@@ -55,6 +75,15 @@ module dsfd_sp_collective (
     output wire [0:0]    tfW4, tfE4,
     output wire [1:0]    t_p2flt             // {die-B lane, primary lane} sticky faults (adapter flops)
 `endif
+`ifdef OT_S81PH_COLL_JOB
+    // s81-ctl-1011 (ADAPTER_CONTRACT_1011, engine 3): the coll command endpoint ot_s81_coll_job -- split3cr: inside dsfd_coll_cb
+    // between its f_vm pin register and the seam register (+0 cycles); v2 core: the dsfd_coll_job tile in front of the
+    // core (+1 on f_vm).  c_cmd = {cv[3], cd[3]} from dsfd_stage_seq, c_done = {dv, dt}, c_st = {online, fault}.
+    ,
+    input  wire [84:0]   c_cmd,
+    output wire [8:0]    c_done,
+    output wire [1:0]    c_st
+`endif
 );
 `ifdef OT_S81PH_COLL_MTPL
 `ifdef OT_S81PH_COLL_P2L
@@ -80,14 +109,17 @@ module dsfd_sp_collective (
     wire s_lo3_v, s_lo3_r, s_li3_v, s_li3_r, s_lo7_v, s_lo7_r, s_li7_v, s_li7_r;
     wire [552:0] s_lo0_d, s_li0_d, s_lo4_d, s_li4_d, s_lo3_d, s_li3_d, s_lo7_d, s_li7_d;
     wire s_bw_v, s_bw_cr, s_bw_flt; wire [2099:1] s_bw_d;
-    dsfd_coll_cb #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
+    `OT_S81PH_CB_INST #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
+`ifdef OT_S81PH_COLL_JOB
+        .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
+`endif
         .wlo_v(lo_v[0]), .wlo_r(lo_r[0]), .wlo_d(lo_d[0*553 +: 553]), .wli_v(li_v[0]), .wli_r(li_r[0]), .wli_d(li_d[0*553 +: 553]), .wflt(flt[0 +: 3]),
         .elo_v(lo_v[4]), .elo_r(lo_r[4]), .elo_d(lo_d[4*553 +: 553]), .eli_v(li_v[4]), .eli_r(li_r[4]), .eli_d(li_d[4*553 +: 553]), .eflt(flt[12 +: 3]),
         .fvm_u(s_fvm), .flt_u(s_fltu),
         .lo0_v(s_lo0_v), .lo0_r(s_lo0_r), .lo0_d(s_lo0_d), .li0_v(s_li0_v), .li0_r(s_li0_r), .li0_d(s_li0_d),
         .lo4_v(s_lo4_v), .lo4_r(s_lo4_r), .lo4_d(s_lo4_d), .li4_v(s_li4_v), .li4_r(s_li4_r), .li4_d(s_li4_d),
         .bw_v(s_bw_v), .bw_d(s_bw_d), .bw_cr(s_bw_cr), .bw_flt(s_bw_flt));
-    dsfd_coll_ce #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_ce (.ck(pll_stream), .rs(rst_stream),
+    `OT_S81PH_CE_INST #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_ce (.ck(pll_stream), .rs(rst_stream),
         .wlo_v(lo_v[2:1]), .wlo_r(lo_r[2:1]), .wlo_d(lo_d[1*553 +: 2*553]), .wli_v(li_v[2:1]), .wli_r(li_r[2:1]), .wli_d(li_d[1*553 +: 2*553]), .wflt(flt[3 +: 6]),
         .elo_v(lo_v[6:5]), .elo_r(lo_r[6:5]), .elo_d(lo_d[5*553 +: 2*553]), .eli_v(li_v[6:5]), .eli_r(li_r[6:5]), .eli_d(li_d[5*553 +: 2*553]), .eflt(flt[15 +: 6]),
         .fvm_u(s_fvm), .flt_u(s_fltu),
@@ -102,8 +134,16 @@ module dsfd_sp_collective (
         .lo3_v(s_lo3_v), .lo3_r(s_lo3_r), .lo3_d(s_lo3_d), .li3_v(s_li3_v), .li3_r(s_li3_r), .li3_d(s_li3_d),
         .lo7_v(s_lo7_v), .lo7_r(s_lo7_r), .lo7_d(s_lo7_d), .li7_v(s_li7_v), .li7_r(s_li7_r), .li7_d(s_li7_d), .flt_d(s_fltd));
 `else
+`ifdef OT_S81PH_COLL_JOB
+    wire [591:0] j_fvm; wire [2099:0] j_tvm;
+    dsfd_coll_job u_job (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .cf_vm(j_fvm), .ct_vm(j_tvm), .t_vm(t_vm),
+        .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st));
+    dsfd_coll_core u_core (.ck(pll_stream), .rs(rst_stream), .f_vm(j_fvm), .ts(ts), .t_vm(j_tvm), .lo_v(lo_v), .lo_r(lo_r),
+        .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .flt(flt));
+`else
     dsfd_coll_core u_core (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm), .lo_v(lo_v), .lo_r(lo_r),
         .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .flt(flt));
+`endif
 `endif
     wire [514:0] rxl [0:7];
     wire [511:0] txl [0:7];
