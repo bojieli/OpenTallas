@@ -85,13 +85,14 @@
   "pd": 0.55,
   "threads": 8,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "hold_delay": true
  },
  "job": {
   "owner": "Claude:el1011-hbm-tputx-cpf",
   "branch": "claude/el1011-hbm-tputx-cpf",
-  "tag": "v2",
-  "purpose": "tputx-cpf: ot_hgi_seq v2.1 throughput restructure (decoupled FE / 6-stage CSA address unit / 8-entry record queue / early indexed resolver / BE; NOS 160) -- CP.FETCH 7.36x -> 0.75x of price; first route of the new structure via ref_tile",
+  "tag": "v23",
+  "purpose": "tputx-cpf: ot_hgi_seq v2.3 timing restructure of route 905100ec5 (TT -187): registered header allocation + ring-limit register, thermometer FIFO control, S_HD payload load, staged item writes, registered DYN row and N-read operands; hold-delay stage on every input (+ pos, ring write data)",
   "extra_paths": [
    "rtl/hbm_accel/generic/tb",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
