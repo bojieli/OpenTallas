@@ -100,6 +100,11 @@ def cmd_tile(a):
     lines.insert(3, "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in SLICE_RTL))
     params = dict(p, NO=a.no)
     lines.append(f"export VERILOG_TOP_PARAMS = NO {a.no}")
+    if a.pin_access:   # child_lint (f): edge pins covered by the tile's own metal on pin layer +-1 -> parent DRT-0073
+        # pin-access plan (ds-coll bf0080873): adjacent-layer keepout over the outer pin column before GRT, removed after DRT
+        lines += ["export PRE_GLOBAL_ROUTE_TCL = /src/physical/redesign_ds/coll_split/pin_access_pregrt.tcl",
+                  "export POST_DETAIL_ROUTE_TCL = /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+                  f"export OT_PK_FRAC = {a.pin_access}"]
     if a.pdn == "m7":   # second line: the tile owns M7 power stripes (its pins); the station joins them from M8
         lines.append(f"export PDN_TCL = /src/{STN}/pdn_slice_m7.tcl")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
@@ -348,6 +353,7 @@ def main(argv=None):
     t.add_argument("--hold-margin", default="10")
     t.add_argument("--make-var", action="append")
     t.add_argument("--pdn", choices=("default", "m7"), default="default")
+    t.add_argument("--pin-access", default=None, help="OT_PK_FRAC: pin-access keepout hook (child_lint f)")
     t.add_argument("--stop-after", default=None)
     t.add_argument("--src", required=True)
     t.add_argument("--label", required=True)
