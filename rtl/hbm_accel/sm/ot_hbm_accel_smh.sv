@@ -1717,7 +1717,10 @@ module ot_hbm_accel_smh_fc_is #(
         end else begin : g_credit_legacy
             assign intake_credit=1'b1;
         end
-        wire demand = input_open && !issue_line_end && intake_credit;
+        // r7 (fcis-r6 TT -138.89: u_issue.si -> iss_line_end compare, ~600 ps, fanned to the 34 slice-control copies):
+        // with the exact producer-beat credit (PIPE_INT8 >= 1) the adapter has always taken the op's last beat before the
+        // issue consumes it, so !iss_line_end is implied there; the PIPE_INT8 >= 2 intake uses registered terms only.
+        wire demand = input_open && intake_credit && ((PIPE_INT8 >= 2) || !issue_line_end);
         wire a_busy, a_v; wire [1087:0] a_d;
         wire fmt3 = (fmt_q == 2'd3);
         wire byp;
