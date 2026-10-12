@@ -5,7 +5,7 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-12T06:30:11Z",
+ "generated_utc": "2026-10-12T11:16:31Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -21,71 +21,71 @@
   "ds_rom": 1447.7
  },
  "ds_hbm": {
-  "S2_cycles": 565569.1,
-  "S2_tok_s": 2121.8,
+  "S2_cycles": 576702.4,
+  "S2_tok_s": 2080.8,
   "target_tok_s": 2208.1,
   "image_bytes": 478720,
   "target_cycles": 543453.6,
-  "price_scale_to_target": 0.9609,
+  "price_scale_to_target": 0.9423,
   "per_unit_S2": {
    "FUSED": {
     "busy": 71369.7,
-    "idle_true_dep": 486498.5,
-    "idle_issue": 3276.5,
+    "idle_true_dep": 496372.3,
+    "idle_issue": 3248.4,
     "records": 201
    },
    "SM": {
-    "busy": 103968.3,
-    "idle_true_dep": 440920.4,
-    "idle_issue": 19886.0,
+    "busy": 126875.5,
+    "idle_true_dep": 429251.0,
+    "idle_issue": 19781.5,
     "records": 1095
    },
    "COLL": {
     "busy": 336487.2,
-    "idle_true_dep": 220715.0,
-    "idle_issue": 8366.9,
+    "idle_true_dep": 231027.4,
+    "idle_issue": 9187.8,
     "records": 642
    },
    "DMA": {
     "busy": 40283.8,
-    "idle_true_dep": 45498.7,
-    "idle_issue": 489087.3,
+    "idle_true_dep": 45886.7,
+    "idle_issue": 498505.3,
     "records": 420
    },
    "SU": {
     "busy": 136388.0,
-    "idle_true_dep": 384190.3,
-    "idle_issue": 38873.8,
+    "idle_true_dep": 392409.1,
+    "idle_issue": 40500.7,
     "records": 1356
    },
    "CTL": {
     "busy": 8.0,
     "idle_true_dep": 0.0,
-    "idle_issue": 554849.2,
+    "idle_issue": 564625.2,
     "records": 197
    },
    "ATT": {
     "busy": 26363.5,
-    "idle_true_dep": 523406.2,
+    "idle_true_dep": 533038.5,
     "idle_issue": 2056.0,
     "records": 80
    },
    "HC": {
     "busy": 43200.0,
-    "idle_true_dep": 463926.8,
-    "idle_issue": 49044.9,
+    "idle_true_dep": 473097.1,
+    "idle_issue": 49650.7,
     "records": 80
    },
    "IDX": {
     "busy": 18833.9,
-    "idle_true_dep": 537303.7,
+    "idle_true_dep": 547109.7,
     "idle_issue": 1392.0,
     "records": 48
    },
    "ARGMAX": {
-    "busy": 3626.0,
+    "busy": 4913.6,
     "idle_true_dep": 0.0,
-    "idle_issue": 561168.7,
+    "idle_issue": 571014.3,
     "records": 1
    }
   },
@@ -98,13 +98,13 @@
     "price_cycles_per_record": 389.2,
     "price_cycles_per_token": 227271.2,
     "price_cycles_per_layer": 5681.8,
-    "budget_cycles_per_record_at_target": 373.9,
+    "budget_cycles_per_record_at_target": 366.7,
     "items_per_record": 8519.0,
     "item": "bytes",
     "required_items_per_cycle": 21.891,
-    "required_items_per_cycle_at_target": 22.781,
+    "required_items_per_cycle_at_target": 23.23,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.02825,
+    "token_elasticity_at_plus10pct": 0.0262,
     "measured_ratio": 0.716,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/coll/report.json",
@@ -112,8 +112,8 @@
     "interim": null,
     "measured_cycles_per_record": 278.6,
     "status": "QUALIFIED",
-    "impact_cycles_per_token": -41550.1,
-    "impact_tok_s": 168.2,
+    "impact_cycles_per_token": -41060.0,
+    "impact_tok_s": 159.5,
     "owner": "hgi-1010/c + fe-push-hgi-1010 (parking SRAM)",
     "elements": [
      "hfd_coll",
@@ -141,13 +141,13 @@
     "price_cycles_per_record": 100.6,
     "price_cycles_per_token": 136388.0,
     "price_cycles_per_layer": 3409.7,
-    "budget_cycles_per_record_at_target": 96.6,
+    "budget_cycles_per_record_at_target": 94.8,
     "items_per_record": 1584.9,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 15.758,
-    "required_items_per_cycle_at_target": 16.399,
+    "required_items_per_cycle_at_target": 16.722,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.01887,
+    "token_elasticity_at_plus10pct": 0.01784,
     "measured_ratio": 1.067,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/su/report.json",
@@ -155,8 +155,8 @@
     "interim": null,
     "measured_cycles_per_record": 107.3,
     "status": "QUALIFIED",
-    "impact_cycles_per_token": 7149.6,
-    "impact_tok_s": -26.5,
+    "impact_cycles_per_token": 6766.6,
+    "impact_tok_s": -24.1,
     "owner": "hgi-1010/b",
     "elements": [
      "ot_hgi_su_record",
@@ -182,25 +182,25 @@
     "unit": "SM",
     "records_per_token": 1095,
     "layers_with_op": 41,
-    "price_cycles_per_record": 94.9,
-    "price_cycles_per_token": 103968.3,
-    "price_cycles_per_layer": 2535.8,
-    "budget_cycles_per_record_at_target": 91.2,
+    "price_cycles_per_record": 115.9,
+    "price_cycles_per_token": 126875.5,
+    "price_cycles_per_layer": 3094.5,
+    "budget_cycles_per_record_at_target": 109.2,
     "items_per_record": 166974.7,
     "item": "MACs (weight / key elements)",
-    "required_items_per_cycle": 1758.587,
-    "required_items_per_cycle_at_target": 1830.151,
+    "required_items_per_cycle": 1441.076,
+    "required_items_per_cycle_at_target": 1529.242,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.0093,
-    "measured_ratio": 32.903,
+    "token_elasticity_at_plus10pct": 0.01451,
+    "measured_ratio": 27.202,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/sm/report.json",
-    "measured_note": "tb_hgi_sm_tput (32 SMs + xload BD + sm_pub + real VM) on the priced g25 DS records: 1,015/1,095 rec; >= 23.0x full token; wq_b / wo_a fail closed (sm_pub arrival overrun); MUT_ROW FAILS. Owner el1011-hbm-smmv",
+    "measured_note": "ratio vs the HBM-floored price (owner 10-12, results/arch/hbm_bw_reprice_1012): the 1,015 matched records price 87,969.6 (was 72,728 at 1 line / cycle; report.json 32.903x is vs the old price); tb_hgi_sm_tput (32 SMs + xload BD + sm_pub + real VM) on the priced g25 DS records: 1,015/1,095 rec; >= 23.0x full token; wq_b / wo_a fail closed (sm_pub arrival overrun); MUT_ROW FAILS. Owner el1011-hbm-smmv",
     "interim": null,
-    "measured_cycles_per_record": 3124.1,
+    "measured_cycles_per_record": 3151.8,
     "status": "UNQUALIFIED",
-    "impact_cycles_per_token": 3213100.8,
-    "impact_tok_s": -1804.2,
+    "impact_cycles_per_token": 3232365.8,
+    "impact_tok_s": -1765.8,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "elements": [
      "ot_hgi_sm_record",
@@ -217,15 +217,15 @@
     "variants": {
      "FP8": {
       "records": 290,
-      "price_cycles_per_token": 54578.4
+      "price_cycles_per_token": 63860.5
      },
      "BF16": {
       "records": 85,
-      "price_cycles_per_token": 30189.8
+      "price_cycles_per_token": 36628.1
      },
      "FP4": {
       "records": 720,
-      "price_cycles_per_token": 19200.0
+      "price_cycles_per_token": 26386.9
      }
     },
     "measured_record": {
@@ -241,13 +241,13 @@
     "price_cycles_per_record": 1325.9,
     "price_cycles_per_token": 53037.6,
     "price_cycles_per_layer": 1325.9,
-    "budget_cycles_per_record_at_target": 1274.1,
+    "budget_cycles_per_record_at_target": 1249.5,
     "items_per_record": 4096.0,
     "item": "bytes",
     "required_items_per_cycle": 3.089,
-    "required_items_per_cycle_at_target": 3.215,
+    "required_items_per_cycle_at_target": 3.278,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00938,
+    "token_elasticity_at_plus10pct": 0.0092,
     "measured_ratio": 0.908,
     "measured_grade": "e2e",
     "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
@@ -256,7 +256,7 @@
     "measured_cycles_per_record": 1204.0,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -4879.5,
-    "impact_tok_s": 18.5,
+    "impact_tok_s": 17.8,
     "owner": "-",
     "elements": [],
     "variants": {
@@ -278,13 +278,13 @@
     "price_cycles_per_record": 649.3,
     "price_cycles_per_token": 52595.9,
     "price_cycles_per_layer": 1282.8,
-    "budget_cycles_per_record_at_target": 623.9,
+    "budget_cycles_per_record_at_target": 611.9,
     "items_per_record": 20480.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 31.54,
-    "required_items_per_cycle_at_target": 32.824,
+    "required_items_per_cycle_at_target": 33.47,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.0093,
+    "token_elasticity_at_plus10pct": 0.00912,
     "measured_ratio": 0.715,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_pre_norm_d5120_ll/report.json",
@@ -292,8 +292,8 @@
     "interim": null,
     "measured_cycles_per_record": 464.3,
     "status": "QUALIFIED",
-    "impact_cycles_per_token": -12347.8,
-    "impact_tok_s": 47.4,
+    "impact_cycles_per_token": -12407.7,
+    "impact_tok_s": 45.8,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -317,11 +317,11 @@
     "price_cycles_per_record": 540.0,
     "price_cycles_per_token": 43200.0,
     "price_cycles_per_layer": 1080.0,
-    "budget_cycles_per_record_at_target": 518.9,
+    "budget_cycles_per_record_at_target": 508.9,
     "items_per_record": 24.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 0.044,
-    "required_items_per_cycle_at_target": 0.046,
+    "required_items_per_cycle_at_target": 0.047,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.0,
     "measured_ratio": 1.282,
@@ -358,13 +358,13 @@
     "price_cycles_per_record": 104.4,
     "price_cycles_per_token": 35483.8,
     "price_cycles_per_layer": 887.1,
-    "budget_cycles_per_record_at_target": 100.3,
+    "budget_cycles_per_record_at_target": 98.3,
     "items_per_record": 1153.1,
     "item": "bytes",
     "required_items_per_cycle": 11.049,
-    "required_items_per_cycle_at_target": 11.499,
+    "required_items_per_cycle_at_target": 11.725,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00092,
+    "token_elasticity_at_plus10pct": 0.0009,
     "measured_ratio": 0.622,
     "measured_grade": "e2e",
     "measured_src": "results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
@@ -373,7 +373,7 @@
     "measured_cycles_per_record": 64.9,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -1927.5,
-    "impact_tok_s": 7.3,
+    "impact_tok_s": 7.0,
     "owner": "-",
     "elements": [],
     "variants": {
@@ -395,13 +395,13 @@
     "price_cycles_per_record": 4246.0,
     "price_cycles_per_token": 33968.0,
     "price_cycles_per_layer": 4246.0,
-    "budget_cycles_per_record_at_target": 4080.0,
+    "budget_cycles_per_record_at_target": 4001.2,
     "items_per_record": 1048576.0,
     "item": "bytes",
     "required_items_per_cycle": 246.956,
-    "required_items_per_cycle_at_target": 257.006,
+    "required_items_per_cycle_at_target": 262.065,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00601,
+    "token_elasticity_at_plus10pct": 0.00589,
     "measured_ratio": 0.997,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_rgx_pipe_merge_20261010/rgx_matrix_SUMMARY.txt",
@@ -434,13 +434,13 @@
     "price_cycles_per_record": 2382.8,
     "price_cycles_per_token": 21445.0,
     "price_cycles_per_layer": 2680.6,
-    "budget_cycles_per_record_at_target": 2289.6,
+    "budget_cycles_per_record_at_target": 2245.4,
     "items_per_record": 2427.6,
     "item": "bytes",
     "required_items_per_cycle": 1.019,
-    "required_items_per_cycle_at_target": 1.06,
+    "required_items_per_cycle_at_target": 1.081,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00379,
+    "token_elasticity_at_plus10pct": 0.00372,
     "measured_ratio": 1.057,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/coll/tkm_tput_480f631d5.json",
@@ -449,7 +449,7 @@
     "measured_cycles_per_record": 2518.6,
     "status": "QUALIFIED",
     "impact_cycles_per_token": 1222.4,
-    "impact_tok_s": -4.6,
+    "impact_tok_s": -4.4,
     "owner": "el1011-hbm-idx (ot_hgi_coll_tkm r2 tile chain) / hbm-coll",
     "elements": [],
     "variants": {
@@ -471,13 +471,13 @@
     "price_cycles_per_record": 222.7,
     "price_cycles_per_token": 17813.8,
     "price_cycles_per_layer": 445.3,
-    "budget_cycles_per_record_at_target": 214.0,
+    "budget_cycles_per_record_at_target": 209.8,
     "items_per_record": 20480.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 91.974,
-    "required_items_per_cycle_at_target": 95.717,
+    "required_items_per_cycle_at_target": 97.601,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00307,
+    "token_elasticity_at_plus10pct": 0.00301,
     "measured_ratio": 1.096,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/fused/hc_post_d5120_ll/report.json",
@@ -486,7 +486,7 @@
     "measured_cycles_per_record": 244.0,
     "status": "QUALIFIED",
     "impact_cycles_per_token": 1667.4,
-    "impact_tok_s": -6.2,
+    "impact_tok_s": -6.0,
     "owner": "hgi-1010/b (FUSED UWIDE / wide VM lanes)",
     "elements": [
      "ot_hgi_fused_record"
@@ -510,13 +510,13 @@
     "price_cycles_per_record": 329.5,
     "price_cycles_per_token": 13181.8,
     "price_cycles_per_layer": 329.5,
-    "budget_cycles_per_record_at_target": 316.7,
+    "budget_cycles_per_record_at_target": 310.5,
     "items_per_record": 16384.0,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 49.717,
-    "required_items_per_cycle_at_target": 51.74,
+    "required_items_per_cycle_at_target": 52.759,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00233,
+    "token_elasticity_at_plus10pct": 0.00229,
     "measured_ratio": null,
     "measured_grade": null,
     "measured_src": null,
@@ -547,7 +547,7 @@
       "price_cycles_per_token": 13181.8
      }
     },
-    "exposure_cycles_if_2x": 13177.8
+    "exposure_cycles_if_2x": 13206.5
    },
    {
     "op": "ATT.PV",
@@ -557,13 +557,13 @@
     "price_cycles_per_record": 329.5,
     "price_cycles_per_token": 13181.8,
     "price_cycles_per_layer": 329.5,
-    "budget_cycles_per_record_at_target": 316.7,
+    "budget_cycles_per_record_at_target": 310.5,
     "items_per_record": 16384.0,
     "item": "MACs (weight / key elements)",
     "required_items_per_cycle": 49.717,
-    "required_items_per_cycle_at_target": 51.74,
+    "required_items_per_cycle_at_target": 52.759,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00233,
+    "token_elasticity_at_plus10pct": 0.00229,
     "measured_ratio": null,
     "measured_grade": null,
     "measured_src": null,
@@ -584,7 +584,7 @@
       "price_cycles_per_token": 13181.8
      }
     },
-    "exposure_cycles_if_2x": 13177.8
+    "exposure_cycles_if_2x": 13206.5
    },
    {
     "op": "IDX.TOPK",
@@ -594,13 +594,13 @@
     "price_cycles_per_record": 283.0,
     "price_cycles_per_token": 11320.3,
     "price_cycles_per_layer": 283.0,
-    "budget_cycles_per_record_at_target": 271.9,
+    "budget_cycles_per_record_at_target": 266.7,
     "items_per_record": 384.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 1.357,
-    "required_items_per_cycle_at_target": 1.412,
+    "required_items_per_cycle_at_target": 1.44,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.002,
+    "token_elasticity_at_plus10pct": 0.00196,
     "measured_ratio": 4.286,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json",
@@ -612,7 +612,7 @@
     "measured_cycles_per_record": 1213.0,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 37198.6,
-    "impact_tok_s": -130.9,
+    "impact_tok_s": -126.1,
     "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)",
     "elements": [
      "hgi_idx_topk_full",
@@ -637,13 +637,13 @@
     "price_cycles_per_record": 939.2,
     "price_cycles_per_token": 7513.6,
     "price_cycles_per_layer": 939.2,
-    "budget_cycles_per_record_at_target": 902.5,
+    "budget_cycles_per_record_at_target": 885.0,
     "items_per_record": 851968.0,
     "item": "keys scored",
     "required_items_per_cycle": 907.126,
-    "required_items_per_cycle_at_target": 944.041,
+    "required_items_per_cycle_at_target": 962.624,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00133,
+    "token_elasticity_at_plus10pct": 0.0013,
     "measured_ratio": 8.603,
     "measured_grade": "e2e",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/idx_index/report.json",
@@ -652,7 +652,7 @@
     "measured_cycles_per_record": 8079.9,
     "status": "UNQUALIFIED",
     "impact_cycles_per_token": 57125.6,
-    "impact_tok_s": -194.6,
+    "impact_tok_s": -187.5,
     "owner": "el1011-hbm-idxs",
     "elements": [
      "hfd_idx_score",
@@ -685,13 +685,13 @@
     "price_cycles_per_record": 60.0,
     "price_cycles_per_token": 2400.0,
     "price_cycles_per_layer": 60.0,
-    "budget_cycles_per_record_at_target": 57.7,
+    "budget_cycles_per_record_at_target": 56.5,
     "items_per_record": 2048.0,
     "item": "bytes",
     "required_items_per_cycle": 34.133,
-    "required_items_per_cycle_at_target": 35.522,
+    "required_items_per_cycle_at_target": 36.222,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00028,
+    "token_elasticity_at_plus10pct": 0.0,
     "measured_ratio": 1.05,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_dma_kvw_20261011/report_split_252a96048.json",
@@ -699,8 +699,8 @@
     "interim": null,
     "measured_cycles_per_record": 63.0,
     "status": "QUALIFIED",
-    "impact_cycles_per_token": 64.0,
-    "impact_tok_s": -0.2,
+    "impact_cycles_per_token": 0.0,
+    "impact_tok_s": 0.0,
     "owner": "el1011-hbm-fq (mover_el PX=1 + kvw hold/core split)",
     "elements": [
      "ot_hgi_dma_mover",
@@ -726,7 +726,7 @@
     "price_cycles_per_record": 60.0,
     "price_cycles_per_token": 2400.0,
     "price_cycles_per_layer": 60.0,
-    "budget_cycles_per_record_at_target": 57.7,
+    "budget_cycles_per_record_at_target": 56.5,
     "items_per_record": 0.0,
     "item": "",
     "required_items_per_cycle": 0.0,
@@ -763,13 +763,13 @@
     "price_cycles_per_record": 24.0,
     "price_cycles_per_token": 960.0,
     "price_cycles_per_layer": 24.0,
-    "budget_cycles_per_record_at_target": 23.1,
+    "budget_cycles_per_record_at_target": 22.6,
     "items_per_record": 512.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 21.333,
-    "required_items_per_cycle_at_target": 22.201,
+    "required_items_per_cycle_at_target": 22.639,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00014,
+    "token_elasticity_at_plus10pct": 0.0,
     "measured_ratio": 2.74,
     "measured_grade": "unit_bench",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json",
@@ -777,8 +777,8 @@
     "interim": null,
     "measured_cycles_per_record": 65.8,
     "status": "ACCEPTED",
-    "impact_cycles_per_token": 1336.3,
-    "impact_tok_s": -5.0,
+    "impact_cycles_per_token": 958.1,
+    "impact_tok_s": -3.5,
     "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)",
     "elements": [
      "hfd_quant",
@@ -804,13 +804,13 @@
     "price_cycles_per_record": 765.4,
     "price_cycles_per_token": 765.4,
     "price_cycles_per_layer": 765.4,
-    "budget_cycles_per_record_at_target": 735.5,
+    "budget_cycles_per_record_at_target": 721.3,
     "items_per_record": 8.0,
     "item": "bytes",
     "required_items_per_cycle": 0.01,
     "required_items_per_cycle_at_target": 0.011,
     "share_of_unit_busy": null,
-    "token_elasticity_at_plus10pct": 0.00014,
+    "token_elasticity_at_plus10pct": 0.00013,
     "measured_ratio": 0.802,
     "measured_grade": "e2e",
     "measured_src": "results/rtl/hgi_unit_tput_20261010/argmax_merge/report.json",
@@ -819,7 +819,7 @@
     "measured_cycles_per_record": 613.9,
     "status": "QUALIFIED",
     "impact_cycles_per_token": -151.6,
-    "impact_tok_s": 0.6,
+    "impact_tok_s": 0.5,
     "owner": "hbm-coll",
     "elements": [],
     "variants": {
@@ -841,11 +841,11 @@
     "price_cycles_per_record": 142.7,
     "price_cycles_per_token": 142.7,
     "price_cycles_per_layer": 142.7,
-    "budget_cycles_per_record_at_target": 137.1,
+    "budget_cycles_per_record_at_target": 134.4,
     "items_per_record": 1347.0,
     "item": "elements (largest operand)",
     "required_items_per_cycle": 9.442,
-    "required_items_per_cycle_at_target": 9.826,
+    "required_items_per_cycle_at_target": 10.019,
     "share_of_unit_busy": null,
     "token_elasticity_at_plus10pct": 0.0,
     "measured_ratio": null,
@@ -871,9 +871,8 @@
    }
   ],
   "critical_weight_if_zero": {
-   "SM.MATVEC|FP8": 20334.9,
-   "SM.MATVEC|FP4": 224.0,
-   "IDX.INDEX|None": 4044.5
+   "SM.MATVEC|FP8": 24260.4,
+   "SM.MATVEC|FP4": 1029.6
   },
   "program": "results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json",
   "run": "results/arch/hgi_sim_20261010/g25_proof/ds_full.json"
@@ -882,11 +881,11 @@
   {
    "rank": 1,
    "op": "SM.MATVEC",
-   "ratio": 32.903,
-   "impact_cycles_per_token": 3213100.8,
-   "impact_tok_s": -1804.2,
-   "budget_cycles_per_record": 94.9,
-   "budget_at_target": 91.2,
+   "ratio": 27.202,
+   "impact_cycles_per_token": 3232365.8,
+   "impact_tok_s": -1765.8,
+   "budget_cycles_per_record": 115.9,
+   "budget_at_target": 109.2,
    "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)"
   },
   {
@@ -894,9 +893,9 @@
    "op": "IDX.INDEX",
    "ratio": 8.603,
    "impact_cycles_per_token": 57125.6,
-   "impact_tok_s": -194.6,
+   "impact_tok_s": -187.5,
    "budget_cycles_per_record": 939.2,
-   "budget_at_target": 902.5,
+   "budget_at_target": 885.0,
    "owner": "el1011-hbm-idxs"
   },
   {
@@ -904,19 +903,19 @@
    "op": "IDX.TOPK",
    "ratio": 4.286,
    "impact_cycles_per_token": 37198.6,
-   "impact_tok_s": -130.9,
+   "impact_tok_s": -126.1,
    "budget_cycles_per_record": 283.0,
-   "budget_at_target": 271.9,
+   "budget_at_target": 266.7,
    "owner": "hgi-1010/g2 (TOPKW=1 heap, 9473077de)"
   },
   {
    "rank": 4,
    "op": "FUSED.QDQ_FP8",
    "ratio": 2.74,
-   "impact_cycles_per_token": 1336.3,
-   "impact_tok_s": -5.0,
+   "impact_cycles_per_token": 958.1,
+   "impact_tok_s": -3.5,
    "budget_cycles_per_record": 24.0,
-   "budget_at_target": 23.1,
+   "budget_at_target": 22.6,
    "owner": "tput-gate-1010 (WIDE 2.74x ACCEPTED by owner rule; route hgi_quant_wide-68fe4bf34 + hb_quant lgE slot-2 share)"
   },
   {
@@ -926,14 +925,14 @@
    "impact_cycles_per_token": 0.0,
    "impact_tok_s": 0.0,
    "budget_cycles_per_record": 540.0,
-   "budget_at_target": 518.9,
+   "budget_at_target": 508.9,
    "owner": "hgi-1010/d"
   }
  ],
  "ds_unbenched_by_exposure": [
   {
    "op": "ATT.QK",
-   "exposure_cycles_if_2x": 13177.8,
+   "exposure_cycles_if_2x": 13206.5,
    "price_cycles_per_token": 13181.8,
    "owner": "hgi-1010/g2 (ATT PIPE=2 a7613320f; wide VM wclient open)",
    "interim": {
@@ -943,7 +942,7 @@
   },
   {
    "op": "ATT.PV",
-   "exposure_cycles_if_2x": 13177.8,
+   "exposure_cycles_if_2x": 13206.5,
    "price_cycles_per_token": 13181.8,
    "owner": "hgi-1010/g2",
    "interim": {
@@ -986,14 +985,14 @@
     "status": "NOT_BUILT",
     "evidence": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv refuses x fmt 1 / 2 (x_fault): no FP8 block-dot x path (audit ds_sm_xload_fp8_fp4_no_peer; FP8 x-path rebase = fe-push-hgi-1010 / hgi-1010/d)",
     "records_per_token": 290,
-    "price_cycles_per_token": 54578.4,
-    "critical_cycles_if_zero": 20334.9,
-    "rate_if_op_free_tok_s": 2200.9,
+    "price_cycles_per_token": 63860.5,
+    "critical_cycles_if_zero": 24260.4,
+    "rate_if_op_free_tok_s": 2172.2,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2121.8 tok/s"
+     "this budget's DS S2 2080.8 tok/s"
     ]
    },
    {
@@ -1003,7 +1002,7 @@
     "status": "BUILT",
     "evidence": "results/rtl/hgi_adapters_20261009/benches/sm_run.log + sm_bench_manifest.json (qwen3_8b_token_sm_matvec 145 records)",
     "records_per_token": 85,
-    "price_cycles_per_token": 30189.8,
+    "price_cycles_per_token": 36628.1,
     "critical_cycles_if_zero": null,
     "rate_if_op_free_tok_s": null,
     "inflates": []
@@ -1015,14 +1014,14 @@
     "status": "NOT_BUILT",
     "evidence": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv refuses x fmt 2",
     "records_per_token": 720,
-    "price_cycles_per_token": 19200.0,
-    "critical_cycles_if_zero": 224.0,
-    "rate_if_op_free_tok_s": 2122.6,
+    "price_cycles_per_token": 26386.9,
+    "critical_cycles_if_zero": 1029.6,
+    "rate_if_op_free_tok_s": 2084.5,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2121.8 tok/s"
+     "this budget's DS S2 2080.8 tok/s"
     ]
    },
    {
@@ -1149,18 +1148,13 @@
     "model": "DS",
     "op": "IDX.INDEX",
     "variant": null,
-    "status": "NO_NATIVE_EVIDENCE",
-    "evidence": "ot_hgi_idx_index / _native exist; every committed die e2e runs IDX.INDEX as a stub (DS L2 with IDX stub); only the IKS key-stream issuer is benched (hgi_unit_tput_20261010/iks)",
+    "status": "BUILT",
+    "evidence": "results/rtl/hgi_e2e_native_20261011/idxn_ds_L2/report.json; results/rtl/hgi_e2e_native_20261011/idxn_ds_L20/report.json; results/rtl/hgi_e2e_native_20261011/idxn_ds_L24/report.json",
     "records_per_token": 8,
     "price_cycles_per_token": 7513.6,
-    "critical_cycles_if_zero": 4044.5,
-    "rate_if_op_free_tok_s": 2137.0,
-    "inflates": [
-     "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
-     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
-     "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2121.8 tok/s"
-    ]
+    "critical_cycles_if_zero": null,
+    "rate_if_op_free_tok_s": null,
+    "inflates": []
    },
    {
     "model": "DS",
@@ -1375,14 +1369,14 @@
     "status": "NOT_BUILT",
     "evidence": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv refuses x fmt 1 / 2 (x_fault): no FP8 block-dot x path (audit ds_sm_xload_fp8_fp4_no_peer; FP8 x-path rebase = fe-push-hgi-1010 / hgi-1010/d)",
     "records_per_token": 290,
-    "price_cycles_per_token": 54578.4,
-    "critical_cycles_if_zero": 20334.9,
-    "rate_if_op_free_tok_s": 2200.9,
+    "price_cycles_per_token": 63860.5,
+    "critical_cycles_if_zero": 24260.4,
+    "rate_if_op_free_tok_s": 2172.2,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2121.8 tok/s"
+     "this budget's DS S2 2080.8 tok/s"
     ]
    },
    {
@@ -1392,31 +1386,14 @@
     "status": "NOT_BUILT",
     "evidence": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv refuses x fmt 2",
     "records_per_token": 720,
-    "price_cycles_per_token": 19200.0,
-    "critical_cycles_if_zero": 224.0,
-    "rate_if_op_free_tok_s": 2122.6,
+    "price_cycles_per_token": 26386.9,
+    "critical_cycles_if_zero": 1029.6,
+    "rate_if_op_free_tok_s": 2084.5,
     "inflates": [
      "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
      "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
      "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2121.8 tok/s"
-    ]
-   },
-   {
-    "model": "DS",
-    "op": "IDX.INDEX",
-    "variant": null,
-    "status": "NO_NATIVE_EVIDENCE",
-    "evidence": "ot_hgi_idx_index / _native exist; every committed die e2e runs IDX.INDEX as a stub (DS L2 with IDX stub); only the IKS key-stream issuer is benched (hgi_unit_tput_20261010/iks)",
-    "records_per_token": 8,
-    "price_cycles_per_token": 7513.6,
-    "critical_cycles_if_zero": 4044.5,
-    "rate_if_op_free_tok_s": 2137.0,
-    "inflates": [
-     "DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
-     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
-     "DS AR table 2,208.1 (budget_audit targets / token_path hbm_gen_ds)",
-     "this budget's DS S2 2121.8 tok/s"
+     "this budget's DS S2 2080.8 tok/s"
     ]
    }
   ]
@@ -1500,7 +1477,7 @@
    "stalled": false,
    "owner": "Claude:el1011-ds-vm/fe",
    "target": null,
-   "t": "2026-10-11T22:41:56-07:00",
+   "t": "2026-10-12T03:48:26-07:00",
    "adopted": true
   },
   "qfd_io_emb_root": {
@@ -1593,6 +1570,21 @@
    "t": "2026-10-11T21:23:35-07:00",
    "adopted": true
   },
+  "ot_hgi_coll_tkm_tile": {
+   "job": "hgi-coll-tkm-tile-c-7258eeb45-tc-cl",
+   "commit": "7258eeb45",
+   "bench": "bench_tkm_matrix_exact",
+   "line": "OK syn_cand expect=PASS got=PASS CYCLES=7073 SURV=5682 INS=1425 SINK=7062  | syn_cand",
+   "cycles": 7073,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-hbm-idx",
+   "target": null,
+   "t": "2026-10-12T00:29:29-07:00",
+   "adopted": true
+  },
   "ot_attn_tile_m6h1q": {
    "job": "hbm_attn_quad_cg-pka-04424cd9f-tc-hm10-grta-cl",
    "commit": "04424cd9f",
@@ -1623,6 +1615,21 @@
    "t": "2026-10-11T22:52:19-07:00",
    "adopted": true
   },
+  "dsfd_vm_be_sl": {
+   "job": "s81vm-besl4a-c15e2bf6a-tc-rd-pd45",
+   "commit": "c15e2bf6a",
+   "bench": "bench_exact_gold",
+   "line": "RESULT cyc=64000 checked=43251 mismatches_or_fails=0 phases=120 arm=120 p2rd=714 done=8322 rows_ready=60 starts=469 p2_words=12679 ctrl_reads=3266 el=196000/196000 cap_ops=11750 max_occ=3 mirror_max=3",
+   "cycles": 64000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-ds-vm/be",
+   "target": null,
+   "t": "2026-10-12T00:48:32-07:00",
+   "adopted": true
+  },
   "dsfd_mtp_seq": {
    "job": "mtp-mtp_seq-b-511fa714d-tc",
    "commit": "511fa714d",
@@ -1639,18 +1646,18 @@
    "adopted": true
   },
   "ot_hdc_v41x_sfu_chain": {
-   "job": "hbm_sfu_chain-b70b0112c-c97-tc-cl",
+   "job": "hbm_sfu_chain-b70b0112c-c108-tc-cl",
    "commit": "b70b0112c",
    "bench": "bench_c12_campaign_exact",
-   "line": "random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1614",
-   "cycles": 1614,
+   "line": "random N=16 seed=2 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1109",
+   "cycles": 1109,
    "item": null,
    "items": null,
    "ii": null,
    "stalled": false,
    "owner": "Claude:el1011-hbm-sfu",
    "target": null,
-   "t": "2026-10-11T23:05:08-07:00",
+   "t": "2026-10-11T23:32:47-07:00",
    "adopted": true
   },
   "hfd_su_tile_xl": {
@@ -1710,7 +1717,7 @@
    "stalled": false,
    "owner": "Claude:conservative-1011 [B hfd_hc]",
    "target": null,
-   "t": "2026-10-11T21:22:19-07:00",
+   "t": "2026-10-12T03:23:16-07:00",
    "adopted": true
   },
   "ot_dsrom_hc_seed_join": {
@@ -1785,7 +1792,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-coll",
    "target": null,
-   "t": "2026-10-11T21:30:31-07:00",
+   "t": "2026-10-12T03:47:45-07:00",
    "adopted": true
   },
   "ot_hgi_argmax18_m": {
@@ -1815,7 +1822,7 @@
    "stalled": false,
    "owner": "Claude:el1011-ds-misc",
    "target": null,
-   "t": "2026-10-11T22:00:04-07:00",
+   "t": "2026-10-12T04:01:00-07:00",
    "adopted": false
   },
   "ot_hbm_native_candidate_parse": {
@@ -1905,7 +1912,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-kvd",
    "target": null,
-   "t": "2026-10-11T21:14:11-07:00",
+   "t": "2026-10-12T03:15:37-07:00",
    "adopted": true
   },
   "qfd_embed_code_bank_retained": {
@@ -2062,6 +2069,21 @@
    "t": "2026-10-11T08:49:23-07:00",
    "adopted": true
   },
+  "qfd_tile_lsl": {
+   "job": "qfd_tile_lsl6-e032e6e6f-tc-hm0-cl",
+   "commit": "e032e6e6f",
+   "bench": "bench_rom_pipe_exact_anr",
+   "line": "\"verdict\": \"PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=300 cycles=22937 result_writes=5632 maxima=24 argmax_changes=501 scale_reads=2444 latency_added=13 ACC_LAT=7 TREE_LAT=",
+   "cycles": 22937,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-tile",
+   "target": null,
+   "t": "2026-10-12T01:17:18-07:00",
+   "adopted": true
+  },
   "ot_hbm_native_candidate_format": {
    "job": "candfmt_rb-937531860-tc-hm10-cl",
    "commit": "937531860",
@@ -2075,21 +2097,6 @@
    "owner": "Claude:struct-close",
    "target": null,
    "t": "2026-10-11T08:46:03-07:00",
-   "adopted": true
-  },
-  "dsfd_vm_be_sl": {
-   "job": "s81vm-besl-b235ed401-tc-rd-pd45",
-   "commit": "b235ed401",
-   "bench": "bench_exact_gold",
-   "line": "RESULT cyc=64000 checked=43251 mismatches_or_fails=0 phases=120 arm=120 p2rd=714 done=8322 rows_ready=60 starts=469 p2_words=12679 ctrl_reads=3266 el=196000/196000 cap_ops=11750 max_occ=3 mirror_max=3",
-   "cycles": 64000,
-   "item": null,
-   "items": null,
-   "ii": null,
-   "stalled": false,
-   "owner": "Claude:el1011-ds-vm/be",
-   "target": null,
-   "t": "2026-10-11T21:46:20-07:00",
    "adopted": true
   },
   "ot_hgi_coll_row_formatter": {
@@ -2289,19 +2296,19 @@
    "t": "2026-10-09T16:06:31-07:00",
    "adopted": true
   },
-  "qfd_tile_lsl": {
-   "job": "qfd_tile_lsl4-7e60104b6-tc-hm0-cl2",
-   "commit": "7e60104b6",
-   "bench": "bench_rom_pipe_exact_anr",
-   "line": "\"verdict\": \"PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=300 cycles=22937 result_writes=5632 maxima=24 argmax_changes=501 scale_reads=2444 latency_added=13 ACC_LAT=7 TREE_LAT=",
-   "cycles": 22937,
-   "item": null,
-   "items": null,
-   "ii": null,
+  "ot_hbm_index_global_order_mt": {
+   "job": "hbm_gorder_mt_ref-v1-23c517d1e",
+   "commit": "23c517d1e",
+   "bench": "bench_golden_exact",
+   "line": "PASS_GLOBAL_ORDER ranks=96 tuples=12288 actual_reads=12480 cycles=61862",
+   "cycles": 61862,
+   "item": "tuples",
+   "items": 12288,
+   "ii": 5.034,
    "stalled": false,
-   "owner": "Claude:el1011-q-tile",
+   "owner": "Claude:el1011-hbm-tputx/tputx-gord",
    "target": null,
-   "t": "2026-10-11T20:18:49-07:00",
+   "t": "2026-10-12T01:19:27-07:00",
    "adopted": true
   },
   "qfd_seq_su": {
@@ -2484,6 +2491,21 @@
    "owner": "Claude:cont-takeover",
    "target": null,
    "t": "2026-10-11T19:46:00-07:00",
+   "adopted": true
+  },
+  "ot_coll_fold_slice": {
+   "job": "coll_fold_slice_rt-rt1-ae9fa22a9",
+   "commit": "ae9fa22a9",
+   "bench": "bench_coll_margin7_exact",
+   "line": "se gather_1w margin=7 mutant=0 PASS mismatches=0 words_out=1024 cycles=355",
+   "cycles": 355,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1011-q-coll",
+   "target": null,
+   "t": "2026-10-11T23:38:46-07:00",
    "adopted": true
   },
   "dsfd_mtp_seed_launch": {
@@ -2669,7 +2691,7 @@
  "class_bench_records": [
   {
    "path": "results/rtl/tput_map_1011/att_su_relay/record.json",
-   "commit": "2269e5375",
+   "commit": "008e80e47",
    "cls": "bench II (no items)",
    "model": "HBM accelerator (fixed-pipeline full-rate rule)",
    "ratio": 1.0009,
@@ -2679,10 +2701,10 @@
   },
   {
    "path": "results/rtl/tput_map_1011/cp_fetch/record.json",
-   "commit": "2269e5375",
+   "commit": "905100ec5",
    "cls": "CP.FETCH",
    "model": "DS AR 1M (HBM)",
-   "ratio": 7.357,
+   "ratio": 0.794,
    "elements": [
     "hfd_cmdproc_n",
     "hfd_cmdproc_s",
@@ -2730,7 +2752,7 @@
   },
   {
    "path": "results/rtl/tput_map_1011/hbm_index_glue/record.json",
-   "commit": "2269e5375",
+   "commit": "14a4b50e2",
    "cls": null,
    "model": null,
    "ratio": null,
@@ -2743,7 +2765,7 @@
   },
   {
    "path": "results/rtl/tput_map_1011/mtp_verify/record.json",
-   "commit": "2269e5375",
+   "commit": "490d93181",
    "cls": "MTP.VERIFY",
    "model": "DS MTP (HBM)",
    "ratio": null,
@@ -2770,19 +2792,28 @@
   },
   {
    "path": "results/rtl/tput_map_1011/qwen_sfu/record.json",
-   "commit": "f54a78490",
+   "commit": "008e80e47",
    "cls": "SFU.GLU",
    "model": "Qwen AR 8K (HBM)",
    "ratio": 1.933,
    "elements": [
-    "hfd_sfu",
-    "hfd_sfu_tile",
     "ot_hgi_sfu_record"
    ]
   },
   {
+   "path": "results/rtl/tput_map_1011/qwen_sfu_c12/record.json",
+   "commit": "4f6326bba",
+   "cls": "SFU.GLU",
+   "model": "Qwen AR 8K (HBM)",
+   "ratio": 3.267,
+   "elements": [
+    "hfd_sfu",
+    "hfd_sfu_tile"
+   ]
+  },
+  {
    "path": "results/rtl/tput_map_1011/qwen_su/record.json",
-   "commit": null,
+   "commit": "008e80e47",
    "cls": "SU.VOP",
    "model": "Qwen AR 8K (HBM)",
    "ratio": 1.946,
@@ -2797,10 +2828,10 @@
   },
   {
    "path": "results/rtl/tput_map_1011/svc_stream/record.json",
-   "commit": "2269e5375",
+   "commit": "2ac2226ca",
    "cls": "SVC.STREAM",
    "model": "Qwen AR 8K (HBM)",
-   "ratio": 1.208,
+   "ratio": 1.046,
    "elements": [
     "hfd_svc_SE_s0",
     "hfd_svc_SE_s1",
@@ -3228,13 +3259,11 @@
  "rom_block_coverage": {
   "dsfd_cap_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_cb": "^dsfd_coll_",
-  "dsfd_coll_cbh": "^dsfd_coll_",
   "dsfd_coll_cbj": "^dsfd_coll_",
   "dsfd_coll_ce": "^dsfd_coll_",
   "dsfd_coll_cef": "^dsfd_coll_",
   "dsfd_coll_cele": "^dsfd_coll_",
   "dsfd_coll_celp": "^dsfd_coll_",
-  "dsfd_coll_ceq": "^dsfd_coll_",
   "dsfd_coll_ceq0": "^dsfd_coll_",
   "dsfd_coll_ceqp": "^dsfd_coll_",
   "dsfd_coll_ces0": "^dsfd_coll_",
@@ -3292,7 +3321,6 @@
   "dsfd_su_t_qn": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_qn0": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_qn1": "^(dsfd_su_t_|ot_s81_hc_)",
-  "dsfd_su_t_root": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_sm": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_sw": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_svc_join": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
@@ -3304,6 +3332,7 @@
   "dsfd_vm_bgq28": "^dsfd_vm_",
   "dsfd_vm_clt": "^dsfd_vm_",
   "dsfd_vm_fe": "^dsfd_vm_",
+  "dsfd_vm_fsr": "^dsfd_vm_",
   "dsfd_vm_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_vm_p2_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_vm_wfc_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -3318,7 +3347,6 @@
   "ot_dsrom_hc_secded_pipe": "^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)",
   "ot_dsrom_hc_seed_join": "^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_)",
   "ot_dsrom_markov_embed_localcapture_pair": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
-  "ot_dsrom_markov_head_driver": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_dsrom_markov_row_K256": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_dsrom_markov_row_K256_PINREG2": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "ot_dsrom_mtp_lrx_rtt": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -3355,14 +3383,20 @@
   "ot_qwen_nearhbm_ectl_h": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_nearhbm_head_h": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qwen_rom_core_core_kv_banked": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qwen_rom_tile_nk": null,
+  "ot_qwen_slab_port_group": null,
   "ot_qwen_stream4_cdc_pc": "^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc)",
+  "ot_s81_hc_ccf": "^(dsfd_su_t_|ot_s81_hc_)",
+  "ot_s81_hc_ccr": "^(dsfd_su_t_|ot_s81_hc_)",
+  "ot_s81_hc_cntree": "^(dsfd_su_t_|ot_s81_hc_)",
   "ot_s81_hc_comb": "^(dsfd_su_t_|ot_s81_hc_)",
+  "ot_s81_hc_cpad": "^(dsfd_su_t_|ot_s81_hc_)",
   "ot_s81_hc_cpin": "^(dsfd_su_t_|ot_s81_hc_)",
   "ot_s81_hc_croot": "^(dsfd_su_t_|ot_s81_hc_)",
   "ot_s81_hc_crootr": "^(dsfd_su_t_|ot_s81_hc_)",
   "ot_s81_hc_crooty": "^(dsfd_su_t_|ot_s81_hc_)",
+  "ot_s81_hc_cseq": "^(dsfd_su_t_|ot_s81_hc_)",
   "ot_s81_hc_ctile": "^(dsfd_su_t_|ot_s81_hc_)",
-  "ot_s81_hc_rtile": "^(dsfd_su_t_|ot_s81_hc_)",
   "ot_s81_hc_tile": "^(dsfd_su_t_|ot_s81_hc_)",
   "ot_s81_host_dispatch": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
   "ot_s81_ingest_visibility_fence": "^(dsfd_host|ot_s81_host_dispatch|ot_s81_ingest_visibility)",
@@ -4997,28 +5031,6 @@
     }
    ]
   },
-  "dsfd_coll_cbh": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:coll",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-   },
-   "ops": [
-    {
-     "op": "class:coll",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-    }
-   ]
-  },
   "dsfd_coll_cbj": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -5108,28 +5120,6 @@
    ]
   },
   "dsfd_coll_celp": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:coll",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-   },
-   "ops": [
-    {
-     "op": "class:coll",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
-    }
-   ]
-  },
-  "dsfd_coll_ceq": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -7212,28 +7202,6 @@
     }
    ]
   },
-  "dsfd_su_t_root": {
-   "status": "QUALIFIED",
-   "ratio": null,
-   "limiting": {
-    "op": "class:su",
-    "model": "ds_rom",
-    "status": "QUALIFIED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
-   },
-   "ops": [
-    {
-     "op": "class:su",
-     "model": "ds_rom",
-     "status": "QUALIFIED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
-    }
-   ]
-  },
   "dsfd_su_t_sm": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -7635,8 +7603,8 @@
     }
    ],
    "bench_ii": {
-    "job": "s81vm-besl-b235ed401-tc-rd-pd45",
-    "commit": "b235ed401",
+    "job": "s81vm-besl4a-c15e2bf6a-tc-rd-pd45",
+    "commit": "c15e2bf6a",
     "bench": "bench_exact_gold",
     "line": "RESULT cyc=64000 checked=43251 mismatches_or_fails=0 phases=120 arm=120 p2rd=714 done=8322 rows_ready=60 starts=469 p2_words=12679 ctrl_reads=3266 el=196000/196000 cap_ops=11750 max_occ=3 mirror_max=3",
     "cycles": 64000,
@@ -7646,7 +7614,7 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-vm/be",
     "target": null,
-    "t": "2026-10-11T21:46:20-07:00",
+    "t": "2026-10-12T00:48:32-07:00",
     "adopted": true
    }
   },
@@ -7795,11 +7763,33 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-vm/fe",
     "target": null,
-    "t": "2026-10-11T22:41:56-07:00",
+    "t": "2026-10-12T03:48:26-07:00",
     "adopted": true
    }
   },
   "dsfd_vm_fe": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
+  "dsfd_vm_fsr": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -8098,7 +8088,7 @@
     "status": "QUALIFIED",
     "ratio": 1.0009,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/att_su_relay/record.json @ 2269e5375: N=9 = the longest R25GQ bus (relays_r25gq.json); valid every cycle outside the two reset windows (dense production stream), cycle-exact vs an N-deep reference incl. a mid-run reset; II = active output-window cycles / beats out = 1.0009"
+    "src": "results/rtl/tput_map_1011/att_su_relay/record.json @ 008e80e47: N=9 = the longest R25GQ bus (relays_r25gq.json); valid every cycle outside the two reset windows (dense production stream), cycle-exact vs an N-deep reference incl. a mid-run reset; II = active output-window cycles / beats out = 1.0009"
    },
    "ops": [
     {
@@ -8107,7 +8097,7 @@
      "status": "QUALIFIED",
      "ratio": 1.0009,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/att_su_relay/record.json @ 2269e5375: N=9 = the longest R25GQ bus (relays_r25gq.json); valid every cycle outside the two reset windows (dense production stream), cycle-exact vs an N-deep reference incl. a mid-run reset; II = active output-window cycles / beats out = 1.0009"
+     "src": "results/rtl/tput_map_1011/att_su_relay/record.json @ 008e80e47: N=9 = the longest R25GQ bus (relays_r25gq.json); valid every cycle outside the two reset windows (dense production stream), cycle-exact vs an N-deep reference incl. a mid-run reset; II = active output-window cycles / beats out = 1.0009"
     }
    ],
    "bench_ii": {
@@ -8187,46 +8177,46 @@
    ]
   },
   "hfd_cmdproc_n": {
-   "status": "UNQUALIFIED",
-   "ratio": 7.357,
+   "status": "QUALIFIED",
+   "ratio": 0.794,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 7.357,
+    "status": "QUALIFIED",
+    "ratio": 0.794,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 7.357,
+     "status": "QUALIFIED",
+     "ratio": 0.794,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
     }
    ]
   },
   "hfd_cmdproc_s": {
-   "status": "UNQUALIFIED",
-   "ratio": 7.357,
+   "status": "QUALIFIED",
+   "ratio": 0.794,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 7.357,
+    "status": "QUALIFIED",
+    "ratio": 0.794,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 7.357,
+     "status": "QUALIFIED",
+     "ratio": 0.794,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
     }
    ]
   },
@@ -8373,7 +8363,7 @@
     "stalled": false,
     "owner": "Claude:conservative-1011 [B hfd_hc]",
     "target": null,
-    "t": "2026-10-11T21:22:19-07:00",
+    "t": "2026-10-12T03:23:16-07:00",
     "adopted": true
    }
   },
@@ -8569,24 +8559,24 @@
    ]
   },
   "hfd_loader": {
-   "status": "UNQUALIFIED",
-   "ratio": 7.357,
+   "status": "QUALIFIED",
+   "ratio": 0.794,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 7.357,
+    "status": "QUALIFIED",
+    "ratio": 0.794,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 7.357,
+     "status": "QUALIFIED",
+     "ratio": 0.794,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
     }
    ]
   },
@@ -8636,58 +8626,58 @@
   },
   "hfd_sfu": {
    "status": "UNQUALIFIED",
-   "ratio": 1.933,
+   "ratio": 3.267,
    "limiting": {
     "op": "SFU.GLU",
     "model": "Qwen AR 8K (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 1.933,
+    "ratio": 3.267,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
+    "src": "results/rtl/tput_map_1011/qwen_sfu_c12/record.json @ 4f6326bba: The bench prices one hfd_sfu (32 lanes) against the full-width SFU.GLU price (128 lanes). Compute 285 = 3,072 elements / 32 lanes = 96 issue cycles + the c12 SiLU-GLU pipeline depth (~190: exp 7 MLAT + 8 ALAT + 4, + ALAT + DDIV 21 + DEN"
    },
    "ops": [
     {
      "op": "SFU.GLU",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 1.933,
+     "ratio": 3.267,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
+     "src": "results/rtl/tput_map_1011/qwen_sfu_c12/record.json @ 4f6326bba: The bench prices one hfd_sfu (32 lanes) against the full-width SFU.GLU price (128 lanes). Compute 285 = 3,072 elements / 32 lanes = 96 issue cycles + the c12 SiLU-GLU pipeline depth (~190: exp 7 MLAT + 8 ALAT + 4, + ALAT + DDIV 21 + DEN"
     }
    ]
   },
   "hfd_sfu_tile": {
    "status": "UNQUALIFIED",
-   "ratio": 1.933,
+   "ratio": 3.267,
    "limiting": {
     "op": "SFU.GLU",
     "model": "Qwen AR 8K (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 1.933,
+    "ratio": 3.267,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
+    "src": "results/rtl/tput_map_1011/qwen_sfu_c12/record.json @ 4f6326bba: The bench prices one hfd_sfu (32 lanes) against the full-width SFU.GLU price (128 lanes). Compute 285 = 3,072 elements / 32 lanes = 96 issue cycles + the c12 SiLU-GLU pipeline depth (~190: exp 7 MLAT + 8 ALAT + 4, + ALAT + DDIV 21 + DEN"
    },
    "ops": [
     {
      "op": "SFU.GLU",
      "model": "Qwen AR 8K (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 1.933,
+     "ratio": 3.267,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
+     "src": "results/rtl/tput_map_1011/qwen_sfu_c12/record.json @ 4f6326bba: The bench prices one hfd_sfu (32 lanes) against the full-width SFU.GLU price (128 lanes). Compute 285 = 3,072 elements / 32 lanes = 96 issue cycles + the c12 SiLU-GLU pipeline depth (~190: exp 7 MLAT + 8 ALAT + 4, + ALAT + DDIV 21 + DEN"
     }
    ]
   },
   "hfd_su_result_ingress": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "UNQUALIFIED",
    "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "UNQUALIFIED",
     "ratio": 1.946,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -8701,23 +8691,23 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "UNQUALIFIED",
      "ratio": 1.946,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
   "hfd_su_tile": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "UNQUALIFIED",
    "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "UNQUALIFIED",
     "ratio": 1.946,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -8731,23 +8721,23 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "UNQUALIFIED",
      "ratio": 1.946,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
   "hfd_su_tile_xl": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "UNQUALIFIED",
    "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "UNQUALIFIED",
     "ratio": 1.946,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -8761,10 +8751,10 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "UNQUALIFIED",
      "ratio": 1.946,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ],
    "bench_ii": {
@@ -8784,376 +8774,376 @@
    }
   },
   "hfd_svc_SE_s0": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SE_s1": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SE_s2": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SE_s3": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SE_s4": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SE_s5": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SE_s6": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SE_s7": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SE_s8": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SW_s0": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SW_s1": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SW_s2": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SW_s3": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SW_s4": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SW_s5": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SW_s6": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
   "hfd_svc_SW_s7": {
-   "status": "UNQUALIFIED",
-   "ratio": 1.208,
+   "status": "QUALIFIED",
+   "ratio": 1.046,
    "limiting": {
     "op": "SVC.STREAM",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 1.208,
+    "status": "QUALIFIED",
+    "ratio": 1.046,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+    "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
    },
    "ops": [
     {
      "op": "SVC.STREAM",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 1.208,
+     "status": "QUALIFIED",
+     "ratio": 1.046,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2269e5375: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
+     "src": "results/rtl/tput_map_1011/svc_stream/record.json @ 2ac2226ca: One bench per family represents every slice: the 17 elements are the x-segments of the SE (s0..s8, NE family) and SW (s0..s7) stream-service chains; a stream passes through every segment of its family, so each family's composed run measur"
     }
    ]
   },
@@ -9638,6 +9628,43 @@
     "adopted": true
    }
   },
+  "ot_coll_fold_slice": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:el1011-q-coll",
+    "src": "closure job coll_fold_slice_rt-rt1-ae9fa22a9: se gather_1w margin=7 mutant=0 PASS mismatches=0 words_out=1024 cycles=355 (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:el1011-q-coll",
+     "src": "closure job coll_fold_slice_rt-rt1-ae9fa22a9: se gather_1w margin=7 mutant=0 PASS mismatches=0 words_out=1024 cycles=355 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "coll_fold_slice_rt-rt1-ae9fa22a9",
+    "commit": "ae9fa22a9",
+    "bench": "bench_coll_margin7_exact",
+    "line": "se gather_1w margin=7 mutant=0 PASS mismatches=0 words_out=1024 cycles=355",
+    "cycles": 355,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-q-coll",
+    "target": null,
+    "t": "2026-10-11T23:38:46-07:00",
+    "adopted": true
+   }
+  },
   "ot_dshbm_accept_port": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -9737,7 +9764,7 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-misc",
     "target": null,
-    "t": "2026-10-11T22:00:04-07:00",
+    "t": "2026-10-12T04:01:00-07:00",
     "adopted": false
    }
   },
@@ -10757,12 +10784,12 @@
   },
   "ot_hbm_accel_smh_be_eg": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -10771,7 +10798,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -10787,12 +10814,12 @@
   },
   "ot_hbm_accel_smh_be_wg": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -10801,7 +10828,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -10817,12 +10844,12 @@
   },
   "ot_hbm_accel_smh_front_c": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -10831,7 +10858,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -10847,12 +10874,12 @@
   },
   "ot_hbm_accel_smh_front_n": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -10861,7 +10888,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -10877,12 +10904,12 @@
   },
   "ot_hbm_accel_smh_front_s": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -10891,7 +10918,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -10907,12 +10934,12 @@
   },
   "ot_hbm_accel_smh_tile_eg": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -10921,7 +10948,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -10937,12 +10964,12 @@
   },
   "ot_hbm_accel_smh_tile_wg": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -10951,7 +10978,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -10967,23 +10994,23 @@
   },
   "ot_hbm_index_global_order": {
    "status": "QUALIFIED",
-   "ratio": 0.271,
+   "ratio": 0.272,
    "limiting": {
     "op": "COLL.TOPK_MERGE",
     "model": "DS AR 1M (HBM)",
     "status": "QUALIFIED",
-    "ratio": 0.271,
+    "ratio": 0.272,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 50.7x -> 0.271x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Again"
+    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 14a4b50e2: 50.7x -> 0.272x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Again"
    },
    "ops": [
     {
      "op": "COLL.TOPK_MERGE",
      "model": "DS AR 1M (HBM)",
      "status": "QUALIFIED",
-     "ratio": 0.271,
+     "ratio": 0.272,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 50.7x -> 0.271x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Again"
+     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 14a4b50e2: 50.7x -> 0.272x: the single outstanding read (12.6 cyc/read) and the 131k-id static scan are replaced by up to 96 concurrent per-rank reads and a pipelined 1 tuple/cycle merge tree; the record is now read-port bound (704 reads). Again"
     }
    ],
    "bench_ii": {
@@ -11002,6 +11029,43 @@
     "adopted": true
    }
   },
+  "ot_hbm_index_global_order_mt": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (tuples)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:el1011-hbm-tputx/tputx-gord",
+    "src": "closure job hbm_gorder_mt_ref-v1-23c517d1e: PASS_GLOBAL_ORDER ranks=96 tuples=12288 actual_reads=12480 cycles=61862 (II 5.034 > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (tuples)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:el1011-hbm-tputx/tputx-gord",
+     "src": "closure job hbm_gorder_mt_ref-v1-23c517d1e: PASS_GLOBAL_ORDER ranks=96 tuples=12288 actual_reads=12480 cycles=61862 (II 5.034 > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "hbm_gorder_mt_ref-v1-23c517d1e",
+    "commit": "23c517d1e",
+    "bench": "bench_golden_exact",
+    "line": "PASS_GLOBAL_ORDER ranks=96 tuples=12288 actual_reads=12480 cycles=61862",
+    "cycles": 61862,
+    "item": "tuples",
+    "items": 12288,
+    "ii": 5.034,
+    "stalled": false,
+    "owner": "Claude:el1011-hbm-tputx/tputx-gord",
+    "target": null,
+    "t": "2026-10-12T01:19:27-07:00",
+    "adopted": true
+   }
+  },
   "ot_hbm_native_candidate_format": {
    "status": "QUALIFIED",
    "ratio": 0.265,
@@ -11011,7 +11075,7 @@
     "status": "QUALIFIED",
     "ratio": 0.265,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 1 tuple / cycle serializer: 1.08 cyc a tuple dense; 3.8x headroom on the coll node share (and 4.9x on the record)"
+    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 14a4b50e2: 1 tuple / cycle serializer: 1.08 cyc a tuple dense; 3.8x headroom on the coll node share (and 4.9x on the record)"
    },
    "ops": [
     {
@@ -11020,7 +11084,7 @@
      "status": "QUALIFIED",
      "ratio": 0.265,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 1 tuple / cycle serializer: 1.08 cyc a tuple dense; 3.8x headroom on the coll node share (and 4.9x on the record)"
+     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 14a4b50e2: 1 tuple / cycle serializer: 1.08 cyc a tuple dense; 3.8x headroom on the coll node share (and 4.9x on the record)"
     }
    ],
    "bench_ii": {
@@ -11048,7 +11112,7 @@
     "status": "QUALIFIED",
     "ratio": 0.27,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 1.07 cyc a tuple dense (16 cycles a 15-slot flit)"
+    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 14a4b50e2: 1.07 cyc a tuple dense (16 cycles a 15-slot flit)"
    },
    "ops": [
     {
@@ -11057,7 +11121,7 @@
      "status": "QUALIFIED",
      "ratio": 0.27,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 1.07 cyc a tuple dense (16 cycles a 15-slot flit)"
+     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 14a4b50e2: 1.07 cyc a tuple dense (16 cycles a 15-slot flit)"
     }
    ],
    "bench_ii": {
@@ -11085,7 +11149,7 @@
     "status": "QUALIFIED",
     "ratio": 0.247,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 1.27 cyc a block incl. frame start / drain; not control glue: it carries the whole 1,047-bit query datapath, so it is benched, not exempted"
+    "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 14a4b50e2: 1.27 cyc a block incl. frame start / drain; not control glue: it carries the whole 1,047-bit query datapath, so it is benched, not exempted"
    },
    "ops": [
     {
@@ -11094,7 +11158,7 @@
      "status": "QUALIFIED",
      "ratio": 0.247,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 2269e5375: 1.27 cyc a block incl. frame start / drain; not control glue: it carries the whole 1,047-bit query datapath, so it is benched, not exempted"
+     "src": "results/rtl/tput_map_1011/hbm_index_glue/record.json @ 14a4b50e2: 1.27 cyc a block incl. frame start / drain; not control glue: it carries the whole 1,047-bit query datapath, so it is benched, not exempted"
     }
    ],
    "bench_ii": {
@@ -11336,7 +11400,7 @@
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
     "owner": "Claude:el1011-hbm-sfu",
-    "src": "closure job hbm_sfu_chain-b70b0112c-c97-tc-cl: random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1614 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    "src": "closure job hbm_sfu_chain-b70b0112c-c108-tc-cl: random N=16 seed=2 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1109 (II None > 1.10 or stalled stimulus: budget not mapped)"
    },
    "ops": [
     {
@@ -11345,22 +11409,22 @@
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
      "owner": "Claude:el1011-hbm-sfu",
-     "src": "closure job hbm_sfu_chain-b70b0112c-c97-tc-cl: random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1614 (II None > 1.10 or stalled stimulus: budget not mapped)"
+     "src": "closure job hbm_sfu_chain-b70b0112c-c108-tc-cl: random N=16 seed=2 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1109 (II None > 1.10 or stalled stimulus: budget not mapped)"
     }
    ],
    "bench_ii": {
-    "job": "hbm_sfu_chain-b70b0112c-c97-tc-cl",
+    "job": "hbm_sfu_chain-b70b0112c-c108-tc-cl",
     "commit": "b70b0112c",
     "bench": "bench_c12_campaign_exact",
-    "line": "random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1614",
-    "cycles": 1614,
+    "line": "random N=16 seed=2 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1109",
+    "cycles": 1109,
     "item": null,
     "items": null,
     "ii": null,
     "stalled": false,
     "owner": "Claude:el1011-hbm-sfu",
     "target": null,
-    "t": "2026-10-11T23:05:08-07:00",
+    "t": "2026-10-11T23:32:47-07:00",
     "adopted": true
    }
   },
@@ -11558,25 +11622,62 @@
     "adopted": true
    }
   },
+  "ot_hgi_coll_tkm_tile": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:el1011-hbm-idx",
+    "src": "closure job hgi-coll-tkm-tile-c-7258eeb45-tc-cl: OK syn_cand expect=PASS got=PASS CYCLES=7073 SURV=5682 INS=1425 SINK=7062  | syn_cand (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:el1011-hbm-idx",
+     "src": "closure job hgi-coll-tkm-tile-c-7258eeb45-tc-cl: OK syn_cand expect=PASS got=PASS CYCLES=7073 SURV=5682 INS=1425 SINK=7062  | syn_cand (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "hgi-coll-tkm-tile-c-7258eeb45-tc-cl",
+    "commit": "7258eeb45",
+    "bench": "bench_tkm_matrix_exact",
+    "line": "OK syn_cand expect=PASS got=PASS CYCLES=7073 SURV=5682 INS=1425 SINK=7062  | syn_cand",
+    "cycles": 7073,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1011-hbm-idx",
+    "target": null,
+    "t": "2026-10-12T00:29:29-07:00",
+    "adopted": true
+   }
+  },
   "ot_hgi_cp": {
-   "status": "UNQUALIFIED",
-   "ratio": 7.357,
+   "status": "QUALIFIED",
+   "ratio": 0.794,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 7.357,
+    "status": "QUALIFIED",
+    "ratio": 0.794,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 7.357,
+     "status": "QUALIFIED",
+     "ratio": 0.794,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
     }
    ]
   },
@@ -11846,24 +11947,24 @@
    ]
   },
   "ot_hgi_seq": {
-   "status": "UNQUALIFIED",
-   "ratio": 7.357,
+   "status": "QUALIFIED",
+   "ratio": 0.794,
    "limiting": {
     "op": "CP.FETCH",
     "model": "DS AR 1M (HBM)",
-    "status": "UNQUALIFIED",
-    "ratio": 7.357,
+    "status": "QUALIFIED",
+    "ratio": 0.794,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+    "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
    },
    "ops": [
     {
      "op": "CP.FETCH",
      "model": "DS AR 1M (HBM)",
-     "status": "UNQUALIFIED",
-     "ratio": 7.357,
+     "status": "QUALIFIED",
+     "ratio": 0.794,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 2269e5375: The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight"
+     "src": "results/rtl/tput_map_1011/cp_fetch/record.json @ 905100ec5: tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DY"
     }
    ]
   },
@@ -11876,7 +11977,7 @@
     "status": "UNQUALIFIED",
     "ratio": 1.933,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
+    "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ 008e80e47: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
    },
    "ops": [
     {
@@ -11885,18 +11986,18 @@
      "status": "UNQUALIFIED",
      "ratio": 1.933,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ f54a78490: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
+     "src": "results/rtl/tput_map_1011/qwen_sfu/record.json @ 008e80e47: Compute is at the price (125 vs 120, 1.04x); the 1.93x is the unpriced serial span 31 + stage 39 + drain 29 around one record a layer: with one SFU record per layer there is no next record to overlap, so the 3-slot pipeline never fills. Fix"
     }
    ]
   },
   "ot_hgi_sm_pub": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -11905,7 +12006,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -11921,12 +12022,12 @@
   },
   "ot_hgi_sm_record": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -11935,7 +12036,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -11951,12 +12052,12 @@
   },
   "ot_hgi_sm_xload": {
    "status": "UNQUALIFIED",
-   "ratio": 32.903,
+   "ratio": 27.202,
    "limiting": {
     "op": "SM.MATVEC",
     "model": "DS AR 1M (HBM)",
     "status": "UNQUALIFIED",
-    "ratio": 32.903,
+    "ratio": 27.202,
     "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
     "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
    },
@@ -11965,7 +12066,7 @@
      "op": "SM.MATVEC",
      "model": "DS AR 1M (HBM)",
      "status": "UNQUALIFIED",
-     "ratio": 32.903,
+     "ratio": 27.202,
      "owner": "el1011-hbm-smmv (restructure + sm_pub arrival overrun)",
      "src": "results/rtl/hgi_unit_tput_20261010/sm/report.json"
     },
@@ -11980,15 +12081,15 @@
    ]
   },
   "ot_hgi_su_ctl": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "UNQUALIFIED",
    "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "UNQUALIFIED",
     "ratio": 1.946,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -12002,23 +12103,23 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "UNQUALIFIED",
      "ratio": 1.946,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
   "ot_hgi_su_ctlw": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "UNQUALIFIED",
    "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "UNQUALIFIED",
     "ratio": 1.946,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -12032,23 +12133,23 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "UNQUALIFIED",
      "ratio": 1.946,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
   "ot_hgi_su_record": {
-   "status": "UNQUALIFIED_NO_BENCH",
+   "status": "UNQUALIFIED",
    "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
+    "status": "UNQUALIFIED",
     "ratio": 1.946,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -12062,10 +12163,10 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
+     "status": "UNQUALIFIED",
      "ratio": 1.946,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ uncommitted: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max "
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 008e80e47: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
@@ -12479,7 +12580,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-kvd",
     "target": null,
-    "t": "2026-10-11T21:14:11-07:00",
+    "t": "2026-10-12T03:15:37-07:00",
     "adopted": true
    }
   },
@@ -12785,6 +12886,50 @@
     }
    ]
   },
+  "ot_qwen_rom_tile_nk": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qwen_slab_port_group": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "ot_qwen_slab_port_group_m3_m8": {
    "status": "QUALIFIED",
    "ratio": null,
@@ -12983,7 +13128,95 @@
     }
    ]
   },
+  "ot_s81_hc_ccf": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    }
+   ]
+  },
+  "ot_s81_hc_ccr": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    }
+   ]
+  },
+  "ot_s81_hc_cntree": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    }
+   ]
+  },
   "ot_s81_hc_comb": {
+   "status": "QUALIFIED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "QUALIFIED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "QUALIFIED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    }
+   ]
+  },
+  "ot_s81_hc_cpad": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -13093,7 +13326,7 @@
     }
    ]
   },
-  "ot_s81_hc_ctile": {
+  "ot_s81_hc_cseq": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -13115,7 +13348,7 @@
     }
    ]
   },
-  "ot_s81_hc_rtile": {
+  "ot_s81_hc_ctile": {
    "status": "QUALIFIED",
    "ratio": null,
    "limiting": {
@@ -13637,7 +13870,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-coll",
     "target": null,
-    "t": "2026-10-11T21:30:31-07:00",
+    "t": "2026-10-12T03:47:45-07:00",
     "adopted": true
    }
   },
@@ -16168,8 +16401,8 @@
     }
    ],
    "bench_ii": {
-    "job": "qfd_tile_lsl4-7e60104b6-tc-hm0-cl2",
-    "commit": "7e60104b6",
+    "job": "qfd_tile_lsl6-e032e6e6f-tc-hm0-cl",
+    "commit": "e032e6e6f",
     "bench": "bench_rom_pipe_exact_anr",
     "line": "\"verdict\": \"PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=2 XVM=0 NWS=1 TWS=2 ORD=1 ops=300 cycles=22937 result_writes=5632 maxima=24 argmax_changes=501 scale_reads=2444 latency_added=13 ACC_LAT=7 TREE_LAT=",
     "cycles": 22937,
@@ -16179,7 +16412,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-tile",
     "target": null,
-    "t": "2026-10-11T20:18:49-07:00",
+    "t": "2026-10-12T01:17:18-07:00",
     "adopted": true
    }
   },
