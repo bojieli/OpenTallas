@@ -133,10 +133,18 @@ class Describer:
         self.load_manual()
 
     def load_manual(self):
-        try: t = self.manual_path.stat().st_mtime
-        except OSError: return
+        # working tree first, else origin/main (the shared checkout can lag main)
+        try: t = self.manual_path.stat().st_mtime; src = None
+        except OSError:
+            rel = str(self.manual_path.relative_to(self.repo))
+            try: t = subprocess.run(['git', '-C', str(self.repo), 'rev-parse', 'origin/main:' + rel],
+                                    capture_output=True, text=True, timeout=20).stdout.strip(); src = rel
+            except Exception: return
+            if not t: return
         if t == self.manual_t: return
-        try: d = json.loads(self.manual_path.read_text())
+        try:
+            d = json.loads(self.manual_path.read_text() if src is None else subprocess.run(
+                ['git', '-C', str(self.repo), 'show', 'origin/main:' + src], capture_output=True, text=True, timeout=30).stdout)
         except Exception: return
         self.manual_t = t; self.manual = d.get('elements', {}); self.families = d.get('families', {})
         for m, e in self.manual.items():
