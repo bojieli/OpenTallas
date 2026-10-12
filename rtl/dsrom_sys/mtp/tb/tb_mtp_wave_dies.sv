@@ -145,13 +145,16 @@ module wv_stg #(parameter integer D = 1, parameter integer HP = -1, parameter in
     generate if (HP >= 0) begin : g_hrow
         wire [35:0] hep;
         assign hep = k_hep;   // the kit's own issue epochs (posted START doorbell; el1011-ds-mtp fix cfe25038d)
-        integer hq_u [0:255], hq_p [0:255], hq_e [0:255], hq_t [0:255]; integer hq_w = 0, hq_r = 0;
-        integer tk_q = 0; reg tk_v = 0;
+        integer hq_u [0:255], hq_p [0:255], hq_e [0:255]; integer hq_w = 0, hq_r = 0;
+        // the row model needs the stage's token, which only the VM endpoint START (ks) carries; the kit's HEP fires at
+        // the doorbell issue, earlier. Starts are 1:1 and in order, so START i's token belongs to HEP i; a row is sent
+        // only once its START has reached the VM (the row exists there: the stub's stand-in for the VM row-completion wait)
+        integer kq_t [0:255]; integer kq_w = 0;
         always @(posedge sclk) begin
-            if (ks[52]) begin tk_q <= ks[NW +: NW]; end
+            if (ks[52]) begin kq_t[kq_w % 256] = ks[NW +: NW]; kq_w = kq_w + 1; end
             if (hep[35]) begin
                 hq_u[hq_w % 256] = hep[4 + NW +: USER_W]; hq_p[hq_w % 256] = hep[4 +: NW]; hq_e[hq_w % 256] = hep[3:0];
-                hq_t[hq_w % 256] = tk_q; hq_w = hq_w + 1;
+                hq_w = hq_w + 1;
             end
         end
         reg hv = 0, bv = 0; wire hr, br; reg [36:0] hd = 0; reg [1023:0] bd = 0; integer nb = 0, cur = -1;
@@ -160,13 +163,13 @@ module wv_stg #(parameter integer D = 1, parameter integer HP = -1, parameter in
         integer rows_sent = 0;
         integer tx_t [0:4095];
         always @(posedge fclk) if (rst_n) begin
-            if (hv && hr) begin hv <= 1'b0; bv <= 1'b1; nb = 0; bd <= wv_beat(HP, hq_p[cur % 256], hq_t[cur % 256], 0); end
+            if (hv && hr) begin hv <= 1'b0; bv <= 1'b1; nb = 0; bd <= wv_beat(HP, hq_p[cur % 256], kq_t[cur % 256], 0); end
             else if (bv && br) begin
                 nb = nb + 1;
                 if (nb == 80) begin bv <= 1'b0; cur = -1; rows_sent = rows_sent + 1; hq_r = hq_r + 1; end
-                else bd <= wv_beat(HP, hq_p[cur % 256], hq_t[cur % 256], nb);
+                else bd <= wv_beat(HP, hq_p[cur % 256], kq_t[cur % 256], nb);
             end
-            if (cur < 0 && !hv && !bv && hq_r < hq_w) begin
+            if (cur < 0 && !hv && !bv && hq_r < hq_w && hq_r < kq_w) begin
                 cur = hq_r;
                 hd <= {USER_W'(hq_u[cur % 256]), NW'(hq_p[cur % 256]), 4'(hq_e[cur % 256]), 2'(HP)}; hv <= 1'b1;
                 tx_t[rows_sent % 4096] = wv_fc(0);
