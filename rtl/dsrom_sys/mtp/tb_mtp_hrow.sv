@@ -142,7 +142,12 @@ module tb_mtp_hrow;
     tb_hrow_relay #(.W(AW + 1), .HOPS(QF)) u_qf (.clk(clk), .rst_n(rst_n), .i(t_vrq), .o(vrq_far));
     tb_hrow_relay #(.W(1), .HOPS(QR)) u_qg (.clk(clk), .rst_n(rst_n), .i(vg_far), .o(vg_near));
     tb_hrow_relay #(.W(1025), .HOPS(QR)) u_qs (.clk(clk), .rst_n(rst_n), .i(t_vrs), .o(vrs_near));
-    dsfd_mtp_hrow #(.NW(NW), .USER_W(UW), .AW(AW), .FWD_P(PF), .RET_P(PR), .FWD_Q(QF), .RET_Q(QR)) u_st (
+`ifdef OT_HROW_TILES
+    dsfd_mtp_hrow_tc #(.NW(NW)
+`else
+    dsfd_mtp_hrow #(.NW(NW)
+`endif
+           , .USER_W(UW), .AW(AW), .FWD_P(PF), .RET_P(PR), .FWD_Q(QF), .RET_Q(QR)) u_st (
         .ck(clk), .rst(rst_n), .f_hp0(link_far[0]), .f_hp1(link_far[1]), .f_hp2(link_far[2]), .t_hpg(g_far),
         .f_vrq(vrq_far), .t_vrq(vg_far), .t_vrs(t_vrs), .f_clr({UW'(0), 1'b0}), .t_flt(st_flt));
     wire [1024:0] t_x, x_far; wire [1:0] f_x; reg [1:0] x_join; wire [PW:0] t_ps; wire [3:0] l_flt;
