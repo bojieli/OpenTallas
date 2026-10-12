@@ -13,6 +13,16 @@
 // the gather-word register (OPR), lane 0's side_y register (SIDEX 4), the side pipe's input registers), so the
 // routes false-path the block's IO (--false-path-io), checked on the routed netlist (outcheck / incheck).
 // ---------------------------------------------------------------------------
+`ifndef OT_SFU_CH_PORTS
+`ifdef OT_SFU_CHAIN_EXT
+// el1011-hbm-sfu TWO-LEVEL (SFUT 2): the sigmoid chain is a separate die-placed tile; the lane exposes the seam
+`define OT_SFU_CH_PORTS , output wire ch_rst_n, output wire ch_v, output wire ch_is_exp, output wire ch_is_sig, output wire ch_silu, output wire [31:0] ch_r, input wire [31:0] ch_y_exp, input wire [31:0] ch_y_div, input wire ch_f_e, input wire ch_f_den, input wire ch_f_div
+`define OT_SFU_CH_CONN , .ch_rst_n(ch_rst_n), .ch_v(ch_v), .ch_is_exp(ch_is_exp), .ch_is_sig(ch_is_sig), .ch_silu(ch_silu), .ch_r(ch_r), .ch_y_exp(ch_y_exp), .ch_y_div(ch_y_div), .ch_f_e(ch_f_e), .ch_f_den(ch_f_den), .ch_f_div(ch_f_div)
+`else
+`define OT_SFU_CH_PORTS
+`define OT_SFU_CH_CONN
+`endif
+`endif
 module ot_su12_lane #(
     parameter integer KIND = 0,
     parameter integer LANE = 37,
@@ -26,6 +36,7 @@ module ot_su12_lane #(
     parameter integer KIMM = 0,         // ... and imm3 in order-key form (rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv)
     parameter integer DENR = 0,         // views agent SFU lane fail-fast (default off): sigmoid den operand register
     parameter integer RSTPIPE = 0,
+    parameter integer SFUT = 0,         // el1011-hbm-sfu: sigmoid chain as a registered sub-tile (+2 exp / sigmoid)
     parameter integer DRING = 0         // ... and the SFU delay lines as ring buffers
 ) (
     input  wire clk, input wire rst_n,
@@ -44,6 +55,7 @@ module ot_su12_lane #(
     output wire [23:0] kv_waddr, output wire [31:0] kv_wdata, output wire ro_v, output wire [31:0] ro_x,
     output wire fault, output wire coll,
     output wire side_v, output wire [31:0] side_x, input wire [31:0] side_y
+    `OT_SFU_CH_PORTS
 );
     localparam integer BW = 1 + 1 + 1200 + 1 + 1 + 4 * 24 + 4 + 4 + 120 + 3 * 24 + 2 + 5 + 1 + 2 + 8
                           + 4 + 32 + 3 + 32 + 3 + 2 + 3 + 32 + 3 + 32 + 3 + 3 + 3 + 32 + 2 + 32 + 1 + 2;
@@ -65,7 +77,7 @@ module ot_su12_lane #(
     // the lane with LEAF = 1: its own register is the broadcast tree's last stage (claude/w11-su d734e304);
     // b_q above stands for the tree's stage BCAST_STAGES - 1
     ot_hdc_v41x_vec_lane #(.AW(24), .LN(10), .KIND(KIND), .LEAF(1), .MLAT(MLAT), .ALAT(ALAT), .OPR(OPR),
-                           .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING), .RSTPIPE(RSTPIPE)) u (
+                           .DDIV(DDIV), .SIDEX(SIDEX), .CAPR(CAPR), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING), .RSTPIPE(RSTPIPE), .SFUT(SFUT)) u (
         .clk(clk), .rst_n(rst_n), .lane_id(LANE[10:0]), .ld(r_ld), .ld_bank(r_ld_bank), .ld_c(r_ld_c), .emit(r_emit),
         .bank(r_bank), .o_v(r_o_v), .i_v(r_i_v), .no(r_no), .ni(r_ni), .ls(r_ls), .lvw(r_lvw), .vb(r_vb),
         .krow(r_krow), .obase(r_obase), .aibase(r_aibase), .aind(r_aind), .gsh(r_gsh), .cpair(r_cpair), .dst(r_dst),
@@ -76,7 +88,7 @@ module ot_su12_lane #(
         .cs_e1(r_e1), .cs_imm2(r_simm2), .ce_e2(r_e2), .ce_imm1(r_eimm1), .co_rnd(r_rnd), .co_dst(r_odst),
         .side_v(side_v), .side_x(side_x), .side_y(side_y),
         .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .kv_we(kv_we), .kv_waddr(kv_waddr),
-        .kv_wdata(kv_wdata), .ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll));
+        .kv_wdata(kv_wdata), .ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll) `OT_SFU_CH_CONN);
 endmodule
 
 module ot_su12_light #(parameter integer GSH = 0, parameter integer KIMM = 0) (
@@ -106,10 +118,10 @@ module ot_su12_light #(parameter integer GSH = 0, parameter integer KIMM = 0) (
         .cm_imm1(cm_imm1), .ca_ad(ca_ad), .ca_imm2(ca_imm2), .ci_sfu(ci_sfu), .cs_sfu(cs_sfu), .cs_e1(cs_e1),
         .cs_imm2(cs_imm2), .ce_e2(ce_e2), .ce_imm1(ce_imm1), .co_rnd(co_rnd), .co_dst(co_dst), .vm_we(vm_we),
         .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
-        .ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll), .side_v(), .side_x(), .side_y(32'd0));
+        .ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll), .side_v(), .side_x(), .side_y(32'd0) `OT_SFU_CH_CONN);
 endmodule
 
-module ot_su12_sfu #(parameter integer GSH = 0, parameter integer KIMM = 0, parameter integer DENR = 0, parameter integer DRING = 0, parameter integer RSTPIPE = 0) (
+module ot_su12_sfu #(parameter integer GSH = 0, parameter integer KIMM = 0, parameter integer DENR = 0, parameter integer DRING = 0, parameter integer RSTPIPE = 0, parameter integer SFUT = 0) (
     input  wire clk, input wire rst_n,
     input  wire ld, input wire ld_bank, input wire [1199:0] ld_c,
     input  wire emit, input wire bank, input wire [23:0] o_v, i_v, no, ni, input wire [3:0] ls, lvw,
@@ -126,8 +138,9 @@ module ot_su12_sfu #(parameter integer GSH = 0, parameter integer KIMM = 0, para
     output wire [23:0] kv_waddr, output wire [31:0] kv_wdata, output wire ro_v, output wire [31:0] ro_x,
     output wire fault, output wire coll,
     output wire side_v, output wire [31:0] side_x, input wire [31:0] side_y
+    `OT_SFU_CH_PORTS
 );
-    ot_su12_lane #(.KIND(1), .LANE(5), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(4), .CAPR(1), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING), .RSTPIPE(RSTPIPE)) u (.clk(clk), .rst_n(rst_n),
+    ot_su12_lane #(.KIND(1), .LANE(5), .MLAT(6), .ALAT(6), .OPR(1), .DDIV(21), .SIDEX(4), .CAPR(1), .GSH(GSH), .KIMM(KIMM), .DENR(DENR), .DRING(DRING), .RSTPIPE(RSTPIPE), .SFUT(SFUT)) u (.clk(clk), .rst_n(rst_n),
         .ld(ld), .ld_bank(ld_bank), .ld_c(ld_c), .emit(emit), .bank(bank), .o_v(o_v), .i_v(i_v), .no(no), .ni(ni),
         .ls(ls), .lvw(lvw), .vb(vb), .krow(krow), .obase(obase), .aibase(aibase), .aind(aind), .gsh(gsh), .cpair(cpair),
         .dst(dst), .srcs(srcs), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re),
