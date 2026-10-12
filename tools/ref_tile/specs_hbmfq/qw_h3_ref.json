@@ -241,7 +241,7 @@
  "job": {
   "owner": "Claude:el1011-hbm-fq",
   "branch": "claude/el1011-hbm-fq",
-  "tag": "f1",
+  "tag": "f2",
   "views_to": "physical/ref_tile/qw_h3_ref/views",
   "record_to": "results/rtl/ref_tile/qw_h3_ref",
   "purpose": "ot_hgi_quant_wide_h cluster via ref_tile: registered face (pure face flops on every input/output, class 3 fix of ha/hb-adc3fb5d8 EARLY_FAIL_HOLD), 777.6x691.2, 8 rq + 8 wq + dec3 (dxl/dbq/daq tiles, track B) + 64x512 SRAM, clock spine",
