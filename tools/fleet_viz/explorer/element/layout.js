@@ -501,11 +501,11 @@ function overlayLayers(layers, b, geo){
   if (V.ov.clock && V.clk){
     const k = V.clk, col = t => [...ramp(ARR, (t - k.lo) / Math.max(1e-6, k.hi - k.lo)), 235];
     layers.push(new deck.LineLayer({id: 'clke', data: k.edges, getSourcePosition: e => e.a, getTargetPosition: e => e.b, getColor: e => e.t == null ? [128, 128, 128, 120] : col(e.t),
-      widthUnits: 'pixels', getWidth: e => e.leaf ? 1 : 2, coordinateSystem: C}));
-    layers.push(new deck.ScatterplotLayer({id: 'clkl', data: k.leaves, getPosition: l => l.p, getFillColor: l => col(l.t), radiusUnits: 'pixels', getRadius: 2.5,
+      widthUnits: 'pixels', getWidth: e => e.leaf ? 0.8 : 1.6, coordinateSystem: C}));
+    layers.push(new deck.ScatterplotLayer({id: 'clkl', data: k.leaves, getPosition: l => l.p, getFillColor: l => col(l.t), radiusUnits: 'pixels', getRadius: 1.6,
       coordinateSystem: C, pickable: true}));
     layers.push(new deck.ScatterplotLayer({id: 'clkb', data: k.bufs, getPosition: l => l.p, getFillColor: l => l.t == null ? [200, 200, 200, 255] : col(l.t), stroked: true,
-      getLineColor: light ? [0, 0, 0, 200] : [255, 255, 255, 200], lineWidthUnits: 'pixels', getLineWidth: 1, radiusUnits: 'pixels', getRadius: 4.5, coordinateSystem: C, pickable: true}));
+      getLineColor: light ? [0, 0, 0, 200] : [255, 255, 255, 200], lineWidthUnits: 'pixels', getLineWidth: 0.8, radiusUnits: 'pixels', getRadius: 3, coordinateSystem: C, pickable: true}));
   }
   if (V.ov.paths && V.d){
     const which = V.pcorner || 'setup', P = ((which === 'hold' ? V.d.hold_paths : V.d.setup_paths) || []).slice(0, 15), sel = V.psel || 0;
