@@ -19,9 +19,10 @@ import s81_ph_vm_master_tiles as V     # noqa: E402
 
 T.CONTRACT = 'contract_vm28'
 SLAB_W, BE_H, COL, NS = V.SLAB_W, V.BE_H, V.W, V.NS
+PX = V.PX                              # s81die-1011 contract v3: bgq column pitch 388.8 (345.6 tile + 43.2 channel)
 TW, TH = 302.4, 92.88                  # tile outline (28 x the 10.8-um M7 PG pitch; 344 rows)
 OX, YB = 43.2, 4.32                    # tile origin in its column; S channel height (N channel = 108 - YB - TH = 10.8)
-CL0R_X = 2 * COL + 21.6                # die c_l0r pin: the channel between tiles 1 and 2 (<= ~530 um to any tile pin)
+CL0R_X = (PX + OX + TW + 2 * PX + OX) / 2   # die c_l0r pin: middle of the channel between slice tiles 1 and 2 (<= ~530 um to any tile pin)
 
 
 def tile_plan(bg):
@@ -84,7 +85,7 @@ def be_plan(bg, tp):
     # S face v3: every response bit at the x of its slice tile's S pin
     def sp(port, bit, s, tname):
         ly, x = tp[tname]
-        pl.put(port, bit, 'S', ly, s * COL + OX + x)
+        pl.put(port, bit, 'S', ly, s * PX + OX + x)
     for p, n in (('t_srq', 1026), ('vrq', 512), ('t_bl', 16 * 513), ('c_l0d', 604)):
         pl.dirs[p] = ('output', n)
     for s in range(NS):
@@ -103,8 +104,8 @@ def be_plan(bg, tp):
         sp('t_bl', 513 * l, 0, f'bl_v[{l}]')
     pl.dirs['c_l0v'] = ('output', 1); sp('c_l0v', 0, 1, 'c_l0v[0]')
     pl.dirs['c_l0r'] = ('input', 1); pl.put('c_l0r', 0, 'S', 'M5', CL0R_X)
-    # status: S face of the E strip (x >= 4 x 345.6)
-    tr = [t for t in V.tracks(SLAB_W) if t[0] == 'M5' and t[1] > NS * COL + 8.0]
+    # status: S face of the channel between slice tiles 2 and 3 (contract v3: columns + channels fill the slab, no E strip)
+    tr = [t for t in V.tracks(SLAB_W) if t[0] == 'M5' and 2 * PX + OX + TW + 8.0 < t[1] < 3 * PX + OX - 8.0]
     k = 0
     for nm, bits in (('t_err', 1), ('flt', 1), ('fvec', 32), ('max_occ', 3)):
         pl.dirs[nm] = ('output', bits)
@@ -115,17 +116,17 @@ def be_plan(bg, tp):
     pl.bus('ck', 1, 'input', 'W', 'M4', BE_H / 2); pl.bus('rst', 1, 'input', 'W', 'M4', BE_H / 2 + 4.8)
     pl.bus('cks', 1, 'input', 'W', 'M4', BE_H / 2 + 9.6); pl.bus('rss', 1, 'input', 'W', 'M4', BE_H / 2 + 14.4)
     pl.emit('VM master back end v3 (BIT-SLICED, el1011-ds-vm/be): N face unchanged; S face CONTRACT v3 = every response '
-            'bit at its slice tile (slice s bits in x [345.6 s + 43.2, + 302.4]); c_l0r at x %.3f; status in the E strip' % CL0R_X)
+            'bit at its slice tile (slice s bits in x [388.8 s + 43.2, + 302.4]); c_l0r at x %.3f; status in the slice 2 / 3 channel' % CL0R_X)
 
 
 def macro_tcl():
     L = ['# el1011-ds-vm/be 2026-10-11 (tools/s81_ph/s81_ph_vm_be_v3.py): the 4 BE v3 slice tiles dsfd_vm_be_sl, tile s at',
-         f'# x = s * {COL} + {OX}, y = {YB} (R0, fixed); channels: {COL - TW:.1f} um between tiles, {BE_H - YB - TH:.2f} um N, {YB} um S.',
+         f'# x = s * {PX} + {OX}, y = {YB} (R0, fixed); channels: {PX - TW:.1f} um between tiles, {BE_H - YB - TH:.2f} um N, {YB} um S.',
          'set ot_blk [ord::get_db_block]', 'set ot_u [$ot_blk getDbUnitsPerMicron]',
          'foreach ot_i [$ot_blk getInsts] {',
          '  set ot_nm [$ot_i getName]',
          '  if {![regexp {g_s\\\\?\\[(\\d+)\\\\?\\]\\.u_sl$} $ot_nm -> ot_s]} { continue }',
-         f'  set ot_x [expr {{round(($ot_s * {COL} + {OX}) * $ot_u)}}]',
+         f'  set ot_x [expr {{round(($ot_s * {PX} + {OX}) * $ot_u)}}]',
          f'  set ot_y [expr {{round({YB} * $ot_u)}}]',
          '  $ot_i setOrient R0', '  $ot_i setLocation $ot_x $ot_y', '  $ot_i setPlacementStatus FIRM',
          '  puts "OT_BE_V3 placed $ot_nm at [expr {$ot_x / double($ot_u)}] [expr {$ot_y / double($ot_u)}]"',
