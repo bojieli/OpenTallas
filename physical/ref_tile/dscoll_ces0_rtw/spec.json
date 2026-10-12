@@ -23,7 +23,6 @@
   "w": 302.4,
   "h": 340.2
  },
- "pg_layer": "M6",
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
@@ -173,5 +172,6 @@
  },
  "params": {},
  "children": [],
- "inter": []
+ "inter": [],
+ "purpose": " | 10-12 regen: bdce12658 kit chained leaf_inhold.tcl (FIRM pad cells) WITHOUT leaf_inhold_release.tcl, so ~4.1k FIRM HB4/BUF cells sat unlegalised at the pins -> DPL-0033 (3928 site-misaligned, 93 overlaps); main ref_tile.py now chains the release at PRE_DETAIL_PLACE. M5 tile cap (pg_layer dropped)."
 }
