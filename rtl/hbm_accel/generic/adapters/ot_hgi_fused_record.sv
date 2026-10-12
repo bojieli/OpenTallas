@@ -74,12 +74,14 @@ module ot_hgi_fused_record #(
     output wire [337:0]  vmq,
     input  wire [273:0]  vmr,
     // the wide VM lanes of the D1 die body (UNIT = 1, UWIDE = 1; ot_hgi_su_unit WIDE ports)
-    output wire [32*16-1:0]  wrq,
-    input  wire [31:0]       wrq_cr,
-    input  wire [32*257-1:0] wrr,
-    output wire [32*280-1:0] wwq,
-    input  wire [31:0]       wwq_cr,
-    input  wire [31:0]       wwq_done,
+    //   el1011-hbm-fused: widths scale with UWIDE (1 b each when UWIDE = 0): the narrow adapter build carried 21,391 IO
+    //   for lanes it never drives (PPL-0024 at its 320 x 320 outline; at 640 x 640 the flop-to-pin wires failed TT/FF)
+    output wire [(UWIDE != 0 ? 32*16 : 1)-1:0]  wrq,
+    input  wire [(UWIDE != 0 ? 32 : 1)-1:0]     wrq_cr,
+    input  wire [(UWIDE != 0 ? 32*257 : 1)-1:0] wrr,
+    output wire [(UWIDE != 0 ? 32*280 : 1)-1:0] wwq,
+    input  wire [(UWIDE != 0 ? 32 : 1)-1:0]     wwq_cr,
+    input  wire [(UWIDE != 0 ? 32 : 1)-1:0]     wwq_done,
     output wire              rg_req,
     input  wire              rg_gnt,
     output wire              wg_req,
