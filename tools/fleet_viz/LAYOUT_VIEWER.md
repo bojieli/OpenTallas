@@ -104,26 +104,43 @@ The density rasters are the exact per-pixel coverage of each layer, computed wit
 * **Share-safe view** (`?safe=1` or proxied requests): geometry only. Names, search and raw manifests are withheld; header
   and lint are redacted.
 
-## Validation (2026-10-11)
+## Validation (2026-10-11; records in `results/layout_viewer_20261011/`)
 
-* **Round trip vs OpenDB**, measured by `lv_verify.js`: IDENTICAL on every exported element. The backfill refuses to
-  publish anything else. Reference cases:
-  * ot_mtp_hist_ring_p (52 µm leaf): 641,291 shapes, plus an exact sorted-list equality with `truth.i32`.
-  * ot_hgi_seq (360 µm tile): 19,177,076 shapes.
-  * dsfd_coll_cbq0 (78 × 340 µm): 6,166,058 shapes.
-* **KLayout 0.29.12, independent DEF/LEF reader**, on ot_mtp_hist_ring_p: XOR area 0 nm² on M1–M7 and V1–V6 over the
-  whole die.
-  * The first comparison found 9 nm RECT patches that `dbWirePathItr` silently drops. The extractor now decodes them
+* **Round trip vs OpenDB** (`lv_verify.js`): IDENTICAL on every published closure. `layout_store.py` refuses to publish
+  anything else, and `layout_store.py audit` re-checks the store. Reference elements:
+
+  | element | size | shapes | notes |
+  |---|---|---|---|
+  | ot_mtp_hist_ring_p | 52 µm leaf | 641,291 | also exact sorted-list equality with `truth.i32` |
+  | ot_hgi_seq | 360 µm tile, 2 SRAM macros | 19,177,076 | |
+  | hfd_router | 1.40 × 0.33 mm | 86,925,001 | decoded in 4.5 s |
+
+* **KLayout 0.29.12, independent DEF/LEF reader.**
+  * ot_mtp_hist_ring_p, whole die: XOR = 0 nm² on M1–M7 and V1–V6.
+  * ot_hgi_seq, a 60 × 60 µm window across a macro edge: XOR = 0 on M1–M7 and V1–V4. This needs the macro LEF the route
+    actually used, `physical/asap7_memory_macros/`; the `_v2` LEF differs by 12 nm pin widths.
+  * hfd_router, a 60 × 60 µm window: XOR = 0 on M1–M8 and V1–V5.
+  * The first comparison found the RECT patches that `dbWirePathItr` silently drops. The extractor now decodes them
     from the wire opcodes.
-  * KLayout needs `macro_resolution_mode = 1` plus the obstruction and LEF-pin suffixes on the plain layer; that gives
-    the same composition as the viewer's layers.
-* **Pixels.** On a 2.5 µm window at 240 px/µm, IoU after a ≤1 px registration shift is 0.94 (M2), 0.81 (M3), 0.89 (M4)
-  and 0.96 (M5). There are essentially no differing pixels beyond 1 px of an edge on M2–M5 and V2.
+  * The pixel comparison found via enclosures missing from a solo metal layer. Via and cell sections now load for every
+    layer they touch.
+* **Pixels.** KLayout render vs viewer `?lvsolid=1`, 2.5 µm windows at 240 px/µm, after ≤ 1 px registration: the share
+  of pixels that differ by more than 1 px of an edge is ≤ 0.1 % on metals and ≤ 2 % on cut layers.
+* **Performance** (`bench`; headless Chrome on the fleet-viz host is **software GL, llvmpipe**: a lower bound).
+  * Application CPU per frame is 0.6–1.3 ms on desktop.
+  * Zoomed out, the raster LOD runs at 50–60 fps even in software.
+  * hfd_router 40 µm view: 33 fps desktop, 29 fps phone (geometry). This uses merged power-via arrays: 11 M V1 cuts in
+    9 tiles are drawn as one box per array until a cut is ~4 px.
+  * Tiles for a 40 µm view arrive in 0.4–1.8 s (static store, uncached).
+  * GPU memory stays ≤ 300 MB desktop and ≤ 150 MB phone.
 
 ## Known gaps
 
 * **No GPU fps measured yet.** Headless Chrome on the fleet-viz host only gets llvmpipe; the RTX's EGL and Vulkan stack
   hangs, `vulkaninfo` included. Numbers measured there are software lower bounds. Use `?perf=1` on a real browser.
+  Deep zoom into dense power-via arrays (millions of cuts per tile) is GPU-bound: about 1 fps in software.
+* **First paint.** In software GL it takes about 35 s, which is deck.gl and luma shader compilation under llvmpipe; on a
+  GPU it is the header fetch plus one raster node (~0.5 s).
 * Cell outlines and pins of physical-only cells (filler, tap, decap) are not drawn until the "Filler / tap" layer is
   switched on. Their M1 rails coincide with the follow-pin straps.
 * Module outlines are bounding boxes of the module's cells, not hulls.

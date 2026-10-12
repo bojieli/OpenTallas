@@ -479,6 +479,12 @@ def export(el, job=None, log=log, force=False):
     t0 = time.time()
     if job and not force and (STORE / 'elements' / el / (job + '.json')).exists():
         log('%s: %s already published' % (el, job)); return True
+    WORK.mkdir(parents=True, exist_ok=True)
+    lk = open(WORK / ('.%s.lock' % el), 'w')
+    try:   # one cut per element at a time across processes (hook, backfill, manual)
+        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        log('%s: another export of this element is running' % el); lk.close(); return False
     try:
         STORE.mkdir(parents=True, exist_ok=True)
         status_update(el, state='running', stage='locate', job=job, error=None)
