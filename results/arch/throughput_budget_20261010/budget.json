@@ -5,7 +5,7 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-12T05:24:34Z",
+ "generated_utc": "2026-10-12T05:46:41Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
@@ -1509,8 +1509,8 @@
  ],
  "bench_ii": {
   "dsfd_vm_clt": {
-   "job": "s81vm-clt6-dc9e98d04-tc-rd-pd40",
-   "commit": "dc9e98d04",
+   "job": "s81vm-clt8-964ae59f7-tc-rd-pd40",
+   "commit": "964ae59f7",
    "bench": "bench_exact_gold",
    "line": "RESULT cyc=64000 checked=44301 mismatches_or_fails=0 phases=139 arm=139 p2rd=671 done=8141 rows_ready=69 starts=459 p2_words=14578 ctrl_reads=3179 el=215712/215712 cap_ops=12842 max_occ=3 mirror_max=3",
    "cycles": 64000,
@@ -1520,7 +1520,7 @@
    "stalled": false,
    "owner": "Claude:el1011-ds-vm/fe",
    "target": null,
-   "t": "2026-10-11T22:21:33-07:00",
+   "t": "2026-10-11T22:41:56-07:00",
    "adopted": true
   },
   "qfd_io_emb_root": {
@@ -1611,6 +1611,21 @@
    "owner": "Claude:struct-close",
    "target": null,
    "t": "2026-10-11T21:23:35-07:00",
+   "adopted": true
+  },
+  "ot_attn_tile_m6h1q": {
+   "job": "hbm_attn_quad_cg-pka-04424cd9f-tc-hm10-grta-cl",
+   "commit": "04424cd9f",
+   "bench": "bench_quad_cg_lockstep",
+   "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060 stale=0 guard_faults=0",
+   "cycles": 12000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:redesign-hbm",
+   "target": null,
+   "t": "2026-10-11T22:37:52-07:00",
    "adopted": true
   },
   "dsfd_mtp_seq": {
@@ -1791,7 +1806,7 @@
    "owner": "Claude:el1011-ds-misc",
    "target": null,
    "t": "2026-10-11T22:00:04-07:00",
-   "adopted": true
+   "adopted": false
   },
   "ot_hbm_native_candidate_parse": {
    "job": "candparse_rb-937531860-tc-hm25-cl",
@@ -2126,7 +2141,7 @@
    "stalled": false,
    "owner": "Claude:el1011-q-tile",
    "target": null,
-   "t": "2026-10-11T16:29:06-07:00",
+   "t": "2026-10-11T22:31:22-07:00",
    "adopted": true
   },
   "dsfd_svc_join": {
@@ -2217,21 +2232,6 @@
    "owner": "Claude:mtp-wfc-1010",
    "target": null,
    "t": "2026-10-11T19:55:40-07:00",
-   "adopted": true
-  },
-  "ot_attn_tile_m6h1q": {
-   "job": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
-   "commit": "c891a57cf",
-   "bench": "bench_quad_cg_lockstep",
-   "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060",
-   "cycles": 12000,
-   "item": null,
-   "items": null,
-   "ii": null,
-   "stalled": false,
-   "owner": "Claude:redesign-hbm",
-   "target": null,
-   "t": "2026-10-11T20:57:47-07:00",
    "adopted": true
   },
   "qfd_seq_su_bi_feb": {
@@ -2783,6 +2783,21 @@
     "hfd_sfu",
     "hfd_sfu_tile",
     "ot_hgi_sfu_record"
+   ]
+  },
+  {
+   "path": "results/rtl/tput_map_1011/qwen_su/record.json",
+   "commit": "7f05f8720",
+   "cls": "SU.VOP",
+   "model": "Qwen AR 8K (HBM)",
+   "ratio": 1.946,
+   "elements": [
+    "hfd_su_result_ingress",
+    "hfd_su_tile",
+    "hfd_su_tile_xl",
+    "ot_hgi_su_ctl",
+    "ot_hgi_su_ctlw",
+    "ot_hgi_su_record"
    ]
   },
   {
@@ -7774,8 +7789,8 @@
     }
    ],
    "bench_ii": {
-    "job": "s81vm-clt6-dc9e98d04-tc-rd-pd40",
-    "commit": "dc9e98d04",
+    "job": "s81vm-clt8-964ae59f7-tc-rd-pd40",
+    "commit": "964ae59f7",
     "bench": "bench_exact_gold",
     "line": "RESULT cyc=64000 checked=44301 mismatches_or_fails=0 phases=139 arm=139 p2rd=671 done=8141 rows_ready=69 starts=459 p2_words=14578 ctrl_reads=3179 el=215712/215712 cap_ops=12842 max_occ=3 mirror_max=3",
     "cycles": 64000,
@@ -7785,7 +7800,7 @@
     "stalled": false,
     "owner": "Claude:el1011-ds-vm/fe",
     "target": null,
-    "t": "2026-10-11T22:21:33-07:00",
+    "t": "2026-10-11T22:41:56-07:00",
     "adopted": true
    }
   },
@@ -8669,15 +8684,15 @@
    ]
   },
   "hfd_su_result_ingress": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -8691,23 +8706,23 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
   "hfd_su_tile": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -8721,23 +8736,23 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
   "hfd_su_tile_xl": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -8751,10 +8766,10 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ],
    "bench_ii": {
@@ -9613,10 +9628,10 @@
     }
    ],
    "bench_ii": {
-    "job": "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl",
-    "commit": "c891a57cf",
+    "job": "hbm_attn_quad_cg-pka-04424cd9f-tc-hm10-grta-cl",
+    "commit": "04424cd9f",
     "bench": "bench_quad_cg_lockstep",
-    "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060",
+    "line": "TILERLOCK cycles=12000 mismatches=0 ov=3597 gated_quad0=1060 stale=0 guard_faults=0",
     "cycles": 12000,
     "item": null,
     "items": null,
@@ -9624,7 +9639,7 @@
     "stalled": false,
     "owner": "Claude:redesign-hbm",
     "target": null,
-    "t": "2026-10-11T20:57:47-07:00",
+    "t": "2026-10-11T22:37:52-07:00",
     "adopted": true
    }
   },
@@ -9728,7 +9743,7 @@
     "owner": "Claude:el1011-ds-misc",
     "target": null,
     "t": "2026-10-11T22:00:04-07:00",
-    "adopted": true
+    "adopted": false
    }
   },
   "ot_dsrom_engram_idwin": {
@@ -11933,15 +11948,15 @@
    ]
   },
   "ot_hgi_su_ctl": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -11955,23 +11970,23 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
   "ot_hgi_su_ctlw": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -11985,23 +12000,23 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
   "ot_hgi_su_record": {
-   "status": "UNQUALIFIED_NO_BENCH",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 1.946,
    "limiting": {
     "op": "SU.VOP",
     "model": "Qwen AR 8K (HBM)",
-    "status": "UNQUALIFIED_NO_BENCH",
-    "ratio": null,
-    "owner": "hgi-1010/b",
-    "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+    "status": "UNQUALIFIED",
+    "ratio": 1.946,
+    "owner": "tput-map-1011",
+    "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
    },
    "ops": [
     {
@@ -12015,10 +12030,10 @@
     {
      "op": "SU.VOP",
      "model": "Qwen AR 8K (HBM)",
-     "status": "UNQUALIFIED_NO_BENCH",
-     "ratio": null,
-     "owner": "hgi-1010/b",
-     "src": "budget_audit table.json qwen_su_sfu (measured rtl/sim)"
+     "status": "UNQUALIFIED",
+     "ratio": 1.946,
+     "owner": "tput-map-1011",
+     "src": "results/rtl/tput_map_1011/qwen_su/record.json @ 7f05f8720: Compute alone (1,327) is under the 1,548 price; the 1.95x is stage 1,101 + drain 850 + span 334 that the 3-slot record pipeline does not hide on the Qwen chain: records are short (61-78 priced) and the softmax ones are data-dependent (max ->"
     }
    ]
   },
@@ -16073,7 +16088,7 @@
     "stalled": false,
     "owner": "Claude:el1011-q-tile",
     "target": null,
-    "t": "2026-10-11T16:29:06-07:00",
+    "t": "2026-10-11T22:31:22-07:00",
     "adopted": true
    }
   },

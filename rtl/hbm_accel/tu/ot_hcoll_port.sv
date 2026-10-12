@@ -19,7 +19,9 @@ module ot_hcoll_port #(
     parameter integer BITS_X100 = 72000,
     parameter integer PWB = 545,
     parameter integer SWCRED = 256,
-    parameter integer K = 8
+    parameter integer K = 8,
+    parameter integer RFETCH = 0,    // FILL-9 opt-in: registered SRAM-FIFO fetch decision (cycle-identical)
+    parameter integer RBSEL = 0      // idleA-hcoll opt-in: registered rb bank select (+1 edge; consumer needs K = 9)
 ) (
     input  wire           clk,
     input  wire           rst_n,
@@ -52,9 +54,9 @@ module ot_hcoll_port #(
     reg qp_pop, qr_pop, tv;
     reg [PWT-1:0] tf;
     integer credit;
-    (* keep_hierarchy *) ot_hcoll_sfifo #(.W(PWT), .AW(QAW)) u_qp (.clk(clk), .rst_n(rst_n), .push(qp_push), .din(qp_din),
+    (* keep_hierarchy *) ot_hcoll_sfifo #(.W(PWT), .AW(QAW), .RFETCH(RFETCH)) u_qp (.clk(clk), .rst_n(rst_n), .push(qp_push), .din(qp_din),
         .pop(qp_pop), .empty(qp_empty), .dout(qp_head), .ovf(qp_ovf), .count(c0));
-    (* keep_hierarchy *) ot_hcoll_sfifo #(.W(PWT), .AW(QAW)) u_qr (.clk(clk), .rst_n(rst_n), .push(qr_push), .din(qr_din),
+    (* keep_hierarchy *) ot_hcoll_sfifo #(.W(PWT), .AW(QAW), .RFETCH(RFETCH)) u_qr (.clk(clk), .rst_n(rst_n), .push(qr_push), .din(qr_din),
         .pop(qr_pop), .empty(qr_empty), .dout(qr_head), .ovf(qr_ovf), .count(c1));
     always @* begin
         qp_pop = 1'b0; qr_pop = 1'b0; tv = 1'b0; tf = '0;
@@ -81,7 +83,7 @@ module ot_hcoll_port #(
     wire rb_ovf;
     (* keep_hierarchy *) ot_hcoll_sdelay #(.W(PWT), .D(WSTG)) u_wrx (.clk(clk), .rst_n(rst_n), .v_in(rxv_p), .d_in(rxf_p),
         .v_out(w2_v), .d_out(w2_d));
-    (* keep_hierarchy *) ot_hcoll_sfifo_x #(.W(PWT), .AW(RXAW), .K(K)) u_rb (.clk(clk), .rst_n(rst_n), .push(w2_v), .din(w2_d),
+    (* keep_hierarchy *) ot_hcoll_sfifo_x #(.W(PWT), .AW(RXAW), .K(K), .RFETCH(RFETCH), .RBSEL(RBSEL)) u_rb (.clk(clk), .rst_n(rst_n), .push(w2_v), .din(w2_d),
         .cr_in(rbcr_p), .out_v(rb_v), .out_d(rb_d), .ovf(rb_ovf));
     // ---- state, output flops ----
     always @(posedge clk or negedge rst_n)

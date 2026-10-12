@@ -230,13 +230,16 @@ async function start(){
   if (u.o) u.o.split('.').forEach(k => V.ov[k] = true);
   V.hl = +u.n || 0; V.lintSel = u.f != null && u.f !== '' ? +u.f : null;
   V.phys = V.L[nl + 1].vis;
+  // layers a via / a std cell can put shapes on (a solo metal layer still needs the vias' enclosures and the cells' pins)
+  V.viaLayers = [...new Set(H.vias.flatMap(v => v.boxes.map(b => b[0])))];
+  V.cellLayers = [...new Set(H.masters.filter(m => !m.block).flatMap(m => m.boxes.map(b => b[0])))];
   applyPalette();
   // workers
   const NW = Math.max(2, Math.min(4, (navigator.hardwareConcurrency || 4) - 1));
   V.workers = []; V.wnext = 0; V.tiles = new Map(); V.rasters = new Map(); V.pending = new Map(); V.rulers = []; V.gpuBytes = 0;
   for (let i = 0; i < NW; i++){ const w = new Worker('/explorer/element/lv_worker.js'); w.onmessage = onWorker; w.postMessage({op: 'init', header: H}); V.workers.push(w); }
   updateUniforms();   // pushes the raster style to the workers
-  V.budget = PHONE() ? 1.6e6 : 5e6;
+  V.budget = PHONE() ? 1.2e6 : 3e6;
   V.gpuCap = 300e6;
   // DOM
   if (SOLID){ V.root.style.background = '#000'; document.documentElement.classList.add('lv-solid'); }
@@ -391,8 +394,8 @@ function neededSecs(k){
   const secs = t.s || [];
   for (const s of secs){
     if (s[0] === 'L'){ const li = +s.slice(1); if (L[li] && L[li].vis) out.push(s); }
-    else if (s === 'v'){ if ((V.kindVis[9] || V.kindVis[10]) && L.some(l => l.type === 'CUT' && l.vis)) out.push(s); }
-    else if (s === 'c'){ if (L[nl].vis || L[nl + 1].vis || L.some(l => /^(M1|V0|M2)$/.test(l.name) && l.vis)) out.push(s); }
+    else if (s === 'v'){ if ((V.kindVis[9] || V.kindVis[10]) && V.viaLayers.some(li => L[li].vis)) out.push(s); }   // cut AND enclosure layers
+    else if (s === 'c'){ if (L[nl].vis || L[nl + 1].vis || V.cellLayers.some(li => L[li].vis)) out.push(s); }
   }
   return out;
 }
@@ -455,7 +458,8 @@ function render(b, geo, want, level){
   const allLoaded = geo && [...want].every(k => V.tiles.has(k) || !tileIndex().has(k));
   if (!allLoaded){ rl(0); if (level !== 0) rl(level); }
   if (geo){
-    for (const k of want){ const t = V.tiles.get(k); if (!t || t.empty || !t.n) continue;
+    const vis = new Set(tilesIn(b, 0).map(([x, y]) => x + '_' + y));   // margin tiles stay loaded but are not drawn
+    for (const k of want){ if (!vis.has(k)) continue; const t = V.tiles.get(k); if (!t || t.empty || !t.n) continue;
       layers.push(new RectLayer({id: 't' + k, data: {length: t.n, attributes: {instanceRects: {value: t.rects, size: 4}, instanceMeta: {value: t.meta, size: 3}}},
         coordinateSystem: C, lv: V.uni})); }
   }
