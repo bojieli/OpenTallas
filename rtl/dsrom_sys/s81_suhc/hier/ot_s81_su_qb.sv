@@ -62,10 +62,13 @@ module ot_s81_su_qbt #(
     // ONE register (pin flop = registered output, 8,192 b); valid / tags / obase come from a few gates on the control pins.
     // Any other arrival pattern (a partial operand cycle, a descriptor sharing its cycle) raises o_fo (fault 5).
     generate if (S_RD == L) begin : g_al
-        reg mine; reg [7:0] jid; reg [15:0] rcnt;
-        wire desc = mine && dn_v_i[0] && rcnt == 16'd0;                      // the descriptor row
-        wire opc  = mine && (|dn_v_i) && !desc;                             // an operand cycle (one pass)
-        wire bad  = (desc && (|dn_v_i[S_RD-1:1])) || (opc && !(&dn_v_i));
+        // boundary depth <= 3 levels: the pins decide only on slot 0 (+ st / kind) against registered state (mine, rnz);
+        // the full-cycle / alignment check runs one cycle later from pin flops of dn_v (a fault, latency irrelevant).
+        reg mine, rnz; reg [7:0] jid; reg [15:0] rcnt, rinc;
+        reg dq_m, dq_desc; reg [S_RD-1:0] dq_v;
+        wire v0   = dn_v_i[0] && !dn_st_i;
+        wire desc = mine && v0 && !rnz;                                     // the descriptor row
+        wire opc  = mine && v0 && rnz;                                      // an operand cycle (one pass)
         wire [15:0] ix0 = rcnt - 16'd1;
         wire [15:0] pp  = (ix0 >> LL) % NPS;
         always @(posedge clk) begin : dreg
@@ -78,15 +81,17 @@ module ot_s81_su_qbt #(
         always @(posedge clk or negedge rst_n) begin : creg
             integer j;
             if (!rst_n) begin
-                mine <= 1'b0; jid <= 8'd0; rcnt <= 16'd0; e_v <= 0;
-                o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0;
+                mine <= 1'b0; rnz <= 1'b0; jid <= 8'd0; rcnt <= 16'd0; e_v <= 0; dq_m <= 1'b0; dq_desc <= 1'b0; rinc <= 16'd0;
+                dq_v <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0;
             end else begin
-                if (dn_st_i) begin mine <= (dn_kind_i == K_QB); jid <= dn_jid_i; rcnt <= 16'd0; end
-                else if (desc) rcnt <= 16'd1;
-                else if (opc) rcnt <= rcnt + S_RD;
-                for (j = 0; j < L; j = j + 1) e_v[j] <= opc && !dn_st_i;
-                o_fu <= 1'b0; o_fo <= bad && !dn_st_i; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0;
-                o_rjid <= jid;
+                // rinc = rcnt + S_RD kept as state (its adder is off the pin paths)
+                if (dn_st_i) begin mine <= (dn_kind_i == K_QB); jid <= dn_jid_i; rcnt <= 16'd0; rnz <= 1'b0; end
+                else if (desc) begin rcnt <= 16'd1; rinc <= 16'd1 + S_RD; rnz <= 1'b1; end
+                else if (opc) begin rcnt <= rinc; rinc <= rinc + S_RD; end
+                for (j = 0; j < L; j = j + 1) e_v[j] <= opc;
+                dq_m <= mine && !dn_st_i; dq_desc <= desc; dq_v <= dn_v_i;
+                o_fu <= 1'b0; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
+                o_fo <= dq_m && (|dq_v) && (dq_desc ? (|dq_v[S_RD-1:1]) : !(&dq_v));   // not S_RD-full / aligned
             end
         end
     end else begin : g_asm
