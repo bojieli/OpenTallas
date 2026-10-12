@@ -41,13 +41,11 @@
    "dn_kind",
    "dn_jid",
    "dn_v",
-   "dn_p",
-   "dn_d"
+   "dn_p"
   ],
   "E": [
    "s_v",
    "p_v",
-   "d_d",
    "c_v",
    "c_nv",
    "c_lt",
@@ -90,6 +88,7 @@
   "views_to": "physical/ref_tile/s81su_smt_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_smt_ref"
  },
+ "std_area_um2": 6161,
  "params": {},
  "macros": [],
  "children": [],

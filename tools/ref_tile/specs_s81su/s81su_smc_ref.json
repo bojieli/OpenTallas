@@ -27,10 +27,6 @@
  "reset_ports": [
   "rst"
  ],
- "outline": {
-  "w": 148.5,
-  "h": 148.5
- },
  "util": 0.52,
  "pins": {
   "S": [
@@ -61,5 +57,6 @@
   "no_bench_reason": "bit-exactness is gated on the slab dsfd_sp_su_h (tools/s81_suhc/su_gate.py --hier full m0 PASS + m1/m5 FAIL, reduced m0 PASS + mutants FAIL; el1011-s81-suhc-hier-1011.log [su]); the sub-tile alone has no golden",
   "views_to": "physical/ref_tile/s81su_smc_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_smc_ref"
- }
+ },
+ "std_area_um2": 7794
 }

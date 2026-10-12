@@ -33,11 +33,11 @@ module ot_s81_su_smt #(
     input  wire [7:0]             dn_jid_i,
     input  wire [S_RD-1:0]        dn_v_i,
     input  wire [NPS*512-1:0]     dn_p_i,                 // spine slots 0 .. NPS-1 (parameter rows)
-    input  wire [1023:0]          dn_d_i,                 // spine slots 2 TI, 2 TI + 1 (this stop's operand rows)
-    // to the lanes / divide engines (registered)
+    // to the lanes / divide engines (registered).  The operand rows themselves (spine slots 2 TI, 2 TI + 1) do not
+    // pass through this master: the slab relays them straight to the lanes / divide engines, 2 stations deeper than
+    // these valids (this master's pin + valid registers), so they meet at the engines' pin flops.
     output reg                    s_v,                    // a score vector (SE)
     output reg                    p_v,                    // a PV vector (SO)
-    output reg  [1023:0]          d_d,                    // head 0 lanes 0..15, head 1 lanes 0..15 (32 b each)
     output reg                    c_v,                    // SE configuration (a pulse, before the first score)
     output reg  [6:0]             c_nv,
     output reg  [2:0]             c_lt,
@@ -83,13 +83,12 @@ module ot_s81_su_smt #(
     reg  [7:0]       dq_jid;
     reg  [S_RD-1:0]  dq_v;
     reg  [NPS*512-1:0] dq_p;
-    reg  [1023:0]    dq_d;
     reg  [3:0]       ti;
     reg              ev_q, ov_q, dv_q, f_q;
     reg  [1023:0]    ed_q;
     reg  [511:0]     od_q;
     always @(posedge clk) begin
-        dq_kind <= dn_kind_i; dq_jid <= dn_jid_i; dq_p <= dn_p_i; dq_d <= dn_d_i; ti <= cfg_ti;
+        dq_kind <= dn_kind_i; dq_jid <= dn_jid_i; dq_p <= dn_p_i; ti <= cfg_ti;
         ed_q <= e_d_i; od_q <= o_d_i;
     end
     always @(posedge clk or negedge rst_n)
@@ -150,7 +149,6 @@ module ot_s81_su_smt #(
     end
 
     // ------------------------------------------------------------------ rows / configuration / cos-sin out
-    always @(posedge clk) d_d <= dq_d;
     always @(posedge clk) begin
         if (pdone && jkind == K_SE) begin
             c_nv <= prow0[64 +: 7]; c_lt <= prow0[128 +: 3]; c_scale <= prow0[96 +: 32];

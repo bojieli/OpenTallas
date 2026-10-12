@@ -16,7 +16,7 @@
   343.44
  ],
  "why": "spec outline",
- "std_area_um2": null,
+ "std_area_um2": 6161,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -37,13 +37,11 @@
    "dn_kind",
    "dn_jid",
    "dn_v",
-   "dn_p",
-   "dn_d"
+   "dn_p"
   ],
   "E": [
    "s_v",
    "p_v",
-   "d_d",
    "c_v",
    "c_nv",
    "c_lt",
@@ -72,7 +70,14 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 26% outside 45%-60% (std 6161 + macro 0 in core 23589 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",

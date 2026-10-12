@@ -4,8 +4,8 @@
 module dsfd_su_t_smt (
     input  wire          ck, rst, input wire [3:0] cfg_ti,
     input  wire          dn_st, input wire [3:0] dn_kind, input wire [7:0] dn_jid, input wire [15:0] dn_v,
-    input  wire [2559:0] dn_p, input wire [1023:0] dn_d,
-    output wire          s_v, p_v, output wire [1023:0] d_d, output wire c_v, output wire [6:0] c_nv,
+    input  wire [2559:0] dn_p,
+    output wire          s_v, p_v, output wire c_v, output wire [6:0] c_nv,
     output wire [2:0]    c_lt, output wire [31:0] c_scale, output wire [63:0] c_sink,
     output wire          cs_v, output wire [4:0] cs_i, output wire [63:0] cs_d,
     input  wire          e_v, input wire [1023:0] e_d, input wire o_vi, input wire [511:0] o_di, input wire den_v, f_i,
@@ -14,7 +14,7 @@ module dsfd_su_t_smt (
 );
     ot_s81_su_smt #(.SM_H(16), .SM_LPH(16), .S_RD(16), .WS(2)) u_t (
         .clk(ck), .rst_in(rst), .cfg_ti(cfg_ti), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_jid_i(dn_jid), .dn_v_i(dn_v),
-        .dn_p_i(dn_p), .dn_d_i(dn_d), .s_v(s_v), .p_v(p_v), .d_d(d_d), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt),
+        .dn_p_i(dn_p), .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt),
         .c_scale(c_scale), .c_sink(c_sink), .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d), .e_v_i(e_v), .e_d_i(e_d),
         .o_v_i(o_vi), .o_d_i(o_di), .den_v_i(den_v), .f_i(f_i), .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d),
         .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));

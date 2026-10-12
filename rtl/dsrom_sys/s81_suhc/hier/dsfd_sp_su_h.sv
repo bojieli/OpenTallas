@@ -310,14 +310,14 @@ module dsfd_sp_su_h #(
             // every intra-stop link through SRL equal-depth relays (lanes in lockstep)
             localparam integer NPS = (S_RD < 5) ? S_RD : 5;
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
-            wire s_v, p_v, c_v, cs_v, e_v, o_vv, den_v, f_any; wire [1023:0] d_d, e_d; wire [511:0] o_dd;
+            wire s_v, p_v, c_v, cs_v, e_v, o_vv, den_v, f_any; wire [1023:0] e_d; wire [511:0] o_dd;
             wire [6:0] c_nv; wire [2:0] c_lt; wire [31:0] c_scale; wire [63:0] c_sink; wire [4:0] cs_i; wire [63:0] cs_d;
             wire [1:0] hden_v; wire [15:0] hf;
             wire [3:0] CTI = TI;
             ot_s81_su_smt #(.SM_H(SM_H), .SM_LPH(SM_LPH), .S_RD(S_RD), .WS(WS), .MUT(MUT)) u_smt (
                 .clk(sk), .rst_in(rst[t]), .cfg_ti(CTI), .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_jid_i(dji[t]),
-                .dn_v_i(dv[t]), .dn_p_i(dd[t][0 +: NPS * 512]), .dn_d_i(dd[t][1024 * TI +: 1024]),
-                .s_v(s_v), .p_v(p_v), .d_d(d_d), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale), .c_sink(c_sink),
+                .dn_v_i(dv[t]), .dn_p_i(dd[t][0 +: NPS * 512]),
+                .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale), .c_sink(c_sink),
                 .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d), .e_v_i(e_v), .e_d_i(e_d), .o_v_i(o_vv), .o_d_i(o_dd),
                 .den_v_i(hden_v[0]), .f_i(f_any),
                 .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
@@ -328,8 +328,11 @@ module dsfd_sp_su_h #(
             wire [63:0] rc_sink; wire [4:0] rcs_i; wire [63:0] rcs_d;
             ot_hdc_delay #(.W(4), .D(SRL), .RESET(1)) u_tv (.clk(sk), .rst_n(rst[t]), .d({s_v, p_v, c_v, cs_v}),
                 .q({rs_v, rp_v, rc_v, rcs_v}));
-            ot_hdc_delay #(.W(1024 + 7 + 3 + 32 + 64 + 5 + 64), .D(SRL)) u_td (.clk(sk), .rst_n(rst[t]),
-                .d({d_d, c_nv, c_lt, c_scale, c_sink, cs_i, cs_d}), .q({rd_d, rc_nv, rc_lt, rc_scale, rc_sink, rcs_i, rcs_d}));
+            ot_hdc_delay #(.W(7 + 3 + 32 + 64 + 5 + 64), .D(SRL)) u_td (.clk(sk), .rst_n(rst[t]),
+                .d({c_nv, c_lt, c_scale, c_sink, cs_i, cs_d}), .q({rc_nv, rc_lt, rc_scale, rc_sink, rcs_i, rcs_d}));
+            // the stop's operand rows (spine slots 2 TI, 2 TI + 1) straight to the engines: SRL + 2 stations (the tap's
+            // pin + valid registers), so they meet their valids at the engines' pin flops
+            ot_hdc_delay #(.W(1024), .D(SRL + 2)) u_tdd (.clk(sk), .rst_n(rst[t]), .d(dd[t][1024 * TI +: 1024]), .q(rd_d));
             wire [1:0] he_v; wire [1:0] ho_v;
             genvar h, ln, pp;
             for (h = 0; h < 2; h = h + 1) begin : g_h
