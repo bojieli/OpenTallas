@@ -19,7 +19,7 @@ module tb_xload_lock;  // FILL-9 2026-10-10: ub = the SRAM-macro x-load, ua = th
 `else
     localparam integer MM = 0;
 `endif
-    ot_hgi_sm_xload #(.MUT_T(MT), .MUT_M(MM)) ub (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(rdy_b), .x_base(x_base), .x_n(x_n), .x_p(x_p),
+    ot_hgi_sm_xload #(.MUT_T(MT), .MUT_M(MM)) ub (.clk(clk), .rst_n(rst_n), .x_xb(7'd0), .x_v(x_v), .x_rdy(rdy_b), .x_base(x_base), .x_n(x_n), .x_p(x_p),
         .x_stride(x_stride), .x_space(2'd1), .x_fmt(2'd0), .x_done(done_b), .x_fault(f_b), .xw_en(en_b), .xw_addr(ad_b),
         .xw_grp(gr_b), .xw_data(d_b), .vmq(qb), .vmr(rb));
     ot_hgi_vm_unit #(.NC(5)) va (.clk(clk), .rst_n(rst_n), .cq({tq, qa}), .cr({tra, ra}), .status());
