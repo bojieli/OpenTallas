@@ -70,3 +70,31 @@ throughput qualification). SM / IKS / IDX_CF report the gate only.
 | src | host | runs | verdict |
 |---|---|---|---|
 | `ca7ca4fff` | ot-epyc1tb | qrom_pos L3 (L0-L2 chain @P8191, 17,120 cyc, 0 X / 0 K/V mismatches), qrom_neg L3 (COMP 0: 49,152 X / 6,046 K/V mismatches = FAIL as expected), qrom_pos head (token 24, logit 0x41962749, 3,055 cyc) | all ok (`ca7ca4fff/summary_epyc1tb.json`) |
+| `d1e95d8d1` | ot-epyc4 | B2 OLD-VM harness `hgi_b2` (all stubs, B2 1 / B2_RING 1) x 12 targets: 11 PASS (final VM / HBM exact, every dispatch == golden); ds_L14 FAIL identically at B2 0 (CFG status err 1, golden token 0: vector / harness issue, not B2); `tput_qdq` GATE PASS (m0 exact, m1/m2 FAIL) after the run_qdq.sh MODMISSING fix, ratio 13.7 (packet path, not qualified) | `d1e95d8d1/`, `b2_traffic_1012/summary.json` |
+
+### Cross-cluster exchange, B2 OLD-VM (`b2_traffic_1012/`, d1e95d8d1)
+
+Exposed = cycles at B2 1 + B2_RING 1 minus the same stub build at B2 0; serial = sum of every record's ring + broadcast
+cycles. Placement is the CURRENT allocator's addresses (owner computes), not the B2 allocator, so this proves the
+harness and sizes what the B2 allocator must remove; it is not the B2 answer.
+
+| target | B2 0 cycles | B2 1 cycles | exposed | serial | budget / layer | exposed / budget | top ring ops (serial cycles) |
+|---|---:|---:|---:|---:|---:|---:|---|
+| DS L0 | 11,641 | 14,723 | 3,082 | 4,040 | 290 | 10.6x | SM.MATVEC 1,836, COLL.ALL_GATHER 1,342, GROUP_REDUCE_MCAST 448 |
+| DS L1 | 14,036 | 19,404 | 5,368 | 6,667 | 290 | 18.5x | ALL_GATHER 2,398, SM.MATVEC 1,836, SU.VOP 1,727 |
+| DS L2 | 20,775 | 24,374 | 3,599 | 4,624 | 290 | 12.4x | SM.MATVEC 1,968, ALL_GATHER 1,599 |
+| DS L3 / L21 / L37 | 16,422 | 19,822 | 3,400 | 4,040 | 290 | 11.7x | SM.MATVEC 1,836, ALL_GATHER 1,342 |
+| DS L14 | 30,489 (FAIL) | 36,249 | 5,760 | 7,251 | 290 | 19.9x | ALL_GATHER 2,655, SM.MATVEC 1,968, SU.VOP 1,762 |
+| DS L20 | 20,634 | 24,348 | 3,714 | 4,843 | 290 | 12.8x | SM.MATVEC 1,968, ALL_GATHER 1,583 |
+| DS L24 | 20,577 | 24,129 | 3,552 | 4,464 | 290 | 12.2x | SM.MATVEC 1,872, ALL_GATHER 1,535 |
+| DS head | 4,357 | 4,357 | 0 | 33 | 290 | 0 | ARGMAX_MERGE 33 |
+| Qwen L0 P8191 | 32,839 | 39,353 | 6,514 | 6,674 | 93 | 70x | SU.VOP 5,357, ATT.PV 820, ALL_REDUCE_SUM 320 |
+| Qwen head | 3,267 | 3,300 | 33 | 33 | 93 | 0.4x | ARGMAX_MERGE 33 |
+
+Findings for the B2 lead / compiler stream:
+- With today's addresses every DS layer is 10-20x over the 290-cycle budget and Qwen L0 is 70x. The B2 allocator has to
+  make SM.MATVEC inputs slice-local or mirrored, and SU.VOP operands (Qwen: 5,357 serial cycles) slice-local.
+- COLL.ALL_GATHER results must reach all 4 clusters: 17 records, 33k words a DS layer, about 1.3-2.7k cycles at
+  32 words/cycle on the broadcast tree. That is bandwidth, not hop latency, and the study's +16 cycles a record does
+  not include it. Either the gathered result streams into the mirror window while the gather is running (overlap), or
+  the broadcast tree needs more width, or the budget goes up.
