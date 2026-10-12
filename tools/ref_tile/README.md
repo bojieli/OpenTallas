@@ -44,7 +44,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | PDN grid for an absent macro (PDN-0217) | every macro/child grid created only if `ot_ref_present` finds the master |
 | bloated abstracts (PDN-0006) | export = `write_abstract_lef` without `-bloat_occupied_layers` (tools/tt_views/view_export.py) |
 | child signals on the parent strap layer / over its own PG | leaf: explicit `RLAYERS M2 M6`, PG on M6 (signals around) or M7 (PG only); cluster: PG M7, children <= M6; child_lint (c) on the output |
-| child edge pins covered on pin layer +-1 (DRT-0073) | pin-access keepout on the adjacent layers over the outer half of the face-pin column at PRE_GLOBAL_ROUTE, removed at POST_DETAIL_ROUTE (stn_pin_keepout.tcl, OT_PK_FRAC 0.5); child_lint (f) |
+| child edge pins covered on pin layer +-1 (DRT-0073) | pin-access keepout on the layer ABOVE the outer half of the face-pin column (OT_PK_ABOVE_ONLY=1; the layer below stays free for the tile's own access, hfd_hc c95527ec0) at PRE_GLOBAL_ROUTE, removed at POST_DETAIL_ROUTE (stn_pin_keepout.tcl, OT_PK_FRAC 0.5); child_lint (f) |
 | macros / tiles off the track grid (DRT-0255/0418/0419/0421) | macros: (0.432, 2.16) um lattice + the best origin shift over EVERY layer's tracks (check_macro_track_alignment); hard children: 43.2 um lattice = lcm(site, row, M1-M7 track pitches, PG strap pitch); all-layer pin check in gen + gate |
 | escaped vs unescaped instance names | place.tcl matches with backslashes stripped on both sides |
 | 1-bit vector ports named `ck[0]` (PPL-0061) | pin plan takes base names only (spec error otherwise); gate checks names against the RTL ports and the synthesized netlist |

@@ -459,7 +459,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
                f"source /src/{QDM}/pre_cts_skew.tcl"]
     if fwd:
         pre_cts.append("source /src/physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
-    pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (adjacent layers over the outer face-pin",
+    pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
                "# column; created here, removed by post_drt.tcl, so the abstract carries only real metal: DRT-0073 at the parent)",
                f"source /src/{QDM}/pre_ref_skew.tcl",
                "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
@@ -481,7 +481,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     pins = " ".join(f"--pin-region {shq(pin_regex(v) + '=' + FACES[f])}" for f, v in s["pins"].items() if v)
     views = sorted({b["view"] for b in blocks})
     extra = ["--orfs-var ADDER_MAP_FILE=", f"--orfs-var PDN_TCL=/src/{kd}/pdn.tcl",
-             f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}"]
+             f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}",
+             # keep only the layer ABOVE each face pin clear (what the parent needs and child_lint (f) checks); also
+             # blocking the layer below took the tile's own M3 access to a dense M4 face (hfd_hc 239-268 DRC, c95527ec0)
+             f"--orfs-var OT_PK_ABOVE_ONLY={0 if s.get('pin_access', {}).get('both_sides') else 1}"]
     if blocks:
         extra.append(f"--orfs-var MACRO_PLACEMENT_TCL=/src/{kd}/place.tcl")
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
