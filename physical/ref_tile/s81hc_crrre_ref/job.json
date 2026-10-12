@@ -3,7 +3,7 @@
  "block": "ot_s81_hc_crootr_r",
  "ref_tile": true,
  "owner": "Claude:el1011-s81hc-crootr",
- "purpose": "[hc-crootr] crootr v2 4-tile split, C=2 (comb W): return (comb-side S corner): capture, RT relay, s_rv/s_rd, packet slice to the tree; ~7.3k flops; replaces s81hc_crootre_ref (one 34.6k-sink root, hold WNS frozen -102 ps)",
+ "purpose": "[hc-crootr] crootr v2 4-tile split, C=2 (comb W): return (comb-side S corner): capture, RT relay, s_rv/s_rd, packet slice to the tree; ~7.3k flops; replaces s81hc_crootre_ref (one 34.6k-sink root, hold WNS frozen -102 ps); pins every track (pin_min_tracks 1): the slab faces carry 8-11 pins/um (v1 crootr E face 9.75/um), 2-track slots run out (PPL-0111 at gate), 1-track slots put them at ~50%",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
