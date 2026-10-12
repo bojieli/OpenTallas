@@ -5,7 +5,9 @@
 // ot_s81_hc_ctile #(.HALF(1)) (that module's header holds the protocol); this file only moves the logic:
 //   ctfn / ctfs  forward bus, N / S strips: ctfn = reset relay, fv / fd pin flops, y-shift register; ctfs = RLY - 1
 //         relays + out flops (the cross-slot stage fdm -> relay is wire only, so no flop-to-flop wire > ~500 um);
-//         exports its pin flops (fv, fd control + slot data) to the other tiles (registered seam).
+//         ctfx (centre band) duplicates the fv / fd control + slot-data pin flops as the slot-wide broadcast (fv, fdx),
+//         so ctfn's faces carry only the through bus.  Reset: ctfn's first rst stage (rst_c) is relayed to every tile,
+//         which adds one flop (same 2-cycle rst_in -> rst_n latency; no slot-long single-cycle reset net).
 //   ctnl  x16, one per norm lane (bank j = h row % 4, group l): the lane's slice of the bank's resident h rows
 //         (group l, 2 slots x NV), its gain words, hc_pre mix -> square, x wait line, scale, y, and chain adder l of the
 //         bank's chunk chain (+ the HALF carry at lane 0); registered zero-gated read ports for hc_post (hpr) and the
@@ -13,7 +15,7 @@
 //         hardened master serves all 16 lanes of every sub-tile; no strap fans out.
 //   ctpl  x8, hc_post group g output lanes {2h, 2h+1} (ot_dsrom_su_hcpost sliced) + its coefficient words and the
 //         write-back counters; in_r = OR of the 4 banks' zero-gated group-g reads.
-//   ctrs / ctrn  return bus, S / N strips (ctrn = RLY - 2 relays + out flops, rdm -> ctrn wire only): rv / rd pin flops, a stage for the far tile's originated slots, the merge stage (y rows from
+//   ctra / ctrb (ot_s81_hc_ctrs split by return slots, centre band) / ctrn  return bus (ctrn = RLY - 2 relays + out flops, rdm -> ctrn wire only): rv / rd pin flops, a stage for the far tile's originated slots, the merge stage (y rows from
 //         ybuf, partial packet from psb, h rows from the banks' hrq), out flops.  The merge sits one stage later than
 //         in ot_s81_hc_ctile and the relay one stage earlier (needs RLY >= 2): same 2 + RLY registers a hop, and every
 //         merged source is one register later (faults / hc_post flags registered at their tile), so rv / rd are
@@ -52,10 +54,13 @@ module ot_s81_hc_cth #(
     wire [FXW-1:0]  fdx;
     wire [S_RD+4:0] fvm;
     wire [FDW-1:0]  fdm;
+    wire            rst_c;                     // ctfn's first reset stage -> one relay flop in every tile
     ot_s81_hc_ctfn #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_fn (
-        .clk(clk), .rst_in(rst_in), .fv_in(fv_in), .fd_in(fd_in), .fv(fv), .fdx(fdx), .fvm(fvm), .fdm(fdm));
+        .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
+    ot_s81_hc_ctfx #(.S_RD(S_RD)) u_fx (
+        .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx));
     ot_s81_hc_ctfs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
-        .clk(clk), .rst_in(rst_in), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out));
+        .clk(clk), .rst_in(rst_c), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out));
     wire [16*S_RT-1:0]  rq_q;
     wire                hs_run;
     wire [15:0]         hs_c;
@@ -72,7 +77,7 @@ module ot_s81_hc_cth #(
         for (l = 0; l < 4; l = l + 1) begin : g_l
             localparam integer n = 4 * j + l;
             ot_s81_hc_ctnl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY)) u_n (
-                .clk(clk), .rst_in(rst_in), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fdx),
+                .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fdx),
                 .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
                 .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
                 .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
@@ -85,7 +90,7 @@ module ot_s81_hc_cth #(
     end endgenerate
     generate for (m = 0; m < 8; m = m + 1) begin : g_p
         ot_s81_hc_ctpl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL)) u_p (
-            .clk(clk), .rst_in(rst_in), .grp(m[2:1]), .half(m[0]), .fv(fv), .fdx(fdx),
+            .clk(clk), .rst_in(rst_c), .grp(m[2:1]), .half(m[0]), .fv(fv), .fdx(fdx),
             .hpr({hpr[64 * (12 + m / 2) +: 64], hpr[64 * (8 + m / 2) +: 64], hpr[64 * (4 + m / 2) +: 64], hpr[64 * (m / 2) +: 64]}),
             .hov(hov[m]), .pwb(pwb[m]), .phs(phs[m]), .pob(pob[16 * m +: 16]), .hpo(hpo[32 * m +: 32]),
             .hov_d(hov_d[m]), .hnz_d(hnz_d[m]), .pflt_d(pflt_d[m]));
@@ -93,12 +98,30 @@ module ot_s81_hc_cth #(
     wire [4*32-1:0] cs = {acc[32 * 15 +: 32], acc[32 * 11 +: 32], acc[32 * 7 +: 32], acc[32 * 3 +: 32]};
     wire [S_RT+3:0] rvm;
     wire [RDW-1:0]  rdm;
-    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u_rs (
-        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx(fdx), .rv_in(rv_in), .rd_in(rd_in),
-        .rvm(rvm), .rdm(rdm), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c), .hrq(hrq), .yb(yb), .cs(cs),
-        .nflt(nflt), .hov_d(hov_d[0]), .hnz_d(|hnz_d), .pflt_d(|pflt_d));
+    localparam integer SH = S_RT / 2, P_D = S_RT + 8 * S_RT + 16 * S_RT + 8, WA = P_D + 512 * SH;
+    wire [8*64*SH-1:0] hqa_n, hqa_s, hqb_n, hqb_s;
+    genvar q;
+    generate for (j = 0; j < 8; j = j + 1) begin : g_hq
+        for (q = 0; q < SH; q = q + 1) begin : g_s
+            assign hqa_n[64 * (SH * j + q) +: 64] = hrq[64 * S_RT * j + 64 * q +: 64];
+            assign hqa_s[64 * (SH * j + q) +: 64] = hrq[64 * S_RT * (j + 8) + 64 * q +: 64];
+            assign hqb_n[64 * (SH * j + q) +: 64] = hrq[64 * S_RT * j + 64 * (q + SH) +: 64];
+            assign hqb_s[64 * (SH * j + q) +: 64] = hrq[64 * S_RT * (j + 8) + 64 * (q + SH) +: 64];
+        end
+    end endgenerate
+    ot_s81_hc_ctra #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u_ra (
+        .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv), .fdx(fdx[O_D-1:0]), .rv_in(rv_in),
+        .rd_in(rd_in[WA-1:0]), .rvm(rvm), .rdm(rdm[WA-1:0]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+        .hrq_n(hqa_n), .hrq_s(hqa_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]), .cs(cs),
+        .nflt_n(nflt[7:0]), .nflt_s(nflt[15:8]), .hov_d(hov_d[0]),
+        .hnz_n({hnz_d[6], hnz_d[4], hnz_d[2], hnz_d[0]}), .hnz_s({hnz_d[7], hnz_d[5], hnz_d[3], hnz_d[1]}),
+        .pflt_n({pflt_d[6], pflt_d[4], pflt_d[2], pflt_d[0]}), .pflt_s({pflt_d[7], pflt_d[5], pflt_d[3], pflt_d[1]}));
+    ot_s81_hc_ctrb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u_rb (
+        .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv), .fdx(fdx[O_D-1:0]), .rv_in(rv_in),
+        .rdh_in(rd_in[P_D-1:0]), .rdd_in(rd_in[RDW-1 -: 512 * SH + 128]), .rdm(rdm[RDW-1 -: 512 * SH]),
+        .hrq_n(hqb_n), .hrq_s(hqb_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]));
     ot_s81_hc_ctrn #(.S_RT(S_RT), .RDW(RDW), .RLY(RLY)) u_rn (
-        .clk(clk), .rst_in(rst_in), .rvm(rvm), .rdm(rdm), .rv_out(rv_out), .rd_out(rd_out));
+        .clk(clk), .rst_in(rst_c), .rvm(rvm), .rdm(rdm), .rv_out(rv_out), .rd_out(rd_out));
 endmodule
 
 // ------------------------------------------------------------------------------------------------ forward bus tiles
@@ -113,8 +136,7 @@ module ot_s81_hc_ctfn #(
     input  wire               rst_in,
     input  wire [S_RD+4:0]    fv_in,
     input  wire [FDW-1:0]     fd_in,
-    output reg  [S_RD+4:0]    fv,                    // pin flops, exported
-    output wire [FXW-1:0]     fdx,
+    output wire               rst_c,                 // first reset stage, relayed to every tile of the slot
     output reg  [S_RD+4:0]    fvm,
     output reg  [FDW-1:0]     fdm
 );
@@ -124,8 +146,9 @@ module ot_s81_hc_ctfn #(
     reg [1:0] rr;
     always @(posedge clk) rr <= {rr[0], rst_in};
     wire rst_n = rr[1];
+    assign rst_c = rr[0];
+    reg [S_RD+4:0] fv;
     reg [FDW-1:0]  fd;
-    assign fdx = fd[FXW-1:0];
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fv <= 0; fvm <= 0; end
         else begin fv <= fv_in; fvm <= fv; end
@@ -134,6 +157,27 @@ module ot_s81_hc_ctfn #(
         fdm <= fd;
         if (fv[S_RD]) fdm[O_D +: YW] <= fd[O_D +: YW] >> (GT * 32);           // y beat: next tile's slice to 0
     end
+endmodule
+
+// ctfx (centre band): duplicate fv / fd control + slot-data pin flops, the slot-wide broadcast source (fv, fdx) for
+// ctnl / ctpl / ctrs.  Same input pins, same cycle as ctfn's pin flops (fd_in fans to both at the die): ctfn's N face
+// keeps only the through bus (fd_in in, fvm / fdm out S), so no face carries > ~3k pins.
+module ot_s81_hc_ctfx #(
+    parameter integer S_RD = 2
+) (
+    input  wire               clk,
+    input  wire               rst_in,
+    input  wire [S_RD+4:0]    fv_in,
+    input  wire [FXW-1:0]     fd_in,
+    output reg  [S_RD+4:0]    fv,
+    output reg  [FXW-1:0]     fdx
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512;
+    reg rr;
+    always @(posedge clk) rr <= rst_in;
+    wire rst_n = rr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) fv <= 0; else fv <= fv_in;
+    always @(posedge clk) fdx <= fd_in;
 endmodule
 
 module ot_s81_hc_ctfs #(
@@ -150,10 +194,10 @@ module ot_s81_hc_ctfs #(
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32;
     localparam integer FDD = (S_RD * 512 > YW) ? S_RD * 512 : YW;
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FDW = O_D + FDD;
-    reg [1:0] rr;
-    always @(posedge clk) rr <= {rr[0], rst_in};
-    wire rst_n = rr[1];
-    assign rst_out = rr[1];
+    reg rr;                                              // regional reset relay: rst_in = ctfn's first stage
+    always @(posedge clk) rr <= rst_in;
+    wire rst_n = rr;
+    assign rst_out = rr;
     wire [S_RD+4:0] fvm_d;
     wire [FDW-1:0]  fdm_d;
     always @(posedge clk or negedge rst_n)
@@ -258,9 +302,9 @@ module ot_s81_hc_ctnl #(
         reg [32:0] s;
         begin s = {1'b0, x} + 33'h7FFF + {32'd0, x[16]}; bf16 = {s[31:16], 16'd0}; end
     endfunction
-    reg [1:0] rr;
-    always @(posedge clk) rr <= {rr[0], rst_in};
-    wire rst_n = rr[1];
+    reg rr;                                              // regional reset relay: rst_in = ctfn's first stage
+    always @(posedge clk) rr <= rst_in;
+    wire rst_n = rr;
     reg [7:0] tq;
     reg [1:0] bq, lq;
     reg       laq, hs_sl, farq, l0q, l3q;
@@ -390,9 +434,9 @@ module ot_s81_hc_ctpl #(
 );
     localparam integer O_RK = 0, O_RS = 2, O_RC = 5, O_PB = O_RC + S_RD * 16, O_D = O_PB + 20 + 6 + 8 + 32 + 1;
     localparam integer FXW = O_D + S_RD * 512;
-    reg [1:0] rr;
-    always @(posedge clk) rr <= {rr[0], rst_in};
-    wire rst_n = rr[1];
+    reg rr;                                              // regional reset relay: rst_in = ctfn's first stage
+    always @(posedge clk) rr <= rst_in;
+    wire rst_n = rr;
     reg [1:0] gq;
     reg       hq;
     always @(posedge clk) begin gq <= grp; hq <= half; end
@@ -493,7 +537,8 @@ module ot_s81_hc_ctrs #(
     input  wire [16*16-1:0]       yb,
     input  wire [4*32-1:0]        cs,
     input  wire [15:0]            nflt,
-    input  wire                   hov_d, hnz_d, pflt_d
+    input  wire                   hov_d,
+    input  wire [7:0]             hnz_d, pflt_d           // per ctpl tile, ORed here (no die-level gate)
 );
     localparam integer O_HS = 5 + S_RD * 16 + 20 + 6 + 8 + 32, O_D = O_HS + 1, FXW = O_D + S_RD * 512;
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, GT = GS / 2, N = 4 * NG, NV = D / N, NT = 4 * GT;
@@ -501,9 +546,9 @@ module ot_s81_hc_ctrs #(
     localparam integer DS = LM + 7 * LA, DY = 2 * LM + 1;
     localparam integer P_T = 0, P_I = S_RT, P_Q = P_I + 8 * S_RT, P_PI = P_Q + 16 * S_RT, P_D = P_PI + 8,
                        RDW = P_D + 512 * S_RT;
-    reg [1:0] rr;
-    always @(posedge clk) rr <= {rr[0], rst_in};
-    wire rst_n = rr[1];
+    reg rr;                                              // regional reset relay: rst_in = ctfn's first stage
+    always @(posedge clk) rr <= rst_in;
+    wire rst_n = rr;
     reg [7:0] tq;
     reg       lq, farq;
     always @(posedge clk) begin tq <= tid; lq <= last; farq <= tid[0]; end
@@ -578,8 +623,8 @@ module ot_s81_hc_ctrs #(
             rv2[S_RT+3]   <= rvq[S_RT+3];
             rvm[S_RT:0]   <= rv2[S_RT:0];
             rvm[S_RT+1]   <= rv2[S_RT+1] | (lq && hov_d);
-            rvm[S_RT+2]   <= rv2[S_RT+2] | pflt_d | (|nflt);
-            rvm[S_RT+3]   <= rv2[S_RT+3] | hnz_d;
+            rvm[S_RT+2]   <= rv2[S_RT+2] | (|pflt_d) | (|nflt);
+            rvm[S_RT+3]   <= rv2[S_RT+3] | (|hnz_d);
         end
     always @(posedge clk) begin : orig
         reg [RDW-1:0] o;
@@ -628,6 +673,95 @@ module ot_s81_hc_ctrs #(
     end
 endmodule
 
+// ctra / ctrb (centre band, two full-width strips): ot_s81_hc_ctrs split by return slots so neither face carries more
+// than ~2.5k pins.  ctra owns rv, the header, slots 0..S_RT/2-1 (incl. the far tile's psb insert into slot 0), rq_q and
+// the hs counters it exports; ctrb owns slots S_RT/2..S_RT-1.  Both replicate the sequencer (ctq), the origination
+// counters and ybuf (a few k flops) so nothing crosses between them; ctrb takes the rd_in header and the 128 data bits
+// the far tile's 128-bit psb insert shifts into its first slot.  fdx: only the control word (bits < O_D) is read.
+// Lanes n < 8 (rows above the band) drive the *_n ports on the N face, n >= 8 the *_s ports on the S face.
+module ot_s81_hc_ctra #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4
+) (
+    input  wire                   clk,
+    input  wire                   rst_in,
+    input  wire [7:0]             tid,
+    input  wire                   last,
+    input  wire [S_RD+4:0]        fv,
+    input  wire [O_D-1:0]         fdx,
+    input  wire [S_RT+3:0]        rv_in,
+    input  wire [WA-1:0]          rd_in,
+    output wire [S_RT+3:0]        rvm,
+    output wire [WA-1:0]          rdm,
+    output wire [16*S_RT-1:0]     rq_q,
+    output wire                   hs_run,
+    output wire [15:0]            hs_c,
+    input  wire [8*64*SH-1:0]     hrq_n, hrq_s,     // [lane n (or n - 8)][slot s] 64 b
+    input  wire [8*16-1:0]        yb_n, yb_s,
+    input  wire [4*32-1:0]        cs,
+    input  wire [7:0]             nflt_n, nflt_s,
+    input  wire                   hov_d,
+    input  wire [3:0]             hnz_n, hnz_s, pflt_n, pflt_s   // ctpl half 0 (N) / half 1 (S), group g
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512;
+    localparam integer SH = S_RT / 2, P_D = S_RT + 8 * S_RT + 16 * S_RT + 8, RDW = P_D + 512 * S_RT, WA = P_D + 512 * SH;
+    wire [RDW-1:0] rdm_w;
+    wire [16*64*S_RT-1:0] hrq;
+    genvar n, q;
+    generate for (n = 0; n < 8; n = n + 1) begin : g_h
+        for (q = 0; q < SH; q = q + 1) begin : g_s
+            assign hrq[64 * S_RT * n + 64 * q +: 64]       = hrq_n[64 * (SH * n + q) +: 64];
+            assign hrq[64 * S_RT * (n + 8) + 64 * q +: 64] = hrq_s[64 * (SH * n + q) +: 64];
+            assign hrq[64 * S_RT * n + 64 * (q + SH) +: 64] = 64'd0;
+            assign hrq[64 * S_RT * (n + 8) + 64 * (q + SH) +: 64] = 64'd0;
+        end
+    end endgenerate
+    wire [7:0] hnz = {hnz_s[3], hnz_n[3], hnz_s[2], hnz_n[2], hnz_s[1], hnz_n[1], hnz_s[0], hnz_n[0]};
+    wire [7:0] pfl = {pflt_s[3], pflt_n[3], pflt_s[2], pflt_n[2], pflt_s[1], pflt_n[1], pflt_s[0], pflt_n[0]};
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u (
+        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx({{(FXW - O_D){1'b0}}, fdx}),
+        .rv_in(rv_in), .rd_in({{(RDW - WA){1'b0}}, rd_in}), .rvm(rvm), .rdm(rdm_w), .rq_q(rq_q), .hs_run(hs_run),
+        .hs_c(hs_c), .hrq(hrq), .yb({yb_s, yb_n}), .cs(cs), .nflt({nflt_s, nflt_n}), .hov_d(hov_d), .hnz_d(hnz),
+        .pflt_d(pfl));
+    assign rdm = rdm_w[WA-1:0];
+endmodule
+
+module ot_s81_hc_ctrb #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4
+) (
+    input  wire                   clk,
+    input  wire                   rst_in,
+    input  wire [7:0]             tid,
+    input  wire                   last,
+    input  wire [S_RD+4:0]        fv,
+    input  wire [O_D-1:0]         fdx,
+    input  wire [S_RT+3:0]        rv_in,
+    input  wire [P_D-1:0]         rdh_in,           // rd_in header
+    input  wire [WB-1:0]          rdd_in,           // rd_in data bits [512 SH - 128, 512 S_RT)
+    output wire [512*SH-1:0]      rdm,              // rdm data slots SH .. S_RT-1
+    input  wire [8*64*SH-1:0]     hrq_n, hrq_s,     // [lane][slot s - SH] 64 b
+    input  wire [8*16-1:0]        yb_n, yb_s
+);
+    localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512;
+    localparam integer SH = S_RT / 2, P_D = S_RT + 8 * S_RT + 16 * S_RT + 8, RDW = P_D + 512 * S_RT;
+    localparam integer WB = 512 * SH + 128;
+    wire [RDW-1:0] rdm_w;
+    wire [16*64*S_RT-1:0] hrq;
+    genvar n, q;
+    generate for (n = 0; n < 8; n = n + 1) begin : g_h
+        for (q = 0; q < SH; q = q + 1) begin : g_s
+            assign hrq[64 * S_RT * n + 64 * q +: 64]       = 64'd0;
+            assign hrq[64 * S_RT * (n + 8) + 64 * q +: 64] = 64'd0;
+            assign hrq[64 * S_RT * n + 64 * (q + SH) +: 64] = hrq_n[64 * (SH * n + q) +: 64];
+            assign hrq[64 * S_RT * (n + 8) + 64 * (q + SH) +: 64] = hrq_s[64 * (SH * n + q) +: 64];
+        end
+    end endgenerate
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u (
+        .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx({{(FXW - O_D){1'b0}}, fdx}),
+        .rv_in(rv_in), .rd_in({rdd_in, {(512 * SH - 128){1'b0}}, rdh_in}), .rvm(), .rdm(rdm_w), .rq_q(), .hs_run(),
+        .hs_c(), .hrq(hrq), .yb({yb_s, yb_n}), .cs(128'd0), .nflt(16'd0), .hov_d(1'b0), .hnz_d(8'd0), .pflt_d(8'd0));
+    assign rdm = rdm_w[RDW-1 -: 512 * SH];
+endmodule
+
 module ot_s81_hc_ctrn #(
     parameter integer S_RT = 4, RDW = 2156, RLY = 2
 ) (
@@ -638,9 +772,9 @@ module ot_s81_hc_ctrn #(
     output reg  [S_RT+3:0]    rv_out,
     output reg  [RDW-1:0]     rd_out
 );
-    reg [1:0] rr;
-    always @(posedge clk) rr <= {rr[0], rst_in};
-    wire rst_n = rr[1];
+    reg rr;                                              // regional reset relay: rst_in = ctfn's first stage
+    always @(posedge clk) rr <= rst_in;
+    wire rst_n = rr;
     wire [S_RT+3:0] rv_out_d;
     wire [RDW-1:0]  rd_out_d;
     ot_hdc_delay #(.W(S_RT + 4), .D(RLY - 2), .RESET(1)) u_rvr (.clk(clk), .rst_n(rst_n), .d(rvm), .q(rv_out_d));
