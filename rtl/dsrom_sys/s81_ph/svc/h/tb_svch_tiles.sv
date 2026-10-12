@@ -8,16 +8,16 @@
 //                     completes once on its port; the ctrl credit is never exceeded; landing credits are honoured
 //                     (the bench pops responses at random gaps); no fault.  Prints SVCHPCS ... PASS / FAIL.
 //   tb_dsfd_svch_rly  one relay station (W 4228, NR 1): the output equals the input one cycle later.
-module tb_dsfd_svch_pcs;
+module tb_dsfd_svch_pcs #(parameter integer HDLY = 0);
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst = 0;
     integer cyc = 0, seed = 1, NREQ = 3000, gap = 30;
-    localparam integer DA = 14, DB = 14, DG = 8, NG = 12;
+    localparam integer DA = 14, DB = 14, DG = 8, NG = 13;
     wire [340:0] qrq; reg qrk = 0, qwd = 0, qrv = 0; reg [255:0] qr_data = 0; reg [16:0] qr_tag = 0; reg [3:0] qr_beat = 0;
     reg aq_v = 0, bq_v = 0, gq_v = 0; reg [49:0] aq_d = 0; reg [45:0] bq_d = 0; reg [343:0] gq_d = 0;
     wire aq_c, bq_c, gq_c, ar_v, br_v, gr_v, fo; wire [275:0] ar_d, gr_d; wire [271:0] br_d; wire [NG-1:0] gwd;
     reg ar_c = 0, br_c = 0, gr_c = 0;
-    dsfd_svch_pcs #(.QID(1), .PCL(3), .DA(DA), .DB(DB), .DG(DG)) dut (.ck(clk), .rst(rst),
+    dsfd_svch_pcs #(.QID(1), .PCL(3), .DA(DA), .DB(DB), .DG(DG), .HDLY(HDLY)) dut (.ck(clk), .rst(rst),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
         .aq_v(aq_v), .aq_d(aq_d), .aq_c(aq_c), .ar_v(ar_v), .ar_d(ar_d), .ar_c(ar_c),
         .bq_v(bq_v), .bq_d(bq_d), .bq_c(bq_c), .br_v(br_v), .br_d(br_d), .br_c(br_c),

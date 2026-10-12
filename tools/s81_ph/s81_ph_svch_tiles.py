@@ -19,7 +19,7 @@ import json
 
 QW, QH = 2125.008, 755.976
 PITCH = 265.584
-NG = 12
+NG = 13
 EDGE = 3.0
 
 
@@ -55,7 +55,8 @@ def quad_ports(g):
           ('h_wb_v', HQ, 'output', hf), ('h_wb_d', HQ * 4228, 'output', hf), ('h_wb_c', HQ, 'input', hf),
           ('h_fb_v', HQ, 'output', hf), ('h_fb_d', HQ * 607, 'output', hf),
           ('h_pv_v', HQ, 'input', hf), ('h_pv_d', HQ * 513, 'input', hf), ('h_pv_c', HQ, 'output', hf),
-          ('h_flt', HQ, 'input', hf)]
+          ('h_flt', HQ, 'input', hf),
+          ('h_hw_v', 1, 'input', 'N'), ('h_hw_d', 291 if home else 1, 'input', 'N'), ('h_hc', 9 if home else 1, 'output', 'N')]
     return L
 
 
