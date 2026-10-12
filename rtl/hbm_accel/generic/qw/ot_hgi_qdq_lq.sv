@@ -50,10 +50,19 @@ module ot_hgi_qdq_lq #(
             e_push <= p_v;
         end
     always @(posedge clk)
-        for (integer i = 0; i < 2; i = i + 1) begin
-            if (p_v[i]) lf[i][lf_t[i]] <= p_d[i];
-            hq[i*256 +: 256] <= lf[i][lf_h[i]];       // 16:1 x 256 on the lane's own pointer (free-running)
+        for (integer i = 0; i < 2; i = i + 1) if (p_v[i]) lf[i][lf_t[i]] <= p_d[i];
+    // head read: 16:1 x 256 per lane, split in 8 slices of 32 b, each on its own kept copy of the read pointer (pre-route
+    // gate 10-12: one lf_h bit drove 3,057 mux loads; a copy now drives ~32 x 15)
+    genvar gi, gs;
+    generate for (gi = 0; gi < 2; gi = gi + 1) begin : g_ln
+        for (gs = 0; gs < 8; gs = gs + 1) begin : g_sl
+            (* keep *) reg [LW-1:0] hc;
+            always @(posedge clk or negedge rr_n[0])
+                if (!rr_n[0]) hc <= 0;
+                else if (i_pop[gi]) hc <= hc + 1'b1;
+            always @(posedge clk) hq[gi*256 + gs*32 +: 32] <= lf[gi][hc][gs*32 +: 32];
         end
+    end endgenerate
     initial if ((LD & (LD - 1)) != 0) $fatal(1, "ot_hgi_qdq_lq: LD power of two");
 endmodule
 `default_nettype wire
