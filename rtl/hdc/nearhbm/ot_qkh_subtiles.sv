@@ -205,7 +205,7 @@ module ot_qkh_ktree #(
     wire [1:0]  merr;
     wire        sv;
     (* keep_hierarchy *) ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_scale (
-        .clk(clk), .rst_n(rc), .valid_in(nvo[14]), .a(n[32*14 +: 32]), .b(SCALE), .y(scd0), .err(merr), .valid_out(sv));
+        .clk(clk), .rst_n(rr[15]), .valid_in(nvo[14]), .a(n[32*14 +: 32]), .b(SCALE), .y(scd0), .err(merr), .valid_out(sv));
     reg kf;
     always @(posedge clk) sc_d <= scd0;
     always @(posedge clk or negedge rc)
