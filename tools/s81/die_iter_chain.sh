@@ -19,7 +19,7 @@ st GEN_DONE
     I=$M/ir_$w; /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py irm $A --work $I --window $w > $M/ir_gen_$w.log 2>&1 || { st IR_GEN_FAIL $w; continue; }
     /srv/opentallas-scratch/admit.sh 60 -- docker run --rm --name dieit_${TAG}_ir_$w --cpus=16 --memory=120g -v $I:/work -w /work openroad/orfs:asap7lock \
       bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; chmod -R a+rwX /work"
-    st "IR $w $(grep -h 'Worstcase IR drop\|OT_IR ' $I/run.log | tr '\n' ' ')"
+    st "IR $w $(grep -h 'OT_IR_INNER\|Worstcase IR drop\|OT_IR ' $I/run.log | tr '\n' ' ')"
   done ) &
 C=$M/clock; mkdir -p $C
 ( /srv/opentallas-scratch/admit.sh 40 -- python3 tools/budgets/extract_die.py --src $S --die s81r8_$KIND --s81-opts "$AK" --out $C/model.json.gz > $C/extract.log 2>&1 || { st CLOCK_EXTRACT_FAIL; exit 1; }
