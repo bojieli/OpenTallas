@@ -140,7 +140,12 @@ module ot_hgi_smmv #(
     // ================= issue stage + SM stations =================
     reg [NSM*CW-1:0] cmd_h;
     reg [NSM-1:0] st_pend, d_pend, rel, arr_prev; reg [NSM*4-1:0] iss_cnt, done_cnt;
-    reg go, fld_v, fp_v, fq_v;
+    reg go, fld_v, fp_v, fq_v, fa_v;
+    // station strap index sg_s = sm_base + s: static, so one kept register per station (no adder in the product path)
+    // and the products are split over two edges (gate 10-12: smb_q -> slq_p was ONE 5 x 24 multiply, 28 levels ~1015 ps)
+    (* keep *) reg [4:0] sgq [0:NSM-1];
+    always @(posedge clk) for (integer s_ = 0; s_ < NSM; s_ = s_ + 1) sgq[s_] <= smb_q + 5'(s_);
+    reg [19:0] sqa [0:NSM-1]; reg [19:0] sqb [0:NSM-1]; reg [31:0] sla [0:NSM-1]; reg [31:0] slb [0:NSM-1];
     reg [19:0] sq_p [0:NSM-1]; reg [31:0] slq_p [0:NSM-1];       // station products (smb + s) x Q, x LQ
     reg [19:0] f_m; reg [12:0] f_q; reg [23:0] f_lq; reg [30:0] f_ml; reg [31:0] f_l0;
     reg [NSM*13-1:0] rows_s; reg [NSM*32-1:0] dbase_s; reg [NSM*24-1:0] dl_s; reg [NSM-1:0] act_s;
@@ -193,7 +198,7 @@ module ot_hgi_smmv #(
             d0_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0; rdy_r <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
             // control only (pointers, valids, counters); datapath / field registers carry no reset (gate: rst fanout)
             tail <= 0; xp <= 0; ip <= 0; rh <= 0; ppc <= 0; pdc <= 0; e_xd <= 0; used <= 0; ap <= 0;
-            xn <= 2'd0; xfh <= 1'b0; xft <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0;
+            xn <= 2'd0; xfh <= 1'b0; xft <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0; fa_v <= 1'b0;
             xo <= 0; xo_v <= 1'b0; st_pend <= 0; d_pend <= 0;
             rel <= 0; arr_prev <= 0; iss_cnt <= 0; done_cnt <= 0; sm_cg_en <= 1'b0; rh_wait <= 1'b0;
         end else begin : main
@@ -262,16 +267,25 @@ module ot_hgi_smmv #(
             if (xn != 2'd0 && in_xd) begin e_xd[ix(xfq[xfh])] <= 1'b1; xfh <= !xfh; end
             xn <= xn + ((!x_v && xn < 2'(XQ) && xp != tail && !halt_q && !(xn == 2'd0 && x_hit) && a_ok) ? 2'd1 : 2'd0) - ((xn != 2'd0 && in_xd) ? 2'd1 : 2'd0);
             // ---- issue stage: fields (stations) one edge, then the start / descriptor handshakes of every active SM
-            if (!go && !fld_v && !fp_v && !fq_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
+            if (!go && !fld_v && !fp_v && !fq_v && !fa_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
                 fq_v <= 1'b1;                                    // edge 1: select the issue entry's fields
                 fmt_i <= e_f[ix(ip)]; g_i <= e_g[ix(ip)]; xb_i <= e_xb[ix(ip)];
                 f_m <= e_m[ix(ip)]; f_q <= e_q[ix(ip)]; f_lq <= e_lq[ix(ip)]; f_ml <= e_ml[ix(ip)]; f_l0 <= e_l0[ix(ip)];
             end
             if (fq_v) begin
-                fq_v <= 1'b0; fp_v <= 1'b1;
-                for (s = 0; s < NSM; s = s + 1) begin : stp       // edge 2: station products, 5-b strapped index x Q / LQ
-                    reg [4:0] sg; sg = smb_q + s[4:0];
-                    sq_p[s] <= sg * f_q; slq_p[s] <= sg * f_lq;
+                fq_v <= 1'b0; fa_v <= 1'b1;
+                for (s = 0; s < NSM; s = s + 1) begin : stp       // edge 2a: partial products of sg x Q / LQ (bits 0-2, 3-4)
+                    reg [4:0] sg; sg = sgq[s];
+                    sqa[s] <= (sg[0] ? {7'd0, f_q} : 20'd0) + (sg[1] ? {6'd0, f_q, 1'b0} : 20'd0) + (sg[2] ? {5'd0, f_q, 2'b0} : 20'd0);
+                    sqb[s] <= (sg[3] ? {4'd0, f_q, 3'b0} : 20'd0) + (sg[4] ? {3'd0, f_q, 4'b0} : 20'd0);
+                    sla[s] <= (sg[0] ? {8'd0, f_lq} : 32'd0) + (sg[1] ? {7'd0, f_lq, 1'b0} : 32'd0) + (sg[2] ? {6'd0, f_lq, 2'b0} : 32'd0);
+                    slb[s] <= (sg[3] ? {5'd0, f_lq, 3'b0} : 32'd0) + (sg[4] ? {4'd0, f_lq, 4'b0} : 32'd0);
+                end
+            end
+            if (fa_v) begin
+                fa_v <= 1'b0; fp_v <= 1'b1;
+                for (s = 0; s < NSM; s = s + 1) begin : stq       // edge 2b: station products = the two partial sums
+                    sq_p[s] <= sqa[s] + sqb[s]; slq_p[s] <= sla[s] + slb[s];
                 end
             end
             if (fp_v) begin                                       // edge 3: clamps -> per-SM fields
