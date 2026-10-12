@@ -11,7 +11,21 @@ module tb_qfd_seq_su_bi_psram;
     parameter integer U1_OLAG = 0;                  // el1011-q-seq: lagged other-unit counter (2 = mutant)
     parameter integer U1_PCUT = 0;                  // el1011-q-seq: exact controller path cuts (2 = mutant)
     parameter integer U1_RRG = 0;                   // el1011-q-seq: replicated tile reset (2 = vm_wdata mutant, must FAIL)      // the instance under test (u0 = PSRAM 0, HQ2 0); fe-h: HQ2 1, mutant HQ2 2
-    localparam integer W = 16, G = 6144, AW = 24, NW = 18, SW = 64;
+    // qwen-tp8/seq (2026-10-12): TP_D = tensor-parallel ranks, TP_G = lane groups, for BOTH instances (TP4 4 / 6,144
+    // default; TP8 8 / 3,072); RBW = the collective rank width.  AMCOV 1: every descriptor is an ARGMAX segment and the bench
+    // is the collective: it takes the die's {logit, row} record and returns TP_D rank-ordered records (the die's own at a
+    // random rank, the others random with ~1/4 ties to an earlier rank, random gaps); GOLD = the first strictly-greatest
+    // (sign-magnitude order) record, which s_done must report in seq_ntok / seq_nval with no new s_fault; MINAM = minimum
+    // such checks for a PASS.  U1_TPMUT: ot_qfd_seq_su_bi TPMUT negative controls (1 = 2-bit rank compare, 2 = 4-rank
+    // gather) must FAIL at TP_D 8.
+    parameter integer TP_D = 4, TP_G = 6144, AMCOV = 0, MINAM = 0, U1_TPMUT = 0;
+    localparam integer RBW = (TP_D > 1) ? $clog2(TP_D) : 1;
+    localparam integer W = 16, G = TP_G, AW = 24, NW = 18, SW = 64;
+    integer nam = 0, namb = 0, am_n = 0, am_k = 0, am_r = 0;
+    reg am_on = 0, am_wait = 0, am_fpre = 0;
+    reg [31:0] am_v [0:15]; reg [NW-1:0] am_i [0:15];
+    reg [31:0] am_ev; reg [NW-1:0] am_ei;
+    function automatic [31:0] okey(input [31:0] v); okey = v[31] ? ~v : {1'b1, v[30:0]}; endfunction
     reg clk = 0, rst_n = 1;
     initial #0.1 rst_n = 0;                          // a real negedge: every async reset fires (4-state sim)
     always #0.5 clk = ~clk;
@@ -33,7 +47,7 @@ module tb_qfd_seq_su_bi_psram;
     reg  [1-1:0] r_valid = 0;
     reg  [512-1:0] r_data = 0;
     reg  [1-1:0] r_last = 0;
-    reg  [2-1:0] r_rank = 0;
+    reg  [RBW-1:0] r_rank = 0;
     reg  [1-1:0] r_err = 0;
     reg  [1-1:0] pw_v = 0;
     reg  [10-1:0] pw_addr = 0;
@@ -117,7 +131,7 @@ module tb_qfd_seq_su_bi_psram;
     wire [1-1:0] su_idle_o_0, su_idle_o_1;
     wire [16-1:0] su_prog_o_0, su_prog_o_1;
     wire [16-1:0] su_rows_o_0, su_rows_o_1;
-    ot_qfd_seq_su_bi #(.PSRAM(0), .PMUT(0)) u0 (
+    ot_qfd_seq_su_bi #(.PSRAM(0), .PMUT(0), .D(TP_D), .G(TP_G)) u0 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
@@ -213,7 +227,7 @@ module tb_qfd_seq_su_bi_psram;
         .su_idle_o(su_idle_o_0),
         .su_prog_o(su_prog_o_0),
         .su_rows_o(su_rows_o_0));
-    ot_qfd_seq_su_bi #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .RRG(U1_RRG), .PCUT(U1_PCUT), .OLAG(U1_OLAG)) u1 (
+    ot_qfd_seq_su_bi #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .RRG(U1_RRG), .PCUT(U1_PCUT), .OLAG(U1_OLAG), .D(TP_D), .G(TP_G), .TPMUT(U1_TPMUT)) u1 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
@@ -352,7 +366,7 @@ module tb_qfd_seq_su_bi_psram;
             @(negedge clk); pw_v = 1; pw_addr = k; pw_data = {$random(seed), $random(seed)};
             if (k % 16 == 0) begin         // slice 0: unit / barrier / chase / waits biased toward progress (mostly ME / SU ops)
                 pw_data[1:0] = (($random(seed) & 15) == 0) ? 2'd0 : (($random(seed) & 1) ? 2'd1 : 2'd2);
-                if (ARCOV != 0 && ($random(seed) & 1)) pw_data[1:0] = 2'd0;
+                if ((ARCOV != 0 || AMCOV != 0) && ($random(seed) & 1)) pw_data[1:0] = 2'd0;
                 if (PCOV != 0) begin pw_data[3] = $random(seed) & 1; pw_data[19:4] = 16'(1 + ($random(seed) & 3)); end
                 pw_data[3:2] = (($random(seed) & 7) == 0) ? 2'($random(seed)) : 2'd0;
                 pw_data[21:20] = (($random(seed) & 7) == 0) ? 2'($random(seed)) : 2'd0;
@@ -361,6 +375,7 @@ module tb_qfd_seq_su_bi_psram;
         for (k = 0; k < 8; k = k + 1) begin
             @(negedge clk); pw_v = 0; dw_v = 1; dw_addr = k;
             dw_data = {20'($random(seed)), 6'd0, 6'(k * 7 % 48), 32'($random(seed))};   // program base [43:32] inside the store
+            if (AMCOV != 0) dw_data[1:0] = 2'd2;   // qwen-tp8/seq: every segment ends in the argmax gather
             if (ARCOV != 0) begin dw_data[1:0] = (k == 7) ? 2'd0 : ((($random(seed) & 3) != 0) ? 2'd1 : 2'd2); dw_data[17:10] = 8'd1 + 8'($random(seed) & 7); end
         end
         @(negedge clk); dw_v = 0;
@@ -377,9 +392,41 @@ module tb_qfd_seq_su_bi_psram;
             x_ofin = ($random(seed) & 3) == 0;
             rst_n = (i % 400) != 399;                // a reset every 400 cycles restarts the sequencer (store kept)
             h_start = (i % 400) == 12;
+            if (AMCOV != 0) begin
+                // qwen-tp8/seq: the bench is the TP_D-rank collective of the argmax gather
+                r_valid = 0; r_err = 0; r_last = 0; r_rank = 0; pi_su_fault = 0;
+                if (!rst_n) begin am_on = 0; am_wait = 0; end
+                if ((am_on || am_wait) && s_done_0) begin
+                    if (!am_fpre) begin
+                        nam = nam + 1;
+                        if (am_on || seq_ntok_0 !== am_ei || seq_nval_0 !== am_ev || s_fault_0 !== 1'b0) begin
+                            namb = namb + 1;
+                            if (namb <= 5) $display("AMBAD i=%0d sent=%0d ntok=%h exp=%h nval=%h exp=%h fault=%b", i, am_n, seq_ntok_0, am_ei, seq_nval_0, am_ev, s_fault_0);
+                        end
+                    end
+                    am_on = 0; am_wait = 0;
+                end
+                if (am_on && ($random(seed) & 3) != 0) begin
+                    r_valid = 1; r_rank = RBW'(am_n); r_last = (am_n == TP_D - 1);
+                    r_data[31:0] = am_v[am_n]; r_data[32 +: NW] = am_i[am_n];
+                    am_n = am_n + 1;
+                    if (am_n == TP_D) begin am_on = 0; am_wait = 1; end
+                end else if (!am_on && !am_wait && rst_n && c_valid_0 && c_mode_0) begin
+                    am_r = $random(seed) & (TP_D - 1);
+                    for (am_k = 0; am_k < TP_D; am_k = am_k + 1) begin
+                        am_v[am_k] = $random(seed); am_i[am_k] = NW'($random(seed));
+                        if (am_k > 0 && ($random(seed) & 3) == 0) am_v[am_k] = am_v[$unsigned($random(seed)) % am_k];
+                        if (am_k == am_r) begin am_v[am_k] = c_data_0[31:0]; am_i[am_k] = c_data_0[32 +: NW]; end
+                        if (am_k == 0 || okey(am_v[am_k]) > okey(am_ev)) begin am_ev = am_v[am_k]; am_ei = am_i[am_k]; end
+                    end
+                    am_on = 1; am_n = 0; am_fpre = s_fault_0;
+                end
+            end
         end
         @(negedge clk); h_start = 0;
         repeat (20) @(posedge clk);
+        if (AMCOV != 0) $display("GOLD argmax ranks=%0d checks=%0d bad=%0d (min %0d)", TP_D, nam, namb, MINAM);
+        if (namb != 0 || nam < MINAM) bad = bad + 1 + namb;
         if (bad == 0 && nrd >= MINRD && nvw >= MINVW) $display("PASS seq_su_bi_psram cycles=%0d program_reads=%0d loads=%0d core_done=%0d cwait=%0d coll=%0d vm_writes=%0d chase_eq=%0d", cyc, nrd, nld, ncd, ncw, ncol, nvw, nceq);
         else $display("FAIL seq_su_bi_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d core_done=%0d cwait=%0d coll=%0d vm_writes=%0d (min %0d)", bad, nrd, MINRD, nld, ncd, ncw, ncol, nvw, MINVW);
         $finish;
