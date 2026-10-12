@@ -22,7 +22,12 @@ Stream `qwen-tp8`, die agent `[qwen-tp8/die]`. Branch `claude/el1011-qwen-tp8-di
 
 **Tree balance.** `tools/qwen_die_seam/tree_pads.py` runs the array bench's arrival model on the unpadded netlist: 704 of 720 nodes were misaligned. The resulting pads are in `results/arch/hier_contract_1012/qwen_rom_tp8_tree_pads.json`. The generator places them as relays at the sink end of each early leg. As placed, 0 of 720 nodes are misaligned.
 
-**Open.** 119 pad-junction hops exceed 500 µm (maximum about 1,030 µm), where the corridors near the node are full. The fix is for it2: reserve the pad sites before the bulk relays are placed.
+**Open.** `die_audit` counts 1,232 nets over the 504 µm reach:
+
+- 1,226 are tree-pad chain hops (500 to 1,250 µm). The corridors near the nodes are full, so the pads land in the row gaps, up to 880 µm from the W-face tree pins.
+- 6 are hops on the W-SerDes words, which cross the collective.
+
+The v2 fix: place pads on the leg's own row-gap crossing (between two frames that are within reach), or reserve corridor pad sites before the bulk relays are placed. Route the W-SerDes words S of the collective.
 
 ## Seam benches (agidock128 `/srv/opentallas-scratch/claude/qwen-tp8-seam`)
 
@@ -33,13 +38,13 @@ These run on the tp8a contract and netlist with `QS_CONTRACT=…/qwen_rom_tp8.js
 | `array_placed` (corridor + tree, **no `--deskew`**) | **PASS**: 0 / 720 misaligned nodes, 0 pad relays needed |
 | `p2p` | **PASS** |
 | `array_mut_drop_tree` (drop `n_tree_0_1_0b` relay 1) | FAIL, as required |
-| `credit` | Rerun after the res_ser lane fix (3 bands); see the log |
+| `credit` (15 lanes: 8 cbuf, 3 rs, collective) | **PASS**; mutant `cr:+1` FAILs as required |
 
 ## Iterations
 
 | It | Source | Views | Run | GRT overflow | TT setup | FF hold (after pads) | Clock plan | State |
 |---|---|---|---|---|---|---|---|---|
-| it1 | tp8a (see `it1.log`) | Closed views through `die_views`: `qfd_crom_g_a`, `qfd_su_cbuf_g_b`, `qfd_d2d_rom_b`, `qfd_io_serdes_rxd512` (all 3 SerDes). ETM-bound through `qwen_die_etm_map`: station ETMs on `qfd_cst_n` / `_s` and `qfd_chead`, and slab port-group ETMs. Contract budget (0.2 T): everything else, including `qfd_tile_nk` (GT 3,072 re-synthesis pending) and `tt_up4` (NB 3) | EPYC1 `/srv/opentallas-scratch/claude/qwen-tp8-die/it1` | pending | pending | pending | pending | running |
+| it1 | tp8a (see `it1.log`) | Closed views through `die_views`: `qfd_crom_g_a`, `qfd_su_cbuf_g_b`, `qfd_d2d_rom_b`, `qfd_io_serdes_rxd512` (all 3 SerDes). ETM-bound through `qwen_die_etm_map`: station ETMs on `qfd_cst_n` / `_s` and `qfd_chead`, and slab port-group ETMs. Contract budget (0.2 T): everything else, including `qfd_tile_nk` (GT 3,072 re-synthesis pending) and `tt_up4` (NB 3) | EPYC1 `/srv/opentallas-scratch/claude/qwen-tp8-die/it1` | pending | pending | pending | 0 intra / 0 inter (max inter 135.4 ps; balance left 262 late views) | running. **CONGESTION PROBE ONLY**: 267 µm tile slot, superseded by the coordinator's v2 tile slot of 311.04 × 1,296 |
 
 **Pass criteria:** GRT overflow 0, TT ≥ 0, FF ≥ 0 after pads, clock plan with 0 intra and 0 inter violations, die_audit hops_over 0.
 
