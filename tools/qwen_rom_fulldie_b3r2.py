@@ -558,16 +558,34 @@ def _tp8b_kv(v, m):
         sq, eg = o['qkd_seq'], o['qkd_embgw']
         ref = sq.ports.get('rf') or sq.ports.get('d2df')
         lay = ref[3] if ref and ref[0] == 'face' else 'M5'
-        c = {'qkd_seq': 8.0, 'qkd_embgw': 8.0}
+        def occupied(mm, face):
+            # intervals (along the face) already taken by face groups on that face, any layer
+            occ = []
+            for q in mm.ports.values():
+                if q and q[0] == 'face' and q[2] == face:
+                    h = q[1] * q[5] * 0.048 / 2
+                    occ.append((q[4] - h, q[4] + h))
+            return sorted(occ)
+
         for bid, (kn, kp, bits, face) in sorted(short.items()):
             mm = sq if kn == 'seq' else eg
-            span = bits * 0.048 * 2 + 4.0
-            if kp not in mm.ports:
-                # a pin layer must run across its face: the N/S faces take the seq 'rf' layer (vertical, M5), the
-                # E/W faces a horizontal layer (M4).  An M5 pin on a W/E face sits at x = depth/2 (0.096), off the
-                # M5 x lattice the N/S pins fix -> 'ot_mts: qkd_embgw R0 x has no legal origin' (it2 case_r22k).
-                mm.face(kp, bits, face, lay if face in 'NS' else 'M4', c[mm.name] + span / 2, 2)
-            c[mm.name] += span + 4.0
+            if kp in mm.ports:
+                continue
+            # a pin layer must run across its face: the N/S faces take the seq 'rf' layer (vertical, M5), the E/W
+            # faces a horizontal layer (M4).  An M5 pin on a W/E face sits at x = depth/2 (0.096), off the M5 x
+            # lattice the N/S pins fix -> 'ot_mts: qkd_embgw R0 x has no legal origin' (it2 case_r22k).  On M4 the
+            # words share the face with the KV-half M4 groups, so each takes the first free gap (first fit, 4-um
+            # gaps) instead of a private running offset from the face start.
+            span = bits * 0.048 * 2
+            L_ = mm.h if face in 'EW' else mm.w
+            at = 8.0
+            for a0, a1 in occupied(mm, face):
+                if at + span + 4.0 <= a0:
+                    break
+                at = max(at, a1 + 4.0)
+            if at + span > L_ - 2.0:
+                raise ValueError(f'tp8b kv short {kp}: {bits} b do not fit the {mm.name} {face} face')
+            mm.face(kp, bits, face, lay if face in 'NS' else 'M4', at + span / 2, 2)
         su = o.get('qfd_sp_su64_sfu') or next((q for q in o.values() if 'eq' in q.ports and q.name.endswith('su64_sfu')), None)
         if su is not None and su.ports['eq'][0] == 'face':
             sp = su.ports['eq']
