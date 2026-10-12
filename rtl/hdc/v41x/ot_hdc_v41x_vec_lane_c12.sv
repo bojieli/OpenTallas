@@ -21,6 +21,16 @@
 // with a gather 6 + OPR, M1 OPR + (MLAT | DDIV), AD OPR + ALAT, E1 OPR + MLAT, divide DDIV, sigmoid
 // exp + ALAT + DDIV, rsqrt / sqrt / sqrt(softplus) / gate + SIDEX, sqrt(softplus) exp + 11 MLAT + 10 ALAT + 31 + DDIV.
 // ---------------------------------------------------------------------------
+`ifndef OT_SFU_CH_PORTS
+`ifdef OT_SFU_CHAIN_EXT
+// el1011-hbm-sfu TWO-LEVEL (SFUT 2): the sigmoid chain is a separate die-placed tile; the lane exposes the seam
+`define OT_SFU_CH_PORTS , output wire ch_rst_n, output wire ch_v, output wire ch_is_exp, output wire ch_is_sig, output wire ch_silu, output wire [31:0] ch_r, input wire [31:0] ch_y_exp, input wire [31:0] ch_y_div, input wire ch_f_e, input wire ch_f_den, input wire ch_f_div
+`define OT_SFU_CH_CONN , .ch_rst_n(ch_rst_n), .ch_v(ch_v), .ch_is_exp(ch_is_exp), .ch_is_sig(ch_is_sig), .ch_silu(ch_silu), .ch_r(ch_r), .ch_y_exp(ch_y_exp), .ch_y_div(ch_y_div), .ch_f_e(ch_f_e), .ch_f_den(ch_f_den), .ch_f_div(ch_f_div)
+`else
+`define OT_SFU_CH_PORTS
+`define OT_SFU_CH_CONN
+`endif
+`endif
 module ot_hdc_v41x_vec_lane #(
     parameter integer AW = 24,
     parameter integer CW = 24,          // internal count width
@@ -118,6 +128,7 @@ module ot_hdc_v41x_vec_lane #(
     output wire [31:0]       ro_x,
     output wire              fault,
     output wire              coll
+    `OT_SFU_CH_PORTS
 );
     /* verilator no_inline_module */
     localparam [1:0] SRC_VM = 0, SRC_CLO = 1, SRC_CHI = 2, SRC_WROM = 3;
@@ -742,7 +753,35 @@ module ot_hdc_v41x_vec_lane #(
             wire is_exp = (ci_sfu == SFU_EXP), is_sig = (ci_sfu == SFU_SIGM || ci_sfu == SFU_SILU);
             wire [31:0] y_exp, y_div;
             wire f_e, f_den, f_div;
-            if (SFUT != 0) begin : g_chain_tile
+            if (SFUT >= 2) begin : g_chain_seam
+                // TWO-LEVEL hierarchy (owner 10-11 ~21:00): the chain is its own die-placed tile.  Die-level seam
+                // registered on both sides: lane-side launch registers here, the chain's own pin registers, the
+                // chain's registered outputs, lane-side capture registers here (+4 = 2 * SFUT cycles on exp / sigmoid)
+                (* keep *) reg so_rst, so_v, so_ie, so_is, so_si;
+                (* keep *) reg [31:0] so_r;
+                always @(posedge clk) begin
+                    so_rst <= local_rst_n[29]; so_v <= v3; so_ie <= is_exp; so_is <= is_sig; so_si <= (ci_sfu == SFU_SILU);
+                    so_r <= R;
+                end
+                wire [31:0] ci_ye, ci_yd;
+                wire ci_fe, ci_fden, ci_fdiv;
+`ifdef OT_SFU_CHAIN_EXT
+                assign ch_rst_n = so_rst; assign ch_v = so_v; assign ch_is_exp = so_ie; assign ch_is_sig = so_is;
+                assign ch_silu = so_si; assign ch_r = so_r;
+                assign ci_ye = ch_y_exp; assign ci_yd = ch_y_div; assign ci_fe = ch_f_e; assign ci_fden = ch_f_den;
+                assign ci_fdiv = ch_f_div;
+`else
+                ot_hdc_v41x_sfu_chain #(.MLAT(MLAT), .ALAT(ALAT), .DDIV(DDIV), .DENR(DENR), .DRING(DRING), .K(K)) u_chain (
+                    .clk(clk), .rst_n(so_rst), .v(so_v), .is_exp(so_ie), .is_sig(so_is), .silu(so_si), .r(so_r),
+                    .y_exp(ci_ye), .y_div(ci_yd), .f_e(ci_fe), .f_den(ci_fden), .f_div(ci_fdiv));
+`endif
+                (* keep *) reg [31:0] yi_e, yi_d;
+                (* keep *) reg fi_e, fi_den, fi_div;
+                always @(posedge clk) begin
+                    yi_e <= ci_ye; yi_d <= ci_yd; fi_e <= ci_fe; fi_den <= ci_fden; fi_div <= ci_fdiv;
+                end
+                assign y_exp = yi_e; assign y_div = yi_d; assign f_e = fi_e; assign f_den = fi_den; assign f_div = fi_div;
+            end else if (SFUT != 0) begin : g_chain_tile
 `ifdef OT_SFU_CHAIN_HARD
                 // hard sub-tile: no parameter overrides (the LEF/LIB cell); its defaults must be this lane's config
                 if (MLAT != 6 || ALAT != 6 || DDIV != 21 || DENR != 1 || DRING != 4 || K != 1) begin : g_chain_cfg_err
