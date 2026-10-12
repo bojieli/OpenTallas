@@ -1,5 +1,5 @@
 {
- "name": "dscoll_ces0_rt-rta-COMMIT",
+ "name": "dscoll_ces0_rt-rta-2a4f935aa",
  "block": "dsfd_coll_ces0",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-coll",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/el1011-ds-coll",
-  "commit": "COMMIT"
+  "commit": "2a4f935aa"
  },
  "stages": {
   "bench": [
@@ -158,7 +158,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_ces0_rt/dscoll_ces0_rt-rta-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_ces0_rt/dscoll_ces0_rt-rta-2a4f935aa"
   }
  ],
  "cycles_added": 0,
