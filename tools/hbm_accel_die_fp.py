@@ -663,7 +663,13 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # direction over 9 links); 1,024 b does not fit the SerDes face in the k = 16 GRT bundling
              link_ep=dict(wh=(1728.0, 1015.2), gap=43.2, flit_bits=1120, phy_bits=974),
              # hbmdie-1011 contract v2 (granted 10-11): hfd_lk_ep = 3-tile cluster 2,600 x 830 (was 1,728 x 1,015.2)
-             link_ep_v2=dict(wh=(2600.0, 830.0), xy=dict(S=((7570.0, 10254.0, 12938.0, 15622.0, 18306.0), 6016.0),
+             # hbmdie-1011 contract v5 (D16, 10-11): the S row of 5 in one 13,504-um gap between sm7 and sm14 left only
+             # 84-um inter-slot channels for every N-S crossing (8 clock/reset tree segments > 504 um, far-side relays).
+             # S becomes a 3 + 2 brick in the free band y 6,016-7,977 under SU/hgi_idx: row 1 (y 6,016) A1 / A2 / A3,
+             # row 2 (y 7,046) B1 over A1 and B2 over A3; channels >= 200 um (A1-A2 1,014, A2-A3 2,170 over the SerDes,
+             # rows 200, B2-hgi_idx 200, sm7-A1 400); per-slot (x, y) in SerDes x order S0..S4
+             link_ep_v2=dict(wh=(2600.0, 830.0), xy=dict(S=((7886.0, 6016.0), (7886.0, 7046.0), (11500.0, 6016.0),
+                                                           (16270.0, 6016.0), (16270.0, 7046.0)),
                                                        N=((9984.0, 12668.0, 15352.0, 18036.0), 18919.0))),
              lane_bypass=dict(W=dict(client='hb_sfu_SW', after='hb_su_SW', toward='hb_hc_SW', stn='hb_stn_lgW',
                                      master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)),
@@ -1045,11 +1051,18 @@ def build_r25gq_net(variant):
                 xs_ = [x0 + k * (ew + V['link_ep']['gap']) for k in range(len(sds))]
             if V['link_ep'].get('xy'):      # hbmdie-1011 contract v2 grant: hfd_lk_ep 3-tile cluster 2,600 x 830, fixed
                 # slots (S row bottom 6,016, N row top kept at 19,749), in serdes x order
-                xs_, y0 = V['link_ep']['xy'][grp]
-                y0 += 2 * V.get('svc_ch_dh', 0.0) if grp == 'N' else 0.0     # rf2: the N row rides the N half
+                g_ = V['link_ep']['xy'][grp]
+                if isinstance(g_[1], (int, float)):     # (xs, y): one row
+                    xs_, y0 = g_
+                    ys_ = [y0] * len(xs_)
+                else:                                   # v5: per-slot (x, y) (the S 3 + 2 brick)
+                    xs_, ys_ = [p_[0] for p_ in g_], [p_[1] for p_ in g_]
+                ys_ = [y_ + (2 * V.get('svc_ch_dh', 0.0) if grp == 'N' else 0.0) for y_ in ys_]   # rf2: N rides the N half
                 assert len(xs_) == len(sds), ('link_ep grant / serdes count', grp, len(xs_), len(sds))
+            else:
+                ys_ = [y0] * len(xs_)
             for k, sd in enumerate(sds):
-                ep = Inst(f'ep_{sd.name[3:]}', 'hfd_lk_ep', dn(xs_[k], GX), y0, ew, eh,
+                ep = Inst(f'ep_{sd.name[3:]}', 'hfd_lk_ep', dn(xs_[k], GX), ys_[k], ew, eh,
                           'R0' if grp == 'S' else 'MX', kind='hub', region='hub')
                 bx = ep.box()
                 hit_ = [i.name for i in insts if i.kind != 'waypoint' and bx[0] < i.x + i.w and i.x < bx[2]

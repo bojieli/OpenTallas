@@ -478,7 +478,7 @@ def main(argv=None):
                  status='decided v3'),
             dict(id='D13', slot='die', change='v4: contract on r25gqn_pr (b4638437b): data segments > 504 um 985 -> 0, 0 '
                  'overlaps, die 856.95 mm2 (svc channels +108 um); residual check rc 3 = 8 clock/reset tree segments > 504 '
-                 'um + 7 far-side data relays, all at the lk_ep S row (84-um gaps full) -> D16', status='v4 (residual open)'),
+                 'um + 7 far-side data relays, all at the lk_ep S row (84-um gaps full) -> D16', status='v4; residual closed v5 (D18)'),
             dict(id='D14', slot='hfd_cmdproc / hfd_coll', change='coll_recx 554 b (TOPK_MERGE sideband): t_hgi_coll widens by '
                  '554 b when the TKM tiles compose on the die (die coll view TKM=0 today); lgEcp / lgEatt / t_hgi_e2* classed '
                  'OPEN with owners (main 04dad4b3a)', status='open'),
@@ -486,7 +486,12 @@ def main(argv=None):
                  'the w8 cluster (43.2 um to idx_selector); spine above moves up: idx_selector y 8,875, coll 10,902, hgi_vm '
                  '12,506, cmdproc 14,623', status='v4'),
             dict(id='D16', slot='hfd_lk_ep S row', change='re-grant pending: the 84-um inter-ep channels carry every N-S crossing '
-                 'of the row; widen to >= 200 um (pitch 2,800) or move the S row', status='open'),
+                 'of the row; widen to >= 200 um (pitch 2,800) or move the S row', status='closed v5 (D18)'),
+            dict(id='D18', slot='hfd_lk_ep S row', change='v5 re-grant (closes D16): the one-row S band (5 x 2,600 in the 13,504-um '
+                 'sm7 | sm14 gap, 84-um channels) becomes a 3 + 2 brick in the free band y 6,016-7,977: row 1 y 6,016 at x 7,886 '
+                 '(ep_S0) / 11,500 (ep_S2) / 16,270 (ep_S3), row 2 y 7,046 at x 7,886 (ep_S1) / 16,270 (ep_S4); slot 2,600 x 830 '
+                 'and the pg M8 / strap M9 exception unchanged; every channel >= 200 um (A2-A3 2,170 over the SerDes); '
+                 'check rc 3 -> 0 (8 clock/reset tree segments + far-side relays -> 0)', status='v5'),
             dict(id='D17', slot='hfd_hc_eng', change='lane-major N-face re-pin accepted; needs per-lane ports in the die bus model '
                  '(generator places each port contiguous) and the lgE station spanning the full 4,384.8 face', status='open'),
         ],
