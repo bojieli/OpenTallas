@@ -18,11 +18,13 @@ module tb_hgi_dma_back;
     parameter integer ALAT = 40;
     parameter integer NRAND = 40;
     parameter integer SEED = 1;
-    localparam integer NS = 4, NL = 8, NB = 32, SBIT = 35;
+    parameter integer NS = 4;          // 1: the HBM B2 per-cluster instance (stack STK only)
+    parameter integer STK = 0;
+    localparam integer NL = 8, NB = 32, SBIT = 35;
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_src, mv_done, mv_fault, quiet;
     wire [512:0] vr2q; wire [8256:0] vr2r; wire [NS*NL*289-1:0] wd; wire [NS*NL-1:0] wd_cr; wire [NS*4-1:0] wa;
-    ot_hgi_dma_back #(.SBIT(SBIT), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
+    ot_hgi_dma_back #(.NS(NS), .STK(STK), .SBIT(SBIT), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
         .mv_src(mv_src), .mv_done(mv_done), .mv_fault(mv_fault), .quiet(quiet), .vr2q(vr2q), .vr2r(vr2r),
         .wd(wd), .wd_cr(wd_cr), .wa(wa));
     // ---------------------------------------------------------------- VM model
@@ -73,7 +75,7 @@ module tb_hgi_dma_back;
                 bt = wdh[HOPS][(s*NL + l)*289 +: 289];
                 if (bt[288]) begin
                     a = longint'(bt[287:256]) * 32;
-                    if (((a >> SBIT) & 3) != s) begin $display("TB FAIL: stack %0d lane %0d got address %h", s, l, a); $finish; end
+                    if (((a >> SBIT) & 3) != ((STK + s) & 3)) begin $display("TB FAIL: stack %0d lane %0d got address %h", s, l, a); $finish; end
                     for (integer w = 0; w < 8; w++) begin hbm[a / 4 + w] = bt[w*32 +: 32]; wr[a / 4 + w] = 1'b1; end
                     cr0[s*NL + l] <= 1'b1; c = c + 1; nwrit = nwrit + 1;
                 end
@@ -152,6 +154,31 @@ module tb_hgi_dma_back;
         void'($urandom(SEED));
         for (integer i = 0; i < 262144; i++) vm[i] = $urandom;
         repeat (4) @(posedge clk); rst_n = 1; repeat (8) @(posedge clk);
+        if (NS == 1) begin : b2
+            // HBM B2 per-cluster instance: the cluster's quarter of h (80 rows of 256 B, contiguous in its slice) to its
+            // stack (stack-local COLB + STK x 64 + r x 256), cluster 0 also PRE; then a long row and random moves on STK
+            longint sb; sb = longint'(STK) << SBIT;
+            add_mv(0, 64, sb | (64'h180020000 + 64 * STK), 0, 256, 80, 64, 0);
+            if (STK == 0) add_mv(20480, 64, 64'h180020000 + 81920, 0, 0, 1, 8, 0);
+            run_queue(t0, t1); tp = t1 - t0;
+            $display("TB TPUT B2 cluster %0d swapout quarter (20 KiB%s, store -> quiet): %0d cycles", STK, STK == 0 ? " + PRE" : "", tp);
+            check("P1");
+            for (integer i = 0; i < 262144; i++) vm[i] = $urandom;
+            add_mv(64 * 7, 64, sb | 64'h1000, 0, 0, 1, 20480, 0);
+            add_mv(64 * 400, 128, sb | 64'h40000, 0, 4096 + 32, 7, 24, 5);
+            add_mv(64 * 1000, 64 * 4, sb | 64'h200000, 0, 512, 9, 40, 0);
+            run_queue(t0, t1); check("L1");
+            for (integer r = 0; r < NRAND; r++) begin : rnd1
+                integer m, n, vb, vst; longint dst;
+                for (integer i = 0; i < 262144; i++) vm[i] = $urandom;
+                m = $urandom_range(1, 9); n = 8 * $urandom_range(1, 100);
+                vst = 64 * ((n + 63) / 64 + $urandom_range(0, 2)); vb = 64 * $urandom_range(0, (262144 - vst * m) / 64 - 1);
+                dst = 32 * ((n * 4 + 31) / 32 + $urandom_range(0, 3));
+                add_mv(vb, vst, sb | (32 * longint'($urandom_range(0, 1 << 16))), 0, dst, m, n, 0);
+                run_queue(t0, t1); check($sformatf("R%0d", r));
+                if (errors) break;
+            end
+        end else begin : b4
         // P: the production swapout (ds_mtp_kernels swap(): h STRIPE4 320 x 64 FP32 at COLB + slot x CSTR, PRE 8 words)
         add_mv(0, 64, (longint'(1) << 37) | 64'h180020000, 1, 64, 320, 64, 0);
         add_mv(20480, 64, 64'h180020000 + 81920, 0, 0, 1, 8, 0);
@@ -184,6 +211,7 @@ module tb_hgi_dma_back;
             end
             run_queue(t0, t1); check($sformatf("R%0d", r));
             if (errors) break;
+        end
         end
         if (errors == 0 && !mv_fault) $display("TB_HGI_DMA_BACK PASS (MUT %0d) production %0d cycles", MUT, tp);
         else $display("TB_HGI_DMA_BACK FAIL (MUT %0d) errors %0d", MUT, errors);
