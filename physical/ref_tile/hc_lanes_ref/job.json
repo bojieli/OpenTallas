@@ -4,12 +4,6 @@
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-hcvm",
  "purpose": "el1011-hbm-hcvm/hc round 4: HARD LANE-GROUP LEAF ot_hdc_v41x_hcp_lanes (8 FP32 MAC lanes, mul LAT 8 / add LAT 7, pin-flopped inputs = the stage's old input registers, registered outputs) of the HC bank tile (TLG 8 -> 4 leaves per tile, 8 tiles per die). Structural fix for hc_tile-sys-faa39cbe9-{a,b} EARLY_FAIL_HOLD (one clock root over ~57k sinks, FF insertion 415..765 ps, CTS hold stuck at -165/-247 ps in u_mul pipes; textbook REFUSE > 15k sinks). Benches: HC unit SYS composition (exact + MUT_MP/MUT_POST fail) built on these leaves.",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
