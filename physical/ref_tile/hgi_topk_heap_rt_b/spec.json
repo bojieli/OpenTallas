@@ -5,7 +5,6 @@
  "sources": [
   "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv",
   "rtl/lib/ot_rst_relay.sv",
-  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
  ],
@@ -14,26 +13,38 @@
   "rst_n"
  ],
  "outline": {
-  "w": 345.6,
+  "w": 259.2,
   "h": 259.2
  },
  "pg_layer": "M6",
  "macros": [
   {
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
-   "count": 1
-  },
-  {
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "count": 1
-  },
-  {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
-   "count": 1
+   "at": [
+    22.464,
+    23.76
+   ]
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
-   "count": 2
+   "at": [
+    22.464,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    138.24,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    22.464,
+    148.32
+   ]
   }
  ],
  "pins": {
@@ -63,7 +74,7 @@
   "owner": "Claude:el1011-hbm-idx",
   "branch": "claude/el1011-hbm-idx",
   "tag": "w8s",
-  "purpose": "el1011-hbm-idx w8 split: heap tile ot_hgi_topk_heap_tile re-route via ref_tile (hand-kit view tile-b-3c5540533 fails child_lint (f) 11/181); pins on the N face (abuts its lane tile), clk/rst_n N; variant b 345.6x259.2 (macro rows 1024+128 / 256+128 / 128) PD 0.5",
+  "purpose": "el1011-hbm-idx w8 split: heap tile ot_hgi_topk_heap_tile re-route via ref_tile (hand-kit view tile-b-3c5540533 fails child_lint (f) 11/181); pins on the N face (abuts its lane tile), clk/rst_n N; variant b 259.2x259.2 PD 0.5 (macros 256 / 2x128 / 128: level 11 is one node, no 1024 macro)",
   "benches": [
    {
     "name": "heap_iw8w8_short_exact",
