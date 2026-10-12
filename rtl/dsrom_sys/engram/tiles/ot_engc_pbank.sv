@@ -12,7 +12,15 @@
 // Bank 2 (64 b) uses this tile with w_d[255:64] = 0 (the old zero pad) and ignores r_d[255:64].
 module ot_engc_pbank #(
     parameter integer BW = 256,
-    parameter integer XW = 64
+    parameter integer XW = 64,
+    // CKL: per-SRAM clock leaf (el1011-ds-misc/engram 2026-10-11, T_PBC macro clock fix).  TritonCTS builds the 6 SRAM
+    // clock pins as a separate macro tree that ends with NO leaf buffers (2 branch nets, 3 SRAMs each, 124-188 um,
+    // SRAM clk slew 239 ps FF -> slew-dependent library hold 42-61 ps on every wd_in / addr pin; CTS macro-clustering
+    // options do not change it, CTS-stop x1-x3).  An explicit clock cell per group gives each SRAM its own short driver:
+    //   (gated off while the tile is in reset: only valid-reset / unreset data flops sit on it, no observable change)
+    //   0 = none (T_PBB as closed);  1 = per-group ICG drives only the SRAM clk;
+    //   2 = per-group ICG drives the SRAM clk AND its access (W3 / R2) and capture flops (macro + launch flops on one leaf).
+    parameter integer CKL = 0
 ) (
     input  wire          ck,
     input  wire          rst,          // async die reset (active low); synchronised here (2 flops, as every tile)
@@ -43,19 +51,32 @@ module ot_engc_pbank #(
     genvar g;
     generate for (g = 0; g < NG; g = g + 1) begin : g_grp
         wire w3_v, r2_v; wire [7:0] w3_a, r2_a; wire [BW-1:0] w3_d; wire [255:0] rd_out;
-        ot_v41_kreg #(.W(8+BW), .AR(0)) u_w3d (.clk(ck), .arst_n(rn), .d({wd_p, wa_p}), .q({w3_d, w3_a}));
-        ot_v41_kreg #(.W(1), .AR(1)) u_w3v (.clk(ck), .arst_n(rn), .d(woh_p[g]), .q(w3_v));
-        ot_v41_kreg #(.W(8), .AR(0)) u_r2a (.clk(ck), .arst_n(rn), .d(ra_p), .q(r2_a));
-        ot_v41_kreg #(.W(1), .AR(1)) u_r2v (.clk(ck), .arst_n(rn), .d(roh_p[g]), .q(r2_v));
+        wire ckm;                       // SRAM clock
+        wire ckg;                       // access / capture flop clock
+        if (CKL == 0) begin : g_ck0 assign ckm = ck; end
+        else begin : g_ckl
+`ifdef SYNTHESIS
+            // ENA = the synchronised reset (clock runs once out of reset).  NOT a tie: OpenSTA propagates the ENA=1 constant
+            // through the ICG statetable and drops the CLK->GCLK arc (CTS-stop x5: SRAM clk unclocked, 1,536 unconstrained D).
+            ICGx4_ASAP7_75t_R u_ckl (.CLK(ck), .ENA(rn), .SE(1'b0), .GCLK(ckm));
+`else
+            assign ckm = ck;
+`endif
+        end
+        if (CKL == 2) begin : g_ckg2 assign ckg = ckm; end else begin : g_ckg0 assign ckg = ck; end
+        ot_v41_kreg #(.W(8+BW), .AR(0)) u_w3d (.clk(ckg), .arst_n(rn), .d({wd_p, wa_p}), .q({w3_d, w3_a}));
+        ot_v41_kreg #(.W(1), .AR(1)) u_w3v (.clk(ckg), .arst_n(rn), .d(woh_p[g]), .q(w3_v));
+        ot_v41_kreg #(.W(8), .AR(0)) u_r2a (.clk(ckg), .arst_n(rn), .d(ra_p), .q(r2_a));
+        ot_v41_kreg #(.W(1), .AR(1)) u_r2v (.clk(ckg), .arst_n(rn), .d(roh_p[g]), .q(r2_v));
         wire [255:0] wd_m;
         if (BW < 256) begin : g_wpad assign wd_m = {{(256-BW){1'b0}}, w3_d}; end
         else begin : g_wfull assign wd_m = w3_d; end
         ot_sram_1r1w_256x256_m2_r2c2 u_sram(
-            .clk(ck), .r_ce_in(r2_v), .r_addr_in(r2_a), .rd_out(rd_out),
+            .clk(ckm), .r_ce_in(r2_v), .r_addr_in(r2_a), .rd_out(rd_out),
             .w_ce_in(w3_v), .w_addr_in(w3_a), .wd_in(wd_m), .w_mask_in({256{1'b1}}),
             .rr_en(2'd0), .rr_addr(14'd0), .cr_en(2'd0), .cr_sel(16'd0));
         reg [BW-1:0] cap_q; reg sm_q, s3_q;
-        always @(posedge ck) cap_q <= rd_out[BW-1:0];
+        always @(posedge ckg) cap_q <= rd_out[BW-1:0];
         always @(posedge ck or negedge rn) if (!rn) begin sm_q <= 1'b0; s3_q <= 1'b0; end
                                            else begin sm_q <= r2_v; s3_q <= sm_q; end
         assign cap[g] = cap_q;
@@ -80,6 +101,9 @@ module ot_engc_pbank #(
     always @(posedge ck) r_d <= m_q;
 endmodule
 
+`ifndef OT_ENGC_PBC_CKL
+`define OT_ENGC_PBC_CKL 2
+`endif
 // tile tops (parameterless, so the hardened views and the composition's black boxes agree)
 module ot_engc_t_pbb (    // bank 1 band tile: write transit {bank2 64, bank0 256} N face -> E face
     input wire ck, rst, input wire [5:0] w_oh, input wire [7:0] w_a, input wire [255:0] w_d, input wire [319:0] x_d,
@@ -92,6 +116,6 @@ module ot_engc_t_pbc (    // bank 0 / bank 2 column tile: write W face, transit 
     input wire ck, rst, input wire [5:0] w_oh, input wire [7:0] w_a, input wire [255:0] w_d, input wire [63:0] x_d,
     output wire [5:0] x_oh, output wire [7:0] x_a, output wire [63:0] x_do,
     input wire [5:0] r_oh, input wire [7:0] r_a, output wire [255:0] r_d);
-    ot_engc_pbank #(.BW(256), .XW(64)) u_b (.ck(ck), .rst(rst), .w_oh(w_oh), .w_a(w_a), .w_d(w_d), .x_d(x_d),
+    ot_engc_pbank #(.BW(256), .XW(64), .CKL(`OT_ENGC_PBC_CKL)) u_b (.ck(ck), .rst(rst), .w_oh(w_oh), .w_a(w_a), .w_d(w_d), .x_d(x_d),
         .x_oh(x_oh), .x_a(x_a), .x_do(x_do), .r_oh(r_oh), .r_a(r_a), .r_d(r_d));
 endmodule
