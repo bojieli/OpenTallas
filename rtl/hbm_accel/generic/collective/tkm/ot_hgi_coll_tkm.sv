@@ -523,21 +523,30 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
     end
     reg [EW-1:0] X [0:PT-1];
     wire [EW-1:0] SX [0:NP-1];
-    wire [3:0] g2 [0:NP-1];                                  // B2 vs the current array
-    wire [3:0] gb [0:NGR-1][0:3];                            // gb[g][j][j2]: B2 element j2 beats B1 element j
+    // flat packed vectors (yosys 0.68 asserts on unpacked wire arrays driven by parameterised instance ports)
+    wire [4*NP-1:0]    g2f;                                  // g2f[4q +: 4]: B2 vs the current array position q
+    wire [16*NGR-1:0]  gbf;                                  // gbf[16g + 4j + j2]: B2 element j2 beats B1 element j
     wire [2:0] cp [0:NP-1];                                  // stage I count (B1)
     genvar gp, gj, gk, gg;
     for (gp = 0; gp < NP; gp = gp + 1) begin : g_pos
         if (gp < PT) begin : g_x assign SX[gp] = X[gp]; end else begin : g_e assign SX[gp] = {EW{1'b0}}; end
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_c
-            ot_tkm_lt #(.W(KT)) u_c (.a(SX[gp][EW-1:1]), .b(p_bg[gp / GP][EW*gj + 1 +: KT]), .lt(g2[gp][gj]));
+            wire [KT-1:0] ka = SX[gp][EW-1:1];               // operands as local wires (yosys 0.68: a memory-word
+            wire [KT-1:0] kb = p_bg[gp / GP][EW*gj + 1 +: KT]; // part-select on a port re-derives the module and asserts)
+            wire lt_;
+            ot_tkm_lt #(.W(KT)) u_c (.a(ka), .b(kb), .lt(lt_));
+            assign g2f[4*gp + gj] = lt_;
         end
         assign cp[gp] = q_vg[gp / GP] ? (3'(gt[gp][0]) + 3'(gt[gp][1]) + 3'(gt[gp][2]) + 3'(gt[gp][3])) : 3'd0;
     end
     for (gg = 0; gg < NGR; gg = gg + 1) begin : g_bb
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_j
             for (gk = 0; gk < 4; gk = gk + 1) begin : g_k
-                ot_tkm_lt #(.W(KT)) u_b (.a(q_bg[gg][EW*gj + 1 +: KT]), .b(p_bg[gg][EW*gk + 1 +: KT]), .lt(gb[gg][gj][gk]));
+                wire [KT-1:0] ka = q_bg[gg][EW*gj + 1 +: KT];
+                wire [KT-1:0] kb = p_bg[gg][EW*gk + 1 +: KT];
+                wire lt_;
+                ot_tkm_lt #(.W(KT)) u_b (.a(ka), .b(kb), .lt(lt_));
+                assign gbf[16*gg + 4*gj + gk] = lt_;
             end
         end
     end
@@ -550,12 +559,12 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
             for (integer i = 0; i <= 4; i = i + 1)
                 if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) begin
                     ins[q] = ins[q] | SX[(q - i >= 0) ? q - i : 0];
-                    gn[q]  = gn[q]  | g2[(q - i >= 0) ? q - i : 0];
+                    gn[q]  = gn[q]  | g2f[4*((q - i >= 0) ? q - i : 0) +: 4];
                 end
             for (integer j = 0; j < 4; j = j + 1)
                 if (q_vg[q / GP] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j))) begin
                     ins[q] = ins[q] | q_bg[q / GP][EW*j +: EW];
-                    gn[q]  = gn[q]  | gb[q / GP][j];
+                    gn[q]  = gn[q]  | gbf[16*(q / GP) + 4*j +: 4];
                 end
             // the overflow positions are empty again after the edge: B2 beats them with every valid element
             if (q >= PT) for (integer j = 0; j < 4; j = j + 1) gn[q][j] = p_bg[q / GP][EW*j + EW - 1];
