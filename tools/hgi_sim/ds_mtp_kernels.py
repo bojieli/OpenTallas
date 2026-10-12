@@ -315,6 +315,10 @@ ZT, HT = 261440, 261504              # VM (above ds_native's map end 261,440 sin
 # PRE rides the swap as one whole 32 B sector (8 words: the 4 pre-mix words + 4 words of the 64-word-aligned VM PRE
 # slot): an HBM write is whole sectors (the DMA write paths have no byte enables; the mover refuses a partial sector)
 SLOT = (("h", 0, 20480), ("PRE", 81920, 8))
+# h rides the swap STRIPE4-coded (stack-interleaved in 256 B rows): every 32 consecutive VM sectors of h land on the four
+# stacks, 8 each, so the swap streams at the DMA BACK / FRONT rate (4 stacks x 8 lanes x 32 B) instead of one stack's 8 lanes;
+# per stack the rows are packed (row o at stack-local COLB + slot x CSTR + o x 64: stack s holds rows s, s + 4, ... 256 B apart)
+SW, HSTRIPE = 64, 320
 # The index selection (SELIDX) and the layer-20 candidate table (CANDM) are per-POSITION transients written by the
 # index-source layers and read by later layers of the same position: they move to position-indexed rows (SELB / CANDB +
 # (POS mod 16) * stride, written by the writer layer's body, loaded by the readers' bodies -- rollback-safe like the
@@ -473,6 +477,9 @@ class Kernels:
         for nm, off, n in SLOT:
             hb = self.H(COLB + off, n, dyn_sel=3, dyn_mul=CSTR)
             vm = self.V(nm, n)
+            if nm == "h":                # STRIPE4 (spec 6.4): 320 rows of 256 B, row o on stack o mod 4 at COLB + o x 64
+                hb = self.H((1 << 37) | COLB, SW, m=HSTRIPE, stride=64, dyn_sel=3, dyn_mul=CSTR)
+                vm = self.V(nm, SW, m=HSTRIPE, stride=SW)
             if into:
                 b.add(self.Rec("DMA", "LOAD", desc=dict(A=hb, O=vm), tag=f"swapin.{nm}", family="swap"), [], [nm])
             else:
@@ -877,6 +884,8 @@ def sim(a):
         d.hbm.add(ROPEB, rope.view(np.uint8).reshape(-1).copy(), "ROPE_ROWS")
         d.hbm.add(MTB, np.array([1, 0, 0, 0], F).view(np.uint8).copy(), "MTP_CONST")
         d.hbm.add(COLB, np.zeros(NCOLSLOT * CSTR, np.uint8), "COLSLOTS")
+        for st_ in (1, 2, 3):        # the STRIPE4 h rows of stacks 1..3 (same stack-local window as stack 0)
+            d.hbm.add((st_ << 35) | COLB, np.zeros(NCOLSLOT * CSTR, np.uint8), f"COLSLOTS{st_}")
         for t in toks:
             d.hbm.add(EMBB + t * 10240, raw[t].copy(), f"EMB{t}")
         if spec:
@@ -907,14 +916,19 @@ def sim(a):
     eng = Engine(K, Mach, units)
     col_out, stage_out = {}, {}
 
+    def col_read(d, c):
+        """slot c as the linear column (h 20,480 words from its STRIPE4 rows, then PRE 4 words)"""
+        lb = COLB + c * CSTR
+        h = [d.hbm.view(((o & 3) << 35) | (lb + o * 64), SW * 4).view(np.uint32) for o in range(HSTRIPE)]
+        return np.concatenate(h + [d.hbm.view(lb + 81920, 16).view(np.uint32)]).copy()
+
     def on_launch(e):
         if e["kind"] == "swapout" and K_cur["L"] == 0:
             c = e["token"]
-            col_out[e["pos"]] = [d.hbm.view(COLB + c * CSTR, 81936).view(np.uint32).copy() for d in dies]
+            col_out[e["pos"]] = [col_read(d, c) for d in dies]
         if e["kind"] == "swapout" and K_cur["L"] >= 40 and K_cur["phase_b"]:
             c = e["token"]
-            stage_out[(K_cur["L"] - 40, c - PMAX)] = [d.hbm.view(COLB + c * CSTR, 81936).view(np.uint32).copy()
-                                                       for d in dies]
+            stage_out[(K_cur["L"] - 40, c - PMAX)] = [col_read(d, c) for d in dies]
         if e["kind"] == "swapin":
             K_cur["L"] = e["pos"]
         if spec and e["kind"] in ("dsa", "dsb") and not K_cur.get("dbg_" + e["kind"] + str(e["token"])) and K_cur["L"] == 40:
