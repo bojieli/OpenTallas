@@ -583,8 +583,11 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # wire chain (stations <= 67 um); die routes cross the tiles on M8 / M9. face_coll 1,560 (el1011-hbm-coll: 9 tiles +
              # core SRAMs, hierarchical hfd_coll): the spine stack re-gaps evenly (cross gap loader -> coll 302.4 kept)
              coll_h=1560.0,
+             hc_wh=(2032.944, 1684.8),    # hbmdie-1011 contract v1: tiled HC quarter 3.425 mm2 (55 % at 88 tiles); cons asked 2,263.68 x 1,499.04 but the
+             # W hub has 18.6 um x slack and 3.1 mm of empty HC column below the quarter -> same area as a TALLER slot
              phys_trees=True,
-             pg_m8_masters=('hfd_hc',),   # conservative-1011 a0bda978e: tiled hfd_hc PG pins on M8 (die M9 straps join by via89)      # hbmdie-1011 textbook audit rows 2-3: regional pipelined reset tree + clock H-tree per domain
+             pg_m8_masters=(),   # hbmdie-1011 contract v1 (layer rule: M8/M9 die top only): the hfd_hc quarter cluster takes M7 PG
+             # stripes (its tiles PG M6 / signals <= M6, quarter straps M7), die joins M7-M8 like every block; 7c875ca6c's M8 PG path kept off.   # conservative-1011 a0bda978e: tiled hfd_hc PG pins on M8 (die M9 straps join by via89)      # hbmdie-1011 textbook audit rows 2-3: regional pipelined reset tree + clock H-tree per domain
              # (phys_relays, row 1, stays OFF: fully physical relaying of the hub's wide buses does not fit this
              # floorplan's channels -- relays reach 64.5 % of a 2 x 2 mm hub cell; needs the row-4 re-floorplan)
              idx_cols=((0, 1, 2), (3, 4, 5)), idx_col_gap=172.8, idx_gap=43.2, hc_gap=172.8, sfu_gap=216.0,
@@ -793,6 +796,11 @@ def build_r25gq(variant):
     su_w, su_h = V['su_slot']
     su_x = dn(sx0 - spch - su_w, GX)
     ix_w = 2 * B['hb_index_SW_b0'].w + V['idx_col_gap']
+    if V.get('hc_wh'):      # hbmdie-1011: explicit hfd_hc quarter outline (conservative-1011 tiled quarter, 88
+        # hfd_hc_tile_xl at ~55 %).  The column cannot widen (W slack 18.6 um to the die edge channel) but the R25GQ HC
+        # column is empty below the HC (the index stack left it), so the quarter grows in HEIGHT, its equator-side edge fixed
+        assert V.get('att_su_relays'), 'hc_wh needs the R25GQ hub (no index stack in the HC column)'
+        assert V['hc_wh'][0] <= ix_w + 1e-6, ('HC wider than its column', V['hc_wh'][0], ix_w)
     ix_x = dn(su_x - V['hub_col_gap'] - ix_w, GX)
     tw = B['at_SW_00_lo'].w
     at_w = V['attn_cols'] * tw + (V['attn_cols'] - 1) * V['attn_col_gap']
@@ -812,7 +820,7 @@ def build_r25gq(variant):
         tp = th_lo + th_hi
         at_h = V['attn_rows'] * tp + (V['attn_rows'] - 1) * V['attn_row_gap']
     sfu_h = up(B['hb_sfu_SW'].w * B['hb_sfu_SW'].h * V['sfu_frac'] / su_w, GY)
-    hc_h = up(V['hc_mm2'] * 1e6 / ix_w, GY)
+    hc_h = up(V['hc_wh'][1], GY) if V.get('hc_wh') else up(V['hc_mm2'] * 1e6 / ix_w, GY)
     assert su_h + V['sfu_gap'] + sfu_h <= qh, ('SU + SFU column overflows', su_h + V['sfu_gap'] + sfu_h, qh)
     for q in ('SW', 'SE', 'NW', 'NE'):
         S_, E_ = q[0] == 'S', q[1] == 'E'
@@ -843,8 +851,11 @@ def build_r25gq(variant):
                     y_ = up(y_ + B[f'hb_index_SW_b{b_}'].h + V['idx_gap'], GY)
                 ytop = max(ytop, y_ - V['idx_gap'])
         hc_y = up(ytop + V['hc_gap'], GY)
+        if V.get('hc_wh'):      # equator-side edge where the ledger-sized quarter had it; grow away from the equator
+            hc_y = dn(hc_y + up(V['hc_mm2'] * 1e6 / ix_w, GY) - hc_h, GY)
+            assert hc_y >= qy, ('taller HC leaves its column', hc_y, qy)
         assert hc_y + hc_h <= qy + qh, ('HC over the index stack overflows', hc_y + hc_h, qy + qh)
-        put(f'hb_hc_{q}', 'hb_hc_SW', ix_x, hc_y, ix_w, hc_h)
+        put(f'hb_hc_{q}', 'hb_hc_SW', ix_x, hc_y, V['hc_wh'][0] if V.get('hc_wh') else ix_w, hc_h)
         rmap[f'hb_hc_{q}'] = f'hb_hc_{q}'
         ty0 = up(qy + (qh - at_h0) / 2, GY)
         if V.get('attn_tall'):      # S top below the die equator with half the >= 346 um central corridor
@@ -886,7 +897,12 @@ def build_r25gq(variant):
     regions.append(dict(name='hub', kind='hub', rect=[g0['x0'], hb0, g0['x0'] + g0['core_w'], hb1]))
     if V.get('att_su_relays'):
         for r_ in json.loads((ROOT / V['att_su_relays']).read_text())['relays']:
-            insts.append(Inst(r_['name'], r_['master'], r_['x'], r_['y'], r_['w'], r_['h'], r_['orient'], kind='waypoint',
+            y_r = r_['y']
+            if V.get('hc_wh') and re.fullmatch(r'rly_N[WE]_1_\d+', r_['name']):
+                # hbmdie-1011: the N tr row-1 chain runs just above the N HC quarter; the taller quarter pushes the whole
+                # row (all 8 stations, so every hop keeps its length but the tile -> first relay hop) up by the growth
+                y_r = round(y_r + up(V['hc_wh'][1], GY) - up(V['hc_mm2'] * 1e6 / (2 * B['hb_index_SW_b0'].w + V['idx_col_gap']), GY), 6)
+            insts.append(Inst(r_['name'], r_['master'], r_['x'], y_r, r_['w'], r_['h'], r_['orient'], kind='waypoint',
                               region='channel', domain='stream_1p2'))
     notes.append(f'R25GQ: SM rows at {row_y} (S), hub blocks {hb0:.2f}-{hb1:.2f} um, quadrant {qh:.2f} um; spine gap '
                  f'{g_:.2f} um (+ abut 43.2 / cross {V["spine_cross_um"]})')
@@ -1046,11 +1062,15 @@ def build_r25gq_net(variant):
     A = G.graph(1.0 + RP.BLOCK_COST * G.blocked)
     from scipy.sparse.csgraph import dijkstra as _dj
 
+    spt_ = {}
+
     def gpath(a, b):
         if (a, b) not in pcache:
             ra = rings.setdefault(a, G.ring(a))
             rb = rings.setdefault(b, G.ring(b))
-            d_, pr_, _ = _dj(A, indices=ra, min_only=True, return_predecessors=True)
+            if a not in spt_:       # hbmdie-1011/rf: one shortest-path tree per source (multicast loads share prefixes)
+                spt_[a] = _dj(A, indices=ra, min_only=True, return_predecessors=True)[:2]
+            d_, pr_ = spt_[a]
             k_ = min(rb, key=lambda x: d_[x])
             pth = [k_]
             while pr_[pth[-1]] >= 0:
@@ -1447,12 +1467,18 @@ def build_r25gq_net(variant):
     def prelays(bid, bits, pth, L):
         """hbmdie-1011 phys_relays: relays() with ROUTE-AWARE placement -- each station first takes a free site on its
         own path (+-4 grid cells along the route, <= 2 lattice steps across it), only then the spiral legaliser."""
-        nonlocal nst
         ns_ = max(0, math.ceil(L / LINK_STAGE_UM) - 1)
         out = []
         for k in range(ns_):
             fr = (k + 1) / (ns_ + 1)
             ix = min(len(pth) - 1, int(round(fr * (len(pth) - 1))))
+            out.append(place1(bid, bits, pth, ix))
+        return out
+
+    def place1(bid, bits, pth, ix):
+        """one route-aware relay station of bus bid at route cell pth[ix] (hbmdie-1011/rf: shared by prelays / rtree)"""
+        nonlocal nst
+        if True:
             kk = pth[ix]
             if bits <= 1400:
                 sw_, sh_ = 58.32, 71.28
@@ -1492,8 +1518,7 @@ def build_r25gq_net(variant):
                 legal(st_)
             insts.append(st_)
             by[nm] = st_
-            out.append(nm)
-        return out
+            return nm
     if V.get('phys_relays'):
 
         def _near_pt(it, q):
@@ -1520,6 +1545,44 @@ def build_r25gq_net(variant):
                     keep.append(e)
             if not far_:
                 nb_.append(b_)
+                continue
+            if V.get('relay_tree'):
+                # hbmdie-1011/rf (relay TREE): the far loads of one bus share relay stations along the common prefix of
+                # their routes (one shortest-path tree per source), branching where the routes diverge; a station each
+                # time the route length since the last one reaches STEP (one route cell of legalisation margin)
+                STEP = LINK_STAGE_UM - RP.CELL
+                G.inst.setdefault(d0[0], by[d0[0]])
+                trie, st_of, kids = {}, {}, defaultdict(list)
+                for e in far_:
+                    G.inst.setdefault(e[0], by[e[0]])
+                    pth = gpath(d0[0], e[0])
+                    cur, par, last_i = 0, None, 0
+                    for i_ in range(1, len(pth)):
+                        cur = trie.setdefault((cur, pth[i_]), len(trie) + 1)
+                        if (i_ - last_i) * RP.CELL >= STEP and (len(pth) - 1 - i_) * RP.CELL > RP.CELL:
+                            if cur not in st_of:
+                                st_of[cur] = place1(bid, bits, pth, i_)
+                                G.inst[st_of[cur]] = by[st_of[cur]]
+                                new_rl[st_of[cur]] = bid
+                                n_rl += 1
+                            sn_ = st_of[cur]
+                            if par is None:
+                                if (sn_, 'a') not in keep:
+                                    keep.append((sn_, 'a'))
+                            elif (sn_, 'a') not in kids[par]:
+                                kids[par].append((sn_, 'a'))
+                            par, last_i = sn_, i_
+                    if par is None:
+                        keep.append(e)
+                    else:
+                        kids[par].append(e)
+                        n_ch += 1
+                for t_, (sn_, ch_) in enumerate(kids.items()):
+                    nid = f'{bid}_t{t_}'
+                    nb_.append((nid, cls, bits, [(sn_, 'b')] + ch_))
+                    if bid in fcl_:
+                        fclk_new_[nid] = fcl_[bid]
+                nb_.append((bid, cls, bits, keep))
                 continue
             for j_, e in enumerate(far_):
                 G.inst.setdefault(d0[0], by[d0[0]])
