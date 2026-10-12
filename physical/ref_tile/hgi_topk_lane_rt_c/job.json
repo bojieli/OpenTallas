@@ -1,5 +1,5 @@
 {
- "name": "hgi_topk_lane_rt_c-w8a-COMMIT",
+ "name": "hgi_topk_lane_rt_c-w8a-9d13382b6",
  "block": "ot_hgi_topk_lane_tile",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-idx",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-idx",
-  "commit": "COMMIT",
+  "commit": "9d13382b6",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/ref_tile_specs/hgi_topk",
@@ -128,7 +128,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_topk_lane_rt_c/hgi_topk_lane_rt_c-w8a-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_topk_lane_rt_c/hgi_topk_lane_rt_c-w8a-9d13382b6"
   }
  ],
  "cycles_added": 0,
