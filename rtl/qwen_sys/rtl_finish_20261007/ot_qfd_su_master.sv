@@ -33,7 +33,13 @@ module ot_qfd_su_embed_pf #(
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0,
     parameter integer CRD = 4,              // request credits the embedding ROM grants (its request FIFO depth)
-    parameter integer FI = 1                // width of the held instruction fields
+    parameter integer FI = 1,               // width of the held instruction fields
+    // RSRAM = 1 (fe-push-qwen-1010, 2026-10-10; 0 = unchanged): the NWD x 512 row buffer (32,768 flops + a 64:1 x 512
+    // read mux) is one ot_sram_1r1w_64x512_m1_r2c2 macro (HID = 4096: NWD = 64).  Same edges: the write lands at the
+    // eq_v edge, the read is issued at the code_re edge with the same (unregistered) word address and the macro's
+    // registered output IS code_q (held while code_re is low, as the flop).  Read-before-write on a same-edge
+    // collision, as the flop array.  RSRAM = 2: bench negative control (each code word written one row off).
+    parameter integer RSRAM = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -103,7 +109,7 @@ module ot_qfd_su_embed_pf #(
         end
     end
     always @(posedge clk) begin
-        if (eq_v && nrsp < NWD) rowbuf[nrsp[LWD-1:0]] <= eq_data;
+        if (RSRAM == 0 && eq_v && nrsp < NWD) rowbuf[nrsp[LWD-1:0]] <= eq_data;
         if (eq_v && nrsp == NWD) rscale <= eq_data[15:0];
     end
     // ---- the decode (ot_qfd_su_embed term for term, the code ROM replaced by the row buffer) ----
@@ -113,7 +119,18 @@ module ot_qfd_su_embed_pf #(
     reg [511:0] code_q;
     wire code_re = |(su_va_re & {SW{embed_active}});
     wire [AW-1:0] word = ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) / EMB_CODE_LANES;
-    always @(posedge clk) if (code_re) code_q <= rowbuf[word[LWD-1:0]];
+    generate if (RSRAM != 0) begin : g_rsram
+        // one macro per 64 words (NWD = 64 at HID = 4096)
+        if (NWD != 64) begin : g_bad initial $fatal(1, "RSRAM needs NWD = 64 (HID = 4096)"); end
+        wire [LWD-1:0] w_row = (RSRAM == 2) ? (nrsp[LWD-1:0] + 1'b1) : nrsp[LWD-1:0];
+        wire [511:0] rd;
+        ot_sram_1r1w_64x512_m1_r2c2 u_rb (.clk(clk), .r_ce_in(code_re), .r_addr_in(word[LWD-1:0]), .rd_out(rd),
+            .w_ce_in(eq_v && nrsp < NWD), .w_addr_in(w_row), .wd_in(eq_data), .w_mask_in({512{1'b1}}),
+            .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+        always @(*) code_q = rd;
+    end else begin : g_rflop
+        always @(posedge clk) if (code_re) code_q <= rowbuf[word[LWD-1:0]];
+    end endgenerate
     assign va_re = su_va_re & ~({SW{embed_active}});
     assign va_addr = su_va_addr;
     always @(posedge clk or negedge rst_n) begin
