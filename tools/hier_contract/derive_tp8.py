@@ -29,7 +29,18 @@ SLOT_REQ = {
         note='VM = ot_qfd_vm_grp CLUSTER (8 vm_grp tiles + MEE): clock entry budgeted at the cluster insertion ~240 ps '
              '(coordinator); q-sp 11:19: closed bank_t/su_t routed insertion 319/371 ps mean -> cluster may export '
              '~450-500 ps TT, re-budget on the qfd_vm_grp_c gated number',
-        outline_req=(1149.0, 1149.0, 'q-sp 11:19: vm_grp cluster 993.6 x 648 -> ~1149 x 1149 at util 0.55')),
+        # coordinator 15:00: qfd_vm_grp_c (r6c-da28dc03e) outline 1149.12 um square (8 bank_t + 6 su_t children; old
+        # 993.6 x 648 could not hold them); first clock-spine pass 2,093 ps arrival spread across children.  8 groups
+        # per VM -> 4 x 2 = 4596.48 x 2298.24 before the MEE: the 2332.776 x 2073.576 VM slot cannot hold it (10.56 mm2
+        # of groups vs 4.84 mm2) -> the VM leaves the spine stack (W field or a split VM), die floorplan regen.
+        outline_req=(4596.48, 2298.24, 'coordinator 15:00: vm_grp cluster 1149.12 sq x 8 (4 x 2, excl. MEE); '
+                                       'insertion 240 ps budget vs 2,093 ps first-pass child spread -> re-check')),
+    # coordinator 15:30: the KV hub cluster qkd_ahub_ref (job qkd_ahub_ref-q8-fcb9fa5a5) grew to 889.92 x 760.32 (+61%;
+    # failed at util 0.90 in 648 x 648).  KV-centre sub-column fit (it25 plan): column x 17589.3-18366.9 is free W of
+    # 17589 at that height and N of pll 15163 -> keep the E edge at 18366.9 (E corridor to tile col 18487 untouched),
+    # grow W by 112.3 (x0 17477.0) and push seq/embgw/pll N by 112.3 (pll top 15275.5); re-run the KVc fine cuts.
+    'qkd_ahub': dict(outline_req=(889.92, 760.32, 'coordinator 15:30: qkd_ahub_ref 124.8k hub + 274.3k children; '
+                                                  'E edge fixed at 18366.9, W +112.3, seq/embgw/pll N +112.3')),
     'qfd_io_collective': dict(outline_req=(1166.4, 950.4, 'qwen-tp8/coll 07:11: W up/dp y 43-475, ur/dr y 475-907; S in_* '
                                                          'x 43-302; N out_*/fault* x 43-302, clk/rst_n x 562-605')),
     # die lead DECISION 2026-10-12 (reroute_m5 12:19 proposal): die-placed in TP8 (8 + 8 spine slots), so the die takes
