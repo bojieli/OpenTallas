@@ -1,5 +1,5 @@
 {
- "name": "vm_cp_fe0-cp1-COMMIT",
+ "name": "vm_cp_fe0-cp1-b2764dce0",
  "block": "vm_cp_fe0",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-vm8cp",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-vm8cp",
-  "commit": "COMMIT",
+  "commit": "b2764dce0",
   "extra_paths": [
    "physical/hbm_accel_die_views/vm",
    "physical/hbm_accel_die_views/common",
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vm_cp_fe0/vm_cp_fe0-cp1-COMMIT"
+   "to": "results/rtl/ref_tile/vm_cp_fe0/vm_cp_fe0-cp1-b2764dce0"
   }
  ],
  "cycles_added": 0,
