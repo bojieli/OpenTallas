@@ -28,7 +28,7 @@ Model: hidden 4,096, 36 layers, 32 Q / 8 KV heads of 128, FFN 12,288, vocab 151,
 
 **Where 1,536 comes from (TP4).** Words per die = Σ over the 36 layers of the stream words (qkv 64 + o 48 + gate_up 256 + down 144 = 512 per layer), plus the LM head (1,584), giving 20,016. That fits in 5 banks × 4,096 = 20,480 words per column. A G of 6,144 groups at 4 groups per tile is 1,536 tiles.
 
-**TP8 at G = 3,072.** It has the **same 20,032 words** (512 per layer + 1,600 for the LM head), so the **tile is bit-for-bit the same element** (`CODE_BANKS` 5, 10 macros, same pins and outline). There are **768 tiles per die**: the weight bits halve and so does the tile count, with the stream length per die unchanged.
+**TP8 at G = 3,072.** It has the **same 20,032 words** (512 per layer + 1,600 for the LM head), so the tile keeps **the same master, outline, pins and 10 ROM macros** (`CODE_BANKS` 5). Its only change is the synthesis parameter `GT` 6,144 → 3,072: the issue loop's per-round constants derive from the die's group count (`ot_qwen_w12_matvec.sv`). That means one re-synthesis and one re-route of the replicated cluster. The TP4 view stays valid as a die placeholder because its faces are identical. There are **768 tiles per die**: the weight bits halve and so does the tile count, with the stream length per die unchanged.
 
 TP8 at G = 6,144 would halve the stream instead, but it keeps 1,536 shorter tiles (6 macros each), frees no area and needs a new tile. It is rejected.
 
