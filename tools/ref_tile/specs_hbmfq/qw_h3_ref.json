@@ -29,7 +29,7 @@
    "inst": "u_od",
    "at": [
     345.6,
-    518.4
+    540.0
    ]
   }
  ],
@@ -184,7 +184,7 @@
    "inst": "g_d3.u_dec.u_dxl",
    "at": [
     302.4,
-    345.6
+    216.0
    ]
   },
   {
@@ -192,8 +192,8 @@
    "count": 1,
    "inst": "g_d3.u_dec.u_dbq",
    "at": [
-    453.6,
-    345.6
+    302.4,
+    388.8
    ]
   },
   {
@@ -202,7 +202,7 @@
    "inst": "g_d3.u_dec.u_daq",
    "at": [
     302.4,
-    172.8
+    43.2
    ]
   }
  ],
@@ -246,5 +246,9 @@
   "record_to": "results/rtl/ref_tile/qw_h3_ref",
   "purpose": "ot_hgi_quant_wide_h cluster via ref_tile: registered face (pure face flops on every input/output, class 3 fix of ha/hb-adc3fb5d8 EARLY_FAIL_HOLD), 777.6x691.2, 8 rq + 8 wq + dec3 (dxl/dbq/daq tiles, track B) + 64x512 SRAM, clock spine",
   "no_bench_reason": "bench = qdq_wide_h WQ=2 QDQ_DEFS=+define+OT_QW_DEC3 gate (tools/hgi_unit_tput/run_qdq_wide.sh, needs the DS-shape vectors on the fleet scratch) PASS + m1/w1 mutants FAIL at the source commit; record results/rtl/hgi_unit_tput_20261010/qdq_wide_h"
- }
+ },
+ "defines": [
+  "OT_HARD_CHILDREN"
+ ],
+ "hard_define": "OT_HARD_CHILDREN"
 }
