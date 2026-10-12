@@ -64,7 +64,7 @@ if [ "$kind" = port ]; then
     --place-density ${PD:-0.5} --routing-layers M2 M6 --max-transition-ns library --max-fanout 32 \
     --orfs-var ADDER_MAP_FILE= --orfs-var "CTS_ARGS=${CTSA:--apply_ndr none}" --orfs-var PDN_TCL=/src/$D/pdn_port.tcl \
     --orfs-var "SYNTH_KEEP_MODULES=" \
-    --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=$GRTH ${MAXWIRE:+--orfs-var OT_MAXWIRE_UM=$MAXWIRE} ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} \
+    --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=$GRTH ${MAXWIRE:+--orfs-var OT_MAXWIRE_UM=$MAXWIRE} ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} ${PKA:+--orfs-var OT_PK_ABOVE_ONLY=$PKA} \
     --slew-margin-percent 20 --hold-margin-ns ${HM:-0.050} --purpose signoff_target --nickname-tag hcp_$lab \
     --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "${interior_args[@]}" "$@" \
     --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
