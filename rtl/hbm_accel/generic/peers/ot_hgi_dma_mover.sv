@@ -50,8 +50,13 @@ module ot_hgi_dma_mover #(
     parameter integer SVR2 = -1,          // the SECTOR engine's VM-source reads on the read group (-1: = VR2).  hbm-fq/dma 10-11 audit:
                                           //   with KVW = 1 set 0 (the sector engine reads through the packet client; the read group's
                                           //   32-lane response capture / 32-way drain belong to the KV engine only)
-    parameter integer KVW = 0             // 1 (needs VR2 = 1): the KV write-back engine ot_hgi_dma_kvw takes every raw VM -> HBM row
+    parameter integer KVW = 0,            // 1 (needs VR2 = 1): the KV write-back engine ot_hgi_dma_kvw takes every raw VM -> HBM row
                                           // copy (KVWB_DS / FP32 / U32 STORE of whole sectors, linear destination), 64 B a cycle
+    parameter integer PX = 0              // hbm-fq/mvf 10-11 (route mover_el 89c140d31 post-CTS -435 ps wq_h -> rsa[1][41]: the
+                                          // write-queue head-lane mux -> iss_kw -> reader pick -> r_k-muxed 42-b chunk add in one
+                                          // cycle; sel_s -> vmq 338-b output mux): 1 = registered write-queue head lane, every slot's
+                                          // next source / destination / row values precomputed in R0 (the issue is a select),
+                                          // registered vmq output (+1 cycle on VM packet requests)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -235,7 +240,8 @@ module ot_hgi_dma_mover #(
     // ---- read lanes (one a stack): request registers, landing grant, beat counters
     reg [3:0] lq_v; reg [36:0] lq_a [0:3]; reg [3:0] lq_n [0:3]; reg [7:0] lq_t [0:3];
     reg [3:0] lq_we; reg [255:0] lq_d [0:3]; reg [31:0] lq_s [0:3];
-    wire [1:0] w_l = wq_a[wq_h][31:30];                     // the write queue head's stack (its lane)
+    reg  [1:0] wq_hl;                                       // PX: the write queue head's lane, registered
+    wire [1:0] w_l = (PX != 0) ? wq_hl : wq_a[wq_h][31:30]; // the write queue head's stack (its lane)
     // ---- VM read group (VR2): per lane a sector in flight, its landing slot, the held response, the credits
     localparam integer GLQ = 32;
     reg [31:0] g_busy, g_hv; reg [7:0] g_slot [0:31]; reg [255:0] g_d [0:31]; reg [5:0] g_cr [0:31]; reg [4:0] g_rr;
@@ -327,10 +333,16 @@ module ot_hgi_dma_mover #(
     // and the packet client's count stay live (one register compare each).  +1 cycle per chunk on one slot.
     reg [3:0] q_ok, q_rend, q_bad; reg [36:0] q_ea [0:3]; reg [3:0] q_ns [0:3]; reg [8:0] q_by [0:3]; reg [36:0] q_ds [0:3];
     reg [4:0] q_ln [0:3]; reg l_v; reg [1:0] l_k; reg [4:0] l_ln;
+    // PX: each slot's next values on issue (valid under the same mask as q_*: a slot that issued last cycle is not picked)
+    reg [41:0] q_san [0:3], q_ddn [0:3], q_nsn [0:3], q_ndn [0:3]; reg [23:0] q_rln [0:3]; reg [19:0] q_ron [0:3]; reg [3:0] q_rlst;
     always @(posedge clk) begin
-        for (integer k = 0; k < 4; k = k + 1) begin
+        for (integer k = 0; k < 4; k = k + 1) begin : r0
+            reg [41:0] w; reg [19:0] rn1;
             q_ok[k] <= c_ok[k]; q_rend[k] <= c_rend[k]; q_bad[k] <= c_bad[k]; q_ea[k] <= c_ea[k]; q_ns[k] <= c_ns[k];
             q_by[k] <= c_by[k]; q_ds[k] <= c_ds[k]; q_ln[k] <= rsa[k][9:5];
+            w = {33'd0, c_by[k] >> sl2}; rn1 = ro[k] + ((stp || stpd) ? 20'd4 : 20'd1);
+            q_san[k] <= rsa[k] + {33'd0, c_by[k]}; q_rln[k] <= rrl[k] - {15'd0, c_by[k]}; q_ddn[k] <= rdd[k] + (w << dl2);
+            q_nsn[k] <= rnsa[k] + sstw; q_ndn[k] <= rndd[k] + dstw; q_ron[k] <= rn1; q_rlst[k] <= rn1 >= mm;
         end
         l_k <= r_k; l_ln <= rsa[r_k][9:5];
     end
@@ -521,7 +533,7 @@ module ot_hgi_dma_mover #(
             g_busy <= 32'd0; g_hv <= 32'd0; g_rr <= 5'd0; s_vr2q <= '0; for (integer b = 0; b < 32; b = b + 1) g_cr[b] <= 6'(GLQ);
             w_acc_q <= 4'd0; w_ack_q <= 4'd0; for (integer l = 0; l < 4; l = l + 1) l_wn[l] <= 6'd0;
             for (integer l = 0; l < 4; l = l + 1) lbc[l] <= 3'd0;
-            wq_h <= 4'd0; wq_t <= 4'd0; wq_n <= 5'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
+            wq_h <= 4'd0; wq_t <= 4'd0; wq_n <= 5'd0; wq_hl <= 2'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
             p1_v <= 1'b0; pr_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pa_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 4'd0;
         end else begin
             mv_done <= 1'b0; fence_done <= 1'b0; mv_src <= 1'b0;
@@ -632,7 +644,17 @@ module ot_hgi_dma_mover #(
                     end
                     if (q_bad[r_k]) begin f_fault <= 1'b1; mv_fault <= 1'b1; end
                     rrr <= r_k + 2'd1;
-                    if (q_rend[r_k]) begin                                       // the slot's next row (precomputed)
+                    if (PX != 0) begin
+                        for (integer k = 0; k < 4; k = k + 1) if (r_k == 2'(k)) begin   // a select of precomputed values
+                            if (q_rend[k]) begin
+                                if (q_rlst[k]) ract[k] <= 1'b0;
+                                ro[k] <= q_ron[k]; rrl[k] <= nnb;
+                                rsa[k] <= rnsa[k]; rnsa[k] <= q_nsn[k]; rdd[k] <= rndd[k]; rndd[k] <= q_ndn[k];
+                            end else begin
+                                rsa[k] <= q_san[k]; rrl[k] <= q_rln[k]; rdd[k] <= q_ddn[k];
+                            end
+                        end
+                    end else if (q_rend[r_k]) begin                                       // the slot's next row (precomputed)
                         if (ro[r_k] + ((stp || stpd) ? 20'd4 : 20'd1) >= mm) ract[r_k] <= 1'b0;
                         ro[r_k] <= ro[r_k] + ((stp || stpd) ? 20'd4 : 20'd1); rrl[r_k] <= nnb;
                         rsa[r_k] <= rnsa[r_k]; rnsa[r_k] <= rnsa[r_k] + sstw; rdd[r_k] <= rndd[r_k]; rndd[r_k] <= rndd[r_k] + dstw;
@@ -746,6 +768,10 @@ module ot_hgi_dma_mover #(
                 end
             end
             wq_n <= wq_n + {4'd0, p3_v && p3_fl && p3_keep} - {4'd0, iss_kw | iss_vw};
+            begin : hl
+                reg [3:0] nh; nh = wq_h + {3'd0, iss_kw | iss_vw};
+                wq_hl <= (p3_v && p3_fl && p3_keep && wq_t == nh) ? p3_dsec[31:30] : wq_a[nh][31:30];
+            end
             wq_res <= wq_res + {4'd0, u_go && u_fl} - {4'd0, iss_kw | iss_vw} - {4'd0, p3_v && p3_fl && !p3_keep};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
             if (busy_f && go_q4 && !f_fault && r_done && !u_cv && !cd_v && cf_n == 7'd0 && !lw_v && lq_v == 4'd0 && !p1_v && !pr_v && !px_v && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 &&
@@ -778,7 +804,14 @@ module ot_hgi_dma_mover #(
             ko_d <= sel_s ? s_kd : f_kd; ko_s <= sel_s ? s_ks : f_ks;
         end
     assign k_req_v = ko_v; assign k_req_we = ko_we; assign k_req_addr = ko_a; assign k_req_wdata = ko_d; assign k_req_wstrb = ko_s;
-    assign vmq = sel_s ? s_vmq : f_vmq;
+    generate if (PX != 0) begin : g_vmo
+        reg [337:0] vmq_r;                                  // registered output (sel_s fanned out over 338 bits to the pins)
+        always @(posedge clk or negedge rn) if (!rn) vmq_r[337] <= 1'b0; else vmq_r[337] <= sel_s ? s_vmq[337] : f_vmq[337];
+        always @(posedge clk) vmq_r[336:0] <= sel_s ? s_vmq[336:0] : f_vmq[336:0];
+        assign vmq = vmq_r;
+    end else begin : g_vmc
+        assign vmq = sel_s ? s_vmq : f_vmq;
+    end endgenerate
     wire unused_ok = &{1'b0, s_kt, s_krr, s_fence_done};
 `ifndef SYNTHESIS
     // a refused move names itself (bench / e2e debugging)
