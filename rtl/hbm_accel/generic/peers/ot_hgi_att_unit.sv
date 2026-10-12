@@ -409,27 +409,34 @@ module ot_hgi_att_unit #(
         assign l2_room = {NL{1'b1}}; assign l2_rdy = {NL{1'b0}}; assign l2_head = {NL*SPRL*256{1'b0}};
     end
     // whole-row conversion: slot s's lanes -> D E4M3 codes -> the staging row
-    reg [NL*ROWW-1:0] l2_row; reg [NL-1:0] l2_bad;
-    integer cs, ce, cg;
-    always @* begin
-        l2_row = {NL*ROWW{1'b0}}; l2_bad = {NL{1'b0}};
-        for (cs = 0; cs < NL; cs = cs + 1) begin
-            for (cg = 0; cg < G; cg = cg + 1) begin
-                l2_row[cs * ROWW + cg * 265 + 256 +: 8] = (KV8 != 0 && bk8 && cg < hd[9:5]) ?
-                    l2_head[(cs * SPRL + hd[9:5]) * 256 + 8 * ((cg + MUT_KV8) % G) +: 8] : 8'd127;
-                if (KV8 != 0 && bk8 && l2_pmask[cs] && cg < hd[9:5] && l2_head[(cs * SPRL + hd[9:5]) * 256 + 8 * cg +: 8] == 8'hFF)
-                    l2_bad[cs] = 1'b1;
-            end
-            for (ce = 0; ce < D; ce = ce + 1) if (ce < hd) begin : one
-                // static wiring per element format (byte offset ce, 2ce, 4ce are elaboration constants), then a 3:1 select:
-                // no runtime-indexed part-select into the NL x KVL x 256-b landing word
-                reg [8:0] c; reg [31:0] x_;
-                x_ = (es_b == 2'd1) ? {l2_head[(cs * SPRL + (((MUT_LANE != 0 && ((2 * ce) >> 5) == 1) ? 0 : ((2 * ce) >> 5)) % SPRL)) * 256 + 8 * ((2 * ce) % 32) +: 16], 16'd0} : l2_head[(cs * SPRL + (((MUT_LANE != 0 && ((4 * ce) >> 5) == 1) ? 0 : ((4 * ce) >> 5)) % SPRL)) * 256 + 8 * ((4 * ce) % 32) +: 32];
-                c = (es_b == 2'd0) ? {1'b0, l2_head[(cs * SPRL + (((MUT_LANE != 0 && ((ce) >> 5) == 1) ? 0 : ((ce) >> 5)) % SPRL)) * 256 + 8 * ((ce) % 32) +: 8]} : e4m3(x_);
-                l2_row[cs * ROWW + (ce / 32) * 265 + 8 * (ce % 32) +: 8] = c[7:0];
-                if (l2_pmask[cs] && c[8]) l2_bad[cs] = 1'b1;
-            end
+    // Static wiring, one generate instance per element / scale byte (continuous assigns, no wide procedural
+    // part-selects): byte offsets ce, 2ce, 4ce are elaboration constants; only the per-slot scale sector
+    // (lane hd/32) is a runtime select, done once per slot as a <= SPRL : 1 sector mux.
+    wire [NL*ROWW-1:0] l2_row; wire [NL-1:0] l2_bad;
+    genvar cs, ce, cg;
+    for (cs = 0; cs < NL; cs = cs + 1) begin : g_cv
+        wire [4:0] scl = hd[9:5];
+        wire scl_ok = scl < SPRL;
+        wire [255:0] sc_sec = scl_ok ? l2_head[(cs * SPRL + (scl_ok ? scl : 0)) * 256 +: 256] : 256'd0;
+        wire [G-1:0] sbad;
+        wire [D-1:0] ebad;
+        for (cg = 0; cg < G; cg = cg + 1) begin : g_sc
+            wire on = KV8 != 0 && bk8 && cg < scl;
+            assign l2_row[cs * ROWW + cg * 265 + 256 +: 9] = {1'b0, on ? sc_sec[8 * ((cg + MUT_KV8) % G) +: 8] : 8'd127};
+            assign sbad[cg] = on && l2_pmask[cs] && sc_sec[8 * cg +: 8] == 8'hFF;
         end
+        for (ce = 0; ce < D; ce = ce + 1) begin : g_el
+            localparam integer L1 = ((MUT_LANE != 0 && ((ce) >> 5) == 1) ? 0 : ((ce) >> 5)) % SPRL;
+            localparam integer L2 = ((MUT_LANE != 0 && ((2 * ce) >> 5) == 1) ? 0 : ((2 * ce) >> 5)) % SPRL;
+            localparam integer L4 = ((MUT_LANE != 0 && ((4 * ce) >> 5) == 1) ? 0 : ((4 * ce) >> 5)) % SPRL;
+            wire [31:0] x_ = (es_b == 2'd1) ? {l2_head[(cs * SPRL + L2) * 256 + 8 * ((2 * ce) % 32) +: 16], 16'd0}
+                                            : l2_head[(cs * SPRL + L4) * 256 + 8 * ((4 * ce) % 32) +: 32];
+            wire [8:0] c = (es_b == 2'd0) ? {1'b0, l2_head[(cs * SPRL + L1) * 256 + 8 * ((ce) % 32) +: 8]} : e4m3(x_);
+            wire on = ce < hd;
+            assign l2_row[cs * ROWW + (ce / 32) * 265 + 8 * (ce % 32) +: 8] = on ? c[7:0] : 8'd0;
+            assign ebad[ce] = on && l2_pmask[cs] && c[8];
+        end
+        assign l2_bad[cs] = (|sbad) || (|ebad);
     end
 
     // ================= PIPE = 3: the local VM slice wide client =================
