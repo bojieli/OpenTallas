@@ -1,14 +1,14 @@
 {
- "name": "smh_xs_ref_p50-r1-a9afd2404",
+ "name": "smh_xs_ref_p50-r1-61bdbdb41-sf",
  "block": "ot_hbm_accel_smh_xs",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-smh",
- "purpose": "[idle1012] ot_hbm_accel_smh_xs re-route through tools/ref_tile (child_lint (f)/(c) FAIL on the hand-kit view: no above-only pin keepout / M7 signals); same RTL, outline, defines and exact abutment pins (io_tcl) as the closed hand route",
+ "purpose": "[smmv-b 10-12] xs strap fan-out tree (xs_a1[6] 3,567 / xs_a2[5] 3,139 loads -> registered kept copies <= ~64 loads; g straps per-group copies; carry mask constant compares); latency unchanged; [idle1012] ot_hbm_accel_smh_xs re-route through tools/ref_tile (child_lint (f)/(c) FAIL on the hand-kit view: no above-only pin keepout / M7 signals); same RTL, outline, defines and exact abutment pin",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-hbm-smh",
-  "commit": "a9afd2404"
+  "commit": "61bdbdb41"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_xs_ref_p50/smh_xs_ref_p50-r1-a9afd2404"
+   "to": "results/rtl/ref_tile/smh_xs_ref_p50/smh_xs_ref_p50-r1-61bdbdb41"
   }
  ],
  "cycles_added": 0,
