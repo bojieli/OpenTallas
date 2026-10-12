@@ -20,27 +20,29 @@ module tb_hgi_dma_back;
     parameter integer SEED = 1;
     parameter integer NS = 4;          // 1: the HBM B2 per-cluster instance (stack STK only)
     parameter integer STK = 0;
-    localparam integer NL = 8, NB = 32, SBIT = 35;
+    parameter integer NB = 32;         // VM lanes: 8 = the B2 local slice lane group
+    parameter integer VCR = 32;        // VM read credits a lane (B2 slice group: 8)
+    localparam integer NL = 8, SBIT = 35;
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_src, mv_done, mv_fault, quiet;
-    wire [512:0] vr2q; wire [8256:0] vr2r; wire [NS*NL*289-1:0] wd; wire [NS*NL-1:0] wd_cr; wire [NS*4-1:0] wa;
-    ot_hgi_dma_back #(.NS(NS), .STK(STK), .SBIT(SBIT), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
+    wire [NB*16:0] vr2q; wire [NB*258:0] vr2r; wire [NS*NL*289-1:0] wd; wire [NS*NL-1:0] wd_cr; wire [NS*4-1:0] wa;
+    ot_hgi_dma_back #(.NS(NS), .STK(STK), .NB(NB), .VCR(VCR), .SBIT(SBIT), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv),
         .mv_src(mv_src), .mv_done(mv_done), .mv_fault(mv_fault), .quiet(quiet), .vr2q(vr2q), .vr2r(vr2r),
         .wd(wd), .wd_cr(wd_cr), .wa(wa));
     // ---------------------------------------------------------------- VM model
     reg [31:0] vm [0:262143];
-    reg gnt = 0; reg [31:0] vcr = 0; reg [32*257-1:0] vrr = 0;
+    reg gnt = 0; reg [NB-1:0] vcr = 0; reg [NB*257-1:0] vrr = 0;
     assign vr2r = {gnt, vcr, vrr};
     integer rq_s [0:31][0:255]; longint rq_due [0:31][0:255]; integer rq_h [0:31], rq_t [0:31]; longint ldue [0:31];
     longint cyc = 0;
     initial for (integer b = 0; b < 32; b++) begin rq_h[b] = 0; rq_t[b] = 0; ldue[b] = 0; end
     always @(posedge clk) begin
-        cyc <= cyc + 1; gnt <= rst_n && vr2q[512]; vcr <= '0; vrr <= '0;
-        if (rst_n) for (integer b = 0; b < 32; b++) begin
+        cyc <= cyc + 1; gnt <= rst_n && vr2q[NB*16]; vcr <= '0; vrr <= '0;
+        if (rst_n) for (integer b = 0; b < NB; b++) begin
             if (vr2q[b*16 + 15]) begin : rd
                 integer sec; reg [255:0] d; longint du;
                 sec = int'(vr2q[b*16 +: 15]);
-                if (sec % 32 != b) begin $display("TB FAIL: VM lane %0d got sector %0d", b, sec); $finish; end
+                if (sec % NB != b) begin $display("TB FAIL: VM lane %0d got sector %0d", b, sec); $finish; end
                 if (!gnt) begin $display("TB FAIL: VM read without the grant"); $finish; end
                 du = cyc + LAT + ((JIT > 0) ? $urandom_range(0, JIT) : 0); if (du < ldue[b]) du = ldue[b]; ldue[b] = du;
                 rq_s[b][rq_t[b] % 256] = sec; rq_due[b][rq_t[b] % 256] = du; rq_t[b] = rq_t[b] + 1; vcr[b] <= 1'b1;
