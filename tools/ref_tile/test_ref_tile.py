@@ -34,7 +34,7 @@ class Gen(unittest.TestCase):
         env = RT.gen_env(s, "k", *r["outline"], RT.layer_contract(s, None), blocks)
         self.assertIn("RLAYERS='M2 M6'", env)
         self.assertIn("OT_PK_ABOVE_ONLY=1", env)
-        self.assertIn("PLACE_DENSITY_LB_ADDON=", env)      # macro-dominated tile: fixed density
+        self.assertIn("PLACE_DENSITY_LB_ADDON=", env)      # PD means the spec PD (addon cleared)
         place = RT.gen_place(s, blocks)
         self.assertNotIn("dbBlockage_create", place)       # no blockage over row-end endcaps (DPL-0033)
         self.assertIn("ot_ref_strip", place)

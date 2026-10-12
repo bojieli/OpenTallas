@@ -545,12 +545,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--macro-place-halo {h} {h}")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
-    # macro-dominated tile (macros > 1/3 of the core): global placement at the fixed PLACE_DENSITY, not lower-bound + 0.05
-    # (pbst: std cells 3% of the core -> target density 0.11 -> RePlAce GPL-0305 divergence in 3 of 4 runs, ref gate)
-    core = (W - 2 * CORE_MARGIN) * (H - 2 * CORE_MARGIN)
-    fixed = s["route"].get("fixed_density", sum(b["w"] * b["h"] for b in blocks) > core / 3)
-    if fixed:
+    # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
+    # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
+    # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
+    if s["route"].get("lb_addon") is None:
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
+    else:
+        extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([

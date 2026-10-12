@@ -55,6 +55,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | forwarded-clock subtree hook missing | `forwarded_clock: true` composes forwarded_subtree.tcl into PRE_CTS |
 | route script default overriding the kit's layers | ref_route.sh passes the kit's explicit `RLAYERS`; nothing else sets routing layers |
 | macro clock pins on unbuffered wires | loop default macro_cts_cluster.tcl (shipped; the remote gate ships it too) |
+| ORFS PLACE_DENSITY_LB_ADDON silently overrides the spec PD (pbst 0.50 -> 0.1075 target, GPL-0305) | every kit clears the addon (`route.lb_addon` re-enables it explicitly); gate FAILs a kit that leaves it, `--cts` WARNs when the placer's effective target differs from PD by > 0.05 |
 | util outside 45-60%, slivers, macro at a pin edge | outline from util 0.52; >= 20 um macro channels and core margin, 20 um from any pin face; gate FAILs < 30% / > 70%, WARNs outside 45-60% |
 | one clock root over > 15k sinks / 600 um, high fanout, reset on datapath, logic behind pins, ICG enable from a port, > 500 um per stage | remote gate: textbook_lint on the synthesized netlist + placed-IO floorplan; clock_domain / high_fanout / wire_reach REFUSE-tier FAIL, boundary / logic_depth WARN (calibration below) |
 | runtime-indexed wide part-selects (yosys SHARE stall) | gate `rtl` WARN with the fix; the remote synthesis smoke runs under a time cap (2,700 s) and FAILs a stall |
