@@ -155,8 +155,8 @@ module tb_s81ph_coll_sys;
     integer tf_n [0:3]; initial for (integer i = 0; i < 4; i = i + 1) tf_n[i] = 0;
     always @(posedge clk) begin
         for (integer i = 0; i < 4; i = i + 1) tf_n[i] = tf_n[i] + fvm[i][0];
-        if (cyc == 25 || cyc == 30 || cyc == 3000)
-            $display("TBGRD cyc=%0d rsts0=%b warm=%0d cfgd0=%0d fvm00=%b sp0=%0d cr00=%0d", cyc, rsts[0], WARM, cfgd[0],
+        if (cyc == 25 || cyc == 30 || cyc == 3000 || (cyc >= 1105 && cyc <= 1120))
+            $display("TBGRD t=%0t cyc=%0d tf0=%0d rsts0=%b warm=%0d cfgd0=%0d fvm00=%b sp0=%0d cr00=%0d", $time, cyc, tf_n[0], rsts[0], WARM, cfgd[0],
                      fvm[0][0], sp[0], cr[0][0]);
         if (cyc % 50000 == 3000) $display("TBFVM cyc=%0d rsts=%b sent=%0d %0d %0d %0d slab0_fvm=%b", cyc, rsts, tf_n[0], tf_n[1],
                                           tf_n[2], tf_n[3], g_die[0].u.f_vm[0]);
@@ -192,6 +192,7 @@ module tb_s81ph_coll_sys;
     integer dn [0:3];                    // DUT outputs (words / beats) checked
     integer errs, d_last_cyc, cfgd [0:3];
     reg [2099:0] b;
+    reg [591:0]  nf;   // next f_vm word of the die being driven: ONE nonblocking write per die per cycle
     integer nwv, q;
     reg acc_err;
     initial begin
@@ -241,23 +242,24 @@ module tb_s81ph_coll_sys;
             end
             tsr[d] <= {2'b01, (rnd(0) % 8) < TSR};
             // ---- send (one word a cycle): config, then engine records / pass-through flits by credits
-            fvm[d] <= 0;
+            nf = 0;
             if (rsts[d] && cyc > WARM) begin
                 if (cfgd[d] < 2) begin
                     cfgd[d] = cfgd[d] + 1;
-                    if (cfgd[d] == 2) fvm[d] <= {{(W-3){1'b0}}, 1'b1, d[1:0], 32'd0, 1'b0, 1'b0, 3'd0, 2'd3, 1'b1};
+                    if (cfgd[d] == 2) nf = {{(W-3){1'b0}}, 1'b1, d[1:0], 32'd0, 1'b0, 1'b0, 3'd0, 2'd3, 1'b1};
                 end else begin
                     q = PERF ? ((sp[d] < TOT) ? 0 : 1 + rnd(0) % 5) : rnd(0) % 6;
                     if (q == 0 && cr[d][0] > 0 && sp[d] < TOT) begin
-                        fvm[d] <= {{(W-FW){1'b0}}, own[d][sp[d]], ownt[sp[d]], ownm[sp[d]], ownl[sp[d]], 3'd0, 2'd1, 1'b1};
+                        nf = {{(W-FW){1'b0}}, own[d][sp[d]], ownt[sp[d]], ownm[sp[d]], ownl[sp[d]], 3'd0, 2'd1, 1'b1};
                         if (first_send_cyc < 0) first_send_cyc = cyc;
                         sp[d] = sp[d] + 1; cr[d][0] = cr[d][0] - 1;
                     end else if (q != 0 && cr[d][q] > 0 && pts[d][q-1] < NPT) begin
-                        fvm[d] <= {ptd[d][q-1][pts[d][q-1]], 32'd0, 1'b0, ptl[d][q-1][pts[d][q-1]], 3'(q - 1), 2'd2, 1'b1};
+                        nf = {ptd[d][q-1][pts[d][q-1]], 32'd0, 1'b0, ptl[d][q-1][pts[d][q-1]], 3'(q - 1), 2'd2, 1'b1};
                         pts[d][q-1] = pts[d][q-1] + 1; cr[d][q] = cr[d][q] - 1;
                     end
                 end
             end
+            fvm[d] <= nf;
         end
         // ---- end
         if (cdone_cyc < 0 && cyc > 1000 && dn[0] == rn[0] && dn[1] == rn[1] && dn[2] == rn[2] && dn[3] == rn[3] &&
