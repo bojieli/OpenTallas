@@ -11085,45 +11085,45 @@
 "direction": "output"
 },
 "ck": {
-"layer": "M4",
+"layer": "M5",
 "pins": [
 [
 "ck[0]",
-"M4",
+"M5",
+55.296,
 0.0,
-115.008,
-0.192,
-115.032
+55.32,
+0.192
 ]
 ],
 "bits": 1,
 "direction": "input"
 },
 "rn": {
-"layer": "M4",
+"layer": "M5",
 "pins": [
 [
 "rn[0]",
-"M4",
+"M5",
+55.488,
 0.0,
-115.2,
-0.192,
-115.224
+55.512,
+0.192
 ]
 ],
 "bits": 1,
 "direction": "input"
 },
 "sok": {
-"layer": "M4",
+"layer": "M5",
 "pins": [
 [
 "sok[0]",
-"M4",
+"M5",
+55.68,
 0.0,
-115.392,
-0.192,
-115.416
+55.704,
+0.192
 ]
 ],
 "bits": 1,
@@ -11132,6 +11132,6 @@
 },
 "generator": {
 "file": "tools/s81_ph/s81_ph_coll_tiles.py",
-"note": "el1011-ds-vm/fe hardened capture-lane tile: N = 832-b f_cap slice, S = registered row-write port, W = ck / rn / sok"
+"note": "el1011-ds-vm/fe hardened capture-lane tile: N = 832-b f_cap slice, S = registered row-write port, S = row-write port + ck / rn / sok; top layer M6"
 }
 }

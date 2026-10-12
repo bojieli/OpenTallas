@@ -25,7 +25,7 @@ module dsfd_svc_quad #(
     parameter integer NRH0 = 9, NRH1 = 5, NRH3 = 5,
     parameter integer NRI = 3,
     parameter integer NRS = 5,
-    parameter integer NG = 12,
+    parameter integer NG = 13,
     parameter integer DRA = 64,
     parameter integer DRB = 64,
     parameter bit SRAM_MACRO = 0,
@@ -35,13 +35,15 @@ module dsfd_svc_quad #(
     parameter integer OBN = (QID == 2) ? 1 : 8,          // own home-lane ports (unused in quadrant 2: internal)
     parameter integer OGQ = (QID == 2) ? 1 : 344,
     parameter integer OGR = (QID == 2) ? 1 : 276,
-    parameter integer OGW = (QID == 2) ? 1 : 12,
+    parameter integer OGW = (QID == 2) ? 1 : NG,
     parameter integer OWB = (QID == 2) ? 1 : 4228,
     parameter integer OFB = (QID == 2) ? 1 : 607,
     parameter integer OPV = (QID == 2) ? 1 : 513,
     parameter integer SOW = (QID != 2) ? 2132 : 1,
     parameter integer SAW = (QID == 1 || QID == 2) ? 2132 : 1,
-    parameter integer SBW = (QID == 2) ? 2132 : 1
+    parameter integer SBW = (QID == 2) ? 2132 : 1,
+    parameter integer HHW = (QID == 2) ? 291 : 1,
+    parameter integer HHC = (QID == 2) ? 9 : 1
 ) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rst,
@@ -83,7 +85,10 @@ module dsfd_svc_quad #(
     output wire [HQ-1:0]       h_wb_v, output wire [HQ*4228-1:0] h_wb_d, input wire [HQ-1:0] h_wb_c,
     output wire [HQ-1:0]       h_fb_v, output wire [HQ*607-1:0] h_fb_d,
     input  wire [HQ-1:0]       h_pv_v, input wire [HQ*513-1:0] h_pv_d, output wire [HQ-1:0] h_pv_c,
-    input  wire [HQ-1:0]       h_flt
+    input  wire [HQ-1:0]       h_flt,
+    // per-stack host write face (quadrant 2: the home's G port 12): hw without v / {ack 8, cr}
+    input  wire [0:0]          h_hw_v, input wire [HHW-1:0] h_hw_d,
+    output wire [HHC-1:0]      h_hc
 );
     function automatic integer dep(input integer nr); dep = 2 * nr + 8; endfunction
     function automatic integer nrh(input integer d); nrh = (d == 0) ? NRH0 : (d == 1) ? NRH1 : (d == 3) ? NRH3 : 0; endfunction
@@ -287,6 +292,9 @@ module dsfd_svc_quad #(
         wire [4*NG-1:0] gwdv = {hgwd_q[2*NG +: NG], gwd_i, hgwd_q[0 +: 2*NG]};
         wire qf = (|hflt_q) | flt;
         wire hf; wire [31:0] hfc;
+        reg hw_vq; reg [290:0] hw_dq; wire hcr; wire [7:0] hack;
+        always @(posedge clk or negedge rn_h) if (!rn_h) hw_vq <= 1'b0; else hw_vq <= h_hw_v[0];
+        always @(posedge clk) hw_dq <= h_hw_d;
         ot_s81_svch_home #(.DIE_ID(DIE_ID), .ST(ST), .NG(NG), .DRB(DRB), .DW0(dep(NRH0)), .DW1(dep(NRH1)), .DW2(dep(0)),
                            .DW3(dep(NRH3)), .SRAM_MACRO(SRAM_MACRO)) u_home (
             .clk(clk), .rst_n(rn_h), .q_v(qv_q), .q_d(qd_q[511:0]),
@@ -298,7 +306,11 @@ module dsfd_svc_quad #(
             .gq_v(hgq_v), .gq_d(hgq_d), .gq_c(gqc), .gr_v(grv), .gr_d(grd), .gr_c(hgr_c), .gwd(gwdv),
             .sc_v(sc_v), .sc_r(sc_r), .sc_d(sc_d), .pv_v(hpv_v), .pv_r(hpv_r), .pv_d(hpv_d), .qfault(qf),
             .a0_v(a0_v[0]), .a0_d(a0_d), .a0_r(a0_r[0]), .od_v(od_v[0]), .od_d(od_d), .od_r(od_r[0]),
+            .hw_v(hw_vq), .hw_d(hw_dq), .hc_cr(hcr), .hc_ack(hack),
             .fault(hf), .fault_code(hfc));
+        reg [8:0] hc_q;
+        always @(posedge clk or negedge rn_h) if (!rn_h) hc_q <= 0; else hc_q <= {hack, hcr};
+        assign h_hc = hc_q;
         assign h_bq_v = {hbq_v[31:24], hbq_v[15:0]}; assign h_bq_d = {hbq_d[32*46-1:24*46], hbq_d[16*46-1:0]};
         assign h_br_c = {hbr_c[31:24], hbr_c[15:0]};
         assign h_gq_v = {hgq_v[3], hgq_v[1:0]}; assign h_gq_d = {hgq_d[3*344 +: 344], hgq_d[0 +: 2*344]};
@@ -314,6 +326,6 @@ module dsfd_svc_quad #(
         assign sc_r = 1'b0; assign own_idx = 0;
         assign h_bq_v = 0; assign h_bq_d = 0; assign h_br_c = 0; assign h_gq_v = 0; assign h_gq_d = 0; assign h_gr_c = 0;
         assign h_wb_v = 0; assign h_wb_d = 0; assign h_fb_v = 0; assign h_fb_d = 0; assign h_pv_c = 0;
-        assign a0_v[0] = 1'b0; assign a0_d = 0; assign od_v[0] = 1'b0; assign od_d = 0;
+        assign a0_v[0] = 1'b0; assign a0_d = 0; assign od_v[0] = 1'b0; assign od_d = 0; assign h_hc = '0;
     end endgenerate
 endmodule

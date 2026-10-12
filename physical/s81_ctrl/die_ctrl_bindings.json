@@ -104,5 +104,46 @@
    "spare",
    "eng"
   ]
+ },
+ "absent_ports": {
+  "rule": "s81die-1011/ctrl: a master port that a die role / stack set does not use is DECLARED here; die_port_audit reports it as declared_absent (not a finding) only if the RTL port exists with that width and no die bus reaches it. Inputs carry the declared constant (the die netlist tie), outputs are 'open'. Nothing undeclared is waived.",
+  "layer1": {
+   "dsfd_stage_seq_c": {
+    "c8": "open",
+    "d8": "9'd0",
+    "s8": "2'b00",
+    "c9": "open",
+    "d9": "9'd0",
+    "s9": "2'b00",
+    "c10": "open",
+    "d10": "9'd0",
+    "s10": "2'b00",
+    "c11": "open",
+    "d11": "9'd0",
+    "s11": "2'b00",
+    "note": "engines 8 head, 9 emb, 10 eng, 11 spare are role-absent on a layer1 die (role_absent.layer1); engine 7 hop is NOT declared (pending the WFC port-7 endpoint)"
+   },
+   "dsfd_bk_selector_c": {
+    "iNE": "515'd0",
+    "iNW": "515'd0",
+    "iSE": "515'd0",
+    "note": "layer1 = one HBM stack (SW): the NE / NW / SE svc index inputs have no stack (STACKS.layer1)"
+   },
+   "dsfd_bk_collector_c": {
+    "cNE": "515'd0",
+    "cNW": "515'd0",
+    "cSE": "515'd0",
+    "note": "layer1 = one HBM stack (SW): the NE / NW / SE svc row-export inputs have no stack"
+   },
+   "ot_s81_cfg7_seq": {
+    "ef": "2'b00",
+    "go_tag": "open",
+    "note": "PQ = 0 (the layer1 q element ot_v41_rom_elem_q_qp_w10 has no op-tag / loader handshake pins): rtl/v41die/ot_s81_cfg7_seq.sv 'PQ = 0: go_tag = 0, ef ignored'"
+   },
+   "ot_rom_4096x72_m8": {
+    "rd_out[48:71]": "open",
+    "note": "cfg ROM spare columns rd_out[71:48]: the 48-b cfg word uses columns 0..47 (tools/dsrom_s81_fulldie.py unbound_functional_pins / UNUSED_BY_DESIGN note; ROM ECC retired by the 2026-10-02 ROM reliability policy)"
+   }
+  }
  }
 }

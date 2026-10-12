@@ -169,7 +169,7 @@ module ot_hgi_coll_tkm #(
     // tree): a tile keeps its best PT of what reached it and passes its bottom 4 down on a registered seam; an upward
     // conveyor (one presented-top register a seam) empties the chain from the top.  Two passes: value key, top nout ->
     // an SRAM cell buffer, chain cleared, id key, conveyed out as O / R lines.  Control reaches every tile at equal depth.
-    localparam integer PT = (KMAX < 128) ? KMAX : 128;
+    localparam integer PT = (KMAX < 64) ? KMAX : 64;
     localparam integer NT = KMAX / PT;
     localparam integer NG2 = (NT + 3) / 4;
     localparam integer TW = 6, LW = 7;
@@ -447,7 +447,29 @@ endmodule
 // cell, bottom cell <- up_in; ins_v -> broadcast insertion of the 4-element block (rank sorted), positions PT..PT+3
 // leave as the registered overflow block; up_out always = the top cell (the presented-top seam register); tau_o = the
 // value key at (tau_t, tau_l) when this tile holds it.
-module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 128, parameter integer TW = 6,
+// r2 (tile route PREROUTE -899 ps p_b -> X): the block pin flop is REPLICATED per group of 16 positions (no bit fans out
+// to more than 16 positions x 2), and every 85-bit key compare is an explicit log-depth (lt, eq) tree with kept levels
+// (ot_tkm_lt; ABC otherwise maps wide compares as MAJ ripples).
+module ot_tkm_lt #(parameter integer W = 85) (input wire [W-1:0] a, input wire [W-1:0] b, output wire lt);
+ localparam integer L = $clog2(W), N = 1 << L;
+ (* keep *) wire [N-1:0] tl [0:L];
+ (* keep *) wire [N-1:0] te [0:L];
+ genvar l, i;
+ for (i = 0; i < N; i = i + 1) begin : g0
+  if (i < W) begin : g_b assign tl[0][i] = ~a[i] & b[i]; assign te[0][i] = ~(a[i] ^ b[i]); end
+  else begin : g_p assign tl[0][i] = 1'b0; assign te[0][i] = 1'b1; end
+ end
+ for (l = 0; l < L; l = l + 1) begin : g_l
+  for (i = 0; i < (N >> (l + 1)); i = i + 1) begin : g_n
+   assign tl[l + 1][i] = tl[l][2 * i + 1] | (te[l][2 * i + 1] & tl[l][2 * i]);
+   assign te[l + 1][i] = te[l][2 * i + 1] & te[l][2 * i];
+  end
+  for (i = (N >> (l + 1)); i < N; i = i + 1) begin : g_z assign tl[l + 1][i] = 1'b0; assign te[l + 1][i] = 1'b1; end
+ end
+ assign lt = tl[L][0];
+endmodule
+
+module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 64, parameter integer TW = 6,
                               parameter integer LW = 7) (
     input  wire              clk,
     input  wire [TW-1:0]     tid,
@@ -464,6 +486,8 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
     output reg               busy
 );
     localparam integer KW = EW - 2;
+    localparam integer GP = 16;                              // positions a replicated block copy serves
+    localparam integer NGR = (PT + 4 + GP - 1) / GP;
     function automatic [KW-1:0] vkey(input [EW-1:0] e); vkey = e[KW:1]; endfunction
     function automatic [KW-1:0] ikey(input [EW-1:0] e); ikey = {e[83], e[50:19], e[82:51], e[18:1]}; endfunction
     function automatic [KW:0] key2(input [EW-1:0] e);
@@ -471,27 +495,35 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
         begin b_ = e[84] ? ikey(e) : vkey(e); key2 = e[83] ? {1'b1, ~e[84], b_[KW-2:0]} : {(KW+1){1'b0}}; end
     endfunction
     reg p_clr, p_conv, p_v; reg [4*EW-1:0] p_b; reg [TW-1:0] p_tid, p_tt; reg [LW-1:0] p_tl;
+    (* keep *) reg p_vg [0:NGR-1];
+    (* keep *) reg [4*EW-1:0] p_bg [0:NGR-1];
     always @(posedge clk) begin
         p_clr <= clr; p_conv <= conv; p_v <= ins_v; p_b <= ins_b; p_tid <= tid; p_tt <= tau_t; p_tl <= tau_l;
+        for (integer g = 0; g < NGR; g = g + 1) begin p_vg[g] <= ins_v; p_bg[g] <= ins_b; end
     end
     reg [EW-1:0] X [0:PT-1];
-    reg [EW-1:0] SX [0:PT+3];
-    reg [2:0] cp [0:PT+3];
+    wire [EW-1:0] SX [0:PT+3];
+    wire [2:0] cp [0:PT+3];
+    genvar gp, gj;
+    for (gp = 0; gp < PT + 4; gp = gp + 1) begin : g_pos
+        if (gp < PT) begin : g_x assign SX[gp] = X[gp]; end else begin : g_e assign SX[gp] = {EW{1'b0}}; end
+        wire [KW:0] kx = key2(SX[gp]);
+        wire [3:0] gt;
+        for (gj = 0; gj < 4; gj = gj + 1) begin : g_c
+            wire [KW:0] kb = key2(p_bg[gp / GP][EW*gj +: EW]);
+            ot_tkm_lt #(.W(KW + 1)) u_c (.a(kx), .b(kb), .lt(gt[gj]));       // block element j beats position gp
+        end
+        assign cp[gp] = p_vg[gp / GP] ? (3'(gt[0]) + 3'(gt[1]) + 3'(gt[2]) + 3'(gt[3])) : 3'd0;
+    end
     reg [EW-1:0] ins [0:PT+3];
     always @* begin : bcins
-        for (integer p_ = 0; p_ < PT + 4; p_ = p_ + 1) SX[p_] = (p_ < PT) ? X[(p_ < PT) ? p_ : 0] : {EW{1'b0}};
-        for (integer p_ = 0; p_ < PT + 4; p_ = p_ + 1) begin
-            cp[p_] = 3'd0;
-            for (integer j = 0; j < 4; j = j + 1)
-                if (p_v && key2(p_b[EW*j +: EW]) > key2(SX[p_])) cp[p_] = cp[p_] + 3'd1;
-        end
         for (integer q = 0; q < PT + 4; q = q + 1) begin
             ins[q] = {EW{1'b0}};
             for (integer i = 0; i <= 4; i = i + 1)
                 if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) ins[q] = ins[q] | SX[(q - i >= 0) ? q - i : 0];
             for (integer j = 0; j < 4; j = j + 1)
-                if (p_v && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j)))
-                    ins[q] = ins[q] | p_b[EW*j +: EW];
+                if (p_vg[q / GP] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j)))
+                    ins[q] = ins[q] | p_bg[q / GP][EW*j +: EW];
         end
     end
     always @(posedge clk) begin : upd
