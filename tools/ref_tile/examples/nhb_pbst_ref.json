@@ -10,7 +10,6 @@
  "clock_port": "clk",
  "reset_ports": ["rst_n"],
  "outline": {"w": 151.2, "h": 151.2},
- "pg_layer": "M6",
  "macros": [{"view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2", "count": 2}],
  "pins": {"S": ["pdata", "pv", "pgi", "pbeat"], "N": ["sr"], "W": ["clk", "rst_n", "ra"]},
  "refglob": "*pv_b*",

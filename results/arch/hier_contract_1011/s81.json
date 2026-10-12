@@ -1,14 +1,44 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 9,
+ "version": 10,
  "owner": "s81die-1011",
- "updated": "2026-10-12 08:10 PT",
+ "updated": "2026-10-12",
  "clock_period_ps": 833.333,
  "layer_defaults": {
-  "pg_layer": "M7",
-  "strap_layer": "M8",
-  "signal_max_layer": "M6"
+  "rule": "m5_tile_cap_20261012",
+  "layer_cap": "M5",
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "signal_max_layer": "M5",
+  "pin_layers": [
+   "M4",
+   "M5"
+  ],
+  "pin_keepout_layer": "M6",
+  "exception": {
+   "layer_cap": "M6",
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "needs": "slot layer_cap_grant '<die lead>: <reason>' (pin-dense edge relays / stations only)"
+  },
+  "parent_strap_layer": "M6",
+  "die_signal_layers_over_tiles": [
+   "M6",
+   "M7"
+  ],
+  "die_power_global_layers": [
+   "M8",
+   "M9"
+  ],
+  "closed_views": "keep their own cap as slot view_cap; valid only while tools/hier_contract/child_lint.py passes at it (strap = cap + 1); re-route at M5 per m5_reroute_priority.json",
+  "source": "results/arch/hier_contract_1011/layer_usage_1012.md (coordinator decision, main f964f6b2d)",
+  "previous": {
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6"
+  }
  },
  "cluster_child_layers": {
   "pg_layer": "M6",
@@ -73,6 +103,11 @@
    "version": 9,
    "when": "2026-10-12 08:10 PT",
    "change": "el1011-ds-vm/be (approved by main): +4 dsfd_vm_be_sl tile slots under sp_vm (die-placed; BE parent retired): N/S pins on vertical M3/M5 (was N-face M6, stalled M7-spacing DRC), PG M6 stripes (ref_tile), strap M7, outline 302.4 x 92.88 at x = s*388.8+43.2, y 21.6."
+  },
+  {
+   "version": 10,
+   "when": "2026-10-12",
+   "change": "M5 tile layer contract (results/arch/hier_contract_1011/layer_usage_1012.md (coordinator decision, main f964f6b2d)): new tile routes cap signals AND PG at M5 (strap M6, pins M4/M5, keepout M6; M6 by layer_cap_grant only; die signals M6/M7 over tiles; M8/M9 die power/global). 145 tile slots bumped (view_cap = closed view's own cap; 4 views INVALID: signals above their own cap; 0 already <= M5; 0 need a pin re-plan off M6+); unchanged: 3 cluster, 0 hard IP, 0 die-layer slots. Tool: tools/hier_contract/m5_layer_bump.py contracts"
   }
  ],
  "slots": [
@@ -133,10 +168,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "c_cmd[84:0]",
@@ -239,7 +274,16 @@
    ],
    "assembly": "tiles_direct",
    "owner": "el1011 s81 suhc-hier (claude/s81-suhc-hier-1011-su)",
-   "notes": "tiles from physical/s81_ph_views/su_hier/su_slab_composition.json; the slab outline is the die region they fill; v3: 3 columns x 572.4 + 2 x 86.4 channels = 1,890.0 wide (grows E inside the 1,944-um W hub column, 54 um to the VCH): tile W-face (dn_dl 4,096 b) / E-face (o_*) spine pins reachable, spine relay stations + jogs in the channels"
+   "notes": "tiles from physical/s81_ph_views/su_hier/su_slab_composition.json; the slab outline is the die region they fill; v3: 3 columns x 572.4 + 2 x 86.4 channels = 1,890.0 wide (grows E inside the 1,944-um W hub column, 54 um to the VCH): tile W-face (dn_dl 4,096 b) / E-face (o_*) spine pins reachable, spine relay stations + jogs in the channels",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/po0",
@@ -267,10 +311,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/po1",
@@ -298,10 +351,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/po2",
@@ -329,10 +391,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/po3",
@@ -360,10 +431,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/ctl",
@@ -391,10 +471,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/qn0",
@@ -422,10 +511,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/qn1",
@@ -453,10 +551,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/kv0",
@@ -484,10 +591,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/kv1",
@@ -515,10 +631,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/qb0",
@@ -546,10 +671,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/qb1",
@@ -577,10 +711,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/qb2",
@@ -608,10 +751,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/qb3",
@@ -639,10 +791,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sw0",
@@ -670,10 +831,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sw1",
@@ -701,10 +871,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sw2",
@@ -732,10 +911,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sw3",
@@ -763,10 +951,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sw4",
@@ -794,10 +991,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sw5",
@@ -825,10 +1031,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sw6",
@@ -856,10 +1071,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sw7",
@@ -887,10 +1111,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sm0",
@@ -918,10 +1151,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sm1",
@@ -949,10 +1191,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sm2",
@@ -980,10 +1231,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sm3",
@@ -1011,10 +1271,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sm4",
@@ -1042,10 +1311,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sm5",
@@ -1073,10 +1351,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sm6",
@@ -1104,10 +1391,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_su_s/sm7",
@@ -1135,10 +1431,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s",
@@ -1166,10 +1471,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "c_cmd[84:0]",
@@ -1293,7 +1598,16 @@
    ],
    "assembly": "tiles_direct",
    "owner": "el1011 s81 suhc-hier (claude/s81-suhc-hier-1011-hc)",
-   "notes": "split variant outline 1,727.976 x (22 H_half + 840), H_half 400 -> 9,640; roots on the N edge; v3: 3 columns x 575.992 + 2 x 43.2 channels = 1,814.376 wide (grows E by 86.4 into the 518.4-um spine/field SPF channel -> 432.0): ctile W-face clk/last/tid of columns 1-2 reachable; root-row W/E links (crootr s_* <-> comb w_*/e_*, yacc) cross the channel as 43.2-um straight register-to-register wires"
+   "notes": "split variant outline 1,727.976 x (22 H_half + 840), H_half 400 -> 9,640; roots on the N edge; v3: 3 columns x 575.992 + 2 x 43.2 channels = 1,814.376 wide (grows E by 86.4 into the 518.4-um spine/field SPF channel -> 432.0): ctile W-face clk/last/tid of columns 1-2 reachable; root-row W/E links (crootr s_* <-> comb w_*/e_*, yacc) cross the channel as 43.2-um straight register-to-register wires",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/crooty_c0",
@@ -1321,10 +1635,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/crootr_c0",
@@ -1352,10 +1675,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/cpin",
@@ -1383,10 +1715,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/comb",
@@ -1414,10 +1755,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/crooty_c2",
@@ -1445,10 +1795,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/crootr_c2",
@@ -1476,10 +1835,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_0",
@@ -1507,10 +1875,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_1",
@@ -1538,10 +1915,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_2",
@@ -1569,10 +1955,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_3",
@@ -1600,10 +1995,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_4",
@@ -1631,10 +2035,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_5",
@@ -1662,10 +2075,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_6",
@@ -1693,10 +2115,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_7",
@@ -1724,10 +2155,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_8",
@@ -1755,10 +2195,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_9",
@@ -1786,10 +2235,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_10",
@@ -1817,10 +2275,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_11",
@@ -1848,10 +2315,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_12",
@@ -1879,10 +2355,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_13",
@@ -1910,10 +2395,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_14",
@@ -1941,10 +2435,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_15",
@@ -1972,10 +2475,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_16",
@@ -2003,10 +2515,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_17",
@@ -2034,10 +2555,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_18",
@@ -2065,10 +2595,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_19",
@@ -2096,10 +2635,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_20",
@@ -2127,10 +2675,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_21",
@@ -2158,10 +2715,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_22",
@@ -2189,10 +2755,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_23",
@@ -2220,10 +2795,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_24",
@@ -2251,10 +2835,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_25",
@@ -2282,10 +2875,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_26",
@@ -2313,10 +2915,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_27",
@@ -2344,10 +2955,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_28",
@@ -2375,10 +2995,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_29",
@@ -2406,10 +3035,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_30",
@@ -2437,10 +3075,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_31",
@@ -2468,10 +3115,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_32",
@@ -2499,10 +3155,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_33",
@@ -2530,10 +3195,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_34",
@@ -2561,10 +3235,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_35",
@@ -2592,10 +3275,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_36",
@@ -2623,10 +3315,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_37",
@@ -2654,10 +3355,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_38",
@@ -2685,10 +3395,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_39",
@@ -2716,10 +3435,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_40",
@@ -2747,10 +3475,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_41",
@@ -2778,10 +3515,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_42",
@@ -2809,10 +3555,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_43",
@@ -2840,10 +3595,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_44",
@@ -2871,10 +3635,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_45",
@@ -2902,10 +3675,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_46",
@@ -2933,10 +3715,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_47",
@@ -2964,10 +3755,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_48",
@@ -2995,10 +3795,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_49",
@@ -3026,10 +3835,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_50",
@@ -3057,10 +3875,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_51",
@@ -3088,10 +3915,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_52",
@@ -3119,10 +3955,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_53",
@@ -3150,10 +3995,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_54",
@@ -3181,10 +4035,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_55",
@@ -3212,10 +4075,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_56",
@@ -3243,10 +4115,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_57",
@@ -3274,10 +4155,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_58",
@@ -3305,10 +4195,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_59",
@@ -3336,10 +4235,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_60",
@@ -3367,10 +4275,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_61",
@@ -3398,10 +4315,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_62",
@@ -3429,10 +4355,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_hc_s/ctile_63",
@@ -3460,10 +4395,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective",
@@ -3491,10 +4435,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "c_cmd[84:0]",
@@ -3828,7 +4772,16 @@
    ],
    "assembly": "tiles_direct",
    "owner": "el1011-ds-coll",
-   "notes": "v1 slab 1,727.976 x 2,721.576 (free W-column height): lanes W stacked, core column 1,360.776 wide; cb = 8 tiles direct (cbh parent route not iterated: GLUE PLACEMENT); ce tiles to fill (367.2, 444.96)-(1,727.976, 2,359.776) at 50-60% with >= 20 um channels -> owner posts the tile list; ct 1,036.776 x 340.2 at the N"
+   "notes": "v1 slab 1,727.976 x 2,721.576 (free W-column height): lanes W stacked, core column 1,360.776 wide; cb = 8 tiles direct (cbh parent route not iterated: GLUE PLACEMENT); ce tiles to fill (367.2, 444.96)-(1,727.976, 2,359.776) at 50-60% with >= 20 um channels -> owner posts the tile list; ct 1,036.776 x 340.2 at the N",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/lane0",
@@ -3856,10 +4809,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 2,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/lane1",
@@ -3887,10 +4849,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 2,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/lane2",
@@ -3918,10 +4889,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 2,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/lane3",
@@ -3949,10 +4929,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 2,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/lane4",
@@ -3980,10 +4969,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 2,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/lane5",
@@ -4011,10 +5009,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 2,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/lane6",
@@ -4042,10 +5049,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 2,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/lane7",
@@ -4073,10 +5089,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 2,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/cb_rw",
@@ -4104,10 +5129,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 297.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/cb_f",
@@ -4135,10 +5169,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 217.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/cb_q0",
@@ -4166,10 +5209,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 291.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/cb_q1",
@@ -4197,10 +5249,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 302.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/cb_q2",
@@ -4228,10 +5289,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 302.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/cb_q3",
@@ -4259,10 +5329,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 302.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/cb_q4",
@@ -4290,10 +5369,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 302.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/cb_re",
@@ -4321,10 +5409,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 297.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_collective/ct",
@@ -4352,10 +5449,19 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6"
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm",
@@ -4383,10 +5489,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "aSW[1026:0]",
@@ -4629,7 +5735,16 @@
    ],
    "assembly": "pending_owner",
    "owner": "el1011-ds-vm",
-   "notes": "BE S-face contract v3 (P2 READY-LATENCY 4: consumer dsfd_vm_p2_ep rebuilt s81die-1011 377e1ff10); tile list (be slices, fe lane tiles, be hub logic folded into tiles) to be posted by the owner; clt6 LEF fails M7/pin access (re-route); v3: bgq28 columns at pitch 388.8 (345.6 + 43.2 channel; 1,512.0 of the 1,520.184 slab): column 1-3 W-face ck/rs/grp reachable; FE S-face / BE N-face pins follow the columns (+43.2 h), BE slice tiles at 388.8 s + 43.2"
+   "notes": "BE S-face contract v3 (P2 READY-LATENCY 4: consumer dsfd_vm_p2_ep rebuilt s81die-1011 377e1ff10); tile list (be slices, fe lane tiles, be hub logic folded into tiles) to be posted by the owner; clt6 LEF fails M7/pin access (re-route); v3: bgq28 columns at pitch 388.8 (345.6 + 43.2 channel; 1,512.0 of the 1,520.184 slab): column 1-3 W-face ck/rs/grp reachable; FE S-face / BE N-face pins follow the columns (+43.2 h), BE slice tiles at 388.8 s + 43.2",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_capture",
@@ -4657,10 +5772,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "ck",
@@ -4700,7 +5815,16 @@
    ],
    "assembly": "element",
    "owner": "el1011 s81 ctrl",
-   "notes": "single hard element (dsfd_sp_capture_c)"
+   "notes": "single hard element (dsfd_sp_capture_c)",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_gather",
@@ -4728,10 +5852,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "c_cmd[84:0]",
@@ -4897,7 +6021,16 @@
    ],
    "assembly": "element",
    "owner": "el1011 s81 ctrl",
-   "notes": "single hard element (dsfd_sp_gather_c)"
+   "notes": "single hard element (dsfd_sp_gather_c)",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_wfc",
@@ -4925,10 +6058,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "ck",
@@ -5073,7 +6206,16 @@
    ],
    "assembly": "element",
    "owner": "el1011-ds-wfc",
-   "notes": "WFC kit stage (dsfd_wfc_stg)"
+   "notes": "WFC kit stage (dsfd_wfc_stg)",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "rep/q_elem",
@@ -5099,13 +6241,22 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "assembly": "cluster",
    "owner": "ds-1010",
-   "notes": "instances 1,898: positions in the plan floorplan.def; replicated >= 4 -> hardened once and stepped"
+   "notes": "instances 1,898: positions in the plan floorplan.def; replicated >= 4 -> hardened once and stepped",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "rep/bf",
@@ -5131,13 +6282,22 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 1,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "assembly": "cluster",
    "owner": "el1011-ds-bf",
-   "notes": "instances 519: positions in the plan floorplan.def; replicated >= 4 -> hardened once and stepped"
+   "notes": "instances 519: positions in the plan floorplan.def; replicated >= 4 -> hardened once and stepped",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "rep/pqc",
@@ -5169,7 +6329,8 @@
    "signal_max_layer": "M6",
    "assembly": "pending_owner",
    "owner": "el1011-ds-misc",
-   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)"
+   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)",
+   "layer_rule": "cluster"
   },
   {
    "name": "rep/hrow",
@@ -5201,7 +6362,8 @@
    "signal_max_layer": "M6",
    "assembly": "pending_owner",
    "owner": "el1011-ds-mtp",
-   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)"
+   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)",
+   "layer_rule": "cluster"
   },
   {
    "name": "rep/engram_c",
@@ -5233,7 +6395,8 @@
    "signal_max_layer": "M6",
    "assembly": "pending_owner",
    "owner": "el1011-ds-misc",
-   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)"
+   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)",
+   "layer_rule": "cluster"
   },
   {
    "name": "sp_vm/g_h[0].g_t[0].u_bg",
@@ -5262,11 +6425,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[0].g_t[1].u_bg",
@@ -5295,11 +6467,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[0].g_t[2].u_bg",
@@ -5328,11 +6509,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[0].g_t[3].u_bg",
@@ -5361,11 +6551,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[1].g_t[0].u_bg",
@@ -5394,11 +6593,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[1].g_t[1].u_bg",
@@ -5427,11 +6635,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[1].g_t[2].u_bg",
@@ -5460,11 +6677,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[1].g_t[3].u_bg",
@@ -5493,11 +6719,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[2].g_t[0].u_bg",
@@ -5526,11 +6761,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[2].g_t[1].u_bg",
@@ -5559,11 +6803,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[2].g_t[2].u_bg",
@@ -5592,11 +6845,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[2].g_t[3].u_bg",
@@ -5625,11 +6887,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[3].g_t[0].u_bg",
@@ -5658,11 +6929,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[3].g_t[1].u_bg",
@@ -5691,11 +6971,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[3].g_t[2].u_bg",
@@ -5724,11 +7013,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/g_h[3].g_t[3].u_bg",
@@ -5757,11 +7055,20 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 4,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
-   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/u_be.g_s[0].u_sl",
@@ -5788,10 +7095,10 @@
     "face": "W",
     "layer": "M4"
    },
-   "version": "9",
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "o_v[9:0]",
@@ -5925,7 +7232,16 @@
     "E": "M4 M6"
    },
    "owner": "el1011-ds-vm",
-   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl."
+   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M6",
+    "strap_layer": "M7",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M6",
+   "view_status": "INVALID: closed view routes signals on M7 above its own cap M6; re-route at M5 (m5_reroute_priority.json)",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/u_be.g_s[1].u_sl",
@@ -5952,10 +7268,10 @@
     "face": "W",
     "layer": "M4"
    },
-   "version": "9",
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "o_v[9:0]",
@@ -6089,7 +7405,16 @@
     "E": "M4 M6"
    },
    "owner": "el1011-ds-vm",
-   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl."
+   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M6",
+    "strap_layer": "M7",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M6",
+   "view_status": "INVALID: closed view routes signals on M7 above its own cap M6; re-route at M5 (m5_reroute_priority.json)",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/u_be.g_s[2].u_sl",
@@ -6116,10 +7441,10 @@
     "face": "W",
     "layer": "M4"
    },
-   "version": "9",
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "o_v[9:0]",
@@ -6253,7 +7578,16 @@
     "E": "M4 M6"
    },
    "owner": "el1011-ds-vm",
-   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl."
+   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M6",
+    "strap_layer": "M7",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M6",
+   "view_status": "INVALID: closed view routes signals on M7 above its own cap M6; re-route at M5 (m5_reroute_priority.json)",
+   "layer_cap": "M5"
   },
   {
    "name": "sp_vm/u_be.g_s[3].u_sl",
@@ -6280,10 +7614,10 @@
     "face": "W",
     "layer": "M4"
    },
-   "version": "9",
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
+   "version": 10,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "pins": [
     {
      "name": "o_v[9:0]",
@@ -6417,7 +7751,16 @@
     "E": "M4 M6"
    },
    "owner": "el1011-ds-vm",
-   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl."
+   "notes": "v9 (el1011-ds-vm/be 2026-10-12, approved by main): be_sl is a die-placed tile (BE parent retired under TWO-LEVEL/GLUE; glue inside be_sl v4). N/S face pins on VERTICAL layers M3/M5 (ref_tile pin_balance, 32-pin groups) instead of hand-flow N-face M6 pins at 0.128 pitch (1,300-3,452 stalled M7-spacing DRC in besl5/besl7). PG = ref_tile M6 stripes-as-pins, parent strap M7. Outline 302.4 x 92.88, x = s*388.8+43.2, y 21.6 (sp_vm frame). Kit physical/ref_tile/dsfd_vm_be_sl.",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M6",
+    "strap_layer": "M7",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M6",
+   "view_status": "INVALID: closed view routes signals on M7 above its own cap M6; re-route at M5 (m5_reroute_priority.json)",
+   "layer_cap": "M5"
   }
  ]
 }

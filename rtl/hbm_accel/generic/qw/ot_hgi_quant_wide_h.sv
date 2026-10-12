@@ -25,7 +25,13 @@
 module ot_hgi_quant_wide_h #(
     parameter integer NB = 32,
     parameter integer LQ = 16,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // decoder track: 0 = ot_hgi_qw_dec (one tile, g_d1.u_dec), 1 = ot_hgi_qw_dec3 (dxl/dbq/daq tiles, g_d3.u_dec)
+`ifdef OT_QW_DEC3
+    parameter integer DEC3 = 1
+`else
+    parameter integer DEC3 = 0
+`endif
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -195,13 +201,14 @@ module ot_hgi_quant_wide_h #(
         else begin gv <= {gv[2:0], |hit_p}; launch <= gv[3]; end
     // ---------------------------------------------------------------- decode tile, result capture, SRAM FIFO
     wire d_vo, d_f, d_df; wire [511:0] d_y;
-`ifdef OT_QW_DEC3
-    // track B (el1011-hbm-fq 10-12): the decoder as three hardened tiles (dxl / dbq / daq), same ports and timing
-    ot_hgi_qw_dec3 u_dec (.clk(clk), .rst_n(rr_n[2]), .v(launch), .header(hdr), .x(lx), .vo(d_vo), .y(d_y),
-`else
-    ot_hgi_qw_dec u_dec (.clk(clk), .rst_n(rr_n[2]), .v(launch), .header(hdr), .x(lx), .vo(d_vo), .y(d_y),
-`endif
-        .fault(d_f), .decode_fault(d_df));
+    generate if (DEC3 != 0) begin : g_d3
+        // track B (el1011-hbm-fq 10-12): the decoder as three hardened tiles (dxl / dbq / daq), same ports and timing
+        ot_hgi_qw_dec3 u_dec (.clk(clk), .rst_n(rr_n[2]), .v(launch), .header(hdr), .x(lx), .vo(d_vo), .y(d_y),
+            .fault(d_f), .decode_fault(d_df));
+    end else begin : g_d1
+        ot_hgi_qw_dec u_dec (.clk(clk), .rst_n(rr_n[2]), .v(launch), .header(hdr), .x(lx), .vo(d_vo), .y(d_y),
+            .fault(d_f), .decode_fault(d_df));
+    end endgenerate
     reg yc_v, yc_f, yc_df; reg [511:0] yc;
     always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin yc_v <= 0; yc_f <= 0; yc_df <= 0; end
         else begin yc_v <= d_vo; yc_f <= d_vo && d_f; yc_df <= d_df; end
