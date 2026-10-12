@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_coll_ceqp",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/dsfd_coll_ceqp-ceh-390208180-tc-cl/routes/dsfd_coll_ceqp_ceh_390208180_tc_cl/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ceqp-ceh-390208180-tc-cl/routes/dsfd_coll_ceqp_ceh_390208180_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ceqp-ceh-390208180-tc-cl/routes/dsfd_coll_ceqp_ceh_390208180_tc_cl/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ceqp-ceh-390208180-tc-cl/routes/dsfd_coll_ceqp_ceh_390208180_tc_cl/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ceqp-ceh-390208180-tc-cl/routes/dsfd_coll_ceqp_ceh_390208180_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ceqp-ceh-390208180-tc-cl/routes/dsfd_coll_ceqp_ceh_390208180_tc_cl/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_coll_ceqp-ceh-390208180-tc-cl/routes/dsfd_coll_ceqp_ceh_390208180_tc_cl/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_coll_ceqp.lef": "352ddb649c16f0e4035616c5054b0bd4a92343778354f531fc43cd8358307278",
+    "dsfd_coll_ceqp_ff.lib": "b00c74367c0118d5692156c4b9504dad707763d5e9af448bb5b949585806fb34",
+    "dsfd_coll_ceqp_ss.lib": "e697958a9b205d7228aa1ff69bab6bd0163a3555fb2a551640a7408be577a7da"
+  },
+  "ok": true
+}

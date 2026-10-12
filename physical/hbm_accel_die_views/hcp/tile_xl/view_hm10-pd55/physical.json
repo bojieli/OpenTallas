@@ -5,17 +5,17 @@
         "antenna_violating_nets": 0.0,
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
-        "hold_violations": 119.0,
-        "hold_wns_ns": -0.0156089,
+        "hold_violations": 418.0,
+        "hold_wns_ns": -0.031735900000000004,
         "max_cap_violations": 0.0,
         "max_fanout_violations": 0.0,
-        "max_slew_violations": 1.0,
+        "max_slew_violations": 0.0,
         "met": false,
-        "physically_clean": false,
+        "physically_clean": true,
         "scope": "post-route, extracted parasitics",
-        "setup_violations": 103.0,
-        "setup_wns_ns": -0.08720090000000001,
-        "signal_integrity_clean": false,
+        "setup_violations": 16.0,
+        "setup_wns_ns": -0.015528100000000001,
+        "signal_integrity_clean": true,
         "stage": "place_and_route",
         "timing_met": false
       }
@@ -26,7 +26,7 @@
     "status": "not_met"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-10-11T15:38:03.186850+00:00",
+  "completed_at": "2026-10-12T04:05:43.039363+00:00",
   "corner": {
     "liberty": [
       {
@@ -65,9 +65,9 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 485.383,
+    "area_um2": 469.068,
     "block": "hfd_hc_tile_xl",
-    "cells": 4893,
+    "cells": 5318,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 0.77,
     "clock_port": "clk",
@@ -81,16 +81,16 @@
     "extra_sdc": {
       "files": [
         {
-          "path": ".views/hfd_hc_tilexl_cons1011_5c35b1a6e_tc_hm10_pd55_cl/io.sdc",
-          "sha256": "180cf1e8a552f148b42e012ad13a30961b0c470a19d7f9db492996082a7bd4cd"
+          "path": ".views/hfd_hc_tilexl_cons1011_c95527ec0_tc_hm10_pd55_pka10_cl/io.sdc",
+          "sha256": "2ab11fa211bccdd6ae4d98d0e5ef7a6daa76c8a679aa56bcbf865ffd0c6e0095"
         }
       ],
       "lines": [
         "set ti_c [get_clocks core_clk]",
         "set ti_p [get_property $ti_c period]",
         "create_clock -name peer_clk -period $ti_p -waveform [list 0 [expr {$ti_p/2}]]",
-        "set ti_lat 262.0",
-        "if {[llength [get_libs -quiet *_FF_*]]} {set ti_lat 209.0}",
+        "set ti_lat 263.0",
+        "if {[llength [get_libs -quiet *_FF_*]]} {set ti_lat 205.0}",
         "set_clock_latency -source $ti_lat [get_clocks peer_clk]",
         "set_clock_uncertainty -setup 60 [get_clocks peer_clk]",
         "set_clock_uncertainty -hold 25 [get_clocks peer_clk]",
@@ -106,16 +106,16 @@
     "false_path_from_ports": [],
     "false_path_io": false,
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 3197040000.0,
-    "hold_wns_ns": -0.0156089,
+    "fmax_hz": 2340650000.0,
+    "hold_wns_ns": -0.031735900000000004,
     "io_delay_fraction": 0.2,
     "parameters": {},
-    "setup_wns_ns": -0.08720090000000001,
-    "signal_integrity_clean": false,
+    "setup_wns_ns": -0.015528100000000001,
+    "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 1
+      "max_slew_violations": 0
     },
     "sources": [
       {
@@ -125,12 +125,12 @@
       }
     ],
     "top": "hfd_hc_tile_xl",
-    "utilization_fraction": 0.489041
+    "utilization_fraction": 0.488266
   },
-  "elapsed_seconds": 774.308,
+  "elapsed_seconds": 1344.971,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-10-11T15:25:08.878502+00:00",
+  "generated_at": "2026-10-12T03:43:18.068394+00:00",
   "git": {
     "commit": null,
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
@@ -140,7 +140,7 @@
   },
   "place_and_route": {
     "adder_map": "yosys_kogge_stone",
-    "artifact_dir": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/routes/hfd_hc_tilexl_cons1011_5c35b1a6e_tc_hm10_pd55_cl/physical_artifacts",
+    "artifact_dir": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/routes/hfd_hc_tilexl_cons1011_c95527ec0_tc_hm10_pd55_pka10_cl/physical_artifacts",
     "artifacts": {
       "1_2_yosys.v": {
         "retained": true,
@@ -154,53 +154,53 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "960d9d2451a61de02eb51fb386ff5bec2bfaa2a7ab985e5ebb981c81c185fcc7",
-        "size_bytes": 10310483
+        "sha256": "78d27a407df612aee647417d20844c8c5bb2f5889e0be9bf965c3f05f396df3a",
+        "size_bytes": 10100057
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "a1a6313b4445c79eb65efacd04bc8cc25e352cb8d001b5b1e249fd30818f648c",
-        "size_bytes": 8694522
+        "sha256": "6b87f4362550d8b9da5a5b3d29f38abfb8aa73f32c31c9c0bfeebf3fa6f79453",
+        "size_bytes": 8262266
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "98b770ec0038479b4a8d5a95f6f729823fa988df9d13d57b15782cb3e2906895",
-        "size_bytes": 19072425
+        "sha256": "32eb0aed47d64678302c56cbc8f28eac956f77baa0da3df18c5aa69b0334f638",
+        "size_bytes": 18850065
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "236e1ccebd888c7f9c12d7077a6eda43a18fec81841aafd92a59e351b17e6d76",
-        "size_bytes": 4461957
+        "sha256": "206886976523c497d4191138ad7a16d4d147b9460c09e45667b0aa2e8a3f755f",
+        "size_bytes": 4200561
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "d41a42768b27e6c3a783fe7d472a036ae86fe43a04d53486bac872e31336a67a",
-        "size_bytes": 222602
+        "sha256": "2372a4a8da5844eee822a124a4524b2c794c76f16e8e8edfa1931e46c7f7aedd",
+        "size_bytes": 252772
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "f89f527140deddcbf11415841bb208a48fdaf8adbe6288a2d245ad0ab7cd9f09",
-        "size_bytes": 35875
+        "sha256": "5df7f24cf34e58a5d0044e866d1056d78d0fa8b38f092a5b1d9a275b4f6bccfa",
+        "size_bytes": 42157
       },
       "config.mk": {
         "retained": true,
-        "sha256": "1330aa849280535cb56ad38ed9cb222cff0653fd1c000484571d5728a9051e3a",
-        "size_bytes": 2785
+        "sha256": "04cc1289852bb3361249c100ef8f0621fdf2c7255f20d68f38669fa458bd4744",
+        "size_bytes": 2920
       },
       "constraint.sdc": {
         "retained": true,
-        "sha256": "1941fa4ffb0e0b5f52e54d6237bf3c0a05d78ce36ef61a52219c6e782df6993f",
+        "sha256": "413462822b9d2a7fc22c633c130e830120a6fc15a039dbecb962115bb5683a14",
         "size_bytes": 1225
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "c3078be792fc029bea68320e0e234677fe3e14c65cd456ce358c36aec40473b0",
-        "size_bytes": 26390
+        "sha256": "56fc588c59e61228839c53223aa54cbff4d19d4076fccadad38812a4f5cbe7f2",
+        "size_bytes": 26357
       }
     },
     "clock_period_ns": 0.77,
     "core_utilization_percent": 35,
-    "design_nickname": "opentallas_hfd_hc_tile_xl_asap7_hct_hfd_hc_tilexl_cons1011_5c35b1a6e_tc_hm10_pd55_cl",
+    "design_nickname": "opentallas_hfd_hc_tile_xl_asap7_hct_hfd_hc_tilexl_cons1011_c95527ec0_tc_hm10_pd55_pka10_cl",
     "extracted_spef_annotation": {
       "helper": "tools/orfs_allcorner_spef.py",
       "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
@@ -228,22 +228,29 @@
           "hook": "PRE_GLOBAL_PLACE",
           "name": "pre_global_place_wire_stage_fence.tcl",
           "path": "physical/hbm_accel_die_views/common/wire_stage_fence.tcl",
-          "sha256": "f227e06ffc65a33314ab5d6aab24d2670668626d23bc3eafb10a98bf1915734a",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/src/physical/hbm_accel_die_views/common/wire_stage_fence.tcl"
+          "sha256": "4249f89727d62ca9121c39a43d32175e3f990e7bb655a57396a5a5621ab21887",
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/src/physical/hbm_accel_die_views/common/wire_stage_fence.tcl"
         },
         {
           "hook": "PRE_CTS",
           "name": "pre_cts_v41x_karb_repair_buffer_cap.tcl",
           "path": "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
           "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/src/physical/abi3/v41x_karb_repair_buffer_cap.tcl"
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/src/physical/abi3/v41x_karb_repair_buffer_cap.tcl"
         },
         {
           "hook": "PRE_GLOBAL_ROUTE",
-          "name": "pre_global_route_v41x_karb_repair_buffer_cap.tcl",
-          "path": "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
-          "sha256": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
-          "source": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/src/physical/abi3/v41x_karb_repair_buffer_cap.tcl"
+          "name": "pre_global_route_pin_access_pregrt.tcl",
+          "path": "physical/redesign_ds/coll_split/pin_access_pregrt.tcl",
+          "sha256": "9d426299ba2bf0e7efc3cbc8fb4bee946de3a63df30537b8faa5a668b7a35d5f",
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/src/physical/redesign_ds/coll_split/pin_access_pregrt.tcl"
+        },
+        {
+          "hook": "POST_DETAIL_ROUTE",
+          "name": "post_detail_route_stn_pin_keepout.tcl",
+          "path": "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+          "sha256": "7df42ae115d95482949474513b4b6f4803268a7e66d2319d1507438a24ac6db8",
+          "source": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
         }
       ]
     },
@@ -354,38 +361,38 @@
         "synth__flow__errors__count": 0
       },
       "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
-      "fmax_hz": 3197040000.0,
-      "hold_tns_ns": -0.594486,
-      "hold_violations": 119,
-      "hold_wns_ns": -0.0156089,
-      "instance_count": 39732,
+      "fmax_hz": 2340650000.0,
+      "hold_tns_ns": -5.91087,
+      "hold_violations": 418,
+      "hold_wns_ns": -0.031735900000000004,
+      "instance_count": 40008,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 9813.51,
       "macro_count": 1,
       "max_cap_violations": 0,
       "max_fanout_violations": 0,
-      "max_slew_violations": 1,
+      "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "orfs_aggregate_fmax_hz": 3197040000.0,
+      "orfs_aggregate_fmax_hz": 2340650000.0,
       "per_clock_fmax_hz": {},
-      "power_total_w": 0.00445655,
+      "power_total_w": 0.00386465,
       "raw_timing_library_units": {
-        "hold_tns_ns": -594.486,
-        "hold_wns_ns": -15.6089,
-        "setup_tns_ns": -4868.09,
-        "setup_wns_ns": -87.2009
+        "hold_tns_ns": -5910.87,
+        "hold_wns_ns": -31.7359,
+        "setup_tns_ns": -67.5949,
+        "setup_wns_ns": -15.5281
       },
-      "routed_nets": 2706,
-      "routed_wirelength_um": 120696,
-      "sequential_area_um2": 256.71,
+      "routed_nets": 3147,
+      "routed_wirelength_um": 60409,
+      "sequential_area_um2": 253.692,
       "sequential_cell_count": 870,
-      "setup_tns_ns": -4.8680900000000005,
-      "setup_violations": 103,
-      "setup_wns_ns": -0.08720090000000001,
-      "standard_cell_area_um2": 485.383,
-      "standard_cell_count": 4893,
-      "utilization_fraction": 0.489041,
-      "vias": 26637
+      "setup_tns_ns": -0.0675949,
+      "setup_violations": 16,
+      "setup_wns_ns": -0.015528100000000001,
+      "standard_cell_area_um2": 469.068,
+      "standard_cell_count": 5318,
+      "utilization_fraction": 0.488266,
+      "vias": 24007
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "dd460da3cba12d6adee370a61c092236661032fd4c6784cb11f032daa403329b",
@@ -605,7 +612,7 @@
       "--io-delay-fraction",
       "0.2",
       "--sdc-append",
-      ".views/hfd_hc_tilexl_cons1011_5c35b1a6e_tc_hm10_pd55_cl/io.sdc",
+      ".views/hfd_hc_tilexl_cons1011_c95527ec0_tc_hm10_pd55_pka10_cl/io.sdc",
       "--stages",
       "pnr",
       "--die-area",
@@ -640,7 +647,7 @@
       "--purpose",
       "signoff_target",
       "--nickname-tag",
-      "hct_hfd_hc_tilexl_cons1011_5c35b1a6e_tc_hm10_pd55_cl",
+      "hct_hfd_hc_tilexl_cons1011_c95527ec0_tc_hm10_pd55_pka10_cl",
       "--orfs-var",
       "GPL_ROUTABILITY_DRIVEN=0",
       "--orfs-var",
@@ -662,30 +669,36 @@
       "--step-tcl",
       "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
       "--step-tcl",
-      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "PRE_GLOBAL_ROUTE=physical/redesign_ds/coll_split/pin_access_pregrt.tcl",
+      "--step-tcl",
+      "POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+      "--orfs-var",
+      "OT_PK_FRAC=1.0",
+      "--orfs-var",
+      "OT_PK_ABOVE_ONLY=1",
       "--synth-timeout-seconds",
       "unlimited",
       "--flow-timeout-seconds",
       "unlimited",
       "--keep-workdir",
-      "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/routes/hfd_hc_tilexl_cons1011_5c35b1a6e_tc_hm10_pd55_cl/work",
+      "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/routes/hfd_hc_tilexl_cons1011_c95527ec0_tc_hm10_pd55_pka10_cl/work",
       "--force",
       "--output",
-      "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/routes/hfd_hc_tilexl_cons1011_5c35b1a6e_tc_hm10_pd55_cl/physical.json"
+      "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/routes/hfd_hc_tilexl_cons1011_c95527ec0_tc_hm10_pd55_pka10_cl/physical.json"
     ],
     "driver": {
       "commit": null,
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
-      "path": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/src/tools/run_abi3_physical.py",
+      "path": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/src/tools/run_abi3_physical.py",
       "same_tree_as_sources": true,
-      "sha256": "365d16de005c60778b84a4f9538687a00ad7e3774831e97b2711d54338f75c26",
-      "tree": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/src"
+      "sha256": "b9feb8107310a48c058681472b84a7b1af68ec9b80d65bdfd50b16e6dbc1a94f",
+      "tree": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/src"
     },
     "orfs_num_cores": 16,
-    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
     "python": "3.14.4",
-    "source_root": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-5c35b1a6e-tc-hm10-pd55-cl/src"
+    "source_root": "/srv/opentallas-scratch/claude/closure-loop/hfd_hc_tilexl-cons1011-c95527ec0-tc-hm10-pd55-pka10-cl/src"
   },
   "schema_version": 1,
   "stages_completed": [

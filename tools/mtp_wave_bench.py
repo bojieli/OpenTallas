@@ -238,11 +238,11 @@ def main_record(a):
                                                 'commit n / q_next / squash; history ring reads (both rings)']),
                               mutants=muts, all_ok=all(c['ok'] for c in cases.values())),
                charges=charges, events=ev, elements=el,
-               notes=['wfc_kit.ar_pass measured = stage core done -> next stage core command, minus the ideal hop (header + 41 words '
+               notes=['wfc_kit.ar_pass measured = stage core done -> next stage core command, minus the ideal hop (header + 46 TXW words '
                       'serialised + 2 x 10 die hub stations + the collective stub cycle); price 160.53 a hop, x 120 hops',
                       'wfc_kit.intervals measured = same-pass start-to-start at the last stage - stage busy - the composed handoff 46',
-                      'POSTED VM (the priced configuration): the kit\'s own t_hep is dead (k_start never pulses); the bench binds '
-                      'dsfd_wfc_hep to the endpoint START for the layer 37/38/39 row senders',
+                      'POSTED VM (the priced configuration): the stage kits run HEP 1 and count the START doorbell write '
+                      '(fix cfe25038d); their t_hep feeds the layer 37/38/39 row senders',
                       'coll.engine_endpoint (dsfd_coll_job) is not a wave-class element and is not in this bench'])
     a.record.parent.mkdir(parents=True, exist_ok=True)
     a.record.write_text(json.dumps(rec, indent=1) + '\n')
