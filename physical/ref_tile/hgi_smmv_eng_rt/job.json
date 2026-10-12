@@ -1,20 +1,20 @@
 {
- "name": "hgi_smmv_eng_rt-r1-6e530654e",
+ "name": "hgi_smmv_eng_rt-r2-COMMIT",
  "block": "ot_hgi_smmv",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-smmv-b",
- "purpose": "SM.MATVEC track B per-cluster record engine (B2, NSM 8): record window W4, pipelined decode + exact divide, HW x-slot ring + verified XR reuse, two-edge SM stations, in-order retire",
+ "purpose": "SM.MATVEC track B per-cluster record engine (B2, NSM 8): record window W4, pipelined decode + exact divide, HW x-slot ring + verified XR reuse, two-edge SM stations, in-order retire; r2: held-input multi-edge arithmetic (<=12 carry bits an edge) for decode products, SM stations and the x allocator (r1 TT -141.17: all ripple chains)",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-hbm-smmv-b",
-  "commit": "6e530654e"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_hgi_smmv rtl/hbm_accel/generic/adapters/ot_hgi_smmv.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_smmv u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/ot_hgi_smmv.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_smmv_eng_rt/hgi_smmv_eng_rt-r1-6e530654e"
+   "to": "results/rtl/ref_tile/hgi_smmv_eng_rt/hgi_smmv_eng_rt-r2-COMMIT"
   }
  ],
  "cycles_added": 0,
