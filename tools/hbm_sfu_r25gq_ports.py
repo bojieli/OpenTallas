@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """hbm-phys-1010 [sfu] 2026-10-10: a PROPOSED R25GQ pin plan of hfd_sfu (slot 2016.144 x 1095.12, SW instance R0),
-for the folded tiled quarter (tools/hbm_hub_quarter_gen.py --quarter sfu --tiled --half-width --fold 3).
+for the folded tiled quarter (tools/hbm_hub_quarter_gen.py --quarter sfu --tiled --half-width --seg-fold 3).
 
 R25GQ has no die nets for hfd_sfu yet (results/arch/r25gq_refloorplan_20261010/README: pins come with the network
 build), so hbm_die_views.py --variant r25gq ports is empty.  This keeps the r24p port SET (names, widths, directions)

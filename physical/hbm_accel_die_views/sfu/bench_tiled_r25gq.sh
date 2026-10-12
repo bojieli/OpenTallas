@@ -1,5 +1,5 @@
 #!/bin/bash
-# hbm-phys-1010 [sfu] 2026-10-10: the R25GQ FOLDED variant (--fold 3, proposed pin plan tools/hbm_sfu_r25gq_ports.py,
+# hbm-phys-1010 [sfu] 2026-10-10: the R25GQ FOLDED variant (--seg-fold 3, proposed pin plan tools/hbm_sfu_r25gq_ports.py,
 # slot 2016.144 x 1095.12: 2 chains x 8 tiles in 6 column segments of 3, a relay register each way at every turn) of
 # fill-8's transaction-exact bench of the TILED half-width SFU quarter (hfd_sfu = 16 hfd_sfu_tile macros,
 # tools/hbm_hub_quarter_gen.py --quarter sfu --tiled --half-width --xroot lockup) against the generator's SFU reference
@@ -21,7 +21,7 @@ set -u; O=$1; mkdir -p $O; m=hfd_sfu; R=physical/hbm_accel_die_views/sfu/rtl_til
 # the committed rtl_tiled_r25gq/ports.json IS the die-view output (check it with the default path on a full checkout)
 if [ -n "${PORTS:-}" ]; then mkdir -p $O/ports/$m && cp $PORTS/ports.json $PORTS/io_place.tcl $O/ports/$m/
 else python3 tools/hbm_die_views.py --variant r25gqn ports --master $m --out $O/ports > /dev/null || { echo "ports_rc=1"; exit 1; }; fi
-python3 tools/hbm_hub_quarter_gen.py --quarter sfu --ports $O/ports/$m/ports.json --out $O/gen --tiled --half-width --xroot lockup --fold 3 \
+python3 tools/hbm_hub_quarter_gen.py --quarter sfu --ports $O/ports/$m/ports.json --out $O/gen --tiled --half-width --xroot lockup --seg-fold 3 \
   --band-y 40 --end f_lgW_rdn=N --end f_lgW_wdn=N --end t_lgW_rup=N --end t_lgW_wup=N --end f_hgi_vmr=N --end t_hgi_vmq=N --end f_hgi_cmdproc=N --end t_hgi_cmdproc=N \
   --nvec ${NVEC:-6} > $O/plan.log 2> $O/gen.err || { echo "gen_rc=1"; cat $O/gen.err; exit 1; }
 : > $O/result.txt
