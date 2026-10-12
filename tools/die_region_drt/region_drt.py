@@ -751,7 +751,7 @@ foreach {{pn v}} $lat {{ set p [get_pins -quiet $pn]; if {{[llength $p]}} {{
 # window): ideal stream clock, the same on the GRT and RCX side, so the RCX-GRT delta stays a wire-only delta
 set have {{}}; foreach p [concat $sp $hp] {{ dict set have [get_full_name $p] 1 }}
 set ip 0
-foreach p [get_pins -quiet -hierarchical {{*/ck */clk */CLK */clk_i}}] {{
+foreach p [get_pins -quiet -hierarchical {{*/ck */ck\\[0\\] */clk */CLK */clk_i}}] {{
   if {{![dict exists $have [get_full_name $p]]}} {{ lappend sp $p; incr ip }} }}
 puts "OT_CLOCK_SINKS stream=[llength $sp] hclk=[llength $hp] ideal_unplanned=$ip"
 if {{[llength $sp]}} {{ create_clock -name stream -period 833.333 $sp }}
