@@ -91,7 +91,9 @@ module ot_hdc_v41x_vec_red #(
 endmodule
 
 // the c12 controller vehicle
-module ot_su13_ctl64 #(parameter integer N = 64, parameter integer M = 16, parameter integer AW = 24, parameter integer NW = 16) (
+module ot_su13_ctl64 #(parameter integer N = 64, parameter integer M = 16, parameter integer AW = 24, parameter integer NW = 16,
+    // el1011-hbm-sfu: the SFU lanes' latency contract (insertion depths H_EXP / H_SIG); must equal the routed lanes' values
+    parameter integer DENR = 0, parameter integer SFUT = 0) (
     input  wire clk, input wire rst_n, input wire go, output wire ready, output wire idle,
     input  wire [NW-1:0] i_nout, i_nin, input wire [1:0] i_asrc, i_bsrc, i_csrc, i_dsrc,
     input  wire [AW-1:0] i_abase, i_aso, i_asi, i_aibase, input wire [1:0] i_aind, input wire [AW-1:0] i_bbase, i_bso, i_bsi,
@@ -114,5 +116,6 @@ module ot_su13_ctl64 #(parameter integer N = 64, parameter integer M = 16, param
     output wire dbg_res, output wire [7:0] dbg_sseq
 );
     ot_hdc_v41x_vec #(.N(N), .M(M), .AW(AW), .NW(NW), .BCAST_STAGES(7), .RET_STAGES(8), .MLAT(6), .ALAT(6), .OPR(1),
-                      .DDIV(21), .SIDEX(4), .FSQ(1), .CAPR(1), .RPAD(1), .RSL(2), .RTAP(1), .ROUT(1), .RSLICE(64), .CTL12(1), .CTL13(1)) u (.*);
+                      .DDIV(21), .SIDEX(4), .FSQ(1), .CAPR(1), .RPAD(1), .RSL(2), .RTAP(1), .ROUT(1), .RSLICE(64), .CTL12(1), .CTL13(1),
+                      .DENR(DENR), .SFUT(SFUT)) u (.*);
 endmodule
