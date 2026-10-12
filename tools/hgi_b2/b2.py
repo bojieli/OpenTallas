@@ -7,7 +7,9 @@ compiler emitted, where every logical word lives and which cluster computes what
   placement   every touched logical word is LOCAL q (slice q only) or MIRROR (the same copy in every slice's mirror
               window).  A word that a split record needs on more than one cluster (an SM activation, a scalar
               broadcast, a reduction result) is MIRROR; a word only one cluster reads or writes is LOCAL to it.  Words
-              only the central ring clients touch are spread over the slices in 256-word blocks.
+              only the central ring clients touch is LOCAL to the home cluster of the first central record that
+              touches it (home = the cluster holding most of that record's already-LOCAL words, else the least loaded
+              slice), so a central client's private operands never cross the ring.
               The slice holds LOCAL_W local words + MIRROR_W mirror words (STUDY: 65,536 + mirror, 98,304 total).
   map         the address -> slice map the command processor uses: runs of equal class in logical order, each packed
               contiguously in its region (local q at phys 0.., mirror at phys LOCAL_W..); segment table
@@ -49,7 +51,50 @@ MIRROR_W = 32768
 SLICE_W = LOCAL_W + MIRROR_W
 MIR = NQ
 SPLIT_UNITS = {"SM", "SU", "SFU", "ATT"}
+VEC_HOME = 0                # the vector home cluster: small vector records run there, on operands LOCAL to it
+SMALL_VEC = 16384           # an SU / SFU record of at most this many elements is a home record (no split, no chain)
+
+
+def is_home_vec(M, r, die, L):
+    """a small SU.VOP / SFU record runs whole on VEC_HOME: splitting a decode-size vector 4 ways buys no time and
+    costs a chained reduction and a mirror broadcast per record (the verification harness measured SU.VOP ring
+    traffic as a top driver); its operands are LOCAL to VEC_HOME, so it never crosses the ring"""
+    if r.unit not in ("SU", "SFU"):
+        return False
+    try:
+        if r.unit == "SU":
+            _, ni, no, _, _ = M.eff(r.desc["A"], die, L)
+        else:
+            _, ni, no, _, _ = M.eff(r.desc["O"], die, L)
+    except (MC.Fault, KeyError):
+        return False
+    return ni * no <= SMALL_VEC
+
+
+def central(M, r, die, L):
+    return r.unit not in SPLIT_UNITS or is_home_vec(M, r, die, L)
 F = np.float32
+
+# ring / broadcast cost model: the verification harness's (tools/hgi_e2e/b2.py on el1012-b2verif), same constants;
+# results/arch/hbm_b2_1012/b2_params.json (from SPEC.md) overrides key by key when it exists
+RING = dict(ring_link_bits=2048, ring_hop_cycles=16, bcast_bits=1024, bcast_hops=2,
+            budget_cycles_per_layer=dict(ds=290, qwen=93), source="provisional (PHY study STUDY.md)")
+
+
+def ring_params():
+    import os
+    from pathlib import Path
+    f = Path(os.environ.get("HGI_B2_PARAMS", Path(__file__).resolve().parents[2] / "results/arch/hbm_b2_1012/b2_params.json"))
+    out = dict(RING)
+    if f.exists():
+        out.update({k: v for k, v in json.loads(f.read_text()).items() if k in RING})
+        out["source"] = str(f)
+    return out
+
+
+def _hops(a, b):
+    d = abs(a - b)
+    return min(d, NQ - d)
 
 
 class PlacementError(Exception):
@@ -95,7 +140,7 @@ def _cp_words(M, r, die, L):
 
 def split_of(M, r, die, L):
     u = r.unit
-    if u not in SPLIT_UNITS:
+    if central(M, r, die, L):
         return Split("CENTRAL")
     E = lambda nm: M.eff(r.desc[nm], die, L)          # noqa: E731
     if u == "SM":
@@ -226,25 +271,31 @@ class Collect:
         self.central = np.zeros(VMW, bool)        # a central ring client reads / writes it
         self.modes = Counter()
         self.subs = set()                         # per-cluster VM sub-operands (one physical descriptor each)
+        self.crecs = []                           # rank 0: the VM words of every central record, in program order
 
     def _central(self, M, r, die, L):
+        xs = []
         for nm, d in r.desc.items():
             if d.space == "VM":
                 try:
                     a = M.vm_addrs(d, die, L)
-                    self.central[a[(a >= 0) & (a < VMW)]] = True
+                    a = a[(a >= 0) & (a < VMW)]
+                    self.central[a] = True
+                    xs.append(a)
                 except MC.Fault:
                     pass
+        if die.rank == 0 and xs:
+            self.crecs.append(np.unique(np.concatenate(xs)))
 
     def wrap(self, key, fn):
         def run(M, r, L):
             dies, cur = M.dies, M.cur
             try:
-                if r.unit not in SPLIT_UNITS:
+                if central(M, M.rec_of(dies[0], r), dies[0], L):
                     for die in dies:
                         M.dies, M.cur = [die], M.rec_of(die, r)
                         self._central(M, M.cur, die, L)
-                    self.modes[(r.unit, "CENTRAL")] += 1
+                    self.modes[(r.unit, "CENTRAL" if r.unit not in SPLIT_UNITS else "HOME")] += 1
                 else:
                     for die in dies:
                         M.dies, M.cur = [die], M.rec_of(die, r)
@@ -273,7 +324,18 @@ class Collect:
         for q in range(NQ):
             cls[(cnt == 1) & (((nb >> q) & 1) == 1)] = q
         only_c = (cnt == 0) & self.central
-        w = np.nonzero(only_c)[0]
+        load = np.array([int(np.sum(cls == q)) for q in range(NQ)], np.int64)
+        for a in self.crecs:                     # central-private words: LOCAL to the record's home cluster
+            fresh = a[only_c[a] & (cls[a] < 0)]
+            if not fresh.size:
+                continue
+            c = cls[a]
+            votes = np.bincount(c[(c >= 0) & (c < NQ)].astype(np.int64), minlength=NQ)
+            order = sorted(range(NQ), key=lambda q: (q != VEC_HOME, -votes[q], load[q], q))
+            h = next((q for q in order if load[q] + fresh.size <= LOCAL_W), order[0])
+            cls[fresh] = h
+            load[h] += fresh.size
+        w = np.nonzero(only_c & (cls < 0))[0]    # a central word on a non-rank-0 die only
         cls[w] = (w // 256) % NQ
         # closure: a cluster's sub-operand is ONE physical descriptor, so it must sit in one region: promote a mixed one
         # to MIRROR until stable
@@ -367,6 +429,7 @@ class Check:
         self.ring = Counter()
         self.recs = []              # rank 0, one per executed dispatched record (Capture order)
         self.hbm_q = np.zeros(NQ, np.int64)
+        self.P = ring_params()
 
     def fail(self, msg):
         self.viol.append(msg)
@@ -423,7 +486,7 @@ class Check:
             dies, cur = M.dies, M.cur
             hook_prev = MC.RED_HOOK
             try:
-                if r.unit not in SPLIT_UNITS:
+                if central(M, M.rec_of(dies[0], r), dies[0], L):
                     self._central_ring(M, r, dies, L)
                     M.dies, M.cur = dies, cur
                     return fn(M, r, L)
@@ -441,6 +504,7 @@ class Check:
                 continue
             M.dies, M.cur = [die], M.rec_of(die, r)
             rd = wr = 0
+            ops = []
             for nm, d in M.cur.desc.items():
                 if d.space != "VM":
                     continue
@@ -449,14 +513,38 @@ class Check:
                 except MC.Fault:
                     continue
                 a = a[(a >= 0) & (a < VMW)]
-                if nm in ("O", "R", "D") and r.unit != "SU":
-                    wr += int(np.sum(np.where(self.pl.cls[a] == MIR, NQ, 1)))
+                ops.append((nm in (("O", "R") if r.unit == "SU" else ("O", "R", "D")), self.pl.cls[a]))
+            allc = np.concatenate([c for _, c in ops]) if ops else np.zeros(0, np.int8)
+            v = np.bincount(allc[(allc >= 0) & (allc < NQ)].astype(np.int64), minlength=NQ)
+            home = VEC_HOME if r.unit in SPLIT_UNITS else (int(np.argmax(v)) if v.any() else VEC_HOME)
+            pair, bc = Counter(), 0
+            for is_w, c in ops:
+                for q in range(NQ):
+                    n = int(np.sum(c == q))
+                    if q != home and n:
+                        pair[(home, q) if is_w else (q, home)] += n
+                if is_w:
+                    bc += int(np.sum(c == MIR))
+                    wr += int(np.sum((c >= 0) & (c != home)))
                 else:
-                    rd += a.size
-            self.ring["central_read"] += rd
-            self.ring["central_write"] += wr
-            self.recs.append(dict(unit=r.unit, op=r.op, tag=getattr(M.cur, "tag", ""), L=int(L), mode="CENTRAL",
-                                  ring_read=rd, ring_write=wr))
+                    rd += int(np.sum((c >= 0) & (c < NQ) & (c != home)))
+            cyc = self._cycles(pair, bc, 0)
+            self.ring["central_remote_read"] += rd
+            self.ring["central_remote_write"] += wr
+            self.ring["central_mirror_write"] += bc
+            self.recs.append(dict(unit=r.unit, op=r.op, tag=getattr(M.cur, "tag", ""), L=int(L),
+                                  mode="HOME" if r.unit in SPLIT_UNITS else "CENTRAL",
+                                  cluster=home, ring_read=rd, ring_write=wr, mirror_write=bc, **cyc))
+
+    def _cycles(self, pair, bcast, chain_hop):
+        """the harness's per-record cost: ring = slowest (src, dst) pair, broadcast tree, plus the chained-reduction
+        state carried cluster 0 -> 1 -> 2 -> 3 (NQ - 1 sequential one-hop transfers)"""
+        P = self.P
+        wpl, wpb, hc = P["ring_link_bits"] // 32, P["bcast_bits"] // 32, P["ring_hop_cycles"]
+        ring = max((hc * _hops(s_, d_) + -(-w // wpl) for (s_, d_), w in pair.items() if w), default=0)
+        bc = (hc * P["bcast_hops"] + -(-bcast // wpb)) if bcast else 0
+        ch = (NQ - 1) * (hc + -(-chain_hop // wpl)) if chain_hop else 0
+        return dict(ring_cycles=int(ring), bcast_cycles=int(bc), chain_cycles=int(ch), cycles=int(ring + bc + ch))
 
     def _one(self, M, r, die, L, fn):
         rank = die.rank
@@ -549,9 +637,33 @@ class Check:
                 if kind == "hbm":
                     for q in range(NQ):
                         self.hbm_q[q] += per[q][1]
+            cyc = self._cycles({}, mb // (NQ - 1), hop)
             self.recs.append(dict(unit=r.unit, op=r.op, tag=getattr(r, "tag", ""), L=int(L), mode=s.mode,
+                                  cluster=[q for q in range(NQ) if work.get(q, 0)] or [0],
                                   chain=s.chain, grid=list(map(int, s.grid)), work=work, sub=sub,
-                                  mirror_broadcast=mb, chain_hop_words=hop))
+                                  mirror_broadcast=mb, chain_hop_words=hop, **cyc))
+
+    def ring_report(self, model):
+        """measured exposed ring cycles per layer (sum over the rank-0 records, the harness's convention) vs budget"""
+        per_l = defaultdict(lambda: dict(cycles=0, ring=0, bcast=0, chain=0, records=0))
+        by = defaultdict(lambda: dict(records=0, cycles=0))
+        for e in self.recs:
+            x = per_l[e["L"]]
+            x["cycles"] += e["cycles"]
+            x["ring"] += e["ring_cycles"]
+            x["bcast"] += e["bcast_cycles"]
+            x["chain"] += e["chain_cycles"]
+            x["records"] += 1
+            b = by[f"{e['unit']}.{e['op']}"]
+            b["records"] += 1
+            b["cycles"] += e["cycles"]
+        key = "qwen" if "qwen" in str(model).lower() else "ds"
+        bud = self.P["budget_cycles_per_layer"][key]
+        lay = {int(k): v for k, v in sorted(per_l.items()) if k >= 0} or {int(k): v for k, v in per_l.items()}
+        return dict(params_source=self.P["source"], budget_cycles_per_layer=bud, per_layer=lay,
+                    max_layer_cycles=max((v["cycles"] for v in lay.values()), default=0),
+                    within_budget=all(v["cycles"] <= bud for v in lay.values()),
+                    by_op=dict(sorted(by.items(), key=lambda kv: -kv[1]["cycles"])[:12]))
 
     def finish(self):
         return dict(violations=len(self.viol), first_violations=self.viol[:40], stats=dict(self.stats),
@@ -564,6 +676,8 @@ def write(out, pl, chk, collect, vm0, vm_final, meta_extra):
         (out / f"vm0_s{q}.bin").write_bytes(pl.slice_image(vm0, q).astype("<u4").tobytes())
         (out / f"vm_final_s{q}.bin").write_bytes(pl.slice_image(vm_final, q).astype("<u4").tobytes())
     (out / "placement.json").write_text(json.dumps(pl.table(), default=int) + "\n")
+    sl = np.where(pl.cls == MIR, -1, np.where(pl.cls < 0, -2, pl.cls)).astype(np.int8)
+    np.save(out / "slice.npy", sl)          # per logical VM word: slice 0..3, -1 = mirror, -2 = untouched
     (out / "records_b2.json").write_text(json.dumps(chk.recs, default=int) + "\n")
     v = chk.finish()
     split_work = defaultdict(lambda: [0] * NQ)
@@ -572,7 +686,7 @@ def write(out, pl, chk, collect, vm0, vm_final, meta_extra):
             split_work[e["unit"]][int(q)] += w
     verdict = dict(schema="opentallas.hgi_b2.verdict.v1", **meta_extra, capacity=pl.capacity(),
                    modes={f"{k[0]}:{k[1]}": n for k, n in sorted(collect.modes.items())},
-                   work_per_cluster=dict(split_work), **v,
+                   work_per_cluster=dict(split_work), ring_cycles=chk.ring_report(meta_extra.get("model")), **v,
                    exact=bool(v["violations"] == 0))
     (out / "verdict.json").write_text(json.dumps(verdict, indent=1, default=int) + "\n")
     return verdict

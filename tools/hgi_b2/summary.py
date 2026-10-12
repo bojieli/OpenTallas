@@ -28,7 +28,7 @@ def main():
                          mutant=v.get("mutant"), golden=meta.get("layer_out_exact_vs_qwen_r25",
                                                                  meta.get("layer_verdict_sim_vs_golden")),
                          ranks=meta.get("group"), dispatched=len(meta["records"]), capacity=v["capacity"],
-                         modes=v["modes"], stats=v["stats"], ring_words=v["ring_words"],
+                         modes=v["modes"], stats=v["stats"], ring_words=v["ring_words"], ring_cycles=v.get("ring_cycles"),
                          work_per_cluster=v["work_per_cluster"], promoted_to_mirror=v.get("promoted_to_mirror"),
                          moe_expert_records=len(moe), moe_rows_per_cluster=[sum(r["work"][str(q)] for r in moe)
                                                                             for q in range(4)] if moe else None,
@@ -38,7 +38,7 @@ def main():
         if not v.get("mutant"):
             dst = OUT / d.name
             dst.mkdir(parents=True, exist_ok=True)
-            for f in ("placement.json", "verdict.json", "pass1.json"):
+            for f in ("placement.json", "verdict.json", "pass1.json", "slice.npy"):
                 shutil.copy(d / "b2" / f, dst / f)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "summary.json").write_text(json.dumps(dict(
@@ -50,7 +50,9 @@ def main():
                "verdict.json, cls.npy = word classes)"),
         vehicles=rows), indent=1) + "\n")
     for r in rows:
-        print(r["vehicle"], "exact", r["exact"], "viol", r["violations"], "mutant", r["mutant"], "cap", r["capacity"])
+        rc = r["ring_cycles"] or {}
+        print(r["vehicle"], "exact", r["exact"], "viol", r["violations"], "mutant", r["mutant"], "fits", r["capacity"]["fits"],
+              "ring/layer", rc.get("max_layer_cycles"), "budget", rc.get("budget_cycles_per_layer"))
 
 
 if __name__ == "__main__":

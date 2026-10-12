@@ -33,6 +33,9 @@ def test_tiny_qwen_b2_exact_and_mutants_refused(tmp_path):
     assert rc == 0 and v["exact"] and v["violations"] == 0
     assert v["capacity"]["fits"] and v["stats"]["chain_reductions"] > 0
     assert all(len(set(w)) <= 2 for w in v["work_per_cluster"].values())          # balanced by construction
+    meta = json.loads((out / "meta.json").read_text())
+    assert all("cluster" in r for r in meta["records"])                           # the harness's placement input
+    assert (out / "b2" / "slice.npy").exists() and v["ring_cycles"]["per_layer"]
     for m in ("stale_mirror", "chain_naive"):
         rc, out = _export(tmp_path, "--b2-mutant", m)
         assert rc == 3, m

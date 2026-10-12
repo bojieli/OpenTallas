@@ -635,8 +635,24 @@ def export_b2(a):
     v = B.write(b2o, pl, B2, _C, vm0, vmf, dict(vehicle=meta.get("vehicle"), model=meta.get("model"),
                                                  mutant=a.b2_mutant, golden_rc=rc, pass2_wall_s=round(time.time() - t0, 1),
                                                  promoted_to_mirror=p1["promoted"]))
+    # the B2 dispatch on the vector: each meta record's cluster (a list for a split record) + the slice map, so the
+    # verification harness places records and words as this pass did (b2/slice.npy: slice per logical word, -1 mirror)
+    recs = meta["records"]
+    if len(recs) == len(B2.recs) and all((x["unit"], x["op"]) == (y["unit"], y["op"]) for x, y in zip(recs, B2.recs)):
+        for x, y in zip(recs, B2.recs):
+            x["cluster"] = y["cluster"]
+        meta["b2"] = dict(slice_map="b2/slice.npy", placement="b2/placement.json", records="b2/records_b2.json",
+                          ring_cycles=v["ring_cycles"])
+        (a.out / "meta.json").write_text(json.dumps(meta, indent=1, default=int) + "\n")
+    else:
+        print(f"b2: meta records ({len(recs)}) do not pair with B2 records ({len(B2.recs)}): no cluster field")
+        v["violations"] += 1
+        v["first_violations"].append("meta/B2 record pairing failed: the vector carries no cluster field")
+        v["exact"] = False
+        (b2o / "verdict.json").write_text(json.dumps(v, indent=1, default=int) + "\n")
+    rc_ = v["ring_cycles"]
     print(f"b2 {meta.get('vehicle')}: exact {v['exact']} violations {v['violations']} capacity {v['capacity']} "
-          f"ring {v['ring_words']}")
+          f"ring {v['ring_words']} ring_cycles/layer max {rc_['max_layer_cycles']} budget {rc_['budget_cycles_per_layer']}")
     if v["violations"] and not a.b2_allow:
         print("B2 placement REFUSED:\n  " + "\n  ".join(v["first_violations"][:10]))
         return 3
