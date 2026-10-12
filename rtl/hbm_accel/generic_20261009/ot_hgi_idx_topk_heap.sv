@@ -296,9 +296,9 @@ module ot_hgi_topk_lane_tile (
  // pin flops (relay stage 1)
  // lane_rt_d (10-12, rt_c TT -183): k and clear land in TWO pin flops each -- kl / clr_r feed the core, tk_q / tcg are the
  // S-face heap-seam output registers (rt_c pulled the shared kl flop into the 25-um seam window, so every k compare in the
- // merge / reverse-buffer logic crossed the tile: t_k -> mf -246 / -> wm_q -217 at SS); klm1 = k - 1 is a pin flop too.
- reg [2:0] lph; reg [KW-1:0] kl, tk_q, klm1; reg clr_r, tcg, p3_v, mcr_p; reg [53:0] p3_d;
- always @(posedge clk) begin kl <= kin; tk_q <= kin; klm1 <= kin - 1'b1; p3_d <= pd; end
+ // merge / reverse-buffer logic crossed the tile: t_k -> mf -246 / -> wm_q -217 at SS); wa = k - 1 - xo is ONE adder k + ~xo.
+ reg [2:0] lph; reg [KW-1:0] kl, tk_q; reg clr_r, tcg, p3_v, mcr_p; reg [53:0] p3_d;
+ always @(posedge clk) begin kl <= kin; tk_q <= kin; p3_d <= pd; end
  always @(posedge clk or negedge rr[0])
   if (!rr[0]) begin lph <= IDLE; clr_r <= 1'b0; tcg <= 1'b0; p3_v <= 1'b0; mcr_p <= 1'b0; end
   else begin lph <= ph; clr_r <= clr; tcg <= clr; p3_v <= pv; mcr_p <= mcr; end
@@ -347,7 +347,7 @@ module ot_hgi_topk_lane_tile (
   else begin t_op_v <= iss; t_op_ext <= ex; i_cr <= t_op_cr; i_xv <= t_ext_v; i_idle <= t_idle; end
  assign t_k = tk_q; assign t_clr_go = tcg;
  // reverse buffer: registered write (WREG) and read (rq_*), capture flop rbq next to the macro output
- wire [KW-1:0] wa = (MUT_REV != 0) ? xo : klm1 - xo;
+ wire [KW-1:0] wa = (MUT_REV != 0) ? xo : kl + ~xo;     // == kl - 1 - xo (mod 2^KW)
  reg [RA:0] mw; reg [RA-1:0] rq_a; reg rq_ce, s2, s3; reg [215:0] rbq; wire [215:0] rb_q;
  reg [53:0] mf [0:7]; reg [3:0] mc; reg [2:0] mr, mwp; reg [KW-1:0] mp; reg lh_v; reg [53:0] lh_d; reg [2:0] mcc;
  wire rd_go = mg && !rq_ce && !s2 && !s3 && ({mw, 2'b00} < kl) && (mc + 4'd4 <= 4'd8);
