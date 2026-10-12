@@ -651,8 +651,11 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         nm = Path(m["view"]).name
         if f"{m['view']}/{nm}.v" not in mvs:
             mvs.append(f"{m['view']}/{nm}.v")
-    lint = ("verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module "
-            f"{s['top']} " + "".join(f"+define+{d} " for d in s.get("defines", []))
+    # the top is linted under a one-line wrapper: verilator refuses --top-module on a module that another source
+    # instantiates (ot_hgi_hc_tile inside ot_hgi_hc_unit.sv); unconnected wrapper ports are warnings only
+    lint = (f"mkdir -p {{RUN}} && printf 'module ot_lint_top; {s['top']} u_top (); endmodule\\n' > {{RUN}}/ot_lint_top.sv && "
+            "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module "
+            "ot_lint_top {RUN}/ot_lint_top.sv " + "".join(f"+define+{d} " for d in s.get("defines", []))
             + " ".join(list(s["sources"]) + mvs) + " && echo lint-ok")
     benches = j.get("benches") or []
     if not any(b.get("name") == "lint" for b in benches):
