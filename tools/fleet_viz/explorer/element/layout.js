@@ -230,6 +230,9 @@ async function start(){
   if (u.o) u.o.split('.').forEach(k => V.ov[k] = true);
   V.hl = +u.n || 0; V.lintSel = u.f != null && u.f !== '' ? +u.f : null;
   V.phys = V.L[nl + 1].vis;
+  // layers a via / a std cell can put shapes on (a solo metal layer still needs the vias' enclosures and the cells' pins)
+  V.viaLayers = [...new Set(H.vias.flatMap(v => v.boxes.map(b => b[0])))];
+  V.cellLayers = [...new Set(H.masters.filter(m => !m.block).flatMap(m => m.boxes.map(b => b[0])))];
   applyPalette();
   // workers
   const NW = Math.max(2, Math.min(4, (navigator.hardwareConcurrency || 4) - 1));
@@ -391,8 +394,8 @@ function neededSecs(k){
   const secs = t.s || [];
   for (const s of secs){
     if (s[0] === 'L'){ const li = +s.slice(1); if (L[li] && L[li].vis) out.push(s); }
-    else if (s === 'v'){ if ((V.kindVis[9] || V.kindVis[10]) && L.some(l => l.type === 'CUT' && l.vis)) out.push(s); }
-    else if (s === 'c'){ if (L[nl].vis || L[nl + 1].vis || L.some(l => /^(M1|V0|M2)$/.test(l.name) && l.vis)) out.push(s); }
+    else if (s === 'v'){ if ((V.kindVis[9] || V.kindVis[10]) && V.viaLayers.some(li => L[li].vis)) out.push(s); }   // cut AND enclosure layers
+    else if (s === 'c'){ if (L[nl].vis || L[nl + 1].vis || V.cellLayers.some(li => L[li].vis)) out.push(s); }
   }
   return out;
 }

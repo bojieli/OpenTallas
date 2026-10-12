@@ -30,11 +30,13 @@ const header = JSON.parse(blob('header').toString());
 const nl = header.layers.length;
 const acc = Array.from({length: nl}, () => Object.assign(D.hashAcc(), {bb: [Infinity, Infinity, -Infinity, -Infinity]}));
 const pieces = new Map();   // (li, id) -> [x0, y0, x1, y1]
-let dump = dumpAt > 0 ? [] : null, ntile = 0, npiece = 0;
+let ntile = 0, npiece = 0;
+const dump = dumpAt > 0 ? {chunks: [], cur: new Int32Array(5 << 20), n: 0} : null;   // chunked: tens of millions of shapes
 function add(li, x0, y0, x1, y1){
   const a = acc[li]; D.hashAdd(a, li, x0, y0, x1, y1);
   if (x0 < a.bb[0]) a.bb[0] = x0; if (y0 < a.bb[1]) a.bb[1] = y0; if (x1 > a.bb[2]) a.bb[2] = x1; if (y1 > a.bb[3]) a.bb[3] = y1;
-  if (dump) dump.push(li, x0, y0, x1, y1);
+  if (dump){ if (dump.n === dump.cur.length){ dump.chunks.push(dump.cur); dump.cur = new Int32Array(5 << 20); dump.n = 0; }
+    const c = dump.cur, k = dump.n; c[k] = li; c[k + 1] = x0; c[k + 2] = y0; c[k + 3] = x1; c[k + 4] = y1; dump.n += 5; }
 }
 for (const k of Object.keys(index)){
   if (!k.startsWith('t/')) continue;
@@ -59,5 +61,7 @@ const out = {schema: 'opentallas.layout_viewer.roundtrip.v1', element: header.el
   joined_shapes: pieces.size, shapes: acc.reduce((s, a) => s + a.n, 0), db_shapes: (header.truth || []).reduce((s, t) => s + t.n, 0),
   layers: rows, verdict: ok ? 'IDENTICAL' : 'MISMATCH', seconds: (Date.now() - t0) / 1000};
 console.log(JSON.stringify(out, null, 1));
-if (dump) fs.writeFileSync(process.argv[dumpAt + 1], Buffer.from(new Int32Array(dump).buffer));
+if (dump){ const fd2 = fs.openSync(process.argv[dumpAt + 1], 'w');
+  for (const c of dump.chunks) fs.writeSync(fd2, Buffer.from(c.buffer));
+  fs.writeSync(fd2, Buffer.from(dump.cur.buffer, 0, dump.n * 4)); fs.closeSync(fd2); }
 process.exit(ok ? 0 : 1);
