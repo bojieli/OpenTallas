@@ -1,20 +1,14 @@
 {
- "name": "vms_bank-v04-98ae25577",
+ "name": "vms_bank-v08-COMMIT",
  "block": "ot_vms_bank",
  "ref_tile": true,
- "owner": "Claude:el1011-hbm-b2-vm",
- "purpose": "HBM B2 VM slice bank tile (x32 on the die, bid/sid straps): 3 macros, main+mirror, SECDED, 2 ring-write lanes, dual egress; reset only on control",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
+ "owner": "Claude:el1011-hbm-sfu",
+ "purpose": "HBM B2 VM slice bank tile (x32 on the die, bid/sid straps): 3 macros, main+mirror, SECDED, 2 ring-write lanes, dual egress; reset only on control; v08: per-lane credit depth 4 + 2 x relay stages (RRS/WRS default 3 -> 10 entries, SPEC v0.8 D-B2-12), M5 leaf",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/el1011-hbm-b2-vm",
-  "commit": "98ae25577",
+  "branch": "claude/el1011-qdqtput",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -25,7 +19,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_vms_bank rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_vms_bank #(.EGC(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -105,6 +99,16 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "vms_slice_lqshort",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_slice_lqshort tb_vms_slice -GBMUT=2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "calibrate": {
@@ -157,7 +161,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vms_bank/vms_bank-v04-98ae25577"
+   "to": "results/rtl/ref_tile/vms_bank/vms_bank-v08-COMMIT"
   }
  ],
  "cycles_added": 0,
