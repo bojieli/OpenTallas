@@ -17,7 +17,7 @@ if [ "$MUT" = slot ]; then
   PSLIB=$O/ps_mut_slot.sv
 fi
 if [ "$MUT" = rob ]; then   # tputx-svc: the ROB drains a sector without waiting for it to land -> must FAIL under reorder
-  sed 's/wire dr = dact \&\& rv\[gd\] \&\& /wire dr = dact \&\& /' $PSLIB > $O/ps_mut_rob.sv
+  sed 's/wire dr = dact \&\& rvh \&\& /wire dr = dact \&\& /' $PSLIB > $O/ps_mut_rob.sv
   cmp -s $O/ps_mut_rob.sv $PSLIB && { echo "rob mutant not applied" >> $O/summary.txt; exit 2; }
   PSLIB=$O/ps_mut_rob.sv
 fi

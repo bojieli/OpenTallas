@@ -131,9 +131,18 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 31, para
   wire [11:0] di_nsec = di_d[PCID] ? di_d[43:32] : 12'd0;      // a PC outside the mask takes no sectors
   wire [11:0] di_nsec4 = (di_nsec + 12'd3) & ~12'd3;
   reg [11:0] jn; reg [12:0] jd; reg [7:0] nob; reg [7:0] cred; reg [6:0] gd;
+  // tputx-svc 2026-10-12 (routes SE_s6 TT -3.6 / SW_s4 TT -60.7: dh -> snsec[dh] -> +3 -> compare -> dr, gd -> rv[gd]
+  // 128:1 -> dr, and the segment-wide rdy_q2 net -> m_in -> out_d -> dr each fed dr's ~300-flop fanout in one cycle):
+  // the drain decision now reads only registers -- dlim (the drain head's nsec4), rvh (rv[gd] as of this cycle, computed
+  // one cycle ahead from rv / gd / gd1 / the ROB write) and m_in / s_in, registered from the raw response inputs
+  // (kr_v, kr_tag[16:15]) and rl1 (= rdy_q: reset 0, 1 from the first edge; one cycle later it is rdy_q2).  Cycle-identical.
+  reg [11:0] dlim; reg rvh; reg [6:0] gd1;
+  reg rl1, m_in, s_in;
+  always @(posedge ck or negedge rn) if (!rn) begin rl1 <= 1'b0; m_in <= 1'b0; s_in <= 1'b0; end
+    else begin rl1 <= 1'b1; m_in <= kr_v && rl1 && (kr_tag[16:15] != 2'b11); s_in <= kr_v && rl1 && (kr_tag[16:15] == 2'b11); end
   wire [11:0] insec = snsec[ih];
   wire [11:0] dnsec = snsec[dh];
-  wire [11:0] dnsec4 = (dnsec + 12'd3) & ~12'd3;
+  wire [11:0] osnsec4 = (snsec[~dh] + 12'd3) & ~12'd3;     // the other slot's nsec4 (the next drain head)
   wire [11:0] jq = {jn[11:2], 2'b00};
   wire [29:0] sa; wire sf;
   ot_hbm_kport_map u_m (.pc(5'(PCID)), .bank({jq[9:7], jq[1:0]}), .row({4'd0, srow0[ih]} + 19'(jq >> 10)), .col(jq[6:2]),
@@ -171,8 +180,8 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 31, para
   wire [14:0] rr = row0 + 15'(bj4 >> 10);
   wire [1:0] slot = bb_r[1:0] ^ rr[1:0];
   wire [11:0] bj = {t_r[14:5], slot};
-  wire m_in = kr_v_q && rdy_q2 && !s_beat;        // SM / KV / IK beat: straight to the output register
-  wire s_in = kr_v_q && rdy_q2 && s_beat;         // stream beat: into the ROB at its sequence position
+  // m_in == kr_v_q && rdy_q2 && !s_beat (SM / KV / IK beat -> output register), registered above
+  // s_in == kr_v_q && rdy_q2 && s_beat (stream beat -> ROB at its sequence position), registered above
   reg wv; reg [6:0] wa; reg [255:0] wd;
   always @(posedge ck or negedge rn) if (!rn) begin kr_v_q <= 1'b0; wv <= 1'b0; end
                                      else begin kr_v_q <= kr_v; wv <= s_in; end
@@ -187,9 +196,10 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 31, para
   wire out_d = !m_in && (h_v || cap_v);           // a drained beat leaves this cycle (SM beats have priority)
   wire [1:0] nfl = 2'(rp_v) + 2'(cap_v) + 2'(h_v);
   wire row1 = (jd[1:0] == 2'd0);                  // the row's first sector takes the row's credit
-  wire dact = (dcnt != 2'd0) && (jd < {1'b0, dnsec4});
-  wire dr = dact && rv[gd] && ((nfl - 2'(out_d)) <= 2'd1) && (!row1 || snocr[dh] || cred != 0);
-  wire ddone = (dcnt != 2'd0) && (jd >= {1'b0, dnsec4});             // the drain head's sectors all read out
+  wire dlt = jd < {1'b0, dlim};
+  wire dact = (dcnt != 2'd0) && dlt;
+  wire dr = dact && rvh && ((nfl - 2'(out_d)) <= 2'd1) && (!row1 || snocr[dh] || cred != 0);
+  wire ddone = (dcnt != 2'd0) && !dlt;                               // the drain head's sectors all read out
   wire rob_ovf = wv && rv[wa];                    // a sector landing on an undrained slot (never: nob <= 124)
   ot_sram_1r1w_128x256_m1_r2c2 u_rob (.clk(ck), .r_ce_in(dr), .r_addr_in(gd), .rd_out(rob_q),
     .w_ce_in(wv), .w_addr_in(wa), .wd_in(wd), .w_mask_in({256{1'b1}}),
@@ -198,8 +208,9 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 31, para
   always @(posedge ck) if (rn && rob_ovf) $display("ERROR ot_svs_pcs PC %0d: ROB slot %0d overwritten", PCID, wa);
 `endif
   always @(posedge ck or negedge rn)
-    if (!rn) begin rv <= {ROBD{1'b0}}; rp_v <= 1'b0; cap_v <= 1'b0; h_v <= 1'b0; end
+    if (!rn) begin rv <= {ROBD{1'b0}}; rp_v <= 1'b0; cap_v <= 1'b0; h_v <= 1'b0; rvh <= 1'b0; end
     else begin
+      rvh <= dr ? (rv[gd1] || (wv && wa == gd1)) : (rv[gd] || (wv && wa == gd));   // rv[gd] after this edge
       if (wv) rv[wa] <= 1'b1;
       if (dr) rv[gd] <= 1'b0;
       rp_v <= dr;
@@ -222,14 +233,14 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 31, para
   assign b_v = bv; assign b_t = bt; assign b_b = bb; assign b_d = bd;
   // ---- stream engine: descriptor slots, issue head, drain head, done count
   always @(posedge ck or negedge rn)
-    if (!rn) begin icnt <= 2'd0; dcnt <= 2'd0; ih <= 1'b0; dh <= 1'b0; nb <= 7'd0; dsc <= 2'd0; jn <= 0; jd <= 0; gd <= 7'd0;
+    if (!rn) begin icnt <= 2'd0; dcnt <= 2'd0; ih <= 1'b0; dh <= 1'b0; nb <= 7'd0; dsc <= 2'd0; jn <= 0; jd <= 0; gd <= 7'd0; gd1 <= 7'd1; dlim <= 12'd0;
                    nob <= 0; cred <= 8'(CRR); do_v <= 1'b0; dno_ok <= 1'b0; dno_ph <= 2'd0; end
     else begin
       do_v <= di_v;
       cred <= cred - ((dr && row1 && !snocr[dh]) ? 8'd1 : 8'd0) + (cr_v ? 8'd1 : 8'd0);  // cred persists across streams
       nob <= nob + (sacc ? 8'd4 : 8'd0) - (dr ? 8'd1 : 8'd0);
       if (sacc) jn <= jn + 12'd4;
-      if (dr) begin jd <= jd + 13'd1; gd <= gd + 7'd1; end
+      if (dr) begin jd <= jd + 13'd1; gd <= gd + 7'd1; gd1 <= gd1 + 7'd1; end
       if (di_v) nb <= nb + di_nsec4[6:0];
       // issue queue: a new descriptor joins; the head retires when all its reads are accepted
       icnt <= icnt + (di_v ? 2'd1 : 2'd0) - (idone ? 2'd1 : 2'd0);
@@ -237,8 +248,9 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 31, para
       else if (di_v && icnt == 2'd0) ih <= di_d[61];
       // drain queue: the head retires when all its sectors are read out of the ROB and the output pipe is empty
       dcnt <= dcnt + (di_v ? 2'd1 : 2'd0) - ((ddone && nfl == 2'd0) ? 2'd1 : 2'd0);
-      if (ddone && nfl == 2'd0) begin dh <= ~dh; jd <= 0; dsc <= dsc + 2'd1; end
-      else if (di_v && dcnt == 2'd0) dh <= di_d[61];
+      if (ddone && nfl == 2'd0) begin dh <= ~dh; jd <= 0; dsc <= dsc + 2'd1;
+        dlim <= (di_v && di_d[61] != dh) ? di_nsec4 : osnsec4; end
+      else if (di_v && dcnt == 2'd0) begin dh <= di_d[61]; dlim <= di_nsec4; end
       // done chain: every PC upstream has drained as many streams as this one
       dno_ok <= (END != 0) ? 1'b1 : (dni_ok && dni_ph == dsc);
       dno_ph <= dsc;
