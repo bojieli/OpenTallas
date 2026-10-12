@@ -10,12 +10,16 @@ run() { t=$1; shift
   $V --cc --exe --build -j ${J:-4} -O1 -CFLAGS -O1 -MAKEFLAGS OPT_SLOW=-O0 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING --top-module tb_hfd_attn_half_b --prefix Vtb -Mdir $O/$t "$@" $SRC > $O/$t.log 2>&1 && $O/$t/Vtb > $O/$t.run 2>&1; echo "$t rc=$?" >> $O/rc.txt; }
 : > $O/rc.txt
 if [ "$M" = neg ]; then
-  for m in 1 2 3 4 5; do run m$m -GROLE=4 -GMUT=$m "$@" & done; wait
+  for m in 1 2 3 4 5; do run m$m -GROLE=4 -GMUT=$m "$@" & done
+  run m6 -GROLE=4 -GLDK=1 -DOT_ATTN_MUT_LDK "$@" &   # el1011-hbm-attn v11: the ldk strap ignored (entry-point packets)
+  wait
   grep -h ATTNHALF $O/m*.run | sort | uniq
-  for m in 1 2 3 4 5; do grep -q "^m$m rc=0$" $O/rc.txt && { echo "MUTANT NOT CAUGHT mut=$m"; exit 0; }; done
+  for m in 1 2 3 4 5 6; do grep -q "^m$m rc=0$" $O/rc.txt && { echo "MUTANT NOT CAUGHT mut=$m"; exit 0; }; done
   echo "ATTN_LOCKH NEG ALL CAUGHT"; exit 1
 fi
-for r in 0 1 2 3 4; do run r$r -GROLE=$r "$@" & done; wait
+for r in 0 1 2 3 4; do run r$r -GROLE=$r "$@" & done
+run r5 -GROLE=4 -GLDK=1 "$@" &   # el1011-hbm-attn v11: the entry-point ldk strap (KV rows on ks) is gated too
+wait
 grep -h ATTNHALF $O/r*.run | sort | uniq
-for r in 0 1 2 3 4; do grep -q "^r$r rc=0$" $O/rc.txt || { echo "role $r FAILED"; echo "ATTN_LOCKH FAIL"; exit 1; }; done
+for r in 0 1 2 3 4 5; do grep -q "^r$r rc=0$" $O/rc.txt || { echo "role $r FAILED"; echo "ATTN_LOCKH FAIL"; exit 1; }; done
 echo "ATTN_LOCKH PASS"
