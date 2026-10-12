@@ -966,7 +966,7 @@ module ot_qfd_vm_bank_t #(
 endmodule
 
 module ot_qfd_vm_su_t #(
-    parameter integer NSB = 2,
+    parameter integer NSB = 1,
     parameter integer DEPTHS = 695,
     parameter integer LAWS = 10,
     parameter integer USE_MACRO = 1
@@ -1144,14 +1144,20 @@ module ot_qfd_vm_grp #(
     end endgenerate
     // ---- SU copy banks ----
     wire [NSU*NSB*512-1:0] sq;
+    //      r6b: one hard child per SU row bank (NSB = 1: pin flops -> 2 x 1024x256 -> capture -> registered q), NSU x NSB
+    //      per grp -- the NSB = 2 child (4 macros, 3,149 flops) gated at TT clock insertion 312-451 ps vs 188-268 for the
+    //      2-macro bank_t.  Same per-row-bank pipeline, so latency and behaviour are unchanged.
     generate for (c = 0; c < NSU; c = c + 1) begin : g_c
+      for (j = 0; j < NSB; j = j + 1) begin : g_j
 `ifndef OT_QFD_VM_HARD
-        ot_qfd_vm_su_t #(.NSB(NSB), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(USE_MACRO)) u_st (.clk(clk),
-`else   // hardened cluster: leaf view built with the TP4 defaults (NSB 2 / DEPTHS 695 / LAWS 10)
+        ot_qfd_vm_su_t #(.NSB(1), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(USE_MACRO)) u_st (.clk(clk),
+`else   // hardened cluster: leaf view built with the TP4 defaults (NSB 1 / DEPTHS 695 / LAWS 10)
         ot_qfd_vm_su_t u_st (.clk(clk),
 `endif
-            .rst_n(rtg[c % NBK]), .sre(m_sre[c*NSB +: NSB]), .sra(m_sra[c*NSB*LAWS +: NSB*LAWS]),
-            .swe(m_swe), .swl(m_swl), .swm(m_swm), .swd(m_swd), .q(sq[c*NSB*512 +: NSB*512]));
+            .rst_n(rtg[(c*NSB + j) % NBK]), .sre(m_sre[c*NSB + j]), .sra(m_sra[(c*NSB + j)*LAWS +: LAWS]),
+            .swe(m_swe[j]), .swl(m_swl[j*LAWS +: LAWS]), .swm(m_swm[j*16 +: 16]), .swd(m_swd[j*512 +: 512]),
+            .q(sq[(c*NSB + j)*512 +: 512]));
+      end
     end endgenerate
     // ---- output data path: capture register beside every macro (no logic before it), then NRX (copy-0) / NRS (SU)
     //      clock relays toward the E face.  Datapath registers carry no reset and no enable. ----

@@ -6,25 +6,27 @@
  "die": [
   0,
   0,
-  432.0,
-  237.6
+  235.44,
+  235.44
  ],
  "core": [
   2.16,
   2.16,
-  429.84,
-  235.44
+  233.28,
+  233.28
  ],
- "why": "spec outline",
- "std_area_um2": null,
+ "why": "util 0.52 of std 530 + macros 26791 um2",
+ "std_area_um2": 530,
  "layer_contract": {
   "children": {},
-  "pg_layer": "M6",
+  "pg_layer": "M5",
   "rlayers": [
    "M2",
-   "M6"
+   "M5"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
  },
  "pins": {
   "W": [
@@ -51,8 +53,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 31.104,
-   "y": 38.88,
+   "x": 30.24,
+   "y": 36.72,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -64,34 +66,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 1,
-   "x": 225.936,
-   "y": 38.88,
-   "w": 174.744,
-   "h": 70.488,
-   "orient": "R0",
-   "offtrack": 0
-  },
-  {
-   "kind": "macro",
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
-   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": null,
-   "idx": 2,
-   "x": 31.104,
-   "y": 129.6,
-   "w": 174.744,
-   "h": 70.488,
-   "orient": "R0",
-   "offtrack": 0
-  },
-  {
-   "kind": "macro",
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
-   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": null,
-   "idx": 3,
-   "x": 225.936,
-   "y": 129.6,
+   "x": 30.24,
+   "y": 127.44,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",

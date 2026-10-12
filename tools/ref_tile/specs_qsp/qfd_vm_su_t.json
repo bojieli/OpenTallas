@@ -8,7 +8,7 @@
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
  ],
  "params": {
-  "NSB": 2,
+  "NSB": 1,
   "DEPTHS": 695,
   "LAWS": 10,
   "USE_MACRO": 1
@@ -17,11 +17,10 @@
  "reset_ports": [
   "rst_n"
  ],
- "pg_layer": "M6",
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
-   "count": 4
+   "count": 2
   }
  ],
  "pins": {
@@ -55,7 +54,7 @@
   "owner": "Claude:el1011-q-sp",
   "branch": "claude/el1011-q-sp",
   "tag": "r6",
-  "purpose": "el1011-q-sp r6: VM bank-group split -- SU COPY leaf child of ot_qfd_vm_grp (3 per grp): pin flops -> 2 x (lo/hi) 1024x256 macros per row bank -> capture -> registered q (r5 latency kept). Same root cause as qfd_vm_bank_t (flat grp: one 96.6k-sink tree, 1.06 ns insertion).",
+  "purpose": "el1011-q-sp r6: VM bank-group split -- SU COPY leaf child of ot_qfd_vm_grp (3 per grp): pin flops -> 2 x (lo/hi) 1024x256 macros per row bank -> capture -> registered q (r5 latency kept). Same root cause as qfd_vm_bank_t (flat grp: one 96.6k-sink tree, 1.06 ns insertion). | r6b: NSB=1 per child (2 x 1024x256, ~1.6k flops; 6 per grp): NSB=2 child gated TT insertion 312-451 ps.",
   "benches": [
    {
     "name": "vmt_s3",
@@ -131,18 +130,15 @@
   "views_to": "physical/ref_tile/qfd_vm_su_t/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_su_t"
  },
- "outline": {
-  "w": 432.0,
-  "h": 237.6
- },
+ "std_area_um2": 530,
  "pin_ranges": {
   "clk": [
-   211.0,
-   221.0
+   113.0,
+   123.0
   ],
   "rst_n": [
-   150.0,
-   170.0
+   70.0,
+   90.0
   ]
  }
 }

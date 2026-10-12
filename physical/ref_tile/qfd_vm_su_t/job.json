@@ -3,7 +3,7 @@
  "block": "ot_qfd_vm_su_t",
  "ref_tile": true,
  "owner": "Claude:el1011-q-sp",
- "purpose": "el1011-q-sp r6: VM bank-group split -- SU COPY leaf child of ot_qfd_vm_grp (3 per grp): pin flops -> 2 x (lo/hi) 1024x256 macros per row bank -> capture -> registered q (r5 latency kept). Same root cause as qfd_vm_bank_t (flat grp: one 96.6k-sink tree, 1.06 ns insertion).",
+ "purpose": "el1011-q-sp r6: VM bank-group split -- SU COPY leaf child of ot_qfd_vm_grp (3 per grp): pin flops -> 2 x (lo/hi) 1024x256 macros per row bank -> capture -> registered q (r5 latency kept). Same root cause as qfd_vm_bank_t (flat grp: one 96.6k-sink tree, 1.06 ns insertion). | r6b: NSB=1 per child (2 x 1024x256, ~1.6k flops; 6 per grp): NSB=2 child gated TT insertion 312-451 ps.",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
@@ -14,7 +14,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -GNSB=2 -GDEPTHS=695 -GLAWS=10 -GUSE_MACRO=1 --top-module ot_qfd_vm_su_t rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_vm_su_t #(.NSB(1), .DEPTHS(695), .LAWS(10), .USE_MACRO(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,

@@ -38,7 +38,7 @@
   },
   {
    "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
-   "count": 3
+   "count": 6
   }
  ],
  "pins": {
@@ -88,7 +88,7 @@
   "owner": "Claude:el1011-q-sp",
   "branch": "claude/el1011-q-sp",
   "tag": "r6c",
-  "purpose": "el1011-q-sp r6 CLUSTER ot_qfd_vm_grp (TP4, 8 per VM): hard leaf children qfd_vm_bank_t x8 + qfd_vm_su_t x3 (local trees, exported TT insertion) + grp glue (NRI/NRX/NRS relays, per-bank reset relays rtg, per-bank pop pin flops, sliced x FIFO) on a pre-placed clock spine; PG M7, children <= M6; registered face IO (0.2 T). Die requirement (die lead 08:25): exported TT insertion 175-250 ps. Why: grp_b-4f52a5999 one flat CTS tree over 96,573 flops + 28 macros, insertion ~1.06 ns, -655 ps. SUBMIT ONLY after both leaf kits are CLOSED with child_lint-clean views (views do not exist yet).",
+  "purpose": "el1011-q-sp r6 CLUSTER ot_qfd_vm_grp (TP4, 8 per VM): hard leaf children qfd_vm_bank_t x8 + qfd_vm_su_t x6 (one per SU row bank) (local trees, exported TT insertion) + grp glue (NRI/NRX/NRS relays, per-bank reset relays rtg, per-bank pop pin flops, sliced x FIFO) on a pre-placed clock spine; PG M7, children <= M6; registered face IO (0.2 T). Die requirement (die lead 08:25): exported TT insertion 175-250 ps. Why: grp_b-4f52a5999 one flat CTS tree over 96,573 flops + 28 macros, insertion ~1.06 ns, -655 ps. SUBMIT ONLY after both leaf kits are CLOSED with child_lint-clean views (views do not exist yet).",
   "benches": [
    {
     "name": "vmt_s3",
