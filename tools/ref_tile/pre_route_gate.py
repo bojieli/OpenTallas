@@ -297,6 +297,7 @@ if m:
 print("GATE_PORTS "+json.dumps(ports))
 EOP
 grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | tail -1 | sed 's/^/GATE_AREA /'
+grep -hE '^ +[0-9]+ +[0-9.E+]+ +[0-9]+ +[0-9.E+]+ +[A-Za-z_][A-Za-z0-9_]*$' $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | grep -v '_ASAP7_' | sed 's/^/GATE_BB /'
 if [ "{CTS}" = 1 ]; then
   docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
   grep -h "\[ERROR" $R/cts.log | head -3 | sed 's/^/GATE_CTSERR /'
@@ -382,7 +383,15 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         W, H = fp["die"][2], fp["die"][3]
         core = (W - 2 * RT.CORE_MARGIN) * (H - 2 * RT.CORE_MARGIN)
         mac = sum(b["w"] * b["h"] for b in fp["blocks"])
-        if area > mac:          # yosys' chip area counts the black-box macros' liberty area
+        # yosys' chip area counts the black-box macros' / children's LIBERTY area, which differs from their LEF
+        # outline (hard children: lib area = std cells only): subtract the lib area of each placed master
+        bb = {}
+        for c, a_, nm in re.findall(r"^GATE_BB +(\d+) +([\d.E+]+) +\d+ +[\d.E+]+ +(\S+)\s*$", out, re.M):
+            bb[nm] = float(a_)          # the last section is the top module's
+        masters = {b["master"] for b in fp["blocks"]}
+        if masters and masters <= set(bb):
+            area -= sum(bb[m] for m in masters)
+        elif area > mac:
             area -= mac
         u = (area + mac) / core
         # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
