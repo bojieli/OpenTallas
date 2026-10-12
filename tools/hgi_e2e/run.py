@@ -189,7 +189,13 @@ def prep(d: Path):
             i = j
         else:
             i += 1
-    scr = (best[1] + 7) & ~7
+    # bank phase 0 (word base a multiple of 256): the DS HC buffers sit at phase 0 (ds_native rule A), and the lane-local
+    # HC_PRE_NORM puts its gain at the scratch base, which must share O's bank phase
+    scr = (best[1] + 255) & ~255
+    if any(r.unit == "FUSED" and r.op == "HC_PRE_NORM" for r in recs):
+        from hgi_sim import ds_native as DN
+        for r in recs:
+            DN.assert_fused_fast_path(r, scratch=scr, check_gain=False)
     assert best[0] - (scr - best[1]) >= 16384, f"no 16 Ki-word free VM range for the FUSED scratch ({best})"
     tk = meta.get("tokx_golden") or []                # DFlash step: the CPU golden's committed tokens (CTL.TOKX beats)
     # host words (tb_hgi_e2e, non-MTP): 64 token, 65 pos, 66 expected token, 67 rank, 68 ncol, 69 FUSED scratch;
