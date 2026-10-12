@@ -142,7 +142,8 @@ catch {
   set ot_sr [lindex [all_registers -clock str_clk -clock_pins] 0]
   if {$ot_sr ne ""} {
     set a [get_property $ot_sr arrival_max_rise]; set b [get_property $ot_sr arrival_min_rise]
-    if {[string is double -strict $a] && [string is double -strict $b]} { set ot_slx $a; set ot_sln $b }
+    # finite only: before CTS (ideal clocks, synthesis) the arrival reads -Inf/Inf -> keep 0 (r1 df88d1e26 STA-0562 'set_output_delay -Inf')
+    if {[string is double -strict $a] && [string is double -strict $b] && abs($a) < 1e6 && abs($b) < 1e6} { set ot_slx $a; set ot_sln $b }
   }
 }
 puts "BE_SL str_clk boundary: T $ot_sT reference insertion max $ot_slx min $ot_sln"

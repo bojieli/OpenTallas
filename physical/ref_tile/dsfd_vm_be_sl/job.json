@@ -1,14 +1,14 @@
 {
- "name": "dsfd_vm_be_sl-r1-df88d1e26",
+ "name": "dsfd_vm_be_sl-r2-COMMIT",
  "block": "dsfd_vm_be_sl",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/be",
- "purpose": "el1011-ds-vm/be: dsfd_vm_be_sl v4 (BE slice, glue inside; RTL = besl4/5/7) re-routed through tools/ref_tile: N/S face pins on VERTICAL layers M3/M5 (pin_balance group 32) instead of the hand-flow N-face M6 pins at 0.128 pitch that stalled besl5/besl7 at 1,300-3,452 M7 spacing DRC; PG M6 stripes as pins; contract slot outline 302.4 x 92.88; str_clk (cks, 3/4 T) via sdc_extra be_sl_clock_ref.sdc; inhold on the single-capture inputs (besl5 FF miss was rns_in -> u_rns). CONTRACT CHANGE: N/S pins M6/M5 -> M3/M5 balanced; c_l0r/c_l0v/c_l0d moved from the middle of bl_d to right of bl_v (x 252.5-267.2).",
+ "purpose": "el1011-ds-vm/be r2: r1 df88d1e26 crashed STA-0562 'set_output_delay -Inf' (pre-CTS str_clk arrival = -Inf passed the double check) -> finite guard; + boundary_tcl re-applies the str_clk boundary after every io_ref switch (post-CTS/pre-GRT/post-DRT) so the route times vrv/vrq/rns_in on the propagated str_clk. | el1011-ds-vm/be: dsfd_vm_be_sl v4 (BE slice, glue inside; RTL = besl4/5/7) re-routed through tools/ref_tile: N/S face pins on VERTICAL layers M3/M5 (pin_balance group 32) instead of the hand-flow N-face M6 pins at 0.128 pitch that stalled besl5/besl7 at 1,300-3,452 M7 spacing DRC; PG M6 stripes as pins; contract slot outline 302.4 x 92.88; str_clk (cks, 3/4 T) via sdc_extra be_sl_clock_ref.sdc; inhold on the single-capture inputs (besl5 FF miss was rns_in -> u_rns). CONTRACT CHANGE: N/S pins M6/M5 -> M3/M5 balanced; c_l0r/c_l0v/c_l0d moved from the middle of bl_d to right of bl_v (x 252.5-267.2).",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-vm-be",
-  "commit": "df88d1e26"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r1-df88d1e26"
+   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r2-COMMIT"
   }
  ],
  "cycles_added": 0,
