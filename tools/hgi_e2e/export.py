@@ -274,6 +274,12 @@ def export_qwen(a):
 
 # --------------------------------------------------------------------------------------------------------------- DS
 def export_ds(a):
+    # el1011-hbm-fused: the e2e FUSED slot (rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv hgi_e2e_fused_slot) runs the
+    # micro-op lowering, not the lane-local HC engine, so it reads the d = 5120 gain LINEAR: export without the GPK /
+    # bank-phase rules unless the harness builds the slot with the engine (then HGI_FUSED_HLL=1).  The die (hfd_quant
+    # HCE 2 + hfd_hc_eng) and its die-master bench use HLL 1.
+    import os
+    os.environ.setdefault("HGI_FUSED_HLL", "0")
     from hgi_sim import ds_native as DN
     from hgi_sim import timing as T
     from hgi_sim.ds_native_timing import NativeCost
