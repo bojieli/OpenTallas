@@ -648,7 +648,7 @@ module ot_hgi_idx_topk_wreg #(
    if(go)begin h_v<=0;active<=1;c_valid<=1;error<=0;end
    if(in_ready)s_valid<=in_valid;
    q_valid<=q_nx; bn<=bn_nx; if(to_b)bw<=bw+1'b1; if(from_b)br<=br+1'b1;
-   o_rdy<=({2'b00,q_nx}+bn_nx)<=3'd2;
+   o_rdy<=({2'b00,q_valid}+bn+{2'b00,push})<=3'd2;   // occupancy if nothing pops: out_ready stays out of the credit (pin -> few levels)
    if(core_done)begin pending_done<=1;error<=core_error;end
    if((pending_done||core_done)&&bn==3'd0&&(!q_valid||out_ready))begin done<=1;active<=0;pending_done<=0;c_valid<=0;s_valid<=0;end
   end
