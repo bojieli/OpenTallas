@@ -37,6 +37,12 @@ module ot_hgi_hc_unit #(
     parameter [31:0]  HC_EPS = 32'h358637BD, // hc_eps (1e-6)
     parameter integer HAW = 35,
     parameter integer MUT_POST = 0,         // mutant: pre without + hc_eps
+    // conservative-1011 2026-10-11 (throughput gate HC.HC_MIX_POST 1.282x: 693 vs 540 / record, of which S_LDA 168 = the
+    // exposed HBM parameter fetch, FA 160): PPF = 1 prefetches the NEXT job's 4 parameter sectors while this job runs
+    // (the record adapter holds job_v until job_rdy), on lane 0 at the lowest priority (tag source 9), into a shadow bank
+    // pf; an HC_MIX_POST whose wsec matches takes the shadow bank (or waits for its in-flight fetch) instead of fetching.
+    // Latency-only: values and order unchanged.  PPF = 0 = the original netlist.
+    parameter integer PPF = 1,
     parameter integer WMACRO = 0,           // hgi-1010/d: 1 = weight windows in ot_sram_1r1w_128x256 macros (RMAX 128)
     parameter integer PMAX = 8,             // hgi-1010/d: positions a record (A.m; the MTP verify), a power of two
     parameter integer XMACRO = 0,           // hgi-1010/d: 1 = the x memory in ot_sram_1r1w_1024x256 macros
@@ -322,6 +328,8 @@ module ot_hgi_hc_unit #(
         assign wq[g*W*32 +: W*32] = (HSRC != 0 && ap_job) ? apw : wqs[(g*SPL + wsel_q[g])*W*32 +: W*32];
     end
     reg p_req; reg [31:0] pw [0:31]; reg [3:0] p_got;
+    reg pf_req, pf_v, pf_bsy, pfu; reg [31:0] pfw [0:31]; reg [3:0] pf_got; reg [34:0] pf_sec;
+    wire pf_hit = (PPF != 0) && (pf_v || pf_bsy);
     // request register a lane: lowest-index window of the lane first, then (lane 0) the parameter fetch (source 8)
     integer k, l;
     function automatic on_lane(input integer win, input integer ln);
@@ -340,6 +348,8 @@ module ot_hgi_hc_unit #(
                 end
             if (l == 0 && !f && p_req) begin
                 hq_v[0] <= 1'b1; hq_addr[0 +: HAW] <= pbase; hq_len[0 +: 3] <= 3'd4; hq_tag[0 +: TG] <= {4'd8, {RTW{1'b0}}};
+            end else if (l == 0 && !f && pf_req && PPF != 0) begin   // PPF: the next job's parameters, lowest priority
+                hq_v[0] <= 1'b1; hq_addr[0 +: HAW] <= pf_sec[HAW-1:0]; hq_len[0 +: 3] <= 3'd4; hq_tag[0 +: TG] <= {4'd9, {RTW{1'b0}}};
             end
         end
     end
@@ -353,6 +363,11 @@ module ot_hgi_hc_unit #(
         end
     end
     wire p_iss = (!hq_v[0] || hq_rdy[0]) && p_req && !(|(wq_v & ((HL == 1) ? {NW{1'b1}} : {{(NW-1){1'b0}}, 1'b1})));
+    wire pf_iss = (PPF != 0) && (!hq_v[0] || hq_rdy[0]) && pf_req && !p_req &&
+                  !(|(wq_v & ((HL == 1) ? {NW{1'b1}} : {{(NW-1){1'b0}}, 1'b1})));
+    generate if (PPF != 0 && HL == 1 && NW > 9) begin : g_ppf_tag
+        initial $fatal(1, "ot_hgi_hc_unit: PPF tag source 9 collides with weight window 9 (HL 1, NW > 9)");
+    end endgenerate
 
     // ---- post-processing units
     reg mu_v, ad_v, ex_v, dv_v; reg [31:0] mu_a, mu_b, ad_a, ad_b, ex_a, dv_a, dv_b;
@@ -391,7 +406,7 @@ module ot_hgi_hc_unit #(
         if (!rst_n) begin
             st <= S_IDLE; job_rdy <= 1'b1; job_done <= 1'b0; job_fault <= 1'b0; vmq <= 338'd0; w_start <= 1'b0;
             w_rel <= 1'b0; h_cv <= 1'b0; p_req <= 1'b0; mu_v <= 1'b0; ad_v <= 1'b0; ex_v <= 1'b0; dv_v <= 1'b0;
-            sk_req <= 1'b0; mw <= 0; mr <= 0; aw <= 0; ar <= 0; ew <= 0; er <= 0; dw <= 0; drp <= 0; outst <= 0;
+            sk_req <= 1'b0; pf_req <= 1'b0; pf_v <= 1'b0; pf_bsy <= 1'b0; pfu <= 1'b0; pf_got <= 4'd0; pf_sec <= 35'd0; mw <= 0; mr <= 0; aw <= 0; ar <= 0; ew <= 0; er <= 0; dw <= 0; drp <= 0; outst <= 0;
             flt <= 1'b0; vo_n <= 3'd0; p_got <= 4'd0; wpre <= 1'b0; wst <= 1'b0; w_go <= 1'b0; wfl <= 2'd0;
             ap_rel <= 1'b0; ap_job <= 1'b0; ap_slot <= 1'b0;
         end else begin
@@ -405,6 +420,16 @@ module ot_hgi_hc_unit #(
             if (wpre) begin wpre <= 1'b0; w_start <= 1'b1; wst <= 1'b1; end
             mu_v <= 1'b0; ad_v <= 1'b0; ex_v <= 1'b0; dv_v <= 1'b0;
             if (p_iss) p_req <= 1'b0;
+            if (pf_iss) pf_req <= 1'b0;
+            // PPF: start the next job's parameter prefetch while busy (an HC_MIX_POST waiting at the adapter)
+            if (PPF != 0 && !job_rdy && job_v && job[201:200] == 2'd2 && !pf_bsy && !(pf_v && pf_sec == job[157:123])) begin
+                pf_req <= 1'b1; pf_bsy <= 1'b1; pf_v <= 1'b0; pf_got <= 4'd0; pf_sec <= job[157:123];
+            end
+            if (PPF != 0 && hr_vq && hr_tq[TG-1 -: 4] == 4'd9) begin
+                for (q = 0; q < 8; q = q + 1) pfw[{hr_bq, 3'b000} + q] <= hr_dq[32*q +: 32];
+                pf_got <= pf_got + 4'd1;
+                if (pf_got == 4'd3) begin pf_bsy <= 1'b0; pf_v <= 1'b1; end
+            end
             // parameter sectors
             if (hr_vq && hr_tq[TG-1 -: 4] == 4'd8) begin
                 for (q = 0; q < 8; q = q + 1) pw[{hr_bq, 3'b000} + q] <= hr_dq[32*q +: 32];
@@ -455,7 +480,8 @@ module ot_hgi_hc_unit #(
                     for (q = 0; q < SPL; q = q + 1)
                         nwk[q] <= ({1'b0, rr} > rsw * q) ? (({1'b0, rr} - rsw * q > {1'b0, rsw}) ? CWW'(rsw) : CWW'(rr - rsw * q)) : '0;
                     wpre <= (op != 2'd2) && !ap_job;                 // the first row's weights stream during x staging
-                    p_req <= (op != 2'd1); p_got <= 4'd0;
+                    p_req <= (op != 2'd1) && !(op == 2'd2 && pf_hit && pf_sec == wsec); p_got <= 4'd0;
+                    pfu <= (op == 2'd2) && pf_hit && pf_sec == wsec;
                     sec <= xrow >> 3; rsec <= xrow >> 3;
                     sec_end <= (op == 2'd2) ? ({9'd0, xrow} + 27'd23) >> 3 : ({9'd0, xrow} + {6'd0, nchunk, 3'd0} - 27'd1) >> 3;
                     vo_n <= 3'd0; st <= (op == 2'd2) ? S_LDA : S_STAGE;
@@ -487,7 +513,10 @@ module ot_hgi_hc_unit #(
                         rsec <= rsec + 27'd1;
                     end
                     vo_n <= vo_n + ((vo_n < 3'd4 && sec <= sec_end) ? 3'd1 : 3'd0) - ((vr[273] && !vr[256]) ? 3'd1 : 3'd0);
-                    if (rsec > sec_end && vo_n == 3'd0 && p_got == 4'd4) begin i <= 5'd0; iss_done <= 1'b0; st <= S_P1; end
+                    if (rsec > sec_end && vo_n == 3'd0 && (pfu ? pf_v : p_got == 4'd4)) begin
+                        i <= 5'd0; iss_done <= 1'b0; st <= S_P1;
+                        if (pfu) for (q = 0; q < 32; q = q + 1) pw[q] <= pfw[q];
+                    end
                 end
                 S_STAGE: begin                                       // A sectors -> x banks, 4 outstanding
                     if (vo_n < 3'd4 && sec <= sec_end) begin
