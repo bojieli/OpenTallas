@@ -1015,6 +1015,13 @@ endmodule
 //     sector word-masked through the VM wide write lanes (credit at acceptance, retire on the last done).
 // The packet client (vmq / vmr) stays idle in this mode.  Order, faults and STREAM paths are those of ot_hgi_su_ctl.
 // ---------------------------------------------------------------------------------------------------------------------
+`ifndef OT_CTLW_NLP
+`ifdef OT_CTLW_HEAD_EXT
+`define OT_CTLW_NLP 8      // GLUE PLACEMENT (el1011-hbm-sfu 10-11): the ctlw HEAD tile = control + slice 0 (lanes 0-7)
+`else
+`define OT_CTLW_NLP 32
+`endif
+`endif
 module ot_hgi_su_ctlw #(
     parameter integer N = 16, M = 8, LV = 6,
     parameter integer LWB = 17,           // log2 local words (the Qwen head: 37,984 B + O + the stream region)
@@ -1074,56 +1081,40 @@ module ot_hgi_su_ctlw #(
     input  wire [7:0]    sr_dm,
     // WIDE STAGE / DRAIN (hgi-unitrate 2026-10-10): 32 lanes, lane b <-> VM bank b <-> local bank b (every region is
     // placed with lb == lo mod 256 words, so a VM sector and its local copy share the bank: no crossbar)
-`ifndef OT_CTLW_HUB_EXT
-    output wire  [32*16-1:0]  wrq,          // VM wide read lane b {v, sector 15}: LQ credits a lane
-    input  wire [31:0]       wrq_cr,       // a credit back (the request reached its bank)
-    input  wire [32*257-1:0] wrr,          // the sector {v, data 256}, in request order
-    output wire  [32*280-1:0] wwq,          // VM wide write lane b {v, sector 15, wdata 256, word mask 8}
-    input  wire [31:0]       wwq_cr,       // a credit back (the write reached its bank)
-    input  wire [31:0]       wwq_done,     // a write in the macro (the record retires after the last)
-`endif
+    output wire  [`OT_CTLW_NLP*16-1:0]  wrq,          // VM wide read lane b {v, sector 15}: LQ credits a lane
+    input  wire [`OT_CTLW_NLP-1:0]       wrq_cr,       // a credit back (the request reached its bank)
+    input  wire [`OT_CTLW_NLP*257-1:0] wrr,          // the sector {v, data 256}, in request order
+    output wire  [`OT_CTLW_NLP*280-1:0] wwq,          // VM wide write lane b {v, sector 15, wdata 256, word mask 8}
+    input  wire [`OT_CTLW_NLP-1:0]       wwq_cr,       // a credit back (the write reached its bank)
+    input  wire [`OT_CTLW_NLP-1:0]       wwq_done,     // a write in the macro (the record retires after the last)
     // shared lane groups (ot_hgi_vm_lanearb): a burst (a record's stage / drain) holds its group from grant to release;
     // tie the grants high for a dedicated group
     output reg               rg_req,
     input  wire              rg_gnt,
     output reg               wg_req,
     input  wire              wg_gnt,
-`ifndef OT_CTLW_HUB_EXT
-    output wire  [31:0]       lsw_v,        // local stage write lane b (sector, data)
-    output wire  [32*(LWB-3)-1:0] lsw_sec,
-    output wire  [32*256-1:0] lsw_d,
-    output wire  [31:0]       ldc_v,        // local dirty clear lane b
-    output wire  [32*(LWB-3)-1:0] ldc_sec,
-    output wire  [31:0]       ldr_v,        // local drain read lane b: {data, dirty mask} one edge later
-    output wire  [32*(LWB-3)-1:0] ldr_sec,
-    input  wire [32*256-1:0] ldr_d,
-    input  wire [32*8-1:0]   ldr_dm,
-    input  wire [31:0]       ldr_rv,       // the lane's drain read data is valid (any latency, in request order)
-`endif
-`ifdef OT_CTLW_HUB_EXT
-    // TWO-LEVEL hierarchy (el1011-hbm-sfu, owner 10-11 ~21:00): ctlw HUB element; the four 8-lane slices
-    // (ot_hgi_su_ctlw_slice) are die-placed tiles wired lane-side straight to VM / local memory.  Hub -> slice: the
-    // hub's descriptor / go registers (slices pin-register them); slice -> hub: the slices' registered done / ovf.
-    output wire              h_wst_go, h_wdr_go, h_d_os,
-    output wire [6*24-1:0]   h_lo, h_hi,
-    output wire [6*(LWB+1)-1:0] h_lb,
-    output wire [5:0]        h_rv,
-    output wire [6*21-1:0]   h_dsec,
-    output wire [2*24-1:0]   h_dlo, h_dhi,
-    output wire [2*(LWB+1)-1:0] h_dlb,
-    output wire [1:0]        h_drv,
-    output wire [2*21-1:0]   h_ddsec,
-    input  wire [3:0]        s_wst_i, s_wdr_i, s_ovf_i,
-`endif
+    output wire  [`OT_CTLW_NLP-1:0]       lsw_v,        // local stage write lane b (sector, data)
+    output wire  [`OT_CTLW_NLP*(LWB-3)-1:0] lsw_sec,
+    output wire  [`OT_CTLW_NLP*256-1:0] lsw_d,
+    output wire  [`OT_CTLW_NLP-1:0]       ldc_v,        // local dirty clear lane b
+    output wire  [`OT_CTLW_NLP*(LWB-3)-1:0] ldc_sec,
+    output wire  [`OT_CTLW_NLP-1:0]       ldr_v,        // local drain read lane b: {data, dirty mask} one edge later
+    output wire  [`OT_CTLW_NLP*(LWB-3)-1:0] ldr_sec,
+    input  wire [`OT_CTLW_NLP*256-1:0] ldr_d,
+    input  wire [`OT_CTLW_NLP*8-1:0]   ldr_dm,
+    input  wire [`OT_CTLW_NLP-1:0]       ldr_rv,       // the lane's drain read data is valid (any latency, in request order)
     input  wire              sr_rv         // the STREAM-out sector read data is valid
+`ifdef OT_CTLW_HEAD_EXT
+    // the edge-registered nearest-neighbour link to slice tile 1 (descriptor / go forward from slice 0's pin registers,
+    // the done / overflow combine back into slice 0's pin flops)
+    , output wire c_wst_go, output wire c_wdr_go, output wire c_d_os,
+    output wire [6*24-1:0] c_lo, output wire [6*24-1:0] c_hi, output wire [6*(LWB+1)-1:0] c_lb, output wire [5:0] c_rv,
+    output wire [6*21-1:0] c_dsec, output wire [2*24-1:0] c_dlo, output wire [2*24-1:0] c_dhi,
+    output wire [2*(LWB+1)-1:0] c_dlb, output wire [1:0] c_drv, output wire [2*21-1:0] c_ddsec,
+    input  wire c_wst_dn, input wire c_wdr_dn, input wire c_ovf
+`endif
 );
     localparam integer AW = 24, NR = N / 8, LW = 1 << LWB;
-`ifdef OT_CTLW_HUB_EXT
-    wire [32*16-1:0] wrq; wire [32*280-1:0] wwq; wire [31:0] lsw_v, ldc_v, ldr_v;
-    wire [32*(LWB-3)-1:0] lsw_sec, ldc_sec, ldr_sec; wire [32*256-1:0] lsw_d;
-    wire [31:0] wrq_cr = '0, wwq_cr = '0, wwq_done = '0, ldr_rv = '0; wire [32*257-1:0] wrr = '0;
-    wire [32*256-1:0] ldr_d = '0; wire [32*8-1:0] ldr_dm = '0;
-`endif
     // ---- the record adapter (decode) and the op it issues
     wire op_v; reg op_rdy_r; wire [669:0] op_w; reg su_idle_r, su_fault_r;
     wire [1:0] strm;
@@ -1351,36 +1342,60 @@ module ot_hgi_su_ctlw #(
             assign dlo_v[(q-4)*24 +: 24] = d_lo[q]; assign dhi_v[(q-4)*24 +: 24] = d_hi[q];
             assign dlb_v[(q-4)*(LWB+1) +: LWB+1] = d_lb[q]; assign drv_v[q-4] = d_rv[q]; assign ddsec_v[(q-4)*21 +: 21] = d_dsec[q];
         end
-`ifdef OT_CTLW_HUB_EXT
-        assign h_wst_go = wst_go; assign h_wdr_go = wdr_go; assign h_d_os = d_os;
-        assign h_lo = lo_v; assign h_hi = hi_v; assign h_lb = lb_v; assign h_rv = rv_v; assign h_dsec = dsec_v;
-        assign h_dlo = dlo_v; assign h_dhi = dhi_v; assign h_dlb = dlb_v; assign h_drv = drv_v; assign h_ddsec = ddsec_v;
-        assign s_wst = s_wst_i; assign s_wdr = s_wdr_i; assign s_ovf = s_ovf_i;
+        // GLUE PLACEMENT (owner 10-11 ~19:15): no hub.  The slices form a chain of edge-registered nearest-neighbour
+        // links: descriptors / go forward (slice g's pin registers drive slice g+1's pin registers, one edge a hop),
+        // done / overflow combine backward (slice g pin-flops slice g+1's combined flags, ANDs / ORs its own, registers
+        // the result: two edges a hop).  Slice 0's combined flags are the whole unit's.
+        localparam integer NSL = 4;
+        wire [NSL:0] c_go_s, c_go_d, c_os;
+        wire [6*24-1:0] c_lo_v [0:NSL]; wire [6*24-1:0] c_hi_v [0:NSL]; wire [6*(LWB+1)-1:0] c_lb_v [0:NSL];
+        wire [5:0] c_rv_v [0:NSL]; wire [6*21-1:0] c_dsec_v [0:NSL]; wire [2*24-1:0] c_dlo_v [0:NSL];
+        wire [2*24-1:0] c_dhi_v [0:NSL]; wire [2*(LWB+1)-1:0] c_dlb_v [0:NSL]; wire [1:0] c_drv_v [0:NSL];
+        wire [2*21-1:0] c_ddsec_v [0:NSL];
+        wire [NSL:0] dn_st, dn_dr, dn_ov;           // dn_*[g]: slice g's combined flags (g .. NSL-1); [NSL] = the chain end
+        assign c_go_s[0] = wst_go; assign c_go_d[0] = wdr_go; assign c_os[0] = d_os;
+        assign c_lo_v[0] = lo_v; assign c_hi_v[0] = hi_v; assign c_lb_v[0] = lb_v; assign c_rv_v[0] = rv_v;
+        assign c_dsec_v[0] = dsec_v; assign c_dlo_v[0] = dlo_v; assign c_dhi_v[0] = dhi_v; assign c_dlb_v[0] = dlb_v;
+        assign c_drv_v[0] = drv_v; assign c_ddsec_v[0] = ddsec_v;
+`ifdef OT_CTLW_HEAD_EXT
+        localparam integer NIN = 1;                 // the head tile holds slice 0; slices 1..3 are die-placed tiles
+        assign c_wst_go = c_go_s[1]; assign c_wdr_go = c_go_d[1]; assign c_d_os = c_os[1];
+        assign c_lo = c_lo_v[1]; assign c_hi = c_hi_v[1]; assign c_lb = c_lb_v[1]; assign c_rv = c_rv_v[1];
+        assign c_dsec = c_dsec_v[1]; assign c_dlo = c_dlo_v[1]; assign c_dhi = c_dhi_v[1]; assign c_dlb = c_dlb_v[1];
+        assign c_drv = c_drv_v[1]; assign c_ddsec = c_ddsec_v[1];
+        assign dn_st[1] = c_wst_dn; assign dn_dr[1] = c_wdr_dn; assign dn_ov[1] = c_ovf;
 `else
-        for (genvar g = 0; g < 4; g = g + 1) begin : g_s
+        localparam integer NIN = NSL;
+        assign dn_st[NSL] = 1'b1; assign dn_dr[NSL] = 1'b1; assign dn_ov[NSL] = 1'b0;
+`endif
+        for (genvar g = 0; g < NIN; g = g + 1) begin : g_s
             ot_hgi_su_ctlw_slice #(.SL(g), .NL(8), .LWB(LWB), .LQ(LQ), .MUT_W(MUT_W), .MUT_DIRTY(MUT_DIRTY), .LQSRAM(SLICES >= 2 ? 1 : 0)) u_slice (
-                .clk(clk), .rst_n(rst_n), .wst_go_i(wst_go), .wdr_go_i(wdr_go),
-                .lo_i(lo_v), .hi_i(hi_v), .lb_i(lb_v), .rv_i(rv_v), .dsec_i(dsec_v),
-                .d_lo_i(dlo_v), .d_hi_i(dhi_v), .d_lb_i(dlb_v), .d_rv_i(drv_v), .d_dsec_i(ddsec_v), .d_os_i(d_os),
+                .clk(clk), .rst_n(rst_n), .sl_i(2'(g)), .wst_go_i(c_go_s[g]), .wdr_go_i(c_go_d[g]),
+                .lo_i(c_lo_v[g]), .hi_i(c_hi_v[g]), .lb_i(c_lb_v[g]), .rv_i(c_rv_v[g]), .dsec_i(c_dsec_v[g]),
+                .d_lo_i(c_dlo_v[g]), .d_hi_i(c_dhi_v[g]), .d_lb_i(c_dlb_v[g]), .d_rv_i(c_drv_v[g]), .d_dsec_i(c_ddsec_v[g]), .d_os_i(c_os[g]),
+                .wst_go_o(c_go_s[g+1]), .wdr_go_o(c_go_d[g+1]), .lo_o(c_lo_v[g+1]), .hi_o(c_hi_v[g+1]), .lb_o(c_lb_v[g+1]),
+                .rv_o(c_rv_v[g+1]), .dsec_o(c_dsec_v[g+1]), .d_lo_o(c_dlo_v[g+1]), .d_hi_o(c_dhi_v[g+1]), .d_lb_o(c_dlb_v[g+1]),
+                .d_rv_o(c_drv_v[g+1]), .d_dsec_o(c_ddsec_v[g+1]), .d_os_o(c_os[g+1]),
+                .wst_dn_i(dn_st[g+1]), .wdr_dn_i(dn_dr[g+1]), .ovf_i(dn_ov[g+1]),
                 .wrq(wrq[g*8*16 +: 8*16]), .wrq_cr(wrq_cr[g*8 +: 8]), .wrr(wrr[g*8*257 +: 8*257]),
                 .wwq(wwq[g*8*280 +: 8*280]), .wwq_cr(wwq_cr[g*8 +: 8]), .wwq_done(wwq_done[g*8 +: 8]),
                 .lsw_v(lsw_v[g*8 +: 8]), .lsw_sec(lsw_sec[g*8*(LWB-3) +: 8*(LWB-3)]), .lsw_d(lsw_d[g*8*256 +: 8*256]),
                 .ldc_v(ldc_v[g*8 +: 8]), .ldc_sec(ldc_sec[g*8*(LWB-3) +: 8*(LWB-3)]),
                 .ldr_v(ldr_v[g*8 +: 8]), .ldr_sec(ldr_sec[g*8*(LWB-3) +: 8*(LWB-3)]),
                 .ldr_d(ldr_d[g*8*256 +: 8*256]), .ldr_dm(ldr_dm[g*8*8 +: 8*8]), .ldr_rv(ldr_rv[g*8 +: 8]),
-                .wst_dn(s_wst[g]), .wdr_dn(s_wdr[g]), .ovf(s_ovf[g]));
+                .wst_dn(dn_st[g]), .wdr_dn(dn_dr[g]), .ovf(dn_ov[g]));
         end
-`endif
-        // hub stage 2 + go blanking: a done seen within BL edges of its go belongs to the previous burst (go reaches
-        // the slices one edge late, their per-lane done one edge after that, the slice reduction one, this one more)
-        localparam integer BL = 6;
-        reg h_wst, h_wdr, h_ovf; reg [2:0] bl_st, bl_dr;
+        // go blanking: a done seen within BL edges of its go belongs to the previous burst.  Worst path, slice 3: go
+        // ctlw -> s0 .. s3 pins (4), lane done (1), s3 combine (1), back s2 / s1 / s0 (2 each: 6), the capture here (1)
+        // = 13 (the single-slice hub path was 4 with BL 6): BL = 15
+        localparam integer BL = 15;
+        reg h_wst, h_wdr, h_ovf; reg [3:0] bl_st, bl_dr;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin h_wst <= 1'b1; h_wdr <= 1'b1; h_ovf <= 1'b0; bl_st <= '0; bl_dr <= '0; end
             else begin
-                h_wst <= &s_wst; h_wdr <= &s_wdr; h_ovf <= |s_ovf;
-                bl_st <= wst_go ? 3'(BL) : (bl_st != 0 ? bl_st - 3'd1 : 3'd0);
-                bl_dr <= wdr_go ? 3'(BL) : (bl_dr != 0 ? bl_dr - 3'd1 : 3'd0);
+                h_wst <= dn_st[0]; h_wdr <= dn_dr[0]; h_ovf <= dn_ov[0];
+                bl_st <= wst_go ? 4'(BL) : (bl_st != 0 ? bl_st - 4'd1 : 4'd0);
+                bl_dr <= wdr_go ? 4'(BL) : (bl_dr != 0 ? bl_dr - 4'd1 : 4'd0);
             end
         assign wst_done = h_wst && bl_st == 0 && !wst_go;
         assign wdr_done = h_wdr && bl_dr == 0 && !wdr_go;
@@ -2379,6 +2394,14 @@ module ot_hgi_su_ctlw_slice #(
     input  wire [6*21-1:0] dsec_i,
     input  wire [2*24-1:0] d_lo_i, input wire [2*24-1:0] d_hi_i, input wire [2*(LWB+1)-1:0] d_lb_i, input wire [1:0] d_rv_i,
     input  wire [2*21-1:0] d_dsec_i, input wire d_os_i,
+    // GLUE PLACEMENT (el1011-hbm-sfu 10-11): slice id strap (one hard tile for every slice), the forward link (this
+    // slice's descriptor / go pin registers, to the next slice) and the backward done / overflow combine link
+    input  wire [1:0] sl_i,
+    output wire wst_go_o, output wire wdr_go_o, output wire d_os_o,
+    output wire [6*24-1:0] lo_o, output wire [6*24-1:0] hi_o, output wire [6*(LWB+1)-1:0] lb_o, output wire [5:0] rv_o,
+    output wire [6*21-1:0] dsec_o, output wire [2*24-1:0] d_lo_o, output wire [2*24-1:0] d_hi_o,
+    output wire [2*(LWB+1)-1:0] d_lb_o, output wire [1:0] d_rv_o, output wire [2*21-1:0] d_dsec_o,
+    input  wire wst_dn_i, input wire wdr_dn_i, input wire ovf_i,
     output reg  [NL*16-1:0] wrq, input wire [NL-1:0] wrq_cr, input wire [NL*257-1:0] wrr,
     output reg  [NL*280-1:0] wwq, input wire [NL-1:0] wwq_cr, input wire [NL-1:0] wwq_done,
     output reg  [NL-1:0] lsw_v, output reg [NL*(LWB-3)-1:0] lsw_sec, output reg [NL*256-1:0] lsw_d,
@@ -2405,6 +2428,19 @@ module ot_hgi_su_ctlw_slice #(
         end
         d_os <= d_os_i;
     end
+    reg [1:0] sl_q; always @(posedge clk) sl_q <= sl_i;      // strap pin flop
+    assign wst_go_o = wst_go; assign wdr_go_o = wdr_go; assign d_os_o = d_os;
+    for (genvar q = 0; q < 6; q = q + 1) begin : g_fo
+        assign lo_o[q*24 +: 24] = lo[q]; assign hi_o[q*24 +: 24] = hi[q]; assign lb_o[q*(LWB+1) +: LWB+1] = lb[q];
+        assign rv_o[q] = rv[q]; assign dsec_o[q*21 +: 21] = dsec[q];
+    end
+    for (genvar q = 4; q < 6; q = q + 1) begin : g_fd
+        assign d_lo_o[(q-4)*24 +: 24] = d_lo[q]; assign d_hi_o[(q-4)*24 +: 24] = d_hi[q];
+        assign d_lb_o[(q-4)*(LWB+1) +: LWB+1] = d_lb[q]; assign d_rv_o[q-4] = d_rv[q]; assign d_dsec_o[(q-4)*21 +: 21] = d_dsec[q];
+    end
+    reg dn_st_q, dn_dr_q, dn_ov_q;                           // the next slice's combined flags, pin-flopped
+    always @(posedge clk or negedge rst_l) if (!rst_l) begin dn_st_q <= 1'b1; dn_dr_q <= 1'b1; dn_ov_q <= 1'b0; end
+                                           else begin dn_st_q <= wst_dn_i; dn_dr_q <= wdr_dn_i; dn_ov_q <= ovf_i; end
     reg [NL-1:0] wrq_cr_q, wwq_cr_q, wwq_done_q; reg [NL*257-1:0] wrr_q;
     always @(posedge clk or negedge rst_l)
         if (!rst_l) begin wrq_cr_q <= '0; wwq_cr_q <= '0; wwq_done_q <= '0; wrr_q <= '0; end
@@ -2468,7 +2504,7 @@ module ot_hgi_su_ctlw_slice #(
                 if (wst_go) begin sg_r[b] <= 3'd0; sg_on[b] <= 1'b0; cl_r[b] <= 3'd4; cl_on[b] <= 1'b0; wst_ldone[b] <= 1'b0; end
                 else if (sg_r[b] < 3'd4) begin
                     if (!sg_on[b]) begin
-                        f = first_of(21'(lo[sg_r[b]] >> 3), SL * NL + b);
+                        f = first_of(21'(lo[sg_r[b]] >> 3), 32'(sl_q) * NL + b);
                         if (rv[sg_r[b]] && f <= 21'(hi[sg_r[b]] >> 3)) begin
                             sg_nx[b] <= f; sg_end[b] <= 21'(hi[sg_r[b]] >> 3); sg_on[b] <= 1'b1;
                         end else sg_r[b] <= sg_r[b] + 3'd1;
@@ -2495,7 +2531,7 @@ module ot_hgi_su_ctlw_slice #(
                 // sink dirty-mask clears (regions 4, 5; the local span), one sector a lane an edge
                 if (!wst_go && cl_r[b] < 3'd6) begin
                     if (!cl_on[b]) begin
-                        f = first_of(21'(lb[cl_r[b]] >> 3), SL * NL + b);
+                        f = first_of(21'(lb[cl_r[b]] >> 3), 32'(sl_q) * NL + b);
                         if (rv[cl_r[b]] && f <= 21'((lb[cl_r[b]] + (hi[cl_r[b]] - lo[cl_r[b]])) >> 3)) begin
                             cl_nx[b] <= LSW'(f); cl_end[b] <= LSW'((lb[cl_r[b]] + (hi[cl_r[b]] - lo[cl_r[b]])) >> 3);
                             cl_on[b] <= 1'b1;
@@ -2512,7 +2548,7 @@ module ot_hgi_su_ctlw_slice #(
                 if (wdr_go) begin dg_r[b] <= 3'd4; dg_on[b] <= 1'b0; wdr_ldone[b] <= 1'b0; end
                 else if (dg_r[b] < 3'd6) begin
                     if (!dg_on[b]) begin
-                        f = first_of(21'(d_lb[dg_r[b]] >> 3), SL * NL + b);
+                        f = first_of(21'(d_lb[dg_r[b]] >> 3), 32'(sl_q) * NL + b);
                         if (d_rv[dg_r[b]] && !(dg_r[b] == 3'd4 && d_os) &&
                             f <= 21'((d_lb[dg_r[b]] + (d_hi[dg_r[b]] - d_lo[dg_r[b]])) >> 3)) begin
                             dg_nx[b] <= LSW'(f); dg_end[b] <= LSW'((d_lb[dg_r[b]] + (d_hi[dg_r[b]] - d_lo[dg_r[b]])) >> 3);
@@ -2551,5 +2587,5 @@ module ot_hgi_su_ctlw_slice #(
     end
     always @(posedge clk or negedge rst_l)
         if (!rst_l) begin wst_dn <= 1'b1; wdr_dn <= 1'b1; ovf <= 1'b0; end
-        else begin wst_dn <= &wst_ldone; wdr_dn <= &wdr_ldone; ovf <= lane_ovf; end
+        else begin wst_dn <= (&wst_ldone) && dn_st_q; wdr_dn <= (&wdr_ldone) && dn_dr_q; ovf <= lane_ovf || dn_ov_q; end
 endmodule
