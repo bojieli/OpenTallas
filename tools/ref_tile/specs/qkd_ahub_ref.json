@@ -25,15 +25,99 @@
  "children": [
   {
    "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
-   "count": 4
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+   "count": 1,
+   "at": [
+    216.0,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+   "count": 1,
+   "at": [
+    388.8,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+   "count": 1,
+   "at": [
+    561.6,
+    43.2
+   ]
   },
   {
    "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
-   "count": 4
+   "count": 1,
+   "at": [
+    43.2,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+   "count": 1,
+   "at": [
+    216.0,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+   "count": 1,
+   "at": [
+    388.8,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+   "count": 1,
+   "at": [
+    561.6,
+    216.0
+   ]
   },
   {
    "view": "physical/ref_tile/nhb_zh_ref/views/ot_nhb_zh",
-   "count": 4
+   "count": 1,
+   "at": [
+    43.2,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_zh_ref/views/ot_nhb_zh",
+   "count": 1,
+   "at": [
+    216.0,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_zh_ref/views/ot_nhb_zh",
+   "count": 1,
+   "at": [
+    388.8,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/nhb_zh_ref/views/ot_nhb_zh",
+   "count": 1,
+   "at": [
+    561.6,
+    388.8
+   ]
   }
  ],
  "pins": {
@@ -77,12 +161,12 @@
  "job": {
   "owner": "Claude:el1011-q-kvd",
   "branch": "claude/el1011-q-kvd",
-  "tag": "q5b",
+  "tag": "q8",
   "hosts": [
    "ot-epyc1tb",
    "ot-epyc4"
   ],
-  "purpose": "q-kvd RELAUNCH5: attention hub cluster ot_qwen_nearhbm_attn_hub_t (qkd_ahub slot 647.976^2) over ref_tile views 4 pbst + 4 pvlg + 4 zh; replaces hand qkd_ahub_t || route peak declared 112 GB (> AGIdock per-job limit 110 GB) so the route lands on an EPYC: the loop pins benches to the route host and does not offload a 128 GB bench that exceeds AGIdock's per-job limit (reported to coordinator)",
+  "purpose": "q-kvd R8: KV attention hub cluster (hub_t) over child_lint-clean ref views (4 pbst + 4 pvlg + 4 zh, 151.2^2 each). Slot 647.976^2 cannot hold 12 children on the 43.2 um child lattice with >= 20 um channels (3 x 3 max); outline 736.56 x 604.8 (4 x 3 rows: pbst S row, pvlg, zh N row; +6.1% area) -- reported to the KV die lead. q-kvd RELAUNCH5: attention hub cluster ot_qwen_nearhbm_attn_hub_t (qkd_ahub slot 647.976^2) over ref_tile views 4 pbst + 4 pvlg + 4 zh; replaces hand qkd_ahub_t || route peak declared 112 GB (> AGIdock per-job limit 110 GB) so the route lands on an EPYC: the loop pins benches to the route host and d",
   "benches": [
    {
     "name": "hubt_layer_exact",
@@ -111,7 +195,7 @@
  "macros": [],
  "inter": [],
  "outline": {
-  "w": 647.976,
-  "h": 647.976
+  "w": 736.56,
+  "h": 604.8
  }
 }

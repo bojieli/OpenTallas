@@ -1,14 +1,14 @@
 {
- "name": "qkh_ktree_ref-q5-e5d2d7d8b",
+ "name": "qkh_ktree_ref-q6-COMMIT",
  "block": "ot_qkh_ktree",
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
- "purpose": "idle1012 head_h (ot_qwen_nearhbm_head_h, 128 inst) hierarchical rebuild via ref_tile: flat head = class 1 (one root over ~200k sinks) + class 3/5 (hid pin -> 1,024 q enables); sub-tile ot_qkh_ktree x1 (K levels 4-7 adders + scale + fault OR), 151.2x97.2 (~51% util), M2-M6, PG M6",
+ "purpose": "idle1012 head_h (ot_qwen_nearhbm_head_h, 128 inst) hierarchical rebuild via ref_tile: flat head = class 1 (one root over ~200k sinks) + class 3/5 (hid pin -> 1,024 q enables); sub-tile ot_qkh_ktree x1 (K levels 4-7 adders + scale + fault OR), 151.2x97.2 (~51% util), M2-M5, PG M5; q6: HSUB bench uses the DPI _nr stand-in (b5d5477c7, peak 12 GiB vs 491), M5 layer cap",
  "threads": 16,
  "peak_ram_gb": 112,
  "source": {
   "branch": "claude/el1011-q-kvd",
-  "commit": "e5d2d7d8b",
+  "commit": "COMMIT",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
   ]
@@ -29,8 +29,8 @@
     "name": "layer_hs_pos",
     "cmd": "mkdir -p {RUN}/bench && HSUB=1 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hs_pos",
     "expect": "pass",
-    "threads": 16,
-    "peak_ram_gb": 128,
+    "threads": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
@@ -41,12 +41,13 @@
     "name": "layer_hs_mut",
     "cmd": "mkdir -p {RUN}/bench && HSUB=1 HSMUT=1 bash tools/qwen_kv_die/bench_gate.sh neg {RUN}/bench/hs_neg 0",
     "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 128,
+    "threads": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "timeout_s": 43200
+    "timeout_s": 43200,
+    "fail_regex": "\"mismatches\": [1-9]"
    },
    {
     "name": "anr7",
@@ -69,6 +70,18 @@
      "iverilog"
     ],
     "fail_regex": "^FAIL add_lat_nr"
+   },
+   {
+    "name": "nr_standin_equiv",
+    "cmd": "mkdir -p {RUN}/bench && bash rtl/test/nearhbm/run_nr_standin_equiv.sh {RUN}/bench/eq",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 14400,
+    "pass_regex": "^EQUIV PASS"
    }
   ],
   "calibrate": {
@@ -119,7 +132,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_ktree_ref/qkh_ktree_ref-q5-e5d2d7d8b"
+   "to": "results/rtl/ref_tile/qkh_ktree_ref/qkh_ktree_ref-q6-COMMIT"
   }
  ],
  "cycles_added": 0,

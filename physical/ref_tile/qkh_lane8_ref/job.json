@@ -1,14 +1,14 @@
 {
- "name": "qkh_lane8_ref-a-5b672e553",
+ "name": "qkh_lane8_ref-q6a-COMMIT",
  "block": "ot_qkh_lane8",
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
- "purpose": "idle1012 head_h (ot_qwen_nearhbm_head_h, 128 inst) hierarchical rebuild via ref_tile: flat head = class 1 (one root over ~200k sinks) + class 3/5 (hid pin -> 1,024 q enables); sub-tile ot_qkh_lane8 x16 (8 lanes + K levels 1-3, own reset relay, pin flops in / registered out), 140.4 um ~50% util, M2-M6, PG M6",
+ "purpose": "idle1012 head_h (ot_qwen_nearhbm_head_h, 128 inst) hierarchical rebuild via ref_tile: flat head = class 1 (one root over ~200k sinks) + class 3/5 (hid pin -> 1,024 q enables); sub-tile ot_qkh_lane8 x16 (8 lanes + K levels 1-3, own reset relay, pin flops in / registered out), 140.4 um ~50% util, M2-M5, PG M5; q6: HSUB bench uses the DPI _nr stand-in (b5d5477c7, peak 12 GiB vs 491), M5 layer cap",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-q-kvd",
-  "commit": "5b672e553",
+  "commit": "COMMIT",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
   ]
@@ -17,7 +17,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qkh_lane8 rtl/lib/ot_rst_relay.sv rtl/hdc/nearhbm/ot_qkh_subtiles.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qkh_lane8 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hdc/nearhbm/ot_qkh_subtiles.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -29,8 +29,8 @@
     "name": "layer_hs_pos",
     "cmd": "mkdir -p {RUN}/bench && HSUB=1 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hs_pos",
     "expect": "pass",
-    "threads": 16,
-    "peak_ram_gb": 64,
+    "threads": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
@@ -41,12 +41,13 @@
     "name": "layer_hs_mut",
     "cmd": "mkdir -p {RUN}/bench && HSUB=1 HSMUT=1 bash tools/qwen_kv_die/bench_gate.sh neg {RUN}/bench/hs_neg 0",
     "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 32,
+    "threads": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "timeout_s": 43200
+    "timeout_s": 43200,
+    "fail_regex": "\"mismatches\": [1-9]"
    },
    {
     "name": "anr7",
@@ -69,6 +70,18 @@
      "iverilog"
     ],
     "fail_regex": "^FAIL add_lat_nr"
+   },
+   {
+    "name": "nr_standin_equiv",
+    "cmd": "mkdir -p {RUN}/bench && bash rtl/test/nearhbm/run_nr_standin_equiv.sh {RUN}/bench/eq",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 14400,
+    "pass_regex": "^EQUIV PASS"
    }
   ],
   "calibrate": {
@@ -119,7 +132,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_lane8_ref/qkh_lane8_ref-a-5b672e553"
+   "to": "results/rtl/ref_tile/qkh_lane8_ref/qkh_lane8_ref-q6a-COMMIT"
   }
  ],
  "cycles_added": 0,
