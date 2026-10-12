@@ -128,6 +128,19 @@ module ot_hgi_smmv #(
     // D2
     reg [255:0] a2, o2; reg [20:0] na2; reg [1:0] f2; reg [3:0] p2; reg [7:0] g2; reg [12:0] q2; reg [19:0] m2;
     reg [23:0] lq2; reg [30:0] ml2; reg [18:0] strp2; reg [31:0] str2; reg bad2; reg [36:0] qd2; reg lb160_2; reg lo_ok2; reg xr2;
+    // r2: D2 products are multi-edge (held D1 operands; ONE record in decode at a time, rec_rdy low until D3 commits):
+    // dw_v counts DLAT edges, then D2 captures.  Was one edge (base1 -> qd2 37 x 37 exact-divide multiply -141 ps,
+    // lpr1 -> ml2 / lq2 -83 / -74 ps).
+    localparam integer DLAT = 12;          // >= max LAT below (qd 7 + 4 = 11; ml 2 + 3; lq 2 + 2; strp 2 + 2)
+    reg dw_v; reg [3:0] dcnt;
+    wire dcap = dw_v && (dcnt == 4'(DLAT));
+    wire [36:0] qx = lb160_1 ? {2'b00, base1[39:5]} : base1[39:3];
+    wire [36:0] qk = lb160_1 ? {2'b00, INV5} : INV17;
+    wire [36:0] qd_p; wire [23:0] lq_p; wire [30:0] ml_p; wire [18:0] strp_p;
+    ot_hgi_smmv_pmul #(.WA(37), .WB(37), .WP(37), .R(6)) u_qd (.clk(clk), .a(qk), .b(qx), .p(qd_p));
+    ot_hgi_smmv_pmul #(.WA(13), .WB(11), .WP(24), .R(6)) u_lq (.clk(clk), .a(q1), .b(lpr1), .p(lq_p));
+    ot_hgi_smmv_pmul #(.WA(20), .WB(11), .WP(31), .R(6)) u_ml (.clk(clk), .a(m1), .b(lpr1), .p(ml_p));
+    ot_hgi_smmv_pmul #(.WA(8), .WB(11), .WP(19), .R(6)) u_sp (.clk(clk), .a(lb160_1 ? 8'd160 : 8'd136), .b(lpr1), .p(strp_p));
 
     // ================= window (entries at seq mod W) =================
     localparam integer WI = (W > 1) ? $clog2(W) : 1;
@@ -145,11 +158,21 @@ module ot_hgi_smmv #(
 
     // ================= x allocator / x stage =================
     reg [7:0] used; reg [6:0] ap; reg [6:0] xbc; reg [1:0] xn; reg [2:0] xfq [0:1]; reg xfh, xft;
-    wire [7:0] nf = {e_g[ix(xp)], 3'b000};
-    wire       fits = ({1'b0, ap} + nf) <= 8'd128;
-    wire [6:0] a_st = (MUT_SLOT != 0) ? 7'd0 : (fits ? ap : 7'd0);
-    wire [7:0] a_ws = (MUT_SLOT != 0 || fits) ? 8'd0 : (8'd128 - {1'b0, ap});
-    wire       a_ok = (MUT_SLOT != 0) || ({1'b0, used} + a_ws + nf <= 9'd128);
+    // r2 (route r1-6e530654e: xp -> used -89 ps = e_g[xp] mux -> ap + nf compare -> wrap -> used + ws + nf compare ->
+    // used update in one edge): the allocation is precomputed over two registered edges.  al_age restarts at every
+    // event that changes xp / ap / used-upward / the window tail (x alloc, x hit, D3 commit); an allocation fires only at
+    // age 2.  A retire in between only LOWERS used, so a_ok computed on the older used stays safe (conservative).
+    reg [1:0] al_age;
+    reg [7:0] nf; reg fits_r; reg [6:0] a_st; reg [7:0] a_ws; reg a_okr;
+    wire [7:0] nfw = {e_g[ix(xp)], 3'b000};
+    always @(posedge clk) begin : alq
+        reg ft; ft = ({1'b0, ap} + nfw) <= 8'd128;
+        nf <= nfw; fits_r <= ft;
+        a_st <= (MUT_SLOT != 0) ? 7'd0 : (ft ? ap : 7'd0);
+        a_ws <= (MUT_SLOT != 0 || ft) ? 8'd0 : (8'd128 - {1'b0, ap});
+        a_okr <= (MUT_SLOT != 0) || ({1'b0, used} + a_ws + nf <= 9'd128);
+    end
+    wire       a_ok = a_okr && (al_age == 2'd2);
 
     // ================= issue stage + SM stations =================
     reg [NSM*CW-1:0] cmd_h;
@@ -159,9 +182,30 @@ module ot_hgi_smmv #(
     // and the products are split over two edges (gate 10-12: smb_q -> slq_p was ONE 5 x 24 multiply, 28 levels ~1015 ps)
     (* keep *) reg [4:0] sgq [0:NSM-1];
     always @(posedge clk) for (integer s_ = 0; s_ < NSM; s_ = s_ + 1) sgq[s_] <= smb_q + 5'(s_);
-    reg [19:0] sqa [0:NSM-1]; reg [19:0] sqb [0:NSM-1]; reg [31:0] sla [0:NSM-1]; reg [31:0] slb [0:NSM-1];
-    reg [19:0] sq_p [0:NSM-1]; reg [31:0] slq_p [0:NSM-1];       // station products (smb + s) x Q, x LQ
     reg [19:0] f_m; reg [12:0] f_q; reg [23:0] f_lq; reg [30:0] f_ml; reg [31:0] f_l0;
+    // r2 (route r1-6e530654e: f_lq -> sla -89, sla -> slq_p -80, f_ml -> dl_s -134, f_l0 -> dbase_s -124, f_m -> rows_s
+    // -20 ps, all ripple chains): per-station multi-edge arithmetic on the held f_* fields, <= 12 carry bits an edge.
+    //   sq = sg Q (3 edges), slq = sg LQ (4), dmq = M - sq (2), gtq = dmq > Q (2), dm = ML - slq (3), gtl = dm > LQ (3),
+    //   db = L0 + slq (3): longest chain slq -> dm -> gtl = 10 edges; capture after SLAT.
+    localparam integer SLAT = 12;
+    reg [3:0] scnt;
+    wire [NSM-1:0] st_act; wire [NSM*13-1:0] st_rows; wire [NSM*24-1:0] st_dl; wire [NSM*32-1:0] st_db;
+    genvar gs;
+    for (gs = 0; gs < NSM; gs = gs + 1) begin : g_st
+        wire [19:0] sq; wire [31:0] slq; wire [20:0] dmq, gq; wire [31:0] dm, db; wire [32:0] gl;
+        ot_hgi_smmv_pmul #(.WA(13), .WB(5), .WP(20), .R(5)) u_sq (.clk(clk), .a(f_q), .b(sgq[gs]), .p(sq));
+        ot_hgi_smmv_pmul #(.WA(24), .WB(5), .WP(32), .R(5)) u_slq (.clk(clk), .a(f_lq), .b(sgq[gs]), .p(slq));
+        ot_hgi_smmv_padd #(.W(21), .SUB(1)) u_dmq (.clk(clk), .a({1'b0, f_m}), .b({1'b0, sq}), .s(dmq));
+        ot_hgi_smmv_padd #(.W(21), .SUB(1)) u_gq (.clk(clk), .a({8'd0, f_q}), .b({1'b0, dmq[19:0]}), .s(gq));
+        ot_hgi_smmv_padd #(.W(32), .SUB(1)) u_dm (.clk(clk), .a({1'b0, f_ml}), .b(slq), .s(dm));
+        ot_hgi_smmv_padd #(.W(33), .SUB(1)) u_gl (.clk(clk), .a({9'd0, f_lq}), .b({1'b0, dm}), .s(gl));
+        ot_hgi_smmv_padd #(.W(32), .SUB(0)) u_db (.clk(clk), .a(f_l0), .b(slq), .s(db));
+        wire a_ = !dmq[20] && (|dmq[19:0]);                       // M > sg Q
+        assign st_act[gs] = a_;
+        assign st_rows[gs*13 +: 13] = !a_ ? 13'd0 : gq[20] ? f_q : dmq[12:0];
+        assign st_dl[gs*24 +: 24] = !a_ ? 24'd0 : gl[32] ? f_lq : dm[23:0];
+        assign st_db[gs*32 +: 32] = db;
+    end
     reg [NSM*13-1:0] rows_s; reg [NSM*32-1:0] dbase_s; reg [NSM*24-1:0] dl_s; reg [NSM-1:0] act_s;
     // smmv-cr row-credit chunking (CR = 1): rows / lines still to describe, the next chunk's base, credits
     localparam integer CHM = (CH < AD) ? CH : AD;
@@ -217,10 +261,12 @@ module ot_hgi_smmv #(
     wire x_hit = e_xr[ix(xp)] && xo_v && (xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]) == xk);
     wire [2:0] xo_d = xo - rh, xp_d = xp - rh;
     wire xo_live = xo_d < xp_d;
+    wire x_hit_go = !x_v && xn == 2'd0 && xp != tail && !halt_q && x_hit;
+    wire x_ev = x_hit_go || (!x_v && xn < 2'(XQ) && xp != tail && !halt_q && !x_hit_go && a_ok);
 
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
-            d0_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0; rdy_r <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
+            d0_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0; dw_v <= 1'b0; dcnt <= 4'd0; al_age <= 2'd0; rdy_r <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
             // control only (pointers, valids, counters); datapath / field registers carry no reset (gate: rst fanout)
             tail <= 0; xp <= 0; ip <= 0; rh <= 0; ppc <= 0; pdc <= 0; e_xd <= 0; used <= 0; ap <= 0;
             xn <= 2'd0; xfh <= 1'b0; xft <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0; fa_v <= 1'b0;
@@ -230,9 +276,10 @@ module ot_hgi_smmv #(
         end else begin : main
             reg [7:0] used_n;
             rec_done <= 1'b0; rec_fault <= 1'b0;
-            sm_cg_en <= (tail != rh) || d0_v || d1_v || d2_v;
+            sm_cg_en <= (tail != rh) || d0_v || d1_v || dw_v || d2_v;
             // ---- accept (window has room counting the decode pipe)
-            rdy_r <= !halt_q && ({1'b0, nin} + d0_v + d1_v + d2_v + (rec_v && rec_rdy) < W);
+            // r2: one record in decode at a time (held operands): accept again once D3 has committed it
+            rdy_r <= !halt_q && !(rec_v && rec_rdy) && !d0_v && !d1_v && !dw_v && ({1'b0, nin} + d2_v < W);
             d0_v <= rec_v && rec_rdy;
             if (rec_v && rec_rdy) begin hdr0 <= rec_hdr; a0 <= rec_a; b0 <= rec_b; o0 <= rec_o; na0 <= rec_n_a; nb0 <= rec_n_b; end
             // ---- D1
@@ -243,13 +290,15 @@ module ot_hgi_smmv #(
                 lb160_1 <= (pf0 == 2'd3); bad1 <= bad0; xr1 <= hdr0[69]; m1 <= mm0; base1 <= b0[47:8]; str1 <= b0[119:88];
             end
             // ---- D2: products and the exact divide
-            d2_v <= d1_v;
-            if (d1_v) begin
+            if (d1_v) begin dw_v <= 1'b1; dcnt <= 4'd0; end
+            else if (dw_v) dcnt <= dcnt + 4'd1;
+            if (dcap) dw_v <= 1'b0;
+            d2_v <= dcap;
+            if (dcap) begin
                 a2 <= a1; o2 <= o1; na2 <= na1; f2 <= f1; p2 <= p1; g2 <= g1; q2 <= q1; m2 <= m1; bad2 <= bad1; xr2 <= xr1;
-                lq2 <= {11'd0, q1} * {13'd0, lpr1}; ml2 <= m1 * lpr1; str2 <= str1;
-                strp2 <= lpr1 * (lb160_1 ? 8'd160 : 8'd136); lb160_2 <= lb160_1;
-                if (lb160_1) begin qd2 <= {2'b00, base1[39:5] * INV5}; lo_ok2 <= (base1[4:0] == 5'd0); end
-                else begin qd2 <= base1[39:3] * INV17; lo_ok2 <= (base1[2:0] == 3'd0); end
+                lq2 <= lq_p; ml2 <= ml_p; str2 <= str1; strp2 <= strp_p; lb160_2 <= lb160_1;
+                qd2 <= lb160_1 ? {2'b00, qd_p[34:0]} : qd_p;
+                lo_ok2 <= lb160_1 ? (base1[4:0] == 5'd0) : (base1[2:0] == 3'd0);
             end
             // ---- D3: checks -> window entry
             if (d2_v) begin
@@ -294,36 +343,20 @@ module ot_hgi_smmv #(
             xn <= xn + ((!x_v && xn < 2'(XQ) && xp != tail && !halt_q && !(xn == 2'd0 && x_hit) && a_ok) ? 2'd1 : 2'd0) - ((xn != 2'd0 && in_xd) ? 2'd1 : 2'd0);
             // ---- issue stage: fields (stations) one edge, then the start / descriptor handshakes of every active SM
             if (!go && !fld_v && !fp_v && !fq_v && !fa_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
-                fq_v <= 1'b1;                                    // edge 1: select the issue entry's fields
+                fq_v <= 1'b1; scnt <= 4'd0;                      // edge 1: select the issue entry's fields
                 fmt_i <= e_f[ix(ip)]; g_i <= e_g[ix(ip)]; xb_i <= e_xb[ix(ip)];
                 f_m <= e_m[ix(ip)]; f_q <= e_q[ix(ip)]; f_lq <= e_lq[ix(ip)]; f_ml <= e_ml[ix(ip)]; f_l0 <= e_l0[ix(ip)];
             end
+            // r2 stations: operands f_* held while the multi-edge station arithmetic runs (SLAT edges), then one capture
             if (fq_v) begin
-                fq_v <= 1'b0; fa_v <= 1'b1;
-                for (s = 0; s < NSM; s = s + 1) begin : stp       // edge 2a: partial products of sg x Q / LQ (bits 0-2, 3-4)
-                    reg [4:0] sg; sg = sgq[s];
-                    sqa[s] <= (sg[0] ? {7'd0, f_q} : 20'd0) + (sg[1] ? {6'd0, f_q, 1'b0} : 20'd0) + (sg[2] ? {5'd0, f_q, 2'b0} : 20'd0);
-                    sqb[s] <= (sg[3] ? {4'd0, f_q, 3'b0} : 20'd0) + (sg[4] ? {3'd0, f_q, 4'b0} : 20'd0);
-                    sla[s] <= (sg[0] ? {8'd0, f_lq} : 32'd0) + (sg[1] ? {7'd0, f_lq, 1'b0} : 32'd0) + (sg[2] ? {6'd0, f_lq, 2'b0} : 32'd0);
-                    slb[s] <= (sg[3] ? {5'd0, f_lq, 3'b0} : 32'd0) + (sg[4] ? {4'd0, f_lq, 4'b0} : 32'd0);
-                end
-            end
-            if (fa_v) begin
-                fa_v <= 1'b0; fp_v <= 1'b1;
-                for (s = 0; s < NSM; s = s + 1) begin : stq       // edge 2b: station products = the two partial sums
-                    sq_p[s] <= sqa[s] + sqb[s]; slq_p[s] <= sla[s] + slb[s];
-                end
-            end
-            if (fp_v) begin                                       // edge 3: clamps -> per-SM fields
-                fp_v <= 1'b0; fld_v <= 1'b1;
-                for (s = 0; s < NSM; s = s + 1) begin : stn
-                    reg a_;
-                    a_ = f_m > sq_p[s];
-                    act_s[s] <= a_;
-                    rows_s[s*13 +: 13] <= !a_ ? 13'd0 : ((f_m - sq_p[s]) > {7'd0, f_q}) ? f_q : (f_m - sq_p[s]);
-                    dl_s[s*24 +: 24] <= !a_ ? 24'd0 : (({1'b0, f_ml} - slq_p[s]) > {8'd0, f_lq}) ? f_lq : ({1'b0, f_ml} - slq_p[s]);
-                    dbase_s[s*32 +: 32] <= f_l0 + slq_p[s];
-                end
+                if (scnt == 4'(SLAT)) begin
+                    fq_v <= 1'b0; fld_v <= 1'b1;
+                    for (s = 0; s < NSM; s = s + 1) begin
+                        act_s[s] <= st_act[s];
+                        rows_s[s*13 +: 13] <= st_rows[s*13 +: 13]; dl_s[s*24 +: 24] <= st_dl[s*24 +: 24];
+                        dbase_s[s*32 +: 32] <= st_db[s*32 +: 32];
+                    end
+                end else scnt <= scnt + 4'd1;
             end
             if (fld_v) begin
                 fld_v <= 1'b0; go <= 1'b1; st_pend <= act_s; d_pend <= (CR != 0) ? {NSM{1'b0}} : act_s; e_act[ix(ip)] <= act_s;
@@ -369,6 +402,7 @@ module ot_hgi_smmv #(
                 for (s = 0; s < NSM; s = s + 1) if (e_act[ix(rh)][s]) rel[s] <= ~rel[s];
             end
             used <= used_n;
+            al_age <= (x_ev || d2_v) ? 2'd0 : (al_age == 2'd2) ? 2'd2 : al_age + 2'd1;
             if (!halt_q && (any_fault || in_xf || in_pf)) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
         end
     end
@@ -571,5 +605,65 @@ module ot_hgi_smmv_pub #(
             end
         end
     end
+endmodule
+// ---------------------------------------------------------------------------------------------------------------------
+// smmv-b r2 (2026-10-12, route r1-6e530654e TT -141 ps: every failing class was a ripple carry chain -- ABC maps each
+// adder / multiplier / compare to a MAJ chain, ~31 ps a bit -- 20 to 37 bits in one edge): HELD-INPUT MULTI-EDGE ARITHMETIC.
+// Inputs must stay constant for LAT edges (the engine holds its decode / station operand registers while a counter runs);
+// every edge carries at most SEG = 12 carry bits or R carry-save rows, so no stage depends on ABC's adder structure.
+// ot_hgi_smmv_padd: s = a + b (SUB 0) or a - b (SUB 1) mod 2^W, carry-segmented, LAT = ceil(W / SEG).
+module ot_hgi_smmv_padd #(parameter integer W = 32, parameter integer SUB = 0, parameter integer SEG = 12) (
+    input  wire         clk,
+    input  wire [W-1:0] a,
+    input  wire [W-1:0] b,
+    output wire [W-1:0] s
+);
+    localparam integer NC = (W + SEG - 1) / SEG;
+    wire [W-1:0] bb = (SUB != 0) ? ~b : b;
+    reg  [W-1:0] sr;
+    reg  [NC:0]  cy;                      // cy[j]: registered carry into segment j (cy[0] unused)
+    genvar j;
+    for (j = 0; j < NC; j = j + 1) begin : g_seg
+        localparam integer LO = j * SEG;
+        localparam integer WS = ((LO + SEG) <= W) ? SEG : (W - LO);
+        wire ci = (j == 0) ? (SUB != 0) : cy[j];
+        wire [WS:0] t = {1'b0, a[LO +: WS]} + {1'b0, bb[LO +: WS]} + {{WS{1'b0}}, ci};
+        always @(posedge clk) begin sr[LO +: WS] <= t[WS-1:0]; cy[j+1] <= t[WS]; end
+    end
+    assign s = sr;
+endmodule
+
+// ot_hgi_smmv_pmul: p = a * b mod 2^WP; R multiplier bits a stage into a carry-save pair (R+2 -> 2 by a chain of R 3:2
+// compressors, no carry propagation), then the carry-segmented final add.  LAT = ceil(WB / R) + ceil(WP / SEG).
+module ot_hgi_smmv_pmul #(parameter integer WA = 8, parameter integer WB = 8, parameter integer WP = 16,
+                          parameter integer R = 4, parameter integer SEG = 12) (
+    input  wire          clk,
+    input  wire [WA-1:0] a,
+    input  wire [WB-1:0] b,
+    output wire [WP-1:0] p
+);
+    localparam integer NS = (WB + R - 1) / R;
+    reg  [WP*NS-1:0] ssr, ccr;
+    wire [WP*(NS+1)-1:0] ssw = {ssr, {WP{1'b0}}};
+    wire [WP*(NS+1)-1:0] ccw = {ccr, {WP{1'b0}}};
+    wire [WP-1:0] ax;
+    genvar k;
+    for (k = 0; k < WP; k = k + 1) begin : g_ax
+        assign ax[k] = (k < WA) ? a[(k < WA) ? k : 0] : 1'b0;
+    end
+    for (k = 0; k < NS; k = k + 1) begin : g_cs
+        reg [WP-1:0] x0, x1, x2;
+        integer j, bi;
+        always @(posedge clk) begin
+            x0 = ssw[k*WP +: WP]; x1 = ccw[k*WP +: WP];
+            for (j = 0; j < R; j = j + 1) begin
+                bi = k * R + j;
+                x2 = (bi < WB && b[(bi < WB) ? bi : 0]) ? (ax << bi) : {WP{1'b0}};
+                {x0, x1} = {x0 ^ x1 ^ x2, ((x0 & x1) | (x0 & x2) | (x1 & x2)) << 1};
+            end
+            ssr[k*WP +: WP] <= x0; ccr[k*WP +: WP] <= x1;
+        end
+    end
+    ot_hgi_smmv_padd #(.W(WP), .SUB(0), .SEG(SEG)) u_cpa (.clk(clk), .a(ssr[(NS-1)*WP +: WP]), .b(ccr[(NS-1)*WP +: WP]), .s(p));
 endmodule
 `default_nettype wire
