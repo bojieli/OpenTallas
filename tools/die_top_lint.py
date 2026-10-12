@@ -2101,7 +2101,7 @@ def run_lint(die, out, top_fix=False, tag=''):
         clock_sources={i: sorted(p) for i, p in ck_ports.items() if any(x.startswith('pll') for x in p)},
         reset=[dict(master=k[0], net=k[1], instances=n) for k, n in sorted(rst_rows.items())],
         interfaces=interfaces(die, m, pw) if die == 'hbm' else {},
-        top_ports=list(LAST_TOP) if R8_ACTIVE[0] else 0,
+        top_ports=list(LAST_TOP) if (R8_ACTIVE[0] or die == "hbm") else 0,
         physical=dict(missing_pins=[dict(master=k[0], port=k[1], **v) for k, v in sorted(missing.items())],
                       face_away=[dict(master=k[0], port=k[1], orient=k[2], **v) for k, v in sorted(away.items())],
                       pin_spread=sorted(spread, key=lambda r: -r['span_um'])[:60],

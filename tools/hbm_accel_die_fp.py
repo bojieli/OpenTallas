@@ -381,6 +381,10 @@ R25 = dict(R24P, vm_cross_2layer=True, hub_ports_file='physical/hbm_accel_die_vi
 #   queued r23-pin re-harden and the loader route stay valid)
 R25['pin_centre'] = {**R25.get('pin_centre', {}), **{(m_, p_): c_ for m_ in ('hfd_router', 'hfd_loader')
                                                      for p_, c_ in (('rst', 366.0253), ('ck', 612.5932))}}
+# TA-15 (hbm-wiring 2026-10-08, tieoff audit): die top I/O -- package refclk + por_n top ports (template: S81 r8)
+#   -> the PLL owner (hfd_coll: PLL black box + per-domain reset synchronisers) -> pll_* / por_* domain nets.  r25 had
+#   0 top ports: every pll_* clock came from an unconnected wrapper pin.
+R25['top_io'] = True
 R25A = dict(R25, attn_tile_h_um=1600.5)
 # r25s (attn-split, OWNER 2026-10-08 18:10 PT; flag default OFF, r25 stays ADOPTED until both halves close): every
 #   attention tile slot holds the two HALF tiles hfd_attn_half_lo / hfd_attn_half_hi (rtl/hdc/v41x/
@@ -2416,6 +2420,19 @@ def clock_nets(m, B, coll):
     (pll_stream / pll_serial / pll_hbm / pll_link) to every clocked block of the domain, and one reset net per domain
     (por_*).  Forwarded-link stations take their clock from the forwarded clock bits of their segments (r15 fwd) and only
     the reset.  The nets are logical: CTS builds a tree per clock region (domains.sdc) from them."""
+    if m['variant'].get('top_io'):
+        # TA-15: die top input ports on the die edge nearest the PLL owner, at its height (S81 r8 places them on the W
+        # edge at the collective's height); M4 pins, 4.32 um apart
+        W_, H_ = m['geo']['W'], m['geo']['H']
+        cy = coll.y + coll.h / 2
+        west = coll.x + coll.w / 2 <= W_ / 2
+        x_ = 0.5 if west else W_ - 0.5
+        tp = {}
+        for i, (nm_, use_) in enumerate((('refclk', 'CLOCK'), ('por_n', 'SIGNAL'))):
+            tp[nm_] = dict(center_um=(x_, round(cy + 4.32 * i, 3)), size_um=(1.0, 0.072), layer='M4', use=use_,
+                           edge='W' if west else 'E')
+            B.append((nm_, 'top_in', 1, [('TOP', nm_), (coll.name, nm_)]))
+        m['top_input_ports'] = tp
     ck = defaultdict(list)
     rst = defaultdict(list)
     clocked = m.get('clocked', {})
@@ -2533,6 +2550,10 @@ def masters(m, k=1):
             elif it is not first[it.master]:
                 continue
             others = [by[o] for j, (o, _) in enumerate(eps) if j != i and o != 'TOP']
+            for j, (o, p_) in enumerate(eps):     # TA-15: a die top port is a peer point on the die edge
+                if j != i and o == 'TOP' and p_ in m.get('top_input_ports', {}):
+                    cx_, cy_ = m['top_input_ports'][p_]['center_um']
+                    others.append(Inst(f'TOP.{p_}', 'TOP', cx_, cy_, 0.0, 0.0))
             peers[key] += others
     notes = {'hfd_sm': 'SM element ot_hbm_accel_sm_v NC8/SUB4 (sm_r2 context 2202.768 x 2072.79, 202 macros; pin regions '
                        'of the context: d/req/rsp bottom, xw left, results right, control top; element route OPEN)'}
