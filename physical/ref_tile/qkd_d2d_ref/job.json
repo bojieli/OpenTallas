@@ -1,9 +1,9 @@
 {
- "name": "qkd_d2d_ref-q5b-ebf1805fa",
+ "name": "qkd_d2d_ref-q8-COMMIT",
  "block": "ot_qkvd_kv_end",
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
- "purpose": "q-kvd RELAUNCH5: KV end cluster (qkd_d2d slot 777.576x518.376, results/arch/hier_contract_1011/qwen_kv.json) over child_lint-clean views (4 sbuf + 3 fbuf8) through the reference cluster flow; replaces hand qkd_d2d_h (DRT-0073 on hand tile abstracts) || route peak declared 112 GB (> AGIdock per-job limit 110 GB) so the route lands on an EPYC: the loop pins benches to the route host and does not offload a 128 GB bench that exceeds AGIdock's per-job limit (reported to coordinator)",
+ "purpose": "q-kvd R8: KV end cluster (qkd_d2d slot 777.576x518.376) structural setup fix on a commit >= de53a3b7c (hold MM after parasitic estimation + OT_SPINE_MACRO_LEAF): q5b TT -613 at CTS = rq_f -> RX sbuf din 814 ps of wire. Fix: RTL input/output relays (+1 cycle each way, HT builds; RX word replicated per receive buffer) + explicit floorplan (buffers at their input faces, RX MX din-up). Benches ht_layer_exact (HT=1, relays in) PASS / ht_layer_mut FAIL",
  "hosts": [
   "ot-epyc1tb",
   "ot-epyc4"
@@ -12,7 +12,7 @@
  "peak_ram_gb": 112,
  "source": {
   "branch": "claude/el1011-q-kvd",
-  "commit": "ebf1805fa"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_d2d_ref/qkd_d2d_ref-q5b-ebf1805fa"
+   "to": "results/rtl/ref_tile/qkd_d2d_ref/qkd_d2d_ref-q8-COMMIT"
   }
  ],
  "cycles_added": 0,
