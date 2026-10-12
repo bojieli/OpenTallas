@@ -8,9 +8,11 @@
 //   NPB physical blocks take the beat in NPS = QB_NB / NPB column passes (pass p = rows [p L, p L + L), L = 2 NPB),
 //   one pass a cycle at most.  Blocks are independent (no cross-block step), so every value is that of the 32-block
 //   bank; the VM rows are addressed exactly as the old tile TI = p wrote them (q rows, the exps row, y rows).
-// TAP: pin flops on the tap (8,192 b + job), row numbering (rcnt), the job's obase (the parameter row), a registered
-//   row rotation: position j <- the slot carrying operand row index = j mod L, with its tag {beat, pass}.  Position
-//   2b / 2b + 1 go to engine b over equal-depth relays (the slab), so every engine runs in lockstep.
+// TAP (v3b, <= 15k sinks): passes are aligned at the source (descriptor row alone, operand cycles S_RD-full from slot 0),
+//   so with S_RD == L (full) spine slot j IS pass position j and a spine cycle is one pass: the tap is ONE data register
+//   (8,192 b) + tags {beat, pass} + obase (~8.45k flops), no rotation, no hold; a mis-aligned arrival raises o_fo.  With
+//   S_RD < L (reduced only) the pass spans L / S_RD cycles and the tap assembles it (rotation + hold, as 230a8ca0f).
+//   Position 2b / 2b + 1 go to engine b over equal-depth relays (the slab), so every engine runs in lockstep.
 // ENGINE b (b a registered config pin): pin flops; low half held until the high half of its pass arrives; the block;
 //   writes per pass exactly two rows on its two write slots: its y row on slot 0 (at the block's output), and on slot
 //   1 two cycles later the pair row it owns -- an even engine the q row {q_b+1, q_b}, an odd engine the masked exps
@@ -53,88 +55,125 @@ module ot_s81_su_qbt #(
     reg rr0, rr1;
     always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
     wire rst_n = rr1;
-    // pin flops
-    reg dq_st, dq_fp4; reg [3:0] dq_kind; reg [7:0] dq_jid; reg [S_RD-1:0] dq_v; reg [S_RD*512-1:0] dq_d;
-    always @(posedge clk) begin dq_kind <= dn_kind_i; dq_fp4 <= dn_fp4_i; dq_jid <= dn_jid_i; dq_d <= dn_d_i; end
-    always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; end
-                                           else begin dq_st <= dn_st_i; dq_v <= dn_v_i; end
-    // job context; row numbering: the first row of a QB job is its descriptor (obase), the rest operand rows
-    reg mine, fp4; reg [7:0] jid; reg [13:0] ob; reg [15:0] rcnt;
-    always @(posedge clk or negedge rst_n) begin : jb
-        integer i; reg [15:0] c;
-        if (!rst_n) begin mine <= 1'b0; fp4 <= 1'b0; jid <= 8'd0; rcnt <= 16'd0; end
-        else if (dq_st) begin mine <= (dq_kind == K_QB); fp4 <= dq_fp4; jid <= dq_jid; rcnt <= 16'd0; end
-        else begin
-            c = rcnt;
-            for (i = 0; i < S_RD; i = i + 1) if (dq_v[i]) c = c + 16'd1;
-            rcnt <= c;
+    // TAP RATE-ALIGNED (S_RD == L, the full configuration): the controller issues the descriptor row alone (slot 0 of
+    // its own cycle) and then every operand cycle S_RD-full from slot 0 (ot_s81_su_hctl: ph 0 then ph 2, QB never
+    // throttled, rows_in = c * RPB a multiple of S_RD), so operand row index = rcnt - 1 + s with rcnt - 1 = 0 mod L:
+    // spine slot s IS pass position s and every spine cycle is exactly one pass.  No rotation, no hold: the data takes
+    // ONE register (pin flop = registered output, 8,192 b); valid / tags / obase come from a few gates on the control pins.
+    // Any other arrival pattern (a partial operand cycle, a descriptor sharing its cycle) raises o_fo (fault 5).
+    generate if (S_RD == L) begin : g_al
+        reg mine; reg [7:0] jid; reg [15:0] rcnt;
+        wire desc = mine && dn_v_i[0] && rcnt == 16'd0;                      // the descriptor row
+        wire opc  = mine && (|dn_v_i) && !desc;                             // an operand cycle (one pass)
+        wire bad  = (desc && (|dn_v_i[S_RD-1:1])) || (opc && !(&dn_v_i));
+        wire [15:0] ix0 = rcnt - 16'd1;
+        wire [15:0] pp  = (ix0 >> LL) % NPS;
+        always @(posedge clk) begin : dreg
+            integer j;
+            e_d <= dn_d_i;                                                 // the only data register
+            for (j = 0; j < L; j = j + 1) e_t[12 * j +: 12] <= {ix0[LR +: 10], pp[1:0]};
+            if (desc) e_ob <= dn_d_i[13:0];                                 // datapath: no reset
+            if (dn_st_i) e_f4 <= dn_fp4_i;
         end
-    end
-    wire          prm = mine && dq_v[0] && rcnt == 16'd0;              // the descriptor row (slot 0 of the first cycle)
-    wire [13:0]   ob_n = prm ? dq_d[13:0] : ob;
-    always @(posedge clk) ob <= ob_n;                                   // datapath: no reset
-    // per slot: operand-row valid and tag; then a registered rotation by off = (rcnt - 1) mod L into positions
-    reg  [L-1:0]      sv;
-    reg  [L*512-1:0]  sd;
-    reg  [L*12-1:0]   st;
-    always @(*) begin : sl
-        integer s; reg [15:0] ix, pp;
-        sv = 0; sd = 0; st = 0;
-        for (s = 0; s < S_RD; s = s + 1) begin
-            ix = rcnt + s - 16'd1;
-            sv[s] = mine && dq_v[s] && (rcnt != 16'd0 || s != 0);
-            sd[512 * s +: 512] = dq_d[512 * s +: 512];
-            pp = (ix >> LL) % NPS;
-            st[12 * s +: 12] = {ix[LR +: 10], pp[1:0]};
-        end
-    end
-    wire [LL-1:0] off = rcnt[LL-1:0] - 1'b1;
-    // rotate left by off rows: position (s + off) mod L <- slot s (a log2(L)-level barrel, 1 row = 525 b)
-    localparam integer RB = 512 + 12 + 1;
-    reg [L*RB-1:0] rv [0:LL];
-    always @(*) begin : rot
-        integer s, k;
-        for (s = 0; s < L; s = s + 1) rv[0][RB * s +: RB] = {sv[s], st[12 * s +: 12], sd[512 * s +: 512]};
-        for (k = 0; k < LL; k = k + 1)
-            for (s = 0; s < L; s = s + 1)
-                rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
-    end
-    // pass assembly: with off != 0 a pass's L rows straddle two spine cycles; the early rows wait in a hold register so
-    // every position of a pass leaves in ONE cycle (the engines run in lockstep: the pair exchange and the write slots
-    // depend on it). The pass completes when its last position (L - 1) arrives; rows of the next pass arriving in that
-    // cycle are held.
-    wire [L-1:0] iv;
-    wire [L-1:0] same;
-    wire [11:0]  tl = rv[LL][RB * (L - 1) + 512 +: 12];
-    wire         done = iv[L - 1];
-    genvar gj;
-    generate for (gj = 0; gj < L; gj = gj + 1) begin : g_as
-        assign iv[gj] = rv[LL][RB * gj + 524];
-        assign same[gj] = iv[gj] && rv[LL][RB * gj + 512 +: 12] == tl;
-    end endgenerate
-    reg [L-1:0] hv; reg [L*512-1:0] hd; reg [L*12-1:0] ht;
-    always @(posedge clk) begin : oreg
-        integer j;
-        for (j = 0; j < L; j = j + 1) begin
-            e_d[512 * j +: 512] <= same[j] ? rv[LL][RB * j +: 512] : hd[512 * j +: 512];
-            e_t[12 * j +: 12] <= same[j] ? rv[LL][RB * j + 512 +: 12] : ht[12 * j +: 12];
-            if (iv[j] && !(done && same[j])) begin hd[512 * j +: 512] <= rv[LL][RB * j +: 512];
-                                                   ht[12 * j +: 12] <= rv[LL][RB * j + 512 +: 12]; end
-        end
-        e_ob <= ob_n; e_f4 <= fp4;
-    end
-    always @(posedge clk or negedge rst_n) begin : vreg
-        integer j;
-        if (!rst_n) begin e_v <= 0; hv <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; end
-        else begin
-            for (j = 0; j < L; j = j + 1) begin
-                e_v[j] <= done && (same[j] || hv[j]);
-                if (iv[j] && !(done && same[j])) hv[j] <= 1'b1;
-                else if (done) hv[j] <= 1'b0;
+        always @(posedge clk or negedge rst_n) begin : creg
+            integer j;
+            if (!rst_n) begin
+                mine <= 1'b0; jid <= 8'd0; rcnt <= 16'd0; e_v <= 0;
+                o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0;
+            end else begin
+                if (dn_st_i) begin mine <= (dn_kind_i == K_QB); jid <= dn_jid_i; rcnt <= 16'd0; end
+                else if (desc) rcnt <= 16'd1;
+                else if (opc) rcnt <= rcnt + S_RD;
+                for (j = 0; j < L; j = j + 1) e_v[j] <= opc && !dn_st_i;
+                o_fu <= 1'b0; o_fo <= bad && !dn_st_i; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0;
+                o_rjid <= jid;
             end
-            o_fu <= 1'b0; o_fo <= done && !(&(same | hv)); o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
         end
-    end
+    end else begin : g_asm
+    // TAP ASSEMBLING (S_RD < L, the reduced configuration only: a pass spans L / S_RD spine cycles)
+        // pin flops
+        reg dq_st, dq_fp4; reg [3:0] dq_kind; reg [7:0] dq_jid; reg [S_RD-1:0] dq_v; reg [S_RD*512-1:0] dq_d;
+        always @(posedge clk) begin dq_kind <= dn_kind_i; dq_fp4 <= dn_fp4_i; dq_jid <= dn_jid_i; dq_d <= dn_d_i; end
+        always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; end
+                                               else begin dq_st <= dn_st_i; dq_v <= dn_v_i; end
+        // job context; row numbering: the first row of a QB job is its descriptor (obase), the rest operand rows
+        reg mine, fp4; reg [7:0] jid; reg [13:0] ob; reg [15:0] rcnt;
+        always @(posedge clk or negedge rst_n) begin : jb
+            integer i; reg [15:0] c;
+            if (!rst_n) begin mine <= 1'b0; fp4 <= 1'b0; jid <= 8'd0; rcnt <= 16'd0; end
+            else if (dq_st) begin mine <= (dq_kind == K_QB); fp4 <= dq_fp4; jid <= dq_jid; rcnt <= 16'd0; end
+            else begin
+                c = rcnt;
+                for (i = 0; i < S_RD; i = i + 1) if (dq_v[i]) c = c + 16'd1;
+                rcnt <= c;
+            end
+        end
+        wire          prm = mine && dq_v[0] && rcnt == 16'd0;              // the descriptor row (slot 0 of the first cycle)
+        wire [13:0]   ob_n = prm ? dq_d[13:0] : ob;
+        always @(posedge clk) ob <= ob_n;                                   // datapath: no reset
+        // per slot: operand-row valid and tag; then a registered rotation by off = (rcnt - 1) mod L into positions
+        reg  [L-1:0]      sv;
+        reg  [L*512-1:0]  sd;
+        reg  [L*12-1:0]   st;
+        always @(*) begin : sl
+            integer s; reg [15:0] ix, pp;
+            sv = 0; sd = 0; st = 0;
+            for (s = 0; s < S_RD; s = s + 1) begin
+                ix = rcnt + s - 16'd1;
+                sv[s] = mine && dq_v[s] && (rcnt != 16'd0 || s != 0);
+                sd[512 * s +: 512] = dq_d[512 * s +: 512];
+                pp = (ix >> LL) % NPS;
+                st[12 * s +: 12] = {ix[LR +: 10], pp[1:0]};
+            end
+        end
+        wire [LL-1:0] off = rcnt[LL-1:0] - 1'b1;
+        // rotate left by off rows: position (s + off) mod L <- slot s (a log2(L)-level barrel, 1 row = 525 b)
+        localparam integer RB = 512 + 12 + 1;
+        reg [L*RB-1:0] rv [0:LL];
+        always @(*) begin : rot
+            integer s, k;
+            for (s = 0; s < L; s = s + 1) rv[0][RB * s +: RB] = {sv[s], st[12 * s +: 12], sd[512 * s +: 512]};
+            for (k = 0; k < LL; k = k + 1)
+                for (s = 0; s < L; s = s + 1)
+                    rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
+        end
+        // pass assembly: with off != 0 a pass's L rows straddle two spine cycles; the early rows wait in a hold register so
+        // every position of a pass leaves in ONE cycle (the engines run in lockstep: the pair exchange and the write slots
+        // depend on it). The pass completes when its last position (L - 1) arrives; rows of the next pass arriving in that
+        // cycle are held.
+        wire [L-1:0] iv;
+        wire [L-1:0] same;
+        wire [11:0]  tl = rv[LL][RB * (L - 1) + 512 +: 12];
+        wire         done = iv[L - 1];
+        genvar gj;
+        for (gj = 0; gj < L; gj = gj + 1) begin : g_as
+            assign iv[gj] = rv[LL][RB * gj + 524];
+            assign same[gj] = iv[gj] && rv[LL][RB * gj + 512 +: 12] == tl;
+        end
+        reg [L-1:0] hv; reg [L*512-1:0] hd; reg [L*12-1:0] ht;
+        always @(posedge clk) begin : oreg
+            integer j;
+            for (j = 0; j < L; j = j + 1) begin
+                e_d[512 * j +: 512] <= same[j] ? rv[LL][RB * j +: 512] : hd[512 * j +: 512];
+                e_t[12 * j +: 12] <= same[j] ? rv[LL][RB * j + 512 +: 12] : ht[12 * j +: 12];
+                if (iv[j] && !(done && same[j])) begin hd[512 * j +: 512] <= rv[LL][RB * j +: 512];
+                                                       ht[12 * j +: 12] <= rv[LL][RB * j + 512 +: 12]; end
+            end
+            e_ob <= ob_n; e_f4 <= fp4;
+        end
+        always @(posedge clk or negedge rst_n) begin : vreg
+            integer j;
+            if (!rst_n) begin e_v <= 0; hv <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; end
+            else begin
+                for (j = 0; j < L; j = j + 1) begin
+                    e_v[j] <= done && (same[j] || hv[j]);
+                    if (iv[j] && !(done && same[j])) hv[j] <= 1'b1;
+                    else if (done) hv[j] <= 1'b0;
+                end
+                o_fu <= 1'b0; o_fo <= done && !(&(same | hv)); o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
+            end
+        end
+    end endgenerate
 endmodule
 
 module ot_s81_su_qbe #(
