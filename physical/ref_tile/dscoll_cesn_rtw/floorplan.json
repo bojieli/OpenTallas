@@ -19,12 +19,14 @@
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
-  "pg_layer": "M6",
+  "pg_layer": "M5",
   "rlayers": [
    "M2",
-   "M6"
+   "M5"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
  },
  "pins": {
   "N": [
@@ -119,6 +121,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib",

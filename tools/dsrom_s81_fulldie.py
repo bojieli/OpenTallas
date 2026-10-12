@@ -4377,7 +4377,7 @@ HSRC_BUSES = (('wfc', 'hrsrc', 36, 't_hep', 'f_hep'),
               ('hrsrc', 'collective', 515, 't_hp', 'f_mhs'), ('collective', 'hrsrc', 1, 't_mhsg', 'f_hpg'))
 HSRC_HOST_BUSES = (('hrsrc', 'host', 2, 't_flt', 'f_hsrc_flt'),)
 HROW = False                    # --hrow (mtp-dsbind 2026-10-10): with --seedl, the main-hidden row store dsfd_mtp_hrow
-HROW_UM = (2998.08, 1438.56)     #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
+HROW_UM = (2998.08, 1769.04)     #   contract physical/s81_ph_views/specs/dsfd_mtp_hrow.json (SE service slot, N-face ports)
 HROW_TOP_REF = 950.4            # el1011-ds-mtp rev 3 (30 hardened banks): the store grows DOWN into the slot's free PHY / ctrl
                                 #   space; its N face (pins, the end-block corridor above it) stays where the 950.4 um store had it
 # the seed client reads the row store, not the VM; the 3 part links arrive from the collective's MTP part lanes

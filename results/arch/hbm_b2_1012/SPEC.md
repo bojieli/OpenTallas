@@ -1,6 +1,6 @@
 # HBM die B2: quadrant-local VM slices (spec, 2026-10-12)
 
-**Status: v0.6 (10-12 08:30 PT; v0.6 = IDX.INDEX gets a WIDE lanestation slot (slot 5) on slice SW, operand placement rule IDX-P; v0.5 = HC weight aperture MOVED to 294,912-360,447 (REPL keeps 262,144-294,911), COLL star edge and ring channel adopted as built; v0.4 = GRT gate PASSED (section 7), ring physical channel settled against the built VM-slice RTL, coll_tkm kept, contract v9 proposal in section 6; v0.3 = section 5.0 budget counts EXPOSED cycles + bandwidth sizing; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
+**Status: v0.7 (10-12 PT; v0.7 = HC x lanes settled by the HC tile stream (02c9777e0): 8 x 150-b lanes a quarter (4 a tile, 2 tiles a quarter), 1,200 + 16 b, replacing the 2 x 278-b TBD; compiler rule F4 (x transposed in the local / mirrored region); cut re-check in section 6a; v0.6 = IDX.INDEX gets a WIDE lanestation slot (slot 5) on slice SW, operand placement rule IDX-P; v0.5 = HC weight aperture MOVED to 294,912-360,447 (REPL keeps 262,144-294,911), COLL star edge and ring channel adopted as built; v0.4 = GRT gate PASSED (section 7), ring physical channel settled against the built VM-slice RTL, coll_tkm kept, contract v9 proposal in section 6; v0.3 = section 5.0 budget counts EXPOSED cycles + bandwidth sizing; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
 are marked TBD. The windowed hub GRT gate PASSED (section 7: window overflow -89.7 % vs v8). Changes after the gate are versioned here and
 announced in `claude-takeover-20261007/el1011-hbm-b2.log`.
 
@@ -76,7 +76,7 @@ tree of 2 x 1,088 b; the star adds about 4.2 kb on the y = 14 mm line and is re-
 **SM.MATVEC x load and attention.** D19 used to put the x load on lgE slot 0. Now each slice feeds its own
 quadrant's `hb_vm_<q>` (x read, 2,065 + 129 b), and attention q / p reads attach to the local slice.
 
-**HC aperture.** Each slice → its own HC quarter: 556 + 4 b (the 2,224-b aperture split by quarter).
+**HC x lanes (v0.7).** Each slice → its own HC quarter: 8 lanes x 150 b = 1,200 b, plus 16 b back (`xl_cr` 8 + `xl_done` 8). v0.6 had 556 + 4 b (2 x 278).
 
 **DMA.** The loader becomes per-quadrant: `lq_<q>` / `lr_<q>` from its svc band end at slice q. The wide 8,992-b
 `vmw` and 8,257-b `vmr2` buses disappear from the spine. Their bandwidth is unchanged at 8 lanes x 4 slices.
@@ -178,9 +178,14 @@ protocols are unchanged; only the lane count goes 32 → 8.
   whose operands break this rule.
 - TBD: whether attention takes its own station or shares the SU station (attention stream).
 
-**HC aperture a quarter.** `vmap_<q>` is 556 b (2 lanes x 278), plus `vmap_<q>_r` of 4 b (ap credit 2 + done 2).
-- The HC tile's `xw_*` / aperture port is fed from its local slice; lane k = local bank k mod 8, 2 lanes a quarter.
-- TBD: the HC stream confirms 2 vs 4 lanes.
+**HC x lanes a quarter (v0.7, settled by the HC tile stream, `claude/el1011-hcvm-hc4` 02c9777e0).** The v0.6 TBD (2 vs 4 lanes) is closed:
+- **Count.** Each `ot_hgi_hc_tile` writes both of its x macros in one wave, two half rows each. That is 4 lanes a tile. A quarter has 2 tiles (8 a die), so it has **8 lanes**: lane l = 4 t + 2 m + h (tile t, x macro m, half row h), and lane l ↔ local bank l (= sector[2:0]). Each bank feeds exactly one lane.
+- **Width.** `vmap_<q>` is **8 x 150 = 1,200 b**. A lane is `{v 1, sector 13 = {0, macro 1, row 10, half 1}, 8 x bf16 128, word mask 8}`. It is the 278-b aperture lane with the low half of each fp32 word dropped, because HC uses x as bf16 (= word[31:16]). The slice's HC station drops those halves, so only 150 b a lane cross the die. The return `vmap_<q>_r` is 16 b: `xl_cr[8]` pulses on the edge a lane's sector is captured (pin flop; one sector a lane every edge) and `xl_done[8]` on the edge it is written.
+- **Tile side.** The lane pin flops merge into one macro row write, with the same latency as the old `xw_*`. The tile face carries 600 lane pins + 8 back, against 566 for `xw_*`.
+- **Weights do not use these lanes.** The SYS tile path takes its weights from the HBM lanes (`ot_hgi_hc_unit` HSRC 0). The HC aperture range (`HCAP_*`, section 2) stays reserved in the address map.
+- **Faults (fail closed).** The tile raises `t_flt` and the HC record faults when a lane's sector does not match its lane (macro, half: `sector & ~0x7FE` must equal `{0, m, 0, h}`), or when the two lanes of one macro name different rows in the same edge. No partial write is committed silently.
+- **Mutant.** `MUT_XL` swaps the two half rows of a macro write. The tile bench must FAIL under it (job `hc_tile_xl-c2-8612208d7` judges `mut_xl` with a FAIL regex), which shows the lane-to-half mapping is observable.
+- **Placement.** The compiler places x by rule F4 (section 5a).
 
 **Packet clients (cq / cr)** are unchanged: 338 / 274 b, OUT = 4, responses in order. A client is wired to its local
 slice, or the nearest one for central units. The slice forwards a non-local address over the ring.
@@ -353,6 +358,7 @@ holds only after the following three fixes:
 |---|---|---|---|
 | F1 | SM.MATVEC reads x from a remote slice | Every MATVEC input x (and every vector read by more than one cluster: norms, residual, HC state) is allocated in **REPL**. The producer streams it into all 4 mirrors as it produces it: its own slice locally, the other 3 over the ring at 64 words a cycle a link. SMs read only their local mirror, so remote x reads = 0. The consumer gates per sector on the mirror scoreboard (R1). | tail of the last remote sector ≤ 1 farthest hop (~12-23 cycles), only when the producer is a remote cluster's record |
 | F2 | remote SU.VOP operands (Qwen) | **Partition alignment.** All operands and the result of an elementwise SU / SFU / HC op use the SAME 4-way quadrant partition: element range `[q*N/4, (q+1)*N/4)` in slice q, or REPL. The exporter refuses a VOP whose operands are partitioned differently. Each SU quarter works on its own range, so remote SU operands = 0. Reductions inside a VOP use the section 4 ordered carry. | 0 for elementwise; one carry chain (3 hops, streamed) for a reduction |
+| F4 (v0.7) | HC x writes would otherwise need a gather or remote read | **Transposed x for HC.** An HC record's x (the vector that its tiles stage into their x macros) goes in **REPL** (the local mirror) or in the quarter's **local region**, laid out TRANSPOSED: one VM sector = one half row of one x macro of one tile, i.e. tile lanes 16 m + 8 h .. 16 m + 8 h + 7 of x row r, as 8 fp32 words (bf16 in [31:16]). The sector index puts tile t, macro m, half h in local bank 4 t + 2 m + h (sector[2:0]), and the row in the upper bits, so the 8 banks drive the 8 lanes in parallel, one row a cycle. The exporter writes the transposed copy as the producer streams x (as F1 does for REPL), and refuses an HC record whose x is untransposed, remote, or bank-misaligned. With F2's partition, the HC quarter's x is then local or mirrored. | 0: every x lane is a local-bank sector |
 | F3 | COLL.ALL_GATHER / GROUP_REDUCE_MCAST result broadcast is bandwidth-limited | Size the broadcast for the gather payload. (a) The width is 64 words a cycle a slice: 2,048-b data edges, more than 9 links x ~5.2 words a cycle of aggregate link arrival, so the broadcast never back-pressures the links. (b) It is a cut-through star from coll: every slice is 1 hop (coll sits on the spine between the 4 slices, ≤ ~3.5 mm, ≤ 8 stages). (c) It overlaps the gather arrival, so only the last flit's hop is exposed. | ≤ 1 hop (≤ ~10 cycles) + 1 sector |
 
 **Re-estimate with the fixes.** Records a layer come from the measured vectors. The critical shares are those of
@@ -408,7 +414,7 @@ In their place:
 - COLL broadcast `vcb_*` (1,088 + 2 b, 4 edges);
 - ring-client taps `vrc_{cp,att,q,hce}_*` (4,452 b);
 - x-load `vxl_<q>` (2,065 + 129 b);
-- `vmap_<q>` (556 + 4 b).
+- `vmap_<q>` (556 + 4 b; **v0.7: 1,200 + 16 b**, 8 HC x lanes, section 2a).
 
 **D-B2-3.** Removed: `hgi_vmw_dma` (+ rdy / done), `hgi_vmr2_dma` (+ _r) and `hgi_vmw2_coll` (+ _r). `lq_<q>` /
 `lr_<q>` re-terminate at `hb_vms_<q>`.
@@ -444,6 +450,31 @@ weight aperture moves from 262,144-327,679 to 294,912-360,447 (same 65,536 words
 is 39,863 b at 0.55 with the v0.1 ring (8,592 b) and tree (2,176 b). v9 adds ≈ +0.3 kb (ring) and ≈ +2.1 kb (star):
 ≈ 42.3 kb, **≈ 0.58**, inside the 0.55-0.60 target. Both full centre lines stay ≤ 0.08. The next die GRT runs with
 the star and the v9 ring to confirm.
+
+**Cut re-check v0.7 (HC x lanes 8 x 150 + 16 a quarter).** Script: `results/arch/hbm_b2_1012/cuts_v07.py`. It uses the same segment
+count and capacity model as `cuts.py`, applied directly to the `r25gqn_b2` die network with the v9 ring (2,224 b) and the
+COLL star (4 x 2,130 b). It also adds one perpendicular cut through every slice → HC quarter segment. Records are in
+`cuts_v07.json` and `cuts_v07_y_extra.json`.
+
+| cut (window) | v0.6 (556 + 4) | **v0.7 (1,200 + 16)** | vmap bits on the cut |
+|---|---:|---:|---:|
+| vmap_SE (x 19.3 mm) | 0.334 | **0.349** (worst slice → HC) | 1,216 |
+| vmap_SW / NW / NE | 0.271 / 0.229 / 0.288 | 0.282 / 0.241 / 0.303 | 1,216 each |
+| x 12 / x 13 hub | 0.238 / 0.358 | 0.251 / 0.370 | 2,432 |
+| y 10 hub | 0.457 | 0.462 | 1,216 |
+| x 15 spine | 0.317 | 0.317 | 0 |
+| y 16 hub (x 12-18) | 0.764 | 0.770 | 1,216 |
+| y 15.1 / y 16.9 hub (just outside the NW / NE slices) | | 0.455 / 0.276 | |
+
+- The extra lanes add at most +0.015 on any cut, and every slice → HC cut stays ≤ 0.35.
+- The one line above 0.60, **y = 16 mm, is not caused by the HC lanes**: it was 0.764 in v0.6. That line runs through
+  the NW / NE slice bodies just below their centres (y 16,042). The centre-to-centre model therefore counts each slice's
+  own lane-group and ring-client fan-out (`hgi_lgnw_*`, `vrc_cp/att_*`) on it, and only M9 is counted over the blocks.
+  The real channel cuts on either side of the slices are 0.455 (y 15.1) and 0.276 (y 16.9).
+- The worst channel cut is therefore **0.462 (y 10)**, inside the 0.55-0.60 target. No placement, width or relay change
+  is needed for the HC lanes.
+- The y = 16 artifact still points to one thing to confirm in the die GRT: the NW / NE slices must put their
+  local-group and ring-client pins on the faces toward their peers (section 1), not route them through the slice.
 
 ## 7. Results
 

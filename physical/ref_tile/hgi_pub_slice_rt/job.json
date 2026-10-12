@@ -1,5 +1,5 @@
 {
- "name": "hgi_pub_slice_rt-r1-COMMIT",
+ "name": "hgi_pub_slice_rt-r1-3cf6e822e",
  "block": "ot_hgi_sm_pub_slice",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-smmv",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-smmv",
-  "commit": "COMMIT"
+  "commit": "3cf6e822e"
  },
  "stages": {
   "bench": [
@@ -80,7 +80,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_pub_slice_rt/hgi_pub_slice_rt-r1-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_pub_slice_rt/hgi_pub_slice_rt-r1-3cf6e822e"
   }
  ],
  "cycles_added": 0,
