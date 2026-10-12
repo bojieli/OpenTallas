@@ -1,6 +1,6 @@
 # HBM die B2: quadrant-local VM slices (spec, 2026-10-12)
 
-**Status: PROVISIONAL (v0.1, 10-12 04:45 PT).** Streams may build against the constants in section 2a. The open items
+**Status: PROVISIONAL (v0.2, 10-12 05:05 PT; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
 are marked TBD. The windowed hub GRT gate (section 7) is still running. Changes after the gate are versioned here and
 announced in `claude-takeover-20261007/el1011-hbm-b2.log`.
 
@@ -59,8 +59,10 @@ channel adjustment 0.5, `PYTHONHASHSEED=0`. Results are in section 7.
 - `ot_fwd_link_stage` relays at ≤ 500 um;
 - stage counts (generator relay count + 2 face flops) are in section 7.
 
-**COLL broadcast** (replaces `hgi_vmw2_coll`, 8,961 b): a tree `coll` → SW, SE → NW, NE. Each edge is 1,088 b
-(an 8-lane sector group + header) plus a 2-b credit.
+**COLL broadcast** (replaces `hgi_vmw2_coll`, 8,961 b). **v0.2:** a STAR from `coll` to all 4 slices, one hop each
+(the v0.1 2-hop tree doubled the tail). Each edge is 2,112 b (8 sectors = 64 words a cycle, plus header) plus a 2-b
+credit. The edge is sized for the gather payload, as section 5 explains. The running GRT gate still models the v0.1
+tree of 2 x 1,088 b; the star adds about 4.2 kb on the y = 14 mm line and is re-checked in the next GRT.
 
 **Ring clients.** The central units are 8-lane ring clients of one slice's ring stop (tap 4,452 b):
 
@@ -176,8 +178,11 @@ slice, or the nearest one for central units. The slice forwards a non-local addr
 - deadlock freedom: the ring is a 4-node cycle, so RD_REQ, RD_RSP and WR traffic use 2 virtual channels (request and
   response) with separate credits (dateline at the SW-SE link).
 
-**COLL broadcast.** `vcb` is 1,088 b: `{v, sector_addr 15, data 1,024 (4 sectors), mask 32, epoch 4, …}` plus a 2-b
-credit. Tree: coll → SW → NW, and coll → SE → NE. It writes REPL (or the owning slice) without a barrier.
+**COLL broadcast.** `vcb` (v0.2) is 2,112 b a slice: `{v, sector_addr 15, data 2,048 (8 sectors), mask 64, epoch 4, …}`
+plus a 2-b credit. It is a star, coll → each slice in one hop.
+- **Cut-through.** Each sector is forwarded as it arrives from the links. The broadcast never stores and forwards a
+  whole record.
+- It writes REPL (or the owning slice) without a barrier.
 
 **Ring-client tap** (cmdproc CP → NW, ATT adapter → NE, quant → NW, hc_eng → SE). It is the 8-lane tap above
 (4,452 b). Remote banks are reached through the ring.
@@ -255,6 +260,71 @@ streamed. The study's bound is 16 cycles a record with a remote operand.
 | overlap credit (SU local lanes, 8 cycles x 1,356 SU.VOP x 0.78 share) | -212 / layer (-1.5 %) | n/a |
 
 The budget passes when the measured exposed cycles a layer (R4) are ≤ 2.0 % of layer time on DS and ≤ 0.3 % on Qwen.
+
+### 5a. Measured OLD-VM traffic and the three structural fixes (v0.2, b2verif main 89610e018)
+
+**What was measured.** The B2 verification harness (`results/rtl/comp_regress/b2_traffic_1012/`, `tb_hgi_e2e` B2 = 1)
+used TODAY's allocator addresses with owner-computes placement. The exposed ring cycles a layer were:
+- DS: 3,082-5,760 (10-20x the 290 budget; on layer bases of 11.6k-30.5k cycles);
+- Qwen L0: about 6.5k (70x the 93 budget).
+
+**Drivers in DS L2** (exposed / serial cycles):
+- SM.MATVEC 1,968: remote x reads;
+- COLL.ALL_GATHER 1,599 over 17 records: 33,744 broadcast words, charged as store-and-forward at 32 words a cycle;
+- GROUP_REDUCE_MCAST 448: 12,288 broadcast words;
+- TOPK_MERGE 80.
+
+The Qwen driver is remote SU.VOP operands.
+
+These are the costs the B2 allocator and broadcast must remove. They are not B2's cost, but the -0.5 to -2 % claim
+holds only after the following three fixes:
+
+| # | driver | rule (binding for the compiler, exporter, cmdproc and coll) | residual exposure a record |
+|---|---|---|---|
+| F1 | SM.MATVEC reads x from a remote slice | Every MATVEC input x (and every vector read by more than one cluster: norms, residual, HC state) is allocated in **REPL**. The producer streams it into all 4 mirrors as it produces it: its own slice locally, the other 3 over the ring at 64 words a cycle a link. SMs read only their local mirror, so remote x reads = 0. The consumer gates per sector on the mirror scoreboard (R1). | tail of the last remote sector ≤ 1 farthest hop (~12-23 cycles), only when the producer is a remote cluster's record |
+| F2 | remote SU.VOP operands (Qwen) | **Partition alignment.** All operands and the result of an elementwise SU / SFU / HC op use the SAME 4-way quadrant partition: element range `[q*N/4, (q+1)*N/4)` in slice q, or REPL. The exporter refuses a VOP whose operands are partitioned differently. Each SU quarter works on its own range, so remote SU operands = 0. Reductions inside a VOP use the section 4 ordered carry. | 0 for elementwise; one carry chain (3 hops, streamed) for a reduction |
+| F3 | COLL.ALL_GATHER / GROUP_REDUCE_MCAST result broadcast is bandwidth-limited | Size the broadcast for the gather payload. (a) The width is 64 words a cycle a slice: 2,048-b data edges, more than 9 links x ~5.2 words a cycle of aggregate link arrival, so the broadcast never back-pressures the links. (b) It is a cut-through star from coll: every slice is 1 hop (coll sits on the spine between the 4 slices, ≤ ~3.5 mm, ≤ 8 stages). (c) It overlaps the gather arrival, so only the last flit's hop is exposed. | ≤ 1 hop (≤ ~10 cycles) + 1 sector |
+
+**Re-estimate with the fixes.** Records a layer come from the measured vectors. The critical shares are those of
+`tok_model.json`.
+
+DS (a layer of 14,139 cycles, S2):
+
+| source | exposed cycles a layer |
+|---|---:|
+| ALL_GATHER: 17 x 10 | 170 |
+| REPL x tails: about 4 x-producing records x 12 | 48 |
+| GROUP_REDUCE_MCAST + TOPK_MERGE: 2 x 10 | 20 |
+| **total** | **≈ 238 = 1.7 %** (within the 2.0 % budget) |
+
+- Critical (shares 0.70 / 0.51 / 1.0): about 175 cycles = 1.2 % → about 2,095 tok/s.
+- With the SU local-lane saving (-1.5 %): about 2,110-2,125 tok/s, i.e. -0.7 % to +0.1 % against 2,121.8.
+- Without F1-F3, the measured OLD-VM traffic gives +3.1-5.8k cycles a layer: 1,500-1,700 tok/s (-20 to -30 %). Do NOT
+  adopt B2 without F1-F3.
+
+Qwen (a layer of 35,253 cycles):
+
+| source | exposed cycles a layer |
+|---|---:|
+| REPL x tails: 4 MATVEC inputs a layer x 12 | 48 |
+| ALL_REDUCE broadcast: 2 x 10 | 20 |
+| SU.VOP (F2) | 0 |
+| **total** | **≈ 68 = 0.19 %** → about 943-945 tok/s (budget 93 = 0.27 %) |
+
+**Acceptance (R4).** The harness reruns with the B2 allocator (`cluster` field per vector, REPL placement, F2
+alignment) and the v0.2 broadcast parameters:
+
+| parameter | value |
+|---|---|
+| `bcast_bits` | 2,048 |
+| `bcast_hops` | 1 |
+| `ring_link_bits` | 2,048 |
+| `ring_hop_cycles` | 12 vertical / 11 horizontal (planned), measured in the RTL bench |
+
+Pass criteria: DS ≤ 290 and Qwen ≤ 93 exposed cycles a layer, on every vector in `b2_traffic_1012`.
+
+**TBD (compiler stream).** The REPL census (words of replicated vectors live at once), which confirms that
+MIRROR_W = 32,768 holds them.
 
 ## 6. Contract v9 delta (proposal to the HBM die lead)
 
