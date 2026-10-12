@@ -3,17 +3,23 @@
 #   run_bench_stream_tput.sh <out dir> [fam SW|NE] [segdir seg_psfc|seg_ps] [mut]
 # Builds one binary per (fam, segdir, mut) and runs the phase / credit sweep; summary in <out>/summary.txt.
 # mut=slot: the PS sector slot ignores the row's bank XOR (run_bench_ps.sh neg_slot) -> must FAIL.
+# mut=rob: the per-PC reorder buffer drains without waiting for the sector (tputx-svc) -> must FAIL.
 # (run from the source snapshot root)
 set -u
 O=$1; FAM=${2:-SW}; SD=${3:-seg_psfc}; MUT=${4:-}
 V=physical/hbm_accel_die_views/svc; T=$V/tb
 mkdir -p $O
-LIB="rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv $V/rtl/ot_hbm_svc_core.sv $V/rtl/ot_hbm_svc_seg_lib.sv"
+LIB="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv $V/rtl/ot_hbm_svc_core.sv $V/rtl/ot_hbm_svc_seg_lib.sv"
 PSLIB=$V/rtl/ot_hbm_svc_ps_lib.sv
 if [ "$MUT" = slot ]; then
   sed 's/wire \[1:0\] slot = bb_r\[1:0\] ^ rr\[1:0\];/wire [1:0] slot = bb_r[1:0];/' $PSLIB > $O/ps_mut_slot.sv
   cmp -s $O/ps_mut_slot.sv $PSLIB && { echo "slot mutant not applied" >> $O/summary.txt; exit 2; }
   PSLIB=$O/ps_mut_slot.sv
+fi
+if [ "$MUT" = rob ]; then   # tputx-svc: the ROB drains a sector without waiting for it to land -> must FAIL under reorder
+  sed 's/wire dr = dact \&\& rv\[gd\] \&\& /wire dr = dact \&\& /' $PSLIB > $O/ps_mut_rob.sv
+  cmp -s $O/ps_mut_rob.sv $PSLIB && { echo "rob mutant not applied" >> $O/summary.txt; exit 2; }
+  PSLIB=$O/ps_mut_rob.sv
 fi
 if [ $FAM = NE ]; then SEGS="$V/rtl/$SD/hfd_svc_SE_s[0-9].sv $V/rtl/$SD/hfd_svc_NE_seg.sv"; DEF=-DFAM_NE
 else SEGS="$V/rtl/$SD/hfd_svc_SW_s[0-9].sv $V/rtl/$SD/hfd_svc_SW_seg.sv"; DEF=; fi
