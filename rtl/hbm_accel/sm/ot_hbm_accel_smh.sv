@@ -3054,6 +3054,28 @@ module ot_hbm_accel_smh_pt_w #(parameter integer TAGW = 16, parameter integer NB
     output wire [6+TAGW+788+1+7-1:0] rl1_n, output wire [7+NBEAT+2048:0] bk1_n, output wire [NBEAT-1:0] ohl1_n,
     output wire [6+TAGW+788+1+7-1:0] rl1_s, output wire [7+NBEAT+2048:0] bk1_s, output wire [NBEAT-1:0] ohl1_s
 );
+    // output hold-delay stage (el1012-hbm T5, smh_pt_w_ref_p45-lf NEEDS_RTL FF -13.53 -> -4.53 after a 12,470-cell hold ECO):
+    // every output is flop Q -> output buffer -> port (~75-85 ps FF), and the die-context output-min contract asks for
+    // clk->port >= (L_min - L_launch) + 50 hold skew + 25 uncertainty; launch flops on the early leaves (287-295 ps vs the
+    // 299 ps reference) miss by 3-14 ps on ~6,000 bits, a residue the post-route ECO cannot place in the above-only pin band.
+    // One dont_touch'ed HB4xp67 per output bit (ot_hdly N=1, ~38 ps FF, spec route.hold_delay) is sender-owned hold by
+    // construction inside this tile's own 0.2 T output budget (TT output setup +79.6 ps before it); a wire in simulation.
+    localparam integer RBW_O = 6 + TAGW + 788 + 1 + 7, BBW_O = 7 + NBEAT + 2048 + 1;
+    wire [2*RBW_O-1:0] rpm_q; wire [BBW_O-1:0] bm_q, bk1_n_q, bk1_s_q; wire [RBW_O-1:0] rl1_n_q, rl1_s_q;
+    wire [NBEAT-1:0] ohl1_n_q, ohl1_s_q;
+`ifdef OT_SMH_PTW_OHDLY
+    localparam integer OHN = 1;
+`else
+    localparam integer OHN = 0;
+`endif
+    ot_hdly #(.W(2*RBW_O), .N(OHN)) u_hdly_orpm (.a(rpm_q), .y(rpm));
+    ot_hdly #(.W(BBW_O), .N(OHN)) u_hdly_obm (.a(bm_q), .y(bm));
+    ot_hdly #(.W(RBW_O), .N(OHN)) u_hdly_orln (.a(rl1_n_q), .y(rl1_n));
+    ot_hdly #(.W(RBW_O), .N(OHN)) u_hdly_orls (.a(rl1_s_q), .y(rl1_s));
+    ot_hdly #(.W(BBW_O), .N(OHN)) u_hdly_obkn (.a(bk1_n_q), .y(bk1_n));
+    ot_hdly #(.W(BBW_O), .N(OHN)) u_hdly_obks (.a(bk1_s_q), .y(bk1_s));
+    ot_hdly #(.W(NBEAT), .N(OHN)) u_hdly_oohn (.a(ohl1_n_q), .y(ohl1_n));
+    ot_hdly #(.W(NBEAT), .N(OHN)) u_hdly_oohs (.a(ohl1_s_q), .y(ohl1_s));
     localparam integer CW = 6 + TAGW, XW = 7, RBW = CW + 788 + 1 + XW, BBW = 1 + XW + NBEAT + 2048;
     wire rw_n;
 `ifdef OT_SMH_RSTRELAY
@@ -3065,21 +3087,21 @@ module ot_hbm_accel_smh_pt_w #(parameter integer TAGW = 16, parameter integer NB
     generate for (j = 0; j < 2; j = j + 1) begin : g_r
         wire [RBW-1:0] rp;
         ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rp (.clk(clk), .rst_n(rw_n), .d(rin[j*RBW +: RBW]), .q(rp));
-        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpm (.clk(clk), .rst_n(rw_n), .d(rp), .q(rpm[j*RBW +: RBW]));
+        ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rpm (.clk(clk), .rst_n(rw_n), .d(rp), .q(rpm_q[j*RBW +: RBW]));
     end endgenerate
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rln (.clk(clk), .rst_n(rw_n), .d(rin[0 +: RBW]), .q(rl1_n));
-    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rls (.clk(clk), .rst_n(rw_n), .d(rin[RBW +: RBW]), .q(rl1_s));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rln (.clk(clk), .rst_n(rw_n), .d(rin[0 +: RBW]), .q(rl1_n_q));
+    ot_hbm_accel_smh_bundle_reg #(.W(RBW), .V(CW-2), .NV(2), .X(XW)) u_rls (.clk(clk), .rst_n(rw_n), .d(rin[RBW +: RBW]), .q(rl1_s_q));
     wire [BBW-1:0] bl;
     ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blv (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bl[BBW-1]));
     ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bld (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bl[BBW-2:0]));
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvm (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bl[BBW-1]), .q(bm[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldm (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bm[BBW-2:0]));
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bk1_n[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bk1_n[BBW-2:0]));
-    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[2048 +: NBEAT]), .q(ohl1_n));
-    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bk1_s[BBW-1]));
-    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bk1_s[BBW-2:0]));
-    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[2048 +: NBEAT]), .q(ohl1_s));
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_blvm (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bl[BBW-1]), .q(bm_q[BBW-1]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bldm (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bl[BBW-2:0]), .q(bm_q[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkvn (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bk1_n_q[BBW-1]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkdn (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bk1_n_q[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohln (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[2048 +: NBEAT]), .q(ohl1_n_q));
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_bkvs (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-1]), .q(bk1_s_q[BBW-1]));
+    ot_hbm_accel_smh_kreg #(.W(BBW-1)) u_bkds (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[BBW-2:0]), .q(bk1_s_q[BBW-2:0]));
+    ot_hbm_accel_smh_kreg #(.W(NBEAT)) u_ohls (.clk(clk), .rst_n(rw_n), .en(1'b1), .d(bin[2048 +: NBEAT]), .q(ohl1_s_q));
 endmodule
 // pt_e: the third (u_rpn / u_bln) and launch (u_rp2 / u_bl2) registers
 module ot_hbm_accel_smh_pt_e #(parameter integer TAGW = 16, parameter integer NBEAT = 13) (
