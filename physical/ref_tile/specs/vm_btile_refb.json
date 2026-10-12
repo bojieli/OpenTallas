@@ -1,0 +1,155 @@
+{
+ "name": "vm_btile_refb",
+ "top": "ot_hgi_vm_btile",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hbm_accel/generic/vm/ot_hgi_vm_btile.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 518.4
+ },
+ "pg_layer": "M6",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_lo",
+   "at": [
+    24.0,
+    24.0
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_hi",
+   "at": [
+    24.0,
+    116.1
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "g_w2?0?.g_on.u_q",
+   "at": [
+    24.0,
+    208.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "g_w2?1?.g_on.u_q",
+   "at": [
+    24.0,
+    307.6
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "g_w2?2?.g_on.u_q",
+   "at": [
+    24.0,
+    407.0
+   ]
+  }
+ ],
+ "pins": {
+  "E": [
+   "gi",
+   "lanes",
+   "w_hit",
+   "w_row",
+   "w_enc",
+   "w_wm"
+  ],
+  "N": [
+   "rq_in",
+   "rr",
+   "w2q_in",
+   "rqh_v",
+   "rqh_m",
+   "rq_cr",
+   "w2h_v",
+   "w2h_m",
+   "w2q_cr",
+   "w2q_done"
+  ],
+  "S": [
+   "u_v",
+   "u_c",
+   "u_d",
+   "u_ce",
+   "u_ue",
+   "bid",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "refglob": "*wh_q*",
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:idle1012 (el1011-hbm-hcvm/vm)",
+  "branch": "claude/el1011-hcvm-vm2",
+  "tag": "b",
+  "purpose": "idle1012 ot_hgi_vm_unit: hard bank tile ot_hgi_vm_btile (RTL 74fdec20c, closed hand-kit hgi_vm_bta2-74fdec20c TT +8.80/FF +12.33 but its view fails child_lint (c) 17,916 OBS on M6/M7 + (f) 97 face pins blocked) re-routed through tools/ref_tile (leaf RLAYERS M2-M6, PG M6, above-only keepout) so ot_hgi_vm_tunit can be built as a ref_tile CLUSTER of 32 hard btiles (fix for flat tunit hgi_vm_tb-ee633319d EARLY_FAIL_HOLD: 152,811 flops on one root) | outline 302.4x518.4 (util ~0.45; gate2 at 410 wide = util 33%, synth std 4,534 um2), PD 0.45",
+  "benches": [
+   {
+    "name": "vm_tunit_die_exact",
+    "cmd": "bash rtl/hbm_accel/generic/vm/tb/run_vm_tunit_full_lock.sh {RUN}/vm_tunit_die_exact 0 11 die",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS VM tunit full lockstep"
+   },
+   {
+    "name": "vm_tunit_small_exact",
+    "cmd": "bash rtl/hbm_accel/generic/vm/tb/run_vm_tunit_full_lock.sh {RUN}/vm_tunit_small_exact 0 11 small",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS VM tunit full lockstep"
+   },
+   {
+    "name": "vm_tunit_mut_bank_index",
+    "cmd": "bash rtl/hbm_accel/generic/vm/tb/run_vm_tunit_full_lock.sh {RUN}/vm_tunit_mut_bank_index 2 11 die",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FATAL lockstep"
+   },
+   {
+    "name": "vm_tunit_mut_w2_yield",
+    "cmd": "bash rtl/hbm_accel/generic/vm/tb/run_vm_tunit_full_lock.sh {RUN}/vm_tunit_mut_w2_yield 6 11 die",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FATAL lockstep"
+   }
+  ],
+  "views_to": "physical/ref_tile/vm_btile_refb/views",
+  "record_to": "results/rtl/ref_tile/vm_btile_refb"
+ }
+}
