@@ -50,8 +50,8 @@
  "job": {
   "owner": "Claude:el1011-ds-mtp",
   "branch": "claude/el1011-ds-mtp-hrow",
-  "tag": "r5c",
-  "purpose": "el1011-ds-mtp 2026-10-12 hub r5c: hrow5_hub-r5-6d3c31c2b NEEDS_RTL TT -48.81 (9 D pins, reg2reg v2->ok2: issue/advance loop v2->adv selecting 3 x 128:1 x 13-bit tag/cmp muxes in one cycle, v2 buffered ~290 ps to ~5k selects; class 2+5) / FF -6.52 (input pin flop pr[2][711], late leaf). Fix: lookup evaluated for both candidate keys from registered per-part key copies (next skid head + held entry), adv only selects the 1-bit results at ok2/hz2; hold margin 0.03 as an addition on the pin flops.",
+  "tag": "r5d",
+  "purpose": "el1011-ds-mtp 2026-10-12 hub r5d: hrow5_hub-r5c-1f107b1e4 NEEDS_RTL TT -8.08 (4 D, reg2reg v2->ok2; WC -71: ABC re-merged the r5c dual lookup into one lookup on an adv-selected key, v2 -> 8 buffer levels -> 128:1 tag mux -> XNOR/AND -> ok2) / FF -20.68 (383 D: in->reg -20.68, reg2reg -16.83, out -7.63; combo ECO reached -5.76 on the pre-b1e49e8f1 config). Fix (RTL, structural): both lookup results + the select registered (okn2/okh2/hzn2/hzh2/sel2), ok2 = sel2 mux after the flops so no v2->tag-mux path exists; per-part/per-slot tag state with 6 reset synchronisers (1,573-load reset net -> 6 x 256); per-part key regs; ck/rst/t_vrq scalar ports. On main >= b1e49e8f1 (ECO config) / eb642d870.",
   "benches": [
    {
     "name": "hrow_tiles_pos",
