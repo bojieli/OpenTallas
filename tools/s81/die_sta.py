@@ -369,15 +369,15 @@ def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=N
                 r['insertion_in_arcs_ps'] = [round(x, 1) for x in ins[mst]]
             r.pop('insertion_added_ps', None)
     grp = (lambda k_: group.get(k_, 'trunk')) if group else (lambda k_: 'trunk')
-    # per-clock-pin insertion for multi-clock masters (more than one of their clock pins in the plan): the ETM's own
-    # clock_tree_path on that pin (pin_insertion), else the master scalar
-    pins_of = defaultdict(set)
-    for k_ in lat:
-        pins_of[pin_master[k_]].add(k_.split('/')[1].split('[')[0])
+    # per-clock-pin insertion: the ETM's own clock_tree_path on that pin (pin_insertion: SS max, FF min, TT mean), else
+    # the master scalar.  s81-die-iter 2026-10-12: SINGLE-clock closed views too -- r4f FF, dsfd_m2l_vr_512x1__hco_SW
+    # was balanced on its routed boundary MEAN (152 ps FF) while its ETM's min tree path is 123.0, so its launch flops
+    # arrived ~29 ps before the plan into the interim xsco_SW relay 2.8 um away (-103.7 ps); multi-clock masters
+    # (the colck cfifo) were already balanced per pin.
     pin_ins, per_pin = {}, {}
     for k_ in lat:
         mst, pn = pin_master[k_], k_.split('/')[1].split('[')[0]
-        if len(pins_of[mst]) > 1:
+        if masters.get(mst, {}).get('view', 'interim') != 'interim':
             if (mst, pn) not in per_pin:
                 per_pin[(mst, pn)] = pin_insertion(mst, pn, libs)
             if per_pin[(mst, pn)]:
