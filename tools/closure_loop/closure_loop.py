@@ -3069,6 +3069,25 @@ def yield_to_priority(j, fleet, host=None):
                                if fleet.compatible(h["name"], j["spec"]))
 
 
+def move_to_other_host(j, fleet, spec, stl, reason):
+    """move a job with nothing in flight to another allowed host (fleet.choose excluding the current one): claim the
+    target, re-sync there and restart from the calibrate stage.  Shared by launch_ready's capacity move and
+    handle_transient's ssh-failure move.  Returns True when moved."""
+    h, _ = fleet.choose(spec, exclude=[j["host"]])
+    if not h:
+        return False
+    fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32), j["name"])  # 2026-10-08: claim, no herd moves
+    event(j, f"{reason}; moving to {host_cfg(h)['label']}")
+    j["hosts_tried"].append(h)
+    j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
+    j.pop("wait_since", None)
+    cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+    if cal is not None and j.get("stage_idx", 0) > cal:
+        j["stage_idx"] = cal
+    experiment(j, f"running: moved to {host_cfg(h)['label']}")
+    return True
+
+
 def launch_ready(j, fleet, spec, stl, st):
     """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
     OUTSIDE the lock (launch_now) or None."""
@@ -3085,16 +3104,7 @@ def launch_ready(j, fleet, spec, stl, st):
             j.setdefault("wait_since", time.time())
         if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
-            h, _ = fleet.choose(spec, exclude=[j["host"]])
-            if h:
-                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32), j["name"])  # 2026-10-08: claim, no herd moves
-                event(j, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why}); moving to {host_cfg(h)['label']}")
-                j["hosts_tried"].append(h)
-                j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
-                j.pop("wait_since", None)
-                cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
-                j["stage_idx"] = cal if cal is not None else j["stage_idx"]
-                experiment(j, f"running: moved to {host_cfg(h)['label']}")
+            if move_to_other_host(j, fleet, spec, stl, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why})"):
                 return
         if not ok:
             if j.get("wait") != why:
@@ -4992,7 +5002,7 @@ def is_transient(ex):
 
 def handle_transient(j, fleet, ex):
     """robustness (2026-10-07): transient ssh errors back off (2, 4, 8, 15, 30 min); after 3 at a stage that has
-    nothing in flight on the host (QUEUED / SYNC / READY before the first launch, or READY at calibrate/bench) the job
+    nothing in flight on the host (QUEUED / SYNC / READY before the first launch, or READY at calibrate/route/bench) the job
     moves to another host; a job whose results live on the host (verdict, ECO) keeps backing off and goes NEEDS_HUMAN
     only after 12 consecutive failures (~5 h).  Returns True when handled."""
     n = j.get("transient", 0) + 1
@@ -5001,18 +5011,15 @@ def handle_transient(j, fleet, ex):
     event(j, f"transient ssh/network error #{n} on {j.get('host')} ({type(ex).__name__}: {str(ex)[:160]}); backing off")
     stl = stage_list(j["spec"])
     st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
-    movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and st["kind"] in ("calibrate", "bench")
-                                                     and not j.get("stage_tag"))
+    # 2026-10-11: READY at calibrate/route is movable as in launch_ready's capacity move (READY = this stage has not
+    # launched; stage_tag is the previous stage's and is never cleared, and the move re-runs calibrate) -- on an
+    # overloaded host (load 500+) the loop's own ssh calls time out, and such a job otherwise backed off there for ever
+    movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and (
+        st["kind"] in ("calibrate", "route") or (st["kind"] == "bench" and not j.get("stage_tag"))))
     if n >= 3 and movable and j.get("host") and not checkpoint_location(j):
-        h, _ = fleet.choose(j["spec"], exclude=[j["host"]])
-        if h:
-            event(j, f"{n} transient errors on {host_cfg(j['host'])['label']}: moving to {host_cfg(h)['label']}")
-            j["hosts_tried"].append(h)
-            j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", transient=0)
+        if move_to_other_host(j, fleet, j["spec"], stl, f"{n} transient errors on {host_cfg(j['host'])['label']}"):
+            j["transient"] = 0
             j.pop("transient_next", None)
-            cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
-            if cal is not None and j.get("stage_idx", 0) > cal:
-                j["stage_idx"] = cal
             return True
     if n >= 12:
         return False                     # falls through to the ordinary error accounting
