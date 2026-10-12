@@ -388,6 +388,10 @@ def _tp8b_kv(v, m):
             continue
         keep_rly |= rl
         nb += [(bid, cl if cl in RELAY_SKIP else f'{cl}@kv', bt, eps) for bid, cl_, bt, eps in segs for cl in (cl_,)]
+    # main 758ccc84c: KV relays now sit on their driver's clk_core trunk; a dropped (re-relayed) KV relay leaves the
+    # multi-pin trunks with it, the kept ones keep their ck
+    nb = [(b_, c_, t_, [e for e in eps_ if not (kby[e[0]].master.startswith('qkd_rly') and e[0] not in keep_rly)])
+          if len(eps_) != 2 else (b_, c_, t_, eps_) for b_, c_, t_, eps_ in nb]
     RELAY_SKIP = tuple(RELAY_SKIP) + tuple(sorted({b[1] for b in nb if b[1].endswith('@kv')}))
     new = []
     for i in mk['insts']:
@@ -1674,7 +1678,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if x_ in lane_bits:
             lane_bits[x_] = [b_] * len(lane_bits[x_])
     cur_bits = [0]
-    io_sub = [0.0, 0.0, 0.0, 0.0]
+    io_sub = [[], [], [], []]
     IO_SUB_F = (0.1, 0.37, 0.63, 0.9)
     # it4 (fine cuts): KV-half words (KV centre <-> W / E KV strip) run in a row gap across the field, not via the IO
     # channel (pass-2 search sent kvn_* down to the IO channel and back up: 80 relays, 1 kb stacked on the serdes words)
@@ -1683,6 +1687,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     kv_gaps = []
     gap_set = set()
     cur_tight = [False]
+    e_rot = [0]
     tight_stride = set()     # it4: buses on the KV row-run rule place relays at pitch - 70 (frame snapping at the field /
     #                          strip edges overshot RMAX by 10-70 um, and the pass-2 search then rerouted them via the IO channel)
     if getattr(v, 'SPINE_LANE_BALANCE', False) and g.get('row_y'):
@@ -1705,7 +1710,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 continue
             det = abs(x - P0[0]) + abs(x - P1[0])
             pk = max(lb[x][ka:kb]) + cur_bits[0]
-            cost = det + 4000.0 * pk / 4900.0
+            cost = det + 6000.0 * pk / 4900.0     # it4: 4000 -> 6000 (tt_ty + 4 bwords stacked on the E spine lane)
             if best is None or cost < best[0]:
                 best = (cost, x)
         if best is None:
@@ -1714,6 +1719,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for k in range(ka, min(kb, len(lb[x]))):
             lb[x][k] += cur_bits[0]
         return x
+
+    def io_lane(lo, hi, subs):
+        """it4: the IO sub-lane whose 260-um bin, then lane, carries the fewest bits over this word's x span"""
+        def ov(j):
+            return sum(b_ for a_, c_, b_ in io_sub[j] if a_ < hi and lo < c_)
+        binl = lambda j: sum(ov(q) for q in range(len(subs)) if int(subs[q] // 260.0) == int(subs[j] // 260.0))  # noqa: E731
+        k = min(range(len(subs)), key=lambda j: (binl(j), ov(j), j))
+        io_sub[k].append((lo, hi, cur_bits[0]))
+        return k
 
     def poly_of(cl, P0, P1, bid=None, eps=None):
         f0, f1 = in_field(*P0), in_field(*P1)
@@ -1743,8 +1757,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # it4: four sub-lanes (one word per lane where possible: shared lanes stacked relays at the faces)
                 hch = io_ch[1] - io_ch[0]
                 subs = [io_ch[0] + hch * f for f in IO_SUB_F]
-                k_ = min(range(len(subs)), key=lambda j: io_sub[j])
-                io_sub[k_] += cur_bits[0]
+                k_ = io_lane(lo_, hi_, subs)
                 return [P0, (P0[0], subs[k_]), (P1[0], subs[k_]), P1]
         if io_ch is not None and bid is not None and bid.split('__r')[0] == 'host_fdi' and abs(P0[0] - P1[0]) > 500.0 \
                 and (P0[1] < io_ch[0]) != (P1[1] < io_ch[0]):
@@ -1753,8 +1766,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             Pa, Pi = (P0, P1) if P1[1] < io_ch[0] else (P1, P0)
             hch = io_ch[1] - io_ch[0]
             subs = [io_ch[0] + hch * f for f in IO_SUB_F]
-            k_ = min(range(len(subs)), key=lambda j: io_sub[j])
-            io_sub[k_] += cur_bits[0]
+            k_ = io_lane(*sorted((P0[0], P1[0])), subs)
             chx = getattr(v, 'SPINE_CHANNEL_X', None)
             xl = lane_pick(chx, Pa, (Pa[0], subs[k_]), lane_bits) if chx else Pa[0]
             path = [Pa, (xl, Pa[1]), (xl, subs[k_]), (Pi[0], subs[k_]), Pi]
@@ -1777,7 +1789,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                            for a, b, c, d in big):
                         continue
                     det = abs(yg - Pc[1]) + abs(yg - Ps[1])
-                    cost = det + 1500.0 * (gap_bits.get(yg, 0.0) + cur_bits[0]) / 1000.0 + (0.0 if yg in gap_set else 600.0)
+                    cost = det + 6000.0 * (gap_bits.get(yg, 0.0) + cur_bits[0]) / 1000.0 + (0.0 if yg in gap_set else 600.0)
                     if best is None or cost < best[0]:
                         best = (cost, yg)
                 if best is not None:
@@ -1786,7 +1798,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     tight_stride.add(bid)
                     if Ps[0] > Pc[0]:
                         # E-bound: the KV centre's E face is next to the E field: run up / down its first corridor
-                        xl = min((x for x in cx_list if x > Pc[0]), default=Pc[0])
+                        # it4b: E-bound words run up / down the 120-um gap between the KV centre stack and the E
+                        # field (their pins are on that face): the corridor legs + horizontal stubs from the pins
+                        # stacked 3.2 kb in one window (0.69)
+                        xl = round((Pc[0] + F[0]) / 2, 3) if 0.0 < F[0] - Pc[0] < 200.0 else \
+                            min((x for x in cx_list if x > Pc[0]), default=Pc[0])
                     else:
                         xl = lane_pick(kvl, Pc, (Pc[0], yg), lane_bits) if all(x in lane_bits for x in kvl) else kvl[0]
                     fa, fb = (F[2] + v.CORR, F[0]) if Ps[0] < Pc[0] else (xl, F[2] + v.CORR)
