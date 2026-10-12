@@ -28,7 +28,7 @@
 //          MUT_EARLY (retire on issue, not on completion).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_smmv #(
-    parameter integer NSM = 32,           // SMs served by this engine (B2: 8 = one cluster; legacy 32 = whole die)
+    parameter integer NSM = 8,            // SMs served by this engine (B2 default 8 = one cluster; legacy 32 = whole die)
     parameter integer W = 4,              // record window (power of two, <= 4: 3-bit sequence numbers)
     parameter integer XD = 128,
     parameter integer MUT_SLOT = 0,
@@ -320,7 +320,7 @@ endmodule
 // Flop form (functional reference of the hierarchical slice port; see SPEC.md section 2.6).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_smmv_pub #(
-    parameter integer NSM = 32,
+    parameter integer NSM = 8,
     parameter integer NC = 8,
     parameter integer NPC = 4,
     parameter integer W = 4,
