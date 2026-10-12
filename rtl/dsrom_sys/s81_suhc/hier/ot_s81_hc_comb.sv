@@ -56,6 +56,14 @@ module ot_s81_hc_comb #(
     input  wire [RVW-1:0]       ch_rv,
     input  wire [RDW-1:0]       ch_rd
 );
+    // tile-local reset relay (2 flops at the pin): the srs port drives exactly one flop; every reset of the tile
+    // is the relay output (no pin-to-register reset path, no reset-removal hold flood off an input port)
+    reg [1:0] rsr;
+    always @(posedge sk) rsr <= {rsr[0], srs};
+    wire rs_n = rsr[1];
+    reg [1:0] crsr;                                      // same for the controller-clock reset
+    always @(posedge cck) crsr <= {crsr[0], crs};
+    wire crs_n = crsr[1];
     localparam integer NS = NG / GS;
     localparam integer NP = (NS + NCOL - 1) / NCOL;
     localparam integer NL = 4 * NS;
@@ -108,23 +116,23 @@ module ot_s81_hc_comb #(
     wire [7:0]  d_t;
     wire [3:0]  fcode;
     reg  inp_q;
-    always @(posedge sk or negedge srs) if (!srs) inp_q <= 1'b0; else inp_q <= n_inp;
+    always @(posedge sk or negedge rs_n) if (!rs_n) inp_q <= 1'b0; else inp_q <= n_inp;
     reg        cv_q;
     reg [83:0] cd_q;
-    always @(posedge cck or negedge crs) if (!crs) cv_q <= 1'b0; else cv_q <= n_cmd_v;
+    always @(posedge cck or negedge crs_n) if (!crs_n) cv_q <= 1'b0; else cv_q <= n_cmd_v;
     always @(posedge cck) cd_q <= n_cmd_d;
     wire [8:0] dd;
-    ot_hdc_delay #(.W(9), .D(DW), .RESET(1)) u_dd (.clk(sk), .rst_n(srs), .d({d_v, d_t}), .q(dd));
+    ot_hdc_delay #(.W(9), .D(DW), .RESET(1)) u_dd (.clk(sk), .rst_n(rs_n), .d({d_v, d_t}), .q(dd));
     wire       cdv;
     wire [7:0] cdt;
     ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
-        .c_clk(cck), .c_rst_n(crs), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(cdv), .c_done_tag(cdt),
+        .c_clk(cck), .c_rst_n(crs_n), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(cdv), .c_done_tag(cdt),
         .fault(a_flt), .online(online),
         .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),
         .e_done_v(dd[8]), .e_done_tag(dd[7:0]));
     reg       dv_q;
     reg [7:0] dt_q;
-    always @(posedge cck or negedge crs) if (!crs) dv_q <= 1'b0; else dv_q <= cdv;
+    always @(posedge cck or negedge crs_n) if (!crs_n) dv_q <= 1'b0; else dv_q <= cdv;
     always @(posedge cck) dt_q <= cdt;
     assign n_done_v = dv_q;
     assign n_done_tag = dt_q;
@@ -139,8 +147,8 @@ module ot_s81_hc_comb #(
     reg  [NE0*32-1:0]   wex;
     reg  [NE2*32-1:0]   eex;
     reg                 wfl, efl;
-    always @(posedge sk or negedge srs)
-        if (!srs) begin rs_v_q <= 0; ya <= 1'b0; wrv <= 0; erv <= 0; crv <= 0; wfl <= 1'b0; efl <= 1'b0; end
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) begin rs_v_q <= 0; ya <= 1'b0; wrv <= 0; erv <= 0; crv <= 0; wfl <= 1'b0; efl <= 1'b0; end
         else begin rs_v_q <= n_rs_v; ya <= n_yacc; wrv <= w_rv; erv <= e_rv; crv <= ch_rv; wfl <= w_flt; efl <= e_flt; end
     always @(posedge sk) begin rs_d_q <= n_rs_d; y1 <= n_y; wrd <= w_rd; erd <= e_rd; crd <= ch_rd; wex <= w_ex; eex <= e_ex; end
 
@@ -149,12 +157,12 @@ module ot_s81_hc_comb #(
     wire       h_yrdy;
     wire       h_yv = (avail != 0);
     wire       ytake = h_yv && h_yrdy;
-    always @(posedge sk or negedge srs) if (!srs) avail <= 0; else avail <= avail + ya - ytake;
+    always @(posedge sk or negedge rs_n) if (!rs_n) avail <= 0; else avail <= avail + ya - ytake;
 
     // ---------------------------------------------------------------- the centre chain: return, subtrees, padding
     wire [NE1*32-1:0] ex1;
     wire              tf1;
-    ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(AL), .OWN(1)) u_tree1 (.clk(sk), .rst_n(srs), .v(crv[S_RT]),
+    ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(AL), .OWN(1)) u_tree1 (.clk(sk), .rst_n(rs_n), .v(crv[S_RT]),
         .pk(crd[P_D +: NP * 128]), .im(32'd0), .ex(ex1), .r_v(), .r(), .fault(tf1));
     localparam integer HOP = 2 + RLY;                             // registers a sub-tile hop (each bus)
     localparam integer PAD = HOP * (NP - L1) * (HALF ? 2 : 1);    // the centre chain is short by NP - L1 octets
@@ -168,9 +176,9 @@ module ot_s81_hc_comb #(
     wire [RDW-1:0]    crd_p;
     wire [NE1*32-1:0] ex1_p;
     wire [RVW-1:0]    crv_f = {crv[RVW-1], crv[RVW-2] | tf1, crv[RVW-3:0]};
-    ot_hdc_delay #(.W(RVW), .D(RP), .RESET(1)) u_prv (.clk(sk), .rst_n(srs), .d(crv_f), .q(crv_p));
-    ot_hdc_delay #(.W(RDW), .D(RP)) u_prd (.clk(sk), .rst_n(srs), .d(crd), .q(crd_p));
-    ot_hdc_delay #(.W(NE1 * 32), .D(RP)) u_pex (.clk(sk), .rst_n(srs), .d(ex1), .q(ex1_p));
+    ot_hdc_delay #(.W(RVW), .D(RP), .RESET(1)) u_prv (.clk(sk), .rst_n(rs_n), .d(crv_f), .q(crv_p));
+    ot_hdc_delay #(.W(RDW), .D(RP)) u_prd (.clk(sk), .rst_n(rs_n), .d(crd), .q(crd_p));
+    ot_hdc_delay #(.W(NE1 * 32), .D(RP)) u_pex (.clk(sk), .rst_n(rs_n), .d(ex1), .q(ex1_p));
     // merged return (lockstep: valids / metadata identical, row data disjoint per lane) and the imported subtrees
     wire [RVW-1:0] m_rv = wrv | erv | ((L1 > 0) ? crv_p : {RVW{1'b0}});
     wire [RDW-1:0] m_rd = wrd | erd | ((L1 > 0) ? crd_p : {RDW{1'b0}});
@@ -198,7 +206,7 @@ module ot_s81_hc_comb #(
     wire        bsy;
     ot_s81_hc_hroot #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
                       .MUT(MUT), .NIM(NIM)) u_root (
-        .clk(sk), .rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_done_v(d_v), .e_done_tag(d_t),
+        .clk(sk), .rst_n(rs_n), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_done_v(d_v), .e_done_tag(d_t),
         .y_v(h_yv), .y_rdy(h_yrdy), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v_q), .rs_d(rs_d_q),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .busy(bsy), .fault(c_flt), .fault_code(fcode),
         .st_jobs(jobs), .fv(fv), .fd(fd), .rv_in(m_rv), .rd_in(m_rd), .im(m_im));
@@ -207,8 +215,8 @@ module ot_s81_hc_comb #(
     reg [YB:0] yn1;
     reg        yfl;
     integer s;
-    always @(posedge sk or negedge srs)
-        if (!srs) begin
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) begin
             n_rq_v <= 0; n_flt <= 1'b0; n_online <= 1'b0; n_fcode <= 0; n_ypop <= 1'b0; w_fv <= 0; e_fv <= 0;
         end else begin
             n_rq_v <= rq_v; n_flt <= a_flt | c_flt | wfl | efl | yfl; n_online <= online; n_fcode <= fcode;
@@ -224,18 +232,16 @@ module ot_s81_hc_comb #(
     end
     // write valids on reset flops (the slot words above carry them too: the outer roots take the valid from its own flop)
     // ---------------------------------------------------------------- the centre chain: forward (padded) + y FIFO
-    reg [1:0] rr;
-    always @(posedge sk) rr <= {rr[0], srs};
-    assign ch_rst = rr[1];
+    assign ch_rst = rs_n;
     wire [FVW-1:0] fv_p;
     wire [FSW-1:0] fd_p;
-    ot_hdc_delay #(.W(FVW), .D(FP), .RESET(1)) u_pfv (.clk(sk), .rst_n(srs), .d(fv), .q(fv_p));
-    ot_hdc_delay #(.W(FSW), .D(FP)) u_pfd (.clk(sk), .rst_n(srs), .d(fd), .q(fd_p));
+    ot_hdc_delay #(.W(FVW), .D(FP), .RESET(1)) u_pfv (.clk(sk), .rst_n(rs_n), .d(fv), .q(fv_p));
+    ot_hdc_delay #(.W(FSW), .D(FP)) u_pfd (.clk(sk), .rst_n(rs_n), .d(fd), .q(fd_p));
     reg  [YS1-1:0] yf [0:YDC-1];
     reg  [YB-1:0]  yw, yr;
     wire pop = fv_p[S_RD];
-    always @(posedge sk or negedge srs)
-        if (!srs) begin ch_fv <= 0; yn1 <= 0; yw <= 0; yr <= 0; yfl <= 1'b0; end
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) begin ch_fv <= 0; yn1 <= 0; yw <= 0; yr <= 0; yfl <= 1'b0; end
         else begin
             ch_fv <= (L1 > 0) ? fv_p : {FVW{1'b0}};
             if (ya) yw <= yw + 1'b1;

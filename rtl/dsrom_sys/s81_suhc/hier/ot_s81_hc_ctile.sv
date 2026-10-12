@@ -74,6 +74,8 @@ module ot_s81_hc_ctile #(
 `ifndef SYNTHESIS
     initial begin
         if (GS < 8 || (GS & (GS - 1)) != 0 || NG % GS != 0) $fatal(1, "ot_s81_hc_ctile: GS a power of two >= 8 dividing NG");
+        if (GS != 8) $fatal(1, "ot_s81_hc_ctile: decoded row writes assume octet groups (GS 8)");
+        if (NG % 32 != 0) $fatal(1, "ot_s81_hc_ctile: NG a multiple of 32 (y rows inside one quadrant)");
         if (HALF && GS != 8) $fatal(1, "ot_s81_hc_ctile: HALF splits an octet (GS 8)");
         if (NP * 128 > S_RT * 512) $fatal(1, "ot_s81_hc_ctile: the partial packet must fit the return data field");
         if (D % N != 0) $fatal(1, "ot_s81_hc_ctile: D a multiple of 4 NG");
@@ -123,24 +125,27 @@ module ot_s81_hc_ctile #(
     reg [NT*32-1:0] gtab [0:4*NV-1];
 
     // ------------------------------------------------------------------ VM response rows (H_LOAD 0 / GAIN 1 / COEF 2)
-    integer s, k, q, j_, gg;
+    integer s, k, q, j_, gg, qd;
     always @(posedge clk) begin
         for (s = 0; s < S_RD; s = s + 1)
             if (rd_v[s]) begin : one
                 reg [15:0] c, g0, l0, rb, g;
                 c = fd[O_RC + 16 * s +: 16];
+                // decoded writes: every lane slice is a constant part-select; the row's tile and quadrant are
+                // compares (GS 8: an h row's 8 groups start at a multiple of 8, a gain row's 16 lanes at a multiple
+                // of 16, so the in-tile slice is k % GT and only the owner / quadrant are runtime values)
                 if (rd_k == 2'd0) begin
-                    rb = c / PPR; g0 = 8 * (c % PPR);
+                    rb = c / PPR; g0 = c % PPR;                           // group octet of the row
                     for (k = 0; k < 8; k = k + 1)                         // the row's 8 groups
-                        if ((g0 + k) / GT == tid)
-                            hb[(rb % 4) * 2 * NV + rd_s * NV + rb / 4][64 * ((g0 + k) % GT) +: 64] <= fd[O_D + 512 * s + 64 * k +: 64];
+                        if (g0 * (8 / GT) + k / GT == tid)
+                            hb[(rb % 4) * 2 * NV + rd_s * NV + rb / 4][64 * (k % GT) +: 64] <= fd[O_D + 512 * s + 64 * k +: 64];
                 end else if (rd_k == 2'd1) begin
                     l0 = (16 * c) % N;
-                    for (k = 0; k < 16; k = k + 1) begin
-                        g = (l0 + k) % NG;
-                        if (g / GT == tid)
-                            gtab[rd_g * NV + (16 * c) / N][32 * (((l0 + k) / NG) * GT + g % GT) +: 32] <= fd[O_D + 512 * s + 32 * k +: 32];
-                    end
+                    g = (l0 % NG) / GT;                                   // first tile-group of the row's 16 lanes
+                    for (k = 0; k < 16; k = k + 1)
+                        for (qd = 0; qd < N / NG; qd = qd + 1)
+                            if (g + k / GT == tid && l0 / NG == qd)
+                                gtab[rd_g * NV + (16 * c) / N][32 * (qd * GT + k % GT) +: 32] <= fd[O_D + 512 * s + 32 * k +: 32];
                 end else if (rd_k == 2'd2) begin
                     if (c == 0) cf_comb[rd_s] <= fd[O_D + 512 * s +: 512];
                     else begin
@@ -397,18 +402,22 @@ module ot_s81_hc_ctile #(
         for (s = 0; s < S_RT; s = s + 1)
             if (vv[s]) begin : sl
                 reg [7:0] vi;
-                reg [15:0] qx, L, g, g0, b;
+                reg [15:0] qx, g, g0, b;
+                reg [NT*16-1:0] yr;
+                reg [RWT-1:0] hr;
                 vi = o[P_I + 8 * s +: 8]; qx = o[P_Q + 16 * s +: 16];
                 if (!o[P_T + s]) begin                                       // y row qx: lanes 32 qx .. 32 qx + 31
-                    for (k = 0; k < 32; k = k + 1) begin
-                        L = 32 * qx + k; g = L % NG;
-                        if (g / GT == tid) o[P_D + 512 * s + 16 * k +: 16] = ybuf[vi][16 * ((L / NG) * GT + g % GT) +: 16];
-                    end
+                    yr = ybuf[vi];                                           // one row read a slot
+                    g = ((32 * qx) % NG) / GT; b = (32 * qx) / NG;            // first tile-group, lane quadrant
+                    for (k = 0; k < 32; k = k + 1)
+                        for (qd = 0; qd < N / NG; qd = qd + 1)
+                            if (g + k / GT == tid && b == qd) o[P_D + 512 * s + 16 * k +: 16] = yr[16 * (qd * GT + k % GT) +: 16];
                 end else begin                                               // h row qx: 8 groups of resident row b
-                    g0 = (8 * qx) % NG; b = (8 * qx) / NG;
+                    g0 = ((8 * qx) % NG) / 8; b = (8 * qx) / NG;
+                    hr = hb[(b % 4) * 2 * NV + hs_sl * NV + b / 4];          // one row read a slot
                     for (k = 0; k < 8; k = k + 1)
-                        if ((g0 + k) / GT == tid)
-                            o[P_D + 512 * s + 64 * k +: 64] = hb[(b % 4) * 2 * NV + hs_sl * NV + b / 4][64 * ((g0 + k) % GT) +: 64];
+                        if (g0 * (8 / GT) + k / GT == tid)
+                            o[P_D + 512 * s + 64 * k +: 64] = hr[64 * (k % GT) +: 64];
                 end
             end
         rdq <= rd_in;
