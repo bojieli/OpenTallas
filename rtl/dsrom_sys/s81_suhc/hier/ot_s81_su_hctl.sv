@@ -99,6 +99,25 @@ module ot_s81_su_hctl #(
     // async recovery check over a ~600-flop reset net from the slab reset synchroniser)
     reg rst_q;
     always @(posedge clk) rst_q <= rst_n;
+    // response / write-slot accounting rung: the 16-slot popcounts and the first-response descriptor select are
+    // trees registered one cycle ahead of the job counters (was one 16-deep ripple count -> select -> compare ->
+    // rows_in / rows_out multiply -> nw chain in a single cycle, ~1.34 ns)
+    reg  [4:0]  rs_n, up_n;
+    reg         rs_any;
+    reg  [29:0] rs_pn;
+    always @(posedge clk) begin : acct
+        integer i;
+        reg [4:0] a, b;
+        reg [29:0] f;
+        reg any;
+        a = 0; b = 0; f = 0; any = 1'b0;
+        for (i = 0; i < S_RD; i = i + 1) a = a + rs_v[i];
+        for (i = 0; i < S_WR; i = i + 1) b = b + up_v[i];
+        for (i = S_RD - 1; i >= 0; i = i - 1) if (rs_v[i]) begin f = rs_f[30 * i +: 30]; any = 1'b1; end
+        if (!rst_n || !rst_q) begin rs_n <= 0; up_n <= 0; rs_any <= 0; end
+        else begin rs_n <= a; up_n <= b; rs_any <= any; end
+        rs_pn <= f;
+    end
     always @(posedge clk) begin
         if (!rst_n || !rst_q) begin
             run <= 0; kind <= 0; jslot <= 0; jtag <= 0; jid <= 0; dbase <= 0; ph <= 0; p0 <= 0;
@@ -131,17 +150,19 @@ module ot_s81_su_hctl #(
                     begin : prsp
                         reg [15:0] c;
                         reg [29:0] pn;
-                        c = rr; pn = p0;
-                        for (s = 0; s < S_RD; s = s + 1)
-                            if (rs_v[s]) begin if (c == 0) pn = rs_f[30 * s +: 30]; c = c + 1; end
+                        c = rr + rs_n;
+                        pn = (rr == 0 && rs_any) ? rs_pn : p0;
                         p0 <= pn; rr <= c;
-                        if (c == np) begin
-                            ph <= 2; ri <= 0; rr <= 0;
-                            nrow <= rows_in(kind, pn[14 +: 16]);
-                            nw <= rows_out(kind, pn[14 +: 16]);
+                        if (c == np) begin                     // parameters in: size the job next cycle (ph 3)
+                            ph <= 3; ri <= 0; rr <= 0;
                             if (kind == K_SE) begin sm_owner_v <= 1; sm_owner <= jslot; end
                         end
                     end
+                end
+                if (ph == 3) begin                             // rows_in / rows_out from the registered descriptor
+                    nrow <= rows_in(kind, p0[14 +: 16]);
+                    nw <= rows_out(kind, p0[14 +: 16]);
+                    ph <= 2;
                 end
                 if (ph == 2) begin
                     if ((kind != K_QN && kind != K_KV) || rdy_ok) begin
@@ -151,8 +172,7 @@ module ot_s81_su_hctl #(
                     end
                     begin : orsp
                         reg [15:0] c;
-                        c = rr;
-                        for (s = 0; s < S_RD; s = s + 1) if (rs_v[s]) c = c + 1;
+                        c = rr + rs_n;
                         rr <= c;
                     end
                     if (MUT == 1 && nw != 0 && rr == nrow && nrow != 0) begin
@@ -166,8 +186,7 @@ module ot_s81_su_hctl #(
             // ------------------------------------------------------------- write slots issued -> completion
             begin : outp
                 reg [15:0] n_out;
-                n_out = 0;
-                for (s = 0; s < S_WR; s = s + 1) if (up_v[s]) n_out = n_out + 1;
+                n_out = {11'd0, up_n};
                 if (run && ph == 2 && nw != 0) begin
                     cw <= cw + n_out;
                     if (MUT != 1 && cw + n_out >= nw && (kind != K_SE || up_den)) begin
