@@ -35,7 +35,8 @@ module ot_hgi_b2_disp #(
     input  wire              rst_n,
     // cp_die side (B2 = 1): ONE shared record register (the unit's packed record, zero-extended) + a one-hot valid
     input  wire [4:0]        r_v,         // {DMA, ATT, SFU, SU, SM} valid pulse
-    input  wire [2197:0]     r_p,
+    input  wire [1098:0]     r_pa,        // r_p[1098:0]  (W face)
+    input  wire [1098:0]     r_pb,        // r_p[2197:1099] (N face)
     output wire [2:0]        sm_ret,
     output wire [2:0]        su_ret,
     output wire [2:0]        sfu_ret,
@@ -44,10 +45,13 @@ module ot_hgi_b2_disp #(
     input  wire [17:0]       mlo,         // mirror window [mlo, mhi) (VM words; cfg)
     input  wire [17:0]       mhi,
     // cluster side
-    output reg  [BW+8:0]     cb,          // {payload BW, qmask 4, unit 3, last, v}
+    output wire [BW+8:0]     cb,          // {payload BW, qmask 4, unit 3, last, v}
     input  wire [39:0]       rb,          // cluster q: rb[q*10 +: 10] = {fault 5, done 5}
-    output wire              busy
+    output reg               busy
 );
+    wire [2197:0] r_p = {r_pb, r_pa};
+    reg [8:0] cbc; reg [BW-1:0] cbd;           // the bus: control flops (reset) / payload flops (no reset)
+    assign cb = {cbd, cbc};
     localparam integer PW = 2198;                           // widest record (SU)
     localparam integer FD = 4;
     localparam integer CFB = $clog2(CF + 1);
@@ -85,16 +89,20 @@ module ot_hgi_b2_disp #(
             else m_dma = oh(h[8 + SBIT +: 2]);
         end
     endfunction
+    // pin flops (v2, gate: register every boundary): the record (no reset), its valid, the mirror window
+    reg [4:0] pv; reg [PW-1:0] pp; reg [17:0] plo, phi;
+    always @(posedge clk) begin pp <= r_p; plo <= mlo; phi <= mhi; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) pv <= 5'd0; else pv <= r_v;
     // record layouts (cp_die): bit 0 valid, header [128:1], then descriptors (256 b each)
-    wire [3:0] mk_su  = m_owner(r_p[1409 +: 256], r_p[385 +: 256], r_p[641 +: 256], r_p[897 +: 256], r_p[1153 +: 256], mlo, mhi);
-    wire [3:0] mk_sfu = m_owner(r_p[897 +: 256], r_p[129 +: 256], r_p[385 +: 256], r_p[641 +: 256], 256'd0, mlo, mhi);
-    wire [3:0] mk_dma = m_dma(r_p[129 +: 256], r_p[385 +: 256], mlo, mhi);
-    wire [4:0] in_v = r_v;
+    wire [3:0] mk_su  = m_owner(pp[1409 +: 256], pp[385 +: 256], pp[641 +: 256], pp[897 +: 256], pp[1153 +: 256], plo, phi);
+    wire [3:0] mk_sfu = m_owner(pp[897 +: 256], pp[129 +: 256], pp[385 +: 256], pp[641 +: 256], 256'd0, plo, phi);
+    wire [3:0] mk_dma = m_dma(pp[129 +: 256], pp[385 +: 256], plo, phi);
+    wire [4:0] in_v = pv;
     reg  [3:0] in_m; reg [2:0] in_u; reg [PW-1:0] in_p;
     always @* begin
         in_m = ({4{in_v[0] | in_v[3]}} & 4'b1111) | ({4{in_v[1]}} & mk_su) | ({4{in_v[2]}} & mk_sfu) | ({4{in_v[4]}} & mk_dma);
         in_u = {in_v[4], in_v[3] | in_v[2], in_v[3] | in_v[1]};   // one-hot -> index (0 SM .. 4 DMA)
-        in_p = r_p;
+        in_p = pp;
     end
     // beats a unit's record takes
     function automatic [1:0] nbeats(input [2:0] u);
@@ -107,7 +115,6 @@ module ot_hgi_b2_disp #(
         endcase
     endfunction
     // ------------------------------------------------------------------ input FIFO
-    reg [PW-1:0] f_p [0:FD-1];
     reg [3:0]    f_m [0:FD-1];
     reg [2:0]    f_u [0:FD-1];
     reg [1:0] wp, rp; reg [2:0] cnt; reg rdy_q;
@@ -150,7 +157,7 @@ module ot_hgi_b2_disp #(
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wp <= 2'd0; rp <= 2'd0; cnt <= 3'd0; rdy_q <= 1'b0; bt <= 2'd0; sending <= 1'b0; cb <= '0; rb_q <= 40'd0;
+            wp <= 2'd0; rp <= 2'd0; cnt <= 3'd0; rdy_q <= 1'b0; bt <= 2'd0; sending <= 1'b0; cbc <= 9'd0; rb_q <= 40'd0;
             rt_d <= 5'd0; rt_f <= 5'd0;
             for (u = 0; u < 5; u = u + 1) begin
                 cwp[u] <= '0; crp[u] <= '0; ccnt[u] <= '0;
@@ -159,19 +166,14 @@ module ot_hgi_b2_disp #(
         end else begin
             rb_q <= rb;
             // FIFO
-            if (push) begin f_p[wp] <= in_p; f_m[wp] <= in_m; f_u[wp] <= in_u; wp <= wp + 2'd1; end
+            if (push) begin f_m[wp] <= in_m; f_u[wp] <= in_u; wp <= wp + 2'd1; end
             if (pop) rp <= rp + 2'd1;
             cnt <= cnt + {2'd0, push} - {2'd0, pop};
-            rdy_q <= (cnt + {2'd0, push} - {2'd0, pop}) <= 3'd2;
+            rdy_q <= (cnt + {2'd0, push} - {2'd0, pop}) <= 3'd1;   // 3 records can be in flight (decision, cp_die reg, pin flop)
             // bus
-            cb[0] <= start || sending;
+            cbc[0] <= start || sending;
             if (start || sending) begin
-                cb[1] <= last_b; cb[4:2] <= hu; cb[8:5] <= hm;
-                case (sending ? bt : 2'd0)
-                    2'd0: cb[9 +: BW] <= f_p[rp][0 +: BW];
-                    2'd1: cb[9 +: BW] <= f_p[rp][BW +: BW];
-                    default: cb[9 +: BW] <= {{(3*BW-PW){1'b0}}, f_p[rp][PW-1:2*BW]};
-                endcase
+                cbc[1] <= last_b; cbc[4:2] <= hu; cbc[8:5] <= hm;
                 sending <= !last_b; bt <= last_b ? 2'd0 : ((sending ? bt : 2'd0) + 2'd1);
             end
             // credits (consumed at the start; returned with each cluster's done / fault)
@@ -208,6 +210,31 @@ module ot_hgi_b2_disp #(
     assign dma_ret = {rt_f[4], rt_d[4], rdy_q};
     reg bz;
     always @* begin bz = (cnt != 0) || sending; for (u = 0; u < 5; u = u + 1) if (ccnt[u] != 0) bz = 1'b1; end
-    assign busy = bz;
+    always @(posedge clk or negedge rst_n) if (!rst_n) busy <= 1'b0; else busy <= bz;
+    // ------------------------------------------------------------------ v2 datapath: FIFO payload in 128-b slices, each
+    // with its OWN copy of the write / read pointers and the beat select (no pointer net over ~600 loads; gate high-fanout)
+    localparam integer SLW = 128, NSL = (PW + SLW - 1) / SLW, SPB = BW / SLW;     // 18 slices, 8 a beat
+    genvar gs;
+    reg [SLW-1:0] fm [0:NSL-1][0:FD-1];
+    wire [NSL*SLW-1:0] ppx = {{(NSL*SLW-PW){1'b0}}, pp};
+    generate for (gs = 0; gs < NSL; gs = gs + 1) begin : sl
+        (* keep *) reg [1:0] wpc;
+        always @(posedge clk or negedge rst_n) if (!rst_n) wpc <= 2'd0; else if (push) wpc <= wpc + 2'd1;
+        always @(posedge clk) if (|pv) fm[gs][wpc] <= ppx[gs * SLW +: SLW];
+    end endgenerate
+    // the bus beat, 8 x 128 b; slice t of beat b is FIFO slice b*SPB + t (beat 2 exists for the first NSL - 2 SPB)
+    generate for (gs = 0; gs < SPB; gs = gs + 1) begin : ob
+        (* keep *) reg [1:0] rpc, btc; (* keep *) reg sdc;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin rpc <= 2'd0; btc <= 2'd0; sdc <= 1'b0; end
+            else begin
+                if (pop) rpc <= rpc + 2'd1;
+                if (start || sending) begin sdc <= !last_b; btc <= last_b ? 2'd0 : ((sending ? bt : 2'd0) + 2'd1); end
+            end
+        wire [1:0] bs = sdc ? btc : 2'd0;
+        wire [SLW-1:0] b0 = fm[gs][rpc], b1 = fm[SPB + gs][rpc];
+        wire [SLW-1:0] b2 = (2 * SPB + gs < NSL) ? fm[(2 * SPB + gs < NSL) ? 2 * SPB + gs : 0][rpc] : {SLW{1'b0}};
+        always @(posedge clk) if (start || sending) cbd[gs * SLW +: SLW] <= (bs == 2'd0) ? b0 : (bs == 2'd1) ? b1 : b2;
+    end endgenerate
 endmodule
 `default_nettype wire

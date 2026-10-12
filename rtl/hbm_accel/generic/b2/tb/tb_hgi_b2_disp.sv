@@ -13,7 +13,7 @@ module tb_hgi_b2_disp;
     wire [BW+8:0] cb; wire [39:0] rb;
     localparam [17:0] MLO = 18'h3C000, MHI = 18'h3E000;
     reg [4:0] r_v = 0; reg [2197:0] r_p = 0;          // cp_die's shared record register
-    ot_hgi_b2_disp #(.MUT(DMUT), .BW(BW)) dut (.clk(clk), .rst_n(rst_n), .r_v(r_v), .r_p(r_p), .sm_ret(sm_ret),
+    ot_hgi_b2_disp #(.MUT(DMUT), .BW(BW)) dut (.clk(clk), .rst_n(rst_n), .r_v(r_v), .r_pa(r_p[1098:0]), .r_pb(r_p[2197:1099]), .sm_ret(sm_ret),
         .su_ret(su_ret), .sfu_ret(sfu_ret), .att_ret(att_ret), .dma_ret(dma_ret), .mlo(MLO), .mhi(MHI), .cb(cb), .rb(rb), .busy());
     // relays (die distance)
     reg [BW+8:0] cbr [0:RL]; reg [39:0] rbr [0:RL]; wire [9:0] rbq [0:3];

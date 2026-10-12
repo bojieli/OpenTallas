@@ -15,24 +15,27 @@
   "rst_n"
  ],
  "outline": {
-  "w": 129.6,
-  "h": 291.6
+  "w": 136.08,
+  "h": 136.08
  },
  "pg_layer": "M6",
  "pins": {
   "W": [
-   "cb",
-   "uid",
-   "qid",
-   "clk",
-   "rst_n"
-  ],
-  "S": [
-   "rb",
-   "ret"
+   "cb"
   ],
   "E": [
-   "rec"
+   "rec_a"
+  ],
+  "N": [
+   "rec_b"
+  ],
+  "S": [
+   "uid",
+   "qid",
+   "rb",
+   "ret",
+   "clk",
+   "rst_n"
   ]
  },
  "route": {
@@ -44,7 +47,7 @@
  "job": {
   "owner": "Claude:el1011-hbm-b2-cp",
   "branch": "claude/el1011-hbm-b2-cp",
-  "tag": "v1",
+  "tag": "v2",
   "purpose": "HBM B2 cluster record station (one per unit per cluster, 20 instances, straps uid/qid): command-bus capture, D=4 record queue, legacy record bus + credit return",
   "extra_paths": [
    "rtl/hbm_accel/generic/b2"

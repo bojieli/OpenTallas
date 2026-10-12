@@ -15,16 +15,23 @@
   "rst_n"
  ],
  "outline": {
-  "w": 129.6,
-  "h": 291.6
+  "w": 136.08,
+  "h": 136.08
  },
  "pg_layer": "M6",
  "pins": {
   "W": [
    "r_v",
-   "r_p"
+   "r_pa"
   ],
   "N": [
+   "r_pb"
+  ],
+  "E": [
+   "cb",
+   "rb"
+  ],
+  "S": [
    "mlo",
    "mhi",
    "sm_ret",
@@ -32,13 +39,7 @@
    "sfu_ret",
    "att_ret",
    "dma_ret",
-   "busy"
-  ],
-  "E": [
-   "cb",
-   "rb"
-  ],
-  "S": [
+   "busy",
    "clk",
    "rst_n"
   ]
@@ -52,7 +53,7 @@
  "job": {
   "owner": "Claude:el1011-hbm-b2-cp",
   "branch": "claude/el1011-hbm-b2-cp",
-  "tag": "v1",
+  "tag": "v2",
   "purpose": "HBM B2 (owner 10-12) CP record dispatcher: address->slice routing, per-(unit,cluster) credits, one 1,033-b command bus to 4 cluster stations, all-cluster retire (in cmdproc beside ot_hgi_cp)",
   "extra_paths": [
    "rtl/hbm_accel/generic/b2"

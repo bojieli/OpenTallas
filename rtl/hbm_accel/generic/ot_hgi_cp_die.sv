@@ -148,7 +148,7 @@ module ot_hgi_cp_die #(
     wire [2:0] sm_rt, su_rt, sfu_rt, att_rt, dma_rt;                // the per-cluster units' {fault, done, ready}
     reg  [4:0] b2_v; reg [2197:0] b2_p;                              // B2: one shared record register (the dispatcher's input)
     generate if (B2 != 0) begin : b2
-        ot_hgi_b2_disp #(.D(4), .BW(1024)) u_disp (.clk(clk), .rst_n(rst_n), .r_v(b2_v), .r_p(b2_p), .sm_ret(sm_rt),
+        ot_hgi_b2_disp #(.D(4), .BW(1024)) u_disp (.clk(clk), .rst_n(rst_n), .r_v(b2_v), .r_pa(b2_p[1098:0]), .r_pb(b2_p[2197:1099]), .sm_ret(sm_rt),
             .su_ret(su_rt), .sfu_ret(sfu_rt), .att_ret(att_rt), .dma_ret(dma_rt), .mlo(b2_mir[17:0]), .mhi(b2_mir[35:18]), .cb(b2_cb), .rb(b2_rb), .busy());
     end else begin : nb2
         assign sm_rt = sm_ret; assign su_rt = su_ret; assign sfu_rt = sfu_ret; assign att_rt = att_ret; assign dma_rt = dma_ret;
