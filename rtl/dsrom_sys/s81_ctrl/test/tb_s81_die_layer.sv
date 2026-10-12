@@ -124,7 +124,8 @@ module tb_s81_die_layer;
     wire [3:0] hfcode;
     dsfd_sp_hc_c #(.NG(NG), .D(5120), .S_RD(S_RD), .S_WR(S_WR), .MUT(HMUT)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
         .c_done(d[2]), .c_st(est[2]), .f_inp(hc_inp), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row),
-        .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .fcode(hfcode));
+        .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d));
+    assign hfcode = u_hc.fcode;              // diagnostic code (internal to the slab since the hier HC)
     // ---------------- DUT: the TP4 collective group (port 3 of die 0)
     wire [514:0] rx [0:3][0:7];
     wire [511:0] tx [0:3][0:7];
@@ -166,6 +167,15 @@ module tb_s81_die_layer;
                 .busy(), .fault(pf), .fault_code(), .st_jobs(), .st_cmds(), .st_credit_stall());
             assign ccmd[gd] = {cv[3], cd[3*84 +: 84]};
             integer njd = 0, ndn = 0;
+`ifdef TB_TRACE
+            always @(posedge ck) if (gd == 1 && cyc < 2200) begin
+                if (u_sq.pw_v_q) $display("TR %0d peer1 pw a %0d d %h len %0d", cyc, u_sq.pw_a_q, u_sq.pw_d_q, u_sq.len_q);
+                if (u_sq.jv_q || (jv && jr)) $display("TR %0d peer1 job jv %b jr %b jv_q %b len %0d started %0d njd %0d", cyc, jv, jr, u_sq.jv_q, u_sq.len_q, started, njd);
+                if (u_sq.f_v) $display("TR %0d peer1 fetch op %0d e %h ip %0d iss %b/%0d", cyc, u_sq.f_op, u_sq.f_e, u_sq.ip, u_sq.iss_v, u_sq.iss_s);
+                if (cv != 0 || jd_) $display("TR %0d peer1 cmd %h jd %b", cyc, cv, jd_);
+                if (cdn[gd][8]) $display("TR %0d peer1 done tag %h", cyc, cdn[gd][7:0]);
+            end
+`endif
             always @(posedge ck) if (rst) begin
                 if (jv && jr) jv <= 1'b0;
                 if (peer_go && !jv && started < JOBS && njd >= started) begin jv <= 1'b1; started <= started + 1; end   // one peer job at a time (as the kit)
@@ -319,8 +329,8 @@ module tb_s81_die_layer;
         for (s = 0; s < S_RD; s = s + 1) rs_d[512 * s +: 512] <= vm[dl_a[LVM - 1][14 * s +: 14]];
     end
     // f_inp: the head descriptor's operands are complete in the VM (dropped on the take cycle)
-    wire [83:0] hq = u_hc.u_hc.u_ad.rq;
-    wire        hrv = u_hc.u_hc.u_ad.rv;
+    wire [83:0] hq = u_hc.u_hc.g_flat.u_ad.rq;
+    wire        hrv = u_hc.u_hc.g_flat.u_ad.rv;
     wire        htake = u_hc.u_hc.e_v && u_hc.u_hc.e_r;
     wire [3:0]  hkind = hq[30:27];
     wire [13:0] hbase = hq[20:7];
@@ -338,7 +348,7 @@ module tb_s81_die_layer;
     // HC job start (the core takes the descriptor)
     always @(posedge ck) if (u_hc.u_hc.e_v && u_hc.u_hc.e_r) stt[cj][u_hc.u_hc.e_d[6:0]] = cyc;
     // HC job end: the core's done (the job's last result committed); the controller-pin done follows through the adapter
-    always @(posedge ck) if (u_hc.u_hc.d_v) endt[cj][u_hc.u_hc.d_t[6:0]] = cyc;
+    always @(posedge ck) if (u_hc.u_hc.g_flat.d_v) endt[cj][u_hc.u_hc.g_flat.d_t[6:0]] = cyc;
     // ---------------- reference roots (as tb_s81ph_gather_capture)
     reg [NR-1:0] s_v; reg [31:0] s_t [0:NR-1]; reg [31:0] s_d [0:NR-1]; reg [NR-1:0] s_e, s_b;
     wire [NR-1:0] rr_v, rr_e, rr_f;
@@ -593,11 +603,14 @@ module tb_s81_die_layer;
         end
         pw_v = 0; plen = nop;
 `endif
-        // peer programs: the coll messages
+        // peer programs: the coll messages.  Re-align to ck first: the TB_SEQC branch leaves us on a ckv edge, and a
+        // pk write set there races the ck posedge, losing address 0 (peers then fetched a zero op = engine-0 command)
+        @(negedge ck);
         for (m = 0; m < NMSG; m = m + 1) begin pk_v = 1; pk_a = m; pk_d = {4'd3, 7'd0, m_mode[m][0], 16'(m_n[m])}; @(negedge ck); end
         pk_v = 0; pk_len = NMSG;
         repeat (4) @(negedge ck);
         peer_go = 1;
+        $display("TB_S81_DIE_LAYER peer_go at cyc %0d (die-0 program %0d ops loaded)", cyc, nop);
         // the links are trained before the token arrives (collective first-send point of the coll gate)
         while (cyc < 1200) @(negedge ck);
         ctl_up = 1;

@@ -21,7 +21,9 @@ for L in $LAYERS; do
 done
 FPF="rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv"
 [ $FP = dpi ] && FPF="rtl/test/sim_hdc_v41x_fastfp_dpi.sv rtl/test/sim_hdc_v41x_fastfp_wrap.sv rtl/test/sim_hdc_v41x_fastfp_dpi.cpp rtl/test/sim_hdc_fp32_f12_dpi_tops.sv rtl/test/nearhbm/sim_nhb_fp_lat_dpi.sv rtl/test/nearhbm/sim_nhb_fp_lat_dpi.cpp rtl/test/sim_hdc_fp32_lat_tops.sv rtl/test/sim_hdc_prefix_beh.sv rtl/test/sim_dsrom_fp32_add_l6_dpi.sv"
-LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.sv rtl/common/ot_ratio_cdc_fifo.sv
+# the HC (and SU) master file lists come from their own gates, so the vehicle always builds the gated RTL
+HCL=$(cd $SRC && python3 -c "import sys; sys.path.insert(0, 'tools/s81_suhc'); import hc_gate; print(' '.join(hc_gate.RTL))")
+LIST="$HCL rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.sv rtl/common/ot_ratio_cdc_fifo.sv
  rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv rtl/dsrom_sys/s81_ctrl/dsfd_stage_seq_c.sv
  rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv rtl/dsrom_sys/s81_ctrl/ot_s81_stage_guard.sv rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv
  rtl/dsrom_sys/s81_ctrl/ot_s81_stop.sv rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv rtl/dsrom_sys/ot_dsrom_stall_export.sv
@@ -57,7 +59,8 @@ sha256sum $FILES $SRC/tools/s81_ctrl/die_layer_stim.py $SRC/tools/s81_suhc/hc_ga
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 for m in $MODES; do
   case $m in base) X="";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";;
-    seqc) X="+define+TB_SEQC -GTMAX=110000";; mut_seqc) X="+define+TB_SEQC +define+OT_SSEQC_MUT_DROP_START -GTMAX=110000";; esac
+    seqc) X="+define+TB_SEQC -GTMAX=110000";; mut_seqc) X="+define+TB_SEQC +define+OT_SSEQC_MUT_DROP_START -GTMAX=110000";;
+    seqc_tr) X="+define+TB_SEQC +define+TB_TRACE -GTMAX=2300";; esac
   RUNL=$LAYERS; [ $m = base ] || [ $m = seqc ] || RUNL=$(echo $LAYERS | awk '{print $1}')
   ( $ADMIT $VL --binary --timing -j $J -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING \
       -DOT_S81PH_PLL_MODEL +define+OT_S81PH_COLL_JOB $SPL -I$S/s81_ctrl --unroll-count 4 -fno-dfg -CFLAGS -O1 \

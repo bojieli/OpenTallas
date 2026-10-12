@@ -50,7 +50,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 F = np.float32
-LAYERS = (0, 2)              # representative layer types; "head" = -1
+# representative layer types; "head" = -1.  OT_DSHBM_LAYERS (default "0,2") widens the dump (s81lv: 0,1,2,20,37)
+LAYERS = tuple(int(x) for x in os.environ.get("OT_DSHBM_LAYERS", "0,2").split(","))
 HEAD = -1
 SNAP_FNS = {"hc_pre_norm", "hc_post", "q_norm_kv_row", "q_rope", "router_act", "route", "swiglu", "moe_sum",
             "final_norm", "argmax_local", "index_q", "attend"}

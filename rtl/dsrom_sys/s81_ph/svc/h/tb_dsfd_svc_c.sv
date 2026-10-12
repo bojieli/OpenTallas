@@ -266,6 +266,11 @@ module tb_dsfd_svc_c (input wire clk);
                     key = (longint'(DIE) << 32) | (longint'(ST) << 30) | longint'(w341[31:2] + pq_b[i]);
                     if (((w341[31:2] + pq_b[i]) >> 2 ^ (w341[31:2] + pq_b[i]) >> 7 ^ (w341[31:2] + pq_b[i]) >> 12) % 32 != i) pc_err = pc_err + 1;
                     rv[i] <= 1; r_tag[i*17 +: 17] <= w341[52:36]; r_beat[i*4 +: 4] <= pq_b[i];
+`ifdef TB_HBM_MUT_BEAT
+                    // S6 mutant (s81lv): the HBM-side TLM answers beat b with the sector of beat b ^ 1 (beat slip)
+                    if (w341[35:32] > 1 && (pq_b[i] ^ 1) < w341[35:32])
+                        key = (longint'(DIE) << 32) | (longint'(ST) << 30) | longint'(w341[31:2] + (pq_b[i] ^ 1));
+`endif
                     r_data[i*256 +: 256] <= hbm.exists(key) ? hbm[key] : 256'd0;
                     if (pq_b[i] + 1 == w341[35:32]) begin pq_b[i] = 0; pq_h[i] = (pq_h[i] + 1) % PQ; pq_n[i] = pq_n[i] - 1; rk[i] <= 1; end
                     else pq_b[i] = pq_b[i] + 1;
