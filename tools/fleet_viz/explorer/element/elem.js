@@ -1,7 +1,8 @@
 /* Chip Explorer element page (/explorer/element/): one closed element (or a side-by-side pair), from its final routed
    DB (tools/explorer_elem_export.py: OpenROAD in the ORFS container with the closure loop's own sign-off STA setup) and
    its RTL at the closure's source commit (tools/explorer_elem/rtl_export.py: yosys elaboration of the exact synthesis
-   inputs).  Tabs: Layout (landing) · Timing · Clock arrival · Clock tree · Density · RTL (structure diagram, reference
+   inputs).  Tabs: Layout (landing: the routed-geometry viewer, layout.js + /api/layout) · Placement · Timing · Clock arrival ·
+   Clock tree · Density · RTL (structure diagram, reference
    model, source) · Facts (key numbers, throughput qualification, every fact with its record).
    URL: ?p=<page id> | ?e=<element id>; #tab=<tab>; ?safe=1 hides raw names. */
 (function(){
@@ -21,7 +22,8 @@ function hex2rgb(h){ h = h.replace('#', ''); if (h.length === 3) h = h.split('')
 
 const F = {flop: 1, clk: 2, lvt: 4, hold: 8, repair: 16, infer: 32, slvt: 64, icg: 128};
 const TABS = [
-  ['layout', 'Layout', 'Every placed cell of the routed layout, coloured by the RTL block it implements.'],
+  ['geo', 'Layout', 'The routed geometry from the final DB, per metal layer: every wire, via, pin and cell shape, with contract findings, timing paths, the clock tree and congestion drawn on it.'],
+  ['layout', 'Placement', 'Every placed cell of the routed layout, coloured by the RTL block it implements.'],
   ['timing', 'Timing', 'The worst setup (TT) and hold (FF) paths, drawn through their placed pins, with per-stage delays.'],
   ['arrival', 'Clock arrival', 'When the clock edge reaches each flop, on one colour scale for every element shown.'],
   ['tree', 'Clock tree', 'How one clock pin feeds every flop: each buffer level and clock gate, on the layout and as a level diagram.'],
@@ -45,7 +47,7 @@ const S = {page: null, pages: null, els: [], tab: 'layout', depth: null, iso: {}
 /* ------------------------------------------------------------------ theme */
 function applyTheme(){ const t = lsGet('theme', ''); if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
 applyTheme();
-$('theme').onclick = () => { const dark = cssv('color-scheme') !== 'light'; lsSet('theme', dark ? 'light' : 'dark'); applyTheme(); S.els.forEach(E => E.raster = {}); render(); };
+$('theme').onclick = () => { const dark = cssv('color-scheme') !== 'light'; lsSet('theme', dark ? 'light' : 'dark'); applyTheme(); S.els.forEach(E => E.raster = {}); render(); if (window.LayoutViewer) LayoutViewer.theme(); };
 
 /* ------------------------------------------------------------------ load */
 async function getJSON(u){ const r = await fetch(u, {cache: 'no-store'}); if (!r.ok) throw new Error(r.status + ' ' + u); return r.json(); }
@@ -66,7 +68,7 @@ async function init(){
   S.page = page;
   document.title = (page.title || 'Element Layout').slice(0, 40);
   $('title').textContent = page.title || page.elements.join(' vs ');
-  S.tab = hashTab() || 'layout';
+  S.tab = hashTab() || 'geo';
   renderTabs();
   buildStage();
   const els = await Promise.all(page.elements.map(async (id, k) => {
@@ -253,8 +255,31 @@ function setTab(k){
   render();
 }
 window.addEventListener('hashchange', () => { if (/^#(story-|overview)/.test(location.hash)){ setTab('layout'); return; } const t = hashTab(); if (t && t !== S.tab) setTab(t); });
+/* ------------------------------------------------------------------ Layout tab: the routed-geometry viewer (layout.js) */
+let lvLoading = null;
+function renderGeo(){
+  const on = S.tab === 'geo';
+  $('stage').hidden = on; $('side').hidden = on; $('geo').hidden = !on; $('geoside').hidden = !on;
+  if (!on){ if (window.LayoutViewer) LayoutViewer.close(); return false; }
+  const ok = S.els.filter(E => E.d);
+  if (!ok.length){ $('geo').innerHTML = '<div class="lv-busy">' + esc(S.els.map(E => E.err || '').join(' ') || 'No element data.') + '</div>'; return true; }
+  const k = Math.min(S.geoEl || 0, ok.length - 1), E = ok[k];
+  if (ok.length > 1){
+    $('tabdesc').innerHTML = esc(TABS[0][2]) + ' <span class="seg" style="margin-left:8px">' + ok.map((x, i) => `<button type="button" data-ge="${i}" aria-pressed="${i === k}">${esc(short(x))}</button>`).join('') + '</span>';
+    $('tabdesc').querySelectorAll('[data-ge]').forEach(b => b.onclick = () => { S.geoEl = +b.dataset.ge; render(); });
+  }
+  const go = () => LayoutViewer.open({root: $('geo'), side: $('geoside'), el: E.id, d: E.d, E: E.nolayout || E.err ? null : E, safe: SAFE,
+    onFallback: () => setTab('layout')});
+  if (window.LayoutViewer) go();
+  else {
+    lvLoading = lvLoading || new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'layout.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+    lvLoading.then(go).catch(e => { $('geo').innerHTML = '<div class="lv-busy">Layout viewer failed to load: ' + esc(String(e)) + '</div>'; });
+  }
+  return true;
+}
 function render(){
   document.body.className = 'tab-' + S.tab;
+  if (renderGeo()) return;
   S.els.forEach(E => { if (!E.err && !E.nolayout && (!E.view || E.view.auto)) fit(E); });
   renderSide(); redrawAll();
 }

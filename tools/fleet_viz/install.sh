@@ -11,6 +11,18 @@ rm -rf "$dst/explorer/token"; cp -r "$src/explorer/token" "$dst/explorer/token"
 rm -rf "$dst/explorer/coverage"; cp -r "$src/explorer/coverage" "$dst/explorer/coverage"
 # element pages: page + pages.json from the repo; explorer/element/data/ is deploy data (tools/explorer_elem_export.py pack), kept
 mkdir -p "$dst/explorer/element/data"; cp "$src"/explorer/element/{index.html,elem.js,pages.json} "$dst/explorer/element/"
+# layout viewer (Layout tab): client, vendored deck.gl, tiling service, and the host-side tools it ships to fleet hosts
+cp "$src"/explorer/element/{layout.js,lv_worker.js,lv_decode.js} "$dst/explorer/element/"
+mkdir -p "$dst/explorer/element/vendor"; cp "$src"/explorer/element/vendor/*.js "$dst/explorer/element/vendor/"
+cp "$src"/layout_service.py "$dst/"
+mkdir -p "$dst/layout_viewer"; cp "$src"/../layout_viewer/{lv_extract.py,lv_tile.py,lv_lint.py} "$src"/../hier_contract/child_lint.py "$dst/layout_viewer/"
+# python 3.14 fleet hosts have no brotli module: ship the wheel's contents next to lv_tile.py (pylib314/)
+if [ ! -f "$dst/layout_viewer/pylib314/brotli.py" ]; then
+  tmp=$(mktemp -d); python3 -m pip download -q brotli==1.2.0 --python-version 3.14 --only-binary=:all: \
+    --platform manylinux2014_x86_64 --platform manylinux_2_17_x86_64 --no-deps -d "$tmp" \
+    && mkdir -p "$dst/layout_viewer/pylib314" && (cd "$dst/layout_viewer/pylib314" && python3 -m zipfile -e "$tmp"/brotli-*.whl .)
+  rm -rf "$tmp"
+fi
 rm -rf "$dst/landing"; mkdir -p "$dst/landing/recordings"
 cp "$src"/landing/{index.html,landing.css,landing.js} "$dst/landing/"; cp "$src"/landing/recordings/*.json "$dst/landing/recordings/"
 cp "$src"/fleet-viz.service "$HOME/.config/systemd/user/"
