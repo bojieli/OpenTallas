@@ -84,7 +84,7 @@
  "job": {
   "owner": "Claude:s81-suhc-hier-1011",
   "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "tag": "v1",
+  "tag": "v2",
   "purpose": "s81-suhc-hier-1011 HC crootr C=0 via the reference tile flow (die slot contract_hcs outline + faces): a860089b7 rw-pd40 hand view NEEDS_RTL TT -31.83 / FF -4.97 (input s_fd -> fd_c capture hold) -> uniform input hold stage (inhold) + ref_tile io_ref; ",
   "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_crootrw_ref/views",

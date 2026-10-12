@@ -1,20 +1,14 @@
 {
- "name": "hgi_seq_v2-v2-905100ec5",
+ "name": "hgi_seq_v2-v23-COMMIT",
  "block": "ot_hgi_seq",
  "ref_tile": true,
- "owner": "Claude:el1011-hbm-tputx-cpf",
- "purpose": "tputx-cpf: ot_hgi_seq v2.1 throughput restructure (decoupled FE / 6-stage CSA address unit / 8-entry record queue / early indexed resolver / BE; NOS 160) -- CP.FETCH 7.36x -> 0.75x of price; first route of the new structure via ref_tile",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-pve1"
- ],
+ "owner": "Claude:el1011-hbm-b2-cp",
+ "purpose": "ot_hgi_seq v2.3 (prefetching fetch sequencer for CP.FETCH, 0.794x of price; B2 dispatch path 0.828x): v2.2 route 905100ec5 TT -186.91 fixed structurally (registered header alloc, thermometer FIFO control, staged writes, registered DYN row / resolver operands, hold-delay cells on inputs)",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/el1011-hbm-tputx-cpf",
-  "commit": "905100ec5",
+  "branch": "claude/el1011-hbm-b2-cp",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/tb",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
@@ -100,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_seq_v2/hgi_seq_v2-v2-905100ec5"
+   "to": "results/rtl/ref_tile/hgi_seq_v2/hgi_seq_v2-v23-COMMIT"
   }
  ],
  "cycles_added": 0,
