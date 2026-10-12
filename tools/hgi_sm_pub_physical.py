@@ -26,13 +26,23 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import hbm_accel_smh_physical as smh  # noqa: E402
 
 SRAM = "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+SRAM32 = "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"   # smmv AD 32: arrival data, 2 a local SM (u_lo / u_hi)
 SRC_RTL = ["rtl/lib/ot_rst_relay.sv", "rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv",
-           SRAM + "/ot_sram_1r1w_128x256_m1_r2c2_bb.v"]
+           SRAM + "/ot_sram_1r1w_128x256_m1_r2c2_bb.v", SRAM32 + "/ot_sram_1r1w_32x128_m1_bb.v"]
 NSS, NC, NSL, NCOL = 4, 8, 8, 4
-SW, SH = 259.2, 302.4                      # slice outline
+# smmv 10-12 (AD 32 + sm_cr): the slice gains 8 x 32x128 arrival SRAMs (51.408 x 20.79).  Outline grown from 259.2 x
+# 302.4 so macros + std cells stay <= 55 % (macros 39.7k + ~11k cells in 104.6k um2 = ~48 %): the 2 big columns keep their
+# rows; a 4-wide band of arrival SRAMs under the N face (the SM result ports) + a 4-high centre column between the big
+# columns, >= 21.38 um channels everywhere (centre column 22.68 / 21.38 to the big columns, band 21.6 above the top row).
+SW, SH = 319.68, 327.24                    # slice outline
 MW, MH = 94.824, 41.04                     # 128x256 SRAM
 XA, YB, RP = 17.28, 34.56, 62.64           # col A x, first macro row y, macro row pitch (21.6 um channels)
 XB = round(SW - XA - MW, 3)
+SW32, SH32 = 51.408, 20.79                  # 32x128 SRAM
+XC32 = 134.784                              # centre column x (channels 22.68 / 21.38 to columns A / B)
+YBAND = round(YB + 3 * RP + MH + 21.6, 3)   # N band y (21.6 above the top big row)
+XBAND0, XBP = 24.624, round(SW32 + 21.6, 3)  # band x0, band pitch (4 macros, 24.6 um to each side edge)
+YC32 = [round(YB + 3 * RP + MH - SH32 - i * (SH32 + 21.6), 3) for i in range(4)]   # centre column, top down
 EDGE, GAP, CH = 17.28, 25.92, 103.68       # parent: edge margin, column gap, central channel
 PW = round(2 * EDGE + NCOL * SW + (NCOL - 1) * GAP, 3)
 PH = round(2 * EDGE + 2 * SH + CH, 3)
@@ -101,6 +111,13 @@ def slice_macros_tcl():
     t = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
          "  if {![[$ot_inst getMaster] isBlock]} { continue }",
          "  set n [string map {\"\\\\\" \"\"} [$ot_inst getName]]",
+         "  if {[regexp {g_af\\[(\\d+)\\]\\.u_(lo|hi)} $n -> a h]} {",
+         "    set k [expr {2 * $a + ($h eq \"hi\" ? 1 : 0)}]",
+         f"    if {{$k < 4}} {{ set x [expr {{{XBAND0} + $k * {XBP}}}]; set y {YBAND} }} \\",
+         f"    else {{ set x {XC32}; set y [lindex {{{' '.join(str(v) for v in YC32)}}} [expr {{$k - 4}}]] }}",
+         "    place_macro -macro_name [$ot_inst getName] -location [list $x $y] -orientation R0",
+         "    incr ot_n; continue",
+         "  }",
          "  if {![regexp {g_m\\[(\\d+)\\]\\.u_m} $n -> q]} { error \"no slot for $n\" }",
          f"  set y [expr {{{YB} + ($q % 4) * {RP}}}]",
          f"  if {{$q < 4}} {{ place_macro -macro_name [$ot_inst getName] -location [list {XA} $y] -orientation R0 }} \\",
@@ -139,7 +156,7 @@ def cmd_block(a):
         name, die = VSLICE, (SW, SH)
         north, south = slice_pins()
         pins = north + south
-        macros = [SRAM]
+        macros = [SRAM, SRAM32]
         extra.update({"MAX_ROUTING_LAYER": "M6", "PDN_TCL": "/src/tools/chip_assembly/tcl/pdn_hgi_pub_child.tcl",
                       "MACRO_PLACE_HALO": "3 3", "GDS_ALLOW_EMPTY": "(ot_sram.*)"})
         (work / "macros.tcl").write_text(slice_macros_tcl())
