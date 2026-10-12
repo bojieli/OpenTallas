@@ -1,6 +1,6 @@
 # HBM die B2: quadrant-local VM slices (spec, 2026-10-12)
 
-**Status: v0.5 (10-12 08:10 PT; v0.5 = HC weight aperture MOVED to 294,912-360,447 (REPL keeps 262,144-294,911), COLL star edge and ring channel adopted as built; v0.4 = GRT gate PASSED (section 7), ring physical channel settled against the built VM-slice RTL, coll_tkm kept, contract v9 proposal in section 6; v0.3 = section 5.0 budget counts EXPOSED cycles + bandwidth sizing; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
+**Status: v0.6 (10-12 08:30 PT; v0.6 = IDX.INDEX gets a WIDE lanestation slot (slot 5) on slice SW, operand placement rule IDX-P; v0.5 = HC weight aperture MOVED to 294,912-360,447 (REPL keeps 262,144-294,911), COLL star edge and ring channel adopted as built; v0.4 = GRT gate PASSED (section 7), ring physical channel settled against the built VM-slice RTL, coll_tkm kept, contract v9 proposal in section 6; v0.3 = section 5.0 budget counts EXPOSED cycles + bandwidth sizing; v0.2 = section 5a fixes F1-F3 from the measured OLD-VM traffic, COLL broadcast star 2,112 b).** Streams may build against the constants in section 2a. The open items
 are marked TBD. The windowed hub GRT gate PASSED (section 7: window overflow -89.7 % vs v8). Changes after the gate are versioned here and
 announced in `claude-takeover-20261007/el1011-hbm-b2.log`.
 
@@ -141,7 +141,7 @@ The REPL window uses the mirror storage, so each slice has 98,304 physical words
 - svc band / HBM stack q.
 
 The central (ring-client) units are cmdproc (CP and the ATT adapter), quant, hc_eng, coll (via the broadcast) and idx
-(via packet).
+(via packet). **v0.6:** idx is ALSO a wide client: IDX.INDEX takes slot 5 on slice SW's local lane group (below).
 
 **Address map.**
 - `VM_WORDS_TOTAL` = 262,144 words, owned, plus the REPL window.
@@ -166,6 +166,16 @@ protocols are unchanged; only the lane count goes 32 → 8.
 - Lane b ↔ local bank b.
 - Slot list a cluster: SU 0, SFU 1, HC 2, ATT (quadrant tiles) 3, SM x-load (VM8 quarter) 4. KE = 5 slots, a
   round-robin lanearb.
+- **v0.6 (coordinator decision): IDX.INDEX wide slot.** Slice SW (q 0) is nearest the `hb_hgi_idx` site
+  ((14,800, 7,113) um, below the SW slice at y 8,999), so SW's group has KE = 6: slot 5 = `ot_hgi_idx_index_w`
+  (`claude/el1011-hbm-idxs`, `ot_hgi_idx_unit` IXW = 1), a standard 8-lane lanestation client (taps rup 129 / rdn 2,065
+  / wup 2,241 / wdn 17; lane b ↔ bank sector[2:0]). The other three slices stay at KE = 5. A packet-only IDX.INDEX
+  is not allowed: it measured 8.60x over its price on DS L24 (9,291 vs 1,080 cycles). idx keeps its packet port for
+  TOPK / MERGE / OWNED.
+- **IDX-P placement rule (exporter).** IDX.INDEX's query A (4,096 words), B (32 words) and candidate table C
+  (2 x 2,048 words, stride % 32 == 0) go in REPL; its weights and outputs O / R / D go in slice SW's local region
+  (0 .. 65,535). Every IDX.INDEX wide access is then slice-local (D-B2-8). The exporter refuses an IDX.INDEX record
+  whose operands break this rule.
 - TBD: whether attention takes its own station or shares the SU station (attention stream).
 
 **HC aperture a quarter.** `vmap_<q>` is 556 b (2 lanes x 278), plus `vmap_<q>_r` of 4 b (ap credit 2 + done 2).
@@ -427,6 +437,7 @@ weight aperture moves from 262,144-327,679 to 294,912-360,447 (same 65,536 words
 | D-B2-7 coll_tkm | KEEP `ot_hgi_coll_tkm` (16 `hgi_coll_tkm_tile` chain) inside `hb_coll`; result to the slices over `vcb`. `ot_hbm_index_global_order_mt` is the IDX id-merge (no value key, no top-k, no -0 / NaN / tie-to-lower-id rules), so it cannot do COLL.TOPK_MERGE (DS 9 / token, cross-die) |
 | D-B2-8 wide lanes | slice-LOCAL only (RG 2 read groups, WG 2 write groups, DMA lane, COLL lane a bank tile). No remote wide reads: F1 (REPL x) and F2 (VOP partition alignment) make them unnecessary, and the exporter refuses a record that would need one. Packet clients (338 / 274 b) reach remote addresses through the ring |
 | D-B2-9 VM8 | `hb_vm_<q>` abuts slice q (fixes the 3 link-domain clock / reset reach FAILs at (14.8-15.6, 18.9-20.0) mm, where the x-load pins crowd the tree nodes) |
+| D-B2-11 IDX | `hb_hgi_idx` = wide client, slot 5 of slice SW's local group (KE 6 there), `ot_hgi_idx_index_w` 8-lane tap 2,065 / 17 / 129 / 2,241 b, a new SW-group chain station at the idx face; IDX-P placement (A / B / C in REPL; weights and O / R / D in SW-local). Packet port kept for TOPK / MERGE / OWNED |
 | D-B2-10 harness | R4 records per-sector t_arrive / t_need; `bcast_bits` 2,048, `bcast_hops` 1, `ring_link_bits` 2,048 both directions, ring hop 12 / 11 |
 
 **Cut analysis (v9, study method of `hbm_die_phy_study_1012/cuts.py`).** The study's B2 spine cut (x = 15 mm, y 10-16)
