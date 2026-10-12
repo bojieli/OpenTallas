@@ -158,10 +158,16 @@ module ot_hgi_quant_wide_h #(
         r_ok_l[b] = (rcr[b] > CW'(hit_r[b])) && ((lf_r[b] + (LW+1)'(hit_r[b])) < (LW+1)'(LD));
     wire r_cr_ok = &(~lanes(r_sec[4:0], r_nsec) | r_ok_l);
     wire r_issue = busy && !bad && rg_ok && !rd_done && r_used < NB && r_cr_ok;
-    wire [4:0] h_l = bq_l[r_head]; wire [2:0] h_n = bq_n[r_head];
+    // read head lookahead (el1011-hbm-fq 10-12, qw_h3_ref-f2h CTS SS r_head -> bq mux -> lanes -> l_fire -> mq_sec, 20
+    // levels): hh_* = entry r_head of bq, registered.  Both candidates for the next head (r_head, r_head + 1) are read
+    // from bq in parallel, with a bypass when r_issue writes that slot this edge (only possible when it is the head:
+    // r_used == 0 for r_head, r_used == 1 for r_head + 1); l_fire / p_go only pick between them at the end.  Exact: a
+    // live head slot (r_used != 0) is never rewritten (r_issue needs r_used < NB), so hh == bq[r_head] whenever used.
+    reg [4:0] hh_l; reg [2:0] hh_n; reg [31:0] hh_ln;
+    wire [4:0] h_l = hh_l; wire [2:0] h_n = hh_n;
     reg [31:0] h_ok_l;
     always @* for (integer b = 0; b < 32; b = b + 1) h_ok_l[b] = lf_n[b] > (LW+1)'(hit_p[b]);
-    wire h_ok = (r_used != 0) && &(~lanes(h_l, h_n) | h_ok_l);
+    wire h_ok = (r_used != 0) && &(~hh_ln | h_ok_l);
     wire l_fire = busy && h_ok && resv < OD;
     // write head lookahead: hd_* = meta of entry od_h, re-read every edge for the next od_h.  Exact: an entry counts in od_n
     // only after its gather/decode/capture pipeline (>= 5 edges after its meta write), so mq is settled when hd reads it.
@@ -171,6 +177,16 @@ module ot_hgi_quant_wide_h #(
     always @* for (integer b = 0; b < 32; b = b + 1) w_ok_l[b] = wcr[b] > CW'(hit_w[b]);
     wire w_cr_ok = &(~hd_ln | w_ok_l);
     wire w_fire = busy && !bad && wg_ok && od_n != 0 && w_cr_ok;
+    wire [SW-1:0] r_head1 = r_head + 1'b1;
+    wire c0_b = r_issue && (r_used == 0), c1_b = r_issue && (r_used == 1);
+    wire [4:0] c0_l = c0_b ? r_sec[4:0] : bq_l[r_head];  wire [2:0] c0_n = c0_b ? r_nsec : bq_n[r_head];
+    wire [4:0] c1_l = c1_b ? r_sec[4:0] : bq_l[r_head1]; wire [2:0] c1_n = c1_b ? r_nsec : bq_n[r_head1];
+    wire [31:0] c0_ln = lanes(c0_l, c0_n), c1_ln = lanes(c1_l, c1_n);
+    always @(posedge clk) begin
+        // p_go: r_head -> 0 with r_used 0; the next issue writes slot 0 with r_used == 0 and bypasses into hh
+        if (l_fire && !p_go) begin hh_l <= c1_l; hh_n <= c1_n; hh_ln <= c1_ln; end
+        else begin hh_l <= c0_l; hh_n <= c0_n; hh_ln <= c0_ln; end
+    end
     wire [OW-1:0] od_hn = p_go ? {OW{1'b0}} : (w_fire ? od_h + 1'b1 : od_h);
     always @(posedge clk) begin
         hd_sec <= mq_sec[od_hn]; hd_n <= mq_n[od_hn]; hd_ln <= lanes(mq_sec[od_hn][4:0], mq_n[od_hn]);
@@ -189,16 +205,22 @@ module ot_hgi_quant_wide_h #(
     always @(posedge clk or negedge rr_n[1])
         if (!rr_n[1]) begin hr2 <= 0; hp2 <= 0; end
         else begin hr2 <= hit_r; hp2 <= hit_p; end
-    // ---------------------------------------------------------------- gather: 2-level OR, launch
+    // ---------------------------------------------------------------- gather: registered OR2 tree, launch
+    // (el1011-hbm-fq 10-12, qw_h3_ref-f2h CTS SS -382.8: the 4-way OR across a 2 x 2 block of rq tiles into go_h was one
+    // stage over ~300 um of 1,024-bit wire.)  Now every stage is one OR2 of two neighbours: gp[k] = the two side-by-side
+    // tiles of row k (registered between them), go_h[h] = two adjacent rows, lx = the two halves next to the decoder.
+    // +1 edge of gather latency; gv follows (5 deep).
+    (* keep *) reg [1023:0] gp [0:3];
     reg [1023:0] go_h [0:1]; reg [1023:0] lx;
-    reg [3:0] gv; reg launch;
+    reg [4:0] gv; reg launch;
     always @(posedge clk) begin
-        for (integer h = 0; h < 2; h = h + 1) go_h[h] <= gq[h*4] | gq[h*4 + 1] | gq[h*4 + 2] | gq[h*4 + 3];
+        for (integer k = 0; k < 4; k = k + 1) gp[k] <= gq[k*2] | gq[k*2 + 1];
+        for (integer h = 0; h < 2; h = h + 1) go_h[h] <= gp[h*2] | gp[h*2 + 1];
         lx <= go_h[0] | go_h[1];
     end
     always @(posedge clk or negedge rr_n[0])
         if (!rr_n[0]) begin gv <= 0; launch <= 0; end
-        else begin gv <= {gv[2:0], |hit_p}; launch <= gv[3]; end
+        else begin gv <= {gv[3:0], |hit_p}; launch <= gv[4]; end
     // ---------------------------------------------------------------- decode tile, result capture, SRAM FIFO
     wire d_vo, d_f, d_df; wire [511:0] d_y;
     generate if (DEC3 != 0) begin : g_d3
@@ -255,7 +277,7 @@ module ot_hgi_quant_wide_h #(
         end else begin
             c_done <= 0;
             hit_r <= r_issue ? lanes(r_sec[4:0], r_nsec) : 32'd0;
-            hit_p <= l_fire ? lanes(h_l, h_n) : 32'd0;
+            hit_p <= l_fire ? hh_ln : 32'd0;
             hit_w <= w_fire ? hd_ln : 32'd0;
             if (p_go) begin
                 busy <= 1; bad <= 0; c_fault <= 0; hdr <= p_cmd[128:1];
@@ -304,9 +326,14 @@ module ot_hgi_quant_wide_h #(
             end
         end
     end
+    // meta write one edge after l_fire (mw_*: l_fire only loads a few control flops, not the 64-entry write enables).
+    // Exact: hd reads an entry only once it counts in od_n, >= 6 edges after this write.
+    reg mw_v; reg [OW-1:0] mw_a; reg [14:0] mw_sec; reg [2:0] mw_n;
+    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) mw_v <= 0; else mw_v <= l_fire;
+    always @(posedge clk) begin mw_a <= mq_t; mw_sec <= w_rowbase[17:3] + 15'({w_beat, 2'd0}); mw_n <= h_n; end
     always @(posedge clk) begin
         if (r_issue) begin bq_l[r_tail] <= r_sec[4:0]; bq_n[r_tail] <= r_nsec; end
-        if (l_fire) begin mq_sec[mq_t] <= w_rowbase[17:3] + 15'({w_beat, 2'd0}); mq_n[mq_t] <= h_n; end
+        if (mw_v) begin mq_sec[mw_a] <= mw_sec; mq_n[mw_a] <= mw_n; end
     end
     initial if (NB < 8 || (NB & (NB - 1)) != 0 || (LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_quant_wide_h: NB / LQ");
 endmodule
