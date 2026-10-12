@@ -1,5 +1,5 @@
 {
- "name": "hattn_ks_entry-m5-COMMIT",
+ "name": "hattn_ks_entry-m5-bcd09bc3f",
  "block": "ot_attn_ks_entry",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-attn",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-attn-phys",
-  "commit": "COMMIT"
+  "commit": "bcd09bc3f"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hattn_ks_entry/hattn_ks_entry-m5-COMMIT"
+   "to": "results/rtl/ref_tile/hattn_ks_entry/hattn_ks_entry-m5-bcd09bc3f"
   }
  ],
  "cycles_added": 0,
