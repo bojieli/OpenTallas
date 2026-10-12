@@ -1,5 +1,5 @@
 {
- "name": "qfd_port_tiles_tp8_s14o-v2-COMMIT",
+ "name": "qfd_port_tiles_tp8_s14o-v2-ed9a37b29",
  "block": "ot_qwen_slab_port_group",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8/par-port",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-qwen-tp8-par-port",
-  "commit": "COMMIT",
+  "commit": "ed9a37b29",
   "extra_paths": [
    "src",
    "results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json",
@@ -146,7 +146,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_port_tiles_tp8_s14o/qfd_port_tiles_tp8_s14o-v2-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_port_tiles_tp8_s14o/qfd_port_tiles_tp8_s14o-v2-ed9a37b29"
   }
  ],
  "cycles_added": 0,
