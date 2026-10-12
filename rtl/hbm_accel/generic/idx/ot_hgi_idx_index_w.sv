@@ -32,17 +32,17 @@ module ot_hgi_idx_index_w #(
 ) (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire          go,
-    input  wire [11:0]   k,
-    input  wire          cand_en, keep_en,
-    input  wire [31:0]   n,
-    input  wire [6:0]    rank,
-    input  wire [19:0]   pos,
-    input  wire [17:0]   a_base, b_base, c_base, o_base, r_base, d_base,
-    input  wire [17:0]   d_stride,
-    input  wire [17:0]   c_stride,
-    input  wire [11:0]   c_n,
-    input  wire          has_r,
+    input  wire          go_i,
+    input  wire [11:0]   k_i,
+    input  wire          cand_en_i, keep_en_i,
+    input  wire [31:0]   n_i,
+    input  wire [6:0]    rank_i,
+    input  wire [19:0]   pos_i,
+    input  wire [17:0]   a_base_i, b_base_i, c_base_i, o_base_i, r_base_i, d_base_i,
+    input  wire [17:0]   d_stride_i,
+    input  wire [17:0]   c_stride_i,
+    input  wire [11:0]   c_n_i,
+    input  wire          has_r_i,
     output reg           done,
     output reg           fault,
     // VM wide read group (32 lanes, lane b <-> bank b = sector mod 32)
@@ -71,10 +71,23 @@ module ot_hgi_idx_index_w #(
     localparam [1:0] K_B = 2'd0, K_CI = 2'd1, K_CV = 2'd2, K_A = 2'd3;
     localparam integer DLB = $clog2(DL), CB = $clog2(LQ) + 1;
     integer i, l, p;
+    // local reset: rst_n lands in a 2-flop synchroniser (asserts at once, releases on the clock); every control register
+    // resets from this flop, the wide datapath registers carry no reset
+    reg rs1, rn;
+    always @(posedge clk or negedge rst_n) if (!rst_n) {rn, rs1} <= 2'b00; else {rn, rs1} <= {rs1, 1'b1};
+    // frame command pin registers (the record station holds them for the whole frame; go is a pulse)
+    reg go; reg [11:0] k; reg cand_en, keep_en; reg [31:0] n; reg [6:0] rank; reg [19:0] pos;
+    reg [17:0] a_base, b_base, c_base, o_base, r_base, d_base, d_stride, c_stride; reg [11:0] c_n; reg has_r;
+    always @(posedge clk or negedge rn) if (!rn) go <= 1'b0; else go <= go_i;
+    always @(posedge clk) begin
+        k <= k_i; cand_en <= cand_en_i; keep_en <= keep_en_i; n <= n_i; rank <= rank_i; pos <= pos_i;
+        a_base <= a_base_i; b_base <= b_base_i; c_base <= c_base_i; o_base <= o_base_i; r_base <= r_base_i;
+        d_base <= d_base_i; d_stride <= d_stride_i; c_stride <= c_stride_i; c_n <= c_n_i; has_r <= has_r_i;
+    end
     // ================================================================ pin registers (inputs)
     reg [31:0] rcr_q, wcr_q, wdn_q, rr_v; reg [32*256-1:0] rr_d; reg rgnt_q, wgnt_q, qbr_q; reg [1:0] ev_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rcr_q <= '0; wcr_q <= '0; wdn_q <= '0; rr_v <= '0; rgnt_q <= 1'b0; wgnt_q <= 1'b0; qbr_q <= 1'b0;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin rcr_q <= '0; wcr_q <= '0; wdn_q <= '0; rr_v <= '0; rgnt_q <= 1'b0; wgnt_q <= 1'b0; qbr_q <= 1'b0;
             ev_q <= 2'd0; end
         else begin
             rcr_q <= wrq_cr; wcr_q <= wwq_cr; wdn_q <= wwq_done; rgnt_q <= rg_gnt; wgnt_q <= wg_gnt; qbr_q <= qbr; ev_q <= ev;
@@ -115,12 +128,12 @@ module ot_hgi_idx_index_w #(
     end
     wire ch_go = ch_v && ch_ok;
     // ================================================================ landing FIFOs (lane-local)
-    reg [255:0] lm [0:31][0:DL-1]; reg [DLB:0] lwp [0:31], lrp [0:31];
+    reg [255:0] lm [0:32*DL-1]; reg [DLB:0] lwp [0:31], lrp [0:31];   // lm: lane l entry e at l * DL + e
     reg [31:0] lne, lpop;
     always @* for (l = 0; l < 32; l = l + 1) lne[l] = lwp[l] != lrp[l];
-    always @(posedge clk) for (l = 0; l < 32; l = l + 1) if (rr_v[l]) lm[l][lwp[l][DLB-1:0]] <= rr_d[l*256 +: 256];
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) for (l = 0; l < 32; l = l + 1) begin lwp[l] <= '0; lrp[l] <= '0; end
+    always @(posedge clk) for (l = 0; l < 32; l = l + 1) if (rr_v[l]) lm[l*DL + lwp[l][DLB-1:0]] <= rr_d[l*256 +: 256];
+    always @(posedge clk or negedge rn)
+        if (!rn) for (l = 0; l < 32; l = l + 1) begin lwp[l] <= '0; lrp[l] <= '0; end
         else for (l = 0; l < 32; l = l + 1) begin
             if (rr_v[l]) lwp[l] <= lwp[l] + 1'b1;
             if (lpop[l]) lrp[l] <= lrp[l] + 1'b1;
@@ -139,10 +152,10 @@ module ot_hgi_idx_index_w #(
     wire g_take;
     wire g_load = h_rdy && (!g_v || g_take);
     always @* lpop = g_load ? h_mask : 32'd0;
-    always @(posedge clk or negedge rst_n) if (!rst_n) g_v <= 1'b0; else if (!g_v || g_take) g_v <= h_rdy;
+    always @(posedge clk or negedge rn) if (!rn) g_v <= 1'b0; else if (!g_v || g_take) g_v <= h_rdy;
     always @(posedge clk) if (g_load) begin
         g_kind <= h_kind; g_slot <= h_slot; g_cnt <= h_cnt; g_shi <= h_shi;
-        for (l = 0; l < 4; l = l + 1) g_d[l*256 +: 256] <= lm[{h_grp, 2'(l)}][lrp[{h_grp, 2'(l)}][DLB-1:0]];
+        for (l = 0; l < 4; l = l + 1) g_d[l*256 +: 256] <= lm[{h_grp, 2'(l)}*DL + lrp[{h_grp, 2'(l)}][DLB-1:0]];
     end
     wire [255:0] g_sec0 = g_d[g_slot*256 +: 256];
     // ================================================================ KEEP walk
@@ -167,8 +180,8 @@ module ot_hgi_idx_index_w #(
     reg [341:0] keep [0:3];
     reg [11:0] c_iss, c_done;               // C chunks (id + value) issued / consumed this frame
     reg [17:0] cw_w; reg [31:0] cv_w; reg [14:0] cq;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin h0_v <= 1'b0; k1_v <= 1'b0; k2_v <= 1'b0; k3_v <= 1'b0; mb <= 32'd0; ks_v <= 1'b0; end
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin h0_v <= 1'b0; k1_v <= 1'b0; k2_v <= 1'b0; k3_v <= 1'b0; mb <= 32'd0; ks_v <= 1'b0; end
         else begin
             if (g_ci && !h0_v) h0_v <= 1'b1; else if (k1_ld) h0_v <= 1'b0;
             if (k1_free) k1_v <= k1_ld;
@@ -233,16 +246,16 @@ module ot_hgi_idx_index_w #(
     wire t_pop = t_ld && hb;
     wire c_pop = st == S_RUN && cfn != 4'd0 && d1_free;
     wire flush_go = flush && (&pk_rdy);
-    ot_hgi_idx_wpack u_p0 (.clk(clk), .rst_n(rst_n), .ld(st == S_IDLE && go), .base(o_base), .in_v(t2_go), .in_n(t2_n),
+    ot_hgi_idx_wpack u_p0 (.clk(clk), .rst_n(rn), .ld(st == S_IDLE && go), .base(o_base), .in_v(t2_go), .in_n(t2_n),
         .in_w(t2_o), .flush(flush_go), .rdy(pk_rdy[0]), .e_v(pk_ev[0]), .e_sec(pk_sec[0 +: 15]), .e_d(pk_d[0 +: 256]),
         .e_m(pk_m[0 +: 8]), .e_take(e_take[0]), .empty(pk_empty[0]));
-    ot_hgi_idx_wpack u_p1 (.clk(clk), .rst_n(rst_n), .ld(st == S_IDLE && go), .base(r_base), .in_v(t2_go && has_r),
+    ot_hgi_idx_wpack u_p1 (.clk(clk), .rst_n(rn), .ld(st == S_IDLE && go), .base(r_base), .in_v(t2_go && has_r),
         .in_n(t2_n), .in_w(t2_r), .flush(flush_go), .rdy(pk_rdy[1]), .e_v(pk_ev[1]), .e_sec(pk_sec[15 +: 15]),
         .e_d(pk_d[256 +: 256]), .e_m(pk_m[8 +: 8]), .e_take(e_take[1]), .empty(pk_empty[1]));
-    ot_hgi_idx_wpack u_p2 (.clk(clk), .rst_n(rst_n), .ld(st == S_IDLE && go), .base(d_base), .in_v(d1_go), .in_n(d1_n),
+    ot_hgi_idx_wpack u_p2 (.clk(clk), .rst_n(rn), .ld(st == S_IDLE && go), .base(d_base), .in_v(d1_go), .in_n(d1_n),
         .in_w(d1_i), .flush(flush_go), .rdy(pk_rdy[2]), .e_v(pk_ev[2]), .e_sec(pk_sec[30 +: 15]), .e_d(pk_d[512 +: 256]),
         .e_m(pk_m[16 +: 8]), .e_take(e_take[2]), .empty(pk_empty[2]));
-    ot_hgi_idx_wpack u_p3 (.clk(clk), .rst_n(rst_n), .ld(st == S_IDLE && go), .base(d_base + d_stride), .in_v(d1_go),
+    ot_hgi_idx_wpack u_p3 (.clk(clk), .rst_n(rn), .ld(st == S_IDLE && go), .base(d_base + d_stride), .in_v(d1_go),
         .in_n(d1_n), .in_w(d1_x), .flush(flush_go), .rdy(pk_rdy[3]), .e_v(pk_ev[3]), .e_sec(pk_sec[45 +: 15]),
         .e_d(pk_d[768 +: 256]), .e_m(pk_m[24 +: 8]), .e_take(e_take[3]), .empty(pk_empty[3]));
     // write lane arbitration (fixed priority O, R, D ids, D values; one sector a lane a cycle; per-lane credits)
@@ -262,8 +275,8 @@ module ot_hgi_idx_index_w #(
     end
     // ================================================================ main sequential block
     reg [3:0] cntv; reg [3:0] pref; reg [1:0] rnk; reg [255:0] o_acc, r_acc;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
             st <= S_IDLE; done <= 1'b0; fault <= 1'b0; bad <= 1'b0; is_on <= 1'b0; is_cv <= 1'b0;
             lg_n <= 6'd0; lg_h <= 5'd0; lg_t <= 5'd0; rg_req <= 1'b0; wg_req <= 1'b0;
             fs <= 90'd0; qb[0] <= 1'b0; kin[0] <= 1'b0; toc <= 1'b0; coc <= 1'b0; fs_pend <= 1'b0; qfull <= 1'b0;
@@ -421,7 +434,7 @@ module ot_hgi_idx_index_w #(
         end
     end
 `ifndef SYNTHESIS
-    always @(posedge clk) if (rst_n) begin
+    always @(posedge clk) if (rn) begin
         for (l = 0; l < 32; l = l + 1) if (rr_v[l] && lwp[l] - lrp[l] == (DLB+1)'(DL))
             $fatal(1, "ot_hgi_idx_index_w: landing FIFO overflow lane %0d (%m)", l);
     end

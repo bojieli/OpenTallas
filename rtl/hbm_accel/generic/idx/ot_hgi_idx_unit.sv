@@ -167,10 +167,10 @@ module ot_hgi_idx_unit #(
                    (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && x_iks_ok && x_n_ok;
     generate if (IXW != 0) begin : g_ixw
     assign vmq_x = 338'd0;
-    ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go(NGLOB != 0 ? x_go2 : x_go), .k(k), .cand_en(x_cand),
-        .keep_en(x_keep), .n(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank(x_rank),
-        .pos(NGLOB != 0 ? x_newest : rpos), .a_base(a_base[17:0]), .b_base(dB_b), .c_base(dC_b), .o_base(o_base[17:0]), .r_base(r_base[17:0]),
-        .d_base(dD_b), .d_stride(dD_s), .c_stride(dC[105:88]), .c_n(dC[59:48]), .has_r(has_r), .done(x_done), .fault(x_fault),
+    ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
+        .keep_en_i(x_keep), .n_i(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank_i(x_rank),
+        .pos_i(NGLOB != 0 ? x_newest : rpos), .a_base_i(a_base[17:0]), .b_base_i(dB_b), .c_base_i(dC_b), .o_base_i(o_base[17:0]), .r_base_i(r_base[17:0]),
+        .d_base_i(dD_b), .d_stride_i(dD_s), .c_stride_i(dC[105:88]), .c_n_i(dC[59:48]), .has_r_i(has_r), .done(x_done), .fault(x_fault),
         .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .rg_req(rg_req), .rg_gnt(rg_gnt), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done),
         .wg_req(wg_req), .wg_gnt(wg_gnt),
         .fs(sel_fs), .qb(sel_qb), .qbr(sel_qbr), .kin(sel_kin), .to(sel_to), .toc(sel_toc), .co(sel_co), .coc(sel_coc), .ev(sel_ev));
