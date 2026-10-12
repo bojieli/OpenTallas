@@ -20,6 +20,7 @@ def main():
     cases = [
         ('path', 'tb_mtp_p2_prefix_path', dict(ROOTPIPE=1), path+common, True, 'PATH PASS'),
         ('order', 'tb_mtp_p2_prefix_path', dict(ROOTPIPE=1, MUT=2), path+common, False, 'PATH unexpected fault'),
+        ('pathcopy', 'tb_mtp_p2_prefix_path', dict(ROOTPIPE=1, MUT=1), path+common, False, 'PATH numeric'),
         ('prefix', 'tb_mtp_p2_prefix', dict(ROOTPIPE=1, DSTAGE=1), [d+'ot_mtp_p2_prefix.sv']+common, True, 'PREFIX PASS'),
         ('copy', 'tb_mtp_p2_prefix', dict(ROOTPIPE=1, DSTAGE=1, MUT_COPY_FIRST=1), [d+'ot_mtp_p2_prefix.sv']+common, False, 'PREFIX +0/-0 first-round mutant detected'),
         ('ue', 'tb_mtp_p2_prefix', dict(ROOTPIPE=1, DSTAGE=1, ERROR_MODE=1), [d+'ot_mtp_p2_prefix.sv']+common, True, 'PREFIX NEGATIVE PASS'),
@@ -40,7 +41,7 @@ def main():
     (out/'gate.json').write_text(json.dumps(verdict, indent=2)+'\n')
     if not all(v['ok'] for v in verdict.values()):
         raise SystemExit(1)
-    print('ROOTPIPE GATE PASS 8 cases')
+    print('ROOTPIPE GATE PASS 9 cases')
 
 
 if __name__ == '__main__':
