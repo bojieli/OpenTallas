@@ -26,7 +26,9 @@ module dsfd_sp_su_h #(
     // heads; pin owners 4 x (4 read + 4 write slots); every tile <= ~600 x 600 um)
     parameter integer NQN = (QN_N >= 256) ? 2 : 1,
     parameter integer NKV = (KV_N >= 128) ? 2 : 1,
-    parameter integer NQB = (QB_NB >= 32) ? QB_NB / 8 : 2,
+    // QB (el1011-s81su, spec v3): one tap + NPB engines (rate-matched to the down spine: NPB = S_RD / 2 blocks a pass)
+    parameter integer NPB = (S_RD / 2 > 2) ? S_RD / 2 : 2,
+    parameter integer ERL = (S_RD >= 16) ? 3 : 1,      // tap -> engine relays, equal depth on every engine (lockstep)
     parameter integer NSW = (SW_W >= 128) ? SW_W / 128 : 1,
     parameter integer NSM = (SM_H >= 2) ? SM_H / 2 : 1,
     parameter integer NPO = (S_RD >= 16 && S_WR >= 16) ? 4 : 1,
@@ -58,7 +60,17 @@ module dsfd_sp_su_h #(
     output wire                online,
     output wire [3:0]          fcode
 );
+    localparam integer NQB = 1 + NPB;                  // QB stops: the tap, then the engines
     localparam integer NTL = NQN + NKV + NQB + NSW + NSM;
+    // QB tap -> engines (positions 2b / 2b + 1 to engine b) and the engines' pair exchange
+    wire [2*NPB-1:0]     qe_v;
+    wire [2*NPB*512-1:0] qe_d;
+    wire [2*NPB*12-1:0]  qe_t;
+    wire [13:0]          qe_ob;
+    wire                 qe_f4;
+    wire                 nxv [0:NPB-1];
+    wire [255:0]         nxq [0:NPB-1];
+    wire [9:0]           nxe [0:NPB-1];
     localparam integer KR = S_RD / NPO, KW = S_WR / NPO;
     // spines: stop t = tile t.  Down: dn[t] is the relay register at stop t (dn[0]: the pin owners' row registers +
     // the control tile's job announce); the tile taps it and the next stop re-registers it.  Up: up[t] is the relay
@@ -97,7 +109,7 @@ module dsfd_sp_su_h #(
     wire [S_WR-1:0]    p_uv;
     wire               rst_c;
     ot_s81_su_ctl #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
-                    .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(NQB), .NQN(NQN), .NKV(NKV), .MUT(MUT), .AMUT(AMUT)) u_ctl (
+                    .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(QB_NB / 2), .NQN(NQN), .NKV(NKV), .MUT(MUT), .AMUT(AMUT)) u_ctl (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(cc_v), .c_cmd_d(cc_d), .c_done_v(cd_v),
         .c_done_tag(cd_t), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_c),
         .p_rq_v(c_rq_v), .p_rq_row(c_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),
@@ -139,11 +151,13 @@ module dsfd_sp_su_h #(
     genvar t;
     generate for (t = 0; t < NTL; t = t + 1) begin : g_t
         localparam integer B1 = NQN, B2 = NQN + NKV, B3 = B2 + NQB, B4 = B3 + NSW;
-        localparam integer TK = (t < B1) ? 0 : (t < B2) ? 1 : (t < B3) ? 2 : (t < B4) ? 3 : 4;
-        localparam integer TI = (t < B1) ? t : (t < B2) ? t - B1 : (t < B3) ? t - B2 : (t < B4) ? t - B3 : t - B4;
-        localparam integer NT = (t < B1) ? NQN : (t < B2) ? NKV : (t < B3) ? NQB : (t < B4) ? NSW : NSM;
-        localparam integer WS = S_WR / NT, W0 = TI * WS;
-        wire [WS-1:0] o_v; wire [WS*14-1:0] o_a; wire [WS*16-1:0] o_m; wire [WS*512-1:0] o_d;
+        // TK 2: the QB tap (no write slots), TK 5: QB engine TI (slots 2 TI, 2 TI + 1)
+        localparam integer TK = (t < B1) ? 0 : (t < B2) ? 1 : (t == B2) ? 2 : (t < B3) ? 5 : (t < B4) ? 3 : 4;
+        localparam integer TI = (t < B1) ? t : (t < B2) ? t - B1 : (t < B3) ? (t == B2 ? 0 : t - B2 - 1) : (t < B4) ? t - B3 : t - B4;
+        localparam integer NT = (t < B1) ? NQN : (t < B2) ? NKV : (t < B3) ? NPB : (t < B4) ? NSW : NSM;
+        localparam integer WS = (TK == 2) ? 0 : S_WR / NT, W0 = TI * WS;
+        localparam integer WSX = (WS > 0) ? WS : 1;
+        wire [WSX-1:0] o_v; wire [WSX*14-1:0] o_a; wire [WSX*16-1:0] o_m; wire [WSX*512-1:0] o_d;
         wire o_fu, o_fo, o_alive, o_den, o_rdy; wire [7:0] o_rjid;
         // rung relays: into a head (TK <= 1, TI 0) from t + 1; into a member (TI 1) from t - 1
         reg ipv, irv; reg [7:0] ipi; reg [31:0] ipd, ird;
@@ -163,15 +177,41 @@ module dsfd_sp_su_h #(
         end else begin : g_rm0
             always @(*) begin irv = 1'b0; ird = 32'd0; end
         end
-        ot_s81_su_tile #(.TK(TK), .TI(TI), .NT(NT), .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H),
-                         .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .LM(LM), .LA(LA), .MUT(MUT)) u_tile (
-            .clk(sk), .rst_in(rst[t]),
-            .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
-            .dn_v_i(dv[t]), .dn_d_i(dd[t]),
-            .x_pp_v_i(ipv), .x_pp_i_i(ipi), .x_pp_d_i(ipd), .x_rb_v_i(irv), .x_rb_d_i(ird),
-            .x_pp_v_o(xpv[t]), .x_pp_i_o(xpi[t]), .x_pp_d_o(xpd[t]), .x_rb_v_o(xrv[t]), .x_rb_d_o(xrd[t]),
-            .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
-            .o_rdy(o_rdy), .o_rjid(o_rjid));
+        if (TK == 2) begin : g_qbt
+            assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+            ot_s81_su_qbt #(.QB_NB(QB_NB), .S_RD(S_RD), .NPB(NPB)) u_qbt (
+                .clk(sk), .rst_in(rst[t]),
+                .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                .dn_v_i(dv[t]), .dn_d_i(dd[t]), .e_v(qe_v), .e_d(qe_d), .e_t(qe_t), .e_ob(qe_ob), .e_f4(qe_f4),
+                .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+        end else if (TK == 5) begin : g_qbe
+            // equal-depth relays from the tap (every engine ERL stations: lockstep), positions 2 TI / 2 TI + 1
+            wire [1:0] rv; wire [1023:0] rd; wire [23:0] rt; wire [13:0] rob; wire rf4;
+            ot_hdc_delay #(.W(2), .D(ERL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[t]), .d(qe_v[2 * TI +: 2]), .q(rv));
+            ot_hdc_delay #(.W(1024 + 24 + 15), .D(ERL)) u_rd (.clk(sk), .rst_n(rst[t]),
+                .d({qe_d[1024 * TI +: 1024], qe_t[24 * TI +: 24], qe_ob, qe_f4}), .q({rd, rt, rob, rf4}));
+            localparam integer PN = TI ^ 1;              // the pair neighbour
+            wire [3:0] CB = TI;
+            ot_s81_su_qbe #(.QB_NB(QB_NB), .NPB(NPB)) u_qbe (
+                .clk(sk), .rst_in(rst[t]), .cfg_b(CB),
+                .i_vlo(rv[0]), .i_vhi(rv[1]), .i_lo(rd[511:0]), .i_hi(rd[1023:512]), .i_tlo(rt[11:0]), .i_thi(rt[23:12]),
+                .i_ob(rob), .i_f4(rf4), .nx_i_v(nxv[PN]), .nx_i_q(nxq[PN]), .nx_i_e(nxe[PN]),
+                .nx_o_v(nxv[TI]), .nx_o_q(nxq[TI]), .nx_o_e(nxe[TI]),
+                .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
+                .o_rdy(o_rdy), .o_rjid(o_rjid));
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+        end else begin : g_tl
+            ot_s81_su_tile #(.TK(TK), .TI(TI), .NT(NT), .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H),
+                             .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .LM(LM), .LA(LA), .MUT(MUT)) u_tile (
+                .clk(sk), .rst_in(rst[t]),
+                .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                .dn_v_i(dv[t]), .dn_d_i(dd[t]),
+                .x_pp_v_i(ipv), .x_pp_i_i(ipi), .x_pp_d_i(ipd), .x_rb_v_i(irv), .x_rb_d_i(ird),
+                .x_pp_v_o(xpv[t]), .x_pp_i_o(xpi[t]), .x_pp_d_o(xpd[t]), .x_rb_v_o(xrv[t]), .x_rb_d_o(xrd[t]),
+                .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
+                .o_rdy(o_rdy), .o_rjid(o_rjid));
+        end
         // reset spine station
         reg rs_q;
         always @(posedge sk or negedge rst[t]) if (!rst[t]) rs_q <= 1'b0; else rs_q <= 1'b1;
