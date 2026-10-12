@@ -1030,7 +1030,7 @@ def _o4_masters(v, m, ghosts):
                 su.ports.pop(p)
                 su.order.remove(p)
         sui, seq_i = ins['sp_su64_sfu'], ins['seq_su']
-        yc = min(sui.h - 60.0, max(60.0, seq_i.y + seq_i.h / 2 - sui.y))      # facing seq_su across the channel
+        yc = min(sui.h - 60.0, max(80.0, seq_i.y + seq_i.h / 2 - sui.y))      # facing seq_su across the channel
         su.face('si', B['su_iss'], 'E', 'M4', yc - 60.0, 1)
         su.face('sd', B['su_st'], 'E', 'M4', yc + 20.0, 1)
         su.face('acc', B['su_acc'], 'E', 'M4', yc + 40.0, 2)

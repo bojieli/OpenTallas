@@ -100,8 +100,16 @@ def _tp8_base(v, cfg):
     # the 4-rank fold) gets a 1.5x TP4 budget outline; the CDC cluster widens for the 3 SerDes word pairs
     v.IO_BLOCKS = [(n, a * (cfg.get('coll_scale', 1.5) if n == 'collective' else 1.0), d) for n, a, d in v.IO_BLOCKS]
     v.IOX_W = cfg.get('iox_w', 700.128)
+    if cfg.get('tile_body'):
+        # contract v2 (SPEC 5, tile slot width): the GT 3,072 qfd_tile_nk cluster (ref_tile kit qfd_tile_nk_tp8, 311.04 x
+        # 1,296 um) + the unchanged 52.704-um qfd_cst corridor; r19 takes the slot pitch from KV_TILE_W
+        v.KV_TILE_W = round(cfg['tile_body'] + v.CORR, 6)
+        v.TILE_SLOT = (v.KV_TILE_W, cfg.get('tile_h', v.TILE_SLOT[1]))
+        v.TILE_BODY_W = cfg['tile_body']
     if cfg.get('tree_pads'):
-        v.TREE_PADS = json.loads((ROOT / cfg['tree_pads']).read_text())['pads']
+        _tp = json.loads((ROOT / cfg['tree_pads']).read_text())
+        v.TREE_PADS = _tp['pads']
+        v.TREE_PAD_TARGETS = _tp.get('targets', {})     # total relays per padded leg (unpadded relays + pads)
 
 
 def _tp8_io(v, m):
@@ -161,6 +169,130 @@ def _tp8_io(v, m):
     v.masters = masters
     m['tp8_io'] = dict(serdes=[s0.name] + [i.name for i in new], collective_um=[round(col.w, 3), round(col.h, 3)],
                        xfifo_um=[round(iox.w, 3), round(iox.h, 3)])
+
+
+def _tp8_spine(v, m):
+    """qwen-tp8 contract v2: the 26.0-mm reticle width.  At the 363.744-um slot pitch the 64 columns take 23.28 mm, so the
+    spine gets <= 2.68 mm: three abutted 777.6-um sub-columns W | M | E between two full-height cfg['spine_gap'] edge
+    relay channels (SPINE_CHANNEL_X; _seam_free moves pins off the W|M and M|E seams), and the near-square VM (3 x
+    777.6, qwendie-1011 decision: its x path cannot cross a one-column cut) spans all three in a y window where the W
+    and E sub-columns are free (vertical spine words pass it in the edge channels).  The SU / VM / control-tile / up4 / constant-store stack (abutted
+    faces, ROM row at one height) moves up as one rigid body into the first such window inside its link-channel
+    segment; the S-edge UCIe PHY + d2d_rom join the M sub-column.  Everything else keeps its y."""
+    from qwen_kv_die import rom_r22k as R
+    g = m['geo']
+    by = {i.name: i for i in m['insts']}
+    su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
+    cw, gap = 777.6, TP8['spine_gap']
+    x0 = round(g['x_spine'], 4)
+    xL = round(x0 + gap, 4)
+    xM, xE = round(xL + cw, 4), round(xL + 2 * cw, 4)
+    W = m['die']['w']
+    xm0 = su.x
+    left_sub = [i for i in m['insts'] if xm0 - cw - 1.0 <= i.x < xm0 - 1e-3 and i.name != vm.name and i.kind != 'tile'
+                and i.y < g['y_top'] and i.x >= x0 + cw - 1e-3]
+    # W edge channel, then M abutting W, E abutting M, then the E edge channel before the E tile field
+    W = R._spine_relay_channel(v, m, g, x0, gap, W)
+    xs = su.x
+    W = R._spine_relay_channel(v, m, g, round(xs, 4), round(xM - xs, 4), W)
+    xs = by['sp_port_tiles_0_f1'].x
+    W = R._spine_relay_channel(v, m, g, round(xs, 4), round(xE - xs, 4), W)
+    W = R._spine_relay_channel(v, m, g, round(xE + cw, 4), gap, W)
+    for i in left_sub:
+        i.x = round(xM + (i.x - gap - (xm0 - cw)), 4)      # moved by the W edge channel only
+    # the small S-edge glue that sat in the old W | M channel (rs_bump, ckb_rom) steps W of the moved PHY / d2d column
+    lsn = {i.name for i in left_sub}
+    for i in m['insts']:
+        if i.name in lsn or i.kind in ('tile', 'station', 'head') or i.y >= g['y_top']:
+            continue
+        if any(i.x < j.x + j.w + v.SHAVE and j.x < i.x + i.w + v.SHAVE and i.y < j.y + j.h + v.SHAVE and j.y < i.y + i.h + v.SHAVE
+               for j in left_sub):
+            i.x = round(v.dn(xM - i.w - v.SHAVE - 4.32, v.GX), 4)
+    vm.x = xL
+    # the rigid stack and the window search
+    stack = [vm, su] + [by[n] for n in by if n.startswith(('tt_ctlm', 'tt_up4_', 'cbuf_g_', 'crom_g_'))]
+    sn = {i.name for i in stack}
+    S = v.SHAVE
+    fixed = [i for i in m['insts'] if i.name not in sn and i.kind not in ('tile', 'station', 'head')
+             and i.y < g['y_top'] and i.x + i.w > xL - 1e-3 and i.x < xE + cw + 1e-3]
+    chans = [(r['rect'][1], r['rect'][3]) for r in m['regions'] if r['name'].startswith('hchan_')]
+    seg = [(lo, hi) for lo, hi in zip([g['y0']] + [b for a, b in sorted(set(chans))],
+                                      [a for a, b in sorted(set(chans))] + [g['y_top']])]
+    y_lo, y_hi = min(i.y for i in stack), max(i.y + i.h + S for i in stack)
+    seg0 = next((lo, hi) for lo, hi in seg if lo - 1e-3 <= vm.y < hi)
+
+    def ov(a0, a1, b_):
+        return a0 < b_.y + b_.h + S and b_.y < a1
+
+    Lcol = [b_ for b_ in fixed if b_.x < xM - 1e-3]
+
+    def chain(seed):
+        # the W sub-column blocks abutting (in y) the seeds: the band slab stack moves as one rigid group
+        grp = set(seed)
+        while True:
+            more = {c.name for c in Lcol if c.name not in grp and any(
+                abs(c.y - (by[q].y + by[q].h + S)) < 3 * v.GY or abs(by[q].y - (c.y + c.h + S)) < 3 * v.GY for q in grp)}
+            if not more:
+                return grp
+            grp |= more
+
+    def fit(dy):
+        """None when the stack cannot sit at dy; else the W-column group to move and its new y origin offset"""
+        if y_lo + dy < seg0[0] - 1e-3 or y_hi + dy > seg0[1] + 1e-3:
+            return None
+        for a in stack:
+            ay0, ay1 = a.y + dy, a.y + dy + a.h + S
+            # the SU keeps an open E face (seq_su issue word si, 476 b: its S face is the constant buffers', N the VM's)
+            ax1 = xE + cw if a is su else a.x + a.w + S
+            for b_ in fixed:
+                if b_ in Lcol and a is vm:
+                    continue
+                if a.x < b_.x + b_.w + S and b_.x < ax1 and ov(ay0, ay1, b_):
+                    return None
+        vy0, vy1 = vm.y + dy, vm.y + dy + vm.h + S
+        hitL = [b_.name for b_ in Lcol if ov(vy0, vy1, b_)]
+        if not hitL:
+            return (set(), 0.0)
+        grp = chain(hitL)
+        gy0 = min(by[q].y for q in grp)
+        gy1 = max(by[q].y + by[q].h + S for q in grp)
+        rest = [b_ for b_ in Lcol if b_.name not in grp]
+        for ny in sorted((v.up(vy1 + v.GY, v.GY), v.dn(vy0 - v.GY - (gy1 - gy0), v.GY)), key=lambda t: abs(t - gy0)):
+            if ny < seg0[0] - 1e-3 or ny + (gy1 - gy0) > seg0[1] + 1e-3:
+                continue
+            if any(ov(ny, ny + gy1 - gy0, b_) for b_ in rest):
+                continue
+            return (grp, ny - gy0)
+        return None
+    dy, mv = None, None
+    for k in range(0, int(max(seg0[1] - y_lo, y_hi - seg0[0]) / v.GY) + 1):
+        for d_ in ((k * v.GY,) if k == 0 else (-k * v.GY, k * v.GY)):
+            r_ = fit(d_)
+            if r_ is not None:
+                dy, mv = d_, r_
+                break
+        if dy is not None:
+            break
+    if dy is None:
+        occ = sorted((round(b_.x), round(b_.y), round(b_.y + b_.h), b_.name) for b_ in fixed)
+        raise SystemExit(f'tp8 spine: no window for the VM stack in segment {seg0} (W {W:.1f}); stack '
+                         f'{sorted((round(a.x), round(a.y), round(a.y + a.h), a.name) for a in stack)}; fixed {occ}')
+    for i in stack:
+        i.y = round(i.y + dy, 4)
+    for q in mv[0]:
+        by[q].y = round(by[q].y + mv[1], 4)
+    # seq_su (cbuf ctl / rdy x 8, SU issue / status / count, VM vrd / vrq / vwr, d2d words) leaves the far N end of the
+    # E sub-column for the slot between the constant ROM row and the SU's E face: its 20+ words no longer cross the VM
+    # window (the edge channels carry only the control-tile snapshots and the collective words past it)
+    sq = by.get('seq_su')
+    crt = max(by[f'crom_g_{k}'].y + by[f'crom_g_{k}'].h + S for k in range(8))
+    if sq is not None and su.y - crt >= sq.h + S + 4 * v.GY:
+        sq.x = round(v.up(xE + 43.2, v.GX), 4)
+        sq.y = round(v.dn(crt + (su.y - crt - sq.h - S) / 2, v.GY), 4)
+    v.SPINE_CHANNEL_X = [round(x0 + gap / 2, 3), round(xE + cw + gap / 2, 3)]
+    m['die'] = dict(m['die'], w=W, mm2=round(W * m['die']['h'] / 1e6, 3), margin_mm2=round(858 - W * m['die']['h'] / 1e6, 3))
+    m['tp8_spine'] = dict(sub_x=[xL, xM, xE], cw=cw, gap=gap, spine_w=round(xE + cw + gap - x0, 3), vm_xy=[vm.x, vm.y],
+                          stack_dy=round(dy, 3), seq_su_xy=[sq.x, sq.y] if sq is not None else None, w_group_moved=sorted(mv[0]), w_group_dy=round(mv[1], 3), segment=list(seg0), moved_left_sub=[i.name for i in left_sub], die_w=W)
 
 
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
@@ -289,6 +421,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         _edge_gap(v, m, edge_gap)
     if east_mirror:
         _east_mirror(v, m)
+    if TP8 and TP8.get('root_spread'):
+        _root_spread(v, m)
     groups = _group_map(v, m)
     _spine_buses(v, m, groups)
     if bw_align:
@@ -358,6 +492,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
 
         def before_relays(v_, m_):
             _br0(v_, m_)
+            if TP8.get('spine_gap'):
+                _tp8_spine(v_, m_)
             _tp8_io(v_, m_)
     if before_relays is not None:
         # Opt-in system composition: actual slots/ports precede relay discovery.
@@ -484,7 +620,12 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
                 if pn in M_.ports:
                     M_.ports.pop(pn)
                     M_.order.remove(pn)
-            taken = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f]
+            # qwen-tp8 v2: a VM wider than the SU may carry other pin groups on its S face outside the SU's span
+            # (seq_su's all-reduce words rise beside the SU into the VM's S face E of it); anything inside the
+            # abutted span is still refused
+            lo_f, hi_f = (off, off + su.w) if M_ is q else (0.0, su.w)
+            taken = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f
+                     and sp[4] + sp[1] * p * sp[5] / 2 + lo > lo_f and sp[4] - sp[1] * p * sp[5] / 2 - lo < hi_f]
             if taken:
                 raise ValueError(f'su_vm_abut: {M_.name} {f} face already holds {taken}')
         s.face('va', SU_VM_A_BITS, 'N', 'M5', a_c, 1)
@@ -1167,12 +1308,60 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             return w, RELAY_V_H - v.SHAVE
         return w, max(v.up(span1, v.GY), BWP_H) - v.SHAVE
 
+    # ---- qwen-tp8 v2: tree-leg pad columns are RESERVED before the bulk relays (it1/v2g: placed after them, the
+    # corridors next to the node were full and pads scattered up to 850 um from their sink).  Each padded leg gets
+    # one contiguous column of `pad` frames in one corridor flanking its sink tile, starting at the sink's height and
+    # growing toward the source; the bulk relays then route source -> far end of the column (P1 override), so
+    # consecutive pads are one frame apart and the last pad is within reach of the M8 tree pins at the tile middle.
+    tpads = getattr(v, 'TREE_PADS', None) or {}
+    pre_pads, pre_far = {}, {}
+    if tpads:
+        bidx0 = {bid: idx for idx, (bid, cl, bits, eps) in buses}
+        for bid, npad in sorted(tpads.items(), key=lambda t: -t[1]):
+            if bid not in bidx0:
+                raise ValueError(f'tree pads: no bus {bid}')
+            idx = bidx0[bid]
+            _, cl, bits, eps = m['buses'][idx]
+            P0, P1 = pos(*eps[0]), pos(*eps[1])
+            w, h = relay_frame(bits, cl)
+            sgn = 1 if P0[1] >= P1[1] else -1
+            best = None
+            for c_ in sorted(range(COLS), key=lambda c: abs(corr_x0[c] + v.CORR / 2 - P1[0]))[:2]:
+                x0 = corr_x0[c_]
+                got, y = [], P1[1] - h / 2
+                for k in range(npad):
+                    hit = None
+                    for t in range(0, int(600.0 / v.GY)):
+                        y0 = v.dn(y + sgn * t * v.GY, v.GY)
+                        r = (x0, y0, x0 + w + v.SHAVE, y0 + h + v.SHAVE)
+                        if y0 >= g['y0'] and r[3] <= die_top and free(r) and \
+                                not any(q[1] < r[3] - 1e-6 and r[1] < q[3] - 1e-6 for q in got):
+                            hit = r
+                            break
+                    if hit is None:
+                        break
+                    got.append(hit)
+                    y = hit[1] + sgn * (h + v.SHAVE)
+                if len(got) < npad:
+                    continue
+                cen = [((q[0] + q[2]) / 2, (q[1] + q[3]) / 2) for q in got]
+                hops = [abs(cen[0][0] - P1[0]) + abs(cen[0][1] - P1[1])] + \
+                       [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(cen, cen[1:])]
+                if best is None or max(hops) < best[0]:
+                    best = (max(hops), got, cen)
+            if best is None or best[0] > RMAX:
+                continue                      # fall back to the post-bulk walk below
+            for q in best[1]:
+                add_rect(q)
+            # chain order: far end first, the frame nearest the sink last
+            pre_pads[idx] = [(q[0], q[1], w, h) for q in reversed(best[1])]
+            pre_far[idx] = best[2][-1]
     plans = {}
     for idx, (bid, cl, bits, eps) in buses:
         if cl in RELAY_SKIP or len(eps) != 2:
             keep[idx] = [(bid, cl, bits, eps)]
             continue
-        P0, P1 = pos(*eps[0]), pos(*eps[1])
+        P0, P1 = pos(*eps[0]), pre_far.get(idx) or pos(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
         if d <= RMAX:
             keep[idx] = [(bid, cl, bits, eps)]
@@ -1400,7 +1589,38 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # ---- qwen-tp8 tree-leg pads (tools/qwen_die_seam/tree_pads.py: the array bench's arrival model on the unpadded
     # netlist): a tree word whose leg arrives early at its node gets `pad` extra relays at its sink end, in the
     # corridor the node tile's W-face tree pins face, so both legs of every node arrive on the same cycle
-    tpads = getattr(v, 'TREE_PADS', None) or {}
+    targets = getattr(v, 'TREE_PAD_TARGETS', {}) or {}
+    pad_trim = dict(trimmed=0, extended=0, over=[])
+    extra = {}
+    for idx, fr_ in pre_pads.items():
+        _, cl, bits, eps = m['buses'][idx]
+        bid_ = m['buses'][idx][0]
+        nb_ = len(plans[idx]['frames']) if idx in plans else 0
+        if bid_ in targets:
+            # the bulk relays now end at the column's far end: keep exactly target - bulk pads (nearest the sink),
+            # so the leg's register depth is the balanced one whatever the bulk planner did
+            need = targets[bid_] - nb_
+            if need < 0:
+                pad_trim['over'].append(bid_)
+                need = 0
+            if need < len(fr_):
+                pad_trim['trimmed'] += len(fr_) - need
+                fr_ = fr_[len(fr_) - need:] if need else []
+            elif need > len(fr_):
+                pad_trim['extended'] += need - len(fr_)
+                extra[bid_] = need - len(fr_)
+        if idx not in plans:
+            P0 = pos(*eps[0])
+            plans[idx] = dict(bid=m['buses'][idx][0], cl=cl, bits=bits, eps=eps, P0=P0, P1=None, frames=[], d=0.0)
+            keep.pop(idx, None)
+        pl = plans[idx]
+        pl['P1'] = pos(*eps[1])
+        pl['frames'] = list(pl['frames']) + fr_
+        pl['d'] = abs(pl['P0'][0] - pl['P1'][0]) + abs(pl['P0'][1] - pl['P1'][1])
+    pre_ids = {m['buses'][i][0] for i in pre_pads}
+    tpads = {b: n for b, n in tpads.items() if b not in pre_ids}
+    tpads.update(extra)
+    m['tp8_pad_trim'] = pad_trim
 
     def pad_spot(x, y, w, h, rings=200):
         # nearest free frame anywhere (corridor, row-gap channel, spine): free() rejects every instance rect
@@ -1437,12 +1657,30 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             fq = pl['frames'][-1] if pl['frames'] else None
             Q = (fq[0] + fq[2] / 2, fq[1] + fq[3] / 2) if fq else pl['P0']
             px, py = x1 - v.CORR / 2, y1
+            leg_c = None
             for j in range(npad):
                 # a walk from the sink toward Q: each pad nearest the point 1 / (pads left + 1) of the way from the
                 # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
                 fr = 1.0 / (npad - j + 1)
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
                 sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
+                if sp is None and cc is None:
+                    # contract v2: qfd_tile_nk's tree pins are area pins inside the body (x 10-223 um), so the sink
+                    # is in no corridor: take the nearer of the two corridors flanking the walk point (y search
+                    # +-400 um), never the row gap ~650 um away (it1: 1,226 hops over reach)
+                    # one corridor per leg (v2g audit: alternating between the two flanking corridors zigzagged the
+                    # chain, 68 hops of 700-830 um): the first pad picks it, the rest walk along it
+                    best = None
+                    for c_ in ([leg_c] if leg_c is not None else
+                               sorted(range(COLS), key=lambda c: abs(cx_list[c] - qx))[:2]):
+                        s_ = place(cx_list[c_], qy, w + v.SHAVE, h + v.SHAVE, c_, 400.0)
+                        if s_ is not None:
+                            d_ = abs(s_[0] + w / 2 - qx) + abs(s_[1] + h / 2 - qy)
+                            if best is None or d_ < best[0]:
+                                best = (d_, s_, c_)
+                    sp = best[1] if best else None
+                    if best:
+                        leg_c = best[2]
                 if sp is None:
                     sp = pad_spot(qx, qy, w + v.SHAVE, h + v.SHAVE)
                 if sp is None:
@@ -1453,7 +1691,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
             pl['frames'] = list(pl['frames']) + got
             pad_done[bid] = npad
-    m['tp8_tree_pads'] = dict(buses=len(pad_done), relays=sum(pad_done.values()))
+    m['tp8_tree_pads'] = dict(buses=len(pad_done) + len(pre_pads), relays=sum(pad_done.values()) + sum(
+        len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done))
     # ---- emit relays and hops
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
@@ -2674,6 +2913,36 @@ def _channel_pins(v, model, out, bits, far, k):
                 out[it.master].face(port, nb, face, 'M4', y - it.y, pitch)
                 placed[(it.master, port)] = (face, round(y, 1), pitch)
     model.setdefault('b3r6_channel', {}).update({f'{a}.{b}': v_ for (a, b), v_ in placed.items()})
+
+
+def _root_spread(v, m):
+    """qwen-tp8 contract v2 (TP4 e9 finding, el1011-qwendie 03:50): the morton host rule puts every block root (and so
+    the 16 block words of a band and their waypoints) in ONE tile row (local row 1), which overflowed the M8 / M6 H
+    rows over that row.  Re-host each block's tree with its local row index XORed with (block column mod 4): XOR on
+    the row bits is an automorphism of the morton pair tree (every level's partner keeps its distance), so every leg
+    keeps its length and the reduction order is unchanged (ROM slice placement is a compile-time map, as in
+    _east_mirror); the roots land on local rows 1, 0, 3, 2 -> four distinct rows per band."""
+    bc, br = v.BLOCK
+    rx = re.compile(r't_(\d+)_(\d+)$')
+
+    def mp(inst):
+        mm = rx.match(inst)
+        if not mm:
+            return inst
+        c, r = int(mm.group(1)), int(mm.group(2))
+        r0 = r - r % br
+        return f't_{c}_{r0 + ((r - r0) ^ ((c // bc) % br))}'
+    out, n = [], 0
+    for bid, cl, bits, eps in m['buses']:
+        if cl == 'tree_block' or bid.startswith('bword_'):
+            neps = [(mp(i), p) if p in ('t_out', 'n_a', 'n_b', 'n_y') else (i, p) for i, p in eps]
+            n += neps != eps
+            eps = neps
+        out.append((bid, cl, bits, eps))
+    m['buses'] = out
+    roots = sorted({int(rx.match(e[0]).group(2)) for bid, cl, bits, eps in out if bid.startswith('bword_')
+                    for e in eps[:1] if rx.match(e[0])})
+    m['geo']['tp8_root_spread'] = dict(remapped_buses=n, root_rows=roots)
 
 
 def _east_mirror(v, m):

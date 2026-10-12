@@ -55,3 +55,18 @@ These run on the tp8a contract and netlist with `QS_CONTRACT=…/qwen_rom_tp8.js
 3. Assumed libraries, r21b ETMs and `die_views` (`bind_it1.json`).
 4. Clock plan: htop + hreg `--shards 12` on EPYC1, then record and balance.
 5. EPYC1 `die_chain` followed by `pad_chain`.
+
+## it1 result (EPYC1 `/srv/opentallas-scratch/claude/qwen-tp8-die/it1`)
+
+**FAIL at the real case, before GRT.** There is no GRT overflow or hotspot data. `ot_mts::place` found no legal origin for `crom_g_0` because the constant-ROM row `crom_g_0..3` overlaps `sp_port_tiles_0_f1`. A local overlap check of the it1 case finds the same 4 overlaps. The chain stopped at 04:20, so the congestion probe on the 267 µm slot produced no data.
+
+## Contract v2 probe (tp8a at the 311.04 × 1296 slot; local generation only, not launched)
+
+This probe was superseded at 07:34. The owner chose track B and the spec picked floorplan F2. tp8a v2 is kept only as a probe and as tooling for tp8b.
+
+- **Geometry:** the die is 25,999.5 × 24,719.0 µm. Row gap 669.6 µm. The spine is three 777.6 µm sub-columns plus two 171.9 µm edge relay channels (`_tp8_spine`). The VM square spans all three sub-columns. Overlaps: 0 (the it1 overlap is gone).
+- **Root spread (`root_spread`, `_root_spread`):** each block's tree is re-hosted with its local row XOR (block column mod 4). XOR is a tree automorphism, so every leg keeps its length and the reduction order is unchanged. Block roots now sit 4 per row on all 12 rows; before, they were all on local row 1.
+- **Reserved pad columns:** each padded leg gets one contiguous corridor column next to its sink, reserved before the bulk relays. The bulk relays end at the column's far end. Tree-leg hops over reach went from 117 to 1.
+- **Open item 1, balance:** the reservations change the bulk relay counts of 127 *unpadded* legs (for example, 5 relays become 7 or 10). As placed, 294 of 720 nodes are misaligned. Fix: compute the pads inside the generator *after* the bulk relays, using the arrival model of `gen_bench.tree_pads`. The reservation then only reserves space, and the trim/extend step uses the final counts.
+- **Open item 2, non-tree hops over reach:** 59, all in the spine and IO: `pword` ×6, `tt_*` ×31, `o4_cb_*`/`cf_*` ×13, `rst_seq_ctlm` ×3, SerDes rx/tx ×4 (up to 3,496 µm).
+- **Fixes:** `su_vm_abut` allows VM S-face groups outside the SU span. The SU E-face `si` clamp is now 80 µm (seq_su sits below the SU).

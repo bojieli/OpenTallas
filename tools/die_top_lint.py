@@ -136,7 +136,11 @@ QWEN_R22KSV = dict(QWEN_R22K, before_relays=_R22K.surgery_vm, seam_free=True)
 # tp8a (qwen-tp8 2026-10-12, results/arch/qwen_tp8_1012/SPEC.md track A): the TP8 ROM die = r22ko4 with 768 tiles
 # (64 columns x 12 rows, 3 bands of 4 rows), 48 port groups, ROW_GAP routing channel between tile rows to the 25.0 x 23.0
 # mm spec outline, link channels before rows 2 and 10 (the M column segment between them holds the SU + VM + tree-top stack), an IO band with the two-level collective and 3 SerDes
-QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=518.4,
+# contract v2 (qwen-tp8/die 2026-10-12): the GT 3,072 tile_nk cluster slot (311.04 x 1,296 um body + 52.704 cst corridor),
+# the spine re-packed to three 777.6 sub-columns + two spine_gap relay channels (VM square across all three) for the
+# 26.0-mm reticle width (qwen_rom_fulldie_b3r2._tp8_spine)
+QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=669.6, tile_body=311.04, tile_h=1296.0,
+                                           spine_gap=171.936, root_spread=True,
                                            tree_pads='results/arch/hier_contract_1012/qwen_rom_tp8_tree_pads.json'))
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
