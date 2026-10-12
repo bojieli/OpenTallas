@@ -39,7 +39,7 @@ module ot_p2h_xport #(parameter integer MUT_ORDER=0)(
  .out_valid(li_v[l]),.out_ready(li_r[l]),.out_data(li_d[l]));
  end
  wire tr_sr,tr_fault,tr_v,tr_r,tr_shared,tr_last,tr_tlast;wire [73:0] tr_id;wire [8:0] tr_expert;wire [6:0] tr_word;wire [575:0] tr_code;
- ot_mtp_p2_ordered_rows #(.ENABLE(1),.PRIMARY_SHARED(1),.SB_REG(1),.ACC_REG(1),.PRE_DEC(1),.BSEL_REP(1),.MUT_ORDER(MUT_ORDER)) rows(
+ ot_mtp_p2_ordered_rows #(.ENABLE(1),.PRIMARY_SHARED(1),.SB_REG(1),.ACC_REG(2),.PRE_DEC(1),.BSEL_REP(1),.MUT_ORDER(MUT_ORDER)) rows(
  .clk(clk),.rst_n(rn),.start_v(c_sv),.start_r(tr_sr),
  .start_identity(c_id),.start_ids(c_ids),
  .in_v(li_v),.in_r(li_r),.in_identity({li_d[1][603:530],li_d[0][603:530]}),
