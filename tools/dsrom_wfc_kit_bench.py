@@ -169,6 +169,11 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'hep_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 10), 'hep_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 10),
     'hep_stg_r1': ('stg_r1', 1, [], 'pass', 10),
     'hep_s0_neg_stale': ('s0_hash_u3', 0, ['OT_WFCHEP_MUT_STALE'], 'fail', 10),
+    # HEP under POSTED (the priced configuration; el1011-ds-mtp wave-bench finding: t_ks never pulses there, the kit
+    # now counts the START doorbell write): same checks as hep_*, through dsfd_vm_wfc_ep
+    'posthep_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 11), 'posthep_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 11),
+    'posthep_stg_r1': ('stg_r1', 1, [], 'pass', 11),
+    'posthep_s0_neg_stale': ('s0_hash_u3', 0, ['OT_WFCHEP_MUT_STALE'], 'fail', 11),
     # TOKIN: the S0 kit's link-in from the collective MTP lane (t_mrt {data, valid} / f_mrt grant)
     'tokin_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 6), 'tokin_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 6),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
@@ -233,7 +238,7 @@ def kit_tb(stage, vmrly=0):
         for chk in ('RD2(1)', 'e_m1od <= vmem', '2*FLIT+2', '2*VWA+2', 'wire [2*VWA:0] k_srd'):
             assert chk in pv, chk
         kit = pv + kit
-    elif vmrly in (4, 5):   # posted: endpoint + VM port model; 5 = mutant (the define is in the case)
+    elif vmrly in (4, 5, 11):   # posted: endpoint + VM port model; 5 = mutant (the define is in the case); 11 = + HEP
         kit = kit.replace('u_kit (', '#(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1)) u_kit (').replace(
             'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1))',
             'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1))')
@@ -243,6 +248,11 @@ def kit_tb(stage, vmrly=0):
             assert a_ in kit, a_
             kit = kit.replace(a_, b_)
         kit = POSTED_VM + kit
+        if vmrly == 11:
+            assert kit.count('.POSTED(1)) u_kit (') == 1 and '.t_ft(k_ft));' in kit
+            kit = kit.replace('.POSTED(1)) u_kit (', '.POSTED(1), .HEP(1)) u_kit (').replace('.t_ft(k_ft));', '.t_ft(k_ft), .t_hep(k_hep));')
+            tag = 'MTP_STG' if stage else 'MTP_S0'
+            kit = kit + HEPCHK.replace('TAGFAIL("', '$display("' + tag + ' FAIL: hep ').replace('); end', '); $finish; end')
     elif vmrly:
         kit = VMRLY + (kit if vmrly == 2 else   # 2: negative, valid / ready skids (VM_LINK 0) behind the relays
                        kit.replace('u_kit (', '#(.VM_LINK(1), .WOUTW(WOUTW_K)) u_kit (').replace(
@@ -255,7 +265,7 @@ def kit_tb(stage, vmrly=0):
             kit = kit.replace(a_, b_)
     body, n = re.subn(r'    dsfd_wfc_vmx #\(.*?\) u_vmx \(.*?\);\n', lambda m: kit + binds, body, count=1, flags=re.S)
     assert n == 1, tb
-    if vmrly == 10 and not stage:   # HEP: the epochs advance exactly once per WFC rejection
+    if vmrly in (10, 11) and not stage:   # HEP: the epochs advance exactly once per WFC rejection
         assert body.count('        $display("MTP_S0 PASS mode') == 1
         body = body.replace('        $display("MTP_S0 PASS mode', '        if (h_inc != rej) begin $display("MTP_S0 FAIL: hep epoch '
                             'advances %0d != WFC rejections %0d", h_inc, rej); $finish; end\n        $display("MTP_S0 PASS mode')

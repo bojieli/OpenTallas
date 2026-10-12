@@ -103,7 +103,17 @@ module dsfd_wfc_src #(parameter integer FLIT = 512, parameter integer NW = 21, p
     end
     assign t_tok = tok_q; assign t_ft = ft_q; assign t_cfg = {cfg_users, cfg_plen, cfg_glen};
     generate if (HEP) begin : g_hep
-        dsfd_wfc_hep #(.NW(NW), .USER_W(USER_W)) u_hep (.clk(ckv[0]), .rst_n(rsv[0]), .ks(t_ks), .hep(t_hep));
+        // el1011-ds-mtp 2026-10-11 (wave bench finding): under POSTED the vmx never pulses k_start -- the VM endpoint
+        // starts the core from the START doorbell, a write to VM address all-ones carrying {user, token, pos} -- so
+        // t_ks is dead and HEP saw no stage start.  The doorbell's accepted write (vmx side, issue order, ckv domain)
+        // is the stage start HEP counts; non-posted kits keep t_ks.
+        wire [USER_W+2*NW:0] hks;
+        if (POSTED) begin : g_post
+            assign hks = {x_swv && x_swr && (&x_swd[FLIT +: VWA]), x_swd[USER_W+2*NW-1:0]};
+        end else begin : g_ks
+            assign hks = t_ks;
+        end
+        dsfd_wfc_hep #(.NW(NW), .USER_W(USER_W)) u_hep (.clk(ckv[0]), .rst_n(rsv[0]), .ks(hks), .hep(t_hep));
     end else begin : g_nohep
         assign t_hep = '0;
     end endgenerate
@@ -176,7 +186,17 @@ module dsfd_wfc_stg #(parameter integer FLIT = 512, parameter integer NW = 21, p
     reg [3:0] ft_q; always @(posedge clk) ft_q <= {proto_fault, lnk_ft, 1'b0, vmx_ft};
     assign t_ft = ft_q;
     generate if (HEP) begin : g_hep
-        dsfd_wfc_hep #(.NW(NW), .USER_W(USER_W)) u_hep (.clk(ckv[0]), .rst_n(rsv[0]), .ks(t_ks), .hep(t_hep));
+        // el1011-ds-mtp 2026-10-11 (wave bench finding): under POSTED the vmx never pulses k_start -- the VM endpoint
+        // starts the core from the START doorbell, a write to VM address all-ones carrying {user, token, pos} -- so
+        // t_ks is dead and HEP saw no stage start.  The doorbell's accepted write (vmx side, issue order, ckv domain)
+        // is the stage start HEP counts; non-posted kits keep t_ks.
+        wire [USER_W+2*NW:0] hks;
+        if (POSTED) begin : g_post
+            assign hks = {x_swv && x_swr && (&x_swd[FLIT +: VWA]), x_swd[USER_W+2*NW-1:0]};
+        end else begin : g_ks
+            assign hks = t_ks;
+        end
+        dsfd_wfc_hep #(.NW(NW), .USER_W(USER_W)) u_hep (.clk(ckv[0]), .rst_n(rsv[0]), .ks(hks), .hep(t_hep));
     end else begin : g_nohep
         assign t_hep = '0;
     end endgenerate

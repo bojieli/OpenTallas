@@ -93,6 +93,7 @@ module ot_s81_hc_crootr #(
 
     reg [1:0] rr;
     always @(posedge sk) rr <= {rr[0], srs};
+    wire rs_n = rr[1];                                   // tile-local reset relay: no flop of the tile sees the srs pin
     assign ch_rst = rr[1];
 
     reg  [YS-1:0] ydq;
@@ -101,15 +102,15 @@ module ot_s81_hc_crootr #(
     // ---------------------------------------------------------------- forward: capture, relays, chain output
     reg  [FVW-1:0] fv_c;
     reg  [FSW-1:0] fd_c;
-    always @(posedge sk or negedge srs) if (!srs) fv_c <= 0; else fv_c <= s_fv;
+    always @(posedge sk or negedge rs_n) if (!rs_n) fv_c <= 0; else fv_c <= s_fv;
     always @(posedge sk) fd_c <= s_fd;
     wire [FVW-1:0] fv_r;
     wire [FSW-1:0] fd_r;
-    ot_hdc_delay #(.W(FVW), .D(RF), .RESET(1)) u_rfv (.clk(sk), .rst_n(srs), .d(fv_c), .q(fv_r));
-    ot_hdc_delay #(.W(FSW), .D(RF)) u_rfd (.clk(sk), .rst_n(srs), .d(fd_c), .q(fd_r));
+    ot_hdc_delay #(.W(FVW), .D(RF), .RESET(1)) u_rfv (.clk(sk), .rst_n(rs_n), .d(fv_c), .q(fv_r));
+    ot_hdc_delay #(.W(FSW), .D(RF)) u_rfd (.clk(sk), .rst_n(rs_n), .d(fd_c), .q(fd_r));
     wire pop = fv_r[S_RD];                                        // a POST beat: the chain's y slice joins it
-    always @(posedge sk or negedge srs)
-        if (!srs) begin ch_fv <= 0; p_req <= 1'b0; pfl <= 1'b0; s_flt <= 1'b0; end
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) begin ch_fv <= 0; p_req <= 1'b0; pfl <= 1'b0; s_flt <= 1'b0; end
         else begin
             ch_fv <= fv_r;
             p_req <= fv_c[S_RD];                                  // the slice arrives (p_y, ydq) RF cycles on
@@ -128,25 +129,25 @@ module ot_s81_hc_crootr #(
     // ---------------------------------------------------------------- return: capture, the chain's subtrees, relays
     reg  [RVW-1:0] rv_c;
     reg  [RDW-1:0] rd_c;
-    always @(posedge sk or negedge srs) if (!srs) rv_c <= 0; else rv_c <= ch_rv;
+    always @(posedge sk or negedge rs_n) if (!rs_n) rv_c <= 0; else rv_c <= ch_rv;
     always @(posedge sk) rd_c <= ch_rd;
     wire [NEX*32-1:0] ex;
     wire              tf;
-    ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(AL), .OWN(C)) u_tree (.clk(sk), .rst_n(srs), .v(rv_c[S_RT]),
+    ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(AL), .OWN(C)) u_tree (.clk(sk), .rst_n(rs_n), .v(rv_c[S_RT]),
         .pk(rd_c[P_D +: NP * 128]), .im(32'd0), .ex(ex), .r_v(), .r(), .fault(tf));
     wire [RVW-1:0]    rv_r;
     wire [RDW-1:0]    rd_r;
     wire [NEX*32-1:0] ex_r;
     wire [RVW-1:0]    rv_f = {rv_c[RVW-1] , rv_c[RVW-2] | tf, rv_c[RVW-3:0]};    // tree add faults join the chain's
-    ot_hdc_delay #(.W(RVW), .D(RT), .RESET(1)) u_rrv (.clk(sk), .rst_n(srs), .d(rv_f), .q(rv_r));
-    ot_hdc_delay #(.W(RDW), .D(RT)) u_rrd (.clk(sk), .rst_n(srs), .d(rd_c), .q(rd_r));
-    ot_hdc_delay #(.W(NEX * 32), .D(RT)) u_rex (.clk(sk), .rst_n(srs), .d(ex), .q(ex_r));
-    always @(posedge sk or negedge srs) if (!srs) s_rv <= 0; else s_rv <= rv_r;
+    ot_hdc_delay #(.W(RVW), .D(RT), .RESET(1)) u_rrv (.clk(sk), .rst_n(rs_n), .d(rv_f), .q(rv_r));
+    ot_hdc_delay #(.W(RDW), .D(RT)) u_rrd (.clk(sk), .rst_n(rs_n), .d(rd_c), .q(rd_r));
+    ot_hdc_delay #(.W(NEX * 32), .D(RT)) u_rex (.clk(sk), .rst_n(rs_n), .d(ex), .q(ex_r));
+    always @(posedge sk or negedge rs_n) if (!rs_n) s_rv <= 0; else s_rv <= rv_r;
     always @(posedge sk) begin s_rd <= rd_r; s_ex <= ex_r; end
     // ---------------------------------------------------------------- writes: capture, relays, north
     reg  [4*WSL-1:0] w_c;
     always @(posedge sk) w_c <= s_w;
     wire [4*WSL-1:0] w_r;
-    ot_hdc_delay #(.W(4 * WSL), .D(RW)) u_rw (.clk(sk), .rst_n(srs), .d(w_c), .q(w_r));
+    ot_hdc_delay #(.W(4 * WSL), .D(RW)) u_rw (.clk(sk), .rst_n(rs_n), .d(w_c), .q(w_r));
     always @(posedge sk) p_w <= w_r;
 endmodule

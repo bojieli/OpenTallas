@@ -13,7 +13,9 @@ module hgi_e2e_su_slot #(
     parameter integer LV = 6,
     parameter integer LWB = 18,
     parameter integer VLAT = 6,
-    parameter integer WIDE = 0
+    parameter integer WIDE = 0,
+    // hbmdie-1011/views VM_TUNIT model (tb_hgi_e2e): wide-lane read latency, extra rq / w2q credit and w2q done edges
+    parameter integer VLL = 5, parameter integer VCX = 0, parameter integer VWCX = 0, parameter integer VDX = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -29,7 +31,7 @@ module hgi_e2e_su_slot #(
     wire [337:0] vq; wire [273:0] vr;
     wire [32*16-1:0] wrq; wire [31:0] wrq_cr, wwq_cr, wwq_done; wire [32*257-1:0] wrr; wire [32*280-1:0] wwq;
     if (WIDE) begin : g_lanes
-        hgi_e2e_vmlanes #(.UNIT(UNIT)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
+        hgi_e2e_vmlanes #(.UNIT(UNIT), .LAT(VLL), .CRX(VCX), .WCX(VWCX), .WDX(VDX)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
             .wq_cr(wwq_cr), .wq_done(wwq_done));
     end else begin : g_nolanes
         assign wrq_cr = '0; assign wrr = '0; assign wwq_cr = '0; assign wwq_done = '0;
@@ -240,7 +242,8 @@ endmodule
 module hgi_e2e_fused_slot #(
     parameter integer KLAT = 40, parameter integer VLAT = 6, parameter integer VDX = 0, parameter integer SCRATCH = 256064,
     parameter integer UN = 32, parameter integer UM = 8,       // the FUSED unit's stream unit (die: ot_hgi_fused_record defaults)
-    parameter integer UWIDE = 0                                // 1: its D1 body is the WIDE successor (VM wide lanes)
+    parameter integer UWIDE = 0,                               // 1: its D1 body is the WIDE successor (VM wide lanes)
+    parameter integer VLL = 5, parameter integer VCX = 0, parameter integer VWCX = 0   // hbmdie-1011/views VM_TUNIT lane model
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -259,7 +262,7 @@ module hgi_e2e_fused_slot #(
     wire mv_v, mv_rdy, mv_done, mv_fault; wire [226:0] mv; wire [337:0] fq, mq; wire [273:0] fr, mr;
     wire [32*16-1:0] wrq; wire [31:0] wrq_cr, wwq_cr, wwq_done; wire [32*257-1:0] wrr; wire [32*280-1:0] wwq;
     if (UWIDE) begin : g_lanes
-        hgi_e2e_vmlanes #(.UNIT(4)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
+        hgi_e2e_vmlanes #(.UNIT(4), .LAT(VLL), .CRX(VCX), .WCX(VWCX), .WDX(VDX)) u_ln (.clk(clk), .rst_n(rst_n), .rq(wrq), .rq_cr(wrq_cr), .rr(wrr), .wq(wwq),
             .wq_cr(wwq_cr), .wq_done(wwq_done));
     end else begin : g_nolanes
         assign wrq_cr = '0; assign wrr = '0; assign wwq_cr = '0; assign wwq_done = '0;
