@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/smh_fcxl_ref_p40-r1-a9afd2404-lf/record/views/ot_hbm_accel_smh_fc_xl/ot_hbm_accel_smh_fc_xl.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/smh_fcxl_ref_p40-r1-9214bae8b/record/views/ot_hbm_accel_smh_fc_xl/ot_hbm_accel_smh_fc_xl.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "ot_hbm_accel_smh_fc_xl 302.4 x 298.08: PG M6 VDD 27 stripes (94% spread, 100% cov) / VSS 28 stripes (98% spread, 100% cov); strap M7; face pins 7845 blocked-above 0; clock clk insertion 348 ps",
+ "summary": "ot_hbm_accel_smh_fc_xl 302.4 x 298.08: PG M6 VDD 27 stripes (94% spread, 100% cov) / VSS 28 stripes (98% spread, 100% cov); strap M7; face pins 7845 blocked-above 0; clock clk insertion 366 ps",
  "info": {
   "cell": "ot_hbm_accel_smh_fc_xl",
   "W": 302.4,
@@ -34,16 +34,17 @@
   },
   "pg_layer": "M6",
   "strap_layer": "M7",
+  "cap": null,
   "face": {
    "face_pins": 7845,
    "blocked_above": 0,
-   "covered_below": 2708,
+   "covered_below": 2736,
    "examples": []
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 347.75,
-    "min_ps": 259.94
+    "max_ps": 365.86,
+    "min_ps": 284.84
    }
   }
  }
