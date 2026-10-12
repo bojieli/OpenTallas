@@ -18,7 +18,7 @@
     input wire [0:0] gr_c,
     output wire [275:0] gr_d,
     output wire [0:0] gr_v,
-    output wire [11:0] gwd,
+    output wire [12:0] gwd,
     input wire [3:0] qr_beat,
     input wire [255:0] qr_data,
     input wire [16:0] qr_tag,
