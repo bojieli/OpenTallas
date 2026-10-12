@@ -9,7 +9,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_mover_el #(
     parameter integer MUT = 0,
-    parameter integer PX = 1              // hbm-fq/mvf: registered issue decisions + vmq output (ot_hgi_dma_mover PX)
+    parameter integer PX = 2              // hbm-fq/mvf: 1 registered issue decisions + vmq output; 2 + response pin flops, chunked set-up, serial SXP (ot_hgi_dma_mover PX)
 ) (
     input  wire          clk,
     input  wire          rst_n,

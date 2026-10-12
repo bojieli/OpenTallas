@@ -57,6 +57,14 @@ module ot_hgi_dma_mover #(
                                           // cycle; sel_s -> vmq 338-b output mux): 1 = registered write-queue head lane, every slot's
                                           // next source / destination / row values precomputed in R0 (the issue is a select),
                                           // registered vmq output (+1 cycle on VM packet requests)
+                                          // 2 (hbm-fq/mvf 10-11, route px2a-75a1aed59 TT -143: r_rsp_we pin -> l_take -> 4-way
+                                          // 256-b AND-OR -> lt_* 12-17 levels behind the pin; sbase/sstb -> rsa / dbase/dstb -> rdd
+                                          // 42-b (3-operand) adds at go_f 26-29 levels; sstw -> s_nc settle add; u_ser.sa self-loop):
+                                          // = PX 1 + read-response pin flops (raw capture, the lane pick one cycle later, +1 cycle
+                                          // on the landing), every slot's row start and next-row start computed straight from
+                                          // base + m x stride (m <= 8) as carry-save + three 14-b chunks with registered carries on
+                                          // the existing go_f / go_q2 / go_q3 setup edges (no extra command cycle), serial engine
+                                          // next addresses precomputed (SXP: +1 cycle a command)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -155,7 +163,7 @@ module ot_hgi_dma_mover #(
     wire s_kv, s_kwe; wire [36:0] s_ka; wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
     reg  f_fault;
     assign mv_rdy = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
-    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_go && !fast_cmd && cm_q[94:93] != 2'd0),
+    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE), .SXP(PX >= 2 ? 1 : 0)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_go && !fast_cmd && cm_q[94:93] != 2'd0),
         .mv_rdy(s_mv_rdy), .mv(cm_q), .mv_done(s_mv_done), .mv_fault(s_mv_fault), .fence_v(1'b0), .fence_rdy(s_fence_rdy),
         .fence_done(s_fence_done), .k_req_v(s_kv), .k_req_rdy(ko_ld && sel_s), .k_req_we(s_kwe), .k_req_addr(s_ka),
         .k_req_wdata(s_kd), .k_req_wstrb(s_ks), .k_req_tag(s_kt), .k_rsp_v(kr_v && sel_s), .k_rsp_rdy(s_krr),
@@ -352,6 +360,29 @@ module ot_hgi_dma_mover #(
         assign q_nsn[g] = {q_nc[g] ? q_nh1[g] : q_nh0[g], q_nlo[g]};
         assign q_ndn[g] = {q_mc[g] ? q_mh1[g] : q_mh0[g], q_mlo[g]};
     end
+    // PX 2 set-up operands (registered base / stride / stp / stpd only): value v of slot k = base + A + B + cin, as
+    // carry-save S = base ^ A ^ B, K = maj(base, A, B) << 1; v 0 rsa (m = k), 1 rnsa (m = k + step), 2 rdd, 3 rndd
+    // (step 4 when STRIPE4 on either side, as sstw / dstw; 7 x = 8 x + ~x + 1)
+    reg [41:0] cs_s [0:3][0:3], cs_k [0:3][0:3]; reg cs_i [0:3][0:3]; reg [1:0] cs_c [0:3][0:3];
+    always @* begin : csa
+        reg [41:0] b, x, a1, a2; reg ci; integer m;
+        for (integer v = 0; v < 4; v = v + 1) for (integer k = 0; k < 4; k = k + 1) begin
+            b = (v < 2) ? sbase : dbase; x = (v < 2) ? {8'd0, sstb} : {8'd0, dstb};
+            m = (v == 0 || v == 2) ? k : (stp || stpd) ? k + 4 : k + 1;
+            ci = 1'b0;
+            case (m)
+                0: begin a1 = 42'd0;    a2 = 42'd0; end
+                1: begin a1 = x;        a2 = 42'd0; end
+                2: begin a1 = x << 1;   a2 = 42'd0; end
+                3: begin a1 = x << 1;   a2 = x; end
+                4: begin a1 = x << 2;   a2 = 42'd0; end
+                5: begin a1 = x << 2;   a2 = x; end
+                6: begin a1 = x << 2;   a2 = x << 1; end
+                default: begin a1 = x << 3; a2 = ~x; ci = 1'b1; end
+            endcase
+            cs_s[v][k] = b ^ a1 ^ a2; cs_k[v][k] = ((b & a1) | (b & a2) | (a1 & a2)) << 1; cs_i[v][k] = ci;
+        end
+    end
     always @(posedge clk) begin
         for (integer k = 0; k < 4; k = k + 1) begin : r0
             reg [41:0] w; reg [19:0] rn1;
@@ -527,15 +558,30 @@ module ot_hgi_dma_mover #(
     // the taken sector is registered first (the grant is one-hot: an AND-OR pick), its slot computed from the register
     // (registered boundary: r_rsp_v -> lt_i -> tag[lt_i] + beat -> lw_a was 49 levels)
     reg lt_v; reg [7:0] lt_tag; reg [2:0] lt_bt; reg [255:0] lt_d;
+    // PX 2: the taken read sector is first captured raw per lane (pin flops: take = v & grant & !we, no logic before the
+    // data / tag / last flops); the one-hot lane pick and the beat count run from those registers (+1 cycle on the landing)
+    wire [3:0] lk_take; wire [4*8-1:0] lk_tag; wire [3:0] lk_last; wire [4*256-1:0] lk_data;
+    if (PX >= 2) begin : g_rpf
+        reg [3:0] tk_q; reg [3:0] tl_q; reg [4*8-1:0] tt_q; reg [4*256-1:0] td_q;
+        always @(posedge clk or negedge rn) if (!rn) tk_q <= 4'd0; else tk_q <= l_take;
+        always @(posedge clk) begin
+            tl_q <= r_rsp_last; td_q <= r_rsp_data;
+            for (integer l = 0; l < 4; l = l + 1) tt_q[l*8 +: 8] <= r_rsp_tag[l*16 +: 8];
+        end
+        assign lk_take = tk_q; assign lk_tag = tt_q; assign lk_last = tl_q; assign lk_data = td_q;
+    end else begin : g_rnopf
+        assign lk_take = l_take; assign lk_last = r_rsp_last; assign lk_data = r_rsp_data;
+        for (genvar l = 0; l < 4; l = l + 1) begin : g_t assign lk_tag[l*8 +: 8] = r_rsp_tag[l*16 +: 8]; end
+    end
     always @(posedge clk) begin : ltk
         reg [7:0] tg; reg [2:0] bt; reg [255:0] dd;
         tg = 8'd0; bt = 3'd0; dd = 256'd0;
-        for (integer l = 0; l < 4; l = l + 1) if (l_take[l]) begin
-            tg = tg | r_rsp_tag[l*16 +: 8]; bt = bt | lbc[l]; dd = dd | r_rsp_data[l*256 +: 256];
+        for (integer l = 0; l < 4; l = l + 1) if (lk_take[l]) begin
+            tg = tg | lk_tag[l*8 +: 8]; bt = bt | lbc[l]; dd = dd | lk_data[l*256 +: 256];
         end
         lt_tag <= tg; lt_bt <= bt; lt_d <= dd;
     end
-    always @(posedge clk or negedge rn) if (!rn) lt_v <= 1'b0; else lt_v <= |l_take;
+    always @(posedge clk or negedge rn) if (!rn) lt_v <= 1'b0; else lt_v <= |lk_take;
     // KVW: bank 0 of the KV engine's buffer (the sector engine is idle while it runs; its enables pick the port)
     // (textbook audit 10-11: the KV engine owns both its buffer banks, OWN_B0 1: no shared macro port across the split)
     wire kb_we, kb_re; wire [7:0] kb_wa, kb_ra; wire [255:0] kb_wd;
@@ -612,10 +658,12 @@ module ot_hgi_dma_mover #(
                 // reader slots: slot k starts at row k (STRIPE4: rows k, k + 4, ...; else slot 0 takes every row)
                 db_dirty <= 4'd0; u_cv <= 1'b0; rrr <= 2'd0; v_ptr <= sf_a;
                 sstw <= (stp || stpd) ? {6'd0, sstb, 2'b00} : {8'd0, sstb}; dstw <= (stp || stpd) ? {6'd0, dstb, 2'b00} : {8'd0, dstb};
-                rsa[0] <= sbase; rsa[1] <= sbase + {8'd0, sstb}; rsa[2] <= sbase + {7'd0, sstb, 1'b0};
-                rsa[3] <= sbase + {7'd0, sstb, 1'b0} + {8'd0, sstb};
-                rdd[0] <= dbase; rdd[1] <= dbase + {8'd0, dstb}; rdd[2] <= dbase + {7'd0, dstb, 1'b0};
-                rdd[3] <= dbase + {7'd0, dstb, 1'b0} + {8'd0, dstb};
+                if (PX < 2) begin
+                    rsa[0] <= sbase; rsa[1] <= sbase + {8'd0, sstb}; rsa[2] <= sbase + {7'd0, sstb, 1'b0};
+                    rsa[3] <= sbase + {7'd0, sstb, 1'b0} + {8'd0, sstb};
+                    rdd[0] <= dbase; rdd[1] <= dbase + {8'd0, dstb}; rdd[2] <= dbase + {7'd0, dstb, 1'b0};
+                    rdd[3] <= dbase + {7'd0, dstb, 1'b0} + {8'd0, dstb};
+                end
                 for (integer k = 0; k < 4; k = k + 1) begin
                     ro[k] <= 20'(k); rrl[k] <= nnb;
                     ract[k] <= (k == 0 || stp || stpd) && 20'(k) < mm;
@@ -626,7 +674,28 @@ module ot_hgi_dma_mover #(
                     f_fault <= 1'b1; mv_fault <= 1'b1; busy_f <= 1'b0;
                 end
             end
-            if (PX != 0) begin                                                 // two settle edges: 21-b halves, carry kept
+            if (PX >= 2) begin                     // base + m x stride: carry-save, 14-b chunks on go_f / go_q2 / go_q3
+                for (integer k = 0; k < 4; k = k + 1) begin
+                    if (go_f) begin
+                        {cs_c[0][k][0], rsa[k][13:0]}  <= {1'b0, cs_s[0][k][13:0]} + {1'b0, cs_k[0][k][13:0]} + 15'(cs_i[0][k]);
+                        {cs_c[1][k][0], rnsa[k][13:0]} <= {1'b0, cs_s[1][k][13:0]} + {1'b0, cs_k[1][k][13:0]} + 15'(cs_i[1][k]);
+                        {cs_c[2][k][0], rdd[k][13:0]}  <= {1'b0, cs_s[2][k][13:0]} + {1'b0, cs_k[2][k][13:0]} + 15'(cs_i[2][k]);
+                        {cs_c[3][k][0], rndd[k][13:0]} <= {1'b0, cs_s[3][k][13:0]} + {1'b0, cs_k[3][k][13:0]} + 15'(cs_i[3][k]);
+                    end
+                    if (go_q2 && !go_q3) begin
+                        {cs_c[0][k][1], rsa[k][27:14]}  <= {1'b0, cs_s[0][k][27:14]} + {1'b0, cs_k[0][k][27:14]} + 15'(cs_c[0][k][0]);
+                        {cs_c[1][k][1], rnsa[k][27:14]} <= {1'b0, cs_s[1][k][27:14]} + {1'b0, cs_k[1][k][27:14]} + 15'(cs_c[1][k][0]);
+                        {cs_c[2][k][1], rdd[k][27:14]}  <= {1'b0, cs_s[2][k][27:14]} + {1'b0, cs_k[2][k][27:14]} + 15'(cs_c[2][k][0]);
+                        {cs_c[3][k][1], rndd[k][27:14]} <= {1'b0, cs_s[3][k][27:14]} + {1'b0, cs_k[3][k][27:14]} + 15'(cs_c[3][k][0]);
+                    end
+                    if (go_q3 && !go_q4) begin
+                        rsa[k][41:28]  <= cs_s[0][k][41:28] + cs_k[0][k][41:28] + 14'(cs_c[0][k][1]);
+                        rnsa[k][41:28] <= cs_s[1][k][41:28] + cs_k[1][k][41:28] + 14'(cs_c[1][k][1]);
+                        rdd[k][41:28]  <= cs_s[2][k][41:28] + cs_k[2][k][41:28] + 14'(cs_c[2][k][1]);
+                        rndd[k][41:28] <= cs_s[3][k][41:28] + cs_k[3][k][41:28] + 14'(cs_c[3][k][1]);
+                    end
+                end
+            end else if (PX != 0) begin                                        // two settle edges: 21-b halves, carry kept
                 if (go_q2 && !go_q3) for (integer k = 0; k < 4; k = k + 1) begin
                     {s_nc[k], rnsa[k][20:0]} <= {1'b0, rsa[k][20:0]} + {1'b0, sstw[20:0]};
                     {s_mc[k], rndd[k][20:0]} <= {1'b0, rdd[k][20:0]} + {1'b0, dstw[20:0]};
@@ -730,7 +799,7 @@ module ot_hgi_dma_mover #(
                 end
                 s_vr2q[512] <= VR2 != 0 && ((SV != 0 && busy_f && !src_hbm && go_q4 && !r_done) || g_busy != 32'd0 || !g_home || kv_creq);
                 if (v_rd_land) v_ptr <= v_ptr + 8'd1;
-                for (integer l = 0; l < 4; l = l + 1) if (l_take[l]) lbc[l] <= r_rsp_last[l] ? 3'd0 : lbc[l] + 3'd1;
+                for (integer l = 0; l < 4; l = l + 1) if (lk_take[l]) lbc[l] <= lk_last[l] ? 3'd0 : lbc[l] + 3'd1;
                 // next grant: rotating from the lane after the current grant, among the lanes with a sector waiting
                 nf = 1'b0; nx = 2'd0;
                 for (integer t = 4; t >= 1; t = t - 1) begin : gp
