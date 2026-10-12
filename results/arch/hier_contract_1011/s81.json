@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 6,
+ "version": 7,
  "owner": "s81die-1011",
- "updated": "2026-10-12 02:20 PT",
+ "updated": "2026-10-12 02:45 PT",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -58,6 +58,11 @@
    "version": 6,
    "when": "2026-10-12 02:20 PT",
    "change": "s81-die-iter: rep/hrow outline 2,998.08 x 1,769.04 (el1011-ds-mtp fd01e9763: grows DOWN from the fixed N face, N-face ports unchanged); dsrom_s81_fulldie --contract now reads rep/hrow (the old key \"hrow\" never matched). Wide face-to-face hub groups centred on the span shared with the peer (--peer-span-centre): SU 1,890 (grown W) and VM 1,520 keep their wide rs_d/wq_d groups aligned across the 21.6 um abut gap."
+  },
+  {
+   "version": 7,
+   "when": "2026-10-12 02:45 PT",
+   "change": "s81-die-iter: hub slot origins re-derived from the re-stacked i3 plan (src 4c8acb002, recipe s81_layer1_v4.opts; legality 0 overlaps / 0 outside / 0 pin clashes over 58,338 instances; results/physical/die_iter_1012/s81/i3_plan): sp_collective (13942.8,14603.76)->(13942.8,14724.72); sp_capture (13942.8,12091.68)->(13942.8,12212.64); sp_gather (13942.8,12242.88)->(13942.8,12363.84); sp_wfc (13942.8,13841.28)->(13942.8,13962.24). VM FE v5 conflict resolved by the re-stack: SU|21.6|VM 9,460.8-12,191.0|21.6|capture|21.6|gather (abut gaps, pin flops both faces); hub stations regenerate clear of it."
   }
  ],
  "slots": [
@@ -3461,7 +3466,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 14603.76,
+    "y": 14724.72,
     "orient": "R0"
    },
    "io_budget": {
@@ -4627,7 +4632,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 12091.68,
+    "y": 12212.64,
     "orient": "R0"
    },
    "io_budget": {
@@ -4698,7 +4703,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 12242.88,
+    "y": 12363.84,
     "orient": "R0"
    },
    "io_budget": {
@@ -4895,7 +4900,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 13841.28,
+    "y": 13962.24,
     "orient": "R0"
    },
    "io_budget": {
