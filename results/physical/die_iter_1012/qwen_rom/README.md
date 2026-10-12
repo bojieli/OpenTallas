@@ -40,9 +40,10 @@ Some elements have closed but are not bound yet, because their die master is not
 ## Contract v5 (2026-10-12): floorplan fixes from this iteration
 
 - **D5, word width.** The station words were 323 bits: the corridor a/b on `qfd_cst_n`/`_s`, and tap on the cst and
-  `qfd_tile_nk`. They are now 508 bits. The closed RTL is 508: `qfd_cst` (ot_qwen_die_station a_d/b_d/t_d) and the
+  `qfd_tile_nk`. They are now 509 bits: 508 data plus ready. The closed RTL is 508 + 1: `qfd_cst` (ot_qwen_die_station a_d/b_d/t_d plus
+  a_r/b_r/t_r) and the
   tile_nk ports ib 379 + ib_go 1 + xl 128. The die generator still used the b3r2 compressed instruction transport
-  (TAP_BITS 325), which no RTL implements. So the die under-counted 185 bits on every station hop. The die generator
+  (TAP_BITS 325), which no RTL implements. So the die under-counted 186 bits on every station hop. The die generator
   follows in e8.
 - **D6, tile_nk layers.** `qfd_tile_nk` signal_max_layer goes from M6 to M7. The die straps on M8, and the tile's M7
   signals run between its M7 PG straps.
