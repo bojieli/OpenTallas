@@ -97,6 +97,14 @@ HIER = {
                               'substantial) -> topk_w8 is ONE hardened cluster (heap tiles abut N/S 4+4, seams <= 410 um), '
                               'not tiles + hub; the submitted w8hub routes may finish but get no iterations; '
                               'idx chunk / TOPK_MERGE likewise: TOPK_MERGE = 16 tkm tiles + its pass sequencer/SRAM as one cluster'),
+    'hfd_lk_ep': dict(decision='hardened_cluster', count_rule='9 (5 S + 4 N)', owner='el1011-hbm-coll',
+                      tiles='3 x ot_lkep_sub (864 x 643.2, retry macro + TX bank + pin queues + relays, seam pins bottom) '
+                            'side by side + glue strip (~25k flops: admission, CRC, gearbox, merge) below; die pins f_lk '
+                            '(1,120) + phy (974) on the glue strip long face',
+                      slot_change='v3 GRANTED 2,600 x 830 (was 1,728 x 1,015.2): S row x 7,570 / 10,254 / 12,938 / 15,622 / '
+                                  '18,306 at y 6,016 (84 um channels, sm7..sm14 gap); N row x 9,984 / 12,668 / 15,352 / '
+                                  '18,036, top edge 19,749 (MX); ep <-> lk link relays grow with the wider row',
+                      layers='EXCEPTION (main): pg_layer M8 / die strap M9 over the slot'),
     'hfd_vm_sw': dict(decision='two_level', count_rule='1 (distinct master per quarter)', owner='hbm-vm8',
                       tiles='halves hfd_vm_<q>_<h> = 6 tiles t<k> each, abutted in the half slot, no hub; clock entry '
                             'M7 area pin ckt<k> per tile (+ face taps), die balances ckt<k> + taps to one REF'),
@@ -104,6 +112,10 @@ HIER = {
     'hfd_vm_nw': dict(decision='two_level', count_rule='1', owner='hbm-vm8', tiles='as hfd_vm_sw'),
     'hfd_vm_ne': dict(decision='two_level', count_rule='1', owner='hbm-vm8', tiles='as hfd_vm_sw'),
 }
+# main 10-11 layer exception: a cluster whose tiles contain a hard macro with M6 power puts tile PG on M7 and its own
+# straps on M8 (pg_layer M8); the die connects on M9 over that slot (strap_layer M9).  Per slot:
+LAYER_EXC = {'hfd_lk_ep': dict(pg_layer='M8', strap_layer='M9', signal_max_layer='M7',
+                               why='3 x ot_lkep_sub tiles hold the retry macro (M6 PG) -> tile PG M7, cluster straps M8')}
 # elements handed off with no R25GQ die master today (recorded, not placed)
 UNPLACED = {
     'ot_hbm_native_frame_station_rb_NO2/NO3/NO3_SAFE (hbm-no3)': dict(
@@ -224,7 +236,9 @@ def to_schema(rec, a):
                       origin=dict(x=inst['xy'][0], y=inst['xy'][1], orient=inst['orient'] if inst['orient'] in ('R0', 'MX', 'MY', 'R180') else 'R0'),
                       io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True),
                       clock_entry=ce0 or dict(pin='ck', face='N', layer='M7'),
-                      pg_layer='M7', strap_layer='M8', signal_max_layer='M7', version=a.version,
+                      **{k: v for k, v in dict(pg_layer='M7', strap_layer='M8', signal_max_layer='M7',
+                                               **{k2: v2 for k2, v2 in LAYER_EXC.get(cell, {}).items() if k2 != 'why'}).items()},
+                      version=a.version,
                       notes=(f"hierarchy {sl['hierarchy']['decision']}" + (f'; {ip}' if ip else '') +
                              ('' if ce0 else '; clock entry = die H-tree leaf at the block ck pin (phys_trees)') +
                              ('' if k_ == 0 else f"; pins as {sl['instances'][0]['name']}")))
