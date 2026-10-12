@@ -104,7 +104,10 @@ def cmd_tile(a):
         # pin-access plan (ds-coll bf0080873): adjacent-layer keepout over the outer pin column before GRT, removed after DRT
         lines += ["export PRE_GLOBAL_ROUTE_TCL = /src/physical/redesign_ds/coll_split/pin_access_pregrt.tcl",
                   "export POST_DETAIL_ROUTE_TCL = /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
-                  f"export OT_PK_FRAC = {a.pin_access}"]
+                  f"export OT_PK_FRAC = {a.pin_access}",
+                  # above-only (preamble PIN-ACCESS KEEPOUT, cons c95527ec0): keep only the layer ABOVE each edge pin clear
+                  # (the parent's access side, what child_lint f checks); blocking below too starved dense faces (hfd_hc)
+                  "export OT_PK_ABOVE_ONLY = 1"]
     if a.pdn == "m7":   # second line: the tile owns M7 power stripes (its pins); the station joins them from M8
         lines.append(f"export PDN_TCL = /src/{STN}/pdn_slice_m7.tcl")
     (work / "config.mk").write_text("\n".join(lines) + "\n")
