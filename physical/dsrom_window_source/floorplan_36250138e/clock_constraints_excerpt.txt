@@ -1,0 +1,9 @@
+create_clock -name core_clk -period 770.0000 [get_ports {clk}]
+set_clock_uncertainty -setup 60.0000 core_clk
+set_clock_uncertainty -hold 25.0000 core_clk
+create_clock -name vclk -period 770.0000 
+set_clock_uncertainty -setup 60.0000 vclk
+set_clock_uncertainty -hold 25.0000 vclk
+set_clock_latency 538.0000 [get_clocks {core_clk}]
+set_clock_latency 538.0000 [get_clocks {vclk}]
+set_clock_latency -source 0.0000 [get_clocks {core_clk}]

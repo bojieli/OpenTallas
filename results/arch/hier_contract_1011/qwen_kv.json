@@ -1,7 +1,7 @@
 {
  "schema": "qwen-hier-contract/0 (provisional; migrate to tools/hier_contract/)",
  "die": "qwen_kv",
- "version": 2,
+ "version": 3,
  "source": "die_kv15 case_kv @14f0f4368 (die chain CLOSED TT +217.17 / FF +18.26)",
  "period_ps": 833.333,
  "die_outline": "qwen_kv",
@@ -24377,6 +24377,12 @@
    "date": "2026-10-11 21:45 PDT",
    "by": "qwendie-1011",
    "note": "seam_check spec; KV hub tiles pending q-kvd handover"
+  },
+  {
+   "version": 3,
+   "date": "2026-10-11 19:20 PDT",
+   "by": "qwendie-1011",
+   "note": "GLUE PLACEMENT; die_closure section"
   }
  ],
  "seam_check": {
@@ -24402,5 +24408,12 @@
    "hops_over_504um": 0
   },
   "evidence_rule": "estimate-only seam checks are not closure evidence; a seam passes only on the routed die region"
- }
+ },
+ "die_closure": {
+  "seam_check": "part of DIE closure (ELEMENT CLOSURE UNDER TWO-LEVEL 19:45), not element closure",
+  "regions": "die top routed per region with slots as fixed macros, relays as the only logic; region list + routes tracked here",
+  "region_routes": [],
+  "status": "pending: per-region die-top DRT flow to be added; current evidence = GRT + STA (r22ko4 e6/e7 chains), not closure"
+ },
+ "kv_hub": "per el1011-q-kvd choice (GLUE PLACEMENT: glue into tiles or one hardened cluster)"
 }
