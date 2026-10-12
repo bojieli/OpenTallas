@@ -43,7 +43,15 @@ module ot_hgi_sm_xload #(
     parameter integer MUT_M = 0,          // mutant (FILL-9): a landing sector's write mask on lane slice (j ^ 1) of its quarter
     parameter integer MUT_T = 0,          // mutant: lane j takes t from the wrong half (k = (g 64 + j) 8 + (7 - t))
     parameter integer MUT_BD = 0,         // mutant: a block-dot block lands in the neighbouring lane (j ^ 1)
-    parameter integer BD = 0              // hbm-relaunch-1011/xfp: 1 = native block-dot x (fmt 1 / 2); 0 = refuse (as main)
+    parameter integer BD = 0,             // hbm-relaunch-1011/xfp: 1 = native block-dot x (fmt 1 / 2); 0 = refuse (as main)
+    parameter integer WVM = 0,            // smmv 3b: 1 = BF16 x (fmt 0 / 3) over a 32-lane VM wide READ group (die contract
+                                          //   r25gq v7 D19: lane group lgE slot 0, ot_hgi_vm_lanearb client): one burst a
+                                          //   column p a super-block of <= 16 groups, 32 sectors (= lanes j of one half
+                                          //   group) land in ONE edge as full 256-b rows of 16 macros; emission of group g
+                                          //   overlaps the landing of g + 1 (x word {g mod 16, p}).  Block-dot: packet path.
+    parameter integer WLQ = 16,           // wide-lane credits a lane (the lane-group round trip)
+    parameter integer WD = 8,             // waves outstanding (ot_hgi_vm_wrd response FIFO depth)
+    parameter integer MUT_WV = 0          // mutants: 1 the wave lands rotated one lane too far; 2 / 3 = ot_hgi_vm_wrd MUT 1 / 2
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -63,7 +71,14 @@ module ot_hgi_sm_xload #(
     output reg  [6:0]         xw_grp,
     output reg  [2047:0]      xw_data,
     output wire [NXC*338-1:0] vmq,   // {v, payload 337}: v from a reset flop, payload from a data flop
-    input  wire [NXC*274-1:0] vmr
+    input  wire [NXC*274-1:0] vmr,
+    // smmv 3b: the VM wide read lane group (WVM = 1; lanearb client: rg_req held a burst, lane b {v, sector15}, credits,
+    // responses {v, data256} in order a lane).  WVM = 0: rg_req / wrq stay 0.
+    output wire               rg_req,
+    input  wire               rg_gnt,
+    output wire [32*16-1:0]   wrq,
+    input  wire [31:0]        wrq_cr,
+    input  wire [32*257-1:0]  wrr
 );
     localparam integer XC = 3152, XOFF = 2128;
     localparam integer RD = 8;             // read pipe: r0 decision, r1 quarter copy, r2 pins, r3 macro out, r4 cap, r5 or4, r6 rw, r7 xb
@@ -76,14 +91,52 @@ module ot_hgi_sm_xload #(
     // ---- read pipeline valids (reset) and metadata (data)
     reg [RD-1:0] rv;
     reg [6:0] rm_addr [0:RD-1]; reg [6:0] rm_b [0:RD-1]; reg rm_ok [0:RD-1];
-    reg [2:0] r0_t; reg [3:0] r0_sp;
+    reg [2:0] r0_t; reg [6:0] r0_sp;
     reg [2047:0] xb;                       // r7: the assembled beat
     // ---- write pipeline: L1 (selected sector), L2 (converted), W1 (per-quarter copy), W2 (per-macro pins)
     reg l1_v, l2_v; reg [3:0] w1_v;
-    reg [273:0] l1_d; reg [127:0] l2_d; reg [1:0] l2_q; reg [3:0] l2_a; reg [3:0] l2_l;
-    reg [127:0] w1_d [0:3]; reg [3:0] w1_a [0:3]; reg [3:0] w1_l [0:3];
+    reg [273:0] l1_d; reg [127:0] l2_d; reg [1:0] l2_q; reg [6:0] l2_a; reg [3:0] l2_l;
+    reg [127:0] w1_d [0:3]; reg [6:0] w1_a [0:3]; reg [3:0] w1_l [0:3];
     // ---- read command per-quarter copy (r1): t one-hot + slot address
-    reg [7:0] r1_oh [0:3]; reg [3:0] r1_sp [0:3];
+    reg [7:0] r1_oh [0:3]; reg [6:0] r1_sp [0:3];
+    // ---- smmv 3b WIDE LANDING (WVM): ot_hgi_vm_wrd bursts -> R (rotate VM lane -> x lane, registered) -> C (BF16 + K
+    //      range, registered) -> per-macro pins (vp_*) -> the macro write edge.  Every stage is a register; the 8-kb wave
+    //      enters at the VM lane face (the block sits at the lane-group face; die stations <= 504 um in lanearb RLY).
+    //      A wave = lanes j = 32 h .. 32 h + 31 of (group g, column p): it writes m[t][2 h], m[t][2 h + 1] (16 macros)
+    //      at word {g mod 16, p} in ONE edge; wcnt[g mod 16] counts the landed waves (2 P = group complete).
+    reg wm;                                // this command lands over the wide group (WVM && !block-dot)
+    reg w_go; reg [14:0] w_s0; reg [15:0] w_ns; wire w_busy, w_done, w_fault;
+    wire [31:0] wd_v; wire [32*15-1:0] wd_sec; wire [32*256-1:0] wd_dat;
+    reg [3:0] wl_p; reg [7:0] wl_sb; reg wl_pend, wl_next; reg [8:0] wv;   // burst column, super-block group base, waves
+    reg [4:0] wcnt [0:15];
+    reg [20:0] kk;                         // K
+    reg r_v; reg r_h; reg [7:0] r_g; reg [3:0] r_p; reg [8:0] r_rem; reg [32*256-1:0] r_d;
+    reg cv_v; reg cv_h; reg [6:0] cv_a; reg [32*128-1:0] cv_d;
+    generate if (WVM != 0) begin : g_wvm
+        ot_hgi_vm_wrd #(.LQ(WLQ), .D(WD), .SW(15), .MUT(MUT_WV >= 2 ? MUT_WV - 1 : 0)) u_wrd (.clk(clk), .rst_n(rst_c),
+            .start(w_go), .s0(w_s0), .ns(w_ns), .busy(w_busy), .done(w_done), .fault(w_fault), .req(rg_req), .gnt(rg_gnt),
+            .q(wrq), .cr(wrq_cr), .rsp(wrr), .d_v(wd_v), .d_sec(wd_sec), .d_data(wd_dat));
+    end else begin : g_nowvm
+        assign rg_req = 1'b0; assign wrq = '0; assign w_busy = 1'b0; assign w_done = 1'b0; assign w_fault = 1'b0;
+        assign wd_v = '0; assign wd_sec = '0; assign wd_dat = '0;
+    end endgenerate
+    // R: rotation (x lane l <- VM lane (l + s0) mod 32) + the wave's (g, h, p) and its K remainder clamped to [0, 256]
+    always @(posedge clk) begin : wrot
+        reg signed [23:0] rm; integer b;
+        rm = $signed({3'd0, kk}) - $signed({4'd0, wl_sb + {7'd0, wv[8:1]}, 9'd0}) - $signed({15'd0, wv[0], 8'd0});
+        for (integer l = 0; l < 32; l = l + 1) begin
+            b = (l + w_s0[4:0] + (MUT_WV == 1 ? 1 : 0)) % 32;
+            r_d[l*256 +: 256] <= wd_dat[b*256 +: 256];
+        end
+        r_h <= wv[0]; r_g <= wl_sb + {7'd0, wv[8:1]}; r_p <= wl_p;
+        r_rem <= (rm < 0) ? 9'd0 : (rm > 24'sd256) ? 9'd256 : rm[8:0];
+    end
+    // C: BF16 (RNE) of every element inside K, 0 past it
+    always @(posedge clk) begin
+        for (integer l = 0; l < 32; l = l + 1) for (integer tv = 0; tv < 8; tv = tv + 1)
+            cv_d[l*128 + 16*tv +: 16] <= ({1'b0, 8'(l * 8 + tv)} < r_rem) ? bf16(r_d[l*256 + 32*tv +: 32]) : 16'd0;
+        cv_h <= r_h; cv_a <= {r_g[3:0], r_p[2:0]};
+    end
     // ---- macro field
     wire [255:0] cap [0:31];               // gated capture of m[t][q] at index t * 4 + q (zero unless read)
     reg  [255:0] or4 [0:7];                // index h * 4 + q: OR of cap[t][q] over t in half h (t >> 2 == h)
@@ -91,28 +144,33 @@ module ot_hgi_sm_xload #(
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
         for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
             // per-macro pin flops (kept: one copy a macro, so no register drives pins across the field)
-            (* keep = 1 *) reg       rp_ce;  (* keep = 1 *) reg [3:0] rp_a;   (* keep = 1 *) reg rp_sel;
-            (* keep = 1 *) reg       wp_ce;  (* keep = 1 *) reg [3:0] wp_a;   reg [15:0] wp_d;  reg [15:0] wp_m;
+            (* keep = 1 *) reg       rp_ce;  (* keep = 1 *) reg [6:0] rp_a;   (* keep = 1 *) reg rp_sel;
+            (* keep = 1 *) reg       wp_ce;  (* keep = 1 *) reg [6:0] wp_a;   reg [15:0] wp_d;  reg [15:0] wp_m;
+            // smmv 3b wide landing pins (WVM): a full 256-b row (16 lanes x BF16 of t-value gt) at word {g mod 16, p}
+            (* keep = 1 *) reg       vp_ce;  (* keep = 1 *) reg [6:0] vp_a;   reg [255:0] vp_d;
             reg [255:0] cq;
             wire [255:0] rd;
             wire [3:0] lsl = w1_l[gq] ^ ((MUT_M != 0) ? 4'd1 : 4'd0);
             always @(posedge clk or negedge rst_c) begin
-                if (!rst_c) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; end
-                else begin rp_ce <= rv[1] && r1_oh[gq][gt]; rp_sel <= rp_ce; wp_ce <= w1_v[gq]; end
+                if (!rst_c) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; vp_ce <= 1'b0; end
+                else begin rp_ce <= rv[1] && r1_oh[gq][gt]; rp_sel <= rp_ce; wp_ce <= w1_v[gq];
+                           vp_ce <= (WVM != 0) && cv_v && cv_h == (gq / 2); end
             end
             always @(posedge clk) begin
                 rp_a <= r1_sp[gq];
                 wp_a <= w1_a[gq]; wp_d <= w1_d[gq][16 * gt +: 16]; wp_m <= 16'd1 << lsl;
                 cq <= rd & {256{rp_sel}};                                      // capture: zero unless this macro was read
+                vp_a <= cv_a;
+                for (integer ll = 0; ll < 16; ll = ll + 1) vp_d[16 * ll +: 16] <= cv_d[((gq % 2) * 16 + ll) * 128 + 16 * gt +: 16];
             end
             wire [255:0] wmask;
             for (gs = 0; gs < 16; gs = gs + 1) begin : g_m
                 assign wmask[16 * gs +: 16] = {16{wp_m[gs]}};
             end
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
-                .r_ce_in(rp_ce), .r_addr_in({3'd0, rp_a}), .rd_out(rd),
-                .w_ce_in(wp_ce), .w_addr_in({3'd0, wp_a}), .wd_in({16{wp_d}}),
-                .w_mask_in(wmask), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+                .r_ce_in(rp_ce), .r_addr_in(rp_a), .rd_out(rd),
+                .w_ce_in(wp_ce || vp_ce), .w_addr_in(vp_ce ? vp_a : wp_a), .wd_in(vp_ce ? vp_d : {16{wp_d}}),
+                .w_mask_in(vp_ce ? {256{1'b1}} : wmask), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
             assign cap[gt * 4 + gq] = cq;
         end
     end endgenerate
@@ -260,22 +318,30 @@ module ot_hgi_sm_xload #(
         wd = {14'd0, base} + p_rd * {14'd0, st} + {g, 9'd0} + {j_rd, 3'd0};
     end
     wire rd_ph = busy && ph == 2'd0, em_ph = busy && ph == 2'd1;
-    wire issue = rd_ph && found && p_rd < pp;
+    wire issue = rd_ph && found && p_rd < pp && !wm;
     reg [NXC-1:0] take;
     always @* for (integer ct = 0; ct < NXC; ct = ct + 1) take[ct] = (rd_ph || bd_rd) && cbusy[ct] && !hv[ct] && vr[ct][273] && !vr[ct][256];
     // a landing waits until no read is still on its way to the macro pins (write-after-read order of the field)
     wire rd_pins_busy = |rv[2:0];
     wire land = rd_ph && lsel_v && !rd_pins_busy;
     wire wr_busy = l1_v || l2_v || |w1_v;
-    wire to_emit = rd_ph && got == {pp, 6'd0} && !wr_busy;   // every landed sector written (W2 is the macro write edge)
+    wire [3:0] sob = slot_of(b);
+    wire to_emit = rd_ph && (wm ? (wcnt[g[3:0]] == {pp, 1'b0} && g < wl_sb + 8'd16)   // WVM: the group's 2 P waves at the pins
+                                : (got == {pp, 6'd0} && !wr_busy));  // every landed sector written (W2 is the macro write edge)
+    // WVM bursts: column wl_p of super-block wl_sb (groups [wl_sb, wl_sb + 16) cap gn); the next super-block launches
+    // once emission has reached it (its x words reuse the slots of the one before)
+    wire [7:0] sb_ng = (gn - wl_sb > 8'd16) ? 8'd16 : gn - wl_sb;
+    wire w_launch = busy && wm && wl_pend && !w_busy && !w_go;
+    wire sb_adv = busy && wm && wl_next && rd_ph && g == wl_sb + 8'd16 && !w_busy;
     wire last_b = b == nb - 7'd1, last_bt = last_b && t == 4'd7, last_g = g == gn - 8'd1;
-    wire fin = busy && ph == 2'd2 && !(|rv) && !be_v;         // last beat out
+    wire fin = busy && ph == 2'd2 && !(|rv) && !be_v && !(wm && (w_busy || w_go));   // last beat out
     // ---- control (reset)
     always @(posedge clk or negedge rst_c) begin
         if (!rst_c) begin cmd_v <= 1'b0; busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vq_v <= 0;
                           cbusy <= 0; ph <= 0; hv <= 0; rv <= 0; l1_v <= 1'b0; l2_v <= 1'b0; w1_v <= 4'd0;
                           bd <= 1'b0; bph <= 2'd0; aact <= 2'b00; aq_v <= 1'b0; tgh <= 4'd0; tgt <= 4'd0; be_v <= 1'b0;
-                          bflt <= 1'b0; end
+                          bflt <= 1'b0; wm <= 1'b0; w_go <= 1'b0; wl_pend <= 1'b0; wl_next <= 1'b0; r_v <= 1'b0;
+                          cv_v <= 1'b0; for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
         else begin
             x_done <= fin && !(bd && bflt);
             if (fin && bd && bflt) x_fault <= 1'b1;
@@ -284,7 +350,18 @@ module ot_hgi_sm_xload #(
             for (integer wq = 0; wq < 4; wq = wq + 1) w1_v[wq] <= l2_v && l2_q == wq;
             cmd_v <= (x_v && x_rdy) ? 1'b1 : 1'b0;
             if (cmd_v && c_bad) x_fault <= 1'b1;
-            if (start) begin busy <= 1'b1; ph <= c_bdf ? 2'd3 : 2'd0; bd <= c_bdf; bph <= 2'd1; aact <= 2'b00; bflt <= 1'b0; end
+            if (start) begin busy <= 1'b1; ph <= c_bdf ? 2'd3 : 2'd0; bd <= c_bdf; bph <= 2'd1; aact <= 2'b00; bflt <= 1'b0;
+                             wm <= (WVM != 0) && !c_bdf; wl_pend <= (WVM != 0) && !c_bdf; wl_next <= 1'b0;
+                             for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
+            // smmv 3b wide landing control
+            w_go <= w_launch;
+            r_v <= |wd_v; cv_v <= r_v;
+            if (cv_v) wcnt[cv_a[6:3]] <= wcnt[cv_a[6:3]] + 5'd1;
+            if (wm && w_done) begin
+                if (wl_p == pp - 4'd1) begin wl_pend <= 1'b0; wl_next <= ({1'b0, wl_sb} + 9'd16 < {1'b0, gn}); end
+            end
+            if (sb_adv) begin wl_next <= 1'b0; wl_pend <= 1'b1; for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
+            if (wm && w_fault) x_fault <= 1'b1;
             vq_v <= {NXC{1'b0}};
             if (issue || bd_issue) begin vq_v[cf] <= 1'b1; cbusy[cf] <= 1'b1; end
             for (integer ch = 0; ch < NXC; ch = ch + 1) if (take[ch]) hv[ch] <= 1'b1;
@@ -311,7 +388,8 @@ module ot_hgi_sm_xload #(
     // ---- data (no reset)
     always @(posedge clk) begin
         if (start) begin
-            base <= c_base[17:0]; pp <= c_p; st <= c_stride[17:0]; krem <= {2'b00, c_n};
+            base <= c_base[17:0]; pp <= c_p; st <= c_stride[17:0]; krem <= {2'b00, c_n}; kk <= c_n;
+            wl_p <= 4'd0; wl_sb <= 8'd0;
             gn <= ((c_n - 21'd1) >> 9) + 8'd1; g <= 8'd0; p_rd <= 4'd0; j_rd <= 7'd0; got <= 11'd0;
             nb <= ({12'd0, c_p} * 16'd3152 + 16'd2047) >> 11;    // 16 b: P x XC reaches 25,216
             la <= (c_fmt == 2'd2) ? 4'd8 : 4'd4; nbk <= c_n[20:5];
@@ -362,6 +440,13 @@ module ot_hgi_sm_xload #(
                 if (t == 4'd7) begin t <= 4'd0; if (g != gn - 8'd1) g <= g + 8'd1; end else t <= t + 4'd1;
             end else b <= b + 7'd1;
         end
+        if (w_launch) begin
+            w_s0 <= 15'(({14'd0, base} + {28'd0, wl_p} * {14'd0, st}) >> 3) + 15'({wl_sb, 6'd0});
+            w_ns <= {2'd0, sb_ng, 6'd0}; wv <= 9'd0;
+        end
+        if (|wd_v) wv <= wv + 9'd1;
+        if (wm && w_done && wl_p != pp - 4'd1) wl_p <= wl_p + 4'd1;
+        if (sb_adv) begin wl_sb <= wl_sb + 8'd16; wl_p <= 4'd0; end
         if (issue) begin
             vq_d[cf] <= {1'b0, wd[29:3], 5'd0, 256'd0, 32'd0, {5'd0, p_rd, j_rd}};
             if (j_rd == 7'd63) begin j_rd <= 7'd0; p_rd <= p_rd + 4'd1; end else j_rd <= j_rd + 7'd1;
@@ -375,7 +460,7 @@ module ot_hgi_sm_xload #(
             for (integer wv = 0; wv < 8; wv = wv + 1)
                 v[wv] = ($signed({13'd0, lj, 3'd0}) + wv < krem) ? bf16(l1_d[32*wv +: 32]) : 16'd0;
             if (l1_v) begin
-                l2_q <= lj[5:4]; l2_a <= lp; l2_l <= lj[3:0];
+                l2_q <= lj[5:4]; l2_a <= {3'd0, lp}; l2_l <= lj[3:0];
                 l2_d <= {v[7], v[6], v[5], v[4], v[3], v[2], v[1], v[0]};
             end
         end
@@ -387,7 +472,7 @@ module ot_hgi_sm_xload #(
         // read pipeline: r0 decision -> r1 per-quarter copy -> r2 macro pins -> r3 macro out -> r4 cap -> r5 or4
         //                -> r6 rw -> r7 xb (beat) -> xw pins
         if (em_ph) begin
-            r0_t <= tt[2:0]; r0_sp <= slot_of(b);
+            r0_t <= tt[2:0]; r0_sp <= wm ? {g[3:0], sob[2:0]} : {3'd0, sob};
             rm_addr[0] <= {g[3:0], t[2:0]}; rm_b[0] <= b; rm_ok[0] <= in_slot(b, pp);
             if (last_b) begin
                 b <= 7'd0;

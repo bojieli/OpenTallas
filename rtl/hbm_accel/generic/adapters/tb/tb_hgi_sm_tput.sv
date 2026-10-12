@@ -90,15 +90,45 @@ module tb_hgi_sm_tput;
     wire [2047:0] xw_data = proxy_q ? tx_data : xl_data;
     wire [NXC*338-1:0] xq; wire [NXC*274-1:0] xr; wire [NPC*338-1:0] pq; wire [NPC*274-1:0] pr;
     wire [273:0] tr; reg [337:0] tq = 0;
+`ifdef WVM
+    // smmv 3b: BF16 x over the VM wide read lane group lgE slot 0 (die contract r25gq v7 D19): x-load = client 0 of a
+    // KE = 4 ot_hgi_vm_lanearb (slots 1-3 idle here: hce / CP) with WRLY relay stages each way (stn_lgE_hce, stn_lgE_cp)
+`ifndef WLQ
+`define WLQ 16
+`endif
+`ifndef WRLY
+`define WRLY 2
+`endif
+`ifdef MUT_WV
+    localparam integer MWV = `MUT_WV;
+`else
+    localparam integer MWV = 0;
+`endif
+    wire rg_req; wire [32*16-1:0] wrq_x, g_q; wire [31:0] g_cr; wire [32*257-1:0] g_rsp;
+    wire [3:0] a_gnt; wire [4*32-1:0] a_cr; wire [4*32*257-1:0] a_rsp;
+    ot_hgi_vm_lanearb #(.K(4), .REQW(16), .RSPW(257), .RLY(`WRLY)) u_arb (.clk(clk), .rst_n(rst_n), .c_req({3'b000, rg_req}),
+        .c_gnt(a_gnt), .c_q({{3*32*16{1'b0}}, wrq_x}), .c_cr(a_cr), .c_rsp(a_rsp), .g_q(g_q), .g_cr(g_cr), .g_rsp(g_rsp));
+    ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .WVM(1), .WLQ(`WLQ), .MUT_WV(MWV)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+        .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(proxy_f ? 2'd0 : x_fmt), .x_xb(x_xb), .x_done(x_done),
+        .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr),
+        .rg_req(rg_req), .rg_gnt(a_gnt[0]), .wrq(wrq_x), .wrq_cr(a_cr[0 +: 32]), .wrr(a_rsp[0 +: 32*257]));
+`else
     ot_hgi_sm_xload #(.NXC(NXC), .BD(XB)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(proxy_f ? 2'd0 : x_fmt), .x_xb(x_xb), .x_done(x_done),
-        .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr));
+        .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr),
+        .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
+`endif
     wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
     ot_hgi_sm_pub #(.NSM(NSM), .NPC(NPC), .MUT_ROW(MW), .AD(ADP)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
         .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr),
         .s0_v(), .s0_idx(), .s0_data(), .sm_cr(pcr));
+`ifdef WVM
+    ot_hgi_vm_unit #(.NC(NXC + NPC + 1), .RP(32), .LQ(`WLQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status(),
+        .rq(g_q), .rq_cr(g_cr), .rr(g_rsp));
+`else
     ot_hgi_vm_unit #(.NC(NXC + NPC + 1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
+`endif
     // current record's M / Q (for the shadows' row clamp)
     reg [19:0] cur_m = 0; reg [15:0] cur_q = 0;
     // CREDITS UNDER SHADOWING: shadows replay real SM (s mod 2), so every SM of a class must see the SAME credits: the
