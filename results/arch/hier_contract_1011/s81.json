@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 4,
+ "version": 5,
  "owner": "s81die-1011",
- "updated": "2026-10-12T00:45-07:00",
+ "updated": "2026-10-12T00:55-07:00",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "pg_layer": "M7",
@@ -46,8 +46,13 @@
   },
   {
    "version": 4,
-   "when": "2026-10-12 00:45 PT",
-   "change": "s81-die-iter: sp_vm h 2,609.256 -> 2,730.216 (VM FE v5 1,520.064 x 594.00, +120.96, el1011-ds-vm/fe 3c93919d3); die-fit replay of v3 slabs with --contract + --hub-column-width 1890 (SU 1,890 slab sets the hub column; centre hard elements keep their contract outline, centred)"
+   "when": "2026-10-12 00:40 PT",
+   "change": "die-fit replay of v3 widths on plan d221bdf05 (DEF + SVG overlay): sp_hc_s 1,814.376 wide 0 overlaps (nearest station 4.4 um); sp_su_s 1,890.0 grown E overlapped 5 die-top stations (xE trunk f_xEdn_10/11, f_xEup_10 at x 15,693.7; su_s sseq hub stations at x 15,681/15,752) -> v4 grows SU W instead: origin x 13,942.8 -> 13,780.8 (E edge 15,670.8, = v2b edge), 0 overlaps, 10.5 um to the W xW station column; SU tile slots are slab-relative (unchanged), SU die pins move -162.0 in x. sp_vm/*.u_bg dsfd_vm_bgq28 signal_max_layer M7 -> M6 (pins re-layered, positions unchanged). OPEN: FE v5 (594) makes sp_vm 2,730.216 tall: capture+gather shifted +120.96 collide with 1 hub station at (13,940.3, 13,126.3) -- VM height NOT adopted in v4."
+  },
+  {
+   "version": 5,
+   "when": "2026-10-12 00:55 PT",
+   "change": "s81-die-iter: VM FE v5 adopted, sp_vm h 2,609.256 -> 2,730.216, resolved by RE-STACKING the hub column in the full generator (not an overlay shift): dsrom_s81_fulldie --contract reads SU/HC/VM/centre outlines from this file, hub column 1,890 (SU width), centre hard elements centred at their contract outline; hub stations and relays are regenerated around the new stack. Slot origins of hub elements are re-derived from that plan (next version)."
   }
  ],
  "slots": [
@@ -92,7 +97,7 @@
     "h": 6069.576
    },
    "origin": {
-    "x": 13942.8,
+    "x": 13780.8,
     "y": 3369.6,
     "orient": "R0"
    },
@@ -108,7 +113,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
@@ -5237,11 +5242,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[0].g_t[1].u_bg",
@@ -5270,11 +5275,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[0].g_t[2].u_bg",
@@ -5303,11 +5308,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[0].g_t[3].u_bg",
@@ -5336,11 +5341,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[1].g_t[0].u_bg",
@@ -5369,11 +5374,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[1].g_t[1].u_bg",
@@ -5402,11 +5407,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[1].g_t[2].u_bg",
@@ -5435,11 +5440,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[1].g_t[3].u_bg",
@@ -5468,11 +5473,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[2].g_t[0].u_bg",
@@ -5501,11 +5506,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[2].g_t[1].u_bg",
@@ -5534,11 +5539,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[2].g_t[2].u_bg",
@@ -5567,11 +5572,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[2].g_t[3].u_bg",
@@ -5600,11 +5605,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[3].g_t[0].u_bg",
@@ -5633,11 +5638,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[3].g_t[1].u_bg",
@@ -5666,11 +5671,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[3].g_t[2].u_bg",
@@ -5699,11 +5704,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   },
   {
    "name": "sp_vm/g_h[3].g_t[3].u_bg",
@@ -5732,11 +5737,11 @@
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 3,
+   "version": 4,
    "pg_layer": "M7",
    "strap_layer": "M8",
-   "signal_max_layer": "M7",
-   "notes": "v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
+   "signal_max_layer": "M6",
+   "notes": "v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract."
   }
  ]
 }
