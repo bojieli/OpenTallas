@@ -507,6 +507,9 @@ puts "REF_TILE spine: child insertion targets $::ot_ref_child_ins"
 """
 
 
+HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
+
+
 def gen_hooks(s: dict, kd: str) -> dict:
     fwd = bool(s.get("forwarded_clock"))
     spine = s["kind"] == "cluster" and s.get("clock", "spine") == "spine"
@@ -570,12 +573,20 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append(f"--macro-place-halo {h} {h}")
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
+    # spec "defines": RTL defines the top's synthesis needs (e.g. the hardened-child body selected by `ifdef); written after
+    # run_abi3's own "VERILOG_DEFINES = -DSYNTHESIS", so it keeps -DSYNTHESIS explicitly (the lint bench uses the same set).
+    if s.get("defines"):
+        extra.append("--orfs-var " + shq("VERILOG_DEFINES=" + " ".join(["-DSYNTHESIS"] + [f"-D{d}" for d in s["defines"]])))
     # spec "orfs_vars" {NAME: value}: extra ORFS variables the RTL needs (e.g. VERILOG_INCLUDE_DIRS=/src/rtl/common for a
     # source with `include); flow-mechanics knobs stay owned by the kit
     for k, v in s.get("orfs_vars", {}).items():
         if not re.fullmatch(r"[A-Z][A-Z0-9_]*", k) or re.search(r"\s", str(v)):
             raise SpecError(f"spec: orfs_vars {k}={v!r}: NAME=[A-Z0-9_]+, value without whitespace")
         extra.append(f"--orfs-var {k}={v}")
+    if s["route"].get("hold_delay"):
+        # deterministic hold fix by construction (owner 10-10): the RTL's *u_hdly_* HB delay cells are dont_touch'ed at
+        # PRE_FLOORPLAN so remove_buffers / repair passes keep them (tputx-cpf hgi_seq v2.3)
+        extra.append(f"--step-tcl PRE_FLOORPLAN={HDLY_TCL}")
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
@@ -587,6 +598,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         # spec 'inhold': one dont_touch hold buffer between every data input port and its single capture flop, inserted
         # before global placement (owner 10-10: a hold-only miss on input captures -> delay stage at the inputs, no ECO)
         extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
+        # the hold cell sits AT its input pin with a strong resizable driver after it (vm8 181753c60), FIRM through GPL and
+        # released before DPL: seeding it at the capture flop left a long dont_touch-loaded port net -> GPL repair_design
+        # RSZ-3006 (s81hc crootrw/crootre d02b035e3), and a bare HB4 driving the long wire costs ~400 ps (vm8 r9)
+        drv = s.get("inhold_drv", "BUFx4f_ASAP7_75t_R")
+        if drv:
+            extra.append(f"--orfs-var OT_INHOLD_DRV={drv}")
+            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -621,6 +639,10 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("inhold"):
         out.append("physical/dsrom_window_source/leaf_inhold.tcl")
+        if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R"):
+            out.append("physical/dsrom_window_source/leaf_inhold_release.tcl")
+    if s["route"].get("hold_delay"):
+        out.append(HDLY_TCL)
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
@@ -636,13 +658,32 @@ ROUTE_PREFIX = ("export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/
                 "physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; ")
 
 
+def lint_cmd(s: dict) -> str:
+    """the auto 'lint' bench: Verilator over exactly what the route synthesises -- the same sources, -DSYNTHESIS (run_abi3's
+    VERILOG_DEFINES) plus the spec defines, the top's params, the include dirs of orfs_vars VERILOG_INCLUDE_DIRS.
+    -Wno-MODMISSING: hard macros / children are blackboxes in the route (LEF/LIB only), and Verilator links every parsed
+    module, also ones outside the top's hierarchy; a module genuinely missing under the top still fails yosys
+    'hierarchy -check' in the route.  (10-12: ~30 ref jobs NEEDS_RTL on a lint that omitted the defines that select the
+    top's body / named blackbox children.)"""
+    defs = ["-DSYNTHESIS"] + [f"-D{d}" for d in s.get("defines", [])]
+    inc = [f"-I{d[len('/src/'):] if d.startswith('/src/') else d}"
+           for d in str(s.get("orfs_vars", {}).get("VERILOG_INCLUDE_DIRS", "")).split() if d]
+    # the top is linted under a one-line wrapper: verilator refuses --top-module on a module that another parsed source
+    # instantiates (ot_hgi_hc_tile inside ot_hgi_hc_unit.sv, from claude/el1011-hcvm-hc4 7e3baed71); the top's params
+    # become instance overrides (-G only reaches the top level); unconnected wrapper ports are lint warnings only
+    pv = ", ".join(f".{k}({v})" for k, v in s.get("params", {}).items())
+    inst = f"{s['top']} #({pv}) u_top ();" if pv else f"{s['top']} u_top ();"
+    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' 'module ot_lint_top; {inst} endmodule' > {{RUN}}/ot_lint_top.sv && ")
+    return wrap + " ".join(["verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING",
+                     *defs, *inc, "--top-module", "ot_lint_top", "{RUN}/ot_lint_top.sv", *s["sources"]]) + " && echo lint-ok"
+
+
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     r, j = s["route"], s.get("job", {})
     hm = float(r.get("hold_margin_ns", 0.010))
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
-    lint = ("verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module "
-            f"{s['top']} " + " ".join(s["sources"]) + " && echo lint-ok")
+    lint = lint_cmd(s)
     benches = j.get("benches") or []
     if not any(b.get("name") == "lint" for b in benches):
         benches = [{"name": "lint", "cmd": lint, "expect": "pass", "threads": 1, "peak_ram_gb": 4,

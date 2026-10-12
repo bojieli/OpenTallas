@@ -31,7 +31,8 @@
    "BURST0_FLAT160": 25271,
    "BURST1_FLAT104_random_ready_jitter_unit_delays (diagnostic: unit retire 0-20 / IDX+ARGMAX 40-60 cycles, die 1 credit a unit: not CP-alone)": 43552,
    "v2.1 QD 8 (9cdf62fc7)": 23769,
-   "v2.0 no early indexed resolver, QD 4 (7754c2edb)": 32900
+   "v2.0 no early indexed resolver, QD 4 (7754c2edb)": 32900,
+   "v2.3 timing restructure (1a12191a0)": 25258
   },
   "breakdown_cycles": {
    "src": "tb +define+CPF_PROF (CPF_DEFS=-DCPF_PROF tools/tput_map_1011/run_cp_fetch.sh)",
@@ -60,10 +61,10 @@
  "exactness": "HGI_SEQ_DIE PASS: all 3,923 dispatches (header, SUT, 7 effective descriptors, n sidebands) equal the HGI-1 v1.0 reference sequencer (tools/hgi_seq_vectors.Ref) and the completion token / status match.  Regression on the same RTL: committed 43-case vectors PASS standalone (tb_hgi_seq), with the macro ring (SEQ_MACRO), CC preset, and through ot_hgi_cp_die (tb_hgi_cp_die_seq BURST 1); conformance 66 cases PASS; G24 LOOP-from-VM gate PASS (mutant FAIL); tb_hgi_cp_die_mtp PASS.  The DS vector set (SEQ_DS, hgi_seq_*_ds) fails at dispatch 266 on v1 and v2 alike (stale vector set, pre-existing).",
  "mutant": "MUT 9 (loader burst one sector longer) FAIL: FATAL more than 160 ring sectors in flight; sequencer mutants on the 43-case vectors: OT_HGI_SEQ_MUT_WAIT / MUT_LOOP / MUT_IDXL / MUT_TOKX all FAIL.  MUT_WAIT on the G25 program with random unit delays (FLAT 104, FAST 0) FAILs (839 wait-rule violations).  (MUT_WAIT on the FAST G25 bench passes: units retire one cycle after accept and dispatches are >= 3 cycles apart, so FAST cannot expose a wait bug; the random-delay benches do.)",
  "bench": "tools/tput_map_1011/run_cp_fetch.sh <out> 1 0 160 1  (vectors: tools/tput_map_1011/cp_fetch_vectors.py; tb rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv +FAST +FLAT, NOS 160, Icarus 12.0)",
- "host": "ot-epyc3:/home/ubuntu/tputx-cpf/v2",
- "source_commit": "d1510bb7d (claude/el1011-hbm-tputx-cpf; v2.2 = v2.1 + gate fixes, QD 4)",
- "verdict": "THROUGHPUT PASS (0.794 <= 1.10); unit qualification still needs the routed v2 (ref_tile hgi_seq_v2)",
- "notes": "tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DYN from a per-slot table built at job start; 60 partial-product rows CSA-reduced; 17-bit chunk carry-select adds); 4-entry record queue (8 entries: 0.747x, +11k flops); early indexed resolver (one X + one N VM read a record as soon as its wait mask holds with older queued dispatches counted busy; reader and AU re-injection overlapped); BE dispatch 3 cycles a record.  NOS 48 -> 160 (the priced 32 B/cyc x 160-cycle lane; at 48 the lane caps at 9.6 B/cyc = 49.9k cycles for this image).  Residual: the resolver's serial VM round trip (~8.5 cycles, one outstanding read) shows as head-pending 9.9k; decode is 17.0k busy.",
+ "host": "ot-epyc4:/home/ubuntu/tputx-cpf/b",
+ "source_commit": "1a12191a0 (claude/el1011-hbm-tputx-cpf; v2.3 = v2.2 + route-905100ec5 timing restructure, cycle-identical)",
+ "verdict": "THROUGHPUT PASS (0.794 <= 1.10, cycle-identical to v2.2: 25,258 cyc, 3,923 dispatches exact); route of v2.2 (hgi_seq_v2-v2-905100ec5) failed TT -186.91 / FF -17.85 -> v2.3 restructure re-routed as hgi_seq_v2-v23-<commit>; unit qualification needs that route CLOSED",
+ "notes": "tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DYN from a per-slot table built at job start; 60 partial-product rows CSA-reduced; 17-bit chunk carry-select adds); 4-entry record queue (8 entries: 0.747x, +11k flops); early indexed resolver (one X + one N VM read a record as soon as its wait mask holds with older queued dispatches counted busy; reader and AU re-injection overlapped); BE dispatch 3 cycles a record.  NOS 48 -> 160 (the priced 32 B/cyc x 160-cycle lane; at 48 the lane caps at 9.6 B/cyc = 49.9k cycles for this image).  Residual: the resolver's serial VM round trip (~8.5 cycles, one outstanding read) shows as head-pending 9.9k; decode is 17.0k busy. | v2.3 (route 905100ec5 limiter = FIFO head word -> header class -> queue allocation enable to ~800 entry flops, 29 lv): registered header allocation + ring-limit register, thermometer FIFO control, S_HD payload load, staged item/SUT writes, registered DYN row / resolver N-read operands, FE run copy, faddr next-next; kept HB4 hold-delay stage on every input, pos->p1 and ring write data (ref_tile route.hold_delay). Function and cycle count unchanged.",
  "history": [
   {
    "measured": {
@@ -96,6 +97,12 @@
    "verdict": "UNQUALIFIED",
    "notes": "The CP-alone time is ~59.7 cycles a dispatch and does not move with the HBM latency (104 / 160), the loader burst (BURST 0 / 1), the wait masks, or unit readiness: the fetch lane is NOT the limit (17,008 sectors in 234k cycles, 48 in flight cap never binding); the sequencer's per-record decode / effective-address path is (ot_hgi_seq: word-serial decode + ONE radix-16 iterative multiplier per scaled descriptor term, up to 7 descriptors a record) vs the simulator's 1 + 1-a-chunk decode + 2-cycle address. In the full token (S2 566.8k / 543k cycles, ~137 unit cycles a record) most of it hides behind unit time; the e2e residual (audit hbm_ds_cp_dispatch 1.16 on DS L0) is the token-level exposure. Lane model: the bench's in-order memory lane (48 sectors in flight, FLAT cycles, i.e. <= 9.6 B/cyc at FLAT 160) is not binding at the 2.04 B/cyc the CP draws; the real loader kport / svc native path is not in this bench (its rate is the SVC / loader owners' bench).",
    "label": "v1 (tput-map-1011 F2, word-serial seq): kept as measured, not overwritten"
+  },
+  {
+   "source_commit": "d1510bb7d (claude/el1011-hbm-tputx-cpf; v2.2 = v2.1 + gate fixes, QD 4)",
+   "measured_cycles": 25258,
+   "ratio": 0.794,
+   "route": "hgi_seq_v2-v2-905100ec5 NEEDS_RTL: TT -186.91 ps (TNS -248.6 ns, 2,664 reg-to-reg D pins) / FF -17.85 (input pin flops), DRC 0"
   }
  ]
 }
