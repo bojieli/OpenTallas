@@ -1,5 +1,5 @@
 {
- "name": "vms_hub-v05-COMMIT",
+ "name": "vms_hub-v05-af4457f45",
  "block": "ot_vms_hub",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-b2-vm",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-b2-vm",
-  "commit": "COMMIT",
+  "commit": "af4457f45",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -149,7 +149,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vms_hub/vms_hub-v05-COMMIT"
+   "to": "results/rtl/ref_tile/vms_hub/vms_hub-v05-af4457f45"
   }
  ],
  "cycles_added": 0,
