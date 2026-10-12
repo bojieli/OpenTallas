@@ -123,6 +123,17 @@ module ot_hgi_hc_lane_ll #(
     // lane holds the gains of its data sectors u + 32 (2k) (words 0..3) and u + 32 (2k + 1) (words 4..7), so the gain
     // is D / 2 words (half the mover traffic) and still bank-local; NG = gain sectors this lane reads
     reg pk; wire [MB-1:0] NG = pk ? MB'(NM / 2) : MB'(NM);
+    // el1011-hbm-fused READ PREFETCH (HC_POST): the lane starts its row reads on the JOB command (pf), not on GO, so the
+    // top's scalar fetch / weight broadcast / GO relay (~2 RL + the scalar round trip) overlaps the reads.  Responses land
+    // in a ring of RG sector groups {y, r0..r3} (the PRE x / gain buffers, idle on HC_POST); the k sweep consumes a whole
+    // group a 4-cycle sweep (1.25 reads a cycle, faster than the 1-a-cycle read lane) once GO has delivered the weights.
+    // Scalar reads now interleave with data reads on the bank lane: an in-order 1-bit tag FIFO (depth LQ = the lane's
+    // credits) tells a scalar response from a data one.
+    localparam integer RG = (2 * NM) / 5;    // ring groups (8 at D 5120)
+    localparam integer RGB = (RG > 1) ? $clog2(RG) : 1;
+    localparam integer TB = (LQ > 1) ? $clog2(LQ) : 1;
+    reg pf;                                  // HC_POST: reads may issue (from JOB)
+    reg [RGB-1:0] rgp, cgp; reg [MB:0] cg;   // ring write / consume group pointers, groups consumed
     function automatic [255:0] bf2f(input [127:0] h);
         integer e; begin bf2f = '0; for (e = 0; e < 8; e = e + 1) bf2f[32*e +: 32] = {h[16*e +: 16], 16'd0}; end
     endfunction
@@ -148,9 +159,9 @@ module ot_hgi_hc_lane_ll #(
     always @* begin
         iss = 1'b0; isec = '0;
         if (scr_mine) begin iss = 1'b1; isec = dd_q[14:0]; end
-        else if (run && cr != '0 && !rd_done) begin
+        else if ((run || pf) && cr != '0 && !rd_done) begin
             if (post) begin
-                if (it != 3'd0 || ({1'b0, occ} + 8'(4 * (gs - gp)) + 8'd4 <= 8'(FD))) begin
+                if (it != 3'd0 || (({1'b0, occ} + 8'(4 * (gs - gp)) + 8'd4 <= 8'(FD)) && ((gs - cg) < (MB+1)'(RG)))) begin
                     iss = 1'b1;
                     isec = (it == 3'd0) ? (a_s + 15'(i_s)) : (b_s + 15'(it - 3'd1) * 15'(SD) + 15'(i_s));
                 end
@@ -172,15 +183,29 @@ module ot_hgi_hc_lane_ll #(
     reg [255:0] xb [0:NM-1], gb [0:NM-1];    // PRE: x and gain of the lane's sectors
     reg sw; reg [1:0] kk;                    // HC_POST k sweep
     reg mx_v;                                // PRE: a sector's h quad to the mix
-    wire rsp = rv_q && !scp;
-    wire last_post = rsp && !rph_b && post && rt == 3'd4;
+    reg [LQ-1:0] tgq; reg [TB-1:0] tgw, tgr;  // tag FIFO: 1 = a scalar read
+    wire tg_h = tgq[tgr];
+    always @(posedge clk) if (iss) tgq[tgw] <= scr_mine;
+    always @(posedge clk or negedge rl)
+        if (!rl) begin tgw <= '0; tgr <= '0; end
+        else begin if (iss) tgw <= tgw + 1'b1; if (rv_q) tgr <= tgr + 1'b1; end
+    wire rsp = rv_q && !tg_h;                // a data response
+    wire srsp = rv_q && tg_h;                // a scalar response
+    // HC_POST ring: write slot 5 rgp + rt, consume group cgp
+    wire [7:0] rs_w = 8'(5 * rgp) + 8'(rt);
+    wire cs_go = post && run && ({1'b0, rm} > cg) && (!sw || kk == 2'd3);
+    function automatic [255:0] ring(input [7:0] i);
+        ring = (i < 8'(NM)) ? xb[i] : gb[i - 8'(NM)];
+    endfunction
     wire last_h = rsp && !rph_b && !post && rt == 3'd3;
     always @(posedge clk) begin
-        if (rsp && !rph_b) asb[rt] <= rd_q;
-        if (last_post) begin
-            op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= asb[3]; op[4] <= rd_q;
-            if (MUT == 2 && lid_q == 5'd0) begin op[1] <= asb[2]; op[2] <= asb[1]; end
+        if (rsp && !rph_b && !post) asb[rt] <= rd_q;
+        if (cs_go) begin
+            op[0] <= ring(8'(5 * cgp)); op[1] <= ring(8'(5 * cgp) + 8'd1); op[2] <= ring(8'(5 * cgp) + 8'd2);
+            op[3] <= ring(8'(5 * cgp) + 8'd3); op[4] <= ring(8'(5 * cgp) + 8'd4);
+            if (MUT == 2 && lid_q == 5'd0) begin op[1] <= ring(8'(5 * cgp) + 8'd2); op[2] <= ring(8'(5 * cgp) + 8'd1); end
         end
+        if (rsp && post && rs_w >= 8'(NM)) gb[rs_w - 8'(NM)] <= rd_q;
         if (last_h) begin
             op[0] <= asb[0]; op[1] <= asb[1]; op[2] <= asb[2]; op[3] <= rd_q;
             if (MUT == 2 && lid_q == 5'd0) begin op[0] <= asb[1]; op[1] <= asb[0]; end
@@ -284,6 +309,7 @@ module ot_hgi_hc_lane_ll #(
     always @(posedge clk or negedge rl) begin
         if (!rl) begin
             run <= 1'b0; g_ok <= 1'b0; r_ok <= 1'b0; scp <= 1'b0; scx <= '0; cr <= QB'(LQ); im <= '0; it <= '0; ph_b <= 1'b0;
+            pf <= 1'b0; rgp <= '0; cgp <= '0; cg <= '0;
             gs <= '0; gp <= '0; occ <= '0; rm <= '0; rt <= '0; rph_b <= 1'b0; sw <= 1'b0; kk <= '0; mx_v <= 1'b0;
             sc_run <= 1'b0; sm <= '0; om <= '0; ym <= '0; xm <= '0; cm <= '0; ok <= '0; wcr <= QB'(LQ);
             npush <= '0; nexp_l <= '0; npop <= '0;
@@ -295,6 +321,7 @@ module ot_hgi_hc_lane_ll #(
                 rm <= '0; rt <= '0; rph_b <= 1'b0; sw <= 1'b0; kk <= '0; sc_run <= 1'b0; sm <= '0;
                 om <= '0; ym <= '0; xm <= '0; cm <= '0; ok <= '0; npush <= '0; npop <= '0; fin <= 1'b0; flt <= 1'b0;
                 nexp_l <= dd_q[45] ? 8'(4 * NM) : 8'(NM);
+                pf <= dd_q[45]; rgp <= '0; cgp <= '0; cg <= '0;
             end
             if (c_go) run <= 1'b1;
             if (c_grdy) g_ok <= 1'b1;
@@ -316,7 +343,7 @@ module ot_hgi_hc_lane_ll #(
                 end else im <= im + 1'b1;
             end
             // responses
-            if (rv_q && scp) begin
+            if (srsp) begin
                 scp <= 1'b0; up_v <= 1'b1; up_t <= 1'b0;
             end else if (rsp) begin
                 if (rph_b) rm <= rm + 1'b1;
@@ -329,7 +356,10 @@ module ot_hgi_hc_lane_ll #(
                     end else rt <= rt + 1'b1;
                 end
             end
-            if (last_post) begin sw <= 1'b1; kk <= '0; end
+            if (rsp && post && rt == 3'd4) rgp <= (rgp == RGB'(RG - 1)) ? '0 : rgp + 1'b1;
+            if (cs_go) begin
+                sw <= 1'b1; kk <= '0; cg <= cg + 1'b1; cgp <= (cgp == RGB'(RG - 1)) ? '0 : cgp + 1'b1;
+            end
             else if (sw) begin if (kk == 2'd3) sw <= 1'b0; kk <= kk + 2'd1; end
             if (last_h) mx_v <= 1'b1;
             // PRE: x into its buffer, the chunk sum up
@@ -349,7 +379,7 @@ module ot_hgi_hc_lane_ll #(
             if ((|hf) || (|mf) || (|sf) || (|cf) || (|f1) || (|f2) || ovf) flt <= 1'b1;
         end
     end
-    always @(posedge clk) if (x_v) xb[xm] <= xl;
+    always @(posedge clk) if (x_v) xb[xm] <= xl; else if (rsp && post && rs_w < 8'(NM)) xb[rs_w] <= rd_q;
     // up data: a scalar sector (rd_q) or a chunk sum in the low word; 32-bit select, no enable on the 224 upper bits
     always @(posedge clk) begin
         up_d[255:32] <= rd_q[255:32];
