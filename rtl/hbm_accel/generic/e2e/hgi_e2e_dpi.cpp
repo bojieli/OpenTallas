@@ -307,6 +307,7 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
 // coll_<k>.bin: every rank's A operand (rank-major, n words each) of COLL record k; the golden O is record k's VM writes.
 static int coll_k = -1, coll_g = 0, coll_n = 0;
 static std::vector<uint32_t> coll_a;
+static std::vector<uint32_t> coll_b;                  // collb_<k>.bin: every rank's B (TOPK_MERGE ids), rank-major
 static std::unordered_map<uint32_t, uint32_t> coll_o;
 extern "C" int e2e_coll_load(int k, int g) {
     if (k == coll_k) return coll_n;
@@ -315,6 +316,12 @@ extern "C" int e2e_coll_load(int k, int g) {
     if (!read_file(dir + nm, b) || g <= 0) { fprintf(stderr, "E2E COLL: no %s\n", nm); return -1; }
     coll_k = k; coll_g = g; coll_n = (int)(b.size() / 4 / g);
     coll_a.resize(b.size() / 4); memcpy(coll_a.data(), b.data(), b.size());
+    coll_b.clear();
+    {
+        std::vector<uint8_t> bb;
+        char nb[64]; snprintf(nb, sizeof nb, "/collb_%d.bin", k);
+        if (read_file(dir + nb, bb) && bb.size() == b.size()) { coll_b.resize(bb.size() / 4); memcpy(coll_b.data(), bb.data(), bb.size()); }
+    }
     coll_o.clear();
     const Rec& r = recs[k];
     for (uint64_t i = 0; i < r.vm_n; i++) coll_o[vmw[2 * (r.vm_off + i)]] = vmw[2 * (r.vm_off + i) + 1];
@@ -332,6 +339,18 @@ extern "C" void e2e_coll_part_w(int q, int w0, svBitVecVal* out) {
     for (int j = 0; j < 16; j++) {
         int e = w0 + j;
         out[j] = (q >= 0 && q < coll_g && e >= 0 && e < coll_n) ? coll_a[(size_t)q * coll_n + e] : 0;
+    }
+}
+// TOPK_MERGE (hgi-1010/k): rank q's flit f as its endpoint injects it (ot_hgi_coll_ep TKM): words 0..7 its A[8f ..]
+// (a NaN as the canonical 7FC00000), words 8..15 its B[8f ..]; slots past n are the pad pair {FFFFFFFF, FFFFFFFF}
+extern "C" void e2e_coll_pair(int q, int f, svBitVecVal* out) {
+    for (int j = 0; j < 8; j++) {
+        int e = f * 8 + j;
+        bool ok = q >= 0 && q < coll_g && e < coll_n;
+        uint32_t v = ok ? coll_a[(size_t)q * coll_n + e] : 0xFFFFFFFFu;
+        if (ok && (v & 0x7F800000u) == 0x7F800000u && (v & 0x007FFFFFu)) v = 0x7FC00000u;
+        out[j] = v;
+        out[8 + j] = ok ? (!coll_b.empty() ? coll_b[(size_t)q * coll_n + e] : 0) : 0xFFFFFFFFu;
     }
 }
 // the golden result flit gi at O (BF16: 32 halves from O[gi*32 + j]; FP32: 16 words from O[gi*16 + j])

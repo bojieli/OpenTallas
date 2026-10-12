@@ -30,15 +30,18 @@ module ot_hdc_v41x_idx_score_quarter #(
     wire take=i_valid && i_ready;
     wire consume=o_valid && o_ready;
     assign i_ready=&sr;
-    assign ql_ready=&qr;
+    // Queries are excluded while the raw key valid is up (keys of the current query go first); the slices then
+    // drop their own !i_valid term, which closed a combinational loop take -> ql_ready -> engine k_ready -> i_ready.
+    assign ql_ready=(&qr) && !i_valid;
+    wire slice_ql_v=ql_v && !i_valid;
     assign o_valid=&sv;
     assign o_last=sl[0];
     assign protocol_fault=(|sv && !(&sv)) || ((&sv) && sl!={4{sl[0]}});
     genvar s;
     generate for(s=0;s<4;s=s+1) begin:g_slice
         localparam [IW-1:0] OFFSET=IW'(s*NK);
-        ot_hdc_v41x_idx_score_slice #(.NK(NK),.NB(NB),.IH(IH),.IW(IW),.MD(MD)) u (
-            .clk(clk),.rst_n(rst_n),.ql_v(ql_v),.ql_ready(qr[s]),.ql_head(ql_head),
+        ot_hdc_v41x_idx_score_slice #(.NK(NK),.NB(NB),.IH(IH),.IW(IW),.MD(MD),.ARRAY_PHASE_GATE(1)) u (
+            .clk(clk),.rst_n(rst_n),.ql_v(slice_ql_v),.ql_ready(qr[s]),.ql_head(ql_head),
             .ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),
             .i_valid(take),.i_ready(sr[s]),.i_last(i_last),
             .i_first_index(i_first_index+OFFSET),

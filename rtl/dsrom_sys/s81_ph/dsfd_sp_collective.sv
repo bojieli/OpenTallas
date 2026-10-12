@@ -17,6 +17,18 @@
 `define OT_S81PH_CB_MASTER dsfd_coll_cb
 `endif
 `endif
+// el1011-ds-coll 2026-10-11: OT_S81PH_COLL_CBH instantiates the hierarchical cb (dsfd_coll_cbh: hardened sub-elements)
+`ifdef OT_S81PH_COLL_CBH
+`define OT_S81PH_CB_INST dsfd_coll_cbh
+`else
+`define OT_S81PH_CB_INST `OT_S81PH_CB_MASTER
+`endif
+// el1011-ds-coll 2026-10-11: OT_S81PH_COLL_CEH instantiates the hierarchical ce (dsfd_coll_ceh)
+`ifdef OT_S81PH_COLL_CEH
+`define OT_S81PH_CE_INST dsfd_coll_ceh
+`else
+`define OT_S81PH_CE_INST dsfd_coll_ce
+`endif
 module dsfd_sp_collective (
     input  wire [0:0]    refclk,
     input  wire [0:0]    por,
@@ -97,7 +109,7 @@ module dsfd_sp_collective (
     wire s_lo3_v, s_lo3_r, s_li3_v, s_li3_r, s_lo7_v, s_lo7_r, s_li7_v, s_li7_r;
     wire [552:0] s_lo0_d, s_li0_d, s_lo4_d, s_li4_d, s_lo3_d, s_li3_d, s_lo7_d, s_li7_d;
     wire s_bw_v, s_bw_cr, s_bw_flt; wire [2099:1] s_bw_d;
-    `OT_S81PH_CB_MASTER #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
+    `OT_S81PH_CB_INST #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_cb (.ck(pll_stream), .rs(rst_stream), .f_vm(f_vm), .ts(ts), .t_vm(t_vm),
 `ifdef OT_S81PH_COLL_JOB
         .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
 `endif
@@ -107,7 +119,7 @@ module dsfd_sp_collective (
         .lo0_v(s_lo0_v), .lo0_r(s_lo0_r), .lo0_d(s_lo0_d), .li0_v(s_li0_v), .li0_r(s_li0_r), .li0_d(s_li0_d),
         .lo4_v(s_lo4_v), .lo4_r(s_lo4_r), .lo4_d(s_lo4_d), .li4_v(s_li4_v), .li4_r(s_li4_r), .li4_d(s_li4_d),
         .bw_v(s_bw_v), .bw_d(s_bw_d), .bw_cr(s_bw_cr), .bw_flt(s_bw_flt));
-    dsfd_coll_ce #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_ce (.ck(pll_stream), .rs(rst_stream),
+    `OT_S81PH_CE_INST #(.CR(`ifdef OT_S81PH_COLL_CR 1 `else 0 `endif)) u_ce (.ck(pll_stream), .rs(rst_stream),
         .wlo_v(lo_v[2:1]), .wlo_r(lo_r[2:1]), .wlo_d(lo_d[1*553 +: 2*553]), .wli_v(li_v[2:1]), .wli_r(li_r[2:1]), .wli_d(li_d[1*553 +: 2*553]), .wflt(flt[3 +: 6]),
         .elo_v(lo_v[6:5]), .elo_r(lo_r[6:5]), .elo_d(lo_d[5*553 +: 2*553]), .eli_v(li_v[6:5]), .eli_r(li_r[6:5]), .eli_d(li_d[5*553 +: 2*553]), .eflt(flt[15 +: 6]),
         .fvm_u(s_fvm), .flt_u(s_fltu),
