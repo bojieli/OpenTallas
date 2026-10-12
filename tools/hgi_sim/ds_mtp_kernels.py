@@ -311,7 +311,7 @@ EMBB = 1 << 32                       # BF16 embedding rows: EMBB + token * 10,24
 MTB = 0x170000000                    # MTP constants (ONE4 = 1, 0, 0, 0)
 COLB = 0x180000000                   # column slot store: COLB + slot * CSTR (dyn_sel TOKEN)
 ROPEB = 1 << 31                      # plain RoPE rows: ROPEB + pos * 256 (cos 32 | sin 32, dyn_sel POS)
-ZT, HT = 261376, 261440              # VM: the END token word of non-head kernels (0); the head stub's table HT[pos]
+ZT, HT = 261440, 261504              # VM (above ds_native's map end 261,440 since EGID 144): the END token word of non-head kernels (0); the head stub's table HT[pos]
 # PRE rides the swap as one whole 32 B sector (8 words: the 4 pre-mix words + 4 words of the 64-word-aligned VM PRE
 # slot): an HBM write is whole sectors (the DMA write paths have no byte enables; the mover refuses a partial sector)
 SLOT = (("h", 0, 20480), ("PRE", 81920, 8))
@@ -337,7 +337,7 @@ GOLDB = 0x200000000                  # LABELLED REPLAY: golden h / pre after lay
 GSTR, GPOS = 81952, 16
 MHB = 0x280000000                    # main hidden parts (layers 37..39 inputs), ring of 16 positions x 61,440 B
 MEMB = 0x290000000                   # Markov-head embedding rows (BF16 x 256) by token: MEMB + token * 512
-QV = 261504                          # VM: the WTAB row of the launch's position (16 words)
+QV = 261568                          # VM: the WTAB row of the launch's position (16 words)
 WROW = 2048
 
 
