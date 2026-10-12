@@ -32,6 +32,12 @@ SLOT_REQ = {
         outline_req=(1149.0, 1149.0, 'q-sp 11:19: vm_grp cluster 993.6 x 648 -> ~1149 x 1149 at util 0.55')),
     'qfd_io_collective': dict(outline_req=(1166.4, 950.4, 'qwen-tp8/coll 07:11: W up/dp y 43-475, ur/dr y 475-907; S in_* '
                                                          'x 43-302; N out_*/fault* x 43-302, clk/rst_n x 562-605')),
+    # die lead DECISION 2026-10-12 (reroute_m5 12:19 proposal): die-placed in TP8 (8 + 8 spine slots), so the die takes
+    # the growth: ref_tile macro_edge >= 20 um on pin faces. crom_g ROM#5 8.4 um from N -> +12.96 um N (min N gap in tp8b
+    # 17.3 um: fits in place); cbuf_g SRAM#0 16.6 um from E -> +3.456 um E (abutted 4-wide rows shift <= 13.8 um into the
+    # 43.2-um E gap). +0.026 mm2 total, spine-local, no fine-cut change
+    'qfd_crom_g': dict(outline_req=(194.376, 531.336, 'reroute_m5 12:19: ROM#5 8.4 um from N edge, grow N to >= 20 um')),
+    'qfd_su_cbuf_g': dict(outline_req=(197.832, 215.976, 'reroute_m5 12:19: SRAM#0 16.6 um from E pin face, grow E to >= 20 um')),
     'qfd_tile_nk': dict(note='q-tile 10:03 face pins: W n_a 356-456 n_b 457-557 t_out 557-657 n_y 658-758 li 758-946; E ib '
                              '400-520 ib_go 520-524 xl 524-580 tile_id 580-600 fault 600-604 rst_n 640-644 clk 660-664 lo '
                              '758-946 (M4)'),
