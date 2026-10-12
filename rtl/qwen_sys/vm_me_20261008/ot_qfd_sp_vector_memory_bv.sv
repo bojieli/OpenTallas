@@ -111,8 +111,9 @@ module ot_qfd_sp_vector_memory_bv #(
     // replicas).  MEE = 1: me_en_e is me_en one edge early; every me_en use is a registered regional replica (control,
     // 8 x-stage regions, the tiles), so no port drives the ~160k engine-enabled flops.  VMT = 1 (requires NRB % 8 == 0,
     // NRBS % (NRB / 8) == 0, 1 <= RO <= RV + 1): the banks are NRB / 8 hardened tiles ot_qfd_vm_grp behind RV clock relays
-    // (in) and RO relays (out); x latency + XS = RV + RO + 2 engine edges (the x consumer's XVM grows by XS), SU answer
-    // latency + SX = RV + RO + 1 edges (the SU master's VL = 7 + SX), row read + RV + RO + 2 edges (r_qv-tagged).
+    // (in) and RO relays (out); x latency + XS = RV + RO + 7 engine edges (the x consumer's XVM grows by XS), SU answer
+    // latency + SX = RV + RO + 5 edges (the SU master's VL = 7 + SX), row read + RV + RO + 8 edges (r_qv-tagged)
+    // (r5: + TLX 5 / TLS 4 / TLR 6 from the tile's in-tile wire relays).
     parameter integer MEE = 0,
     parameter integer VMT = 0,
     parameter integer RV = 1,
@@ -187,11 +188,17 @@ module ot_qfd_sp_vector_memory_bv #(
     // XS: the tile FIFO is pushed 4 clocks after the beat's issue edge (relays RV, pin flop, macro, capture); the pop
     // must land at least one edge later (a same-edge pop of an empty FIFO reads the entry being written: gate 18:3x
     // DBG OVF push=1 pop=1 cnt=0), so the pop source is one stage later than the push and x gains RV + RO + 2 edges.
-    localparam integer XS = (VMT != 0) ? RV + RO + 2 : 0;      // extra engine edges, x path (rot1 at issue + 4 + XS)
-    localparam integer SX = (VMT != 0) ? RV + RO + 1 : 0;      // extra edges, SU answers
-    localparam integer RL = (VMT != 0) ? RV + RO + 5 : 3;      // row read: r_qr at r_v + 2 (+ RV + RO + 2)
-    localparam integer NPP = RV + 6;                           // tile x FIFO: beats in flight between push and pop
-    localparam integer XPOP = 4 + RV - RO;                     // the x stage whose valid becomes the tiles' pop
+    // TNI / TNX / TNS: the tile's in-tile wire relays (ot_qfd_vm_grp NRI / NRX / NRS, r5); TLX / TLR / TLS the latency
+    // they add to the x, row-read and SU paths.
+    localparam integer TNI = 2, TNX = 2, TNS = 1;
+    localparam integer TLX = (VMT != 0) ? 1 + TNI + TNX : 0;
+    localparam integer TLR = (VMT != 0) ? 2 + TNI + TNX : 0;
+    localparam integer TLS = (VMT != 0) ? 1 + TNI + TNS : 0;
+    localparam integer XS = (VMT != 0) ? RV + RO + 2 + TLX : 0;  // extra engine edges, x path (rot1 at issue + 4 + XS)
+    localparam integer SX = (VMT != 0) ? RV + RO + 1 + TLS : 0;  // extra edges, SU answers
+    localparam integer RL = (VMT != 0) ? RV + RO + 5 + TLR : 3;  // row read: r_qr at r_v + 2 (+ RV + RO + 2 + TLR)
+    localparam integer NPP = RV + 6 + TLX;                       // tile x FIFO: beats in flight between push and pop
+    localparam integer XPOP = 4 + RV - RO + TLX;                 // the x stage whose valid becomes the tiles' pop
     localparam integer NG = (NRB >= 8) ? NRB / 8 : 1;
     localparam integer NSB = NRBS / NG;
     localparam integer NWR = (SW + 30) / 16;           // rows an SU vector can span
@@ -700,7 +707,7 @@ module ot_qfd_sp_vector_memory_bv #(
             end
             wire [8*512-1:0] xo; wire [511:0] ro_t; wire [NSU*NSB*512-1:0] so_t; wire ovf_t;
             ot_qfd_vm_grp #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
-                .USE_MACRO(USE_MACRO), .NPP(NPP), .MEREG((MEE != 0) ? 1 : 0)) u_t (
+                .USE_MACRO(USE_MACRO), .NPP(NPP), .MEREG((MEE != 0) ? 1 : 0), .NRI(TNI), .NRX(TNX), .NRS(TNS)) u_t (
                 .clk(clk), .rst_n(rst_n), .me_in((MEE != 0) ? me_en_e : me_en),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .xv(d_xv), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
@@ -724,9 +731,9 @@ module ot_qfd_sp_vector_memory_bv #(
             assign ovf_all[g] = ovf_t;
         end
         wire [LNRB-1:0] rbq;
-        ot_hdc_delay #(.W(LNRB), .D(RV + RO + 3)) u_rb (.clk(clk), .rst_n(rst_n), .d(rr_b0), .q(rbq));
+        ot_hdc_delay #(.W(LNRB), .D(RV + RO + 3 + TLR)) u_rb (.clk(clk), .rst_n(rst_n), .d(rr_b0), .q(rbq));
         reg [511:0] r_qr;
-        always @(posedge clk) if (rr_v[RV + RO + 3]) r_qr <= ro_all[(rbq >> 3)*512 +: 512];
+        always @(posedge clk) if (rr_v[RV + RO + 3 + TLR]) r_qr <= ro_all[(rbq >> 3)*512 +: 512];
         assign r_q = r_qr;
         assign t_ovf = |ovf_all;
     end endgenerate
@@ -928,6 +935,12 @@ endmodule
 //   row read  ro <= the requested bank (rqb) two edges after the pin, as the base's r_qr.
 //   SU reads  so <= the copy's NSB banks two edges after the pin (sv), as the base's scap.
 // ovf: FIFO overflow / pop of an empty FIFO (never in a legal schedule; reaches w_fault).
+// el1011-q-sp 2026-10-11 r5 (qfd_vm_grp_{a,b}-5839e0912 PREROUTE_MARGIN -924.9 / -1,068.2 ps: the worst paths were 4-5
+// logic cells + 27-29 repeaters, i.e. ~1.5 ns of WIRE from the W macro columns to the E pin face in one cycle, class 4):
+// every macro input crosses the tile in NRI relays, every macro output is captured beside the macro and relayed NRX / NRS
+// stages to the E region, where the x FIFO (per-slice replicas) and the row-read rungs (two one-hot 4:1 rungs + 2:1,
+// registered) sit next to the pins.  Latency vs r4: x + (1 + NRI + NRX), row + (2 + NRI + NRX), SU + (1 + NRI + NRS);
+// the parent carries them as TLX / TLR / TLS (x FIFO NPP + TLX, pop source TLX engine edges later).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qfd_vm_grp #(
     parameter integer NBK = 8,
@@ -938,8 +951,11 @@ module ot_qfd_vm_grp #(
     parameter integer DEPTHS = 1024,
     parameter integer LAWS = 10,
     parameter integer USE_MACRO = 0,
-    parameter integer NPP = 6,
+    parameter integer NPP = 12,          // production RV 1: RV + 6 + TLX (TLX = 1 + NRI + NRX = 5)
     parameter integer MEREG = 1,         // 1: me_in is me_en one edge early (registered here: the tile's replica)
+    parameter integer NRI = 2,           // clock relays pin flop -> macro inputs (every read / write port, uniform)
+    parameter integer NRX = 2,           // clock relays copy-0 capture -> E region (x FIFO + row-read rungs)
+    parameter integer NRS = 1,           // clock relays SU capture -> E region (so)
     parameter integer FSW = 32           // x FIFO slice width: each FSW-bit slice owns kept one-hot wp/rp + push/pop replicas
                                          // (128 -> 32 after e39fac4f9: pp_k -> 128 xo enables across the pin face was -1,068.9 ps)
 ) (
@@ -1003,56 +1019,116 @@ module ot_qfd_vm_grp #(
         p_ra <= ra; p_wl <= wl; p_wm <= wm; p_wd <= wd; p_rqb <= rqb;
         p_sra <= sra; p_swl <= swl; p_swm <= swm; p_swd <= swd;
     end
+    // ---- macro-side input relays: every macro input crosses the tile from the E-face pin flops in NRI clock stages
+    //      (the far copy-0 column sits ~750 um from the pins; <= ~500 um of wire per stage).  Uniform delay on every
+    //      read / write port keeps the base ordering argument (a read sees exactly the writes presented before it). ----
+    wire [NBK-1:0]          m_re, m_we;
+    wire [NSU*NSB-1:0]      m_sre;
+    wire [NSB-1:0]          m_swe;
+    wire [NBK*LAW-1:0]      m_ra, m_wl;
+    wire [NBK*16-1:0]       m_wm;
+    wire [NBK*512-1:0]      m_wd;
+    wire [NSU*NSB*LAWS-1:0] m_sra;
+    wire [NSB*LAWS-1:0]     m_swl;
+    wire [NSB*16-1:0]       m_swm;
+    wire [NSB*512-1:0]      m_swd;
+    ot_hdc_delay #(.W(2*NBK + NSU*NSB + NSB), .D(NRI), .RESET(1)) u_ic (.clk(clk), .rst_n(rt),
+        .d({p_re, p_we, p_sre, p_swe}), .q({m_re, m_we, m_sre, m_swe}));
+    ot_hdc_delay #(.W(2*NBK*LAW + NBK*16 + NBK*512 + NSU*NSB*LAWS + NSB*LAWS + NSB*16 + NSB*512), .D(NRI)) u_id (
+        .clk(clk), .rst_n(rt), .d({p_ra, p_wl, p_wm, p_wd, p_sra, p_swl, p_swm, p_swd}),
+        .q({m_ra, m_wl, m_wm, m_wd, m_sra, m_swl, m_swm, m_swd}));
     // ---- copy-0 banks ----
     wire [NBK*512-1:0] bq;
     generate for (g = 0; g < NBK; g = g + 1) begin : g_b
         ot_qfd_vm_rowbank #(.DEPTH(DEPTH), .LAW(LAW), .USE_MACRO(USE_MACRO)) u_b (.clk(clk),
-            .re(p_re[g]), .raddr(p_ra[g*LAW +: LAW]), .q(bq[g*512 +: 512]),
-            .we(p_we[g]), .waddr(p_wl[g*LAW +: LAW]), .wmask(p_wm[g*16 +: 16]), .wdata(p_wd[g*512 +: 512]));
+            .re(m_re[g]), .raddr(m_ra[g*LAW +: LAW]), .q(bq[g*512 +: 512]),
+            .we(m_we[g]), .waddr(m_wl[g*LAW +: LAW]), .wmask(m_wm[g*16 +: 16]), .wdata(m_wd[g*512 +: 512]));
     end endgenerate
     // ---- SU copy banks ----
     wire [NSU*NSB*512-1:0] sq;
     generate for (c = 0; c < NSU; c = c + 1) begin : g_c
         for (j = 0; j < NSB; j = j + 1) begin : g_s
             ot_qfd_vm_rowbank_s #(.DEPTH(DEPTHS), .LAW(LAWS), .USE_MACRO(USE_MACRO)) u_s (.clk(clk),
-                .re(p_sre[c*NSB + j]), .raddr(p_sra[(c*NSB + j)*LAWS +: LAWS]), .q(sq[(c*NSB + j)*512 +: 512]),
-                .we(p_swe[j]), .waddr(p_swl[j*LAWS +: LAWS]), .wmask(p_swm[j*16 +: 16]), .wdata(p_swd[j*512 +: 512]));
+                .re(m_sre[c*NSB + j]), .raddr(m_sra[(c*NSB + j)*LAWS +: LAWS]), .q(sq[(c*NSB + j)*512 +: 512]),
+                .we(m_swe[j]), .waddr(m_swl[j*LAWS +: LAWS]), .wmask(m_swm[j*16 +: 16]), .wdata(m_swd[j*512 +: 512]));
         end
     end endgenerate
-    // ---- captures (one edge after the macro read, as the base) ----
-    reg           xv2, rq2;
-    reg [2:0]     rqb2;
-    reg [NSU-1:0] sv2;
+    // ---- output data path: capture register beside every macro (no logic before it), then NRX (copy-0) / NRS (SU)
+    //      clock relays toward the E face.  Datapath registers carry no reset and no enable. ----
+    wire [NBK*512-1:0]     bx;          // copy-0 words at the E region: bq + 1 + NRX edges
+    wire [NSU*NSB*512-1:0] sx;          // SU words at the E region:     sq + 1 + NRS edges
+    ot_hdc_delay #(.W(NBK*512), .D(1 + NRX)) u_bx (.clk(clk), .rst_n(rt), .d(bq), .q(bx));
+    ot_hdc_delay #(.W(NSU*NSB*512), .D(1 + NRS)) u_sx (.clk(clk), .rst_n(rt), .d(sq), .q(sx));
+    // ---- tags (pin flop -> central control chain -> per-region kept replicas -> per-slice kept replicas) ----
+    //   x push:  p_xv + 2 + NRI + NRX edges (aligned with bx)   = central (NRI + NRX) + xg (bank) + xv_k (slice)
+    //   row:     one-hot select of p_rqb, p_rqb[2], p_rq   + 2 + NRI + NRX = decode + central (NRI + NRX) + slice
+    //   SU:      p_sv + 2 + NRI + NRS edges (aligned with sx) = central (NRI + NRS) + sg (copy) + sv_k (slice)
+    wire          xvc;
+    ot_hdc_delay #(.W(1), .D(NRI + NRX), .RESET(1)) u_xc (.clk(clk), .rst_n(rt), .d(p_xv), .q(xvc));
+    wire          xpush;                // central push (FIFO occupancy / ovf), aligned with every xv_k
+    ot_hdc_delay #(.W(1), .D(2 + NRI + NRX), .RESET(1)) u_xp (.clk(clk), .rst_n(rt), .d(p_xv), .q(xpush));
+    reg  [5:0]    rdq;                  // decoded row tag: {rq, rqb[2], onehot(rqb[1:0])}
     always @(posedge clk or negedge rt)
-        if (!rt) begin xv2 <= 1'b0; rq2 <= 1'b0; sv2 <= 0; end
-        else begin xv2 <= p_xv; rq2 <= p_rq; sv2 <= p_sv; end
-    always @(posedge clk) rqb2 <= p_rqb;
-    always @(posedge clk) if (rq2) ro <= bq[rqb2*512 +: 512];
-    generate for (c = 0; c < NSU; c = c + 1) begin : g_sc
-        always @(posedge clk) if (sv2[c]) so[c*NSB*512 +: NSB*512] <= sq[c*NSB*512 +: NSB*512];
+        if (!rt) rdq <= 6'd0;
+        else rdq <= {p_rq, p_rqb[2], (p_rqb[1:0] == 2'd3), (p_rqb[1:0] == 2'd2), (p_rqb[1:0] == 2'd1), (p_rqb[1:0] == 2'd0)};
+    wire [5:0]    rdc;
+    ot_hdc_delay #(.W(6), .D(NRI + NRX), .RESET(1)) u_rc (.clk(clk), .rst_n(rt), .d(rdq), .q(rdc));
+    wire [NSU-1:0] svc;
+    ot_hdc_delay #(.W(NSU), .D(NRI + NRS), .RESET(1)) u_sc (.clk(clk), .rst_n(rt), .d(p_sv), .q(svc));
+    // ---- row read: registered 8:1 as two 4:1 rungs (one-hot select, one AND-OR level) + a 2:1 rung into ro ----
+    localparam integer RSL = 512 / FSW;
+    genvar k, e;
+    generate for (k = 0; k < RSL; k = k + 1) begin : g_rs
+        (* keep = "true", dont_touch = "true" *) reg [5:0] rs1;   // select replica, rung 1
+        (* keep = "true", dont_touch = "true" *) reg [1:0] rs2;   // {en, half} replica, rung 2
+        reg [2*FSW-1:0] t1, t1n;
+        always @(posedge clk or negedge rt) if (!rt) begin rs1 <= 6'd0; rs2 <= 2'd0; end
+            else begin rs1 <= rdc; rs2 <= rs1[5:4]; end
+        integer h, i;
+        always @* begin
+            t1n = {(2*FSW){1'b0}};
+            for (h = 0; h < 2; h = h + 1)
+                for (i = 0; i < 4; i = i + 1)
+                    t1n[h*FSW +: FSW] = t1n[h*FSW +: FSW] | (bx[(4*h + i)*512 + k*FSW +: FSW] & {FSW{rs1[i]}});
+        end
+        always @(posedge clk) t1 <= t1n;
+        always @(posedge clk) if (rs2[1]) ro[k*FSW +: FSW] <= rs2[0] ? t1[FSW +: FSW] : t1[0 +: FSW];
     end endgenerate
-    // ---- x beat FIFO: push on the clock, pop on engine edges ----
-    // el1011-q-sp 2026-10-11: qfd_vm_grp_a-6b30117c7 PREROUTE_MARGIN -1,183.6 ps, worst rp[0] -> xo[*]: ONE binary read
-    // pointer selected 7 x 4,096 b through a mux tree (rp[0] fanout ~16k across the 561.6 um pin face), and one binary wp
-    // decoded into 28,672 write enables.  Now every FSW-bit slice owns its own one-hot wp / rp and its own push / pop
-    // replicas (kept registers, same next state as the central counters), so a select drives FSW x NPP flops, the read
-    // is one AND-OR level, and no pointer net crosses the tile.  Cycle behaviour unchanged.
+    // ---- SU answers: per-copy region replica, per-slice enable replica ----
+    localparam integer SSL = (NSB * 512) / FSW;
+    generate for (c = 0; c < NSU; c = c + 1) begin : g_sc
+        (* keep = "true", dont_touch = "true" *) reg sg;
+        always @(posedge clk or negedge rt) if (!rt) sg <= 1'b0; else sg <= svc[c];
+        for (k = 0; k < SSL; k = k + 1) begin : g_k
+            (* keep = "true", dont_touch = "true" *) reg sv_k;
+            always @(posedge clk or negedge rt) if (!rt) sv_k <= 1'b0; else sv_k <= sg;
+            always @(posedge clk) if (sv_k) so[c*NSB*512 + k*FSW +: FSW] <= sx[c*NSB*512 + k*FSW +: FSW];
+        end
+    end endgenerate
+    // ---- x beat FIFO in the E region: push on the clock (aligned with bx), pop on engine edges ----
+    // Every FSW-bit slice owns kept one-hot wp / rp and its own push / pop / me replicas (a select drives FSW x NPP
+    // flops, the read is one AND-OR level, no pointer net crosses the tile); push comes from a per-bank region replica.
     localparam integer NSL = (NBK * 512) / FSW;
+    localparam integer SPB = 512 / FSW;
     reg [LP:0]   cnt;
-    wire push = xv2;
     wire popn = me_t && p_pop;
     always @(posedge clk or negedge rt) begin
         if (!rt) begin cnt <= 0; ovf <= 1'b0; end
         else begin
-            cnt <= cnt + (push ? 1'b1 : 1'b0) - (popn ? 1'b1 : 1'b0);
-            if ((push && !popn && cnt == NPP) || (popn && cnt == 0)) ovf <= 1'b1;
+            cnt <= cnt + (xpush ? 1'b1 : 1'b0) - (popn ? 1'b1 : 1'b0);
+            if ((xpush && !popn && cnt == NPP) || (popn && cnt == 0)) ovf <= 1'b1;
         end
     end
-    genvar k, e;
+    wire [NBK-1:0] xg;
+    generate for (g = 0; g < NBK; g = g + 1) begin : g_xg
+        (* keep = "true", dont_touch = "true" *) reg r;
+        always @(posedge clk or negedge rt) if (!rt) r <= 1'b0; else r <= xvc;
+        assign xg[g] = r;
+    end endgenerate
     generate for (k = 0; k < NSL; k = k + 1) begin : g_fs
         (* keep = "true", dont_touch = "true" *) reg mr_k;       // me_t replica
-        (* keep = "true", dont_touch = "true" *) reg pp_k;       // p_pop replica
-        (* keep = "true", dont_touch = "true" *) reg xv_k;       // xv2 replica (push)
+        (* keep = "true", dont_touch = "true" *) reg pp_k;       // pop pin-flop replica
+        (* keep = "true", dont_touch = "true" *) reg xv_k;       // push replica
         (* keep = "true", dont_touch = "true" *) reg [NPP-1:0] wpo, rpo;
         wire me_k = (MEREG != 0) ? mr_k : me_in;
         wire pop_k = me_k && pp_k;
@@ -1061,13 +1137,13 @@ module ot_qfd_vm_grp #(
             if (!rt) begin pp_k <= 1'b0; xv_k <= 1'b0; wpo <= {{(NPP-1){1'b0}}, 1'b1}; rpo <= {{(NPP-1){1'b0}}, 1'b1}; end
             else begin
                 if (me_k) pp_k <= pop;
-                xv_k <= p_xv;
+                xv_k <= xg[k / SPB];
                 if (xv_k) wpo <= (NPP > 1) ? {wpo[NPP-2:0], wpo[NPP-1]} : wpo;
                 if (pop_k) rpo <= (NPP > 1) ? {rpo[NPP-2:0], rpo[NPP-1]} : rpo;
             end
         reg [FSW-1:0] fe [0:NPP-1];
         for (e = 0; e < NPP; e = e + 1) begin : g_fe
-            always @(posedge clk) if (xv_k && wpo[e]) fe[e] <= bq[k*FSW +: FSW];
+            always @(posedge clk) if (xv_k && wpo[e]) fe[e] <= bx[k*FSW +: FSW];
         end
         reg [FSW-1:0] rd;
         integer i;

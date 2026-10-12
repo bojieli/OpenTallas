@@ -23,7 +23,7 @@ module tb_qfd_vm_bv_ports;
     parameter integer DB = 16, RSD = 4, CRB = 4, MUT = 0, SMUT = 0, TSR = 0, CYCLES = 30000, SEED = 5, XRN = 4096;
     parameter integer ND = 9;
     parameter integer MEE = 0, VMT = 0, RV = 1, RO = 2;   // el1011-q-sp: me_en one edge early / hardened bank tiles
-                                                           // (VMT: pass XVM + RV + RO + 2 and VL = 7 + RV + RO + 1)
+                                                           // (VMT: pass XVM + RV + RO + 7 and VL = 7 + RV + RO + 5)
     parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
     parameter [ND*8-1:0] DSET = {8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0};
     localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NB = 6, NS = 8;
