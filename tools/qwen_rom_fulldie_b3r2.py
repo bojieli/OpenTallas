@@ -2108,20 +2108,36 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         # stacked 3.2 kb in one window (0.69)
                         xl = round((Pc[0] + F[0]) / 2, 3) if 0.0 < F[0] - Pc[0] < 200.0 else \
                             min((x for x in cx_list if x > Pc[0]), default=Pc[0])
+                        xg_, ys_ = (xl if 0.0 < F[0] - Pc[0] < 200.0 else None), None
                         if FIELD_ALLOC:
                             # it19: E-bound kvn words pick, by booked vertical load, among the KVc|E-field gap and
                             # the first two E-field corridors (all on the fixed gap crowded the KV-centre E face:
                             # 0.69 / 0.67)
-                            xo = [xl] + sorted(x for x in cx_list if x > Pc[0] + 1.0 and abs(x - xl) > 1.0)[:2]
+                            # it26: first FOUR E corridors (5 lanes; it25 corridor 18825/19220 stacks 0.71-0.73 had 3)
+                            xo = [xl] + sorted(x for x in cx_list if x > Pc[0] + 1.0 and abs(x - xl) > 1.0)[:4]
                             # it24: + the stub from the KVc E-face pin to the lane at pin height (a corridor lane's stub
                             # crosses the KVc|E gap with every other E-face word: 0.74 at x 18550)
                             xl = min(xo, key=lambda q: (vr(q, Pc[1], yg, cur_bits[0]) > 1.0 or hr(Pc[1], Pc[0], q, cur_bits[0]) > 1.0,
                                                         2000.0 * max(vr(q, Pc[1], yg), hr(Pc[1], Pc[0], q)) + 0.3 * abs(q - Pc[0])))
+                            if xg_ is not None and abs(xl - xg_) > 1.0:
+                                # it26: a corridor lane's stub leaves the KVc|E gap at a height of its own: the word
+                                # first runs along the gap toward its row gap, then steps across at the least-loaded
+                                # 260-um window (it26: four E-face kvn stubs at pin height y 14290-14545 crossed x 18600
+                                # in one window, 0.888)
+                                sg_ = 1.0 if yg > Pc[1] else -1.0
+                                ys_c = [Pc[1] + sg_ * k_ * 260.0 for k_ in range(0, 6) if k_ * 260.0 < abs(yg - Pc[1]) - 130.0]
+                                if ys_c:
+                                    ys_ = min(ys_c, key=lambda y_: (hr(y_, xg_, xl, cur_bits[0]) > 1.0,
+                                                                    2000.0 * hr(y_, xg_, xl) + 0.3 * abs(y_ - Pc[1])))
+                                    if abs(ys_ - Pc[1]) < 1.0:
+                                        ys_ = None
                     else:
+                        xg_, ys_ = None, None
                         xl = lane_pick(kvl, Pc, (Pc[0], yg), lane_bits) if all(x in lane_bits for x in kvl) else kvl[0]
                     fa, fb = (F[2] + v.CORR, F[0]) if Ps[0] < Pc[0] else (xl, F[2] + v.CORR)
                     jog = [] if yc is None else [(xj, yg), (xj, yc)]
-                    path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg)] + jog + [(Ps[0], yr), Ps]
+                    head_ = [Pc, (xl, Pc[1])] if ys_ is None else [Pc, (xg_, Pc[1]), (xg_, ys_), (xl, ys_)]
+                    path = head_ + [(xl, yg), (fa, yg), (fb, yg)] + jog + [(Ps[0], yr), Ps]
                     bs = by.get(eps[1][0] if kc0 else eps[0][0])
                     if bs is not None and abs(Ps[1] - yr) > 1.0:
                         # it4: approach a strip pin from its own face: a pin on the N / S face of a block between the
@@ -2133,7 +2149,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         if (face_n and yr < bot) or (face_s and yr > top):
                             xs = bs.x + bs.w + 65.0 if Ps[0] < Pc[0] else bs.x - 65.0
                             ya = Ps[1] + (60.0 if face_n else -60.0)
-                            path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg)] + jog + [(xs, yr), (xs, ya), (Ps[0], ya), Ps]
+                            path = head_ + [(xl, yg), (fa, yg), (fb, yg)] + jog + [(xs, yr), (xs, ya), (Ps[0], ya), Ps]
                     return path if Pc is P0 else path[::-1]
         chx = getattr(v, 'SPINE_CHANNEL_X', None)
         if chx and abs(P0[1] - P1[1]) > 1000.0 and min(chx) - 1500.0 < P0[0] < max(chx) + 1500.0 \
@@ -2180,8 +2196,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     stage_of = {}
     # it24: the KV host link (d2d_fdi) places first: its spine lane + IO sub-lane relay sites never depend on the
     # order of the other classes (it22: kvn before trees took its sites and it staircased into the SerDes window)
+    # it26: KV row runs (kvn*) place and book BEFORE the tree words (d2d_fdi already owns its sites, so the it22
+    # staircase cannot recur): the trees then see the kvn corridor loads (it25 corridor 18825/19220 = cor 444 + tree
+    # 1024 + bword 512 + kvn 1060 because kvn came last and had to take what was left)
     order = {'d2d_fdi': -1, 'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
-    buses = sorted(enumerate(m['buses']), key=lambda t: (order.get(t[1][1], 3), t[0]))
+    buses = sorted(enumerate(m['buses']), key=lambda t: (1.5 if t[1][1].startswith('kvn') else order.get(t[1][1], 3), t[0]))
     keep = {}
     def relay_frame(bits, cl):
         """off-corridor relay frame: faces at one track; <= 512 b fits the 52.68 x 30.24 corridor relay, wider words
@@ -2251,6 +2270,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
         mh = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])   # noqa: E731
         return any(mh(pts[i], pts[i + 1]) > mh(pts[i - 1], pts[i + 1]) + 20.0 for i in range(1, len(pts) - 1))
+
+    FWD_SLACK = 60.0
+    fwd_miss = [0]
+
+    def at_arc(path, s_):
+        """the point at arc length s_ along a rectilinear path"""
+        for (xa_, ya_), (xb_, yb_) in zip(path, path[1:]):
+            L_ = abs(xb_ - xa_) + abs(yb_ - ya_)
+            if s_ <= L_ and L_ > 1e-9:
+                f_ = s_ / L_
+                return (xa_ + (xb_ - xa_) * f_, ya_ + (yb_ - ya_) * f_)
+            s_ -= L_
+        return path[-1]
 
     def chain_path(P0, frames, P1, poly):
         """it24: the rectilinear route of a PLACED relay chain (each hop an L whose corner lies nearer the allocator's
@@ -2342,19 +2374,38 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     reach = [(c[0], c[1], ycur, c[3], c[4]) if (c[4] == 'h' or (c[4] == 'o' and bid in tight_stride))
                              and abs(ycur - c[2]) < 400.0 else c for c in reach]
                 got = None
+                # it26: forward progress at the source.  A relay must lie inside the detour ellipse from the previous
+                # chain point to a point 2 pitches ahead on the path (mh(prev,q) + mh(q,T) <= mh(prev,T) + FWD_SLACK):
+                # the tol/corridor fall-backs used to land frames 500-1000 um to either side of a run (ap_WS at x 2850:
+                # 3127 -> 2583 -> 3188 -> 2522 -> 3568), and every back-and-forth hop is another crossing of the cut.
+                prev_ = (frames[-1][0] + frames[-1][2] / 2, frames[-1][1] + frames[-1][3] / 2) if frames else path[0]
+                T_ = at_arc(path, min(L, s_last + 2.0 * pitch_b))
+                mh_ = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])   # noqa: E731
+                lim_ = mh_(prev_, T_) + FWD_SLACK
+
+                def fwd(sp_):
+                    q_ = (sp_[0] + sp_[2] / 2, sp_[1] + sp_[3] / 2)
+                    return mh_(prev_, q_) + mh_(q_, T_) <= lim_
                 for tol in (20.0, 80.0, 200.0):
                     for c in reach[::-1]:
                         sp = _try(c, tol)
-                        if sp is not None:
+                        if sp is not None and fwd(sp):
                             got = (c, sp)
                             break
                     if got is not None:
                         break
                 if got is None:
+                    for c in reach[::-1]:
+                        sp = _try(c, None)
+                        if sp is not None and fwd(sp):
+                            got = (c, sp)
+                            break
+                if got is None:
                     c = reach[-1]
                     sp = _try(c, None)
                     if sp is None:
                         raise ValueError(f'relays: no free spot for {bid} near ({c[1]:.0f}, {c[2]:.0f})')
+                    fwd_miss[0] += 1
                     got = (c, sp)
                 x0, y0, w, h = got[1]
                 add_rect((x0, y0, x0 + w + v.SHAVE, y0 + h + v.SHAVE))
@@ -2804,7 +2855,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
                           repaired_examples=repaired[:20], unrepaired=unrepaired,
-                          repaired_all=[r[0] for r in repaired], off_plan=off_plan, feedback=feedback,
+                          repaired_all=[r[0] for r in repaired], off_plan=off_plan, fwd_miss=fwd_miss[0], feedback=feedback,
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
                           relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
     base = v.masters
