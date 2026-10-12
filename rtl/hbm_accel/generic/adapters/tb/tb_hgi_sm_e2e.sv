@@ -92,12 +92,13 @@ module tb_hgi_sm_e2e;
         .rq(g_q), .rq_cr(g_cr), .rr(g_rsp));
 `else
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret;
+    wire [NSM-1:0] e_cr;                       // smmv 2026-10-11: row credits pub -> adapter
     ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
         .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
         .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done),
         .x_fault(x_fault), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
-        .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done), .pub_fault(pub_fault),
+        .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done), .pub_fault(pub_fault), .sm_cr(e_cr),
         .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd), .sm_ret(sm_ret));
     wire xw_en; wire [6:0] xw_addr, xw_grp; wire [2047:0] xw_data;
     wire [2*338-1:0] xq, pq; wire [2*274-1:0] xr, pr; wire [273:0] tr; reg [337:0] tq = 0;
@@ -133,7 +134,7 @@ module tb_hgi_sm_e2e;
     wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
     ot_hgi_sm_pub #(.NSM(NSM), .NPC(2), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
-        .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr));
+        .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr), .sm_cr(e_cr));
 `ifdef WVM
     ot_hgi_vm_unit #(.NC(5), .RP(32), .LQ(`WLQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status(),
         .rq(g_q), .rq_cr(g_cr), .rr(g_rsp));

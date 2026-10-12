@@ -45,7 +45,8 @@ module ot_hgi_sm_pub_ff #(
     input  wire [NPC*274-1:0] vmr,
     output reg                s0_v,
     output reg  [19:0]        s0_idx,
-    output reg  [31:0]        s0_data
+    output reg  [31:0]        s0_data,
+    output reg  [NSM-1:0]     sm_cr          // smmv 2026-10-11: one pulse per arrival entry consumed, per SM (row credits)
 );
     localparam integer NB = NSM * NC, QD = 16;
     reg busy, sm_m; reg [17:0] ob, ost; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
@@ -65,6 +66,7 @@ module ot_hgi_sm_pub_ff #(
     function automatic [255:0] rb8(input [255:0] x, input en);
         integer q; for (q = 0; q < 8; q = q + 1) rb8[32*q +: 32] = rb(x[32*q +: 32], en);
     endfunction
+    always @(posedge clk) sm_cr <= rv_q;                     // the flop form takes a row on its arrival edge
     always @(posedge clk) for (s = 0; s < NSM; s = s + 1) begin rv_q[s] <= sm_rv[s]; rr_q[s] <= sm_rrow[s*12 +: 12];
                                                                 rd_q[s] <= sm_rdata[s*NC*32 +: NC*32]; end
     // per-SM rows expected / received; all_rows registered
@@ -232,7 +234,8 @@ module ot_hgi_sm_pub_mem #(
     input  wire [NPC*274-1:0] vmr,
     output reg                s0_v,
     output reg  [19:0]        s0_idx,
-    output reg  [31:0]        s0_data
+    output reg  [31:0]        s0_data,
+    output reg  [NSM-1:0]     sm_cr          // smmv 2026-10-11: one pulse per arrival entry consumed, per SM (row credits)
 );
     localparam integer NSL = NSM / NE, LSL = (NSL > 1) ? $clog2(NSL) : 1, ADW = $clog2(AD), PQW = $clog2(PQ);
     localparam integer NQ = NE * NC;                       // pending FIFOs
@@ -316,6 +319,7 @@ module ot_hgi_sm_pub_mem #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; pub_done <= 1'b0; pub_fault <= 1'b0; vmq <= '0; s0_v <= 1'b0;
+            sm_cr <= '0;
             s0_idx <= '0; s0_data <= '0; all_rows <= 1'b0; ovr <= 1'b0; cbusy <= '0; dr_v <= 1'b0; dr_rr <= '0;
             dr_v2 <= 1'b0; hq_n <= 3'd0; hq_h <= 2'd0; hq_t <= 2'd0;
             b_v <= '0; c_v <= '0; d_v <= '0; sweep <= 1'b0; s_rr <= '0; m_we <= '0; m_re <= '0;
@@ -328,7 +332,8 @@ module ot_hgi_sm_pub_mem #(
         end else begin : main
             reg [ADW:0] an [0:NSM-1]; reg [ADW:0] atk [0:NSM-1]; reg [PQW:0] qn_ [0:NQ-1];
             reg [1:0] pf_ [0:NE-1][0:NSL-1][0:NC-1];
-            reg ok, dr_go; integer e, q_, sl;
+            reg ok, dr_go; integer e, q_, sl; reg [NSM-1:0] crp;
+            crp = '0;
             pub_done <= 1'b0; s0_v <= 1'b0; m_we <= '0; m_re <= '0;
             for (c = 0; c < NPC; c = c + 1) vmq[c*338 + 337] <= 1'b0;
             all_rows <= &rdone;
@@ -396,13 +401,13 @@ module ot_hgi_sm_pub_mem #(
                             k_msk[e][sl][p] <= (ch || k_msk[e][sl][p] == 0) ? (8'd1 << w) : (k_msk[e][sl][p] | (8'd1 << w));
                         end
                         d_v[e] <= 1'b0;
-                        s = e + NE * d_i[e]; atk[s] = atk[s] - 1'b1; an[s] = an[s] - 1'b1;     // the entry is consumed
+                        s = e + NE * d_i[e]; atk[s] = atk[s] - 1'b1; an[s] = an[s] - 1'b1; crp[s] = 1'b1;  // consumed
                     end
                 end else if (d_v[e] && sm_m) begin
                     ok = 1'b0;
                     if (s_req[e]) begin                           // granted this edge (below): one beat out
                         if (d_sp[e] + 4'd1 >= pp) begin d_v[e] <= 1'b0; d_sp[e] <= 4'd0; ok = 1'b1;
-                            s = e + NE * d_i[e]; atk[s] = atk[s] - 1'b1; an[s] = an[s] - 1'b1; end
+                            s = e + NE * d_i[e]; atk[s] = atk[s] - 1'b1; an[s] = an[s] - 1'b1; crp[s] = 1'b1; end
                         else d_sp[e] <= d_sp[e] + 4'd1;
                     end
                 end
@@ -495,6 +500,7 @@ module ot_hgi_sm_pub_mem #(
             for (c = 0; c < NQ; c = c + 1) pq_n[c] <= qn_[c];
             for (e = 0; e < NE; e = e + 1) for (i = 0; i < NSL; i = i + 1) for (p = 0; p < NC; p = p + 1)
                 k_pf[e][i][p] <= pf_[e][i][p];
+            sm_cr <= crp;
             // ---- done: every row in, swept (VM) / emitted (STREAM), nothing pending, every write acknowledged
             if (busy && all_rows && &rdone && !pend_any && cbusy == 0 && (sm_m || (sweep && !open_any && sw_all))) begin
                 busy <= 1'b0; pub_done <= 1'b1; sweep <= 1'b0;
@@ -514,7 +520,8 @@ module ot_hgi_sm_pub #(
     parameter integer MUT_ROW = 0,
     parameter integer MEM = 1,
     parameter integer NE = 2,
-    parameter integer MUT_PAR = 0
+    parameter integer MUT_PAR = 0,
+    parameter integer AD = 32              // per-SM arrival entries (MEM 1) = ot_hgi_sm_record AD (row credits)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -536,20 +543,21 @@ module ot_hgi_sm_pub #(
     input  wire [NPC*274-1:0] vmr,
     output wire               s0_v,
     output wire [19:0]        s0_idx,
-    output wire [31:0]        s0_data
+    output wire [31:0]        s0_data,
+    output wire [NSM-1:0]     sm_cr          // row credits to ot_hgi_sm_record (CR = 1; its AD must equal this AD)
 );
     generate if (MEM) begin : g_mem
-        ot_hgi_sm_pub_mem #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW), .NE((NSM % NE == 0) ? NE : 1), .MUT_PAR(MUT_PAR)) u (
+        ot_hgi_sm_pub_mem #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW), .NE((NSM % NE == 0) ? NE : 1), .MUT_PAR(MUT_PAR), .AD(AD)) u (
             .clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
             .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done),
             .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
-            .s0_idx(s0_idx), .s0_data(s0_data));
+            .s0_idx(s0_idx), .s0_data(s0_data), .sm_cr(sm_cr));
     end else begin : g_ff
         ot_hgi_sm_pub_ff #(.NSM(NSM), .NC(NC), .NPC(NPC), .MUT_ROW(MUT_ROW)) u (
             .clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
             .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done),
             .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
-            .s0_idx(s0_idx), .s0_data(s0_data));
+            .s0_idx(s0_idx), .s0_data(s0_data), .sm_cr(sm_cr));
     end endgenerate
 endmodule
 `default_nettype wire

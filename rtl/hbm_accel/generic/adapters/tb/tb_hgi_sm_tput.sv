@@ -24,6 +24,19 @@ module tb_hgi_sm_tput;
 `endif
     `include "tput_sizes.svh"
     localparam integer NSM = 32, NREAL = 2, CW = 106, NXC = 4, NPC = 4;
+    // smmv 2026-10-11 row credits: ADP = per-SM pub arrival depth = adapter credits (+define+TB_AD4: the old depth 4);
+    // +define+MUT_NOCR: the adapter describes the whole slice at once (the pre-fix behaviour: the overrun reproduces)
+`ifdef TB_AD4
+    localparam integer ADP = 4;
+`else
+    localparam integer ADP = 32;
+`endif
+`ifdef MUT_NOCR
+    localparam integer NOCR = 1;
+`else
+    localparam integer NOCR = 0;
+`endif
+    wire [NSM-1:0] pcr; reg [NSM-1:0] acr = 0;
     reg clk = 0;
     always #1 clk = ~clk;
     reg [937:0] recm [0:NREC-1]; reg [119:0] infm [0:NREC-1]; reg [2063:0] xwm [0:NXW-1];
@@ -48,12 +61,12 @@ module tb_hgi_sm_tput;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
     wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret;
-    ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
+    ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0), .MUT_EARLY(ME), .AD(ADP), .MUT_NOCR(NOCR)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
         .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
         .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done),
         .x_fault(x_fault), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
-        .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done), .pub_fault(pub_fault),
+        .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done), .pub_fault(pub_fault), .sm_cr(acr),
         .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd), .sm_ret(sm_ret), .sm_cg_en());
     // x load: FP8 / FP4 run the real loader in BF16 mode (timing proxy); its writes are replaced by the tb's fragments.
     // tput-hbm-1011: +define+XBD = the native block-dot x path (ot_hgi_sm_xload BD 1, main 291e1f95f): no proxy.
@@ -76,13 +89,34 @@ module tb_hgi_sm_tput;
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(proxy_f ? 2'd0 : x_fmt), .x_done(x_done),
         .x_fault(x_fault), .xw_en(xl_en), .xw_addr(xl_addr), .xw_grp(xl_grp), .xw_data(xl_data), .vmq(xq), .vmr(xr));
     wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
-    ot_hgi_sm_pub #(.NSM(NSM), .NPC(NPC), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
+    ot_hgi_sm_pub #(.NSM(NSM), .NPC(NPC), .MUT_ROW(MW), .AD(ADP)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
         .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr),
-        .s0_v(), .s0_idx(), .s0_data());
+        .s0_v(), .s0_idx(), .s0_data(), .sm_cr(pcr));
     ot_hgi_vm_unit #(.NC(NXC + NPC + 1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
     // current record's M / Q (for the shadows' row clamp)
     reg [19:0] cur_m = 0; reg [15:0] cur_q = 0;
+    // CREDITS UNDER SHADOWING: shadows replay real SM (s mod 2), so every SM of a class must see the SAME credits: the
+    // adapter's sm_cr for class r pulses once per unit of the class MINIMUM of eff_s = rows the pub consumed of SM s +
+    // rows SM s never emits (Q - R_s, added at each record) -- the conservative bound for every SM the real one drives.
+    integer ccnt [0:NSM-1]; integer csent [0:NREAL-1]; integer ci, cr_, cm;
+    initial begin for (ci = 0; ci < NSM; ci = ci + 1) ccnt[ci] = 0; for (ci = 0; ci < NREAL; ci = ci + 1) csent[ci] = 0; end
+    task automatic cr_missing(input integer q, input integer m);
+        integer z, rs;
+        for (z = 0; z < NSM; z = z + 1) begin
+            rs = (m > z * q) ? (((m - z * q) > q) ? q : (m - z * q)) : 0;
+            ccnt[z] = ccnt[z] + (q - rs);
+        end
+    endtask
+    always @(posedge clk) begin
+        for (ci = 0; ci < NSM; ci = ci + 1) if (pcr[ci]) ccnt[ci] = ccnt[ci] + 1;
+        for (cr_ = 0; cr_ < NREAL; cr_ = cr_ + 1) begin
+            cm = ccnt[cr_];
+            for (ci = cr_; ci < NSM; ci = ci + NREAL) if (ccnt[ci] < cm) cm = ccnt[ci];
+            for (ci = cr_; ci < NSM; ci = ci + NREAL) acr[ci] <= (cm > csent[cr_]);
+            if (cm > csent[cr_]) csent[cr_] = csent[cr_] + 1;
+        end
+    end
     integer lines_req [0:NREAL-1];
     genvar s;
     generate for (s = 0; s < NREAL; s = s + 1) begin : g_sm
@@ -173,7 +207,7 @@ module tb_hgi_sm_tput;
         for (r = 0; r < NREC; r = r + 1) begin
             inf = infm[r];
             @(negedge clk); cur = recm[r]; rec_v = 1;
-            cur_q = inf[115:100]; cur_m = inf[99:80];
+            cur_q = inf[115:100]; cur_m = inf[99:80]; cr_missing(inf[115:100], inf[99:80]);
             t = 0; while (!rec_rdy && t < 100000) begin @(negedge clk); t = t + 1; end
             e_xi = -1; e_xd = -1; e_st = -1; e_rq0 = -1; e_rq1 = -1; e_rs1 = -1; e_rv0 = -1; e_rv1 = -1; e_pd = -1;
             @(posedge clk); td = cyc; #0.1 rec_v = 0;

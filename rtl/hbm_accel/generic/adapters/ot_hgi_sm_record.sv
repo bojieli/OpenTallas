@@ -38,7 +38,18 @@ module ot_hgi_sm_record #(
     parameter integer NSM = 32,
     parameter integer MUT_ROWS = 0,       // mutant: an even floor split (M >> 5 rows a SM) instead of the ceil blocks
     parameter integer MUT_EARLY = 0,      // mutant: retire when the SMs start
-    parameter integer LEGACY = 1          // 1: static legacy pass-through mux; 0: the routed adapter (records only)
+    parameter integer LEGACY = 1,         // 1: static legacy pass-through mux; 0: the routed adapter (records only)
+    // el1011-hbm-smmv (2026-10-11): ROW CREDITS AT THE DESCRIPTOR (the sm_pub arrival-overrun fix).  CR = 1: SM s is
+    // described its R_s x LPR lines in chunks of CH rows (the last chunk = the remainder); a chunk of n rows leaves only
+    // while cr[s] >= n, cr[s] = AD - (rows described to SM s and not yet consumed by the publication), +1 per sm_cr[s]
+    // pulse (the pub consumed one arrival entry of SM s).  A row is emitted only after its last line was consumed and
+    // a line is consumed only after it was described, so SM s never has more than AD rows emitted-and-unconsumed: the
+    // pub's AD-entry arrival FIFO cannot overrun for ANY HBM / pub / VM rate (credit lag only delays).  AD must equal
+    // the pub's per-SM arrival depth.  CR = 0 (and MUT_NOCR): one descriptor of the whole slice (the old behaviour).
+    parameter integer CR = 1,
+    parameter integer AD = 32,
+    parameter integer CH = 8,             // rows a chunk (power of two)
+    parameter integer MUT_NOCR = 0        // mutant: describe the whole slice at once, ignore the credits (overrun returns)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -75,6 +86,7 @@ module ot_hgi_sm_record #(
     output reg                pub_bf16,      // hgi-1010/d: O.fmt = BF16 (the publication rounds each word to BF16)
     input  wire               pub_done,
     input  wire               pub_fault,
+    input  wire [NSM-1:0]     sm_cr,         // one pulse per arrival entry the pub consumed, per SM (CR = 1)
     // legacy per-SM buses (DS control path): {release_in, d_lines 24, d_base 32, d_valid, op_xb 7, op_fmt 2, op_gs,
     // op_g 8, op_c 16, op_rows 13, start} = 106 b a SM; returns {fault, arrive, d_ready, start_ready} = 4 b a SM
     input  wire [NSM*106-1:0] lg_cmd,
@@ -152,6 +164,14 @@ module ot_hgi_sm_record #(
     reg         go_ok, xs_done, started, pub_sent, x_sent;
     reg  [NSM-1:0] st_pend, d_pend, arr_want, arr_seen;
     reg  [NSM-1:0] rel;                  // release_in a SM (the adapter echoes arrive at retire)
+    // row-credit chunking (CR): rows / lines still to describe, the next chunk's base, credits; chunk lines = LPR x CH
+    localparam integer LCH = $clog2(CH), CRW = $clog2(AD + 1);
+    localparam integer NOCR = (CR == 0 || MUT_NOCR != 0) ? 1 : 0;
+    reg  [NSM*13-1:0] rr_s; reg [NSM*24-1:0] lr_s; reg [NSM*32-1:0] nb_s; reg [NSM*CRW-1:0] cr_s;
+    reg  [23:0] chl;                     // lines a full chunk
+    reg  [NSM-1:0] cri;                  // the pub's credit pulses, landed in flops
+    reg  [NSM-1:0] rr_nz; reg rr_any;    // a slice still has rows to describe (registered 32-wide OR)
+    always @(posedge clk) cri <= sm_cr;
     integer s;
     // ---- outputs: per-SM command words
     // registered command words (one flop a bit per SM: no reg -> out fanout); start / d_valid are the pend bits of the
@@ -167,14 +187,15 @@ module ot_hgi_sm_record #(
     integer s2;
     always @(posedge clk)                                    // datapath flops: no reset tree (start / d_valid are gated
         for (s2 = 0; s2 < NSM; s2 = s2 + 1)                  //  by the registered reset rst_i, synchronously)
-            cmd_h[s2*CW +: CW] <= {rel[s2], dl_s[s2*24 +: 24], dbase_s[s2*32 +: 32], d_n[s2] & go_ok & rst_i, 7'd0,
+            cmd_h[s2*CW +: CW] <= {rel[s2], dl_s[s2*24 +: 24], dbase_s[s2*32 +: 32], d_n[s2] & rst_i, 7'd0,
                                    fmt_r, 1'b1, g_r, 16'd8, rows_s[s2*13 +: 13], st_n[s2] & go_ok & rst_i};
     assign sm_cmd = hen ? cmd_h : lg_cmd;
     assign lg_ret = hen ? {NSM*4{1'b0}} : sm_ret;
 
     // the 32-wide reductions land in flops (retire / go decisions one edge later: no reduction -> enable fanout)
     reg all_arr, all_arr_r, pend0_r;
-    always @(posedge clk) begin all_arr_r <= all_arr && !rec_done; pend0_r <= (st_pend == 0) && (d_pend == 0); end
+    always @(posedge clk) begin all_arr_r <= all_arr && !rec_done; pend0_r <= (st_pend == 0) && (d_pend == 0) && !rr_any;
+                                 rr_any <= |rr_nz; end
     always @* begin
         all_arr = 1'b1;
         for (s = 0; s < NSM; s = s + 1) if (arr_want[s] && !arr_seen[s]) all_arr = 1'b0;
@@ -191,7 +212,8 @@ module ot_hgi_sm_record #(
             x_v <= 1'b0; pub_v <= 1'b0; go_ok <= 1'b0; xs_done <= 1'b0; started <= 1'b0; pub_sent <= 1'b0;
             x_sent <= 1'b0; st_pend <= 0; d_pend <= 0; arr_want <= 0; arr_seen <= 0; rel <= 0; act <= 0; fld_ph <= 0;
             dig <= 0; hdr_q <= 0; a_q <= 0; b_q <= 0; o_q <= 0; na_q <= 0; nb_q <= 0; dec_ok <= 1'b0;
-            rows_s <= 0; dbase_s <= 0; dl_s <= 0; g_r <= 0; fmt_r <= 0;
+            rows_s <= 0; dbase_s <= 0; dl_s <= 0; g_r <= 0; fmt_r <= 0; rr_s <= 0; lr_s <= 0; nb_s <= 0; rr_nz <= 0;
+            for (s = 0; s < NSM; s = s + 1) cr_s[s*CRW +: CRW] <= CRW'(AD);
             x_base <= 0; x_n <= 0; x_p <= 0; x_stride <= 0; x_space <= 0; x_fmt <= 0;
             pub_base <= 0; pub_stride <= 0; pub_space <= 0; pub_m <= 0; pub_q <= 0; pub_p <= 0; pub_bf16 <= 1'b0;
         end else begin
@@ -212,7 +234,7 @@ module ot_hgi_sm_record #(
                 else begin
                     busy <= 1'b1; xs_done <= 1'b0; started <= 1'b0; go_ok <= 1'b0; fld_ph <= 2'd0;
                     q_r <= {4'd0, q1}; q_sh <= {4'd0, q1}; m_sh <= b1[87:68]; g_r <= g1; lpr_r <= lpr1; lby_r <= lb1; dv_n <= b1[47:8]; dv_q <= 40'd0; dv_r <= 9'd0; dv_k <= 6'd20; dv_chk <= 1'b1; m_r <= b1[87:68];
-                    base_r <= b1[47:8]; str_r <= b1[119:88]; fmt_r <= pf1;
+                    base_r <= b1[47:8]; str_r <= b1[119:88]; fmt_r <= pf1; chl <= {13'd0, lpr1} << LCH;
                     qs <= 45'd0; lq <= 24'd0; ml <= 31'd0; dig <= 3'd5; prod_v <= 1'b0; pd_seen <= 1'b0;
                     x_v <= 1'b1; x_base <= a1[47:8]; x_n <= na1; x_p <= pp1; x_stride <= a1[119:88];
                     x_space <= a1[1:0]; x_fmt <= pf1;
@@ -262,16 +284,37 @@ module ot_hgi_sm_record #(
                 if (fk == NSM && !t_v) fld_ph <= 2'd2;
             end
             if (fld_ph == 2'd2) begin
-                fld_ph <= 2'd3; st_pend <= act; d_pend <= act; arr_want <= act;
+                fld_ph <= 2'd3; st_pend <= act; d_pend <= 0; arr_want <= act;
+                rr_s <= rows_s; lr_s <= dl_s; nb_s <= dbase_s; rr_nz <= act;
+            end
+            // chunk issue, per SM (independent state, no cross-SM arbitration): the next chunk's fields land in the
+            // command registers (dbase_s / dl_s) while d_pend is low, then d_pend shows it; credits -n at the issue
+            begin : g_chunk
+                reg [12:0] n; reg [23:0] ln; reg [CRW-1:0] c; reg go;
+                for (s = 0; s < NSM; s = s + 1) begin
+                    n  = (NOCR || rr_s[s*13 +: 13] <= CH) ? rr_s[s*13 +: 13] : 13'(CH);
+                    ln = (NOCR || rr_s[s*13 +: 13] <= CH) ? lr_s[s*24 +: 24] : chl;
+                    c  = cr_s[s*CRW +: CRW];
+                    go = busy && fld_ph == 2'd3 && !d_pend[s] && rr_nz[s] && (NOCR || {{(32-CRW){1'b0}}, c} >= {19'd0, n});
+                    if (go) begin
+                        dbase_s[s*32 +: 32] <= nb_s[s*32 +: 32]; dl_s[s*24 +: 24] <= ln; d_pend[s] <= 1'b1;
+                        nb_s[s*32 +: 32] <= nb_s[s*32 +: 32] + {8'd0, ln}; lr_s[s*24 +: 24] <= lr_s[s*24 +: 24] - ln;
+                        rr_s[s*13 +: 13] <= rr_s[s*13 +: 13] - n; rr_nz[s] <= (rr_s[s*13 +: 13] != n);
+                    end
+                    if (!NOCR) cr_s[s*CRW +: CRW] <= c + {{(CRW-1){1'b0}}, cri[s]} - (go ? n[CRW-1:0] : {CRW{1'b0}});
+                end
             end
             if (busy && in_xd) xs_done <= 1'b1;
             if (busy && fld_ph == 2'd3 && xs_done && !started) begin go_ok <= 1'b1; started <= 1'b1;
                 if (MUT_EARLY) begin rec_done <= 1'b1; busy <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0; end
             end
+            // descriptors leave as soon as the per-SM fields exist (fld_ph 3), NOT after x_done: the SM's bulk-copy ring
+            // starts the HBM first access under the x load (smmv 2026-10-11); a chunk's handshake frees d_pend
+            for (s = 0; s < NSM; s = s + 1)
+                if (d_pend[s] && cmd_h[s*CW + 48] && sm_ret[s*4 + 1]) d_pend[s] <= 1'b0;
             if (go_ok) begin
                 for (s = 0; s < NSM; s = s + 1) begin
                     if (st_pend[s] && cmd_h[s*CW] && sm_ret[s*4 + 0]) st_pend[s] <= 1'b0;
-                    if (d_pend[s] && cmd_h[s*CW + 48] && sm_ret[s*4 + 1]) d_pend[s] <= 1'b0;
                     if (arr_want[s] && ret_q[s*4 + 2] != rel[s]) arr_seen[s] <= 1'b1;
                 end
                 if (pend0_r) go_ok <= 1'b0;
