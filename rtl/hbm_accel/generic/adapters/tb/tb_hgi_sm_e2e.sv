@@ -41,7 +41,7 @@ module tb_hgi_sm_e2e;
     wire rec_rdy, done, fault, halted;
     wire x_v, x_rdy, x_done, x_fault, pub_v, pub_rdy, pub_done, pub_fault;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
-    wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
+    wire [1:0] x_space, x_fmt, pub_space; wire [6:0] x_xb; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q;
 `ifdef DIEPATH
     // hgi-1010/d N4: the die form of the whole SM path -- ot_hgi_sm_cp (record adapter + SM leaves + x-load on the
     // E-group lanes + publication command link) in the CP block, ot_hgi_sm_pub_stn at the result trunk ends; every
@@ -92,12 +92,13 @@ module tb_hgi_sm_e2e;
         .rq(g_q), .rq_cr(g_cr), .rr(g_rsp));
 `else
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret;
+    wire [NSM-1:0] e_cr;                       // smmv 2026-10-11: row credits pub -> adapter
     ot_hgi_sm_record #(.NSM(NSM), .LEGACY(0)) u_a (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
         .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted), .x_v(x_v), .x_rdy(x_rdy),
-        .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done),
+        .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
         .x_fault(x_fault), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base), .pub_stride(pub_stride),
-        .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done), .pub_fault(pub_fault),
+        .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16), .pub_done(pub_done), .pub_fault(pub_fault), .sm_cr(e_cr),
         .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd), .sm_ret(sm_ret));
     wire xw_en; wire [6:0] xw_addr, xw_grp; wire [2047:0] xw_data;
     wire [2*338-1:0] xq, pq; wire [2*274-1:0] xr, pr; wire [273:0] tr; reg [337:0] tq = 0;
@@ -120,20 +121,20 @@ module tb_hgi_sm_e2e;
     ot_hgi_vm_lanearb #(.K(3), .REQW(16), .RSPW(257), .RLY(`WRLY)) u_arb (.clk(clk), .rst_n(rst_n), .c_req({2'b00, rg_req}),
         .c_gnt(a_gnt), .c_q({{2*32*16{1'b0}}, wrq_x}), .c_cr(a_cr), .c_rsp(a_rsp), .g_q(g_q), .g_cr(g_cr), .g_rsp(g_rsp));
     assign rg_gnt_x = a_gnt[0]; assign wcr_x = a_cr[0 +: 32]; assign wrr_x = a_rsp[0 +: 32*257];
-    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .WVM(1), .WLQ(`WLQ), .MUT_WV(MWV)) u_x (.clk(clk), .rst_n(rst_n),
+    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .WVM(1), .WLQ(`WLQ), .MUT_WV(MWV)) u_x (.clk(clk), .rst_n(rst_n), .x_xb(x_xb),
         .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(x_fault),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .vmq(xq), .vmr(xr),
         .rg_req(rg_req), .rg_gnt(rg_gnt_x), .wrq(wrq_x), .wrq_cr(wcr_x), .wrr(wrr_x));
 `else
-    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .BD(`ifdef XBD0 0 `else 1 `endif)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+    ot_hgi_sm_xload #(.NXC(2), .MUT_T(MT), .MUT_BD(MB), .BD(`ifdef XBD0 0 `else 1 `endif)) u_x (.clk(clk), .rst_n(rst_n), .x_xb(x_xb), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
         .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(x_fault),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .vmq(xq), .vmr(xr));
 `endif
     wire [NSM-1:0] rv; wire [NSM*12-1:0] rrow; wire [NSM*256-1:0] rdata;
     ot_hgi_sm_pub #(.NSM(NSM), .NPC(2), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
-        .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr));
+        .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv), .sm_rrow(rrow), .sm_rdata(rdata), .vmq(pq), .vmr(pr), .sm_cr(e_cr));
 `ifdef WVM
     ot_hgi_vm_unit #(.NC(5), .RP(32), .LQ(`WLQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status(),
         .rq(g_q), .rq_cr(g_cr), .rr(g_rsp));

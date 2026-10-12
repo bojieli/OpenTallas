@@ -5320,6 +5320,10 @@ def _col_relays(m, P):
         Lp = _poly_len(path)
         for k in range(n):
             pl, tier = _pick(path, cur, k, Lp)
+            if HOPDBG and bid.startswith(HOPDBG):    # OT_S81_HOPDBG=<bus prefix>: column relay trace (stderr)
+                print('COLDBG', bid, cls, d0.name, d0.kind, k, n, round(Lp, 1), [tuple(round(v, 1) for v in q) for q in path],
+                      tuple(round(v, 1) for v in cur), pl and tuple(round(v, 1) for v in pl), (w_, h_), tier, fr,
+                      file=sys.stderr)
             if tier == 'tt' and pl:
                 tt_col.append(f'y_{bid}_{k}')
             assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if RELAY_PROGRESS else (bid, k)
@@ -6710,6 +6714,8 @@ def glue_rtl(m):
                      '    // crossing is bounded at 382-385 ps, beyond a single-register window (data changes every cycle), so',
                      '    // it crosses through the d8g1 meso FIFO (the closed die crossing: arcs settle in 1.5 T - 60 ps, low',
                      '    // guard flop at 1.5 T) with registered pins.  Lane vr: i[0] rst_n, i[1] valid.',
+                     '    // Hold pad (s81-die-iter 2026-10-12): i -> ir passes a 120 ps (FF) dont_touch delay chain placed in',
+                     '    // this stage (its feeder is the adjacent end block\'s boundary flops); tools/s81/die_sta.py INPUT_PAD.',
                      _sync('rsync', 'ck[0]', 'i[0]'),
                      f'    reg [{w - 1}:0] ir; always @(posedge cw[0]) ir <= i;',
                      '    wire rv, wl, rl, wf, rf_, wr; wire [%d:0] rq;' % (w - 3),
