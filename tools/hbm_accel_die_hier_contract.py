@@ -47,8 +47,9 @@ HIER = {
                          'in the 8 x 11 serpentine grid (pitch 179.136 x 187.38, physical/hbm_accel_die_views/hcp/rtl_qt/'
                          'macro_place.tcl @87e02e7ad re-fit to the slot); GLUE RULE: no hfd_hc_hub -- chain-head glue '
                          '(band capture, 3 head relays each way, XOR fold slice, rst sync) into head tiles / die-region relays',
-                   slot_change='v1: region 2,032.944 x 1,684.8 (asked 2,263.68 x 1,499.04: the W hub has 18.6 um x slack, '
-                               'the HC column 3.1 mm free below -> same 3.425 mm2 TALLER)',
+                   slot_change='v6: region 2,263.68 x 1,499.04 = the CLOSED tiled quarter (r25gqw ports; the die adapts '
+                               'to the closed element): SU-facing edge fixed, grows away from the spine into the HC | '
+                               'attention channel (345.6 -> 114.96 um); supersedes the v1 2,032.944 x 1,684.8 taller slot',
                    layers='v1.1: tiles placed by the die (closed tile as-is: PG M7 stripes, signals <= M7), die region straps '
                           'M8 (die-only layer, legal at the die top). No quarter cluster / no M8-PG quarter (pdn_qt '
                           'quarter routes finish as evidence only).',
@@ -452,8 +453,11 @@ def main(argv=None):
                  'for multicast) implemented but OFF: relay_tree on r25gqn = 17,650 overlaps -> channels too narrow; '
                  'next = data-flow re-floorplan / relay banks (v2)'),
         deltas=[
-            dict(id='D1', slot='hfd_hc', change='2,032.944 x 1,499.04 -> 2,032.944 x 1,684.8 (equator edge fixed, grows '
-                 'away from the equator); N tr row-1 att->SU relays move up 185.76 um with it', status='decided v1'),
+            dict(id='D1', slot='hfd_hc', change='v6: 2,032.944 x 1,684.8 -> 2,263.68 x 1,499.04 = the CLOSED tiled quarter '
+                 '(88 hfd_hc_tile_xl 8 x 11, pka10 view; r25gqw ports): SU-facing edge fixed, grows away from the spine into '
+                 'the HC | attention channel (345.6 -> 114.96 um); N tr row-1 att->SU relays back at their 1,499.04 '
+                 'positions, rly_N[WE]_1_1 re-centred in the narrowed channel (hops 480 / 480 um); tile sub-slots '
+                 'unchanged in the quarter frame (the 2,263.68 quarter = rtl_qt @9c9c1a34b, same grid)', status='decided v6'),
             dict(id='D2', slot='hfd_hc', change='v1.1: no quarter cluster / no M8-PG quarter; the 88 closed tiles (PG M7) '
                  'are placed by the die in an HC region, die straps M8 (supersedes v1 "tile_xl PG M6")', status='decided v1.1'),
             dict(id='D3', slot='hfd_coll', change='1,399.656 x 1,561.68 (c07156bbc)', status='in place'),
@@ -464,7 +468,7 @@ def main(argv=None):
                  'ap RTT +2, reset +3 (vm_tunit record); TUNIT stays 0 until the btile + VM parent close', status='contract v3'),
             dict(id='D6', slot='hfd_sfu/su ctl', change='DENR=1 now; SFUT=2 when the lane cluster closes', status='open'),
             dict(id='D7', slot='hfd_hc', change='v3: 88 tile sub-slots per quarter from macro_place.tcl @87e02e7ad (8 x 11 '
-                 'serpentine, all inside 2,032.944 x 1,684.8; top 201 um band for head relays); region gate waits on tile '
+                 'serpentine, v6: all inside 2,263.68 x 1,499.04, the closed quarter frame; the 316 um SU-side band x 1,947-2,263 holds the head relays / glue as in the closed quarter); region gate waits on tile '
                  'child_lint (f)', status='contract v3'),
             dict(id='D8', slot='hfd_vm_sw/se/nw/ne', change='v3: 36 VM8 tile sub-slots (6 open halves x 6, 9adc3c44e); '
                  'e half at x 349.056; clock entry ckt<k> M7 area pin; +1 cycle on the listed half seams', status='contract v3'),
@@ -478,7 +482,7 @@ def main(argv=None):
                  status='decided v3'),
             dict(id='D13', slot='die', change='v4: contract on r25gqn_pr (b4638437b): data segments > 504 um 985 -> 0, 0 '
                  'overlaps, die 856.95 mm2 (svc channels +108 um); residual check rc 3 = 8 clock/reset tree segments > 504 '
-                 'um + 7 far-side data relays, all at the lk_ep S row (84-um gaps full) -> D16', status='v4 (residual open)'),
+                 'um + 7 far-side data relays, all at the lk_ep S row (84-um gaps full) -> D16', status='v4; residual closed v5 (D18)'),
             dict(id='D14', slot='hfd_cmdproc / hfd_coll', change='coll_recx 554 b (TOPK_MERGE sideband): t_hgi_coll widens by '
                  '554 b when the TKM tiles compose on the die (die coll view TKM=0 today); lgEcp / lgEatt / t_hgi_e2* classed '
                  'OPEN with owners (main 04dad4b3a)', status='open'),
@@ -486,7 +490,12 @@ def main(argv=None):
                  'the w8 cluster (43.2 um to idx_selector); spine above moves up: idx_selector y 8,875, coll 10,902, hgi_vm '
                  '12,506, cmdproc 14,623', status='v4'),
             dict(id='D16', slot='hfd_lk_ep S row', change='re-grant pending: the 84-um inter-ep channels carry every N-S crossing '
-                 'of the row; widen to >= 200 um (pitch 2,800) or move the S row', status='open'),
+                 'of the row; widen to >= 200 um (pitch 2,800) or move the S row', status='closed v5 (D18)'),
+            dict(id='D18', slot='hfd_lk_ep S row', change='v5 re-grant (closes D16): the one-row S band (5 x 2,600 in the 13,504-um '
+                 'sm7 | sm14 gap, 84-um channels) becomes a 3 + 2 brick in the free band y 6,016-7,977: row 1 y 6,016 at x 7,886 '
+                 '(ep_S0) / 11,500 (ep_S2) / 16,270 (ep_S3), row 2 y 7,046 at x 7,886 (ep_S1) / 16,270 (ep_S4); slot 2,600 x 830 '
+                 'and the pg M8 / strap M9 exception unchanged; every channel >= 200 um (A2-A3 2,170 over the SerDes); '
+                 'check rc 3 -> 0 (8 clock/reset tree segments + far-side relays -> 0)', status='v5'),
             dict(id='D17', slot='hfd_hc_eng', change='lane-major N-face re-pin accepted; needs per-lane ports in the die bus model '
                  '(generator places each port contiguous) and the lgE station spanning the full 4,384.8 face', status='open'),
         ],

@@ -13,7 +13,7 @@
 //   default PASS | OT_P2L_MUT_SEG FAIL (segmentation) | OT_P2L_MUT_CRED FAIL (row class buffer overflow) |
 //   OT_P2L_MUT_DIRECT FAIL (abort blocked behind the pending start = HOL) | OT_FIXLAT_MUT_LAT1 FAIL (link ends)
 module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX=2, START_DELAY=300, NOSTALL=0,
-                         CHB=60, CHU=12, EPER=97, AB0=1700, ABMAX=400, SGHOLD=2500, RS0=20, RS1=3020);
+                         CHB=60, CHU=12, EPER=97, AB0=1700, ABMAX=400, SGHOLD=2500, RS0=20, RS1=3020, RL0=4);
  reg refclk=0; always #5 refclk=~refclk;
  reg por=0; initial #50 por=1;
  wire clk, rstd;
@@ -59,7 +59,7 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   .lo_v(pl_lov), .lo_r(pl_lor), .lo_d(pl_lod), .li_v(pl_liv), .li_r(pl_lir), .li_d(pl_lid), .flt(pl_flt));
  dsfd_coll_lane_w #(.LCR(1)) u_blt (.ck(clk), .rs(rstd), .chb(1'b0), .rx(b_rx), .tx(b_tx), .tf(),
   .lo_v(bl_lov), .lo_r(bl_lor), .lo_d(bl_lod), .li_v(bl_liv), .li_r(bl_lir), .li_d(bl_lid), .flt(bl_flt));
- reg cs_v=0, c1_v=0, c0_v=0, co_r=0, ab=0; integer starts=0, row1=-1;
+ reg cs_v=0, c1_v=0, c0_v=0, co_r=0, ab=0; reg [7:0] c0_rh=0; integer starts=0, row1=-1;
  wire cs_r, c1_r, c0_r, co_v; wire [593:0] co_d; wire [2:0] p_ev;
  dsfd_coll_p2_lane #(.TXK(6), .TXW(101), .RXK(7), .RXW(594), .EVT(1), .EVR(3), .CRED(8), .TCRED(8)) u_pr (
   .ck(clk), .rs(rstd), .x_v(cs_v), .x_r(cs_r), .x_d({IDN0+starts,IDS}), .r_v(co_v), .r_r(co_r), .r_d(co_d),
@@ -88,7 +88,8 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
  always @(negedge clk) if(rstd) begin
   cs_v = starts<NTX && cycles>=START_DELAY;
   c1_v = s1<80*NTX  && (NOSTALL || rnd[2:0]!=0);
-  c0_v = s0<160*NTX && (NOSTALL || rnd[5:3]!=0);
+  // VM BE contract v3: lane 0 is READY-LATENCY RL0 (a beat only RL0 cycles after a ready; every beat is a transfer)
+  c0_v = s0<160*NTX && (NOSTALL || rnd[5:3]!=0) && (RL0==0 || c0_rh[RL0-1]);
   // the result-row consumer: random gaps, 50-cycle windows, and one long window RS0..RS1 cycles after the first row (rows
   // are still flowing: the row class buffer runs full, one credit over its capacity overflows it)
   co_r = NOSTALL || (!(row1>=0 && cycles>=row1+RS0 && cycles<row1+RS1) && rnd[9:7]!=0 && !(cycles%300>=250));
@@ -112,7 +113,8 @@ module tb_mtp_p2_lanes #(parameter integer FV=12, RV=14, FC=8, RC=9, SEED=1, NTX
   cycles<=cycles+1;
   if(cs_v&&cs_r) starts<=starts+1;
   if(c1_v&&c1_r) s1<=s1+1;
-  if(c0_v&&c0_r) s0<=s0+1;
+  if(c0_v&&(RL0!=0||c0_r)) s0<=s0+1;
+  c0_rh <= {c0_rh[6:0], c0_r};
   if(fault) $display("P2L core fault parts tr %0d ar %0d pub %0d broken %0d lost %0d abort %0d cur_id %h c_start %0d/%0d %h c_in_v %b c_in_r %b in_id1 %h in_id0 %h",
      dut.u_core.enabled.tr_fault, dut.u_core.enabled.ar_fault, dut.u_core.enabled.pub_fault, dut.u_core.enabled.broken,
      dut.u_core.enabled.lost_q, dut.u_core.enabled.abort_q, dut.u_lnk.cur_id, dut.u_lnk.c_start_v, dut.u_lnk.c_start_r,

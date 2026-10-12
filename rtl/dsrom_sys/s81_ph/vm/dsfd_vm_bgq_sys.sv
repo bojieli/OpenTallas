@@ -163,9 +163,17 @@ module dsfd_vm_bgq #(
         reg [NP*DW-1:0] x1_d, x2_d;
         if (EP > 0) begin : g_x
             integer xp;
+            // x1 data fields load only on a valid port beat (clock-enabled, per port).  Besides the power saving this
+            // keeps them STRUCTURALLY distinct from the next bus relay rb_*[gs+1] <= rb_*[gs]: as plain copies yosys
+            // opt_merge folded them into the relays (keep does not stop it), so the bus relays / f_* output flops were
+            // placed by the bank logic -- f_d 358 um from its S pin, zero-wire relay pairs (4a2c66fb7-pd35 hold class).
+            // Consumers only read x1/x2 data of valid beats, so holding the old value on an idle port is exact.
             always @(posedge clk) begin
-                x1_we <= a_we; x1_m <= a_m; x1_d <= a_d;
-                for (xp = 0; xp < NP; xp = xp + 1) x1_r[xp*9 +: 9] <= a_row[xp*RA + BB +: 9];
+                x1_we <= a_we;
+                for (xp = 0; xp < NP; xp = xp + 1) if (a_v[xp]) begin
+                    x1_m[xp*MW +: MW] <= a_m[xp*MW +: MW]; x1_d[xp*DW +: DW] <= a_d[xp*DW +: DW];
+                    x1_r[xp*9 +: 9] <= a_row[xp*RA + BB +: 9];
+                end
                 x2_we <= x1_we; x2_r <= x1_r; x2_m <= x1_m; x2_d <= x1_d;
             end
         end

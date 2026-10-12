@@ -176,6 +176,14 @@ set block [ord::get_db_block]
 # strip + fresh GRT + DRT alone took SS +70.18 -> +5.98 and FF -4.20 -> -2.06, i.e. the whole "ECO kills setup" loss
 # was the fresh global route, not the hold buffers.  (Keeping untouched WIRES instead fails in DRT: 1,300-2,800
 # 'pin not visited' + checkConnectivity on untouched nets; keeping clock wires fails checkConnectivity.)
+# FACE-PIN KEEPOUT (hold_eco.sh OT_ECO_PK=1, el1011-ds-misc 2026-10-12): re-apply the route's face-pin keepout, ABOVE ONLY,
+# for this pass's GRT/DRT (stn_pin_keepout.tcl is a toggle: the first source adds the obstructions, the second removes
+# exactly those), so the ECO re-route keeps the layer above every face pin clear as the route did (child_lint (f)).
+set ot_pk_stn /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
+# Sourced inside a proc: the hook's scratch variables (a b c d f k l x0 ...) stay local and cannot clobber this session's.
+proc ot_pk_toggle {} { source $::ot_pk_stn }
+set ot_eco_pk [expr {[envd OT_ECO_PK 0] && [file exists $ot_pk_stn]}]
+if {$ot_eco_pk} { puts "OT_ECO face-pin keepout: add (above only [envd OT_PK_ABOVE_ONLY 0])"; ot_pk_toggle }
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 set allow_fresh [envd OT_ALLOW_FRESH_GRT 0]
 puts "OT_ECO route guides from the db: $guides"
@@ -319,6 +327,7 @@ if {$drt_err} {
   global_route -allow_congestion -congestion_iterations 30 {*}$ra
   detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 }
+if {$ot_eco_pk} { puts "OT_ECO face-pin keepout: remove"; ot_pk_toggle }
 # MULTI-VT: one filler pair per VT present (OT_VT); RVT-only fillers leave LVTN/SLVTN implant gaps -> DPL-0050
 # "No fillers found for LVTN" (dshead-ep-r6-60f5a0a90-tt-lvt hold ECO, drive-2041)
 set ot_fill {}
