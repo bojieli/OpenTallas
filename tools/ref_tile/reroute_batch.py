@@ -135,6 +135,12 @@ def used_cells() -> dict:
             c = cells.setdefault(cell, {"slots": [], "dies": set(), "rules": set(), "count": 0, "cluster": False})
             c["dies"].add("cfg:" + Path(f).stem)
             c["count"] += 1
+    # coordinator 2026-10-12 16:05: every cell of the el1012 ECO-config audit (M7-routed closed views, views failing
+    # child_lint (c)/(f)/(b)) is a used cell of this batch, prioritised by congestion (m5_reroute_priority tier) like the rest
+    for cell, e in ((jload(HC / "m5_reroute_audit_cells.json", {}) or {}).get("cells") or {}).items():
+        c = cells.setdefault(cell, {"slots": [], "dies": set(), "rules": set(), "count": 0, "cluster": False})
+        c["dies"].add("audit:el1012-eco-config")
+        c["audit"] = e.get("why") or ["audit"]
     return cells
 
 
@@ -252,7 +258,7 @@ def plan() -> dict:
                        owner=spec.get("owner"), ref_tile=bool(spec.get("ref_tile")))
         p = pri.get(cell)
         row["priority"] = 1 if p and p.get("tier") == 1 else 2 if c["count"] >= 4 else \
-            3 if rec and rec["job"] in lf else 4
+            3 if (rec and rec["job"] in lf) or c.get("audit") else 4
         if p:
             row["rank"] = p.get("rank")
         row["state"] = "skip" if reason else "eligible"
