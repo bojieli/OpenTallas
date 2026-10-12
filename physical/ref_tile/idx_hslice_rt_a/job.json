@@ -1,5 +1,5 @@
 {
- "name": "idx_hslice_rt_a-i1012-COMMIT",
+ "name": "idx_hslice_rt_a-i1012-63dc36f91",
  "block": "ot_hdc_v41x_idx_hslice",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-idx",
@@ -14,7 +14,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-idx",
-  "commit": "COMMIT",
+  "commit": "63dc36f91",
   "extra_paths": [
    "tools/hgi_idx_chunk_el_bench.sh",
    "rtl/hdc/v41x",
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/idx_hslice_rt_a/idx_hslice_rt_a-i1012-COMMIT"
+   "to": "results/rtl/ref_tile/idx_hslice_rt_a/idx_hslice_rt_a-i1012-63dc36f91"
   }
  ],
  "cycles_added": 0,
