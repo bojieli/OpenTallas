@@ -81,11 +81,30 @@ module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integ
  // (a non-default request instantiates an undefined module, so elaboration fails in every tool)
  if (MUT_BYP != 0 || MUT_CLR != 0) begin : g_chk ot_ERROR_hard_heap_tiles_take_no_parameters u_chk (); end
 `endif
- ot_hgi_idx_topk_w8_hub u_hub (.clk(clk), .rst_n(rst_n), .cmd_valid(cmd_valid), .cmd_ready(cmd_ready),
-  .cmd_unit(cmd_unit), .cmd_op(cmd_op), .cmd_param(cmd_param), .cmd_n(cmd_n), .cmd_m(cmd_m), .cmd_values(cmd_values),
-  .in_valid(in_valid), .in_ready(in_ready), .in_score(in_score), .in_nw(in_nw), .out_valid(out_valid), .out_ready(out_ready),
-  .out_id(out_id), .out_score(out_score), .out_row(out_row), .out_last(out_last), .out_values_valid(out_values_valid),
-  .done(done), .error(error),
+ // r7 (el1011-hbm-idx, w8c df02eb521 textbook lint): REGISTERED cluster boundary.  Every valid/ready port goes through a
+ // 2-entry FIFO whose ready is a function of its own count only (no out_ready -> in_ready pass-through), so no port
+ // reaches more than one flop and no core path starts or ends at a pin (was out_ready -> b_r 7 levels, in_valid/in_ready
+ // registers >= 641-767 um from their pins).  done/error are registered (they follow the registered out stream).
+ wire hc_v, hc_r, hi_v, hi_r, ho_v, ho_r, h_done; wire [3:0] h_err;
+ wire [3:0] hc_unit; wire [5:0] hc_op; wire [24:0] hc_param; wire [31:0] hc_n, hc_m; wire hc_values;
+ wire [255:0] hi_score; wire [3:0] hi_nw; wire [31:0] ho_id, ho_score, ho_row; wire ho_last, ho_vv;
+ ot_hgi_w8_bfifo #(.W(100)) u_bc (.clk(clk), .rst_n(rst_n), .i_v(cmd_valid), .i_r(cmd_ready),
+  .i_d({cmd_unit, cmd_op, cmd_param, cmd_n, cmd_m, cmd_values}), .o_v(hc_v), .o_r(hc_r),
+  .o_d({hc_unit, hc_op, hc_param, hc_n, hc_m, hc_values}));
+ ot_hgi_w8_bfifo #(.W(260)) u_bi (.clk(clk), .rst_n(rst_n), .i_v(in_valid), .i_r(in_ready), .i_d({in_score, in_nw}),
+  .o_v(hi_v), .o_r(hi_r), .o_d({hi_score, hi_nw}));
+ ot_hgi_w8_bfifo #(.W(98)) u_bo (.clk(clk), .rst_n(rst_n), .i_v(ho_v), .i_r(ho_r),
+  .i_d({ho_id, ho_score, ho_row, ho_last, ho_vv}), .o_v(out_valid), .o_r(out_ready),
+  .o_d({out_id, out_score, out_row, out_last, out_values_valid}));
+ reg done_q; reg [3:0] err_q;
+ always @(posedge clk or negedge rst_n) if (!rst_n) begin done_q <= 1'b0; err_q <= 4'd0; end
+  else begin done_q <= h_done; err_q <= h_err; end
+ assign done = done_q; assign error = err_q;
+ ot_hgi_idx_topk_w8_hub u_hub (.clk(clk), .rst_n(rst_n), .cmd_valid(hc_v), .cmd_ready(hc_r),
+  .cmd_unit(hc_unit), .cmd_op(hc_op), .cmd_param(hc_param), .cmd_n(hc_n), .cmd_m(hc_m), .cmd_values(hc_values),
+  .in_valid(hi_v), .in_ready(hi_r), .in_score(hi_score), .in_nw(hi_nw), .out_valid(ho_v), .out_ready(ho_r),
+  .out_id(ho_id), .out_score(ho_score), .out_row(ho_row), .out_last(ho_last), .out_values_valid(ho_vv),
+  .done(h_done), .error(h_err),
   .t0_k(k0), .t0_op_v(v0), .t0_op_ext(e0), .t0_clr_go(c0), .t0_op_x(x0), .t0_op_cr(cr0), .t0_ext_v(xv0),
   .t0_idle(id0), .t0_ext_d(xd0), .t0_root_key(rk0),
   .t1_k(k1), .t1_op_v(v1), .t1_op_ext(e1), .t1_clr_go(c1), .t1_op_x(x1), .t1_op_cr(cr1), .t1_ext_v(xv1),
@@ -158,4 +177,26 @@ module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integ
 `endif
 .clk(clk), .rst_n(rst_n), .k(k7),
   .op_v(v7), .op_ext(e7), .op_x(x7), .op_cr(cr7), .ext_v(xv7), .ext_d(xd7), .root_key(rk7), .clr_go(c7), .idle(id7));
+endmodule
+
+// 2-entry boundary FIFO with a REGISTERED ready (i_r = count < 2, no pass-through from o_r): full throughput at one beat a
+// cycle (steady state count 1), one cycle of latency, data out of a 2:1 mux behind flops.  Datapath entries are reset-free.
+module ot_hgi_w8_bfifo #(parameter integer W=32) (
+ input wire clk, rst_n,
+ input wire i_v, output wire i_r, input wire [W-1:0] i_d,
+ output wire o_v, input wire o_r, output wire [W-1:0] o_d
+);
+ reg [W-1:0] m0, m1; reg wp, rp; reg [1:0] cnt;
+ wire push = i_v && i_r, pop = o_v && o_r;
+ assign i_r = (cnt != 2'd2);
+ assign o_v = (cnt != 2'd0);
+ assign o_d = rp ? m1 : m0;
+ always @(posedge clk) if (push) begin if (wp) m1 <= i_d; else m0 <= i_d; end
+ always @(posedge clk or negedge rst_n)
+  if (!rst_n) begin wp <= 1'b0; rp <= 1'b0; cnt <= 2'd0; end
+  else begin
+   if (push) wp <= ~wp;
+   if (pop) rp <= ~rp;
+   cnt <= cnt + {1'b0, push} - {1'b0, pop};
+  end
 endmodule
