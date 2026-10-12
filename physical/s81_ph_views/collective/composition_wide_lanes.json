@@ -1,10 +1,4 @@
 {
- "reuse_east_w_my": true,
- "lane_rtl_defines": [
-  "OT_S81PH_GBX_FMT1",
-  "OT_S81PH_EP_PIPE2"
- ],
- "final_physical_signoff": "unverified until current routed-reference and die-context checks pass",
  "schema": "opentallas.s81_ph.composition.v1",
  "slab": "dsfd_sp_collective",
  "slab_um": [
@@ -59,103 +53,47 @@
   },
   {
    "inst": "g_lane[4].g_e.u_l",
-   "master": "dsfd_coll_lane_w",
+   "master": "dsfd_coll_lane_e",
    "xy": [
     853.176,
     0.0
    ],
-   "orient": "MY",
+   "orient": "R0",
    "lane": "E0",
-   "ch_b": 0,
-   "control_pin_xy_um": {
-    "ck": [
-     1030.764,
-     340.104
-    ],
-    "rs": [
-     1025.964,
-     340.104
-    ],
-    "chb": [
-     1021.164,
-     340.104
-    ]
-   }
+   "ch_b": 0
   },
   {
    "inst": "g_lane[5].g_e.u_l",
-   "master": "dsfd_coll_lane_w",
+   "master": "dsfd_coll_lane_e",
    "xy": [
     853.176,
     340.2
    ],
-   "orient": "MY",
+   "orient": "R0",
    "lane": "E1",
-   "ch_b": 1,
-   "control_pin_xy_um": {
-    "ck": [
-     1030.764,
-     680.304
-    ],
-    "rs": [
-     1025.964,
-     680.304
-    ],
-    "chb": [
-     1021.164,
-     680.304
-    ]
-   }
+   "ch_b": 1
   },
   {
    "inst": "g_lane[6].g_e.u_l",
-   "master": "dsfd_coll_lane_w",
+   "master": "dsfd_coll_lane_e",
    "xy": [
     853.176,
     680.4
    ],
-   "orient": "MY",
+   "orient": "R0",
    "lane": "E2",
-   "ch_b": 1,
-   "control_pin_xy_um": {
-    "ck": [
-     1030.764,
-     1020.504
-    ],
-    "rs": [
-     1025.964,
-     1020.504
-    ],
-    "chb": [
-     1021.164,
-     1020.504
-    ]
-   }
+   "ch_b": 1
   },
   {
    "inst": "g_lane[7].g_e.u_l",
-   "master": "dsfd_coll_lane_w",
+   "master": "dsfd_coll_lane_e",
    "xy": [
     853.176,
     1020.6
    ],
-   "orient": "MY",
+   "orient": "R0",
    "lane": "E3",
-   "ch_b": 1,
-   "control_pin_xy_um": {
-    "ck": [
-     1030.764,
-     1360.704
-    ],
-    "rs": [
-     1025.964,
-     1360.704
-    ],
-    "chb": [
-     1021.164,
-     1360.704
-    ]
-   }
+   "ch_b": 1
   },
   {
    "inst": "u_core",

@@ -132,8 +132,6 @@ class ReliabilityTests(unittest.TestCase):
                      reason="bench_exact expected PASS but rc=0", stage_tag="bench_exact.a1")
         second = dict(first, name="available", benches={})
         stage = dict(key="bench_exact", expect="pass")
-        for x in (first, second):   # STALE-SAVE 2026-10-09: the re-judgment re-reads the job file under its lock
-            cl.save_job(copy.deepcopy(x))
         with patch.object(cl, "stage_list", return_value=[stage]), \
              patch.object(cl, "bench_outcome", side_effect=[RuntimeError("unreadable"), True]), \
              patch.object(cl, "save_job") as save, patch.object(cl, "log"), \
@@ -141,9 +139,9 @@ class ReliabilityTests(unittest.TestCase):
             cl.reevaluate_benches([first, second])
         self.assertEqual(first["status"], "NEEDS_RTL")
         self.assertNotIn("fix_requeued", first)
-        save.assert_called_once()
-        saved = save.call_args.args[0]
-        self.assertEqual((saved["name"], saved["status"], saved["stage_idx"]), ("available", "READY", 1))
+        self.assertEqual(second["status"], "READY")
+        self.assertEqual(second["stage_idx"], 1)
+        save.assert_called_once_with(second)
 
     def test_cancel_survives_stale_save_and_new_worker(self):
         stale = copy.deepcopy(self.j)
@@ -250,13 +248,8 @@ class ReliabilityTests(unittest.TestCase):
                  stage_idx=0, commit_full="a" * 40, source_synced=True)
         cl.save_job(j)
         with patch.object(cl, "ledger"), patch.object(cl, "log"):
-            cl.cmd_retry(SimpleNamespace(name="race", keep_resume=True))
-        self.assertEqual(cl.load_job("race")["status"], "READY")
-        # FRESH-RETRY (48c27d12e): a plain human retry re-syncs (released jobs have no src/ left)
-        cl.save_job(dict(j, status="NEEDS_HUMAN"))
-        with patch.object(cl, "ledger"), patch.object(cl, "log"):
             cl.cmd_retry(SimpleNamespace(name="race"))
-        self.assertEqual(cl.load_job("race")["status"], "SYNC")
+        self.assertEqual(cl.load_job("race")["status"], "READY")
 
     def test_calibration_transport_failure_preserves_completed_stage(self):
         j = dict(self.j, status="RUNNING", host="host", run="/run", stage_idx=0)

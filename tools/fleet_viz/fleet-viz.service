@@ -10,7 +10,7 @@ Restart=always
 RestartSec=5
 Nice=10
 CPUQuota=25%
-MemoryMax=800M
+MemoryMax=400M
 
 [Install]
 WantedBy=default.target
