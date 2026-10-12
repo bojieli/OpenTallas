@@ -105,6 +105,18 @@ module ot_hgi_coll_tkm #(
             key2 = e[83] ? {1'b1, ~e[84], b_[KW-2:0]} : {(KW+1){1'b0}};
         end
     endfunction
+    // KEY FORM (r3, the chain's storage format): T = {key2(e), nz} -- T[EW-1:1] is the 84-bit insertion key, so the
+    // tiles compare stored bits with no key mux; tinv restores the element (an invalid element is 0 in both forms)
+    function automatic [EW-1:0] tform(input [EW-1:0] e);
+        tform = e[83] ? {key2(e), e[0]} : {EW{1'b0}};
+    endfunction
+    function automatic [EW-1:0] tinv(input [EW-1:0] t);
+        reg [81:0] b_;
+        begin
+            b_ = t[82:1];
+            tinv = !t[84] ? {EW{1'b0}} : (!t[83] ? {1'b1, 1'b1, b_[49:18], b_[81:50], b_[17:0], t[0]} : {1'b0, 1'b1, b_, t[0]});
+        end
+    endfunction
     // ---------------------------------------------------------------- configuration
     reg [11:0] n_q; reg [7:0] g_q, gb_q; reg [15:0] pf_q; reg [12:0] nout_q; reg [39:0] ob_q, rb_q; reg hr_q;
     reg [23:0] tot_q;                          // G pf flits expected
@@ -178,10 +190,10 @@ module ot_hgi_coll_tkm #(
     reg  [TW-1:0] tau_t; reg [LW-1:0] tau_l;
     reg  ctl_conv, ctl_clr;
     reg  [NG2-1:0] g_conv, g_clr; reg [TW-1:0] g_tt [0:NG2-1]; reg [LW-1:0] g_tl [0:NG2-1];
-    reg  dconv1, dconv2;
+    reg  dconv1, dconv2, dconv3;
     reg  eb_v; reg [4*EW-1:0] eb;
     wire [4*EW-1:0] t_ovf [0:NT]; wire t_ovf_v [0:NT]; wire [4*EW-1:0] t_up [0:NT];
-    wire [KW-1:0] t_tau [0:NT-1]; wire t_busy [0:NT-1];
+    wire [KW:0] t_tau [0:NT-1]; wire t_busy [0:NT-1];
     assign t_ovf[0] = eb; assign t_ovf_v[0] = eb_v; assign t_up[NT] = '0;
     for (genvar t = 0; t < NT; t = t + 1) begin : g_t
         ot_hgi_coll_tkm_tile #(.EW(EW), .PT(PT), .TW(TW), .LW(LW)) u_t (.clk(clk), .tid(TW'(t)),
@@ -189,9 +201,9 @@ module ot_hgi_coll_tkm #(
             .ins_v(t_ovf_v[t]), .ins_b(t_ovf[t]), .ovf_v(t_ovf_v[t + 1]), .ovf_b(t_ovf[t + 1]),
             .up_in(t_up[t + 1]), .up_out(t_up[t]), .tau_o(t_tau[t]), .busy(t_busy[t]));
     end
-    reg [NG2-1:0] gb_busy; reg [KW-1:0] g_tau [0:NG2-1]; reg any_busy; reg [KW-1:0] tau_b;
+    reg [NG2-1:0] gb_busy; reg [KW:0] g_tau [0:NG2-1]; reg any_busy; reg [KW:0] tau_b;
     always @(posedge clk) begin : trees
-        reg [KW-1:0] o_; reg b_;
+        reg [KW:0] o_; reg b_;
         for (integer g = 0; g < NG2; g = g + 1) begin
             g_conv[g] <= ctl_conv; g_clr[g] <= ctl_clr; g_tt[g] <= tau_t; g_tl[g] <= tau_l;
             o_ = '0; b_ = 1'b0;
@@ -200,7 +212,7 @@ module ot_hgi_coll_tkm #(
         end
         o_ = '0; for (integer g = 0; g < NG2; g = g + 1) o_ = o_ | g_tau[g];
         tau_b <= o_; any_busy <= |gb_busy;
-        dconv1 <= ctl_conv; dconv2 <= dconv1;             // the tiles shift 2 edges after ctl_conv: capture t_up[0] then
+        dconv1 <= ctl_conv; dconv2 <= dconv1; dconv3 <= dconv2;   // r3: the tiles shift 3 edges after ctl_conv: capture t_up[0] then
     end
     // the SRAM cell buffer (pass 1 -> pass 2): BD cells of 4 elements, registered write port, captured read
     reg  bw_v; reg [BA-1:0] bw_a; reg [4*EW-1:0] bw_d;
@@ -309,7 +321,7 @@ module ot_hgi_coll_tkm #(
             if (ph == P_INS) rcv <= rcv + 24'(d2_v[0]) + 24'(d2_v[1]) + 24'(d2_v[2]) + 24'(d2_v[3]);
             if ((rcv + 24'(d2_v[0]) + 24'(d2_v[1]) + 24'(d2_v[2]) + 24'(d2_v[3])) > tot_q && ph == P_INS) fault <= 1'b1;
             // ---- tau (2 edges behind the array)
-            tau <= tau_b;
+            tau <= vkey(tinv({tau_b, 1'b0}));
             // ---- staging: land (mask against tau), then slots; select consumes slot 0
             for (l = 0; l < DEL; l = l + 1) begin
                 ld_v[l] <= fpop[l];
@@ -353,8 +365,8 @@ module ot_hgi_coll_tkm #(
                 r3 = 2'(e2_ge[2]) + 2'(e2_ge[4]) + 2'(e2_ge[5]);
                 eb_v <= e2_v;
                 for (s = 0; s < 4; s = s + 1)
-                    eb[EW*s +: EW] <= ((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
-                                      ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}});
+                    eb[EW*s +: EW] <= tform(((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
+                                            ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}}));
                 if (e2_v && (ph == P_INS || ph == P_DRAIN)) stat_ins <= stat_ins + 32'd1;
             end
             // ---- the chain controls (one-edge pulses / levels; the tiles act 2 edges later)
@@ -363,10 +375,10 @@ module ot_hgi_coll_tkm #(
             if (((ph == P_CONV1) && (13'(cnv) < cneed)) || pgo) cnv <= cnv + 1'b1;
             qcnt <= (!e1_v && !e2_v && !eb_v && !any_busy && !br_v && !br_q && !rd2_v) ? ((qcnt == 4'd15) ? qcnt : qcnt + 4'd1) : 4'd0;
             // pass-1 capture: the top cell leaving the chain -> the buffer, id order tag (region 1), positions >= nout dropped
-            if (ph == P_CONV1 && dconv2) begin
+            if (ph == P_CONV1 && dconv3) begin
                 for (s = 0; s < 4; s = s + 1) begin : c1
                     reg [EW-1:0] e_;
-                    e_ = t_up[0][EW*s +: EW];
+                    e_ = tinv(t_up[0][EW*s +: EW]);
                     bw_d[EW*s +: EW] <= (13'({cap, 2'(s)}) < nout_q) ? (e_ | {e_[83], {(EW-1){1'b0}}}) : {EW{1'b0}};
                 end
                 bw_v <= 1'b1; bw_a <= BA'(cap); cap <= cap + 1'b1;
@@ -384,9 +396,9 @@ module ot_hgi_coll_tkm #(
                     w_v <= 1'b1; w_addr <= lq_a[lq_h]; w_mask <= lq_m[lq_h]; w_data <= lq_d[lq_h];
                     lq_h <= lq_h + 3'd1; n_ = n_ - 4'd1;
                 end else if (w_v && w_rdy) w_v <= 1'b0;
-                if (ph == P_OUT && dconv2) begin
+                if (ph == P_OUT && dconv3) begin
                     for (i = 0; i < 16; i = i + 1) lx[i] = lb[i];
-                    for (s = 0; s < 4; s = s + 1) begin lx[4 * cap[1:0] + s] = t_up[0][EW*s +: EW]; lb[4 * cap[1:0] + s] <= t_up[0][EW*s +: EW]; end
+                    for (s = 0; s < 4; s = s + 1) begin lx[4 * cap[1:0] + s] = tinv(t_up[0][EW*s +: EW]); lb[4 * cap[1:0] + s] <= tinv(t_up[0][EW*s +: EW]); end
                     cap <= cap + 1'b1;
                     if (cap[1:0] == 2'd3 || 13'(cap) + 13'd1 == cneed) begin
                         cnt_ = ((nout_q - outn) >= 13'd16) ? 13'd16 : (nout_q - outn);
@@ -430,7 +442,7 @@ module ot_hgi_coll_tkm #(
                 P_CLR2: begin wcnt <= wcnt + 4'd1; if (wcnt == 4'd4) begin rdn <= '0; ph <= P_INS2; end end
                 P_INS2: if (13'(rdn) == cneed) ph <= P_DRAIN2;
                 P_DRAIN2: if (qcnt >= 4'd4) begin cnv <= '0; cap <= '0; ph <= P_OUT; end
-                P_OUT: if (13'(cap) == cneed && lq_n == 4'd0 && !dconv1 && !dconv2) ph <= P_FLUSH;
+                P_OUT: if (13'(cap) == cneed && lq_n == 4'd0 && !dconv1 && !dconv2 && !dconv3) ph <= P_FLUSH;
                 P_FLUSH: if (!w_v) begin ph <= P_IDLE; done <= 1'b1; end
                 default: ph <= P_IDLE;
             endcase
@@ -441,15 +453,7 @@ module ot_hgi_coll_tkm #(
         fpop[l2] = !fe[l2] && (ph == P_INS) && ({1'b0, st_n[l2]} + 3'(ld_v[l2]) < 3'd3);
 endmodule
 
-// el1011-hbm-idx 2026-10-11: one HARDENED TILE of the TOPK_MERGE chain: PT positions sorted by the insertion key (larger
-// first), reset-free, cleared by a pin.  Every input pin-flopped except the conveyor seam up_in (the tile below's
-// up_out register drives only the bottom cell's D mux).  Per edge (pins registered): clr -> empty; conv -> shift up one
-// cell, bottom cell <- up_in; ins_v -> broadcast insertion of the 4-element block (rank sorted), positions PT..PT+3
-// leave as the registered overflow block; up_out always = the top cell (the presented-top seam register); tau_o = the
-// value key at (tau_t, tau_l) when this tile holds it.
-// r2 (tile route PREROUTE -899 ps p_b -> X): the block pin flop is REPLICATED per group of 16 positions (no bit fans out
-// to more than 16 positions x 2), and every 85-bit key compare is an explicit log-depth (lt, eq) tree with kept levels
-// (ot_tkm_lt; ABC otherwise maps wide compares as MAJ ripples).
+// ot_tkm_lt: an explicit log-depth (lt, eq) key compare with kept levels (ABC otherwise maps wide compares as MAJ ripples).
 module ot_tkm_lt #(parameter integer W = 85) (input wire [W-1:0] a, input wire [W-1:0] b, output wire lt);
  localparam integer L = $clog2(W), N = 1 << L;
  (* keep *) wire [N-1:0] tl [0:L];
@@ -469,6 +473,21 @@ module ot_tkm_lt #(parameter integer W = 85) (input wire [W-1:0] a, input wire [
  assign lt = tl[L][0];
 endmodule
 
+
+// el1011-hbm-idx 2026-10-11: one HARDENED TILE of the TOPK_MERGE chain: PT positions sorted by the insertion key (larger
+// first), reset-free, cleared by a pin.  Every input pin-flopped except the conveyor seam up_in (the tile below's
+// up_out register drives only the bottom cell's D mux).
+// r3 (tile route r2: TT -312 ps, 10,760 failing D pins, p_bg -> 85-b key compare -> count -> 9:1 insertion mux -> X in
+// ONE edge; textbook class 5): the tile is a two-stage insertion pipeline at one block an edge.
+//   stage C (compare): the pinned block B2 against the CURRENT array X (4 compares a position) and against the block B1
+//     being inserted this edge (16 compares, replicated per position group); the 4-bit compare vectors are then moved
+//     through the SAME insertion mux as B1's data (the vector travels with its element), so gt[] describes the array
+//     B2 will meet.  Registered: gt[q] (4 bits a position), the block copy, the ops.
+//   stage I (insert): count (popcount of gt[q]) -> neighbour decode -> the 9:1 insertion mux -> X / ovf / up_out.
+// Elements arrive and live in KEY FORM (the parent's tform: T[EW-1:1] is the 84-bit insertion key, T[0] = nz), so no
+// key mux sits in front of a compare.  Ops act at stage I, one edge behind the pins (clr > conv > insert); a block
+// must not sit in stage C while stage I conveys (the parent drains the chain before conv; checked in simulation).
+// The block pin flop is replicated per group of GP = 8 positions (no bit fans out to more than 8 positions x 4).
 module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 64, parameter integer TW = 6,
                               parameter integer LW = 7) (
     input  wire              clk,
@@ -482,65 +501,89 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
     output reg  [4*EW-1:0]   ovf_b,
     input  wire [4*EW-1:0]   up_in,
     output reg  [4*EW-1:0]   up_out,
-    output reg  [EW-3:0]     tau_o,
+    output reg  [EW-2:0]     tau_o,          // the KEY (T[EW-1:1]) at (tau_t, tau_l) when this tile holds it, else 0
     output reg               busy
 );
-    localparam integer KW = EW - 2;
-    localparam integer GP = 16;                              // positions a replicated block copy serves
-    localparam integer NGR = (PT + 4 + GP - 1) / GP;
-    function automatic [KW-1:0] vkey(input [EW-1:0] e); vkey = e[KW:1]; endfunction
-    function automatic [KW-1:0] ikey(input [EW-1:0] e); ikey = {e[83], e[50:19], e[82:51], e[18:1]}; endfunction
-    function automatic [KW:0] key2(input [EW-1:0] e);
-        reg [KW-1:0] b_;
-        begin b_ = e[84] ? ikey(e) : vkey(e); key2 = e[83] ? {1'b1, ~e[84], b_[KW-2:0]} : {(KW+1){1'b0}}; end
-    endfunction
-    reg p_clr, p_conv, p_v; reg [4*EW-1:0] p_b; reg [TW-1:0] p_tid, p_tt; reg [LW-1:0] p_tl;
+    localparam integer KT = EW - 1;                          // key width (T[EW-1:1])
+    localparam integer GP = 8;                               // positions a replicated block copy serves
+    localparam integer NP = PT + 4;
+    localparam integer NGR = (NP + GP - 1) / GP;
+    reg p_clr, p_conv, p_v; reg [TW-1:0] p_tid, p_tt; reg [LW-1:0] p_tl;
     (* keep *) reg p_vg [0:NGR-1];
     (* keep *) reg [4*EW-1:0] p_bg [0:NGR-1];
+    reg q_clr, q_conv, q_v;
+    (* keep *) reg q_vg [0:NGR-1];
+    (* keep *) reg [4*EW-1:0] q_bg [0:NGR-1];
+    reg [3:0] gt [0:NP-1];                                   // stage C -> I: block element j beats position q
     always @(posedge clk) begin
-        p_clr <= clr; p_conv <= conv; p_v <= ins_v; p_b <= ins_b; p_tid <= tid; p_tt <= tau_t; p_tl <= tau_l;
+        p_clr <= clr; p_conv <= conv; p_v <= ins_v; p_tid <= tid; p_tt <= tau_t; p_tl <= tau_l;
         for (integer g = 0; g < NGR; g = g + 1) begin p_vg[g] <= ins_v; p_bg[g] <= ins_b; end
+        q_clr <= p_clr; q_conv <= p_conv; q_v <= p_v;
+        for (integer g = 0; g < NGR; g = g + 1) begin q_vg[g] <= p_vg[g]; q_bg[g] <= p_bg[g]; end
     end
     reg [EW-1:0] X [0:PT-1];
-    wire [EW-1:0] SX [0:PT+3];
-    wire [2:0] cp [0:PT+3];
-    genvar gp, gj;
-    for (gp = 0; gp < PT + 4; gp = gp + 1) begin : g_pos
+    wire [EW-1:0] SX [0:NP-1];
+    wire [3:0] g2 [0:NP-1];                                  // B2 vs the current array
+    wire [3:0] gb [0:NGR-1][0:3];                            // gb[g][j][j2]: B2 element j2 beats B1 element j
+    wire [2:0] cp [0:NP-1];                                  // stage I count (B1)
+    genvar gp, gj, gk, gg;
+    for (gp = 0; gp < NP; gp = gp + 1) begin : g_pos
         if (gp < PT) begin : g_x assign SX[gp] = X[gp]; end else begin : g_e assign SX[gp] = {EW{1'b0}}; end
-        wire [KW:0] kx = key2(SX[gp]);
-        wire [3:0] gt;
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_c
-            wire [KW:0] kb = key2(p_bg[gp / GP][EW*gj +: EW]);
-            ot_tkm_lt #(.W(KW + 1)) u_c (.a(kx), .b(kb), .lt(gt[gj]));       // block element j beats position gp
+            ot_tkm_lt #(.W(KT)) u_c (.a(SX[gp][EW-1:1]), .b(p_bg[gp / GP][EW*gj + 1 +: KT]), .lt(g2[gp][gj]));
         end
-        assign cp[gp] = p_vg[gp / GP] ? (3'(gt[0]) + 3'(gt[1]) + 3'(gt[2]) + 3'(gt[3])) : 3'd0;
+        assign cp[gp] = q_vg[gp / GP] ? (3'(gt[gp][0]) + 3'(gt[gp][1]) + 3'(gt[gp][2]) + 3'(gt[gp][3])) : 3'd0;
     end
-    reg [EW-1:0] ins [0:PT+3];
-    always @* begin : bcins
-        for (integer q = 0; q < PT + 4; q = q + 1) begin
-            ins[q] = {EW{1'b0}};
-            for (integer i = 0; i <= 4; i = i + 1)
-                if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) ins[q] = ins[q] | SX[(q - i >= 0) ? q - i : 0];
-            for (integer j = 0; j < 4; j = j + 1)
-                if (p_vg[q / GP] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j)))
-                    ins[q] = ins[q] | p_bg[q / GP][EW*j +: EW];
+    for (gg = 0; gg < NGR; gg = gg + 1) begin : g_bb
+        for (gj = 0; gj < 4; gj = gj + 1) begin : g_j
+            for (gk = 0; gk < 4; gk = gk + 1) begin : g_k
+                ot_tkm_lt #(.W(KT)) u_b (.a(q_bg[gg][EW*gj + 1 +: KT]), .b(p_bg[gg][EW*gk + 1 +: KT]), .lt(gb[gg][gj][gk]));
+            end
         end
+    end
+    // the insertion mux (stage I selects), applied to the data (ins) and to the stage-C compare vectors (gn)
+    reg [EW-1:0] ins [0:NP-1];
+    reg [3:0]    gn  [0:NP-1];
+    always @* begin : bcins
+        for (integer q = 0; q < NP; q = q + 1) begin
+            ins[q] = {EW{1'b0}}; gn[q] = 4'd0;
+            for (integer i = 0; i <= 4; i = i + 1)
+                if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) begin
+                    ins[q] = ins[q] | SX[(q - i >= 0) ? q - i : 0];
+                    gn[q]  = gn[q]  | g2[(q - i >= 0) ? q - i : 0];
+                end
+            for (integer j = 0; j < 4; j = j + 1)
+                if (q_vg[q / GP] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j))) begin
+                    ins[q] = ins[q] | q_bg[q / GP][EW*j +: EW];
+                    gn[q]  = gn[q]  | gb[q / GP][j];
+                end
+            // the overflow positions are empty again after the edge: B2 beats them with every valid element
+            if (q >= PT) for (integer j = 0; j < 4; j = j + 1) gn[q][j] = p_bg[q / GP][EW*j + EW - 1];
+        end
+    end
+    always @(posedge clk) begin : cmp
+        for (integer q = 0; q < NP; q = q + 1)
+            for (integer j = 0; j < 4; j = j + 1)
+                gt[q][j] <= q_clr ? p_bg[q / GP][EW*j + EW - 1] : gn[q][j];
+`ifndef SYNTHESIS
+        if (q_conv && p_v) $error("ot_hgi_coll_tkm_tile: a block entered stage C while the tile conveys");
+`endif
     end
     always @(posedge clk) begin : upd
-        if (p_clr) begin
+        if (q_clr) begin
             for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= {EW{1'b0}};
             up_out <= '0; ovf_v <= 1'b0;
-        end else if (p_conv) begin
+        end else if (q_conv) begin
             for (integer p_ = 0; p_ < PT - 4; p_ = p_ + 1) X[p_] <= X[p_ + 4];
             for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin X[PT - 4 + s_] <= up_in[EW*s_ +: EW]; up_out[EW*s_ +: EW] <= X[4 + s_]; end
             ovf_v <= 1'b0;
-        end else if (p_v) begin
+        end else if (q_v) begin
             for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= ins[p_];
             for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin ovf_b[EW*s_ +: EW] <= ins[PT + s_]; up_out[EW*s_ +: EW] <= ins[s_]; end
-            ovf_v <= ins[PT][83] | ins[PT + 1][83] | ins[PT + 2][83] | ins[PT + 3][83];
+            ovf_v <= ins[PT][EW-1] | ins[PT + 1][EW-1] | ins[PT + 2][EW-1] | ins[PT + 3][EW-1];
         end else ovf_v <= 1'b0;
-        busy <= p_v || ovf_v;
-        tau_o <= (p_tid == p_tt) ? vkey(X[p_tl % PT]) : '0;
+        busy <= p_v || q_v || ovf_v;
+        tau_o <= (p_tid == p_tt) ? X[p_tl % PT][EW-1:1] : '0;
     end
 endmodule
 `default_nettype wire
