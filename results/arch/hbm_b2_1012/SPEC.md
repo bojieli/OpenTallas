@@ -1,5 +1,9 @@
 # HBM die B2: quadrant-local VM slices (spec, 2026-10-12)
 
+**Status: PROVISIONAL (v0.1, 10-12 04:45 PT).** Streams may build against the constants in section 2a. The open items
+are marked TBD. The windowed hub GRT gate (section 7) is still running. Changes after the gate are versioned here and
+announced in `claude-takeover-20261007/el1011-hbm-b2.log`.
+
 Owner direction 2026-10-12: make the HBM die easier to close by putting compute next to its data (ROM-die and
 GPU/DaVinci practice), with no central hub carrying the main traffic. The study `results/arch/hbm_die_phy_study_1012/STUDY.md`
 recommends B2. B2 keeps 4 PHYs and splits the central VM (`hb_hgi_vm`, 32 banks, 2.07 x 2.07 mm, about 62 kb of wide
@@ -116,6 +120,71 @@ The REPL window uses the mirror storage, so each slice has 98,304 physical words
 - The VM allocator places quadrant q's TP slice in slice q: the outputs of SMs 8q..8q+7, its heads, and its SU operands.
 - Vectors read by all quadrants (layer inputs x, norms, residual, HC state) go in REPL.
 - SU templates are issued per slice.
+
+## 2a. Constants and port protocol (for the compiler, VM slice, cmdproc, SM, attention, SFU / SU and HC streams)
+
+**Clusters.** Quadrant q in {0 SW, 1 SE, 2 NW, 3 NE}. Cluster q contains:
+- VM slice q;
+- SMs 8q..8q+7;
+- attention tiles of quadrant q;
+- SU quarter q, SFU quarter q and HC quarter q;
+- VM8 quarter `hb_vm_<q>` (the SM x source);
+- loader quarter q;
+- svc band / HBM stack q.
+
+The central (ring-client) units are cmdproc (CP and the ATT adapter), quant, hc_eng, coll (via the broadcast) and idx
+(via packet).
+
+**Address map.**
+- `VM_WORDS_TOTAL` = 262,144 words, owned, plus the REPL window.
+- `LOCAL_W` = 65,536 words a slice. The owner is `addr_word[17:16]`.
+- `MIRROR_W` = 32,768 words (REPL, `addr_word` 262,144..294,911), mirrored in every slice.
+- Physical size a slice: 98,304 words = 12,288 sectors.
+- Banks a slice: `NB` = 8. Bank = `sector[2:0]`, row = `sector[13:3]` (own region) or row 8,192 + `sector[11:3]` (mirror).
+- TBD: whether MIRROR_W can drop to 24,576 once the DS / Qwen replicated-vector census is in (compiler stream). The
+  constant is fixed at 32,768 until then.
+
+**Local lane group** (slice q ↔ the cluster's wide clients). `ot_hgi_vm_lanechain`, `lanestation` and `lanearb`
+protocols are unchanged; only the lane count goes 32 → 8.
+
+| bus | bits | content |
+|---|---:|---|
+| rdn | 8 x 258 + 3 = 2,067 | {v, sector data 256, + 1} a lane |
+| rup | 8 x 16 + 3 = 131 | {v, sector 15} |
+| wup | 8 x 280 + 3 = 2,243 | {v, sector 15, data 256, word mask 8} |
+| wdn | 8 x 2 + 3 = 19 | credits / done |
+
+- Client taps (lanestation local side): rdn 2,065, wdn 17, rup 129, wup 2,241.
+- Lane b ↔ local bank b.
+- Slot list a cluster: SU 0, SFU 1, HC 2, ATT (quadrant tiles) 3, SM x-load (VM8 quarter) 4. KE = 5 slots, a
+  round-robin lanearb.
+- TBD: whether attention takes its own station or shares the SU station (attention stream).
+
+**HC aperture a quarter.** `vmap_<q>` is 556 b (2 lanes x 278), plus `vmap_<q>_r` of 4 b (ap credit 2 + done 2).
+- The HC tile's `xw_*` / aperture port is fed from its local slice; lane k = local bank k mod 8, 2 lanes a quarter.
+- TBD: the HC stream confirms 2 vs 4 lanes.
+
+**Packet clients (cq / cr)** are unchanged: 338 / 274 b, OUT = 4, responses in order. A client is wired to its local
+slice, or the nearest one for central units. The slice forwards a non-local address over the ring.
+
+**Ring link** (each direction, `ot_hgi_vm_ring`), 2,148 b:
+- fields `{v, kind 3 (RD_REQ / RD_RSP / WR / REPL_WR / RED_CARRY / COLL_BC), src 2, dst 2, tag 16, sector_addr 15,
+  data 2,048 (8 sectors x 256), word mask 64, epoch 4, …}`;
+- `kind`, `src`, `dst` and `epoch` are fixed. The exact field packing is TBD (VM slice stream) inside the 2,148 b;
+- credit return: 4 b a direction, credits = relay stages x 2 + 4 (TBD from the stage counts in section 7);
+- latency: the hop stages in section 5;
+- deadlock freedom: the ring is a 4-node cycle, so RD_REQ, RD_RSP and WR traffic use 2 virtual channels (request and
+  response) with separate credits (dateline at the SW-SE link).
+
+**COLL broadcast.** `vcb` is 1,088 b: `{v, sector_addr 15, data 1,024 (4 sectors), mask 32, epoch 4, …}` plus a 2-b
+credit. Tree: coll → SW → NW, and coll → SE → NE. It writes REPL (or the owning slice) without a barrier.
+
+**Ring-client tap** (cmdproc CP → NW, ATT adapter → NE, quant → NW, hc_eng → SE). It is the 8-lane tap above
+(4,452 b). Remote banks are reached through the ring.
+
+**Ownership and dispatch.** cmdproc dispatches a record to cluster q when its operands are owned by q. A record with
+operands spanning clusters is issued as 4 per-cluster sub-records (STRIPE4) in one dispatch beat. The cmdproc address
+→ slice function is exactly `addr_word[17:16]`, and REPL is ≥ 262,144.
 
 ## 3. Hard rules (owner, binding)
 
