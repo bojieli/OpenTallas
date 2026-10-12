@@ -1,5 +1,5 @@
 {
- "name": "hrow5_cbe-r5c-COMMIT",
+ "name": "hrow5_cbe-r5c-119b97413",
  "block": "dsfd_mtp_hrow_cbe",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-mtp-cbw",
-  "commit": "COMMIT"
+  "commit": "119b97413"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_cbe/hrow5_cbe-r5c-COMMIT"
+   "to": "results/rtl/ref_tile/hrow5_cbe/hrow5_cbe-r5c-119b97413"
   }
  ],
  "cycles_added": 0,
