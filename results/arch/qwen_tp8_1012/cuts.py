@@ -23,6 +23,9 @@ FINE = 260.0
 # every block); 'v3' applies the cap to every block whose master is not hard IP (HBM PHY, SerDes, UCIe, PLL, clock rx).
 CAP_MODE = 'asbuilt'
 HARD_IP = ('ot_hbm3e_phy', 'qfd_io_serdes', 'qfd_io_ucie', 'qkd_pll', 'qfd_clkrx')
+# coordinator DECISION 2026-10-12 12:15: qfd_tile_nk / h3c / h3s is a CLUSTER slot (hard ROM/SRAM/leaf children, M2-M7,
+# PG M7): the die routes over it on M8+ only, so for the die cut model it counts like hard IP (die layer only).
+CLUSTER = ('qfd_tile_nk', 'qfd_tile_h3c', 'qfd_tile_h3s')
 
 
 def dump(out):
@@ -46,7 +49,7 @@ class Net:
         d = json.load(open(path)); self.I = I = {i['n']: i for i in d['insts']}
         bl = [i for i in d['insts'] if i['w'] * i['h'] > 4e4]
         self.blocks = np.array([(i['x'], i['y'], i['x'] + i['w'], i['y'] + i['h']) for i in bl])
-        self.cap5 = np.array([CAP_MODE == 'v3' and i.get('m', '') not in HARD_IP for i in bl])
+        self.cap5 = np.array([CAP_MODE == 'v3' and i.get('m', '') not in HARD_IP + CLUSTER for i in bl])
         self.W = max(i['x'] + i['w'] for i in d['insts']); self.H = max(i['y'] + i['h'] for i in d['insts'])
         cen = lambda i: (i['x'] + i['w'] / 2, i['y'] + i['h'] / 2)
         cl = lambda i, P: (min(max(P[0], i['x']), i['x'] + i['w']), min(max(P[1], i['y']), i['y'] + i['h']))
