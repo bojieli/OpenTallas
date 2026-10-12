@@ -13,3 +13,7 @@ DS-shape vectors (`/srv/opentallas-scratch/claude/hgi-tput-1010/vec/qdqvec`).
 Rate: one 32-element beat a cycle (unchanged). Fixed latency +20 cycles a record against ot_hgi_quant_wide (n 512: 87 vs 65;
 n 128: 73 vs 53; 8 records 663 vs 503): relay registers on the long seams, registered tile seams, 2-level gather OR, the
 decode tile's input/output flops and the SRAM result FIFO's read + capture.
+
+
+## adc3fb5d8 (el1011-hbm-fq 10-11 23:58): vector credit checks, write-head lookahead, registered SRAM read issue
+Same gate (WQ=2, Verilator 5.032, ot-epyc4): m0 PASS 3,328 words exact, w3 PASS, m1 FAIL (fault), w1 FAIL (MISMATCH) -> QDQ_WIDE_TPUT GATE PASS. 8 records 687 cycles (was 663 at 53eba91c4: +3 a record of fixed latency), rate one beat a cycle unchanged. Logs in this directory are the adc3fb5d8 run.
