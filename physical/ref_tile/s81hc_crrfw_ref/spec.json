@@ -1,0 +1,70 @@
+{
+ "name": "s81hc_crrfw_ref",
+ "top": "ot_s81_hc_crootr_f",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "C": 0
+ },
+ "clock_port": "sk",
+ "reset_ports": [
+  "srs"
+ ],
+ "outline": {
+  "w": 276.48,
+  "h": 597.24
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "N": [
+   "p_req",
+   "p_y"
+  ],
+  "E": [
+   "f_fv",
+   "f_fd"
+  ],
+  "S": [
+   "ch_fv",
+   "ch_fd",
+   "ch_rst"
+  ],
+  "W": [
+   "sk",
+   "srs"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.01,
+  "pin_min_tracks": 1
+ },
+ "job": {
+  "owner": "Claude:el1011-s81hc-crootr",
+  "branch": "claude/el1011-s81hc-crootr",
+  "tag": "v1",
+  "purpose": "[hc-crootr] crootr v2 4-tile split, C=0 (comb E): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootrw_ref (one 34.6k-sink root, hold WNS frozen -102 ps); pins every track (pin_min_tracks 1): the slab faces carry 8-11 pins/um (v1 crootr E face 9.75/um), 2-track slots run out (PPL-0111 at gate), 1-track slots put them at ~50%",
+  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
+  "views_to": "physical/ref_tile/s81hc_crrfw_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_crrfw_ref"
+ },
+ "inhold": true,
+ "pin_ranges": {
+  "f_fv": [
+   180.0,
+   186.0
+  ],
+  "f_fd": [
+   187.0,
+   368.4
+  ]
+ },
+ "children": [],
+ "inter": []
+}
