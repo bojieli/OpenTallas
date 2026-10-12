@@ -16,13 +16,14 @@ proc ot_sny {v} { return [expr {floor($v / 0.27) * 0.27}] }
 foreach inst [$b getInsts] {
     set m [[$inst getMaster] getName]
     set n [$inst getName]
-    set hi [string match {*u_hi} $n]
+    set nn [string map {\\ {}} $n]          ;# getName returns escaped brackets (g_b\[0\]...): parse the plain form
+    set hi [string match {*u_hi} $nn]
     if {[string match ot_sram_1r1w_256x256* $m]} {
-        if {![regexp {g_b\[(\d+)\]} $n -> r]} { error "vm_grp_place: unparsed $n" }
+        if {![regexp {g_b\[(\d+)\]} $nn -> r]} { error "vm_grp_place: unparsed $n" }
         set x [lindex $colx $hi]
         set y [expr {$e + $r * (41.04 + $gs)}]
     } elseif {[string match ot_sram_1r1w_1024x256* $m]} {
-        if {![regexp {g_c\[(\d+)\]\.g_s\[(\d+)\]} $n -> c j]} { error "vm_grp_place: unparsed $n" }
+        if {![regexp {g_c\[(\d+)\]\.g_s\[(\d+)\]} $nn -> c j]} { error "vm_grp_place: unparsed $n" }
         set x [lindex $colx [expr {2 + $hi}]]
         set y [expr {$e + (2 * $c + $j) * (70.47 + $gb)}]
     } else { continue }
