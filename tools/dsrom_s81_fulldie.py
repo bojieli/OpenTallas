@@ -2035,6 +2035,7 @@ def _gen_pg_lef(mst):
     return '\n'.join(L)
 
 
+IR_GUARD = 2           # IR window guard band, in VDD bump pitches (case_irm)
 PG_TILE = 43.2         # current-sink tile of a generated block in the IR model: 4 M7 PG pitches (10.8 um), < 1 bump pitch
 PDN_THIN_OFF = 0.5     # local die-M8 strap offset inside a thin block (its M7 stripes span 0.3 .. h-0.3)
 
@@ -2125,10 +2126,18 @@ def case_irm(m, work, window, cov, vdd_pitch=None, peak=True):
     q element's and every generated abstract's M7 PG stripes (M7-M8 vias) and to the cfg ROMs' M4 rails through an
     M5 macro grid (M4-M5, M5-M8 via stacks); PSM solves the grid with each instance's power on its own pins."""
     work.mkdir(parents=True, exist_ok=True)
-    x0, y0, x1, y1 = windows(m)[window]
-    x0, y0 = max(0.0, dn(x0, GX)), max(0.0, dn(y0, GY))
-    W, H = round(x1 - x0, 3), round(y1 - y0, 3)
     vp = vdd_pitch or BUMP_PITCH / math.sqrt(0.5)
+    # guard band (el1012-s81pdn): the window is solved with IR_GUARD bump pitches of the surrounding die (its blocks,
+    # its bumps, its grid) on every side and judged on the inner window only.  Without it the window edge is an
+    # open boundary -- the first VSS bump column sits a full pitch (63.6 um) in from the cut, and the field's
+    # edge-column q elements read 40.2 mV against 29.7 mV one column in (v4).
+    ix0, iy0, ix1, iy1 = windows(m)[window]
+    g = IR_GUARD * vp
+    x0, y0 = max(0.0, dn(ix0 - g, GX)), max(0.0, dn(iy0 - g, GY))
+    x1, y1 = min(DIE[0], ix1 + g), min(DIE[1], iy1 + g)
+    inner = (round(max(ix0, x0) - x0, 3), round(max(iy0, y0) - y0, 3), round(min(ix1, x1) - x0, 3),
+             round(min(iy1, y1) - y0, 3))
+    W, H = round(x1 - x0, 3), round(y1 - y0, 3)
     p = cov['field']
     raw = dn(0.48 / p, 0.160)
     n = math.ceil(vp / raw - 1e-9)
@@ -2248,6 +2257,16 @@ foreach net {{VDD VSS}} {{
   set_pdnsim_net_voltage -net $net -voltage [expr {{$net eq "VDD" ? {VDD_V} : 0.0}}]
   if {{[catch {{analyze_power_grid -net $net -vsrc /work/vsrc_$net.loc -voltage_file /work/ir_$net.rpt -error_file /work/ir_err_$net.rpt}} err]}} {{
     puts "OT_IR net=$net status=FAIL err=$err" }} else {{ puts "OT_IR net=$net status=PASS" }}
+  set f [open /work/ir_$net.rpt r]; gets $f; set w 0.0; set wl ""
+  while {{[gets $f line] >= 0}} {{
+    set c [split $line ,]; set x [lindex $c 3]; set y [lindex $c 4]; set v [lindex $c 5]
+    if {{$x >= {inner[0]} && $x <= {inner[2]} && $y >= {inner[1]} && $y <= {inner[3]}}} {{
+      set d [expr {{$net eq "VDD" ? {VDD_V} - $v : $v}}]
+      if {{$d > $w}} {{ set w $d; set wl $line }}
+    }}
+  }}
+  close $f
+  puts "OT_IR_INNER net=$net worst_mv=[format %.2f [expr {{$w * 1000.0}}]] budget_mv=35 at=$wl"
 }}
 puts "OT_TIME psm_s=[expr {{[clock seconds]-$t0}}]"
 exit
@@ -2256,6 +2275,7 @@ exit
     kinds = {it.name: it.kind for it in ins}
     (work / 'kinds.json').write_text(json.dumps(kinds))
     meta = dict(case='c', method='real element abstracts + pdngen + PSM', window=window, window_um=[x0, y0, x1, y1],
+                inner_um=[ix0, iy0, ix1, iy1], inner_local_um=list(inner), guard_um=round(g, 3),
                 size_um=[W, H], instances=len(ins), clipped=sorted(clip_pw), power_w=round(sum(power.values()), 4),
                 power_w_per_mm2=round(sum(power.values()) / (W * H / 1e6), 4), coverage=cov,
                 strap_pitch_um=pitch, strap_offset_um=off, masters=masters_used, pg_tile_um=PG_TILE,
