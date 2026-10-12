@@ -567,6 +567,14 @@ R25GQ_V8 = dict(   # hbm-die-iter contract v8 (10-12): the 19 hfd_hc pins the cl
     # 0.5 of M4/M5 for PDN stripes + relay pin access -> 1,335,381 (-37 %); lane-group splits (lgE -> E + E2, W+E) were
     # +29 % and fail reach (3 lgE rdn segments 545-912 um): rejected
     grt_m45=0.5)
+# hbm-die-iter contract v9 (10-12, D22): the HGI HC unit gets its own die slot hb_hgi_hc (hfd_hgi_hc = ot_hgi_hc_unit + the
+# hard ot_hgi_hc_tile cluster of hbm-hcvm [hc], 656.64 x 725.76): 2,016 x 820.8 directly N of hb_sfu_SW (same x span), in
+# the free band between hb_sfu_SW and hb_sfu_NW, ~1.2 mm from the VM W face (the quarter's E face was ~3.6 mm away).  The
+# column under hb_hc_SW was tried first: its lgW hop ran down the 345-um HC | SU channel and failed reach (4.8 mm).  Its 10 die ports (record cmdproc 939 / 3, VM packet vmq 338 / vmr 274, aperture vmap 2,224 / 16,
+# lgW client tap rdn 8,257 / wdn 65 / rup 513 / wup 8,961) move off the closed quarter, which keeps exactly its 19 ports.
+# The lgW chain's third client station abuts the slot's S face, facing the SFU's N-face station (hop < 100 um).
+HGI_HC_PORTS = ('f_hgi_cmdproc', 't_hgi_cmdproc', 't_hgi_vmq', 'f_hgi_vmr', 'f_hgi_vmap', 't_hgi_vmap',
+                'f_lgW_rdn', 'f_lgW_wdn', 't_lgW_rup', 't_lgW_wup')
 R25GQ_PR = dict(phys_free_min=0.45,  # rf2: a 100-um route cell < 45 % free (a <= 43-um abutment gap; every 84-um lk_ep channel keeps one cell >= 46 %) is a block for
                 # physical-relay / clock-tree routes: no station or buffer pair fits a stage there
                 pinned_faces='physical/hbm_accel_die_views/ports_r25gqn', hgi_idx_wh=(1270.08, 1719.36), spine_over_n=1836.0, phys_relays=True, relay_tree=True, phys_block_cost=400.0, svc_ch_dh=108.0, relay_repair_rounds=10,
@@ -1061,6 +1069,18 @@ def build_r25gq_net(variant):
                and bx_[1] - 100 < i.y + i.h and i.y < bx_[3] + 100]
         assert not hh_, ('hc_eng slot overlaps', hh_)
         insts.append(hce_)
+    if V.get('hgi_hc_slot'):    # hbm-die-iter D22 (contract v9): the HGI HC unit (ot_hgi_hc_unit + its hard hc tile
+        # cluster, hbm-hcvm [hc]) is its own die slot.  The closed hfd_hc quarter (cons B, 88 hfd_hc_tile_xl) has only its
+        # 19 ports (sfu / ck / rst); the unit's record (cmdproc 939 / 3), VM packet (vmq 338 / vmr 274), aperture (vmap
+        # 2,224 / 16) and lgW client tap (17.8 kb) land here, N of hb_sfu_SW (the lgW client after the SFU)
+        hs_ = V['hgi_hc_slot']
+        hgh_ = Inst(hs_['name'], hs_['master'], dn(hs_['xy'][0], GX), dn(hs_['xy'][1], GY), up(hs_['wh'][0], GX),
+                    up(hs_['wh'][1], GY), 'R0', kind='hub', region='hub')
+        bx_ = hgh_.box()
+        hh_ = [i.name for i in insts if i.kind != 'waypoint' and bx_[0] - 100 < i.x + i.w and i.x < bx_[2] + 100
+               and bx_[1] - 100 < i.y + i.h and i.y < bx_[3] + 100]
+        assert not hh_, ('hgi_hc slot overlaps', hh_)
+        insts.append(hgh_)
     ep_of = {}
     if V.get('link_ep') and V.get('link_ep_v2'):
         V['link_ep'] = dict(V['link_ep'], **V['link_ep_v2'])
@@ -1190,7 +1210,7 @@ def build_r25gq_net(variant):
     for w, it in wps.items():
         # nearest terminals per neighbour subtree (graph distance on R25GPH centres)
         best = {}
-        for nb in adj[w]:
+        for nb in sorted(adj[w]):      # die-iter 10-12: sorted (set order made the die PYTHONHASHSEED-dependent)
             seen, stack = {w}, [(nb, abs(c0(nb)[0] - c0(w)[0]) + abs(c0(nb)[1] - c0(w)[1]))]
             while stack:
                 n, d_ = stack.pop()
@@ -1201,10 +1221,10 @@ def build_r25gq_net(variant):
                     if nb not in best or d_ < best[nb][1]:
                         best[nb] = (n, d_)
                     continue
-                for n2 in adj[n]:
+                for n2 in sorted(adj[n]):
                     if n2 not in seen:
                         stack.append((n2, d_ + abs(c0(n2)[0] - c0(n)[0]) + abs(c0(n2)[1] - c0(n)[1])))
-        ends = sorted(best.values(), key=lambda t: t[1])
+        ends = sorted(best.values(), key=lambda t: (t[1], t[0]))
         if not ends:
             continue
         if len(ends) == 1:
@@ -1303,6 +1323,12 @@ def build_r25gq_net(variant):
               for q in ('SW', 'SE', 'NW', 'NE')] if V.get('att_e2') else []) + \
             [(f'hgi_iks_{q}', 'expert_req', 128 + 1, ('hb_hgi_idx', f't_hgi_iks{q}'), (f'svc_{q}_s3', 'e'))   # [svc] IKS issuer
              for q in ('SW', 'SE', 'NW', 'NE')]     # -> the free svc e pins (ef_<st> skipped on HGI dies); 128 b + fclk
+    if V.get('hgi_hc_slot'):    # D22: retarget the HGI HC unit's buses from the quarter to its own slot
+        hs_ = V['hgi_hc_slot']
+        frm_, hp_ = hs_['from'], set(hs_['ports'])
+        rt_ = lambda e: (hs_['name'], e[1]) if e[0] == frm_ and e[1] in hp_ else e
+        buses = [(b_, c_, w_, [rt_(e) for e in eps]) for b_, c_, w_, eps in buses]
+        extra = [(b_, c_, w_, rt_(a_), rt_(z_)) for b_, c_, w_, a_, z_ in extra]
     by = {i.name: i for i in insts}
     nst = 0
     lane_rec = {}
@@ -6027,6 +6053,18 @@ def case_ir(m, work, window, cov):
     return meta
 
 
+def r25gq_v9():
+    """contract v9 = v8 + D22 (the HGI HC unit slot hb_hgi_hc; see HGI_HC_PORTS)"""
+    ls_ = R25GQ['lane_stations']
+    w_ = dict(ls_['W'], stations=tuple(st if st[0] != 'hb_stn_lgW_hc' else ('hb_stn_lgW_hc', 'hb_hgi_hc', 'S', 2016.0)
+                                       for st in ls_['W']['stations']))
+    lg_ = dict(R25GQ['lane_groups'], W=tuple('hb_hgi_hc' if n_ == 'hb_hc_SW' else n_ for n_ in R25GQ['lane_groups']['W']))
+    return dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8), lane_stations=dict(ls_, W=w_), lane_groups=lg_,
+                dense_face_masters=tuple(R25GQ['dense_face_masters']) + ('hfd_hgi_hc',),
+                hgi_hc_slot=dict(name='hb_hgi_hc', master='hfd_hgi_hc', xy=(11173.0, 12290.4),
+                                 wh=(2016.0, 820.8), ports=HGI_HC_PORTS, **{'from': 'hb_hc_SW'}))
+
+
 def variant_arg(v):
     """'' -> the adopted default (r16g); 'r8' -> the r1-r8 geometry; 'r10' / 'r14b' / 'r15' / 'r15m' / 'r16e' presets; a JSON dict
     -> those keys (absent keys = r8 behaviour); a JSON dict with "base": preset -> the preset updated with the keys."""
@@ -6035,7 +6073,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gqn_pr9=r25gq_v9(), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
