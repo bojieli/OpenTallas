@@ -478,7 +478,9 @@ def gen_place(s: dict, blocks: list) -> str:
              "  foreach i [dict get $by $master] {",
              "    set n [ot_ref_strip [$i getName]]",
              "    if {[lsearch -exact $used $n] >= 0} continue",
-             "    if {$pat ne \"\" && ![string match [ot_ref_strip $pat] $n]} continue",
+             "    set sp [ot_ref_strip $pat]",
+             "    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)",
+             "    if {$pat ne \"\" && $sp ne $n && ![string match $sp $n]} continue",
              "    lappend used $n; return $i", "  }",
              "  error \"ref_tile place: no unplaced instance of $master matching '$pat'\"", "}",
              "set ot_ref_n 0"]
