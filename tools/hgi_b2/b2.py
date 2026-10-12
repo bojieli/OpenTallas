@@ -283,6 +283,9 @@ def split_of(M, r, die, L):
     if red and whole:
         mode = "RSPLIT" if no > 1 else "ESPLIT"
         chain = "SUM" if red == MC.I.RED_SUM else "MAX"
+    elif red and no == NQ:
+        mode = "RSPLIT"                 # one row per cluster (the DS HC residual's 4 streams): a row reduction stays on
+                                        # its cluster in golden order, and the partition matches the elementwise ops below
     elif red:
         if ni >= NQ * 64 or no < NQ:
             mode, chain = "ESPLIT", ("SUM" if red == MC.I.RED_SUM else "MAX")
@@ -292,7 +295,10 @@ def split_of(M, r, die, L):
         # elementwise: any partition is exact, so follow the long axis -- a [heads x positions] softmax buffer splits by
         # POSITION like its QK producer / ESPLIT reductions / PV consumer (a head split here made every P word needed by
         # two clusters: 65,536 MIRROR words at Qwen P8191, 2.3x the REPL window)
-        mode = "ESPLIT" if ni >= NQ * 64 else ("RSPLIT" if no >= NQ else "ESPLIT")
+        # ROWS == CLUSTERS (the DS HC residual, 4 streams x hidden): one row per cluster, so the residual, its engram
+        # mixes and their row reductions (RSPLIT above) share ONE partition and the residual stays LOCAL (a column
+        # split here against the row-split reductions made all 20,480 residual words MIRROR at L14)
+        mode = "RSPLIT" if no == NQ else "ESPLIT" if ni >= NQ * 64 else ("RSPLIT" if no >= NQ else "ESPLIT")
     s = Split(mode, (no, ni), chain)
     for q in range(NQ):
         s.part[q] = (rng(no, q), (0, ni)) if mode == "RSPLIT" else ((0, no), rng(ni, q))
