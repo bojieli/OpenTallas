@@ -312,7 +312,9 @@ MTB = 0x170000000                    # MTP constants (ONE4 = 1, 0, 0, 0)
 COLB = 0x180000000                   # column slot store: COLB + slot * CSTR (dyn_sel TOKEN)
 ROPEB = 1 << 31                      # plain RoPE rows: ROPEB + pos * 256 (cos 32 | sin 32, dyn_sel POS)
 ZT, HT = 261376, 261440              # VM: the END token word of non-head kernels (0); the head stub's table HT[pos]
-SLOT = (("h", 0, 20480), ("PRE", 81920, 4))
+# PRE rides the swap as one whole 32 B sector (8 words: the 4 pre-mix words + 4 words of the 64-word-aligned VM PRE
+# slot): an HBM write is whole sectors (the DMA write paths have no byte enables; the mover refuses a partial sector)
+SLOT = (("h", 0, 20480), ("PRE", 81920, 8))
 # The index selection (SELIDX) and the layer-20 candidate table (CANDM) are per-POSITION transients written by the
 # index-source layers and read by later layers of the same position: they move to position-indexed rows (SELB / CANDB +
 # (POS mod 16) * stride, written by the writer layer's body, loaded by the readers' bodies -- rollback-safe like the
@@ -696,8 +698,9 @@ class Kernels:
             O=self.V("x", 5120, fmt="BF16")), tag="dhead.norm", family="mtp"), ["h", "PRE"], ["x"])
         r0, r1 = self.mv(b, rank, "head.weight", "head", 5120, "bf16", self.V("x", 5120), "logits", "FP32",
                          local=True, tag="dhead.lm_head")
-        b.add(self.Rec("DMA", "STORE", desc=dict(A=self.V("logits", r1 - r0), O=self.H(DLOG, r1 - r0, dyn_sel=3,
-                                                                                         dyn_mul=1352 * 4)),
+        n8 = -(-(r1 - r0) // 8) * 8                  # whole sectors (logits is 1,352 words: the pad stays in the row)
+        b.add(self.Rec("DMA", "STORE", desc=dict(A=self.V("logits", n8), O=self.H(DLOG, n8, dyn_sel=3,
+                                                                                    dyn_mul=1352 * 4)),
                        tag="dhead.store", family="mtp"), ["logits"], ["DLOG"])
         return b.recs + [self.fence(), self.end()]
 
