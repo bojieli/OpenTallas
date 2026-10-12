@@ -124,6 +124,7 @@ UNPLACED = {
 
 SEAM_CHECK = dict(
     tool='tools/hbm_accel_die_seam_check.py (preflight; hbmdie-1011, to land with contract v2)',
+    region_gate='tools/hier_contract/child_lint.py PASS on every tile / cluster LEF+libs placed in a die region (incl. (f) pin access, (d) TT/FF/SS libs) before that region route is submitted; hfd_hc_tile_xl @5c35b1a6e FAILS (449 blocked pins, no TT view) -> cons re-route with the pin-access hook',
     preflight_criteria=[
         'every seam = flop -> wire -> flop: driver pin is a registered output and load pin a pin-flop input in the '
         'child abstract (lib timing arc from the clock pin only)',
@@ -182,6 +183,62 @@ def gen_ports(mst):
         else:
             out[port] = dict(raw=[str(v) for v in p])
     return out
+
+
+def _lay(v):
+    m_ = re.findall(r'M[1-9]', v or '')
+    return m_[0] if m_ else None
+
+
+def to_schema(rec, a):
+    """opentallas.hier_contract.v1 (tools/hier_contract/contract.schema.json): one slot per die instance; pins on the
+    first instance of each cell (the others carry a note), the hbmdie-1011 detail in the _detail.json sidecar."""
+    slots = [dict(name='die', cell='hbm_r25gq_top', kind='die', parent=None,
+                  outline=dict(w=rec['die_outline_um'][0], h=rec['die_outline_um'][1]), origin=dict(x=0.0, y=0.0, orient='R0'),
+                  io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2), clock_entry=dict(pin='pll_ck', face='S', layer='M9'),
+                  pg_layer='M9', strap_layer='M9', signal_max_layer='M9', version=a.version,
+                  notes='die top: M8/M9 straps + die-region routes (tiles / clusters fixed macros)')]
+    for cell, sl in rec['slots'].items():
+        pins = []
+        for pn, pv in sl['pins'].items():
+            f = pv.get('face')
+            l_ = _lay(pv.get('layer'))
+            if f not in ('N', 'S', 'E', 'W') or not l_:
+                continue
+            b_ = pv.get('bits') or 1
+            pe = dict(name=f'{pn}[{b_ - 1}:0]' if b_ > 1 else pn, face=f, layer=l_)
+            if pv.get('centre_um') is not None:
+                pe['offset'] = pv['centre_um']
+            elif pv.get('span_um'):
+                pe['offset'] = round(sum(pv['span_um']) / 2, 3)
+            pins.append(pe)
+        ce = sl['clock_entry']
+        ce0 = next((dict(pin=c['pin'], face=c['face'], layer=_lay(c.get('layer')),
+                         **({'offset': c['centre_um']} if c.get('centre_um') is not None else {}))
+                    for c in ce if isinstance(ce, list) and c.get('face') in ('N', 'S', 'E', 'W') and _lay(c.get('layer'))),
+                   None) if isinstance(ce, list) else None
+        ip = ('IP macro: own PDN, die connects at its pins' if sl['hierarchy']['decision'] == 'hard_macro_ip' else '')
+        for k_, inst in enumerate(sl['instances']):
+            s_ = dict(name=inst['name'], cell=cell, kind='element', parent='die',
+                      outline=dict(w=sl['outline_um'][0], h=sl['outline_um'][1]),
+                      origin=dict(x=inst['xy'][0], y=inst['xy'][1], orient=inst['orient'] if inst['orient'] in ('R0', 'MX', 'MY', 'R180') else 'R0'),
+                      io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True),
+                      clock_entry=ce0 or dict(pin='ck', face='N', layer='M7'),
+                      pg_layer='M7', strap_layer='M8', signal_max_layer='M7', version=a.version,
+                      notes=(f"hierarchy {sl['hierarchy']['decision']}" + (f'; {ip}' if ip else '') +
+                             ('' if ce0 else '; clock entry = die H-tree leaf at the block ck pin (phys_trees)') +
+                             ('' if k_ == 0 else f"; pins as {sl['instances'][0]['name']}")))
+            if k_ == 0:
+                s_['pins'] = pins
+            slots.append(s_)
+    return dict(schema='opentallas.hier_contract.v1', die='hbm_r25gq', version=a.version, owner='hbmdie-1011',
+                updated=__import__('datetime').datetime.now().astimezone().isoformat(timespec='minutes'),
+                clock_period_ps=PERIOD_PS,
+                layer_defaults=dict(pg_layer='M7', strap_layer='M8', signal_max_layer='M7'),
+                changelog=[dict(version=d.get('version', a.version), change=d['note']) for d in rec['versions']] +
+                          [dict(version=a.version, change=f"{x['id']} {x['slot']}: {x['change']} [{x['status']}]")
+                           for x in rec['deltas']],
+                slots=slots)
 
 
 def main(argv=None):
@@ -275,7 +332,10 @@ def main(argv=None):
                              stages=lambda bid, L: 0, limit=100000, edges=True)
         rec['relays']['segments_over_reach_physical_only'] = ml_.get('reach_violations')
     a.out.parent.mkdir(parents=True, exist_ok=True)
-    a.out.write_text(json.dumps(rec, indent=1) + '\n')
+    detail = a.out.with_name(a.out.stem + '_detail.json')
+    rec['schema'] = 'hbmdie-1011 detail (sidecar of the opentallas.hier_contract.v1 file ' + a.out.name + ')'
+    detail.write_text(json.dumps(rec, indent=1) + '\n')
+    a.out.write_text(json.dumps(to_schema(rec, a), indent=1) + '\n')
     print(json.dumps(dict(out=str(a.out), slots=len(slots), waypoints=sum(wp.values()),
                           clusters=sorted(k for k, v in slots.items() if v['hierarchy']['decision'] == 'hardened_cluster'),
                           relays=rec['relays'].get('segments_over_reach_physical_only'))))
