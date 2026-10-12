@@ -642,7 +642,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         "name": name, "block": s["top"], "ref_tile": True,
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),
-        "hosts": j.get("hosts", ["ot-epyc1tb", "ot-epyc2", "ot-epyc3", "ot-pve1"]),
+        **({"hosts": j["hosts"]} if j.get("hosts") else {}),   # no default host list: the loop places jobs (EPYC2/3 retired 10-12)
         "threads": int(r.get("threads", 8)), "peak_ram_gb": int(r.get("peak_ram_gb", 32)),
         "source": {"branch": j.get("branch", "main"), "commit": commit or "COMMIT",
                    **({"extra_paths": j["extra_paths"]} if j.get("extra_paths") else {})},
