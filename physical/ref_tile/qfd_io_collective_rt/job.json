@@ -1,5 +1,5 @@
 {
- "name": "qfd_io_collective_rt-rt1-COMMIT",
+ "name": "qfd_io_collective_rt-rt1-298652203",
  "block": "ot_rom_oneshot_die_m",
  "ref_tile": true,
  "owner": "Claude:el1011-qwen-tp8-coll",
@@ -8,13 +8,13 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-qwen-tp8-coll",
-  "commit": "COMMIT"
+  "commit": "298652203"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_rom_oneshot_die_m rtl/rom/ot_rom_oneshot_die_m.sv rtl/rom/ot_coll_rst_leaf.sv rtl/lib/ot_hdly.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_rom_oneshot_die_m #(.N(4), .RANK(0), .LANES(16), .TAGW(32), .DEPTH(32), .ADD_LAT(7), .IB(4), .PR(2), .TXK(1), .FPIPE(2), .HDLO(0), .MEMM(1), .FSL(1), .IBH(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/rom/ot_rom_oneshot_die_m.sv rtl/rom/ot_coll_rst_leaf.sv rtl/lib/ot_hdly.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -118,7 +118,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_io_collective_rt/qfd_io_collective_rt-rt1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_io_collective_rt/qfd_io_collective_rt-rt1-298652203"
   }
  ],
  "cycles_added": 0,

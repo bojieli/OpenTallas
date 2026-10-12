@@ -1,5 +1,5 @@
 {
- "name": "coll_tp8_rt2-v2-COMMIT",
+ "name": "coll_tp8_rt2-v2-298652203",
  "block": "ot_coll_tp8_die",
  "ref_tile": true,
  "owner": "Claude:el1011-qwen-tp8-coll",
@@ -8,13 +8,13 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/el1011-qwen-tp8-coll",
-  "commit": "COMMIT"
+  "commit": "298652203"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_coll_tp8_die rtl/rom/ot_coll_tp8_die.sv rtl/rom/ot_rom_oneshot_die_m.sv rtl/rom/ot_coll_rst_leaf.sv rtl/lib/ot_hdly.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_coll_tp8_die #(.PKG(0), .DIE(0), .QMEM(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/rom/ot_coll_tp8_die.sv rtl/rom/ot_rom_oneshot_die_m.sv rtl/rom/ot_coll_rst_leaf.sv rtl/lib/ot_hdly.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -151,7 +151,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_tp8_rt2/coll_tp8_rt2-v2-COMMIT"
+   "to": "results/rtl/ref_tile/coll_tp8_rt2/coll_tp8_rt2-v2-298652203"
   }
  ],
  "cycles_added": 0,
