@@ -35,7 +35,7 @@ module tb_hgi_b2_disp;
     function automatic [3:0] ohs(input [1:0] s); ohs = 4'd1 << s; endfunction
     function automatic t_own(input [255:0] d);
         reg [17:0] a; begin a = d[25:8];
-            t_own = (d[1:0] == 2'd1) && !(!d[26] && a >= MLO && a < MHI) && (!d[26] || d[25:24] == 2'd0); end
+            t_own = (d[1:0] == 2'd1) && !(!d[26] && a >= MLO && a < MHI) && !d[26]; end   // SPEC v0.4: word addr >= 2^18 = REPL window, never an owner
     endfunction
     function automatic [3:0] t_route(input [2:0] u, input [2197:0] p);
         reg [255:0] o, a, b, c, d;
@@ -65,7 +65,7 @@ module tb_hgi_b2_disp;
             if (d[1:0] == 2'd1) begin
                 d[47:8] = 40'd0; d[25:8] = $urandom;
                 if ($urandom % 16 == 0) d[25:8] = MLO + ($urandom % 8192);       // mirror window
-                if ($urandom % 32 == 0) d[26] = 1'b1;                           // HC aperture
+                if ($urandom % 32 == 0) d[26] = 1'b1;                           // REPL window (SPEC v0.4)
             end else if (d[1:0] == 2'd0) begin
                 d[47:8] = {$urandom, $urandom}; d[47:45] = ($urandom % 4 == 0) ? 3'd1 : 3'd0;   // STRIPE4 sometimes
             end

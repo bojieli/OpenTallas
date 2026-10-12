@@ -1,0 +1,100 @@
+{
+  "name": "ot_hgi_topk_heap_tile",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/routes/hgi_topk_heap_rt_b_w8s_402f8bf83/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.7776780875399254e-10 min -7.776237986867329e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/routes/hgi_topk_heap_rt_b_w8s_402f8bf83/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/record/views/ot_hgi_topk_heap_tile:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/ref_tile/hgi_topk_heap_rt_b/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.4274948717817324e-10 min -7.99229571413207e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/routes/hgi_topk_heap_rt_b_w8s_402f8bf83/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/record/views/ot_hgi_topk_heap_tile:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/ref_tile/hgi_topk_heap_rt_b/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 5.882094811227034e-11 min -7.722081307726114e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/routes/hgi_topk_heap_rt_b_w8s_402f8bf83/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/record/views/ot_hgi_topk_heap_tile:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/ref_tile/hgi_topk_heap_rt_b/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/ref_tile/hgi_topk_heap_rt_b/signoff.sdc",
+    "sha256": "b052dc53a23fc3251dfb097be83a50e611d60727b2b8e377c065924686412672",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+    "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_heap_rt_b-w8s-402f8bf83/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "files": {
+    "ot_hgi_topk_heap_tile.lef": "2e623a07971af31d7d25a62ebdab1a7842483633d7338671521a0431557b9db7",
+    "ot_hgi_topk_heap_tile_ff.lib": "c8be6ee5ab0a678efe01e53d35ef5ab6cea882dc5b32d58fcd26d7b4eab5fc9a",
+    "ot_hgi_topk_heap_tile_ss.lib": "7c0d6dc576959839cbb837f3336d892fc920f45b0c7d2b2ae283430867ce014d",
+    "ot_hgi_topk_heap_tile_tt.lib": "8da31652017fd7ac43f7c50e7bb681b7c994d9aec3570139a6914608c07802ff"
+  },
+  "ok": true
+}

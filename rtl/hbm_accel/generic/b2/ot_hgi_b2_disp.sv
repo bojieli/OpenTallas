@@ -8,7 +8,7 @@
 //   * route (at FIFO write, from the cp_die flops; per-unit decode in parallel, then a one-hot 5:1 of 4-bit masks):
 //       SM / ATT  -> all four clusters (each cluster's SMs / heads clip to their quarter);
 //       SU / SFU  -> the HOME slice of O (owner computes): VM word address [SSH+1:SSH]; O not VM or in the mirror window
-//                    [mlo, mhi) -> the home of the first VM non-mirror operand of A, B, C, D; none -> cluster 0;
+//                    [mlo, mhi) or the REPL window (word addr >= 2^18, SPEC v0.4 D-B2-6) -> the home of the first VM non-mirror operand of A, B, C, D; none -> cluster 0;
 //                    (remote operands travel the slice ring: legal, slower; HGI-1 unchanged);
 //       DMA       -> the HBM-side descriptor (A if A is HBM, else O): STRIPE4 (base[39:37] == 1) -> all four (each
 //                    cluster serves the rows on its stack), else the stack base[SBIT+1:SBIT]; no HBM side -> home(O);
@@ -69,7 +69,7 @@ module ot_hgi_b2_disp #(
         in_mir = !d[8 + 18] && (d[8 +: 18] >= lo) && (d[8 +: 18] < hi);
     endfunction
     function automatic [1:0] home(input [255:0] d); home = d[8 + SB +: 2]; endfunction
-    function automatic own(input [255:0] d, input [17:0] lo, input [17:0] hi); own = is_vm(d) && !in_mir(d, lo, hi) && (d[8 + 18] == 1'b0 || d[8 + 16 +: 2] == 2'b00); endfunction
+    function automatic own(input [255:0] d, input [17:0] lo, input [17:0] hi); own = is_vm(d) && !in_mir(d, lo, hi) && d[8 + 18] == 1'b0; endfunction   // SPEC v0.4: >= 2^18 = REPL (local everywhere), never an owner
     // owner-computes mask from O, then A, B, C, D
     function automatic [3:0] m_owner(input [255:0] o, input [255:0] a, input [255:0] b, input [255:0] c, input [255:0] dd,
                                      input [17:0] lo, input [17:0] hi);
