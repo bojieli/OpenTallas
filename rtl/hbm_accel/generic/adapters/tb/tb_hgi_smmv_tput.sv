@@ -41,6 +41,22 @@ module tb_hgi_smmv_tput;
 `ifndef XQ
 `define XQ 1
 `endif
+    // smmv-cr (2026-10-12): +define+SMMV_CR = engine row credits (CR 1, AD `TB_AD, default 8) with a credit-on-arrival
+    // model (sm_cr = the SM's own result rows, shadows' gated rows included: exact per slot); +define+MUT_CRDL = the
+    // pre-fix chunk rule (min(CH, AD), not wave-aligned): at TB_AD 4 it must DEADLOCK -> watchdog FAIL.
+`ifdef SMMV_CR
+    localparam integer CRB = 1;
+`else
+    localparam integer CRB = 0;
+`endif
+`ifndef TB_AD
+`define TB_AD 8
+`endif
+`ifdef MUT_CRDL
+    localparam integer CRDL = 1;
+`else
+    localparam integer CRDL = 0;
+`endif
 `ifdef WVM8
     localparam integer BW = 1;
 `else
@@ -100,7 +116,7 @@ module tb_hgi_smmv_tput;
         wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
         wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q; wire [6:0] x_xb;
         wire l_en; wire [6:0] l_addr, l_grp; wire [2047:0] l_data;
-        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
+        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
             .rec_v(rec_v && rec_rdy), .rec_rdy(c_rdy[cl]),
             .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
             .rec_n_b(cur[937:917]), .rec_done(c_done[cl]), .rec_fault(c_fault[cl]), .halted(c_halt[cl]), .x_v(x_v), .x_rdy(x_rdy),
@@ -108,7 +124,7 @@ module tb_hgi_smmv_tput;
             .x_done(x_done), .x_fault(x_fault), .pub_v(pub_v), .pub_rdy(pub_rdy), .pub_base(pub_base),
             .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
-            .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]));
+            .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]), .sm_cr(rv[cl*NSL +: NSL]));
         wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
         ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
             .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
@@ -260,6 +276,21 @@ module tb_hgi_smmv_tput;
     end
     integer j, t, k, nf, r, prev_ret, busy_sum;
     integer disp [0:NREC-1]; integer retc [0:NREC-1];
+    // DEADLOCK WATCHDOG (smmv-cr): records in flight and no result row, no real-SM line request and no retire for WD
+    // cycles (+WD=, default 20000) -> dump cluster 0's credit loop for the real SMs and FAIL (a hang is a FAIL)
+    integer wd, wd_last = 0, wi; reg wd_on = 0;
+    initial if (!$value$plusargs("WD=%d", wd)) wd = 20000;
+    always @(posedge clk) if (rst_n) begin
+        if (!wd_on || (|rv) || (|c_done) || g_sm[0].req_v || g_sm[1].req_v) wd_last = cyc;
+        else if (cyc - wd_last > wd) begin
+            $display("ERR DEADLOCK: no row / line request / retire for %0d cycles at cycle %0d (retired %0d of %0d, CR %0d AD %0d)", wd, cyc, k, NREC, CRB, `TB_AD);
+            for (wi = 0; wi < NREAL; wi = wi + 1)
+                $display("  SM %0d: cr_s %0d rr_s %0d rr_nz %0d d_pend %0d st_pend %0d lines_req %0d", wi,
+                         g_cl[0].u_a.cr_s[wi*$clog2(`TB_AD+1) +: $clog2(`TB_AD+1)], g_cl[0].u_a.rr_s[wi*13 +: 13],
+                         g_cl[0].u_a.rr_nz[wi], g_cl[0].u_a.d_pend[wi], g_cl[0].u_a.st_pend[wi], lines_req[wi]);
+            $display("HGI_SMMV_TPUT FAIL deadlock"); $finish;
+        end
+    end
     reg [255:0] qd; reg [31:0] lastsec;
     integer kc [0:NCL-1]; integer kmin, c2;
     always @(posedge clk) begin
@@ -279,9 +310,10 @@ module tb_hgi_smmv_tput;
         for (r = 0; r < NREC && nf == 0; r = r + 1) begin
             @(negedge clk); cur = recm[r]; rec_v = 1;
             t = 0; while (!rec_rdy && t < 2000000 && nf == 0) begin @(negedge clk); t = t + 1; end
-            @(posedge clk); disp[r] = cyc; #0.1 rec_v = 0;
+            @(posedge clk); disp[r] = cyc; #0.1 rec_v = 0; if (!wd_on) wd_last = cyc; wd_on = 1;
         end
         t = 0; while (k < NREC && nf == 0 && t < 4000000) begin @(posedge clk); t = t + 1; end
+        wd_on = 0;
         repeat (8) @(posedge clk);
         if (k != NREC || nf != 0) begin $display("ERR retired %0d of %0d, faults %0d (x_fault %b pub_fault %b)", k, NREC, nf, c_xfault, c_pfault); errors = errors + 1; end
         prev_ret = 0; busy_sum = 0;

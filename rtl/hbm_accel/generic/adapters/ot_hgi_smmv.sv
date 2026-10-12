@@ -34,7 +34,20 @@ module ot_hgi_smmv #(
     parameter integer XQ = 1,             // smmv-b BDW8: x loads in flight (1 or 2; the pipelined BW8 loader takes the next
                                           //   load while the previous one drains; x_done in order); 1 = one at a time
     parameter integer MUT_SLOT = 0,
-    parameter integer MUT_EARLY = 0
+    parameter integer MUT_EARLY = 0,
+    // smmv-cr (2026-10-12) ROW CREDITS (track A ot_hgi_sm_record CR, with its DEADLOCK RULE; CR = 0 default: one
+    // descriptor of the whole slice, as before).  CR = 1: SM s is described in chunks of CHE rows, a chunk leaves while
+    // cr[s] >= n (cr = AD - rows described and not yet consumed by the pub, +1 per sm_cr[s] pulse).  The SM issues
+    // group-slot waves of SIL = 8 (row, group) items whose lines interleave and emits a row only when its wave is
+    // complete, so a chunk is a MULTIPLE OF SIL ROWS (= G whole waves for any G): every row of a described chunk leaves
+    // with no later line and credits never wait on a chunk that needs them (a chunk inside a wave + the last credits
+    // = circular wait, track A r_ad4b).  AD < SIL is refused (a wave's rows leave back to back on a port with no
+    // ready).  Credits persist across records (in-order descriptors; a record's last wave ends its op).
+    parameter integer CR = 0,
+    parameter integer AD = 32,
+    parameter integer CH = 8,
+    parameter integer SIL = 8,
+    parameter integer MUT_CRDL = 0         // mutant: chunk min(CH, AD), not wave-aligned, AD < SIL allowed (deadlocks)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -72,7 +85,8 @@ module ot_hgi_smmv #(
     output wire [NSM*106-1:0] sm_cmd,
     input  wire [NSM*4-1:0]   sm_ret,
     output reg                sm_cg_en,
-    output wire [2:0]         dbg_iss_seq      // sequence number of the record being issued (bench shadows)
+    output wire [2:0]         dbg_iss_seq,     // sequence number of the record being issued (bench shadows)
+    input  wire [NSM-1:0]     sm_cr            // smmv-cr: one pulse per arrival entry the pub consumed, per SM (CR = 1)
 );
     localparam integer CW = 106;
     localparam [36:0] INV17 = 37'h10f0f0f0f1;   localparam [36:0] LIM17 = 37'd8084644321;
@@ -149,6 +163,17 @@ module ot_hgi_smmv #(
     reg [19:0] sq_p [0:NSM-1]; reg [31:0] slq_p [0:NSM-1];       // station products (smb + s) x Q, x LQ
     reg [19:0] f_m; reg [12:0] f_q; reg [23:0] f_lq; reg [30:0] f_ml; reg [31:0] f_l0;
     reg [NSM*13-1:0] rows_s; reg [NSM*32-1:0] dbase_s; reg [NSM*24-1:0] dl_s; reg [NSM-1:0] act_s;
+    // smmv-cr row-credit chunking (CR = 1): rows / lines still to describe, the next chunk's base, credits
+    localparam integer CHM = (CH < AD) ? CH : AD;
+    localparam integer CHE = (MUT_CRDL != 0 || CHM >= SIL) ? CHM : SIL;
+    localparam integer LCH = $clog2(CHE), CRW = $clog2(AD + 1);
+`ifndef SYNTHESIS
+    initial if (CR != 0 && ((1 << LCH) != CHE || (MUT_CRDL == 0 && (AD < SIL || CHE % SIL != 0))))
+        $fatal(1, "ot_hgi_smmv: row credits need AD >= SIL = %0d and a power-of-two chunk multiple of SIL rows (AD %0d, CH %0d)", SIL, AD, CH);
+`endif
+    reg [NSM*13-1:0] rr_s; reg [NSM*24-1:0] lr_s; reg [NSM*32-1:0] nb_s; reg [NSM*CRW-1:0] cr_s; reg [NSM-1:0] rr_nz, cri;
+    reg [23:0] chl;                                                  // lines a full chunk (LPR x CHE)
+    always @(posedge clk) cri <= sm_cr;
     reg [1:0] fmt_i; reg [7:0] g_i; reg [6:0] xb_i;
     integer s;
     reg [NSM-1:0] st_n, d_n;
@@ -201,6 +226,7 @@ module ot_hgi_smmv #(
             xn <= 2'd0; xfh <= 1'b0; xft <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0; fa_v <= 1'b0;
             xo <= 0; xo_v <= 1'b0; st_pend <= 0; d_pend <= 0;
             rel <= 0; arr_prev <= 0; iss_cnt <= 0; done_cnt <= 0; sm_cg_en <= 1'b0; rh_wait <= 1'b0;
+            rr_nz <= 0; for (s = 0; s < NSM; s = s + 1) cr_s[s*CRW +: CRW] <= CRW'(AD);
         end else begin : main
             reg [7:0] used_n;
             rec_done <= 1'b0; rec_fault <= 1'b0;
@@ -300,7 +326,9 @@ module ot_hgi_smmv #(
                 end
             end
             if (fld_v) begin
-                fld_v <= 1'b0; go <= 1'b1; st_pend <= act_s; d_pend <= act_s; e_act[ix(ip)] <= act_s;
+                fld_v <= 1'b0; go <= 1'b1; st_pend <= act_s; d_pend <= (CR != 0) ? {NSM{1'b0}} : act_s; e_act[ix(ip)] <= act_s;
+                rr_s <= rows_s; lr_s <= dl_s; nb_s <= dbase_s; rr_nz <= (CR != 0) ? act_s : {NSM{1'b0}};
+                chl <= ((fmt_i == 2'd3) ? {14'd0, g_i, 2'b00} : {13'd0, g_i, 3'b000}) << LCH;   // LPR = 4 g (INT8) / 8 g
                 for (s = 0; s < NSM; s = s + 1) e_tgt[ix(ip)][s*4 +: 4] <= iss_cnt[s*4 +: 4] + {3'd0, act_s[s]};
                 for (s = 0; s < NSM; s = s + 1) iss_cnt[s*4 +: 4] <= iss_cnt[s*4 +: 4] + {3'd0, act_s[s]};
             end
@@ -309,7 +337,24 @@ module ot_hgi_smmv #(
                     if (st_pend[s] && cmd_h[s*CW] && sm_ret[s*4 + 0]) st_pend[s] <= 1'b0;
                     if (d_pend[s] && cmd_h[s*CW + 48] && sm_ret[s*4 + 1]) d_pend[s] <= 1'b0;
                 end
-                if (pend0_r && st_pend == 0 && d_pend == 0) begin go <= 1'b0; ip <= ip + 3'd1; end
+                if (pend0_r && st_pend == 0 && d_pend == 0 && rr_nz == 0) begin go <= 1'b0; ip <= ip + 3'd1; end
+            end
+            // smmv-cr chunk issue, per SM (CR = 1): the chunk's fields land in the command registers while d_pend is
+            // low, then d_pend shows it; credits -n at the issue, +1 per landed sm_cr pulse (always counted)
+            if (CR != 0) begin : g_chunk
+                reg [12:0] n; reg [23:0] ln; reg [CRW-1:0] c; reg gk;
+                for (s = 0; s < NSM; s = s + 1) begin
+                    n  = (rr_s[s*13 +: 13] <= CHE) ? rr_s[s*13 +: 13] : 13'(CHE);
+                    ln = (rr_s[s*13 +: 13] <= CHE) ? lr_s[s*24 +: 24] : chl;
+                    c  = cr_s[s*CRW +: CRW];
+                    gk = go && !d_pend[s] && rr_nz[s] && ({{(32-CRW){1'b0}}, c} >= {19'd0, n});
+                    if (gk) begin
+                        dbase_s[s*32 +: 32] <= nb_s[s*32 +: 32]; dl_s[s*24 +: 24] <= ln; d_pend[s] <= 1'b1;
+                        nb_s[s*32 +: 32] <= nb_s[s*32 +: 32] + {8'd0, ln}; lr_s[s*24 +: 24] <= lr_s[s*24 +: 24] - ln;
+                        rr_s[s*13 +: 13] <= rr_s[s*13 +: 13] - n; rr_nz[s] <= (rr_s[s*13 +: 13] != n);
+                    end
+                    cr_s[s*CRW +: CRW] <= c + {{(CRW-1){1'b0}}, cri[s]} - (gk ? n[CRW-1:0] : {CRW{1'b0}});
+                end
             end
             // ---- completions: one arrive toggle = one op of that SM done
             for (s = 0; s < NSM; s = s + 1) begin
