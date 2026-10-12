@@ -10,7 +10,6 @@
  "reset_ports": [
   "rst_n"
  ],
- "pg_layer": "M6",
  "pins": {
   "W": [
    "clk",
@@ -63,12 +62,12 @@
  "params": {
   "EGC": 1
  },
- "std_area_um2": 6000,
+ "std_area_um2": 7500,
  "job": {
-  "owner": "Claude:el1011-hbm-b2-vm",
-  "branch": "claude/el1011-hbm-b2-vm",
-  "tag": "v04",
-  "purpose": "HBM B2 VM slice bank tile (x32 on the die, bid/sid straps): 3 macros, main+mirror, SECDED, 2 ring-write lanes, dual egress; reset only on control",
+  "owner": "Claude:el1011-hbm-sfu",
+  "branch": "claude/el1011-qdqtput",
+  "tag": "v08",
+  "purpose": "HBM B2 VM slice bank tile (x32 on the die, bid/sid straps): 3 macros, main+mirror, SECDED, 2 ring-write lanes, dual egress; reset only on control; v08: per-lane credit depth 4 + 2 x relay stages (RRS/WRS default 3 -> 10 entries, SPEC v0.8 D-B2-12), M5 leaf",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -141,6 +140,16 @@
    {
     "name": "vms_slice_wrongslice",
     "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_slice_wrongslice tb_vms_slice -GHMUT=1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vms_slice_lqshort",
+    "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_vms.sh {RUN}/bench/vms_slice_lqshort tb_vms_slice -GBMUT=2",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,

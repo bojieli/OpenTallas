@@ -57,6 +57,32 @@
    "steady_gap_n512": 16,
    "host": "ot-epyc4 qdqtput/out3nb",
    "note": "unit NB 32 / OD 64 (now the RTL defaults) + slice bank LQ 16"
+  },
+  "S3_SLICE_V08_DEFAULT": {
+   "cycles": 169,
+   "ratio": 1.006,
+   "exact_words": 3328,
+   "m1": "FAIL",
+   "m2": "FAIL",
+   "decoder": "ot_hgi_qw_dec3 (track B)",
+   "unit": "LQ 10 / LD 16 / NB 32 / OD 64 (defaults)",
+   "slice": "ot_vms_slice defaults RRS/WRS 3 -> 10 credits a lane (SPEC v0.8 D-B2-12), no bench override",
+   "verilator": "5.050",
+   "commit": "b3b36564e",
+   "host": "localhost scope (scratch /tmp/claude-1000/lqb2/out/qdq_s3)"
+  },
+  "S1_SLICE_V08_DEFAULT": {
+   "cycles": 161,
+   "ratio": 0.958,
+   "exact_words": 3328,
+   "m1": "FAIL",
+   "m2": "FAIL",
+   "decoder": "ot_hgi_qw_dec3 (track B)",
+   "commit": "b3b36564e"
+  },
+  "S3_SLICE_V08_DEFAULT_DEC_A": {
+   "cycles": 169,
+   "note": "same run on ot_hgi_qw_dec (track A, DEC3=0 equivalent at bbdb82ce3): cycle-identical"
   }
  }
 }

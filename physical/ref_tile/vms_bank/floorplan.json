@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  302.4,
-  302.4
+  308.88,
+  308.88
  ],
  "core": [
   2.16,
   2.16,
-  300.23999999999995,
-  300.23999999999995
+  306.71999999999997,
+  306.71999999999997
  ],
- "why": "util 0.52 of std 6000 + macros 40186 um2",
- "std_area_um2": 6000,
+ "why": "util 0.52 of std 7500 + macros 40186 um2",
+ "std_area_um2": 7500,
  "layer_contract": {
   "children": {},
   "pg_layer": "M6",
@@ -24,7 +24,9 @@
    "M2",
    "M6"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M7",
+  "layer_cap": "M6",
+  "cap_basis": "legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)"
  },
  "pins": {
   "W": [
@@ -71,8 +73,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 63.936,
-   "y": 25.92,
+   "x": 66.96,
+   "y": 28.08,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -84,8 +86,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 1,
-   "x": 63.936,
-   "y": 116.64,
+   "x": 66.96,
+   "y": 118.8,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -97,8 +99,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 2,
-   "x": 63.936,
-   "y": 207.36,
+   "x": 66.96,
+   "y": 209.52,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
