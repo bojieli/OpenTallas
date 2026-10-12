@@ -20,7 +20,7 @@ tools/layout_viewer/lv_verify.js) before it is published.
 CLI (deployed copy: ~/.local/share/fleet-viz/layout_store.py):
   export  --element E [--job J]   cut + verify + publish one closure (the post-record hook runs this)
   backfill [--limit N] [--only a,b] [--workers 4]   every CLOSED element of the registry, priority order
-  gc | status
+  gc | status | audit     (audit: re-run the round trip on every published closure, from the store files -> AUDIT.json)
 """
 import argparse, collections, concurrent.futures as cf, fcntl, hashlib, json, os, pathlib, shlex, shutil, struct, subprocess, sys, threading, time, traceback
 
@@ -505,7 +505,7 @@ def main():
     sp = ap.add_subparsers(dest='cmd', required=True)
     e = sp.add_parser('export'); e.add_argument('--element'); e.add_argument('--job')
     b = sp.add_parser('backfill'); b.add_argument('--limit', type=int); b.add_argument('--only'); b.add_argument('--workers', type=int, default=4); b.add_argument('--redo', action='store_true')
-    sp.add_parser('gc'); sp.add_parser('status')
+    sp.add_parser('gc'); sp.add_parser('status'); sp.add_parser('audit', help='re-verify every published latest closure from the store files')
     a = ap.parse_args()
     if a.cmd == 'export':
         el = a.element
@@ -521,6 +521,13 @@ def main():
         sys.exit(0 if export(el, a.job) else 1)
     if a.cmd == 'backfill': return backfill(a.limit, set(a.only.split(',')) if a.only else None, a.workers, a.redo)
     if a.cmd == 'gc': print(json.dumps(gc())); return
+    if a.cmd == 'audit':
+        out = {}
+        for idx in sorted((STORE / 'elements').glob('*/index.json')):
+            i = json.loads(idx.read_text()); out[i['element']] = verify_pack(idx.parent / (i['latest'] + '.json'))
+            log(i['element'], out[i['element']].get('verdict'), out[i['element']].get('shapes'))
+        write_json(STORE / 'AUDIT.json', dict(made=now(), elements=out, identical=sum(1 for v in out.values() if v.get('verdict') == 'IDENTICAL'), total=len(out)))
+        return
     s = size_report(); write_json(STORE / 'SIZE.json', s); print(json.dumps(s, indent=1)[:4000])
 
 

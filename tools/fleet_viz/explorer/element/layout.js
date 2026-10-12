@@ -236,7 +236,7 @@ async function start(){
   V.workers = []; V.wnext = 0; V.tiles = new Map(); V.rasters = new Map(); V.pending = new Map(); V.rulers = []; V.gpuBytes = 0;
   for (let i = 0; i < NW; i++){ const w = new Worker('/explorer/element/lv_worker.js'); w.onmessage = onWorker; w.postMessage({op: 'init', header: H}); V.workers.push(w); }
   updateUniforms();   // pushes the raster style to the workers
-  V.budget = PHONE() ? 1.6e6 : 5e6;
+  V.budget = PHONE() ? 1.2e6 : 3e6;
   V.gpuCap = 300e6;
   // DOM
   if (SOLID){ V.root.style.background = '#000'; document.documentElement.classList.add('lv-solid'); }
@@ -455,7 +455,8 @@ function render(b, geo, want, level){
   const allLoaded = geo && [...want].every(k => V.tiles.has(k) || !tileIndex().has(k));
   if (!allLoaded){ rl(0); if (level !== 0) rl(level); }
   if (geo){
-    for (const k of want){ const t = V.tiles.get(k); if (!t || t.empty || !t.n) continue;
+    const vis = new Set(tilesIn(b, 0).map(([x, y]) => x + '_' + y));   // margin tiles stay loaded but are not drawn
+    for (const k of want){ if (!vis.has(k)) continue; const t = V.tiles.get(k); if (!t || t.empty || !t.n) continue;
       layers.push(new RectLayer({id: 't' + k, data: {length: t.n, attributes: {instanceRects: {value: t.rects, size: 4}, instanceMeta: {value: t.meta, size: 3}}},
         coordinateSystem: C, lv: V.uni})); }
   }

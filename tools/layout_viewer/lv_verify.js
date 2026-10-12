@@ -3,7 +3,7 @@
    (tools/fleet_viz/explorer/element/lv_decode.js), re-join clipped pieces by shape id, expand vias and cells exactly as
    the viewer draws them, and compare per layer against the DB truth summary in the pack header (count, bbox,
    order-independent 2 x 32-bit hash of the canonical shape set written by lv_extract.py from OpenDB).
-     node lv_verify.js <pack.lvp> [--dump out.bin]     exit 0 = every layer identical
+     node lv_verify.js <pack.lvp | store manifest .json> [--dump out.bin]     exit 0 = every layer identical
    --dump writes the decoded shape set (int32 layer,x0,y0,x1,y1 per rect, unsorted) for an exact list comparison. */
 'use strict';
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
@@ -11,13 +11,20 @@ const D = require(process.env.LV_DECODE || path.join(__dirname, '../fleet_viz/ex
 
 const file = process.argv[2];
 const dumpAt = process.argv.indexOf('--dump');
-const fd = fs.openSync(file, 'r');
-function readAt(off, len){ const b = Buffer.alloc(len); fs.readSync(fd, b, 0, len, off); return b; }
-const hd = readAt(0, 24);
-if (hd.toString('latin1', 0, 8) !== 'OTLVPK01') throw new Error('not a pack');
-const io = Number(hd.readBigUInt64LE(8)), il = Number(hd.readBigUInt64LE(16));
-const index = JSON.parse(zlib.brotliDecompressSync(readAt(io, il)).toString());
-const blob = k => zlib.brotliDecompressSync(readAt(index[k][0], index[k][1]));
+let index, blob;
+if (file.endsWith('.json')){   // a published closure: manifest in <store>/elements/<el>/<job>.json, objects in <store>/objects
+  const man = JSON.parse(fs.readFileSync(file)), store = path.resolve(path.dirname(file), '../..');
+  index = man.objects;
+  blob = k => zlib.brotliDecompressSync(fs.readFileSync(path.join(store, 'objects', index[k].slice(0, 2), index[k] + '.br')));
+} else {
+  const fd = fs.openSync(file, 'r');
+  const readAt = (off, len) => { const b = Buffer.alloc(len); fs.readSync(fd, b, 0, len, off); return b; };
+  const hd = readAt(0, 24);
+  if (hd.toString('latin1', 0, 8) !== 'OTLVPK01') throw new Error('not a pack');
+  const io = Number(hd.readBigUInt64LE(8)), il = Number(hd.readBigUInt64LE(16));
+  index = JSON.parse(zlib.brotliDecompressSync(readAt(io, il)).toString());
+  blob = k => zlib.brotliDecompressSync(readAt(index[k][0], index[k][1]));
+}
 const t0 = Date.now();
 const header = JSON.parse(blob('header').toString());
 const nl = header.layers.length;
