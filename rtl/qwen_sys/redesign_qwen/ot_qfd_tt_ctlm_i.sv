@@ -90,6 +90,9 @@ module ot_qwen_rom_core_ctrl_x_i #(
     parameter integer MEREG = 0,      // el1011-q-seq: me_mem_ok announced 2 edges ahead; me_en a register
     parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)
     parameter integer FKS = 0,        // el1011-q-seq: 1 = argmax-merge compare / index add as kept prefix trees (exact); 2 = negative control (index add carry-in 1)
+    parameter integer HRC = 0,        // el1011-q-seq SC (d): FIFO-head read select h_rd as HRC kept copies, each selecting INSTR_BITS / HRC
+                                      //   bits of ir (was one flop driving 1,024 mux selects: -75 into kvd_* / me issue); 0 = one; exact
+    parameter integer HRCM = 0,       // negative control: copy 0 does not toggle on a load
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0, // element address of embedding row 0 in the program
     parameter integer SMIN = 0,
@@ -484,7 +487,19 @@ localparam integer W_ME_AMC = 1;
     reg                   h_rd, h_wr;    // FQ_HEAD 2: head read / write pointers
     reg  [1:0]            hc;            // FQ_HEAD 2: head words held
     wire                  hv = (FQ_HEAD >= 2) ? (hc != 2'd0) : hq_v;
-    wire [INSTR_BITS-1:0] ir = (FQ_HEAD >= 2) ? (h_rd ? hq1 : hq) : (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
+    wire [INSTR_BITS-1:0] ir_h2;
+    localparam integer HRN = (HRC > 1) ? HRC : 1;
+    (* keep *) reg [HRN-1:0] h_rd_c;      // SC (d) copies (next state: after `load` below)
+    generate if (HRC > 1 && FQ_HEAD >= 2) begin : g_hrc
+        //: SC (d): h_rd copies, same next state as h_rd (reset, start, toggle on load), each driving its slice's selects
+        genvar hb;
+        for (hb = 0; hb < INSTR_BITS; hb = hb + 1) begin : g_b
+            assign ir_h2[hb] = h_rd_c[(hb * HRC) / INSTR_BITS] ? hq1[hb] : hq[hb];
+        end
+    end else begin : g_hr1
+        assign ir_h2 = h_rd ? hq1 : hq;
+    end endgenerate
+    wire [INSTR_BITS-1:0] ir = (FQ_HEAD >= 2) ? ir_h2 : (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
     reg        nx_v;                      // NEXT holds a decoded instruction
     wire       me_go, su_go;
     wire       me_ready, me_idle, su_ready, su_idle;
@@ -622,6 +637,14 @@ localparam integer W_ME_AMC = 1;
         else begin osync_r <= skip ? o_eq1 : o_eq0; opast_r <= skip ? o_pa1 : o_pa0; end
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
     wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hv : (fq_n != 0)) && (!nx_v || issue || skip);
+    generate if (HRC > 1 && FQ_HEAD >= 2) begin : g_hrcs
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) h_rd_c <= {HRN{1'b0}};
+            else if (st == S_IDLE && start) h_rd_c <= {HRN{1'b0}};
+            else if (st == S_RUN && load) h_rd_c <= ~h_rd_c ^ ((HRCM != 0) ? {{(HRN-1){1'b0}}, 1'b1} : {HRN{1'b0}});
+    end else begin : g_hrcn
+        always @(posedge clk) h_rd_c <= {HRN{1'b0}};
+    end endgenerate
     // FQ_HEAD: the FIFO pops into hq when hq is empty or being loaded into NEXT
     wire hq_fill = (FQ_HEAD >= 2) ? ((st == S_RUN) && (fq_n != 0) && (hc != ((FQ_HEAD == 3) ? 2'd3 : 2'd2))) :
                   (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
@@ -1077,7 +1100,7 @@ module ot_qfd_tt_ctlm_i #(
     parameter integer MEREG = 0,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 0,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
     parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)
-    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations, 64 no engine idle clock gate (power; the ICG enable then = the registered supply word); 8 = SRAM one-short mutant; 128 exact prefix cuts (u_tt PK: KS progress subtract + registered u_ttag read; controller FKS: argmax-merge compare / add); 256 = PK negative control, 512 = FKS negative control
+    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations, 64 no engine idle clock gate (power; the ICG enable then = the registered supply word); 8 = SRAM one-short mutant; 128 exact prefix cuts (u_tt PK: KS progress subtract + registered u_ttag read; controller FKS: argmax-merge compare / add); 256 = PK negative control, 512 = FKS negative control; 1024 setup cuts SC (fpapk-4e9afc303 classes a-d, exact, 0 cycles: u_tt pre-scale compare from flops, mx write pre-decoded with a registered slot maximum, scale_addr 2-operand, 32 h_rd copies); negative controls 2048 (no rk forwarding), 4096 (>= for >), 8192 (offset without nbs), 16384 (h_rd copy 0 stuck)
 ) (
     input  wire clk, input wire rst_n,
     // token start, program writes (the program-store copy), the SU snapshot, KV / supply readiness
@@ -1234,7 +1257,7 @@ module ot_qfd_tt_ctlm_i #(
     wire [16-1:0] c_me_progress, u_me_progress;
     wire [1-1:0] c_me_fault, u_me_fault;
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
-    ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
+    ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .HRC(((AUD & 1024) != 0) ? 32 : 0), .HRCM(((AUD & 16384) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
         .clk(clk),
         .rst_n(rsv[1]),
         .start(q_h_start),
@@ -1466,7 +1489,7 @@ module ot_qfd_tt_ctlm_i #(
     ot_hdc_delay #(.W(XW + 18), .D(OS), .RESET(1)) u_os_snap (.clk(clk), .rst_n(rsv[4]), .d({me_acc, u_me_idle, u_me_progress, m_fin}),
         .q({me_acc_o, me_idle_o, me_prog_o, m_fin_o}));
     ot_hdc_delay #(.W(18 + 32), .D(OS)) u_os_f (.clk(clk), .rst_n(rsv[5]), .d({m_fidx, m_fval}), .q({m_fidx_o, m_fval_o}));
-    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0), .PK(((AUD & 256) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0)) u_tt (
+    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0), .PK(((AUD & 256) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .SC(((AUD & 1024) != 0) ? (1 | ((AUD >> 10) & 14)) : 0)) u_tt (
         .clk(c_me_clk), .rst_n(rsv[0]), .up_fault(up_fault_c), .land_cnt(land_cnt_c), .go(u_me_go), .ready(u_me_ready),
         .idle(u_me_idle), .i_nout(u_me_i_nout), .i_tiles(u_me_i_tiles), .i_k(u_me_i_k), .i_wsrc(u_me_i_wsrc), .i_wbase(u_me_i_wbase), .i_ts(u_me_i_ts), .i_ks(u_me_i_ks), .i_js(u_me_i_js), .i_xbase(u_me_i_xbase), .i_xks(u_me_i_xks), .i_xjs(u_me_i_xjs), .i_xcs(u_me_i_xcs), .i_jsh(u_me_i_jsh), .i_split(u_me_i_split), .i_wcs(u_me_i_wcs), .i_round(u_me_i_round), .i_obase(u_me_i_obase), .i_ots(u_me_i_ots), .i_ojs(u_me_i_ojs), .i_mmode(u_me_i_mmode), .i_oen(u_me_i_oen), .i_amax(u_me_i_amax), .i_rmax(u_me_i_rmax), .i_mbase(u_me_i_mbase),
         .wrom_re(u_me_wrom_re), .wrom_addr(u_me_wrom_addr), .kv_re(),
