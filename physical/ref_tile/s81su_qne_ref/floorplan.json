@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  259.2,
-  259.2
+  222.48,
+  222.48
  ],
  "core": [
   2.16,
   2.16,
-  257.03999999999996,
-  257.03999999999996
+  220.32,
+  220.32
  ],
- "why": "spec outline",
- "std_area_um2": null,
+ "why": "util 0.52 of std 10245 + macros 14418 um2",
+ "std_area_um2": 10245,
  "layer_contract": {
   "children": {},
   "pg_layer": "M6",
@@ -57,8 +57,8 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 44.064,
-   "y": 90.72,
+   "x": 25.488,
+   "y": 71.28,
    "w": 171.288,
    "h": 77.784,
    "orient": "R0",
