@@ -8,6 +8,9 @@
 # This keeps the flow's own repair_design (same slew/cap margins) and adds -max_wire_length; it also keeps the
 # v41x_karb_repair_buffer_cap.tcl repair_timing override that route_ps.sh passes at this hook.
 source /src/physical/abi3/v41x_karb_repair_buffer_cap.tcl
+# el1011-hbm-coll 2026-10-11 (child_lint check f, before the hfd_coll cluster): with OT_PK_FRAC set, the face-pin
+# access keepout (stn_pin_keepout.tcl; the same file runs as POST_DETAIL_ROUTE and removes it) = pin_access_pregrt.tcl.
+if {[info exists ::env(OT_PK_FRAC)]} { source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl }
 if {[info procs repair_design_helper] ne "" && [info procs ot_orig_repair_design_helper] eq ""} {
   rename repair_design_helper ot_orig_repair_design_helper
   proc repair_design_helper {} {
