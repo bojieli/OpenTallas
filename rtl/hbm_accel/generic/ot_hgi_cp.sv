@@ -19,6 +19,7 @@ module ot_hgi_cp #(
     // f_req_rdy is unused.  The parent sends on f_req_v alone.  MUT_FQ (bench): a send does not take a credit.
     parameter integer FQ_LOCAL = 0,
     parameter integer FQCR = 16,
+    parameter integer NOS = 160,       // tputx-cpf: ring sectors in flight (the sequencer's NOS; was a fixed 48)
     parameter integer MUT_FQ = 0
 ) (
     input  wire          clk,
@@ -111,7 +112,7 @@ module ot_hgi_cp #(
         (* keep = 1 *) reg [39:0] front_addr, back_addr;
         reg snd_q, snd_pin;                                  // snd_pin: a copy whose only load is the f_req_v pin (the anchored pin flop)
         reg front_v, back_v;
-        reg [4:0] cr; reg [6:0] inn;
+        reg [4:0] cr; reg [7:0] inn;
         wire take_in = sf_v && sf_rdy;
         wire take_out = snd_q;                               // registered: the front entry leaves this cycle
         assign sf_rdy = !back_v;
@@ -120,16 +121,16 @@ module ot_hgi_cp #(
         // next state (same as g_fetch_pin with take_out = snd_q)
         wire fv_n = take_out ? (back_v || take_in) : (front_v || take_in);
         wire [4:0] cr_n = cr - {4'd0, take_out && MUT_FQ == 0} + {4'd0, f_req_ack};
-        wire [6:0] inn_n = inn + {6'd0, take_out} - {6'd0, f_rsp_v};
+        wire [7:0] inn_n = inn + {7'd0, take_out} - {7'd0, f_rsp_v};
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin front_v <= 0; back_v <= 0; snd_q <= 0; snd_pin <= 0; cr <= 5'(FQCR); inn <= 7'd0; end
+            if (!rst_n) begin front_v <= 0; back_v <= 0; snd_q <= 0; snd_pin <= 0; cr <= 5'(FQCR); inn <= 8'd0; end
             else begin
                 front_v <= fv_n;
                 if (take_out) back_v <= 0;
                 else if (take_in && front_v) back_v <= 1;
                 cr <= cr_n; inn <= inn_n;
-                snd_q <= fv_n && cr_n != 5'd0 && inn_n < 7'd48;
-                snd_pin <= fv_n && cr_n != 5'd0 && inn_n < 7'd48;
+                snd_q <= fv_n && cr_n != 5'd0 && inn_n < NOS;
+                snd_pin <= fv_n && cr_n != 5'd0 && inn_n < NOS;
             end
         always @(posedge clk) begin
             if (take_out && back_v) front_addr <= back_addr;
@@ -165,7 +166,7 @@ module ot_hgi_cp #(
         assign f_req_addr = sf_addr;
         assign sf_rdy = f_req_rdy;
     end endgenerate
-    ot_hgi_seq #(.RW(RW), .USE_MACRO(USE_MACRO)) u_seq (.clk(clk), .rst_n(rst_n), .md_d(md_d),
+    ot_hgi_seq #(.RW(RW), .USE_MACRO(USE_MACRO), .NOS(NOS)) u_seq (.clk(clk), .rst_n(rst_n), .md_d(md_d),
         .cfg_vocab(cp_act[HGI_CP_VOCAB_L +: HGI_CP_VOCAB_N]), .cfg_ctx_max(cp_act[32 + HGI_CP_CTX_MAX_L +: HGI_CP_CTX_MAX_N]),
         .rank(rank), .hold(hold), .busy(seq_busy),
         .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(db_job), .db_gen(db_gen),

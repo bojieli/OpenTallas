@@ -29,6 +29,7 @@ module ot_hgi_cp_die #(
     parameter integer USE_MACRO = 1,
     parameter integer MUT = 0,         // bench mutant: 1 VM read returns the neighbouring word; 2 the G26 layer offset dropped
     parameter integer MTP = 0,         // 1: the MTP backend translator (x_* ports); 2: + the MX1 MTP collar (f_mtp / t_mtp, mh_*)
+    parameter integer NOS = 160,       // tputx-cpf: ring sectors in flight (seq / cp NOS; was 48)
     parameter integer FQCR = 4,        // fetch queue credits = the loader's queue depth (16 with ot_hgi_loader_cp BURST 1)
     parameter integer MTP_PINREG = 0,  // MTP=2 only: 1 = the registered collar ot_hgi_cp_mtp_pinreg (MX1 REGB boundary: pin
                                        // FIFOs / flops on f_mtp, t_mtp, mh_* and the translator side; +1 cycle a crossing,
@@ -126,7 +127,7 @@ module ot_hgi_cp_die #(
     wire [11*32-1:0] md_kent; wire [31:0] md_kstride; wire [17:0] md_noise;
     wire xdb_v, xdb_rdy; wire [17:0] xdb_tok; wire [19:0] xdb_pos; wire [31:0] xdb_job, xdb_off, xdb_loff;
     wire [3:0] xdb_gen, xdb_kind; wire [1:0] xdb_ent;
-    reg  [4:0] fq_cr; reg [6:0] fq_in;                  // F5: fetch credits (the loader's 4-entry queue) / sectors in flight (<= 48)
+    reg  [4:0] fq_cr; reg [7:0] fq_in;                  // F5: fetch credits (the loader's 4-entry queue) / sectors in flight (<= 48)
     reg  cpl_hold;                                       // completion station: waits for the loader's ack
     reg  vr_busy, vr_rv; reg [31:0] vr_rd; reg [2:0] vr_w;
     reg  [3:0] credit;                                   // {argmax, idx, quant, coll}
@@ -134,7 +135,7 @@ module ot_hgi_cp_die #(
     reg  halt;
     wire units_busy = ~credit[0] | ~credit[1] | ~credit[2] | ~credit[3] | ~(&credx) | (|ux_v);
     localparam [15:0] RECU = 16'b0000_0111_1111_1110;   // units 1-10 have a record bus (0 CTL internal, 11 SIMT absent)
-    ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO), .FETCH_PIN_FIFO(1), .FQ_LOCAL(1), .FQCR(FQCR)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
+    ot_hgi_cp #(.RW(RW), .USE_MACRO(USE_MACRO), .FETCH_PIN_FIFO(1), .FQ_LOCAL(1), .FQCR(FQCR), .NOS(NOS)) u_cp (.clk(clk), .rst_n(rst_n), .cmd_we(cfg_we), .cmd_addr(cfg_addr),
         .cmd_wdata(cfg_wdata), .units_busy(units_busy), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded), .cfg_err(cfg_err),
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),
@@ -233,7 +234,7 @@ module ot_hgi_cp_die #(
         if (!rst_n) begin
             credit <= 4'b1111; coll_rec <= 968'd0; coll_recx <= 554'd0; quant_rec <= '0; idx_rec <= 2075'd0; am_rec <= 691'd0; halt <= 1'b0; credx <= 6'b111111;
             sm_rec <= 939'd0; su_rec <= 2198'd0; sfu_rec <= 1174'd0; att_rec <= 1472'd0; dma_rec <= 704'd0; hc_rec <= 939'd0;
-            db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 7'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
+            db_hold <= 1'b0; db_k <= 4'd0; db_lo <= 32'd0; db_x <= 1'b0; x_run <= 1'b0; fq_cr <= 5'(FQCR); fq_in <= 8'd0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
         end else begin
             // dispatch (the bus carries one valid edge per record)
@@ -287,7 +288,7 @@ module ot_hgi_cp_die #(
                 reg snd; snd = f_req_v;                       // [cp] FQ_LOCAL: the CP sends only on a credit (fq_cr / fq_in mirror it)
                 if (snd) begin cpl[113] <= 1'b1; cpl[153:114] <= f_req_addr; end
                 fq_cr <= fq_cr - {4'd0, snd} + {4'd0, l_freq_ack};
-                fq_in <= fq_in + {6'd0, snd} - {6'd0, l_frsp_v};
+                fq_in <= fq_in + {7'd0, snd} - {7'd0, l_frsp_v};
             end
             cpl[221:154] <= {cfg_cp_act, cfg_err, cfg_loaded};
             // VM read client: one word, read as its sector
