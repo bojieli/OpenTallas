@@ -507,6 +507,9 @@ puts "REF_TILE spine: child insertion targets $::ot_ref_child_ins"
 """
 
 
+HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
+
+
 def gen_hooks(s: dict, kd: str) -> dict:
     fwd = bool(s.get("forwarded_clock"))
     spine = s["kind"] == "cluster" and s.get("clock", "spine") == "spine"
@@ -580,6 +583,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         if not re.fullmatch(r"[A-Z][A-Z0-9_]*", k) or re.search(r"\s", str(v)):
             raise SpecError(f"spec: orfs_vars {k}={v!r}: NAME=[A-Z0-9_]+, value without whitespace")
         extra.append(f"--orfs-var {k}={v}")
+    if s["route"].get("hold_delay"):
+        # deterministic hold fix by construction (owner 10-10): the RTL's *u_hdly_* HB delay cells are dont_touch'ed at
+        # PRE_FLOORPLAN so remove_buffers / repair passes keep them (tputx-cpf hgi_seq v2.3)
+        extra.append(f"--step-tcl PRE_FLOORPLAN={HDLY_TCL}")
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
@@ -634,6 +641,8 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append("physical/dsrom_window_source/leaf_inhold.tcl")
         if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R"):
             out.append("physical/dsrom_window_source/leaf_inhold_release.tcl")
+    if s["route"].get("hold_delay"):
+        out.append(HDLY_TCL)
     if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
@@ -657,11 +666,16 @@ def lint_cmd(s: dict) -> str:
     'hierarchy -check' in the route.  (10-12: ~30 ref jobs NEEDS_RTL on a lint that omitted the defines that select the
     top's body / named blackbox children.)"""
     defs = ["-DSYNTHESIS"] + [f"-D{d}" for d in s.get("defines", [])]
-    gp = [f"-G{k}={v}" for k, v in s.get("params", {}).items()]
     inc = [f"-I{d[len('/src/'):] if d.startswith('/src/') else d}"
            for d in str(s.get("orfs_vars", {}).get("VERILOG_INCLUDE_DIRS", "")).split() if d]
-    return " ".join(["verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING",
-                     *defs, *gp, *inc, "--top-module", s["top"], *s["sources"]]) + " && echo lint-ok"
+    # the top is linted under a one-line wrapper: verilator refuses --top-module on a module that another parsed source
+    # instantiates (ot_hgi_hc_tile inside ot_hgi_hc_unit.sv, from claude/el1011-hcvm-hc4 7e3baed71); the top's params
+    # become instance overrides (-G only reaches the top level); unconnected wrapper ports are lint warnings only
+    pv = ", ".join(f".{k}({v})" for k, v in s.get("params", {}).items())
+    inst = f"{s['top']} #({pv}) u_top ();" if pv else f"{s['top']} u_top ();"
+    wrap = (f"mkdir -p {{RUN}} && printf '%s\\n' 'module ot_lint_top; {inst} endmodule' > {{RUN}}/ot_lint_top.sv && ")
+    return wrap + " ".join(["verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING",
+                     *defs, *inc, "--top-module", "ot_lint_top", "{RUN}/ot_lint_top.sv", *s["sources"]]) + " && echo lint-ok"
 
 
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
