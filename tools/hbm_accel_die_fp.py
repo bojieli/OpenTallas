@@ -594,7 +594,7 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # wire chain (stations <= 67 um); die routes cross the tiles on M8 / M9. face_coll 1,560 (el1011-hbm-coll: 9 tiles +
              # core SRAMs, hierarchical hfd_coll): the spine stack re-gaps evenly (cross gap loader -> coll 302.4 kept)
              coll_h=1560.0,
-             hc_wh=(2263.68, 1499.04), hc_col_w=2032.944,    # hbmdie-1011 contract v5: the CLOSED tiled hfd_hc quarter (88
+             hc_wh=(2263.68, 1499.04), hc_col_w=2032.944,    # hbmdie-1011 contract v6: the CLOSED tiled hfd_hc quarter (88
              # hfd_hc_tile_xl 8 x 11, pka10 view; r25gqw ports, E-face pins +230.736) -- the die adapts to the closed element.
              # Wider than its column, it keeps its SU-facing edge (ix_x + hc_col_w, the v1 slot's) and grows AWAY from the
              # spine into the HC | attention channel (345.6 -> 114.96 um); the v1 2,032.944 x 1,684.8 taller slot is retired
@@ -665,7 +665,13 @@ R25GQ = dict(r25gq=True, r25gq_base='r25gph', host_h=HOST_H_HGI,
              # direction over 9 links); 1,024 b does not fit the SerDes face in the k = 16 GRT bundling
              link_ep=dict(wh=(1728.0, 1015.2), gap=43.2, flit_bits=1120, phy_bits=974),
              # hbmdie-1011 contract v2 (granted 10-11): hfd_lk_ep = 3-tile cluster 2,600 x 830 (was 1,728 x 1,015.2)
-             link_ep_v2=dict(wh=(2600.0, 830.0), xy=dict(S=((7570.0, 10254.0, 12938.0, 15622.0, 18306.0), 6016.0),
+             # hbmdie-1011 contract v5 (D16, 10-11): the S row of 5 in one 13,504-um gap between sm7 and sm14 left only
+             # 84-um inter-slot channels for every N-S crossing (8 clock/reset tree segments > 504 um, far-side relays).
+             # S becomes a 3 + 2 brick in the free band y 6,016-7,977 under SU/hgi_idx: row 1 (y 6,016) A1 / A2 / A3,
+             # row 2 (y 7,046) B1 over A1 and B2 over A3; channels >= 200 um (A1-A2 1,014, A2-A3 2,170 over the SerDes,
+             # rows 200, B2-hgi_idx 200, sm7-A1 400); per-slot (x, y) in SerDes x order S0..S4
+             link_ep_v2=dict(wh=(2600.0, 830.0), xy=dict(S=((7886.0, 6016.0), (7886.0, 7046.0), (11500.0, 6016.0),
+                                                           (16270.0, 6016.0), (16270.0, 7046.0)),
                                                        N=((9984.0, 12668.0, 15352.0, 18036.0), 18919.0))),
              lane_bypass=dict(W=dict(client='hb_sfu_SW', after='hb_su_SW', toward='hb_hc_SW', stn='hb_stn_lgW',
                                      master='hfd_stn_lgW', w=43.2, tap_rd=273, tap_wr=280)),
@@ -830,7 +836,7 @@ def build_r25gq(variant):
         # hfd_hc_tile_xl at ~55 %).  The column cannot widen (W slack 18.6 um to the die edge channel) but the R25GQ HC
         # column is empty below the HC (the index stack left it), so the quarter grows in HEIGHT, its equator-side edge fixed
         assert V.get('att_su_relays'), 'hc_wh needs the R25GQ hub (no index stack in the HC column)'
-        # contract v5: a quarter wider than the column overhangs it on the attention side (one row-1 station + 2 x 20 um left)
+        # contract v6: a quarter wider than the column overhangs it on the attention side (one row-1 station + 2 x 20 um left)
         assert V['hc_wh'][0] - ix_w <= V['hub_col_gap'] - 43.2 - 2 * 20.0, ('HC overhang closes the channel', V['hc_wh'][0], ix_w)
     ix_x = dn(su_x - V['hub_col_gap'] - ix_w, GX)
     tw = B['at_SW_00_lo'].w
@@ -887,7 +893,7 @@ def build_r25gq(variant):
             assert hc_y >= qy, ('taller HC leaves its column', hc_y, qy)
         assert hc_y + hc_h <= qy + qh, ('HC over the index stack overflows', hc_y + hc_h, qy + qh)
         hc_w = V['hc_wh'][0] if V.get('hc_wh') else ix_w
-        # v5: the SU-facing edge stays where the v1 slot had it (ix_x + hc_col_w): the mirrored E copies keep their 0.432-grid
+        # v6: the SU-facing edge stays where the v1 slot had it (ix_x + hc_col_w): the mirrored E copies keep their 0.432-grid
         # origin, the W copies land on the 0.048 track grid (as the v1 slot's E edge did)
         hc_x = ix_x if hc_w <= ix_w + 1e-6 else round(ix_x + V.get('hc_col_w', ix_w) - hc_w, 6)
         put(f'hb_hc_{q}', 'hb_hc_SW', hc_x, hc_y, hc_w, hc_h)
@@ -942,7 +948,7 @@ def build_r25gq(variant):
             x_r = r_['x']
             if V.get('hc_wh') and V['hc_wh'][0] > 2 * B['hb_index_SW_b0'].w + V['idx_col_gap'] + 1e-6 and \
                     re.fullmatch(r'rly_N[WE]_1_1', r_['name']):
-                # contract v5: the wider N HC quarter takes the channel column this station sat in; it moves to the centre
+                # contract v6: the wider N HC quarter takes the channel column this station sat in; it moves to the centre
                 # of the narrowed HC | attention channel, at the height that balances its hops 1_0 -> 1_1 -> 1_2 (<= 504 um)
                 hq_ = next(i for i in insts if i.name == f"hb_hc_N{r_['name'][5]}")
                 at_ = [i for i in insts if i.kind == 'attn_tile' and i.name.startswith(f"at_N{r_['name'][5]}")]
@@ -1072,11 +1078,18 @@ def build_r25gq_net(variant):
                 xs_ = [x0 + k * (ew + V['link_ep']['gap']) for k in range(len(sds))]
             if V['link_ep'].get('xy'):      # hbmdie-1011 contract v2 grant: hfd_lk_ep 3-tile cluster 2,600 x 830, fixed
                 # slots (S row bottom 6,016, N row top kept at 19,749), in serdes x order
-                xs_, y0 = V['link_ep']['xy'][grp]
-                y0 += 2 * V.get('svc_ch_dh', 0.0) if grp == 'N' else 0.0     # rf2: the N row rides the N half
+                g_ = V['link_ep']['xy'][grp]
+                if isinstance(g_[1], (int, float)):     # (xs, y): one row
+                    xs_, y0 = g_
+                    ys_ = [y0] * len(xs_)
+                else:                                   # v5: per-slot (x, y) (the S 3 + 2 brick)
+                    xs_, ys_ = [p_[0] for p_ in g_], [p_[1] for p_ in g_]
+                ys_ = [y_ + (2 * V.get('svc_ch_dh', 0.0) if grp == 'N' else 0.0) for y_ in ys_]   # rf2: N rides the N half
                 assert len(xs_) == len(sds), ('link_ep grant / serdes count', grp, len(xs_), len(sds))
+            else:
+                ys_ = [y0] * len(xs_)
             for k, sd in enumerate(sds):
-                ep = Inst(f'ep_{sd.name[3:]}', 'hfd_lk_ep', dn(xs_[k], GX), y0, ew, eh,
+                ep = Inst(f'ep_{sd.name[3:]}', 'hfd_lk_ep', dn(xs_[k], GX), ys_[k], ew, eh,
                           'R0' if grp == 'S' else 'MX', kind='hub', region='hub')
                 bx = ep.box()
                 hit_ = [i.name for i in insts if i.kind != 'waypoint' and bx[0] < i.x + i.w and i.x < bx[2]
