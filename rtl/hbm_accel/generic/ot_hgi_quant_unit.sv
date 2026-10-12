@@ -13,7 +13,9 @@
 // adds a 3-edge steering station in front (eligibility: the span multiplies are registered before the compares).
 module ot_hgi_quant_unit #(
     parameter integer SERIAL_SHAPE = 0,
+    parameter integer PIPE = 0,        // hgi-1010/d5: 1 = ot_hgi_quant_vm_transport_p (pipelined, SRAM result FIFO; opt-in)
     parameter integer MUT = 0,         // bench: transport MUTANT (4 = responses paired with the newest request)
+    parameter integer QRING = 0, NORST = 0, RREQ = 0,   // el1011-hbm-fq/qvm: transport_p textbook rebuild options
     parameter integer WIDE = 0,
     parameter integer WLQ = 16,        // lane credits (WIDE)
     parameter integer WMUT = 0,        // bench: ot_hgi_quant_wide MUT; 3 = every record forced to the packet path
@@ -45,9 +47,15 @@ module ot_hgi_quant_unit #(
     // the die station queues the request: every staged request is taken the next cycle
     wire take = req_v;
     generate if (!WIDE) begin : g_packet
+        if (PIPE) begin : g_pipe
+        ot_hgi_quant_vm_transport_p #(.ENABLE(1), .MUTANT(MUT), .QRING(QRING), .NORST(NORST), .RREQ(RREQ)) u_tr (.clk(clk), .rst_n(rst_n), .cmd(cmd), .ready(ready), .done(done),
+            .fault(fault), .drained(drained), .req_v(req_v), .req_r(take), .req(req), .rsp_v(vmr[273]), .rsp_r(rsp_r),
+            .rsp(vmr[272:0]), .provider_fault(1'b0));
+        end else begin : g_hist
         ot_hgi_quant_vm_transport #(.ENABLE(1), .MUTANT(MUT), .SERIAL_SHAPE(SERIAL_SHAPE)) u_tr (.clk(clk), .rst_n(rst_n), .cmd(cmd), .ready(ready), .done(done),
             .fault(fault), .drained(drained), .req_v(req_v), .req_r(take), .req(req), .rsp_v(vmr[273]), .rsp_r(rsp_r),
             .rsp(vmr[272:0]), .provider_fault(1'b0));
+        end
         assign wrq = '0; assign wwq = '0; assign rg_req = 1'b0; assign wg_req = 1'b0;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin vmq <= 338'd0; ret <= 3'd0; end

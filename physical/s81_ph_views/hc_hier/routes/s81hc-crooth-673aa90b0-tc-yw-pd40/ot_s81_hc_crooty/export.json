@@ -1,0 +1,60 @@
+{
+  "name": "ot_s81_hc_crooty",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81hc-crooth-673aa90b0-tc-yw-pd40/routes/s81hc_crooth_673aa90b0_tc_yw_pd40/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81hc-crooth-673aa90b0-tc-yw-pd40/routes/s81hc_crooth_673aa90b0_tc_yw_pd40/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81hc-crooth-673aa90b0-tc-yw-pd40/routes/s81hc_crooth_673aa90b0_tc_yw_pd40/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81hc-crooth-673aa90b0-tc-yw-pd40/routes/s81hc_crooth_673aa90b0_tc_yw_pd40/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81hc-crooth-673aa90b0-tc-yw-pd40/routes/s81hc_crooth_673aa90b0_tc_yw_pd40/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81hc-crooth-673aa90b0-tc-yw-pd40/routes/s81hc_crooth_673aa90b0_tc_yw_pd40/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81hc-crooth-673aa90b0-tc-yw-pd40/routes/s81hc_crooth_673aa90b0_tc_yw_pd40/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "ot_s81_hc_crooty.lef": "6c0de7ae79588933591dc882404a355bf25c93bcfb78dd67e2846e62ec515bef",
+    "ot_s81_hc_crooty_ff.lib": "8e46241a8398520dd2664ff0e1423cf29a4d8908376b29bbdaab882ef15bf529",
+    "ot_s81_hc_crooty_ss.lib": "904b44ac49a176aae8ac5c3840b5c7b4b6a56db06c850c792cabfbf46480479e"
+  },
+  "ok": true
+}
