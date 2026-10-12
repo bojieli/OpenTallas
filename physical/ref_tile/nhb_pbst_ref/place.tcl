@@ -7,9 +7,10 @@ set b [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 proc ot_ref_strip {n} { return [string map {\\ {}} $n] }
 set ot_ref_by {}
-foreach i [lsort -dictionary -command {apply {{a b} {string compare -dictionary [ot_ref_strip [$a getName]] [ot_ref_strip [$b getName]]}}} [$b getInsts]] {
-  if {![[$i getMaster] isBlock]} continue
-  dict lappend ot_ref_by [[$i getMaster] getName] $i
+set ot_ref_l {}
+foreach i [$b getInsts] { if {[[$i getMaster] isBlock]} { lappend ot_ref_l [list [ot_ref_strip [$i getName]] $i] } }
+foreach p [lsort -dictionary -index 0 $ot_ref_l] {
+  set i [lindex $p 1]; dict lappend ot_ref_by [[$i getMaster] getName] $i
 }
 set ot_ref_used {}
 proc ot_ref_pick {by master pat} {

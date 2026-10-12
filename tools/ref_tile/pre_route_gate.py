@@ -213,7 +213,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     # RTL lint
     files = [str(ROOT / f) for f in spec["sources"] if (ROOT / f).exists()]
     hard = sorted({RT.view_name(c["view"]) for c in spec["children"]})
-    r = TL.rtl_lint(files, hard, spec.get("hard_define"))
+    r = TL.rtl_lint(files, hard, spec.get("hard_define"), top=spec["top"])
     for k, v in r["findings"].items():
         sev = "FAIL" if k == "hard_child_params" else "WARN"
         fix = ("decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
@@ -397,7 +397,7 @@ def main(argv=None) -> int:
     ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (ot-epyc2, ...)")
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
     ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700)")
-    ap.add_argument("--mem", type=int, default=32)
+    ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
     g = Gate()

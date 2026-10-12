@@ -1175,7 +1175,7 @@ def module_params(body: str) -> dict:
     return params
 
 
-def rtl_lint(files: list, hard_cells=(), hard_define=None, T=None) -> dict:
+def rtl_lint(files: list, hard_cells=(), hard_define=None, T=None, top=None) -> dict:
     T = dict(RTL_T, **(T or {}))
     texts = []
     for f in files:
@@ -1185,6 +1185,17 @@ def rtl_lint(files: list, hard_cells=(), hard_define=None, T=None) -> dict:
         except OSError:
             continue
     mods = rtl_modules(texts)
+    if top and top in mods:          # only the elaborated hierarchy under the top (other modules in the files never synthesise)
+        keep, todo = set(), [top]
+        while todo:
+            mn = todo.pop()
+            if mn in keep:
+                continue
+            keep.add(mn)
+            for im in re.finditer(r"(?m)^\s*([A-Za-z_]\w*)\s*(?:#\s*\(.*?\)\s*)?[A-Za-z_][\w\[\]: ]*\(", mods[mn], re.S):
+                if im.group(1) in mods and im.group(1) not in keep and im.group(1) not in hard_cells:
+                    todo.append(im.group(1))
+        mods = {k: v for k, v in mods.items() if k in keep}
     F, R = defaultdict(list), defaultdict(list)
     ps_sites = []
     for mn, body in mods.items():
@@ -1251,7 +1262,7 @@ def rtl_lint(files: list, hard_cells=(), hard_define=None, T=None) -> dict:
 
 def rtl_main(a) -> int:
     hc = [x for x in (a.hard_cells or "").split(",") if x]
-    res = rtl_lint(a.files, hc, a.hard_define)
+    res = rtl_lint(a.files, hc, a.hard_define, top=a.top)
     res["verdict"] = "REFUSE" if (res["refuse"] and a.mode == "refuse") else ("WARN" if res["findings"] else "PASS")
     res["would_refuse"] = sorted(res["refuse"])
     if a.out:
@@ -1283,6 +1294,7 @@ def main(argv=None):
     r.add_argument("files", nargs="+")
     r.add_argument("--hard-cells", default="", help="comma list of hard-child module names (cluster)")
     r.add_argument("--hard-define", help="the define selecting the hard-build path")
+    r.add_argument("--top", help="lint only the hierarchy under this module")
     r.add_argument("--mode", choices=("warn", "refuse"), default="warn")
     r.add_argument("--out")
     a = ap.parse_args(argv)
