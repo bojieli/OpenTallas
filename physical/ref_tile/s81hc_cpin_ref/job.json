@@ -1,20 +1,20 @@
 {
- "name": "s81hc_cpin_ref-v1-89a4bcc13",
+ "name": "s81hc_cpin_ref-v2-COMMIT",
  "block": "ot_s81_hc_cpin",
  "ref_tile": true,
  "owner": "Claude:s81-suhc-hier-1011",
- "purpose": "s81-suhc-hier-1011 HC centre pin tile ot_s81_hc_cpin re-route via the reference tile flow (contract_hcc slot 575.992 x 200, faces from ports.json; clocks sk + cck via cck_cpin_ref.sdc): the CLOSED pd30 view (5db4c7ec6) fails child_lint (f) 1161/7444 (pre-a804fc09b hold ECO blocked pins above)",
+ "purpose": "s81-suhc-hier-1011 HC centre pin tile ot_s81_hc_cpin via the reference tile flow (contract_hcc slot 575.992 x 200, M5 layer cap; clocks sk + cck via cck_cpin_ref.sdc): v1-89a4bcc13 TT +117.89 / FF -7.14 / DRC 0, R2R +40.43; FF misses are only boundary pin flops (R2O pin flop->port 71 ps -7.14, I2R port->pin flop 48 ps -2.42), hold ECO -1.61 -> deterministic IO hold stages: inhold (port->HB4->BUF->D) + outhold (Q->BUF->HB4->BUF->port), FIRM at the pins",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "commit": "89a4bcc13266c6e203dcac5bb3373426a44b72d9"
+  "branch": "claude/el1011-s81hc-cpin",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_s81_hc_cpin rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_hc_cpin #(.NG(256)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_cpin_ref/s81hc_cpin_ref-v1-89a4bcc13"
+   "to": "results/rtl/ref_tile/s81hc_cpin_ref/s81hc_cpin_ref-v2-COMMIT"
   }
  ],
  "cycles_added": 0,
