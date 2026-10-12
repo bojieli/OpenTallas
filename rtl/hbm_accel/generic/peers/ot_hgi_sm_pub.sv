@@ -576,8 +576,12 @@ module ot_hgi_sm_pub_slice #(
         if (!rn) begin k_go <= 1'b0; rv_q <= '0; ack_q <= 1'b0; cr_q <= 1'b0; end
         else begin k_go <= c_go; rv_q <= sm_rv; ack_q <= w_ack; cr_q <= so_cr; end
     // ---- the held command and its precomputed offsets
-    reg busy, sm_m, obf, nv, nv1; reg [20:0] dif [0:NSS-1]; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
+    // round 3 (class 5): the command's address arithmetic is a 3-edge start sequence (st 1: p x stride, p x M, s x Q;
+    // st 2: + O.base, M - sQ; st 3: per-(local SM, slot) bases, need clamp) -> nv; no multiply / add chain behind a pin flop
+    reg busy, sm_m, obf, nv; reg [1:0] st; reg [20:0] dif [0:NSS-1]; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
+    reg [17:0] ob_h, ost_h; reg [17:0] pm [0:NC-1]; reg [19:0] pg [0:NC-1];
     reg [17:0] pofs [0:NC-1]; reg [19:0] pgi [0:NC-1];
+    reg [17:0] bs_a [0:NSS-1][0:NC-1]; reg [19:0] bs_g [0:NSS-1][0:NC-1];   // O-address / global-index base per (SM, slot)
     reg [19:0] sqc [0:NSS-1], need [0:NSS-1], recv [0:NSS-1];
     wire [19:0] sq [0:NSS-1];                         // s x Q of the global SM (MUT_ROW: 0 in the addresses only)
     genvar gsq;
@@ -590,8 +594,9 @@ module ot_hgi_sm_pub_slice #(
     reg [11:0] af_r [0:NSS-1][0:AD-1]; reg [NC*32-1:0] af_d [0:NSS-1][0:AD-1];
     reg [ADW:0] af_n [0:NSS-1]; reg [ADW-1:0] af_h [0:NSS-1], af_t [0:NSS-1];
     // ---- engine: P (pick) -> R (FIFO read, global row) -> D (addresses; coalesce / emit)
-    reg p_v, r_v, d_v; reg [LSL-1:0] p_i, r_i, d_i, rrp; reg [19:0] r_row; reg [NC*32-1:0] r_d, d_d;
-    reg [17:0] d_wa [0:NC-1]; reg [19:0] d_gi [0:NC-1]; reg [3:0] d_sp;
+    // round 3 (class 5): D computes the per-slot sector-change flags only (registered into E); E decides and commits
+    reg p_v, r_v, d_v, e_v; reg [LSL-1:0] p_i, r_i, d_i, e_i, rrp; reg [11:0] r_row; reg [NC*32-1:0] r_d, d_d, e_d;
+    reg [17:0] d_wa [0:NC-1], e_wa [0:NC-1]; reg [19:0] d_gi [0:NC-1], e_gi [0:NC-1]; reg [3:0] e_sp; reg [NC-1:0] e_ch;
     // coalescing state per (local SM, slot)
     reg [14:0] k_sec [0:NSS-1][0:NC-1]; reg [7:0] k_msk [0:NSS-1][0:NC-1];
     reg        k_par [0:NSS-1][0:NC-1]; reg [1:0] k_pf [0:NSS-1][0:NC-1];
@@ -608,6 +613,8 @@ module ot_hgi_sm_pub_slice #(
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     // drain: pick (registered) -> SRAM read -> capture -> 2-entry row FIFO -> write packet
+    // round 3 (class 5): drain pick K1 (grant on registered counts, pop, head index registered) -> K2 (entry read, SRAM read)
+    reg dk_v; reg [LNC-1:0] dk_q; reg [PQW-1:0] dk_h;
     reg dr_v, dr_v2, dr_v3; reg [LNC-1:0] dr_q, dr_q2, dr_q3, dr_rr; reg [LSL+24-1:0] dr_e, dr_e2, dr_e3;
     reg [255:0] hq_d [0:1]; reg [14:0] hq_s [0:1]; reg [7:0] hq_m [0:1]; reg [1:0] hq_n; reg hq_h, hq_t;
     reg tok;                                            // a write is out, not yet acknowledged
@@ -615,20 +622,25 @@ module ot_hgi_sm_pub_slice #(
     reg sweep; reg [LSL:0] sw_i;
     reg pend_any, open_q;
     always @* begin
-        pend_any = dr_v || dr_v2 || dr_v3 || hq_n != 0 || p_v || r_v || d_v;
+        pend_any = dk_v || dr_v || dr_v2 || dr_v3 || hq_n != 0 || p_v || r_v || d_v || e_v;
         for (c = 0; c < NC; c = c + 1) if (pq_n[c] != 0) pend_any = 1'b1;
         for (s = 0; s < NSS; s = s + 1) if (af_n[s] != 0) pend_any = 1'b1;
     end
+    wire [NC-1:0] d_ch;
+    genvar gch;
+    generate for (gch = 0; gch < NC; gch = gch + 1) begin : g_ch
+        assign d_ch[gch] = (gch < pp) && (k_msk[d_i][gch] != 0) && (k_sec[d_i][gch] != d_wa[gch][17:3]);
+    end endgenerate
     reg arr_empty;
     always @* begin arr_empty = 1'b1; for (s = 0; s < NSS; s = s + 1) if (af_n[s] != 0) arr_empty = 1'b0; end
     // data-only registers (no reset)
     always @(posedge clk) for (c = 0; c < NC; c = c + 1) if (dr_v2 && dr_q2 == c) m_cap[c] <= m_rd[c];
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; nv <= 1'b0; nv1 <= 1'b0; all_rows <= 1'b0; s_done <= 1'b0; s_fault <= 1'b0;
+            busy <= 1'b0; sm_m <= 1'b0; obf <= 1'b0; nv <= 1'b0; st <= 2'd0; all_rows <= 1'b0; s_done <= 1'b0; s_fault <= 1'b0;
             w_v <= 1'b0; so_v <= 1'b0; tok <= 1'b0; cr <= SDW'(SD); sweep <= 1'b0; sw_i <= '0; open_q <= 1'b0;
-            p_v <= 1'b0; r_v <= 1'b0; d_v <= 1'b0; rrp <= '0; d_sp <= 4'd0; m_we <= '0; m_re <= '0;
-            dr_v <= 1'b0; dr_v2 <= 1'b0; dr_v3 <= 1'b0; dr_rr <= '0; hq_n <= 2'd0; hq_h <= 1'b0; hq_t <= 1'b0;
+            p_v <= 1'b0; r_v <= 1'b0; d_v <= 1'b0; e_v <= 1'b0; rrp <= '0; e_sp <= 4'd0; m_we <= '0; m_re <= '0;
+            dk_v <= 1'b0; dr_v <= 1'b0; dr_v2 <= 1'b0; dr_v3 <= 1'b0; dr_rr <= '0; hq_n <= 2'd0; hq_h <= 1'b0; hq_t <= 1'b0;
             for (s = 0; s < NSS; s = s + 1) begin af_n[s] <= '0; af_h[s] <= '0; af_t[s] <= '0; recv[s] <= '0; need[s] <= '0; end
             for (i = 0; i < NSS; i = i + 1) for (p = 0; p < NC; p = p + 1) begin
                 k_msk[i][p] <= 8'd0; k_par[i][p] <= 1'b0; k_pf[i][p] <= 2'b00; end
@@ -648,21 +660,22 @@ module ot_hgi_sm_pub_slice #(
             // ---- the command (fields from the pin flops); need follows one edge later
             all_rows <= nv && busy && &rdone;
             if (k_go) begin
-                busy <= 1'b1; sm_m <= k_sm; obf <= k_bf; mm <= k_mm; qq <= k_qq; pp <= k_pp; nv <= 1'b0; nv1 <= 1'b0;
-                all_rows <= 1'b0;
-                sweep <= 1'b0;
-                for (p = 0; p < NC; p = p + 1) begin pofs[p] <= k_ob + 18'(p * k_ost); pgi[p] <= 20'(p * k_mm); end
-                for (s = 0; s < NSS; s = s + 1) sqc[s] <= 20'(({17'd0, sid} * NSS + s) * {7'd0, k_qq});
-            end
-            // need = clamp(M - sQ, 0, Q) over two edges (class 5 split, round 2): the difference, then the clamp
-            if (busy && !k_go && !nv1 && !nv) begin
+                busy <= 1'b1; sm_m <= k_sm; obf <= k_bf; mm <= k_mm; qq <= k_qq; pp <= k_pp; nv <= 1'b0; st <= 2'd1;
+                ob_h <= k_ob; ost_h <= k_ost; all_rows <= 1'b0; sweep <= 1'b0;
+            end else if (busy && st == 2'd1) begin
+                for (p = 0; p < NC; p = p + 1) begin pm[p] <= 18'(p * ost_h); pg[p] <= 20'(p * mm); end
+                for (s = 0; s < NSS; s = s + 1) sqc[s] <= 20'(({17'd0, sid} * NSS + s) * {7'd0, qq});
+                st <= 2'd2;
+            end else if (busy && st == 2'd2) begin
+                for (p = 0; p < NC; p = p + 1) begin pofs[p] <= ob_h + pm[p]; pgi[p] <= pg[p]; end
                 for (s = 0; s < NSS; s = s + 1) dif[s] <= {1'b0, mm} - {1'b0, sqc[s]};
-                nv1 <= 1'b1;
-            end
-            if (busy && nv1 && !nv) begin
-                for (s = 0; s < NSS; s = s + 1)
+                st <= 2'd3;
+            end else if (busy && st == 2'd3) begin
+                for (s = 0; s < NSS; s = s + 1) begin
                     need[s] <= (!sm_en[s] || dif[s][20] || dif[s] == 21'd0) ? 20'd0 : (dif[s][19:0] > {7'd0, qq}) ? {7'd0, qq} : dif[s][19:0];
-                nv <= 1'b1;
+                    for (p = 0; p < NC; p = p + 1) begin bs_a[s][p] <= pofs[p] + sq[s][17:0]; bs_g[s][p] <= pgi[p] + sq[s]; end
+                end
+                nv <= 1'b1; st <= 2'd0;
             end
             // ---- arrivals (pre-armed: counted and queued whether or not the command has arrived)
             for (s = 0; s < NSS; s = s + 1) if (rv_q[s]) begin
@@ -670,20 +683,18 @@ module ot_hgi_sm_pub_slice #(
                 if (an[s] == AD) s_fault <= 1'b1;                           // overrun: fail closed
                 else begin af_r[s][af_t[s]] <= rr_q[s]; af_d[s][af_t[s]] <= rd_q[s]; af_t[s] <= af_t[s] + 1'b1; an[s] = an[s] + 1'b1; end
             end
-            // ---- D: coalesce (VM) / emit (STREAM)
+            // ---- E: decide on the registered sector-change flags; coalesce (VM) / emit (STREAM)
             ok = 1'b1; beat = 1'b0;
-            if (d_v && !sm_m) begin
-                for (p = 0; p < NC; p = p + 1) if (p < pp) begin : chk
-                    reg [14:0] sc; reg ch; reg np;
-                    sc = d_wa[p][17:3]; ch = (k_msk[d_i][p] != 0) && (k_sec[d_i][p] != sc);
-                    np = MUT_PAR ? k_par[d_i][p] : !k_par[d_i][p];
-                    if (ch && (qn_[p] == PQ || pf_[d_i][p][np])) ok = 1'b0;
+            if (e_v && !sm_m) begin
+                for (p = 0; p < NC; p = p + 1) begin : chk
+                    reg np;
+                    np = MUT_PAR ? k_par[e_i][p] : !k_par[e_i][p];
+                    if (e_ch[p] && (qn_[p] == PQ || pf_[e_i][p][np])) ok = 1'b0;
                 end
                 if (ok) begin
                     for (p = 0; p < NC; p = p + 1) if (p < pp) begin : co
                         reg [14:0] sc; reg [2:0] w; reg ch; reg par;
-                        sl = d_i; sc = d_wa[p][17:3]; w = d_wa[p][2:0];
-                        ch = (k_msk[sl][p] != 0) && (k_sec[sl][p] != sc);
+                        sl = e_i; sc = e_wa[p][17:3]; w = e_wa[p][2:0]; ch = e_ch[p];
                         par = k_par[sl][p];
                         if (ch) begin                                       // the old sector -> a pending flush
                             pq_e[p][pq_t[p]] <= {LSL'(sl), par, k_sec[sl][p], k_msk[sl][p]};
@@ -692,33 +703,40 @@ module ot_hgi_sm_pub_slice #(
                             par = MUT_PAR ? par : !par;
                             k_par[sl][p] <= par;
                         end
-                        m_we[p] <= 1'b1; m_wa[p] <= 7'({LSL'(sl), par}); m_wd[p] <= d_d[32*p +: 32]; m_ww[p] <= w;
+                        m_we[p] <= 1'b1; m_wa[p] <= 7'({LSL'(sl), par}); m_wd[p] <= e_d[32*p +: 32]; m_ww[p] <= w;
                         k_sec[sl][p] <= sc;
                         k_msk[sl][p] <= (ch || k_msk[sl][p] == 0) ? (8'd1 << w) : (k_msk[sl][p] | (8'd1 << w));
                     end
-                    d_v <= 1'b0;
+                    e_v <= 1'b0;
                 end
-            end else if (d_v && sm_m) begin
+            end else if (e_v && sm_m) begin
                 ok = 1'b0;
                 if (cr != 0) begin                                          // one beat an edge, against a credit
                     beat = 1'b1;
-                    so_v <= 1'b1; so_idx <= d_gi[d_sp]; so_data <= rb(d_d[32*d_sp +: 32], obf);
-                    if (d_sp + 4'd1 >= pp) begin d_v <= 1'b0; d_sp <= 4'd0; ok = 1'b1; end
-                    else d_sp <= d_sp + 4'd1;
+                    so_v <= 1'b1; so_idx <= e_gi[e_sp]; so_data <= rb(e_d[32*e_sp +: 32], obf);
+                    if (e_sp + 4'd1 >= pp) begin e_v <= 1'b0; e_sp <= 4'd0; ok = 1'b1; end
+                    else e_sp <= e_sp + 4'd1;
                 end
+            end
+            // ---- D -> E: only when E is empty during this cycle (no commit at this edge: the flags are current)
+            if (d_v && !e_v) begin
+                e_v <= 1'b1; e_i <= d_i; e_d <= d_d; e_ch <= d_ch;
+                for (p = 0; p < NC; p = p + 1) begin e_wa[p] <= d_wa[p]; e_gi[p] <= d_gi[p]; end
+                d_v <= 1'b0;
             end
             cr <= cr - (beat ? 1'b1 : 1'b0) + (cr_q ? 1'b1 : 1'b0);
             // ---- R -> D: the P addresses
             // round 2 (class 5): every stage accepts only when it is empty at the edge (registered enables; no stall cone
             // from the coalesce decision back through R and P): one record per 2 edges per slice
-            if (r_v && !d_v) begin
+            if (r_v && !d_v && nv) begin                                     // the bases are in (start sequence done)
                 d_v <= 1'b1; d_i <= r_i; d_d <= r_d;
-                for (p = 0; p < NC; p = p + 1) begin d_wa[p] <= pofs[p] + r_row[17:0]; d_gi[p] <= pgi[p] + r_row; end
+                for (p = 0; p < NC; p = p + 1) begin
+                    d_wa[p] <= bs_a[r_i][p] + {6'd0, r_row}; d_gi[p] <= bs_g[r_i][p] + {8'd0, r_row}; end
                 r_v <= 1'b0;
             end
             // ---- P -> R: read (and pop) the picked SM's FIFO head
             if (p_v && !r_v) begin
-                r_v <= 1'b1; r_i <= p_i; r_d <= af_d[p_i][af_h[p_i]]; r_row <= sq[p_i] + {8'd0, af_r[p_i][af_h[p_i]]};
+                r_v <= 1'b1; r_i <= p_i; r_d <= af_d[p_i][af_h[p_i]]; r_row <= af_r[p_i][af_h[p_i]];
                 af_h[p_i] <= af_h[p_i] + 1'b1; an[p_i] = an[p_i] - 1'b1;
                 p_v <= 1'b0;
             end
@@ -734,7 +752,7 @@ module ot_hgi_sm_pub_slice #(
             end
             for (s = 0; s < NSS; s = s + 1) af_n[s] <= an[s];
             // ---- end sweep (VM): every open sector -> a pending flush (a local SM an edge)
-            if (busy && !sm_m && nv && all_rows && &rdone && arr_empty && !p_v && !r_v && !d_v && !sweep) begin
+            if (busy && !sm_m && nv && all_rows && &rdone && arr_empty && !p_v && !r_v && !d_v && !e_v && !sweep) begin
                 sweep <= 1'b1; sw_i <= '0;
             end
             if (sweep && sw_i < NSS) begin : swp
@@ -768,14 +786,18 @@ module ot_hgi_sm_pub_slice #(
                 hq_n <= n_;
                 dr_v3 <= dr_v2; dr_q3 <= dr_q2; dr_e3 <= dr_e2;
                 dr_v2 <= dr_v; dr_q2 <= dr_q; dr_e2 <= dr_e; dr_v <= 1'b0;
-                dr_go = ({1'b0, n_} + (dr_v ? 3'd1 : 3'd0) + (dr_v2 ? 3'd1 : 3'd0)) < 3'd2;   // room for every read in flight
+                dr_go = ({1'b0, n_} + (dk_v ? 3'd1 : 3'd0) + (dr_v ? 3'd1 : 3'd0) + (dr_v2 ? 3'd1 : 3'd0)) < 3'd2;   // room for every read in flight
+                if (dk_v) begin                                             // K2: the popped entry -> SRAM read
+                    dr_q <= dk_q; dr_e <= pq_e[dk_q][dk_h]; dr_v <= 1'b1;
+                    m_re[dk_q] <= 1'b1; m_ra[dk_q] <= 7'({pq_e[dk_q][dk_h][LSL+23:24], pq_e[dk_q][dk_h][23]});
+                end
+                dk_v <= 1'b0;
             end
             if (dr_go) begin : pk
                 reg f; integer q_; f = 1'b0;
                 for (c = 0; c < NC; c = c + 1) begin q_ = (dr_rr + 1 + c) % NC;
-                    if (!f && pq_n[q_] != 0) begin
-                        f = 1'b1; dr_rr <= LNC'(q_); dr_q <= LNC'(q_); dr_e <= pq_e[q_][pq_h[q_]]; dr_v <= 1'b1;
-                        m_re[q_] <= 1'b1; m_ra[q_] <= 7'({pq_e[q_][pq_h[q_]][LSL+23:24], pq_e[q_][pq_h[q_]][23]});
+                    if (!f && pq_n[q_] != 0) begin                          // K1: grant, pop, head index
+                        f = 1'b1; dr_rr <= LNC'(q_); dk_q <= LNC'(q_); dk_h <= pq_h[q_]; dk_v <= 1'b1;
                         pq_h[q_] <= pq_h[q_] + 1'b1; qn_[q_] = qn_[q_] - 1'b1;
                     end
                 end
@@ -786,7 +808,7 @@ module ot_hgi_sm_pub_slice #(
             done_now = busy && !k_go && nv && all_rows && &rdone && !pend_any && !tok && !w_v && !so_v &&
                        (sm_m || (sweep && sw_i >= NSS && !open_q));
             if (done_now) begin
-                busy <= 1'b0; s_done <= 1'b1; sweep <= 1'b0; nv <= 1'b0; nv1 <= 1'b0;
+                busy <= 1'b0; s_done <= 1'b1; sweep <= 1'b0; nv <= 1'b0; st <= 2'd0;
                 for (s = 0; s < NSS; s = s + 1) recv[s] <= rv_q[s] ? 20'd1 : 20'd0;
             end
         end
