@@ -1,0 +1,57 @@
+{
+  "name": "ot_p2h_fadd16",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/view:/out",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtp-p2h-fa-50b05596a-tc-a/routes/mtp_p2h_fa_50b05596a_tc_a/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_p2h_fadd16.lef": "ee3ed207b76983d0896c8a792e67203e542dc0ae2babdaa7c67027957ab61d8a",
+    "ot_p2h_fadd16_ff.lib": "db79f99ab361a73b08046551f081e7fc738b95e3641819961ba12732f0a276d5",
+    "ot_p2h_fadd16_ss.lib": "3c37f2b23e42e6f50a3d834c2162a83be1d5f43f9d20fff67fa6bc536074ece0"
+  },
+  "ok": true
+}
