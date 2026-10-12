@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  302.4,
+  410.4,
   542.16
  ],
  "core": [
   2.16,
   2.16,
-  300.23999999999995,
+  408.23999999999995,
   540.0
  ],
  "why": "spec outline",
@@ -52,7 +52,7 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 69.12,
+   "x": 118.8,
    "y": 30.24,
    "w": 171.288,
    "h": 77.784,
@@ -65,7 +65,7 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 69.12,
+   "x": 118.8,
    "y": 129.6,
    "w": 171.288,
    "h": 77.784,
@@ -78,7 +78,7 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 69.12,
+   "x": 118.8,
    "y": 231.12,
    "w": 171.288,
    "h": 77.784,
@@ -91,7 +91,7 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 69.12,
+   "x": 118.8,
    "y": 332.64,
    "w": 171.288,
    "h": 77.784,
@@ -104,7 +104,7 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 69.12,
+   "x": 118.8,
    "y": 432.0,
    "w": 171.288,
    "h": 77.784,
@@ -112,7 +112,14 @@
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 34% outside 45%-60% (std 6553 + macro 66617 in core 218406 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",

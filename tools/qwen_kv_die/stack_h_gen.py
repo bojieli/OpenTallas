@@ -499,6 +499,57 @@ module ot_nhb_rp_h""")
     generate for (c = 0; c < NC; c = c + 1) begin : g_rp
         (* keep_hierarchy *) ot_nhb_rp2_h #(.AW(AW), .D(D)) u_rp (.clk(clk), .rst_n(rst_n), .pq(pq[c * NQ / NC]), .ra(rpc[AW*c +: AW]));""")
     s = rep(s, """// FP32 a > b for finite operands""", ROWS2 + """// FP32 a > b for finite operands""")
+    return hsub(s)
+
+
+def hsub(s):
+    """el1011-q-kvd-head 2026-10-11 (owner textbook audit, class 1 / 3 / 5 on qkd_rhead): opt-in (`KVD_HSUB`, default
+    off) hierarchical head tile rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv -- 16 hardened 8-lane sub-tiles + a K-tree
+    tile with registered seams.  Same arithmetic and order; the head's score arrives HXK cycles later and its node slice
+    HXN cycles later, so the control tile's score tag depth (KDEPTH -> SCD) and node-beat tag line (u_nbt) take them.
+    KDRAIN is unchanged (the lane adders now hold only K levels 1-3), so the V issue schedule is the default's."""
+    i = s.index('module ot_qwen_nearhbm_ectl_h #(')
+    j = s.index('endmodule', i)
+    e = s[i:j]
+    e = rep(e, """    parameter integer ND = 1             // re-cut D: staged nodes a engine at the aggregator (= the engine's credits)
+""", """    parameter integer ND = 1,            // re-cut D: staged nodes a engine at the aggregator (= the engine's credits)
+    parameter integer HXK = 0,           // el1011-q-kvd-head: extra head score latency (hierarchical head, KVD_HSUB)
+    parameter integer HXN = 0            // el1011-q-kvd-head: extra head node-slice latency
+""")
+    e = rep(e, 'localparam integer KDEPTH = 4 + LV * ADD_LAT + MUL_LAT;',
+            'localparam integer KDEPTH = 4 + LV * ADD_LAT + MUL_LAT + HXK;')
+    e = rep(e, 'ot_hdc_delay #(.W(10), .D(7), .RESET(1)) u_nbt', 'ot_hdc_delay #(.W(10), .D(7 + HXN), .RESET(1)) u_nbt')
+    s = s[:i] + e + s[j:]
+    s = rep(s, """    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
+                             .LFB(LFB), .ND(ND)) u_ctl (""", """    // el1011-q-kvd-head: KVD_HSUB selects the hierarchical head tile (ot_qwen_nearhbm_head_hs; default off)
+`ifdef KVD_HSUB
+    localparam integer HSUB = 1;
+`else
+    localparam integer HSUB = 0;
+`endif
+    localparam integer NRI = 2, NRK = 2, NRN = 2;          // head_hs parent relay stages: inputs, K partials, node slice
+    localparam integer HXK = HSUB ? NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
+    localparam integer HXN = HSUB ? NRI + NRN : 0;
+    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
+                             .LFB(LFB), .ND(ND), .HXK(HXK), .HXN(HXN)) u_ctl (""")
+    s = rep(s, """        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
+            .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
+            .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));""", """        if (HSUB != 0) begin : g_hs
+        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRI(NRI),
+                                  .NRK(NRK), .NRN(NRN)) u_head (
+            .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
+            .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));
+        end else begin : g_hh
+        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
+            .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
+            .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
+            .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
+            .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));
+        end""")
     return s
 
 
