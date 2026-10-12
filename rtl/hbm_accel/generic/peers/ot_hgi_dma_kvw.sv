@@ -77,21 +77,24 @@ module ot_hgi_dma_kvw_core #(
 );
     // ================================================================ descriptor FIFO (two readers: issue, write)
     reg [14:0] f_vs [0:3], f_vst [0:3]; reg [31:0] f_ds [0:3], f_dst [0:3]; reg [17:0] f_ns [0:3]; reg [19:0] f_m [0:3];
+    // hbm-fq/dma 10-11 (route d8ef9b43d TT -53.6 f_w -> mux -> ds + dst + 1 -> w_dnx1): the write side's destination
+    // sums are computed when the descriptor enters the FIFO (station -> adder -> entry), so dispatch only selects registers
+    reg [31:0] f_dsn [0:3], f_dnx [0:3], f_dnx1 [0:3]; reg [3:0] f_l1;
     reg [2:0] f_t, f_i, f_w;
+    (* keep *) reg [2:0] f_wu;                              // f_w copy for the undispatched-move distance (ud[4])
     reg st_v; reg [14:0] st_vs, st_vst; reg [31:0] st_ds, st_dst; reg [17:0] st_ns; reg [19:0] st_m;                                // tail, issue head, write head (mod 8 counters, 4 entries)
     // ================================================================ issue (I)
     reg        i_act; reg [14:0] i_vs, i_vnx, i_vst; reg [17:0] i_left, i_ns; reg [19:0] i_rows;
     wire       i_le1 = i_left == 18'd1, i_eq2 = i_left == 18'd2;      // registered-input compares (parallel to the decision)
     wire [14:0] i_vs1 = i_vs + 15'd1, i_vs2 = i_vs + 15'd2; wire [17:0] i_lm1 = i_left - 18'd1, i_lm2 = i_left - 18'd2;
     reg [1:0]  occ [0:31];                                  // a lane's sectors issued, not drained (<= 2: its hold entries)
-    reg [31:0] kqv, kqv_d; reg [14:0] kq_s [0:31];          // valid (reset) / sector (no reset) a lane
+    reg [31:0] kqv, kqv_d; reg [14:0] kq_s [0:31];          // valid (reset) / sector, zero when not valid (no reset)
     genvar gk;
     for (gk = 0; gk < 32; gk = gk + 1) begin : g_kq
-        assign kq[gk*16 +: 16] = {kqv[gk], kq_s[gk] & {15{kqv[gk]}}};
+        assign kq[gk*16 +: 16] = {kqv[gk], kq_s[gk]};
     end
-    always @(posedge clk) if (pi_n != 2'd0) begin                // the applied decision's sectors (no reset)
-        kq_s[pi_l0] <= pi_vs; if (pi_n == 2'd2) kq_s[pi_l1] <= 15'(pi_vs + 15'd1);
-    end                                  // lanes with a request in kq / one edge earlier (not yet in gcr_q)
+    always @(posedge clk) for (integer l = 0; l < 32; l = l + 1)  // the applied decision's sectors, registered masked
+        kq_s[l] <= (pi_n != 2'd0 && pi_l0 == 5'(l)) ? pi_vs : (pi_n == 2'd2 && pi_l1 == 5'(l)) ? 15'(pi_vs + 15'd1) : 15'd0;                                  // lanes with a request in kq / one edge earlier (not yet in gcr_q)
     // registered boundary (standalone element): the grant and the mover's credit counters are pin-flopped; the requests of
     // the last two edges are not in gcr_q yet, so a lane needs more credits than those
     reg gnt_q; reg [32*6-1:0] gcr_q;
@@ -107,14 +110,20 @@ module ot_hgi_dma_kvw_core #(
     function automatic [2:0] ipend(input [4:0] l);           // occupancy / credits the unapplied decision takes on lane l
         ipend = 3'((pi_n != 2'd0 && pi_l0 == l) ? 1 : 0) + 3'((pi_n == 2'd2 && pi_l1 == l) ? 1 : 0);
     endfunction
+    // route d8ef9b43d TT -6.4 i_vs -> lane mux -> occupancy / credit compares -> i_rows: every lane's room is evaluated in
+    // parallel from registered state, and the cursor only selects one bit (and its neighbour)
+    reg [31:0] lok;
+    always @* begin : ilok
+        for (integer l = 0; l < 32; l = l + 1) begin : ll
+            reg [2:0] pp; pp = ipend(5'(l));
+            lok[l] = 3'(occ[l]) + pp < 3'd2 && gcr_q[l*6 +: 6] > 6'(3'(kqv[l]) + 3'(kqv_d[l]) + pp);
+        end
+    end
     always @* begin : idec
-        reg ok0, ok1; reg [2:0] p0, p1;
+        reg ok0, ok1;
         l0 = i_vs[4:0]; l1 = 5'(i_vs[4:0] + 5'd1);
-        p0 = ipend(l0); p1 = ipend(l1);
-        ok0 = i_act && gnt_q && buf_ok && 3'(occ[l0]) + p0 < 3'd2 &&
-              gcr_q[l0*6 +: 6] > 6'(3'(kqv[l0]) + 3'(kqv_d[l0]) + p0);
-        ok1 = ok0 && !i_le1 && 3'(occ[l1]) + p1 < 3'd2 &&
-              gcr_q[l1*6 +: 6] > 6'(3'(kqv[l1]) + 3'(kqv_d[l1]) + p1);
+        ok0 = i_act && gnt_q && buf_ok && lok[l0];
+        ok1 = ok0 && !i_le1 && lok[l1];
         ok_n = ok1 ? 2'd2 : ok0 ? 2'd1 : 2'd0;
         i_rend = ok1 ? i_eq2 : ok0 ? i_le1 : 1'b0;          // this decision ends the row
         i_last = i_rend && i_rows == 20'd1;                 // ... and the move
@@ -180,8 +189,8 @@ module ot_hgi_dma_kvw_core #(
     reg [3:0] oh [0:3];                                     // the head pointer one-hot (registered): AND-OR output pick
     reg [3:0]  w_acc, w_ack; reg [6:0] wo [0:3];
     wire [3:0] rl;
-    wire [3:0] oh_v, x_v, q_ld; wire [31:0] oh_s [0:3]; wire [255:0] oh_d [0:3];
-    reg  [3:0] q_v, k_v; reg [31:0] q_s [0:3], k_s [0:3]; reg [255:0] q_d [0:3], k_d [0:3];
+    wire [3:0] oh_v, x_v; wire [31:0] oh_s [0:3]; wire [255:0] oh_d [0:3];
+    reg  [1:0] e_v [0:3]; reg [3:0] wp, rp, kv_r, kw_wo_r; reg [31:0] e_s0 [0:3], e_s1 [0:3]; reg [255:0] e_d0 [0:3], e_d1 [0:3];
     // a stream's next slot is readable: written (w_cnt - q in 1 .. 512)
     // hbm-fq/dma 10-11 (cal cbf118fb5 2_1_floorplan WNS -361 ps into w_ds[1][31]: slot-distance subtract + compare + the
     // rotating pick + the 32-b destination increment / row-end mux in one cycle): the write-side decision is PIPELINED.
@@ -214,34 +223,46 @@ module ot_hgi_dma_kvw_core #(
     // each stream's / the undispatched move's distance from the issue count, R2 their max; buf_ok takes it with a margin
     // for the 3 edges of issue it lags (<= 2 slots an edge)
     reg  [9:0] ud [0:4]; reg [9:0] used;
-    genvar gl;
+    genvar gl, gc;
     for (gl = 0; gl < 4; gl = gl + 1) begin : g_lane
-        // ring head (registered pointer, AND-OR pick) -> the lane's OUTPUT REGISTER pair (route 89c140d31: the AND-OR to the
-        // kw_wdata pins missed the 0.2 T output budget by 35-75 ps, and kw_rdy -> pop -> res / ring state missed the input
-        // budget by 63 ps).  q = presented request (drives the pins straight from flops), k = skid entry.  The ring hands its
-        // head over when the skid is empty (registered); kw_rdy only enables the q load and the two valids.
+        // ring head (registered pointer, AND-OR pick) -> the lane's OUTPUT PAIR (ping-pong) -> pins.
+        // Route d8ef9b43d (q = presented, k = skid): kw_rdy enabled the load of all 288 q flops, and its buffer tree missed
+        // the 0.2 T input budget by 61 ps at the routed insertion.  Now kw_rdy reaches only control flops: the accepted
+        // entry's valid, the read pointer (and its select copies) and the registered kw_v / kw_wo.  The entries are
+        // written from the ring only into an entry that is empty in REGISTERED state (alternately, wp), read alternately
+        // (rp); the pins take a 2:1 select of the two entry registers by kept copies of rp (one per 32 bits, short fanout).
+        // Full rate: while one entry is presented the other is already loaded; a freed entry refills on the next edge.
         assign oh_v[gl] = |(oa_v[gl] & oh[gl]);
         assign oh_s[gl] = (oa_s[gl*4] & {32{oh[gl][0]}}) | (oa_s[gl*4+1] & {32{oh[gl][1]}}) |
                          (oa_s[gl*4+2] & {32{oh[gl][2]}}) | (oa_s[gl*4+3] & {32{oh[gl][3]}});
         assign oh_d[gl] = (oa_d[gl*4] & {256{oh[gl][0]}}) | (oa_d[gl*4+1] & {256{oh[gl][1]}}) |
                          (oa_d[gl*4+2] & {256{oh[gl][2]}}) | (oa_d[gl*4+3] & {256{oh[gl][3]}});
-        assign x_v[gl] = oh_v[gl] && !k_v[gl];
-        assign q_ld[gl] = !q_v[gl] || kw_rdy[gl];
-        assign kw_v[gl] = q_v[gl];
-        assign kw_addr[gl*37 +: 37] = {q_s[gl], 5'd0};
-        assign kw_wdata[gl*256 +: 256] = q_d[gl];
+        wire acc = kv_r[gl] && kw_rdy[gl];                  // a transfer at this edge
+        assign x_v[gl] = oh_v[gl] && !(wp[gl] ? e_v[gl][1] : e_v[gl][0]);
+        assign kw_v[gl] = kv_r[gl];
+        (* keep *) reg [8:0] rpc;                            // rp copies: [7:0] one per 32 data bits, [8] the address
+        for (gc = 0; gc < 8; gc = gc + 1) begin : g_d
+            assign kw_wdata[gl*256 + gc*32 +: 32] = rpc[gc] ? e_d1[gl][gc*32 +: 32] : e_d0[gl][gc*32 +: 32];
+        end
+        assign kw_addr[gl*37 +: 37] = {rpc[8] ? e_s1[gl] : e_s0[gl], 5'd0};
         always @(posedge clk) begin : oq_d                      // datapath: no reset
-            if (x_v[gl]) begin k_s[gl] <= oh_s[gl]; k_d[gl] <= oh_d[gl]; end
-            if (q_ld[gl] && (k_v[gl] || x_v[gl])) begin q_s[gl] <= k_v[gl] ? k_s[gl] : oh_s[gl]; q_d[gl] <= k_v[gl] ? k_d[gl] : oh_d[gl]; end
+            if (x_v[gl] && !wp[gl]) begin e_s0[gl] <= oh_s[gl]; e_d0[gl] <= oh_d[gl]; end
+            if (x_v[gl] &&  wp[gl]) begin e_s1[gl] <= oh_s[gl]; e_d1[gl] <= oh_d[gl]; end
+        end
+        for (gc = 0; gc < 9; gc = gc + 1) begin : g_rpc   // select copies (no reset: rp is 0 under reset, acc 0)
+            always @(posedge clk) rpc[gc] <= rp[gl] ^ acc;
         end
         always @(posedge clk or negedge rl[3]) begin : oq_v
-            if (!rl[3]) begin q_v[gl] <= 1'b0; k_v[gl] <= 1'b0; end
+            reg [1:0] ev; reg rpn;
+            if (!rl[3]) begin e_v[gl] <= 2'd0; wp[gl] <= 1'b0; rp[gl] <= 1'b0; kv_r[gl] <= 1'b0; end
             else begin
-                if (q_ld[gl]) q_v[gl] <= k_v[gl] || x_v[gl];
-                k_v[gl] <= (k_v[gl] || x_v[gl]) && !q_ld[gl];
+                ev = e_v[gl]; rpn = rp[gl] ^ acc;
+                if (acc) ev[rp[gl]] = 1'b0;
+                if (x_v[gl]) begin ev[wp[gl]] = 1'b1; wp[gl] <= !wp[gl]; end
+                e_v[gl] <= ev; rp[gl] <= rpn; kv_r[gl] <= ev[rpn];
             end
         end
-        assign kw_wo[gl] = wo[gl] != 7'd0 || w_acc[gl];
+        assign kw_wo[gl] = kw_wo_r[gl];
     end
     // ================================================================ registers
     // reset: four relayed regions (textbook audit 10-11: the port reset reached 3,418 loads), one a section; datapath
@@ -259,13 +280,15 @@ module ot_hgi_dma_kvw_core #(
             if (st_v) begin
                 f_vs[f_t[1:0]] <= st_vs; f_vst[f_t[1:0]] <= st_vst; f_ds[f_t[1:0]] <= st_ds; f_dst[f_t[1:0]] <= st_dst;
                 f_ns[f_t[1:0]] <= st_ns; f_m[f_t[1:0]] <= st_m; f_t <= f_t + 3'd1;
+                f_dsn[f_t[1:0]] <= st_ds + 32'd1; f_dnx[f_t[1:0]] <= st_ds + st_dst; f_dnx1[f_t[1:0]] <= st_ds + st_dst + 32'd1;
+                f_l1[f_t[1:0]] <= st_ns == 18'd1;
             end
             c_rdy <= 3'(f_t + {2'd0, st_v} - f_w) < 3'd2 && !(c_v && c_rdy) && !st_v;   // registered: FIFO + station <= 3
             // ---- completion
             idle <= !owed && !(c_v && c_rdy) && !st_v;
             if (owed && f_t == f_w && !i_act && o_n == 7'd0 && pi_n == 2'd0 && pd_n == 2'd0 && !d_v[0] && !d_v[1] &&
                 !d_v2[0] && !d_v2[1] && !d_v3[0] && !d_v3[1] && !b0_we && !b1_we && w_act == 4'd0 && !m1_v[0] && !m1_v[1] && !m2_v[0] && !m2_v[1] &&
-                oa_v[0] == 4'd0 && q_v == 4'd0 && k_v == 4'd0 && oa_v[1] == 4'd0 && oa_v[2] == 4'd0 && oa_v[3] == 4'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
+                oa_v[0] == 4'd0 && kv_r == 4'd0 && e_v[0] == 2'd0 && e_v[1] == 2'd0 && e_v[2] == 2'd0 && e_v[3] == 2'd0 && oa_v[1] == 4'd0 && oa_v[2] == 4'd0 && oa_v[3] == 4'd0 && w_acc == 4'd0 && w_ack == 4'd0 &&
                 wo[0] == 7'd0 && wo[1] == 7'd0 && wo[2] == 7'd0 && wo[3] == 7'd0 && !st_v) begin
                 // every accepted move drained (a move accepted on this edge stays owed: its own done comes later)
                 owed <= c_v && c_rdy; done <= 1'b1; idle <= !(c_v && c_rdy);
@@ -303,7 +326,11 @@ module ot_hgi_dma_kvw_core #(
                 o_t <= o_t + 6'(pi_n); q_iss <= q_iss + 10'(pi_n);
             end
             for (integer t = 0; t < 4; t = t + 1) ud[t] <= w_act[t] ? 10'(q_iss - w_q[t]) : 10'd0;
-            ud[4] <= (f_w != f_i) ? 10'(q_iss - f_q[f_w[1:0]]) : 10'd0;
+            begin : ud4                                     // (route d8ef9b43d TT -26.8 f_w -> mux -> subtract)
+                reg [9:0] dq [0:3];
+                for (integer e = 0; e < 4; e = e + 1) dq[e] = 10'(q_iss - f_q[e]);
+                ud[4] <= (f_wu != f_i) ? dq[f_wu[1:0]] : 10'd0;
+            end
             begin : umax
                 reg [9:0] m01, m23, m; m01 = (ud[0] > ud[1]) ? ud[0] : ud[1]; m23 = (ud[2] > ud[3]) ? ud[2] : ud[3];
                 m = (m01 > m23) ? m01 : m23; used <= (m > ud[4]) ? m : ud[4];
@@ -361,15 +388,15 @@ module ot_hgi_dma_kvw_core #(
     end
     always @(posedge clk or negedge rl[3]) begin
         if (!rl[3]) begin
-            f_w <= 3'd0; b0_re <= 1'b0; b1_re <= 1'b0; w_act <= 4'd0; m1_v[0] <= 1'b0; m1_v[1] <= 1'b0; m2_v[0] <= 1'b0; m2_v[1] <= 1'b0; w_acc <= 4'd0; w_ack <= 4'd0;
+            f_w <= 3'd0; f_wu <= 3'd0; b0_re <= 1'b0; b1_re <= 1'b0; w_act <= 4'd0; m1_v[0] <= 1'b0; m1_v[1] <= 1'b0; m2_v[0] <= 1'b0; m2_v[1] <= 1'b0; w_acc <= 4'd0; w_ack <= 4'd0;
             pr[0] <= 2'd0; pr[1] <= 2'd0; r0 <= 4'd0; r1 <= 4'd0; lg <= 4'd0; w_lst <= 4'd0;
-            for (integer l = 0; l < 4; l = l + 1) begin res[l] <= 3'd0; op[l] <= 2'd0; ot[l] <= 2'd0; oh[l] <= 4'd1; wo[l] <= 7'd0; oa_v[l] <= 4'd0; end
+            for (integer l = 0; l < 4; l = l + 1) begin res[l] <= 3'd0; op[l] <= 2'd0; ot[l] <= 2'd0; oh[l] <= 4'd1; wo[l] <= 7'd0; oa_v[l] <= 4'd0; kw_wo_r[l] <= 1'b0; end
         end else begin
             // ---- write side: dispatch a move to its stack's stream; each bank serves one stream a cycle
             if (w_disp) begin
-                w_act[f_stk] <= 1'b1; w_q[f_stk] <= f_q[f_w[1:0]]; w_ds[f_stk] <= f_ds[f_w[1:0]]; w_dsn[f_stk] <= f_ds[f_w[1:0]] + 32'd1;
-                w_dnx[f_stk] <= f_ds[f_w[1:0]] + f_dst[f_w[1:0]]; w_dnx1[f_stk] <= f_ds[f_w[1:0]] + f_dst[f_w[1:0]] + 32'd1; w_dst[f_stk] <= f_dst[f_w[1:0]];
-                w_lst[f_stk] <= f_ns[f_w[1:0]] == 18'd1; w_left[f_stk] <= f_ns[f_w[1:0]]; w_ns[f_stk] <= f_ns[f_w[1:0]]; w_rows[f_stk] <= f_m[f_w[1:0]]; f_w <= f_w + 3'd1;
+                w_act[f_stk] <= 1'b1; w_q[f_stk] <= f_q[f_w[1:0]]; w_ds[f_stk] <= f_ds[f_w[1:0]]; w_dsn[f_stk] <= f_dsn[f_w[1:0]];
+                w_dnx[f_stk] <= f_dnx[f_w[1:0]]; w_dnx1[f_stk] <= f_dnx1[f_w[1:0]]; w_dst[f_stk] <= f_dst[f_w[1:0]];
+                w_lst[f_stk] <= f_l1[f_w[1:0]]; w_left[f_stk] <= f_ns[f_w[1:0]]; w_ns[f_stk] <= f_ns[f_w[1:0]]; w_rows[f_stk] <= f_m[f_w[1:0]]; f_w <= f_w + 3'd1; f_wu <= f_wu + 3'd1;
             end
             b0_re <= g_v[0]; b0_ra <= w_q[g_s[0]][8:1]; b1_re <= g_v[1]; b1_ra <= w_q[g_s[1]][8:1];
             r0 <= c0; r1 <= c1;
@@ -403,8 +430,11 @@ module ot_hgi_dma_kvw_core #(
                 if (push) ov[ot[l]] = 1'b1;
                 oa_v[l] <= ov;
                 res[l] <= res[l] + 3'(((g_v[0] && g_s[0] == 2'(l)) || (g_v[1] && g_s[1] == 2'(l))) ? 1 : 0) - 3'(pop);
-                w_acc[l] <= q_v[l] && kw_rdy[l]; w_ack[l] <= r_rsp_v[l] && r_rsp_we[l] && kw_wo[l];
+                w_acc[l] <= kv_r[l] && kw_rdy[l]; w_ack[l] <= r_rsp_v[l] && r_rsp_we[l] && kw_wo[l];
                 wo[l] <= wo[l] + 7'(w_acc[l]) - 7'(w_ack[l]);
+                // kw_wo = (wo != 0 || w_acc), registered from the next-state values (route d8ef9b43d: wo -> compare ->
+                // kw_wo pin missed the output budget by 6 ps)
+                kw_wo_r[l] <= 7'(wo[l] + 7'(w_acc[l]) - 7'(w_ack[l])) != 7'd0 || (kv_r[l] && kw_rdy[l]);
             end
         end
     end
