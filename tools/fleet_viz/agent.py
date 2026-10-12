@@ -16,8 +16,12 @@ def docker_n():
             if r.returncode == 0: return len(r.stdout.split())
         except Exception: pass
     return None
+_GPU = {'t': -1e9, 'v': []}
 def gpu():
+    # nvidia-smi at most once a minute: each call logs NVRM 'Reset required' asserts on a wedged GPU (owner: no reset), which filled kern.log/syslog (10-12)
     if not shutil.which('nvidia-smi'): return []
+    if time.time() - _GPU['t'] < 60: return _GPU['v']
+    _GPU['t'] = time.time()
     try:
         r = subprocess.run(['nvidia-smi', '--query-gpu=name,utilization.gpu,memory.used,memory.total,power.draw,temperature.gpu',
                             '--format=csv,noheader,nounits'], capture_output=True, text=True, timeout=4)
@@ -26,6 +30,7 @@ def gpu():
             v = [x.strip() for x in l.split(',')]
             g.append(dict(name=v[0].replace('NVIDIA ', ''), util=float(v[1]), mem_used=float(v[2]) / 1024,
                           mem_total=float(v[3]) / 1024, power=float(v[4]), temp=float(v[5])))
+        _GPU['v'] = g
         return g
     except Exception: return []
 prev = stat(); n = 0; dk = None

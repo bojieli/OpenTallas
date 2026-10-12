@@ -60,6 +60,11 @@ module tb_hgi_e2e;
     // 64.. : plen, gamma, ngen, rank, force (0 = real DSpark drafter), maxpos, n emitted, final commit n; 72.. prompt; 80.. forced drafts (f_addr);
     // 88.. the golden emitted tokens.  MUT_HT (bench mutant): the head table entry of position 3 = the draft there.
     parameter integer MTP = 0, MUT = 0, MUT_HT = 0;   // MTP 1: collar in the bench (x_* ports); 2: collar inside the CP die
+    // B2 (2026-10-12, tools/hgi_e2e/b2.py): 4 clusters x local VM slices + ring. B2 1 = OLD-VM mode on the central VM model
+    // (records placed per b2.txt, VM traffic classed local / remote per slice, B2_RING 1: stub hold += ring cycles);
+    // B2 2 = native cluster RTL (reserved until the B2 units land)
+    parameter integer B2 = 0, B2_RING = 0, B2_NCLUST = 4, B2_SLICE_W = 65536;
+    import "DPI-C" function int e2e_b2_init(input int mode, input int ring, input int ncl, input int slw);
     import "DPI-C" function int e2e_init(input string d, input string outp);
     import "DPI-C" function void e2e_posted(input int on);
     initial e2e_posted((REAL_DMA != 0 && DMA_POSTED != 0) ? 1 : 0);
@@ -533,6 +538,8 @@ module tb_hgi_e2e;
         $readmemh({dir, "/host.mem"}, host);
         n_rec = e2e_init(dir, outp);
         if (n_rec <= 0) $fatal(1, "E2E init failed");
+        if (B2 == 2) $fatal(1, "E2E B2 2 (native cluster RTL) is not built yet: run B2 1 (old-VM mode)");
+        if (B2 != 0 && e2e_b2_init(B2, B2_RING, B2_NCLUST, B2_SLICE_W) < 0) $fatal(1, "E2E B2 init failed");
         fscr = (!MTP && host[69] != 0) ? host[69][17:0] : 18'(FUSED_SCRATCH);   // (MTP: host[69] is maxpos)
         if (REAL_FUSED) e2e_ignore(int'(fscr), int'(fscr) + 16384);
         if ($value$plusargs("WATCH=%d", w)) e2e_watch(w);
