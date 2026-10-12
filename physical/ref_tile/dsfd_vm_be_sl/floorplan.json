@@ -15,16 +15,18 @@
   300.23999999999995,
   90.72
  ],
- "why": "spec outline",
+ "why": "contract sp_vm/u_be.g_s[0].u_sl",
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
-  "pg_layer": "M6",
+  "pg_layer": "M5",
   "rlayers": [
    "M2",
-   "M6"
+   "M5"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
  },
  "pins": {
   "N": [
@@ -88,6 +90,8 @@
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl"
  ]
