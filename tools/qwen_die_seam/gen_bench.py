@@ -476,7 +476,7 @@ def gen_credit(S, rec, out, mut):
     xcr = sum(int(m.split(':')[1]) for m in mut if m.startswith('cr:'))
     lanes = [('coll', ['n_seq_coll', 'XF', 'n_seq_coll_x'], ['n_coll_seq', 'XF', 'n_coll_seq_x'])]
     lanes += [(f'cbuf{k}', [f'n_o4_cb_ctl_{k}'], [f'n_o4_cb_rdy_{k}']) for k in range(8)]
-    lanes += [(f'rs{k}', [f'n_rs_{k}'], [f'n_rc_{k}']) for k in range(6)]
+    lanes += [(f'rs{k}', [f'n_rs_{k}'], [f'n_rc_{k}']) for k in range(6) if f'n_rs_{k}' in S['buses']]   # TP8: 3 bands
     L += tb_head('qseam_credit_tb')
     hexfile(out, 'e_cyc', [c - t0 for c, _ in E], 8)
     hexfile(out, 'e_fp', [f for _, f in E], 8)

@@ -24,11 +24,22 @@ Stream `qwen-tp8`, die agent `[qwen-tp8/die]`. Branch `claude/el1011-qwen-tp8-di
 
 **Open.** 119 pad-junction hops exceed 500 µm (maximum about 1,030 µm), where the corridors near the node are full. The fix is for it2: reserve the pad sites before the bulk relays are placed.
 
+## Seam benches (agidock128 `/srv/opentallas-scratch/claude/qwen-tp8-seam`)
+
+These run on the tp8a contract and netlist with `QS_CONTRACT=…/qwen_rom_tp8.json` and `QS_GEN_ARGS=--tile-subset`. The tile subset maps the 768 die tiles onto the first 768 tile streams of the L3 TP4 recording.
+
+| Bench | Verdict |
+|---|---|
+| `array_placed` (corridor + tree, **no `--deskew`**) | **PASS**: 0 / 720 misaligned nodes, 0 pad relays needed |
+| `p2p` | **PASS** |
+| `array_mut_drop_tree` (drop `n_tree_0_1_0b` relay 1) | FAIL, as required |
+| `credit` | Rerun after the res_ser lane fix (3 bands); see the log |
+
 ## Iterations
 
 | It | Source | Views | Run | GRT overflow | TT setup | FF hold (after pads) | Clock plan | State |
 |---|---|---|---|---|---|---|---|---|
-| it1 | tp8a (see `it1.log`) | Closed: `qfd_cst` (n/s), `qfd_crom_g_a`, `qfd_su_cbuf_g_b`, `qfd_d2d_rom_b`, `qfd_io_serdes_rxd512`. Contract budget (0.2 T): everything else, including `qfd_tile_nk` (GT 3,072 re-synthesis pending) and `tt_up4` (NB 3) | EPYC1 `/srv/opentallas-scratch/claude/qwen-tp8-die/it1` | pending | pending | pending | pending | running |
+| it1 | tp8a (see `it1.log`) | Closed views through `die_views`: `qfd_crom_g_a`, `qfd_su_cbuf_g_b`, `qfd_d2d_rom_b`, `qfd_io_serdes_rxd512` (all 3 SerDes). ETM-bound through `qwen_die_etm_map`: station ETMs on `qfd_cst_n` / `_s` and `qfd_chead`, and slab port-group ETMs. Contract budget (0.2 T): everything else, including `qfd_tile_nk` (GT 3,072 re-synthesis pending) and `tt_up4` (NB 3) | EPYC1 `/srv/opentallas-scratch/claude/qwen-tp8-die/it1` | pending | pending | pending | pending | running |
 
 **Pass criteria:** GRT overflow 0, TT ≥ 0, FF ≥ 0 after pads, clock plan with 0 intra and 0 inter violations, die_audit hops_over 0.
 
