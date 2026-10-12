@@ -72,14 +72,16 @@ module ot_s81_su_qnt #(
         for (i = 0; i < S_RD; i = i + 1) pc = pc + dq_v[i];
     end
     wire [15:0] rcnt = st_r ? 16'd0 : ra + pc_r;
-    // the rotation offset off = (rcnt - 1) mod L per position (265-bit 2:1 mux a level each), from per-position copies
-    // of {st_r, ra, pc_r} low bits in a kept module (SYNTH_KEEP_MODULES): synthesis cannot merge them into one
-    // 12k-load net (opt_merge folded the former plain rc_j copies), and each position adds its own LL bits locally.
-    localparam integer KW = 1 + 2 * LL;
+    // the rotation offset off = (rcnt - 1) mod L, REGISTERED, one copy a position (265-bit 2:1 mux a level each) in a
+    // kept module (SYNTH_KEEP_MODULES): synthesis cannot merge the copies into one 12k-load net (opt_merge folded the
+    // former plain rc_j copies).  Next off = (st ? 0 : rcnt + pc) - 1 on LL bits only (popcount mod L + a 4-bit add);
+    // the mux selects stay register outputs (an add in front of them cost the e_d outputs 340 ps after placement).
+    localparam integer KW = LL;
+    wire [LL-1:0] off_n = (dq_st ? {LL{1'b0}} : rcnt[LL-1:0] + pc[LL-1:0]) - 1'b1;
     wire [KW*L-1:0] kq;
     genvar gj;
     generate for (gj = 0; gj < L; gj = gj + 1) begin : g_off
-        ot_s81_su_qn_keep_ff #(.W(KW)) u_k (.clk(clk), .rst_n(rst_n), .d({dq_st, rcnt[LL-1:0], pc[LL-1:0]}),
+        ot_s81_su_qn_keep_ff #(.W(KW)) u_k (.clk(clk), .rst_n(rst_n), .d(off_n),
                                             .q(kq[KW * gj +: KW]));
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
@@ -105,9 +107,7 @@ module ot_s81_su_qnt #(
         for (k = 0; k < LL; k = k + 1)
             for (s = 0; s < L; s = s + 1) begin : pos
                 reg [LL-1:0] off;
-                reg [KW-1:0] kj;
-                kj = kq[KW * s +: KW];
-                off = (kj[KW-1] ? {LL{1'b0}} : kj[LL +: LL] + kj[0 +: LL]) - 1'b1;
+                off = kq[KW * s +: KW];
                 rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
             end
     end
@@ -132,11 +132,11 @@ module ot_s81_su_qnt #(
 endmodule
 
 // a register that synthesis must keep (SYNTH_KEEP_MODULES + keep): per-position copies of a broadcast control value.
-// Reset value 0 (the position's {st_r, ra, pc_r} copies reset as the originals).
+// Reset value all ones = the off of rcnt 0 (bit-identical to the former rc_j <= 0 copies).
 module ot_s81_su_qn_keep_ff #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d,
                                                            output wire [W-1:0] q);
     (* keep = "true" *) reg [W-1:0] q_k;
-    always @(posedge clk or negedge rst_n) if (!rst_n) q_k <= {W{1'b0}}; else q_k <= d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) q_k <= {W{1'b1}}; else q_k <= d;
     assign q = q_k;
 endmodule
 
