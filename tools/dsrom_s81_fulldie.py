@@ -3505,7 +3505,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH, rt_strip=RT_STRIP,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -4163,6 +4163,12 @@ SSTN_CCPAD = False              # --sstn-ccpad (hbmdie-1011, compact199): a --la
 RELAY_PROGRESS = False          # --relay-progress (hbmdie-1011, compact199 die fit): a column relay must advance toward its
                                 # next chain point (mh(relay, nxt) <= mh(driver, nxt) + 15 um, inside the margin lint's 20 um
                                 # far-side slack) in EVERY placement attempt incl. the TT and last-resort fallbacks; no site -> assert
+RT_STRIP = 0.0                  # --rt-strip UM (s81-die-iter 2026-10-12): return-tree relays ('rt' nets) may also take relay
+                                # sites in the UM-high channel strip just above their column frame.  Root cause of the last
+                                # 128 SS-reach hops (bn<c> -> y_rt_<c>_<n>b_0, 515.0 um, one per column): the top slot's
+                                # L-lane qbank bn<c> sits on the frame's top edge and its return leaf runs east along that
+                                # edge to the trunk, but the frame under it is packed (q element, then the cfg / sstn row
+                                # 262 um down, saturated with relays), so relay 0 fell to the TT tier in the cfg row.
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
 # MTP-DIE hub buses (a, b, bits, port at a, port at b).  WFC (ot_rom_pkg_ctrl_wfc ports): VM write xa_we/waddr15/wdata512
@@ -5235,6 +5241,9 @@ def _col_relays(m, P):
             # column FIFO) may take relay sites between its endpoints there, not only inside the frame box
             ends_ = [by[eps[0][0]]] + [by[e[0]] for e in eps[1:] if e[0] in by]
             fr = (fr[0], min([fr[1]] + [i_.y for i_ in ends_]), fr[2], max([fr[3]] + [i_.y + i_.h for i_ in ends_]))
+        if RT_STRIP and RSV_ALLOW == 'rt':
+            # --rt-strip: the channel strip above the frame top (the return leaves of the top slot run along that edge)
+            fr = (fr[0], fr[1], fr[2], max(fr[3], min(f['y'] + column_height() + RT_STRIP, DIE[1] - EDGE)))
         a0 = ep_pt(eps[0])
         fe = max((e for e in eps[1:] if e[0] in by), key=lambda e: _mh(a0, ep_pt(e, True)), default=None)
         far = by[fe[0]] if fe is not None else None
@@ -5320,6 +5329,10 @@ def _col_relays(m, P):
         Lp = _poly_len(path)
         for k in range(n):
             pl, tier = _pick(path, cur, k, Lp)
+            if HOPDBG and bid.startswith(HOPDBG):    # OT_S81_HOPDBG=<bus prefix>: column relay trace (stderr)
+                print('COLDBG', bid, cls, d0.name, d0.kind, k, n, round(Lp, 1), [tuple(round(v, 1) for v in q) for q in path],
+                      tuple(round(v, 1) for v in cur), pl and tuple(round(v, 1) for v in pl), (w_, h_), tier, fr,
+                      file=sys.stderr)
             if tier == 'tt' and pl:
                 tt_col.append(f'y_{bid}_{k}')
             assert pl, ('--relay-progress: no forward relay site in the frame', bid, k) if RELAY_PROGRESS else (bid, k)
@@ -6710,6 +6723,8 @@ def glue_rtl(m):
                      '    // crossing is bounded at 382-385 ps, beyond a single-register window (data changes every cycle), so',
                      '    // it crosses through the d8g1 meso FIFO (the closed die crossing: arcs settle in 1.5 T - 60 ps, low',
                      '    // guard flop at 1.5 T) with registered pins.  Lane vr: i[0] rst_n, i[1] valid.',
+                     '    // Hold pad (s81-die-iter 2026-10-12): i -> ir passes a 120 ps (FF) dont_touch delay chain placed in',
+                     '    // this stage (its feeder is the adjacent end block\'s boundary flops); tools/s81/die_sta.py INPUT_PAD.',
                      _sync('rsync', 'ck[0]', 'i[0]'),
                      f'    reg [{w - 1}:0] ir; always @(posedge cw[0]) ir <= i;',
                      '    wire rv, wl, rl, wf, rf_, wr; wire [%d:0] rq;' % (w - 3),
@@ -7014,6 +7029,8 @@ def die_options(ap):
                     'real LEF pin centroid (not the element centre)')
     ap.add_argument('--sstn-ccpad', action='store_true', help='--lane-equal cc padding as extra cc registers in the '
                     'driving slot station (no floating pad relay)')
+    ap.add_argument('--rt-strip', type=float, default=0.0, help='return-tree relays may use a UM-high strip above their '
+                    'column frame (the top-edge return leaves run there; s81-die-iter 10-12)')
     ap.add_argument('--relay-progress', action='store_true', help='column relays only on sites that advance toward the next '
                     'chain point (no far-side relay); a packed frame without such a site fails loudly')
     ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
@@ -7207,8 +7224,9 @@ def apply_options(a):
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
-    global RELAY_PROGRESS
+    global RELAY_PROGRESS, RT_STRIP
     RELAY_PROGRESS = bool(getattr(a, 'relay_progress', False))
+    RT_STRIP = float(getattr(a, 'rt_strip', 0.0) or 0.0)
     global SSTN_CCPAD
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     global PIN_NEED
