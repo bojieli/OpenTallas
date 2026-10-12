@@ -71,7 +71,8 @@ module ot_qfd_tt_ctl #(
     parameter integer SPRE = 0,           // ot_qwen_me_spctl_w12 SPRE (redesign-qwen: registered scale request)
     parameter integer XADDR = 1,          // el1011-q-seq: spctl XADDR (0: no per-port x_re / x_addr; this module uses the descriptor form)
     parameter integer RDMEM = 0,          // el1011-q-seq: spctl RDMEM (tag delay lines in SRAM)
-    parameter integer OKEEP = 0           // el1011-q-seq: output stations through (* keep *) wires (no merge with internal flops)
+    parameter integer OKEEP = 0,          // el1011-q-seq: output stations through (* keep *) wires (no merge with internal flops)
+    parameter integer PK = 0              // el1011-q-seq: spctl PK (exact path cuts: KS progress subtract, registered u_ttag read)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -171,7 +172,7 @@ module ot_qfd_tt_ctl #(
     wire [W-1:0] c_mxmask;
     wire [W*32-1:0] c_mxdata;
     wire [15:0] c_prog;
-    ot_qwen_me_spctl_w12 #(.XADDR(XADDR), .RDMEM(RDMEM), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
+    ot_qwen_me_spctl_w12 #(.XADDR(XADDR), .RDMEM(RDMEM), .PK(PK), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
         .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD((BAND != 0) ? XD - CLNK : XD), .XVM(XVM), .ORD(ORD),
         .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE),
         .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .LANDED(LANDED),
@@ -279,6 +280,7 @@ module ot_qfd_sp_tree_top_s #(
     parameter integer XADDR = 1,          // el1011-q-seq: ot_qfd_tt_ctl XADDR / RDMEM / OKEEP (ctlm_i AUD build of u_tt)
     parameter integer RDMEM = 0,
     parameter integer OKEEP = 0,
+    parameter integer PK = 0,
     parameter integer PAMD = 0,           // el1011-q-seq test point: 1 = p_am one edge late into the control tile (MUST FAIL)
     parameter integer SLAT = 0,           // el1011-q-seq test point: 1 = up_fault/land_cnt/x_rdy/tr_fault/p_fault/fab_fault one edge late (ctlm_i pin flops)
     parameter integer SMUT = 0            // negative control: 1 = the upper tiles' DLY not reduced by CR (selects CR late)
@@ -357,7 +359,7 @@ module ot_qfd_sp_tree_top_s #(
     end endgenerate
     wire up_f_x, x_rdy_x, fab_fault_x; wire [$bits(land_cnt)-1:0] land_cnt_x; wire [$bits(tr_fault)-1:0] tr_fault_x; wire [$bits(p_fault)-1:0] p_fault_x;
     assign {up_f_x, land_cnt_x, x_rdy_x, tr_fault_x, p_fault_x, fab_fault_x} = st_x;
-    ot_qfd_tt_ctl #(.XADDR(XADDR), .RDMEM(RDMEM), .OKEEP(OKEEP), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
+    ot_qfd_tt_ctl #(.XADDR(XADDR), .RDMEM(RDMEM), .OKEEP(OKEEP), .PK(PK), .W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
         .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .SCALE_LAT(SCALE_LAT), .IS(IS), .OS(OS), .LANDED(LANDED), .MUT(MUT), .BAND(1), .NB(NB), .LNK(LNK),

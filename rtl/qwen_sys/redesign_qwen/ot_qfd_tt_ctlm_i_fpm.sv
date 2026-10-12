@@ -8,7 +8,7 @@ module ot_qfd_tt_ctlm_i_fpm #(
     parameter integer MEREG = 3,   // el1011-q-seq: registered REGIONAL engine clock enable (me_mem_ok 3 edges ahead; engine wakes +1)
     parameter integer RRG = 1,     // el1011-q-seq: replicated tile reset
     parameter integer PCUT = 1,    // el1011-q-seq: exact controller path cuts
-    parameter integer AUD = 55     // el1011-q-seq: textbook-audit rebuild (no x_addr, SRAM tag delays, kv pin flops)
+    parameter integer AUD = 183    // el1011-q-seq: textbook-audit rebuild (no x_addr, SRAM tag delays, kv pin flops, die-input pin flops, kept stations, 128 exact prefix cuts)
 ) (
     input  wire clk, input wire rst_n,
     // token start, program writes (the program-store copy), the SU snapshot, KV / supply readiness

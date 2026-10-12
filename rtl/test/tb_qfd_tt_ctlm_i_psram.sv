@@ -16,6 +16,8 @@ module tb_qfd_tt_ctlm_i_psram;
     parameter integer U1_AUD = 0;
     parameter integer DBGT = 0;     // el1011-q-seq debug: trace u1's MEREG 3 enable for DBGT cycles
     parameter integer DBGMX = 0;    // debug: print the first mx write of each window per DUT
+    parameter integer DBGTX = 0;    // el1011-q-seq TXN debug: per-window stream counts and the cycles of mismatching events
+    parameter integer TXRST = 1;    // el1011-q-seq TXN: the port model's reply pipeline is reset like the real port's valid line
     parameter integer TXN = 0;      // el1011-q-seq: 1 = transaction-level compare (per-interface event streams, per reset window; MEREG 3 wakes +1)
     parameter integer PFMASK = 0;   // el1011-q-seq: 1 = p_f_e2 only while p_v_e2, scale_addr only while scale_re | scale_gre (valid/data): the
                                     //   port element registers it unconditionally but every use is behind raw_v / rv (valid/data contract)
@@ -123,9 +125,14 @@ module tb_qfd_tt_ctlm_i_psram;
     // valid, key = hash of the tag, row = tag bits); ME-domain fault / ready inputs held benign in TXN mode
     localparam integer PL = 6;
     reg [113:0] pt0 [0:PL-1]; reg [113:0] pt1 [0:PL-1]; integer ptk;
+    // the port elements' reply valid line is reset (ot_qwen_me_spport_w12: e_v / raw_v / u_rv vline are async-reset), so
+    // the model clears its pipeline in reset (TXRST 1); TXRST 0 = the earlier unreset model (stale tags replayed after reset)
     always @(posedge clk) begin
+        if (TXRST != 0 && !rst_n) begin for (ptk = 0; ptk < PL; ptk = ptk + 1) begin pt0[ptk] <= '0; pt1[ptk] <= '0; end end
+        else begin
         if (ck0_q) begin pt0[0] <= {p_v_e2_0, p_f_e2_0}; for (ptk = 1; ptk < PL; ptk = ptk + 1) pt0[ptk] <= pt0[ptk-1]; end
         if (ck1_q) begin pt1[0] <= {p_v_e2_1, p_f_e2_1}; for (ptk = 1; ptk < PL; ptk = ptk + 1) pt1[ptk] <= pt1[ptk-1]; end
+        end
     end
     function automatic [12*51-1:0] pam(input [113:0] tg);
         integer q; reg [31:0] h;
@@ -306,15 +313,18 @@ module tb_qfd_tt_ctlm_i_psram;
     reg en0_q = 0, en1_q = 0, kv0_q = 0, kv1_q = 0, fin0_q = 0, fin1_q = 0;
     reg [23:0] acc0_q = 0, acc1_q = 0; reg [15:0] prg0_q = 0, prg1_q = 0; reg cf0_q = 0, cf1_q = 0;
     initial for (ts = 0; ts < NS; ts = ts + 1) begin tc0[ts] = 0; tc1[ts] = 0; end
-    task automatic tpush0(input integer s, input [2047:0] v); begin if (tc0[s] < ME) tq0[s][tc0[s]] = hv(v); tc0[s] = tc0[s] + 1; tt0 = tt0 + 1; end endtask
-    task automatic tpush1(input integer s, input [2047:0] v); begin if (tc1[s] < ME) tq1[s][tc1[s]] = hv(v); tc1[s] = tc1[s] + 1; tt1 = tt1 + 1; end endtask
+    integer tcy0 [0:NS-1][0:ME-1]; integer tcy1 [0:NS-1][0:ME-1];
+    task automatic tpush0(input integer s, input [2047:0] v); begin if (tc0[s] < ME) begin tq0[s][tc0[s]] = hv(v); tcy0[s][tc0[s]] = cyc; end tc0[s] = tc0[s] + 1; tt0 = tt0 + 1; end endtask
+    task automatic tpush1(input integer s, input [2047:0] v); begin if (tc1[s] < ME) begin tq1[s][tc1[s]] = hv(v); tcy1[s][tc1[s]] = cyc; end tc1[s] = tc1[s] + 1; tt1 = tt1 + 1; end endtask
     task automatic twin;   // close a window: prefix-compare and clear
         integer s2, k2, m2;
         begin
             for (s2 = 0; s2 < NS; s2 = s2 + 1) begin
                 m2 = (tc0[s2] < tc1[s2]) ? tc0[s2] : tc1[s2]; if (m2 > ME) m2 = ME;
                 for (k2 = 0; k2 < m2; k2 = k2 + 1) if (tq0[s2][k2] !== tq1[s2][k2]) begin
-                    tbad = tbad + 1; if (tbad <= 5) $display("TXN MISMATCH window=%0d stream=%0d event=%0d", tw, s2, k2); end
+                    tbad = tbad + 1; if (tbad <= 5) $display("TXN MISMATCH window=%0d stream=%0d event=%0d", tw, s2, k2);
+                    if (DBGTX != 0 && tbad <= 40) $display("TXN DBG w=%0d s=%0d k=%0d cyc0=%0d cyc1=%0d n0=%0d n1=%0d", tw, s2, k2, tcy0[s2][k2], tcy1[s2][k2], tc0[s2], tc1[s2]); end
+                if (DBGTX != 0) $display("TXN CNT w=%0d s=%0d n0=%0d n1=%0d", tw, s2, tc0[s2], tc1[s2]);
                 tc0[s2] = 0; tc1[s2] = 0;
             end
             tw = tw + 1;

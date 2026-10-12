@@ -255,7 +255,9 @@ module ot_qwen_me_spctl_w12 #(
     parameter integer SPRE = 0,
     parameter integer XADDR = 1,         // el1011-q-seq: 0 = no per-port x_re / x_addr (callers on the descriptor form x_dv/x_dc/x_dcs;
                                          //   62.7 k flops + shared CSA rows of fan-out 2-4 k in ctlm_i, all unobserved)
-    parameter integer RDMEM = 0          // el1011-q-seq: 1 = the long tag delay lines (u_tag / u_pretag) in SRAM (rdelay MEM)
+    parameter integer RDMEM = 0,         // el1011-q-seq: 1 = the long tag delay lines (u_tag / u_pretag) in SRAM (rdelay MEM)
+    parameter integer PK = 0             // el1011-q-seq (exact, 0 cycles): 1 = progress subtract as a kept Kogge-Stone (was a 16-b MAJ ripple behind the
+                                         //   land_cnt pin flop) and the u_ttag line read from a register (ring D-1 + output flop: t_* straight from flops); 2 = negative control (KS carry-in dropped: progress one low)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -954,8 +956,18 @@ end endgenerate
         else tv <= {tv[LV-1:0], r_v && r_last && (r_amax || r_rmax)};
     end
     wire [1+3+1+AW-1:0] ttag;
-    ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + 1)) u_ttag (.clk(clk), .rst_n(rst_n),
-        .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag));
+    generate if (PK != 0 && LV >= 2) begin : g_ttreg
+        // PK: the same LV + 1 edges as a ring of LV and a register, so the mx write stage starts from flops
+        wire [1+3+1+AW-1:0] ttag_e;
+        ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV)) u_ttag (.clk(clk), .rst_n(rst_n),
+            .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag_e));
+        reg [1+3+1+AW-1:0] ttag_q;
+        always @(posedge clk) ttag_q <= ttag_e;
+        assign ttag = ttag_q;
+    end else begin : g_ttline
+        ot_qwen_me_rdelay_w12 #(.W(1 + 3 + 1 + AW), .D(LV + 1)) u_ttag (.clk(clk), .rst_n(rst_n),
+            .d({r_rmax, r_j, r_opend && r_last, r_mbase}), .q(ttag));
+    end endgenerate
     wire          t_rmax, t_opend;
     wire [2:0]    t_j;
     wire [AW-1:0] t_mbase;
@@ -1082,7 +1094,15 @@ end endgenerate
     //: LANDED (qwen-vm-me): the result rows reach the banked vector memory through the band serializers and the merge
     //: at a variable time; progress counts the bursts LANDED there (in order, ot_qfd_res_merge land_cnt) and the
     //: element is idle only when every burst it emitted has landed.  0: the base (bursts counted at the ports).
-    wire [15:0] ov_done = ((LANDED != 0) ? land_cnt : n_ov) - ov_mark;
+    wire [15:0] ov_done;
+    generate if (PK != 0) begin : g_pks
+        // a - b = a + ~b + 1 with kept log-depth prefix levels (ABC re-ripples a behavioural subtract)
+        wire pk_co;
+        ot_hdc_ksadd_k #(.W(16)) u_pks (.a((LANDED != 0) ? land_cnt : n_ov), .b(~ov_mark), .cin((PK == 2) ? 1'b0 : 1'b1),
+            .s(ov_done), .cout(pk_co));
+    end else begin : g_pkb
+        assign ov_done = ((LANDED != 0) ? land_cnt : n_ov) - ov_mark;
+    end endgenerate
     wire        land_wait = (LANDED != 0) && (land_cnt != n_ov);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

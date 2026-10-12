@@ -89,6 +89,7 @@ module ot_qwen_rom_core_ctrl_x_i #(
     parameter integer ME_IDLE_GATE = 0,
     parameter integer MEREG = 0,      // el1011-q-seq: me_mem_ok announced 2 edges ahead; me_en a register
     parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)
+    parameter integer FKS = 0,        // el1011-q-seq: 1 = argmax-merge compare / index add as kept prefix trees (exact); 2 = negative control (index add carry-in 1)
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0, // element address of embedding row 0 in the program
     parameter integer SMIN = 0,
@@ -742,8 +743,20 @@ localparam integer W_ME_AMC = 1;
     reg run_any;
     reg [31:0] run_key,run_val;
     reg [NW-1:0] run_idx,last_row0;
-    wire am_wins = am_any && (!run_any || okey(am_val) > run_key);
-    wire [NW-1:0] fin_idx = am_wins ? am_idx + last_row0 : run_idx;
+    wire am_gt;                  // okey(am_val) > run_key
+    wire [NW-1:0] am_sum;        // am_idx + last_row0
+    generate if (FKS != 0) begin : g_fks
+        // FKS (el1011-q-seq, exact): the argmax merge's compare and index add as kept Kogge-Stone prefix trees (they were
+        // a 32-b compare + 18-b MAJ ripple straight into the m_fidx / m_fval output station); a > b = carry out of a + ~b
+        wire [31:0] gt_s; wire [NW-1:0] sm_s; wire sm_co;
+        ot_hdc_ksadd_k #(.W(32)) u_gt (.a(okey(am_val)), .b(~run_key), .cin(1'b0), .s(gt_s), .cout(am_gt));
+        ot_hdc_ksadd_k #(.W(NW)) u_sm (.a(am_idx), .b(last_row0), .cin((FKS == 2) ? 1'b1 : 1'b0), .s(am_sum), .cout(sm_co));
+    end else begin : g_fbeh
+        assign am_gt = okey(am_val) > run_key;
+        assign am_sum = am_idx + last_row0;
+    end endgenerate
+    wire am_wins = am_any && (!run_any || am_gt);
+    wire [NW-1:0] fin_idx = am_wins ? am_sum : run_idx;
     wire [31:0] fin_val = am_wins ? am_val : run_val;
     assign o_fidx = fin_idx; assign o_fval = fin_val;
     always @(posedge clk or negedge rst_n) begin
@@ -754,7 +767,7 @@ localparam integer W_ME_AMC = 1;
             if (!me_amc) run_any<=1'b0;
             else if (am_wins) begin
                 run_any<=1'b1; run_key<=okey(am_val);
-                run_idx<=am_idx+last_row0; run_val<=am_val;
+                run_idx<=am_sum; run_val<=am_val;
             end
         end
     end
@@ -1064,7 +1077,7 @@ module ot_qfd_tt_ctlm_i #(
     parameter integer MEREG = 0,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 0,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
     parameter integer PCUT = 0,   // el1011-q-seq: exact controller path cuts (ctrl_pcut)
-    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations, 64 no engine idle clock gate (power; the ICG enable then = the registered supply word); 8 = SRAM one-short mutant
+    parameter integer AUD = 0     // el1011-q-seq: textbook-audit rebuild (ctlm_aud) bits: 1 no x_addr, 2 SRAM tag delays, 4 kv pin flops, 16 die-input pin flops (not p_am), 32 kept output stations, 64 no engine idle clock gate (power; the ICG enable then = the registered supply word); 8 = SRAM one-short mutant; 128 exact prefix cuts (u_tt PK: KS progress subtract + registered u_ttag read; controller FKS: argmax-merge compare / add); 256 = PK negative control, 512 = FKS negative control
 ) (
     input  wire clk, input wire rst_n,
     // token start, program writes (the program-store copy), the SU snapshot, KV / supply readiness
@@ -1221,7 +1234,7 @@ module ot_qfd_tt_ctlm_i #(
     wire [16-1:0] c_me_progress, u_me_progress;
     wire [1-1:0] c_me_fault, u_me_fault;
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
-    ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
+    ot_qwen_rom_core_ctrl_x_i #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G(6144), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
         .clk(clk),
         .rst_n(rsv[1]),
         .start(q_h_start),
@@ -1453,7 +1466,7 @@ module ot_qfd_tt_ctlm_i #(
     ot_hdc_delay #(.W(XW + 18), .D(OS), .RESET(1)) u_os_snap (.clk(clk), .rst_n(rsv[4]), .d({me_acc, u_me_idle, u_me_progress, m_fin}),
         .q({me_acc_o, me_idle_o, me_prog_o, m_fin_o}));
     ot_hdc_delay #(.W(18 + 32), .D(OS)) u_os_f (.clk(clk), .rst_n(rsv[5]), .d({m_fidx, m_fval}), .q({m_fidx_o, m_fval_o}));
-    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0)) u_tt (
+    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(6144), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0), .PK(((AUD & 256) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0)) u_tt (
         .clk(c_me_clk), .rst_n(rsv[0]), .up_fault(up_fault_c), .land_cnt(land_cnt_c), .go(u_me_go), .ready(u_me_ready),
         .idle(u_me_idle), .i_nout(u_me_i_nout), .i_tiles(u_me_i_tiles), .i_k(u_me_i_k), .i_wsrc(u_me_i_wsrc), .i_wbase(u_me_i_wbase), .i_ts(u_me_i_ts), .i_ks(u_me_i_ks), .i_js(u_me_i_js), .i_xbase(u_me_i_xbase), .i_xks(u_me_i_xks), .i_xjs(u_me_i_xjs), .i_xcs(u_me_i_xcs), .i_jsh(u_me_i_jsh), .i_split(u_me_i_split), .i_wcs(u_me_i_wcs), .i_round(u_me_i_round), .i_obase(u_me_i_obase), .i_ots(u_me_i_ots), .i_ojs(u_me_i_ojs), .i_mmode(u_me_i_mmode), .i_oen(u_me_i_oen), .i_amax(u_me_i_amax), .i_rmax(u_me_i_rmax), .i_mbase(u_me_i_mbase),
         .wrom_re(u_me_wrom_re), .wrom_addr(u_me_wrom_addr), .kv_re(),
