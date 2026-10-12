@@ -1,5 +1,5 @@
 {
- "name": "ot_hgi_qw_dec_m5-m5-COMMIT",
+ "name": "ot_hgi_qw_dec_m5-m5-8f89853ec",
  "block": "ot_hgi_qw_dec",
  "ref_tile": true,
  "owner": "Claude:el1011-reroute-m5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-reroute-m5",
-  "commit": "COMMIT"
+  "commit": "8f89853ec"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_hgi_qw_dec_m5/ot_hgi_qw_dec_m5-m5-COMMIT"
+   "to": "results/rtl/ref_tile/ot_hgi_qw_dec_m5/ot_hgi_qw_dec_m5-m5-8f89853ec"
   }
  ],
  "cycles_added": 0,
