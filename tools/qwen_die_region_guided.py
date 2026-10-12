@@ -174,6 +174,7 @@ def cut():
     ndel = 0
     for n in list(block.getNets()):
         if n.getITermCount() == 0 and n.getBTermCount() == 0 and not n.isSpecial():
+            n.clearGuides()           # dbNet::destroy with guides attached costs ~1.1 ms a net (8 M nets: 2.5 h)
             odb.dbNet.destroy(n)
             ndel += 1
     # clip the physical PDN to the box (wires clipped, vias outside or on the border removed)
