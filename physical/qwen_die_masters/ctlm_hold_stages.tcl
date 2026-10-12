@@ -15,6 +15,9 @@
 #   4. R2R: one HB4 in front of each D pin of the listed capture classes, seeded at the capture flop.
 # ctlm_hold_release.tcl (PRE_DETAIL_PLACE) returns the FIRM cells and the pin flops to PLACED for DPL.
 source /src/physical/qwen_die_masters/io_flop_at_pins.tcl
+# ORFS sources step hooks inside a proc (global_place.tcl): bind every script-level name to the global namespace
+# so the procs below (global hs_*) see them (fp{a,b}amh-837f0663a crashed: can't read "hs_ca").
+global hs_blk hs_db hs_hb hs_bf hs_firm hs_dt_nets hs_seq hs_ca hs_ni hs_no hs_nr hs_r2r
 set hs_blk [ord::get_db_block]
 set hs_db [ord::get_db]
 set hs_hb [$hs_db findMaster [expr {[info exists ::env(OT_HS_HOLD)] ? $::env(OT_HS_HOLD) : "HB4xp67_ASAP7_75t_R"}]]
