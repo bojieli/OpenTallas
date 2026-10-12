@@ -237,7 +237,12 @@ module ot_hgi_sm_pub_mem #(
     output reg  [31:0]        s0_data,
     output reg  [NSM-1:0]     sm_cr          // smmv 2026-10-11: one pulse per arrival entry consumed, per SM (row credits)
 );
-    localparam integer NSL = NSM / NE, LSL = (NSL > 1) ? $clog2(NSL) : 1, ADW = $clog2(AD), PQW = $clog2(PQ);
+    localparam integer NSL = NSM / NE, LSL = (NSL > 1) ? $clog2(NSL) : 1, ADW = (AD > 1) ? $clog2(AD) : 1, PQW = $clog2(PQ);
+    // smmv-b 10-12: AD 1 used to die at build on a zero-width cast (ADW 0); ADW is floored at 1 so the refusal below is
+    // the clean one.  The arrival FIFO pointers wrap by width, so AD must be a power of two >= 2 (the credit rule wants
+    // AD >= the SM issue wave SIL 8; ot_hgi_sm_record refuses that).
+    initial if (AD < 2 || (AD & (AD - 1)) != 0)
+        $fatal(1, "ot_hgi_sm_pub_mem: AD %0d refused: arrival depth must be a power of two >= 2 (credit rule: >= SIL 8)", AD);
     localparam integer NQ = NE * NC;                       // pending FIFOs
     reg busy, sm_m, obf; reg [17:0] ob, ost; reg [19:0] mm; reg [12:0] qq; reg [3:0] pp;
     assign pub_rdy = !busy;
