@@ -81,13 +81,13 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.03
  },
  "job": {
   "owner": "Claude:el1011-hold3",
   "branch": "claude/el1011-hbm-idx",
   "tag": "h3m5",
-  "purpose": "el1011-hold3: M5-cap heap tile, structural fix of ot_hgi_topk_heap_tile_m5-m5-3fbe60da9 (TT -43.86 / FF -55.41 / DRC 1): levels 5/6 (8+16 words x 216 b = 5,184 flops behind one write-address decode, wa_q 3,462 loads, and a 16:1 read mux; setup and hold both failing inside that store = skew over one 16k-flop root) move into 128x256 macros (-DOT_TOPK_HEAP_FFMAX=4, ~10.8k flops). Main RTL (not the stale f87bdf90d snapshot); outline 259.2x302.4 (6 macros, >=20 um channels), M5 cap, pins N as heap_rt_b.",
+  "purpose": "el1011-hbm-idx hold fix: hgi_topk_heap_rt_m5-h3m5-18c566503-hs closed TT +78.92 / DRC 0 but FF -4.99 (4 D pins, TNS -6.5): all four are reg->reg 1-level copies inside u_h (a_x[4][15]->b_x, a_x[4][9]->b_x, g_lv[4].u_l.rd[76]->rdr[4][76], a_x[3][40]->b_x) with ~30 ps capture skew across clkbuf_1_0/1_1 branches; no input-pin, output-port or SRAM->flop path fails (I2R +8.79, OUT +7.08). Easiest deterministic fix: hold_margin_ns 0.01 -> 0.03 (route repair inserts the ~5 ps; TT has +79). Kit regen on main (eb642d870 macro-top GRT hook). el1011-hold3: M5-cap heap tile, structural fix of ot_hgi_topk_heap_tile_m5-m5-3fbe60da9 (TT -43.86 / FF -55.41 / DRC 1): levels 5/6 (8+16 words x 216 b = 5,184 flops behind one write-address decode, wa_q 3,462 loads, and a 16:1 read mux; setup and hold both failing inside that store = skew over one 16k-flop root) move into 128x256 macros (-DOT_TOPK_HEAP_FFMAX=4, ~10.8k flops). Main RTL (not the stale f87bdf90d snapshot); outline 259.2x302.4 (6 macros, >=20 um channels), M5 cap, pins N as heap_rt_b.",
   "benches": [
    {
     "name": "heap_iw8w8_short_exact",
