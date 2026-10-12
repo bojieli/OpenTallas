@@ -132,11 +132,11 @@ module ot_vms_cwstop #(
                 f[2210:2209] = e[280:279]; f[2208] = e[278];
                 for (integer l = 0; l < 8; l = l + 1)
                     if (e[277:275] == 3'(l)) f[l*276 +: 276] = {1'b1, e[274:264], e[255:0], e[263:256]};
-                cw_out <= f; outd = 3'd2; inj_pick <= 1'b1;
+                cw_out <= f; outd = 3'd1; inj_pick <= 1'b1;
             end else if (inj_eg) begin
                 f = '0; f[FW-1] = 1'b1; f[2221] = 1'b1; f[2220:2217] = 4'hf & ~(4'd1 << me); f[2216:2215] = me;
                 for (integer l = 0; l < 8; l = l + 1) if (g_v[l]) f[l*276 +: 276] = {1'b1, gb[l][gh[l]]};
-                cw_out <= f; outd = 3'd2; inj_pick <= 1'b0;
+                cw_out <= f; outd = 3'd1; inj_pick <= 1'b0;
             end
             outc <= outc - {1'b0, outd} + (out_cr_r ? 4'd1 : 4'd0);
             // ---- eject

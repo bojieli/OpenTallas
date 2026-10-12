@@ -42,7 +42,8 @@ module ot_vms_slice #(
     wire [289:0] cwi; wire cwi_cr; wire [287:0] cci; wire cci_cr; wire [263:0] cco;
     wire [8*276-1:0] eg, xq; wire [7:0] eg_cr, xq_cr, xq_done;
     wire [287:0] rce; wire rce_cr; wire [2:0] wak; wire wak_cr, ack;
-    ot_vms_hub #(.NC(NC), .MUT(HMUT)) u_hub (.clk(clk), .rst_n(rst_n), .sid(sid), .cq(hcq), .cr(hcr), .pq(pq), .pq_cr(pq_cr),
+    localparam integer HF = 2, EGC = 1;  // EGC: bank egress credits = the CW stop's lane buffer depth;     // hub -> stop PREQ FIFO depth = the hub's credits (one constant for both sides)
+    ot_vms_hub #(.NC(NC), .CWI(HF), .CCI(HF), .MUT(HMUT)) u_hub (.clk(clk), .rst_n(rst_n), .sid(sid), .cq(hcq), .cr(hcr), .pq(pq), .pq_cr(pq_cr),
         .pr(pr), .cwi(cwi), .cwi_cr(cwi_cr), .cci(cci), .cci_cr(cci_cr), .cco(cco), .status(hub_status));
     genvar b, g;
     for (b = 0; b < 8; b = b + 1) begin : g_bank
@@ -56,16 +57,16 @@ module ot_vms_slice #(
             assign bwq[g*281 +: 281] = wq[(g*8 + b)*281 +: 281];
             assign wq_cr[g*8 + b] = bwq_cr[g]; assign wq_done[g*8 + b] = bwq_done[g];
         end
-        ot_vms_bank #(.RG(RG), .WG(WG), .MUT(BMUT)) u_bank (.clk(clk), .rst_n(rst_n), .bid(3'(b)), .sid(sid),
+        ot_vms_bank #(.RG(RG), .WG(WG), .EGC(EGC), .MUT(BMUT)) u_bank (.clk(clk), .rst_n(rst_n), .bid(3'(b)), .sid(sid),
             .rq(brq), .rq_cr(brq_cr), .rr(brr), .wq(bwq), .wq_cr(bwq_cr), .wq_done(bwq_done),
             .dq(dq[b*281 +: 281]), .dq_done(dq_done[b]), .kq(kq[b*281 +: 281]), .kq_cr(kq_cr[b]), .kq_done(kq_done[b]),
             .xq(xq[b*276 +: 276]), .xq_cr(xq_cr[b]), .xq_done(xq_done[b]), .eg(eg[b*276 +: 276]), .eg_cr(eg_cr[b]),
             .pq(pq[b*285 +: 285]), .pq_cr(pq_cr[b]), .pr(pr[b*266 +: 266]), .status(bank_status[b*18 +: 18]));
     end
-    ot_vms_cwstop #(.MUT(CMUT)) u_cw (.clk(clk), .rst_n(rst_n), .sid(sid), .cw_in(cw_in), .cw_in_cr(cw_in_cr),
+    ot_vms_cwstop #(.HF(HF), .EGC(EGC), .MUT(CMUT)) u_cw (.clk(clk), .rst_n(rst_n), .sid(sid), .cw_in(cw_in), .cw_in_cr(cw_in_cr),
         .cw_out(cw_out), .cw_out_cr(cw_out_cr), .cwi(cwi), .cwi_cr(cwi_cr), .eg(eg), .eg_cr(eg_cr), .xq(xq), .xq_cr(xq_cr),
         .xq_done(xq_done), .rce(rce), .rce_cr(rce_cr), .wak(wak), .wak_cr(wak_cr), .ack_in(ack), .mirror_busy(mirror_busy));
-    ot_vms_ccwstop u_ccw (.clk(clk), .rst_n(rst_n), .sid(sid), .ccw_in(ccw_in), .ccw_in_cr(ccw_in_cr), .ccw_out(ccw_out),
+    ot_vms_ccwstop #(.HF(HF)) u_ccw (.clk(clk), .rst_n(rst_n), .sid(sid), .ccw_in(ccw_in), .ccw_in_cr(ccw_in_cr), .ccw_out(ccw_out),
         .ccw_out_cr(ccw_out_cr), .cci(cci), .cci_cr(cci_cr), .cco(cco), .wak(wak), .wak_cr(wak_cr), .ack_out(ack),
         .rce(rce), .rce_cr(rce_cr), .hq(hq), .hr(hr));
 endmodule
