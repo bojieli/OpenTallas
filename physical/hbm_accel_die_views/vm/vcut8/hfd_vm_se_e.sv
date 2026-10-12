@@ -280,155 +280,158 @@ module hfd_vm_se_e (
     reg rst_c; always @(posedge clk) rst_c <= rst_l;
     wire rst_n = ~rst_c;
     reg [2047:0] i0_f_su_SE, il_f_su_SE;
-    always @(posedge c_cke1) i0_f_su_SE[51:0] <= f_su_SE[51:0]; always @(negedge c_cke1) il_f_su_SE[51:0] <= i0_f_su_SE[51:0];   // pin reg + lockup (cke1)
-    always @(posedge c_cke2) i0_f_su_SE[215:52] <= f_su_SE[215:52]; always @(negedge c_cke2) il_f_su_SE[215:52] <= i0_f_su_SE[215:52];   // pin reg + lockup (cke2)
-    always @(posedge c_cke3) i0_f_su_SE[377:216] <= f_su_SE[377:216]; always @(negedge c_cke3) il_f_su_SE[377:216] <= i0_f_su_SE[377:216];   // pin reg + lockup (cke3)
-    always @(posedge c_cke4) i0_f_su_SE[534:378] <= f_su_SE[534:378]; always @(negedge c_cke4) il_f_su_SE[534:378] <= i0_f_su_SE[534:378];   // pin reg + lockup (cke4)
-    always @(posedge c_cke5) i0_f_su_SE[535:535] <= f_su_SE[535:535]; always @(negedge c_cke5) il_f_su_SE[535:535] <= i0_f_su_SE[535:535];   // pin reg + lockup (cke5)
-    always @(posedge c_cke4) i0_f_su_SE[536:536] <= f_su_SE[536:536]; always @(negedge c_cke4) il_f_su_SE[536:536] <= i0_f_su_SE[536:536];   // pin reg + lockup (cke4)
-    always @(posedge c_cke5) i0_f_su_SE[537:537] <= f_su_SE[537:537]; always @(negedge c_cke5) il_f_su_SE[537:537] <= i0_f_su_SE[537:537];   // pin reg + lockup (cke5)
-    always @(posedge c_cke4) i0_f_su_SE[538:538] <= f_su_SE[538:538]; always @(negedge c_cke4) il_f_su_SE[538:538] <= i0_f_su_SE[538:538];   // pin reg + lockup (cke4)
-    always @(posedge c_cke5) i0_f_su_SE[539:539] <= f_su_SE[539:539]; always @(negedge c_cke5) il_f_su_SE[539:539] <= i0_f_su_SE[539:539];   // pin reg + lockup (cke5)
-    always @(posedge c_cke4) i0_f_su_SE[540:540] <= f_su_SE[540:540]; always @(negedge c_cke4) il_f_su_SE[540:540] <= i0_f_su_SE[540:540];   // pin reg + lockup (cke4)
-    always @(posedge c_cke5) i0_f_su_SE[702:541] <= f_su_SE[702:541]; always @(negedge c_cke5) il_f_su_SE[702:541] <= i0_f_su_SE[702:541];   // pin reg + lockup (cke5)
-    always @(posedge c_cke6) i0_f_su_SE[865:703] <= f_su_SE[865:703]; always @(negedge c_cke6) il_f_su_SE[865:703] <= i0_f_su_SE[865:703];   // pin reg + lockup (cke6)
-    always @(posedge c_cke7) i0_f_su_SE[1029:866] <= f_su_SE[1029:866]; always @(negedge c_cke7) il_f_su_SE[1029:866] <= i0_f_su_SE[1029:866];   // pin reg + lockup (cke7)
-    always @(posedge c_cke8) i0_f_su_SE[1191:1030] <= f_su_SE[1191:1030]; always @(negedge c_cke8) il_f_su_SE[1191:1030] <= i0_f_su_SE[1191:1030];   // pin reg + lockup (cke8)
-    always @(posedge c_cke9) i0_f_su_SE[1355:1192] <= f_su_SE[1355:1192]; always @(negedge c_cke9) il_f_su_SE[1355:1192] <= i0_f_su_SE[1355:1192];   // pin reg + lockup (cke9)
-    always @(posedge c_cke10) i0_f_su_SE[1517:1356] <= f_su_SE[1517:1356]; always @(negedge c_cke10) il_f_su_SE[1517:1356] <= i0_f_su_SE[1517:1356];   // pin reg + lockup (cke10)
-    always @(posedge c_cke11) i0_f_su_SE[1676:1518] <= f_su_SE[1676:1518]; always @(negedge c_cke11) il_f_su_SE[1676:1518] <= i0_f_su_SE[1676:1518];   // pin reg + lockup (cke11)
-    always @(posedge c_cke12) i0_f_su_SE[1677:1677] <= f_su_SE[1677:1677]; always @(negedge c_cke12) il_f_su_SE[1677:1677] <= i0_f_su_SE[1677:1677];   // pin reg + lockup (cke12)
-    always @(posedge c_cke11) i0_f_su_SE[1678:1678] <= f_su_SE[1678:1678]; always @(negedge c_cke11) il_f_su_SE[1678:1678] <= i0_f_su_SE[1678:1678];   // pin reg + lockup (cke11)
-    always @(posedge c_cke12) i0_f_su_SE[1840:1679] <= f_su_SE[1840:1679]; always @(negedge c_cke12) il_f_su_SE[1840:1679] <= i0_f_su_SE[1840:1679];   // pin reg + lockup (cke12)
-    always @(posedge c_cke13) i0_f_su_SE[1841:1841] <= f_su_SE[1841:1841]; always @(negedge c_cke13) il_f_su_SE[1841:1841] <= i0_f_su_SE[1841:1841];   // pin reg + lockup (cke13)
-    always @(posedge c_cke12) i0_f_su_SE[1842:1842] <= f_su_SE[1842:1842]; always @(negedge c_cke12) il_f_su_SE[1842:1842] <= i0_f_su_SE[1842:1842];   // pin reg + lockup (cke12)
-    always @(posedge c_cke13) i0_f_su_SE[2005:1843] <= f_su_SE[2005:1843]; always @(negedge c_cke13) il_f_su_SE[2005:1843] <= i0_f_su_SE[2005:1843];   // pin reg + lockup (cke13)
-    always @(posedge c_cke14) i0_f_su_SE[2047:2006] <= f_su_SE[2047:2006]; always @(negedge c_cke14) il_f_su_SE[2047:2006] <= i0_f_su_SE[2047:2006];   // pin reg + lockup (cke14)
+    always @(posedge c_cke1) i0_f_su_SE[59:0] <= f_su_SE[59:0]; always @(negedge c_cke1) il_f_su_SE[59:0] <= i0_f_su_SE[59:0];   // pin reg + lockup (cke1)
+    always @(posedge c_cke2) i0_f_su_SE[223:60] <= f_su_SE[223:60]; always @(negedge c_cke2) il_f_su_SE[223:60] <= i0_f_su_SE[223:60];   // pin reg + lockup (cke2)
+    always @(posedge c_cke3) i0_f_su_SE[385:224] <= f_su_SE[385:224]; always @(negedge c_cke3) il_f_su_SE[385:224] <= i0_f_su_SE[385:224];   // pin reg + lockup (cke3)
+    always @(posedge c_cke4) i0_f_su_SE[542:386] <= f_su_SE[542:386]; always @(negedge c_cke4) il_f_su_SE[542:386] <= i0_f_su_SE[542:386];   // pin reg + lockup (cke4)
+    always @(posedge c_cke5) i0_f_su_SE[543:543] <= f_su_SE[543:543]; always @(negedge c_cke5) il_f_su_SE[543:543] <= i0_f_su_SE[543:543];   // pin reg + lockup (cke5)
+    always @(posedge c_cke4) i0_f_su_SE[544:544] <= f_su_SE[544:544]; always @(negedge c_cke4) il_f_su_SE[544:544] <= i0_f_su_SE[544:544];   // pin reg + lockup (cke4)
+    always @(posedge c_cke5) i0_f_su_SE[545:545] <= f_su_SE[545:545]; always @(negedge c_cke5) il_f_su_SE[545:545] <= i0_f_su_SE[545:545];   // pin reg + lockup (cke5)
+    always @(posedge c_cke4) i0_f_su_SE[546:546] <= f_su_SE[546:546]; always @(negedge c_cke4) il_f_su_SE[546:546] <= i0_f_su_SE[546:546];   // pin reg + lockup (cke4)
+    always @(posedge c_cke5) i0_f_su_SE[547:547] <= f_su_SE[547:547]; always @(negedge c_cke5) il_f_su_SE[547:547] <= i0_f_su_SE[547:547];   // pin reg + lockup (cke5)
+    always @(posedge c_cke4) i0_f_su_SE[548:548] <= f_su_SE[548:548]; always @(negedge c_cke4) il_f_su_SE[548:548] <= i0_f_su_SE[548:548];   // pin reg + lockup (cke4)
+    always @(posedge c_cke5) i0_f_su_SE[708:549] <= f_su_SE[708:549]; always @(negedge c_cke5) il_f_su_SE[708:549] <= i0_f_su_SE[708:549];   // pin reg + lockup (cke5)
+    always @(posedge c_cke6) i0_f_su_SE[709:709] <= f_su_SE[709:709]; always @(negedge c_cke6) il_f_su_SE[709:709] <= i0_f_su_SE[709:709];   // pin reg + lockup (cke6)
+    always @(posedge c_cke5) i0_f_su_SE[710:710] <= f_su_SE[710:710]; always @(negedge c_cke5) il_f_su_SE[710:710] <= i0_f_su_SE[710:710];   // pin reg + lockup (cke5)
+    always @(posedge c_cke6) i0_f_su_SE[873:711] <= f_su_SE[873:711]; always @(negedge c_cke6) il_f_su_SE[873:711] <= i0_f_su_SE[873:711];   // pin reg + lockup (cke6)
+    always @(posedge c_cke7) i0_f_su_SE[1037:874] <= f_su_SE[1037:874]; always @(negedge c_cke7) il_f_su_SE[1037:874] <= i0_f_su_SE[1037:874];   // pin reg + lockup (cke7)
+    always @(posedge c_cke8) i0_f_su_SE[1199:1038] <= f_su_SE[1199:1038]; always @(negedge c_cke8) il_f_su_SE[1199:1038] <= i0_f_su_SE[1199:1038];   // pin reg + lockup (cke8)
+    always @(posedge c_cke9) i0_f_su_SE[1361:1200] <= f_su_SE[1361:1200]; always @(negedge c_cke9) il_f_su_SE[1361:1200] <= i0_f_su_SE[1361:1200];   // pin reg + lockup (cke9)
+    always @(posedge c_cke10) i0_f_su_SE[1525:1362] <= f_su_SE[1525:1362]; always @(negedge c_cke10) il_f_su_SE[1525:1362] <= i0_f_su_SE[1525:1362];   // pin reg + lockup (cke10)
+    always @(posedge c_cke11) i0_f_su_SE[1684:1526] <= f_su_SE[1684:1526]; always @(negedge c_cke11) il_f_su_SE[1684:1526] <= i0_f_su_SE[1684:1526];   // pin reg + lockup (cke11)
+    always @(posedge c_cke12) i0_f_su_SE[1685:1685] <= f_su_SE[1685:1685]; always @(negedge c_cke12) il_f_su_SE[1685:1685] <= i0_f_su_SE[1685:1685];   // pin reg + lockup (cke12)
+    always @(posedge c_cke11) i0_f_su_SE[1686:1686] <= f_su_SE[1686:1686]; always @(negedge c_cke11) il_f_su_SE[1686:1686] <= i0_f_su_SE[1686:1686];   // pin reg + lockup (cke11)
+    always @(posedge c_cke12) i0_f_su_SE[1848:1687] <= f_su_SE[1848:1687]; always @(negedge c_cke12) il_f_su_SE[1848:1687] <= i0_f_su_SE[1848:1687];   // pin reg + lockup (cke12)
+    always @(posedge c_cke13) i0_f_su_SE[1849:1849] <= f_su_SE[1849:1849]; always @(negedge c_cke13) il_f_su_SE[1849:1849] <= i0_f_su_SE[1849:1849];   // pin reg + lockup (cke13)
+    always @(posedge c_cke12) i0_f_su_SE[1850:1850] <= f_su_SE[1850:1850]; always @(negedge c_cke12) il_f_su_SE[1850:1850] <= i0_f_su_SE[1850:1850];   // pin reg + lockup (cke12)
+    always @(posedge c_cke13) i0_f_su_SE[2013:1851] <= f_su_SE[2013:1851]; always @(negedge c_cke13) il_f_su_SE[2013:1851] <= i0_f_su_SE[2013:1851];   // pin reg + lockup (cke13)
+    always @(posedge c_cke14) i0_f_su_SE[2047:2014] <= f_su_SE[2047:2014]; always @(negedge c_cke14) il_f_su_SE[2047:2014] <= i0_f_su_SE[2047:2014];   // pin reg + lockup (cke14)
     reg [2047:0] i1_f_su_SE; always @(posedge clk) i1_f_su_SE <= il_f_su_SE;
     reg [2047:0] i_f_su_SE; always @(posedge clk) i_f_su_SE <= i1_f_su_SE;
     reg [511:0] i0_iSE, il_iSE;
-    always @(posedge c_cke43) i0_iSE[135:0] <= iSE[135:0]; always @(negedge c_cke43) il_iSE[135:0] <= i0_iSE[135:0];   // pin reg + lockup (cke43)
-    always @(posedge c_cke44) i0_iSE[297:136] <= iSE[297:136]; always @(negedge c_cke44) il_iSE[297:136] <= i0_iSE[297:136];   // pin reg + lockup (cke44)
-    always @(posedge c_cke45) i0_iSE[459:298] <= iSE[459:298]; always @(negedge c_cke45) il_iSE[459:298] <= i0_iSE[459:298];   // pin reg + lockup (cke45)
-    always @(posedge c_cke46) i0_iSE[511:460] <= iSE[511:460]; always @(negedge c_cke46) il_iSE[511:460] <= i0_iSE[511:460];   // pin reg + lockup (cke46)
+    always @(posedge c_cke43) i0_iSE[127:0] <= iSE[127:0]; always @(negedge c_cke43) il_iSE[127:0] <= i0_iSE[127:0];   // pin reg + lockup (cke43)
+    always @(posedge c_cke44) i0_iSE[289:128] <= iSE[289:128]; always @(negedge c_cke44) il_iSE[289:128] <= i0_iSE[289:128];   // pin reg + lockup (cke44)
+    always @(posedge c_cke45) i0_iSE[452:290] <= iSE[452:290]; always @(negedge c_cke45) il_iSE[452:290] <= i0_iSE[452:290];   // pin reg + lockup (cke45)
+    always @(posedge c_cke46) i0_iSE[511:453] <= iSE[511:453]; always @(negedge c_cke46) il_iSE[511:453] <= i0_iSE[511:453];   // pin reg + lockup (cke46)
     reg [511:0] i1_iSE; always @(posedge clk) i1_iSE <= il_iSE;
     reg [511:0] i_iSE; always @(posedge clk) i_iSE <= i1_iSE;
     reg [2263:0] xf_f_n_wr, x_f_n_wr;
     always @(posedge c_ckn15) xf_f_n_wr[131:0] <= f_n_wr[131:0]; always @(negedge c_ckn15) x_f_n_wr[131:0] <= xf_f_n_wr[131:0];   // pin reg + lockup (ckn15)
-    always @(posedge c_ckn16) xf_f_n_wr[283:132] <= f_n_wr[283:132]; always @(negedge c_ckn16) x_f_n_wr[283:132] <= xf_f_n_wr[283:132];   // pin reg + lockup (ckn16)
-    always @(posedge c_ckn17) xf_f_n_wr[436:284] <= f_n_wr[436:284]; always @(negedge c_ckn17) x_f_n_wr[436:284] <= xf_f_n_wr[436:284];   // pin reg + lockup (ckn17)
-    always @(posedge c_ckn18) xf_f_n_wr[588:437] <= f_n_wr[588:437]; always @(negedge c_ckn18) x_f_n_wr[588:437] <= xf_f_n_wr[588:437];   // pin reg + lockup (ckn18)
-    always @(posedge c_ckn19) xf_f_n_wr[741:589] <= f_n_wr[741:589]; always @(negedge c_ckn19) x_f_n_wr[741:589] <= xf_f_n_wr[741:589];   // pin reg + lockup (ckn19)
-    always @(posedge c_ckn20) xf_f_n_wr[893:742] <= f_n_wr[893:742]; always @(negedge c_ckn20) x_f_n_wr[893:742] <= xf_f_n_wr[893:742];   // pin reg + lockup (ckn20)
-    always @(posedge c_ckn21) xf_f_n_wr[1045:894] <= f_n_wr[1045:894]; always @(negedge c_ckn21) x_f_n_wr[1045:894] <= xf_f_n_wr[1045:894];   // pin reg + lockup (ckn21)
-    always @(posedge c_ckn22) xf_f_n_wr[1197:1046] <= f_n_wr[1197:1046]; always @(negedge c_ckn22) x_f_n_wr[1197:1046] <= xf_f_n_wr[1197:1046];   // pin reg + lockup (ckn22)
-    always @(posedge c_ckn23) xf_f_n_wr[1349:1198] <= f_n_wr[1349:1198]; always @(negedge c_ckn23) x_f_n_wr[1349:1198] <= xf_f_n_wr[1349:1198];   // pin reg + lockup (ckn23)
-    always @(posedge c_ckn24) xf_f_n_wr[1501:1350] <= f_n_wr[1501:1350]; always @(negedge c_ckn24) x_f_n_wr[1501:1350] <= xf_f_n_wr[1501:1350];   // pin reg + lockup (ckn24)
-    always @(posedge c_ckn25) xf_f_n_wr[1654:1502] <= f_n_wr[1654:1502]; always @(negedge c_ckn25) x_f_n_wr[1654:1502] <= xf_f_n_wr[1654:1502];   // pin reg + lockup (ckn25)
-    always @(posedge c_ckn26) xf_f_n_wr[1807:1655] <= f_n_wr[1807:1655]; always @(negedge c_ckn26) x_f_n_wr[1807:1655] <= xf_f_n_wr[1807:1655];   // pin reg + lockup (ckn26)
-    always @(posedge c_ckn27) xf_f_n_wr[1959:1808] <= f_n_wr[1959:1808]; always @(negedge c_ckn27) x_f_n_wr[1959:1808] <= xf_f_n_wr[1959:1808];   // pin reg + lockup (ckn27)
-    always @(posedge c_ckn28) xf_f_n_wr[2111:1960] <= f_n_wr[2111:1960]; always @(negedge c_ckn28) x_f_n_wr[2111:1960] <= xf_f_n_wr[2111:1960];   // pin reg + lockup (ckn28)
-    always @(posedge c_ckn29) xf_f_n_wr[2263:2112] <= f_n_wr[2263:2112]; always @(negedge c_ckn29) x_f_n_wr[2263:2112] <= xf_f_n_wr[2263:2112];   // pin reg + lockup (ckn29)
+    always @(posedge c_ckn16) xf_f_n_wr[303:132] <= f_n_wr[303:132]; always @(negedge c_ckn16) x_f_n_wr[303:132] <= xf_f_n_wr[303:132];   // pin reg + lockup (ckn16)
+    always @(posedge c_ckn17) xf_f_n_wr[474:304] <= f_n_wr[474:304]; always @(negedge c_ckn17) x_f_n_wr[474:304] <= xf_f_n_wr[474:304];   // pin reg + lockup (ckn17)
+    always @(posedge c_ckn18) xf_f_n_wr[645:475] <= f_n_wr[645:475]; always @(negedge c_ckn18) x_f_n_wr[645:475] <= xf_f_n_wr[645:475];   // pin reg + lockup (ckn18)
+    always @(posedge c_ckn19) xf_f_n_wr[817:646] <= f_n_wr[817:646]; always @(negedge c_ckn19) x_f_n_wr[817:646] <= xf_f_n_wr[817:646];   // pin reg + lockup (ckn19)
+    always @(posedge c_ckn20) xf_f_n_wr[988:818] <= f_n_wr[988:818]; always @(negedge c_ckn20) x_f_n_wr[988:818] <= xf_f_n_wr[988:818];   // pin reg + lockup (ckn20)
+    always @(posedge c_ckn21) xf_f_n_wr[1159:989] <= f_n_wr[1159:989]; always @(negedge c_ckn21) x_f_n_wr[1159:989] <= xf_f_n_wr[1159:989];   // pin reg + lockup (ckn21)
+    always @(posedge c_ckn22) xf_f_n_wr[1330:1160] <= f_n_wr[1330:1160]; always @(negedge c_ckn22) x_f_n_wr[1330:1160] <= xf_f_n_wr[1330:1160];   // pin reg + lockup (ckn22)
+    always @(posedge c_ckn23) xf_f_n_wr[1471:1331] <= f_n_wr[1471:1331]; always @(negedge c_ckn23) x_f_n_wr[1471:1331] <= xf_f_n_wr[1471:1331];   // pin reg + lockup (ckn23)
+    always @(posedge c_ckn24) xf_f_n_wr[1641:1472] <= f_n_wr[1641:1472]; always @(negedge c_ckn24) x_f_n_wr[1641:1472] <= xf_f_n_wr[1641:1472];   // pin reg + lockup (ckn24)
+    always @(posedge c_ckn25) xf_f_n_wr[1813:1642] <= f_n_wr[1813:1642]; always @(negedge c_ckn25) x_f_n_wr[1813:1642] <= xf_f_n_wr[1813:1642];   // pin reg + lockup (ckn25)
+    always @(posedge c_ckn26) xf_f_n_wr[1985:1814] <= f_n_wr[1985:1814]; always @(negedge c_ckn26) x_f_n_wr[1985:1814] <= xf_f_n_wr[1985:1814];   // pin reg + lockup (ckn26)
+    always @(posedge c_ckn27) xf_f_n_wr[2155:1986] <= f_n_wr[2155:1986]; always @(negedge c_ckn27) x_f_n_wr[2155:1986] <= xf_f_n_wr[2155:1986];   // pin reg + lockup (ckn27)
+    always @(posedge c_ckn28) xf_f_n_wr[2263:2156] <= f_n_wr[2263:2156]; always @(negedge c_ckn28) x_f_n_wr[2263:2156] <= xf_f_n_wr[2263:2156];   // pin reg + lockup (ckn28)
     reg [3292:0] xf_w2e, x_w2e;
-    always @(posedge c_ckw1) xf_w2e[57:0] <= w2e[57:0]; always @(negedge c_ckw1) x_w2e[57:0] <= xf_w2e[57:0];   // pin reg + lockup (ckw1)
-    always @(posedge c_ckw2) xf_w2e[165:58] <= w2e[165:58]; always @(negedge c_ckw2) x_w2e[165:58] <= xf_w2e[165:58];   // pin reg + lockup (ckw2)
-    always @(posedge c_ckw3) xf_w2e[273:166] <= w2e[273:166]; always @(negedge c_ckw3) x_w2e[273:166] <= xf_w2e[273:166];   // pin reg + lockup (ckw3)
-    always @(posedge c_ckw4) xf_w2e[380:274] <= w2e[380:274]; always @(negedge c_ckw4) x_w2e[380:274] <= xf_w2e[380:274];   // pin reg + lockup (ckw4)
-    always @(posedge c_ckw5) xf_w2e[490:381] <= w2e[490:381]; always @(negedge c_ckw5) x_w2e[490:381] <= xf_w2e[490:381];   // pin reg + lockup (ckw5)
-    always @(posedge c_ckw6) xf_w2e[599:491] <= w2e[599:491]; always @(negedge c_ckw6) x_w2e[599:491] <= xf_w2e[599:491];   // pin reg + lockup (ckw6)
-    always @(posedge c_ckw7) xf_w2e[707:600] <= w2e[707:600]; always @(negedge c_ckw7) x_w2e[707:600] <= xf_w2e[707:600];   // pin reg + lockup (ckw7)
-    always @(posedge c_ckw8) xf_w2e[815:708] <= w2e[815:708]; always @(negedge c_ckw8) x_w2e[815:708] <= xf_w2e[815:708];   // pin reg + lockup (ckw8)
-    always @(posedge c_ckw9) xf_w2e[925:816] <= w2e[925:816]; always @(negedge c_ckw9) x_w2e[925:816] <= xf_w2e[925:816];   // pin reg + lockup (ckw9)
-    always @(posedge c_ckw10) xf_w2e[1033:926] <= w2e[1033:926]; always @(negedge c_ckw10) x_w2e[1033:926] <= xf_w2e[1033:926];   // pin reg + lockup (ckw10)
-    always @(posedge c_ckw11) xf_w2e[1140:1034] <= w2e[1140:1034]; always @(negedge c_ckw11) x_w2e[1140:1034] <= xf_w2e[1140:1034];   // pin reg + lockup (ckw11)
-    always @(posedge c_ckw12) xf_w2e[1249:1141] <= w2e[1249:1141]; always @(negedge c_ckw12) x_w2e[1249:1141] <= xf_w2e[1249:1141];   // pin reg + lockup (ckw12)
-    always @(posedge c_ckw13) xf_w2e[1359:1250] <= w2e[1359:1250]; always @(negedge c_ckw13) x_w2e[1359:1250] <= xf_w2e[1359:1250];   // pin reg + lockup (ckw13)
-    always @(posedge c_ckw14) xf_w2e[1467:1360] <= w2e[1467:1360]; always @(negedge c_ckw14) x_w2e[1467:1360] <= xf_w2e[1467:1360];   // pin reg + lockup (ckw14)
-    always @(posedge c_ckw15) xf_w2e[1575:1468] <= w2e[1575:1468]; always @(negedge c_ckw15) x_w2e[1575:1468] <= xf_w2e[1575:1468];   // pin reg + lockup (ckw15)
-    always @(posedge c_ckw16) xf_w2e[1683:1576] <= w2e[1683:1576]; always @(negedge c_ckw16) x_w2e[1683:1576] <= xf_w2e[1683:1576];   // pin reg + lockup (ckw16)
-    always @(posedge c_ckw17) xf_w2e[1793:1684] <= w2e[1793:1684]; always @(negedge c_ckw17) x_w2e[1793:1684] <= xf_w2e[1793:1684];   // pin reg + lockup (ckw17)
-    always @(posedge c_ckw18) xf_w2e[1900:1794] <= w2e[1900:1794]; always @(negedge c_ckw18) x_w2e[1900:1794] <= xf_w2e[1900:1794];   // pin reg + lockup (ckw18)
-    always @(posedge c_ckw19) xf_w2e[2008:1901] <= w2e[2008:1901]; always @(negedge c_ckw19) x_w2e[2008:1901] <= xf_w2e[2008:1901];   // pin reg + lockup (ckw19)
-    always @(posedge c_ckw20) xf_w2e[2117:2009] <= w2e[2117:2009]; always @(negedge c_ckw20) x_w2e[2117:2009] <= xf_w2e[2117:2009];   // pin reg + lockup (ckw20)
-    always @(posedge c_ckw21) xf_w2e[2118:2118] <= w2e[2118:2118]; always @(negedge c_ckw21) x_w2e[2118:2118] <= xf_w2e[2118:2118];   // pin reg + lockup (ckw21)
-    always @(posedge c_ckw20) xf_w2e[2119:2119] <= w2e[2119:2119]; always @(negedge c_ckw20) x_w2e[2119:2119] <= xf_w2e[2119:2119];   // pin reg + lockup (ckw20)
-    always @(posedge c_ckw21) xf_w2e[2227:2120] <= w2e[2227:2120]; always @(negedge c_ckw21) x_w2e[2227:2120] <= xf_w2e[2227:2120];   // pin reg + lockup (ckw21)
-    always @(posedge c_ckw22) xf_w2e[2335:2228] <= w2e[2335:2228]; always @(negedge c_ckw22) x_w2e[2335:2228] <= xf_w2e[2335:2228];   // pin reg + lockup (ckw22)
-    always @(posedge c_ckw23) xf_w2e[2443:2336] <= w2e[2443:2336]; always @(negedge c_ckw23) x_w2e[2443:2336] <= xf_w2e[2443:2336];   // pin reg + lockup (ckw23)
-    always @(posedge c_ckw24) xf_w2e[2553:2444] <= w2e[2553:2444]; always @(negedge c_ckw24) x_w2e[2553:2444] <= xf_w2e[2553:2444];   // pin reg + lockup (ckw24)
-    always @(posedge c_ckw25) xf_w2e[2661:2554] <= w2e[2661:2554]; always @(negedge c_ckw25) x_w2e[2661:2554] <= xf_w2e[2661:2554];   // pin reg + lockup (ckw25)
-    always @(posedge c_ckw26) xf_w2e[2768:2662] <= w2e[2768:2662]; always @(negedge c_ckw26) x_w2e[2768:2662] <= xf_w2e[2768:2662];   // pin reg + lockup (ckw26)
-    always @(posedge c_ckw27) xf_w2e[2877:2769] <= w2e[2877:2769]; always @(negedge c_ckw27) x_w2e[2877:2769] <= xf_w2e[2877:2769];   // pin reg + lockup (ckw27)
-    always @(posedge c_ckw28) xf_w2e[2987:2878] <= w2e[2987:2878]; always @(negedge c_ckw28) x_w2e[2987:2878] <= xf_w2e[2987:2878];   // pin reg + lockup (ckw28)
-    always @(posedge c_ckw29) xf_w2e[3095:2988] <= w2e[3095:2988]; always @(negedge c_ckw29) x_w2e[3095:2988] <= xf_w2e[3095:2988];   // pin reg + lockup (ckw29)
-    always @(posedge c_ckw30) xf_w2e[3203:3096] <= w2e[3203:3096]; always @(negedge c_ckw30) x_w2e[3203:3096] <= xf_w2e[3203:3096];   // pin reg + lockup (ckw30)
-    always @(posedge c_ckw31) xf_w2e[3292:3204] <= w2e[3292:3204]; always @(negedge c_ckw31) x_w2e[3292:3204] <= xf_w2e[3292:3204];   // pin reg + lockup (ckw31)
+    always @(posedge c_ckw1) xf_w2e[61:0] <= w2e[61:0]; always @(negedge c_ckw1) x_w2e[61:0] <= xf_w2e[61:0];   // pin reg + lockup (ckw1)
+    always @(posedge c_ckw2) xf_w2e[169:62] <= w2e[169:62]; always @(negedge c_ckw2) x_w2e[169:62] <= xf_w2e[169:62];   // pin reg + lockup (ckw2)
+    always @(posedge c_ckw3) xf_w2e[279:170] <= w2e[279:170]; always @(negedge c_ckw3) x_w2e[279:170] <= xf_w2e[279:170];   // pin reg + lockup (ckw3)
+    always @(posedge c_ckw4) xf_w2e[384:280] <= w2e[384:280]; always @(negedge c_ckw4) x_w2e[384:280] <= xf_w2e[384:280];   // pin reg + lockup (ckw4)
+    always @(posedge c_ckw5) xf_w2e[385:385] <= w2e[385:385]; always @(negedge c_ckw5) x_w2e[385:385] <= xf_w2e[385:385];   // pin reg + lockup (ckw5)
+    always @(posedge c_ckw4) xf_w2e[386:386] <= w2e[386:386]; always @(negedge c_ckw4) x_w2e[386:386] <= xf_w2e[386:386];   // pin reg + lockup (ckw4)
+    always @(posedge c_ckw5) xf_w2e[494:387] <= w2e[494:387]; always @(negedge c_ckw5) x_w2e[494:387] <= xf_w2e[494:387];   // pin reg + lockup (ckw5)
+    always @(posedge c_ckw6) xf_w2e[604:495] <= w2e[604:495]; always @(negedge c_ckw6) x_w2e[604:495] <= xf_w2e[604:495];   // pin reg + lockup (ckw6)
+    always @(posedge c_ckw7) xf_w2e[713:605] <= w2e[713:605]; always @(negedge c_ckw7) x_w2e[713:605] <= xf_w2e[713:605];   // pin reg + lockup (ckw7)
+    always @(posedge c_ckw8) xf_w2e[821:714] <= w2e[821:714]; always @(negedge c_ckw8) x_w2e[821:714] <= xf_w2e[821:714];   // pin reg + lockup (ckw8)
+    always @(posedge c_ckw9) xf_w2e[929:822] <= w2e[929:822]; always @(negedge c_ckw9) x_w2e[929:822] <= xf_w2e[929:822];   // pin reg + lockup (ckw9)
+    always @(posedge c_ckw10) xf_w2e[1038:930] <= w2e[1038:930]; always @(negedge c_ckw10) x_w2e[1038:930] <= xf_w2e[1038:930];   // pin reg + lockup (ckw10)
+    always @(posedge c_ckw11) xf_w2e[1146:1039] <= w2e[1146:1039]; always @(negedge c_ckw11) x_w2e[1146:1039] <= xf_w2e[1146:1039];   // pin reg + lockup (ckw11)
+    always @(posedge c_ckw12) xf_w2e[1254:1147] <= w2e[1254:1147]; always @(negedge c_ckw12) x_w2e[1254:1147] <= xf_w2e[1254:1147];   // pin reg + lockup (ckw12)
+    always @(posedge c_ckw13) xf_w2e[1363:1255] <= w2e[1363:1255]; always @(negedge c_ckw13) x_w2e[1363:1255] <= xf_w2e[1363:1255];   // pin reg + lockup (ckw13)
+    always @(posedge c_ckw14) xf_w2e[1472:1364] <= w2e[1472:1364]; always @(negedge c_ckw14) x_w2e[1472:1364] <= xf_w2e[1472:1364];   // pin reg + lockup (ckw14)
+    always @(posedge c_ckw15) xf_w2e[1581:1473] <= w2e[1581:1473]; always @(negedge c_ckw15) x_w2e[1581:1473] <= xf_w2e[1581:1473];   // pin reg + lockup (ckw15)
+    always @(posedge c_ckw16) xf_w2e[1689:1582] <= w2e[1689:1582]; always @(negedge c_ckw16) x_w2e[1689:1582] <= xf_w2e[1689:1582];   // pin reg + lockup (ckw16)
+    always @(posedge c_ckw17) xf_w2e[1797:1690] <= w2e[1797:1690]; always @(negedge c_ckw17) x_w2e[1797:1690] <= xf_w2e[1797:1690];   // pin reg + lockup (ckw17)
+    always @(posedge c_ckw18) xf_w2e[1904:1798] <= w2e[1904:1798]; always @(negedge c_ckw18) x_w2e[1904:1798] <= xf_w2e[1904:1798];   // pin reg + lockup (ckw18)
+    always @(posedge c_ckw19) xf_w2e[1905:1905] <= w2e[1905:1905]; always @(negedge c_ckw19) x_w2e[1905:1905] <= xf_w2e[1905:1905];   // pin reg + lockup (ckw19)
+    always @(posedge c_ckw18) xf_w2e[1906:1906] <= w2e[1906:1906]; always @(negedge c_ckw18) x_w2e[1906:1906] <= xf_w2e[1906:1906];   // pin reg + lockup (ckw18)
+    always @(posedge c_ckw19) xf_w2e[2014:1907] <= w2e[2014:1907]; always @(negedge c_ckw19) x_w2e[2014:1907] <= xf_w2e[2014:1907];   // pin reg + lockup (ckw19)
+    always @(posedge c_ckw20) xf_w2e[2123:2015] <= w2e[2123:2015]; always @(negedge c_ckw20) x_w2e[2123:2015] <= xf_w2e[2123:2015];   // pin reg + lockup (ckw20)
+    always @(posedge c_ckw21) xf_w2e[2231:2124] <= w2e[2231:2124]; always @(negedge c_ckw21) x_w2e[2231:2124] <= xf_w2e[2231:2124];   // pin reg + lockup (ckw21)
+    always @(posedge c_ckw22) xf_w2e[2341:2232] <= w2e[2341:2232]; always @(negedge c_ckw22) x_w2e[2341:2232] <= xf_w2e[2341:2232];   // pin reg + lockup (ckw22)
+    always @(posedge c_ckw23) xf_w2e[2449:2342] <= w2e[2449:2342]; always @(negedge c_ckw23) x_w2e[2449:2342] <= xf_w2e[2449:2342];   // pin reg + lockup (ckw23)
+    always @(posedge c_ckw24) xf_w2e[2547:2450] <= w2e[2547:2450]; always @(negedge c_ckw24) x_w2e[2547:2450] <= xf_w2e[2547:2450];   // pin reg + lockup (ckw24)
+    always @(posedge c_ckw25) xf_w2e[2655:2548] <= w2e[2655:2548]; always @(negedge c_ckw25) x_w2e[2655:2548] <= xf_w2e[2655:2548];   // pin reg + lockup (ckw25)
+    always @(posedge c_ckw26) xf_w2e[2762:2656] <= w2e[2762:2656]; always @(negedge c_ckw26) x_w2e[2762:2656] <= xf_w2e[2762:2656];   // pin reg + lockup (ckw26)
+    always @(posedge c_ckw27) xf_w2e[2873:2763] <= w2e[2873:2763]; always @(negedge c_ckw27) x_w2e[2873:2763] <= xf_w2e[2873:2763];   // pin reg + lockup (ckw27)
+    always @(posedge c_ckw28) xf_w2e[2981:2874] <= w2e[2981:2874]; always @(negedge c_ckw28) x_w2e[2981:2874] <= xf_w2e[2981:2874];   // pin reg + lockup (ckw28)
+    always @(posedge c_ckw29) xf_w2e[3089:2982] <= w2e[3089:2982]; always @(negedge c_ckw29) x_w2e[3089:2982] <= xf_w2e[3089:2982];   // pin reg + lockup (ckw29)
+    always @(posedge c_ckw30) xf_w2e[3197:3090] <= w2e[3197:3090]; always @(negedge c_ckw30) x_w2e[3197:3090] <= xf_w2e[3197:3090];   // pin reg + lockup (ckw30)
+    always @(posedge c_ckw31) xf_w2e[3292:3198] <= w2e[3292:3198]; always @(negedge c_ckw31) x_w2e[3292:3198] <= xf_w2e[3292:3198];   // pin reg + lockup (ckw31)
     wire [2067:0] od_xSE = {5'd0, x_w2e[2062:0]};
     wire [2067:0] o_xSE;
-    for (genvar k = 0; k <= 89; k = k + 1) begin : g_o_xSE_0
+    for (genvar k = 0; k <= 81; k = k + 1) begin : g_o_xSE_0
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke30), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 90; k <= 251; k = k + 1) begin : g_o_xSE_90
+    for (genvar k = 82; k <= 243; k = k + 1) begin : g_o_xSE_82
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke31), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 252; k <= 408; k = k + 1) begin : g_o_xSE_252
+    for (genvar k = 244; k <= 400; k = k + 1) begin : g_o_xSE_244
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke32), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 409; k <= 409; k = k + 1) begin : g_o_xSE_409
+    for (genvar k = 401; k <= 401; k = k + 1) begin : g_o_xSE_401
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke33), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 410; k <= 410; k = k + 1) begin : g_o_xSE_410
+    for (genvar k = 402; k <= 402; k = k + 1) begin : g_o_xSE_402
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke32), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 411; k <= 411; k = k + 1) begin : g_o_xSE_411
+    for (genvar k = 403; k <= 403; k = k + 1) begin : g_o_xSE_403
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke33), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 412; k <= 412; k = k + 1) begin : g_o_xSE_412
+    for (genvar k = 404; k <= 404; k = k + 1) begin : g_o_xSE_404
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke32), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 413; k <= 574; k = k + 1) begin : g_o_xSE_413
+    for (genvar k = 405; k <= 566; k = k + 1) begin : g_o_xSE_405
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke33), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 575; k <= 575; k = k + 1) begin : g_o_xSE_575
+    for (genvar k = 567; k <= 567; k = k + 1) begin : g_o_xSE_567
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke34), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 576; k <= 576; k = k + 1) begin : g_o_xSE_576
+    for (genvar k = 568; k <= 568; k = k + 1) begin : g_o_xSE_568
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke33), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 577; k <= 739; k = k + 1) begin : g_o_xSE_577
+    for (genvar k = 569; k <= 731; k = k + 1) begin : g_o_xSE_569
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke34), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 740; k <= 903; k = k + 1) begin : g_o_xSE_740
+    for (genvar k = 732; k <= 895; k = k + 1) begin : g_o_xSE_732
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke35), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 904; k <= 1065; k = k + 1) begin : g_o_xSE_904
+    for (genvar k = 896; k <= 1057; k = k + 1) begin : g_o_xSE_896
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke36), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 1066; k <= 1227; k = k + 1) begin : g_o_xSE_1066
+    for (genvar k = 1058; k <= 1219; k = k + 1) begin : g_o_xSE_1058
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke37), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 1228; k <= 1391; k = k + 1) begin : g_o_xSE_1228
+    for (genvar k = 1220; k <= 1383; k = k + 1) begin : g_o_xSE_1220
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke38), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 1392; k <= 1552; k = k + 1) begin : g_o_xSE_1392
+    for (genvar k = 1384; k <= 1544; k = k + 1) begin : g_o_xSE_1384
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke39), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 1553; k <= 1712; k = k + 1) begin : g_o_xSE_1553
+    for (genvar k = 1545; k <= 1704; k = k + 1) begin : g_o_xSE_1545
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke40), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 1713; k <= 1713; k = k + 1) begin : g_o_xSE_1713
+    for (genvar k = 1705; k <= 1705; k = k + 1) begin : g_o_xSE_1705
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke41), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 1714; k <= 1714; k = k + 1) begin : g_o_xSE_1714
+    for (genvar k = 1706; k <= 1706; k = k + 1) begin : g_o_xSE_1706
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke40), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 1715; k <= 1879; k = k + 1) begin : g_o_xSE_1715
+    for (genvar k = 1707; k <= 1871; k = k + 1) begin : g_o_xSE_1707
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke41), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 1880; k <= 2041; k = k + 1) begin : g_o_xSE_1880
+    for (genvar k = 1872; k <= 2033; k = k + 1) begin : g_o_xSE_1872
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke42), .d(od_xSE[k]), .q(o_xSE[k]));
     end
-    for (genvar k = 2042; k <= 2067; k = k + 1) begin : g_o_xSE_2042
+    for (genvar k = 2034; k <= 2067; k = k + 1) begin : g_o_xSE_2034
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke43), .d(od_xSE[k]), .q(o_xSE[k]));
     end
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(c_cke43), .y(fclk_1)); assign xSE[2063] = fclk_1;
@@ -439,25 +442,25 @@ module hfd_vm_se_e (
     for (genvar k = 0; k < 2063; k = k + 1) begin : g_a_xSE assign xSE[k] = o_xSE[k]; end
     wire [581:0] od_qSE = {2'd0, i_f_su_SE[2047:1980], i_iSE[511:0]};
     wire [581:0] o_qSE;
-    for (genvar k = 0; k <= 18; k = k + 1) begin : g_o_qSE_0
+    for (genvar k = 0; k <= 10; k = k + 1) begin : g_o_qSE_0
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke26), .d(od_qSE[k]), .q(o_qSE[k]));
     end
-    for (genvar k = 19; k <= 19; k = k + 1) begin : g_o_qSE_19
+    for (genvar k = 11; k <= 11; k = k + 1) begin : g_o_qSE_11
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke27), .d(od_qSE[k]), .q(o_qSE[k]));
     end
-    for (genvar k = 20; k <= 20; k = k + 1) begin : g_o_qSE_20
+    for (genvar k = 12; k <= 12; k = k + 1) begin : g_o_qSE_12
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke26), .d(od_qSE[k]), .q(o_qSE[k]));
     end
-    for (genvar k = 21; k <= 184; k = k + 1) begin : g_o_qSE_21
+    for (genvar k = 13; k <= 176; k = k + 1) begin : g_o_qSE_13
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke27), .d(od_qSE[k]), .q(o_qSE[k]));
     end
-    for (genvar k = 185; k <= 347; k = k + 1) begin : g_o_qSE_185
+    for (genvar k = 177; k <= 339; k = k + 1) begin : g_o_qSE_177
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke28), .d(od_qSE[k]), .q(o_qSE[k]));
     end
-    for (genvar k = 348; k <= 509; k = k + 1) begin : g_o_qSE_348
+    for (genvar k = 340; k <= 501; k = k + 1) begin : g_o_qSE_340
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke29), .d(od_qSE[k]), .q(o_qSE[k]));
     end
-    for (genvar k = 510; k <= 581; k = k + 1) begin : g_o_qSE_510
+    for (genvar k = 502; k <= 581; k = k + 1) begin : g_o_qSE_502
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke30), .d(od_qSE[k]), .q(o_qSE[k]));
     end
     wire fclk_6; ot_fwd_clk_inv u_fclk_6 (.a(c_cke30), .y(fclk_6)); assign qSE[580] = fclk_6;
@@ -465,262 +468,271 @@ module hfd_vm_se_e (
     for (genvar k = 0; k < 580; k = k + 1) begin : g_a_qSE assign qSE[k] = o_qSE[k]; end
     wire [2047:0] od_t_su_SE = {x_f_n_wr[1330:513], x_w2e[3292:3037], x_w2e[3036:2063]};
     wire [2047:0] o_t_su_SE;
-    for (genvar k = 0; k <= 117; k = k + 1) begin : g_o_t_su_SE_0
+    for (genvar k = 0; k <= 125; k = k + 1) begin : g_o_t_su_SE_0
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke14), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 118; k <= 281; k = k + 1) begin : g_o_t_su_SE_118
+    for (genvar k = 126; k <= 289; k = k + 1) begin : g_o_t_su_SE_126
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke15), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 282; k <= 443; k = k + 1) begin : g_o_t_su_SE_282
+    for (genvar k = 290; k <= 451; k = k + 1) begin : g_o_t_su_SE_290
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke16), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 444; k <= 607; k = k + 1) begin : g_o_t_su_SE_444
+    for (genvar k = 452; k <= 613; k = k + 1) begin : g_o_t_su_SE_452
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke17), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 608; k <= 764; k = k + 1) begin : g_o_t_su_SE_608
+    for (genvar k = 614; k <= 772; k = k + 1) begin : g_o_t_su_SE_614
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke18), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 765; k <= 765; k = k + 1) begin : g_o_t_su_SE_765
+    for (genvar k = 773; k <= 773; k = k + 1) begin : g_o_t_su_SE_773
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke19), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 766; k <= 766; k = k + 1) begin : g_o_t_su_SE_766
+    for (genvar k = 774; k <= 774; k = k + 1) begin : g_o_t_su_SE_774
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke18), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 767; k <= 767; k = k + 1) begin : g_o_t_su_SE_767
+    for (genvar k = 775; k <= 775; k = k + 1) begin : g_o_t_su_SE_775
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke19), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 768; k <= 768; k = k + 1) begin : g_o_t_su_SE_768
+    for (genvar k = 776; k <= 776; k = k + 1) begin : g_o_t_su_SE_776
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke18), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 769; k <= 930; k = k + 1) begin : g_o_t_su_SE_769
+    for (genvar k = 777; k <= 938; k = k + 1) begin : g_o_t_su_SE_777
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke19), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 931; k <= 1095; k = k + 1) begin : g_o_t_su_SE_931
+    for (genvar k = 939; k <= 1103; k = k + 1) begin : g_o_t_su_SE_939
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke20), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 1096; k <= 1257; k = k + 1) begin : g_o_t_su_SE_1096
+    for (genvar k = 1104; k <= 1265; k = k + 1) begin : g_o_t_su_SE_1104
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke21), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 1258; k <= 1419; k = k + 1) begin : g_o_t_su_SE_1258
+    for (genvar k = 1266; k <= 1427; k = k + 1) begin : g_o_t_su_SE_1266
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke22), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 1420; k <= 1420; k = k + 1) begin : g_o_t_su_SE_1420
+    for (genvar k = 1428; k <= 1591; k = k + 1) begin : g_o_t_su_SE_1428
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke23), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 1421; k <= 1421; k = k + 1) begin : g_o_t_su_SE_1421
-        ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke22), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
-    end
-    for (genvar k = 1422; k <= 1583; k = k + 1) begin : g_o_t_su_SE_1422
-        ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke23), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
-    end
-    for (genvar k = 1584; k <= 1745; k = k + 1) begin : g_o_t_su_SE_1584
+    for (genvar k = 1592; k <= 1737; k = k + 1) begin : g_o_t_su_SE_1592
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke24), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 1746; k <= 1906; k = k + 1) begin : g_o_t_su_SE_1746
+    for (genvar k = 1738; k <= 1898; k = k + 1) begin : g_o_t_su_SE_1738
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke25), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 1907; k <= 1907; k = k + 1) begin : g_o_t_su_SE_1907
+    for (genvar k = 1899; k <= 1899; k = k + 1) begin : g_o_t_su_SE_1899
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke26), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 1908; k <= 1908; k = k + 1) begin : g_o_t_su_SE_1908
+    for (genvar k = 1900; k <= 1900; k = k + 1) begin : g_o_t_su_SE_1900
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke25), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
-    for (genvar k = 1909; k <= 2047; k = k + 1) begin : g_o_t_su_SE_1909
+    for (genvar k = 1901; k <= 2047; k = k + 1) begin : g_o_t_su_SE_1901
         ot_hfd_oreg3x u (.clk(clk), .clkf(c_cke26), .d(od_t_su_SE[k]), .q(o_t_su_SE[k]));
     end
     assign t_su_SE = o_t_su_SE;
     wire [2255:0] od_t_n_row = {193'd0, x_w2e[2062:0]};
     wire [2255:0] o_t_n_row;
-    // [vm8] wire stages: longest pin-to-pin span 972 um -> +1 core stage(s) on every bit (ws_stages)
-    for (genvar k = 0; k <= 107; k = k + 1) begin : g_o_t_n_row_0
-        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn0), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
-    end
-    for (genvar k = 108; k <= 257; k = k + 1) begin : g_o_t_n_row_108
+    // [vm8] wire stages: longest pin-to-pin span 991 um -> +1 core stage(s) on every bit (ws_stages)
+    for (genvar k = 0; k <= 23; k = k + 1) begin : g_o_t_n_row_0
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn1), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 258; k <= 258; k = k + 1) begin : g_o_t_n_row_258
+    for (genvar k = 24; k <= 24; k = k + 1) begin : g_o_t_n_row_24
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 259; k <= 259; k = k + 1) begin : g_o_t_n_row_259
+    for (genvar k = 25; k <= 25; k = k + 1) begin : g_o_t_n_row_25
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn1), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 260; k <= 407; k = k + 1) begin : g_o_t_n_row_260
+    for (genvar k = 26; k <= 191; k = k + 1) begin : g_o_t_n_row_26
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 408; k <= 408; k = k + 1) begin : g_o_t_n_row_408
+    for (genvar k = 192; k <= 192; k = k + 1) begin : g_o_t_n_row_192
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 409; k <= 409; k = k + 1) begin : g_o_t_n_row_409
+    for (genvar k = 193; k <= 193; k = k + 1) begin : g_o_t_n_row_193
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 410; k <= 410; k = k + 1) begin : g_o_t_n_row_410
+    for (genvar k = 194; k <= 194; k = k + 1) begin : g_o_t_n_row_194
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 411; k <= 411; k = k + 1) begin : g_o_t_n_row_411
+    for (genvar k = 195; k <= 195; k = k + 1) begin : g_o_t_n_row_195
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 412; k <= 557; k = k + 1) begin : g_o_t_n_row_412
+    for (genvar k = 196; k <= 196; k = k + 1) begin : g_o_t_n_row_196
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 558; k <= 558; k = k + 1) begin : g_o_t_n_row_558
-        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    for (genvar k = 197; k <= 197; k = k + 1) begin : g_o_t_n_row_197
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn2), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 559; k <= 559; k = k + 1) begin : g_o_t_n_row_559
+    for (genvar k = 198; k <= 361; k = k + 1) begin : g_o_t_n_row_198
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 560; k <= 560; k = k + 1) begin : g_o_t_n_row_560
+    for (genvar k = 362; k <= 362; k = k + 1) begin : g_o_t_n_row_362
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 561; k <= 561; k = k + 1) begin : g_o_t_n_row_561
+    for (genvar k = 363; k <= 363; k = k + 1) begin : g_o_t_n_row_363
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 562; k <= 562; k = k + 1) begin : g_o_t_n_row_562
+    for (genvar k = 364; k <= 364; k = k + 1) begin : g_o_t_n_row_364
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 563; k <= 563; k = k + 1) begin : g_o_t_n_row_563
+    for (genvar k = 365; k <= 365; k = k + 1) begin : g_o_t_n_row_365
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 564; k <= 711; k = k + 1) begin : g_o_t_n_row_564
+    for (genvar k = 366; k <= 366; k = k + 1) begin : g_o_t_n_row_366
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 712; k <= 712; k = k + 1) begin : g_o_t_n_row_712
-        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    for (genvar k = 367; k <= 367; k = k + 1) begin : g_o_t_n_row_367
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn3), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 713; k <= 713; k = k + 1) begin : g_o_t_n_row_713
+    for (genvar k = 368; k <= 533; k = k + 1) begin : g_o_t_n_row_368
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 714; k <= 714; k = k + 1) begin : g_o_t_n_row_714
+    for (genvar k = 534; k <= 534; k = k + 1) begin : g_o_t_n_row_534
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 715; k <= 715; k = k + 1) begin : g_o_t_n_row_715
+    for (genvar k = 535; k <= 535; k = k + 1) begin : g_o_t_n_row_535
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 716; k <= 716; k = k + 1) begin : g_o_t_n_row_716
+    for (genvar k = 536; k <= 536; k = k + 1) begin : g_o_t_n_row_536
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 717; k <= 717; k = k + 1) begin : g_o_t_n_row_717
+    for (genvar k = 537; k <= 537; k = k + 1) begin : g_o_t_n_row_537
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 718; k <= 867; k = k + 1) begin : g_o_t_n_row_718
+    for (genvar k = 538; k <= 538; k = k + 1) begin : g_o_t_n_row_538
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 868; k <= 1018; k = k + 1) begin : g_o_t_n_row_868
+    for (genvar k = 539; k <= 539; k = k + 1) begin : g_o_t_n_row_539
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn4), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    end
+    for (genvar k = 540; k <= 707; k = k + 1) begin : g_o_t_n_row_540
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    end
+    for (genvar k = 708; k <= 708; k = k + 1) begin : g_o_t_n_row_708
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn6), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1019; k <= 1019; k = k + 1) begin : g_o_t_n_row_1019
-        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    for (genvar k = 709; k <= 709; k = k + 1) begin : g_o_t_n_row_709
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn5), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1020; k <= 1020; k = k + 1) begin : g_o_t_n_row_1020
+    for (genvar k = 710; k <= 878; k = k + 1) begin : g_o_t_n_row_710
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn6), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1021; k <= 1168; k = k + 1) begin : g_o_t_n_row_1021
+    for (genvar k = 879; k <= 879; k = k + 1) begin : g_o_t_n_row_879
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1169; k <= 1169; k = k + 1) begin : g_o_t_n_row_1169
-        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    for (genvar k = 880; k <= 880; k = k + 1) begin : g_o_t_n_row_880
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn6), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1170; k <= 1170; k = k + 1) begin : g_o_t_n_row_1170
+    for (genvar k = 881; k <= 1048; k = k + 1) begin : g_o_t_n_row_881
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1171; k <= 1171; k = k + 1) begin : g_o_t_n_row_1171
+    for (genvar k = 1049; k <= 1049; k = k + 1) begin : g_o_t_n_row_1049
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1172; k <= 1172; k = k + 1) begin : g_o_t_n_row_1172
+    for (genvar k = 1050; k <= 1050; k = k + 1) begin : g_o_t_n_row_1050
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1173; k <= 1320; k = k + 1) begin : g_o_t_n_row_1173
+    for (genvar k = 1051; k <= 1051; k = k + 1) begin : g_o_t_n_row_1051
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1321; k <= 1321; k = k + 1) begin : g_o_t_n_row_1321
-        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    for (genvar k = 1052; k <= 1052; k = k + 1) begin : g_o_t_n_row_1052
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn7), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1322; k <= 1322; k = k + 1) begin : g_o_t_n_row_1322
+    for (genvar k = 1053; k <= 1218; k = k + 1) begin : g_o_t_n_row_1053
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1323; k <= 1323; k = k + 1) begin : g_o_t_n_row_1323
+    for (genvar k = 1219; k <= 1219; k = k + 1) begin : g_o_t_n_row_1219
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1324; k <= 1324; k = k + 1) begin : g_o_t_n_row_1324
+    for (genvar k = 1220; k <= 1220; k = k + 1) begin : g_o_t_n_row_1220
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1325; k <= 1474; k = k + 1) begin : g_o_t_n_row_1325
+    for (genvar k = 1221; k <= 1221; k = k + 1) begin : g_o_t_n_row_1221
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1475; k <= 1475; k = k + 1) begin : g_o_t_n_row_1475
+    for (genvar k = 1222; k <= 1222; k = k + 1) begin : g_o_t_n_row_1222
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn8), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    end
+    for (genvar k = 1223; k <= 1392; k = k + 1) begin : g_o_t_n_row_1223
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
+    end
+    for (genvar k = 1393; k <= 1393; k = k + 1) begin : g_o_t_n_row_1393
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn10), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1476; k <= 1476; k = k + 1) begin : g_o_t_n_row_1476
+    for (genvar k = 1394; k <= 1394; k = k + 1) begin : g_o_t_n_row_1394
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn9), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1477; k <= 1629; k = k + 1) begin : g_o_t_n_row_1477
+    for (genvar k = 1395; k <= 1566; k = k + 1) begin : g_o_t_n_row_1395
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn10), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1630; k <= 1782; k = k + 1) begin : g_o_t_n_row_1630
+    for (genvar k = 1567; k <= 1706; k = k + 1) begin : g_o_t_n_row_1567
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn11), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1783; k <= 1935; k = k + 1) begin : g_o_t_n_row_1783
+    for (genvar k = 1707; k <= 1877; k = k + 1) begin : g_o_t_n_row_1707
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn12), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 1936; k <= 2087; k = k + 1) begin : g_o_t_n_row_1936
+    for (genvar k = 1878; k <= 2049; k = k + 1) begin : g_o_t_n_row_1878
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn13), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 2088; k <= 2239; k = k + 1) begin : g_o_t_n_row_2088
+    for (genvar k = 2050; k <= 2220; k = k + 1) begin : g_o_t_n_row_2050
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn14), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
-    for (genvar k = 2240; k <= 2255; k = k + 1) begin : g_o_t_n_row_2240
+    for (genvar k = 2221; k <= 2255; k = k + 1) begin : g_o_t_n_row_2221
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckn15), .d(od_t_n_row[k]), .q(o_t_n_row[k]));
     end
     assign t_n_row = o_t_n_row;
     assign t_n_ctl = 256'd0;
     wire [1590:0] od_e2w = {x_f_n_wr[512:0], i_f_su_SE[1077:0]};
     wire [1590:0] o_e2w;
-    // [vm8] wire stages: longest pin-to-pin span 1048 um -> +1 core stage(s) on every bit (ws_stages)
-    for (genvar k = 0; k <= 17; k = k + 1) begin : g_o_e2w_0
+    // [vm8] wire stages: longest pin-to-pin span 1050 um -> +1 core stage(s) on every bit (ws_stages)
+    for (genvar k = 0; k <= 11; k = k + 1) begin : g_o_e2w_0
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw31), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 18; k <= 124; k = k + 1) begin : g_o_e2w_18
+    for (genvar k = 12; k <= 118; k = k + 1) begin : g_o_e2w_12
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw32), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 125; k <= 232; k = k + 1) begin : g_o_e2w_125
+    for (genvar k = 119; k <= 226; k = k + 1) begin : g_o_e2w_119
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw33), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 233; k <= 341; k = k + 1) begin : g_o_e2w_233
+    for (genvar k = 227; k <= 227; k = k + 1) begin : g_o_e2w_227
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw34), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 342; k <= 451; k = k + 1) begin : g_o_e2w_342
+    for (genvar k = 228; k <= 228; k = k + 1) begin : g_o_e2w_228
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw33), .d(od_e2w[k]), .q(o_e2w[k]));
+    end
+    for (genvar k = 229; k <= 337; k = k + 1) begin : g_o_e2w_229
+        ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw34), .d(od_e2w[k]), .q(o_e2w[k]));
+    end
+    for (genvar k = 338; k <= 445; k = k + 1) begin : g_o_e2w_338
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw35), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 452; k <= 559; k = k + 1) begin : g_o_e2w_452
+    for (genvar k = 446; k <= 553; k = k + 1) begin : g_o_e2w_446
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw36), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 560; k <= 667; k = k + 1) begin : g_o_e2w_560
+    for (genvar k = 554; k <= 663; k = k + 1) begin : g_o_e2w_554
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw37), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 668; k <= 775; k = k + 1) begin : g_o_e2w_668
+    for (genvar k = 664; k <= 771; k = k + 1) begin : g_o_e2w_664
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw38), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 776; k <= 885; k = k + 1) begin : g_o_e2w_776
+    for (genvar k = 772; k <= 879; k = k + 1) begin : g_o_e2w_772
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw39), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 886; k <= 992; k = k + 1) begin : g_o_e2w_886
+    for (genvar k = 880; k <= 986; k = k + 1) begin : g_o_e2w_880
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw40), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 993; k <= 1101; k = k + 1) begin : g_o_e2w_993
+    for (genvar k = 987; k <= 1097; k = k + 1) begin : g_o_e2w_987
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw41), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 1102; k <= 1209; k = k + 1) begin : g_o_e2w_1102
+    for (genvar k = 1098; k <= 1205; k = k + 1) begin : g_o_e2w_1098
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw42), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 1210; k <= 1319; k = k + 1) begin : g_o_e2w_1210
+    for (genvar k = 1206; k <= 1313; k = k + 1) begin : g_o_e2w_1206
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw43), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 1320; k <= 1427; k = k + 1) begin : g_o_e2w_1320
+    for (genvar k = 1314; k <= 1421; k = k + 1) begin : g_o_e2w_1314
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw44), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 1428; k <= 1535; k = k + 1) begin : g_o_e2w_1428
+    for (genvar k = 1422; k <= 1531; k = k + 1) begin : g_o_e2w_1422
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw45), .d(od_e2w[k]), .q(o_e2w[k]));
     end
-    for (genvar k = 1536; k <= 1590; k = k + 1) begin : g_o_e2w_1536
+    for (genvar k = 1532; k <= 1590; k = k + 1) begin : g_o_e2w_1532
         ot_hfd_oreg2x u (.clk(clk), .clkf(c_ckw46), .d(od_e2w[k]), .q(o_e2w[k]));
     end
     assign e2w = o_e2w;

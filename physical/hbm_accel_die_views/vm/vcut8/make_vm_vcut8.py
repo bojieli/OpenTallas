@@ -142,6 +142,19 @@ ST_COLB = {kv.split(':')[0]: [float(x) for x in kv.split(':')[1].split('/')]
 # track in tile-local coordinates (r2 9adc3c44e x0 237.6 / y0 502.2: M7 tap pins 0.032 off the track -> DRT-0421 'no pins on
 # routing grid' -> DRT-0255 on cke6 / cke13; r1 the same on ck / cke10)
 ST_PDN_X, ST_PDN_Y = 43.2, 43.2
+# r6: no half pin within FACE_KO um of a tile boundary on a face where EVERY half touching it is tiled (VM_ST_FACE_KO,
+# default 0 = r5 byte-exact).  r3 crashes hbm_vm8st3_sewt1 / neet4 (DRT-0255 on M4/M5 pins at a tile corner, e.g.
+# t_s_wr__t[0] at (0.012, 0.096)) and 30 of 36 r3 tiles carry such corner pins: a pin on the boundary has no access
+# from either side of the corner.  Faces shared with a closed half (nw_e, ne_w) keep their pins (their routes stand).
+FACE_KO = float(os.environ.get('VM_ST_FACE_KO', '0')) if ST else 0.0
+
+def face_ko(halves, f):
+    """tile boundaries along face f ('ew' -> rows, 'ns' -> columns) of the given (q, h) halves; [] unless all are tiled"""
+    if not FACE_KO or not all(f'{q}_{h}' in ST_HALVES for q, h in halves):
+        return ()
+    if f == 'ew':
+        return tuple(sorted({hi for q, h in halves for _, hi in st_rows(h)[:-1]}))
+    return tuple(sorted({hi for q, h in halves for _, hi in st_cols(h, q)[:-1]}))
 
 def st_rows(h):
     """PHYSICAL SPEC [hbm-vm8] 2026-10-11: VM_ST rows (2 -> 500 um each; hop <= 500 um), on the 0.27 um row grid"""
@@ -678,17 +691,28 @@ def free_span(ly, a0, a1):
     return all(a1 + hw < lo + n * per or a0 - hw > hi + n * per
                for lo, hi in bands for n in range(int(a0 // per) - 1, int(a1 // per) + 2))
 
-def lay(runs, L1, L2, lo, hi):
-    """runs: [(port, bits)] in order along the face; returns ({port: [coord of bit b]}, {port: layer list}, pitch, span)"""
+def lay(runs, L1, L2, lo, hi, ko=()):
+    """runs: [(port, bits)] in order along the face; returns ({port: [coord of bit b]}, {port: layer list}, pitch, span)
+    ko (r6, VM_ST_FACE_KO): tile boundaries along this face; no pin within +-FACE_KO um of one (the schedule runs on the
+    face with those windows cut out, so the pitch stays uniform on each side; empty ko = the r5 placement byte-exact)"""
     n = sum(b for _, b in runs)
     gap = 4 * TRK[L2][1]                                   # between runs
+    W = [(b - FACE_KO, b + FACE_KO) for b in sorted(ko)] if FACE_KO > 0 else []
+    def ex(u):                                             # ideal coordinate -> face coordinate past the windows
+        for a, b in W:
+            if u >= a:
+                u += b - a
+        return u
+    def bad(x):
+        return any(a < x < b for a, b in W)
+    cut = sum(b - a for a, b in W)
     for P in PAIR_PITCHES:
         need = sum(-(-b // 2) * P for _, b in runs) + gap * (len(runs) - 1)
-        if need <= hi - lo:
+        if need <= hi - lo - cut:
             break
     else:
         raise AssertionError(('face runs do not fit on two layers', runs, hi - lo))
-    a0 = lo + (hi - lo - need) / 2
+    a0 = lo + (hi - lo - cut - need) / 2
     last = {L1: -1.0, L2: -1.0}
     pos, lys = {}, {}
     for p, b in runs:
@@ -696,9 +720,9 @@ def lay(runs, L1, L2, lo, hi):
         for i in range(b):
             ly = L1 if i % 2 == 0 else L2
             off, pt = TRK[ly]
-            want = max(a0 + (i // 2) * P, last[ly] + pt)
+            want = max(ex(a0 + (i // 2) * P), last[ly] + pt)
             x = off + math.ceil((want - off) / pt - 1e-9) * pt
-            while not free(ly, x):
+            while not free(ly, x) or bad(x):
                 x += pt
             assert x <= hi + 1e-6, (p, i, x, hi)
             x = round(x, 4)
@@ -729,13 +753,13 @@ def plan():
         m = f'hfd_vm_{q}_{OUTER[q]}'
         runs = [(p, widths[q][p]) for p in DIE[q]]
         lo, hi = 3.0, QH - 3.0
-        pos, lys, P, need, n = lay(runs, 'M4', 'M6', lo, hi)
+        pos, lys, P, need, n = lay(runs, 'M4', 'M6', lo, hi, face_ko([(q, OUTER[q])], 'ew'))
         put(m, 'W' if OUTER[q] == 'w' else 'E', pos, lys); note(m, 'W' if OUTER[q] == 'w' else 'E', runs, P, need, n, hi - lo)
     # E-W cross edges: (west quadrant, east quadrant); runs named from the west quadrant (t_e_* / f_e_*)
     for qa, qb in (('sw', 'se'), ('nw', 'ne')):
         runs = [(p, widths[qa][p]) for p in ('t_e_wr', 't_e_row', 't_e_ctl', 'f_e_wr', 'f_e_row', 'f_e_ctl')]
         lo, hi = 3.0, QH - 3.0
-        pos, lys, P, need, n = lay(runs, 'M4', 'M6', lo, hi)
+        pos, lys, P, need, n = lay(runs, 'M4', 'M6', lo, hi, face_ko([(qa, 'e'), (qb, 'w')], 'ew'))
         ma, mb = f'hfd_vm_{qa}_e', f'hfd_vm_{qb}_w'
         put(ma, 'E', pos, lys); put(mb, 'W', pos, lys, lambda p: p.replace('_e_', '_w_').replace('t_w', 'X').replace('f_w', 't_w').replace('X', 'f_w'))
         note(ma, 'E', runs, P, need, n, hi - lo); note(mb, 'W', runs, P, need, n, hi - lo)
@@ -746,7 +770,7 @@ def plan():
             names = [p for p in ('t_n_row', 'f_n_wr', 't_n_ctl', 't_n_wr', 'f_n_row', 'f_n_ctl') if (p in NS_O_SOUTH) == ro]
             runs = [(p, widths[qs][p]) for p in names]
             lo, hi = 3.0, WID[h] - 3.0
-            pos, lys, P, need, n = lay(runs, 'M5', 'M7', lo, hi)
+            pos, lys, P, need, n = lay(runs, 'M5', 'M7', lo, hi, face_ko([(qs, h), (qn, h)], 'ns'))
             ms, mn = f'hfd_vm_{qs}_{h}', f'hfd_vm_{qn}_{h}'
             put(ms, 'N', pos, lys); put(mn, 'S', pos, lys, lambda p: NS_PARTNER[p])
             note(ms, 'N', runs, P, need, n, hi - lo); note(mn, 'S', runs, P, need, n, hi - lo)
@@ -755,7 +779,7 @@ def plan():
         w2e, e2w = SEAM[q]
         runs = [('w2e', w2e), ('e2w', e2w)]
         lo, hi = 3.0, QH - 3.0
-        pos, lys, P, need, n = lay(runs, 'M4', 'M6', lo, hi)
+        pos, lys, P, need, n = lay(runs, 'M4', 'M6', lo, hi, face_ko([(q, 'w'), (q, 'e')], 'ew'))
         put(f'hfd_vm_{q}_w', 'E', pos, lys); put(f'hfd_vm_{q}_e', 'W', pos, lys)
         note(f'hfd_vm_{q}_w/e', 'seam', runs, P, need, n, hi - lo)
     # t_quant (nw_e, N edge: north quadrant's outer edge)
