@@ -7,8 +7,11 @@ A parent may only be submitted when every hard child it instantiates passes this
                  below the PG layer is normal and allowed.
   (b) pg         VDD and VSS each have full-length stripes (>= 90% of the macro span) on ONE common top layer;
                  reports stripe count, spread across the macro and coverage (full-stripe share of top-layer PG metal).
-  (c) strap      no OBS and no signal-pin shape on the parent strap layer (pg_layer + 1, or the contract's strap_layer)
-                 or above (preamble UPDATE 3, PDN-0233/0232); with a contract also no signal pin above signal_max_layer.
+  (c) strap      no OBS and no signal-pin shape on the parent strap layer or above (preamble UPDATE 3, PDN-0233/0232) and
+                 no signal pin above the cap.  Cap (2026-10-12 layer contract): --cap, else the contract slot's
+                 layer_cap (new routes, M5 default / M6 granted) or view_cap (the closed view's own recorded cap, valid
+                 only while it passes here) -- whichever the view's PG top layer matches; strap = cap + 1.  Without a
+                 cap: pg_layer + 1 (or the slot's strap_layer), signals <= the slot's signal_max_layer.
   (d) libs       <cell>_tt.lib, <cell>_ff.lib and <cell>_ss.lib exist in --libs (only when --libs is given).
   (e) contract   with --contract/--slot: outline, PG layer and every pin's face / layer (and offset when given) match the
                  slot; pins missing from or extra to the contract are mismatches.
@@ -256,8 +259,26 @@ def check_contract(m: dict, s: dict, pg_top: str | None) -> list[str]:
 
 
 # ---------------------------------------------------------------------------------------------------------- driver
+def pick_cap(s: dict | None, pg_top: str | None, cap: str | None = None) -> int | None:
+    """the cap (top layer of the child's signals AND PG) to lint at: explicit, else the slot's layer_cap / view_cap that the
+    view's PG top layer matches (layer_cap when neither does, so the mismatch fails), else None (pre-1012 behaviour)"""
+    if cap:
+        return metal(cap)
+    s = s or {}
+    caps = [c for c in (s.get("layer_cap"), s.get("view_cap")) if c]
+    if not caps:
+        return None
+    for c in caps:
+        if pg_top and metal(c) == metal(pg_top):
+            return metal(c)
+    for c in caps:      # legacy views whose PG sits one layer above their signals (PG-only M7 over M6 signals)
+        if pg_top and metal(c) and metal(pg_top) and metal(c) >= metal(pg_top):
+            return metal(c)
+    return metal(caps[0])
+
+
 def lint(lef_path: str, libs: str | None = None, contract: str | None = None, slot: str | None = None,
-         skip: set | None = None) -> dict:
+         skip: set | None = None, cap: str | None = None) -> dict:
     skip = skip or set()
     text = Path(lef_path).read_text(errors="replace")
     m = parse_lef(text, slot_cell(contract, slot))
@@ -266,9 +287,16 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
     fails, warns, info = [], [], {"cell": cell, "W": W, "H": H}
     pg = check_pg(m)
     info["pg"] = pg
-    pg_L = metal((s or {}).get("pg_layer")) or metal(pg["top_layer"])
-    strap_L = metal((s or {}).get("strap_layer")) or ((pg_L + 1) if pg_L else None)
+    cap_L = pick_cap(s, pg["top_layer"], cap)
+    if cap_L:
+        pg_L, strap_L = cap_L, cap_L + 1
+    else:
+        pg_L = metal((s or {}).get("pg_layer")) or metal(pg["top_layer"])
+        strap_L = metal((s or {}).get("strap_layer")) or ((pg_L + 1) if pg_L else None)
     info["pg_layer"], info["strap_layer"] = (f"M{pg_L}" if pg_L else None), (f"M{strap_L}" if strap_L else None)
+    info["cap"] = f"M{cap_L}" if cap_L else None
+    if cap_L and s and s.get("layer_cap") and cap_L != metal(s["layer_cap"]):
+        info["cap_basis"] = f"view_cap (legacy closed view; slot layer_cap {s['layer_cap']} for new routes)"
     # (a)
     if "a" not in skip and pg_L:
         for r in m["obs"]:
@@ -292,12 +320,13 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
             fails.append(f"(c) strap layer M{strap_L}+ not clear: {n_obs} OBS on {'/'.join(hi_obs) or '-'}, "
                          f"{len(hi_sig)} signal pins, PG on {'/'.join(hi_pg) or '-'} (child signals must stop below "
                          f"the parent strap layer, or own M{strap_L - 1} as full PG stripes and leave M{strap_L} free)")
-        smax = metal((s or {}).get("signal_max_layer"))
+        smax = cap_L or metal((s or {}).get("signal_max_layer"))
         if smax:
             over = sorted({n for n, p in m["pins"].items() if not is_pg(n, p)
                            for r in p["rects"] if (metal(r[0]) or 0) > smax})
             if over:
-                fails.append(f"(c) {len(over)} signal pins above contract signal_max_layer M{smax} (e.g. {over[0]})")
+                fails.append(f"(c) {len(over)} signal pins above the {'cap' if cap_L else 'contract signal_max_layer'} M{smax} "
+                             f"(e.g. {over[0]})")
     # (d)
     tt_lib = None
     if libs:
@@ -308,7 +337,10 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
         tt_lib = p if p.exists() else None
     # (e)
     if s and "e" not in skip:
-        fails += [f"(e) contract {s.get('_die')}/{slot} v{s.get('_version')}: {b}" for b in check_contract(m, s, pg["top_layer"])]
+        sc = dict(s, pg_layer=f"M{cap_L}") if cap_L else s
+        if cap_L and pg["top_layer"] and metal(pg["top_layer"]) < cap_L:
+            sc["pg_layer"] = pg["top_layer"]       # a legacy view with PG one layer below its recorded cap
+        fails += [f"(e) contract {s.get('_die')}/{slot} v{s.get('_version')}: {b}" for b in check_contract(m, sc, pg["top_layer"])]
     # (f)
     fa = face_access(m)
     info["face"] = fa
@@ -356,12 +388,13 @@ def main(argv=None) -> int:
     ap.add_argument("--contract", help="results/arch/hier_contract_1011/<die>.json")
     ap.add_argument("--slot")
     ap.add_argument("--skip", default="", help="comma list of checks to skip (a..g)")
+    ap.add_argument("--cap", help="lint at this layer cap (M5 / M6 ...): strap = cap + 1, no signal pin above the cap")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
     if bool(a.contract) != bool(a.slot):
         ap.error("--contract and --slot go together")
     try:
-        r = lint(a.lef, a.libs, a.contract, a.slot, {x.strip() for x in a.skip.split(",") if x.strip()})
+        r = lint(a.lef, a.libs, a.contract, a.slot, {x.strip() for x in a.skip.split(",") if x.strip()}, a.cap)
     except (OSError, ValueError, KeyError) as ex:
         print(f"ERROR: {ex}")
         return 2

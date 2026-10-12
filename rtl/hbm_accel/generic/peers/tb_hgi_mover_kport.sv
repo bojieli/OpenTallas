@@ -15,6 +15,10 @@
 // wq taking one packet a cycle, popping one a cycle (stalled on a random 1/WSTALL of the cycles) into the stack memory,
 // WR_G = the Gray count of pops on lr[291:284].  Every destination word is checked; STORE B/cycle likewise.
 // Prints MOVER-KPORT PASS / FAIL and, per case, RATE <case> <B/cycle>.
+// B2 = 1 (el1011-hbm-b2-cp, B2_CONVENTION): four quadrant movers (B2 1, QID 0..3) behind the B2 dispatcher model, each with
+// its own VM client / read group / wide-port models (one VM image) and its five kport lanes (ND 20); quadrant q's lane s
+// reaches stack s with the stack bits replaced by s.  Every case also prints IMAGE <case> <hash> (+ IMAGE-HASH, the same
+// at B2 0 and 1) and STACKCYC <case> q<k> <cycles> (accept -> that quadrant's done).  MUT_B2 1 / 2 must FAIL.
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_hgi_mover_kport;
     parameter integer MUT = 0;
@@ -37,31 +41,10 @@ module tb_hgi_mover_kport;
     parameter integer KVB_N = 16;                       // records a KVWB burst
     parameter integer KVB_MAX = 0;                      // gate: posted cycles / record x 10 (0: report only)
     parameter integer ONLY_KVB = 0;                     // 1: the KVWB cases only
+    parameter integer PX = 0;                           // the mover's registered issue decisions + vmq output (hbm-fq/mvf)
     reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
-    // ---- mover
-    reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_done, mv_fault, mv_src;
-    wire k_req_v, k_req_we, k_rsp_rdy; wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
-    wire [3:0] r_req_v, r_req_rdy, r_rsp_v, r_rsp_rdy, r_rsp_last; wire [4*37-1:0] r_req_addr; wire [15:0] r_req_len;
-    wire [63:0] r_req_tag, r_rsp_tag; wire [1023:0] r_rsp_data, r_req_wdata; wire [3:0] r_req_we, r_rsp_we; wire [127:0] r_req_wstrb;
-    wire [337:0] vmq; wire [279:0] wl; reg wl_done = 0; reg [273:0] vmr = 0;
-    wire [4:0] kp_rdy, kp_rsp_v, kp_rsp_we, kp_last; wire [79:0] kp_rtag; wire [5*256-1:0] kp_rdata; wire kp_fault;
-    wire [512:0] vr2q; reg [8256:0] vr2r = '0;
-    ot_hgi_dma_mover #(.MUT(MUT), .VR2(VR2), .SVR2(SVR2), .KVW(KVW)) u_m (.clk(clk), .rst_n(rst_n), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
-        .mv_fault(mv_fault), .mv_src(mv_src), .fence_v(1'b0), .fence_rdy(), .fence_done(),
-        .k_req_v(k_req_v), .k_req_rdy(kp_rdy[0]), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
-        .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(kp_rsp_v[0]), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(kp_rsp_we[0]),
-        .k_rsp_data(kp_rdata[255:0]), .k_fault(kp_fault),
-        .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
-        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(vr2q), .vr2r(vr2r),
-        .vmq(vmq), .vmr(vmr), .wl(wl), .wl_done(wl_done));
-    assign r_req_rdy = kp_rdy[4:1]; assign r_rsp_v = kp_rsp_v[4:1]; assign r_rsp_tag = kp_rtag[79:16];
-    assign r_rsp_last = kp_last[4:1]; assign r_rsp_data = kp_rdata[5*256-1:256]; assign r_rsp_we = kp_rsp_we[4:1];
-    wire [4*350-1:0] lq; wire [4*293-1:0] lr;
-    ot_hfd_loader_kport #(.ENABLE(1), .ND(5), .STACK_BYTES(36'h800000000), .NO(NO), .NQ(NQ), .RB(RB), .WNO(WNO), .MUT(KMUT)) u_kp (.clk(clk), .rst_n(rst_n),
-        .req_v({r_req_v, k_req_v}), .req_rdy(kp_rdy), .req_we({r_req_we, k_req_we}), .req_addr({r_req_addr, k_addr}),
-        .req_wdata({r_req_wdata, k_wd}), .req_wstrb({r_req_wstrb, k_ws}), .req_tag({r_req_tag, k_tag}), .req_len({r_req_len, 4'd1}),
-        .rsp_v(kp_rsp_v), .rsp_rdy({r_rsp_rdy, k_rsp_rdy}), .rsp_we(kp_rsp_we), .rsp_tag(kp_rtag), .rsp_data(kp_rdata),
-        .rsp_last(kp_last), .lq(lq), .lr(lr), .fault(kp_fault));
+    parameter integer B2 = 0;                           // 1: the B2 die's four quadrant movers (QID 0..3) behind the B2 dispatcher model
+    parameter integer MUT_B2 = 0;                       // the quadrant movers' B2 mutant (1 rows off by one, 2 wrong lane)
     function automatic [255:0] smask(input integer s);
         smask = {8{32'h1F2E3D4C * (s + 1)}};
     endfunction
@@ -71,42 +54,126 @@ module tb_hgi_mover_kport;
     reg [255:0] hm [bit [31:0]];                            // written sectors {stack, local sector}
     integer errs = 0;
     function automatic [31:0] vmw(input [31:0] a); vmw = (a * 32'h2545F491) ^ (a >> 7) ^ 32'hA5A50F0F; endfunction
-    // ---- VM packet client model: reads in order, VLAT edges later (data vmw(word))
-    reg [26:0] vq [0:15]; longint vd [0:15]; integer vh = 0, vn = 0; longint vt = 0;
-    always @(posedge clk) begin
-        vt <= vt + 1; vmr[273] <= 1'b0;
-        if (vn > 0 && vd[vh % 16] <= vt) begin
-            for (integer w = 0; w < 8; w = w + 1) vmr[32*w +: 32] <= vmw({vq[vh % 16], 3'(w)});
-            vmr[273] <= 1'b1; vh = vh + 1; vn = vn - 1;
+    // ---- movers (B2 = 0: one; B2 = 1: four quadrant instances, QID 0..3, each with its own VM ports and its kport lanes)
+    // B2 (B2_CONVENTION): the dispatcher sends a move to all four quadrants when a side is STRIPE4, else to the quadrant of
+    // its HBM side's stack (no HBM side: 0); done / src = every targeted quadrant's, fault = any.  The bench HBM: quadrant
+    // q's lane s is kport lane 5q + 1 + s with its address's stack bits replaced by s (stack s memory, local address only).
+    localparam integer NI = (B2 != 0) ? 4 : 1;
+    localparam integer ND = 5 * NI;
+    reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_done, mv_fault, mv_src;
+    wire [NI-1:0] i_rdy, i_done, i_fault, i_src, i_v;
+    wire [ND-1:0] kq_v, kq_we, kq_rdy, kq_rrdy, kp_rsp_v, kp_rsp_we, kp_last; wire [ND*37-1:0] kq_a; wire [ND*256-1:0] kq_d, kp_rdata;
+    wire [ND*32-1:0] kq_s; wire [ND*16-1:0] kq_t, kp_rtag; wire [ND*4-1:0] kq_n; wire kp_fault;
+    function automatic [3:0] tgt_of(input [226:0] w);
+        if ((w[1:0] == 2'd0 && w[44:42] == 3'd1) || (w[94:93] == 2'd0 && w[137:135] == 3'd1)) tgt_of = 4'hF;
+        else if (w[1:0] == 2'd0) tgt_of = 4'd1 << w[41:40];
+        else if (w[94:93] == 2'd0) tgt_of = 4'd1 << w[134:133];
+        else tgt_of = 4'd1;
+    endfunction
+    wire [3:0] t4 = (B2 != 0) ? tgt_of(mv) : 4'd1;
+    wire [NI-1:0] tgt = t4[NI-1:0];
+    wire all_rdy = &(i_rdy | ~tgt);
+    assign i_v = {NI{mv_v && all_rdy}} & tgt;
+    assign mv_rdy = all_rdy;
+    longint vt = 0; integer cyc = 0;
+    always @(posedge clk) begin vt <= vt + 1; cyc <= cyc + 1; end
+    integer t_acc [0:3], t_dn [0:3];
+    reg b_done = 0, b_src = 0, bc = 0; reg [NI-1:0] bc_t = 0, bc_d = 0, bc_s = 0;
+    always @(posedge clk) begin : disp
+        reg [NI-1:0] nd, ns;
+        b_done <= 1'b0; b_src <= 1'b0;
+        for (integer q = 0; q < NI; q = q + 1) begin
+            if (i_v[q]) t_acc[q] = cyc;
+            if (i_done[q]) t_dn[q] = cyc;
         end
-        if (rst_n && vmq[337]) begin
-            if (vmq[336]) begin $display("FATAL unexpected VM write packet"); errs = errs + 1; end
-            vq[(vh + vn) % 16] = vmq[335:309]; vd[(vh + vn) % 16] = vt + VLAT; vn = vn + 1;
-            if (vn > 4) begin $display("FATAL VM client > 4 outstanding"); errs = errs + 1; end
+        if (!rst_n) bc <= 1'b0;
+        else begin
+            if (bc) begin
+                nd = bc_d | i_done; ns = bc_s | i_src; bc_d <= nd; bc_s <= ns;
+                if ((ns & bc_t) == bc_t && (bc_s & bc_t) != bc_t) b_src <= 1'b1;
+                if ((nd & bc_t) == bc_t) begin b_done <= 1'b1; bc <= 1'b0; end
+            end else begin b_done <= |i_done; b_src <= |i_src; end
+            if (mv_v && mv_rdy && (tgt & (tgt - 1'b1)) != 0) begin bc <= 1'b1; bc_t <= tgt; bc_d <= '0; bc_s <= '0; end
         end
     end
-    // ---- VM DMA wide read group model (VR2): grant follows c_req, a lane's request is answered in order GLAT edges later,
-    //      its credit returns 2 edges after the request (it reached the bank); a request without a credit or a grant is fatal
-    reg [14:0] gq [0:31][0:63]; longint gd [0:31][0:63]; integer gh [0:31], gn [0:31]; integer gcr [0:31];
-    initial for (integer b = 0; b < 32; b = b + 1) begin gh[b] = 0; gn[b] = 0; gcr[b] = 32; end
-    reg [31:0] gcr_d1, gcr_d2;
-    always @(posedge clk) begin
-        vr2r[8256] <= vr2q[512];
-        gcr_d2 <= gcr_d1; gcr_d1 <= 32'd0; vr2r[8255:8224] <= gcr_d2;
-        for (integer b = 0; b < 32; b = b + 1) begin
-            vr2r[b*257 + 256] <= 1'b0;
-            if (gn[b] > 0 && gd[b][gh[b] % 64] <= vt) begin
-                for (integer w = 0; w < 8; w = w + 1) vr2r[b*257 + 32*w +: 32] <= vmw({17'd0, gq[b][gh[b] % 64], 3'(w)});
-                vr2r[b*257 + 256] <= 1'b1; gh[b] = gh[b] + 1; gn[b] = gn[b] - 1;
+    assign mv_done = (B2 != 0) ? b_done : i_done[0];
+    assign mv_src = (B2 != 0) ? b_src : i_src[0];
+    assign mv_fault = |i_fault;
+    reg [31:0] vm [int];                                    // the VM image (every instance's wide write port)
+    genvar qi, sl;
+    for (qi = 0; qi < NI; qi = qi + 1) begin : g_mv
+        wire k_req_v, k_req_we, k_rsp_rdy; wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
+        wire [3:0] r_req_v, r_req_rdy, r_rsp_v, r_rsp_rdy, r_rsp_last; wire [4*37-1:0] r_req_addr; wire [15:0] r_req_len;
+        wire [63:0] r_req_tag, r_rsp_tag; wire [1023:0] r_rsp_data, r_req_wdata; wire [3:0] r_req_we, r_rsp_we; wire [127:0] r_req_wstrb;
+        wire [337:0] vmq; wire [279:0] wl; reg wl_done = 0; reg [273:0] vmr = 0;
+        wire [512:0] vr2q; reg [8256:0] vr2r = '0;
+        localparam integer B = 5 * qi;
+        ot_hgi_dma_mover #(.MUT(MUT), .VR2(VR2), .SVR2(SVR2), .KVW(KVW), .PX(PX), .B2(B2), .QID(qi), .MUT_B2(MUT_B2)) u_m (.clk(clk), .rst_n(rst_n),
+            .mv_v(i_v[qi]), .mv_rdy(i_rdy[qi]), .mv(mv), .mv_done(i_done[qi]),
+            .mv_fault(i_fault[qi]), .mv_src(i_src[qi]), .fence_v(1'b0), .fence_rdy(), .fence_done(),
+            .k_req_v(k_req_v), .k_req_rdy(kq_rdy[B]), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
+            .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(kp_rsp_v[B]), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(kp_rsp_we[B]),
+            .k_rsp_data(kp_rdata[B*256 +: 256]), .k_fault(kp_fault),
+            .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
+            .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(vr2q), .vr2r(vr2r),
+            .vmq(vmq), .vmr(vmr), .wl(wl), .wl_done(wl_done));
+        assign r_req_rdy = kq_rdy[B+1 +: 4]; assign r_rsp_v = kp_rsp_v[B+1 +: 4]; assign r_rsp_tag = kp_rtag[(B+1)*16 +: 64];
+        assign r_rsp_last = kp_last[B+1 +: 4]; assign r_rsp_data = kp_rdata[(B+1)*256 +: 1024]; assign r_rsp_we = kp_rsp_we[B+1 +: 4];
+        assign kq_v[B +: 5] = {r_req_v, k_req_v}; assign kq_we[B +: 5] = {r_req_we, k_req_we}; assign kq_rrdy[B +: 5] = {r_rsp_rdy, k_rsp_rdy};
+        assign kq_d[B*256 +: 5*256] = {r_req_wdata, k_wd}; assign kq_s[B*32 +: 5*32] = {r_req_wstrb, k_ws};
+        assign kq_t[B*16 +: 5*16] = {r_req_tag, k_tag}; assign kq_n[B*4 +: 5*4] = {r_req_len, 4'd1};
+        assign kq_a[B*37 +: 37] = k_addr;
+        for (sl = 0; sl < 4; sl = sl + 1) begin : g_la
+            assign kq_a[(B+1+sl)*37 +: 37] = (B2 != 0) ? {2'(sl), r_req_addr[sl*37 +: 35]} : r_req_addr[sl*37 +: 37];
+        end
+        // ---- VM packet client model: reads in order, VLAT edges later (data vmw(word))
+        reg [26:0] vq [0:15]; longint vd [0:15]; integer vh = 0, vn = 0;
+        always @(posedge clk) begin
+            vmr[273] <= 1'b0;
+            if (vn > 0 && vd[vh % 16] <= vt) begin
+                for (integer w = 0; w < 8; w = w + 1) vmr[32*w +: 32] <= vmw({vq[vh % 16], 3'(w)});
+                vmr[273] <= 1'b1; vh = vh + 1; vn = vn - 1;
             end
-            if (rst_n && vr2q[b*16 + 15]) begin
-                if (!vr2r[8256]) begin $display("FATAL read group request without the grant"); errs = errs + 1; end
-                if (vr2q[b*16 +: 5] != 5'(b)) begin $display("FATAL read group lane %0d got sector %h", b, vr2q[b*16 +: 15]); errs = errs + 1; end
-                gq[b][(gh[b] + gn[b]) % 64] = vr2q[b*16 +: 15]; gd[b][(gh[b] + gn[b]) % 64] = vt + GLAT; gn[b] = gn[b] + 1;
-                gcr_d1[b] <= 1'b1;
+            if (rst_n && vmq[337]) begin
+                if (vmq[336]) begin $display("FATAL unexpected VM write packet"); errs = errs + 1; end
+                vq[(vh + vn) % 16] = vmq[335:309]; vd[(vh + vn) % 16] = vt + VLAT; vn = vn + 1;
+                if (vn > 4) begin $display("FATAL VM client > 4 outstanding"); errs = errs + 1; end
             end
         end
+        // ---- VM DMA wide read group model (VR2): grant follows c_req, a lane's request is answered in order GLAT edges later,
+        //      its credit returns 2 edges after the request (it reached the bank); a request without a credit or a grant is fatal
+        reg [14:0] gq [0:31][0:63]; longint gd [0:31][0:63]; integer gh [0:31], gn [0:31]; integer gcr [0:31];
+        initial for (integer b = 0; b < 32; b = b + 1) begin gh[b] = 0; gn[b] = 0; gcr[b] = 32; end
+        reg [31:0] gcr_d1, gcr_d2;
+        always @(posedge clk) begin
+            vr2r[8256] <= vr2q[512];
+            gcr_d2 <= gcr_d1; gcr_d1 <= 32'd0; vr2r[8255:8224] <= gcr_d2;
+            for (integer b = 0; b < 32; b = b + 1) begin
+                vr2r[b*257 + 256] <= 1'b0;
+                if (gn[b] > 0 && gd[b][gh[b] % 64] <= vt) begin
+                    for (integer w = 0; w < 8; w = w + 1) vr2r[b*257 + 32*w +: 32] <= vmw({17'd0, gq[b][gh[b] % 64], 3'(w)});
+                    vr2r[b*257 + 256] <= 1'b1; gh[b] = gh[b] + 1; gn[b] = gn[b] - 1;
+                end
+                if (rst_n && vr2q[b*16 + 15]) begin
+                    if (!vr2r[8256]) begin $display("FATAL read group request without the grant"); errs = errs + 1; end
+                    if (vr2q[b*16 +: 5] != 5'(b)) begin $display("FATAL read group lane %0d got sector %h", b, vr2q[b*16 +: 15]); errs = errs + 1; end
+                    gq[b][(gh[b] + gn[b]) % 64] = vr2q[b*16 +: 15]; gd[b][(gh[b] + gn[b]) % 64] = vt + GLAT; gn[b] = gn[b] + 1;
+                    gcr_d1[b] <= 1'b1;
+                end
+            end
+        end
+        // ---- VM wide port capture
+        always @(posedge clk) begin
+            wl_done <= rst_n && wl[279];
+            if (rst_n && wl[279]) for (integer q = 0; q < 8; q = q + 1) if (wl[q]) vm[{wl[278:264], 3'(q)}] = wl[8 + 32*q +: 32];
+        end
     end
+    wire [4*350-1:0] lq; wire [4*293-1:0] lr;
+    ot_hfd_loader_kport #(.ENABLE(1), .ND(ND), .STACK_BYTES(36'h800000000), .NO(NO), .NQ(NQ), .RB(RB), .WNO(WNO), .MUT(KMUT)) u_kp (.clk(clk), .rst_n(rst_n),
+        .req_v(kq_v), .req_rdy(kq_rdy), .req_we(kq_we), .req_addr(kq_a),
+        .req_wdata(kq_d), .req_wstrb(kq_s), .req_tag(kq_t), .req_len(kq_n),
+        .rsp_v(kp_rsp_v), .rsp_rdy(kq_rrdy), .rsp_we(kp_rsp_we), .rsp_tag(kp_rtag), .rsp_data(kp_rdata),
+        .rsp_last(kp_last), .lq(lq), .lr(lr), .fault(kp_fault));
     // ---- four svc stacks (as tb_hfd_loader_kport)
     genvar s, gp;
     for (s = 0; s < 4; s = s + 1) begin : g_st
@@ -153,12 +220,6 @@ module tb_hgi_mover_kport;
             .req_we(k_we), .req_wdata(k_wdata), .req_wstrb(k_wstrb), .wr_done(k_wr_done), .rsp_v(kr_v), .rsp_rdy(kr_rdy),
             .rsp_tag(kr_tag), .rsp_beat(kr_beat), .rsp_data(kr_data));
     end
-    // ---- VM wide port capture
-    reg [31:0] vm [int];
-    always @(posedge clk) begin
-        wl_done <= rst_n && wl[279];
-        if (rst_n && wl[279]) for (integer q = 0; q < 8; q = q + 1) if (wl[q]) vm[{wl[278:264], 3'(q)}] = wl[8 + 32*q +: 32];
-    end
     // ---- expected source element -> VM word
     function automatic [31:0] i8_f(input [7:0] c);
         reg [7:0] a; reg [2:0] p;
@@ -183,18 +244,30 @@ module tb_hgi_mover_kport;
     function automatic [7:0] hbyte(input [36:0] a);            // the byte at HBM address a (stack a[36:35])
         reg [255:0] d; d = pat(a[34:5]) ^ smask(a[36:35]); hbyte = d[8*a[4:0] +: 8];
     endfunction
-    integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     integer ncase = 0, nwords = 0;
+    // B2 evidence: the final image of every case (a hash, identical at B2 = 0 and 1) and each targeted quadrant's cycles
+    // from accept to its done (B2 = 0: the one mover's) -- the per-stack streaming time of a STRIPE4 move
+    longint img_tot = 64'd0;
+    task automatic image(input [127:0] name, input integer hbm);
+        longint h; h = 64'hCBF29CE484222325;
+        if (hbm != 0) foreach (hm[k]) for (integer w = 0; w < 8; w = w + 1) h = (h ^ {k, hm[k][32*w +: 32]}) * 64'h100000001B3;
+        else foreach (vm[k]) h = (h ^ {32'(k), vm[k]}) * 64'h100000001B3;
+        img_tot = (img_tot ^ h) * 64'h100000001B3;
+        $display("IMAGE %0s %h", name, h);
+    endtask
+    task automatic stackcyc(input [127:0] name, input [3:0] tg);
+        for (integer q = 0; q < NI; q = q + 1) if (tg[q]) $display("STACKCYC %0s q%0d %0d", name, q, t_dn[q] - t_acc[q]);
+    endtask
     // run one LOAD: src fmt f, HBM base (40 b incl. the stripe code), stride (bytes), dst VM base / stride (words), m, n
     task automatic load(input [127:0] name, input integer f, input [39:0] hb, input [31:0] hst, input [39:0] vb, input [31:0] vst,
                         input integer m, input integer n, input integer expect_fault);
-        integer t0, t1, es, o, i, k, bad; reg [36:0] ra; reg [31:0] raw, want, got; reg strp; real bpc;
+        integer t0, t1, es, o, i, k, bad; reg [3:0] tg; reg [36:0] ra; reg [31:0] raw, want, got; reg strp; real bpc;
         begin
             es = (f == 0 || f == 5) ? 4 : (f == 1) ? 2 : 1; strp = hb[39:37] == 3'd1;
             vm.delete();
             @(negedge clk);
             mv = {21'(n), 20'(m), 16'd1, vst, vb, (f == 5) ? 3'd5 : 3'd0, 2'd1, 16'd1, hst, hb, 3'(f), 2'd0};
-            mv_v = 1; while (!mv_rdy) @(negedge clk); t0 = cyc; @(negedge clk); mv_v = 0;
+            mv_v = 1; while (!mv_rdy) @(negedge clk); t0 = cyc; tg = t4; @(negedge clk); mv_v = 0;
             while (!mv_done && !mv_fault && cyc - t0 < 2000000) @(negedge clk);
             t1 = cyc;
             if (expect_fault) begin
@@ -216,6 +289,7 @@ module tb_hgi_mover_kport;
                 errs = errs + bad;
                 bpc = (1.0 * m * n * es) / (t1 - t0);
                 $display("RATE %0s %0.2f B/cycle (%0d B in %0d cycles)%0s", name, bpc, m * n * es, t1 - t0, bad ? " DATA BAD" : "");
+                image(name, 0); stackcyc(name, tg);
                 if (name == "hc_row" && bpc * 1000 < HC_MIN) begin $display("FAIL hc_row rate %0.2f < %0.2f", bpc, HC_MIN / 1000.0); errs = errs + 1; end
             end
             ncase = ncase + 1;
@@ -224,13 +298,13 @@ module tb_hgi_mover_kport;
     // STORE: VM FP32 / U32 words (vmw) -> HBM rows (FP32 / U32), whole sectors; STRIPE4 destination when hb[39:37] = 1
     task automatic store(input [127:0] name, input integer f, input [39:0] vb, input [31:0] vst, input [39:0] hb, input [31:0] hst,
                          input integer m, input integer n, input integer expect_fault);
-        integer t0, t1, o, i, bad; reg [36:0] ra; reg [31:0] want, got; reg strp; real bpc; reg [255:0] sec;
+        integer t0, t1, o, i, bad; reg [3:0] tg; reg [36:0] ra; reg [31:0] want, got; reg strp; real bpc; reg [255:0] sec;
         begin
             strp = hb[39:37] == 3'd1;
             hm.delete();
             @(negedge clk);
             mv = {21'(n), 20'(m), 16'd1, hst, hb, 3'(f), 2'd0, 16'd1, vst, vb, (f == 5) ? 3'd5 : 3'd0, 2'd1};
-            mv_v = 1; while (!mv_rdy) @(negedge clk); t0 = cyc; @(negedge clk); mv_v = 0;
+            mv_v = 1; while (!mv_rdy) @(negedge clk); t0 = cyc; tg = t4; @(negedge clk); mv_v = 0;
             while (!mv_done && !mv_fault && cyc - t0 < 2000000) @(negedge clk);
             t1 = cyc;
             if (expect_fault) begin
@@ -253,6 +327,7 @@ module tb_hgi_mover_kport;
                 errs = errs + bad;
                 bpc = (1.0 * m * n * 4) / (t1 - t0);
                 $display("RATE %0s %0.2f B/cycle (%0d B in %0d cycles)%0s", name, bpc, m * n * 4, t1 - t0, bad ? " DATA BAD" : "");
+                image(name, 1); stackcyc(name, tg);
                 if (name == "swap_stripe" && bpc * 1000 < ST_MIN) begin $display("FAIL swap_stripe rate %0.2f < %0.2f", bpc, ST_MIN / 1000.0); errs = errs + 1; end
             end
             ncase = ncase + 1;
@@ -297,6 +372,7 @@ module tb_hgi_mover_kport;
             end
             if (hm.num() != KVB_N * 64) begin $display("FAIL %0s: %0d sectors written, %0d expected", name, hm.num(), KVB_N * 64); bad = bad + 1; end
             errs = errs + bad;
+            image(name, 1);
             $display("KVWB %0s N %0d first %0d cyc posted %0.1f cyc/record (retire latency mean %0.1f max %0d) drain %0.1f cyc/record%0s",
                      name, KVB_N, lat0, pr, (1.0 * sum_lat) / KVB_N, max_lat, dr, bad ? " DATA BAD" : "");
             if (KVB_MAX != 0 && lat0 * 10 > KVB_MAX) begin $display("FAIL %0s: first record %0d cyc > %0.1f", name, lat0, KVB_MAX / 10.0); errs = errs + 1; end
@@ -318,6 +394,7 @@ module tb_hgi_mover_kport;
         load("i8_stripe",    4, {3'd1, 2'd0, 35'h0400000}, 32,   40'd800,   64,   6, 64,   0);
         load("u32_rows",     5, {3'd0, 2'd1, 35'h0500020}, 2080, 40'd16000, 520,  7, 500,  0);
         load("fp32_stripe2", 0, {3'd1, 2'd2, 35'h0600000}, 640,  40'd20000, 168,  13, 161, 0);
+        load("stripe_m2",    0, {3'd1, 2'd3, 35'h0d00000}, 64,   40'd30000, 16,   2, 16,   0);   // B2: quadrants 1, 2 own no row
         load("stripe_unal",  0, {3'd1, 2'd0, 35'h0700004}, 0,    40'd0,     64,   4, 64,   1);   // must fault
         store("swap_stripe", 0, 40'd1024,  6784, {3'd1, 2'd2, 35'h0800000}, 0,     4, 6784, 0);  // ~106 KB, STRIPE4 destination
         store("swap_linear", 0, 40'd1024,  6784, {3'd0, 2'd1, 35'h0900000}, 27136, 4, 6784, 0);  // the same, one stack
@@ -326,6 +403,7 @@ module tb_hgi_mover_kport;
         store("unal_base",   0, 40'd0,     64,   {3'd0, 2'd0, 35'h0b00010}, 256,   2, 64,   1);  // must fault
         end
         if (kp_fault) begin $display("FAIL kport fault"); errs = errs + 1; end
+        $display("IMAGE-HASH %h (B2 %0d MUT_B2 %0d)", img_tot, B2, MUT_B2);
         if (errs == 0) $display("MOVER-KPORT PASS %0d cases, %0d words (NO %0d RB %0d XLAT %0d)", ncase, nwords, NO, RB, XLAT);
         else $display("MOVER-KPORT FAIL %0d errors", errs);
         $finish;
