@@ -111,6 +111,14 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     reg [3:0] acc_bank_q, acc_last_q;
     reg [511:0] acc_data_q[0:3];
     reg [6:0] acc_word_q[0:3];
+    // ACC_REG=2 (el1011-ds-mtp idle1012, mtp-p2h-xp-f78ff6417-tc-a TT -44.1: acc_data_q (async-reset, central) -> 6 XNOR
+    // levels of the SECDED encoder with 137 + 123 ps of wire -> enc.q at the bank macros): the accepted beat is held in
+    // TWO reset-free stages (acc_d1 next to the accept mux, acc_d2 next to its bank's encoders) so each stage is either
+    // wire or local XOR logic; control (bank/last/word) is delayed alongside.  +1 cycle accept -> write/complete, full rate.
+    reg [3:0] acc_bank_q2, acc_last_q2;
+    reg [6:0] acc_word_q2[0:3];
+    reg [511:0] acc_d1[0:3], acc_d2[0:3];
+    always @(posedge clk) for(int ab=0;ab<4;ab=ab+1) begin acc_d1[ab]<=accepted_data[ab]; acc_d2[ab]<=acc_d1[ab]; end
     wire queue_bad=(queue_meta[rp[2:0]]!=queue_meta_copy[rp[2:0]]);
     wire [3:0] occupancy=wp-rp;
     wire issue=busy&&!fault&&!sbad&&!all_issued&&
@@ -157,7 +165,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
     for(genvar bank=0;bank<BANKS;bank=bank+1) begin: banks
       for(genvar slice=0;slice<8;slice=slice+1) begin: codes
         ot_secded_enc #(.K(64),.R(8)) enc(.clk(clk),
-          .d(ACC_REG?acc_data_q[bank][64*slice+:64]:accepted_data[bank][64*slice+:64]),.q(encoded[bank][72*slice+:72]));
+          .d(ACC_REG==2?acc_d2[bank][64*slice+:64]:ACC_REG?acc_data_q[bank][64*slice+:64]:accepted_data[bank][64*slice+:64]),.q(encoded[bank][72*slice+:72]));
       end
       wire [767:0] macro_word={192'd0,encoded[bank]};
       for(genvar macro_index=0;macro_index<3;macro_index=macro_index+1) begin: macros
@@ -176,12 +184,16 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
         read_word<=0;read_word_copy<=0;all_issued<=0;all_issued_copy<=0;
         wp<=0;rp<=0;wp_copy<=0;rp_copy<=0;pending<=0;pending_copy<=0;
         pending_meta<=0;pending_meta_copy<=0;wr_commit<=0;wr_commit_last<=0;
-        wr_address<=0;done<=0;fault<=0;state_bad_q<=0;acc_bank_q<=0;acc_last_q<=0;
-        for(sb=0;sb<4;sb=sb+1) begin acc_data_q[sb]<=0;acc_word_q[sb]<=0;end
+        wr_address<=0;done<=0;fault<=0;state_bad_q<=0;acc_bank_q<=0;acc_last_q<=0;acc_bank_q2<=0;acc_last_q2<=0;
+        for(sb=0;sb<4;sb=sb+1) begin acc_data_q[sb]<=0;acc_word_q[sb]<=0;acc_word_q2[sb]<=0;end
         for(sb=0;sb<4;sb=sb+1) begin count[sb]<=0;count_copy[sb]<=0;end
       end else begin
         done<=0;state_bad_q<=state_bad;
-        if(ACC_REG) begin
+        if(ACC_REG==2) begin
+          acc_bank_q<=accept_bank;acc_last_q<=accept_last;acc_bank_q2<=acc_bank_q;acc_last_q2<=acc_last_q;
+          wr_commit<=acc_bank_q2;wr_commit_last<=acc_last_q2;
+          for(sb=0;sb<4;sb=sb+1) begin acc_word_q[sb]<=accepted_word[sb];acc_word_q2[sb]<=acc_word_q[sb];wr_address[7*sb+:7]<=acc_word_q2[sb];end
+        end else if(ACC_REG) begin
           acc_bank_q<=accept_bank;acc_last_q<=accept_last;wr_commit<=acc_bank_q;wr_commit_last<=acc_last_q;
           for(sb=0;sb<4;sb=sb+1) begin acc_data_q[sb]<=accepted_data[sb];acc_word_q[sb]<=accepted_word[sb];wr_address[7*sb+:7]<=acc_word_q[sb];end
         end else begin
@@ -221,7 +233,7 @@ module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MU
             ids<=start_ids;ids_copy<=start_ids;complete<=0;complete_copy<=0;
             read_bank<=MUT_ORDER?1:0;read_bank_copy<=MUT_ORDER?1:0;read_word<=0;read_word_copy<=0;
             all_issued<=0;all_issued_copy<=0;wp<=0;rp<=0;wp_copy<=0;rp_copy<=0;
-            pending<=0;pending_copy<=0;wr_commit<=0;wr_commit_last<=0;acc_bank_q<=0;acc_last_q<=0;
+            pending<=0;pending_copy<=0;wr_commit<=0;wr_commit_last<=0;acc_bank_q<=0;acc_last_q<=0;acc_bank_q2<=0;acc_last_q2<=0;
             for(sb=0;sb<4;sb=sb+1) begin count[sb]<=0;count_copy[sb]<=0;end
           end
         end

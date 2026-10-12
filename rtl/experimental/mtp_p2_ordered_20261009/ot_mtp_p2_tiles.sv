@@ -39,7 +39,7 @@ module ot_p2h_xport #(parameter integer MUT_ORDER=0)(
  .out_valid(li_v[l]),.out_ready(li_r[l]),.out_data(li_d[l]));
  end
  wire tr_sr,tr_fault,tr_v,tr_r,tr_shared,tr_last,tr_tlast;wire [73:0] tr_id;wire [8:0] tr_expert;wire [6:0] tr_word;wire [575:0] tr_code;
- ot_mtp_p2_ordered_rows #(.ENABLE(1),.PRIMARY_SHARED(1),.SB_REG(1),.ACC_REG(1),.PRE_DEC(1),.BSEL_REP(1),.MUT_ORDER(MUT_ORDER)) rows(
+ ot_mtp_p2_ordered_rows #(.ENABLE(1),.PRIMARY_SHARED(1),.SB_REG(1),.ACC_REG(2),.PRE_DEC(1),.BSEL_REP(1),.MUT_ORDER(MUT_ORDER)) rows(
  .clk(clk),.rst_n(rn),.start_v(c_sv),.start_r(tr_sr),
  .start_identity(c_id),.start_ids(c_ids),
  .in_v(li_v),.in_r(li_r),.in_identity({li_d[1][603:530],li_d[0][603:530]}),
@@ -125,7 +125,7 @@ module ot_p2h_fadd16(
  end
 endmodule
 
-module ot_mtp_p2_prefix_path_hub(
+module ot_mtp_p2_prefix_path_hub #(parameter integer AIN=1)(
  input wire [0:0] ck,rst,
  input wire [102:0] f_s,       // die: {start_v, abort, start_identity[73:0], start_ids[26:0]}
  output wire [3:0] t_s,        // die: {start_r, done, fault, corrected}
@@ -155,9 +155,14 @@ module ot_mtp_p2_prefix_path_hub(
  assign t_s={sr_q,done_q,fault_q,corrected_q};
  // arith -> publisher: PINREG input FIFO {identity74, word7, last, code576} = 658
  wire ai_v,ai_r;wire [657:0] ai_d;
+ // AIN=0 (inside ot_p2h_head): the arith output pfifo is in the same tile, so no seam FIFO; ready is internal
+ generate if(AIN)begin: g_ain
  ot_sc_pfifo #(.W(658),.S(3),.G(32),.PINREG(1)) ain(.clk(clk),.rst_n(rn),
  .in_valid(f_a[658]),.in_ready(t_ar[0]),.in_data(f_a[657:0]),
  .out_valid(ai_v),.out_ready(ai_r),.out_data(ai_d));
+ end else begin: g_noain
+ assign ai_v=f_a[658];assign ai_d=f_a[657:0];assign t_ar[0]=ai_r;
+ end endgenerate
  wire po_v,po_r,po_last;wire [511:0] po_data;wire [73:0] po_id;wire [6:0] po_word;wire [593:0] oq;wire out_v,out_last;
  ot_mtp_p2_prefix_native #(.ENABLE(1),.BREG(1)) publisher(.clk(clk),.rst_n(rn),.abort(poison),
  .in_v(ai_v),.in_r(ai_r),.in_secded(ai_d[575:0]),.in_identity(ai_d[657:584]),
@@ -186,5 +191,31 @@ module ot_mtp_p2_prefix_path_hub(
  if(fire)begin busy<=1;busy_copy<=1;end
  if(last_pop)begin busy<=0;busy_copy<=0;done_q<=1;end
  end end
+endmodule
+
+// el1011-ds-mtp r5 2026-10-12 (owner GLUE PLACEMENT): the P2 glue (start/abort control, context ownership, native
+// SECDED publisher, output pin station; < 20k cells, no one-cycle loop to any tile) is pushed into the arith tile, which
+// already ends the stream: ot_p2h_head = ot_p2h_arith + that glue, so P2 = 3 die-placed hard tiles (xport, head,
+// fadd16) and no hub element / cluster parent.  The arith -> publisher seam is internal (its PINREG FIFO is removed);
+// the control seam to the arith core keeps its register (same start timing as the 4-tile composition); the xport
+// control seam (t_xc / f_xc) stays registered on both sides at the die.
+module ot_p2h_head #(parameter integer MUT_COPY_FIRST=0)(
+ input wire [0:0] ck,rst,
+ input wire [102:0] f_s,       // die: {start_v, abort, start_identity[73:0], start_ids[26:0]}
+ output wire [3:0] t_s,        // die: {start_r, done, fault, corrected}
+ output wire [594:0] t_out,    // die: {out_v, out_data[511:0], out_identity[73:0], out_word[6:0], out_last}
+ input wire [0:0] f_outr,      // die: out_ready
+ output wire [102:0] t_xc,     // -> xport f_c
+ input wire [1:0] f_xc,        // <- xport t_c
+ input wire [669:0] f_x,       // <- xport t_o
+ output wire [0:0] t_xr,       // -> xport f_or
+ output wire [1024:0] t_ab,    // -> ot_p2h_fadd16
+ input wire [559:0] f_y        // <- ot_p2h_fadd16
+);
+ wire [102:0] acf;wire [2:0] ac;wire [658:0] ao;wire [0:0] ar;
+ ot_mtp_p2_prefix_path_hub #(.AIN(0)) ctl(.ck(ck),.rst(rst),.f_s(f_s),.t_s(t_s),.t_out(t_out),.f_outr(f_outr),
+  .t_xc(t_xc),.f_xc(f_xc),.t_ac(acf),.f_ac(ac),.f_a(ao),.t_ar(ar));
+ ot_p2h_arith #(.MUT_COPY_FIRST(MUT_COPY_FIRST)) arith(.ck(ck),.rst(rst),.f_x(f_x),.t_xr(t_xr),.f_c(acf),.t_c(ac),
+  .t_ab(t_ab),.f_y(f_y),.t_o(ao),.f_or(ar));
 endmodule
 `default_nettype wire

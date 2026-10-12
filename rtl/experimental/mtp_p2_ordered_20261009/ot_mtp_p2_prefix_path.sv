@@ -15,7 +15,7 @@
 // Context ownership is unchanged: start_r stays low from the accepted start through the last external out handshake.
 // REGB=0 is the original wiring.
 // HIER=1 (el1011-ds-mtp [p2pfx] 2026-10-11, default): the element is the RTL composition of four hard tiles assembled
-// by the die (ot_mtp_p2_tiles.sv: ot_p2h_xport, ot_p2h_arith, ot_p2h_fadd16, ot_mtp_p2_prefix_path_hub); no parent route.
+// by the die (ot_mtp_p2_tiles.sv: ot_p2h_xport, ot_p2h_head = arith + glue, ot_p2h_fadd16); no parent route.
 // The composition below is the die wiring (every seam registered on both sides); HIER=0 keeps the flat lines.
 module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer HIER=1, parameter integer REGB=1, parameter integer ROOTPIPE=0, parameter integer MUT_COPY_FIRST=0, parameter integer MUT_ORDER=0)(
  input wire clk,rst_n,start_v,output wire start_r,
@@ -34,15 +34,13 @@ module ot_mtp_p2_prefix_path #(parameter integer ENABLE=0, parameter integer HIE
  end else if(HIER)begin: hier
  wire [1:0] xc;wire [2:0] ac;wire [102:0] xcf,acf;wire [669:0] xo;wire xor_;wire [658:0] ao;wire ar;
  wire [1024:0] ab;wire [559:0] y;wire [594:0] po;
- ot_mtp_p2_prefix_path_hub hub(.ck(clk),.rst(rst_n),.f_s({start_v,abort,start_identity,start_ids}),
-  .t_s({start_r,done,fault,corrected}),.t_out(po),.f_outr(out_r),.t_xc(xcf),.f_xc(xc),.t_ac(acf),.f_ac(ac),
-  .f_a(ao),.t_ar(ar));
+ ot_p2h_head #(.MUT_COPY_FIRST(MUT_COPY_FIRST)) head(.ck(clk),.rst(rst_n),.f_s({start_v,abort,start_identity,start_ids}),
+  .t_s({start_r,done,fault,corrected}),.t_out(po),.f_outr(out_r),.t_xc(xcf),.f_xc(xc),
+  .f_x(xo),.t_xr(xor_),.t_ab(ab),.f_y(y));
  assign out_v=po[594];assign out_data=po[593:82];assign out_identity=po[81:8];assign out_word=po[7:1];assign out_last=po[0];
  ot_p2h_xport #(.MUT_ORDER(MUT_ORDER)) xport(.ck(clk),.rst(rst_n),
   .f_in({in_v,in_identity,in_expert,in_shared,in_last,in_word,in_data}),.t_inr(in_r),.f_c(xcf),.t_c(xc),
   .t_o(xo),.f_or(xor_));
- ot_p2h_arith #(.MUT_COPY_FIRST(MUT_COPY_FIRST)) arith(.ck(clk),.rst(rst_n),.f_x(xo),.t_xr(xor_),.f_c(acf),.t_c(ac),
-  .t_ab(ab),.f_y(y),.t_o(ao),.f_or(ar));
  ot_p2h_fadd16 fadd(.ck(clk),.rst(rst_n),.f_ab(ab),.t_y(y));
  end else if(!REGB)begin: enabled
  reg busy,busy_copy,done_q;
