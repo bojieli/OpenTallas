@@ -182,32 +182,65 @@ module dsfd_mtp_hrow_hub #(
     wire [1:0] l_part = (l_beat < 8'd80) ? 2'd0 : (l_beat < 8'd160) ? 2'd1 : 2'd2;
     wire [6:0] l_pb = l_beat - (l_part == 2'd0 ? 8'd0 : l_part == 2'd1 ? 8'd80 : 8'd160);
     reg [7:0] pos2; reg [3:0] ep2;
-    wire [SW-1:0] ks = adv ? {l_u, l_pos[SB-1:0]} : s2;
-    wire [7:0] kpos = adv ? l_pos : pos2;
-    wire [3:0] kep = adv ? l_ep : ep2;
-    wire [1:0] kpart = adv ? l_part : p2;
-    reg k_ok; integer pi;
+    // r5c (hub TT -48.81: v2 -> adv -> ks select of 3 x 128:1 x 13-bit tag/cmp muxes -> compare -> ok2 was ONE cycle
+    // with the issue/advance loop inside it and v2/adv buffered to ~5k mux selects): the lookup is evaluated for BOTH
+    // candidate keys from registers -- the next skid head (hk*, registered copy of sk[skr] for the coming cycle) and the
+    // held entry (hs*, copy of s2/pos2/ep2) -- one replicated key copy per part, so no select net spans the three tag
+    // arrays; adv only picks between the two 1-bit results at the ok2/hz2 D pins. Same values as the rev-3 lookup.
+    (* keep *) reg [SW-1:0] hk_s [0:NP-1]; (* keep *) reg [7:0] hk_pos [0:NP-1]; (* keep *) reg [3:0] hk_ep [0:NP-1];
+    (* keep *) reg [SW-1:0] hs_s [0:NP-1]; (* keep *) reg [7:0] hs_pos [0:NP-1]; (* keep *) reg [3:0] hs_ep [0:NP-1];
+    reg [1:0] hk_part, hs_part; reg [SW-1:0] hz_ks, hz_hs;
+    wire        sk_push = q_v && qr_q;
+    wire        skr_n   = skr ^ take;
+    wire [AW-1:0] la_n  = (sk_push && skw == skr_n) ? q_a : sk[skr_n];
+    wire [7:0]  ln_beat = la_n[7:0];
+    integer hp;
+    always @(posedge clk) begin
+        for (hp = 0; hp < NP; hp = hp + 1) begin
+            hk_s[hp] <= {la_n[16 +: UB], la_n[8 +: SB]}; hk_pos[hp] <= la_n[15:8]; hk_ep[hp] <= la_n[UB+16 +: 4];
+            if (take) begin hs_s[hp] <= {l_u, l_pos[SB-1:0]}; hs_pos[hp] <= l_pos; hs_ep[hp] <= l_ep; end
+        end
+        hk_part <= (ln_beat < 8'd80) ? 2'd0 : (ln_beat < 8'd160) ? 2'd1 : 2'd2;
+        hz_ks <= {la_n[16 +: UB], la_n[8 +: SB]};
+        if (take) begin hs_part <= l_part; hz_hs <= {l_u, l_pos[SB-1:0]}; end
+    end
+    reg k_ok_n, k_ok_h; integer pi;
     always @(*) begin
-        k_ok = 1'b1;
+        k_ok_n = 1'b1; k_ok_h = 1'b1;
         for (pi = 0; pi < NP; pi = pi + 1) begin
 `ifdef OT_HROW_MUT_NOPART
-            if (pi == kpart)
+            if (pi == hk_part)
 `endif
             begin
 `ifdef OT_HROW_MUT_NOEPOCH
-                if (!(cmp[pi][ks] && tag[pi][ks][11:4] == kpos)) k_ok = 1'b0;
+                if (!(cmp[pi][hk_s[pi]] && tag[pi][hk_s[pi]][11:4] == hk_pos[pi])) k_ok_n = 1'b0;
 `else
-                if (!(cmp[pi][ks] && tag[pi][ks] == {kpos, kep})) k_ok = 1'b0;
+                if (!(cmp[pi][hk_s[pi]] && tag[pi][hk_s[pi]] == {hk_pos[pi], hk_ep[pi]})) k_ok_n = 1'b0;
+`endif
+            end
+`ifdef OT_HROW_MUT_NOPART
+            if (pi == hs_part)
+`endif
+            begin
+`ifdef OT_HROW_MUT_NOEPOCH
+                if (!(cmp[pi][hs_s[pi]] && tag[pi][hs_s[pi]][11:4] == hs_pos[pi])) k_ok_h = 1'b0;
+`else
+                if (!(cmp[pi][hs_s[pi]] && tag[pi][hs_s[pi]] == {hs_pos[pi], hs_ep[pi]})) k_ok_h = 1'b0;
 `endif
             end
         end
     end
-    reg k_hz; integer ei;
+    reg k_hz_n, k_hz_h; integer ei;
     always @(*) begin
-        k_hz = c_v && c_user < MAXU && c_user[UB-1:0] == ks[SW-1:SB];
-        for (ei = 0; ei < NP; ei = ei + 1)
-            if (ev_c[ei][EV-2] && ev_c[ei][EV-1] && ev_c[ei][12 +: SW] == ks) k_hz = 1'b1;
+        k_hz_n = c_v && c_user < MAXU && c_user[UB-1:0] == hz_ks[SW-1:SB];
+        k_hz_h = c_v && c_user < MAXU && c_user[UB-1:0] == hz_hs[SW-1:SB];
+        for (ei = 0; ei < NP; ei = ei + 1) begin
+            if (ev_c[ei][EV-2] && ev_c[ei][EV-1] && ev_c[ei][12 +: SW] == hz_ks) k_hz_n = 1'b1;
+            if (ev_c[ei][EV-2] && ev_c[ei][EV-1] && ev_c[ei][12 +: SW] == hz_hs) k_hz_h = 1'b1;
+        end
     end
+    wire k_ok = adv ? k_ok_n : k_ok_h;
+    wire k_hz = adv ? k_hz_n : k_hz_h;
     reg [RC-1:0] rcq [0:NP-1];
     assign t_rc0 = rcq[0]; assign t_rc1 = rcq[1]; assign t_rc2 = rcq[2];
     integer p, s;

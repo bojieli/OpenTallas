@@ -45,13 +45,13 @@
   "pd": 0.55,
   "threads": 8,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.03
  },
  "job": {
   "owner": "Claude:el1011-ds-mtp",
   "branch": "claude/el1011-ds-mtp-hrow",
-  "tag": "r5",
-  "purpose": "el1011-ds-mtp hrow-r5 2026-10-12 (owner GLUE PLACEMENT; rev-3 cluster mtp-hrow3-e33f9cff1-tc-sp FAILED reg2reg -7.7 ns, 140,653 flops on one root): dsfd_mtp_hrow as tiles placed by the S81 die -- 30 chain bank tiles (bank + its chain stage, W->E cbe / E->W cbw snake per part), 3 ingress tiles (drain receiver: the never-filled 22x514 RTT queue removed; write ordering delay inside), 1 hub; every tile < 15k clock sinks. This tile: dsfd_mtp_hrow_hub x1 (central tag unit, unchanged logic).",
+  "tag": "r5c",
+  "purpose": "el1011-ds-mtp 2026-10-12 hub r5c: hrow5_hub-r5-6d3c31c2b NEEDS_RTL TT -48.81 (9 D pins, reg2reg v2->ok2: issue/advance loop v2->adv selecting 3 x 128:1 x 13-bit tag/cmp muxes in one cycle, v2 buffered ~290 ps to ~5k selects; class 2+5) / FF -6.52 (input pin flop pr[2][711], late leaf). Fix: lookup evaluated for both candidate keys from registered per-part key copies (next skid head + held entry), adv only selects the 1-bit results at ok2/hz2; hold margin 0.03 as an addition on the pin flops.",
   "benches": [
    {
     "name": "hrow_tiles_pos",
