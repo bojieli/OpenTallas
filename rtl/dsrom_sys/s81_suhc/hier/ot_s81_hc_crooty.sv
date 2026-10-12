@@ -80,10 +80,11 @@ module ot_s81_hc_crooty_y #(
             if ((ya && !pr && yn == YD) || (pr && yn == 0)) p_flt <= 1'b1;
         end
     // y slice FIFO in SRAM: ot_fifo_sram_fwft over ceil(YS / 256) ot_sram_1r1w_128x256 macros with its 2-entry register
-    // head, so a record pushed in cycle k is the head in k + 1 (yw / yr kept for the occupancy fault only).
+    // head, so a record pushed in cycle k is the head in k + 1 (yw / yr kept for the occupancy fault only).  ESL 256: the
+    // head in one slice per macro, each with its own head/occupancy copy (v2/v3a: one select net drove 5.6k loads).
     wire [YS-1:0] yh;
     wire          yhv, yovf;
-    ot_fifo_sram_fwft #(.W(YS), .DEPTH(YD), .MACRO(2)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(yp2),
+    ot_fifo_sram_fwft #(.W(YS), .DEPTH(YD), .MACRO(2), .ESL(256)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(yp2),
         .pop(pr), .hv(yhv), .head(yh), .ovf(yovf));
     always @(posedge sk) p_y <= yh;                               // the head, registered (valid the cycle after pr)
 endmodule
