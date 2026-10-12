@@ -15,8 +15,13 @@
  },
  "pg_layer": "M6",
  "pins": {
+  "W": [
+   "clk",
+   "rn"
+  ],
   "S": [
    "c_v",
+   "c_rdy",
    "c_vs",
    "c_vst",
    "c_ds",
@@ -25,32 +30,31 @@
    "c_m",
    "g_gnt",
    "g_cr",
-   "vr2r",
-   "b0_rd",
-   "kw_rdy",
-   "r_rsp_v",
-   "r_rsp_we"
-  ],
-  "N": [
-   "c_rdy",
    "kq",
    "kq_creq",
+   "src"
+  ],
+  "E": [
    "b0_we",
    "b0_wa",
    "b0_wd",
    "b0_re",
    "b0_ra",
+   "b0_rd"
+  ],
+  "N": [
    "kw_v",
+   "kw_rdy",
    "kw_addr",
    "kw_wdata",
+   "r_rsp_v",
+   "r_rsp_we",
    "kw_wo",
-   "src",
    "done",
    "idle"
   ],
-  "W": [
-   "clk",
-   "rn"
+  "ANY": [
+   "vr2r"
   ]
  },
  "macros": [

@@ -27,7 +27,7 @@ export OT_MM_FF_SDC=${OT_MM_FF_SDC:-$K/signoff.sdc}
 echo "$(date -Is) start $NAME kit=$K src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
   --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
-  "${PINS[@]}" --pin-regions-exhaustive "${EXTRA[@]}" \
+  "${PINS[@]}" $([ "${PINEX:-1}" = 1 ] && echo --pin-regions-exhaustive) "${EXTRA[@]}" \
   --routing-layers $RLAYERS --clock-port $CLKPORT --clock-period-ns ${ROUTE_PERIOD_NS:-0.770} --clock-uncertainty-ns 0.06 \
   --clock-uncertainty-hold-ns 0.025 --orfs-corner ${CORNER:-WC} --hold-corners ${CORNER:-WC},BC --io-delay-fraction 0.2 --stages pnr \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --synth-timeout-seconds $STO --flow-timeout-seconds unlimited \
