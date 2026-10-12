@@ -182,6 +182,12 @@ KV is FP8 E4M3 K and V codes. At P8191 one user needs 36 × (1 KV head) × 128 �
 
 **Congestion lesson from r22ko4.** GRT overflow was 155k on M6/M8 H, with a 72% slot share and a 2D residual at the option-4 constant-buffer word row. At about 56% slots with 44% channels, the M6/M8 H supply per tile row roughly doubles. The generator must still route the cbuf word row in a channel and not across tile rows.
 
+**Tile slot width (coordinator, 2026-10-12).** The lsl6-based `qfd_tile_nk` needs at least 288 µm of width, and the TP4 slot (267 µm) will not be widened. TP8 therefore sizes the tile slot to the TP8 ref_tile kit, **311.04 × 1,296 µm**. That is 288 µm plus 20 µm ROM channels, so the tile drops in unchanged.
+
+- The tile array becomes 64 × (311 + 52.7 µm cst) ≈ 23.3 mm wide, plus the spine.
+- The track-A die re-fits to about **26.0 × 24.5 mm (≈ 637 mm²)**: tile slots 309.6 mm², total slots ≈ 366 mm², **≈ 57% slots / 43% channels**.
+- Track B grows the same way: 26.0 × 32.5 mm ≈ 845 mm², slots ≈ 482 mm² = 57%. That leaves 13 mm² of reticle margin, so B's margin is now thin.
+
 ## 6. Throughput composition (P8191, AR, 1.2 GHz)
 
 Basis: the TP4 L1 layer row is 6,835 cycles. Its contents:
