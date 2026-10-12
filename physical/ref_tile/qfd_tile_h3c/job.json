@@ -1,5 +1,5 @@
 {
- "name": "qfd_tile_h3c-r1-COMMIT",
+ "name": "qfd_tile_h3c-r1-61ef92148",
  "block": "ot_qwen_rom_tile_die",
  "ref_tile": true,
  "owner": "Claude:el1011-q-tile",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1011-q-tile",
-  "commit": "COMMIT"
+  "commit": "61ef92148"
  },
  "stages": {
   "bench": [
@@ -166,7 +166,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_h3c/qfd_tile_h3c-r1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tile_h3c/qfd_tile_h3c-r1-61ef92148"
   }
  ],
  "cycles_added": 0,
