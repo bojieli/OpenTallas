@@ -6,7 +6,7 @@
 # env: SRC (source snapshot dir), OUT (route base dir), PD (place density, default 0.55), CORES (16), NEED (GB, 24),
 #      SRCS (extra --source files, space separated), MACROS (space separated NAME=DIR macro views),
 #      MAXL (top signal routing layer, default M7), PDN (PDN tcl, default common/pdn_view.tcl), HM (hold margin ns),
-#      PK=<frac> PREGRT=physical/redesign_ds/coll_split/pin_access_pregrt.tcl (child_lint (f) face-pin access keepout, el1011-ds-coll),
+#      PK=<frac> PREGRT=physical/redesign_ds/coll_split/pin_access_pregrt.tcl (child_lint (f) face-pin access keepout, el1011-ds-coll; PKA=1 above-only, cons c95527ec0),
 #      SDCA (extra --sdc-append file), STEPS (extra --step-tcl args), CTSA (CTS_ARGS), PRECTS (PRE_CTS hook; die
 #      wrappers with forwarded-clock outputs use common/pre_cts_fclk_root_buf.tcl), POSTSDC (corner_sta --post-sdc),
 #      PER (route clock period ns, default 0.833; margin rule: route at 0.770, sign off at 0.833), IOF (io delay
@@ -43,7 +43,7 @@ cat SOURCE_COMMIT > $W/SOURCE_COMMIT
   ${WSF:+--step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/common/wire_stage_fence.tcl --orfs-var OT_IO_FILE=/src/.views/$lab/io_place.tcl --orfs-var OT_WS_DENSITY=$WSF ${WSFILE:+--orfs-var OT_WS_FILE=/src/$WSFILE}} \
   ${PS:+--step-tcl POST_SYNTH=$PS} ${FCP:+--step-tcl POST_GLOBAL_PLACE=physical/hbm_accel_die_views/common/face_chain_place.tcl --orfs-var OT_FC_STAGES=$FCP ${FCF:+--orfs-var OT_FC_FILE=/src/$FCF}} \
   --step-tcl PRE_CTS=${PRECTS:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} --step-tcl PRE_GLOBAL_ROUTE=${PREGRT:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} \
-  ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} \
+  ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK ${PKA:+--orfs-var OT_PK_ABOVE_ONLY=1}} \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.010} --purpose signoff_target --nickname-tag hv_$lab \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
