@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_bgr28_cmy-r4-cc856153c",
+ "name": "dsfd_vm_bgr28_cmy-r5-COMMIT",
  "block": "dsfd_vm_bgq28",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/bgq28",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/el1011-ds-vm-bgq28",
-  "commit": "cc856153c"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -89,7 +89,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_bgr28_cmy/dsfd_vm_bgr28_cmy-r4-cc856153c"
+   "to": "results/rtl/ref_tile/dsfd_vm_bgr28_cmy/dsfd_vm_bgr28_cmy-r5-COMMIT"
   }
  ],
  "cycles_added": 0,

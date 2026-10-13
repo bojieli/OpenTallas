@@ -212,7 +212,7 @@
  "job": {
   "owner": "Claude:el1011-ds-vm/bgq28",
   "branch": "claude/el1011-ds-vm-bgq28",
-  "tag": "r4",
+  "tag": "r5",
   "purpose": "el1011-ds-vm/bgq28 v4b dsfd_vm_bgr under the M5 cap (M2-M5): region-aware N/S pins -- over the macro column (M1-M4 blocked) pins on M5 only at 0.57 of its tracks, off-macro M3+M5 at 0.57; the v4 uniform plan loaded the over-macro M5 at 0.83 (2.80k bits / 3.38k tracks) = the hotspot. Horizontal cut at a macro row 6.1k / 11.24k = 0.54. Macros centred, MY: SRAM pins face the E channel (read data next to the return bus, write data from distributed crosspoints).",
   "benches": [
    {
