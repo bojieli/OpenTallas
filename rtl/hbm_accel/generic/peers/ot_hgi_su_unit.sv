@@ -872,6 +872,7 @@ module ot_hgi_su_unit #(
     parameter integer LQ = 10,            // WIDE: credits a lane holds (size to the lane-group round trip incl. relays)
     parameter integer LRLAT = 1,          // WIDE bench: the wide lmem model's read latency (the controller is valid-driven)
     parameter integer MUT_RV = 0,         // WIDE bench: lmem read valid 1 early / 2 late (must FAIL)
+    parameter integer STREAM_WM = 0, MUT_WM = 0,
     parameter integer MUT_W = 0,          // WIDE bench mutants (ot_hgi_su_ctlw)
     // WIDE = 0 (hgi-1010/d): the lane-local banked local memory (ot_hgi_su_lmem) and its dense-layout controller
     parameter integer LG1 = LWB, LG2 = LWB, LG3 = LWB, LGO = LWB, RWB = 6,
@@ -894,6 +895,7 @@ module ot_hgi_su_unit #(
     input  wire          s0_v,
     input  wire [19:0]   s0_idx,
     input  wire [31:0]   s0_data,
+    output wire [19:0] sfu_wm,
     output wire [522:0]  am_stream,
     input  wire          am_rdy,
     // WIDE = 1 only (tie off / leave open otherwise): the VM wide lanes, lane b <-> VM bank b (ot_hgi_su_ctlw)
@@ -925,6 +927,7 @@ module ot_hgi_su_unit #(
     generate if (WIDE != 1) begin : g_noxc
         assign w_xseq = 8'd0; assign w_xdseq = 8'hFF; assign w_xcnt = 16'd0;
     end endgenerate
+    generate if (WIDE != 1) assign sfu_wm = 20'd0; endgenerate
     generate if (WIDE == 2) begin : g_xctl
     ot_hgi_su_ctlx #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET),
         .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO), .RWB(RWB), .LQ(1 << $clog2(LQ)), .DF(DF), .MUT_X(MUT_X)) u_ctl (.clk(clk),
@@ -941,11 +944,11 @@ module ot_hgi_su_unit #(
 `ifndef OT_CTLW_SLICES
 `define OT_CTLW_SLICES 0
 `endif
-    ot_hgi_su_ctlw #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET), .MUT_W(MUT_W), .LQ(LQ), .SLICES(`OT_CTLW_SLICES)) u_ctl (.clk(clk),
+    ot_hgi_su_ctlw #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET), .MUT_W(MUT_W), .STREAM_WM(STREAM_WM), .MUT_WM(MUT_WM), .LQ(LQ), .SLICES(`OT_CTLW_SLICES)) u_ctl (.clk(clk),
         .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a),
         .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o), .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a),
         .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
-        .s0_idx(s0_idx), .s0_data(s0_data), .am_stream(am_stream), .am_rdy(am_rdy), .go(go), .ready(ready),
+        .s0_idx(s0_idx), .s0_data(s0_data), .sfu_wm(sfu_wm), .am_stream(am_stream), .am_rdy(am_rdy), .go(go), .ready(ready),
         .idle(idle), .vfault(vfault), .wl(wl), .sl_v(sl_v), .sl_addr(sl_addr), .sl_data(sl_data), .sw_v(sw_v),
         .sw_sec(sw_sec), .sw_data(sw_data), .dc_v(dc_v), .dc_sec(dc_sec), .sr_v(sr_v), .sr_sec(sr_sec),
         .sr_data(sr_data), .sr_dm(sr_dm),
@@ -1055,6 +1058,7 @@ module ot_hgi_su_ctlw #(
     parameter integer SLB = 16,           // log2 words of the stream-0 landing region (top of the local memory)
     parameter integer MUT_DIRTY = 0,      // mutant: drain whole sectors (overwrites words the op did not write)
     parameter integer LQ = 10,            // credits a wide lane holds (= the VM lane queue depth)
+    parameter integer STREAM_WM = 0, MUT_WM = 0,
     parameter integer MUT_W = 0,          // bench mutants: 1 stage lands every sector at its lane's first slot (no
                                           //   advance), 2 the drain skips the last sector of each lane, 3 the record
                                           //   retires before its drain writes are in VM (no done wait), 4 no source / live-sink hazard check
@@ -1087,6 +1091,7 @@ module ot_hgi_su_ctlw #(
     input  wire [31:0]   s0_data,
     // STREAM to ARGMAX (the 523-b su_red stream: {bias_en, bias 256, vals 256, mask 8, last, v}); am_rdy = the argmax
     // unit holds a STREAM record (it consumes every beat once busy)
+    output reg [19:0] sfu_wm,
     output reg  [522:0]  am_stream,
     input  wire          am_rdy,
     // the stream unit (ot_hdc_v41x_vec): go / ready / idle / fault, the relocated op word
@@ -1299,6 +1304,37 @@ module ot_hgi_su_ctlw #(
         t = 18'(off) + {1'b0, n, 5'd0};
         pre16 = (t > 18'h0FFFE) ? 16'hFFFE : t[15:0];
     endfunction
+    // Opt-in dense SFU producer stream, sector prefix from completed O writes only.
+    reg [3:0] stream_seq, stream_tags [0:3];
+    wire stream_fault;
+    wire [19:0] stream_watermark;
+    wire stream_complete = STREAM_WM == 0 || GLU == 0 || !d_rv[4] || d_os ||
+        (stream_watermark[18:15] == stream_tags[d_tag] && stream_watermark[14:0] == stream_count[14:0]);
+    wire [31:0] stream_done, stream_issue;
+    wire [20:0] stream_count = (21'(d_hi[4] >> 3) - 21'(d_lo[4] >> 3)) + 21'd1;
+    for (genvar b=0;b<32;b++) begin : g_stream_ack
+        assign stream_done[b] = wwq_done_q[b] && o4o[b] != 0;
+        assign stream_issue[b] = wwq_f[b*280+279] &&
+            wwq_f[b*280+264 +: 15] >= d_lo[4][17:3] && wwq_f[b*280+264 +: 15] <= d_hi[4][17:3];
+    end
+    generate if (STREAM_WM != 0) begin : g_stream_wm
+        ot_hgi_sfu_wm #(.LANES(32), .MUT_WM(MUT_WM)) u_wm (
+            .clk(clk), .rst_n(rst_n), .begin_v(wdr_go && GLU != 0 && d_rv[4] && !d_os),
+            .begin_tag(stream_tags[d_tag]), .base_lane(d_lo[4][7:3]), .sector_count(stream_count[14:0]),
+            .write_done(stream_done), .write_issue(stream_issue), .sfu_wm(stream_watermark), .fault(stream_fault));
+    end else begin : g_no_stream_wm
+        assign stream_watermark = 20'd0; assign stream_fault = 1'b0;
+    end endgenerate
+    // Dispatch zero clears the previous generation before the dependent SM command.
+    // Repeat the committed prefix while draining, so a simultaneous dispatch zero
+    // cannot discard another record's only final update.
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) sfu_wm <= 20'd0;
+        else if (STREAM_WM != 0 && GLU != 0 && st == S_IDLE && op_v && op_rdy_r)
+            sfu_wm <= {1'b1, stream_seq, 15'd0};
+        else sfu_wm <= {STREAM_WM != 0 && GLU != 0 && d_v && d_ph == 1 &&
+                       stream_watermark[18:15] == stream_tags[d_tag], stream_watermark[18:0]};
+    end
     // the O words of VM sector s (region 4 of the drain head): the full dirty mask of that sector
     function automatic [7:0] o_mask(input [20:0] s);
         reg [7:0] m;
@@ -1733,13 +1769,15 @@ module ot_hgi_su_ctlw #(
             r_hand <= 1'b0; f_hand <= 1'b0; f_seq <= 8'd0; x_seq <= 8'hFF; x_dseq <= 8'hFF; fs_on <= 1'b0;
             fs_str <= '0; fs_late <= '0; fs_sw <= '0; fs_odense <= 1'b0; wm_v <= 1'b0; wm_tag <= 2'd0; d_str <= 1'b0;
             r_str <= 1'b0; q1_str <= 1'b0; fs_ytag <= 2'd0; stg_busy <= 4'd0;
+            stream_seq <= 4'd0;
+            for (k2=0;k2<4;k2=k2+1) stream_tags[k2] <= 4'd0;
             f_fph <= 2'd2; fwd <= 4'd0; f_pv <= 1'b0; r_pv <= 1'b0; q1_pv <= 1'b0; d_pv <= 1'b0; r_fok <= 6'd0;
             for (k2 = 0; k2 < 4; k2 = k2 + 1) fs_wm[k2] <= 4'd0;
         end else begin
             vmq[337] <= 1'b0; su_fault_r <= 1'b0; am_stream[0] <= 1'b0; am_stream[1] <= 1'b0; su_ret <= 1'b0;
             sl_v <= s0v_q && s0i_q < SW; sl_addr <= SBASE + s0i_q; sl_data <= s0d_q;
             sw_v <= 1'b0; dc_v <= 1'b0; sr_v <= 1'b0; wst_go <= 1'b0; wdr_go <= 1'b0; go <= 1'b0;
-            if ((s0v_q && s0i_q >= SW) || lane_ovf) begin su_fault_r <= 1'b1; st <= S_FAULT; end
+            if ((s0v_q && s0i_q >= SW) || lane_ovf || stream_fault || (STREAM_WM != 0 && wdr_go && stream_count > 32767)) begin su_fault_r <= 1'b1; st <= S_FAULT; end
             if (s_clr) scount <= {20'd0, s0v_q}; else if (s0v_q) scount <= scount + 21'd1;
             s_clr <= 1'b0;
             if (vfault_q && r_v && !r_gop) vf_seen <= 1'b1;
@@ -1757,7 +1795,7 @@ module ot_hgi_su_ctlw #(
                           else if (d_os) begin etot <= {5'd0, d_no} * {5'd0, d_ni}; ebeat <= 21'd0; o_lb <= d_lb[4]; rp <= 4'd0;
                                                so_w <= 1'b0; d_ph <= 2'd2; end
                           else begin su_ret <= 1'b1; d_v <= 1'b0; d_ser <= 1'b0; wm_v <= 1'b0; if (d_as) s_clr <= 1'b1; end
-                    2'd1: if (!wdr_go && wdr_done && !d_live) begin
+                    2'd1: if (!wdr_go && wdr_done && !d_live && stream_complete) begin
                               wg_req <= 1'b0;
                               if (d_os) begin etot <= {5'd0, d_no} * {5'd0, d_ni}; ebeat <= 21'd0; o_lb <= d_lb[4]; rp <= 4'd0;
                                               so_w <= 1'b0; d_ph <= 2'd2; end
@@ -1797,6 +1835,7 @@ module ot_hgi_su_ctlw #(
                         a_s <= strm[0]; o_s <= strm[1]; f_ser <= strm[0] | strm[1];
                         st <= (STR != 0 && strm == 2'd0) ? S_PMUL : S_SPAN; pph <= 2'd0;
                         f_tag <= tag_ctr; tag_ctr <= tag_ctr + 2'd1;
+                        stream_tags[tag_ctr] <= stream_seq; stream_seq <= stream_seq + 4'd1;
                         f_fph <= 2'd2; fwd <= 4'd0; f_pv <= 1'b0;
                         for (k2 = 0; k2 < 6; k2 = k2 + 1) rv[k2] <= 1'b0;
                     end

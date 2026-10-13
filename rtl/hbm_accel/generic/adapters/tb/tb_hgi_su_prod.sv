@@ -19,6 +19,14 @@
 `define CTLP u.g_ctl.u_ctl
 `endif
 module tb_hgi_su_prod;
+`ifndef STREAM_WM
+`define STREAM_WM 0
+`endif
+`ifndef MUT_WM
+`define MUT_WM 0
+`endif
+    wire [19:0] sfu_wm;
+
 `ifndef N
 `define N 64
 `endif
@@ -62,7 +70,7 @@ module tb_hgi_su_prod;
     wire rec_rdy, done, fault, halted; wire [18:0] vm_status; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
     wire [RPL*16-1:0] rq; wire [RPL-1:0] rq_cr; wire [RPL*257-1:0] rr;
     wire [RPL*280-1:0] w2q; wire [RPL-1:0] w2_done, w2_cr;
-    ot_hgi_su_unit #(.N(`N), .M(`M), .LV(`LV), .LWB(`LWB), .GLU(GL), .MUT_DIRTY(MD)
+    ot_hgi_su_unit #(.N(`N), .M(`M), .LV(`LV), .LWB(`LWB), .GLU(GL), .MUT_DIRTY(MD), .STREAM_WM(`STREAM_WM), .MUT_WM(`MUT_WM)
 `ifdef WIDE2
         , .WIDE(2), .MACRO(0)
 `ifdef MUT_X
@@ -85,7 +93,7 @@ module tb_hgi_su_prod;
 `endif
         ) u (.clk(clk), .rst_n(rst_n),
         .rec_v(rec_v), .rec_rdy(rec_rdy),
-        .rec_hdr(cur[127:0]), .rec_sut(cur[383:128]), .rec_a(cur[639:384]), .rec_b(cur[895:640]), .rec_c(cur[1151:896]),
+        .sfu_wm(sfu_wm), .rec_hdr(cur[127:0]), .rec_sut(cur[383:128]), .rec_a(cur[639:384]), .rec_b(cur[895:640]), .rec_c(cur[1151:896]),
         .rec_d(cur[1407:1152]), .rec_o(cur[1663:1408]), .rec_r(cur[1919:1664]), .rec_i(cur[2175:1920]),
         .rec_n_a(cur[2196:2176]), .rec_done(done), .rec_fault(fault), .halted(halted), .vmq(uq), .vmr(ur),
         .s0_v(1'b0), .s0_idx(20'd0), .s0_data(32'd0), .am_stream(), .am_rdy(1'b0)
