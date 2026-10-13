@@ -1,0 +1,199 @@
+{
+  "schema": "opentallas.quant.overlap.cut-screen.v1",
+  "source_commit": "ed571fb365ac129f76219ac854a1f64139752077",
+  "tech_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+  "tech_layers": {
+    "M3": {
+      "pitch_um": 0.036,
+      "direction": "VERTICAL",
+      "width_um": 0.018
+    },
+    "M4": {
+      "pitch_um": 0.048,
+      "direction": "HORIZONTAL",
+      "width_um": 0.024
+    },
+    "M5": {
+      "pitch_um": 0.048,
+      "direction": "VERTICAL",
+      "width_um": 0.024
+    },
+    "M6": {
+      "pitch_um": 0.064,
+      "direction": "HORIZONTAL",
+      "width_um": 0.032
+    },
+    "M7": {
+      "pitch_um": 0.064,
+      "direction": "VERTICAL",
+      "width_um": 0.032
+    }
+  },
+  "child_lef_sha256": {
+    "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq/ot_hgi_qw_rq.lef": "af019b5ef51cc8108a38a85b5dfcbdff489397802cee9993b5d4faa608eb31f4",
+    "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq/ot_hgi_qw_wq.lef": "e3ea2319b5c6166f3090491bc8be0978e6bf81d883c44020a1ffd8e8354ff4ba",
+    "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl/ot_hgi_qw_dxl.lef": "b78e9d8d8a343eb0f2e89ae3021c1683b6d7bc89aed9c01ea98c0f00af56d21e",
+    "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq/ot_hgi_qw_dbq.lef": "246c6efe88d6900b99f4aa62618f86b4b79d89a6c987670b9eb6844693a7b1ba",
+    "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq.lef": "e91c90b7fbc60151665e539b725b93ba94bf1bc82dd7633d0c25189a5cfb24a2",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef": "36346864c98588e41d85c8c9f095ce69bfe477119633ca9458aef3ee41127070"
+  },
+  "spec_sha256": "50338c7fd35e1b6b9a56f6473255e76cd488f29f96ede8f38a8ef2de11a17a1c",
+  "cuts": [
+    {
+      "name": "read_center",
+      "axis": "x",
+      "position_um": 280,
+      "span_um": [
+        0,
+        691.2
+      ],
+      "demand_bits": 4768,
+      "layers": {
+        "M4": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 7200.0
+        },
+        "M6": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 5400.0
+        }
+      },
+      "usable_tracks": 12600.0,
+      "demand_supply": 0.3784,
+      "screen": "PASS"
+    },
+    {
+      "name": "center_write",
+      "axis": "x",
+      "position_um": 570,
+      "span_um": [
+        0,
+        691.2
+      ],
+      "demand_bits": 1728,
+      "layers": {
+        "M4": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 7200.0
+        },
+        "M6": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 5400.0
+        }
+      },
+      "usable_tracks": 12600.0,
+      "demand_supply": 0.1371,
+      "screen": "PASS"
+    },
+    {
+      "name": "whole_midrow",
+      "axis": "y",
+      "position_um": 345.6,
+      "span_um": [
+        0,
+        777.6
+      ],
+      "demand_bits": 6303,
+      "layers": {
+        "M3": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 10800.0
+        },
+        "M5": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 8100.0
+        },
+        "M7": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 6075.0
+        }
+      },
+      "usable_tracks": 24975.0,
+      "demand_supply": 0.2524,
+      "screen": "PASS"
+    },
+    {
+      "name": "decoder_tile_width_only",
+      "axis": "y",
+      "position_um": 345.6,
+      "span_um": [
+        302.4,
+        423.36
+      ],
+      "demand_bits": 2602,
+      "layers": {
+        "M3": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 1680.0
+        },
+        "M5": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 1260.0
+        },
+        "M7": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 945.0
+        }
+      },
+      "usable_tracks": 3885.0,
+      "demand_supply": 0.6698,
+      "screen": "FAIL"
+    },
+    {
+      "name": "reserved_decoder_corridor",
+      "axis": "y",
+      "position_um": 345.6,
+      "span_um": [
+        270,
+        570
+      ],
+      "demand_bits": 2602,
+      "layers": {
+        "M3": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 4166.67
+        },
+        "M5": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 3125.0
+        },
+        "M7": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 2343.75
+        }
+      },
+      "usable_tracks": 9635.42,
+      "demand_supply": 0.27,
+      "screen": "PASS"
+    },
+    {
+      "name": "center_all_bus_upper_bound",
+      "axis": "y",
+      "position_um": 345.6,
+      "span_um": [
+        270,
+        570
+      ],
+      "demand_bits": 6303,
+      "layers": {
+        "M3": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 4166.67
+        },
+        "M5": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 3125.0
+        },
+        "M7": {
+          "blocked_um": 0.0,
+          "usable_tracks_after_50pct_reserve": 2343.75
+        }
+      },
+      "usable_tracks": 9635.42,
+      "demand_supply": 0.6541,
+      "screen": "FAIL"
+    }
+  ],
+  "scope": "Exact transformed OBS and pin shapes; half wire-width blockage expansion; 50% remaining supply reserved for PG/access/spacing. Demand is an explicit RTL bus envelope, not extracted net demand. No placement or global-route closure claim.",
+  "required_action": "Reserve decoder seam corridor x270..570 across y336.96..388.8. Tile-width-only routing fails; all-midpoint-buses central upper bound fails. Route distinct gather/result buses by region and check actual GRT demand before adoption."
+}
