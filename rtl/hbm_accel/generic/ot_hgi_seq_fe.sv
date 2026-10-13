@@ -491,7 +491,10 @@ module ot_hgi_seq_fe #(
 `else
     localparam [QB:0] CRED0 = QD;
 `endif
-    wire cred_dec = fe_halloc || fe_aalloc;               // one credit an alloc sent (header alloc, FENCE / LOOP-from-VM)
+    // one credit an alloc sent.  The header alloc is counted from its registered copy ha_v (the cycle after the header
+    // pop: the next header pop is >= 2 cycles after this one, so the count is current when it is read; counting on
+    // fe_halloc put the whole header decode in front of the credit adder: 17 levels, ~610 ps in the pre-route gate)
+    wire cred_dec = q_alloc;
     always @(posedge clk or negedge rn_f)
         if (!rn_f) begin qt <= {QB{1'b0}}; q_cred <= CRED0; qpop_sk <= 1'b0; end
         else if (job_start) begin qt <= {QB{1'b0}}; q_cred <= CRED0; qpop_sk <= 1'b0; end

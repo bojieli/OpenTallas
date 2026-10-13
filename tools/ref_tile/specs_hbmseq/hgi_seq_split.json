@@ -132,6 +132,37 @@
   "tag": "s1",
   "views_to": "physical/ref_tile/hgi_seq_split/views",
   "record_to": "results/rtl/ref_tile/hgi_seq_split",
-  "purpose": "hgi_seq split parent cluster: wires only (child TX flop -> M6/M7 hop <= 350 um -> child RX flop), clock spine to three child roots; same ports / slot / pin faces as hgi_seq_v26s"
+  "purpose": "hgi_seq split parent cluster: wires only (child TX flop -> M6/M7 hop <= 350 um -> child RX flop), clock spine to three child roots; same ports / slot / pin faces as hgi_seq_v26s",
+  "benches": [
+   {
+    "name": "seqsplit_exact",
+    "cmd": "python3 tools/run_hgi_seq_split.py --out {RUN}/seqsplit_gate --jobs 4",
+    "expect": "pass",
+    "pass_regex": "GATE PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "seqsplit_mut",
+    "cmd": "python3 tools/run_hgi_seq_split.py --out {RUN}/seqsplit_mut --only positive --defs OT_HGI_SEQ_MUT_SEAM_QPOP",
+    "expect": "fail",
+    "fail_regex": "HGI_SEQ_SPLIT FAIL|Assertion failed",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic",
+   "tools/run_hgi_seq_split.py",
+   "tools/hgi_seq_vectors.py",
+   "tools/run_hgi_seq_g24.py",
+   "tools/hbm_generic_iface.py"
+  ]
  }
 }

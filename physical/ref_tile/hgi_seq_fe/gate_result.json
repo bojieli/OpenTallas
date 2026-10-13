@@ -1,17 +1,17 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "hgi_seq_fe",
- "verdict": "PASS",
- "generated": "2026-10-13T08:05:10-0700",
+ "verdict": "WARN",
+ "generated": "2026-10-13T08:18:15-0700",
  "host": "ot-epyc1tb",
  "cts": true,
- "commit": "e1bf45c0f",
+ "commit": "e9615429a",
  "clock": {
   "max_root_sinks": 4683,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 405.8,
-  "tt_spread_ps": 148.1,
+  "tt_insertion_ps": 369.7,
+  "tt_spread_ps": 111.8,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -19,7 +19,14 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "4,683 sinks on the largest root <= 15,000; measured TT insertion 405.8 ps, leaf spread 148.1 ps"
+  "text": "4,683 sinks on the largest root <= 15,000; measured TT insertion 369.7 ps, leaf spread 111.8 ps"
  },
- "items": []
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage g_fr[2].pr[0]$_DFF_PN0_ -> q_cred[1]$_DFF_PN0_/D: ~610 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  }
+ ]
 }

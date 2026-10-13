@@ -2,16 +2,16 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "hgi_seq_au",
  "verdict": "WARN",
- "generated": "2026-10-13T08:05:26-0700",
+ "generated": "2026-10-13T08:18:24-0700",
  "host": "ot-epyc1tb",
  "cts": true,
- "commit": "e1bf45c0f",
+ "commit": "e9615429a",
  "clock": {
-  "max_root_sinks": 7142,
+  "max_root_sinks": 7517,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 268.3,
-  "tt_spread_ps": 21.3,
+  "tt_insertion_ps": 254.0,
+  "tt_spread_ps": 23.6,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -19,25 +19,19 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "7,142 sinks on the largest root <= 15,000; measured TT insertion 268.3 ps, leaf spread 21.3 ps"
+  "text": "7,517 sinks on the largest root <= 15,000; measured TT insertion 254.0 ps, leaf spread 23.6 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 5381 um2 + macros 0 in core 17804: util 30%",
-   "fix": "set \"std_area_um2\": 5381 and drop 'outline' (gen sizes to util 0.52)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.high_fanout",
-   "message": "port be_s4_v: 374 loads (1 flops, e.g. a0_be$_DFF_P_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
-   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+   "message": "synthesized std area 5532 um2 + macros 0 in core 12989: util 43%",
+   "fix": "set \"std_area_um2\": 5532 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 30.3% outside 45%-65% (std 5391 + macro 0 um2 in 17804 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 42.7% outside 45%-65% (std 5541 + macro 0 um2 in 12989 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]

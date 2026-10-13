@@ -224,7 +224,9 @@ module ot_hgi_seq_be #(
     reg  [31:0] Xv; reg [20:0] Nv;
 `ifndef SYNTHESIS
     reg seam_err; initial seam_err = 1'b0;
-    always @(posedge clk) if (rn_m && q_alloc && (q_cnt == QD || fe_s2a_tag_r != qt)) begin
+    reg rst_seen; initial rst_seen = 1'b0;          // the probe is armed by the first reset (2-state simulators start
+    always @(negedge rst_n) rst_seen <= 1'b1;       // flops at arbitrary values: nothing before a reset is a seam event)
+    always @(posedge clk) if (rst_seen && rn_m && q_alloc && (q_cnt == QD || fe_s2a_tag_r != qt)) begin
         seam_err <= 1'b1; $error("ot_hgi_seq_be: alloc with the queue full or out of order (credit violated)");
     end
 `endif

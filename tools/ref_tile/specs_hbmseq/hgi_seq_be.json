@@ -140,8 +140,34 @@
    "tools/hgi_seq_vectors.py",
    "tools/hgi_seq_ds.py",
    "tools/hgi_seq_conformance.py",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/run_hgi_seq_g24.py",
+   "tools/hbm_generic_iface.py"
   ],
-  "purpose": "BE child of the hgi_seq split: record queue (4 entries), head mux + qh copies, indexed resolver / injector, main FSM, doorbell, completion, outst, dispatch payload; ~14.5k flops on its own root (<= 15,000; BE-Q / BE-D cut is the fallback). Full slot height: the 2,462 E-face dispatch pins need the 272 um face (2,835 M4 slots at 2 tracks; 211 um gave PPL-0111)"
+  "purpose": "BE child of the hgi_seq split: record queue (4 entries), head mux + qh copies, indexed resolver / injector, main FSM, doorbell, completion, outst, dispatch payload; ~14.5k flops on its own root (<= 15,000; BE-Q / BE-D cut is the fallback). Full slot height: the 2,462 E-face dispatch pins need the 272 um face (2,835 M4 slots at 2 tracks; 211 um gave PPL-0111)",
+  "benches": [
+   {
+    "name": "seqsplit_exact",
+    "cmd": "python3 tools/run_hgi_seq_split.py --out {RUN}/seqsplit_gate --jobs 4",
+    "expect": "pass",
+    "pass_regex": "GATE PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "seqsplit_mut",
+    "cmd": "python3 tools/run_hgi_seq_split.py --out {RUN}/seqsplit_mut --only positive --defs OT_HGI_SEQ_MUT_SEAM_HOLD",
+    "expect": "fail",
+    "fail_regex": "HGI_SEQ_SPLIT FAIL|Assertion failed",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  }
 }

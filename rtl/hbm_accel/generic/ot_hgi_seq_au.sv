@@ -137,7 +137,9 @@ module ot_hgi_seq_au #(
 `endif
 `ifndef SYNTHESIS
     reg seam_err; initial seam_err = 1'b0;
-    always @(posedge clk) if (rn_a && s4_v_r[0] && s1_v_r) begin
+    reg rst_seen; initial rst_seen = 1'b0;          // the probe is armed by the first reset (2-state simulators start
+    always @(negedge rst_n) rst_seen <= 1'b1;       // flops at arbitrary values: nothing before a reset is a seam event)
+    always @(posedge clk) if (rst_seen && rn_a && s4_v_r[0] && s1_v_r) begin
         seam_err <= 1'b1; $error("ot_hgi_seq_au: S1 and S4 valid in one cycle (injector hold violated)");
     end
 `endif
