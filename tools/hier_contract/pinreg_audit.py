@@ -636,12 +636,20 @@ def hops_qwen_case(case, contract, reach):
                 bitpin[cur][pin] = ((float(t[1]) + float(t[3])) / 2, (float(t[2]) + float(t[4])) / 2)
                 pin = None
     pos = {}
-    for ln in open(D / 'place.tcl'):
-        m = re.match(r'ot_mts::place \[\$_blk findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)', ln)
-        if m:
-            pos[m.group(1)] = (float(m.group(2)), float(m.group(3)), m.group(4))
+    if (D / 'place.tcl').exists():
+        for ln in open(D / 'place.tcl'):
+            m = re.match(r'ot_mts::place \[\$_blk findInst (\S+)\] ([\d.]+) ([\d.]+) (\S+)', ln)
+            if m:
+                pos[m.group(1)] = (float(m.group(2)), float(m.group(3)), m.group(4))
+    else:       # HBM die case (tools/hbm_accel_die_fp.py grt): the placement is the place_inst block of run.tcl
+        for ln in open(D / 'run.tcl'):
+            m = re.match(r'place_inst -name (\S+) -location \{([\d.]+) ([\d.]+)\} -orientation (\S+)', ln)
+            if m:
+                pos[m.group(1)] = (float(m.group(2)), float(m.group(3)), m.group(4))
     txt = (D / 'die.v').read_text()
-    width = {m.group(2): int(m.group(1)) + 1 for m in re.finditer(r'wire \[(\d+):0\] (\S+);', txt)}
+    # a bundled case (manifest bundle_k = 16) carries one wire per k bits: report bits, not bundles
+    kb = json.loads((D / 'manifest.json').read_text()).get('bundle_k', 1) if (D / 'manifest.json').exists() else 1
+    width = {m.group(2): (int(m.group(1)) + 1) * kb for m in re.finditer(r'wire \[(\d+):0\] (\S+);', txt)}
     inst, netpins = {}, collections.defaultdict(list)
     netbits = collections.defaultdict(list)        # net -> [(inst, full pin name)] of concatenated connections
     for m in re.finditer(r'^\s+(\w+) (\S+) \((.*?)\);', txt, re.M):
