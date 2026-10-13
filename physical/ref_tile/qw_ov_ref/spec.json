@@ -242,10 +242,10 @@
  "job": {
   "owner": "Codex:el1012-hbm-fq-cx",
   "branch": "codex/el1012-hbm-fq-cx",
-  "tag": "ov1-cx",
+  "tag": "ov2-cx",
   "views_to": "physical/ref_tile/qw_ov_ref/views",
   "record_to": "results/rtl/ref_tile/qw_ov_ref",
-  "purpose": "Opt-in WQ3 record-overlap quant cluster: continuous per-beat header/destination, RAW/WAR/WAW hazard serialization, finite compact descriptors and ordered per-lane retirement; reserve x270..570,y336.96..388.8 seam. Price168 preserved; production184/168 exact plus lane-map/header/premature-retire mutants and delayed-lane/RAW controls. New drained output binds unit packet-fallback wait; cmd unused SUT bits carry frontend A/O span ends. Canonical WQ2/f3/f3p preserved.",
+  "purpose": "Opt-in WQ3 record-overlap quant cluster: continuous per-beat header/destination, RAW/WAR/WAW hazard serialization, finite compact descriptors and ordered per-lane retirement; reserve x270..570,y336.96..388.8 seam. Price168 preserved; production184/168 exact plus lane-map/header/premature-retire mutants and delayed-lane/RAW controls. New drained output binds unit packet-fallback wait; cmd unused SUT bits carry frontend A/O span ends. Canonical WQ2/f3/f3p preserved. Physical ov2: identical seam reservation moved POST_TAPCELL to PRE_TAPCELL before fixed tap/endcap insertion (ov1 DPL0033 1148 fixed cells in removed seam rows); RTL, clock and budgets unchanged. NativeASAP7tapcell ignores dbBlockage: PRE hook explicitly splits192 native rows at270/570.024, with384 legal boundarycaps and zero seam-intersecting rows/taps; stopped3_5dp checks actualold3_4 logical netlist+positions with only fresh rows/taps replaced.",
   "no_bench_reason": "Source-pinned fleet gate record results/rtl/hbm_quant_overlap_1012; WQ3 OVERLAP1 DEC3 Verilator5.050 production184/168 words3328, skew control exact, header/lane/early-retire mutants fail; RAW dependency gate exact. Adoption awaits this cluster closure."
  },
  "defines": [
@@ -256,7 +256,7 @@
   "cols": 6
  },
  "orfs_vars": {
-  "POST_TAPCELL_TCL": "physical/hbm_quant_overlap/reserve_seam.tcl"
+  "PRE_TAPCELL_TCL": "physical/hbm_quant_overlap/reserve_seam.tcl"
  },
  "inter": []
 }

@@ -1,14 +1,14 @@
 {
- "name": "qw_ov_ref-ov1-cx-c8c47022e",
+ "name": "qw_ov_ref-ov2-cx-COMMIT",
  "block": "ot_hgi_quant_wide_ov",
  "ref_tile": true,
  "owner": "Codex:el1012-hbm-fq-cx",
- "purpose": "Opt-in WQ3 record-overlap quant cluster: continuous per-beat header/destination, RAW/WAR/WAW hazard serialization, finite compact descriptors and ordered per-lane retirement; reserve x270..570,y336.96..388.8 seam. Price168 preserved; production184/168 exact plus lane-map/header/premature-retire mutants and delayed-lane/RAW controls. New drained output binds unit packet-fallback wait; cmd unused SUT bits carry frontend A/O span ends. Canonical WQ2/f3/f3p preserved.",
+ "purpose": "Opt-in WQ3 record-overlap quant cluster: continuous per-beat header/destination, RAW/WAR/WAW hazard serialization, finite compact descriptors and ordered per-lane retirement; reserve x270..570,y336.96..388.8 seam. Price168 preserved; production184/168 exact plus lane-map/header/premature-retire mutants and delayed-lane/RAW controls. New drained output binds unit packet-fallback wait; cmd unused SUT bits carry frontend A/O span ends. Canonical WQ2/f3/f3p preserved. Physical ov2: identical seam reservation moved POST_TAPCELL to PRE_TAPCELL before fixed tap/endcap insertion (ov1 DPL0033 1148 fixed cells in removed seam rows); RTL, clock and budgets unchanged. NativeASAP7tapcell ignores dbBlockage: PRE hook explicitly splits192 native rows at270/570.024, with384 legal boundarycaps and zero seam-intersecting rows/taps; stopped3_5dp checks actualold3_4 logical netlist+positions with only fresh rows/taps replaced.",
  "threads": 16,
  "peak_ram_gb": 96,
  "source": {
   "branch": "codex/el1012-hbm-fq-cx",
-  "commit": "c8c47022e"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -78,7 +78,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qw_ov_ref/qw_ov_ref-ov1-cx-c8c47022e"
+   "to": "results/rtl/ref_tile/qw_ov_ref/qw_ov_ref-ov2-cx-COMMIT"
   }
  ],
  "cycles_added": 0,
