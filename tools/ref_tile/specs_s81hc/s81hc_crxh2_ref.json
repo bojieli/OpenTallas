@@ -89,6 +89,7 @@
  },
  "aspect": 1.0,
  "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Claude:s81-suhc-hier-1011",
   "branch": "claude/s81-suhc-hier-1011-hc-mp",
   "tag": "v1",
