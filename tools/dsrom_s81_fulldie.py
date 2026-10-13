@@ -1547,6 +1547,19 @@ def case_real(m, work):
         (work / nm).write_text(_lef_text(rel))
     (work / 'snap.tcl').write_text((ROOT / SNAP_LIB).read_text())
     write_netlist(m, 1, work / 'die.v')
+    if HOP_GATE_UM:
+        # s81-die v14 (2026-10-12): hard hop gate before PLACE / GRT (c3: -17.7 ns TT on 2.3 mm unbuffered hub hops;
+        # c5: a 1,025 um svc_SW.rv -> ctrl_SW.rd hop) -- every data bit, pin to pin, from the LEFs written above
+        sys.path.insert(0, str(ROOT / 'tools' / 's81'))
+        import die_hop_gate as HG
+        lefs = [(work / f).read_text() for f in ('elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef',
+                                                 'ucie.lef', 'head_a.lef', 'head_b.lef') if (work / f).exists()]
+        hg = HG.gate(m['insts'], m['buses'], lefs, pslice, limit_um=HOP_GATE_UM, ss_um=SS_REACH_UM)
+        (work / 'hop_gate.json').write_text(json.dumps(hg, indent=1) + '\n')
+        print('OT_HOP_GATE %s max %.1f um bits>%g: %d bits>%g(SS): %d' % (hg['verdict'], hg['max_um'], HOP_GATE_UM,
+              hg['bits_over_limit'], SS_REACH_UM, hg['bits_over_ss']), file=sys.stderr)
+        if hg['verdict'] != 'PASS':
+            raise SystemExit(f'hop gate FAIL: {hg["bits_over_limit"]} bits over {HOP_GATE_UM} um (see {work}/hop_gate.json)')
     W, H = DIE
     # ot_mts::place rescans every placed macro per call (O(n^2): 8k of 24k instances in 31 min); the floorplan is
     # built on the snap lattice, so snap each origin (snap_origin, no neighbour scan) and let the one sweep-line
@@ -2619,6 +2632,8 @@ COLL_SLAB_H = None             # --coll-slab-h H (s81die-1011 hier contract v1):
 VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
 ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre slabs moved to an E-column sub-column
 ECOL_W = 518.4
+CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
+HOP_GATE_UM = None             # --hop-gate UM (s81-die v14): real mode fails when any data bit's pin-to-pin hop > UM
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -6711,6 +6726,7 @@ def _faces_r8(m, Mx, it, ports):
         # inter-region skew bound was 197.2 ps > 150 (m221pq_r3 clock plan).
         east = _peer_pos(m, it, 'cks', 'N') > Mx.w / 2       # the end the svc 'ck' takes (same net, same peer sort)
         _lay(Mx, 'N', P_(['cks']), 'M5', start=(Mx.w - 62.0) if east else 2.0)
+        m.setdefault('_laid', {})[Mx.name] = Mx
     else:   # hub slabs, band blocks, services: each port on the face toward its peers, ordered by peer position
         faces = defaultdict(list)
         for p_ in sorted(ports):
@@ -6777,6 +6793,16 @@ def _faces_r8(m, Mx, it, ports):
                     resv.append((c_ - 1.0, c_ + bw + 1.0))
                     c_ += bw + 2.0
                 lst = [p_ for p_ in lst if p_ not in wide]
+            if CTRL_SVC_ALIGN and it.kind == 'svc' and f in 'NS':
+                # --ctrl-svc-align (s81-die v14): the stack client's controller-facing ports take the EXACT x of the
+                # controller bits they connect to (bit for bit, both faces M5), so the ~20k-bit rq / rd interface
+                # crosses the abut gap straight on its M5 tracks.  v13 centred each face's ports independently: svc
+                # rq / r_data sat 488 um E of ctrl rq / rd and rv 1,025 um off (c3 GRT: 20% of the overflow in the
+                # 0.4 mm pinch at x 7.2-7.6 mm, M7-M9)
+                for p_, cen_, bw_ in _ctrl_aligned(m, it, Mx, lst, ports, f):
+                    Mx.face(p_, ports[p_][1], f, 'M5', cen_, 1)
+                    resv.append((cen_ - bw_ / 2 - 1.0, cen_ + bw_ / 2 + 1.0))
+                    lst = [q_ for q_ in lst if q_ != p_]
             pos = 0.4                     # band blocks / services: at their peers' positions where they fit
             for p_ in lst:
                 bw = bwf(ports[p_][1])
@@ -6788,6 +6814,41 @@ def _faces_r8(m, Mx, it, ports):
                         pos = r1_ + 1.0
                 Mx.face(p_, ports[p_][1], f, 'M4' if f in 'EW' else 'M5', pos + bw / 2, 1)
                 pos += bw + 2.0
+
+
+def _ctrl_aligned(m, it, Mx, lst, ports, f):
+    """--ctrl-svc-align: [(port, centre, width)] for the ports of `it` (a stack client) whose single peer is a laid
+    controller master: centre chosen so that bit b of the port lands on the controller's pin of the same net bit"""
+    by_ = m['_by']
+    laid = m.get('_laid', {})
+    out = []
+    fx_ = lambda o: o.orient in ('MY', 'R180')
+    for p_ in lst:
+        for _bid, _c, _w, eps_ in m['_nets_of'].get((it.name, p_), []):
+            pe_ = [(i_, q_) for i_, q_ in eps_ if i_ != it.name and i_ in by_]
+            if len(pe_) != 1 or by_[pe_[0][0]].kind != 'ctrl':
+                continue
+            ct_ = by_[pe_[0][0]]
+            cm_ = laid.get(ct_.master)
+            base_, lo_, _hi = pslice(pe_[0][1])
+            mine_ = pslice([q_ for i_, q_ in eps_ if i_ == it.name][0])
+            sp_ = cm_.ports.get(base_) if cm_ is not None else None
+            if sp_ is None or sp_[0] != 'face' or sp_[2] not in 'NS' or fx_(ct_) != fx_(it) or mine_[1] not in (None, 0):
+                continue
+            _, n_, _f, ly_, c_, pt_ = sp_
+            off_, pp_ = TRK[ly_]
+            step_ = pp_ * pt_
+            st_ = max(c_ - n_ * step_ / 2, 2 * pp_)
+            if st_ + n_ * step_ > ct_.w - 2 * pp_:
+                st_ = ct_.w - 2 * pp_ - n_ * step_
+            first_ = off_ + math.ceil((st_ - off_) / pp_ - 1e-9) * pp_
+            x_ = first_ + (lo_ or 0) * step_                       # ctrl master frame, bit lo
+            xd_ = ct_.x + (ct_.w - x_ if fx_(ct_) else x_)         # die
+            xl_ = (it.x + it.w - xd_) if fx_(it) else (xd_ - it.x)  # client master frame
+            nb_ = ports[p_][1]                                      # (both mirrored: bits ascend in both frames)
+            out.append((p_, xl_ + nb_ * step_ / 2, nb_ * step_))
+            break
+    return out
 
 
 def _pnum(p_):
@@ -7254,6 +7315,10 @@ def die_options(ap):
                     'the TIERS frame columns per tier and half (default 10,11,11,11,11,10 = 128 frames); with --bf-hier the '
                     'die stays 33 x 26 mm (no widening) and the columns must fit it (e.g. 8,8,8,8,8,8 = 96 frames at col600); '
                     'frames (= PQ roots) = 2 x the sum')
+    ap.add_argument('--ctrl-svc-align', action='store_true', help='s81-die v14: the stack client (dsfd_svc_c) '
+                    'controller-facing pins take the x of the controller bits they connect to (straight M5 abut crossing)')
+    ap.add_argument('--hop-gate', type=float, help='s81-die v14: real mode hard gate: every data bit pin-to-pin '
+                    'hop <= UM (tools/s81/die_hop_gate.py; hop_gate.json in --work)')
     ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
                     'within both reaches may take up to N extra stations (+1 cycle each on that hop; dry-run chosen); default 0')
     ap.add_argument('--fwd-iface', action='store_true', help='s81-gen 2026-10-09: host-write (with --ctrl-rq) and layer1e '
@@ -7460,7 +7525,7 @@ def apply_options(a):
         if COLL_P2_LANE and getattr(a, 'draft', None) != 'A':
             raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
         COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr_%s.json' % ('mtpl' if COLL_MTP_LANE else 'p2l')
-    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, LANES_W, COL_W8, COL_PITCH8, DIE
+    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, HOP_GATE_UM, CTRL_SVC_ALIGN, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
     if getattr(a, 'bf_hier_compact', False):
         assert BF_HIER is None, '--bf-hier and --bf-hier-compact are exclusive'
@@ -7520,6 +7585,8 @@ def apply_options(a):
         assert (Q_ELEM_FRAME_H or 0) >= 0 and (getattr(a, 'elem_h', None) or ELEM_FRAME_H) >= BF_ROUTE_H + 8.64 - 1e-6, \
             '--bf-hier: the BF frame (--elem-h) must hold the routed BF blocks (BF_ROUTE_H) + halos'
     HOP_EXTRA = int(getattr(a, 'hop_extra', 0) or 0)
+    HOP_GATE_UM = getattr(a, 'hop_gate', None)
+    CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
     CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'
     if a.die == 'layer1e':
