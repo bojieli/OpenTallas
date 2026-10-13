@@ -174,25 +174,25 @@ library (dsfd_svc_asm_ss) {
       }
   }
   bus (q) { bus_type : b515; direction : input;
-   capacitance : 10.3739;
+   capacitance : 7.2741;
    timing () {
         related_pin : "ck";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("130.73897");
+          values("138.44963");
         }
         fall_constraint(scalar) {
-          values("158.62813");
+          values("174.89584");
         }
       }
    timing () {
         related_pin : "ck";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-47.36012");
+          values("-40.13712");
         }
         fall_constraint(scalar) {
-          values("-65.66258");
+          values("-61.75845");
         }
       }
   }

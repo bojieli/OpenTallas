@@ -49,7 +49,7 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_coll_cbq.lef": "165f2860b68e554718fb072fec6a4f2e2d55b61b625ed28b1aa272729949bdea",
+    "dsfd_coll_cbq.lef": "a5b93592707b6b10cb81b10bc03bce7e4768d52d51a1f766585e2e999bf55294",
     "dsfd_coll_cbq_ff.lib": "0d42c61cc2c0d424e40c6ee22878abc858455b3bf13318332e0261a19e937185",
     "dsfd_coll_cbq_ss.lib": "0b43b0ccdb716a7ed0c48152c2c60a411f00a18f6891324819a76c244a626641",
     "dsfd_coll_cbq_tt.lib": "9ef298661ff49754f0f23101767db919c7ec8242b50af326c3b8b95541e3c780"
@@ -141,5 +141,15 @@
         "ok": true
       }
     }
+  },
+  "abstract_pin_stub_1013": {
+    "when": "2026-10-13",
+    "by": "el1013-die-pin-audit",
+    "tool": "tools/hier_contract/abstract_pin_stub.py",
+    "old_sha256": "5be4a70cc03eb3eb8cfe5217fc4a3df21d449b4c3d764420ce65147d34aa8bf4",
+    "new_sha256": "a5b93592707b6b10cb81b10bc03bce7e4768d52d51a1f766585e2e999bf55294",
+    "pockets_closed": 1775,
+    "layer": "M7",
+    "note": "own-top-layer pockets closed (OT_OBS_CLOSED marker); pins, outline and timing views unchanged"
   }
 }
