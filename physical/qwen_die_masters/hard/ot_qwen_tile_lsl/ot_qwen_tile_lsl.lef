@@ -16,6 +16,10 @@ MACRO ot_qwen_tile_lsl
       LAYER M4 ;
         RECT  99.708 62.976 99.792 63 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  99.445 62.976 99.756 63 ;
+    END
   END clk
   PIN first_d
     DIRECTION INPUT ;
@@ -23,6 +27,10 @@ MACRO ot_qwen_tile_lsl
     PORT
       LAYER M4 ;
         RECT  99.708 64.992 99.792 65.016 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  98.557 64.992 99.756 65.016 ;
     END
   END first_d
   PIN lfault[0]
@@ -96,6 +104,10 @@ MACRO ot_qwen_tile_lsl
       LAYER M4 ;
         RECT  99.708 67.008 99.792 67.032 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  99.673 67.008 99.756 67.032 ;
+    END
   END rst_n
   PIN split_d[0]
     DIRECTION INPUT ;
@@ -103,6 +115,10 @@ MACRO ot_qwen_tile_lsl
     PORT
       LAYER M4 ;
         RECT  99.708 68.976 99.792 69 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  99.349 68.976 99.756 69 ;
     END
   END split_d[0]
   PIN split_d[1]
@@ -112,6 +128,10 @@ MACRO ot_qwen_tile_lsl
       LAYER M4 ;
         RECT  99.708 70.992 99.792 71.016 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  99.673 70.992 99.756 71.016 ;
+    END
   END split_d[1]
   PIN split_d[2]
     DIRECTION INPUT ;
@@ -120,6 +140,10 @@ MACRO ot_qwen_tile_lsl
       LAYER M4 ;
         RECT  99.708 73.008 99.792 73.032 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  99.493 73.008 99.756 73.032 ;
+    END
   END split_d[2]
   PIN split_d[3]
     DIRECTION INPUT ;
@@ -127,6 +151,10 @@ MACRO ot_qwen_tile_lsl
     PORT
       LAYER M4 ;
         RECT  99.708 74.976 99.792 75 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  99.673 74.976 99.756 75 ;
     END
   END split_d[3]
   PIN t_out[0]
@@ -655,6 +683,10 @@ MACRO ot_qwen_tile_lsl
     PORT
       LAYER M4 ;
         RECT  99.708 76.992 99.792 77.016 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  99.493 76.992 99.756 77.016 ;
     END
   END v_d
   PIN w_d[0]
@@ -14495,14 +14527,6 @@ MACRO ot_qwen_tile_lsl
      RECT  99.493 23.616 99.756 26.904 ;
      RECT  99.493 37.584 99.756 40.92 ;
      RECT  99.637 51.6 99.756 54.888 ;
-     RECT  99.445 62.976 99.756 63 ;
-     RECT  98.557 64.992 99.756 65.016 ;
-     RECT  99.673 67.008 99.756 67.032 ;
-     RECT  99.349 68.976 99.756 69 ;
-     RECT  99.673 70.992 99.756 71.016 ;
-     RECT  99.493 73.008 99.756 73.032 ;
-     RECT  99.673 74.976 99.756 75 ;
-     RECT  99.493 76.992 99.756 77.016 ;
      RECT  99.493 80.832 99.756 83.448 ;
      RECT  99.673 91.824 99.756 94.44 ;
      RECT  99.539 104.208 99.756 116.952 ;
