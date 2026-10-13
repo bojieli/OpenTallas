@@ -84,8 +84,8 @@
  "job": {
   "owner": "Codex:hbm-sm-native-manifest",
   "branch": "codex/hbm-sm-native-manifest-1013",
-  "tag": "r2",
-  "purpose": "Native backend clock architecture: preserve the one production ot_cg_tile ICG and build the supported balanced GCLK spine. r1 generic cg_pushdown cloned the same 6813-sink root into256 gates before through-ICG spine; explicit guarded per-element exclusion fixes hook interaction. Exact RTL/ENA/HOLD/latency/clock constraints preserved. Clean M5 reference export and fullshape adoption gates remain required.",
+  "tag": "r3",
+  "purpose": "Native WG backend resize-legality correction afterr2 actualCTS: rootICGexclusion/spineconstructionpassedcheck_placement with6813sinks1875spinecells; laterrepair_timing resized342cells andmadeFIRM cgi/resetcone bufferfootprints overlap(2pairs). Post-spine callback releasesonlycombinationalconecellstoPLACED so ordinaryresize/legalization canmove them; preserveICG/raw-clockregisteranchors/spinebuffers, RTL/ENA/HOLD/period/latency/pinplan/outline. ActualSTA/DRC/childlint andproductiongates stillmandatory.",
   "benches": [],
   "extra_paths": [
    "results/arch/hbm_native_1013/sm"
@@ -93,7 +93,7 @@
   "no_bench_reason": "Module-text-equal historical arithmetic gate retained; new route is a reference-flow/clock-spine/above-face-keepout replacement. Full RMAX4096 FC_HIER exact+mutant+throughput must pass before adoption. Physical and logical source pinned49b00f711 snapshots, not reduced shape."
  },
  "native_preconditions": {
-  "status": "R2_PREPARED_AFTER_CTS_VERDICT",
+  "status": "R3_PREPARED_AFTER_DPL_RESIZE_VERDICT",
   "requires": [
    "NC8 active8 FC_HIER exact positive",
    "OT_SMH_MUT_S1W negative must be exercised",
@@ -108,7 +108,8 @@
  "clock": "spine",
  "spine_through_icg": true,
  "boundary_tcl": [
-  "results/arch/hbm_native_1013/sm/physical_specs/smn_be_keep_root_gate.tcl"
+  "results/arch/hbm_native_1013/sm/physical_specs/smn_be_keep_root_gate.tcl",
+  "results/arch/hbm_native_1013/sm/physical_specs/smn_be_resize_legal.tcl"
  ],
  "params": {},
  "macros": [],
