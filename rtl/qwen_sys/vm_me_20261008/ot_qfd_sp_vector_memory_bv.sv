@@ -31,10 +31,26 @@
 // written in the same edge, so an SU read sees exactly the writes presented before it, as the base.  Per bank, the SU
 // lane rows have priority (fixed timing, distinct banks; banks counted mod NRBS, which divides NRB, so a grant set
 // is conflict-free in every copy); the three skid sources (in the base's commit order mx, rd,
-// seq) take a free bank, else wait in a SQD-deep queue; the merge's row takes what is left.  An entry that misses its
+// seq) take a free bank, else wait in a SQD-row queue; the merge's row takes what is left.  An entry that misses its
 // nominal edge is LATE: a read of its row (any copy) or another write onto its row while it is late is w_hazard (the
 // contract, as the x path's: programs never touch such a row within the few edges of a bank conflict); a queue
 // overflow is w_fault.  The x path (copy 0) is ot_qfd_sp_vector_memory's, its hazard check now over every landing row.
+// SKID CAPACITY RULE (2026-10-13, after SEED 9 of tb_qfd_vm_bv_ports lost a sequencer row: three row writes on three
+// consecutive edges, the first denied twice by SU lane rows on its bank, against a 2-deep head-of-line queue).  The
+// skid ports carry no ready and no spacing rule (one row an edge is legal on each), and a bank takes one row an edge,
+// so the memory states what it absorbs and the queue is built to absorb exactly that:
+//   * WORK-CONSERVING: every waiting row (not only the oldest of its source) is written on the first edge on which
+//     its bank (mod NRBS) is taken neither by an SU lane row nor by a waiting row that goes first (order mx, rd, seq;
+//     within a source the older row).  Rows of one source on one bank therefore keep their order; a row is never held
+//     behind a row for ANOTHER bank.
+//   * hence the rows of a source waiting at an edge are a function of the PRESENTED traffic only (a per-bank server
+//     of one row an edge behind the SU lane rows), and the rule is: at most SQD rows of one source wait at once.
+//     Sizing: a row presented every edge and denied for D consecutive edges needs D + 1 entries; SQD = 4 covers the
+//     longest hold of one bank by a stride-<= 1 lane stream (ceil(16 / SW) + 1 edges: 3 at SW 8, 2 at SW 64) at the
+//     full rate of one row an edge.  Traffic beyond the rule is refused loudly: the row is dropped and w_fault rises
+//     at the next edge (fail-stop, never a silent loss).
+// The bench carries the rule as an independent model (tb_qfd_vm_bv_ports `wmodel`) and requires the memory to raise
+// w_fault exactly when the model overflows.  MUT = 14: the queues hold 2 rows (the pre-fix capacity; must FAIL).
 // ME result rows reach the memory at a variable time; the tree top counts LANDED bursts, so consumers that wait on
 // its progress / idle (the base's contract for ME outputs) see them.
 // me_ok: AND of the band serializers' rok (to the die's me_mem_ok), registered.
@@ -98,7 +114,7 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer NSU = 3,
     parameter integer NB = 6,
     parameter integer CRB = 4,
-    parameter integer SQD = 2,
+    parameter integer SQD = 4,                         // skid rows a source may have waiting (capacity rule above)
     parameter integer NRBS = 16,                       // banks of each SU replica copy (rows r mod NRBS)
     parameter integer USE_MACRO = 0,
     parameter integer MUT = 0,
@@ -248,7 +264,10 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer DEPTHS = (ROWS + NRBS - 1) / NRBS;
     localparam integer LAWS = (DEPTHS > 1) ? $clog2(DEPTHS) : 1;
     localparam integer NPS = (NWR + 7 < NRBS) ? NWR + 7 : NRBS;   // coarse-rotate positions of an SU copy
-    localparam integer NL = NK * (SQD + 1);            // late rows checked per cycle (queue entries + late grants)
+    localparam integer NQ = NK * SQD;                  // skid entries, in grant order (source major, oldest first)
+    localparam integer LSQ = $clog2(SQD + 1);
+    localparam integer QCAP = (MUT == 14) ? 2 : SQD;   // MUT 14: the pre-fix capacity
+    localparam integer NL = 2 * NQ;                    // late rows checked per cycle (queue entries + late grants)
     integer i, a, di, k, b;
     genvar g, gc, c, dd;
 
@@ -506,11 +525,9 @@ module ot_qfd_sp_vector_memory_bv #(
     reg  [15:0]    k1_mb  [0:NK-1];
     always @(*) for (k = 0; k < NK; k = k + 1)
         for (i = 0; i < 16; i = i + 1) k1_mb[k][i] = k1_mask[k][i] && ({k1_row[k], 4'h0} + i < ELEMS);
-    // heads (entry 0 of each queue)
-    wire [NK-1:0] hq_v;
-    generate for (g = 0; g < NK; g = g + 1) begin : g_hq
-        assign hq_v[g] = q_v[g][0];
-    end endgenerate
+    // every entry is a grant candidate (work-conserving queue); flat index e = source * SQD + age rank (0 oldest)
+    reg  [NQ-1:0] qvf;
+    always @(*) for (k = 0; k < NK; k = k + 1) for (i = 0; i < SQD; i = i + 1) qvf[k*SQD + i] = q_v[k][i];
     // ---- merge ----
     wire           m_v, m_nowr, m_land;
     wire [RW-1:0]  m_row;
@@ -544,16 +561,23 @@ module ot_qfd_sp_vector_memory_bv #(
             su_hs[b] = f_v && (kk < NWR) && (|f_m[kk*16 +: 16]);
         end
     end
-    reg  [NK-1:0]  gk;                                  // skid head grants
-    reg  [NRBS-1:0] used;
+    // An entry is granted when its bank is taken neither by an SU lane row nor by an entry that goes first (any
+    // valid earlier entry on the bank: it is either granted or denied by the SU row, the bank is taken either way).
+    // Pairwise bank compares, no priority chain through the bank set.
+    reg  [NQ-1:0]  ge;                                  // skid entry grants
     reg            gm;
-    always @(*) begin
-        used = su_hs; gk = 0;
-        for (k = 0; k < NK; k = k + 1)
-            if (hq_v[k] && !used[q_row[k*SQD][LNRBS-1:0]]) begin
-                gk[k] = 1'b1; used[q_row[k*SQD][LNRBS-1:0]] = 1'b1;
-            end
-        gm = m_v && !m_nowr && !used[m_row[LNRBS-1:0]];
+    integer e, e2;
+    always @(*) begin : arb
+        reg bl;
+        for (e = 0; e < NQ; e = e + 1) begin
+            bl = su_hs[q_row[e][LNRBS-1:0]];
+            for (e2 = 0; e2 < e; e2 = e2 + 1)
+                if (qvf[e2] && q_row[e2][LNRBS-1:0] == q_row[e][LNRBS-1:0]) bl = 1'b1;
+            ge[e] = qvf[e] && !bl;
+        end
+        bl = su_hs[m_row[LNRBS-1:0]];
+        for (e = 0; e < NQ; e = e + 1) if (qvf[e] && q_row[e][LNRBS-1:0] == m_row[LNRBS-1:0]) bl = 1'b1;
+        gm = m_v && !m_nowr && !bl;
     end
     assign m_take = m_v && (m_nowr || gm);
     // per-bank write registers (beside the bank; written into every copy's macro the next edge)
@@ -566,12 +590,21 @@ module ot_qfd_sp_vector_memory_bv #(
         wire [2:0] kk = su_k[g*3 +: 3];
         wire [RW-1:0] srow = f_r0 + kk;
         reg  [2:0] src;          // 0 none, 1 su, 2 mx, 3 rd, 4 seq, 5 merge
+        // the one granted skid entry of this bank (grants are distinct mod NRBS, so distinct mod NRB): AND-OR select
+        reg  [2:0]    es;
+        reg  [RW-1:0] er;
+        reg  [15:0]   em;
+        reg  [511:0]  ed;
+        integer ee;
         always @(*) begin
+            es = 3'd0; er = {RW{1'b0}}; em = 16'd0; ed = 512'd0;
+            for (ee = 0; ee < NQ; ee = ee + 1)
+                if (ge[ee] && q_row[ee][LNRB-1:0] == g) begin
+                    es = es | (ee / SQD + 2); er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+                end
             src = 3'd0;
             if (su_hit[g]) src = 3'd1;
-            else if (gk[0] && q_row[0*SQD][LNRB-1:0] == g) src = 3'd2;
-            else if (gk[1] && q_row[1*SQD][LNRB-1:0] == g) src = 3'd3;
-            else if (gk[2] && q_row[2*SQD][LNRB-1:0] == g) src = 3'd4;
+            else if (es != 3'd0) src = es;
             else if (gm && m_row[LNRB-1:0] == g) src = 3'd5;
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) bw_we[g] <= 1'b0; else bw_we[g] <= (src != 0);
@@ -580,12 +613,8 @@ module ot_qfd_sp_vector_memory_bv #(
             case (src)
                 3'd1: begin bw_line[g*LAW +: LAW] <= srow[LNRB +: LAW]; bw_mask[g*16 +: 16] <= f_m[kk*16 +: 16];
                             bw_data[g*512 +: 512] <= f_d[kk*512 +: 512]; end
-                3'd2: begin bw_line[g*LAW +: LAW] <= q_row[0*SQD][LNRB +: LAW]; bw_mask[g*16 +: 16] <= q_mask[0*SQD];
-                            bw_data[g*512 +: 512] <= q_data[0*SQD]; end
-                3'd3: begin bw_line[g*LAW +: LAW] <= q_row[1*SQD][LNRB +: LAW]; bw_mask[g*16 +: 16] <= q_mask[1*SQD];
-                            bw_data[g*512 +: 512] <= q_data[1*SQD]; end
-                3'd4: begin bw_line[g*LAW +: LAW] <= q_row[2*SQD][LNRB +: LAW]; bw_mask[g*16 +: 16] <= q_mask[2*SQD];
-                            bw_data[g*512 +: 512] <= q_data[2*SQD]; end
+                3'd2, 3'd3, 3'd4: begin bw_line[g*LAW +: LAW] <= er[LNRB +: LAW]; bw_mask[g*16 +: 16] <= em;
+                            bw_data[g*512 +: 512] <= ed; end
                 default: begin bw_line[g*LAW +: LAW] <= m_row[LNRB +: LAW]; bw_mask[g*16 +: 16] <= m_mb;
                             bw_data[g*512 +: 512] <= m_data; end
             endcase
@@ -600,12 +629,20 @@ module ot_qfd_sp_vector_memory_bv #(
         wire [LNRBS-1:0] kk = g[LNRBS-1:0] - f_r0[LNRBS-1:0];
         wire [RW-1:0] srow = f_r0 + kk;
         reg  [2:0] src;
+        reg           es;
+        reg  [RW-1:0] er;
+        reg  [15:0]   em;
+        reg  [511:0]  ed;
+        integer ee;
         always @(*) begin
+            es = 1'b0; er = {RW{1'b0}}; em = 16'd0; ed = 512'd0;
+            for (ee = 0; ee < NQ; ee = ee + 1)
+                if (ge[ee] && q_row[ee][LNRBS-1:0] == g) begin
+                    es = 1'b1; er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+                end
             src = 3'd0;
             if (su_hs[g]) src = 3'd1;
-            else if (gk[0] && q_row[0*SQD][LNRBS-1:0] == g) src = 3'd2;
-            else if (gk[1] && q_row[1*SQD][LNRBS-1:0] == g) src = 3'd3;
-            else if (gk[2] && q_row[2*SQD][LNRBS-1:0] == g) src = 3'd4;
+            else if (es) src = 3'd2;
             else if (gm && m_row[LNRBS-1:0] == g) src = 3'd5;
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) ws_we[g] <= 1'b0; else ws_we[g] <= (src != 0);
@@ -613,75 +650,72 @@ module ot_qfd_sp_vector_memory_bv #(
             case (src)
                 3'd1: begin ws_line[g*LAWS +: LAWS] <= srow[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= f_m[kk*16 +: 16];
                             ws_data[g*512 +: 512] <= f_d[kk*512 +: 512]; end
-                3'd2: begin ws_line[g*LAWS +: LAWS] <= q_row[0*SQD][LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= q_mask[0*SQD];
-                            ws_data[g*512 +: 512] <= q_data[0*SQD]; end
-                3'd3: begin ws_line[g*LAWS +: LAWS] <= q_row[1*SQD][LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= q_mask[1*SQD];
-                            ws_data[g*512 +: 512] <= q_data[1*SQD]; end
-                3'd4: begin ws_line[g*LAWS +: LAWS] <= q_row[2*SQD][LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= q_mask[2*SQD];
-                            ws_data[g*512 +: 512] <= q_data[2*SQD]; end
+                3'd2: begin ws_line[g*LAWS +: LAWS] <= er[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= em;
+                            ws_data[g*512 +: 512] <= ed; end
                 default: begin ws_line[g*LAWS +: LAWS] <= m_row[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= m_mb;
                             ws_data[g*512 +: 512] <= m_data; end
             endcase
         end
     end endgenerate
-    // skid queue state: pop granted heads, push the E1 registers, mark survivors late; late grants for one cycle
-    reg  [NK-1:0] lg_v;
-    reg  [RW-1:0] lg_row [0:NK-1];
+    // skid queue state: granted entries leave (any of them), the survivors close up in age order and are late, the
+    // E1 register is pushed behind them; a push onto QCAP survivors is the overflow.  Late grants for one cycle.
+    reg  [NQ-1:0]     cs_v, cs_new;                    // next state of slot j: valid / the pushed row
+    reg  [NQ*LSQ-1:0] cs_src;                          // else the survivor that moves into it
+    reg  [NK-1:0]     cs_ovf;
+    always @(*) begin : compact
+        integer n;
+        cs_v = 0; cs_new = 0; cs_src = 0; cs_ovf = 0;
+        for (k = 0; k < NK; k = k + 1) begin
+            n = 0;
+            for (i = 0; i < SQD; i = i + 1)
+                if (q_v[k][i] && !ge[k*SQD + i]) begin
+                    cs_v[k*SQD + n] = 1'b1; cs_src[(k*SQD + n)*LSQ +: LSQ] = i; n = n + 1;
+                end
+            if (k1_v[k]) begin
+                if (n < QCAP) begin cs_v[k*SQD + n] = 1'b1; cs_new[k*SQD + n] = 1'b1; end
+                else cs_ovf[k] = 1'b1;
+            end
+        end
+    end
+    reg  [NQ-1:0] lg_v;
+    reg  [RW-1:0] lg_row [0:NQ-1];
     reg           q_ovf;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             for (k = 0; k < NK; k = k + 1) begin q_v[k] <= 0; q_late[k] <= 0; end
             lg_v <= 0; q_ovf <= 1'b0;
         end else begin
-            q_ovf <= 1'b0;
-            for (k = 0; k < NK; k = k + 1) begin : qk
-                reg [SQD-1:0] v, lt;
-                reg           pushed;
-                v = q_v[k]; lt = q_late[k];
-                lg_v[k] <= gk[k] && lt[0];
-                if (gk[k]) begin v = v >> 1; lt = lt >> 1; end
-                lt = lt | v;                               // survivors of this edge are late
-                pushed = 1'b0;
-                for (i = 0; i < SQD; i = i + 1)
-                    if (k1_v[k] && !pushed && !v[i]) begin v[i] = 1'b1; lt[i] = 1'b0; pushed = 1'b1; end
-                if (k1_v[k] && !pushed) q_ovf <= 1'b1;
-                q_v[k] <= v; q_late[k] <= lt;
+            q_ovf <= |cs_ovf;
+            for (k = 0; k < NK; k = k + 1) begin
+                q_v[k] <= cs_v[k*SQD +: SQD]; q_late[k] <= cs_v[k*SQD +: SQD] & ~cs_new[k*SQD +: SQD];
+                for (i = 0; i < SQD; i = i + 1) lg_v[k*SQD + i] <= ge[k*SQD + i] && q_late[k][i];
             end
         end
     end
     always @(posedge clk) begin
-        for (k = 0; k < NK; k = k + 1) begin : qd
-            reg [SQD-1:0] v;
-            integer sl, tgt;
-            reg pushed;
-            v = q_v[k];
-            lg_row[k] <= q_row[k*SQD];
-            if (gk[k]) begin
-                for (sl = 0; sl < SQD - 1; sl = sl + 1) begin
-                    q_row[k*SQD + sl] <= q_row[k*SQD + sl + 1]; q_mask[k*SQD + sl] <= q_mask[k*SQD + sl + 1];
-                    q_data[k*SQD + sl] <= q_data[k*SQD + sl + 1];
+        for (k = 0; k < NK; k = k + 1)
+            for (i = 0; i < SQD; i = i + 1) begin
+                lg_row[k*SQD + i] <= q_row[k*SQD + i];
+                if (cs_new[k*SQD + i]) begin
+                    q_row[k*SQD + i] <= k1_row[k]; q_mask[k*SQD + i] <= k1_mb[k]; q_data[k*SQD + i] <= k1_data[k];
+                end else if (cs_v[k*SQD + i]) begin
+                    q_row[k*SQD + i]  <= q_row[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
+                    q_mask[k*SQD + i] <= q_mask[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
+                    q_data[k*SQD + i] <= q_data[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
                 end
-                v = v >> 1;
             end
-            pushed = 1'b0; tgt = 0;
-            for (sl = 0; sl < SQD; sl = sl + 1) if (!pushed && !v[sl]) begin tgt = sl; pushed = 1'b1; end
-            if (k1_v[k] && pushed) begin
-                q_row[k*SQD + tgt] <= k1_row[k]; q_mask[k*SQD + tgt] <= k1_mb[k]; q_data[k*SQD + tgt] <= k1_data[k];
-            end
-        end
     end
     // late rows (queue entries with late set + late grants now in the bank write registers)
     reg  [NL-1:0]  lt_v;
     reg  [NL*RW-1:0] lt_row;
     always @(*) begin
-        for (k = 0; k < NK; k = k + 1) begin
+        for (k = 0; k < NK; k = k + 1)
             for (i = 0; i < SQD; i = i + 1) begin
-                lt_v[k*(SQD+1) + i] = q_v[k][i] && q_late[k][i];
-                lt_row[(k*(SQD+1) + i)*RW +: RW] = q_row[k*SQD + i];
+                lt_v[k*SQD + i] = q_v[k][i] && q_late[k][i];
+                lt_row[(k*SQD + i)*RW +: RW] = q_row[k*SQD + i];
+                lt_v[NQ + k*SQD + i] = lg_v[k*SQD + i];
+                lt_row[(NQ + k*SQD + i)*RW +: RW] = lg_row[k*SQD + i];
             end
-            lt_v[k*(SQD+1) + SQD] = lg_v[k];
-            lt_row[(k*(SQD+1) + SQD)*RW +: RW] = lg_row[k];
-        end
     end
 
     // =================================================================================================================
@@ -1074,15 +1108,15 @@ module ot_qfd_sp_vector_memory_bv #(
     // x hazard: a landing row (registered rows of this edge's bank writes) on the span of a pending x tuple
     reg            lr_su, lr_m;
     reg  [RW-1:0]  lr_r0, lr_mr;
-    reg  [NK-1:0]  lr_k;
-    reg  [RW-1:0]  lr_kr [0:NK-1];
+    reg  [NQ-1:0]  lr_k;
+    reg  [RW-1:0]  lr_kr [0:NQ-1];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin lr_su <= 1'b0; lr_m <= 1'b0; lr_k <= 0; end
-        else begin lr_su <= |su_hit; lr_m <= gm; lr_k <= gk; end
+        else begin lr_su <= |su_hit; lr_m <= gm; lr_k <= ge; end
     end
     always @(posedge clk) begin
         lr_r0 <= f_r0; lr_mr <= m_row;
-        for (k = 0; k < NK; k = k + 1) lr_kr[k] <= q_row[k*SQD];
+        for (k = 0; k < NQ; k = k + 1) lr_kr[k] <= q_row[k];
     end
     function automatic hits(input [RW-1:0] lo, input [RW-1:0] hi, input [AW-1:0] dc, input [AW+12:0] sp);
         hits = ({lo, 4'h0} <= dc + sp) && ({hi, 4'hf} >= dc);
@@ -1093,12 +1127,12 @@ module ot_qfd_sp_vector_memory_bv #(
         for (a = 0; a <= XVM; a = a + 1) if (h_new[a]) begin
             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, h_dc[a], h_span[a])) hzx = 1'b1;
             if (lr_m && hits(lr_mr, lr_mr, h_dc[a], h_span[a])) hzx = 1'b1;
-            for (k = 0; k < NK; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], h_dc[a], h_span[a])) hzx = 1'b1;
+            for (k = 0; k < NQ; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], h_dc[a], h_span[a])) hzx = 1'b1;
         end
         if (nt) begin
             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, x_dc, span_n)) hzx = 1'b1;
             if (lr_m && hits(lr_mr, lr_mr, x_dc, span_n)) hzx = 1'b1;
-            for (k = 0; k < NK; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], x_dc, span_n)) hzx = 1'b1;
+            for (k = 0; k < NQ; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], x_dc, span_n)) hzx = 1'b1;
         end
     end
     always @(posedge clk or negedge rst_n) begin

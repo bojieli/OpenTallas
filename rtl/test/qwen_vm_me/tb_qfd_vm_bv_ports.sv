@@ -17,7 +17,16 @@
 //               read; at every land_cnt step n: every result row whose last writer among the bursts so far is < n holds
 //               the reference value (progress soundness); the final image of every region; no x_fault / x_hazard /
 //               w_fault / w_hazard / serializer fault; bursts landed == bursts generated.
+//   skid rule   `wmodel`: an independent model of the memory's SKID CAPACITY RULE (a per-bank server of one row an edge
+//               behind the SU lane rows, order mx, rd, seq, oldest first; at most SQD rows of a source waiting).  The
+//               memory must raise w_fault exactly when the model overflows (never earlier: no row lost inside the
+//               rule; never silently: fail-stop outside it).  The WQ line reports the deepest queue of each source.
+//               WDIR = 1: directed burst AT the bound (SQD sequencer rows on consecutive edges, two of them the same
+//               row, all on one bank that SU lane rows hold meanwhile, then a reducer element on that bank): must PASS
+//               with the sequencer queue at SQD.  WDIR = 2: one row more: the model overflows, the memory must fault
+//               (the run FAILS: the expected fail-stop).  The random stream is the same with and without WDIR.
 // MUT = 1: the memory's SU lane select is one lane off; SMUT = 1: a serializer swaps a slot's mask.  Both must FAIL.
+// MUT = 14: the skid queues hold 2 rows (the pre-fix capacity): SEED 9 at MWD 3 and WDIR = 1 must FAIL.
 module tb_qfd_vm_bv_ports;
     parameter integer ELEMS = 16384, NRB = 16, SMIN = 3, SMAX = 7, XVM = 12, BMAX = 4, SW = 8, VL = 7;
     parameter integer DB = 16, RSD = 4, CRB = 4, MUT = 0, SMUT = 0, TSR = 0, CYCLES = 30000, SEED = 5, XRN = 4096;
@@ -30,6 +39,9 @@ module tb_qfd_vm_bv_ports;
     // early, an earlier tap of the stall loop: needs XMK <= RSD - 2), line / x_q leaf owners (XLO; pass XVM + XQR + 2).
     // MWD: me_want lookahead depth in negedges (0 = XMK + 1); a tree-less run at the same MWD has the same stimulus.
     parameter integer XTK = 0, XMK = 0, XMF = 16, XLO = 0, XQR = 0, MWD = 0;
+    parameter integer DBGC = 0, DBGN = 12;     // write-side trace window (diagnostics only)
+    parameter integer SQD = 4, WDIR = 0, WDC = 2000;   // skid capacity (the memory's SQD), directed burst and its cycle
+    localparam integer NRBS = 16;              // SU replica banks: the bank space of the write arbiter
     localparam integer WD = (MWD != 0) ? MWD : XMK + 1;
     parameter [ND*8-1:0] DSET = {8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0};
     localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NB = 6, NS = 8;
@@ -78,7 +90,7 @@ module tb_qfd_vm_bv_ports;
     end endgenerate
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
         .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
-        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR)) dut (
+        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS)) dut (
         .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e), .me_en_t(me_en_t), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),
         .s_re0(s_re0), .s_re1(s_re1), .s_a0(s_a0), .s_a1(s_a1), .s_q(s_q),
@@ -236,6 +248,78 @@ module tb_qfd_vm_bv_ports;
         $display("w_hazard term at %0t: hz0 %0d su_hz %b waw %0d lt_v %b", $time, dut.hz0, dut.su_hz, dut.waw, dut.lt_v);
         for (hk2 = 0; hk2 < 9; hk2 = hk2 + 1) if (dut.lt_v[hk2]) $display("  late row %0d: %0d", hk2, dut.lt_row[hk2*RW +: RW]);
     end
+    // diagnostics: the first w_fault term that fires (q_ovf: a skid queue overflowed; f_bad: SU write stride > 1;
+    // m_fault: the result merge; t_ovf: a tile x FIFO), with the skid queues' state at that edge
+    reg wf_seen = 0;
+    integer wk;
+    always @(posedge clk) if (rst_n && !wf_seen && (dut.q_ovf || dut.f_bad || dut.m_fault || dut.t_ovf)) begin
+        wf_seen <= 1;
+        $display("w_fault term at %0t cyc %0d: q_ovf %0d f_bad %0d m_fault %0d t_ovf %0d", $time, cyc, dut.q_ovf, dut.f_bad,
+                 dut.m_fault, dut.t_ovf);
+        for (wk = 0; wk < 3; wk = wk + 1)
+            $display("  skid %0d (0 mx, 1 rd, 2 seq): q_v %b q_late %b oldest row %0d (bank %0d) next row %0d", wk, dut.q_v[wk],
+                     dut.q_late[wk], dut.q_row[wk*SQD], dut.q_row[wk*SQD] % NRBS, dut.q_row[wk*SQD+1]);
+    end
+    // ---- wmodel: the skid capacity rule, from the PRESENTED traffic only ----
+    // A row presented at edge p is in the queue after p + 1 and first competes with the SU lane rows presented at p
+    // (both reach the arbiter two edges after their port edge); a row granted at edge t leaves at t.
+    localparam integer NWR_ = (SW + 30) / 16;
+    function [NRBS-1:0] su_banks(input [SW-1:0] m, input [AW-1:0] a0, input [AW-1:0] a1);
+        integer g_, ll_; reg mm_; reg [AW-1:0] r0_;
+        begin
+            su_banks = 0; r0_ = a0 >> 4;
+            for (g_ = 0; g_ < NWR_ * 16; g_ = g_ + 1) begin
+                ll_ = g_ - a0[3:0];
+                if (!m[1] || (a1 - a0) == 0) mm_ = (g_ == a0[3:0]) && (|m);
+                else mm_ = (ll_ >= 0 && ll_ < SW) ? m[ll_] : 1'b0;
+                if ({r0_, 4'h0} + g_ >= ELEMS) mm_ = 1'b0;
+                if (mm_) su_banks[(r0_ + g_ / 16) % NRBS] = 1'b1;
+            end
+        end
+    endfunction
+    integer mq_n [0:2], mq_row [0:2][0:63], mo_max [0:2];
+    integer m_ovf, m_waits, d_ovf, mk, mi, mn;
+    reg [NRBS-1:0] m_su1, m_su2, m_used;
+    reg [2:0] m_kv1;
+    integer m_kr1 [0:2];
+    initial begin
+        m_ovf = 0; m_waits = 0; d_ovf = 0; m_su1 = 0; m_su2 = 0; m_kv1 = 0;
+        for (mk = 0; mk < 3; mk = mk + 1) begin mq_n[mk] = 0; mo_max[mk] = 0; end
+    end
+    always @(posedge clk) if (rst_n) begin : wmodel
+        if (dut.q_ovf) d_ovf = d_ovf + 1;
+        // (1) the waiting rows against the SU lane rows presented two edges ago
+        m_used = m_su2;
+        for (mk = 0; mk < 3; mk = mk + 1) begin
+            mn = 0;
+            for (mi = 0; mi < mq_n[mk]; mi = mi + 1)
+                if (!m_used[mq_row[mk][mi] % NRBS]) m_used[mq_row[mk][mi] % NRBS] = 1'b1;
+                else begin
+                    m_waits = m_waits + 1;
+                    mq_row[mk][mn] = mq_row[mk][mi]; mn = mn + 1;
+                end
+            mq_n[mk] = mn;
+        end
+        // (2) the rows presented one edge ago join
+        for (mk = 0; mk < 3; mk = mk + 1) if (m_kv1[mk]) begin
+            if (mq_n[mk] >= SQD) m_ovf = m_ovf + 1;
+            else begin mq_row[mk][mq_n[mk]] = m_kr1[mk]; mq_n[mk] = mq_n[mk] + 1; end
+            if (mq_n[mk] > mo_max[mk]) mo_max[mk] = mq_n[mk];
+        end
+        // (3) this edge's ports
+        m_su2 = m_su1; m_su1 = su_banks(sw_mask, sw_a0, sw_a1);
+        m_kv1 = {w_v, rd_v, me_en && mx_we};
+        m_kr1[0] = mx_addr[RW-1:0]; m_kr1[1] = rd_addr[AW-1:4]; m_kr1[2] = w_row;
+    end
+    // DBGC != 0: trace of the write side in [DBGC - DBGN, DBGC] (sources presented, SU banks, skid queues, grants)
+    generate if (DBGC != 0) begin : g_dbg
+        always @(posedge clk) if (rst_n && cyc >= DBGC - DBGN && cyc <= DBGC)
+            $display("WTR cyc %0d w_v %0d row %0d (b%0d) rd_v %0d (b%0d) mx %0d (b%0d) me %0d | sw %b a0 %0d | k1_v %b | f_v %0d su_hs %b | seq q_v %b late %b rows %0d(b%0d) %0d(b%0d) | rd q_v %b row b%0d | mx q_v %b row b%0d | gk %b gm %0d m_v %0d | q_ovf %0d",
+                     cyc, w_v, w_row, w_row % 16, rd_v, (rd_addr >> 4) % 16, mx_we, mx_addr % 16, me_en, sw_mask, sw_a0,
+                     dut.k1_v, dut.f_v, dut.su_hs, dut.q_v[2], dut.q_late[2], dut.q_row[2*SQD], dut.q_row[2*SQD] % 16, dut.q_row[2*SQD+1],
+                     dut.q_row[2*SQD+1] % 16, dut.q_v[1], dut.q_row[SQD] % 16, dut.q_v[0], dut.q_row[0] % 16, dut.ge, dut.gm, dut.m_v,
+                     dut.q_ovf);
+    end endgenerate
     reg [15:0] land_seen;
     // ---- stimulus ----
     function integer dset(input integer i); dset = DSET[i*8 +: 8]; endfunction
@@ -360,6 +444,21 @@ module tb_qfd_vm_bv_ports;
             w_v = ($random(seed) & 15) == 0; w_row = (SQ0 / 16) + (($random(seed) & 32'h7fffffff) % 64); w_mask = $random(seed);
             for (l = 0; l < 16; l = l + 1) w_data[32*l +: 32] = $random(seed);
             r_v = ($random(seed) & 3) == 0; r_row = (XR0 / 16) + (($random(seed) & 32'h7fffffff) % (XRN / 16));
+            // ---- WDIR: directed skid burst (overrides the write ports drawn above; the random stream is untouched) ----
+            // SQD (WDIR 2: SQD + 1) sequencer rows on consecutive edges, all on bank 0 (rows SQ0 / 16 + 16 (j mod 3): the
+            // fourth repeats the first: same-row order), while a stride-0 SU element holds bank 0 (row SU0 / 16 + 16 j: the
+            // lane rows have priority), then one reducer element on bank 0 (goes before the waiting sequencer rows);
+            // no other skid traffic until the queue has drained.
+            if (WDIR != 0 && cyc >= WDC && cyc < WDC + 3 * SQD + 8) begin : wdir
+                integer j_;
+                j_ = cyc - WDC;
+                w_v = 0; rd_v = 0; sw_mask = 0; mx_we = 0;
+                if (j_ < SQD + (WDIR == 2 ? 1 : 0)) begin
+                    w_v = 1; w_row = SQ0 / 16 + 16 * (j_ % 3); w_mask = 16'h0ff0 << (j_ % 5);
+                    sw_mask = 1; sw_a0 = SU0 + 256 * j_ + 3; sw_a1 = sw_a0;
+                end
+                if (j_ == SQD + (WDIR == 2 ? 1 : 0)) begin rd_v = 1; rd_addr = RD0 + 256 + 5; end
+            end
         end
         // drain: no new traffic, the engine runs until every burst landed
         b_ov = 0; b_we = 0; mx_we = 0; x_dv = 0; s_re0 = 0; sw_mask = 0; rd_v = 0; w_v = 0; r_v = 0;
@@ -381,9 +480,12 @@ module tb_qfd_vm_bv_ports;
         if (XTK != 0 || XMK != 0 || XLO != 0)
             $display("TREE XTK=%0d XMK=%0d XMF=%0d XLO=%0d XQR=%0d me_consumers=%0d me_toggles=%0d me_t_checks=%0d pctl_changes=%0d xline_changes=%0d",
                      XTK, XMK, XMF, XLO, XQR, dut.NMC, n_mt, n_tchk, n_pc, n_lq);
+        $display("WQ SQD=%0d max_waiting mx=%0d rd=%0d seq=%0d waits=%0d model_overflow=%0d dut_overflow=%0d WDIR=%0d",
+                 SQD, mo_max[0], mo_max[1], mo_max[2], m_waits, m_ovf, d_ovf, WDIR);
+        if (m_ovf != d_ovf) $display("skid capacity rule: the memory overflowed %0d times, the rule's model %0d", d_ovf, m_ovf);
         if (tree_vac) $display("FAIL qfd_vm_bv_ports TREE-VACUOUS x=%0d", bad_x);
         else
-        if (bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
+        if (m_ovf == d_ovf && (WDIR != 1 || mo_max[2] == SQD) && bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
             !w_hazard && !(|l_fault) && land_cnt == nburst[15:0] && nburst > 500 && n_s > 1000 && n_r > 1000 && tuples > 500)
             $display("PASS qfd_vm_bv_ports NRB=%0d SW=%0d VL=%0d su_reads=%0d row_reads=%0d tuples=%0d bursts=%0d land_steps=%0d cycles=%0d",
                      NRB, SW, VL, n_s, n_r, tuples, nburst, n_land, CYCLES);
