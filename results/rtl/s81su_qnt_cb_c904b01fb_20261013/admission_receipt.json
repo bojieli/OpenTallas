@@ -3,10 +3,64 @@
   "candidate_full_sha256": "e33c4f5eb2f69f513b2c5bc053f3c40b6f5864b74144c8a6f6f64b5f9d4dfe32",
   "reference_commit": "69c124e5dd4197c71e25d39c527d93146076636d",
   "reference_full_sha256": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
-  "commands": [
-    "git show c904b01fb:rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
-    "git show 69c124e5d:rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv"
-  ],
+  "commands": {
+    "initial": [
+      "ot-heavy",
+      "--mem",
+      "24",
+      "--",
+      "python3",
+      "tools/s81_suhc/qnt_cb_gate.py",
+      "--candidate-commit",
+      "c904b01fb",
+      "--pinned-sources-dir",
+      "pinned",
+      "--output",
+      "/tmp/codex-qnt-cb-gate-c904b01fb-20261013"
+    ],
+    "active_failure": [
+      "ot-heavy",
+      "--mem",
+      "24",
+      "--",
+      "python3",
+      "tools/s81_suhc/qnt_cb_gate.py",
+      "--candidate-commit",
+      "c904b01fb",
+      "--pinned-sources-dir",
+      "pinned",
+      "--output",
+      "/tmp/codex-qnt-cb-active-c904b01fb-20261013"
+    ],
+    "active2": [
+      "ot-heavy",
+      "--mem",
+      "24",
+      "--",
+      "python3",
+      "tools/s81_suhc/qnt_cb_gate.py",
+      "--candidate-commit",
+      "c904b01fb",
+      "--pinned-sources-dir",
+      "pinned",
+      "--output",
+      "/tmp/codex-qnt-cb-active2-c904b01fb-20261013"
+    ],
+    "active3": [
+      "ot-heavy",
+      "--mem",
+      "24",
+      "--",
+      "python3",
+      "tools/s81_suhc/qnt_cb_gate.py",
+      "--candidate-commit",
+      "c904b01fb",
+      "--pinned-sources-dir",
+      "pinned",
+      "--output",
+      "/tmp/codex-qnt-cb-active3-c904b01fb-20261013"
+    ]
+  },
   "gate_commit": "75091902b",
   "host": "ot-epyc1tb",
   "admission": [
