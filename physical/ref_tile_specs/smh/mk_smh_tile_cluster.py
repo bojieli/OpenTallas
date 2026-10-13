@@ -154,7 +154,7 @@ def spec(variant):
         "orfs_vars": {"POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
         "refglob": "*",
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96},
-        "job": {"owner": "Codex:hbm-sm-cluster", "branch": "codex/hbm-sm-cluster", "tag": "r3",
+        "job": {"owner": "Codex:hbm-sm-cluster", "branch": "codex/hbm-sm-cluster", "tag": "r4",
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p50, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
@@ -172,8 +172,32 @@ def strap_regions(variant):
     # Five physical stages per leaf, kept on the gated cluster clock.
     points = [[(300,H-12),(365,1100),(365,1060),(300,1060),(260,Y_XS0+DIM["xs"][1]+12)],
               [(340,H-12),(365,950),(365,650),(365,350),(260,Y_XS1-16)]]
-    lines = ["# Generated kept strap-stage fences: no child/clock/pin budget change.",
+    lines = ["# Generated fixed legal strap-stage stations: no child/clock/pin budget change.",
              "set sb [ord::get_db_block]", "set su [[ord::get_db_tech] getDbUnitsPerMicron]", "set sn 0",
+             "proc sr_init {} {",
+             "  set ::sr_rows {}; set ::sr_used [dict create]; set ::sr_fixed 0",
+             "  foreach r [$::sb getRows] {set rb [$r getBBox]; lassign [$r getOrigin] ox oy; set ::sr_sw [[$r getSite] getWidth]; set ::sr_rh [[$r getSite] getHeight]; lappend ::sr_rows [list $ox $oy [$rb xMax] [$r getOrient]]}",
+             "  foreach i [$::sb getInsts] {if {[$i isPlaced]} {set bb [$i getBBox]; sr_occupy [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]}}",
+             "}",
+             "proc sr_occupy {x0 y0 x1 y1} {for {set k [expr {int(floor(double($y0)/$::sr_rh))}]} {$k <= int(floor(double($y1-1)/$::sr_rh))} {incr k} {dict lappend ::sr_used $k [list $x0 $x1]}}",
+             "proc sr_place {group cx cy} {",
+             "  set cx [expr {round($cx*$::su)}]; set cy [expr {round($cy*$::su)}]; set rows {}",
+             "  foreach r $::sr_rows {lassign $r ox oy xe ori; if {abs($oy-$cy) < 4*$::su} {lappend rows [linsert $r 0 [expr {abs($oy-$cy)}]]}}",
+             "  set rows [lsort -integer -index 0 $rows]",
+             "  foreach i [$group getInsts] {",
+             "    set w [[$i getMaster] getWidth]; set h [[$i getMaster] getHeight]; set found 0",
+             "    foreach r $rows {lassign $r delta ox oy xe ori; if {$oy < $cy-4*$::su || $oy+$h > $cy+4*$::su} continue",
+             "      set x [expr {$ox+int(ceil(double(max($ox,$cx-8*$::su)-$ox)/$::sr_sw))*$::sr_sw}]",
+             "      while {$x+$w <= min($xe,$cx+8*$::su)} {",
+             "        set jump $x; for {set k [expr {int(floor(double($oy)/$::sr_rh))}]} {$k <= int(floor(double($oy+$h-1)/$::sr_rh))} {incr k} {",
+             "          if {![dict exists $::sr_used $k]} continue; foreach iv [dict get $::sr_used $k] {lassign $iv a b; if {$x+$w > $a && $x < $b} {set jump [expr {max($jump,$ox+int(ceil(double($b-$ox)/$::sr_sw))*$::sr_sw)}]}}",
+             "        }",
+             "        if {$jump > $x} {set x $jump; continue}",
+             "        $i setOrient $ori; $i setLocation $x $oy; $i setPlacementStatus FIRM; incr ::sr_fixed; sr_occupy $x $oy [expr {$x+$w}] [expr {$oy+$h}]; set found 1; break",
+             "      }; if {$found} break",
+             "    }; if {!$found} {error \"STRAP_REGION no legal station site for [$i getName]\"}",
+             "  }",
+             "}", "sr_init",
              "proc sr_bind {net group} {",
              "  for {set hop 0} {$hop < 5} {incr hop} {",
              "    set driver {}; foreach it [$net getITerms] {if {[$it isOutputSignal]} {lappend driver $it}}",
@@ -191,11 +215,11 @@ def strap_regions(variant):
             name=f"strap_l{leaf}_s{stage}"
             lines += [f"set rg [odb::dbRegion_create $sb {name}]", "$rg setRegionType EXCLUSIVE",
                       f"odb::dbBox_create $rg [expr {{round({x-8}*$su)}}] [expr {{round({y-4}*$su)}}] [expr {{round({x+8}*$su)}}] [expr {{round({y+4}*$su)}}]",
-                      f"set gr [odb::dbGroup_create $sb {name}]", "$rg addGroup $gr", "set nc 0",
+                      f"set gr [odb::dbGroup_create $sb {name}]", "set nc 0",
                       "foreach net [$sb getNets] {", "  set nm [string map {\\\\ {}} [$net getName]]",
                       f"  if {{[string first {{g_strap[{leaf}].u_sr.s{stage}[}} $nm] >= 0 }} {{ sr_bind $net $gr; incr nc; incr sn }}",
-                      "}", f"if {{$nc != 26}} {{error \"STRAP_REGION {name}: expected 26 DFFs, got $nc\"}}"]
-    lines += ["if {$sn != 260} {error \"STRAP_REGION expected 260 DFFs\"}", "puts \"STRAP_REGION_FENCES 10 DFFS $sn\""]
+                      "}", f"if {{$nc != 26}} {{error \"STRAP_REGION {name}: expected 26 DFFs, got $nc\"}}", f"sr_place $gr {x} {y}", "odb::dbGroup_destroy $gr", "odb::dbRegion_destroy $rg"]
+    lines += ["if {$sn != 260} {error \"STRAP_REGION expected 260 DFFs\"}", "puts \"STRAP_REGION_PLACED 10 DFFS $sn FIXED_CELLS $::sr_fixed\""]
     (OUT/f"smh_tile_{variant}_ref_strap_regions.tcl").write_text("\n".join(lines)+"\n")
 
 
