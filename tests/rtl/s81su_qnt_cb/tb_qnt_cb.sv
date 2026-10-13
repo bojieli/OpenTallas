@@ -80,8 +80,12 @@ wire [4304:0] ref_all = {ref_e_v,ref_e_d,ref_e_t,ref_e_gq,ref_e_gr,ref_e_gw,ref_
 wire [4304:0] cb32_all = {cb32_e_v,cb32_e_d,cb32_e_t,cb32_e_gq,cb32_e_gr,cb32_e_gw,cb32_e_go,cb32_e_ob,cb32_e_eps,cb32_o_fu,cb32_o_fo,cb32_o_alive,cb32_o_den,cb32_o_rdy,cb32_o_rjid};
 wire [4304:0] cb16_all = {cb16_e_v,cb16_e_d,cb16_e_t,cb16_e_gq,cb16_e_gr,cb16_e_gw,cb16_e_go,cb16_e_ob,cb16_e_eps,cb16_o_fu,cb16_o_fo,cb16_o_alive,cb16_o_den,cb16_o_rdy,cb16_o_rjid};
 wire [4304:0] default_all = {default_e_v,default_e_d,default_e_t,default_e_gq,default_e_gr,default_e_gw,default_e_go,default_e_ob,default_e_eps,default_o_fu,default_o_fo,default_o_alive,default_o_den,default_o_rdy,default_o_rjid};
+wire [15:0] active_data_bad;
+genvar ap;
+generate for(ap=0;ap<16;ap=ap+1) begin : g_active_check
+ assign active_data_bad[ap]=ref_e_v[ap] && (cb32_e_d[ap*256+:256] !== ref_e_d[ap*256+:256]);
+end endgenerate
 task tick;
- reg active_data_fail;
  begin
   @(posedge clk); #1;
   cycles=cycles+1;
@@ -89,14 +93,10 @@ task tick;
    checks=checks+1;
    if (cb32_all !== ref_all || cb16_all !== ref_all || default_all !== ref_all) begin
     $display("FAIL QNT_CB cycle=%0d MUT=%0d ev_ref=%h ev_cb32=%h ev_cb16=%h diff32=%h diff16=%h diff_default=%h",cycles,MUT,ref_e_v,cb32_e_v,cb16_e_v,cb32_all^ref_all,cb16_all^ref_all,default_all^ref_all);
-    if(MUT==0) $fatal(1,"cycle-by-cycle output mismatch");
     // The negative must corrupt a row that an engine actually consumes.
-    active_data_fail=0;
-    for(integer b=0;b<16;b=b+1)
-     if(ref_e_v[b] && cb32_e_d[b*256+:256] !== ref_e_d[b*256+:256]) active_data_fail=1;
-    if(active_data_fail) begin
-     $display("FAIL QNT_CB active_data=1 cycle=%0d MUT=%0d ev_ref=%h",cycles,MUT,ref_e_v);
-     $fatal(1,"active-row data rotation mismatch");
+    if(MUT==0 || (|active_data_bad)) begin
+     $display("FAIL QNT_CB active_data=%0d cycle=%0d MUT=%0d ev_ref=%h",|active_data_bad,cycles,MUT,ref_e_v);
+     $fatal(1,"cycle-by-cycle output mismatch");
     end
    end
    if (|ref_e_v) valid_cycles=valid_cycles+1;
