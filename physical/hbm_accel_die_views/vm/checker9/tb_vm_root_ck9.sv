@@ -12,6 +12,11 @@ module tb_vm_root_ck9;
  wire mem_cmd_v,mem_cmd_we,mem_cmd_bank;wire [6:0] mem_cmd_addr;wire [2815:0] mem_wd;
  reg mem_rd_v=0;reg [2815:0] mem_rd;
  reg [2815:0] rows[0:255];
+ reg mutate_verify=0;
+ function [71:0] encode64(input [63:0] data);
+  begin encode64={^{data[0],data[1],data[2],data[4],data[5],data[7],data[10],data[11],data[12],data[14],data[17],data[18],data[21],data[23],data[24],data[26],data[27],data[29],data[32],data[33],data[36],data[38],data[39],data[41],data[44],data[46],data[47],data[50],data[51],data[53],data[56],data[57],data[58],data[60],data[63]},data[63],data[62],data[61],data[60],data[59],data[58],data[57],^{data[57],data[58],data[59],data[60],data[61],data[62],data[63]},data[56],data[55],data[54],data[53],data[52],data[51],data[50],data[49],data[48],data[47],data[46],data[45],data[44],data[43],data[42],data[41],data[40],data[39],data[38],data[37],data[36],data[35],data[34],data[33],data[32],data[31],data[30],data[29],data[28],data[27],data[26],^{data[26],data[27],data[28],data[29],data[30],data[31],data[32],data[33],data[34],data[35],data[36],data[37],data[38],data[39],data[40],data[41],data[42],data[43],data[44],data[45],data[46],data[47],data[48],data[49],data[50],data[51],data[52],data[53],data[54],data[55],data[56]},data[25],data[24],data[23],data[22],data[21],data[20],data[19],data[18],data[17],data[16],data[15],data[14],data[13],data[12],data[11],^{data[11],data[12],data[13],data[14],data[15],data[16],data[17],data[18],data[19],data[20],data[21],data[22],data[23],data[24],data[25],data[41],data[42],data[43],data[44],data[45],data[46],data[47],data[48],data[49],data[50],data[51],data[52],data[53],data[54],data[55],data[56]},data[10],data[9],data[8],data[7],data[6],data[5],data[4],^{data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[18],data[19],data[20],data[21],data[22],data[23],data[24],data[25],data[33],data[34],data[35],data[36],data[37],data[38],data[39],data[40],data[49],data[50],data[51],data[52],data[53],data[54],data[55],data[56]},data[3],data[2],data[1],^{data[1],data[2],data[3],data[7],data[8],data[9],data[10],data[14],data[15],data[16],data[17],data[22],data[23],data[24],data[25],data[29],data[30],data[31],data[32],data[37],data[38],data[39],data[40],data[45],data[46],data[47],data[48],data[53],data[54],data[55],data[56],data[60],data[61],data[62],data[63]},data[0],^{data[0],data[2],data[3],data[5],data[6],data[9],data[10],data[12],data[13],data[16],data[17],data[20],data[21],data[24],data[25],data[27],data[28],data[31],data[32],data[35],data[36],data[39],data[40],data[43],data[44],data[47],data[48],data[51],data[52],data[55],data[56],data[58],data[59],data[62],data[63]},^{data[0],data[1],data[3],data[4],data[6],data[8],data[10],data[11],data[13],data[15],data[17],data[19],data[21],data[23],data[25],data[26],data[28],data[30],data[32],data[34],data[36],data[38],data[40],data[42],data[44],data[46],data[48],data[50],data[52],data[54],data[56],data[57],data[59],data[61],data[63]}}; end
+ endfunction
+
 `ifdef VM_CK_BASELINE
  ot_hfd_vm_root_x #(.ENABLE(1),.SEATP(1),.FREG(1)) dut(.*);
 `else
@@ -21,7 +26,7 @@ module tb_vm_root_ck9;
   mem_rd_v<=mem_cmd_v&&!mem_cmd_we;
   if(mem_cmd_v)begin
    if(mem_cmd_we)rows[{mem_cmd_bank,mem_cmd_addr}]<=mem_wd;
-   else mem_rd<=rows[{mem_cmd_bank,mem_cmd_addr}];
+   else mem_rd<=rows[{mem_cmd_bank,mem_cmd_addr}]^(mutate_verify?{2744'd0,encode64(64'd1)}:2816'd0);
   end
  end
  task tick;begin @(posedge clk);#0.001;end endtask
@@ -74,8 +79,23 @@ module tb_vm_root_ck9;
   step();rows[127][0]=~rows[127][0];
   rows[127][1]=~rows[127][1];
   rd_bank=0;rd_addr=127;rd_owner=own;rd_v=1;tick();step();rd_v=0;
-  repeat(12)tick();if(!fault||(|tap_v)||native_release)$fatal(1,"external mutable SRAM response UE published");
+  repeat(12)begin
+   tick();if((|tap_v)||native_release)$fatal(1,"external mutable SRAM response UE published before quarantine");
+  end
+  if(!fault)$fatal(1,"external mutable SRAM response UE not quarantined");
   $display("NEGATIVE external mutable SRAM response double-bit error refuses publication");
+  // Correct a single returned data bit, then prove read-owner mismatch cannot transiently publish.
+  reset();write_row(0,127,own,d);
+  step();rows[127][10]=~rows[127][10];read_row(0,127,own,d);
+  reset();write_row(0,127,own,d);
+  step();rd_bank=0;rd_addr=127;rd_owner=own^192'b1;rd_v=1;tick();step();rd_v=0;
+  repeat(12)begin tick();if((|tap_v)||native_release)$fatal(1,"wrong read owner published before quarantine");end
+  if(!fault)$fatal(1,"wrong read owner not quarantined");
+  // A valid-code changed write readback must never ACK, even for one edge.
+  reset();step();mutate_verify=1;wr_bank=0;wr_addr=127;wr_owner=own;wr_data=d;wr_v=1;tick();step();wr_v=0;
+  repeat(12)begin tick();if(wr_ACK_v)$fatal(1,"changed write readback ACKed before quarantine");end
+  if(!fault)$fatal(1,"changed write readback not quarantined");
+  $display("NEGATIVE valid-code read-owner and write-readback mismatches never transiently publish/ACK");
   $display("VM_ROOT_CK9 COMPONENT PASS (memory physical integration/production price OPEN)");$finish;
  end
  initial begin #1000;$fatal(1,"bench deadlock");end
