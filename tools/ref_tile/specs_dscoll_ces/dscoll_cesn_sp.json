@@ -221,7 +221,7 @@
  "why_floorplan": "wires-only parent: 10 hard leaves, no register and no logic of its own; outline set by the leaves and their >= 20 um channels (see gen_specs.py CLUSTER)",
  "job": {
   "owner": "Claude:s81-cesn-1013",
-  "branch": "main",
+  "branch": "claude/s81-cesn-1013",
   "tag": "sp1",
   "purpose": "S81 collective lane-slice dsfd_coll_cesn as a hardened cluster of the split leaves (wires only)",
   "benches": [

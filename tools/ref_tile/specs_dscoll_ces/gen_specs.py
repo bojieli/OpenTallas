@@ -130,7 +130,7 @@ def leaf_spec(key, d, ovr):
          "reset_ports": ["rs"], "outline": {"w": w, "h": h}, "pins": d["pins"], "recipe": 2,
          "route": {"pd": o.get("pd", d["pd"]), "threads": 16 if d.get("core") else 8, "peak_ram_gb": d["ram"]},
          "structural_change": STRUCT,
-         "job": {"owner": "Claude:s81-cesn-1013", "branch": "main", "tag": "sp1",
+         "job": {"owner": "Claude:s81-cesn-1013", "branch": "claude/s81-cesn-1013", "tag": "sp1",
                  "purpose": f"S81 collective lane-slice split: hardened leaf {d['top']} (M5 cap, recipe 2, registers at "
                             "the pins) of the wires-only clusters dsfd_coll_ces0 / dsfd_coll_cesn; bench = the 4-die "
                             "collective composition with both split parents + this leaf's mutant",
@@ -201,7 +201,7 @@ def cluster_spec(s0):
             "route": {"pd": 0.3, "threads": 8, "peak_ram_gb": 32}, "structural_change": STRUCT,
             "why_floorplan": "wires-only parent: 10 hard leaves, no register and no logic of its own; outline set by the "
                              "leaves and their >= 20 um channels (see gen_specs.py CLUSTER)",
-            "job": {"owner": "Claude:s81-cesn-1013", "branch": "main", "tag": "sp1",
+            "job": {"owner": "Claude:s81-cesn-1013", "branch": "claude/s81-cesn-1013", "tag": "sp1",
                     "purpose": f"S81 collective lane-slice {top} as a hardened cluster of the split leaves (wires only)",
                     "benches": [EXACT, CS, SLOW, *MUT.values()], "extra_paths": EXTRA,
                     "views_to": f"physical/ref_tile/{name}/views", "record_to": f"results/rtl/ref_tile/{name}"}}
