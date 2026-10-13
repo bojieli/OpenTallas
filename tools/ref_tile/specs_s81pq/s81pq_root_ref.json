@@ -89,5 +89,6 @@
   "views_to": "physical/ref_tile/s81pq_root_ref/views",
   "record_to": "results/rtl/ref_tile/s81pq_root_ref"
  },
- "slot_change_request": "el1011-s81die.log 10-13 [s81-pqroot]: dsfd_pq_root real view 131.76 x 211.68 (leaf lattice 2.16 um; slot 132.192 x 211.68 reserved, 0.432 um narrower, fits inside); tree word in N, root word out S, clk/rst_n W M4"
+ "slot_change_request": "el1011-s81die.log 10-13 [s81-pqroot]: dsfd_pq_root real view 131.76 x 211.68 (leaf lattice 2.16 um; slot 132.192 x 211.68 reserved, 0.432 um narrower, fits inside); tree word in N, root word out S, clk/rst_n W M4",
+ "structural_change": "the three failed routes (s81b-pq-rcp/-rcpp, 08f27dc4f) were the round-1 RTL; this kit hardens the round-2 RTL that closed on 10-08 (closed-form norm, registered match/removal masks, delayed entry write, kept Kogge-Stone adder, registered reset) as an M5-capped recipe-2 leaf with flops at the N/S pins instead of the legacy M6 route"
 }
