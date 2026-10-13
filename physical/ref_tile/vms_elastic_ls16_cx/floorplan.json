@@ -1,0 +1,71 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "vms_elastic_ls16_cx",
+ "top": "ot_vms_elastic_regional",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  410.4,
+  138.24
+ ],
+ "core": [
+  2.16,
+  2.16,
+  408.23999999999995,
+  136.08
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "S": [
+   "clk",
+   "data_clk",
+   "f_in",
+   "cr_out"
+  ],
+  "N": [
+   "f_out",
+   "cr_in"
+  ],
+  "W": [
+   "rst_n"
+  ],
+  "E": []
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_elastic.sv",
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_elastic_regional.sv",
+  "physical/ref_tile/vms_elastic_ls16_cx/kit.env",
+  "physical/ref_tile/vms_elastic_ls16_cx/clock.sdc",
+  "physical/ref_tile/vms_elastic_ls16_cx/signoff.sdc",
+  "physical/ref_tile/vms_elastic_ls16_cx/pdn.tcl",
+  "physical/ref_tile/vms_elastic_ls16_cx/pre_cts.tcl",
+  "physical/ref_tile/vms_elastic_ls16_cx/pre_grt.tcl",
+  "physical/ref_tile/vms_elastic_ls16_cx/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/hbm_ring_transport_1013/station_ls_pins.tcl"
+ ]
+}

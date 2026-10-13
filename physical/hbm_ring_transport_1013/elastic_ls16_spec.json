@@ -1,0 +1,73 @@
+{
+  "name": "vms_elastic_ls16_cx",
+  "top": "ot_vms_elastic_regional",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/vm/b2/ot_vms_elastic.sv",
+    "rtl/hbm_accel/generic/vm/b2/ot_vms_elastic_regional.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "layer_cap": "M5",
+  "outline": {
+    "w": 410.4,
+    "h": 138.24
+  },
+  "pins": {
+    "S": [
+      "clk",
+      "data_clk",
+      "f_in",
+      "cr_out"
+    ],
+    "N": [
+      "f_out",
+      "cr_in"
+    ],
+    "W": [
+      "rst_n"
+    ],
+    "E": []
+  },
+  "sdc_extra": [
+    "physical/hbm_ring_transport_1013/regional_clocks.sdc"
+  ],
+  "route": {
+    "pd": 0.55,
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "hold_margin_ns": 0.01,
+    "pin_v": "M5",
+    "pin_h": "M4"
+  },
+  "job": {
+    "owner": "Claude:ring-station-1013",
+    "branch": "claude/ring-station-1013",
+    "tag": "ls16-cx",
+    "purpose": "D8 local elastic station, landscape 410.4x138.24, kept put/take/VC/pointer control replicated per <=16 payload bits (old single copy: 4,416 loads per chunk), locked M5 pin plan with f_in[i]/f_out[i] on one track (matching-bit dX 0 um, budget 5.28). Source-only S67 II1 proof; ten timed same-phase clocks; no native D3-view alias. Die placement/parent PG/compiler exposure remain separate gates.",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/vm/b2",
+      "physical/hbm_ring_transport_1013"
+    ],
+    "benches": [
+      {
+        "name": "ring_transport_source",
+        "cmd": "bash rtl/hbm_accel/generic/vm/b2/run_ring_transport.sh {RUN}/bench/transport",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "views_to": "physical/ref_tile/vms_elastic_ls16_cx/views",
+    "record_to": "results/rtl/ref_tile/vms_elastic_ls16_cx"
+  },
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "io_tcl": "physical/hbm_ring_transport_1013/station_ls_pins.tcl"
+}

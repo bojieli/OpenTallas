@@ -3,22 +3,35 @@
 // Source-only local credit terminator candidate. Not a closed hard view.
 // Fixed native flit encoding; no destination interpretation or arithmetic.
 // Payload chunks are separate hardening units; no reset on payload.
-module ot_vms_elastic_chunk #(parameter integer W=276,D=8,B=$clog2(D))(
+module ot_vms_elastic_chunk #(parameter integer W=276,D=8,B=$clog2(D),SUBW=16)(
  input wire clk, input wire rst_n, input wire [W-1:0] din,
  input wire put, input wire putvc, input wire [B-1:0] wp,
  input wire take, input wire takevc, input wire [B-1:0] rp,
- output reg [W-1:0] dout);
- reg [W-1:0] pin_d, delayed_d;
- (* keep="true", dont_touch="true" *) reg put_r,take_r,putvc_r,takevc_r;
- (* keep="true", dont_touch="true" *) reg [B-1:0] wp_r,rp_r;
- always @(posedge clk or negedge rst_n)
-  if(!rst_n) begin put_r<=0;take_r<=0;putvc_r<=0;takevc_r<=0;wp_r<=0;rp_r<=0;end
-  else begin put_r<=put;take_r<=take;putvc_r<=putvc;takevc_r<=takevc;wp_r<=wp;rp_r<=rp;end
- reg [W-1:0] mem [0:1][0:D-1];
- always @(posedge clk) begin
-  pin_d<=din;delayed_d<=pin_d;
-  if(put_r) mem[putvc_r][wp_r]<=delayed_d;
-  if(take_r) dout<=mem[takevc_r][rp_r];
+ output wire [W-1:0] dout);
+ // Physical fanout repair (2026-10-13): one kept copy of the registered put/take/VC/pointer
+ // control per <= SUBW payload bits. Every copy is the same register of the same inputs, so
+ // function and latency are unchanged; the old single copy drove 4,416 loads per 276-bit chunk.
+ localparam integer NS=(W+SUBW-1)/SUBW;
+ for(genvar s=0;s<NS;s=s+1) begin:g_sub
+  localparam integer LO=s*SUBW, SW=(LO+SUBW>W)?(W-LO):SUBW;
+  reg [SW-1:0] pin_d, delayed_d, dout_r;
+  (* keep="true", dont_touch="true" *) reg put_r,take_r,putvc_r,takevc_r;
+  (* keep="true", dont_touch="true" *) reg [B-1:0] wp_r,rp_r;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n) begin put_r<=0;take_r<=0;putvc_r<=0;takevc_r<=0;wp_r<=0;rp_r<=0;end
+`ifdef RING_SUB_MUT
+   // Bench-only negative: one replicated read-pointer copy (last subslice) disagrees.
+   else begin put_r<=put;take_r<=take;putvc_r<=putvc;takevc_r<=takevc;wp_r<=wp;rp_r<=(s==NS-1)?(rp^1'b1):rp;end
+`else
+   else begin put_r<=put;take_r<=take;putvc_r<=putvc;takevc_r<=takevc;wp_r<=wp;rp_r<=rp;end
+`endif
+  reg [SW-1:0] mem [0:1][0:D-1];
+  always @(posedge clk) begin
+   pin_d<=din[LO+:SW];delayed_d<=pin_d;
+   if(put_r) mem[putvc_r][wp_r]<=delayed_d;
+   if(take_r) dout_r<=mem[takevc_r][rp_r];
+  end
+  assign dout[LO+:SW]=dout_r;
  end
 endmodule
 module ot_vms_elastic #(parameter integer D=8, MUT=0)(

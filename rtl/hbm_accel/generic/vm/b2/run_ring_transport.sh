@@ -20,6 +20,14 @@ for mut in 1 2; do
  printf '%s\n' "$result" > "$run/mutant$mut.exit"
  if [ "$result" -eq 0 ]; then echo "FAIL mutant $mut survived"; exit 1; fi
 done
+# Replication negative: one per-16-bit read-pointer copy wrong must break payload order.
+verilator --binary --timing -DRING_REGIONAL_PHY -DRING_SUB_MUT -Wno-fatal --top-module tb_vms_elastic -GS="$stages" -j 4 --Mdir "$run/submut" "$src/ot_vms_elastic.sv" "$src/ot_vms_elastic_regional.sv" "$src/tb_vms_elastic.sv" > "$run/submut_compile.log" 2>&1
+set +e
+"$run/submut/Vtb_vms_elastic" +MODE=0 > "$run/mutant_sub.log" 2>&1
+result=$?
+set -e
+printf '%s\n' "$result" > "$run/mutant_sub.exit"
+if [ "$result" -eq 0 ]; then echo "FAIL replication mutant survived"; exit 1; fi
 verilator --binary --timing -DRING_REGIONAL_PHY -Wno-fatal --top-module tb_vms_endpoint_rate -GD=8 -GHF=8 -GS="$stages" -GRATE_GATE=1 -j 4 --Mdir "$run/endpoint" "$src/ot_vms_rstop.sv" "$src/ot_vms_elastic.sv" "$src/ot_vms_elastic_regional.sv" "$src/tb_vms_endpoint_rate.sv" > "$run/endpoint_compile.log" 2>&1
 "$run/endpoint/Vtb_vms_endpoint_rate" > "$run/endpoint.log" 2>&1
 for dir in 0 1; do
