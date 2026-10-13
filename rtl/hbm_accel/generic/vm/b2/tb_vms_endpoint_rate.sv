@@ -2,18 +2,18 @@
 // Minimum optimistic registered terminator: no wire relays, immediate downstream
 // consumption. Uses actual rstop RTL defaults, including D3/HF2/EGC1.
 module tb_vms_endpoint_rate;
- parameter integer D=3, HF=2, N=1000;
+ parameter integer D=3, HF=2, N=1000, FORWARD=0;
  reg clk=0, rst_n=0; always #1 clk=~clk;
- reg [289:0] pi='0; wire pi_cr;
+ reg [289:0] pi='0; wire pi_cr; reg [2223:0] si='0;
  wire [2223:0] lo; reg [1:0] lc=0;
  wire [1:0] ic; wire [7:0] eg_cr; wire [2207:0] xq;
  wire [287:0] rce; wire [263:0] cco; wire ri_cr,wki_cr,wko_cr,ack,busy; wire [2:0] wko;
  ot_vms_rstop #(.D(D),.HF(HF)) dut(.clk(clk),.rst_n(rst_n),.sid(2'd0),.dir(1'b0),
-  .l_in(2224'd0),.l_in_cr(ic),.l_out(lo),.l_out_cr(lc),.pi(pi),.pi_cr(pi_cr),
+  .l_in(si),.l_in_cr(ic),.l_out(lo),.l_out_cr(lc),.pi(pi),.pi_cr(pi_cr),
   .eg(2208'd0),.eg_cr(eg_cr),.xq(xq),.xq_cr(8'd0),.xq_done(8'd0),
   .rce(rce),.rce_cr(1'b0),.ri(266'd0),.ri_cr(ri_cr),.wko(wko),.wko_cr(1'b0),
   .wki(3'd0),.wki_cr(wki_cr),.cco(cco),.ack_o(ack),.ack_i(1'b0),.mirror_busy(busy));
- integer issued=0,received=0,credits=HF,cyc=0,first=-1,last=-1,returned=0;
+ integer issued=0,received=0,credits=(FORWARD ? D : HF),cyc=0,first=-1,last=-1,returned=0;
  initial begin repeat(4) @(negedge clk);rst_n=1;end
  // Credit returned only after receiver captures/consumes the flit at its pin.
  always @(posedge clk) begin
@@ -28,15 +28,16 @@ module tb_vms_endpoint_rate;
  end
  always @(negedge clk) if(rst_n) begin
   cyc=cyc+1;
-  if(pi_cr) begin credits=credits+1;returned=returned+1;end
-  if(credits<0 || credits>HF || credits+issued-returned!=HF) $fatal(1,"SOURCE_CREDIT");
-  pi=0;
+  if(FORWARD ? ic[0] : pi_cr) begin credits=credits+1;returned=returned+1;end
+  if(credits<0 || credits>(FORWARD ? D : HF) || credits+issued-returned!=(FORWARD ? D : HF)) $fatal(1,"SOURCE_CREDIT");
+  pi=0;si=0;
   if(issued<N && credits>0) begin
-   pi={1'b1,4'b0010,4'd0,2'(issued),1'b0,3'd0,11'd0,8'hff,256'(issued)};
+   if(FORWARD) begin si[2223]=1'b1;si[2220:2217]=4'b0010;si[263:8]=256'(issued);end
+   else pi={1'b1,4'b0010,4'd0,2'(issued),1'b0,3'd0,11'd0,8'hff,256'(issued)};
    issued=issued+1;credits=credits-1;
   end
   if(received==N && returned==N) begin
-   $display("PASS endpoint D=%0d HF=%0d count=%0d steady_cycles=%0d rate=%f total_cycles=%0d",D,HF,received,last-first+1,real'(N)/(last-first+1),cyc);$finish;
+   $display("PASS endpoint FORWARD=%0d D=%0d HF=%0d count=%0d steady_cycles=%0d rate=%f total_cycles=%0d",FORWARD,D,HF,received,last-first+1,real'(N)/(last-first+1),cyc);$finish;
   end
   if(cyc>20000) $fatal(1,"TIMEOUT issued=%0d received=%0d",issued,received);
  end
