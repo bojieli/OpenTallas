@@ -12,6 +12,7 @@
 // but sk/srs, so the cut is cycle-neutral; this wrapper is wires only and keeps the v2 port list.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_crooty #(
+    parameter integer FIFO_SLICE = 256,
     parameter integer NG = 256, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, C = 0, YD = 16
 ) (
     input  wire                 sk,
@@ -33,7 +34,7 @@ module ot_s81_hc_crooty #(
     localparam integer LC = (C == 0) ? L0 : (C == 1) ? L1 : L2;
     localparam integer YS = LC * GS * 32;
     localparam integer WSL = 1 + 14 + 16 + 512;                  // a write slot {v, row, mask, d}
-    ot_s81_hc_crooty_y #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(C), .YD(YD)) u_y (.sk(sk), .srs(srs),
+    ot_s81_hc_crooty_y #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(C), .YD(YD), .FIFO_SLICE(FIFO_SLICE)) u_y (.sk(sk), .srs(srs),
         .y_s(y_s), .yacc(yacc), .p_req(p_req), .p_y(p_y), .p_flt(p_flt));
     ot_s81_hc_crooty_w #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .C(C), .YD(YD)) u_w (.sk(sk), .srs(srs),
         .p_w(p_w), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d));
@@ -43,6 +44,7 @@ endmodule
 // ot_s81_hc_crooty_y: the y slice path (hard tile, far side).  N: y_s; S: p_req in, p_y / p_flt out; inner face: yacc.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_crooty_y #(
+    parameter integer FIFO_SLICE = 0,
     parameter integer NG = 256, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, C = 0, YD = 16
 ) (
     input  wire                 sk,
@@ -84,8 +86,20 @@ module ot_s81_hc_crooty_y #(
     // head in one slice per macro, each with its own head/occupancy copy (v2/v3a: one select net drove 5.6k loads).
     wire [YS-1:0] yh;
     wire          yhv, yovf;
-    ot_fifo_sram_fwft #(.W(YS), .DEPTH(YD), .MACRO(2), .ESL(256)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(yp2),
-        .pop(pr), .hv(yhv), .head(yh), .ovf(yovf));
+    generate if(FIFO_SLICE>0) begin:g_slice
+        localparam integer NF=(YS+FIFO_SLICE-1)/FIFO_SLICE;
+        wire [NF-1:0] hv,ov;
+        for(genvar f=0;f<NF;f=f+1) begin:g_f
+            localparam integer LO=f*FIFO_SLICE,FW=(YS-LO<FIFO_SLICE)?YS-LO:FIFO_SLICE;
+            ot_fifo_sram_fwft #(.W(FW),.DEPTH(YD),.MACRO(2),.ESL(256)) u_yf (
+                .clk(sk),.rst_n(rs_n),.push(ya),.wdata(yp2[LO+:FW]),.pop(pr),
+                .hv(hv[f]),.head(yh[LO+:FW]),.ovf(ov[f]));
+        end
+        assign yhv=&hv;assign yovf=|ov;
+    end else begin:g_legacy
+        ot_fifo_sram_fwft #(.W(YS), .DEPTH(YD), .MACRO(2), .ESL(256)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(yp2),
+            .pop(pr), .hv(yhv), .head(yh), .ovf(yovf));
+    end endgenerate
     always @(posedge sk) p_y <= yh;                               // the head, registered (valid the cycle after pr)
 endmodule
 
