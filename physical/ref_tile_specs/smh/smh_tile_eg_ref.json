@@ -223,7 +223,8 @@
  "job": {
   "owner": "Claude:el1013-smh-r11",
   "branch": "claude/el1013-smh-r11",
-  "tag": "r11",
+  "tag": "r13",
+  "structural_change": "clock root rebuilt: only the tile ICG and its enable registers are fixed beside the clk pin and they are dont_touch; the ICG enable cone (input buffer of cgi + gates) is movable and legalised (r11/r12: cone cells FIRM yet resizable -> input2099 sized to BUFx12f over FIRM _0956_, DPL-0033 at CTS in both tiles; spine errors if a moved cell is fixed and resizable)",
   "purpose": "[smmv-b/smt] ot_hbm_accel_smh_tile_eg: SM tile as ONE ref_tile cluster (owner contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles (pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their LEFs on the 43.2-um lattice (630.72 x 1252.8, landing channels 58-60 um, cut 0.59), clock spine through the tile ICG (symmetric insertion-aware topology), exact abutment pin plan re-applied after place_pins, rst_n pin flop + registered N-S reset tree (16 stations FFs, no reset on the raw clock: RSTEN 0 / RAWRST 0). Five registered regional static-strap stages per leaf (260 DFFs), zero data latency; production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail.",
   "benches": [
    {
