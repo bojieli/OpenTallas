@@ -88,5 +88,6 @@
   "cell": "dsfd_su_t_pin",
   "pair_cost_ps": 724.8,
   "fix": "kit recipe 2 (pin flops and hold stages FIRM at the pins) and PG pins M7 -> M6: the tile is two registers pin to pin, the closed route placed them ~193 um from the faces (dn_d leaves 327 ps after the boundary clock, up_d 348 ps before it)"
- }
+ },
+ "slot_change_request": "el1011-s81die.log 2026-10-13 12:52 PDT [s81su -> s81-die] SLOT CHANGE REQUEST (3): dsfd_su_t_pin clock = early trunk tap, R up to ~620 ps (pin-registered rebuild measures 622 ps / 115 ps pre-route; die level table 10-13 lists su_t_pin as an early-tap tile)"
 }
