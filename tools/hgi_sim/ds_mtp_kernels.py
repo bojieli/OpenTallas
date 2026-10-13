@@ -1023,6 +1023,8 @@ def sim(a):
     m, _ = LC.build_model(ck, engram=False)
     V41D.NOISE = m.noise_id
     TP = DN.TP
+    if getattr(a, "hc_hbm", False):
+        DN.HC_DB[0] = False
     plan = {p_["name"]: p_ for p_ in (HC_PLAN, HC_PLAN_BACKBONE_CHAIN)}[getattr(a, "hc_plan", "mtp")]
     K = Kernels(m, spec=spec, hc_plan=plan)
     if spec and DN.HC_DB[0]:
@@ -1134,11 +1136,50 @@ def sim(a):
             return list(forced_d)
     eng.prog = SimpleNamespace(m=SimpleNamespace(L=m.L))
     ngen = len(gd["emitted"])
-    tok, _, steps = V41D.ctl_loop(eng, gd["prompt"], ngen, gd["gamma"], forced, maxpos=1 << 20)
+    # A step whose drafts / targets differ from the golden's ends the job there (FAIL): the golden holds rows only for
+    # its own path, and a later step would overwrite the position-indexed rows (DSK, stage rows, columns) the first
+    # mismatch has to be named from.
+    watch = dict(heads=[], markov=[], vheads=0)
+    run0 = eng.run
+
+    class StepDiverged(Exception):
+        pass
+
+    def run_watch(cmd, want=False):
+        res, lgs = run0(cmd, want)
+        if cmd["op"] == "VHEAD":
+            watch["vheads"] += 1
+            watch["heads"].append(list(res))
+        elif cmd["op"] == "MARKOV":
+            watch["markov"] += res
+        elif spec and cmd["op"] == "SEED" and watch["vheads"] == plen + 1:
+            d_, t_ = watch["markov"], watch["heads"][-1]
+            if d_ != gd["drafts"] or t_ != gd["targets"] or watch["heads"][0] != [gd["positions"][plen - 1]["argmax"]]:
+                raise StepDiverged
+        return res, lgs
+    eng.run = run_watch
+    diverged = None
+    try:
+        tok, _, steps = V41D.ctl_loop(eng, gd["prompt"], ngen, gd["gamma"], forced, maxpos=1 << 20)
+    except StepDiverged:
+        d_, t_ = watch["markov"], watch["heads"][-1]
+        a_ = 0
+        while a_ < len(d_) and d_[a_] == t_[a_]:
+            a_ += 1
+        steps = [dict(anchor=plen - 1, drafts=d_, targets=t_, accepted=a_)]
+        tok = (watch["heads"][0] + t_[:a_ + 1])[:ngen]
+        diverged = dict(prefill_y=watch["heads"][0], golden_y=gd["positions"][plen - 1]["argmax"], drafts=d_,
+                        golden_drafts=gd["drafts"], targets=t_, golden_targets=gd["targets"])
+        print(f"STEP 1 DIVERGED from the golden (job stopped after its verify): {diverged}", flush=True)
     # (A) every column's L0 output (slot after swapout) == the golden's L0 output at that position, every rank
     colres = []
     for p in sorted(col_out):
-        hh, pp = h0(p)
+        try:
+            hh, pp = h0(p)
+        except KeyError:                  # a position the golden never ran (only reachable on a diverged path)
+            colres.append(dict(pos=p, kind="prefill" if p < plen else "verify", bit_exact_all_ranks=False,
+                               no_golden_row=True))
+            continue
         want = np.concatenate([hh.reshape(-1).view(np.uint32), pp.view(np.uint32)])
         got = col_out[p]
         ok = all(np.array_equal(g_[:20484], want) for g_ in got)
@@ -1245,7 +1286,7 @@ def sim(a):
                                                       "emitted")},
                machine_tokens=tok, steps=steps, accept_stream_equals_golden=bool(accept_ok),
                l0_columns=colres, l0_all_bit_exact=all(c["bit_exact_all_ranks"] for c in colres),
-               draft_checks=draft_checks, verdict="PASS" if ok_all else "FAIL",
+               draft_checks=draft_checks, verdict="PASS" if ok_all else "FAIL", step1_diverged=diverged,
                launches=len(eng.launches), s2_job_cycles=round(t_launch, 1),
                s2_l0_cycles=[x["s2_cycles"] for x in l0],
                s2_by_kind={k_: round(sum(x["s2_cycles"] for x in per_launch if x["kind"] == k_), 1)
@@ -1373,6 +1414,8 @@ def main():
     q.add_argument("--export")
     q.add_argument("--hc-plan", default="mtp", choices=("mtp", "backbone_chain"),
                    help="HC aperture row plan; backbone_chain = the checker's negative case (the first lowering)")
+    q.add_argument("--hc-hbm", action="store_true",
+                   help="HC mix rows read from HBM directly (ds_native HC_DB off: no aperture slots; a bisection aid)")
     q.add_argument("--hc-trace-only", action="store_true", help="build the kernels, write the reader trace, stop")
     a = ap.parse_args()
     if a.cmd == "golden":
