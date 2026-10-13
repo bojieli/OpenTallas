@@ -3847,7 +3847,7 @@ def build_r8(variant=None):
     m['buses'] = []
     buses_r8(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
-        _split_fields(m, hub['wfc'].name, WFC_FIELD_SPLIT[hub['wfc'].master])
+        _split_fields(m, hub['wfc'].name, (WFC_FIELD_SPLIT_PRICED if WFC_PRICED else WFC_FIELD_SPLIT)[hub['wfc'].master])
     return m
 
 
@@ -3860,6 +3860,15 @@ WFC_FIELD_SPLIT = {'dsfd_wfc_stg': {'f_li': (('f_liv', 1), ('f_lid', 513)),
                                     't_lo': (('t_lov', 1), ('t_lod', 513)),
                                     't_sw_sr': (('t_swv', 1), ('t_swd', 527), ('t_srv', 1), ('t_srd', 15)),
                                     'f_sw_sr': (('f_swr', 1), ('f_swa', 1), ('f_srr', 1), ('f_srq', 513))}}
+
+
+# --wfc-priced (contract v16, el1013-s81-wfcstg): the kit of record is the PRICED one (tb_mtp_wave_dies.sv:96:
+# VM_LINK 1, VMRQ 64, WOUTW 8, POSTED 1, RD2 1): t_srd = {v1, a1[14:0], a0[14:0]} 31 b, f_srq = {rv1, rq1[511:0], rv,
+# rq[511:0]} 1,026 b (the VM side dsfd_vm_wfc_ep is already RD2 1), and t_ft[3:0] to the host fault collector.
+WFC_PRICED = False
+WFC_FIELD_SPLIT_PRICED = {'dsfd_wfc_stg': dict(WFC_FIELD_SPLIT['dsfd_wfc_stg'],
+                                               t_sw_sr=(('t_swv', 1), ('t_swd', 527), ('t_srv', 1), ('t_srd', 31)),
+                                               f_sw_sr=(('f_swr', 1), ('f_swa', 1), ('f_srr', 1), ('f_srq', 1026)))}
 
 
 def _split_fields(m, inst, spec):
@@ -4495,8 +4504,10 @@ def wfc_kit_buses(role, host, far=None, crp=False):
     b = ([('collective', 'wfc', 513, 't_mrt', 'f_mrt'), ('wfc', 'collective', 1, 't_mrg', 'f_mrt')] if far == 's0' else
          [('collective', 'wfc', 514, 't_wfc', 'f_li'), ('wfc', 'collective', 1, 't_lir', 'f_wfcg')]) + [
          ('wfc', 'collective', 514, 't_lo', 'f_wfc'), ('collective', 'wfc', 1, 't_wfcg', 'f_lor'),
-         ('wfc', 'vm', 544, 't_sw_sr', 'f_wfc'), ('vm', 'wfc', 516, 't_wfc', 'f_sw_sr'),
+         ('wfc', 'vm', 560 if WFC_PRICED else 544, 't_sw_sr', 'f_wfc'), ('vm', 'wfc', 1029 if WFC_PRICED else 516, 't_wfc', 'f_sw_sr'),
          ('wfc', 'capture', 53, 't_ks', 'f_wfc'), ('capture', 'wfc', 54, 't_wfc', 'f_kd')]
+    if WFC_PRICED and host:      # contract v16: the kit's fault flags {proto_fault, lnk_ft, 0, vmx_ft} reach the die fault collector
+        b += [('wfc', 'host', 4, 't_ft', 'f_wfc_ft')]
     if far == 's0' and host:
         b += [('collective', 'host', 57, 't_macc', 'f_macc')]
     if role == 'source' and host:
@@ -5658,17 +5669,24 @@ def _col_relays(m, P):
                 # --xb-rgap site E of the slot station with its out pins on the E face (toward the E element bank),
                 # 507.1 um pin to pin from the next station's xai (8,309 bits > 500).  When the default out face
                 # centre is farther than UM from a load pin, the relay takes the out face with the smallest worst-load
-                # distance; it stays a STRAIGHT master (in face opposite: the existing dsfd_rly_<W>_SN / _WE kits, no
-                # new corner master) when the driver is within UM of that in face.
+                # distance.  It stays a STRAIGHT master: first the same axis reversed (dsfd_rly_283_WE -> _EW: same outline
+                # class and site, a mirrored kit), else the best face with the in face opposite when the driver is
+                # within UM of it.
                 fpt_ = dict(E=(it.x + it.w, it.y + it.h / 2), W=(it.x, it.y + it.h / 2),
                             N=(it.x + it.w / 2, it.y + it.h), S=(it.x + it.w / 2, it.y))
                 lds_ = [ep_pt(e, True) for e in eps[1:] if e[0] in by]
                 wl_ = {f_: max(_mh(fpt_[f_], q_) for q_ in lds_) for f_ in 'NSEW'} if lds_ else None
                 if wl_ and wl_[fo] > RLY_FACE_REACH:
                     opp_ = dict(N='S', S='N', E='W', W='E')
-                    fb_ = min(wl_, key=lambda f_: (wl_[f_], f_))
-                    if fb_ != fo:
+                    best_ = min(wl_.values())
+                    if fo == opp_[fi] and wl_[fi] < wl_[fo] and wl_[fi] <= best_ + 25.0:
+                        # the same straight axis, reversed (in <-> out): the relay keeps its outline class and its site
+                        # (W >= 266: the 21.6 x 30.24 E/W class is the one that fits the 25.5-um --xb-rgap site)
+                        fi2_, fb_ = fo, fi
+                    else:
+                        fb_ = min(wl_, key=lambda f_: (wl_[f_], f_))
                         fi2_ = opp_[fb_] if _mh(pa, fpt_[opp_[fb_]]) <= RLY_FACE_REACH else (fi if fi != fb_ else opp_[fb_])
+                    if fb_ != fo:
                         m.setdefault('rly_face_reach', []).append((it.name, fi + fo, fi2_ + fb_, round(wl_[fo], 1),
                                                                    round(wl_[fb_], 1)))
                         fi, fo = fi2_, fb_
@@ -7031,9 +7049,9 @@ def _faces_r8(m, Mx, it, ports):
                 want = _peer_pos(m, it, p_, f) - bw / 2
                 rem = sum(bwf(ports[q][1]) + 2.0 for q in lst[lst.index(p_) + 1:])
                 pos = min(max(pos, want), L - 0.4 - rem - bw)
-                for r0_, r1_ in resv:                     # step over the centred wide ports
-                    if pos < r1_ and pos + bw > r0_:
-                        pos = r1_ + 1.0
+                for r0_, r1_ in sorted(resv):             # step over the centred wide ports
+                    if pos < r1_ and pos + bw > r0_:      # (sorted: one pass in an arbitrary order could step INTO a
+                        pos = r1_ + 1.0                   #  range already visited -- v15 dsfd_svc_c hs[1:0] on rk[23:22])
                 Mx.face(p_, ports[p_][1], f, 'M4' if f in 'EW' else 'M5', pos + bw / 2, 1)
                 pos += bw + 2.0
 
@@ -7600,6 +7618,8 @@ def die_options(ap):
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
+    ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
+                    't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
                     'the out face nearest its worst load when the default face centre is > UM from a load pin (straight '
                     'master kept: in face opposite)')
@@ -7690,6 +7710,9 @@ def apply_options(a):
     global MTP_EP, P2_LNK
     MTP_EP = bool(getattr(a, 'mtp_ep', False)); P2_LNK = bool(getattr(a, 'p2_lnk', False))
     WFC_KIT = bool(getattr(a, 'wfc_kit', False))
+    global WFC_PRICED
+    WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
+    assert not WFC_PRICED or (WFC_KIT and not getattr(a, 'wfc_crp', False)), '--wfc-priced: the --wfc-kit stage / source kit (not --wfc-crp)'
     global WFC_CRP, STAGE_SEQ
     WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT
     STAGE_SEQ = bool(getattr(a, 'stage_seq', False)) and WFC_KIT

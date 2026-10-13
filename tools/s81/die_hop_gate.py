@@ -74,6 +74,7 @@ def gate(insts, buses, lef_texts, pslice, limit_um=600.0, ss_um=504.0, exempt_cl
     over = collections.Counter()
     over_ss = collections.Counter()
     nbits = 0
+    lmax = [0.0]
     missing = 0
     strip = lambda s: re.sub(r'\d+', '#', s)
     for bid, cls, bits, eps in buses:
@@ -95,6 +96,8 @@ def gate(insts, buses, lef_texts, pslice, limit_um=600.0, ss_um=504.0, exempt_cl
                     continue
                 nbits += 1
                 L = abs(pa[0] - pb[0]) + abs(pa[1] - pb[1])
+                if L > lmax[0]:
+                    lmax[0] = L
                 if L > ss_um:
                     over_ss[key] += 1
                     if L > limit_um:
@@ -106,7 +109,7 @@ def gate(insts, buses, lef_texts, pslice, limit_um=600.0, ss_um=504.0, exempt_cl
     rows = sorted(worst.items(), key=lambda kv: -kv[1][0])
     rec = dict(limit_um=limit_um, ss_reach_um=ss_um, exempt_classes=list(exempt_cls), bits_checked=nbits,
                bits_without_pin=missing, bits_over_limit=sum(over.values()), bits_over_ss=sum(over_ss.values()),
-               max_um=round(rows[0][1][0], 1) if rows else 0.0,
+               max_um=round(lmax[0], 1),     # the longest checked data hop (was 0.0 on a PASS: only over-reach classes were ranked)
                verdict='PASS' if not over else 'FAIL',
                classes=[dict(drv=k[0], load=k[1], cls=k[2], bits_over_limit=over.get(k, 0), bits_over_ss=over_ss[k],
                              max_um=round(v[0], 1), bus=v[1], example=list(v[2:])) for k, v in rows[:top]])

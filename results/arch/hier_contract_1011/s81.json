@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 15,
+ "version": 16,
  "owner": "s81die-1011",
  "updated": "2026-10-13 PT",
  "clock_period_ps": 833.333,
@@ -55,10 +55,16 @@
   "reach_um_per_stage": 500.0,
   "relays": "longer seams get die-top relay stations (last segment <= ~100 um at a die pin); v14: relays are the real hard tiles of relay_masters, bound by name",
   "io_budget": "0.2 T in / 0.2 T out per tile; the die top owns the remaining 0.6 T per seam stage",
-  "clock": "each tile clock pin balanced to target_insertion_ps (provisional 120 ps; re-budget from routed CTS)",
+  "clock": "v16 DIE CLOCK DELIVERY RULE: the die delivers the clock at tile X's clock pin at phi - R_X (R = views/<cell>/insertion.json <corner>.boundary.mean, the sign-off reference), never a common phase at the pins; tiles with R <= 300 ps share one level, a tile with R > 300 takes the trunk earlier by R - 300 on its own tap and its hops are budgeted at SKEW 150 (623.3 ps) instead of 90 (683.3 ps); boundary spread <= 80 ps is inside o + s and not compensatable; every bound view needs insertion.json (tools/s81/die_sta.py kit: clock_delivery record; tools/hier_contract/pinreg_audit.py)",
   "check": "die closure, not element closure: die-region routes (tiles as fixed macros, relays/stations only logic, M8/M9 straps) signed off TT setup >= 0 / FF hold >= 0 / DRC 0; prerequisite: tools/hier_contract/child_lint.py PASS on every placed tile",
   "channels": "every column boundary of an abutted tile array whose tiles carry W- or E-face pins is a >= 20-um channel on the M7 PG / 0.064 M7 / 0.096 M5 / 0.054 site grids (43.2 = lcm multiple): VM bgq28 43.2, HC 43.2, SU 86.4 (spine jogs); N/S abutment chains keep zero gap; die-level nets into a channel are relayed <= 500 um a stage",
-  "min_delay": "every abutted or short seam: sender L - receiver H >= 50 ps + capture-minus-launch clock skew, measured on the routed FF ETMs (L = min clock-to-output - max insertion, H = hold - min insertion); a deficient master is fixed physically at its own pins (outhold / inhold), never by a Liberty offset"
+  "min_delay": "every abutted or short seam: sender L - receiver H >= 50 ps + capture-minus-launch clock skew, measured on the routed FF ETMs (L = min clock-to-output - max insertion, H = hold - min insertion); a deficient master is fixed physically at its own pins (outhold / inhold), never by a Liberty offset",
+  "hop_budget_ps": {
+   "setup": "o_A + 0.76 ps/um x L + s_B <= 833.3 - 60 - SKEW",
+   "same_level": 683.3,
+   "across_levels": 623.3,
+   "hold": "l_A - h_B >= 100 ps at FF"
+  }
  },
  "changelog": [
   {
@@ -135,6 +141,11 @@
    "version": 15,
    "when": "2026-10-13 PT",
    "change": "s81-die: (A1) sp_p2/xport 403.2 x 228.96 -> 403.2 x 211.68 (closed view). (A2) sp_p2/fadd16 150 x 66.15 @ (587.4, 194.4) R0 -> 216 x 58.32 @ (496.608, 194.4) MX (closed view; faces measured on the LEF, f_ab centred on head t_ab). (A3) sp_p2 = container. (B) rep/q_elem, rep/bf, rep/pqc descriptor rows (0 x 0) -> 8 per-master rows with outline and placed count; rep/engram_c -> dsfd_engram_c 1188 x 432 cluster on layer1e only. m6_pin_grants: none signed, 6 pending the exact audit. SU kv/qb/sw slot change accepted as target, carried open. No price changed; no closed tile re-shaped."
+  },
+  {
+   "version": 16,
+   "when": "2026-10-13 PT",
+   "change": "s81-die: (1) hrow: 4 die-placed leaf slots ing 129.6 sq x3 / hub 216 sq x1 / cbe, cbw 475.2 x 216 x15 each (coordinator 07:55), rep/hrow = container. (2) sp_collective: ce_s0 (ces0, closed) + ce_s1..3 (cesn parent) 302.4 x 341.28 as a 2 x 2 block. (3) sp_capture 129.576 -> 561.6 tall cluster (+432.024). (4) q element row: real view + libs + bound PQ1 bench; M7 pockets kept. (5) pq_root 131.76 x 211.68, ports 68 / 71. (6) bgq28 501.12 -> 622.08 (16 slots re-stacked), new FE slot 1520.064 x 695.52, sp_vm 2730.216 -> 3343.656 (+613.44 N). (7) sp_wfc priced-kit pins t_srd 31 / f_srq 1026 / t_ft 4 / t_hep 36. (8) SU: 14 legacy kv / qb / sw lane-tile slots -> 10 per-master rows (kvt, kvq, kve, kvp, kvr, qbt, qbe, swt reserve, swe) inside the same regions. (9) HC W face on the VM / collective lanes (--lane-pins 2). (10) gather pending, slot unchanged. (11) seam_rules.clock = die clock delivery rule (insertion-compensated entry, tap levels at 300 ps, SKEW 150 on deep-tile hops). NEIGHBOUR COST: the hub column stack above the VM moves N by +613.44 (VM) and the stack above the capture by a further +432.024 (total +1,045.464 for gather / pq / wfc / collective): taken from the free band of the hub column, die 33 x 26 mm unchanged; the hc_s <-> vm / collective straight lanes move with their slabs (GEN v16: hop gate 500 um, 0 overlaps). No price changed; no closed tile re-shaped."
   }
  ],
  "slots": [
@@ -592,19 +603,6 @@
    "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
   },
   {
-   "name": "sp_su_s/kv0",
-   "cell": "dsfd_su_t_kv0",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 604.8
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 1965.6,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -616,36 +614,57 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/kv/dsfd_su_t_kvt",
+   "cell": "dsfd_su_t_kvt",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 36.72,
+    "h": 453.6
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_kvt_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 4,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 1965.6,
+     "w": 572.4,
+     "h": 604.8
+    },
+    {
+     "x": 1317.6,
+     "y": 1339.2,
+     "w": 572.4,
+     "h": 604.8
+    }
+   ],
+   "view_status": "CLOSED +63.22 / +25.87; pins BIT-ordered (e_d[128 j + b] of all 32 positions in band b): the tap -> engine fan-out is 4,096 wires, ~2,050 across the mid-height cut on M7 (SU-internal)",
+   "notes": "v16: replaces the legacy sp_su_s/kv* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 225.7,
+   "clock_delivery": {
+    "R_tt_ps": 225.7,
+    "spread_ps": 25.0,
+    "sinks": 6846,
+    "level": "common (R <= 300)",
+    "spread_ok": true,
+    "source": "physical/ref_tile/s81su_kvt_ref/views/dsfd_su_t_kvt/insertion.json"
+   }
   },
   {
-   "name": "sp_su_s/kv1",
-   "cell": "dsfd_su_t_kv1",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 604.8
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 1339.2,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -657,36 +676,57 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/kv/dsfd_su_t_kvq",
+   "cell": "dsfd_su_t_kvq",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 259.2,
+    "h": 259.2
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_kvq_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 16,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 1965.6,
+     "w": 572.4,
+     "h": 604.8
+    },
+    {
+     "x": 1317.6,
+     "y": 1339.2,
+     "w": 572.4,
+     "h": 604.8
+    }
+   ],
+   "view_status": "CLOSED s81su_kvq_ref-v4-ebdb80f0e (closure-loop record on main)",
+   "notes": "v16: replaces the legacy sp_su_s/kv* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 542.3,
+   "clock_delivery": {
+    "R_tt_ps": 542.3,
+    "spread_ps": 60.2,
+    "sinks": 2190,
+    "level": "early tap, R - 300 = 242.3 ps before the common level; its hops at SKEW 150",
+    "spread_ok": true,
+    "source": "physical/ref_tile/s81su_kvq_ref/views/dsfd_su_t_kvq/insertion.json"
+   }
   },
   {
-   "name": "sp_su_s/qb0",
-   "cell": "dsfd_su_t_qb",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 680.4,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -698,36 +738,57 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/kv/dsfd_su_t_kve",
+   "cell": "dsfd_su_t_kve",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 125.28,
+    "h": 125.28
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_kve_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 1,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 1965.6,
+     "w": 572.4,
+     "h": 604.8
+    },
+    {
+     "x": 1317.6,
+     "y": 1339.2,
+     "w": 572.4,
+     "h": 604.8
+    }
+   ],
+   "view_status": "CLOSED +56.64 / +3.23 | outline = closed LEF 125.28 x 125.28 (posted 124.2 x 124.2)",
+   "notes": "v16: replaces the legacy sp_su_s/kv* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 175.9,
+   "clock_delivery": {
+    "R_tt_ps": 175.9,
+    "spread_ps": 16.7,
+    "sinks": 460,
+    "level": "common (R <= 300)",
+    "spread_ok": true,
+    "source": "physical/ref_tile/s81su_kve_ref/views/dsfd_su_t_kve/insertion.json"
+   }
   },
   {
-   "name": "sp_su_s/qb1",
-   "cell": "dsfd_su_t_qb",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 21.6,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -739,36 +800,57 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/kv/dsfd_su_t_kvp",
+   "cell": "dsfd_su_t_kvp",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 151.2,
+    "h": 151.2
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_kvp_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 1,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 1965.6,
+     "w": 572.4,
+     "h": 604.8
+    },
+    {
+     "x": 1317.6,
+     "y": 1339.2,
+     "w": 572.4,
+     "h": 604.8
+    }
+   ],
+   "view_status": "CLOSED +60.82 / +1.87",
+   "notes": "v16: replaces the legacy sp_su_s/kv* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 202.1,
+   "clock_delivery": {
+    "R_tt_ps": 202.1,
+    "spread_ps": 12.3,
+    "sinks": 716,
+    "level": "common (R <= 300)",
+    "spread_ok": true,
+    "source": "physical/ref_tile/s81su_kvp_ref/views/dsfd_su_t_kvp/insertion.json"
+   }
   },
   {
-   "name": "sp_su_s/qb2",
-   "cell": "dsfd_su_t_qb",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 6069.6,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -780,36 +862,57 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/kv/dsfd_su_t_kvr",
+   "cell": "dsfd_su_t_kvr",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 140.4,
+    "h": 140.4
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_kvr_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 1,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 1965.6,
+     "w": 572.4,
+     "h": 604.8
+    },
+    {
+     "x": 1317.6,
+     "y": 1339.2,
+     "w": 572.4,
+     "h": 604.8
+    }
+   ],
+   "view_status": "CLOSED +84.25 / +1.95",
+   "notes": "v16: replaces the legacy sp_su_s/kv* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 207.4,
+   "clock_delivery": {
+    "R_tt_ps": 207.4,
+    "spread_ps": 24.5,
+    "sinks": 209,
+    "level": "common (R <= 300)",
+    "spread_ok": true,
+    "source": "physical/ref_tile/s81su_kvr_ref/views/dsfd_su_t_kvr/insertion.json"
+   }
   },
   {
-   "name": "sp_su_s/qb3",
-   "cell": "dsfd_su_t_qb",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 6728.4,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -821,36 +924,69 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/qb/dsfd_su_t_qbt",
+   "cell": "dsfd_su_t_qbt",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 572.4,
+    "h": 453.6
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_qbt_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 1,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 680.4,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 21.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 6069.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 6728.4,
+     "w": 572.4,
+     "h": 637.2
+    }
+   ],
+   "view_status": "CLOSED +101.46 / +11.81; DEFECTS open: 26 input endpoints 4 levels from dn_st (pin register), boundary spread > 80 ps",
+   "notes": "v16: replaces the legacy sp_su_s/qb* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 576.8,
+   "clock_delivery": {
+    "R_tt_ps": 576.8,
+    "spread_ps": 102.2,
+    "sinks": 8288,
+    "level": "early tap, R - 300 = 276.8 ps before the common level; its hops at SKEW 150",
+    "spread_ok": false,
+    "source": "physical/ref_tile/s81su_qbt_ref/views/dsfd_su_t_qbt/insertion.json"
+   }
   },
   {
-   "name": "sp_su_s/sw0",
-   "cell": "dsfd_su_t_sw",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 7387.2,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -862,36 +998,69 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/qb/dsfd_su_t_qbe",
+   "cell": "dsfd_su_t_qbe",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 259.2,
+    "h": 259.2
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_qbe_sp8_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 8,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 680.4,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 21.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 6069.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 6728.4,
+     "w": 572.4,
+     "h": 637.2
+    }
+   ],
+   "view_status": "CLOSED +62.49 / +17.68",
+   "notes": "v16: replaces the legacy sp_su_s/qb* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 773.9,
+   "clock_delivery": {
+    "R_tt_ps": 773.9,
+    "spread_ps": 82.4,
+    "sinks": 2667,
+    "level": "early tap, R - 300 = 473.9 ps before the common level; its hops at SKEW 150",
+    "spread_ok": false,
+    "source": "physical/ref_tile/s81su_qbe_sp8_ref/views/dsfd_su_t_qbe/insertion.json"
+   }
   },
   {
-   "name": "sp_su_s/sw1",
-   "cell": "dsfd_su_t_sw",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 8046.0,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -903,36 +1072,84 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/sw/dsfd_su_t_swt",
+   "cell": "dsfd_su_t_swt",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 572.4,
+    "h": 453.6
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_swt_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 1,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 7387.2,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 8046.0,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 0.0,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 658.8,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 0.0,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 658.8,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    }
+   ],
+   "view_status": "NOT CLOSED (DRT 5,067 violations, 434 unregistered input endpoints): RESERVE ONLY; becomes two half-tap columns dl / dh (36.72 x 453.6 each, own clock root); final outline follows the split RTL | no view LEF on main",
+   "notes": "v16: replaces the legacy sp_su_s/sw* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet."
   },
   {
-   "name": "sp_su_s/sw2",
-   "cell": "dsfd_su_t_sw",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 0.0,
-    "y": 8704.8,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -944,36 +1161,93 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/sw/dsfd_su_t_swe",
+   "cell": "dsfd_su_t_swe",
+   "kind": "tile",
+   "parent": "sp_su_s",
+   "outline": {
+    "w": 216.0,
+    "h": 216.0
    },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "s81su_swe_sp8_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 128,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
+   },
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 7387.2,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 8046.0,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 0.0,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 658.8,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 0.0,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 658.8,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    }
+   ],
+   "view_status": "CLOSED +128.43 / +15.08",
+   "notes": "v16: replaces the legacy sp_su_s/sw* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 435.7,
+   "clock_delivery": {
+    "R_tt_ps": 435.7,
+    "spread_ps": 46.1,
+    "sinks": 479,
+    "level": "early tap, R - 300 = 135.7 ps before the common level; its hops at SKEW 150",
+    "spread_ok": true,
+    "source": "physical/ref_tile/s81su_swe_sp8_ref/views/dsfd_su_t_swe/insertion.json"
+   }
   },
   {
-   "name": "sp_su_s/sw3",
-   "cell": "dsfd_su_t_sw",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 658.8,
-    "y": 8704.8,
-    "orient": "R0"
-   },
    "io_budget": {
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2,
@@ -985,185 +1259,91 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
-  },
-  {
-   "name": "sp_su_s/sw4",
-   "cell": "dsfd_su_t_sw",
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_su_s/sw/dsfd_su_t_qbe",
+   "cell": "dsfd_su_t_qbe",
    "kind": "tile",
    "parent": "sp_su_s",
    "outline": {
-    "w": 572.4,
-    "h": 637.2
+    "w": 259.2,
+    "h": 259.2
    },
    "origin": {
-    "x": 1317.6,
-    "y": 8704.8,
-    "orient": "R0"
+    "x": 0,
+    "y": 0
    },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2,
-    "registered_in": true,
-    "registered_out": true
+   "kit": "s81su_qbe_sp8_ref",
+   "owner": "el1013-s81su",
+   "replicated": {
+    "count": 8,
+    "placement": "SU owner's sub_layout inside the reserved region(s) (origins not posted yet)"
    },
-   "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M4"
-   },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
-  },
-  {
-   "name": "sp_su_s/sw5",
-   "cell": "dsfd_su_t_sw",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 0.0,
-    "y": 9363.6,
-    "orient": "R0"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2,
-    "registered_in": true,
-    "registered_out": true
-   },
-   "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M4"
-   },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
-  },
-  {
-   "name": "sp_su_s/sw6",
-   "cell": "dsfd_su_t_sw",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 658.8,
-    "y": 9363.6,
-    "orient": "R0"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2,
-    "registered_in": true,
-    "registered_out": true
-   },
-   "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M4"
-   },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
-  },
-  {
-   "name": "sp_su_s/sw7",
-   "cell": "dsfd_su_t_sw",
-   "kind": "tile",
-   "parent": "sp_su_s",
-   "outline": {
-    "w": 572.4,
-    "h": 637.2
-   },
-   "origin": {
-    "x": 1317.6,
-    "y": 9363.6,
-    "orient": "R0"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2,
-    "registered_in": true,
-    "registered_out": true
-   },
-   "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M4"
-   },
-   "target_insertion_ps": 250.0,
-   "version": 13,
-   "pg_layer": "M6",
-   "strap_layer": "M7",
-   "signal_max_layer": "M6",
-   "layer_rule": "cluster_child",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_su_s; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "region_um": [
+    {
+     "x": 1317.6,
+     "y": 7387.2,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 8046.0,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 0.0,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 658.8,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 8704.8,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 0.0,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 658.8,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    },
+    {
+     "x": 1317.6,
+     "y": 9363.6,
+     "w": 572.4,
+     "h": 637.2
+    }
+   ],
+   "view_status": "CLOSED (SW quantiser = the qbe master)",
+   "notes": "v16: replaces the legacy sp_su_s/sw* lane tiles; the legacy slot rectangles stay reserved as region_um. Bench binding pending the tile-top gate s81su_tiles: not qualified yet.",
+   "target_insertion_ps": 773.9,
+   "clock_delivery": {
+    "R_tt_ps": 773.9,
+    "spread_ps": 82.4,
+    "sinks": 2667,
+    "level": "early tap, R - 300 = 473.9 ps before the common level; its hops at SKEW 150",
+    "spread_ok": false,
+    "source": "physical/ref_tile/s81su_qbe_sp8_ref/views/dsfd_su_t_qbe/insertion.json"
+   }
   },
   {
    "name": "sp_su_s/sm0",
@@ -1527,7 +1707,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
@@ -1697,7 +1877,8 @@
    "assembly": "tiles_direct",
    "owner": "el1011 s81 suhc-hier (claude/s81-suhc-hier-1011-hc)",
    "notes": "v12 (DIE LEAD, s81-die-iter 2026-10-12): HC split around the E-column crossing corridor. Upper slab sp_hc_s 1,816.56 x 12053.44 = root row 940.24 + 15 rows x 740.88 (ot_s81_hc_cth half-octet slot 576.72 x 740.88, the HC lead's measured size: ~210k um2 std, pin-bound strips 120.96 um + ctra/ctrb 43.2); the chain tails (c0 7, comb column 5, c2 7 slots) are in sp_hc_t below the corridor. Why: die = full 33 x 26 mm reticle; E column above the corridor is 12,655.5 um (22,785.9 - 10,130.4) = 22.99 mm2 vs 64 x 0.4273 + root 1.71 = 29.1 mm2 needed, so no re-arrangement of 64 x 740.88 fits there; the E-column floor slot below the corridor (y 3,214-8,618, 9.8 mm2) held only 14 stations. S face: per column k one fwd crossing t_tf<k> (1264 b = fd 1128 + fv 7 + rst 1 + cy 128) and one return f_tr<k> (1090 b = rd 1082 + rv 8) at column centre -/+ 90 um. W-face root-row pin offsets shifted -576.776 with the outline. v11 note kept in changelog. | v13: root row + 10 rows (c0 0..9, comb 22..31, c2 42..51) = 1,816.56 x 8,349.04; the corridor moved N 3,952.8 with the SU.",
-   "layer_rule": "cluster"
+   "layer_rule": "cluster",
+   "w_face_v16": "--lane-pins 2: wq_d[4095:0] and the 8 y_d slices (one 8,192-b port) stand on their straight VCH station lanes at 2-track pitch (M4), on both slabs; master frame (v15 run 4): wq_d y 1018.416..1411.536; y_d slice k at 4811.136 + 98.304 k .. +98.208; every other lane port of the W face moved with them (take the LEF; pins below are refreshed from the v16 generator LEF). Cost: the HC root row (cpin / crooty / crootr) must take wq_d / y_d at those y: HC owner's cluster relays; cut at the face 4,096 b / 393 um = 10.4 b/um on M4 2-track = 0.50 of the M4 tracks under the pins (0.25 with M2+M4)."
   },
   {
    "name": "sp_hc_t",
@@ -6362,13 +6543,166 @@
    "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_collective; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
   },
   {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_collective/ce_s0",
+   "cell": "dsfd_coll_ces0",
+   "kind": "tile",
+   "parent": "sp_collective",
+   "outline": {
+    "w": 302.4,
+    "h": 341.28
+   },
+   "origin": {
+    "x": 604.8,
+    "y": 1017.36,
+    "orient": "R0"
+   },
+   "owner": "el1013-s81-cesn",
+   "notes": "v16 engine lane-slice 0: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage).",
+   "kit": "dscoll_ces0_cxsp",
+   "view_status": "CLOSED cxsp d8b0f7a0e, view physical/ref_tile/dscoll_ces0_cxsp/views/dsfd_coll_ces0",
+   "target_insertion_ps": 431.8,
+   "clock_delivery": {
+    "R_tt_ps": 431.8,
+    "spread_ps": 90.6,
+    "sinks": 2768,
+    "level": "early tap, R - 300 = 131.8 ps before the common level; its hops at SKEW 150",
+    "spread_ok": false,
+    "source": "physical/ref_tile/dscoll_ces0_cxsp/views/dsfd_coll_ces0/insertion.json"
+   }
+  },
+  {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_collective/ce_s1",
+   "cell": "dsfd_coll_cesn",
+   "kind": "parent",
+   "parent": "sp_collective",
+   "outline": {
+    "w": 302.4,
+    "h": 341.28
+   },
+   "origin": {
+    "x": 950.4,
+    "y": 1017.36,
+    "orient": "R0"
+   },
+   "owner": "el1013-s81-cesn",
+   "notes": "v16 engine lane-slice 1: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage).",
+   "assembly": "cluster",
+   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts"
+  },
+  {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_collective/ce_s2",
+   "cell": "dsfd_coll_cesn",
+   "kind": "parent",
+   "parent": "sp_collective",
+   "outline": {
+    "w": 302.4,
+    "h": 341.28
+   },
+   "origin": {
+    "x": 604.8,
+    "y": 1401.84,
+    "orient": "R0"
+   },
+   "owner": "el1013-s81-cesn",
+   "notes": "v16 engine lane-slice 2: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage).",
+   "assembly": "cluster",
+   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts"
+  },
+  {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_collective/ce_s3",
+   "cell": "dsfd_coll_cesn",
+   "kind": "parent",
+   "parent": "sp_collective",
+   "outline": {
+    "w": 302.4,
+    "h": 341.28
+   },
+   "origin": {
+    "x": 950.4,
+    "y": 1401.84,
+    "orient": "R0"
+   },
+   "owner": "el1013-s81-cesn",
+   "notes": "v16 engine lane-slice 3: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage).",
+   "assembly": "cluster",
+   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts"
+  },
+  {
    "name": "sp_vm",
    "cell": "dsfd_sp_vm",
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
     "w": 1520.184,
-    "h": 2730.216
+    "h": 3343.656
    },
    "origin": {
     "x": 14046.912,
@@ -6387,7 +6721,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
@@ -6633,7 +6967,7 @@
    ],
    "assembly": "pending_owner",
    "owner": "el1011-ds-vm",
-   "notes": "BE S-face contract v3 (P2 READY-LATENCY 4: consumer dsfd_vm_p2_ep rebuilt s81die-1011 377e1ff10); tile list (be slices, fe lane tiles, be hub logic folded into tiles) to be posted by the owner; clt6 LEF fails M7/pin access (re-route); v3: bgq28 columns at pitch 388.8 (345.6 + 43.2 channel; 1,512.0 of the 1,520.184 slab): column 1-3 W-face ck/rs/grp reachable; FE S-face / BE N-face pins follow the columns (+43.2 h), BE slice tiles at 388.8 s + 43.2",
+   "notes": "BE S-face contract v3 (P2 READY-LATENCY 4: consumer dsfd_vm_p2_ep rebuilt s81die-1011 377e1ff10); tile list (be slices, fe lane tiles, be hub logic folded into tiles) to be posted by the owner; clt6 LEF fails M7/pin access (re-route); v3: bgq28 columns at pitch 388.8 (345.6 + 43.2 channel; 1,512.0 of the 1,520.184 slab): column 1-3 W-face ck/rs/grp reachable; FE S-face / BE N-face pins follow the columns (+43.2 h), BE slice tiles at 388.8 s + 43.2 v16: slab height 2730.216 -> 3343.656 (+613.44 N): 4 x bgq28 at 622.08 (+483.84) and the FE envelope 695.52 at y 2646.0 (+~108 + lattice); be_sl row and the 136.08 BE band unchanged. The hub stack above (capture, gather, pq, wfc, collective) moves N with it (generator re-stack).",
    "layer_rule": "cluster",
    "internal_blocks": [
     {
@@ -6654,7 +6988,7 @@
    "parent": "s81_layer1",
    "outline": {
     "w": 1727.976,
-    "h": 129.576
+    "h": 561.6
    },
    "origin": {
     "x": 13942.8,
@@ -6673,7 +7007,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M5",
    "strap_layer": "M6",
    "signal_max_layer": "M5",
@@ -6714,9 +7048,9 @@
      "width": 642.024
     }
    ],
-   "assembly": "element",
+   "assembly": "cluster",
    "owner": "el1011 s81 ctrl",
-   "notes": "single hard element (dsfd_sp_capture_c)",
+   "notes": "v16: 1727.976 x 561.6 cluster over CLOSED M5 views, children MX (inputs N, outputs S): 8 x dsfd_capt_g2 at y 345.6, 8 x dsfd_capt_x at y 43.2 (x 129.6, 302.4, 475.2, 648.0 | 950.4, 1123.2, 1296.0, 1468.8), dsfd_capt_ctl at (820.8, 172.8); cluster logic = 872 station flops + t_cd. 0.439 mm2 of closed leaf outline cannot fit 129.6 um in any partition. Clocks: ck N (17 child pins), ckv S (8 child pins): ckv / rsv are NEW die pins. Spec tools/ref_tile/specs_s81sp/s81sp_capc_cl.json (branch s81-spwfc-1013).",
    "layer_rule": "tile_m5",
    "view_layers": {
     "pg_layer": "M7",
@@ -6725,7 +7059,16 @@
    },
    "view_cap": "M7",
    "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M5"
+   "layer_cap": "M5",
+   "pin_request": {
+    "f_gather[53*16*g +: 848]": "8 bundles on N centred at x 189, 361.8, 534.6, 707.4, 1009.8, 1182.6, 1355.4, 1528.2",
+    "f_gather[6946:6784]": "163 b on N over the ctl, x 864",
+    "t_vm[1664*g +: 1664]": "S under the x columns",
+    "t_vm[13375:13312]": "S under column 3, x 707.4",
+    "t_cd": "N near x 707",
+    "ckv, rsv": "S",
+    "status": "OPEN in the generator: v16 GEN still lays f_gather / t_vm as one centred group each (pins below = the generated ones); the bundle split is a generator change owed before the cluster routes"
+   }
   },
   {
    "name": "sp_gather",
@@ -6753,7 +7096,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M5",
    "strap_layer": "M6",
    "signal_max_layer": "M5",
@@ -6930,7 +7273,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "PENDING (s81-gather): the slot 1727.976 x 803.496 cannot hold the flat cell (2,907,531 flops, 1.61 mm2 of std cells). Storage redesign: step A (queue / pairing data in per-root 1r1w macros) needs 1727.976 x ~1,230 (+~430 N); step B (pairing store indexed by {open-row slot, tree node}) fits THIS slot (~1.15 mm2) if <= 8 rows are open per root. Measured on the die-layer vehicle: queue peak 10 of 128, pairing buffer peak 5 of 128 (synthetic field order). DIE LEAD: slot UNCHANGED in v16 (step B is the design to build; capacity fault stays sticky / fail-closed); if the real field order shows > 8 open rows, v17 grows the slot +430 N (the hub stack has the room: see the v16 changelog). Pins: t_capture as 8 bundles on S at the capture's f_gather x centres (generator change owed with the capture bundle split).",
    "layer_cap": "M5"
   },
   {
@@ -6959,7 +7302,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M5",
    "strap_layer": "M6",
    "signal_max_layer": "M5",
@@ -7115,8 +7458,16 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M5"
+   "view_status": "no cluster: the three closed children (tokpipe_stg 190.41 sq, lnk 216 x 151.2, vmx 291.6 x 280.8) route M1..M7 and vmx is closed only at the DEFAULT pins; vmx at the priced parameters is being rebuilt split <= 15k sinks per root. Die M6 / M7 treat the three child footprints (698 um at the E end) as blocked; no hot die window over the slot (c5: hub W face 0.022, E face 0.128), so no M5 re-route is asked.",
+   "layer_cap": "M5",
+   "kit_of_record": "dsfd_wfc_stg #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1), .HEP(layer in 37/38/39)) = the PRICED kit (tb_mtp_wave_dies.sv:96)",
+   "pin_changes_v16": {
+    "t_srd": "15 -> 31 b ({v1, a1[14:0], a0[14:0]}); group t_sw_sr 544 -> 560",
+    "f_srq": "513 -> 1026 b ({rv1, rq1[511:0], rv, rq[511:0]}); group f_sw_sr 516 -> 1029",
+    "t_ft[3:0]": "NEW: kit fault flags to the die fault collector (host f_wfc_ft); was a tied-off functional port",
+    "t_hep[35:0]": "NEW on the layer 37 / 38 / 39 stage dies only (HEP 1), to ot_dsrom_mtp_hrow_tx",
+    "generator": "--wfc-priced (tools/dsrom_s81_fulldie.py): WFC_FIELD_SPLIT + wfc_kit_buses at RD2 1"
+   }
   },
   {
    "name": "rep/q_elem/ot_v41_rom_elem_q_qxpq_w10",
@@ -7142,7 +7493,7 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 15,
+   "version": 16,
    "pg_layer": "M5",
    "strap_layer": "M6",
    "signal_max_layer": "M5",
@@ -7155,14 +7506,15 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "REAL view on main cd4790dd9: LEF 510.84 x 221.4 (= the LEF every die case placed) + TT / FF / SS libs = verdict replay of the CLOSED route dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl (TT +98.72 / FF +12.04, DRC 0); exact PQ=1 bench + mutant bound at 9a645eab1 (3648/3648, mutant fails). Legacy layers: signals and pockets up to M7 (view_cap M7). Coordinator 12:25: the view is KEPT; a strict M7 pocket check is owed only by a parent that routes M7 over it (the die keeps M7 off the element frames: field-frame die routes use M8/M9 and the column relays' M4/M5 in the relay sites).",
    "layer_cap": "M5",
    "replicated": {
     "count": 1280,
     "count_census_c5": 1280,
     "placement": "die plan floorplan.def (generator); no single origin"
    },
-   "notes": "v15 per-master row (Q element (10-way)); replaces the 0 x 0 descriptor row rep/q_elem; outline = die case c5 master"
+   "notes": "v15 per-master row (Q element (10-way)); replaces the 0 x 0 descriptor row rep/q_elem; outline = die case c5 master",
+   "view": "physical/s81_die_views/q_elem_qs5f_efs"
   },
   {
    "name": "rep/q_elem/dsfd_qbank_N",
@@ -7346,8 +7698,8 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 132.168,
-    "h": 211.656
+    "w": 131.76,
+    "h": 211.68
    },
    "origin": {
     "x": 0,
@@ -7364,20 +7716,28 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 15,
-   "pg_layer": "M7",
-   "strap_layer": "M8",
-   "signal_max_layer": "M6",
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
    "assembly": "pending_owner",
    "owner": "el1011-ds-misc",
-   "layer_rule": "cluster",
+   "layer_rule": "tile_m5",
    "replicated": {
     "count": 128,
     "count_census_c5": 128,
     "placement": "die plan floorplan.def (generator); no single origin"
    },
-   "notes": "v15 per-master row (PQ root, one per column); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master",
-   "parent_master": "dsfd_sp_pq"
+   "notes": "v16: 131.76 x 211.68 (2.16 lattice; 0.432 um narrower than the reserved 132.192 frame, placed at the frame's W edge, no neighbour moves). Ports 68 / 71 ADOPTED. Cost to neighbours: the die buses are pqt 66 and pqo / pqc 68 (generator PQ_TI / PQ_RO): +2 b on pqt (i_p, up_fault: tied at PAR 0 by the N return station) and +3 b on pqo and on the column return into the cfifo `ri` (68 -> 71); dsfd_cfifo is a CLOSED view, so the +3 b (r_e, r_p, fault) ride a separate 3-b status relay to the column fault collector instead of widening `ri`. OPEN in the generator (PQ_TI / PQ_RO unchanged in the v16 case: the root is still the generated 66 / 68 placeholder).",
+   "parent_master": "dsfd_sp_pq",
+   "layer_cap": "M5",
+   "kit": "s81pq_root_ref",
+   "real_cell": "ot_s81_pq_ret_root_cam_p (D128 QD128 PAR0 ASPLIT0)",
+   "ports": {
+    "N": "tree word in: i_v, i_t[32], i_d[32], i_e, i_p, up_fault = 68 b (M5)",
+    "S": "root word out: r_v, r_row[16], r_pos[3], r_fp32[32], r_bf16[16], r_e, r_p, fault = 71 b (M5)",
+    "W": "clk, rst_n (M4)"
+   }
   },
   {
    "name": "rep/pqc/dsfd_rstg_pq66",
@@ -7415,7 +7775,7 @@
     "count_census_c5": 128,
     "placement": "die plan floorplan.def (generator); no single origin"
    },
-   "notes": "v15 per-master row (PQ return stage 66 b); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master",
+   "notes": "v15 per-master row (PQ return stage 66 b); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master v16: stays 132.168 wide (0.408 um overhang past the 131.76 root on E, inside the frame); width follows the pq_root port decision (68 / 71).",
    "parent_master": "dsfd_sp_pq"
   },
   {
@@ -7454,13 +7814,13 @@
     "count_census_c5": 128,
     "placement": "die plan floorplan.def (generator); no single origin"
    },
-   "notes": "v15 per-master row (PQ return stage 68 b); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master",
+   "notes": "v15 per-master row (PQ return stage 68 b); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master v16: stays 132.168 wide (0.408 um overhang past the 131.76 root on E, inside the frame); width follows the pq_root port decision (68 / 71).",
    "parent_master": "dsfd_sp_pq"
   },
   {
    "name": "rep/hrow",
    "cell": "dsfd_mtp_hrow banks",
-   "kind": "element",
+   "kind": "container",
    "parent": "s81_layer1",
    "outline": {
     "w": 2998.08,
@@ -7481,14 +7841,214 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 1,
+   "version": 16,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
-   "assembly": "pending_owner",
+   "assembly": "tiles_direct",
    "owner": "el1011-ds-mtp",
-   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)",
+   "notes": "v16 (coordinator 2026-10-13 07:55): rev 5 kept as DIE-PLACED tiles with die relays; four leaf slots below, no parent / cluster job. Chain relays per hop CQ 3 / P 2 / WD 0 (dsfd_mtp_hrow_tc); the U-turn hop (336..509 um, 2,079 b) takes one more die relay so every hop <= 500 um; cbe / cbw pin jogs (34 / 153 um) are absorbed by the die relays. Functional gate: mtp_hrow_gate --tiles on the mixed r8a / r8b pair. Present on the stage dies that carry the hidden row (--hrow-tx / L37..39), not on layer1.",
    "layer_rule": "cluster"
+  },
+  {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "rep/hrow/dsfd_mtp_hrow_ing",
+   "cell": "dsfd_mtp_hrow_ing",
+   "kind": "tile",
+   "parent": "s81_layer1",
+   "parent_master": "rep/hrow",
+   "outline": {
+    "w": 129.6,
+    "h": 129.6
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "hrow5_ing",
+   "assembly": "tiles_direct",
+   "owner": "el1013-ds-mtp",
+   "replicated": {
+    "count": 3,
+    "placement": "die plan (generator --hrow-tx), inside the rep/hrow region 2998.08 x 1769.04"
+   },
+   "view_status": "CLOSED on main, view physical/ref_tile/hrow5_ing/views/dsfd_mtp_hrow_ing (LEF 129.6 x 129.6, 3 libs, insertion.json)",
+   "notes": "v16 leaf slot of the MTP hidden row (die-placed, die relays)",
+   "target_insertion_ps": 147.7,
+   "clock_delivery": {
+    "R_tt_ps": 147.7,
+    "spread_ps": 20.4,
+    "sinks": 1582,
+    "level": "common (R <= 300)",
+    "spread_ok": true,
+    "source": "physical/ref_tile/hrow5_ing/views/dsfd_mtp_hrow_ing/insertion.json"
+   }
+  },
+  {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "rep/hrow/dsfd_mtp_hrow_hub",
+   "cell": "dsfd_mtp_hrow_hub",
+   "kind": "tile",
+   "parent": "s81_layer1",
+   "parent_master": "rep/hrow",
+   "outline": {
+    "w": 216.0,
+    "h": 216.0
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "hrow5_hub",
+   "assembly": "tiles_direct",
+   "owner": "el1013-ds-mtp",
+   "replicated": {
+    "count": 1,
+    "placement": "die plan (generator --hrow-tx), inside the rep/hrow region 2998.08 x 1769.04"
+   },
+   "view_status": "CLOSED on main, view physical/ref_tile/hrow5_hub/views/dsfd_mtp_hrow_hub (LEF 216.0 x 216.0, 3 libs, insertion.json)",
+   "notes": "v16 leaf slot of the MTP hidden row (die-placed, die relays)",
+   "target_insertion_ps": 236.3,
+   "clock_delivery": {
+    "R_tt_ps": 236.3,
+    "spread_ps": 45.0,
+    "sinks": 4227,
+    "level": "common (R <= 300)",
+    "spread_ok": true,
+    "source": "physical/ref_tile/hrow5_hub/views/dsfd_mtp_hrow_hub/insertion.json"
+   }
+  },
+  {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "rep/hrow/dsfd_mtp_hrow_cbe",
+   "cell": "dsfd_mtp_hrow_cbe",
+   "kind": "tile",
+   "parent": "s81_layer1",
+   "parent_master": "rep/hrow",
+   "outline": {
+    "w": 475.2,
+    "h": 216.0
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "hrow5_cbe_cx",
+   "assembly": "tiles_direct",
+   "owner": "el1013-ds-mtp",
+   "replicated": {
+    "count": 15,
+    "placement": "die plan (generator --hrow-tx), inside the rep/hrow region 2998.08 x 1769.04"
+   },
+   "view_status": "CLOSED on main, view physical/ref_tile/hrow5_cbe_cx/views/dsfd_mtp_hrow_cbe (LEF 475.2 x 216.0, 3 libs, insertion.json)",
+   "notes": "v16 leaf slot of the MTP hidden row (die-placed, die relays)",
+   "target_insertion_ps": 747.2,
+   "clock_delivery": {
+    "R_tt_ps": 747.2,
+    "spread_ps": 98.5,
+    "sinks": 4224,
+    "level": "early tap, R - 300 = 447.2 ps before the common level; its hops at SKEW 150",
+    "spread_ok": false,
+    "source": "physical/ref_tile/hrow5_cbe_cx/views/dsfd_mtp_hrow_cbe/insertion.json"
+   }
+  },
+  {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "rep/hrow/dsfd_mtp_hrow_cbw",
+   "cell": "dsfd_mtp_hrow_cbw",
+   "kind": "tile",
+   "parent": "s81_layer1",
+   "parent_master": "rep/hrow",
+   "outline": {
+    "w": 475.2,
+    "h": 216.0
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "kit": "hrow5_cbw_cx",
+   "assembly": "tiles_direct",
+   "owner": "el1013-ds-mtp",
+   "replicated": {
+    "count": 15,
+    "placement": "die plan (generator --hrow-tx), inside the rep/hrow region 2998.08 x 1769.04"
+   },
+   "view_status": "CLOSED on main, view physical/ref_tile/hrow5_cbw_cx/views/dsfd_mtp_hrow_cbw (LEF 475.2 x 216.0, 3 libs, insertion.json)",
+   "notes": "v16 leaf slot of the MTP hidden row (die-placed, die relays)",
+   "target_insertion_ps": 538.5,
+   "clock_delivery": {
+    "R_tt_ps": 538.5,
+    "spread_ps": 89.2,
+    "sinks": 5268,
+    "level": "early tap, R - 300 = 238.5 ps before the common level; its hops at SKEW 150",
+    "spread_ok": false,
+    "source": "physical/ref_tile/hrow5_cbw_cx/views/dsfd_mtp_hrow_cbw/insertion.json"
+   }
   },
   {
    "name": "rep/engram_c/dsfd_engram_c",
@@ -7527,15 +8087,15 @@
   {
    "name": "sp_vm/g_h[0].g_t[0].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 0.0,
-    "y": 1639.44,
+    "y": 2002.32,
     "orient": "R0"
    },
    "io_budget": {
@@ -7547,15 +8107,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -7563,7 +8122,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -7683,15 +8242,15 @@
   {
    "name": "sp_vm/g_h[0].g_t[1].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 0.0,
-    "y": 1138.32,
+    "y": 1380.24,
     "orient": "R0"
    },
    "io_budget": {
@@ -7703,15 +8262,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -7719,7 +8277,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -7839,15 +8397,15 @@
   {
    "name": "sp_vm/g_h[0].g_t[2].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 0.0,
-    "y": 637.2,
+    "y": 758.16,
     "orient": "R0"
    },
    "io_budget": {
@@ -7859,15 +8417,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -7875,7 +8432,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -7995,11 +8552,11 @@
   {
    "name": "sp_vm/g_h[0].g_t[3].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 0.0,
@@ -8015,15 +8572,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -8031,7 +8587,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -8151,15 +8707,15 @@
   {
    "name": "sp_vm/g_h[1].g_t[0].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 388.8,
-    "y": 1639.44,
+    "y": 2002.32,
     "orient": "R0"
    },
    "io_budget": {
@@ -8171,15 +8727,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -8187,7 +8742,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -8307,15 +8862,15 @@
   {
    "name": "sp_vm/g_h[1].g_t[1].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 388.8,
-    "y": 1138.32,
+    "y": 1380.24,
     "orient": "R0"
    },
    "io_budget": {
@@ -8327,15 +8882,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -8343,7 +8897,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -8463,15 +9017,15 @@
   {
    "name": "sp_vm/g_h[1].g_t[2].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 388.8,
-    "y": 637.2,
+    "y": 758.16,
     "orient": "R0"
    },
    "io_budget": {
@@ -8483,15 +9037,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -8499,7 +9052,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -8619,11 +9172,11 @@
   {
    "name": "sp_vm/g_h[1].g_t[3].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 388.8,
@@ -8639,15 +9192,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -8655,7 +9207,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -8775,15 +9327,15 @@
   {
    "name": "sp_vm/g_h[2].g_t[0].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 777.6,
-    "y": 1639.44,
+    "y": 2002.32,
     "orient": "R0"
    },
    "io_budget": {
@@ -8795,15 +9347,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -8811,7 +9362,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -8931,15 +9482,15 @@
   {
    "name": "sp_vm/g_h[2].g_t[1].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 777.6,
-    "y": 1138.32,
+    "y": 1380.24,
     "orient": "R0"
    },
    "io_budget": {
@@ -8951,15 +9502,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -8967,7 +9517,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -9087,15 +9637,15 @@
   {
    "name": "sp_vm/g_h[2].g_t[2].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 777.6,
-    "y": 637.2,
+    "y": 758.16,
     "orient": "R0"
    },
    "io_budget": {
@@ -9107,15 +9657,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9123,7 +9672,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -9243,11 +9792,11 @@
   {
    "name": "sp_vm/g_h[2].g_t[3].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 777.6,
@@ -9263,15 +9812,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9279,7 +9827,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -9399,15 +9947,15 @@
   {
    "name": "sp_vm/g_h[3].g_t[0].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 1166.4,
-    "y": 1639.44,
+    "y": 2002.32,
     "orient": "R0"
    },
    "io_budget": {
@@ -9419,15 +9967,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9435,7 +9982,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -9555,15 +10102,15 @@
   {
    "name": "sp_vm/g_h[3].g_t[1].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 1166.4,
-    "y": 1138.32,
+    "y": 1380.24,
     "orient": "R0"
    },
    "io_budget": {
@@ -9575,15 +10122,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9591,7 +10137,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -9711,15 +10257,15 @@
   {
    "name": "sp_vm/g_h[3].g_t[2].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 1166.4,
-    "y": 637.2,
+    "y": 758.16,
     "orient": "R0"
    },
    "io_budget": {
@@ -9731,15 +10277,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9747,7 +10292,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -9867,11 +10412,11 @@
   {
    "name": "sp_vm/g_h[3].g_t[3].u_bg",
    "cell": "dsfd_vm_bgq28",
-   "kind": "tile",
+   "kind": "parent",
    "parent": "sp_vm",
    "outline": {
     "w": 345.6,
-    "h": 501.12
+    "h": 622.08
    },
    "origin": {
     "x": 1166.4,
@@ -9887,15 +10432,14 @@
    "clock_entry": {
     "pin": "ck",
     "face": "W",
-    "offset": 249.996,
     "layer": "M4"
    },
    "target_insertion_ps": 610.0,
-   "version": 13,
+   "version": 16,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 el1011-ds-vm/bgq28-B: internal clock = planned equal-delay spine (clock_spine.tcl; leaves <= 24 sinks, bisection tree rooted at the sink centroid = tile centre, central to the N rb0 / mid rb1 / S f_* pin-flop rows; measured leaf spread ~31 ps vs 381..491 ps f_* row spread of the single TritonCTS tree). ck[0] stays W face y 249.996 M4 (vertically central to the N/S pin-flop rows; the port->root trunk is common to every leaf). target_insertion_ps 610 = offline CTS replay (TC, placement parasitics, 803dc8b3a pd45 placement); re-derive from the routed ETM. OPEN (lead): tiles abut at 345.6 x 500.04 pitch, so ck[0]/rs/grp on the W face of columns 1-3 face the neighbour's E face -- the die clock needs a W channel or an interior top-layer entry. Origins = composition.json + BE growth 28.08 (provisional until the composition regen). signal_max M7 = current tile build (MAXL M7, PG pins M7), pre-dates the M6 layer contract. | v12: bgq28 v4b (dsfd_vm_bgr28, ref_tile, M5 cap) 345.6 x 501.12 (ref_tile 2.16 height snap), y = 136.08 + k x 501.12 (stack +4.32, top 2,140.56 < sp_vm 2,730.216); N/S pin x-ranges as v11; i_d/f_d x[85.5,259.7] M5-only; W pins ck 249.996, rs 251.004, grp 252.012/253.02 (M4).",
+   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9903,7 +10447,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "view_status": "NOT BUILT: wires-only parent over 8 x dsfd_vm_bgl28 (345.6 x 77.76, one bank each, hardened once; kit physical/ref_tile/dsfd_vm_bgl28_a on claude/s81-bgq28-1013 @d415c687f)",
    "layer_cap": "M6",
    "pin_layers": {
     "N": "M3 M5",
@@ -10889,6 +11433,42 @@
    }
   },
   {
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 16,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile_m5",
+   "name": "sp_vm/u_fe",
+   "cell": "dsfd_vm_fe_h",
+   "kind": "parent",
+   "parent": "sp_vm",
+   "outline": {
+    "w": 1520.064,
+    "h": 695.52
+   },
+   "origin": {
+    "x": 0.0,
+    "y": 2646.0,
+    "orient": "R0"
+   },
+   "assembly": "cluster",
+   "owner": "el1013-s81-vmfe",
+   "view_status": "NOT BUILT: hierarchy RTL + all leaves frozen and proven @ 693940a56 (claude/el1013-s81-vmfe: lockstep 9/9, FRL 6, KD 2, LGL / LDL / LAL 3); leaf kits and the plan are owed by the physical agent",
+   "notes": "v16 FE envelope 1,520.064 x 695.52 (the request: up to 1,520.064 x ~694; 695.52 = 322 x 2.16): room for one lane row under the clt plateau (option (a) of el1013-s81-vmfe B3). Includes clt, fsr, flt, fcn / fcc / fcw, frg / fra / frr mid relays (the 02:51 clt / fsr slot request is answered by this envelope: FE-internal sub-slots are the FE owner's sub_layout). Cycles: read +4, write landing +4 (+7 on the landing lanes), slot done +1 (el1013-rom-layer-tput-s81.log)."
+  },
+  {
    "name": "sp_p2",
    "cell": "ot_mtp_p2_prefix_path",
    "kind": "container",
@@ -11238,6 +11818,140 @@
    ],
    "spare_um": 2.16,
    "note": "v13 = the hc-ctile 11:20 layout (768.96) re-cut to the granted 740.88: ctnl 99.36 -> 95.04 (std 7,750 um2 -> core util ~0.57), ctpl 125.28 -> 118.8 (~9,470 -> ~0.56); strips and faces unchanged (fd/fv + rst enter ctfn/ctfx N, leave ctfs S; rd/rv enter ctrs-side S, leave ctrn N). Re-cut the ctnl/ctpl kits to these outlines; a counter-request needs equal total height."
+  },
+  "dsfd_sp_capture_c": {
+   "outline": {
+    "w": 1727.976,
+    "h": 561.6
+   },
+   "owner": "s81-spwfc",
+   "orient": "MX children",
+   "rows": [
+    {
+     "tile": "g2[0]",
+     "cell": "dsfd_capt_g2",
+     "x": 129.6,
+     "y": 345.6
+    },
+    {
+     "tile": "g2[1]",
+     "cell": "dsfd_capt_g2",
+     "x": 302.4,
+     "y": 345.6
+    },
+    {
+     "tile": "g2[2]",
+     "cell": "dsfd_capt_g2",
+     "x": 475.2,
+     "y": 345.6
+    },
+    {
+     "tile": "g2[3]",
+     "cell": "dsfd_capt_g2",
+     "x": 648.0,
+     "y": 345.6
+    },
+    {
+     "tile": "g2[4]",
+     "cell": "dsfd_capt_g2",
+     "x": 950.4,
+     "y": 345.6
+    },
+    {
+     "tile": "g2[5]",
+     "cell": "dsfd_capt_g2",
+     "x": 1123.2,
+     "y": 345.6
+    },
+    {
+     "tile": "g2[6]",
+     "cell": "dsfd_capt_g2",
+     "x": 1296.0,
+     "y": 345.6
+    },
+    {
+     "tile": "g2[7]",
+     "cell": "dsfd_capt_g2",
+     "x": 1468.8,
+     "y": 345.6
+    },
+    {
+     "tile": "x[0]",
+     "cell": "dsfd_capt_x",
+     "x": 129.6,
+     "y": 43.2
+    },
+    {
+     "tile": "x[1]",
+     "cell": "dsfd_capt_x",
+     "x": 302.4,
+     "y": 43.2
+    },
+    {
+     "tile": "x[2]",
+     "cell": "dsfd_capt_x",
+     "x": 475.2,
+     "y": 43.2
+    },
+    {
+     "tile": "x[3]",
+     "cell": "dsfd_capt_x",
+     "x": 648.0,
+     "y": 43.2
+    },
+    {
+     "tile": "x[4]",
+     "cell": "dsfd_capt_x",
+     "x": 950.4,
+     "y": 43.2
+    },
+    {
+     "tile": "x[5]",
+     "cell": "dsfd_capt_x",
+     "x": 1123.2,
+     "y": 43.2
+    },
+    {
+     "tile": "x[6]",
+     "cell": "dsfd_capt_x",
+     "x": 1296.0,
+     "y": 43.2
+    },
+    {
+     "tile": "x[7]",
+     "cell": "dsfd_capt_x",
+     "x": 1468.8,
+     "y": 43.2
+    },
+    {
+     "tile": "ctl",
+     "cell": "dsfd_capt_ctl",
+     "x": 820.8,
+     "y": 172.8
+    }
+   ]
+  },
+  "sp_su_s_v16_fit": {
+   "kv": {
+    "tiles_mm2": 1.1998,
+    "region_mm2": 0.6924,
+    "fill": 1.733
+   },
+   "qb": {
+    "tiles_mm2": 0.7971,
+    "region_mm2": 1.4589,
+    "fill": 0.546
+   },
+   "sw": {
+    "tiles_mm2": 6.7691,
+    "region_mm2": 2.9179,
+    "fill": 2.32
+   },
+   "short_mm2_at_0p60_fill": {
+    "kv": 1.307,
+    "sw": 8.364
+   },
+   "verdict": "MEASURED from the closed outlines x the posted counts: the kv and sw tile sets do NOT fit the legacy regions (fill > 1); sp_su_s (1,890 x 10,022.4) is NOT grown in v16 because no sub_layout was posted and the growth direction (N into the hub stack / corridor, or the --su-e E column) is a floorplan decision that needs it. The rows are reservations by master; the slab outline change is owed with the SU owner's sub_layout (v17)."
   }
  },
  "layer_cap_grants": {
@@ -11728,10 +12442,15 @@
   "hc_tail_crossing",
   "min_delay_gaps",
   "hc_post_midpoint",
-  "v15 SU slot change (s81su 03:40): kv0/kv1 -> kvt x4 (36.72 x 453.6) + kvq x16 (259.2 sq) + kve/kvp/kvr; qb0-3 -> qbt (572.4 x 453.6) + qbe; sw0-7 -> swt (572.4 x 453.6) + swe: ACCEPTED as the target, NOT folded as slots: the four tiles are not closed, qbt/swt insertion 614-740 ps fails the 300 ps clock rule (half-tap split likely), and no sub-layout origins were posted. Fold with the verdicts.",
   "v15 fadd16: closed view routes signals on M7 above its cap M6 (view_status INVALID stands); t_y on the far face (MX slot).",
   "v15 layer1e die case (Engram home) missing from the real-view census.",
-  "v15 no closed slot-shaped view by name for dsfd_bf, ot_v41_rom_elem_q_qxpq_w10, dsfd_pq_root, dsfd_sp_pq (unowned per [s81-slots])."
+  "v16 capture / gather bundle pins (f_gather, t_capture as 8 bundles at the g2 column centres; t_vm under the x columns): generator change owed.",
+  "v16 pq_root ports 68 / 71: generator PQ_TI / PQ_RO still 66 / 68; +3 b status relay to the column fault collector owed.",
+  "v16 SU sub_layout origins (kvt / kvq / kve / kvp / kvr, qbt / qbe, swt / swe) owed by the SU owner; swt not closed (two half-tap split); qbt spread / pin-register defects. MISFIT: {\"kv\": {\"fill\": 1.733, \"region_mm2\": 0.6924, \"tiles_mm2\": 1.1998}, \"qb\": {\"fill\": 0.546, \"region_mm2\": 1.4589, \"tiles_mm2\": 0.7971}, \"short_mm2_at_0p60_fill\": {\"kv\": 1.307, \"sw\": 8.364}, \"sw\": {\"fill\": 2.32, \"region_mm2\": 2.9179, \"tiles_mm2\": 6.7691}, \"verdict\": \"MEASURED from the closed outlines x the posted counts: the kv and sw tile sets do NOT fit the legacy regions (fill > 1); sp_su_s (1,890 x 10,022.4) is NOT grown in v16 because no sub_layout was posted and the growth direction (N into the hub stack / corridor, or the --su-e E column) is a floorplan decision that needs it. The rows are ",
+  "v16 sp_collective ce_s1..3 (cesn) child leaf slots follow the leaf verdicts; lane -> slice relays inside the cluster owed.",
+  "v16 sp_gather: step B capacity answer (rows open per root on the real field order) owed; else +430 um N in v17.",
+  "v16 dsfd_bf (s81-bf 07:39): tiles_direct request (2 x bf_col 450.144 + bf_front 100.224 in the same frame, two 1.188 um seam channels) NOT folded: LEF / lib exports and the compact199 compose STA are owed first.",
+  "v16 no closed slot-shaped view by name for dsfd_bf, dsfd_pq_root, dsfd_sp_pq."
  ],
  "m6_pin_grants": {
   "rule": "tools/hier_contract/M6_PIN_GRANT.md: exact master, source commit, physical-spec digest, exact bits / face / span; signals and PG stay <= M5",

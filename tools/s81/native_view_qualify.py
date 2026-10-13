@@ -16,7 +16,7 @@ every gate below holds; nothing is inferred from a CLOSED label.
   clock     the FF ETM has clock pins and every one carries min/max_clock_tree_path
   scalar    contract clock_pin_rules: a master the contract lists as scalar-clock must export scalar clock pins;
             vector-named clocks on other masters are recorded (the die binds [0:0] ports by name)
-  thr       registry throughput gate is not UNQUALIFIED / over 1.10x
+  thr       registry throughput not a MEASURED failure (over 1.10x); unmeasured units ride the per-layer ROM run (owner 10-13)
   current   the bundle's job is the registry's adopted (best) closure of that master (else: a newer view exists)
 
 It also measures, from the FF ETM, the launch side of the minimum-delay seam budget: the smallest clock->output
@@ -257,14 +257,23 @@ def qualify(master: str, n_inst: int, files: dict, d: Path, reg: dict, jobs: Pat
     r = reg.get(master) or {}
     thr = (r.get("throughput") or {})
     gt = r.get("gate") or ""
-    if not r:
-        gate("thr", None, "no registry row")
-    elif thr.get("status") == "QUALIFIED":
-        gate("thr", True, f"registry {gt} (ratio {thr.get('ratio')}, class row {((thr.get('limiting') or {}).get('op'))})")
-    elif "NO-THROUGHPUT-BUDGET-ROW" in gt:
-        gate("thr", None, "no budget row for this master: its parent element's production bench must cover it")
+    # OWNER 2026-10-13 (ROM throughput): a ROM design's throughput is qualified by a PER-LAYER measured run of the die
+    # composition against the priced layer; unit benches only for critical-path units.  So for an S81 ROM master the
+    # unit registry state is a view gate only when it is a MEASURED failure (status UNQUALIFIED: over 1.10x and not on
+    # the accepted-cost ledger).  UNMEASURED / no bench / no budget row do not block the BINDING of a closed view: the
+    # layer run (el1013-rom-layer-tput-s81.log) is the release gate and is recorded as such (thr_basis), never as a
+    # unit qualification.
+    st = thr.get("status")
+    if st in ("QUALIFIED", "QUALIFIED_BY_BOUND", "EXEMPT"):
+        row["thr_basis"] = "unit"
+        gate("thr", True, f"registry {gt} ({st}, ratio {thr.get('ratio')}, class row {((thr.get('limiting') or {}).get('op'))})")
+    elif st == "UNQUALIFIED":
+        row["thr_basis"] = "unit"
+        gate("thr", False, f"registry gate {gt}: MEASURED over 1.10x (ratio {thr.get('ratio')}), no accepted-cost ledger row")
     else:
-        gate("thr", False, f"registry gate {gt}")
+        row["thr_basis"] = "rom_layer_run_pending"
+        gate("thr", True, "ROM rule (owner 2026-10-13): unit throughput is not a view gate; qualified by the per-layer measured "
+                          "die run against the priced layer (RELEASE gate, pending); registry: " + (gt or "no row") + f" / {st}")
     best = (r.get("best") or {}).get("job")
     gate("current", best == job, f"registry adopted job {best}" + ("" if best == job else f" != bundle job {job}"))
 
