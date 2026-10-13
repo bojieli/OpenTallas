@@ -1,14 +1,14 @@
 {
- "name": "hrow5_cbe-r5f-9f8b3b616",
+ "name": "hrow5_cbe-r5g-194034df4",
  "block": "dsfd_mtp_hrow_cbe",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
- "purpose": "el1011-ds-mtp 2026-10-12 cbe r5f: r5e-443ce010e TT +84.54 / FF +2.83 / DRC 7 (stuck at 7 for all late DRT iters). All 7 = M4 Short/Metal Spacing at x 443.32-443.41 = east edge of the EAST-column SRAMs g_c[1]/g_c[3] (edge 443.448; M4 OBS ends 443.376, M4 edge pins 443.424-443.448): DRT drops VIA45 on the last M5 track before the edge (x 443.340) and its M4 pad lands in the OBS. Hold-ECO / inhold cells sit exactly at the 2.16 um halo (hold14323 x 445.608) in the strip the 414 M4 edge pins/macro need for access. Fix: macro placement halo 2.16 -> 5.4 um (one M5 PG pitch) to leave a pin-access strip; floorplan, RTL, benches unchanged; not a mask.",
+ "purpose": "el1011-ds-mtp 2026-10-12 hrow5_cbe r5g: r5f (halo 5.4) still DRC 7/12, all M4 Short/Spacing at the EAST edge pins (x 443.4) of the EAST-column SRAMs only. Asymmetry: the macro's x=174.72 pin set (w_mask_in 256 tied + wd_in 120 + redundancy) routes clean when it faces the 62.9 um central channel (west column) and fails when it faces the 31.75 um outer channel (east column); the x=0 set (rd_out/addr/wd_in 136) is clean facing the outer west channel. Fix (floorplan, structural): east column mirrored MY so the floorplan is mirror-symmetric -- both columns' tie-heavy mask/wd pin sets face the central channel, both rd_out/addr sets face an outer channel. Pin counts per channel unchanged (828 central, ~415 per outer). RTL/benches unchanged; halo 5.4 kept.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-mtp-hrow",
-  "commit": "9f8b3b616"
+  "commit": "194034df4"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_cbe/hrow5_cbe-r5f-9f8b3b616"
+   "to": "results/rtl/ref_tile/hrow5_cbe/hrow5_cbe-r5g-194034df4"
   }
  ],
  "cycles_added": 0,
