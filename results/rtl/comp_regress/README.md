@@ -98,3 +98,19 @@ Findings for the B2 lead / compiler stream:
   32 words/cycle on the broadcast tree. That is bandwidth, not hop latency, and the study's +16 cycles a record does
   not include it. Either the gathered result streams into the mirror window while the gather is running (overlap), or
   the broadcast tree needs more width, or the budget goes up.
+
+### B2 with the real collective, and the unit throughput benches (57fff655a, ot-epyc4, `57fff655a/`)
+
+| run | verdict |
+|---|---|
+| `hgi_b2coll` x ds_head / qwen_head (real COLL, B2 1) | PASS, 4,357 / 3,271 cycles |
+| `hgi_b2collmut` (OT_COLL_AMX_MUT_MIN) x ds_head / qwen_head | FAIL, as required |
+| `tput_qdq_wide` | GATE PASS; default variant m0 ratio 2.99 (not within 10 %) |
+| `tput_hc` | GATE PASS; ratio 29.1 (not within 10 %) |
+| `tput_idx` | GATE PASS; default reader m0 ratio 1.65 (not within 10 %) |
+| `tput_iks` | GATE PASS (no priced ratio) |
+| `tput_sm`, `tput_idx_cf` | did not build: the staged source lacked `physical/hbm_accel_macros` and `results/arch/hgi_sim_20261009` (now in `archive_paths`); re-run pending |
+
+The `hgi_b2` rows of this summary for DS L2 / L20 / L24 predate `CP_IKS_I 1` and are superseded by `d1e95d8d1`.
+Ratios are the bench's default PASS variant over all its records; the qualified variants recorded in
+`results/rtl/hgi_unit_tput_20261010/` (e.g. the IDX heap engine) are separate builds of the same script.

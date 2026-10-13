@@ -150,12 +150,36 @@ def plans(m):
     return {"crrf": (f, 598.32), "crrr": (r, 200.88), "crrw": (w, 200.88)}
 
 
+def ctrn_plan():
+    """ot_s81_hc_ctrn (576.72 x 12.96 return-out sliver, one flop per bit): rvm/rdm[i] on S exactly below rv_out/rd_out[i]
+    on N, same layer and track, uniform over the full width.  v1-v3 left both faces to PPL 32-pin groups, which landed
+    anywhere on the face (reach 107 um): 7,300 horizontally overflowed gcells and no vertical one at 5_1_grt (v3
+    GRT-0116).  Bit-aligned, every bit is a vertical feed-through and the tile has no horizontal bus demand."""
+    global W
+    keep, W = W, 576.72
+    H = 12.96
+    n = [f"rv_out[{i}]" for i in range(S_RT + 4)] + bits("rd_out", RDW)
+    s_ = [f"rvm[{i}]" for i in range(S_RT + 4)] + bits("rdm", RDW)
+    top = face_plan("N", [n], H, ["M5", "M3"])
+    pins = top + [("S", b, L, x) for b, (_, _, L, x) in zip(s_, top)]
+    pins += [("W", "clk", "M4", 6.012), ("W", "rst_in", "M4", 7.02)]
+    txt = emit(pins, H, "S81 HC ctrn: bit-aligned N/S feed-through pin plan (S pin of bit i under its N pin), M5+M3")
+    chk = check(pins, H, "ctrn")
+    W = keep
+    return txt, chk, len(pins)
+
+
 def main():
     out = Path(sys.argv[1] if len(sys.argv) > 1 else "physical/s81_hc_pinplan")
     for side, mirror in (("e", False), ("w", True)):
         for nm, (pins, H) in plans(mirror).items():
             print(nm, side, len(pins), check(pins, H, nm))
             (out / f"{nm}_{side}.tcl").write_text(emit(pins, H, f"S81 HC {nm}_{side}: full-face, by-bit-count, two-layer pin plan (b/um/layer <= 6)"))
+
+
+    txt, chk, n = ctrn_plan()
+    print("ctrn", n, chk)
+    (out / "ctrn.tcl").write_text(txt)
 
 
 if __name__ == "__main__":

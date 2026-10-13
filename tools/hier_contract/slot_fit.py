@@ -258,7 +258,10 @@ def compare(k: dict, s: dict) -> tuple[list[str], list[str]]:
         if lack:
             bad.append(f"{f}-face slot pin layer {'/'.join(lack)} is not a kit pin layer ({'/'.join(sorted(used))})")
     # ---- layer cap
-    scap = s.get("layer_cap") or s.get("signal_max_layer") or s.get("pg_layer")
+    scap = s.get("layer_cap")
+    if isinstance(scap, dict):      # derived contracts: {"cap": "M5", "view_max_layer": ..., "conforms": ...}
+        scap = scap.get("cap")
+    scap = scap or s.get("signal_max_layer") or s.get("pg_layer")
     if scap and k["cap"] and (child_lint.metal(k["cap"]) or 0) > (child_lint.metal(scap) or 99):
         bad.append(f"routing cap {k['cap']} above the slot layer cap {scap}")
     # ---- clock insertion
