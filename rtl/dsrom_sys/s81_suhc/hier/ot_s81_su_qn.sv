@@ -22,7 +22,7 @@
 // phase starts at the rstd, which reaches every engine in the same cycle, so the y of a block leave in one cycle.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_qnt #(
-    parameter integer N = 256, S_RD = 16, NFI = 33, MUT = 0, CB = 256
+    parameter integer N = 256, S_RD = 16, NFI = 33, MUT = 0, CB = 32
 ) (
     input  wire                   clk,
     input  wire                   rst_in,

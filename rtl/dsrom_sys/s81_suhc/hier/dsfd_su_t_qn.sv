@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // QN (el1011-s81su-qn, spec v3): production masters of the split q RMSNorm -> FP8 (rtl ot_s81_su_qn.sv), each hardened
 // once: the tap (x 2, data halves), the 8-lane norm engine (x 32), the reduce (x 1), the act-quant engine (x 8).
-module dsfd_su_t_qnt #(parameter integer CB = 256) (
+module dsfd_su_t_qnt #(parameter integer CB = 32) (
     input  wire          ck, rst,
     input  wire          dn_st, input wire [3:0] dn_kind, input wire [1:0] dn_gsel, input wire [7:0] dn_jid,
     input  wire [15:0]   dn_v, input wire [4095:0] dn_d, input wire [32:0] i_f,
