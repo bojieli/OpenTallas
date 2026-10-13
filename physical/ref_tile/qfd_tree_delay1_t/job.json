@@ -1,14 +1,14 @@
 {
- "name": "qfd_tree_delay1_t-u52-baaa52fff",
+ "name": "qfd_tree_delay1_t-w13-COMMIT",
  "block": "ot_qwen_tree_delay1_t",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8-die-1013",
- "purpose": "Right-sized 512-bit fixed 1-cycle tree pad tile (util ~0.52, 64.8 um tall W->E, own master name); depth set 1/2/3/4/8/16 binds the 590-leg / 1,855-cycle pad ledger with <= 3 tiles per leg",
+ "purpose": "512-bit fixed 1-cycle tree pad tile, 12.96 x 64.8 (u52 at 10.8 wide failed DPL-0038 at CTS: 6.48-um core has no room after taps/clock cells); own master name",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-tp8-die-1013",
-  "commit": "baaa52fff",
+  "commit": "COMMIT",
   "extra_paths": [
    "tools/qwen_die_seam"
   ]
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tree_delay1_t/qfd_tree_delay1_t-u52-baaa52fff"
+   "to": "results/rtl/ref_tile/qfd_tree_delay1_t/qfd_tree_delay1_t-w13-COMMIT"
   }
  ],
  "cycles_added": 1,

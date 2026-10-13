@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  10.8,
+  12.96,
   64.8
  ],
  "core": [
   2.16,
   2.16,
-  8.64,
+  10.8,
   62.64
  ],
  "why": "spec outline",
@@ -41,7 +41,14 @@
  },
  "clock_port": "clk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 40% outside 45%-60% (std 209 + macro 0 in core 523 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/physical/ot_qwen_tree_delay_tiles.sv",
   "rtl/physical/ot_qwen_tree_delay.sv",
