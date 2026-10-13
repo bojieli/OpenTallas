@@ -105,5 +105,66 @@
    "got": "FAIL",
    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=8 errors=5906 of 6166 (xo 0 ro 0 so 5906 ovf 0)"
   }
+ },
+ "rerun_verif_20261013": {
+  "why": "re-run after the base VM's skid-queue fix (ot_qfd_sp_vector_memory_bv.sv) and the region miter's parameters; logs and the full record: results/rtl/qwen_tp8_vm_plane_20261013/leaf_gate/record.json (source commit 8ea8932e2), which also holds the runs at the ROUTED parameters",
+  "all_as_expected": true,
+  "runs": {
+   "ok": {
+    "expected": "PASS",
+    "observed": "PASS",
+    "line": "PASS qfd_vm_region_leaf DEPTH=8 LAW=3 DEPTHS=8 LAWS=3 SEED=1 OVFMODE=0 exact 6166 checks: pushes=1967 pops=1964 row_reads=2010 su_answers=1785 stalls=1501 pop_garbage=733 deep=577 xo_chg=1959 ro_chg=1920 so_chg=1715 nonzero_words=1465191 ovf_cycles=144"
+   },
+   "ok_s2": {
+    "expected": "PASS",
+    "observed": "PASS",
+    "line": "PASS qfd_vm_region_leaf DEPTH=8 LAW=3 DEPTHS=8 LAWS=3 SEED=2 OVFMODE=1 exact 6166 checks: pushes=1925 pops=1921 row_reads=2096 su_answers=1804 stalls=1562 pop_garbage=762 deep=526 xo_chg=2021 ro_chg=2000 so_chg=1733 nonzero_words=1467528 ovf_cycles=147"
+   },
+   "ok_s3_tree": {
+    "expected": "PASS",
+    "observed": "PASS",
+    "line": "PASS qfd_vm_region_leaf DEPTH=8 LAW=3 DEPTHS=8 LAWS=3 SEED=3 OVFMODE=0 exact 6166 checks: pushes=1936 pops=1930 row_reads=2030 su_answers=1826 stalls=1528 pop_garbage=752 deep=351 xo_chg=1922 ro_chg=1924 so_chg=1740 nonzero_words=1465194 ovf_cycles=147"
+   },
+   "mut1": {
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=1 ROW_MUT=0 SU_MUT=0 errors=6139 of 6166 (xo 0 ro 6139 so 0 ovf 0)"
+   },
+   "mut2": {
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=2 ROW_MUT=0 SU_MUT=0 errors=3732 of 6166 (xo 0 ro 3732 so 0 ovf 0)"
+   },
+   "mut3": {
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=3 ROW_MUT=0 SU_MUT=0 errors=6108 of 6166 (xo 6108 ro 0 so 0 ovf 0)"
+   },
+   "mut4": {
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=4 ROW_MUT=0 SU_MUT=0 errors=6101 of 6166 (xo 6101 ro 659 so 0 ovf 0)"
+   },
+   "mut5": {
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=5 ROW_MUT=0 SU_MUT=0 errors=2779 of 6166 (xo 2580 ro 321 so 0 ovf 0)"
+   },
+   "mut6": {
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=6 ROW_MUT=0 SU_MUT=0 errors=6129 of 6166 (xo 0 ro 0 so 6129 ovf 0)"
+   },
+   "mut7": {
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=7 ROW_MUT=0 SU_MUT=0 errors=1 of 6166 (xo 0 ro 0 so 0 ovf 1)"
+   },
+   "mut8": {
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "line": "FAIL qfd_vm_region_leaf LEAF_MUT=8 ROW_MUT=0 SU_MUT=0 errors=5906 of 6166 (xo 0 ro 0 so 5906 ovf 0)"
+   }
+  }
  }
 }
