@@ -28,6 +28,9 @@ module tb_hgi_smmv_tput;
 `ifndef XSPD
 `define XSPD 0
 `endif
+`ifndef XCR
+`define XCR 16
+`endif
 `ifdef MUT_WDROP
     localparam integer MWD = 1;
 `else
@@ -165,7 +168,7 @@ module tb_hgi_smmv_tput;
             .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]), .sm_cr(rv[cl*NSL +: NSL]));
         wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
 `ifdef XP
-        ot_hgi_xp_load #(.NXC(NXC), .XDD(`XSPD + 12), .MUT_WDROP(MWD), .MUT_BEAT(MBT), .MUT_LANE(MLN)) u_x (
+        ot_hgi_xp_load #(.NXC(NXC), .CR(`XCR), .XDD(`XSPD + 12), .MUT_WDROP(MWD), .MUT_BEAT(MBT), .MUT_LANE(MLN)) u_x (
 `else
         ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (
 `endif
@@ -279,6 +282,32 @@ module tb_hgi_smmv_tput;
                 qh = qh + 1;
             end
             if (rst_n && fault_s) begin $display("ERR SM %0d fault", s); errors = errors + 1; end
+        end
+        // +SMT=1: event trace of real SM 0 (start / descriptor / first + last request and response / first row / arrive)
+        integer smt, n_rq = 0, n_rs = 0, n_rv = 0; reg arr_t = 0;
+        initial if (!$value$plusargs("SMT=%d", smt)) smt = 0;
+        always @(posedge clk) if (rst_n && smt != 0 && s == 0) begin
+            arr_t <= arrive;
+            if (c[0] && start_ready) $display("SMT %0d START rows %0d fmt %0d xb %0d | rq %0d rs %0d rv %0d busy %b", cyc, c[9:1], c[40:39], c[47:41], n_rq, n_rs, n_rv, busy);
+            if (c[48] && d_ready) $display("SMT %0d DESC lines %0d | rq %0d rs %0d", cyc, c[104:81], n_rq, n_rs);
+            if (arrive != arr_t) $display("SMT %0d ARRIVE | rq %0d rs %0d rv %0d", cyc, n_rq, n_rs, n_rv);
+            if (req_v) n_rq = n_rq + 1; if (rsp_v) n_rs = n_rs + 1; if (rv[s]) n_rv = n_rv + 1;
+            if (req_v && (n_rq % 8) == 0) $display("SMT %0d RQ %0d", cyc, n_rq);
+            if (rsp_v && (n_rs % 8) == 0) $display("SMT %0d RS %0d", cyc, n_rs);
+            if (rv[s]) $display("SMT %0d ROW %0d", cyc, n_rv);
+        end
+        if (s == 0) begin : g_it
+            integer n_adv = 0, n_wst = 0, n_hz = 0, n_nst = 0;
+            always @(posedge clk) if (rst_n && smt != 0) begin
+                if (u_sm.g_fp.u_fc.u_issue.adv) n_adv = n_adv + 1;
+                if (u_sm.g_fp.u_fc.u_issue.need_line && !u_sm.g_fp.u_fc.u_issue.w_valid) n_wst = n_wst + 1;
+                if (u_sm.g_fp.u_fc.u_issue.issuing && !u_sm.g_fp.u_fc.u_issue.my_turn) n_nst = n_nst + 1;
+                if (u_sm.g_fp.u_fc.u_issue.start_v && !u_sm.g_fp.u_fc.u_issue.launch) n_hz = n_hz + 1;
+                if (u_sm.g_fp.u_fc.u_issue.launch) $display("SMI %0d LAUNCH on %0d since %0d need %0d | adv %0d wstall %0d noturn %0d headwait %0d", cyc,
+                    u_sm.g_fp.u_fc.u_issue.on, u_sm.g_fp.u_fc.u_issue.since, u_sm.g_fp.u_fc.u_issue.need_q, n_adv, n_wst, n_nst, n_hz);
+                if (u_sm.g_fp.u_fc.u_issue.op_end) $display("SMI %0d OPEND | adv %0d wstall %0d noturn %0d headwait %0d", cyc, n_adv, n_wst, n_nst, n_hz);
+                if (u_sm.g_fp.u_fc.u_issue.head_done) $display("SMI %0d HEADDONE on %0d", cyc, u_sm.g_fp.u_fc.u_issue.on);
+            end
         end
     end endgenerate
 

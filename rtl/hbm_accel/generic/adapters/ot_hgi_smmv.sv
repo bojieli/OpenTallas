@@ -159,7 +159,7 @@ module ot_hgi_smmv #(
     function automatic [WI-1:0] ix(input [SQ-1:0] q); ix = q[WI-1:0]; endfunction
 
     // ================= x allocator / x stage =================
-    reg [7:0] used; reg [6:0] ap; reg [6:0] xbc, xbp; reg [1:0] xn; reg [SQ-1:0] xfq [0:1]; reg xfh, xft;
+    reg [7:0] used; reg [6:0] ap; reg [6:0] xbc, xbp; reg [1:0] xn; reg [SQ-1:0] xfq [0:3]; reg [1:0] xfh, xft;   // XQ <= 3 (xp 10-13: a third load in flight)
     // r2 (route r1-6e530654e: xp -> used -89 ps = e_g[xp] mux -> ap + nf compare -> wrap -> used + ws + nf compare ->
     // used update in one edge): the allocation is precomputed over two registered edges.  al_age restarts at every
     // event that changes xp / ap / used-upward / the window tail (x alloc, x hit, D3 commit); an allocation fires only at
@@ -281,7 +281,7 @@ module ot_hgi_smmv #(
             d0_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0; dw_v <= 1'b0; dcnt <= 4'd0; al_age <= 2'd0; rdy_r <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
             // control only (pointers, valids, counters); datapath / field registers carry no reset (gate: rst fanout)
             tail <= 0; xp <= 0; ip <= 0; rh <= 0; ppc <= 0; pdc <= 0; e_xd <= 0; used <= 0; ap <= 0;
-            xn <= 2'd0; xfh <= 1'b0; xft <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0; fa_v <= 1'b0;
+            xn <= 2'd0; xfh <= 2'd0; xft <= 2'd0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0; fa_v <= 1'b0;
             xo <= 0; xo_v <= 1'b0; st_pend <= 0; d_pend <= 0;
             rel <= 0; arr_prev <= 0; iss_cnt <= 0; done_cnt <= 0; sm_cg_en <= 1'b0; rh_wait <= 1'b0;
             rr_nz <= 0; for (s = 0; s < NSM; s = s + 1) cr_s[s*CRW +: CRW] <= CRW'(AD);
@@ -346,12 +346,12 @@ module ot_hgi_smmv #(
                 else begin e_rel[ix(xp)] <= xo_nf; used_n = used_n + xo_nf; end
             end else if (x_ld_go) begin
                 xo <= xp; xo_v <= 1'b1; xo_nf <= nf; xk <= xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]);
-                xp <= xp + 1'b1; xfq[xft] <= xp; xft <= !xft; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
+                xp <= xp + 1'b1; xfq[xft] <= xp; xft <= xft + 2'd1; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
                 x_stride <= e_a[ix(xp)][119:88]; x_space <= e_a[ix(xp)][1:0]; x_fmt <= e_f[ix(xp)]; x_xb <= a_st;
                 e_xb[ix(xp)] <= a_st; e_rel[ix(xp)] <= (MUT_SLOT != 0) ? 8'd0 : a_ws + nf; xbc <= a_st; xbp <= xbc;
                 if (MUT_SLOT == 0) begin used_n = used_n + a_ws + nf; ap <= a_st + nf[6:0]; end
             end
-            if (xn != 2'd0 && in_xd) begin e_xd[ix(xfq[xfh])] <= 1'b1; xfh <= !xfh; end
+            if (xn != 2'd0 && in_xd) begin e_xd[ix(xfq[xfh])] <= 1'b1; xfh <= xfh + 2'd1; end
             xn <= xn + (x_ld_go ? 2'd1 : 2'd0) - ((xn != 2'd0 && in_xd) ? 2'd1 : 2'd0);
             // ---- issue stage: fields (stations) one edge, then the start / descriptor handshakes of every active SM
             if (!go && !fld_v && !fp_v && !fq_v && !fa_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
