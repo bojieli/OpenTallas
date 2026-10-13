@@ -22,7 +22,7 @@ module ot_s81_hc_comb #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer WIN = 2, WOUT = 2, MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16,
     parameter integer HALF = 0, RLY = 1,            // the chains' sub-tiles: half octets (2 a slot), RLY relays a hop
-    parameter integer DW = 3 + RW                   // the write path to the pins (send + capture + relays + pin flop)
+    parameter integer DW = 3 + RW, RET_EXTRA = 0    // the write path to the pins (send + capture + relays + pin flop)
 ) (
     input  wire                 cck, crs, sk, srs,
     // centre pin tile seam
