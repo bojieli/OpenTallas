@@ -321,7 +321,7 @@
   "tag": "fp1",
   "purpose": "TP8 NK die tile from hardened leaves (spec r5, floorplan r5-fp1): 5 x ot_qwen_tile_rpair (ROM bank rows, own ROM clock), ot_qwen_tile_node (W-edge strip: n_a/n_b/n_y pins + t_out feed-through pin registers), 8 x ot_qwen_tile_lsl; top glue (u_me control, XTX rungs, relays, RQR group registers) on one spine root. Outline 362.88 x 1442.88 (slot change request: the closed rpair leaf is 311.04 wide).",
   "benches_from": "tools/ref_tile/specs_qtile_r5/qfd_tile_nk_r5_benches.json",
-  "cycles_added": 3,
+  "cycles_added": 4,
   "structural_change": "hardened leaves rpair x5 + node + lsl x8, top root = glue only, replaces the flat 34k-sink root",
   "views_to": "physical/ref_tile/qfd_tile_nk_r5/views",
   "record_to": "results/rtl/ref_tile/qfd_tile_nk_r5"
