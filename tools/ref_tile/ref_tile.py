@@ -148,6 +148,16 @@ def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
     kits generated before the cut (legacy_layer_kits.json) keep their old PG layer (M6/M7, signals <= M6)."""
     slot = slot or {}
     cap = s.get("layer_cap") or slot.get("layer_cap")
+    grant = s.get("m6_pin_grant") or slot.get("m6_pin_grant")
+    if grant is not None:
+        import m6_pin_grant as M6
+        try:
+            M6.validate(grant, s["top"])
+        except (ValueError, TypeError, KeyError) as ex:
+            raise SpecError(str(ex)) from ex
+        if cap not in (None, "M5") or s.get("pg_layer") not in (None, "M5"):
+            raise SpecError("M6 pin-only grant requires signal/PG layer_cap M5")
+        return "M5", "pin-only grant"
     if cap is None and s["name"] in LEGACY_KITS:
         return LEGACY_KITS[s["name"]], "legacy"
     if cap is None and s.get("pg_layer") not in (None, "M5"):
@@ -177,6 +187,8 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
                        cap_basis="legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)")
         else:
             out.update(pg_layer=cap, rlayers=("M2", cap), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap, cap_basis=why)
+        if s.get("m6_pin_grant") or (slot or {}).get("m6_pin_grant"):
+            out["m6_pin_grant"] = s.get("m6_pin_grant") or slot["m6_pin_grant"]
         if slot:
             ok = {slot.get("layer_cap") or slot.get("pg_layer"), slot.get("view_cap") if why == "legacy" else None}
             if out["pg_layer"] not in ok:
@@ -211,7 +223,7 @@ def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
         pb = r.get("pin_balance") or {}
         used = (h + " " + v + " " + pb.get("h", "") + " " + pb.get("v", "")).split()
         over = sorted({x for x in used if (metal(x) or 0) > metal(lc["rlayers"][1])})
-        if over:
+        if over and not (over == ["M6"] and lc.get("m6_pin_grant")):
             raise SpecError(f"layer contract: pin layers {over} above the tile's signal cap {lc['rlayers'][1]} "
                             f"(pins on M4/M5 under the M5 cap; the parent reaches them from M6)")
     return h, v
@@ -687,6 +699,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # register stages + 6,860 hold buffers in one 24-um strip, GRT stuck at ~3,000 markers; the closed hand kit
             # placed pins at floorplan: W 3705 / E 3705).  The kit's post_tapcell.tcl places the exact pins first.
             vv = f"/src/{kd}/post_tapcell.tcl"
+            # ... and post_iop.tcl re-applies them after place_pins (el1013-smh-r11, see the kit file below)
+            if "POST_IO_PLACEMENT_TCL" not in s.get("orfs_vars", {}):
+                extra.append(f"--orfs-var POST_IO_PLACEMENT_TCL=/src/{kd}/post_iop.tcl")
         extra.append(f"--orfs-var {k}={vv}")
     # spec "post_synth_tcl": a repo POST_SYNTH hook, e.g. physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl
     # for a top with inout terminals (ORFS never buffers an inout: the post-GRT repair stops with RSZ-0074 "found route to
@@ -838,7 +853,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
     lint = lint_cmd(s)
-    benches = j.get("benches") or []
+    benches = list(j.get("benches") or [])
+    if j.get("benches_from"):     # shared bench template (e.g. tools/s81_suhc/hc_gate_benches.json: the HC composition gate)
+        have = {b.get("name") for b in benches}
+        benches += [b for b in json.loads((ROOT / j["benches_from"]).read_text())["benches"] if b.get("name") not in have]
     if not any(b.get("name") == "lint" for b in benches):
         benches = [{"name": "lint", "cmd": lint, "expect": "pass", "threads": 1, "peak_ram_gb": 4,
                     "needs": ["verilator"]}] + benches
@@ -847,6 +865,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     mv = " ".join(f"--macro-view {v}" for v in views)
     spec = {
         "name": name, "block": s["top"], "ref_tile": True,
+        **({"m6_pin_grant": s["m6_pin_grant"]} if s.get("m6_pin_grant") else {}),
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),
         **({"hosts": j["hosts"]} if j.get("hosts") else {}),   # no default host list: the loop places jobs (EPYC2/3 retired 10-12)
@@ -886,6 +905,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     }
     if j.get("no_bench_reason"):
         spec["no_bench_reason"] = j["no_bench_reason"]
+    if j.get("benched_by"):     # composition gate (tools/ref_tile/composition_gates.json): the loop appends its benches
+        spec["benched_by"] = j["benched_by"]
+    if j.get("hold_merge"):     # a physical probe that never merges (not a closure candidate)
+        spec["hold_merge"] = j["hold_merge"]
     return spec
 
 
@@ -894,6 +917,29 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     s = load_spec(spec_path)
     slot = contract_slot(s)
     lc = layer_contract(s, slot)
+    if lc.get("m6_pin_grant"):
+        import m6_pin_grant as M6
+        raw_spec = json.loads(Path(spec_path).read_text())
+        if M6.spec_digest(raw_spec) != lc["m6_pin_grant"]["source_spec_sha256"]:
+            raise SpecError("M6 pin-only grant physical source-spec SHA256 mismatch")
+        import subprocess
+        source_commit = lc["m6_pin_grant"]["source_commit"]
+        exists = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", source_commit + "^{commit}"],
+                                capture_output=True)
+        if exists.returncode:
+            raise SpecError("M6 pin-only grant source commit does not exist")
+        source_paths = list(s["sources"])
+        source_paths += [s[k] for k in ("io_tcl", "post_synth_tcl") if s.get(k)]
+        source_paths += [v for v in s.get("orfs_vars", {}).values() if isinstance(v, str)
+                         and v.endswith((".tcl", ".sdc"))]
+        for path in source_paths:
+            path = path.removeprefix("/src/")
+            file = ROOT / path
+            original = subprocess.run(["git", "-C", str(ROOT), "show", f"{source_commit}:{path}"],
+                                      capture_output=True)
+            if original.returncode or not file.is_file() or original.stdout != file.read_bytes():
+                raise SpecError(f"M6 pin-only grant source differs from approved commit: {path}")
+        s["m6_pin_grant"] = lc["m6_pin_grant"]
     blocks = blocks_of(s)
     W, H, why = outline(s, slot, area_um2, blocks)
     place_blocks(s, W, H, blocks)
@@ -911,7 +957,8 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
              "clock.sdc": gen_sdc(s, float(s["route"].get("period_ps", 770))),
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),
              **gen_hooks(s, kd), "floorplan.json": json.dumps(fp, indent=1) + "\n",
-             "spec.json": json.dumps({k: v for k, v in s.items()}, indent=1) + "\n"}
+             "spec.json": json.dumps(({**raw_spec, "m6_pin_grant": lc["m6_pin_grant"]} if lc.get("m6_pin_grant")
+                                      else {k: v for k, v in s.items()}), indent=1) + "\n"}
     if blocks:
         files["place.tcl"] = gen_place(s, blocks)
     if s.get("io_tcl") and s.get("orfs_vars", {}).get("POST_TAPCELL_TCL"):
@@ -923,6 +970,26 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             "# then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when\n"
             "# a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)\n"
             "foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
+        # el1013-smh-r11 2026-10-13: this ORFS sources IO_CONSTRAINTS at 2_1_floorplan ONLY (floorplan.tcl), not at
+        # 3_2_place_iop, so after the unplace above place_pins placed EVERY port by wirelength and the exact plan was lost
+        # (smh_tile_eg_ref r10: 7,766 of 7,766 ports re-placed; clk / cgi on the W face, gin on the E face on M4, 50 of the
+        # 200 gout on S; the boundary flops stayed FIRM at the planned positions).  POST_IO_PLACEMENT: place the exact pins
+        # again, check every port is back on its planned spot, and rewrite the stage result the next step loads.
+        files["post_iop.tcl"] = (
+            "# ref_tile: re-apply the exact abutment pin plan after place_pins (IO_CONSTRAINTS is sourced only at\n"
+            "# 2_1_floorplan; the POST_TAPCELL hook unplaced the ports so place_pins could run) and save the stage result\n"
+            "set ot_blk [ord::get_db_block]\n"
+            "foreach bt [$ot_blk getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n"
+            f"source /src/{s['io_tcl']}\n"
+            "set ot_n 0; set ot_miss {}\n"
+            "foreach bt [$ot_blk getBTerms] {\n"
+            "  if {[$bt getSigType] in {POWER GROUND}} continue\n"
+            "  if {[llength [$bt getBPins]] == 0} { lappend ot_miss [$bt getName] } else { incr ot_n }\n"
+            "}\n"
+            "if {[llength $ot_miss]} { error \"REF_TILE exact pin plan: [llength $ot_miss] ports left unplaced ([lrange $ot_miss 0 4])\" }\n"
+            "puts \"REF_TILE exact pin plan re-applied after place_pins: $ot_n ports\"\n"
+            "orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb\n"
+            "write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl\n")
     job = gen_job(s, kd, commit, blocks)
     files["job.json"] = json.dumps(job, indent=1) + "\n"
     if write:
@@ -936,7 +1003,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
 # --------------------------------------------------------------------------------------------- export
 def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     """exact-shape abstract (write_abstract_lef, never -bloat_occupied_layers) + TT/FF/SS timing models from the routed
-    odb + spef at the sign-off SDC, the routed clock insertion (ck_insertion.py), then child_lint of the result."""
+    odb + spef at the VERDICT's constraint sequence (tools/tt_views/view_export.py), the routed clock insertion (ck_insertion.py), then child_lint of the result."""
     import subprocess
     fp = json.loads((ROOT / kit / "floorplan.json").read_text())
     top = fp["top"]
@@ -944,6 +1011,15 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    # EXPORT-SDC (2026-10-13): view_export replays the route's VERDICT constraint sequence (closure-loop run: routed
+    # 6_final.sdc, SPEF, post-SDCs, io_ref_routed.sdc last) and fails when its TT / FF slack differs from the verdict.
+    # Outside a loop run there is no verdict to replay: the same order from the kit (never signoff.sdc INSTEAD of the
+    # routed SDC: s81su SMT exported FF -19.69 against a +3.66 verdict that way).
+    for f in (ROOT / kit / "signoff.sdc", ROOT / "physical/common_flow/io_ref_routed.sdc"):
+        cmd += ["--post-sdc", str(f)]
+    grant = fp.get("layer_contract", {}).get("m6_pin_grant")
+    if grant:
+        cmd += ["--pin-only-tech"]
     for v in macro_views:
         cmd += ["--macro-view", str(ROOT / v)]
     rc = subprocess.run(cmd).returncode
@@ -952,11 +1028,22 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--output", str(o / "insertion.json")])
     lef = o / f"{top}.lef"
-    if lef.exists():
+    if lef.exists() and not grant:
         # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
         # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
         subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])
-    res = child_lint.lint(str(lef), str(o)) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
+    routed_def = None
+    if grant and base is not None:
+        # Require final detailed-route geometry; never GRT or an abstract reconstructed from pins.
+        candidates = [base / n for n in ("6_final.def", "5_route.def") if (base / n).exists()]
+        if candidates:
+            import shutil
+            routed_def = str(o / "pin_only_routed.def")
+            shutil.copyfile(candidates[0], routed_def)
+        (o / "m6_pin_grant.json").write_text(json.dumps(grant, indent=1) + "\n")
+    res = child_lint.lint(str(lef), str(o), cap="M5" if grant else None,
+                          pin_grant=grant, routed_def=routed_def,
+                          tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])

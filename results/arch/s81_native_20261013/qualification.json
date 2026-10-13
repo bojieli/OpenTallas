@@ -1,0 +1,3730 @@
+{
+ "schema": "s81-native-view-qualification-v1",
+ "manifest": "results/arch/s81_native_20261013/manifest.json",
+ "manifest_sha256": "7e13b039f4ceb2d70e1cb856555fa9a6a3989480173a5ee84e81aa19dd8752ad",
+ "gates": [
+  "pair",
+  "tt",
+  "ff",
+  "export",
+  "drc",
+  "bench",
+  "lint",
+  "clock",
+  "scalar",
+  "thr",
+  "current"
+ ],
+ "contract_version": 13,
+ "bundles": 21,
+ "bundle_instances": 2387,
+ "qualified_masters": 0,
+ "qualified_instances": 0,
+ "gate_failures": {
+  "pair": [
+   "dsfd_l2r_vr_564x1__hx_W",
+   "dsfd_r2l_vr_512x1__hcol",
+   "dsfd_r2l_vr_512x1__hsel",
+   "dsfd_stnh_512x1",
+   "dsfd_stnh_514x1",
+   "dsfd_stnh_566x1",
+   "dsfd_stnv_512x1",
+   "dsfd_stnv_514x1"
+  ],
+  "tt": [],
+  "ff": [],
+  "export": [],
+  "drc": [],
+  "bench": [
+   "dsfd_m2l_raw_512x1__hl_E0",
+   "dsfd_m2l_raw_512x1__hl_E2",
+   "dsfd_m2l_raw_512x1__hl_W1",
+   "dsfd_m2l_vr_512x1__hix_SW",
+   "dsfd_m2l_vr_512x1__hqe_SW",
+   "ot_s81_hc_ctfn",
+   "ot_s81_hc_ctfs",
+   "ot_s81_hc_ctfx",
+   "ot_s81_hc_ctpl"
+  ],
+  "lint": [
+   "dsfd_cfifo",
+   "dsfd_l2r_vr_564x1__hx_E",
+   "dsfd_l2r_vr_564x1__hx_W",
+   "dsfd_m2l_raw_512x1__hl_E0",
+   "dsfd_m2l_raw_512x1__hl_E2",
+   "dsfd_m2l_raw_512x1__hl_W1",
+   "dsfd_m2l_vr_512x1__hix_SW",
+   "dsfd_m2l_vr_512x1__hqe_SW",
+   "dsfd_r2l_vr_1024x1__ha_SW",
+   "dsfd_r2l_vr_512x1__hcol",
+   "dsfd_r2l_vr_512x1__hsel",
+   "dsfd_stnh_512x1",
+   "dsfd_stnh_514x1",
+   "dsfd_stnh_566x1",
+   "dsfd_stnv_514x1"
+  ],
+  "clock": [
+   "dsfd_cfifo"
+  ],
+  "scalar": [],
+  "thr": [],
+  "current": [
+   "dsfd_m2l_vr_512x1__hix_SW",
+   "dsfd_m2l_vr_512x1__hqe_SW",
+   "dsfd_r2l_vr_512x1__hsel"
+  ]
+ },
+ "gate_open": {
+  "pair": [
+   "dsfd_cfifo",
+   "dsfd_l2r_vr_564x1__hx_E",
+   "dsfd_m2l_raw_512x1__hl_E0",
+   "dsfd_m2l_raw_512x1__hl_E2",
+   "dsfd_m2l_raw_512x1__hl_W1",
+   "dsfd_m2l_vr_512x1__hix_SW",
+   "dsfd_m2l_vr_512x1__hqe_SW",
+   "dsfd_r2l_vr_1024x1__ha_SW",
+   "ot_s81_hc_ctfn",
+   "ot_s81_hc_ctfs"
+  ],
+  "tt": [],
+  "ff": [],
+  "export": [
+   "dsfd_m2l_raw_512x1__hl_E2",
+   "dsfd_m2l_raw_512x1__hl_W1",
+   "dsfd_m2l_vr_512x1__hqe_SW",
+   "dsfd_stnh_512x1",
+   "dsfd_stnh_514x1",
+   "dsfd_stnh_566x1",
+   "dsfd_stnv_512x1",
+   "dsfd_stnv_514x1",
+   "dsfd_svc_join",
+   "ot_s81_hc_ctfn",
+   "ot_s81_hc_ctfs",
+   "ot_s81_hc_ctfx",
+   "ot_s81_hc_ctpl"
+  ],
+  "drc": [],
+  "bench": [],
+  "lint": [],
+  "clock": [],
+  "scalar": [],
+  "thr": [
+   "ot_s81_hc_ctfn",
+   "ot_s81_hc_ctfs",
+   "ot_s81_hc_ctfx",
+   "ot_s81_hc_ctpl"
+  ],
+  "current": []
+ },
+ "rows": [
+  {
+   "master": "dsfd_cfifo",
+   "instances": 128,
+   "export_dir": "physical/s81_die_views/views_colck/dsfd_cfifo",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "['dsfd_cfifo_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_cfifo.lef', 'dsfd_cfifo_ff.lib', 'dsfd_cfifo_ss.lib']); no ODB hash links it to the LEF"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +13.17 ps, export +13.17"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +0.27 ps, export +0.27"
+    },
+    "export": {
+     "ok": true,
+     "detail": "export-side STA within 1 ps of the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_words']; failing mutants ['bench_neg_xb_mutant']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_cfifo 431.976 x 95.016: PG M7 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M8; face pins 1277 blocked-above 1058 blocked-same 5; clock cr[0] insertion 315 ps; clock xf[0] insertion 296 ps | (f) face-pin access: 1058 of 1277 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. cc[0] M5 (136.416,94.824), cc[10] M5 (136.896,94.824), cc[11] M5 (136.944,94.824)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 5 of 1277 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. ck[0] M4 (0.025,46.992), co[0] M5 (182.976,94.777), cr["
+    },
+    "clock": {
+     "ok": false,
+     "detail": "clock pins ['ck[0]', 'cr[0]', 'xf[0]']; no FF min/max_clock_tree_path on ['ck[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'cr[0]', 'xf[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-dsfd-cfifo-colck-a6ca75fbe-tt-srcfix"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_cfifo_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_cfifo.lef', 'dsfd_cfifo_ff.lib', 'dsfd_cfifo_ss.lib']); no ODB hash links it to the LEF",
+    "lint: dsfd_cfifo 431.976 x 95.016: PG M7 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M8; face pins 1277 blocked-above 1058 blocked-same 5; clock cr[0] insertion 315 ps; clock xf[0] insertion 296 ps | (f) face-pin access: 1058 of 1277 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. cc[0] M5 (136.416,94.824), cc[10] M5 (136.896,94.824), cc[11] M5 (136.944,94.824)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 5 of 1277 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. ck[0] M4 (0.025,46.992), co[0] M5 (182.976,94.777), cr[",
+    "clock: clock pins ['ck[0]', 'cr[0]', 'xf[0]']; no FF min/max_clock_tree_path on ['ck[0]']"
+   ],
+   "job": "s81-dsfd-cfifo-colck-a6ca75fbe-tt-srcfix",
+   "sta_odb_sha256": [
+    "73e51898c9207e8afdb249c14cf85d17d9ce8a965ee94593976bfa855479ef39"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "a6ca75fbe7b6d124c46f260c9c12cf1fcf737d32",
+   "verdict_orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81-dsfd-cfifo-colck-a6ca75fbe-tt-srcfix/cl/eco-vtswap/pass1/orfs",
+   "verdict_tt_ff_drc": [
+    13.17,
+    0.27,
+    0
+   ],
+   "export_tt_ff": [
+    13.17,
+    0.27
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {},
+      "cr[0]": {
+       "min_clock_tree_path_ps": 207.29,
+       "max_clock_tree_path_ps": 315.41
+      },
+      "xf[0]": {
+       "min_clock_tree_path_ps": 222.34,
+       "max_clock_tree_path_ps": 295.52
+      }
+     },
+     "cq_min_ps": {
+      "cr[0]": 264.37,
+      "ck[0]": 59.43,
+      "ck[0]@fall": -426.1,
+      "cr[0]@fall": -413.96
+     },
+     "hold_max_ps": {
+      "cr[0]": 152.45,
+      "xf[0]": 218.47
+     },
+     "out_arcs": 639,
+     "hold_arcs": 634
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {},
+      "cr[0]": {
+       "min_clock_tree_path_ps": 164.9,
+       "max_clock_tree_path_ps": 252.51
+      },
+      "xf[0]": {
+       "min_clock_tree_path_ps": 179.32,
+       "max_clock_tree_path_ps": 240.24
+      }
+     },
+     "cq_min_ps": {
+      "cr[0]": 213.42,
+      "ck[0]": 54.01,
+      "ck[0]@fall": -423.44,
+      "cr[0]@fall": -414.8
+     },
+     "hold_max_ps": {
+      "cr[0]": 135.58,
+      "xf[0]": 178.96
+     },
+     "out_arcs": 639,
+     "hold_arcs": 634
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {},
+      "cr[0]": {
+       "min_clock_tree_path_ps": 278.84,
+       "max_clock_tree_path_ps": 429.84
+      },
+      "xf[0]": {
+       "min_clock_tree_path_ps": 293.24,
+       "max_clock_tree_path_ps": 392.81
+      }
+     },
+     "cq_min_ps": {
+      "cr[0]": 351.43,
+      "ck[0]": 67.02,
+      "ck[0]@fall": -431.28,
+      "cr[0]@fall": -412.37
+     },
+     "hold_max_ps": {
+      "cr[0]": 182.36,
+      "xf[0]": 285.17
+     },
+     "out_arcs": 639,
+     "hold_arcs": 634
+    }
+   },
+   "min_delay_ff": {
+    "cr[0]": {
+     "cq_min_at_pin_ps": 213.42,
+     "min_insertion_ps": 164.9,
+     "max_insertion_ps": 252.51,
+     "hold_req_max_ps": 135.58
+    },
+    "ck[0]": {
+     "cq_min_at_pin_ps": 54.01,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": null
+    },
+    "ck[0]@fall": {
+     "cq_min_at_pin_ps": -423.44,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": null
+    },
+    "cr[0]@fall": {
+     "cq_min_at_pin_ps": -414.8,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "cr[0]": {
+     "launch_L_ps": -39.09,
+     "hold_H_ps": -29.32,
+     "insertion_spread_ps": 87.61,
+     "same_master_zero_wire_margin_ps": -59.77
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "lint",
+    "clock"
+   ],
+   "open_gates": [
+    "pair"
+   ],
+   "file_sha256": {
+    "lef": "3afd25575a9b112bc3115d0cc52fe349244fa839309b4d801c2d77764d7222dc",
+    "tt": "63783f6a0e852d4e1321f0b2130bd9657389718c7fb130a3519f0afa5743bea8",
+    "ff": "5aeab0c5c67edb9c02dc4c4941a132996b4fdc37994c72f8c42909f3e103e72c",
+    "ss": "23fe42aee24f269064cddcb77fea172fb395c2af20f4e76e63cb2443e30649a8"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_l2r_vr_564x1__hx_E",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_E",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "['dsfd_l2r_vr_564x1__hx_E_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_E.lef', 'dsfd_l2r_vr_564x1__hx_E_ff.lib', 'dsfd_l2r_vr_564x1__hx_E_ss.lib']); no ODB hash links it to the LEF"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +0.78 ps, export +0.78"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +22.00 ps, export +22.00"
+    },
+    "export": {
+     "ok": true,
+     "detail": "export-side STA within 1 ps of the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_pinreg']; failing mutants ['bench_neg_mut']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_l2r_vr_564x1__hx_E 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 760 blocked-same 1; clock ck[0] insertion 146 ps; clock cks[0] insertion 142 ps | (f) face-pin access: 760 of 1139 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (20.688,0.000), cks[0] M5 (20.880,0.000), fo[0] M5 (21.072,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1139 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. i[495] M4 (0.025,45.696)); fix: tools/hier_contract/abstract_pi"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'cks[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'cks[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-hend-m221pq-hx-E-pinreg-m5w-9ec0460c9-tt"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_l2r_vr_564x1__hx_E_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_E.lef', 'dsfd_l2r_vr_564x1__hx_E_ff.lib', 'dsfd_l2r_vr_564x1__hx_E_ss.lib']); no ODB hash links it to the LEF",
+    "lint: dsfd_l2r_vr_564x1__hx_E 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 760 blocked-same 1; clock ck[0] insertion 146 ps; clock cks[0] insertion 142 ps | (f) face-pin access: 760 of 1139 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (20.688,0.000), cks[0] M5 (20.880,0.000), fo[0] M5 (21.072,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1139 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. i[495] M4 (0.025,45.696)); fix: tools/hier_contract/abstract_pi"
+   ],
+   "job": "s81-hend-m221pq-hx-E-pinreg-m5w-9ec0460c9-tt",
+   "sta_odb_sha256": [
+    "dc315cc03b44f041ba7b929d91e5ff5d59fe8653774cdfe269acb4dfcaddd629"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "9ec0460c9db74a4ae26d8d262d345721e949fb59",
+   "verdict_orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hx-E-pinreg-m5w-9ec0460c9-tt/routes/s81_hend_m221pq_hx_E_pinreg_m5w_9ec0460c9_tt/work/orfs",
+   "verdict_tt_ff_drc": [
+    0.78,
+    22.0,
+    0
+   ],
+   "export_tt_ff": [
+    0.78,
+    22.0
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 112.73,
+       "max_clock_tree_path_ps": 145.96
+      },
+      "cks[0]": {
+       "min_clock_tree_path_ps": 112.47,
+       "max_clock_tree_path_ps": 141.85
+      }
+     },
+     "cq_min_ps": {
+      "cks[0]": -27.31,
+      "cks[0]@fall": -414.0,
+      "ck[0]": 240.74
+     },
+     "hold_max_ps": {
+      "ck[0]": 78.05
+     },
+     "out_arcs": 570,
+     "hold_arcs": 565
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 89.34,
+       "max_clock_tree_path_ps": 117.25
+      },
+      "cks[0]": {
+       "min_clock_tree_path_ps": 89.01,
+       "max_clock_tree_path_ps": 112.57
+      }
+     },
+     "cq_min_ps": {
+      "cks[0]": -30.78,
+      "cks[0]@fall": -414.81,
+      "ck[0]": 182.79
+     },
+     "hold_max_ps": {
+      "ck[0]": 66.68
+     },
+     "out_arcs": 570,
+     "hold_arcs": 565
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 153.54,
+       "max_clock_tree_path_ps": 199.01
+      },
+      "cks[0]": {
+       "min_clock_tree_path_ps": 153.22,
+       "max_clock_tree_path_ps": 197.06
+      }
+     },
+     "cq_min_ps": {
+      "cks[0]": -25.2,
+      "cks[0]@fall": -412.41,
+      "ck[0]": 340.94
+     },
+     "hold_max_ps": {
+      "ck[0]": 98.25
+     },
+     "out_arcs": 570,
+     "hold_arcs": 565
+    }
+   },
+   "min_delay_ff": {
+    "cks[0]": {
+     "cq_min_at_pin_ps": -30.78,
+     "min_insertion_ps": 89.01,
+     "max_insertion_ps": 112.57,
+     "hold_req_max_ps": null
+    },
+    "cks[0]@fall": {
+     "cq_min_at_pin_ps": -414.81,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": null
+    },
+    "ck[0]": {
+     "cq_min_at_pin_ps": 182.79,
+     "min_insertion_ps": 89.34,
+     "max_insertion_ps": 117.25,
+     "hold_req_max_ps": 66.68
+    }
+   },
+   "min_delay_budget_ff": {
+    "cks[0]": {
+     "launch_L_ps": -143.35,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 23.56,
+     "same_master_zero_wire_margin_ps": null
+    },
+    "ck[0]": {
+     "launch_L_ps": 65.54,
+     "hold_H_ps": -22.66,
+     "insertion_spread_ps": 27.91,
+     "same_master_zero_wire_margin_ps": 38.2
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "lint"
+   ],
+   "open_gates": [
+    "pair"
+   ],
+   "file_sha256": {
+    "lef": "80d8aa6980883b871cb3d31804ffabbbcc84dbcfc7122b2904a809c8c06d03e5",
+    "tt": "49f9d5e454c72b4c54031499bbac0776945cdfd8a6beb8b7431e7d1adcba1a0e",
+    "ff": "8a5967a82b7c18cbb68e8877041cade00164901ad8e5573ef52ae9cd74e56fa6",
+    "ss": "dadc361ed236b2f1d6fefe7bbb5b1297fc5dd5b698be8a76b4bf91b32152f8e6"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_l2r_vr_564x1__hx_W",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_W",
+   "gates": {
+    "pair": {
+     "ok": false,
+     "detail": "['dsfd_l2r_vr_564x1__hx_W_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:32): it is the extraction of an earlier ODB"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +57.28 ps, export +57.28"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +24.98 ps, export +24.98"
+    },
+    "export": {
+     "ok": true,
+     "detail": "export-side STA within 1 ps of the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_pinreg']; failing mutants ['bench_neg_mut']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_l2r_vr_564x1__hx_W 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 697 blocked-same 2; clock ck[0] insertion 134 ps; clock cks[0] insertion 133 ps | (f) face-pin access: 697 of 1139 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. fo[0] M4 (0.000,21.936), i[0] M4 (69.336,21.936), i[10] M4 (69.336,22.416)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 2 of 1139 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. od[135] M4 (0.025,28.608), od[484] M4 (0.025,45.360)); fix: too"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'cks[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'cks[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt-arch"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_l2r_vr_564x1__hx_W_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:32): it is the extraction of an earlier ODB",
+    "lint: dsfd_l2r_vr_564x1__hx_W 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 697 blocked-same 2; clock ck[0] insertion 134 ps; clock cks[0] insertion 133 ps | (f) face-pin access: 697 of 1139 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. fo[0] M4 (0.000,21.936), i[0] M4 (69.336,21.936), i[10] M4 (69.336,22.416)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 2 of 1139 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. od[135] M4 (0.025,28.608), od[484] M4 (0.025,45.360)); fix: too"
+   ],
+   "job": "s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt-arch",
+   "sta_odb_sha256": [
+    "abda0163f35207a0ac7da311407e579f74d6a3cc1f9942492091e8bdeee1695c"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "f1b64667d7674a4453f935bd1ae20a4c06ef3db0",
+   "verdict_orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt-arch/routes/s81_hend_m221pq_hx_W_pinreg_f1b64667d_tt_arch/work/orfs",
+   "verdict_tt_ff_drc": [
+    57.28,
+    24.98,
+    0
+   ],
+   "export_tt_ff": [
+    57.28,
+    24.98
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 109.19,
+       "max_clock_tree_path_ps": 134.13
+      },
+      "cks[0]": {
+       "min_clock_tree_path_ps": 109.32,
+       "max_clock_tree_path_ps": 133.09
+      }
+     },
+     "cq_min_ps": {
+      "cks[0]": 2.86,
+      "cks[0]@fall": -159.51,
+      "ck[0]": 336.99
+     },
+     "hold_max_ps": {
+      "ck[0]": 86.7
+     },
+     "out_arcs": 570,
+     "hold_arcs": 565
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 84.82,
+       "max_clock_tree_path_ps": 106.06
+      },
+      "cks[0]": {
+       "min_clock_tree_path_ps": 85.73,
+       "max_clock_tree_path_ps": 105.19
+      }
+     },
+     "cq_min_ps": {
+      "cks[0]": -10.73,
+      "cks[0]@fall": -414.42,
+      "ck[0]": 202.76
+     },
+     "hold_max_ps": {
+      "ck[0]": 43.99
+     },
+     "out_arcs": 570,
+     "hold_arcs": 565
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 149.08,
+       "max_clock_tree_path_ps": 189.28
+      },
+      "cks[0]": {
+       "min_clock_tree_path_ps": 151.4,
+       "max_clock_tree_path_ps": 188.13
+      }
+     },
+     "cq_min_ps": {
+      "cks[0]": 9.34,
+      "cks[0]@fall": -411.52,
+      "ck[0]": 400.26
+     },
+     "hold_max_ps": {
+      "ck[0]": 42.54
+     },
+     "out_arcs": 570,
+     "hold_arcs": 565
+    }
+   },
+   "min_delay_ff": {
+    "cks[0]": {
+     "cq_min_at_pin_ps": -10.73,
+     "min_insertion_ps": 85.73,
+     "max_insertion_ps": 105.19,
+     "hold_req_max_ps": null
+    },
+    "cks[0]@fall": {
+     "cq_min_at_pin_ps": -414.42,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": null
+    },
+    "ck[0]": {
+     "cq_min_at_pin_ps": 202.76,
+     "min_insertion_ps": 84.82,
+     "max_insertion_ps": 106.06,
+     "hold_req_max_ps": 43.99
+    }
+   },
+   "min_delay_budget_ff": {
+    "cks[0]": {
+     "launch_L_ps": -115.92,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 19.46,
+     "same_master_zero_wire_margin_ps": null
+    },
+    "ck[0]": {
+     "launch_L_ps": 96.7,
+     "hold_H_ps": -40.83,
+     "insertion_spread_ps": 21.24,
+     "same_master_zero_wire_margin_ps": 87.53
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "pair",
+    "lint"
+   ],
+   "open_gates": [],
+   "file_sha256": {
+    "lef": "34a5190ea547fe0bcf2d330863a89c0d5f0a1ba4165f9dcb17108022d6684114",
+    "tt": "69093d7ae029b96f1d2b8b66300b162ff66d7d832643005e3adaf401edd303e8",
+    "ff": "378dfa46caac85980161c6a97bb93e7138c06224926dc1fe1ca8fe3f9738861f",
+    "ss": "9e43f43626dbfbeb53a85d84267cc33a65aff52a5060e5d71d85b4621b1f192d"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E0",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E0",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "['dsfd_m2l_raw_512x1__hl_E0_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E0.lef', 'dsfd_m2l_raw_512x1__hl_E0_ff.lib', 'dsfd_m2l_raw_512x1__hl_E0_ss.lib']); no ODB hash links it to the LEF"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +173.64 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +11.85 ps, export +11.85"
+    },
+    "export": {
+     "ok": true,
+     "detail": "export-side STA within 1 ps of the verdict (FF only; TT not exported-side checked)"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE (no bench record)"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_m2l_raw_512x1__hl_E0 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 648 blocked-same 2; clock ck[0] insertion 189 ps; clock fi0[0] insertion 187 ps | (f) face-pin access: 648 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (128.088,53.472), di0[100] M4 (128.088,58.272), di0[101] M4 (128.088,58.320)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 2 of 1030 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[426] M4 (0.025,73.968), o[460] M4 (0.025,75.600))"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-hend-m221pq-hl-E0-a1f23fa0b-mm"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_m2l_raw_512x1__hl_E0_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E0.lef', 'dsfd_m2l_raw_512x1__hl_E0_ff.lib', 'dsfd_m2l_raw_512x1__hl_E0_ss.lib']); no ODB hash links it to the LEF",
+    "bench: pass benches NONE; failing mutants NONE (no bench record)",
+    "lint: dsfd_m2l_raw_512x1__hl_E0 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 648 blocked-same 2; clock ck[0] insertion 189 ps; clock fi0[0] insertion 187 ps | (f) face-pin access: 648 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (128.088,53.472), di0[100] M4 (128.088,58.272), di0[101] M4 (128.088,58.320)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 2 of 1030 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[426] M4 (0.025,73.968), o[460] M4 (0.025,75.600))"
+   ],
+   "job": "s81-hend-m221pq-hl-E0-a1f23fa0b-mm",
+   "sta_odb_sha256": [
+    "2b38e8d3b0f63a901ac019d228b7cfcefb24161ded0628e1043f277a1b179df3"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "verdict_orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E0-a1f23fa0b-mm/routes/s81_hend_m221pq_hl_E0_a1f23fa0b_mm/work/orfs",
+   "verdict_tt_ff_drc": [
+    173.64,
+    11.85,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    11.85
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 151.0,
+       "max_clock_tree_path_ps": 188.55
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 140.93,
+       "max_clock_tree_path_ps": 186.73
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 354.95,
+      "ck[0]": 279.04
+     },
+     "hold_max_ps": {
+      "fi0[0]": 134.65
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 120.75,
+       "max_clock_tree_path_ps": 150.08
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 112.71,
+       "max_clock_tree_path_ps": 148.79
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 278.3,
+      "ck[0]": 215.1
+     },
+     "hold_max_ps": {
+      "fi0[0]": 114.32
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 202.7,
+       "max_clock_tree_path_ps": 259.93
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 189.2,
+       "max_clock_tree_path_ps": 257.13
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 484.89,
+      "ck[0]": 389.47
+     },
+     "hold_max_ps": {
+      "fi0[0]": 171.55
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    }
+   },
+   "min_delay_ff": {
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 278.3,
+     "min_insertion_ps": 112.71,
+     "max_insertion_ps": 148.79,
+     "hold_req_max_ps": 114.32
+    },
+    "ck[0]": {
+     "cq_min_at_pin_ps": 215.1,
+     "min_insertion_ps": 120.75,
+     "max_insertion_ps": 150.08,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "fi0[0]": {
+     "launch_L_ps": 129.51,
+     "hold_H_ps": 1.61,
+     "insertion_spread_ps": 36.08,
+     "same_master_zero_wire_margin_ps": 77.9
+    },
+    "ck[0]": {
+     "launch_L_ps": 65.02,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 29.33,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench",
+    "lint"
+   ],
+   "open_gates": [
+    "pair"
+   ],
+   "file_sha256": {
+    "lef": "f60914314feb4a003eb1ea54cad6dc55eb4fe1c959803368140f4fd11edb495b",
+    "tt": "d729d4fb180f670d538aa976db3628c794a5a23d0dcc4f61b76ee38544ee7f17",
+    "ff": "f51a64606c883d31eedb0eaedd3a54c469586bce66159c609a73da062f66109f",
+    "ss": "10d7a0819efa7ee97c067246cbc2ae78b9cfe57975a1b0a95e33622c41c216de"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_E2",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E2",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "['dsfd_m2l_raw_512x1__hl_E2_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E2.lef', 'dsfd_m2l_raw_512x1__hl_E2_ff.lib', 'dsfd_m2l_raw_512x1__hl_E2_ss.lib']); no ODB hash links it to the LEF"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +155.76 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +23.43 ps, export +6.56"
+    },
+    "export": {
+     "ok": null,
+     "detail": "export minus verdict: FF -16.87 ps"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE (no bench record)"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_m2l_raw_512x1__hl_E2 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 382 blocked-same 0; clock ck[0] insertion 186 ps; clock fi0[0] insertion 199 ps | (f) face-pin access: 382 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[322] M4 (128.088,68.928), di0[323] M4 (128.088,68.976), di0[324] M4 (128.088,69.024)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-hend-m221pq-hl-E2-a1f23fa0b-mm"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_m2l_raw_512x1__hl_E2_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E2.lef', 'dsfd_m2l_raw_512x1__hl_E2_ff.lib', 'dsfd_m2l_raw_512x1__hl_E2_ss.lib']); no ODB hash links it to the LEF",
+    "export: export minus verdict: FF -16.87 ps",
+    "bench: pass benches NONE; failing mutants NONE (no bench record)",
+    "lint: dsfd_m2l_raw_512x1__hl_E2 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 382 blocked-same 0; clock ck[0] insertion 186 ps; clock fi0[0] insertion 199 ps | (f) face-pin access: 382 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[322] M4 (128.088,68.928), di0[323] M4 (128.088,68.976), di0[324] M4 (128.088,69.024)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+   ],
+   "job": "s81-hend-m221pq-hl-E2-a1f23fa0b-mm",
+   "sta_odb_sha256": [
+    "d3206e7f749e2d91c4a0339af8b38ca2fbb2cf6e650c8861063c7f5de87a9a18"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "verdict_orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E2-a1f23fa0b-mm/routes/s81_hend_m221pq_hl_E2_a1f23fa0b_mm/work/orfs",
+   "verdict_tt_ff_drc": [
+    155.76,
+    23.43,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    6.56
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 147.46,
+       "max_clock_tree_path_ps": 186.16
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 143.84,
+       "max_clock_tree_path_ps": 198.67
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 374.69,
+      "ck[0]": 267.03
+     },
+     "hold_max_ps": {
+      "fi0[0]": 130.88
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 117.53,
+       "max_clock_tree_path_ps": 147.9
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 114.72,
+       "max_clock_tree_path_ps": 160.15
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 293.56,
+      "ck[0]": 206.41
+     },
+     "hold_max_ps": {
+      "fi0[0]": 110.43
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 197.87,
+       "max_clock_tree_path_ps": 257.01
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 193.56,
+       "max_clock_tree_path_ps": 269.98
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 512.79,
+      "ck[0]": 362.93
+     },
+     "hold_max_ps": {
+      "fi0[0]": 169.5
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    }
+   },
+   "min_delay_ff": {
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 293.56,
+     "min_insertion_ps": 114.72,
+     "max_insertion_ps": 160.15,
+     "hold_req_max_ps": 110.43
+    },
+    "ck[0]": {
+     "cq_min_at_pin_ps": 206.41,
+     "min_insertion_ps": 117.53,
+     "max_insertion_ps": 147.9,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "fi0[0]": {
+     "launch_L_ps": 133.41,
+     "hold_H_ps": -4.29,
+     "insertion_spread_ps": 45.43,
+     "same_master_zero_wire_margin_ps": 87.7
+    },
+    "ck[0]": {
+     "launch_L_ps": 58.51,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 30.37,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench",
+    "lint"
+   ],
+   "open_gates": [
+    "pair",
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "15a17d47c23a193a17ef6eac0aaf85b6ff8d364ec00ad499bfafabe09545864b",
+    "tt": "844cfe1af964cf1f413ccb227babeea08ce347743e1882e9864db5ca28d7e883",
+    "ff": "91390e50962eac014e4325f788ec50547acffd26478c807d6501a66f4bda7441",
+    "ss": "74a999a937a4b07fa5d0ee60d57c3c404f79d31be5a6c95e009bab7e3119bf40"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_m2l_raw_512x1__hl_W1",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_W1",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "['dsfd_m2l_raw_512x1__hl_W1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_W1.lef', 'dsfd_m2l_raw_512x1__hl_W1_ff.lib', 'dsfd_m2l_raw_512x1__hl_W1_ss.lib']); no ODB hash links it to the LEF"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +168.87 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +25.06 ps, export +8.01"
+    },
+    "export": {
+     "ok": null,
+     "detail": "export minus verdict: FF -17.05 ps"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE (no bench record)"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_m2l_raw_512x1__hl_W1 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 710 blocked-same 0; clock ck[0] insertion 191 ps; clock fi0[0] insertion 198 ps | (f) face-pin access: 710 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (51.552,0.000), di0[0] M5 (51.936,0.000), di0[10] M5 (52.416,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-hend-m221pq-hl-W1-a1f23fa0b-mm"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_m2l_raw_512x1__hl_W1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_W1.lef', 'dsfd_m2l_raw_512x1__hl_W1_ff.lib', 'dsfd_m2l_raw_512x1__hl_W1_ss.lib']); no ODB hash links it to the LEF",
+    "export: export minus verdict: FF -17.05 ps",
+    "bench: pass benches NONE; failing mutants NONE (no bench record)",
+    "lint: dsfd_m2l_raw_512x1__hl_W1 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 710 blocked-same 0; clock ck[0] insertion 191 ps; clock fi0[0] insertion 198 ps | (f) face-pin access: 710 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (51.552,0.000), di0[0] M5 (51.936,0.000), di0[10] M5 (52.416,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+   ],
+   "job": "s81-hend-m221pq-hl-W1-a1f23fa0b-mm",
+   "sta_odb_sha256": [
+    "9e446d0902ee2b34d6c8a87a74d2c0483a8027351ff5ec1b362c0d959afd8284"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "verdict_orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-W1-a1f23fa0b-mm/routes/s81_hend_m221pq_hl_W1_a1f23fa0b_mm/work/orfs",
+   "verdict_tt_ff_drc": [
+    168.87,
+    25.06,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    8.01
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 153.47,
+       "max_clock_tree_path_ps": 191.42
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 148.06,
+       "max_clock_tree_path_ps": 198.31
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 367.56,
+      "ck[0]": 268.54
+     },
+     "hold_max_ps": {
+      "fi0[0]": 136.97
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 123.4,
+       "max_clock_tree_path_ps": 152.79
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 118.69,
+       "max_clock_tree_path_ps": 159.23
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 288.32,
+      "ck[0]": 214.29
+     },
+     "hold_max_ps": {
+      "fi0[0]": 115.73
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 203.88,
+       "max_clock_tree_path_ps": 262.56
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 196.3,
+       "max_clock_tree_path_ps": 270.23
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]": 501.55,
+      "ck[0]": 362.19
+     },
+     "hold_max_ps": {
+      "fi0[0]": 174.44
+     },
+     "out_arcs": 516,
+     "hold_arcs": 512
+    }
+   },
+   "min_delay_ff": {
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 288.32,
+     "min_insertion_ps": 118.69,
+     "max_insertion_ps": 159.23,
+     "hold_req_max_ps": 115.73
+    },
+    "ck[0]": {
+     "cq_min_at_pin_ps": 214.29,
+     "min_insertion_ps": 123.4,
+     "max_insertion_ps": 152.79,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "fi0[0]": {
+     "launch_L_ps": 129.09,
+     "hold_H_ps": -2.96,
+     "insertion_spread_ps": 40.54,
+     "same_master_zero_wire_margin_ps": 82.05
+    },
+    "ck[0]": {
+     "launch_L_ps": 61.5,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 29.39,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench",
+    "lint"
+   ],
+   "open_gates": [
+    "pair",
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "4c3d9e12172e2de51f1024a2fe42c87756d58c4ccc3f63667e6e5ddcaaad98be",
+    "tt": "ef04baaec3b4d1d5e4a5710f9e64907d1193315cbc4345135081471ef71c8f6a",
+    "ff": "d4333370a76d9d0b90e1f711a14be2fa2c25c29e3659546bc4508b40aec125d0",
+    "ss": "01d3caac2ae77c4947c79bba0183f0f6bfb7a23c0ffa43d0a8952ce3bc5e31d2"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hix_SW",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hix_SW",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "['dsfd_m2l_vr_512x1__hix_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hix_SW.lef', 'dsfd_m2l_vr_512x1__hix_SW_ff.lib', 'dsfd_m2l_vr_512x1__hix_SW_ss.lib']); no ODB hash links it to the LEF"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +110.63 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +14.79 ps, export +14.79"
+    },
+    "export": {
+     "ok": true,
+     "detail": "export-side STA within 1 ps of the verdict (FF only; TT not exported-side checked)"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE (no bench record)"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_m2l_vr_512x1__hix_SW 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1032 blocked-above 1008 blocked-same 1; clock ck[0] insertion 193 ps; clock fi0[0] insertion 172 ps | (f) face-pin access: 1008 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M5 (51.696,131.544), di0[100] M5 (56.496,131.544), di0[101] M5 (56.544,131.544)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[370] M4 (0.025,71.280)); fix: tools/hier_contrac"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": false,
+     "detail": "registry adopted job dsfd_m2l_vr_512x1__hix_sw_m5-m5-5b76815db != bundle job s81-hend-m221pq-hix-SW-a1f23fa0b-mm"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_m2l_vr_512x1__hix_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hix_SW.lef', 'dsfd_m2l_vr_512x1__hix_SW_ff.lib', 'dsfd_m2l_vr_512x1__hix_SW_ss.lib']); no ODB hash links it to the LEF",
+    "bench: pass benches NONE; failing mutants NONE (no bench record)",
+    "lint: dsfd_m2l_vr_512x1__hix_SW 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1032 blocked-above 1008 blocked-same 1; clock ck[0] insertion 193 ps; clock fi0[0] insertion 172 ps | (f) face-pin access: 1008 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M5 (51.696,131.544), di0[100] M5 (56.496,131.544), di0[101] M5 (56.544,131.544)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[370] M4 (0.025,71.280)); fix: tools/hier_contrac",
+    "current: registry adopted job dsfd_m2l_vr_512x1__hix_sw_m5-m5-5b76815db != bundle job s81-hend-m221pq-hix-SW-a1f23fa0b-mm"
+   ],
+   "job": "s81-hend-m221pq-hix-SW-a1f23fa0b-mm",
+   "sta_odb_sha256": [
+    "3561efa2797459852a61732afc42ca9de859721329555ba944a54a18168304a1"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "verdict_orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hix-SW-a1f23fa0b-mm/routes/s81_hend_m221pq_hix_SW_a1f23fa0b_mm/work/orfs",
+   "verdict_tt_ff_drc": [
+    110.63,
+    14.79,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    14.79
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 151.54,
+       "max_clock_tree_path_ps": 192.58
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 120.34,
+       "max_clock_tree_path_ps": 172.38
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 282.49,
+      "fi0[0]": 379.62
+     },
+     "hold_max_ps": {
+      "fi0[0]": 101.75
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 121.39,
+       "max_clock_tree_path_ps": 154.15
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 96.43,
+       "max_clock_tree_path_ps": 140.62
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 217.63,
+      "fi0[0]": 298.9
+     },
+     "hold_max_ps": {
+      "fi0[0]": 90.94
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 202.03,
+       "max_clock_tree_path_ps": 263.62
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 161.22,
+       "max_clock_tree_path_ps": 231.04
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 395.36,
+      "fi0[0]": 516.58
+     },
+     "hold_max_ps": {
+      "fi0[0]": 129.67
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    }
+   },
+   "min_delay_ff": {
+    "ck[0]": {
+     "cq_min_at_pin_ps": 217.63,
+     "min_insertion_ps": 121.39,
+     "max_insertion_ps": 154.15,
+     "hold_req_max_ps": null
+    },
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 298.9,
+     "min_insertion_ps": 96.43,
+     "max_insertion_ps": 140.62,
+     "hold_req_max_ps": 90.94
+    }
+   },
+   "min_delay_budget_ff": {
+    "ck[0]": {
+     "launch_L_ps": 63.48,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 32.76,
+     "same_master_zero_wire_margin_ps": null
+    },
+    "fi0[0]": {
+     "launch_L_ps": 158.28,
+     "hold_H_ps": -5.49,
+     "insertion_spread_ps": 44.19,
+     "same_master_zero_wire_margin_ps": 113.77
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench",
+    "lint",
+    "current"
+   ],
+   "open_gates": [
+    "pair"
+   ],
+   "file_sha256": {
+    "lef": "5bc556377d09c8c22befaaa9f1412e08904da100cbe6d76673ec84453458baa3",
+    "tt": "aaa148a61f8bcf7bcafb12a5610ffb442cf569aba49a7647381adee30f2cd5e8",
+    "ff": "ababdb13ac178c8a9ccc32dc7d6d980eed7762682f2bca45d7fbc5c5f4068bc2",
+    "ss": "a8399b8d4b13c76b078615963b2731f51e229a7c47b20b69ca58f9f632cb2441"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hqe_SW",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hqe_SW",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "['dsfd_m2l_vr_512x1__hqe_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hqe_SW.lef', 'dsfd_m2l_vr_512x1__hqe_SW_ff.lib', 'dsfd_m2l_vr_512x1__hqe_SW_ss.lib']); no ODB hash links it to the LEF"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +148.42 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +26.31 ps, export +10.02"
+    },
+    "export": {
+     "ok": null,
+     "detail": "export minus verdict: FF -16.29 ps"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE (no bench record)"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_m2l_vr_512x1__hqe_SW 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1032 blocked-above 750 blocked-same 1; clock ck[0] insertion 198 ps; clock fi0[0] insertion 188 ps | (f) face-pin access: 750 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (128.088,53.424), di0[100] M4 (128.088,58.224), di0[101] M4 (128.088,58.272)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. ck[0] M5 (51.408,0.053)); fix: tools/hier_contract/"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": false,
+     "detail": "registry adopted job dsfd_m2l_vr_512x1__hqe_sw_m5-m5-5b76815db != bundle job s81-hend-m221pq-hqe-SW-a1f23fa0b-mm"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_m2l_vr_512x1__hqe_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hqe_SW.lef', 'dsfd_m2l_vr_512x1__hqe_SW_ff.lib', 'dsfd_m2l_vr_512x1__hqe_SW_ss.lib']); no ODB hash links it to the LEF",
+    "export: export minus verdict: FF -16.29 ps",
+    "bench: pass benches NONE; failing mutants NONE (no bench record)",
+    "lint: dsfd_m2l_vr_512x1__hqe_SW 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1032 blocked-above 750 blocked-same 1; clock ck[0] insertion 198 ps; clock fi0[0] insertion 188 ps | (f) face-pin access: 750 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (128.088,53.424), di0[100] M4 (128.088,58.224), di0[101] M4 (128.088,58.272)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. ck[0] M5 (51.408,0.053)); fix: tools/hier_contract/",
+    "current: registry adopted job dsfd_m2l_vr_512x1__hqe_sw_m5-m5-5b76815db != bundle job s81-hend-m221pq-hqe-SW-a1f23fa0b-mm"
+   ],
+   "job": "s81-hend-m221pq-hqe-SW-a1f23fa0b-mm",
+   "sta_odb_sha256": [
+    "ae1dd73380a6b7d64e8c8705e05e9cdaed1d5f9e8651cee4445f8502ae0a110b"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "verdict_orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hqe-SW-a1f23fa0b-mm/routes/s81_hend_m221pq_hqe_SW_a1f23fa0b_mm/work/orfs",
+   "verdict_tt_ff_drc": [
+    148.42,
+    26.31,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    10.02
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 151.16,
+       "max_clock_tree_path_ps": 198.07
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 141.31,
+       "max_clock_tree_path_ps": 187.62
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 284.36,
+      "fi0[0]": 389.13
+     },
+     "hold_max_ps": {
+      "fi0[0]": 122.73
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 120.9,
+       "max_clock_tree_path_ps": 159.12
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 112.57,
+       "max_clock_tree_path_ps": 148.38
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 218.87,
+      "fi0[0]": 305.11
+     },
+     "hold_max_ps": {
+      "fi0[0]": 104.89
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 202.71,
+       "max_clock_tree_path_ps": 269.89
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 190.64,
+       "max_clock_tree_path_ps": 259.64
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 397.71,
+      "fi0[0]": 529.56
+     },
+     "hold_max_ps": {
+      "fi0[0]": 158.03
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    }
+   },
+   "min_delay_ff": {
+    "ck[0]": {
+     "cq_min_at_pin_ps": 218.87,
+     "min_insertion_ps": 120.9,
+     "max_insertion_ps": 159.12,
+     "hold_req_max_ps": null
+    },
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 305.11,
+     "min_insertion_ps": 112.57,
+     "max_insertion_ps": 148.38,
+     "hold_req_max_ps": 104.89
+    }
+   },
+   "min_delay_budget_ff": {
+    "ck[0]": {
+     "launch_L_ps": 59.75,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 38.22,
+     "same_master_zero_wire_margin_ps": null
+    },
+    "fi0[0]": {
+     "launch_L_ps": 156.73,
+     "hold_H_ps": -7.68,
+     "insertion_spread_ps": 35.81,
+     "same_master_zero_wire_margin_ps": 114.41
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench",
+    "lint",
+    "current"
+   ],
+   "open_gates": [
+    "pair",
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "8ca685e38c87ae9869dec1de1cc6ab7d2ce01e56649eec6b52ad38568d4584dc",
+    "tt": "5066bfd145cc15b3d180ed6d89b83a75ffd49660b0474f7bd61fbe7c5a4059a3",
+    "ff": "b3972322b391469b097e906aa964e52d4062db564875f50663229508f2505ad3",
+    "ss": "25f86792fe5ac7d1c3853f056a3bc7b6adbf5bd7d71d8b3ba4f576a79ad82c0e"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_r2l_vr_1024x1__ha_SW",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_1024x1__ha_SW",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "['dsfd_r2l_vr_1024x1__ha_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_r2l_vr_1024x1__ha_SW.lef', 'dsfd_r2l_vr_1024x1__ha_SW_ff.lib', 'dsfd_r2l_vr_1024x1__ha_SW_ss.lib']); no ODB hash links it to the LEF"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +59.55 ps, export +59.55"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +12.79 ps, export +12.79"
+    },
+    "export": {
+     "ok": true,
+     "detail": "export-side STA within 1 ps of the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_pinreg']; failing mutants ['bench_neg_mut']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_r2l_vr_1024x1__ha_SW 112.296 x 112.296: PG M7 VDD 10 stripes (87% spread, 100% cov) / VSS 11 stripes (96% spread, 100% cov); strap M8; face pins 2056 blocked-above 1021 blocked-same 0; clock ck[0] insertion 184 ps; clock fi0[0] insertion 183 ps | (f) face-pin access: 1021 of 2056 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (31.248,0.000), di0[0] M5 (31.632,0.000), di0[1000] M5 (79.632,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_r2l_vr_1024x1__ha_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_r2l_vr_1024x1__ha_SW.lef', 'dsfd_r2l_vr_1024x1__ha_SW_ff.lib', 'dsfd_r2l_vr_1024x1__ha_SW_ss.lib']); no ODB hash links it to the LEF",
+    "lint: dsfd_r2l_vr_1024x1__ha_SW 112.296 x 112.296: PG M7 VDD 10 stripes (87% spread, 100% cov) / VSS 11 stripes (96% spread, 100% cov); strap M8; face pins 2056 blocked-above 1021 blocked-same 0; clock ck[0] insertion 184 ps; clock fi0[0] insertion 183 ps | (f) face-pin access: 1021 of 2056 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (31.248,0.000), di0[0] M5 (31.632,0.000), di0[1000] M5 (79.632,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+   ],
+   "job": "s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt",
+   "sta_odb_sha256": [
+    "78482207c39b75b9a5c0c10811a1bd1575d0379eace6d81da1a98c5543e85490"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "f1b64667d7674a4453f935bd1ae20a4c06ef3db0",
+   "verdict_orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_ha_SW_pinreg_f1b64667d_tt/work/orfs",
+   "verdict_tt_ff_drc": [
+    59.55,
+    12.79,
+    0
+   ],
+   "export_tt_ff": [
+    59.55,
+    12.79
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 148.01,
+       "max_clock_tree_path_ps": 183.64
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 150.37,
+       "max_clock_tree_path_ps": 183.33
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 263.15
+     },
+     "hold_max_ps": {
+      "fi0[0]": 126.89
+     },
+     "out_arcs": 1026,
+     "hold_arcs": 1026
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 118.37,
+       "max_clock_tree_path_ps": 146.19
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 120.97,
+       "max_clock_tree_path_ps": 145.71
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 204.73
+     },
+     "hold_max_ps": {
+      "fi0[0]": 109.24
+     },
+     "out_arcs": 1026,
+     "hold_arcs": 1026
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 198.19,
+       "max_clock_tree_path_ps": 253.04
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 199.36,
+       "max_clock_tree_path_ps": 252.52
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 363.63
+     },
+     "hold_max_ps": {
+      "fi0[0]": 158.1
+     },
+     "out_arcs": 1026,
+     "hold_arcs": 1026
+    }
+   },
+   "min_delay_ff": {
+    "ck[0]": {
+     "cq_min_at_pin_ps": 204.73,
+     "min_insertion_ps": 118.37,
+     "max_insertion_ps": 146.19,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "ck[0]": {
+     "launch_L_ps": 58.54,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 27.82,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "lint"
+   ],
+   "open_gates": [
+    "pair"
+   ],
+   "file_sha256": {
+    "lef": "0d407cfdb369bb9bc07ee2ad7d1908bde597d8ead0d38de2624153d794289e02",
+    "tt": "fc01c1e36c67d4599331428662706681687e69c973ff4ffddcb83573fee317ca",
+    "ff": "71f30eb527e0b4cc54c5dde3f834bd6d79b258f877e7caa4ebc5c06a000a3add",
+    "ss": "fc327cf152ec61b514e4ba398702048da1bb34748034aa16657edb02ce9ac7cb"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_r2l_vr_512x1__hcol",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hcol",
+   "gates": {
+    "pair": {
+     "ok": false,
+     "detail": "['dsfd_r2l_vr_512x1__hcol_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 04:02): it is the extraction of an earlier ODB"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +63.93 ps, export +63.93"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +23.77 ps, export +23.77"
+    },
+    "export": {
+     "ok": true,
+     "detail": "export-side STA within 1 ps of the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_pinreg']; failing mutants ['bench_neg_mut']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_r2l_vr_512x1__hcol 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 553 blocked-same 0; clock ck[0] insertion 134 ps; clock fi0[0] insertion 133 ps | (f) face-pin access: 553 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (18.960,0.000), di0[0] M4 (62.856,19.968), di0[100] M4 (62.856,24.768)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:select)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-hend-m221pq-hcol-pinreg-f1b64667d-tt"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_r2l_vr_512x1__hcol_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 04:02): it is the extraction of an earlier ODB",
+    "lint: dsfd_r2l_vr_512x1__hcol 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 553 blocked-same 0; clock ck[0] insertion 134 ps; clock fi0[0] insertion 133 ps | (f) face-pin access: 553 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (18.960,0.000), di0[0] M4 (62.856,19.968), di0[100] M4 (62.856,24.768)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+   ],
+   "job": "s81-hend-m221pq-hcol-pinreg-f1b64667d-tt",
+   "sta_odb_sha256": [
+    "90bcaa8d26f3db597c38e2ac18d95f2dc68af774f76c4bb3e3678f509412fbb3"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "f1b64667d7674a4453f935bd1ae20a4c06ef3db0",
+   "verdict_orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hcol_pinreg_f1b64667d_tt/work/orfs",
+   "verdict_tt_ff_drc": [
+    63.93,
+    23.77,
+    0
+   ],
+   "export_tt_ff": [
+    63.93,
+    23.77
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 106.05,
+       "max_clock_tree_path_ps": 133.72
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 107.52,
+       "max_clock_tree_path_ps": 133.33
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 324.55
+     },
+     "hold_max_ps": {
+      "fi0[0]": 88.82
+     },
+     "out_arcs": 514,
+     "hold_arcs": 514
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 84.78,
+       "max_clock_tree_path_ps": 104.48
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 85.47,
+       "max_clock_tree_path_ps": 105.15
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 172.95
+     },
+     "hold_max_ps": {
+      "fi0[0]": 62.85
+     },
+     "out_arcs": 514,
+     "hold_arcs": 514
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 147.31,
+       "max_clock_tree_path_ps": 186.78
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 146.14,
+       "max_clock_tree_path_ps": 184.53
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 324.41
+     },
+     "hold_max_ps": {
+      "fi0[0]": 90.7
+     },
+     "out_arcs": 514,
+     "hold_arcs": 514
+    }
+   },
+   "min_delay_ff": {
+    "ck[0]": {
+     "cq_min_at_pin_ps": 172.95,
+     "min_insertion_ps": 84.78,
+     "max_insertion_ps": 104.48,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "ck[0]": {
+     "launch_L_ps": 68.47,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 19.7,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "pair",
+    "lint"
+   ],
+   "open_gates": [],
+   "file_sha256": {
+    "lef": "7a9f3515bef54b3292980434fab5926c3ab054198e76b5812642cdf5f8281132",
+    "tt": "4c0a68ecdccc8fd14cece12957664fea6222b2d6ba8e39d84371ce779a693ec9",
+    "ff": "52a2c9dcf467b0e69c1acd19f54918b7357bf8deb5f3dd0e85439925115a70df",
+    "ss": "28946dc37b2d25fdb77e616b54aae7207965b75a518a01ad0b13d9b80b56c3de"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_r2l_vr_512x1__hsel",
+   "instances": 1,
+   "export_dir": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hsel",
+   "gates": {
+    "pair": {
+     "ok": false,
+     "detail": "['dsfd_r2l_vr_512x1__hsel_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 03:38): it is the extraction of an earlier ODB"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +72.85 ps, export +72.85"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +21.72 ps, export +21.72"
+    },
+    "export": {
+     "ok": true,
+     "detail": "export-side STA within 1 ps of the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_pinreg']; failing mutants ['bench_neg_mut']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_r2l_vr_512x1__hsel 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 283 blocked-same 4; clock ck[0] insertion 131 ps; clock fi0[0] insertion 130 ps | (f) face-pin access: 283 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (62.856,19.968), di0[100] M4 (62.856,24.768), di0[101] M4 (62.856,24.816)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 4 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[148] M5 (26.256,64.720), o[181] M5 (27.840,64.720), "
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck[0]', 'fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['ck[0]', 'fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:select)"
+    },
+    "current": {
+     "ok": false,
+     "detail": "registry adopted job dsfd_r2l_vr_512x1__hsel_m5-m5-5b76815db != bundle job s81-hend-m221pq-hsel-pinreg-f1b64667d-tt"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_r2l_vr_512x1__hsel_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 03:38): it is the extraction of an earlier ODB",
+    "lint: dsfd_r2l_vr_512x1__hsel 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 283 blocked-same 4; clock ck[0] insertion 131 ps; clock fi0[0] insertion 130 ps | (f) face-pin access: 283 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (62.856,19.968), di0[100] M4 (62.856,24.768), di0[101] M4 (62.856,24.816)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 4 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[148] M5 (26.256,64.720), o[181] M5 (27.840,64.720), ",
+    "current: registry adopted job dsfd_r2l_vr_512x1__hsel_m5-m5-5b76815db != bundle job s81-hend-m221pq-hsel-pinreg-f1b64667d-tt"
+   ],
+   "job": "s81-hend-m221pq-hsel-pinreg-f1b64667d-tt",
+   "sta_odb_sha256": [
+    "5fe7357bafe6e8fc6413b3ae41d6ba629615a4dcc3097a2ac8267fc0000d0c82"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "f1b64667d7674a4453f935bd1ae20a4c06ef3db0",
+   "verdict_orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hsel-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hsel_pinreg_f1b64667d_tt/work/orfs",
+   "verdict_tt_ff_drc": [
+    72.85,
+    21.72,
+    0
+   ],
+   "export_tt_ff": [
+    72.85,
+    21.72
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 105.61,
+       "max_clock_tree_path_ps": 130.83
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 106.64,
+       "max_clock_tree_path_ps": 129.85
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 324.89
+     },
+     "hold_max_ps": {
+      "fi0[0]": 82.99
+     },
+     "out_arcs": 514,
+     "hold_arcs": 514
+    },
+    "ff": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 85.24,
+       "max_clock_tree_path_ps": 107.31
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 87.22,
+       "max_clock_tree_path_ps": 106.03
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 172.8
+     },
+     "hold_max_ps": {
+      "fi0[0]": 61.26
+     },
+     "out_arcs": 514,
+     "hold_arcs": 514
+    },
+    "ss": {
+     "clocks": {
+      "ck[0]": {
+       "min_clock_tree_path_ps": 148.5,
+       "max_clock_tree_path_ps": 187.51
+      },
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 149.15,
+       "max_clock_tree_path_ps": 186.74
+      }
+     },
+     "cq_min_ps": {
+      "ck[0]": 328.26
+     },
+     "hold_max_ps": {
+      "fi0[0]": 95.75
+     },
+     "out_arcs": 514,
+     "hold_arcs": 514
+    }
+   },
+   "min_delay_ff": {
+    "ck[0]": {
+     "cq_min_at_pin_ps": 172.8,
+     "min_insertion_ps": 85.24,
+     "max_insertion_ps": 107.31,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "ck[0]": {
+     "launch_L_ps": 65.49,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 22.07,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "pair",
+    "lint",
+    "current"
+   ],
+   "open_gates": [],
+   "file_sha256": {
+    "lef": "fd9242f2c77f969211273e4736fa54ca26a9c9c28ee5d43e49e8a0b42cd30a83",
+    "tt": "8d11ae3956f352adf709eaa66dcc1e719a2e8df5353683e4c4ed5f75967c365f",
+    "ff": "6eb6cc2f513239e412a2b45399ccebf8d04bc1619c3dd6472dc832c3d817b9a2",
+    "ss": "624099648d537e32a95e77dc2981eb783e75d7a09b33073bce098f6f3ce0bcdc"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_stnh_512x1",
+   "instances": 598,
+   "export_dir": "physical/s81_die_views/views/dsfd_stnh_512x1",
+   "gates": {
+    "pair": {
+     "ok": false,
+     "detail": "['dsfd_stnh_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +77.89 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +383.05 ps, export +399.43"
+    },
+    "export": {
+     "ok": null,
+     "detail": "export minus verdict: FF +16.38 ps"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_words']; failing mutants ['bench_neg_data_mutant']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_stnh_512x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1026 blocked-above 352 blocked-same 1; clock fi0[0] insertion 102 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 352 of 1026 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (0.000,2.928), di0[100] M4 (0.000,7.728), di0[101] M4 (0.000,7.776)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1026 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. di0[6] M4 ("
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-dsfd-stnh-512x1-b85da0774-c-arch"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_stnh_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
+    "export: export minus verdict: FF +16.38 ps",
+    "lint: dsfd_stnh_512x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1026 blocked-above 352 blocked-same 1; clock fi0[0] insertion 102 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 352 of 1026 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (0.000,2.928), di0[100] M4 (0.000,7.728), di0[101] M4 (0.000,7.776)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1026 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. di0[6] M4 ("
+   ],
+   "job": "s81-dsfd-stnh-512x1-b85da0774-c-arch",
+   "sta_odb_sha256": [
+    "ff66ba7c8ef58ad46375440efd8eb0d23f09a5a0eb4420ccc6d89ebb50fb4fc1"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "b85da0774a0aee53949d63aa05338d3cdb3b0a56",
+   "verdict_orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-stnh-512x1-b85da0774-c-arch/routes/s81_dsfd_stnh_512x1_b85da0774_c_arch/work/orfs",
+   "verdict_tt_ff_drc": [
+    77.89,
+    383.05,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    399.43
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 83.9,
+       "max_clock_tree_path_ps": 102.47
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 151.24,
+      "fi0[0]": 3.23
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 106.45
+     },
+     "out_arcs": 514,
+     "hold_arcs": 512
+    },
+    "ff": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 65.08,
+       "max_clock_tree_path_ps": 79.01
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 112.91,
+      "fi0[0]": 2.27
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 84.24
+     },
+     "out_arcs": 514,
+     "hold_arcs": 512
+    },
+    "ss": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 122.99,
+       "max_clock_tree_path_ps": 151.04
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 222.85,
+      "fi0[0]": 5.22
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 155.2
+     },
+     "out_arcs": 514,
+     "hold_arcs": 512
+    }
+   },
+   "min_delay_ff": {
+    "fi0[0]@fall": {
+     "cq_min_at_pin_ps": 112.91,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": 84.24
+    },
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 2.27,
+     "min_insertion_ps": 65.08,
+     "max_insertion_ps": 79.01,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "fi0[0]": {
+     "launch_L_ps": -76.74,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 13.93,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "pair",
+    "lint"
+   ],
+   "open_gates": [
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "9f85ce78af9d448011e23313f9955cb9992f0fc6aa58ff2e3b13b0ddda2c4856",
+    "tt": "6bfdf29dd752281952f9a085d73ff8221052db1a176bf94c556fc90efb8e5204",
+    "ff": "9e9755658c8e86cd98e728d72f7e01f30f0d94dce42626415e0521e14792f03c",
+    "ss": "4cecc44e59cfb8fe7a9bbf5aa03072a35b541b8b9a2ca6c6c5fce6829601be56"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_stnh_514x1",
+   "instances": 43,
+   "export_dir": "physical/s81_die_views/views/dsfd_stnh_514x1",
+   "gates": {
+    "pair": {
+     "ok": false,
+     "detail": "['dsfd_stnh_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +79.56 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +383.75 ps, export +400.09"
+    },
+    "export": {
+     "ok": null,
+     "detail": "export minus verdict: FF +16.34 ps"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_words']; failing mutants ['bench_neg_data_mutant']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_stnh_514x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1030 blocked-above 367 blocked-same 1; clock fi0[0] insertion 104 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 367 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[100] M4 (0.000,7.680), di0[101] M4 (0.000,7.728), di0[102] M4 (0.000,7.776)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1030 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. di0[142] "
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-dsfd-stnh-514x1-b85da0774-c-arch"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_stnh_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
+    "export: export minus verdict: FF +16.34 ps",
+    "lint: dsfd_stnh_514x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1030 blocked-above 367 blocked-same 1; clock fi0[0] insertion 104 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 367 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[100] M4 (0.000,7.680), di0[101] M4 (0.000,7.728), di0[102] M4 (0.000,7.776)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1030 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. di0[142] "
+   ],
+   "job": "s81-dsfd-stnh-514x1-b85da0774-c-arch",
+   "sta_odb_sha256": [
+    "c1f32d88c4cc53465b8630f5f6ba635bb2d87138a613f4b00198f8e30e5e1aed"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "b85da0774a0aee53949d63aa05338d3cdb3b0a56",
+   "verdict_orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-stnh-514x1-b85da0774-c-arch/routes/s81_dsfd_stnh_514x1_b85da0774_c_arch/work/orfs",
+   "verdict_tt_ff_drc": [
+    79.56,
+    383.75,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    400.09
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 86.43,
+       "max_clock_tree_path_ps": 104.04
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 153.84,
+      "fi0[0]": 3.28
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 108.61
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    },
+    "ff": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 63.17,
+       "max_clock_tree_path_ps": 76.21
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 112.6,
+      "fi0[0]": 2.09
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 80.58
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    },
+    "ss": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 119.74,
+       "max_clock_tree_path_ps": 147.03
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 221.36,
+      "fi0[0]": 4.79
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 150.76
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    }
+   },
+   "min_delay_ff": {
+    "fi0[0]@fall": {
+     "cq_min_at_pin_ps": 112.6,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": 80.58
+    },
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 2.09,
+     "min_insertion_ps": 63.17,
+     "max_insertion_ps": 76.21,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "fi0[0]": {
+     "launch_L_ps": -74.12,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 13.04,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "pair",
+    "lint"
+   ],
+   "open_gates": [
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "e6d6fba05893fca7be1aaa914813b8cca1944fde8865a02bbcc8a276404cf8e4",
+    "tt": "1ed0b421455ec382f47a0656cd9ef315ae43f3808f7f13b68432d06f49de22db",
+    "ff": "92aa0e82ff7d0b67d9521308f1368ec15613002e316f324cdd3cda00067b1177",
+    "ss": "ba3cff0849234a33ef3d5dd677fcc029b4cfa619d0ee64b9b440d5c69c83d71b"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_stnh_566x1",
+   "instances": 391,
+   "export_dir": "physical/s81_die_views/views/dsfd_stnh_566x1",
+   "gates": {
+    "pair": {
+     "ok": false,
+     "detail": "['dsfd_stnh_566x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +76.93 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +382.33 ps, export +397.94"
+    },
+    "export": {
+     "ok": null,
+     "detail": "export minus verdict: FF +15.61 ps"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_words']; failing mutants ['bench_neg_data_mutant']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_stnh_566x1 17.256 x 32.376: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1134 blocked-above 396 blocked-same 0; clock fi0[0] insertion 111 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 396 of 1134 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (0.000,2.688), di0[100] M4 (0.000,7.488), di0[101] M4 (0.000,7.536)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-dsfd-stnh-566x1-2e2d7aa3f-arch"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_stnh_566x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
+    "export: export minus verdict: FF +15.61 ps",
+    "lint: dsfd_stnh_566x1 17.256 x 32.376: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1134 blocked-above 396 blocked-same 0; clock fi0[0] insertion 111 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 396 of 1134 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (0.000,2.688), di0[100] M4 (0.000,7.488), di0[101] M4 (0.000,7.536)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+   ],
+   "job": "s81-dsfd-stnh-566x1-2e2d7aa3f-arch",
+   "sta_odb_sha256": [
+    "9c83def3682082407b3d64c9f9d6c71a9dff2c086c0ddfb059c587750d41262f"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb",
+   "verdict_orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-stnh-566x1-2e2d7aa3f-arch/routes/s81_dsfd_stnh_566x1_2e2d7aa3f_arch/work/orfs",
+   "verdict_tt_ff_drc": [
+    76.93,
+    382.33,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    397.94
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 87.15,
+       "max_clock_tree_path_ps": 110.69
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 160.68,
+      "fi0[0]": 3.27
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 114.26
+     },
+     "out_arcs": 568,
+     "hold_arcs": 566
+    },
+    "ff": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 66.24,
+       "max_clock_tree_path_ps": 81.63
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 115.38,
+      "fi0[0]": 2.22
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 86.73
+     },
+     "out_arcs": 568,
+     "hold_arcs": 566
+    },
+    "ss": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 125.29,
+       "max_clock_tree_path_ps": 154.7
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 227.22,
+      "fi0[0]": 5.09
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 159.33
+     },
+     "out_arcs": 568,
+     "hold_arcs": 566
+    }
+   },
+   "min_delay_ff": {
+    "fi0[0]@fall": {
+     "cq_min_at_pin_ps": 115.38,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": 86.73
+    },
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 2.22,
+     "min_insertion_ps": 66.24,
+     "max_insertion_ps": 81.63,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "fi0[0]": {
+     "launch_L_ps": -79.41,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 15.39,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "pair",
+    "lint"
+   ],
+   "open_gates": [
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "e426304bbf8dc4fed4d1297b83c7970462e0c61c371b7f5595993f59ea7a3513",
+    "tt": "245474e884397989a01803bf01dc361432b158223824f28847f01290552f562c",
+    "ff": "13ba3a1d8c99958e8fee4a82782d4f0d27e0513fdef134eda937255be311cb8d",
+    "ss": "fcb57f45beeb9c244fed377c17551b2673c7351522a2e90a24c4fa0a08f25037"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_stnv_512x1",
+   "instances": 383,
+   "export_dir": "physical/s81_die_views/views/dsfd_stnv_512x1",
+   "gates": {
+    "pair": {
+     "ok": false,
+     "detail": "['dsfd_stnv_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +79.12 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +382.91 ps, export +398.57"
+    },
+    "export": {
+     "ok": null,
+     "detail": "export minus verdict: FF +15.66 ps"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_words']; failing mutants ['bench_neg_data_mutant']"
+    },
+    "lint": {
+     "ok": true,
+     "detail": "dsfd_stnv_512x1 29.352 x 17.256: PG M7 VDD 3 stripes (74% spread, 100% cov) / VSS 3 stripes (74% spread, 100% cov); strap M8; face pins 1026 blocked-above 0 blocked-same 0; clock fi0[0] insertion 104 ps"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-dsfd-stnv-512x1-2e2d7aa3f-arch"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_stnv_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB",
+    "export: export minus verdict: FF +15.66 ps"
+   ],
+   "job": "s81-dsfd-stnv-512x1-2e2d7aa3f-arch",
+   "sta_odb_sha256": [
+    "947343c4a6a8daacb3f8e7ad195d41e45916a11e3636275f0dabf3859c6165e7"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb",
+   "verdict_orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-stnv-512x1-2e2d7aa3f-arch/routes/s81_dsfd_stnv_512x1_2e2d7aa3f_arch/work/orfs",
+   "verdict_tt_ff_drc": [
+    79.12,
+    382.91,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    398.57
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 87.19,
+       "max_clock_tree_path_ps": 103.66
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 153.06,
+      "fi0[0]": 3.07
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 108.06
+     },
+     "out_arcs": 514,
+     "hold_arcs": 512
+    },
+    "ff": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 61.99,
+       "max_clock_tree_path_ps": 80.38
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 113.66,
+      "fi0[0]": 2.11
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 84.09
+     },
+     "out_arcs": 514,
+     "hold_arcs": 512
+    },
+    "ss": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 120.0,
+       "max_clock_tree_path_ps": 152.0
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 224.06,
+      "fi0[0]": 4.84
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 155.6
+     },
+     "out_arcs": 514,
+     "hold_arcs": 512
+    }
+   },
+   "min_delay_ff": {
+    "fi0[0]@fall": {
+     "cq_min_at_pin_ps": 113.66,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": 84.09
+    },
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 2.11,
+     "min_insertion_ps": 61.99,
+     "max_insertion_ps": 80.38,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "fi0[0]": {
+     "launch_L_ps": -78.27,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 18.39,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "pair"
+   ],
+   "open_gates": [
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "e061ee669b2c27815d625198973c3378a16c21536ec641542e92220e50ba7fcf",
+    "tt": "47e8a01a98d0e18e5b15b8f7775a3609b85ad8eb36c0f014f057128367520b66",
+    "ff": "431dfdbef745f473490c7c2c81033643c30d4100edeea209a55557429f92eb1c",
+    "ss": "3750aaf7318b62734bca09af75b200f6a5ee67c0c529825498e94a33c12ec5b5"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_stnv_514x1",
+   "instances": 129,
+   "export_dir": "physical/s81_die_views/views/dsfd_stnv_514x1",
+   "gates": {
+    "pair": {
+     "ok": false,
+     "detail": "['dsfd_stnv_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +80.09 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +383.95 ps, export +401.24"
+    },
+    "export": {
+     "ok": null,
+     "detail": "export minus verdict: FF +17.29 ps"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_exact_words']; failing mutants ['bench_neg_data_mutant']"
+    },
+    "lint": {
+     "ok": false,
+     "detail": "dsfd_stnv_514x1 30.216 x 17.256: PG M7 VDD 3 stripes (72% spread, 100% cov) / VSS 3 stripes (72% spread, 100% cov); strap M8; face pins 1030 blocked-above 68 blocked-same 0; clock fi0[0] insertion 105 ps | (f) face-pin access: 68 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[10] M5 (3.360,0.000), di0[11] M5 (3.408,0.000), di0[12] M5 (3.456,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['fi0[0]']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "vector-named clock pins ['fi0[0]'] (no contract scalar rule for this master)"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:field)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81-dsfd-stnv-514x1-b85da0774-c-arch"
+    }
+   },
+   "why": [
+    "pair: ['dsfd_stnv_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB",
+    "export: export minus verdict: FF +17.29 ps",
+    "lint: dsfd_stnv_514x1 30.216 x 17.256: PG M7 VDD 3 stripes (72% spread, 100% cov) / VSS 3 stripes (72% spread, 100% cov); strap M8; face pins 1030 blocked-above 68 blocked-same 0; clock fi0[0] insertion 105 ps | (f) face-pin access: 68 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[10] M5 (3.360,0.000), di0[11] M5 (3.408,0.000), di0[12] M5 (3.456,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+   ],
+   "job": "s81-dsfd-stnv-514x1-b85da0774-c-arch",
+   "sta_odb_sha256": [
+    "666e6e6eb275a9290d85f3cd93ab1530c089adc6bb0722116242b8d91475b89f"
+   ],
+   "job_status": "CLOSED",
+   "job_commit": "b85da0774a0aee53949d63aa05338d3cdb3b0a56",
+   "verdict_orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-dsfd-stnv-514x1-b85da0774-c-arch/routes/s81_dsfd_stnv_514x1_b85da0774_c_arch/work/orfs",
+   "verdict_tt_ff_drc": [
+    80.09,
+    383.95,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    401.24
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 87.92,
+       "max_clock_tree_path_ps": 105.34
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 155.0,
+      "fi0[0]": 3.07
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 111.37
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    },
+    "ff": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 63.59,
+       "max_clock_tree_path_ps": 77.04
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 114.06,
+      "fi0[0]": 2.11
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 81.42
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    },
+    "ss": {
+     "clocks": {
+      "fi0[0]": {
+       "min_clock_tree_path_ps": 121.46,
+       "max_clock_tree_path_ps": 148.88
+      }
+     },
+     "cq_min_ps": {
+      "fi0[0]@fall": 224.12,
+      "fi0[0]": 4.84
+     },
+     "hold_max_ps": {
+      "fi0[0]@fall": 152.78
+     },
+     "out_arcs": 516,
+     "hold_arcs": 514
+    }
+   },
+   "min_delay_ff": {
+    "fi0[0]@fall": {
+     "cq_min_at_pin_ps": 114.06,
+     "min_insertion_ps": null,
+     "max_insertion_ps": null,
+     "hold_req_max_ps": 81.42
+    },
+    "fi0[0]": {
+     "cq_min_at_pin_ps": 2.11,
+     "min_insertion_ps": 63.59,
+     "max_insertion_ps": 77.04,
+     "hold_req_max_ps": null
+    }
+   },
+   "min_delay_budget_ff": {
+    "fi0[0]": {
+     "launch_L_ps": -74.93,
+     "hold_H_ps": null,
+     "insertion_spread_ps": 13.45,
+     "same_master_zero_wire_margin_ps": null
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "pair",
+    "lint"
+   ],
+   "open_gates": [
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "3ebb2cfa373071c454bc5ce0f0a9ec7c76da2eb14ac94755205f6b1feb07c60a",
+    "tt": "c81ab9f26e73fdc33ed9964e7d0e2931012b96c6bd95a1c95fc17673593d7d06",
+    "ff": "c1fd25ba6deb05f2f5e9416aee7060d85bde7873de960d1dedfd275630c4c73e",
+    "ss": "d9793c86de54b14a45f3c617992b53e8ce7647d4c85e6e0180340610b3a4bc39"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "dsfd_svc_join",
+   "instances": 1,
+   "export_dir": "physical/ref_tile/s81_svcjoin_ref/views/dsfd_svc_join",
+   "gates": {
+    "pair": {
+     "ok": true,
+     "detail": "LEF + TT/FF/SS ETM from one export of the verdict's orfs dir (no ODB hash recorded)"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +84.40 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +7.89 ps, no export-side FF STA"
+    },
+    "export": {
+     "ok": null,
+     "detail": "no export-side corner STA record to compare with the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": true,
+     "detail": "pass benches ['bench_svc_job_gate']; failing mutants ['bench_svc_job_neg_partialdone']"
+    },
+    "lint": {
+     "ok": true,
+     "detail": "dsfd_svc_join 64.8 x 43.2: PG M5 VDD 12 stripes (92% spread, 100% cov) / VSS 12 stripes (92% spread, 100% cov); strap M6; face pins 133 blocked-above 0 blocked-same 0; clock ck insertion 121 ps"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['ck']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "scalar"
+    },
+    "thr": {
+     "ok": true,
+     "detail": "registry CLOSED-TIMING, THROUGHPUT-QUALIFIED (ratio None, class row class:hbm)"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81_svcjoin_ref-v1-b3c4341ce"
+    }
+   },
+   "why": [
+    "export: no export-side corner STA record to compare with the verdict"
+   ],
+   "job": "s81_svcjoin_ref-v1-b3c4341ce",
+   "sta_odb_sha256": [],
+   "job_status": "CLOSED",
+   "job_commit": "b3c4341cecf70c605fd902b499c02205f3896d4d",
+   "verdict_orfs_dir": "/srv/opentallas/claude/closure-loop/s81_svcjoin_ref-v1-b3c4341ce/routes/s81_svcjoin_ref_v1_b3c4341ce/work/orfs",
+   "verdict_tt_ff_drc": [
+    84.4,
+    7.89,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    null
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "ck": {
+       "min_clock_tree_path_ps": 85.76,
+       "max_clock_tree_path_ps": 120.99
+      }
+     },
+     "cq_min_ps": {
+      "ck": 227.66
+     },
+     "hold_max_ps": {
+      "ck": 80.61
+     },
+     "out_arcs": 44,
+     "hold_arcs": 36
+    },
+    "ff": {
+     "clocks": {
+      "ck": {
+       "min_clock_tree_path_ps": 67.49,
+       "max_clock_tree_path_ps": 99.16
+      }
+     },
+     "cq_min_ps": {
+      "ck": 170.22
+     },
+     "hold_max_ps": {
+      "ck": 68.9
+     },
+     "out_arcs": 44,
+     "hold_arcs": 36
+    },
+    "ss": {
+     "clocks": {
+      "ck": {
+       "min_clock_tree_path_ps": 117.63,
+       "max_clock_tree_path_ps": 161.34
+      }
+     },
+     "cq_min_ps": {
+      "ck": 324.5
+     },
+     "hold_max_ps": {
+      "ck": 105.82
+     },
+     "out_arcs": 44,
+     "hold_arcs": 36
+    }
+   },
+   "min_delay_ff": {
+    "ck": {
+     "cq_min_at_pin_ps": 170.22,
+     "min_insertion_ps": 67.49,
+     "max_insertion_ps": 99.16,
+     "hold_req_max_ps": 68.9
+    }
+   },
+   "min_delay_budget_ff": {
+    "ck": {
+     "launch_L_ps": 71.06,
+     "hold_H_ps": 1.41,
+     "insertion_spread_ps": 31.67,
+     "same_master_zero_wire_margin_ps": 19.65
+    }
+   },
+   "verdict": "NOT_ESTABLISHED",
+   "failed_gates": [],
+   "open_gates": [
+    "export"
+   ],
+   "file_sha256": {
+    "lef": "11f29ae91ca9920c4f982515a0022822cf1f6b954bb919f717a037f8e25bbc26",
+    "tt": "ea7dd9edbcdda4d031fcb4a0f53ea6120672451d77e8d7fc455655396d4d4e67",
+    "ff": "d348a9c33d112a8e1179ace0fa0dcbb962c4ac2c6ef9294eb958766bcb305696",
+    "ss": "62941a54db50a2e43a1b1186263b8b85a9c75f777a43455098a7c10fa6bc7c69"
+   },
+   "hash_matches_manifest": true
+  },
+  {
+   "master": "ot_s81_hc_ctfn",
+   "instances": 64,
+   "export_dir": "physical/ref_tile/s81hc_ctfn_ref/views/ot_s81_hc_ctfn",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/routes/s81hc_ctfn_ref_v1_4c6ea9b8c/work/orfs: the loop installs the ECO ODB there before re-export, but the export records no ODB hash"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +148.41 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +17.65 ps, no export-side FF STA"
+    },
+    "export": {
+     "ok": null,
+     "detail": "no export-side corner STA record to compare with the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE"
+    },
+    "lint": {
+     "ok": true,
+     "detail": "ot_s81_hc_ctfn 576.72 x 25.92: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 5857 blocked-above 0 blocked-same 0; clock clk insertion 415 ps"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['clk']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "scalar"
+    },
+    "thr": {
+     "ok": null,
+     "detail": "no budget row for this master: its parent element's production bench must cover it"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81hc_ctfn_ref-v1-4c6ea9b8c"
+    }
+   },
+   "why": [
+    "pair: verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/routes/s81hc_ctfn_ref_v1_4c6ea9b8c/work/orfs: the loop installs the ECO ODB there before re-export, but the export records no ODB hash",
+    "export: no export-side corner STA record to compare with the verdict",
+    "bench: pass benches NONE; failing mutants NONE",
+    "thr: no budget row for this master: its parent element's production bench must cover it"
+   ],
+   "job": "s81hc_ctfn_ref-v1-4c6ea9b8c",
+   "sta_odb_sha256": [],
+   "job_status": "CLOSED",
+   "job_commit": "4c6ea9b8c5a85de9bbf974ed38bcfcc87e47c3b9",
+   "verdict_orfs_dir": "/srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/cl/eco/pass2/orfs",
+   "verdict_tt_ff_drc": [
+    148.41,
+    17.65,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    null
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 297.02,
+       "max_clock_tree_path_ps": 414.78
+      }
+     },
+     "cq_min_ps": {
+      "clk": 473.72
+     },
+     "hold_max_ps": {
+      "clk": 301.29
+     },
+     "out_arcs": 2928,
+     "hold_arcs": 2928
+    },
+    "ff": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 246.17,
+       "max_clock_tree_path_ps": 352.41
+      }
+     },
+     "cq_min_ps": {
+      "clk": 384.43
+     },
+     "hold_max_ps": {
+      "clk": 265.15
+     },
+     "out_arcs": 2928,
+     "hold_arcs": 2928
+    },
+    "ss": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 376.33,
+       "max_clock_tree_path_ps": 515.32
+      }
+     },
+     "cq_min_ps": {
+      "clk": 616.83
+     },
+     "hold_max_ps": {
+      "clk": 384.63
+     },
+     "out_arcs": 2928,
+     "hold_arcs": 2928
+    }
+   },
+   "min_delay_ff": {
+    "clk": {
+     "cq_min_at_pin_ps": 384.43,
+     "min_insertion_ps": 246.17,
+     "max_insertion_ps": 352.41,
+     "hold_req_max_ps": 265.15
+    }
+   },
+   "min_delay_budget_ff": {
+    "clk": {
+     "launch_L_ps": 32.02,
+     "hold_H_ps": 18.98,
+     "insertion_spread_ps": 106.24,
+     "same_master_zero_wire_margin_ps": -36.96
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench"
+   ],
+   "open_gates": [
+    "pair",
+    "export",
+    "thr"
+   ],
+   "file_sha256": {
+    "lef": "be9d8e5639cd1697ebac01a1780468c60d72aa92d5a3d2af311c7de93852390a",
+    "tt": "3863865ddf86a1a4402f7325d6bf40ce495c230f26e41ff3a1514089e2071904",
+    "ff": "4c94d07253e10d87dd0a3e818a0bb74ead97eaac1a6ee1499be7baf888875549",
+    "ss": "1f9f2207858da9288abab483e449ab056e26c9c529a6bc8cd895611679bd4c67"
+   },
+   "hash_matches_manifest": true,
+   "family": "hc_half_leaf"
+  },
+  {
+   "master": "ot_s81_hc_ctfs",
+   "instances": 64,
+   "export_dir": "physical/ref_tile/s81hc_ctfs_ref/views/ot_s81_hc_ctfs",
+   "gates": {
+    "pair": {
+     "ok": null,
+     "detail": "verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/routes/s81hc_ctfs_ref_v1_a9cfb97b9/work/orfs: the loop installs the ECO ODB there before re-export, but the export records no ODB hash"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +288.38 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +19.57 ps, no export-side FF STA"
+    },
+    "export": {
+     "ok": null,
+     "detail": "no export-side corner STA record to compare with the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE"
+    },
+    "lint": {
+     "ok": true,
+     "detail": "ot_s81_hc_ctfs 576.72 x 25.92: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 5857 blocked-above 0 blocked-same 0; clock clk insertion 355 ps"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['clk']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "scalar"
+    },
+    "thr": {
+     "ok": null,
+     "detail": "no budget row for this master: its parent element's production bench must cover it"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81hc_ctfs_ref-v1-a9cfb97b9"
+    }
+   },
+   "why": [
+    "pair: verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/routes/s81hc_ctfs_ref_v1_a9cfb97b9/work/orfs: the loop installs the ECO ODB there before re-export, but the export records no ODB hash",
+    "export: no export-side corner STA record to compare with the verdict",
+    "bench: pass benches NONE; failing mutants NONE",
+    "thr: no budget row for this master: its parent element's production bench must cover it"
+   ],
+   "job": "s81hc_ctfs_ref-v1-a9cfb97b9",
+   "sta_odb_sha256": [],
+   "job_status": "CLOSED",
+   "job_commit": "a9cfb97b96ad8e09181b71697593042b93cdebb6",
+   "verdict_orfs_dir": "/srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/cl/eco/pass2/orfs",
+   "verdict_tt_ff_drc": [
+    288.38,
+    19.57,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    null
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 281.26,
+       "max_clock_tree_path_ps": 354.53
+      }
+     },
+     "cq_min_ps": {
+      "clk": 450.4
+     },
+     "hold_max_ps": {
+      "clk": 247.03
+     },
+     "out_arcs": 2928,
+     "hold_arcs": 2928
+    },
+    "ff": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 231.8,
+       "max_clock_tree_path_ps": 296.22
+      }
+     },
+     "cq_min_ps": {
+      "clk": 360.1
+     },
+     "hold_max_ps": {
+      "clk": 217.41
+     },
+     "out_arcs": 2928,
+     "hold_arcs": 2928
+    },
+    "ss": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 358.66,
+       "max_clock_tree_path_ps": 451.54
+      }
+     },
+     "cq_min_ps": {
+      "clk": 597.7
+     },
+     "hold_max_ps": {
+      "clk": 291.83
+     },
+     "out_arcs": 2928,
+     "hold_arcs": 2928
+    }
+   },
+   "min_delay_ff": {
+    "clk": {
+     "cq_min_at_pin_ps": 360.1,
+     "min_insertion_ps": 231.8,
+     "max_insertion_ps": 296.22,
+     "hold_req_max_ps": 217.41
+    }
+   },
+   "min_delay_budget_ff": {
+    "clk": {
+     "launch_L_ps": 63.88,
+     "hold_H_ps": -14.39,
+     "insertion_spread_ps": 64.42,
+     "same_master_zero_wire_margin_ps": 28.27
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench"
+   ],
+   "open_gates": [
+    "pair",
+    "export",
+    "thr"
+   ],
+   "file_sha256": {
+    "lef": "5f19bdb0cb5b6d346a4219990092e95ca17fb334b743ee4f2ca60e870b9642e3",
+    "tt": "18c96223ce0e181b02bd77b028f258555135799e05eea21409f5ae6861ce13d3",
+    "ff": "65616da8365bd1a31e728adf64f95830900b6f2903f2a631ff832ea17a65ab35",
+    "ss": "56fc1df664057de50a5121ae1e873cb1647fe63e9a1a27c3ad4379e996878789"
+   },
+   "hash_matches_manifest": true,
+   "family": "hc_half_leaf"
+  },
+  {
+   "master": "ot_s81_hc_ctfx",
+   "instances": 64,
+   "export_dir": "physical/ref_tile/s81hc_ctfx_ref/views/ot_s81_hc_ctfx",
+   "gates": {
+    "pair": {
+     "ok": true,
+     "detail": "LEF + TT/FF/SS ETM from one export of the verdict's orfs dir (no ODB hash recorded)"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +270.20 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +4.80 ps, no export-side FF STA"
+    },
+    "export": {
+     "ok": null,
+     "detail": "no export-side corner STA record to compare with the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE"
+    },
+    "lint": {
+     "ok": true,
+     "detail": "ot_s81_hc_ctfx 576.72 x 12.96: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 2272 blocked-above 0 blocked-same 0; clock clk insertion 218 ps"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['clk']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "scalar"
+    },
+    "thr": {
+     "ok": null,
+     "detail": "no budget row for this master: its parent element's production bench must cover it"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81hc_ctfx_ref-v1-a9cfb97b9"
+    }
+   },
+   "why": [
+    "export: no export-side corner STA record to compare with the verdict",
+    "bench: pass benches NONE; failing mutants NONE",
+    "thr: no budget row for this master: its parent element's production bench must cover it"
+   ],
+   "job": "s81hc_ctfx_ref-v1-a9cfb97b9",
+   "sta_odb_sha256": [],
+   "job_status": "CLOSED",
+   "job_commit": "a9cfb97b96ad8e09181b71697593042b93cdebb6",
+   "verdict_orfs_dir": "/srv/opentallas/claude/closure-loop/s81hc_ctfx_ref-v1-a9cfb97b9/routes/s81hc_ctfx_ref_v1_a9cfb97b9/work/orfs",
+   "verdict_tt_ff_drc": [
+    270.2,
+    4.8,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    null
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 177.79,
+       "max_clock_tree_path_ps": 218.04
+      }
+     },
+     "cq_min_ps": {
+      "clk": 317.56
+     },
+     "hold_max_ps": {
+      "clk": 171.08
+     },
+     "out_arcs": 1135,
+     "hold_arcs": 1136
+    },
+    "ff": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 148.43,
+       "max_clock_tree_path_ps": 183.82
+      }
+     },
+     "cq_min_ps": {
+      "clk": 251.09
+     },
+     "hold_max_ps": {
+      "clk": 151.0
+     },
+     "out_arcs": 1135,
+     "hold_arcs": 1136
+    },
+    "ss": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 223.9,
+       "max_clock_tree_path_ps": 273.55
+      }
+     },
+     "cq_min_ps": {
+      "clk": 426.02
+     },
+     "hold_max_ps": {
+      "clk": 201.93
+     },
+     "out_arcs": 1135,
+     "hold_arcs": 1136
+    }
+   },
+   "min_delay_ff": {
+    "clk": {
+     "cq_min_at_pin_ps": 251.09,
+     "min_insertion_ps": 148.43,
+     "max_insertion_ps": 183.82,
+     "hold_req_max_ps": 151.0
+    }
+   },
+   "min_delay_budget_ff": {
+    "clk": {
+     "launch_L_ps": 67.27,
+     "hold_H_ps": 2.57,
+     "insertion_spread_ps": 35.39,
+     "same_master_zero_wire_margin_ps": 14.7
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench"
+   ],
+   "open_gates": [
+    "export",
+    "thr"
+   ],
+   "file_sha256": {
+    "lef": "d2cdc7b1d42f8eaf8eb0e11b94329d1cf0f053dba6e275042e9912cd643a3753",
+    "tt": "0b34b55e2c0095ef5a3ec0b8b08c97a3a8205d61b791ee9c76b6ef4ebe66ddae",
+    "ff": "17215f1de1955c22626daf5b98dcd199da8ec5994fe713dedaecefba8956a234",
+    "ss": "22507e0235f397a564c93fed96d43b35aca485fd755b9a9b0cecee0ad6a8c001"
+   },
+   "hash_matches_manifest": true,
+   "family": "hc_half_leaf"
+  },
+  {
+   "master": "ot_s81_hc_ctpl",
+   "instances": 512,
+   "export_dir": "physical/ref_tile/s81hc_ctpl_ref/views/ot_s81_hc_ctpl",
+   "gates": {
+    "pair": {
+     "ok": true,
+     "detail": "LEF + TT/FF/SS ETM from one export of the verdict's orfs dir (no ODB hash recorded)"
+    },
+    "tt": {
+     "ok": true,
+     "detail": "verdict TT setup +88.26 ps, no export-side TT STA"
+    },
+    "ff": {
+     "ok": true,
+     "detail": "verdict FF hold +3.77 ps, no export-side FF STA"
+    },
+    "export": {
+     "ok": null,
+     "detail": "no export-side corner STA record to compare with the verdict"
+    },
+    "drc": {
+     "ok": true,
+     "detail": "job CLOSED; DRC 0"
+    },
+    "bench": {
+     "ok": false,
+     "detail": "pass benches NONE; failing mutants NONE"
+    },
+    "lint": {
+     "ok": true,
+     "detail": "ot_s81_hc_ctpl 142.56 x 118.8: PG M5 VDD 26 stripes (95% spread, 100% cov) / VSS 26 stripes (95% spread, 100% cov); strap M6; face pins 1450 blocked-above 0 blocked-same 0; clock clk insertion 210 ps"
+    },
+    "clock": {
+     "ok": true,
+     "detail": "clock pins ['clk']"
+    },
+    "scalar": {
+     "ok": true,
+     "detail": "scalar"
+    },
+    "thr": {
+     "ok": null,
+     "detail": "no budget row for this master: its parent element's production bench must cover it"
+    },
+    "current": {
+     "ok": true,
+     "detail": "registry adopted job s81hc_ctpl_ref-v3-cx-pinstage-958724442"
+    }
+   },
+   "why": [
+    "export: no export-side corner STA record to compare with the verdict",
+    "bench: pass benches NONE; failing mutants NONE",
+    "thr: no budget row for this master: its parent element's production bench must cover it"
+   ],
+   "job": "s81hc_ctpl_ref-v3-cx-pinstage-958724442",
+   "sta_odb_sha256": [],
+   "job_status": "CLOSED",
+   "job_commit": "958724442ddd6745096eeaee78b30c98b580a1cc",
+   "verdict_orfs_dir": "/srv/opentallas/claude/closure-loop/s81hc_ctpl_ref-v3-cx-pinstage-958724442/routes/s81hc_ctpl_ref_v3_cx_pinstage_958724442/work/orfs",
+   "verdict_tt_ff_drc": [
+    88.26,
+    3.77,
+    0
+   ],
+   "export_tt_ff": [
+    null,
+    null
+   ],
+   "etm": {
+    "tt": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 163.72,
+       "max_clock_tree_path_ps": 209.86
+      }
+     },
+     "cq_min_ps": {
+      "clk": 309.95
+     },
+     "hold_max_ps": {
+      "clk": 158.87
+     },
+     "out_arcs": 53,
+     "hold_arcs": 1326
+    },
+    "ff": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 132.98,
+       "max_clock_tree_path_ps": 171.68
+      }
+     },
+     "cq_min_ps": {
+      "clk": 240.43
+     },
+     "hold_max_ps": {
+      "clk": 138.6
+     },
+     "out_arcs": 53,
+     "hold_arcs": 1326
+    },
+    "ss": {
+     "clocks": {
+      "clk": {
+       "min_clock_tree_path_ps": 214.83,
+       "max_clock_tree_path_ps": 279.96
+      }
+     },
+     "cq_min_ps": {
+      "clk": 428.81
+     },
+     "hold_max_ps": {
+      "clk": 198.14
+     },
+     "out_arcs": 53,
+     "hold_arcs": 1326
+    }
+   },
+   "min_delay_ff": {
+    "clk": {
+     "cq_min_at_pin_ps": 240.43,
+     "min_insertion_ps": 132.98,
+     "max_insertion_ps": 171.68,
+     "hold_req_max_ps": 138.6
+    }
+   },
+   "min_delay_budget_ff": {
+    "clk": {
+     "launch_L_ps": 68.75,
+     "hold_H_ps": 5.62,
+     "insertion_spread_ps": 38.7,
+     "same_master_zero_wire_margin_ps": 13.13
+    }
+   },
+   "verdict": "NOT_QUALIFIED",
+   "failed_gates": [
+    "bench"
+   ],
+   "open_gates": [
+    "export",
+    "thr"
+   ],
+   "file_sha256": {
+    "lef": "64bf6ed399525e5f4bc2298feab7cda8ea061c0c2f617db4f31a4df676a1a5c4",
+    "tt": "5a3819edd69ae5682103a02305267eaafaebdb64772e104336e01ce24ff4ac91",
+    "ff": "9c95334b424742301995b403b68fc77815579f032e2b8121dcfeaaff0b5af0ab",
+    "ss": "86fce9189fb25685ae8210ab802fd1edcfe5818be6d73a2698a840f6080f2330"
+   },
+   "hash_matches_manifest": true,
+   "family": "hc_half_leaf"
+  }
+ ],
+ "unbound": [
+  {
+   "master": "dsfd_ctrl",
+   "instances": 1,
+   "why": "no complete native bundle: "
+  },
+  {
+   "master": "dsfd_l2r_vr_512x1__hq_SW",
+   "instances": 1,
+   "why": "no complete native bundle: physical/s81_die_views/views/m221pq/dsfd_l2r_vr_512x1__hq_SW missing ['tt']"
+  },
+  {
+   "master": "dsfd_m2l_vr_512x1__hco_SW",
+   "instances": 1,
+   "why": "no complete native bundle: physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hco_SW missing ['tt']"
+  },
+  {
+   "master": "dsfd_m2l_vr_68x10__hr_W5",
+   "instances": 1,
+   "why": "no complete native bundle: physical/s81_die_views/views/m221pq/dsfd_m2l_vr_68x10__hr_W5 missing ['tt']"
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E3",
+   "instances": 1,
+   "why": "no complete native bundle: physical/s81_die_views/views/m221pq/dsfd_m2l_vr_68x11__hr_E3 missing ['tt']"
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_E4",
+   "instances": 1,
+   "why": "no complete native bundle: physical/variant_fill/s81-hend-m221pq-hr-E4-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_E4 missing ['tt']"
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W1",
+   "instances": 1,
+   "why": "no complete native bundle: physical/variant_fill/s81-hend-m221pq-hr-W1-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_W1 missing ['tt']"
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W2",
+   "instances": 1,
+   "why": "no complete native bundle: physical/variant_fill/s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_W2 missing ['tt']"
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W3",
+   "instances": 1,
+   "why": "no complete native bundle: physical/variant_fill/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_W3 missing ['tt']"
+  },
+  {
+   "master": "dsfd_m2l_vr_68x11__hr_W4",
+   "instances": 1,
+   "why": "no complete native bundle: physical/variant_fill/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_W4 missing ['tt']"
+  },
+  {
+   "master": "ot_s81_hc_ctnl",
+   "instances": 1024,
+   "why": "HC leaf without a complete native bundle (missing ['lef', 'tt', 'ff', 'ss'])"
+  },
+  {
+   "master": "ot_s81_hc_ctra",
+   "instances": 64,
+   "why": "HC leaf without a complete native bundle (missing ['lef', 'tt', 'ff', 'ss'])"
+  },
+  {
+   "master": "ot_s81_hc_ctrb",
+   "instances": 64,
+   "why": "HC leaf without a complete native bundle (missing ['lef', 'tt', 'ff', 'ss'])"
+  },
+  {
+   "master": "ot_s81_hc_ctrn",
+   "instances": 64,
+   "why": "HC leaf without a complete native bundle (missing ['lef', 'tt', 'ff', 'ss'])"
+  }
+ ]
+}

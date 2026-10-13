@@ -298,10 +298,17 @@ def validate(spec: dict) -> list[str]:
             if ng == 0:   # bench_work counts the captured group: without one every pass reads as vacuous (suctlw r2 10-11)
                 e.append(f"bench {b.get('name')}: min_count_regex needs one capture group around the count: {mcr!r}")
     benches = st.get("bench", []) if isinstance(st, dict) else []
+    if spec.get("benched_by") is not None:
+        bspec, berr = expand_benched_by(spec)
+        if berr:
+            e.append(berr)
+        else:
+            benches = bspec["stages"].get("bench", [])
     if not spec.get("no_bench_reason") and not (any(b.get("expect") == "pass" for b in benches)
                                                 and any(b.get("expect") == "fail" for b in benches)):
-        e.append("need >= 1 bench expect=pass and >= 1 expect=fail (or no_bench_reason: e.g. pure re-route of a "
-                 "benched commit, naming the bench record)")
+        e.append("need >= 1 bench expect=pass and >= 1 expect=fail (or benched_by: a composition gate; or "
+                 "no_bench_reason for a job that never merges -- a ref_tile closure candidate is REFUSED without a "
+                 "behavioural bench + mutant, see BENCH-REQUIRED)")
     cal = st.get("calibrate") if isinstance(st, dict) else None
     if cal is None or (cal.get("enabled", True) and not (cal.get("cmd") and cal.get("base"))):
         if not (cal and cal.get("enabled") is False and cal.get("reason")):
@@ -389,7 +396,7 @@ def stage_list(spec):
     out = []
     for b in st.get("bench", []):
         t, r = STAGE_DEFAULTS["bench"]
-        out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
+        out.append(dict(key=bench_key(b["name"]), kind="bench", cmd=b["cmd"],
                         expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
                         min_count_regex=b.get("min_count_regex"), timeout_s=b.get("timeout_s"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
@@ -780,7 +787,7 @@ def lint_at_submit(j):
                  + (f", util {res['util_est']['util']:.1%}" if res.get("util_est") else "") + ")"
                  + (f"; {res['rtl_boundary']['verdict']} {res['rtl_boundary']['message'][:400]}" if res.get("rtl_boundary") else ""))
     elif v == "FIX":
-        j["spec_submitted"] = j["spec"]
+        j.setdefault("spec_submitted", j["spec"])
         j["spec"] = submit_lint.apply_fix(j["spec"], res, now_iso())
         event(j, f"submit lint FIX {res['fix']}: {res['message'][:500]}; settings added to the route_master stage "
                  f"commands (spec.submit_lint)")
@@ -889,6 +896,143 @@ def ref_gate_at_submit(j):
     else:
         event(j, f"ref gate PASS: {res.get('message', '')[:200]}")
 
+# BENCH-REQUIRED (owner 2026-10-13, el1013-bench-required): lint-only ref_tile jobs routed for hours, CLOSED on timing and
+# were then refused by the guarded auto-merge ("no behavioral positive + negative mutant": s81su_qnt_cb32,
+# s81su_swe_gfix, s81hc_ctnl_l0/l1/l2, smn FS r1, HC crooty Y v4) -- validate() let them in on a no_bench_reason.
+# ONE definition of the bench evidence, used by the merge guard (auto_merge_guard, on the bench RESULTS) and by the
+# submit gate (bench_gate_at_submit, on the bench stages the spec DECLARES), so the two cannot disagree:
+#   a positive bench (expect pass) whose key is not a lint (LINT_BENCH_RE) + a negative bench (expect fail).
+# Submit: a closure candidate without it is REFUSED before any compute.  Closure candidate = a job whose CLOSED would be
+# offered to main: not spec "auto_merge": false / "hold_merge" (those never merge: physical probes).  "ref_tile": true
+# jobs REFUSE, every other job WARNs (STATE/ref_gate.json {"bench": ..., "bench_other": ...: refuse|warn|off}).
+# A no_bench_reason alone no longer admits a candidate; the only bench-less route is the one the guard itself takes
+# (no bench at all + no_bench_reason + an owner auto_merge_external_bench_prefixes name).
+# benched_by: a sub-tile with no golden of its own names a COMPOSITION gate from tools/ref_tile/composition_gates.json
+# (read from the daemon's main tree, never from the job's branch); the gate's positive bench and mutant are appended to
+# the job as <gate>_<name> and run in the job's own source snapshot, i.e. the composition built from the sub-tile's RTL
+# at its source commit.  The merge guard then sees real behavioural results (and requires every gate bench to be there).
+# Not retroactive: jobs ingested before the gate are untouched, and an auto-react successor of such a job only WARNs.
+LINT_BENCH_RE = re.compile(r"(?:bench_)?lint(?:_.*)?", re.I)
+COMPOSITION_GATES = HERE.parent / "ref_tile" / "composition_gates.json"
+
+
+def bench_key(name):
+    return "bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", str(name))
+
+
+def bench_evidence_gap(expects):
+    """{bench key: expect} -> None when it holds a behavioural positive and a mutant, else the reason it does not"""
+    if not any(x == "pass" for x in expects.values()):
+        return "no positive bench"
+    if not any(x == "pass" and not LINT_BENCH_RE.fullmatch(k) for k, x in expects.items()):
+        return "no behavioral positive bench (lint alone is not exactness)"
+    if not any(x == "fail" for x in expects.values()):
+        return "no negative bench (mutant evidence required)"
+    return None
+
+
+def spec_bench_expects(spec):
+    st = spec.get("stages") if isinstance(spec.get("stages"), dict) else {}
+    return {bench_key(b.get("name")): b.get("expect") for b in st.get("bench") or [] if isinstance(b, dict)}
+
+
+def composition_gates():
+    try:
+        return json.loads(COMPOSITION_GATES.read_text()).get("gates") or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def gate_bench_names(gate):
+    return [f"{gate}_{b['name']}" for b in (composition_gates().get(gate) or {}).get("benches") or []]
+
+
+def expand_benched_by(spec):
+    """(spec with the composition gate's benches appended, error | None); the input spec is not modified"""
+    gate = spec.get("benched_by")
+    if gate is None:
+        return spec, None
+    gates = composition_gates()
+    g = gates.get(gate) if isinstance(gate, str) else None
+    if not isinstance(g, dict):
+        return spec, (f"benched_by {gate!r} is not a composition gate of tools/ref_tile/composition_gates.json on main "
+                      f"(known: {', '.join(sorted(gates)) or 'none'}); add the gate there first")
+    gb = [b for b in g.get("benches") or [] if isinstance(b, dict)]
+    if bench_evidence_gap({bench_key(f"{gate}_{b.get('name')}"): b.get("expect") for b in gb}):
+        return spec, f"composition gate {gate} lacks a behavioural positive bench or a mutant in composition_gates.json"
+    out = json.loads(json.dumps(spec))
+    st = out.get("stages")
+    if not isinstance(st, dict):
+        return spec, None
+    have = {b.get("name") for b in st.get("bench") or [] if isinstance(b, dict)}
+    st["bench"] = list(st.get("bench") or []) + [dict(b, name=f"{gate}_{b['name']}") for b in gb
+                                                 if f"{gate}_{b['name']}" not in have]
+    extra = [x for x in g.get("extra_paths") or [] if x not in (out.get("source") or {}).get("extra_paths", [])]
+    if extra and isinstance(out.get("source"), dict):
+        out["source"]["extra_paths"] = list(out["source"].get("extra_paths", [])) + extra
+    return out, None
+
+
+def bench_gate_check(spec, name=None):
+    """the submit-side bench rule on a (benched_by-expanded) spec: None, or the reason the merge guard would give"""
+    if spec.get("auto_merge") is False or spec.get("hold_merge"):
+        return None                                     # not a closure candidate: its CLOSED is never offered to main
+    expects = spec_bench_expects(spec)
+    if not expects and spec.get("no_bench_reason"):
+        try:
+            waive = json.loads((STATE / "main_publish_owner.json").read_text()).get("auto_merge_external_bench_prefixes") or []
+        except (OSError, ValueError):
+            waive = []
+        if any(str(name or spec.get("name", "")).startswith(w) for w in waive):
+            return None                                 # owner-approved external bench, as in auto_merge_guard
+    if not expects:
+        return "no loop benches"
+    return bench_evidence_gap(expects)
+
+
+BENCH_GATE_FIX = ("add to stages.bench a behavioural bench (expect pass, bit-exact against a golden) and its mutant "
+                  "(expect fail), or name a composition gate with \"benched_by\" (tools/ref_tile/README.md); a job that "
+                  "must never merge says so with \"hold_merge\": \"<reason>\"")
+
+
+def bench_gate_at_submit(j):
+    if j["status"] != "QUEUED":
+        return
+    spec = j["spec"]
+    try:
+        cfg = json.loads((STATE / "ref_gate.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    mode = str(cfg.get("bench", "refuse") if spec.get("ref_tile") else cfg.get("bench_other", "warn"))
+    if mode == "off":
+        return
+    why = bench_gate_check(spec, j["name"])
+    if not why:
+        if spec.get("benched_by"):
+            event(j, f"bench gate PASS: benched_by {spec['benched_by']} ({', '.join(gate_bench_names(spec['benched_by']))})")
+        return
+    parent = spec.get("auto_react_parent")
+    if mode == "refuse" and parent and jpath(parent).exists():
+        try:
+            pj = load_job(parent)
+            if not (pj.get("submit_checks") or {}).get("bench_gate") or pj.get("bench_gate_grandfathered"):
+                j["bench_gate_grandfathered"] = True    # successor of a job ingested before the gate: not retroactive
+                mode = "warn"
+        except Exception:  # noqa: BLE001
+            pass
+    msg = f"{why}: the guarded auto-merge would skip this job's CLOSED (fix: {BENCH_GATE_FIX})"
+    j.setdefault("submit_checks", {})["bench_gate"] = {"verdict": "REFUSE" if mode == "refuse" else "WARN", "mode": mode,
+                                                       "message": msg}
+    if mode == "refuse":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT BENCH_REQUIRED: {msg}"[:1500]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    else:
+        event(j, f"BENCH_REQUIRED WARN ({mode}): {msg}")
+        log(f"[{j['name']}] bench gate WARN: {why}")
+
+
 def ingest():
     try:
         gfetch("main", timeout=300)
@@ -928,8 +1072,13 @@ def ingest():
                 log(f"INVALID job file {origin}: {spec['_parse_error']}")
             continue
         errs = validate(spec)
+        submitted = spec
+        if not errs and spec.get("benched_by") is not None:
+            spec, _ = expand_benched_by(spec)
         j = dict(name=name, spec=spec, origin=origin, created=now_iso(), status="QUEUED", stage_idx=0, attempt=1,
                  retries_used=0, benches={}, hosts_tried=[], events=[])
+        if spec is not submitted:
+            j["spec_submitted"] = submitted          # the frozen-spec comparison and successors use the file as written
         if errs:
             j["status"] = "INVALID"
             j["reason"] = "; ".join(errs)
@@ -944,7 +1093,10 @@ def ingest():
                 ledger(j, f"REFUSED: {j['reason']}")
             else:
                 event(j, f"ingested from {origin}")
-                lint_at_submit(j)
+                bench_gate_at_submit(j)              # seconds, before the commit-reading lints
+                if j["status"] == "QUEUED":
+                    j.setdefault("submit_checks", {}).setdefault("bench_gate", {"verdict": "PASS"})
+                    lint_at_submit(j)
                 if j["status"] == "QUEUED":
                     hier_lint_at_submit(j)
                 if j["status"] == "QUEUED":
@@ -1912,7 +2064,8 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
-           "../hier_contract/abstract_pin_stub.py", "../../physical/common_flow/grt_macro_top_layer.tcl",
+           "../hier_contract/abstract_pin_stub.py", "../hier_contract/m6_pin_grant.py", "../../physical/common_flow/grt_macro_top_layer.tcl",
+           "../tt_views/view_export.py",
            "../../physical/common_flow/grt_macro_top_layer_post.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
@@ -2420,7 +2573,8 @@ def launch_stage(j, st, cmd):
         _src = j.get("stage_source", f"{j['run']}/src")
         env += (f"[ -f {_src}/tools/hier_contract/child_lint.py ] && ! [ -f {_src}/tools/hier_contract/child_lint.py.job ] && "
                 f"cp {_src}/tools/hier_contract/child_lint.py {_src}/tools/hier_contract/child_lint.py.job; "
-                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py\n")
+                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py; "
+                f"cp -f {j['run']}/cl/m6_pin_grant.py {_src}/tools/hier_contract/m6_pin_grant.py\n")
         # LOOP-PIN-STUB (2026-10-12): the loop's child_lint (ba4d5d136) refuses a pin's own same-layer route stub written as
         # OBS; ref_tile export runs abstract_pin_stub.py on the view before the lint, but only from ba4d5d136 on.  A job
         # synced earlier got the new lint WITHOUT the view fix (smh_fcbc_ref_p40-r1-9214bae8b: 10 stub pins, collect
@@ -2428,6 +2582,11 @@ def launch_stage(j, st, cmd):
         # writes atomically now: the exported LEF is root-owned) and add the pre-lint call to a stale ref_tile.py export.
         env += (f"cp -f {j['run']}/cl/abstract_pin_stub.py {_src}/tools/hier_contract/abstract_pin_stub.py; "
                 f"python3 - {_src}/tools/ref_tile/ref_tile.py <<'OT_PINSTUB_PATCH' || true\n{PINSTUB_PATCH}OT_PINSTUB_PATCH\n")
+        # EXPORT-SDC (2026-10-13): the view export replays the VERDICT's constraint sequence (routed 6_final.sdc, SPEF,
+        # post-SDCs, io_ref_routed.sdc) and fails on a slack that differs from the verdict; a job's synced view_export.py
+        # read the kit signoff.sdc INSTEAD of the routed SDC (s81su SMT: FF -19.69 exported vs +3.66 verdict).  The
+        # export is the loop's publish step, not the design: every ref_tile collect / re-export runs the loop's copy.
+        env += (f"[ -d {_src}/tools/tt_views ] && cp -f {j['run']}/cl/view_export.py {_src}/tools/tt_views/view_export.py; true\n")
         # GRT-TOP-RESTORE (2026-10-12): grt_macro_top_layer.tcl (d36d0b234) left the block's max routing layer at MAX+1 in
         # 5_1_grt.odb, so DRT routed M6 under the M5 cap (hgi_topk_heap_rt_m5-h3m5-6d8d554ba: 190 um M6, child_lint (c)
         # FAIL at collect).  Jobs synced before the fix get the fixed hook + its POST_GLOBAL_ROUTE restore.
@@ -2823,8 +2982,8 @@ def defer_record_merge(j, out, sparse, dry=False):
 
 # AUTO-MERGE (owner 2026-10-10, drive-1010): closures keep reaching main while no agent is alive.  With
 # STATE/main_publish_owner.json {"auto_merge_guarded": true}, a CLOSED job is merged into main by the loop when
-#   - its source branch is claude/*  (Codex / other branches stay with a human),
-#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; at least one bench),
+#   - its source branch is claude/* or codex/* (other namespaces stay with a coordinator),
+#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; behavioral positive and mutant required),
 #   - its spec does not opt out ("auto_merge": false, or "hold_merge": "<reason>"),
 #   - the merge of the VERIFIED source commit (commit_full, not the branch tip) into origin/main is clean, and the
 #     record files (verdict + recorded views) come from the record commit on top.
@@ -2854,8 +3013,8 @@ def auto_merge_guard(j):
     hit = next((h for h in holds if str(spec.get('block', '')).startswith(h) or j['name'].startswith(h)), None)
     if hit:
         return f"held by policy prefix {hit} (gate outside the loop benches)"
-    if not str(spec['source'].get('branch', '')).startswith('claude/'):
-        return f"source branch {spec['source'].get('branch')} is not claude/*"
+    if not str(spec['source'].get('branch', '')).startswith(('claude/', 'codex/')):
+        return f"source branch {spec['source'].get('branch')} is not claude/* or codex/*"
     benches = j.get('benches') or {}
     try:
         waive = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_external_bench_prefixes') or []
@@ -2868,8 +3027,14 @@ def auto_merge_guard(j):
     bad = [k for k, v in benches.items() if not (isinstance(v, dict) and v.get('ok') is True)]
     if bad:
         return f"benches not as expected: {', '.join(bad[:4])}"
-    if not any(isinstance(v, dict) and v.get('expect') == 'pass' for v in benches.values()):
-        return "no positive bench"
+    gap = bench_evidence_gap({k: v.get('expect') for k, v in benches.items()})    # the submit gate's own definition
+    if gap:
+        return gap
+    if spec.get('benched_by'):
+        want = [bench_key(n) for n in gate_bench_names(spec['benched_by'])]
+        lost = [k for k in want if k not in benches]
+        if not want or lost:
+            return f"benched_by {spec['benched_by']}: composition gate benches did not run ({', '.join(lost[:4]) or 'unknown gate'})"
     if not j.get('commit_full'):
         return "no verified source commit"
     return None
@@ -2878,6 +3043,8 @@ def auto_merge_guard(j):
 def auto_merge_closure(j, out, record_paths, dry=False):
     """merge commit_full + the record files into main (clean merges only); returns a status string"""
     why = auto_merge_guard(j)
+    attribution = ("Coordinated by: Codex" if str(j["spec"]["source"].get("branch", "")).startswith("codex/")
+                   else "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>")
     if why:
         if why != "auto-merge policy off":
             append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']} ({j['spec'].get('block')}): AUTO-MERGE skipped: {why}; "
@@ -2895,7 +3062,7 @@ def auto_merge_closure(j, out, record_paths, dry=False):
             m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
                     "merge", "--no-ff", "--no-edit", "-m",
                     f"Merge {j['spec']['source']['branch']} @ {j['commit_full'][:9]} (closure-loop AUTO-MERGE {j['name']}: "
-                    f"{j['spec']['block']} CLOSED, benches as expected)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+                    f"{j['spec']['block']} CLOSED, benches as expected)\n\n{attribution}",
                     j['commit_full']], timeout=1800)
             if m.returncode:
                 conf = sh(["git", "-C", str(mwt), "diff", "--name-only", "--diff-filter=U"], timeout=120).stdout.split()
@@ -2910,7 +3077,7 @@ def auto_merge_closure(j, out, record_paths, dry=False):
         if sh(["git", "-C", str(mwt), "diff", "--cached", "--quiet"], timeout=120).returncode:
             git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m",
                 f"closure-loop AUTO-MERGE record {j['name']} ({j['spec']['block']} CLOSED)\n\n"
-                f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", cwd=mwt)
+                f"{attribution}", cwd=mwt)
         head = git("rev-parse", "HEAD", cwd=mwt).stdout.strip()
         if dry:
             status = f"AUTO-MERGE dry-run {head[:9]} (not pushed)"
@@ -5145,7 +5312,7 @@ def pick_view_lef(paths, block):
     return next((p for p in cand if Path(p).stem == block), None)
 
 
-def child_lint_view(lef_text, checks):
+def child_lint_view(lef_text, checks, pin_grant=None, def_text=None, tech_text=None):
     """child_lint on a view LEF text: (fails restricted to checks, summary)"""
     if str(CHILD_LINT_DIR) not in sys.path:
         sys.path.insert(0, str(CHILD_LINT_DIR))
@@ -5153,10 +5320,24 @@ def child_lint_view(lef_text, checks):
     with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as fh:
         fh.write(lef_text)
         tmp = fh.name
+    def_path, tech_path = None, None
     try:
-        res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks))
+        if def_text is not None:
+            with tempfile.NamedTemporaryFile("w", suffix=".def", delete=False) as df:
+                df.write(def_text)
+                def_path = df.name
+        if tech_text is not None:
+            with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as tf:
+                tf.write(tech_text)
+                tech_path = tf.name
+        res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks), pin_grant=pin_grant,
+                              cap="M5" if pin_grant else None, routed_def=def_path, tech_lef=tech_path)
     finally:
         os.unlink(tmp)
+        if def_path:
+            os.unlink(def_path)
+        if tech_path:
+            os.unlink(tech_path)
     return [x for x in res["fails"] if x[1:2] in checks], res.get("summary", "")
 
 
@@ -5178,6 +5359,9 @@ def pin_stub_fix(lef_text):
 def child_lint_gate(j):
     """None = pass / not a tile view; else the (c)/(f) failure text.  Raises on ssh failure (the commit is re-tried)."""
     checks = child_lint_gate_checks(j["spec"])
+    grant = j["spec"].get("m6_pin_grant")
+    if grant is not None:
+        checks |= {"c", "f"}  # a pin-only grant never authorizes skipping physical evidence
     if not checks:
         return None
     blk = j["spec"]["block"]
@@ -5192,7 +5376,7 @@ def child_lint_gate(j):
     t = ssh(j["host"], f"cat {shlex.quote(lef)}", timeout=300)
     if t.returncode != 0 or "MACRO" not in t.stdout:
         raise RuntimeError(f"child-lint gate: could not read {lef}: {(t.stderr or '')[-200:]}")
-    text, moved = pin_stub_fix(t.stdout)
+    text, moved = (t.stdout, "") if grant else pin_stub_fix(t.stdout)
     if moved:
         # PIN-STUB (73e17f447, ot_qkvd_sbuf DRT-0073): write_abstract_lef writes a face pin's own same-layer route stub
         # as OBS over the pin; child_lint (f) now refuses that.  Moving the stub into the pin's PORT is the exact view
@@ -5202,7 +5386,18 @@ def child_lint_gate(j):
         if w.returncode != 0:
             raise RuntimeError(f"child-lint gate: could not write the pin-stub view {lef}: {(w.stderr or '')[-200:]}")
         event(j, f"child-lint gate: abstract_pin_stub moved {moved} into their pins' PORTs in {lef}")
-    fails, summ = child_lint_view(text, checks)
+    def_text, tech_text = None, None
+    if grant:
+        # Raw routed geometry copied by ref_tile export, not a modified abstract.
+        def_file = str(Path(lef).parent / "pin_only_routed.def")
+        dt = ssh(j["host"], f"cat {shlex.quote(def_file)}", timeout=300)
+        if dt.returncode != 0:
+            return "M6 pin-only grant missing raw routed DEF evidence"
+        def_text = dt.stdout
+        tech_file = str(Path(lef).parent / "pin_only_tech.lef")
+        tt = ssh(j["host"], f"cat {shlex.quote(tech_file)}", timeout=300)
+        tech_text = tt.stdout if tt.returncode == 0 else None
+    fails, summ = child_lint_view(text, checks, grant, def_text, tech_text)
     j["child_lint"] = dict(lef=lef, checks="".join(sorted(checks)), fails=fails, summary=summ[:400], at=now_iso())
     return "; ".join(fails) if fails else None
 
@@ -5612,6 +5807,7 @@ NEAR_MISS_JSON = STATE / "near_miss_retain.json"
 # ORFS objects under the job's ORFS work trees.  Kept: 6_final.*, 5_2_route.odb, every log / report / json (metrics).
 BULK_RELEASE_SH = r"""set -u
 R=%(run)s
+if [ -e "$R/.keep" ]; then echo "RETAIN owner diagnostic .keep"; exit 4; fi
 if [ "${NEAR_MISS_RELEASE:-0}" != 1 ] && python3 - "$R" <<'NMPY'
 import json, os, sys
 r = sys.argv[1].rstrip("/")
@@ -5691,6 +5887,32 @@ def closed_blocks(jobs):
     return {x["spec"].get("block") for x in jobs if closure_counts(x, rv)}
 
 
+def release_source_index(jobs):
+    """Counting closures indexed by immutable revision, not just a reused block name."""
+    rv = revoked_closures()
+    out = {}
+    for x in jobs:
+        if closure_counts(x, rv):
+            commit = x.get("commit_full") or (x.get("spec", {}).get("source") or {}).get("commit") or ""
+            out.setdefault(x["spec"].get("block"), set()).add(commit)
+    return out
+
+
+def source_mismatch_retained(j, index):
+    """An older/different-source closure cannot retire an unclosed candidate's diagnostics.
+
+    Missing or abbreviated closure revisions cannot prove equivalence. Exact source
+    identity is conservative; an owner can retire/archive unique diagnostics explicitly.
+    """
+    if j.get("status") == "CLOSED":
+        return False
+    versions = index.get(j.get("spec", {}).get("block"))
+    if versions is None:
+        return False
+    commit = j.get("commit_full") or (j.get("spec", {}).get("source") or {}).get("commit") or ""
+    return not (re.fullmatch(r"[0-9a-f]{40}", commit) and commit in versions)
+
+
 def near_miss(j, closed=None):
     """a non-CLOSED job whose route verdict is TT >= NEAR_MISS_PS and FF >= NEAR_MISS_PS (and not both >= the line),
     while its element (spec block) has no counting CLOSED job: its route tree is retained"""
@@ -5709,14 +5931,16 @@ def write_near_miss_retain(jobs, closed=None):
     """STATE/near_miss_retain.json: run dirs (+ ORFS dir) of retained near-miss routes, read by tools/fleet/fleet_sweep.py"""
     closed = closed_blocks(jobs) if closed is None else closed
     rows = []
+    sources = release_source_index(jobs)
     for x in jobs:
-        if x.get("run") and x.get("host") and near_miss(x, closed):
+        mismatch = source_mismatch_retained(x, sources)
+        if x.get("run") and x.get("host") and (near_miss(x, closed) or mismatch):
             m = x.get("metrics") or {}
             rows.append(dict(job=x["name"], block=x["spec"].get("block"), host=x["host"], run=x["run"],
                              orfs_dir=m.get("orfs_dir"), tt_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"),
-                             status=x["status"]))
+                             status=x["status"], reason="source-mismatched closure" if mismatch else "near miss"))
     body = dict(schema="opentallas.closure_loop.near_miss_retain.v1", generated=now_iso(), threshold_ps=NEAR_MISS_PS,
-                rule="non-closed route with TT >= threshold and FF >= threshold keeps its route tree until its block closes",
+                rule="retain near misses and unclosed source revisions not covered by a source-identical closure",
                 jobs=sorted(rows, key=lambda r: r["job"]))
     try:
         tmp = NEAR_MISS_JSON.with_suffix(".tmp")
@@ -5744,6 +5968,7 @@ def release_bulk(jobs):
     """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk --
     except a near miss (near_miss()) whose block has not closed: it keeps its route tree (NEAR-MISS RETENTION)."""
     closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
     write_near_miss_retain(jobs, closed)
     n = 0
     for x in jobs:
@@ -5751,7 +5976,7 @@ def release_bulk(jobs):
             break
         if x.get("bulk_released") or not x.get("host") or not x.get("run") or x["status"] not in TERMINAL:
             continue
-        if bf_exempt(x):
+        if bf_exempt(x) or source_mismatch_retained(x, sources):
             continue
         if x["status"] == "CLOSED" or not (x["status"] == "CANCELLED" or x["spec"].get("block") in closed):
             continue
@@ -5761,7 +5986,7 @@ def release_bulk(jobs):
             continue
         with job_lock(x["name"]):
             j = load_job(x["name"])
-            if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED":
+            if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED" or source_mismatch_retained(j, sources):
                 continue
             # the block is closed (or the job has no near-miss verdict): a near-miss corner_sta may be released
             rel = "NEAR_MISS_RELEASE=1\n" if j["spec"].get("block") in closed else ""
@@ -6118,6 +6343,7 @@ def mem_guard(jobs, fleet, now=None):
 def release_deep(jobs, now=None):
     """DEEP RELEASE of up to DEEP_RELEASE_PER_TICK terminal jobs (see DEEP_RELEASE_PY)"""
     closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
     hosts = {h["name"] for h in hosts_table()}
     shared = {}
     for x in jobs:
@@ -6135,7 +6361,7 @@ def release_deep(jobs, now=None):
         if n >= DEEP_RELEASE_PER_TICK:
             break
         mode = deep_release_mode(x, closed, ev, now)
-        if not mode:
+        if not mode or source_mismatch_retained(x, sources):
             continue
         run = x["run"].rstrip("/")
         if any(y["status"] not in TERMINAL or _terminal_age_h(y, now) < DEEP_RELEASE_AGE_H
@@ -6143,7 +6369,7 @@ def release_deep(jobs, now=None):
             continue                                    # a sibling job still uses the run dir
         with job_lock(x["name"]):
             j = load_job(x["name"])
-            if mode != deep_release_mode(j, closed, ev, now):
+            if mode != deep_release_mode(j, closed, ev, now) or source_mismatch_retained(j, sources):
                 continue
             commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
             if commit and subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
@@ -6861,6 +7087,12 @@ def cmd_validate(a):
     spec = json.loads(Path(a.file).read_text())
     errs = validate(spec)
     if not errs:
+        spec, _ = expand_benched_by(spec)
+        why = bench_gate_check(spec)
+        if why and spec.get("ref_tile"):
+            errs.append(f"SUBMIT_LINT BENCH_REQUIRED: the loop would REFUSE this job: {why} (fix: {BENCH_GATE_FIX})")
+        elif why:
+            print(f"BENCH_REQUIRED WARN: {why}: the guarded auto-merge would skip this job's CLOSED")
         res = submit_check(spec)
         print(f"submit lint {res['verdict']}: {res.get('message', '')}"
               + (f" (estimate {res.get('est')} b/um, with fix {res.get('est_fix')})" if res.get("est") else ""))

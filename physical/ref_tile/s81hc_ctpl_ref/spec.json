@@ -40,23 +40,23 @@
   "h": 118.8
  },
  "std_area_um2": 8492,
- "why_floorplan": "hc_post group g x half (8 per slot, one 4-column row each side of the centre band, column g under lane column g); std 8492 um2 (ref_tile gate synth @5fc2f656b, cth shrink), core util ~0.599 at 142.56 x 106.92",
+ "why_floorplan": "v13 slot unchanged: PIN_STAGE consumes one WIN relay; pure payload pin flops, staged coefficient decode, deterministic split-face IO. Re-measure synthesized area before acceptance.",
  "macros": [],
  "pins": {
   "N": [
    "fv",
    "fdx",
+   "grp",
+   "half",
+   "rst_in"
+  ],
+  "S": [
    "hpr",
    "hov",
    "pwb",
    "phs",
    "pob",
    "hpo",
-   "grp",
-   "half",
-   "rst_in"
-  ],
-  "S": [
    "hov_d",
    "hnz_d",
    "pflt_d"
@@ -74,15 +74,22 @@
   "pin_min_tracks": 1
  },
  "job": {
-  "owner": "Claude:el1011-s81hc-ctile",
-  "branch": "main",
-  "tag": "v2m",
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
+  "owner": "Codex:s81_hc_closure",
+  "branch": "codex/s81hc-physical-20261012",
+  "tag": "v3-cx-pinstage",
   "purpose": "s81-suhc HC half-octet column slot (576.72 x 768.96: the measured ~215k um2 std does not fit 572.4 under the 70% cap) as 30 hard tiles of 8 masters (N->S: ctrn | ctnl rows 0-1 | ctpl half 0 | centre band ctra, ctrb, ctfx, ctfn | ctpl half 1 | ctnl rows 2-3 | ctfs; ot_s81_hc_cth; every flop-to-flop stage <= ~400 um): ctpl [el1012-flowreq requeue on main HEAD: v1 PPL-0093 (32-pin group did not fit the N face at 2 tracks): pin_min_tracks 1; outline per s81 contract v13 (142.56 x 118.8)]",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctpl_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctpl_ref"
  },
- "params": {},
+ "params": {
+  "PIN_STAGE": 1
+ },
  "children": [],
- "inter": []
+ "inter": [],
+ "io_tcl": "physical/s81_hc_pinplan/ctpl.tcl",
+ "orfs_vars": {
+  "SYNTH_KEEP_MODULES": "ot_s81_hc_ctpl_ctl_ff"
+ }
 }

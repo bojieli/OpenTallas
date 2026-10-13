@@ -45,7 +45,7 @@
     "w": 6013.44,
     "h": 2609.28
   },
-  "placement_revision": 2,
+  "placement_revision": 3,
   "placement_status": "nonoverlapping_functional_front_candidate_requires_seam_placement",
   "front_placement_reference": {
     "source_commit": "49b00f711ce5613322f3c0d011f109c78894d1de",
@@ -55,7 +55,9 @@
       898.56,
       1088.64
     ],
-    "note": "Actual view widths218.16supersede oldFC_DIM216.024. No hard front_c master."
+    "native_site_grid_um": 0.432,
+    "east_my_x_delta_um": 0.048,
+    "note": "Actual view widths218.16supersede oldFC_DIM216.024. EastMYx678.192->678.24 snaps oldFC_POS to native0.432sitegrid. No hard front_c master."
   },
   "closed": false,
   "boundary_ports": {
@@ -267,15 +269,16 @@
         }
       },
       "orientation": "R0",
-      "view_lef": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg.lef",
+      "view_lef": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg.lef",
       "view_lib": {
-        "ff": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ff.lib",
-        "ss": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ss.lib"
+        "tt": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_tt.lib",
+        "ff": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ff.lib",
+        "ss": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ss.lib"
       },
       "w_um": 319.68,
       "h_um": 77.76,
-      "pg_top": "M6",
-      "closure_status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "pg_top": "M5",
+      "closure_status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
       "view_sha256": "2480834ec4838f5864b3ee525503b7701725a456f5cf7caac3c77858ababbdbc",
       "obs_layers": [
         "M1",
@@ -286,11 +289,15 @@
         "M6",
         "M7"
       ],
-      "child_lint": null,
-      "view_source_commit": "80412d770a255770fe64f82549b07abf36699096",
-      "view_publication_commit": "edf098390aef3e0f38a0664df85233d106c38c94",
-      "view_job": "hbm_smh_be_eg_cg-80412d770-tc-np-r2-tcfix-cl",
+      "child_lint": {
+        "path": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/child_lint.json",
+        "verdict": "PASS"
+      },
+      "view_source_commit": "49b00f711",
+      "view_publication_commit": "a148b214a667cbd1f062ce7166dcf5b230328969",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93",
       "module_text_equal": true,
+      "physical_receipt": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/receipt.json",
       "xy_um": [
         0.0,
         0
@@ -734,15 +741,16 @@
         }
       },
       "orientation": "R0",
-      "view_lef": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg.lef",
+      "view_lef": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg.lef",
       "view_lib": {
-        "ff": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ff.lib",
-        "ss": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ss.lib"
+        "tt": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_tt.lib",
+        "ff": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ff.lib",
+        "ss": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ss.lib"
       },
       "w_um": 319.68,
       "h_um": 77.76,
-      "pg_top": "M6",
-      "closure_status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "pg_top": "M5",
+      "closure_status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
       "view_sha256": "2480834ec4838f5864b3ee525503b7701725a456f5cf7caac3c77858ababbdbc",
       "obs_layers": [
         "M1",
@@ -753,11 +761,15 @@
         "M6",
         "M7"
       ],
-      "child_lint": null,
-      "view_source_commit": "80412d770a255770fe64f82549b07abf36699096",
-      "view_publication_commit": "edf098390aef3e0f38a0664df85233d106c38c94",
-      "view_job": "hbm_smh_be_eg_cg-80412d770-tc-np-r2-tcfix-cl",
+      "child_lint": {
+        "path": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/child_lint.json",
+        "verdict": "PASS"
+      },
+      "view_source_commit": "49b00f711",
+      "view_publication_commit": "a148b214a667cbd1f062ce7166dcf5b230328969",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93",
       "module_text_equal": true,
+      "physical_receipt": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/receipt.json",
       "xy_um": [
         639.36,
         0
@@ -1201,15 +1213,16 @@
         }
       },
       "orientation": "R0",
-      "view_lef": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg.lef",
+      "view_lef": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg.lef",
       "view_lib": {
-        "ff": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ff.lib",
-        "ss": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ss.lib"
+        "tt": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_tt.lib",
+        "ff": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ff.lib",
+        "ss": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ss.lib"
       },
       "w_um": 319.68,
       "h_um": 77.76,
-      "pg_top": "M6",
-      "closure_status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "pg_top": "M5",
+      "closure_status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
       "view_sha256": "2480834ec4838f5864b3ee525503b7701725a456f5cf7caac3c77858ababbdbc",
       "obs_layers": [
         "M1",
@@ -1220,11 +1233,15 @@
         "M6",
         "M7"
       ],
-      "child_lint": null,
-      "view_source_commit": "80412d770a255770fe64f82549b07abf36699096",
-      "view_publication_commit": "edf098390aef3e0f38a0664df85233d106c38c94",
-      "view_job": "hbm_smh_be_eg_cg-80412d770-tc-np-r2-tcfix-cl",
+      "child_lint": {
+        "path": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/child_lint.json",
+        "verdict": "PASS"
+      },
+      "view_source_commit": "49b00f711",
+      "view_publication_commit": "a148b214a667cbd1f062ce7166dcf5b230328969",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93",
       "module_text_equal": true,
+      "physical_receipt": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/receipt.json",
       "xy_um": [
         1278.72,
         0
@@ -1668,15 +1685,16 @@
         }
       },
       "orientation": "R0",
-      "view_lef": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg.lef",
+      "view_lef": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg.lef",
       "view_lib": {
-        "ff": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ff.lib",
-        "ss": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ss.lib"
+        "tt": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_tt.lib",
+        "ff": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ff.lib",
+        "ss": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ss.lib"
       },
       "w_um": 319.68,
       "h_um": 77.76,
-      "pg_top": "M6",
-      "closure_status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "pg_top": "M5",
+      "closure_status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
       "view_sha256": "2480834ec4838f5864b3ee525503b7701725a456f5cf7caac3c77858ababbdbc",
       "obs_layers": [
         "M1",
@@ -1687,11 +1705,15 @@
         "M6",
         "M7"
       ],
-      "child_lint": null,
-      "view_source_commit": "80412d770a255770fe64f82549b07abf36699096",
-      "view_publication_commit": "edf098390aef3e0f38a0664df85233d106c38c94",
-      "view_job": "hbm_smh_be_eg_cg-80412d770-tc-np-r2-tcfix-cl",
+      "child_lint": {
+        "path": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/child_lint.json",
+        "verdict": "PASS"
+      },
+      "view_source_commit": "49b00f711",
+      "view_publication_commit": "a148b214a667cbd1f062ce7166dcf5b230328969",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93",
       "module_text_equal": true,
+      "physical_receipt": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/receipt.json",
       "xy_um": [
         1918.08,
         0
@@ -4143,7 +4165,7 @@
       "view_job": "smh_fcb_ref_p45-r1-a9afd2404-lf",
       "module_text_equal": true,
       "xy_um": [
-        3235.632,
+        3235.68,
         250.56
       ]
     },
@@ -4391,7 +4413,7 @@
       "view_job": "smh_fcxr_ref_p35-r1-a9afd2404-lf",
       "module_text_equal": true,
       "xy_um": [
-        3235.632,
+        3235.68,
         768.96
       ]
     },
@@ -4527,7 +4549,7 @@
       "view_job": "smh_fct_ref_p45-r1-a9afd2404-lf",
       "module_text_equal": true,
       "xy_um": [
-        3235.632,
+        3235.68,
         1123.2
       ]
     },
@@ -118322,7 +118344,7 @@
     {
       "instance": "g_c[0].g_be_e.u_be",
       "logical_module": "ot_hbm_accel_smh_be_eg",
-      "reason": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "reason": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
       "owner": "/root/hbm_sm_native_manifest",
       "required": [
         "source equivalence",
@@ -118364,7 +118386,7 @@
     {
       "instance": "g_c[1].g_be_e.u_be",
       "logical_module": "ot_hbm_accel_smh_be_eg",
-      "reason": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "reason": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
       "owner": "/root/hbm_sm_native_manifest",
       "required": [
         "source equivalence",
@@ -118406,7 +118428,7 @@
     {
       "instance": "g_c[2].g_be_e.u_be",
       "logical_module": "ot_hbm_accel_smh_be_eg",
-      "reason": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "reason": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
       "owner": "/root/hbm_sm_native_manifest",
       "required": [
         "source equivalence",
@@ -118448,7 +118470,7 @@
     {
       "instance": "g_c[3].g_be_e.u_be",
       "logical_module": "ot_hbm_accel_smh_be_eg",
-      "reason": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "reason": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
       "owner": "/root/hbm_sm_native_manifest",
       "required": [
         "source equivalence",
