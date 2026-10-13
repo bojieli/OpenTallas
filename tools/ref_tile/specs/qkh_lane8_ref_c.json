@@ -48,13 +48,12 @@
   "route": {
     "pd": 0.6,
     "threads": 16,
-    "peak_ram_gb": 48,
-    "hold_margin_ns": 0.01
+    "peak_ram_gb": 48
   },
   "job": {
-    "owner": "Claude:q13-rhead-fit",
+    "owner": "Claude:q13-rhead-r2",
     "branch": "claude/q13-rhead-fit",
-    "tag": "q13c",
+    "tag": "q13d",
     "purpose": "TP8 qkd_rhead slot fit (648 x 453.6, 128 inst): the closed 4 x 4 head_hs cluster is 734.4 x 855.36 (+43 mm2 on the die). Lane leaf variant c = same RTL top ot_qkh_lane8, 108 x 151.2 (synth std 8,754 um2 -> util 0.575 of the 103.68 x 146.88 core), M5 cap, all signal pins + rst_n on E, clk on W; own local clock root (~13.1k sinks)",
     "extra_paths": [
       "results/arch/qwen_kv_die_20261009"
@@ -124,5 +123,6 @@
     "structural_change": "lane leaf re-shaped 129.6 x 129.6 -> 108 x 151.2 (6 x 3 slot grid of the TP8 qkd_rhead slot 648 x 453.6) with every signal pin and rst_n on ONE face (E; MY gives W) so 16 lanes pack around a relay hub without the 43.2 um channels of the 4 x 4 parent"
   },
   "layer_cap": "M5",
-  "structural_change": "lane leaf re-shaped 129.6 x 129.6 -> 108 x 151.2 (6 x 3 slot grid of the TP8 qkd_rhead slot 648 x 453.6) with every signal pin and rst_n on ONE face (E; MY gives W) so 16 lanes pack around a relay hub without the 43.2 um channels of the 4 x 4 parent"
+  "structural_change": "lane leaf re-shaped 129.6 x 129.6 -> 108 x 151.2 (6 x 3 slot grid of the TP8 qkd_rhead slot 648 x 453.6) with every signal pin and rst_n on ONE face (E; MY gives W) so 16 lanes pack around a relay hub without the 43.2 um channels of the 4 x 4 parent",
+  "recipe": 2
 }
