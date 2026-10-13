@@ -3277,7 +3277,7 @@ def hop_plan(m):
             continue
         d = by[eps[0][0]]
         a = _anchor(M.get(d.master), d, eps[0][1]) or (d.x + d.w / 2, d.y + d.h / 2)
-        R = HOP_R_FWD if cls in HOP_FWD_CLS else HOP_R_CC
+        R = HOP_R_FWD if cls in HOP_FWD_CLS else (HOP_R_HUB if cls == 'hub' and HOP_R_HUB else HOP_R_CC)
         for e in eps[1:]:
             if e[0] == 'TOP':
                 continue
@@ -4755,6 +4755,9 @@ HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491
 # few longer relay segments (timed by the die STA on GRT parasitics) for fewer relays in the 100 %-packed frame cfg bands
 # (m221pq_r4c GEN_FAIL rt_0_8a_y1: no legal relay box within 400 um of the driver).
 HOP_R_CC = float(os.environ.get('OT_S81_HOP_R_CC', HOP_R_CC))
+HOP_R_HUB = 0.0                 # --hop-r-hub UM (s81-die v16): planner reach of the hub-bus bridges (slab pin <-> its chain);
+#                                 the planner measures anchor to anchor, the 500-um gate pin to pin: v16 run 1 planned the
+#                                 collective -> VM bridge at <= 500 and built 589.8 / 505.1 um hops (Z path, face turns)
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
 MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 8 / OFFSET 3 / guards 0,6 / CREDITS 16
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing
@@ -5018,7 +5021,7 @@ def _hop_fix(m, P):
                 continue
             L, a, b, _ = plan[key]
             fwd = cls in HOP_FWD_CLS
-            R = HOP_R_FWD if fwd else HOP_R_CC
+            R = HOP_R_FWD if fwd else (HOP_R_HUB if cls == 'hub' and HOP_R_HUB else HOP_R_CC)
             n = math.ceil(L / (R - 20.0) - 1e-9) - 1
             d0, l0 = by[eps[0][0]], by[e[0]]
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
@@ -5799,6 +5802,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     # --ecol-slabs: a second chain between the same slab pair (wfc t_lo + t_lir -> collective: direct face-to-face
     # wires in one column, staged across the VCH once the kit moves) takes its driver port in the name, so its
     # stations do not collide with the first chain's
+    lane_forced = ()
     hbn = f'hb_{a_}_{b_}' if f'hb_{a_}_{b_}' not in m.get('hub_stations', {}) else \
         f'hb_{a_}_{re.sub(r"[^A-Za-z0-9_]+", "_", pa).strip("_")}_{b_}'
     # --ecol-slabs: a moved slab stands in the E column (W of the HC halves): it faces the VCH with its W face like HC
@@ -5848,6 +5852,15 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             y_ = lo + (hi - lo) * (ky_ + 0.5) / 8.0
         if LANE_PINS:
             y_ = _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi, fx(A), fx(Bk))
+            if LANE_PINS > 1 and abs(fx(A) - fx(Bk)) > 2 * PIN_SEG:
+                # v16 (cut table of v15 run 5): the lane's OWN first / last station stands on the lane row next to each
+                # slab face, instead of a separate --pin-relay station that found its site 170-366 um off the lane
+                # (g_hb_collective_t_hc_y_*: every bit of the slice jogging across the 60-um face gap, ratio up to
+                # 0.615; at the HC face the 1-track station sat 5 um from the 2-track pins: 256 b in 5 um = 2.11).
+                # Gap g between the P-track pin face and the 1-track station: the bits/4 that cross the worst line of
+                # the fan-in get >= 2 x their tracks on M5 + M7 (ratio <= 0.50): g = bits / 4 / (0.50 x 27.9 /um).
+                g_ = min(max(30.0, bits / 4.0 / (0.50 * 27.9)), PIN_SEG - 20.0)
+                lane_forced = (g_ + 9.0, abs(fx(A) - fx(Bk)) - g_ - 9.0)
         lane[0] += 1
         path = [(fx(A), y_), (fx(Bk), y_)]
     elif hcA == hcB and same_col and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - (0.0 if {a_, b_} == {'vm', 'pq'} else 60.0):
@@ -5924,7 +5937,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
         return
     try:
         sts = CH8.run(name, [bits], path, [cor['vch']] + [cor[k_] for k_ in ('collE', 'collW') if k_ in cor] + xcol, path[0],
-                      reach=reach_um or (CC_REACH if CC_REACH < LINK_STAGE_UM else None))
+                      forced=lane_forced, reach=reach_um or (CC_REACH if CC_REACH < LINK_STAGE_UM else None))
     except RuntimeError:
         if LANE_PINS:   # diagnosis: what stands on the lane
             x0_, x1_ = min(p_[0] for p_ in path), max(p_[0] for p_ in path)
@@ -6753,13 +6766,19 @@ def masters_r8(m, k=1):
     _init_real()
     M = {}
     _LAY_K[0] = k
-    for mst, it in first.items():
+    m['_laid_all'] = {}
+    # --peer-pin-pos (s81-die v16): the stations / link ends are laid FIRST (their pin groups do not depend on a slab),
+    # so a slab port can stand on its peer's PIN GROUP instead of the peer's outline centre
+    order_ = sorted(first.items(), key=lambda kv: kv[1].kind not in PEER_PIN_KINDS) if PEER_PIN_POS else list(first.items())
+    for mst, it in order_:
         if mst in REAL_FILES:
             continue
         ports = pdir.get(mst, {})
         Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst == 'ot_s81_cfg7_seq' else 7, f'r8 {it.kind}')
         M[mst] = Mx
         _faces_r8(m, Mx, it, ports)
+        if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
+            m['_laid_all'][mst] = Mx
         if CK_RULE:
             _ck_rule(Mx)
     if k > 1:
@@ -7096,16 +7115,32 @@ def _pnum(p_):
     return (int(mm.group(2)) if mm and mm.group(2) else -1, p_)
 
 
+PEER_PIN_POS = False            # --peer-pin-pos (s81-die v16)
+PEER_PIN_KINDS = ('hend', 'hstn', 'stn')
+
+
 def _peer_pos(m, it, port, f):
-    """peer centroid along face f, in the master frame"""
+    """peer centroid along face f, in the master frame.  --peer-pin-pos: a peer whose master is already laid (station,
+    link end) counts at the centre of ITS pin group of this net, not at its outline centre: v15 run 5 put
+    sp_collective.rE0 / rE3 / rW2 27.6 um beside the abutting link end's `o` pins (two ports of one peer stacked at the
+    peer centre: 515 b jogging in a 6-um gap, cut 3.27) and sp_wfc.f_lid / sp_gather.f_vm 35-44 um beside their last
+    station (0.85-0.87)."""
     by = m['_by']
+    la = m.get('_laid_all') or {}
     xs, ys = [], []
     for bid, cls, bits, eps in m['_nets_of'].get((it.name, port), []):
         for inst, p_ in eps:
             if inst != it.name and inst in by:
                 o = by[inst]
-                xs.append(o.x + o.w / 2)
-                ys.append(o.y + o.h / 2)
+                px, py = o.x + o.w / 2, o.y + o.h / 2
+                sp_ = la[o.master].ports.get(pslice(p_)[0]) if o.master in la else None
+                if sp_ and sp_[0] == 'face':
+                    if sp_[2] in 'EW':
+                        py = o.y + (o.h - sp_[4] if o.orient in ('MX', 'R180') else sp_[4])
+                    else:
+                        px = o.x + (o.w - sp_[4] if o.orient in ('MY', 'R180') else sp_[4])
+                xs.append(px)
+                ys.append(py)
     if not xs:
         return 0.0
     if f in 'EW':
@@ -7618,6 +7653,10 @@ def die_options(ap):
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
+    ap.add_argument('--hop-r-hub', type=float, default=0.0, help='s81-die v16: hop-fix planner reach (um) of the hub-bus '
+                    'bridges; default = --hop-r-cc')
+    ap.add_argument('--peer-pin-pos', action='store_true', help='s81-die v16: a slab port stands on the pin group of its '
+                    'station / link-end peer (laid first), not on the peer outline centre')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
                     't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
@@ -7710,7 +7749,9 @@ def apply_options(a):
     global MTP_EP, P2_LNK
     MTP_EP = bool(getattr(a, 'mtp_ep', False)); P2_LNK = bool(getattr(a, 'p2_lnk', False))
     WFC_KIT = bool(getattr(a, 'wfc_kit', False))
-    global WFC_PRICED
+    global WFC_PRICED, PEER_PIN_POS, HOP_R_HUB
+    HOP_R_HUB = float(getattr(a, 'hop_r_hub', 0.0) or 0.0)
+    PEER_PIN_POS = bool(getattr(a, 'peer_pin_pos', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
     assert not WFC_PRICED or (WFC_KIT and not getattr(a, 'wfc_crp', False)), '--wfc-priced: the --wfc-kit stage / source kit (not --wfc-crp)'
     global WFC_CRP, STAGE_SEQ

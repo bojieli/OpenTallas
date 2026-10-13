@@ -206,6 +206,15 @@ def qualify(master: str, n_inst: int, files: dict, d: Path, reg: dict, jobs: Pat
     drc = int(mt.group(4)) if mt else met.get("drc")
     e_tt = (cs.get("setup_tt") or {}).get("worst_slack_ps")
     e_ff = (cs.get("hold_ff") or {}).get("worst_slack_ps")
+    if e_tt is None and e_ff is None and ab.get("ok") and (ab.get("verdict") or {}).get("expect_ps"):
+        # the fixed export (main abc334b14) records its OWN corner STA of the verdict replay in abstract.json:
+        # corners.<c>.ws = "OT_WS max <setup s> min <hold s>".  That is the export-side record of this view directory
+        # (the same files the die binds), used when the job wrote no corner_sta.json beside it.
+        def _ws(c, k):
+            mm = re.search(r"OT_WS max (\S+) min (\S+)", ((ab.get("corners") or {}).get(c) or {}).get("ws") or "")
+            return round(float(mm.group(1 if k == "max" else 2)) * 1e12, 2) if mm else None
+        e_tt, e_ff = _ws("tt", "max"), _ws("ff", "min")
+        row["export_sta_source"] = "abstract.json corners.<c>.ws (verdict replay of the fixed export)"
     row["verdict_tt_ff_drc"] = [v_tt, v_ff, drc]
     row["export_tt_ff"] = [e_tt, e_ff]
     if v_tt is None:

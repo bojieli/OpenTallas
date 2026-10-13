@@ -317,8 +317,10 @@ def main() -> int:
                         "(pairing store indexed by {open-row slot, tree node}) fits THIS slot (~1.15 mm2) if <= 8 rows are open per root. "
                         "Measured on the die-layer vehicle: queue peak 10 of 128, pairing buffer peak 5 of 128 (synthetic field order). "
                         "DIE LEAD: slot UNCHANGED in v16 (step B is the design to build; capacity fault stays sticky / fail-closed); "
-                        "if the real field order shows > 8 open rows, v17 grows the slot +430 N (the hub stack has the room: see the v16 "
-                        "changelog). Pins: t_capture as 8 bundles on S at the capture's f_gather x centres (generator change owed with "
+                        "if the real field order shows > 8 open rows, step A needs +430 um N and the hub column has NO such room after v16 "
+                        "(v16 GEN: VM top 16,757, capture .. host stacked to y 22,746.9 of the 22,749.1 N strip; only the five ~172-um "
+                        "station pockets between the slabs remain): it would cost the SU / VM stack or the pockets. "
+                        "Pins: t_capture as 8 bundles on S at the capture's f_gather x centres (generator change owed with "
                         "the capture bundle split).")
 
     # ---- insert the new rows, drop the legacy SU rows
@@ -364,7 +366,7 @@ def main() -> int:
         "(--lane-pins 2). (10) gather pending, slot unchanged. (11) seam_rules.clock = die clock delivery rule (insertion-compensated entry, "
         "tap levels at 300 ps, SKEW 150 on deep-tile hops). NEIGHBOUR COST: the hub column stack above the VM moves N by +613.44 (VM) and the "
         "stack above the capture by a further +432.024 (total +1,045.464 for gather / pq / wfc / collective): taken from the free band of the "
-        "hub column, die 33 x 26 mm unchanged; the hc_s <-> vm / collective straight lanes move with their slabs (GEN v16: hop gate 500 um, "
+        "hub column, which is now FULL (v16 GEN: host top y 22,746.9 of 22,749.1; station pockets of ~172 um between pq / wfc / sseq / collective / host kept), die 33 x 26 mm unchanged; the hc_s <-> vm / collective straight lanes move with their slabs (GEN v16: hop gate 500 um, "
         "0 overlaps). No price changed; no closed tile re-shaped."})
     if a.pins_from:
         refresh_pins(c, a.pins_from)
