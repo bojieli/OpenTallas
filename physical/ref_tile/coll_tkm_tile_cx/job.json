@@ -1,5 +1,5 @@
 {
- "name": "coll_tkm_tile_cx-r1-COMMIT",
+ "name": "coll_tkm_tile_cx-r1-5ab85cbc7",
  "block": "ot_hgi_coll_tkm_tile",
  "ref_tile": true,
  "owner": "Codex:hbm-front-link",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/hbm-front-link",
-  "commit": "COMMIT",
+  "commit": "5ab85cbc7ea01326c516007c819f8cdbe6c05b8e",
   "extra_paths": [
    "results/rtl/hgi_unit_tput_20261010"
   ]
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_tkm_tile_cx/coll_tkm_tile_cx-r1-COMMIT"
+   "to": "results/rtl/ref_tile/coll_tkm_tile_cx/coll_tkm_tile_cx-r1-5ab85cbc7"
   }
  ],
  "cycles_added": 0,

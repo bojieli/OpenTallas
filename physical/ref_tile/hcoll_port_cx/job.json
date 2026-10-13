@@ -1,5 +1,5 @@
 {
- "name": "hcoll_port_cx-r2-COMMIT",
+ "name": "hcoll_port_cx-r2-ddb173c36",
  "block": "ot_hcoll_port",
  "ref_tile": true,
  "owner": "Codex:hbm-front-link",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/hbm-front-link",
-  "commit": "COMMIT",
+  "commit": "ddb173c36d493ac0633d5c1b859c0709faa27674",
   "extra_paths": [
    "physical/variant_fill/hcoll_port_rbsel_idleA"
   ]
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hcoll_port_cx/hcoll_port_cx-r2-COMMIT"
+   "to": "results/rtl/ref_tile/hcoll_port_cx/hcoll_port_cx-r2-ddb173c36"
   }
  ],
  "cycles_added": 1,

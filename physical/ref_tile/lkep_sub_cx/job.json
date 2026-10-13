@@ -1,5 +1,5 @@
 {
- "name": "lkep_sub_cx-r1-COMMIT",
+ "name": "lkep_sub_cx-r1-31def6706",
  "block": "ot_lkep_sub",
  "ref_tile": true,
  "owner": "Codex:hbm-front-link",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/hbm-front-link",
-  "commit": "COMMIT",
+  "commit": "31def67068a0ac5c035144721c20a253748bafc7",
   "extra_paths": [
    "results/rtl/hbm_retry_txrx_pin_20261010"
   ]
@@ -156,7 +156,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/lkep_sub_cx/lkep_sub_cx-r1-COMMIT"
+   "to": "results/rtl/ref_tile/lkep_sub_cx/lkep_sub_cx-r1-31def6706"
   }
  ],
  "cycles_added": 2,
