@@ -3,7 +3,7 @@ module tb_hbm_b2_vm8_sm_sink;
  parameter integer MUT=0;
  reg clk=0;always #0.5 clk=~clk;reg rst_n=0,permit=1;
  reg [191:0] expected_owner=192'h123abcfe9;reg [7:0] sm_mask=8'hff;
- reg tap_v=0;wire tap_ready;reg [2062:0] tap_data=0;reg [191:0] tap_owner;
+ reg tap_v=0;wire tap_ready;reg [2062:0] tap_data=0;reg [191:0] tap_owner;reg [15:0] tap_ticket=0;wire [15:0] tap_ACK_ticket;
  wire tap_ACK_v;wire [191:0] tap_ACK_owner;wire [7:0] xw_en;
  wire [55:0] xw_addr,xw_grp;wire [16383:0] xw_data;wire fault,drained;
  ot_hbm_b2_vm8_sm_sink #(.MUT(MUT)) u(.*);

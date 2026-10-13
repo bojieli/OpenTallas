@@ -37,3 +37,19 @@ stream; VM8 staging has serialized wr_ready and only2562063-bit row seats.
 The largest native fragment stream has1664beats. No direct producer binding
 may discard pulses or pretend256seats buffer1664beats. A held emitter or
 measured bounded FIFO needs source-specific throughput/physical qualification.
+
+Opt-in PIPE1 sink accepted1664consecutive beats, observed1664native SM input
+sampling edges and1664matching owner192/ticket16 ACKs; accepted-to-root-ACK
+latency2edges. Every beat uses one identical lease owner and a distinct
+generation11/bank1/slot4 ticket, with alternating banks. Data, ticket and
+early-ACK mutants all fail on the first affected edge. PIPE0 default still
+passes its1664beat/4992cycle exact case and its data mutant fails. Source SHA,
+all rc/build/run records are in sink_pipe_r2. PIPE1 remains default-off and
+physically/production unqualified. It establishes boundary acceptance only;
+selected SM internal x-write wl/wm/w0/branch paths still need source-specific
+commit/drain safety before engine launch. Root allocator must hold and match
+both owner192 and ticket16 until all4receiver ACKs; no owner-only release.
+
+The first inline-shell launch failed to produce separately named case files
+and is preserved under sink_pipe_initial_shell_failure (not qualification
+evidence). The successful run used the source-pinned run_sinkpipe.sh file.

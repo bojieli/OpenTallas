@@ -124,3 +124,35 @@ Fits one local M5/M4 station: <400 clock sinks, <=500um reach, command+owner
 Caller must obtain real lane-burst and SM publication reservations before
 command acceptance; this seat does not invent those allocations. No changes
 to golden arithmetic/layout, no global barrier, no queue or response omitted.
+
+## Pipelined native sink, prebuild 2026-10-13
+
+The default sink remains PIPE0 (one outstanding, one beat/3edges). Opt-in
+PIPE1 accepts one beat/edge and retains two local stages: xw launch then
+boundary-sampling ACK. Add explicit tap_ticket16 / tap_ACK_ticket16 alongside
+UNMODIFIED opaque owner192. The root service allocator owns32live entries
+(16/bank); ticket={generation11,bank1,slot4}, checked for collision and wrap
+reuse. Root matches BOTH owner and ticket and rejects duplicate/stale/per-face
+unissued ACKs. The sink never repurposes any of the192owner bits. No published
+source field map for those bits exists; a constant command owner alone cannot
+identify multiple concurrent beats.
+
+At acceptance edge t the sink registers payload+owner+ticket and launch mask;
+at t+1 the real native SM input samples that xw pulse and the sink launches
+matching owner/ticket ACK; the root observes the registered ACK at t+2. This is
+SM-boundary acceptance, NOT x-SRAM readback. Selected SM front_n has internal
+wl/wm/w0 and branch pipelines; its source-defined commit/launch safety remains
+a separate gate and must be priced before engine start. Permission and owner
+lease remain installed through the sampling edge and final ACK drain.
+
+The additional state is two16-bit ticket registers; one sink's payload+owner
+and controls remain below2500sinks, localM5signal/PG, M4/M5faces, independently
+buffered localclock/coldreset. No added payload reset. The forwarding channel
+is2063+192+16+valid/ready, reverse192+16+ACK, total2482bits: on500um M4 with
+9375usabletracks ratio0.26475. Every extra physical relay must preserve ticket,
+owner and valid together and be priced in the32-ticket release window. The
+flat eight-SM fork is still refused; real local stations/cuts are required.
+PIPE1 boundary throughput target1664beats in1664accept edges (plus2drain);
+positive gate checks every native sampling/ACK edge and equal-owner distinct
+tickets, and payload/ticket/early-ACK mutants must fail. Production native
+root memory/SMstore price and physical closure remain OPEN.
