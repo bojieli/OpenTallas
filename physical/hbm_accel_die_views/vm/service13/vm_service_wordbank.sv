@@ -9,6 +9,9 @@ module vm_service_wordbank #(parameter integer OWNER_BANK=0)(
  output wire [287:0] encoded,
  input wire capture_v,check_v,check_write,input wire [3:0] check_slot,
  input wire [287:0] returned,
+`ifdef VM_SVC_FAULT_HOOK
+ input wire [287:0] tb_exp_xor, // bench-only upset of the expected seat as read (never synthesised)
+`endif
  output wire valid,error,output wire [255:0] repaired_data);
  function automatic [71:0] encode64(input [63:0] data);
   reg [71:0] c;integer j,k,p;
@@ -50,7 +53,12 @@ module vm_service_wordbank #(parameter integer OWNER_BANK=0)(
  localparam [255:0] PAD_MASK=OWNER_BANK ? (256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff<<207) : 256'b0;
  vm_ck4 u_check(.ck(clk),.rst_n(rst_n),.capture_i(capture_v),.check_i(check_v),
   .write_i(check_write),.capture_regions_i(8'b0),.check_regions_i(8'b0),
-  .sample_i(returned),.expected_i(expected[check_slot]),
+  .sample_i(returned),
+`ifdef VM_SVC_FAULT_HOOK
+  .expected_i(expected[check_slot]^tb_exp_xor),
+`else
+  .expected_i(expected[check_slot]),
+`endif
   .owner_mask_i(OWNER_MASK),.padding_mask_i(PAD_MASK),
   .error_o(error),.valid_o(valid),.repaired_o(fixed_code));
 endmodule

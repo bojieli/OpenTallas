@@ -3,10 +3,10 @@ module tb_vm_service_wordbank;
  reg clk=0;always #1 clk=~clk;
  reg rst_n=0,expect_v=0,capture_v=0,check_v=0,check_write=0;
  reg[3:0]expect_slot=0,check_slot=0;reg[255:0]expect_data=0;wire[287:0]encoded;
- reg[287:0]returned=0;wire valid,error;wire[255:0]repaired_data;
+ reg[287:0]returned=0;reg[287:0]tb_exp_xor=0;wire valid,error;wire[255:0]repaired_data;
  vm_service_wordbank #(.OWNER_BANK(1)) dut(.*);
  reg[255:0]raw[0:15];reg[287:0]codes[0:15];
- integer errors=0,compared=0;reg want_v=0,want_error=0;reg[255:0]want_data=0;
+ integer errors=0,compared=0,expected_ue=0,expected_ce=0;reg want_v=0,want_error=0;reg[255:0]want_data=0;
  reg cur_error;reg[255:0]cur_data;
  task step;
   begin
@@ -31,7 +31,10 @@ module tb_vm_service_wordbank;
   for(integer n=0;n<4096;n=n+1)begin
    capture_v=1;check_v=(n!=0);check_slot=4'(n);check_write=(n%2==0);
    returned=codes[n%16];cur_data=raw[n%16];cur_error=0;
-   if(n%23==0)begin returned[0]=~returned[0];returned[1]=~returned[1];cur_error=1;end
+   tb_exp_xor=0;
+   if(n%37==0)begin tb_exp_xor[(n*7)%288]=1;tb_exp_xor[(n*7+19)%72+((n*7)%288)/72*72]=~tb_exp_xor[(n*7+19)%72+((n*7)%288)/72*72];cur_error=1;expected_ue=expected_ue+1;end
+   else if(n%41==0)begin tb_exp_xor[(n*11)%288]=1;expected_ce=expected_ce+1;end
+   else if(n%23==0)begin returned[0]=~returned[0];returned[1]=~returned[1];cur_error=1;end
    else if(n%17==0)begin
     cur_data[33]=~cur_data[33];returned[0+:72]=dut.encode64(cur_data[0+:64]);cur_error=1;
    end else if(n%29==0)begin
@@ -42,7 +45,8 @@ module tb_vm_service_wordbank;
    step();
   end
   capture_v=0;check_v=1;step();check_v=0;step();
-  $display("SERVICE_WORDBANK compared=%0d errors=%0d II=1 expected_entries=16",compared,errors);
+  $display("SERVICE_WORDBANK compared=%0d errors=%0d II=1 expected_entries=16 expected_seat_ue=%0d expected_seat_corrected=%0d",compared,errors,expected_ue,expected_ce);
+  if(compared!=4096||expected_ue<100||expected_ce<90)$fatal(1,"SERVICE_WORDBANK FAIL coverage");
   if(errors)$fatal(1,"SERVICE_WORDBANK FAIL");$finish;
  end
 endmodule

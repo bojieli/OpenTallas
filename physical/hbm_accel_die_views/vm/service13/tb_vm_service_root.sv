@@ -4,7 +4,8 @@
 // receiver back-pressure (rewind), receiver masks, lease changes, generation wraps, corrected single-bit
 // reads. Negative phases (each must raise the stated fault code and never publish the bad beat): double-bit
 // verify / publication reads, a valid-code wrong write, stale / old-generation / duplicate / unissued /
-// wrong-owner ACKs, a lease change on a valid beat, a control upset.
+// wrong-owner ACKs, a lease change on a valid beat, a control upset, an uncorrectable expected seat (fc58d5470)
+// at the verify and at the publication check. A single-bit expected-seat upset is corrected and publishes exact.
 module tb_vm_service_root;
  parameter integer GENW=11;
  parameter integer WRAPS=2;
@@ -39,6 +40,7 @@ module tb_vm_service_root;
  reg [3:0] inj_ack_v=0;reg [15:0] inj_ack_t=0;reg [191:0] inj_ack_o=0;
  reg inj_armed=0,inj_kind=0;integer inj_seq=0,inj_hit=0;reg [2815:0] inj_mask=0;
  reg winj_armed=0;integer winj_seq=0,winj_hit=0;reg [2815:0] winj_mask=0;
+ reg einj_armed=0,einj_kind=0;integer einj_seq=0,einj_hit=0;reg [287:0] einj_mask=0;reg [3:0] einj_word=0;
  function automatic [15:0] tick(input integer n);
   integer m;
   begin m=n-base;tick=16'({GENW'((m/32)),1'(m%2),4'((m/2)%16)});end
@@ -104,6 +106,11 @@ module tb_vm_service_root;
    if(dut.t_v[3][rr]&&dut.t_k[3][rr]==inj_kind&&dut.t_n[3][rr]==5'(inj_seq-base))begin
     dut.tb_rd_xor[rr]=inj_mask;inj_armed=0;inj_hit=inj_hit+1;
    end
+  dut.tb_exp_xor[0]=0;dut.tb_exp_xor[1]=0;
+  if(einj_armed)for(rr=0;rr<2;rr=rr+1)
+   if(dut.t_v[3][rr]&&dut.t_k[3][rr]==einj_kind&&dut.t_n[3][rr]==5'(einj_seq-base))begin
+    dut.tb_exp_xor[rr]=einj_mask;dut.tb_exp_word=einj_word;einj_armed=0;einj_hit=einj_hit+1;
+   end
   if(winj_armed&&dut.w0_v&&{dut.w0_slot,dut.w0_bank}==5'(winj_seq-base))begin
    dut.tb_wr_xor=winj_mask;winj_armed=0;winj_hit=winj_hit+1;
   end
@@ -138,7 +145,7 @@ module tb_vm_service_root;
  endtask
  task automatic reset_dut;
   begin
-   wr_v=0;fault_expected=1;repeat(2)@(negedge clk);rst_n=0;inj_armed=0;winj_armed=0;inj_ack_v=0;dut.tb_upset=0;
+   wr_v=0;fault_expected=1;repeat(2)@(negedge clk);rst_n=0;inj_armed=0;winj_armed=0;einj_armed=0;inj_ack_v=0;dut.tb_upset=0;
    repeat(3)@(negedge clk);
    base=n_acc;n_rel=n_acc;for(integer q=0;q<4;q=q+1)begin n_tap[q]=n_acc;ap[q]=n_acc;lat[q]=2;rdy_mode[q]=0;end
    rcv_mask=4'hf;tap_ready=4'hf;rst_n=1;fault_expected=0;repeat(2)@(negedge clk);
@@ -171,7 +178,7 @@ module tb_vm_service_root;
  integer c0,s0,a0,r0,kb,w,mo;
  initial begin
   for(integer q=0;q<4;q=q+1)begin n_tap[q]=0;ap[q]=0;lat[q]=2;rdy_mode[q]=0;end
-  dut.tb_rd_xor[0]=0;dut.tb_rd_xor[1]=0;dut.tb_wr_xor=0;dut.tb_upset=0;
+  dut.tb_rd_xor[0]=0;dut.tb_rd_xor[1]=0;dut.tb_wr_xor=0;dut.tb_upset=0;dut.tb_exp_xor[0]=0;dut.tb_exp_xor[1]=0;dut.tb_exp_word=0;
   repeat(4)@(negedge clk);rst_n=1;repeat(2)@(negedge clk);
   // ---- A: II 1 stream, 1,664 beats, receivers ready, ACK two edges after the tap ----
   lease(1);c0=cyc;s0=stalls;a0=n_acc;max_a2t=0;max_a2r=0;max_out=0;
@@ -215,7 +222,26 @@ module tb_vm_service_root;
   join
   drain();if(inj_hit!=8)begin $display("single-bit injections%0d",inj_hit);$fatal(1,"SERVICE_ROOT FAIL");end
   $display("CORRECTED single_bit_reads=8 data exact");
+  // ---- D2: corrected single-bit expected seats (verify and publication, both banks, data and owner islands) ----
+  reset_dut();lease(22);
+  fork
+   send(128,0,0,0);
+   begin
+    einj_hit=0;
+    for(integer e=0;e<8;e=e+1)begin
+     einj_kind=e[0];einj_seq=base+5+e*14;einj_word=4'((e*5)%9);einj_mask=0;einj_mask[(e*101+7)%288]=1;einj_armed=1;
+     while(einj_armed)@(negedge clk);
+    end
+   end
+  join
+  drain();if(einj_hit!=8)begin $display("single-bit expected injections%0d",einj_hit);$fatal(1,"SERVICE_ROOT FAIL");end
+  $display("CORRECTED single_bit_expected_seats=8 data exact");
   // ---- negative phases ----
+  reset_dut();lease(23);kb=base+10;einj_kind=0;einj_seq=kb;einj_word=4'd2;einj_mask=0;einj_mask[40]=1;einj_mask[61]=1;einj_armed=1;
+  fault_expected=1;send(40,0,0,0);want_fault(2,"uncorrectable expected seat at verify");never_published(kb,"uncorrectable expected seat at verify");
+  reset_dut();lease(24);kb=base+13;einj_kind=1;einj_seq=kb;einj_word=4'd8;einj_mask=0;einj_mask[150]=1;einj_mask[203]=1;einj_armed=1;
+  fault_expected=1;send(40,0,0,0);want_fault(3,"uncorrectable expected seat at publication");never_published(kb,"uncorrectable expected seat at publication");
+  if(einj_hit!=10)$fatal(1,"expected-seat injection missed");
   reset_dut();lease(10);kb=base+9;inj_kind=0;inj_seq=kb;inj_mask=0;inj_mask[300]=1;inj_mask[317]=1;inj_armed=1;
   fault_expected=1;send(40,0,0,0);want_fault(2,"double-bit verify read");never_published(kb,"double-bit verify read");
   reset_dut();lease(11);kb=base+12;inj_kind=1;inj_seq=kb;inj_mask=0;inj_mask[2400]=1;inj_mask[2410]=1;inj_armed=1;

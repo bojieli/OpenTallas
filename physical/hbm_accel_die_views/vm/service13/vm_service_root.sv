@@ -90,12 +90,16 @@ module vm_service_root #(parameter integer GENW=11)(
     .encoded(enc[gb][gw*288+:288]),
     .capture_v(t_v[3][gb]),.check_v(t_v[4][gb]),.check_write(!t_k[3][gb]),.check_slot(t_n[3][gb][4:1]),
     .returned(returned[gw*288+:288]),
+`ifdef VM_SVC_FAULT_HOOK
+    .tb_exp_xor(tb_exp_word==4'(gw)?tb_exp_xor[gb]:288'b0),
+`endif
     .valid(ck_valid[gb][gw]),.error(ck_error[gb][gw]),.repaired_data(ck_data[gb][gw*256+:256]));
   end
  end endgenerate
 `ifdef VM_SVC_FAULT_HOOK
  // bench-only injection points (never synthesised): returned-row and written-row XOR masks, control upset
  reg [2815:0] tb_rd_xor[0:1];reg [2815:0] tb_wr_xor;reg tb_upset;
+ reg [287:0] tb_exp_xor[0:1];reg [3:0] tb_exp_word; // expected-seat upset of one island
 `endif
  // ---------------- scheduling ----------------
  wire [4:0] p_idx=idx_of(pub_n);
