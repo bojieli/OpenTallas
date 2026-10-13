@@ -1,5 +1,5 @@
 {
- "name": "qkd_cdc_wleaf_ref-q13r3-COMMIT",
+ "name": "qkd_cdc_wleaf_ref-q13r3-0e8018007",
  "block": "qkd_cdc_wleaf",
  "ref_tile": true,
  "owner": "Claude:q13-cdcw",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q13-cdcw",
-  "commit": "COMMIT"
+  "commit": "0e8018007"
  },
  "stages": {
   "bench": [
@@ -116,7 +116,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_cdc_wleaf_ref/qkd_cdc_wleaf_ref-q13r3-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_cdc_wleaf_ref/qkd_cdc_wleaf_ref-q13r3-0e8018007"
   }
  ],
  "cycles_added": 0,
