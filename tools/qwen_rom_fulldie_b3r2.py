@@ -2209,7 +2209,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             k_ = io_lane(*sorted((P0[0], P1[0])), subs, allow=(3,) if FIELD_ALLOC else None)
             chx = getattr(v, 'SPINE_CHANNEL_X', None)
             xl = lane_pick(chx, Pa, (Pa[0], subs[k_]), lane_bits) if chx else Pa[0]
-            path = [Pa, (xl, Pa[1]), (xl, subs[k_]), (Pi[0], subs[k_]), Pi]
+            xd = getattr(v, 'HOST_FDI_DROP_X', None)
+            if xd is not None:
+                # r9 (contract v5 T21): the PHY's FDI pins are on its W face: the link drops down the middle of the
+                # access strip W of the macro and turns to the pins at their height
+                path = [Pa, (xl, Pa[1]), (xl, subs[k_]), (xd, subs[k_]), (xd, Pi[1]), Pi]
+            else:
+                path = [Pa, (xl, Pa[1]), (xl, subs[k_]), (Pi[0], subs[k_]), Pi]
             return path if Pa is P0 else path[::-1]
         if kv_gaps and eps is not None and len(eps) == 2:
             n0, n1 = eps[0][0], eps[1][0]
@@ -2604,24 +2610,51 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     GATE = bool(getattr(v, 'RELAY_REACH_GATE', False))
 
+    def frame_faces(pts, k, fr, bits):
+        """(in face, out face) of relay frame k of a chain (pts = P0, frame centres, P1): toward the previous / next
+        point on the dominant axis; both on one side: the output takes the other axis.  r9 (pin alignment): toward a
+        BLOCK PIN (first / last hop) the face is turned to the other axis when the pin would stand nearer than the bus
+        needs to jog and off the face centre by more than 20 um (the hop becomes an L, which needs no jog)."""
+        x0, y0, w, h = fr
+        here = pts[k + 1]
+
+        def face(o):
+            dx, dy = o[0] - here[0], o[1] - here[1]
+            if abs(dx) >= abs(dy):
+                return 'E' if dx > 0 else 'W'
+            return 'N' if dy > 0 else 'S'
+        fi, fo = face(pts[k]), face(pts[k + 2])
+        if fi == fo:
+            dx, dy = pts[k + 2][0] - here[0], pts[k + 2][1] - here[1]
+            fo = ('E' if dx >= 0 else 'W') if fi in 'NS' else ('N' if dy >= 0 else 'S')
+        fp = {'E': (x0 + w, y0 + h / 2), 'W': (x0, y0 + h / 2), 'N': (x0 + w / 2, y0 + h), 'S': (x0 + w / 2, y0)}
+        need = bits / (0.60 * 31.51)
+
+        def bad(f, o):
+            q = fp[f]
+            gap, jog = (abs(q[0] - o[0]), abs(q[1] - o[1])) if f in 'EW' else (abs(q[1] - o[1]), abs(q[0] - o[0]))
+            return jog > 20.0 and gap < need
+
+        def alt(f, o):
+            dx, dy = o[0] - here[0], o[1] - here[1]
+            return ('E' if dx >= 0 else 'W') if f in 'NS' else ('N' if dy >= 0 else 'S')
+        if k + 2 == len(pts) - 1 and bad(fo, pts[k + 2]):
+            a_ = alt(fo, pts[k + 2])
+            if a_ != fi and not bad(a_, pts[k + 2]):
+                fo = a_
+        if k == 0 and bad(fi, pts[0]):
+            a_ = alt(fi, pts[0])
+            if a_ != fo and not bad(a_, pts[0]):
+                fi = a_
+        return fi, fo, fp
+
     def pin_pts(pl, faces=None):
         """relay-data 2026-10-13: the chain's pins as the emit step below draws them (port a at the centre of the face
         toward the previous point, b toward the next; both neighbours on one side: b takes the other axis)"""
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
         out = [pl['P0']]
         for k, (x0, y0, w, h) in enumerate(pl['frames']):
-            here = pts[k + 1]
-
-            def face(o):
-                dx, dy = o[0] - here[0], o[1] - here[1]
-                if abs(dx) >= abs(dy):
-                    return 'E' if dx > 0 else 'W'
-                return 'N' if dy > 0 else 'S'
-            fi, fo = face(pts[k]), face(pts[k + 2])
-            if fi == fo:
-                dx, dy = pts[k + 2][0] - here[0], pts[k + 2][1] - here[1]
-                fo = ('E' if dx >= 0 else 'W') if fi in 'NS' else ('N' if dy >= 0 else 'S')
-            fp = {'E': (x0 + w, y0 + h / 2), 'W': (x0, y0 + h / 2), 'N': (x0 + w / 2, y0 + h), 'S': (x0 + w / 2, y0)}
+            fi, fo, fp = frame_faces(pts, k, (x0, y0, w, h), pl['bits'])
             out += [fp[fi], fp[fo]]
             if faces is not None:
                 faces += [fi, fo]
@@ -2651,7 +2684,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if f_ is None:
                 continue
             gap, jog = (abs(a_[0] - b_[0]), abs(a_[1] - b_[1])) if f_ in 'EW' else (abs(a_[1] - b_[1]), abs(a_[0] - b_[0]))
-            if jog > JOG_OK_UM and gap < need:
+            if (jog > JOG_OK_UM and gap < need) or (gap < 1.0 and jog > 0.1):      # + pin_align's abutted rule
                 bad.append(k)
         return bad
 
@@ -3448,19 +3481,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for k, (x0, y0, w, h) in enumerate(pl['frames']):
             here = pts[k + 1]
 
-            def face(o):
-                dx, dy = o[0] - here[0], o[1] - here[1]
-                if abs(dx) >= abs(dy):
-                    return 'E' if dx > 0 else 'W'
-                return 'N' if dy > 0 else 'S'
-            fi, fo = face(pts[k]), face(pts[k + 2])
-            if fi == fo:
-                # both neighbours on one side: the output takes the other axis toward its peer
-                dx, dy = pts[k + 2][0] - here[0], pts[k + 2][1] - here[1]
-                if fi in 'NS':
-                    fo = 'E' if dx >= 0 else 'W'
-                else:
-                    fo = 'N' if dy >= 0 else 'S'
+            fi, fo, _fp = frame_faces(pts, k, (x0, y0, w, h), bits)       # the one face rule (pin_pts draws the same)
             pr_ = bid in pair
             mn = f'qfd_rly{"f" if link else ("p" if pr_ else "")}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
             masters_needed[mn] = (bits, fi, fo, w, h, link, pr_)

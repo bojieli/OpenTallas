@@ -467,6 +467,7 @@ def apply(v, m, G):
                 i.x = round(i.x - IO_STRIP_DX, 4)
                 moved.append(i.name)
         strip = hp.x - max(i.x + i.w for i in m['insts'] if i.master == 'qfd_io_serdes' and i.x < hp.x)
+        v.HOST_FDI_DROP_X = round(hp.x - strip / 2, 3)
         B = [(b, c, FDI_BITS if b == 'host_fdi' else n, e) for b, c, n, e in B]
         io_rec['host'] = dict(old=old, new=[hp.x, hp.y, hp.w, hp.h], moved_w=moved, dx=IO_STRIP_DX, strip_um=round(strip, 3),
                               fdi_bits=FDI_BITS, fdi='W face M4 y 600-700.344')
