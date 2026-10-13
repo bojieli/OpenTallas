@@ -71,7 +71,7 @@ def main():
         for v in S.values(): AL[v] = xw
         for v in K.values(): AL[v] = pw
     def est(u, v, d):
-        return d + AL[u] + AL[v] + (TERM_BAY if (u >= NB) != (v >= NB) else 0.0)
+        return float(d) + float(AL[u]) + float(AL[v]) + (TERM_BAY if (u >= NB) != (v >= NB) else 0.0)
     # ---- cut bookkeeping ----
     ccache = {}; used = collections.defaultdict(int)
     # Demand along a cut axis only changes at a node coordinate, so one booking line per interval between consecutive
@@ -183,7 +183,7 @@ def main():
     ok = not fail and (not worst or worst[0]['util'] <= LIM) and pad <= spare and max(c['util'] for c in coarse) <= LIM
     allst = [h for v in done for h in v.get('stage_um', [])]
     stage_audit = dict(rule='every stage (register pin -> wire -> register pin) <= 500 um, estimated pin to pin (see AL / TERM_BAY in the tool)',
-                       stages=len(allst), max_um=max(allst, default=0), over_500=sum(h > 500 for h in allst), over_450=sum(h > 450 for h in allst),
+                       stages=len(allst), max_um=max(allst, default=0), over_500=int(sum(h > 500 for h in allst)), over_450=int(sum(h > 450 for h in allst)),
                        allowance_um=dict(xfifo8_xo=float(AL[NB]) if N > NB else 0, plane=float(AL[-1]) if N > NB else 0, bay_facing_terminal=TERM_BAY, bay_to_bay=0.0),
                        not_proven='bay-to-bay stages assume the pin-level assignment (tile of the bay, pin order) that makes the pins face each other')
     ok = ok and stage_audit['over_500'] == 0

@@ -61,8 +61,9 @@ def build():
     ch = []; bays = []
     def add(n, m, x, y, **k):
         ch.append(dict(n=n, m=m, x=G(x), y=G(y), w=size[m][0], h=size[m][1], orient='R0', layer_cap='M5', **k))
+    TW, TH = size['ot_qfd_vm_xrelay_t']; BW = round(2 * TW + 2.16, 3); NP = G(TH + 2.16); NODES = int((RH - 4.32) // NP)   # node = two tiles side by side (real kit outline)
     def strip(n, x, y, r):   # full-height double column of x relay leaves: 8 nodes of 2 x 2 tiles (2,048 b), pitch 133.92
-        for k in range(8): bays.append(dict(n=f'{n}_{k}', x=G(x), y=G(y + 4.32 + 133.92 * k), w=36.72, h=131.76, tiles=4, region=r))
+        for k in range(NODES): bays.append(dict(n=f'{n}_{k}', x=G(x), y=G(y + 4.32 + NP * k), w=BW, h=TH, tiles=2, region=r))
     for r in range(8):
         X, Y = region_origin(r)
         for b in range(8):
@@ -93,9 +94,9 @@ def build():
         if FOLD[r % 4] in (1, 2):
             X, Y = region_origin(r)
             for nm, bx in (('sW', 4.32), ('sA', 432.0), ('sB', 859.68)) + ((('sE', RW + 4.32),) if FOLD[r % 4] == 2 else ()):
-                for k in range(2):
-                    y = Y - 4.32 - 133.92 * (k + 1) if r < 4 else Y + RH + 4.32 + 133.92 * k
-                    bays.append(dict(n=f'vm_g{r}_{nm}_x{k}', x=G(X + bx), y=G(y), w=36.72, h=131.76, tiles=4, region=r, optional=True))
+                for k in range(3):
+                    y = Y - 4.32 - NP * (k + 1) if r < 4 else Y + RH + 4.32 + NP * k
+                    bays.append(dict(n=f'vm_g{r}_{nm}_x{k}', x=G(X + bx), y=G(y), w=BW, h=TH, tiles=2, region=r, optional=True))
     return ch, bays, size
 
 def seam_audit(ch):
@@ -170,7 +171,7 @@ def main():
                       it2_relay_objects_inside_envelope=sum(ov(env, i) for i in relays),
                       note='it2 relay objects (qfd_rly* / qkd_rly*) are regenerated with their chains, as in the Codex plans; they are counted, not checked.'),
         leaf_count=dict(cnt), leaf_area_mm2=area, closed_child_area_mm2=round(sum(area[m] for m in VIEW), 4),
-        placed_leaf_area_mm2=round(sum(area.values()), 4), x_relay_bay_tiles=relay_tiles, x_relay_bay_area_mm2=round(relay_tiles * 17.28 * 64.8 / 1e6, 4),
+        placed_leaf_area_mm2=round(sum(area.values()), 4), x_relay_bay_tiles=relay_tiles, x_relay_bay_area_mm2=round(relay_tiles * NEW['ot_qfd_vm_xrelay_t'][0] * NEW['ot_qfd_vm_xrelay_t'][1] / 1e6, 4),
         clock_roots=roots, max_sinks_per_root=max(v['sinks_per_root'] for v in roots.values()), root_rule='<= 15000 sinks per root: every leaf is its own root; no group-level tree',
         sizing={m: dict(kit='physical/ref_tile/' + KIT[m], outline_um=list(NEW[m]), sinks_per_root=SINKS[m], gate=GATE.get(m)) for m in KIT},
         optional_bays_dropped_for_clearance=dropped, real_pins=pins, children=ch, x_relay_bays=bays)
