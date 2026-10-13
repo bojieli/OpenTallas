@@ -394,6 +394,7 @@ def _tp8b_kv(v, m):
     for bus in mk['buses']:
         chains.setdefault(base(bus[0]), []).append(bus)
     keep_rly, nb = set(), []
+    kept_chains = {}                                   # base bus -> (segments, relay names) of the chains kept as placed
     for b0, segs in chains.items():
         ends = [e for s_ in segs for e in s_[3] if not kby[e[0]].master.startswith('qkd_rly')]
         rl = {e[0] for s_ in segs for e in s_[3] if kby[e[0]].master.startswith('qkd_rly')}
@@ -407,6 +408,8 @@ def _tp8b_kv(v, m):
             nb.append((b0, cl, bits, [segs[0][3][0], segs[-1][3][-1]] if len(segs) > 1 else segs[0][3]))
             continue
         keep_rly |= rl
+        if rl:
+            kept_chains[b0] = (segs, rl)
         nb += [(bid, cl if cl in RELAY_SKIP else f'{cl}@kv', bt, eps) for bid, cl_, bt, eps in segs for cl in (cl_,)]
     # main 758ccc84c: KV relays now sit on their driver's clk_core trunk; a dropped (re-relayed) KV relay leaves the
     # multi-pin trunks with it, the kept ones keep their ck
@@ -430,6 +433,7 @@ def _tp8b_kv(v, m):
     # v.KV_XCH per strip side for _relays (<= KV_XCH_CAP b per channel)
     xch = TP8['f2'].get('kv_xch')
     v.KV_XCH = {}
+    xsh = {}                                           # instance -> its crossing-channel shift (um)
     if xch:
         import re as _re
         heads = [i for i in new if _re.match(r'(head|ectl)_[WE][SN]_\d+', i.name)]
@@ -452,11 +456,30 @@ def _tp8b_kv(v, m):
                        and ya - 1.0 <= i.y + i.h / 2 <= yb + 1.0]
             for i, sh in mv:
                 i.y = round(i.y + sh, 4)
+                xsh[i.name] = round(xsh.get(i.name, 0.0) + sh, 4)
             chs = [round(spans[j][0] + (j - 0.5) * xch, 3) for j in range(1, len(order))]
             v.KV_XCH.setdefault(sd, set()).update(chs)
         v.KV_XCH = {k: sorted(x) for k, x in v.KV_XCH.items()}
         v.KV_XCH_STRIP = {sd: (min(i.x for i in heads if f'_{sd}' in i.name[4:7]), max(i.x + i.w for i in heads if f'_{sd}' in i.name[4:7]))
                           for sd in v.KV_XCH}
+    # relay-data 2026-10-13 (pinreg audit: 52 kept hops of 700 um, krs / krq): a kept KV chain is as placed on the KV die
+    # (every hop <= 450 um pin to pin) only if the crossing-channel shift moved ALL its members alike.  A chain whose
+    # relays / endpoints moved by different amounts (head groups j * kv_xch, relays between the columns and the 12-mm
+    # landing 0) is TORN: its KV relays are dropped and the word is re-relayed by _relays like every centre word.
+    torn = []
+    for b0, (segs, rl) in sorted(kept_chains.items()):
+        mem = {e[0] for s_ in segs for e in s_[3]}
+        if len({xsh.get(n_, 0.0) for n_ in mem}) > 1:
+            torn.append(b0)
+            keep_rly -= rl
+            ids = {s_[0] for s_ in segs}
+            nb = [b_ for b_ in nb if b_[0] not in ids]
+            nb.append((b0, segs[0][1], segs[0][2], [segs[0][3][0], segs[-1][3][-1]]))
+    if torn:
+        new = [i for i in new if not (i.master.startswith('qkd_rly') and i.name not in keep_rly)]
+        nb = [(b_, c_, t_, [e for e in eps_ if not (kby[e[0]].master.startswith('qkd_rly') and e[0] not in keep_rly)])
+              if len(eps_) != 2 else (b_, c_, t_, eps_) for b_, c_, t_, eps_ in nb]
+    v.RELAY_REACH_GATE = True
     # KV centre column (E of the ROM spine), centred on the die's mid-height
     x0, x1 = g['tp8b_kvc_x']
     gap = 2 * v.GY
@@ -495,7 +518,7 @@ def _tp8b_kv(v, m):
                      dict(name='kv_e', kind='kv_half', rect=[e_beg + dxe, dy, W, dy + Hk]),
                      dict(name='kv_centre', kind='kv_centre', rect=[x0, y, x1, y + tot + gap])]
     m['tp8b_kv'] = dict(kv_die_um=[Wk, Hk], dy=dy, dxe=dxe, w_end=round(w_end, 3), e_beg=round(e_beg + dxe, 3),
-                        kept_relays=len(keep_rly), insts=len(new), buses=len(nb), short=sorted(short), emb_ingress_b=1024)
+                        kept_relays=len(keep_rly), torn_chains=torn, insts=len(new), buses=len(nb), short=sorted(short), emb_ingress_b=1024)
     # qwen-tp8/die it3 (coordinator 10-12, single die type): EVERY die carries the KV host SerDes slot (serdes_host,
     # 112G x12 PHY) and the 2,085-b host FDI ingress host.fdi <-> serdes_host.fdi; only the dies wired to a host use it.
     # The PHY sits on a die edge (S IO row first, then N edge) in the free slot nearest the KV-centre column (the host
@@ -1654,6 +1677,13 @@ RELAY_SKIP = ('clock_trunk', 'reset', 'tap', 'kv_land', 'cdc_core', 'hbm_cdc', '
 RELAY_V_H = 30.24      # relay frame height with N/S faces only (vertical run): 512 flops + clock leaf, M1-M3
 RELAY_MAX_UM = 350.0   # owner fast rule 2026-10-06: every die wire > ~350 um gets relay registers ...
 RELAY_PITCH_UM = 300.0  # ... at a conservative ~300 um pitch
+# owner 2026-10-13 (die timing by construction): register at the pin -> wire <= 500 um -> register at the pin, measured
+# PIN TO PIN (bounding box of the net's pin centroids, as tools/hier_contract/pinreg_audit.py).  Under v.RELAY_REACH_GATE
+# (tp8b) _relays accepts a chain only when every hop is <= RELAY_REACH_OK pin to pin and raises on any data net over
+# RELAY_REACH_UM; clock / reset trees are built by CTS / the reset tree and are not data hops.
+RELAY_REACH_UM = 500.0
+RELAY_REACH_OK = 490.0
+RELAY_NEVER = ('clock_trunk', 'reset')
 
 
 def _relays(v, m, pitch=RELAY_PITCH_UM):
@@ -2292,6 +2322,39 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         mh = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])   # noqa: E731
         return any(mh(pts[i], pts[i + 1]) > mh(pts[i - 1], pts[i + 1]) + 20.0 for i in range(1, len(pts) - 1))
 
+    GATE = bool(getattr(v, 'RELAY_REACH_GATE', False))
+
+    def pin_pts(pl):
+        """relay-data 2026-10-13: the chain's pins as the emit step below draws them (port a at the centre of the face
+        toward the previous point, b toward the next; both neighbours on one side: b takes the other axis)"""
+        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
+        out = [pl['P0']]
+        for k, (x0, y0, w, h) in enumerate(pl['frames']):
+            here = pts[k + 1]
+
+            def face(o):
+                dx, dy = o[0] - here[0], o[1] - here[1]
+                if abs(dx) >= abs(dy):
+                    return 'E' if dx > 0 else 'W'
+                return 'N' if dy > 0 else 'S'
+            fi, fo = face(pts[k]), face(pts[k + 2])
+            if fi == fo:
+                dx, dy = pts[k + 2][0] - here[0], pts[k + 2][1] - here[1]
+                fo = ('E' if dx >= 0 else 'W') if fi in 'NS' else ('N' if dy >= 0 else 'S')
+            fp = {'E': (x0 + w, y0 + h / 2), 'W': (x0, y0 + h / 2), 'N': (x0 + w / 2, y0 + h), 'S': (x0 + w / 2, y0)}
+            out += [fp[fi], fp[fo]]
+        out.append(pl['P1'])
+        return out
+
+    def p2p_hops(pl):
+        """pin-to-pin hop lengths of a chain (the audit's measure); the allocator's own measure (hops_of) is centre to
+        centre, up to w / 2 + h / 2 a side shorter"""
+        q = pin_pts(pl)
+        return [abs(q[i][0] - q[i + 1][0]) + abs(q[i][1] - q[i + 1][1]) for i in range(0, len(q), 2)]
+
+    def reach_bad(pl):
+        return GATE and max(p2p_hops(pl)) > RELAY_REACH_OK
+
     def chain_path(P0, frames, P1, poly):
         """it24: the rectilinear route of a PLACED relay chain (each hop an L whose corner lies nearer the allocator's
         poly) -- what the allocator books, so its load model is the placement, not the plan"""
@@ -2336,12 +2399,17 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     _only = tuple(q for q in _os.environ.get('OT_RELAY_ONLY', '').split(',') if q)   # debug: relay only these buses
     _dbg = set(q for q in _os.environ.get('OT_RELAY_DBG', '').split(',') if q)
     for idx, (bid, cl, bits, eps) in buses:
-        if cl in RELAY_SKIP or len(eps) != 2 or (_only and not bid.startswith(_only)):
+        # relay-data 2026-10-13: 'not relayed' classes (<= 350 um by construction) are relayed all the same when their
+        # pins are farther apart than the die reach (wcf_*: cdc -> landing, 623 um pin to pin, 128 words); a kept KV
+        # chain ('@kv') is never touched here (a torn one was already handed over whole by _tp8b_kv)
+        skip_cl = cl in RELAY_SKIP
+        if len(eps) != 2 or (_only and not bid.startswith(_only)) or (skip_cl and (
+                not GATE or cl in RELAY_NEVER or cl.endswith('@kv'))):
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         P0, P1 = pos(*eps[0]), pre_far.get(idx) or pos(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
-        if d <= RMAX:
+        if d <= (RELAY_REACH_OK if skip_cl else RMAX):
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         cur_bits[0] = bits
@@ -2514,7 +2582,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     repaired, unrepaired, off_plan = [], [], []
     for idx, pl in sorted(plans.items()):
         hs = hops_of(pl)
-        if max(hs) <= RMAX + 25.0 and not backtracks(pl):
+        if max(hs) <= RMAX + 25.0 and not backtracks(pl) and not reach_bad(pl):
             continue
         bits = pl['bits']
         w, h = relay_frame(bits, pl['cl'])
@@ -2558,9 +2626,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 arcp = np.where(better, s0_ + np.abs(qx - xa_) + np.abs(qy - ya_), arcp)
                 near = np.minimum(near, dd)
                 s0_ += abs(xb_ - xa_) + abs(yb_ - ya_)
+            neard = near
             near = near <= near_r
             # progress along the planned path (not toward the load: the run detours by design)
             dP1 = s0_ - arcp
+            dP1_arc = dP1
         dP1_free = np.abs(ctr[:, 0] - P1[0]) + np.abs(ctr[:, 1] - P1[1])
 
         def ok(i):
@@ -2583,7 +2653,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 nxt = []
                 for i, nb in zip(front, tree.query_ball_point(ctr[front], D, p=1)):
                     for j in nb:
-                        if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j):
+                        if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j) and (
+                                not GATE or abs(arr[j][0] - arr[i][0]) >= W or abs(arr[j][1] - arr[i][1]) >= H):
                             par[j] = i
                             nxt.append(j)
                 nxt.sort(key=lambda j: dP1[j])
@@ -2597,35 +2668,78 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             return [(float(arr[i][0]), float(arr[i][1]), w, h) for i in c_[::-1]]
         # qwendie-1011: a monotone chain (each relay closer to the load: no doubling back) first; the unconstrained
         # search only when the pass-1 hops are too long; a pass-1 chain whose hops pass is never replaced by a worse one
-        need = max(hs) > RMAX + 25.0
+        need = max(hs) > RMAX + 25.0 or reach_bad(pl)
         found, why = None, ''
         tries = [(D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)]
-        if near_cons is not None and FIELD_ALLOC and pl['bid'] not in tight_stride:
-            tries = [(De_, mo_, True) for De_, mo_ in tries] + [(De_, mo_, False) for De_, mo_ in tries]
-        else:
-            tries = [(De_, mo_, True) for De_, mo_ in tries]
-        off = False
-        for De, mono, cons in tries:
-            if not mono and not need:
-                continue
-            if found is not None and not cons and not off:
-                break                    # a constrained chain exists: never trade it for an off-plan one
-            if not cons and not off:
-                off = True
-                near = None
-                dP1 = dP1_free
+        if GATE:
+            # relay-data 2026-10-13 (pinreg audit: 28 chains left 'unrepaired' and silently kept, hops to 2.4 mm).  A
+            # planned leg over a block (a KV-half word's end leg ran 4 mm inside the attention stack to its S-face pin)
+            # has no relay site within the route corridor: the corridor is widened 2x / 4x / 8x, then dropped (the whole
+            # die), until a chain exists whose every hop is <= RELAY_REACH_OK PIN TO PIN and whose frames do not overlap.
+            radii = [near_r, 2 * near_r, 4 * near_r, 8 * near_r, None] if near_r is not None else [None]
+            off, fallback = False, None
+
+            def _overlap(fr):
+                return any(abs(p_[0] - q_[0]) < W and abs(p_[1] - q_[1]) < H for i_, p_ in enumerate(fr) for q_ in fr[i_ + 1:])
+            for r_ in radii:
+                if r_ is None:
+                    near, dP1 = None, dP1_free
+                else:
+                    near, dP1 = neard <= r_, dP1_arc
                 ok_cache.clear()
-            hit, par, start = bfs(De, mono)
-            if hit is None:
-                why = f"start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f}"
-                continue
-            cand = chain_of(hit, par)
-            if mono or not backtracks(dict(pl, frames=cand)) or found is None:
-                found = cand
-            if mono or not need:
-                break
-            if not backtracks(dict(pl, frames=cand)):
-                break
+                for De, mono in tries:
+                    if not mono and not need:
+                        continue
+                    hit, par, start = bfs(De, mono)
+                    if hit is None:
+                        why = f"start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f}, corridor {r_}"
+                        continue
+                    cand = chain_of(hit, par)
+                    plc = dict(pl, frames=cand)
+                    if _overlap(cand):
+                        why = 'self-overlap'
+                        continue
+                    if max(p2p_hops(plc)) > RELAY_REACH_OK:
+                        why = f'pin-to-pin {max(p2p_hops(plc)):.0f}'
+                        continue
+                    if backtracks(plc) and not mono:
+                        fallback = fallback or (cand, r_)
+                        continue
+                    found = cand
+                    break
+                if found is not None:
+                    off = r_ != radii[0]
+                    break
+            if found is None and fallback is not None and need:
+                found, off = fallback[0], fallback[1] != radii[0]
+        else:
+            tries = [(D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)]
+            if near_cons is not None and FIELD_ALLOC and pl['bid'] not in tight_stride:
+                tries = [(De_, mo_, True) for De_, mo_ in tries] + [(De_, mo_, False) for De_, mo_ in tries]
+            else:
+                tries = [(De_, mo_, True) for De_, mo_ in tries]
+            off = False
+            for De, mono, cons in tries:
+                if not mono and not need:
+                    continue
+                if found is not None and not cons and not off:
+                    break                    # a constrained chain exists: never trade it for an off-plan one
+                if not cons and not off:
+                    off = True
+                    near = None
+                    dP1 = dP1_free
+                    ok_cache.clear()
+                hit, par, start = bfs(De, mono)
+                if hit is None:
+                    why = f"start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f}"
+                    continue
+                cand = chain_of(hit, par)
+                if mono or not backtracks(dict(pl, frames=cand)) or found is None:
+                    found = cand
+                if mono or not need:
+                    break
+                if not backtracks(dict(pl, frames=cand)):
+                    break
         frames = []
         if found is not None:
             for f in found:
@@ -2866,6 +2980,36 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             o[mn] = M
         return o
     v.masters = masters
+    if GATE:
+        # relay-data 2026-10-13: the release rule checked on the emitted die (the audit's measure: bounding box of the
+        # net's pin centroids): no data net over RELAY_REACH_UM; a miss is an error, never a kept 'unrepaired' chain
+        pos2 = _pin_pos(v, m)
+        over, hmax = [], 0.0
+        for bid, cl, bits, eps in m['buses']:
+            if cl in RELAY_NEVER or len(eps) < 2:
+                continue
+            pts_ = [pos2(*e) for e in eps]
+            L_ = max(q[0] for q in pts_) - min(q[0] for q in pts_) + max(q[1] for q in pts_) - min(q[1] for q in pts_)
+            hmax = max(hmax, L_)
+            if L_ > RELAY_REACH_UM:
+                over.append((bid, cl, bits, round(L_, 1)))
+        m['r21_relays'].update(reach_um=RELAY_REACH_UM, max_pin_to_pin_um=round(hmax, 1), over_reach=sorted(over, key=lambda t: -t[3]))
+        if _os.environ.get('OT_RELAY_DUMP'):
+            import json as _json
+            _rep = {r[0]: r for r in repaired}
+            _json.dump(dict(rmax=RMAX, pitch=pitch, reach_um=RELAY_REACH_UM, unrepaired=unrepaired, off_plan=off_plan,
+                            feedback=feedback, tight_stride=sorted(tight_stride), over_reach=m['r21_relays']['over_reach'],
+                            max_pin_to_pin_um=round(hmax, 1), clock_nets_missing=missing, classes=stats,
+                            tp8b_kv=dict(torn_chains=m.get('tp8b_kv', {}).get('torn_chains'),
+                                         kept_relays=m.get('tp8b_kv', {}).get('kept_relays')),
+                            plans=[dict(bid=p_['bid'], cl=p_['cl'], bits=p_['bits'], eps=p_['eps'], P0=p_['P0'], P1=p_['P1'],
+                                        n=len(p_['frames']), repaired=_rep.get(p_['bid']),
+                                        cc=round(max(hops_of(p_)), 1), p2p=round(max(p2p_hops(p_)), 1))
+                                   for _, p_ in sorted(plans.items())]),
+                       open(_os.environ['OT_RELAY_DUMP'], 'w'))
+        if over and _os.environ.get('OT_RELAY_GATE') != 'warn':
+            raise ValueError(f'relays: {len(over)} data nets over {RELAY_REACH_UM:.0f} um pin to pin, worst {over[:8]}; '
+                             f'unrepaired {unrepaired[:8]}')
     return m['r21_relays']
 
 
