@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_fxs_m5-p1-COMMIT",
+ "name": "dsfd_vm_fxs_m5-p1-dcf82afbe",
  "block": "dsfd_vm_fxs",
  "ref_tile": true,
  "owner": "Claude:el1013-s81-vmfe/B5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/el1013-s81-vmfe",
-  "commit": "COMMIT",
+  "commit": "dcf82afbe",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/mtp",
@@ -84,7 +84,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_fxs_m5/dsfd_vm_fxs_m5-p1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_fxs_m5/dsfd_vm_fxs_m5-p1-dcf82afbe"
   }
  ],
  "cycles_added": 0,
