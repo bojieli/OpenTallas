@@ -53,23 +53,31 @@
     "name": "smn_be_eg_ref-r2-b9a29ac93",
     "source_commit": "b9a29ac93",
     "owner": "Codex:hbm-sm-native-manifest",
-    "status": "PREPARED_INTAKE_NEXT",
+    "status": "CLOSED_TT_FF_PHYSICAL_ADOPTION_PENDING",
     "root_cause": "cg_pushdown clonedone6813sinkcoarseICGinto256beforethrough-ICGspine",
     "structural_fix": "PreserveexactguardedrootICGandbalancedGCLKspinedistribution",
     "local_gate": "PASS",
     "rtl_unchanged": true,
-    "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT"
+    "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT",
+    "receipt": "be_eg_r2_physical_candidate/receipt.json",
+    "metrics": {
+      "tt_ps": 3.74,
+      "ff_ps": 0.94,
+      "drc": 0,
+      "ss_sensitivity_ps": -191.19
+    }
   },
   {
     "name": "smn_be_wg_ref-r2-b9a29ac93",
     "source_commit": "b9a29ac93",
     "owner": "Codex:hbm-sm-native-manifest",
-    "status": "PREPARED_INTAKE_NEXT",
+    "status": "NEEDS_HUMAN_POST_CTS_RESIZE_DPL",
     "root_cause": "cg_pushdown clonedone6813sinkcoarseICGinto256beforethrough-ICGspine",
     "structural_fix": "PreserveexactguardedrootICGandbalancedGCLKspinedistribution",
     "local_gate": "PASS",
     "rtl_unchanged": true,
-    "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT"
+    "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT",
+    "superseded_by": "smn_be_wg_ref-r3-47a0591e9"
   },
   {
     "name": "smn_fcxr_ref_fa-r1-2a8f467c0",
@@ -81,6 +89,18 @@
     "structural_fix": "Realreroutefullpindepth+0.096halo onabovelayeronly",
     "local_gate": "PASS",
     "full_default_TAGW16_lint": "PASS",
+    "rtl_unchanged": true,
+    "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT_AND_PHYSICAL_EXPORT"
+  },
+  {
+    "name": "smn_be_wg_ref-r3-47a0591e9",
+    "source_commit": "47a0591e9",
+    "owner": "Codex:hbm-sm-native-manifest",
+    "status": "PREPARED_INTAKE_NEXT",
+    "replaces": "smn_be_wg_ref-r2-b9a29ac93",
+    "root_cause": "342postspineresizesenlargeFIRMgate-conebuffers,2DPLoverlaps",
+    "structural_fix": "Allowcombinationalcone bufferresizing+legalizationwhilekeepingICG/register/spineanchors",
+    "local_gate": "PASS",
     "rtl_unchanged": true,
     "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT_AND_PHYSICAL_EXPORT"
   }
