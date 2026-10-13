@@ -6,7 +6,7 @@
  "warns": [
   "(f) face-pin access: 916 of 917 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M6 (0.016,35.904), fst M6 (0.016,35.904), gov_i M6 (0.016,35.904))"
  ],
- "summary": "ot_hdc_v41x_hcp_lanes 138.24 x 138.24: PG M6 VDD 13 stripes (94% spread, 100% cov) / VSS 13 stripes (94% spread, 100% cov); strap M7; face pins 917 blocked-above 0 blocked-same 0; clock clk insertion 204 ps",
+ "summary": "ot_hdc_v41x_hcp_lanes 138.24 x 138.24: PG M6 VDD 13 stripes (94% spread, 100% cov) / VSS 13 stripes (94% spread, 100% cov); strap M7; face pins 917 blocked-above 0 blocked-same 0; clock clk insertion 204 ps; pockets M6 0 (closed)",
  "info": {
   "cell": "ot_hdc_v41x_hcp_lanes",
   "W": 138.24,
@@ -59,6 +59,18 @@
     "max_ps": 204.35,
     "min_ps": 160.01
    }
+  },
+  "pockets": {
+   "layer": "M6",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "added": 1109
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }

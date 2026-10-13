@@ -284,6 +284,13 @@ def main():
                              slots_by_cell_mm2={k: round(v, 3) for k, v in sorted(area.items())},
                              rederived_cells=rederived),
            'open_items': {k: sorted(v) for k, v in sorted(open_items.items())}}
+    if a.version >= 4:
+        # v4 slot change answers (stations / heads _d/_r, cdc_wleaf, rhead cluster, VM region): one idempotent pass
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import contract_v4_tp8 as V4
+        rg = ROOT / 'results/arch/hier_contract_1012/qwen_rom_tp8_v4_regen.json'
+        out = V4.apply(out, a.when, json.load(open(rg)) if rg.exists() else {}, source_note=a.source)
+        out['version'] = a.version
     Path(a.out).write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps(dict(slots=len(slots), relays=sum(relays.values()), kept=len(kept), rederived=sorted(rederived),
                           slot_share=out['floorplan']['slot_share'], die_um=[dw, dh])))

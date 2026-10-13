@@ -1016,6 +1016,76 @@ def structure_repeat_at_submit(j, jobs=None):
         log(f"[{j['name']}] structure-repeat WARN: {len(fails)} failed routes, no structural_change")
 
 
+# CLOSED STANDS (owner 2026-10-12 19:00 "M5 cap narrowed"; submit gate 2026-10-13, el1013-rule-enforcement).  128 failed
+# jobs in 24 h ran on 81 blocks that had already closed, 74 of them M5 re-routes of closed tiles.  A block (top module +
+# parameter set) with a counting CLOSED job whose view is published takes a new ROUTE only with spec "reroute_reason"
+# {"kind": die_window | slot_change | param_change | rtl_change | evidence_gap, ...}; the gate verifies what it can
+# (cut > 0.6 / GRT overflow + source file, kit outline / pin faces, parameter set, RTL blobs against the closed commit,
+# the closed job's bench + mutant and routed verdict).  Logic: closed_stands.py; rule text + constants:
+# tools/textbook_lint.py.  Loop successors of a job that is not CLOSED are exempt.  Mode from STATE/ref_gate.json
+# "closed_stands": "refuse" (default) | "warn" | "off".
+TAKEOVER_DIR = Path(os.environ.get("CL_TAKEOVER", str(Path.home() / "claude-takeover-20261007")))
+
+
+def closed_stands_mode():
+    try:
+        return str(json.loads((STATE / "ref_gate.json").read_text()).get("closed_stands", "refuse"))
+    except (OSError, ValueError):
+        return "refuse"
+
+
+def closed_stands_check(spec, name, jobs=None):
+    """closed_stands.check on the loop's history and object store; never raises ({"verdict": "SKIP"} on a gate error)"""
+    try:
+        import closed_stands
+        git_ = submit_lint.Git(REPO)
+        commit = str((spec.get("source") or {}).get("commit") or "")
+        rv = revoked_closures()
+
+        def exists(path):
+            q = Path(path)
+            if q.is_absolute():
+                return q.exists()
+            return ((REPO / path).exists() or (TAKEOVER_DIR / path).exists()
+                    or any(git_.blob(c, path) for c in (commit, "origin/main") if c))
+        return closed_stands.check(spec, name, jobs if jobs is not None else all_jobs(), git_.show, git_.blob,
+                                   closure_counts=lambda x: closure_counts(x, rv), bench_gap=bench_evidence_gap,
+                                   exists=exists)
+    except Exception as ex:  # noqa: BLE001
+        return {"verdict": "SKIP", "message": f"gate error {type(ex).__name__}: {str(ex)[:200]}", "closed": [], "kind": None}
+
+
+def closed_stands_at_submit(j, jobs=None):
+    spec = j["spec"]
+    if j["status"] != "QUEUED" or "route" not in (spec.get("stages") or {}):
+        return
+    mode = closed_stands_mode()
+    if mode == "off":
+        return
+    res = closed_stands_check(j.get("spec_submitted") or spec, j["name"], jobs)
+    v, msg = res["verdict"], res.get("message", "")
+    if v == "NA":
+        return
+    if v == "SKIP":
+        event(j, f"closed-stands gate skipped: {msg[:300]}")
+        return
+    if v == "REFUSE" and mode != "refuse":
+        v = "WARN"
+    j.setdefault("submit_checks", {})["closed_stands"] = {
+        "verdict": v, "mode": mode, "kind": res.get("kind"), "closed": res.get("closed", [])[-4:],
+        "facts": res.get("facts") or {}, "message": msg[:1500]}
+    if v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT CLOSED_STANDS: {msg}"[:1800]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    elif v == "WARN":
+        event(j, f"CLOSED_STANDS WARN ({mode}): {msg[:1200]}")
+        log(f"[{j['name']}] closed-stands WARN: {msg[:300]}")
+    else:
+        event(j, f"CLOSED-STANDS {v}: {msg[:600]}")
+
+
 def ref_gate_at_submit(j, jobs=None):
     if j["status"] != "QUEUED" or j["spec"].get("ref_gate") is False:
         return
@@ -1265,6 +1335,8 @@ def ingest():
                 if hist is None:
                     hist = all_jobs()                # one read per ingest pass that sees a new job
                 structure_repeat_at_submit(j, hist)  # no compute: job history only
+                if j["status"] == "QUEUED":
+                    closed_stands_at_submit(j, hist)  # history + a few blob ids: a CLOSED tile stands
                 if j["status"] == "QUEUED":
                     bench_gate_at_submit(j)          # seconds, before the commit-reading lints
                 if j["status"] == "QUEUED":
@@ -4026,7 +4098,11 @@ def launch_ready(j, fleet, spec, stl, st):
                 return
             if j["name"] not in keys.setdefault(key, []):
                 keys[key].append(j["name"])
-            keys_path().write_text(json.dumps(keys, indent=1) + "\n")
+            # atomic (el1013-fleet4): write_text truncates first, and a reader in another job thread got an empty file
+            # (auto_react JSONDecodeError 10-13 04:21)
+            tmp = keys_path().with_suffix(f".tmp.{threading.get_ident()}")
+            tmp.write_text(json.dumps(keys, indent=1) + "\n")
+            os.replace(tmp, keys_path())
         st["admission_launch_token"] = fleet._launched(j["host"], st["threads"], st["ram"], j["name"], actual=True)  # reservation (replaces the job's claim)
         return st
 
@@ -6074,7 +6150,14 @@ def advance_job(name, fleet):
         if nt and time.time() < nt:
             return                       # backing off after a transient ssh / network error
         try:
+            before = j["status"]
             step(j, fleet)
+            # el1013-fleet4 2026-10-13: a job whose source sync just finished launches its first stage in the same pass.
+            # It used to return at READY and wait for the next tick to be submitted again: 45-100 s on idle hosts
+            # (median ingest -> first launch 157 s over 21 jobs, 04:16-05:30).
+            if before in ("QUEUED", "SYNC") and j["status"] == "READY":
+                save_job(j)
+                step(j, fleet)
             if j.get("transient"):
                 j["transient"] = 0
                 j.pop("transient_next", None)
@@ -7592,6 +7675,12 @@ def cmd_validate(a):
             errs.append(f"SUBMIT_LINT BENCH_REQUIRED: the loop would REFUSE this job: {why} (fix: {BENCH_GATE_FIX})")
         elif why:
             print(f"BENCH_REQUIRED WARN: {why}: the guarded auto-merge would skip this job's CLOSED")
+        cs = (closed_stands_check(spec, spec.get("name")) if closed_stands_mode() != "off"
+              else {"verdict": "NA"})
+        if cs["verdict"] == "REFUSE" and closed_stands_mode() == "refuse":
+            errs.append(f"SUBMIT_LINT CLOSED_STANDS: the loop would REFUSE this job: {cs['message']}")
+        elif cs["verdict"] != "NA":
+            print(f"closed-stands {cs['verdict']}: {cs.get('message', '')}")
         res = submit_check(spec)
         print(f"submit lint {res['verdict']}: {res.get('message', '')}"
               + (f" (estimate {res.get('est')} b/um, with fix {res.get('est_fix')})" if res.get("est") else ""))
