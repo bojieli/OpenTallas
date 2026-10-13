@@ -109,6 +109,7 @@ module ot_s81_hc_comb #(
     localparam integer NIM_ = NE0_ + NE1_ + NE2_, NIM = (NIM_ > 0) ? NIM_ : 1;
 `ifdef OT_S81_HC_COMB_HARD
  `define OT_HCC_P
+ `define OT_HCC_F
 `ifndef SYNTHESIS
     initial if (NG != 256 || D != 5120 || NCOL != 3 || GS != 8 || S_RD != 2 || S_WR != 8 || S_RT != 4 || ML != 5 ||
                 AL != 4 || MUT != 0 || AMUT != 0 || RF != 1 || RT != 1 || RW != 2 || YD != 16 || HALF != 0 ||
@@ -118,6 +119,9 @@ module ot_s81_hc_comb #(
 `else
  `define OT_HCC_P #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL), \
      .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW))
+ `define OT_HCC_F #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL), \
+     .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW), \
+     .FIFO_SLICE(512), .KEEP_POP(1), .Y_RELAY(1))
 `endif
     // ---------------------------------------------------------------- seam nets (tile to tile)
     wire              ngo, t_ssv, t_flt, j_v, j_fq, j_fy, j_end, j_flt, j_civ, x_wdone, x_pob, x_f1, x_f4, c_yfl;
@@ -184,7 +188,7 @@ module ot_s81_hc_comb #(
     ot_s81_hc_cpad `OT_HCC_P u_pd (
         .sk(sk), .srs(srs), .crd_i(r_crd), .crd_o(p_crd), .fv_i(c_fv), .fd_i(c_fd), .fv_o(p_fv), .fd_o(p_fd));
 
-    ot_s81_hc_ccf `OT_HCC_P u_cf (
+    ot_s81_hc_ccf `OT_HCC_F u_cf (
         .sk(sk), .srs(srs), .fv_i(p_fv), .fd_i(p_fd), .n_yacc(n_yacc), .n_y(n_y), .ch_rst(ch_rst), .ch_fv(ch_fv),
         .ch_fd(ch_fd), .yfl(c_yfl));
 `ifndef SYNTHESIS
@@ -193,4 +197,5 @@ module ot_s81_hc_comb #(
     wire [83:0] e_d = u_seq.e_d;
 `endif
 `undef OT_HCC_P
+`undef OT_HCC_F
 endmodule
