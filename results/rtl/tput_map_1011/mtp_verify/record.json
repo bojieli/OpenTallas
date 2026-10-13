@@ -82,5 +82,36 @@
   "b2": "HBM B2 (owner 10-12): one ot_hgi_dma_back per cluster beside its local slice, NS 1 / NB 8. VM side = the cluster's local 8-lane group client tap (rup 129 = {c_req, 8 x {v, sector 15}}, rdn 2,065 = {c_gnt, credits 8, 8 x {v, data 256}}). svc side inside the cluster: dma_wd 8 x 289, dma_wd_cr 8, dma_wa 4 (own stack only). No cross-cluster wires.",
   "b2_compiler": "B2 compiler item (lead acked): the STRIPE4 h swap (ds_mtp_kernels swap(), 320 x 256 B rows, row o on stack o mod 4) must be emitted as 4 per-cluster DMA.STOREs (cluster k: its 80 rows from its slice, linear on stack k at COLB + slot x CSTR + k x 64, stride 256), and the swapin as 4 per-cluster loads."
  },
- "notes_tputx_mtp_1012": "Rec 14 (q_norm.ss) fixed by 37508ae85 (su_ctl unused-stream stride): runs A/B passed it and stopped at rec 101 swapout.PRE: a 16 B (partial-sector) DMA.STORE the mover refuses (abort 0x60 / 0x64); the sim's DMA.STORE already demands whole sectors -> compiler pads PRE / dhead stores to sectors. Swapout.h ran 6.8k cycles on the mover (~12 B/cyc) vs price 248: DMA BACK + STRIPE4 h swap (this branch). Vehicle re-run pending (see el1011-hbm-tputx.log COLLECT (tputx-mtp))."
+ "notes_tputx_mtp_1012": "Rec 14 (q_norm.ss) fixed by 37508ae85 (su_ctl unused-stream stride): runs A/B passed it and stopped at rec 101 swapout.PRE: a 16 B (partial-sector) DMA.STORE the mover refuses (abort 0x60 / 0x64); the sim's DMA.STORE already demands whole sectors -> compiler pads PRE / dhead stores to sectors. Swapout.h ran 6.8k cycles on the mover (~12 B/cyc) vs price 248: DMA BACK + STRIPE4 h swap (this branch). Vehicle re-run pending (see el1011-hbm-tputx.log COLLECT (tputx-mtp)).",
+ "verification_run": {
+  "collected_at": "2026-10-12T23:29:20-07:00",
+  "predecessor": {
+   "host": "ot-epyc4",
+   "root": "/srv/opentallas-scratch/claude/tputx-mtp-r5",
+   "status": "REGEN_FAIL",
+   "ended_at": "2026-10-12T09:06:55-07:00",
+   "cause": "missing model-00004-of-00048.safetensors (layer 1 HC row prefetch)",
+   "C_D_E_existed": false
+  },
+  "successor": {
+   "host": "ot-epyc4",
+   "root": "/srv/opentallas-scratch/claude/tputx-mtp-r5/codex-1012",
+   "chain_script": "/srv/opentallas-scratch/claude/tputx-mtp-r5/chain_codex1012.sh",
+   "chain_pid": 1645774,
+   "status": "REGEN_RUNNING",
+   "source": "97515338c source tree + 0d4f53559 overlay, unchanged from predecessor",
+   "snapshot_repair": "shard4_subset_provenance.json: original checkpoint layer1 HC/norm payloads, no synthetic values",
+   "vehicle_scope": "MTP and DMA mechanism composition using legacy VM; native B2 per-cluster swap emission still outstanding"
+  },
+  "route": {
+   "prior_job": "hgi_dma_back_b2_ref-a-01e2a5600",
+   "prior_verdict": "NEEDS_RTL",
+   "tt_ps": -36.9,
+   "ff_ps": -8.09,
+   "drc": 0,
+   "exact_and_mutants": "bench_dma_back_exact PASS; bench_dma_back_mut1/2 expected FAIL matched",
+   "next_job": "hgi_dma_back_b2_ref-a-01e2a5600-hs-cx",
+   "reason": "unchanged rerun mandated for routes launched before Oct12 14:36 hold-flow fix; no closure claim"
+  }
+ }
 }
