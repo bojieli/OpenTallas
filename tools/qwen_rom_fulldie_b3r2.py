@@ -609,6 +609,63 @@ def _tp8b_kv(v, m):
             if at + span > L_ - 2.0:
                 raise ValueError(f'tp8b kv short {kp}: {bits} b do not fit the {mm.name} {face} face')
             mm.face(kp, bits, face, lay if face in 'NS' else 'M4', at + span / 2, 2)
+        # r6 2026-10-13 (die timing by construction; the two pin plans no relay chain can serve):
+        # (a) gq / gr (seq <-> embedding gateway, 530 b each): the KV-die pins face each other with the gateway S of
+        #     the sequencer; on this die the centre stack has the gateway N of it, so both pins looked AWAY from their
+        #     peer (911 um around two abutting blocks, no relay site in the 4-um gaps: 746.9 / 892.3 um hops).  They
+        #     move to the facing faces (seq N, gateway S) at one x: an abutment wire, no relay, no cycle.
+        ci = {i.name: i for i in model['insts'] if i.name in ('seq', 'embgw')}
+        if len(ci) == 2 and ci['embgw'].y > ci['seq'].y:
+            dx_ = ci['embgw'].x - ci['seq'].x
+            for p_ in ('gq', 'gr'):
+                q = sq.ports.get(p_)
+                if not q or q[0] != 'face' or q[2] == 'N' or p_ not in eg.ports:
+                    continue
+                half = q[1] * q[5] * 0.048 / 2
+                occ = occupied(sq, 'N') + [(a0 + dx_, a1 + dx_) for a0, a1 in occupied(eg, 'S')]
+                at = None
+                c_ = dx_ + 8.0 + half
+                while c_ + half <= dx_ + eg.w - 8.0:
+                    if all(c_ + half + 4.0 <= a0 or a1 + 4.0 <= c_ - half for a0, a1 in occ):
+                        at = c_
+                        break
+                    c_ += 2.16
+                if at is None:
+                    raise ValueError(f'tp8b kv: no common free span for {p_} on the seq N / embgw S faces')
+                sq.ports[p_] = (q[0], q[1], 'N', q[3], round(at, 4), q[5])
+                e_ = eg.ports[p_]
+                eg.ports[p_] = (e_[0], e_[1], 'S', e_[3], round(at - dx_, 4), e_[5])
+        # (b) a port slab's block-word pin at an edge another block abuts (sp_port_tiles_1_f1.bw8 on the W edge against
+        #     tt_ctlm, the vector memory below: the nearest relay site is 849 um away) moves to the slab's other
+        #     edge, where its siblings' relay chains arrive.
+        big_ = [i for i in model['insts'] if i.w * i.h > 4e4]
+        cnt_ = {}
+        for i in model['insts']:
+            cnt_[i.master] = cnt_.get(i.master, 0) + 1
+        for it in model['insts']:
+            if not it.master.startswith(('qfd_port_tiles', 'qfd_sp_port_tiles')) or cnt_[it.master] != 1 or it.orient != 'R0':
+                continue
+            mm = o.get(it.master)
+            if mm is None:
+                continue
+            bw = {p_: q for p_, q in mm.ports.items() if p_.startswith('bw') and q and q[0] == 'area'}
+
+            def blocked(west, yy, it=it):
+                xe = it.x if west else it.x + it.w
+                return any(b_ is not it and b_.y - 1.0 <= yy <= b_.y + b_.h + 1.0 and
+                           abs((b_.x + b_.w if west else b_.x) - xe) < 60.0 for b_ in big_)
+            for p_, q in sorted(bw.items()):
+                west = q[2] < 60.0
+                if not west and q[2] <= mm.w - 60.0:
+                    continue
+                yy = it.y + q[3]
+                if not blocked(west, yy) or blocked(not west, yy):
+                    continue
+                sib = [s_ for n_, s_ in bw.items() if n_ != p_ and ((s_[2] > mm.w - 60.0) if west else (s_[2] < 60.0))]
+                if not sib or any(abs(s_[3] - q[3]) < 60.0 for s_ in sib):
+                    continue
+                mm.ports[p_] = (q[0], q[1], sib[0][2], q[3], q[4])
+                m.setdefault('tp8b_kv', {}).setdefault('pin_moves', {})[f'{it.master}.{p_}'] = 'E' if west else 'W'
         su = o.get('qfd_sp_su64_sfu') or next((q for q in o.values() if 'eq' in q.ports and q.name.endswith('su64_sfu')), None)
         if su is not None and su.ports['eq'][0] == 'face':
             sp = su.ports['eq']
@@ -2579,7 +2636,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return site_cache[key]
 
 
-    repaired, unrepaired, off_plan = [], [], []
+    repaired, unrepaired, off_plan, cut_over = [], [], [], []
+    hop_chk = [None]     # r6: the load test of the span search (None outside it)
     for idx, pl in sorted(plans.items()):
         hs = hops_of(pl)
         if max(hs) <= RMAX + 25.0 and not backtracks(pl) and not reach_bad(pl):
@@ -2640,12 +2698,14 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             return ok_cache[i]
         near_cons = near
         def bfs(De, mono):
-            start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i)]
+            start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i) and (
+                hop_chk[0] is None or hop_chk[0](P0, (float(ctr[i][0]), float(ctr[i][1]))))]
             par = {i: -1 for i in start}
             front, hit = start, None
             while front and hit is None and len(par) < 400000:
                 for i in front:
-                    if abs(ctr[i][0] - P1[0]) + abs(ctr[i][1] - P1[1]) <= De:
+                    if abs(ctr[i][0] - P1[0]) + abs(ctr[i][1] - P1[1]) <= De and (
+                            hop_chk[0] is None or hop_chk[0]((float(ctr[i][0]), float(ctr[i][1])), P1)):
                         hit = i
                         break
                 if hit is not None:
@@ -2654,7 +2714,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 for i, nb in zip(front, tree.query_ball_point(ctr[front], D, p=1)):
                     for j in nb:
                         if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j) and (
-                                not GATE or abs(arr[j][0] - arr[i][0]) >= W or abs(arr[j][1] - arr[i][1]) >= H):
+                                not GATE or abs(arr[j][0] - arr[i][0]) >= W or abs(arr[j][1] - arr[i][1]) >= H) and (
+                                hop_chk[0] is None or hop_chk[0]((float(ctr[i][0]), float(ctr[i][1])),
+                                                                 (float(ctr[j][0]), float(ctr[j][1])))):
                             par[j] = i
                             nxt.append(j)
                 nxt.sort(key=lambda j: dP1[j])
@@ -2671,47 +2733,111 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         need = max(hs) > RMAX + 25.0 or reach_bad(pl)
         found, why = None, ''
         tries = [(D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)]
+        unbooked = False
         if GATE:
             # relay-data 2026-10-13 (pinreg audit: 28 chains left 'unrepaired' and silently kept, hops to 2.4 mm).  A
             # planned leg over a block (a KV-half word's end leg ran 4 mm inside the attention stack to its S-face pin)
-            # has no relay site within the route corridor: the corridor is widened 2x / 4x / 8x, then dropped (the whole
-            # die), until a chain exists whose every hop is <= RELAY_REACH_OK PIN TO PIN and whose frames do not overlap.
+            # has no relay site within the route corridor.  r6: only the BAD SPAN of the chain is searched again (the
+            # frames around every hop over the reach, +- 1, then +- 3, then the whole chain): the rest of the chain
+            # stays on its booked route.  The span search is LOAD-AWARE (a hop is taken only when one of its two L
+            # routes fits the allocator's window caps with this word added: cut <= 0.58 usable, then <= 0.60), inside
+            # the route corridor first, then 2x / 4x / 8x wider, then the whole die; a chain is accepted only when
+            # every hop is <= RELAY_REACH_OK PIN TO PIN and no two frames overlap.  The first run of this rule (v1)
+            # re-searched whole chains without the load test: kvn_WS left its row gap for a mid-tile lane two block
+            # words already used (cut 0.864).
             radii = [near_r, 2 * near_r, 4 * near_r, 8 * near_r, None] if near_r is not None else [None]
             off, fallback = False, None
+            if idx in booked:
+                book(booked[idx][0], -bits)
+                unbooked = True
+            nfr = len(pl['frames'])
+            hp_, hc_ = p2p_hops(pl), hops_of(pl)
+            badk = [k_ for k_ in range(nfr + 1) if hp_[k_] > RELAY_REACH_OK or hc_[k_] > RMAX + 25.0]
+            spans_ = []
+            if badk and not backtracks(pl):
+                for mg_ in (1, 3):
+                    sp_ = (max(0, min(badk) - mg_), min(nfr, max(badk) + mg_))
+                    if sp_ not in spans_ and sp_ != (0, nfr):
+                        spans_.append(sp_)
+            spans_.append((0, nfr))
+            lims = [1.0, 0.60 / CAP_FRAC, None] if FIELD_ALLOC else [None]
+            lim_cur = [None]
+
+            def hop_fits(pa, pb):
+                """one of the two L routes pa -> pb stays within the window caps with this word added"""
+                lim = lim_cur[0]
+                if lim is None:
+                    return True
+                (xa_, ya_), (xb_, yb_) = pa, pb
+                if max(hr(ya_, xa_, xb_, bits), vr(xb_, ya_, yb_, bits)) <= lim:
+                    return True
+                return max(vr(xa_, ya_, yb_, bits), hr(yb_, xa_, xb_, bits)) <= lim
 
             def _overlap(fr):
                 return any(abs(p_[0] - q_[0]) < W and abs(p_[1] - q_[1]) < H for i_, p_ in enumerate(fr) for q_ in fr[i_ + 1:])
-            for r_ in radii:
-                if r_ is None:
-                    near, dP1 = None, dP1_free
-                else:
-                    near, dP1 = neard <= r_, dP1_arc
-                ok_cache.clear()
-                for De, mono in tries:
-                    if not mono and not need:
-                        continue
-                    hit, par, start = bfs(De, mono)
-                    if hit is None:
-                        why = f"start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f}, corridor {r_}"
-                        continue
-                    cand = chain_of(hit, par)
-                    plc = dict(pl, frames=cand)
-                    if _overlap(cand):
-                        why = 'self-overlap'
-                        continue
-                    if max(p2p_hops(plc)) > RELAY_REACH_OK:
-                        why = f'pin-to-pin {max(p2p_hops(plc)):.0f}'
-                        continue
-                    if backtracks(plc) and not mono:
-                        fallback = fallback or (cand, r_)
-                        continue
-                    found = cand
-                    break
+
+            def _rm_rect(r_):
+                for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
+                    for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
+                        lst = grid.get((gx, gy), [])
+                        if r_ in lst:
+                            lst.remove(r_)
+            P0_, P1_ = P0, P1
+            for a_, b_ in spans_:
+                pre_, suf_ = pl['frames'][:a_], pl['frames'][b_:]
+                kept_ = [(f[0], f[1], f[0] + W, f[1] + H) for f in pre_ + suf_]
+                for r_ in kept_:
+                    add_rect(r_)
+                P0 = (pre_[-1][0] + w / 2, pre_[-1][1] + h / 2) if pre_ else P0_
+                P1 = (suf_[0][0] + w / 2, suf_[0][1] + h / 2) if suf_ else P1_
+                dP1_free = np.abs(ctr[:, 0] - P1[0]) + np.abs(ctr[:, 1] - P1[1])
+                hop_chk[0] = hop_fits
+                for lim in lims:
+                    lim_cur[0] = lim
+                    for r_ in radii:
+                        if r_ is None:
+                            near, dP1 = None, dP1_free
+                        else:
+                            near, dP1 = neard <= r_, dP1_arc
+                        ok_cache.clear()
+                        for De, mono in tries:
+                            if not mono and not need:
+                                continue
+                            hit, par, start = bfs(De, mono)
+                            if hit is None:
+                                why = (f"span {a_}-{b_} of {nfr}, start {len(start)}, visited {len(par)}, sites {len(arr)}, "
+                                       f"D {D:.0f}, corridor {r_}, load {lim}")
+                                continue
+                            cand = pre_ + chain_of(hit, par) + suf_
+                            plc = dict(pl, frames=cand)
+                            if _overlap(cand):
+                                why = 'self-overlap'
+                                continue
+                            if max(p2p_hops(plc)) > RELAY_REACH_OK:
+                                why = f'span {a_}-{b_}: pin-to-pin {max(p2p_hops(plc)):.0f}'
+                                continue
+                            if backtracks(plc) and not mono:
+                                fallback = fallback or (cand, r_, lim)
+                                continue
+                            found = cand
+                            break
+                        if found is not None:
+                            break
+                    if found is not None:
+                        break
+                hop_chk[0] = None
+                for r__ in kept_:
+                    _rm_rect(r__)
                 if found is not None:
                     off = r_ != radii[0]
+                    if lim is None and FIELD_ALLOC:
+                        cut_over.append(pl['bid'])
                     break
+            P0, P1 = P0_, P1_
             if found is None and fallback is not None and need:
                 found, off = fallback[0], fallback[1] != radii[0]
+                if fallback[2] is None and FIELD_ALLOC:
+                    cut_over.append(pl['bid'])
         else:
             tries = [(D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)]
             if near_cons is not None and FIELD_ALLOC and pl['bid'] not in tight_stride:
@@ -2762,6 +2888,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             unrepaired.append(f"{pl['bid']} ({why})")
             for r_ in own:
                 add_rect(r_)
+            if unbooked:
+                book(booked[idx][0], bits)
             continue
         old = len(pl['frames'])
         pl['frames'] = frames
@@ -2770,7 +2898,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             off_plan.append(pl['bid'])
         if idx in booked:
             # it24: re-book the repaired chain in place of the pass-1 one
-            book(booked[idx][0], -bits)
+            if not unbooked:
+                book(booked[idx][0], -bits)
             cp_ = chain_path(P0, frames, P1, pl['path'])
             book(cp_, bits)
             booked[idx] = (cp_, bits)
@@ -2957,7 +3086,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
-                          repaired_examples=repaired[:20], unrepaired=unrepaired,
+                          repaired_examples=repaired[:20], unrepaired=unrepaired, cut_over=cut_over,
                           repaired_all=[r[0] for r in repaired], off_plan=off_plan, feedback=feedback,
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
                           relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
@@ -2997,7 +3126,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if _os.environ.get('OT_RELAY_DUMP'):
             import json as _json
             _rep = {r[0]: r for r in repaired}
-            _json.dump(dict(rmax=RMAX, pitch=pitch, reach_um=RELAY_REACH_UM, unrepaired=unrepaired, off_plan=off_plan,
+            _json.dump(dict(rmax=RMAX, pitch=pitch, reach_um=RELAY_REACH_UM, unrepaired=unrepaired, off_plan=off_plan, cut_over=cut_over,
                             feedback=feedback, tight_stride=sorted(tight_stride), over_reach=m['r21_relays']['over_reach'],
                             max_pin_to_pin_um=round(hmax, 1), clock_nets_missing=missing, classes=stats,
                             tp8b_kv=dict(torn_chains=m.get('tp8b_kv', {}).get('torn_chains'),
@@ -4779,7 +4908,7 @@ def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k
             n += S(fb)
             fl = f'{fb}__r{S(fb) - 1}' if S(fb) > 1 else fb
             slab = B[fl][3][1][0]
-        n += S(prim[slab])
+        n += S(prim[slab]) if slab in prim else 0     # tp8: no primary-slab word (the tree top is tt_ctlm: tt_c / tt_f)
         tws = max(tws, n)
     ordv = S('tt_res')
     # ---- hub <-> stack: the longest chain of link hops a traversal takes (hub -> leg -> corner -> channel -> FIFO)

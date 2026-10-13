@@ -24,13 +24,14 @@ fine = [dict(ax=r['ax'], pos=float(r['pos']), win=[float(q) for q in r['win']] i
 try:
     cost = G.relay_token_cost(v, m)
 except Exception as e:   # noqa: BLE001
-    cost = dict(error=repr(e))
+    import traceback
+    cost = dict(error=repr(e), trace=traceback.format_exc()[-1500:])
 r = dict(m.get('r21_relays') or {})
 rec = dict(schema='opentallas.qwen-tp8.relay-data-run.v1', recipe='tp8b', die=m['die'], build_s=round(time.time() - t),
            relays={k: r.get(k) for k in ('pitch_um', 'max_um', 'relays', 'masters', 'classes', 'clock_nets_missing', 'repaired',
-                                         'unrepaired', 'off_plan', 'relay_flop_bits', 'relay_area_mm2', 'reach_um',
+                                         'unrepaired', 'cut_over', 'off_plan', 'relay_flop_bits', 'relay_area_mm2', 'reach_um',
                                          'max_pin_to_pin_um', 'over_reach')},
-           tp8b_kv={k: (m.get('tp8b_kv') or {}).get(k) for k in ('kept_relays', 'torn_chains')},
+           tp8b_kv={k: (m.get('tp8b_kv') or {}).get(k) for k in ('kept_relays', 'torn_chains', 'pin_moves')},
            stage_of=m.get('r21_stage_of'), masters=sorted({i['m'] for i in ins if '_rly' in i['m']}),
            cuts=dict(tool='results/arch/qwen_tp8_1012/cuts.py', cap_mode='v3', rule='bits / usable tracks <= 0.60',
                      worst=max((f['util'] for f in fine), default=None), fine_top=fine), relay_token_cost=cost)
