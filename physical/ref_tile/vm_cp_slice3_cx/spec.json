@@ -1,0 +1,93 @@
+{
+ "name": "vm_cp_slice3_cx",
+ "top": "vm_cp_slice3",
+ "kind": "tile",
+ "sources": [
+  "physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_slice3.sv",
+  "physical/hbm_accel_die_views/vm/tiles/ot_hfd_vm_slice.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 216.0
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "cmd",
+   "wd",
+   "rv",
+   "rd",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "cmd": [
+   5.0,
+   6.603
+  ],
+  "wd": [
+   7.603,
+   130.741
+  ],
+  "rv": [
+   131.741,
+   131.902
+  ],
+  "rd": [
+   132.902,
+   256.04
+  ],
+  "rst": [
+   257.04,
+   257.2
+  ],
+  "ck": [
+   2.0,
+   4.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "job": {
+  "owner": "Codex:vm8-physical",
+  "branch": "codex/vm8-physical-1013",
+  "tag": "cx1",
+  "purpose": "[vm8cp] VM8 top-down re-plan tile vm_cp_slice3 (results/arch/hier_contract_1011/vm8_replan.md)",
+  "extra_paths": [
+   "physical/hbm_accel_die_views/vm",
+   "physical/hbm_accel_die_views/common",
+   "rtl/common",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "benches": [],
+  "views_to": "physical/ref_tile/vm_cp_slice3_cx/views",
+  "record_to": "results/rtl/ref_tile/vm_cp_slice3_cx",
+  "no_bench_reason": "Physical-only M5-cap rebuild; all three RTL files byte-identical to2370c0876 (slice3_rtl_identity.json). VM_CP_BENCH PASS and XBUS/RELAY mutantfail source2370c0876, recordda9cd8d8d physical/hbm_accel_die_views/vm/cp/bench_b89f43b23_v5050.log. Productionthroughput remainsOPEN."
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 6
+  }
+ ],
+ "params": {},
+ "children": [],
+ "inter": [],
+ "layer_cap": "M5"
+}
