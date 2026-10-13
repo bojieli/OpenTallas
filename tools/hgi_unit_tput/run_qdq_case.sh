@@ -1,7 +1,7 @@
 #!/bin/bash
 # FUSED.QDQ_* B2 QUARTER throughput bench (el1011-qdqtput): ot_hgi_qdq_q on the B2 VM slice's local 8-lane group.
 # usage (from the repo root): tools/hgi_unit_tput/run_qdq_q.sh <vectors dir> <out dir>
-# env: S (relay stages each way, default 1), VERILATOR
+# env: S (relay stages each way, default 1), VERILATOR, QDQ_G (verilator -G...), QDQ_PLUS (plusargs, e.g. +ROWS=3)
 # The B2 slice RTL (rtl/hbm_accel/generic/vm/b2) is taken from the tree, or from origin/claude/el1011-hbm-b2-vm until it
 # lands on main (provisional port, SPEC.md v0.1 sec 2a).
 set -euo pipefail
@@ -23,7 +23,7 @@ src=("${hdc[@]}" physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hb
 m=${MUT:-0}
 "$VL" --binary --timing -O3 -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT=$m -GS=${S:-3} ${QDQ_G:-} --top-module tb_hgi_qdq_q_tput -Mdir "$out/obj" -o sim "${src[@]}" > "$out/build.log" 2>&1
 set +e
-"$out/obj/sim" +DIR="$vec" > "$out/run.log" 2>&1
+"$out/obj/sim" +DIR="$vec" ${QDQ_PLUS:-} > "$out/run.log" 2>&1
 rc=$?
 cat "$out/run.log"
 exit "$rc"

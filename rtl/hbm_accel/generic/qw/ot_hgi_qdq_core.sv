@@ -64,6 +64,7 @@ module ot_hgi_qdq_core #(
     reg [17:0] q_alo [0:RQ-1], q_ahi [0:RQ-1], q_olo [0:RQ-1], q_ohi [0:RQ-1];
     reg [14:0] q_as [0:RQ-1], q_os [0:RQ-1], q_rs [0:RQ-1], q_ws [0:RQ-1];
     reg [15:0] q_bpr [0:RQ-1]; reg [2:0] q_nsl [0:RQ-1]; reg [19:0] q_m [0:RQ-1]; reg [17:0] q_hd [0:RQ-1];
+    reg [RQ-1:0] q_lb, q_lr; reg [7:0] q_hit [0:RQ-1];   // first-beat flags of an entry, computed at enqueue
     reg [QW-1:0] qt, rp, hd;                          // tail, next to start, retire head
     reg [QW:0] occ;                                   // accepted (bound) and not retired
     reg [QW:0] fin_c;                                 // finished (all writes done), not yet retired
@@ -84,16 +85,26 @@ module ot_hgi_qdq_core #(
     reg [LW:0] lf_r [0:7];                            // issued, pop not yet seen (lane FIFO space, LD a lane)
     reg [SW:0] b_used;                                // issued, fire not yet seen (the assembly leaf's beat queue space)
     wire [14:0] r_sec0 = r_rsec + {r_beat[12:0], 2'd0};
-    wire r_lastbeat = (r_beat + 16'd1 == r_bpr);
-    wire r_lastrow = (r_row + 20'd1 == r_m);
-    wire [2:0] r_nsec = r_lastbeat ? r_nsl : 3'd4;
-    reg [7:0] r_hit; reg r_cr_ok;
+    // The beat's last-beat / last-row flags and its lane hit mask are STATE (q8b gate, 10-13: computed in the cycle they
+    // sat in front of the issue decision: 16-b / 20-b increment-compare -> sector count -> hit -> credit -> issue -> load,
+    // -205 ps at 770 on 622 endpoints).  Their next values are computed beside the decision and selected by it.
+    reg r_lb, r_lr; reg [7:0] r_hit;                  // r_beat + 1 == r_bpr, r_row + 1 == r_m, lanes of the current beat
+    wire r_lastbeat = r_lb, r_lastrow = r_lr;
+    wire [2:0] r_nsec = r_lb ? r_nsl : 3'd4;
+    function automatic [7:0] hit8(input [2:0] l, input [2:0] n);
+        for (integer b = 0; b < 8; b = b + 1) hit8[b] = 3'(b - l) < n;
+    endfunction
+    wire r_lb_adv = (r_beat + 16'd2 == r_bpr);        // next beat of this row is its last
+    wire r_lb_row = (r_bpr == 16'd1);                 // a row's first beat is its last
+    wire r_lr_adv = (r_row + 20'd2 == r_m);
+    wire [2:0] r_l_row = 3'(r_rsec[2:0] + r_rs[2:0]); // first lane of the next row
+    wire [7:0] r_hit_adv = hit8(r_sec0[2:0] ^ 3'd4, r_lb_adv ? r_nsl : 3'd4);
+    wire [7:0] r_hit_row = hit8(r_l_row, r_lb_row ? r_nsl : 3'd4);
+    reg r_cr_ok;
     always @* begin
         r_cr_ok = 1'b1;
-        for (integer b = 0; b < 8; b = b + 1) begin
-            r_hit[b] = 3'(b - r_sec0[2:0]) < r_nsec;
+        for (integer b = 0; b < 8; b = b + 1)
             if (r_hit[b] && (rcr[b] == 0 || lf_r[b] == LD[LW:0])) r_cr_ok = 1'b0;
-        end
     end
     wire r_issue = r_act && rg_ok && !bad && b_used != NB[SW:0] && r_cr_ok;
     wire r_end = r_issue && r_lastbeat && r_lastrow;
@@ -140,7 +151,7 @@ module ot_hgi_qdq_core #(
     always @(posedge clk or negedge rr_n[1]) begin
         if (!rr_n[1]) begin
             r_act <= 0; r_row <= 0; r_m <= 0; r_beat <= 0; r_bpr <= 0; r_nsl <= 0; r_rsec <= 0; r_osec <= 0;
-            r_rs <= 0; r_ws <= 0; b_used <= 0; bp_v <= 0;
+            r_rs <= 0; r_ws <= 0; b_used <= 0; bp_v <= 0; r_lb <= 0; r_lr <= 0; r_hit <= 0;
             for (b = 0; b < 8; b = b + 1) wrq[b*16 + 15] <= 1'b0;
         end else begin
             for (integer qb = 0; qb < 8; qb = qb + 1) wrq[qb*16 + 15] <= 1'b0;
@@ -148,13 +159,16 @@ module ot_hgi_qdq_core #(
             // ---- read walk: one beat (<= 4 sectors) a cycle; the next record loads on the last beat
             if (r_issue) begin
                 for (b = 0; b < 8; b = b + 1) if (r_hit[b]) wrq[b*16 + 15] <= 1'b1;
-                if (r_lastbeat) begin r_beat <= 0; r_row <= r_row + 1'b1; r_rsec <= r_rsec + r_rs; r_osec <= r_osec + r_ws; end
-                else r_beat <= r_beat + 1'b1;
+                if (r_lastbeat) begin
+                    r_beat <= 0; r_row <= r_row + 1'b1; r_rsec <= r_rsec + r_rs; r_osec <= r_osec + r_ws;
+                    r_lb <= r_lb_row; r_lr <= r_lr_adv; r_hit <= r_hit_row;
+                end else begin r_beat <= r_beat + 1'b1; r_lb <= r_lb_adv; r_hit <= r_hit_adv; end
             end
             if (r_end && !n_load) r_act <= 1'b0;
             if (n_load) begin
                 r_act <= 1'b1; r_row <= 0; r_beat <= 0; r_m <= q_m[rp]; r_bpr <= q_bpr[rp]; r_nsl <= q_nsl[rp];
                 r_rsec <= q_as[rp]; r_osec <= q_os[rp]; r_rs <= q_rs[rp]; r_ws <= q_ws[rp];
+                r_lb <= q_lb[rp]; r_lr <= q_lr[rp]; r_hit <= q_hit[rp];
             end
             b_used <= b_used + (SW+1)'(r_issue) - (SW+1)'(f_fire);
         end
@@ -184,8 +198,17 @@ module ot_hgi_qdq_core #(
         if (s3_v) begin
             q_alo[qt] <= alo3; q_ahi[qt] <= ahi3; q_olo[qt] <= olo3; q_ohi[qt] <= ohi3; q_as[qt] <= as3; q_os[qt] <= os3;
             q_rs[qt] <= rs3; q_ws[qt] <= ws3; q_bpr[qt] <= bpr3; q_nsl[qt] <= nsl3; q_m[qt] <= m3; q_hd[qt] <= hd3;
+            q_lb[qt] <= bpr3 == 16'd1; q_lr[qt] <= m3 == 20'd1; q_hit[qt] <= hit8(as3[2:0], (bpr3 == 16'd1) ? nsl3 : 3'd4);
         end
     end
+`ifndef SYNTHESIS
+    // the registered walk flags equal their definitions on every active cycle (every bench carries this check)
+    always @(posedge clk) if (rr_n[1] && r_act) begin
+        if (r_lb !== (r_beat + 16'd1 == r_bpr) || r_lr !== (r_row + 20'd1 == r_m) ||
+            r_hit !== hit8(r_sec0[2:0], (r_beat + 16'd1 == r_bpr) ? r_nsl : 3'd4))
+            $fatal(1, "FATAL: ot_hgi_qdq_core walk flags diverged (beat %0d row %0d)", r_beat, r_row);
+    end
+`endif
     initial begin
         if ((RQ & (RQ - 1)) != 0 || RQ < 8) $fatal(1, "ot_hgi_qdq_q: RQ must be a power of two >= 8");
         if ((NB & (NB - 1)) != 0 || (LD & (LD - 1)) != 0) $fatal(1, "ot_hgi_qdq_q: NB / LD powers of two");

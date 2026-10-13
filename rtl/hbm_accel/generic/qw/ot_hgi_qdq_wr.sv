@@ -55,7 +55,12 @@ module ot_hgi_qdq_wr #(
     wire od_hv, od_ovf; wire [511:0] od_head;
     reg bad, wg_ok;
     reg [CW-1:0] wcr [0:7]; reg [7:0] wcnt [0:7], dcnt [0:7];
-    wire [14:0] w_sec0 = mq_o[mq_h]; wire [2:0] w_n = mq_n[mq_h];
+    // head entry in registers (q8b gate, 10-13: the 64:1 head read sat in front of hit -> credit -> fire -> credit update,
+    // 15 levels): both candidates (head, head + 1) are read from the registered pointer and the fire selects one.  An
+    // entry is written >= 20 cycles (decode latency) before its result can fire, so the one-edge-late copy is always current.
+    reg [14:0] mh_o; reg [2:0] mh_n; reg mh_z;
+    wire [OW-1:0] mq_h1 = mq_h + 1'b1;
+    wire [14:0] w_sec0 = mh_o; wire [2:0] w_n = mh_n;
     reg [7:0] w_hit; reg w_cr_ok;
     always @* begin
         w_cr_ok = 1'b1;
@@ -69,7 +74,7 @@ module ot_hgi_qdq_wr #(
         .wdata(y_f), .pop(w_fire), .hv(od_hv), .head(od_head), .ovf(od_ovf));
     // snapshot FIFO: per-lane write count after a record's last write, in record order
     reg [63:0] sq [0:RQ-1]; reg [QW-1:0] sq_t, sq_h; reg [QW:0] sq_n;
-    wire sq_push = w_fire && mq_z[mq_h];
+    wire sq_push = w_fire && mh_z;
     reg fin;
     always @* begin
         fin = sq_n != 0;
@@ -111,6 +116,8 @@ module ot_hgi_qdq_wr #(
     // Address/payload flops are written separately from resettable valid strobes (no ALDFF feedback on payload bits).
     always @(posedge clk) begin
         if (f_m_v) begin mq_o[mq_t] <= f_m[18:4]; mq_n[mq_t] <= f_m[3:1]; mq_z[mq_t] <= f_m[0]; end
+        mh_o <= w_fire ? mq_o[mq_h1] : mq_o[mq_h]; mh_n <= w_fire ? mq_n[mq_h1] : mq_n[mq_h];
+        mh_z <= w_fire ? mq_z[mq_h1] : mq_z[mq_h];
         if (sq_push) for (integer q = 0; q < 8; q = q + 1) sq[sq_t][q*8 +: 8] <= wcnt[q] + 8'(w_hit[q]);
         for (integer b = 0; b < 8; b = b + 1) begin
             if (w_fire && w_hit[b]) begin

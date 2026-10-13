@@ -57,8 +57,9 @@ module ot_hgi_qdq_q #(
     input  wire              wg_gnt
 );
     wire s1_v, s3_v, nfault; wire [189:0] s3;
-    wire [7:0] c_pop, e_push; wire [3:0] e_ovf; wire [8*256-1:0] hq; wire lq_rst_n, dec_rst_n, asm_rst_n, wr_rst_n;
-    wire d_v, vo, qfault, dfault; wire [127:0] d_h; wire [1023:0] d_x; wire [511:0] y;
+    wire [7:0] c_pop, e_push; wire [3:0] e_ovf; wire [8*256-1:0] hq; wire [3:0] lq_rst_n; wire dec_rst_n, asm_rst_n, wr_rst_n;
+    wire d_v, vo, qfault, dfault; wire [17:0] d_hd; wire [1023:0] d_x; wire [511:0] y;
+    wire [127:0] d_h = {d_hd[17:8], 46'd0, d_hd[7:0], 64'd0};   // the decode's only header fields (constants are wires)
     wire bp_v, a_fire, a_bad_c, a_bad_w, a_idle, m_v, w_wf, w_fin, w_bad, w_idle, c_act;
     wire [39:0] bp; wire [7:0] a_pop; wire [18:0] m;
 `ifdef OT_HARD_CHILDREN
@@ -80,8 +81,9 @@ module ot_hgi_qdq_q #(
 `else
     ot_hgi_qdq_asm #(.LD(LD), .NB(NB), .OD(OD), .MUT(MUT)) u_asm (
 `endif
-        .clk(clk), .rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .hq(hq), .e_push(e_push), .e_ovf(e_ovf), .c_pop(c_pop),
-        .lq_rst_n(lq_rst_n), .dec_rst_n(dec_rst_n), .wr_rst_n(wr_rst_n), .d_v(d_v), .d_h(d_h), .d_x(d_x), .o_pop(a_pop),
+        .clk(clk), .rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .hq_p0(hq[511:0]), .hq_p1(hq[1023:512]),
+        .hq_p2(hq[1535:1024]), .hq_p3(hq[2047:1536]), .e_push(e_push), .e_ovf(e_ovf), .c_pop(c_pop),
+        .lq_rst_n(lq_rst_n), .dec_rst_n(dec_rst_n), .wr_rst_n(wr_rst_n), .d_v(d_v), .d_hd(d_hd), .d_x(d_x), .o_pop(a_pop),
         .o_fire(a_fire), .o_bad_c(a_bad_c), .o_idle(a_idle), .m_v(m_v), .m(m), .o_bad_w(a_bad_w), .i_wf(w_wf));
 `ifdef OT_HARD_CHILDREN
     ot_hgi_qdq_wr u_wr (
@@ -93,7 +95,7 @@ module ot_hgi_qdq_q #(
         .o_fin(w_fin), .o_bad(w_bad), .o_idle(w_idle));
     genvar gp;
     generate for (gp = 0; gp < 4; gp = gp + 1) begin : g_lq
-        ot_hgi_qdq_lq u_lq (.clk(clk), .rst_n(lq_rst_n), .wrr(wrr[gp*2*257 +: 2*257]), .c_pop(c_pop[gp*2 +: 2]),
+        ot_hgi_qdq_lq u_lq (.clk(clk), .rst_n(lq_rst_n[gp]), .wrr(wrr[gp*2*257 +: 2*257]), .c_pop(c_pop[gp*2 +: 2]),
             .hq(hq[gp*512 +: 512]), .e_push(e_push[gp*2 +: 2]), .e_ovf(e_ovf[gp]));
     end endgenerate
     generate if (DEC3 != 0) begin : g_d3
