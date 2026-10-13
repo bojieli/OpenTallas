@@ -1,0 +1,64 @@
+{
+  "source_commit": "a5d66b9a21f9f6a64a997bcfd300735adb8108d6",
+  "status": "EARLY_FAIL_HOLD",
+  "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +1.8% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -66.3 ps (start -88.13), 6500 it / 18601 buffers, 24102 endpoints in margin, 1.1 h in step, HM guard present",
+  "bulk_released": {
+    "at": "2026-10-13T00:48:12-07:00",
+    "why": "superseded by a CLOSED job of block ot_hgi_seq",
+    "du_mb": "9756 8857"
+  },
+  "actual_cts": {
+    "spine_sinks": 25081,
+    "leaves": 3148,
+    "rounds": [
+      {
+        "iteration": 0,
+        "buffers": 6297,
+        "spread_ps": 203.1
+      },
+      {
+        "iteration": 1,
+        "buffers": 12430,
+        "spread_ps": 73.9
+      },
+      {
+        "iteration": 2,
+        "buffers": 16026,
+        "spread_ps": 40.7
+      },
+      {
+        "iteration": 3,
+        "buffers": 28550,
+        "spread_ps": 133.1
+      }
+    ],
+    "worst_hold_endpoint": "a5_ian[24]$_DFF_P_/D",
+    "initial_hold_ps": -88.13,
+    "final_hold_ps": -66.323,
+    "actual_full_hold_path_available": false,
+    "reason_path_unavailable": "auto bulk release removed ODB while classifying superseded by OLD v1 closed job"
+  },
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.194 MB sources in 7 modules, into 0.010 MB in 4 C++ files needing 0.000 MB\n- Verilator: Walltime 0.241 s (elab=0.053, cvt=0.178, bld=0.000); cpu 0.241 s on 1 threads; allocated 61.383 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_seq_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "SEQ case 42: 4 dispatches, token 0 status 1, 118 cycles\nHGI_SEQ PASS cases=43 dispatches=2801\ntb_hgi_seq.sv:280: $finish called at 100496000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_seq_mut_wait": {
+      "expect": "fail",
+      "rc": 0,
+      "ok": true,
+      "tail": "SEQ case 42: 4 dispatches, token 0 status 1, 123 cycles\nHGI_SEQ FAIL 1516\ntb_hgi_seq.sv:280: $finish called at 60016000 (1ps)\n",
+      "track": "parallel"
+    }
+  }
+}
