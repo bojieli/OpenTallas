@@ -1,5 +1,5 @@
 {
- "name": "s81su_kvq_ref-v2-COMMIT",
+ "name": "s81su_kvq_ref-v2-7d01bceb4",
  "block": "dsfd_su_t_kvq",
  "ref_tile": true,
  "owner": "Claude:el1013-s81su-kvsw",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1013-s81su-kvsw",
-  "commit": "COMMIT"
+  "commit": "7d01bceb4"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_kvq_ref/s81su_kvq_ref-v2-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_kvq_ref/s81su_kvq_ref-v2-7d01bceb4"
   }
  ],
  "cycles_added": 0,
