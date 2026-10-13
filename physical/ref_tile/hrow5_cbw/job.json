@@ -1,14 +1,14 @@
 {
- "name": "hrow5_cbw-r5f-7d9faad0a",
+ "name": "hrow5_cbw-r5g-COMMIT",
  "block": "dsfd_mtp_hrow_cbw",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
- "purpose": "el1011-ds-mtp 2026-10-12 cbw r5f: r5e-443ce010e DRT stuck at 11 violations (iter 60/64), all M4 at x 443.03-443.38 = east edge of the east-column SRAM g_c[1] (same as cbe r5e DRC 7: VIA45 M4 pads in the SRAM M4 OBS next to the 414 M4 edge pins; hold/inhold cells at the 2.16 um halo crowd the pin-access strip). Fix: macro placement halo 2.16 -> 5.4 um; floorplan, RTL, benches unchanged.",
+ "purpose": "el1011-ds-mtp 2026-10-12 hrow5_cbw r5g: r5f (halo 5.4) still DRC 7/12, all M4 Short/Spacing at the EAST edge pins (x 443.4) of the EAST-column SRAMs only. Asymmetry: the macro's x=174.72 pin set (w_mask_in 256 tied + wd_in 120 + redundancy) routes clean when it faces the 62.9 um central channel (west column) and fails when it faces the 31.75 um outer channel (east column); the x=0 set (rd_out/addr/wd_in 136) is clean facing the outer west channel. Fix (floorplan, structural): east column mirrored MY so the floorplan is mirror-symmetric -- both columns' tie-heavy mask/wd pin sets face the central channel, both rd_out/addr sets face an outer channel. Pin counts per channel unchanged (828 central, ~415 per outer). RTL/benches unchanged; halo 5.4 kept.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-mtp-hrow",
-  "commit": "7d9faad0a"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_cbw/hrow5_cbw-r5f-7d9faad0a"
+   "to": "results/rtl/ref_tile/hrow5_cbw/hrow5_cbw-r5g-COMMIT"
   }
  ],
  "cycles_added": 0,
