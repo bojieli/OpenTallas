@@ -192,9 +192,28 @@ module ot_qwen_nearhbm_attn_hub_t #(
     wire [31:0] ry;
     wire        rvo, rfault;
 `ifdef QKH_RECIP_LEAF
-    // Hardened leaf adds two registered boundary cycles. rcnt advances on rvo,
-    // so result identity remains unchanged; no fixed reciprocal latency used.
-    ot_qkh_recip_leaf u_recip (.clk(clk), .rst_n(rl[6]), .v(rv1), .x(rx), .y(ry), .vo(rvo), .fault(rfault));
+    // Hardened leaf adds two registered boundary cycles (+4 seam relay cycles below). rcnt advances
+    // on rvo, so result identity remains unchanged; no fixed reciprocal latency used.
+    // q13 physical spec: the leaf sits in its own east column of the cluster (up to ~860 um from the
+    // west zh roots and from the rz consumers), so both directions carry two relay registers
+    // (<= ~430 um per stage). Valid relays reset on rl[6]; data relays are unreset.
+    (* keep *) reg        rxv_a, rxv_b;
+    (* keep *) reg [31:0] rxd_a, rxd_b;
+    wire [31:0] ry_l;
+    wire        rvo_l, rfault_l;
+    (* keep *) reg        ryv_a, ryv_b, ryf_a, ryf_b;
+    (* keep *) reg [31:0] ryd_a, ryd_b;
+    always @(posedge clk or negedge rl[6])
+        if (!rl[6]) begin rxv_a <= 1'b0; rxv_b <= 1'b0; ryv_a <= 1'b0; ryv_b <= 1'b0; end
+        else begin rxv_a <= rv1; rxv_b <= rxv_a; ryv_a <= rvo_l; ryv_b <= ryv_a; end
+    always @(posedge clk) begin
+        rxd_a <= rx; rxd_b <= rxd_a;
+        ryd_a <= ry_l; ryd_b <= ryd_a; ryf_a <= rfault_l; ryf_b <= ryf_a;
+    end
+    assign ry = ryd_b;
+    assign rvo = ryv_b;
+    assign rfault = ryf_b;
+    ot_qkh_recip_leaf u_recip (.clk(clk), .rst_n(rl[6]), .v(rxv_b), .x(rxd_b), .y(ry_l), .vo(rvo_l), .fault(rfault_l));
 `else
     ot_qwen_nearhbm_recip_p #(.LA(7), .LM(7)) u_recip (.clk(clk), .rst_n(rl[6]), .v(rv1), .x(rx), .y(ry), .vo(rvo),
                                                      .fault(rfault));
