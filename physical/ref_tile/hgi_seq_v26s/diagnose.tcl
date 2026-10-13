@@ -1,3 +1,8 @@
+# Verify rollback operations in the real OpenDB interpreter before building clocks.
+foreach ot_seq26_api {odb::dbInst_destroy odb::dbNet_destroy} {
+  if {[info commands $ot_seq26_api] eq ""} { error "SEQ26 required rollback API absent: $ot_seq26_api" }
+}
+puts "SEQ26 OpenDB rollback APIs available"
 # Keep the real source/capture clock paths before a long repair can be interrupted.
 # This hook changes no clock, path exception, delay or repair setting.
 if {[info commands repair_timing] ne "" && [info commands ot_seq26_repair_orig] eq ""} {
