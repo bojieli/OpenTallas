@@ -68,6 +68,7 @@ def main():
                     'overlap them); VM in = the pre-chain state of every touched sector, out = the final sink sectors')
     ap.add_argument('--ds-program', default='', help='a ds_native --program-out dump: use its layer-0 rank-0 records '
                     '(DeepSeek-V4.1 1M) instead of the Qwen3-8B token program')
+    ap.add_argument('--dirty-adversarial', action='store_true', help='append production 8x8192 identity to disjoint unaligned sink; untouched edge words were never staged locally')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -182,6 +183,38 @@ def main():
         for s_ in osecs:
             vme.append((int(s_), [int(x) for x in die.vm[s_ * 8:(s_ + 1) * 8]]))
         print(f"chain of {len(chain)} records, priced sum {tot:.1f}, {len(secs)} sectors in, {len(osecs)} out")
+    if a.dirty_adversarial:
+        # A and O share no VM sectors. O's first/last sectors have guard words
+        # the local-memory sink clear does not load. A whole-sector drain must
+        # corrupt those guards instead of rewriting an identical staged copy.
+        from hgi_sim.records import decode_one
+        dd = SB.synth(sut=SB.sut_word(dst=1), descs=dict(
+            A=SB.mdesc(base=0, n=8192, m=8, stride=8192, istride=1),
+            O=SB.mdesc(base=131073, n=8192, m=8, stride=8192, istride=1)))
+        bb = dd['hdr'].to_bytes(16, 'little') + dd['sut'].to_bytes(32, 'little')
+        bb += dd['eff'][0].to_bytes(32, 'little') + dd['eff'][4].to_bytes(32, 'little')
+        rr, _ = decode_one(bb, 0)
+        rr.tag = 'dirty_unstaged_sink_8x8192'
+        before = die.vm.copy()
+        M.cur = rr
+        sp = spans(rr, M, die, 0)
+        src, snk = sp['A'], sp['O']
+        assert not set(src >> 3) & set(snk >> 3)
+        MA.UNITS[(rr.unit, rr.op)](M, rr, 0)
+        assert np.array_equal(die.vm[snk], before[src])
+        assert np.array_equal(die.vm[[131072, 196609, 196610, 196611, 196612, 196613, 196614, 196615]],
+                              before[[131072, 196609, 196610, 196611, 196612, 196613, 196614, 196615]])
+        secs = np.unique(np.concatenate([src >> 3, snk >> 3]))
+        osecs = np.unique(snk >> 3)
+        cases.append((len(recl), 1, len(vmi), len(secs), len(vme), len(osecs), len(man)))
+        recl.append(SB.pack_rec(dd))
+        for ss in secs:
+            vmi.append((int(ss), [int(x) for x in before[ss*8:(ss+1)*8]]))
+        for ss in osecs:
+            vme.append((int(ss), [int(x) for x in die.vm[ss*8:(ss+1)*8]]))
+        man.append(dict(tag=rr.tag, unit='SU', qualification='adversarial exactness only; unchanged production chain price',
+                        shape=[8,8192], source_words=[0,65535], sink_words=[131073,196608],
+                        unstaged_guard_words=[131072,196609,196610,196611,196612,196613,196614,196615]))
     (out / 'su_rec.mem').write_text(''.join(C.hexw(x, 2197) + '\n' for x in recl))
     (out / 'su_case.mem').write_text(''.join(''.join(f'{x:08X}' for x in c) + '\n' for c in cases))
     (out / 'su_vmi.mem').write_text(''.join(f'{s:08X}' + ''.join(f'{w:08X}' for w in reversed(ws)) + '\n'
