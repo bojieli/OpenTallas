@@ -19,8 +19,8 @@
  ],
  "std_area_um2": 3955,
  "outline": {
-  "w": 95.04,
-  "h": 103.68
+  "w": 77.76,
+  "h": 120.96
  },
  "util": 0.52,
  "macros": [],
@@ -98,7 +98,7 @@
  "job": {
   "owner": "Codex:hbm-qdq-physical",
   "branch": "codex/hbm-qdq-physical",
-  "tag": "l2",
+  "tag": "l3",
   "views_to": "physical/ref_tile/ctlw_lane2_ref/views",
   "record_to": "results/rtl/ref_tile/ctlw_lane2_ref",
   "purpose": "Two-lane ctlw PRE/FWD2 leaf, landing FIFOs flop64x15 per lane; removes SRAM walls and splits clock roots; pair strap selects global bank indices",
@@ -129,5 +129,6 @@
     "fail_regex": "CTLW_EQ landing"
    }
   ]
- }
+ },
+ "why_floorplan": "l3 (l2 7e3f21a6a NEEDS_HUMAN PPL-0111 at 3_2_place_iop: W face 1112 pins (wrq 32 + wrr 514 + wwq 560 + cr/done 6) and E face 1138 pins (lsw_d 512 + ldr_d 512 + sec 90 + dm 16 + v/rv 8) on ONE horizontal pin layer (M4, 48 nm pitch, 2-track slots) had 1065 slots on 103.68 um). Outline from pin demand: H 120.96 um gives ~1245 M4 slots (E 91%, W 89%); N/S carry 724/719 pins on M3+M5 (~1.9k slots on 77.76 um, 38%), so the width is set by area: core 73.44 x 116.64 = 8566 um2, util 46%. No M6 grant needed."
 }

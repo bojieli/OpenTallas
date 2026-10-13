@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  95.04,
-  103.68
+  77.76,
+  120.96
  ],
  "core": [
   2.16,
   2.16,
-  92.88000000000001,
-  101.52000000000001
+  75.60000000000001,
+  118.8
  ],
  "why": "spec outline",
  "std_area_um2": 3955,
@@ -92,14 +92,7 @@
  },
  "clock_port": "clk",
  "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 44% outside 45%-60% (std 3955 + macro 0 in core 9014 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_lane2.sv",
   "rtl/link/ot_fifo_sram_fwft.sv",
