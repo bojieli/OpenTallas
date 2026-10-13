@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_res_slot_rt",
+ "verdict": "PASS",
+ "generated": "2026-10-13T08:47:42-0700",
+ "host": "ot-agidock128",
+ "cts": true,
+ "commit": "f9f0aaa98",
+ "clock": {
+  "max_root_sinks": 5537,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": 312.4,
+  "tt_spread_ps": 114.6,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "5,537 sinks on the largest root <= 15,000; measured TT insertion 312.4 ps, leaf spread 114.6 ps"
+ },
+ "items": []
+}
