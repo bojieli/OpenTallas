@@ -67,10 +67,10 @@ def allocate(src,dst,count,clk):
  assert mh(prev,sink)<=498+1e-6
  return names
 
-def allocate_legal(src,dst,count,clk):
+def allocate_legal(src,dst,count,clk,extra=12):
  global serial
  first=serial;start=len(new)
- for total in range(count,count+12):
+ for total in range(count,count+extra):
   try:return allocate(src,dst,total,clk)
   except RuntimeError:
    # Undo a partial attempt before changing depth. No orphan placement or clock.
@@ -81,6 +81,30 @@ def allocate_legal(src,dst,count,clk):
     del I[n];newclock.pop(n);P.pop(n+'.a');P.pop(n+'.b');D['insts'].pop()
    del new[start:];serial=first
  raise RuntimeError(f'No legal registered detour after 12 depth candidates: {src}->{dst}')
+
+def balance_distributed(src,rs,dst,count,clk):
+ # A delay may sit on any chain segment. Spread it across the existing corridor
+ # instead of concentrating every frame at a crowded tile input.
+ rs=list(rs);remaining=count
+ for batch in (3,2,1):
+  for sweep in range(8):
+   if not remaining:break
+   ends=[src]+[r+'.b' for r in rs]
+   sinks=[r+'.a' for r in rs]+[dst]
+   order=sorted(range(len(ends)),key=lambda k:-mh(P[ends[k]],P[sinks[k]]))
+   changed=False
+   for k in order:
+    n=min(batch,remaining)
+    try:added=allocate_legal(ends[k],sinks[k],n,clk,extra=1)
+    except RuntimeError:continue
+    rs[k:k]=added;remaining-=n;changed=True
+    # Recompute segment indices after each insertion.
+    break
+   if not changed:break
+  if not remaining:break
+ if remaining:
+  raise RuntimeError(f'No distributed space for {remaining}/{count} pads: {src}->{dst}')
+ return rs
 
 def emit(path):
  binds={};decl=[];treeb=[]
@@ -125,8 +149,8 @@ for iteration in range(12):
  prior=len(new)
  for b,pad in sorted(current['proposed_pads'].items(),key=lambda t:-t[1]['extra_cycles']):
   src,rs,dst=chains[b];prev=rs[-1]+'.b' if rs else src;clk=inst[dst.split('.')[0]][1]['ck']
-  added=allocate_legal(prev,dst,pad['extra_cycles'],clk)
-  rs+=added;chains[b]=(src,rs,dst)
+  rs=balance_distributed(src,rs,dst,pad['extra_cycles'],clk)
+  chains[b]=(src,rs,dst)
  emit(out/f'balance_round{iteration}.v');current=tree_alignment.audit(str(out/f'balance_round{iteration}.v'))
  rounds.append(dict(round=iteration,added=len(new)-prior,misaligned=current['misaligned']))
  if current['misaligned']==0:break
