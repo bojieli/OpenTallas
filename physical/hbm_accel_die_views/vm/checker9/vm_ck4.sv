@@ -2,7 +2,8 @@
 `default_nettype none
 // Four-word mutable-SRAM SECDED checker. CAPTURE computes syndrome;
 // CHECK repairs locally and registers one verdict. LOAD may reduce bank flags.
-// Data registers have no cold reset. cap_valid protects every consumption.
+// Data registers have no reset. Scalar mode captures every cycle with pipeline
+// validity; regional mode uses kept local enables. CHECK consumes the preceding CAPTURE.
 module vm_ck4 #(parameter integer LOCAL_REGIONS=0)(input wire ck, input wire rst_n,
  input wire capture_i, check_i, write_i,
  input wire [7:0] capture_regions_i,check_regions_i,
@@ -54,17 +55,15 @@ module vm_ck4 #(parameter integer LOCAL_REGIONS=0)(input wire ck, input wire rst
   assign sample_ue[k]=ue(sample_syn_q[k*8+:8]);
  end
  always @(posedge ck)begin
-  if(capture_i)begin
-   owner_mask_q<=owner_mask_i;padding_mask_q<=padding_mask_i;write_q<=write_i;
-  end
+  owner_mask_q<=owner_mask_i;padding_mask_q<=padding_mask_i;write_q<=write_i;
   for(integer h=0;h<8;h=h+1)begin
-   if(LOCAL_REGIONS?capture_regions_i[h]:capture_i)begin
+   if(!LOCAL_REGIONS||capture_regions_i[h])begin
     sample_q[h*36+:36]<=sample_i[h*36+:36];expected_q[h*36+:36]<=expected_i[h*36+:36];
    end
-   if((LOCAL_REGIONS?check_regions_i[h]:check_i)&&cap_valid)repaired_o[h*36+:36]<=repaired[h*36+:36];
+   if(!LOCAL_REGIONS||(check_regions_i[h]&&cap_valid))repaired_o[h*36+:36]<=repaired[h*36+:36];
   end
   for(integer k=0;k<4;k=k+1)begin
-   if(LOCAL_REGIONS?capture_regions_i[k*2]:capture_i)begin
+   if(!LOCAL_REGIONS||capture_regions_i[k*2])begin
     sample_syn_q[k*8+:8]<=syndrome(sample_i[k*72+:72]);
     expected_syn_q[k*8+:8]<=syndrome(expected_i[k*72+:72]);
    end
@@ -73,7 +72,7 @@ module vm_ck4 #(parameter integer LOCAL_REGIONS=0)(input wire ck, input wire rst
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin cap_valid<=0;error_o<=0;valid_o<=0;end
   else begin
-   if(capture_i)begin cap_valid<=1;valid_o<=0;end
+   cap_valid<=capture_i;valid_o<=check_i&&cap_valid;
    if(check_i)begin
     valid_o<=cap_valid;
 `ifdef MUT_CK_IGNORE

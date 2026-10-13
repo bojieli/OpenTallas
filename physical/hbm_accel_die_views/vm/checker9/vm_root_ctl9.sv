@@ -34,6 +34,10 @@ module vm_root_ctl9(
   reg [71:0] control_code;
   reg [4*72-1:0] validity; // authoritative coded256 valid bits, cold reset only
   wire [255:0] valid_bits;wire [3:0] valid_UE;
+  // A decoded validity shadow is ready before WACK drains. The coded words
+  // remain authoritative; UE is still captured directly by bad_cv_q.
+  reg [255:0] valid_bits_pipe;
+  always @(posedge clk)valid_bits_pipe<=valid_bits;
   for(genvar k=0;k<4;k=k+1)begin:validity_decode
    wire [65:0] d=decode64(validity[k*72+:72]);
    assign valid_bits[k*64+:64]=d[63:0];assign valid_UE[k]=d[65];
@@ -71,7 +75,7 @@ module vm_root_ctl9(
      next_sent=0;next_acked=0;
      if(wf)begin next_bank=wr_bank;next_addr=wr_addr;next_is_write=1;next_state=WRITE;end
      if(rf)begin
-      if(!valid_bits[{rd_bank,rd_addr}])next_sticky=1;
+      if(!valid_bits_pipe[{rd_bank,rd_addr}])next_sticky=1;
       else begin next_bank=rd_bank;next_addr=rd_addr;next_is_write=0;next_state=READ;end
      end
     end
@@ -107,7 +111,7 @@ module vm_root_ctl9(
     sticky<=next_sticky;sent<=next_sent;acked<=next_acked;control_code<=encode64(next_control);
     bad_cv_q<=control_bad||(|valid_UE);
     if(SEATP!=0&&state==LOAD&&!chk_err_q&&is_write)begin
-     next_valid=valid_bits;next_valid[{bank,addr}]=1;
+     next_valid=valid_bits_pipe;next_valid[{bank,addr}]=1;
      for(integer k=0;k<4;k=k+1)validity[k*72+:72]<=encode64(next_valid[k*64+:64]);
     end
    end
