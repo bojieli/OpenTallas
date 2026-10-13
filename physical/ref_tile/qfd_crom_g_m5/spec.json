@@ -16,7 +16,7 @@
   "w": 194.4,
   "h": 550.8
  },
- "slot_change_request": "qfd_crom_g v3 slot 194.376 x 518.376 -> 194.4 x 550.8 (+32.4 N): six ot_rom_4096x266_m8 (62.91 tall, W/E pin edges) on the on-track 2.16 lattice need pitch 84.24 (ref_tile channel rule >= 20 um; abutment impossible, 62.91 is off the lattice) = 507.87 um from the S edge, + 42.9 um N station band for 723 N/M5 pin flops; real cell ot_qfd_crom_gr, N/M5 pins crom_re[7:0] crom_addr[191:0] crom_stage[5:0] (= ra[205:0]), crom_q[511:0] fault (= rq[512:0]) + NEW fault_code[1:0], crom_lb[5:0] strap (tie group g to 8g), rst_n; clk N/M5; strobe->q 8 edges (was 5)",
+ "slot_change_request": "qfd_crom_g v3 slot 194.376 x 518.376 -> 194.4 x 550.8 (+32.4 N): six ot_rom_4096x266_m8 (62.91 tall, W/E pin edges) on the on-track 2.16 lattice need pitch 84.24 (ref_tile channel rule >= 20 um; abutment impossible, 62.91 is off the lattice) = 507.87 um from the S edge, + 42.9 um N station band for 723 N/M5 pin flops; real cell ot_qfd_crom_gr, N/M5 pins crom_re[7:0] crom_addr[191:0] crom_stage[5:0] (= ra[205:0]), crom_q[511:0] fault (= rq[512:0]) + NEW fault_code[1:0], crom_lb[5:0] strap (tie group g to 8g), rst_n; clk N/M5; strobe->q 8 edges (was 5); reset release 3 clk edges after the rst_n pin (relay), strobes ignored until then",
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
@@ -112,7 +112,7 @@
  "boundary_tcl": [
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
- "structural_change": "slot-shaped M5 re-design of qfd_crom_g (closed qfd_crom_g_a-ff3637ce7-tc: TT +2.59, signals to M7, pins S/W): all pins + clock on the N face on M5, macros in one column with W 43.2 / E 29.4 um pin channels, halo 2.16 -> 5.4 um, macro pin-edge M5 guard; RTL relay stages (RLY 1, strobe->q 5 -> 8 edges): column address register after the macro-column select, one {ce,addr} register per macro beside its pins, lane select register before the output station at the pins, so no stage carries logic plus the 518-um column wire; lane-base STRAP pin crom_lb (crom_gs) so ONE hardened master serves the 8 groups (LB 0 of ot_qfd_crom_g faults in groups 1-7)",
+ "structural_change": "slot-shaped M5 re-design of qfd_crom_g (closed qfd_crom_g_a-ff3637ce7-tc: TT +2.59, signals to M7, pins S/W): all pins + clock on the N face on M5, macros in one column with W 43.2 / E 29.4 um pin channels, halo 2.16 -> 5.4 um, macro pin-edge M5 guard; RTL relay stages (RLY 1, strobe->q 5 -> 8 edges): column address register after the macro-column select, one {ce,addr} register per macro beside its pins, lane select register before the output station at the pins, so no stage carries logic plus the 518-um column wire; lane-base STRAP pin crom_lb (crom_gs) so ONE hardened master serves the 8 groups (LB 0 of ot_qfd_crom_g faults in groups 1-7); r2 (gate c2f759ff8: rst_n 347 loads): the rst_n port drives only a 2-sync + 2 kept-copy reset relay (pin stations + decode + faults / valid side band; release 3 edges after the port), the per-macro {ce, addr} relay registers carry no reset, kit recipe 2 (pin hold stages + pin flops), the address decode is combinational next-state with reset only on the valid / fault strobes (no reset-as-enable on datapath registers)",
  "job": {
   "owner": "Claude:q13-cromcbuf",
   "branch": "claude/q13-cromcbuf",
@@ -165,6 +165,9 @@
   ]
  },
  "layer_cap": "M5",
+ "recipe": 2,
  "children": [],
- "inter": []
+ "inter": [],
+ "inhold": true,
+ "outhold": true
 }
