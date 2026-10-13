@@ -64,5 +64,8 @@ puts "REF_TILE place: [$i getName] ot_nhb_zh at 475.2 561.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_nhb_zh {}]
 $i setOrient R0; $i setLocation [expr {round(691.2 * $dbu)}] [expr {round(561.6 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_nhb_zh at 691.2 561.6 R0"
+set i [ot_ref_pick $ot_ref_by ot_qkh_recip_leaf {u_recip}]
+$i setOrient R0; $i setLocation [expr {round(907.2 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qkh_recip_leaf at 907.2 259.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 12} { error "ref_tile place: expected 12 macros, netlist has $nb" }
+if {$nb != 13} { error "ref_tile place: expected 13 macros, netlist has $nb" }

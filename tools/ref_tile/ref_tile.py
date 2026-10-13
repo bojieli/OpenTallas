@@ -116,7 +116,11 @@ def contract_slot(s: dict) -> dict | None:
     c = s.get("contract")
     if not c:
         return None
-    return child_lint.contract_slot(str(ROOT / c["file"]), c["slot"])
+    slot = child_lint.contract_slot(str(ROOT / c["file"]), c["slot"])
+    if isinstance(slot, dict) and isinstance(slot.get("layer_cap"), dict):
+        # derived contracts (qwen_rom_tp8 v3) carry {"cap": "M5", "view_max_layer": ..., "conforms": ...}: the cap is "cap"
+        slot = dict(slot, layer_cap=slot["layer_cap"].get("cap"))
+    return slot
 
 
 def view_name(view: str) -> str:
@@ -699,6 +703,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # register stages + 6,860 hold buffers in one 24-um strip, GRT stuck at ~3,000 markers; the closed hand kit
             # placed pins at floorplan: W 3705 / E 3705).  The kit's post_tapcell.tcl places the exact pins first.
             vv = f"/src/{kd}/post_tapcell.tcl"
+            # ... and post_iop.tcl re-applies them after place_pins (el1013-smh-r11, see the kit file below)
+            if "POST_IO_PLACEMENT_TCL" not in s.get("orfs_vars", {}):
+                extra.append(f"--orfs-var POST_IO_PLACEMENT_TCL=/src/{kd}/post_iop.tcl")
         extra.append(f"--orfs-var {k}={vv}")
     # spec "post_synth_tcl": a repo POST_SYNTH hook, e.g. physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl
     # for a top with inout terminals (ORFS never buffers an inout: the post-GRT repair stops with RSZ-0074 "found route to
@@ -712,6 +719,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
+    # route.synth_keep_modules: hierarchy kept through synthesis (ABC re-ripples a pipelined fp adder once it is flattened
+    # into its context; the hbm norm group closed only with its fp add/mul stages kept, idle1012)
+    if s["route"].get("synth_keep_modules"):
+        extra.append("--orfs-var " + shq("SYNTH_KEEP_MODULES=" + " ".join(s["route"]["synth_keep_modules"])))
     if s["route"].get("lb_addon") is None:
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
@@ -850,7 +861,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
     lint = lint_cmd(s)
-    benches = j.get("benches") or []
+    benches = list(j.get("benches") or [])
+    if j.get("benches_from"):     # shared bench template (e.g. tools/s81_suhc/hc_gate_benches.json: the HC composition gate)
+        have = {b.get("name") for b in benches}
+        benches += [b for b in json.loads((ROOT / j["benches_from"]).read_text())["benches"] if b.get("name") not in have]
     if not any(b.get("name") == "lint" for b in benches):
         benches = [{"name": "lint", "cmd": lint, "expect": "pass", "threads": 1, "peak_ram_gb": 4,
                     "needs": ["verilator"]}] + benches
@@ -899,6 +913,15 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     }
     if j.get("no_bench_reason"):
         spec["no_bench_reason"] = j["no_bench_reason"]
+    if j.get("benched_by"):     # composition gate (tools/ref_tile/composition_gates.json): the loop appends its benches
+        spec["benched_by"] = j["benched_by"]
+    if j.get("hold_merge"):     # a physical probe that never merges (not a closure candidate)
+        spec["hold_merge"] = j["hold_merge"]
+    # closure loop STRUCTURE_REPEAT lint (owner 10-13): after two failed routes the next submission states what changed
+    # in the structure; the sentence is written once in the tile spec (top level, or under "job") and must reach job.json
+    sc = s.get("structural_change") or j.get("structural_change")
+    if isinstance(sc, str) and sc.strip():
+        spec["structural_change"] = sc.strip()
     return spec
 
 
@@ -960,6 +983,26 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             "# then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when\n"
             "# a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)\n"
             "foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
+        # el1013-smh-r11 2026-10-13: this ORFS sources IO_CONSTRAINTS at 2_1_floorplan ONLY (floorplan.tcl), not at
+        # 3_2_place_iop, so after the unplace above place_pins placed EVERY port by wirelength and the exact plan was lost
+        # (smh_tile_eg_ref r10: 7,766 of 7,766 ports re-placed; clk / cgi on the W face, gin on the E face on M4, 50 of the
+        # 200 gout on S; the boundary flops stayed FIRM at the planned positions).  POST_IO_PLACEMENT: place the exact pins
+        # again, check every port is back on its planned spot, and rewrite the stage result the next step loads.
+        files["post_iop.tcl"] = (
+            "# ref_tile: re-apply the exact abutment pin plan after place_pins (IO_CONSTRAINTS is sourced only at\n"
+            "# 2_1_floorplan; the POST_TAPCELL hook unplaced the ports so place_pins could run) and save the stage result\n"
+            "set ot_blk [ord::get_db_block]\n"
+            "foreach bt [$ot_blk getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n"
+            f"source /src/{s['io_tcl']}\n"
+            "set ot_n 0; set ot_miss {}\n"
+            "foreach bt [$ot_blk getBTerms] {\n"
+            "  if {[$bt getSigType] in {POWER GROUND}} continue\n"
+            "  if {[llength [$bt getBPins]] == 0} { lappend ot_miss [$bt getName] } else { incr ot_n }\n"
+            "}\n"
+            "if {[llength $ot_miss]} { error \"REF_TILE exact pin plan: [llength $ot_miss] ports left unplaced ([lrange $ot_miss 0 4])\" }\n"
+            "puts \"REF_TILE exact pin plan re-applied after place_pins: $ot_n ports\"\n"
+            "orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb\n"
+            "write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl\n")
     job = gen_job(s, kd, commit, blocks)
     files["job.json"] = json.dumps(job, indent=1) + "\n"
     if write:
@@ -973,7 +1016,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
 # --------------------------------------------------------------------------------------------- export
 def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     """exact-shape abstract (write_abstract_lef, never -bloat_occupied_layers) + TT/FF/SS timing models from the routed
-    odb + spef at the sign-off SDC, the routed clock insertion (ck_insertion.py), then child_lint of the result."""
+    odb + spef at the VERDICT's constraint sequence (tools/tt_views/view_export.py), the routed clock insertion (ck_insertion.py), then child_lint of the result."""
     import subprocess
     fp = json.loads((ROOT / kit / "floorplan.json").read_text())
     top = fp["top"]
@@ -981,6 +1024,12 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    # EXPORT-SDC (2026-10-13): view_export replays the route's VERDICT constraint sequence (closure-loop run: routed
+    # 6_final.sdc, SPEF, post-SDCs, io_ref_routed.sdc last) and fails when its TT / FF slack differs from the verdict.
+    # Outside a loop run there is no verdict to replay: the same order from the kit (never signoff.sdc INSTEAD of the
+    # routed SDC: s81su SMT exported FF -19.69 against a +3.66 verdict that way).
+    for f in (ROOT / kit / "signoff.sdc", ROOT / "physical/common_flow/io_ref_routed.sdc"):
+        cmd += ["--post-sdc", str(f)]
     grant = fp.get("layer_contract", {}).get("m6_pin_grant")
     if grant:
         cmd += ["--pin-only-tech"]
