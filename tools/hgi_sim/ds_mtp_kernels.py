@@ -507,6 +507,20 @@ class Kernels:
                       [nm], [f"COL.{nm}"])
         return b.recs + ([] if into else [self.fence()]) + [self.end()]
 
+    def swap_b2(self, into, h_allocations, pre_allocation):
+        """Native B2 swap groups for the allocator's CURRENT record lifetime.
+
+        h_allocations maps cluster -> resolved LOCAL/MIRROR descriptor for
+        rows q+4*j. pre_allocation is PRE's resolved stack-zero descriptor.
+        The cmdproc must dispatch every group's records in one beat. This
+        explicit entry point keeps the legacy vehicle unchanged until its
+        caller supplies the native B2 allocator and local-slice engines.
+        """
+        from hgi_b2.mtp_swap import lower_h, lower_pre
+        legacy = self.swap(into)
+        h, pre = legacy[:2]
+        return [lower_h(h, h_allocations), lower_pre(pre, 0, pre_allocation), *legacy[2:]]
+
     def embed(self):
         b = self.Builder(None)
         for j in range(4):

@@ -3,10 +3,10 @@
 
 NARROWED SCOPE (owner 2026-10-12 19:00, supersedes the bulk re-route): a closed tile is selected only when it sits under
   (a) a die fine cut with util > --cut-thr (0.6) in the direction its M5 cap frees: ax 'x' cuts (horizontal wires,
-      M6) for every closed view above M5; ax 'y' cuts (vertical wires, M7) only for a view that uses M7.  Inputs: the
+      M6). Vertical cuts do not justify this reroute. Inputs: the
       cut JSON (--cuts, default the Qwen TP8 tp8b_cuts_v3.json; entries 'fine' + 'fine_tree') and the die placement
       next to it (--placement, default rom_tp8b.json: insts n/m/x/y/w/h).  A placed master under the window selects
-      itself and its hardened children (die-master cfg --macro-view children, ref_tile cluster kit 'children').
+      itself only. Children inside an M7 hardened cluster cannot free die tracks by rerouting to M5.
   (b) real die-GRT overflow over the tile footprint (--grt REPORT[:PLACEMENT], repeatable; OpenROAD congestion report
       'bbox = ( x0, y0 ) - ( x1, y1 ) on Layer Mn' or JSON {"boxes":[{"rect":[x0,y0,x1,y1]}]}; PLACEMENT = an insts
       JSON as above or a hier contract; HBM / DeepSeek tiles qualify only this way).
@@ -25,8 +25,8 @@ NARROWED SCOPE (owner 2026-10-12 19:00, supersedes the bulk re-route): a closed 
 
 Selection (one pass, deterministic):
   used cells   = every cell placed by a die contract (results/arch/hier_contract_1011/{qwen_rom,qwen_kv,s81,r25gq}.json
-                 and any newer *.json contract with "slots"), plus hard children of placed clusters (contract slots whose
-                 parent is a cluster slot), plus Qwen die-master cfg --macro-view children (blocked_pin_sweep.parent_index)
+                 and any newer *.json contract with "slots"); the inventory also includes cluster children, but
+                 those children have no die-window evidence and cannot qualify for this reroute.
   excluded     superseded/withdrawn (claude-takeover superseded_elements.json); HBM central-VM fallback track (hfd_vm_*,
                vm_cp_* / make_vm_cp.py specs, ot_hgi_vm_unit); B2-changed HBM units (results/arch/hbm_b2_1012/SPEC.md
                section 6); Qwen TP8 PARAMETER CHANGE / REDESIGN / REMOVED elements (results/arch/qwen_tp8_1012/
@@ -258,7 +258,11 @@ def _insts(p: Path) -> list[dict]:
     if isinstance(d.get("insts"), list):
         return [i for i in d["insts"] if all(k in i for k in ("m", "x", "y", "w", "h"))]
     out = []
-    for s in d.get("slots") or []:
+    slots = d.get("slots") or []
+    die_names = {s.get("name") for s in slots if s.get("kind") == "die"}
+    for s in slots:
+        if s.get("parent") and s["parent"] not in die_names:
+            continue  # a hardened child is not placed directly at the die
         if s.get("kind") == "die" or not s.get("cell") or not s.get("origin"):
             continue
         out.append({"n": s["name"], "m": s["cell"], "x": float(s["origin"]["x"]), "y": float(s["origin"]["y"]),
@@ -275,7 +279,7 @@ def hot_cuts(cuts: Path, thr: float) -> list[dict]:
     seen, out = set(), []
     for c in (d.get("fine") or []) + (d.get("fine_tree") or []):
         k = (c["ax"], c["pos"], tuple(c["win"]))
-        if k in seen or float(c.get("util", 0)) <= thr:
+        if c["ax"] != "x" or k in seen or float(c.get("util", 0)) <= thr:
             continue
         seen.add(k)
         out.append(c)
@@ -292,39 +296,12 @@ def grt_boxes(report: Path) -> list[tuple]:
         r"bbox\s*=\s*\(\s*([\d.]+),\s*([\d.]+)\s*\)\s*-\s*\(\s*([\d.]+),\s*([\d.]+)\s*\)\s*on Layer\s*(\S*)", t)]
 
 
-def cluster_children(master: str) -> set:
-    """hardened children of a placed master: die-master cfg --macro-view children (cfg/<master>*.env) and the newest
-    ref_tile cluster kit of that master (spec 'children' views, read at the job's source commit)"""
-    kids = set()
-    for f in glob.glob(str(ROOT / f"physical/qwen_die_masters/cfg/{master}*.env")):
-        kids.update(re.findall(r"--macro-view\s+'?([A-Za-z0-9_]+)=", Path(f).read_text(errors="replace")))
-    best = None
-    for f in JOBS.glob(f"{master}_*.json"):
-        j = jload(f) or {}
-        sp = j.get("spec") or {}
-        kit = kit_of(sp) if sp.get("ref_tile") else None
-        if kit and (best is None or (j.get("updated") or "") > best[0]):
-            best = (j.get("updated") or "", kit, (sp.get("source") or {}).get("commit"))
-    if best and best[2]:
-        k = jload(ROOT / f"physical/ref_tile/{best[1]}.json")
-        if k is None:
-            r = subprocess.run(["git", "-C", str(ROOT), "show", f"{best[2]}:physical/ref_tile/{best[1]}.json"],
-                               capture_output=True, text=True)
-            k = json.loads(r.stdout) if r.returncode == 0 else {}
-        for c in (k or {}).get("children") or []:
-            kids.add(Path(c.get("view", "")).name)
-    kids.discard("")
-    return kids
-
-
 def window_scope(cuts: Path, placement: Path | None, grts: list[str], thr: float) -> dict:
-    """cell -> [why]: placed masters (and their hardened children) under a hot die window or die-GRT overflow"""
+    """cell -> [why]: direct die masters under a horizontal hot window or die-GRT overflow"""
     scope: dict[str, list] = {}
 
     def add(master: str, why: dict):
         scope.setdefault(master, []).append(why)
-        for k in cluster_children(master):
-            scope.setdefault(k, []).append({**why, "via": master})
 
     if cuts and cuts.exists():
         ins = _insts(placement or cuts.with_name("rom_tp8b.json"))
@@ -987,14 +964,17 @@ def run(a, rows, closed, st):
     for p in ok:
         st["tiles"][p["cell"]].update(state="committed", commit=c1)
     save_state(st)
-    submit(st)
+    submit(st, {r["cell"]: r.get("windows", []) for r in rows if r["state"] == "eligible"})
 
 
-def submit(st: dict):
+def submit(st: dict, scope: dict):
     """drop every committed (gated, pushed) kit's job spec into the loop intake once; re-checks live jobs first"""
     _, live, pending = records()
     for cell, t in sorted(st["tiles"].items()):
         if t.get("state") != "committed":
+            continue
+        if cell not in scope:
+            log(t.get("owner"), f"{cell}: M5 submit withheld: no current die-window evidence; closed view stands")
             continue
         jp = ROOT / t["kit"] / "job.json"
         job = json.loads(jp.read_text())
@@ -1162,7 +1142,8 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     st = load_state()
     if a.cmd == "submit":
-        submit(st)
+        scope = window_scope(a.cuts, a.placement, a.grt, a.cut_thr)
+        submit(st, {r["cell"]: r.get("windows", []) for r in plan(scope)["rows"] if r["state"] == "eligible"})
         return 0
     if a.cmd == "compare":
         compare(st)

@@ -1,0 +1,96 @@
+{
+  "name": "ot_hgi_dma_back",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/routes/hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -3.2724456477950525e-10 min -1.4348772170436064e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/routes/hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/record/views/ot_hgi_dma_back:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 4.4667269882836536e-11 min -1.2939575799730818e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/routes/hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/record/views/ot_hgi_dma_back:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -3.467010012414562e-11 min -1.343727906721881e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/routes/hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/record/views/ot_hgi_dma_back:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc",
+    "sha256": "62c0fcafe94e02624e355c2ea3efdd081b8e83f19bb1b1f9cade65942f02a573",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "vt_flavours_added": [
+    "L"
+  ],
+  "files": {
+    "ot_hgi_dma_back.lef": "6ac847c0d1cd6ee2fed6bdb00d84dada80cd8fa2168aded12897a77ecddfcc44",
+    "ot_hgi_dma_back_ff.lib": "2d56b4f29a606aa2a1402e7aebb979f53c7d314f27e2defc4c94557e95cf6f75",
+    "ot_hgi_dma_back_ss.lib": "69c92e3d7db4fab9db074b19ff53b994937e47b39b09af1307fff580b06a86c1",
+    "ot_hgi_dma_back_tt.lib": "4a1bfa2cd010ed8c2b6436caeb9ac4b1eb082df438275543d7c0692684d1f3c5"
+  },
+  "ok": true
+}

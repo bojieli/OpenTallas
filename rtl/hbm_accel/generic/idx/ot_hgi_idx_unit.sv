@@ -41,7 +41,13 @@ module ot_hgi_idx_unit #(
     parameter integer IKS = 0,
     // hbm-relaunch-1011 (opt-in, default 0 = unchanged): IKS_EVEN = 1 streams whole scorer beats (B_q rounded up to
     // an even block count; ot_hgi_idx_iks_issue EVEN) so an odd-block quarter retires
-    parameter integer IKS_EVEN = 0
+    parameter integer IKS_EVEN = 0,
+    // el1011-hbm-idxs (opt-in, default 0 = the packet-client adapter above, unchanged): IXW = 1 runs IDX.INDEX on
+    // ot_hgi_idx_index_w, whose VM traffic rides the die's 32-lane VM wide read / write groups (the wr* / ww* ports,
+    // ot_hgi_vm_lanestation client format; tie the grants high for a dedicated group).  IXW = 0 ties them off.
+    parameter integer IXW = 0,
+    parameter integer IXLQ = 8,        // wide lane credit capacity; B2 RRS3 requires 10
+    parameter integer IXNL = 8         // IXW lanes (HBM B2 slice-local lane group)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -60,7 +66,18 @@ module ot_hgi_idx_unit #(
     output wire          sel_coc,
     input  wire [1:0]    sel_ev,
     // index-key stream (IKS = 1): the four stacks' svc e beats {payload 127, valid} (ot_hgi_idx_iks_issue); 0 otherwise
-    output wire [511:0]  iks_e
+    output wire [511:0]  iks_e,
+    // VM wide groups (IXW = 1)
+    output wire [IXNL*16-1:0]  wrq,
+    input  wire [IXNL-1:0]     wrq_cr,
+    input  wire [IXNL*257-1:0] wrr,
+    output wire              rg_req,
+    input  wire              rg_gnt,
+    output wire [IXNL*280-1:0] wwq,
+    input  wire [IXNL-1:0]     wwq_cr,
+    input  wire [IXNL-1:0]     wwq_done,
+    output wire              wg_req,
+    input  wire              wg_gnt
 );
     reg [337:0] vmq_t;
     wire [337:0] vmq_x, vmq_m, vmq_w;
@@ -153,12 +170,24 @@ module ot_hgi_idx_unit #(
                    dB[1:0] == 2'd1 && dB[4:2] == 3'd0 && dO[1:0] == 2'd1 && dO[4:2] == 3'd5 &&
                    (!has_r || (dR[1:0] == 2'd1 && dR[4:2] == 3'd0)) && (!x_keep || (opnd[2] && dC[1:0] == 2'd1 && dC[67:48] != 20'd0 && dC[67:48] <= 20'd2048)) &&
                    (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && x_iks_ok && x_n_ok;
+    generate if (IXW != 0) begin : g_ixw
+    assign vmq_x = 338'd0;
+    ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0), .NL(IXNL), .LQ(IXLQ)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
+        .keep_en_i(x_keep), .n_i(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank_i(x_rank),
+        .pos_i(NGLOB != 0 ? x_newest : rpos), .a_base_i(a_base[17:0]), .b_base_i(dB_b), .c_base_i(dC_b), .o_base_i(o_base[17:0]), .r_base_i(r_base[17:0]),
+        .d_base_i(dD_b), .d_stride_i(dD_s), .c_stride_i(dC[105:88]), .c_n_i(dC[59:48]), .has_r_i(has_r), .done(x_done), .fault(x_fault),
+        .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .rg_req(rg_req), .rg_gnt(rg_gnt), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done),
+        .wg_req(wg_req), .wg_gnt(wg_gnt),
+        .fs(sel_fs), .qb(sel_qb), .qbr(sel_qbr), .kin(sel_kin), .to(sel_to), .toc(sel_toc), .co(sel_co), .coc(sel_coc), .ev(sel_ev));
+    end else begin : g_ixp
+    assign wrq = '0; assign rg_req = 1'b0; assign wwq = '0; assign wg_req = 1'b0;
     ot_hgi_idx_index #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go(NGLOB != 0 ? x_go2 : x_go), .k(k), .cand_en(x_cand),
         .keep_en(x_keep), .n(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank(x_rank),
         .pos(NGLOB != 0 ? x_newest : rpos), .a_base(a_base[17:0]), .b_base(dB_b), .c_base(dC_b), .o_base(o_base[17:0]), .r_base(r_base[17:0]),
         .d_base(dD_b), .d_stride(dD_s), .c_stride(dC[105:88]), .c_n(dC[59:48]), .has_r(has_r), .done(x_done), .fault(x_fault),
         .vmq(vmq_x), .vmr(x_active ? vmr : 274'd0), .fs(sel_fs), .qb(sel_qb), .qbr(sel_qbr), .kin(sel_kin), .to(sel_to),
         .toc(sel_toc), .co(sel_co), .coc(sel_coc), .ev(sel_ev));
+    end endgenerate
     // ---------------------------------------------------------------- IDX.MERGE (op 1, proposed G20)
     reg m_go; wire m_done, m_fault;
     wire [19:0] mb_n = dB[67:48]; wire [19:0] mb_m = dB[87:68];

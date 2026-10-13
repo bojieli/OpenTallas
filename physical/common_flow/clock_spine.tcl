@@ -211,6 +211,51 @@ proc ot_sp_emit {n innet px py} {
   }
 }
 
+# Opt-in safe balancing keeps a measured best clock topology.  Rollback reconnects
+# each surviving leaf to its old input net, then deletes ONLY subsequently added
+# pad instances/nets.  No ODB reload: all surviving Tcl object handles stay valid.
+proc ot_sp_checkpoint {} {
+  set inputs [dict create]
+  foreach n [dict keys $::ot_sp_members] {
+    set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    dict set inputs $n [[$b findITerm $::ot_sp_in] getNet]
+  }
+  return [dict create inputs $inputs insts $::ot_sp_insts nbuf $::ot_sp_nbuf npad $::ot_sp_npad used $::ot_sp_used]
+}
+proc ot_sp_restore {saved} {
+  dict for {n net} [dict get $saved inputs] {
+    set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    set p [$b findITerm $::ot_sp_in]
+    $p disconnect; $p connect $net
+  }
+  set added [lrange $::ot_sp_insts [llength [dict get $saved insts]] end]
+  set nets {}
+  foreach b $added { lappend nets [[$b findITerm $::ot_sp_out] getNet] }
+  # Destroy instances first: no net is destroyed while a pad pin still references it.
+  foreach b [lreverse $added] { odb::dbInst_destroy $b }
+  foreach net [lreverse $nets] { odb::dbNet_destroy $net }
+  set ::ot_sp_insts [dict get $saved insts]
+  set ::ot_sp_nbuf [dict get $saved nbuf]
+  set ::ot_sp_npad [dict get $saved npad]
+  set ::ot_sp_used [dict get $saved used]
+  puts "OT_SPINE restored best checkpoint; removed [llength $added] pad cells"
+}
+proc ot_sp_keep_best {a} {
+  set vals [dict values $a]
+  set spread [expr {[tcl::mathfunc::max {*}$vals] - [tcl::mathfunc::min {*}$vals]}]
+  if {![info exists ::ot_sp_best_spread] || $spread < $::ot_sp_best_spread} {
+    set ::ot_sp_best_spread $spread
+    set ::ot_sp_best_state [ot_sp_checkpoint]
+    return 1
+  }
+  if {$spread > $::ot_sp_best_spread + 0.001} {
+    puts "OT_SPINE overshoot $spread ps vs best $::ot_sp_best_spread ps; restoring measured best"
+    ot_sp_restore $::ot_sp_best_state
+    return 0
+  }
+  return 1
+}
+
 # insert `count` pad buffers in front of leaf n's buffer (between its driver net and its A pin)
 proc ot_sp_pad {n count} {
   set lb [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
@@ -410,6 +455,8 @@ proc ot_clock_spine {} {
   set fstage [ot_sp_env OT_SPINE_FINE_PS 14]
   set tol [ot_sp_env OT_SPINE_TOL_PS 25]
   set prev ""; set padded [dict create]; set mode coarse
+  set safe [expr {[ot_sp_env OT_SPINE_SAFE_BALANCE 0] eq "1"}]
+  unset -nocomplain ::ot_sp_best_spread ::ot_sp_best_state
   for {set it 0} {$it <= $iters} {incr it} {
     set a [ot_sp_leaf_arrivals]
     set vals [dict values $a]
@@ -422,12 +469,23 @@ proc ot_clock_spine {} {
       if {$mode eq "coarse"} { set stage $m } else { set fstage $m }
     }
     puts [format "OT_SPINE iter %d (%s) leaves %d sinks %d cells %d leaf arrival %.1f..%.1f ps (spread %.1f) pad %.1f / %.1f ps" $it $mode $nl $ns $::ot_sp_nbuf $mn $mx [expr {$mx - $mn}] $stage $fstage]
+    if {$safe && ![ot_sp_keep_best $a]} {
+      set restored [ot_sp_leaf_arrivals]
+      set rv [dict values $restored]
+      set rsp [expr {[tcl::mathfunc::max {*}$rv] - [tcl::mathfunc::min {*}$rv]}]
+      puts "OT_SPINE restored measured spread $rsp ps (best $::ot_sp_best_spread)"
+      if {$rsp > $::ot_sp_best_spread + 1.0} { error "OT_SPINE best-checkpoint restore changed measured spread" }
+      break
+    }
     if {$it == $iters || $mx - $mn <= $tol} break
     if {$mode eq "coarse" && $mx - $mn < 1.6 * $stage} { set mode fine; set ::ot_sp_pm $::ot_sp_pmf }
     set st [expr {$mode eq "coarse" ? $stage : $fstage}]
     set prev $a; set padded [dict create]
     dict for {n v} $a {
       set c [expr {int(floor(($mx - $v - 0.5 * $tol) / $st))}]
+      # Small measured steps prevent a noisy fine-delay estimate from inserting
+      # a long chain in one round.  Record the ACTUAL count for the next estimate.
+      if {$safe} { set c [expr {min($c, $mode eq "fine" ? 1 : 3)}] }
       if {$c > 0} { ot_sp_pad $n $c; dict set padded $n $c }
     }
     if {[dict size $padded] == 0} break
