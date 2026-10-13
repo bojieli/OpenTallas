@@ -20,6 +20,11 @@ module dsfd_sp_hc #(
     // 0: existing chain; 1: expose upper seam to die stations + dsfd_sp_hc_t;
     // 2: compose upper/stations/tail for transaction-level exactness (never harden this wrapper).
     parameter integer TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0,
+    // XP = 1: POST express (hier/ot_s81_hc_xp.sv): job accept / dispatch / completion at the corridor midpoint, 24-region
+    // conditional dispatch.  Composition for transaction-level exactness and throughput (never harden this wrapper):
+    // head rows + CORR_ST corridor stations + tail rows a column, as TAIL_SPLIT = 2.  XMUT: express negative controls.
+    parameter integer XP = 0, XMUT = 0, CORR_ST = 7, XNR = 8,
+    parameter integer G_SLOT_H = 74088, G_COL_P = 61992, G_CORR = 151200, G_ROOT_H = 84000, G_REACH = 50000,
     parameter integer RLY = HALF ? 2 : 1                 // sub-tile relays a hop
 ) (
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
@@ -87,6 +92,8 @@ module dsfd_sp_hc #(
 `ifndef SYNTHESIS
     initial if (TAIL_SPLIT && (!HIER || !HALF || NCOL != 3 || HEAD_ROWS < 1))
         $fatal(1,"HC tail split requires hierarchical half-octets, three columns and positive head rows");
+    initial if (XP && (!HIER || !HALF || !CSPLIT || NCOL != 3 || HEAD_ROWS < 1 || TAIL_SPLIT))
+        $fatal(1,"HC POST express requires hierarchical half-octets, split roots, three columns, TAIL_SPLIT 0");
 `endif
     wire e_v, e_r;
     wire [83:0] e_d;
@@ -111,10 +118,19 @@ module dsfd_sp_hc #(
     end else begin : g_ny1
         assign y_s1 = 1'b0;
     end
+    // POST express seams (XP): the die command / done pins and the y handshake leave the centre pin tile
+    wire        cp_done_v, cp_y_rdy, xm_done_v, xy_rdy;
+    wire [7:0]  cp_done_tag, xm_done_tag;
+    wire        x_ev, x_dv, x_flt, x_on;
+    wire [83:0] x_ed;
+    wire [7:0]  x_dt;
+    assign c_done_v = XP ? xm_done_v : cp_done_v;
+    assign c_done_tag = XP ? xm_done_tag : cp_done_tag;
+    assign y_rdy = XP ? xy_rdy : cp_y_rdy;
     ot_s81_hc_cpin #(.NG(NG), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_cp (
-        .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
-        .c_done_tag(c_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d), .flt(flt),
-        .online(online), .fcode(fcode), .y_v(y_v), .y_rdy(y_rdy), .y_s(y_s1), .yacc_w(yacc_w), .yacc_e(yacc_e),
+        .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(XP ? 1'b0 : c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(cp_done_v),
+        .c_done_tag(cp_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d), .flt(flt),
+        .online(online), .fcode(fcode), .y_v(XP ? 1'b0 : y_v), .y_rdy(cp_y_rdy), .y_s(y_s1), .yacc_w(yacc_w), .yacc_e(yacc_e),
         .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v), .n_done_tag(n_done_tag), .n_inp(n_inp),
         .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d), .n_flt(n_flt), .n_online(n_online),
         .n_fcode(n_fcode), .n_yacc(n_yacc), .n_y(n_y), .n_ypop(n_ypop));
@@ -134,7 +150,8 @@ module dsfd_sp_hc #(
     wire [NE2*32-1:0] e_ex;
     ot_s81_hc_comb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
                      .MUT(MUT), .AMUT(AMUT), .HALF(HALF), .RLY(RLY), .RF(CSPLIT ? 5 : 1),
-                     .DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN)) u_cb (
+                     .DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN), .XP(XP)) u_cb (
+        .x_ev(x_ev), .x_ed(x_ed), .x_dv(x_dv), .x_dt(x_dt), .x_flt(x_flt), .x_on(x_on),
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
         .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
         .n_flt(n_flt), .n_online(n_online), .n_fcode(n_fcode), .n_yacc(n_yacc), .n_y(n_y), .n_ypop(n_ypop),
@@ -192,7 +209,48 @@ module dsfd_sp_hc #(
             .ch_fd(ch_fd[CC * FDW +: FDW]), .ch_rv(ch_rv[CC * RVW +: RVW]), .ch_rd(ch_rd[CC * RDW +: RDW]));
     end
     end
-    if (TAIL_SPLIT == 0) begin : g_unsplit
+    if (XP) begin : g_xp
+        assign {t_tf2,t_tf1,t_tf0} = 0;
+        // stage counts of the midpoint <-> sequencer / slab-face runs (v13 geometry, as ot_s81_hc_xcol)
+        localparam integer NT_ = (HEAD_ROWS * G_SLOT_H + G_CORR / 2 + G_ROOT_H + G_REACH - 1) / G_REACH;
+        localparam integer NRX = D / NG, YQ = (2 * NRX <= 64) ? 2 * NRX : 64;
+        reg [1:0] rsr;
+        always @(posedge sk) rsr <= {rsr[0], srs};
+        wire rs_n = rsr[1];
+        wire              up_v, dn_v, m_flt, m_on, go_v, cr_v, cr_q, y_ov, t_flt, t_on;
+        wire [83:0]       up_d;
+        wire [7:0]        dn_t;
+        wire [18:0]       go_d;
+        wire [NCOL*XNR-1:0]    ak_v, ak_f, ak_p;
+        wire [NCOL*XNR*16-1:0] ak_d;
+        wire [NG*32-1:0]  y_o;
+        ot_s81_hc_xmid #(.NG(NG), .D(D), .NA(NCOL * XNR), .MUT(MUT), .AMUT(AMUT)) u_xm (
+            .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(xm_done_v),
+            .c_done_tag(xm_done_tag), .inp(inp), .up_v(up_v), .up_d(up_d), .dn_v(dn_v), .dn_t(dn_t),
+            .st_flt(m_flt), .st_on(m_on), .go_v(go_v), .go_d(go_d), .ak_v(ak_v), .ak_f(ak_f), .ak_p(ak_p), .ak_d(ak_d),
+            .cr_v(cr_v));
+        ot_s81_hc_xlink #(.W(84), .N(NT_)) u_lup (.clk(sk), .rst_n(rs_n), .v_i(up_v), .d_i(up_d), .v_o(x_ev), .d_o(x_ed));
+        ot_s81_hc_xlink #(.W(8), .N(NT_)) u_ldn (.clk(sk), .rst_n(rs_n), .v_i(x_dv), .d_i(x_dt), .v_o(dn_v), .d_o(dn_t));
+        ot_hdc_delay #(.W(3), .D(NT_), .RESET(1)) u_lst (.clk(sk), .rst_n(rs_n), .d({m_flt, m_on, cr_v}), .q({t_flt, t_on, cr_q}));
+        ot_s81_hc_xyacc #(.NG(NG), .YQ(YQ)) u_xy (.sk(sk), .srs(srs), .y_v(y_v), .y_rdy(xy_rdy), .y_d(y_d), .cr_v(cr_q),
+            .flt_i(t_flt), .on_i(t_on), .o_v(y_ov), .o_d(y_o), .flt_o(x_flt), .on_o(x_on));
+        for (c = 0; c < NCOL; c = c + 1) begin : g_c
+            localparam integer LCX = (c == 0) ? L0 : (c == 1) ? L1 : L2;
+            localparam integer BCX = (c == 0) ? B0 : (c == 1) ? B1 : B2;
+            ot_s81_hc_xcol #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
+                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE),
+                .C(c), .HEAD_ROWS(HEAD_ROWS), .CORR_ST(CORR_ST), .NRMAX(XNR), .XMUT(XMUT), .G_SLOT_H(G_SLOT_H),
+                .G_COL_P(G_COL_P), .G_CORR(G_CORR), .G_ROOT_H(G_ROOT_H), .G_REACH(G_REACH)) u_x (
+                .sk(sk), .srs(srs), .rst_in(ch_rst[c]), .fv_in(ch_fv[c * FVW +: FVW]), .fd_in(ch_fd[c * FDW +: FDW]),
+                .rv_out(ch_rv[c * RVW +: RVW]), .rd_out(ch_rd[c * RDW +: RDW]), .go_v(go_v), .go_d(go_d),
+                .y_v(y_ov), .y_d(y_o[BCX * GS * 32 +: LCX * GS * 32]),
+                .ak_v(ak_v[c * XNR +: XNR]), .ak_f(ak_f[c * XNR +: XNR]), .ak_p(ak_p[c * XNR +: XNR]),
+                .ak_d(ak_d[c * XNR * 16 +: XNR * 16]));
+        end
+`ifndef SYNTHESIS
+        initial if ($test$plusargs("HC_XGEOM")) $display("HCX mid sequencer_stages=%0d credit_stages=%0d yq=%0d", NT_, NT_, YQ);
+`endif
+    end else if (TAIL_SPLIT == 0) begin : g_unsplit
     assign {t_tf2,t_tf1,t_tf0} = 0;
     for (c = 0; c < NCOL; c = c + 1) begin : g_c
         localparam integer LC = ((c == 0) ? L0 : (c == 1) ? L1 : L2) * (HALF ? 2 : 1);   // sub-tiles of the chain
@@ -270,9 +328,17 @@ module dsfd_sp_hc #(
                 .rv_out(ch_rv[c*RVW+:RVW]),.rd_out(ch_rd[c*RDW+:RDW]));
         end
     end
+    if (!XP) begin : g_nxp
+        assign {x_ev, x_ed, x_flt, x_on} = 0;
+        assign {xm_done_v, xm_done_tag, xy_rdy} = 0;
+    end
 `ifndef SYNTHESIS
     // bench observability (tb job start cycles)
-    assign e_v = u_cb.e_v; assign e_r = u_cb.e_r; assign e_d = u_cb.e_d;
+    if (XP) begin : g_xprobe
+        assign e_v = g_xp.u_xm.e_v; assign e_r = g_xp.u_xm.e_r; assign e_d = g_xp.u_xm.e_d;
+    end else begin : g_probe
+        assign e_v = u_cb.e_v; assign e_r = u_cb.e_r; assign e_d = u_cb.e_d;
+    end
 `endif
     end else begin : g_flat
     assign {t_tf2,t_tf1,t_tf0}=0;

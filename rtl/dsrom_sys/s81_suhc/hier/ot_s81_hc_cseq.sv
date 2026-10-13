@@ -13,8 +13,17 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cseq #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW
+    parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW,
+    // XP = 1 (POST express, ot_s81_hc_xp.sv): the engine adapter and the POST sequencing live in the midpoint station
+    // ot_s81_hc_xmid; the other kinds arrive as slab-clock pulses (x_ev / x_ed), their done returns as x_dv / x_dt
+    // (after the DW write guard), and HLOAD / COEF / GAIN beats carry their generation + a last flag in the PB bits.
+    parameter integer XP = 0
 ) (
+    input  wire                 x_ev,
+    input  wire [83:0]          x_ed,
+    output wire                 x_dv,
+    output wire [7:0]           x_dt,
+    input  wire                 x_flt, x_on,
     input  wire                 cck, crs, sk, srs,
     input  wire                 n_cmd_v,
     input  wire [83:0]          n_cmd_d,
@@ -87,14 +96,17 @@ module ot_s81_hc_cseq #(
     wire [83:0] e_d;
     reg         d_v;
     reg  [7:0]  d_t;
+    wire [8:0] dd;
+    ot_hdc_delay #(.W(9), .D(DW), .RESET(1)) u_dd (.clk(sk), .rst_n(rs_n), .d({d_v, d_t}), .q(dd));
+    assign x_dv = (XP != 0) && dd[8];
+    assign x_dt = dd[7:0];
+    generate if (XP == 0) begin : g_ad
     reg  inp_q;
     always @(posedge sk or negedge rs_n) if (!rs_n) inp_q <= 1'b0; else inp_q <= n_inp;
     reg        cv_q;
     reg [83:0] cd_q;
     always @(posedge cck or negedge crs_n) if (!crs_n) cv_q <= 1'b0; else cv_q <= n_cmd_v;
     always @(posedge cck) cd_q <= n_cmd_d;
-    wire [8:0] dd;
-    ot_hdc_delay #(.W(9), .D(DW), .RESET(1)) u_dd (.clk(sk), .rst_n(rs_n), .d({d_v, d_t}), .q(dd));
     wire       cdv;
     wire [7:0] cdt;
     ot_s81_engine_adapter #(.QD(8), .MUT(AMUT)) u_ad (
@@ -108,6 +120,16 @@ module ot_s81_hc_cseq #(
     always @(posedge cck) dt_q <= cdt;
     assign n_done_v = dv_q;
     assign n_done_tag = dt_q;
+    end else begin : g_xp
+    reg        xv, xf, xo;
+    reg [83:0] xd;
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) begin xv <= 1'b0; xf <= 1'b0; xo <= 1'b0; end
+        else begin xv <= x_ev; xf <= x_flt; xo <= x_on; end
+    always @(posedge sk) xd <= x_ed;
+    assign e_v = xv; assign e_d = xd; assign a_flt = xf; assign online = xo;
+    assign n_done_v = 1'b0; assign n_done_tag = 8'd0;
+    end endgenerate
 
     // ---------------------------------------------------------------- seam captures
     reg  [S_RD-1:0]     rs_v;
@@ -162,6 +184,7 @@ module ot_s81_hc_cseq #(
     reg  [FVW-1:0]     fv;
     reg  [FSW-1:0]     fd;
     reg  [3:0]         fault_code;
+    reg  [7:0]         xgen;                 // XP: generation of the resident h / coefficient / gain state
     assign e_r = !run && !fault;
     wire take = e_v && e_r;
     wire [23:0] c_arg = e_d[30:7];
@@ -173,7 +196,9 @@ module ot_s81_hc_cseq #(
             run <= 1'b0; kind <= 0; jslot <= 0; jtag <= 0; base <= 0; gsel <= 0; f_q <= 0; f_y <= 0; st0 <= 0;
             d_v <= 1'b0; d_t <= 0; fault <= 1'b0; fault_code <= 0;
             ci <= 0; cr <= 0; post_ob <= 0; rq_v <= 0; fv <= 0; ngo <= 1'b0; j_v <= 1'b0; j_end <= 1'b0; j_civ <= 1'b0;
+            xgen <= 0;
         end else begin
+            if (XP != 0 && e_v && !e_r) begin fault <= 1'b1; if (!fault) fault_code <= 4'd6; end
             d_v <= 1'b0; rq_v <= 0; fv <= 0; ngo <= 1'b0; j_v <= 1'b0; j_end <= 1'b0;
             j_civ <= (ci == NV + 1);
             if (tail_f) begin fault <= 1'b1; if (!fault) fault_code <= 4'd1; end
@@ -185,9 +210,11 @@ module ot_s81_hc_cseq #(
                 run <= 1'b1; kind <= c_arg[22:20]; jslot <= e_d[83]; jtag <= {e_d[83], e_d[6:0]};
                 base <= c_arg[13:0]; gsel <= c_arg[19:18]; f_q <= c_arg[14]; f_y <= c_arg[15]; st0 <= 1'b0;
                 ci <= 0; cr <= 0; post_ob <= 0; j_v <= 1'b1;
-                if (c_arg[23] || c_arg[22:20] > 3'd5 || (c_arg[22:20] == K_NORM && !c_arg[14] && !c_arg[15])) begin
+                if (c_arg[23] || c_arg[22:20] > 3'd5 || (c_arg[22:20] == K_NORM && !c_arg[14] && !c_arg[15]) ||
+                    (XP != 0 && c_arg[22:20] == K_POST)) begin
                     fault <= 1'b1; fault_code <= 4'd3;
                 end
+                if (c_arg[22:20] == K_HLOAD || c_arg[22:20] == K_COEF || c_arg[22:20] == K_GAIN) xgen <= xgen + 8'd1;
             end
             // HSTORE / NORM: the writer's count (ot_s81_hc_crx) ends the job
             if (wd_q && run && (kind == K_HSTORE || kind == K_NORM) && !fault) begin
@@ -215,6 +242,10 @@ module ot_s81_hc_cseq #(
                                 cc = cc + 1;
                             end
                         cr <= cc;
+                        if (XP != 0 && rs_v != 0) begin
+                            fd[O_PB + 4 +: 8] <= xgen;
+                            fd[O_PB + 12] <= (cc == ((kind == K_HLOAD) ? HROWS : (kind == K_COEF) ? 2 : GROWS));
+                        end
                         if (cc == ((kind == K_HLOAD) ? HROWS : (kind == K_COEF) ? 2 : GROWS)) begin
                             run <= 1'b0; d_v <= 1'b1; d_t <= (MUT == 5) ? (jtag ^ 8'h01) : jtag; j_end <= 1'b1;
                         end

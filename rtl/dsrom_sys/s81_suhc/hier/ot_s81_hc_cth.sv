@@ -41,7 +41,9 @@ module ot_s81_hc_cth #(
     output wire [S_RT+3:0]            rv_out,
     output wire [RDW-1:0]             rd_out,
     output wire [127:0]               cy_out,
-    input  wire [127:0]               cy_in
+    input  wire [127:0]               cy_in,
+    // POST express taps (ot_s81_hc_xp.sv): the 8 lane-pair tiles' registered output strobes / fault flags, wires only
+    output wire [7:0]                 x_hov, x_hnz, x_pflt
 );
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32;
     localparam integer FDD = (S_RD * 512 > YW) ? S_RD * 512 : YW;
@@ -196,6 +198,7 @@ module ot_s81_hc_cth #(
             .hov(hov[m]), .pwb(pwb[m]), .phs(phs[m]), .pob(pob[16 * m +: 16]), .hpo(hpo[32 * m +: 32]),
             .hov_d(hov_d[m]), .hnz_d(hnz_d[m]), .pflt_d(pflt_d[m]));
     end endgenerate
+    assign x_hov = hov_d; assign x_hnz = hnz_d; assign x_pflt = pflt_d;
     wire [4*32-1:0] cs = {acc[32 * 15 +: 32], acc[32 * 11 +: 32], acc[32 * 7 +: 32], acc[32 * 3 +: 32]};
     wire [S_RT+3:0] rvm;
     wire [RDW-1:0]  rdm;

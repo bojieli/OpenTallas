@@ -59,7 +59,7 @@ RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cseq.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crx.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cntree.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccr.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpad.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
-       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_xp.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/lib/ot_skid_buffer.sv",
        "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv", "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
@@ -220,6 +220,76 @@ class Run:
             for q, row in enumerate(self.h_rows(h[c])):
                 self.exp[S_BASE + c * HROWS + q] = row
 
+    def build_x(self, chains, h2, y2):
+        """POST express epoch program (hier 4): the 20-job program with the POSTs issued straight behind the jobs whose
+        beats they depend on or share the bus with -- COEF (a decoy coefficient set, then the real one) -> POST,
+        GAIN -> POST, and a second stage entry HLOAD (fresh h) -> POST -> HSTORE."""
+        ng = self.ng
+        H2_BASE, S2_BASE, CBAD = 8192, 9216, C_BASE + 32
+        for c, ch in enumerate(chains):
+            for b, blk in enumerate(("attn", "ffn")):
+                w = u32(ch[blk][1])
+                for r in range(GROWS):
+                    self.vm[G_BASE + (2 * c + b) * GROWS + r] = pack(w[16 * r:16 * r + 16], 32)
+                pre, _w, eps, comb, post, _y = ch[blk]
+                self.vm[C_BASE + 4 * c + 2 * b] = pack(u32(np.asarray(comb, F).reshape(-1)), 32)
+                self.vm[C_BASE + 4 * c + 2 * b + 1] = pack(list(u32(pre)) + list(u32(post)) + [int(u32([eps])[0])], 32)
+            for q, row in enumerate(self.h_rows(ch["h"])):
+                self.vm[H_BASE + c * HROWS + q] = row
+        pre0, _w0, eps0, comb0, post0, _y0 = chains[0]["attn"]
+        self.vm[CBAD] = pack(u32(np.asarray(comb0, F).reshape(-1) * F(-3.0) + F(0.5)), 32)
+        self.vm[CBAD + 1] = pack(list(u32(np.asarray(pre0, F) + F(1.0))) + list(u32(np.asarray(post0, F) * F(7.0) + F(1.0))) +
+                                 [int(u32([eps0])[0])], 32)
+        for q, row in enumerate(self.h_rows(h2)):
+            self.vm[H2_BASE + q] = row
+        for g in range(4):
+            self.job(K_GAIN, 0, G_BASE + g * GROWS, gsel=g)
+        for c in range(len(chains)):
+            self.job(K_HLOAD, c, H_BASE + c * HROWS)
+        h = [np.asarray(ch["h"], F).reshape(HC, D) for ch in chains]
+
+        def post(c, blk):
+            pre, w, eps, comb, post_, y = chains[c][blk]
+            self.job(K_POST, c, 0)
+            yv = u32(y)
+            for bt in range(D // ng):
+                self.y.append(pack(yv[bt * ng:(bt + 1) * ng], 32))
+            h[c] = g_post(h[c], np.asarray(y, F), np.asarray(comb, F).reshape(HC, HC), np.asarray(post_, F))
+
+        for b, blk in enumerate(("attn", "ffn")):
+            for c, ch in enumerate(chains):
+                pre, w, eps, comb, post_, y = ch[blk]
+                quant, yout = 1, (1 if blk == "ffn" else 0)
+                base = O_BASE + (2 * c + b) * 512
+                self.job(K_COEF, c, C_BASE + 4 * c + 2 * b)
+                self.job(K_NORM, c, base, gsel=2 * c + b, quant=quant, yout=yout)
+                self.norm_rows(base, g_norm(h[c], pre, w, eps), quant, yout)
+            if b == 0:
+                self.job(K_COEF, 0, CBAD)                       # decoy set into slot 0 ...
+                self.job(K_COEF, 0, C_BASE)                     # ... replaced by the real one, POST straight behind
+                post(0, blk)
+                self.job(K_GAIN, 0, G_BASE, gsel=0)             # gain beats on the bus the POST y beats use
+                post(1, blk)
+            else:
+                post(0, blk)
+                post(1, blk)
+        for c in range(len(chains)):
+            self.job(K_HSTORE, c, S_BASE + c * HROWS)
+            for q, row in enumerate(self.h_rows(h[c])):
+                self.exp[S_BASE + c * HROWS + q] = row
+        # second stage entry on slot 0: fresh h, POST straight behind its HLOAD
+        self.job(K_COEF, 0, C_BASE)
+        self.job(K_HLOAD, 0, H2_BASE)
+        self.job(K_POST, 0, 0)
+        yv = u32(y2)
+        for bt in range(D // ng):
+            self.y.append(pack(yv[bt * ng:(bt + 1) * ng], 32))
+        hx = g_post(np.asarray(h2, F).reshape(HC, D), np.asarray(y2, F), np.asarray(comb0, F).reshape(HC, HC),
+                    np.asarray(post0, F))
+        self.job(K_HSTORE, 0, S2_BASE)
+        for q, row in enumerate(self.h_rows(hx)):
+            self.exp[S2_BASE + q] = row
+
     def write(self, d: Path, meta):
         d.mkdir(parents=True, exist_ok=True)
         with open(d / "vm.mem", "w") as f:
@@ -315,16 +385,39 @@ def cmd_prep(a):
     return 0
 
 
+def cmd_prepx(a):
+    """Add the POST express epoch run (random operands, no case pickle) to an existing fixture."""
+    import hdc_golden_v41 as V
+    out = Path(a.out)
+    rng = np.random.default_rng(20261013)
+    chs = chains_stress(rng, [0, 3])
+    h2 = V.to_bf16((rng.standard_normal((HC, D)) * 2.0).astype(F))
+    y2 = V.to_bf16((rng.standard_normal(D) * 0.7).astype(F))
+    r = Run(a.ng)
+    r.build_x(chs, h2, y2)
+    meta = dict(run="express_epoch", ng=a.ng, jobs=len(r.prog), exp_rows=len(r.exp), y_beats=len(r.y), golden_checks=0,
+                chains=[dict(src=c["src"], attn_to_ffn_consistent=None) for c in chs], cases_sha256=None,
+                program="COEF decoy -> COEF -> POST, GAIN -> POST, HLOAD -> POST adjacency")
+    r.write(out / "runs" / "express_epoch", meta)
+    rj = out / "runs.json"
+    rows = json.loads(rj.read_text())["runs"] if rj.exists() else []
+    rows = [x for x in rows if x["run"] != "express_epoch"] + [meta]
+    rj.write_text(json.dumps(dict(runs=rows), indent=1) + "\n")
+    print("express_epoch", meta["jobs"], "jobs", meta["exp_rows"], "rows", meta["y_beats"], "y beats")
+    return 0
+
+
 # ---------------------------------------------------------------------------------------------------------------- run
 HCG = re.compile(r"HCG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) code=(\d+) cyc=(\d+) bad_tag=(\d+)")
 JOB = re.compile(r"HCJ op=(\d+) kind=(\d+) start=(\d+) done=(\d+)")
 
 
-def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0):
+def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0, xmut=0):
     # hier: 1 = root split + column chains of octet sub-tiles; 2 = the structural variant (half-octet sub-tiles, split
     # column roots)
-    tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + {0: "", 1: "_hier", 2: "_hier2", 3: "_hier3tail"}[hier]
-    tag += f"_cp{cnl_pin}_cs{chain_step}_ls{lane_specialize}"
+    # 4 = hier 2 + the POST express (accept point at the corridor midpoint, head / corridor / tail as hier 3)
+    tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + {0: "", 1: "_hier", 2: "_hier2", 3: "_hier3tail", 4: "_hier4xp"}[hier]
+    tag += f"_cp{cnl_pin}_cs{chain_step}_ls{lane_specialize}" + (f"_x{xmut}" if hier == 4 else "")
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_hc_master"
     if not exe.exists():
@@ -334,7 +427,7 @@ def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, la
             srcs = dpi_rest(obj) + srcs
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
-               f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GXP={int(hier == 4)}", f"-GXMUT={xmut}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *map(str, srcs), "-CFLAGS", "-O1"]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode != 0:
@@ -344,11 +437,13 @@ def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, la
 
 def cmd_run(a):
     out = Path(a.out)
-    exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier, a.cnl_pin, a.chain_step, a.lane_specialize)
+    exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier, a.cnl_pin, a.chain_step, a.lane_specialize, a.xmut)
     res = []
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
         d = out / "runs" / meta["run"]
-        r = subprocess.run([str(exe)], cwd=d, capture_output=True, text=True)
+        r = subprocess.run([str(exe)] + a.plusarg, cwd=d, capture_output=True, text=True)
+        if a.plusarg:
+            (out / f"log_{tag}_{meta['run']}.txt").write_text(r.stdout + r.stderr)
         m = HCG.search(r.stdout)
         jobs = [dict(op=int(x[0]), kind=int(x[1]), start=int(x[2]), done=int(x[3])) for x in JOB.findall(r.stdout)]
         if not m:
@@ -363,7 +458,7 @@ def cmd_run(a):
         print(meta["run"], "PASS" if row["ok"] else "FAIL", row["err_rows"], "/", row["rows"], "fault", row["fault"],
               "cyc", row["cycles"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
-               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, cnl_pin=a.cnl_pin, chain_step=a.chain_step, lane_specialize=a.lane_specialize, runs=res,
+               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, xmut=a.xmut, cnl_pin=a.cnl_pin, chain_step=a.chain_step, lane_specialize=a.lane_specialize, runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
                simulator=subprocess.run([VERILATOR, "--version"], capture_output=True, text=True).stdout.strip(),
                source_sha256={s: sha(ROOT / s) for s in FP[a.fp] + RTL + [TB]})
@@ -379,6 +474,9 @@ def main():
     p.add_argument("--cases", required=True)
     p.add_argument("--out", required=True)
     p.add_argument("--ng", type=int, default=256)
+    p = sp.add_parser("prepx")
+    p.add_argument("--out", required=True)
+    p.add_argument("--ng", type=int, default=256)
     p = sp.add_parser("run")
     p.add_argument("--out", required=True)
     p.add_argument("--ng", type=int, default=256)
@@ -390,8 +488,10 @@ def main():
     p.add_argument("--cnl-pin", type=int, default=0)
     p.add_argument("--chain-step", type=int, default=4)
     p.add_argument("--lane-specialize", type=int, default=0)
+    p.add_argument("--xmut", type=int, default=0, help="POST express negative control (hier 4)")
+    p.add_argument("--plusarg", action="append", default=[], help="simulator plusarg, e.g. +HC_XGEOM")
     a = ap.parse_args()
-    return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
+    return dict(prep=cmd_prep, prepx=cmd_prepx, run=cmd_run)[a.cmd](a)
 
 
 if __name__ == "__main__":

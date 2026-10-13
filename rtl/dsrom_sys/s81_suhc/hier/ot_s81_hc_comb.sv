@@ -22,8 +22,14 @@ module ot_s81_hc_comb #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer WIN = 2, WOUT = 2, MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16,
     parameter integer HALF = 0, RLY = 1,            // the chains' sub-tiles: half octets (2 a slot), RLY relays a hop
-    parameter integer DW = 3 + RW, RET_EXTRA = 0    // the write path to the pins (send + capture + relays + pin flop)
+    parameter integer DW = 3 + RW, RET_EXTRA = 0,   // the write path to the pins (send + capture + relays + pin flop)
+    parameter integer XP = 0                        // POST express: ot_s81_hc_cseq XP (pass-through pins x_*)
 ) (
+    input  wire                 x_ev,
+    input  wire [83:0]          x_ed,
+    output wire                 x_dv,
+    output wire [7:0]           x_dt,
+    input  wire                 x_flt, x_on,
     input  wire                 cck, crs, sk, srs,
     // centre pin tile seam
     input  wire                 n_cmd_v,
@@ -114,7 +120,7 @@ module ot_s81_hc_comb #(
 `ifndef SYNTHESIS
     initial if (NG != 256 || D != 5120 || NCOL != 3 || GS != 8 || S_RD != 2 || S_WR != 8 || S_RT != 4 || ML != 5 ||
                 AL != 4 || MUT != 0 || AMUT != 0 || RF != 1 || RT != 1 || RW != 2 || YD != 16 || HALF != 0 ||
-                RLY != 1 || DW != 3 + RW || RET_EXTRA != 0)
+                RLY != 1 || DW != 3 + RW || RET_EXTRA != 0 || XP != 0)
         $fatal(1, "ot_s81_hc_comb: OT_S81_HC_COMB_HARD needs the hardened configuration (the tiles' defaults)");
 `endif
 `else
@@ -149,7 +155,14 @@ module ot_s81_hc_comb #(
     wire [S_RT*10-1:0]  a_e;
     wire [S_RT*24-1:0]  a_iq;
 
-    ot_s81_hc_cseq `OT_HCC_P u_seq (
+`ifdef OT_S81_HC_COMB_HARD
+    assign x_dv = 1'b0; assign x_dt = 8'd0;
+    ot_s81_hc_cseq u_seq (
+`else
+    ot_s81_hc_cseq #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
+        .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW), .XP(XP)) u_seq (
+        .x_ev(x_ev), .x_ed(x_ed), .x_dv(x_dv), .x_dt(x_dt), .x_flt(x_flt), .x_on(x_on),
+`endif
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
         .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
         .n_flt(n_flt), .n_online(n_online), .n_fcode(n_fcode), .n_yacc(n_yacc), .n_ypop(n_ypop),
