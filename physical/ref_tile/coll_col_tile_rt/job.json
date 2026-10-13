@@ -1,14 +1,14 @@
 {
- "name": "coll_col_tile_rt-ct1-a5f98cb03",
+ "name": "coll_col_tile_rt-ct2-COMMIT",
  "block": "ot_coll_col_tile",
  "ref_tile": true,
  "owner": "Claude:el1011-qwen-tp8-coll",
- "purpose": "qwen-tp8/coll4 clock-root split: ot_coll_col_tile = one 128-bit column of the MARGIN-9 collective engine datapath (IB 4, rx pin+align regs, 4 x 32x128 FIFO macros, heads, s0 operands, gather + tx words; ~3.5k flops), hardened once and replicated x5 in qfd_io_collective (TP4) and coll_tp8 (TP8, u_eng). Replaces ~11k engine glue flops that made the cluster spine build 1.75/3.3 ns insertion (both cluster routes EARLY_FAIL_HOLD FF -505/-781). One-cycle-delayed replica of the engine column: +1 cycle on tx and on out_*.",
+ "purpose": "qwen-tp8/coll4 clock-root split: ot_coll_col_tile = one 128-bit column of the MARGIN-9 collective engine datapath (IB 4, rx pin+align regs, 4 x 32x128 FIFO macros, heads, s0 operands, gather + tx words; ~3.5k flops), hardened once and replicated x5 in qfd_io_collective (TP4) and coll_tp8 (TP8, u_eng). Replaces ~11k engine glue flops that made the cluster spine build 1.75/3.3 ns insertion (both cluster routes EARLY_FAIL_HOLD FF -505/-781). One-cycle-delayed replica of the engine column: +1 cycle on tx and on out_*. | ct2 (2026-10-12 PT): ct1 routed TT +226.07 / FF -11.85 / DRC 1. FF miss is ONLY input->capture at the W face (in_d->in_p 98 ep -11.85, rx_d->rx_p 293 ep -9.31; every reg->reg >= +29) -> sanctioned inhold (one dont_touch hold buffer per data input) on a sound leaf. DRC 1 = M4 metal spacing at SRAM g_r[2] pin edge (73.8, 75.9) -> macro halo 2.16 -> 4.32 um. pd 0.55",
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/el1011-qwen-tp8-coll",
-  "commit": "a5f98cb03"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_col_tile_rt/coll_col_tile_rt-ct1-a5f98cb03"
+   "to": "results/rtl/ref_tile/coll_col_tile_rt/coll_col_tile_rt-ct2-COMMIT"
   }
  ],
  "cycles_added": 0,
