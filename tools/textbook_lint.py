@@ -112,10 +112,17 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #   rtl_change    the block's RTL differs from the closed job's commit (the gate compares the source blobs itself)
 #   evidence_gap  the closed job lacks a behavioural bench + mutant or a routed verdict: "why_route" says why a route
 #                 (and not a bench bind / re-export) is needed
+#   pin_register  (owner 2026-10-13, die timing by construction: a tile with an unregistered face pin or a long
+#                 pin-to-flop wire is a defect to fix, not to waive) the closed view is a ranked violation of the
+#                 insertion-compensated pin-register audit (tools/hier_contract/pinreg_audit.py v2): "source" (the
+#                 audit JSON, must exist), "cell", and the measured "pair_cost_ps" (o + s of the view, must be >
+#                 PIN_REGISTER_PAIR_MAX_PS: no hop of any length closes against it) -- the die needs the tile re-placed
+#                 with its pin flops at the pins; "fix" says what the new kit changes (recipe 2 / RTL pin flops)
 # M5 is the default for NEW tiles only.  Loop successors (auto-react, near-miss finishing, -hs / -ls re-runs) of a job
 # that is not CLOSED are unaffected.
-CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap")
+CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register")
 DIE_WINDOW_CUT_MIN = 0.6
+PIN_REGISTER_PAIR_MAX_PS = 683.3      # 833.3 - 60 - SKEW 90 (same clock level): o + s of one view above it leaves no wire
 CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + "
                          "mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json "
                          "\"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), "
@@ -124,7 +131,8 @@ CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it ag
                          "\"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | "
                          "\"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ "
                          "\"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ "
-                         "\"why_route\")}")
+                         "\"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > "
+                         "683.3, \"fix\")}")
 
 
 def clock_rule(max_sinks, evidence=None):

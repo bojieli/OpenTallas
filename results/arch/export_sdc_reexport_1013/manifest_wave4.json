@@ -1,0 +1,1590 @@
+{
+ "schema": "export-sdc-reexport/1",
+ "note": "wave 4 (2026-10-13): libraries only, published LEF kept; every row was checked against its sign-off (verdict_check); class says which evidence",
+ "views": [
+  {
+   "view": "dsfd_coll_ct",
+   "dir": "physical/variant_fill/dsfd_coll_ct-fe-6d1a3decb-kpslvt-tc-cl/dsfd_coll_ct",
+   "run": "dsfd_coll_ct-fe-6d1a3decb-kpslvt-tc-cl",
+   "cls": "ROM view that Codex published as a separately named revision (physical/hbm_export_revisions_1013): installed in place",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 1.2484457911909885,
+     "verdict_ps": 1.25,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 75.65426063393943,
+     "verdict_ps": 75.65,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "f5015d9747a873f64099ac4cc5a1ae3902ef266eac3f1e4c4791494ee186ab88",
+    "ff": "6dc3950715491d4e08aef5d006f66bd7ef8e145f8c612b5ffaa59541c88d7dca"
+   },
+   "new": {
+    "ss": "f5015d9747a873f64099ac4cc5a1ae3902ef266eac3f1e4c4791494ee186ab88",
+    "ff": "6dc3950715491d4e08aef5d006f66bd7ef8e145f8c612b5ffaa59541c88d7dca",
+    "tt": "43de0f4e2319a9812bab7531f6e304782ea8ae9cc42fbe426d835e076ca335ed"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_mtp_seq",
+   "dir": "physical/s81_ph_views/closed/dsfd_mtp_seq_c",
+   "run": "mtp-mtp_seq-c-c67a71fe5-tc",
+   "cls": "ROM view that Codex published as a separately named revision (physical/hbm_export_revisions_1013): installed in place",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 5.759684396089426,
+     "verdict_ps": 5.76,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 52.369275582719865,
+     "verdict_ps": 52.37,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "33ef0f5a1910366665ebbce2812aef1b5f903c996e1bd9bde0c210a621b319ca",
+    "ff": "51fcd458a992fe5c6756cc7c181a02bf04c5d4ba9da4c32629c6b57f2f16966a"
+   },
+   "new": {
+    "ss": "33ef0f5a1910366665ebbce2812aef1b5f903c996e1bd9bde0c210a621b319ca",
+    "ff": "51fcd458a992fe5c6756cc7c181a02bf04c5d4ba9da4c32629c6b57f2f16966a",
+    "tt": "2271a9380d0ba1d968e3dc925b869b72f2766f9f2d2087c34c10a79c2f1224ac"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "ot_mtp_hist_ring_p",
+   "dir": "physical/mtp_rollback/views/ot_mtp_hist_ring_p",
+   "run": "mtprb-hist-ring-p-190e09324-tc",
+   "cls": "ROM view that Codex published as a separately named revision (physical/hbm_export_revisions_1013): installed in place",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 7.1336547780020965,
+     "verdict_ps": 7.13,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 129.05843060906363,
+     "verdict_ps": 129.06,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "7445d81b5c4e3abff77024806a6d06ef393d743ee3bf6a54eead95ac7dce40a6",
+    "ff": "122ba1f4619a81e9fef0b889e2716fe5c879dd1e24a5409bcf3d03b03639f818",
+    "tt": "a83dd12c000b375bed7d969a875f3371db47430e34233795d8245bdd9016a035"
+   },
+   "new": {
+    "ss": "7445d81b5c4e3abff77024806a6d06ef393d743ee3bf6a54eead95ac7dce40a6",
+    "ff": "122ba1f4619a81e9fef0b889e2716fe5c879dd1e24a5409bcf3d03b03639f818",
+    "tt": "a83dd12c000b375bed7d969a875f3371db47430e34233795d8245bdd9016a035"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "ot_dsrom_mtp_lrx_rtt",
+   "dir": "physical/mtp_link_rtt/view_f9r10_d23p1_09dc8fad4/view",
+   "run": "mtp-rtt512-f9r10-d23p1-09dc8fad4-hm10",
+   "cls": "ROM view that Codex published as a separately named revision (physical/hbm_export_revisions_1013): installed in place",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 3.1573910153070983,
+     "verdict_ps": 3.16,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 113.32895732962811,
+     "verdict_ps": 113.33,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "33f8f97b2604167c35e40ec94c7859f55a88fe3258e739d574822ea9051a72f8",
+    "ff": "f235de6094bbe5e1f3359df48caf9f23904c27726bc0a0bb4a568618037afd76"
+   },
+   "new": {
+    "ss": "5315b407487416bb99af2571e543a7f8a373ed034dde5f7547419a9a4e44dc54",
+    "ff": "f235de6094bbe5e1f3359df48caf9f23904c27726bc0a0bb4a568618037afd76",
+    "tt": "acd8f00c9f4f7dd90eb4f5f6a1f68e3c5d7fe3082aa55c8e7f55afa556b43126"
+   },
+   "changed": [
+    "ss"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_vm_be_sl",
+   "dir": "physical/s81_ph_views/vm_master/views/dsfd_vm_be_sl",
+   "run": "s81vm-besl-b235ed401-tc-rd-pd55",
+   "cls": "record only: hand-published view whose libraries are byte-identical to the checked re-export physical/s81_ph_views/vm_master/routes/s81vm-besl-b235ed401-tc-rd-pd55/dsfd_vm_be_sl",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 16.528639568136327,
+     "verdict_ps": 16.53,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 36.0034224655692,
+     "verdict_ps": 36.0,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "de9ef0c559fd314cbeda945b5484e05bf3558bbb60b0b2f10cc91ef067ccab28",
+    "ff": "3e25299b25c9af1c823948ab0b74a99cbd9eb44a0c43a294be861791240f4469",
+    "tt": "539a10af1dbfb6f0bd6e49d863d340bbff5dc65f08788f11164b4772a8e20039"
+   },
+   "new": {
+    "ss": "de9ef0c559fd314cbeda945b5484e05bf3558bbb60b0b2f10cc91ef067ccab28",
+    "ff": "3e25299b25c9af1c823948ab0b74a99cbd9eb44a0c43a294be861791240f4469",
+    "tt": "539a10af1dbfb6f0bd6e49d863d340bbff5dc65f08788f11164b4772a8e20039"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "qfd_ctrl_pc_03",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_03",
+   "run": "qfd_ctrl_ready_hbm_03-216a06602mm-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 23.482465971724764,
+     "verdict_ps": 23.48,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 233.9268778683845,
+     "verdict_ps": 233.93,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "305221c4ef08ecd918c4da8da8237e77a1b612f1b98eb3681abdf5e8b9ce2459",
+    "ff": "76f6dc91897790b21bf51b771e1f4c19ba30cdd1bee4628bafd0883f4e62fab6"
+   },
+   "new": {
+    "ss": "f3bbe191bad68d408c81b08b7b5b095009c2a6c36b365c681bc15860980ac681",
+    "ff": "848d24fd581b2a02ffa693f614ac8a7d6d89f28b9179a3bb067acd58c3515f03",
+    "tt": "00b34c6984d3759c14710ea590a44ccc7223a380a54e94e0bcd98920d91a7d82"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_04",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_04",
+   "run": "qfd_ctrl_ready_hbm_04-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 34.92092726098406,
+     "verdict_ps": 34.92,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 239.34243476020356,
+     "verdict_ps": 239.34,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "a0cb4acf8048a7b6a1a95a8a855d1e7aaaed88309d0da9f9e419d454d0cfd7e9",
+    "ff": "b8bc05d71be680c8eb2f20ad84b986bbb270c17bd9286bc2d2df4ade9b0111dc"
+   },
+   "new": {
+    "ss": "5292605e571405e565e7f13b8039b11338aa5e0ee3e66d919a1809d1a18f4130",
+    "ff": "5708f5a51cdef2b78dceaaa41bff56f210a7c86c3b5bfc6b5b63ee62e5407e17",
+    "tt": "898c12c4de088e4781919c01b390ff3871189dc8cf1f02896189d8046075a3a4"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_02",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_02",
+   "run": "qfd_ctrl_ready_hbm_02-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 33.196473347985034,
+     "verdict_ps": 33.2,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 263.02227063013106,
+     "verdict_ps": 263.02,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "2e241c41ffc01774b6dd13b6a77289d362250ae4d1e6a9750bd4ef80f76d9f5a",
+    "ff": "3d9cafdf4eb320475d7407ebbd84fcae39c9837989456a54c4def5e74dd8282d"
+   },
+   "new": {
+    "ss": "29264a48ebb4b1b94c1a9496f52c70e735f9b174b7e6d6171ab5fe4e588db6be",
+    "ff": "01be5a7d208bcaaf2f823603ec0aad1ba9fb44398f47bb2a90816d46929aa068",
+    "tt": "c2a248d9d3f78553427561d54e8f16249415face8efbee6b5646f36288366b0f"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_01",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_01",
+   "run": "qfd_ctrl_ready_hbm_01-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 35.22471203609712,
+     "verdict_ps": 35.22,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 266.3210763031998,
+     "verdict_ps": 266.32,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "ce70ec4bafa54f3b976797c79165665ed071a35a660d79c4ec4298947ecfbca2",
+    "ff": "bfcda1723744826258d8dd6b895cee58f3734abfc5990c9a6e6ac1355403bec0"
+   },
+   "new": {
+    "ss": "77cc4df7a3556802bba7425ba723558c0c3420b8cc730ec3ef3d8d326a61d034",
+    "ff": "3790999631067b37fab2eff26b3e375e00037d4bccd49843633bff5d166d05fc",
+    "tt": "0b9eb9ff2da7dc5568df737ea12430e9d9b81b004389e034313ad8547c9fffb0"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_ready_00",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_ready_00",
+   "run": "qfd_ctrl_ready_00-8be556c2e-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 26.088742277607935,
+     "verdict_ps": 26.09,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 98.3425563205742,
+     "verdict_ps": 98.34,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "4a7c54c5b691d270cac52c1a1cf9240bf770f4e60663de225ba3af04b8141f5f",
+    "ff": "d221c0034c45148a5a2026d69d373c9956622c50ea2b0b2923df124d869814ff"
+   },
+   "new": {
+    "ss": "7af8fc8678647752df58f2400c1fd84423935d9a3527bc51d3fc394e6b877e27",
+    "ff": "a593279ccf3d868d4c3529324ba2b157213f4cd94d6b55c4f42ce890701d2deb",
+    "tt": "e60fa5e183f3bda9d703abd6eedde3c8001499edbb2ad0d209c3f397299cd39b"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_05",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_05",
+   "run": "qfd_ctrl_ready_hbm_05-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 31.671387734633072,
+     "verdict_ps": 31.67,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 271.9782177251773,
+     "verdict_ps": 271.98,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "d7a1abc70fffd3e2cc95d9f5592b109bcac32ad8fe68a974f6a0cf94ee77d712",
+    "ff": "6e6a64314e4eb6bb1a6500463a49c718e3f86354f2ffb2ce25d9aae4d82b091d"
+   },
+   "new": {
+    "ss": "342c27f1e40a9ba49679d9c37b77c3409d090e9705e22dcb58fb7582daff753f",
+    "ff": "e7fb3dccc31c9a2cb9c29d6ff35dc803e3a1b18bb9639622f312d9dfe2e5d810",
+    "tt": "8c68609fe2050fcecc99b46ab81f7c0acb9243219c9c8d6606f202c4e7a3f52d"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_00",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_00",
+   "run": "qfd_ctrl_ready_hbm_00-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 26.088742277607935,
+     "verdict_ps": 26.09,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 283.74769200922856,
+     "verdict_ps": 283.75,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "98af9fe5036cb3b68f76fe3c17f432102f994faa59c77667925dfcecaf6646ee",
+    "ff": "35f4ea268df4ef883064a3e3dc59b1e2d24c749452729c00c90be1a5a611f2ea"
+   },
+   "new": {
+    "ss": "2e6ac05cea6b523ecc4596df30b184912a7005fcaa47a360d001c9968f2ce341",
+    "ff": "c065fd702edbb747ca78ae37b124d429887dc667f082dae74608ea0287a0d300",
+    "tt": "c032c03258c1fb9c76846ce4ba07722f60e6b09eecb6fc2a7f42fb3480a2181f"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_01",
+   "dir": "physical/multivt/qfd_ctrl_pc_01-74d839a79-tt-lvt/views/qfd_ctrl_pc_01",
+   "run": "qfd_ctrl_pc_01-74d839a79-tt-lvt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 25.146856819091568,
+     "verdict_ps": 25.15,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 87.45948409938364,
+     "verdict_ps": 87.46,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "d47c183e13997622f960be0e116eeb51a1b57f95f931ef2936df3c2980060daf",
+    "ff": "2d9041eb5d4bd999623b3ec975f6653cbf9d231493f2d4d34198d4441403433b"
+   },
+   "new": {
+    "ss": "4a54f6bb6f826cb2c9d570910774514156aa181bc3b843c4c837f02afa2cc3fd",
+    "ff": "2d9041eb5d4bd999623b3ec975f6653cbf9d231493f2d4d34198d4441403433b",
+    "tt": "75309eedb356363d9959bdcbcedf25651492a1435062a5078d0c4bcb8f43ec8f"
+   },
+   "changed": [
+    "ss"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_16",
+   "dir": "physical/multivt/qfd_ctrl_pc_16-74d839a79-tt-lvt/views/qfd_ctrl_pc_16",
+   "run": "qfd_ctrl_pc_16-74d839a79-tt-lvt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 29.03635665241211,
+     "verdict_ps": 29.04,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 97.63956310138155,
+     "verdict_ps": 97.64,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "e26aa1063748becc96c707a5f067fd4082dc8ed0e285fc447900995c81ff1057",
+    "ff": "81cfadf9518a914ef637d0b66aefe2b80ea522da5fa23d793283f89670a48b94"
+   },
+   "new": {
+    "ss": "785bad3b4881aa55baaef9dd08e11c949ccde8ca8be7a7356181e46939817d60",
+    "ff": "81cfadf9518a914ef637d0b66aefe2b80ea522da5fa23d793283f89670a48b94",
+    "tt": "17624445aab554427ea234299cbb5d886f00bd54f308304b1374c57d54db9592"
+   },
+   "changed": [
+    "ss"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_06",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_06",
+   "run": "qfd_ctrl_ready_hbm_06-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 33.96966041790961,
+     "verdict_ps": 33.97,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 286.43015737017663,
+     "verdict_ps": 286.43,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "648c2f1ca5b60f24d17837cd74df3a90d5e0d8d7940364e8fbf21976ecdc0676",
+    "ff": "ea77f32003e1d6a5b742bae25701b01146a495aefe99b092473abcaa2cffc301"
+   },
+   "new": {
+    "ss": "aedf28861b47c1fc8eb8b902b1bbf6aa8463fcb333594291097a1be5e8e5cf99",
+    "ff": "32d87d7bd6392e8741961db1e55b06077e99d2cad91a4abdf673e56ac254fc85",
+    "tt": "a8250805238f634a02e9b8e9b193f28642b76b0e2dfd36fb2a75bcc833886dbf"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "ot_hdc_v41_fh_ctl",
+   "dir": "physical/dsrom_fh_safe/closed/ctl_oreg2",
+   "run": "dshead-ctl-oreg2-fcecef219-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 0.8293643549706076,
+     "verdict_ps": 0.83,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 173.872805042663,
+     "verdict_ps": 173.87,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "1d3d1fbc285aad0d00abff7c00e5fabfbe9950f9529569cd85c9f9693ff51378",
+    "ff": "65239dd774e0b7e20e84827eb3164c6497ba942e38fffc8db205d965ee4efd27"
+   },
+   "new": {
+    "ss": "1d3d1fbc285aad0d00abff7c00e5fabfbe9950f9529569cd85c9f9693ff51378",
+    "ff": "65239dd774e0b7e20e84827eb3164c6497ba942e38fffc8db205d965ee4efd27",
+    "tt": "0a1182d23a9a92d9477a8d3cdc06aa6c73ac3d3261310d7d5a74f4f2de003995"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_protected_oreg_00",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_protected_oreg_00",
+   "run": "qfd_ctrl_protected_oreg_00-591f6a683mm-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 31.223523766499284,
+     "verdict_ps": 31.22,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 247.10400392535803,
+     "verdict_ps": 247.1,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "821d04dae61f4f015dbf8ae2ad57b558bbfe283df4a7fef0ff00bb94b4c78b6e",
+    "ff": "7ad49f26e8926e845cef9f5c3ace0ce10158610f0aa922f3a5aa9a6d570b5132"
+   },
+   "new": {
+    "ss": "d0c2bc927d5ca2d74d13232f622860773cb0ae86ba6109e5db15411021c786b0",
+    "ff": "be43a8c13741fc5030324d90aef9136a67853e70763efa18055ddedfd8eb22b1",
+    "tt": "5bf895b98aa936c8f6e3620445108a3e9ae108a8a7042a8686634f29f51e8951"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "ot_dsrom_head_bundle_glue",
+   "dir": "physical/dsrom_fh_safe/closed/glue",
+   "run": "dshead-glue-safe-351e67caa-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 2.1833090890766016,
+     "verdict_ps": 2.18,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 165.09438260925435,
+     "verdict_ps": 165.09,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "5823ea1bca29385aeb631f90e207bb0942b37b8ec6db199ae143c0e813e25a56",
+    "ff": "c5a3e4a80be631e4eb089bda215dcaffe58f9a436779f2dd5430ba83e2eba658"
+   },
+   "new": {
+    "ss": "5823ea1bca29385aeb631f90e207bb0942b37b8ec6db199ae143c0e813e25a56",
+    "ff": "c5a3e4a80be631e4eb089bda215dcaffe58f9a436779f2dd5430ba83e2eba658",
+    "tt": "11822fda7e9c56297aba1dd7f2b2f3cae8a0829f20ba638f28e2b357a108d027"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_08",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_08",
+   "run": "qfd_ctrl_ready_hbm_08-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 32.2638860072999,
+     "verdict_ps": 32.26,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 269.7689849284757,
+     "verdict_ps": 269.77,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "fd4b79aded828d9c123056f5b87e47f3d16e802574f920e0363557da165fe4ac",
+    "ff": "6b483483957238ed946263960bd617f259d84403be754e2e8153539134eee90b"
+   },
+   "new": {
+    "ss": "664df887a78801cef8ef7f65a8ebdc109942e81eb7a27db63c0426eeff24ed1f",
+    "ff": "b1bdc9bb2ce9da927cda7a688ff5e99dab431712d0dd6e0952e93fe50838fd29",
+    "tt": "1d28549988e1c92b524816f2aa44e6aafa3770191888799c5a22171787626e15"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_ctrl_pc_07",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_07",
+   "run": "qfd_ctrl_ready_hbm_07-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 31.111113685255987,
+     "verdict_ps": 31.11,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 264.04145536673695,
+     "verdict_ps": 264.04,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "6e68f320c54633afee2e9917afbd4e766b47818f23e8a297d3db2509e125294d",
+    "ff": "620e4cd54dc5ef89c471ad6ea3908e03e64a094533b5d7514be21fffb026dd2a"
+   },
+   "new": {
+    "ss": "ea385f691af2738b1886456e0506e0bdc7ac5e93a909a26b6579e55a03547836",
+    "ff": "32726ba0bda82fb10ff8566b611a64d0bd9843505aab7e2383fb4dc91ac67092",
+    "tt": "30d7e9d5d2e5ba3f967cffbfbd6a4e38bbf08207641f099a717f63d1203e0df2"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_embed_code_bank_retained",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_code_bank_retained",
+   "run": "qfd_embed_code_bank_retained-24bd6a53b-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 28.10254806639989,
+     "verdict_ps": 28.1,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 190.88347569251596,
+     "verdict_ps": 190.88,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "8869904b54141d587fde45f5011960367ce0b0031e9584bf8b26cc1a3d13449e",
+    "ff": "ac11ee2d9d0cec9e283638cf7bc8fcbea161c3920d3496f9fa906ee5853092b7"
+   },
+   "new": {
+    "ss": "c96d79cb7a9bbf4defe3e8010b83fa3ff0a99af697cdb0174c98c1fc2bd224fb",
+    "ff": "d7f09635fa36d1e4968abd83a33df39a35bac9f7adc148cf0f95c3d845ae9399",
+    "tt": "772ac942b57b39a6e7aaf6a7b2e982c50c99de4c70e75d4ec46378af19145208"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_kvc_decode_pc",
+   "dir": "physical/qwen_die_masters/views/qfd_kvc_decode_pc",
+   "run": "qfd_kvc_decode_pc-d85c4b6ce-mmq-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 26.591701063338746,
+     "verdict_ps": 26.59,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 141.2697181457645,
+     "verdict_ps": 141.27,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "850fb0952cc091655bee53e7c672cf74779c97be1364218c32993fef0c1c6e02",
+    "ff": "6ad253be10c3dd6585305b83174d0a786ef21e3f50bd3e883b7509ca52a76820"
+   },
+   "new": {
+    "ss": "cdd5495df439dfac558bbc7dd7983d140c03929c3141d19a51f8fdaaf6bb3959",
+    "ff": "274e3640e4c127a2c0cc863a8dc738893c499989479be036062ae6668737c23c",
+    "tt": "7b618ea01306fda3e570ddc4933fce8892e216e197871aa2374c00de8b9803a2"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_lst_c_split",
+   "dir": "physical/qwen_die_masters/views/qfd_lst_c_split",
+   "run": "qfd_lst_c_split-5a3bb1721-mm-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 41.393874439243916,
+     "verdict_ps": 41.39,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 186.24951581003302,
+     "verdict_ps": 186.25,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "351dd3bcb6588691b5c1ea59466db10cc1056b65369a3026a40cab528de3971b",
+    "ff": "acec1d750a6cbbefe289d77496c7e7efed81f7e8f906911e79e5de1835cab73d"
+   },
+   "new": {
+    "ss": "ab9a9e1a55430082f5fa6560e3393eae9c50ebf5b21480129080f343cc71dccc",
+    "ff": "fc3e27e6dd6b2d5f5f8eaf1489b943f2ca2256f569bb81420b3c5c5683a7f42b",
+    "tt": "7b3adadc2b8d8465edf68e3c05d4b9be5f90a8c26aece0bd0436e698582c8348"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_lst_h",
+   "dir": "physical/qwen_die_masters/views/qfd_lst_h",
+   "run": "qfd_lst_h-5a3bb1721-lbc",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 42.174153058738284,
+     "verdict_ps": 42.17,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 244.83973182221064,
+     "verdict_ps": 244.84,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "931e9b9d592449dc9e3a54d8f0a2f61b9fbf4bc59cb6f17f189dae96c419462b",
+    "ff": "b40d81137cd6526ea9e627fd54d0d7657a381c5205a93bdb9dbb4ec7a628eb8d"
+   },
+   "new": {
+    "ss": "931e9b9d592449dc9e3a54d8f0a2f61b9fbf4bc59cb6f17f189dae96c419462b",
+    "ff": "787b88cb087f9026a7c72285ff4b31d49a12e45039335570f4a6dec0793c94eb",
+    "tt": "eff45fb6fc2b277abe8ad5e13e4a73be0af10c6a6e19fcfaae046a5c2078d330"
+   },
+   "changed": [
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_coll_ck",
+   "dir": "physical/s81_ph_views/closed/dsfd_coll_ck",
+   "run": "s81ph-dsfd_coll_ck-752a48488",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 31.292746172084662,
+     "verdict_ps": 31.29,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 9592.118210832723,
+     "verdict_ps": 9592.12,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "48cabeeff9f869aa924342bf67f82b4865d01958d83283d707043bfb51e7d0d0",
+    "ff": "da13018b1450cf960ed800007360f90bb44eba55145cdf30a53e02351c8a74a9",
+    "tt": "5126bbe48a100cdddb0aef08619ca095f5344ffeb62ef81fc0e109a07ffa6a56"
+   },
+   "new": {
+    "ss": "48cabeeff9f869aa924342bf67f82b4865d01958d83283d707043bfb51e7d0d0",
+    "ff": "da13018b1450cf960ed800007360f90bb44eba55145cdf30a53e02351c8a74a9",
+    "tt": "5126bbe48a100cdddb0aef08619ca095f5344ffeb62ef81fc0e109a07ffa6a56"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "qfd_ctrl_pc_09",
+   "dir": "physical/qwen_die_masters/views/qfd_ctrl_pc_09",
+   "run": "qfd_ctrl_ready_hbm_09-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 33.47697119515658,
+     "verdict_ps": 33.48,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 264.1432628180951,
+     "verdict_ps": 264.14,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "d87b24c55c8e3bf65958a9ad30da9e7f38c37de7aff82352e9b76c3db8df05cb",
+    "ff": "809a187c9705ca6fa8ec5e9cd539c87a08babacc88d0b369b54c75c745ac6d63"
+   },
+   "new": {
+    "ss": "039bbbefd78f8a5d5c7834a7df6225b0cfa70c6f36648cc961570f35506c05b2",
+    "ff": "0136e33d1ccf67c95591b8b2c75753f670d4765700f862c7e7b10ed3077376ea",
+    "tt": "d77fab372cb5f7e53a8b7b885f051bb1c7a38dc13f7079f2f4ed09ef0cb190f8"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_kvc_decode_map_pc",
+   "dir": "physical/qwen_die_masters/views/qfd_kvc_decode_map_pc",
+   "run": "qfd_kvc_decode_map_pc-970663df7-mmq-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 30.78540200540658,
+     "verdict_ps": 30.79,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 125.90689602021143,
+     "verdict_ps": 125.91,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "d09cc5e171cb4f5f76918993fba2dbaed2b0ae3d23bed1817f601b45d71a24ff",
+    "ff": "d29d8ea8387ca93f0deea3de697107559be86a32e80b78fe81a9b9242bb47a9f"
+   },
+   "new": {
+    "ss": "26dad1822e459f5b5bee89b7357502e3da1cada4d16aed2802ec4326adb62263",
+    "ff": "c9ddac9f8c5d6a68a388f2d935201e6c164a63fe929b99167f6412e1de65b3fc",
+    "tt": "cb701fc7025959d4132a0741827b1f3f9450ca152b63d8d58ee901dfed241c94"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_svc_pc",
+   "dir": "physical/s81_ph_views/closed/dsfd_svc_pc",
+   "run": "s81ph-dsfd_svc_pc-752a48488",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 20.111676213296903,
+     "verdict_ps": 20.11,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 219.9992965579156,
+     "verdict_ps": 220.0,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "d15d34b944fc1e95a6c6b1a062af80be4325c3d129f3783bd63e37011761949c",
+    "ff": "0e49b9d35deff4342480d5a27892ddd59f2f8bd9fef3293efbb96eaae8734d76",
+    "tt": "cb66da9c546a3ff2c79be51fc4cd6915fcbb9a9673d114c7aee2ed0a5fa12a39"
+   },
+   "new": {
+    "ss": "d15d34b944fc1e95a6c6b1a062af80be4325c3d129f3783bd63e37011761949c",
+    "ff": "0e49b9d35deff4342480d5a27892ddd59f2f8bd9fef3293efbb96eaae8734d76",
+    "tt": "cb66da9c546a3ff2c79be51fc4cd6915fcbb9a9673d114c7aee2ed0a5fa12a39"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "qfd_kvc_decode_map_pc",
+   "dir": "physical/multivt/qfd_kvc_decode_map_pc-970663df7-tt-lvt/views/qfd_kvc_decode_map_pc",
+   "run": "qfd_kvc_decode_map_pc-970663df7-tt-lvt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 28.63873027614261,
+     "verdict_ps": 28.64,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 130.2842833617035,
+     "verdict_ps": 130.28,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "7d6f440d29509b9f610487b76cbc244cdcc287128d8abec37754c3a1d08def92",
+    "ff": "e79b5a5a6b55b31b26c404b61cd5802962d8af8cc19942c0423950761bbdf38e"
+   },
+   "new": {
+    "ss": "96858e9961a999c4dd27c938386f211ccf2b06313ecef483233d980679e66677",
+    "ff": "caf68cb311ef4122f0456d1648619bc09d2a842fa9bdbb0f74a443c92ae60f48",
+    "tt": "17cd7b8ac61d66f486574f5c2f901f83c8517b278e0d18522f30e4c662a3ba5c"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_r2l_vr_512x1__hsel",
+   "dir": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hsel",
+   "run": "s81-hend-m221pq-hsel-pinreg-f1b64667d-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 21.71814117435389,
+     "verdict_ps": 21.72,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 72.85191894190746,
+     "verdict_ps": 72.85,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "624099648d537e32a95e77dc2981eb783e75d7a09b33073bce098f6f3ce0bcdc",
+    "ff": "6eb6cc2f513239e412a2b45399ccebf8d04bc1619c3dd6472dc832c3d817b9a2",
+    "tt": "8d11ae3956f352adf709eaa66dcc1e719a2e8df5353683e4c4ed5f75967c365f"
+   },
+   "new": {
+    "ss": "624099648d537e32a95e77dc2981eb783e75d7a09b33073bce098f6f3ce0bcdc",
+    "ff": "6eb6cc2f513239e412a2b45399ccebf8d04bc1619c3dd6472dc832c3d817b9a2",
+    "tt": "d70af90a0f7b79636432bf001d60db8cedf98e099cf36b63f61bff6f79a96155"
+   },
+   "changed": [
+    "tt"
+   ],
+   "added": []
+  },
+  {
+   "view": "ot_dsrom_head_elem",
+   "dir": "physical/dsrom_fh_safe/closed/elemB",
+   "run": "dshead-elemB-ss-a318fdf47",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 19.13044722634538,
+     "verdict_ps": 19.13,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 91.75404880323867,
+     "verdict_ps": 91.75,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "c1eca9c1861178691ab7c185d905212aafcb8b8bff81c31efd0ed301d0c9066b",
+    "ff": "b57a1cd8ede9c4e94a77c56197bdc51e194f6464bdaaa41b766a2741faab9ef2"
+   },
+   "new": {
+    "ss": "c1eca9c1861178691ab7c185d905212aafcb8b8bff81c31efd0ed301d0c9066b",
+    "ff": "b57a1cd8ede9c4e94a77c56197bdc51e194f6464bdaaa41b766a2741faab9ef2",
+    "tt": "34d0b347ec7130b90bb61d30f7e23be540c82cc7e6b4c13dbe421631ed35d1f2"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_svcio_x",
+   "dir": "physical/s81_ph_views/closed/dsfd_svcio_x",
+   "run": "s81ph-dsfd_svcio_x-093da5918",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 17.152029796463353,
+     "verdict_ps": 17.15,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 198.1786401650254,
+     "verdict_ps": 198.18,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "a39b3e719bd8ee4406721e168ddfba68c72aed46045b752f7b7d42202fd239a0",
+    "ff": "bf76b7a2d15935995c3d26d97dc2ea6d91ba37ac8fcb5541f5f15345dc8d64c7",
+    "tt": "cd6114c868c75d3deddb9235f47a7069d5634f2535e6bc3bc5f5518003a21921"
+   },
+   "new": {
+    "ss": "a833b2c52aa619c6b4cd217ea36e830fd6f55e7f298c64e20c07d678dd7fd6d4",
+    "ff": "5b2af229db1d6d86349221047a5d1dc57c3223f79562b1136a9f573335584736",
+    "tt": "183cefde03f60dfce2375f61073ea27b19bbe08cf4bcd2754fd1aba6627378e6"
+   },
+   "changed": [
+    "ss",
+    "ff",
+    "tt"
+   ],
+   "added": []
+  },
+  {
+   "view": "qfd_lst_c",
+   "dir": "physical/qwen_die_masters/views/qfd_lst_c",
+   "run": "qfd_lst_c-5a3bb1721-mmq-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 33.058542014963166,
+     "verdict_ps": 33.06,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 171.22361861687807,
+     "verdict_ps": 171.22,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "322062b1b152cb325779751afc102e7fd9ad4c92f7c543f43b93eca6d47c9d64",
+    "ff": "ef8957d458e95a109a57d1f3b441d8218a80d40599d2bc50280e46f796366980"
+   },
+   "new": {
+    "ss": "322062b1b152cb325779751afc102e7fd9ad4c92f7c543f43b93eca6d47c9d64",
+    "ff": "caaf51ee533ff8c75bc403caf58367d4922a2ab482e9798d84c7bf141cc94e01",
+    "tt": "1b30ecf470dee2c0459fbe0fe3d99982e2c8e962041c9e1afb25f2d10e75faff"
+   },
+   "changed": [
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "ot_meso_fifo",
+   "dir": "physical/s81_die_views/meso/view_d4/record/view",
+   "run": "s81-meso-d4-96885ea7e-mmq",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 5.6188942387791485,
+     "verdict_ps": 5.62,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 116.4289775701377,
+     "verdict_ps": 116.43,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "5ce5fe62c8a3badc08349466233e1ed368ea83955b9ea3f0a204b9ac86382549",
+    "ff": "d6c52535bfbae4e5de913f0dd6ce7ce395e67a51b3ffb0a4f431fde142cff8fe"
+   },
+   "new": {
+    "ss": "5ce5fe62c8a3badc08349466233e1ed368ea83955b9ea3f0a204b9ac86382549",
+    "ff": "d6c52535bfbae4e5de913f0dd6ce7ce395e67a51b3ffb0a4f431fde142cff8fe",
+    "tt": "567978c32c8171a347e43a35d22037b7ea79bbec3dd1ead83659c8fdcd0b7ab9"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_colt_lane",
+   "dir": "physical/s81_ph_views/closed/dsfd_colt_lane",
+   "run": "s81ph-dsfd_colt_lane-7345266ce-e",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 21.733476129881524,
+     "verdict_ps": 21.73,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 47.237103117936385,
+     "verdict_ps": 47.24,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "38c63367d43da848ed3321aa4ea81936bc42fd4ff9693c67d4d07a1200888cf5",
+    "ff": "239b3b5a8a0a5092b3fb171f11b6a83ab1333c393f9874fa67879717ea0cce91",
+    "tt": "bde0d3bbc9e4738292fad54d79f36e0780e3bbe6db4f580305a2113598102d39"
+   },
+   "new": {
+    "ss": "38c63367d43da848ed3321aa4ea81936bc42fd4ff9693c67d4d07a1200888cf5",
+    "ff": "239b3b5a8a0a5092b3fb171f11b6a83ab1333c393f9874fa67879717ea0cce91",
+    "tt": "bde0d3bbc9e4738292fad54d79f36e0780e3bbe6db4f580305a2113598102d39"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "ot_dsrom_head_elem",
+   "dir": "physical/dsrom_fh_safe/closed/elemA",
+   "run": "dshead-elemA-ss-f11f3cc47",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 10.811795903009624,
+     "verdict_ps": 10.81,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 133.67495999005996,
+     "verdict_ps": 133.67,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "29152945876f08e11f44e0bb9c2fd2dba6948883cd09d5f44fe93afdc2be7552",
+    "ff": "7450f6a651c25ca8f17c91fbaeed8a26ad4f7d3c88af57a6bfe96337d7db88ea"
+   },
+   "new": {
+    "ss": "29152945876f08e11f44e0bb9c2fd2dba6948883cd09d5f44fe93afdc2be7552",
+    "ff": "7450f6a651c25ca8f17c91fbaeed8a26ad4f7d3c88af57a6bfe96337d7db88ea",
+    "tt": "4a0f1f942ac7ed7606c7d72cadd183b331341295d93bd9ca2b85e8901fff8a2b"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_svcio_od",
+   "dir": "physical/s81_ph_views/closed/dsfd_svcio_od",
+   "run": "s81ph-dsfd_svcio_od-3f0455126",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 3.8075931296788212,
+     "verdict_ps": 3.81,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 89.94893718750063,
+     "verdict_ps": 89.95,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "f46a154c85f6e5e591ba89afae03b009fc310814986172489772c5ca74655acf",
+    "ff": "fa09ccd90a6d2038073306277f7091eaddfb65b913b80e15a68f7a914442b979",
+    "tt": "0b06921e8c8aa8d23121147814a03e69b93286ad1b76a0310972697d1aa1256c"
+   },
+   "new": {
+    "ss": "f46a154c85f6e5e591ba89afae03b009fc310814986172489772c5ca74655acf",
+    "ff": "fa09ccd90a6d2038073306277f7091eaddfb65b913b80e15a68f7a914442b979",
+    "tt": "ffc7b5b5acc0448d6c26a67413dc7bb7c17f779e6e1cfff7e0167d6bd6e45e0f"
+   },
+   "changed": [
+    "tt"
+   ],
+   "added": []
+  },
+  {
+   "view": "dsfd_ctrl_pc",
+   "dir": "physical/s81_ph_views/closed/dsfd_ctrl_pc",
+   "run": "s81ph-dsfd_ctrl_pc-3f0455126",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 24.302837520195908,
+     "verdict_ps": 24.3,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 68.7778722863186,
+     "verdict_ps": 68.78,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "0463969c9e3bf7f5779bbd24cb0148447549cf917873a61e1167ddc4e2e199f4",
+    "ff": "f0f46a9539dd48231e84973895e0878f76654acb48ae78d46cd7071205946a06",
+    "tt": "e0afd1aa4837314628a41443deea1d1dd6cde68d98f13ab06cd6ce04279ca53f"
+   },
+   "new": {
+    "ss": "0463969c9e3bf7f5779bbd24cb0148447549cf917873a61e1167ddc4e2e199f4",
+    "ff": "f0f46a9539dd48231e84973895e0878f76654acb48ae78d46cd7071205946a06",
+    "tt": "0b175562cb34bfc215ea8e212ab1b08cd1dcb061471abe5dbc7c566ca63129df"
+   },
+   "changed": [
+    "tt"
+   ],
+   "added": []
+  },
+  {
+   "view": "ot_dsrom_window_column_128",
+   "dir": "physical/dsrom_window_columns/m6/ot_dsrom_window_column_128/view",
+   "run": "wcol128-pinreg-f1b64667d-tt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 13.998899262013254,
+     "verdict_ps": 14.0,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 71.18283740226161,
+     "verdict_ps": 71.18,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "d5419834788d2a495750b7934a69e22de77e70fa2f4533f6718e8b23e4858e71",
+    "ff": "69afe9a851c5dfc7480efba29767cf85caf846e0b97bed9be9f566b2dd530f50"
+   },
+   "new": {
+    "ss": "cec0df506ecd20ce45d4b2cb0869a44e7bee8ce43668f04fe056e9eb2a5119de",
+    "ff": "70557ad7e1f461f2110458243b73d2dbe0c356775412869221aab0fee695ad50",
+    "tt": "8885ee93d5ee533ec3493c5706b976bc853c06b125f1566d19420581706a00db"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_capt_g2",
+   "dir": "physical/s81_ph_views/closed/dsfd_capt_g2",
+   "run": "s81ph-dsfd_capt_g2-fda73a869",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 18.896939568691096,
+     "verdict_ps": 18.9,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 60.223492859279304,
+     "verdict_ps": 60.22,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "9982aec693818ee47c605cb4af4b1a88dd90ad62e875c0a7715bccda186fd474",
+    "ff": "3fb7364a4a37a9bba85bf3af6410eb21496a9005bdb7a2f2a74a1508798d6a41",
+    "tt": "97c59d7edcad2fc7f7c48c09990648f41b6460cfd0955a5a9daccaf771428329"
+   },
+   "new": {
+    "ss": "9982aec693818ee47c605cb4af4b1a88dd90ad62e875c0a7715bccda186fd474",
+    "ff": "3fb7364a4a37a9bba85bf3af6410eb21496a9005bdb7a2f2a74a1508798d6a41",
+    "tt": "97c59d7edcad2fc7f7c48c09990648f41b6460cfd0955a5a9daccaf771428329"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "ot_meso_fifo",
+   "dir": "physical/s81_die_views/meso/view_d8g1/view",
+   "run": "s81-meso-d8g1-c20d75e28",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 27.38356763565264,
+     "verdict_ps": 27.38,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 29.6067614868889,
+     "verdict_ps": 29.61,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "4085365c439523689dece254ad5101fb4fe25f0b8caca742bbe38ef47a2cd4fe",
+    "ff": "38c28f1d65afc8f9c5e62077ec3bbe974c74b0fc481015ab70a7e59361602398",
+    "tt": "fa6f3b813fcc27c8609da2f020a950ceab3c455c63879b3f72e9d7d36f58efa0"
+   },
+   "new": {
+    "ss": "4085365c439523689dece254ad5101fb4fe25f0b8caca742bbe38ef47a2cd4fe",
+    "ff": "38c28f1d65afc8f9c5e62077ec3bbe974c74b0fc481015ab70a7e59361602398",
+    "tt": "fa6f3b813fcc27c8609da2f020a950ceab3c455c63879b3f72e9d7d36f58efa0"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "dsfd_cfifo",
+   "dir": "physical/s81_die_views/views/dsfd_cfifo",
+   "run": "s81-dsfd-cfifo-290446310",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 24.898527684058536,
+     "verdict_ps": 24.9,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 46.22635607631764,
+     "verdict_ps": 46.23,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "cbe15c0ea401875da96acd73b8ca18870b81d6370f192925b5c0d8fca59ebef3",
+    "ff": "9435be04728810b18903453211b557bb410c0ac55acb8a4452e19eb101b22f82",
+    "tt": "dc1c9afc87cbd14417414864436399cd469027f7ced3500b46bcfac28832c14e"
+   },
+   "new": {
+    "ss": "cbe15c0ea401875da96acd73b8ca18870b81d6370f192925b5c0d8fca59ebef3",
+    "ff": "12a058fbd62324d94c05e7f8edfcc131bc5d2745ee8c16d569604a0f6fffb206",
+    "tt": "ef8f3e7cec636964aed617176ca638513c66d000d9479ee1108fa95ce2e41828"
+   },
+   "changed": [
+    "ff",
+    "tt"
+   ],
+   "added": []
+  },
+  {
+   "view": "dsfd_svch_rly",
+   "dir": "physical/s81_ph_views/closed/dsfd_svch_rly",
+   "run": "svch_rly4228-e1d02f5ae-tc",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 34.22623295890048,
+     "verdict_ps": 34.23,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 81.91014533309726,
+     "verdict_ps": 81.91,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "411cb32d56ab88628a7c5e52a5e5ce897e889b5cdf4e08173f9d37e056a47bf4",
+    "ff": "626f7582710df6192b491d36e49f4dd75ac4b3d0aa7d595ea599832bf9932d4d"
+   },
+   "new": {
+    "ss": "411cb32d56ab88628a7c5e52a5e5ce897e889b5cdf4e08173f9d37e056a47bf4",
+    "ff": "626f7582710df6192b491d36e49f4dd75ac4b3d0aa7d595ea599832bf9932d4d",
+    "tt": "41e534e83ebee0950ad2e5d8991d324da7c8188cbf57325a1b75b9082f135040"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_vm_clt",
+   "dir": "physical/s81_ph_views/vm_master/routes/s81vm-clt-bca3ab44b-tc-rd/dsfd_vm_clt",
+   "run": "s81vm-clt-bca3ab44b-tc-rd",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 1.1713269243429636,
+     "verdict_ps": 1.17,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 37.78333201864825,
+     "verdict_ps": 37.78,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "c6511a4645051a83ab876f70ded52aa5acc50cbcaf13a39f0f528ac70ef49395",
+    "ff": "37172d5dc5957a846b5eef5a324109b409cff550e758998e762d0e68c6b49fe1"
+   },
+   "new": {
+    "ss": "c6511a4645051a83ab876f70ded52aa5acc50cbcaf13a39f0f528ac70ef49395",
+    "ff": "37172d5dc5957a846b5eef5a324109b409cff550e758998e762d0e68c6b49fe1",
+    "tt": "005972c3b06d3cb430e5cc4685e74757cad5681e67b12cc01dccfdf76fbd6daa"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_vm_clt",
+   "dir": "physical/s81_ph_views/vm_master/routes/s81vm-clt6-dc9e98d04-tc-rd/dsfd_vm_clt",
+   "run": "s81vm-clt6-dc9e98d04-tc-rd",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 10.544343176377424,
+     "verdict_ps": 10.54,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 30.844438114741024,
+     "verdict_ps": 30.84,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "24d02fa4e743dd651308eceb0f1794ae058857a038f5435703bbb503c649a16c",
+    "ff": "5d4f72d6253e557a6f6eec5529c4a9fa17c3a2ebfa793a2fbdcc3a09bdd38bc1"
+   },
+   "new": {
+    "ss": "24d02fa4e743dd651308eceb0f1794ae058857a038f5435703bbb503c649a16c",
+    "ff": "5d4f72d6253e557a6f6eec5529c4a9fa17c3a2ebfa793a2fbdcc3a09bdd38bc1",
+    "tt": "a6365073fb66f2a4267c4ff8e832da9e43ba83a55435c05975b0f44e5a0efdf8"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_vm_clt",
+   "dir": "physical/s81_ph_views/vm_master/routes/s81vm-clt6-dc9e98d04-tc-rd-pd40/dsfd_vm_clt",
+   "run": "s81vm-clt6-dc9e98d04-tc-rd-pd40",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 10.544343176377424,
+     "verdict_ps": 10.54,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 30.844438114741024,
+     "verdict_ps": 30.84,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "24d02fa4e743dd651308eceb0f1794ae058857a038f5435703bbb503c649a16c",
+    "ff": "5d4f72d6253e557a6f6eec5529c4a9fa17c3a2ebfa793a2fbdcc3a09bdd38bc1"
+   },
+   "new": {
+    "ss": "24d02fa4e743dd651308eceb0f1794ae058857a038f5435703bbb503c649a16c",
+    "ff": "5d4f72d6253e557a6f6eec5529c4a9fa17c3a2ebfa793a2fbdcc3a09bdd38bc1",
+    "tt": "a6365073fb66f2a4267c4ff8e832da9e43ba83a55435c05975b0f44e5a0efdf8"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_svcio_ad",
+   "dir": "physical/s81_ph_views/closed/dsfd_svcio_ad",
+   "run": "s81ph-dsfd_svcio_ad-d12b194f0",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 18.48818320659973,
+     "verdict_ps": 18.49,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 36.93234607027307,
+     "verdict_ps": 36.93,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "bc530d56876d96422f2f71deabf2f04c75bdc6482cd4c8d2354860719c13521e",
+    "ff": "d03933d684dae4fddf6fd1fb834e6d233619467483a12f71675aff30351a731b",
+    "tt": "618630073cb187b1c8f6a36f1b7079686e9e9944c392e709ea1dc755be640430"
+   },
+   "new": {
+    "ss": "bc530d56876d96422f2f71deabf2f04c75bdc6482cd4c8d2354860719c13521e",
+    "ff": "d03933d684dae4fddf6fd1fb834e6d233619467483a12f71675aff30351a731b",
+    "tt": "618630073cb187b1c8f6a36f1b7079686e9e9944c392e709ea1dc755be640430"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "ot_s81ph_root_tile",
+   "dir": "physical/s81_ph_views/closed/ot_s81ph_root_tile",
+   "run": "s81ph-root_tile-77bcb3f3c",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 8.391370931448705,
+     "verdict_ps": 8.39,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 193.8589289096626,
+     "verdict_ps": 193.86,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "0da2d7f85ee7b4b59bd518cfd4f5181d9a92450115ea50e3a395311c80422aa7",
+    "ff": "a58d119dc38cf13182e2a4fb5ebdeb881fe9e4eabd8586578a9ff3c253c9b61c",
+    "tt": "00ea15cb39e81db28371c15cbc41b526a85c0b85079c991c72132e1044c8d5ff"
+   },
+   "new": {
+    "ss": "0da2d7f85ee7b4b59bd518cfd4f5181d9a92450115ea50e3a395311c80422aa7",
+    "ff": "a58d119dc38cf13182e2a4fb5ebdeb881fe9e4eabd8586578a9ff3c253c9b61c",
+    "tt": "00ea15cb39e81db28371c15cbc41b526a85c0b85079c991c72132e1044c8d5ff"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "dsfd_colt_mrg",
+   "dir": "physical/s81_ph_views/closed/dsfd_colt_mrg",
+   "run": "s81ph-dsfd_colt_mrg-cd3337221-b",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists)",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 21.99943005543048,
+     "verdict_ps": 22.0,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 54.28180127609039,
+     "verdict_ps": 54.28,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "ac6360a89854630b532e380f94b08ec4796efe8bf2854445e80fe502c3ed9414",
+    "ff": "76bb596e27078f4dba037870f2932fbb7da8be0ba98e0a37305ed7d0228296f7",
+    "tt": "e5789917f8486f8706a67ff46c6a49a4d78b4f7dccded53150376b50d17f236b"
+   },
+   "new": {
+    "ss": "429a36616025f1f89245fa07afe38268c4c792e09474e1cd84526c5be142f399",
+    "ff": "76bb596e27078f4dba037870f2932fbb7da8be0ba98e0a37305ed7d0228296f7",
+    "tt": "9e572207b9f9cb9d4c9fe026e30770428ad67bb65202a8838afe968574dbd9e8"
+   },
+   "changed": [
+    "ss",
+    "tt"
+   ],
+   "added": []
+  }
+ ]
+}
