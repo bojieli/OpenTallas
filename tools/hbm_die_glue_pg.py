@@ -66,7 +66,7 @@ read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
 read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
 read_verilog /work/mapped.v
 link_design hbm_glue_pg
-initialize_floorplan -die_area {{0 0 32.4 32.4}} -core_area {{0 0 32.4 32.4}} -site asap7sc7p5t
+initialize_floorplan -die_area {{0 0 36.72 36.72}} -core_area {{2.16 2.16 34.56 34.56}} -site asap7sc7p5t
 '''
     for i in range(4):
         y=4.32+i*5.4
@@ -80,9 +80,9 @@ set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name native -voltage_domains CORE -pins {M5}
 add_pdn_stripe -grid native -layer M1 -width 0.018 -followpins
 add_pdn_stripe -grid native -layer M2 -width 0.018 -followpins
-add_pdn_stripe -grid native -layer M3 -width 0.09 -pitch 1.08 -spacing 0.45 -offset 0.27
-add_pdn_stripe -grid native -layer M4 -width 0.12 -pitch 2.16 -spacing 0.96 -offset 0.54
-add_pdn_stripe -grid native -layer M5 -width 0.12 -pitch 2.16 -spacing 0.96 -offset 0.54
+add_pdn_stripe -grid native -layer M3 -width 0.09 -pitch 1.08 -spacing 0.45 -offset 0.27 -extend_to_boundary
+add_pdn_stripe -grid native -layer M4 -width 0.12 -pitch 2.16 -spacing 0.96 -offset 0.54 -extend_to_boundary
+add_pdn_stripe -grid native -layer M5 -width 0.12 -pitch 2.16 -spacing 0.96 -offset 0.54 -extend_to_boundary
 foreach pair {{M1 M2} {M2 M3} {M3 M4} {M4 M5}} { add_pdn_connect -grid native -layers $pair }
 pdngen -failed_via_report /work/failed_vias.rpt
 puts {OT_PDN PASS}
