@@ -358,7 +358,7 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
-  python3 tools/closure_loop/ck_insertion.py --base $B --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
+  python3 tools/closure_loop/ck_insertion.py --base $B --clock {CLK} --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
@@ -398,7 +398,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short=9", "HEAD"], capture_output=True,
                             text=True).stdout.strip() + "+wt"
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=cap, KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
-                          RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0)
+                          RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0,
+                          CLK=spec["clock_port"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     script = f"/tmp/ref_gate_{spec['name']}_{ts}.sh"
     t0 = time.time()
     data = ship_tar(dirs)
