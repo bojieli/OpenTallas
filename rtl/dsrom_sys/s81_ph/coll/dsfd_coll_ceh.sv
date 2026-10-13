@@ -57,7 +57,14 @@ module dsfd_coll_cef #(parameter integer PW = 547, parameter integer PD = 256, p
 endmodule
 
 // ------------------------------------------------------------------------------------------------ engine lane-slice
-module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parameter integer OQX_D = 16) (
+// SEAM (s81-cesn 2026-10-13, opt-in; 0 = byte-identical): this module is the CORE leaf of the split lane-slice.  The
+// flat slice had 22,816 flops on one root (yosys stat: xl landings 6 x 1,160, pass-through landings 5 x 922, lanes
+// 12 x 206) and three routes missed hold.  With SEAM the engine runs at LSEAM 1 (FP32 lanes in 4 dsfd_coll_cesl leaves,
+// reduce +2 cycles), and the xl / pass-through links arrive from relay leaves (dsfd_coll_cesx / cesp, D XD towards the
+// sender, +2 cycles each way) into XLD / PTD-deep landings here.  All four slices of a composition MUST use the same
+// SEAM (they run in lockstep with no cross-slice wire): dsfd_coll_ceh asserts it.
+module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parameter integer OQX_D = 16,
+    parameter integer SEAM = 0, parameter integer XLD = 3, parameter integer PTD = 2) (
     input  wire              ck, input wire rs,
     input  wire              e_en, input wire [1:0] rank_i,
     input  wire [5:0]        qp,                            // VM queue pops (broadcast, VM credit replicas)
@@ -76,7 +83,10 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     output reg               bw_v, output reg [(S == 0 ? 563 : 512)-1:0] bw_d,
     // slice faults to ceq, header error bits to / from slice 0
     output reg  [1:0]        lf,                            // {e_flt, mq_flt}
-    output reg               pe_o, input wire [3:1] pe_i
+    output reg               pe_o, input wire [3:1] pe_i,
+    // SEAM: lane seam to the 4 dsfd_coll_cesl leaves (lane g: ln_d[r*128 + 32*g +: 32], r = source 0..3)
+    output wire              ln_v, output wire [511:0] ln_d,
+    input  wire [127:0]      ln_y, input wire [3:0] ln_yv, input wire [7:0] ln_ye, input wire [3:0] ln_pe
 );
     // OT_S81PH_COLL_CSTRESS (bench only): 8-deep receive FIFOs per parity, so the inter-die credit loop runs dry and
     // must work (277 records per die never exhaust the 256-deep production FIFOs)
@@ -111,7 +121,8 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     wire e_flt; wire [2:0] e_code; wire e_rpop;
     ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(0), .LANES(4), .TAGW(TAGW),
         .DEPTH(EDEPTH), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1), .FIFO_SRAM(1),
-        .SRAM_MACRO(1), .PULL(1), .PULL_D(XD), .PCOPY(1), .PSL(1), .LQW(2), .EXTF(1), .RHOLD(1)) u_eng (
+        .SRAM_MACRO(1), .PULL(1), .PULL_D(XD), .PCOPY(1), .PSL(1), .LQW(2), .EXTF(1), .RHOLD(1), .LSEAM(SEAM),
+        .XF_D((SEAM != 0) ? XLD : XD)) u_eng (
         .clk(ck), .rst_n(erst_n),
         .in_valid(e_iv), .in_ready(e_ir), .in_data(lq_d[SFW-1:0]), .in_last(lq_d[161]), .in_mode(lq_d[160]),
         .in_tag(lq_d[SFW +: TAGW]),
@@ -120,7 +131,8 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
         .rl_tx_valid(), .rl_tx_rec(), .rl_rx_valid(4'd0), .rl_rx_rec({4*PW{1'b0}}),
         .out_valid(o_v), .out_ready(o_rdy), .out_data(o_d), .out_last(o_last), .out_rank(o_rank), .out_err(o_err),
         .out_red(o_red), .out_rdat(o_rdat), .out_gdat(o_gdat),
-        .fault(e_flt), .fault_code(e_code), .red_hold(!room2), .out_rpop(e_rpop), .xl_v(xl_v), .xl_d(xl_d), .xl_cr(xl_cr));
+        .fault(e_flt), .fault_code(e_code), .red_hold(!room2), .out_rpop(e_rpop), .xl_v(xl_v), .xl_d(xl_d), .xl_cr(xl_cr),
+        .ln_v(ln_v), .ln_d(ln_d), .ln_y(ln_y), .ln_yv(ln_yv), .ln_ye(ln_ye), .ln_pe(ln_pe));
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin tx_v <= 3'd0; cr_o <= 6'd0; end
         else begin tx_v <= e_txv[3:1]; cr_o <= e_cro[7:2]; end
@@ -129,7 +141,7 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     wire [4:0] ep_ov, ep_or; wire [PTW-1:0] ep_od [0:4];
     genvar l;
     generate for (l = 0; l < 5; l = l + 1) begin : g_pt
-        ot_link_credit_rx #(.W(PTW), .DEPTH(XD), .OREG(0), .WFREE(2)) u_lp (.clk(ck), .rst_n(rst_n), .l_valid(pt_v[l]),
+        ot_link_credit_rx #(.W(PTW), .DEPTH((SEAM != 0) ? PTD : XD), .OREG(0), .WFREE(2)) u_lp (.clk(ck), .rst_n(rst_n), .l_valid(pt_v[l]),
             .l_data(pt_d[l*PTW +: PTW]), .l_credit(pt_cr[l]), .o_valid(ep_ov[l]), .o_ready(ep_or[l]), .o_data(ep_od[l]),
             .fault());
     end endgenerate
@@ -627,15 +639,56 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
                                 xd[1][(4+s)*163 +: 163], xd[1][s*163 +: 163], {2*163{1'b0}}};
         wire [(s == 0 ? 563 : 512)-1:0] bwd;
         wire po;
+`ifdef OT_S81PH_COLL_CES_SPLIT
+        // split lane-slices (route masters).  OT_S81PH_MUT_LOCKSTEP (negative control): slice 3 is the flat slice at the
+        // old latency -- the lockstep assertion below refuses it; with OT_S81PH_LOCKSTEP_NOASSERT the bench must.
+        localparam integer SEAM_S = `ifdef OT_S81PH_MUT_LOCKSTEP (s == 3) ? 0 : `endif 1;
+        if (SEAM_S == 0) begin : g_flat
+            dsfd_coll_ces #(.S(s)) u_s (.ck(c), .rs(r), .e_en(e_en), .rank_i(rank), .qp(qp), .fv_i(fv),
+                .q_v(q_v), .q_d(q_d[s*162 +: 162]), .q_cr(q_cr_s[s]),
+                .xl_v(xlv), .xl_d(xld), .xl_cr(xl_cr_s[s]),
+                .tx_v(tx_v_s[s]), .tx_d(tx_d_s[s]), .tx_rdy(tx_rdy), .cr_i(cr_i), .cr_o(cr_o_s[s]),
+                .pt_v(p_v), .pt_d(ptd), .pt_cr(p_cr_s[s]),
+                .bw_cr(bw_cr[0]), .bw_v(bwv_s[s]), .bw_d(bwd), .lf(slice_f[2*s +: 2]), .pe_o(pe[s]), .pe_i(pe[3:1]),
+                .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
+        end else if (s == 0) begin : g_sp0
+            dsfd_coll_ces0 u_s (.ck(c), .rs(r), .e_en(e_en), .rank_i(rank), .qp(qp), .fv_i(fv),
+                .q_v(q_v), .q_d(q_d[s*162 +: 162]), .q_cr(q_cr_s[s]),
+                .xl_v(xlv), .xl_d(xld), .xl_cr(xl_cr_s[s]),
+                .tx_v(tx_v_s[s]), .tx_d(tx_d_s[s]), .tx_rdy(tx_rdy), .cr_i(cr_i), .cr_o(cr_o_s[s]),
+                .pt_v(p_v), .pt_d(ptd), .pt_cr(p_cr_s[s]),
+                .bw_cr(bw_cr[0]), .bw_v(bwv_s[s]), .bw_d(bwd), .lf(slice_f[2*s +: 2]), .pe_o(pe[s]), .pe_i(pe[3:1]));
+        end else begin : g_spn
+            dsfd_coll_cesn u_s (.ck(c), .rs(r), .e_en(e_en), .rank_i(rank), .qp(qp), .fv_i(fv),
+                .q_v(q_v), .q_d(q_d[s*162 +: 162]), .q_cr(q_cr_s[s]),
+                .xl_v(xlv), .xl_d(xld), .xl_cr(xl_cr_s[s]),
+                .tx_v(tx_v_s[s]), .tx_d(tx_d_s[s]), .tx_rdy(tx_rdy), .cr_i(cr_i), .cr_o(cr_o_s[s]),
+                .pt_v(p_v), .pt_d(ptd), .pt_cr(p_cr_s[s]),
+                .bw_cr(bw_cr[0]), .bw_v(bwv_s[s]), .bw_d(bwd), .lf(slice_f[2*s +: 2]), .pe_o(pe[s]));
+        end
+`else
+        localparam integer SEAM_S = 0;
         dsfd_coll_ces #(.S(s)) u_s (.ck(c), .rs(r), .e_en(e_en), .rank_i(rank), .qp(qp), .fv_i(fv),
             .q_v(q_v), .q_d(q_d[s*162 +: 162]), .q_cr(q_cr_s[s]),
             .xl_v(xlv), .xl_d(xld), .xl_cr(xl_cr_s[s]),
             .tx_v(tx_v_s[s]), .tx_d(tx_d_s[s]), .tx_rdy(tx_rdy), .cr_i(cr_i), .cr_o(cr_o_s[s]),
             .pt_v(p_v), .pt_d(ptd), .pt_cr(p_cr_s[s]),
-            .bw_cr(bw_cr[0]), .bw_v(bwv_s[s]), .bw_d(bwd), .lf(slice_f[2*s +: 2]), .pe_o(pe[s]), .pe_i(pe[3:1]));
+            .bw_cr(bw_cr[0]), .bw_v(bwv_s[s]), .bw_d(bwd), .lf(slice_f[2*s +: 2]), .pe_o(pe[s]), .pe_i(pe[3:1]),
+            .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
+`endif
         if (s == 0) begin : g_b0 assign bwd0 = bwd; end
         else begin : g_bn assign bwd_s[s] = bwd; end
     end endgenerate
+    // LOCKSTEP (s81-cesn 2026-10-13, coordinator rule): no slice may run at a seam latency different from the others
+    localparam integer SEAM_ALL = g_s[0].SEAM_S + g_s[1].SEAM_S + g_s[2].SEAM_S + g_s[3].SEAM_S;
+`ifndef OT_S81PH_LOCKSTEP_NOASSERT
+    generate if (SEAM_ALL != 0 && SEAM_ALL != 4) begin : g_lockstep_refused
+        initial begin
+            $display("TB_S81PH_COLL_SYS FAIL lockstep: slices at different seam latencies (%0d of 4 split)", SEAM_ALL);
+            $fatal(1, "dsfd_coll_ceh: lockstep violated");
+        end
+    end endgenerate
+`endif
     assign q_cr = q_cr_s[0];
     // b_word = {b_d[2047:0], header[50:0]}; b_d[w*512 + s*128 + i] = slice s word w bit i
     assign bw_v[0] = bwv_s[0];
@@ -651,13 +704,137 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
 endmodule
 
 // ---- route masters (one per hardened variant; the composition instantiates the parameterised modules above)
+// ---- split lane-slice (s81-cesn 2026-10-13): hardened leaves + wires-only parents.  ces0 and cesn are the SAME structure
+// (same lane / xl-relay leaves, one parameterised parent, their own core and pass-through-relay masters).
+// lane leaf: one FP32 lane of the pairwise reduce, ((a + b) + (c + d)); pin flops in, the adders' output flops out.
+// e_en builds the engine reset exactly as the core does (same two flops), so lane and core reset on the same cycle.
+module dsfd_coll_cesl (input wire ck, input wire rs, input wire e_en, input wire i_v, input wire [127:0] i_d,
+    output wire [31:0] o_y, output wire o_yv, output wire [1:0] o_ye, output wire o_pe);
+    reg [1:0] rst_s;
+    always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    wire rst_n = rst_s[1];
+    reg en_q, erst_n;
+    always @(posedge ck or negedge rst_n) if (!rst_n) begin en_q <= 1'b0; erst_n <= 1'b0; end else begin en_q <= e_en; erst_n <= en_q; end
+    reg v_q; reg [127:0] d_q;                                 // pin flops
+    always @(posedge ck or negedge erst_n) if (!erst_n) v_q <= 1'b0; else v_q <= i_v;
+    always @(posedge ck) d_q <= i_d;
+    wire [31:0] ab, cd; wire av, cv; wire [1:0] ae, ce;
+    ot_hdc_fp32_add_fast u_ab (.clk(ck), .rst_n(erst_n), .valid_in(v_q), .a(d_q[31:0]), .b(d_q[63:32]), .y(ab), .err(ae), .valid_out(av));
+    ot_hdc_fp32_add_fast u_cd (.clk(ck), .rst_n(erst_n), .valid_in(v_q), .a(d_q[95:64]), .b(d_q[127:96]), .y(cd), .err(ce), .valid_out(cv));
+    ot_hdc_fp32_add_fast u_y (.clk(ck), .rst_n(erst_n), .valid_in(av), .a(ab), .b(cd), .y(o_y), .err(o_ye), .valid_out(o_yv));
+    reg [2:0] pe_d;                                           // first-level errors, aligned to o_ye (the engine's err_delay)
+    always @(posedge ck or negedge erst_n) if (!erst_n) pe_d <= 3'd0; else pe_d <= {pe_d[1:0], (|ae) || (|ce)};
+    assign o_pe = pe_d[2];
+    wire unused_ok = &{1'b0, cv};
+endmodule
+// xl relay leaf: ONE remote source's two parity links, FIFO tile (cef, XD credits) -> relay -> core landing (XLD slots)
+module dsfd_coll_cesx #(parameter integer XD = 6, parameter integer XLD = 3) (input wire ck, input wire rs, input wire e_en,
+    input wire [1:0] i_v, input wire [2*163-1:0] i_d, output wire [1:0] i_cr,
+    output wire [1:0] o_v, output wire [2*163-1:0] o_d, input wire [1:0] o_cr);
+    reg [1:0] rst_s;
+    always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    wire rst_n = rst_s[1];
+    reg en_q, erst_n;
+    always @(posedge ck or negedge rst_n) if (!rst_n) begin en_q <= 1'b0; erst_n <= 1'b0; end else begin en_q <= e_en; erst_n <= en_q; end
+    genvar q;
+    generate for (q = 0; q < 2; q = q + 1) begin : g_q
+        ot_s81ph_cr_relay #(.W(163), .D(XD), .DO(XLD)) u_r (.clk(ck), .rst_n(erst_n), .i_v(i_v[q]), .i_cr(i_cr[q]),
+            .i_d(i_d[q*163 +: 163]), .o_v(o_v[q]), .o_cr(o_cr[q]), .o_d(o_d[q*163 +: 163]));
+    end endgenerate
+endmodule
+// pass-through relay leaf: the five pass-through lane links (lane tiles, XD credits) -> relay -> core landing (PTD slots)
+module dsfd_coll_cesp #(parameter integer PTW = 129, parameter integer XD = 6, parameter integer PTD = 2) (input wire ck, input wire rs,
+    input wire [4:0] i_v, input wire [5*PTW-1:0] i_d, output wire [4:0] i_cr,
+    output wire [4:0] o_v, output wire [5*PTW-1:0] o_d, input wire [4:0] o_cr);
+    reg [1:0] rst_s;
+    always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    wire rst_n = rst_s[1];
+    genvar l;
+    generate for (l = 0; l < 5; l = l + 1) begin : g_l
+        ot_s81ph_cr_relay #(.W(PTW), .D(XD), .DO(PTD)) u_r (.clk(ck), .rst_n(rst_n), .i_v(i_v[l]), .i_cr(i_cr[l]),
+            .i_d(i_d[l*PTW +: PTW]), .o_v(o_v[l]), .o_cr(o_cr[l]), .o_d(o_d[l*PTW +: PTW]));
+    end endgenerate
+endmodule
+// parameter-free leaf masters
+module dsfd_coll_cesp0 (input wire ck, input wire rs, input wire [4:0] i_v, input wire [5*169-1:0] i_d, output wire [4:0] i_cr,
+    output wire [4:0] o_v, output wire [5*169-1:0] o_d, input wire [4:0] o_cr);
+    dsfd_coll_cesp #(.PTW(169)) u (.*);
+endmodule
+module dsfd_coll_cespn (input wire ck, input wire rs, input wire [4:0] i_v, input wire [5*129-1:0] i_d, output wire [4:0] i_cr,
+    output wire [4:0] o_v, output wire [5*129-1:0] o_d, input wire [4:0] o_cr);
+    dsfd_coll_cesp #(.PTW(129)) u (.*);
+endmodule
+module dsfd_coll_cesc0 (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [562:0] bw_d,
+    output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i,
+    output wire ln_v, output wire [511:0] ln_d, input wire [127:0] ln_y, input wire [3:0] ln_yv, input wire [7:0] ln_ye,
+    input wire [3:0] ln_pe);
+    dsfd_coll_ces #(.S(0), .SEAM(1)) u (.*);
+endmodule
+module dsfd_coll_cescn (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [511:0] bw_d,
+    output wire [1:0] lf, output wire pe_o,
+    output wire ln_v, output wire [511:0] ln_d, input wire [127:0] ln_y, input wire [3:0] ln_yv, input wire [7:0] ln_ye,
+    input wire [3:0] ln_pe);
+    dsfd_coll_ces #(.S(1), .SEAM(1)) u (.*, .pe_i(3'd0));
+endmodule
+// wires-only parent of the split lane-slice (S = 0: ces0, else cesn): 4 lane leaves, 3 xl relay leaves, 1 pass-through
+// relay leaf, the core.  No logic and no flop here: every seam is leaf flop -> wire -> leaf flop.
+module dsfd_coll_cess #(parameter integer S = 0, parameter integer PTW = (S == 0) ? 169 : 129, parameter integer BW = (S == 0) ? 563 : 512) (
+    input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*PTW-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [BW-1:0] bw_d,
+    output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i);
+    wire ln_v; wire [511:0] ln_d; wire [127:0] ln_y; wire [3:0] ln_yv, ln_pe; wire [7:0] ln_ye;
+    wire [7:0] cx_v, cx_cr; wire [8*163-1:0] cx_d;
+    wire [4:0] cp_v, cp_cr; wire [5*PTW-1:0] cp_d;
+    assign cx_v[1:0] = 2'b00; assign cx_d[2*163-1:0] = {2*163{1'b0}}; assign xl_cr[1:0] = 2'b00;
+    genvar g;
+    generate
+        for (g = 0; g < 4; g = g + 1) begin : g_ln
+            dsfd_coll_cesl u_l (.ck(ck), .rs(rs), .e_en(e_en), .i_v(ln_v),
+                .i_d({ln_d[3*128 + 32*g +: 32], ln_d[2*128 + 32*g +: 32], ln_d[128 + 32*g +: 32], ln_d[32*g +: 32]}),
+                .o_y(ln_y[32*g +: 32]), .o_yv(ln_yv[g]), .o_ye(ln_ye[2*g +: 2]), .o_pe(ln_pe[g]));
+        end
+        for (g = 1; g < 4; g = g + 1) begin : g_x
+            dsfd_coll_cesx u_x (.ck(ck), .rs(rs), .e_en(e_en), .i_v(xl_v[2*g +: 2]), .i_d(xl_d[2*g*163 +: 2*163]),
+                .i_cr(xl_cr[2*g +: 2]), .o_v(cx_v[2*g +: 2]), .o_d(cx_d[2*g*163 +: 2*163]), .o_cr(cx_cr[2*g +: 2]));
+        end
+        if (S == 0) begin : g_0
+            dsfd_coll_cesp0 u_p (.ck(ck), .rs(rs), .i_v(pt_v), .i_d(pt_d), .i_cr(pt_cr), .o_v(cp_v), .o_d(cp_d), .o_cr(cp_cr));
+            dsfd_coll_cesc0 u_c (.ck(ck), .rs(rs), .e_en(e_en), .rank_i(rank_i), .qp(qp), .fv_i(fv_i), .q_v(q_v), .q_d(q_d),
+                .q_cr(q_cr), .xl_v(cx_v), .xl_d(cx_d), .xl_cr(cx_cr), .tx_v(tx_v), .tx_d(tx_d), .tx_rdy(tx_rdy), .cr_i(cr_i),
+                .cr_o(cr_o), .pt_v(cp_v), .pt_d(cp_d), .pt_cr(cp_cr), .bw_cr(bw_cr), .bw_v(bw_v), .bw_d(bw_d), .lf(lf),
+                .pe_o(pe_o), .pe_i(pe_i), .ln_v(ln_v), .ln_d(ln_d), .ln_y(ln_y), .ln_yv(ln_yv), .ln_ye(ln_ye), .ln_pe(ln_pe));
+        end else begin : g_n
+            dsfd_coll_cespn u_p (.ck(ck), .rs(rs), .i_v(pt_v), .i_d(pt_d), .i_cr(pt_cr), .o_v(cp_v), .o_d(cp_d), .o_cr(cp_cr));
+            dsfd_coll_cescn u_c (.ck(ck), .rs(rs), .e_en(e_en), .rank_i(rank_i), .qp(qp), .fv_i(fv_i), .q_v(q_v), .q_d(q_d),
+                .q_cr(q_cr), .xl_v(cx_v), .xl_d(cx_d), .xl_cr(cx_cr), .tx_v(tx_v), .tx_d(tx_d), .tx_rdy(tx_rdy), .cr_i(cr_i),
+                .cr_o(cr_o), .pt_v(cp_v), .pt_d(cp_d), .pt_cr(cp_cr), .bw_cr(bw_cr), .bw_v(bw_v), .bw_d(bw_d), .lf(lf),
+                .pe_o(pe_o), .ln_v(ln_v), .ln_d(ln_d), .ln_y(ln_y), .ln_yv(ln_yv), .ln_ye(ln_ye), .ln_pe(ln_pe));
+            wire unused_pe = &{1'b0, pe_i};
+        end
+    endgenerate
+    wire unused_ok = &{1'b0, cx_cr[1:0]};
+endmodule
+// ---- route masters of the lane-slice: OT_S81PH_COLL_CES_SPLIT selects the split structure for BOTH (one define, so no
+// committed configuration can mix seam latencies); without it both are the flat slices (the closed ces0 view).
+`ifdef OT_S81PH_COLL_CES_SPLIT
 module dsfd_coll_ces0 (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
     input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
     input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
     input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
     input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [562:0] bw_d,
     output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i);
-    dsfd_coll_ces #(.S(0)) u (.*);
+    dsfd_coll_cess #(.S(0)) u (.*);
 endmodule
 module dsfd_coll_cesn (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
     input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
@@ -665,8 +842,26 @@ module dsfd_coll_cesn (input wire ck, input wire rs, input wire e_en, input wire
     input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
     input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [511:0] bw_d,
     output wire [1:0] lf, output wire pe_o);
-    dsfd_coll_ces #(.S(1)) u (.*, .pe_i(3'd0));
+    dsfd_coll_cess #(.S(1)) u (.*, .pe_i(3'd0));
 endmodule
+`else
+module dsfd_coll_ces0 (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [562:0] bw_d,
+    output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i);
+    dsfd_coll_ces #(.S(0)) u (.*, .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
+endmodule
+module dsfd_coll_cesn (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [511:0] bw_d,
+    output wire [1:0] lf, output wire pe_o);
+    dsfd_coll_ces #(.S(1)) u (.*, .pe_i(3'd0), .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
+endmodule
+`endif
 module dsfd_coll_cele (input wire ck, input wire rs, input wire e_en, output wire f_lo_v, input wire f_lo_r,
     output wire [552:0] f_lo_d, input wire f_li_v, output wire f_li_r, input wire [552:0] f_li_d, input wire [2:0] x_flt,
     output wire [3:0] lf, input wire tx_v, input wire [4*163-1:0] tx_d, output wire tx_rdy, input wire [1:0] cr_o,
