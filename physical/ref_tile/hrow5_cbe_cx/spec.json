@@ -41,8 +41,8 @@
  "job": {
   "owner": "Codex:ds-hrow-1012",
   "branch": "codex/ds-hrow-1012",
-  "tag": "r6-cx",
-  "purpose": "r5g real routed failures: cbe TT46.28 FF-32.58 DRC5; cbw TT83.58 FF-6.25 DRC3. All residual DRC VIA45 M4 pads overlap the SRAM M4 interior OBS at physical E edge even after MY; reserve M5 interior edge strips 0.024..0.30um and retain exterior via/planar M4 access. Real hold paths wi/ri->SRAM have unmatched macro clock arrival; balanced local clock spine with one leaf per macro and 24-sink local leaves. No latency or RTL change; gold/mutant loop gates.",
+  "tag": "r7-cx",
+  "purpose": "r6 guard silently skipped after flow renamed caller pre_global_route_pre_grt.tcl; fix suffix dispatch and assert 8 creations/removals. Actual spine ran. Separate macro launch issue: cbe wi1->SRAM2.waddr0 TT-15.75, macro wd FF-5.78; cbw FF-9.02. Add kept per-macro write-data and read/write-address capture copies from same original f input edge as chain flops; forwarding flops now independent of SRAM launch, no latency change. Exact positive/mutant gates required.",
   "benches": [
    {
     "name": "hrow_tiles_pos",
