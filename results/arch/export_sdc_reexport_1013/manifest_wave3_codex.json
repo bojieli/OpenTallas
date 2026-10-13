@@ -3372,6 +3372,102 @@
     "vj_matches_manifest": true,
     "commit": "5e6ab1fda2e4ad079d18bfe65f0df11243a8ec85"
    }
+  },
+  {
+   "view": "qfd_cdc",
+   "dir": "physical/qwen_die_masters/views/qfd_cdc_eco_h1",
+   "run": "cdc_eco-hm80-h1-e59973516-tt",
+   "host": "ot-epyc1tb",
+   "verdict_ps": {
+    "tt": 46.92,
+    "ff": 1.21
+   },
+   "verdict_check": {
+    "ff": {
+     "export_ps": 1.2089357293021408,
+     "verdict_ps": 1.21,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 46.91502741849263,
+     "verdict_ps": 46.92,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": {
+     "sha256": "048e4688de9aaed5da8b21083b2e5d314eee291ea7fd3bb9873c1ef2743bde30",
+     "setup_max": 543.18,
+     "hold_max": 214.92,
+     "n": 2340
+    },
+    "ff": {
+     "sha256": "37ef4c8d4cf05993b1512ba05c0da21554bd81cbab913ffbe6149297bb6a7479",
+     "setup_max": 236.75,
+     "hold_max": 132.35,
+     "n": 2340
+    }
+   },
+   "new": {
+    "ss": {
+     "sha256": "048e4688de9aaed5da8b21083b2e5d314eee291ea7fd3bb9873c1ef2743bde30",
+     "setup_max": 543.18,
+     "hold_max": 214.92,
+     "n": 2340
+    },
+    "ff": {
+     "sha256": "37ef4c8d4cf05993b1512ba05c0da21554bd81cbab913ffbe6149297bb6a7479",
+     "setup_max": 236.75,
+     "hold_max": 132.35,
+     "n": 2340
+    },
+    "tt": {
+     "sha256": "77074bfbaa2b3301397c99838d00c0cea3af5b5364441542be0a47d20727c6cc",
+     "setup_max": 345.64,
+     "hold_max": 161.58,
+     "n": 2340
+    }
+   },
+   "added": [
+    "tt"
+   ],
+   "changed": [],
+   "archive_proof": {
+    "variant": {
+     "corner_sta_json": "record/route/corner_sta.json",
+     "corner_sta_py_sha256": "2a0dd06fb6c0ccb8abf0e9cab2e17111d6e1aaed83ea0cbe57c3f78b9e893350",
+     "ref_wrapper": null,
+     "macros": [],
+     "post_sdc": [
+      "physical/qwen_stream4_cdc/io_skew90.sdc"
+     ],
+     "setup_post_sdc": [],
+     "sdc_name": "6_final.sdc",
+     "vts": [],
+     "vtswap_sed": false,
+     "census": false
+    },
+    "tcl_sha256": {
+     "ss": "d1a412f2faebc253ad12751fd907bafc43c796b61d74656b9b80f7c95ad3ca96",
+     "ff": "9bfc69e79e5844fcd014fb412fb0d331c6f6e13a2cb10e00a3516b7b39845e77"
+    },
+    "verdict": {
+     "tt": 46.92,
+     "ff": 1.21
+    },
+    "manifest": {
+     "tt": 46.92,
+     "ff": 1.21
+    },
+    "vj_matches_manifest": true,
+    "commit": "e599735164e0682c5212dee541457d1ba956459c"
+   },
+   "runner_repair": {
+    "file": "physical/qwen_stream4_cdc/io_skew.sdc",
+    "source_commit": "e59973516",
+    "sha256": "85bd94eab509983b6d83c763c3f1fe3c55ca9592a1b3227aec89c350da8c7cd4",
+    "why": "nested source missing from archived replay staging; original constraints kept"
+   }
   }
  ]
 }
