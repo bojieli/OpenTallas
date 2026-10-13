@@ -52,6 +52,7 @@
 // edges a beat (pipelined) and +3 edges a landing (once a group: emission waits for the write pipe to drain).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_sm_xload #(
+    parameter integer XW_FLOW = 0,        // opt-in finite retained x-write transport
     parameter integer NXC = 4,            // VM packet clients (reads in flight)
     parameter integer PMAX = 8,
     parameter integer MUT_M = 0,          // mutant (FILL-9): a landing sector's write mask on lane slice (j ^ 1) of its quarter
@@ -83,12 +84,14 @@ module ot_hgi_sm_xload #(
     input  wire [1:0]         x_space,
     input  wire [1:0]         x_fmt,
     input  wire [6:0]         x_xb,          // smmv 3a: x-store slot base (fragment address offset; compiler-allocated)
-    output reg                x_done,
+    input wire                xw_ready,
+    output wire               xw_last,
+    output wire               x_done,
     output reg                x_fault,
-    output reg                xw_en,
-    output reg  [6:0]         xw_addr,
-    output reg  [6:0]         xw_grp,
-    output reg  [2047:0]      xw_data,
+    output wire               xw_en,
+    output wire [6:0]         xw_addr,
+    output wire [6:0]         xw_grp,
+    output wire [2047:0]      xw_data,
     output wire [NXC*338-1:0] vmq,   // {v, payload 337}: v from a reset flop, payload from a data flop
     input  wire [NXC*274-1:0] vmr,
     // smmv 3b: the VM wide read lane group (WVM = 1; lanearb client: rg_req held a burst, lane b {v, sector15}, credits,
@@ -99,6 +102,70 @@ module ot_hgi_sm_xload #(
     input  wire [31:0]        wrq_cr,
     input  wire [32*257-1:0]  wrr
 );
+    reg px_en, px_last, legacy_done;
+    reg [6:0] px_addr, px_grp; reg [2047:0] px_data;
+    // Four transport credits cover two registered enable propagation stages, the pin beat in flight,
+    // and an accepted seat. Credits are charged BEFORE the pin beat launches. The existing read/emit
+    // pipeline retains all other operands. No command-sized FIFO and no reset on payload registers.
+    reg go_ctl, go_em; wire transport_fault;
+    wire emit_go = (XW_FLOW == 0) || (go_em && !transport_fault);
+    wire emit_next = rv[RD-1] || be_v || k_bev;
+    wire pin_last_next = k_xdone || (rv[RD-1] && rm_addr[RD-1] == {4'(gn-1),3'd7} && rm_b[RD-1] == nb-1) ||
+        (be_v && be_a == {4'(gn-1),3'd7} && be_g == nb-1);
+    generate if (XW_FLOW != 0) begin : g_xw_flow
+        localparam integer W=2064, NS=(W+63)/64;
+        reg [2:0] credits, count; reg hv, flow_done, flow_fault; wire [W-1:0] head;
+        wire pop = hv && xw_ready;
+        wire grant = emit_go && emit_next;
+        wire [3:0] cr_next = {1'b0,credits} + 4'(pop) - 4'(grant);
+        wire [3:0] cn_next = {1'b0,count} + 4'(px_en) - 4'(pop);
+        wire [W-1:0] payload={px_last,1'b1,px_addr,px_grp,px_data};
+        assign transport_fault=flow_fault;
+        assign xw_en=hv && !flow_fault; assign xw_last=head[2063];
+        assign xw_addr=head[2061:2055]; assign xw_grp=head[2054:2048]; assign xw_data=head[2047:0];
+        // Transport completion is acceptance only. The native adapter must wait for matching final
+        // native_release before reporting committed completion to the SM engine.
+        assign x_done=flow_done;
+        always @(posedge clk or negedge rst_c) begin
+            if(!rst_c)begin credits<=4;count<=0;hv<=0;go_ctl<=0;go_em<=0;flow_done<=0;flow_fault<=0;end
+            else begin
+                flow_done<=pop && xw_last && !flow_fault;
+                credits<=cr_next[2:0];count<=cn_next[2:0];hv<=cn_next!=0;
+                go_ctl<=cr_next>2;go_em<=go_ctl;
+                if(cr_next>4 || cn_next>4)flow_fault<=1;
+`ifndef SYNTHESIS
+                if(cr_next>4 || cn_next>4) $fatal(1,"XW_FLOW transport credit/seat invariant failed");
+`endif
+            end
+        end
+        genvar r;
+        for(r=0;r<NS;r=r+1)begin:g_region
+            localparam integer LO=r*64, WS=(W-LO<64)?W-LO:64;
+            (* keep *) reg [2:0] local_count;
+            reg [WS-1:0] seats[0:3];
+            wire local_pop=local_count!=0 && xw_ready;
+            wire [3:0] after_pop={1'b0,local_count}-4'(local_pop);
+            always @(posedge clk or negedge rst_c)
+                if(!rst_c)local_count<=0;
+                else local_count<=3'(after_pop+4'(px_en));
+            genvar k;
+            for(k=0;k<4;k=k+1)begin:g_seat
+                // Separate local row enables: at most64 payload loads, no queue-wide shift/select net.
+                (* keep *) wire shift=local_pop && local_count>k+1;
+                (* keep *) wire store=px_en && after_pop==k;
+                always @(posedge clk)begin
+                    if(k<3 && shift)seats[k]<=seats[(k<3)?k+1:k];
+                    if(store)seats[k]<=payload[LO+:WS];
+                end
+            end
+            assign head[LO+:WS]=seats[0]; // pure held register boundary, no data mux at the pins
+        end
+    end else begin:g_no_xw_flow
+        assign transport_fault=1'b0;
+        assign xw_en=px_en;assign xw_last=px_last;assign xw_addr=px_addr;assign xw_grp=px_grp;assign xw_data=px_data;
+        assign x_done=legacy_done;
+        always @(posedge clk or negedge rst_c)if(!rst_c)begin go_ctl<=0;go_em<=0;end else begin go_ctl<=1;go_em<=1;end
+    end endgenerate
     localparam integer XC = 3152, XOFF = 2128;
     localparam integer RD = 8;             // read pipe: r0 decision, r1 quarter copy, r2 pins, r3 macro out, r4 cap, r5 or4, r6 rw, r7 xb
     reg busy; reg [3:0] pp; reg [17:0] base; reg [17:0] st;
@@ -165,22 +232,29 @@ module ot_hgi_sm_xload #(
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
         for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
             // per-macro pin flops (kept: one copy a macro, so no register drives pins across the field)
-            (* keep = 1 *) reg       rp_ce;  (* keep = 1 *) reg [6:0] rp_a;   (* keep = 1 *) reg rp_sel;
+            (* keep = 1 *) reg       rp_ce; (* keep = 1 *) reg rp_fire;  (* keep = 1 *) reg [6:0] rp_a;   (* keep = 1 *) reg rp_sel;
             (* keep = 1 *) reg       wp_ce;  (* keep = 1 *) reg [6:0] wp_a;   reg [15:0] wp_d;  reg [15:0] wp_m;
             // smmv 3b wide landing pins (WVM): a full 256-b row (16 lanes x BF16 of t-value gt) at word {g mod 16, p}
             (* keep = 1 *) reg       vp_ce;  (* keep = 1 *) reg [6:0] vp_a;   reg [255:0] vp_d;
+            (* keep *) reg local_emit;
+            always @(posedge clk or negedge rst_c)if(!rst_c)local_emit<=0;else local_emit<=go_ctl;
+            wire macro_go=(XW_FLOW==0)||local_emit;
             reg [255:0] cq;
             wire [255:0] rd;
             wire [3:0] lsl = w1_l[gq] ^ ((MUT_M != 0) ? 4'd1 : 4'd0);
             always @(posedge clk or negedge rst_c) begin
-                if (!rst_c) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; vp_ce <= 1'b0; end
-                else begin rp_ce <= rv[1] && r1_oh[gq][gt]; rp_sel <= rp_ce; wp_ce <= w1_v[gq];
+                if (!rst_c) begin rp_ce <= 1'b0; rp_fire <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; vp_ce <= 1'b0; end
+                else begin
+                    // Freeze the SRAM's own synchronous read stage too. Predict the next local
+                    // enable phase in a PIN FLOP; a paused pipeline must not overwrite its pending read.
+                    rp_fire <= ((XW_FLOW==0)||go_ctl) && (macro_go ? (rv[1] && r1_oh[gq][gt]) : rp_ce);
+                    if(macro_go)begin rp_ce <= rv[1] && r1_oh[gq][gt]; rp_sel <= rp_ce; end wp_ce <= w1_v[gq];
                            vp_ce <= (WVM != 0) && cv_v && cv_h == (gq / 2); end
             end
             always @(posedge clk) begin
-                rp_a <= r1_sp[gq];
+                if(macro_go)rp_a <= r1_sp[gq];
                 wp_a <= w1_a[gq]; wp_d <= w1_d[gq][16 * gt +: 16]; wp_m <= 16'd1 << lsl;
-                cq <= rd & {256{rp_sel}};                                      // capture: zero unless this macro was read
+                if(macro_go)cq <= rd & {256{rp_sel}};                                      // capture: zero unless this macro was read
                 vp_a <= cv_a;
                 for (integer ll = 0; ll < 16; ll = ll + 1) vp_d[16 * ll +: 16] <= cv_d[((gq % 2) * 16 + ll) * 128 + 16 * gt +: 16];
             end
@@ -189,17 +263,17 @@ module ot_hgi_sm_xload #(
                 assign wmask[16 * gs +: 16] = {16{wp_m[gs]}};
             end
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
-                .r_ce_in(rp_ce), .r_addr_in(rp_a), .rd_out(rd),
+                .r_ce_in(rp_fire), .r_addr_in(rp_a), .rd_out(rd),
                 .w_ce_in(wp_ce || vp_ce), .w_addr_in(vp_ce ? vp_a : wp_a), .wd_in(vp_ce ? vp_d : {16{wp_d}}),
                 .w_mask_in(vp_ce ? {256{1'b1}} : wmask), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
             assign cap[gt * 4 + gq] = cq;
         end
     end endgenerate
     always @(posedge clk) for (integer h = 0; h < 2; h = h + 1) for (integer q = 0; q < 4; q = q + 1)
-        or4[h * 4 + q] <= cap[(4 * h + 0) * 4 + q] | cap[(4 * h + 1) * 4 + q] | cap[(4 * h + 2) * 4 + q] |
+        if(emit_go)or4[h * 4 + q] <= cap[(4 * h + 0) * 4 + q] | cap[(4 * h + 1) * 4 + q] | cap[(4 * h + 2) * 4 + q] |
                           cap[(4 * h + 3) * 4 + q];
     reg [1023:0] rw;                       // the beat's slot word (OR-2 of the halves)
-    always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) rw[256 * q +: 256] <= or4[q] | or4[4 + q];
+    always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) if(emit_go)rw[256 * q +: 256] <= or4[q] | or4[4 + q];
     // ---- VM responses
     reg [NXC-1:0] hv;                      // a client's response held, not yet landed
     reg [273:0] hdat [0:NXC-1];
@@ -314,7 +388,7 @@ module ot_hgi_sm_xload #(
     wire blk_ok = blk < nbk;
     wire [31:0] wdb = {14'd0, base} + bp * {14'd0, st} + {blk, 5'd0} + {bs, 3'd0};
     wire bd_rd = busy && ph == 2'd3 && bph == 2'd1;
-    assign bshift = busy && ph == 2'd3 && bph == 2'd2;
+    assign bshift = emit_go && busy && ph == 2'd3 && bph == 2'd2;
     wire bd_issue = bd_rd && !bq_iss_done && bp < pp && blk_ok && found && !aact[asl];
     reg bq_v; reg bq_s;                    // a complete block -> the quantiser (older slot first)
     always @* begin
@@ -325,7 +399,7 @@ module ot_hgi_sm_xload #(
     wire bd_done_rd = bd_rd && bq_iss_done && bq_got == bq_exp && !aact[0] && !aact[1] && !aq_v;
     wire be_last = bph == 2'd2 && b == nb - 7'd1;
     // BW8: block-dot commands go to the 8-lane pipeline (k_take); the command flop holds until taken; a packet / WVM
-    // command waits until the BW8 pipeline is empty (the xw pins and x_done order are shared)
+    // command waits until the BW8 pipeline is empty (the xw pins and legacy_done order are shared)
     wire k_cmd = (BW8 != 0) && c_bdf;
     wire k_take, k_wflt, k_cidle, k_allidle, k_xdone, k_xflt, k_bev; wire [6:0] k_bea, k_beg; wire [2047:0] k_bed;
     wire start = cmd_v && !c_bad && !k_cmd && ((BW8 == 0) || k_allidle);
@@ -362,19 +436,20 @@ module ot_hgi_sm_xload #(
     wire fin = busy && ph == 2'd2 && !(|rv) && !be_v && !(wm && (w_busy || w_go));   // last beat out
     // ---- control (reset)
     always @(posedge clk or negedge rst_c) begin
-        if (!rst_c) begin cmd_v <= 1'b0; busy <= 1'b0; x_done <= 1'b0; x_fault <= 1'b0; xw_en <= 1'b0; vq_v <= 0;
+        if (!rst_c) begin cmd_v <= 1'b0; busy <= 1'b0; legacy_done <= 1'b0; x_fault <= 1'b0; px_en <= 1'b0; vq_v <= 0;
                           cbusy <= 0; ph <= 0; hv <= 0; rv <= 0; l1_v <= 1'b0; l2_v <= 1'b0; w1_v <= 4'd0;
                           bd <= 1'b0; bph <= 2'd0; aact <= 2'b00; aq_v <= 1'b0; tgh <= 4'd0; tgt <= 4'd0; be_v <= 1'b0;
                           bflt <= 1'b0; wm <= 1'b0; w_go <= 1'b0; wl_pend <= 1'b0; wl_next <= 1'b0; r_v <= 1'b0;
                           cv_v <= 1'b0; for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
         else begin
-            x_done <= (fin && !(bd && bflt)) || (k_xdone && !k_xflt);
+            legacy_done <= emit_go && ((fin && !(bd && bflt)) || (k_xdone && !k_xflt));
             if ((fin && bd && bflt) || (k_xdone && k_xflt)) x_fault <= 1'b1;
-            rv <= {rv[RD-2:0], em_ph}; xw_en <= rv[RD-1] || be_v || k_bev;
+            if(emit_go)rv <= {rv[RD-2:0], em_ph}; px_en <= emit_go && emit_next;
+            if(emit_go)px_last<=pin_last_next;
             l1_v <= land; l2_v <= l1_v;
             for (integer wq = 0; wq < 4; wq = wq + 1) w1_v[wq] <= l2_v && l2_q == wq;
             cmd_v <= (x_v && x_rdy) ? 1'b1 : (BW8 != 0 && cmd_v && !c_bad && !start && !k_take) ? 1'b1 : 1'b0;
-            if ((cmd_v && c_bad) || k_wflt) x_fault <= 1'b1;
+            if ((cmd_v && c_bad) || k_wflt || transport_fault) x_fault <= 1'b1;
             if (start) begin busy <= 1'b1; ph <= c_bdf ? 2'd3 : 2'd0; bd <= c_bdf; bph <= 2'd1; aact <= 2'b00; bflt <= 1'b0;
                              wm <= (WVM != 0) && !c_bdf; wl_pend <= (WVM != 0) && !c_bdf; wl_next <= 1'b0;
                              for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
@@ -392,22 +467,22 @@ module ot_hgi_sm_xload #(
             for (integer ch = 0; ch < NXC; ch = ch + 1) if (take[ch]) hv[ch] <= 1'b1;
             if (land) begin hv[lsel] <= 1'b0; cbusy[lsel] <= 1'b0; end
             // block-dot: land one held sector an edge into its assembly slot; complete blocks -> the quantiser
-            aq_v <= 1'b0; be_v <= 1'b0;
+            aq_v <= 1'b0; if(emit_go)be_v <= 1'b0;
             if (bd_rd && lsel_v) begin hv[lsel] <= 1'b0; cbusy[lsel] <= 1'b0; end
             if (bd_issue && bs == 2'd3) aact[asl] <= 1'b1;
             if (bd_rd && bq_v) begin aq_v <= 1'b1; aact[bq_s] <= 1'b0; end
             if (aq_v) tgt <= tgt + 4'd1;
             if (ph == 2'd3 && aq_vo) begin tgh <= tgh + 4'd1; if (aq_f) bflt <= 1'b1; end
             if (bd_done_rd) bph <= 2'd2;
-            if (busy && ph == 2'd3 && bph == 2'd2) begin
+            if (emit_go && busy && ph == 2'd3 && bph == 2'd2) begin
                 be_v <= 1'b1;
                 if (be_last) begin
                     if (t == 4'd7 && g == gn - 8'd1) ph <= 2'd2; else bph <= 2'd1;
                 end
             end
             if (to_emit) ph <= 2'd1;
-            if (em_ph && last_bt) ph <= last_g ? 2'd2 : 2'd0;
-            if (fin) begin busy <= 1'b0; ph <= 2'd0; end
+            if (emit_go && em_ph && last_bt) ph <= last_g ? 2'd2 : 2'd0;
+            if (emit_go && fin) begin busy <= 1'b0; ph <= 2'd0; end
         end
     end
     // ---- data (no reset)
@@ -457,7 +532,7 @@ module ot_hgi_sm_xload #(
         if (ph == 2'd3 && aq_vo) begin
             w_d <= {aq_e, aq_q};
         end
-        if (busy && ph == 2'd3 && bph == 2'd2) begin
+        if (emit_go && busy && ph == 2'd3 && bph == 2'd2) begin
             be_a <= {g[3:0], t[2:0]}; be_g <= b; be_d <= bdb[0];
             if (be_last) begin
                 b <= 7'd0;
@@ -496,7 +571,7 @@ module ot_hgi_sm_xload #(
         if (to_emit) begin t <= 4'd0; b <= 7'd0; end
         // read pipeline: r0 decision -> r1 per-quarter copy -> r2 macro pins -> r3 macro out -> r4 cap -> r5 or4
         //                -> r6 rw -> r7 xb (beat) -> xw pins
-        if (em_ph) begin
+        if (emit_go && em_ph) begin
             r0_t <= tt[2:0]; r0_sp <= wm ? {g[3:0], sob[2:0]} : {3'd0, sob};
             rm_addr[0] <= {g[3:0], t[2:0]}; rm_b[0] <= b; rm_ok[0] <= in_slot(b, pp);
             if (last_b) begin
@@ -507,15 +582,15 @@ module ot_hgi_sm_xload #(
                 t <= t + 4'd1;
             end else b <= b + 7'd1;
         end
-        for (integer q = 0; q < 4; q = q + 1) begin r1_oh[q] <= 8'd1 << r0_t; r1_sp[q] <= r0_sp; end
+        for (integer q = 0; q < 4; q = q + 1) begin if(emit_go)begin r1_oh[q] <= 8'd1 << r0_t; r1_sp[q] <= r0_sp;end end
         for (integer s = 1; s < RD; s = s + 1) begin
-            rm_addr[s] <= rm_addr[s - 1]; rm_b[s] <= rm_b[s - 1]; rm_ok[s] <= rm_ok[s - 1];
+            if(emit_go)begin rm_addr[s] <= rm_addr[s - 1]; rm_b[s] <= rm_b[s - 1]; rm_ok[s] <= rm_ok[s - 1];end
         end
         // r7 (xb): the beat assembled from rw (r6) under its stage-6 beat index; xw_* = pin flops of xb
-        if (rv[RD-2]) xb <= rm_ok[RD-2] ? beats[rm_b[RD-2]] : 2048'd0;
-        if (rv[RD-1]) begin xw_addr <= rm_addr[RD-1] + c_xb; xw_grp <= rm_b[RD-1]; xw_data <= xb; end
-        if (be_v) begin xw_addr <= be_a + c_xb; xw_grp <= be_g; xw_data <= be_d; end
-        if (k_bev) begin xw_addr <= k_bea; xw_grp <= k_beg; xw_data <= k_bed; end
+        if (emit_go && rv[RD-2]) xb <= rm_ok[RD-2] ? beats[rm_b[RD-2]] : 2048'd0;
+        if (emit_go && rv[RD-1]) begin px_addr <= rm_addr[RD-1] + c_xb; px_grp <= rm_b[RD-1]; px_data <= xb; end
+        if (emit_go && be_v) begin px_addr <= be_a + c_xb; px_grp <= be_g; px_data <= be_d; end
+        if (emit_go && k_bev) begin px_addr <= k_bea; px_grp <= k_beg; px_data <= k_bed; end
     end
     // =================================================================================================================
     // BDW8: block-dot x over the local 8-lane slice group (BW8 = 1)
@@ -629,17 +704,20 @@ module ot_hgi_sm_xload #(
                 end
             end
             reg [NBQ*2048-1:0] fr;                // the fragment (beat k at [k 2,048 +: 2,048])
+            (* keep *) reg region_go;
+            always @(posedge clk or negedge rst_c)if(!rst_c)region_go<=0;else region_go<=go_ctl;
+            wire fragment_go=(XW_FLOW==0)||region_go;
             (* keep = 1 *) reg [NBQ-1:0] sh;     // shift enable, one register copy a beat
             always @(posedge clk or negedge rst_c) if (!rst_c) sh <= '0;
-                                                else sh <= {NBQ{em_n && {eb_n, ep_n} == 3'(fb)}};
+                                                else if(fragment_go)sh <= {NBQ{em_n && {eb_n, ep_n} == 3'(fb)}};
             always @(posedge clk)
                 for (integer k = 0; k < NBQ; k = k + 1) begin
-                    if (sh[k]) fr[k*2048 +: 2048] <= (k == NBQ - 1) ? 2048'd0 : fr[((k == NBQ - 1) ? k : k + 1)*2048 +: 2048];
+                    if (fragment_go && sh[k]) fr[k*2048 +: 2048] <= (k == NBQ - 1) ? 2048'd0 : fr[((k == NBQ - 1) ? k : k + 1)*2048 +: 2048];
                     else if (wv8[fb]) fr[k*2048 +: 2048] <= (fr[k*2048 +: 2048] & ~fm8[k*2048 +: 2048]) | (fd8[k*2048 +: 2048] & fm8[k*2048 +: 2048]);
                 end
             assign f0[fb] = fr[2047:0];
         end
-        // ---- E: the beat on its way to the xw pins (+ the command's done / fault one edge later, with xw_en)
+        // ---- E: the beat on its way to the xw pins (+ the command's done / fault one edge later, with px_en)
         reg bev; reg [6:0] bea, beg; reg [2047:0] bed; reg edn, eflt, cflt;
         assign k_bev = bev; assign k_bea = bea; assign k_beg = beg; assign k_bed = bed;
         assign k_xdone = edn; assign k_xflt = eflt;
@@ -685,11 +763,11 @@ module ot_hgi_sm_xload #(
                 for (integer z = 0; z < NBF; z = z + 1)
                     if (wl8[z]) begin mgot[z] <= mgot[z] + 7'd1; if (wfl8) mflt[z] <= 1'b1; if (wls8) mfull[z] <= 1'b1; end
                 // emission
-                em <= em_n; eb <= eb_n; ep <= ep_n; ebt <= ebt_n;
+                if(emit_go)begin em <= em_n; eb <= eb_n; ep <= ep_n; ebt <= ebt_n;
                 if (fr_end) bst[eb] <= 2'd0;
                 bev <= em;
                 edn <= edn_n; eflt <= edn_n && (cflt || mflt[eb]);
-                if (fr_end) cflt <= edn_n ? 1'b0 : (cflt || mflt[eb]);
+                if (fr_end) cflt <= edn_n ? 1'b0 : (cflt || mflt[eb]);end
                 rfn <= rfn_; tqn <= tqn_; mqn <= mqn_; lcn <= lcn_; lfn <= lfn_;
             end
         end
@@ -726,7 +804,7 @@ module ot_hgi_sm_xload #(
                 if (lpop && wb == 2'(z / 2)) woh[z][{lfo[LW-4:LW-7], 3'd0} + {4'd0, lfo[LW-8:LW-10]}] <= 1'b1;
                 if (lpop) wdd[z] <= (z % 2 == 0) ? lfo[265:0] : lfo[531:266];
             end
-            if (em) begin
+            if (emit_go && em) begin
                 bea <= {mg[eb], mtp[eb], ep} + mxb[eb]; beg <= ebt; bed <= f0[{eb, ep}];
             end
         end

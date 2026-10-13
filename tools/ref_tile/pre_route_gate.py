@@ -75,6 +75,35 @@ class Gate:
 
 
 # --------------------------------------------------------------------------------------------- pins
+def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
+    """Yosys chip area includes each hard instance's Liberty area.
+
+    A hardened child's Liberty area is its occupied logical area; its LEF
+    rectangle includes whitespace. Subtract the Liberty areas before adding
+    the physical envelopes to utilization, otherwise children count twice.
+    Preserve the conservative old behavior when a library area is unavailable.
+    """
+    logical = 0.0
+    for b in blocks:
+        view = b.get("view")
+        if not view:
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        directory = root / view
+        lib = directory / (directory.name + "_tt.lib")
+        if not lib.exists():
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        match = re.search(r"\barea\s*:\s*([\d.eE+-]+)", lib.read_text())
+        if not match:
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        logical += float(match.group(1))
+    if logical > chip_area + 0.01:
+        raise ValueError(f"synthesis chip area {chip_area} is smaller than summed macro Liberty area {logical}")
+    return max(0.0, chip_area - logical)
+
+
 def rtl_ports(sources, top, root=None):
     root = root or ROOT
     texts = []
@@ -239,7 +268,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
             mm = re.search(rf"^{k}='([^']*)'", env, re.M)
             pins_used |= set(mm.group(1).split()) if mm else set()
         over = sorted(x for x in pins_used if re.fullmatch(r"M\d+", x) and int(x[1:]) > cap_n)
-        if over:
+        if over and not (over == ["M6"] and fresh_lc.get("m6_pin_grant")):
             g.add("FAIL", "layer", f"pin layers {over} above the tile cap {rl.group(1)}: the parent strap layer would "
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
     g.add("INFO", "layer", f"{spec['kind']}: PG {lc['pg_layer']} stripes as pins, signals {lc['rlayers'][0]}-"
@@ -353,6 +382,9 @@ def ship_tar(paths):
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
     fp = json.loads((kd / "floorplan.json").read_text())
     ref = set(fp["referenced"])
+    # Ship the same transitive Tcl/shell dependencies checked by the local gate.
+    # A custom PRE_GLOBAL_PLACE hook may source helpers outside its own folder.
+    ref |= referenced_closure(sorted(ref))[0]
     dirs = {"tools", "rtl", str(kd.relative_to(ROOT)), "physical/qwen_die_masters", "physical/common_flow",
             "physical/hbm_accel_die_views/stations/bench", "physical/hbm_w2_rb_station_20261006"}
     dirs |= {str(Path(p).parent) for p in ref}
@@ -403,8 +435,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         W, H = fp["die"][2], fp["die"][3]
         core = (W - 2 * RT.CORE_MARGIN) * (H - 2 * RT.CORE_MARGIN)
         mac = sum(b["w"] * b["h"] for b in fp["blocks"])
-        if area > mac:          # yosys' chip area counts the black-box macros' liberty area
-            area -= mac
+        area = synthesis_std_area(area, fp["blocks"])
         u = (area + mac) / core
         # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
         sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")

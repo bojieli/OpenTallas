@@ -49,6 +49,7 @@ def main():
     ap.add_argument("--corners", default="ss,ff,tt")
     ap.add_argument("--image", default="openroad/orfs:latest")
     ap.add_argument("--tmp-dir", type=Path)
+    ap.add_argument("--pin-only-tech", action="store_true", help="snapshot exact read-tech LEF for M6 contact-via audit")
     a = ap.parse_args()
     orfs, out = a.orfs_dir.resolve(), a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -84,13 +85,17 @@ def main():
         lefs = [f"read_lef {PLAT}/lef/asap7sc7p5t_28_{VT[v][1]}_1x_220121a.lef" for v in vts]
         lefs += [f"read_lef /mv{i}/{n}.lef" for i, n in mv]
         sdc = "/interface.sdc" if a.interface_sdc is not None else f"/in/{rel}/6_final.sdc"
+        # Interface SDC derives its clock reference immediately; routed parasitics
+        # must be loaded before it evaluates clock arrivals.
         tcl = "\n".join([f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef",
                          f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef", *lefs, *libs,
-                         f"read_db /in/{rel}/6_final.odb", f"read_sdc {sdc}", f"read_spef /in/{rel}/6_final.spef",
+                         f"read_db /in/{rel}/6_final.odb", f"read_spef /in/{rel}/6_final.spef", f"read_sdc {sdc}",
                          "set_propagated_clock [all_clocks]",
                          "puts \"OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]\"",
                          f"write_timing_model -library_name {a.name}_{c} /out/{a.name}_{c}.lib",
                          f"write_abstract_lef /out/{a.name}.lef" if c == "ss" else "",
+                         f"file copy -force {PLAT}/lef/asap7_tech_1x_201209.lef /out/pin_only_tech.lef"
+                         if c == "ss" and a.pin_only_tech else "",
                          "puts \"OT_EXPORT_DONE\"", "exit", ""])
         (out / f"export_{c}.tcl").write_text(tcl)
         cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/in:ro", "-v", f"{out}:/out", *mounts, a.image,
