@@ -5,6 +5,8 @@
 //   fault == the flat tile's engine fault | its node fault ONE cycle later (the leaf's fault pin register).
 // Stimulus: random finite / special FP32 words on n_a / n_b with random n_va, random instruction words with sparse go.
 // BMUT 2 (the leaf's a input with lanes 0 / 1 swapped at the seam) must FAIL.
+// q14: t_out / t_vout come from the leaf's feed-through pin registers (the TOREG registers moved into the leaf); BMUT 3
+// (the leaf's t_d input with lanes 0 / 1 swapped at the seam) must FAIL.
 module ot_rom_4096x266_m8 (input wire clk, input wire ce_in, input wire [11:0] addr_in, output reg [265:0] rd_out);
     always @(posedge clk) if (ce_in) rd_out <= {22{addr_in ^ 12'h5a5}} ^ {{8{addr_in, 21'h1f3a5c}}, 2'b01};
 endmodule
@@ -57,6 +59,7 @@ module tb_qwen_tile_r5_node;
         seed = SEED;
         repeat (4) @(posedge clk);
         rst_n = 1;
+        repeat (8) @(posedge clk);      // q14: the leaf's reset relay releases 3 edges after the pin; the tile is idle after reset
         for (i = 0; i < N; i = i + 1) begin
             @(posedge clk); #0.1;
             n_va = ($urandom(seed) % 4) != 0; seed = seed + 1;

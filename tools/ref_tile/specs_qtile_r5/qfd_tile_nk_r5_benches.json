@@ -1,5 +1,5 @@
 {
- "comment": "q14 r5 assembled-tile bench list (job.benches_from): rom_pipe exact at W 16 with RPH 1 + NDH 1 (soft leaves = the hardened leaves' logic), seams' mutants TMUT 5 (rpair) / BMUT 2 (node), TMUT 3, node boundary bench, NK boundary and die glue. Evidence: results/rtl/q14_tile_r5_1013/record.json. tile_die_glue_* apply to the KV die tile; an NK-only job may drop them.",
+ "comment": "q14 r5 assembled-tile bench list (job.benches_from): rom_pipe exact at W 16 with RPH 1 + NDH 1 (soft leaves = the hardened leaves' logic), seams' mutants TMUT 5 (rpair) / BMUT 2 (node), TMUT 3, node boundary bench, NK boundary and die glue. Evidence: results/rtl/q14_tile_r5_1013/record.json. tile_die_glue_* apply to the KV die tile; an NK-only job may drop them. | q14-node: + r5_node_seam_bmut3 / r5_node_boundary_bmut3 (t_out feed-through seam mutant) after the node leaf gained the reset relay and the t_out/t_vout feed-through pin registers.",
  "benches": [
   {
    "name": "r5_rom_pipe_exact",
@@ -57,6 +57,17 @@
    ]
   },
   {
+   "name": "r5_node_seam_bmut3",
+   "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param SEED=2 --param BMUT=3 --workdir {RUN}/bench/r5_node_seam_bmut3 --result {RUN}/bench/r5_node_seam_bmut3.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/r5_node_seam_bmut3.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+   "expect": "fail",
+   "fail_regex": "MUTVERDICT FAIL",
+   "threads": 8,
+   "peak_ram_gb": 32,
+   "needs": [
+    "verilator"
+   ]
+  },
+  {
    "name": "r5_node_boundary_exact",
    "cmd": "bash tools/qwen_tile_r5_node_bench.sh {RUN}/bench/r5_node_boundary_exact 0",
    "expect": "pass",
@@ -70,6 +81,17 @@
   {
    "name": "r5_node_boundary_bmut2",
    "cmd": "bash tools/qwen_tile_r5_node_bench.sh {RUN}/bench/r5_node_boundary_bmut2 2",
+   "expect": "fail",
+   "fail_regex": "^FAIL tile_r5_node",
+   "threads": 8,
+   "peak_ram_gb": 40,
+   "needs": [
+    "verilator"
+   ]
+  },
+  {
+   "name": "r5_node_boundary_bmut3",
+   "cmd": "bash tools/qwen_tile_r5_node_bench.sh {RUN}/bench/r5_node_boundary_bmut3 3",
    "expect": "fail",
    "fail_regex": "^FAIL tile_r5_node",
    "threads": 8,

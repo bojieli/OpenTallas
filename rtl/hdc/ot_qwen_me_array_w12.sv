@@ -62,6 +62,7 @@ module ot_qwen_me_array_w12 #(
     parameter integer TIDR = 0,
     parameter integer LRR = 0,
     parameter integer RPH = 0,            // q13 r5 leaf 1: 1 = ROM pair pipeline as ot_qwen_rpair_logic per bank (soft), 2 = hardened leaf ot_qwen_tile_rpair (owns its 2 macros)
+    parameter integer RQR = 0,            // q14 r5-fp1: ROM return relay: 1 = one register per bank group (south / north) on the rows' relay words before the group OR (+1 cycle on the ROM data), and per-group copies of the rpair address / any seam (needs RPH)
     parameter integer XTX = 0,             // el1011-q-tile r3: registered transmit rungs per hardened leaf (matvec HIER_HARD; +XTX cycles)
     parameter integer NDH = 0,            // q13 spec r5 leaf 2: the tiles' tree node as the hardened leaf ot_qwen_tile_node (needs W 16)
     parameter integer BMUT = 0,           // bench boundary mutant of the node seam (ot_qwen_rom_tile_logic_w12 BMUT)
@@ -128,7 +129,7 @@ module ot_qwen_me_array_w12 #(
     localparam integer LT  = $clog2(TG);
     localparam integer NXC = 1 << SMAX;
     localparam integer NXL = NXC / TG;
-    localparam integer RXA = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0)) : 0;
+    localparam integer RXA = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0) + RQR) : 0;
     localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX : 0;   // r3: the tiles' leaf transmit rungs
     localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + RXA + TOREG + XTD;
     localparam integer NPT = GT >> TCUT;                  // tree words into the top
@@ -219,7 +220,7 @@ module ot_qwen_me_array_w12 #(
             end
             wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
             ot_qwen_rom_tile_logic_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .XTX(XTX), .NDH(NDH), .BMUT(BMUT), .TMUT(TMUT), .ANR(ANR), .BAW(BAW),
+                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .NDH(NDH), .BMUT(BMUT), .TMUT(TMUT), .ANR(ANR), .BAW(BAW),
                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
                 .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
