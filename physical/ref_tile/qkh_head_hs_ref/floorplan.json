@@ -38,10 +38,7 @@
    "hid",
    "q_valid_in",
    "q_beat_in",
-   "q_data_in",
-   "sc_d",
-   "sc_f",
-   "g_f"
+   "q_data_in"
   ],
   "E": [
    "nb_d"
@@ -49,6 +46,11 @@
   "W": [
    "clk",
    "rst_n"
+  ],
+  "N": [
+   "sc_d",
+   "sc_f",
+   "g_f"
   ]
  },
  "clock_port": "clk",

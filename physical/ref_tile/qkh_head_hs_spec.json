@@ -182,10 +182,7 @@
       "hid",
       "q_valid_in",
       "q_beat_in",
-      "q_data_in",
-      "sc_d",
-      "sc_f",
-      "g_f"
+      "q_data_in"
     ],
     "E": [
       "nb_d"
@@ -193,6 +190,11 @@
     "W": [
       "clk",
       "rst_n"
+    ],
+    "N": [
+      "sc_d",
+      "sc_f",
+      "g_f"
     ]
   },
   "route": {
@@ -210,8 +212,8 @@
   "job": {
     "owner": "Codex:qwen-head-1013",
     "branch": "codex/qwen-head-1013",
-    "tag": "cx1",
-    "purpose": "TP8 required head_h structural successor:16 closed lane8 local roots + closed ktree; registered per-lane2stage seams, real parent clock spine. Flat historical root200k sinks TT-706 replaced. Envelope734.4x853.2 awaiting die contract incorporation; no main adoption until exact+mutant+frozenprice production gates+physical CLOSED.",
+    "tag": "cx2",
+    "purpose": "TP8 required head_h structural successor:16 closed lane8 local roots + closed ktree; registered per-lane2stage seams, real parent clock spine. Flat historical root200k sinks TT-706 replaced. Envelope734.4x853.2 awaiting die contract incorporation; no main adoption until exact+mutant+frozenprice production gates+physical CLOSED. Score faceN keeps Ktree output relay local<=121um; no855umSscorehop.",
     "benches": [
       {
         "name": "layer_hs_pos",
@@ -254,7 +256,8 @@
     "views_to": "physical/ref_tile/qkh_head_hs_ref/views",
     "record_to": "results/rtl/ref_tile/qkh_head_hs_ref",
     "extra_paths": [
-      "results/arch/qwen_kv_die_20261009"
+      "results/arch/qwen_kv_die_20261009",
+      "results/rtl/tput_map_1011/qwen_kv_die"
     ]
   }
 }
