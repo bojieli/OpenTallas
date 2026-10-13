@@ -154,8 +154,16 @@
     "peak_ram_gb": 16
    },
    {
+    "name": "descriptor_span_mutant",
+    "cmd": "SPAN_MUT=1 bash tools/hgi_unit_tput/run_qdq_span_equiv.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/span_mut; cat {RUN}/span_mut/run.log",
+    "expect": "fail",
+    "fail_regex": "SPAN_EQ mismatch",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
     "name": "production_qdq_m0",
-    "cmd": "S=3 MUT=0 QDQ_G='-GSPANPIPE=1 -GPIN4=1' bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m0 && grep -q 'cycles=179 priced=168 S=3' {RUN}/qdq_m0/run.log",
+    "cmd": "S=3 MUT=0 QDQ_G='-GSPANPIPE=1 -GPIN4=1' bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m0 && grep -q 'cycles=181 priced=168 S=3' {RUN}/qdq_m0/run.log",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,

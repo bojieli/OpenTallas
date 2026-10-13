@@ -83,6 +83,18 @@
   "S3_SLICE_V08_DEFAULT_DEC_A": {
    "cycles": 169,
    "note": "same run on ot_hgi_qw_dec (track A, DEC3=0 equivalent at bbdb82ce3): cycle-identical"
+  },
+  "S3_q8_fr_core_SPANPIPE1_PIN4": {
+   "cycles": 181,
+   "ratio": 1.077,
+   "S1_cycles": 173,
+   "S1_ratio": 1.03,
+   "verilator": "5.032",
+   "host": "ot-agidock128 /tmp/qdq8_run (scratch, not kept)",
+   "source_commit": "71a03aeb8",
+   "structure": "q8 re-partition: ot_hgi_qdq_q wires only over ot_hgi_qdq_fr (rec -> S3) and ot_hgi_qdq_core (queue .. write); +1 record ingress (S3 pin flops), +1 pop -> decode (hq pin flops), ready margin RQ-12; q7 (same parameters, own logic in the cluster) was 179 = 1.065",
+   "exact": "PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=181 priced=168 S=3; m1 FATAL fault after 0 dones, m2 FATAL 2898 of 3328 words mismatch",
+   "status": "measured at the edit, logs in scratch only; the committed evidence is the cluster job bench (grep cycles=181) when qdq_q_ref q8 runs. Within 1.10x: no accepted-cost ledger entry needed. NOT yet physically closed"
   }
  }
 }

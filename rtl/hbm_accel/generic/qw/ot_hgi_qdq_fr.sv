@@ -76,7 +76,11 @@ module ot_hgi_qdq_fr #(
             last_a <= nibble_a[4]; last_o <= nibble_o[4];
             sum_a <= 48'(pair_a[0]) + (48'(pair_a[1]) << 8); sum_o <= 48'(pair_o[0]) + (48'(pair_o[1]) << 8);
             last_a2 <= last_a; last_o2 <= last_o;
+`ifdef OT_QDQ_SPAN_MUT   // bench mutant only (tb_hgi_qdq_span_equiv must FAIL): rows[19:16] partial dropped
+            prod_a <= 52'(sum_a); prod_o <= 52'(sum_o);
+`else
             prod_a <= 52'(sum_a) + (52'(last_a2) << 16); prod_o <= 52'(sum_o) + (52'(last_o2) << 16);
+`endif
             aend2 <= 64'(prod_a) + 64'(offset_a[4]); oend2 <= 64'(prod_o) + 64'(offset_o[4]);
             flags[0] <= {fld1, fast1, ars1 == ors1}; bases_a[0] <= ab1; bases_o[0] <= ob1;
             ns[0] <= an1; ms[0] <= am1; rss_a[0] <= ars1; rss_o[0] <= ors1; headers[0] <= {s1_h[127:118], s1_h[71:64]};
