@@ -163,6 +163,9 @@ module tb_hgi_b2_swap_grp;
         g_v = 0;
         while (!done && !fault && to < 20000) begin @(negedge clk); to++; end
         t_done = cyc; tp = t_done - t_first; armed = 0;
+        if (done && nack < exp_sec) begin          // the fence answer before the last acknowledged sector
+            $display("TB FAIL: EARLY FENCE: done at +%0d with %0d of %0d sectors acknowledged (%0d written)", tp, nack, exp_sec, nwrit); errors++;
+        end
         if (fault) begin $display("TB FAIL: fault (slot %0d mirror %0d)", slot, mirror); errors++; end
         if (to >= 20000) begin $display("TB FAIL: timeout (slot %0d mirror %0d)", slot, mirror); errors++; end
         repeat (ALAT + 2 * HOPS + 30) @(negedge clk);       // late / stray writes after the fence
