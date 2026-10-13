@@ -169,7 +169,7 @@ def spec(variant):
 
 
 def strap_regions(variant):
-    # Five physical stages per leaf, kept on the ungated cluster clock.
+    # Five physical stages per leaf, kept on the gated cluster clock.
     points = [[(300,H-12),(365,1100),(365,1060),(300,1060),(260,Y_XS0+DIM["xs"][1]+12)],
               [(340,H-12),(365,950),(365,650),(365,350),(260,Y_XS1-16)]]
     lines = ["# Generated kept strap-stage fences: no child/clock/pin budget change.",

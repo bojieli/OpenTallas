@@ -3282,7 +3282,7 @@ module ot_hbm_accel_smh_tile_g #(
 );
     wire gclk;
     ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE), .ENREG(ENREG)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
-    // Static slice positions settle on the ungated clock before reset/wake.
+    // Static slice positions settle while reset holds the tile gate open.
     // Five regional stations avoid a raw north-face wire crossing the cluster.
     localparam integer STRAPW = A1B + 5 + A2B + 5;
     wire [RPT*A1B-1:0] sx_a1;
@@ -3294,7 +3294,7 @@ module ot_hbm_accel_smh_tile_g #(
                                   xs_g1[sr*5 +: 5], xs_a1[sr*A1B +: A1B]};
         wire [STRAPW-1:0] q;
         ot_hbm_accel_smh_strap_region #(.W(STRAPW),
-            .MUT(`ifdef OT_SMH_MUT_STRAP_REGION (sr == 1) `else 0 `endif)) u_sr (.clk(clk), .d(d), .q(q));
+            .MUT(`ifdef OT_SMH_MUT_STRAP_REGION (sr == 1) `else 0 `endif)) u_sr (.clk(gclk), .d(d), .q(q));
         assign {sx_g2[sr*5 +: 5], sx_a2[sr*A2B +: A2B],
                 sx_g1[sr*5 +: 5], sx_a1[sr*A1B +: A1B]} = q;
     end endgenerate
@@ -3365,7 +3365,7 @@ module ot_hbm_accel_smh_result_valid #(
     assign fault_event = ENABLE ? ((|(faults & valids)) | partial_valid) : (|faults);
 endmodule
 
-// Static configuration only: no reset/enable, so startup settles even while the tile is gated.
+// Static configuration only: reset keeps the cluster gate open for startup; no data-path cycle added.
 module ot_hbm_accel_smh_strap_region #(parameter integer W = 26, parameter integer MUT = 0) (
     input wire clk, input wire [W-1:0] d, output wire [W-1:0] q
 );
