@@ -1,0 +1,2382 @@
+{
+  "schema": "opentallas.hbm.native_component.v1",
+  "component": "hc",
+  "logical_module": "ot_hgi_hc_quarter",
+  "source_commit": "5ed73de79",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_quarter.sv": "5fbd184bbce7c28acd716c0a0735d9bc28cc04a2fd38b41c0343f853eb92271f",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv": "02371ab365df48150d5337479223891323443aab0e88a440c8ce12f1cc6188a8"
+  },
+  "source_commits": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_quarter.sv": "5ed73de79",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv": "550082537"
+  },
+  "parameters": {
+    "W": 32,
+    "RMAX": 128,
+    "SPL": 4,
+    "AW": 16,
+    "HAW": 35,
+    "RTW": 7,
+    "TG": 11,
+    "WMACRO": 1,
+    "LM": 8,
+    "LA": 7,
+    "NVW": 6,
+    "CWW": 8,
+    "NXM": 2
+  },
+  "outline_um": [
+    1356.48,
+    756.0
+  ],
+  "boundary_ports": {
+    "clk": {
+      "direction": "input",
+      "width": 1,
+      "role": "clock"
+    },
+    "rst_n": {
+      "direction": "input",
+      "width": 1,
+      "role": "reset"
+    },
+    "first": {
+      "direction": "input",
+      "width": 1,
+      "role": "data"
+    },
+    "d_v": {
+      "direction": "input",
+      "width": 1,
+      "role": "data"
+    },
+    "d_ss": {
+      "direction": "input",
+      "width": 1,
+      "role": "data"
+    },
+    "d_nv": {
+      "direction": "input",
+      "width": 6,
+      "role": "data"
+    },
+    "d_wa": {
+      "direction": "input",
+      "width": 16,
+      "role": "data"
+    },
+    "d_xa": {
+      "direction": "input",
+      "width": 16,
+      "role": "data"
+    },
+    "o_v": {
+      "direction": "output",
+      "width": 1,
+      "role": "data"
+    },
+    "o_ss": {
+      "direction": "output",
+      "width": 1,
+      "role": "data"
+    },
+    "o_nv": {
+      "direction": "output",
+      "width": 6,
+      "role": "data"
+    },
+    "o_wa": {
+      "direction": "output",
+      "width": 16,
+      "role": "data"
+    },
+    "o_xa": {
+      "direction": "output",
+      "width": 16,
+      "role": "data"
+    },
+    "sum_in": {
+      "direction": "input",
+      "width": 1024,
+      "role": "data"
+    },
+    "sum_out": {
+      "direction": "output",
+      "width": 1024,
+      "role": "data"
+    },
+    "f_in": {
+      "direction": "input",
+      "width": 1,
+      "role": "data"
+    },
+    "f_out": {
+      "direction": "output",
+      "width": 1,
+      "role": "data"
+    },
+    "c_start": {
+      "direction": "input",
+      "width": 2,
+      "role": "data"
+    },
+    "c_rel": {
+      "direction": "input",
+      "width": 2,
+      "role": "data"
+    },
+    "c_base": {
+      "direction": "input",
+      "width": 70,
+      "role": "data"
+    },
+    "c_soff": {
+      "direction": "input",
+      "width": 280,
+      "role": "data"
+    },
+    "c_nwk": {
+      "direction": "input",
+      "width": 64,
+      "role": "data"
+    },
+    "c_bnd": {
+      "direction": "input",
+      "width": 128,
+      "role": "data"
+    },
+    "c_pgo": {
+      "direction": "input",
+      "width": 2,
+      "role": "data"
+    },
+    "c_pbase": {
+      "direction": "input",
+      "width": 70,
+      "role": "data"
+    },
+    "t_rdy": {
+      "direction": "output",
+      "width": 2,
+      "role": "data"
+    },
+    "t_flt": {
+      "direction": "output",
+      "width": 2,
+      "role": "data"
+    },
+    "xl_q": {
+      "direction": "input",
+      "width": 1200,
+      "role": "data"
+    },
+    "xl_cr": {
+      "direction": "output",
+      "width": 8,
+      "role": "data"
+    },
+    "xl_done": {
+      "direction": "output",
+      "width": 8,
+      "role": "data"
+    },
+    "hq_v": {
+      "direction": "output",
+      "width": 8,
+      "role": "data"
+    },
+    "hq_rdy": {
+      "direction": "input",
+      "width": 8,
+      "role": "data"
+    },
+    "hq_addr": {
+      "direction": "output",
+      "width": 280,
+      "role": "data"
+    },
+    "hq_len": {
+      "direction": "output",
+      "width": 24,
+      "role": "data"
+    },
+    "hq_tag": {
+      "direction": "output",
+      "width": 88,
+      "role": "data"
+    },
+    "hr_v": {
+      "direction": "input",
+      "width": 8,
+      "role": "data"
+    },
+    "hr_tag": {
+      "direction": "input",
+      "width": 88,
+      "role": "data"
+    },
+    "hr_beat": {
+      "direction": "input",
+      "width": 16,
+      "role": "data"
+    },
+    "hr_data": {
+      "direction": "input",
+      "width": 2048,
+      "role": "data"
+    }
+  },
+  "children": [
+    {
+      "instance": "g_tile[0].u_tile",
+      "logical_module": "ot_hgi_hc_tile",
+      "view_lef": null,
+      "view_lib": {},
+      "xy_um": [
+        10.8,
+        15.12
+      ],
+      "orientation": "R0",
+      "w_um": 656.64,
+      "h_um": 725.76,
+      "pg_top": null,
+      "closure_status": "OPEN_ROUTE_RUNNING_NO_VIEW_NO_TT_FF_DRC_VERDICT",
+      "physical_kit": "hc_tile_xl",
+      "source_job": "hc_tile_xl-c4-550082537-hs",
+      "source_commit": "550082537",
+      "bank_stage": 0,
+      "kit_layer_contract": {
+        "children": {
+          "ot_hdc_v41x_hcp_lanes": "M6"
+        },
+        "pg_layer": "M7",
+        "rlayers": [
+          "M2",
+          "M7"
+        ],
+        "strap_layer": "M8"
+      },
+      "kit_pin_layers": {
+        "horizontal": [
+          "M4",
+          "M6"
+        ],
+        "vertical": [
+          "M5"
+        ]
+      }
+    },
+    {
+      "instance": "g_tile[1].u_tile",
+      "logical_module": "ot_hgi_hc_tile",
+      "view_lef": null,
+      "view_lib": {},
+      "xy_um": [
+        689.04,
+        15.12
+      ],
+      "orientation": "R0",
+      "w_um": 656.64,
+      "h_um": 725.76,
+      "pg_top": null,
+      "closure_status": "OPEN_ROUTE_RUNNING_NO_VIEW_NO_TT_FF_DRC_VERDICT",
+      "physical_kit": "hc_tile_xl",
+      "source_job": "hc_tile_xl-c4-550082537-hs",
+      "source_commit": "550082537",
+      "bank_stage": 1,
+      "kit_layer_contract": {
+        "children": {
+          "ot_hdc_v41x_hcp_lanes": "M6"
+        },
+        "pg_layer": "M7",
+        "rlayers": [
+          "M2",
+          "M7"
+        ],
+        "strap_layer": "M8"
+      },
+      "kit_pin_layers": {
+        "horizontal": [
+          "M4",
+          "M6"
+        ],
+        "vertical": [
+          "M5"
+        ]
+      }
+    }
+  ],
+  "connections": [
+    {
+      "net": "ext_clk_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "clk",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "clk",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "clock"
+    },
+    {
+      "net": "ext_clk_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "clk",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "clk",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "clock"
+    },
+    {
+      "net": "ext_rst_n_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "rst_n",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "rst_n",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "reset"
+    },
+    {
+      "net": "ext_rst_n_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "rst_n",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "rst_n",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "reset"
+    },
+    {
+      "net": "ext_first_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "first",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "first",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_d_v_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "d_v",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "d_v",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "chain_o_v",
+      "endpoints": [
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "o_v",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "d_v",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "chain_seam"
+    },
+    {
+      "net": "ext_d_ss_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "d_ss",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "d_ss",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "chain_o_ss",
+      "endpoints": [
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "o_ss",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "d_ss",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "chain_seam"
+    },
+    {
+      "net": "ext_d_nv_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "d_nv",
+          "lsb": 0,
+          "width": 6
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "d_nv",
+          "lsb": 0,
+          "width": 6
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "chain_o_nv",
+      "endpoints": [
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "o_nv",
+          "lsb": 0,
+          "width": 6
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "d_nv",
+          "lsb": 0,
+          "width": 6
+        }
+      ],
+      "kind": "chain_seam"
+    },
+    {
+      "net": "ext_d_wa_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "d_wa",
+          "lsb": 0,
+          "width": 16
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "d_wa",
+          "lsb": 0,
+          "width": 16
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "chain_o_wa",
+      "endpoints": [
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "o_wa",
+          "lsb": 0,
+          "width": 16
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "d_wa",
+          "lsb": 0,
+          "width": 16
+        }
+      ],
+      "kind": "chain_seam"
+    },
+    {
+      "net": "ext_d_xa_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "d_xa",
+          "lsb": 0,
+          "width": 16
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "d_xa",
+          "lsb": 0,
+          "width": 16
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "chain_o_xa",
+      "endpoints": [
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "o_xa",
+          "lsb": 0,
+          "width": 16
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "d_xa",
+          "lsb": 0,
+          "width": 16
+        }
+      ],
+      "kind": "chain_seam"
+    },
+    {
+      "net": "ext_o_v_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "o_v",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "o_v",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_o_ss_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "o_ss",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "o_ss",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_o_nv_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "o_nv",
+          "lsb": 0,
+          "width": 6
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "o_nv",
+          "lsb": 0,
+          "width": 6
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_o_wa_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "o_wa",
+          "lsb": 0,
+          "width": 16
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "o_wa",
+          "lsb": 0,
+          "width": 16
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_o_xa_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "o_xa",
+          "lsb": 0,
+          "width": 16
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "o_xa",
+          "lsb": 0,
+          "width": 16
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_sum_in_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "sum_in",
+          "lsb": 0,
+          "width": 1024
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "sum_in",
+          "lsb": 0,
+          "width": 1024
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "chain_sum_out",
+      "endpoints": [
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "sum_out",
+          "lsb": 0,
+          "width": 1024
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "sum_in",
+          "lsb": 0,
+          "width": 1024
+        }
+      ],
+      "kind": "chain_seam"
+    },
+    {
+      "net": "ext_sum_out_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "sum_out",
+          "lsb": 0,
+          "width": 1024
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "sum_out",
+          "lsb": 0,
+          "width": 1024
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_f_in_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "f_in",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "f_in",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "chain_f_out",
+      "endpoints": [
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "f_out",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "f_in",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "chain_seam"
+    },
+    {
+      "net": "ext_f_out_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "f_out",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "f_out",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_start_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_start",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "c_start",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_start_1",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_start",
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "c_start",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_rel_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_rel",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "c_rel",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_rel_1",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_rel",
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "c_rel",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_base_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_base",
+          "lsb": 0,
+          "width": 35
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "c_base",
+          "lsb": 0,
+          "width": 35
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_base_35",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_base",
+          "lsb": 35,
+          "width": 35
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "c_base",
+          "lsb": 0,
+          "width": 35
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_soff_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_soff",
+          "lsb": 0,
+          "width": 140
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "c_soff",
+          "lsb": 0,
+          "width": 140
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_soff_140",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_soff",
+          "lsb": 140,
+          "width": 140
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "c_soff",
+          "lsb": 0,
+          "width": 140
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_nwk_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_nwk",
+          "lsb": 0,
+          "width": 32
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "c_nwk",
+          "lsb": 0,
+          "width": 32
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_nwk_32",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_nwk",
+          "lsb": 32,
+          "width": 32
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "c_nwk",
+          "lsb": 0,
+          "width": 32
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_bnd_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_bnd",
+          "lsb": 0,
+          "width": 64
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "c_bnd",
+          "lsb": 0,
+          "width": 64
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_bnd_64",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_bnd",
+          "lsb": 64,
+          "width": 64
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "c_bnd",
+          "lsb": 0,
+          "width": 64
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_pgo_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_pgo",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "c_pgo",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_pgo_1",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_pgo",
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "c_pgo",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_pbase_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_pbase",
+          "lsb": 0,
+          "width": 35
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "c_pbase",
+          "lsb": 0,
+          "width": 35
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_c_pbase_35",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "c_pbase",
+          "lsb": 35,
+          "width": 35
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "c_pbase",
+          "lsb": 0,
+          "width": 35
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_t_rdy_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "t_rdy",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "t_rdy",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_t_rdy_1",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "t_rdy",
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "t_rdy",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_t_flt_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "t_flt",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "t_flt",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_t_flt_1",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "t_flt",
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "t_flt",
+          "lsb": 0,
+          "width": 1
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_xl_q_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "xl_q",
+          "lsb": 0,
+          "width": 600
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "xl_q",
+          "lsb": 0,
+          "width": 600
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_xl_q_600",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "xl_q",
+          "lsb": 600,
+          "width": 600
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "xl_q",
+          "lsb": 0,
+          "width": 600
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_xl_cr_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "xl_cr",
+          "lsb": 0,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "xl_cr",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_xl_cr_4",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "xl_cr",
+          "lsb": 4,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "xl_cr",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_xl_done_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "xl_done",
+          "lsb": 0,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "xl_done",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_xl_done_4",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "xl_done",
+          "lsb": 4,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "xl_done",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_v_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_v",
+          "lsb": 0,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hq_v",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_v_4",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_v",
+          "lsb": 4,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hq_v",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_rdy_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_rdy",
+          "lsb": 0,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hq_rdy",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_rdy_4",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_rdy",
+          "lsb": 4,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hq_rdy",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_addr_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_addr",
+          "lsb": 0,
+          "width": 140
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hq_addr",
+          "lsb": 0,
+          "width": 140
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_addr_140",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_addr",
+          "lsb": 140,
+          "width": 140
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hq_addr",
+          "lsb": 0,
+          "width": 140
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_len_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_len",
+          "lsb": 0,
+          "width": 12
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hq_len",
+          "lsb": 0,
+          "width": 12
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_len_12",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_len",
+          "lsb": 12,
+          "width": 12
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hq_len",
+          "lsb": 0,
+          "width": 12
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_tag_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_tag",
+          "lsb": 0,
+          "width": 44
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hq_tag",
+          "lsb": 0,
+          "width": 44
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hq_tag_44",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hq_tag",
+          "lsb": 44,
+          "width": 44
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hq_tag",
+          "lsb": 0,
+          "width": 44
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hr_v_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hr_v",
+          "lsb": 0,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hr_v",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hr_v_4",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hr_v",
+          "lsb": 4,
+          "width": 4
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hr_v",
+          "lsb": 0,
+          "width": 4
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hr_tag_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hr_tag",
+          "lsb": 0,
+          "width": 44
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hr_tag",
+          "lsb": 0,
+          "width": 44
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hr_tag_44",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hr_tag",
+          "lsb": 44,
+          "width": 44
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hr_tag",
+          "lsb": 0,
+          "width": 44
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hr_beat_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hr_beat",
+          "lsb": 0,
+          "width": 8
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hr_beat",
+          "lsb": 0,
+          "width": 8
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hr_beat_8",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hr_beat",
+          "lsb": 8,
+          "width": 8
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hr_beat",
+          "lsb": 0,
+          "width": 8
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hr_data_0",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hr_data",
+          "lsb": 0,
+          "width": 1024
+        },
+        {
+          "instance": "g_tile[0].u_tile",
+          "port": "hr_data",
+          "lsb": 0,
+          "width": 1024
+        }
+      ],
+      "kind": "boundary"
+    },
+    {
+      "net": "ext_hr_data_1024",
+      "endpoints": [
+        {
+          "instance": "$boundary",
+          "port": "hr_data",
+          "lsb": 1024,
+          "width": 1024
+        },
+        {
+          "instance": "g_tile[1].u_tile",
+          "port": "hr_data",
+          "lsb": 0,
+          "width": 1024
+        }
+      ],
+      "kind": "boundary"
+    }
+  ],
+  "boundary_binding": [
+    {
+      "parent_port": "clk",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "clk",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "clk",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "clk",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "rst_n",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "rst_n",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "rst_n",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "rst_n",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "first",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "first",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "d_v",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "d_v",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "d_ss",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "d_ss",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "d_nv",
+      "parent_lsb": 0,
+      "width": 6,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "d_nv",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "d_wa",
+      "parent_lsb": 0,
+      "width": 16,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "d_wa",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "d_xa",
+      "parent_lsb": 0,
+      "width": 16,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "d_xa",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "o_v",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "o_v",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "o_ss",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "o_ss",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "o_nv",
+      "parent_lsb": 0,
+      "width": 6,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "o_nv",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "o_wa",
+      "parent_lsb": 0,
+      "width": 16,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "o_wa",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "o_xa",
+      "parent_lsb": 0,
+      "width": 16,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "o_xa",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "sum_in",
+      "parent_lsb": 0,
+      "width": 1024,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "sum_in",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "sum_out",
+      "parent_lsb": 0,
+      "width": 1024,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "sum_out",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "f_in",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "f_in",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "f_out",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "f_out",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_start",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "c_start",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_start",
+      "parent_lsb": 1,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "c_start",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_rel",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "c_rel",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_rel",
+      "parent_lsb": 1,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "c_rel",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_base",
+      "parent_lsb": 0,
+      "width": 35,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "c_base",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_base",
+      "parent_lsb": 35,
+      "width": 35,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "c_base",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_soff",
+      "parent_lsb": 0,
+      "width": 140,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "c_soff",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_soff",
+      "parent_lsb": 140,
+      "width": 140,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "c_soff",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_nwk",
+      "parent_lsb": 0,
+      "width": 32,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "c_nwk",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_nwk",
+      "parent_lsb": 32,
+      "width": 32,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "c_nwk",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_bnd",
+      "parent_lsb": 0,
+      "width": 64,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "c_bnd",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_bnd",
+      "parent_lsb": 64,
+      "width": 64,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "c_bnd",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_pgo",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "c_pgo",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_pgo",
+      "parent_lsb": 1,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "c_pgo",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_pbase",
+      "parent_lsb": 0,
+      "width": 35,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "c_pbase",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "c_pbase",
+      "parent_lsb": 35,
+      "width": 35,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "c_pbase",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "t_rdy",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "t_rdy",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "t_rdy",
+      "parent_lsb": 1,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "t_rdy",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "t_flt",
+      "parent_lsb": 0,
+      "width": 1,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "t_flt",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "t_flt",
+      "parent_lsb": 1,
+      "width": 1,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "t_flt",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "xl_q",
+      "parent_lsb": 0,
+      "width": 600,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "xl_q",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "xl_q",
+      "parent_lsb": 600,
+      "width": 600,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "xl_q",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "xl_cr",
+      "parent_lsb": 0,
+      "width": 4,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "xl_cr",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "xl_cr",
+      "parent_lsb": 4,
+      "width": 4,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "xl_cr",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "xl_done",
+      "parent_lsb": 0,
+      "width": 4,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "xl_done",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "xl_done",
+      "parent_lsb": 4,
+      "width": 4,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "xl_done",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_v",
+      "parent_lsb": 0,
+      "width": 4,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hq_v",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_v",
+      "parent_lsb": 4,
+      "width": 4,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hq_v",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_rdy",
+      "parent_lsb": 0,
+      "width": 4,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hq_rdy",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_rdy",
+      "parent_lsb": 4,
+      "width": 4,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hq_rdy",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_addr",
+      "parent_lsb": 0,
+      "width": 140,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hq_addr",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_addr",
+      "parent_lsb": 140,
+      "width": 140,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hq_addr",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_len",
+      "parent_lsb": 0,
+      "width": 12,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hq_len",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_len",
+      "parent_lsb": 12,
+      "width": 12,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hq_len",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_tag",
+      "parent_lsb": 0,
+      "width": 44,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hq_tag",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hq_tag",
+      "parent_lsb": 44,
+      "width": 44,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hq_tag",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hr_v",
+      "parent_lsb": 0,
+      "width": 4,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hr_v",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hr_v",
+      "parent_lsb": 4,
+      "width": 4,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hr_v",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hr_tag",
+      "parent_lsb": 0,
+      "width": 44,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hr_tag",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hr_tag",
+      "parent_lsb": 44,
+      "width": 44,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hr_tag",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hr_beat",
+      "parent_lsb": 0,
+      "width": 8,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hr_beat",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hr_beat",
+      "parent_lsb": 8,
+      "width": 8,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hr_beat",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hr_data",
+      "parent_lsb": 0,
+      "width": 1024,
+      "child_instance": "g_tile[0].u_tile",
+      "child_port": "hr_data",
+      "child_lsb": 0
+    },
+    {
+      "parent_port": "hr_data",
+      "parent_lsb": 1024,
+      "width": 1024,
+      "child_instance": "g_tile[1].u_tile",
+      "child_port": "hr_data",
+      "child_lsb": 0
+    }
+  ],
+  "constants": [
+    {
+      "instance": "g_tile[1].u_tile",
+      "port": "first",
+      "width": 1,
+      "value": 0
+    }
+  ],
+  "unused_outputs": [],
+  "replicated_instances": [
+    "hb_hc_SW",
+    "hb_hc_SE",
+    "hb_hc_NW",
+    "hb_hc_NE"
+  ],
+  "cut_ledger": [
+    {
+      "axis": "x",
+      "pos_um": 678.24,
+      "demand_bits": 1065,
+      "usable_tracks": 15120,
+      "ratio": 0.07043650793650794,
+      "bits_per_track_limit": [
+        0.55,
+        0.6
+      ],
+      "capacity_grade": "one horizontal layer at the 0.048 um pin pitch over the full tile height, as b2_functional_map.json; no PG/OBS subtraction is possible before the c4 tile LEF exists",
+      "terms": [
+        {
+          "net": "chain_o_v",
+          "bits": 1
+        },
+        {
+          "net": "chain_o_ss",
+          "bits": 1
+        },
+        {
+          "net": "chain_o_nv",
+          "bits": 6
+        },
+        {
+          "net": "chain_o_wa",
+          "bits": 16
+        },
+        {
+          "net": "chain_o_xa",
+          "bits": 16
+        },
+        {
+          "net": "chain_sum_out",
+          "bits": 1024
+        },
+        {
+          "net": "chain_f_out",
+          "bits": 1
+        }
+      ]
+    }
+  ],
+  "long_seams": [],
+  "status": "CANDIDATE_NOT_QUALIFIED",
+  "functional_map": {
+    "path": "results/rtl/ref_tile/hc_tile_xl/b2_functional_map.json",
+    "sha256": "30e425e04b6c848b04503954d3448fda6beaa9a9973c6d0372d05a296226144f",
+    "status": "CANDIDATE_NOT_ADOPTED",
+    "contract_version": 11
+  },
+  "hierarchy": {
+    "levels": [
+      "die",
+      "ot_hgi_hc_tile"
+    ],
+    "logical_group_only": "ot_hgi_hc_quarter",
+    "third_hard_level": false,
+    "outline_um_is": "bounding box of two die-placed child tiles, not new macro",
+    "tiles_per_quarter": 2,
+    "quarters": 4,
+    "tiles_die": 8,
+    "lanes_tile": 32,
+    "lanes_die": 256
+  },
+  "die_quarter_placement": {
+    "rule": "translation only, R0 in all four quarters, at the UNRESOLVED_HC_<quarter> origin of tools/hbm_native_integration_1013.py; the die compiler owns the final origin",
+    "instances": [
+      {
+        "instance": "hb_hc_SW",
+        "quarter": "SW",
+        "orientation": "R0",
+        "xy_um": [
+          64.8,
+          10821.6
+        ],
+        "tile_xy_um": [
+          [
+            75.6,
+            10836.72
+          ],
+          [
+            753.84,
+            10836.72
+          ]
+        ],
+        "replaces_reservation": "UNRESOLVED_HC_SW"
+      },
+      {
+        "instance": "hb_hc_SE",
+        "quarter": "SE",
+        "orientation": "R0",
+        "xy_um": [
+          16556.832,
+          10821.6
+        ],
+        "tile_xy_um": [
+          [
+            16567.632,
+            10836.72
+          ],
+          [
+            17245.872,
+            10836.72
+          ]
+        ],
+        "replaces_reservation": "UNRESOLVED_HC_SE"
+      },
+      {
+        "instance": "hb_hc_NW",
+        "quarter": "NW",
+        "orientation": "R0",
+        "xy_um": [
+          64.8,
+          23803.2
+        ],
+        "tile_xy_um": [
+          [
+            75.6,
+            23818.32
+          ],
+          [
+            753.84,
+            23818.32
+          ]
+        ],
+        "replaces_reservation": "UNRESOLVED_HC_NW"
+      },
+      {
+        "instance": "hb_hc_NE",
+        "quarter": "NE",
+        "orientation": "R0",
+        "xy_um": [
+          16556.832,
+          23803.2
+        ],
+        "tile_xy_um": [
+          [
+            16567.632,
+            23818.32
+          ],
+          [
+            17245.872,
+            23818.32
+          ]
+        ],
+        "replaces_reservation": "UNRESOLVED_HC_NE"
+      }
+    ]
+  },
+  "interface_summary": {
+    "chain_in_bits": 1065,
+    "chain_out_bits": 1065,
+    "chain_mid_seam_bits": 1065,
+    "x_lanes": 8,
+    "x_lane_bits": 150,
+    "x_forward_bits": 1200,
+    "x_return_bits": 16,
+    "hbm_lanes": 8,
+    "hbm_request_bits": 400,
+    "hbm_request_ready_bits": 8,
+    "hbm_response_bits": 2160,
+    "control_in_bits": 619,
+    "status_out_bits": 4,
+    "tile_pin_faces": {
+      "W": [
+        "d_nv",
+        "d_ss",
+        "d_v",
+        "d_wa",
+        "d_xa",
+        "f_in",
+        "first",
+        "sum_in"
+      ],
+      "E": [
+        "f_out",
+        "o_nv",
+        "o_ss",
+        "o_v",
+        "o_wa",
+        "o_xa",
+        "sum_out"
+      ],
+      "N": [
+        "hq_addr",
+        "hq_len",
+        "hq_rdy",
+        "hq_tag",
+        "hq_v",
+        "hr_beat",
+        "hr_data",
+        "hr_tag",
+        "hr_v"
+      ],
+      "S": [
+        "c_base",
+        "c_bnd",
+        "c_nwk",
+        "c_pbase",
+        "c_pgo",
+        "c_rel",
+        "c_soff",
+        "c_start",
+        "clk",
+        "rst_n",
+        "t_flt",
+        "t_rdy",
+        "xl_cr",
+        "xl_done",
+        "xl_q"
+      ]
+    },
+    "chain_direction": "W face of bank 0 in, E face of bank 1 out; bank 0 E face abuts bank 1 W face across the seam gap",
+    "added_pipeline_cycles": 0,
+    "arithmetic_order": "same eight-bank sequential partial-sum chain; pair grouping adds no arithmetic or hop"
+  },
+  "geometry_check": {
+    "width_identity_um": "2*656.64 + 21.6 + 2*10.8 = 1356.48",
+    "height_identity_um": "725.76 + 2*15.12 = 756.0",
+    "seam_gap_um": 21.6,
+    "margin_um": [
+      10.8,
+      15.12
+    ],
+    "placement_grid_um": [
+      0.432,
+      2.16
+    ],
+    "on_grid": true,
+    "tile_outline_on_grid": true,
+    "pin_track_pitch_um": 0.048,
+    "on_pin_track_pitch": true,
+    "child_area_um2": 953126.0928,
+    "bbox_area_um2": 1025498.88
+  },
+  "layer_cap": {
+    "default": "M5",
+    "status": "requested default for the native die child; NOT what the committed kit carries",
+    "committed_kit": {
+      "path": "physical/ref_tile/hc_tile_xl/floorplan.json",
+      "pg_layer": "M7",
+      "rlayers": [
+        "M2",
+        "M7"
+      ],
+      "strap_layer": "M8"
+    },
+    "open": "the c4 view decides pg_top; an M5-capped export is not built"
+  },
+  "legacy_envelope": {
+    "cells": [
+      "hfd_hc",
+      "hfd_hc_tile_xl"
+    ],
+    "children_per_quarter": 88,
+    "functional_coverage": false,
+    "note": "physical envelope only; never presented as HC coverage"
+  },
+  "qualification": {
+    "tile_route": "RUNNING",
+    "tile_tt": null,
+    "tile_ff": null,
+    "tile_drc": null,
+    "child_lint": null,
+    "pair_functional_gate": {
+      "path": "results/rtl/ref_tile/hc_tile_xl/qpair_5ed73de79/receipt.json",
+      "scope": "QPAIR functional assembly exactness and three mutants only; no physical timing"
+    },
+    "missing_gates": [
+      "pair integrated into SYS production unit",
+      "global control/Sinkhorn physical source and timing",
+      "residual LL physical view mapping",
+      "contract replacement from historical 88-lane envelope to two real bank tiles",
+      "full production exact+mutants+throughput",
+      "current fresh child route TT/FF/DRC"
+    ]
+  },
+  "unresolved": [
+    "Tile hc_tile_xl-c4-550082537-hs is still routing: no LEF, no TT/FF/SS libs, no DRC verdict, no child lint; children carry no view.",
+    "Per-pin seam distances, PG/OBS-aware cut capacity and long_seams cannot be measured before the tile LEF exists.",
+    "HC_MIX_POST scalar shell (ot_hgi_hc_unit SYS control, sigmoid/exponential/Sinkhorn) and the FUSED.HC_POST / HC_PRE_NORM residual LL path have no native physical map; this helper covers the eight HCP bank tiles only.",
+    "Chain head/tail between quarters, c_* control, x lanes to the local VM slice and the eight HBM lanes are boundary ports here; the die consumer must bind them from source.",
+    "Production exact + mutants + throughput at the pair-integrated SYS unit are not run."
+  ],
+  "closed": false,
+  "hard_parent_created": false,
+  "final_signoff_eligible": false
+}

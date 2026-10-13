@@ -1,0 +1,1491 @@
+{
+ "widths": {
+  "DESC": 40,
+  "CHAIN": 1065,
+  "DB": 306,
+  "CTL_DN_TILE": 309,
+  "CTL_UP_TILE": 2,
+  "CTL_Q": 622,
+  "CTL_Q_SHARED": 351,
+  "RET": 1025,
+  "PARAM": 270,
+  "XS_EST": 50,
+  "RES_Q": 497,
+  "REC": 942,
+  "VMP": 612,
+  "XL_Q": 1216,
+  "HBM_Q": 2568,
+  "shell_quarter_side_rtl": 3823,
+  "shell_quarter_side_b2": 4023,
+  "centre_with_residual": 6011,
+  "shell_all_ports": 5577
+ },
+ "order": [
+  "SW",
+  "NW",
+  "NE",
+  "SE"
+ ],
+ "reach_um": 504.0,
+ "shell_wh_est": [
+  1000.0,
+  500.0
+ ],
+ "quarter_slots": {
+  "SW": [
+   8564,
+   11141,
+   10828,
+   12640
+  ],
+  "NW": [
+   8564,
+   13340,
+   10828,
+   14839
+  ],
+  "NE": [
+   21293,
+   13340,
+   23557,
+   14839
+  ],
+  "SE": [
+   21293,
+   11141,
+   23557,
+   12640
+  ]
+ },
+ "quarter_face": {
+  "ew_face_tracks": 15750,
+  "ns_face_tracks": 28260,
+  "ew_bits_no_hbm": 3450,
+  "ew_frac_no_hbm": 0.219,
+  "ew_bits_with_hbm": 6018,
+  "ew_frac_with_hbm": 0.382,
+  "ns_bits_chain": 1065,
+  "ns_frac_chain": 0.038
+ },
+ "v07_base": {
+  "X_centre_full": {
+   "bits": 61064,
+   "usable": 601648,
+   "util": 0.101
+  },
+  "Y_centre_full": {
+   "bits": 70706,
+   "usable": 923359,
+   "util": 0.077
+  },
+  "x12_hub": {
+   "bits": 25750,
+   "usable": 102534,
+   "util": 0.251
+  },
+  "x13_hub": {
+   "bits": 39044,
+   "usable": 105402,
+   "util": 0.37
+  },
+  "x14_hub": {
+   "bits": 33141,
+   "usable": 156226,
+   "util": 0.212
+  },
+  "x14.4_hub": {
+   "bits": 33260,
+   "usable": 189062,
+   "util": 0.176
+  },
+  "x15_hub": {
+   "bits": 37677,
+   "usable": 118759,
+   "util": 0.317
+  },
+  "x15.5_hub": {
+   "bits": 24073,
+   "usable": 118759,
+   "util": 0.203
+  },
+  "x16_hub": {
+   "bits": 24163,
+   "usable": 118759,
+   "util": 0.203
+  },
+  "x16.5_hub": {
+   "bits": 25435,
+   "usable": 189062,
+   "util": 0.135
+  },
+  "x17_hub": {
+   "bits": 35186,
+   "usable": 154398,
+   "util": 0.228
+  },
+  "x18_hub": {
+   "bits": 45098,
+   "usable": 121562,
+   "util": 0.371
+  },
+  "y10_hub": {
+   "bits": 60193,
+   "usable": 130261,
+   "util": 0.462
+  },
+  "y11_hub": {
+   "bits": 58569,
+   "usable": 158081,
+   "util": 0.371
+  },
+  "y12_hub": {
+   "bits": 60474,
+   "usable": 131753,
+   "util": 0.459
+  },
+  "y12.5_hub": {
+   "bits": 64028,
+   "usable": 162367,
+   "util": 0.394
+  },
+  "y13_hub": {
+   "bits": 51958,
+   "usable": 162367,
+   "util": 0.32
+  },
+  "y14_hub": {
+   "bits": 62620,
+   "usable": 162735,
+   "util": 0.385
+  },
+  "y14.6_hub": {
+   "bits": 60178,
+   "usable": 162735,
+   "util": 0.37
+  },
+  "y15_hub": {
+   "bits": 71082,
+   "usable": 158081,
+   "util": 0.45
+  },
+  "y16_hub": {
+   "bits": 81376,
+   "usable": 105622,
+   "util": 0.77
+  },
+  "vmap_SW_x": {
+   "bits": 16626,
+   "usable": 58907,
+   "util": 0.282
+  },
+  "vmap_SE_x": {
+   "bits": 15275,
+   "usable": 43705,
+   "util": 0.35
+  },
+  "vmap_NW_x": {
+   "bits": 13962,
+   "usable": 57996,
+   "util": 0.241
+  },
+  "vmap_NE_x": {
+   "bits": 13041,
+   "usable": 42938,
+   "util": 0.304
+  },
+  "x11_hub": {
+   "bits": 30601,
+   "usable": 189062,
+   "util": 0.162
+  },
+  "x19_hub": {
+   "bits": 23317,
+   "usable": 70738,
+   "util": 0.33
+  },
+  "x20_hub": {
+   "bits": 22913,
+   "usable": 67869,
+   "util": 0.338
+  },
+  "x20.8_hub": {
+   "bits": 22924,
+   "usable": 70738,
+   "util": 0.324
+  },
+  "hcW_y12.99": {
+   "bits": 12508,
+   "usable": 102850,
+   "util": 0.122
+  },
+  "hcE_y12.99": {
+   "bits": 3233,
+   "usable": 94310,
+   "util": 0.034
+  }
+ },
+ "P_C_centre": {
+  "shell_xy": [
+   14936,
+   13293
+  ],
+  "residual_centre": "hb_hc_eng",
+  "cuts": {
+   "X_centre_full": {
+    "bits": 65492,
+    "added": 4428,
+    "usable": 601648,
+    "util": 0.109,
+    "util_base": 0.101
+   },
+   "Y_centre_full": {
+    "bits": 76509,
+    "added": 5803,
+    "usable": 923359,
+    "util": 0.083,
+    "util_base": 0.077
+   },
+   "x12_hub": {
+    "bits": 29463,
+    "added": 3713,
+    "usable": 102534,
+    "util": 0.287,
+    "util_base": 0.251
+   },
+   "x13_hub": {
+    "bits": 42757,
+    "added": 3713,
+    "usable": 105402,
+    "util": 0.406,
+    "util_base": 0.37
+   },
+   "x14_hub": {
+    "bits": 37466,
+    "added": 4325,
+    "usable": 156226,
+    "util": 0.24,
+    "util_base": 0.212
+   },
+   "x14.4_hub": {
+    "bits": 37585,
+    "added": 4325,
+    "usable": 189062,
+    "util": 0.199,
+    "util_base": 0.176
+   },
+   "x15_hub": {
+    "bits": 42002,
+    "added": 4325,
+    "usable": 107691,
+    "util": 0.39,
+    "util_base": 0.317
+   },
+   "x15.5_hub": {
+    "bits": 28501,
+    "added": 4428,
+    "usable": 107691,
+    "util": 0.265,
+    "util_base": 0.203
+   },
+   "x16_hub": {
+    "bits": 28591,
+    "added": 4428,
+    "usable": 118759,
+    "util": 0.241,
+    "util_base": 0.203
+   },
+   "x16.5_hub": {
+    "bits": 29863,
+    "added": 4428,
+    "usable": 189062,
+    "util": 0.158,
+    "util_base": 0.135
+   },
+   "x17_hub": {
+    "bits": 39614,
+    "added": 4428,
+    "usable": 154398,
+    "util": 0.257,
+    "util_base": 0.228
+   },
+   "x18_hub": {
+    "bits": 49526,
+    "added": 4428,
+    "usable": 121562,
+    "util": 0.407,
+    "util_base": 0.371
+   },
+   "y10_hub": {
+    "bits": 60193,
+    "added": 0,
+    "usable": 130261,
+    "util": 0.462,
+    "util_base": 0.462
+   },
+   "y11_hub": {
+    "bits": 58569,
+    "added": 0,
+    "usable": 158081,
+    "util": 0.371,
+    "util_base": 0.371
+   },
+   "y12_hub": {
+    "bits": 63650,
+    "added": 3176,
+    "usable": 131753,
+    "util": 0.483,
+    "util_base": 0.459
+   },
+   "y12.5_hub": {
+    "bits": 67204,
+    "added": 3176,
+    "usable": 162367,
+    "util": 0.414,
+    "util_base": 0.394
+   },
+   "y13_hub": {
+    "bits": 55134,
+    "added": 3176,
+    "usable": 162367,
+    "util": 0.34,
+    "util_base": 0.32
+   },
+   "y14_hub": {
+    "bits": 66015,
+    "added": 3395,
+    "usable": 162735,
+    "util": 0.406,
+    "util_base": 0.385
+   },
+   "y14.6_hub": {
+    "bits": 61732,
+    "added": 1554,
+    "usable": 162735,
+    "util": 0.379,
+    "util_base": 0.37
+   },
+   "y15_hub": {
+    "bits": 72636,
+    "added": 1554,
+    "usable": 158081,
+    "util": 0.459,
+    "util_base": 0.45
+   },
+   "y16_hub": {
+    "bits": 81988,
+    "added": 612,
+    "usable": 105622,
+    "util": 0.776,
+    "util_base": 0.77
+   },
+   "vmap_SW_x": {
+    "bits": 18105,
+    "added": 1479,
+    "usable": 58907,
+    "util": 0.307,
+    "util_base": 0.282
+   },
+   "vmap_SE_x": {
+    "bits": 17469,
+    "added": 2194,
+    "usable": 43705,
+    "util": 0.4,
+    "util_base": 0.35
+   },
+   "vmap_NW_x": {
+    "bits": 17178,
+    "added": 3216,
+    "usable": 57996,
+    "util": 0.296,
+    "util_base": 0.241
+   },
+   "vmap_NE_x": {
+    "bits": 16972,
+    "added": 3931,
+    "usable": 42938,
+    "util": 0.395,
+    "util_base": 0.304
+   },
+   "x11_hub": {
+    "bits": 34314,
+    "added": 3713,
+    "usable": 189062,
+    "util": 0.181,
+    "util_base": 0.162
+   },
+   "x19_hub": {
+    "bits": 27745,
+    "added": 4428,
+    "usable": 70738,
+    "util": 0.392,
+    "util_base": 0.33
+   },
+   "x20_hub": {
+    "bits": 27341,
+    "added": 4428,
+    "usable": 67869,
+    "util": 0.403,
+    "util_base": 0.338
+   },
+   "x20.8_hub": {
+    "bits": 27352,
+    "added": 4428,
+    "usable": 70738,
+    "util": 0.387,
+    "util_base": 0.324
+   },
+   "hcW_y12.99": {
+    "bits": 15052,
+    "added": 2544,
+    "usable": 102850,
+    "util": 0.146,
+    "util_base": 0.122
+   },
+   "hcE_y12.99": {
+    "bits": 6492,
+    "added": 3259,
+    "usable": 94310,
+    "util": 0.069,
+    "util_base": 0.034
+   }
+  },
+  "worst_channel_cut": [
+   "y12_hub",
+   0.483,
+   0.459
+  ],
+  "largest_increase": [
+   "vmap_NE_x",
+   0.091,
+   0.395
+  ],
+  "y16_artifact": [
+   0.776,
+   0.77
+  ],
+  "over_060": [],
+  "over_055": [],
+  "relays": {
+   "ctl_um_stages": {
+    "SW": [
+     5511,
+     11
+    ],
+    "NW": [
+     4608,
+     10
+    ],
+    "NE": [
+     5858,
+     12
+    ],
+    "SE": [
+     6760,
+     14
+    ]
+   },
+   "chain_hop_um_stages": {
+    "SW->NW": [
+     700,
+     2
+    ],
+    "NW->NE": [
+     10466,
+     21
+    ],
+    "NE->SE": [
+     700,
+     2
+    ]
+   },
+   "desc_in_stages": 11,
+   "ret_out_stages": 14,
+   "inter_quarter_stages": 25,
+   "xrly_max": 14,
+   "sys_lat_today": 106,
+   "sys_lat_b2": 152,
+   "sys_lat_delta_per_row": 46,
+   "rw_hold_today": 14,
+   "rw_hold_b2": 34,
+   "rw_hold_delta_per_row": 20,
+   "param_roundtrip_delta": 18,
+   "rec_um_stages": [
+    1080,
+    3
+   ],
+   "residual_um_stages": {
+    "SW": [
+     5966,
+     12
+    ],
+    "NW": [
+     5966,
+     12
+    ],
+    "NE": [
+     114,
+     1
+    ],
+    "SE": [
+     114,
+     1
+    ]
+   },
+   "relay_flops": {
+    "ctl": 29234,
+    "chain": 26625,
+    "desc": 440,
+    "ret": 14350,
+    "param": 2970
+   }
+  }
+ },
+ "P_SW_colocated": {
+  "shell_xy": [
+   9828,
+   12140
+  ],
+  "residual_centre": "hb_hc_eng",
+  "cuts": {
+   "X_centre_full": {
+    "bits": 65492,
+    "added": 4428,
+    "usable": 601648,
+    "util": 0.109,
+    "util_base": 0.101
+   },
+   "Y_centre_full": {
+    "bits": 75174,
+    "added": 4468,
+    "usable": 923359,
+    "util": 0.081,
+    "util_base": 0.077
+   },
+   "x12_hub": {
+    "bits": 30178,
+    "added": 4428,
+    "usable": 102534,
+    "util": 0.294,
+    "util_base": 0.251
+   },
+   "x13_hub": {
+    "bits": 43472,
+    "added": 4428,
+    "usable": 105402,
+    "util": 0.412,
+    "util_base": 0.37
+   },
+   "x14_hub": {
+    "bits": 37569,
+    "added": 4428,
+    "usable": 156226,
+    "util": 0.24,
+    "util_base": 0.212
+   },
+   "x14.4_hub": {
+    "bits": 37688,
+    "added": 4428,
+    "usable": 189062,
+    "util": 0.199,
+    "util_base": 0.176
+   },
+   "x15_hub": {
+    "bits": 42105,
+    "added": 4428,
+    "usable": 118759,
+    "util": 0.355,
+    "util_base": 0.317
+   },
+   "x15.5_hub": {
+    "bits": 28501,
+    "added": 4428,
+    "usable": 118759,
+    "util": 0.24,
+    "util_base": 0.203
+   },
+   "x16_hub": {
+    "bits": 28591,
+    "added": 4428,
+    "usable": 118759,
+    "util": 0.241,
+    "util_base": 0.203
+   },
+   "x16.5_hub": {
+    "bits": 29863,
+    "added": 4428,
+    "usable": 189062,
+    "util": 0.158,
+    "util_base": 0.135
+   },
+   "x17_hub": {
+    "bits": 39614,
+    "added": 4428,
+    "usable": 154398,
+    "util": 0.257,
+    "util_base": 0.228
+   },
+   "x18_hub": {
+    "bits": 49526,
+    "added": 4428,
+    "usable": 121562,
+    "util": 0.407,
+    "util_base": 0.371
+   },
+   "y10_hub": {
+    "bits": 60193,
+    "added": 0,
+    "usable": 130261,
+    "util": 0.462,
+    "util_base": 0.462
+   },
+   "y11_hub": {
+    "bits": 58569,
+    "added": 0,
+    "usable": 158081,
+    "util": 0.371,
+    "util_base": 0.371
+   },
+   "y12_hub": {
+    "bits": 62668,
+    "added": 2194,
+    "usable": 131753,
+    "util": 0.476,
+    "util_base": 0.459
+   },
+   "y12.5_hub": {
+    "bits": 65197,
+    "added": 1169,
+    "usable": 162367,
+    "util": 0.402,
+    "util_base": 0.394
+   },
+   "y13_hub": {
+    "bits": 53127,
+    "added": 1169,
+    "usable": 162367,
+    "util": 0.327,
+    "util_base": 0.32
+   },
+   "y14_hub": {
+    "bits": 63789,
+    "added": 1169,
+    "usable": 162735,
+    "util": 0.392,
+    "util_base": 0.385
+   },
+   "y14.6_hub": {
+    "bits": 60178,
+    "added": 0,
+    "usable": 162735,
+    "util": 0.37,
+    "util_base": 0.37
+   },
+   "y15_hub": {
+    "bits": 71082,
+    "added": 0,
+    "usable": 158081,
+    "util": 0.45,
+    "util_base": 0.45
+   },
+   "y16_hub": {
+    "bits": 81376,
+    "added": 0,
+    "usable": 105622,
+    "util": 0.77,
+    "util_base": 0.77
+   },
+   "vmap_SW_x": {
+    "bits": 19492,
+    "added": 2866,
+    "usable": 58907,
+    "util": 0.331,
+    "util_base": 0.282
+   },
+   "vmap_SE_x": {
+    "bits": 18141,
+    "added": 2866,
+    "usable": 43705,
+    "util": 0.415,
+    "util_base": 0.35
+   },
+   "vmap_NW_x": {
+    "bits": 16196,
+    "added": 2234,
+    "usable": 57996,
+    "util": 0.279,
+    "util_base": 0.241
+   },
+   "vmap_NE_x": {
+    "bits": 15275,
+    "added": 2234,
+    "usable": 42938,
+    "util": 0.356,
+    "util_base": 0.304
+   },
+   "x11_hub": {
+    "bits": 35029,
+    "added": 4428,
+    "usable": 189062,
+    "util": 0.185,
+    "util_base": 0.162
+   },
+   "x19_hub": {
+    "bits": 27745,
+    "added": 4428,
+    "usable": 70738,
+    "util": 0.392,
+    "util_base": 0.33
+   },
+   "x20_hub": {
+    "bits": 27341,
+    "added": 4428,
+    "usable": 67869,
+    "util": 0.403,
+    "util_base": 0.338
+   },
+   "x20.8_hub": {
+    "bits": 27352,
+    "added": 4428,
+    "usable": 70738,
+    "util": 0.387,
+    "util_base": 0.324
+   },
+   "hcW_y12.99": {
+    "bits": 15414,
+    "added": 2906,
+    "usable": 102850,
+    "util": 0.15,
+    "util_base": 0.122
+   },
+   "hcE_y12.99": {
+    "bits": 5467,
+    "added": 2234,
+    "usable": 94310,
+    "util": 0.058,
+    "util_base": 0.034
+   }
+  },
+  "worst_channel_cut": [
+   "y12_hub",
+   0.476,
+   0.459
+  ],
+  "largest_increase": [
+   "vmap_SE_x",
+   0.065,
+   0.415
+  ],
+  "y16_artifact": [
+   0.77,
+   0.77
+  ],
+  "over_060": [],
+  "over_055": [],
+  "relays": {
+   "ctl_um_stages": {
+    "SW": [
+     0,
+     0
+    ],
+    "NW": [
+     950,
+     2
+    ],
+    "NE": [
+     11916,
+     24
+    ],
+    "SE": [
+     10966,
+     22
+    ]
+   },
+   "chain_hop_um_stages": {
+    "SW->NW": [
+     700,
+     2
+    ],
+    "NW->NE": [
+     10466,
+     21
+    ],
+    "NE->SE": [
+     700,
+     2
+    ]
+   },
+   "desc_in_stages": 0,
+   "ret_out_stages": 22,
+   "inter_quarter_stages": 25,
+   "xrly_max": 24,
+   "sys_lat_today": 106,
+   "sys_lat_b2": 149,
+   "sys_lat_delta_per_row": 43,
+   "rw_hold_today": 14,
+   "rw_hold_b2": 54,
+   "rw_hold_delta_per_row": 40,
+   "param_roundtrip_delta": -4,
+   "rec_um_stages": [
+    6641,
+    14
+   ],
+   "residual_um_stages": {
+    "SW": [
+     5966,
+     12
+    ],
+    "NW": [
+     5966,
+     12
+    ],
+    "NE": [
+     114,
+     1
+    ],
+    "SE": [
+     114,
+     1
+    ]
+   },
+   "relay_flops": {
+    "ctl": 29856,
+    "chain": 26625,
+    "desc": 0,
+    "ret": 22550,
+    "param": 0
+   }
+  }
+ },
+ "P_W_between": {
+  "shell_xy": [
+   9828,
+   12740
+  ],
+  "residual_centre": "hb_hc_eng",
+  "cuts": {
+   "X_centre_full": {
+    "bits": 65492,
+    "added": 4428,
+    "usable": 601648,
+    "util": 0.109,
+    "util_base": 0.101
+   },
+   "Y_centre_full": {
+    "bits": 73830,
+    "added": 3124,
+    "usable": 901223,
+    "util": 0.082,
+    "util_base": 0.077
+   },
+   "x12_hub": {
+    "bits": 30178,
+    "added": 4428,
+    "usable": 102534,
+    "util": 0.294,
+    "util_base": 0.251
+   },
+   "x13_hub": {
+    "bits": 43472,
+    "added": 4428,
+    "usable": 105402,
+    "util": 0.412,
+    "util_base": 0.37
+   },
+   "x14_hub": {
+    "bits": 37569,
+    "added": 4428,
+    "usable": 156226,
+    "util": 0.24,
+    "util_base": 0.212
+   },
+   "x14.4_hub": {
+    "bits": 37688,
+    "added": 4428,
+    "usable": 189062,
+    "util": 0.199,
+    "util_base": 0.176
+   },
+   "x15_hub": {
+    "bits": 42105,
+    "added": 4428,
+    "usable": 118759,
+    "util": 0.355,
+    "util_base": 0.317
+   },
+   "x15.5_hub": {
+    "bits": 28501,
+    "added": 4428,
+    "usable": 118759,
+    "util": 0.24,
+    "util_base": 0.203
+   },
+   "x16_hub": {
+    "bits": 28591,
+    "added": 4428,
+    "usable": 118759,
+    "util": 0.241,
+    "util_base": 0.203
+   },
+   "x16.5_hub": {
+    "bits": 29863,
+    "added": 4428,
+    "usable": 189062,
+    "util": 0.158,
+    "util_base": 0.135
+   },
+   "x17_hub": {
+    "bits": 39614,
+    "added": 4428,
+    "usable": 154398,
+    "util": 0.257,
+    "util_base": 0.228
+   },
+   "x18_hub": {
+    "bits": 49526,
+    "added": 4428,
+    "usable": 121562,
+    "util": 0.407,
+    "util_base": 0.371
+   },
+   "y10_hub": {
+    "bits": 60193,
+    "added": 0,
+    "usable": 130261,
+    "util": 0.462,
+    "util_base": 0.462
+   },
+   "y11_hub": {
+    "bits": 58569,
+    "added": 0,
+    "usable": 158081,
+    "util": 0.371,
+    "util_base": 0.371
+   },
+   "y12_hub": {
+    "bits": 62668,
+    "added": 2194,
+    "usable": 131753,
+    "util": 0.476,
+    "util_base": 0.459
+   },
+   "y12.5_hub": {
+    "bits": 66222,
+    "added": 2194,
+    "usable": 162367,
+    "util": 0.408,
+    "util_base": 0.394
+   },
+   "y13_hub": {
+    "bits": 53127,
+    "added": 1169,
+    "usable": 162367,
+    "util": 0.327,
+    "util_base": 0.32
+   },
+   "y14_hub": {
+    "bits": 63789,
+    "added": 1169,
+    "usable": 162735,
+    "util": 0.392,
+    "util_base": 0.385
+   },
+   "y14.6_hub": {
+    "bits": 60178,
+    "added": 0,
+    "usable": 162735,
+    "util": 0.37,
+    "util_base": 0.37
+   },
+   "y15_hub": {
+    "bits": 71082,
+    "added": 0,
+    "usable": 158081,
+    "util": 0.45,
+    "util_base": 0.45
+   },
+   "y16_hub": {
+    "bits": 81376,
+    "added": 0,
+    "usable": 105622,
+    "util": 0.77,
+    "util_base": 0.77
+   },
+   "vmap_SW_x": {
+    "bits": 18820,
+    "added": 2194,
+    "usable": 58907,
+    "util": 0.319,
+    "util_base": 0.282
+   },
+   "vmap_SE_x": {
+    "bits": 17469,
+    "added": 2194,
+    "usable": 43705,
+    "util": 0.4,
+    "util_base": 0.35
+   },
+   "vmap_NW_x": {
+    "bits": 16196,
+    "added": 2234,
+    "usable": 57996,
+    "util": 0.279,
+    "util_base": 0.241
+   },
+   "vmap_NE_x": {
+    "bits": 15275,
+    "added": 2234,
+    "usable": 42938,
+    "util": 0.356,
+    "util_base": 0.304
+   },
+   "x11_hub": {
+    "bits": 35029,
+    "added": 4428,
+    "usable": 189062,
+    "util": 0.185,
+    "util_base": 0.162
+   },
+   "x19_hub": {
+    "bits": 27745,
+    "added": 4428,
+    "usable": 70738,
+    "util": 0.392,
+    "util_base": 0.33
+   },
+   "x20_hub": {
+    "bits": 27341,
+    "added": 4428,
+    "usable": 67869,
+    "util": 0.403,
+    "util_base": 0.338
+   },
+   "x20.8_hub": {
+    "bits": 27352,
+    "added": 4428,
+    "usable": 70738,
+    "util": 0.387,
+    "util_base": 0.324
+   },
+   "hcW_y12.99": {
+    "bits": 16749,
+    "added": 4241,
+    "usable": 80715,
+    "util": 0.208,
+    "util_base": 0.122
+   },
+   "hcE_y12.99": {
+    "bits": 6492,
+    "added": 3259,
+    "usable": 94310,
+    "util": 0.069,
+    "util_base": 0.034
+   }
+  },
+  "worst_channel_cut": [
+   "y12_hub",
+   0.476,
+   0.459
+  ],
+  "largest_increase": [
+   "hcW_y12.99",
+   0.086,
+   0.208
+  ],
+  "y16_artifact": [
+   0.77,
+   0.77
+  ],
+  "over_060": [],
+  "over_055": [],
+  "relays": {
+   "ctl_um_stages": {
+    "SW": [
+     350,
+     1
+    ],
+    "NW": [
+     350,
+     1
+    ],
+    "NE": [
+     11316,
+     23
+    ],
+    "SE": [
+     11316,
+     23
+    ]
+   },
+   "chain_hop_um_stages": {
+    "SW->NW": [
+     700,
+     2
+    ],
+    "NW->NE": [
+     10466,
+     21
+    ],
+    "NE->SE": [
+     700,
+     2
+    ]
+   },
+   "desc_in_stages": 1,
+   "ret_out_stages": 23,
+   "inter_quarter_stages": 25,
+   "xrly_max": 23,
+   "sys_lat_today": 106,
+   "sys_lat_b2": 151,
+   "sys_lat_delta_per_row": 45,
+   "rw_hold_today": 14,
+   "rw_hold_b2": 52,
+   "rw_hold_delta_per_row": 38,
+   "param_roundtrip_delta": -2,
+   "rec_um_stages": [
+    6041,
+    12
+   ],
+   "residual_um_stages": {
+    "SW": [
+     5966,
+     12
+    ],
+    "NW": [
+     5966,
+     12
+    ],
+    "NE": [
+     114,
+     1
+    ],
+    "SE": [
+     114,
+     1
+    ]
+   },
+   "relay_flops": {
+    "ctl": 29856,
+    "chain": 26625,
+    "desc": 40,
+    "ret": 23575,
+    "param": 270
+   }
+  }
+ },
+ "P_C_centre+res_at_shell": {
+  "shell_xy": [
+   14936,
+   13293
+  ],
+  "residual_centre": "shell",
+  "cuts": {
+   "X_centre_full": {
+    "bits": 65492,
+    "added": 4428,
+    "usable": 601648,
+    "util": 0.109,
+    "util_base": 0.101
+   },
+   "Y_centre_full": {
+    "bits": 76509,
+    "added": 5803,
+    "usable": 923359,
+    "util": 0.083,
+    "util_base": 0.077
+   },
+   "x12_hub": {
+    "bits": 29463,
+    "added": 3713,
+    "usable": 102534,
+    "util": 0.287,
+    "util_base": 0.251
+   },
+   "x13_hub": {
+    "bits": 42757,
+    "added": 3713,
+    "usable": 105402,
+    "util": 0.406,
+    "util_base": 0.37
+   },
+   "x14_hub": {
+    "bits": 37466,
+    "added": 4325,
+    "usable": 156226,
+    "util": 0.24,
+    "util_base": 0.212
+   },
+   "x14.4_hub": {
+    "bits": 37585,
+    "added": 4325,
+    "usable": 189062,
+    "util": 0.199,
+    "util_base": 0.176
+   },
+   "x15_hub": {
+    "bits": 42002,
+    "added": 4325,
+    "usable": 107691,
+    "util": 0.39,
+    "util_base": 0.317
+   },
+   "x15.5_hub": {
+    "bits": 28501,
+    "added": 4428,
+    "usable": 107691,
+    "util": 0.265,
+    "util_base": 0.203
+   },
+   "x16_hub": {
+    "bits": 28591,
+    "added": 4428,
+    "usable": 118759,
+    "util": 0.241,
+    "util_base": 0.203
+   },
+   "x16.5_hub": {
+    "bits": 29863,
+    "added": 4428,
+    "usable": 189062,
+    "util": 0.158,
+    "util_base": 0.135
+   },
+   "x17_hub": {
+    "bits": 39614,
+    "added": 4428,
+    "usable": 154398,
+    "util": 0.257,
+    "util_base": 0.228
+   },
+   "x18_hub": {
+    "bits": 49526,
+    "added": 4428,
+    "usable": 121562,
+    "util": 0.407,
+    "util_base": 0.371
+   },
+   "y10_hub": {
+    "bits": 60193,
+    "added": 0,
+    "usable": 130261,
+    "util": 0.462,
+    "util_base": 0.462
+   },
+   "y11_hub": {
+    "bits": 58569,
+    "added": 0,
+    "usable": 158081,
+    "util": 0.371,
+    "util_base": 0.371
+   },
+   "y12_hub": {
+    "bits": 64147,
+    "added": 3673,
+    "usable": 131753,
+    "util": 0.487,
+    "util_base": 0.459
+   },
+   "y12.5_hub": {
+    "bits": 67701,
+    "added": 3673,
+    "usable": 162367,
+    "util": 0.417,
+    "util_base": 0.394
+   },
+   "y13_hub": {
+    "bits": 55631,
+    "added": 3673,
+    "usable": 162367,
+    "util": 0.343,
+    "util_base": 0.32
+   },
+   "y14_hub": {
+    "bits": 66512,
+    "added": 3892,
+    "usable": 162735,
+    "util": 0.409,
+    "util_base": 0.385
+   },
+   "y14.6_hub": {
+    "bits": 61732,
+    "added": 1554,
+    "usable": 162735,
+    "util": 0.379,
+    "util_base": 0.37
+   },
+   "y15_hub": {
+    "bits": 72636,
+    "added": 1554,
+    "usable": 158081,
+    "util": 0.459,
+    "util_base": 0.45
+   },
+   "y16_hub": {
+    "bits": 81988,
+    "added": 612,
+    "usable": 105622,
+    "util": 0.776,
+    "util_base": 0.77
+   },
+   "vmap_SW_x": {
+    "bits": 18105,
+    "added": 1479,
+    "usable": 58907,
+    "util": 0.307,
+    "util_base": 0.282
+   },
+   "vmap_SE_x": {
+    "bits": 17469,
+    "added": 2194,
+    "usable": 43705,
+    "util": 0.4,
+    "util_base": 0.35
+   },
+   "vmap_NW_x": {
+    "bits": 17675,
+    "added": 3713,
+    "usable": 57996,
+    "util": 0.305,
+    "util_base": 0.241
+   },
+   "vmap_NE_x": {
+    "bits": 17469,
+    "added": 4428,
+    "usable": 42938,
+    "util": 0.407,
+    "util_base": 0.304
+   },
+   "x11_hub": {
+    "bits": 34314,
+    "added": 3713,
+    "usable": 189062,
+    "util": 0.181,
+    "util_base": 0.162
+   },
+   "x19_hub": {
+    "bits": 27745,
+    "added": 4428,
+    "usable": 70738,
+    "util": 0.392,
+    "util_base": 0.33
+   },
+   "x20_hub": {
+    "bits": 27341,
+    "added": 4428,
+    "usable": 67869,
+    "util": 0.403,
+    "util_base": 0.338
+   },
+   "x20.8_hub": {
+    "bits": 27352,
+    "added": 4428,
+    "usable": 70738,
+    "util": 0.387,
+    "util_base": 0.324
+   },
+   "hcW_y12.99": {
+    "bits": 15052,
+    "added": 2544,
+    "usable": 102850,
+    "util": 0.146,
+    "util_base": 0.122
+   },
+   "hcE_y12.99": {
+    "bits": 6492,
+    "added": 3259,
+    "usable": 94310,
+    "util": 0.069,
+    "util_base": 0.034
+   }
+  },
+  "worst_channel_cut": [
+   "y12_hub",
+   0.487,
+   0.459
+  ],
+  "largest_increase": [
+   "vmap_NE_x",
+   0.103,
+   0.407
+  ],
+  "y16_artifact": [
+   0.776,
+   0.77
+  ],
+  "over_060": [],
+  "over_055": [],
+  "relays": {
+   "ctl_um_stages": {
+    "SW": [
+     5511,
+     11
+    ],
+    "NW": [
+     4608,
+     10
+    ],
+    "NE": [
+     5858,
+     12
+    ],
+    "SE": [
+     6760,
+     14
+    ]
+   },
+   "chain_hop_um_stages": {
+    "SW->NW": [
+     700,
+     2
+    ],
+    "NW->NE": [
+     10466,
+     21
+    ],
+    "NE->SE": [
+     700,
+     2
+    ]
+   },
+   "desc_in_stages": 11,
+   "ret_out_stages": 14,
+   "inter_quarter_stages": 25,
+   "xrly_max": 14,
+   "sys_lat_today": 106,
+   "sys_lat_b2": 152,
+   "sys_lat_delta_per_row": 46,
+   "rw_hold_today": 14,
+   "rw_hold_b2": 34,
+   "rw_hold_delta_per_row": 20,
+   "param_roundtrip_delta": 18,
+   "rec_um_stages": [
+    1080,
+    3
+   ],
+   "residual_um_stages": {
+    "SW": [
+     5966,
+     12
+    ],
+    "NW": [
+     5966,
+     12
+    ],
+    "NE": [
+     114,
+     1
+    ],
+    "SE": [
+     114,
+     1
+    ]
+   },
+   "relay_flops": {
+    "ctl": 29234,
+    "chain": 26625,
+    "desc": 440,
+    "ret": 14350,
+    "param": 2970
+   }
+  }
+ }
+}
