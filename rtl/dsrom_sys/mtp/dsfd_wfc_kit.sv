@@ -218,18 +218,18 @@ module dsfd_wfc_hep #(parameter integer NW = 21, parameter integer USER_W = 10, 
     // the flat module's output cycle for cycle (reference dsfd_wfc_hep_flat, bench tools/dsrom_wfc_hep_bench.py).
     wire [USER_W+NW+EW:0] h0, h1;
     wire [0:0] ckv = clk, rsv = rst_n;
-    dsfd_wfc_hep_bank #(.NW(NW), .USER_W(USER_W), .EW(EW), .BANK(0)) u_b0 (.ckv(ckv), .rsv(rsv),
+    dsfd_wfc_hep_bank #(.NW(NW), .USER_W(USER_W), .EW(EW)) u_b0 (.ckv(ckv), .rsv(rsv), .f_bid(1'b0),
         .f_st(ks[USER_W+2*NW]), .f_u(ks[2*NW +: USER_W]), .f_p(ks[NW-1:0]), .t_hep(h0));
-    dsfd_wfc_hep_bank #(.NW(NW), .USER_W(USER_W), .EW(EW), .BANK(1)) u_b1 (.ckv(ckv), .rsv(rsv),
+    dsfd_wfc_hep_bank #(.NW(NW), .USER_W(USER_W), .EW(EW)) u_b1 (.ckv(ckv), .rsv(rsv), .f_bid(1'b1),
         .f_st(ks[USER_W+2*NW]), .f_u(ks[2*NW +: USER_W]), .f_p(ks[NW-1:0]), .t_hep(h1));
     assign hep = h0 | h1;
 endmodule
 
 // dsfd_wfc_hep_bank: one user-MSB half of the issue-epoch table, a die tile (ckv domain; pin -> read / compare / +1 ->
 // flop, registered output).  2^(USER_W-1) x {last pos NW, epoch EW, seen} + the output register.
-module dsfd_wfc_hep_bank #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4,
-                           parameter integer BANK = 0) (
+module dsfd_wfc_hep_bank #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
     input  wire [0:0] ckv, rsv,
+    input  wire [0:0] f_bid,                 // bank id strap (the user MSB this tile serves): one master, two instances
     input  wire [0:0] f_st, input wire [USER_W-1:0] f_u, input wire [NW-1:0] f_p,
     output reg  [USER_W+NW+EW:0] t_hep       // {v, user, pos, epoch}; 0 unless this bank's user started last cycle
 );
@@ -239,7 +239,7 @@ module dsfd_wfc_hep_bank #(parameter integer NW = 21, parameter integer USER_W =
 `ifdef OT_WFCHEP_MUT_BANK
     wire st = f_st[0];                                     // MUTANT: bank select dropped (both banks answer)
 `else
-    wire st = f_st[0] && f_u[USER_W-1] == BANK[0];
+    wire st = f_st[0] && f_u[USER_W-1] == f_bid[0];
 `endif
 `ifdef OT_WFCHEP_MUT_STALE
     wire rew = 1'b0;                                       // MUTANT: the epoch never advances (stale rows served)
