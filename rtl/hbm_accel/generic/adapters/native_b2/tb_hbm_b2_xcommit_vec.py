@@ -86,7 +86,7 @@ def cmd_check(a):
             sram.append({t[k]: int(t[k + 1]) for k in range(3, len(t) - 1, 2)})
         elif line.startswith("# xcsum"):
             xs = {t[k]: int(t[k + 1]) for k in range(2, len(t) - 1, 2)}
-        elif line.startswith("# trc"):
+        elif line.startswith("# trc") or line.startswith("# xcmode"):
             continue
         elif line.startswith("# total_cycles"):
             total = int(t[-1])
@@ -126,8 +126,14 @@ def cmd_check(a):
     if xs is None:
         fails.append("no summary line")
     else:
+        # tracker 5 (XR_LEAD 6: dispatch on the release) starts the op while the last beats are still in the write
+        # pipeline BY DESIGN: the store-at-the-start-edge readback (rb_bad) and the drained-level monitors do not
+        # apply; what must hold is that no READ sees a word before its write (stale 0, golden exact, slack >= 1)
+        early = a.sel == 5
         for k in ("rb_bad", "stale", "write_while_drained", "write_gated", "beat_while_drained", "trk_fault", "sink_fault",
                   "sm_fault", "cal_nonuniform"):
+            if early and k in ("rb_bad", "write_while_drained", "beat_while_drained"):
+                continue
             if xs[k]:
                 fails.append(f"{k} = {xs[k]}")
         if xs["cal_lat_max"] != D:
@@ -143,6 +149,15 @@ def cmd_check(a):
             want = max(r["commit"]["e0_last"] + D + 1, r["commit"]["e_rel"] + 2)
             if a.sel == 0 and r["commit"]["t_start"] != want:
                 fails.append(f"op {r['op']}: start at edge {r['commit']['t_start']}, not max(last beat + D + 1, release + 2) = {want}")
+            if a.sel == 5:
+                # dispatch on the release: never before the last beat the tracker saw (the SM pins sample it a.late
+                # edges later), at most 4 edges after the later of last ACK and release; every read after its write
+                lo = r["commit"]["e0_last"] - a.late + 1
+                hi = max(r["commit"]["e_ack"], r["commit"]["e_rel"]) + 4
+                if not lo <= r["commit"]["t_start"] <= hi:
+                    fails.append(f"op {r['op']}: start at edge {r['commit']['t_start']} outside [{lo}, {hi}]")
+                if r["commit"]["slack_min"] < 1:
+                    fails.append(f"op {r['op']}: first read {r['commit']['slack_min']} edges after the last write (< 1)")
     # per branch (hop, tile row): calibrated write latency, first read after start, read-after-write slack
     br = {}
     for s in sram:
@@ -155,7 +170,9 @@ def cmd_check(a):
         b["read_after_write_slack_min"] = min(b["read_after_write_slack_min"], s["smin"])
     for b in br.values():
         b["write_latency_edges"] = sorted(b["write_latency_edges"])
-    out = dict(schema="opentallas.hbm_b2.xcommit_gate.v1", sel_mut=a.sel, D=D, status="pass" if not fails else "fail",
+    slack = [r["commit"]["slack_min"] for r in rows if r["load"] and r.get("commit") and r["commit"].get("slack_min") is not None]
+    out = dict(schema="opentallas.hbm_b2.xcommit_gate.v1", sel_mut=a.sel, xw_late=a.late, dispatch_wait_edges=0 if a.sel == 5 else D,
+               read_after_write_slack_min=min(slack) if slack else None, D=D, status="pass" if not fails else "fail",
                fails=fails, mismatching_ops=bad_ops, total_cycles=total, summary=xs, branches=dict(sorted(br.items())),
                ops=rows)
     Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
@@ -172,6 +189,7 @@ if __name__ == "__main__":
     ap.add_argument("step", choices=("gen", "check"))
     ap.add_argument("--dir", required=True)
     ap.add_argument("--sel", type=int, default=0)
+    ap.add_argument("--late", type=int, default=0)
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
     if a.step == "gen":

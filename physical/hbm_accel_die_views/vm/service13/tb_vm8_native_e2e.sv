@@ -18,6 +18,10 @@
 //  ignored, 4 in-flight writes dropped from the count, 5 load_hold ignored: the next record may overtake the
 //  dispatch); +DROP_X=g drops beat g before the SM pins (E2E_XSM); +SM_BUSY=n: the dispatcher is not ready for n edges
 //  after every final release (the next record's fetch is shorter than the wait: load_hold must hold its first beat).
+//  +SEL=6: the PRODUCTION tracker (XR_LEAD 6: dispatch on the release, the SM's start -> first-read pipeline covers the
+//  write depth); +SEL=7 the same with load_hold ignored.  For these the x-store image is checked per column on the
+//  edge before the SM's first possible read (dispatch + 21 + 4 hop, the measured minimum of xcommit r8), not at the
+//  dispatch edge.  +XW_LATE=k: the beat reaches the SM pins k edges later than the tracker sees it.
 // OVERLAP (round 4): a record's command is issued as soon as the producer is free (x_done of the previous record),
 //  i.e. while the previous record still waits for its last releases, its 27-edge x-store drain and its dispatch.
 //  The root holds the new owner's first beat until every old beat is released (lease load); the tracker's load_hold
@@ -187,13 +191,13 @@ module tb_vm8_native_e2e;
  // (start to the SM stays 0: op execution after the gated start is the scope of tb_hbm_b2_xcommit).
  // +DROP_X=g: beat g never reaches the SM pins (a dropped commit).
  localparam integer SMI=5,XC=3152,NSR=128;
- integer sel=0,drop_x=-1,n_disp=0,ndisp_s=0,dcyc=0,xs_words=0,xs_bad=0,nxs_seen=0,nxs_fire=0,xs_applied=0;
- reg cmd_begin=0,start_in=0,drop_now=0,rb_q=0;
- wire [5:0] t_start,t_taken,t_fault,t_ok,t_hold;wire sm_ready_raw;wire sm_start_ready=sm_ready_raw&&cyc>=busy_until;
+ integer sel=0,xw_late=0,drop_x=-1,n_disp=0,ndisp_s=0,dcyc=0,xs_words=0,xs_bad=0,nxs_seen=0,nxs_fire=0,xs_applied=0;
+ reg cmd_begin=0,start_in=0,drop_now=0,rb_q=0;reg [63:0] rbsh=0;
+ wire [7:0] t_start,t_taken,t_fault,t_ok,t_hold;wire early=sel>=6;wire sum_now=early?rbsh[35]:rb_q;wire sm_ready_raw;wire sm_start_ready=sm_ready_raw&&cyc>=busy_until;
  assign load_hold=t_hold[sel[2:0]];
  genvar gm;
- generate for(gm=0;gm<6;gm=gm+1)begin:g_trk
-  ot_hbm_b2_xcommit #(.NSM(32),.NSINK(4),.MUT(gm)) u(.clk(clk),.rst_n(rst_n),.xw_en({s_en[3],s_en[2],s_en[1],s_en[0]}),
+ generate for(gm=0;gm<8;gm=gm+1)begin:g_trk
+  ot_hbm_b2_xcommit #(.NSM(32),.NSINK(4),.MUT(gm<6?gm:(gm==6?0:5)),.XR_LEAD(gm>=6?6:-1000)) u(.clk(clk),.rst_n(rst_n),.xw_en({s_en[3],s_en[2],s_en[1],s_en[0]}),
    .sink_drained(s_drained),.cmd_begin(cmd_begin),.release_final(native_release&&release_last),.start_in(start_in),
    .start_committed(1'b0),.start_ready(sm_start_ready&&sel==gm),.x_inflight(),.x_drained(),.dispatch_ok(t_ok[gm]),
    .start_out(t_start[gm]),.start_taken(t_taken[gm]),.fault(t_fault[gm]),.load_hold(t_hold[gm]));
@@ -222,17 +226,26 @@ module tb_vm8_native_e2e;
   end
  endtask
  reg cg_wake=1;
- wire sm_xw_en=s_en[0][SMI]&&!drop_now;
+ reg dl_en[0:63];reg [6:0] dl_a[0:63],dl_g[0:63];reg [2047:0] dl_d[0:63];reg [6:0] late_busy=0;
+ initial for(integer z=0;z<64;z=z+1)begin dl_en[z]=0;dl_a[z]=0;dl_g[z]=0;dl_d[z]=0;end
+ always @(posedge clk)begin
+  dl_en[0]<=s_en[0][SMI]&&!drop_now;dl_a[0]<=s_addr[0][SMI*7+:7];dl_g[0]<=s_grp[0][SMI*7+:7];dl_d[0]<=s_data[0][SMI*2048+:2048];
+  for(integer z=1;z<64;z=z+1)begin dl_en[z]<=dl_en[z-1];dl_a[z]<=dl_a[z-1];dl_g[z]<=dl_g[z-1];dl_d[z]<=dl_d[z-1];end
+  late_busy<=s_en[0][SMI]?7'd80:(late_busy!=0?late_busy-7'd1:7'd0);
+ end
+ wire sm_xw_en=xw_late==0?s_en[0][SMI]&&!drop_now:dl_en[xw_late-1];
+ wire [6:0] sm_xw_a=xw_late==0?s_addr[0][SMI*7+:7]:dl_a[xw_late-1],sm_xw_g=xw_late==0?s_grp[0][SMI*7+:7]:dl_g[xw_late-1];
+ wire [2047:0] sm_xw_d=xw_late==0?s_data[0][SMI*2048+:2048]:dl_d[xw_late-1];
  wire sm_busy,sm_fault;
  ot_hbm_accel_smh xsm(.clk(clk),.rst_n(rst_n),.start(1'b0),.start_ready(sm_ready_raw),.op_rows(13'd0),.op_c(16'd0),
   .op_g(8'd0),.op_gs(1'b0),.op_fmt(2'd0),.op_xb(7'd0),.busy(sm_busy),.d_valid(1'b0),.d_ready(),.d_base(32'd0),.d_lines(24'd0),
   .req_v(),.req_ready(1'b1),.req_addr(),.req_tag(),.rsp_v(1'b0),.rsp_tag(10'd0),.rsp_data(1088'd0),.xw_en(sm_xw_en),
-  .xw_addr(s_addr[0][SMI*7+:7]),.xw_grp(s_grp[0][SMI*7+:7]),.xw_data(s_data[0][SMI*2048+:2048]),.rv(),.rrow(),.rdata(),
+  .xw_addr(sm_xw_a),.xw_grp(sm_xw_g),.xw_data(sm_xw_d),.rv(),.rrow(),.rdata(),
   .fault(sm_fault),.arrive(),.release_in(1'b0),.released(),.cg_en(cg_wake));
  initial if(xsm.DEF!=1||xsm.NBEAT!=13||xsm.TAGW!=16||xsm.REQCR!=1||xsm.RMAX!=4096)$fatal(1,"E2E FAIL the SM is not the selected native configuration");
  always @(negedge clk)begin
   drop_now=drop_x>=0&&n_x[0]==drop_x;
-  cg_wake<=!rst_n||s_en[0][SMI];
+  cg_wake<=!rst_n||s_en[0][SMI]||sm_xw_en||(xw_late!=0&&late_busy!=0);
   // the shadow is the image of the records up to the one whose dispatch is awaited: a beat of a LATER record that
   // the SM pins sample before that dispatch is staged and enters the shadow only after it (a later record's x in
   // the store at the dispatch edge = the dispatched op would read the wrong x)
@@ -247,11 +260,13 @@ module tb_vm8_native_e2e;
   localparam integer IDX=((gc*2+gp)*2+gj)*4+gx;
   localparam integer R=gp*2+gj;
   localparam integer NV=(gx==3)?20:256;
+  localparam integer LRC=21+4*(gc<4?3-gc:gc-4);   // the SM's first possible x read of this column: dispatch edge + LRC
+  wire chk_now=early?rbsh[LRC-1]:rb_fire;
   `define XCM(BR) xsm.g_c[gc].g_p[gp].BR.u_t.u.u.g_lf[gj].u_lh.u_xs.u_leaf.g_xm[gx].u_x
   `define XCB(BR) \
    integer q,ad; reg [255:0] g,mk,df; \
    initial for(q=0;q<130;q=q+1) `XCM(BR).arr[q]={8{32'h5a5a_0000^(IDX*32'h0001_0193)^(q*32'h0100_01b3)}}|258'd1; \
-   always @(negedge clk) if(rst_n&&rb_fire)begin \
+   always @(negedge clk) if(rst_n&&chk_now)begin \
     xbad[IDX]=0;xchk[IDX]=0; \
     for(ad=0;ad<128;ad=ad+1)begin \
      g=`XCM(BR).arr[ad][255:0]; \
@@ -271,18 +286,18 @@ module tb_vm8_native_e2e;
 `else
  assign sm_ready_raw=1'b1;
 `endif
- always @(posedge clk)ndisp_s<=n_disp;
  always @(negedge clk)if(rst_n)begin
   if(t_fault[sel[2:0]])$fatal(1,"E2E FAIL commit tracker fault");
-  if(rb_q)begin
+  if(sum_now)begin
+   ndisp_s<=ndisp_s+1;
    xs_bad=0;xs_words=0;for(integer i=0;i<NSR;i=i+1)begin xs_bad=xs_bad+xbad[i];xs_words=xs_words+xchk[i];end
-   if(xs_bad!=0)begin $display("dispatch%0d: %0d x-store words differ from the record's image (of %0d checked)",n_disp-1,xs_bad,xs_words);$fatal(1,"E2E FAIL x-store at the dispatch edge is not the record's committed image");end
+   if(xs_bad!=0)begin $display("dispatch%0d: %0d x-store words differ from the record's image (of %0d checked)",n_disp-1,xs_bad,xs_words);$fatal(1,"E2E FAIL x-store is not the record's committed image at the dispatch (first-read) edge");end
 `ifdef E2E_XSM
    if(xs_words==0)$fatal(1,"E2E FAIL x-store readback checked nothing");
    if(nxs_fire>cum_rec[n_disp-1])begin $display("dispatch%0d: %0d beats of a later record were sampled by the SM pins before it",n_disp-1,nxs_fire-cum_rec[n_disp-1]);$fatal(1,"E2E FAIL a later record overtook the dispatch");end
 `endif
   end
-  rb_q<=rb_fire;
+  rb_q<=rb_fire;rbsh<={rbsh[62:0],rb_fire};
   if(rb_fire)begin
    if(n_disp>8||n_disp>=n_cmd||cnt_rec[n_disp]!=exp_rec[n_disp]||n_rel<cum_rec[n_disp]||n_x[0]<cum_rec[n_disp]||n_x[1]<cum_rec[n_disp]||n_x[2]<cum_rec[n_disp]||n_x[3]<cum_rec[n_disp])begin
     $display("dispatch%0d at cycle%0d beats%0d expected%0d accepted%0d released%0d",n_disp,cyc,cnt_rec[n_disp],exp_rec[n_disp],n_acc,n_rel);
@@ -426,7 +441,8 @@ module tb_vm8_native_e2e;
   if($value$plusargs("TAP_LFSR=%d",tap_seed)&&tap_seed!=0)tl=tap_seed;
   void'($value$plusargs("INJ_CE=%d",inj_ce));void'($value$plusargs("INJ_UE=%d",inj_ue));void'($value$plusargs("INJ_UEV=%d",inj_uev));
   void'($value$plusargs("INJ_WR=%d",inj_wr));void'($value$plusargs("INJ_EXP=%d",inj_exp));void'($value$plusargs("INJ_STALE=%d",inj_stale));
-  void'($value$plusargs("SEL=%d",sel));void'($value$plusargs("DROP_X=%d",drop_x));if(sel<0||sel>5)$fatal(1,"SEL 0..5");
+  void'($value$plusargs("SEL=%d",sel));void'($value$plusargs("DROP_X=%d",drop_x));if(sel<0||sel>7)$fatal(1,"SEL 0..7");
+  void'($value$plusargs("XW_LATE=%d",xw_late));if(xw_late<0||xw_late>64)$fatal(1,"XW_LATE 0..64");
   void'($value$plusargs("SM_BUSY=%d",sm_busy));
   void'($value$plusargs("STALE_SINK=%d",stale_sink));void'($value$plusargs("EXPECT_FAULT=%d",expect_fault));
   if(ack_delay<0||ack_skew<0||ack_delay+3*ack_skew>64)$fatal(1,"ACK_DELAY + 3 ACK_SKEW 0..64");

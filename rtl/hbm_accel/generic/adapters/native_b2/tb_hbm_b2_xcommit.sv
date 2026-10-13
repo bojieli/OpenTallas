@@ -10,7 +10,11 @@
 //   * every x-store macro of the SM (8 columns x 2 tiles x 2 leaves x 4 macros = 128) is probed: write edges, read
 //     edges, array contents against a shadow of the beats the SM pins sampled.
 // The x-store arrays start with a non-zero pattern (OT_MEM_NO_INIT + the fill below), so a read before commit differs.
-// Five trackers run in parallel (MUT 0..4); +SEL picks the one whose start_out drives the SM (one build, five runs).
+// Six trackers run in parallel: MUT 0..4 at the full write depth (XR_LEAD unknown: dispatch D + 1 edges after the last
+// beat) and tracker 5 = the production setting XR_LEAD 6 (dispatch on the release; the SM's own start -> first-read
+// pipeline covers the write depth).  +SEL picks the one whose start_out drives the SM (one build).
+// +XW_LATE=k: the x-write beat reaches the SM pins k edges later than the tracker sees it (stages the tracker does not
+// know): k within the read lead stays exact, k beyond it reads stale x (the mutant of tracker 5).
 // All monitors sample a quarter cycle BEFORE the rising clock edge (ck_s): the values the edge will sample; `e` is the
 // index of that upcoming edge.  Files (+DIR): seq.hex, lines.hex, x.hex (as the pq bench), xc.hex (5 words per op:
 // burst length (0 = one burst), gap between bursts, release delay, idle gap before the load, claim committed).
@@ -34,10 +38,10 @@ module tb_hbm_b2_xcommit;
     integer sel;
     reg cmd_begin = 0, release_final = 0, start_in = 0, start_committed = 0;
     wire start_ready;
-    wire [4:0] t_inflight, t_drained, t_ok, t_start, t_taken, t_fault;
+    wire [5:0] t_inflight, t_drained, t_ok, t_start, t_taken, t_fault;
     genvar gm;
-    generate for (gm = 0; gm < 5; gm = gm + 1) begin : g_trk
-        ot_hbm_b2_xcommit #(.D(D), .MUT(gm)) u (.clk(clk), .rst_n(rst_n), .xw_en(xw_en), .sink_drained(sink_drained),
+    generate for (gm = 0; gm < 6; gm = gm + 1) begin : g_trk
+        ot_hbm_b2_xcommit #(.D(D), .MUT(gm == 5 ? 0 : gm), .XR_LEAD(gm == 5 ? 6 : -1000)) u (.clk(clk), .rst_n(rst_n), .xw_en(xw_en), .sink_drained(sink_drained),
             .cmd_begin(cmd_begin), .release_final(release_final), .start_in(start_in),
             .start_committed(start_committed), .start_ready(start_ready && sel == gm), .x_inflight(t_inflight[gm]),
             .x_drained(t_drained[gm]), .dispatch_ok(t_ok[gm]), .start_out(t_start[gm]), .start_taken(t_taken[gm]),
@@ -45,6 +49,21 @@ module tb_hbm_b2_xcommit;
     end endgenerate
     wire start = t_start[sel[2:0]];
     wire trk_fault = t_fault[sel[2:0]];
+    // ---------------- +XW_LATE: stages between the sink and the SM pins that the tracker does not see ----------------
+    integer xw_late = 0;
+    reg dl_en [0:63]; reg [6:0] dl_a [0:63]; reg [6:0] dl_g [0:63]; reg [2047:0] dl_d [0:63];
+    integer dz;
+    initial for (dz = 0; dz < 64; dz = dz + 1) begin dl_en[dz] = 0; dl_a[dz] = 0; dl_g[dz] = 0; dl_d[dz] = 0; end
+    always @(posedge clk) begin
+        dl_en[0] <= xw_en[SMI]; dl_a[0] <= xw_addr[SMI*7 +: 7]; dl_g[0] <= xw_grp[SMI*7 +: 7]; dl_d[0] <= xw_data[SMI*2048 +: 2048];
+        for (dz = 1; dz < 64; dz = dz + 1) begin dl_en[dz] <= dl_en[dz-1]; dl_a[dz] <= dl_a[dz-1]; dl_g[dz] <= dl_g[dz-1]; dl_d[dz] <= dl_d[dz-1]; end
+    end
+    wire          sm_en = xw_late == 0 ? xw_en[SMI]               : dl_en[xw_late-1];
+    wire [6:0]    sm_a  = xw_late == 0 ? xw_addr[SMI*7 +: 7]       : dl_a[xw_late-1];
+    wire [6:0]    sm_g  = xw_late == 0 ? xw_grp[SMI*7 +: 7]        : dl_g[xw_late-1];
+    wire [2047:0] sm_d  = xw_late == 0 ? xw_data[SMI*2048 +: 2048] : dl_d[xw_late-1];
+    reg [6:0] late_busy = 0;      // beats still in the delay line (clock-gate wake)
+    always @(posedge clk) late_busy <= xw_en[SMI] ? 7'd80 : (late_busy != 0 ? late_busy - 7'd1 : 7'd0);
     // ---------------- the real native SM ----------------
     reg [RW:0] op_rows; reg [15:0] op_c; reg [7:0] op_g; reg op_gs; reg [1:0] op_fmt; reg [XW-1:0] op_xb;
     wire busy;
@@ -58,8 +77,8 @@ module tb_hbm_b2_xcommit;
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
         .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
         .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr),
-        .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en[SMI]),
-        .xw_addr(xw_addr[SMI*7 +: 7]), .xw_grp(xw_grp[SMI*7 +: 7]), .xw_data(xw_data[SMI*2048 +: 2048]), .rv(rv),
+        .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(sm_en),
+        .xw_addr(sm_a), .xw_grp(sm_g), .xw_data(sm_d), .rv(rv),
         .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive), .release_in(release_in), .released(released),
         .cg_en(cg_wake));
     initial if (dut.DEF != 1 || dut.NBEAT != NBEAT || dut.BBW != 2069 || dut.TAGW != 16 || dut.REQCR != 1 || dut.RMAX != 4096)
@@ -128,7 +147,7 @@ module tb_hbm_b2_xcommit;
     always @(posedge clk) if (start && start_ready) begin n_started <= n_started + 1; taken_seen = 1; end
     // the SM adapter's clock-gating contract (tb_hbm_accel_sm_pq_seq OT_SMH_CG_LOCKSTEP): awake while an x beat, a
     // start or an op is in flight; the tiles' HOLD (64 edges) covers the beats still in the x-write pipeline (D = 27)
-    always @(negedge clk) cg_wake <= !rst_n || xw_en[SMI] || start || (n_started > ndone) || d_valid;
+    always @(negedge clk) cg_wake <= !rst_n || xw_en[SMI] || sm_en || (xw_late != 0 && late_busy != 0) || start || (n_started > ndone) || d_valid;
     // ---------------- shadow of the beats the SM pins sampled; monitors (quarter cycle before the edge) ----------------
  // shadow of the x-store as the macros hold it: one 256-bit word and one valid mask per (macro, address), filled
  // by the beats the SM pins sampled.  Macro IDX = ((c*2+p)*2+j)*4+m = (c*4+R)*4+m holds, of column c (XC bits of
@@ -174,12 +193,12 @@ module tb_hbm_b2_xcommit;
     end
     always @(negedge ck_s) begin
         if (rst_n) begin
-            if (trc != 0 && xw_en[SMI] && cal != 0) $fwrite(fo, "# trc beat e %0d t %0t grp %0d\n", e, $realtime, xw_grp[SMI*7 +: 7]);
+            if (trc != 0 && sm_en && cal != 0) $fwrite(fo, "# trc beat e %0d t %0t grp %0d\n", e, $realtime, sm_g);
             if (trc != 0 && rb_fire) $fwrite(fo, "# trc start e %0d t %0t e0_last %0d\n", e, $realtime, e0_last);
-            if (xw_en[SMI]) begin
+            if (sm_en) begin                      // the beat the SM pins sample on the upcoming edge
                 e0_last = e; if (e0_first < 0) e0_first = e; n_beats = n_beats + 1;
-                xs_beat(xw_addr[SMI*7 +: 7], 32'(xw_grp[SMI*7 +: 7]), xw_data[SMI*2048 +: 2048]);
-                shv[xw_addr[SMI*7 +: 7]][xw_grp[SMI*7 +: 7]] = 1'b1;
+                xs_beat(sm_a, 32'(sm_g), sm_d);
+                shv[sm_a][sm_g] = 1'b1;
                 if (t_drained[0]) drained_low_err = drained_low_err + 1;   // a beat at the pins while x_drained
             end
             if (tap_ACK_v) begin e_ack = e; sink_ack = sink_ack + 1; end
@@ -304,6 +323,8 @@ module tb_hbm_b2_xcommit;
         if (!$value$plusargs("NOPS=%d", nops)) nops = 1;
         if (!$value$plusargs("SEL=%d", sel)) sel = 0;
         if (!$value$plusargs("TRC=%d", trc)) trc = 0;
+        if (!$value$plusargs("XW_LATE=%d", xw_late)) xw_late = 0;
+        if (sel < 0 || sel > 5 || xw_late < 0 || xw_late > 64) begin $display("SEL 0..5, XW_LATE 0..64"); $finish; end
         seed = 7; cyc = 0; cur = 0; cons_total = 0; line_op = 0; ndone = 0; n_started = 0; ticket = 0;
         $readmemh({dir, "/seq.hex"}, seq);
         $readmemh({dir, "/lines.hex"}, lines);
@@ -384,6 +405,7 @@ module tb_hbm_b2_xcommit;
             if (lat_min[s] != lat_max[s]) lat_bad = lat_bad + 1;
             if (lat_max[s] > wl_max) wl_max = lat_max[s];
         end
+        $fwrite(fo, "# xcmode sel %0d xw_late %0d dwait %0d\n", sel, xw_late, sel == 5 ? 0 : D);
         $fwrite(fo, "# xcsum sel %0d D %0d cal_lat_max %0d cal_nonuniform %0d cal_gated %0d rb_bad %0d stale %0d write_while_drained %0d write_gated %0d beat_while_drained %0d trk_fault %0d sink_fault %0d sink_acks %0d beats %0d sm_fault %0d\n",
                 sel, D, wl_max, lat_bad, cal_gated, total_rb, total_stale, total_wad, total_wg, drained_low_err, trk_fault,
                 sink_fault, sink_ack, n_beats, fault);

@@ -39,6 +39,18 @@
 //                            record begun; a beat sampled by the SM pins while a closed record is not yet dispatched
 //                            (the caller ignored load_hold).  A fault blocks start_out.
 // The op payload is held stable by the caller from start_in until start_taken; it does not pass through this module.
+//
+// READ LEAD (round 5).  Waiting the full write depth D after the last beat assumes that the SM could read the store on
+// the very edge it samples start.  It cannot: the first x read of an op travels the same registered spine as the x
+// write and trails it.  ot_hbm_accel_smh states the contract in its header ("x write ... write edge W+5+h, read edge
+// S+3+h: the same write-before-read margin, so every load the hub issues for sm_pq is legal here"); in the selected
+// production shape, measured per branch on all 128 x-store macros (xcommit r8): a beat sampled at pin edge W is
+// written at W + 12 + 4 hop (+3 on tile row 1), a start sampled at pin edge S reads first at S + 21 + 4 hop or later:
+// the read trails the write by XR_LEAD = 6 edges on the worst branch (9 on tile row 0).  With that lead the dispatch
+// only has to wait DWAIT = clamp(GUARD - XR_LEAD, 0, D) edges after the last beat: 0 for the native SM with GUARD 2,
+// i.e. start is sampled two edges after the final release and the worst-branch read still lands XR_LEAD + 1 - 0 = 7
+// edges after the last write.  XR_LEAD unknown (default): DWAIT = D, the round-3 behaviour.  The gate measures the
+// lead in RTL: writes delayed by 5 unseen edges stay exact, by 8 they fail (tb_hbm_b2_xcommit +XW_LATE).
 // MUT (bench only): 1 = counter reloads D - 1 (one pipeline stage short); 2 = the join ignores the drain (dispatch on
 // the release / last ACK); 3 = the join ignores the release and the sink drained inputs; 4 = only the first beat of a
 // run of consecutive beats reloads the counter (the later in-flight writes of the run are dropped from the count);
@@ -53,6 +65,8 @@ module ot_hbm_b2_xcommit #(
  parameter integer NHOP=4,
  parameter integer TILE_STAGES=6,
  parameter integer D=27,
+ parameter integer XR_LEAD=-1000,   // edges the SM's first x read trails the write of a beat sampled on the start edge (unknown: wait D)
+ parameter integer GUARD=2,         // edges of the lead kept in reserve
  parameter integer MUT=0
 )(
  input wire clk,rst_n,
@@ -65,7 +79,9 @@ module ot_hbm_b2_xcommit #(
  output wire load_hold
 );
  localparam integer DCFG=PIN_STAGES+FRONT_STAGES+HOP_STAGES*(NHOP-1)+TILE_STAGES;
- localparam integer DEFF=MUT==1?D-1:D;
+ localparam integer DW0=GUARD-XR_LEAD;
+ localparam integer DWAIT=DW0<0?0:(DW0>D?D:DW0);
+ localparam integer DEFF=(MUT==1&&DWAIT>0)?DWAIT-1:DWAIT;
  localparam integer CW=$clog2(D+1);
  initial if(D!=DCFG||D<2)$fatal(1,"ot_hbm_b2_xcommit: D %0d does not match the configured x-write pipeline %0d",D,DCFG);
  reg [CW-1:0] cnt,pcnt;reg rel_q,rel_d,armed,xw_q,pend;reg [1:0] nopen;

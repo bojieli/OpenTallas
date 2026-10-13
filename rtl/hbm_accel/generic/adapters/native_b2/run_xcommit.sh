@@ -36,20 +36,30 @@ set -e
 echo $rc > "$out/build.rc"
 if [[ $rc -ne 0 ]]; then tail -40 "$out/build.log"; exit 3; fi
 bad=0
-for sel in 0 1 2 3 4; do
-    d=$out/mut$sel
+# name | +SEL | +XW_LATE | expected verdict rc (0 pass, 1 rejected)
+#  mut0..mut4: the full-depth trackers (XR_LEAD unknown, dispatch D + 1 edges after the last beat) and their mutants
+#  early: tracker 5 = the production setting (XR_LEAD 6: dispatch on the release); early_late5: writes 5 unseen edges
+#  late, inside the read lead, still exact; early_late40: beyond it, the op reads stale x and must be rejected
+runs=("mut0|0|0|0" "mut1|1|0|1" "mut2|2|0|1" "mut3|3|0|1" "mut4|4|0|1" "early|5|0|0" "early_late5|5|5|0" "early_late40|5|40|1")
+for r in "${runs[@]}"; do
+    IFS='|' read -r name sel late exp <<<"$r"
+    (
+    d=$out/$name
     mkdir -p "$d"
     for f in seq.hex lines.hex x.hex xc.hex gold.json; do ln -f "$out/vec/$f" "$d/$f"; done
     set +e
-    /usr/bin/time -v "$out/build/Vtb_hbm_b2_xcommit" +DIR="$d" +NOPS="$nops" +SEL=$sel +TRC=${XC_TRC:-0} > "$d/run.log" 2>&1
+    /usr/bin/time -v "$out/build/Vtb_hbm_b2_xcommit" +DIR="$d" +NOPS="$nops" +SEL=$sel +XW_LATE=$late +TRC=${XC_TRC:-0} > "$d/run.log" 2>&1
     echo $? > "$d/sim.rc"
-    python3 "$here/tb_hbm_b2_xcommit_vec.py" check --dir "$d" --sel $sel --out "$d/result.json" > "$d/check.log" 2>&1
-    rc=$?
-    set -e
-    echo $rc > "$d/rc"
-    echo "== mut$sel rc $rc"; cat "$d/check.log"
-    if [[ $sel == 0 && $rc -ne 0 ]]; then bad=1; fi
-    if [[ $sel != 0 && $rc -ne 1 ]]; then bad=1; fi     # a mutant must be REJECTED by the verdict (rc 1), not crash
+    python3 "$here/tb_hbm_b2_xcommit_vec.py" check --dir "$d" --sel $sel --late $late --out "$d/result.json" > "$d/check.log" 2>&1
+    echo $? > "$d/rc"
+    ) &
+done
+wait
+for r in "${runs[@]}"; do
+    IFS='|' read -r name sel late exp <<<"$r"
+    rc=$(cat "$out/$name/rc")
+    echo "== $name sel $sel late $late rc $rc (expected $exp)"; cat "$out/$name/check.log"
+    if [[ $rc -ne $exp ]]; then bad=1; fi     # a mutant must be REJECTED by the verdict (rc 1), not crash
 done
 echo $bad > "$out/gate.rc"
 exit $bad

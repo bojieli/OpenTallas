@@ -22,20 +22,26 @@ S="$S rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xcommit.sv"
 SX=$(for f in $SM $S;do echo $f;done|awk '!seen[$0]++'|tr '\n' ' ')
 cd "$root";sha256sum $SX tools/dshbm_sm_pq_seq.py physical/hbm_accel_die_views/vm/service13/run_native_e2e.sh tools/vm8_service/xload_flow_compare.py >"$out/source.sha256"
 # name | build define | plusargs | expectation (pass / quar / stale / fail)
-# rate: the nine-record rate WITH the x-store drain joined (overlapped under the next record's fetch) and the VM8 root
-#   re-timing (vm_cp_root cx1: +6 edges per write, +10 per read = +16 on the accept -> release loop, as +ACK_DELAY=16).
-# rate_root0: the same without the +16.  ovl_busy / m_xc_overtake: the dispatcher is busy for 120 edges after every
-#   final release; load_hold must hold the next record's first beat (exact), the tracker without it must FAIL.
+# rate: the nine-record rate with the PRODUCTION commit join (tracker 6: XR_LEAD 6, dispatch on the release; the next
+#   record's fetch overlapped) and the VM8 root re-timing (vm_cp_root: +6 edges per write, +10 per read = +16 on the
+#   accept -> release loop, as +ACK_DELAY=16).  rate_root0: without the +16.  rate_fulldrain: the full-depth tracker
+#   (dispatch 28 edges after the last beat) for reference.  ovl_busy / m_xc_overtake*: the dispatcher is busy for 120
+#   edges after every final release; load_hold must hold the next record's first beat (exact), the tracker without it
+#   must FAIL.  xw_late5 / m_xw_late40: writes 5 / 40 unseen edges late (inside / beyond the SM's read lead).
 runs=(
-"rate|xsm|+SEL=0 +ACK_DELAY=16|pass"
-"rate_root0|xsm|+SEL=0|pass"
-"ovl_busy|xsm|+SEL=0 +SM_BUSY=120|pass"
-"m_xc_overtake|xsm|+SEL=5 +SM_BUSY=120|fail"
+"rate|xsm|+SEL=6 +ACK_DELAY=16|pass"
+"rate_root0|xsm|+SEL=6|pass"
+"rate_fulldrain|xsm|+SEL=0 +ACK_DELAY=16|pass"
+"ovl_busy|xsm|+SEL=6 +SM_BUSY=120|pass"
+"xw_late5|xsm|+SEL=6 +XW_LATE=5|pass"
+"m_xw_late40|xsm|+SEL=6 +XW_LATE=40|fail"
+"m_xc_overtake|xsm|+SEL=7 +SM_BUSY=120|fail"
+"m_xc_overtake_full|xsm|+SEL=5 +SM_BUSY=120|fail"
 "m_xc_short|xsm|+SEL=1|fail"
 "m_xc_nodrain|xsm|+SEL=2|fail"
 "m_xc_norel|xsm|+SEL=3|fail"
 "m_xc_dropcount|xsm|+SEL=4|fail"
-"m_x_dropcommit|xsm|+DROP_X=4000|fail"
+"m_x_dropcommit|xsm|+SEL=6 +DROP_X=4000|fail"
 "rate_nosm|exact||pass"
 "ack_skew|exact|+ACK_DELAY=5 +ACK_SKEW=3|pass"
 "ack_slow|exact|+ACK_DELAY=40|pass"
@@ -81,7 +87,7 @@ for r in "${runs[@]}";do
    echo $crc >compare.rc;rm -f beats.txt
    case $exp in
     pass) [[ $rc == 0 && $crc == 0 ]]&&grep -q 'E2E PASS records=9' run.log&&v=ok||v=BAD
-          [[ $name == rate && $v == ok ]]&&{ grep -q 'rate_ok=1' run.log||v=RATE_OVER; };;
+          [[ ( $name == rate || $name == rate_root0 ) && $v == ok ]]&&{ grep -q 'rate_ok=1' run.log||v=RATE_OVER; };;
     quar) [[ $rc == 0 ]]&&grep -q 'E2E QUARANTINE PASS' run.log&&v=ok||v=BAD;;
     stale) [[ $rc == 0 ]]&&grep -q 'E2E STALE_OWNER PASS' run.log&&v=ok||v=BAD;;
     fail) if [[ $rc != 0 || ( $crc != 0 && $crc != - ) ]];then v=ok;else v=BAD;fi;;
