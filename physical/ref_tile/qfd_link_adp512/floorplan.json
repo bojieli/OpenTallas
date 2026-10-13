@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  216.0,
+  237.6,
   583.2
  ],
  "core": [
   2.16,
   2.16,
-  213.84,
+  235.44,
   581.0400000000001
  ],
  "why": "spec outline",
@@ -46,11 +46,10 @@
   ],
   "W": [
    "ck",
-   "rst_n"
-  ],
-  "E": [
+   "rst_n",
    "fault"
-  ]
+  ],
+  "E": []
  },
  "clock_port": "ck",
  "blocks": [
@@ -60,8 +59,8 @@
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_t?0?.*u_m",
    "idx": 0,
-   "x": 35.856,
-   "y": 90.72,
+   "x": 31.536,
+   "y": 86.4,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -73,8 +72,8 @@
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_t?1?.*u_m",
    "idx": 0,
-   "x": 35.856,
-   "y": 142.56,
+   "x": 31.536,
+   "y": 138.24,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -86,8 +85,8 @@
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_t?2?.*u_m",
    "idx": 0,
-   "x": 35.856,
-   "y": 192.24,
+   "x": 31.536,
+   "y": 190.08,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -99,8 +98,8 @@
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_t?3?.*u_m",
    "idx": 0,
-   "x": 35.856,
-   "y": 244.08,
+   "x": 31.536,
+   "y": 241.92,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -112,7 +111,7 @@
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_t?4?.*u_m",
    "idx": 0,
-   "x": 35.856,
+   "x": 31.536,
    "y": 293.76,
    "w": 174.12,
    "h": 29.736,
@@ -125,7 +124,7 @@
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_t?5?.*u_m",
    "idx": 0,
-   "x": 35.856,
+   "x": 31.536,
    "y": 345.6,
    "w": 174.12,
    "h": 29.736,
@@ -138,7 +137,7 @@
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_t?6?.*u_m",
    "idx": 0,
-   "x": 35.856,
+   "x": 31.536,
    "y": 397.44,
    "w": 174.12,
    "h": 29.736,
@@ -151,82 +150,15 @@
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
    "inst": "*g_t?7?.*u_m",
    "idx": 0,
-   "x": 35.856,
-   "y": 447.12,
+   "x": 31.536,
+   "y": 449.28,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 / ot_sram_1r1w_512x128_m4_r2c2#0 channel 19.9 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 / ot_sram_1r1w_512x128_m4_r2c2#0 channel 19.9 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 / ot_sram_1r1w_512x128_m4_r2c2#0 channel 19.9 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/physical/ot_qwen_romio_slots.sv",
   "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv",

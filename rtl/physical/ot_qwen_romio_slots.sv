@@ -9,7 +9,7 @@
 //                     No logic, no flop is added or removed.  Every port is a flop at its pin in the body: c_* captured
 //                     (ci_v / ci_d), c_cr / r_v / r_d (PINREG) / tx_v / tx_flit / fault launched from flops, rx_* and
 //                     tx_up captured (rq_v / rq_f / up_q), r_cr feeds the o_cred counter only.
-//                     Faces: die bus c_* / r_* S (toward the slot's c / r pins), PHY FDI tx_* / rx_* N.
+//                     237.6 x 583.2, 8 SRAMs in one column.  Faces: die bus c_* / r_* S (toward the slot's c / r pins), PHY FDI tx_* / rx_* N.
 //                     UCIe uses the same child (the abstract's RXD = 32 flop buffer is 32 k flops on one root: over
 //                     the 15 k clock rule; with RXD = 512 in SRAM both links share one view and one flit width 1,043).
 //
