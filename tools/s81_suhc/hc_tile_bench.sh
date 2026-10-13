@@ -1,7 +1,9 @@
 #!/bin/bash
 # Per-tile qualification of the hard S81 HC leaves by the production-shape composition gate (s81hc-1013 r5; see TILES
 # in tools/s81_suhc/hc_gate.py).  NG 256, HIER 3 (half-octet tiles + split column roots + chain-tail split), CNL_PIN 1,
-# CHAIN_STEP 6, LANE_SPECIALIZE 1, OT_S81_HC_PAD_HARD (pad leaves at their hardened defaults).
+# CHAIN_STEP 6, LANE_SPECIALIZE 1.  NOT with OT_S81_HC_PAD_HARD: under that define ot_s81_hc_ccr_align instantiates
+# ot_s81_hc_ccr at its module defaults (HALF 0, RLY 1, RF 1) and the composition never completes (r5, 2026-10-13); the
+# probe instead proves the soft instantiation elaborates each pad leaf at exactly its hardened default tuple.
 #   hc_tile_bench.sh <out dir> exact [tiles]   probe run: bit-exact AND every probed tile (default all) is elaborated
 #                                              only at its routed parameter tuples; prints "RUN <tag> pass"
 #   hc_tile_bench.sh <out dir> <tile>          that tile's one-edit mutant; must print "RUN <tag> fail"
@@ -19,9 +21,9 @@ got=$(sha256sum "$pkl" | cut -c1-${#PKL_SHA})
 [ -x "$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" ] && export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 mkdir -p "$out"
 python3 tools/s81_suhc/hc_gate.py prep --cases "$pkl" --out "$out" --ng 256
-shape="--ng 256 --hier 3 --cnl-pin 1 --chain-step 6 --lane-specialize 1 --pad-hard 1"
+shape="--ng 256 --hier 3 --cnl-pin 1 --chain-step 6 --lane-specialize 1"
 if [ "$what" = exact ]; then
     python3 tools/s81_suhc/hc_gate.py run --out "$out" $shape --tile-probe "$probes"
 else
-    python3 tools/s81_suhc/hc_gate.py run --out "$out" $shape --tile-mut "$what"
+    python3 tools/s81_suhc/hc_gate.py run --out "$out" $shape --tile-mut "$what" --tmax 40000
 fi
