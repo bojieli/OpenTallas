@@ -7,7 +7,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cpad_split #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 3 + RW, RET_EXTRA = 1
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1
 ) (
     input  wire                 sk, srs,
     input  wire [RDW-1:0]       crd_i,
@@ -70,7 +70,7 @@ module ot_s81_hc_cpad_split #(
         if (F0<1 || F1<1 || R0<1 || R1<1) $fatal(1,"pad split requires positive hard-leaf depths");
 `ifdef OT_S81_HC_PAD_HARD
         if(NG!=256 || HALF!=1 || RLY!=2 || RF!=5 || RT!=1 || RET_EXTRA!=1 ||
-           S_RD!=2 || S_RT!=4 || F0!=8 || F1!=5 || R0!=6 || R1!=5)
+           S_RD!=2 || S_RT!=4 || DW!=6 || F0!=8 || F1!=5 || R0!=6 || R1!=5)
             $fatal(1,"pad hard views require exact production depth/width tuple");
 `endif
     end
@@ -116,7 +116,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_ccr_align #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 3 + RW, RET_EXTRA = 1
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1
 ) (
     input  wire                 sk, srs,
     input  wire [RVW-1:0]       ch_rv,
@@ -201,7 +201,7 @@ module ot_s81_hc_ccr_align #(
 `ifndef SYNTHESIS
 `ifdef OT_S81_HC_PAD_HARD
     initial if(NG!=256 || HALF!=1 || RLY!=2 || RF!=5 || RT!=1 || RET_EXTRA!=1 ||
-        S_RD!=2 || S_RT!=4 || NE1*32!=512 || EXTRA!=2)
+        S_RD!=2 || S_RT!=4 || DW!=6 || NE1*32!=512 || EXTRA!=2)
         $fatal(1,"CCR core/meta hard views require production width/depth tuple");
 `endif
 `endif
