@@ -89,7 +89,7 @@ module ot_s81_hc_cth #(
         assign cy_out[32 * j +: 32] = cyo[32 * (4 * j + 2) +: 32];
     end endgenerate
     generate for (m = 0; m < 8; m = m + 1) begin : g_p
-        ot_s81_hc_ctpl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL)) u_p (
+        ot_s81_hc_ctpl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL), .PIN_STAGE(1)) u_p (
             .clk(clk), .rst_in(rst_c), .grp(m[2:1]), .half(m[0]), .fv(fv), .fdx(fdx),
             .hpr({hpr[64 * (12 + m / 2) +: 64], hpr[64 * (8 + m / 2) +: 64], hpr[64 * (4 + m / 2) +: 64], hpr[64 * (m / 2) +: 64]}),
             .hov(hov[m]), .pwb(pwb[m]), .phs(phs[m]), .pob(pob[16 * m +: 16]), .hpo(hpo[32 * m +: 32]),
@@ -433,7 +433,8 @@ endmodule
 // WIN traverse + latch, the group's WIN in-wire + x register, 2 ot_dsrom_su_hcpost_lane, the WOUT out-wire), with its
 // slice of the coefficient words and the write-back counters.  r: OR of the 4 banks' zero-gated group-gq reads.
 module ot_s81_hc_ctpl #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, WIN = 2, WOUT = 2, ML = 5, AL = 4
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, WIN = 2, WOUT = 2, ML = 5, AL = 4,
+    parameter integer PIN_STAGE = 0
 ) (
     input  wire                clk,
     input  wire                rst_in,
@@ -456,34 +457,97 @@ module ot_s81_hc_ctpl #(
     reg [1:0] gq;
     reg       hq;
     always @(posedge clk) begin gq <= grp; hq <= half; end
-    wire [S_RD-1:0] rd_v = fv[S_RD-1:0];
-    wire pb_v = fv[S_RD];
-    wire [1:0] rd_k = fdx[O_RK +: 2];
-    wire       rd_s = fdx[O_RS];
-    wire pb_go = fdx[O_PB], pb_wb = fdx[O_PB + 1], pb_hs = fdx[O_PB + 2], pb_cs = fdx[O_PB + 3];
+    // The physical variant consumes one existing WIN relay as the pin stage.
+    // No added arithmetic latency: both data and coefficient-go keep their original latch edges.
+    localparam integer WPIPE = WIN - PIN_STAGE;
+    wire [S_RD+4:0] fvq;
+    wire [FXW-1:0] fdq;
+    wire [255:0] hprq;
+    generate if (PIN_STAGE) begin : g_pin
+        reg [S_RD+4:0] vq;
+        reg [FXW-1:0] dq;
+        reg [255:0] rq;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) vq <= 0; else vq <= fv;
+        always @(posedge clk) begin dq <= fdx; rq <= hpr; end
+        assign fvq = vq;
+        assign fdq = dq;
+        assign hprq = rq;
+    end else begin : g_nopin
+        assign fvq = fv;
+        assign fdq = fdx;
+        assign hprq = hpr;
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (PIN_STAGE && WIN < 2)
+        $fatal(1, "ot_s81_hc_ctpl PIN_STAGE requires WIN >= 2");
+`endif
+    wire [S_RD-1:0] rd_v = fvq[S_RD-1:0];
+    wire pb_v = fvq[S_RD];
+    wire [1:0] rd_k = fdq[O_RK +: 2];
+    wire       rd_s = fdq[O_RS];
+    wire pb_go = fdq[O_PB], pb_wb = fdq[O_PB + 1], pb_hs = fdq[O_PB + 2], pb_cs = fdq[O_PB + 3];
     // coefficient words of lanes k0 = 2 hq, k0 + 1: comb c[j][k] = word 4 j + k, post[k]
     reg [8*32-1:0] cf_comb [0:1];
     reg [2*32-1:0] cf_post [0:1];
     integer s, j, e;
+    generate if (!PIN_STAGE) begin : g_legacy_cf
     always @(posedge clk)
         for (s = 0; s < S_RD; s = s + 1)
             if (rd_v[s] && rd_k == 2'd2) begin
-                if (fdx[O_RC + 16 * s +: 16] == 16'd0) begin
+                if (fdq[O_RC + 16 * s +: 16] == 16'd0) begin
                     for (j = 0; j < 4; j = j + 1)
                         for (e = 0; e < 2; e = e + 1)
-                            cf_comb[rd_s][32 * (2 * j + e) +: 32] <= hq ? fdx[O_D + 512 * s + 32 * (4 * j + 2 + e) +: 32]
-                                                                         : fdx[O_D + 512 * s + 32 * (4 * j + e) +: 32];
+                            cf_comb[rd_s][32 * (2 * j + e) +: 32] <= hq ? fdq[O_D + 512 * s + 32 * (4 * j + 2 + e) +: 32]
+                                                                         : fdq[O_D + 512 * s + 32 * (4 * j + e) +: 32];
                 end else
-                    cf_post[rd_s] <= hq ? fdx[O_D + 512 * s + 128 + 64 +: 64] : fdx[O_D + 512 * s + 128 +: 64];
+                    cf_post[rd_s] <= hq ? fdq[O_D + 512 * s + 128 + 64 +: 64] : fdq[O_D + 512 * s + 128 +: 64];
             end
+    end else begin : g_staged_cf
+        // Separate row decode/half selection from the slot-bank write mux.
+        // Slot writes are two cycles after the raw interface; the original no-rewrite
+        // op window below remains enforced on the raw interface, before either stage.
+        wire [2:0] ctl [0:S_RD-1][0:9];
+        reg [255:0] cd [0:S_RD-1];
+        reg [63:0] pd [0:S_RD-1];
+        integer ps, pj, pe, pw;
+        genvar cp, cw;
+        for (cp = 0; cp < S_RD; cp = cp + 1) begin : g_cp
+            for (cw = 0; cw < 10; cw = cw + 1) begin : g_cw
+                // One kept control driver per 32-bit word, <=32 state-D loads.
+                ot_s81_hc_ctpl_ctl_ff u_ctl (.clk(clk), .rst_n(rst_n),
+                    .d({rd_s,
+                        rd_v[cp] && rd_k == 2'd2 && fdq[O_RC+16*cp +: 16] != 0,
+                        rd_v[cp] && rd_k == 2'd2 && fdq[O_RC+16*cp +: 16] == 0}),
+                    .q(ctl[cp][cw]));
+            end
+        end
+        always @(posedge clk) begin
+            for (ps = 0; ps < S_RD; ps = ps + 1) begin
+                for (pj = 0; pj < 4; pj = pj + 1)
+                    for (pe = 0; pe < 2; pe = pe + 1)
+                        cd[ps][32*(2*pj+pe) +: 32] <= hq
+                            ? fdq[O_D+512*ps+32*(4*pj+2+pe) +: 32]
+                            : fdq[O_D+512*ps+32*(4*pj+pe) +: 32];
+                pd[ps] <= hq ? fdq[O_D+512*ps+192 +: 64] : fdq[O_D+512*ps+128 +: 64];
+            end
+            // Preserve simultaneous-write priority: higher s wins, as in the legacy loop.
+            for (ps = 0; ps < S_RD; ps = ps + 1) begin
+                for (pw = 0; pw < 8; pw = pw + 1)
+                    if (ctl[ps][pw][0]) cf_comb[ctl[ps][pw][2]][32*pw +: 32] <= cd[ps][32*pw +: 32];
+                for (pw = 0; pw < 2; pw = pw + 1)
+                    if (ctl[ps][8+pw][1]) cf_post[ctl[ps][8+pw][2]][32*pw +: 32] <= pd[ps][32*pw +: 32];
+            end
+        end
+    end endgenerate
     reg            hp_go, hp_in_v, hp_cs;
     reg [31:0]     hp_y;
     always @(posedge clk or negedge rst_n) if (!rst_n) hp_in_v <= 1'b0; else hp_in_v <= pb_v;
     always @(posedge clk) begin
         hp_go <= pb_v && pb_go;
         if (pb_v) begin
-            case (gq) 2'd0: hp_y <= fdx[O_D +: 32]; 2'd1: hp_y <= fdx[O_D + 32 +: 32];
-                      2'd2: hp_y <= fdx[O_D + 64 +: 32]; default: hp_y <= fdx[O_D + 96 +: 32]; endcase
+            case (gq) 2'd0: hp_y <= fdq[O_D +: 32]; 2'd1: hp_y <= fdq[O_D + 32 +: 32];
+                      2'd2: hp_y <= fdq[O_D + 64 +: 32]; default: hp_y <= fdq[O_D + 96 +: 32]; endcase
             hp_cs <= pb_cs;
             if (pb_go) begin pwb <= pb_wb; phs <= pb_hs; pob <= 16'd0; end
         end
@@ -496,7 +560,7 @@ module ot_s81_hc_ctpl #(
     // two slots, so a write targets the idle one) -- checked below in simulation.
     wire           w_v;
     wire           w_cs;
-    ot_dsrom_su_hcpost_wire #(.W(1), .D(WIN)) u_wop (.clk(clk), .rst_n(rst_n), .v(hp_go), .d(hp_cs), .vq(w_v), .q(w_cs));
+    ot_dsrom_su_hcpost_wire #(.W(1), .D(WPIPE)) u_wop (.clk(clk), .rst_n(rst_n), .v(hp_go), .d(hp_cs), .vq(w_v), .q(w_cs));
     reg [8*32-1:0] c_r;
     reg [2*32-1:0] p_r;
     always @(posedge clk) if (w_v) begin c_r <= cf_comb[w_cs]; p_r <= cf_post[w_cs]; end
@@ -507,27 +571,27 @@ module ot_s81_hc_ctpl #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin pend_v <= 0; pend_s <= 0; end
         else begin
-            pend_v <= {pend_v[WIN-1:0], pb_v && pb_go};
-            pend_s <= {pend_s[WIN-1:0], pb_cs};
+            pend_v <= {pend_v[WIN-1:0], (fv[S_RD] && fdx[O_PB])};
+            pend_s <= {pend_s[WIN-1:0], fdx[O_PB+3]};
         end
     integer ck;
     always @(posedge clk)                    // writes at the go edge and the WIN edges after it change the latched words
         if (rst_n)
             for (s = 0; s < S_RD; s = s + 1)
-                if (rd_v[s] && rd_k == 2'd2) begin
-                    if (pb_v && pb_go && pb_cs == rd_s)
-                        $error("ot_s81_hc_ctpl: coefficient slot %0d written at its go", rd_s);
+                if (fv[s] && fdx[O_RK +: 2] == 2'd2) begin
+                    if ((fv[S_RD] && fdx[O_PB]) && fdx[O_PB+3] == fdx[O_RS])
+                        $error("ot_s81_hc_ctpl: coefficient slot %0d written at its go", fdx[O_RS]);
                     for (ck = 0; ck < WIN; ck = ck + 1)
-                        if (pend_v[ck] && pend_s[ck] == rd_s)
-                            $error("ot_s81_hc_ctpl: coefficient slot %0d written %0d cycles after its go", rd_s, ck + 1);
+                        if (pend_v[ck] && pend_s[ck] == fdx[O_RS])
+                            $error("ot_s81_hc_ctpl: coefficient slot %0d written %0d cycles after its go", fdx[O_RS], ck + 1);
                 end
 `endif
     // the group (ot_dsrom_su_hcpost_group, lanes k0, k0 + 1)
-    wire [63:0]  hr = hpr[0 +: 64] | hpr[64 +: 64] | hpr[128 +: 64] | hpr[192 +: 64];
+    wire [63:0]  hr = hprq[0 +: 64] | hprq[64 +: 64] | hprq[128 +: 64] | hprq[192 +: 64];
     wire [127:0] r  = {hr[48 +: 16], 16'h0000, hr[32 +: 16], 16'h0000, hr[16 +: 16], 16'h0000, hr[0 +: 16], 16'h0000};
     wire         b_v;
     wire [159:0] b_d;
-    ot_dsrom_su_hcpost_wire #(.W(160), .D(WIN)) u_win (.clk(clk), .rst_n(rst_n), .v(hp_in_v), .d({hp_y, r}), .vq(b_v), .q(b_d));
+    ot_dsrom_su_hcpost_wire #(.W(160), .D(WPIPE)) u_win (.clk(clk), .rst_n(rst_n), .v(hp_in_v), .d({hp_y, r}), .vq(b_v), .q(b_d));
     reg          x_v;
     reg  [159:0] x_d;
     always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= b_v;
@@ -550,6 +614,17 @@ module ot_s81_hc_ctpl #(
         if (!rst_n) begin hov_d <= 1'b0; hnz_d <= 1'b0; pflt_d <= 1'b0; end
         else begin hov_d <= hov; hnz_d <= hov & nz; pflt_d <= |l_f; end
 endmodule
+
+// Keep this module in SYNTH_KEEP_MODULES so per-word control replicas do not merge.
+module ot_s81_hc_ctpl_ctl_ff (
+    input wire clk, rst_n,
+    input wire [2:0] d,
+    output reg [2:0] q
+);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 0; else q <= d;
+endmodule
+
 
 // ------------------------------------------------------------------------------------------------ return bus tiles
 // ctrs (S strip): rv / rd pin flops, the far tile's originated slots, the merge stage (ybuf, psb, the banks' hrq) and
