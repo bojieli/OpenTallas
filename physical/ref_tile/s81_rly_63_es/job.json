@@ -1,5 +1,5 @@
 {
- "name": "s81_rly_63_es-v1-05805dc84",
+ "name": "s81_rly_63_es-v2-COMMIT",
  "block": "dsfd_rly_63_ES",
  "ref_tile": true,
  "owner": "Claude:s81-die",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1011-s81dieit",
-  "commit": "05805dc84"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_rly_63_es/s81_rly_63_es-v1-05805dc84"
+   "to": "results/rtl/ref_tile/s81_rly_63_es/s81_rly_63_es-v2-COMMIT"
   }
  ],
  "cycles_added": 0,
