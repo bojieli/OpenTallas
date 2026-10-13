@@ -12,12 +12,12 @@
 // MUT 1: the record header drops the A operand bit -> the unit faults (must FAIL);
 // MUT 2: engine lane-to-sector mutant (assembly takes sector j from lane j ^ 1) -> wrong words (must FAIL).
 module tb_hgi_qdq_q_tput;
- parameter integer MUT = 0, S = 1;
+ parameter integer MUT = 0, S = 1, SPANPIPE = 0;
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
  reg [682:0] rec = 0; wire [2:0] ret;
  reg [337:0] bq = 0; wire [273:0] br;
  wire [8*16-1:0] rq; wire [7:0] rq_cr, wq_cr, wq_done; wire [8*257-1:0] rr; wire [8*280-1:0] wq;
- ot_hgi_qdq_q #(.MUT(MUT == 2 ? 1 : 0)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
+ ot_hgi_qdq_q #(.MUT(MUT == 2 ? 1 : 0), .SPANPIPE(SPANPIPE)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
    .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(wq), .wwq_cr(wq_cr), .wwq_done(wq_done),
    .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1));
  // S relay stages each way (the lanestation + chain flops between the client and the slice face)
