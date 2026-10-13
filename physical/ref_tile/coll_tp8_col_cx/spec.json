@@ -100,6 +100,17 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "tp8_wrapper_production",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns --production --out {RUN}/bench/wt_exact",
+    "expect": "pass",
+    "pass_regex": "^COLL_TP8 PASS cases=3",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "views_to": "physical/ref_tile/coll_tp8_col_cx/views",
