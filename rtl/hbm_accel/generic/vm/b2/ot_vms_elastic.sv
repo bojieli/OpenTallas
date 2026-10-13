@@ -8,28 +8,42 @@ module ot_vms_elastic_chunk #(parameter integer W=276,D=8,B=$clog2(D),SUBW=16)(
  input wire put, input wire putvc, input wire [B-1:0] wp,
  input wire take, input wire takevc, input wire [B-1:0] rp,
  output wire [W-1:0] dout);
- // Physical fanout repair (2026-10-13): one kept copy of the registered put/take/VC/pointer
- // control per <= SUBW payload bits. Every copy is the same register of the same inputs, so
- // function and latency are unchanged; the old single copy drove 4,416 loads per 276-bit chunk.
- localparam integer NS=(W+SUBW-1)/SUBW;
+ // Physical fanout repair (2026-10-13). Each <= SUBW-bit payload subslice owns kept, registered
+ // ONE-HOT write-enable and read-select copies (2*D each) plus its take copy: every control flop
+ // drives <= SUBW loads and the read path is one AND-OR plane. The old binary pointer copy drove
+ // 4,416 loads per 276-bit chunk; a per-16-bit binary copy still left 128-256 loads on an x1 flop
+ // (-145 ps before placement). Same registered function of the same inputs: latency unchanged.
+ localparam integer NS=(W+SUBW-1)/SUBW, E=2*D;
  for(genvar s=0;s<NS;s=s+1) begin:g_sub
   localparam integer LO=s*SUBW, SW=(LO+SUBW>W)?(W-LO):SUBW;
   reg [SW-1:0] pin_d, delayed_d, dout_r;
-  (* keep="true", dont_touch="true" *) reg put_r,take_r,putvc_r,takevc_r;
-  (* keep="true", dont_touch="true" *) reg [B-1:0] wp_r,rp_r;
-  always @(posedge clk or negedge rst_n)
-   if(!rst_n) begin put_r<=0;take_r<=0;putvc_r<=0;takevc_r<=0;wp_r<=0;rp_r<=0;end
+  (* keep="true" *) reg [E-1:0] wen_r, rsel_r;
+  (* keep="true" *) reg take_r;
 `ifdef RING_SUB_MUT
-   // Bench-only negative: one replicated read-pointer copy (last subslice) disagrees.
-   else begin put_r<=put;take_r<=take;putvc_r<=putvc;takevc_r<=takevc;wp_r<=wp;rp_r<=(s==NS-1)?(rp^1'b1):rp;end
+  // Bench-only negative: one replicated read-select copy (last subslice) disagrees.
+  wire [B-1:0] rp_x=(s==NS-1)?(rp^1'b1):rp;
 `else
-   else begin put_r<=put;take_r<=take;putvc_r<=putvc;takevc_r<=takevc;wp_r<=wp;rp_r<=rp;end
+  wire [B-1:0] rp_x=rp;
 `endif
-  reg [SW-1:0] mem [0:1][0:D-1];
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n) begin wen_r<=0;rsel_r<=0;take_r<=0;end
+   else begin
+    take_r<=take;
+    for(integer i=0;i<E;i=i+1) begin
+     wen_r[i]<=put && (putvc==(i>=D)) && (wp==(i%D));
+     rsel_r[i]<=take && (takevc==(i>=D)) && (rp_x==(i%D));
+    end
+   end
+  reg [SW-1:0] mem [0:E-1];
+  reg [SW-1:0] rd;
+  always @* begin
+   rd={SW{1'b0}};
+   for(integer i=0;i<E;i=i+1) rd=rd|({SW{rsel_r[i]}} & mem[i]);
+  end
   always @(posedge clk) begin
    pin_d<=din[LO+:SW];delayed_d<=pin_d;
-   if(put_r) mem[putvc_r][wp_r]<=delayed_d;
-   if(take_r) dout_r<=mem[takevc_r][rp_r];
+   for(integer i=0;i<E;i=i+1) if(wen_r[i]) mem[i]<=delayed_d;
+   if(take_r) dout_r<=rd;
   end
   assign dout[LO+:SW]=dout_r;
  end
