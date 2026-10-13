@@ -78,7 +78,8 @@ class Gate(unittest.TestCase):
 
     # ---------------------------------------------------------------- when the gate does not apply
     def test_constants(self):
-        self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap"))
+        self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap",
+                                                  "pin_register"))
         self.assertEqual(TL.DIE_WINDOW_CUT_MIN, 0.6)
 
     def test_new_block_and_unclosed_history_pass(self):
@@ -156,6 +157,21 @@ class Gate(unittest.TestCase):
         r = self.run_(spec(reroute_reason={"kind": "slot_change", "contract": "qwen_rom_tp8.json v5"}))
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("die_window, not slot_change", r["message"])
+
+    # ---------------------------------------------------------------- pin_register
+    def test_pin_register(self):
+        ok = {"kind": "pin_register", "source": "results/arch/cuts.json", "cell": "dsfd_su_t_ctl", "pair_cost_ps": 766.1,
+              "fix": "kit recipe 2: pin flops and hold stages FIRM at the pins"}
+        r = self.run_(spec(reroute_reason=ok))
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "pin_register"))
+        for k in ("source", "cell", "fix", "pair_cost_ps"):
+            self.assertEqual(self.run_(spec(reroute_reason={a: b for a, b in ok.items() if a != k}))["verdict"], "REFUSE", k)
+        r = self.run_(spec(reroute_reason=dict(ok, pair_cost_ps=640.0)))            # closes a hop within its reach
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("closed view stands", r["message"])
+        r = self.run_(spec(reroute_reason=dict(ok, source="results/arch/missing.json")))
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("does not exist", r["message"])
 
     # ---------------------------------------------------------------- param_change
     def test_param_change(self):
