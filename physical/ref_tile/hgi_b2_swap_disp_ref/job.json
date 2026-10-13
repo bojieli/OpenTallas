@@ -1,14 +1,14 @@
 {
- "name": "hgi_b2_swap_disp_ref-a-COMMIT",
+ "name": "hgi_b2_swap_disp_ref-b-b08ec6b55",
  "block": "ot_hgi_b2_swap_disp_t",
  "ref_tile": true,
  "owner": "Claude:el1013-ds-mtp-lead",
- "purpose": "[mtp-phys] HBM B2 MTP swap dispatcher S (ot_hgi_b2_swap_disp: group collect / release / join, 2,313 flops), tile-internal block of the cmdproc tile routed as a ref leaf: registers at every pin, cluster q's down 228 b / up 3 b on the face toward cluster q. E (ot_hgi_b2_swap_ep) stays glue of the cluster DMA unit tile; relays are die wire stages. S RTL at 62f54cc4f: re-route when [mtp-rtl]'s duplicate-cluster fault lands.",
+ "purpose": "[mtp-phys] HBM B2 MTP swap dispatcher S (ot_hgi_b2_swap_disp: group collect / release / join, 2,313 flops), tile-internal block of the cmdproc tile routed as a ref leaf: registers at every pin, cluster q's down 228 b / up 3 b on the face toward cluster q. E (ot_hgi_b2_swap_ep) stays glue of the cluster DMA unit tile; relays are die wire stages. S RTL at claude/mtp-rtl-1013 b4e9f86c7: unconditional g_* pin capture stage + 4-deep FIFO + duplicate-cluster sticky fault (route a-088d1eb3b CLOSED on the old S whose g_v gated the pin FIFO enable: superseded).",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/mtp-phys-1013",
-  "commit": "COMMIT",
+  "commit": "b08ec6b55",
   "extra_paths": [
    "rtl/hbm_accel/generic/b2",
    "rtl/hbm_accel/generic/peers",
@@ -137,7 +137,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_b2_swap_disp_ref/hgi_b2_swap_disp_ref-a-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_b2_swap_disp_ref/hgi_b2_swap_disp_ref-b-b08ec6b55"
   }
  ],
  "cycles_added": 0,
