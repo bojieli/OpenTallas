@@ -122,11 +122,11 @@
  "boundary_tcl": [
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
- "structural_change": "hgi_seq flat (25,081 sinks on one root; v25s/v26s/v27a/v27b all failed FF hold on short reg->reg hops across spine leaves) is replaced by three hardened children with their own clock roots and reset synchronisers under a wires-only parent: five registered valid/credit seams, queue-full -> FE credit counter, injector stall -> registered hold; s2 (s1 983266320 NEEDS_RTL TT -59.64 on 28 endpoints, all be_jl_kernel_r -> kern_off, FF +15.24, DRC 0; every other class met 770 ps): the job-load kernel offset is computed in two edges (kernel-table select registered, then zero test / 32-b add), inside the unchanged SEAM_JL_WAIT 6 (it had one spare edge; lockstep gate PASS at 6 and FAIL at 5, so the closed BE view is unchanged; CP.FETCH 30,340 cycles = 0.953x of price)",
+ "structural_change": "hgi_seq flat (25,081 sinks on one root; v25s/v26s/v27a/v27b all failed FF hold on short reg->reg hops across spine leaves) is replaced by three hardened children with their own clock roots and reset synchronisers under a wires-only parent: five registered valid/credit seams, queue-full -> FE credit counter, injector stall -> registered hold; s2 (s1 983266320 NEEDS_RTL TT -59.64 on 28 endpoints, all be_jl_kernel_r -> kern_off, FF +15.24, DRC 0; every other class met 770 ps): the job-load kernel offset is computed in two edges (kernel-table select registered, then zero test / 32-b add), inside the unchanged SEAM_JL_WAIT 6 (it had one spare edge; lockstep gate PASS at 6 and FAIL at 5, so the closed BE view is unchanged; CP.FETCH 30,340 cycles = 0.953x of price); s3 (s2 031099211 NEEDS_RTL TT -55.21 on 50 endpoints, all g_ring rb_qq -> bank select x 256 -> word select -> FIFO entry select -> fqv, 14-15 levels launched 106 ps late beside the ring macros; FF -8.88 on md_k -> md_k_r): the selected ring sector is registered once more before the word FIFO (read pipe 3 -> 4 edges; the reader is credit-based, lockstep gate PASS, CP.FETCH 30,341 cycles = 0.953x)",
  "job": {
   "owner": "Claude:el1013-hbm-seq-split",
   "branch": "claude/hbm-seq-split-1013",
-  "tag": "s2",
+  "tag": "s3",
   "extra_paths": [
    "rtl/hbm_accel/generic",
    "tools/run_hgi_seq_split.py",

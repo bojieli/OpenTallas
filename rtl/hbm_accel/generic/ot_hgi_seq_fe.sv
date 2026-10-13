@@ -238,7 +238,12 @@ module ot_hgi_seq_fe #(
     reg [2:0]  fs;
     reg [RB:0] rp, rdp;                  // record header pointer / next ring word to read
     reg        ep;                       // FIFO epoch (a redirect drops older reads)
-    reg [2:0]  rv, rodd, rep;            // read pipe: valid, started at an odd word, epoch
+    reg [3:0]  rv, rodd, rep;            // read pipe: valid, started at an odd word, epoch (4 edges since s3: + rd_sec_q)
+    // s3 (s2 route 031099211: TT -55.2 on 50 endpoints, all rb_qq -> bank select x 256 -> word select -> FIFO entry
+    // select -> fqv, 14-15 levels launched 106 ps late beside the ring macros): the selected sector is registered once
+    // more before the FIFO.  The reader is credit-based (fcred at issue, returned at pop), so the pipe depth is free.
+    reg [255:0] rd_sec_q;
+    always @(posedge clk) rd_sec_q <= rd_sec;
     reg [FD*128-1:0] fqv;                // shift FIFO: word 0 is the head
     reg [4:0]  fq_n, fcred;              // words held / free credits (FD - held - in the read pipe)
     reg [FD+1:0] fq_th;                  // v2.3: thermometer copy of fq_n (fq_th[j] = j < fq_n), registered
@@ -340,18 +345,18 @@ module ot_hgi_seq_fe #(
     // ---- reader: one sector a cycle while the ring has it and the FIFO has room
     wire [RB:0] ravail = wv ? (wp - rdp) : {(RB+1){1'b0}};
     wire        rd_iss = run_f && !fe_flush && (ravail != {(RB+1){1'b0}}) && fcred >= 5'd2;
-    wire        push_ok = rv[2] && (rep[2] == ep) && !fe_flush;
-    wire [1:0]  sc = !push_ok ? 2'd0 : rodd[2] ? 2'd1 : 2'd2;
-    wire [127:0] pw0 = rodd[2] ? rd_sec[255:128] : rd_sec[127:0];
-    wire [127:0] pw1 = rd_sec[255:128];
+    wire        push_ok = rv[3] && (rep[3] == ep) && !fe_flush;
+    wire [1:0]  sc = !push_ok ? 2'd0 : rodd[3] ? 2'd1 : 2'd2;
+    wire [127:0] pw0 = rodd[3] ? rd_sec_q[255:128] : rd_sec_q[127:0];
+    wire [127:0] pw1 = rd_sec_q[255:128];
     // ---- loop-from-VM reply (BE)
     wire        lv_rsp = be_lv_v_r; wire [15:0] lv_rcnt = be_lv_cnt_r;
     // ---- FIFO data (no reset), v2.4 lazy shift: storage entry i takes storage word i + pq when i < fq_n (view kept),
     // pushed word 0 at i == fq_n, pushed word 1 at i == fq_n + 1.  Writes in a flush cycle are harmless (fq_th clears),
     // so the data path carries the raw push (no fe_flush cone).
     wire [FD+4:0] feq = {3'b000, fq_th[FD:0] & ~fq_th[FD+1:1], !fq_th[0]};    // feq[m] = (m == fq_n)
-    wire        push_raw = rv[2] && (rep[2] == ep);
-    wire [1:0]  scr = !push_raw ? 2'd0 : rodd[2] ? 2'd1 : 2'd2;
+    wire        push_raw = rv[3] && (rep[3] == ep);
+    wire [1:0]  scr = !push_raw ? 2'd0 : rodd[3] ? 2'd1 : 2'd2;
     wire [1:0]  pq_n = fe_flush ? 2'd0 : pc;
     genvar gi;
     generate for (gi = 0; gi < FD; gi = gi + 1) begin : g_fq
@@ -399,12 +404,12 @@ module ot_hgi_seq_fe #(
     integer fk;
     always @(posedge clk or negedge rn_f) begin
         if (!rn_f) begin
-            fs <= F_HALT; rp <= 0; rdp <= 0; frp <= 0; ep <= 1'b0; rv <= 3'b000; rodd <= 3'b000; rep <= 3'b000;
+            fs <= F_HALT; rp <= 0; rdp <= 0; frp <= 0; ep <= 1'b0; rv <= 4'b0000; rodd <= 4'b0000; rep <= 4'b0000;
             fq_n <= 5'd0; fcred <= FD; depth <= 2'd0; Lc <= 16'd0; L1c <= 16'd0; settle <= 2'd0; pi <= 4'd0;
             rd_ptr <= 0; rcl <= RC_DISC; rskip <= 1'b0;
         end else begin
             // reader pipe
-            rv <= {rv[1:0], rd_iss}; rodd <= {rodd[1:0], rdp[0]}; rep <= {rep[1:0], ep};
+            rv <= {rv[2:0], rd_iss}; rodd <= {rodd[2:0], rdp[0]}; rep <= {rep[2:0], ep};
             if (rd_iss) begin rd_ptr <= rdp; rdp <= {rdp[RB:1] + {{(RB-1){1'b0}}, 1'b1}, 1'b0}; end
             if (settle != 2'd0) settle <= settle - 2'd1;
             // FIFO occupancy / credits (pops return credits, issues take them)
