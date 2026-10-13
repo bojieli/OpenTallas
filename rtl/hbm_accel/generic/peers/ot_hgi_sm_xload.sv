@@ -68,6 +68,7 @@ module ot_hgi_sm_xload #(
     parameter integer MUT_WV = 0,         // mutants: 1 the wave lands rotated one lane too far; 2 / 3 = ot_hgi_vm_wrd MUT 1 / 2
     parameter integer BW8 = 0,            // smmv-b BDW8: 1 = block-dot x over the local 8-lane slice group (needs BD, WVM 0)
     parameter integer FW8 = 0,            // optional BF16 x over the same local 8-lane group (BW8 required)
+    parameter integer SFU_STREAM = 0,     // opt-in committed SFU watermark gating (P=1)
     parameter integer MUT_F8 = 0,         // mutant: rotate BF16 gathered wave one lane too far
     parameter integer W8D = 16,           // BW8: waves outstanding (>= the local group round trip for 1 wave an edge)
     parameter integer W8LQ = 16,          // BW8: credits a lane
@@ -84,6 +85,11 @@ module ot_hgi_sm_xload #(
     input  wire [31:0]        x_stride,
     input  wire [1:0]         x_space,
     input  wire [1:0]         x_fmt,
+    input  wire              x_stream,
+    input  wire [3:0]        x_stag,
+    input  wire              sfu_wm_v,
+    input  wire [3:0]        sfu_wm_tag,
+    input  wire [14:0]       sfu_wm,
     input  wire [6:0]         x_xb,          // smmv 3a: x-store slot base (fragment address offset; compiler-allocated)
     output reg                x_done,
     output reg                x_fault,
@@ -106,6 +112,28 @@ module ot_hgi_sm_xload #(
     reg busy; reg [3:0] pp; reg [17:0] base; reg [17:0] st;
     reg [7:0] gn, g; reg [3:0] p_rd; reg [6:0] j_rd; reg [3:0] t; reg [6:0] b; reg [6:0] nb;
     reg signed [22:0] krem;                // K - g x 512 (elements of this group still inside K)
+    // Producer emits wm=0 at each record start before early consumer dispatch.  The 16 tagged prefix
+    // slots support pipelined SFU records; a tag is not reused while an earlier consumer can still wait.
+    reg mw_v; reg [3:0] mw_tag; reg [14:0] mw_count;
+    reg [15:0] mw_valid; reg [14:0] mw_prefix [0:15]; reg stream_fault;
+    wire k_stream_live; wire [3:0] k_stream_tag;
+    reg c_stream; reg [3:0] c_stag;
+    always @(posedge clk) begin mw_tag<=sfu_wm_tag; mw_count<=sfu_wm; end
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) begin mw_v<=1'b0; mw_valid<=0; stream_fault<=1'b0; end
+        else begin
+            mw_v <= (SFU_STREAM != 0) && (sfu_wm_v === 1'b1);
+            if (mw_v) begin
+                if (mw_valid[mw_tag] && mw_count < mw_prefix[mw_tag] &&
+                    ((fw && f_stream && f_stag==mw_tag) || (k_stream_live && k_stream_tag==mw_tag))) stream_fault<=1'b1;
+                mw_valid[mw_tag]<=1'b1;
+            end
+        end
+    end
+    always @(posedge clk) if (mw_v) mw_prefix[mw_tag]<=mw_count;
+    function automatic prefix_ready(input [3:0] tag, input [14:0] need);
+        prefix_ready = mw_valid[tag] && mw_prefix[tag]>=need && !stream_fault;
+    endfunction
     // ---- reset: the port drives only the relay (design standard); control flops reset from rst_c, data flops never
     wire rst_c;
     ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_c));
@@ -162,14 +190,16 @@ module ot_hgi_sm_xload #(
     end
     // BF8: a 64-sector burst fills one slot of the current BF16 group.  The two layouts share the slice
     // port; the command scheduler waits for the block-dot pipeline to drain before accepting BF16.
-    reg fw, f_go, f_pending; reg [3:0] f_p; reg [2:0] f_wave;
+    reg fw, f_go, f_pending, f_stream; reg [3:0] f_stag; reg [3:0] f_p; reg [2:0] f_wave;
     reg [14:0] f_s0; wire f_busy, f_done, f_fault, f_req;
     wire [7:0] fd_v; wire [8*15-1:0] fd_sec; wire [2047:0] fd_data; wire [127:0] f_q;
     wire bw_req; wire [127:0] bw_q;
     reg fr_v, fc_v; reg [2:0] fr_wave; reg [3:0] fr_p; reg [2047:0] fr_data;
     reg [1023:0] fc_data; reg [1:0] fc_q; reg fc_hi; reg [6:0] fc_a;
     reg [6:0] f_got;
-    wire f_launch = fw && rd_ph && f_pending && !f_busy && !f_go;
+    wire [14:0] f_tail = krem >= 23'sd512 ? 15'd64 : 15'((krem+23'sd7)>>3);
+    wire [14:0] f_need = {1'b0,g,6'd0} + f_tail;
+    wire f_launch = fw && rd_ph && f_pending && !f_busy && !f_go && (!f_stream || prefix_ready(f_stag,f_need));
     generate if (FW8 != 0) begin : g_fw8
         if (BW8 == 0 || WVM != 0) initial $fatal(1, "FW8 needs BW8 and WVM=0");
         ot_hgi_vm_wrd #(.LQ(W8LQ), .D(W8D), .SW(15), .NL(8)) u_frd (
@@ -194,6 +224,7 @@ module ot_hgi_sm_xload #(
         end
     end
     always @(posedge clk) begin
+        if (start) begin f_stream<=c_stream; f_stag<=c_stag; end
         if (start || (fw && em_ph && last_bt && !last_g)) f_p<=0;
         else if (fw && f_done) f_p<=f_p+1'b1;
         if (f_launch) begin
@@ -308,10 +339,11 @@ module ot_hgi_sm_xload #(
     reg cmd_v; reg [6:0] c_xb; reg [39:0] c_base; reg [20:0] c_n; reg [3:0] c_p; reg [31:0] c_stride; reg [1:0] c_space, c_fmt;
     assign x_rdy = !busy && !cmd_v;
     always @(posedge clk) if (x_v && x_rdy) begin
+        c_stream <= (SFU_STREAM != 0) && (x_stream === 1'b1); c_stag<=x_stag;
         c_base <= x_base; c_n <= x_n; c_p <= x_p; c_stride <= x_stride; c_space <= x_space; c_fmt <= x_fmt; c_xb <= x_xb;
     end
     wire c_bdf = (BD != 0) && (c_fmt == 2'd1 || c_fmt == 2'd2);
-    wire c_bad = ((BD == 0) && (c_fmt == 2'd1 || c_fmt == 2'd2)) || c_space != 2'd1 || |c_base[2:0] || |c_stride[2:0] || c_p > PMAX || c_p == 4'd0 ||
+    wire c_bad = (c_stream && (c_p!=4'd1 || c_n>21'd262136 || (BW8==0))) || ((BD == 0) && (c_fmt == 2'd1 || c_fmt == 2'd2)) || c_space != 2'd1 || |c_base[2:0] || |c_stride[2:0] || c_p > PMAX || c_p == 4'd0 ||
                  (c_bdf && (|c_n[4:0] || c_n == 21'd0));
     // ---- block-dot state
     reg bd; reg [3:0] la; reg [15:0] nbk;  // fmt 1 / 2; lanes a fragment column; K / 32 blocks
@@ -426,7 +458,7 @@ module ot_hgi_sm_xload #(
             l1_v <= land; l2_v <= l1_v;
             for (integer wq = 0; wq < 4; wq = wq + 1) w1_v[wq] <= l2_v && l2_q == wq;
             cmd_v <= (x_v && x_rdy) ? 1'b1 : (BW8 != 0 && cmd_v && !c_bad && !start && !k_take) ? 1'b1 : 1'b0;
-            if ((cmd_v && c_bad) || k_wflt) x_fault <= 1'b1;
+            if ((cmd_v && c_bad) || k_wflt || stream_fault) x_fault <= 1'b1;
             if (start) begin busy <= 1'b1; ph <= c_bdf ? 2'd3 : 2'd0; bd <= c_bdf; bph <= 2'd1; aact <= 2'b00; bflt <= 1'b0;
                              wm <= (WVM != 0) && !c_bdf; wl_pend <= (WVM != 0) && !c_bdf; wl_next <= 1'b0;
                              for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
@@ -586,7 +618,9 @@ module ot_hgi_sm_xload #(
         // pins take a beat every edge and the group sustains 1 wave an edge (beats = waves at P 1 FP8).
         localparam integer QD = 32, LD = 32, MQD = 4, NBF = 3;
         // ---- command / cursor (issue side)
-        reg cidle; reg [14:0] cb, cs; reg [3:0] cp, cla; reg [15:0] cnbk; reg [7:0] cgn, cg; reg [6:0] cxb, cnb;
+        reg cidle, bs_stream; reg [3:0] bs_tag;
+        assign k_stream_live = bs_stream && !cidle; assign k_stream_tag = bs_tag;
+        reg [14:0] cb, cs; reg [3:0] cp, cla; reg [15:0] cnbk; reg [7:0] cgn, cg; reg [6:0] cxb, cnb;
         reg [1:0] ctp; reg [3:0] cj, cpi; reg [7:0] cgj; reg [14:0] crow;
         // ---- tpair meta FIFO (cursor -> write stage): {xb 7, g 4, tp 2, nb 7, last command tpair 1, empty 1}
         reg [21:0] mq [0:MQD-1]; reg [1:0] mqh, mqt; reg [2:0] mqn;
@@ -608,7 +642,8 @@ module ot_hgi_sm_xload #(
         // the cursor's wave: blocks b0 = (g LA + j) 8 + 2 tp and b0 + 1 of slot p
         wire [15:0] b0 = {5'd0, cgj, 3'd0} + {13'd0, ctp, 1'b0};
         wire wlo = b0 < cnbk, whi = (b0 + 16'd1) < cnbk;
-        wire cstep = !cidle && mqn < 3'(MQD) && (!wlo || (rfn < 3'd4 && tqn < 6'd31 && lcn < 6'(LD)));
+        wire [14:0] b_need = {2'd0,cgj,5'd0} + {10'd0,ctp,3'd0} + (whi ? 15'd8 : 15'd4);
+        wire cstep = !cidle && (!bs_stream || !wlo || prefix_ready(bs_tag,b_need)) && mqn < 3'(MQD) && (!wlo || (rfn < 3'd4 && tqn < 6'd31 && lcn < 6'(LD)));
         wire cpush = cstep && wlo;
         wire clast = cj == cla - 4'd1 && cpi == cp - 4'd1;                   // the tpair's last wave
         wire cfirst = cj == 4'd0 && cpi == 4'd0;                             // the tpair's first step: its meta leaves
@@ -749,6 +784,7 @@ module ot_hgi_sm_xload #(
         end
         always @(posedge clk) begin
             if (k_take) begin
+                bs_stream<=c_stream; bs_tag<=c_stag;
                 cb <= c_base[17:3]; cs <= c_stride[17:3]; cp <= c_p; cla <= (c_fmt == 2'd2) ? 4'd8 : 4'd4;
                 cnbk <= c_n[20:5]; cxb <= c_xb; cnb <= 7'(({12'd0, c_p} * 16'd3152 + 16'd2047) >> 11);
                 cgn <= (c_fmt == 2'd2) ? 8'(((c_n - 21'd1) >> 11) + 21'd1) : 8'(((c_n - 21'd1) >> 10) + 21'd1);
@@ -785,6 +821,7 @@ module ot_hgi_sm_xload #(
             end
         end
     end else begin : g_nobw8
+        assign k_stream_live=1'b0; assign k_stream_tag=4'd0;
         assign k_take = 1'b0; assign k_wflt = 1'b0; assign k_cidle = 1'b1; assign k_allidle = 1'b1; assign k_xdone = 1'b0; assign k_xflt = 1'b0;
         assign k_bev = 1'b0; assign k_bea = '0; assign k_beg = '0; assign k_bed = '0;
     end endgenerate

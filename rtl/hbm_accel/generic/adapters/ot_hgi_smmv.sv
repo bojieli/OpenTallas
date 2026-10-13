@@ -33,6 +33,7 @@ module ot_hgi_smmv #(
     parameter integer XD = 128,
     parameter integer XQ = 1,             // smmv-b BDW8: x loads in flight (1 or 2; the pipelined BW8 loader takes the next
                                           //   load while the previous one drains; x_done in order); 1 = one at a time
+    parameter integer SFU_STREAM = 0,     // header param[6] STREAM; [10:7] producer tag
     parameter integer MUT_SLOT = 0,
     parameter integer MUT_EARLY = 0,
     parameter integer MUT_XRS = 0,        // bx mutant: an X REUSE hit takes the PREVIOUS load's slot (stale x)
@@ -63,6 +64,8 @@ module ot_hgi_smmv #(
     output wire               halted,
     output reg                x_v,
     input  wire               x_rdy,
+    output reg               x_stream,
+    output reg  [3:0]         x_stag,
     output reg  [39:0]        x_base,
     output reg  [20:0]        x_n,
     output reg  [3:0]         x_p,
@@ -125,9 +128,10 @@ module ot_hgi_smmv #(
                (pp0 > 4'd1 && (a0[87:68] != {16'd0, pp0} || o0[87:68] != {16'd0, pp0}));
     // D1
     reg [255:0] a1, o1; reg [20:0] na1; reg [1:0] f1; reg [3:0] p1; reg [7:0] g1; reg [12:0] q1; reg [10:0] lpr1;
-    reg lb160_1, bad1, xr1; reg [19:0] m1; reg [39:0] base1; reg [31:0] str1;
+    reg lb160_1, bad1, xr1, stream1; reg [3:0] stag1; reg [19:0] m1; reg [39:0] base1; reg [31:0] str1;
     // D2
     reg [255:0] a2, o2; reg [20:0] na2; reg [1:0] f2; reg [3:0] p2; reg [7:0] g2; reg [12:0] q2; reg [19:0] m2;
+    reg stream2; reg [3:0] stag2;
     reg [23:0] lq2; reg [30:0] ml2; reg [18:0] strp2; reg [31:0] str2; reg bad2; reg [36:0] qd2; reg lb160_2; reg lo_ok2; reg xr2;
     // r2: D2 products are multi-edge (held D1 operands; ONE record in decode at a time, rec_rdy low until D3 commits):
     // dw_v counts DLAT edges, then D2 captures.  Was one edge (base1 -> qd2 37 x 37 exact-divide multiply -141 ps,
@@ -151,7 +155,7 @@ module ot_hgi_smmv #(
     reg [255:0] e_a [0:WA-1]; reg [255:0] e_o [0:WA-1]; reg [20:0] e_na [0:WA-1];
     reg [1:0] e_f [0:WA-1]; reg [3:0] e_p [0:WA-1]; reg [7:0] e_g [0:WA-1]; reg [12:0] e_q [0:WA-1]; reg [19:0] e_m [0:WA-1];
     reg [23:0] e_lq [0:WA-1]; reg [30:0] e_ml [0:WA-1]; reg [31:0] e_l0 [0:WA-1];
-    reg [6:0] e_xb [0:WA-1]; reg [7:0] e_rel [0:WA-1]; reg [WA-1:0] e_xd, e_xr;
+    reg [6:0] e_xb [0:WA-1]; reg [7:0] e_rel [0:WA-1]; reg [WA-1:0] e_xd, e_xr, e_stream; reg [3:0] e_stag [0:WA-1];
     reg [NSM-1:0] e_act [0:WA-1]; reg [NSM*4-1:0] e_tgt [0:WA-1];
     wire [SQ-1:0] nin = tail - rh;
     reg rdy_r;
@@ -265,7 +269,7 @@ module ot_hgi_smmv #(
         xkey = {a[47:8], a[119:88], a[1:0], n, f, p};
     endfunction
     reg [100:0] xk;
-    wire x_hit = e_xr[ix(xp)] && xo_v && (xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]) == xk);
+    wire x_hit = e_xr[ix(xp)] && !e_stream[ix(xp)] && xo_v && (xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]) == xk);
     wire [SQ-1:0] xo_d = xo - rh, xp_d = xp - rh;
     wire xo_live = xo_d < xp_d;
     // bx (10-12): a hit no longer waits for the latest load to land (nor for its command to be taken): the hit record
@@ -299,7 +303,7 @@ module ot_hgi_smmv #(
             if (d0_v) begin
                 a1 <= a0; o1 <= o0; na1 <= na0; f1 <= pf0; p1 <= pp0; g1 <= g_full[7:0]; q1 <= q_full[12:0];
                 lpr1 <= (pf0 == 2'd3) ? {1'b0, g_full[7:0], 2'b00} : {g_full[7:0], 3'b000};
-                lb160_1 <= (pf0 == 2'd3); bad1 <= bad0; xr1 <= hdr0[69]; m1 <= mm0; base1 <= b0[47:8]; str1 <= b0[119:88];
+                lb160_1 <= (pf0 == 2'd3); bad1 <= bad0; xr1 <= hdr0[69]; stream1<=(SFU_STREAM!=0)&&hdr0[70]; stag1<=hdr0[74:71]; m1 <= mm0; base1 <= b0[47:8]; str1 <= b0[119:88];
             end
             // ---- D2: products and the exact divide
             if (d1_v) begin dw_v <= 1'b1; dcnt <= 4'd0; end
@@ -307,7 +311,7 @@ module ot_hgi_smmv #(
             if (dcap) dw_v <= 1'b0;
             d2_v <= dcap;
             if (dcap) begin
-                a2 <= a1; o2 <= o1; na2 <= na1; f2 <= f1; p2 <= p1; g2 <= g1; q2 <= q1; m2 <= m1; bad2 <= bad1; xr2 <= xr1;
+                a2 <= a1; o2 <= o1; na2 <= na1; f2 <= f1; p2 <= p1; g2 <= g1; q2 <= q1; m2 <= m1; bad2 <= bad1; xr2 <= xr1; stream2<=stream1; stag2<=stag1;
                 lq2 <= lq_p; ml2 <= ml_p; str2 <= str1; strp2 <= strp_p; lb160_2 <= lb160_1;
                 qd2 <= lb160_1 ? {2'b00, qd_p[34:0]} : qd_p;
                 lo_ok2 <= lb160_1 ? (base1[4:0] == 5'd0) : (base1[2:0] == 3'd0);
@@ -321,7 +325,7 @@ module ot_hgi_smmv #(
                     e_a[ix(tail)] <= a2; e_o[ix(tail)] <= o2; e_na[ix(tail)] <= na2; e_f[ix(tail)] <= f2;
                     e_p[ix(tail)] <= p2; e_g[ix(tail)] <= g2; e_q[ix(tail)] <= q2; e_m[ix(tail)] <= m2;
                     e_lq[ix(tail)] <= lq2; e_ml[ix(tail)] <= ml2; e_l0[ix(tail)] <= qd2[31:0];
-                    e_xd[ix(tail)] <= 1'b0; e_xr[ix(tail)] <= xr2;
+                    e_xd[ix(tail)] <= 1'b0; e_xr[ix(tail)] <= xr2; e_stream[ix(tail)]<=stream2; e_stag[ix(tail)]<=stag2;
                     tail <= tail + 1'b1;
                 end
             end
@@ -347,6 +351,7 @@ module ot_hgi_smmv #(
             end else if (x_ld_go) begin
                 xo <= xp; xo_v <= 1'b1; xo_nf <= nf; xk <= xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]);
                 xp <= xp + 1'b1; xfq[xft] <= xp; xft <= !xft; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
+                x_stream<=e_stream[ix(xp)]; x_stag<=e_stag[ix(xp)];
                 x_stride <= e_a[ix(xp)][119:88]; x_space <= e_a[ix(xp)][1:0]; x_fmt <= e_f[ix(xp)]; x_xb <= a_st;
                 e_xb[ix(xp)] <= a_st; e_rel[ix(xp)] <= (MUT_SLOT != 0) ? 8'd0 : a_ws + nf; xbc <= a_st; xbp <= xbc;
                 if (MUT_SLOT == 0) begin used_n = used_n + a_ws + nf; ap <= a_st + nf[6:0]; end
