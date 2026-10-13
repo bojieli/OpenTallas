@@ -167,6 +167,24 @@ class Gate(unittest.TestCase):
             g, res = self.gate(td, {"name": "j1"}, top="unplanned")
             self.assertEqual((g.verdict, res["status"], g.items), ("PASS", "no_slot", []))
 
+    def test_contract_from_git_ref(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as td:
+            rp = repo(td)
+            run = lambda *a: subprocess.run(["git", "-C", td, "-c", "user.name=t", "-c", "user.email=t@t", *a],  # noqa: E731
+                                            check=True, capture_output=True)
+            run("init", "-q", "-b", "main")
+            run("add", "results")
+            run("commit", "-q", "-m", "c")
+            (rp / "results/arch/hier_contract_1011/s81.json").unlink()        # stale checkout: the ref still has it
+            self.assertEqual(SF.load_contracts(rp), [])
+            cs, ref = SF.live_contracts(rp)
+            self.assertEqual((ref, [c["file"] for c in cs]), ("main", ["results/arch/hier_contract_1011/s81.json"]))
+            g = G.Gate()
+            G.check_slot_fit(g, kit(td, w=45.36), {"name": "j"}, td, "")
+            self.assertEqual(g.verdict, "FAIL")
+            self.assertIn("v3 (main)", g.items[-1]["message"])
+
     def test_lead_logs(self):
         self.assertEqual(SF.lead_log("qwen_rom_tp8").name, "el1011-qwen-tp8.log")
         self.assertEqual(SF.lead_log("ds_rom_s81_layer1").name, "el1011-s81die.log")
