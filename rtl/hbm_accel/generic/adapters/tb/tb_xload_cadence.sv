@@ -5,14 +5,27 @@ module tb_xload_cadence;
 `else
  localparam integer FLOW=0;
 `endif
- integer sink_period=1;
- wire sink_ready=sink_period<=1 || cyc%sink_period==0;
+`ifdef MUT_XW_CREDIT
+ localparam integer MUTX=1;   // stop reservation one credit short: must trip the credit/seat invariant
+`elsif MUT_XW_RDPIN
+ localparam integer MUTX=2;   // macro read pin not frozen: must corrupt payload under back-pressure
+`else
+ localparam integer MUTX=0;
+`endif
+ // sink patterns: +SINK_PERIOD=n (ready one edge in n); +SINK_LFSR=seed (pseudo-random: ready when the low
+ // +SINK_BITS=b bits of a 32-b xorshift are zero, default b=1 = half the edges)
+ integer sink_period=1,sink_seed=0,sink_bits=1;
+ reg[31:0] lfsr=32'd1;
+ wire sink_ready=sink_seed!=0 ? (lfsr&((32'd1<<sink_bits)-32'd1))==32'd0 : (sink_period<=1 || cyc%sink_period==0);
+ always @(posedge clk) begin :g_lfsr
+  reg[31:0] x; x=lfsr; x=x^(x<<13); x=x^(x>>17); x=x^(x<<5); lfsr<=x;
+ end
  wire last_beat;
  reg clk=0; always #1 clk=~clk;
  reg rst_n=0,x_v=0; reg[39:0] base=0; reg[20:0] n=0; reg[3:0] p=0; reg[31:0] stride=0; reg[1:0] fmt=0;
  wire ready,done,fault,en,req; wire[6:0] addr,grp; wire[2047:0] data;
  wire[1351:0] vmq; wire[1095:0] vmr; wire[511:0] q; wire[31:0] cr; wire[8223:0] rsp;
- ot_hgi_sm_xload #(.XW_FLOW(FLOW),.BD(1),.BW8(1),.PMAX(8),.W8LQ(10)) u (.clk(clk),.rst_n(rst_n),.x_v(x_v),.x_rdy(ready),
+ ot_hgi_sm_xload #(.XW_FLOW(FLOW),.MUT_XW(MUTX),.BD(1),.BW8(1),.PMAX(8),.W8LQ(10)) u (.clk(clk),.rst_n(rst_n),.x_v(x_v),.x_rdy(ready),
  .x_base(base),.x_n(n),.x_p(p),.x_stride(stride),.x_space(2'd1),.x_fmt(fmt),.x_xb(7'd0),
  .xw_ready(sink_ready),.xw_last(last_beat),.x_done(done),.x_fault(fault),.xw_en(en),.xw_addr(addr),.xw_grp(grp),.xw_data(data),
  .vmq(vmq),.vmr(vmr),.rg_req(req),.rg_gnt(1'b1),.wrq(q),.wrq_cr(cr),.wrr(rsp));
@@ -69,6 +82,8 @@ module tb_xload_cadence;
  endtask
  initial begin
   if(!$value$plusargs("SINK_PERIOD=%d",sink_period))sink_period=1;
+  if(!$value$plusargs("SINK_BITS=%d",sink_bits))sink_bits=1;
+  if($value$plusargs("SINK_LFSR=%d",sink_seed)&&sink_seed!=0)lfsr=sink_seed;
   fd=$fopen("beats.txt","w");repeat(5)@(negedge clk);rst_n=1;repeat(8)@(negedge clk);
   command(5120,1,0);command(5120,1,1);command(5120,1,2);
   command(7168,4,0);command(7168,4,1);command(7168,4,2);

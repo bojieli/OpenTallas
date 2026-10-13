@@ -53,6 +53,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_sm_xload #(
     parameter integer XW_FLOW = 0,        // opt-in finite retained x-write transport
+    parameter integer XW_SEATS = 4,       // XW_FLOW: held seats = transport credits (4..8; derivation at g_xw_flow)
+    parameter integer MUT_XW = 0,         // XW_FLOW mutants: 1 = stop reservation one credit short; 2 = macro read pin not frozen
     parameter integer NXC = 4,            // VM packet clients (reads in flight)
     parameter integer PMAX = 8,
     parameter integer MUT_M = 0,          // mutant (FILL-9): a landing sector's write mask on lane slice (j ^ 1) of its quarter
@@ -104,9 +106,19 @@ module ot_hgi_sm_xload #(
 );
     reg px_en, px_last, legacy_done;
     reg [6:0] px_addr, px_grp; reg [2047:0] px_data;
-    // Four transport credits cover two registered enable propagation stages, the pin beat in flight,
-    // and an accepted seat. Credits are charged BEFORE the pin beat launches. The existing read/emit
-    // pipeline retains all other operands. No command-sized FIFO and no reset on payload registers.
+    // XW_FLOW credit scheme (one credit = one held seat; charged at grant, returned at the sink's accept).
+    //   Edges, with R(t) = cr_next(t) = credits(t) + pop(t) - grant(t), the count registered into edge t + 1:
+    //     stop path : R(t) -> go_ctl(t+1) -> go_em = local_emit = region_go (t+2) -> emit_go(t+2) gates grant(t+2).
+    //                 A decision at t therefore cannot stop grant(t+1) (one uncontrolled grant) and decides grant(t+2):
+    //                 RESERVE = 2, go(t+2) = R(t) >= 2.  credits(t+3) >= R(t) - grant(t+1) - grant(t+2) >= 0.
+    //     return path: grant(s) -> px_en(s+1) (pin beat in flight) -> seat 0 / hv (s+2) -> pop(s+2), counted in R(s+2).
+    //                 At one beat an edge into an always-ready sink R(t) sees grants t and t-1 outstanding (t-2 returns
+    //                 in the same R): R = SEATS - 2 (CIRC = 2).
+    //   No throttle at full rate needs SEATS - CIRC >= RESERVE: SEATS >= 4.  (The first version asked R > 2 with four
+    //   seats, one credit more than the stop path can spend, so the steady R = 2 stalled every third edge.)
+    //   Seat occupancy <= SEATS - credits <= SEATS; a wrapped credit count (grant without credit) or count > SEATS
+    //   trips the invariant.  The read/emit pipeline retains all other operands: no command-sized FIFO, no reset on
+    //   payload registers.
     reg go_ctl, go_em; wire transport_fault;
     wire emit_go = (XW_FLOW == 0) || (go_em && !transport_fault);
     wire emit_next = rv[RD-1] || be_v || k_bev;
@@ -114,11 +126,16 @@ module ot_hgi_sm_xload #(
         (be_v && be_a == {4'(gn-1),3'd7} && be_g == nb-1);
     generate if (XW_FLOW != 0) begin : g_xw_flow
         localparam integer W=2064, NS=(W+63)/64;
-        reg [2:0] credits, count; reg hv, flow_done, flow_fault; wire [W-1:0] head;
+        localparam integer NSEAT=XW_SEATS, CIRC=2, RESERVE=2, CW=$clog2(NSEAT+1);
+        localparam integer GO_MIN=(MUT_XW==1)?RESERVE-1:RESERVE;
+        if (NSEAT < CIRC + RESERVE || NSEAT > 8) begin : g_chk
+            $error("ot_hgi_sm_xload: XW_SEATS must be 4..8 (2 credits in circulation + 2 reserved for the stop path)");
+        end
+        reg [CW-1:0] credits, count; reg hv, flow_done, flow_fault; wire [W-1:0] head;
         wire pop = hv && xw_ready;
         wire grant = emit_go && emit_next;
-        wire [3:0] cr_next = {1'b0,credits} + 4'(pop) - 4'(grant);
-        wire [3:0] cn_next = {1'b0,count} + 4'(px_en) - 4'(pop);
+        wire [CW:0] cr_next = {1'b0,credits} + (CW+1)'(pop) - (CW+1)'(grant);
+        wire [CW:0] cn_next = {1'b0,count} + (CW+1)'(px_en) - (CW+1)'(pop);
         wire [W-1:0] payload={px_last,1'b1,px_addr,px_grp,px_data};
         assign transport_fault=flow_fault;
         assign xw_en=hv && !flow_fault; assign xw_last=head[2063];
@@ -127,34 +144,34 @@ module ot_hgi_sm_xload #(
         // native_release before reporting committed completion to the SM engine.
         assign x_done=flow_done;
         always @(posedge clk or negedge rst_c) begin
-            if(!rst_c)begin credits<=4;count<=0;hv<=0;go_ctl<=0;go_em<=0;flow_done<=0;flow_fault<=0;end
+            if(!rst_c)begin credits<=CW'(NSEAT);count<=0;hv<=0;go_ctl<=0;go_em<=0;flow_done<=0;flow_fault<=0;end
             else begin
                 flow_done<=pop && xw_last && !flow_fault;
-                credits<=cr_next[2:0];count<=cn_next[2:0];hv<=cn_next!=0;
-                go_ctl<=cr_next>2;go_em<=go_ctl;
-                if(cr_next>4 || cn_next>4)flow_fault<=1;
+                credits<=cr_next[CW-1:0];count<=cn_next[CW-1:0];hv<=cn_next!=0;
+                go_ctl<=cr_next>=(CW+1)'(GO_MIN);go_em<=go_ctl;
+                if(cr_next>(CW+1)'(NSEAT) || cn_next>(CW+1)'(NSEAT))flow_fault<=1;
 `ifndef SYNTHESIS
-                if(cr_next>4 || cn_next>4) $fatal(1,"XW_FLOW transport credit/seat invariant failed");
+                if(cr_next>(CW+1)'(NSEAT) || cn_next>(CW+1)'(NSEAT)) $fatal(1,"XW_FLOW transport credit/seat invariant failed");
 `endif
             end
         end
         genvar r;
         for(r=0;r<NS;r=r+1)begin:g_region
             localparam integer LO=r*64, WS=(W-LO<64)?W-LO:64;
-            (* keep *) reg [2:0] local_count;
-            reg [WS-1:0] seats[0:3];
+            (* keep *) reg [CW-1:0] local_count;
+            reg [WS-1:0] seats[0:NSEAT-1];
             wire local_pop=local_count!=0 && xw_ready;
-            wire [3:0] after_pop={1'b0,local_count}-4'(local_pop);
+            wire [CW:0] after_pop={1'b0,local_count}-(CW+1)'(local_pop);
             always @(posedge clk or negedge rst_c)
                 if(!rst_c)local_count<=0;
-                else local_count<=3'(after_pop+4'(px_en));
+                else local_count<=CW'(after_pop+(CW+1)'(px_en));
             genvar k;
-            for(k=0;k<4;k=k+1)begin:g_seat
+            for(k=0;k<NSEAT;k=k+1)begin:g_seat
                 // Separate local row enables: at most64 payload loads, no queue-wide shift/select net.
                 (* keep *) wire shift=local_pop && local_count>k+1;
                 (* keep *) wire store=px_en && after_pop==k;
                 always @(posedge clk)begin
-                    if(k<3 && shift)seats[k]<=seats[(k<3)?k+1:k];
+                    if(k<NSEAT-1 && shift)seats[k]<=seats[(k<NSEAT-1)?k+1:k];
                     if(store)seats[k]<=payload[LO+:WS];
                 end
             end
@@ -263,7 +280,7 @@ module ot_hgi_sm_xload #(
                 assign wmask[16 * gs +: 16] = {16{wp_m[gs]}};
             end
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
-                .r_ce_in(rp_fire), .r_addr_in(rp_a), .rd_out(rd),
+                .r_ce_in((MUT_XW == 2) ? rp_ce : rp_fire), .r_addr_in(rp_a), .rd_out(rd),
                 .w_ce_in(wp_ce || vp_ce), .w_addr_in(vp_ce ? vp_a : wp_a), .wd_in(vp_ce ? vp_d : {16{wp_d}}),
                 .w_mask_in(vp_ce ? {256{1'b1}} : wmask), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
             assign cap[gt * 4 + gq] = cq;
