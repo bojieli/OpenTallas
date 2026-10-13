@@ -31,7 +31,9 @@ module tb_hgi_idx_ix2_div #(parameter integer MUT = 0);
             end
             c_v = 0; repeat (10) @(posedge clk);
         end
-        $display("IX2DIV checks=%0d bad=%0d %s", n, bad, (bad == 0 && n >= 32768) ? "PASS" : "FAIL");
+        // (two displays: the ?: of two string literals inside $display printed FAIL at bad = 0 under Verilator 5.050)
+        if (bad == 0 && n >= 32768) $display("IX2DIV checks=%0d bad=%0d PASS", n, bad);
+        else $display("IX2DIV checks=%0d bad=%0d FAIL", n, bad);
         $finish;
     end
 endmodule
