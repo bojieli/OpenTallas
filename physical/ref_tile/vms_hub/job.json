@@ -1,14 +1,14 @@
 {
- "name": "vms_hub-v05-af4457f45",
+ "name": "vms_hub-v06-COMMIT",
  "block": "ot_vms_hub",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-b2-vm",
- "purpose": "HBM B2 VM slice hub tile: packet clients reorder buffers, slice routing, CW/CCW PREQ, PRSPs from both ring stops; reset only on control; v05: 2-stage dispatch (grant reg -> one-hot payload AND-OR), registered request alloc one-hot + response hit decode, one-hot head; M5 leaf, 100x540 outline for 4.4k E-face pins on M4",
+ "purpose": "HBM B2 VM slice hub tile v06: dispatch G->S->P (one-hot entry select into per-destination-group payload regs, kept one-hot select/grant copies per 57-b slice), sliced head mux with kept h1/write-flag copies, pure pin relays on the N/S ring PRSP inputs; M5 leaf 101.5x540",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-b2-vm",
-  "commit": "af4457f45",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
@@ -149,7 +149,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/vms_hub/vms_hub-v05-af4457f45"
+   "to": "results/rtl/ref_tile/vms_hub/vms_hub-v06-COMMIT"
   }
  ],
  "cycles_added": 0,
