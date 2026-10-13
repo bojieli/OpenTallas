@@ -333,7 +333,9 @@ def plan(dx_my=0.0):
             "tile_N_M5_b_per_um": round(562 / TW, 2), "tile_E_M4_b_per_um_100um": round(100 / (2 * P45) / 100.0, 2)}
     single = [v[1] for k, v in worst.items() if "two hops" not in k] + [h["um"] for h in chain]
     paths = [v[1] for k, v in worst.items() if "two hops" in k]
-    mp = sorted(n for n, v in tp.items() if n not in ("clk", "fault") and not n.startswith(("slot_id", "od[", "ov", "rqf")))
+    # tile input pins a parent flop drives: the row-0 X stage (word, strobes), the reset relay leaf, the head's rq
+    mp = sorted(n for n, v in tp.items() if v[0] == "N" and n != "clk" and not n.startswith("slot_id")) \
+        + ["rq_v"] + [f"rq_slot[{b}]" for b in range(3)] + [f"rq_ptr[{b}]" for b in range(6)]
     flops = {"A (die pins)": 4426, "M + X (row 0: 3 tiles x 557 x 2)": 3342, "head (ctl, rd capture 552, o 551)": 1160,
              "reset relay + fault ring": 31}
     fp = {"schema": "opentallas.qwen.res_ser_cluster_fp.v2", "outline_um": [W, H], "tile_um": [TW, TH],
