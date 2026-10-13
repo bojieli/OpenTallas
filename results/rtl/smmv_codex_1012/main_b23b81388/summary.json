@@ -1,0 +1,71 @@
+{
+  "schema": "smmv_run_collect_v1",
+  "source_commit": "b23b8138812c703f34f292315974aac3d3161517",
+  "host": "ot-epyc4",
+  "remote_root": "/srv/opentallas-scratch/claude/smmvrec",
+  "defines": [
+    "XBD",
+    "NCL=4",
+    "WVM8",
+    "XQ=2",
+    "WIN=8"
+  ],
+  "record_shapes": {
+    "L0": "layer 0",
+    "L1": "layer 1",
+    "IH": "layers 2,20,head"
+  },
+  "runs": [
+    {
+      "name": "IH",
+      "records": 59,
+      "service_cycles": 22320,
+      "checked_result_words": 6082,
+      "verdict": "PASS",
+      "errors": 0,
+      "log": "IH.log",
+      "sha256": "1a1bc87ce5f993a6c61f6bdd15c046d0891923e870519ad94e6b083458ef1a67"
+    },
+    {
+      "name": "L0",
+      "records": 27,
+      "service_cycles": 5760,
+      "checked_result_words": 2318,
+      "verdict": "PASS",
+      "errors": 0,
+      "log": "L0.log",
+      "sha256": "9c1688888245161a89e0e81f3c87cc2b10958f450c1670f2e8d23661b059db5f"
+    },
+    {
+      "name": "L0_MUT_EARLY",
+      "records": 27,
+      "service_cycles": 4161,
+      "checked_result_words": 2318,
+      "verdict": "FAIL",
+      "errors": 213,
+      "log": "L0_MUT_EARLY.log",
+      "sha256": "9d88b1bddacc1d5ec6c8e57e4f83e1a78e82b3a38b77a44b5ec057fb797e14d8"
+    },
+    {
+      "name": "L1",
+      "records": 28,
+      "service_cycles": 6392,
+      "checked_result_words": 2584,
+      "verdict": "PASS",
+      "errors": 0,
+      "log": "L1.log",
+      "sha256": "34dc2379426adbfd3b4f1e1af76013d7f522109fb6ff2050a1fc1e306ec6f755"
+    },
+    {
+      "name": "L1_MUT_ROW",
+      "records": 28,
+      "service_cycles": 6402,
+      "checked_result_words": 2584,
+      "verdict": "FAIL",
+      "errors": 2582,
+      "log": "L1_MUT_ROW.log",
+      "sha256": "9015263a7f7675448309046d41f6aa3ec035ab8349ef040005632226a677d043"
+    }
+  ],
+  "qualification": "Not qualified: published per-layer L0/L1 gates still fail; this record does not extrapolate a full-token price."
+}

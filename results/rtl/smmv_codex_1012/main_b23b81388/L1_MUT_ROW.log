@@ -1,0 +1,66 @@
+x loaded: 4672 sectors at cycle 32714 (LAT 104 BWX10 31667 W 8 NCL 4 BW8 1 XQ 2 XL 4/3/4)
+TPUT 0 disp 32715 ret 33873 service 1158 xi 32735 xd 32969 is 32989 a0 33827 pd 33866
+TPUT 1 disp 32732 ret 33903 service 30 xi 32752 xd 33144 is 33164 a0 33898 pd 33896
+TPUT 2 disp 32749 ret 33975 service 72 xi 32767 xd 32767 is 33182 a0 33970 pd 33968
+TPUT 3 disp 32766 ret 34328 service 353 xi 32972 xd 33211 is 33231 a0 34279 pd 34304
+TPUT 4 disp 32783 ret 34694 service 366 xi 33147 xd 33404 is 33424 a0 34635 pd 34671
+TPUT 5 disp 32800 ret 34862 service 168 xi 33977 xd 34281 is 34301 a0 34821 pd 34843
+TPUT 6 disp 32817 ret 37126 service 2264 xi 34849 xd 36690 is 36710 a0 37121 pd 37119
+TPUT 7 disp 32834 ret 37223 service 97 xi 34852 xd 36889 is 36909 a0 37218 pd 37216
+TPUT 8 disp 33874 ret 37295 service 72 xi 34853 xd 34853 is 36927 a0 37290 pd 37288
+TPUT 9 disp 33904 ret 37598 service 303 xi 37128 xd 37277 is 37297 a0 37593 pd 37591
+TPUT 10 disp 33976 ret 37670 service 72 xi 37129 xd 37129 is 37315 a0 37665 pd 37663
+TPUT 11 disp 34329 ret 37742 service 72 xi 37130 xd 37130 is 37333 a0 37737 pd 37735
+TPUT 12 disp 34695 ret 37814 service 72 xi 37131 xd 37131 is 37351 a0 37809 pd 37807
+TPUT 13 disp 34863 ret 37886 service 72 xi 37132 xd 37132 is 37369 a0 37881 pd 37879
+TPUT 14 disp 37127 ret 37958 service 72 xi 37145 xd 37145 is 37387 a0 37953 pd 37951
+TPUT 15 disp 37224 ret 38030 service 72 xi 37242 xd 37242 is 37405 a0 38025 pd 38023
+TPUT 16 disp 37296 ret 38102 service 72 xi 37314 xd 37314 is 37423 a0 38097 pd 38095
+TPUT 17 disp 37599 ret 38350 service 248 xi 37617 xd 37617 is 38043 a0 38345 pd 38343
+TPUT 18 disp 37671 ret 38422 service 72 xi 37689 xd 37689 is 38061 a0 38417 pd 38415
+TPUT 19 disp 37743 ret 38494 service 72 xi 37761 xd 37761 is 38079 a0 38489 pd 38487
+TPUT 20 disp 37815 ret 38566 service 72 xi 37833 xd 37833 is 38097 a0 38561 pd 38559
+TPUT 21 disp 37887 ret 38676 service 110 xi 37907 xd 38014 is 38115 a0 38635 pd 38657
+TPUT 22 disp 37959 ret 38748 service 72 xi 37979 xd 38086 is 38133 a0 38707 pd 38729
+TPUT 23 disp 38031 ret 38825 service 77 xi 38051 xd 38158 is 38178 a0 38779 pd 38818
+TPUT 24 disp 38103 ret 38892 service 67 xi 38123 xd 38230 is 38250 a0 38851 pd 38873
+TPUT 25 disp 38351 ret 38964 service 72 xi 38371 xd 38478 is 38498 a0 38923 pd 38945
+TPUT 26 disp 38423 ret 39036 service 72 xi 38443 xd 38550 is 38570 a0 38995 pd 39017
+TPUT 27 disp 38495 ret 39117 service 81 xi 38568 xd 38694 is 38714 a0 39076 pd 39098
+lines real SM0 1840 SM1 1840
+ERR O[200000] = bf870000 expected c07b0000
+ERR O[200001] = bff80000 expected 40530000
+ERR O[200002] = 41460000 expected 41020000
+ERR O[200003] = c1030000 expected 3dc40000
+ERR O[200004] = c05b0000 expected 3f9f0000
+ERR O[200005] = be5e0000 expected 414d0000
+ERR O[200006] = 408b0000 expected 41480000
+ERR O[200007] = 3fe90000 expected c06e0000
+ERR O[200008] = 40080000 expected c19f0000
+ERR O[200009] = 00000000 expected bf870000
+ERR O[200010] = 00000000 expected bff80000
+ERR O[200011] = 00000000 expected 41460000
+ERR O[200012] = 00000000 expected c1030000
+ERR O[200013] = 00000000 expected c05b0000
+ERR O[200014] = 00000000 expected be5e0000
+ERR O[200015] = 00000000 expected 408b0000
+ERR O[200016] = 00000000 expected 3fe90000
+ERR O[200017] = 00000000 expected 40080000
+ERR O[200018] = 00000000 expected c07b0000
+ERR O[200019] = 00000000 expected 40530000
+ERR O[200020] = 00000000 expected 41020000
+ERR O[200021] = 00000000 expected 3dc40000
+ERR O[200022] = 00000000 expected 3f9f0000
+ERR O[200023] = 00000000 expected 414d0000
+ERR O[200024] = 00000000 expected 41480000
+ERR O[200025] = 00000000 expected c06e0000
+ERR O[200026] = 00000000 expected c19f0000
+ERR O[200027] = 00000000 expected bf870000
+ERR O[200028] = 00000000 expected bff80000
+ERR O[200029] = 00000000 expected 41460000
+summary: 28 SM.MATVEC records (window 8, clusters 4), service sum 6402 cycles, 2584 result words checked
+HGI_SMMV_TPUT FAIL errors=2582
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_smmv_tput.sv:394: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 83us; walltime 637.974 s; speed 130.338 ns/s
+- Verilator: cpu 637.964 s on 1 threads; allocated 89 MB

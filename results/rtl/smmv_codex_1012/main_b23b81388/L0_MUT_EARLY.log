@@ -1,0 +1,45 @@
+x loaded: 3904 sectors at cycle 27338 (LAT 104 BWX10 31667 W 8 NCL 4 BW8 1 XQ 2 XL 4/3/4)
+ERR RETIRE-EARLY cluster 0 record 0 retired at cycle 27579 before its publication was done (0 pub_done)
+ERR RETIRE-EARLY cluster 0 record 0 retired at cycle 27579 before real SM 0 arrived
+ERR RETIRE-EARLY cluster 0 record 0 retired at cycle 27579 before real SM 1 arrived
+ERR RETIRE-EARLY cluster 1 record 0 retired at cycle 27579 before its publication was done (0 pub_done)
+ERR RETIRE-EARLY cluster 1 record 1 retired at cycle 27595 before its publication was done (0 pub_done)
+ERR RETIRE-EARLY cluster 0 record 1 retired at cycle 27597 before its publication was done (0 pub_done)
+ERR RETIRE-EARLY cluster 0 record 1 retired at cycle 27597 before real SM 0 arrived
+ERR RETIRE-EARLY cluster 0 record 1 retired at cycle 27597 before real SM 1 arrived
+ERR RETIRE-EARLY cluster 0 record 2 retired at cycle 27646 before its publication was done (0 pub_done)
+ERR RETIRE-EARLY cluster 0 record 2 retired at cycle 27646 before real SM 0 arrived
+TPUT 0 disp 27339 ret 27579 service 240 xi 27359 xd 27558 is 27578 a0 27890 pd 27888
+TPUT 1 disp 27356 ret 27597 service 18 xi 27374 xd 27374 is 27596 a0 27962 pd 27960
+TPUT 2 disp 27373 ret 27646 service 49 xi 27393 xd 27625 is 27645 a0 28271 pd 28308
+TPUT 3 disp 27390 ret 27842 service 196 xi 27561 xd 27818 is 27838 a0 28627 pd 28665
+TPUT 4 disp 27407 ret 28146 service 304 xi 27628 xd 28122 is 28142 a0 28813 pd 28835
+TPUT 5 disp 27424 ret 30008 service 1862 xi 28145 xd 29986 is 30006 a0 30417 pd 30415
+TPUT 6 disp 27441 ret 30208 service 200 xi 28148 xd 30185 is 30205 a0 30514 pd 30512
+TPUT 7 disp 27458 ret 30226 service 18 xi 28149 xd 28149 is 30223 a0 30586 pd 30584
+TPUT 8 disp 27580 ret 30333 service 107 xi 30009 xd 30310 is 30330 a0 30657 pd 30655
+TPUT 9 disp 27598 ret 30351 service 18 xi 30010 xd 30010 is 30348 a0 30729 pd 30727
+TPUT 10 disp 27647 ret 30369 service 18 xi 30011 xd 30011 is 30366 a0 30801 pd 30799
+TPUT 11 disp 27843 ret 30387 service 18 xi 30012 xd 30012 is 30384 a0 30873 pd 30871
+TPUT 12 disp 28147 ret 30405 service 18 xi 30013 xd 30013 is 30402 a0 30945 pd 30943
+TPUT 13 disp 30009 ret 30423 service 18 xi 30027 xd 30027 is 30420 a0 31017 pd 31015
+TPUT 14 disp 30209 ret 30441 service 18 xi 30227 xd 30227 is 30438 a0 31089 pd 31087
+TPUT 15 disp 30227 ret 30533 service 92 xi 30245 xd 30245 is 30532 a0 31161 pd 31159
+TPUT 16 disp 30334 ret 30605 service 72 xi 30352 xd 30352 is 30604 a0 31233 pd 31231
+TPUT 17 disp 30352 ret 31180 service 575 xi 30370 xd 30370 is 31179 a0 31481 pd 31479
+TPUT 18 disp 30370 ret 31198 service 18 xi 30388 xd 30388 is 31197 a0 -1 pd -1
+TPUT 19 disp 30388 ret 31216 service 18 xi 30406 xd 30406 is 31215 a0 -1 pd -1
+TPUT 20 disp 30406 ret 31234 service 18 xi 30426 xd 30533 is 31233 a0 -1 pd -1
+TPUT 21 disp 30424 ret 31252 service 18 xi 30444 xd 30605 is 31251 a0 -1 pd -1
+TPUT 22 disp 30442 ret 31270 service 18 xi 30536 xd 30677 is 31269 a0 -1 pd -1
+TPUT 23 disp 30534 ret 31288 service 18 xi 30608 xd 30749 is 31287 a0 -1 pd -1
+TPUT 24 disp 30606 ret 31306 service 18 xi 30680 xd 30821 is 31305 a0 -1 pd -1
+TPUT 25 disp 31181 ret 31329 service 23 xi 31201 xd 31308 is 31328 a0 -1 pd -1
+TPUT 26 disp 31199 ret 31500 service 171 xi 31219 xd 31406 is 31499 a0 -1 pd -1
+lines real SM0 1361 SM1 1361
+summary: 27 SM.MATVEC records (window 8, clusters 4), service sum 4161 cycles, 2318 result words checked
+HGI_SMMV_TPUT FAIL errors=213
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_smmv_tput.sv:394: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 67us; walltime 518.229 s; speed 130.112 ns/s
+- Verilator: cpu 518.211 s on 1 threads; allocated 87 MB

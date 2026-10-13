@@ -1,0 +1,35 @@
+x loaded: 3904 sectors at cycle 27338 (LAT 104 BWX10 31667 W 8 NCL 4 BW8 1 XQ 2 XL 4/3/4)
+TPUT 0 disp 27339 ret 27895 service 556 xi 27359 xd 27558 is 27578 a0 27890 pd 27888
+TPUT 1 disp 27356 ret 27967 service 72 xi 27374 xd 27374 is 27596 a0 27962 pd 27960
+TPUT 2 disp 27373 ret 28312 service 345 xi 27393 xd 27625 is 27645 a0 28271 pd 28308
+TPUT 3 disp 27390 ret 28671 service 359 xi 27561 xd 27818 is 27838 a0 28627 pd 28665
+TPUT 4 disp 27407 ret 28838 service 167 xi 27628 xd 28122 is 28142 a0 28813 pd 28835
+TPUT 5 disp 27424 ret 31118 service 2280 xi 28840 xd 30681 is 30701 a0 31113 pd 31111
+TPUT 6 disp 27441 ret 31215 service 97 xi 28843 xd 30880 is 30900 a0 31210 pd 31208
+TPUT 7 disp 27458 ret 31287 service 72 xi 28844 xd 28844 is 30918 a0 31282 pd 31280
+TPUT 8 disp 27896 ret 31590 service 303 xi 31120 xd 31269 is 31289 a0 31585 pd 31583
+TPUT 9 disp 27968 ret 31662 service 72 xi 31121 xd 31121 is 31307 a0 31657 pd 31655
+TPUT 10 disp 28313 ret 31734 service 72 xi 31122 xd 31122 is 31325 a0 31729 pd 31727
+TPUT 11 disp 28672 ret 31806 service 72 xi 31123 xd 31123 is 31343 a0 31801 pd 31799
+TPUT 12 disp 28839 ret 31878 service 72 xi 31124 xd 31124 is 31361 a0 31873 pd 31871
+TPUT 13 disp 31119 ret 31950 service 72 xi 31137 xd 31137 is 31379 a0 31945 pd 31943
+TPUT 14 disp 31216 ret 32022 service 72 xi 31234 xd 31234 is 31397 a0 32017 pd 32015
+TPUT 15 disp 31288 ret 32094 service 72 xi 31306 xd 31306 is 31415 a0 32089 pd 32087
+TPUT 16 disp 31591 ret 32166 service 72 xi 31609 xd 31609 is 31627 a0 32161 pd 32159
+TPUT 17 disp 31663 ret 32414 service 248 xi 31681 xd 31681 is 32107 a0 32409 pd 32407
+TPUT 18 disp 31735 ret 32486 service 72 xi 31753 xd 31753 is 32125 a0 32481 pd 32479
+TPUT 19 disp 31807 ret 32558 service 72 xi 31825 xd 31825 is 32143 a0 32553 pd 32551
+TPUT 20 disp 31879 ret 32658 service 100 xi 31899 xd 32006 is 32161 a0 32627 pd 32655
+TPUT 21 disp 31951 ret 32724 service 66 xi 31971 xd 32078 is 32179 a0 32699 pd 32721
+TPUT 22 disp 32023 ret 32802 service 78 xi 32043 xd 32150 is 32197 a0 32771 pd 32799
+TPUT 23 disp 32095 ret 32868 service 66 xi 32115 xd 32222 is 32242 a0 32843 pd 32865
+TPUT 24 disp 32167 ret 32946 service 78 xi 32187 xd 32294 is 32314 a0 32915 pd 32943
+TPUT 25 disp 32415 ret 33012 service 66 xi 32435 xd 32542 is 32562 a0 32987 pd 33009
+TPUT 26 disp 32487 ret 33099 service 87 xi 32560 xd 32686 is 32706 a0 33068 pd 33096
+lines real SM0 1408 SM1 1408
+summary: 27 SM.MATVEC records (window 8, clusters 4), service sum 5760 cycles, 2318 result words checked
+HGI_SMMV_TPUT PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_smmv_tput.sv:394: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 71us; walltime 543.394 s; speed 129.972 ns/s
+- Verilator: cpu 543.370 s on 1 threads; allocated 87 MB
