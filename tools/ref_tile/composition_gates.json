@@ -27,6 +27,18 @@
     {"name": "mutant", "expect": "fail", "threads": 8, "peak_ram_gb": 48, "fail_regex": "RUN full_dpi_m5_a0_h fail",
      "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su5 --shape full --hier --mut 5"}
    ]
+  },
+  "vm8_cp": {
+   "what": "HBM VM8 channel-plan control plane, all 25 tiles composed (hfd_vm_cp) against the monolithic hfd_vm: transaction hashes seeds 1-3, every output bit at one constant latency, one-depth root ports; mutants XBUS (SE slice write-data bits) and RELAY (xSE tap bits in the E fork) must fail. Mechanics only: production throughput is a separate gate.",
+   "extra_paths": ["physical/hbm_accel_die_views/vm", "physical/hbm_accel_die_views/common", "rtl/common", "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"],
+   "benches": [
+    {"name": "exact", "expect": "pass", "threads": 16, "peak_ram_gb": 32, "needs": ["verilator"], "pass_regex": "VM_CP_BENCH PASS", "min_count_regex": "events=(\\d+)/",
+     "cmd": "bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/cg_vmcp"},
+    {"name": "mutant", "expect": "fail", "threads": 16, "peak_ram_gb": 32, "needs": ["verilator"], "fail_regex": "VM_CP_BENCH FAIL",
+     "cmd": "VM_CP_MUT=XBUS bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/cg_vmcp_xbus"},
+    {"name": "mutant_relay", "expect": "fail", "threads": 16, "peak_ram_gb": 32, "needs": ["verilator"], "fail_regex": "VM_CP_BENCH FAIL",
+     "cmd": "VM_CP_MUT=RELAY bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/cg_vmcp_relay"}
+   ]
   }
  }
 }

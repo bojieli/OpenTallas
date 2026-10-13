@@ -91,7 +91,7 @@ that lacks it (`SUBMIT_LINT BENCH_REQUIRED`) before any compute. The auto `lint`
 1. `job.benches`: the tile's own bit-exact bench and its mutant
    (`{"name", "cmd", "expect": "pass"|"fail", "pass_regex"/"fail_regex", "min_count_regex", "threads", "peak_ram_gb"}`).
 2. `job.benched_by: "<gate>"` for a sub-tile with no golden of its own (HC column/root pieces, SU bank slices): the name
-   of a composition gate in `tools/ref_tile/composition_gates.json` (`s81hc_ng64`, `s81hc_ng256`, `s81su_full`). At
+   of a composition gate in `tools/ref_tile/composition_gates.json` (`s81hc_ng64`, `s81hc_ng256`, `s81su_full`, `vm8_cp`). At
    intake the loop appends the gate's positive bench and mutant to the job as `<gate>_exact` / `<gate>_mutant`; they run
    in the job's own source snapshot, i.e. the composition built from the sub-tile's RTL at the job's source commit, and
    the merge guard requires both results. The registry is read from main (the daemon tree), never from the job's
