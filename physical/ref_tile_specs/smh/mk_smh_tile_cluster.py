@@ -161,12 +161,18 @@ def spec(variant):
         "orfs_vars": {"OT_CG_EXCLUDE": "*u_cgt.u_cg.u_icg", "OT_SPINE_SYM": "1", "OT_SPINE_TREE_PAD": "1", "POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
         "refglob": "*",
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96},
-        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r11" if variant == "eg" else "r12",
-                **({} if variant == "eg" else {"structural_change": (
-                    "station plan rebuilt: strap and reset stations mirror about the PLACED wg centre channel "
-                    "(x 259.2-302.4; reset 271.2, strap 283.0) instead of the die mirror that put 16 reset stations "
-                    "inside tcl h0; every station window asserted inside the core and clear of each child + halo at "
-                    "generation")}),
+        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r13",
+                # r13 (el1013-smh-r11, 10-13): eg r11 / wg r12 died at 4_1_cts with DPL-0033 -- the spine's THROUGH_ICG move
+                # left the ICG enable cone FIRM but resizable; repair_timing sized the cgi input buffer over an abutting
+                # FIRM AND3.  Fixed in physical/common_flow/clock_spine.tcl (main 8e4929331).
+                "structural_change": (
+                    "clock root rebuilt: only the tile ICG and its enable registers are fixed beside the clk pin and "
+                    "they are dont_touch; the ICG enable cone (input buffer of cgi + gates) is movable and legalised "
+                    "(r11/r12: cone cells FIRM yet resizable -> input2099 sized to BUFx12f over FIRM _0956_, DPL-0033 "
+                    "at CTS in both tiles; spine errors if a moved cell is fixed and resizable)"
+                    + ("" if variant == "eg" else "; wg station plan mirrors about the PLACED centre channel "
+                       "(x 259.2-302.4; reset 271.2, strap 283.0), every station window asserted clear of each child "
+                       "+ halo at generation")),
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
