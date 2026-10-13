@@ -430,6 +430,14 @@ proc ot_clock_spine {} {
   set u $::ot_sp_dbu
   set port [ot_sp_env OT_SPINE_PORT {ck[0]}]
   set bt [$blk findBTerm $port]
+  # s81-spwfc 2026-10-13: a [0:0] clock port stays "ck[0]" in a wires-only cluster netlist and becomes "ck" in a
+  # flattened leaf; ref_tile passes the base name.  Try the other spelling before giving up (s81sp_capc_cl gate:
+  # "OT_SPINE skipped: no port ck", plain TritonCTS, insertion 1,507 ps).
+  if {$bt eq "NULL" || $bt eq ""} {
+    if {[regexp {^(.*)\[0\]$} $port -> base]} { set alt $base } else { set alt [format {%s[0]} $port] }
+    set bt2 [$blk findBTerm $alt]
+    if {$bt2 ne "NULL" && $bt2 ne ""} { puts "OT_SPINE port $port not found, using $alt"; set bt $bt2; set port $alt }
+  }
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
   set net0 [$bt getNet]
   # OT_SPINE_THROUGH_ICG=1 (el1011-hbm-smt 2026-10-12): the port clock enters ONE tile clock gate (ICG*, e.g. the SM tile's
@@ -453,6 +461,7 @@ proc ot_clock_spine {} {
       set i [$it getInst]
       if {![[$i getMaster] isBlock] && [lsearch -exact $::ot_sp_icg_move $i] < 0} { lappend ::ot_sp_icg_move $i }
     }
+    set ::ot_sp_icg_port $::ot_sp_icg_move
     # + their local logic (counter / enable cone): cells within 6 net hops over nets of fanout <= 16, capped at 400 cells
     set front $::ot_sp_icg_move
     for {set d 0} {$d < 6 && [llength $front]} {incr d} {
@@ -539,13 +548,22 @@ proc ot_clock_spine {} {
       set ::ot_sp_cw [[$i getMaster] getWidth]; set ::ot_sp_retry 0
       lassign [ot_sp_legal $qx $qy] lx ly
       if {[dict exists $::ot_sp_rowor $ly]} { $i setOrient [dict get $::ot_sp_rowor $ly] }
-      $i setLocation $lx $ly; $i setPlacementStatus FIRM
+      # Only the cells ON the port net (the ICG and its enable registers: their clock pins define the root) stay FIRM, and a
+      # FIRM cell is dont_touch: the resizer sizes a FIRM cell in place and the legaliser cannot move it or a FIRM
+      # neighbour (SM tile cluster eg r11 / wg r12: the cgi input buffer of the moved cone was sized up to BUFx12f by
+      # repair_timing over the abutting FIRM AND3 -> DPL-0033 at 4_1_cts in both tiles).  The enable cone itself is left
+      # movable (PLACED on the free sites found here), so any later sizing is legalised by detailed_placement.
+      $i setLocation $lx $ly
+      if {[lsearch -exact $::ot_sp_icg_port $i] >= 0} { $i setPlacementStatus FIRM; $i setDoNotTouch 1 } else { $i setPlacementStatus PLACED }
+    }
+    foreach i $::ot_sp_icg_move {
+      if {[$i getPlacementStatus] in {FIRM LOCKED} && ![$i isDoNotTouch]} { error "OT_SPINE: moved cell [$i getName] is fixed but resizable" }
     }
     set ::ot_sp_cw $cw0
     lassign [[$::ot_sp_icg findITerm GCLK] getAvgXY] ok gx gy
     if {!$ok} { lassign [$::ot_sp_icg getLocation] gx gy }
     set ::ot_sp_root_xy [list $gx $gy]
-    puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] port-net cells (ICG + enable regs) moved beside the clock pin"
+    puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] cells moved beside the clock pin ([llength $::ot_sp_icg_port] port-net cells FIRM + dont_touch, enable cone movable)"
   }
   # sinks -> bins -> leaves
   set bins [dict create]; set ns 0

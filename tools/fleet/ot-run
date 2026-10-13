@@ -2,14 +2,26 @@
 """ot-run: run a heavy command on the fleet host with the most free memory (admission is by memory only).
 
   ot-run --mem GB [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] -- <command...>
+  ot-run --selftest [HOST]   proves on HOST (default: every host) that a command runs and returns ITS exit status, and
+                             that a request that cannot be admitted fails non-zero with NOT RUN (never a silent 0)
+  ot-run --status          one line: per host, GB free after reservations and headroom / waiters (count:GB queued)
 
 Asks every host for `ot-heavy-reconcile --free` (MemAvailable - growth still reserved by running ot-heavy jobs -
 headroom - memory already requested by waiters), drops hosts with less than --disk GB (default 20) free under --dir
 (or where --dir does not exist), picks the largest, and runs  ssh <host> "cd DIR && ot-heavy --mem GB -- <command>".
 It syncs nothing: the inputs must already be on the host (name them with --dir so only hosts that have them qualify).
 --pick prints the chosen host and the table and runs nothing.  stdin/stdout/exit status are the remote command's.
+--max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
+
+Exit status (v2, 2026-10-13, after a bench was reported "EXIT 0" although nothing had run): ot-run returns the command's
+status ONLY when the remote side reported both the start (ot-heavy "admitted ... OT_RUN_START") and the exit of the
+command.  Anything else -- ssh dropped, waiter killed, cd failed, no memory within --max-wait -- is a non-zero status and
+a last stderr line "ot-run: NOT RUN ..." / "ot-run: NOT COMPLETED ...".  The last stderr line of a real run is
+"ot-run: RAN on <host>: exit <n>".  Read that line when the call sits in a pipe (`| tail` hides the status).
+A killed ot-run (timeout, Ctrl-C) cancels its waiter on the host, so the command cannot start later with nobody
+listening; a command that already started is left running and the message says so.
 """
-import concurrent.futures as cf, json, os, shlex, subprocess, sys
+import concurrent.futures as cf, json, os, shlex, signal, subprocess, sys, time
 
 HOSTS = ["ot-epyc1tb", "ot-epyc4", "ot-pve1", "ot-agidock128"]
 
@@ -25,9 +37,105 @@ def probe(host, d):
         return host, {"error": str(e)[:80]}
 
 
+def status(hosts):
+    """one line an agent can read before choosing where to launch: memory nobody has claimed, per host"""
+    with cf.ThreadPoolExecutor(len(hosts)) as ex:
+        res = dict(ex.map(lambda h: probe(h, None), hosts))
+    out = []
+    for h in hosts:
+        r = res[h]
+        if not r or r.get("error"):
+            out.append(f"{h} unreachable")
+            continue
+        free = r["avail_gb"] - r["growth_gb"] - r["headroom_gb"]      # before waiters; free_gb is after them
+        out.append(f"{h} free {free} GB" + (f" (waiters {r['waiting']}:{r['waiting_gb']} GB)" if r["waiting"] else "")
+                   + f" run {r['running']}")
+    best = max((h for h in hosts if res[h] and not res[h].get("error")), key=lambda h: res[h]["free_gb"], default=None)
+    print("ot-run status: " + " | ".join(out) + (f" | most free after waiters: {best} {res[best]['free_gb']} GB" if best else ""))
+
+
+def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False):
+    """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
+    tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
+    say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
+    inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
+        + " -- " + " ".join(shlex.quote(x) for x in cmd)
+    remote = (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
+        + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
+    p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
+    state = dict(started=False, rc=None, nocd=False, unit="?")
+
+    def stop(sig, _frame):
+        if state["started"]:
+            say(f"ot-run: interrupted (signal {sig}); the command is STILL RUNNING on {host} (unit {state['unit']}): NOT COMPLETED")
+        else:      # cancel the waiter, or it would start the command later with nobody listening
+            subprocess.run(["ssh", "-o", "ControlPath=none", "-o", "ConnectTimeout=10", "-o", "BatchMode=yes", host,
+                            f"pkill -TERM -f -- '[-]-tag {tag} '"], capture_output=True, timeout=40)
+            say(f"ot-run: interrupted (signal {sig}) while waiting for memory on {host}; waiter cancelled: NOT RUN")
+        p.kill()
+        os._exit(128 + sig)
+
+    for sg in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+        signal.signal(sg, stop)
+    for raw in p.stderr:
+        ln = raw.decode(errors="replace")
+        if tag in ln and "OT_RUN_EXIT" in ln:
+            try:
+                state["rc"] = int(ln.split()[-1])
+            except ValueError:
+                pass
+            continue
+        if "OT_RUN_NOCD" in ln and tag in ln:
+            state["nocd"] = True
+            continue
+        if "OT_RUN_START" in ln and tag in ln:
+            state["started"] = True
+            state["unit"] = next((w for w in ln.split() if w.startswith("oth-")), "?")
+            ln = ln.split(" OT_RUN_START")[0] + "\n"
+        if not quiet:
+            sys.stderr.write(ln)
+            sys.stderr.flush()
+    ssh_rc = p.wait()
+    for sg in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+        signal.signal(sg, signal.SIG_DFL)
+    if state["started"] and state["rc"] is not None:
+        say(f"ot-run: RAN on {host} (unit {state['unit']}): exit {state['rc']}")
+        return state["rc"], True
+    if state["started"]:
+        say(f"ot-run: NOT COMPLETED: the command started on {host} (unit {state['unit']}) but the connection ended (ssh status "
+            f"{ssh_rc}) before it reported an exit status; it may still be running there")
+        return (ssh_rc or 255), False
+    why = f"cannot cd to {d}" if state["nocd"] else f"ot-heavy exit {state['rc']}" if state["rc"] is not None \
+        else f"ssh ended with status {ssh_rc} before the command was admitted"
+    say(f"ot-run: NOT RUN on {host}: {why}")
+    return (state["rc"] or ssh_rc or 255), False
+
+
+def selftest(hosts):
+    """a command runs and its status comes back; a request that cannot be admitted is a loud non-zero NOT RUN"""
+    bad = 0
+    for h in hosts:
+        m = f"/tmp/ot-run-selftest.{os.getpid()}"
+        rc1, ran1 = run(h, 1, ["bash", "-c", f"echo ran > {m}.a; exit 7"], quiet=True)
+        rc2, ran2 = run(h, 1, ["bash", "-c", f"echo ran > {m}.b"], max_wait=1, env="REAL_FLOOR_GB=99999999 ", quiet=True)
+        rc3, ran3 = run(h, 1, ["true"], d="/nonexistent-ot-run-selftest", quiet=True)
+        ls = subprocess.run(["ssh", "-o", "ControlPath=none", h, f"ls {m}.a {m}.b 2>/dev/null; rm -f {m}.a {m}.b"],
+                            capture_output=True, text=True, timeout=60).stdout.split()
+        ok = (rc1, ran1) == (7, True) and ls == [f"{m}.a"] and (rc2, ran2) == (75, False) and (rc3, ran3) == (96, False)
+        bad += not ok
+        print(f"ot-run selftest {h}: {'PASS' if ok else 'FAIL'}  run->status {rc1} ran={ran1} (want 7 True); "
+              f"no-memory->status {rc2} ran={ran2} (want 75 False); bad dir->status {rc3} ran={ran3} (want 96 False); "
+              f"markers {[x.rsplit('.', 1)[-1] for x in ls]} (want ['a'])")
+    return 1 if bad else 0
+
+
 def main():
     a = sys.argv[1:]
-    mem, d, disk, hosts, pick = None, None, 20, HOSTS, False
+    if a[:1] == ["--selftest"]:
+        sys.exit(selftest(a[1].split(",") if len(a) > 1 else HOSTS))
+    if a[:1] == ["--status"]:
+        return status(HOSTS)
+    mem, d, disk, hosts, pick, max_wait = None, None, 20, HOSTS, False, None
     while a and a[0] != "--":
         o = a.pop(0)
         if o == "--mem": mem = int(a.pop(0))
@@ -35,6 +143,7 @@ def main():
         elif o == "--disk": disk = int(a.pop(0))
         elif o == "--hosts": hosts = a.pop(0).split(",")
         elif o == "--pick": pick = True
+        elif o == "--max-wait": max_wait = int(a.pop(0))
         else: sys.exit(__doc__)
     cmd = a[1:]
     if mem is None or not (cmd or pick):
@@ -58,8 +167,8 @@ def main():
     if pick:
         print(best)
         return
-    remote = (f"cd {shlex.quote(d)} && " if d else "") + f"ot-heavy --mem {mem} -- " + " ".join(shlex.quote(x) for x in cmd)
-    os.execvp("ssh", ["ssh", best, remote])
+    rc, ran = run(best, mem, cmd, d, max_wait)
+    sys.exit(rc if ran else (rc or 255))
 
 
 if __name__ == "__main__":

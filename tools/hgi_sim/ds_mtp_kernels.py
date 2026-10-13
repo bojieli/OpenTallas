@@ -361,6 +361,107 @@ GSTR, GPOS = 81952, 16
 MHB = 0x280000000                    # main hidden parts (layers 37..39 inputs), ring of 16 positions x 61,440 B
 MEMB = 0x290000000                   # Markov-head embedding rows (BF16 x 256) by token: MEMB + token * 512
 WROW = 2048
+VOCAB, EMB_ROW, MEMB_ROW = 129280, 10240, 512
+
+
+def full_table(raw, row_bytes, vocab=VOCAB):
+    """A whole per-token HBM table (vocab rows of row_bytes) as ONE read-only byte region: no per-token subset, so
+    every token the program can compute has its row; refuses a checkpoint tensor of any other size."""
+    t = np.asarray(raw).view(np.uint8).reshape(-1)
+    if t.size != vocab * row_bytes:
+        raise ValueError(f"table holds {t.size} B, not {vocab} rows x {row_bytes} B")
+    if t.flags.writeable:
+        t = t.view()
+        t.flags.writeable = False
+    return t
+
+
+# ---- the HC aperture row plan of the MTP program (slot 0 = the attn mix row, slot 1 = the ffn mix row)
+# A body's attn HC_MIX_ROWS loads its own ffn row under itself (slot 1: written and read inside one body, or by all dsa
+# of a stage before all its dsb), so only slot 0 crosses bodies.  Its row must come from a body that precedes the
+# reader in EVERY launch order v41_dspark.expand / ctl_loop can produce:
+#   enter: kind -> (layer, which) the body loads before its END.  embed precedes every L0 body (prefill, every verify
+#          column, the first token); demb precedes every dsa of stage 0.
+#   next:  layer -> the layer whose attn row its FFN mix record prefetches (None = no cross-body prefetch).  The dsb
+#          bodies of stage st run after ALL dsa of st and before all dsa of st + 1, so they prefetch mtp.(st + 1);
+#          L0 and stage 2 have no fixed successor (L0: its next column, the head or a draft; stage 2: a verify).
+# HC_PLAN_BACKBONE_CHAIN is the single-column backbone rule ((L + 1) % 40, no entering load) the MTP program was
+# first lowered with; it is kept ONLY as the checker's negative case (the reader trace and the simulator fault on it).
+HC_PLAN = dict(name="mtp", enter={2: (0, "attn"), 6: (40, "attn")}, next={0: None, 40: 41, 41: 42, 42: None})
+HC_PLAN_BACKBONE_CHAIN = dict(name="backbone_chain", enter={}, next=None)
+
+
+def kernel_lp(k, pos, lp):
+    """L' after a launch of kind k at pos (G26: a swapin's position field names the layer of the column's bodies)"""
+    return (pos if pos < 40 else (pos - 40 if pos != L_NONE else 0)) if k == 0 else lp
+
+
+def hc_reader_trace(body, launches, ranks=None):
+    """STATIC reader trace of the HC aperture over a launch list [(kind, token, pos)] in program order: for every
+    aperture HC_MIX_ROWS, the row it needs (rec.hc_row) against the row the LAST aperture LOAD before it left in its
+    slot, and that LOAD's launch.  Returns (rows, bad, dead): rows = one dict a reader; bad = the readers whose slot
+    was never loaded or holds another row; dead = loads overwritten or left at the end without a reader."""
+    from hgi_sim import machine as MC
+    from hgi_sim import ds_native as DN
+    rows, bad, dead = [], [], []
+    for rank in (sorted(body) if ranks is None else ranks):
+        held, lp = {}, 0
+        for i, (kind, tok, pos) in enumerate(launches):
+            k = KINDS.index(kind)
+            lp = kernel_lp(k, pos, lp)
+            key = (k, lp if k in PER_LAYER else 0)
+            for r in body[rank][key]:
+                if r.unit == "DMA" and r.op == "LOAD" and r.desc["O"].space == "VM" and r.desc["O"].base >= MC.VM_WORDS:
+                    slot = (r.desc["O"].base - MC.VM_WORDS) // DN.HC_SLOT
+                    old = held.get(slot)
+                    if old is not None and not old["readers"] and old["row"] != tuple(r.hc_row):
+                        dead.append(dict(old, rank=rank, why="overwritten unread", by=i))
+                    # (the same row again = a refresh by the next column's copy of the body: not a dead load)
+                    held[slot] = dict(row=tuple(r.hc_row), launch=i, kind=kind, lp=key[1], readers=0)
+                elif r.unit == "HC" and r.op == "HC_MIX_ROWS" and r.desc["B"].space == "VM":
+                    slot = (r.desc["B"].base - MC.VM_WORDS) // DN.HC_SLOT
+                    h = held.get(slot)
+                    row = dict(rank=rank, launch=i, kind=kind, lp=key[1], token=tok, pos=pos, slot=slot,
+                               needs=tuple(r.hc_row), holds=h and h["row"], loaded_by=h and (h["launch"], h["kind"], h["lp"]),
+                               ok=bool(h and h["row"] == tuple(r.hc_row)))
+                    if h:
+                        h["readers"] += 1
+                    rows.append(row)
+                    if not row["ok"]:
+                        bad.append(row)
+        dead += [dict(h, rank=rank, why="never read") for h in held.values() if not h["readers"]]
+    return rows, bad, dead
+
+
+def mtp_launches(prompt_len=1, steps=1, gamma=None, accept=0, nl=40):
+    """The launch list of a DSpark job as the shipped control loop issues it (v41_dspark.ctl_loop over expand): the
+    prefill of prompt_len positions, then `steps` draft / verify steps accepting `accept` drafts each."""
+    sys.path.insert(0, str(TOOLS / "gpu_sys"))
+    import v41_dspark as V41D
+    from types import SimpleNamespace
+    out = []
+    gamma = V41D.GAMMA if gamma is None else gamma
+
+    class Eng:
+        prog = SimpleNamespace(m=SimpleNamespace(L=nl))
+
+        def run(self, cmd, want_logits=False):
+            ls = V41D.expand(cmd)
+            out.extend(ls)
+            if cmd["op"] == "MARKOV":                   # draft i = 1000 + i; the verify agrees with the first `accept`
+                return [1000 + cmd["idx"]], [None]
+            n = sum(1 for x in ls if x[0] == "head")
+            return [1000 + c if c < accept else 7 for c in range(n)], [None] * n
+    noise, V41D.NOISE = V41D.NOISE, (V41D.NOISE if V41D.NOISE is not None else 3)
+    try:
+        ngen = 1 + steps * (1 + accept)
+        import contextlib
+        import io
+        with contextlib.redirect_stdout(io.StringIO()):
+            V41D.ctl_loop(Eng(), [1] * prompt_len, ngen, gamma, maxpos=1 << 20)
+    finally:
+        V41D.NOISE = noise
+    return out
 
 
 def wtab_row(p):
@@ -374,10 +475,11 @@ class Kernels:
     LABELLED REPLAY bodies (load the golden h / pre after the layer; layers 37..39 first store their input's main hidden
     part with real SU records)."""
 
-    def __init__(self, m, spec=False, b2_swap=None):
+    def __init__(self, m, spec=False, b2_swap=None, hc_plan=None):
         """b2_swap (opt-in, default None = the legacy swap bodies, unchanged): callable rank -> (h_allocations,
         pre_allocation) read from the live B2 record-liveness allocator (hgi_b2.mtp_swap.allocations_from_placement);
         the swap bodies (0, 0) / (1, 0) are then swap_b2's native dispatch groups."""
+        self.hc_plan = HC_PLAN if hc_plan is None else hc_plan
         from hgi_sim import ds_native as DN
         from hgi_sim.records import MDesc, Rec
         from hgi_sim.qwen_compiler import Builder, sut
@@ -390,6 +492,7 @@ class Kernels:
         bind_vm_tail()
         assert self.lay.end <= ZT and QV + 16 <= DN.MC.VM_WORDS
         self.low = DN.Lower(m, 1, self.lay, self.man)
+        self.low.hc_next_attn = self.hc_next()
         self.ops = {}
         self.tabs = {}                                  # slot -> [per-rank table buffer]
         self.st0 = SimpleNamespace(win={L: np.zeros((m.window - 1, m.hd), F) for L in (0, 40, 41, 42)}, slots={})
@@ -400,8 +503,8 @@ class Kernels:
                     self.body[r][(k, Lp)] = [self.end()]
         for r in range(self.TP):
             self.body[r][(0, 0)], self.body[r][(1, 0)] = self.swap_bodies(r, b2_swap)
-            self.body[r][(2, 0)] = self.embed()
-            self.body[r][(6, 0)] = self.embed()           # demb = the embedding kernel (token y or the noise id)
+            self.body[r][(2, 0)] = self.embed(r, 2)
+            self.body[r][(6, 0)] = self.embed(r, 6)       # demb = the embedding kernel (token y or the noise id)
             if not spec:
                 self.body[r][(4, 0)] = [self.end(HT, POS=True)]
         self.tables_for(0)
@@ -425,19 +528,35 @@ class Kernels:
                 self.body[r][(10, 0)] = self.markov(r)
 
     # ---- tables (one region per layer slot, relocated)
+    def table_region(self, L):
+        """the HBM base of slot L's table region (L: 0, 40..42 or "seed")"""
+        return self.DN.TBASE + TSLOT[L] * TSTR
+
     def tables_for(self, L):
+        """Build slot L's tables FOR THEIR OWN REGION: the bytes and their layouts (ds_native.set_table_layouts: which
+        gains are GPK) are recorded at table_region(L), the address every reader -- lowering check, simulator unit,
+        export -- resolves them by.  The seed set's mtp.2.norm gain is the B of the DHEAD FUSED.HC_PRE_NORM (d = 5,120:
+        the lane-local engine on an HLL target), so it is stored by the same rule as every other such gain
+        (ds_native.gain_image); the other seed gains are read by SU records and stay linear."""
         DN = self.DN
+        assert TSTR == DN.TABLE_SPAN
+        region = self.table_region(L)
+        self.low.table_region = region
         if L == "seed":
             items = [("mtp.0.main_norm.weight", self.m.w["mtp.0.main_norm.weight"])]
             items += [(f"mtp.{st}.attn.kv_norm.weight", self.m.lw(40 + st, "attn.kv_norm.weight")) for st in range(3)]
             items += [("mtp.2.norm.weight", self.m.lw(42, "norm.weight")), ("ROPE", np.zeros(64, F))]
-            off, blobs = 0, []
+            off, blobs, layouts = 0, [], {}
             for name, arr in items:
                 a = np.asarray(arr, dtype=F).reshape(-1)
                 off = -(-off // 32) * 32
                 fmt = "BF16" if name.endswith("norm.weight") else "FP32"     # (ds_native.build_tables' rule)
                 if fmt == "BF16":
                     assert np.array_equal(DN.MC.A.to_bf16(a).view(np.uint32), a.view(np.uint32)), name
+                    if name == "mtp.2.norm.weight":
+                        a, lay_ = DN.gain_image(name, a)
+                        if lay_:
+                            layouts[off] = lay_
                     raw = DN.MC.encode_fmt(a, "BF16")
                 else:
                     raw = a.view(np.uint8)
@@ -447,10 +566,11 @@ class Kernels:
             buf = np.zeros(-(-off // 32) * 32, dtype=np.uint8)
             for o, raw in blobs:
                 buf[o:o + raw.size] = raw
+            DN.set_table_layouts(region, layouts)
             self.tabs["seed"] = [buf] * self.TP
             self.dnorm_off = DN.TABLE_OFF["mtp.2.norm.weight"]
             return
-        self.tabs[L] = [DN.build_tables(self.m, self.st0, L, 0, r) for r in range(self.TP)]
+        self.tabs[L] = [DN.build_tables(self.m, self.st0, L, 0, r, region=region) for r in range(self.TP)]
 
     def relocate(self, recs, slot):
         """table bases -> slot's region; the RoPE row -> ROPEB by POS"""
@@ -531,8 +651,25 @@ class Kernels:
         h, pre = legacy[:2]
         return [lower_h(h, h_allocations), lower_pre(pre, 0, pre_allocation), *legacy[2:]]
 
-    def embed(self):
+    def hc_next(self):
+        """Lower.hc_next_attn of the plan (None = the backbone chain rule)"""
+        nxt = self.hc_plan["next"]
+        return None if nxt is None else (lambda L: nxt[L])
+
+    def hc_enter(self, b, kind, rank):
+        """the plan's entering HC row of a kernel kind: the row its successor's attn HC_MIX_ROWS reads from aperture
+        slot 0, loaded under this body (the reader FENCEs the slot; END drains the DMA).  A rank that owns no mix row
+        carries a NOP so every die's image keeps one structure."""
+        if not self.DN.HC_DB[0] or kind not in self.hc_plan["enter"]:
+            return
+        L, w = self.hc_plan["enter"][kind]
+        ld = self.low.hc_row_load(L, w, rank)
+        b.add(ld or self.Rec("CTL", "NOP", tag=f"hc_{w}.weight_row_prefetch (layer {L})", family="hc_mixes"), [],
+              [f"HCW{0 if w == 'attn' else 1}"] if ld else [])
+
+    def embed(self, rank=0, kind=2):
         b = self.Builder(None)
+        self.hc_enter(b, kind, rank)
         for j in range(4):
             b.add(self.Rec("DMA", "LOAD", desc=dict(A=self.H(EMBB, 5120, fmt="BF16", dyn_sel=3, dyn_mul=10240),
                                                      O=self.V("h", 5120, off=5120 * j)),
@@ -654,8 +791,7 @@ class Kernels:
         for recs in rank_recs:
             a_ = self.Builder(None)
             self.qvload(a_)
-            pa = [r for r in recs if r.src and r.src[1] < split]
-            pb = [r for r in recs if r.src and r.src[1] >= split]
+            pa, pb = self.split_stage(recs, split)
             res_copy = None
             for r in pa:
                 if r.tag == "attn.res_copy":
@@ -703,6 +839,11 @@ class Kernels:
             B_.append(out + [self.end()])
         return A_, B_
 
+    @staticmethod
+    def split_stage(recs, split):
+        """a stage's records at the attention op: (dsa part, dsb part)"""
+        return ([r for r in recs if r.src and r.src[1] < split], [r for r in recs if r.src and r.src[1] >= split])
+
     def seed(self):
         """SEED (kind 5, token = column, pos p): main_x = main_norm(main_proj(MH of p)); each stage's DSpark window row
         (kv_norm(wkv(main_x)), RoPE at p, FP8) into DSKX ring slot p mod 128."""
@@ -739,14 +880,21 @@ class Kernels:
             out.append(self.relocate(b.recs, TSLOT["seed"]) + [self.fence(), self.end()])
         return out
 
+    def dhead_norm(self):
+        """DHEAD's FUSED.HC_PRE_NORM (h, PRE, the seed region's mtp.2.norm gain -> x), under the same refusal as every
+        lowered HC_PRE_NORM: bank phases (rule A) and a GPK gain image at B (rule B)."""
+        DN = self.DN
+        dn = self.Rec("FUSED", "HC_PRE_NORM", imm_a=f32u(self.m.eps), desc=dict(
+            A=self.V("h", 20480), B=self.H(self.table_region("seed") + self.dnorm_off, 5120, fmt="BF16"),
+            C=self.V("PRE", 4), O=self.V("x", 5120, fmt="BF16")), tag="dhead.norm", family="mtp")
+        DN.assert_fused_fast_path(dn, gain_layout=DN.table_layout_at(dn.desc["B"].base))
+        return dn
+
     def dhead(self, rank):
         """DHEAD (kind 9, token = block row i): rmsnorm(hc_pre(h), mtp.2.norm) -> the LM head (this die's rows) ->
         DLOG row i."""
-        DN, m = self.DN, self.m
         b = self.Builder(None)
-        b.add(self.Rec("FUSED", "HC_PRE_NORM", imm_a=f32u(m.eps), desc=dict(
-            A=self.V("h", 20480), B=self.H(DN.TBASE + TSLOT["seed"] * TSTR + self.dnorm_off, 5120, fmt="BF16"), C=self.V("PRE", 4),
-            O=self.V("x", 5120, fmt="BF16")), tag="dhead.norm", family="mtp"), ["h", "PRE"], ["x"])
+        b.add(self.dhead_norm(), ["h", "PRE"], ["x"])
         r0, r1 = self.mv(b, rank, "head.weight", "head", 5120, "bf16", self.V("x", 5120), "logits", "FP32",
                          local=True, tag="dhead.lm_head")
         n8 = -(-(r1 - r0) // 8) * 8                  # whole sectors (logits is 1,352 words: the pad stays in the row)
@@ -839,7 +987,7 @@ class Engine:
         DN = self.K.DN
         k = KINDS.index(kind)
         if k == 0:
-            self.Lp = pos if pos < 40 else (pos - 40 if pos != L_NONE else 0)
+            self.Lp = kernel_lp(k, pos, self.Lp)
         Lp = self.Lp if k in PER_LAYER else 0
         progs = [self.K.body[d.rank][(k, Lp)] for d in self.M.dies]
         t0 = time.time()
@@ -876,6 +1024,14 @@ def sim(a):
     else golden.json: the forced drafter (draft kinds END stubs, head stub)."""
     npy_check()
     sys.path.insert(0, str(TOOLS / "gpu_sys"))
+    if a.export:
+        # The die-bench vehicle's FUSED slot (hgi_e2e_slots.sv hgi_e2e_fused_slot) is ot_hgi_fused_record UNIT 1: the
+        # micro-op lowering, which reads the d = 5,120 gain LINEAR -- so the exported image is built by the rule of
+        # THAT reader (tools/hgi_e2e/export.py export_ds does the same), unless the caller says the harness builds
+        # the slot with the lane-local engine (HGI_FUSED_HLL=1).  A run without --export prices and checks the die
+        # target (HLL 1: GPK gains, bank phase 0).  ds_native reads the variable once, at import.
+        os.environ.setdefault("HGI_FUSED_HLL", "0")
+        assert "hgi_sim.ds_native" not in sys.modules, "ds_native imported before the export target was chosen"
     import v41_dspark as V41D
     import hdc_golden_v41 as V
     import rtl_v41_fullshape_layer_campaign as LC
@@ -899,19 +1055,35 @@ def sim(a):
     m, _ = LC.build_model(ck, engram=False)
     V41D.NOISE = m.noise_id
     TP = DN.TP
-    K = Kernels(m, spec=spec)
+    if getattr(a, "hc_hbm", False):
+        DN.HC_DB[0] = False
+    plan = {p_["name"]: p_ for p_ in (HC_PLAN, HC_PLAN_BACKBONE_CHAIN)}[getattr(a, "hc_plan", "mtp")]
+    K = Kernels(m, spec=spec, hc_plan=plan)
+    if spec and DN.HC_DB[0]:
+        # the HC aperture reader trace of this job's launch order, before anything runs (the simulator's provenance
+        # check faults on the first bad reader; this is the whole table)
+        tr, bad, dead = hc_reader_trace(K.body, mtp_launches(len(gd["prompt"]), 1, gd["gamma"], gd["accepted"]))
+        (out / "hc_reader_trace.json").write_text(json.dumps(dict(
+            plan=plan["name"], readers=len(tr), bad=len(bad), dead_loads=len(dead),
+            rank3=[x for x in tr if x["rank"] == 3], bad_first=bad[:8], dead_first=dead[:8]), indent=0, default=str) + "\n")
+        print(f"HC aperture reader trace ({plan['name']}): {len(tr)} readers, {len(bad)} bad, {len(dead)} dead loads",
+              flush=True)
+        if getattr(a, "hc_trace_only", False):
+            return 1 if bad else 0
     npos = 1 + len(gd["verify_tokens"])
     rope = np.zeros((GPOS, 64), F)
     for p in range(GPOS):
         cs, sn = V.rope_cs(m.freqs_plain, p)
         rope[p] = np.concatenate([cs, sn])
-    toks = sorted(set([gd["p0"]] + gd["verify_tokens"] + [m.noise_id] + list(gd.get("drafts_block", []))))
-    emb_raw = np.asarray(ck.raw("embed.weight")[0]).reshape(129280, 10240)
-    raw = {t: emb_raw[t].copy() for t in toks}
+    # The image holds the WHOLE embedding tables, as the die's HBM does (one read-only region each, shared by the 96
+    # dies): the token of an embed / Markov-embed LOAD is computed by the program (dyn_sel TOKEN), so an image that
+    # held only the golden's tokens turned every wrong token into "HBM access outside every region" before the draft /
+    # golden comparison could report it (regen r5: Markov row of token 2,616, a draft the unfixed HC rows produced).
+    emb_tab = full_table(ck.raw("embed.weight")[0], EMB_ROW)
+    assert EMBB + emb_tab.size <= MTB, (emb_tab.size, MTB)
     shared = {}
     if spec:
-        mraw = np.asarray(ck.raw("mtp.2.markov_head.embed.weight")[0]).reshape(129280, 512)
-        shared["memb"] = {t: mraw[t].copy() for t in toks}
+        shared["memb"] = full_table(ck.raw("mtp.2.markov_head.embed.weight")[0], MEMB_ROW)
         gold = np.zeros((40 * GPOS, GSTR // 4), F)
         for p in range(npos):
             for L in range(1, 40):
@@ -930,8 +1102,7 @@ def sim(a):
         d.hbm.add(COLB, np.zeros(NCOLSLOT * CSTR, np.uint8), "COLSLOTS")
         for st_ in (1, 2, 3):        # the STRIPE4 h rows of stacks 1..3 (same stack-local window as stack 0)
             d.hbm.add((st_ << 35) | COLB, np.zeros(NCOLSLOT * CSTR, np.uint8), f"COLSLOTS{st_}")
-        for t in toks:
-            d.hbm.add(EMBB + t * 10240, raw[t].copy(), f"EMB{t}")
+        d.hbm.add(EMBB, emb_tab, "EMBED_TABLE")
         if spec:
             for st in range(3):
                 d.hbm.add(DSKX + st * (1 << 20), np.zeros(136 * WROW, np.uint8), f"DSKX{st}")
@@ -941,8 +1112,7 @@ def sim(a):
             d.hbm.add(WTAB, shared["wtab"], "WTAB")
             d.hbm.add(GOLDB, shared["gold"], "GOLD_REPLAY")
             d.hbm.add(MHB, np.zeros(16 * 61440, np.uint8), "MHRING")
-            for t, row in shared["memb"].items():
-                d.hbm.add(MEMB + t * 512, row.copy(), f"MEMB{t}")
+            d.hbm.add(MEMB, shared["memb"], "MARKOV_EMBED_TABLE")
         d.vm[ZT] = 0
         if not spec:
             assert npos <= HT_N, npos
@@ -976,6 +1146,16 @@ def sim(a):
             stage_out[(K_cur["L"] - 40, c - PMAX)] = [col_read(d, c) for d in dies]
         if e["kind"] == "swapin":
             K_cur["L"] = e["pos"]
+            # swap round trip: the working h after a swap-in is the slot's h in the HBM image (rank 0)
+            hv = K.V("h", HSTRIPE * SW)
+            got_h = dies[0].vm[hv.base:hv.base + HSTRIPE * SW]
+            nbad = int(np.count_nonzero(got_h != col_read(dies[0], e["token"])[:HSTRIPE * SW]))
+            swapchk["n"] += 1
+            if nbad:
+                swapchk["bad"] += 1
+                if len(swapchk["first"]) < 8:
+                    swapchk["first"].append(dict(launch=len(eng.launches) - 1, slot=e["token"], Lp=e["pos"],
+                                                 words_differing=nbad))
         if spec and e["kind"] in ("dsa", "dsb") and not K_cur.get("dbg_" + e["kind"] + str(e["token"])) and K_cur["L"] == 40:
             K_cur["dbg_" + e["kind"] + str(e["token"])] = 1
             d0 = dies[0]
@@ -986,6 +1166,7 @@ def sim(a):
         if e["kind"] in ("dsa", "dsb"):
             K_cur["phase_b"] = e["kind"] == "dsb"
     K_cur = {"L": -1, "phase_b": False}
+    swapchk = dict(n=0, bad=0, first=[])
     dbg = {}
     eng.on_launch = on_launch
     plen = len(gd["prompt"])
@@ -998,11 +1179,50 @@ def sim(a):
             return list(forced_d)
     eng.prog = SimpleNamespace(m=SimpleNamespace(L=m.L))
     ngen = len(gd["emitted"])
-    tok, _, steps = V41D.ctl_loop(eng, gd["prompt"], ngen, gd["gamma"], forced, maxpos=1 << 20)
+    # A step whose drafts / targets differ from the golden's ends the job there (FAIL): the golden holds rows only for
+    # its own path, and a later step would overwrite the position-indexed rows (DSK, stage rows, columns) the first
+    # mismatch has to be named from.
+    watch = dict(heads=[], markov=[], vheads=0)
+    run0 = eng.run
+
+    class StepDiverged(Exception):
+        pass
+
+    def run_watch(cmd, want=False):
+        res, lgs = run0(cmd, want)
+        if cmd["op"] == "VHEAD":
+            watch["vheads"] += 1
+            watch["heads"].append(list(res))
+        elif cmd["op"] == "MARKOV":
+            watch["markov"] += res
+        elif spec and cmd["op"] == "SEED" and watch["vheads"] == plen + 1:
+            d_, t_ = watch["markov"], watch["heads"][-1]
+            if d_ != gd["drafts"] or t_ != gd["targets"] or watch["heads"][0] != [gd["positions"][plen - 1]["argmax"]]:
+                raise StepDiverged
+        return res, lgs
+    eng.run = run_watch
+    diverged = None
+    try:
+        tok, _, steps = V41D.ctl_loop(eng, gd["prompt"], ngen, gd["gamma"], forced, maxpos=1 << 20)
+    except StepDiverged:
+        d_, t_ = watch["markov"], watch["heads"][-1]
+        a_ = 0
+        while a_ < len(d_) and d_[a_] == t_[a_]:
+            a_ += 1
+        steps = [dict(anchor=plen - 1, drafts=d_, targets=t_, accepted=a_)]
+        tok = (watch["heads"][0] + t_[:a_ + 1])[:ngen]
+        diverged = dict(prefill_y=watch["heads"][0], golden_y=gd["positions"][plen - 1]["argmax"], drafts=d_,
+                        golden_drafts=gd["drafts"], targets=t_, golden_targets=gd["targets"])
+        print(f"STEP 1 DIVERGED from the golden (job stopped after its verify): {diverged}", flush=True)
     # (A) every column's L0 output (slot after swapout) == the golden's L0 output at that position, every rank
     colres = []
     for p in sorted(col_out):
-        hh, pp = h0(p)
+        try:
+            hh, pp = h0(p)
+        except KeyError:                  # a position the golden never ran (only reachable on a diverged path)
+            colres.append(dict(pos=p, kind="prefill" if p < plen else "verify", bit_exact_all_ranks=False,
+                               no_golden_row=True))
+            continue
         want = np.concatenate([hh.reshape(-1).view(np.uint32), pp.view(np.uint32)])
         got = col_out[p]
         ok = all(np.array_equal(g_[:20484], want) for g_ in got)
@@ -1081,20 +1301,54 @@ def sim(a):
         per_launch.append(dict(e, s2_cycles=round(sch["total_cycles"], 1), s2_start=round(t_launch, 1)))
         t_launch += sch["total_cycles"]
     l0 = [x for x in per_launch if x["kind"] == "layer" and x["Lp"] == 0]
-    ok_all = bool(accept_ok and all(c["bit_exact_all_ranks"] for c in colres) and (not spec or draft_checks["all_ok"]))
+    # rank 0 owns no HC mix row (its HC_MIX_ROWS and row LOADs are NOPs): the same pricing of a row-owning die's
+    # bodies (rank 3 = mix row 0), per kernel and per kind, so the HC row loads are in a reported number
+    hc_rank, own, own_kern = 3, {k_: 0.0 for k_ in KINDS}, {}
+    for e in eng.launches:
+        body = K.body[hc_rank][(e["k"], e["Lp"])]
+        key = (hc_rank, e["k"], e["Lp"], e["pos"], e["token"])
+        if key not in cache:
+            for r in body:
+                if not hasattr(r, "src_key0"):
+                    sr = getattr(r, "src", None)
+                    r.src_key0 = None if not sr or not isinstance(sr, tuple) else f"{sr[0]}:{sr[1]}"
+                r.src_key = r.src_key0 if r.src_key0 in K.ops else None
+                r.src_extra = []
+                r.layer = e["Lp"]
+            nc = NativeCost(K.ops, body)
+            cache[key] = T.schedule(body, e["pos"], "S2", token=e["token"], cost_fn=lambda r, dyn, L, nc=nc: cf(r, dyn, L, nc))
+        own[e["kind"]] += cache[key]["total_cycles"]
+        own_kern.setdefault(f"{e['kind']}{'' if e['Lp'] == 0 else e['Lp']}", round(cache[key]["total_cycles"], 1))
+    r0_kern = {}
+    for x in per_launch:
+        r0_kern.setdefault(f"{x['kind']}{'' if x['Lp'] == 0 else x['Lp']}", x["s2_cycles"])
+    print(f"swap-in round trip (rank 0, working h == slot h): {swapchk['n']} swap-ins, {swapchk['bad']} bad, first "
+          f"{swapchk['first']}", flush=True)
+    ok_all = bool(swapchk["bad"] == 0 and accept_ok and all(c["bit_exact_all_ranks"] for c in colres) and (not spec or draft_checks["all_ok"]))
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_sim.v2", golden=str(a.golden),
                drafter="dspark (real, lowered)" if spec else "FORCED (golden drafts; draft kinds END stubs)",
                golden_summary={k_: gd[k_] for k_ in ("prompt", "y", "verify_tokens", "drafts", "targets", "accepted",
                                                       "emitted")},
                machine_tokens=tok, steps=steps, accept_stream_equals_golden=bool(accept_ok),
                l0_columns=colres, l0_all_bit_exact=all(c["bit_exact_all_ranks"] for c in colres),
-               draft_checks=draft_checks, verdict="PASS" if ok_all else "FAIL",
+               draft_checks=draft_checks, verdict="PASS" if ok_all else "FAIL", step1_diverged=diverged,
+               swapin_round_trip=swapchk,
                launches=len(eng.launches), s2_job_cycles=round(t_launch, 1),
                s2_l0_cycles=[x["s2_cycles"] for x in l0],
                s2_by_kind={k_: round(sum(x["s2_cycles"] for x in per_launch if x["kind"] == k_), 1)
                            for k_ in KINDS},
                kernel_records={f"{KINDS[k_]}{'' if Lp == 0 else Lp}": len([r for r in K.body[0][(k_, Lp)] if r.unit != "CTL"])
                                for (k_, Lp) in K.body[0] if (k_ not in (3,) or Lp in (0, 1, 37))},
+               hc_plan=plan["name"], fused_hll=int(DN.FUSED_HLL),
+               s2_first_launch_cycles={k_: v for k_, v in r0_kern.items() if not k_.startswith("layer") or k_ in (
+                   "layer", "layer1", "layer37")},
+               hc_row_rank=dict(rank=hc_rank, s2_job_cycles=round(sum(own.values()), 1),
+                                s2_by_kind={k_: round(v, 1) for k_, v in own.items()},
+                                s2_first_launch_cycles={k_: v for k_, v in own_kern.items() if not k_.startswith(
+                                    "layer") or k_ in ("layer", "layer1", "layer37")},
+                                kernel_records={f"{KINDS[k_]}{'' if Lp == 0 else Lp}": len(
+                                    [r for r in K.body[hc_rank][(k_, Lp)] if r.unit != "CTL"])
+                                    for (k_, Lp) in K.body[hc_rank] if (k_ not in (3,) or Lp in (0, 1, 37))}),
                stubbed=(["layer bodies L1..L39: LABELLED REPLAY of the golden h / pre after the layer "
                          "(L37..39 store their input's main hidden part with real SU records)"] if spec else
                         ["layer bodies L1..L39 (END only)", "head (END reads golden argmax HT[POS])",
@@ -1148,7 +1402,8 @@ def export_bench(a, K, cap, die0, regions0, snap0, vm0, costs, gd, simrec):
                 rank=0, group=96, md_words=words, records=cap.recs, image_bytes=len(img), kent=kent, kstride=ks,
                 entry_ar=ar, image_base_bytes=EX.IMAGE_PAGE * 4096, image_sha256=hashlib.sha256(img).hexdigest(),
                 golden=simrec["golden_summary"], sim=dict(s2_job_cycles=simrec["s2_job_cycles"],
-                                                         s2_l0_cycles=simrec["s2_l0_cycles"]), needs_end=False)
+                                                         s2_l0_cycles=simrec["s2_l0_cycles"]), needs_end=False,
+                fused_hll=int(K.DN.FUSED_HLL))        # the FUSED gain layout the image was built for (0 = micro-op slot)
     (out / "meta.json").write_text(json.dumps(meta, indent=1, default=int) + "\n")
     # recs.txt / prep.txt / host.mem for tb_hgi_e2e MTP=1 (run.py prep's format; host words below the md words)
     sys.argv = ["x"]
@@ -1204,6 +1459,11 @@ def main():
     q.add_argument("--golden", required=True)
     q.add_argument("--out", required=True)
     q.add_argument("--export")
+    q.add_argument("--hc-plan", default="mtp", choices=("mtp", "backbone_chain"),
+                   help="HC aperture row plan; backbone_chain = the checker's negative case (the first lowering)")
+    q.add_argument("--hc-hbm", action="store_true",
+                   help="HC mix rows read from HBM directly (ds_native HC_DB off: no aperture slots; a bisection aid)")
+    q.add_argument("--hc-trace-only", action="store_true", help="build the kernels, write the reader trace, stop")
     a = ap.parse_args()
     if a.cmd == "golden":
         return golden(a)

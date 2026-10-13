@@ -158,20 +158,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("132.86928");
+          values("103.21014");
         }
         fall_constraint(scalar) {
-          values("141.66019");
+          values("107.00591");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-109.83042");
+          values("-80.20296");
         }
         fall_constraint(scalar) {
-          values("-110.93013");
+          values("-76.22274");
         }
       }
     }
@@ -182,20 +182,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("131.51154");
+          values("101.88516");
         }
         fall_constraint(scalar) {
-          values("140.40273");
+          values("105.63358");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-108.54030");
+          values("-78.95267");
         }
         fall_constraint(scalar) {
-          values("-109.83186");
+          values("-75.02607");
         }
       }
     }
@@ -206,20 +206,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("138.76526");
+          values("109.13525");
         }
         fall_constraint(scalar) {
-          values("148.99040");
+          values("114.21698");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-117.32652");
+          values("-87.73907");
         }
         fall_constraint(scalar) {
-          values("-119.91502");
+          values("-85.10489");
         }
       }
     }
@@ -230,20 +230,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("149.97163");
+          values("120.67636");
         }
         fall_constraint(scalar) {
-          values("162.38664");
+          values("127.00821");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-128.45984");
+          values("-99.19669");
         }
         fall_constraint(scalar) {
-          values("-133.14037");
+          values("-97.78742");
         }
       }
     }
@@ -254,20 +254,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("144.19383");
+          values("115.31761");
         }
         fall_constraint(scalar) {
-          values("158.63829");
+          values("123.40212");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-117.17454");
+          values("-88.33626");
         }
         fall_constraint(scalar) {
-          values("-126.68642");
+          values("-91.44431");
         }
       }
     }
@@ -290,20 +290,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("149.25562");
+          values("120.54092");
         }
         fall_constraint(scalar) {
-          values("162.55675");
+          values("127.49367");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-126.79208");
+          values("-98.09208");
         }
         fall_constraint(scalar) {
-          values("-131.99092");
+          values("-96.92940");
         }
       }
     }
@@ -314,20 +314,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("133.09181");
+          values("103.62714");
         }
         fall_constraint(scalar) {
-          values("144.74455");
+          values("109.77306");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-110.82651");
+          values("-81.37273");
         }
         fall_constraint(scalar) {
-          values("-114.61681");
+          values("-79.60989");
         }
       }
     }
@@ -338,20 +338,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("138.03183");
+          values("108.35141");
         }
         fall_constraint(scalar) {
-          values("148.32562");
+          values("113.68183");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-116.61481");
+          values("-86.95703");
         }
         fall_constraint(scalar) {
-          values("-119.22189");
+          values("-84.51987");
         }
       }
     }
@@ -362,20 +362,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("139.03378");
+          values("109.33878");
         }
         fall_constraint(scalar) {
-          values("149.06821");
+          values("114.41259");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-117.53466");
+          values("-87.86263");
         }
         fall_constraint(scalar) {
-          values("-119.82673");
+          values("-85.11221");
         }
       }
     }
@@ -386,20 +386,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("136.24409");
+          values("106.56934");
         }
         fall_constraint(scalar) {
-          values("146.80347");
+          values("112.09301");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-114.85249");
+          values("-85.20935");
         }
         fall_constraint(scalar) {
-          values("-117.62262");
+          values("-82.86344");
         }
       }
     }
@@ -410,20 +410,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("138.87544");
+          values("109.21054");
         }
         fall_constraint(scalar) {
-          values("149.07759");
+          values("114.37444");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-117.42396");
+          values("-87.78966");
         }
         fall_constraint(scalar) {
-          values("-120.01095");
+          values("-85.25985");
         }
       }
     }
@@ -434,20 +434,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("129.49107");
+          values("99.88520");
         }
         fall_constraint(scalar) {
-          values("138.88567");
+          values("104.12045");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-106.42809");
+          values("-76.86259");
         }
         fall_constraint(scalar) {
-          values("-108.00578");
+          values("-73.20603");
         }
       }
     }
@@ -458,20 +458,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("131.48363");
+          values("101.85543");
         }
         fall_constraint(scalar) {
-          values("140.53610");
+          values("105.84556");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-108.39560");
+          values("-78.80472");
         }
         fall_constraint(scalar) {
-          values("-109.76711");
+          values("-75.03410");
         }
       }
     }
@@ -482,20 +482,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("132.01396");
+          values("102.36140");
         }
         fall_constraint(scalar) {
-          values("140.99582");
+          values("106.34501");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-108.97145");
+          values("-79.34734");
         }
         fall_constraint(scalar) {
-          values("-110.18228");
+          values("-75.47775");
         }
       }
     }
@@ -506,20 +506,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("148.22914");
+          values("118.56424");
         }
         fall_constraint(scalar) {
-          values("159.30353");
+          values("124.57328");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-125.25987");
+          values("-95.63026");
         }
         fall_constraint(scalar) {
-          values("-128.30965");
+          values("-93.53545");
         }
       }
     }
@@ -530,20 +530,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("130.80399");
+          values("101.12531");
         }
         fall_constraint(scalar) {
-          values("139.99513");
+          values("105.34917");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-107.71252");
+          values("-78.05596");
         }
         fall_constraint(scalar) {
-          values("-109.17281");
+          values("-74.46915");
         }
       }
     }
@@ -554,20 +554,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("136.52670");
+          values("106.87876");
         }
         fall_constraint(scalar) {
-          values("145.66891");
+          values("110.91587");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-113.04319");
+          values("-83.43614");
         }
         fall_constraint(scalar) {
-          values("-114.24737");
+          values("-79.45431");
         }
       }
     }
@@ -578,20 +578,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("134.18575");
+          values("104.49790");
         }
         fall_constraint(scalar) {
-          values("144.32347");
+          values("109.70292");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-109.07595");
+          values("-79.40818");
         }
         fall_constraint(scalar) {
-          values("-110.61609");
+          values("-75.93381");
         }
       }
     }
@@ -602,20 +602,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("132.28938");
+          values("102.79732");
         }
         fall_constraint(scalar) {
-          values("141.22290");
+          values("106.37235");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-109.22510");
+          values("-79.77523");
         }
         fall_constraint(scalar) {
-          values("-110.48795");
+          values("-75.59818");
         }
       }
     }
@@ -626,20 +626,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("126.54669");
+          values("97.00703");
         }
         fall_constraint(scalar) {
-          values("136.11304");
+          values("101.15873");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-103.59122");
+          values("-74.06092");
         }
         fall_constraint(scalar) {
-          values("-105.54281");
+          values("-70.54065");
         }
       }
     }
@@ -650,20 +650,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("145.23943");
+          values("115.62992");
         }
         fall_constraint(scalar) {
-          values("155.50507");
+          values("120.90104");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-122.91203");
+          values("-93.33067");
         }
         fall_constraint(scalar) {
-          values("-125.52814");
+          values("-90.87428");
         }
       }
     }
@@ -674,20 +674,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("145.68303");
+          values("116.03317");
         }
         fall_constraint(scalar) {
-          values("155.88564");
+          values("121.18583");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-123.38628");
+          values("-93.76988");
         }
         fall_constraint(scalar) {
-          values("-125.92134");
+          values("-91.17592");
         }
       }
     }
@@ -698,20 +698,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("149.52460");
+          values("119.88159");
         }
         fall_constraint(scalar) {
-          values("160.06708");
+          values("125.40760");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-126.74656");
+          values("-97.13559");
         }
         fall_constraint(scalar) {
-          values("-129.35408");
+          values("-94.64490");
         }
       }
     }
@@ -722,20 +722,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("144.71339");
+          values("115.01675");
         }
         fall_constraint(scalar) {
-          values("154.98349");
+          values("120.33584");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-122.59177");
+          values("-92.91589");
         }
         fall_constraint(scalar) {
-          values("-124.89934");
+          values("-90.19095");
         }
       }
     }
@@ -746,20 +746,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("142.50163");
+          values("112.92159");
         }
         fall_constraint(scalar) {
-          values("153.11101");
+          values("118.35054");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-120.35577");
+          values("-90.81675");
         }
         fall_constraint(scalar) {
-          values("-123.14176");
+          values("-88.34750");
         }
       }
     }
@@ -770,20 +770,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.54984");
+          values("113.98084");
         }
         fall_constraint(scalar) {
-          values("154.04070");
+          values("119.38599");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-121.28525");
+          values("-91.75758");
         }
         fall_constraint(scalar) {
-          values("-124.08630");
+          values("-89.39452");
         }
       }
     }
@@ -794,20 +794,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("142.98300");
+          values("113.43339");
         }
         fall_constraint(scalar) {
-          values("154.13914");
+          values("119.44450");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-120.81509");
+          values("-91.30817");
         }
         fall_constraint(scalar) {
-          values("-123.95267");
+          values("-89.22893");
         }
       }
     }
@@ -818,20 +818,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("145.70390");
+          values("116.09815");
         }
         fall_constraint(scalar) {
-          values("155.87154");
+          values("121.29375");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-123.47321");
+          values("-93.89487");
         }
         fall_constraint(scalar) {
-          values("-125.94431");
+          values("-91.31404");
         }
       }
     }
@@ -842,20 +842,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("144.26886");
+          values("114.72375");
         }
         fall_constraint(scalar) {
-          values("155.30893");
+          values("120.47057");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-122.10212");
+          values("-92.59713");
         }
         fall_constraint(scalar) {
-          values("-125.15807");
+          values("-90.28230");
         }
       }
     }
@@ -866,20 +866,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.49779");
+          values("113.96055");
         }
         fall_constraint(scalar) {
-          values("154.60442");
+          values("119.88373");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-121.36005");
+          values("-91.87194");
         }
         fall_constraint(scalar) {
-          values("-124.46319");
+          values("-89.71555");
         }
       }
     }
@@ -890,20 +890,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.08504");
+          values("113.57955");
         }
         fall_constraint(scalar) {
-          values("153.61275");
+          values("118.93993");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-120.80591");
+          values("-91.34892");
         }
         fall_constraint(scalar) {
-          values("-123.69820");
+          values("-88.99901");
         }
       }
     }
@@ -914,20 +914,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.53989");
+          values("113.98245");
         }
         fall_constraint(scalar) {
-          values("154.31398");
+          values("119.45850");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-121.10143");
+          values("-91.58054");
         }
         fall_constraint(scalar) {
-          values("-124.07378");
+          values("-89.17876");
         }
       }
     }
@@ -938,20 +938,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("143.67162");
+          values("114.13017");
         }
         fall_constraint(scalar) {
-          values("154.59593");
+          values("119.91576");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-121.58870");
+          values("-92.09425");
         }
         fall_constraint(scalar) {
-          values("-124.55614");
+          values("-89.84628");
         }
       }
     }
@@ -962,20 +962,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("146.82600");
+          values("117.14955");
         }
         fall_constraint(scalar) {
-          values("158.09274");
+          values("123.43876");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-123.81600");
+          values("-94.16299");
         }
         fall_constraint(scalar) {
-          values("-127.00395");
+          values("-92.29169");
         }
       }
     }
@@ -986,20 +986,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("128.05667");
+          values("98.44010");
         }
         fall_constraint(scalar) {
-          values("137.55043");
+          values("102.71989");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-105.06780");
+          values("-75.48495");
         }
         fall_constraint(scalar) {
-          values("-106.78094");
+          values("-71.90988");
         }
       }
     }
@@ -1010,20 +1010,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("127.61281");
+          values("98.03804");
         }
         fall_constraint(scalar) {
-          values("137.01520");
+          values("102.10159");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-104.71236");
+          values("-75.17156");
         }
         fall_constraint(scalar) {
-          values("-106.32482");
+          values("-71.37241");
         }
       }
     }
@@ -1034,20 +1034,20 @@ library (ot_hdc_v41x_sfu_chain_tt) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("132.09189");
+          values("102.44792");
         }
         fall_constraint(scalar) {
-          values("140.94589");
+          values("106.34583");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-109.07700");
+          values("-79.45807");
         }
         fall_constraint(scalar) {
-          values("-110.29984");
+          values("-75.64262");
         }
       }
     }
