@@ -20,14 +20,23 @@
 //   One record is in the adapter at a time; a beat leaves 3 edges after its record was accepted and the next record is
 //   accepted 3 edges later (6 cycles a member: the record adapter's handshake).
 // RETIRE: one DMA retire a member when ITS engine reports the source consumed (STORE, posted) / the move done (LOAD):
-//   the adapter counts S's up-link src pulses (its own pin flops of the same up pins) and returns one retire a cycle.
-//   DMA.FENCE (op 2, param 0) retires when nothing is outstanding and S is fence-quiet; wr_quiet (CTL.FENCE) likewise.
-// FAULT (sticky; the unit refuses every later record; one ret_fault pulse): a record that is not a group member or a
-//   fence, param[24:2] != 0, an op other than LOAD / STORE in a group, not exactly one HBM side, the STRIPE4 code, a
-//   SECOND RECORD FOR A CLUSTER IN ONE GROUP (S holds one record a cluster: it would stall), members of different ops,
-//   the indexed stream form, a fence while a group is open (a dropped GLAST), any fault of the record adapter or of S.
-// MUT (bench): 6 no duplicate-cluster check; 7 GLAST dropped on cluster 3's beat; 9 retire at the beat (before the
-//   source is consumed).  1 .. 5 are S's (ot_hgi_b2_swap_disp).
+//   the adapter queues S's up-link src pulses (its own pin flops of the same up pins) and returns one retire a cycle.
+// ONE OWNER A RULE (2026-10-13: rec MUT 3 and MUT 6 survived because the adapter repeated two of S's rules, so neither
+//   copy could be shown necessary).  S owns the engines and therefore owns
+//     (a) "every released record's source is consumed and every HBM write acknowledged" = S.fence_quiet (its credit
+//         count + the relayed engine quiet).  The adapter keeps NO outstanding-member count of its own: DMA.FENCE
+//         (op 2, param 0) and wr_quiet (CTL.FENCE) are S.fence_quiet AND the adapter's own pipeline being empty --
+//         its retire queue, the record in it, and the beat it handed to S in the last two edges (S's pin capture
+//         stage: S.fence_quiet cannot fall earlier; that is this interface's latency, not a second count);
+//     (b) "one record a cluster in a group" = S's sticky duplicate-cluster fault (S holds one record a cluster).  The
+//         adapter forwards the beat and reports S's fault (s_fault) as the unit fault.
+// FAULT (sticky; the unit refuses every later record; one ret_fault pulse): the adapter's OWN rules -- a record that
+//   is not a group member or a fence, param[24:2] != 0, an op other than LOAD / STORE in a group, not exactly one HBM
+//   side, the STRIPE4 code, members of different ops, the indexed stream form, a fence while a group is open (a dropped
+//   GLAST), a fault of the record adapter -- and ANY FAULT OF S (a second record for a cluster in one group, an engine
+//   fault).
+// MUT (bench): 7 GLAST dropped on cluster 3's beat; 9 retire at the beat (before the source is consumed).  1 .. 5 are
+//   S's (ot_hgi_b2_swap_disp); 6 is the composition's (ot_hgi_b2_swap_rgrp: S's fault report does not leave S).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_b2_swap_rec #(
     parameter integer MUT = 0
@@ -88,13 +97,12 @@ module ot_hgi_b2_swap_rec #(
     wire [5:0]  op  = cur[30:25];
     wire [24:0] par = cur[24:0];
     // ---------------------------------------------------------------- group checks on the registered move word
-    reg [3:0] seen; reg [5:0] gop;                      // clusters of the open group; its op
+    reg open; reg [5:0] gop;                            // a group is open (a member sent, no GLAST yet); its op
     wire        hs_s = mv[1:0] == 2'd0, hs_d = mv[94:93] == 2'd0;
     wire [4:0]  hb = hs_s ? mv[44:40] : mv[137:133];    // the HBM-side effective base [39:35]
     wire [1:0]  q = hb[1:0];
-    wire        open = seen != 4'd0;
     wire        bad = !par[0] || par[24:2] != 23'd0 || op[5:1] != 5'd0 || !(hs_s ^ hs_d) || hb[4:2] != 3'd0 ||
-                      (seen[q] && MUT != 6) || (open && op != gop);
+                      (open && op != gop);
     assign g_v    = mv_v && !bad && !fault;
     assign g_last = (MUT == 7 && q == 2'd3) ? 1'b0 : par[1];
     assign g_q    = q;
@@ -102,9 +110,10 @@ module ot_hgi_b2_swap_rec #(
     assign acc    = g_v && g_rdy;
     assign fence_rdy = !open && par == 25'd0 && !fault;
     // ---------------------------------------------------------------- outstanding members, retires, quiet
-    reg [3:0] src_q; reg [3:0] out, pend;               // out <= 2 FIFO + 4 held + 8 credits; pend <= out
+    reg [3:0] src_q; reg [3:0] pend;                    // src pulses not yet returned as retires (<= 8 credits + 4)
+    reg acc_d1, acc_d2;                                 // a beat entered S's pin stage 1 / 2 edges ago
     wire [2:0] nsrc = {2'd0, src_q[0]} + {2'd0, src_q[1]} + {2'd0, src_q[2]} + {2'd0, src_q[3]};
-    assign quiet_core = s_quiet && out == 4'd0 && pend == 4'd0;
+    assign quiet_core = s_quiet && !acc_d1 && !acc_d2 && pend == 4'd0;
     wire viol = (mv_v && bad) || is_v || (fence_v && (open || par != 25'd0)) || s_fault || r_fault;
     always @(posedge clk) begin
         p_d <= {rec_n_o, rec_n_a, rec_o, rec_a, rec_hdr};
@@ -116,7 +125,8 @@ module ot_hgi_b2_swap_rec #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             p_v <= 1'b0; rdy_q <= 1'b0; rdy_d <= 1'b0; swp <= 1'b0; srp <= 1'b0; scnt <= 2'd0;
-            acc_q <= 1'b0; inrec <= 1'b0; seen <= 4'd0; src_q <= 4'd0; out <= 4'd0; pend <= 4'd0;
+            acc_q <= 1'b0; inrec <= 1'b0; open <= 1'b0; src_q <= 4'd0; pend <= 4'd0;
+            acc_d1 <= 1'b0; acc_d2 <= 1'b0;
             ret_done <= 1'b0; ret_fault <= 1'b0; wr_quiet <= 1'b0; fault <= 1'b0;
         end else begin
             p_v <= rec_v; rdy_d <= rdy_q;
@@ -126,9 +136,9 @@ module ot_hgi_b2_swap_rec #(
             rdy_q <= (scnt + {1'b0, spush} - {1'b0, spop}) == 2'd0 && !fault;
             acc_q <= spop;
             if (spop) inrec <= 1'b1; else if (r_done || fault) inrec <= 1'b0;
-            if (acc) seen <= par[1] ? 4'd0 : (seen | (4'b0001 << q));
+            if (acc) open <= !par[1];
+            acc_d1 <= acc; acc_d2 <= acc_d1;
             src_q <= up_src;
-            out   <= out + {3'd0, acc} - {1'b0, nsrc};
             pend  <= pend + {1'b0, nsrc} - {3'd0, pend != 4'd0};
             ret_done  <= (MUT == 9) ? r_done : ((pend != 4'd0) || (r_done && op == 6'd2));
             ret_fault <= viol && !fault;
@@ -161,6 +171,7 @@ module ot_hgi_b2_swap_rgrp #(
     output wire               wr_quiet,
     output wire               fault,
     output wire               s_done,      // (bench) S's completed-release pulse
+    output wire               s_fault_o,   // (bench) S's own sticky fault
     output wire [3:0]         e_src,       // (bench) the engines' source-consumed pulses
     output wire [3:0]         e_acc,       // (bench) the engines' accept edges
     output wire [4*129-1:0]   vr2q,
@@ -169,14 +180,18 @@ module ot_hgi_b2_swap_rgrp #(
     input  wire [4*8-1:0]     wd_cr,
     input  wire [4*4-1:0]     wa
 );
-    wire g_v, g_rdy, g_last, s_quiet, s_fault; wire [1:0] g_q; wire [226:0] g_mv;
+    wire g_v, g_rdy, g_last, s_quiet; wire [1:0] g_q; wire [226:0] g_mv;
+    // MUT 6: S's fault report does not leave S.  For a duplicate cluster this is S's own check removed, as seen from
+    // outside S (S stalls on the held cluster either way; only its sticky fault tells the unit) -- the adapter has no
+    // check of its own that could cover for it.
+    wire s_fault = (MUT == 6) ? 1'b0 : s_fault_o;
     wire [4*228-1:0] dn, dn_e; wire [4*3-1:0] up, up_e;
     ot_hgi_b2_swap_rec #(.MUT(MUT)) u_r (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr),
         .rec_a(rec_a), .rec_o(rec_o), .rec_n_a(rec_n_a), .rec_n_o(rec_n_o), .ret_done(ret_done), .ret_fault(ret_fault),
         .wr_quiet(wr_quiet), .fault(fault), .g_v(g_v), .g_rdy(g_rdy), .g_last(g_last), .g_q(g_q), .g_mv(g_mv),
         .up_src({up[9], up[6], up[3], up[0]}), .s_quiet(s_quiet), .s_fault(s_fault));
     ot_hgi_b2_swap_disp #(.MUT(MUT)) u_s (.clk(clk), .rst_n(rst_n), .g_v(g_v), .g_rdy(g_rdy), .g_last(g_last), .g_q(g_q),
-        .g_mv(g_mv), .dn(dn), .up(up), .fence_quiet(s_quiet), .done(s_done), .fault(s_fault));
+        .g_mv(g_mv), .dn(dn), .up(up), .fence_quiet(s_quiet), .done(s_done), .fault(s_fault_o));
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_c
         wire mv_v, mv_rdy, mv_src, mv_fault, quiet; wire [226:0] mv;

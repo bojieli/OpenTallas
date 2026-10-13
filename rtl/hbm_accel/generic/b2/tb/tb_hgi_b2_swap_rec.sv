@@ -13,8 +13,13 @@
 //   engine's src, wr_quiet / the completion never before the last acknowledged sector, and first DMA dispatch ->
 //   wr_quiet (the CTL.FENCE answer at the unit pin) <= LIMIT in every run; then two NEGATIVE programs (a duplicate
 //   cluster in a group; a dropped GLAST) must each end in the sticky unit fault with no HBM word written.
-//   MUT: 1 2 3 5 (S) / 6 7 9 (adapter) / 8 (bench: the doorbell token is slot ^ 1 = a wrong TOKEN resolve) must FAIL;
-//   4 (serialized group) must fail the throughput check.
+//   ONE OWNER A RULE: the fence answer is S's (the adapter keeps no outstanding count), so the wr_quiet / completion
+//   checks observe S's join directly (MUT 3 = S's join ignores its outstanding count -> EARLY FENCE here); the
+//   duplicate-cluster fault is S's (the adapter has no such check), so the bench requires S's own fault to be the
+//   origin of the unit fault in both negative programs (a dropped GLAST makes the PRE record a second record for
+//   cluster 0 in the still-open group) -- MUT 6 = S's fault report dropped -> no unit fault.
+//   MUT: 1 2 3 5 (S) / 6 (composition) / 7 9 (adapter) / 8 (bench: the doorbell token is slot ^ 1 = a wrong TOKEN
+//   resolve) must FAIL; 4 (serialized group) must fail the throughput check.
 module tb_hgi_b2_swap_rec;
     parameter integer MUT = 0;
     parameter integer DHOPS = 10;
@@ -30,7 +35,8 @@ module tb_hgi_b2_swap_rec;
     localparam integer VMW = 98304;
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     wire [4*129-1:0] vr2q; reg [4*2065-1:0] vr2r = 0; wire [4*2312-1:0] wd; wire [31:0] wd_cr; reg [15:0] wa = 0;
-    wire rec_v, rec_rdy, ret_done, ret_fault, wr_quiet, fault, s_done; wire [3:0] e_src, e_acc;
+    wire rec_v, rec_rdy, ret_done, ret_fault, wr_quiet, fault, s_done, s_fault_o; wire [3:0] e_src, e_acc;
+    longint t_sf = 0, t_uf = 0;          // first cycle of S's fault / of the unit fault in a run
     // ---------------------------------------------------------------- the sequencer
     reg db_v = 0; reg [17:0] db_token = 0; wire db_rdy, sq_busy;
     wire f_req_v; wire [39:0] f_req_addr; reg f_rsp_v = 0; reg [255:0] f_rsp_data = 0;
@@ -52,7 +58,7 @@ module tb_hgi_b2_swap_rec;
     assign rec_v = u_v[8];
     ot_hgi_b2_swap_rgrp #(.DHOPS(DHOPS), .VCR(VCR), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(d_hdr), .rec_a(d_desc[255:0]), .rec_o(d_desc[4*256 +: 256]), .rec_n_a(d_n[20:0]), .rec_n_o(d_n[4*21 +: 21]),
-        .ret_done(ret_done), .ret_fault(ret_fault), .wr_quiet(wr_quiet), .fault(fault), .s_done(s_done), .e_src(e_src),
+        .ret_done(ret_done), .ret_fault(ret_fault), .wr_quiet(wr_quiet), .fault(fault), .s_done(s_done), .s_fault_o(s_fault_o), .e_src(e_src),
         .e_acc(e_acc), .vr2q(vr2q), .vr2r(vr2r), .wd(wd), .wd_cr(wd_cr), .wa(wa));
     // ---------------------------------------------------------------- HBM image fetch / the END token read
     reg [127:0] img [0:255]; integer iw = 0;
@@ -175,6 +181,8 @@ module tb_hgi_b2_swap_rec;
             if (nret > nsrc && errors < 8) begin $display("TB FAIL: DMA retire %0d with only %0d sources consumed", nret, nsrc); errors++; end
         end
         if (ret_fault) nflt = nflt + 1;
+        if (s_fault_o && t_sf == 0) t_sf = cyc;
+        if (fault && t_uf == 0) t_uf = cyc;
     end
     integer exp_sec = 0; reg armed = 0; longint t_first = 0, t_q = 0, t_cpl = 0, t_db = 0, t_lastrec = 0;
     always @(posedge clk) if (rst_n && armed) begin
@@ -194,7 +202,7 @@ module tb_hgi_b2_swap_rec;
         to = 0; loc = COLB + slot * CSTR;
         rst_n = 0; repeat (4) @(negedge clk); rst_n = 1; repeat (40 + 2 * DHOPS) @(negedge clk);
         exp_w.delete(); wr.delete(); hbm.delete(); nwrit = 0; nack = 0; t_lastw = 0; t_lastack = 0; nret = 0; nsrc = 0; nflt = 0;
-        t_first = 0; t_q = 0; t_lastrec = 0;
+        t_first = 0; t_q = 0; t_lastrec = 0; t_sf = 0; t_uf = 0;
         for (integer c = 0; c < 4; c++) begin sv_k[c] = 0; sv_t[c] = 0; for (integer i = 0; i < VMW; i++) vm[c][i] = $urandom; end
         for (integer o = 0; o < 320; o++) for (integer i = 0; i < 64; i++) h[o][i] = $urandom;
         for (integer i = 0; i < 8; i++) pre[i] = $urandom;
@@ -228,6 +236,10 @@ module tb_hgi_b2_swap_rec;
         if (kind != 0) begin
             if (!fault || nflt != 1 || nwrit != 0 || (cpl_v && cpl_status == 4'd0))
                 begin $display("TB FAIL: negative program %0d: fault %0d ret_fault %0d HBM sectors written %0d cpl %0d status %0d", kind, fault, nflt, nwrit, cpl_v, cpl_status); errors++; end
+            // the owner of the rule is S in BOTH programs: 1 sends cluster 1 twice in the h group; 2 leaves the h group
+            // open, so the PRE record (cluster 0) is a second record for cluster 0 in it.  S's fault must precede the unit's.
+            else if (!(t_sf != 0 && t_sf < t_uf))
+                begin $display("TB FAIL: negative program %0d: the unit fault (cycle %0d) did not come from S's own fault (cycle %0d)", kind, t_uf, t_sf); errors++; end
             else $display("TB negative program %0d (%s): sticky unit fault, 0 HBM sectors written, completion %0d status %0d",
                           kind, kind == 1 ? "duplicate cluster" : "dropped GLAST", cpl_v, cpl_status);
         end else begin
