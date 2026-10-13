@@ -7,13 +7,13 @@
   0,
   0,
   86.4,
-  753.84
+  302.4
  ],
  "core": [
   2.16,
   2.16,
   84.24000000000001,
-  751.6800000000001
+  300.23999999999995
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -58,14 +58,7 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "clock_span",
-   "86.4 x 753.84 um: one clock root over > 600 um",
-   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/qwen_sys/kv_die_20261009/qkd_land_strip.sv",
   "rtl/qwen_sys/kv_die_20261009/ot_qkvd_emb_strip_c.sv",

@@ -14,6 +14,7 @@
 //     beat is there, so no status travels); the pair then enters the unchanged stage 1 / stage 2.  The POPs of the next
 //     FOUR words are sent ahead (tag = word number mod 4; the beats of a word wait in slot tag until the packer takes
 //     them in order), so the chain round trip (<= 2 x 32 hops + 4 cycles) is shared by four words.
+//   * the boot checksum is a registered XOR tree added to csum one cycle later (see crc_mask);
 //   * s_cr is the credit vector of the PCs as it arrives on the strip's credit chain (later than the monolith's: the
 //     credit rule only becomes more conservative).
 // A beat on the up chain that was not asked for sets fault code bit 2 (the monolith's return-FIFO overrun bit; the
@@ -149,13 +150,21 @@ module ot_qkvd_emb_strip_c #(
     end
   endfunction
 
-  // ---- boot checksum: zlib.crc32 of {E (4 B LE), data (32 B LE)}, LSB first
-  function automatic [31:0] crc_sector(input [24:0] e, input [255:0] d);
-    reg [287:0] m; reg [31:0] c; integer i;
+  // ---- boot checksum: zlib.crc32 of {E (4 B LE), data (32 B LE)}, LSB first.  The monolith evaluates the 288-step
+  // bit-serial recurrence in one cycle (93 logic levels in the first gate of this leaf).  The CRC is affine in the
+  // message, so bit k = parity(m & MASK_k) ^ CONST_k: a balanced XOR tree, registered (crc_q), added to csum one
+  // cycle later (the STATUS word that carries csum cannot leave before every write's credit is home).
+  // crc_mask(k) = {CONST_k, MASK_k}: walk the recurrence backwards from output bit k (v = the state bits that reach it).
+  function automatic [288:0] crc_mask(input integer k);
+    reg [31:0] v; reg t; integer i;
     begin
-      m = {d, 7'd0, e}; c = 32'hffffffff;
-      for (i = 0; i < 288; i = i + 1) c = (c >> 1) ^ ((c[0] ^ m[i]) ? 32'hedb88320 : 32'h0);
-      crc_sector = ~c;
+      v = 32'd1 << k;
+      for (i = 287; i >= 0; i = i - 1) begin
+        t = ^(v & 32'hedb88320);
+        crc_mask[i] = t;
+        v = {v[30:0], t};
+      end
+      crc_mask[288] = ~(^v);                     // the all-ones initial state and the final inversion
     end
   endfunction
 
@@ -192,6 +201,15 @@ module ot_qkvd_emb_strip_c #(
     reg [28:0] sl_q;                             // scale_loc of the fetched token
     reg [24:0] be; reg [255:0] bd; reg [25:0] bl;
     reg [31:0] csum, wcnt;
+    wire [287:0] crc_m = {bd, 7'd0, be};
+    wire [31:0]  crc_lin;
+    genvar gk;
+    generate for (gk = 0; gk < 32; gk = gk + 1) begin : g_crc
+        localparam [288:0] MK = crc_mask(gk);
+        assign crc_lin[gk] = (^(crc_m & MK[287:0])) ^ MK[288];
+    end endgenerate
+    reg [31:0] crc_q; reg cv;
+    always @(posedge clk) crc_q <= crc_lin;
     wire [17:0] ft = ih[17:0];
     wire [28:0] fsl = scale_loc(ft);
     wire [17:0] fbcr = code_bcr(ft);
@@ -200,13 +218,14 @@ module ot_qkvd_emb_strip_c #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             iw <= 0; ir <= 0; i_cr <= 1'b0; st <= IDLE; tw <= 0; s_m <= 0; w_m <= 0; s_we <= 1'b0;
-            csum <= 0; wcnt <= 0; stat_v <= 1'b0; fa <= 1'b0; fca <= 0;
+            csum <= 0; wcnt <= 0; cv <= 1'b0; stat_v <= 1'b0; fa <= 1'b0; fca <= 0;
             for (p = 0; p < NPC; p = p + 1) cred[p] <= CQ'(SQD);
             all1 <= 1'b1; allf <= 1'b1; ge2 <= {NPC{1'b1}};
         end else begin : fsm
             reg [NPC-1:0] dec, dec2;
             dec = 0; dec2 = 0;
-            s_m <= 0; w_m <= 0; i_cr <= 1'b0;
+            s_m <= 0; w_m <= 0; i_cr <= 1'b0; cv <= 1'b0;
+            if (cv) csum <= csum + crc_q;
             if (i_v) iw <= iw + 1'b1;
             case (st)
                 IDLE: if (i_ne) begin
@@ -244,7 +263,7 @@ module ot_qkvd_emb_strip_c #(
                         s_we <= 1'b1; s_bank <= bl[17:13]; s_col <= bl[12:8]; s_row <= 19'(ROW0) + 19'(bl[7:0]);
                         w_d <= bd;
                         dec[bl[22:18]] = 1'b1;
-                        csum <= csum + crc_sector(be, bd); wcnt <= wcnt + 1'b1;
+                        cv <= 1'b1; wcnt <= wcnt + 1'b1;
                         if (TWIN != 0) st <= B2; else begin ir <= ir + 1'b1; i_cr <= 1'b1; st <= IDLE; end
                     end
                 end

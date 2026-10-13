@@ -15,7 +15,7 @@
  "reset_ports": [],
  "outline": {
   "w": 86.4,
-  "h": 375.84
+  "h": 172.8
  },
  "layer_cap": "M5",
  "macros": [],
@@ -49,40 +49,40 @@
  },
  "pin_ranges": {
   "es": [
-   194,
-   223
+   20,
+   50
   ],
   "er": [
-   226,
-   252
+   54,
+   80
   ],
   "li": [
-   255,
-   300
+   84,
+   130
   ],
   "lp": [
-   302,
-   303
+   132,
+   133
   ],
   "cf": [
-   304,
-   305
+   134,
+   135
   ],
   "gw": [
-   170,
-   200
+   70,
+   100
   ],
   "gc": [
-   202,
-   203
+   102,
+   103
   ],
   "lpc": [
-   206,
-   210
+   106,
+   110
   ],
   "rst_n": [
-   212,
-   213
+   112,
+   113
   ],
   "dni": [
    4,
@@ -127,7 +127,7 @@
   "peak_ram_gb": 32
  },
  "recipe": 2,
- "slot_change_request": "el1013-qwen-kvstrips 2026-10-13 (table in el1011-qwen-tp8.log): qwen_rom_tp8 strip slots land_<q> (cells qkd_land / qkd_land_n, 172.776 x 12,141.312; one 26,789-flop KV merge + one 39,613-flop embedding engine, both over the clock rule, and a landing crossbar with no RTL) are replaced by 32 slots landpc_<q>_<k> of qkd_land_pc (86.4 x 375.84 in the E half, strip x 86.4, y = 378 k), 8 slots landgrp_<q>_<i> of qkd_land_grp (86.4 x 753.84 in the W half, y = 1,512 i + 378: beside the two middle PCs of its group; the outer two PCs' gw / gc run <= 200 um along the free W half, which also takes the die's relay stations) and one slot landemb_<q> of qkd_land_emb (172.8 x 43.2 at y = 12,096).  SLOT ORDER: strip slot 4 i + q hosts LOGICAL PC {q, G(i)} (kv_die.LAND_GROUP_ORDER 4 5 0 1 2 3 6 7): the lane strap of the write-queue leaf and lpc of qkd_land_pc follow it, the write feed chains hop 4 slots; the physical PC (qkd_ctrl_pc strap pc, PHY slice) stays the slot.  Pins: per PC li[281:0] / lp / cf = the CDC co bus + c_fault (was c<k>i[282:0] / cf<k>), es / er to qkd_ctrl_pc (NEW die buses, over the CDC column); per group rq[15:0] / rs[1024:0] of its engine (was rq<e> / rs<e>), lt[20:0], NEW kn[1046:0] = the posted K / V rows {kvw_d, kvw_layer, kvw_t, kvw_vg, kvw_v} (the contract sends kvn to wctl only: the merge slices need a tap); strip emf / emr on the N face of qkd_land_emb with the link credits in bit 529; mf = the strip fault.  NOT bound (no RTL consumer in the landing): ing[529:0] (prefill ingest: belongs with the write queue wctl), wdurable[22:0], wfault, crst.",
+ "slot_change_request": "el1013-qwen-kvstrips 2026-10-13 (table in el1011-qwen-tp8.log): qwen_rom_tp8 strip slots land_<q> (cells qkd_land / qkd_land_n, 172.776 x 12,141.312; one 26,789-flop KV merge + one 39,613-flop embedding engine, both over the clock rule, and a landing crossbar with no RTL) are replaced by 32 slots landpc_<q>_<k> of qkd_land_pc (86.4 x 172.8 in the E half, strip x 86.4, y = 378 k + 190.08: level with the PC's CDC and qkd_ctrl_pc; the down / up / credit / fault chains hop 205.2 um between leaves, flop to flop), 8 slots landgrp_<q>_<i> of qkd_land_grp (86.4 x 302.4 in the W half, y = 1,512 i + 691.2: the middle of its four PCs; gw / gc of the inner PCs run ~95 um and of the outer PCs ~440 um along the free W half, flop to flop, which also takes the die's relay stations) and one slot landemb_<q> of qkd_land_emb (172.8 x 64.8 at y = 12,074.4).  SLOT ORDER: strip slot 4 i + q hosts LOGICAL PC {q, G(i)} (kv_die.LAND_GROUP_ORDER 4 5 0 1 2 3 6 7): the lane strap of the write-queue leaf and lpc of qkd_land_pc follow it, the write feed chains hop 4 slots; the physical PC (qkd_ctrl_pc strap pc, PHY slice) stays the slot.  Pins: per PC li[281:0] / lp / cf = the CDC co bus + c_fault (was c<k>i[282:0] / cf<k>), es / er to qkd_ctrl_pc (NEW die buses, over the CDC column); per group rq[15:0] / rs[1024:0] of its engine (was rq<e> / rs<e>), lt[20:0], NEW kn[1046:0] = the posted K / V rows {kvw_d, kvw_layer, kvw_t, kvw_vg, kvw_v} (the contract sends kvn to wctl only: the merge slices need a tap); strip emf / emr on the N face of qkd_land_emb with the link credits in bit 529; mf = the strip fault.  NOT bound (no RTL consumer in the landing): ing[529:0] (prefill ingest: belongs with the write queue wctl), wdurable[22:0], wfault, crst.",
  "job": {
   "owner": "Claude:el1013-qwen-kvstrips",
   "branch": "claude/el1013-qwen-kvstrips",

@@ -3,8 +3,8 @@
 // Qwen3-8B ROM TP8 die (track B), KV landing strip qkd_land / qkd_land_n (el1013-qwen-kvstrips 2026-10-13).
 // The 172.776 x 12,141.312 strip slot (one 26,789-flop KV merge + one 39,613-flop embedding engine + the landing
 // crossbar that had no RTL) becomes hardened leaves, each with its own clock root (core clock):
-//   32 x qkd_land_pc   one a pseudo-channel (E half of the strip, 86.4 x 375.84 at the PC's 378 um slot)
-//    8 x qkd_land_grp  one a row engine (W half, 86.4 x 1,509.84 beside its four PCs)
+//   32 x qkd_land_pc   one a pseudo-channel (E half of the strip, 86.4 x 172.8 beside the PC's CDC and controller leaf)
+//    8 x qkd_land_grp  one a row engine (W half, 86.4 x 302.4 at the middle of its four PCs)
 //    1 x qkd_land_emb  the embedding strip engine ot_qkvd_emb_strip_c (N end)
 // SLOT ORDER (die contract, requested with these masters): a KV row (layer, g, v, t) is 4 sectors at the same PC-local
 // index j on the logical PCs {q, G} = 8 q + G, G = t[2:0] = its row engine (CONTRACT map v2).  The four PCs of an engine
@@ -67,6 +67,8 @@ module qkd_land_pc #(
 );
     (* keep *) reg rn_q;
     always @(posedge ck) rn_q <= rst_n;
+    (* keep *) reg [4:0] lpc_q;                                // strap through a pin flop
+    always @(posedge ck) lpc_q <= lpc;
     // ---- landing: pin flops, queue, group port -----------------------------------------------------------------------
     (* keep *) reg         lv_q, gc_q, cf_q;
     (* keep *) reg [271:0] lw_q;                               // {data, j, layer}
@@ -105,7 +107,7 @@ module qkd_land_pc #(
         else begin dni_q[0] <= dni[0]; upi_q[0] <= upi[0]; cri_q <= cri; er_q[0] <= er[0]; er_q[260:259] <= er[260:259]; fi_q <= fi; end
     always @(posedge ck) begin dni_q[297:1] <= dni[297:1]; upi_q[261:1] <= upi[261:1]; er_q[258:1] <= er[258:1]; end
     wire d_v = dni_q[0], d_pop = dni_q[1], d_bc = dni_q[2];
-    wire d_me = d_v && (dni_q[7:3] == lpc);
+    wire d_me = d_v && (dni_q[7:3] == lpc_q);
     localparam integer PA = $clog2(PFD);
     reg [257:0] rf [0:PFD-1];
     reg [PA:0]  rfw, rfr;
@@ -130,12 +132,12 @@ module qkd_land_pc #(
             dno[0] <= 1'b0; es[0] <= 1'b0; upo[0] <= 1'b0; cro <= 32'd0; fo <= 1'b0; rfw <= 0; rfr <= 0; pqw <= 3'd0; pqr <= 3'd0; f_emb <= 1'b0;
         end else begin
             dno[0] <= d_v;
-            es[0] <= d_v && !d_pop && (d_bc || dni_q[7:3] == lpc);
+            es[0] <= d_v && !d_pop && (d_bc || dni_q[7:3] == lpc_q);
             if (er_q[0]) begin rfw <= rfw + 1'b1; if (r_full) f_emb <= 1'b1; end
             if (d_me && d_pop) begin pqw <= pqw + 3'd1; if (pq_full) f_emb <= 1'b1; end
             if (u_go) begin rfr <= rfr + 1'b1; pqr <= pqr + 3'd1; end
             upo[0] <= upi_q[0] | u_go;
-            cro <= cri_q | ({31'd0, er_q[259]} << lpc);
+            cro <= cri_q | ({31'd0, er_q[259]} << lpc_q);
             fo <= fi_q | cf_q | er_q[260] | f_land | f_emb;
         end
 endmodule
@@ -173,6 +175,9 @@ module qkd_land_grp #(
 );
     (* keep *) reg rn_q;
     always @(posedge ck) rn_q <= rst_n;
+    (* keep *) reg [2:0] g_q;                                  // straps through pin flops
+    (* keep *) reg [1:0] s_q;
+    always @(posedge ck) begin g_q <= g; s_q <= s; end
     reg  [3:0]   gc;
     assign {gc3, gc2, gc1, gc0} = gc;
     wire [272:0] gw [0:3];
@@ -228,7 +233,7 @@ module qkd_land_grp #(
     wire [5:0]   h_l = hw[0][5:0];
     wire [9:0]   h_j = hw[0][15:6];
     wire         agree = hw[1][15:0] == hw[0][15:0] && hw[2][15:0] == hw[0][15:0] && hw[3][15:0] == hw[0][15:0];
-    wire [12:0]  h_t = {h_j[6:3], s, h_j[7], h_j[2:0], g};
+    wire [12:0]  h_t = {h_j[6:3], s_q, h_j[7], h_j[2:0], g_q};
     // a row of the layer that starts next (its stream may land before lt) WAITS; any other layer is a stale tail
     wire         cur    = cur_v && h_l == L_cur;
     wire         stale  = cur_v && h_l != L_cur && h_l != L_nxt;
@@ -289,6 +294,8 @@ module qkd_land_emb #(
 );
     (* keep *) reg rn_q;
     always @(posedge ck) rn_q <= rst_n;
+    (* keep *) reg [1:0] st_q;                                 // strap through a pin flop
+    always @(posedge ck) st_q <= st;
     (* keep *) reg         iv_q, ocr_q, fi_q, gfi_q;
     (* keep *) reg [522:0] id_q;
     (* keep *) reg [261:0] upi_q;
@@ -302,7 +309,7 @@ module qkd_land_emb #(
     // the stack is a strap: the engine is built for stack 0 and the two address checks that use STK are made here
     ot_qkvd_emb_strip_c #(.STK(0), .MUT(MUT)) u_e (
         .clk(ck), .rst_n(rn_q), .i_v(iv_q), .i_d(id_q), .i_cr(ecf), .o_v(o_v), .o_d(o_d), .o_cr(ocr_q),
-        .dn(dno), .s_cr(cri_q), .up(upi_q), .fault(e_fault), .fault_code(), .ce_cnt(), .ue_info(), .stk(st));
+        .dn(dno), .s_cr(cri_q), .up(upi_q), .fault(e_fault), .fault_code(), .ce_cnt(), .ue_info(), .stk(st_q));
     assign emr = {ecf, 5'd0, o_d, o_v};
     always @(posedge ck or negedge rn_q) if (!rn_q) mf <= 1'b0; else mf <= fi_q | gfi_q | e_fault;
 endmodule
