@@ -5,8 +5,11 @@
  "sources": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/generic/qw/ot_hgi_quant_wide_ov.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_lg2.sv",
   "rtl/hbm_accel/generic/qw/ot_hgi_qw_rq.sv",
   "rtl/hbm_accel/generic/qw/ot_hgi_qw_wq.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovc.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovd.sv",
   "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
  ],
@@ -22,178 +25,96 @@
   "h": 691.2
  },
  "pg_layer": "M7",
- "macros": [
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
-   "count": 1,
-   "inst": "u_od",
-   "at": [
-    345.6,
-    540.0
-   ]
-  }
- ],
+ "macros": [],
  "children": [
   {
-   "view": "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "view": "physical/ref_tile/qw_lgr_ref/views/ot_hgi_qw_lgr",
    "count": 1,
-   "inst": "g_q[0].u_rq",
+   "inst": "g_lg[0].u_lg.u_r",
    "at": [
-    43.2,
-    43.2
+    21.6,
+    21.6
    ]
   },
   {
-   "view": "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "view": "physical/ref_tile/qw_lgw_ref/views/ot_hgi_qw_lgw",
    "count": 1,
-   "inst": "g_q[1].u_rq",
+   "inst": "g_lg[0].u_lg.u_w",
    "at": [
-    172.8,
-    43.2
+    730.08,
+    21.6
    ]
   },
   {
-   "view": "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "view": "physical/ref_tile/qw_lgr_ref/views/ot_hgi_qw_lgr",
    "count": 1,
-   "inst": "g_q[2].u_rq",
+   "inst": "g_lg[1].u_lg.u_r",
    "at": [
-    43.2,
-    216.0
+    21.6,
+    189.36
    ]
   },
   {
-   "view": "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "view": "physical/ref_tile/qw_lgw_ref/views/ot_hgi_qw_lgw",
    "count": 1,
-   "inst": "g_q[3].u_rq",
+   "inst": "g_lg[1].u_lg.u_w",
    "at": [
-    172.8,
-    216.0
+    730.08,
+    189.36
    ]
   },
   {
-   "view": "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "view": "physical/ref_tile/qw_lgr_ref/views/ot_hgi_qw_lgr",
    "count": 1,
-   "inst": "g_q[4].u_rq",
+   "inst": "g_lg[2].u_lg.u_r",
    "at": [
-    43.2,
-    388.8
+    21.6,
+    357.12
    ]
   },
   {
-   "view": "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "view": "physical/ref_tile/qw_lgw_ref/views/ot_hgi_qw_lgw",
    "count": 1,
-   "inst": "g_q[5].u_rq",
+   "inst": "g_lg[2].u_lg.u_w",
    "at": [
-    172.8,
-    388.8
+    730.08,
+    357.12
    ]
   },
   {
-   "view": "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "view": "physical/ref_tile/qw_lgr_ref/views/ot_hgi_qw_lgr",
    "count": 1,
-   "inst": "g_q[6].u_rq",
+   "inst": "g_lg[3].u_lg.u_r",
    "at": [
-    43.2,
-    561.6
+    21.6,
+    524.88
    ]
   },
   {
-   "view": "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "view": "physical/ref_tile/qw_lgw_ref/views/ot_hgi_qw_lgw",
    "count": 1,
-   "inst": "g_q[7].u_rq",
+   "inst": "g_lg[3].u_lg.u_w",
    "at": [
-    172.8,
-    561.6
+    730.08,
+    524.88
    ]
   },
   {
-   "view": "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq",
+   "view": "physical/ref_tile/qw_ovc_ref/views/ot_hgi_qw_ovc",
    "count": 1,
-   "inst": "g_q[0].u_wq",
+   "inst": "u_c",
    "at": [
-    604.8,
-    43.2
+    216.0,
+    21.6
    ]
   },
   {
-   "view": "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq",
+   "view": "physical/ref_tile/qw_ovd_ref/views/ot_hgi_qw_ovd",
    "count": 1,
-   "inst": "g_q[1].u_wq",
+   "inst": "u_d",
    "at": [
-    691.2,
-    43.2
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq",
-   "count": 1,
-   "inst": "g_q[2].u_wq",
-   "at": [
-    604.8,
-    216.0
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq",
-   "count": 1,
-   "inst": "g_q[3].u_wq",
-   "at": [
-    691.2,
-    216.0
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq",
-   "count": 1,
-   "inst": "g_q[4].u_wq",
-   "at": [
-    604.8,
-    388.8
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq",
-   "count": 1,
-   "inst": "g_q[5].u_wq",
-   "at": [
-    691.2,
-    388.8
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq",
-   "count": 1,
-   "inst": "g_q[6].u_wq",
-   "at": [
-    604.8,
-    561.6
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq",
-   "count": 1,
-   "inst": "g_q[7].u_wq",
-   "at": [
-    691.2,
-    561.6
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
-   "count": 1,
-   "inst": "g_d3.u_dec.u_dxl",
-   "at": [
-    302.4,
-    216.0
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
-   "count": 1,
-   "inst": "g_d3.u_dec.u_dbq",
-   "at": [
-    302.4,
-    388.8
+    216.0,
+    259.2
    ]
   },
   {
@@ -201,8 +122,26 @@
    "count": 1,
    "inst": "g_d3.u_dec.u_daq",
    "at": [
-    302.4,
-    43.2
+    518.4,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
+   "count": 1,
+   "inst": "g_d3.u_dec.u_dxl",
+   "at": [
+    518.4,
+    259.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
+   "count": 1,
+   "inst": "g_d3.u_dec.u_dbq",
+   "at": [
+    518.4,
+    432.0
    ]
   }
  ],
@@ -232,30 +171,116 @@
    "drained"
   ]
  },
- "refglob": "*f_go*",
+ "refglob": "*",
  "route": {
   "pd": 0.5,
   "threads": 16,
-  "peak_ram_gb": 96,
-  "hold_margin_ns": 0.01
+  "peak_ram_gb": 64
  },
  "job": {
-  "owner": "Codex:el1012-hbm-fq-cx",
-  "branch": "codex/el1012-hbm-fq-cx",
-  "tag": "ov2-cx",
+  "owner": "Claude:el1013-hbm-quant-split",
+  "branch": "claude/hbm-quant-split-1013",
+  "tag": "w1",
   "views_to": "physical/ref_tile/qw_ov_ref/views",
   "record_to": "results/rtl/ref_tile/qw_ov_ref",
-  "purpose": "Opt-in WQ3 record-overlap quant cluster: continuous per-beat header/destination, RAW/WAR/WAW hazard serialization, finite compact descriptors and ordered per-lane retirement; reserve x270..570,y336.96..388.8 seam. Price168 preserved; production184/168 exact plus lane-map/header/premature-retire mutants and delayed-lane/RAW controls. New drained output binds unit packet-fallback wait; cmd unused SUT bits carry frontend A/O span ends. Canonical WQ2/f3/f3p preserved. Physical ov2: identical seam reservation moved POST_TAPCELL to PRE_TAPCELL before fixed tap/endcap insertion (ov1 DPL0033 1148 fixed cells in removed seam rows); RTL, clock and budgets unchanged. NativeASAP7tapcell ignores dbBlockage: PRE hook explicitly splits192 native rows at270/570.024, with384 legal boundarycaps and zero seam-intersecting rows/taps; stopped3_5dp checks actualold3_4 logical netlist+positions with only fresh rows/taps replaced.",
-  "no_bench_reason": "Source-pinned fleet gate record results/rtl/hbm_quant_overlap_1012; WQ3 OVERLAP1 DEC3 Verilator5.050 production184/168 words3328, skew control exact, header/lane/early-retire mutants fail; RAW dependency gate exact. Adoption awaits this cluster closure."
+  "purpose": "WQ3 record-overlap quant cluster as a WIRES-ONLY parent over 13 hard children with their own clock roots: 4 read lane-group leaves, 4 write lane-group leaves, control head, data head (result SRAM inside), decoder tiles dxl / dbq / daq (closed views). Gate quant_wide_ov at the source commit: 184 cycles vs 168 priced (1.095x), exact, skew control exact, three mutants fail.",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ]
  },
  "defines": [
   "OT_HARD_CHILDREN"
  ],
  "hard_define": "OT_HARD_CHILDREN",
- "io_flop_at_pins": {
-  "cols": 6
- },
- "orfs_vars": {
-  "PRE_TAPCELL_TCL": "physical/hbm_quant_overlap/reserve_seam.tcl"
+ "child_lattice_um": 2.16,
+ "structural_change": "quant_wide_ov flat cluster (38,353 flops + 20 macro clock pins on one root: ov1 crash, ov2 cancelled at 32-38k sinks with 495-727 ps CTS spread, ov3 EARLY_FAIL_HOLD) is replaced by a wires-only parent over hardened M5 leaves with their own clock roots: control head ot_hgi_qw_ovc, data head ot_hgi_qw_ovd (result SRAM + write side), 4 x read lane-group leaf ot_hgi_qw_lgr, 4 x write lane-group leaf ot_hgi_qw_lgw, the three closed decoder tiles; a register at both pins of every seam, no cycle added (gate quant_wide_ov: 184 cycles vs 168 priced = 1.095x, unchanged)",
+ "why_floorplan": "777.6 x 691.2 slot unchanged (W = read lanes, E = write lanes, S = command / status). Read leaves x 21.6-144.72 and write leaves x 730.08-756 at 167.76 um pitch; control head on the S face (216, 21.6); data head in the centre (216, 259.2): gather pin registers on the faces toward their rows, write beat out of the faces toward the write leaves; decoder column east of the data head (daq / dxl / dbq at x 518.4, y 86.4 / 259.2 / 432: the order and gaps of the flat floorplan), dxl W face 43 um from the data head's x pins; the row-1 / row-2 write bundles pass through the 43.2 / 51.84 um gaps of the decoder column, row 0 below daq, row 3 above dbq.",
+ "cut_analysis": {
+  "outline_um": [
+   777.6,
+   691.2
+  ],
+  "rule": "demand / (tracks at 50 % reserve) <= 0.55-0.60",
+  "cuts": [
+   {
+    "seam": "lgr | head channel x 144.72-216 at y 86.4 (row-0 gather pins below the control head top + control / events of rows 1-3)",
+    "bits": 1036,
+    "tracks_50pct": 2289,
+    "ratio": 0.45,
+    "hop_um": 440
+   },
+   {
+    "seam": "row-1 / row-2 gather -> data head W face (facing, 71 um)",
+    "bits": 2048,
+    "tracks_50pct": 3600,
+    "ratio": 0.57,
+    "hop_um": 150
+   },
+   {
+    "seam": "data head E -> dxl W (x 1,024 + launch + header 18), 43 um",
+    "bits": 1043,
+    "tracks_50pct": 2200,
+    "ratio": 0.47,
+    "hop_um": 80
+   },
+   {
+    "seam": "row-1 write beat through the daq | dxl gap (43.2 um)",
+    "bits": 680,
+    "tracks_50pct": 1387,
+    "ratio": 0.49,
+    "hop_um": 360
+   },
+   {
+    "seam": "row-2 write beat through the dxl | dbq gap (51.84 um)",
+    "bits": 680,
+    "tracks_50pct": 1664,
+    "ratio": 0.41,
+    "hop_um": 360
+   },
+   {
+    "seam": "below daq (y 21.6-86.4): row-0 write beat east + decode result y west",
+    "bits": 1195,
+    "tracks_50pct": 2080,
+    "ratio": 0.57,
+    "hop_um": 510
+   },
+   {
+    "seam": "above dbq (y 553-691): row-3 write beat",
+    "bits": 680,
+    "tracks_50pct": 4430,
+    "ratio": 0.15,
+    "hop_um": 510
+   },
+   {
+    "seam": "decoder | write-leaf channel x 639-730 (dxl E -> dbq W wrap, xs)",
+    "bits": 2048,
+    "tracks_50pct": 2889,
+    "ratio": 0.71,
+    "hop_um": 300,
+    "note": "inherited decoder-internal seams (closed tiles' pin faces): xb and xs both wrap on this side; xs can take the W side (data-head | decoder channel is only 43 um): the one cut over 0.60, to re-measure with the child LEF OBS before the cluster gate; move the decoder column 21.6 um west if it holds"
+   },
+   {
+    "seam": "control head N -> data head S (meta write 25, launch, header 18, grant, w_fire, fault)",
+    "bits": 50,
+    "tracks_50pct": 2000,
+    "ratio": 0.03,
+    "hop_um": 175
+   },
+   {
+    "seam": "control head W -> read leaves (168 b a leaf + 24 events back)",
+    "bits": 768,
+    "tracks_50pct": 2289,
+    "ratio": 0.34,
+    "hop_um": 600,
+    "note": "row 3 is ~600 um from the S-face control head: over the 500 um rule of thumb, inside the hop formula only if o + s <= 227 ps; fallback = one uniform control relay (+1 cycle, 185 / 168 = 1.101x -> accepted-cost ledger row)"
+   }
+  ],
+  "worst_ratio": 0.71,
+  "longest_hop_um": 600
  }
 }
