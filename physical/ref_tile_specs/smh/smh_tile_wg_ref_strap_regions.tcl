@@ -385,3 +385,60 @@ odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 if {$rn != 16} {error "RESET_STATION expected 16 registers"}
 puts "RESET_STATION_PLACED 16 FIXED_CELLS $::sr_fixed"
+# el1013-smh-r14: g-lane relay / G1 select stations (window fill, nearest rows first, 1 um between cells)
+proc sr_place_win {insts x0 y0 x1 y1} {
+  set X0 [expr {round($x0*$::sr_dbu)}]; set Y0 [expr {round($y0*$::sr_dbu)}]; set X1 [expr {round($x1*$::sr_dbu)}]; set Y1 [expr {round($y1*$::sr_dbu)}]
+  set cy [expr {($Y0+$Y1)/2}]; set rows {}; set pad [expr {round(1.0*$::sr_dbu)}]
+  foreach r $::sr_rows {lassign $r ox oy xe ori; if {$oy >= $Y0 && $oy+$::sr_rh <= $Y1 && $xe > $X0 && $ox < $X1} {lappend rows [linsert $r 0 [expr {abs($oy-$cy)}]]}}
+  set rows [lsort -integer -index 0 $rows]
+  foreach i $insts {
+    set h [[$i getMaster] getHeight]; set w [expr {max([[$i getMaster] getWidth],$::sr_mw_dff)+4*$::sr_sw+$pad}]; set found 0
+    foreach r $rows {lassign $r delta ox oy xe ori
+      set x [expr {$ox+int(ceil(double(max($ox,$X0)-$ox)/$::sr_sw))*$::sr_sw}]
+      while {$x+$w <= min($xe,$X1)} {
+        set jump $x; for {set k [expr {int(floor(double($oy)/$::sr_rh))}]} {$k <= int(floor(double($oy+$h-1)/$::sr_rh))} {incr k} {
+          if {![dict exists $::sr_used $k]} continue; foreach iv [dict get $::sr_used $k] {lassign $iv a b; if {$x+$w > $a && $x < $b} {set jump [expr {max($jump,$ox+int(ceil(double($b-$ox)/$::sr_sw))*$::sr_sw)}]}}
+        }
+        if {$jump > $x} {set x $jump; continue}
+        $i setOrient $ori; $i setLocation [expr {$x+2*$::sr_sw}] $oy; $i setPlacementStatus FIRM; incr ::sr_fixed; sr_occupy $x $oy [expr {$x+$w}] [expr {$oy+$h}]; set found 1; break
+      }; if {$found} break
+    }; if {!$found} {error "G_STATION no legal site for [$i getName] in ($x0 $y0 $x1 $y1)"}
+  }
+}
+set gn 0
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_gl\[[0-9]\]\.u_[dv]2/q\[[0-9]+\]\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] != 100} {error "G_STATION g_pass2: expected 100 registers, got [llength $gl]"}
+sr_place_win $gl 263.8 664.0 297.8 676.0
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[0\]\.u_lh\.g[ytvf](_q)?(\[[0-9]+\])?\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] != 50} {error "G_STATION g1_l0: expected 50 registers, got [llength $gl]"}
+sr_place_win $gl 278.0 1073.0 298.0 1087.0
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[0\]\.u_gr[dv]1/q\[[0-9]+\]\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] != 50} {error "G_STATION grd1_l0: expected 50 registers, got [llength $gl]"}
+sr_place_win $gl 264.8 714.0 296.8 726.0
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[0\]\.u_gr[dv]2/q\[[0-9]+\]\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] != 50} {error "G_STATION grd2_l0: expected 50 registers, got [llength $gl]"}
+sr_place_win $gl 264.8 374.0 296.8 386.0
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[1\]\.u_lh\.g[ytvf](_q)?(\[[0-9]+\])?\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] != 50} {error "G_STATION g1_l1: expected 50 registers, got [llength $gl]"}
+sr_place_win $gl 278.0 93.0 298.0 107.0
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[1\]\.u_gr[dv]1/q\[[0-9]+\]\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] != 50} {error "G_STATION grd1_l1: expected 50 registers, got [llength $gl]"}
+sr_place_win $gl 285.72 56.0 305.72 68.0
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[1\]\.u_gr[dv]2/q\[[0-9]+\]\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] != 50} {error "G_STATION grd2_l1: expected 50 registers, got [llength $gl]"}
+sr_place_win $gl 310.72 16.0 330.72 28.0
+incr gn [llength $gl]
+puts "G_STATION_PLACED 7 DFFS $gn FIXED_CELLS $::sr_fixed"

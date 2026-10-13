@@ -66,7 +66,7 @@ EG = [("pt_w", "*u_ptw", 43.2, Y_BAND, "R0"), ("pt_e", "*u_pte", 388.8, Y_BAND, 
       ("tcl", "*g_lf?1?.u_lh.u_tcc.u_h1", 518.4, round(Y_BAND - 172.8, 3), "R0")]
 MYO = {"R0": "MY", "MX": "R180"}
 DEFINES = ["OT_SMH_CG_ENREG", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SMH_RSTPIN", "OT_SMH_HIER",
-           "OT_SMH_PTW_OHDLY", "OT_SMH_PRODUCTION_SHAPE"]
+           "OT_SMH_PTW_OHDLY", "OT_SMH_PINREG", "OT_SMH_PRODUCTION_SHAPE"]
 BDEF = " ".join(f"--define {d}" for d in DEFINES)
 BENCH = ("W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg " + BDEF +
          " {mut}--cg-gap 300 --build-jobs 8 --workdir $W --out {{RUN}}/b_{n}.json > {{RUN}}/b_{n}.log 2>&1; rc=$?; "
@@ -158,26 +158,31 @@ def spec(variant):
         "pins": {fin: ["rin", "bin"], fout: ["rout", "bout"], "S": ["gout"],
                  "N": ["gin", "xs_a1", "xs_g1", "xs_a2", "xs_g2", "clk", "rst_n", "cgi", "cgo"]},
         "io_tcl": io,
-        "orfs_vars": {"OT_CG_EXCLUDE": "*u_cgt.u_cg.u_icg", "OT_SPINE_SYM": "1", "OT_SPINE_TREE_PAD": "1", "POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
+        "orfs_vars": {"OT_CG_EXCLUDE": "*u_cgt.u_cg.u_icg", "OT_SPINE_SYM": "1", "OT_SPINE_TREE_PAD": "1", "OT_IO_REF_CLASS": "1", "POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
         "refglob": "*",
-        "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96},
-        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r13",
-                # r13 (el1013-smh-r11, 10-13): eg r11 / wg r12 died at 4_1_cts with DPL-0033 -- the spine's THROUGH_ICG move
-                # left the ICG enable cone FIRM but resizable; repair_timing sized the cgi input buffer over an abutting
-                # FIRM AND3.  Fixed in physical/common_flow/clock_spine.tcl (main 8e4929331).
+        # r14: every port's single launch / capture flop FIRM at its own pin through GPL (qwen_die_masters/
+        # io_flop_at_pins.tcl; the 3,705 rin / bin landing registers of OT_SMH_PINREG, the gin landings, the gout
+        # launches); the wake pin's kept HB4 hold stage (ot_hdly u_hdly_cgi) dont_touch'ed at PRE_FLOORPLAN
+        "io_flop_at_pins": {"cols": 6, "allow_none": True},
+        "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96, "hold_delay": True},
+        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r14",
+                # r14 (el1013-smh-r14, 10-13): r13 passed CTS and was stopped EARLY_FAIL_SETUP (3,985 / 3,885 endpoints).
+                # Diagnosis in el1011-hbm-smh.log: 95 % = rin / bin ports straight into pt_w's pins (the child spends
+                # 240-530 ps pin -> landing flops), the rest g-lane pin registers left mid-wire by the placer.
                 "structural_change": (
-                    "clock root rebuilt: only the tile ICG and its enable registers are fixed beside the clk pin and "
-                    "they are dont_touch; the ICG enable cone (input buffer of cgi + gates) is movable and legalised "
-                    "(r11/r12: cone cells FIRM yet resizable -> input2099 sized to BUFx12f over FIRM _0956_, DPL-0033 "
-                    "at CTS in both tiles; spine errors if a moved cell is fixed and resizable)"
-                    + ("" if variant == "eg" else "; wg station plan mirrors about the PLACED centre channel "
-                       "(x 259.2-302.4; reset 271.2, strap 283.0), every station window asserted clear of each child "
-                       "+ halo at generation")),
+                    "registered cluster boundary: OT_SMH_PINREG adds one tile-owned register per rin / bin bit at the "
+                    "tile pins (3,705 flops; +1 cycle per tile hop on the row bundles and the x-write beat, front_s "
+                    "result deskew 5 + PT4 + 1 a hop), fixed at the pins with the gin landing and gout launch "
+                    "registers (io_flop_at_pins); the g-lane relays (pass mid, own-row grd1 / grd2) and the G1 select "
+                    "registers sit at fixed stations (<= 700 um a hop, G1 midway between bdc and tct outputs); two "
+                    "kept HB4 hold cells on the wake pin (r13 FF hold -37.5 ps at cgi -> wq, repair stalled on the "
+                    "fixed root cells).  r13: post-CTS TT -816 ps / 3,906 endpoints in the session budget (S = R = "
+                    "223 ps): port -> pt_w 3,705 (-419 worst), reg -> gout 99 (-465), gin -> reg 67 (-327)"),
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
                             "LEFs on the 43.2-um lattice (630.72 x 1252.8, landing channels 58-60 um, cut 0.59), clock "
-                            "spine through the tile ICG (symmetric insertion-aware topology), exact abutment pin plan re-applied after place_pins, rst_n pin flop + registered N-S reset tree (16 stations FFs, no reset on the raw clock: RSTEN 0 / RAWRST 0). Five registered regional static-strap stages per leaf (260 DFFs), zero data latency; "
+                            "spine through the tile ICG (symmetric insertion-aware topology), exact abutment pin plan re-applied after place_pins, rst_n pin flop + registered N-S reset tree (16 stations FFs, no reset on the raw clock: RSTEN 0 / RAWRST 0), tile-owned pin registers on rin / bin (OT_SMH_PINREG), g-lane relay and G1 stations. Five registered regional static-strap stages per leaf (260 DFFs), zero data latency; "
                             "production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail."),
                 "benches": BENCHES + [{"name": "mut_strap_region", "expect": "fail",
                 "fail_regex": "SMT_STRAP_MUTANT_KILLED", "threads": 8, "peak_ram_gb": 72,
@@ -230,7 +235,7 @@ def station_x(variant, x):
     return round(W - x, 3)
 
 
-def station_check(variant, name, x, y):
+def station_check(variant, name, x, y, SBX=SBX, SBY=SBY):
     """the whole search window must be legal rows: inside the core and clear of every child + halo (0.5 um for the
     mirrored-pin track shift of a placed origin).  Fails at generation, not in the route."""
     m = HALO + 0.5
@@ -239,6 +244,59 @@ def station_check(variant, name, x, y):
         if x + SBX > x0 - m and x - SBX < x1 + m and y + SBY > y0 - m and y - SBY < y1 + m:
             raise AssertionError(f"{variant} station {name} window ({x}, {y}) +-({SBX}, {SBY}) overlaps a child + halo "
                                  f"at x {x0}-{x1} y {y0}-{y1}")
+
+
+# el1013-smh-r14: g-lane relay and G1 select registers at fixed stations.  r13 post-CTS (wg): a relay register on a chain
+# of 2-pin nets is HPWL-neutral anywhere along its wire, so the placer smeared every g-lane stage over the tile (u_d y
+# 549..1,242, u_d3 y 7..807, leaf 0's u_god y 3..701): gin -> landing 185-753 um, launch -> gout 158-1,008 um, relay
+# hops ~1 mm (TT -77).  The pin stages are fixed at their pins by io_flop_at_pins; these are the stages in between.
+#   pass lanes (gin N -> gout S, 3 registers): u_d2 / u_v2 mid-channel, 650-700 um a hop
+#   own rows: G1 (u_lh.gy / gt / gv / gf) midway between the bdc outputs (W column, outer face) and the tct outputs
+#   (E column, outer face; 750 um apart, ~375 um each), then grd1 / grd2 down the channel (<= 450 um a hop) to gout
+# (name, instance regexp, expected flops, eg x, y, half x, half y)
+G_ST = [("g_pass2", r"g_gl\[[0-9]\]\.u_[dv]2/q\[[0-9]+\]\$_DFF", 100, CH_X, 670.0, 17.0, 6.0),
+        ("g1_l0", r"g_lf\[0\]\.u_lh\.g[ytvf](_q)?(\[[0-9]+\])?\$_DFF", 50, CH_X - 7.2, 1080.0, 10.0, 7.0),
+        ("grd1_l0", r"g_lf\[0\]\.u_gr[dv]1/q\[[0-9]+\]\$_DFF", 50, CH_X, 720.0, 16.0, 6.0),
+        ("grd2_l0", r"g_lf\[0\]\.u_gr[dv]2/q\[[0-9]+\]\$_DFF", 50, CH_X, 380.0, 16.0, 6.0),
+        ("g1_l1", r"g_lf\[1\]\.u_lh\.g[ytvf](_q)?(\[[0-9]+\])?\$_DFF", 50, CH_X - 7.2, 100.0, 10.0, 7.0),
+        ("grd1_l1", r"g_lf\[1\]\.u_gr[dv]1/q\[[0-9]+\]\$_DFF", 50, 335.0, 62.0, 10.0, 6.0),
+        ("grd2_l1", r"g_lf\[1\]\.u_gr[dv]2/q\[[0-9]+\]\$_DFF", 50, 310.0, 22.0, 10.0, 6.0)]
+
+
+def g_stations(variant):
+    lines = ["# el1013-smh-r14: g-lane relay / G1 select stations (window fill, nearest rows first, 1 um between cells)",
+             "proc sr_place_win {insts x0 y0 x1 y1} {",
+             "  set X0 [expr {round($x0*$::sr_dbu)}]; set Y0 [expr {round($y0*$::sr_dbu)}]; set X1 [expr {round($x1*$::sr_dbu)}]; set Y1 [expr {round($y1*$::sr_dbu)}]",
+             "  set cy [expr {($Y0+$Y1)/2}]; set rows {}; set pad [expr {round(1.0*$::sr_dbu)}]",
+             "  foreach r $::sr_rows {lassign $r ox oy xe ori; if {$oy >= $Y0 && $oy+$::sr_rh <= $Y1 && $xe > $X0 && $ox < $X1} {lappend rows [linsert $r 0 [expr {abs($oy-$cy)}]]}}",
+             "  set rows [lsort -integer -index 0 $rows]",
+             "  foreach i $insts {",
+             "    set h [[$i getMaster] getHeight]; set w [expr {max([[$i getMaster] getWidth],$::sr_mw_dff)+4*$::sr_sw+$pad}]; set found 0",
+             "    foreach r $rows {lassign $r delta ox oy xe ori",
+             "      set x [expr {$ox+int(ceil(double(max($ox,$X0)-$ox)/$::sr_sw))*$::sr_sw}]",
+             "      while {$x+$w <= min($xe,$X1)} {",
+             "        set jump $x; for {set k [expr {int(floor(double($oy)/$::sr_rh))}]} {$k <= int(floor(double($oy+$h-1)/$::sr_rh))} {incr k} {",
+             "          if {![dict exists $::sr_used $k]} continue; foreach iv [dict get $::sr_used $k] {lassign $iv a b; if {$x+$w > $a && $x < $b} {set jump [expr {max($jump,$ox+int(ceil(double($b-$ox)/$::sr_sw))*$::sr_sw)}]}}",
+             "        }",
+             "        if {$jump > $x} {set x $jump; continue}",
+             "        $i setOrient $ori; $i setLocation [expr {$x+2*$::sr_sw}] $oy; $i setPlacementStatus FIRM; incr ::sr_fixed; sr_occupy $x $oy [expr {$x+$w}] [expr {$oy+$h}]; set found 1; break",
+             "      }; if {$found} break",
+             "    }; if {!$found} {error \"G_STATION no legal site for [$i getName] in ($x0 $y0 $x1 $y1)\"}",
+             "  }",
+             "}", "set gn 0"]
+    tot = 0
+    for name, rex, n, x, y, hx, hy in G_ST:
+        x = station_x(variant, x)
+        station_check(variant, name, x, y, hx, hy)
+        lines += ["set gl {}",
+                  "foreach i [$::sr_blk getInsts] {set nm [string map {\\\\ {}} [$i getName]]; "
+                  f"if {{[regexp {{{rex}}} $nm] && [string match DFF* [[$i getMaster] getName]]}} {{lappend gl $i}}}}",
+                  f"if {{[llength $gl] != {n}}} {{error \"G_STATION {name}: expected {n} registers, got [llength $gl]\"}}",
+                  f"sr_place_win $gl {round(x - hx, 3)} {round(y - hy, 3)} {round(x + hx, 3)} {round(y + hy, 3)}",
+                  "incr gn [llength $gl]"]
+        tot += n
+    lines += [f"puts \"G_STATION_PLACED {len(G_ST)} DFFS $gn FIXED_CELLS $::sr_fixed\""]
+    return lines
 
 
 def strap_regions(variant):
@@ -315,6 +373,7 @@ def strap_regions(variant):
                   f"  if {{[regexp {{u_rt\\.{reg}$}} $nm]}} {{ sr_bind $net $gr; incr nc; incr rn }}",
                   "}", f"if {{$nc != 1}} {{error \"RESET_STATION {name}: expected 1 register, got $nc\"}}", f"sr_place $gr {x} {y}", "odb::dbGroup_destroy $gr", "odb::dbRegion_destroy $rg"]
     lines += [f"if {{$rn != {len(rst)}}} {{error \"RESET_STATION expected {len(rst)} registers\"}}", f"puts \"RESET_STATION_PLACED {len(rst)} FIXED_CELLS $::sr_fixed\""]
+    lines += g_stations(variant)
     (OUT/f"smh_tile_{variant}_ref_strap_regions.tcl").write_text("\n".join(lines)+"\n")
 
 
