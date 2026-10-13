@@ -174,6 +174,50 @@ module tb_hbm_b2_xcommit;
         end
         e = e + 1;
     end
+`define XCM(BR) dut.g_c[gc].g_p[gp].BR.u_t.u.u.g_lf[gj].u_lh.u_xs.u_leaf.g_xm[gx].u_x
+`define XC_MON(BR) \
+    integer a, q; \
+    wire wce = `XCM(BR).w_ce_in, rce = `XCM(BR).r_ce_in; \
+    wire [6:0] ra = `XCM(BR).r_addr_in; \
+    initial for (q = 0; q < 130; q = q + 1) \
+        `XCM(BR).arr[q] = {8{32'h5a5a_0000 ^ (IDX * 32'h0001_0193) ^ (q * 32'h0100_01b3)}} | 258'd1; \
+    function automatic bad(input integer ad); \
+        reg [255:0] g, x; reg [1023:0] w; \
+        begin \
+            g = `XCM(BR).arr[ad][255:0]; \
+            w = 1024'd0; \
+            w[531:0] = fragx[ad][BK +: 532]; \
+            w[787:532] = fragx[ad][BF +: 256]; \
+            x = w[gx*256 +: 256]; \
+            bad = (&shv[ad]) ? (g[NV-1:0] !== x[NV-1:0]) : 1'b1; \
+        end \
+    endfunction \
+    always @(negedge ck_s) if (rst_n) begin \
+        if (rb_fire) begin \
+            for (a = 0; a < cur_xn; a = a + 1) \
+                if (bad((cur_xb + a) % XDEPTH)) rb_bad[IDX] = rb_bad[IDX] + 1; \
+            rd_seen[IDX] = 0; \
+        end \
+        if (wce && m_p[gp].en_l) begin \
+            lastw[IDX] = e; nwr[IDX] = nwr[IDX] + 1; \
+            if (cal != 0) begin \
+                if (e - e0_last < lat_min[IDX]) lat_min[IDX] = e - e0_last; \
+                if (e - e0_last > lat_max[IDX]) lat_max[IDX] = e - e0_last; \
+            end \
+            if (t_drained[0]) w_after_drained[IDX] = w_after_drained[IDX] + 1; \
+        end \
+        if (wce && !m_p[gp].en_l) w_gated[IDX] = w_gated[IDX] + 1; \
+        if (rce && m_p[gp].en_l) begin \
+            if (!rd_seen[IDX]) begin firstr[IDX] = e; rd_seen[IDX] = 1; end \
+            if (bad({25'd0, ra})) stale[IDX] = stale[IDX] + 1; \
+        end \
+        if (fin_now && rd_seen[IDX]) begin \
+            if (firstr[IDX] - t_start_e < rmin[IDX]) rmin[IDX] = firstr[IDX] - t_start_e; \
+            if (firstr[IDX] - lastw[IDX] < smin[IDX]) smin[IDX] = firstr[IDX] - lastw[IDX]; \
+        end \
+    end
+// at a start edge (rb_fire) the SM takes an op on the upcoming edge: the store must already hold the op's x (rb_bad);
+// every read of the store while an op runs is compared with the shadow too (stale)
     // per x-store macro: c column, p tile row, j leaf, m macro; R = p * 2 + j the SM row of the leaf
     genvar gc, gp, gj, gx;
     generate for (gc = 0; gc < NC; gc = gc + 1) begin : m_c
@@ -191,61 +235,13 @@ module tb_hbm_b2_xcommit;
                     localparam integer BK  = gc * XC + R * 532;
                     localparam integer BF  = gc * XC + 2128 + R * 256;
                     localparam integer NV  = (gx == 3) ? 20 : 256;
-                    integer a;
-                    // (the west / east tile masters differ in one scope name: the whole probe body is one macro per
-                    // branch, so no function calls another function across a generate scope -- Verilator 5.050
-                    // LinkDot faults on that)
-                    `define XCM(BR) dut.g_c[gc].g_p[gp].BR.u_t.u.u.g_lf[gj].u_lh.u_xs.u_leaf.g_xm[gx].u_x
-                    `define XCB(BR) \
-                        integer q; \
-                        wire wce = `XCM(BR).w_ce_in, rce = `XCM(BR).r_ce_in; \
-                        wire [6:0] ra = `XCM(BR).r_addr_in; \
-                        initial for (q = 0; q < 130; q = q + 1) \
-                            `XCM(BR).arr[q] = {8{32'h5a5a_0000 ^ (IDX * 32'h0001_0193) ^ (q * 32'h0100_01b3)}} | 258'd1; \
-                        function automatic bad(input integer ad); \
-                            reg [255:0] g, x; reg [1023:0] w; \
-                            begin \
-                                g = `XCM(BR).arr[ad][255:0]; \
-                                w = 1024'd0; \
-                                w[531:0] = fragx[ad][BK +: 532]; \
-                                w[787:532] = fragx[ad][BF +: 256]; \
-                                x = w[gx*256 +: 256]; \
-                                bad = (&shv[ad]) ? (g[NV-1:0] !== x[NV-1:0]) : 1'b1; \
-                            end \
-                        endfunction
+                    // one monitor body per tile master (the west / east masters differ in one scope name); the body
+                    // reads the macro model array directly: no dotted function call into a conditional generate scope
+                    // (Verilator 5.050 faults on it, 5.032 rejects it)
                     if (gc < NC / 2) begin : g_s
-                        `XCB(g_tw)
+                        `XC_MON(g_tw)
                     end else begin : g_s
-                        `XCB(g_te)
-                    end
-                    `undef XCB
-                    `undef XCM
-                    wire wce = g_s.wce, rce = g_s.rce;
-                    wire [6:0] ra = g_s.ra;
-                    always @(negedge ck_s) if (rst_n) begin
-                        // the SM takes an op on the upcoming edge: the store must already hold the op's x
-                        if (rb_fire) begin
-                            for (a = 0; a < cur_xn; a = a + 1)
-                                if (g_s.bad((cur_xb + a) % XDEPTH)) rb_bad[IDX] = rb_bad[IDX] + 1;
-                            rd_seen[IDX] = 0;
-                        end
-                        if (wce && m_p[gp].en_l) begin
-                            lastw[IDX] = e; nwr[IDX] = nwr[IDX] + 1;
-                            if (cal != 0) begin
-                                if (e - e0_last < lat_min[IDX]) lat_min[IDX] = e - e0_last;
-                                if (e - e0_last > lat_max[IDX]) lat_max[IDX] = e - e0_last;
-                            end
-                            if (t_drained[0]) w_after_drained[IDX] = w_after_drained[IDX] + 1;
-                        end
-                        if (wce && !m_p[gp].en_l) w_gated[IDX] = w_gated[IDX] + 1;
-                        if (rce && m_p[gp].en_l) begin
-                            if (!rd_seen[IDX]) begin firstr[IDX] = e; rd_seen[IDX] = 1; end
-                            if (g_s.bad(ra)) stale[IDX] = stale[IDX] + 1;
-                        end
-                        if (fin_now && rd_seen[IDX]) begin
-                            if (firstr[IDX] - t_start_e < rmin[IDX]) rmin[IDX] = firstr[IDX] - t_start_e;
-                            if (firstr[IDX] - lastw[IDX] < smin[IDX]) smin[IDX] = firstr[IDX] - lastw[IDX];
-                        end
+                        `XC_MON(g_te)
                     end
                 end
             end
