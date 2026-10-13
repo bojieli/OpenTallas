@@ -16,6 +16,10 @@ MACRO dsfd_coll_ceqp
       LAYER M4 ;
         RECT  0 10.176 0.192 10.2 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.156 10.176 0.248 10.2 ;
+    END
   END ck
   PIN f_i[0]
     DIRECTION INPUT ;
@@ -4863,6 +4867,10 @@ MACRO dsfd_coll_ceqp
     PORT
       LAYER M5 ;
         RECT  23.712 203.928 23.736 204.12 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  23.616 203.984 23.88 203.987 ;
     END
   END f_o[111]
   PIN f_o[112]
@@ -13983,6 +13991,10 @@ MACRO dsfd_coll_ceqp
     PORT
       LAYER M4 ;
         RECT  0 12.672 0.192 12.696 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.156 12.672 0.248 12.696 ;
     END
   END rs
   PIN VDD
@@ -25497,8 +25509,6 @@ MACRO dsfd_coll_ceqp
      RECT  22.932 203.885 22.95 203.981 ;
     LAYER M4 ;
      RECT  0.156 4.8 0.248 5.208 ;
-     RECT  0.156 10.176 0.248 10.2 ;
-     RECT  0.156 12.672 0.248 12.696 ;
      RECT  0.133 14.976 0.248 15 ;
      RECT  0.125 16.992 0.248 17.016 ;
      RECT  0.248 0.528 0.352 203.592 ;
@@ -33714,7 +33724,6 @@ MACRO dsfd_coll_ceqp
      RECT  2.592 203.509 115.896 203.893 ;
      RECT  2.4 203.893 116.184 203.984 ;
      RECT  15.936 203.984 15.96 203.987 ;
-     RECT  23.616 203.984 23.88 203.987 ;
      RECT  31.488 203.984 31.512 203.987 ;
      RECT  33.408 203.984 34.392 203.987 ;
      RECT  37.632 203.984 38.232 203.987 ;

@@ -1912,6 +1912,8 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
+           "../hier_contract/abstract_pin_stub.py", "../../physical/common_flow/grt_macro_top_layer.tcl",
+           "../../physical/common_flow/grt_macro_top_layer_post.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
                                                           "macro_sliver_block.tcl", "edge_sliver_block.tcl",
@@ -2062,6 +2064,19 @@ def overlay_drift_check(force=False):
             log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: all overlay files equal main")
     except Exception:  # noqa: BLE001
         log("overlay_drift_check error:\n" + traceback.format_exc())
+
+
+# LOOP-PIN-STUB: stdin script patching a stale ref_tile.py export (pre-ba4d5d136) to run abstract_pin_stub.py before the lint
+PINSTUB_PATCH = r"""import sys
+p = sys.argv[1]
+t = open(p).read()
+a = '    res = child_lint.lint(str(lef), str(o)) if lef.exists() else'
+if "abstract_pin_stub" not in t and t.count(a) == 1:
+    t = t.replace(a, '    if lef.exists():  # LOOP-PIN-STUB (closure loop, = ba4d5d136)\n'
+                     '        subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])\n' + a)
+    open(p, "w").write(t)
+    print("LOOP-PIN-STUB: patched", p)
+"""
 
 
 def ship_helpers(host, run):
@@ -2406,6 +2421,18 @@ def launch_stage(j, st, cmd):
         env += (f"[ -f {_src}/tools/hier_contract/child_lint.py ] && ! [ -f {_src}/tools/hier_contract/child_lint.py.job ] && "
                 f"cp {_src}/tools/hier_contract/child_lint.py {_src}/tools/hier_contract/child_lint.py.job; "
                 f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py\n")
+        # LOOP-PIN-STUB (2026-10-12): the loop's child_lint (ba4d5d136) refuses a pin's own same-layer route stub written as
+        # OBS; ref_tile export runs abstract_pin_stub.py on the view before the lint, but only from ba4d5d136 on.  A job
+        # synced earlier got the new lint WITHOUT the view fix (smh_fcbc_ref_p40-r1-9214bae8b: 10 stub pins, collect
+        # crashed twice on a route that closed).  The fix and the lint travel together: ship abstract_pin_stub.py (it also
+        # writes atomically now: the exported LEF is root-owned) and add the pre-lint call to a stale ref_tile.py export.
+        env += (f"cp -f {j['run']}/cl/abstract_pin_stub.py {_src}/tools/hier_contract/abstract_pin_stub.py; "
+                f"python3 - {_src}/tools/ref_tile/ref_tile.py <<'OT_PINSTUB_PATCH' || true\n{PINSTUB_PATCH}OT_PINSTUB_PATCH\n")
+        # GRT-TOP-RESTORE (2026-10-12): grt_macro_top_layer.tcl (d36d0b234) left the block's max routing layer at MAX+1 in
+        # 5_1_grt.odb, so DRT routed M6 under the M5 cap (hgi_topk_heap_rt_m5-h3m5-6d8d554ba: 190 um M6, child_lint (c)
+        # FAIL at collect).  Jobs synced before the fix get the fixed hook + its POST_GLOBAL_ROUTE restore.
+        env += (f"[ -f {_src}/physical/common_flow/grt_macro_top_layer.tcl ] && for f in grt_macro_top_layer.tcl "
+                f"grt_macro_top_layer_post.tcl; do cp -f {j['run']}/cl/$f {_src}/physical/common_flow/$f; done; true\n")
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
         cap = stage_mem_cap(j, st)
@@ -5133,6 +5160,21 @@ def child_lint_view(lef_text, checks):
     return [x for x in res["fails"] if x[1:2] in checks], res.get("summary", "")
 
 
+def pin_stub_fix(lef_text):
+    """(text, note): tools/hier_contract/abstract_pin_stub.py applied to a view LEF text; note '' when nothing moved"""
+    with tempfile.TemporaryDirectory() as td:
+        a, b = Path(td) / "in.lef", Path(td) / "out.lef"
+        a.write_text(lef_text)
+        r = subprocess.run([sys.executable, str(CHILD_LINT_DIR / "abstract_pin_stub.py"), str(a), str(b)],
+                           capture_output=True, text=True, timeout=600)
+        m = re.search(r"pinstub: (\d+) OBS rects moved into (\d+) pins", r.stdout or "")
+        if r.returncode != 0 or not m or not b.exists():
+            return lef_text, ""
+        if m.group(1) == "0":
+            return lef_text, ""
+        return b.read_text(), f"{m.group(1)} OBS stubs of {m.group(2)} pins"
+
+
 def child_lint_gate(j):
     """None = pass / not a tile view; else the (c)/(f) failure text.  Raises on ssh failure (the commit is re-tried)."""
     checks = child_lint_gate_checks(j["spec"])
@@ -5150,7 +5192,17 @@ def child_lint_gate(j):
     t = ssh(j["host"], f"cat {shlex.quote(lef)}", timeout=300)
     if t.returncode != 0 or "MACRO" not in t.stdout:
         raise RuntimeError(f"child-lint gate: could not read {lef}: {(t.stderr or '')[-200:]}")
-    fails, summ = child_lint_view(t.stdout, checks)
+    text, moved = pin_stub_fix(t.stdout)
+    if moved:
+        # PIN-STUB (73e17f447, ot_qkvd_sbuf DRT-0073): write_abstract_lef writes a face pin's own same-layer route stub
+        # as OBS over the pin; child_lint (f) now refuses that.  Moving the stub into the pin's PORT is the exact view
+        # (in a DRC-clean route, metal touching a pin on its layer is the pin's net), so fix the record's view in place.
+        w = ssh(j["host"], f"cat > {shlex.quote(lef)}.pinstub && mv {shlex.quote(lef)}.pinstub {shlex.quote(lef)}",
+                timeout=300, input=text)
+        if w.returncode != 0:
+            raise RuntimeError(f"child-lint gate: could not write the pin-stub view {lef}: {(w.stderr or '')[-200:]}")
+        event(j, f"child-lint gate: abstract_pin_stub moved {moved} into their pins' PORTs in {lef}")
+    fails, summ = child_lint_view(text, checks)
     j["child_lint"] = dict(lef=lef, checks="".join(sorted(checks)), fails=fails, summary=summ[:400], at=now_iso())
     return "; ".join(fails) if fails else None
 

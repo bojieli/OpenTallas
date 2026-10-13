@@ -784,6 +784,14 @@ MACRO dsfd_coll_cbfj
       LAYER M4 ;
         RECT  0 170.112 0.192 170.136 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 170.112 0.133 170.136 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.133 170.112 0.248 170.232 ;
+    END
   END ck
   PIN f_vm[0]
     DIRECTION INPUT ;
@@ -10376,6 +10384,14 @@ MACRO dsfd_coll_cbfj
       LAYER M4 ;
         RECT  0 174.912 0.192 174.936 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 174.912 0.133 174.936 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.133 174.816 0.248 174.936 ;
+    END
   END rs
   PIN VDD
     DIRECTION INOUT ;
@@ -17894,12 +17910,8 @@ MACRO dsfd_coll_cbfj
      RECT  48.816 339.869 48.834 339.917 ;
      RECT  17.28 339.917 17.298 340.013 ;
     LAYER M4 ;
-     RECT  0.06 170.112 0.133 170.136 ;
-     RECT  0.06 174.912 0.133 174.936 ;
      RECT  0.092 143.136 0.248 143.16 ;
      RECT  0.241 148.416 0.248 148.44 ;
-     RECT  0.133 170.112 0.248 170.232 ;
-     RECT  0.133 174.816 0.248 174.936 ;
      RECT  0.205 200.16 0.248 200.184 ;
      RECT  0.133 215.136 0.248 215.16 ;
      RECT  0.133 218.784 0.248 218.808 ;

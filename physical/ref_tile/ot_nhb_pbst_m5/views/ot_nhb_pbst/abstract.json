@@ -1,0 +1,93 @@
+{
+  "name": "ot_nhb_pbst",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/routes/ot_nhb_pbst_m5_m5_e5e8e058b/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 9.613831952748342e-11 min -6.484168757481257e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/routes/ot_nhb_pbst_m5_m5_e5e8e058b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/record/views/ot_nhb_pbst:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/src/physical/ref_tile/ot_nhb_pbst_m5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.7284463577359475e-10 min -6.025648036089848e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/routes/ot_nhb_pbst_m5_m5_e5e8e058b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/record/views/ot_nhb_pbst:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/src/physical/ref_tile/ot_nhb_pbst_m5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.2094309715114946e-10 min -5.923569967869469e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/routes/ot_nhb_pbst_m5_m5_e5e8e058b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/record/views/ot_nhb_pbst:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/src/physical/ref_tile/ot_nhb_pbst_m5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/src/physical/ref_tile/ot_nhb_pbst_m5/signoff.sdc",
+    "sha256": "26b6d61ca8449d8e140829cc24f551f36623e3d5e9fca1bbbf3f658e43e92ac1",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/ot_nhb_pbst_m5-m5-e5e8e058b/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_nhb_pbst.lef": "a20d266fecf4169a3a6c111174e64469ff47e2db531da7d7b9c85004f12ccbd7",
+    "ot_nhb_pbst_ff.lib": "16ca41d5cf032153aff1121d3edd694dcee35df3031cbdfd32cc28763ab4fb58",
+    "ot_nhb_pbst_ss.lib": "5c33f44ec37f32367879086f23baca26641c34e26214b0a114f2edf64916717d",
+    "ot_nhb_pbst_tt.lib": "ec55c93b17cb2465bfbad87b916ba70a51d016300adbe0b49ef2d0a6677e8567"
+  },
+  "ok": true
+}

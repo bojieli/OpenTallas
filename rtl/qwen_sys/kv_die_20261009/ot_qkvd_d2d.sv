@@ -49,6 +49,17 @@ module ot_qkvd_d2d #(
     // the link buffers, REPLICATED per buffer on RX (rx_word is broadcast to all NR buffers: one kept copy sits next to
     // each buffer's din, the parent -> parent hop takes the wire).  +1 cycle per direction, behaviour = inputs delayed
     parameter integer IRL = 0,
+    // PQ (el1011-q-kvd 2026-10-12; 0 = unchanged; needs HT): every hard-buffer POP pin is driven straight from a kept flop
+    // (placed at the macro pin), decided ONE CYCLE AHEAD from registered state only.  The hardened buffers' empty is a
+    // macro output (~500 ps clk->Q incl. folded insertion) and their pop is a ~660 ps internal cone, so the same-cycle
+    // empty -> arbitration -> pop loop could not close (route qkd_d2d_ref-q8-aeca40e24: up_q -> 647 ps TX arbitration ->
+    // g_tx[0] sbuf pop, TT -611).  Each buffer gets a parent-side SHADOW of its control (ot_qkvd_sbuf_shadow /
+    // ot_qkvd_fbuf8_shadow: exact mirror of the tile's push / pop occupancy pipeline, same reset release), which says
+    // whether the buffer still holds a word after this cycle's pop; the arbiter grants from that, the grant is
+    // registered and is the next cycle's pop.  Full rate per class is kept (back-to-back pops of one buffer).  TX: the
+    // link slot of a decided grant is the next cycle (tx_up one more cycle of latency); RX: r_v / r_d one cycle later.
+    // Order, values and credits unchanged; simulation checks every cycle that each shadow's empty equals the tile's.
+    parameter integer PQ  = 0,
     parameter integer FW  = 8 + 8 + 1 + 3 + W
 ) (
     input  wire            clk,
@@ -70,6 +81,7 @@ module ot_qkvd_d2d #(
     output reg             fault,
     output reg  [4:0]      fault_cause
 );
+    localparam integer PQE = (PQ != 0 && HT != 0) ? 1 : 0;      // PQ applies to the hardened buffers only
     // ---- reset copy ----
     // el1011-q-kvd 2026-10-11: two kept copies of the same 2-stage synchroniser (identical release cycle): rs for the
     // parent control flops, rs_t for the hardened buffer tiles' rst_n pins (route qkd_d2d_h-305021c34: one rs net drove
@@ -130,12 +142,18 @@ module ot_qkvd_d2d #(
     // grant: first class at or after rr that has a word and a link credit
     reg  [NT-1:0] gnt;
     reg           any;
+    wire [NT-1:0] tx_ne;               // class has a word for the slot being decided (PQ: shadow, after this cycle's pop)
+    reg  [NT-1:0] gq;                  // PQ: grant decided last cycle = this cycle's pop / flit word
+    reg           up2;                 // PQ: up_q one cycle later = the link slot of a grant decided with up_q
+    wire [NT-1:0] gsel = (PQE != 0) ? gq : gnt;   // word that leaves its buffer / goes in this cycle's flit
+    wire          anys = |gsel;
+    wire          up_s = (PQE != 0) ? up2 : up_q;  // this cycle's link slot is up
     integer k, c;
     always @* begin
         gnt = 0; any = 1'b0;
         for (k = 0; k < NT; k = k + 1) begin
             c = (rr + k) % NT;
-            if (!any && up_q && !ib_empty[c] && lc_nz[c]) begin gnt[c] = 1'b1; any = 1'b1; end
+            if (!any && up_q && tx_ne[c] && lc_nz[c]) begin gnt[c] = 1'b1; any = 1'b1; end
         end
     end
     genvar i, j;
@@ -143,20 +161,47 @@ module ot_qkvd_d2d #(
         wire [$clog2(IBD[8*i +: 8]+1)-1:0] cnt;
         if (HT != 0) begin : g_ht
             reg [7:0] oc;
-            always @(posedge clk or negedge rs) if (!rs) oc <= 8'd0; else oc <= oc + (ce_v[i] ? 8'd1 : 8'd0) - (gnt[i] ? 8'd1 : 8'd0);
+            always @(posedge clk or negedge rs) if (!rs) oc <= 8'd0; else oc <= oc + (ce_v[i] ? 8'd1 : 8'd0) - (gsel[i] ? 8'd1 : 8'd0);
             assign ib_full[i] = (oc == IBD[8*i +: 8]);
             assign cnt = oc[$clog2(IBD[8*i +: 8]+1)-1:0];
-            if (IBD[8*i +: 8] > 8) begin : g_s
-                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .din(ce_d[W*i +: W]), .pop(gnt[i]),
-                    .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
-            end else begin : g_f
-                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .din(ce_d[W*i +: W]), .pop(gnt[i]),
-                    .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
+            wire pop_i, sh_e, sh_ne;
+            if (PQE != 0) begin : g_pq
+                (* keep *) reg pp;                                                    // pop pin flop, at the macro
+                always @(posedge clk or negedge rs) if (!rs) pp <= 1'b0; else pp <= gnt[i];
+                assign pop_i = pp;
+                assign tx_ne[i] = sh_ne;
+            end else begin : g_npq
+                assign pop_i = gnt[i];
+                assign sh_e = 1'b0; assign sh_ne = 1'b0;
+                assign tx_ne[i] = !ib_empty[i];
             end
+            if (IBD[8*i +: 8] > 8) begin : g_s
+                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .din(ce_d[W*i +: W]), .pop(pop_i),
+                    .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
+                if (PQE != 0) begin : g_sh
+                    ot_qkvd_sbuf_shadow u_sh (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .pop(gq[i]), .empty(sh_e), .ne_next(sh_ne));
+                end
+            end else begin : g_f
+                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .din(ce_d[W*i +: W]), .pop(pop_i),
+                    .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
+                if (PQE != 0) begin : g_sh
+                    ot_qkvd_fbuf8_shadow u_sh (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .pop(gq[i]), .empty(sh_e), .ne_next(sh_ne));
+                end
+            end
+`ifndef SYNTHESIS
+            if (PQE != 0) begin : g_chk
+                always @(posedge clk) if (rs && sh_e !== ib_empty[i]) begin
+                    $display("ERROR ot_qkvd_d2d PQ: TX class %0d shadow empty %b != buffer empty %b at %0t", i, sh_e, ib_empty[i], $time);
+                    $fatal(1);
+                end
+            end
+`endif
         end else if (SBD != 0 && IBD[8*i +: 8] >= SBD) begin : g_sb
+        assign tx_ne[i] = !ib_empty[i];
         ot_qkvd_fifo_sb #(.W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ce_v[i]), .din(ce_d[W*i +: W]),
             .pop(gnt[i]), .dout(ib_head[W*i +: W]), .empty(ib_empty[i]), .full(ib_full[i]), .count(cnt));
         end else begin : g_ff
+        assign tx_ne[i] = !ib_empty[i];
         ot_qkvd_fifo #(.RH(1), .W(W), .D(IBD[8*i +: 8])) u_ib (.clk(clk), .rst_n(rs), .push(ce_v[i]), .din(ce_d[W*i +: W]),
             .pop(gnt[i]), .dout(ib_head[W*i +: W]), .empty(ib_empty[i]), .full(ib_full[i]), .count(cnt));
         end
@@ -165,7 +210,7 @@ module ot_qkvd_d2d #(
     reg [2:0]   sel_cls;
     always @* begin
         sel_word = {W{1'b0}}; sel_cls = 3'd0;
-        for (k = 0; k < NT; k = k + 1) if (gnt[k]) begin sel_word = ib_head[W*k +: W]; sel_cls = 3'(TXB + k); end
+        for (k = 0; k < NT; k = k + 1) if (gsel[k]) begin sel_word = ib_head[W*k +: W]; sel_cls = 3'(TXB + k); end
     end
     // ---- RX side ----
     wire [NR-1:0]   rb_empty, rb_full;
@@ -173,26 +218,57 @@ module ot_qkvd_d2d #(
     reg  [7:0]      ocred [0:NR-1];
     reg  [7:0]      owed  [0:NR-1];
     wire [NR-1:0]   rb_push, rb_pop;
+    wire [NR-1:0]   rx_ne;             // receive buffer has a word for the pop being decided (PQ: shadow)
+    wire [NR-1:0]   rdec;              // pop decided this cycle (consumes a die-face credit)
+    reg  [NR-1:0]   rq_q;              // PQ: pop decided last cycle = this cycle's pop
     generate for (j = 0; j < NR; j = j + 1) begin : g_rx
         wire [$clog2(RBD[8*j +: 8]+1)-1:0] cnt;
         assign rb_push[j] = rx_dv && (rx_cls == 3'(RXB + j));
-        assign rb_pop[j]  = !rb_empty[j] && (ocred[j] != 0);
+        assign rdec[j]    = rx_ne[j] && (ocred[j] != 0);
+        assign rb_pop[j]  = (PQE != 0) ? rq_q[j] : rdec[j];
         if (HT != 0) begin : g_ht
             reg [7:0] oc;
             always @(posedge clk or negedge rs) if (!rs) oc <= 8'd0; else oc <= oc + (rb_push[j] ? 8'd1 : 8'd0) - (rb_pop[j] ? 8'd1 : 8'd0);
             assign rb_full[j] = (oc == RBD[8*j +: 8]);
             assign cnt = oc[$clog2(RBD[8*j +: 8]+1)-1:0];
-            if (RBD[8*j +: 8] > 8) begin : g_s
-                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(re_w[W*j +: W]), .pop(rb_pop[j]),
-                    .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
-            end else begin : g_f
-                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(re_w[W*j +: W]), .pop(rb_pop[j]),
-                    .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
+            wire pop_j, sh_e, sh_ne;
+            if (PQE != 0) begin : g_pq
+                (* keep *) reg pp;                                                    // pop pin flop, at the macro
+                always @(posedge clk or negedge rs) if (!rs) pp <= 1'b0; else pp <= rdec[j];
+                assign pop_j = pp;
+                assign rx_ne[j] = sh_ne;
+            end else begin : g_npq
+                assign pop_j = rb_pop[j];
+                assign sh_e = 1'b0; assign sh_ne = 1'b0;
+                assign rx_ne[j] = !rb_empty[j];
             end
+            if (RBD[8*j +: 8] > 8) begin : g_s
+                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(re_w[W*j +: W]), .pop(pop_j),
+                    .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
+                if (PQE != 0) begin : g_sh
+                    ot_qkvd_sbuf_shadow u_sh (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .pop(rq_q[j]), .empty(sh_e), .ne_next(sh_ne));
+                end
+            end else begin : g_f
+                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(re_w[W*j +: W]), .pop(pop_j),
+                    .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
+                if (PQE != 0) begin : g_sh
+                    ot_qkvd_fbuf8_shadow u_sh (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .pop(rq_q[j]), .empty(sh_e), .ne_next(sh_ne));
+                end
+            end
+`ifndef SYNTHESIS
+            if (PQE != 0) begin : g_chk
+                always @(posedge clk) if (rs && sh_e !== rb_empty[j]) begin
+                    $display("ERROR ot_qkvd_d2d PQ: RX class %0d shadow empty %b != buffer empty %b at %0t", j, sh_e, rb_empty[j], $time);
+                    $fatal(1);
+                end
+            end
+`endif
         end else if (SBD != 0 && RBD[8*j +: 8] >= SBD) begin : g_sb
+        assign rx_ne[j] = !rb_empty[j];
         ot_qkvd_fifo_sb #(.W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(re_w[W*j +: W]),
             .pop(rb_pop[j]), .dout(rb_head[W*j +: W]), .empty(rb_empty[j]), .full(rb_full[j]), .count(cnt));
         end else begin : g_ff
+        assign rx_ne[j] = !rb_empty[j];
         ot_qkvd_fifo #(.RH(1), .W(W), .D(RBD[8*j +: 8])) u_rb (.clk(clk), .rst_n(rs), .push(rb_push[j]), .din(re_w[W*j +: W]),
             .pop(rb_pop[j]), .dout(rb_head[W*j +: W]), .empty(rb_empty[j]), .full(rb_full[j]), .count(cnt));
         end
@@ -205,7 +281,7 @@ module ot_qkvd_d2d #(
         for (k = 0; k < 4; k = k + 1) begin
             ret[k] = 2'd0;
             if (k < NR) ret[k] = (owed[k] > 8'd3) ? 2'd3 : owed[k][1:0];
-            if (!up_q) ret[k] = 2'd0;
+            if (!up_s) ret[k] = 2'd0;
             cr_ret[2*k +: 2] = ret[k];
         end
     end
@@ -213,14 +289,14 @@ module ot_qkvd_d2d #(
     reg tv0;                                                                      // ORL: tx_v one stage early
     generate if (ORL != 0) begin : g_torl
         reg [FW-1:0] tf0;                                                         // relay: near the TX buffers
-        always @(posedge clk) begin tf0 <= {tx_seq, cr_ret, any, sel_cls, sel_word}; tx_flit <= tf0; end
+        always @(posedge clk) begin tf0 <= {tx_seq, cr_ret, anys, sel_cls, sel_word}; tx_flit <= tf0; end
     end else begin : g_tdir
-        always @(posedge clk) tx_flit <= {tx_seq, cr_ret, any, sel_cls, sel_word};   // datapath: no reset
+        always @(posedge clk) tx_flit <= {tx_seq, cr_ret, anys, sel_cls, sel_word};   // datapath: no reset
     end endgenerate
     reg [NR-1:0] rv0;                                                             // ORL: r_v one stage early
     always @(posedge clk or negedge rs) begin
         if (!rs) begin
-            tx_v <= 1'b0; tv0 <= 1'b0; rv0 <= 0; tx_seq <= 8'd0; rx_seq <= 8'd0; rr <= 0;
+            tx_v <= 1'b0; tv0 <= 1'b0; rv0 <= 0; gq <= 0; up2 <= 1'b0; rq_q <= 0; tx_seq <= 8'd0; rx_seq <= 8'd0; rr <= 0;
             t_cr <= 0; r_v <= 0;
             f_die <= 1'b0; f_rb <= 1'b0; f_seq <= 1'b0; f_cred <= 1'b0; f_cls <= 1'b0;
             fault <= 1'b0; fault_cause <= 5'd0;
@@ -231,12 +307,13 @@ module ot_qkvd_d2d #(
             for (k = 0; k < NR; k = k + 1) begin ocred[k] <= OCR[8*k +: 8]; owed[k] <= 8'd0; end
         end else begin
             // die TX face
-            for (k = 0; k < NT; k = k + 1) if (ce_v[k] && ib_full[k] && !gnt[k]) f_die <= 1'b1;
-            t_cr <= gnt;
+            for (k = 0; k < NT; k = k + 1) if (ce_v[k] && ib_full[k] && !gsel[k]) f_die <= 1'b1;
+            t_cr <= gsel;
             // link TX
-            tv0 <= up_q;
-            tx_v <= (ORL != 0) ? tv0 : up_q;
-            if (up_q) tx_seq <= tx_seq + 1'b1;
+            gq <= gnt; up2 <= up_q; rq_q <= rdec;
+            tv0 <= up_s;
+            tx_v <= (ORL != 0) ? tv0 : up_s;
+            if (up_s) tx_seq <= tx_seq + 1'b1;
             if (any) rr <= ((rr + 1) % NT);
             for (k = 0; k < NT; k = k + 1) begin : upd_lc
                 reg [8:0] nxt;
@@ -253,8 +330,8 @@ module ot_qkvd_d2d #(
             if (rx_dv && (rx_cls < 3'(RXB) || rx_cls >= 3'(RXB + NR))) f_cls <= 1'b1;
             for (k = 0; k < NR; k = k + 1) begin
                 if (rb_push[k] && rb_full[k] && !rb_pop[k]) f_rb <= 1'b1;
-                owed[k] <= owed[k] - (up_q ? {6'd0, ret[k]} : 8'd0) + ((MUT == 2 ? rb_push[k] : rb_pop[k]) ? 8'd1 : 8'd0);
-                ocred[k] <= ocred[k] - (rb_pop[k] ? 8'd1 : 8'd0) + (cr_q[k] ? 8'd1 : 8'd0);
+                owed[k] <= owed[k] - (up_s ? {6'd0, ret[k]} : 8'd0) + ((MUT == 2 ? rb_push[k] : rb_pop[k]) ? 8'd1 : 8'd0);
+                ocred[k] <= ocred[k] - (rdec[k] ? 8'd1 : 8'd0) + (cr_q[k] ? 8'd1 : 8'd0);
             end
             // die RX face
             rv0 <= rb_pop;
@@ -272,4 +349,71 @@ module ot_qkvd_d2d #(
     end else begin : g_rdir
         always @(posedge clk) for (k = 0; k < NR; k = k + 1) if (rb_pop[k]) r_d[W*k +: W] <= rb_head[W*k +: W];
     end endgenerate
+endmodule
+
+// el1011-q-kvd 2026-10-12 (PQ): parent-side shadows of the hardened link buffers' occupancy control.  Exact mirrors of
+// ot_qkvd_sbuf / ot_qkvd_fbuf8 (ot_qkvd_buf_tiles.sv) as functions of push / pop: pin-flop push stage, (sbuf) the
+// direct / SRAM path decision and its read pipeline, and the head-queue count (slice 0) whose zero is the tile's empty.
+// Reset releases on the same cycle as the tile's ot_rst_relay (2 sync + 1 tree stages).  ne_next: a word remains at the
+// head after this cycle's pop (pushes already in the pipeline included), i.e. a pop may be issued for the next cycle.
+// Keep in step with ot_qkvd_buf_tiles.sv (the d2d simulation checks shadow empty == tile empty every cycle).
+module ot_qkvd_sbuf_shadow (
+    input  wire clk,
+    input  wire rst_n,
+    input  wire push,
+    input  wire pop,
+    output wire empty,
+    output wire ne_next
+);
+`ifdef KVD_SBP
+    localparam integer P = `KVD_SBP;
+`else
+    localparam integer P = 8;
+`endif
+    localparam integer CW = $clog2(P + 1);
+    reg  [2:0]    rsr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rsr <= 3'd0; else rsr <= {rsr[1:0], 1'b1};
+    wire          rr = rsr[2];
+    reg           push_q, rq, rd_v, cap_vc, capv;
+    reg  [6:0]    ns;
+    reg  [CW:0]   f;
+    reg  [CW-1:0] oc;
+`ifdef KVD_FSBMUT
+    wire direct = push_q && (oc < P[CW-1:0]);
+`else
+    wire direct = push_q && (ns == 0) && (f == 0) && (oc < P[CW-1:0]);
+`endif
+    wire tos   = push_q && !direct;
+    wire req   = (ns != 0) && ({1'b0, oc} + f < P);
+    wire spush = direct || capv;
+    always @(posedge clk or negedge rr)
+        if (!rr) begin push_q <= 1'b0; ns <= 0; f <= 0; rq <= 1'b0; rd_v <= 1'b0; cap_vc <= 1'b0; capv <= 1'b0; oc <= 0; end
+        else begin
+            push_q <= push; rq <= req; rd_v <= rq; cap_vc <= rd_v; capv <= rd_v;
+            ns <= ns + (tos ? 1'b1 : 1'b0) - (req ? 1'b1 : 1'b0);
+            f  <= f + (req ? 1'b1 : 1'b0) - (cap_vc ? 1'b1 : 1'b0);
+            oc <= oc + (spush ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
+        end
+    assign empty   = (oc == 0);
+    assign ne_next = ({1'b0, oc} + (spush ? 1'b1 : 1'b0)) > (pop ? 1 : 0);
+endmodule
+
+module ot_qkvd_fbuf8_shadow (
+    input  wire clk,
+    input  wire rst_n,
+    input  wire push,
+    input  wire pop,
+    output wire empty,
+    output wire ne_next
+);
+    reg  [2:0] rsr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rsr <= 3'd0; else rsr <= {rsr[1:0], 1'b1};
+    wire       rr = rsr[2];
+    reg        push_q;
+    reg  [3:0] oc;
+    always @(posedge clk or negedge rr)
+        if (!rr) begin push_q <= 1'b0; oc <= 4'd0; end
+        else begin push_q <= push; oc <= oc + (push_q ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0); end
+    assign empty   = (oc == 4'd0);
+    assign ne_next = ({1'b0, oc} + (push_q ? 5'd1 : 5'd0)) > (pop ? 5'd1 : 5'd0);
 endmodule

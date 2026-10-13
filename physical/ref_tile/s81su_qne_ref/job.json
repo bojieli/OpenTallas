@@ -1,14 +1,14 @@
 {
- "name": "s81su_qne_ref-v2-8946ebc79",
+ "name": "s81su_qne_ref-v4m-46d62c427",
  "block": "dsfd_su_t_qne",
  "ref_tile": true,
  "owner": "Claude:el1011-s81su",
- "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the 8-lane QN norm engine (x32, position-independent): SRAM x/gain bank, one time-shared multiplier a lane, chunk chain -> partial, y = bf16(w*(x*r)) (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow [M5 layer cap re-kit 10-12]",
+ "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the 8-lane QN norm engine (x32, position-independent): SRAM x/gain bank, one time-shared multiplier a lane, chunk chain -> partial, y = bf16(w*(x*r)) (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow [M5 layer cap re-kit 10-12] [el1012-flowreq requeue on main HEAD: M5 re-kit; v1 REFUSED pg_layer M6]",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/el1011-s81su",
-  "commit": "8946ebc79"
+  "branch": "main",
+  "commit": "46d62c427"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qne_ref/s81su_qne_ref-v2-8946ebc79"
+   "to": "results/rtl/ref_tile/s81su_qne_ref/s81su_qne_ref-v4m-46d62c427"
   }
  ],
  "cycles_added": 0,
