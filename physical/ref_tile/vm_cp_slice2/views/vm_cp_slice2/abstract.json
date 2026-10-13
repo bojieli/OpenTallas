@@ -85,9 +85,97 @@
   ],
   "files": {
     "vm_cp_slice2.lef": "af38de0e30718256c2f4069868e5d5821220d91eac8371ee2e4b26600f97a9d9",
-    "vm_cp_slice2_ff.lib": "59504d11fd88b466b37abb1fcb6f2abf5b93c4940930ad7f715a393dbe9dd813",
-    "vm_cp_slice2_ss.lib": "b1d48a96527631f4aa1d79c017ea5ea9b06f3a593013cea50912bcc2fff5c42f",
-    "vm_cp_slice2_tt.lib": "87d4e18fbd27d51ac91c93b324b74c9728924f38da7d650c50879b2244b921cc"
+    "vm_cp_slice2_ff.lib": "ec1705301d6b69761ff82ec217ed1f4dcc44fbaee30a566294b39a876af3917e",
+    "vm_cp_slice2_ss.lib": "021aa36ca0cce9b113aa3ec776b9d0bbfac3e1f50fcb5089acb1c91688def2c8",
+    "vm_cp_slice2_tt.lib": "f7a478e7b7a6b071ea78e110942a88647dd97ff9dfca63cd4ad949c5b8c131e2"
   },
-  "ok": true
+  "ok": true,
+  "reexport_1013": {
+    "why": "export replayed at the routed verdict's SDC sequence (main abc334b14 / 56328a88a); libraries replaced, LEF kept",
+    "verdict": {
+      "json": "/home/ubuntu/xsdc1013/stage/vm_cp_slice2-cp1-2370c0876/cl/routed_ioref.a1.json",
+      "sha256": "b534e5654de42fc68c181f81234239f1d8f437823e0162dfa3e396c834d0c575",
+      "expect_ps": {
+        "tt": 173.85,
+        "ff": 2.83
+      },
+      "tol_ps": 0.05,
+      "work": "/home/ubuntu/xsdc1013/stage/vm_cp_slice2-cp1-2370c0876/routes/vm_cp_slice2_cp1_2370c0876/work/orfs",
+      "files": {
+        "/meas/app0_io_ref_routed.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/vm_cp_slice2-cp1-2370c0876/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+          "sha256": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+        },
+        "/work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.odb": {
+          "host": "/home/ubuntu/xsdc1013/stage/vm_cp_slice2-cp1-2370c0876/routes/vm_cp_slice2_cp1_2370c0876/work/orfs/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.odb",
+          "sha256": "5b77ddd26b31fdabf932056ac5aca343a30bfd830053793bd24076cf598364d5"
+        },
+        "/work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/vm_cp_slice2-cp1-2370c0876/routes/vm_cp_slice2_cp1_2370c0876/work/orfs/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.sdc",
+          "sha256": "909c9d58cffaabf17615a12c6c51dbbf1ee68cf7c17ecfd32631f6417e63f91e"
+        },
+        "/work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.spef": {
+          "host": "/home/ubuntu/xsdc1013/stage/vm_cp_slice2-cp1-2370c0876/routes/vm_cp_slice2_cp1_2370c0876/work/orfs/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.spef",
+          "sha256": "773fdc25da6852915021b4dc102a30b3fcb12c7a97716fde49e539e4830c03d1"
+        },
+        "/work/w18_extra.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/vm_cp_slice2-cp1-2370c0876/routes/vm_cp_slice2_cp1_2370c0876/work/orfs/w18_extra.sdc",
+          "sha256": "febcfc783e8a0ed5b1f02f73d0d7f57adacbc68efd6c8dfcbaac4426646a870f"
+        }
+      },
+      "check": {
+        "ff": {
+          "export_ps": 2.832789558482318,
+          "verdict_ps": 2.83,
+          "ok": true
+        },
+        "tt": {
+          "export_ps": 173.8495458702971,
+          "verdict_ps": 173.85,
+          "ok": true
+        }
+      }
+    },
+    "sdc_sequence": {
+      "ss": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /work/w18_extra.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      },
+      "ff": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /work/w18_extra.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      },
+      "tt": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_vm_cp_slice2_asap7_ref_vm_cp_slice2_cp1_2370c0876/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /work/w18_extra.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      }
+    },
+    "orfs_dir": "/home/ubuntu/xsdc1013/stage/vm_cp_slice2-cp1-2370c0876/routes/vm_cp_slice2_cp1_2370c0876/work/orfs",
+    "old_lib_sha256": {
+      "ss": "021aa36ca0cce9b113aa3ec776b9d0bbfac3e1f50fcb5089acb1c91688def2c8",
+      "ff": "ec1705301d6b69761ff82ec217ed1f4dcc44fbaee30a566294b39a876af3917e",
+      "tt": "f7a478e7b7a6b071ea78e110942a88647dd97ff9dfca63cd4ad949c5b8c131e2"
+    }
+  }
 }
