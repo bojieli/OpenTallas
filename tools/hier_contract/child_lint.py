@@ -24,9 +24,18 @@ A parent may only be submitted when every hard child it instantiates passes this
                  abstract_pin_stub.py.  A same-layer OBS rect spanning several pins is WARN only (edge-band decomposition).
   (g) clock      WARN only: clock-pin insertion delay (max/min_clock_tree_path) from the TT lib; missing, or more than
                  100 ps from the contract slot's target_insertion_ps (preamble CLOCK LATENCY ACROSS THE HIERARCHY).
+  (h) pockets    interior own-layer pockets: on the child's OWN TOP SIGNAL LAYER (highest metal layer with OBS) no free gap
+                 narrower than D (32 routing pitches, 2.048 um on M6) between two of the child's own obstacles (OBS + PG
+                 pin rects; never obstacle-to-boundary, never within a pitch of a signal pin on that layer or the one
+                 below) -- a parent router that enters one shorts against the child (hc_tile_xl-c4-550082537-hs: DRC 11
+                 in one M6 pocket of ot_hdc_v41x_hcp_lanes).  Detection is abstract_pin_stub.find_pockets (the sibling
+                 file; not importable = FAIL).  A LEF carrying the exporter's `# OT_OBS_CLOSED` marker (every export
+                 since 2026-10-13): any pocket = FAIL.  A LEF without it (exported before the fix; accepted closed views
+                 stand): WARN with the count, the largest pocket and the fix command -- FAIL under --strict-pockets,
+                 which a parent that routes on the child's own top layer should use on its children.
 
 exit 0 = PASS (warnings allowed), 1 = FAIL, 2 = usage / unreadable input.  --json prints the machine record.
-Usage: child_lint.py CHILD.lef [--libs DIR] [--contract DIE.json --slot NAME] [--json] [--skip f,g]
+Usage: child_lint.py CHILD.lef [--libs DIR] [--contract DIE.json --slot NAME] [--json] [--skip f,g] [--strict-pockets]
 """
 from __future__ import annotations
 
@@ -48,6 +57,29 @@ FACE_FIX = ("physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): 
 
 SAME_FIX = ("tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef (73e17f447): move the pin's own same-layer stub "
             "from OBS into its PORT")
+POCKET_FIX = ("tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own "
+              "obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)")
+
+
+def pockets(text: str) -> dict:
+    """(h): abstract_pin_stub.find_pockets on the LEF text; {'error': why} when the sibling detector is unusable"""
+    src = Path(__file__).resolve().parent / "abstract_pin_stub.py"
+    try:
+        # never import a pre-2026-10-13 copy: that one is a bare script acting on sys.argv at import time
+        if "def find_pockets" not in src.read_text(errors="replace"):
+            return {"error": f"{src} is a pre-pocket-closing copy (no find_pockets)"}
+        if str(src.parent) not in sys.path:
+            sys.path.insert(0, str(src.parent))
+        import abstract_pin_stub as APS
+        if not hasattr(APS, "find_pockets"):
+            return {"error": f"abstract_pin_stub imported from {getattr(APS, '__file__', '?')} has no find_pockets"}
+        r = APS.find_pockets(text)
+    except Exception as ex:  # noqa: BLE001 - any detector failure must fail the check, not skip it
+        return {"error": f"{src.name}: {type(ex).__name__}: {ex}"}
+    rs = sorted(r["rects"], key=lambda q: -(q[2] - q[0]) * (q[3] - q[1]))
+    return {"layer": r["layer"], "d_um": r["d_um"], "marker": r["marker"], "count": len(rs),
+            "area_um2": round(sum((q[2] - q[0]) * (q[3] - q[1]) for q in rs), 3),
+            "examples": [f"({q[0]:g},{q[1]:g})-({q[2]:g},{q[3]:g})" for q in rs[:3]]}
 
 
 def metal(layer: str | None) -> int | None:
@@ -250,8 +282,12 @@ def contract_slot(path: str, slot: str) -> dict:
     raise ValueError(f"slot {slot} not in {path}")
 
 
-def check_contract(m: dict, s: dict, pg_top: str | None) -> list[str]:
+def check_contract(m: dict, s: dict, pg_top: str | None, pin_grant: dict | None = None) -> list[str]:
     bad = []
+    granted_ports = {}
+    if pin_grant:
+        import m6_pin_grant as M6
+        granted_ports = M6.validate(pin_grant, m["name"])
     ow, oh = float(s["outline"]["w"]), float(s["outline"]["h"])
     if abs(ow - m["W"]) > 0.001 or abs(oh - m["H"]) > 0.001:
         bad.append(f"outline {m['W']} x {m['H']} != contract {ow} x {oh}")
@@ -271,7 +307,8 @@ def check_contract(m: dict, s: dict, pg_top: str | None) -> list[str]:
     wrong = []
     for n in sorted(set(want) & set(have)):
         p, rs = want[n], have[n]["rects"]
-        ok = [r for r in rs if (not p.get("layer") or r[0] == p["layer"]) and
+        ok = [r for r in rs if (not p.get("layer") or r[0] == p["layer"] or
+              (granted_ports and M6.approved(n, r, m, granted_ports))) and
               (not p.get("face") or face_of(r, m["W"], m["H"]) == p["face"])]
         if not ok:
             got = ", ".join(sorted({f"{r[0]}/{face_of(r, m['W'], m['H']) or 'interior'}" for r in rs}))
@@ -288,13 +325,19 @@ def check_contract(m: dict, s: dict, pg_top: str | None) -> list[str]:
 
 
 # ---------------------------------------------------------------------------------------------------------- driver
+def cap_str(v) -> str | None:
+    """a slot layer_cap / view_cap as a layer name: derived contracts carry the dict form
+    {"cap": "M5", "view_max_layer": ..., "conforms": ...} (qwen_rom_tp8 v3; slot_fit.py reads it the same way)"""
+    return v.get("cap") if isinstance(v, dict) else v
+
+
 def pick_cap(s: dict | None, pg_top: str | None, cap: str | None = None) -> int | None:
     """the cap (top layer of the child's signals AND PG) to lint at: explicit, else the slot's layer_cap / view_cap that the
     view's PG top layer matches (layer_cap when neither does, so the mismatch fails), else None (pre-1012 behaviour)"""
     if cap:
         return metal(cap)
     s = s or {}
-    caps = [c for c in (s.get("layer_cap"), s.get("view_cap")) if c]
+    caps = [c for c in (cap_str(s.get("layer_cap")), cap_str(s.get("view_cap"))) if c]
     if not caps:
         return None
     for c in caps:
@@ -307,7 +350,8 @@ def pick_cap(s: dict | None, pg_top: str | None, cap: str | None = None) -> int 
 
 
 def lint(lef_path: str, libs: str | None = None, contract: str | None = None, slot: str | None = None,
-         skip: set | None = None, cap: str | None = None) -> dict:
+         skip: set | None = None, cap: str | None = None, pin_grant: dict | None = None,
+         routed_def: str | None = None, tech_lef: str | None = None, strict_pockets: bool = False) -> dict:
     skip = skip or set()
     text = Path(lef_path).read_text(errors="replace")
     m = parse_lef(text, slot_cell(contract, slot))
@@ -316,7 +360,40 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
     fails, warns, info = [], [], {"cell": cell, "W": W, "H": H}
     pg = check_pg(m)
     info["pg"] = pg
-    cap_L = pick_cap(s, pg["top_layer"], cap)
+    grant = pin_grant if pin_grant is not None else (s or {}).get("m6_pin_grant")
+    allowed = set()
+    if grant is not None:
+        import m6_pin_grant as M6
+        try:
+            ports = M6.validate(grant, cell)
+            if cap not in (None, "M5") or cap_str((s or {}).get("layer_cap")) not in (None, "M5"):
+                raise ValueError("M6 pin-only grant requires layer_cap M5, never cap/view_cap M6")
+            if pg["top_layer"] != "M5":
+                raise ValueError("M6 pin-only grant requires PG top M5")
+            unknown = set(ports) - set(m["pins"])
+            if unknown:
+                raise ValueError(f"grant names unknown ports: {sorted(unknown)[:4]}")
+            for n, p in m["pins"].items():
+                for r in p["rects"]:
+                    if (metal(r[0]) or 0) > 5:
+                        if not M6.approved(n, r, m, ports):
+                            raise ValueError(f"ungranted/oversized high PORT geometry {n}/{r[0]}")
+                        allowed.add(n)
+            if re.search(r"\b(?:POLYGON|PATH|VIA)\b", text):
+                raise ValueError("pin-only audit requires explicit LEF RECT geometry, not unparsed POLYGON/PATH/VIA")
+            if not routed_def:
+                raise ValueError("pin-only grant requires raw routed DEF evidence")
+            bad, evidence = M6.audit_def(routed_def, m, ports, tech_lef)
+            fails += ["(c) M6 pin-only: " + b for b in bad]
+            import hashlib
+            evidence["lef_sha256"] = hashlib.sha256(text.encode()).hexdigest()
+            evidence["granted_by"] = grant["granted_by"]
+            evidence["m6_ports"] = sorted(allowed)
+            info["m6_pin_grant"] = evidence
+        except (ValueError, OSError, TypeError, KeyError) as ex:
+            fails.append(f"(c) M6 pin-only: {ex}")
+            allowed = set()
+    cap_L = 5 if grant is not None else pick_cap(s, pg["top_layer"], cap)
     if cap_L:
         pg_L, strap_L = cap_L, cap_L + 1
     else:
@@ -324,8 +401,8 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
         strap_L = metal((s or {}).get("strap_layer")) or ((pg_L + 1) if pg_L else None)
     info["pg_layer"], info["strap_layer"] = (f"M{pg_L}" if pg_L else None), (f"M{strap_L}" if strap_L else None)
     info["cap"] = f"M{cap_L}" if cap_L else None
-    if cap_L and s and s.get("layer_cap") and cap_L != metal(s["layer_cap"]):
-        info["cap_basis"] = f"view_cap (legacy closed view; slot layer_cap {s['layer_cap']} for new routes)"
+    if cap_L and s and cap_str(s.get("layer_cap")) and cap_L != metal(cap_str(s["layer_cap"])):
+        info["cap_basis"] = f"view_cap (legacy closed view; slot layer_cap {cap_str(s['layer_cap'])} for new routes)"
     # (a)
     if "a" not in skip and pg_L:
         for r in m["obs"]:
@@ -338,9 +415,9 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
     if "b" not in skip and not pg["ok"]:
         fails.append("(b) pg: " + "; ".join(pg["why"]))
     # (c)
-    if "c" not in skip and strap_L:
+    if ("c" not in skip or grant is not None) and strap_L:
         hi_obs = sorted({r[0] for r in m["obs"] if (metal(r[0]) or 0) >= strap_L})
-        hi_sig = sorted({n for n, p in m["pins"].items() if not is_pg(n, p)
+        hi_sig = sorted({n for n, p in m["pins"].items() if not is_pg(n, p) and n not in allowed
                          for r in p["rects"] if (metal(r[0]) or 0) >= strap_L})
         hi_pg = sorted({r[0] for n, p in m["pins"].items() if is_pg(n, p) for r in p["rects"]
                         if (metal(r[0]) or 0) >= strap_L})
@@ -351,7 +428,7 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
                          f"the parent strap layer, or own M{strap_L - 1} as full PG stripes and leave M{strap_L} free)")
         smax = cap_L or metal((s or {}).get("signal_max_layer"))
         if smax:
-            over = sorted({n for n, p in m["pins"].items() if not is_pg(n, p)
+            over = sorted({n for n, p in m["pins"].items() if not is_pg(n, p) and n not in allowed
                            for r in p["rects"] if (metal(r[0]) or 0) > smax})
             if over:
                 fails.append(f"(c) {len(over)} signal pins above the {'cap' if cap_L else 'contract signal_max_layer'} M{smax} "
@@ -369,7 +446,7 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
         sc = dict(s, pg_layer=f"M{cap_L}") if cap_L else s
         if cap_L and pg["top_layer"] and metal(pg["top_layer"]) < cap_L:
             sc["pg_layer"] = pg["top_layer"]       # a legacy view with PG one layer below its recorded cap
-        fails += [f"(e) contract {s.get('_die')}/{slot} v{s.get('_version')}: {b}" for b in check_contract(m, sc, pg["top_layer"])]
+        fails += [f"(e) contract {s.get('_die')}/{slot} v{s.get('_version')}: {b}" for b in check_contract(m, sc, pg["top_layer"], grant if allowed else None)]
     # (f)
     fa = face_access(m)
     info["face"] = fa
@@ -398,13 +475,33 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
                     if v and abs(v["max_ps"] - float(target)) > INSERTION_TOL_PS:
                         warns.append(f"(g) clock insertion {pin} {v['max_ps']:.0f} ps vs contract target {float(target):.0f} ps "
                                      f"(> {INSERTION_TOL_PS:.0f} ps off): re-budget the slot or the parent CTS")
+    # (h)
+    if "h" not in skip:
+        pk = pockets(text)
+        info["pockets"] = pk
+        if pk.get("error"):
+            fails.append(f"(h) pockets: detector unavailable ({pk['error']}); ship tools/hier_contract/abstract_pin_stub.py "
+                         f"next to child_lint.py")
+        elif pk["count"]:
+            msg = (f"(h) pockets: {pk['count']} open own-layer pocket rects on {pk['layer']} ({pk['area_um2']:g} um2; gaps < "
+                   f"{pk['d_um']:g} um between the child's own obstacles; largest {', '.join(pk['examples'])})")
+            if pk["marker"]:
+                fails.append(msg + f" in a LEF marked OT_OBS_CLOSED (edited after the export?); fix: {POCKET_FIX}")
+            elif strict_pockets:
+                fails.append(msg + f"; --strict-pockets (the parent routes on {pk['layer']}); fix: {POCKET_FIX}")
+            else:
+                warns.append(msg + f"; view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on "
+                             f"{pk['layer']} must lint with --strict-pockets; fix: {POCKET_FIX}")
     verdict = "FAIL" if fails else "PASS"
     summ = (f"{cell} {W} x {H}: PG {pg['top_layer']} "
             + " / ".join(f"{n} {e['stripes']} stripes ({e['spread']:.0%} spread, {e['coverage']:.0%} cov)"
                          for n, e in pg["nets"].items())
             + f"; strap {info['strap_layer']}; face pins {fa['face_pins']} blocked-above {fa['blocked_above']}"
             + f" blocked-same {fa['blocked_same']}"
-            + "".join(f"; clock {k} insertion {v['max_ps']:.0f} ps" for k, v in (info.get("clock_insertion") or {}).items() if v))
+            + "".join(f"; clock {k} insertion {v['max_ps']:.0f} ps" for k, v in (info.get("clock_insertion") or {}).items() if v)
+            + ("" if "pockets" not in info or info["pockets"].get("error") or not info["pockets"]["layer"] else
+               f"; pockets {info['pockets']['layer']} {info['pockets']['count']}"
+               + (" (closed)" if info["pockets"]["marker"] else " (legacy view)")))
     return {"schema": "opentallas.hier_contract.child_lint.v1", "lef": str(lef_path), "verdict": verdict,
             "fails": fails, "warns": warns, "summary": summ, "info": info}
 
@@ -424,14 +521,20 @@ def main(argv=None) -> int:
     ap.add_argument("--libs", help="directory holding <cell>_{tt,ff,ss}.lib")
     ap.add_argument("--contract", help="results/arch/hier_contract_1011/<die>.json")
     ap.add_argument("--slot")
-    ap.add_argument("--skip", default="", help="comma list of checks to skip (a..g)")
+    ap.add_argument("--skip", default="", help="comma list of checks to skip (a..h)")
     ap.add_argument("--cap", help="lint at this layer cap (M5 / M6 ...): strap = cap + 1, no signal pin above the cap")
+    ap.add_argument("--pin-grant", help="JSON M6 pin-only grant; requires --routed-def")
+    ap.add_argument("--tech-lef", help="exact technology LEF read by the route (named via RECT geometry)")
+    ap.add_argument("--routed-def", help="raw routed DEF for independent nonpin metal and PORT geometry audit")
+    ap.add_argument("--strict-pockets", action="store_true",
+                    help="(h) FAIL on own-top-layer pockets even in a view exported before the pocket fix (no OT_OBS_CLOSED "
+                         "marker); use when the parent routes on the child's own top layer")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
     if bool(a.contract) != bool(a.slot):
         ap.error("--contract and --slot go together")
     try:
-        r = lint(a.lef, a.libs, a.contract, a.slot, {x.strip() for x in a.skip.split(",") if x.strip()}, a.cap)
+        r = lint(a.lef, a.libs, a.contract, a.slot, {x.strip() for x in a.skip.split(",") if x.strip()}, a.cap, json.loads(Path(a.pin_grant).read_text()) if a.pin_grant else None, a.routed_def, a.tech_lef, a.strict_pockets)
     except (OSError, ValueError, KeyError) as ex:
         print(f"ERROR: {ex}")
         return 2

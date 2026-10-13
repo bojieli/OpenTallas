@@ -9,7 +9,9 @@
 // ot_qkvd_sbuf: depth <= 64, W 528 = 512 in one ot_sram_1r1w_64x512 macro + 16 tag bits in flops; registered write
 // stage, capture flops on rd_out inside each head-queue slice, 8-deep head queue as 8 x 66-bit slices each with its own
 // control copy.
-module ot_qkvd_sbuf (
+module ot_qkvd_sbuf #(
+    parameter integer PIQ = 0      // 1: pop registered once per head-queue slice (pin register; pop acts one cycle later)
+) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire         push,
@@ -72,7 +74,7 @@ module ot_qkvd_sbuf (
     wire [CW-1:0] c [0:NS-1];
     genvar s;
     generate for (s = 0; s < NS; s = s + 1) begin : g_s
-        (* keep_hierarchy *) ot_qkvd_sbq_sl #(.SW(SW), .D(P)) u_sl (.clk(clk), .rst_n(rr[s]), .direct(direct),
+        (* keep_hierarchy *) ot_qkvd_sbq_sl #(.SW(SW), .D(P), .PIQ(PIQ)) u_sl (.clk(clk), .rst_n(rr[s]), .direct(direct),
             .din(din_q[SW*s +: SW]), .rd_v(rd_v), .mq(mq[SW*s +: SW]), .pop(pop), .dout(dout[SW*s +: SW]),
             .empty(e[s]), .count(c[s]));
     end endgenerate
@@ -84,7 +86,8 @@ endmodule
 // and its own registered-head FIFO control (RH=1 behaviour).
 module ot_qkvd_sbq_sl #(
     parameter integer SW = 66,
-    parameter integer D  = 8
+    parameter integer D  = 8,
+    parameter integer PIQ = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -101,12 +104,26 @@ module ot_qkvd_sbq_sl #(
     reg          capv;
     always @(posedge clk) cap <= mq;
     always @(posedge clk or negedge rst_n) if (!rst_n) capv <= 1'b0; else capv <= rd_v;
+    wire pop_e;
+    generate if (PIQ != 0) begin : g_piq
+        (* keep *) reg pop_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) pop_q <= 1'b0; else pop_q <= pop;
+`ifdef KVD_PIQMUT
+        assign pop_e = pop;            // mutant: pop pin not registered (acts a cycle early)
+`else
+        assign pop_e = pop_q;
+`endif
+    end else begin : g_npiq
+        assign pop_e = pop;
+    end endgenerate
     ot_qkvd_fifo_sl #(.SW(SW), .D(D)) u_q (.clk(clk), .rst_n(rst_n), .push(direct || capv), .din(capv ? cap : din),
-        .pop(pop), .dout(dout), .empty(empty), .count(count));
+        .pop(pop_e), .dout(dout), .empty(empty), .count(count));
 endmodule
 
 // ot_qkvd_fbuf8: depth <= 8 flop buffer as 8 x 66-bit slices (own control copy each) behind pin flops.
-module ot_qkvd_fbuf8 (
+module ot_qkvd_fbuf8 #(
+    parameter integer PIQ = 0
+) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire         push,
@@ -122,6 +139,21 @@ module ot_qkvd_fbuf8 (
     always @(posedge clk or negedge rr[8]) if (!rr[8]) push_q <= 1'b0; else push_q <= push;
     always @(posedge clk) din_q <= din;
     wire [3:0] cnt_unused;
-    ot_qkvd_fifo_sliced #(.W(528), .SW(66), .D(8)) u_f (.clk(clk), .rst_n(rr[7:0]), .push(push_q), .din(din_q),
+    ot_qkvd_fifo_sliced #(.W(528), .SW(66), .D(8), .PIQ(PIQ)) u_f (.clk(clk), .rst_n(rr[7:0]), .push(push_q), .din(din_q),
         .pop(pop), .dout(dout), .empty(empty), .count(cnt_unused));
+endmodule
+
+// q13b-kvend 2026-10-13: the same two tiles with EVERY face pin registered (pin-register rule: register at the pin ->
+// wire -> register at the pin).  push / din already had pin flops and dout / empty are registered; pop was the one face
+// pin that entered a combinational cone (8 slice controls; ~660 ps in the old sbuf view, which left the parent's pop pin
+// flop ~110 ps).  Here pop is registered once per slice (8 kept copies, each beside its slice control), so the pop pin
+// is a plain flop D and a pop takes effect ONE CYCLE AFTER the pin (ot_qkvd_d2d PQ=2 issues it one cycle earlier from
+// the shadow occupancy; order / data / credits unchanged).  Fixed-name tops for the hard views.
+module ot_qkvd_sbufp (input wire clk, input wire rst_n, input wire push, input wire [527:0] din, input wire pop,
+    output wire [527:0] dout, output wire empty);
+    ot_qkvd_sbuf #(.PIQ(1)) u (.clk(clk), .rst_n(rst_n), .push(push), .din(din), .pop(pop), .dout(dout), .empty(empty));
+endmodule
+module ot_qkvd_fbuf8p (input wire clk, input wire rst_n, input wire push, input wire [527:0] din, input wire pop,
+    output wire [527:0] dout, output wire empty);
+    ot_qkvd_fbuf8 #(.PIQ(1)) u (.clk(clk), .rst_n(rst_n), .push(push), .din(din), .pop(pop), .dout(dout), .empty(empty));
 endmodule

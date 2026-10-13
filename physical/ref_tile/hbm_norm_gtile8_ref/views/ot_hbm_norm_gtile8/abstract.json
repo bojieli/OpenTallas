@@ -1,0 +1,93 @@
+{
+  "name": "ot_hbm_norm_gtile8",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/routes/hbm_norm_gtile8_ref_u52_0813c81c0/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.4674617904452134e-10 min -1.6018664172889885e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/routes/hbm_norm_gtile8_ref_u52_0813c81c0/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/record/views/ot_hbm_norm_gtile8:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/src/physical/ref_tile/hbm_norm_gtile8_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.2125173087795815e-10 min -1.4292395045245598e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/routes/hbm_norm_gtile8_ref_u52_0813c81c0/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/record/views/ot_hbm_norm_gtile8:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/src/physical/ref_tile/hbm_norm_gtile8_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 5.1726178895705743e-11 min -1.4037387918719446e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/routes/hbm_norm_gtile8_ref_u52_0813c81c0/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/record/views/ot_hbm_norm_gtile8:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/src/physical/ref_tile/hbm_norm_gtile8_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/src/physical/ref_tile/hbm_norm_gtile8_ref/signoff.sdc",
+    "sha256": "9cc81ce5ba8c2dce63606a6ecb6f52234df01c508cd8d509cb6d65a87c189644",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/hbm_norm_gtile8_ref-u52-0813c81c0/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_hbm_norm_gtile8.lef": "ac15a2b410323eef81c5abbe20f5f149c5a312f01d09dc6b280a1391a497fcc8",
+    "ot_hbm_norm_gtile8_ff.lib": "e3830cecd3b8a83955a69b764909f2d553bfe5b34e43f2edb1a61a1a16ab5ed2",
+    "ot_hbm_norm_gtile8_ss.lib": "2495dba1627d78bd66669f8e435df03a954ed85a95b0b30cd0b9a7120de199c4",
+    "ot_hbm_norm_gtile8_tt.lib": "455f5f4fe44429252ed46ce639ab1fa58e40edd46b99a9fac39b9bd970d6aea0"
+  },
+  "ok": true
+}

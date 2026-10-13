@@ -14,6 +14,9 @@ LOCAL (seconds; also run by the closure loop at submit for "ref_tile": true jobs
                 names (PPL-0061), the clock port planned
   rtl           textbook_lint.py rtl: runtime-indexed wide part-selects (yosys SHARE stall), hard-child #() overrides
   children      tools/hier_contract/child_lint.py (a)-(g) on every hard child; TT/FF/SS libs of every macro view
+  slot_fit      (submit only, owner 2026-10-13) a tile with a slot in a die contract fits it: outline, pin faces, pin
+                layers, layer cap, estimated clock insertion (tools/hier_contract/slot_fit.py); a mismatch is REFUSED
+                unless the spec carries "slot_change_request" (then WARN + a line in the die lead's log)
   sources       every file the flow reads (kit hooks, the scripts they source, views, RTL) exists and lies inside the
                 job's synced source paths (the loop copies only source.paths + extra_paths: hbm-no3 'No rule to make
                 target /src/physical/redesign_ds/coll_split/pin_access_pregrt.tcl')
@@ -21,7 +24,9 @@ REMOTE (--remote HOST, minutes, on the fleet via ot-heavy): the real ORFS synthe
 fails here, not after hours), floorplan + PDN + IO placement of the kit (PDN-0217/0233/0006, PPL-0061 surface here),
 then the netlist textbook lint (clock root size / span, high fanout + reset on datapath, logic behind pins, ICG enable
 from a port, logic depth, > 500 um wire per stage) on the synthesized netlist + the placed-IO floorplan, and the pin
-plan against the SYNTHESIZED port names.  --cts continues through CTS and reports clock insertion spread (ck_insertion)
+plan against the SYNTHESIZED port names.  MEASURED CLOCK RULE (owner 2026-10-13, constants in tools/textbook_lint.py):
+> 15,000 sinks on one clock root FAILs unless this run's --cts measured TT insertion <= 300 ps and leaf spread <= 80 ps;
+a declared spine does not waive it.  A --remote run writes <kit>/gate_result.json (commit it: the submit gate reads it).  --cts continues through CTS and reports clock insertion spread (ck_insertion)
 and the worst-path classes.
 Exit 0 PASS / WARN, 1 FAIL, 2 usage.
 """
@@ -75,6 +80,35 @@ class Gate:
 
 
 # --------------------------------------------------------------------------------------------- pins
+def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
+    """Yosys chip area includes each hard instance's Liberty area.
+
+    A hardened child's Liberty area is its occupied logical area; its LEF
+    rectangle includes whitespace. Subtract the Liberty areas before adding
+    the physical envelopes to utilization, otherwise children count twice.
+    Preserve the conservative old behavior when a library area is unavailable.
+    """
+    logical = 0.0
+    for b in blocks:
+        view = b.get("view")
+        if not view:
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        directory = root / view
+        lib = directory / (directory.name + "_tt.lib")
+        if not lib.exists():
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        match = re.search(r"\barea\s*:\s*([\d.eE+-]+)", lib.read_text())
+        if not match:
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        logical += float(match.group(1))
+    if logical > chip_area + 0.01:
+        raise ValueError(f"synthesis chip area {chip_area} is smaller than summed macro Liberty area {logical}")
+    return max(0.0, chip_area - logical)
+
+
 def rtl_ports(sources, top, root=None):
     root = root or ROOT
     texts = []
@@ -239,7 +273,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
             mm = re.search(rf"^{k}='([^']*)'", env, re.M)
             pins_used |= set(mm.group(1).split()) if mm else set()
         over = sorted(x for x in pins_used if re.fullmatch(r"M\d+", x) and int(x[1:]) > cap_n)
-        if over:
+        if over and not (over == ["M6"] and fresh_lc.get("m6_pin_grant")):
             g.add("FAIL", "layer", f"pin layers {over} above the tile cap {rl.group(1)}: the parent strap layer would "
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
     g.add("INFO", "layer", f"{spec['kind']}: PG {lc['pg_layer']} stripes as pins, signals {lc['rlayers'][0]}-"
@@ -353,6 +387,9 @@ def ship_tar(paths):
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
     fp = json.loads((kd / "floorplan.json").read_text())
     ref = set(fp["referenced"])
+    # Ship the same transitive Tcl/shell dependencies checked by the local gate.
+    # A custom PRE_GLOBAL_PLACE hook may source helpers outside its own folder.
+    ref |= referenced_closure(sorted(ref))[0]
     dirs = {"tools", "rtl", str(kd.relative_to(ROOT)), "physical/qwen_die_masters", "physical/common_flow",
             "physical/hbm_accel_die_views/stations/bench", "physical/hbm_w2_rb_station_20261006"}
     dirs |= {str(Path(p).parent) for p in ref}
@@ -403,8 +440,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         W, H = fp["die"][2], fp["die"][3]
         core = (W - 2 * RT.CORE_MARGIN) * (H - 2 * RT.CORE_MARGIN)
         mac = sum(b["w"] * b["h"] for b in fp["blocks"])
-        if area > mac:          # yosys' chip area counts the black-box macros' liberty area
-            area -= mac
+        area = synthesis_std_area(area, fp["blocks"])
         u = (area + mac) / core
         # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
         sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
@@ -417,6 +453,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         if not mm:
             continue
         tag, chk, msg = mm.groups()
+        if chk in TL.HARD_CHECKS:
+            continue                    # the measured clock rule is judged below, after the CTS numbers
         if tag == "PASS" or not chk or " cells " in line[:200] and " flops " in line[:200] and ":" not in line[15:40]:
             g.add("INFO", "textbook", line[len("textbook_lint: "):][:300])
             continue
@@ -447,6 +485,73 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
             g.add("INFO", "clock_spine", line[:300])
         for line in re.findall(r"^GATE_PC (.*)$", out, re.M):
             g.add("INFO", "path_classes", line)
+    clock_item(g, clock_record(out, cts, spec))
+
+
+CLOCK_RESULT = "gate_result.json"       # <kit>/gate_result.json: the kit's gate result (commit it with the kit)
+
+
+def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
+    """the clock evidence of one remote gate run: sinks of the largest root from the synthesized netlist (textbook
+    lint 'clock_roots' line) and, with --cts, the measured TT insertion (latest leaf arrival) and leaf arrival spread
+    (max - min over all register clock pins, ck_insertion.py 'all')."""
+    rec = {"max_root_sinks": None, "root": None, "cts": bool(cts), "tt_insertion_ps": None, "tt_spread_ps": None,
+           "declared_clock": (spec or {}).get("clock"),
+           "limits": {"sinks": TL.CLK_ROOT_SINKS_MAX, "insertion_ps": TL.CLK_INSERTION_MAX_PS,
+                      "spread_ps": TL.CLK_SPREAD_MAX_PS}}
+    m = re.search(r"textbook_lint: INFO clock_roots max_root_sinks=(\d+) root=(\S+)", out)
+    if m:
+        rec["max_root_sinks"], rec["root"] = int(m.group(1)), m.group(2)
+    ck = re.search(r"^GATE_CK .*?\btt insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
+    if cts and ck:
+        lo, hi = float(ck.group(1)), float(ck.group(2))
+        rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
+    ok, text = TL.clock_rule(rec["max_root_sinks"], rec)
+    rec["verdict"] = "PASS" if ok and rec["max_root_sinks"] is not None else ("UNKNOWN" if ok else "REFUSE")
+    rec["text"] = text
+    return rec
+
+
+def clock_item(g: Gate, rec: dict) -> None:
+    """measured clock rule (owner 2026-10-13, constants in textbook_lint.py): reported for every kit."""
+    g.clock = rec
+    if rec["verdict"] == "REFUSE":
+        g.add("FAIL", "clock_rule", rec["text"] + ("" if rec["cts"] else " -- this gate ran without --cts")
+              + (f" (declared clock '{rec['declared_clock']}' does not waive it)" if rec.get("declared_clock") else ""),
+              TL.CLOCK_RULE_FIX)
+    elif rec["verdict"] == "UNKNOWN":
+        g.add("WARN", "clock_rule", "the synthesized netlist's clock sinks were not reported: " + rec["text"],
+              "read the remote log (textbook lint line 'clock_roots')")
+    else:
+        g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
+
+
+def kit_clock_evidence(kd: Path) -> dict | None:
+    try:
+        d = json.loads((kd / CLOCK_RESULT).read_text())
+        return d["clock"] if isinstance(d.get("clock"), dict) else None
+    except (OSError, ValueError, KeyError, AttributeError):
+        return None
+
+
+def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, closed_stands: bool = False) -> dict:
+    """SUBMIT side of the measured clock rule.  The kit's committed gate result decides when it exists; without one the
+    sink count of this block's latest synthesized design (known_sinks, from the loop's job history) does.  A kit with no
+    gate result and no history passes here and is judged by the in-flow lint right after synthesis (FLOORPLAN_MARGIN,
+    before placement).  closed_stands: a CLOSED tile is not re-judged."""
+    ev = kit_clock_evidence(kd)
+    n = (ev or {}).get("max_root_sinks")
+    if not isinstance(n, int):          # the kit's own gate result outranks history (a rebuilt tile proves itself)
+        n = known_sinks if isinstance(known_sinks, int) else None
+    ok, text = TL.clock_rule(n if isinstance(n, int) else None, ev)
+    res = {"evidence": ev, "sinks": n, "ok": ok, "text": text, "closed_stands": bool(closed_stands)}
+    g.clock = res
+    if ok or closed_stands:
+        g.add("INFO", "clock_rule", text + (" (CLOSED tile: stands)" if closed_stands and not ok else ""))
+    else:
+        src = "kit gate_result.json" if ev and ev.get("max_root_sinks") == n else "this block's latest synthesized design"
+        g.add("FAIL", "clock_rule", f"{text} [{src}]", TL.CLOCK_RULE_FIX)
+    return res
 
 
 TEXTBOOK_FIX = {
@@ -498,6 +603,14 @@ def main(argv=None) -> int:
     except RT.SpecError as ex:
         g.add("FAIL", "spec", str(ex), "fix the tile spec")
     g.print()
+    if a.remote and getattr(g, "clock", None) and "kd" in locals():
+        out = {"schema": "opentallas.ref_tile.gate_result.v1", "kit": kd.name, "verdict": g.verdict,
+               "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": a.remote, "cts": bool(a.cts),
+               "commit": subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short=9", "HEAD"], capture_output=True,
+                                        text=True).stdout.strip(),
+               "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+        (kd / CLOCK_RESULT).write_text(json.dumps(out, indent=1) + "\n")
+        print(f"GATE: {kd.name}/{CLOCK_RESULT} written (clock evidence for the submit gate: commit it with the kit)")
     if a.json:
         Path(a.json).write_text(json.dumps({"verdict": g.verdict, "items": g.items}, indent=1) + "\n")
     return 1 if g.verdict == "FAIL" else 0
@@ -514,11 +627,44 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
         subprocess.run(["tar", "-x", "-C", str(dst)], input=a.stdout, check=True)
     arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc"])
     sp = json.loads((dst / kit / "spec.json").read_text())
-    arch(list(sp.get("sources", [])) + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
+    # sdc_extra too: without it RT.gen raised FileNotFoundError and the whole gate went SKIP for every kit that has one
+    arch(list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
+         + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
          + ([sp["contract"]["file"]] if sp.get("contract") else []))
 
 
-def submit_check(spec: dict, repo: str | None = None) -> dict:
+def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:
+    """SLOT FIT (owner 2026-10-13, tools/hier_contract/slot_fit.py): a tile with a slot in a die contract must fit it
+    BEFORE it routes -- outline, pin faces, pin layers, layer cap and the estimated clock insertion against the LIVE
+    contract (origin/main of the repo's object store, else main, the job's commit, the working tree).  A mismatch FAILs (REFUSED at submit) unless the
+    spec carries "slot_change_request": "<die lead log line or contract version>": then it is a WARN and the request is
+    appended to the die lead's log."""
+    import slot_fit
+    cs, ref = slot_fit.live_contracts(Path(repo), commit)
+    res = slot_fit.check(kd, Path(repo), job, cs)
+    if res["status"] == "no_slot":
+        return res
+    where = f"slot {res['slot']} of {res['contract']} v{res['version']} ({ref})"
+    for n in res["notes"]:
+        g.add("INFO", "slot_fit", f"{where}: {n}")
+    if res["status"] == "fit":
+        g.add("INFO", "slot_fit", f"{res['top']} fits {where}")
+        return res
+    msg = f"{res['top']} does not fit {where}: " + "; ".join(res["mismatches"])
+    req = res.get("slot_change_request")
+    if req:
+        log = slot_fit.append_request(res, str(job.get("name", res["kit"])), commit)
+        g.add("WARN", "slot_fit", f"{msg} -- routes on slot_change_request {str(req)[:160]!r}"
+              + (f" (appended to {log.name})" if log else " (no die lead log for this die: tell the lead)"))
+    else:
+        g.add("FAIL", "slot_fit", msg, "build the tile to its slot, or get the slot changed by the die lead and put "
+              "\"slot_change_request\": \"<die lead log line or contract version>\" in the spec (check before submit: "
+              "tools/hier_contract/slot_fit.py KIT_DIR)")
+    return res
+
+
+def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = None,
+                 closed_stands: bool = False, clock_mode: str = "refuse") -> dict:
     """closure-loop submit hook: the LOCAL gate on a job spec AT ITS SOURCE COMMIT (kit / pins / RTL / children /
     source-sync for "ref_tile": true; source-sync only for any other job).  {"verdict": PASS|WARN|REFUSE|SKIP, "message"}.
     Never raises."""
@@ -545,6 +691,13 @@ def submit_check(spec: dict, repo: str | None = None) -> dict:
                         ROOT = RT.ROOT = Path(repo)
                         check_sources(g, spec, json.loads((Path(td) / kit / "floorplan.json").read_text())
                                       .get("referenced", []), commit)
+                        check_slot_fit(g, Path(td) / kit, spec, repo, commit)
+                        if clock_mode != "off":
+                            check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands)
+                            if clock_mode != "refuse":
+                                for i in g.items:
+                                    if i["check"] == "clock_rule" and i["severity"] == "FAIL":
+                                        i["severity"] = "WARN"
             else:
                 ROOT = RT.ROOT = Path(repo)
                 check_sources(g, spec, (), commit)
@@ -556,7 +709,8 @@ def submit_check(spec: dict, repo: str | None = None) -> dict:
     warns = [i for i in g.items if i["severity"] == "WARN"]
     msg = " | ".join(f"{i['check']}: {i['message']}" + (f" (fix: {i['fix']})" if i["fix"] else "")
                      for i in (fails or warns))[:1500]
-    return {"verdict": "REFUSE" if fails else ("WARN" if warns else "PASS"), "message": msg or "pre-route gate PASS"}
+    return {"verdict": "REFUSE" if fails else ("WARN" if warns else "PASS"), "message": msg or "pre-route gate PASS",
+            "clock": getattr(g, "clock", None)}
 
 if __name__ == "__main__":
     sys.exit(main())

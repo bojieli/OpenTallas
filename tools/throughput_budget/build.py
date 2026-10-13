@@ -5,7 +5,7 @@ For each unit / op class on each target's dataflow:
   budget   = the simulator price the token is charged for the op (per record and per token, S2 schedule), scaled to
              the target table rate, plus the items / cycle the unit must sustain at that price (production shape);
   measured = the production-shape throughput bench (RTL cycles over the same records' price) -> ratio;
-  status   = QUALIFIED (ratio <= 1.10) | UNQUALIFIED (ratio > 1.10) | UNQUALIFIED_NO_BENCH (no production-shape number);
+  status   = QUALIFIED (measured ratio <= 1.10) | UNMEASURED (a price, no measured production ratio) | UNQUALIFIED (ratio > 1.10) | UNQUALIFIED_NO_BENCH (no production-shape number);
   impact   = the token cycles the op's measured ratio costs on the S2 schedule (op scaled alone, everything else at
              price) -- the bottleneck rank.  A unit qualifies only with a committed production-shape bench.
 
@@ -700,6 +700,37 @@ def _rom_measured(grade):
 BOUND_SLOWDOWN, BOUND_RATE = 10.0, 0.01
 
 
+# Qwen ROM per-layer qualification (owner 2026-10-13: ROM throughput is qualified by a measured per-layer run against the
+# priced layer; unit benches only for critical-path units).  The record gives each operator class its measured ratio; an
+# element of the class that the per-layer vehicle does not hold (a priced adder: relays, native ports ...) is UNMEASURED.
+QWEN_LAYER = ROOT / "results/rtl/qwen_layer_tput_1013/record.json"
+
+
+def qwen_layer():
+    if not QWEN_LAYER.exists():
+        return None
+    d = json.loads(QWEN_LAYER.read_text())
+    L, R = d["layer"], d["registry"]
+    if not (d["exact"]["positive"]["exact"] and d["exact"]["mutant"]["fails_as_required"]):
+        return None
+    src = (f"{QWEN_LAYER.relative_to(ROOT)} @ {d['source_sha']}: per-layer run ({L['name']} chained, exact, mutant fails) "
+           f"measured {L['measured_cycles']} / priced {L['priced_vehicle_scope']:.0f} = {L['ratio']}; {R['basis']}")
+    return dict(ratio=R["class_ratio"], layer_ratio=L["ratio"], src=src,
+                skip=[(re.compile(rx), why) for rx, why in R["not_in_vehicle_elements"]])
+
+
+def qwen_layer_status(ql, cls, e):
+    """(status, ratio, op suffix, src) of element e in Qwen ROM class cls under the per-layer record, or None.  The op
+    name stays 'class:<cls>' (suffix '') so that a class bench record still replaces the row it measures."""
+    if ql is None or cls not in ql["ratio"]:
+        return None
+    for rx, why in ql["skip"]:
+        if rx.match(e):
+            return "UNMEASURED", None, "", "by layer: NOT in the per-layer vehicle: " + why + "; " + ql["src"]
+    r = max(ql["ratio"][cls], ql["layer_ratio"])
+    return ("QUALIFIED" if r <= QUAL else "UNQUALIFIED"), r, "", "QUALIFIED by layer: " + ql["src"]
+
+
 def rom_budget(name):
     d = json.loads((TP / f"{name}.json").read_text())
     tot = d["totals"]["cycles"]
@@ -727,6 +758,8 @@ def rom_budget(name):
                          measured_fraction=round(1 - unm / allc, 4) if allc else None,
                          unmeasured_nodes=c["unmeasured"][:12], n_unmeasured=len(c["unmeasured"]),
                          status=st, elements=cls_el.get(k, []),
+                         **(dict(qualified_by="layer", ratio=max(QL["ratio"][k], QL["layer_ratio"]), layer_src=QL["src"])
+                            if name == "qwen_rom" and (QL := qwen_layer()) and k in QL["ratio"] else {}),
                          basis="token-path node prices are the measured RTL unit cycles at production shape "
                                "(grade 'measured'); 'modelled' / 'priced' / 'apportioned' nodes have no bench"))
     stages = [g for g in d["groups"] if g.get("kind") in ("stage", "layer", "embed")]
@@ -745,6 +778,7 @@ def main():
     qw = qwen_budget()
     print("Qwen S2", qw["S2_cycles"], qw["S2_tok_s"], flush=True)
     audit = json.loads(AUDIT.read_text())
+    ql = qwen_layer()
     rom = {"qwen_rom": rom_budget("qwen_rom"), "ds_rom": rom_budget("ds_rom"), "ds_rom_mtp": rom_budget("ds_rom_mtp")}
     rom_audit = [dict(id=r["id"], target=r["target"], unit=r["unit"], metric=r.get("metric"), required=r.get("required"),
                       measured=r.get("measured"), margin=r.get("margin"), flag=r.get("flag"), owner=r.get("owner_stream"))
@@ -762,10 +796,15 @@ def main():
                     impact_tok_s=r["impact_tok_s"], budget_cycles_per_record=r["price_cycles_per_record"],
                     budget_at_target=r["budget_cycles_per_record_at_target"], owner=r["owner"]) for i, r in enumerate(rank)]
     # registry gate: element -> worst status over the ops it serves (DS first, then Qwen, then ROM classes)
-    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "ACCEPTED": 2, "EXEMPT": 2.5, "QUALIFIED_BY_BOUND": 3, "QUALIFIED": 4}
+    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "UNMEASURED": 1.5, "ACCEPTED": 2, "EXEMPT": 2.5,
+             "QUALIFIED_BY_BOUND": 3, "QUALIFIED": 4}
     el = {}
 
     def put(e, target, op, st, ratio, owner, src):
+        # registry honesty (owner 2026-10-13): a priced row with no measured production ratio is UNMEASURED, never
+        # QUALIFIED (the ROM class rule "95 % of the class's cycles are measured node prices" is not a unit's ratio)
+        if st == "QUALIFIED" and not isinstance(ratio, (int, float)):
+            st = "UNMEASURED"
         cur = el.get(e)
         ent = dict(op=op, model=target, status=st, ratio=ratio, owner=owner, src=src)
         if cur is None:
@@ -798,6 +837,10 @@ def main():
     for name, rb in rom.items():
         for c in rb["classes"]:
             for e in c["elements"]:
+                q = qwen_layer_status(ql, c["cls"], e) if name == "qwen_rom" else None
+                if q:
+                    put(e, name, "class:" + c["cls"] + q[2], q[0], q[1], "rom-layer-tput-1013", q[3])
+                    continue
                 put(e, name, "class:" + c["cls"], c["status"], None, "-", rb["source"])
     # HBM loader / svc endpoint budget (DS AR, per die and per stack of 4): bytes per token from the program, the rate a
     # record needs at its price, and the overlap-aware token average (owner bandwidth rule: derive the minimum)
@@ -836,6 +879,12 @@ def main():
                 if rr["status"] == "WAVE_BENCH":
                     st, wr, wsrc = wave_status(e)
                     put(e, rr["model"], "class:" + rr["cls"] + " (wave bench)", st, wr, "el1011-ds-mtp", wsrc)
+                    rom_cov[e] = rr["pattern"]
+                    break
+                q = qwen_layer_status(ql, rr["cls"], e) if (rr["model"] == "qwen_rom" and not rr["status"]) else None
+                if q:
+                    put(e, rr["model"], "class:" + rr["cls"] + q[2], q[0], q[1], "rom-layer-tput-1013",
+                        q[3] + " | name rule " + rr["pattern"] + ": " + rr["why"])
                     rom_cov[e] = rr["pattern"]
                     break
                 st = rr["status"] or cls_status.get((rr["model"], rr["cls"]), "UNQUALIFIED_NO_BENCH")

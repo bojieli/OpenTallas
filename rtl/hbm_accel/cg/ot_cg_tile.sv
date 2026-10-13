@@ -26,7 +26,14 @@ module ot_cg_tile #(
     // ICG's ENA is driven by a flop the placer puts beside the gate (hbm_hc_quarter rootcg-40ec7b434: wq / cnt sat 1 mm
     // from the group ICG, ENA wire 2.3 ns, TT -3,186 ps).  Same value every cycle (0 cycles); reset 1 like wq / cnt.
     // MUT_LATE > 0 (bench mutant) keeps the combinational enable.
-    parameter integer ENREG = 0
+    parameter integer ENREG = 0,
+    // RAWRST 0 (el1013-smh-r11 2026-10-13, with RSTEN 0): the raw-clock registers (wq, cnt, en_r) carry NO reset, so the
+    // rst_n port reaches nothing on the raw clock (SM tile cluster r10: port rst_n -> ICG ENA -2,360 ps and -> the nine raw
+    // SETN/RESETN pins 858 ps across ~1,200 um; a port may serve one clock class, and the reset now enters the GATED class
+    // through a pin flop).  The gate self-initialises from the wake: cgi = 1 loads wq = 1, cnt = HOLD and en_r = 1 on the
+    // next raw edge whatever their power-up state.  CONTRACT (the wake source's obligation): cgi is high while the unit's
+    // reset is asserted, from at least 2 raw edges before the first edge the gated logic needs.  rst_n is then unused.
+    parameter integer RAWRST = 1
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -40,21 +47,35 @@ module ot_cg_tile #(
     reg [MUT_LATE:0] wl;
     integer i;
     wire w_eff;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wq <= 1'b1; cnt <= HOLD[CW-1:0]; wl <= {(MUT_LATE+1){1'b1}}; end
-        else begin
+    wire en_c;
+    reg  en_r;
+    generate if (RAWRST != 0) begin : g_rr
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin wq <= 1'b1; cnt <= HOLD[CW-1:0]; wl <= {(MUT_LATE+1){1'b1}}; end
+            else begin
+                wq <= cgi;
+                wl[0] <= wq;
+                for (i = 1; i <= MUT_LATE; i = i + 1) wl[i] <= wl[i-1];
+                cnt <= w_eff ? HOLD[CW-1:0] : ((cnt != 0) ? cnt - 1'b1 : cnt);
+            end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) en_r <= 1'b1;
+            else        en_r <= cgi | wq | (cnt > 1);   // = wq' | (cnt' != 0): cnt' = HOLD (wq) or cnt - 1 (cnt != 0)
+    end else begin : g_nr
+        always @(posedge clk) begin
             wq <= cgi;
             wl[0] <= wq;
             for (i = 1; i <= MUT_LATE; i = i + 1) wl[i] <= wl[i-1];
             cnt <= w_eff ? HOLD[CW-1:0] : ((cnt != 0) ? cnt - 1'b1 : cnt);
         end
+        always @(posedge clk) en_r <= cgi | wq | (cnt > 1);
+    end endgenerate
     assign w_eff = (MUT_LATE == 0) ? wq : wl[MUT_LATE];
-    wire en_c = w_eff | (cnt != 0);
-    reg  en_r;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) en_r <= 1'b1;
-        else        en_r <= cgi | wq | (cnt > 1);   // = wq' | (cnt' != 0): cnt' = HOLD (wq) or cnt - 1 (cnt != 0)
+    assign en_c = w_eff | (cnt != 0);
     wire en = (((ENREG != 0) && (MUT_LATE == 0) && (HOLD >= 2)) ? en_r : en_c) | ((RSTEN != 0) ? !rst_n : 1'b0);
     assign cgo = wq;
     ot_hdc_cg u_cg (.clk(clk), .en(en), .gclk(gclk));
+`ifndef SYNTHESIS
+    initial if (RAWRST == 0 && RSTEN != 0) $error("ot_cg_tile: RAWRST 0 needs RSTEN 0 (no reset path on the raw clock)");
+`endif
 endmodule
