@@ -3418,6 +3418,264 @@
     "original_job_sha256": "b2da4fccb6f454ad21275daffe16fa7ebab2a0bc5db555e59363ae18789ec467",
     "launcher_exit_marker": "ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1388427-1791909904): exit 0"
    }
+  },
+  {
+   "view": "qfd_embed_scale_bank_parent",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_scale_bank_parent",
+   "run": "qfd_embed_scale_bank_parent_flat-e510ca8c2tt",
+   "host": null,
+   "verdict_ps": {
+    "tt": 138.69,
+    "ff": 45.01
+   },
+   "verdict_check": {
+    "ff": {
+     "export_ps": 45.01392314448793,
+     "verdict_ps": 45.01,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 138.68678427897407,
+     "verdict_ps": 138.69,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": {
+     "sha256": "954522dbb548d25ddc46f86d42c8460136fb517aeb481c299af638f0a0db221a",
+     "setup_max": 299.47,
+     "hold_max": 46.73,
+     "n": 82
+    },
+    "ff": {
+     "sha256": "4a3c59183ca3942218700515c22cf3c08f1d25fbf39dd74c503169f52d1769b7",
+     "setup_max": 131.04,
+     "hold_max": 37.81,
+     "n": 82
+    },
+    "tt": {
+     "sha256": "bdad2c9a51961218c37e99ae960e63b47589e675e1dcf8e01c0aa2ec3a8b8094",
+     "setup_max": 189.26,
+     "hold_max": 41.9,
+     "n": 82
+    }
+   },
+   "new": {
+    "ss": {
+     "sha256": "954522dbb548d25ddc46f86d42c8460136fb517aeb481c299af638f0a0db221a",
+     "setup_max": 299.47,
+     "hold_max": 46.73,
+     "n": 82
+    },
+    "ff": {
+     "sha256": "4a3c59183ca3942218700515c22cf3c08f1d25fbf39dd74c503169f52d1769b7",
+     "setup_max": 131.04,
+     "hold_max": 37.81,
+     "n": 82
+    },
+    "tt": {
+     "sha256": "bdad2c9a51961218c37e99ae960e63b47589e675e1dcf8e01c0aa2ec3a8b8094",
+     "setup_max": 189.26,
+     "hold_max": 41.9,
+     "n": 82
+    }
+   },
+   "added": [],
+   "changed": [],
+   "job_replay_proof": {
+    "source_commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+    "sources": {
+     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
+     },
+     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346"
+     },
+     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805"
+     },
+     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021"
+     },
+     "physical/qwen_die_masters/embed_scale_capture.sdc": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "e803f3e898593c6a635db8975716967799d4b4e03547854f68345653ec8a4127"
+     }
+    },
+    "archive_manifest_sha256": "1c78e51c8f1fcde5f77bf977160b9994b6c3611f3bb0a25ad2d9b6f28736a722",
+    "verdict_full": {
+     "json": null,
+     "job_json": "/srv/opentallas-scratch/claude/codex-takeover-1013/job-replay/stage/qfd_embed_scale_bank_parent_flat-e510ca8c2tt/job.json",
+     "job": "qfd_embed_scale_bank_parent_flat-e510ca8c2tt",
+     "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+     "overlay": null,
+     "basis": "job metrics",
+     "expect_ps": {
+      "tt": 138.69,
+      "ff": 45.01
+     },
+     "tol_ps": 0.05,
+     "files": {
+      "/job_extra.sdc": {
+       "host": "/srv/opentallas-scratch/claude/codex-takeover-1013/job-replay/stage/qfd_embed_scale_bank_parent_flat-e510ca8c2tt/original_extra.sdc",
+       "sha256": "44f2e6696f47851c3973d876ba8d3eaaca623a0c596bcbf1c41a1c38103d2b13"
+      }
+     },
+     "check": {
+      "ff": {
+       "export_ps": 45.01392314448793,
+       "verdict_ps": 45.01,
+       "ok": true
+      },
+      "tt": {
+       "export_ps": 138.68678427897407,
+       "verdict_ps": 138.69,
+       "ok": true
+      }
+     }
+    },
+    "original_extra": {
+     "file": "original_extra.sdc",
+     "receipt": "/home/ubuntu/closed_archive/qfd_embed_scale_bank/qfd_embed_scale_bank_parent_flat-e510ca8c2tt/run/routes/qfd_embed_scale_bank_parent_flat_e510ca8c2tt/corner_sta.json",
+     "receipt_sha256": "db7295c672edce6efd88d49d53e8ee7a6d46f4216f2c1df8d24987485ccfa4cc",
+     "sha256": "44f2e6696f47851c3973d876ba8d3eaaca623a0c596bcbf1c41a1c38103d2b13"
+    },
+    "original_job_sha256": "4893fa519d4ae3fcbb6de51cded0f3870dc8ed2d8bb575b0899127bc7ad53571",
+    "launcher_exit_marker": "ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1410769-1791910452): exit 0"
+   }
+  },
+  {
+   "view": "qfd_embed_code_bank_parent",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_code_bank_parent",
+   "run": "qfd_embed_code_bank_parent_flat-e510ca8c2tt",
+   "host": null,
+   "verdict_ps": {
+    "tt": 89.4,
+    "ff": 34.7
+   },
+   "verdict_check": {
+    "ff": {
+     "export_ps": 34.696925887978125,
+     "verdict_ps": 34.7,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 89.40193030326782,
+     "verdict_ps": 89.4,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": {
+     "sha256": "193112f6b43a8033fc11a38dffc912c91f93e626880548a5daad4f204a89122a",
+     "setup_max": 220.27,
+     "hold_max": 25.93,
+     "n": 58
+    },
+    "ff": {
+     "sha256": "17e336bf49bb85af9f4e3ba962d20e65f795ca5b7f1847c7e7af909125a4194c",
+     "setup_max": 83.64,
+     "hold_max": 46.37,
+     "n": 58
+    },
+    "tt": {
+     "sha256": "fca2ba60734447c5d5b3792db7aa7d5a537532f3c41ce57b50e0ddd01d380643",
+     "setup_max": 135.99,
+     "hold_max": 41.24,
+     "n": 58
+    }
+   },
+   "new": {
+    "ss": {
+     "sha256": "193112f6b43a8033fc11a38dffc912c91f93e626880548a5daad4f204a89122a",
+     "setup_max": 220.27,
+     "hold_max": 25.93,
+     "n": 58
+    },
+    "ff": {
+     "sha256": "17e336bf49bb85af9f4e3ba962d20e65f795ca5b7f1847c7e7af909125a4194c",
+     "setup_max": 83.64,
+     "hold_max": 46.37,
+     "n": 58
+    },
+    "tt": {
+     "sha256": "fca2ba60734447c5d5b3792db7aa7d5a537532f3c41ce57b50e0ddd01d380643",
+     "setup_max": 135.99,
+     "hold_max": 41.24,
+     "n": 58
+    }
+   },
+   "added": [],
+   "changed": [],
+   "job_replay_proof": {
+    "source_commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+    "sources": {
+     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
+     },
+     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ff.lib": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346"
+     },
+     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_ss.lib": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805"
+     },
+     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021"
+     },
+     "physical/qwen_die_masters/embed_bank_capture.sdc": {
+      "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+      "sha256": "2cfcd7e2b2be6060f0a99c218ea198b883dc25ed54f701ed37360a4d95fe6793"
+     }
+    },
+    "archive_manifest_sha256": "2f9b31c11a1f0d056bd7a0a083ecefa7185fbb8870f4e1886eac0da3f267a96e",
+    "verdict_full": {
+     "json": null,
+     "job_json": "/srv/opentallas-scratch/claude/codex-takeover-1013/job-replay/stage/qfd_embed_code_bank_parent_flat-e510ca8c2tt/job.json",
+     "job": "qfd_embed_code_bank_parent_flat-e510ca8c2tt",
+     "commit": "e510ca8c226f4b0265f65f6bb7b9d5089a7dd584",
+     "overlay": null,
+     "basis": "job metrics",
+     "expect_ps": {
+      "tt": 89.4,
+      "ff": 34.7
+     },
+     "tol_ps": 0.05,
+     "files": {
+      "/job_extra.sdc": {
+       "host": "/srv/opentallas-scratch/claude/codex-takeover-1013/job-replay/stage/qfd_embed_code_bank_parent_flat-e510ca8c2tt/original_extra.sdc",
+       "sha256": "c1a3bff2cb27dc1888e7e796ce5c5316fc1bdd9f7f800cd99ba6e50abdb8dcad"
+      }
+     },
+     "check": {
+      "ff": {
+       "export_ps": 34.696925887978125,
+       "verdict_ps": 34.7,
+       "ok": true
+      },
+      "tt": {
+       "export_ps": 89.40193030326782,
+       "verdict_ps": 89.4,
+       "ok": true
+      }
+     }
+    },
+    "original_extra": {
+     "file": "original_extra.sdc",
+     "receipt": "/home/ubuntu/closed_archive/qfd_embed_code_bank/qfd_embed_code_bank_parent_flat-e510ca8c2tt/run/routes/qfd_embed_code_bank_parent_flat_e510ca8c2tt/corner_sta.json",
+     "receipt_sha256": "f052cca4bdf35d291bdfb0f839c58ec01d3b23e2133b68eaebf14d5434468087",
+     "sha256": "c1a3bff2cb27dc1888e7e796ce5c5316fc1bdd9f7f800cd99ba6e50abdb8dcad"
+    },
+    "original_job_sha256": "1abf5d1e92f9da64a4bff58eb1e3083a0183d4a8362814b85c8fecdfd1979dcc",
+    "launcher_exit_marker": "ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1410768-1791910452): exit 0"
+   }
   }
  ]
 }
