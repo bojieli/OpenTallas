@@ -1,12 +1,20 @@
 `timescale 1ns/1ps
 module tb_xload_cadence;
+`ifdef XW_FLOW
+ localparam integer FLOW=1;
+`else
+ localparam integer FLOW=0;
+`endif
+ integer sink_period=1;
+ wire sink_ready=sink_period<=1 || cyc%sink_period==0;
+ wire last_beat;
  reg clk=0; always #1 clk=~clk;
  reg rst_n=0,x_v=0; reg[39:0] base=0; reg[20:0] n=0; reg[3:0] p=0; reg[31:0] stride=0; reg[1:0] fmt=0;
  wire ready,done,fault,en,req; wire[6:0] addr,grp; wire[2047:0] data;
  wire[1351:0] vmq; wire[1095:0] vmr; wire[511:0] q; wire[31:0] cr; wire[8223:0] rsp;
- ot_hgi_sm_xload #(.BD(1),.BW8(1),.PMAX(8),.W8LQ(10)) u (.clk(clk),.rst_n(rst_n),.x_v(x_v),.x_rdy(ready),
+ ot_hgi_sm_xload #(.XW_FLOW(FLOW),.BD(1),.BW8(1),.PMAX(8),.W8LQ(10)) u (.clk(clk),.rst_n(rst_n),.x_v(x_v),.x_rdy(ready),
  .x_base(base),.x_n(n),.x_p(p),.x_stride(stride),.x_space(2'd1),.x_fmt(fmt),.x_xb(7'd0),
- .x_done(done),.x_fault(fault),.xw_en(en),.xw_addr(addr),.xw_grp(grp),.xw_data(data),
+ .xw_ready(sink_ready),.xw_last(last_beat),.x_done(done),.x_fault(fault),.xw_en(en),.xw_addr(addr),.xw_grp(grp),.xw_data(data),
  .vmq(vmq),.vmr(vmr),.rg_req(req),.rg_gnt(1'b1),.wrq(q),.wrq_cr(cr),.wrr(rsp));
  function automatic [255:0] sector(input integer s);
   for(integer t=0;t<8;t=t+1) sector[32*t+:32]=32'h3f800000+32'(((s*8+t)%127)<<16);
@@ -29,10 +37,16 @@ module tb_xload_cadence;
   end
   assign vmr[b*274+:274]=pipe[7];
  end endgenerate
+ reg held=0;reg[2062:0] held_payload;
+ always @(posedge clk)begin
+  if(FLOW!=0 && held && (!en || {addr,grp,data,last_beat}!==held_payload))$fatal(1,"held producer changed before acceptance");
+  held<=FLOW!=0 && en && !sink_ready;
+  if(en && !sink_ready)held_payload<={addr,grp,data,last_beat};
+ end
  integer cyc=0,count=0,run=0,maxrun=0,first=-1,last=-1,prev=-2,fd,id=0,startcyc=0;
  always @(posedge clk) begin
   cyc<=cyc+1;
-  if(en) begin
+  if(en && (FLOW==0 || sink_ready)) begin
    count=count+1; if(first<0)first=cyc;
    run=cyc==prev+1?run+1:1; if(run>maxrun)maxrun=run;
    prev=cyc;last=cyc;
@@ -54,6 +68,7 @@ module tb_xload_cadence;
   end
  endtask
  initial begin
+  if(!$value$plusargs("SINK_PERIOD=%d",sink_period))sink_period=1;
   fd=$fopen("beats.txt","w");repeat(5)@(negedge clk);rst_n=1;repeat(8)@(negedge clk);
   command(5120,1,0);command(5120,1,1);command(5120,1,2);
   command(7168,4,0);command(7168,4,1);command(7168,4,2);
