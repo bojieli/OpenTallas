@@ -109,6 +109,13 @@
     {"name": "mutant_rot", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm xplane mutant_rot -GPMUT=1", "fail_regex": "FAIL qfd_vm_xplane errors="},
     {"name": "mutant_relay", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm xplane mutant_relay -GRMUT=1", "fail_regex": "FAIL qfd_vm_xplane errors="}
    ]
+  },
+  "s81su_tiles": {
+   "what": "S81 SU routed-top gate: the slab dsfd_sp_su_h rebuilt by tools/s81_suhc/su_tile_tops.py so that every engine core instance IS its routed top dsfd_su_t_<x> (chosen at elaboration by parameter equality: no match stops the run with SU_TILE_TOPS_NOMATCH; port widths checked with $bits; wrapper ties asserted), full shape, bit-exact against the golden; then one output mutant per routed-top class, every one must fail with error rows (a survivor = that tile is not observed). In the loop it runs with DPI float models (minutes, 64 GB). A tile that holds float primitives (swe, qne, qnq, qbe, kvq, kve, sm*) is qualified by the SAME gate under --fp rtl, recorded once per RTL in results/rtl/ref_tile/s81su_tiles_gate_<sha>/qualification.json (f6ff6785b: exact PASS 0/1722 x3 at 3,146 cycles, 21 of 21 class mutants fail; ~384 GB and ~2.5 h, not a loop bench): re-run it when the RTL under such a tile changes. Needs tools/s81_suhc/su_tiles_gate.sh in the job's source commit (merge main).",
+   "benches": [
+    {"name": "exact", "expect": "pass", "threads": 16, "peak_ram_gb": 64, "timeout_s": 7200, "needs": ["verilator"], "cmd": "bash tools/s81_suhc/su_tiles_gate.sh {RUN}/bench/cg_sut exact dpi", "pass_regex": "^RUN full_dpi_m0_a0_h_t0 pass$"},
+    {"name": "mutants", "expect": "fail", "threads": 16, "peak_ram_gb": 64, "timeout_s": 10800, "needs": ["verilator"], "cmd": "bash tools/s81_suhc/su_tiles_gate.sh {RUN}/bench/cg_sutm mutants dpi 8", "fail_regex": "^SU_TILES_MUTANTS all \\d+ fail$"}
+   ]
   }
  }
 }
