@@ -90,7 +90,29 @@ if [ -z "${ECO_PK:-}" ]; then
     done
   fi
 fi
-PK_ENV=(-e OT_ECO_PK=$ECO_PK)
+# MACRO-EDGE VIA GUARD (2026-10-13): a route whose hooks sourced physical/common_flow/macro_edge_via_guard.tcl gets the
+# same guard around the ECO's GRT/DRT (hold_eco.tcl OT_ECO_MEG, with the route's OT_MEG_* knobs).  ECO_MEG=0 opts out.
+if [ -z "${ECO_MEG:-}" ]; then
+  ECO_MEG=0
+  if [ -f "$RCFG" ]; then
+    for hk in $(sed -n 's/^export \(PRE_GLOBAL_ROUTE_TCL\|POST_DETAIL_ROUTE_TCL\) *= *//p' "$RCFG"); do
+      for hf in $(find "$(dirname "$RCFG")/.." -maxdepth 3 -name "$(basename "$hk")" 2>/dev/null); do
+        if grep -q 'macro_edge_via_guard' "$hf"; then ECO_MEG=1; fi
+        for sf in $(grep -o '/src/[^ ;"]*\.tcl' "$hf" | sed 's|^/src/||'); do   # one level down: a kit wrapper that sources it
+          if [ -f "$PWD/$sf" ] && grep -q 'macro_edge_via_guard' "$PWD/$sf"; then ECO_MEG=1; fi
+        done
+      done
+    done
+  fi
+fi
+echo "OT_ECO macro-edge via guard in the re-route: $ECO_MEG" | tee -a "$OUT/eco.log"
+PK_ENV=(-e OT_ECO_PK=$ECO_PK -e OT_ECO_MEG=$ECO_MEG)
+if [ "$ECO_MEG" = 1 ] && [ -f "$RCFG" ]; then
+  for v in OT_MEG_DEPTH_UM OT_MEG_PIN_UM; do
+    x=$(sed -n "s/^export $v *= *//p" "$RCFG" | tail -1)
+    if [ -n "$x" ]; then PK_ENV+=(-e "$v=$x"); fi
+  done
+fi
 if [ "$ECO_PK" = 1 ]; then
   for v in OT_PK_FRAC OT_PK_HALO OT_PK_FACES; do
     x=$( [ -f "$RCFG" ] && sed -n "s/^export $v *= *//p" "$RCFG" | tail -1 )
@@ -191,6 +213,8 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
   fi
   cat $L >> $OUT/eco.log
   if [ "${WINDOW_ONLY:-0}" = 1 ]; then grep "OT_WIN\|session" $L; exit 0; fi
+  # a route with wire above its layer cap is refused by hold_eco.tcl (it used to abort OpenROAD: rc=9 with no reason)
+  if grep -q "OT_ECO layer_cap_leak" $L; then grep "OT_ECO layer_cap_leak" $L | tee -a $OUT/eco.log; echo "ECO refused: route violates its layer cap (not an ECO candidate; regenerate the kit and re-route)"; exit 11; fi
   grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best" ] && break; exit 9; }
   seed_sdc   # the ECO may have rewritten the base's SDC
   python3 $CSTA $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
