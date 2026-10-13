@@ -267,7 +267,7 @@ def build():
                                f'%m slab %0d pin %0d", $bits({x}), ({msb}) + 1); tt_bad = 1; end')
             used = [w["core2pin"][cp] for cp in ports if cp in w["core2pin"]] + [q for cp in ports for q in w["cat"].get(cp, [])]
             unconn = [p for p in w["pins"] if p not in used]
-            g.append(("if (" if k == 0 else "else if (") + (" && ".join(cond) or "1") + f") begin : g_tt{k}")
+            g.append(("if (" if k == 0 else "else if (") + (" && ".join(cond) or "1") + f") begin : g_tt{k}_{iname}")
             g += pre
             g.append(f"{w['name']} {iname} ({', '.join(conn)});")
             g += post
@@ -277,7 +277,7 @@ def build():
                 man["instances"].append(dict(core=core, inst=iname, line=line, wrappers=[x["name"] for x in wr[core]],
                                              slab_params=par, mutated_port=mp, unconnected_pins=unconn))
         pv = " ".join(f'$display("  {p} = %0d", ({sv}));' for p, sv in par.items())
-        g.append(f'else begin : g_tt_none initial begin $display("SU_TILE_TOPS_NOMATCH {core} {iname} line {line} %m"); {pv} '
+        g.append(f'else begin : g_ttx_{iname} initial begin $display("SU_TILE_TOPS_NOMATCH {core} {iname} line {line} %m"); {pv} '
                  f'#1 $fatal(1, "SU_TILE_TOPS: no routed top with these parameters"); end end')
         out.append(raw[pos:s])
         out.append("\n".join(g))
