@@ -1,5 +1,5 @@
 {
- "name": "idxw_b2-v2-COMMIT",
+ "name": "idxw_b2-v2-c08e87086",
  "block": "ot_hgi_idx_index_w",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-idxs",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-hbm-idxs",
-  "commit": "COMMIT"
+  "commit": "c08e87086"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/idxw_b2/idxw_b2-v2-COMMIT"
+   "to": "results/rtl/ref_tile/idxw_b2/idxw_b2-v2-c08e87086"
   }
  ],
  "cycles_added": 0,
