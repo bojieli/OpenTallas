@@ -37,6 +37,7 @@ module ot_coll_tp8_die #(
     parameter integer MEMM    = 1,
     parameter integer FSL     = 1,
     parameter integer IBH     = 1,
+    parameter integer CT      = 1,       // qwen-tp8/coll4: engine column datapath in hardened ot_coll_col_tile leaves
     parameter integer ICR     = 32,      // credits held by the die's sequencer (<= LBD, <= PQD)
     parameter integer LBD     = 64,      // local partial buffer (words), 32 * k with QMEM 1
     parameter integer PQD     = 64,      // peer partial receive queue (= P-channel credits)
@@ -273,7 +274,7 @@ module ot_coll_tp8_die #(
         else begin sxv_q <= {3{e_txv}}; sxr_q <= sx_ready; sxc_q <= sx_cr_in; srv_q <= sr_valid; end
     assign sx_valid = sxv_q; assign sx_rec = sxrec_q; assign sr_cr_out = src_q;
     ot_rom_oneshot_die_m #(.N(N), .RANK(PKG), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .ADD_LAT(ADD_LAT), .IB(4),
-        .PR(PR), .OPQ(0), .TXK(TXK), .FPIPE(FPIPE), .HDLO(HDLO), .MEMM(MEMM), .FSL(FSL), .IBH(IBH)) u_eng (
+        .PR(PR), .OPQ(0), .TXK(TXK), .FPIPE(FPIPE), .HDLO(HDLO), .MEMM(MEMM), .FSL(FSL), .IBH(IBH), .CT(CT)) u_eng (
         .clk(clk), .rst_n(rst_n),
         .in_valid(eq_pop), .in_cr(e_icr), .in_data(eq_hd[FW-1:0]), .in_last(eq_last), .in_mode(eq_mode),
         .in_tag(eq_hd[FW+2 +: TAGW]),
