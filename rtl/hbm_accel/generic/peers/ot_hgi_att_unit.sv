@@ -73,7 +73,22 @@ module ot_hgi_att_unit #(
     parameter integer TROWS1 = 640,
     parameter integer KVL = D * 4 / 32,     // row lanes a slot (PIPE >= 2); PIPE 3 production KV8 rows: D / 32 + 1
     parameter integer LQW = 8,
-    parameter integer MUT_W3 = 0
+    parameter integer MUT_W3 = 0,
+    // PIPE = 3 RECORD OVERLAP (hbm-attn-tput2 2026-10-12): the unit is a FRONT (decode / check, wide q / p loads, KV
+    // row stream, engine job, q / p words) and two BACK paths, each holding a SNAPSHOT of its job's tail context
+    // (op fields, O base / strides, rows, lanes) taken at the job's start:
+    //   * the SCORE path (QK): every beat writes the score buffer on its sc_v edge (one beat a cycle), the next edge
+    //     closes its 8-row sectors into the write FIFO wf; the engine's SQ3 score credits are returned against a
+    //     RESERVATION of wf space (H closes a beat in flight, 2 H for the beat being closed), so wf never overflows;
+    //   * the PV path: pv beats land in the O buffer; the O burst leaves when the job's last beat has landed.
+    // The FRONT takes the next record as soon as its own job's rows / q / p words are in the engine; the next
+    // record's wide loads and KV row requests run during the current record's tail, and its engine job starts
+    // when the engine is free AND its op's back path is free (one job a path: the buffers need no second bank).
+    // Records retire in order (a 4-deep op FIFO); a path's writes are counted per lane by a tag FIFO.
+    // Multi-job records (T > TROWS1) keep the serial merge in the FRONT.  MUT_OVL (bench): the back paths use the
+    // FRONT's live O base instead of the snapshot -> must FAIL.
+    parameter integer SQ3 = 64,
+    parameter integer MUT_OVL = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -115,9 +130,11 @@ module ot_hgi_att_unit #(
     initial if (PIPE != 0 && (RBD < 2 || RBD > 256 || (RBD & (RBD - 1)) != 0)) $fatal(1, "ot_hgi_att_unit: RBD a power of two <= 256");
     // ---- record pin flops
     reg [127:0] hdr; reg [255:0] da, db, dc, dout; reg [20:0] nb, nc, pos1; reg raw_v, busy, halt_q;
-    always @(posedge clk) begin hdr <= rec_hdr; da <= rec_a; db <= rec_b; dc <= rec_c; dout <= rec_o; nb <= rec_n_b;
-                                nc <= rec_n_c; pos1 <= rec_pos1; end
-    assign rec_rdy = !raw_v && !busy && !halt_q;
+    // PIPE = 3: the pin flops load on the handshake only (the record stays put while the next one waits)
+    always @(posedge clk) if (PIPE != 3 || (rec_v && rec_rdy)) begin hdr <= rec_hdr; da <= rec_a; db <= rec_b;
+                                dc <= rec_c; dout <= rec_o; nb <= rec_n_b; nc <= rec_n_c; pos1 <= rec_pos1; end
+    reg [2:0] rf_n; reg [1:0] rf_h; reg [3:0] rf_k;             // PIPE = 3: records accepted, not retired (op bit)
+    assign rec_rdy = !raw_v && !busy && !halt_q && (PIPE != 3 || rf_n < 3'd4);
     assign halted = halt_q;
     function automatic [39:0] mbase(input [255:0] d); mbase = d[47:8]; endfunction
     function automatic [19:0] mn(input [255:0] d); mn = d[67:48]; endfunction
@@ -138,7 +155,7 @@ module ot_hgi_att_unit #(
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f; reg sc_cr;
     reg p_v; reg [TD*16-1:0] p_w; wire p_ready;
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f; reg pv_cr;
-    localparam integer SQ = 16;              // score beats in flight (the engine's credit count)
+    localparam integer SQ = (PIPE == 3) ? SQ3 : 16;     // score beats in flight (the engine's credit count)
     localparam integer JB = (PIPE == 3 && TROWS1 > BLK) ? TROWS1 : BLK;     // rows a job (buffers)
     ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(JB), .SC_CRED(SQ), .MODES(PIPE == 3 ? 1 : 0)) u_eng (.clk(clk), .rst_n(rst_n),
         .job_v(job_v), .job_t(job_t), .job_ready(job_ready), .q_v(q_v), .q_w(q_w), .q_ready(q_ready),
@@ -350,8 +367,10 @@ module ot_hgi_att_unit #(
     wire [20:0] so_cnt = ((21'd8 - so_wa[2:0]) < (tb - so_r)) ? (21'd8 - so_wa[2:0]) : (tb - so_r);
     reg [20:0] scn; reg [4:0] sch; reg [3:0] scl; reg sc_hold; reg [NL*H*32-1:0] scy; reg [20:0] scrow; reg [NL-1:0] scm;
     reg [NL*H*32-1:0] sfy [0:31]; reg [15:0] sfr_row [0:31]; reg [NL-1:0] sfm [0:31]; reg [4:0] sfw, sfr;
-    localparam integer WFD = 64;             // PIPE = 3 score-sector write FIFO
-    reg [6:0] wf_n;
+    // PIPE = 3 score-sector write FIFO: H (SQ + 4) entries cover every beat the engine may hold a credit for
+    localparam integer WFA = (PIPE == 3) ? $clog2(H * (SQ + 4)) : 6;
+    localparam integer WFD = 1 << WFA;
+    reg [WFA:0] wf_n;
     wire hd_pop = (PIPE == 3) && (wf_n > WFD - 2 * H - 4);
     function automatic [20:0] pc(input [NL-1:0] m); integer x; pc = 0; for (x = 0; x < NL; x = x + 1) pc = pc + m[x]; endfunction
     reg [20:0] pw_i; reg [9:0] pvn; reg [2:0] ml; reg flt;
@@ -474,11 +493,16 @@ module ot_hgi_att_unit #(
     integer pa3;
     always @* begin p3_all = !ld_on; for (pa3 = 0; pa3 < H; pa3 = pa3 + 1) if (pa3 < lanes && ld_cnt[pa3] != w3need[pa3]) p3_all = 1'b0; end
     // ---- wide WRITE side: score sectors (FIFO, <= 4 distinct-bank sectors a cycle) or the O burst (32 a cycle)
-    reg [290:0] wf [0:WFD-1]; reg [5:0] wf_h, wf_t;    // {sector 27, data 256, mask 8}
+    reg [290:0] wf [0:WFD-1]; reg [WFA-1:0] wf_h, wf_t;    // {sector 27, data 256, mask 8}
     reg [3:0] xw_c [0:NW-1]; reg [12:0] xw_out;
+    // ---- back-path snapshots (PIPE = 3): taken at the job's start, read only by the back paths
+    reg sc_busy, scx_last; reg [17:0] scx_ob, scx_os; reg [20:0] scx_b0, scx_tb; reg [4:0] scx_ln;
+    reg pv_busy, pvx_last, pvx_multi, pvx_og; reg [17:0] pvx_ob, pvx_os; reg [9:0] pvx_hd; reg [4:0] pvx_ln;
+    wire [17:0] scx_obu = (MUT_OVL != 0) ? obase : scx_ob;   // MUT_OVL: the FRONT's live O base
+    wire [17:0] pvx_obu = (MUT_OVL != 0) ? obase : pvx_ob;
     reg o3_on; reg [4:0] o3_h; reg [26:0] o3_s;         // O burst: head, next sector
-    wire [26:0] o3_b = {9'd0, obase} + o3_h * {9'd0, ostr};
-    wire [26:0] o3_e = (o3_b + {17'd0, hd} - 27'd1) >> 3;
+    wire [26:0] o3_b = {9'd0, pvx_obu} + o3_h * {9'd0, pvx_os};
+    wire [26:0] o3_e = (o3_b + {17'd0, pvx_hd} - 27'd1) >> 3;
     reg [NW-1:0] wi_v; reg [279:0] wi_q [0:NW-1]; reg [5:0] wi_n, wi_f;
     always @* begin : w3wi
         reg [26:0] s_; reg stop; reg [NW-1:0] seen; reg [290:0] e_; reg [255:0] d_; reg [7:0] m_; integer w_; reg [31:0] a_;
@@ -491,7 +515,7 @@ module ot_hgi_att_unit #(
                     d_ = 256'd0; m_ = 8'd0;
                     for (w_ = 0; w_ < 8; w_ = w_ + 1) begin
                         a_ = {s_, 3'(w_)} - o3_b;
-                        if ({s_, 3'(w_)} >= o3_b && a_ < hd) begin d_[32 * w_ +: 32] = obuf[o3_h * D + a_]; m_[w_] = 1'b1; end
+                        if ({s_, 3'(w_)} >= o3_b && a_ < pvx_hd) begin d_[32 * w_ +: 32] = obuf[o3_h * D + a_]; m_[w_] = 1'b1; end
                     end
                     wi_v[s_[4:0]] = 1'b1; wi_q[s_[4:0]] = {1'b1, s_[14:0], d_, m_}; wi_n = ix3 + 1;
                 end else stop = 1'b1;
@@ -514,10 +538,10 @@ module ot_hgi_att_unit #(
         cl_n = 6'd0;
         for (c_ = 0; c_ < 2 * H; c_ = c_ + 1) cl_e[c_] = 291'd0;
         if (b3_v)
-            for (h3x = 0; h3x < H; h3x = h3x + 1) if (h3x < lanes) begin
-                base_ = {14'd0, obase} + h3x * {14'd0, ostr} + {11'd0, blk0};
+            for (h3x = 0; h3x < H; h3x = h3x + 1) if (h3x < scx_ln) begin
+                base_ = {14'd0, scx_obu} + h3x * {14'd0, scx_os} + {11'd0, scx_b0};
                 for (r_ = 0; r_ < NL; r_ = r_ + 1)
-                    if (b3_r0 + r_ <= b3_r1 && (((base_ + b3_r0 + r_) % 8) == 7 || b3_r0 + r_ == tb - 1)) begin
+                    if (b3_r0 + r_ <= b3_r1 && (((base_ + b3_r0 + r_) % 8) == 7 || b3_r0 + r_ == scx_tb - 1)) begin
                         a_ = base_ + b3_r0 + r_; s0_ = a_ & ~32'd7;     // the sector's first word
                         d_ = 256'd0; m_ = 8'd0;
                         for (w_ = 0; w_ < 8; w_ = w_ + 1)
@@ -535,6 +559,7 @@ module ot_hgi_att_unit #(
             xw_q[b3x * 280 +: 280] <= wi_v[b3x] ? wi_q[b3x] : 280'd0;
         end
         for (b3x = 0; b3x < NW; b3x = b3x + 1) if (ri_v[b3x]) xr_f[b3x][xr_ft[b3x]] <= {ld_h, ri_s[b3x]};
+        for (b3x = 0; b3x < NW; b3x = b3x + 1) if (wi_v[b3x]) xt_m[b3x][xt_w[b3x]] <= o3_on;   // write tag: 1 = O burst
         for (b3x = 0; b3x < NW; b3x = b3x + 1) if (xr_d[b3x * 257 + 256]) begin : land
             reg [31:0] f_; reg [26:0] bs_; reg [26:0] e_;
             f_ = xr_f[b3x][xr_fh[b3x]]; bs_ = w3base(f_[31:27]);
@@ -553,11 +578,21 @@ module ot_hgi_att_unit #(
     end
     // q / p BF16 check on landing (fault), credits, FIFO pointers, landed counts
     reg w3f;
+    // per-lane write tag FIFOs (a lane's writes complete in order): xo0 score-path / xo1 O-burst writes outstanding
+    reg xt_m [0:NW-1][0:LQW-1]; reg [3:0] xt_w [0:NW-1], xt_r [0:NW-1]; reg [12:0] xo0, xo1;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            for (b3x = 0; b3x < NW; b3x = b3x + 1) begin xr_c[b3x] <= LQW; xw_c[b3x] <= LQW; xr_fh[b3x] <= 4'd0; xr_ft[b3x] <= 4'd0; end
-            wf_h <= 6'd0; wf_t <= 6'd0; wf_n <= 7'd0; xw_out <= 13'd0; w3f <= 1'b0;
-        end else if (PIPE == 3) begin
+            for (b3x = 0; b3x < NW; b3x = b3x + 1) begin xr_c[b3x] <= LQW; xw_c[b3x] <= LQW; xr_fh[b3x] <= 4'd0; xr_ft[b3x] <= 4'd0;
+                xt_w[b3x] <= 4'd0; xt_r[b3x] <= 4'd0; end
+            wf_h <= '0; wf_t <= '0; wf_n <= '0; xw_out <= 13'd0; w3f <= 1'b0; xo0 <= 13'd0; xo1 <= 13'd0;
+        end else if (PIPE == 3) begin : cr3
+            integer i0_, i1_, d0_, d1_;
+            i0_ = 0; i1_ = 0; d0_ = 0; d1_ = 0;
+            for (b3x = 0; b3x < NW; b3x = b3x + 1) begin
+                if (wi_v[b3x]) begin xt_w[b3x] <= (xt_w[b3x] + 4'd1) % LQW; if (o3_on) i1_ = i1_ + 1; else i0_ = i0_ + 1; end
+                if (xw_done[b3x]) begin xt_r[b3x] <= (xt_r[b3x] + 4'd1) % LQW; if (xt_m[b3x][xt_r[b3x]]) d1_ = d1_ + 1; else d0_ = d0_ + 1; end
+            end
+            xo0 <= xo0 + 13'(i0_) - 13'(d0_); xo1 <= xo1 + 13'(i1_) - 13'(d1_);
             w3f <= 1'b0;
             for (b3x = 0; b3x < NW; b3x = b3x + 1) begin
                 xr_c[b3x] <= xr_c[b3x] - (ri_v[b3x] ? 4'd1 : 4'd0) + (xr_cr[b3x] ? 4'd1 : 4'd0);
@@ -579,19 +614,29 @@ module ot_hgi_att_unit #(
         end
     // landed sectors a head (reset at each job start, S_JOB -> S_W3)
     always @(posedge clk) if (PIPE == 3) begin
-        if (st == S_JOB) for (h3x = 0; h3x < H; h3x = h3x + 1) ld_cnt[h3x] <= 8'd0;
+        if (st == S_JOB && j3_go) for (h3x = 0; h3x < H; h3x = h3x + 1) ld_cnt[h3x] <= 8'd0;
         else for (h3x = 0; h3x < H; h3x = h3x + 1) begin : lc
             integer n_; n_ = 0;
             for (b3x = 0; b3x < NW; b3x = b3x + 1) if (xr_d[b3x * 257 + 256] && xr_f[b3x][xr_fh[b3x]][31:27] == h3x) n_ = n_ + 1;
             ld_cnt[h3x] <= ld_cnt[h3x] + 8'(n_);
         end
     end
+    // ---- PIPE = 3 back-path control: credit return against the wf reservation, completion, in-order retire
+    reg [8:0] cw;                                       // score beats received whose credit is still held
+    reg j3_go;                                          // FRONT: first cycle of a job (start the loads / rows)
+    wire [31:0] sc_rsv = 32'(wf_n) + (b3_v ? 32'(2 * H) : 32'd0) + 32'(H) * (32'(SQ) + 32'd2 - 32'(cw));
+    wire sc_ret = (PIPE == 3) && cw != 9'd0 && sc_rsv <= 32'(WFD);
+    wire sc_cpl = sc_busy && scn == scx_tb && !b3_v && wf_n == 0 && xo0 == 13'd0;
+    wire pv_cpl = pv_busy && pvx_og && !o3_on && xo1 == 13'd0;
+    wire ret_sc = (PIPE == 3) && sc_cpl && scx_last && rf_n != 3'd0 && !rf_k[rf_h];
+    wire ret_pv = (PIPE == 3) && pv_cpl && pvx_last && rf_n != 3'd0 && rf_k[rf_h];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; raw_v <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
             vmq <= 338'd0; hq_v <= 1'b0; wq_v <= 1'b0; wq_sv <= {NL{1'b0}}; wq_row <= {NL*40{1'b0}}; wq_nsec <= 8'd0; job_v <= 1'b0; q_v <= 1'b0; kv_v <= 1'b0; sc_cr <= 1'b0; p_v <= 1'b0;
             pv_cr <= 1'b0; flt <= 1'b0; vo_n <= 3'd0; sc_hold <= 1'b0; scn <= 21'd0; pvn <= 10'd0; ad_v <= 1'b0;
             rows_on <= 1'b0; ld_on <= 1'b0; o3_on <= 1'b0; b3_v <= 1'b0; q3_h <= 5'd0;
+            sc_busy <= 1'b0; pv_busy <= 1'b0; pvx_og <= 1'b0; rf_n <= 3'd0; rf_h <= 2'd0; cw <= 9'd0; j3_go <= 1'b0;
             sfw <= 5'd0; sfr <= 5'd0;
             aw <= 6'd0; ar <= 6'd0;
             rv <= {RBD{1'b0}}; occ <= 9'd0; fi_t <= 8'd0; co_h <= 8'd0; pend_row <= 1'b0;
@@ -610,8 +655,8 @@ module ot_hgi_att_unit #(
             if (PIPE == 3 && o3_on) begin                           // O burst: next sectors / head
                 o3_s <= o3_s + {21'd0, wi_n};
                 if (o3_s + {21'd0, wi_n} > o3_e) begin
-                    if (o3_h + 5'd1 >= lanes) o3_on <= 1'b0;
-                    else begin o3_h <= o3_h + 5'd1; o3_s <= ({9'd0, obase} + (o3_h + 5'd1) * {9'd0, ostr}) >> 3; end
+                    if (o3_h + 5'd1 >= pvx_ln) o3_on <= 1'b0;
+                    else begin o3_h <= o3_h + 5'd1; o3_s <= ({9'd0, pvx_obu} + (o3_h + 5'd1) * {9'd0, pvx_os}) >> 3; end
                 end
             end
             if (ad_o) begin ar <= ar + 6'd1; if (ad_e != 2'd0) flt <= 1'b1; end
@@ -623,11 +668,33 @@ module ot_hgi_att_unit #(
             // pv beats: capture (PV) and return the credit
             if (pv_v) begin
                 for (k = 0; k < NT; k = k + 1) for (j = 0; j < H; j = j + 1)
-                    if (!qk && j < lanes && k * DPT + pv_c < hd && pv_f[k * H + j]) flt <= 1'b1;
+                    if ((PIPE == 3) ? (j < pvx_ln && k * DPT + pv_c < pvx_hd && pv_f[k * H + j])
+                                    : (!qk && j < lanes && k * DPT + pv_c < hd && pv_f[k * H + j])) flt <= 1'b1;
                 pv_cr <= 1'b1; pvn <= pvn + 10'd1;
+            end
+            if (PIPE == 3) begin                                    // ---- BACK: score path, one beat a cycle
+                if (sc_v) begin
+                    for (k = 0; k < NL; k = k + 1) for (j = 0; j < H; j = j + 1)
+                        if (sc_m[k] && j < scx_ln) begin
+                            sbuf[j * JB + sc_row + k] <= sc_y[32 * (k * H + j) +: 32];
+                            if (sc_f[k * H + j]) flt <= 1'b1;
+                        end
+                    b3_v <= 1'b1; b3_r0 <= {5'd0, sc_row}; b3_r1 <= {5'd0, sc_row} + pc(sc_m) - 21'd1; scn <= scn + pc(sc_m);
+                end
+                cw <= cw + (sc_v ? 9'd1 : 9'd0) - (sc_ret ? 9'd1 : 9'd0); sc_cr <= sc_ret;
+                // path completion: the last job of a record retires in order (rf), an earlier job frees the path
+                if (sc_cpl && (!scx_last || ret_sc)) sc_busy <= 1'b0;
+                if (pv_busy && !pvx_multi && !pvx_og && pvn == DPT) begin
+                    o3_on <= 1'b1; o3_h <= 5'd0; o3_s <= {9'd0, pvx_obu} >> 3; pvx_og <= 1'b1;
+                end
+                if (pv_cpl && ret_pv) pv_busy <= 1'b0;
+                if (ret_sc || ret_pv) begin rec_done <= 1'b1; rf_h <= rf_h + 2'd1; end
+                rf_n <= rf_n + ((st == S_DEC) ? 3'd1 : 3'd0) - ((ret_sc || ret_pv) ? 3'd1 : 3'd0);
+                if (st == S_DEC) rf_k[rf_h + rf_n[1:0]] <= (op != 6'd0);
             end
             // score beats: QK writes heads < lanes to O (one masked word a VM write), PV discards
             // score FIFO (SQ = the engine's credits): push every beat; the head is written, then its credit returns
+            if (PIPE != 3) begin
             if (sc_v) begin sfy[sfw] <= sc_y; sfr_row[sfw] <= sc_row; sfm[sfw] <= sc_m; sfw <= sfw + 5'd1;
                 for (k = 0; k < NL; k = k + 1) for (j = 0; j < H; j = j + 1)
                     if (qk && sc_m[k] && j < lanes && sc_f[k * H + j]) flt <= 1'b1; end
@@ -673,6 +740,7 @@ module ot_hgi_att_unit #(
             end
             if (sc_kvst)
                 vo_n <= vo_n + (sc_iss ? 3'd1 : 3'd0) - (vr[273] ? 3'd1 : 3'd0);
+            end
             if (PIPE >= 2) begin                                    // striped row lanes (S_KVS / PIPE 3 rows_on)
                 if (wq_v && wq_rdy) wq_v <= 1'b0;
                 if (l2_iss) begin
@@ -707,7 +775,7 @@ module ot_hgi_att_unit #(
                 end
                 pend_row <= (co_land && co_sec == nsec_w - 8'd1) ? 1'b1 : (co_copy ? 1'b0 : pend_row);
             end
-            if (flt && st != S_FAULT && st != S_IDLE) st <= S_FAULT;
+            if (flt && st != S_FAULT && (st != S_IDLE || (PIPE == 3 && !halt_q))) st <= S_FAULT;
             else case (st)
                 S_IDLE: if (raw_v) begin raw_v <= 1'b0; busy <= 1'b1; st <= S_DEC; end
                 S_DEC: begin
@@ -731,17 +799,26 @@ module ot_hgi_att_unit #(
                         bstr[4:0] != 0 || (hasc && (cbase[4:0] != 0 || cstr[4:0] != 0)) ||
                         (PIPE >= 2 && nsec_w > KVL) || (PIPE == 3 && qk && oist != 18'd1))
                         st <= S_FAULT;
-                    else begin blk0 <= 21'd0; jb <= 4'd0; st <= S_JOB; end
+                    else begin blk0 <= 21'd0; jb <= 4'd0; st <= S_JOB; j3_go <= (PIPE == 3); end
                 end
                 // ---- one engine job: rows blk0 .. blk0 + tb - 1
                 S_JOB: if (PIPE == 3) begin : j3
                     reg [20:0] tj;                                  // one job when T <= TROWS1, else BLK-row jobs
                     tj = (tt <= TROWS1) ? tt : ((tt - blk0 > BLK) ? BLK : tt - blk0);
-                    tb <= tj;
-                    if (job_ready && !job_v) begin
-                        job_v <= 1'b1; job_t <= tj[15:0] | (qk ? 16'h2000 : 16'h4000); scn <= 21'd0; pvn <= 10'd0;
+                    if (j3_go) begin                                // the loads and the row stream start now,
+                        tb <= tj; j3_go <= 1'b0;                    // during the previous record's tail
                         fi_row <= blk0; co_row <= blk0; rows_on <= 1'b1; q3_h <= 5'd0; pw_i <= 21'd0;
                         ld_on <= 1'b1; ld_h <= 5'd0; ld_s <= ({9'd0, abase} + (qk ? 27'd0 : {6'd0, blk0})) >> 3;
+                    end else if (job_ready && !job_v && (qk ? !sc_busy : !pv_busy)) begin
+                        // the engine job, once the engine and this op's back path are free: snapshot the tail context
+                        job_v <= 1'b1; job_t <= tb[15:0] | (qk ? 16'h2000 : 16'h4000);
+                        if (qk) begin
+                            scn <= 21'd0; sc_busy <= 1'b1; scx_last <= blk0 + tb >= tt; scx_ob <= obase; scx_os <= ostr;
+                            scx_b0 <= blk0; scx_tb <= tb; scx_ln <= lanes;
+                        end else begin
+                            pvn <= 10'd0; pv_busy <= 1'b1; pvx_last <= blk0 + tb >= tt; pvx_multi <= tt > TROWS1;
+                            pvx_og <= 1'b0; pvx_ob <= obase; pvx_os <= ostr; pvx_hd <= hd; pvx_ln <= lanes;
+                        end
                         st <= S_W3;
                     end
                 end else begin
@@ -768,9 +845,19 @@ module ot_hgi_att_unit #(
                             if (hh < lanes && pw_i * R + jj < tb) w[(jj * H + hh) * 16 +: 16] = pbuf[hh * JB + pw_i * R + jj];
                         p_w <= w; p_v <= 1'b1; pw_i <= pw_i + 21'd1;
                     end
+                    // the FRONT is done with the job once its rows and q / p words are in the engine; the tail runs
+                    // on the back path (next record / job accepted now)
                     if (co_row == blk0 + tb && !kv_v && !ld_on) begin
-                        if (qk && q3_h == H && scn == tb && !sc_hold && sfr == sfw) begin rows_on <= 1'b0; st <= S_NEXT; end
-                        if (!qk && pw_i * R >= tb && !p_v && pvn == DPT) begin rows_on <= 1'b0; ml <= 3'd0; st <= S_MRG; end
+                        if (qk && q3_h == H && !q_v) begin
+                            rows_on <= 1'b0;
+                            if (blk0 + tb >= tt) begin busy <= 1'b0; st <= S_IDLE; end
+                            else begin blk0 <= blk0 + tb; jb <= jb + 4'd1; j3_go <= 1'b1; st <= S_JOB; end
+                        end
+                        if (!qk && pw_i * R >= tb && !p_v) begin
+                            rows_on <= 1'b0;
+                            if (tt <= TROWS1) begin busy <= 1'b0; st <= S_IDLE; end
+                            else st <= S_PVW;                       // multi-job: the FRONT merges (serial)
+                        end
                     end
                 end
                 S_QRD: begin                                        // q[hq]: hd words of A row hq (QK, hq < lanes)
@@ -925,7 +1012,12 @@ module ot_hgi_att_unit #(
                         if (mh == lanes - 1) st <= S_NEXT; else mh <= mh + 5'd1;
                     end else md <= md + 10'd1;
                 end
-                S_NEXT: begin
+                S_NEXT: if (PIPE == 3) begin                        // multi-job PV after its merge
+                    if (blk0 + tb >= tt) begin
+                        o3_on <= 1'b1; o3_h <= 5'd0; o3_s <= {9'd0, pvx_obu} >> 3; pvx_og <= 1'b1;
+                        busy <= 1'b0; st <= S_IDLE;
+                    end else begin pv_busy <= 1'b0; blk0 <= blk0 + tb; jb <= jb + 4'd1; j3_go <= 1'b1; st <= S_JOB; end
+                end else begin
                     if (blk0 + tb >= tt) begin
                         if (qk) st <= S_DONE;
                         else begin
