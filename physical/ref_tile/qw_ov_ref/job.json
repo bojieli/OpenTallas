@@ -1,14 +1,14 @@
 {
- "name": "qw_ov_ref-ov2-cx-493cb25e6",
+ "name": "qw_ov_ref-ov3-cl-COMMIT",
  "block": "ot_hgi_quant_wide_ov",
  "ref_tile": true,
- "owner": "Codex:el1012-hbm-fq-cx",
- "purpose": "Opt-in WQ3 record-overlap quant cluster: continuous per-beat header/destination, RAW/WAR/WAW hazard serialization, finite compact descriptors and ordered per-lane retirement; reserve x270..570,y336.96..388.8 seam. Price168 preserved; production184/168 exact plus lane-map/header/premature-retire mutants and delayed-lane/RAW controls. New drained output binds unit packet-fallback wait; cmd unused SUT bits carry frontend A/O span ends. Canonical WQ2/f3/f3p preserved. Physical ov2: identical seam reservation moved POST_TAPCELL to PRE_TAPCELL before fixed tap/endcap insertion (ov1 DPL0033 1148 fixed cells in removed seam rows); RTL, clock and budgets unchanged. NativeASAP7tapcell ignores dbBlockage: PRE hook explicitly splits192 native rows at270/570.024, with384 legal boundarycaps and zero seam-intersecting rows/taps; stopped3_5dp checks actualold3_4 logical netlist+positions with only fresh rows/taps replaced.",
+ "owner": "Claude:el1013-quant-tput",
+ "purpose": "Opt-in WQ3 record-overlap quant cluster: continuous per-beat header/destination, RAW/WAR/WAW hazard serialization, finite compact descriptors and ordered per-lane retirement; reserve x270..570,y336.96..388.8 seam. Price168 preserved; production184/168 exact plus lane-map/header/premature-retire mutants and delayed-lane/RAW controls. New drained output binds unit packet-fallback wait; cmd unused SUT bits carry frontend A/O span ends. Canonical WQ2/f3/f3p preserved. Physical ov2: identical seam reservation moved POST_TAPCELL to PRE_TAPCELL before fixed tap/endcap insertion (ov1 DPL0033 1148 fixed cells in removed seam rows); RTL, clock and budgets unchanged. NativeASAP7tapcell ignores dbBlockage: PRE hook explicitly splits192 native rows at270/570.024, with384 legal boundarycaps and zero seam-intersecting rows/taps; stopped3_5dp checks actualold3_4 logical netlist+positions with only fresh rows/taps replaced. Physical ov3 (Claude 10-13): clock spine with subtree-common padding (OT_SPINE_TREE_PAD=1, main clock_spine.tcl) + measured-best restore; the per-leaf padding ran away on the same outline/children in qw_h3/qw_h3p (165,891 / 190,931 spine cells, arrival to 4,428 ps, hold -764.7 ps). RTL, SDC, outline, seam and price unchanged.",
  "threads": 16,
  "peak_ram_gb": 96,
  "source": {
   "branch": "codex/el1012-hbm-fq-cx",
-  "commit": "493cb25e6"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -78,7 +78,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qw_ov_ref/qw_ov_ref-ov2-cx-493cb25e6"
+   "to": "results/rtl/ref_tile/qw_ov_ref/qw_ov_ref-ov3-cl-COMMIT"
   }
  ],
  "cycles_added": 0,
