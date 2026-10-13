@@ -86,8 +86,9 @@
   "gates": {
     "record_guard": "PASS1015",
     "guard_rebase_mutant": "FAIL expected",
-    "station_read": "PASS slot5/mirror/credit/reply/release/wrong-owner",
-    "full_unit_lint": "queued ot-heavy20, session21402"
+    "station_read": "PASS read/write address/data/mask/credits/commit/owner/release",
+    "full_unit_lint": "PASS Verilator5.032 EPYC1 ot-heavy20; lint5.rc0;1131.383MB allocated",
+    "station_slot_mutant": "FAIL expected"
   },
   "unresolved": [
     "native production source-matched exact/mutant/rate",
