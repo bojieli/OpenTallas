@@ -1,5 +1,5 @@
 {
- "name": "qkd_kvwq_ctl_bin-sl1-ec8d7180b",
+ "name": "qkd_kvwq_ctl_bin-sl1-ecdaf6345",
  "block": "qkd_kvwq_ctl_bin",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-clusters",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1013-qwen-clusters",
-  "commit": "ec8d7180b"
+  "commit": "ecdaf6345"
  },
  "stages": {
   "bench": [
@@ -118,7 +118,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kvwq_ctl_bin/qkd_kvwq_ctl_bin-sl1-ec8d7180b"
+   "to": "results/rtl/ref_tile/qkd_kvwq_ctl_bin/qkd_kvwq_ctl_bin-sl1-ecdaf6345"
   }
  ],
  "cycles_added": 0,
