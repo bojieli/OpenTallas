@@ -155,6 +155,11 @@
    "version": 11,
    "when": "2026-10-12",
    "change": "M5 tile layer contract (results/arch/hier_contract_1011/layer_usage_1012.md (coordinator decision, main f964f6b2d)): new tile routes cap signals AND PG at M5 (strap M6, pins M4/M5, keepout M6; M6 by layer_cap_grant only; die signals M6/M7 over tiles; M8/M9 die power/global). 45 die-placed tile slots bumped, 516 cluster children at M6 (coordinator 10-12 11:40) (view_cap = closed view's own cap; 128 views INVALID: signals above their own cap; 0 already <= M5; 53 need a pin re-plan off M6+); unchanged: 192 cluster, 16 hard IP, 0 die-layer slots. Tool: tools/hier_contract/m5_layer_bump.py contracts"
+  },
+  {
+   "version": 11,
+   "when": "2026-10-13",
+   "change": "v11a: ot_su12_sfu sub-slot 207.36 x 336.96 (the sfu_lane_cl_rta kit outline, no closed view) -> 216 x 330.48 = the CLOSED ring3 view physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu, same 64 origins (x gap 34.56 um, y inside the old 336.96); pin faces of the view (70 groups, all W, M4/M6) on hb_sfu_SW/u_tile_0. Generator: tile_slots() / lef_face_pins() in tools/hbm_accel_die_hier_contract.py"
   }
  ],
  "slots": [
@@ -25225,8 +25230,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 25.92,
@@ -25248,8 +25253,430 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
-   "layer_rule": "cluster"
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
+   "layer_rule": "cluster",
+   "pins": [
+    {
+     "name": "aibase[23:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 186.64
+    },
+    {
+     "name": "aind[1:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 188.304
+    },
+    {
+     "name": "bank",
+     "face": "W",
+     "layer": "M6",
+     "offset": 188.496
+    },
+    {
+     "name": "ca_ad[2:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 188.752
+    },
+    {
+     "name": "ca_imm2[31:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 83.472
+    },
+    {
+     "name": "ce_e2[1:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 78.48
+    },
+    {
+     "name": "ce_imm1[31:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 191.248
+    },
+    {
+     "name": "ci_sfu[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 45.756
+    },
+    {
+     "name": "clk",
+     "face": "W",
+     "layer": "M4",
+     "offset": 45.948
+    },
+    {
+     "name": "cm_imm1[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 47.916
+    },
+    {
+     "name": "cm_m1[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 52.284
+    },
+    {
+     "name": "cm_m2[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 52.524
+    },
+    {
+     "name": "cm_qm[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 52.764
+    },
+    {
+     "name": "co_dst[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 53.004
+    },
+    {
+     "name": "co_rnd",
+     "face": "W",
+     "layer": "M4",
+     "offset": 53.148
+    },
+    {
+     "name": "coll",
+     "face": "W",
+     "layer": "M4",
+     "offset": 53.244
+    },
+    {
+     "name": "cp_imm1[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 51.756
+    },
+    {
+     "name": "cp_m1[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 50.364
+    },
+    {
+     "name": "cpair",
+     "face": "W",
+     "layer": "M4",
+     "offset": 50.556
+    },
+    {
+     "name": "cs_e1[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 50.748
+    },
+    {
+     "name": "cs_imm2[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 103.212
+    },
+    {
+     "name": "cs_sfu[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 124.764
+    },
+    {
+     "name": "cx_amin",
+     "face": "W",
+     "layer": "M4",
+     "offset": 124.956
+    },
+    {
+     "name": "cx_arelu",
+     "face": "W",
+     "layer": "M4",
+     "offset": 125.052
+    },
+    {
+     "name": "cx_arnd",
+     "face": "W",
+     "layer": "M4",
+     "offset": 125.148
+    },
+    {
+     "name": "cx_cclip",
+     "face": "W",
+     "layer": "M4",
+     "offset": 125.244
+    },
+    {
+     "name": "cx_imm3[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 49.068
+    },
+    {
+     "name": "dst[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 45.516
+    },
+    {
+     "name": "emit",
+     "face": "W",
+     "layer": "M4",
+     "offset": 180.06
+    },
+    {
+     "name": "fault",
+     "face": "W",
+     "layer": "M4",
+     "offset": 180.156
+    },
+    {
+     "name": "gsh[4:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 180.444
+    },
+    {
+     "name": "i_v[23:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 181.836
+    },
+    {
+     "name": "krow[23:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 174.572
+    },
+    {
+     "name": "kv_waddr[8:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 175.74
+    },
+    {
+     "name": "kv_waddr[23:9]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 28.368
+    },
+    {
+     "name": "kv_wdata[31:17]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 154.62
+    },
+    {
+     "name": "kv_wdata[16:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 30.416
+    },
+    {
+     "name": "kv_we",
+     "face": "W",
+     "layer": "M4",
+     "offset": 155.388
+    },
+    {
+     "name": "ld",
+     "face": "W",
+     "layer": "M4",
+     "offset": 155.484
+    },
+    {
+     "name": "ld_bank",
+     "face": "W",
+     "layer": "M4",
+     "offset": 155.58
+    },
+    {
+     "name": "ld_c[1199:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 181.249
+    },
+    {
+     "name": "ld_c[1069:238]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 148.65
+    },
+    {
+     "name": "ls[3:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 177.324
+    },
+    {
+     "name": "lvw[3:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 177.708
+    },
+    {
+     "name": "ni[23:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 180.908
+    },
+    {
+     "name": "no[23:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 203.628
+    },
+    {
+     "name": "o_v[23:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 201.324
+    },
+    {
+     "name": "obase[13:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 201.612
+    },
+    {
+     "name": "obase[23:14]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 83.344
+    },
+    {
+     "name": "rd_addr[95:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 89.253
+    },
+    {
+     "name": "rd_q[127:118]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 109.836
+    },
+    {
+     "name": "rd_q[117:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 48.997
+    },
+    {
+     "name": "rd_re[3:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 110.508
+    },
+    {
+     "name": "rd_src[7:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 111.084
+    },
+    {
+     "name": "ro_v",
+     "face": "W",
+     "layer": "M4",
+     "offset": 111.516
+    },
+    {
+     "name": "ro_x[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 191.484
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "offset": 223.74
+    },
+    {
+     "name": "side_v",
+     "face": "W",
+     "layer": "M4",
+     "offset": 223.836
+    },
+    {
+     "name": "side_x[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 248.22
+    },
+    {
+     "name": "side_y[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 144.876
+    },
+    {
+     "name": "srcs[7:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 111.66
+    },
+    {
+     "name": "vb[94:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 98.207
+    },
+    {
+     "name": "vb[119:95]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 131.408
+    },
+    {
+     "name": "vi_addr[23:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 167.909
+    },
+    {
+     "name": "vi_q[31:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 142.256
+    },
+    {
+     "name": "vi_re",
+     "face": "W",
+     "layer": "M6",
+     "offset": 106.448
+    },
+    {
+     "name": "vm_waddr[23:14]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 228.108
+    },
+    {
+     "name": "vm_waddr[13:0]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 107.408
+    },
+    {
+     "name": "vm_wdata[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 226.914
+    },
+    {
+     "name": "vm_we",
+     "face": "W",
+     "layer": "M4",
+     "offset": 221.436
+    }
+   ]
   },
   {
    "name": "hb_sfu_SW/u_tile_1",
@@ -25257,8 +25684,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 276.48,
@@ -25280,7 +25707,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25289,8 +25716,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 527.04,
@@ -25312,7 +25739,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25321,8 +25748,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 777.6,
@@ -25344,7 +25771,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25353,8 +25780,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1028.16,
@@ -25376,7 +25803,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25385,8 +25812,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1278.72,
@@ -25408,7 +25835,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25417,8 +25844,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1529.28,
@@ -25440,7 +25867,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25449,8 +25876,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1779.84,
@@ -25472,7 +25899,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25481,8 +25908,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 25.92,
@@ -25504,7 +25931,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25513,8 +25940,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 276.48,
@@ -25536,7 +25963,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25545,8 +25972,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 527.04,
@@ -25568,7 +25995,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25577,8 +26004,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 777.6,
@@ -25600,7 +26027,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25609,8 +26036,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1028.16,
@@ -25632,7 +26059,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25641,8 +26068,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1278.72,
@@ -25664,7 +26091,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25673,8 +26100,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1529.28,
@@ -25696,7 +26123,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25705,8 +26132,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1779.84,
@@ -25728,7 +26155,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25770,8 +26197,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 25.92,
@@ -25793,7 +26220,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25802,8 +26229,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 276.48,
@@ -25825,7 +26252,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25834,8 +26261,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 527.04,
@@ -25857,7 +26284,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25866,8 +26293,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 777.6,
@@ -25889,7 +26316,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25898,8 +26325,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1028.16,
@@ -25921,7 +26348,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25930,8 +26357,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1278.72,
@@ -25953,7 +26380,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25962,8 +26389,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1529.28,
@@ -25985,7 +26412,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -25994,8 +26421,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1779.84,
@@ -26017,7 +26444,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26026,8 +26453,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 25.92,
@@ -26049,7 +26476,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26058,8 +26485,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 276.48,
@@ -26081,7 +26508,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26090,8 +26517,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 527.04,
@@ -26113,7 +26540,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26122,8 +26549,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 777.6,
@@ -26145,7 +26572,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26154,8 +26581,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1028.16,
@@ -26177,7 +26604,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26186,8 +26613,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1278.72,
@@ -26209,7 +26636,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26218,8 +26645,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1529.28,
@@ -26241,7 +26668,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26250,8 +26677,8 @@
    "kind": "tile",
    "parent": "hb_sfu_SE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1779.84,
@@ -26273,7 +26700,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26315,8 +26742,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 25.92,
@@ -26338,7 +26765,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26347,8 +26774,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 276.48,
@@ -26370,7 +26797,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26379,8 +26806,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 527.04,
@@ -26402,7 +26829,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26411,8 +26838,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 777.6,
@@ -26434,7 +26861,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26443,8 +26870,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1028.16,
@@ -26466,7 +26893,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26475,8 +26902,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1278.72,
@@ -26498,7 +26925,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26507,8 +26934,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1529.28,
@@ -26530,7 +26957,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26539,8 +26966,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1779.84,
@@ -26562,7 +26989,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26571,8 +26998,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 25.92,
@@ -26594,7 +27021,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26603,8 +27030,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 276.48,
@@ -26626,7 +27053,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26635,8 +27062,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 527.04,
@@ -26658,7 +27085,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26667,8 +27094,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 777.6,
@@ -26690,7 +27117,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26699,8 +27126,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1028.16,
@@ -26722,7 +27149,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26731,8 +27158,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1278.72,
@@ -26754,7 +27181,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26763,8 +27190,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1529.28,
@@ -26786,7 +27213,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26795,8 +27222,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NW",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1779.84,
@@ -26818,7 +27245,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26860,8 +27287,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 25.92,
@@ -26883,7 +27310,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26892,8 +27319,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 276.48,
@@ -26915,7 +27342,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26924,8 +27351,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 527.04,
@@ -26947,7 +27374,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26956,8 +27383,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 777.6,
@@ -26979,7 +27406,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -26988,8 +27415,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1028.16,
@@ -27011,7 +27438,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27020,8 +27447,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1278.72,
@@ -27043,7 +27470,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27052,8 +27479,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1529.28,
@@ -27075,7 +27502,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27084,8 +27511,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1779.84,
@@ -27107,7 +27534,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27116,8 +27543,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 25.92,
@@ -27139,7 +27566,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27148,8 +27575,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 276.48,
@@ -27171,7 +27598,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27180,8 +27607,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 527.04,
@@ -27203,7 +27630,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27212,8 +27639,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 777.6,
@@ -27235,7 +27662,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27244,8 +27671,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1028.16,
@@ -27267,7 +27694,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27276,8 +27703,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1278.72,
@@ -27299,7 +27726,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27308,8 +27735,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1529.28,
@@ -27331,7 +27758,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {
@@ -27340,8 +27767,8 @@
    "kind": "tile",
    "parent": "hb_sfu_NE",
    "outline": {
-    "w": 207.36,
-    "h": 336.96
+    "w": 216.0,
+    "h": 330.48
    },
    "origin": {
     "x": 1779.84,
@@ -27363,7 +27790,7 @@
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "version": 9,
-   "notes": "die-placed tile (two-level); chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 M7 OBS, (f) 1186; v10: ot_su12_sfu ref_tile CLUSTER sub-slot 207.36 x 336.96 (8 x 2, pitch 250.56 / 423.36, 43.2-um channels; sfu_lane_cl_rta.json, SFUT=2), active when the sfu_chain_rt leaf closes",
+   "notes": "die-placed tile (two-level); CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)",
    "layer_rule": "cluster"
   },
   {

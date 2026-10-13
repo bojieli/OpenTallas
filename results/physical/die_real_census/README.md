@@ -11,3 +11,4 @@ One row per (die, case): instances bound to a real closed view (exact LEF + exac
 | s81_layer1 | v14 | contract | main a17ddd16e + outline tol | 166 | 21 | 0 | 0 | 0 | 145 | 12.65 | 10 / 46 | 2026-10-13 04:27 PDT |
 | hbm_r25gqn | v11 | contract |  | 769 | 482 | 0 | 0 | 13 | 274 | 62.68 | 4 / 86 | 2026-10-13 07:30 PDT |
 | qwen_rom_tp8 | v3 | contract | main 602d3ab9b + slot pin check (816 real by name + outline; 0 with the v3 slot's pins: port pair x_d / x_r awaits contract v4) | 2069 | 816 | 0 | 0 | 4 | 1249 | 39.44 | 4 / 44 | 2026-10-13 07:33 PDT |
+| hbm_r25gqn | v11a | contract | main 19fd36625 + sfu sub-slot | 769 | 546 | 0 | 0 | 13 | 210 | 71.00 | 5 / 86 | 2026-10-13 07:53 PDT |
