@@ -101,7 +101,7 @@ library (ot_engc_t_pbb_ff) {
   }
 
   cell ("ot_engc_t_pbb") {
-    area : 3331.799 
+    area : 45886.492 
     is_macro_cell : true;
     pin("ck") {
       direction : input;
@@ -111,10 +111,10 @@ library (ot_engc_t_pbb_ff) {
         timing_sense : positive_unate;
         timing_type : min_clock_tree_path;
         cell_rise(scalar) {
-          values("277.02710");
+          values("217.64249");
         }
         cell_fall(scalar) {
-          values("289.80283");
+          values("227.76967");
         }
       }
       timing() {
