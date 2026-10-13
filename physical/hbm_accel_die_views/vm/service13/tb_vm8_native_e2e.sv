@@ -125,7 +125,7 @@ module tb_vm8_native_e2e;
  integer n_acc=0,n_rel=0,n_x[0:3],n_sa[0:3],n_ra[0:3];
  integer cyc=0,fd,id=0,startcyc=0,count=0,run=0,maxrun=0,first=-1,last=-1,prev=-2;
  integer overlap=0,rowwraps=0,rewinds=0,ce_n=0,cap_n=0,max_out=0,held_cyc=0,inj_hit=0;
- integer hold_cyc=0,sm_busy=0,busy_until=0,n_cmd=0;integer cnt_rec[0:8],exp_rec[0:8],cum_rec[0:8],rel_r[0:8],start_r[0:8],disp_r[0:8],done_r[0:8],lastacc_r[0:8],first_r[0:8],maxrun_r[0:8],hold_r[0:8];
+ integer hold_cyc=0,sm_busy_n=0,busy_until=0,n_cmd=0;integer cnt_rec[0:8],exp_rec[0:8],cum_rec[0:8],rel_r[0:8],start_r[0:8],disp_r[0:8],done_r[0:8],lastacc_r[0:8],first_r[0:8],maxrun_r[0:8],hold_r[0:8];
  reg held=0;reg [2062:0] held_payload;reg quiet=0;integer quiet_x[0:3];integer quiet_rel=0;
  function automatic [15:0] tick(input integer g);
   tick={11'(g/32),1'(g%2),4'((g/2)%16)};
@@ -172,7 +172,7 @@ module tb_vm8_native_e2e;
      $display("release%0d ticket%04h want%04h acks%0d,%0d,%0d,%0d",k,release_ticket,tick(k),n_ra[0],n_ra[1],n_ra[2],n_ra[3]);
      $fatal(1,"E2E FAIL release before every receiver ACK or out of order");
     end
-    n_rel=n_rel+1;relcyc=cyc;if(release_last)begin rel_r[acc_id[k]]=cyc;busy_until=cyc+sm_busy;end
+    n_rel=n_rel+1;relcyc=cyc;if(release_last)begin rel_r[acc_id[k]]=cyc;busy_until=cyc+sm_busy_n;end
    end
    if(n_acc-n_rel>32)$fatal(1,"E2E FAIL more than 32 outstanding");
    if(n_acc-n_rel>max_out)max_out=n_acc-n_rel;
@@ -443,7 +443,7 @@ module tb_vm8_native_e2e;
   void'($value$plusargs("INJ_WR=%d",inj_wr));void'($value$plusargs("INJ_EXP=%d",inj_exp));void'($value$plusargs("INJ_STALE=%d",inj_stale));
   void'($value$plusargs("SEL=%d",sel));void'($value$plusargs("DROP_X=%d",drop_x));if(sel<0||sel>7)$fatal(1,"SEL 0..7");
   void'($value$plusargs("XW_LATE=%d",xw_late));if(xw_late<0||xw_late>64)$fatal(1,"XW_LATE 0..64");
-  void'($value$plusargs("SM_BUSY=%d",sm_busy));
+  void'($value$plusargs("SM_BUSY=%d",sm_busy_n));
   void'($value$plusargs("STALE_SINK=%d",stale_sink));void'($value$plusargs("EXPECT_FAULT=%d",expect_fault));
   if(ack_delay<0||ack_skew<0||ack_delay+3*ack_skew>64)$fatal(1,"ACK_DELAY + 3 ACK_SKEW 0..64");
   root.tb_rd_xor[0]=0;root.tb_rd_xor[1]=0;root.tb_wr_xor=0;root.tb_exp_xor[0]=0;root.tb_exp_xor[1]=0;root.tb_exp_word=0;root.tb_upset=0;

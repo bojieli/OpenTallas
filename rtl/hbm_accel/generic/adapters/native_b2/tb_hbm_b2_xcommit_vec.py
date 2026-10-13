@@ -142,7 +142,9 @@ def cmd_check(a):
             fails.append("sink ACK count != beats sampled")
     for r in rows:
         if r["load"] and r.get("commit"):
-            if r["commit_latency_edges"] != D:
+            # (with +XW_LATE and the early dispatch the bench records e0_last at the start edge, before the last
+            #  delayed beats reached the SM pins: the per-op figure is then not a commit depth; the calibration is)
+            if r["commit_latency_edges"] != D and not (a.sel == 5 and a.late):
                 fails.append(f"op {r['op']}: stream commit latency {r['commit_latency_edges']} != D")
             # the dispatch edge is the later of: the edge after the last SRAM write edge (E0 + D + 1) and two edges
             # after the release (r8 op 7: release 3 edges late, drain still running -> start = E0 + D + 1, not release + 2)
@@ -152,7 +154,7 @@ def cmd_check(a):
             if a.sel == 5:
                 # dispatch on the release: never before the last beat the tracker saw (the SM pins sample it a.late
                 # edges later), at most 4 edges after the later of last ACK and release; every read after its write
-                lo = r["commit"]["e0_last"] - a.late + 1
+                lo = r["commit"]["e_ack"]              # the sink ACKs a beat one edge after the tracker saw it
                 hi = max(r["commit"]["e_ack"], r["commit"]["e_rel"]) + 4
                 if not lo <= r["commit"]["t_start"] <= hi:
                     fails.append(f"op {r['op']}: start at edge {r['commit']['t_start']} outside [{lo}, {hi}]")
