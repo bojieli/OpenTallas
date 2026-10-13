@@ -56,7 +56,7 @@ def overlaps(rows):
     return found
 
 
-def compose(outdir, attention_shift_um=136.08):
+def compose(outdir, attention_shift_um=436.32):
     data = {key: json.loads((ROOT / value).read_text()) for key, value in COMPONENTS.items()}
     rows, regions, maps = [], [], []
     names = set()
@@ -125,7 +125,7 @@ def compose(outdir, attention_shift_um=136.08):
     vm8_path='results/arch/hbm_native_1013/vm8/geometry_component.json'
     vm8=json.loads((ROOT/vm8_path).read_text())
     # One union region, beside the south-west VMS assembly, below neither ring band.
-    vm8_origin=[13608.0,8229.6]
+    vm8_origin=[round(13608.0+attention_shift_um-136.08,6),8229.6]
     regions.append(dict(instance='hb_vm8_union',component='vm8_geometry_only',xy_um=vm8_origin,
                         w_um=vm8['outline_um'][0]+0.048,h_um=vm8['outline_um'][1],bookkeeping_region_only=True,
                         inherited_outline_um=vm8['outline_um'],integration_grid_extent_adjustment_um=[0.048,0.0]))
@@ -145,8 +145,10 @@ def compose(outdir, attention_shift_um=136.08):
                dict(name='ring_N_1100',direction='H',layer='M6',rect_um=[21.6,24703.2,32962.688,25803.2],keep_clear_new_devices=True)]
     device_columns=[]
     for quarter,qx,qy in [('SW',21.6,21.6),('SE',16513.632,21.6),('NW',21.6,13003.2),('NE',16513.632,13003.2)]:
-        device_columns.append(dict(name='ring_device_'+quarter,rect_um=[qx+12169.44,qy,qx+12469.68,qy+10692.0],
-                                   device_width_um=268.272,device_height_um=380.16,closed_view_available=False))
+        device_columns.append(dict(name='ring_device_'+quarter,rect_um=[qx+12169.44,qy,qx+12333.6+attention_shift_um,qy+10692.0],
+                                   device_width_um=270.0,device_height_um=380.16,
+                                   directed_lane_count=2,lane_width_um=(12333.6+attention_shift_um-12169.44)/2,
+                                   nominal_forward_wire_segment_um=500.0,closed_view_available=False))
     def box_hits(box,row):
         a,b,c,d=box;x,y,X,Y=rect(row)
         return min(c,X)>max(a,x)+1e-7 and min(d,Y)>max(b,y)+1e-7
@@ -279,6 +281,6 @@ def compose(outdir, attention_shift_um=136.08):
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, default=ROOT/'results/arch/hbm_native_1013/die_v12')
-    parser.add_argument('--attention-shift-um',type=float,default=136.08)
+    parser.add_argument('--attention-shift-um',type=float,default=436.32)
     args=parser.parse_args()
     compose(args.out,args.attention_shift_um)
