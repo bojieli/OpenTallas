@@ -94,5 +94,12 @@
   "views_to": "physical/ref_tile/s81su_ctl_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_ctl_ref"
  },
- "recipe": 2
+ "recipe": 2,
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/pinreg_audit_1013/s81_compensated.json",
+  "cell": "dsfd_su_t_ctl",
+  "pair_cost_ps": 766.1,
+  "fix": "kit recipe 2 (pin flops and hold stages FIRM at the pins): the RTL already has one flop behind every pin, the closed route placed them up to ~464 um inside the tile (worst p_rf 515 ps pin -> flop)"
+ }
 }

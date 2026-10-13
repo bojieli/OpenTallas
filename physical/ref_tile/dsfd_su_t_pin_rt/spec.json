@@ -84,6 +84,13 @@
   "record_to": "results/rtl/ref_tile/dsfd_su_t_pin_rt"
  },
  "recipe": 2,
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/pinreg_audit_1013/s81_compensated.json",
+  "cell": "dsfd_su_t_pin",
+  "pair_cost_ps": 724.8,
+  "fix": "kit recipe 2 (pin flops and hold stages FIRM at the pins) and PG pins M7 -> M6: the tile is two registers pin to pin, the closed route placed them ~193 um from the faces (dn_d leaves 327 ps after the boundary clock, up_d 348 ps before it)"
+ },
  "params": {},
  "children": [],
  "inter": [],
