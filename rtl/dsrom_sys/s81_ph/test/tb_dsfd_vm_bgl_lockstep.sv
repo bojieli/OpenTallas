@@ -44,7 +44,7 @@ module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer N
             nret = nret + $countones(bov);
         end
     end
-    integer s, tfd, tc, tc0, tcur, tlines, npu;
+    integer s, tfd, tc, tc0, tcur, tlines, npu, own, cov_bad;
     string tfile;
     reg [NP-1:0] tv, twe; reg [NP*RA-1:0] trow; reg [NP*4-1:0] tm; reg [NP*128-1:0] td;
     // coverage counters of the op just driven on port pp (ports are visited in ascending order within a cycle)
@@ -103,17 +103,22 @@ module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer N
             npu = 0; for (k = 0; k < NP; k = k + 1) if (cp[k] >= 100) npu = npu + 1;
             for (k = 0; k < 8; k = k + 1) if (cb[k] < 100) bad = bad + 1;
             if (TRACE != 0) begin
-                // production shape: the ports / collisions are whatever the master issues; the bank, read and return
-                // floors stay, and the port census is printed
-                $display("TRACE_COVERAGE ports_used %0d of %0d own_reads %0d returned %0d", npu, NP, nrd, nret);
-                if (npu < 10 || nrd < 1000 || nret < 1000) bad = bad + 1;
+                // production shape: ports, banks and collisions are whatever the master issues (census printed); floors
+                // on ops, own-group ops and returned slots only.  TRACE 1 = the master's gold run, 2 = its short tp run
+                own = 0; for (k = 0; k < 8; k = k + 1) own = own + cb[k];
+                $display("TRACE_COVERAGE ports_used %0d of %0d ops %0d own_group_ops %0d own_reads %0d returned %0d", npu, NP, nops, own, nrd, nret);
+                bad = 0;
+                if (TRACE == 1 && (nops < 5000 || own < 500 || nret < 1000)) bad = 1;
+                if (TRACE != 1 && (nops < 500 || own < 50 || nret < 100)) bad = 1;
             end else begin
                 if (npu != NP) bad = bad + 1;
                 if (nrd < 1000 || nret < 1000 || ndup < 20 || boo < 2) bad = bad + 1;
             end
-            if (bad != 0) begin $display("COVERAGE_REFUSED %0d items", bad); $display("FAIL"); $finish; end
+            cov_bad = bad;
+            if (bad != 0) $display("COVERAGE_REFUSED %0d items", bad);
         end
-        if (nerr == 0) $display("PASS"); else $display("FAIL");
+        // one verdict line only ($finish does not end the block under Verilator: the first version printed FAIL then PASS)
+        if (nerr == 0 && cov_bad == 0) $display("PASS"); else $display("FAIL");
         $finish;
     end
 endmodule
