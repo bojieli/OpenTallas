@@ -1,5 +1,5 @@
 #!/bin/bash
-# ot-heavy v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
+# ot-heavy v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
 # Runs a large build / bench under a hard memory cap and admits it only when the host's memory allows:
 #   ot-heavy --mem <GB> [--slots-class big|small (ignored)] -- <command...>
 # Admission: MemAvailable - (growth still reserved by running ot-heavy jobs) >= MEM + HEADROOM_GB (/etc/ot-heavy.conf).
@@ -27,6 +27,7 @@ UNIT="oth-$(id -un)-$$-$(date +%s)"
 waited=0
 LASTRES=""
 while :; do
+  [ -f /etc/ot-heavy.conf ] && . /etc/ot-heavy.conf   # v5: every attempt, so a headroom change reaches queued waiters
   RES=$MEM; NOTE=""
   OUT=$(timeout 15 /usr/local/bin/ot-heavy-reconcile --admit "$MEM" -- "$@" 2>/dev/null)   # "<GB> <why>" or nothing
   case "${OUT%% *}" in ''|*[!0-9]*) ;; *) [ "${OUT%% *}" -lt "$MEM" ] && { RES=${OUT%% *}; NOTE=${OUT#* }; };; esac
