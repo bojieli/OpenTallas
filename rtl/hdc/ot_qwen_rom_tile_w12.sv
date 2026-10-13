@@ -106,8 +106,15 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer TIDR = 0,
     parameter integer LRR = 0,
     parameter integer RPH = 0,            // q13 r5 leaf 1: 1 = ROM pair pipeline as ot_qwen_rpair_logic per bank (soft), 2 = hardened leaf ot_qwen_tile_rpair (owns its 2 macros)
+    parameter integer XTX = 0,             // el1011-q-tile r3: registered transmit rungs per hardened leaf (matvec HIER_HARD; +XTX cycles)
     // TMUT 3 = column 1 / bank 0's MPR copy one edge stale
     parameter integer TMUT = 0,
+    // q13 spec r5 leaf 2 (2026-10-13), pure re-hierarchy (same registers, same edges):
+    //   NDH 1 = the upper tree node as the hardened leaf ot_qwen_tile_node (W 16, NREG 1, TREE_LAT 7, ANR 1); its fault
+    //           pin is registered in the leaf (+1 cycle on the node fault flag only; data/valid unchanged).
+    //   BMUT  = bench boundary mutants: 2 = the node leaf's a input with lanes 0 / 1 swapped.
+    parameter integer NDH = 0,
+    parameter integer BMUT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
@@ -217,7 +224,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign t_vout = t_vout_i;
     end endgenerate
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR),
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
@@ -238,8 +245,22 @@ module ot_qwen_rom_tile_logic_w12 #(
 
     // -- upper tree node ---------------------------------------------------------
     wire node_fault;
-    ot_qwen_me_node_w12 #(.W(W), .WS(NREG), .TREE_LAT(TREE_LAT), .ANR(ANR)) u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va),
+    generate if (NDH != 0) begin : g_ndh
+        if (W != 16 || NREG != 1 || TREE_LAT != 7 || ANR != 1) begin : g_bad
+            initial $error("NDH needs W 16, NREG 1, TREE_LAT 7, ANR 1 (the fixed hardened leaf ot_qwen_tile_node)");
+        end
+        wire [W*32-1:0] na_x;
+        if (BMUT == 2) begin : g_bm
+            assign na_x = {n_a[W*32-1:64], n_a[31:0], n_a[63:32]};
+        end else begin : g_ok
+            assign na_x = n_a;
+        end
+        ot_qwen_tile_node u_node (.clk(clk), .rst_n(rst_n), .a(na_x), .b(n_b), .va(n_va),
+                                  .y(n_y), .vy(n_vy), .fault(node_fault));
+    end else begin : g_nd
+        ot_qwen_me_node_w12 #(.W(W), .WS(NREG), .TREE_LAT(TREE_LAT), .ANR(ANR)) u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va),
                                                .y(n_y), .vy(n_vy), .fault(node_fault));
+    end endgenerate
     assign fault = me_fault | node_fault;
 
     function automatic [15:0] int8_bf16(input [7:0] code);   // == ot_qwen_w12_matvec_part int8_bf16
@@ -647,10 +668,14 @@ module ot_qwen_rom_tile_w12 #(
     // el1011-q-tile h3 (2026-10-11; the glue stays tile-level logic, GLUE PLACEMENT): TOREG = tile output pin registers
     // on t_out / t_vout (+1 cycle a tile->node hop), TIDR = registered tile_id strap, LRR = one reset relay flop per
     // hardened leaf
+    // q13 spec r5 leaf 2: NDH = the tree node as the hardened leaf ot_qwen_tile_node; BMUT 2 = its bench boundary mutant
+    parameter integer NDH = 0,
+    parameter integer BMUT = 0,
     parameter integer TOREG = 0,
     parameter integer TIDR = 0,
     parameter integer LRR = 0,
     parameter integer RPH = 0,            // q13 r5 leaf 1: 1 = ROM pair pipeline as ot_qwen_rpair_logic per bank (soft), 2 = hardened leaf ot_qwen_tile_rpair (owns its 2 macros)
+    parameter integer XTX = 0,             // el1011-q-tile r3: registered transmit rungs per hardened leaf (matvec HIER_HARD; +XTX cycles)
     parameter integer KV_SLICE = 1,       // 0 (el1011-q-tile, r22ko4 qfd_tile_nk): no KV slice macros / write port (attention on the KV die)
     parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
@@ -683,7 +708,7 @@ module ot_qwen_rom_tile_w12 #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .ANR(ANR), .BAW(BAW)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
