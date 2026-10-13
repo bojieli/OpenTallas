@@ -25,7 +25,7 @@
  ],
  "outline": {
   "w": 216.0,
-  "h": 125.28
+  "h": 129.6
  },
  "pins": {
   "N": [
@@ -95,6 +95,6 @@
    "results/arch"
   ],
   "benched_by": "s81_vm_fe_h_lockstep",
-  "purpose": "el1013-s81-vmfe/B5 dsfd_vm_fe_h leaf dsfd_vm_flt at M5 (landing lane: 64 x 512 SRAM + row relay; producer word in on N, return word + control on the side face towards fld (W, or E mirrored MY)); RTL FROZEN 693940a56 (lockstep 9/9 bit-exact, 4 hierarchy mutants fail, pin-register check PASS); 4078 mapped flops, std 1553.37 um2 measured, outline 216.0 x 125.28.  ck signed off at 833.3 ps (VM serial clock is 1,111.1 ps: stricter). PIN FACES by data flow, bit-ordered ranges; the exact abutment plan waits for a passing parent floorplan (results/arch/s81_vm_fe_h_plan_1013.json: FAIL at 1,520.064 x 691.20, 8 of 10 lanes), so this route is first closure evidence of the leaf and is re-routed if its faces move."
+  "purpose": "el1013-s81-vmfe/B5 dsfd_vm_fe_h leaf dsfd_vm_flt at M5 (landing lane: 64 x 512 SRAM + row relay; producer word in on N, return word + control on the side face towards fld (W, or E mirrored MY)); RTL FROZEN 693940a56 (lockstep 9/9 bit-exact, 4 hierarchy mutants fail, pin-register check PASS); 4078 mapped flops, std 1553.37 um2 measured, outline 216.0 x 129.6.  ck signed off at 833.3 ps (VM serial clock is 1,111.1 ps: stricter). PIN FACES by data flow, bit-ordered ranges; the exact abutment plan waits for a passing parent floorplan (results/arch/s81_vm_fe_h_plan_1013.json: FAIL at 1,520.064 x 691.20, 8 of 10 lanes), so this route is first closure evidence of the leaf and is re-routed if its faces move."
  }
 }
