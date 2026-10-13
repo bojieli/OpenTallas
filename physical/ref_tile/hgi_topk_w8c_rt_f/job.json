@@ -1,5 +1,5 @@
 {
- "name": "hgi_topk_w8c_rt_f-boundaryf-COMMIT",
+ "name": "hgi_topk_w8c_rt_f-boundaryf-74c255a3f",
  "block": "ot_hgi_idx_topk_w8_cluster",
  "ref_tile": true,
  "owner": "Codex:hbm_index_physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "codex/hbm-idx-physical-1012",
-  "commit": "COMMIT",
+  "commit": "74c255a3f",
   "extra_paths": [
    "tools/hgi_topk_heap_bench.sh",
    "rtl/test/hbm_generic_20261009",
@@ -133,7 +133,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_topk_w8c_rt_f/hgi_topk_w8c_rt_f-boundaryf-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_topk_w8c_rt_f/hgi_topk_w8c_rt_f-boundaryf-74c255a3f"
   }
  ],
  "cycles_added": 0,
