@@ -10,8 +10,8 @@
     "por_n"
   ],
   "outline": {
-    "w": 64.8,
-    "h": 64.8
+    "w": 43.2,
+    "h": 47.52
   },
   "layer_cap": "M5",
   "pins": {
@@ -27,7 +27,8 @@
       "wr_ACK_v",
       "native_release",
       "drained",
-      "fault"
+      "fault",
+      "ack2"
     ],
     "S": [
       "mem_rd_v",
@@ -36,7 +37,7 @@
       "checker_valid",
       "seat_owner_i",
       "tap_ACK_v",
-      "tap_ACK_owner"
+      "ack0"
     ],
     "E": [
       "rd_v",
@@ -54,19 +55,30 @@
       "check_o",
       "load_o",
       "write_o",
-      "write_accept_o"
+      "write_accept_o",
+      "ack3"
+    ],
+    "N": [
+      "ack1"
     ]
   },
   "route": {
     "pd": 0.55,
     "threads": 8,
     "peak_ram_gb": 16,
-    "hold_margin_ns": 0.01
+    "hold_margin_ns": 0.01,
+    "pin_h": "M4 M5",
+    "pin_v": "M4 M5",
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4 M5",
+      "v": "M4 M5"
+    }
   },
   "job": {
     "owner": "Codex:vm8-root-checker-1013",
     "branch": "codex/vm8-root-checker-1013",
-    "tag": "ctl1",
+    "tag": "ctl2",
     "purpose": "Compact mutable VM transaction control, nine registered bank errors; no fake parentview",
     "extra_paths": [
       "physical/hbm_accel_die_views/vm/checker9",

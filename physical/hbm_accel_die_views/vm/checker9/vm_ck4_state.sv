@@ -24,10 +24,11 @@ module vm_ck4_state #(parameter integer OWNER_BANK=0)(
  reg [287:0] seat,returned;
  reg [255:0] raw_q,seat_data_q;
  wire [287:0] encoded_raw;
- (* keep = "true", dont_touch = "true" *) reg [7:0] accept_q,capture_q,check_q;
+ (* keep = "true", dont_touch = "true" *) reg [7:0] accept_q,capture_q,check_q,load_pre_q;
  always @(posedge ck)begin
   raw_q<=raw_i;
   accept_q<={8{accept_i}};capture_q<={8{return_i}};check_q<={8{capture_i}};
+  load_pre_q<={8{check_i&&!write_i}};
  end
  reg seat_present,seat_ld_q,seat_bad_q;
  wire [287:0] repaired;
@@ -37,10 +38,10 @@ module vm_ck4_state #(parameter integer OWNER_BANK=0)(
  for(genvar k=0;k<4;k=k+1)begin:words
   assign encoded_raw[k*72+:72]=encode64(raw_q[k*64+:64]);
   wire [65:0] d=decode64(seat[k*72+:72]);
-  assign seat_data_o[k*64+:64]=seat_present?seat_data_q[k*64+:64]:64'd0;
+  assign seat_data_o[k*64+:64]=seat_data_q[k*64+:64];
   assign seat_ue[k]=seat_present&&d[65];
  end
- assign seat_code_o=seat_present?seat:288'd0;
+ assign seat_code_o=seat; // Unqualified data is not consumed before the local presence bit.
  assign seat_bad_o=seat_present&&seat_bad_q&&!seat_ld_q;
  vm_ck4 #(.LOCAL_REGIONS(1)) u_checker(.ck(ck),.rst_n(rst_n),.capture_i(capture_i),.check_i(check_i),
   .capture_regions_i(capture_q),.check_regions_i(check_q),
@@ -48,17 +49,16 @@ module vm_ck4_state #(parameter integer OWNER_BANK=0)(
   .owner_mask_i(OM),.padding_mask_i(PM),.error_o(checker_error_o),
   .valid_o(checker_valid_o),.repaired_o(repaired));
  always @(posedge ck)begin
-  if(return_i)returned<=returned_i;
+  returned<=returned_i; // Always capture the held return bus; return_i qualifies the syndrome stage.
   for(integer h=0;h<8;h=h+1)if(accept_q[h])begin
    seat[h*36+:36]<=encoded_raw[h*36+:36];seat_data_q[h*32+:32]<=raw_q[h*32+:32];
   end
-  if(load_i)begin
-   seat<=repaired;
-   for(integer k=0;k<4;k=k+1)begin
-    integer j,d;d=0;
-    for(j=1;j<=71;j=j+1)if(j!=1&&j!=2&&j!=4&&j!=8&&j!=16&&j!=32&&j!=64)begin
-     seat_data_q[k*64+d]<=repaired[k*72+j-1];d=d+1;
-    end
+  for(integer h=0;h<8;h=h+1)if(load_pre_q[h]&&load_i)begin
+   integer j,d;d=0;
+   seat[h*36+:36]<=repaired[h*36+:36];
+   // Extract one repaired data half without adding a second ECC decode.
+   for(j=1;j<=71;j=j+1)if(j!=1&&j!=2&&j!=4&&j!=8&&j!=16&&j!=32&&j!=64)begin
+    if((d/32)==(h%2))seat_data_q[h*32+(d%32)]<=repaired[(h/2)*72+j-1];d=d+1;
    end
   end
  end

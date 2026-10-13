@@ -33,7 +33,8 @@ module vm_root_ck9 #(parameter integer ENABLE=0,parameter integer SEATP=1,parame
   wire [8:0] bank_bad,checker_err,checker_valid;
   wire [191:0] seat_owner_i=seat_data[2063+:192];
   wire [2303:0] raw=write_accept_o?{49'b0,wr_owner,wr_data}:{49'b0,rd_owner,2063'b0};
-  vm_root_ctl9 u_ctrl(.*);
+  vm_root_ctl9 u_ctrl(.ack0(tap_ACK_owner[0+:192]),.ack1(tap_ACK_owner[192+:192]),
+   .ack2(tap_ACK_owner[384+:192]),.ack3(tap_ACK_owner[576+:192]),.*);
   for(genvar b=0;b<9;b=b+1)begin:checker_banks
    if(b==8)begin:owner
     vm_ck4_state_owner u_bank(.ck(clk),.rst_n(por_n),.accept_i(accept_o),.return_i(return_o),
