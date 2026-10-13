@@ -1,5 +1,5 @@
 {
- "name": "hgi_b2_swap_disp_ref-a-COMMIT",
+ "name": "hgi_b2_swap_disp_ref-a-088d1eb3b",
  "block": "ot_hgi_b2_swap_disp_t",
  "ref_tile": true,
  "owner": "Claude:el1013-ds-mtp-lead",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/mtp-phys-1013",
-  "commit": "COMMIT",
+  "commit": "088d1eb3b",
   "extra_paths": [
    "rtl/hbm_accel/generic/b2",
    "rtl/hbm_accel/generic/peers",
@@ -137,7 +137,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_b2_swap_disp_ref/hgi_b2_swap_disp_ref-a-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_b2_swap_disp_ref/hgi_b2_swap_disp_ref-a-088d1eb3b"
   }
  ],
  "cycles_added": 0,
