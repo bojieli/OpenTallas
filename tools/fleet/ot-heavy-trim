@@ -1,0 +1,28 @@
+#!/bin/bash
+# ot-heavy-trim (2026-10-13 owner: reservations must not block jobs).  Every 2 min: lower the reservation of each
+# RUNNING ot-heavy unit that is >= 5 min old to its observed memory + max(50 % of observed peak, 4 GB)
+# (>= 30 min: + max(25 %, 2 GB)); never raises (ot-heavy-reconcile raises when RSS nears the reservation), never
+# touches MemoryMax.  Works for waiters of every ot-heavy version because it rewrites /var/tmp/ot-heavy/res.*.
+D=/var/tmp/ot-heavy; up=$(awk '{print int($1)}' /proc/uptime); freed=0
+for f in "$D"/res.*; do
+  [ -e "$f" ] || continue
+  read -r u m < "$f" || continue
+  case "$m" in ''|*[!0-9]*) continue;; esac
+  systemctl --user is-active --quiet "$u.scope" 2>/dev/null || continue
+  cg=""; aem=""; cur=0
+  eval "$(systemctl --user show "$u.scope" -p ControlGroup -p ActiveEnterTimestampMonotonic -p MemoryCurrent 2>/dev/null | sed -n 's/^ControlGroup=\(.*\)$/cg="\1"/p; s/^ActiveEnterTimestampMonotonic=\([0-9]*\)$/aem=\1/p; s/^MemoryCurrent=\([0-9]*\)$/cur=\1/p')"
+  case "$aem" in ''|*[!0-9]*) continue;; esac
+  age=$(( up - aem / 1000000 )); [ $age -ge 300 ] || continue
+  use=0; [ -f "$D/use.$u" ] && read -r use < "$D/use.$u"; case "$use" in ''|*[!0-9]*) use=0;; esac
+  pk=0; [ -n "$cg" ] && [ -r "/sys/fs/cgroup$cg/memory.peak" ] && pk=$(( $(cat "/sys/fs/cgroup$cg/memory.peak") / 1073741824 ))
+  now=$(( cur / 1073741824 + use )); obs=$now; [ $pk -gt $obs ] && obs=$pk
+  if [ $age -ge 1800 ]; then cap=$(( obs / 4 )); [ $cap -lt 2 ] && cap=2; else cap=$(( obs / 2 )); [ $cap -lt 4 ] && cap=4; fi
+  new=$(( obs + cap + 1 ))
+  if [ $new -lt $m ]; then
+    echo "$u $new" > "$f.tmp.$$" && mv "$f.tmp.$$" "$f"
+    echo "$(date -Is) TRIM $u ${m}G -> ${new}G (now ${now}G peak ${pk}G age ${age}s)" >> "$D/admit.log"
+    freed=$(( freed + m - new ))
+  fi
+done
+[ "${1:-}" = "-v" ] && echo "freed ${freed} GB"
+exit 0
