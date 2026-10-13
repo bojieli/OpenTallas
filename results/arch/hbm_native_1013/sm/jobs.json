@@ -1,0 +1,46 @@
+[
+  {
+    "name": "smn_front_n_ref-r1-0720be650",
+    "source_commit": "0720be650",
+    "physical_rtl_snapshot_source": "49b00f711",
+    "owner": "Codex:hbm-sm-native-manifest",
+    "status": "PREPARED_INTAKE_NEXT",
+    "kit": "physical/ref_tile/smn_front_n_ref",
+    "local_gate": "PASS",
+    "full_default_shape_lint": "PASS",
+    "adoption_gate": "PENDING_RMAX4096_REQCR1_DEFTRUE_FCHIER_EXACT_MUTANT_THROUGHPUT"
+  },
+  {
+    "name": "smn_front_s_ref-r1-0720be650",
+    "source_commit": "0720be650",
+    "physical_rtl_snapshot_source": "49b00f711",
+    "owner": "Codex:hbm-sm-native-manifest",
+    "status": "PREPARED_INTAKE_NEXT",
+    "kit": "physical/ref_tile/smn_front_s_ref",
+    "local_gate": "PASS",
+    "full_default_shape_lint": "PASS",
+    "adoption_gate": "PENDING_RMAX4096_REQCR1_DEFTRUE_FCHIER_EXACT_MUTANT_THROUGHPUT"
+  },
+  {
+    "name": "smn_be_eg_ref-r1-0720be650",
+    "source_commit": "0720be650",
+    "physical_rtl_snapshot_source": "49b00f711",
+    "owner": "Codex:hbm-sm-native-manifest",
+    "status": "PREPARED_INTAKE_NEXT",
+    "kit": "physical/ref_tile/smn_be_eg_ref",
+    "local_gate": "PASS",
+    "full_default_shape_lint": "PASS",
+    "adoption_gate": "PENDING_RMAX4096_REQCR1_DEFTRUE_FCHIER_EXACT_MUTANT_THROUGHPUT"
+  },
+  {
+    "name": "smn_be_wg_ref-r1-0720be650",
+    "source_commit": "0720be650",
+    "physical_rtl_snapshot_source": "49b00f711",
+    "owner": "Codex:hbm-sm-native-manifest",
+    "status": "PREPARED_INTAKE_NEXT",
+    "kit": "physical/ref_tile/smn_be_wg_ref",
+    "local_gate": "PASS",
+    "full_default_shape_lint": "PASS",
+    "adoption_gate": "PENDING_RMAX4096_REQCR1_DEFTRUE_FCHIER_EXACT_MUTANT_THROUGHPUT"
+  }
+]
