@@ -221,11 +221,13 @@ module ot_hgi_seq_fe #(
                              (db_entry_q == 2'd2) ? md_d_r[95:64] : kern_off, 4'd0};
     wire [39:0] img_a = {md_d_r[123:96], 12'd0};
     reg [20:0] img_l; reg [19:0] img_ha, img_hb;
+    // kern_off in two edges (s1 route 983266320: be_jl_kernel_r -> 11:1 x 32 select -> zero test -> 32-b add -> select was
+    // the block's only TT miss, -59.6 ps on 28 endpoints): edge 1 = the kernel-table select, edge 2 = zero test / add.
+    reg jl_v2, kpl_q; reg [31:0] kb_q, loff_q;
     always @(posedge clk) begin
-        if (be_jl_v_r) begin
-            db_entry_q <= be_jl_entry_r; pos0 <= (be_jl_pos_r == 20'd0);
-            kern_off <= (kern_base == 32'd0) ? 32'd0 : kern_pl ? kern_base + be_jl_loff_r : kern_base;
-        end
+        jl_v2 <= be_jl_v_r; kb_q <= kern_base; kpl_q <= kern_pl; loff_q <= be_jl_loff_r;
+        if (be_jl_v_r) begin db_entry_q <= be_jl_entry_r; pos0 <= (be_jl_pos_r == 20'd0); end
+        if (jl_v2) kern_off <= (kb_q == 32'd0) ? 32'd0 : kpl_q ? kb_q + loff_q : kb_q;
         img_l <= {1'b0, img_a[19:0]} + {1'b0, entry_off[19:0]};
         img_ha <= img_a[39:20]; img_hb <= entry_off[39:20];
         img_q <= {img_ha + img_hb + {19'd0, img_l[20]}, img_l[19:0]};
