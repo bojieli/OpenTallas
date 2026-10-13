@@ -151,10 +151,16 @@ def clock_refs(lib, ins_json, corner):
             continue
         out[name] = dict(rise=(min(r) + max(r)) / 2, fall=(min(f) + max(f)) / 2, min=min(r), max=max(r), src='lib midrange',
                          bmin=min(r), bmax=max(r), n=None)
-    j = (ins_json or {}).get(corner) or {}
-    b = j.get('boundary') if isinstance(j, dict) else None
-    if out and isinstance(b, dict) and b.get('mean') is not None:
-        ck = (ins_json or {}).get('clock')
+    records = [ins_json or {}]
+    # A dual-clock view needs the independently measured reference of each
+    # clock. The pin mapping comes from the routed SDC's create_clock port.
+    records += list((ins_json or {}).get('clock_measurements', {}).values())
+    for record in records:
+        j = record.get(corner) or {}
+        b = j.get('boundary') if isinstance(j, dict) else None
+        if not (out and isinstance(b, dict) and b.get('mean') is not None):
+            continue
+        ck = record.get('lib_clock_pin') or record.get('clock')
         # insertion.json names the SDC clock port ("ck"); the Liberty clock pin may be a bus bit ("ck[0]") or the RTL
         # name ("clk"): exact name, else the bus, else the view's only clock pin (the measurement has one clock).
         # A view with several clock pins under other names (raw "cck" beside the spine "sk"): the measured clock is the

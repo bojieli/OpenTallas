@@ -69,6 +69,17 @@ def main():
         assert r2['die_clock']['reference_ps'] == 104.0 and r2['die_clock']['reference_src'].startswith('insertion.json')
         assert r2['buses']['q']['out_ps'] == 296.0 and r2['buses']['far_i']['in_ps'] == 254.0 and r2['summary']['pair_cost_ps'] == 550.0
         assert r2['die_clock']['boundary_spread_ps'] == 90.0 and 'spread' in r2['flags'] and 'ref_estimated' not in r2['notes']
+        # Independent clock records must not borrow the other domain's mean or
+        # spread; an SDC clock name can differ from its physical Liberty pin.
+        ll = P.parse_lib(v / 't_tt.lib')
+        ll['pins']['hk'] = ll['pins']['ck']
+        refs = P.clock_refs(ll, {'clock_measurements': {
+            'ck': {'clock': 'core_clk', 'lib_clock_pin': 'ck', 'tt': {'boundary': {'n': 4, 'mean': 103, 'min': 98, 'max': 110}}},
+            'hk': {'clock': 'hclk', 'lib_clock_pin': 'hk', 'tt': {'boundary': {'n': 8, 'mean': 207, 'min': 199, 'max': 216}}},
+        }}, 'tt')
+        assert refs['ck']['rise'] == 103 and refs['ck']['bmin'] == 98 and refs['ck']['n'] == 4
+        assert refs['hk']['rise'] == 207 and refs['hk']['bmin'] == 199 and refs['hk']['n'] == 8
+        assert all(r['src'] == 'insertion.json boundary mean' for r in refs.values())
         (v / 'insertion.json').unlink()
         # a tile over the reach against its own kind but with pin registers is NOT a tile defect; C > available is 'abut'
         a.q_pin = a.p_pin = 1000.0
