@@ -60,7 +60,10 @@ def main():
         n = f"app{i}_{Path(f).name}"
         shutil.copy(f, d / n)
         app.append(n)
-    res = dict(inserted=a.insert, replaced=dict(r.split("=", 1) for r in a.replace), appended=a.append)
+    # orfs: the ORFS dir this verdict was timed in (/work of meas_*.tcl) -- tools/tt_views/view_export.py replays the
+    # verdict's constraint section from there, so the exported view carries exactly the sign-off sequence
+    res = dict(inserted=a.insert, replaced=dict(r.split("=", 1) for r in a.replace), appended=a.append,
+               orfs=str(a.orfs.resolve()))
     for corner, key in (("ss", "setup_tt"), ("ff", "hold_ff")):
         t = a.orfs / f"w18_sta_{corner}.tcl"
         if not t.is_file():
