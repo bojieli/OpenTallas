@@ -2,3 +2,5 @@
 # column; created here, removed by post_drt.tcl, so the abstract carries only real metal: DRT-0073 at the parent)
 source /src/physical/qwen_die_masters/pre_ref_skew.tcl
 source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
+source /src/physical/common_flow/grt_macro_top_layer.tcl
+source /src/physical/s81su_physical/qnq_sram_edge_access.tcl
