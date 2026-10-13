@@ -1,0 +1,75 @@
+{
+ "name": "dsfd_engram_sink_m5",
+ "top": "dsfd_engram_sink",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/engram/dsfd_engram_sink.sv",
+  "rtl/hdc/v41/ot_hdc_engram_gather.sv",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv"
+ ],
+ "params": {
+  "PIN_CAPTURE": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 360.0,
+  "h": 135.0
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "ck",
+   "perr",
+   "rdy",
+   "rel_slot",
+   "rel_v",
+   "rst_n"
+  ],
+  "N": [
+   "in_beat",
+   "in_col",
+   "in_d",
+   "in_r",
+   "in_slot",
+   "in_v",
+   "st_bad",
+   "st_slot",
+   "st_v"
+  ],
+  "S": [
+   "wr_addr",
+   "wr_data",
+   "wr_en"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed engram-sink-pin-e5c627229-tt (dsfd_engram_sink, RTL e5c627229): same RTL, outline 360.0x135.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Codex:engram",
+  "benches": [
+   {
+    "name": "pin_fullshape_and_overflow",
+    "cmd": "python3 tools/engram_sink_pin_gate.py",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_engram_sink",
+  "closed_job": "engram-sink-pin-e5c627229-tt",
+  "closed_commit": "e5c6272290a1b951e961d8222e70d2b4d10aaa61",
+  "snapshot": [],
+  "orig_owner": "Codex:engram"
+ }
+}

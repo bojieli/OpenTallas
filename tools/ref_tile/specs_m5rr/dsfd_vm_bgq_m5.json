@@ -1,0 +1,100 @@
+{
+ "name": "dsfd_vm_bgq_m5",
+ "top": "dsfd_vm_bgq",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/dsfd_vm_bgq_m5/src/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv"
+ ],
+ "params": {
+  "NSTG": 2
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 253.794,
+  "h": 500.04
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 8
+  }
+ ],
+ "pins": {
+  "W": [
+   "ck",
+   "grp",
+   "rs"
+  ],
+  "S": [
+   "f_d",
+   "f_mask",
+   "f_row",
+   "f_v",
+   "f_we",
+   "o_d",
+   "o_f",
+   "o_o",
+   "o_v"
+  ],
+  "N": [
+   "i_d",
+   "i_mask",
+   "i_row",
+   "i_v",
+   "i_we",
+   "r_d",
+   "r_f",
+   "r_o",
+   "r_v"
+  ]
+ },
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed s81b-vm_bgq-sys2s-30327ff97-tc-rd (dsfd_vm_bgq, RTL 30327ff97, snapshot of 1 drifted files): same RTL, outline 253.794x500.04, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:redesign-ds",
+  "benches": [
+   {
+    "name": "exact_sys",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_vm_bgq_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_vm_bgq_m5/src/. $B/ && cd $B && { python3 physical/redesign_ds/vm_sys/vm_sys_bench.py {RUN}/bench ex 2 4 -- +CYCLES=20000 +SEED=1\n}",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "note": "[m5rr: run on the 30327ff97 snapshot overlay of physical/ref_tile/dsfd_vm_bgq_m5/src]"
+   },
+   {
+    "name": "neg_order",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_vm_bgq_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_vm_bgq_m5/src/. $B/ && cd $B && { python3 physical/redesign_ds/vm_sys/vm_sys_bench.py {RUN}/bench mord 2 4 OT_S81PH_VM_MUT_ORDER -- +CYCLES=4000\n}",
+    "expect": "fail",
+    "fail_regex": "VM_SYS_mord: FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "note": "[m5rr: run on the 30327ff97 snapshot overlay of physical/ref_tile/dsfd_vm_bgq_m5/src]"
+   },
+   {
+    "name": "neg_skew",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_vm_bgq_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_vm_bgq_m5/src/. $B/ && cd $B && { python3 physical/redesign_ds/vm_sys/vm_sys_bench.py {RUN}/bench mskew 2 4 OT_VM_SYS_MUT_SKEW -- +CYCLES=4000\n}",
+    "expect": "fail",
+    "fail_regex": "VM_SYS_mskew: FAIL",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "note": "[m5rr: run on the 30327ff97 snapshot overlay of physical/ref_tile/dsfd_vm_bgq_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_vm_bgq",
+  "closed_job": "s81b-vm_bgq-sys2s-30327ff97-tc-rd",
+  "closed_commit": "30327ff9755904c75fd9445f53df314818a028b1",
+  "snapshot": [
+   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv"
+  ],
+  "orig_owner": "Claude:redesign-ds"
+ }
+}

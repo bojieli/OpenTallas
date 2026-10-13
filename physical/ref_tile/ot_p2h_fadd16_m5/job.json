@@ -1,0 +1,117 @@
+{
+ "name": "ot_p2h_fadd16_m5-m5-COMMIT",
+ "block": "ot_p2h_fadd16",
+ "ref_tile": true,
+ "owner": "Claude:el1011-reroute-m5",
+ "purpose": "M5 re-route (reroute_batch.py) of closed mtp-p2h-fa-50b05596a-tc-b (ot_p2h_fadd16, RTL 50b05596a, snapshot of 4 drifted files): same RTL, outline 216.0x58.32, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-ds-mtp",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/el1011-reroute-m5",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_p2h_fadd16 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/common --top-module ot_lint_top {RUN}/ot_lint_top.sv physical/ref_tile/ot_p2h_fadd16_m5/src/rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_tiles.sv physical/ref_tile/ot_p2h_fadd16_m5/src/rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_native.sv physical/ref_tile/ot_p2h_fadd16_m5/src/rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_path.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/common/ot_secded.sv physical/ref_tile/ot_p2h_fadd16_m5/src/rtl/common/ot_sc_pfifo.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "p2h_gate",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_p2h_fadd16_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_p2h_fadd16_m5/src/. $B/ && cd $B && { python3 tools/mtp_p2_rootpipe_gate.py --out {RUN}/bench/gate\n}",
+    "expect": "pass",
+    "pass_regex": "^ROOTPIPE GATE PASS 8 cases",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 50b05596a snapshot overlay of physical/ref_tile/ot_p2h_fadd16_m5/src]"
+   },
+   {
+    "name": "p2h_neg_order",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_p2h_fadd16_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_p2h_fadd16_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/bench/p2h_neg_order && (cd {RUN}/bench/p2h_neg_order && python3 {SRC}/tools/mtp_p2_prefix_fixture.py) && iverilog -g2012 -Irtl/common -s tb_mtp_p2_prefix_path -Ptb_mtp_p2_prefix_path.MUT=2 -Ptb_mtp_p2_prefix_path.ROOTPIPE=1 -o {RUN}/bench/p2h_neg_order/t.vvp rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_native.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_path.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_tiles.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/common/ot_secded.sv rtl/common/ot_sc_pfifo.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_prefix_path.sv && (cd {RUN}/bench/p2h_neg_order && vvp -n {RUN}/bench/p2h_neg_order/t.vvp) | tee {RUN}/bench/p2h_neg_order/t.log; grep -q '^PATH PASS' {RUN}/bench/p2h_neg_order/t.log\n}",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 50b05596a snapshot overlay of physical/ref_tile/ot_p2h_fadd16_m5/src]"
+   },
+   {
+    "name": "p2prefix_neg_copy_first",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_p2h_fadd16_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_p2h_fadd16_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/bench && (cd {RUN}/bench && python3 {SRC}/tools/mtp_p2_prefix_fixture.py) && iverilog -g2012 -Irtl/common -s tb_mtp_p2_prefix -Ptb_mtp_p2_prefix.MUT_COPY_FIRST=1 -Ptb_mtp_p2_prefix.DSTAGE=1 -Ptb_mtp_p2_prefix.ROOTPIPE=1 -o {RUN}/bench/mut.vvp rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/common/ot_secded.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_prefix.sv && (cd {RUN}/bench && vvp -n {RUN}/bench/mut.vvp) | tee {RUN}/bench/mut.log; grep -q '^PREFIX PASS' {RUN}/bench/mut.log\n}",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 50b05596a snapshot overlay of physical/ref_tile/ot_p2h_fadd16_m5/src]"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/ot_p2h_fadd16_m5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/ot_p2h_fadd16_m5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/ot_p2h_fadd16_m5 --out {RUN}/record/views/ot_p2h_fadd16  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/ot_p2h_fadd16_m5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/ot_p2h_fadd16_m5/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/ot_p2h_fadd16_m5/ot_p2h_fadd16_m5-m5-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

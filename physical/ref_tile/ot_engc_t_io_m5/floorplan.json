@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "ot_engc_t_io_m5",
+ "top": "ot_engc_t_io",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  449.28,
+  38.88
+ ],
+ "core": [
+  2.16,
+  2.16,
+  447.11999999999995,
+  36.72
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "c_cmd",
+   "c_done",
+   "c_st",
+   "f_cfg",
+   "f_vm",
+   "t_vm"
+  ],
+  "W": [
+   "cfg_o",
+   "ck",
+   "jf_i",
+   "jn_o",
+   "perr_i",
+   "rdy_i",
+   "rst",
+   "vrel_o",
+   "werr_i",
+   "wn_i"
+  ],
+  "S": [
+   "r0_a",
+   "r0_oh",
+   "r1_a",
+   "r1_oh",
+   "r2_a",
+   "r2_oh",
+   "rd0",
+   "rd1",
+   "rd2"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/dsrom_sys/engram/tiles/ot_engc_t_io.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+  "physical/ref_tile/ot_engc_t_io_m5/kit.env",
+  "physical/ref_tile/ot_engc_t_io_m5/clock.sdc",
+  "physical/ref_tile/ot_engc_t_io_m5/signoff.sdc",
+  "physical/ref_tile/ot_engc_t_io_m5/pdn.tcl",
+  "physical/ref_tile/ot_engc_t_io_m5/pre_cts.tcl",
+  "physical/ref_tile/ot_engc_t_io_m5/pre_grt.tcl",
+  "physical/ref_tile/ot_engc_t_io_m5/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl"
+ ]
+}

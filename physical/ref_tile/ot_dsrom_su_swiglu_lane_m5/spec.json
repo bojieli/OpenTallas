@@ -1,0 +1,75 @@
+{
+ "name": "ot_dsrom_su_swiglu_lane_m5",
+ "top": "ot_dsrom_su_swiglu_lane",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+  "physical/ref_tile/ot_dsrom_su_swiglu_lane_m5/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "physical/ref_tile/ot_dsrom_su_swiglu_lane_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "params": {
+  "LM": 5,
+  "LA": 4,
+  "ROUTED": 1,
+  "IREG": 1,
+  "ESUM": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 214.234,
+  "h": 214.234
+ },
+ "macros": [],
+ "pins": {
+  "E": [
+   "a",
+   "fault",
+   "rst_n",
+   "vo"
+  ],
+  "W": [
+   "clk",
+   "g",
+   "lim",
+   "u",
+   "v",
+   "w"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed s81-swiglu-esum-435a62a41-hm25-tt (ot_dsrom_su_swiglu_lane, RTL 435a62a41, snapshot of 2 drifted files): same RTL, outline 214.234x214.234, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:drive-1613",
+  "benches": [],
+  "no_bench_reason": "closed record s81-swiglu-esum-435a62a41-hm25-tt had no benches"
+ },
+ "m5rr": {
+  "cell": "ot_dsrom_su_swiglu_lane",
+  "closed_job": "s81-swiglu-esum-435a62a41-hm25-tt",
+  "closed_commit": "435a62a418d536d0d25f8420469c9a4bd3518889",
+  "snapshot": [
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_f12.sv"
+  ],
+  "orig_owner": "Claude:drive-1613"
+ },
+ "children": [],
+ "inter": []
+}

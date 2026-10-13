@@ -1,0 +1,91 @@
+{
+ "name": "hfd_router_m5",
+ "top": "hfd_router",
+ "kind": "tile",
+ "sources": [
+  "physical/hbm_accel_die_views/router/rtl/hfd_router.sv",
+  "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+  "rtl/gpu/ot_gpu_router_topk_ps.sv",
+  "rtl/gpu/ot_gpu_router_topk.sv",
+  "rtl/common/ot_fwd_link_stage.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 1399.66,
+  "h": 326.28
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "ck",
+   "rst",
+   "t_cmdproc"
+  ],
+  "ANY": [
+   "eNE",
+   "eSE",
+   "f_su_NE",
+   "f_su_SE"
+  ],
+  "W": [
+   "eNW",
+   "eSW",
+   "f_su_NW",
+   "f_su_SW",
+   "f_vm"
+  ]
+ },
+ "defines": [
+  "OT_ROUTER_KNEG"
+ ],
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed hbm_router_r23_kneg_94fab53cc_b (hfd_router, RTL 94fab53cc): same RTL, outline 1399.66x326.28, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:hbm-die",
+  "benches": [
+   {
+    "name": "exact_kneg_core",
+    "cmd": "bash rtl/test/hbm_router_ps/run_kneg.sh {RUN}/bench pos 1500",
+    "expect": "pass",
+    "pass_regex": "KNEG_BENCH PASS",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "wrapper_lockstep_kneg",
+    "cmd": "bash physical/hbm_accel_die_views/router/rtl/run_bench.sh {RUN}/bench_wrap -DOT_ROUTER_KNEG",
+    "expect": "pass",
+    "pass_regex": "mismatches=0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_kneg",
+    "cmd": "bash rtl/test/hbm_router_ps/run_kneg.sh {RUN}/bench neg 200",
+    "expect": "fail",
+    "fail_regex": "KNEG_BENCH FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "hfd_router",
+  "closed_job": "hbm_router_r23_kneg_94fab53cc_b",
+  "closed_commit": "94fab53ccc96a4bdac81f3cd18335962690109ed",
+  "snapshot": [],
+  "orig_owner": "Claude:hbm-die"
+ },
+ "children": [],
+ "inter": []
+}

@@ -1,0 +1,123 @@
+{
+ "name": "hfd_idx_t4_join_m5",
+ "top": "hfd_idx_t4_join",
+ "kind": "tile",
+ "sources": [
+  "physical/hbm_accel_die_views/index/rtl/hfd_idx_t4_join.sv",
+  "physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/ref_tile/hfd_idx_t4_join_m5/src/rtl/link/ot_fifo_sram_fwft.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "MEM": 1,
+  "FE": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 420.0,
+  "h": 360.0
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 4
+  }
+ ],
+ "pins": {
+  "S": [
+   "ck",
+   "rst"
+  ],
+  "E": [
+   "fault",
+   "s",
+   "sc"
+  ],
+  "W": [
+   "tap_credit",
+   "taps"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 40
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl (hfd_idx_t4_join, RTL f7cabb9b7, snapshot of 1 drifted files): same RTL, outline 420.0x360.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:fe-push-hgi-1010",
+  "benches": [
+   {
+    "name": "t4j_fe_exact",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/hfd_idx_t4_join_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/hfd_idx_t4_join_m5/src/. $B/ && cd $B && { bash physical/variant_fill/hgi_idx_t4_join-fe/bench.sh {RUN}/bench base\n}",
+    "expect": "pass",
+    "pass_regex": "T4J_base_PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "note": "[m5rr: run on the f7cabb9b7 snapshot overlay of physical/ref_tile/hfd_idx_t4_join_m5/src]"
+   },
+   {
+    "name": "t4j_fe_flop",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/hfd_idx_t4_join_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/hfd_idx_t4_join_m5/src/. $B/ && cd $B && { bash physical/variant_fill/hgi_idx_t4_join-fe/bench.sh {RUN}/bench fe_flop\n}",
+    "expect": "pass",
+    "pass_regex": "T4J_fe_flop_PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "note": "[m5rr: run on the f7cabb9b7 snapshot overlay of physical/ref_tile/hfd_idx_t4_join_m5/src]"
+   },
+   {
+    "name": "t4j_legacy_sram",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/hfd_idx_t4_join_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/hfd_idx_t4_join_m5/src/. $B/ && cd $B && { bash physical/variant_fill/hgi_idx_t4_join-fe/bench.sh {RUN}/bench legacy\n}",
+    "expect": "pass",
+    "pass_regex": "T4J_legacy_PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "note": "[m5rr: run on the f7cabb9b7 snapshot overlay of physical/ref_tile/hfd_idx_t4_join_m5/src]"
+   },
+   {
+    "name": "t4j_mut_swap",
+    "cmd": "B={RUN}/bsrc_m5_3; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/hfd_idx_t4_join_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/hfd_idx_t4_join_m5/src/. $B/ && cd $B && { bash physical/variant_fill/hgi_idx_t4_join-fe/bench.sh {RUN}/bench MUT_SWAP\n}",
+    "expect": "fail",
+    "fail_regex": "T4J_MUT_SWAP_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "note": "[m5rr: run on the f7cabb9b7 snapshot overlay of physical/ref_tile/hfd_idx_t4_join_m5/src]"
+   },
+   {
+    "name": "t4j_mut_drop_credit",
+    "cmd": "B={RUN}/bsrc_m5_4; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/hfd_idx_t4_join_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/hfd_idx_t4_join_m5/src/. $B/ && cd $B && { bash physical/variant_fill/hgi_idx_t4_join-fe/bench.sh {RUN}/bench MUT_DROP_CREDIT\n}",
+    "expect": "fail",
+    "fail_regex": "T4J_MUT_DROP_CREDIT_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "note": "[m5rr: run on the f7cabb9b7 snapshot overlay of physical/ref_tile/hfd_idx_t4_join_m5/src]"
+   },
+   {
+    "name": "t4j_mut_fe_cnz",
+    "cmd": "B={RUN}/bsrc_m5_5; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/hfd_idx_t4_join_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/hfd_idx_t4_join_m5/src/. $B/ && cd $B && { bash physical/variant_fill/hgi_idx_t4_join-fe/bench.sh {RUN}/bench MUT_FE_CNZ\n}",
+    "expect": "fail",
+    "fail_regex": "T4J_MUT_FE_CNZ_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "note": "[m5rr: run on the f7cabb9b7 snapshot overlay of physical/ref_tile/hfd_idx_t4_join_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "hfd_idx_t4_join",
+  "closed_job": "hgi_idx_t4_join-fe-f7cabb9b7-a-tc-cl",
+  "closed_commit": "f7cabb9b71d66991bd0e1bc087e322561fe21b41",
+  "snapshot": [
+   "rtl/link/ot_fifo_sram_fwft.sv"
+  ],
+  "orig_owner": "Claude:fe-push-hgi-1010"
+ },
+ "children": [],
+ "inter": []
+}

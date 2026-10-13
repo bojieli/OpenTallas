@@ -1,0 +1,92 @@
+{
+ "name": "dsfd_wfc_tok_hard_m5",
+ "top": "dsfd_wfc_tok_hard",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv",
+  "physical/ref_tile/dsfd_wfc_tok_hard_m5/src/rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+  "physical/ref_tile/dsfd_wfc_tok_hard_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "physical/ref_tile/dsfd_wfc_tok_hard_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv",
+  "physical/ref_tile/dsfd_wfc_tok_hard_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 162.0,
+  "h": 151.2
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck",
+   "f_c",
+   "rst"
+  ],
+  "W": [
+   "f_dw"
+  ],
+  "E": [
+   "f_pr",
+   "t_cfg",
+   "t_ft",
+   "t_pr"
+  ]
+ },
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed mtp-wfc_tok-hard-e829cb457-r2-tc-cx (dsfd_wfc_tok_hard, RTL e829cb457, snapshot of 4 drifted files): same RTL, outline 162.0x151.2, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Codex:mtp-rom/wfc_hard",
+  "benches": [
+   {
+    "name": "exact_and_epoch_mutant",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_wfc_tok_hard_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_wfc_tok_hard_m5/src/. $B/ && cd $B && { python3 tools/dsrom_wfc_token_hard_gate.py --out {RUN}/bench\n}",
+    "expect": "pass",
+    "pass_regex": "WFC_TOKEN_HARD_GATE PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the e829cb457 snapshot overlay of physical/ref_tile/dsfd_wfc_tok_hard_m5/src]"
+   },
+   {
+    "name": "negative_epoch",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_wfc_tok_hard_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_wfc_tok_hard_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/negative && iverilog -g2012 -s tb_mtp_rom_tok_hard -DOT_WFCTOK_MUT_NOEPOCH -o {RUN}/negative/sim.vvp rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv && vvp -n {RUN}/negative/sim.vvp > {RUN}/negative/run.log && python3 -c \"import pathlib,sys;p=pathlib.Path('{RUN}/negative/run.log').read_text();assert 'MTP_TOK_HARD FAIL read=277' in p;print('WFC_TOKEN_HARD_NEGATIVE FAIL_AS_REQUIRED');sys.exit(1)\"\n}",
+    "expect": "fail",
+    "fail_regex": "WFC_TOKEN_HARD_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the e829cb457 snapshot overlay of physical/ref_tile/dsfd_wfc_tok_hard_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_wfc_tok_hard",
+  "closed_job": "mtp-wfc_tok-hard-e829cb457-r2-tc-cx",
+  "closed_commit": "e829cb45763defec6166dcacf33a2efe873c730c",
+  "snapshot": [
+   "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv"
+  ],
+  "orig_owner": "Codex:mtp-rom/wfc_hard"
+ }
+}

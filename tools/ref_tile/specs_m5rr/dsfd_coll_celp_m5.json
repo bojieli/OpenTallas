@@ -1,0 +1,112 @@
+{
+ "name": "dsfd_coll_celp_m5",
+ "top": "dsfd_coll_celp",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/dsfd_coll_celp_m5/src/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ceh.sv",
+  "physical/ref_tile/dsfd_coll_celp_m5/src/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_cbh.sv",
+  "physical/ref_tile/dsfd_coll_celp_m5/src/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
+  "physical/ref_tile/dsfd_coll_celp_m5/src/rtl/common/ot_link_credit.sv",
+  "physical/ref_tile/dsfd_coll_celp_m5/src/rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv",
+  "physical/ref_tile/dsfd_coll_celp_m5/src/rtl/link/ot_fifo_sram_fwft.sv",
+  "physical/ref_tile/dsfd_coll_celp_m5/src/rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 113.4,
+  "h": 340.2
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "ck",
+   "lf",
+   "rs"
+  ],
+  "W": [
+   "f_li_d",
+   "f_li_r",
+   "f_li_v",
+   "f_lo_d",
+   "f_lo_r",
+   "f_lo_v",
+   "x_flt"
+  ],
+  "E": [
+   "p_cr",
+   "p_d",
+   "p_v",
+   "q_cr",
+   "q_d",
+   "q_v"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 112
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed dsfd_coll_celp-ceh-c1323b550-tc-cl-p4 (dsfd_coll_celp, RTL c1323b550, snapshot of 7 drifted files): same RTL, outline 113.4x340.2, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-ds-coll",
+  "benches": [
+   {
+    "name": "exact_coll_ceh",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_celp_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_celp_m5/src/. $B/ && cd $B && { bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench ceh +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH\n}",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "note": "[m5rr: run on the c1323b550 snapshot overlay of physical/ref_tile/dsfd_coll_celp_m5/src]"
+   },
+   {
+    "name": "neg_cel_slice_swap",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_celp_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_celp_m5/src/. $B/ && cd $B && { bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cel +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_MUT_CEL\n}",
+    "expect": "fail",
+    "fail_regex": "TB_S81PH_COLL_SYS FAIL",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "note": "[m5rr: run on the c1323b550 snapshot overlay of physical/ref_tile/dsfd_coll_celp_m5/src]"
+   },
+   {
+    "name": "neg_wfree2",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_celp_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_celp_m5/src/. $B/ && cd $B && { bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_wfree2 +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_LINK_WFREE2_MUT\n}",
+    "expect": "fail",
+    "fail_regex": "TB_S81PH_COLL_SYS FAIL",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "note": "[m5rr: run on the c1323b550 snapshot overlay of physical/ref_tile/dsfd_coll_celp_m5/src]"
+   },
+   {
+    "name": "neg_ceh_err_flag",
+    "cmd": "B={RUN}/bsrc_m5_3; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_celp_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_celp_m5/src/. $B/ && cd $B && { bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_ceh +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_MUT_CEH\n}",
+    "expect": "fail",
+    "fail_regex": "TB_S81PH_COLL_SYS FAIL",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "note": "[m5rr: run on the c1323b550 snapshot overlay of physical/ref_tile/dsfd_coll_celp_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_coll_celp",
+  "closed_job": "dsfd_coll_celp-ceh-c1323b550-tc-cl-p4",
+  "closed_commit": "c1323b55092863cb12546de470e8ea06cca65fd5",
+  "snapshot": [
+   "rtl/common/ot_link_credit.sv",
+   "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_cbh.sv",
+   "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ceh.sv",
+   "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv"
+  ],
+  "orig_owner": "Claude:el1011-ds-coll"
+ }
+}

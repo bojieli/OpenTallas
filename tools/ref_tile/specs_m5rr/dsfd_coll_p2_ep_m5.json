@@ -1,0 +1,153 @@
+{
+ "name": "dsfd_coll_p2_ep_m5",
+ "top": "dsfd_coll_p2_ep",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/dsfd_coll_p2_ep_m5/src/rtl/experimental/mtp_p2_ordered_20261009/dsfd_p2_lnk.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+  "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+  "physical/ref_tile/dsfd_coll_p2_ep_m5/src/rtl/common/ot_sc_pfifo.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 302.4
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "c_od",
+   "c_or",
+   "c_ov",
+   "c_sd",
+   "c_sr",
+   "c_sv"
+  ],
+  "S": [
+   "ck",
+   "rst"
+  ],
+  "E": [
+   "f_od",
+   "f_ov",
+   "f_sg",
+   "t_og",
+   "t_sd",
+   "t_sv"
+  ]
+ },
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed el1011-collp2-966562e4c-tc-a (dsfd_coll_p2_ep, RTL 966562e4c, snapshot of 4 drifted files): same RTL, outline 64.8x302.4, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-ds-wfc",
+  "benches": [
+   {
+    "name": "pass_p2_s1",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one p2_s1 --out {RUN}/bench\n}",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FIXLAT p2_s1 PASS \\(expect pass\\)",
+    "note": "[m5rr: run on the 966562e4c snapshot overlay of physical/ref_tile/dsfd_coll_p2_ep_m5/src]"
+   },
+   {
+    "name": "pass_p2_s5",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one p2_s5 --out {RUN}/bench\n}",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FIXLAT p2_s5 PASS \\(expect pass\\)",
+    "note": "[m5rr: run on the 966562e4c snapshot overlay of physical/ref_tile/dsfd_coll_p2_ep_m5/src]"
+   },
+   {
+    "name": "fail_p2_lat1",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one p2_lat1 --out {RUN}/bench\n}",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FIXLAT p2_lat1 FAIL \\(expect fail\\)",
+    "note": "[m5rr: run on the 966562e4c snapshot overlay of physical/ref_tile/dsfd_coll_p2_ep_m5/src]"
+   },
+   {
+    "name": "fail_p2_naive_1tx",
+    "cmd": "B={RUN}/bsrc_m5_3; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one p2_naive_1tx --out {RUN}/bench\n}",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FIXLAT p2_naive_1tx FAIL \\(expect fail\\)",
+    "note": "[m5rr: run on the 966562e4c snapshot overlay of physical/ref_tile/dsfd_coll_p2_ep_m5/src]"
+   },
+   {
+    "name": "fail_p2_nogate",
+    "cmd": "B={RUN}/bsrc_m5_4; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one p2_nogate --out {RUN}/bench\n}",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FIXLAT p2_nogate FAIL \\(expect fail\\)",
+    "note": "[m5rr: run on the 966562e4c snapshot overlay of physical/ref_tile/dsfd_coll_p2_ep_m5/src]"
+   },
+   {
+    "name": "pass_p2lane_p2l_s1",
+    "cmd": "B={RUN}/bsrc_m5_5; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_p2lane_gate.py --out {RUN}/bench_p2l --cases p2l_s1 --raw -j 1\n}",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "p2l_s1 +expect pass -> pass OK",
+    "note": "[m5rr: run on the 966562e4c snapshot overlay of physical/ref_tile/dsfd_coll_p2_ep_m5/src]"
+   },
+   {
+    "name": "fail_p2lane_neg_lat1",
+    "cmd": "B={RUN}/bsrc_m5_6; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_p2lane_gate.py --out {RUN}/bench_p2l --cases neg_lat1 --raw -j 1\n}",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "neg_lat1 +expect fail -> fail",
+    "note": "[m5rr: run on the 966562e4c snapshot overlay of physical/ref_tile/dsfd_coll_p2_ep_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_coll_p2_ep",
+  "closed_job": "el1011-collp2-966562e4c-tc-a",
+  "closed_commit": "966562e4c50da61bb58b269fc2c5d01a247f3ff3",
+  "snapshot": [
+   "rtl/common/ot_sc_pfifo.sv",
+   "rtl/experimental/mtp_p2_ordered_20261009/dsfd_p2_lnk.sv",
+   "tools/mtp_fixlat_gate.py",
+   "tools/mtp_p2lane_gate.py"
+  ],
+  "orig_owner": "Claude:el1011-ds-wfc"
+ }
+}

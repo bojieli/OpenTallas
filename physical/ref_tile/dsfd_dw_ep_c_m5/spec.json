@@ -1,0 +1,80 @@
+{
+ "name": "dsfd_dw_ep_c_m5",
+ "top": "dsfd_dw_ep_c",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ctrl/dsfd_dw_ep.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_done_word.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 64.8
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "c_cmd",
+   "c_done",
+   "c_st",
+   "ck",
+   "rst"
+  ],
+  "N": [
+   "vh"
+  ]
+ },
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed s81ctl-dsfd_dw_ep_c-ccd2f9928-tc (dsfd_dw_ep_c, RTL ccd2f9928): same RTL, outline 64.8x64.8, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:s81-ctl-1011",
+  "benches": [
+   {
+    "name": "exact_col_ctrl",
+    "cmd": "bash rtl/dsrom_sys/s81_ctrl/test/run_selcol_ctrl_gate.sh {RUN}/bench_p one col",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "neg_col_wrongtag",
+    "cmd": "bash rtl/dsrom_sys/s81_ctrl/test/run_selcol_ctrl_gate.sh {RUN}/bench_w one col -DTB_MUT_WRONGTAG",
+    "expect": "fail",
+    "fail_regex": "rc=1",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "neg_col_dropdone",
+    "cmd": "bash rtl/dsrom_sys/s81_ctrl/test/run_selcol_ctrl_gate.sh {RUN}/bench_d one col -DOT_S81_DW_MUT=4",
+    "expect": "fail",
+    "fail_regex": "rc=1",
+    "threads": 8,
+    "peak_ram_gb": 24
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_dw_ep_c",
+  "closed_job": "s81ctl-dsfd_dw_ep_c-ccd2f9928-tc",
+  "closed_commit": "ccd2f99285a546b1e59290dbcc3549454aad8d8d",
+  "snapshot": [],
+  "orig_owner": "Claude:s81-ctl-1011"
+ },
+ "children": [],
+ "inter": []
+}

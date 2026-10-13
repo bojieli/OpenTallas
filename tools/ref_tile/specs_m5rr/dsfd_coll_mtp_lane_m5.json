@@ -1,0 +1,102 @@
+{
+ "name": "dsfd_coll_mtp_lane_m5",
+ "top": "dsfd_coll_mtp_lane",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_mtp_lane.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
+  "physical/ref_tile/dsfd_coll_mtp_lane_m5/src/rtl/common/ot_link_credit.sv",
+  "rtl/dsrom_sys/mtp/dsfd_coll_mtp_ep.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+  "physical/ref_tile/dsfd_coll_mtp_lane_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+  "physical/ref_tile/dsfd_coll_mtp_lane_m5/src/rtl/link/ot_fifo_sram_fwft.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 345.6,
+  "h": 340.2
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 2
+  }
+ ],
+ "pins": {
+  "S": [
+   "ck",
+   "rs"
+  ],
+  "N": [
+   "f_acc",
+   "f_rsg",
+   "f_rtg",
+   "f_sd",
+   "f_sv",
+   "f_td",
+   "f_tv",
+   "t_racc",
+   "t_rsd",
+   "t_rsv",
+   "t_rtd",
+   "t_rtv",
+   "t_sg",
+   "t_tg"
+  ],
+  "W": [
+   "f_lflt",
+   "li_d",
+   "li_r",
+   "li_v",
+   "lo_d",
+   "lo_r",
+   "lo_v"
+  ]
+ },
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 48
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed mtpl-dsfd_coll_mtp_lane-f6674a3d0-tc-hm10-b (dsfd_coll_mtp_lane, RTL f6674a3d0, snapshot of 4 drifted files): same RTL, outline 345.6x340.2, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:mtp-colllane-1011",
+  "benches": [
+   {
+    "name": "exact_hol_mtpl",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_mtp_lane_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_mtp_lane_m5/src/. $B/ && cd $B && { bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench pos_hol +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_MTPL +define+TB_MTP -GMSTALL=1\n}",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "note": "[m5rr: run on the f6674a3d0 snapshot overlay of physical/ref_tile/dsfd_coll_mtp_lane_m5/src]"
+   },
+   {
+    "name": "neg_shared_hol",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_mtp_lane_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_mtp_lane_m5/src/. $B/ && cd $B && { bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_shared +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_MTPL +define+TB_MTP -GMSTALL=1 -GMTP_HOLD=20000 +define+OT_MTPL_MUT_SHARED\n}",
+    "expect": "fail",
+    "fail_regex": "TB_S81PH_COLL_SYS FAIL",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "note": "[m5rr: run on the f6674a3d0 snapshot overlay of physical/ref_tile/dsfd_coll_mtp_lane_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_coll_mtp_lane",
+  "closed_job": "mtpl-dsfd_coll_mtp_lane-f6674a3d0-tc-hm10-b",
+  "closed_commit": "f6674a3d00d9430caff69e7131adb27939684879",
+  "snapshot": [
+   "rtl/common/ot_link_credit.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+   "rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh",
+   "rtl/link/ot_fifo_sram_fwft.sv"
+  ],
+  "orig_owner": "Claude:mtp-colllane-1011"
+ }
+}

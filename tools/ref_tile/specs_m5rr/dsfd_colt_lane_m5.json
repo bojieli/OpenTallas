@@ -1,0 +1,77 @@
+{
+ "name": "dsfd_colt_lane_m5",
+ "top": "dsfd_colt_lane",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/dsfd_colt_lane_m5/src/rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv",
+  "physical/ref_tile/dsfd_colt_lane_m5/src/rtl/link/ot_fifo_sram_fwft.sv",
+  "rtl/common/ot_fwd_link_stage.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 432.0,
+  "h": 129.6
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 2
+  }
+ ],
+ "pins": {
+  "W": [
+   "c_in",
+   "ck",
+   "rst"
+  ],
+  "E": [
+   "f_cr",
+   "t_f",
+   "t_w"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed s81ph-dsfd_colt_lane-7345266ce-e (dsfd_colt_lane, RTL 7345266ce, snapshot of 2 drifted files): same RTL, outline 432.0x129.6, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:s81-ph (tiles)",
+  "benches": [
+   {
+    "name": "exact_col_tiled",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_colt_lane_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_colt_lane_m5/src/. $B/ && cd $B && { bash tools/s81_ph/colt_bench.sh {RUN}/bench t1 'gold1 gold2 gold3 fault1 fault2 fault3 fault4 fault5'\n}",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "note": "[m5rr: run on the 7345266ce snapshot overlay of physical/ref_tile/dsfd_colt_lane_m5/src]"
+   },
+   {
+    "name": "neg_colmut1_interleave",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_colt_lane_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_colt_lane_m5/src/. $B/ && cd $B && { bash tools/s81_ph/colt_bench.sh {RUN}/bench m1 'gold1' OT_S81PH_COLMUT1\n}",
+    "expect": "fail",
+    "fail_regex": "COLT_BENCH FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "note": "[m5rr: run on the 7345266ce snapshot overlay of physical/ref_tile/dsfd_colt_lane_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_colt_lane",
+  "closed_job": "s81ph-dsfd_colt_lane-7345266ce-e",
+  "closed_commit": "7345266ce4b0f65574eb8fafe8730f8dee955813",
+  "snapshot": [
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv"
+  ],
+  "orig_owner": "Claude:s81-ph (tiles)"
+ }
+}

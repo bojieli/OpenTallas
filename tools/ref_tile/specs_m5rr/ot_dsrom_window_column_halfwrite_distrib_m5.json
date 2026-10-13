@@ -1,0 +1,60 @@
+{
+ "name": "ot_dsrom_window_column_halfwrite_distrib_m5",
+ "top": "ot_dsrom_window_column_halfwrite_distributed",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/ot_dsrom_window_column_halfwrite_distrib_m5/src/rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv",
+  "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_column_halfwrite_distributed.sv"
+ ],
+ "params": {
+  "HALFWRITE": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 90.632,
+  "h": 90.632
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "clk",
+   "write_data"
+  ],
+  "E": [
+   "read_addr",
+   "row_we",
+   "rst_n"
+  ],
+  "S": [
+   "read_data"
+  ],
+  "N": [
+   "read_v"
+  ]
+ },
+ "route": {
+  "pd": 0.6,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt (ot_dsrom_window_column_halfwrite_distributed, RTL 69cd5731a, snapshot of 1 drifted files): same RTL, outline 90.632x90.632, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:variant-fill",
+  "benches": [],
+  "no_bench_reason": "closed record window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt had no benches"
+ },
+ "m5rr": {
+  "cell": "ot_dsrom_window_column_halfwrite_distributed",
+  "closed_job": "window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt",
+  "closed_commit": "69cd5731aa92f8436170b9004a832cd1c8342522",
+  "snapshot": [
+   "rtl/dsrom_sys/s81_window_la/pipeline/ot_dsrom_window_stage_pipeline.sv"
+  ],
+  "orig_owner": "Claude:variant-fill"
+ }
+}

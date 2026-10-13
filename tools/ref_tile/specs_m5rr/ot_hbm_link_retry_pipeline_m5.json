@@ -1,0 +1,177 @@
+{
+ "name": "ot_hbm_link_retry_pipeline_m5",
+ "top": "ot_hbm_link_retry_pipeline",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_secded.sv",
+  "rtl/common/ot_secded_dec_dp.sv",
+  "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv",
+  "rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "ENABLE": 1,
+  "W": 545,
+  "EW": 24,
+  "DEPTH": 512,
+  "RSTR": 1,
+  "RX_SLOT_SAMPLE": 1,
+  "TX_SLOT_SAMPLE": 1,
+  "IN_PIN": 1,
+  "IN_WPIN": 1,
+  "NAK_HOLD": 64
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 501.12,
+  "h": 300.24
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 16
+  }
+ ],
+ "pins": {
+  "E": [
+   "ack_nak",
+   "ack_seq",
+   "ack_session",
+   "fault",
+   "fb_good",
+   "fb_nak",
+   "fb_seq",
+   "fb_session",
+   "fb_valid",
+   "out_data",
+   "out_ready",
+   "out_valid",
+   "replay_count",
+   "retained"
+  ],
+  "W": [
+   "clk",
+   "in_data",
+   "in_ready",
+   "in_valid",
+   "rst_n",
+   "session"
+  ],
+  "N": [
+   "rx_data",
+   "rx_ready",
+   "rx_seq",
+   "rx_session",
+   "rx_ue",
+   "rx_valid"
+  ],
+  "S": [
+   "tx_data",
+   "tx_ready",
+   "tx_seq",
+   "tx_session",
+   "tx_valid"
+  ]
+ },
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "rtl/common"
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 40
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed hbm_retry545_ref-r1-9357f2d4b (ot_hbm_link_retry_pipeline, RTL 9357f2d4b): same RTL, outline 501.12x300.24, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-hbm-coll/lkep",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Irtl/common --top-module ot_hbm_link_retry_pipeline -GENABLE=1 -GW=545 -GEW=24 -GDEPTH=512 rtl/common/ot_secded.sv rtl/common/ot_secded_dec_dp.sv rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "replay_dp_exact",
+    "cmd": "OT_RETRY_DEFS='-DOT_RETRY_RSTR -DOT_RETRY_RX_SLOT_SAMPLE -DOT_RETRY_TX_SLOT_SAMPLE -DOT_RETRY_IN_PIN -DOT_RETRY_IN_WPIN' bash physical/hbm_link_retry_pipeline_20261009/bench_dp.sh {RUN}/bench_dp",
+    "expect": "pass",
+    "pass_regex": "REPLAY_DP PASS",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "min_count_regex": "(512) records"
+   },
+   {
+    "name": "replay_dp_sel_mutant",
+    "cmd": "bash physical/hbm_link_retry_pipeline_20261009/bench_dp.sh {RUN}/bench_dp_sel sel; grep -q PASS_ALL {RUN}/bench_dp_sel/unit.log",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "dup",
+    "cmd": "mkdir -p {RUN}/bench_neg && iverilog -g2012 -Irtl/common -s tb_hbm_link_retry_pipeline -DOT_HBM_RETRY_NO_REG_POISON -DOT_RETRY_RSTR -DOT_RETRY_RX_SLOT_SAMPLE -DOT_RETRY_TX_SLOT_SAMPLE -DOT_RETRY_IN_PIN -DOT_RETRY_IN_WPIN -DOT_HBM_RETRY_PIPE_MUT_DUPLICATE -o {RUN}/bench_neg/dup rtl/common/ot_secded.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/common/ot_secded_dec_dp.sv rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_link_retry_pipeline.sv && vvp {RUN}/bench_neg/dup",
+    "expect": "fail",
+    "fail_regex": "FATAL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "nogate",
+    "cmd": "mkdir -p {RUN}/bench_neg && iverilog -g2012 -Irtl/common -s tb_hbm_link_retry_pipeline -DOT_HBM_RETRY_NO_REG_POISON -DOT_RETRY_RSTR -DOT_RETRY_RX_SLOT_SAMPLE -DOT_RETRY_TX_SLOT_SAMPLE -DOT_RETRY_IN_PIN -DOT_RETRY_IN_WPIN -DOT_RETRY_MUT_RSTR_NOGATE -o {RUN}/bench_neg/nogate rtl/common/ot_secded.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/common/ot_secded_dec_dp.sv rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_link_retry_pipeline.sv && vvp {RUN}/bench_neg/nogate",
+    "expect": "fail",
+    "fail_regex": "FATAL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "txhold",
+    "cmd": "mkdir -p {RUN}/bench_neg && iverilog -g2012 -Irtl/common -s tb_hbm_link_retry_pipeline -DOT_HBM_RETRY_NO_REG_POISON -DOT_RETRY_RSTR -DOT_RETRY_RX_SLOT_SAMPLE -DOT_RETRY_TX_SLOT_SAMPLE -DOT_RETRY_IN_PIN -DOT_RETRY_IN_WPIN -DOT_RETRY_MUT_TX_SLOT_HOLD -o {RUN}/bench_neg/txhold rtl/common/ot_secded.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/common/ot_secded_dec_dp.sv rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_link_retry_pipeline.sv && vvp {RUN}/bench_neg/txhold",
+    "expect": "fail",
+    "fail_regex": "FATAL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "in_pin_hostile",
+    "cmd": "mkdir -p {RUN}/bench_inpin && iverilog -g2012 -Irtl/common -s tb_hbm_retry_in_pin -DOT_RETRY_RSTR -DOT_RETRY_RX_SLOT_SAMPLE -DOT_RETRY_TX_SLOT_SAMPLE -DOT_RETRY_IN_PIN -DOT_RETRY_IN_WPIN -o {RUN}/bench_inpin/pos rtl/common/ot_secded.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/common/ot_secded_dec_dp.sv rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_retry_in_pin.sv && vvp {RUN}/bench_inpin/pos",
+    "expect": "pass",
+    "pass_regex": "PASS_ALL IN_PIN",
+    "min_count_regex": "(100) records",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "inpinhold",
+    "cmd": "mkdir -p {RUN}/bench_neg && iverilog -g2012 -Irtl/common -s tb_hbm_retry_in_pin -DOT_HBM_RETRY_NO_REG_POISON -DOT_RETRY_RSTR -DOT_RETRY_RX_SLOT_SAMPLE -DOT_RETRY_TX_SLOT_SAMPLE -DOT_RETRY_IN_PIN -DOT_RETRY_IN_WPIN -DOT_RETRY_MUT_IN_PIN_HOLD -o {RUN}/bench_neg/inpinhold rtl/common/ot_secded.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/common/ot_secded_dec_dp.sv rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_retry_in_pin.sv && vvp {RUN}/bench_neg/inpinhold",
+    "expect": "fail",
+    "fail_regex": "FATAL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "wpindata",
+    "cmd": "mkdir -p {RUN}/bench_neg && iverilog -g2012 -Irtl/common -s tb_hbm_link_retry_pipeline -DOT_HBM_RETRY_NO_REG_POISON -DOT_RETRY_RSTR -DOT_RETRY_RX_SLOT_SAMPLE -DOT_RETRY_TX_SLOT_SAMPLE -DOT_RETRY_IN_PIN -DOT_RETRY_IN_WPIN -DOT_RETRY_MUT_WPIN_DATA -o {RUN}/bench_neg/wpindata rtl/common/ot_secded.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/common/ot_secded_dec_dp.sv rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_link_retry_pipeline.sv && vvp {RUN}/bench_neg/wpindata",
+    "expect": "fail",
+    "fail_regex": "FATAL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "ot_hbm_link_retry_pipeline",
+  "closed_job": "hbm_retry545_ref-r1-9357f2d4b",
+  "closed_commit": "9357f2d4b97f8bc65cdd5b69639b9914383d8bf2",
+  "snapshot": [],
+  "orig_owner": "Claude:el1011-hbm-coll/lkep"
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "name": "ot_engc_t_win_m5",
+ "top": "ot_engc_t_win",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/engram/tiles/ot_engc_t_win.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 327.888,
+  "h": 47.52
+ },
+ "macros": [],
+ "pins": {
+  "E": [
+   "cfg_i",
+   "jf_o",
+   "jn_i",
+   "perr_o",
+   "rdy_o",
+   "vrel_i",
+   "werr_o",
+   "wn_o"
+  ],
+  "S": [
+   "cfg_o",
+   "lk_fault",
+   "lk_ob",
+   "lk_oc",
+   "lk_ocred",
+   "lk_od",
+   "lk_os",
+   "lk_ov",
+   "lk_rel",
+   "lk_stb",
+   "lk_sts",
+   "lk_stv",
+   "lk_wcred",
+   "lk_wid",
+   "lk_wv",
+   "rn_lk",
+   "werr_i"
+  ],
+  "N": [
+   "ck",
+   "f_agc",
+   "f_win",
+   "rst",
+   "t_ag",
+   "t_collective"
+  ],
+  "W": [
+   "rn_sk",
+   "s_perr",
+   "s_rdy",
+   "vrel_o"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 48
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed el1011-engc-win-pk-5f1603a05-tc-cl (ot_engc_t_win, RTL 5f1603a05): same RTL, outline 327.888x47.52, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-ds-misc",
+  "benches": [
+   {
+    "name": "engram_c_exact_quick",
+    "cmd": "python3 tools/s81_svceng/engram_c_gate.py --quick --out {RUN}/bench_engc",
+    "expect": "pass",
+    "pass_regex": "^ENGRAM_C_GATE PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 10800
+   },
+   {
+    "name": "engram_c_neg_earlydone",
+    "cmd": "python3 tools/s81_svceng/engram_c_gate.py --quick --neg earlydone --out {RUN}/bench_engc_neg",
+    "expect": "fail",
+    "fail_regex": "ENGRAM_C_NEG earlydone FAIL",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 10800
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "ot_engc_t_win",
+  "closed_job": "el1011-engc-win-pk-5f1603a05-tc-cl",
+  "closed_commit": "5f1603a0505b7a63e4b2a37cf144fbea9b594ded",
+  "snapshot": [],
+  "orig_owner": "Claude:el1011-ds-misc"
+ },
+ "children": [],
+ "inter": []
+}

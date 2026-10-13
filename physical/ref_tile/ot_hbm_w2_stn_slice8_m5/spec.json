@@ -1,0 +1,97 @@
+{
+ "name": "ot_hbm_w2_stn_slice8_m5",
+ "top": "ot_hbm_w2_stn_slice8",
+ "kind": "tile",
+ "sources": [
+  "physical/hbm_w2_rb_station_20261006/bank_veto_static.sv",
+  "physical/hbm_w2_rb_station_20261006/slice_static.sv"
+ ],
+ "params": {
+  "NO": 3
+ },
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 162.0,
+  "h": 56.16
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "clk",
+   "din",
+   "go_check",
+   "go_commit",
+   "go_repair",
+   "go_sel",
+   "gr",
+   "grc_o",
+   "ph4",
+   "rst_e",
+   "rst_p",
+   "v_bad",
+   "v_cbad",
+   "v_ce",
+   "v_clean",
+   "v_same",
+   "v_ue"
+  ],
+  "N": [
+   "dout"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "pin_v": "M3 M5",
+  "peak_ram_gb": 48
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed stn_slice8_no3_rt-r1-bd2c24ea1 (ot_hbm_w2_stn_slice8, RTL bd2c24ea1): same RTL, outline 162.0x56.16, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-hbm-no3",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_hbm_w2_stn_slice8 physical/hbm_w2_rb_station_20261006/bank_veto_static.sv physical/hbm_w2_rb_station_20261006/slice_static.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_gate_hier",
+    "cmd": "rm -rf {RUN}/gate && python3 tools/w2_station_rb_gate.py --safe --skip-legacy --no2-chain --grant-seat --hier --out {RUN}/gate",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "neg_slice_commit_zero_hier",
+    "cmd": "rm -rf {RUN}/neg_h1 && python3 tools/w2_station_rb_gate.py --safe --skip-legacy --no2-chain --grant-seat --hier --neg-only H1_slice_commit_zero --out {RUN}/neg_h1",
+    "expect": "fail",
+    "fail_regex": "^NEG_ONLY H1_slice_commit_zero REJECTED$",
+    "threads": 8,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "ot_hbm_w2_stn_slice8",
+  "closed_job": "stn_slice8_no3_rt-r1-bd2c24ea1",
+  "closed_commit": "bd2c24ea18f325c5e5b62f1029be3717dd6f9c17",
+  "snapshot": [],
+  "orig_owner": "Claude:el1011-hbm-no3"
+ },
+ "children": [],
+ "inter": []
+}

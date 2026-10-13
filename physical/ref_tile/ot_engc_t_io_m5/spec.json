@@ -1,0 +1,114 @@
+{
+ "name": "ot_engc_t_io_m5",
+ "top": "ot_engc_t_io",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/engram/tiles/ot_engc_t_io.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 448.416,
+  "h": 38.88
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "c_cmd",
+   "c_done",
+   "c_st",
+   "f_cfg",
+   "f_vm",
+   "t_vm"
+  ],
+  "W": [
+   "cfg_o",
+   "ck",
+   "jf_i",
+   "jn_o",
+   "perr_i",
+   "rdy_i",
+   "rst",
+   "vrel_o",
+   "werr_i",
+   "wn_i"
+  ],
+  "S": [
+   "r0_a",
+   "r0_oh",
+   "r1_a",
+   "r1_oh",
+   "r2_a",
+   "r2_oh",
+   "rd0",
+   "rd1",
+   "rd2"
+  ]
+ },
+ "route": {
+  "pd": 0.6,
+  "threads": 8,
+  "peak_ram_gb": 48
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed el1011-engc-io-b-109a69d35-tc-cl (ot_engc_t_io, RTL 109a69d35): same RTL, outline 448.416x38.88, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-ds-misc",
+  "benches": [
+   {
+    "name": "engram_c_exact_quick",
+    "cmd": "python3 tools/s81_svceng/engram_c_gate.py --quick --out {RUN}/bench_engc",
+    "expect": "pass",
+    "pass_regex": "^ENGRAM_C_GATE PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 10800
+   },
+   {
+    "name": "engc_pf_lockstep_exact",
+    "cmd": "bash physical/s81_engc_tiles/bench_pf.sh {RUN}/bench_pf",
+    "expect": "pass",
+    "pass_regex": "^ENGC_PF_EQ PASS",
+    "threads": 16,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "engram_c_neg_earlydone",
+    "cmd": "python3 tools/s81_svceng/engram_c_gate.py --quick --neg earlydone --out {RUN}/bench_engc_neg",
+    "expect": "fail",
+    "fail_regex": "ENGRAM_C_NEG earlydone FAIL",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 10800
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "ot_engc_t_io",
+  "closed_job": "el1011-engc-io-b-109a69d35-tc-cl",
+  "closed_commit": "109a69d35932d44dc987476d96184d06580b97d6",
+  "snapshot": [],
+  "orig_owner": "Claude:el1011-ds-misc"
+ },
+ "children": [],
+ "inter": []
+}

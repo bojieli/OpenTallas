@@ -1,0 +1,146 @@
+{
+ "name": "dsfd_cap_mtp_ep_m5",
+ "top": "dsfd_cap_mtp_ep",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/dsfd_cap_mtp_ep_m5/src/rtl/dsrom_sys/mtp/dsfd_mtp_partner_ep.sv",
+  "physical/ref_tile/dsfd_cap_mtp_ep_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+  "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 32.4,
+  "h": 129.6
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "c_rd",
+   "c_rr",
+   "c_rv"
+  ],
+  "S": [
+   "ck",
+   "rst"
+  ],
+  "E": [
+   "f_rg",
+   "t_rd",
+   "t_rv"
+  ]
+ },
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed fixlat-capmtp-ffbec0c86-tc (dsfd_cap_mtp_ep, RTL ffbec0c86, snapshot of 4 drifted files): same RTL, outline 32.4x129.6, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:mtp-fixlat-1011",
+  "benches": [
+   {
+    "name": "pass_pep_s1",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_cap_mtp_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_cap_mtp_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one pep_s1 --out {RUN}/bench\n}",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FIXLAT pep_s1 PASS \\(expect pass\\)",
+    "note": "[m5rr: run on the ffbec0c86 snapshot overlay of physical/ref_tile/dsfd_cap_mtp_ep_m5/src]"
+   },
+   {
+    "name": "pass_pep_s7",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_cap_mtp_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_cap_mtp_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one pep_s7 --out {RUN}/bench\n}",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FIXLAT pep_s7 PASS \\(expect pass\\)",
+    "note": "[m5rr: run on the ffbec0c86 snapshot overlay of physical/ref_tile/dsfd_cap_mtp_ep_m5/src]"
+   },
+   {
+    "name": "fail_pep_lat1",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_cap_mtp_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_cap_mtp_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one pep_lat1 --out {RUN}/bench\n}",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FIXLAT pep_lat1 FAIL \\(expect fail\\)",
+    "note": "[m5rr: run on the ffbec0c86 snapshot overlay of physical/ref_tile/dsfd_cap_mtp_ep_m5/src]"
+   },
+   {
+    "name": "fail_pep_stale",
+    "cmd": "B={RUN}/bsrc_m5_3; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_cap_mtp_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_cap_mtp_ep_m5/src/. $B/ && cd $B && { python3 tools/mtp_fixlat_gate.py one pep_stale --out {RUN}/bench\n}",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "FIXLAT pep_stale FAIL \\(expect fail\\)",
+    "note": "[m5rr: run on the ffbec0c86 snapshot overlay of physical/ref_tile/dsfd_cap_mtp_ep_m5/src]"
+   },
+   {
+    "name": "pass_ep_s0_tr_forced",
+    "cmd": "B={RUN}/bsrc_m5_4; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_cap_mtp_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_cap_mtp_ep_m5/src/. $B/ && cd $B && { python3 tools/dsrom_mtp_rom_bench.py one ep_s0_tr_forced --out {RUN}/bench\n}",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "MTP_BENCH ep_s0_tr_forced PASS",
+    "note": "[m5rr: run on the ffbec0c86 snapshot overlay of physical/ref_tile/dsfd_cap_mtp_ep_m5/src]"
+   },
+   {
+    "name": "pass_ep_s0_hash_u3",
+    "cmd": "B={RUN}/bsrc_m5_5; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_cap_mtp_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_cap_mtp_ep_m5/src/. $B/ && cd $B && { python3 tools/dsrom_mtp_rom_bench.py one ep_s0_hash_u3 --out {RUN}/bench\n}",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "MTP_BENCH ep_s0_hash_u3 PASS",
+    "note": "[m5rr: run on the ffbec0c86 snapshot overlay of physical/ref_tile/dsfd_cap_mtp_ep_m5/src]"
+   },
+   {
+    "name": "fail_ep_s0_neg_off1",
+    "cmd": "B={RUN}/bsrc_m5_6; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_cap_mtp_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_cap_mtp_ep_m5/src/. $B/ && cd $B && { python3 tools/dsrom_mtp_rom_bench.py one ep_s0_neg_off1 --out {RUN}/bench\n}",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "MTP_BENCH ep_s0_neg_off1 FAIL",
+    "note": "[m5rr: run on the ffbec0c86 snapshot overlay of physical/ref_tile/dsfd_cap_mtp_ep_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_cap_mtp_ep",
+  "closed_job": "fixlat-capmtp-ffbec0c86-tc",
+  "closed_commit": "ffbec0c86dd71c69af1072ca63f651d41fabf0fa",
+  "snapshot": [
+   "rtl/dsrom_sys/mtp/dsfd_mtp_partner_ep.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+   "tools/dsrom_mtp_rom_bench.py",
+   "tools/mtp_fixlat_gate.py"
+  ],
+  "orig_owner": "Claude:mtp-fixlat-1011"
+ }
+}

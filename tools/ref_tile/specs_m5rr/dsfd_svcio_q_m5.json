@@ -1,0 +1,52 @@
+{
+ "name": "dsfd_svcio_q_m5",
+ "top": "dsfd_svcio_q",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/dsfd_svcio_q_m5/src/rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv",
+  "rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io.sv",
+  "rtl/common/ot_fwd_link_stage.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 270.0,
+  "h": 129.6
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "ck",
+   "q",
+   "rst"
+  ],
+  "S": [
+   "q_q"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed s81ph-dsfd_svcio_q-093da5918 (dsfd_svcio_q, RTL 093da5918, snapshot of 1 drifted files): same RTL, outline 270.0x129.6, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:s81-ph",
+  "benches": [],
+  "no_bench_reason": "closed record s81ph-dsfd_svcio_q-093da5918 had no benches"
+ },
+ "m5rr": {
+  "cell": "dsfd_svcio_q",
+  "closed_job": "s81ph-dsfd_svcio_q-093da5918",
+  "closed_commit": "093da59182006519c48a4cd844af9dea6cfd6618",
+  "snapshot": [
+   "rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv"
+  ],
+  "orig_owner": "Claude:s81-ph"
+ }
+}

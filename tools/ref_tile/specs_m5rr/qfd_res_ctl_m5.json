@@ -1,0 +1,95 @@
+{
+ "name": "qfd_res_ctl_m5",
+ "top": "ot_qfd_res_tiles_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_tiles.sv"
+ ],
+ "params": {
+  "RS": 42,
+  "CRB": 16
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 216.0
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "clk",
+   "i_ov",
+   "me_en",
+   "o_cr",
+   "rst_n"
+  ],
+  "S": [
+   "fault",
+   "o_data",
+   "o_end",
+   "o_mask",
+   "o_nul",
+   "o_row",
+   "o_v",
+   "rok"
+  ],
+  "W": [
+   "rd",
+   "rv"
+  ],
+  "E": [
+   "rq_ptr",
+   "rq_slot",
+   "rq_v"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 24
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed qfd_res_ctl-f46a68c8a-tc-hm0 (qfd_res_ctl, RTL f46a68c8a, snapshot of 1 drifted files): same RTL, outline 216.0x216.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Codex:res-ser-tiles",
+  "benches": [
+   {
+    "name": "fullshape",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/qfd_res_ctl_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/qfd_res_ctl_m5/src/. $B/ && cd $B && { bash physical/res_tiles/bench.sh {RUN}/bench/pos\n}",
+    "expect": "pass",
+    "pass_regex": "^PASS res_tiles",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "[m5rr: run on the f46a68c8a snapshot overlay of physical/ref_tile/qfd_res_ctl_m5/src]"
+   },
+   {
+    "name": "mutant",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/qfd_res_ctl_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/qfd_res_ctl_m5/src/. $B/ && cd $B && { bash physical/res_tiles/bench.sh {RUN}/bench/neg 1\n}",
+    "expect": "fail",
+    "fail_regex": "^FAIL res_tiles mutant detected",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "[m5rr: run on the f46a68c8a snapshot overlay of physical/ref_tile/qfd_res_ctl_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "qfd_res_ctl",
+  "closed_job": "qfd_res_ctl-f46a68c8a-tc-hm0",
+  "closed_commit": "f46a68c8afbaab1986002d13b00bb660cbc062f8",
+  "snapshot": [
+   "physical/res_tiles/bench.sh"
+  ],
+  "orig_owner": "Codex:res-ser-tiles"
+ }
+}

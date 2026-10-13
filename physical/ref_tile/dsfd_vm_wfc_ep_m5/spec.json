@@ -1,0 +1,107 @@
+{
+ "name": "dsfd_vm_wfc_ep_m5",
+ "top": "dsfd_vm_wfc_ep",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/dsfd_vm_wfc_ep_m5/src/rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv",
+  "physical/ref_tile/dsfd_vm_wfc_ep_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "physical/ref_tile/dsfd_vm_wfc_ep_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv",
+  "physical/ref_tile/dsfd_vm_wfc_ep_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv",
+  "physical/ref_tile/dsfd_vm_wfc_ep_m5/src/rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck",
+   "m_d",
+   "m_fault",
+   "m_od",
+   "m_ov",
+   "m_row",
+   "m_v",
+   "m_we",
+   "rst"
+  ],
+  "N": [
+   "f_srd",
+   "f_srv",
+   "f_swd",
+   "f_swv",
+   "t_err",
+   "t_srg",
+   "t_srq",
+   "t_swg"
+  ],
+  "E": [
+   "t_ks"
+  ]
+ },
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed mtp-vm_wfc_ep-4550cfabc-tc (dsfd_vm_wfc_ep, RTL 4550cfabc, snapshot of 6 drifted files): same RTL, outline 259.2x259.2, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:mtp-wfc-1010",
+  "benches": [
+   {
+    "name": "kit_post_stg_r1",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_vm_wfc_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_vm_wfc_ep_m5/src/. $B/ && cd $B && { python3 tools/dsrom_wfc_kit_bench.py --out {RUN}/kitbench --case post_stg_r1\n}",
+    "expect": "pass",
+    "pass_regex": "WFC_KIT_GATE PASS positives=1",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 4550cfabc snapshot overlay of physical/ref_tile/dsfd_vm_wfc_ep_m5/src]"
+   },
+   {
+    "name": "kit_post_neg_early",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_vm_wfc_ep_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_vm_wfc_ep_m5/src/. $B/ && cd $B && { python3 tools/dsrom_wfc_kit_bench.py --out {RUN}/kitbench --case post_stg_neg_early --raw-negative\n}",
+    "expect": "fail",
+    "fail_regex": "WFC_KIT_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 4550cfabc snapshot overlay of physical/ref_tile/dsfd_vm_wfc_ep_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_vm_wfc_ep",
+  "closed_job": "mtp-vm_wfc_ep-4550cfabc-tc",
+  "closed_commit": "4550cfabcb1013a064e13efa6af69f7e0d587eb7",
+  "snapshot": [
+   "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+   "rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv",
+   "tools/dsrom_wfc_kit_bench.py"
+  ],
+  "orig_owner": "Claude:mtp-wfc-1010"
+ },
+ "children": [],
+ "inter": []
+}

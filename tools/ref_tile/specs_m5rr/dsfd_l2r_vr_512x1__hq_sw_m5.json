@@ -1,0 +1,70 @@
+{
+ "name": "dsfd_l2r_vr_512x1__hq_sw_m5",
+ "top": "dsfd_l2r_vr_512x1__hq_SW",
+ "kind": "tile",
+ "sources": [
+  "physical/s81_die_views/hend/m221pq/dsfd_glue.sv",
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/common/ot_meso_fifo.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 64.776,
+  "h": 64.776
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck",
+   "cks",
+   "rs",
+   "rss"
+  ],
+  "W": [
+   "fo",
+   "od"
+  ],
+  "N": [
+   "i",
+   "st"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-28efeed64-tt (dsfd_l2r_vr_512x1__hq_SW, RTL 28efeed64): same RTL, outline 64.776x64.776, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:drive-1028",
+  "benches": [
+   {
+    "name": "exact_pinreg",
+    "cmd": "bash physical/s81_die_views/hend/m221pq/bench_pinreg/run.sh {RUN}/bench && test $(grep -c 'run_g_.*RESULT PASS' {RUN}/bench/summary.txt) -eq 3",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "neg_mut",
+    "cmd": "bash physical/s81_die_views/hend/m221pq/bench_pinreg/run.sh {RUN}/bench_neg >/dev/null 2>&1; grep -q 'run_m1.log.*RESULT FAIL' {RUN}/bench_neg/summary.txt && { echo 'HEND_NEG FAIL'; exit 1; }; exit 0",
+    "expect": "fail",
+    "fail_regex": "HEND_NEG FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_l2r_vr_512x1__hq_SW",
+  "closed_job": "s81-hend-m221pq-hq-SW-pinreg-m5w-lvt-28efeed64-tt",
+  "closed_commit": "28efeed64548d07f72a907e138dc3dbf99a44d8c",
+  "snapshot": [],
+  "orig_owner": "Claude:drive-1028"
+ }
+}

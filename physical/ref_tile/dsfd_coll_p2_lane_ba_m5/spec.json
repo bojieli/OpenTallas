@@ -1,0 +1,103 @@
+{
+ "name": "dsfd_coll_p2_lane_ba_m5",
+ "top": "dsfd_coll_p2_lane_ba",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
+  "physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src/rtl/common/ot_link_credit.sv",
+  "physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 345.6,
+  "h": 340.2
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck",
+   "rs"
+  ],
+  "W": [
+   "f_lflt",
+   "li_d",
+   "li_r",
+   "li_v",
+   "lo_d",
+   "lo_r",
+   "lo_v"
+  ],
+  "N": [
+   "r_d",
+   "r_r",
+   "r_v",
+   "t_flt"
+  ]
+ },
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 48
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed qf-p2lba-ogrant-5b059065b-tc-hm0-lvt (dsfd_coll_p2_lane_ba, RTL 5b059065b, snapshot of 3 drifted files): same RTL, outline 345.6x340.2, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:mtp-colllane-1011/p2lba",
+  "benches": [
+   {
+    "name": "exact_p2l_s1",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src/. $B/ && cd $B && { python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases p2l_s1 --raw -j 1\n}",
+    "expect": "pass",
+    "pass_regex": "P2LANE_RAW PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "note": "[m5rr: run on the 5b059065b snapshot overlay of physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src]"
+   },
+   {
+    "name": "exact_p2l_s5",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src/. $B/ && cd $B && { python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases p2l_s5 --raw -j 1\n}",
+    "expect": "pass",
+    "pass_regex": "P2LANE_RAW PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "note": "[m5rr: run on the 5b059065b snapshot overlay of physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src]"
+   },
+   {
+    "name": "neg_seg",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src/. $B/ && cd $B && { python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases neg_seg --raw -j 1\n}",
+    "expect": "fail",
+    "fail_regex": "P2LANE_RAW FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "note": "[m5rr: run on the 5b059065b snapshot overlay of physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src]"
+   },
+   {
+    "name": "neg_lat1",
+    "cmd": "B={RUN}/bsrc_m5_3; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src/. $B/ && cd $B && { python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases neg_lat1 --raw -j 1\n}",
+    "expect": "fail",
+    "fail_regex": "P2LANE_RAW FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "note": "[m5rr: run on the 5b059065b snapshot overlay of physical/ref_tile/dsfd_coll_p2_lane_ba_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_coll_p2_lane_ba",
+  "closed_job": "qf-p2lba-ogrant-5b059065b-tc-hm0-lvt",
+  "closed_commit": "5b059065b286484fede2af1d82aa5e0f4dbf1512",
+  "snapshot": [
+   "rtl/common/ot_link_credit.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+   "tools/mtp_p2lane_gate.py"
+  ],
+  "orig_owner": "Claude:mtp-colllane-1011/p2lba"
+ },
+ "children": [],
+ "inter": []
+}

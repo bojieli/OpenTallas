@@ -1,0 +1,90 @@
+{
+ "name": "dsfd_engram_lkp_m5",
+ "top": "dsfd_engram_lkp",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv",
+  "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+  "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 324.0,
+  "h": 216.0
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "cfg_layer",
+   "cfg_rank",
+   "ck",
+   "fault",
+   "rst_n"
+  ],
+  "S": [
+   "hq_atom",
+   "hq_cred",
+   "hq_tag",
+   "hq_v",
+   "hr_d",
+   "hr_idx",
+   "hr_tag",
+   "hr_v"
+  ],
+  "N": [
+   "o_beat",
+   "o_col",
+   "o_cred",
+   "o_d",
+   "o_slot",
+   "o_v",
+   "rel",
+   "st_bad",
+   "st_slot",
+   "st_v",
+   "win_cred",
+   "win_ids",
+   "win_v"
+  ]
+ },
+ "route": {
+  "pd": 0.35,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed engram_lkp_crcmat2_a-b17ee03d4-tc (dsfd_engram_lkp, RTL b17ee03d4): same RTL, outline 324.0x216.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:sys-takeover",
+  "benches": [
+   {
+    "name": "exact_engram",
+    "cmd": "OT_ENGRAM_CRCMAT=1 python3 tools/rtl_dsrom_engram_lookup_campaign.py --no-mutations --output {RUN}/bench.json",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "neg_offset_not_subtracted",
+    "cmd": "OT_ENGRAM_CRCMAT=1 python3 tools/rtl_dsrom_engram_lookup_campaign.py --mutant 1",
+    "expect": "fail",
+    "fail_regex": "ENGRAM_NEG FAIL as required",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_engram_lkp",
+  "closed_job": "engram_lkp_crcmat2_a-b17ee03d4-tc",
+  "closed_commit": "b17ee03d4f86bf56365be908c9a001518202fcc4",
+  "snapshot": [],
+  "orig_owner": "Claude:sys-takeover"
+ }
+}
