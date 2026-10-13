@@ -234,6 +234,8 @@ def _tp8b_f2(v, m):
         v.SPINE_CHANNEL_X = lanes
         v.SPINE_LANE_BALANCE = True
         v.TILE_CLUSTER = True        # coordinator 12:15: qfd_tile_nk is a cluster slot, die M8+ over it
+        if f2.get('tile_m6'):
+            v.CLUSTER_PLAN = 'M6'    # coordinator 2026-10-13: tiles M5-capped, die M6 over them for horizontal buses
         xe0 = round(xe0 + wch + ab, 4)
         ck = by.get('clk_rx')
         if ck is not None and ab:
@@ -1072,6 +1074,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                 _tp8b_f2(v_, m_)
                 if TP8['f2'].get('kv'):
                     _tp8b_kv(v_, m_)
+                if TP8['f2'].get('v5'):
+                    from qwen_kv_die import tp8b_v5 as _V5
+                    _V5.apply(v_, m_, sys.modules[__name__])
     if before_relays is not None:
         # Opt-in system composition: actual slots/ports precede relay discovery.
         # Default recipes retain their existing geometry and master contracts.
@@ -1167,7 +1172,10 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     SU_VM_Q_BITS = q_bits if q_bits is not None else globals()['SU_VM_Q_BITS']   # noqa: N806
     by = {i.name: i for i in m['insts']}
     su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
-    gap = vm.y - (su.y + su.h)
+    # contract v5 (r8): the bit-plane VM region sits N of the tree top; the SU abuts its N face (R0: an MX master's M8
+    # clock pins are not mirror-legal): the SU takes va / vq on its S face, the VM sa / sq on N
+    north = bool(getattr(v, 'SU_VM_NORTH', False))
+    gap = (su.y - (vm.y + vm.h)) if north else vm.y - (su.y + su.h)
     # qwendie-1011: a VM wider than the SU (r22ko4 near-square slot) abuts with the SU inside its S face; the pin
     # groups shift by the SU's offset (0 for every equal-width recipe: unchanged)
     off = round(su.x - vm.x, 4) if vm.w > su.w + 1e-6 else 0.0
@@ -1194,7 +1202,7 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
         s, q = out['qfd_sp_su64_sfu'], out['qfd_sp_vector_memory']
-        for M_, f, mine in ((s, 'N', ('va', 'vq')), (q, 'S', ('sa', 'sq'))):
+        for M_, f, mine in ((s, 'S' if north else 'N', ('va', 'vq')), (q, 'N' if north else 'S', ('sa', 'sq'))):
             for pn in mine:                 # the base wrapper's default pin group for the new bus: replaced here
                 if pn in M_.ports:
                     M_.ports.pop(pn)
@@ -1207,10 +1215,10 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
                      and sp[4] + sp[1] * p * sp[5] / 2 + lo > lo_f and sp[4] - sp[1] * p * sp[5] / 2 - lo < hi_f]
             if taken:
                 raise ValueError(f'su_vm_abut: {M_.name} {f} face already holds {taken}')
-        s.face('va', SU_VM_A_BITS, 'N', 'M5', a_c, 1)
-        s.face('vq', SU_VM_Q_BITS, 'N', 'M5', q_c, 1)
-        q.face('sa', SU_VM_A_BITS, 'S', 'M5', a_c + off, 1)
-        q.face('sq', SU_VM_Q_BITS, 'S', 'M5', q_c + off, 1)
+        s.face('va', SU_VM_A_BITS, 'S' if north else 'N', 'M5', a_c, 1)
+        s.face('vq', SU_VM_Q_BITS, 'S' if north else 'N', 'M5', q_c, 1)
+        q.face('sa', SU_VM_A_BITS, 'N' if north else 'S', 'M5', a_c + off, 1)
+        q.face('sq', SU_VM_Q_BITS, 'N' if north else 'S', 'M5', q_c + off, 1)
         return out
     v.masters = masters
     m['r21v_su_vm'] = dict(bits_su_to_vm=SU_VM_A_BITS, bits_vm_to_su=SU_VM_Q_BITS, gap_um=round(gap, 4),
@@ -1821,7 +1829,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for dx, dy in sorted(cands, key=lambda t: abs(t[0]) + abs(t[1])):
                 x0 = v.dn(x - w / 2 + dx, v.GX)
                 y0 = v.dn(y - h / 2 + dy, v.GY)
-                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None and not cur_tight[0]:
+                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None and not (cur_tight[0] or cur_gapok[0]):
                     continue           # never over a tile body (it4: a KV row-run relay may sit in a row gap; free()
                     #                    still refuses any tile overlap)
                 if free((x0, y0, x0 + w, y0 + h)):
@@ -1856,6 +1864,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     kv_gaps = []
     gap_set = set()
     cur_tight = [False]
+    cur_gapok = [False]      # r8 (coordinator 2026-10-13): row-gap sites are legal for head chains
     e_rot = [0]
     tight_stride = set()     # it4: buses on the KV row-run rule place relays at pitch - 70 (frame snapping at the field /
     #                          strip edges overshot RMAX by 10-70 um, and the pass-2 search then rerouted them via the IO channel)
@@ -1870,6 +1879,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                              for f in (0.25, 0.5, 0.75))
             gap_set = set(kv_gaps)
             gap_id = {round(a + th + (b - a - th) * f, 3): k for k, (a, b) in enumerate(zip(ry, ry[1:])) for f in (0.25, 0.5, 0.75)}
+            if getattr(v, 'CLUSTER_PLAN', 'A') == 'M6':
+                # r8 (coordinator 2026-10-13, tile growth): die M6 over the M5-capped tiles carries horizontal buses, so
+                # a KV-half word may also run OVER a tile row (relays in the column corridors, one per column pitch);
+                # the row-gap sub-lanes stay first choice (the run cost charges 600 for a lane outside gap_set) and
+                # every lane is admitted by its fine windows (hr) at the cut model's caps
+                kv_gaps = sorted(kv_gaps + [round(a + th * f, 3) for a in ry for f in (0.2, 0.4, 0.6, 0.8)])
         else:
             kv_gaps = [round((a + th + b) / 2, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0]
             # over-tile runs too (M6+ over the M5-capped tiles, relays in the corridors): the KV strips' head stacks
@@ -1908,7 +1923,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         def ov(j):
             return sum(b_ for a_, c_, b_ in io_sub[j] if a_ < hi and lo < c_)
         binl = lambda j: sum(ov(q) for q in range(len(subs)) if int(subs[q] // 260.0) == int(subs[j] // 260.0))  # noqa: E731
-        k = min(allow if allow is not None else range(len(subs)), key=lambda j: (binl(j), ov(j), j))
+        if FIELD_ALLOC:
+            # r8: by the fine windows the lane's run would see with this word added (cut-model caps): the two bottom
+            # sub-lanes share one 260-um window, and 10 SerDes words on them stood at 5,120 b / 7,928 = 0.646
+            k = min(allow if allow is not None else range(len(subs)),
+                    key=lambda j: (round(max(hr(subs[j], lo, hi, cur_bits[0]), 1.0), 3), binl(j), ov(j), j))
+        else:
+            k = min(allow if allow is not None else range(len(subs)), key=lambda j: (binl(j), ov(j), j))
         io_sub[k].append((lo, hi, cur_bits[0]))
         return k
 
@@ -1963,10 +1984,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if _cdir not in _sys.path:
             _sys.path.insert(0, _cdir)
         import cuts as _cuts
-        _cm0 = _cuts.CAP_MODE
+        _cm0, _cp0 = _cuts.CAP_MODE, _cuts.CLUSTER_PLAN
         _cuts.CAP_MODE = 'v3'
+        # r8 (coordinator 2026-10-13): tiles are M5-capped -> die M6 over the tile field for horizontal buses
+        _cuts.CLUSTER_PLAN = getattr(v, 'CLUSTER_PLAN', 'A')
         _bm = _cuts.block_model([dict(x=i.x, y=i.y, w=i.w, h=i.h, m=getattr(i, 'master', '')) for i in m['insts']])
-        _cuts.CAP_MODE = _cm0
+        _cuts.CAP_MODE, _cuts.CLUSTER_PLAN = _cm0, _cp0
         import numpy as _np
         _ed = {'x': _np.arange(0.0, m['die']['h'] + FBIN, FBIN), 'y': _np.arange(0.0, m['die']['w'] + FBIN, FBIN)}
 
@@ -2164,7 +2187,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # it4: four sub-lanes (one word per lane where possible: shared lanes stacked relays at the faces)
                 hch = io_ch[1] - io_ch[0]
                 subs = [io_ch[0] + hch * f for f in IO_SUB_F]
-                k_ = io_lane(lo_, hi_, subs, allow=(0, 1) if FIELD_ALLOC else None)
+                k_ = io_lane(lo_, hi_, subs, allow=(0, 1, 2) if FIELD_ALLOC else None)
                 return [P0, (P0[0], subs[k_]), (P1[0], subs[k_]), P1]
         if io_ch is not None and bid is not None and bid.split('__r')[0] == 'host_fdi' and abs(P0[0] - P1[0]) > 500.0 \
                 and (P0[1] < io_ch[0]) != (P1[1] < io_ch[0]):
@@ -2200,7 +2223,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                    and not (a <= Ps[0] <= c)
                                    and not (a <= Pc[0] <= c and b <= Pc[1] <= d) and not (F[0] - 1 <= a and c <= F[2] + v.CORR + 1)
                                    for a, b, c, d in big)
-                for yg in kv_gaps:
+                # r8: the row-gap sub-lanes first; an over-tile (die M6) lane is offered only when no row-gap lane keeps
+                # its fine windows within the cap (run a1: a 530-b word on an over-tile lane had its corridor relays
+                # pushed off the lane by the stations and crossed a two-tree-word corridor window, vertical cut 0.659)
+                m6_only = [y_ for y_ in kv_gaps if y_ not in gap_set] if getattr(v, 'CLUSTER_PLAN', 'A') == 'M6' else []
+                for yg in [y_ for y_ in kv_gaps if not m6_only or y_ in gap_set] + [None] + m6_only:
+                    if yg is None:
+                        if best is not None and best[3] <= 1.0:
+                            break
+                        continue
                     gid = gap_id.get(yg)
                     if gid is not None and gap_tot.get(gid, 0.0) + cur_bits[0] > KV_GAP_CAP:
                         continue                 # it17: <= ~4 kb aggregate per row gap (all its sub-lanes)
@@ -2216,11 +2247,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         det = abs(yg_ - Pc[1]) + abs(yg_ - yr) + abs(yr - Ps[1])
                         cost = det + 6000.0 * (gap_bits.get(yg_, 0.0) + cur_bits[0]) / 1000.0 + (0.0 if yg_ in gap_set else 600.0) \
                             + (6000.0 * (xch_bits.get((sd_, yc), 0.0) + cur_bits[0]) / 1000.0 if yc is not None else 0.0)
+                        fill_ = 0.0
                         if FIELD_ALLOC:
                             # it24: the run's fine windows (cut-model caps): three sub-lanes of one gap share a window
-                            cost += 20000.0 * max(0.0, hr(yg_, Pc[0], Ps[0], cur_bits[0]) - 1.0) + 600.0 * hr(yg_, Pc[0], Ps[0])
+                            fill_ = hr(yg_, Pc[0], Ps[0], cur_bits[0])
+                            cost += 20000.0 * max(0.0, fill_ - 1.0) + 600.0 * hr(yg_, Pc[0], Ps[0])
                         if best is None or cost < best[0]:
-                            best = (cost, yg_, yc)
+                            best = (cost, yg_, yc, fill_)
                 if best is not None:
                     yg, yc = best[1], best[2]
                     gap_bits[yg] = gap_bits.get(yg, 0.0) + cur_bits[0]
@@ -2433,14 +2466,20 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             out.append(b)
         return out
 
+    def rm_rect(r_):
+        """r8: drop a frame rect from the live grid, tolerant of the two ways a frame's far corner is summed
+        (x + (w + SHAVE) in pass 2, (x + w) + SHAVE elsewhere): an exact tuple test left pass-2 frames in place"""
+        for gx in range(int((r_[0] - 1e-3) // BK), int((r_[2] + 1e-3) // BK) + 1):
+            for gy in range(int((r_[1] - 1e-3) // BK), int((r_[3] + 1e-3) // BK) + 1):
+                lst = grid.get((gx, gy))
+                if lst:
+                    lst[:] = [q for q in lst if not (abs(q[0] - r_[0]) < 1e-6 and abs(q[1] - r_[1]) < 1e-6
+                                                     and abs(q[2] - r_[2]) < 1e-6 and abs(q[3] - r_[3]) < 1e-6)]
+
     def unplace(frames):
         for f in frames:
             r_ = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
-            for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
-                for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
-                    lst = grid.get((gx, gy), [])
-                    if r_ in lst:
-                        lst.remove(r_)
+            rm_rect(r_)
             cc_ = corr_of(f[0] + f[2] / 2)
             if cc_ is not None and (f[1], f[1] + f[3]) in corr_used.get(cc_, []):
                 corr_used[cc_].remove((f[1], f[1] + f[3]))
@@ -2452,6 +2491,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if cc_ is not None:
                 corr_used.setdefault(cc_, []).append((f[1], f[1] + f[3]))
     booked = {}          # it24: idx -> (booked rectilinear chain route, bits)
+    # contract v4 T7 / v5 (r8): a PAIRED bus = x_d (with the flow) + its 1-b x_r (ready, against the flow).  The reverse
+    # net is never planned by itself: it rides the forward chain's relay frames (one registered hop each way per frame,
+    # the closed station family ot_qwen_die_station TAP=0), relay ports a_d / a_r (upstream face) and b_d / b_r
+    pair = dict(m.get('bus_pair') or {})          # forward bid -> reverse bid
+    rev_idx = {b_[0]: j_ for j_, b_ in enumerate(m['buses']) if b_[0] in set(pair.values())}
     feedback = []        # it24: (bid, max hop before, after, accepted)
     plans = {}
     import os as _os
@@ -2462,6 +2506,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         # pins are farther apart than the die reach (wcf_*: cdc -> landing, 623 um pin to pin, 128 words); a kept KV
         # chain ('@kv') is never touched here (a torn one was already handed over whole by _tp8b_kv)
         skip_cl = cl in RELAY_SKIP
+        if bid in rev_idx:
+            keep[idx] = [(bid, cl, bits, eps)]      # replaced by per-hop reverse nets when its forward bus is relayed
+            continue
         if len(eps) != 2 or (_only and not bid.startswith(_only)) or (skip_cl and (
                 not GATE or cl in RELAY_NEVER or cl.endswith('@kv'))):
             keep[idx] = [(bid, cl, bits, eps)]
@@ -2497,6 +2544,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             tight1 = tt_.get(tuple(eps[-1]))
             pitch_b = pitch - 70.0 if bid in tight_stride else pitch
             cur_tight[0] = bid in tight_stride
+            cur_gapok[0] = cl == 'head_chain'
             while L - s_last > (tight1 if tight1 and len(frames) else pitch_b) or (tight0 and not frames and L > tight0):
                 hi_ = tight0 if (tight0 and not frames) else pitch_b
                 reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + hi_]
@@ -2639,26 +2687,29 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
 
     repaired, unrepaired, off_plan, cut_over = [], [], [], []
+    unrep = {}           # r8: bid -> reason (a chain repaired by a later rip-up pass leaves the list)
+    rep_at = {}          # r8: idx of every chain pass 2 re-placed
     hop_chk = [None]     # r6: the load test of the span search (None outside it)
-    for idx, pl in sorted(plans.items()):
+
+    def needs_repair(pl):
         hs = hops_of(pl)
-        if max(hs) <= RMAX + 25.0 and not backtracks(pl) and not reach_bad(pl):
-            continue
+        return not (max(hs) <= RMAX + 25.0 and not backtracks(pl) and not reach_bad(pl))
+
+    def repair(idx, pl, gaps=False):
+        hs = hops_of(pl)
         bits = pl['bits']
         w, h = relay_frame(bits, pl['cl'])
         W, H = w + v.SHAVE, h + v.SHAVE
-        arr, tree = sites(W, H, pl['bid'] in tight_stride)
+        # r8 (coordinator 2026-10-13): row-gap sites are legal for head chains (h_<c> sits at a row gap in the column
+        # channel: head_24's W pin had no free site within reach once its neighbours were repaired)
+        arr, tree = sites(W, H, gaps or pl['bid'] in tight_stride or (GATE and pl['cl'] == 'head_chain'))
         if tree is None:
-            unrepaired.append(pl['bid'])
-            continue
+            unrep[pl['bid']] = 'no sites'
+            return False
         # free the bus's own pass-1 relays for its search
         own = [(f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE) for f in pl['frames']]
         for r_ in own:
-            for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
-                for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
-                    lst = grid.get((gx, gy), [])
-                    if r_ in lst:
-                        lst.remove(r_)
+            rm_rect(r_)
         D = RMAX - max(W, H) / 2 + 26.0
         P0, P1 = pl['P0'], pl['P1']
         ctr = arr + np.array([W / 2, H / 2])
@@ -2890,16 +2941,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                 lst.remove(r_)
                 frames, why = [], 'self-overlap'
         if not frames:
-            unrepaired.append(f"{pl['bid']} ({why})")
+            unrep[pl['bid']] = why
             for r_ in own:
                 add_rect(r_)
             if unbooked:
                 book(booked[idx][0], bits)
-            continue
+            return False
         old = len(pl['frames'])
         pl['frames'] = frames
+        unrep.pop(pl['bid'], None)
+        rep_at[idx] = True
+        repaired[:] = [q for q in repaired if q[0] != pl['bid']]
         repaired.append((pl['bid'], old, len(frames), round(max(hops_of(pl)), 1)))
-        if off:
+        if off and pl['bid'] not in off_plan:
             off_plan.append(pl['bid'])
         if idx in booked:
             # it24: re-book the repaired chain in place of the pass-1 one
@@ -2908,6 +2962,73 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             cp_ = chain_path(P0, frames, P1, pl['path'])
             book(cp_, bits)
             booked[idx] = (cp_, bits)
+        return True
+
+    # r8 (coordinator 2026-10-13: "rip up and re-repair neighbouring chains on failure"): pass 2 is a work list.  A chain
+    # that cannot be repaired names its victims = the chains pass 2 already re-placed that hold a frame within RIP_UM of
+    # one of its bad hops; their frames are lifted, the failing chain is repaired first, then every victim takes its
+    # old frames back where they are still free and is re-repaired where they are not (span search around the lost
+    # frames).  One rip-up round per failing chain; a second failure restores the victims untouched.
+    RIP_UM = 450.0
+    rip_log, gap_tier = [], []
+
+    def _bad_pts(pl):
+        pts_ = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
+        hp_, hc_ = p2p_hops(pl) if GATE else hops_of(pl), hops_of(pl)
+        out = []
+        for k_ in range(len(hc_)):
+            if hc_[k_] > RMAX + 25.0 or (GATE and hp_[k_] > RELAY_REACH_OK):
+                out += [pts_[k_], pts_[k_ + 1]]
+        return out or [pl['P0'], pl['P1']]
+
+    def _lift(j):
+        plj = plans[j]
+        fr = list(plj['frames'])
+        unplace(fr)
+        return fr
+
+    def _settle(j, fr):
+        """a lifted victim takes back every old frame that is still free; -> True when the chain is whole again"""
+        plj = plans[j]
+        wj, hj = fr[0][2], fr[0][3]
+        keep_ = [f for f in fr if free((f[0], f[1], f[0] + wj + v.SHAVE, f[1] + hj + v.SHAVE))]
+        for f in keep_:
+            add_rect((f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE))
+        plj['frames'] = keep_
+        return len(keep_) == len(fr)
+
+    work = [idx for idx, pl in sorted(plans.items()) if needs_repair(pl)]
+    ripped = set()
+    rounds = 0
+    while work:
+        idx = work.pop(0)
+        pl = plans[idx]
+        if not needs_repair(pl):
+            continue
+        if repair(idx, pl) or not GATE:
+            continue
+        if repair(idx, pl, True):
+            # r8: last tier before a rip-up: the row-gap sites (relay sites stay in the gaps / corridors; run a1:
+            # tree_27_1_6b had no free corridor slot within reach of its source pin)
+            gap_tier.append(pl['bid'])
+            continue
+        if idx in ripped or rounds >= 40:
+            continue
+        ripped.add(idx)
+        rounds += 1
+        bp = _bad_pts(pl)
+        vict = [j for j in sorted(rep_at) if j != idx and plans[j]['frames'] and any(
+            abs(f[0] + f[2] / 2 - q[0]) + abs(f[1] + f[3] / 2 - q[1]) <= RIP_UM for f in plans[j]['frames'] for q in bp)]
+        if not vict:
+            continue
+        lifted = {j: _lift(j) for j in vict}
+        ok_ = repair(idx, pl) or repair(idx, pl, True)
+        redo = [j for j in vict if not _settle(j, lifted[j])]
+        rip_log.append((pl['bid'], [plans[j]['bid'] for j in vict], bool(ok_), [plans[j]['bid'] for j in redo]))
+        for j in redo:
+            ripped.discard(j)
+        work = redo + work
+    unrepaired[:] = [f'{b_} ({w_})' for b_, w_ in unrep.items()]
     # ---- qwen-tp8 tree-leg pads (tools/qwen_die_seam/tree_pads.py: the array bench's arrival model on the unpadded
     # netlist): a tree word whose leg arrives early at its node gets `pad` extra relays at its sink end, in the
     # corridor the node tile's W-face tree pins face, so both legs of every node arrive on the same cycle
@@ -3021,7 +3142,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         link = cl in ('link_spine', 'link_channel')
         dom = next((by[x].domain for x, _ in eps if by[x].domain != 'cdc'), 'stream_1p2')
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
-        prev, hops = eps[0], []
+        prev, hops, rhops = eps[0], [], []
         for k, (x0, y0, w, h) in enumerate(pl['frames']):
             here = pts[k + 1]
 
@@ -3038,8 +3159,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     fo = 'E' if dx >= 0 else 'W'
                 else:
                     fo = 'N' if dy >= 0 else 'S'
-            mn = f'qfd_rly{"f" if link else ""}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
-            masters_needed[mn] = (bits, fi, fo, w, h, link)
+            pr_ = bid in pair
+            mn = f'qfd_rly{"f" if link else ("p" if pr_ else "")}_{bits}_{fi}{fo}_{round(w)}x{round(h)}'
+            masters_needed[mn] = (bits, fi, fo, w, h, link, pr_)
             nm = f'rly_{bid}_{k}'
             ccx, ccy = x0 + w / 2, y0 + h / 2
             reg = 'corridor' if corr_of(ccx) is not None and in_field(ccx, ccy) else next(
@@ -3048,7 +3170,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             insts.append(v.Inst(nm, mn, x0, y0, w, h, kind='relay', region=reg, domain=dom))
             by[nm] = insts[-1]
             hop = bid if k == 0 else f'{bid}__r{k}'
-            hops.append((hop, cl, bits, [prev, (nm, 'a')]))
+            hops.append((hop, cl, bits, [prev, (nm, 'a_d' if pr_ else 'a')]))
+            if pr_:
+                rhop = pair[bid] if k == 0 else f'{pair[bid]}__r{k}'
+                rprev = (prev[0], prev[1][:-2] + '_r') if prev[1].endswith('_d') else (prev[0], prev[1] + '_r')
+                rhops.append((rhop, cl, 1, [(nm, 'a_r'), rprev]))
             if link:
                 fck_new.append((f'fck_{hop}', 'clock_trunk', 1, [(prev[0], f'fck_{prev[1]}'), (nm, 'fck_a')]))
             elif dom == 'stream_1p2':
@@ -3056,10 +3182,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             else:
                 ck_add.setdefault({'serial_0p9': 'clk_serial', 'link_serdes': 'clk_serdes',
                                    'link_ucie': 'clk_ucie'}.get(dom, f'clk_{dom}'), []).append((nm, 'ck'))
-            prev = (nm, 'b')
+            prev = (nm, 'b_d' if pr_ else 'b')
         n = len(pl['frames'])
         last = bid if not n else f'{bid}__r{n}'
         hops.append((last, cl, bits, [prev, eps[1]]))
+        if bid in pair and n:
+            e1 = eps[1]
+            rhops.append((f'{pair[bid]}__r{n}', cl, 1, [(e1[0], e1[1][:-2] + '_r' if e1[1].endswith('_d') else e1[1] + '_r'),
+                                                         (prev[0], 'b_r')]))
+            keep[rev_idx[pair[bid]]] = rhops
         if link and n:
             fck_drop.add(f'fck_{bid}')
             fck_new.append((f'fck_{last}', 'clock_trunk', 1, [(prev[0], 'fck_b'), (eps[1][0], f'fck_{eps[1][1]}')]))
@@ -3092,19 +3223,24 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
                           repaired_examples=repaired[:20], unrepaired=unrepaired, cut_over=cut_over,
-                          repaired_all=[r[0] for r in repaired], off_plan=off_plan, feedback=feedback,
+                          repaired_all=[r[0] for r in repaired], off_plan=off_plan, feedback=feedback, rip_up=rip_log, gap_tier=gap_tier,
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
                           relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
     base = v.masters
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
-        for mn, (bits, fi, fo, w, h, link) in masters_needed.items():
+        for mn, (bits, fi, fo, w, h, link, pr_) in masters_needed.items():
             M = v.Master(mn, w, h, 3, f'die relay: one registered {bits}-b hop (ot_qwen_die_station TAP=0 family), '
-                         f'standard cells M1-M3, in {fi} out {fo}')
+                         f'standard cells M1-M3, in {fi} out {fo}' + (' + the 1-b ready hop against the flow' if pr_ else ''))
             for port, f in (('a', fi), ('b', fo)):
                 along = w if f in 'NS' else h
-                pitch_tr = 2 if bits * 0.096 + 2.0 <= along else 1
+                pitch_tr = 2 if (bits + (2 if pr_ else 0)) * 0.096 + 2.0 <= along else 1
+                if pr_:
+                    st_ = 0.048 * pitch_tr
+                    M.face(port + '_d', bits, f, 'M5' if f in 'NS' else 'M4', along / 2 - st_, pitch_tr)
+                    M.face(port + '_r', 1, f, 'M5' if f in 'NS' else 'M4', along / 2 + (bits / 2 + 1) * st_, pitch_tr)
+                    continue
                 M.face(port, bits, f, 'M5' if f in 'NS' else 'M4', along / 2, pitch_tr)
             if link:
                 M.area('fck_a', 1, w / 2 - 0.8, h / 2, 1)
@@ -3296,6 +3432,10 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         def usable(c):
             if c not in tent:
                 cx, cy = (c[0] + 0.5) * P, (c[1] + 0.5) * P
+                # r8: a lattice cell cut by the die edge keeps its part inside the die (run t2: the E PHYs' reset pins
+                # sit in the 20-um edge strip, whose cell centre lies outside: rst_hbm_ES / _EN 'leaf_no_trunk_cell')
+                if c[0] * P < W and c[1] * P < H and c[0] >= 0 and c[1] >= 0:
+                    cx, cy = min(cx, W - RST_W), min(cy, H - RST_H)
                 if not (0 <= cx <= W and 0 <= cy <= H):
                     tent[c] = None
                 else:
@@ -3598,7 +3738,11 @@ def _pin_pos(v, m):
         cen[name] = {p: (a[0] / a[2], a[1] / a[2]) for p, a in acc.items()}
     by = {i.name: i for i in m['insts']}
 
+    extra = getattr(v, 'PIN_POS_EXTRA', None) or {}
+
     def pos(inst, port):
+        if (inst, port) in extra:
+            return extra[(inst, port)]
         i = by[inst]
         c = cen.get(i.master, {}).get(port.lstrip('*'))
         if c is None:

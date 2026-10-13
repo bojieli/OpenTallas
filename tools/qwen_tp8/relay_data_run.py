@@ -17,6 +17,7 @@ v, m = D.load_qwen()[:2]
 ins = [dict(n=i.name, m=getattr(i, 'master', ''), x=i.x, y=i.y, w=i.w, h=i.h) for i in m['insts']]
 json.dump(dict(insts=ins, buses=[(b, c, bits, [e[0] for e in eps]) for b, c, bits, eps in m['buses']]), open(out / 'rom_tp8b.json', 'w'))
 C.CAP_MODE = 'v3'
+C.CLUSTER_PLAN = getattr(v, 'CLUSTER_PLAN', 'A')     # r8: 'M6' = die M6 over the M5-capped tiles (horizontal buses)
 A = C.Net(str(out / 'rom_tp8b.json'))
 fine = [dict(ax=r['ax'], pos=float(r['pos']), win=[float(q) for q in r['win']] if isinstance(r['win'], (list, tuple)) else r['win'],
              bits=float(r['bits']), usable=float(r['usable']), util=float(r['util']), fam={str(k): float(x) for k, x in r['fam'].items()})
@@ -29,12 +30,26 @@ except Exception as e:   # noqa: BLE001
 r = dict(m.get('r21_relays') or {})
 rec = dict(schema='opentallas.qwen-tp8.relay-data-run.v1', recipe='tp8b', die=m['die'], build_s=round(time.time() - t),
            relays={k: r.get(k) for k in ('pitch_um', 'max_um', 'relays', 'masters', 'classes', 'clock_nets_missing', 'repaired',
-                                         'unrepaired', 'cut_over', 'off_plan', 'relay_flop_bits', 'relay_area_mm2', 'reach_um',
+                                         'unrepaired', 'cut_over', 'off_plan', 'rip_up', 'gap_tier', 'relay_flop_bits', 'relay_area_mm2', 'reach_um',
                                          'max_pin_to_pin_um', 'over_reach')},
            tp8b_kv={k: (m.get('tp8b_kv') or {}).get(k) for k in ('kept_relays', 'torn_chains', 'pin_moves')},
            stage_of=m.get('r21_stage_of'), masters=sorted({i['m'] for i in ins if '_rly' in i['m']}),
-           cuts=dict(tool='results/arch/qwen_tp8_1012/cuts.py', cap_mode='v3', rule='bits / usable tracks <= 0.60',
+           cuts=dict(tool='results/arch/qwen_tp8_1012/cuts.py', cap_mode='v3', cluster_plan=C.CLUSTER_PLAN, rule='bits / usable tracks <= 0.60',
                      worst=max((f['util'] for f in fine), default=None), fine_top=fine), relay_token_cost=cost)
+# r8: the reset tree of the same build (as reset_tree_run.py) and, with --case, the die case for pinreg_audit.py --case
+pos = G._pin_pos(v, m)
+rst = []
+for bid, cl, bits, eps in m['buses']:
+    if len(eps) < 2 or not (cl == 'reset' or bid.startswith(('rst', 'arst')) or '_rst_' in bid):
+        continue
+    rst.append((round(G._hp([pos(*e) for e in eps]), 1), bid, cl, len(eps)))
+rst.sort(reverse=True)
+rec['reset'] = dict(reset_tree=m.get('tp8_reset_tree'), reset_named_nets=len(rst),
+                    reset_named_over_500=[q for q in rst if q[0] > 500.0], reset_named_worst=rst[:12])
+rec['instances'] = len(m['insts'])
 (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
+if '--case' in sys.argv:
+    v.case_real(m, out / 'case')
 print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
-                      unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'])))
+                      unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'],
+                      reset_over_500=len(rec['reset']['reset_named_over_500']), instances=rec['instances'])))

@@ -30,6 +30,10 @@ CLUSTER = ('qfd_tile_nk', 'qfd_tile_h3c', 'qfd_tile_h3s')
 # + horizontal ROM-band crossing on M6) -> the die owns M7 + M8 (+M9) over the cluster.  CLUSTER_PLAN 'B' adds M7 (75 %)
 # to vertical-wire (horizontal-cut) capacity over CLUSTER blocks; horizontal wires still see M8 only (M6 is the tile's).
 CLUSTER_PLAN = 'A'
+# coordinator DECISION 2026-10-13 (tile growth, die lead r8): the qfd_tile_nk slot is M5-capped (signals + PG), so the
+# die owns M6 over the tile field for HORIZONTAL buses.  CLUSTER_PLAN 'M6' adds M6 (75 % after the die PDN) to the
+# horizontal-wire (vertical-cut) capacity over CLUSTER blocks; vertical wires over a tile stay on M9 only (M7 is not
+# counted: the decision names M6 only).  Relay sites stay in the row gaps / column corridors.
 
 
 def dump(out):
@@ -55,7 +59,7 @@ def block_model(insts):
     bl = [i for i in insts if i['w'] * i['h'] > 4e4]
     return (np.array([(i['x'], i['y'], i['x'] + i['w'], i['y'] + i['h']) for i in bl]).reshape(-1, 4),
             np.array([CAP_MODE == 'v3' and i.get('m', '') not in HARD_IP + CLUSTER for i in bl], dtype=bool),
-            np.array([CLUSTER_PLAN == 'B' and i.get('m', '') in CLUSTER for i in bl], dtype=bool))
+            np.array([({'B': 1, 'M6': 2}.get(CLUSTER_PLAN, 0) if i.get('m', '') in CLUSTER else 0) for i in bl], dtype=int))
 
 
 def usable(ax, cp, edges, blocks, cap5, clB):
@@ -63,7 +67,8 @@ def usable(ax, cp, edges, blocks, cap5, clB):
     p0, o0 = (0, 1) if ax == 'x' else (1, 0)
     sel = (blocks[:, p0] < cp) & (cp < blocks[:, p0 + 2])
     B = blocks[sel]
-    K5 = cap5[sel] | (clB[sel] & (ax == 'y'))   # plan B: die M7 over the cluster serves vertical wires only
+    # plan B: die M7 over the cluster serves vertical wires only; plan M6: die M6 over it serves horizontal wires only
+    K5 = cap5[sel] | ((clB[sel] == 1) & (ax == 'y')) | ((clB[sel] == 2) & (ax == 'x'))
     cov = np.zeros(len(edges) - 1); cov5 = np.zeros(len(edges) - 1)
     for b, k5 in zip(B, K5):
         o = np.clip(np.minimum(edges[1:], b[o0 + 2]) - np.maximum(edges[:-1], b[o0]), 0, None)
