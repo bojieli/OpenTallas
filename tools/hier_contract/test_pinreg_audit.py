@@ -50,6 +50,15 @@ def main():
         assert r['flags'] == ['comb', 'out_over', 'in_over', 'min_delay'], r['flags']
         a.skew = 0.0
         assert 'min_delay' not in P.audit_view('v', a, 1)['flags']
+        # export-SDC marking: corrected only by the view's own record, never by commit time
+        assert r['export_sdc_corrected'] is None and r['exported_before_export_sdc_fix'] is True
+        (v / 'abstract.json').write_text('{"name": "t", "verdict": {"json": "x"}}')
+        assert P.audit_view('v', a, 1)['exported_before_export_sdc_fix'] is True
+        (v / 'abstract.json').write_text('{"name": "t", "verdict": {"check": {"tt": {"ok": true}}}}')
+        r = P.audit_view('v', a, 1)
+        assert r['export_sdc_corrected'] == 'verdict' and r['exported_before_export_sdc_fix'] is False
+        (v / 'abstract.json').write_text('{"name": "t", "reexport_1013": {"why": "replayed"}}')
+        assert P.audit_view('v', a, 1)['export_sdc_corrected'] == 'reexport_1013'
     print('test_pinreg_audit PASS')
 
 
