@@ -480,7 +480,7 @@ module ot_s81_hc_ctnl #(
             if(!rst_n) fire_q<=0; else fire_q<=fire;
         wire [1:0] err;
         wire vo;
-        ot_hdc_fp32_add_f12 #(.CUTS(7'b1101010)) u_a
+        ot_hdc_fp32_add_f12_l5x u_a
             (.clk(clk),.rst_n(rst_n),.valid_in(fire_q),.a(acc_a),.b(farq?df:dn),
              .y(acc_out),.err(err),.valid_out(vo));
         assign f[4]=vo && (err!=0);
