@@ -124,7 +124,7 @@
  "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/ot_hgi_seq_fe.sv",
-  "rtl/hbm_accel/generic/ot_hgi_seq.sv",
+  "rtl/hbm_accel/generic/ot_hgi_seq_hd.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl",
   "physical/ref_tile/hgi_seq_fe/kit.env",

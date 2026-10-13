@@ -2,7 +2,8 @@
 // Holds the DYN table builder (ps .. dsq, tbc, trow), the record row register hrow_q and the address pipeline A0 .. A5
 // with the A6 range flags: every table -> row -> A1 and A4 -> A5 path of the flat ot_hgi_seq stays inside this child.
 // The arithmetic is MOVED from ot_hgi_seq.sv unchanged; the seam contract is ot_hgi_seq_seam.svh (rules R1-R4, X1).
-// Seams: S1 (FE item) and S4 (BE re-injection) land directly in the A0 flops (X1); S3 (result) leaves from TX flops.
+// Seams: S1 (FE item) and S4 (BE re-injection) are registered at the pin, then selected into A0; S3 (result) leaves from
+// TX flops.
 `default_nettype none
 module ot_hgi_seq_au #(
     parameter integer RW   = 4096,
@@ -113,6 +114,7 @@ module ot_hgi_seq_au #(
     // table build sees pos exactly as the flat design does)
     reg [17:0] token; reg [19:0] pos; reg [20:0] pos1_q;
     always @(posedge clk) if (be_jl_v_r) begin pos <= be_jl_pos_r; pos1_q <= {1'b0, be_jl_pos_r} + 21'd1; token <= be_jl_token_r; end
+    reg        s1_v_r; (* keep = 1 *) reg [1:0] s4_v_r;   // S1 / S4 RX valids (declared here: used by av below)
     reg [5:0] av;                        // stage valids A0 .. A5
     reg [6:0] tbc;                       // table build counter (restarts on the job-load RX)
 `ifdef OT_HGI_SEQ_MUT_SEAM_RST
@@ -122,20 +124,20 @@ module ot_hgi_seq_au #(
         else begin be_jl_v_r <= be_jl_v; be_js_r <= be_js; au_s3_v <= av[5]; au_tbl_ok <= tbc[6]; end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin av <= 6'd0; tbc <= 7'd0; end
-        else begin av <= {av[4:0], be_s4_v | fe_s1_v}; if (!tbc[6]) tbc <= tbc + 7'd1; end
+        else begin av <= {av[4:0], s4_v_r[0] | s1_v_r}; if (!tbc[6]) tbc <= tbc + 7'd1; end
 `else
     always @(posedge clk or negedge rn_a)
         if (!rn_a) begin be_jl_v_r <= 1'b0; be_js_r <= 1'b0; av <= 6'd0; tbc <= 7'd0; au_s3_v <= 1'b0; au_tbl_ok <= 1'b0; end
         else begin
             be_jl_v_r <= be_jl_v; be_js_r <= be_js;
-            av <= be_js_r ? 6'd0 : {av[4:0], be_s4_v | fe_s1_v};     // a job start flushes the pipe
+            av <= be_js_r ? 6'd0 : {av[4:0], s4_v_r[0] | s1_v_r};     // a job start flushes the pipe
             if (be_jl_v_r) tbc <= 7'd0; else if (!tbc[6]) tbc <= tbc + 7'd1;
             au_s3_v <= av[5]; au_tbl_ok <= tbc[6];
         end
 `endif
 `ifndef SYNTHESIS
     reg seam_err; initial seam_err = 1'b0;
-    always @(posedge clk) if (rn_a && be_s4_v && fe_s1_v) begin
+    always @(posedge clk) if (rn_a && s4_v_r[0] && s1_v_r) begin
         seam_err <= 1'b1; $error("ot_hgi_seq_au: S1 and S4 valid in one cycle (injector hold violated)");
     end
 `endif
@@ -210,19 +212,41 @@ module ot_hgi_seq_au #(
     reg        a0_be, a0_idx, a0_last, a0_isI, a0_hi, a0_et;
     reg [63:0] a0_b64; reg [31:0] a0_lstr, a0_l1str, a0_str, a0_x; reg [26:0] a0_dmul; reg [5:0] a0_dsel, a0_nsel;
     reg [19:0] a0_n; reg [1:0] a0_sp; reg [15:0] a0_L, a0_L1; reg [2:0] a0_slot, a0_j; reg [QB-1:0] a0_tag;
-    always @(posedge clk) begin                    // X1: the seam RX flop IS A0; one 2:1 select by be_s4_v
-        if (be_s4_v) begin
-            a0_be <= 1'b1; a0_b64 <= {be_s4_ph, be_s4_base}; a0_lstr <= 32'd0; a0_l1str <= 32'd0; a0_str <= 32'd0;
-            a0_x <= be_s4_x; a0_dmul <= be_s4_dmul; a0_dsel <= 6'd0; a0_nsel <= 6'd0; a0_n <= 20'd0;
-            a0_idx <= 1'b0; a0_sp <= be_s4_sp; a0_L <= 16'd0; a0_L1 <= 16'd0; a0_slot <= 3'd0; a0_j <= be_s4_j;
-            a0_tag <= be_s4_tag; a0_last <= 1'b0; a0_isI <= 1'b0; a0_hi <= 1'b0; a0_et <= 1'b0;
+    // S1 / S4 RX flops (R1: every seam input is registered at the pin; the X1 exception of the first seam draft is
+    // gone -- a port driving the A0 select had 374 loads).  The select has two kept copies (<= ~256 loads each).
+    reg [39:0] s1_base_r; reg [31:0] s1_lstr_r, s1_l1str_r, s1_str_r; reg [26:0] s1_dmul_r; reg [5:0] s1_dsel_r, s1_nsel_r;
+    reg [19:0] s1_n_r; reg s1_idx_r; reg [1:0] s1_sp_r; reg [15:0] s1_L_r, s1_L1_r; reg [2:0] s1_slot_r, s1_j_r; reg [QB-1:0] s1_tag_r;
+    reg        s1_last_r, s1_isI_r, s1_hi_r, s1_et_r;
+    reg [23:0] s4_ph_r; reg [39:0] s4_base_r; reg [26:0] s4_dmul_r; reg [1:0] s4_sp_r; reg [31:0] s4_x_r; reg [2:0] s4_j_r; reg [QB-1:0] s4_tag_r;
+    always @(posedge clk or negedge rn_a)
+        if (!rn_a) begin s1_v_r <= 1'b0; s4_v_r <= 2'b00; end
+        else begin s1_v_r <= fe_s1_v; s4_v_r <= {2{be_s4_v}}; end
+    always @(posedge clk) begin
+        s1_base_r <= fe_s1_base; s1_lstr_r <= fe_s1_lstr; s1_l1str_r <= fe_s1_l1str; s1_str_r <= fe_s1_str; s1_dmul_r <= fe_s1_dmul;
+        s1_dsel_r <= fe_s1_dsel; s1_nsel_r <= fe_s1_nsel; s1_n_r <= fe_s1_n; s1_idx_r <= fe_s1_idx; s1_sp_r <= fe_s1_sp;
+        s1_L_r <= fe_s1_L; s1_L1_r <= fe_s1_L1; s1_slot_r <= fe_s1_slot; s1_j_r <= fe_s1_j; s1_tag_r <= fe_s1_tag;
+        s1_last_r <= fe_s1_last; s1_isI_r <= fe_s1_isI; s1_hi_r <= fe_s1_hi; s1_et_r <= fe_s1_et;
+        s4_ph_r <= be_s4_ph; s4_base_r <= be_s4_base; s4_dmul_r <= be_s4_dmul; s4_sp_r <= be_s4_sp; s4_x_r <= be_s4_x;
+        s4_j_r <= be_s4_j; s4_tag_r <= be_s4_tag;
+    end
+    always @(posedge clk) begin                    // A0, select copy 0: base, x, narrow fields
+        if (s4_v_r[0]) begin
+            a0_be <= 1'b1; a0_b64 <= {s4_ph_r, s4_base_r}; a0_x <= s4_x_r; a0_dsel <= 6'd0; a0_nsel <= 6'd0; a0_n <= 20'd0;
+            a0_idx <= 1'b0; a0_sp <= s4_sp_r; a0_slot <= 3'd0; a0_j <= s4_j_r;
+            a0_tag <= s4_tag_r; a0_last <= 1'b0; a0_isI <= 1'b0; a0_hi <= 1'b0; a0_et <= 1'b0;
         end else begin
-            a0_be <= 1'b0; a0_b64 <= {24'd0, fe_s1_base}; a0_lstr <= fe_s1_lstr;
-            a0_l1str <= fe_s1_l1str; a0_str <= fe_s1_str; a0_x <= 32'd0; a0_dmul <= fe_s1_dmul;
-            a0_dsel <= fe_s1_dsel; a0_nsel <= fe_s1_nsel; a0_n <= fe_s1_n; a0_idx <= fe_s1_idx;
-            a0_sp <= fe_s1_sp; a0_L <= fe_s1_L; a0_L1 <= fe_s1_L1; a0_slot <= fe_s1_slot; a0_j <= fe_s1_j; a0_tag <= fe_s1_tag;
-            a0_last <= fe_s1_last; a0_isI <= fe_s1_isI; a0_hi <= fe_s1_hi;
-            a0_et <= fe_s1_et;
+            a0_be <= 1'b0; a0_b64 <= {24'd0, s1_base_r}; a0_x <= 32'd0;
+            a0_dsel <= s1_dsel_r; a0_nsel <= s1_nsel_r; a0_n <= s1_n_r; a0_idx <= s1_idx_r;
+            a0_sp <= s1_sp_r; a0_slot <= s1_slot_r; a0_j <= s1_j_r; a0_tag <= s1_tag_r;
+            a0_last <= s1_last_r; a0_isI <= s1_isI_r; a0_hi <= s1_hi_r;
+            a0_et <= s1_et_r;
+        end
+    end
+    always @(posedge clk) begin                    // A0, select copy 1: strides, multiplier, loop counters
+        if (s4_v_r[1]) begin
+            a0_lstr <= 32'd0; a0_l1str <= 32'd0; a0_str <= 32'd0; a0_dmul <= s4_dmul_r; a0_L <= 16'd0; a0_L1 <= 16'd0;
+        end else begin
+            a0_lstr <= s1_lstr_r; a0_l1str <= s1_l1str_r; a0_str <= s1_str_r; a0_dmul <= s1_dmul_r; a0_L <= s1_L_r; a0_L1 <= s1_L1_r;
         end
     end
     // A1: DYN lookups (table row of the record's slot), n, the per-descriptor checks

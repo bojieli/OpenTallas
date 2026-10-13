@@ -6,7 +6,10 @@
 // RULES (every seam signal)
 //  R1 TX: the sender drives the port straight from a dedicated flop (no logic after it). RX: the receiver registers the
 //     port once (suffix _r) before any use. A sender decision in cycle t is in the TX flop in t+1 and in the RX flop in t+2.
-//     Exception X1: S1 and S4 land directly in the AU A0 flops (a0_* IS the RX flop; one 2:1 select by s4_v allowed).
+//     (Exception X1 of the first draft -- S1 / S4 landing directly in the A0 flops -- is REMOVED as built 10-13: the
+//     port be_s4_v drove 374 A0 selects (pre-route gate high_fanout / logic behind a pin).  AU registers S1 and S4 at the
+//     pin and selects into A0 one cycle later: AU result +4 instead of +3; the collision rule (S1 TX and S4 TX valid in
+//     one cycle) and SEAM_INJ_WAIT are unchanged.)
 //  R2 No ready crosses a seam: pulses / valid-only, flow control by credit (S5 q_pop) or hold (S5 inj_hold).
 //  R3 Every valid / pulse / level TX and RX flop resets to 0 on the child's OWN reset synchroniser (2 flops from rst_n,
 //     async assert, sync release, as rs_* in the flat file); data flops carry no reset.
