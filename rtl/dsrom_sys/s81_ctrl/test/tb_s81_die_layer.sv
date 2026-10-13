@@ -21,6 +21,10 @@
 //   ports 1 su, 4 svc, 5 sel, 6 col, 9 hcx (the HC coefficient producers fn/sumsq/rsqrt/pre_post/sinkhorn, which
 //                write the golden coefficient rows at their end), 7, 8, 10, 11: behavioural engines behind REAL
 //                ot_s81_slab_ep endpoints (golden durations, dataflow start).
+//   port 10 eng (Engram layers, e.g. L14: eng.hh / dot / gate / add): BEHAVIOURAL at program duration like the others
+//                (no Engram RTL in this vehicle).  The HIDDEN payload is then the layer-ENTRY h; the op with wrow >= 0
+//                (eng.add) writes the XW golden post-Engram h rows (coef.mem) over the H rows at its end, and the HC
+//                H_LOAD's f_inp waits on that write (eng_h / eng_done) as well as on its eng.add predecessor.
 // Clocks: the die PLL in die 0's collective slab (pll_stream 1.2 GHz = ck for the controller and every stream slab;
 // pll_serial 0.9 GHz = ckv for the gather/capture serial side).
 // CHECKS: (1) capture VM writes = reference per root (multiset); (2) every done at dsfd_sp_ctrl_e is the next op of its
@@ -290,6 +294,7 @@ module tb_s81_die_layer;
     reg [511:0] vm [0:16383];
     reg vm_ok [0:16383];
     integer hcnt = 0, gcnt [0:1];
+    reg eng_h = 0, eng_done = 0;         // eng_h: the program has an Engram h write (a port-10 op with wrow >= 0)
     reg clr_req = 0;
     task automatic mark(input integer r);
         begin
@@ -307,11 +312,16 @@ module tb_s81_die_layer;
         if (clr_req) begin
             for (i2 = H_BASE; i2 < H_BASE + XW; i2 = i2 + 1) vm_ok[i2] = 1'b0;
             for (i2 = C_BASE; i2 < C_BASE + 4; i2 = i2 + 1) vm_ok[i2] = 1'b0;
-            hcnt = 0; clr_req = 0;
+            hcnt = 0; clr_req = 0; eng_done = 0;
         end
         if (vwe) begin vm[vwa] = vwd; mark(vwa); nwr = nwr + 1; end
         if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0) begin
             vm[o_wr[g_eng[9].g_b.dop_r]] = coefm[o_wr[g_eng[9].g_b.dop_r]]; mark(o_wr[g_eng[9].g_b.dop_r]); end
+        if (g_eng[10].g_b.jdone_r && o_wr[g_eng[10].g_b.dop_r] >= 0) begin
+            for (i2 = 0; i2 < XW; i2 = i2 + 1) begin
+                vm[o_wr[g_eng[10].g_b.dop_r] + i2] = coefm[o_wr[g_eng[10].g_b.dop_r] + i2]; mark(o_wr[g_eng[10].g_b.dop_r] + i2); end
+            eng_done = 1;
+        end
         for (s = 0; s < S_WR; s = s + 1) if (wq_v[s]) begin vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512]; mark(wq_row[14 * s +: 14]); end
         for (i2 = 63; i2 > 0; i2 = i2 - 1) begin dl_v[i2] = dl_v[i2 - 1]; dl_a[i2] = dl_a[i2 - 1]; end
         dl_v[0] = rq_v; dl_a[0] = rq_row;
@@ -327,7 +337,7 @@ module tb_s81_die_layer;
     reg hpres;
     always @* begin
         case (hkind)
-            4'd0: hpres = (hbase == H_BASE) && (hcnt == XW);
+            4'd0: hpres = (hbase == H_BASE) && (hcnt == XW) && (!eng_h || eng_done);
             4'd2: hpres = vm_ok[hbase] && vm_ok[hbase + 1];
             4'd3: hpres = (yrd < ywr) || y_v;
             4'd5: hpres = (hbase == G_BASE) ? (gcnt[0] == GROWS) : (hbase == G_BASE + GROWS) ? (gcnt[1] == GROWS) : 1'b0;
@@ -532,7 +542,7 @@ module tb_s81_die_layer;
         while (!$feof(fd)) begin
             rc = $fscanf(fd, "%d %d %d %d %d %d %d %d %d %d %d\n", o_port[nop], o_arg[nop], o_dur[nop], o_np[nop],
                          o_p[nop][0], o_p[nop][1], o_p[nop][2], o_p[nop][3], o_ph[nop], o_cm[nop], o_wr[nop]);
-            if (rc == 11) nop = nop + 1;
+            if (rc == 11) begin if (o_port[nop] == 10 && o_wr[nop] >= 0) eng_h = 1; nop = nop + 1; end
         end
         $fclose(fd);
         fd = $fopen({dir, "/stim.txt"}, "r");
