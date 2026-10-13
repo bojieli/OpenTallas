@@ -74,6 +74,7 @@
   "pin_min_tracks": 1
  },
  "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Claude:el1011-s81hc-crootr",
   "branch": "claude/el1011-s81hc-crootr",
   "tag": "v1",

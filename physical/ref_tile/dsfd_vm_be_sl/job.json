@@ -1,14 +1,14 @@
 {
- "name": "dsfd_vm_be_sl-r3-71536bfc4",
+ "name": "dsfd_vm_be_sl-r4-8d0114042",
  "block": "dsfd_vm_be_sl",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/be",
- "purpose": "el1011-ds-vm/be r3: r2 698f866c5 TT -34.26 = ALL reg->reg core_clk<->str_clk ratio crossings (u_rc0/u_rc1 mem->sh 2048 paths, w_st->w_st_r, wp_pub->wp_r; data 68 ps / 2 levels in the 208 ps 4:3 edge window) failing on 104 ps INTER-TREE insertion skew (ck tree 276 ps vs cks tree 172 ps); FF -2.87 = vrq output ports (str_clk). Fix: be_sl_str_boundary.tcl balances the cks tree to the ck tree after CTS (dont_touch delay chain at the cks root, iterated to |dL|<=12 ps) so both pins carry one insertion in the ETM; outhold (BUF-HB4-BUF at flop-driven output pins); M5 layer cap (contract v11 slot: PG M5, pins M3/M5 N/S, M4 W/E); N-face o_* at contract v11 x 217.29-300.0 (follows bgq28 v4).",
+ "purpose": "el1011-ds-vm/besl r4: r3 71536bfc4 TT +7.85 / FF -6.57 = 9 endpoints, ALL str_clk->core_clk pointer/state hops (u_rc*.rp->rp_w, r_st->r_st_w): launch cks leaf 219.8 ps vs capture ck leaf 258.7 ps at FF (39 ps inter-tree skew vs 38 ps clk->Q; trees routed str EARLY by 10 TT / 18 FF because r3 balanced the all-register mean one-sided, stop at +12). Post-route hold ECO skipped exactly these (tight: setup +23.9 in the 208 ps 4:3 window) and buffered 9,314 others -> TT -2.36. Fix (tree, not ECO): be_sl_str_boundary.tcl balances on the CROSSING flops (pointer and storage hops weighted equally), two-sided, TT residual (-14,0] ps. No RTL / SDC / pin / outline change vs r3; the kit regenerates at the contract v13 slot cap M6 (coordinator grant 10-12 11:40; ref_tile refuses M5 against the slot), r3 was M5.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "main",
-  "commit": "71536bfc4"
+  "commit": "8d0114042"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r3-71536bfc4"
+   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r4-8d0114042"
   }
  ],
  "cycles_added": 0,
