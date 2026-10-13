@@ -1,0 +1,127 @@
+{
+ "name": "dsfd_wfc_lnk_m5",
+ "top": "dsfd_wfc_lnk",
+ "kind": "tile",
+ "sources": [
+  "physical/ref_tile/dsfd_wfc_lnk_m5/src/rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+  "physical/ref_tile/dsfd_wfc_lnk_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "physical/ref_tile/dsfd_wfc_lnk_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv",
+  "physical/ref_tile/dsfd_wfc_lnk_m5/src/rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 151.2
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck",
+   "f_vc",
+   "rst",
+   "t_dw",
+   "t_ft"
+  ],
+  "W": [
+   "f_lid",
+   "f_liv",
+   "t_lir"
+  ],
+  "E": [
+   "f_lor",
+   "t_lod",
+   "t_lov"
+  ],
+  "N": [
+   "f_wig",
+   "f_wod",
+   "f_wov",
+   "t_wid",
+   "t_wiv",
+   "t_wog"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32
+ },
+ "job": {
+  "owner": "Claude:el1011-reroute-m5",
+  "branch": "claude/el1011-reroute-m5",
+  "tag": "m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed mtp-wfc_lnk-b-0cd6caa1b-tc (dsfd_wfc_lnk, RTL 0cd6caa1b, snapshot of 5 drifted files): same RTL, outline 216.0x151.2, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:mtp-rom",
+  "benches": [
+   {
+    "name": "pass_stg_r1",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_wfc_lnk_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_wfc_lnk_m5/src/. $B/ && cd $B && { python3 tools/dsrom_mtp_rom_bench.py one stg_r1 --out {RUN}/bench\n}",
+    "expect": "pass",
+    "pass_regex": "MTP_BENCH stg_r1 PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 0cd6caa1b snapshot overlay of physical/ref_tile/dsfd_wfc_lnk_m5/src]"
+   },
+   {
+    "name": "pass_s0_tr_forced_w16",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_wfc_lnk_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_wfc_lnk_m5/src/. $B/ && cd $B && { python3 tools/dsrom_mtp_rom_bench.py one s0_tr_forced_w16 --out {RUN}/bench\n}",
+    "expect": "pass",
+    "pass_regex": "MTP_BENCH s0_tr_forced_w16 PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 0cd6caa1b snapshot overlay of physical/ref_tile/dsfd_wfc_lnk_m5/src]"
+   },
+   {
+    "name": "fail_stg_neg_nocred",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_wfc_lnk_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_wfc_lnk_m5/src/. $B/ && cd $B && { python3 tools/dsrom_mtp_rom_bench.py one stg_neg_nocred --out {RUN}/bench\n}",
+    "expect": "fail",
+    "fail_regex": "MTP_BENCH stg_neg_nocred FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 0cd6caa1b snapshot overlay of physical/ref_tile/dsfd_wfc_lnk_m5/src]"
+   },
+   {
+    "name": "fail_s0_neg_draft2wfc",
+    "cmd": "B={RUN}/bsrc_m5_3; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/dsfd_wfc_lnk_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/dsfd_wfc_lnk_m5/src/. $B/ && cd $B && { python3 tools/dsrom_mtp_rom_bench.py one s0_neg_draft2wfc --out {RUN}/bench\n}",
+    "expect": "fail",
+    "fail_regex": "MTP_BENCH s0_neg_draft2wfc FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "[m5rr: run on the 0cd6caa1b snapshot overlay of physical/ref_tile/dsfd_wfc_lnk_m5/src]"
+   }
+  ]
+ },
+ "m5rr": {
+  "cell": "dsfd_wfc_lnk",
+  "closed_job": "mtp-wfc_lnk-b-0cd6caa1b-tc",
+  "closed_commit": "0cd6caa1bd0cbff7af7e97368219cac19e626d38",
+  "snapshot": [
+   "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv",
+   "tools/dsrom_mtp_rom_bench.py"
+  ],
+  "orig_owner": "Claude:mtp-rom"
+ }
+}
