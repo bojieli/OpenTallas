@@ -38,6 +38,11 @@ module dsfd_sp_su_h #(
     parameter integer NPB = (S_RD / 2 > 2) ? S_RD / 2 : 2,
     parameter integer ERL = (S_RD >= 16) ? 3 : 1,      // tap -> engine relays, equal depth on every engine (lockstep)
     parameter integer NSW = (SW_W >= 128) ? SW_W / 128 : 1,
+    // SW (el1011-s81su-sw, spec v3): one tap + NSWQ act-quant engines (the QB master) on the spine, NSWQ * 2 * 16 / SLPE
+    // ... lane engines off the tap (SLPE lanes each, rate-matched: a beat takes >= SLPE spine cycles); ERS equal-depth
+    // relay stations tap -> lane engine (and lane faults back), <= 500 um a station over the ~3.2 x 2 mm SW region
+    parameter integer NSWQ = (S_RD / 2 > 2) ? S_RD / 2 : 2,
+    parameter integer ERS = (S_RD >= 16) ? 5 : 1,
     parameter integer NSM = (SM_H >= 2) ? SM_H / 2 : 1,
     parameter integer NPO = (S_RD >= 16 && S_WR >= 16) ? 4 : 1,
     // relay stations on every pin owner link (spine slices and control seams), the same depth on every link so the
@@ -72,7 +77,23 @@ module dsfd_sp_su_h #(
 );
     localparam integer NQB = 1 + NPB;                  // QB stops: the tap, then the engines
     localparam integer NQN = 1 + NQQ;                  // QN stops: the tap, then the quant engines
-    localparam integer NTL = NQN + 1 + NQB + NSW + NSM;
+    localparam integer NSWS = 1 + NSWQ;                // SW stops: the tap, then the quant engines
+    localparam integer NTL = NQN + 1 + NQB + NSWS + NSM;
+    localparam integer SLPE = (SW_W / (8 * S_RD) > 16) ? 16 : (SW_W / (8 * S_RD) < 1) ? 1 : SW_W / (8 * S_RD);
+    localparam integer SL = 2 * NSWQ, SNPS = (SW_W / 16) / SL, SEPR = 16 / SLPE, SNCH = SL * SEPR, SNE = SNCH * SNPS;
+    // SW tap -> lane engines, lane chains -> quant engines
+    wire [SL*512-1:0]    sw_d;
+    wire [SNPS-1:0]      sw_gv, sw_uv;
+    wire [11:0]          sw_t;
+    wire [31:0]          sw_w, sw_lim;
+    wire [13:0]          sw_ob;
+    wire [SNCH-1:0]      sw_f;                         // chain-head lane faults, relayed into the tap
+    wire [SNE-1:0]       sc_v, sc_f;                   // engine e = ch * SNPS + P: its chain output
+    wire [SNE*16*SLPE-1:0] sc_d;
+    wire [SNE*12-1:0]    sc_t;
+    wire                 snxv [0:NSWQ-1];
+    wire [255:0]         snxq [0:NSWQ-1];
+    wire [9:0]           snxe [0:NSWQ-1];
     localparam integer QL = QN_N / 16;                 // QN tap positions (rows a vector)
     localparam integer DQ_ = 1280;                     // q width (the golden's DQ)
     // QB tap -> engines (positions 2b / 2b + 1 to engine b) and the engines' pair exchange
@@ -122,7 +143,7 @@ module dsfd_sp_su_h #(
     wire [S_WR-1:0]    p_uv;
     wire               rst_c;
     ot_s81_su_ctl #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
-                    .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(QB_NB / 2), .NQN(QN_N / 64), .NKV(NKV), .MUT(MUT), .AMUT(AMUT)) u_ctl (
+                    .S_RD(S_RD), .S_WR(S_WR), .NSW((SW_W >= 64) ? SW_W / 64 : 1), .NQB(QB_NB / 2), .NQN(QN_N / 64), .NKV(NKV), .MUT(MUT), .AMUT(AMUT)) u_ctl (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(cc_v), .c_cmd_d(cc_d), .c_done_v(cd_v),
         .c_done_tag(cd_t), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_c),
         .p_rq_v(c_rq_v), .p_rq_row(c_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),
@@ -313,19 +334,45 @@ module dsfd_sp_su_h #(
             .q({kq_a[14 * kb +: 14], kq_m[16 * kb +: 16], kq_d[512 * kb +: 512]}));
     end endgenerate
 
+    // ------------------------------------------------------------------ SW: lane engines (off the spine, chains)
+    genvar sch, sp;
+    generate for (sch = 0; sch < SNCH; sch = sch + 1) begin : g_swc
+        // chain sch = pass row sch / SEPR, chunk sch % SEPR; engine P of the chain owns that chunk of pass P
+        for (sp = 0; sp < SNPS; sp = sp + 1) begin : g_swe
+            localparam integer E = sch * SNPS + sp;
+            wire gv, uv; wire [32*SLPE-1:0] d; wire [11:0] et; wire [31:0] ew, el;
+            ot_hdc_delay #(.W(2), .D(ERS), .RESET(1)) u_iv (.clk(sk), .rst_n(rst[0]), .d({sw_gv[sp], sw_uv[sp]}), .q({gv, uv}));
+            ot_hdc_delay #(.W(32 * SLPE + 12 + 64), .D(ERS)) u_id (.clk(sk), .rst_n(rst[0]),
+                .d({sw_d[512 * (sch / SEPR) + 32 * SLPE * (sch % SEPR) +: 32 * SLPE], sw_t, sw_w, sw_lim}), .q({d, et, ew, el}));
+            wire civ, cif; wire [16*SLPE-1:0] cid; wire [11:0] cit;
+            if (sp == SNPS - 1) begin : g_tail
+                assign civ = 1'b0; assign cif = 1'b0; assign cid = 0; assign cit = 12'd0;
+            end else begin : g_link
+                assign civ = sc_v[E + 1]; assign cif = sc_f[E + 1]; assign cid = sc_d[16 * SLPE * (E + 1) +: 16 * SLPE];
+                assign cit = sc_t[12 * (E + 1) +: 12];
+            end
+            ot_s81_su_swe #(.LPE(SLPE), .LM(LM), .LA(LA)) u_swe (
+                .clk(sk), .rst_in(rst[0]), .i_gv(gv), .i_uv(uv), .i_d(d), .i_t(et), .i_w(ew), .i_lim(el),
+                .c_iv(civ), .c_id(cid), .c_it(cit), .c_if(cif), .c_ov(sc_v[E]), .c_od(sc_d[16 * SLPE * E +: 16 * SLPE]),
+                .c_ot(sc_t[12 * E +: 12]), .c_of(sc_f[E]));
+        end
+        ot_hdc_delay #(.W(1), .D(ERS), .RESET(1)) u_fr (.clk(sk), .rst_n(rst[0]), .d(sc_f[sch * SNPS]), .q(sw_f[sch]));
+    end endgenerate
+
     // ------------------------------------------------------------------ engine tiles
     // norm rungs: the group partial of tile t (TI 1) to its head (t - 1), the head's rstd back (registered relays)
     wire        xpv [0:NTL]; wire [7:0] xpi [0:NTL]; wire [31:0] xpd [0:NTL];   // tile t's outputs
     wire        xrv [0:NTL]; wire [31:0] xrd [0:NTL];
     genvar t;
     generate for (t = 0; t < NTL; t = t + 1) begin : g_t
-        localparam integer B1 = NQN, B2 = NQN + 1, B3 = B2 + NQB, B4 = B3 + NSW;
+        localparam integer B1 = NQN, B2 = NQN + 1, B3 = B2 + NQB, B4 = B3 + NSWS;
         // TK 2: the QB tap (no write slots), TK 5: QB engine TI (slots 2 TI, 2 TI + 1)
         // TK 6: the QN tap (no write slots), TK 7: QN quant engine TI (slot TI), TK 8: the KV stop (tap + all S_WR slots)
-        localparam integer TK = (t == 0) ? 6 : (t < B1) ? 7 : (t < B2) ? 8 : (t == B2) ? 2 : (t < B3) ? 5 : (t < B4) ? 3 : 4;
-        localparam integer TI = (t < B1) ? (t == 0 ? 0 : t - 1) : (t < B2) ? t - B1 : (t < B3) ? (t == B2 ? 0 : t - B2 - 1) : (t < B4) ? t - B3 : t - B4;
-        localparam integer NT = (t < B1) ? NQQ : (t < B2) ? 1 : (t < B3) ? NPB : (t < B4) ? NSW : NSM;
-        localparam integer WS = (TK == 2 || TK == 6) ? 0 : (TK == 7) ? 1 : (TK == 8) ? S_WR : S_WR / NT, W0 = TI * WS;
+        // TK 12: the SW tap (no write slots), TK 13: SW quant engine TI (the QB master; slots 2 TI, 2 TI + 1)
+        localparam integer TK = (t == 0) ? 6 : (t < B1) ? 7 : (t < B2) ? 8 : (t == B2) ? 2 : (t < B3) ? 5 : (t == B3) ? 12 : (t < B4) ? 13 : 4;
+        localparam integer TI = (t < B1) ? (t == 0 ? 0 : t - 1) : (t < B2) ? t - B1 : (t < B3) ? (t == B2 ? 0 : t - B2 - 1) : (t < B4) ? (t == B3 ? 0 : t - B3 - 1) : t - B4;
+        localparam integer NT = (t < B1) ? NQQ : (t < B2) ? 1 : (t < B3) ? NPB : (t < B4) ? NSWQ : NSM;
+        localparam integer WS = (TK == 2 || TK == 6 || TK == 12) ? 0 : (TK == 7) ? 1 : (TK == 8) ? S_WR : S_WR / NT, W0 = TI * WS;
         localparam integer WSX = (WS > 0) ? WS : 1;
         wire [WSX-1:0] o_v; wire [WSX*14-1:0] o_a; wire [WSX*16-1:0] o_m; wire [WSX*512-1:0] o_d;
         wire o_fu, o_fo, o_alive, o_den, o_rdy; wire [7:0] o_rjid;
@@ -538,6 +585,37 @@ module dsfd_sp_su_h #(
             assign e_v = he_v[0];
             assign o_vv = ho_v[0];
             assign den_v = hden_v[0];
+        end else if (TK == 12) begin : g_swt
+            assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+            ot_s81_su_swt #(.SW_W(SW_W), .S_RD(S_RD), .NSQ(NSWQ), .NCH(SNCH)) u_swt (
+                .clk(sk), .rst_in(rst[t]),
+                .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                .dn_v_i(dv[t]), .dn_d_i(dd[t]), .i_f(sw_f), .e_d(sw_d), .e_gv(sw_gv), .e_uv(sw_uv), .e_t(sw_t), .e_w(sw_w),
+                .e_lim(sw_lim), .e_ob(sw_ob), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy),
+                .o_rjid(o_rjid));
+        end else if (TK == 13) begin : g_swq
+            // quant engine TI: lo = the chain heads of pass row 2 TI, hi = row 2 TI + 1 (words {bf16, 16'h0})
+            wire [1023:0] x; wire [13:0] rob;
+            genvar hc, hj;
+            for (hc = 0; hc < 2 * SEPR; hc = hc + 1) begin : g_c
+                for (hj = 0; hj < SLPE; hj = hj + 1) begin : g_j
+                    assign x[32 * (SLPE * hc + hj) +: 32] =
+                        {sc_d[((2 * TI * SEPR + hc) * SNPS) * 16 * SLPE + 16 * hj +: 16], 16'h0000};
+                end
+            end
+            ot_hdc_delay #(.W(14), .D(ERS)) u_ob (.clk(sk), .rst_n(rst[t]), .d(sw_ob), .q(rob));
+            localparam integer PN = TI ^ 1;
+            localparam integer HL = (2 * TI * SEPR) * SNPS, HH = ((2 * TI + 1) * SEPR) * SNPS;
+            wire [3:0] CB = TI;
+            ot_s81_su_qbe #(.QB_NB(SW_W / 32), .NPB(NSWQ)) u_qbe (
+                .clk(sk), .rst_in(rst[t]), .cfg_b(CB),
+                .i_vlo(sc_v[HL]), .i_vhi(sc_v[HH]), .i_lo(x[511:0]), .i_hi(x[1023:512]), .i_tlo(sc_t[12 * HL +: 12]),
+                .i_thi(sc_t[12 * HH +: 12]), .i_ob(rob), .i_f4(1'b0), .nx_i_v(snxv[PN]), .nx_i_q(snxq[PN]), .nx_i_e(snxe[PN]),
+                .nx_o_v(snxv[TI]), .nx_o_q(snxq[TI]), .nx_o_e(snxe[TI]),
+                .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
+                .o_rdy(o_rdy), .o_rjid(o_rjid));
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
         end else begin : g_tl
             ot_s81_su_tile #(.TK(TK), .TI(TI), .NT(NT), .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H),
                              .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .LM(LM), .LA(LA), .MUT(MUT)) u_tile (
