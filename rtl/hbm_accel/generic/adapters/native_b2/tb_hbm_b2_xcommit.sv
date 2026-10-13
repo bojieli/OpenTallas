@@ -192,48 +192,41 @@ module tb_hbm_b2_xcommit;
                     localparam integer BF  = gc * XC + 2128 + R * 256;
                     localparam integer NV  = (gx == 3) ? 20 : 256;
                     integer a;
-                    // hierarchical access to the macro model (the west / east tile masters differ in one scope name)
+                    // (the west / east tile masters differ in one scope name: the whole probe body is one macro per
+                    // branch, so no function calls another function across a generate scope -- Verilator 5.050
+                    // LinkDot faults on that)
                     `define XCM(BR) dut.g_c[gc].g_p[gp].BR.u_t.u.u.g_lf[gj].u_lh.u_xs.u_leaf.g_xm[gx].u_x
+                    `define XCB(BR) \
+                        integer q; \
+                        wire wce = `XCM(BR).w_ce_in, rce = `XCM(BR).r_ce_in; \
+                        wire [6:0] ra = `XCM(BR).r_addr_in; \
+                        initial for (q = 0; q < 130; q = q + 1) \
+                            `XCM(BR).arr[q] = {8{32'h5a5a_0000 ^ (IDX * 32'h0001_0193) ^ (q * 32'h0100_01b3)}} | 258'd1; \
+                        function automatic bad(input integer ad); \
+                            reg [255:0] g, x; reg [1023:0] w; \
+                            begin \
+                                g = `XCM(BR).arr[ad][255:0]; \
+                                w = 1024'd0; \
+                                w[531:0] = fragx[ad][BK +: 532]; \
+                                w[787:532] = fragx[ad][BF +: 256]; \
+                                x = w[gx*256 +: 256]; \
+                                bad = (&shv[ad]) ? (g[NV-1:0] !== x[NV-1:0]) : 1'b1; \
+                            end \
+                        endfunction
                     if (gc < NC / 2) begin : g_s
-                        integer q;
-                        wire wce = `XCM(g_tw).w_ce_in, rce = `XCM(g_tw).r_ce_in;
-                        wire [6:0] ra = `XCM(g_tw).r_addr_in;
-                        initial for (q = 0; q < 130; q = q + 1)
-                            `XCM(g_tw).arr[q] = {8{32'h5a5a_0000 ^ (IDX * 32'h0001_0193) ^ (q * 32'h0100_01b3)}} | 258'd1;
-                        function automatic [255:0] rdw(input integer ad); rdw = `XCM(g_tw).arr[ad][255:0]; endfunction
+                        `XCB(g_tw)
                     end else begin : g_s
-                        integer q;
-                        wire wce = `XCM(g_te).w_ce_in, rce = `XCM(g_te).r_ce_in;
-                        wire [6:0] ra = `XCM(g_te).r_addr_in;
-                        initial for (q = 0; q < 130; q = q + 1)
-                            `XCM(g_te).arr[q] = {8{32'h5a5a_0000 ^ (IDX * 32'h0001_0193) ^ (q * 32'h0100_01b3)}} | 258'd1;
-                        function automatic [255:0] rdw(input integer ad); rdw = `XCM(g_te).arr[ad][255:0]; endfunction
+                        `XCB(g_te)
                     end
+                    `undef XCB
                     `undef XCM
                     wire wce = g_s.wce, rce = g_s.rce;
                     wire [6:0] ra = g_s.ra;
-                    function automatic [255:0] expw(input integer ad);
-                        reg [1023:0] w;
-                        begin
-                            w = 1024'd0;
-                            w[531:0] = fragx[ad][BK +: 532];
-                            w[787:532] = fragx[ad][BF +: 256];
-                            expw = w[gx*256 +: 256];
-                        end
-                    endfunction
-                    function automatic bad(input integer ad);
-                        reg [255:0] g, x;
-                        begin
-                            g = g_s.rdw(ad);
-                            x = expw(ad);
-                            bad = (&shv[ad]) ? (g[NV-1:0] !== x[NV-1:0]) : 1'b1;
-                        end
-                    endfunction
                     always @(negedge ck_s) if (rst_n) begin
                         // the SM takes an op on the upcoming edge: the store must already hold the op's x
                         if (rb_fire) begin
                             for (a = 0; a < cur_xn; a = a + 1)
-                                if (bad((cur_xb + a) % XDEPTH)) rb_bad[IDX] = rb_bad[IDX] + 1;
+                                if (g_s.bad((cur_xb + a) % XDEPTH)) rb_bad[IDX] = rb_bad[IDX] + 1;
                             rd_seen[IDX] = 0;
                         end
                         if (wce && m_p[gp].en_l) begin
@@ -247,7 +240,7 @@ module tb_hbm_b2_xcommit;
                         if (wce && !m_p[gp].en_l) w_gated[IDX] = w_gated[IDX] + 1;
                         if (rce && m_p[gp].en_l) begin
                             if (!rd_seen[IDX]) begin firstr[IDX] = e; rd_seen[IDX] = 1; end
-                            if (bad(ra)) stale[IDX] = stale[IDX] + 1;
+                            if (g_s.bad(ra)) stale[IDX] = stale[IDX] + 1;
                         end
                         if (fin_now && rd_seen[IDX]) begin
                             if (firstr[IDX] - t_start_e < rmin[IDX]) rmin[IDX] = firstr[IDX] - t_start_e;
