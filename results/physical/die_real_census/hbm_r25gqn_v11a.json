@@ -3,8 +3,8 @@
  "die": "hbm_r25gqn",
  "case": "v11a",
  "mode": "contract",
- "source": "",
- "when": "2026-10-13 07:51 PDT",
+ "source": "main 56b4511cb + sfu sub-slot pins (81 bus runs = the view)",
+ "when": "2026-10-13 07:54 PDT",
  "roots": [
   "/home/ubuntu/wt/claude-hbm-native-die-1013"
  ],
@@ -28,6 +28,8 @@
    "hard_macro": 2,
    "placeholder": 79
   },
+  "real_slot_exact": 64,
+  "real_provisional_etm": 546,
   "placeholder_with_view": 8,
   "top_placeholders": [
    [
@@ -165,6 +167,13 @@
    "view_exists": true,
    "lef": "outline",
    "etm": "by name",
+   "slot": "hb_hc_SW/u_tile_0",
+   "slot_pins": "differ",
+   "slot_check": [
+    "PG layer M7 != contract M6",
+    "836 LEF pins not in the contract (e.g. acc_in[0], acc_in[100], acc_in[101], acc_in[102])"
+   ],
+   "exported_before_export_sdc_fix": true,
    "instances": 352,
    "size": [
     135.648,
@@ -1127,6 +1136,15 @@
    "view_exists": true,
    "lef": "outline",
    "etm": "by name",
+   "slot": "hb_mtp",
+   "slot_pins": "differ",
+   "slot_check": [
+    "PG layer M6 != contract M5",
+    "2 contract pins missing from the LEF (e.g. ck, rst)",
+    "2 LEF pins not in the contract (e.g. clk, rst_n)",
+    "682 pins off their contract face/layer/offset: f_cmdproc[0] M5/S (contract M4/W); f_cmdproc[100] M5/N (contract M4/W); f_cmdproc[101] M5/N (contract M4/W); f_cmdproc[102] M5/N (contract M4/W)"
+   ],
+   "exported_before_export_sdc_fix": true,
    "instances": 1,
    "size": [
     286.56,
@@ -1153,6 +1171,13 @@
    "view_exists": true,
    "lef": "outline",
    "etm": "by name",
+   "slot": "lk_host",
+   "slot_pins": "differ",
+   "slot_check": [
+    "1 contract pins missing from the LEF (e.g. ck)",
+    "382 LEF pins not in the contract (e.g. clk, h_dma_araddr[0], h_dma_araddr[10], h_dma_araddr[11])"
+   ],
+   "exported_before_export_sdc_fix": true,
    "instances": 1,
    "size": [
     260.808,
@@ -1166,6 +1191,12 @@
    "view_exists": true,
    "lef": "outline",
    "etm": "by name",
+   "slot": "idx_score_SW/g_col[0].g_s[0].u_hs",
+   "slot_pins": "differ",
+   "slot_check": [
+    "2302 LEF pins not in the contract (e.g. cf_in, cf_out, cs_in[0], cs_in[10])"
+   ],
+   "exported_before_export_sdc_fix": true,
    "instances": 128,
    "size": [
     180.0,
@@ -1192,6 +1223,10 @@
    "view_exists": true,
    "lef": "outline",
    "etm": "by name",
+   "slot": "hb_sfu_SW/u_tile_0",
+   "slot_pins": "exact",
+   "slot_check": [],
+   "exported_before_export_sdc_fix": true,
    "instances": 64,
    "size": [
     216.0,

@@ -4026,7 +4026,11 @@ def launch_ready(j, fleet, spec, stl, st):
                 return
             if j["name"] not in keys.setdefault(key, []):
                 keys[key].append(j["name"])
-            keys_path().write_text(json.dumps(keys, indent=1) + "\n")
+            # atomic (el1013-fleet4): write_text truncates first, and a reader in another job thread got an empty file
+            # (auto_react JSONDecodeError 10-13 04:21)
+            tmp = keys_path().with_suffix(f".tmp.{threading.get_ident()}")
+            tmp.write_text(json.dumps(keys, indent=1) + "\n")
+            os.replace(tmp, keys_path())
         st["admission_launch_token"] = fleet._launched(j["host"], st["threads"], st["ram"], j["name"], actual=True)  # reservation (replaces the job's claim)
         return st
 
@@ -6074,7 +6078,14 @@ def advance_job(name, fleet):
         if nt and time.time() < nt:
             return                       # backing off after a transient ssh / network error
         try:
+            before = j["status"]
             step(j, fleet)
+            # el1013-fleet4 2026-10-13: a job whose source sync just finished launches its first stage in the same pass.
+            # It used to return at READY and wait for the next tick to be submitted again: 45-100 s on idle hosts
+            # (median ingest -> first launch 157 s over 21 jobs, 04:16-05:30).
+            if before in ("QUEUED", "SYNC") and j["status"] == "READY":
+                save_job(j)
+                step(j, fleet)
             if j.get("transient"):
                 j["transient"] = 0
                 j.pop("transient_next", None)

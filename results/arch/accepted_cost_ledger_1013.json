@@ -117,6 +117,53 @@
    "accepted_date": "2026-10-13"
   },
   {
+   "design": "s81",
+   "unit": "SU.HC_PRE_NORM (dsfd_sp_hc_c fused NORM: hc_pre mix + RMSNorm + FP8 act-quant, flat engine HIER 0)",
+   "group": "SU.HC_PRE_NORM",
+   "measured": 449.0,
+   "price": 329.9,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.361,
+   "e2e_loss_pct": 1.178,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 838748.4,
+     "added_cycles": 9882.0,
+     "runs_per_token": 81,
+     "critical_runs": 81,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 9882.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.178
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1189350.1,
+     "added_cycles": 11834.0,
+     "runs_per_token": 87,
+     "critical_runs": 87,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 10614.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 244.0,
+     "e2e_loss_pct": 0.995
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_layer_tput_1013/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-13",
+   "status": "proposed",
+   "note": "per-layer die bench tb_s81_die_layer L0+L2 at the 1M token, bit-exact, 2 mutants fail: one fused NORM job is 449 cycles in all 4 runs against 327.0-333.9 priced (hc_pre + quant [+ norm.scale]); +122 on each of the 80 critical hc_pre nodes (worst block; ffn is +115)"
+  },
+  {
    "design": "r25gq",
    "unit": "FUSED.QDQ_FP8 [bench of record, WIDE]",
    "group": "FUSED.QDQ_FP8",
@@ -512,11 +559,11 @@
   },
   "s81": {
    "accepted_pct": 1.812,
-   "proposed_pct": 0,
-   "accepted_plus_proposed_pct": 1.812,
+   "proposed_pct": 1.178,
+   "accepted_plus_proposed_pct": 2.99,
    "limit_pct": 15.0,
    "accepted_rows": 2,
-   "proposed_rows": 0,
+   "proposed_rows": 1,
    "headroom_pct": 13.188
   },
   "r25gq": {
