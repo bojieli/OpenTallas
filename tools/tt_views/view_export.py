@@ -85,9 +85,11 @@ def main():
         lefs = [f"read_lef {PLAT}/lef/asap7sc7p5t_28_{VT[v][1]}_1x_220121a.lef" for v in vts]
         lefs += [f"read_lef /mv{i}/{n}.lef" for i, n in mv]
         sdc = "/interface.sdc" if a.interface_sdc is not None else f"/in/{rel}/6_final.sdc"
+        # Interface SDC derives its clock reference immediately; routed parasitics
+        # must be loaded before it evaluates clock arrivals.
         tcl = "\n".join([f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef",
                          f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef", *lefs, *libs,
-                         f"read_db /in/{rel}/6_final.odb", f"read_sdc {sdc}", f"read_spef /in/{rel}/6_final.spef",
+                         f"read_db /in/{rel}/6_final.odb", f"read_spef /in/{rel}/6_final.spef", f"read_sdc {sdc}",
                          "set_propagated_clock [all_clocks]",
                          "puts \"OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]\"",
                          f"write_timing_model -library_name {a.name}_{c} /out/{a.name}_{c}.lib",
