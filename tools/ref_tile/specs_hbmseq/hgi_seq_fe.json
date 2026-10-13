@@ -122,7 +122,7 @@
  "boundary_tcl": [
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
- "structural_change": "hgi_seq flat (25,081 sinks on one root; v25s/v26s/v27a/v27b all failed FF hold on short reg->reg hops across spine leaves) is replaced by three hardened children with their own clock roots and reset synchronisers under a wires-only parent: five registered valid/credit seams, queue-full -> FE credit counter, injector stall -> registered hold; s2 (s1 983266320 NEEDS_RTL TT -59.64 on 28 endpoints, all be_jl_kernel_r -> kern_off, FF +15.24, DRC 0; every other class met 770 ps): the job-load kernel offset is computed in two edges (kernel-table select registered, then zero test / 32-b add), SEAM_JL_WAIT 6 -> 7 (one cycle a job; CP.FETCH 30,341 cycles = 0.953x of price, lockstep gate PASS)",
+ "structural_change": "hgi_seq flat (25,081 sinks on one root; v25s/v26s/v27a/v27b all failed FF hold on short reg->reg hops across spine leaves) is replaced by three hardened children with their own clock roots and reset synchronisers under a wires-only parent: five registered valid/credit seams, queue-full -> FE credit counter, injector stall -> registered hold; s2 (s1 983266320 NEEDS_RTL TT -59.64 on 28 endpoints, all be_jl_kernel_r -> kern_off, FF +15.24, DRC 0; every other class met 770 ps): the job-load kernel offset is computed in two edges (kernel-table select registered, then zero test / 32-b add), inside the unchanged SEAM_JL_WAIT 6 (it had one spare edge; lockstep gate PASS at 6 and FAIL at 5, so the closed BE view is unchanged; CP.FETCH 30,340 cycles = 0.953x of price)",
  "job": {
   "owner": "Claude:el1013-hbm-seq-split",
   "branch": "claude/hbm-seq-split-1013",
