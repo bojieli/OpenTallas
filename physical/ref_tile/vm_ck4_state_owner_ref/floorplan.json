@@ -44,11 +44,13 @@
    "returned_i"
   ],
   "E": [
-   "seat_code_o",
    "seat_data_o",
    "seat_bad_o",
    "checker_error_o",
    "checker_valid_o"
+  ],
+  "N": [
+   "seat_code_o"
   ]
  },
  "clock_port": "ck",
