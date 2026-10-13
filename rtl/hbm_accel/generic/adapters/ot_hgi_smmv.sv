@@ -25,16 +25,17 @@
 //     a record, in order; ot_hgi_smmv_pub).
 // Refusals as ot_hgi_sm_record (+ 8 op_g > XD).  Any fault halts (sticky until rst_n), rec_fault pulses once.
 // Mutants: MUT_SLOT (every record's x at slot 0, no allocation: a later load overwrites x under a running matvec),
-//          MUT_EARLY (retire on issue, not on completion).
+//          MUT_EARLY (retire on issue, not on completion), MUT_XRS (an XR hit reads the previous load's slot: stale x).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_smmv #(
     parameter integer NSM = 8,            // SMs served by this engine (B2 default 8 = one cluster; legacy 32 = whole die)
-    parameter integer W = 4,              // record window (power of two, <= 4: 3-bit sequence numbers)
+    parameter integer W = 4,              // record window (power of two, <= 8; sequence numbers WI + 1 bits)
     parameter integer XD = 128,
     parameter integer XQ = 1,             // smmv-b BDW8: x loads in flight (1 or 2; the pipelined BW8 loader takes the next
                                           //   load while the previous one drains; x_done in order); 1 = one at a time
     parameter integer MUT_SLOT = 0,
     parameter integer MUT_EARLY = 0,
+    parameter integer MUT_XRS = 0,        // bx mutant: an X REUSE hit takes the PREVIOUS load's slot (stale x)
     // smmv-cr (2026-10-12) ROW CREDITS (track A ot_hgi_sm_record CR, with its DEADLOCK RULE; CR = 0 default: one
     // descriptor of the whole slice, as before).  CR = 1: SM s is described in chunks of CHE rows, a chunk leaves while
     // cr[s] >= n (cr = AD - rows described and not yet consumed by the pub, +1 per sm_cr[s] pulse).  The SM issues
@@ -92,8 +93,8 @@ module ot_hgi_smmv #(
     localparam [36:0] INV17 = 37'h10f0f0f0f1;   localparam [36:0] LIM17 = 37'd8084644321;
     localparam [34:0] INV5  = 35'h4cccccccd;    localparam [34:0] LIM5  = 35'd6871947673;
     localparam integer NSMT = 32;                // row blocks Q = ceil(M / 32) over the whole die's SMs (B2: 4 x 8)
-    initial if (W > 4 || (W & (W - 1)) != 0 || (NSM != 8 && NSM != 16 && NSM != 32) || XD != 128)
-        $fatal(1, "ot_hgi_smmv: W in {1,2,4}, NSM in {8,16,32}, XD 128");
+    initial if (W > 8 || (W & (W - 1)) != 0 || (NSM != 8 && NSM != 16 && NSM != 32) || XD != 128)
+        $fatal(1, "ot_hgi_smmv: W in {1,2,4,8}, NSM in {8,16,32}, XD 128");
     reg [4:0] smb_q; always @(posedge clk) smb_q <= sm_base;     // strap pin flop
     reg [1:0] rs;
     always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
@@ -144,20 +145,21 @@ module ot_hgi_smmv #(
 
     // ================= window (entries at seq mod W) =================
     localparam integer WI = (W > 1) ? $clog2(W) : 1;
+    localparam integer SQ = WI + 1;      // sequence number bits (one more than the slot index: full / empty)
     localparam integer WA = 1 << WI;     // ring slots (W=1 keeps 2 slots so the 1-bit seq index stays in range; occupancy still <= W)
-    reg [2:0] tail, xp, ip, rh, ppc, pdc;            // push / x / issue / retire / pub command / pub done (3-b seq)
+    reg [SQ-1:0] tail, xp, ip, rh, ppc, pdc;         // push / x / issue / retire / pub command / pub done (SQ-b seq)
     reg [255:0] e_a [0:WA-1]; reg [255:0] e_o [0:WA-1]; reg [20:0] e_na [0:WA-1];
     reg [1:0] e_f [0:WA-1]; reg [3:0] e_p [0:WA-1]; reg [7:0] e_g [0:WA-1]; reg [12:0] e_q [0:WA-1]; reg [19:0] e_m [0:WA-1];
     reg [23:0] e_lq [0:WA-1]; reg [30:0] e_ml [0:WA-1]; reg [31:0] e_l0 [0:WA-1];
     reg [6:0] e_xb [0:WA-1]; reg [7:0] e_rel [0:WA-1]; reg [WA-1:0] e_xd, e_xr;
     reg [NSM-1:0] e_act [0:WA-1]; reg [NSM*4-1:0] e_tgt [0:WA-1];
-    wire [2:0] nin = tail - rh;
+    wire [SQ-1:0] nin = tail - rh;
     reg rdy_r;
     assign rec_rdy = rdy_r;
-    function automatic [WI-1:0] ix(input [2:0] q); ix = q[WI-1:0]; endfunction
+    function automatic [WI-1:0] ix(input [SQ-1:0] q); ix = q[WI-1:0]; endfunction
 
     // ================= x allocator / x stage =================
-    reg [7:0] used; reg [6:0] ap; reg [6:0] xbc; reg [1:0] xn; reg [2:0] xfq [0:1]; reg xfh, xft;
+    reg [7:0] used; reg [6:0] ap; reg [6:0] xbc, xbp; reg [1:0] xn; reg [SQ-1:0] xfq [0:1]; reg xfh, xft;
     // r2 (route r1-6e530654e: xp -> used -89 ps = e_g[xp] mux -> ap + nf compare -> wrap -> used + ws + nf compare ->
     // used update in one edge): the allocation is precomputed over two registered edges.  al_age restarts at every
     // event that changes xp / ap / used-upward / the window tail (x alloc, x hit, D3 commit); an allocation fires only at
@@ -166,9 +168,14 @@ module ot_hgi_smmv #(
     reg [7:0] nf; reg fits_r; reg [6:0] a_st; reg [7:0] a_ws; reg a_okr;
     wire [7:0] nfw = {e_g[ix(xp)], 3'b000};
     always @(posedge clk) begin : alq
-        reg ft; ft = ({1'b0, ap} + nfw) <= 8'd128;
+        // bx (10-12, deadlock at L1 xr cycle 94,847): an EMPTY ring (used 0: no live record holds a slot) restarts at
+        // address 0 with no wrap waste.  Before, a record with 8 op_g > ap after a wrap point (here nf 128 at ap 64,
+        // left there by a load before four X REUSE hits) needed waste 128 - ap + nf > 128 forever: ap only moves on
+        // an allocation, so the x stage never allocated again and every SM went idle.  used is read 2 edges early,
+        // but only an x event (which restarts al_age) raises it, so used 0 here is still 0 at the allocation.
+        reg ft, em; em = (used == 8'd0); ft = em || ({1'b0, ap} + nfw) <= 8'd128;
         nf <= nfw; fits_r <= ft;
-        a_st <= (MUT_SLOT != 0) ? 7'd0 : (ft ? ap : 7'd0);
+        a_st <= (MUT_SLOT != 0 || em) ? 7'd0 : (ft ? ap : 7'd0);
         a_ws <= (MUT_SLOT != 0 || ft) ? 8'd0 : (8'd128 - {1'b0, ap});
         a_okr <= (MUT_SLOT != 0) || ({1'b0, used} + a_ws + nf <= 9'd128);
     end
@@ -230,7 +237,7 @@ module ot_hgi_smmv #(
             cmd_h[s*CW +: CW] <= {rel[s], dl_s[s*24 +: 24], dbase_s[s*32 +: 32], d_n[s] & go & rst_i, xb_i,
                                   fmt_i, 1'b1, g_i, 16'd8, rows_s[s*13 +: 13], st_n[s] & go & rst_i};
     assign sm_cmd = cmd_h;
-    assign dbg_iss_seq = ip;
+    assign dbg_iss_seq = 3'(ip);
     reg pend0_r; always @(posedge clk) pend0_r <= (st_n == 0) && (d_n == 0);
     // retire condition of the head (registered reductions)
     reg hd_ok;
@@ -251,7 +258,7 @@ module ot_hgi_smmv #(
     reg rh_wait;                                       // one edge after a retire (hd_ok recomputed for the new head)
     wire ret_go = (rh != ip) && !rh_wait && (MUT_EARLY != 0 || (hd_ok && pdc != rh)) && !halt_q;
     // x reuse: xo = the record currently holding the latest loaded slot's release; xo_live = it has not retired
-    reg [2:0] xo; reg xo_v; reg [7:0] xo_nf;
+    reg [SQ-1:0] xo; reg xo_v; reg [7:0] xo_nf;
     // the hit is VERIFIED: XR only says "x unchanged since"; the hardware reuses only the LATEST load's slot (the one a pin
     // can hold without breaking the ring's in-order release) and only if the A descriptor matches; otherwise it loads.
     function automatic [100:0] xkey(input [255:0] a, input [20:0] n, input [1:0] f, input [3:0] p);
@@ -259,10 +266,15 @@ module ot_hgi_smmv #(
     endfunction
     reg [100:0] xk;
     wire x_hit = e_xr[ix(xp)] && xo_v && (xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]) == xk);
-    wire [2:0] xo_d = xo - rh, xp_d = xp - rh;
+    wire [SQ-1:0] xo_d = xo - rh, xp_d = xp - rh;
     wire xo_live = xo_d < xp_d;
-    wire x_hit_go = !x_v && xn == 2'd0 && xp != tail && !halt_q && x_hit;
-    wire x_ev = x_hit_go || (!x_v && xn < 2'(XQ) && xp != tail && !halt_q && !x_hit_go && a_ok);
+    // bx (10-12): a hit no longer waits for the latest load to land (nor for its command to be taken): the hit record
+    // only names the slot; issue is in order (ip) and waits on e_xd of the holder, so the hit's x is read after the
+    // holder's load landed.  (Was !x_v && xn == 0: with XQ 2 a hit candidate always found a load in flight and loaded
+    // again -> XR never engaged, w8_L1 xr = noxr = 10,704 cyc.)
+    wire x_hit_go = xp != tail && !halt_q && x_hit;
+    wire x_ld_go = !x_v && xn < 2'(XQ) && xp != tail && !halt_q && !x_hit_go && a_ok;
+    wire x_ev = x_hit_go || x_ld_go;
 
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
@@ -310,7 +322,7 @@ module ot_hgi_smmv #(
                     e_p[ix(tail)] <= p2; e_g[ix(tail)] <= g2; e_q[ix(tail)] <= q2; e_m[ix(tail)] <= m2;
                     e_lq[ix(tail)] <= lq2; e_ml[ix(tail)] <= ml2; e_l0[ix(tail)] <= qd2[31:0];
                     e_xd[ix(tail)] <= 1'b0; e_xr[ix(tail)] <= xr2;
-                    tail <= tail + 3'd1;
+                    tail <= tail + 1'b1;
                 end
             end
             // ---- publication command (in order, as soon as decoded: the pub holds the descriptor before any row)
@@ -318,29 +330,29 @@ module ot_hgi_smmv #(
             if (!pub_v && !(pub_v && pub_rdy) && ppc != tail && !halt_q) begin
                 pub_v <= 1'b1; pub_base <= e_o[ix(ppc)][47:8]; pub_stride <= e_o[ix(ppc)][119:88];
                 pub_space <= e_o[ix(ppc)][1:0]; pub_bf16 <= (e_o[ix(ppc)][4:2] == 3'd1); pub_m <= e_m[ix(ppc)];
-                pub_q <= e_q[ix(ppc)]; pub_p <= e_p[ix(ppc)]; ppc <= ppc + 3'd1;
+                pub_q <= e_q[ix(ppc)]; pub_p <= e_p[ix(ppc)]; ppc <= ppc + 1'b1;
             end
-            if (in_pd) pdc <= pdc + 3'd1;
+            if (in_pd) pdc <= pdc + 1'b1;
             // ---- x stage: allocate the slot, issue the load; one load in flight
             used_n = used;
             if (x_v && x_rdy) x_v <= 1'b0;
-            if (!x_v && xn == 2'd0 && xp != tail && !halt_q && x_hit) begin
+            if (x_hit_go) begin
                 // X REUSE hit: the x of this record is the latest load's slot; no load.  The slot stays pinned until this
                 // record retires: the latest holder's release moves to it, or (holder already retired) it is re-reserved
                 // (it sits right behind the ring pointer, nothing was allocated since).
-                e_xb[ix(xp)] <= xbc; e_xd[ix(xp)] <= 1'b1; xp <= xp + 3'd1; xo <= xp;
+                e_xb[ix(xp)] <= (MUT_XRS != 0) ? xbp : xbc; e_xd[ix(xp)] <= 1'b1; xp <= xp + 1'b1; xo <= xp;
                 if (MUT_SLOT != 0) e_rel[ix(xp)] <= 8'd0;
                 else if (xo_live && !(ret_go && rh == xo)) begin e_rel[ix(xp)] <= e_rel[ix(xo)]; e_rel[ix(xo)] <= 8'd0; end
                 else begin e_rel[ix(xp)] <= xo_nf; used_n = used_n + xo_nf; end
-            end else if (!x_v && xn < 2'(XQ) && xp != tail && !halt_q && a_ok) begin
+            end else if (x_ld_go) begin
                 xo <= xp; xo_v <= 1'b1; xo_nf <= nf; xk <= xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]);
-                xp <= xp + 3'd1; xfq[xft] <= xp; xft <= !xft; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
+                xp <= xp + 1'b1; xfq[xft] <= xp; xft <= !xft; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
                 x_stride <= e_a[ix(xp)][119:88]; x_space <= e_a[ix(xp)][1:0]; x_fmt <= e_f[ix(xp)]; x_xb <= a_st;
-                e_xb[ix(xp)] <= a_st; e_rel[ix(xp)] <= (MUT_SLOT != 0) ? 8'd0 : a_ws + nf; xbc <= a_st;
+                e_xb[ix(xp)] <= a_st; e_rel[ix(xp)] <= (MUT_SLOT != 0) ? 8'd0 : a_ws + nf; xbc <= a_st; xbp <= xbc;
                 if (MUT_SLOT == 0) begin used_n = used_n + a_ws + nf; ap <= a_st + nf[6:0]; end
             end
             if (xn != 2'd0 && in_xd) begin e_xd[ix(xfq[xfh])] <= 1'b1; xfh <= !xfh; end
-            xn <= xn + ((!x_v && xn < 2'(XQ) && xp != tail && !halt_q && !(xn == 2'd0 && x_hit) && a_ok) ? 2'd1 : 2'd0) - ((xn != 2'd0 && in_xd) ? 2'd1 : 2'd0);
+            xn <= xn + (x_ld_go ? 2'd1 : 2'd0) - ((xn != 2'd0 && in_xd) ? 2'd1 : 2'd0);
             // ---- issue stage: fields (stations) one edge, then the start / descriptor handshakes of every active SM
             if (!go && !fld_v && !fp_v && !fq_v && !fa_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
                 fq_v <= 1'b1; scnt <= 4'd0;                      // edge 1: select the issue entry's fields
@@ -370,7 +382,7 @@ module ot_hgi_smmv #(
                     if (st_pend[s] && cmd_h[s*CW] && sm_ret[s*4 + 0]) st_pend[s] <= 1'b0;
                     if (d_pend[s] && cmd_h[s*CW + 48] && sm_ret[s*4 + 1]) d_pend[s] <= 1'b0;
                 end
-                if (pend0_r && st_pend == 0 && d_pend == 0 && rr_nz == 0) begin go <= 1'b0; ip <= ip + 3'd1; end
+                if (pend0_r && st_pend == 0 && d_pend == 0 && rr_nz == 0) begin go <= 1'b0; ip <= ip + 1'b1; end
             end
             // smmv-cr chunk issue, per SM (CR = 1): the chunk's fields land in the command registers while d_pend is
             // low, then d_pend shows it; credits -n at the issue, +1 per landed sm_cr pulse (always counted)
@@ -397,7 +409,7 @@ module ot_hgi_smmv #(
             // ---- retire the head in order
             rh_wait <= 1'b0;
             if (ret_go) begin
-                rec_done <= 1'b1; rh <= rh + 3'd1; rh_wait <= 1'b1;
+                rec_done <= 1'b1; rh <= rh + 1'b1; rh_wait <= 1'b1;
                 if (MUT_SLOT == 0) used_n = used_n - e_rel[ix(rh)];
                 for (s = 0; s < NSM; s = s + 1) if (e_act[ix(rh)][s]) rel[s] <= ~rel[s];
             end
@@ -452,7 +464,8 @@ module ot_hgi_smmv_pub #(
     reg [4:0] smb_q; always @(posedge clk) smb_q <= sm_base;
     localparam integer WI = (W > 1) ? $clog2(W) : 1;
     localparam integer WA = 1 << WI;
-    reg [2:0] ct, chd;                                        // command tail / done head (3-b seq)
+    localparam integer SQ = WI + 1, SH = 53 + SQ;     // seq bits; STREAM shadow entry {tag, bf, idx 20, data 32}
+    reg [SQ-1:0] ct, chd;                                     // command tail / done head (SQ-b seq)
     reg [17:0] c_ob [0:WA-1]; reg [17:0] c_ost [0:WA-1]; reg [19:0] c_mm [0:WA-1]; reg [12:0] c_qq [0:WA-1];
     reg [3:0] c_pp [0:WA-1]; reg [WA-1:0] c_sm, c_bf;
     assign pub_rdy = rst_n && ((ct - chd) < W);
@@ -472,7 +485,7 @@ module ot_hgi_smmv_pub #(
     always @(posedge clk) for (s = 0; s < NSM; s = s + 1) begin rv_q[s] <= sm_rv[s]; rr_q[s] <= sm_rrow[s*12 +: 12];
                                                                 rd_q[s] <= sm_rdata[s*NC*32 +: NC*32]; end
     // per-SM command pointer and rows of the current command
-    reg [2:0] rp [0:NSM-1]; reg [12:0] recv [0:NSM-1];
+    reg [SQ-1:0] rp [0:NSM-1]; reg [12:0] recv [0:NSM-1];
     reg [12:0] need [0:NSM-1]; reg [NSM-1:0] has;           // has: the SM's pointer is at a queued command
     always @* for (s = 0; s < NSM; s = s + 1) begin : nd
         reg [19:0] r0; reg [WI-1:0] k;
@@ -481,16 +494,16 @@ module ot_hgi_smmv_pub #(
         need[s] = (c_mm[k] > r0) ? (((c_mm[k] - r0) > {7'd0, c_qq[k]}) ? c_qq[k] : (c_mm[k] - r0)) : 13'd0;
     end
     reg [NB-1:0] bval, fv, sv, ovr;
-    wire [NB*15-1:0] fsec_v; wire [NB*256-1:0] fdat_v; wire [NB*8-1:0] fmsk_v; wire [NB*56-1:0] shd_v;
-    wire [NB*3-1:0] ftag_v; wire [NB-1:0] fbf_v;
+    wire [NB*15-1:0] fsec_v; wire [NB*256-1:0] fdat_v; wire [NB*8-1:0] fmsk_v; wire [NB*SH-1:0] shd_v;
+    wire [NB*SQ-1:0] ftag_v; wire [NB-1:0] fbf_v;
     reg [3:0] qn, qh, qt;
-    reg [14:0] qsec [0:QD-1]; reg [255:0] qdat [0:QD-1]; reg [7:0] qmsk [0:QD-1]; reg [2:0] qtag [0:QD-1]; reg [QD-1:0] qbf;
+    reg [14:0] qsec [0:QD-1]; reg [255:0] qdat [0:QD-1]; reg [7:0] qmsk [0:QD-1]; reg [SQ-1:0] qtag [0:QD-1]; reg [QD-1:0] qbf;
     wire [NB-1:0] req = fv | sv;
     reg gv; integer gk;
     always @* begin gv = 1'b0; gk = 0; for (c = NB - 1; c >= 0; c = c - 1) if (req[c]) begin gv = 1'b1; gk = c; end end
     wire g_str = sv[gk] && !fv[gk];                          // a pending flush first, else a STREAM beat
     wire take = gv && (g_str || qn < QD - 1);
-    reg [NPC-1:0] cbusy; reg [2:0] ctag [0:NPC-1]; reg [273:0] vr [0:NPC-1];
+    reg [NPC-1:0] cbusy; reg [SQ-1:0] ctag [0:NPC-1]; reg [273:0] vr [0:NPC-1];
     always @(posedge clk) for (c = 0; c < NPC; c = c + 1) vr[c] <= vmr[c*274 +: 274];
     // tag-of-head occupancy (registered reductions; done one edge later)
     wire [NB-1:0] hb_occ;
@@ -504,13 +517,13 @@ module ot_hgi_smmv_pub #(
             wire [31:0] wd = {14'd0, c_ob[k]} + gp * {14'd0, c_ost[k]} + (MUT_ROW ? 32'd0 : {27'd0, smb_q + 5'(gs)} * {19'd0, c_qq[k]}) + {20'd0, rr_q[gs]};
             wire [19:0] gidx = gp * c_mm[k] + (MUT_ROW ? 20'd0 : {15'd0, smb_q + 5'(gs)} * {7'd0, c_qq[k]}) + {8'd0, rr_q[gs]};
             wire tk = take && gk == K;
-            reg [14:0] bsec, fsec; reg [255:0] bdat, fdat; reg [7:0] bmsk, fmsk; reg [2:0] btag, ftag; reg bbf, fbf;
-            reg [55:0] sent [0:3]; reg [1:0] sw_, sr_; reg [2:0] scnt;
+            reg [14:0] bsec, fsec; reg [255:0] bdat, fdat; reg [7:0] bmsk, fmsk; reg [SQ-1:0] btag, ftag; reg bbf, fbf;
+            reg [SH-1:0] sent [0:3]; reg [1:0] sw_, sr_; reg [2:0] scnt;
             assign fsec_v[K*15 +: 15] = fsec; assign fdat_v[K*256 +: 256] = fdat; assign fmsk_v[K*8 +: 8] = fmsk;
-            assign ftag_v[K*3 +: 3] = ftag; assign fbf_v[K] = fbf; assign shd_v[K*56 +: 56] = sent[sr_];
+            assign ftag_v[K*SQ +: SQ] = ftag; assign fbf_v[K] = fbf; assign shd_v[K*SH +: SH] = sent[sr_];
             wire chg = res && !sm_m && bval[K] && (bsec != wd[17:3] || btag != rp[gs]);
             wire endf = bval[K] && !res && !fv[K] && btag != rp[gs];
-            assign hb_occ[K] = (bval[K] && btag == chd) || (fv[K] && ftag == chd) || (scnt != 0 && sent[sr_][55:53] == chd);
+            assign hb_occ[K] = (bval[K] && btag == chd) || (fv[K] && ftag == chd) || (scnt != 0 && sent[sr_][SH-1:53] == chd);
             always @(posedge clk or negedge rst_n) begin
                 if (!rst_n) begin bval[K] <= 1'b0; fv[K] <= 1'b0; sv[K] <= 1'b0; ovr[K] <= 1'b0; sw_ <= 2'd0;
                                   sr_ <= 2'd0; scnt <= 3'd0; end
@@ -559,7 +572,7 @@ module ot_hgi_smmv_pub #(
         if (!rst_n) begin
             ct <= 0; chd <= 0; pub_done <= 1'b0; pub_fault <= 1'b0; qh <= 0; qt <= 0; qn <= 0; cbusy <= 0; dwait <= 1'b0;
             vmq <= 0; s0_v <= 1'b0; s0_idx <= 20'd0; s0_data <= 32'd0; c_sm <= 0; c_bf <= 0;
-            for (s = 0; s < NSM; s = s + 1) begin rp[s] <= 3'd0; recv[s] <= 13'd0; end
+            for (s = 0; s < NSM; s = s + 1) begin rp[s] <= '0; recv[s] <= 13'd0; end
         end else begin
             pub_done <= 1'b0; s0_v <= 1'b0; dwait <= 1'b0;
             for (c = 0; c < NPC; c = c + 1) vmq[c*338 + 337] <= 1'b0;
@@ -569,21 +582,21 @@ module ot_hgi_smmv_pub #(
                 else begin
                     c_ob[ct[WI-1:0]] <= pub_base[17:0]; c_ost[ct[WI-1:0]] <= pub_stride[17:0]; c_mm[ct[WI-1:0]] <= pub_m;
                     c_qq[ct[WI-1:0]] <= pub_q; c_pp[ct[WI-1:0]] <= pub_p; c_sm[ct[WI-1:0]] <= (pub_space == 2'd2);
-                    c_bf[ct[WI-1:0]] <= pub_bf16; ct <= ct + 3'd1;
+                    c_bf[ct[WI-1:0]] <= pub_bf16; ct <= ct + 1'b1;
                 end
             end
             // per-SM pointer: a row of the current command; move on after its R_s rows (or at once if R_s = 0)
             for (s = 0; s < NSM; s = s + 1) begin
                 if (rv_q[s] && (!has[s] || need[s] == 13'd0)) pub_fault <= 1'b1;            // a row with no command
                 else if (rv_q[s]) begin
-                    if (recv[s] + 13'd1 == need[s]) begin recv[s] <= 13'd0; rp[s] <= rp[s] + 3'd1; end
+                    if (recv[s] + 13'd1 == need[s]) begin recv[s] <= 13'd0; rp[s] <= rp[s] + 1'b1; end
                     else recv[s] <= recv[s] + 13'd1;
-                end else if (has[s] && need[s] == 13'd0) rp[s] <= rp[s] + 3'd1;
+                end else if (has[s] && need[s] == 13'd0) rp[s] <= rp[s] + 1'b1;
             end
             if (take) begin
-                if (g_str) begin s0_v <= 1'b1; s0_idx <= shd_v[gk*56 + 32 +: 20]; s0_data <= rb(shd_v[gk*56 +: 32], shd_v[gk*56 + 52]); end
+                if (g_str) begin s0_v <= 1'b1; s0_idx <= shd_v[gk*SH + 32 +: 20]; s0_data <= rb(shd_v[gk*SH +: 32], shd_v[gk*SH + 52]); end
                 else begin qsec[qt] <= fsec_v[gk*15 +: 15]; qdat[qt] <= fdat_v[gk*256 +: 256]; qmsk[qt] <= fmsk_v[gk*8 +: 8];
-                           qtag[qt] <= ftag_v[gk*3 +: 3]; qbf[qt] <= fbf_v[gk]; end
+                           qtag[qt] <= ftag_v[gk*SQ +: SQ]; qbf[qt] <= fbf_v[gk]; end
             end
             begin : dr
                 reg taken; taken = 1'b0;
@@ -601,7 +614,7 @@ module ot_hgi_smmv_pub #(
             for (c = 0; c < NPC; c = c + 1) if (cbusy[c] && vr[c][273] && vr[c][256]) cbusy[c] <= 1'b0;
             // command chd done: every SM past it, nothing of tag chd anywhere (registered view + no take this edge)
             if (chd != ct && !dwait && sm_past_r && !head_busy_r) begin
-                pub_done <= 1'b1; chd <= chd + 3'd1; dwait <= 1'b1;
+                pub_done <= 1'b1; chd <= chd + 1'b1; dwait <= 1'b1;
             end
         end
     end
