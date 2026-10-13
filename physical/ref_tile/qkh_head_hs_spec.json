@@ -1,0 +1,260 @@
+{
+  "name": "qkh_head_hs_ref",
+  "top": "ot_qwen_nearhbm_head_hs",
+  "kind": "cluster",
+  "sources": [
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv",
+    "rtl/hdc/nearhbm/ot_qkh_subtiles_bb.v",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 734.4,
+    "h": 853.2
+  },
+  "children": [
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[0].u_l8",
+      "at": [
+        43.2,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[1].u_l8",
+      "at": [
+        216.0,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[2].u_l8",
+      "at": [
+        388.8,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[3].u_l8",
+      "at": [
+        561.6000000000001,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[4].u_l8",
+      "at": [
+        43.2,
+        216.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[5].u_l8",
+      "at": [
+        216.0,
+        216.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[6].u_l8",
+      "at": [
+        388.8,
+        216.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[7].u_l8",
+      "at": [
+        561.6000000000001,
+        216.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[8].u_l8",
+      "at": [
+        43.2,
+        388.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[9].u_l8",
+      "at": [
+        216.0,
+        388.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[10].u_l8",
+      "at": [
+        388.8,
+        388.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[11].u_l8",
+      "at": [
+        561.6000000000001,
+        388.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[12].u_l8",
+      "at": [
+        43.2,
+        561.6000000000001
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[13].u_l8",
+      "at": [
+        216.0,
+        561.6000000000001
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[14].u_l8",
+      "at": [
+        388.8,
+        561.6000000000001
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+      "count": 1,
+      "inst": "g_t[15].u_l8",
+      "at": [
+        561.6000000000001,
+        561.6000000000001
+      ]
+    },
+    {
+      "view": "physical/ref_tile/qkh_ktree_ref/views/ot_qkh_ktree",
+      "count": 1,
+      "inst": "u_kt",
+      "at": [
+        259.2,
+        734.4
+      ]
+    }
+  ],
+  "macros": [],
+  "inter": [],
+  "pins": {
+    "S": [
+      "c_in",
+      "row_in",
+      "e_in",
+      "lt_in",
+      "hid",
+      "q_valid_in",
+      "q_beat_in",
+      "q_data_in",
+      "sc_d",
+      "sc_f",
+      "g_f"
+    ],
+    "E": [
+      "nb_d"
+    ],
+    "W": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "pin_balance": {
+      "group_max": 1
+    }
+  },
+  "refglob": "*",
+  "io_flop_at_pins": {
+    "cols": 8
+  },
+  "job": {
+    "owner": "Codex:qwen-head-1013",
+    "branch": "codex/qwen-head-1013",
+    "tag": "cx1",
+    "purpose": "TP8 required head_h structural successor:16 closed lane8 local roots + closed ktree; registered per-lane2stage seams, real parent clock spine. Flat historical root200k sinks TT-706 replaced. Envelope734.4x853.2 awaiting die contract incorporation; no main adoption until exact+mutant+frozenprice production gates+physical CLOSED.",
+    "benches": [
+      {
+        "name": "layer_hs_pos",
+        "cmd": "mkdir -p {RUN}/bench && HSUB=1 DQ=64 HT=1 SBD=16 HUBT=1 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hs_pos && python3 tools/qwen_kv_die/head_hs_tput_gate.py {RUN}/bench/hs_pos/results.jsonl {RUN}/bench/head_hs_tput.json",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "timeout_s": 43200,
+        "min_count_regex": "\"runs\": (\\d+)",
+        "pass_regex": "HEAD_HS_TPUT PASS"
+      },
+      {
+        "name": "layer_hs_mut",
+        "cmd": "mkdir -p {RUN}/bench && HSUB=1 HSMUT=1 DQ=64 HT=1 SBD=16 HUBT=1 bash tools/qwen_kv_die/bench_gate.sh neg {RUN}/bench/hs_neg 0",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ],
+        "timeout_s": 43200,
+        "fail_regex": "\"mismatches\": [1-9]"
+      },
+      {
+        "name": "nr_standin_equiv",
+        "cmd": "mkdir -p {RUN}/bench && bash rtl/test/nearhbm/run_nr_standin_equiv.sh {RUN}/bench/eq",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "timeout_s": 14400,
+        "pass_regex": "^EQUIV PASS"
+      }
+    ],
+    "views_to": "physical/ref_tile/qkh_head_hs_ref/views",
+    "record_to": "results/rtl/ref_tile/qkh_head_hs_ref",
+    "extra_paths": [
+      "results/arch/qwen_kv_die_20261009"
+    ]
+  }
+}
