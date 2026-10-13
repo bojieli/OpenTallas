@@ -8,10 +8,28 @@ here=$(cd "$(dirname "$0")";pwd);root=$(cd "$here/../../../..";pwd)
 V=${VERILATOR:-/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator}
 mkdir -p "$out";if [[ -e $out/source.sha256 ]];then echo refuse_overwriting_receipt;exit 2;fi
 S="rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv rtl/lib/ot_rst_relay.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/proto/ot_fp32_add_rne_pipe.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/hbm_accel_die_views/vm/service13/vm_service_root.sv physical/hbm_accel_die_views/vm/service13/vm_service_wordbank.sv physical/hbm_accel_die_views/vm/service13/vm_service_slice.sv physical/hbm_accel_die_views/vm/checker9/vm_ck4.sv rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_vm8_sm_sink.sv physical/hbm_accel_die_views/vm/service13/tb_vm8_native_e2e.sv"
-cd "$root";sha256sum $S tools/vm8_service/xload_flow_compare.py >"$out/source.sha256"
+# the real native SM (E2E_XSM build): sources and production defines of run_xcommit.sh
+SM=$(cd "$root";python3 - <<'P'
+import os, sys
+os.environ.setdefault("HDC_V41_ARITH", "chunk8")
+sys.path.insert(0, "tools")
+import dshbm_sm_pq_seq as P
+print(" ".join([s for s in P.SRC if not s.startswith("rtl/test/")] + P.SMH_SRC + ["rtl/hdc/ot_hdc_cg.sv", "rtl/hbm_accel/cg/ot_cg_tile.sv"]))
+P
+)
+SMDEF="-DE2E_XSM -DOT_SMH -DOT_SMH_CG -DOT_SMH_PRODUCTION_SHAPE -DOT_SMH_FC_HIER -DOT_SMH_CG_ENREG -DOT_SMH_XLK -DOT_FP_DATA_NORST -DOT_SMH_DRST0 -DOT_SMH_RSTRELAY -DOT_SMH_HIER -DOT_SMH_PTW_OHDLY"
+S="$S rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xcommit.sv"
+SX=$(for f in $SM $S;do echo $f;done|awk '!seen[$0]++'|tr '\n' ' ')
+cd "$root";sha256sum $SX tools/dshbm_sm_pq_seq.py physical/hbm_accel_die_views/vm/service13/run_native_e2e.sh tools/vm8_service/xload_flow_compare.py >"$out/source.sha256"
 # name | build define | plusargs | expectation (pass / quar / stale / fail)
 runs=(
-"rate|exact||pass"
+"rate|xsm|+SEL=0|pass"
+"m_xc_short|xsm|+SEL=1|fail"
+"m_xc_nodrain|xsm|+SEL=2|fail"
+"m_xc_norel|xsm|+SEL=3|fail"
+"m_xc_dropcount|xsm|+SEL=4|fail"
+"m_x_dropcommit|xsm|+DROP_X=4000|fail"
+"rate_nosm|exact||pass"
 "ack_skew|exact|+ACK_DELAY=5 +ACK_SKEW=3|pass"
 "ack_slow|exact|+ACK_DELAY=40|pass"
 "tap_half|exact|+TAP_LFSR=2463534242 +TAP_BITS=1|pass"
@@ -41,8 +59,8 @@ runs=(
 [[ -n ${ONLY:-} ]]&&{ sel=();for r in "${runs[@]}";do [[ " $ONLY " == *" ${r%%|*} "* ]]&&sel+=("$r");done;runs=("${sel[@]}"); }
 builds=$(for r in "${runs[@]}";do IFS='|' read -r _ b _ _ <<<"$r";echo "$b";done|sort -u)
 for b in $builds;do
- ( d=;[[ $b != exact ]]&&d=-D$b
-   /usr/bin/time -v $V --binary --timing -O1 -CFLAGS -O1 -j 4 -Wno-fatal -DOT_MEM_NO_INIT -DVM_SVC_FAULT_HOOK $d --top-module tb_vm8_native_e2e --Mdir "$out/obj_$b" $S >"$out/build_$b.log" 2>&1
+ ( d=;src=$S;[[ $b != exact ]]&&d=-D$b;[[ $b == xsm ]]&&{ d=$SMDEF;src=$SX; }
+   /usr/bin/time -v $V --binary --timing -O1 -CFLAGS -O1 -j ${BUILD_J:-4} -Wno-fatal -DOT_MEM_NO_INIT -DVM_SVC_FAULT_HOOK $d --top-module tb_vm8_native_e2e --Mdir "$out/obj_$b" $src >"$out/build_$b.log" 2>&1
    echo $? >"$out/build_$b.rc" ) &
  while (( $(jobs -rp|wc -l) >= ${BUILD_PAR:-5} ));do wait -n;done
 done
@@ -56,7 +74,7 @@ for r in "${runs[@]}";do
    echo $crc >compare.rc;rm -f beats.txt
    case $exp in
     pass) [[ $rc == 0 && $crc == 0 ]]&&grep -q 'E2E PASS records=9' run.log&&v=ok||v=BAD
-          [[ $name == rate ]]&&{ grep -q 'rate_ok=1' run.log||v=BAD; };;
+          [[ $name == rate && $v == ok ]]&&{ grep -q 'rate_ok=1' run.log||v=RATE_OVER; };;
     quar) [[ $rc == 0 ]]&&grep -q 'E2E QUARANTINE PASS' run.log&&v=ok||v=BAD;;
     stale) [[ $rc == 0 ]]&&grep -q 'E2E STALE_OWNER PASS' run.log&&v=ok||v=BAD;;
     fail) if [[ $rc != 0 || ( $crc != 0 && $crc != - ) ]];then v=ok;else v=BAD;fi;;
