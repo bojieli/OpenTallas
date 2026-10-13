@@ -5,9 +5,60 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-13T15:02:41Z",
+ "generated_utc": "2026-10-13T20:40:53Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
+ "s81_layer": {
+  "record": "results/rtl/s81_layer_tput_1013/record.json",
+  "hc_rows": [
+   {
+    "group": "SU.HC_POST",
+    "ratio": 2.5421,
+    "status": "accepted",
+    "e2e_loss_pct": 1.653
+   },
+   {
+    "group": "SU.HC_PRE_NORM",
+    "ratio": 2.1613,
+    "status": "proposed",
+    "e2e_loss_pct": 3.566
+   }
+  ],
+  "by_layer": [],
+  "hc_elements": [
+   "ot_dsrom_su_hcpost_lane_pr",
+   "ot_s81_hc_caq",
+   "ot_s81_hc_ccf",
+   "ot_s81_hc_ccr",
+   "ot_s81_hc_cntree",
+   "ot_s81_hc_cpin",
+   "ot_s81_hc_crootr",
+   "ot_s81_hc_crootr_f",
+   "ot_s81_hc_crootr_r",
+   "ot_s81_hc_crootr_w",
+   "ot_s81_hc_crooty",
+   "ot_s81_hc_crooty_w",
+   "ot_s81_hc_crooty_y",
+   "ot_s81_hc_crx",
+   "ot_s81_hc_cseq",
+   "ot_s81_hc_ctfn",
+   "ot_s81_hc_ctfs",
+   "ot_s81_hc_ctfx",
+   "ot_s81_hc_ctnl_l0",
+   "ot_s81_hc_ctnl_l1",
+   "ot_s81_hc_ctnl_l2",
+   "ot_s81_hc_ctnl_l3",
+   "ot_s81_hc_ctpl",
+   "ot_s81_hc_ctra",
+   "ot_s81_hc_ctrb",
+   "ot_s81_hc_ctrn",
+   "ot_s81_hc_pad_f5r1",
+   "ot_s81_hc_pad_f8",
+   "ot_s81_hc_pad_meta2",
+   "ot_s81_hc_pad_r5",
+   "ot_s81_hc_pad_r6"
+  ]
+ },
  "hbm_bandwidth_rule": "no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
  "targets": {
   "ds_ar": 2208.1,
@@ -1477,7 +1528,7 @@
    "stalled": false,
    "owner": "Claude:q13-coll",
    "target": null,
-   "t": "2026-10-13T03:38:07-07:00",
+   "t": "2026-10-13T09:38:35-07:00",
    "adopted": true
   },
   "dsfd_vm_clt": {
@@ -1525,6 +1576,21 @@
    "t": "2026-10-12T09:05:52-07:00",
    "adopted": true
   },
+  "ot_hgi_qdq_core": {
+   "job": "qdq_core_ref-q8b-67a60693f",
+   "commit": "67a60693f",
+   "bench": "bench_production_qdq_m0",
+   "line": "PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3",
+   "cycles": 183,
+   "item": "words",
+   "items": 3328,
+   "ii": 0.055,
+   "stalled": false,
+   "owner": "Claude:hbm-qdq-q8",
+   "target": null,
+   "t": "2026-10-13T13:11:35-07:00",
+   "adopted": true
+  },
   "ot_hbm_native_index_query_credit": {
    "job": "qcredit_rb-2db44a8cd-tc-hm25-cl",
    "commit": "2db44a8cd",
@@ -1556,8 +1622,8 @@
    "adopted": true
   },
   "ot_qfd_res_slot_tile": {
-   "job": "qfd_res_slot_ri-r3-df1f3c478",
-   "commit": "df1f3c478",
+   "job": "qfd_res_slot_ru-u1-c956bae20",
+   "commit": "c956bae20",
    "bench": "bench_fullshape",
    "line": "PASS res_tiles bursts=360 beats=1465 cycles=12000 request_to_chain=19 request_to_output=21 peak_bursts=55 first_accept_to_output=24 profile=0 first_output=26 last_output=5920",
    "cycles": 12000,
@@ -1565,9 +1631,9 @@
    "items": 1465,
    "ii": 8.191,
    "stalled": false,
-   "owner": "Claude:el1013-qwen-elements-r3",
+   "owner": "Claude:el1013-qwen-elements-r6",
    "target": null,
-   "t": "2026-10-13T05:09:38-07:00",
+   "t": "2026-10-13T09:34:17-07:00",
    "adopted": true
   },
   "ot_attn_lo_root": {
@@ -1642,7 +1708,7 @@
    "stalled": true,
    "owner": "Codex:hbm-front-link",
    "target": null,
-   "t": "2026-10-13T04:20:57-07:00",
+   "t": "2026-10-13T10:21:22-07:00",
    "adopted": true
   },
   "ot_attn_hi_merge": {
@@ -1688,6 +1754,21 @@
    "owner": "Claude:el1011-hbm-b2-cp",
    "target": null,
    "t": "2026-10-12T18:45:35-07:00",
+   "adopted": true
+  },
+  "ot_pqc_t_bc": {
+   "job": "ot_pqc_t_bc_m5-v1-404e9e410",
+   "commit": "404e9e410",
+   "bench": "bench_sp_pq_lockstep_exact",
+   "line": "SP_PQ_LOCKSTEP stats seeds=48 cycles=228591 compared=227439 ops=1920 retired_idle=48 bf_ops=750 mtp_ops=366 x_reads=7264 q_beats=9185 bf_beats=5616 row_writes=63120",
+   "cycles": 228591,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:s81-sppq",
+   "target": null,
+   "t": "2026-10-13T09:05:43-07:00",
    "adopted": true
   },
   "ot_qkvd_sbuf": {
@@ -1777,7 +1858,7 @@
    "stalled": false,
    "owner": "Claude:q13-su",
    "target": null,
-   "t": "2026-10-13T02:47:48-07:00",
+   "t": "2026-10-13T08:48:09-07:00",
    "adopted": false
   },
   "hfd_su_tile_xl": {
@@ -1840,6 +1921,21 @@
    "t": "2026-10-12T09:05:52-07:00",
    "adopted": true
   },
+  "ot_qwen_nearhbm_head_hs": {
+   "job": "qkh_head_hs_ref-q13b-54a543b22",
+   "commit": "54a543b22",
+   "bench": "bench_layer_hs_pos",
+   "line": "HEAD_HS_TPUT PASS cycles=1847 price=1816 ratio=1.0170704845814977",
+   "cycles": 1847,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:q13-rhead-r2",
+   "target": null,
+   "t": "2026-10-13T13:40:30-07:00",
+   "adopted": true
+  },
   "ot_dsrom_hc_seed_join": {
    "job": "hcjoin-mc420-lk-d4211f538-tc-cl",
    "commit": "d4211f538",
@@ -1867,7 +1963,7 @@
    "stalled": false,
    "owner": "Claude:q13b-kvend",
    "target": null,
-   "t": "2026-10-13T04:25:54-07:00",
+   "t": "2026-10-13T10:26:23-07:00",
    "adopted": true
   },
   "dsfd_mtp_seq_rtt": {
@@ -1897,7 +1993,7 @@
    "stalled": false,
    "owner": "Claude:q13-coll",
    "target": null,
-   "t": "2026-10-13T05:35:14-07:00",
+   "t": "2026-10-13T11:35:16-07:00",
    "adopted": true
   },
   "qfd_io_serdes": {
@@ -1928,6 +2024,21 @@
    "owner": "Claude:rr1012",
    "target": null,
    "t": "2026-10-13T02:52:49-07:00",
+   "adopted": true
+  },
+  "ot_qwen_tile_node": {
+   "job": "ot_qwen_tile_node-r5-78b36aae5",
+   "commit": "78b36aae5",
+   "bench": "bench_tile_r5_node_exact",
+   "line": "PASS tile_r5_node cycles=60048 checks=60048 node_results=45147 nonzero=45147 go=82 fault_cycles=39522",
+   "cycles": 60048,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:q14-node",
+   "target": null,
+   "t": "2026-10-13T13:21:57-07:00",
    "adopted": true
   },
   "qfd_embed_ingress_code": {
@@ -2276,7 +2387,7 @@
    "stalled": false,
    "owner": "Claude:q13-tile-rpair",
    "target": null,
-   "t": "2026-10-13T05:37:24-07:00",
+   "t": "2026-10-13T11:38:20-07:00",
    "adopted": true
   },
   "ot_hbm_native_candidate_format": {
@@ -2322,6 +2433,21 @@
    "owner": "Claude:el1011-q-seq",
    "target": null,
    "t": "2026-10-12T16:06:20-07:00",
+   "adopted": true
+  },
+  "ot_hgi_qdq_fr": {
+   "job": "qdq_fr_ref-q8b-67a60693f",
+   "commit": "67a60693f",
+   "bench": "bench_production_qdq_m0",
+   "line": "PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3",
+   "cycles": 183,
+   "item": "words",
+   "items": 3328,
+   "ii": 0.055,
+   "stalled": false,
+   "owner": "Claude:hbm-qdq-q8",
+   "target": null,
+   "t": "2026-10-13T13:03:45-07:00",
    "adopted": true
   },
   "ot_hgi_coll_row_formatter": {
@@ -2399,6 +2525,21 @@
    "owner": "Claude:el1011-hbm-b2-cp",
    "target": null,
    "t": "2026-10-12T17:46:27-07:00",
+   "adopted": true
+  },
+  "qkd_rstseq": {
+   "job": "qkd_rstseq-kc1-b4a0a3156",
+   "commit": "b4a0a3156",
+   "bench": "bench_rstseq_exact",
+   "line": "COUNTS cycles=40601 compared=40601 good_boots=2 soft_resets=1 fault1=1 fault2=1 fault3=1 mismatches=0 property_errors=0",
+   "cycles": 40601,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-qwen-kvcentre",
+   "target": null,
+   "t": "2026-10-13T09:06:45-07:00",
    "adopted": true
   },
   "ot_qfd_vm_bank_t": {
@@ -2641,6 +2782,21 @@
    "t": "2026-10-12T09:05:50-07:00",
    "adopted": true
   },
+  "qkd_kvwq_ctl_bin": {
+   "job": "qkd_kvwq_ctl_bin-sl1-ecdaf6345",
+   "commit": "ecdaf6345",
+   "bench": "bench_slot_exact",
+   "line": "PASS kv_slots kvwq_ctl_bin cycles=40000 rows=7943 feed_beats=31760 durable=7939 mismatches=0",
+   "cycles": 40000,
+   "item": "rows",
+   "items": 7943,
+   "ii": 5.036,
+   "stalled": false,
+   "owner": "Claude:el1013-qwen-clusters",
+   "target": null,
+   "t": "2026-10-13T08:23:31-07:00",
+   "adopted": true
+  },
   "dsfd_wfc_vmx": {
    "job": "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl",
    "commit": "c39e235bb",
@@ -2745,7 +2901,7 @@
    "stalled": true,
    "owner": "Claude:el1011-ds-coll",
    "target": null,
-   "t": "2026-10-13T06:49:36-07:00",
+   "t": "2026-10-13T12:49:58-07:00",
    "adopted": true
   },
   "dsfd_wfc_lnk": {
@@ -2790,7 +2946,7 @@
    "stalled": false,
    "owner": "Codex:hbm-front-link",
    "target": null,
-   "t": "2026-10-13T02:46:30-07:00",
+   "t": "2026-10-13T08:47:10-07:00",
    "adopted": true
   },
   "ot_v41_rom_elem_q_qxpq_w10": {
@@ -3059,7 +3215,7 @@
   },
   {
    "path": "results/rtl/tput_map_1011/ds_qdq_b2/record.json",
-   "commit": "bb49c6813",
+   "commit": "0c7676119",
    "cls": "FUSED.QDQ_*",
    "model": "DS-V4.1 AR 1M (HBM B2)",
    "ratio": 1.006,
@@ -3099,7 +3255,7 @@
   },
   {
    "path": "results/rtl/tput_map_1011/mtp_verify/record.json",
-   "commit": "762865e47",
+   "commit": "a1835266d",
    "cls": "MTP.VERIFY",
    "model": "DS MTP (HBM)",
    "ratio": null,
@@ -3610,7 +3766,14 @@
   "dsfd_coll_ceq0": "^dsfd_coll_",
   "dsfd_coll_ceqp": "^dsfd_coll_",
   "dsfd_coll_ces0": "^dsfd_coll_",
+  "dsfd_coll_cesc0": "^dsfd_coll_",
+  "dsfd_coll_cescn": "^dsfd_coll_",
+  "dsfd_coll_cesl": "^dsfd_coll_",
   "dsfd_coll_cesn": "^dsfd_coll_",
+  "dsfd_coll_ceso": "^dsfd_coll_",
+  "dsfd_coll_cesp0": "^dsfd_coll_",
+  "dsfd_coll_cespn": "^dsfd_coll_",
+  "dsfd_coll_cesx": "^dsfd_coll_",
   "dsfd_coll_ct": "^dsfd_coll_",
   "dsfd_coll_mtp_lane": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_coll_p2_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -3698,6 +3861,7 @@
   "dsfd_su_t_pin": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_qbe": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_qbt": "^(dsfd_su_t_|ot_s81_hc_)",
+  "dsfd_su_t_qbtl": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_qn": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_qne": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_qnh": "^(dsfd_su_t_|ot_s81_hc_)",
@@ -3713,16 +3877,26 @@
   "dsfd_su_t_sw": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_swe": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_su_t_swt": "^(dsfd_su_t_|ot_s81_hc_)",
+  "dsfd_su_t_swth": "^(dsfd_su_t_|ot_s81_hc_)",
+  "dsfd_su_t_swtl": "^(dsfd_su_t_|ot_s81_hc_)",
   "dsfd_svc_join": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
   "dsfd_svch_pcs": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
   "dsfd_svch_rly": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
   "dsfd_svcio_job": "^(ot_s81_native_pc_mux|dsfd_svc|dsfd_ctrl)",
   "dsfd_vm_be": "^dsfd_vm_",
   "dsfd_vm_be_sl": "^dsfd_vm_",
+  "dsfd_vm_bgl28": "^dsfd_vm_",
   "dsfd_vm_bgq28": "^dsfd_vm_",
   "dsfd_vm_clt": "^dsfd_vm_",
+  "dsfd_vm_fcw": "^dsfd_vm_",
   "dsfd_vm_fe": "^dsfd_vm_",
+  "dsfd_vm_flt": "^dsfd_vm_",
+  "dsfd_vm_fra": "^dsfd_vm_",
+  "dsfd_vm_frg": "^dsfd_vm_",
+  "dsfd_vm_frr": "^dsfd_vm_",
   "dsfd_vm_fsr": "^dsfd_vm_",
+  "dsfd_vm_fxr": "^dsfd_vm_",
+  "dsfd_vm_fxs": "^dsfd_vm_",
   "dsfd_vm_mtp_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_vm_p2_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
   "dsfd_vm_wfc_ep": "^(dsfd_cap_mtp|dsfd_coll_mtp|dsfd_coll_p2|dsfd_mtp_|dsfd_vm_mtp|dsfd_vm_p2|dsfd_vm_wfc|dsfd_wfc_|dsfd_p2_lnk|dsrom_mtp_|ot_dsrom_mtp_|ot_dsrom_wfc_|ot_mtp_|ot_dsrom_markov_)",
@@ -3763,22 +3937,34 @@
   "ot_p2h_arith": "tile of ot_mtp_p2_prefix_path",
   "ot_qfd_band_lanes": null,
   "ot_qfd_band_upper": null,
+  "ot_qfd_crom_gr": null,
   "ot_qfd_emb_pcport": null,
   "ot_qfd_emb_tap": null,
   "ot_qfd_kv_landing_ecc": null,
   "ot_qfd_res_slot_tile": null,
   "ot_qfd_res_tiles_ctl": null,
+  "ot_qfd_su_cbuf_g": null,
   "ot_qfd_vm_bank_t": null,
+  "ot_qfd_vm_gctl_t": null,
   "ot_qfd_vm_grp": null,
   "ot_qfd_vm_su1024_t": null,
   "ot_qfd_vm_su_t": null,
   "ot_qfd_vm_xfifo32_t": null,
   "ot_qfd_vm_xfifo8_t": null,
+  "ot_qfd_vm_xplane_t": null,
+  "ot_qfd_vm_xrelay_t": null,
   "ot_qkh_ktree": "tile of ot_qwen_nearhbm_head_h",
   "ot_qkh_lane8": "tile of ot_qwen_nearhbm_head_h",
   "ot_qkh_recip_leaf": "tile of ot_qwen_nearhbm_head_h",
   "ot_qkvd_fbuf8": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_fbuf8p": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qkvd_ke_ctl": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qkvd_ke_ro": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qkvd_ke_rq": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qkvd_ke_tf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qkvd_ke_ti": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qkvd_ke_tm": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "ot_qkvd_ke_wf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_kv_end": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_rom_end": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "ot_qkvd_sbuf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
@@ -3804,6 +3990,7 @@
   "ot_qwen_stream4_cdc_pc": "^(qfd_coll_xfifo|qfd_cdc|ot_qwen_stream4_cdc)",
   "ot_qwen_tile_kvl": null,
   "ot_qwen_tile_lsl": null,
+  "ot_qwen_tile_node": null,
   "ot_qwen_tile_rpair": null,
   "ot_qwen_tree_delay": null,
   "ot_qwen_tree_delay16_t": null,
@@ -3904,6 +4091,7 @@
   "qfd_kv_row": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qfd_kvc_decode_map_pc": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qfd_kvc_decode_pc": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qfd_link_adp512": null,
   "qfd_pc_head_owner": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_q5_landing_ecc": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_res_ctl": "^(qfd_res_|qfd_cst|qfd_seq_su|qfd_sp_constants|qfd_su_cbuf|qfd_sysctl|qfd_io_host)",
@@ -3929,9 +4117,19 @@
   "qfd_tt_ctlm": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_tt_up4": "^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge)",
   "qfd_vm_grp": "tile of qfd_sp_vector_memory",
+  "qkd_cdc_wleaf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_ctrl_kc": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_ctrl_pc": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_ectl": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_ctl": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_kvwq_ctl_bin": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_grp": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
-  "qkd_kvwq_leaf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)"
+  "qkd_kvwq_leaf": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_kvwq_leaf_s_w129_m": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_land_emb": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_land_grp": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_land_pc": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_rstseq": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)"
  },
  "hbm_datactl_rows": [
   {
@@ -5668,7 +5866,161 @@
     }
    ]
   },
+  "dsfd_coll_cesc0": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cescn": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cesl": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
   "dsfd_coll_cesn": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_ceso": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cesp0": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cespn": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:coll",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "ds-1010",
+    "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+   },
+   "ops": [
+    {
+     "op": "class:coll",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "ds-1010",
+     "src": "name rule ^dsfd_coll_: ds-1010: collective lanes"
+    }
+   ]
+  },
+  "dsfd_coll_cesx": {
    "status": "UNMEASURED",
    "ratio": null,
    "limiting": {
@@ -5843,7 +6195,7 @@
     "stalled": true,
     "owner": "Claude:el1011-ds-coll",
     "target": null,
-    "t": "2026-10-13T06:49:36-07:00",
+    "t": "2026-10-13T12:49:58-07:00",
     "adopted": true
    }
   },
@@ -8426,6 +8778,28 @@
     }
    ]
   },
+  "dsfd_su_t_qbtl": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    }
+   ]
+  },
   "dsfd_su_t_qn": {
    "status": "UNMEASURED",
    "ratio": null,
@@ -8735,6 +9109,50 @@
    ]
   },
   "dsfd_su_t_swt": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    }
+   ]
+  },
+  "dsfd_su_t_swth": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:su",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+   },
+   "ops": [
+    {
+     "op": "class:su",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    }
+   ]
+  },
+  "dsfd_su_t_swtl": {
    "status": "UNMEASURED",
    "ratio": null,
    "limiting": {
@@ -9188,6 +9606,28 @@
     }
    ]
   },
+  "dsfd_vm_bgl28": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
   "dsfd_vm_bgq": {
    "status": "UNMEASURED",
    "ratio": null,
@@ -9277,7 +9717,117 @@
     "adopted": true
    }
   },
+  "dsfd_vm_fcw": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
   "dsfd_vm_fe": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
+  "dsfd_vm_flt": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
+  "dsfd_vm_fra": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
+  "dsfd_vm_frg": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
+  "dsfd_vm_frr": {
    "status": "UNMEASURED",
    "ratio": null,
    "limiting": {
@@ -9335,6 +9885,50 @@
     "t": "2026-10-12T17:48:29-07:00",
     "adopted": true
    }
+  },
+  "dsfd_vm_fxr": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
+  "dsfd_vm_fxs": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
   },
   "dsfd_vm_mtp_ep": {
    "status": "QUALIFIED",
@@ -10153,7 +10747,7 @@
      "status": "QUALIFIED",
      "ratio": 1.006,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/ds_qdq_b2/record.json @ bb49c6813: Was 13.7x (hfd_quant -> ot_hgi_quant_unit PACKET transport, 2,295 / 168) and 4.4x (quant_wide_h, 743 / 168). Restructure: B2 QDQ quarter on the cluster's LOCAL slice 8-lane group, 1 beat (32 FP32 = 4 sectors) a cycle into one decode core, "
+     "src": "results/rtl/tput_map_1011/ds_qdq_b2/record.json @ 0c7676119: Was 13.7x (hfd_quant -> ot_hgi_quant_unit PACKET transport, 2,295 / 168) and 4.4x (quant_wide_h, 743 / 168). Restructure: B2 QDQ quarter on the cluster's LOCAL slice 8-lane group, 1 beat (32 FP32 = 4 sectors) a cycle into one decode core, "
     }
    ]
   },
@@ -11305,7 +11899,7 @@
     "stalled": false,
     "owner": "Claude:q13-coll",
     "target": null,
-    "t": "2026-10-13T03:38:07-07:00",
+    "t": "2026-10-13T09:38:35-07:00",
     "adopted": true
    }
   },
@@ -11379,7 +11973,7 @@
     "stalled": false,
     "owner": "Claude:q13-coll",
     "target": null,
-    "t": "2026-10-13T05:35:14-07:00",
+    "t": "2026-10-13T11:35:16-07:00",
     "adopted": true
    }
   },
@@ -12058,41 +12652,34 @@
    ]
   },
   "ot_dsrom_su_hcpost_lane_pr": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "ds-1010",
-    "src": "name rule ^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_): ds-1010: HC / SU lanes (su class)"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "ds-1010",
-     "src": "name rule ^(ot_dsrom_hc_|dsfd_sp_hc_|ot_dsrom_su_): ds-1010: HC / SU lanes (su class)"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
-   ],
-   "bench_ii": {
-    "job": "hbm_hcp_lane_pr_79315a431-tc",
-    "commit": "79315a431",
-    "bench": "bench_lane_pr_exact",
-    "line": "PASS_HCPOST_LANE_PR cycles=20000 outputs=15083 latency=+1",
-    "cycles": 20000,
-    "item": null,
-    "items": null,
-    "ii": null,
-    "stalled": false,
-    "owner": "Claude:safe-hbm",
-    "target": null,
-    "t": "2026-10-12T09:05:51-07:00",
-    "adopted": true
-   }
+   ]
   },
   "ot_dsrom_su_softmax_div_tile": {
    "status": "UNMEASURED",
@@ -12950,7 +13537,7 @@
     "stalled": false,
     "owner": "Codex:hbm-front-link",
     "target": null,
-    "t": "2026-10-13T02:46:30-07:00",
+    "t": "2026-10-13T08:47:10-07:00",
     "adopted": true
    }
   },
@@ -13528,7 +14115,7 @@
     "stalled": true,
     "owner": "Codex:hbm-front-link",
     "target": null,
-    "t": "2026-10-13T04:20:57-07:00",
+    "t": "2026-10-13T10:21:22-07:00",
     "adopted": true
    }
   },
@@ -13775,6 +14362,50 @@
     }
    ]
   },
+  "ot_hgi_qdq_core": {
+   "status": "QUALIFIED",
+   "ratio": 0.055,
+   "limiting": {
+    "op": "bench II (words)",
+    "model": "rom",
+    "status": "QUALIFIED",
+    "ratio": 0.055,
+    "owner": "Claude:hbm-qdq-q8",
+    "src": "closure job qdq_core_ref-q8b-67a60693f @ 67a60693f: PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3 (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+   },
+   "ops": [
+    {
+     "op": "bench II (words)",
+     "model": "rom",
+     "status": "QUALIFIED",
+     "ratio": 0.055,
+     "owner": "Claude:hbm-qdq-q8",
+     "src": "closure job qdq_core_ref-q8b-67a60693f @ 67a60693f: PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3 (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+    }
+   ]
+  },
+  "ot_hgi_qdq_fr": {
+   "status": "QUALIFIED",
+   "ratio": 0.055,
+   "limiting": {
+    "op": "bench II (words)",
+    "model": "rom",
+    "status": "QUALIFIED",
+    "ratio": 0.055,
+    "owner": "Claude:hbm-qdq-q8",
+    "src": "closure job qdq_fr_ref-q8b-67a60693f @ 67a60693f: PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3 (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+   },
+   "ops": [
+    {
+     "op": "bench II (words)",
+     "model": "rom",
+     "status": "QUALIFIED",
+     "ratio": 0.055,
+     "owner": "Claude:hbm-qdq-q8",
+     "src": "closure job qdq_fr_ref-q8b-67a60693f @ 67a60693f: PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3 (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+    }
+   ]
+  },
   "ot_hgi_qdq_q": {
    "status": "QUALIFIED",
    "ratio": 1.006,
@@ -13784,7 +14415,7 @@
     "status": "QUALIFIED",
     "ratio": 1.006,
     "owner": "tput-map-1011",
-    "src": "results/rtl/tput_map_1011/ds_qdq_b2/record.json @ bb49c6813: Was 13.7x (hfd_quant -> ot_hgi_quant_unit PACKET transport, 2,295 / 168) and 4.4x (quant_wide_h, 743 / 168). Restructure: B2 QDQ quarter on the cluster's LOCAL slice 8-lane group, 1 beat (32 FP32 = 4 sectors) a cycle into one decode core, "
+    "src": "results/rtl/tput_map_1011/ds_qdq_b2/record.json @ 0c7676119: Was 13.7x (hfd_quant -> ot_hgi_quant_unit PACKET transport, 2,295 / 168) and 4.4x (quant_wide_h, 743 / 168). Restructure: B2 QDQ quarter on the cluster's LOCAL slice 8-lane group, 1 beat (32 FP32 = 4 sectors) a cycle into one decode core, "
    },
    "ops": [
     {
@@ -13793,7 +14424,7 @@
      "status": "QUALIFIED",
      "ratio": 1.006,
      "owner": "tput-map-1011",
-     "src": "results/rtl/tput_map_1011/ds_qdq_b2/record.json @ bb49c6813: Was 13.7x (hfd_quant -> ot_hgi_quant_unit PACKET transport, 2,295 / 168) and 4.4x (quant_wide_h, 743 / 168). Restructure: B2 QDQ quarter on the cluster's LOCAL slice 8-lane group, 1 beat (32 FP32 = 4 sectors) a cycle into one decode core, "
+     "src": "results/rtl/tput_map_1011/ds_qdq_b2/record.json @ 0c7676119: Was 13.7x (hfd_quant -> ot_hgi_quant_unit PACKET transport, 2,295 / 168) and 4.4x (quant_wide_h, 743 / 168). Restructure: B2 QDQ quarter on the cluster's LOCAL slice 8-lane group, 1 beat (32 FP32 = 4 sectors) a cycle into one decode core, "
     }
    ]
   },
@@ -14332,6 +14963,43 @@
     }
    ]
   },
+  "ot_pqc_t_bc": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "bench II (no items)",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "Claude:s81-sppq",
+    "src": "closure job ot_pqc_t_bc_m5-v1-404e9e410: SP_PQ_LOCKSTEP stats seeds=48 cycles=228591 compared=227439 ops=1920 retired_idle=48 bf_ops=750 mtp_ops=366 x_reads=7264 q_beats=9185 bf_bea (II None > 1.10 or stalled stimulus: budget not mapped)"
+   },
+   "ops": [
+    {
+     "op": "bench II (no items)",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "Claude:s81-sppq",
+     "src": "closure job ot_pqc_t_bc_m5-v1-404e9e410: SP_PQ_LOCKSTEP stats seeds=48 cycles=228591 compared=227439 ops=1920 retired_idle=48 bf_ops=750 mtp_ops=366 x_reads=7264 q_beats=9185 bf_bea (II None > 1.10 or stalled stimulus: budget not mapped)"
+    }
+   ],
+   "bench_ii": {
+    "job": "ot_pqc_t_bc_m5-v1-404e9e410",
+    "commit": "404e9e410",
+    "bench": "bench_sp_pq_lockstep_exact",
+    "line": "SP_PQ_LOCKSTEP stats seeds=48 cycles=228591 compared=227439 ops=1920 retired_idle=48 bf_ops=750 mtp_ops=366 x_reads=7264 q_beats=9185 bf_beats=5616 row_writes=63120",
+    "cycles": 228591,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:s81-sppq",
+    "target": null,
+    "t": "2026-10-13T09:05:43-07:00",
+    "adopted": true
+   }
+  },
   "ot_qfd_band_lanes": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -14355,6 +15023,28 @@
    ]
   },
   "ot_qfd_band_upper": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qfd_crom_gr": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -14479,8 +15169,8 @@
     }
    ],
    "bench_ii": {
-    "job": "qfd_res_slot_ri-r3-df1f3c478",
-    "commit": "df1f3c478",
+    "job": "qfd_res_slot_ru-u1-c956bae20",
+    "commit": "c956bae20",
     "bench": "bench_fullshape",
     "line": "PASS res_tiles bursts=360 beats=1465 cycles=12000 request_to_chain=19 request_to_output=21 peak_bursts=55 first_accept_to_output=24 profile=0 first_output=26 last_output=5920",
     "cycles": 12000,
@@ -14488,9 +15178,9 @@
     "items": 1465,
     "ii": 8.191,
     "stalled": false,
-    "owner": "Claude:el1013-qwen-elements-r3",
+    "owner": "Claude:el1013-qwen-elements-r6",
     "target": null,
-    "t": "2026-10-13T05:09:38-07:00",
+    "t": "2026-10-13T09:34:17-07:00",
     "adopted": true
    }
   },
@@ -14531,6 +15221,28 @@
     "adopted": true
    }
   },
+  "ot_qfd_su_cbuf_g": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "ot_qfd_vm_bank_t": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -14567,6 +15279,28 @@
     "t": "2026-10-13T02:50:45-07:00",
     "adopted": true
    }
+  },
+  "ot_qfd_vm_gctl_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
   },
   "ot_qfd_vm_grp": {
    "status": "UNQUALIFIED_NO_BENCH",
@@ -14672,6 +15406,50 @@
    ]
   },
   "ot_qfd_vm_xfifo8_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qfd_vm_xplane_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qfd_vm_xrelay_t": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -14829,9 +15607,163 @@
     "stalled": false,
     "owner": "Claude:q13b-kvend",
     "target": null,
-    "t": "2026-10-13T04:25:54-07:00",
+    "t": "2026-10-13T10:26:23-07:00",
     "adopted": true
    }
+  },
+  "ot_qkvd_ke_ctl": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "ot_qkvd_ke_ro": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "ot_qkvd_ke_rq": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "ot_qkvd_ke_tf": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "ot_qkvd_ke_ti": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "ot_qkvd_ke_tm": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "ot_qkvd_ke_wf": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
   },
   "ot_qkvd_kv_end": {
    "status": "QUALIFIED",
@@ -15072,7 +16004,7 @@
     "stalled": false,
     "owner": "Claude:q13-su",
     "target": null,
-    "t": "2026-10-13T02:47:48-07:00",
+    "t": "2026-10-13T08:48:09-07:00",
     "adopted": false
    }
   },
@@ -15272,7 +16204,22 @@
      "owner": "qwen-1010/b",
      "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "qkh_head_hs_ref-q13b-54a543b22",
+    "commit": "54a543b22",
+    "bench": "bench_layer_hs_pos",
+    "line": "HEAD_HS_TPUT PASS cycles=1847 price=1816 ratio=1.0170704845814977",
+    "cycles": 1847,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:q13-rhead-r2",
+    "target": null,
+    "t": "2026-10-13T13:40:30-07:00",
+    "adopted": true
+   }
   },
   "ot_qwen_rom_core_core_kv_banked": {
    "status": "EXEMPT",
@@ -15583,6 +16530,43 @@
     }
    ]
   },
+  "ot_qwen_tile_node": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ],
+   "bench_ii": {
+    "job": "ot_qwen_tile_node-r5-78b36aae5",
+    "commit": "78b36aae5",
+    "bench": "bench_tile_r5_node_exact",
+    "line": "PASS tile_r5_node cycles=60048 checks=60048 node_results=45147 nonzero=45147 go=82 fault_cycles=39522",
+    "cycles": 60048,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:q14-node",
+    "target": null,
+    "t": "2026-10-13T13:21:57-07:00",
+    "adopted": true
+   }
+  },
   "ot_qwen_tile_rpair": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -15616,7 +16600,7 @@
     "stalled": false,
     "owner": "Claude:q13-tile-rpair",
     "target": null,
-    "t": "2026-10-13T05:37:24-07:00",
+    "t": "2026-10-13T11:38:20-07:00",
     "adopted": true
    }
   },
@@ -15929,662 +16913,902 @@
    ]
   },
   "ot_s81_hc_caq": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ccf": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ccr": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_cntree": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_cpin": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_crootr": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_crootr_f": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_crootr_r": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_crootr_w": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_crooty": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_crooty_w": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_crooty_y": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_crx": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_cseq": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctfn": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctfs": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctfx": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctnl_l0": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctnl_l1": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctnl_l2": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctnl_l3": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctpl": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctra": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctrb": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_ctrn": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_pad_f5r1": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_pad_f8": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_pad_meta2": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_pad_r5": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
   "ot_s81_hc_pad_r6": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "UNQUALIFIED",
+   "ratio": 2.1613,
    "limiting": {
-    "op": "class:su",
+    "op": "HC unit bench: SU.HC_PRE_NORM",
     "model": "ds_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
-    "owner": "tput-map-1011",
-    "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+    "status": "UNQUALIFIED",
+    "ratio": 2.1613,
+    "owner": "rom-layer-tput-s81",
+    "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
    },
    "ops": [
     {
-     "op": "class:su",
+     "op": "HC unit bench: SU.HC_POST",
      "model": "ds_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
-     "owner": "tput-map-1011",
-     "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
+     "status": "ACCEPTED",
+     "ratio": 2.5421,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81hc_throughput_20261013/baseline.json: 287 / 112.9 cycles, e2e loss 1.653 % (ar), ledger row accepted"
+    },
+    {
+     "op": "HC unit bench: SU.HC_PRE_NORM",
+     "model": "ds_rom",
+     "status": "UNQUALIFIED",
+     "ratio": 2.1613,
+     "owner": "rom-layer-tput-s81",
+     "src": "results/rtl/s81_layer_tput_1013/record.json: 713 / 329.9 cycles, e2e loss 3.566 % (ar), ledger row proposed"
     }
    ]
   },
@@ -18770,6 +19994,28 @@
    ],
    "exempt": "not_in_design"
   },
+  "qfd_link_adp512": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "qfd_link_rx128": {
    "status": "UNMEASURED",
    "ratio": null,
@@ -19847,6 +21093,94 @@
     }
    ]
   },
+  "qkd_cdc_wleaf": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_ctrl_kc": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_ctrl_pc": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_ectl": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
   "qkd_kvwq_ctl": {
    "status": "QUALIFIED",
    "ratio": 1.0099,
@@ -19868,6 +21202,43 @@
      "src": "results/rtl/tput_map_1011/qwen_kv_die/record.json @ 2269e5375: Composed KV-die attention layer step (ROM faces -> r22k relays -> ROM end -> UCIe pair (fbuf8 / sbuf hard link buffers, HT=1 SBD=16) -> KV end -> qkd_seq -> near-HBM re-cut H stack (ectl_h + 4 head_h tiles per engine, R 8) + hub_p (harde"
     }
    ]
+  },
+  "qkd_kvwq_ctl_bin": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ],
+   "bench_ii": {
+    "job": "qkd_kvwq_ctl_bin-sl1-ecdaf6345",
+    "commit": "ecdaf6345",
+    "bench": "bench_slot_exact",
+    "line": "PASS kv_slots kvwq_ctl_bin cycles=40000 rows=7943 feed_beats=31760 durable=7939 mismatches=0",
+    "cycles": 40000,
+    "item": "rows",
+    "items": 7943,
+    "ii": 5.036,
+    "stalled": false,
+    "owner": "Claude:el1013-qwen-clusters",
+    "target": null,
+    "t": "2026-10-13T08:23:31-07:00",
+    "adopted": true
+   }
   },
   "qkd_kvwq_grp": {
    "status": "QUALIFIED",
@@ -19917,21 +21288,21 @@
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
-    "op": "bench II (no items)",
-    "model": "rom",
+    "op": "class:kv_die",
+    "model": "qwen_rom",
     "status": "UNQUALIFIED_NO_BENCH",
     "ratio": null,
-    "owner": "Claude:el1013-qwen-elements-r6",
-    "src": "closure job qkd_kvwq_leaf_s_w129_m-sl1-4df79ee4f: PASS kvwq_leaf_slot cycles=60000 feed=18679 pushes=10196 dones=3570 bads=4105 replaced=7513 (II None > 1.10 or stalled stimulus: budget not mapped)"
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
    },
    "ops": [
     {
-     "op": "bench II (no items)",
-     "model": "rom",
+     "op": "class:kv_die",
+     "model": "qwen_rom",
      "status": "UNQUALIFIED_NO_BENCH",
      "ratio": null,
-     "owner": "Claude:el1013-qwen-elements-r6",
-     "src": "closure job qkd_kvwq_leaf_s_w129_m-sl1-4df79ee4f: PASS kvwq_leaf_slot cycles=60000 feed=18679 pushes=10196 dones=3570 bads=4105 replaced=7513 (II None > 1.10 or stalled stimulus: budget not mapped)"
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
     }
    ],
    "bench_ii": {
@@ -19947,6 +21318,109 @@
     "owner": "Claude:el1013-qwen-elements-r6",
     "target": null,
     "t": "2026-10-13T07:51:45-07:00",
+    "adopted": true
+   }
+  },
+  "qkd_land_emb": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_land_grp": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_land_pc": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_rstseq": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ],
+   "bench_ii": {
+    "job": "qkd_rstseq-kc1-b4a0a3156",
+    "commit": "b4a0a3156",
+    "bench": "bench_rstseq_exact",
+    "line": "COUNTS cycles=40601 compared=40601 good_boots=2 soft_resets=1 fault1=1 fault2=1 fault3=1 mismatches=0 property_errors=0",
+    "cycles": 40601,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-qwen-kvcentre",
+    "target": null,
+    "t": "2026-10-13T09:06:45-07:00",
     "adopted": true
    }
   }

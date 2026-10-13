@@ -1,0 +1,316 @@
+{
+ "name": "qkd_d2d_p2_ref",
+ "top": "ot_qkvd_kv_end",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_ke_cluster.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_buf_tiles_bb.v",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_ke_tiles_bb.v"
+ ],
+ "params": {
+  "QD": 48,
+  "UCX": 48,
+  "SPL": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+   "count": 1,
+   "inst": "*u_tb0",
+   "at": [
+    22.464,
+    73.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+   "count": 1,
+   "inst": "*u_tb2",
+   "at": [
+    280.368,
+    73.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+   "count": 1,
+   "inst": "*u_tb1",
+   "at": [
+    397.872,
+    73.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+   "count": 1,
+   "inst": "*u_rb1",
+   "at": [
+    22.464,
+    291.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+   "count": 1,
+   "inst": "*u_rb3",
+   "at": [
+    280.368,
+    291.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+   "count": 1,
+   "inst": "*u_rb0",
+   "at": [
+    538.272,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+   "count": 1,
+   "inst": "*u_rb2",
+   "at": [
+    655.776,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_ti_ref/views/ot_qkvd_ke_ti",
+   "count": 1,
+   "inst": "*u_ti0",
+   "at": [
+    22.464,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_ro_ref/views/ot_qkvd_ke_ro",
+   "count": 1,
+   "inst": "*u_ro1",
+   "at": [
+    129.168,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_ti_ref/views/ot_qkvd_ke_ti",
+   "count": 1,
+   "inst": "*u_ti2",
+   "at": [
+    235.872,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_ro_ref/views/ot_qkvd_ke_ro",
+   "count": 1,
+   "inst": "*u_ro3",
+   "at": [
+    342.576,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_ti_ref/views/ot_qkvd_ke_ti",
+   "count": 1,
+   "inst": "*u_ti1",
+   "at": [
+    449.28,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_ro_ref/views/ot_qkvd_ke_ro",
+   "count": 1,
+   "inst": "*u_ro0",
+   "at": [
+    555.984,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_ro_ref/views/ot_qkvd_ke_ro",
+   "count": 1,
+   "inst": "*u_ro2",
+   "at": [
+    662.688,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_wf_ref/views/ot_qkvd_ke_wf",
+   "count": 1,
+   "inst": "*u_wf",
+   "at": [
+    22.464,
+    246.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_tm_ref/views/ot_qkvd_ke_tm",
+   "count": 1,
+   "inst": "*u_tm",
+   "at": [
+    108.0,
+    246.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_ctl_ref/views/ot_qkvd_ke_ctl",
+   "count": 1,
+   "inst": "*u_ctl",
+   "at": [
+    367.2,
+    246.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_tf_ref/views/ot_qkvd_ke_tf",
+   "count": 1,
+   "inst": "*u_tf",
+   "at": [
+    194.4,
+    464.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ke_rq_ref/views/ot_qkvd_ke_rq",
+   "count": 1,
+   "inst": "*u_rq",
+   "at": [
+    302.4,
+    464.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "outline": {
+  "w": 777.576,
+  "h": 518.376
+ },
+ "pins": {
+  "S": [
+   "r_v",
+   "r_cr",
+   "r_d",
+   "t_v",
+   "t_cr",
+   "t_d"
+  ],
+  "N": [
+   "tx_up",
+   "tx_v",
+   "tx_flit",
+   "rx_v",
+   "rx_flit"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "fault",
+   "fault_cause"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 112
+ },
+ "macros": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:q13-kvleaves",
+  "branch": "claude/q13b-kvend",
+  "tag": "q16",
+  "purpose": "q13-kvleaves: ot_qkvd_kv_end SPL=1 = thin cluster over 19 hard children (12 KV-end tiles + 7 pin-registered link buffers), no parent register; replaces the flat kv_end parents (q10, pf q13) whose clock spine diverged.",
+  "benches": [
+   {
+    "name": "ke_eq_exact",
+    "cmd": "bash tools/qwen_kv_die/ke_eq_bench.sh {RUN}/bench/ke_eq",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^KE_EQ PASS",
+    "min_count_regex": "compares (\\d+)"
+   },
+   {
+    "name": "ke_eq_mut_ctl",
+    "cmd": "NCYC=12000 bash tools/qwen_kv_die/ke_eq_bench.sh {RUN}/bench/ke_mut CTL",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^KE_EQ PASS"
+   },
+   {
+    "name": "spl_ht_layer_exact",
+    "cmd": "SPL=1 PQ=2 PF=1 HT=1 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/ht_pos",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "spl_ht_layer_mut",
+    "cmd": "SPL=1 PQ=2 PF=1 HT=1 bash tools/qwen_kv_die/bench_gate.sh neg {RUN}/bench/ht_neg 2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_p2_ref/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_p2_ref",
+  "structural_change": "thin cluster: ot_qkvd_d2d's 11.5k own registers are hardened into pin-registered tiles with their own clock roots (ke_ti x3, ke_rq, ke_tm, ke_tf, ke_ro x4, ke_ctl, ke_wf: TT insertion 50-131 ps, spread <= 24 ps at the --cts gate) next to the pin-registered link buffers (sbufp x4, fbuf8p x3); the parent holds NO register and only distributes the clock to 19 child clock pins with entry offsets from the children's insertion.json (flat parents: qkd_d2d_ref-q10 TT -134.7 / FF -215.8 / DRC 35, qkd_d2d_pf_ref-q13 TT -129.5 / FF -141.6 / DRC 31, 11,497 registers on one root, boundary clock 2,072 ps TT); r_cr, tx_up and fault each one cycle later, everything else cycle-exact",
+  "extra_paths": [
+   "rtl/test/qwen_kv_die",
+   "rtl/lib",
+   "tools/qwen_kv_die",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "io_flop_at_pins": false,
+ "structural_change": "thin cluster: ot_qkvd_d2d's 11.5k own registers are hardened into pin-registered tiles with their own clock roots (ke_ti x3, ke_rq, ke_tm, ke_tf, ke_ro x4, ke_ctl, ke_wf: TT insertion 50-131 ps, spread <= 24 ps at the --cts gate) next to the pin-registered link buffers (sbufp x4, fbuf8p x3); the parent holds NO register and only distributes the clock to 19 child clock pins with entry offsets from the children's insertion.json (flat parents: qkd_d2d_ref-q10 TT -134.7 / FF -215.8 / DRC 35, qkd_d2d_pf_ref-q13 TT -129.5 / FF -141.6 / DRC 31, 11,497 registers on one root, boundary clock 2,072 ps TT); r_cr, tx_up and fault each one cycle later, everything else cycle-exact",
+ "child_lattice_um": 0.432,
+ "inhold": false,
+ "outhold": false,
+ "floorplan_note": "q13-kvleaves 2026-10-13: thin cluster, no parent register.  S strip y 23.76: ti0 ro1 ti2 ro3 ti1 ro0 ro2 (pitch 106.704, each under its buffer); TX row y 73.44: sbufp tb0, fbuf8p tb2, sbufp tb1 (din S, dout N); mid channel y 246.24: wf (W face), tm (head mux, under-N of the TX row), ctl (x 367: <= 480 um Manhattan to every pop pin and seam); RX row y 291.6 / 345.6 (MX: din N, dout S): sbufp rb1, rb3, fbuf8p rb0, rb2; N strip y 464.4: tf, rq. Every child >= 20 um from the core edge and from its neighbours (x on the 0.432 lattice, y on 2.16: M5-cap leaf children, pins M4/M5).  RX heads cross the TX row and TX tf0 crosses the RX row on M7 (cut <= 0.25 of the M7 tracks over a row)."
+}

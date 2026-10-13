@@ -1019,7 +1019,7 @@ def structure_repeat_at_submit(j, jobs=None):
 # CLOSED STANDS (owner 2026-10-12 19:00 "M5 cap narrowed"; submit gate 2026-10-13, el1013-rule-enforcement).  128 failed
 # jobs in 24 h ran on 81 blocks that had already closed, 74 of them M5 re-routes of closed tiles.  A block (top module +
 # parameter set) with a counting CLOSED job whose view is published takes a new ROUTE only with spec "reroute_reason"
-# {"kind": die_window | slot_change | param_change | rtl_change | evidence_gap, ...}; the gate verifies what it can
+# {"kind": die_window | slot_change | param_change | rtl_change | evidence_gap | pin_register, ...}; the gate verifies what it can
 # (cut > 0.6 / GRT overflow + source file, kit outline / pin faces, parameter set, RTL blobs against the closed commit,
 # the closed job's bench + mutant and routed verdict).  Logic: closed_stands.py; rule text + constants:
 # tools/textbook_lint.py.  Loop successors of a job that is not CLOSED are exempt.  Mode from STATE/ref_gate.json
