@@ -1,14 +1,14 @@
 {
- "name": "s81su_swe_hb1_ref-v2-hb1-1d94ca904",
+ "name": "s81su_swe_hb1_ref-v2-hb1-COMMIT",
  "block": "dsfd_su_t_swe",
  "ref_tile": true,
  "owner": "Codex:s81_su_closure",
- "purpose": "el1011-s81su-sw PHYSICAL SPEC SW v3: ot_s81_su_swe, the position-independent SwiGLU lane engine (one lane pipeline over 8 lanes, g/u/w wait lines in 2 SRAM 128x256, registered chain to the QB act-quant master), hardened once and stepped x128 (replaces 8 x ~2.7M-flop dsfd_su_t_sw); reference tile flow, M5 cap; measured input+internal hold capture delays HB1xp67, preserved slot/clocks/cycles",
+ "purpose": "el1011-s81su-sw PHYSICAL SPEC SW v3: ot_s81_su_swe, the position-independent SwiGLU lane engine (one lane pipeline over 8 lanes, g/u/w wait lines in 2 SRAM 128x256, registered chain to the QB act-quant master), hardened once and stepped x128 (replaces 8 x ~2.7M-flop dsfd_su_t_sw); reference tile flow, M5 cap; measured input+internal hold capture delays HB1xp67, preserved slot/clocks/cycles; actual M4 SRAM edge OBS + via45 clearance protected by interior M5 guard, exterior pin access retained",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
   "branch": "codex/s81su-physical-20261013",
-  "commit": "1d94ca904"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_swe_hb1_ref/s81su_swe_hb1_ref-v2-hb1-1d94ca904"
+   "to": "results/rtl/ref_tile/s81su_swe_hb1_ref/s81su_swe_hb1_ref-v2-hb1-COMMIT"
   }
  ],
  "cycles_added": 0,
