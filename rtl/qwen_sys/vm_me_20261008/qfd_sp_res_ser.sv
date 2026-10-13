@@ -4,34 +4,34 @@
 //
 // Body: the tile composition ot_qfd_res_tiles, re-cut for the floorplan (8 hard slot tiles ot_qfd_res_slot_tile + the
 // serialiser head ot_qfd_res_tiles_ctl; both modules UNCHANGED).  The parent holds only registers and wires:
-//   A   pin flops of i[4424:0] and me_en under the N face (every die input one flop at its pin)
-//   B   second stage, one copy per tile and one for the head: the tile's 555-bit word {we, last, empty, addr, mask,
-//       data} and its own {me_en, i_ov} pair.  last / empty are decoded from the eight A-stage we bits here, so no
-//       logic sits behind a pin and no tile word waits on a net that spans the cluster.
-//   C   third stage for the three bottom-row tiles only (N strip -> row 0 is > 300 um in one hop)
+//   A   one flop at every die input pin (i[4424:0], me_en) under the N face.  i word g sits on the N face straight
+//       above its tile, so for the tiles of rows 1 and 2 A drives the tile's own pin flop (<= 360 um); last / empty
+//       are decoded from the eight A-stage we bits on the way, so no logic sits behind a die pin.
+//   M, X  two more stages for the three row-0 tiles (N face -> row 0 is > 350 um for a word and > 500 um for the
+//       centre strobes): M free, X anchored at the tile pin.
 //   F   sticky tile-fault OR, registered tile to tile along the ring, then the registered fault pin
-//   reset: ot_rst_relay (2 sync + 2 tree stages): region g = tile g with its own B / C strobes and fault flop, 8 = the head,
-//       9 = the A strobes.  Release is 4 ck edges after the rst_n pin, the same edge everywhere.
+//   reset: ot_rst_relay (2 sync + 2 tree stages): region g = tile g with its own M / X strobes and fault flop, 8 = the
+//       head, 9 = the A strobes.  Release is 4 ck edges after the rst_n pin, the same edge everywhere.
 //
-// Die ports (one direction per bus; packing LSB first):
-//   i  [4424:0] N in   {i_ov, i_we[7:0], i_addr[8*24-1:0], i_mask[8*16-1:0], i_data[8*512-1:0]}   i_ov = i[0]
-//   o  [550:0]  E out  {o_data[511:0], o_mask[15:0], o_row[19:0], o_nul, o_end, o_v}  LSB first = o_data[0] at o[0],
-//                      i.e. o = {o_v, o_end, o_nul, o_row, o_mask, o_data} in Verilog concatenation (o_v = o[550])
+// Die ports (one direction per bus):
+//   i  [4424:0] N in   {i_data[8*512-1:0], i_mask[8*16-1:0], i_addr[8*24-1:0], i_we[7:0], i_ov}   i_ov = i[0]
+//   o  [550:0]  E out  {o_v, o_end, o_nul, o_row[19:0], o_mask[15:0], o_data[511:0]}                o_v = o[550]
 //   ok E out (rok), cr E in (o_cr credit), fault E out, me_en N in, rst_n N in, ck N in.
 //
-// Cycles (absorbed by the protocol): the head sees every burst LAT = 2 cycles later than ot_qfd_res_tiles does (A, B),
-// so its ready is computed with RS + LAT: rok falls LAT bursts earlier and the engine's stopping debt of RS edges still
-// fits the 64-entry store.  A tile sees its word D_g = 2 (rows 1, 2) or 3 (row 0) cycles late; the head asks slot g of
+// Cycles (absorbed by the protocol): the head sees every burst LAT = 1 cycle later than ot_qfd_res_tiles does (A), so
+// its ready is computed with RS + LAT: rok falls one burst earlier and the engine's stopping debt of RS edges still
+// fits the 64-entry store.  A tile sees its word D_g = 1 (rows 1, 2) or 3 (row 0) cycles late; the head asks slot g of
 // a burst no earlier than LAT + 6 + 2 g cycles after the burst's edge and the tile's write lands D_g + 3 after it, so
-// any D_g <= LAT + 3 + 2 g is safe (worst here: 3 <= 5).  Beats, their order and the 19-cycle conveyor are unchanged;
-// o_* / rok / fault are registers at the pins (inside the head); cr is captured by the head's pin flop.
+// any D_g <= LAT + 3 + 2 g is safe (row 0 holds slots 5, 6, 7: 3 <= 14).  Beats, their order and the 19-cycle
+// conveyor are unchanged; o_* / rok / fault are registers at the pins (inside the head); cr is captured by the head's
+// pin flop.
 //
-// Slot g = ring position g (slot_id strap g).  Ring order over the floorplan (column, row), every chain face on a
-// tile's E side: (2,2) (1,2) (0,2) (0,1) (0,0) (1,0) (1,1) (2,0); the head is the ninth cell (2,1).
+// Slot g = ring position g (slot_id strap g).  Ring order over the floorplan (column, row): (2,2) (1,2) (0,2) (0,1)
+// (1,1) (0,0) (1,0) (2,0); the head is the ninth cell (2,1) (tools/qwen_vm_me/res_ser_cluster_fp.py).
 //
 // OT_HARD_CHILDREN: the tiles are hard children (LEF / lib only, default parameters).  Without it (benches) the tile RTL
 // is elaborated with USE_MACRO and the bench mutants (MUT = 1: one data bit of slot 1 inverted inside the tile; MUT = 2:
-// the row-0 tiles' strobes bypass the C stage).
+// the row-0 tiles' strobes bypass the X stage).
 module qfd_sp_res_ser #(
     parameter integer RS        = 42,
     parameter integer CRB       = 16,
@@ -47,8 +47,8 @@ module qfd_sp_res_ser #(
     input  wire          cr,
     output wire          fault
 );
-    localparam integer LAT = 2;                 // A + B in front of the head
-    localparam [7:0]   ROW0 = 8'b1011_0000;     // ring positions on floorplan row 0: (0,0) = 4, (1,0) = 5, (2,0) = 7
+    localparam integer LAT = 1;                 // A in front of the head
+    localparam [7:0]   ROW0 = 8'b1110_0000;     // ring positions on floorplan row 0: (0,0) = 5, (1,0) = 6, (2,0) = 7
 
     // ------------------------------------------------------------------ reset relay (region 8 head, 9 strobes)
     wire [9:0] rr_n;
@@ -72,7 +72,7 @@ module qfd_sp_res_ser #(
     end
     wire a_empty = (a_we == 8'd0);
 
-    // ------------------------------------------------------------------ B / C: per-tile word and strobe pair
+    // ------------------------------------------------------------------ per-tile word and strobe pair (M, X: row 0)
     wire [8:0]       qv, rv;
     wire [26:0]      qs;
     wire [53:0]      qp;
@@ -81,41 +81,28 @@ module qfd_sp_res_ser #(
     assign rv[0] = 1'b0;
     assign rd[0 +: 551] = 551'd0;
 
-    reg b_me_h, b_ov_h;                         // the head's own copy
-    always @(posedge ck or negedge rr_n[8]) begin
-        if (!rr_n[8]) begin b_me_h <= 1'b0; b_ov_h <= 1'b0; end
-        else          begin b_me_h <= a_me; b_ov_h <= a_ov; end
-    end
-
     genvar g;
     generate
         for (g = 0; g < 8; g = g + 1) begin : g_slot
             wire a_last = (a_we[g] && !(|(a_we >> (g + 1)))) || (g == 7 && a_we == 8'd0);
             // {data, mask, addr, empty, last, we}
-            reg [554:0] b_w;
-            reg         b_me, b_ov;
-            always @(posedge ck)
-                b_w <= {a_data[g*512 +: 512], a_mask[g*16 +: 16], a_addr[g*24 +: 24], a_empty, a_last, a_we[g]};
-            always @(posedge ck or negedge rr_n[g]) begin
-                if (!rr_n[g]) begin b_me <= 1'b0; b_ov <= 1'b0; end
-                else          begin b_me <= a_me; b_ov <= a_ov; end
-            end
+            wire [554:0] a_w = {a_data[g*512 +: 512], a_mask[g*16 +: 16], a_addr[g*24 +: 24], a_empty, a_last, a_we[g]};
             wire [554:0] t_w;
             wire         t_me, t_ov;
-            if (ROW0[g]) begin : g_c
-                reg [554:0] c_w;
-                reg         c_me, c_ov;
-                always @(posedge ck) c_w <= b_w;
+            if (ROW0[g]) begin : g_r0
+                reg [554:0] m_w, x_w;
+                reg         m_me, m_ov, x_me, x_ov;
+                always @(posedge ck) begin m_w <= a_w; x_w <= m_w; end
                 always @(posedge ck or negedge rr_n[g]) begin
-                    if (!rr_n[g]) begin c_me <= 1'b0; c_ov <= 1'b0; end
-                    else          begin c_me <= b_me; c_ov <= b_ov; end
+                    if (!rr_n[g]) begin m_me <= 1'b0; m_ov <= 1'b0; x_me <= 1'b0; x_ov <= 1'b0; end
+                    else          begin m_me <= a_me; m_ov <= a_ov; x_me <= m_me; x_ov <= m_ov; end
                 end
-                // MUT == 2 (bench only): the row-0 strobes skip the C stage, so they lead their word by one cycle
-                assign t_w = c_w;
-                assign t_me = (MUT == 2) ? b_me : c_me;
-                assign t_ov = (MUT == 2) ? b_ov : c_ov;
-            end else begin : g_b
-                assign t_w = b_w; assign t_me = b_me; assign t_ov = b_ov;
+                // MUT == 2 (bench only): the row-0 strobes skip the X stage, so they lead their word by one cycle
+                assign t_w  = x_w;
+                assign t_me = (MUT == 2) ? m_me : x_me;
+                assign t_ov = (MUT == 2) ? m_ov : x_ov;
+            end else begin : g_r12
+                assign t_w = a_w; assign t_me = a_me; assign t_ov = a_ov;
             end
             wire [2:0] sid = g;
 `ifdef OT_HARD_CHILDREN
@@ -139,7 +126,7 @@ module qfd_sp_res_ser #(
     wire [15:0]  o_mask;
     wire [511:0] o_data;
     ot_qfd_res_tiles_ctl #(.RS(RS + LAT), .CRB(CRB)) u_ctl (
-        .clk(ck), .rst_n(rr_n[8]), .me_en(b_me_h), .i_ov(b_ov_h), .o_cr(cr),
+        .clk(ck), .rst_n(rr_n[8]), .me_en(a_me), .i_ov(a_ov), .o_cr(cr),
         .rv(rv[8]), .rd(rd[8*551 +: 551]),
         .rq_v(qv[0]), .rq_slot(qs[0 +: 3]), .rq_ptr(qp[0 +: 6]),
         .o_v(o_v), .o_end(o_end), .o_nul(o_nul), .o_row(o_row), .o_mask(o_mask), .o_data(o_data),
