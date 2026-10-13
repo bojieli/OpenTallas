@@ -114,24 +114,33 @@ module ot_hgi_idx_index_w #(
     reg [DLB:0]   rres  [0:NL-1];            // landing slots reserved (issued, not yet popped)
     localparam integer LGW = 2 + 2 + 3 + 13;               // kind, slot, count, sector[14:2] (group = sector[LB-1:2])
     reg [LGW-1:0] lg [0:31]; reg [5:0] lg_n; reg [4:0] lg_h, lg_t;
-    reg [1:0]  ch_kind; reg [14:0] ch_sec; reg [2:0] ch_cnt; reg [NL-1:0] ch_mask; reg ch_ok, ch_v, ch_last; reg [2:0] room;
+    // Two-stage issuer (timing: the chunk walk -- room / count / stream bounds / value offset / lane mask -- is a
+    // full cycle of 15-bit arithmetic; the issue cycle sees only the registered descriptor against lane credits).
+    // Stage W computes the next chunk descriptor from the walker state into ch_* whenever the descriptor register
+    // is empty or being issued this cycle, so a back-to-back walk still issues one chunk per cycle.
+    reg [1:0]  nx_kind; reg [14:0] nx_sec; reg [2:0] nx_cnt; reg [NL-1:0] nx_mask; reg nx_last; reg [2:0] room;
+    reg        pd_v;                        // ch_* holds a walked, not yet issued chunk
+    reg [1:0]  ch_kind; reg [14:0] ch_sec; reg [2:0] ch_cnt; reg [NL-1:0] ch_mask; reg ch_ok, ch_v;
     always @* begin
-        ch_kind = (is_kind == K_CI && is_cv) ? K_CV : is_kind;
+        nx_kind = (is_kind == K_CI && is_cv) ? K_CV : is_kind;
         room = 3'd4 - {1'b0, is_sec[1:0]};
-        if (is_kind == K_B) ch_cnt = 3'd1;
-        else if ({12'd0, room} > is_end - is_sec) ch_cnt = 3'(is_end - is_sec + 15'd1);
-        else ch_cnt = room;
-        ch_sec = (ch_kind == K_CV) ? is_sec + cs8 : is_sec;
-        ch_last = is_sec + {12'd0, ch_cnt} > is_end;
-        ch_v = st == S_RUN && is_on && !bad && lg_n != 6'd32 && rgnt_q;
-        ch_mask = '0;
+        if (is_kind == K_B) nx_cnt = 3'd1;
+        else if ({12'd0, room} > is_end - is_sec) nx_cnt = 3'(is_end - is_sec + 15'd1);
+        else nx_cnt = room;
+        nx_sec = (nx_kind == K_CV) ? is_sec + cs8 : is_sec;
+        nx_last = is_sec + {12'd0, nx_cnt} > is_end;
+        nx_mask = '0;
         for (l = 0; l < 4; l = l + 1)
-            if (l >= ch_sec[1:0] && l < ch_sec[1:0] + ch_cnt) ch_mask[(NG > 1 ? 4 * ch_sec[LB-1:2] : 0) + l] = 1'b1;
+            if (l >= nx_sec[1:0] && l < nx_sec[1:0] + nx_cnt) nx_mask[(NG > 1 ? 4 * nx_sec[LB-1:2] : 0) + l] = 1'b1;
+    end
+    always @* begin
+        ch_v = pd_v && st == S_RUN && !bad && lg_n != 6'd32 && rgnt_q;
         ch_ok = 1'b1;
         for (l = 0; l < NL; l = l + 1)
             if (ch_mask[l] && (rcred[l] == '0 || rres[l] == (DLB+1)'(DL))) ch_ok = 1'b0;
     end
     wire ch_go = ch_v && ch_ok;
+    wire wk_go = st == S_RUN && is_on && !bad && (!pd_v || ch_go);
     // ================================================================ landing FIFOs (lane-local)
     reg [255:0] lm [0:NL*DL-1]; reg [DLB:0] lwp [0:NL-1], lrp [0:NL-1];   // lm: lane l entry e at l * DL + e
     reg [NL-1:0] lne, lpop;
@@ -227,7 +236,7 @@ module ot_hgi_idx_index_w #(
         if (pk_v) ks_ord <= mb_ord[pk];
     end
     wire k_busy = h0_v || k1_v || k2_v || k3_v || !mb_z || ks_v;
-    wire walk_done = !keep_en || (is_kind == K_A || !is_on) && c_iss == c_done && !k_busy && !g_ci && !g_cv;
+    wire walk_done = !keep_en || (is_kind == K_A || !is_on) && !(pd_v && ch_kind != K_A) && c_iss == c_done && !k_busy && !g_ci && !g_cv;
     // ================================================================ QUERY (A sectors -> 8-sector ring -> blocks)
     reg [255:0] ring [0:7]; reg [2:0] rg_wp, rg_rp; reg [3:0] rg_n;
     reg qfull; reg [1023:0] qdat; reg [7:0] qmade, qsent; reg [2:0] qcred;
@@ -287,7 +296,7 @@ module ot_hgi_idx_index_w #(
     reg [3:0] cntv; reg [3:0] pref; reg [255:0] o_acc, r_acc;
     always @(posedge clk) begin                 // synchronous reset from the local rn flop (datapath fields hold, no reset)
         if (!rn) begin
-            st <= S_IDLE; done <= 1'b0; fault <= 1'b0; bad <= 1'b0; is_on <= 1'b0; is_cv <= 1'b0;
+            st <= S_IDLE; done <= 1'b0; fault <= 1'b0; bad <= 1'b0; is_on <= 1'b0; is_cv <= 1'b0; pd_v <= 1'b0;
             lg_n <= 6'd0; lg_h <= 5'd0; lg_t <= 5'd0; rg_req <= 1'b0; wg_req <= 1'b0;
             fs <= 90'd0; qb[0] <= 1'b0; kin[0] <= 1'b0; toc <= 1'b0; coc <= 1'b0; fs_pend <= 1'b0; qfull <= 1'b0;
             for (l = 0; l < NL; l = l + 1) begin wrq[l*16 + 15] <= 1'b0; wwq[l*280 + 279] <= 1'b0; end
@@ -327,15 +336,22 @@ module ot_hgi_idx_index_w #(
                     if (ch_mask[l]) wrq[l*16 +: 16] <= {1'b1, ch_sec[14:2], 2'(l % 4)};
                 lg[lg_t] <= {ch_kind, ch_sec[1:0], ch_cnt, ch_sec[14:2]};
                 lg_t <= lg_t + 5'd1;
-                if (ch_kind == K_CI) is_cv <= 1'b1;
+                if (ch_kind == K_CV) c_iss <= c_iss + 12'd1;
+            end
+            // ---- chunk walk (stage W)
+            if (wk_go) begin
+                ch_kind <= nx_kind; ch_sec <= nx_sec; ch_cnt <= nx_cnt; ch_mask <= nx_mask;
+            end
+            if (wk_go) pd_v <= 1'b1; else if (ch_go) pd_v <= 1'b0;
+            if (wk_go) begin
+                if (nx_kind == K_CI) is_cv <= 1'b1;
                 else begin
                     is_cv <= 1'b0;
-                    if (ch_kind == K_CV) c_iss <= c_iss + 12'd1;
-                    if (ch_last) begin                                     // stream exhausted -> next stream
+                    if (nx_last) begin                                     // stream exhausted -> next stream
                         if (is_kind == K_B && keep_en) begin is_kind <= K_CI; is_sec <= c_s0; is_end <= c_s1; end
                         else if (is_kind != K_A) begin is_kind <= K_A; is_sec <= a_s0; is_end <= a_s0 + 15'd511; end
                         else is_on <= 1'b0;
-                    end else is_sec <= is_sec + {12'd0, ch_cnt};
+                    end else is_sec <= is_sec + {12'd0, nx_cnt};
                 end
             end
             lg_n <= lg_n + 6'(ch_go) - 6'(g_load);
@@ -420,7 +436,7 @@ module ot_hgi_idx_index_w #(
                         (keep_en && c_stride[4:0] != 5'd0)) fault <= 1'b1;
                     else begin
                         st <= S_RUN; bad <= 1'b0; sel_done <= 1'b0; to_last <= 1'b0; co_last <= !cand_en;
-                        is_on <= 1'b1; is_cv <= 1'b0; is_kind <= K_B; is_sec <= b_base[17:3];
+                        is_on <= 1'b1; is_cv <= 1'b0; pd_v <= 1'b0; is_kind <= K_B; is_sec <= b_base[17:3];
                         is_end <= 15'((b_base + 18'd31) >> 3);
                         c_s0 <= c_base[17:3]; c_s1 <= 15'((c_base + {6'd0, c_n} - 18'd1) >> 3); a_s0 <= a_base[17:3];
                         cs8 <= c_stride[17:3];
@@ -436,11 +452,11 @@ module ot_hgi_idx_index_w #(
                         fs_pend <= 1'b0;
                         fs <= {keep_en, cand_en, k[9:0], n[13:0], rank, pos, 4'd0, 32'd0, 1'b1};
                     end
-                    if (!is_on && lg_n == 6'd0 && !g_v) rg_req <= 1'b0;
+                    if (!is_on && !pd_v && lg_n == 6'd0 && !g_v) rg_req <= 1'b0;
                     if (t1_v || t2_v || d1_v || tfn != 4'd0 || cfn != 4'd0) wg_req <= 1'b1;
                     if (bad) begin st <= S_IDLE; fault <= 1'b1; rg_req <= 1'b0; wg_req <= 1'b0; end
                     else if (sel_done && to_last && co_last && tfn == 4'd0 && cfn == 4'd0 && !t1_v && !t2_v && !d1_v &&
-                             qsent == 8'd128 && !is_on && lg_n == 6'd0 && !g_v) begin
+                             qsent == 8'd128 && !is_on && !pd_v && lg_n == 6'd0 && !g_v) begin
                         st <= S_FLUSH; flush <= 1'b1; wg_req <= 1'b1;
                     end
                 end
