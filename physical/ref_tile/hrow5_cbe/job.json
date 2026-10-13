@@ -1,14 +1,14 @@
 {
- "name": "hrow5_cbe-r5d-COMMIT",
+ "name": "hrow5_cbe-r5f-9f8b3b616",
  "block": "dsfd_mtp_hrow_cbe",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
- "purpose": "el1011-ds-mtp 2026-10-12 cbe r5d: same core / plan as cbw (cbw-r5c TT +116.41 / FF -22.14: reg2reg wi->t_w -22.14, out t_w -10.53, in f_w -5.18). Pre-emptive same fix: outhold + inhold, hold margin 0.03; scalar ck/rst (cbe-r5c-119b97413 still has ck[0] -> unusable at die level). On main >= b1e49e8f1.",
+ "purpose": "el1011-ds-mtp 2026-10-12 cbe r5f: r5e-443ce010e TT +84.54 / FF +2.83 / DRC 7 (stuck at 7 for all late DRT iters). All 7 = M4 Short/Metal Spacing at x 443.32-443.41 = east edge of the EAST-column SRAMs g_c[1]/g_c[3] (edge 443.448; M4 OBS ends 443.376, M4 edge pins 443.424-443.448): DRT drops VIA45 on the last M5 track before the edge (x 443.340) and its M4 pad lands in the OBS. Hold-ECO / inhold cells sit exactly at the 2.16 um halo (hold14323 x 445.608) in the strip the 414 M4 edge pins/macro need for access. Fix: macro placement halo 2.16 -> 5.4 um (one M5 PG pitch) to leave a pin-access strip; floorplan, RTL, benches unchanged; not a mask.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-mtp-hrow",
-  "commit": "COMMIT"
+  "commit": "9f8b3b616"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_cbe/hrow5_cbe-r5d-COMMIT"
+   "to": "results/rtl/ref_tile/hrow5_cbe/hrow5_cbe-r5f-9f8b3b616"
   }
  ],
  "cycles_added": 0,

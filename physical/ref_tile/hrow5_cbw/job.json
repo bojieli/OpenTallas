@@ -1,14 +1,14 @@
 {
- "name": "hrow5_cbw-r5d-COMMIT",
+ "name": "hrow5_cbw-r5f-7d9faad0a",
  "block": "dsfd_mtp_hrow_cbw",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
- "purpose": "el1011-ds-mtp 2026-10-12 cbw r5d: hrow5_cbw-r5c-4829659c5 TT +116.41 / DRC 0 (GRT hook worked), NEEDS_RTL FF -22.14 only (hold ECO rc=9, pre-b1e49e8f1 config). FF classes (path_summary, signoff SDC + routed IO ref): reg2reg chain stage u_c.wi -> u_c.t_w -22.14 (33 D; pin flop -> out flop across the 216-um tile, no logic, capture leaf late) and u_c.di -> u_c.t_d -6.13 (24); outputs t_w -10.53 (101) / t_d -7.68 (62) / t_r -4.96; inputs f_w -> wi -5.18 (56) / f_d -> di -3.91 (108). Fix: outhold + inhold (delay stages at the ports, by construction) and hold margin 0.01 -> 0.03 for the reg2reg chain stage; scalar ck/rst (die clock pin). On main >= b1e49e8f1.",
+ "purpose": "el1011-ds-mtp 2026-10-12 cbw r5f: r5e-443ce010e DRT stuck at 11 violations (iter 60/64), all M4 at x 443.03-443.38 = east edge of the east-column SRAM g_c[1] (same as cbe r5e DRC 7: VIA45 M4 pads in the SRAM M4 OBS next to the 414 M4 edge pins; hold/inhold cells at the 2.16 um halo crowd the pin-access strip). Fix: macro placement halo 2.16 -> 5.4 um; floorplan, RTL, benches unchanged.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-mtp-hrow",
-  "commit": "COMMIT"
+  "commit": "7d9faad0a"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_cbw/hrow5_cbw-r5d-COMMIT"
+   "to": "results/rtl/ref_tile/hrow5_cbw/hrow5_cbw-r5f-7d9faad0a"
   }
  ],
  "cycles_added": 0,

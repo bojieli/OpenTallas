@@ -229,7 +229,7 @@ set_voltage_domain -name {{CORE}} -power {{VDD}} -ground {{VSS}}
 define_pdn_grid -name {{top}} -voltage_domains {{CORE}} -pins {{{pg}}}
 add_pdn_stripe -grid {{top}} -layer {{M1}} -width {{0.018}} -pitch {{0.54}} -offset {{0}} -followpins
 add_pdn_stripe -grid {{top}} -layer {{M2}} -width {{0.018}} -pitch {{0.54}} -offset {{0}} -followpins
-add_pdn_stripe -grid {{top}} -layer {{M5}} -width {{0.12}} -spacing {{0.072}} -pitch {{5.4}} -offset {{0.300}}
+add_pdn_stripe -grid {{top}} -layer {{M5}} -width {{0.12}} -spacing {{0.072}} -pitch {{{m5_pitch}}} -offset {{0.300}}
 """
 # Macro grids exist ONLY for masters present in the block (PDN-0217 'No grid found with name' otherwise: a macro grid
 # with no matching instance is never created and its add_pdn_connect aborts).
@@ -272,7 +272,12 @@ def gen_pdn(s: dict, lc: dict) -> str:
                 "add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}\n"
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
                 "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n")
-    t = PDN_HEAD.format(name=s["name"], kind=s["kind"], pg=pg, note=note) + body + PDN_GUARD
+    # route.m5_pg_pitch (5.4 default, or 2.7: every other stripe still on the 5.4 lattice): a narrow M5-cap tile (< ~3
+    # pitches wide) gets only 2 stripes per net at 5.4, so its M5 PG pins span < 50% of the width and the export
+    # child_lint (b) fails (qfd_embed_ingress_code/scale_m5 at 15.12 um: 36%, 2026-10-12)
+    m5p = float(s.get("route", {}).get("m5_pg_pitch", 5.4))
+    assert m5p in (2.7, 5.4), "route.m5_pg_pitch must be 2.7 or 5.4"
+    t = PDN_HEAD.format(name=s["name"], kind=s["kind"], pg=pg, note=note, m5_pitch=f"{m5p:g}") + body + PDN_GUARD
     by_layer: dict = {}
     for cell, top in lc["children"].items():
         by_layer.setdefault(top, []).append(cell)
