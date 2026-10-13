@@ -71,7 +71,11 @@
  "route": {
   "pd": 0.5,
   "threads": 16,
-  "peak_ram_gb": 32
+  "peak_ram_gb": 32,
+  "cts_sink": {
+   "size": 60,
+   "diameter_um": 60
+  }
  },
  "slot_change_request": "q13-cdcw 2026-10-13 (el1011-qwen-tp8.log SLOT_CHANGE_REQUEST): qwen_rom_tp8 v3 slot cell qkd_cdc_wleaf (cdc_*_*, 128) -- (1) outline 183.72 x 183.72 (the old qfd_cdc_eco_h1 LEF, off the 2.16 um floorplan grid) -> 183.6 x 183.6 (2.16-grid tile inside the slot, same origin); (2) the contract pins are the die generator's aggregated buses; the view carries the real RTL ports on the SAME faces and layers: co[282:0] W/M4 = {l_v, l_sec, l_row, l_data, l_pop}, hi[293:0] N/M5 = {h_lv, h_lsec, h_lrow, h_ldata, h_hand, h_wcon, h_av, h_atag}, ho[318:0] E/M4 = {h_cred, h_wv, h_wsec, h_cv, h_csec, h_cdata, h_ctag, h_fault}, wi[289:0] S/M5 = {w_v, w_sec, w_data, w_tag}, wr[10:0] S/M5 = {w_room, wd_v, wd_tag}, cf S/M5 = c_fault; clock entry ck N/M5 = port clk; hclk, c_arst_n, h_arst_n W/M4; pin offsets from the new LEF; r2: (3) LD 32 leaves the 183.6 x 183.6 slot under-utilised (std ~12k um2, util ~0.36 < 0.45): the outline is the contract slot and is NOT shrunk; (4) interface latency: h_cv / h_c* arrive one HCLK edge later than the old qfd_cdc_eco_h1 view (h_wcon pin flop): the die composition / transport context must take the completion entry on h_cv (it does: h_cv qualifies h_c*), and the landing depth contract is controller CRED <= 32",
  "job": {
