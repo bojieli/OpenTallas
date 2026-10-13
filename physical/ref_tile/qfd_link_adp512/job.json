@@ -1,0 +1,134 @@
+{
+ "name": "qfd_link_adp512-m5a-COMMIT",
+ "block": "qfd_link_adp512",
+ "ref_tile": true,
+ "owner": "Claude:el1013-qwen-romio",
+ "purpose": "Qwen ROM TP8 link adapter as the M5 leaf child of cluster masters qfd_io_serdes (3) and qfd_io_ucie (1): wiring-only cell qfd_link_adp512 around ot_qfd_link_adapter W=1024 RXD=512 SRAM=1 PINREG=1 (body closed TT +6.61 / FF +16.92 at 600.048^2, M8 era). 216 x 583.2, cap M5, pins M4/M5, recipe 2, every port a flop at its pin. Cut: the S->N crossing over an SRAM row is c->tx 1,043 + rx->SRAM/skid ~1,024 = 2.07 k bits vs 4.5 k M5 tracks (M1-M4 blocked over the 174 um macro, 216 um wide) = 0.46 <= 0.60; pin faces 2,052 (S) / 2,089 (N) pins on 4.5 k M5 tracks = 0.46. Clock: ~15.4 k sinks estimated on one root (ci 1,025, IBUF 4,096, tx 1,044, rq 1,044, rb_cap 1,024, skid 4,096, rr + pin 2,050, control): the --cts gate measures it.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/el1013-qwen-romio",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_link_adp512 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_romio_slots.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "slot_exact",
+    "cmd": "bash physical/qwen_romio_slots/bench.sh {RUN}/bench/exact exact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "two cells back to back through the 223-cycle PHY pipe model, 1,500 random words each way with die-bus credits and receiver back-pressure, bit-exact in order through the cell's own ports, no fault",
+    "pass_regex": "^PASS romio_slots exact"
+   },
+   {
+    "name": "slot_rate",
+    "cmd": "bash physical/qwen_romio_slots/bench.sh {RUN}/bench/rate rate",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "line rate 1.000 words/cycle at LAT 229 (223 PHY + 6 FDI relay stages of the cluster parent), floor 0.950",
+    "pass_regex": "^PASS romio_slots rate"
+   },
+   {
+    "name": "slot_stall",
+    "cmd": "bash physical/qwen_romio_slots/bench.sh {RUN}/bench/stall stall",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "3,000 words with 1,500-cycle receiver stalls",
+    "pass_regex": "^PASS romio_slots stall"
+   },
+   {
+    "name": "slot_mutant",
+    "cmd": "bash physical/qwen_romio_slots/bench.sh {RUN}/bench/mut mut",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "MUT=1: one extra link credit overruns the far receive buffer (fault + words lost)",
+    "fail_regex": "^FAIL romio_slots mut"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_link_adp512/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_link_adp512/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_link_adp512 --out {RUN}/record/views/qfd_link_adp512 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_link_adp512/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_link_adp512/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_link_adp512/qfd_link_adp512-m5a-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "el1013-qwen-romio 10-13: the adapter is no longer routed as the die master (8 loop rows on qfd_io_serdes: 600.048^2 M8-era tile, PHY-sized frame never bound). New: ONE M5 leaf child qfd_link_adp512 shared by qfd_io_serdes (3) and qfd_io_ucie (1), a 216 x 583.2 strip (0.126 mm2, was 0.360) with the 8 SRAMs in one column, die-bus pins S (toward the slot's c / r pins) and FDI pins N (toward the PHY relays), recipe 2; the masters become clusters (child + FDI relay stations + PHY macro). UCIe moves from the RXD=32 flop buffer (32 k flops on one root) to this SRAM view."
+}

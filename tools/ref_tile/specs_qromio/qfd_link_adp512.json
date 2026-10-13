@@ -1,0 +1,192 @@
+{
+ "name": "qfd_link_adp512",
+ "top": "qfd_link_adp512",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_romio_slots.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 583.2
+ },
+ "pins": {
+  "S": [
+   "c_v",
+   "c_d",
+   "c_cr",
+   "r_v",
+   "r_d",
+   "r_cr"
+  ],
+  "N": [
+   "tx_up",
+   "tx_v",
+   "tx_flit",
+   "rx_v",
+   "rx_flit"
+  ],
+  "W": [
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "fault"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    36.018,
+    94.5
+   ],
+   "orient": "R0",
+   "inst": "*g_t?0?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    36.018,
+    144.72
+   ],
+   "orient": "R0",
+   "inst": "*g_t?1?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    36.018,
+    194.94
+   ],
+   "orient": "R0",
+   "inst": "*g_t?2?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    36.018,
+    245.16
+   ],
+   "orient": "R0",
+   "inst": "*g_t?3?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    36.018,
+    295.38
+   ],
+   "orient": "R0",
+   "inst": "*g_t?4?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    36.018,
+    345.6
+   ],
+   "orient": "R0",
+   "inst": "*g_t?5?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    36.018,
+    395.82
+   ],
+   "orient": "R0",
+   "inst": "*g_t?6?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    36.018,
+    446.04
+   ],
+   "orient": "R0",
+   "inst": "*g_t?7?.*u_m"
+  }
+ ],
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03
+ },
+ "structural_change": "el1013-qwen-romio 10-13: the adapter is no longer routed as the die master (8 loop rows on qfd_io_serdes: 600.048^2 M8-era tile, PHY-sized frame never bound). New: ONE M5 leaf child qfd_link_adp512 shared by qfd_io_serdes (3) and qfd_io_ucie (1), a 216 x 583.2 strip (0.126 mm2, was 0.360) with the 8 SRAMs in one column, die-bus pins S (toward the slot's c / r pins) and FDI pins N (toward the PHY relays), recipe 2; the masters become clusters (child + FDI relay stations + PHY macro). UCIe moves from the RXD=32 flop buffer (32 k flops on one root) to this SRAM view.",
+ "slot_change_request": "el1013-qwen-romio 10-13, for the die lead (masters qfd_io_serdes / qfd_io_ucie, this child sits inside them): (a) bundles c[1023:0] / r[1023:0] are built as c_v + c_d[1023:0] in + c_cr out, r_v + r_d[1023:0] out + r_cr in on the bundle's face (credit against the flow); rst_n and fault are owed in the slot pin list. (b) the 8 x 174.096-wide SRAM column needs a 216 um adapter strip; the io_serdes frame leaves 157.656 um beside the 2,400.192 x 1,512 PHY abstract: re-shape the ASSUMED PHY abstract to <= 2,341.8 wide (same 3.629 mm2 at 1,550 tall) or widen the slot by 58.4 um. (c) PHY abstracts' FDI flit is 1,041 b (RXD 128) / 1,039 b (UCIe RXD 32): regenerate both with RXD = 512 (1,043 b) in tools/qwen_missing/link_phy_gen.py.",
+ "job": {
+  "owner": "Claude:el1013-qwen-romio",
+  "branch": "claude/el1013-qwen-romio",
+  "tag": "m5a",
+  "purpose": "Qwen ROM TP8 link adapter as the M5 leaf child of cluster masters qfd_io_serdes (3) and qfd_io_ucie (1): wiring-only cell qfd_link_adp512 around ot_qfd_link_adapter W=1024 RXD=512 SRAM=1 PINREG=1 (body closed TT +6.61 / FF +16.92 at 600.048^2, M8 era). 216 x 583.2, cap M5, pins M4/M5, recipe 2, every port a flop at its pin. Cut: the S->N crossing over an SRAM row is c->tx 1,043 + rx->SRAM/skid ~1,024 = 2.07 k bits vs 4.5 k M5 tracks (M1-M4 blocked over the 174 um macro, 216 um wide) = 0.46 <= 0.60; pin faces 2,052 (S) / 2,089 (N) pins on 4.5 k M5 tracks = 0.46. Clock: ~15.4 k sinks estimated on one root (ci 1,025, IBUF 4,096, tx 1,044, rq 1,044, rb_cap 1,024, skid 4,096, rr + pin 2,050, control): the --cts gate measures it.",
+  "benches": [
+   {
+    "name": "slot_exact",
+    "cmd": "bash physical/qwen_romio_slots/bench.sh {RUN}/bench/exact exact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "two cells back to back through the 223-cycle PHY pipe model, 1,500 random words each way with die-bus credits and receiver back-pressure, bit-exact in order through the cell's own ports, no fault",
+    "pass_regex": "^PASS romio_slots exact"
+   },
+   {
+    "name": "slot_rate",
+    "cmd": "bash physical/qwen_romio_slots/bench.sh {RUN}/bench/rate rate",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "line rate 1.000 words/cycle at LAT 229 (223 PHY + 6 FDI relay stages of the cluster parent), floor 0.950",
+    "pass_regex": "^PASS romio_slots rate"
+   },
+   {
+    "name": "slot_stall",
+    "cmd": "bash physical/qwen_romio_slots/bench.sh {RUN}/bench/stall stall",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "3,000 words with 1,500-cycle receiver stalls",
+    "pass_regex": "^PASS romio_slots stall"
+   },
+   {
+    "name": "slot_mutant",
+    "cmd": "bash physical/qwen_romio_slots/bench.sh {RUN}/bench/mut mut",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "MUT=1: one extra link credit overruns the far receive buffer (fault + words lost)",
+    "fail_regex": "^FAIL romio_slots mut"
+   }
+  ]
+ }
+}
