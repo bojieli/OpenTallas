@@ -35,7 +35,10 @@ module ot_qwen_rom_tile_nk #(
     parameter integer LRR = 0,
     parameter integer XTX = 0,             // el1011-q-tile r3: registered transmit rungs per hardened leaf (matvec HIER_HARD; +XTX cycles)
     parameter integer ANR = 0,            // ot_qwen_rom_tile_w12 ANR (hardcore-1010 D)           // ot_qwen_rom_tile_w12 ARPB (qwen-1010/c)
-    parameter integer BAW = 12
+    parameter integer BAW = 12,
+    parameter integer RPH = 0,            // q13 spec r5: ot_qwen_rom_tile_w12 RPH / NDH / BMUT (hardened bank-row and node leaves)
+    parameter integer NDH = 0,
+    parameter integer BMUT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -55,7 +58,7 @@ module ot_qwen_rom_tile_nk #(
     wire tile_fault;
     ot_qwen_rom_tile_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
-        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .KV_SLICE(0)) u_tile (
+        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .RPH(RPH), .NDH(NDH), .BMUT(BMUT), .KV_SLICE(0)) u_tile (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .t_out(t_out), .t_vout(t_vout),
         .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(tile_fault),
         .kvw_ce(1'b0), .kvw_addr(7'd0), .kvw_data(512'd0), .kvw_mask(512'd0));

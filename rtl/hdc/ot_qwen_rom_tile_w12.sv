@@ -108,6 +108,18 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer XTX = 0,             // el1011-q-tile r3: registered transmit rungs per hardened leaf (matvec HIER_HARD; +XTX cycles)
     // TMUT 3 = column 1 / bank 0's MPR copy one edge stale
     parameter integer TMUT = 0,
+    // q13 spec r5 (2026-10-13), pure re-hierarchy (same registers, same edges):
+    //   RPH 1 = each ROM bank's macro-side registers (the 2 MPR request copies, cap, the CAPX rungs, the select copies)
+    //           as one ot_qwen_rom_bank_regs_w12 per bank inside this module (bench form: macros stay at the ROM pins);
+    //   RPH 2 = the same registers live in the hardened leaf ot_qwen_tile_rpair with the bank's 2 macros (the wrapper
+    //           instantiates it); this module only drives rp_req / rp_sel (flops) and takes rp_cv (leaf flops).
+    //           Needs ROM_PIPE, ROM_CAP2, ROM_CAPX 2, MPR, TG 4.
+    //   NDH 1 = the upper tree node as the hardened leaf ot_qwen_tile_node (W 16, NREG 1, TREE_LAT 7, ANR 1); its fault
+    //           pin is registered in the leaf (+1 cycle on the node fault flag only; data/valid unchanged).
+    //   BMUT  = bench boundary mutants: 2 = the node leaf's a input with lanes 0 / 1 swapped.
+    parameter integer RPH = 0,
+    parameter integer NDH = 0,
+    parameter integer BMUT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
@@ -146,6 +158,12 @@ module ot_qwen_rom_tile_logic_w12 #(
     output wire [CODE_BANKS*12-1:0] rom_addr_b,   // per-bank address (ARPB; else each bank's group address)
     output wire [2*CODE_BANKS*13-1:0] rom_req_m,  // MPR: per-macro {ce, addr[11:0]}, macro (column p, bank b) at p*CODE_BANKS+b
     input  wire [2*CODE_BANKS*266-1:0] rom_rd,
+    // RPH 2: the hardened bank leaves (ot_qwen_tile_rpair): request pre-stage {ce, addr} and select per bank (flops
+    // here, captured by flops at the leaf pins); the leaves' registered masked BF16 words, bank b pair p at
+    // (b*TG/2 + p)*4*W*8
+    output wire [CODE_BANKS*13-1:0] rp_req,
+    output wire [CODE_BANKS-1:0]    rp_sel,
+    input  wire [CODE_BANKS*TG*W*16-1:0] rp_cv,
     // KV slice macro pins (KV_LOCAL = 1)
     output wire              kvs_r_ce,
     output wire [KV_AW-1:0]  kvs_r_addr,
@@ -238,8 +256,22 @@ module ot_qwen_rom_tile_logic_w12 #(
 
     // -- upper tree node ---------------------------------------------------------
     wire node_fault;
-    ot_qwen_me_node_w12 #(.W(W), .WS(NREG), .TREE_LAT(TREE_LAT), .ANR(ANR)) u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va),
+    generate if (NDH != 0) begin : g_ndh
+        if (W != 16 || NREG != 1 || TREE_LAT != 7 || ANR != 1) begin : g_bad
+            initial $error("NDH needs W 16, NREG 1, TREE_LAT 7, ANR 1 (the fixed hardened leaf ot_qwen_tile_node)");
+        end
+        wire [W*32-1:0] na_x;
+        if (BMUT == 2) begin : g_bm
+            assign na_x = {n_a[W*32-1:64], n_a[31:0], n_a[63:32]};
+        end else begin : g_ok
+            assign na_x = n_a;
+        end
+        ot_qwen_tile_node u_node (.clk(clk), .rst_n(rst_n), .a(na_x), .b(n_b), .va(n_va),
+                                  .y(n_y), .vy(n_vy), .fault(node_fault));
+    end else begin : g_nd
+        ot_qwen_me_node_w12 #(.W(W), .WS(NREG), .TREE_LAT(TREE_LAT), .ANR(ANR)) u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va),
                                                .y(n_y), .vy(n_vy), .fault(node_fault));
+    end endgenerate
     assign fault = me_fault | node_fault;
 
     function automatic [15:0] int8_bf16(input [7:0] code);   // == ot_qwen_w12_matvec_part int8_bf16
@@ -302,6 +334,8 @@ module ot_qwen_rom_tile_logic_w12 #(
 
         assign rom_addr_n = rom_addr;
         assign rom_addr_b = {CODE_BANKS{rom_addr}};
+        assign rp_req = {CODE_BANKS*13{1'b0}};
+        assign rp_sel = {CODE_BANKS{1'b0}};
     end else begin : g_rom_pipe
         //: request relay: ROM_ARELAY stages, one kept copy per bank group, decoded at the first stage
         wire [CODE_BANKS-1:0] ce0 = {CODE_BANKS{wrom_re}} & (({{(CODE_BANKS-1){1'b0}}, 1'b1}) << wrom_addr[AW-1:BAW]);
@@ -366,7 +400,7 @@ module ot_qwen_rom_tile_logic_w12 #(
                 assign rom_addr_b[12*b +: 12] = (b < SB) ? rq_ad_s[ROM_ARELAY] : rq_ad_n[ROM_ARELAY];
             end
         end
-        if (MPR != 0) begin : g_mpr
+        if (MPR != 0 && RPH == 0) begin : g_mpr
             //: MPR: one kept {ce, address} register per macro, the pre-stage of the last relay as its D
             wire [CODE_BANKS-1:0] ce_pre;
             wire [11:0] adm_pre;
@@ -402,7 +436,7 @@ module ot_qwen_rom_tile_logic_w12 #(
                     $finish;
                 end
 `endif
-        end else begin : g_nmpr
+        end else if (RPH == 0) begin : g_nmpr
             assign rom_req_m = {2*CODE_BANKS*13{1'b0}};
         end
         //: bank select of the word in the capture registers (held when no read: the macros hold their output)
@@ -415,7 +449,63 @@ module ot_qwen_rom_tile_logic_w12 #(
                 sel_c2 <= sel_c;                       // ROM_CAP2: the edge it lands in cap2
             end
         end
-        for (p = 0; p < TG / 2; p = p + 1) begin : g_pair
+        //: RPH (spec r5 leaf 1): the per-bank macro-side registers as one module a bank
+        wire [CODE_BANKS*TG*W*16-1:0] rp_cv_w;
+        if (RPH != 0) begin : g_rph
+            if (ROM_CAP2 == 0 || ROM_CAPX != 2 || MPR == 0 || TG != 4) begin : g_bad
+                initial $error("RPH needs ROM_CAP2, ROM_CAPX 2, MPR, TG 4");
+            end
+            wire [CODE_BANKS-1:0] ce_pre;
+            wire [11:0] adm_pre;
+            if (ROM_ARELAY == 1) begin : g_mp1
+                assign ce_pre = ce0;
+                assign adm_pre = {{(12-BAW){1'b0}}, wrom_addr[BAW-1:0]};
+            end else begin : g_mpn
+                for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_cp
+                    assign ce_pre[b] = (b < SB) ? rq_ce_s[ROM_ARELAY-1][b] : rq_ce_n[ROM_ARELAY-1][b];
+                end
+                assign adm_pre = rq_ad_s[ROM_ARELAY-1];
+            end
+            for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_b
+                wire [12:0] rq = {ce_pre[b], adm_pre};
+                wire        sl = (ROM_MUT != 0) ? sel_1[b] : sel_c[b];
+                assign rp_req[13*b +: 13] = rq;
+                assign rp_sel[b] = sl;
+                if (RPH == 1) begin : g_int
+                    wire [25:0] rq_m;
+                    ot_qwen_rom_bank_regs_w12 #(.W(W), .TMUT((b == 0) ? TMUT : 0)) u_br (.clk(clk), .rst_n(rst_n),
+                        .req_d(rq), .sel_d(sl), .rom_req(rq_m),
+                        .rom_rd({rom_rd[(CODE_BANKS + b)*266 +: 266], rom_rd[b*266 +: 266]}),
+                        .cv(rp_cv_w[TG*W*16*b +: TG*W*16]));
+                    assign rom_req_m[13*b +: 13] = rq_m[12:0];
+                    assign rom_req_m[13*(CODE_BANKS + b) +: 13] = rq_m[25:13];
+                end else begin : g_ext
+                    assign rom_req_m[13*b +: 13] = 13'd0;
+                    assign rom_req_m[13*(CODE_BANKS + b) +: 13] = 13'd0;
+                    assign rp_cv_w[TG*W*16*b +: TG*W*16] = rp_cv[TG*W*16*b +: TG*W*16];
+                end
+            end
+        end else begin : g_nrph
+            assign rp_req = {CODE_BANKS*13{1'b0}};
+            assign rp_sel = {CODE_BANKS{1'b0}};
+            assign rp_cv_w = {CODE_BANKS*TG*W*16{1'b0}};
+        end
+        for (p = 0; p < ((RPH != 0) ? TG / 2 : 0); p = p + 1) begin : g_pairh
+            wire [2*PWB-1:0] os [0:CODE_BANKS];
+            wire [2*PWB-1:0] on [0:CODE_BANKS];
+            assign os[0] = {2*PWB{1'b0}};
+            assign on[0] = {2*PWB{1'b0}};
+            for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
+                wire [2*PWB-1:0] cvb = rp_cv_w[(b*(TG/2) + p)*2*PWB +: 2*PWB];
+                assign os[b+1] = (b < SB) ? (os[b] | cvb) : os[b];
+                assign on[b+1] = (b < SB) ? on[b] : (on[b] | cvb);
+            end
+            //: group registers and relay registers, as g_pair's
+            reg [2*PWB-1:0] gs, gn, rs, rn;
+            always @(posedge clk) begin gs <= os[CODE_BANKS]; gn <= on[CODE_BANKS]; rs <= gs; rn <= gn; end
+            assign wrom_q[2*PWB*p +: 2*PWB] = rs | rn;
+        end
+        for (p = 0; p < ((RPH == 0) ? TG / 2 : 0); p = p + 1) begin : g_pair
             wire [2*PWB-1:0] cv [0:CODE_BANKS-1];
             wire [2*PWB-1:0] os [0:CODE_BANKS];
             wire [2*PWB-1:0] on [0:CODE_BANKS];
@@ -602,6 +692,12 @@ module ot_qwen_rom_tile_w12 #(
     // el1011-q-tile h3 (2026-10-11; the glue stays tile-level logic, GLUE PLACEMENT): TOREG = tile output pin registers
     // on t_out / t_vout (+1 cycle a tile->node hop), TIDR = registered tile_id strap, LRR = one reset relay flop per
     // hardened leaf
+    // q13 spec r5: RPH != 0 = the 5 bank rows as hardened leaves ot_qwen_tile_rpair (2 macros + their registers; the
+    // logic runs RPH 2), NDH = the tree node as the hardened leaf ot_qwen_tile_node; BMUT bench boundary mutants
+    // (1 = bank 0's leaf takes bank 1's request, 2 = node leaf a lanes swapped)
+    parameter integer RPH = 0,
+    parameter integer NDH = 0,
+    parameter integer BMUT = 0,
     parameter integer TOREG = 0,
     parameter integer TIDR = 0,
     parameter integer LRR = 0,
@@ -634,33 +730,51 @@ module ot_qwen_rom_tile_w12 #(
     wire [CODE_BANKS*12-1:0] rom_addr_b;
     wire [2*CODE_BANKS*266-1:0] rom_rd;
     wire [2*CODE_BANKS*13-1:0]  rom_req_m;
+    wire [CODE_BANKS*13-1:0]    rp_req;
+    wire [CODE_BANKS-1:0]       rp_sel;
+    wire [CODE_BANKS*1024-1:0]  rp_cv;
     wire                  kvs_r_ce;
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .XTX(XTX), .ANR(ANR), .BAW(BAW)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .RPH((RPH != 0) ? 2 : 0), .NDH(NDH), .BMUT(BMUT)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
+        .rp_req(rp_req), .rp_sel(rp_sel), .rp_cv(rp_cv),
         .kvs_r_ce(kvs_r_ce), .kvs_r_addr(kvs_r_addr), .kvs_rd(kvs_rd),
         .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}));
     genvar p, b;
     generate
         //: BAW 12 keeps the original macro path g_col[p].g_bank[b].u_rom (floorplan scripts, die views, runtime
         //: array binding); BAW 11 half-depth banks live under g_colh (zero-trip loops, no extra scope level)
-        for (p = 0; p < ((BAW == 12) ? 2 : 0); p = p + 1) begin : g_col
+        for (p = 0; p < ((BAW == 12 && RPH == 0) ? 2 : 0); p = p + 1) begin : g_col
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
                 ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]),
                     .addr_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b) +: 12] : (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
                     .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end
         end
-        for (p = 0; p < ((BAW == 11) ? 2 : 0); p = p + 1) begin : g_colh
+        for (p = 0; p < ((BAW == 11 && RPH == 0) ? 2 : 0); p = p + 1) begin : g_colh
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
                 wire [11:0] ra = (MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b) +: 12] : (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr;
                 ot_rom_2048x266_m8 u_rom (.clk(clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]), .addr_in(ra[10:0]),
                     .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end
+        end
+    endgenerate
+    generate
+        //: q13 spec r5 leaf 1: bank row b = the hardened leaf ot_qwen_tile_rpair (macros of columns 0 / 1 at g_col[p].u_rom
+        //: inside it + their request / capture / expansion registers); every leaf pin is a flop on both sides
+        for (b = 0; b < ((RPH != 0) ? CODE_BANKS : 0); b = b + 1) begin : g_rp
+            ot_qwen_tile_rpair u_rp (.clk(clk), .rst_n(rst_n),
+                .req_d(rp_req[13*((BMUT == 1 && b == 0) ? 1 : b) +: 13]), .sel_d(rp_sel[b]), .cv(rp_cv[1024*b +: 1024]));
+        end
+        if (RPH == 0) begin : g_nrp
+            assign rp_cv = {CODE_BANKS*1024{1'b0}};
+        end
+        if (RPH != 0 && BAW != 12) begin : g_rp_bad
+            initial $error("RPH needs BAW 12 (ot_rom_4096x266_m8 bank rows)");
         end
     endgenerate
     reg        kvw_ce_q;
@@ -715,4 +829,63 @@ endmodule
 module ot_qwen_mpr_reg (input wire clk, input wire rst_n, input wire [12:0] d, output reg [12:0] q);
     always @(posedge clk or negedge rst_n) if (!rst_n) q[12] <= 1'b0; else q[12] <= d[12];
     always @(posedge clk) q[11:0] <= d[11:0];
+endmodule
+
+// q13 spec r5 leaf 1 (2026-10-13): the macro-side registers of ONE code ROM bank row (the macros of columns 0 and 1):
+// per macro the kept {ce, address} request register (MPR), the capture register at the macro's output pins, the two
+// CAPX rungs (sign / magnitude / leading one, then the masked BF16 word) and the select copies -- exactly the registers
+// of ot_qwen_rom_tile_logic_w12 g_mpr.g_mc[*].g_mb[b] and g_pair[*].g_bank[b].g_capx2, on the same edges.  Every input
+// feeds only flops, every output is a flop.  TMUT 3 = column 1's request copy one edge stale (bench mutant).
+module ot_qwen_rom_bank_regs_w12 #(
+    parameter integer W = 16,
+    parameter integer TMUT = 0
+) (
+    input  wire               clk,
+    input  wire               rst_n,
+    input  wire [12:0]        req_d,       // {ce, addr[11:0]}: the pre-stage of the last request relay
+    input  wire               sel_d,       // the bank select of the edge the capture register holds the word
+    output wire [2*13-1:0]    rom_req,     // column mc's macro {ce, addr} at 13*mc
+    input  wire [2*266-1:0]   rom_rd,      // column mc's macro word at 266*mc
+    output wire [64*W-1:0]    cv           // pair (column) mc's masked BF16 expansion at 32*W*mc
+);
+    localparam integer PWB = 2 * W * 8;
+    function automatic [2:0] lead1(input [7:0] m);
+        integer i;
+        begin lead1 = 0; for (i = 0; i < 8; i = i + 1) if (m[i]) lead1 = i[2:0]; end
+    endfunction
+    genvar mc, ex, er;
+    generate for (mc = 0; mc < 2; mc = mc + 1) begin : g_mc
+        if (TMUT == 3 && mc == 1) begin : g_mut
+            wire [12:0] stale;
+            ot_qwen_mpr_reg u_s (.clk(clk), .rst_n(rst_n), .d(req_d), .q(stale));
+            ot_qwen_mpr_reg u_r (.clk(clk), .rst_n(rst_n), .d(stale), .q(rom_req[13*mc +: 13]));
+        end else begin : g_ok
+            ot_qwen_mpr_reg u_r (.clk(clk), .rst_n(rst_n), .d(req_d), .q(rom_req[13*mc +: 13]));
+        end
+        (* keep *) reg [PWB-1:0] cap;
+        always @(posedge clk) cap <= rom_rd[266*mc +: PWB];
+        (* keep *) reg [PWB/8-1:0] xa_s, xa_nz;
+        (* keep *) reg [PWB-1:0]   xa_m;
+        (* keep *) reg [3*PWB/8-1:0] xa_p;
+        (* keep *) reg [2*PWB-1:0] cap2x;
+        (* keep *) reg [PWB/32-1:0] sel_r;
+        for (er = 0; er < PWB / 32; er = er + 1) begin : g_selr
+            always @(posedge clk) sel_r[er] <= sel_d;
+        end
+        for (ex = 0; ex < PWB / 8; ex = ex + 1) begin : g_cvx
+            wire [7:0] cb = cap[8*ex +: 8];
+            wire [7:0] mg = cb[7] ? (~cb + 8'd1) : cb;
+            always @(posedge clk) begin
+                xa_s[ex] <= cb[7];
+                xa_m[8*ex +: 8] <= mg;
+                xa_p[3*ex +: 3] <= lead1(mg);
+                xa_nz[ex] <= (mg != 8'd0);
+            end
+            wire [7:0] nm = xa_m[8*ex +: 8] << (3'd7 - xa_p[3*ex +: 3]);
+            always @(posedge clk)
+                cap2x[16*ex +: 16] <= (xa_nz[ex] && sel_r[ex / 4]) ?
+                    {xa_s[ex], 8'd127 + {5'd0, xa_p[3*ex +: 3]}, nm[6:0]} : 16'd0;
+        end
+        assign cv[2*PWB*mc +: 2*PWB] = cap2x;
+    end endgenerate
 endmodule
