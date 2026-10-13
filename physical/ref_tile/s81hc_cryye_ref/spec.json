@@ -28,7 +28,7 @@
     22.248,
     32.4
    ],
-   "inst": "g_slice.g_f[0].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[0].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -37,7 +37,7 @@
     22.248,
     96.12
    ],
-   "inst": "g_slice.g_f[1].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[1].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -46,7 +46,7 @@
     22.248,
     159.84
    ],
-   "inst": "g_slice.g_f[2].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[2].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -55,7 +55,7 @@
     22.248,
     223.56
    ],
-   "inst": "g_slice.g_f[3].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[3].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -64,7 +64,7 @@
     137.16,
     32.4
    ],
-   "inst": "g_slice.g_f[4].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[4].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -73,7 +73,7 @@
     137.16,
     96.12
    ],
-   "inst": "g_slice.g_f[5].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[5].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -82,7 +82,7 @@
     137.16,
     159.84
    ],
-   "inst": "g_slice.g_f[6].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[6].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -91,7 +91,7 @@
     137.16,
     223.56
    ],
-   "inst": "g_slice.g_f[7].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[7].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -100,7 +100,7 @@
     252.072,
     32.4
    ],
-   "inst": "g_slice.g_f[8].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[8].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -109,7 +109,7 @@
     252.072,
     96.12
    ],
-   "inst": "g_slice.g_f[9].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[9].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -118,7 +118,7 @@
     252.072,
     159.84
    ],
-   "inst": "g_slice.g_f[10].u_yf.g_tile[0].g_m2.u_m"
+   "inst": "g_slice.g_f[10].u_yf.g_tile[0].genblk1.genblk1.g_m2.u_m"
   }
  ],
  "pins": {
@@ -146,7 +146,7 @@
  "job": {
   "owner": "Codex:s81_hc_closure",
   "branch": "codex/s81hc-physical-20261012",
-  "tag": "v2-regional",
+  "tag": "v3-regional-names",
   "purpose": "[hc-crooty] crooty v3 2-tile split, C=2: y slice tile (far side, above crrf): y_s -> yp -> yp2 -> SRAM FWFT FIFO (11 x 128x256 in 3x4) -> p_y; ~14.1k flops on its own root; replaces s81hc_crootye_ref-v2 (one root over 18.4k flops + 11 macros, hold repair not converging)",
   "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_cryye_ref/views",
