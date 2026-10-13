@@ -24,7 +24,7 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_wrx/u_m.g_m[0].u_sram",
+   "inst": "u_wrx/*g_m?0?*u_sram",
    "at": [
     36.288,
     23.76
@@ -32,7 +32,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_wrx/u_m.g_m[1].u_sram",
+   "inst": "u_wrx/*g_m?1?*u_sram",
    "at": [
     161.56799999999998,
     23.76
@@ -40,7 +40,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_wrx/u_m.g_m[2].u_sram",
+   "inst": "u_wrx/*g_m?2?*u_sram",
    "at": [
     286.848,
     23.76
@@ -48,7 +48,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_rb/g_bk[0].u_m.g_m[0].u_sram",
+   "inst": "u_rb/*g_bk?0?**g_m?0?*u_sram",
    "at": [
     36.288,
     86.4
@@ -56,7 +56,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_rb/g_bk[0].u_m.g_m[1].u_sram",
+   "inst": "u_rb/*g_bk?0?**g_m?1?*u_sram",
    "at": [
     161.56799999999998,
     86.4
@@ -64,7 +64,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_rb/g_bk[0].u_m.g_m[2].u_sram",
+   "inst": "u_rb/*g_bk?0?**g_m?2?*u_sram",
    "at": [
     286.848,
     86.4
@@ -72,7 +72,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_rb/g_bk[1].u_m.g_m[0].u_sram",
+   "inst": "u_rb/*g_bk?1?**g_m?0?*u_sram",
    "at": [
     36.288,
     149.04
@@ -80,7 +80,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_rb/g_bk[1].u_m.g_m[1].u_sram",
+   "inst": "u_rb/*g_bk?1?**g_m?1?*u_sram",
    "at": [
     161.56799999999998,
     149.04
@@ -88,7 +88,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_rb/g_bk[1].u_m.g_m[2].u_sram",
+   "inst": "u_rb/*g_bk?1?**g_m?2?*u_sram",
    "at": [
     286.848,
     149.04
@@ -96,7 +96,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_wtx/u_m.g_m[0].u_sram",
+   "inst": "u_wtx/*g_m?0?*u_sram",
    "at": [
     36.288,
     211.68
@@ -104,7 +104,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_wtx/u_m.g_m[1].u_sram",
+   "inst": "u_wtx/*g_m?1?*u_sram",
    "at": [
     161.56799999999998,
     211.68
@@ -112,7 +112,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_wtx/u_m.g_m[2].u_sram",
+   "inst": "u_wtx/*g_m?2?*u_sram",
    "at": [
     286.848,
     211.68
@@ -120,7 +120,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_qp/u_m.g_m[0].u_sram",
+   "inst": "u_qp/*g_m?0?*u_sram",
    "at": [
     36.288,
     274.32
@@ -128,7 +128,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_qp/u_m.g_m[1].u_sram",
+   "inst": "u_qp/*g_m?1?*u_sram",
    "at": [
     161.56799999999998,
     274.32
@@ -136,7 +136,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_qp/u_m.g_m[2].u_sram",
+   "inst": "u_qp/*g_m?2?*u_sram",
    "at": [
     286.848,
     274.32
@@ -144,7 +144,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_qr/u_m.g_m[0].u_sram",
+   "inst": "u_qr/*g_m?0?*u_sram",
    "at": [
     36.288,
     336.96
@@ -152,7 +152,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_qr/u_m.g_m[1].u_sram",
+   "inst": "u_qr/*g_m?1?*u_sram",
    "at": [
     161.56799999999998,
     336.96
@@ -160,7 +160,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_qr/u_m.g_m[2].u_sram",
+   "inst": "u_qr/*g_m?2?*u_sram",
    "at": [
     286.848,
     336.96
@@ -204,7 +204,7 @@
  "job": {
   "owner": "Codex:hbm-front-link",
   "branch": "codex/hbm-front-link",
-  "tag": "r1",
+  "tag": "r2",
   "purpose": "Reference-flow successor to structurally split hcoll port, ordered SRAM rows and balanced local spine; registered boundaries; concrete routed output hold-only residual -6.38ps corrected with physical pin delay stage.",
   "extra_paths": [
    "physical/variant_fill/hcoll_port_rbsel_idleA"
