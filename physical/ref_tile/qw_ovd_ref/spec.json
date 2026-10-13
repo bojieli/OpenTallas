@@ -1,0 +1,145 @@
+{
+ "name": "qw_ovd_ref",
+ "top": "ot_hgi_qw_ovd",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovd.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 172.8
+ },
+ "util": 0.52,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_od"
+  }
+ ],
+ "pins": {
+  "W": [
+   "l_gp1",
+   "l_gp2"
+  ],
+  "S": [
+   "l_gp0",
+   "l_wv0",
+   "l_wsec0",
+   "l_ws0",
+   "l_wy0",
+   "l_wcr0",
+   "d_vo",
+   "d_f",
+   "d_df",
+   "d_y",
+   "clk",
+   "rst_n",
+   "c_gv",
+   "c_gh",
+   "c_mw_v",
+   "c_mw_a",
+   "c_mw_sec",
+   "c_mw_n",
+   "c_wg",
+   "d_wf",
+   "d_bad"
+  ],
+  "N": [
+   "l_gp3",
+   "l_wv3",
+   "l_wsec3",
+   "l_ws3",
+   "l_wy3",
+   "l_wcr3"
+  ],
+  "E": [
+   "l_wv1",
+   "l_wsec1",
+   "l_ws1",
+   "l_wy1",
+   "l_wcr1",
+   "l_wv2",
+   "l_wsec2",
+   "l_ws2",
+   "l_wy2",
+   "l_wcr2",
+   "dec_rst_n",
+   "x_v",
+   "x_hd",
+   "x"
+  ]
+ },
+ "refglob": "*gpf*",
+ "io_flop_at_pins": {
+  "cols": 12,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "quant_wide_ov flat cluster (38,353 flops + 20 macro clock pins on one root: ov1 crash, ov2 cancelled at 32-38k sinks with 495-727 ps CTS spread, ov3 EARLY_FAIL_HOLD) is replaced by a wires-only parent over hardened M5 leaves with their own clock roots: control head ot_hgi_qw_ovc, data head ot_hgi_qw_ovd (result SRAM + write side), 4 x read lane-group leaf ot_hgi_qw_lgr, 4 x write lane-group leaf ot_hgi_qw_lgw, the three closed decoder tiles; a register at both pins of every seam, no cycle added (gate quant_wide_ov: 184 cycles vs 168 priced = 1.095x, unchanged)",
+ "job": {
+  "owner": "Claude:el1013-hbm-quant-split",
+  "branch": "claude/hbm-quant-split-1013",
+  "tag": "w1",
+  "purpose": "WQ3 quant cluster data head: four gather pin registers (4,096) + OR4 register x to the decoder, decode launch / header RX, result capture, result FIFO on one 64x512 SRAM, meta FIFO, write credits, write issue, write beat registers (wy 512) to the write leaves, write grant.",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ]
+ },
+ "orfs_vars": {
+  "OT_MEG_MASTER": "ot_sram_1r1w_64x512_m1_r2c2",
+  "OT_MEG_EXPECT": 1,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "pin_ranges": {
+  "l_gp0": [
+   2.0,
+   125.0
+  ],
+  "l_gp3": [
+   2.0,
+   125.0
+  ],
+  "l_wy0": [
+   198.0,
+   257.0
+  ],
+  "l_wy3": [
+   198.0,
+   257.0
+  ],
+  "d_y": [
+   128.0,
+   196.0
+  ]
+ },
+ "why_floorplan": "cluster centre (216, 259.2), 259.2 x 172.8: W face = gather pin registers of rows 1 / 2 (facing, 71 um), S / N faces west = rows 0 / 3 (<= 440 um), E face = decoder x (dxl W face 43 um away) and the write beat of rows 1 / 2, S / N faces east = the write beat of rows 0 / 3 (<= ~510 um to the write leaves at x 730), S face = decode result y from daq's S pins and the control seam; pins on every track (4,096 gather pins: 0.57 of the W face, <= 0.67 elsewhere)",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "inhold": true,
+ "outhold": true
+}
