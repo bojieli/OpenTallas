@@ -13,3 +13,4 @@ One row per (die, case): instances bound to a real closed view (exact LEF + exac
 | hbm_r25gqn | v11a | contract | main aed297865 + sfu sub-slot pins (81 bus runs = the view) | 769 | 546 | 0 | 0 | 13 | 210 | 71.00 | 5 / 86 | 2026-10-13 07:54 PDT |
 | s81_layer1 | c5 | case | case 2fa1d3e09 v5 opts (as timed: q_elem on kit/interim_tt.lib); views main 30e399aa9 + case source | 57015 | 0 | 1280 | 1683 | 12556 | 41496 | 0.00 | 0 / 212 | 2026-10-13 08:21 PDT |
 | s81_layer1 | c5_qelem_etm | case | c5 placement + LEFs, q_elem verdict-replay TT ETM added to the lib list (NOT yet a die STA run); views main 30e399aa9 + case source | 57015 | 1280 | 0 | 1683 | 12556 | 41496 | 2.25 | 1 / 212 | 2026-10-13 08:21 PDT |
+| qwen_rom_tp8 | v4 | contract | main 573c6c1c8 | 2066 | 948 | 0 | 0 | 4 | 1114 | 45.89 | 6 / 43 | 2026-10-13 08:49 PDT |
