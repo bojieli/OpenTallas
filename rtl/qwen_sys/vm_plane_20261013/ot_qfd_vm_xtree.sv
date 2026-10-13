@@ -95,40 +95,33 @@ module ot_qfd_vm_xline_t #(
             ov[gi] <= o_v; osp[gi*4 +: 4] <= o_sp;
         end
     end
-    reg [NX-1:0] line;
-    genvar c, dd;
-    generate for (c = 0; c < NX; c = c + 1) begin : g_ent
-        localparam integer G = c / GE;
-        wire [ND-1:0] hit, src;
-        for (dd = 0; dd < ND; dd = dd + 1) begin : g_d
-            localparam integer DV = DSET[dd*8 +: 8];
-            localparam integer JJ = (c * DV) / BEAT;
-            localparam integer MM = ((c * DV) % BEAT + ((MUT == 1 && c == 5) ? 1 : 0)) % BEAT;
-            if (JJ < BMAX) begin : g_ok
-                assign hit[dd] = pdd[G*ND + dd] && (pj[G*LB +: LB] == JJ);
-                assign src[dd] = pd[MM];
-            end else begin : g_no
-                assign hit[dd] = 1'b0;
-                assign src[dd] = 1'b0;
-            end
+    // line and the replication stage as PROCEDURAL loops over constant indices (PLAN 2026-10-13: the per-entry generate
+    // form -- 2,048 x (14 + 17) generate scopes -- kept the ORFS yosys front end in elaboration for > 20 minutes; a
+    // loop body with constant-folded indices elaborates in seconds).  Same expressions: the last hit of DSET wins,
+    // the source is bv[(c * DV) % BEAT] of beat (c * DV) / BEAT, x_q[c] takes line[c mod 2^sp] through one CONSTANT
+    // line entry per sp value (17 with the mutant's + 1) -- never a run-time index into pd or line.
+    reg [NX-1:0] line, pick, anyhit, qn;
+    integer c, dd, sv;
+    always @* begin
+        for (c = 0; c < NX; c = c + 1) begin
+            pick[c] = 1'b0; anyhit[c] = 1'b0;
+            for (dd = 0; dd < ND; dd = dd + 1)
+                if (((c * DSET[dd*8 +: 8]) / BEAT < BMAX) && pdd[(c / GE)*ND + dd]
+                    && (pj[(c / GE)*LB +: LB] == (c * DSET[dd*8 +: 8]) / BEAT)) begin
+                    pick[c] = pd[((c * DSET[dd*8 +: 8]) % BEAT + ((MUT == 1 && c == 5) ? 1 : 0)) % BEAT];
+                    anyhit[c] = 1'b1;
+                end
+            qn[c] = 1'b0;
+            for (sv = 0; sv <= 16; sv = sv + 1)
+                if (({1'b0, osp[(c / GE)*4 +: 4]} + ((MUT == 3) ? 5'd1 : 5'd0)) == sv) qn[c] = line[c & ((1 << sv) - 1)];
         end
-        reg pick;
-        integer kk;
-        always @(*) begin
-            pick = 1'b0;
-            for (kk = 0; kk < ND; kk = kk + 1) if (hit[kk]) pick = src[kk];
+    end
+    always @(posedge clk) begin
+        for (c = 0; c < NX; c = c + 1) begin
+            if (me[c / GE] && pv[c / GE] && anyhit[c] && (c < (1 << psp[(c / GE)*4 +: 4]) || MUT == 2)) line[c] <= pick[c];
+            if (me[c / GE] && ov[c / GE]) q[c] <= qn[c];
         end
-        always @(posedge clk) if (me[G] && pv[G] && (|hit) && (c < (1 << psp[G*4 +: 4]) || MUT == 2)) line[c] <= pick;
-        // replication source line[c mod 2^sp]: one CONSTANT line entry per sp value (17 values with the mutant's
-        // + 1), selected by sp -- never a run-time index into line (a 2,048:1 shift per q bit stalls synthesis)
-        wire [4:0] osw = {1'b0, osp[G*4 +: 4]} + ((MUT == 3) ? 5'd1 : 5'd0);
-        wire [16:0] rs;
-        genvar sv;
-        for (sv = 0; sv <= 16; sv = sv + 1) begin : g_rs
-            assign rs[sv] = line[c & ((1 << sv) - 1)];
-        end
-        always @(posedge clk) if (me[G] && ov[G]) q[c] <= rs[osw];
-    end endgenerate
+    end
 endmodule
 
 module ot_qfd_vm_xqface_t #(
@@ -150,6 +143,50 @@ module ot_qfd_vm_xqface_t #(
         assign me = me_e;
     end endgenerate
     always @(posedge clk) if (me || MUT == 1) q <= d;
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_qfd_vm_xcol_t (PLAN 2026-10-13): ONE BIT POSITION of the whole x read as ONE hardened leaf = ot_qfd_vm_xplane_t
+// (pin flop, rot1, rot2, bv) feeding ot_qfd_vm_xline_t (line, x_q replication) -- instances and wires only.
+// Why one leaf: as two leaves the 1,008-b bv plane of every bit position was a die net between abutting leaves; in
+// the band it took a third of every 260-um window (plan: 0.5994 with the lanes) and forced the line leaf between the
+// plane and one region row.  Inside one leaf it is M2-M5 wiring, and the lanes land on BOTH faces: d[NRB*8-1:0]
+// (the lower region row's banks, port d_lo) on S, d[NRB*16-1:NRB*8] (d_hi) on N; q (x_q plane, 2^SMAX b) leaves on
+// W (q_lo) / E (q_hi).  Ports = the union of the two leaves, the two buses split per face; ONE me_e (every replica of both samples it); cycle behaviour unchanged.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_qfd_vm_xcol_t #(
+    parameter integer NRB = 64,
+    parameter integer SMIN = 7,
+    parameter integer SMAX = 11,
+    parameter integer BMAX = 8,
+    parameter integer ND = 14,
+    parameter [ND*8-1:0] DSET = {8'd96, 8'd64, 8'd48, 8'd32, 8'd24, 8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0},
+    parameter integer MEREG = 1,
+    parameter integer PMUT = 0,                 // ot_qfd_vm_xplane_t MUT
+    parameter integer LMUT = 0                  // ot_qfd_vm_xline_t MUT
+) (
+    input  wire                        clk,
+    input  wire                        me_e,
+    input  wire [NRB*8-1:0]            d_lo,    // bit p of every element of banks 0 .. NRB/2-1 (the lower region row): S face
+    input  wire [NRB*8-1:0]            d_hi,    // ... of banks NRB/2 .. NRB-1 (the upper region row): N face
+    input  wire [$clog2(NRB)+3:0]      c_a,     // plane control (see ot_qfd_vm_xplane_t)
+    input  wire [$clog2((NRB-1)*16+1)-1:0] c_nv,
+    input  wire                        c_v,     // line / x_q control (see ot_qfd_vm_xline_t)
+    input  wire [ND-1:0]               c_d,
+    input  wire [$clog2(BMAX):0]       c_j,
+    input  wire [3:0]                  c_sp,
+    input  wire                        o_v,
+    input  wire [3:0]                  o_sp,
+    output wire [(1<<(SMAX-1))-1:0]    q_lo,    // x_q plane, elements 0 .. 2^(SMAX-1)-1: W face
+    output wire [(1<<(SMAX-1))-1:0]    q_hi     // elements 2^(SMAX-1) .. 2^SMAX-1: E face
+);
+    wire [(NRB-1)*16-1:0] bv;
+    wire [NRB*16-1:0]     d = {d_hi, d_lo};
+    wire [(1<<SMAX)-1:0]  q;
+    assign {q_hi, q_lo} = q;
+    ot_qfd_vm_xplane_t #(.NRB(NRB), .MEREG(MEREG), .MUT(PMUT)) u_p (.clk(clk), .me_e(me_e), .d(d), .c_a(c_a), .c_nv(c_nv), .q(bv));
+    ot_qfd_vm_xline_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET), .MEREG(MEREG), .MUT(LMUT)) u_l (
+        .clk(clk), .me_e(me_e), .d(bv), .c_v(c_v), .c_d(c_d), .c_j(c_j), .c_sp(c_sp), .o_v(o_v), .o_sp(o_sp), .q(q));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------

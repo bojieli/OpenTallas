@@ -182,7 +182,9 @@ module ot_qfd_vm_region_leaf #(
 `else
         ot_qfd_vm_rr4_t u_r4 (
 `endif
-            .clk(clk), .rst_n(rst_n), .rqb(rqb[1:0]), .bx(bx[h*2048 +: 2048]), .t1(t1[h*512 +: 512]));
+            .clk(clk), .rst_n(rst_n), .rqb(rqb[1:0]),
+            .bx_w({bx[(4*h + 2)*512 +: 512], bx[(4*h + 0)*512 +: 512]}), .bx_e({bx[(4*h + 3)*512 +: 512], bx[(4*h + 1)*512 +: 512]}),
+            .t1(t1[h*512 +: 512]));
     end endgenerate
     localparam integer R2MUT = (ROW_MUT != 0) ? 1 : (LEAF_MUT == 12) ? 2 : (LEAF_MUT == 7) ? 3 : 0;
 `ifndef OT_QFD_VM_HARD
@@ -328,9 +330,11 @@ module ot_qfd_vm_rr4_t #(
     input  wire          clk,
     input  wire          rst_n,
     input  wire [1:0]    rqb,
-    input  wire [2047:0] bx,
+    input  wire [1023:0] bx_w,          // bx of banks 4h + 0, 4h + 2 (unit column 0): W face
+    input  wire [1023:0] bx_e,          // bx of banks 4h + 1, 4h + 3 (unit column 1): E face
     output wire [511:0]  t1
 );
+    wire [2047:0] bx = {bx_e[1023:512], bx_w[1023:512], bx_e[511:0], bx_w[511:0]};
     reg rt;
     always @(posedge clk or negedge rst_n) if (!rst_n) rt <= 1'b0; else rt <= 1'b1;
     (* keep = "true", dont_touch = "true" *) reg [3:0] r;

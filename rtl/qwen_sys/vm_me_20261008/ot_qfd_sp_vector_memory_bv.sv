@@ -135,7 +135,8 @@ module ot_qfd_sp_vector_memory_bv #(
     //        pipelines, so the leaves see it on the original edge: latency + 0.
     //   XMK  levels of the me tree (EN 0, MEE = 1): me_en_t is me_en (XMK + 1) edges early; the tree's last level is
     //        the me_e of every relay / plane / region / fan / line / face leaf, <= XMF sinks per node.
-    //   XLO  1: line and x_q are owned by leaves: 32 x ot_qfd_vm_xline_t, XQR x_q relay stages (ot_qfd_vm_xrelay_t)
+    //   XLO  1: line and x_q are owned by leaves: 32 x ot_qfd_vm_xcol_t (plane + line of one bit position in ONE
+    //        leaf, PLAN 2026-10-13), XQR x_q relay stages (ot_qfd_vm_xrelay_t)
     //        and ot_qfd_vm_xqface_t at the consumer face.  x latency + XQR + 2 engine edges (the x consumer's XVM
     //        grows by it; the schedule here runs against XVM - XQR - 2).
     // MUT = 8: a plane-control tree node is transparent; 9: a me-tree node; 10: line leaf 3 picks a wrong source;
@@ -280,7 +281,7 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer MB_P = ((NRB >= 8) ? NRB / 8 : 1) * MCG;
     localparam integer MB_PC = MB_P + 32;
     localparam integer MB_L = MB_PC + XTK * 8;
-    localparam integer MB_LC = MB_L + 32 * XOWN;
+    localparam integer MB_LC = MB_L;                            // PLAN 2026-10-13: the line leaf is inside the plane leaf (ot_qfd_vm_xcol_t): one me pin
     localparam integer MB_QR = MB_LC + XTK * 8 * XOWN;
     localparam integer MB_F = MB_QR + 32 * NQS * XQR * XOWN;
     localparam integer NMC = MB_F + NF * XOWN;
@@ -863,10 +864,12 @@ module ot_qfd_sp_vector_memory_bv #(
             for (pb = 0; pb < NRB*16; pb = pb + 1) begin : g_i
                 assign pd[pb] = capx[pb*32 + pl];
             end
-            ot_qfd_vm_xplane_t #(.NRB(NRB), .MEREG((MEE != 0) ? 1 : 0),
-                .MUT((pl == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0)) u_p (.clk(clk),
-                .me_e(me_lf[MB_P + pl]), .d(pd), .c_a(pcq[pl*PCW + NVW +: LNRB+4]), .c_nv(pcq[pl*PCW +: NVW]), .q(pq));
-            assign pq_all[((MUT == 7 && pl < 2) ? 1 - pl : pl)*BEAT +: BEAT] = pq;
+            if (XOWN == 0) begin : g_pl        // XOWN: the plane is inside ot_qfd_vm_xcol_t (g_xown), which takes pd and pcq
+                ot_qfd_vm_xplane_t #(.NRB(NRB), .MEREG((MEE != 0) ? 1 : 0),
+                    .MUT((pl == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0)) u_p (.clk(clk),
+                    .me_e(me_lf[MB_P + pl]), .d(pd), .c_a(pcq[pl*PCW + NVW +: LNRB+4]), .c_nv(pcq[pl*PCW +: NVW]), .q(pq));
+                assign pq_all[((MUT == 7 && pl < 2) ? 1 - pl : pl)*BEAT +: BEAT] = pq;
+            end
             for (pb = 0; pb < BEAT; pb = pb + 1) begin : g_o
                 assign bvs[pb*32 + pl] = pq_all[pl*BEAT + pb];
             end
@@ -912,6 +915,8 @@ module ot_qfd_sp_vector_memory_bv #(
         localparam integer QWL = LB + AW + ND + 4;
         localparam integer LCW = 1 + ND + LB + 4 + 1 + 4;
         localparam integer SWW = 1 + ND + LB + 4;
+        localparam integer XNVW = $clog2(BEAT + 1);
+        localparam integer XPCW = LNRB + 4 + XNVW;
         wire [7*SWW-1:0] stg;                                  // the line-write word at stage n (6 = s6 ... 3 = s3)
         assign stg[6*SWW +: SWW] = {s6_bv, s6_d, s6_j, s6_sp};
         assign stg[5*SWW +: SWW] = {s5_bv, s5_d, s5_j, s5_sp};
@@ -935,10 +940,20 @@ module ot_qfd_sp_vector_memory_bv #(
         genvar lp, lk, ls, lf, lb;
         for (lp = 0; lp < 32; lp = lp + 1) begin : g_l
             wire [LCW-1:0] w = lcq[lp*LCW +: LCW];
-            ot_qfd_vm_xline_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET),
-                .MEREG((MEE != 0) ? 1 : 0), .MUT((MUT == 10 && lp == 3) ? 1 : 0)) u_l (.clk(clk), .me_e(me_lf[MB_L + lp]),
-                .d(pq_all[lp*BEAT +: BEAT]), .c_v(w[LCW-1]), .c_d(w[LB + 9 +: ND]), .c_j(w[9 +: LB]), .c_sp(w[8:5]),
-                .o_v(w[4]), .o_sp(w[3:0]), .q(xr[lp*NX +: NX]));
+            // PLAN 2026-10-13: plane + line of one bit position are ONE leaf (ot_qfd_vm_xcol_t); MUT 7 swaps the data
+            // of planes 0 and 1 at the leaves' inputs (the bv plane is no longer a net of this module)
+            localparam integer PSRC = (MUT == 7 && lp < 2) ? 1 - lp : lp;
+            wire [NRB*16-1:0] cd;
+            for (lb = 0; lb < NRB*16; lb = lb + 1) begin : g_i
+                assign cd[lb] = capx[lb*32 + PSRC];
+            end
+            ot_qfd_vm_xcol_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET),
+                .MEREG((MEE != 0) ? 1 : 0), .PMUT((lp == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0),
+                .LMUT((MUT == 10 && lp == 3) ? 1 : 0)) u_l (.clk(clk), .me_e(me_lf[MB_P + lp]),
+                .d_lo(cd[NRB*8-1:0]), .d_hi(cd[NRB*16-1:NRB*8]),
+                .c_a(g_plane.pcq[lp*XPCW + XNVW +: LNRB+4]), .c_nv(g_plane.pcq[lp*XPCW +: XNVW]),
+                .c_v(w[LCW-1]), .c_d(w[LB + 9 +: ND]), .c_j(w[9 +: LB]), .c_sp(w[8:5]),
+                .o_v(w[4]), .o_sp(w[3:0]), .q_lo(xr[lp*NX +: NX/2]), .q_hi(xr[lp*NX + NX/2 +: NX/2]));
         end
         for (lk = 1; lk <= XQR; lk = lk + 1) begin : g_r
             for (lp = 0; lp < 32; lp = lp + 1) begin : g_p
