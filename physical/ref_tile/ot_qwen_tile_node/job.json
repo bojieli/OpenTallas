@@ -1,5 +1,5 @@
 {
- "name": "ot_qwen_tile_node-r5-COMMIT",
+ "name": "ot_qwen_tile_node-r5-78b36aae5",
  "block": "ot_qwen_tile_node",
  "ref_tile": true,
  "owner": "Claude:q14-node",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q14-tile-parent",
-  "commit": "COMMIT"
+  "commit": "78b36aae5"
  },
  "stages": {
   "bench": [
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_qwen_tile_node/ot_qwen_tile_node-r5-COMMIT"
+   "to": "results/rtl/ref_tile/ot_qwen_tile_node/ot_qwen_tile_node-r5-78b36aae5"
   }
  ],
  "cycles_added": 0,
