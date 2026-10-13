@@ -6,7 +6,9 @@ sys.path.insert(0,'tools'); sys.path.insert(0,'results/arch/qwen_tp8_1012')
 import die_top_lint as D, cuts as C
 out=Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True); t=time.time()
 D.QWEN_RECIPE='tp8b'; D._QW.clear(); D.QSRC=None
-m=D.load_qwen()[1]
+v,m=D.load_qwen()
+v.write_netlist(m,1,out/'die.v')
+json.dump(dict(pad_trim=m.get('tp8_pad_trim'),pads=m.get('tp8_tree_pads'),relays=m.get('r21_relays')),open(out/'pad_placement.json','w'),indent=1)
 ins=[dict(n=i.name, m=getattr(i,'master',''), x=i.x, y=i.y, w=i.w, h=i.h) for i in m['insts']]
 json.dump(dict(insts=ins, buses=[(b,c,bits,[e[0] for e in eps]) for b,c,bits,eps in m['buses']]), open(out/'rom_tp8b.json','w'))
 r_=m.get('r21_relays',{}); print('relays', r_.get('relays'), 'repaired', r_.get('repaired'), 'unrepaired', len(r_.get('unrepaired',[])), 'off_plan', r_.get('off_plan'), 'feedback', r_.get('feedback'))

@@ -148,6 +148,7 @@ QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=669.6, 
 # band under a 400-um IO word channel (qwen_rom_fulldie_b3r2._tp8b_f2)
 QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=190.08, tile_body=311.04, tile_h=1296.0,
                                        spine_gap=171.936, root_spread=True,
+                                       tree_pads='results/arch/qwen_tp8_1012/tree_pads_codex.json',
                                        f2=dict(cols=48, rows=16, col_pitch=394.848, spine_w=4589.0, kv_w=3700.0,
                                                kv_ch=100.0, io_chan=480.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4)))
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
