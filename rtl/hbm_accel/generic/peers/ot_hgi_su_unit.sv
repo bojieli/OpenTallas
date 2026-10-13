@@ -1304,6 +1304,8 @@ module ot_hgi_su_ctlw #(
         t = 18'(off) + {1'b0, n, 5'd0};
         pre16 = (t > 18'h0FFFE) ? 16'hFFFE : t[15:0];
     endfunction
+    initial if (STREAM_WM != 0 && SLICES != 0)
+        $error("STREAM_WM requires flat drain accounting; slice tracker integration pending");
     // Opt-in dense SFU producer stream, sector prefix from completed O writes only.
     reg [3:0] stream_seq, stream_tags [0:3];
     wire stream_fault;
