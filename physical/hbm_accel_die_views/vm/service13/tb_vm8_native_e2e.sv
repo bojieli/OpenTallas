@@ -15,7 +15,14 @@
 // Mutants: MUT_SINK_DATA, MUT_SINK_TICKET, MUT_SINK_EARLYACK (sink 3), MUT_XW_CREDIT, MUT_XW_RDPIN (producer),
 //  and every root / checker / slice mutant by its own define.
 //  +SEL=1..4 picks a mutated commit tracker (1 one stage short, 2 dispatch on the release, 3 release and sinks
-//  ignored, 4 in-flight writes dropped from the count); +DROP_X=g drops beat g before the SM pins (E2E_XSM).
+//  ignored, 4 in-flight writes dropped from the count, 5 load_hold ignored: the next record may overtake the
+//  dispatch); +DROP_X=g drops beat g before the SM pins (E2E_XSM); +SM_BUSY=n: the dispatcher is not ready for n edges
+//  after every final release (the next record's fetch is shorter than the wait: load_hold must hold its first beat).
+// OVERLAP (round 4): a record's command is issued as soon as the producer is free (x_done of the previous record),
+//  i.e. while the previous record still waits for its last releases, its 27-edge x-store drain and its dispatch.
+//  The root holds the new owner's first beat until every old beat is released (lease load); the tracker's load_hold
+//  holds it until the previous dispatch is taken.  Rate = the start-to-start PERIOD of the records against the price;
+//  the start-to-dispatch LATENCY of each record is reported beside it.
 module tb_vm8_native_e2e;
 `ifdef MUT_XW_CREDIT
  localparam integer MUTX=1;
@@ -38,10 +45,10 @@ module tb_vm8_native_e2e;
  reg rst_n=0,x_v=0; reg[39:0] base=0; reg[20:0] n=0; reg[3:0] p=0; reg[31:0] stride=0; reg[1:0] fmt=0;
  wire ready,done,xfault,en,req,last_beat; wire[6:0] addr,grp; wire[2047:0] data;
  wire[1351:0] vmq; wire[1095:0] vmr; wire[511:0] q; wire[31:0] cr; wire[8223:0] rsp;
- wire wr_ready;
+ wire wr_ready;wire load_hold;wire wr_ready_g=wr_ready&&!load_hold;   // acceptance gated by the commit tracker (overlap interlock)
  ot_hgi_sm_xload #(.XW_FLOW(1),.MUT_XW(MUTX),.BD(1),.BW8(1),.PMAX(8),.W8LQ(10)) u (.clk(clk),.rst_n(rst_n),.x_v(x_v),.x_rdy(ready),
  .x_base(base),.x_n(n),.x_p(p),.x_stride(stride),.x_space(2'd1),.x_fmt(fmt),.x_xb(7'd0),
- .xw_ready(wr_ready),.xw_last(last_beat),.x_done(done),.x_fault(xfault),.xw_en(en),.xw_addr(addr),.xw_grp(grp),.xw_data(data),
+ .xw_ready(wr_ready_g),.xw_last(last_beat),.x_done(done),.x_fault(xfault),.xw_en(en),.xw_addr(addr),.xw_grp(grp),.xw_data(data),
  .vmq(vmq),.vmr(vmr),.rg_req(req),.rg_gnt(1'b1),.wrq(q),.wrq_cr(cr),.wrr(rsp));
  function automatic [255:0] sector(input integer s);
   for(integer t=0;t<8;t=t+1) sector[32*t+:32]=32'h3f800000+32'(((s*8+t)%127)<<16);
@@ -74,7 +81,7 @@ module tb_vm8_native_e2e;
  wire native_release;wire [15:0] release_ticket;wire release_last;
  wire drained,fault;wire [3:0] fault_code;wire [15:0] stale_count,dup_count,wrap_epochs;
  vm_service_root root(.clk(clk),.rst_n(rst_n),.rcv_mask(4'hf),
-  .wr_v(en),.wr_ready(wr_ready),.wr_data({1'b1,addr,grp,data}),.wr_last(last_beat),.wr_owner(wr_owner),
+  .wr_v(en&&!load_hold),.wr_ready(wr_ready),.wr_data({1'b1,addr,grp,data}),.wr_last(last_beat),.wr_owner(wr_owner),
   .tap_v(tap_v),.tap_ready(tap_ready),.tap_data(tap_data),.tap_owner(tap_owner),.tap_ticket(tap_ticket),.tap_last(tap_last),
   .tap_ACK_v(tap_ACK_v),.tap_ACK_owner(tap_ACK_owner),.tap_ACK_ticket(tap_ACK_ticket),
   .native_release(native_release),.release_ticket(release_ticket),.release_last(release_last),
@@ -114,6 +121,7 @@ module tb_vm8_native_e2e;
  integer n_acc=0,n_rel=0,n_x[0:3],n_sa[0:3],n_ra[0:3];
  integer cyc=0,fd,id=0,startcyc=0,count=0,run=0,maxrun=0,first=-1,last=-1,prev=-2;
  integer overlap=0,rowwraps=0,rewinds=0,ce_n=0,cap_n=0,max_out=0,held_cyc=0,inj_hit=0;
+ integer hold_cyc=0,sm_busy=0,busy_until=0,n_cmd=0;integer cnt_rec[0:8],exp_rec[0:8],cum_rec[0:8],rel_r[0:8],start_r[0:8],disp_r[0:8],done_r[0:8],lastacc_r[0:8],first_r[0:8],maxrun_r[0:8],hold_r[0:8];
  reg held=0;reg [2062:0] held_payload;reg quiet=0;integer quiet_x[0:3];integer quiet_rel=0;
  function automatic [15:0] tick(input integer g);
   tick={11'(g/32),1'(g%2),4'((g/2)%16)};
@@ -123,12 +131,12 @@ module tb_vm8_native_e2e;
   cyc<=cyc+1;
   if(rst_n)begin
    if(held&&(!en||{addr,grp,data,last_beat}!==held_payload))$fatal(1,"E2E FAIL held producer changed before acceptance");
-   held<=en&&!wr_ready;if(en&&!wr_ready)begin held_payload<={addr,grp,data,last_beat};held_cyc=held_cyc+1;end
+   held<=en&&!wr_ready_g;if(en&&!wr_ready_g)begin held_payload<={addr,grp,data,last_beat};held_cyc=held_cyc+1;if(load_hold)hold_cyc=hold_cyc+1;end
    if(xfault)$fatal(1,"E2E FAIL producer fault");
    if(fault&&expect_fault==0)begin $display("root fault code%0d at cycle%0d",fault_code,cyc);$fatal(1,"E2E FAIL unexpected root fault");end
    if(s_fault!=0&&stale_sink<0)begin $display("sink fault%b at cycle%0d",s_fault,cyc);$fatal(1,"E2E FAIL unexpected sink fault");end
-   if(en&&wr_ready)begin
-    acc_pay[n_acc]={addr,grp,data};acc_id[n_acc]=8'(id);acc_last[n_acc]=last_beat;
+   if(en&&wr_ready_g)begin
+    acc_pay[n_acc]={addr,grp,data};acc_id[n_acc]=8'(id);acc_last[n_acc]=last_beat;cnt_rec[id]=cnt_rec[id]+1;
     count=count+1;if(first<0)first=cyc;run=cyc==prev+1?run+1:1;if(run>maxrun)maxrun=run;prev=cyc;last=cyc;
     if(root.rowseq==8'hff)rowwraps=rowwraps+1;
     n_acc=n_acc+1;
@@ -160,7 +168,7 @@ module tb_vm8_native_e2e;
      $display("release%0d ticket%04h want%04h acks%0d,%0d,%0d,%0d",k,release_ticket,tick(k),n_ra[0],n_ra[1],n_ra[2],n_ra[3]);
      $fatal(1,"E2E FAIL release before every receiver ACK or out of order");
     end
-    n_rel=n_rel+1;relcyc=cyc;
+    n_rel=n_rel+1;relcyc=cyc;if(release_last)begin rel_r[acc_id[k]]=cyc;busy_until=cyc+sm_busy;end
    end
    if(n_acc-n_rel>32)$fatal(1,"E2E FAIL more than 32 outstanding");
    if(n_acc-n_rel>max_out)max_out=n_acc-n_rel;
@@ -178,16 +186,17 @@ module tb_vm8_native_e2e;
  // SM pins sampled (every bit of every group sampled since reset).  The op itself is not started in this bench
  // (start to the SM stays 0: op execution after the gated start is the scope of tb_hbm_b2_xcommit).
  // +DROP_X=g: beat g never reaches the SM pins (a dropped commit).
- localparam integer SMI=5,XC=3152,NSR=256;
- integer sel=0,drop_x=-1,n_disp=0,dcyc=0,exp_beats=-1,xs_words=0,xs_bad=0;
+ localparam integer SMI=5,XC=3152,NSR=128;
+ integer sel=0,drop_x=-1,n_disp=0,ndisp_s=0,dcyc=0,xs_words=0,xs_bad=0,nxs_seen=0,nxs_fire=0,xs_applied=0;
  reg cmd_begin=0,start_in=0,drop_now=0,rb_q=0;
- wire [4:0] t_start,t_taken,t_fault,t_ok;wire sm_start_ready;
+ wire [5:0] t_start,t_taken,t_fault,t_ok,t_hold;wire sm_ready_raw;wire sm_start_ready=sm_ready_raw&&cyc>=busy_until;
+ assign load_hold=t_hold[sel[2:0]];
  genvar gm;
- generate for(gm=0;gm<5;gm=gm+1)begin:g_trk
+ generate for(gm=0;gm<6;gm=gm+1)begin:g_trk
   ot_hbm_b2_xcommit #(.NSM(32),.NSINK(4),.MUT(gm)) u(.clk(clk),.rst_n(rst_n),.xw_en({s_en[3],s_en[2],s_en[1],s_en[0]}),
    .sink_drained(s_drained),.cmd_begin(cmd_begin),.release_final(native_release&&release_last),.start_in(start_in),
    .start_committed(1'b0),.start_ready(sm_start_ready&&sel==gm),.x_inflight(),.x_drained(),.dispatch_ok(t_ok[gm]),
-   .start_out(t_start[gm]),.start_taken(t_taken[gm]),.fault(t_fault[gm]));
+   .start_out(t_start[gm]),.start_taken(t_taken[gm]),.fault(t_fault[gm]),.load_hold(t_hold[gm]));
  end endgenerate
  wire rb_fire=t_start[sel[2:0]]&&sm_start_ready;   // the dispatcher takes the command on the upcoming edge
  integer xbad[0:NSR-1],xchk[0:NSR-1];
@@ -215,7 +224,7 @@ module tb_vm8_native_e2e;
  reg cg_wake=1;
  wire sm_xw_en=s_en[0][SMI]&&!drop_now;
  wire sm_busy,sm_fault;
- ot_hbm_accel_smh xsm(.clk(clk),.rst_n(rst_n),.start(1'b0),.start_ready(sm_start_ready),.op_rows(13'd0),.op_c(16'd0),
+ ot_hbm_accel_smh xsm(.clk(clk),.rst_n(rst_n),.start(1'b0),.start_ready(sm_ready_raw),.op_rows(13'd0),.op_c(16'd0),
   .op_g(8'd0),.op_gs(1'b0),.op_fmt(2'd0),.op_xb(7'd0),.busy(sm_busy),.d_valid(1'b0),.d_ready(),.d_base(32'd0),.d_lines(24'd0),
   .req_v(),.req_ready(1'b1),.req_addr(),.req_tag(),.rsp_v(1'b0),.rsp_tag(10'd0),.rsp_data(1088'd0),.xw_en(sm_xw_en),
   .xw_addr(s_addr[0][SMI*7+:7]),.xw_grp(s_grp[0][SMI*7+:7]),.xw_data(s_data[0][SMI*2048+:2048]),.rv(),.rrow(),.rdata(),
@@ -224,7 +233,13 @@ module tb_vm8_native_e2e;
  always @(negedge clk)begin
   drop_now=drop_x>=0&&n_x[0]==drop_x;
   cg_wake<=!rst_n||s_en[0][SMI];
-  if(rst_n&&s_en[0][SMI])xs_beat(s_addr[0][SMI*7+:7],32'(s_grp[0][SMI*7+:7]),s_data[0][SMI*2048+:2048]);
+  // the shadow is the image of the records up to the one whose dispatch is awaited: a beat of a LATER record that
+  // the SM pins sample before that dispatch is staged and enters the shadow only after it (a later record's x in
+  // the store at the dispatch edge = the dispatched op would read the wrong x)
+  if(rst_n&&s_en[0][SMI])nxs_seen=nxs_seen+1;
+  while(xs_applied<nxs_seen&&32'(acc_id[xs_applied])<=ndisp_s)begin
+   xs_beat(acc_pay[xs_applied][2061:2055],32'(acc_pay[xs_applied][2054:2048]),acc_pay[xs_applied][2047:0]);xs_applied=xs_applied+1;
+  end
   if(rst_n&&sm_fault)$fatal(1,"E2E FAIL SM fault");
  end
  genvar gc,gp,gj,gx;
@@ -254,26 +269,42 @@ module tb_vm8_native_e2e;
   `undef XCM
  end end end end endgenerate
 `else
- assign sm_start_ready=1'b1;
+ assign sm_ready_raw=1'b1;
 `endif
+ always @(posedge clk)ndisp_s<=n_disp;
  always @(negedge clk)if(rst_n)begin
   if(t_fault[sel[2:0]])$fatal(1,"E2E FAIL commit tracker fault");
   if(rb_q)begin
    xs_bad=0;xs_words=0;for(integer i=0;i<NSR;i=i+1)begin xs_bad=xs_bad+xbad[i];xs_words=xs_words+xchk[i];end
-   if(xs_bad!=0)begin $display("dispatch%0d: %0d x-store words not committed (of %0d checked)",n_disp-1,xs_bad,xs_words);$fatal(1,"E2E FAIL dispatch before the x-store commit");end
+   if(xs_bad!=0)begin $display("dispatch%0d: %0d x-store words differ from the record's image (of %0d checked)",n_disp-1,xs_bad,xs_words);$fatal(1,"E2E FAIL x-store at the dispatch edge is not the record's committed image");end
 `ifdef E2E_XSM
    if(xs_words==0)$fatal(1,"E2E FAIL x-store readback checked nothing");
+   if(nxs_fire>cum_rec[n_disp-1])begin $display("dispatch%0d: %0d beats of a later record were sampled by the SM pins before it",n_disp-1,nxs_fire-cum_rec[n_disp-1]);$fatal(1,"E2E FAIL a later record overtook the dispatch");end
 `endif
   end
   rb_q<=rb_fire;
   if(rb_fire)begin
-   if(count!=exp_beats||n_rel!=n_acc||n_x[0]!=n_acc||n_x[1]!=n_acc||n_x[2]!=n_acc||n_x[3]!=n_acc)begin
-    $display("dispatch%0d at cycle%0d beats%0d expected%0d accepted%0d released%0d",n_disp,cyc,count,exp_beats,n_acc,n_rel);
+   if(n_disp>8||n_disp>=n_cmd||cnt_rec[n_disp]!=exp_rec[n_disp]||n_rel<cum_rec[n_disp]||n_x[0]<cum_rec[n_disp]||n_x[1]<cum_rec[n_disp]||n_x[2]<cum_rec[n_disp]||n_x[3]<cum_rec[n_disp])begin
+    $display("dispatch%0d at cycle%0d beats%0d expected%0d accepted%0d released%0d",n_disp,cyc,cnt_rec[n_disp],exp_rec[n_disp],n_acc,n_rel);
     $fatal(1,"E2E FAIL dispatch before the final release");
    end
-   dcyc=cyc;n_disp=n_disp+1;
+   nxs_fire=nxs_seen;dcyc=cyc;disp_r[n_disp]=cyc;n_disp=n_disp+1;
   end
  end
+ // the dispatcher's start request: one per record, in order, return-to-zero between records
+ initial begin:g_startreq
+  integer d;
+  wait(rst_n);
+  for(d=0;d<9;d=d+1)begin
+   while(n_cmd<=d)@(negedge clk);
+   start_in=1;
+   while(n_disp<=d)@(negedge clk);
+   @(negedge clk);start_in=0;@(negedge clk);
+  end
+ end
+ // the receivers' expected owner follows the root's lease load (every beat of the old lease is released by then)
+ always @(negedge clk)if(rst_n&&root.lease_load)
+  for(integer r=0;r<4;r=r+1)if(!(r==2&&stale_sink>=0&&id>=stale_sink))sink_owner[r]=root.own_in_q;
  // ---------------- injections (root bench hooks) ----------------
  integer bi;
  // A publication-read fault needs a publication read: receiver 0 is held for 20 accepted beats before the
@@ -336,58 +367,67 @@ module tb_vm8_native_e2e;
    $fclose(fd);$finish;
   end
  endtask
- task automatic command(input integer kk,input integer slots,input integer f);
-  integer expected,timeout,completed,donecyc,lastacc;
+ integer kk_r[0:8],p_r[0:8],f_r[0:8],per[0:8],lat[0:8],end_r;
+ task automatic watch;   // the ends of the negative runs
   begin
-   while(!ready) @(negedge clk);
-   n=kk;p=slots;fmt=f;stride=kk;count=0;run=0;maxrun=0;first=-1;last=-1;prev=-2;
-   wr_owner=own(id);for(integer r=0;r<4;r=r+1)if(!(r==2&&stale_sink>=0&&id>=stale_sink))sink_owner[r]=own(id);
-   exp_beats=((kk+(f==0?511:f==1?1023:2047))/(f==0?512:f==1?1024:2048))*8*((slots*3152+2047)/2048);
-   startcyc=cyc; @(negedge clk);x_v=1;cmd_begin=1;start_in=1;@(negedge clk);x_v=0;cmd_begin=0;
-   timeout=0;
-   while(!done&&timeout<400000)begin
-    @(negedge clk);timeout=timeout+1;
-    if(fault&&expect_fault!=0)quarantine_end();
-    if(s_fault[2]&&stale_sink>=0)stale_owner_end();
-   end
-   completed=done;repeat(2)@(negedge clk);donecyc=cyc-startcyc;lastacc=last-startcyc;
-   timeout=0;
-   while(!(drained&&n_rel==n_acc&&(&s_drained))&&timeout<20000)begin
-    @(negedge clk);timeout=timeout+1;
-    if(fault&&expect_fault!=0)quarantine_end();
-    if(s_fault[2]&&stale_sink>=0)stale_owner_end();
-   end
-   expected=((kk+(f==0?511:f==1?1023:2047))/(f==0?512:f==1?1024:2048))*8*((slots*3152+2047)/2048);
-   if(!completed||!drained||n_rel!=n_acc||count!=expected)begin
-    $display("record%0d k%0d p%0d f%0d count%0d expected%0d done%0d accepted%0d released%0d",id,kk,slots,f,count,expected,completed,n_acc,n_rel);
-    $fatal(1,"E2E FAIL record incomplete");
-   end
-   for(integer r=0;r<4;r=r+1)if(n_x[r]!=n_acc||n_sa[r]!=n_acc)$fatal(1,"E2E FAIL receiver missed beats");
-   timeout=0;while(n_disp<=id&&timeout<2000)begin @(negedge clk);timeout=timeout+1;end
-   if(n_disp!=id+1)$fatal(1,"E2E FAIL no dispatch after the final release");
-   @(negedge clk);start_in=0;
-   // service ends on the edge that shows the release of the last beat (every receiver sampled and ACKed);
-   // the baseline price ends two edges after x_done, when the last SM has sampled
-   // and, since round 3, the service ends on the DISPATCH edge: the edge at which the dispatcher samples the
-   // tracker's start (final release, sinks drained, x-store committed).  release= is the round-2 end point.
-   svc[id]=dcyc-startcyc;tails[id]=svc[id]-lastacc;
-   $display("E2E id=%0d K=%0d P=%0d fmt=%0d beats=%0d max_contiguous=%0d first=%0d last_accept=%0d producer_done=%0d release=%0d service=%0d tail=%0d price=%0d ratio=%0d.%04d",
-    id,kk,slots,f,count,maxrun,first-startcyc,lastacc,donecyc,relcyc-startcyc,svc[id],tails[id],base_service[id],
-    svc[id]/base_service[id],((svc[id]%base_service[id])*10000)/base_service[id]);
-   $fflush();
-   id=id+1;repeat(2)@(negedge clk);
+   if(fault&&expect_fault!=0)quarantine_end();
+   if(s_fault[2]&&stale_sink>=0)stale_owner_end();
   end
  endtask
- integer worst_num=0,worst_den=1;
+ task automatic command(input integer kk,input integer slots,input integer f);
+  integer timeout,h0;
+  begin
+   while(!ready)begin @(negedge clk);watch();end
+   n=kk;p=slots;fmt=f;stride=kk;count=0;run=0;maxrun=0;first=-1;last=-1;prev=-2;h0=hold_cyc;
+   wr_owner=own(id);          // en is low: every beat of the previous record is accepted; the root loads the lease when drained
+   exp_rec[id]=((kk+(f==0?511:f==1?1023:2047))/(f==0?512:f==1?1024:2048))*8*((slots*3152+2047)/2048);
+   cum_rec[id]=exp_rec[id]+(id==0?0:cum_rec[id-1]);
+   startcyc=cyc;start_r[id]=cyc; @(negedge clk);x_v=1;cmd_begin=1;n_cmd=n_cmd+1;@(negedge clk);x_v=0;cmd_begin=0;
+   timeout=0;
+   while(!done&&timeout<400000)begin @(negedge clk);timeout=timeout+1;watch();end
+   if(!done||count!=exp_rec[id])begin
+    $display("record%0d k%0d p%0d f%0d count%0d expected%0d done%0d accepted%0d released%0d",id,kk,slots,f,count,exp_rec[id],done,n_acc,n_rel);
+    $fatal(1,"E2E FAIL record incomplete");
+   end
+   repeat(2)@(negedge clk);
+   done_r[id]=cyc-startcyc;lastacc_r[id]=last-startcyc;first_r[id]=first-startcyc;maxrun_r[id]=maxrun;hold_r[id]=hold_cyc-h0;
+   kk_r[id]=kk;p_r[id]=slots;f_r[id]=f;
+   id=id+1;
+  end
+ endtask
+ task automatic finish_records;
+  integer timeout;
+  begin
+   timeout=0;
+   while(!(n_disp==9&&drained&&n_rel==n_acc&&(&s_drained))&&timeout<40000)begin @(negedge clk);timeout=timeout+1;watch();end
+   while(!ready&&timeout<40000)begin @(negedge clk);timeout=timeout+1;end
+   end_r=cyc;
+   if(n_disp!=9)$fatal(1,"E2E FAIL no dispatch after the final release");
+   if(!drained||n_rel!=n_acc)$fatal(1,"E2E FAIL record incomplete");
+   for(integer r=0;r<4;r=r+1)if(n_x[r]!=n_acc||n_sa[r]!=n_acc)$fatal(1,"E2E FAIL receiver missed beats");
+   // PERIOD: start of a record to the start of the next one (the last record: to the edge two after its x_done, the
+   // edge at which a next command would have been issued).  LATENCY: start to the edge at which the dispatcher
+   // samples the tracker's start for this record (final release, sinks drained, x-store committed).
+   for(integer i=0;i<9;i=i+1)begin
+    per[i]=i<8?start_r[i+1]-start_r[i]:done_r[i];lat[i]=disp_r[i]-start_r[i];svc[i]=per[i];
+    $display("E2E id=%0d K=%0d P=%0d fmt=%0d beats=%0d max_contiguous=%0d first=%0d last_accept=%0d producer_done=%0d release=%0d dispatch=%0d load_hold_edges=%0d period=%0d price=%0d ratio=%0d.%04d latency_ratio=%0d.%04d",
+     i,kk_r[i],p_r[i],f_r[i],cnt_rec[i],maxrun_r[i],first_r[i],lastacc_r[i],done_r[i],rel_r[i]-start_r[i],lat[i],hold_r[i],per[i],base_service[i],
+     per[i]/base_service[i],((per[i]%base_service[i])*10000)/base_service[i],lat[i]/base_service[i],((lat[i]%base_service[i])*10000)/base_service[i]);
+   end
+  end
+ endtask
+ integer worst_num=0,worst_den=1,wl_num=0,wl_den=1,tot_per=0,tot_price=0;
  initial begin
   base_service[0]=2164;base_service[1]=181;base_service[2]=139;base_service[3]=11648;base_service[4]=499;
   base_service[5]=545;base_service[6]=26366;base_service[7]=2111;base_service[8]=4159;
   for(integer r=0;r<4;r=r+1)begin n_x[r]=0;n_sa[r]=0;n_ra[r]=0;sink_owner[r]=0;end
+  for(integer i=0;i<9;i=i+1)begin cnt_rec[i]=0;exp_rec[i]=-1;cum_rec[i]=0;rel_r[i]=-1;disp_r[i]=-1;end
   void'($value$plusargs("ACK_DELAY=%d",ack_delay));void'($value$plusargs("ACK_SKEW=%d",ack_skew));void'($value$plusargs("TAP_BITS=%d",tap_bits));
   if($value$plusargs("TAP_LFSR=%d",tap_seed)&&tap_seed!=0)tl=tap_seed;
   void'($value$plusargs("INJ_CE=%d",inj_ce));void'($value$plusargs("INJ_UE=%d",inj_ue));void'($value$plusargs("INJ_UEV=%d",inj_uev));
   void'($value$plusargs("INJ_WR=%d",inj_wr));void'($value$plusargs("INJ_EXP=%d",inj_exp));void'($value$plusargs("INJ_STALE=%d",inj_stale));
-  void'($value$plusargs("SEL=%d",sel));void'($value$plusargs("DROP_X=%d",drop_x));if(sel<0||sel>4)$fatal(1,"SEL 0..4");
+  void'($value$plusargs("SEL=%d",sel));void'($value$plusargs("DROP_X=%d",drop_x));if(sel<0||sel>5)$fatal(1,"SEL 0..5");
+  void'($value$plusargs("SM_BUSY=%d",sm_busy));
   void'($value$plusargs("STALE_SINK=%d",stale_sink));void'($value$plusargs("EXPECT_FAULT=%d",expect_fault));
   if(ack_delay<0||ack_skew<0||ack_delay+3*ack_skew>64)$fatal(1,"ACK_DELAY + 3 ACK_SKEW 0..64");
   root.tb_rd_xor[0]=0;root.tb_rd_xor[1]=0;root.tb_wr_xor=0;root.tb_exp_xor[0]=0;root.tb_exp_xor[1]=0;root.tb_exp_word=0;root.tb_upset=0;
@@ -395,12 +435,17 @@ module tb_vm8_native_e2e;
   command(5120,1,0);command(5120,1,1);command(5120,1,2);
   command(7168,4,0);command(7168,4,1);command(7168,4,2);
   command(8192,8,0);command(16384,8,1);command(32768,8,2);
+  finish_records();
   $fclose(fd);
   if(expect_fault!=0||stale_sink>=0)$fatal(1,"E2E FAIL expected fault never raised");
   if(inj_ce>0&&ce_n==0)$fatal(1,"E2E FAIL no corrected read injected");
-  for(integer i=0;i<9;i=i+1)if(svc[i]*worst_den>worst_num*base_service[i])begin worst_num=svc[i];worst_den=base_service[i];end
-  $display("E2E SUMMARY records=9 beats=%0d write_read_overlap_cycles=%0d row_wraps=%0d rewinds=%0d verify_read_publications=%0d publication_reads=%0d corrected_reads=%0d max_outstanding=%0d dispatches=%0d xstore_words_checked=%0d producer_held_cycles=%0d wrap_epochs=%0d worst_ratio=%0d.%04d rate_ok=%0d",
-   n_acc,overlap,rowwraps,rewinds,fasts,pubreads,ce_n,max_out,n_disp,xs_words,held_cyc,wrap_epochs,worst_num/worst_den,((worst_num%worst_den)*10000)/worst_den,worst_num*10<=worst_den*11);
+  for(integer i=0;i<9;i=i+1)begin
+   if(per[i]*worst_den>worst_num*base_service[i])begin worst_num=per[i];worst_den=base_service[i];end
+   if(lat[i]*wl_den>wl_num*base_service[i])begin wl_num=lat[i];wl_den=base_service[i];end
+   tot_per=tot_per+per[i];tot_price=tot_price+base_service[i];
+  end
+  $display("E2E SUMMARY records=9 beats=%0d write_read_overlap_cycles=%0d row_wraps=%0d rewinds=%0d verify_read_publications=%0d publication_reads=%0d corrected_reads=%0d max_outstanding=%0d dispatches=%0d xstore_words_checked=%0d producer_held_cycles=%0d load_hold_edges=%0d wrap_epochs=%0d total_period=%0d total_price=%0d worst_latency_ratio=%0d.%04d worst_ratio=%0d.%04d rate_ok=%0d",
+   n_acc,overlap,rowwraps,rewinds,fasts,pubreads,ce_n,max_out,n_disp,xs_words,held_cyc,hold_cyc,wrap_epochs,tot_per,tot_price,wl_num/wl_den,((wl_num%wl_den)*10000)/wl_den,worst_num/worst_den,((worst_num%worst_den)*10000)/worst_den,worst_num*10<=worst_den*11);
   if(overlap==0||rowwraps==0)$fatal(1,"E2E FAIL coverage: no write/read overlap or row wrap");
   $display("E2E PASS records=9");$finish;
  end

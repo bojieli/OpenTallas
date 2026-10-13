@@ -22,8 +22,15 @@ S="$S rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xcommit.sv"
 SX=$(for f in $SM $S;do echo $f;done|awk '!seen[$0]++'|tr '\n' ' ')
 cd "$root";sha256sum $SX tools/dshbm_sm_pq_seq.py physical/hbm_accel_die_views/vm/service13/run_native_e2e.sh tools/vm8_service/xload_flow_compare.py >"$out/source.sha256"
 # name | build define | plusargs | expectation (pass / quar / stale / fail)
+# rate: the nine-record rate WITH the x-store drain joined (overlapped under the next record's fetch) and the VM8 root
+#   re-timing (vm_cp_root cx1: +6 edges per write, +10 per read = +16 on the accept -> release loop, as +ACK_DELAY=16).
+# rate_root0: the same without the +16.  ovl_busy / m_xc_overtake: the dispatcher is busy for 120 edges after every
+#   final release; load_hold must hold the next record's first beat (exact), the tracker without it must FAIL.
 runs=(
-"rate|xsm|+SEL=0|pass"
+"rate|xsm|+SEL=0 +ACK_DELAY=16|pass"
+"rate_root0|xsm|+SEL=0|pass"
+"ovl_busy|xsm|+SEL=0 +SM_BUSY=120|pass"
+"m_xc_overtake|xsm|+SEL=5 +SM_BUSY=120|fail"
 "m_xc_short|xsm|+SEL=1|fail"
 "m_xc_nodrain|xsm|+SEL=2|fail"
 "m_xc_norel|xsm|+SEL=3|fail"

@@ -138,10 +138,11 @@ def cmd_check(a):
         if r["load"] and r.get("commit"):
             if r["commit_latency_edges"] != D:
                 fails.append(f"op {r['op']}: stream commit latency {r['commit_latency_edges']} != D")
-            if a.sel == 0 and r["x_bound"] and r["start_after_last_beat_edges"] != D + 1:
-                fails.append(f"op {r['op']}: start {r['start_after_last_beat_edges']} edges after the last beat, not D + 1")
-            if a.sel == 0 and not r["x_bound"] and r["start_after_release_edges"] != 2:
-                fails.append(f"op {r['op']}: start {r['start_after_release_edges']} edges after the release, not 2")
+            # the dispatch edge is the later of: the edge after the last SRAM write edge (E0 + D + 1) and two edges
+            # after the release (r8 op 7: release 3 edges late, drain still running -> start = E0 + D + 1, not release + 2)
+            want = max(r["commit"]["e0_last"] + D + 1, r["commit"]["e_rel"] + 2)
+            if a.sel == 0 and r["commit"]["t_start"] != want:
+                fails.append(f"op {r['op']}: start at edge {r['commit']['t_start']}, not max(last beat + D + 1, release + 2) = {want}")
     # per branch (hop, tile row): calibrated write latency, first read after start, read-after-write slack
     br = {}
     for s in sram:

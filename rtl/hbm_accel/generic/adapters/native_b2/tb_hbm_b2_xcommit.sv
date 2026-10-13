@@ -7,7 +7,7 @@
 //   * every x beat enters through the sink's tap {v1, addr7, grp7, data2048} at II 1 (13 beats per address);
 //   * start reaches the SM only through the tracker's registered start gate (start_in is raised at cmd_begin, BEFORE
 //     the first beat: the join alone decides the dispatch edge);
-//   * every x-store macro of the SM (8 columns x 2 tiles x 2 leaves x 4 macros = 256) is probed: write edges, read
+//   * every x-store macro of the SM (8 columns x 2 tiles x 2 leaves x 4 macros = 128) is probed: write edges, read
 //     edges, array contents against a shadow of the beats the SM pins sampled.
 // The x-store arrays start with a non-zero pattern (OT_MEM_NO_INIT + the fill below), so a read before commit differs.
 // Five trackers run in parallel (MUT 0..4); +SEL picks the one whose start_out drives the SM (one build, five runs).
@@ -17,7 +17,7 @@
 module tb_hbm_b2_xcommit;
     parameter integer D = 27, SMI = 5, MAXOPS = 32, LAT = 60, JIT = 40, STALL = 20000;
     localparam integer SUB = 4, LBS = 2, LSB = 16, NC = 8, XDEPTH = 128, RMAX = 4096;
-    localparam integer RW = 12, XW = 7, XC = 3152, FRAGW = NC * XC, NBEAT = 13, NW = 10, NX = 5, NS = 256;
+    localparam integer RW = 12, XW = 7, XC = 3152, FRAGW = NC * XC, NBEAT = 13, NW = 10, NX = 5, NS = 128;   // 8 columns x 2 tile rows x 2 leaves x 4 macros = 128 x-store macros (r8: NS 256 left 128 never-written entries that read as cal_nonuniform 128)
     reg clk = 0, rst_n = 0, ck_s = 0;
     always #0.5 clk = ~clk;                       // rises at 0.5 + k
     initial begin #0.25; forever #0.5 ck_s = ~ck_s; end   // from 0: rises at 0.75 + k, FALLS at 0.25 + k = a quarter cycle before the rising edge (r7 trace: with ck_s = 1 it fell at 0.75 + k, a quarter cycle AFTER the edge)
