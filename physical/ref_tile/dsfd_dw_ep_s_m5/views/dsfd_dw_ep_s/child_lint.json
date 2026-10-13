@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_dw_ep_s_m5-m5-5b76815db/record/views/dsfd_dw_ep_s/dsfd_dw_ep_s.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 44 of 124 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cmd[0] M5 (6.864,0.016), c_cmd[10] M5 (6.864,0.016), c_cmd[11] M5 (6.864,0.016))"
+ ],
+ "summary": "dsfd_dw_ep_s 64.8 x 64.8: PG M5 VDD 12 stripes (92% spread, 100% cov) / VSS 12 stripes (92% spread, 100% cov); strap M6; face pins 124 blocked-above 0 blocked-same 0; clock ck[0] insertion 124 ps",
+ "info": {
+  "cell": "dsfd_dw_ep_s",
+  "W": 64.8,
+  "H": 64.8,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 12,
+     "dir": "V",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 12
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 12,
+     "dir": "V",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 12
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 124,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 44,
+   "band_examples": [
+    "c_cmd[0] M5 (6.864,0.016)",
+    "c_cmd[10] M5 (6.864,0.016)",
+    "c_cmd[11] M5 (6.864,0.016)",
+    "c_cmd[12] M5 (6.864,0.016)",
+    "c_cmd[13] M5 (6.864,0.016)",
+    "c_cmd[14] M5 (6.864,0.016)"
+   ]
+  },
+  "clock_insertion": {
+   "ck[0]": {
+    "max_ps": 123.59,
+    "min_ps": 98.26
+   }
+  }
+ }
+}
