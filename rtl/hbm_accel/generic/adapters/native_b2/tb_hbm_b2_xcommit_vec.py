@@ -21,7 +21,11 @@ OPS = [("warm bf16 K5120 R1 (G10): 1040 beats, one burst, tiles asleep", "bf16",
        ("fp8 K1280 R16 (G2): bursts of 26, gap 30, tiles asleep", "fp8", 1280, 16, 1, 26, 30, 0, 200, 0),
        ("fp8 K1280 R2 resident x (no load, claims committed)", "fp8", 1280, 2, 0, 0, 0, 0, 0, 1),
        ("bf16 K5120 R1 (G10): one burst of 1040, ring wrap onto stale x", "bf16", 5120, 1, 1, 0, 0, 0, 0, 0),
-       ("fp8 K2304 R2 (G3): bursts of 104, gap 2, release 3 late", "fp8", 2304, 2, 1, 104, 2, 3, 0, 0)]
+       ("fp8 K2304 R2 (G3): bursts of 104, gap 2, release 3 late", "fp8", 2304, 2, 1, 104, 2, 3, 0, 0),
+       # priced shapes: the full x store (128 addresses x 13 beats = 1,664 beats) in the two production row bursts
+       ("PRICE fp8 K16384 R1 (G16): 1,664 beats, row bursts of 26 (FP8), gap 1", "fp8", 16384, 1, 1, 26, 1, 0, 0, 0),
+       ("PRICE bf16 K8192 R1 (G16): 1,664 beats, row bursts of 104 (BF16), gap 1", "bf16", 8192, 1, 1, 104, 1, 0, 0, 0),
+       ("PRICE bf16 K8192 R1 (G16): 1,664 beats, one burst", "bf16", 8192, 1, 1, 0, 0, 0, 0, 0)]
 
 
 def build():
@@ -109,6 +113,8 @@ def cmd_check(a):
             row["start_after_last_ack_edges"] = x["t_start"] - x["e_ack"]
             row["start_after_release_edges"] = x["t_start"] - x["e_rel"]
             row["first_read_after_start_edges"] = x["rd_first"] - x["t_start"]
+            row["load_edges_first_tap_to_last_ack"] = x["e_ack"] - x["e_tap0"] + 1
+            row["drain_added_ratio"] = round(row["start_after_last_ack_edges"] / row["load_edges_first_tap_to_last_ack"], 6)
             row["x_bound"] = o["release_delay"] == 0
         rows.append(row)
     if timeout:
@@ -153,6 +159,7 @@ def cmd_check(a):
     print(out["status"].upper(), "sel", a.sel, "; ".join(fails))
     for r in rows:
         print(f"  op {r['op']} exact {r['exact']} rb_bad {r['commit'].get('rb_bad')} start-last_beat {r.get('start_after_last_beat_edges')} "
+              f"start-last_ack {r.get('start_after_last_ack_edges')} load {r.get('load_edges_first_tap_to_last_ack')} ratio {r.get('drain_added_ratio')} "
               f"commit {r.get('commit_latency_edges')} slack_min {r['commit'].get('slack_min')} | {r['tag']}")
     return 0 if not fails else 1
 

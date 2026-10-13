@@ -10,7 +10,7 @@
 //   * every x-store macro of the SM (8 columns x 2 tiles x 2 leaves x 4 macros = 256) is probed: write edges, read
 //     edges, array contents against a shadow of the beats the SM pins sampled.
 // The x-store arrays start with a non-zero pattern (OT_MEM_NO_INIT + the fill below), so a read before commit differs.
-// Four trackers run in parallel (MUT 0..3); +SEL picks the one whose start_out drives the SM (one build, four runs).
+// Five trackers run in parallel (MUT 0..4); +SEL picks the one whose start_out drives the SM (one build, five runs).
 // All monitors sample a quarter cycle BEFORE the rising clock edge (ck_s): the values the edge will sample; `e` is the
 // index of that upcoming edge.  Files (+DIR): seq.hex, lines.hex, x.hex (as the pq bench), xc.hex (5 words per op:
 // burst length (0 = one burst), gap between bursts, release delay, idle gap before the load, claim committed).
@@ -30,21 +30,21 @@ module tb_hbm_b2_xcommit;
         .sm_mask(8'hff), .tap_v(tap_v), .tap_ready(tap_ready), .tap_data(tap_data), .tap_owner(OWNER),
         .tap_ticket(tap_ticket), .tap_ACK_v(tap_ACK_v), .tap_ACK_owner(tap_ACK_owner), .tap_ACK_ticket(tap_ACK_ticket),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .fault(sink_fault), .drained(sink_drained));
-    // ---------------- the trackers (MUT 0..3) ----------------
+    // ---------------- the trackers (MUT 0..4) ----------------
     integer sel;
     reg cmd_begin = 0, release_final = 0, start_in = 0, start_committed = 0;
     wire start_ready;
-    wire [3:0] t_inflight, t_drained, t_ok, t_start, t_taken, t_fault;
+    wire [4:0] t_inflight, t_drained, t_ok, t_start, t_taken, t_fault;
     genvar gm;
-    generate for (gm = 0; gm < 4; gm = gm + 1) begin : g_trk
+    generate for (gm = 0; gm < 5; gm = gm + 1) begin : g_trk
         ot_hbm_b2_xcommit #(.D(D), .MUT(gm)) u (.clk(clk), .rst_n(rst_n), .xw_en(xw_en), .sink_drained(sink_drained),
             .cmd_begin(cmd_begin), .release_final(release_final), .start_in(start_in),
             .start_committed(start_committed), .start_ready(start_ready && sel == gm), .x_inflight(t_inflight[gm]),
             .x_drained(t_drained[gm]), .dispatch_ok(t_ok[gm]), .start_out(t_start[gm]), .start_taken(t_taken[gm]),
             .fault(t_fault[gm]));
     end endgenerate
-    wire start = t_start[sel[1:0]];
-    wire trk_fault = t_fault[sel[1:0]];
+    wire start = t_start[sel[2:0]];
+    wire trk_fault = t_fault[sel[2:0]];
     // ---------------- the real native SM ----------------
     reg [RW:0] op_rows; reg [15:0] op_c; reg [7:0] op_g; reg op_gs; reg [1:0] op_fmt; reg [XW-1:0] op_xb;
     wire busy;
@@ -142,7 +142,7 @@ module tb_hbm_b2_xcommit;
     wire rb_fire = start && start_ready;       // the SM takes the op on the upcoming edge
     integer op_e0 [0:MAXOPS-1]; integer op_ts [0:MAXOPS-1]; integer op_erel [0:MAXOPS-1]; integer op_ack [0:MAXOPS-1];
     integer op_rb [0:MAXOPS-1]; integer op_wl [0:MAXOPS-1]; integer op_rf [0:MAXOPS-1]; integer op_sm [0:MAXOPS-1];
-    integer op_d [0:MAXOPS-1]; integer op_nb [0:MAXOPS-1];
+    integer op_d [0:MAXOPS-1]; integer op_nb [0:MAXOPS-1]; integer op_t0 [0:MAXOPS-1]; integer e_tap0;
     integer s, sum, mx, mn, fop, e_ack, drained_low_err, sink_ack;
     initial begin
         for (s = 0; s < XDEPTH; s = s + 1) begin fragx[s] = 0; shv[s] = 0; end
@@ -151,7 +151,7 @@ module tb_hbm_b2_xcommit;
             smin[s] = 1 << 30; rb_bad[s] = 0; stale[s] = 0; w_after_drained[s] = 0; w_gated[s] = 0; nwr[s] = 0;
         end
         e = 1; e0_last = -1; e0_first = -1; e_rel = -1; t_start_e = -1; n_beats = 0; cal = 0; cur_xb = 0; cur_xn = 0; fop = 0;
-        e_ack = -1; drained_low_err = 0; sink_ack = 0;
+        e_ack = -1; drained_low_err = 0; sink_ack = 0; e_tap0 = -1;
     end
     always @(negedge ck_s) begin
         if (rst_n) begin
@@ -162,11 +162,13 @@ module tb_hbm_b2_xcommit;
                 if (t_drained[0]) drained_low_err = drained_low_err + 1;   // a beat at the pins while x_drained
             end
             if (tap_ACK_v) begin e_ack = e; sink_ack = sink_ack + 1; end
+            if (cmd_begin) e_tap0 = -1;                         // per command: the edge that accepts its first tap beat
+            if (tap_v && tap_ready && e_tap0 < 0) e_tap0 = e;
             if (release_final && !rel_mark) begin e_rel = e; rel_mark = 1; end
             if (!release_final) rel_mark = 0;
             if (rb_fire) begin
                 t_start_e = e; op_ts[fop] = e; op_e0[fop] = e0_last; op_erel[fop] = e_rel; op_ack[fop] = e_ack;
-                op_nb[fop] = n_beats;
+                op_nb[fop] = n_beats; op_t0[fop] = e_tap0;
             end
             fin_now <= (fin_tog != fin_seen); fin_seen <= fin_tog;
         end
@@ -302,7 +304,7 @@ module tb_hbm_b2_xcommit;
             base_of[op] = acc; acc = acc + seq[op * NW + 4];
             nres[op] = 0; consumed[op] = 0; t_done[op] = -1; t_post[op] = -1;
             op_e0[op] = -1; op_ts[op] = -1; op_erel[op] = -1; op_rb[op] = -1; op_wl[op] = -1; op_rf[op] = -1; op_sm[op] = -1;
-            op_ack[op] = -1; op_nb[op] = -1;
+            op_ack[op] = -1; op_nb[op] = -1; op_t0[op] = -1;
         end
         fo = $fopen({dir, "/out.txt"}, "w");
         repeat (4) @(posedge clk);
@@ -360,9 +362,9 @@ module tb_hbm_b2_xcommit;
             $fwrite(fo, "# op %0d t_post %0d t_done %0d results %0d lines %0d consumed %0d fault %0d\n",
                     op, t_post[op], t_done[op], nres[op], seq[op * NW + 4], consumed[op], fault);
         for (op = 0; op < nops; op = op + 1)
-            $fwrite(fo, "# xc op %0d load %0d e0_last %0d e_ack %0d e_rel %0d t_start %0d rb_bad %0d wr_last %0d rd_first %0d slack_min %0d beats %0d\n",
+            $fwrite(fo, "# xc op %0d load %0d e0_last %0d e_ack %0d e_rel %0d t_start %0d rb_bad %0d wr_last %0d rd_first %0d slack_min %0d beats %0d e_tap0 %0d\n",
                     op, seq[op * NW + 6], op_e0[op], op_ack[op], op_erel[op], op_ts[op], op_rb[op], op_wl[op], op_rf[op],
-                    op_sm[op], op_nb[op]);
+                    op_sm[op], op_nb[op], op_t0[op]);
         total_stale = 0; total_rb = 0; total_wad = 0; total_wg = 0; lat_bad = 0; wl_max = -1;
         for (s = 0; s < NS; s = s + 1) begin
             $fwrite(fo, "# sram %0d c %0d p %0d j %0d m %0d lat_min %0d lat_max %0d nwr %0d rmin %0d smin %0d rb_bad %0d stale %0d\n",

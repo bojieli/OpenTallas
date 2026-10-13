@@ -25,8 +25,9 @@
 //   fault (sticky)         : a start that claims committed (start_committed) while the join cannot fire, or a
 //                            cmd_begin while a gated start is still waiting for the SM.  A fault blocks start_out.
 // The op payload is held stable by the caller from start_in until start_taken; it does not pass through this module.
-// MUT (bench only): 1 = counter reloads D - 1; 2 = the join ignores x_drained; 3 = the join ignores the release and
-// the sink drained inputs.
+// MUT (bench only): 1 = counter reloads D - 1 (one pipeline stage short); 2 = the join ignores x_drained (dispatch on
+// the release / last ACK); 3 = the join ignores the release and the sink drained inputs; 4 = only the first beat of a
+// run of consecutive beats reloads the counter (the later in-flight writes of the run are dropped from the count).
 module ot_hbm_b2_xcommit #(
  parameter integer NSM=8,
  parameter integer NSINK=1,
@@ -50,8 +51,8 @@ module ot_hbm_b2_xcommit #(
  localparam integer DEFF=MUT==1?D-1:D;
  localparam integer CW=$clog2(D+1);
  initial if(D!=DCFG||D<2)$fatal(1,"ot_hbm_b2_xcommit: D %0d does not match the configured x-write pipeline %0d",D,DCFG);
- reg [CW-1:0] cnt;reg rel_q,armed;
- wire xw_any=|xw_en;
+ reg [CW-1:0] cnt;reg rel_q,armed,xw_q;
+ wire xw_any=MUT==4?(|xw_en)&&!xw_q:|xw_en;
  wire [CW-1:0] cnt_n=xw_any?DEFF[CW-1:0]:(cnt!=0?cnt-1'b1:cnt);
  assign x_inflight=xw_any||cnt!=0;
  assign x_drained=!x_inflight;
@@ -62,9 +63,9 @@ module ot_hbm_b2_xcommit #(
  wire join_n=rel_ok&&sink_ok&&(MUT==2?1'b1:cnt_n==0);
  assign start_taken=start_out&&start_ready;
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin cnt<=0;rel_q<=0;armed<=1;start_out<=0;fault<=0;end
+  if(!rst_n)begin cnt<=0;xw_q<=0;rel_q<=0;armed<=1;start_out<=0;fault<=0;end
   else begin
-   cnt<=cnt_n;
+   cnt<=cnt_n;xw_q<=|xw_en;
    if(cmd_begin)rel_q<=0;else if(release_final)rel_q<=1;
    if(!start_in)armed<=1;
    if(start_taken)start_out<=0;

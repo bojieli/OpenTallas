@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # x-store commit tracker gate: ot_hbm_b2_xcommit + the real PIPE1 sink + the real native SM (ot_hbm_accel_smh, production
-# defines, no parameter overrides).  One Verilator build, four runs (+SEL = tracker MUT 0..3).
-#   ot-heavy --mem 64 -- bash rtl/hbm_accel/generic/adapters/native_b2/run_xcommit.sh <out dir> [build jobs]
+# defines, no parameter overrides).  One Verilator build, five runs (+SEL = tracker MUT 0..4).
+#   ot-heavy --mem 24 -- bash rtl/hbm_accel/generic/adapters/native_b2/run_xcommit.sh <out dir> [build jobs]
 # Run from the root of a source snapshot (git archive of the commit under test).
 set -euo pipefail
 out=$1
@@ -36,7 +36,7 @@ set -e
 echo $rc > "$out/build.rc"
 if [[ $rc -ne 0 ]]; then tail -40 "$out/build.log"; exit 3; fi
 bad=0
-for sel in 0 1 2 3; do
+for sel in 0 1 2 3 4; do
     d=$out/mut$sel
     mkdir -p "$d"
     for f in seq.hex lines.hex x.hex xc.hex gold.json; do ln -f "$out/vec/$f" "$d/$f"; done
