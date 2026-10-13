@@ -3293,7 +3293,7 @@ RST_PAD_LV = 5                   # one pad cell = 5 repeater levels (10 cycles)
 RST_W, RST_H = 5.184, 2.16       # 12 GX x 1 GY (<= 5.4 x 2.16: 96 sites x 8 rows), M1-M3
 RST_PITCH_UM = 220.0             # trunk lattice
 RST_LEAF_UM = 200.0              # sinks of one lattice cell share a leaf repeater
-RST_NET_UM = 470.0               # build limit per net (cell centres); the emitted pins are re-checked at RST_OK_UM
+RST_NET_UM = 450.0               # build limit per net (cell centres); the emitted pins are re-checked at RST_OK_UM
 RST_OK_UM = 480.0
 RST_GAP_UM = 2.16                # clearance to every other instance
 
@@ -3347,6 +3347,8 @@ class _RstOcc:
             pops += 1
             if d > lim or (best is not None and d >= best[0]):
                 break
+            cx = min(max(cx, gap + w / 2 + gx), self.W - gap - w / 2 - gx)      # a point off the die: its nearest die point
+            cy = min(max(cy, gap + h / 2 + gy), self.H - gap - h / 2 - gy)
             x0 = round(math.floor((cx - w / 2) / gx + 1e-9) * gx, 6)
             y0 = round(math.floor((cy - h / 2) / gy + 1e-9) * gy, 6)
             r = (x0, y0, x0 + w, y0 + h)
@@ -3432,11 +3434,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         def usable(c):
             if c not in tent:
                 cx, cy = (c[0] + 0.5) * P, (c[1] + 0.5) * P
-                # r8: a lattice cell cut by the die edge keeps its part inside the die (run t2: the E PHYs' reset pins
-                # sit in the 20-um edge strip, whose cell centre lies outside: rst_hbm_ES / _EN 'leaf_no_trunk_cell')
-                if c[0] * P < W and c[1] * P < H and c[0] >= 0 and c[1] >= 0:
-                    cx, cy = min(cx, W - RST_W), min(cy, H - RST_H)
-                if not (0 <= cx <= W and 0 <= cy <= H):
+                if not (0 <= cx - P / 2 < W and 0 <= cy - P / 2 < H):     # the cell overlaps the die
                     tent[c] = None
                 else:
                     tent[c] = occ.site(cx, cy, box=(cx - P / 4, cy - P / 4, cx + P / 4, cy + P / 4), lim=P) or \
@@ -3456,7 +3454,36 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                         dd = abs(s[0] + RST_W / 2 - x) + abs(s[1] + RST_H / 2 - y)
                         if dd <= RST_NET_UM - 60 and (best is None or dd < best[0]):
                             best = (dd, c)
-            return best and best[1]
+            if best is not None:
+                return best[1]
+            # no usable cell beside k (a pin at the die edge, a strip between abutting blocks): the nearest usable cell
+            # within 5 cells, bridged by repeaters on the straight line to it, each hop within one net
+            far = None
+            for dx in range(-5, 6):
+                for dy in range(-5, 6):
+                    c = (c0[0] + dx, c0[1] + dy)
+                    s = usable(c)
+                    if s is not None:
+                        dd = abs(s[0] + RST_W / 2 - x) + abs(s[1] + RST_H / 2 - y)
+                        if far is None or dd < far[0]:
+                            far = (dd, c, s)
+            if far is None:
+                return None
+            ex, ey = far[2][0] + RST_W / 2, far[2][1] + RST_H / 2
+            n = int(far[0] // 330.0) + 1                  # hops from the cell to k
+            head, pt = k, (x, y)
+            for j in range(1, n):                         # bridge points from k towards the cell
+                bx_, by_ = x + (ex - x) * j / n, y + (ey - y) * j / n
+                b_ = new(bx_, by_, None)
+                if b_ is None or _hp([c_(b_), pt]) > RST_NET_UM - 30:
+                    return None
+                N[b_]['kids'] = [head]
+                bridged[head] = b_
+                head, pt = b_, c_(b_)
+            if _hp([pt, (ex, ey)]) > RST_NET_UM - 30:
+                return None
+            return far[1]
+        bridged = {}
         rc = attach(root)
         want = {}
         for k in leaves:
@@ -3464,7 +3491,10 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             if c is None:
                 errors.append(dict(net=bid, kind='leaf_no_trunk_cell', at=[round(q, 1) for q in c_(k)]))
             else:
-                want.setdefault(c, []).append(k)
+                h_ = k
+                while h_ in bridged:
+                    h_ = bridged[h_]
+                want.setdefault(c, []).append(h_)
         if rc is None:
             errors.append(dict(net=bid, kind='root_no_trunk_cell', at=[round(q, 1) for q in c_(root)]))
             continue
@@ -3493,6 +3523,8 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             cx, cy = (c[0] + 0.5) * P, (c[1] + 0.5) * P
             node[c] = new(tent[c][0] + RST_W / 2, tent[c][1] + RST_H / 2, box=(cx - P / 2, cy - P / 2, cx + P / 2, cy + P / 2))
             assert node[c] is not None, (bid, c)
+        if root in bridged:
+            raise ValueError(f'reset tree: {bid} root repeater has no trunk cell beside it')
         N[root]['kids'] = [node[rc]]
         for c in on:
             if par[c] is not None:
@@ -3660,6 +3692,9 @@ def _reset_tree(v, m):
     if not nets:
         return rec
     rects = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
+    if _os.environ.get('OT_RESET_DUMP'):
+        import json as _json
+        _json.dump(dict(nets=nets, rects=rects, W=m['die']['w'], H=m['die']['h'], gx=v.GX, gy=v.GY), open(_os.environ['OT_RESET_DUMP'], 'w'))
     cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
     if errors:
         rec.update(errors=errors, per_net=per)
