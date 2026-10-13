@@ -19,6 +19,17 @@ module tb_hbm_accel_sm_pq_seq;
     parameter integer SUB = 4, LBS = 2, LSB = 16, NC = 1, XDEPTH = 128, RMAX = 256, LEV = 4,
                       LAT = 60, JIT = 40, MAXOPS = 64, XB = 0, HAZ = 1, G1ASB = 0, REQCR = 0,
                       ENABLE_INT8 = 0, PIPE_INT8 = 0;   // hbm-forks: the INT8 front (CF-1 / CF-SM)
+`ifdef OT_SMH_PRODUCTION_SHAPE
+    // A wide-column test alone can silently leave the production default-master branch.
+    initial begin
+        if (dut.DEF != 1 || NC != 8 || RMAX != 4096 || REQCR != 1 || XB != 13)
+            $fatal(1, "SM_NATIVE_DEFAULTS_FAIL: full production defaults required");
+`ifdef OT_SMH_CG
+        if (dut_g.DEF != 1) $fatal(1, "SM_NATIVE_DEFAULTS_FAIL: gated DUT left native masters");
+`endif
+        $display("SM_NATIVE_DEFAULTS_PASS NC%0d RMAX%0d REQCR%0d TAGW%0d", NC,RMAX,REQCR,dut.TAGW);
+    end
+`endif
     localparam integer RW = $clog2(RMAX);
     localparam integer XW = $clog2(XDEPTH);
     localparam integer FRAGW = NC * (SUB * LBS * 266 + SUB * LSB * 16);

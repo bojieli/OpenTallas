@@ -65,9 +65,9 @@ EG = [("pt_w", "*u_ptw", 43.2, Y_BAND, "R0"), ("pt_e", "*u_pte", 388.8, Y_BAND, 
       ("tcl", "*g_lf?1?.u_lh.u_tcc.u_h1", 518.4, round(Y_BAND - 172.8, 3), "R0")]
 MYO = {"R0": "MY", "MX": "R180"}
 DEFINES = ["OT_SMH_CG_ENREG", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SMH_HIER",
-           "OT_SMH_PTW_OHDLY"]
+           "OT_SMH_PTW_OHDLY", "OT_SMH_PRODUCTION_SHAPE"]
 BDEF = " ".join(f"--define {d}" for d in DEFINES)
-BENCH = ("W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --smh --cg " + BDEF +
+BENCH = ("W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg " + BDEF +
          " {mut}--cg-gap 300 --build-jobs 8 --workdir $W --out {{RUN}}/b_{n}.json > {{RUN}}/b_{n}.log 2>&1; rc=$?; "
          "cat {{RUN}}/b_{n}.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; {tail}")
 BENCHES = [
@@ -154,7 +154,7 @@ def spec(variant):
         "orfs_vars": {"POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
         "refglob": "*",
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96},
-        "job": {"owner": "Codex:hbm-sm-cluster", "branch": "codex/hbm-sm-cluster", "tag": "r7",
+        "job": {"owner": "Codex:hbm-sm-cluster", "branch": "codex/hbm-sm-cluster", "tag": "r8",
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p50, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
@@ -162,9 +162,12 @@ def spec(variant):
                             "spine through the tile ICG, exact abutment pin plan. Five registered regional static-strap stages per leaf (260 DFFs), zero data latency; "
                             "production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail."),
                 "benches": BENCHES + [{"name": "mut_strap_region", "expect": "fail",
-                "fail_regex": "CG_LOCKSTEP mismatches [1-9]", "threads": 8, "peak_ram_gb": 48,
+                "fail_regex": "SMT_STRAP_MUTANT_KILLED", "threads": 8, "peak_ram_gb": 48,
                 "cmd": BENCH.format(n="mut_strap_region", mut="--define OT_SMH_MUT_STRAP_REGION ",
-                    tail="test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log")} ]},
+                    tail=("python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); "
+                          "assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; "
+                          "print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' "
+                          "{RUN}/b_mut_strap_region.json; test $rc -eq 0"))} ]},
     }
 
 
