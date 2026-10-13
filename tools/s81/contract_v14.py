@@ -66,25 +66,8 @@ def apply(d: dict) -> dict:
     d["seam_rules"]["min_delay"] = ("every abutted or short seam: sender L - receiver H >= 50 ps + capture-minus-launch clock skew, measured "
                                     "on the routed FF ETMs (L = min clock-to-output - max insertion, H = hold - min insertion); a deficient "
                                     "master is fixed physically at its own pins (outhold / inhold), never by a Liberty offset")
-    # HC POST accept / dispatch / completion station at the corridor midpoint
-    x0, y0 = round(POST_C[0] - POST_WH[0] / 2, 3), round(POST_C[1] - POST_WH[1] / 2, 3)
-    d["slots"].append({
-        "name": "hc_post_stn", "cell": "dsfd_hc_post_stn", "kind": "tile", "parent": "s81_layer1",
-        "outline": {"w": POST_WH[0], "h": POST_WH[1]}, "origin": {"x": x0, "y": y0, "orient": "R0"},
-        "io_budget": {"in_delay_frac": 0.2, "out_delay_frac": 0.2, "registered_in": True, "registered_out": True},
-        "clock_entry": {"pin": "ck", "face": "E", "layer": "M4"}, "target_insertion_ps": 120.0, "version": 14,
-        "pg_layer": "M5", "strap_layer": "M6", "signal_max_layer": "M5", "layer_rule": "tile",
-        "status": "RESERVED keep-out (no kit yet): outline provisional, to be re-cut from the station kit",
-        "branches": {"count": 24, "max_dispatch_bits": 409, "completion_bits": 23,
-                     "faces": "N: branch groups to the half regions above the corridor; S: to the tail and centre rows below"},
-        "notes": "v14 NEW (coordinator 2026-10-13 03:40 PT): HC POST job accept / dispatch / completion moves from the top of the HC column "
-                 "to the corridor midpoint (18,220.68, 13,327.2); corridor y 12,571.2..14,083.2. Accept at the top gave 127-133 cycles "
-                 "against the immutable 124.19; the midpoint is ESTIMATED ~115 and must be measured by the production bench with the "
-                 "generator's hop counts (hop gate <= 500 um, 24 branches); it is not a price. Provisional 518.4 x 216 = 24 branches x "
-                 "(409 + 23) b split over N / S at 0.096 um a bit. The slot sits in the comb column's N->S crossing lane: the crossing "
-                 "relays of that column (forward 3,056 b / return 2,164 b) and the station share the midpoint rows, so the cut is "
-                 "checked there with the real station pins before any die GRT. Station RTL / kit owner: HC lead.",
-    })
+    # HC POST midpoint station (coordinator 03:40): WITHDRAWN by the coordinator the same day -- HC POST accepted with cost
+    # (2.542x unit, 1.653 % end-to-end); the v13 accept position stands, no slot is reserved
     # crooty Y tiles: clock / control entry SW -> SE (v4 routes)
     for s in d["slots"]:
         if s.get("cell") == "ot_s81_hc_crooty_y":
@@ -129,14 +112,7 @@ def main() -> int:
     assert len(names) == len(set(names)), "duplicate slot name"
     rm = d["relay_masters"]
     assert len(rm["masters"]) == 27 and rm["instances_total"] == 29184, (len(rm["masters"]), rm["instances_total"])
-    p = next(s for s in d["slots"] if s["name"] == "hc_post_stn")
-    assert 12571.2 <= p["origin"]["y"] and p["origin"]["y"] + p["outline"]["h"] <= 14083.2
-    # the reserved slot must not overlap any other die-level slot
-    for s in d["slots"]:
-        if s["parent"] == "s81_layer1" and s["name"] != "hc_post_stn":
-            ox, oy, w, h = s["origin"]["x"], s["origin"]["y"], s["outline"]["w"], s["outline"]["h"]
-            if ox < p["origin"]["x"] + p["outline"]["w"] and p["origin"]["x"] < ox + w and oy < p["origin"]["y"] + p["outline"]["h"] and p["origin"]["y"] < oy + h:
-                raise SystemExit(f"hc_post_stn overlaps slot {s['name']}")
+    assert not any(s["name"] == "hc_post_stn" for s in d["slots"]), "midpoint station was withdrawn"
     if a.check:
         print("v14 check OK:", len(d["slots"]), "slots,", len(rm["masters"]), "relay masters")
         return 0
@@ -144,7 +120,7 @@ def main() -> int:
     led = json.loads(LED.read_text())
     led["status"] = "contract v14 published 2026-10-13 (tools/s81/contract_v14.py); requests not listed as folded stay open in s81.json open_items"
     for q in led["requests"]:
-        if q["id"] in ("relay-masters", "hc-post-station-midpoint", "vm-bgr28-pins-and-clock", "coll-ces-outline", "abut-min-delay-and-etm-reference"):
+        if q["id"] in ("relay-masters", "vm-bgr28-pins-and-clock", "coll-ces-outline", "abut-min-delay-and-etm-reference"):
             q["v14"] = "FOLDED"
         if q["id"] == "relay-masters":
             q["status"] = "KITS GATED (9 of 27 pre-route --cts, 0 fail), 27 ROUTE JOBS SUBMITTED"

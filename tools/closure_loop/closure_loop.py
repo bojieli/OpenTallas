@@ -1994,7 +1994,12 @@ def publish_measured():
     stamp = STATE / "measured.published"
     if stamp.exists() and time.time() - stamp.stat().st_mtime < 600:
         return
-    with PUBLISH_LOCK:
+    # el1013-fleet3 2026-10-13: the daemon's MAIN thread waited here behind 7 queued record commits and an auto-merge
+    # (PUBLISH_LOCK, minutes each): no tick and no heartbeat for 30 min, 29 READY jobs unlaunched on 448 GB of idle
+    # memory.  Never wait: a busy lock means "next tick".
+    if not PUBLISH_LOCK.acquire(blocking=False):
+        return
+    try:
         if claude_owns_main():
             return  # owner consumes durable measured.dirty / measured_insertion.json; no main push
         if (STATE / "main_integration_hold.json").exists():
@@ -2015,6 +2020,8 @@ def publish_measured():
             if sh(["git", "-C", str(wt), "push", "-q", "origin", "HEAD:refs/heads/main"], timeout=900).returncode == 0:
                 break
         wt_rm(wt)
+    finally:
+        PUBLISH_LOCK.release()
     dirty.unlink(missing_ok=True)
     stamp.write_text(now_iso())
 
@@ -6411,14 +6418,30 @@ def _main_evidence():
     return c
 
 
+def _on_main(commit, ev):
+    """is <commit> (7-40 hex) an ancestor of ev["sha"]?  One 'git rev-list' per origin/main sha, cached in ev.
+    el1013-fleet3 2026-10-13: the per-job 'git merge-base --is-ancestor' cost 0.7 s x 214 unreleased CLOSED jobs on the
+    daemon's main thread EVERY tick (2.5-6 min before any READY job was looked at)."""
+    if ev.get("anc_sha") != ev["sha"]:
+        out = subprocess.run(["git", "-C", str(REPO), "rev-list", ev["sha"]], capture_output=True, text=True, timeout=600)
+        if out.returncode != 0:
+            return subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", commit, ev["sha"]],
+                                  capture_output=True, timeout=120).returncode == 0
+        full = out.stdout.split()
+        by7 = {}
+        for c in full:
+            by7.setdefault(c[:7], []).append(c)
+        ev.update(anc_sha=ev["sha"], anc=by7)
+    return any(c.startswith(commit) for c in ev["anc"].get(commit[:7], ()))
+
+
 def closure_on_main(j, ev):
     """a CLOSED job whose record reached origin/main: its record commit is an ancestor, a merged_closures record or a
     main tree path names it"""
     for e in reversed(j.get("events") or []):
         m = re.search(r"CLOSED:.*record (\S+) ([0-9a-f]{7,40})", e)
         if m:
-            if subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", m.group(2), ev["sha"]],
-                              capture_output=True, timeout=120).returncode == 0:
+            if _on_main(m.group(2), ev):
                 return True
             break
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
@@ -7286,11 +7309,15 @@ def host_down_requeue(j, kind, now=None):
 
 
 def tick(fleet):
+    t_ph = time.time()
     overlay_drift_check()
+    _slow_phase("overlay_drift_check", t_ph)
+    t_ph = time.time()
     try:
         ingest()
     except Exception:  # noqa: BLE001
         log("ingest error:\n" + traceback.format_exc())
+    _slow_phase("ingest", t_ph)
     own = {}
     for x in all_jobs():
         if x["status"] in ("RUNNING", "ECO", "SUMMARY", "ECO_INSTALL") and x.get("host"):
@@ -7301,22 +7328,13 @@ def tick(fleet):
             if e.get("state") == "running":
                 own[e["host"]] = own.get(e["host"], 0) + 4
     fleet.own_running = own
-    try:
-        release_bulk(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("release_bulk error:\n" + traceback.format_exc())
-    try:
-        release_deep(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("release_deep error:\n" + traceback.format_exc())
+    schedule_housekeeping()     # release_bulk / release_deep / stale24_sweep: background, never ahead of dispatch
+    t_mg = time.time()
     try:
         mem_guard(all_jobs(), fleet)
     except Exception:  # noqa: BLE001
         log("mem guard error:\n" + traceback.format_exc())
-    try:
-        stale24_sweep(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("stale24 sweep error:\n" + traceback.format_exc())
+    _slow_phase("mem_guard", t_mg)
     for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
         try:
             rq = json.loads(req.read_text())
@@ -7376,6 +7394,33 @@ def tick(fleet):
 
 _RECOVERY_POOL = None
 _RECOVERY_FUTURE = None
+_HOUSE_POOL = None
+_HOUSE_FUTURE = None
+SLOW_PHASE_S = 30
+
+
+def _slow_phase(name, t0):
+    """a tick phase on the main thread that took > SLOW_PHASE_S is named in daemon.log (READY jobs wait for it)"""
+    dt = time.time() - t0
+    if dt > SLOW_PHASE_S:
+        log(f"SLOW-TICK: {name} held the dispatch thread {dt:.0f} s")
+
+
+def housekeeping():
+    """disk give-back passes (ssh up to 30 min each, git): one background thread, so a READY job never waits for them"""
+    for name, fn in (("release_bulk", release_bulk), ("release_deep", release_deep), ("stale24 sweep", stale24_sweep)):
+        try:
+            fn(all_jobs())
+        except Exception:  # noqa: BLE001
+            log(f"{name} error:\n" + traceback.format_exc())
+
+
+def schedule_housekeeping():
+    global _HOUSE_POOL, _HOUSE_FUTURE
+    if _HOUSE_POOL is None:
+        _HOUSE_POOL = ThreadPoolExecutor(max_workers=1)
+    if _HOUSE_FUTURE is None or _HOUSE_FUTURE.done():
+        _HOUSE_FUTURE = _HOUSE_POOL.submit(housekeeping)
 
 
 def recover_jobs():
@@ -7450,6 +7495,7 @@ def cmd_daemon(a):
                                      stderr=subprocess.STDOUT)
             log("register reconcile started (hourly)")
         tick(fleet)
+        _slow_phase("tick", t0)
         try:
             publish_measured()
         except Exception:  # noqa: BLE001
