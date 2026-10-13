@@ -37,6 +37,7 @@ module ot_coll_tp8_die #(
     parameter integer MEMM    = 1,
     parameter integer FSL     = 1,
     parameter integer IBH     = 1,
+    parameter integer WT      = 0,       // opt-in wrapper column leaves, unchanged edge timing
     parameter integer CT      = 1,       // qwen-tp8/coll4: engine column datapath in hardened ot_coll_col_tile leaves
     parameter integer ICR     = 32,      // credits held by the die's sequencer (<= LBD, <= PQD)
     parameter integer LBD     = 64,      // local partial buffer (words), 32 * k with QMEM 1
@@ -113,12 +114,16 @@ module ot_coll_tp8_die #(
     reg iv_q, rl_v; reg [PW-1:0] ir_q, rl_d;
     always @(posedge clk or negedge rs_a) if (!rs_a) begin iv_q <= 1'b0; rl_v <= 1'b0; end
         else begin iv_q <= in_valid; rl_v <= iv_q; end
+    generate if (WT == 0) begin : g_wide_in
     always @(posedge clk) begin ir_q <= {in_tag, in_mode, in_last, in_data}; rl_d <= ir_q; end
+    end endgenerate
     reg upr_q, upc_q, upv_q, icr_q; reg [PW-1:0] uprec_q;
     reg [6:0] cr_a, cr_b;          // freed local entries / returned P credits not yet given back to the sequencer
     wire pair_pop;
     wire cr_go = (cr_a != 0) && (cr_b != 0);
+    generate if (WT == 0) begin
     always @(posedge clk) uprec_q <= rl_d;
+    end endgenerate
     always @(posedge clk or negedge rs_a)
         if (!rs_a) begin upr_q <= 1'b0; upc_q <= 1'b0; upv_q <= 1'b0; icr_q <= 1'b0; cr_a <= 0; cr_b <= 0; end
         else begin
@@ -131,18 +136,24 @@ module ot_coll_tp8_die #(
     assign up_rec = uprec_q;
     wire up_bad = rl_v && !upr_q;   // a send against the link layer's registered may-send
     wire lb_hv, lb_ovf; wire [PW-1:0] lb_hd;
+    generate if (WT == 0) begin : g_u_lb
     ot_coll_tp8_q #(.W(PW), .D(LBD), .MEM(QMEM)) u_lb (.clk(clk), .rst_n(rst_n), .push(rl_v), .wd(rl_d), .pop(pair_pop),
         .hv(lb_hv), .hd(lb_hd), .ovf(lb_ovf));
+    end endgenerate
 
     // ---------------- C: peer partial receive ----------------
     reg dpv_q, dpc_q; reg [PW-1:0] dpr_q;
+    generate if (WT == 0) begin
     always @(posedge clk) dpr_q <= dp_rec;
+    end endgenerate
     always @(posedge clk or negedge rs) if (!rs) begin dpv_q <= 1'b0; dpc_q <= 1'b0; end
         else begin dpv_q <= dp_valid; dpc_q <= pair_pop; end
     assign dp_cr_out = dpc_q;
     wire pq_hv, pq_ovf; wire [PW-1:0] pq_hd;
+    generate if (WT == 0) begin : g_u_pq
     ot_coll_tp8_q #(.W(PW), .D(PQD), .MEM(QMEM)) u_pq (.clk(clk), .rst_n(rst_n), .push(dpv_q), .wd(dpr_q), .pop(pair_pop),
         .hv(pq_hv), .hd(pq_hd), .ovf(pq_ovf));
+    end endgenerate
 
     // ---------------- D: pairing, owner half, pre-fold slices ----------------
     wire [FW-1:0]   lw = lb_hd[FW-1:0], pw = pq_hd[FW-1:0];
@@ -181,13 +192,13 @@ module ot_coll_tp8_die #(
     end endgenerate
     integer k;
     always @(posedge clk) begin
-        if (pr_red && !wpar) begin hl_lo <= lo; hl_hi <= hi; end
+        if (WT == 0 && pr_red && !wpar) begin hl_lo <= lo; hl_hi <= hi; end
         ml_tag[0] <= p_tag;
         for (k = 1; k < SL; k = k + 1) ml_tag[k] <= ml_tag[k-1];
 `ifdef OT_TP8_MUT_GATHER
-        gh_w <= {p_tag, 1'b1, p_last, lo};
+        if (WT == 0) gh_w <= {p_tag, 1'b1, p_last, lo};
 `else
-        gh_w <= {p_tag, 1'b1, p_last, hi};
+        if (WT == 0) gh_w <= {p_tag, 1'b1, p_last, hi};
 `endif
     end
     always @(posedge clk or negedge rs)
@@ -227,8 +238,10 @@ module ot_coll_tp8_die #(
                                   // the engine may emit results of a long message before its last word is fed)
     wire eq_pop = eq_hv && (ecred != 0) && (lq_res + (eq_mode ? 9'd4 : 9'd1) <= LQD) && (eq_mode || tq_res < TQD)
                   && (mf_n < MFD);
+    generate if (WT == 0) begin : g_u_eq
     ot_coll_tp8_q #(.W(PW), .D(EQD), .MEM(QMEM)) u_eq (.clk(clk), .rst_n(rst_n), .push(eq_push), .wd(eq_wd), .pop(eq_pop),
         .hv(eq_hv), .hd(eq_hd), .ovf(eq_ovf));
+    end endgenerate
     wire e_ov, e_ol, e_oe, e_f;
     wire [FW-1:0] e_od;
     wire [1:0] e_or;
@@ -268,7 +281,9 @@ module ot_coll_tp8_die #(
         end
     end endgenerate
     // tx: one registered copy per SerDes port (each placed at its own face)
+    generate if (WT == 0) begin
     always @(posedge clk) begin sxrec_q <= {3{e_txr}}; srr_q <= sr_rec; end
+    end endgenerate
     always @(posedge clk or negedge rs)
         if (!rs) begin sxv_q <= 0; sxr_q <= 0; sxc_q <= 0; srv_q <= 0; end
         else begin sxv_q <= {3{e_txv}}; sxr_q <= sx_ready; sxc_q <= sx_cr_in; srv_q <= sr_valid; end
@@ -287,15 +302,21 @@ module ot_coll_tp8_die #(
     wire lq_hv, lq_ovf, tq_hv, tq_ovf;
     wire [LW-1:0] lq_hd;
     wire [RW-1:0] tq_hd;
+    generate if (WT == 0) begin : g_u_lq
     ot_coll_tp8_q #(.W(LW), .D(LQD), .MEM(QMEM)) u_lq (.clk(clk), .rst_n(rst_n), .push(e_ov),
         .wd({mf_hd, e_or, e_oe, e_ol, e_od}), .pop(lq_pop), .hv(lq_hv), .hd(lq_hd), .ovf(lq_ovf));
+    end endgenerate
+    generate if (WT == 0) begin : g_u_tq
     ot_coll_tp8_q #(.W(RW), .D(TQD), .MEM(QMEM)) u_tq (.clk(clk), .rst_n(rst_n), .push(e_ov && !mf_hd),
         .wd({e_oe, e_ol, e_od}), .pop(tq_pop), .hv(tq_hv), .hd(tq_hd), .ovf(tq_ovf));
+    end endgenerate
 
     // ---------------- G: to-peer results -> UCIe R ----------------
     reg urr_q, urc_q, urv_q; reg [RW-1:0] urrec_q; reg [8:0] rcred;
     assign tq_pop = tq_hv && (rcred != 0) && urr_q;
+    generate if (WT == 0) begin
     always @(posedge clk) urrec_q <= tq_hd;
+    end endgenerate
     always @(posedge clk or negedge rs_m)
         if (!rs_m) begin urr_q <= 1'b0; urc_q <= 1'b0; urv_q <= 1'b0; rcred <= RQD; end
         else begin
@@ -307,12 +328,16 @@ module ot_coll_tp8_die #(
     // ---------------- H: peer results receive ----------------
     reg drv_q, drc_q; reg [RW-1:0] drr_q;
     wire rq_hv, rq_ovf, rq_pop; wire [RW-1:0] rq_hd;
+    generate if (WT == 0) begin
     always @(posedge clk) drr_q <= dr_rec;
+    end endgenerate
     always @(posedge clk or negedge rs_m) if (!rs_m) begin drv_q <= 1'b0; drc_q <= 1'b0; end
         else begin drv_q <= dr_valid; drc_q <= rq_pop; end
     assign dr_cr_out = drc_q;
+    generate if (WT == 0) begin : g_u_rq
     ot_coll_tp8_q #(.W(RW), .D(RQD), .MEM(QMEM)) u_rq (.clk(clk), .rst_n(rst_n), .push(drv_q), .wd(drr_q), .pop(rq_pop),
         .hv(rq_hv), .hd(rq_hd), .ovf(rq_ovf));
+    end endgenerate
 
     // ---------------- I: merger (in-package all-gather) ----------------
     reg [15:0] mc; reg cur_mode;
@@ -327,7 +352,7 @@ module ot_coll_tp8_die #(
     wire          m_lst  = m_mode ? lq_hd[FW] : ((take_l ? lq_hd[FW] : rq_hd[FW]) && mc[0]);
     wire [2:0]    m_rank = m_mode ? {mc[2], lq_hd[FW+2 +: 2]} : 3'd0;
     reg ov_q, ol_q, oe_q; reg [FW-1:0] od_q; reg [2:0] or_q;
-    always @(posedge clk) begin od_q <= m_d; ol_q <= m_lst; oe_q <= m_e; or_q <= m_rank; end
+    always @(posedge clk) begin if (WT == 0) od_q <= m_d; ol_q <= m_lst; oe_q <= m_e; or_q <= m_rank; end
     always @(posedge clk or negedge rs_m)
         if (!rs_m) begin ov_q <= 1'b0; mc <= 0; cur_mode <= 1'b0; end
         else begin
@@ -338,6 +363,69 @@ module ot_coll_tp8_die #(
             end
         end
     assign out_valid = ov_q; assign out_data = od_q; assign out_last = ol_q; assign out_rank = or_q; assign out_err = oe_q;
+
+    // WT factors the existing register/queue datapath into five 128-bit leaves.
+    // Metadata occupies the fifth column; every leaf advances on the identical
+    // original push/pop decisions, so word identity and timing are unchanged.
+    generate if (WT != 0) begin : g_wrapper_cols
+        initial if (FW != 512 || TAGW != 32 || LBD != 64 || PQD != 64 || EQD != 32 || LQD != 64 || TQD != 32 || RQD != 32 || QMEM != 1)
+            $error("WT requires the production 512b, 64/64/32/64/32/32 queue shape");
+        wire [639:0] ind = {{(640-PW){1'b0}}, in_tag, in_mode, in_last, in_data};
+        wire [639:0] dpd = {{(640-PW){1'b0}}, dp_rec};
+        wire [639:0] drd = {{(640-RW){1'b0}}, dr_rec};
+        wire [639:0] gh = {{(640-PW){1'b0}}, p_tag, 1'b1, p_last,
+`ifdef OT_TP8_MUT_GATHER
+            lo
+`else
+            hi
+`endif
+        };
+        wire [639:0] ew = {{(640-PW){1'b0}}, eq_wd};
+        wire [639:0] lwc = {{(640-LW){1'b0}}, mf_hd, e_or, e_oe, e_ol, e_od};
+        wire [639:0] tw = {{(640-RW){1'b0}}, e_oe, e_ol, e_od};
+        wire [639:0] low = {128'd0, lo}, high = {128'd0, hi}, md = {128'd0, m_d};
+        wire [639:0] et = {{(640-PW){1'b0}}, e_txr};
+        wire [1919:0] srp;
+        for (genvar j=0;j<3;j=j+1) begin : g_pad_sr
+            assign srp[j*640 +: 640] = {{(640-PW){1'b0}}, sr_rec[j*PW +: PW]};
+        end
+        wire [639:0] irc, rlc, upc, dpc, hlc, hhc, ghc, urc, drc, odc;
+        wire [639:0] lbh, pqh, eqh, lqh, tqh, rqh;
+        wire [1919:0] srr, sxr;
+        wire [29:0] hv, ovf;
+        for (genvar c=0;c<5;c=c+1) begin : g_col
+            wire [383:0] sri = {srp[1280+c*128 +: 128],srp[640+c*128 +: 128],srp[c*128 +: 128]};
+            wire [383:0] sro,sxo;
+            ot_coll_tp8_col_tile u_wc (.clk(clk),.rst_n(rst_n),
+                .in_d(ind[c*128 +: 128]),.dp_d(dpd[c*128 +: 128]),.dr_d(drd[c*128 +: 128]),.sr_d(sri),
+                .lo(low[c*128 +: 128]),.hi(high[c*128 +: 128]),.gh_d(gh[c*128 +: 128]),
+                .eq_wd(ew[c*128 +: 128]),.lq_wd(lwc[c*128 +: 128]),.tq_wd(tw[c*128 +: 128]),
+                .e_tx(et[c*128 +: 128]),.m_d(md[c*128 +: 128]),
+                .c_push({drv_q,e_ov&&!mf_hd,e_ov,eq_push,dpv_q,rl_v}),
+                .c_pop({rq_pop,tq_pop,lq_pop,eq_pop,pair_pop,pair_pop}),.c_hold(pr_red&&!wpar),
+                .ir(irc[c*128 +: 128]),.rl(rlc[c*128 +: 128]),.up(upc[c*128 +: 128]),.dp(dpc[c*128 +: 128]),
+                .hl(hlc[c*128 +: 128]),.hh(hhc[c*128 +: 128]),.gh(ghc[c*128 +: 128]),
+                .sr(sro),.sx(sxo),.ur(urc[c*128 +: 128]),.dr(drc[c*128 +: 128]),.od(odc[c*128 +: 128]),
+                .lb_hd(lbh[c*128 +: 128]),.pq_hd(pqh[c*128 +: 128]),.eq_hd(eqh[c*128 +: 128]),
+                .lq_hd(lqh[c*128 +: 128]),.tq_hd(tqh[c*128 +: 128]),.rq_hd(rqh[c*128 +: 128]),
+                .hv(hv[c*6 +: 6]),.ovf(ovf[c*6 +: 6]));
+            for (genvar j=0;j<3;j=j+1) begin : g_unpad_sr
+                assign srr[j*640+c*128 +: 128] = sro[j*128 +: 128];
+                assign sxr[j*640+c*128 +: 128] = sxo[j*128 +: 128];
+            end
+        end
+        assign ir_q=irc[PW-1:0]; assign rl_d=rlc[PW-1:0]; assign uprec_q=upc[PW-1:0]; assign dpr_q=dpc[PW-1:0];
+        assign hl_lo=hlc[FW-1:0]; assign hl_hi=hhc[FW-1:0]; assign gh_w=ghc[PW-1:0];
+        assign urrec_q=urc[RW-1:0]; assign drr_q=drc[RW-1:0]; assign od_q=odc[FW-1:0];
+        for (genvar j=0;j<3;j=j+1) begin : g_sx
+            assign srr_q[j*PW +: PW]=srr[j*640 +: PW];
+            assign sxrec_q[j*PW +: PW]=sxr[j*640 +: PW];
+        end
+        assign lb_hd=lbh[PW-1:0]; assign pq_hd=pqh[PW-1:0]; assign eq_hd=eqh[PW-1:0];
+        assign lq_hd=lqh[LW-1:0]; assign tq_hd=tqh[RW-1:0]; assign rq_hd=rqh[RW-1:0];
+        assign {rq_hv,tq_hv,lq_hv,eq_hv,pq_hv,lb_hv}=hv[5:0];
+        assign {rq_ovf,tq_ovf,lq_ovf,eq_ovf,pq_ovf,lb_ovf}=ovf[5:0];
+    end endgenerate
 
     // ---------------- faults ----------------
     wire prot_n = (pair_pop && p_bad) || (pr_red && p_last && !wpar) || (sl_v[0] != sl_tail)

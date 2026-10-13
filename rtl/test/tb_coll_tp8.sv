@@ -15,6 +15,7 @@ module tb_coll_tp8 #(
     parameter integer LATU  = 14,
     parameter integer LATS  = 40,
     parameter integer BPC   = 3600,
+    parameter integer WT    = 0,
     parameter integer ICR   = 32
 ) (input wire clk);
     localparam integer ND = 8, FW = 32 * LANES, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
@@ -51,7 +52,7 @@ module tb_coll_tp8 #(
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
-            ot_coll_tp8_die #(.PKG(P), .DIE(D), .LANES(LANES), .ICR(ICR)) u_die (
+            ot_coll_tp8_die #(.PKG(P), .DIE(D), .LANES(LANES), .WT(WT), .ICR(ICR)) u_die (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(iv[g]), .in_cr(icr[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]),
                 .in_tag(it[g*TAGW +: TAGW]),
