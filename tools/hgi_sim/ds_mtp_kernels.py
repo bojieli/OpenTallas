@@ -363,6 +363,94 @@ MEMB = 0x290000000                   # Markov-head embedding rows (BF16 x 256) b
 WROW = 2048
 
 
+# ---- the HC aperture row plan of the MTP program (slot 0 = the attn mix row, slot 1 = the ffn mix row)
+# A body's attn HC_MIX_ROWS loads its own ffn row under itself (slot 1: written and read inside one body, or by all dsa
+# of a stage before all its dsb), so only slot 0 crosses bodies.  Its row must come from a body that precedes the
+# reader in EVERY launch order v41_dspark.expand / ctl_loop can produce:
+#   enter: kind -> (layer, which) the body loads before its END.  embed precedes every L0 body (prefill, every verify
+#          column, the first token); demb precedes every dsa of stage 0.
+#   next:  layer -> the layer whose attn row its FFN mix record prefetches (None = no cross-body prefetch).  The dsb
+#          bodies of stage st run after ALL dsa of st and before all dsa of st + 1, so they prefetch mtp.(st + 1);
+#          L0 and stage 2 have no fixed successor (L0: its next column, the head or a draft; stage 2: a verify).
+# HC_PLAN_BACKBONE_CHAIN is the single-column backbone rule ((L + 1) % 40, no entering load) the MTP program was
+# first lowered with; it is kept ONLY as the checker's negative case (the reader trace and the simulator fault on it).
+HC_PLAN = dict(name="mtp", enter={2: (0, "attn"), 6: (40, "attn")}, next={0: None, 40: 41, 41: 42, 42: None})
+HC_PLAN_BACKBONE_CHAIN = dict(name="backbone_chain", enter={}, next=None)
+
+
+def kernel_lp(k, pos, lp):
+    """L' after a launch of kind k at pos (G26: a swapin's position field names the layer of the column's bodies)"""
+    return (pos if pos < 40 else (pos - 40 if pos != L_NONE else 0)) if k == 0 else lp
+
+
+def hc_reader_trace(body, launches, ranks=None):
+    """STATIC reader trace of the HC aperture over a launch list [(kind, token, pos)] in program order: for every
+    aperture HC_MIX_ROWS, the row it needs (rec.hc_row) against the row the LAST aperture LOAD before it left in its
+    slot, and that LOAD's launch.  Returns (rows, bad, dead): rows = one dict a reader; bad = the readers whose slot
+    was never loaded or holds another row; dead = loads overwritten or left at the end without a reader."""
+    from hgi_sim import machine as MC
+    from hgi_sim import ds_native as DN
+    rows, bad, dead = [], [], []
+    for rank in (sorted(body) if ranks is None else ranks):
+        held, lp = {}, 0
+        for i, (kind, tok, pos) in enumerate(launches):
+            k = KINDS.index(kind)
+            lp = kernel_lp(k, pos, lp)
+            key = (k, lp if k in PER_LAYER else 0)
+            for r in body[rank][key]:
+                if r.unit == "DMA" and r.op == "LOAD" and r.desc["O"].space == "VM" and r.desc["O"].base >= MC.VM_WORDS:
+                    slot = (r.desc["O"].base - MC.VM_WORDS) // DN.HC_SLOT
+                    old = held.get(slot)
+                    if old is not None and not old["readers"] and old["row"] != tuple(r.hc_row):
+                        dead.append(dict(old, rank=rank, why="overwritten unread", by=i))
+                    # (the same row again = a refresh by the next column's copy of the body: not a dead load)
+                    held[slot] = dict(row=tuple(r.hc_row), launch=i, kind=kind, lp=key[1], readers=0)
+                elif r.unit == "HC" and r.op == "HC_MIX_ROWS" and r.desc["B"].space == "VM":
+                    slot = (r.desc["B"].base - MC.VM_WORDS) // DN.HC_SLOT
+                    h = held.get(slot)
+                    row = dict(rank=rank, launch=i, kind=kind, lp=key[1], token=tok, pos=pos, slot=slot,
+                               needs=tuple(r.hc_row), holds=h and h["row"], loaded_by=h and (h["launch"], h["kind"], h["lp"]),
+                               ok=bool(h and h["row"] == tuple(r.hc_row)))
+                    if h:
+                        h["readers"] += 1
+                    rows.append(row)
+                    if not row["ok"]:
+                        bad.append(row)
+        dead += [dict(h, rank=rank, why="never read") for h in held.values() if not h["readers"]]
+    return rows, bad, dead
+
+
+def mtp_launches(prompt_len=1, steps=1, gamma=None, accept=0, nl=40):
+    """The launch list of a DSpark job as the shipped control loop issues it (v41_dspark.ctl_loop over expand): the
+    prefill of prompt_len positions, then `steps` draft / verify steps accepting `accept` drafts each."""
+    sys.path.insert(0, str(TOOLS / "gpu_sys"))
+    import v41_dspark as V41D
+    from types import SimpleNamespace
+    out = []
+    gamma = V41D.GAMMA if gamma is None else gamma
+
+    class Eng:
+        prog = SimpleNamespace(m=SimpleNamespace(L=nl))
+
+        def run(self, cmd, want_logits=False):
+            ls = V41D.expand(cmd)
+            out.extend(ls)
+            if cmd["op"] == "MARKOV":                   # draft i = 1000 + i; the verify agrees with the first `accept`
+                return [1000 + cmd["idx"]], [None]
+            n = sum(1 for x in ls if x[0] == "head")
+            return [1000 + c if c < accept else 7 for c in range(n)], [None] * n
+    noise, V41D.NOISE = V41D.NOISE, (V41D.NOISE if V41D.NOISE is not None else 3)
+    try:
+        ngen = 1 + steps * (1 + accept)
+        import contextlib
+        import io
+        with contextlib.redirect_stdout(io.StringIO()):
+            V41D.ctl_loop(Eng(), [1] * prompt_len, ngen, gamma, maxpos=1 << 20)
+    finally:
+        V41D.NOISE = noise
+    return out
+
+
 def wtab_row(p):
     nw = [min(p - j, 128) for j in range(5)]
     return [nw[j] + j for j in range(5)] + [nw[j] + 5 for j in range(5)] + [p % 16] + [0] * 5
@@ -374,7 +462,8 @@ class Kernels:
     LABELLED REPLAY bodies (load the golden h / pre after the layer; layers 37..39 first store their input's main hidden
     part with real SU records)."""
 
-    def __init__(self, m, spec=False):
+    def __init__(self, m, spec=False, hc_plan=None):
+        self.hc_plan = HC_PLAN if hc_plan is None else hc_plan
         from hgi_sim import ds_native as DN
         from hgi_sim.records import MDesc, Rec
         from hgi_sim.qwen_compiler import Builder, sut
@@ -387,6 +476,7 @@ class Kernels:
         bind_vm_tail()
         assert self.lay.end <= ZT and QV + 16 <= DN.MC.VM_WORDS
         self.low = DN.Lower(m, 1, self.lay, self.man)
+        self.low.hc_next_attn = self.hc_next()
         self.ops = {}
         self.tabs = {}                                  # slot -> [per-rank table buffer]
         self.st0 = SimpleNamespace(win={L: np.zeros((m.window - 1, m.hd), F) for L in (0, 40, 41, 42)}, slots={})
@@ -398,8 +488,8 @@ class Kernels:
         for r in range(self.TP):
             self.body[r][(0, 0)] = self.swap(True)
             self.body[r][(1, 0)] = self.swap(False)
-            self.body[r][(2, 0)] = self.embed()
-            self.body[r][(6, 0)] = self.embed()           # demb = the embedding kernel (token y or the noise id)
+            self.body[r][(2, 0)] = self.embed(r, 2)
+            self.body[r][(6, 0)] = self.embed(r, 6)       # demb = the embedding kernel (token y or the noise id)
             if not spec:
                 self.body[r][(4, 0)] = [self.end(HT, POS=True)]
         self.tables_for(0)
@@ -521,8 +611,25 @@ class Kernels:
         h, pre = legacy[:2]
         return [lower_h(h, h_allocations), lower_pre(pre, 0, pre_allocation), *legacy[2:]]
 
-    def embed(self):
+    def hc_next(self):
+        """Lower.hc_next_attn of the plan (None = the backbone chain rule)"""
+        nxt = self.hc_plan["next"]
+        return None if nxt is None else (lambda L: nxt[L])
+
+    def hc_enter(self, b, kind, rank):
+        """the plan's entering HC row of a kernel kind: the row its successor's attn HC_MIX_ROWS reads from aperture
+        slot 0, loaded under this body (the reader FENCEs the slot; END drains the DMA).  A rank that owns no mix row
+        carries a NOP so every die's image keeps one structure."""
+        if not self.DN.HC_DB[0] or kind not in self.hc_plan["enter"]:
+            return
+        L, w = self.hc_plan["enter"][kind]
+        ld = self.low.hc_row_load(L, w, rank)
+        b.add(ld or self.Rec("CTL", "NOP", tag=f"hc_{w}.weight_row_prefetch (layer {L})", family="hc_mixes"), [],
+              [f"HCW{0 if w == 'attn' else 1}"] if ld else [])
+
+    def embed(self, rank=0, kind=2):
         b = self.Builder(None)
+        self.hc_enter(b, kind, rank)
         for j in range(4):
             b.add(self.Rec("DMA", "LOAD", desc=dict(A=self.H(EMBB, 5120, fmt="BF16", dyn_sel=3, dyn_mul=10240),
                                                      O=self.V("h", 5120, off=5120 * j)),
@@ -644,8 +751,7 @@ class Kernels:
         for recs in rank_recs:
             a_ = self.Builder(None)
             self.qvload(a_)
-            pa = [r for r in recs if r.src and r.src[1] < split]
-            pb = [r for r in recs if r.src and r.src[1] >= split]
+            pa, pb = self.split_stage(recs, split)
             res_copy = None
             for r in pa:
                 if r.tag == "attn.res_copy":
@@ -692,6 +798,11 @@ class Kernels:
                 out.append(r)
             B_.append(out + [self.end()])
         return A_, B_
+
+    @staticmethod
+    def split_stage(recs, split):
+        """a stage's records at the attention op: (dsa part, dsb part)"""
+        return ([r for r in recs if r.src and r.src[1] < split], [r for r in recs if r.src and r.src[1] >= split])
 
     def seed(self):
         """SEED (kind 5, token = column, pos p): main_x = main_norm(main_proj(MH of p)); each stage's DSpark window row
@@ -829,7 +940,7 @@ class Engine:
         DN = self.K.DN
         k = KINDS.index(kind)
         if k == 0:
-            self.Lp = pos if pos < 40 else (pos - 40 if pos != L_NONE else 0)
+            self.Lp = kernel_lp(k, pos, self.Lp)
         Lp = self.Lp if k in PER_LAYER else 0
         progs = [self.K.body[d.rank][(k, Lp)] for d in self.M.dies]
         t0 = time.time()
@@ -889,7 +1000,19 @@ def sim(a):
     m, _ = LC.build_model(ck, engram=False)
     V41D.NOISE = m.noise_id
     TP = DN.TP
-    K = Kernels(m, spec=spec)
+    plan = {p_["name"]: p_ for p_ in (HC_PLAN, HC_PLAN_BACKBONE_CHAIN)}[getattr(a, "hc_plan", "mtp")]
+    K = Kernels(m, spec=spec, hc_plan=plan)
+    if spec and DN.HC_DB[0]:
+        # the HC aperture reader trace of this job's launch order, before anything runs (the simulator's provenance
+        # check faults on the first bad reader; this is the whole table)
+        tr, bad, dead = hc_reader_trace(K.body, mtp_launches(len(gd["prompt"]), 1, gd["gamma"], gd["accepted"]))
+        (out / "hc_reader_trace.json").write_text(json.dumps(dict(
+            plan=plan["name"], readers=len(tr), bad=len(bad), dead_loads=len(dead),
+            rank3=[x for x in tr if x["rank"] == 3], bad_first=bad[:8], dead_first=dead[:8]), indent=0, default=str) + "\n")
+        print(f"HC aperture reader trace ({plan['name']}): {len(tr)} readers, {len(bad)} bad, {len(dead)} dead loads",
+              flush=True)
+        if getattr(a, "hc_trace_only", False):
+            return 1 if bad else 0
     npos = 1 + len(gd["verify_tokens"])
     rope = np.zeros((GPOS, 64), F)
     for p in range(GPOS):
@@ -1194,6 +1317,9 @@ def main():
     q.add_argument("--golden", required=True)
     q.add_argument("--out", required=True)
     q.add_argument("--export")
+    q.add_argument("--hc-plan", default="mtp", choices=("mtp", "backbone_chain"),
+                   help="HC aperture row plan; backbone_chain = the checker's negative case (the first lowering)")
+    q.add_argument("--hc-trace-only", action="store_true", help="build the kernels, write the reader trace, stop")
     a = ap.parse_args()
     if a.cmd == "golden":
         return golden(a)

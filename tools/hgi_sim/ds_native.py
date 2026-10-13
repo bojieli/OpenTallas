@@ -223,6 +223,42 @@ def assert_fused_fast_path(rec, scratch=None, gain_layout=None, check_gain=True)
         raise ValueError(f"FUSED.{rec.op} {rec.tag!r} misses the lane-local fast path: " + "; ".join(bad))
 
 
+HC_PROV_LOG = None                   # a list -> every aperture reader appends (rank, slot, wanted row, held row)
+
+
+def hc_prov_set(die, vm_base, row):
+    """PROVENANCE of the HC aperture: (layer, which, row) the last LOAD / preset wrote into the slot at vm_base (a
+    write that does not start at a slot base is not a row load and leaves no provenance entry to trust)"""
+    off = vm_base - MC.VM_WORDS
+    if off < 0:
+        return
+    if not hasattr(die, "hc_prov"):
+        die.hc_prov = {}
+    slot, rem = divmod(off, HC_SLOT)
+    die.hc_prov[slot] = tuple(row) if rem == 0 else None
+
+
+def hc_prov_check(die, rd):
+    """An aperture HC_MIX_ROWS reads the row its lowering named (rec.hc_row), or the record FAULTS: a slot never
+    loaded, or holding another layer's / mix's / rank's row, is a compiler error the arithmetic cannot show by itself
+    (the unit would return a well-formed wrong mix)."""
+    slot, rem = divmod(rd.desc["B"].base - MC.VM_WORDS, HC_SLOT)
+    want = getattr(rd, "hc_row", None)
+    have = getattr(die, "hc_prov", {}).get(slot)
+    if HC_PROV_LOG is not None:
+        HC_PROV_LOG.append((die.rank, slot, want, have))
+    if rem or want is None:
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: aperture reader without a row provenance "
+                          f"(hc_row {want}, B {rd.desc['B'].base:#x})")
+    if have is None:
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: HC aperture slot {slot} was NEVER LOADED; the "
+                          f"record needs layer {want[0]} hc_{want[1]}_fn row {want[2]}")
+    if tuple(have) != tuple(want):
+        raise MC.Fault(3, f"HC_MIX_ROWS {rd.tag!r} rank {die.rank}: HC aperture slot {slot} holds layer {have[0]} "
+                          f"hc_{have[1]}_fn row {have[2]}, the record needs layer {want[0]} hc_{want[1]}_fn row "
+                          f"{want[2]}")
+
+
 def hc_row_words(fn_row):
     """one fn row in the weight-set layout (hgi-1010/g hc_weights.weight_set; the HC aperture holds it verbatim):
     word ((k R + r) SPW + s) 8 + l = fn[8 (r W + 8 s + l) + k], zero past the row's K / 8 chunks"""
@@ -310,6 +346,28 @@ class Lower:
         self.ent = {}
         self.cur_op = None
         self.bufn = dict(qa=1280, kvraw=512, gsc=384, y=D, yf=D, iq=4096, iwr=32, eg_rows=6144, eg_kv=25600)
+        # HC aperture: the row the FFN mix record of layer L prefetches into slot 0 (the next attn reader's row).
+        # None = the backbone chain (layer (L + 1) % m.L: one column, layers in order); a program with another
+        # launch order (ds_mtp_kernels) sets hc_next_attn(L) -> the layer whose attn row follows, or None = no
+        # cross-body prefetch (that reader's row is loaded by the body that precedes it: hc_row_load)
+        self.hc_next_attn = None
+
+    def hc_row_load(self, nL, nw, rank):
+        """DMA.LOAD of rank's fn row of (layer nL, nw) into its HC aperture slot (attn 0, ffn 1), or None when the rank
+        owns no mix row.  STRIPE4 (spec 3.6, hgi-1010/c) 2-D load (spec db9ef1603): the row's 8 bank segments (R W =
+        2,560 words each), bank k on stack k mod 4 at stack-local loc + k x 10,240 B, into the slot's banks
+        (destination stride 4,096 words).  rec.hc_row = (layer, which, row): the provenance the checker compares."""
+        lo, hi = 24 * rank // TP, 24 * (rank + 1) // TP
+        slot = 0 if nw == "attn" else 1
+        bw = HC_RS * 8                    # words a bank segment (2,560)
+        loc = HC_STRIPE_LOC + ((nL * 2 + (nw == "ffn")) * 24 + lo) * 8 * bw * 4
+        HC_STRIPE[loc] = (nL, nw, lo)
+        rec = Rec("DMA", "LOAD", desc=dict(
+            A=MDesc(space="HBM", fmt="FP32", base=(1 << 37) | loc, n=bw, m=8, stride=bw * 4),
+            O=MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * slot, n=bw, m=8, stride=HC_BANK)),
+            tag=f"hc_{nw}.weight_row_prefetch (layer {nL})", family="hc_mixes")
+        rec.hc_row = (nL, nw, lo)
+        return rec if hi > lo else None
 
     @staticmethod
     def owned_keys(rank, n):
@@ -433,22 +491,19 @@ class Lower:
                                    stride=HC_BANK)
                         add(Rec("DMA", "FENCE", tag=f"hc_{w}.weight_fence", family="hc_mixes"), [f"HCW{slot}"],
                             [f"HCW{slot}"])
-                        add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=SL, O=V("MIXRAW", max(hi - lo, 1),
+                        mr = Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=SL, O=V("MIXRAW", max(hi - lo, 1),
                                                                                                   off=lo)),
-                                tag=op["tag"] + " rows", family="hc_mixes"), ["h", f"HCW{slot}"], ["MIXRAW"], hi > lo)
-                        nL, nw = (L, "ffn") if w == "attn" else ((L + 1) % m.L, "attn")
-                        # STRIPE4 (spec 3.6, hgi-1010/c) 2-D load (spec db9ef1603): the row's 8 bank segments (R W = 2,560
-                        # words each), bank k on stack k mod 4 at stack-local loc + k x 10,240 B, into the slot's banks
-                        # (destination stride 4,096 words)
-                        bw = HC_RS * 8                    # words a bank segment (2,560)
-                        loc = HC_STRIPE_LOC + ((nL * 2 + (nw == "ffn")) * 24 + lo) * 8 * bw * 4
-                        HC_STRIPE[loc] = (nL, nw, lo)
-                        add(Rec("DMA", "LOAD", desc=dict(
-                            A=MDesc(space="HBM", fmt="FP32", base=(1 << 37) | loc, n=bw, m=8, stride=bw * 4),
-                            O=MDesc(space="VM", fmt="FP32", base=MC.VM_WORDS + HC_SLOT * (1 - slot), n=bw, m=8,
-                                    stride=HC_BANK)),
-                            tag=f"hc_{nw}.weight_row_prefetch (layer {nL})", family="hc_mixes"), [],
-                            [f"HCW{1 - slot}"], hi > lo)
+                                 tag=op["tag"] + " rows", family="hc_mixes")
+                        mr.hc_row = (L, w, lo)            # the row this reader needs in its slot (provenance checker)
+                        add(mr, ["h", f"HCW{slot}"], ["MIXRAW"], hi > lo)
+                        if w == "attn":
+                            nL, nw = L, "ffn"
+                        else:
+                            nL, nw = ((L + 1) % m.L if self.hc_next_attn is None else self.hc_next_attn(L)), "attn"
+                        if nL is not None:
+                            ld = self.hc_row_load(nL, nw, rank)
+                            add(ld or Rec("DMA", "LOAD", tag=f"hc_{nw}.weight_row_prefetch (layer {nL})",
+                                          family="hc_mixes"), [], [f"HCW{1 - slot}"], hi > lo)
                     else:
                         add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=Bw, O=V("MIXRAW", max(hi - lo, 1),
                                                                                                   off=lo)),
@@ -1168,6 +1223,7 @@ def ds_units(m, man, golib):
             if vm_b:                                    # the aperture slot: one fn row (row lo), decoded from its image
                 if n != 1:
                     raise MC.Fault(3, "HC_MIX_ROWS from the aperture: O.n must be 1")
+                hc_prov_check(die, rd)
                 row = hc_row_from_words(M.vm_read(rd.desc["B"], die, L))
                 mixes = V_.mul(V_.matvec_c(row[None, :], flat, V_.HC_SPLIT, cls="he"), rr)
                 M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[:1], F))
@@ -1302,6 +1358,7 @@ def ds_units(m, man, golib):
                 for k in range(8):                       # bank k on stack k mod 4 (the bytes the e2e export places)
                     die.synth_hbm[((k & 3) << 35) | (loc + k * bw * 4)] = vals[k * bw:(k + 1) * bw].view(np.uint8).tobytes()
                 M.vm_write(M.rec_of(die, r).desc["O"], die, L, vals)
+                hc_prov_set(die, M.rec_of(die, r).desc["O"].base, (Lw, which, o))
                 continue
             e, ex, r0, c0 = man.find(base)
             if "hc_" in e["key"]:                       # an HC weight row (the weight-set image, from the checkpoint)
@@ -1314,6 +1371,7 @@ def ds_units(m, man, golib):
                 Lw = int(parts[1]) if parts[0] == "layers" else m.L + int(parts[1])
                 vals = hc_row_words(m.lw(Lw, f"hc_{which}_fn")[o])
                 M.vm_write(M.rec_of(die, r).desc["O"], die, L, vals)
+                hc_prov_set(die, M.rec_of(die, r).desc["O"].base, (Lw, which, o))
                 continue
             Lk = int(e["key"][3:])
             codes, sc = m.emb_codes[Lk]
@@ -1459,7 +1517,7 @@ def schedule_layer(rank_recs, ops, L):
         w = T.rebuild_waits(new)
         for x, y in zip(w, new):
             x.tag, x.family, x.src = y.tag, y.family, getattr(y, "src", None)
-            for at in ("implicit",):
+            for at in ("implicit", "hc_row"):
                 if hasattr(y, at):
                     setattr(x, at, getattr(y, at))
         res.append(w)
@@ -1633,6 +1691,7 @@ def main():
                 w_ = hc_row_words(m.lw(first, "hc_attn_fn")[lo]).view(np.uint32).reshape(8, -1)
                 for k in range(8):
                     d.vm[MC.VM_WORDS + HC_BANK * k:MC.VM_WORDS + HC_BANK * k + w_.shape[1]] = w_[k]
+                hc_prov_set(d, MC.VM_WORDS, (first, "attn", lo))
     sel_hbm, g_hbm = {}, {}
     results = []
     for L in list(layers) + (["head"] if a.head else []):
