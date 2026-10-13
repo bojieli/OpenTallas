@@ -1,0 +1,2077 @@
+[
+ {
+  "tile": "dsfd_su_t_smt",
+  "kit": "s81su_smt_hb1_ref",
+  "routed_commit": "ab43f2fe0",
+  "top": "dsfd_su_t_smt",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+    "sha256_routed": "47cdb311c1bf9e896c3c19478dcf1ca05b0c668c2dbf201c500ada4a4b9d4ec0",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+    "sha256_routed": "90cc21f999b9a439b8fa1deb1eb4cdcc4afe4e69b9b58369244415e7a2dca083",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+    "sha256_routed": "94173957c6c3a6e498c8aeb3c1fba4874bffc0f308003a91945c69f6adfd0983",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+    "sha256_routed": "e5b292dfee16ff5c84744f8c25fd4085b33fd931520870e9cb0fc3452e31697b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+    "sha256_routed": "0a00a6805491b96e6a4c7206c55d1ccd84c16f8da1e8bd0da09a3fbbf29c35d2",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+    "sha256_routed": "51bedeb6b8a5df29ca97dbd57635000e4e8f6e9959d98e8d3421eccf4812d83d",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "sha256_routed": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "sha256_routed": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_smt",
+  "kit": "s81su_smt_hb2_ref",
+  "routed_commit": "ab43f2fe0",
+  "top": "dsfd_su_t_smt",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+    "sha256_routed": "47cdb311c1bf9e896c3c19478dcf1ca05b0c668c2dbf201c500ada4a4b9d4ec0",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+    "sha256_routed": "90cc21f999b9a439b8fa1deb1eb4cdcc4afe4e69b9b58369244415e7a2dca083",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+    "sha256_routed": "94173957c6c3a6e498c8aeb3c1fba4874bffc0f308003a91945c69f6adfd0983",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+    "sha256_routed": "e5b292dfee16ff5c84744f8c25fd4085b33fd931520870e9cb0fc3452e31697b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+    "sha256_routed": "0a00a6805491b96e6a4c7206c55d1ccd84c16f8da1e8bd0da09a3fbbf29c35d2",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+    "sha256_routed": "51bedeb6b8a5df29ca97dbd57635000e4e8f6e9959d98e8d3421eccf4812d83d",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "sha256_routed": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "sha256_routed": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_swe",
+  "kit": "s81su_swe_spx_ref",
+  "routed_commit": "1ec43dde7",
+  "top": "dsfd_su_t_swe",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv",
+    "sha256_routed": "a8b153e5bce873863a10271757ad0442c703a322714a142cb4c618eb1dd02b2e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+    "sha256_routed": "dc5cb1ffa599fbabb43b49ac53a539b4f20e79e8d442d5c38d70a3e90b7b2f97",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+    "sha256_routed": "3b1749f5d4c5bdea21ffe08ccf534aaf83fe693a372ad9d0c2340a0a6340452f",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_swe",
+  "kit": "s81su_swe_gfix_ref",
+  "routed_commit": "1065bcb90",
+  "top": "dsfd_su_t_swe",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv",
+    "sha256_routed": "a8b153e5bce873863a10271757ad0442c703a322714a142cb4c618eb1dd02b2e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+    "sha256_routed": "dc5cb1ffa599fbabb43b49ac53a539b4f20e79e8d442d5c38d70a3e90b7b2f97",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+    "sha256_routed": "3b1749f5d4c5bdea21ffe08ccf534aaf83fe693a372ad9d0c2340a0a6340452f",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_qnt",
+  "kit": "s81su_qnt_cb32_ref",
+  "routed_commit": "c904b01fb",
+  "top": "dsfd_su_t_qnt",
+  "params": {
+   "CB": 32
+  },
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+    "sha256_routed": "052bb1062c979954b9c859e53b09adc1548592e187ec2b1eade69d22d68d453d",
+    "equal_gate_commit": false,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "e33c4f5eb2f69f513b2c5bc053f3c40b6f5864b74144c8a6f6f64b5f9d4dfe32",
+    "equal_gate_commit": false,
+    "in_gate_build": true,
+    "gate_build_sha_equal": false
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_qne",
+  "kit": "s81su_qne_ref",
+  "routed_commit": "8946ebc79",
+  "top": "dsfd_su_t_qne",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+    "sha256_routed": "ec2f88ad258e476de39e30ead8c32ffda94e86908acf9d7915466b3987991af1",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "sha256_routed": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_sram_bank.sv",
+    "sha256_routed": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_qnh",
+  "kit": "s81su_qnh_ref",
+  "routed_commit": "8946ebc79",
+  "top": "dsfd_su_t_qnh",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+    "sha256_routed": "ec2f88ad258e476de39e30ead8c32ffda94e86908acf9d7915466b3987991af1",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "sha256_routed": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "sha256_routed": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_qnr",
+  "kit": "s81su_qnr_ref",
+  "routed_commit": "8946ebc79",
+  "top": "dsfd_su_t_qnr",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+    "sha256_routed": "ec2f88ad258e476de39e30ead8c32ffda94e86908acf9d7915466b3987991af1",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "sha256_routed": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "sha256_routed": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_qnh",
+  "kit": "s81su_qnh_ref",
+  "routed_commit": "46d62c427",
+  "top": "dsfd_su_t_qnh",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+    "sha256_routed": "ec2f88ad258e476de39e30ead8c32ffda94e86908acf9d7915466b3987991af1",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "sha256_routed": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "sha256_routed": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_qnr",
+  "kit": "s81su_qnr_ref",
+  "routed_commit": "46d62c427",
+  "top": "dsfd_su_t_qnr",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+    "sha256_routed": "ec2f88ad258e476de39e30ead8c32ffda94e86908acf9d7915466b3987991af1",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "sha256_routed": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "sha256_routed": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_kve",
+  "kit": "s81su_kve_ref",
+  "routed_commit": "00167e741",
+  "top": "dsfd_su_t_kve",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv",
+    "sha256_routed": "42525bda6a091a32d042c592128ca68fdbb2a706a09613849b56884aa47c8c5d",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+    "sha256_routed": "5756536549d72aac3ae9d5d88a9c47c844b0932339cb75fdb9940cdfeed25fad",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "sha256_routed": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_sram_bank.sv",
+    "sha256_routed": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_kvp",
+  "kit": "s81su_kvp_ref",
+  "routed_commit": "00167e741",
+  "top": "dsfd_su_t_kvp",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv",
+    "sha256_routed": "42525bda6a091a32d042c592128ca68fdbb2a706a09613849b56884aa47c8c5d",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+    "sha256_routed": "5756536549d72aac3ae9d5d88a9c47c844b0932339cb75fdb9940cdfeed25fad",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "sha256_routed": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_sram_bank.sv",
+    "sha256_routed": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_kvr",
+  "kit": "s81su_kvr_ref",
+  "routed_commit": "00167e741",
+  "top": "dsfd_su_t_kvr",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv",
+    "sha256_routed": "42525bda6a091a32d042c592128ca68fdbb2a706a09613849b56884aa47c8c5d",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+    "sha256_routed": "5756536549d72aac3ae9d5d88a9c47c844b0932339cb75fdb9940cdfeed25fad",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "sha256_routed": "1626e87651e191e4cd38ef717dd9e0016e1c783856c421d17111bdee5e8b9871",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "sha256_routed": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "sha256_routed": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_smc",
+  "kit": "s81su_smc_ref",
+  "routed_commit": "47c31b637",
+  "top": "dsfd_su_t_smc",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+    "sha256_routed": "47cdb311c1bf9e896c3c19478dcf1ca05b0c668c2dbf201c500ada4a4b9d4ec0",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+    "sha256_routed": "90cc21f999b9a439b8fa1deb1eb4cdcc4afe4e69b9b58369244415e7a2dca083",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+    "sha256_routed": "94173957c6c3a6e498c8aeb3c1fba4874bffc0f308003a91945c69f6adfd0983",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+    "sha256_routed": "e5b292dfee16ff5c84744f8c25fd4085b33fd931520870e9cb0fc3452e31697b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+    "sha256_routed": "0a00a6805491b96e6a4c7206c55d1ccd84c16f8da1e8bd0da09a3fbbf29c35d2",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+    "sha256_routed": "51bedeb6b8a5df29ca97dbd57635000e4e8f6e9959d98e8d3421eccf4812d83d",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "sha256_routed": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "sha256_routed": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_smd",
+  "kit": "s81su_smd_ref",
+  "routed_commit": "47c31b637",
+  "top": "dsfd_su_t_smd",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+    "sha256_routed": "47cdb311c1bf9e896c3c19478dcf1ca05b0c668c2dbf201c500ada4a4b9d4ec0",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+    "sha256_routed": "90cc21f999b9a439b8fa1deb1eb4cdcc4afe4e69b9b58369244415e7a2dca083",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+    "sha256_routed": "94173957c6c3a6e498c8aeb3c1fba4874bffc0f308003a91945c69f6adfd0983",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+    "sha256_routed": "e5b292dfee16ff5c84744f8c25fd4085b33fd931520870e9cb0fc3452e31697b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+    "sha256_routed": "0a00a6805491b96e6a4c7206c55d1ccd84c16f8da1e8bd0da09a3fbbf29c35d2",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+    "sha256_routed": "51bedeb6b8a5df29ca97dbd57635000e4e8f6e9959d98e8d3421eccf4812d83d",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "sha256_routed": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "sha256_routed": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_sml",
+  "kit": "s81su_sml_ref",
+  "routed_commit": "47c31b637",
+  "top": "dsfd_su_t_sml",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+    "sha256_routed": "47cdb311c1bf9e896c3c19478dcf1ca05b0c668c2dbf201c500ada4a4b9d4ec0",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+    "sha256_routed": "90cc21f999b9a439b8fa1deb1eb4cdcc4afe4e69b9b58369244415e7a2dca083",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+    "sha256_routed": "94173957c6c3a6e498c8aeb3c1fba4874bffc0f308003a91945c69f6adfd0983",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+    "sha256_routed": "e5b292dfee16ff5c84744f8c25fd4085b33fd931520870e9cb0fc3452e31697b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+    "sha256_routed": "0a00a6805491b96e6a4c7206c55d1ccd84c16f8da1e8bd0da09a3fbbf29c35d2",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+    "sha256_routed": "51bedeb6b8a5df29ca97dbd57635000e4e8f6e9959d98e8d3421eccf4812d83d",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "sha256_routed": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "sha256_routed": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_smr",
+  "kit": "s81su_smr_ref",
+  "routed_commit": "47c31b637",
+  "top": "dsfd_su_t_smr",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+    "sha256_routed": "47cdb311c1bf9e896c3c19478dcf1ca05b0c668c2dbf201c500ada4a4b9d4ec0",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+    "sha256_routed": "90cc21f999b9a439b8fa1deb1eb4cdcc4afe4e69b9b58369244415e7a2dca083",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+    "sha256_routed": "94173957c6c3a6e498c8aeb3c1fba4874bffc0f308003a91945c69f6adfd0983",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+    "sha256_routed": "e5b292dfee16ff5c84744f8c25fd4085b33fd931520870e9cb0fc3452e31697b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+    "sha256_routed": "0a00a6805491b96e6a4c7206c55d1ccd84c16f8da1e8bd0da09a3fbbf29c35d2",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+    "sha256_routed": "51bedeb6b8a5df29ca97dbd57635000e4e8f6e9959d98e8d3421eccf4812d83d",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "sha256_routed": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "sha256_routed": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "sha256_routed": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "sha256_routed": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp.sv",
+    "sha256_routed": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "sha256_routed": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "sha256_routed": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "sha256_routed": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256_routed": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "sha256_routed": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_delay.sv",
+    "sha256_routed": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_sfu.sv",
+    "sha256_routed": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "sha256_routed": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ },
+ {
+  "tile": "dsfd_su_t_ctl",
+  "kit": "s81su_ctl_ref",
+  "routed_commit": "cbafa4c7a",
+  "top": "dsfd_su_t_ctl",
+  "params": null,
+  "files": [
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv",
+    "sha256_routed": "4ce50cfe7cb02d9dfa6173b8cf616ef7a86e9d54840025aa7a1ac93870dbed49",
+    "equal_gate_commit": true,
+    "in_gate_build": false,
+    "gate_build_sha_equal": null
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv",
+    "sha256_routed": "0ee545d136ac9194993367a57e29de315baabaa48da5f8fddc7fa2d0d1e2f0d5",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv",
+    "sha256_routed": "d0b537763436b9fd81acc274c2c8ef1e38292a0ba20e227609e41d3d887f826b",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+    "sha256_routed": "f01f0b3d0f6000005376d2816a0dc482025103e11a74f3627cba722fa0348e91",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/lib/ot_async_fifo.sv",
+    "sha256_routed": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   },
+   {
+    "path": "rtl/lib/ot_reset_sync.sv",
+    "sha256_routed": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "equal_gate_commit": true,
+    "in_gate_build": true,
+    "gate_build_sha_equal": true
+   }
+  ]
+ }
+]

@@ -1,0 +1,797 @@
+{
+ "schema": "opentallas.s81su.element_gate.functional_throughput.v1",
+ "generated": "2026-10-13",
+ "price_source": {
+  "file": "results/arch/token_path_20261009/ds_rom.json",
+  "commit": "00888ffb6",
+  "budget": "results/arch/throughput_budget_20261010/budget.json @ 70bd064b2 /rom/ds_rom/classes[cls=su] (116,151.3 cyc, source = that file); name rule ^(dsfd_su_t_|ot_s81_hc_) gives the tiles status QUALIFIED with ratio null: a name rule, not a measurement"
+ },
+ "measurement": {
+  "record": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json",
+  "record_commit": "47c89defd",
+  "gate_source_commit": "b132ae0da",
+  "shape": "full",
+  "params": {
+   "QN_N": 256,
+   "KV_N": 512,
+   "QB_NB": 32,
+   "SW_W": 1024,
+   "SM_H": 16,
+   "SM_LPH": 16,
+   "SM_NVMAX": 40,
+   "S_RD": 16,
+   "S_WR": 16
+  },
+  "fp": "dpi",
+  "basis": "slab cycles from the core accepting the job (e_cmd) to c_done_v after the job's last result row is written; behavioural VM read latency LVM 10; no die transport between VM and the slab pins. The price nodes include the old hub transport, so this is a lower bound of the die-level node.",
+  "total_cycles": 3146
+ },
+ "jobs": {
+  "QN": {
+   "measured_cycles": 301,
+   "flat_master_cycles": 229,
+   "price_cycles": 288.0,
+   "ratio": 1.045,
+   "passes_1p10": true,
+   "price_nodes": [
+    {
+     "key": "nodes[id=L5.attn.q_quant].cycles",
+     "cycles": 288.0,
+     "critical": true,
+     "basis": "su_norm: ot_dsrom_su_norm q (N 256, D 1280): q RMSNorm -> FP8 act-quant 287 cycles at 1.2 GHz from the vector-memory read to the last quantised block landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on the "
+    }
+   ],
+   "priced_shape": "ot_dsrom_su_norm q N 256 D 1280, RMSNorm -> FP8 act-quant, VM read -> last quantised block at its consumer (hub in 33 / out 23 + wire 9 + 9 included)",
+   "bench_shape": "QN_N 256, 1,280-element q row",
+   "critical_in_token_path": true
+  },
+  "KV": {
+   "measured_cycles": 357,
+   "flat_master_cycles": 225,
+   "price_cycles": 283.0,
+   "ratio": 1.261,
+   "passes_1p10": false,
+   "price_nodes": [
+    {
+     "key": "nodes[id=L5.attn.kv_rope_qdq].cycles",
+     "cycles": 283.0,
+     "critical": false,
+     "basis": "su_norm: ot_dsrom_su_norm kv (N 512, D 512): kv RMSNorm -> RoPE tail -> FP8 QDQ 282 cycles at 1.2 GHz from the vector-memory read to the last QDQ block landing at its consumer (hub in 33 / out 23, result + broadcast wire 9 + 9 stages included); bit-exact on th"
+    }
+   ],
+   "priced_shape": "ot_dsrom_su_norm kv N 512 D 512, RMSNorm -> RoPE -> FP8 QDQ, VM read -> last QDQ block at its consumer (hub in 33 / out 23 + wire 9 + 9 included)",
+   "bench_shape": "KV_N 512",
+   "critical_in_token_path": false
+  },
+  "QB": {
+   "measured_cycles": 166,
+   "flat_master_cycles": 65,
+   "price_cycles": 80.0,
+   "ratio": 2.075,
+   "passes_1p10": false,
+   "price_nodes": [
+    {
+     "key": "nodes[id=L5.attn.z_quant].cycles",
+     "cycles": 80.0,
+     "critical": true,
+     "basis": "su_swiglu: ot_dsrom_su_qbank NB32 QLAT5 (2 beats): 76 cyc at 1.2 GHz, exact L0/L3/L20/L24 + stress + r8 hub-slab stations 0.833 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exac"
+    }
+   ],
+   "priced_shape": "ot_dsrom_su_qbank NB 32 QLAT 5, 2 beats (2,048 values): 76 cyc + 1 + 3",
+   "bench_shape": "QB_NB 32, 2 x 32 blocks (2,048 values), FP8 and FP4",
+   "critical_in_token_path": true
+  },
+  "SW": {
+   "measured_cycles": 352,
+   "flat_master_cycles": 201,
+   "price_cycles": 191.0,
+   "ratio": 1.843,
+   "passes_1p10": false,
+   "price_nodes": [
+    {
+     "key": "nodes[id=L5.ffn.quant2].cycles",
+     "cycles": 191.0,
+     "critical": true,
+     "basis": "su_swiglu: ot_dsrom_su_swiglu W1024 LM5/LA4/QLAT5: 33 in + lane 116 + quant 18 + 23 out stages, 4 vectors: 190 cyc at 1.2 GHz first input -> last code, exact L0/L3/L20/L24 routed+shared + stress (rtl W64 + dpi_beh W1024) + r8 hub-slab stations 0.833 ns"
+    }
+   ],
+   "priced_shape": "ot_dsrom_su_swiglu W 1024 LM5/LA4/QLAT5, 4 vectors, first input -> last code (33 in + lane 116 + quant 18 + 23 out); ffn.swiglu 3.0 and ffn.route_w 5.9 are separate nodes 'covered by ffn.quant2'",
+   "bench_shape": "SW_W 1024, 4 vectors, route weight incl. the shared expert",
+   "critical_in_token_path": true
+  },
+  "SE_T640": {
+   "measured_cycles": 466,
+   "flat_master_cycles": 275,
+   "price_cycles": 795.3,
+   "ratio": 0.586,
+   "passes_1p10": true,
+   "price_nodes": [
+    {
+     "key": "nodes[id=L5.attn.max].cycles",
+     "cycles": 221.6,
+     "critical": true,
+     "basis": "SU: L3.attn.max: wired RTL (BCAST 22 / RET 15 stages) 0.17333 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast"
+    },
+    {
+     "key": "nodes[id=L5.attn.exp].cycles",
+     "cycles": 289.7,
+     "critical": true,
+     "basis": "SU: L3.attn.exp: wired RTL (BCAST 22 / RET 15 stages) 0.21222 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 1 cyc / x1.0000 (Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30), exp 2"
+    },
+    {
+     "key": "nodes[id=L5.attn.den].cycles",
+     "cycles": 88.0,
+     "critical": true,
+     "basis": "SU: L3.attn.den: wired RTL (BCAST 22 / RET 15 stages) 0.07 us, golden-exact + r8 hub-slab stations 3.333 ns"
+    },
+    {
+     "key": "nodes[id=L5.attn.sink].cycles",
+     "cycles": 196.0,
+     "critical": true,
+     "basis": "SU: L3.attn.sink: wired RTL (BCAST 22 / RET 15 stages) 0.16 us, golden-exact + r8 hub-slab stations 3.333 ns"
+    }
+   ],
+   "priced_shape": "softmax H 16, T 640 (L3 chain): scores in -> den at the lanes",
+   "bench_shape": "SM_H 16, SM_LPH 16, T 640",
+   "critical_in_token_path": true
+  },
+  "SE_T128": {
+   "measured_cycles": 386,
+   "flat_master_cycles": 196,
+   "price_cycles": 691.2,
+   "ratio": 0.558,
+   "passes_1p10": true,
+   "price_nodes": [
+    {
+     "key": "nodes[id=L0.attn.max].cycles",
+     "cycles": 186.9,
+     "critical": true,
+     "basis": "SU: L0.attn.max: wired RTL (BCAST 22 / RET 15 stages) 0.14444 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 3 cyc / x1.0000 (SU crossings through the d8g1 meso FIFO (fullsys_recheck_20261007/ds_su_xing, 64/64 phases exact): +2.5 ns (+3 fast"
+    },
+    {
+     "key": "nodes[id=L0.attn.exp].cycles",
+     "cycles": 236.3,
+     "critical": true,
+     "basis": "SU: L0.attn.exp: wired RTL (BCAST 22 / RET 15 stages) 0.16778 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 1 cyc / x1.0000 (Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30), exp 2"
+    },
+    {
+     "key": "nodes[id=L0.attn.den].cycles",
+     "cycles": 72.0,
+     "critical": true,
+     "basis": "SU: L0.attn.den: wired RTL (BCAST 22 / RET 15 stages) 0.05667 us, golden-exact + r8 hub-slab stations 3.333 ns"
+    },
+    {
+     "key": "nodes[id=L0.attn.sink].cycles",
+     "cycles": 196.0,
+     "critical": true,
+     "basis": "SU: L0.attn.sink: wired RTL (BCAST 22 / RET 15 stages) 0.16 us, golden-exact + r8 hub-slab stations 3.333 ns"
+    }
+   ],
+   "priced_shape": "softmax H 16, T 128 (L0 sliding window)",
+   "bench_shape": "SM_H 16, SM_LPH 16, T 128",
+   "critical_in_token_path": true
+  },
+  "SO_T640": {
+   "measured_cycles": 303,
+   "flat_master_cycles": 112,
+   "price_cycles": 244.9,
+   "ratio": 1.237,
+   "passes_1p10": false,
+   "price_nodes": [
+    {
+     "key": "nodes[id=L5.attn.normalize].cycles",
+     "cycles": 244.9,
+     "critical": true,
+     "basis": "SU: L3.attn.normalize: wired RTL (BCAST 22 / RET 15 stages) 0.16778 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 30 cyc / x1.0000 (Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30)"
+    }
+   ],
+   "priced_shape": "softmax normalize H 16: first P.V vector in -> last o out (divide + BF16 + inverse RoPE)",
+   "bench_shape": "SM_H 16, 16 x 512 P.V",
+   "critical_in_token_path": true
+  },
+  "SO_T128": {
+   "measured_cycles": 303,
+   "flat_master_cycles": 112,
+   "price_cycles": 244.9,
+   "ratio": 1.237,
+   "passes_1p10": false,
+   "price_nodes": [
+    {
+     "key": "nodes[id=L0.attn.normalize].cycles",
+     "cycles": 244.9,
+     "critical": true,
+     "basis": "SU: L0.attn.normalize: wired RTL (BCAST 22 / RET 15 stages) 0.16778 us, golden-exact + r8 hub-slab stations 3.333 ns + s81_die_tiles: 30 cyc / x1.0000 (Softmax SAFE2 measured against MARGIN baseline (dsrom_softmax_recovery_20261007): normalize 141 -> 171 (+30)"
+    }
+   ],
+   "priced_shape": "as SO_T640 (same price at L0)",
+   "bench_shape": "SM_H 16, 16 x 512 P.V",
+   "critical_in_token_path": true
+  },
+  "GQ": {
+   "measured_cycles": 69,
+   "flat_master_cycles": 38,
+   "price_cycles": null,
+   "ratio": null,
+   "note": "gain load: no token-path node, no immutable price exists (not a per-token op)"
+  },
+  "GK": {
+   "measured_cycles": 67,
+   "flat_master_cycles": 35,
+   "price_cycles": null,
+   "ratio": null,
+   "note": "gain load: no token-path node, no immutable price exists (not a per-token op)"
+  }
+ },
+ "tiles": [
+  {
+   "tile": "dsfd_su_t_smt",
+   "routed": "s81su_smt_hb1_ref @ ab43f2fe0",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "SE_T640": {
+     "measured": 466,
+     "price": 795.3,
+     "ratio": 0.586
+    },
+    "SE_T128": {
+     "measured": 386,
+     "price": 691.2,
+     "ratio": 0.558
+    },
+    "SO_T640": {
+     "measured": 303,
+     "price": 244.9,
+     "ratio": 1.237
+    }
+   },
+   "limiting_job": "SO_T640",
+   "ratio": 1.237,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_sm.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)",
+    "throughput: SO_T640 303 vs 244.9 = 1.237x"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_smt",
+   "routed": "s81su_smt_hb2_ref @ ab43f2fe0",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "SE_T640": {
+     "measured": 466,
+     "price": 795.3,
+     "ratio": 0.586
+    },
+    "SE_T128": {
+     "measured": 386,
+     "price": 691.2,
+     "ratio": 0.558
+    },
+    "SO_T640": {
+     "measured": 303,
+     "price": 244.9,
+     "ratio": 1.237
+    }
+   },
+   "limiting_job": "SO_T640",
+   "ratio": 1.237,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_sm.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)",
+    "throughput: SO_T640 303 vs 244.9 = 1.237x"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_swe",
+   "routed": "s81su_swe_spx_ref @ 1ec43dde7",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "SW": {
+     "measured": 352,
+     "price": 191.0,
+     "ratio": 1.843
+    }
+   },
+   "limiting_job": "SW",
+   "ratio": 1.843,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_sw.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)",
+    "throughput: SW 352 vs 191.0 = 1.843x"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_swe",
+   "routed": "s81su_swe_gfix_ref @ 1065bcb90",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "SW": {
+     "measured": 352,
+     "price": 191.0,
+     "ratio": 1.843
+    }
+   },
+   "limiting_job": "SW",
+   "ratio": 1.843,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_sw.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)",
+    "throughput: SW 352 vs 191.0 = 1.843x"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_qnt",
+   "routed": "s81su_qnt_cb32_ref @ c904b01fb",
+   "params": {
+    "CB": 32
+   },
+   "rtl_bytes_equal_gate_commit_b132ae0da": false,
+   "files_changed_vs_gate": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv"
+   ],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv"
+   ],
+   "fp_primitives_in_full_gate": "none in this tile",
+   "exact_mutant_evidence": "results/rtl/s81su_qnt_cb_c904b01fb_20261013/final @ 70ac518d7: lockstep CB32/CB16 vs the 69c124e5d qnt (bytes = b132ae0da), all 4,305 output bits every cycle, 18,670 checks, added_cycles 0, MUT 6 FAIL; candidate sha256 e33c4f5e = routed ot_s81_su_qn.sv. Composition: results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "QN": {
+     "measured": 301,
+     "price": 288.0,
+     "ratio": 1.045
+    }
+   },
+   "limiting_job": "QN",
+   "ratio": 1.045,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "no composed slab gate with CB 32 (the slab default is the 69c124e5d tap; equivalence is by lockstep only)",
+    "gate never compiles the routed top (dsfd_su_t_qn.sv); its parameters equal the slab's full-shape values by inspection only"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_qne",
+   "routed": "s81su_qne_ref @ 8946ebc79",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "QN": {
+     "measured": 301,
+     "price": 288.0,
+     "ratio": 1.045
+    }
+   },
+   "limiting_job": "QN",
+   "ratio": 1.045,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_qn.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_qnh",
+   "routed": "s81su_qnh_ref @ 8946ebc79",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "QN": {
+     "measured": 301,
+     "price": 288.0,
+     "ratio": 1.045
+    }
+   },
+   "limiting_job": "QN",
+   "ratio": 1.045,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_qn.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_qnr",
+   "routed": "s81su_qnr_ref @ 8946ebc79",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "QN": {
+     "measured": 301,
+     "price": 288.0,
+     "ratio": 1.045
+    }
+   },
+   "limiting_job": "QN",
+   "ratio": 1.045,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_qn.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_qnh",
+   "routed": "s81su_qnh_ref @ 46d62c427",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "QN": {
+     "measured": 301,
+     "price": 288.0,
+     "ratio": 1.045
+    }
+   },
+   "limiting_job": "QN",
+   "ratio": 1.045,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_qn.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_qnr",
+   "routed": "s81su_qnr_ref @ 46d62c427",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "QN": {
+     "measured": 301,
+     "price": 288.0,
+     "ratio": 1.045
+    }
+   },
+   "limiting_job": "QN",
+   "ratio": 1.045,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_qn.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_kve",
+   "routed": "s81su_kve_ref @ 00167e741",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "KV": {
+     "measured": 357,
+     "price": 283.0,
+     "ratio": 1.261
+    }
+   },
+   "limiting_job": "KV",
+   "ratio": 1.261,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_kv.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)",
+    "throughput: KV 357 vs 283.0 = 1.261x"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_kvp",
+   "routed": "s81su_kvp_ref @ 00167e741",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "KV": {
+     "measured": 357,
+     "price": 283.0,
+     "ratio": 1.261
+    }
+   },
+   "limiting_job": "KV",
+   "ratio": 1.261,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_kv.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)",
+    "throughput: KV 357 vs 283.0 = 1.261x"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_kvr",
+   "routed": "s81su_kvr_ref @ 00167e741",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "KV": {
+     "measured": 357,
+     "price": 283.0,
+     "ratio": 1.261
+    }
+   },
+   "limiting_job": "KV",
+   "ratio": 1.261,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_kv.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)",
+    "throughput: KV 357 vs 283.0 = 1.261x"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_smc",
+   "routed": "s81su_smc_ref @ 47c31b637",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "SE_T640": {
+     "measured": 466,
+     "price": 795.3,
+     "ratio": 0.586
+    },
+    "SE_T128": {
+     "measured": 386,
+     "price": 691.2,
+     "ratio": 0.558
+    }
+   },
+   "limiting_job": "SE_T640",
+   "ratio": 0.586,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_sm.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_smd",
+   "routed": "s81su_smd_ref @ 47c31b637",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "SO_T640": {
+     "measured": 303,
+     "price": 244.9,
+     "ratio": 1.237
+    }
+   },
+   "limiting_job": "SO_T640",
+   "ratio": 1.237,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_sm.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)",
+    "throughput: SO_T640 303 vs 244.9 = 1.237x"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_sml",
+   "routed": "s81su_sml_ref @ 47c31b637",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "SE_T640": {
+     "measured": 466,
+     "price": 795.3,
+     "ratio": 0.586
+    },
+    "SE_T128": {
+     "measured": 386,
+     "price": 691.2,
+     "ratio": 0.558
+    }
+   },
+   "limiting_job": "SE_T640",
+   "ratio": 0.586,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_sm.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_smr",
+   "routed": "s81su_smr_ref @ 47c31b637",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv"
+   ],
+   "fp_primitives_in_full_gate": "DPI behavioural models (su_gate --fp dpi), not the routed bytes",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "SE_T640": {
+     "measured": 466,
+     "price": 795.3,
+     "ratio": 0.586
+    },
+    "SE_T128": {
+     "measured": 386,
+     "price": 691.2,
+     "ratio": 0.558
+    }
+   },
+   "limiting_job": "SE_T640",
+   "ratio": 0.586,
+   "verdict": "throughput within 1.10 at the slab pins; functional NOT YET source-exact",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_t_sm.sv); its parameters equal the slab's full-shape values by inspection only",
+    "production-shape gate on the routed FP primitive bytes (--fp rtl)"
+   ]
+  },
+  {
+   "tile": "dsfd_su_t_ctl",
+   "routed": "s81su_ctl_ref @ cbafa4c7a",
+   "params": null,
+   "rtl_bytes_equal_gate_commit_b132ae0da": true,
+   "files_changed_vs_gate": [],
+   "routed_top_wrapper_compiled_by_gate": false,
+   "wrapper_files": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv"
+   ],
+   "fp_primitives_in_full_gate": "none in this tile",
+   "exact_mutant_evidence": "results/physical/s81su_closure_20261013/smt_qualification/full_gate/run_full_dpi_m0_a0_h.json (+ m1, m5) @ 47c89defd: su_gate --hier --shape full --fp dpi @ b132ae0da, m0 PASS 0/1,722 x3 cycles 3,146; m1 FAIL (1,296/1,267/1,294 rows), m5 FAIL (222/193/220)",
+   "jobs": {
+    "QN": {
+     "measured": 301,
+     "price": 288.0,
+     "ratio": 1.045
+    },
+    "KV": {
+     "measured": 357,
+     "price": 283.0,
+     "ratio": 1.261
+    },
+    "QB": {
+     "measured": 166,
+     "price": 80.0,
+     "ratio": 2.075
+    },
+    "SW": {
+     "measured": 352,
+     "price": 191.0,
+     "ratio": 1.843
+    },
+    "SE_T640": {
+     "measured": 466,
+     "price": 795.3,
+     "ratio": 0.586
+    },
+    "SE_T128": {
+     "measured": 386,
+     "price": 691.2,
+     "ratio": 0.558
+    },
+    "SO_T640": {
+     "measured": 303,
+     "price": 244.9,
+     "ratio": 1.237
+    },
+    "SO_T128": {
+     "measured": 303,
+     "price": 244.9,
+     "ratio": 1.237
+    }
+   },
+   "limiting_job": "QB",
+   "ratio": 2.075,
+   "verdict": "NOT QUALIFIED",
+   "missing": [
+    "gate never compiles the routed top (dsfd_su_tiles.sv); its parameters equal the slab's full-shape values by inspection only",
+    "throughput: KV 357 vs 283.0 = 1.261x, QB 166 vs 80.0 = 2.075x, SW 352 vs 191.0 = 1.843x, SO_T640 303 vs 244.9 = 1.237x, SO_T128 303 vs 244.9 = 1.237x"
+   ]
+  }
+ ],
+ "rtl_fp_gate": null
+}
