@@ -662,8 +662,15 @@ def align_abutted(v, model, M, pw, split, rec):
             skipped[(mn, p)] = f'{len(opts)} different positions asked by its instances'
             continue
         fl, layer, pos, who = next(iter(opts))
-        lay_ = 'M5' if fl in 'NS' else 'M4'
-        M[mn].ports[p] = ('pins', len(pos), fl, layer if layer in ('M4', 'M5', 'M6', 'M7') and (layer in ('M5', 'M7')) == (fl in 'NS') else lay_, list(pos), 1)
+        lay_ = layer if layer in ('M4', 'M5', 'M6', 'M7') and (layer in ('M5', 'M7')) == (fl in 'NS') else ('M5' if fl in 'NS' else 'M4')
+        # every pin on the follower's own track lattice (the anchor's pins are on ITS lattice in ITS frame: up to half a
+        # pitch apart, 24-32 nm): a master with pins off one lattice has no legal origin (track-lattice gate)
+        off_, pt_ = v.TRK[lay_]
+        sn = [round(off_ + round((q_ - off_) / pt_) * pt_, 4) for q_ in pos]
+        if len(set(sn)) != len(sn):
+            skipped[(mn, p)] = f'{who}: two pins fall on one {lay_} track of the follower'
+            continue
+        M[mn].ports[p] = ('pins', len(sn), fl, lay_, sn, 1)
         done[f'{mn}.{p}'] = who
     rec.update(aligned=done, skipped={f'{k[0]}.{k[1]}': q for k, q in sorted(skipped.items()) if f'{k[0]}.{k[1]}' not in done},
                both_closed={f'{k[0]}.{k[1]} -> {k[2]}.{k[3]}': len(q) for k, q in sorted(both_closed.items())})
