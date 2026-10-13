@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Region leaf miter (claude/qwen-tp8-vm-rtl, RTL-B 2026-10-13): ot_qfd_vm_region_leaf (leaf instances and wires only:
-// gctl_t, rowrd_t, delay1_t / delay2_t and the closed bank_t / su_t / xfifo8_t / su1024_t) against the FLAT REFERENCE
+// bctl_t, sctl_t, rr4_t, rr2_t, delay1_t / delay2_t and the closed bank_t / su_t / xfifo8_t / su1024_t) against the FLAT REFERENCE
 // ot_qfd_vm_region_quarter, same xorshift64 stimulus on every input, xo / ro / so / ovf compared on EVERY clock
 // from the first one (reset included).
 //   main run      random reads / writes / masks / data on all 8 banks and both SU row banks, random row reads and SU
@@ -11,7 +11,7 @@
 //                 rise, on the same clock in both.
 // Non-vacuity refusal: a run with too few pushes / pops / row reads / SU answers / stalls / output changes / nonzero
 // compared words, or whose ovf never rose in the overflow run, prints FAIL.
-// LEAF_MUT 1..8 (see ot_qfd_vm_region_leaf) must FAIL.
+// LEAF_MUT 1..12 (see ot_qfd_vm_region_leaf) must FAIL.
 module tb_qfd_vm_region_leaf;
     parameter integer CYCLES = 6000, SEED = 1, LEAF_MUT = 0, OVFMODE = 0, NPP = 12;
     localparam integer LAW = 3, LAWS = 3;
