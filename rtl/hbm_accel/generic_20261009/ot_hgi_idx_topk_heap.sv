@@ -556,7 +556,8 @@ module ot_hgi_idx_topk_hw #(
  generate for (h = 0; h < W; h = h + 1) begin : g_h
   if (LANE) begin : g_lt
    wire f2p = f2_v && (h / IW == f2_g) && ((h % IW) < f2_nw) && f2_gt[h % IW];
-   reg [2:0] ph0; reg [KW-1:0] k0; reg c0, pv0; reg [53:0] pd0;     // relay stage 0 (stage 1 = the tile's pin flops)
+   (* keep = 1 *) reg [2:0] ph0; (* keep = 1 *) reg [KW-1:0] k0;
+   (* keep = 1 *) reg c0, pv0; (* keep = 1 *) reg [53:0] pd0;     // relay stage 0 (stage 1 = the tile's pin flops)
    always @(posedge clk) begin k0 <= k; pd0 <= f2_e[h % IW]; end
    always @(posedge clk or negedge rr[h])
     if (!rr[h]) begin ph0 <= IDLE; c0 <= 1'b0; pv0 <= 1'b0; end else begin ph0 <= st; c0 <= clr_go; pv0 <= f2p; end

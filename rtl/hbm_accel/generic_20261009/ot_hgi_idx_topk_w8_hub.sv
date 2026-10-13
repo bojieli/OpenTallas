@@ -182,27 +182,38 @@ module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integ
   .ext_v(xv7), .ext_d(xd7), .root_key(rk7), .clr_go(c7), .idle(id7));
 endmodule
 
-// 2-entry boundary FIFO with a REGISTERED ready (i_r = count < 2, no pass-through from o_r): full throughput at one beat a
-// cycle (steady state count 1), one cycle of latency, data out of a 2:1 mux behind flops.  Datapath entries are reset-free.
+// Four-entry elastic boundary FIFO with a dedicated single-capture input stage.
+// The pending input beat counts against capacity, so registered ingress never
+// overwrites an entry during a downstream stall. Sustained service stays one
+// beat/cycle; the input register adds one edge compared with the two-bank FIFO.
 module ot_hgi_w8_bfifo #(parameter integer W=32) (
  input wire clk, rst_n,
  input wire i_v, output wire i_r, input wire [W-1:0] i_d,
  output wire o_v, input wire o_r, output wire [W-1:0] o_d
 );
- reg [W-1:0] m0, m1; reg wp, rp, up; reg [1:0] cnt;
+ reg [W-1:0] pin_d;
+ reg pin_v, up;
+ reg [W-1:0] mem [0:3];
+ reg [1:0] wp, rp;
+ reg [2:0] cnt;
  wire push = i_v && i_r, pop = o_v && o_r;
- // el1012-t1: not ready while held in reset (rst_n now comes from a relay that releases 3 cycles after the port, so a
- // ready that ignored reset would accept and drop a beat); up is a flop, so i_r stays a function of local state only.
- assign i_r = up && (cnt != 2'd2);
- assign o_v = (cnt != 2'd0);
- assign o_d = rp ? m1 : m0;
- always @(posedge clk) if (push) begin if (wp) m1 <= i_d; else m0 <= i_d; end
+ wire [3:0] occupied = {1'b0, cnt} + {3'b0, pin_v};
+ assign i_r = up && occupied < 4;
+ assign o_v = cnt != 0;
+ assign o_d = mem[rp];
+ // Input pins each reach exactly one reset-free capture flop. The valid bit
+ // carries the acceptance event; invalid input samples are never consumed.
+ always @(posedge clk) begin
+  pin_d <= i_d;
+  if (pin_v) mem[wp] <= pin_d;
+ end
  always @(posedge clk or negedge rst_n)
-  if (!rst_n) begin wp <= 1'b0; rp <= 1'b0; up <= 1'b0; cnt <= 2'd0; end
+  if (!rst_n) begin wp <= 0; rp <= 0; up <= 0; pin_v <= 0; cnt <= 0; end
   else begin
-   up <= 1'b1;
-   if (push) wp <= ~wp;
-   if (pop) rp <= ~rp;
-   cnt <= cnt + {1'b0, push} - {1'b0, pop};
+   up <= 1;
+   pin_v <= push;
+   if (pin_v) wp <= wp + 1'b1;
+   if (pop) rp <= rp + 1'b1;
+   cnt <= cnt + {2'b0, pin_v} - {2'b0, pop};
   end
 endmodule
