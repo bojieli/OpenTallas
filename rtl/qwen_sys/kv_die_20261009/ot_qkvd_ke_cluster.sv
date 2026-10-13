@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // q13-kvleaves 2026-10-13: the KV end of the die link as a THIN cluster (ot_qkvd_kv_end SPL=1): hard children only
 // (ot_qkvd_ke_tiles.sv + the pin-registered link buffers ot_qkvd_sbufp / ot_qkvd_fbuf8p), no register and no logic of
-// its own (three tied strap buses).  Every seam is flop -> wire -> flop except the TX head mux (buffer dout flop ->
+// its own (three tied strap buses).  Every seam is flop -> wire -> flop except the TX head mux in ot_qkvd_ke_tm (buffer dout flop ->
 // wire -> 2 gate levels -> tf0) and the per-slice head-capture enable in ot_qkvd_ke_ro.  See ot_qkvd_ke_tiles.sv.
 // Buffers: TX class 4 / 5 (UCX deep) sbufp, class 6 fbuf8p; RX class 0 fbuf8p, 1 sbufp, 2 fbuf8p, 3 sbufp.
 module ot_qkvd_ke_cluster #(
@@ -58,8 +58,11 @@ module ot_qkvd_ke_cluster #(
         .dout(ib_head[W*1 +: W]), .empty(ib_empty[1]));
     ot_qkvd_fbuf8p u_tb2 (.clk(clk), .rst_n(rs_ta), .push(psh_t[2]), .din(ce_d[W*2 +: W]), .pop(pp_t[2]),
         .dout(ib_head[W*2 +: W]), .empty(ib_empty[2]));
-    ot_qkvd_ke_to u_to (.clk(clk), .rst_n(rs_n), .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit), .upq(upq), .gq_i(gq),
-        .tf0h(tf0h), .tv0_i(tv0), .h0(ib_head[W*0 +: W]), .h1(ib_head[W*1 +: W]), .h2(ib_head[W*2 +: W]));
+    wire [W-1:0] tw;
+    ot_qkvd_ke_tm u_tm (.clk(clk), .rst_n(rs_n), .gq_i(gq), .h0(ib_head[W*0 +: W]), .h1(ib_head[W*1 +: W]),
+        .h2(ib_head[W*2 +: W]), .tw(tw));
+    ot_qkvd_ke_tf u_tf (.clk(clk), .rst_n(rs_n), .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit), .upq(upq), .tf0h(tf0h),
+        .tv0_i(tv0), .tw(tw));
     // ---- FDI RX capture, RX buffers and die RX face lanes ----
     ot_qkvd_ke_rq u_rq (.clk(clk), .rst_n(rs_n), .rx_v(rx_v), .rx_flit(rx_flit), .rqv(rqv), .rqh(rqh), .psh(psh_r),
         .w0(re_w[W*0 +: W]), .w1(re_w[W*1 +: W]), .w2(re_w[W*2 +: W]), .w3(re_w[W*3 +: W]));

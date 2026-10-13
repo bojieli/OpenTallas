@@ -12,13 +12,14 @@
 //
 //   ot_qkvd_ke_ti   x3  die TX face lane: t_v/t_d pin flops (ci), IRL relay (ci2), push pin flop, t_cr face flop
 //   ot_qkvd_ke_rq   x1  FDI RX capture: rx_v/rx_flit pin flops (rq), the four per-buffer word relays (rw) and push flops
-//   ot_qkvd_ke_to   x1  link TX: tx_up pin flop, grant-selected head mux -> tf0 relay -> tx_flit / tx_v face flops
+//   ot_qkvd_ke_tm   x1  link TX head mux (grant-selected) -> tf0 relay, next to the TX buffers
+//   ot_qkvd_ke_tf   x1  link TX face: tx_up pin flop, tx_flit / tx_v face flops
 //   ot_qkvd_ke_ro   x4  die RX face lane: head capture rd0 (enable = the pop in effect), r_d / r_v face flops, r_cr pin flop
 //   ot_qkvd_ke_ctl  x1  credits, round-robin grant, buffer shadows, sequence / fault logic; every pin registered
 //   ot_qkvd_ke_wf   x1  W face: reset synchroniser for the cluster and the fault face flops
 // Fixed width W 528 / FW 548, NT 3 (classes 4-6), NR 4 (classes 0-3): hard tiles carry no parameters.  The three
 // configuration values that ot_qkvd_kv_end takes as parameters (UCX, QD, FCR_RES) reach ot_qkvd_ke_ctl as strap pins.
-// Mutants (bench only): KVD_KE_MUT_TI / _RQ / _TO / _RO / _CTL / _WF, one per tile.
+// Mutants (bench only): KVD_KE_MUT_TI / _RQ / _TM / _TF / _RO / _CTL / _WF, one per tile.
 // ---------------------------------------------------------------------------------------------------------------------
 
 // die TX face lane (class i): ci_d / ci2_d are ot_qkvd_d2d's ci_d / g_irl.ci2_d, pf its g_pf push pin flop, t_cr its t_cr
@@ -85,35 +86,25 @@ module ot_qkvd_ke_rq (
     end endgenerate
 endmodule
 
-// link TX: up_q is ot_qkvd_d2d's up_q, the mux its sel_word (select = a local copy of gq2), tf0w / tx_flit its
-// g_torl.tf0 / tx_flit (header bits: ctl holds the tf0 stage), tx_v its tx_v
-module ot_qkvd_ke_to (
+// link TX head mux, next to the TX buffers: the mux is ot_qkvd_d2d's sel_word (select = local copies of gq2), tf0w its
+// g_torl.tf0 word bits (the tf0 header bits are held by ctl)
+module ot_qkvd_ke_tm (
     input  wire         clk,
     input  wire         rst_n,
-    input  wire         tx_up,           // N face (PHY FDI)
-    output reg          tx_v,
-    output reg  [547:0] tx_flit,
-    output wire         upq,             // to ctl: up_q
     input  wire [2:0]   gq_i,            // from ctl: gq (decided last cycle); gq2 is taken here, next to the mux
-    input  wire [19:0]  tf0h,            // from ctl: tf0 header {seq 8, credit return 8, dv, class 3}
-    input  wire         tv0_i,           // from ctl: tv0
-    input  wire [527:0] h0,              // TX buffer heads (registered inside the tiles)
+    input  wire [527:0] h0,              // TX buffer heads (registered inside the buffer tiles)
     input  wire [527:0] h1,
-    input  wire [527:0] h2
+    input  wire [527:0] h2,
+    output wire [527:0] tw               // to ot_qkvd_ke_tf: tf0 word
 );
-    reg up_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin up_q <= 1'b0; tx_v <= 1'b0; end
-        else begin up_q <= tx_up; tx_v <= tv0_i; end
-    assign upq = up_q;
-    // select copies: 4 groups of 132 bits, each with its own kept gq2 (fan-out 132 x 3 per copy)
+    // select copies: 4 groups of 132 bits, each with its own kept gq2 (fan-out 132 per flop)
     wire [527:0] sel_word;
     genvar c;
     generate for (c = 0; c < 4; c = c + 1) begin : g_sel
         wire [2:0] g2;
         ot_qkvd_pop_ff u_g0 (.clk(clk), .rst_n(rst_n), .d(gq_i[0]), .q(g2[0]));
         ot_qkvd_pop_ff u_g1 (.clk(clk), .rst_n(rst_n), .d(gq_i[1]), .q(g2[1]));
-`ifdef KVD_KE_MUT_TO
+`ifdef KVD_KE_MUT_TM
         assign g2[2] = gq_i[2];                                            // mutant: class 6 selected one cycle early
 `else
         ot_qkvd_pop_ff u_g2 (.clk(clk), .rst_n(rst_n), .d(gq_i[2]), .q(g2[2]));
@@ -122,7 +113,32 @@ module ot_qkvd_ke_to (
                                         ({132{g2[2]}} & h2[132*c +: 132]);
     end endgenerate
     reg [527:0] tf0w;
-    always @(posedge clk) begin tf0w <= sel_word; tx_flit <= {tf0h, tf0w}; end
+    always @(posedge clk) tf0w <= sel_word;
+    assign tw = tf0w;
+endmodule
+
+// link TX face: up_q is ot_qkvd_d2d's up_q, tx_flit / tx_v its tx_flit / tx_v
+module ot_qkvd_ke_tf (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         tx_up,           // N face (PHY FDI)
+    output reg          tx_v,
+    output reg  [547:0] tx_flit,
+    output wire         upq,             // to ctl: up_q
+    input  wire [19:0]  tf0h,            // from ctl: tf0 header {seq 8, credit return 8, dv, class 3}
+    input  wire         tv0_i,           // from ctl: tv0
+    input  wire [527:0] tw               // from ot_qkvd_ke_tm: tf0 word
+);
+    reg up_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin up_q <= 1'b0; tx_v <= 1'b0; end
+        else begin up_q <= tx_up; tx_v <= tv0_i; end
+    assign upq = up_q;
+`ifdef KVD_KE_MUT_TF
+    always @(posedge clk) tx_flit <= {tf0h[19:4], 1'b1, tf0h[2:0], tw};    // mutant: every flit marked as carrying a word
+`else
+    always @(posedge clk) tx_flit <= {tf0h, tw};
+`endif
 endmodule
 
 // die RX face lane (class j): rd0 / r_d are ot_qkvd_d2d's g_rorl.rd0 / r_d, en2 its rq2[j] (= rb_pop[j]), rv0 / r_v its
@@ -193,14 +209,14 @@ module ot_qkvd_ke_ctl (
     input  wire        rqv,              // rq: rq_v, header
     input  wire [19:0] rqh,
     input  wire [3:0]  crq,              // ro: cr_q
-    input  wire        upq,              // to: up_q
+    input  wire        upq,              // tf: up_q
     output wire [2:0]  pp_t,             // TX buffer pop pins
     output wire [3:0]  pp_r,             // RX buffer pop pins
-    output wire [2:0]  gq_o,             // to: gq
+    output wire [2:0]  gq_o,             // tm: gq
     output wire [2:0]  gq2_o,            // ti: gq2 (-> t_cr)
     output wire [3:0]  rqq_o,            // ro: rq_q
-    output reg  [19:0] tf0h,             // to: tf0 header
-    output reg         tv0,              // to: tv0
+    output reg  [19:0] tf0h,             // tf: tf0 header
+    output reg         tv0,              // tf: tv0
     output wire [5:0]  flt,              // wf: {fault_cause, fault}
     output wire        rs_s,             // reset copies: S-face tiles, N-face tiles, TX buffers, RX buffers
     output wire        rs_n,
@@ -277,7 +293,7 @@ module ot_qkvd_ke_ctl (
         assign ib_full[i] = (oc == IBD[i]);
         assign lc_nz_e[i] = ini ? lc_nz[i] : (FCR[i] != 8'd0);
         ot_qkvd_pop_ff u_pp  (.clk(clk), .rst_n(rs), .d(gnt[i]), .q(pp_t[i]));     // pop pin flop
-        ot_qkvd_pop_ff u_gqo (.clk(clk), .rst_n(rs), .d(gnt[i]), .q(gq_o[i]));     // = gq, for the seam to ot_qkvd_ke_to
+        ot_qkvd_pop_ff u_gqo (.clk(clk), .rst_n(rs), .d(gnt[i]), .q(gq_o[i]));     // = gq, for the seam to ot_qkvd_ke_tm
         ot_qkvd_pop_ff u_g2o (.clk(clk), .rst_n(rs), .d(gq[i]),  .q(gq2_o[i]));    // = gq2, for the seam to ot_qkvd_ke_ti
         if (i < 2) begin : g_s
             ot_qkvd_sbuf_shadow #(.PIQ(1)) u_sh (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .pop(gq[i]), .empty(sh_e_t[i]), .ne_next(tx_ne[i]));

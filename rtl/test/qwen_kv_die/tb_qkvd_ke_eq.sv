@@ -11,7 +11,7 @@
 //   then a die-face overrun is forced on TX class 6 (words without credit, link down): both must raise fault with
 //        cause 00001, again in step.
 // Prints "KE_EQ PASS words <n> cycles <c> compares <m> fault_ok 1" or "KE_EQ FAIL ...".  Mutants (must FAIL):
-// +define+KVD_KE_MUT_TI / _RQ / _TO / _RO / _CTL / _WF (one per hard tile) and +define+KVD_PQ2MUT (the shadows).
+// +define+KVD_KE_MUT_TI / _RQ / _TM / _TF / _RO / _CTL / _WF (one per hard tile) and +define+KVD_PQ2MUT (the shadows).
 module tb_qkvd_ke_eq;
     parameter integer QD = 48, UCX = 48, FCR_RES = 32, NCYC = 40000, SEED = 12345;
     localparam integer W = 528, FW = 548;

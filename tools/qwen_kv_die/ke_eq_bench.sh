@@ -1,6 +1,6 @@
 #!/bin/bash
 # q13-kvleaves 2026-10-13: thin-cluster KV end vs the flat KV end (rtl/test/qwen_kv_die/tb_qkvd_ke_eq.sv), iverilog.
-#   ke_eq_bench.sh OUT [MUT]      MUT = TI | RQ | TO | RO | CTL | WF (hard-tile mutants) | PQ2 (shadow mutant) | "" (positive)
+#   ke_eq_bench.sh OUT [MUT]      MUT = TI | RQ | TM | TF | RO | CTL | WF (hard-tile mutants) | PQ2 (shadow mutant) | "" (positive)
 # env QD / UCX / FCR_RES / NCYC override the parameters (default 48 / 48 / 32 / 40000 = the kit parameters).
 # exit 0 iff the bench prints "KE_EQ PASS" (so a mutant job expects FAIL).
 set -u

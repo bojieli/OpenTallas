@@ -9,9 +9,12 @@ module ot_qkvd_ke_rq (input wire clk, input wire rst_n, input wire rx_v, input w
     output wire [527:0] w2, output wire [527:0] w3);
 endmodule
 (* blackbox *)
-module ot_qkvd_ke_to (input wire clk, input wire rst_n, input wire tx_up, output wire tx_v, output wire [547:0] tx_flit,
-    output wire upq, input wire [2:0] gq_i, input wire [19:0] tf0h, input wire tv0_i, input wire [527:0] h0,
-    input wire [527:0] h1, input wire [527:0] h2);
+module ot_qkvd_ke_tm (input wire clk, input wire rst_n, input wire [2:0] gq_i, input wire [527:0] h0,
+    input wire [527:0] h1, input wire [527:0] h2, output wire [527:0] tw);
+endmodule
+(* blackbox *)
+module ot_qkvd_ke_tf (input wire clk, input wire rst_n, input wire tx_up, output wire tx_v, output wire [547:0] tx_flit,
+    output wire upq, input wire [19:0] tf0h, input wire tv0_i, input wire [527:0] tw);
 endmodule
 (* blackbox *)
 module ot_qkvd_ke_ro (input wire clk, input wire rst_n, input wire en_i, input wire [527:0] head, input wire r_cr,
