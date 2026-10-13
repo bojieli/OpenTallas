@@ -3,7 +3,7 @@
 // Bank-local publication seat, return hold and pipelined checker. Reset affects
 // presence and verdict bits only; all 1152-bit row storage is load-qualified.
 module vm_ck4_state #(parameter integer OWNER_BANK=0)(
- input wire ck,rst_n,accept_i,return_i,capture_i,check_i,load_i,write_i,
+ input wire ck,rst_n,accept_i,return_i,capture_i,check_i,load_i,write_i,hold_i,
  input wire [255:0] raw_i,input wire [287:0] returned_i,
  output wire [287:0] seat_code_o,output wire [255:0] seat_data_o,
  output wire seat_bad_o,output wire checker_error_o,checker_valid_o);
@@ -22,12 +22,11 @@ module vm_ck4_state #(parameter integer OWNER_BANK=0)(
  endfunction
 
  reg [287:0] seat,returned;
- reg [255:0] raw_q,seat_data_q;
+ reg [255:0] seat_data_q;
  wire [287:0] encoded_raw;
- (* keep = "true", dont_touch = "true" *) reg [7:0] accept_q,capture_q,check_q,load_pre_q;
+ (* keep = "true", dont_touch = "true" *) reg [7:0] held_q,capture_q,check_q,load_pre_q;
  always @(posedge ck)begin
-  raw_q<=raw_i;
-  accept_q<={8{accept_i}};capture_q<={8{return_i}};check_q<={8{capture_i}};
+  capture_q<={8{return_i}};check_q<={8{capture_i}};
   load_pre_q<={8{check_i&&!write_i}};
  end
  reg seat_present,seat_ld_q,seat_bad_q;
@@ -36,7 +35,7 @@ module vm_ck4_state #(parameter integer OWNER_BANK=0)(
  localparam [255:0] OM=OWNER_BANK?(({256{1'b1}}>>64)<<15):256'd0;
  localparam [255:0] PM=OWNER_BANK?{{49{1'b1}},207'd0}:256'd0;
  for(genvar k=0;k<4;k=k+1)begin:words
-  assign encoded_raw[k*72+:72]=encode64(raw_q[k*64+:64]);
+  assign encoded_raw[k*72+:72]=encode64(raw_i[k*64+:64]);
   wire [65:0] d=decode64(seat[k*72+:72]);
   assign seat_data_o[k*64+:64]=seat_data_q[k*64+:64];
   assign seat_ue[k]=seat_present&&d[65];
@@ -50,8 +49,8 @@ module vm_ck4_state #(parameter integer OWNER_BANK=0)(
   .valid_o(checker_valid_o),.repaired_o(repaired));
  always @(posedge ck)begin
   returned<=returned_i; // Always capture the held return bus; return_i qualifies the syndrome stage.
-  for(integer h=0;h<8;h=h+1)if(accept_q[h])begin
-   seat[h*36+:36]<=encoded_raw[h*36+:36];seat_data_q[h*32+:32]<=raw_q[h*32+:32];
+  for(integer h=0;h<8;h=h+1)if(!held_q[h])begin
+   seat[h*36+:36]<=encoded_raw[h*36+:36];seat_data_q[h*32+:32]<=raw_i[h*32+:32];
   end
   for(integer h=0;h<8;h=h+1)if(load_pre_q[h]&&load_i)begin
    integer j,d;d=0;
@@ -63,21 +62,22 @@ module vm_ck4_state #(parameter integer OWNER_BANK=0)(
   end
  end
  always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin seat_present<=0;seat_ld_q<=0;seat_bad_q<=0;end
+  if(!rst_n)begin seat_present<=0;seat_ld_q<=0;seat_bad_q<=0;held_q<=0;end
   else begin
-   if(accept_q[0]||load_i)seat_present<=1;
-   seat_ld_q<=accept_q[0]||load_i;
+   held_q<={8{hold_i}};
+   if(accept_i||load_i)seat_present<=1;
+   seat_ld_q<=accept_i||load_i;
    seat_bad_q<=|seat_ue;
   end
  end
 endmodule
-module vm_ck4_state_data(input wire ck,rst_n,accept_i,return_i,capture_i,check_i,load_i,write_i,
+module vm_ck4_state_data(input wire ck,rst_n,accept_i,return_i,capture_i,check_i,load_i,write_i,hold_i,
  input wire [255:0] raw_i,input wire [287:0] returned_i,
  output wire [287:0] seat_code_o,output wire [255:0] seat_data_o,
  output wire seat_bad_o,checker_error_o,checker_valid_o);
  vm_ck4_state u_bank(.*);
 endmodule
-module vm_ck4_state_owner(input wire ck,rst_n,accept_i,return_i,capture_i,check_i,load_i,write_i,
+module vm_ck4_state_owner(input wire ck,rst_n,accept_i,return_i,capture_i,check_i,load_i,write_i,hold_i,
  input wire [255:0] raw_i,input wire [287:0] returned_i,
  output wire [287:0] seat_code_o,output wire [255:0] seat_data_o,
  output wire seat_bad_o,checker_error_o,checker_valid_o);

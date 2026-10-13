@@ -25,7 +25,8 @@
    "check_i",
    "load_i",
    "write_i",
-   "raw_i"
+   "raw_i",
+   "hold_i"
   ],
   "S": [
    "returned_i"
@@ -49,7 +50,7 @@
  "job": {
   "owner": "Codex:vm8-root-checker-1013",
   "branch": "codex/vm8-root-checker-1013",
-  "tag": "state2",
+  "tag": "fast3",
   "purpose": "Full bank-local VM seat/return/capture/check state; independent M5 leaf, no parentview",
   "extra_paths": [
    "physical/hbm_accel_die_views/vm/checker9",

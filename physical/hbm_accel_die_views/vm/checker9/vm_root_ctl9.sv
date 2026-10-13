@@ -10,7 +10,7 @@ module vm_root_ctl9(
  output wire wr_ready,rd_ready,wr_ACK_v,native_release,drained,fault,
  output wire [3:0] tap_v,
  output wire mem_cmd_v,mem_cmd_we,mem_cmd_bank,output wire [6:0] mem_cmd_addr,
- output wire accept_o,return_o,capture_o,check_o,load_o,write_o,write_accept_o);
+ output wire accept_o,return_o,capture_o,check_o,load_o,write_o,write_accept_o,hold_o);
  localparam SEATP=1,FREG=1;
  wire [767:0] tap_ACK_owner={ack3,ack2,ack1,ack0};
  function [71:0] encode64(input [63:0] data);
@@ -69,13 +69,12 @@ module vm_root_ctl9(
    if(!fault)case(state)
     IDLE:begin
      next_sent=0;next_acked=0;
-     if(wf)begin next_bank=wr_bank;next_addr=wr_addr;next_is_write=1;next_state=SEAT;end
+     if(wf)begin next_bank=wr_bank;next_addr=wr_addr;next_is_write=1;next_state=WRITE;end
      if(rf)begin
       if(!valid_bits[{rd_bank,rd_addr}])next_sticky=1;
-      else begin next_bank=rd_bank;next_addr=rd_addr;next_is_write=0;next_state=SEAT;end
+      else begin next_bank=rd_bank;next_addr=rd_addr;next_is_write=0;next_state=READ;end
      end
     end
-    SEAT:next_state=is_write?WRITE:READ;
     WRITE:next_state=VERIFY;
     VERIFY,READ:next_state=WAIT_RD;
     WAIT_RD:if(mem_rd_v)next_state=CAPTURE;
@@ -120,5 +119,6 @@ module vm_root_ctl9(
  assign check_o=state==CHECK&&!fault;
  assign load_o=state==LOAD&&!chk_err_q&&!is_write;
  assign write_o=is_write;
+ assign hold_o=next_state!=IDLE;
 endmodule
 `default_nettype wire

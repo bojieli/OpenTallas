@@ -10,8 +10,8 @@
     "por_n"
   ],
   "outline": {
-    "w": 43.2,
-    "h": 47.52
+    "w": 47.52,
+    "h": 43.2
   },
   "layer_cap": "M5",
   "pins": {
@@ -56,7 +56,8 @@
       "load_o",
       "write_o",
       "write_accept_o",
-      "ack3"
+      "ack3",
+      "hold_o"
     ],
     "N": [
       "ack1"
@@ -67,18 +68,18 @@
     "threads": 8,
     "peak_ram_gb": 16,
     "hold_margin_ns": 0.01,
-    "pin_h": "M4 M5",
-    "pin_v": "M4 M5",
+    "pin_h": "M4",
+    "pin_v": "M5",
     "pin_balance": {
       "group_max": 1,
-      "h": "M4 M5",
-      "v": "M4 M5"
+      "h": "M4",
+      "v": "M5"
     }
   },
   "job": {
     "owner": "Codex:vm8-root-checker-1013",
     "branch": "codex/vm8-root-checker-1013",
-    "tag": "ctl2",
+    "tag": "fast4",
     "purpose": "Compact mutable VM transaction control, nine registered bank errors; no fake parentview",
     "extra_paths": [
       "physical/hbm_accel_die_views/vm/checker9",

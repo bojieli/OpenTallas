@@ -40,10 +40,10 @@
     "replicas": 9,
     "bank_memory_port_bytes_per_cycle": 36,
     "root_memory_bytes_per_cycle": 352,
-    "native_row_initiation_interval": "accept SEAT local ingress stage adds one edge per native write/read; unchanged production price gate still OPEN",
+    "native_row_initiation_interval": "unchanged root6write/5read stage cadence; native serialized protocol independently fails SM service budget",
     "checker_bank_initiation_interval": 1,
     "added_compute_cycles": 0,
-    "added_seam_cycles": 1,
+    "added_seam_cycles": 0,
     "maximum_price_ratio": 1.1,
     "price_must_remain_unchanged": true
   },
@@ -60,8 +60,8 @@
     "slot_admitted": false
   },
   "bank_outline_initial": {
-    "w": 86.4,
-    "h": 129.6,
+    "w": 64.8,
+    "h": 64.8,
     "count": 9,
     "std_area": "minimum checker measured876um2; fullstatebank area still pending",
     "target_util": 0.55,
@@ -69,8 +69,8 @@
     "signal_and_PG_cap": "M5"
   },
   "controller_outline_initial": {
-    "w": 86.4,
-    "h": 129.6,
+    "w": 47.52,
+    "h": 43.2,
     "clock_sinks_upper_bound": 2500,
     "signal_and_PG_cap": "M5"
   },
@@ -157,7 +157,7 @@
     },
     "registered_reset_bits_per_bank": 6,
     "datapath_reset": "none; local cold-reset seat-present bit gates validity until load",
-    "fanout": "kept eight half-word accept/capture/check enable registers; CAPTURE copies preloaded on aligned return; ingress raw captured without reset/enable"
+    "fanout": "eight kept predictive held-seat controls from next controller state; idle preloads canonical raw row, accept freezes it without added latency; return bus unconditional capture; eight kept predictive syndrome/check/load controls"
   },
   "cut_budget": {
     "pitch_um": {
@@ -263,5 +263,12 @@
     "double_bit_return_fault": true,
     "production_price_qualified": false,
     "local_ingress_one_edge_revision": "pending new gate; component phase expected7/6"
+  },
+  "rejected_ingress_stage": {
+    "source": "f6fb7148d",
+    "candidate_write_read_cycles": 4864,
+    "old_root_write_read_cycles": 4352,
+    "ratio": 1.1176470588235294,
+    "adoption": "REJECT >1.10 at full2x128rows withrealownerACK"
   }
 }
