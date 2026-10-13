@@ -130,7 +130,25 @@ module tb_hbm_b2_xcommit;
     // start or an op is in flight; the tiles' HOLD (64 edges) covers the beats still in the x-write pipeline (D = 27)
     always @(negedge clk) cg_wake <= !rst_n || xw_en[SMI] || start || (n_started > ndone) || d_valid;
     // ---------------- shadow of the beats the SM pins sampled; monitors (quarter cycle before the edge) ----------------
-    reg [NBEAT*2048-1:0] fragx [0:XDEPTH-1];
+ // shadow of the x-store as the macros hold it: one 256-bit word and one valid mask per (macro, address), filled
+ // by the beats the SM pins sampled.  Macro IDX = ((c*2+p)*2+j)*4+m = (c*4+R)*4+m holds, of column c (XC bits of
+ // the fragment), w[m*256+:256] with w[531:0] = col[R*532+:532], w[787:532] = col[2128+R*256+:256].
+ // (Kept narrow on purpose: 256 probes slicing a 26,624-bit fragment made ~0.9 GB of C++.)
+ reg [255:0] xs_w[0:256*128-1],xs_m[0:256*128-1];
+ initial for(integer i=0;i<256*128;i=i+1)begin xs_w[i]=0;xs_m[i]=0;end
+ task automatic xs_beat(input [6:0] ad,input integer g,input [2047:0] dat);
+  integer c,R,m,j,t,fb,ix,lo;
+  begin
+   lo=g*2048;
+   for(c=lo/3152;c<8&&c*3152<lo+2048;c=c+1)for(R=0;R<4;R=R+1)for(m=0;m<4;m=m+1)begin
+    ix=((c*4+R)*4+m)*128+ad;
+    for(j=0;j<256;j=j+1)begin
+     t=m*256+j;fb=t<532?c*3152+R*532+t:t<788?c*3152+2128+R*256+(t-532):-1;
+     if(fb>=lo&&fb<lo+2048)begin xs_w[ix][j]=dat[fb-lo];xs_m[ix][j]=1'b1;end
+    end
+   end
+  end
+ endtask
     reg [NBEAT-1:0]      shv [0:XDEPTH-1];
     integer e, e0_last, e0_first, e_rel, t_start_e, n_beats, cal;
     integer lastw [0:NS-1]; integer firstr [0:NS-1]; reg rd_seen [0:NS-1];
@@ -145,7 +163,7 @@ module tb_hbm_b2_xcommit;
     integer op_d [0:MAXOPS-1]; integer op_nb [0:MAXOPS-1]; integer op_t0 [0:MAXOPS-1]; integer e_tap0;
     integer s, sum, mx, mn, fop, e_ack, drained_low_err, sink_ack;
     initial begin
-        for (s = 0; s < XDEPTH; s = s + 1) begin fragx[s] = 0; shv[s] = 0; end
+        for (s = 0; s < XDEPTH; s = s + 1) begin shv[s] = 0; end
         for (s = 0; s < NS; s = s + 1) begin
             lastw[s] = -1; firstr[s] = -1; rd_seen[s] = 0; lat_min[s] = 1 << 30; lat_max[s] = -1; rmin[s] = 1 << 30;
             smin[s] = 1 << 30; rb_bad[s] = 0; stale[s] = 0; w_after_drained[s] = 0; w_gated[s] = 0; nwr[s] = 0;
@@ -157,7 +175,7 @@ module tb_hbm_b2_xcommit;
         if (rst_n) begin
             if (xw_en[SMI]) begin
                 e0_last = e; if (e0_first < 0) e0_first = e; n_beats = n_beats + 1;
-                fragx[xw_addr[SMI*7 +: 7]][xw_grp[SMI*7 +: 7]*2048 +: 2048] = xw_data[SMI*2048 +: 2048];
+                xs_beat(xw_addr[SMI*7 +: 7], 32'(xw_grp[SMI*7 +: 7]), xw_data[SMI*2048 +: 2048]);
                 shv[xw_addr[SMI*7 +: 7]][xw_grp[SMI*7 +: 7]] = 1'b1;
                 if (t_drained[0]) drained_low_err = drained_low_err + 1;   // a beat at the pins while x_drained
             end
@@ -182,13 +200,10 @@ module tb_hbm_b2_xcommit;
     initial for (q = 0; q < 130; q = q + 1) \
         `XCM(BR).arr[q] = {8{32'h5a5a_0000 ^ (IDX * 32'h0001_0193) ^ (q * 32'h0100_01b3)}} | 258'd1; \
     function automatic bad(input integer ad); \
-        reg [255:0] g, x; reg [1023:0] w; \
+        reg [255:0] g, x; \
         begin \
             g = `XCM(BR).arr[ad][255:0]; \
-            w = 1024'd0; \
-            w[531:0] = fragx[ad][BK +: 532]; \
-            w[787:532] = fragx[ad][BF +: 256]; \
-            x = w[gx*256 +: 256]; \
+            x = xs_w[IDX*128 + ad]; \
             bad = (&shv[ad]) ? (g[NV-1:0] !== x[NV-1:0]) : 1'b1; \
         end \
     endfunction \

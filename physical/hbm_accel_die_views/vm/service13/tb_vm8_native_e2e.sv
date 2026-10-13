@@ -193,8 +193,25 @@ module tb_vm8_native_e2e;
  integer xbad[0:NSR-1],xchk[0:NSR-1];
  initial for(integer i=0;i<NSR;i=i+1)begin xbad[i]=0;xchk[i]=0;end
 `ifdef E2E_XSM
- reg [13*2048-1:0] fragx[0:127],fragm[0:127];
- initial for(integer i=0;i<128;i=i+1)begin fragx[i]=0;fragm[i]=0;end
+ // shadow of the x-store as the macros hold it: one 256-bit word and one valid mask per (macro, address), filled
+ // by the beats the SM pins sampled.  Macro IDX = ((c*2+p)*2+j)*4+m = (c*4+R)*4+m holds, of column c (XC bits of
+ // the fragment), w[m*256+:256] with w[531:0] = col[R*532+:532], w[787:532] = col[2128+R*256+:256].
+ // (Kept narrow on purpose: 256 probes slicing a 26,624-bit fragment made ~0.9 GB of C++.)
+ reg [255:0] xs_w[0:256*128-1],xs_m[0:256*128-1];
+ initial for(integer i=0;i<256*128;i=i+1)begin xs_w[i]=0;xs_m[i]=0;end
+ task automatic xs_beat(input [6:0] ad,input integer g,input [2047:0] dat);
+  integer c,R,m,j,t,fb,ix,lo;
+  begin
+   lo=g*2048;
+   for(c=lo/3152;c<8&&c*3152<lo+2048;c=c+1)for(R=0;R<4;R=R+1)for(m=0;m<4;m=m+1)begin
+    ix=((c*4+R)*4+m)*128+ad;
+    for(j=0;j<256;j=j+1)begin
+     t=m*256+j;fb=t<532?c*3152+R*532+t:t<788?c*3152+2128+R*256+(t-532):-1;
+     if(fb>=lo&&fb<lo+2048)begin xs_w[ix][j]=dat[fb-lo];xs_m[ix][j]=1'b1;end
+    end
+   end
+  end
+ endtask
  reg cg_wake=1;
  wire sm_xw_en=s_en[0][SMI]&&!drop_now;
  wire sm_busy,sm_fault;
@@ -207,30 +224,23 @@ module tb_vm8_native_e2e;
  always @(negedge clk)begin
   drop_now=drop_x>=0&&n_x[0]==drop_x;
   cg_wake<=!rst_n||s_en[0][SMI];
-  if(rst_n&&s_en[0][SMI])begin
-   fragx[s_addr[0][SMI*7+:7]][s_grp[0][SMI*7+:7]*2048+:2048]=s_data[0][SMI*2048+:2048];
-   fragm[s_addr[0][SMI*7+:7]][s_grp[0][SMI*7+:7]*2048+:2048]={2048{1'b1}};
-  end
+  if(rst_n&&s_en[0][SMI])xs_beat(s_addr[0][SMI*7+:7],32'(s_grp[0][SMI*7+:7]),s_data[0][SMI*2048+:2048]);
   if(rst_n&&sm_fault)$fatal(1,"E2E FAIL SM fault");
  end
  genvar gc,gp,gj,gx;
  generate for(gc=0;gc<8;gc=gc+1)begin:m_c for(gp=0;gp<2;gp=gp+1)begin:m_p for(gj=0;gj<2;gj=gj+1)begin:m_j for(gx=0;gx<4;gx=gx+1)begin:m_x
   localparam integer IDX=((gc*2+gp)*2+gj)*4+gx;
   localparam integer R=gp*2+gj;
-  localparam integer BK=gc*XC+R*532;
-  localparam integer BF=gc*XC+2128+R*256;
   localparam integer NV=(gx==3)?20:256;
   `define XCM(BR) xsm.g_c[gc].g_p[gp].BR.u_t.u.u.g_lf[gj].u_lh.u_xs.u_leaf.g_xm[gx].u_x
   `define XCB(BR) \
-   integer q,ad; reg [255:0] g,x,mk,df; reg [1023:0] w,wm; \
+   integer q,ad; reg [255:0] g,mk,df; \
    initial for(q=0;q<130;q=q+1) `XCM(BR).arr[q]={8{32'h5a5a_0000^(IDX*32'h0001_0193)^(q*32'h0100_01b3)}}|258'd1; \
    always @(negedge clk) if(rst_n&&rb_fire)begin \
     xbad[IDX]=0;xchk[IDX]=0; \
     for(ad=0;ad<128;ad=ad+1)begin \
      g=`XCM(BR).arr[ad][255:0]; \
-     w=1024'd0;w[531:0]=fragx[ad][BK+:532];w[787:532]=fragx[ad][BF+:256];x=w[gx*256+:256]; \
-     wm=1024'd0;wm[531:0]=fragm[ad][BK+:532];wm[787:532]=fragm[ad][BF+:256];mk=wm[gx*256+:256]; \
-     df=(g^x)&mk; \
+     mk=xs_m[IDX*128+ad];df=(g^xs_w[IDX*128+ad])&mk; \
      if(mk[NV-1:0]!=0)xchk[IDX]=xchk[IDX]+1; \
      if(df[NV-1:0]!=0)begin xbad[IDX]=xbad[IDX]+1;if(xbad[IDX]==1)$display("x-store macro c%0d R%0d m%0d addr%0d differs from the sampled beats at dispatch%0d",gc,R,gx,ad,n_disp);end \
     end \
