@@ -28,7 +28,7 @@ done
 grep -q "PASS HGI-IDX" "$out/r0.log" || rc=1
 for mu in 1 2 3; do grep -q "PASS HGI-IDX" "$out/r$mu.log" && rc=1; grep -q "BUILD FAILED" "$out/r$mu.log" && rc=1; done
 { echo "tput: $(cat "$out/tput/gate" 2>/dev/null)"; echo "cf: $(cat "$out/cf/gate" 2>/dev/null)"
-  for mu in 0 1 2 3; do echo "random MUT_TK2=$mu: $(grep -E 'PASS HGI-IDX|FAIL' "$out/r$mu.log" | tail -1)"; done
+  for mu in 0 1 2 3; do echo "random MUT_TK2=$mu: $(grep -E 'PASS HGI-IDX|FAIL|FATAL' "$out/r$mu.log" | tail -1)"; done
   grep -h "^TPUT" "$out/tput/t0.log" 2>/dev/null; } > "$out/SUMMARY"
 cat "$out/SUMMARY"
 [ $rc = 0 ] && echo "IDX_TK2 GATE PASS" | tee "$out/gate" || { echo "IDX_TK2 GATE FAIL" | tee "$out/gate"; exit 1; }

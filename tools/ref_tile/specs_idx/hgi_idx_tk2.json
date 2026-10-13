@@ -41,7 +41,7 @@
  "job": {
   "owner": "Claude:el1013-hbm-redesign-idx",
   "branch": "claude/hbm-redesign-idx",
-  "tag": "r0",
+  "tag": "r1",
   "purpose": "IDX.TOPK redesign (owner 10-13): ot_hgi_idx_tk2 v2, the k <= 8 production shape (DS route.top6) as ONE M5 leaf: 8 sorted register lanes, two-stage insert, registered 8>4>2>1 tournament, every pin a flop; production bench 173 cycles/record vs price 283.008 (0.61x)",
   "extra_paths": [
    "tools/hgi_unit_tput",
@@ -54,7 +54,7 @@
     "cmd": "bash tools/hgi_unit_tput/run_idx_tk2.sh {RUN}/bench/tk2",
     "expect": "pass",
     "pass_regex": "^IDX_TK2 GATE PASS",
-    "min_count_regex": "PASS HGI_IDX_TPUT records=(\\d+)",
+    "min_count_regex": "CF-TOPK vectors=(\\d+)",
     "threads": 16,
     "peak_ram_gb": 80,
     "needs": [
