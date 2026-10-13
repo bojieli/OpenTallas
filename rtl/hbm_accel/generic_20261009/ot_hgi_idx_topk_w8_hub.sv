@@ -192,6 +192,7 @@ module ot_hgi_w8_bfifo #(parameter integer W=32) (
  output wire o_v, input wire o_r, output wire [W-1:0] o_d
 );
  reg [W-1:0] pin_d;
+ reg [W-1:0] head_d;
  reg pin_v, up;
  reg [W-1:0] mem [0:3];
  reg [1:0] wp, rp;
@@ -200,12 +201,24 @@ module ot_hgi_w8_bfifo #(parameter integer W=32) (
  wire [3:0] occupied = {1'b0, cnt} + {3'b0, pin_v};
  assign i_r = up && occupied < 4;
  assign o_v = cnt != 0;
- assign o_d = mem[rp];
+ assign o_d = head_d;
+`ifdef OT_TOPK_FIFO_HEAD_MUT
+ wire [1:0] next_rp = rp; // negative control: stale entry on dequeue
+`else
+ wire [1:0] next_rp = rp + 1'b1;
+`endif
  // Input pins each reach exactly one reset-free capture flop. The valid bit
  // carries the acceptance event; invalid input samples are never consumed.
  always @(posedge clk) begin
   pin_d <= i_d;
   if (pin_v) mem[wp] <= pin_d;
+  // Cache the oldest entry: no memory-selection cone remains after the
+  // output launch flop. Bypass the incoming beat at empty/last-pop boundaries.
+  if (cnt == 0 && pin_v) head_d <= pin_d;
+  else if (pop) begin
+   if (cnt > 1) head_d <= mem[next_rp];
+   else if (pin_v) head_d <= pin_d;
+  end
  end
  always @(posedge clk or negedge rst_n)
   if (!rst_n) begin wp <= 0; rp <= 0; up <= 0; pin_v <= 0; cnt <= 0; end

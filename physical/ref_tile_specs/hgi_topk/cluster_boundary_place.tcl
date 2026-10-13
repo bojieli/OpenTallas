@@ -2,6 +2,7 @@
 # Preserve the receiver hold delay locally, then place existing transmit relay
 # flops beside the hard lane pins instead of at the shared source centroid.
 source /src/physical/dsrom_window_source/leaf_inhold.tcl
+source /src/physical/ref_tile_specs/hgi_topk/cluster_control_hold.tcl
 set ::env(OT_MPFLOP_PINS) {}
 set mp {}
 foreach i [[ord::get_db_block] getInsts] {
