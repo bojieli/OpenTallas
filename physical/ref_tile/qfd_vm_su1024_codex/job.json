@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_su1024_codex-ans2-COMMIT",
+ "name": "qfd_vm_su1024_codex-ans2-c9b9190ac",
  "block": "ot_qfd_vm_su1024_t",
  "ref_tile": true,
  "owner": "Codex:qwen_tp8_vm_split",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/qwen-tp8-die-takeover-1012",
-  "commit": "COMMIT"
+  "commit": "c9b9190ac"
  },
  "stages": {
   "bench": [
@@ -91,7 +91,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_su1024_codex/qfd_vm_su1024_codex-ans2-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_su1024_codex/qfd_vm_su1024_codex-ans2-c9b9190ac"
   }
  ],
  "cycles_added": 0,
