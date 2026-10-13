@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ot-heavy-reconcile v2: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
+"""ot-heavy-reconcile v3: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
 
 ot-heavy charges every running job `reservation - current use` of future growth.  This pass (cron, every 5 min, all
 hosts) lowers a reservation to ceil(max(peak * 1.25, peak + 4 GB)) once the job is provably past its memory peak:
@@ -17,19 +17,27 @@ bare OpenROAD container whose fresh logs show GPL/GRT activity.  A lowered unit 
 
 It also writes use.<unit> (GB held by the unit's docker containers, which the scope's MemoryCurrent does not see, so
 ot-heavy stops charging that memory twice), appends every finished unit's peak to peaks.tsv and rebuilds sizes.json
-(class -> measured peak), which `ot-heavy` consults to warn about requests above 2x the measured peak.
+(class -> measured peak).
+
+v3 (owner 2026-10-13, admission by memory only): a request above 2x the measured peak of its class is CHARGED
+ceil(max(1.5 x peak, peak + 8 GB)) -- by `ot-heavy` at admission (--admit) and, for a unit that was admitted at its full
+request, by this pass (LOWER ... (class)).  A class counts once it has a finished job (n) or a live job this pass proved
+past its peak (proved); the local table is merged with sizes.fleet.json (all hosts, written by tools/fleet/ot-sizes-sync).
+The unit's MemoryMax stays the request; a class-sized unit gets its request back when its RSS passes 80 % of the charge
+(building alone does not restore it: the class peak already contains the build).
 
 usage: ot-heavy-reconcile [--dry-run] [--verbose]     one pass
        ot-heavy-reconcile --free [DIR]                 JSON: memory free after reservations, waiters, disk (for ot-run)
        ot-heavy-reconcile --sizes                      print the learned table
        ot-heavy-reconcile --size MEM -- CMD...         print a warning line if MEM > 2x the measured peak of CMD's class
+       ot-heavy-reconcile --admit MEM -- CMD...        print "<GB> <why>" when MEM is charged less than requested
 """
 import calendar, fcntl, glob, json, math, os, re, subprocess, sys, time
 
 os.environ.setdefault("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")   # cron has none; systemctl --user needs it
 D = "/var/tmp/ot-heavy"
 STATE, LOG, LOCK = f"{D}/reconcile.state.json", f"{D}/reconcile.log", f"{D}/admit.lock"
-PEAKS, SIZES = f"{D}/peaks.tsv", f"{D}/sizes.json"
+PEAKS, SIZES, FLEET = f"{D}/peaks.tsv", f"{D}/sizes.json", f"{D}/sizes.fleet.json"
 FLAT_S = 10 * 60
 GB = 1 << 30
 WRAPPERS = {"bash", "sh", "dash", "tee", "tail", "time", "env", "timeout", "stdbuf", "nice", "cat", "sleep", "docker",
@@ -218,10 +226,31 @@ def launches():
 
 
 def sizes():
-    try:
-        return json.load(open(SIZES))
-    except (OSError, ValueError):
-        return {}
+    """local table merged with the fleet table (which contains this host's rows too: max, not sum)"""
+    t = {}
+    for p in (SIZES, FLEET):
+        try:
+            d = json.load(open(p))
+        except (OSError, ValueError):
+            continue
+        for c, e in d.items():
+            o = t.setdefault(c, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
+            for k in o:
+                o[k] = max(o[k], e.get(k, 0))
+    for e in t.values():
+        e["suggest_gb"] = math.ceil(max(e["peak_gb"] * 1.25, e["peak_gb"] + 4))
+    return t
+
+
+def admit_size(mem, cls, table=None):
+    """(GB charged, why) when a request is over 2x the measured peak of its class, else None"""
+    e = (sizes() if table is None else table).get(cls)
+    if cls in ("?", "cd") or not e or e["n"] + e.get("proved", 0) < 1 or mem <= 2 * e["peak_gb"]:
+        return None
+    res = math.ceil(max(1.5 * e["peak_gb"], e["peak_gb"] + 8))
+    if res >= mem:
+        return None
+    return res, f"class '{cls}' measured peak {e['peak_gb']}G, n={e['n']}+{e.get('proved', 0)} proved"
 
 
 def rebuild_sizes(st):
@@ -229,9 +258,10 @@ def rebuild_sizes(st):
     rows = [ln.split("\t") for ln in rd(PEAKS).splitlines()]
     rows = [(r[2], float(r[4]), int(r[3]), "done") for r in rows if len(r) >= 5]
     rows += [(s["cls"], s["peak"], s["launch"], "live") for s in st.values() if s.get("cls") and s.get("age", 0) > 1800]
+    rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak")]
     for cls, peak, req, kind in rows:
-        e = t.setdefault(cls, dict(n=0, live=0, peak_gb=0.0, req_gb=0))
-        e["n" if kind == "done" else "live"] += 1
+        e = t.setdefault(cls, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
+        e["n" if kind == "done" else kind] += 1
         e["peak_gb"] = round(max(e["peak_gb"], peak), 1)
         e["req_gb"] = max(e["req_gb"], req)
     for e in t.values():
@@ -267,6 +297,7 @@ def main():
         log("no user systemd bus: pass skipped")       # never wipe the state because the bus is unreachable
         return
     la = launches()
+    table = sizes()
     freed, seen = 0, set()
     for f in sorted(glob.glob(f"{D}/res.*")):
         try:
@@ -333,12 +364,23 @@ def main():
             kind, why = "flat", f"RSS flat {min(vals)/GB:.2f}..{max(vals)/GB:.2f} GiB over {span/60:.0f} min, procs {comms}"
         else:
             why = f"waiting for flat window ({span/60:.0f} min, flat={flat}), procs {comms}"
-        if s.get("lowered") is not None and m == s["lowered"] and (building or rss > 0.8 * m * GB):
+        if s.get("lowered") is None and m < s["launch"]:     # admitted on its class size by ot-heavy v4
+            s["lowered"], s["by_class"] = m, True
+        if s.get("lowered") is not None and m == s["lowered"] and \
+                (rss > 0.8 * m * GB or (building and not s.get("by_class"))):
             if not DRY and set_res(f, unit, m, s["launch"]):
                 log(f"RESTORE {unit} {m} -> {s['launch']} GB: {why}, RSS {rss/GB:.2f} GiB")
-                s["lowered"], s["samples"] = None, []
+                s["lowered"], s["samples"], s["no_class"], s["by_class"], s["past_peak"] = None, [], True, False, False
             continue
         new = max(1, math.ceil(max(peak * 1.25, peak + 4 * GB) / GB))
+        if (kind is None or new >= m) and s.get("lowered") is None and not s.get("no_class") and m == s["launch"]:
+            a = admit_size(m, s["cls"], table)                # a full-size unit of an over-requested class
+            if a and rss <= 0.8 * a[0] * GB:
+                if DRY or set_res(f, unit, m, a[0]):
+                    freed += m - a[0]
+                    log(f"LOWER {unit} {m} -> {a[0]} GB (class) [{s['cls']}]: {a[1]}; RSS {rss/GB:.2f} GiB; {why}")
+                    s["lowered"], s["by_class"] = a[0], True
+                continue
         if kind is None or new >= m:
             if VERBOSE:
                 print(f"  keep {unit} {m} GB [{s['cls']}] peak {s['peak']} GB: {why}" + (f" (needs {new})" if kind else ""))
@@ -346,7 +388,7 @@ def main():
         if DRY or set_res(f, unit, m, new):
             freed += m - new
             log(f"LOWER {unit} {m} -> {new} GB ({kind}) [{s['cls']}]: peak {peak/GB:.2f} GiB, RSS {rss/GB:.2f} GiB; {why}")
-            s["lowered"] = new
+            s["lowered"], s["by_class"], s["past_peak"] = new, False, True
     if DRY:
         return
     for u in [u for u in st if u not in seen]:
@@ -380,32 +422,39 @@ def free(path):
         running += 1
         reserved += int(m)
         grow += max(0, int(m) - (num(cg + "/memory.current") >> 30) - num(f"{D}/use.{unit}"))
-    wait = [int(a[a.index("--mem") + 1]) for a in (rd(f"/proc/{p}/cmdline").split("\0") for p in os.listdir("/proc") if p.isdigit())
-            if len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:4]]
+    table, wait, req = sizes(), [], []
+    for a in (rd(f"/proc/{p}/cmdline").split("\0")[:-1] for p in os.listdir("/proc") if p.isdigit()):
+        if len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:4] and "--" in a:
+            m = int(a[a.index("--mem") + 1])
+            req.append(m)                                # charged like ot-heavy v4 will charge it
+            wait.append((admit_size(m, classify(a[a.index("--") + 1:]), table) or [m])[0])
     try:
         v = os.statvfs(path)
         disk = v.f_bavail * v.f_frsize >> 30
     except OSError:
         disk = -1
     print(json.dumps(dict(host=os.uname().nodename, avail_gb=avail, reserved_gb=reserved, growth_gb=grow, headroom_gb=head,
-                          running=running, waiting=len(wait), waiting_gb=sum(wait), disk_gb=disk,
+                          running=running, waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
                           free_gb=avail - grow - head - sum(wait))))
 
 
 if __name__ == "__main__":
-    if "--free" in sys.argv:
-        i = sys.argv.index("--free")
-        free(sys.argv[i + 1] if len(sys.argv) > i + 1 else "/")
-    elif "--sizes" in sys.argv:
-        for c, e in sorted(sizes().items(), key=lambda kv: -kv[1]["peak_gb"]):
-            print(f"{e['peak_gb']:8.1f} GB peak  suggest {e['suggest_gb']:4d}  requested {e['req_gb']:4d}  n={e['n']} live={e['live']}  {c}")
-    elif "--size" in sys.argv:
-        i = sys.argv.index("--size")
-        mem, cls = int(sys.argv[i + 1]), classify(sys.argv[i + 3:])
+    if sys.argv[1:2] == ["--admit"]:
+        a = admit_size(int(sys.argv[2]), classify(sys.argv[4:]))
+        if a:
+            print(a[0], a[1])
+    elif sys.argv[1:2] == ["--size"]:
+        mem, cls = int(sys.argv[2]), classify(sys.argv[4:])
         e = sizes().get(cls)
         if e and e["n"] + e["live"] and mem > 2 * max(e["peak_gb"], 2):
             print(f"WARN request {mem}G is {mem / max(e['peak_gb'], 0.1):.1f}x the measured peak {e['peak_gb']}G of class "
                   f"'{cls}' (n={e['n']}+{e['live']} live); --mem {e['suggest_gb']} is enough")
+    elif "--free" in sys.argv:
+        i = sys.argv.index("--free")
+        free(sys.argv[i + 1] if len(sys.argv) > i + 1 else "/")
+    elif "--sizes" in sys.argv:
+        for c, e in sorted(sizes().items(), key=lambda kv: -kv[1]["peak_gb"]):
+            print(f"{e['peak_gb']:8.1f} GB peak  suggest {e['suggest_gb']:4d}  requested {e['req_gb']:4d}  n={e['n']} proved={e['proved']} live={e['live']}  {c}")
     else:
         with open(f"{D}/reconcile.lock", "a") as run_lock:
             try:
