@@ -1,0 +1,57 @@
+{
+ "name": "s81hc_cryww_ref",
+ "top": "ot_s81_hc_crooty_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv"
+ ],
+ "params": {
+  "C": 0
+ },
+ "clock_port": "sk",
+ "reset_ports": [
+  "srs"
+ ],
+ "outline": {
+  "w": 195.264,
+  "h": 300.24
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "N": [
+   "wq_v",
+   "wq_row",
+   "wq_mask",
+   "wq_d"
+  ],
+  "S": [
+   "p_w"
+  ],
+  "E": [],
+  "W": [
+   "sk",
+   "srs"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01,
+  "pin_min_tracks": 1
+ },
+ "job": {
+  "owner": "Claude:el1011-s81hc-crooty",
+  "branch": "claude/el1011-s81hc-crooty",
+  "tag": "v1",
+  "purpose": "[hc-crooty] crooty v3 2-tile split, C=0: VM write slots tile (comb side, above crrw): p_w (2172, S) -> w_c -> wq_* (2172, N) at 10.5 pins/um, one 300-um stage; ~4.3k flops on its own root; replaces s81hc_crootyw_ref-v2",
+  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
+  "views_to": "physical/ref_tile/s81hc_cryww_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_cryww_ref"
+ },
+ "inhold": true,
+ "why_floorplan": "[hc-crooty] 195.264 x 300.24 (slot remainder after T_y 369.792 + 10.936 channel): face-bound (2172 pins per N/S face at 11.1/um, pins every track); cells ~2k um2, util ~3%",
+ "children": [],
+ "inter": []
+}
