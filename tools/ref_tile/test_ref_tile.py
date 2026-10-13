@@ -188,6 +188,19 @@ class Recipe(unittest.TestCase):
             first = self.old_kit(a)
             self.assertEqual(first, self.kit(a))
 
+    def test_kit_spec_json_reads_the_kit_env_beside_it(self):
+        # the submit gate regenerates <tmp>/<kit>/spec.json with ROOT = a tree that has no kits: the recipe comes from
+        # the kit.env beside the spec, so an old kit is not re-judged with the new-kit defaults
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            old = self.old_kit(a, name="rcp_old_x")
+            kd = Path(a) / RT.KIT_ROOT / "rcp_old_x"
+            again = RT.gen(str(kd / "spec.json"), commit="c" * 40, out_root=Path(b))
+            self.assertEqual({f.name: f.read_text() for f in (Path(b) / again["kit"]).iterdir()}, old)
+            s = RT.load_spec(str(kd / "spec.json"))
+            self.assertEqual(RT.kit_recipe(s, Path(b), str(kd / "spec.json")), 1)
+        with tempfile.TemporaryDirectory() as c:      # no kit.env anywhere in sight: a new kit
+            self.assertEqual(RT.kit_recipe(s, Path(c)), 2)
+
     def test_recipe_1_still_refuses_the_combination(self):
         with tempfile.TemporaryDirectory() as a:
             with self.assertRaises(RT.SpecError):
