@@ -25,46 +25,18 @@ module ot_hgi_su_ctlw_slice_h #(
     output wire  [NL-1:0] ldc_v, output wire [NL*(LWB-3)-1:0] ldc_sec,
     output wire  [NL-1:0] ldr_v, output wire [NL*(LWB-3)-1:0] ldr_sec,
     input  wire [NL*256-1:0] ldr_d, input wire [NL*8-1:0] ldr_dm, input wire [NL-1:0] ldr_rv,
-    output reg  wst_dn, output reg wdr_dn, output reg ovf
+    output wire wst_dn, output wire wdr_dn, output wire ovf
 );
-    localparam integer LSW = LWB - 3, FDW = 561 + 8 * (LWB + 1);
-    reg rst_l; always @(posedge clk) rst_l <= rst_n;
-    reg [FDW-1:0] f0, f1;
-    reg st0, st1, dr0, dr1;
-    always @(posedge clk) begin
-        f0 <= {d_os_i, lo_i, hi_i, lb_i, rv_i, dsec_i, d_lo_i, d_hi_i, d_lb_i, d_rv_i, d_dsec_i};
-        f1 <= f0;
-    end
-    always @(posedge clk or negedge rst_l)
-        if (!rst_l) begin st0 <= 0; st1 <= 0; dr0 <= 0; dr1 <= 0; end
-        else begin st0 <= wst_go_i; st1 <= st0; dr0 <= wdr_go_i; dr1 <= dr0; end
-    assign wst_go_o = st1; assign wdr_go_o = dr1;
-    assign {d_os_o, lo_o, hi_o, lb_o, rv_o, dsec_o, d_lo_o, d_hi_o, d_lb_o, d_rv_o, d_dsec_o} = f1;
-    wire [3:0] st_done, dr_done, lane_fault;
-    genvar g;
-    generate for (g = 0; g < 4; g = g + 1) begin : g_pair
-`ifdef OT_HARD_CHILDREN
-        ot_hgi_su_ctlw_lane2 u_lane (
+    // flat-bus shim (wiring only) of the physical cluster top ot_hgi_su_ctlw_slice_hp (per-pair ports, relayed forward)
+`ifdef OT_HARD_CTLW_SLICE
+    ot_hgi_su_ctlw_slice_hp u_hp (
 `else
-        ot_hgi_su_ctlw_lane2 #(.NL(2), .LWB(LWB), .LQ(LQ), .MUT_W(MUT_W), .MUT_DIRTY(MUT_DIRTY), .LQSRAM(0)) u_lane (
+    ot_hgi_su_ctlw_slice_hp #(.SL(SL), .NL(NL), .LWB(LWB), .LQ(LQ), .MUT_W(MUT_W), .MUT_DIRTY(MUT_DIRTY), .LQSRAM(LQSRAM)) u_hp (
 `endif
-            .clk(clk), .rst_n(rst_n), .sl_i(sl_i), .pair_i(2'(g)),
-            .wst_go_i(wst_go_i), .wdr_go_i(wdr_go_i), .lo_i(lo_i), .hi_i(hi_i), .lb_i(lb_i), .rv_i(rv_i), .dsec_i(dsec_i),
-            .d_lo_i(d_lo_i), .d_hi_i(d_hi_i), .d_lb_i(d_lb_i), .d_rv_i(d_rv_i), .d_dsec_i(d_dsec_i), .d_os_i(d_os_i),
-            .wst_dn_i(wst_dn_i), .wdr_dn_i(wdr_dn_i), .ovf_i(ovf_i),
-            .wrq(wrq[g*32 +: 32]), .wrq_cr(wrq_cr[g*2 +: 2]), .wrr(wrr[g*514 +: 514]),
-            .wwq(wwq[g*560 +: 560]), .wwq_cr(wwq_cr[g*2 +: 2]), .wwq_done(wwq_done[g*2 +: 2]),
-            .lsw_v(lsw_v[g*2 +: 2]), .lsw_sec(lsw_sec[g*2*LSW +: 2*LSW]), .lsw_d(lsw_d[g*512 +: 512]),
-            .ldc_v(ldc_v[g*2 +: 2]), .ldc_sec(ldc_sec[g*2*LSW +: 2*LSW]),
-            .ldr_v(ldr_v[g*2 +: 2]), .ldr_sec(ldr_sec[g*2*LSW +: 2*LSW]),
-            .ldr_d(ldr_d[g*512 +: 512]), .ldr_dm(ldr_dm[g*16 +: 16]), .ldr_rv(ldr_rv[g*2 +: 2]),
-            .wst_dn(st_done[g]), .wdr_dn(dr_done[g]), .ovf(lane_fault[g]));
-    end endgenerate
-    always @(posedge clk or negedge rst_l)
-        if (!rst_l) begin wst_dn <= 1; wdr_dn <= 1; ovf <= 0; end
-        else begin wst_dn <= &st_done; wdr_dn <= &dr_done; ovf <= |lane_fault; end
-    // synthesis translate_off
-    initial if (NL != 8) $fatal(1, "ctlw_slice_h needs four 2-lane children");
-    // synthesis translate_on
+        .clk(clk), .rst_n(rst_n), .wst_go_i(wst_go_i), .wdr_go_i(wdr_go_i), .lo_i(lo_i), .hi_i(hi_i), .lb_i(lb_i), .rv_i(rv_i), .dsec_i(dsec_i), .d_lo_i(d_lo_i), .d_hi_i(d_hi_i), .d_lb_i(d_lb_i), .d_rv_i(d_rv_i), .d_dsec_i(d_dsec_i), .d_os_i(d_os_i), .sl_i(sl_i), .wst_go_o(wst_go_o), .wdr_go_o(wdr_go_o), .d_os_o(d_os_o), .lo_o(lo_o), .hi_o(hi_o), .lb_o(lb_o), .rv_o(rv_o), .dsec_o(dsec_o), .d_lo_o(d_lo_o), .d_hi_o(d_hi_o), .d_lb_o(d_lb_o), .d_rv_o(d_rv_o), .d_dsec_o(d_dsec_o), .wst_dn_i(wst_dn_i), .wdr_dn_i(wdr_dn_i), .ovf_i(ovf_i), .wst_dn(wst_dn), .wdr_dn(wdr_dn), .ovf(ovf),
+        .wrq_p0(wrq[0 +: 32]), .wrq_cr_p0(wrq_cr[0 +: 2]), .wrr_p0(wrr[0 +: 514]), .wwq_p0(wwq[0 +: 560]), .wwq_cr_p0(wwq_cr[0 +: 2]), .wwq_done_p0(wwq_done[0 +: 2]), .lsw_v_p0(lsw_v[0 +: 2]), .lsw_sec_p0(lsw_sec[0*2*(LWB-3) +: 2*(LWB-3)]), .lsw_d_p0(lsw_d[0 +: 512]), .ldc_v_p0(ldc_v[0 +: 2]), .ldc_sec_p0(ldc_sec[0*2*(LWB-3) +: 2*(LWB-3)]), .ldr_v_p0(ldr_v[0 +: 2]), .ldr_sec_p0(ldr_sec[0*2*(LWB-3) +: 2*(LWB-3)]), .ldr_d_p0(ldr_d[0 +: 512]), .ldr_dm_p0(ldr_dm[0 +: 16]), .ldr_rv_p0(ldr_rv[0 +: 2]),
+        .wrq_p1(wrq[32 +: 32]), .wrq_cr_p1(wrq_cr[2 +: 2]), .wrr_p1(wrr[514 +: 514]), .wwq_p1(wwq[560 +: 560]), .wwq_cr_p1(wwq_cr[2 +: 2]), .wwq_done_p1(wwq_done[2 +: 2]), .lsw_v_p1(lsw_v[2 +: 2]), .lsw_sec_p1(lsw_sec[1*2*(LWB-3) +: 2*(LWB-3)]), .lsw_d_p1(lsw_d[512 +: 512]), .ldc_v_p1(ldc_v[2 +: 2]), .ldc_sec_p1(ldc_sec[1*2*(LWB-3) +: 2*(LWB-3)]), .ldr_v_p1(ldr_v[2 +: 2]), .ldr_sec_p1(ldr_sec[1*2*(LWB-3) +: 2*(LWB-3)]), .ldr_d_p1(ldr_d[512 +: 512]), .ldr_dm_p1(ldr_dm[16 +: 16]), .ldr_rv_p1(ldr_rv[2 +: 2]),
+        .wrq_p2(wrq[64 +: 32]), .wrq_cr_p2(wrq_cr[4 +: 2]), .wrr_p2(wrr[1028 +: 514]), .wwq_p2(wwq[1120 +: 560]), .wwq_cr_p2(wwq_cr[4 +: 2]), .wwq_done_p2(wwq_done[4 +: 2]), .lsw_v_p2(lsw_v[4 +: 2]), .lsw_sec_p2(lsw_sec[2*2*(LWB-3) +: 2*(LWB-3)]), .lsw_d_p2(lsw_d[1024 +: 512]), .ldc_v_p2(ldc_v[4 +: 2]), .ldc_sec_p2(ldc_sec[2*2*(LWB-3) +: 2*(LWB-3)]), .ldr_v_p2(ldr_v[4 +: 2]), .ldr_sec_p2(ldr_sec[2*2*(LWB-3) +: 2*(LWB-3)]), .ldr_d_p2(ldr_d[1024 +: 512]), .ldr_dm_p2(ldr_dm[32 +: 16]), .ldr_rv_p2(ldr_rv[4 +: 2]),
+        .wrq_p3(wrq[96 +: 32]), .wrq_cr_p3(wrq_cr[6 +: 2]), .wrr_p3(wrr[1542 +: 514]), .wwq_p3(wwq[1680 +: 560]), .wwq_cr_p3(wwq_cr[6 +: 2]), .wwq_done_p3(wwq_done[6 +: 2]), .lsw_v_p3(lsw_v[6 +: 2]), .lsw_sec_p3(lsw_sec[3*2*(LWB-3) +: 2*(LWB-3)]), .lsw_d_p3(lsw_d[1536 +: 512]), .ldc_v_p3(ldc_v[6 +: 2]), .ldc_sec_p3(ldc_sec[3*2*(LWB-3) +: 2*(LWB-3)]), .ldr_v_p3(ldr_v[6 +: 2]), .ldr_sec_p3(ldr_sec[3*2*(LWB-3) +: 2*(LWB-3)]), .ldr_d_p3(ldr_d[1536 +: 512]), .ldr_dm_p3(ldr_dm[48 +: 16]), .ldr_rv_p3(ldr_rv[6 +: 2]));
 endmodule
 `default_nettype wire
