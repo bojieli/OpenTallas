@@ -1,14 +1,14 @@
 {
- "name": "dscoll_cesn_cxsp-cxsp-COMMIT",
+ "name": "dscoll_cesn_cxsp-cxsp2-f22cf02e5",
  "block": "dsfd_coll_cesn",
  "ref_tile": true,
  "owner": "Codex:el1011-ds-coll",
- "purpose": "cesn real hold failure after corrected -hs: balanced local clock spine for24k sinks; 60um bins <=8 sinks;150um segments; S/N SRAMs contiguous logic band; boundary reference after spine. No added cycles.",
+ "purpose": "Correct actual ORFS copied hook dispatch (*_pre_cts.tcl/*_pre_grt.tcl/*_post_drt.tcl); predecessor silently skipped hook because it matched only literal names. cesn real hold failure after corrected -hs: balanced local clock spine for24k sinks; 60um bins <=8 sinks;150um segments; S/N SRAMs contiguous logic band; boundary reference after spine. No added cycles.",
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/dscoll-1012",
-  "commit": "COMMIT"
+  "commit": "f22cf02e5"
  },
  "stages": {
   "bench": [
@@ -158,7 +158,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_cesn_cxsp/dscoll_cesn_cxsp-cxsp-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_cesn_cxsp/dscoll_cesn_cxsp-cxsp2-f22cf02e5"
   }
  ],
  "cycles_added": 0,

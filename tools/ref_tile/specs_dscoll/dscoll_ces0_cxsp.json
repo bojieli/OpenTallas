@@ -88,8 +88,8 @@
   "job": {
     "owner": "Codex:el1011-ds-coll",
     "branch": "codex/dscoll-1012",
-    "tag": "cxsp",
-    "purpose": "ces0 real hold failure after corrected -hs: balanced local clock spine for24k sinks; 60um bins <=8 sinks;150um segments; S/N SRAMs contiguous logic band; boundary reference after spine. No added cycles.",
+    "tag": "cxsp2",
+    "purpose": "Correct actual ORFS copied hook dispatch (*_pre_cts.tcl/*_pre_grt.tcl/*_post_drt.tcl); predecessor silently skipped hook because it matched only literal names. ces0 real hold failure after corrected -hs: balanced local clock spine for24k sinks; 60um bins <=8 sinks;150um segments; S/N SRAMs contiguous logic band; boundary reference after spine. No added cycles.",
     "benches": [
       {
         "name": "exact_coll_ceh",

@@ -1,9 +1,9 @@
 {
- "name": "dscoll_lane_w_cxea-cxea-COMMIT",
+ "name": "dscoll_lane_w_cxea-cxea3-COMMIT",
  "block": "dsfd_coll_lane_w",
  "ref_tile": true,
- "owner": "Codex:el1011-ds-coll",
- "purpose": "rth passes timing TT15.49 FF8.74, DRC21 SRAM E edge. Reserve interior M5 E-edge via tracks to keep VIA45 M4 pads out of original macro OBS; preserve M4 planar/exterior M5 pin access. No halo claim and no constraint relaxation.",
+ "owner": "Claude:el1011-ds-coll",
+ "purpose": "cxea2-efb routed TT +24.82 / FF -4.04 (1 reg-to-reg D pin, ports +10.17/+6.97) / DRC 7 = M4 stubs across the macro OBS at the SRAM E edges (x 205.24..205.58, 399.54..399.98) from the first M5 track past the 0.30 um guard. cxea3: 6.0 um M5 no-entry strip inside both vertical SRAM edges (hrow5 r8 hook, routed DRC 0 on hrow5_cbe r8a) and macro placement halo 2.16 -> 5.4 um for planar M4 pin access; in-route hold margin stays 30 ps, loop hold ECO allowed for a residual single-pin miss. RTL, outline, macro origins, pins, SDC unchanged.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
@@ -105,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_lane_w_cxea/dscoll_lane_w_cxea-cxea-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_lane_w_cxea/dscoll_lane_w_cxea-cxea3-COMMIT"
   }
  ],
  "cycles_added": 0,
