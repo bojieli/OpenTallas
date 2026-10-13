@@ -176,6 +176,8 @@ module ot_hgi_idx_index_w #(
     // ================================================================ KEEP walk
     reg h0_v; reg [1023:0] h0_d; reg [1:0] h0_slot; reg [2:0] h0_cnt; reg [12:0] h0_shi;      // the held id chunk
     reg k1_v; reg [31:0] k1_ok; reg [14:0] k1_q [0:31]; reg [4:0] k1_lo [0:31];
+    reg [21:0] k1_p [0:31];                 // 85 q (first half of q * 43691 = 2 * 257 * 85 q + q; timing: the q / 3 constant multiply is split across k1 / k2)
+    reg [17:0] kq5; reg [31:0] kq3;
     reg k2_v; reg [31:0] k2_ok; reg [13:0] k2_ord [0:31]; reg [14:0] k2_q [0:31]; reg [4:0] k2_lo [0:31];
     reg k3_v; reg [31:0] k3_m; reg [10:0] k3_ord [0:31];
     reg [31:0] mb; reg [10:0] mb_ord [0:31];
@@ -217,12 +219,15 @@ module ot_hgi_idx_index_w #(
                 k1_ok[p] <= (p / 8) >= h0_slot && (p / 8) < h0_slot + h0_cnt && cw_w >= c_base &&
                             (cw_w - c_base) < {6'd0, c_n} && h0_d[p*32 + 20 +: 12] == 12'd0 && cv_w != 32'hFF80_0000;
                 k1_q[p] <= h0_d[p*32 + 5 +: 15];
+                kq5 = {3'd0, h0_d[p*32 + 5 +: 15]} + {1'b0, h0_d[p*32 + 5 +: 15], 2'd0};
+                k1_p[p] <= {4'd0, kq5} + {kq5, 4'd0};
                 k1_lo[p] <= h0_d[p*32 +: 5];
             end
         if (k2_free && k1_v)
             for (p = 0; p < 32; p = p + 1) begin
                 k2_ok[p] <= k1_ok[p];
-                k2_ord[p] <= 14'(({17'd0, k1_q[p]} * 32'd43691) >> 17);
+                kq3 = {9'd0, k1_p[p], 1'b0} + {1'b0, k1_p[p], 9'd0} + {17'd0, k1_q[p]};
+                k2_ord[p] <= kq3[30:17];
                 k2_q[p] <= k1_q[p];
                 k2_lo[p] <= k1_lo[p];
             end
