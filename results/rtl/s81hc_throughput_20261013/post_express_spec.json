@@ -28,8 +28,18 @@
       [
         3,
         3,
+        2,
+        2,
         3,
         3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        2,
+        2,
         3,
         3,
         2,
@@ -38,28 +48,23 @@
       [
         3,
         3,
-        3,
-        3,
         2,
         2,
-        2,
-        2
-      ],
-      [
         3,
         3,
         3,
-        3,
-        3,
-        3,
-        2,
-        2
+        3
       ]
     ],
     "y_words_per_half_cth": 4,
     "max_y_words_per_region": 12,
     "max_y_payload_bits": 384,
-    "payload_slicing": "Disjoint static slices of one256-word producer beat; no payload replication. Region constant valid word mask8or12;24regions all active."
+    "payload_slicing": "Disjoint static slices of one256-word producer beat; no payload replication. Region constant valid word mask8or12;24regions all active.",
+    "regions_by_field": {
+      "north_per_column": 4,
+      "south_per_column": 4,
+      "note": "No regional group crosses the existing upper/tail corridor; die-owner conditional geometry."
+    }
   },
   "interfaces": {
     "max_forward_bits": 409,
@@ -118,14 +123,16 @@
       19128.96
     ],
     "geometry_authority": "/root/deepseek_die reads active Claude v14 writer; v13 numbers are conditional proposal only, not a placement grant",
-    "cut_analysis": "REQUIRED before RTL; disjoint region slices, complete409bit maximum forward bundles and23bit backward completions, power/OBS-aware actual layer capacities, registered relays included."
+    "cut_analysis": "REQUIRED before RTL; disjoint region slices, complete409bit maximum forward bundles and23bit backward completions, power/OBS-aware actual layer capacities, registered relays included.",
+    "conditional_midpoint_y_um": 13327.2
   },
   "latency_hypothesis_not_qualification": {
-    "conditional_midpoint_transit_each_way_max": 18,
+    "conditional_midpoint_transit_each_way_max": 19,
     "conditional_local_region_hops_each_way_max": 8,
-    "conditional_total_transport_max": 52,
+    "conditional_total_transport_max": 54,
     "local_arithmetic_beats_CDC_estimate": 55,
-    "note": "Only structural sizing to target unchanged124.19cycle requirement. Actual trace and real geometry must replace this hypothesis before implementation/adoption."
+    "note": "Only structural sizing to target unchanged124.19cycle requirement. Actual trace and real geometry must replace this hypothesis before implementation/adoption.",
+    "local_stage_floor": 3
   },
   "required_gates": [
     "Current source-pinned production golden/stress all exact at D5120/NG256.",
@@ -140,5 +147,25 @@
     "geometry_cuts": "/root/deepseek_die",
     "new_transport_and_throughput": "/root/throughput_qualification"
   },
-  "prices_changed": false
+  "prices_changed": false,
+  "conditional_cut_study": {
+    "owner": "/root/deepseek_die",
+    "scope": "Conditional prototype only, no real-view capacity or placement grant",
+    "north_payload_bits": 4140,
+    "north_completion_bits": 276,
+    "south_payload_bits": 4652,
+    "south_completion_bits": 276,
+    "existing_HC_corridor_bits": 15660,
+    "max_total_corridor_bits": 20588,
+    "raw_M3_M5_M7_tracks": 116688,
+    "power_reserve_fraction": 0.2,
+    "conditional_tracks": 93350,
+    "conditional_ratio": 0.221,
+    "missing": "Actual OBS and source-view coverage, authoritative v14 plan published by active writer"
+  },
+  "injection_epoch_and_data_mux": {
+    "current": "CTPL PIN_STAGE1 uses one existing WIN stage; PB and hpr both+1",
+    "requirement": "Express POST must retain matching PB/hpr epoch at CTPL pin captures. Prefer injecting before shared regional CTH pin flops; do not bypass only one operand path.",
+    "coefficient_contention": "Serial coefficient fd payload and fast POST Y share legacy fdx data fields. Separate logical queues, defer POST issuance when coefficient write arrives, or provide distinct physical ingress before an explicit registered mux; never silently overwrite simultaneous rd_v data."
+  }
 }
