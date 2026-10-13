@@ -192,5 +192,5 @@
       ]
     }
   },
-  "remaining_export_mismatch": "Order-only export replaces6_final.sdc with kit signoff.sdc whose input pin-flop median reference yields FF-19.6876ps. Closed verdict uses routed6_final.sdc plus post-SDCs with link virtual clocks and finalio_ref_routed boundary mean; FF+3.66ps. Future fix must reproduce exact closed verdict SDC/post-SDC sequence in ETM extraction, preserve all prior negatives, compare clock reference+exit codes on SAME ODB. No second shared tool edit made."
+  "remaining_export_mismatch": "Order-only export replaces routed6_final.sdc with kit signoff.sdc whose pin-flop median reference yields FF-19.6876ps. Closed SMT HB1 verdict instead reads routed6_final.sdc (already contains link virtual clocks), with post_sdc=[physical/ref_tile/s81su_smt_hb1_ref/signoff.sdc,physical/common_flow/io_ref_routed.sdc] and setup_post_sdc=[]; final routed boundary reference gives FF+3.66ps. Future fix must reproduce exact actual verdict SDC/post-SDC sequence, not assume link_budget_consistent must be reapplied. Preserve original and order-only negatives, compare clock references+exit codes on SAME ODB. No second shared tool edit made."
 }
