@@ -1,0 +1,130 @@
+{
+ "name": "qkd_kvwq_ctl_bin-sl1-COMMIT",
+ "block": "qkd_kvwq_ctl_bin",
+ "ref_tile": true,
+ "owner": "Claude:el1013-qwen-clusters",
+ "purpose": "Qwen ROM TP8 contract v3 slot cell qkd_kvwq_ctl_bin (4 instances wctl_{W,E}{S,N}): first slot-shaped view under the die master name. Body = ot_qkvd_kv_wq_ctl_binary FLANE_BINARY=1 unchanged (closed TT +124.15 / FF +4.47 as qkd_kvwq_ctl_bin_a-9b01712f2 at 172.8 x 518.4, M8-era layers, cell name ot_qkvd_kv_wq_ctl_binary, pins kvw W / feeds E): the wrapper is wiring only. New here: master cell name, v3 outline 172.776 x 518.376, v3 pin faces (kvn N, f0/f1 S, f2 W, f3 N, durable E), pins M4/M5, cap M5, recipe 2. Every port is a flop at its pin in the body.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/el1013-qwen-clusters",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvwq_ctl_bin u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_kv_slot_wrappers.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "slot_exact",
+    "cmd": "bash physical/qwen_kv_slots/bench.sh {RUN}/bench/pos kvwq_ctl_bin",
+    "expect": "pass",
+    "pass_regex": "^PASS kv_slots kvwq_ctl_bin",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "40,000 cycles, 7,950 credit-true posted rows, 31,788 feed beats through the cell's own ports: every bundle (f0..f3 293 b, durable, kvn_cr, fault) bit-exact every cycle against the benched body's fields in the documented packing; upper five lane bits proven 0 on every feed beat"
+   },
+   {
+    "name": "slot_mutant",
+    "cmd": "bash physical/qwen_kv_slots/bench.sh {RUN}/bench/neg kvwq_ctl_bin mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL kv_slots kvwq_ctl_bin mutant detected",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "OT_QKD_SLOT_MUT inverts one f2 data bit inside the cell"
+   },
+   {
+    "name": "binary_stack_exact",
+    "cmd": "bash physical/redesign_qwen/kvwq_binary_bench.sh pos {RUN}/bench/binary_pos",
+    "expect": "pass",
+    "pass_regex": "^KVWQ_BINARY_PASS",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the body in one full 32-PC stack (real CDC -> controller model -> KVW2 -> HBM), 24 / 144 rows, as the closed route qkd_kvwq_ctl_bin_a"
+   },
+   {
+    "name": "binary_stack_mutants",
+    "cmd": "bash physical/redesign_qwen/kvwq_binary_bench.sh neg {RUN}/bench/binary_neg",
+    "expect": "fail",
+    "fail_regex": "^KVWQ_BINARY_NEG_DETECTED",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvwq_ctl_bin/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvwq_ctl_bin/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvwq_ctl_bin --out {RUN}/record/views/qkd_kvwq_ctl_bin  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvwq_ctl_bin/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvwq_ctl_bin/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvwq_ctl_bin/qkd_kvwq_ctl_bin-sl1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

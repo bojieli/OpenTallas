@@ -1,0 +1,29 @@
+{
+ "name": "qkd_kvwq_ctl_bin",
+ "top": "qkd_kvwq_ctl_bin",
+ "kind": "tile",
+ "sources": ["rtl/physical/ot_qwen_kv_slot_wrappers.sv", "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv"],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": ["rst_n"],
+ "contract": {"file": "results/arch/hier_contract_1012/qwen_rom_tp8.json", "slot": "wctl_WS"},
+ "macros": [],
+ "pins": {"N": ["kvn_d", "kvn_cr", "f3", "r3", "ck"], "S": ["f0", "f1", "r0", "r1"], "W": ["f2", "r2", "rst_n"], "E": ["durable", "fault"]},
+ "route": {"pd": 0.45, "threads": 8, "peak_ram_gb": 32, "pin_h": "M4", "pin_v": "M5", "hold_margin_ns": 0.03},
+ "slot_change_request": "el1013-qwen-clusters 10-13: contract bundle kvn[1047:0] is built as kvn_d[1046:0] (posted row, in) + kvn_cr (credit return, out, against the flow) on the N face: one port cannot carry both directions. f<g>[292:0] = {f_v, f_d 256, f_sec 24, f_lane[2:0], f_tag 9}, r<g>[1:0] = {r_v, r_bad}, durable[22:0] = {rw_v, rw_id} (packing in rtl/physical/ot_qwen_kv_slot_wrappers.sv; the leaf-side wrapper must unpack the same order). Pin faces, layers and outline as the v3 slot.",
+ "job": {
+  "owner": "Claude:el1013-qwen-clusters",
+  "branch": "claude/el1013-qwen-clusters",
+  "tag": "sl1",
+  "purpose": "Qwen ROM TP8 contract v3 slot cell qkd_kvwq_ctl_bin (4 instances wctl_{W,E}{S,N}): first slot-shaped view under the die master name. Body = ot_qkvd_kv_wq_ctl_binary FLANE_BINARY=1 unchanged (closed TT +124.15 / FF +4.47 as qkd_kvwq_ctl_bin_a-9b01712f2 at 172.8 x 518.4, M8-era layers, cell name ot_qkvd_kv_wq_ctl_binary, pins kvw W / feeds E): the wrapper is wiring only. New here: master cell name, v3 outline 172.776 x 518.376, v3 pin faces (kvn N, f0/f1 S, f2 W, f3 N, durable E), pins M4/M5, cap M5, recipe 2. Every port is a flop at its pin in the body.",
+  "benches": [
+   {"name": "slot_exact", "cmd": "bash physical/qwen_kv_slots/bench.sh {RUN}/bench/pos kvwq_ctl_bin", "expect": "pass", "pass_regex": "^PASS kv_slots kvwq_ctl_bin", "threads": 1, "peak_ram_gb": 2, "needs": ["iverilog"],
+    "note": "40,000 cycles, 7,950 credit-true posted rows, 31,788 feed beats through the cell's own ports: every bundle (f0..f3 293 b, durable, kvn_cr, fault) bit-exact every cycle against the benched body's fields in the documented packing; upper five lane bits proven 0 on every feed beat"},
+   {"name": "slot_mutant", "cmd": "bash physical/qwen_kv_slots/bench.sh {RUN}/bench/neg kvwq_ctl_bin mut", "expect": "fail", "fail_regex": "^FAIL kv_slots kvwq_ctl_bin mutant detected", "threads": 1, "peak_ram_gb": 2, "needs": ["iverilog"],
+    "note": "OT_QKD_SLOT_MUT inverts one f2 data bit inside the cell"},
+   {"name": "binary_stack_exact", "cmd": "bash physical/redesign_qwen/kvwq_binary_bench.sh pos {RUN}/bench/binary_pos", "expect": "pass", "pass_regex": "^KVWQ_BINARY_PASS", "threads": 4, "peak_ram_gb": 8, "needs": ["verilator"],
+    "note": "the body in one full 32-PC stack (real CDC -> controller model -> KVW2 -> HBM), 24 / 144 rows, as the closed route qkd_kvwq_ctl_bin_a"},
+   {"name": "binary_stack_mutants", "cmd": "bash physical/redesign_qwen/kvwq_binary_bench.sh neg {RUN}/bench/binary_neg", "expect": "fail", "fail_regex": "^KVWQ_BINARY_NEG_DETECTED", "threads": 4, "peak_ram_gb": 8, "needs": ["verilator"]}
+  ]
+ }
+}
