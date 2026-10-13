@@ -4,6 +4,7 @@ module tb_vm_ck4;
  reg rst_n=0,capture_i=0,check_i=0,write_i=1;
  reg [287:0] sample_i,expected_i;
  reg [255:0] owner_mask_i=0,padding_mask_i=0;
+ wire [7:0] capture_regions_i=0,check_regions_i=0;
  wire error_o,valid_o;wire [287:0] repaired_o;
  vm_ck4 dut(.*);
  function [71:0] encode64(input [63:0] data);

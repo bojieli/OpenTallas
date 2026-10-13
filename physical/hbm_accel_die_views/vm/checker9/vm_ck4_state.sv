@@ -22,32 +22,41 @@ module vm_ck4_state #(parameter integer OWNER_BANK=0)(
  endfunction
 
  reg [287:0] seat,returned;
+ reg [255:0] raw_q;
+ wire [287:0] encoded_raw;
+ (* keep = "true", dont_touch = "true" *) reg [7:0] accept_q,capture_q,check_q;
+ always @(posedge ck)begin
+  raw_q<=raw_i;
+  accept_q<={8{accept_i}};capture_q<={8{return_i}};check_q<={8{capture_i}};
+ end
  reg seat_present,seat_ld_q,seat_bad_q;
  wire [287:0] repaired;
  wire [3:0] seat_ue;
  localparam [255:0] OM=OWNER_BANK?(({256{1'b1}}>>64)<<15):256'd0;
  localparam [255:0] PM=OWNER_BANK?{{49{1'b1}},207'd0}:256'd0;
  for(genvar k=0;k<4;k=k+1)begin:words
+  assign encoded_raw[k*72+:72]=encode64(raw_q[k*64+:64]);
   wire [65:0] d=decode64(seat[k*72+:72]);
   assign seat_data_o[k*64+:64]=seat_present?d[63:0]:64'd0;
   assign seat_ue[k]=seat_present&&d[65];
  end
  assign seat_code_o=seat_present?seat:288'd0;
  assign seat_bad_o=seat_present&&seat_bad_q&&!seat_ld_q;
- vm_ck4 u_checker(.ck(ck),.rst_n(rst_n),.capture_i(capture_i),.check_i(check_i),
+ vm_ck4 #(.LOCAL_REGIONS(1)) u_checker(.ck(ck),.rst_n(rst_n),.capture_i(capture_i),.check_i(check_i),
+  .capture_regions_i(capture_q),.check_regions_i(check_q),
   .write_i(write_i),.sample_i(returned),.expected_i(seat_code_o),
   .owner_mask_i(OM),.padding_mask_i(PM),.error_o(checker_error_o),
   .valid_o(checker_valid_o),.repaired_o(repaired));
  always @(posedge ck)begin
   if(return_i)returned<=returned_i;
-  if(accept_i)for(integer k=0;k<4;k=k+1)seat[k*72+:72]<=encode64(raw_i[k*64+:64]);
+  for(integer h=0;h<8;h=h+1)if(accept_q[h])seat[h*36+:36]<=encoded_raw[h*36+:36];
   if(load_i)seat<=repaired;
  end
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin seat_present<=0;seat_ld_q<=0;seat_bad_q<=0;end
   else begin
-   if(accept_i||load_i)seat_present<=1;
-   seat_ld_q<=accept_i||load_i;
+   if(accept_q[0]||load_i)seat_present<=1;
+   seat_ld_q<=accept_q[0]||load_i;
    seat_bad_q<=|seat_ue;
   end
  end

@@ -45,7 +45,7 @@ module vm_root_ck9 #(parameter integer ENABLE=0,parameter integer SEATP=1,parame
   assign drained=1;assign fault=0;
   assign mem_cmd_v=0;assign mem_cmd_we=0;assign mem_cmd_bank=0;assign mem_cmd_addr=0;assign mem_wd=0;
  end else begin:on
-  localparam [3:0] IDLE=0,WRITE=1,VERIFY=2,CAPTURE=3,CHECK=4,WACK=5,READ=6,PUBLISH=7,WAIT_RD=8,LOAD=9;
+  localparam [3:0] IDLE=0,WRITE=1,VERIFY=2,CAPTURE=3,CHECK=4,WACK=5,READ=6,PUBLISH=7,WAIT_RD=8,LOAD=9,SEAT=10;
   reg [3:0] state,next_state;
   reg bank,next_bank,is_write,next_is_write,sticky,next_sticky;
   reg [6:0] addr,next_addr;
@@ -104,12 +104,13 @@ module vm_root_ck9 #(parameter integer ENABLE=0,parameter integer SEATP=1,parame
    if(!fault)case(state)
     IDLE:begin
      next_sent=0;next_acked=0;
-     if(wf)begin next_bank=wr_bank;next_addr=wr_addr;next_is_write=1;next_state=WRITE;end
+     if(wf)begin next_bank=wr_bank;next_addr=wr_addr;next_is_write=1;next_state=SEAT;end
      if(rf)begin
       if(!valid_bits[{rd_bank,rd_addr}])next_sticky=1;
-      else begin next_bank=rd_bank;next_addr=rd_addr;next_is_write=0;next_state=READ;end
+      else begin next_bank=rd_bank;next_addr=rd_addr;next_is_write=0;next_state=SEAT;end
      end
     end
+    SEAT:next_state=is_write?WRITE:READ;
     WRITE:next_state=VERIFY;
     VERIFY,READ:next_state=WAIT_RD;
     WAIT_RD:if(mem_rd_v)next_state=CAPTURE;
