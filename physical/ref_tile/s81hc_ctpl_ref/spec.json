@@ -74,6 +74,7 @@
   "pin_min_tracks": 1
  },
  "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Codex:s81_hc_closure",
   "branch": "codex/s81hc-physical-20261012",
   "tag": "v3-cx-pinstage",
