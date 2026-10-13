@@ -49,15 +49,15 @@ def parse(path):
     for b, nets in groups.items():
         K = max([int(x.rsplit('__r', 1)[1]) for x in nets if '__r' in x] or [0])
         last = f'{b}__r{K}' if K else b
-        ends0 = [f'{x[1]}.{x[2]}' for x in net.get(b, []) if not x[0].startswith('qfd_rly')]
+        ends0 = [f'{x[1]}.{x[2]}' for x in net.get(b, []) if not x[0].startswith(('qfd_rly', 'qkd_rly'))]
         relays = []
         for k in range(K):
-            r = [x for x in net[f'{b}__r{k}' if k else b] if x[0].startswith('qfd_rly') and x[2] == 'a']
+            r = [x for x in net[f'{b}__r{k}' if k else b] if x[0].startswith(('qfd_rly', 'qkd_rly')) and x[2] == 'a']
             assert len(r) == 1, (b, k, r)
             relays.append(dict(master=r[0][0], name=r[0][1]))
         if K:
             src = ends0
-            dst = [f'{x[1]}.{x[2]}' for x in net.get(last, []) if not x[0].startswith('qfd_rly')]
+            dst = [f'{x[1]}.{x[2]}' for x in net.get(last, []) if not x[0].startswith(('qfd_rly', 'qkd_rly'))]
         else:
             src = [e for e in ends0 if e.split('.')[1] in OUTP.get(inst[e.split('.')[0]][0], set())]
             dst = [e for e in ends0 if e not in src]
@@ -74,7 +74,7 @@ def main():
     ap.add_argument('--source', default='')
     a = ap.parse_args()
     inst, buses = parse(a.die_v)
-    slots = {n: dict(master=m, pins=p) for n, (m, p) in inst.items() if not m.startswith('qfd_rly')}
+    slots = {n: dict(master=m, pins=p) for n, (m, p) in inst.items() if not m.startswith(('qfd_rly', 'qkd_rly'))}
     cnt = collections.Counter(v['cls'] for v in buses.values())
     rel = collections.Counter(v['cls'] for v in buses.values() for _ in v['relays'])
     out = dict(schema='opentallas.qwen-die-seams.v1', source=a.source, buses=buses, slots=slots,
