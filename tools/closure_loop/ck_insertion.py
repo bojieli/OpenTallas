@@ -75,9 +75,16 @@ CLOCK_SETUP_TCL = r"""
 set ot_ck_requested {CLOCK_REQUEST}
 set ot_ck_selected [get_clocks -quiet $ot_ck_requested]
 if {![llength $ot_ck_selected]} {
+  set ot_ck_ports [list $ot_ck_requested]
+  if {[regexp {^(.*)\[0\]$} $ot_ck_requested -> ot_ck_base]} {
+    lappend ot_ck_ports $ot_ck_base
+  } else {
+    lappend ot_ck_ports [format {%s[0]} $ot_ck_requested]
+  }
   foreach c [all_clocks] {
     foreach s [get_property $c sources] {
-      if {[get_full_name $s] eq $ot_ck_requested && [llength [get_ports -quiet $ot_ck_requested]]} {
+      set ot_ck_source [get_full_name $s]
+      if {$ot_ck_source in $ot_ck_ports && [llength [get_ports -quiet $ot_ck_source]]} {
         lappend ot_ck_selected $c
       }
     }

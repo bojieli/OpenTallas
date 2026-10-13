@@ -12,10 +12,10 @@ proc get_ports {args} {set n [lindex $args end];return [expr {$n in {clk hk data
 proc unset_input_delay {args} {puts "DROP [lindex $args end]"}
 '''
 class ClockSource(unittest.TestCase):
- def run_setup(self,name):
+ def run_setup(self,name,setup=MOCK):
   code=MOCK+'\n'+C.CLOCK_SETUP_TCL.replace('CLOCK_REQUEST',name)
   # Catch Tcl's error explicitly: tclsh on stdin otherwise exits zero.
-  code=MOCK+'\nif {[catch {\n'+C.CLOCK_SETUP_TCL.replace('CLOCK_REQUEST',name)+'\n} e]} {puts stderr $e;exit 1}\n'
+  code=setup+'\nif {[catch {\n'+C.CLOCK_SETUP_TCL.replace('CLOCK_REQUEST',name)+'\n} e]} {puts stderr $e;exit 1}\n'
   return subprocess.run(['tclsh'],input=code,text=True,capture_output=True)
  def test_port_name_resolves_clock_and_only_clock_ports_lose_data_delays(self):
   r=self.run_setup('clk');self.assertEqual(r.returncode,0,r.stderr);self.assertIn('OT_CK_SELECTED core_clk',r.stdout);self.assertIn('DROP clk',r.stdout);self.assertIn('DROP hk',r.stdout);self.assertNotIn('DROP data',r.stdout)
@@ -23,6 +23,13 @@ class ClockSource(unittest.TestCase):
   r=self.run_setup('hclk');self.assertEqual(r.returncode,0,r.stderr);self.assertIn('OT_CK_SELECTED hclk',r.stdout)
  def test_unknown_clock_cannot_silently_measure_all_domains(self):
   r=self.run_setup('ck');self.assertNotEqual(r.returncode,0);self.assertIn('found 0',r.stderr)
+ def test_scalar_vector_source_resolves_base_port(self):
+  setup=MOCK.replace('core_clk clk', 'core_clk {clk[0]}').replace('{clk hk data}', '{clk[0] hk data}')
+  for name in ('clk', 'clk[0]'):
+   r=self.run_setup(name,setup);self.assertEqual(r.returncode,0,r.stderr);self.assertIn('OT_CK_SELECTED core_clk',r.stdout)
+ def test_scalar_vector_alias_cannot_choose_between_two_domains(self):
+  setup=MOCK.replace('hclk hk', 'hclk {clk[0]}').replace('{clk hk data}', '{clk clk[0] data}')
+  r=self.run_setup('clk',setup);self.assertNotEqual(r.returncode,0);self.assertIn('found 2',r.stderr)
  def test_all_clocks_keeps_independent_records_and_ignores_virtual_clock(self):
   with tempfile.TemporaryDirectory() as td:
    base=pathlib.Path(td);out=base/'insertion.json'
