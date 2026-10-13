@@ -1,0 +1,79 @@
+{
+  "name": "qkh_recip_ref",
+  "top": "ot_qkh_recip_leaf",
+  "kind": "tile",
+  "layer_cap": "M6",
+  "layer_cap_grant": "cluster child: qkd_ahub_ref M2-M7 parent, local reciprocal leaf",
+  "sources": [
+    "rtl/hdc/nearhbm/ot_qkh_recip_leaf.sv",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 216,
+    "h": 216
+  },
+  "pins": {
+    "N": [
+      "v",
+      "x"
+    ],
+    "S": [
+      "y",
+      "vo",
+      "fault"
+    ],
+    "W": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "io_flop_at_pins": {
+    "cols": 4
+  },
+  "route": {
+    "pd": 0.55,
+    "threads": 16,
+    "peak_ram_gb": 32
+  },
+  "job": {
+    "owner": "Codex:q-kvd",
+    "branch": "codex/q-kvd-1012",
+    "tag": "cx1",
+    "purpose": "Ahub reciprocal structural clock partition: local root, boundary pin flops (+2 cycles), reset per arithmetic operator. Original arithmetic/rounding/order unchanged. Child follows parent M2-M7 contract.",
+    "benches": [
+      {
+        "name": "recip_eq",
+        "cmd": "bash tools/qwen_kv_die/recip_leaf_gate.sh pos {RUN}/bench/eq",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "recip_mut",
+        "cmd": "bash tools/qwen_kv_die/recip_leaf_gate.sh neg {RUN}/bench/mut",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "views_to": "physical/ref_tile/qkh_recip_ref/views",
+    "record_to": "results/rtl/ref_tile/qkh_recip_ref"
+  }
+}
