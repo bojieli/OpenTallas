@@ -522,7 +522,9 @@ module ot_hgi_seq_fe #(
         // S2 item: the flat it_d staging
         fe_s2i_d <= fe_it; fe_s2i_tag <= ctag; fe_s2i_slot <= fe_sl; fe_s2i_sut <= fe_sut; fe_s2i_np0 <= (hq_np == 3'd0);
         // S2 alloc: the header's entry (from the FIFO head at the header pop) or a FENCE / LOOP-from-VM entry (from h)
-        if (fe_halloc) begin
+        // (the header branch loads on the state decode alone, as the flat d_ld: the TX data only matter under fe_s2a_v,
+        // and the header decode -> fe_halloc -> 170 TX enables was the FE's longest stage, ~600 ps in the pre-route gate)
+        if (fs == F_H) begin
             fe_s2a_tag <= qt; fe_s2a_hdr <= hw; fe_s2a_kind <= q_akind;
             fe_s2a_rdy0 <= (hw_rc == RC_FLT) || (!hw_tmpl && hw_np == 3'd0); fe_s2a_L <= Lc; fe_s2a_L1 <= L1c;
         end else if (fe_aalloc) begin
