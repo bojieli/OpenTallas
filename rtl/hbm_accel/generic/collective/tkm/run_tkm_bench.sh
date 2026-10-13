@@ -42,7 +42,12 @@ quick)
   build obj_base
   for c in $cases; do run $c PASS obj_base $c & done; wait ;;
 matrix)
-  build obj_base & build obj_mut1 -GMUT_TKM=1 & build obj_mut2 -GMUT_TKM=2 & build obj_mut3 -GMUT_TKM=3 & build obj_mut4 -GMUT_TKM=4 & wait
+  # one Verilator build of the production chain peaks at 47 GB (measured 10-13, ot-epyc1tb); five at once were
+  # SIGTERMed on a 125 GB host (coll_tkm_tile_cx-r2).  TKM_BUILD_PAR builds run at a time (default 1).
+  bp=${TKM_BUILD_PAR:-1}; i=0
+  for a in "obj_base" "obj_mut1 -GMUT_TKM=1" "obj_mut2 -GMUT_TKM=2" "obj_mut3 -GMUT_TKM=3" "obj_mut4 -GMUT_TKM=4"; do
+    build $a & i=$((i+1)); [ $((i % bp)) = 0 ] && wait
+  done; wait
   for c in $cases; do run $c PASS obj_base $c & done
   for c in $(cd "$VEC" && ls -d prod_* syn_sel syn_cand 2>/dev/null | tr -d /); do
     run ${c}_wstall30 PASS obj_base $c +WSTALL=30 +SEED=3 &
@@ -53,5 +58,8 @@ matrix)
   for m in 1 2 3 4; do run mut${m}_$P FAIL obj_mut$m $P & done
   wait ;;
 esac
-if grep -q "^WRONG\|BUILD FAIL" "$O/SUMMARY"; then echo "HGI_TKM FAIL" >> "$O/SUMMARY"; else echo "HGI_TKM PASS" >> "$O/SUMMARY"; fi
+# a build that did not finish is a harness error, never a verdict: no PASS / FAIL marker, exit 2 (a mutant must fail
+# in simulation, and "expect fail" stages match HGI_TKM FAIL)
+if grep -q "BUILD FAIL" "$O/SUMMARY"; then echo "HGI_TKM BUILD_ERROR" >> "$O/SUMMARY"; cat "$O/SUMMARY"; exit 2; fi
+if grep -q "^WRONG" "$O/SUMMARY"; then echo "HGI_TKM FAIL" >> "$O/SUMMARY"; else echo "HGI_TKM PASS" >> "$O/SUMMARY"; fi
 cat "$O/SUMMARY"
