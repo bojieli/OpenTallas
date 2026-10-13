@@ -1132,7 +1132,13 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     base = next(Path(orfs_dir).glob("results/asap7/*/base"), None)
     ck = ROOT / "tools/closure_loop/ck_insertion.py"
     if base is not None and ck.exists():
-        subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--output", str(o / "insertion.json")])
+        insertion = o / "insertion.json"
+        insertion.unlink(missing_ok=True)  # a failed measurement cannot retain a prior route's clock record
+        cr = subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--all-clocks", "--output", str(insertion)])
+        if cr.returncode:
+            (o / "CLOCK_INSERTION_FAILED").write_text(f"clock measurement exit {cr.returncode}; no insertion.json published\n")
+        else:
+            (o / "CLOCK_INSERTION_FAILED").unlink(missing_ok=True)
     lef = o / f"{top}.lef"
     if lef.exists() and not grant:
         # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
