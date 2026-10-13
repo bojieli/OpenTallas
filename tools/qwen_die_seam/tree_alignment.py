@@ -8,7 +8,7 @@ def audit(path, node_latency=3, applied_pads=None):
     applied_pads = applied_pads or {}
     inst, bus = parse(path)
     slots = {n: dict(master=m, pins=p) for n, (m, p) in inst.items()
-             if not m.startswith(('qfd_rly', 'qkd_rly'))}
+             if not m.startswith(('qfd_rly', 'qkd_rly', 'ot_qwen_tree_delay'))}
     ports = collections.defaultdict(list)
     for b, d in bus.items():
         if d['cls'] == 'corridor':
@@ -48,7 +48,7 @@ def audit(path, node_latency=3, applied_pads=None):
     def input_arrival(endpoint):
         d = bus[incoming[endpoint]]
         assert len(d['src']) == 1, (endpoint, d['src'])
-        return arrival(d['src'][0]) + d['K'] + applied_pads.get(incoming[endpoint], 0)
+        return arrival(d['src'][0]) + d.get('lat', d['K']) + applied_pads.get(incoming[endpoint], 0)
     nodes = [n for n, s in slots.items() if s['master'] == 'qfd_tile_nk' and 'n_a' in s['pins']]
     skews = {n: input_arrival(n + '.n_a') - input_arrival(n + '.n_b') for n in nodes}
     pads = {}
@@ -73,7 +73,7 @@ def audit(path, node_latency=3, applied_pads=None):
     def balanced_input(endpoint):
         d = bus[incoming[endpoint]]
         assert len(d['src']) == 1
-        return balanced_arrival(d['src'][0]) + d['K']
+        return balanced_arrival(d['src'][0]) + d.get('lat', d['K'])
     for n in nodes:
         balanced_arrival(n + '.n_y')
     return dict(nodes=len(nodes), misaligned=sum(v != 0 for v in skews.values()),

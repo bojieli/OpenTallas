@@ -3,7 +3,7 @@
 so die STA timed no relay hop).  usage: relay_ck_check.py CASE/die.v  -> prints counts, exit 1 on any unclocked relay"""
 import re, sys, collections
 txt = open(sys.argv[1]).read()
-inst = re.compile(r'\n\s*(q[fk]d_(?:rly|stn|station)\w*)\s+\\?(\S+)\s*\((.*?)\);', re.S)
+inst = re.compile(r'\n\s*(q[fk]d_(?:rly|stn|station)\w*|ot_qwen_tree_delay\d+_t)\s+\\?(\S+)\s*\((.*?)\);', re.S)
 n, bad, by = 0, [], collections.Counter()
 for mst, name, body in inst.findall(txt):
     n += 1
