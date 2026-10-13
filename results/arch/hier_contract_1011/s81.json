@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 14,
+ "version": 15,
  "owner": "s81die-1011",
- "updated": "2026-10-13",
+ "updated": "2026-10-13 PT",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "rule": "m5_tile_cap_20261012",
@@ -130,6 +130,11 @@
    "version": 14,
    "when": "2026-10-13 PT",
    "change": "s81-die: (1) relay_masters: 27 dsfd_rly_<W>_<in><out> masters (29,184 instances, 68% of the generated placeholders) become real hard tiles bound by name; outlines from content (8.64 / 10.8 / 15.12 sq; W 266 / 283: 34.56 x 19.44 N/S, 21.6 x 30.24 E/W), M5 cap, scalar ck / rs, outhold BUF-HB4-BUF as the physical minimum-delay element; seam_rules.min_delay (L - H >= 50 ps + skew on routed FF ETMs). (2) HC POST accept / dispatch station at the corridor midpoint (coordinator 03:40): WITHDRAWN by the coordinator 2026-10-13: S81 HC POST was accepted with cost under the owner's rule (2.542x unit, 1.653 % end-to-end; ledger on main); the v13 accept position at the top of the HC column stands and no midpoint station is reserved; no slot hc_post_stn. (3) ot_s81_hc_crooty_y clock / control entry SW -> SE (sk, srs on S at x 367.356..368.7, M5; v4-ctl-east). (4) clock_pin_rules.dsfd_vm_bgr scalar; open_items carries ces route, bgr scalar view, SU sm / sw layouts, cth growth fit check, hc tail crossing width and the two min-delay gaps (ctfn, cfifo cr). No slot grew; no price changed."
+  },
+  {
+   "version": 15,
+   "when": "2026-10-13 PT",
+   "change": "s81-die: (A1) sp_p2/xport 403.2 x 228.96 -> 403.2 x 211.68 (closed view). (A2) sp_p2/fadd16 150 x 66.15 @ (587.4, 194.4) R0 -> 216 x 58.32 @ (496.608, 194.4) MX (closed view; faces measured on the LEF, f_ab centred on head t_ab). (A3) sp_p2 = container. (B) rep/q_elem, rep/bf, rep/pqc descriptor rows (0 x 0) -> 8 per-master rows with outline and placed count; rep/engram_c -> dsfd_engram_c 1188 x 432 cluster on layer1e only. m6_pin_grants: none signed, 6 pending the exact audit. SU kv/qb/sw slot change accepted as target, carried open. No price changed; no closed tile re-shaped."
   }
  ],
  "slots": [
@@ -7114,13 +7119,13 @@
    "layer_cap": "M5"
   },
   {
-   "name": "rep/q_elem",
-   "cell": "ot_v41_rom_elem_q_*",
+   "name": "rep/q_elem/ot_v41_rom_elem_q_qxpq_w10",
+   "cell": "ot_v41_rom_elem_q_qxpq_w10",
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 0,
-    "h": 0
+    "w": 510.84,
+    "h": 221.4
    },
    "origin": {
     "x": 0,
@@ -7137,13 +7142,12 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 13,
+   "version": 15,
    "pg_layer": "M5",
    "strap_layer": "M6",
    "signal_max_layer": "M5",
    "assembly": "cluster",
    "owner": "ds-1010",
-   "notes": "instances 1,898: positions in the plan floorplan.def; replicated >= 4 -> hardened once and stepped",
    "layer_rule": "tile_m5",
    "view_layers": {
     "pg_layer": "M7",
@@ -7152,16 +7156,22 @@
    },
    "view_cap": "M7",
    "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M5"
+   "layer_cap": "M5",
+   "replicated": {
+    "count": 1280,
+    "count_census_c5": 1280,
+    "placement": "die plan floorplan.def (generator); no single origin"
+   },
+   "notes": "v15 per-master row (Q element (10-way)); replaces the 0 x 0 descriptor row rep/q_elem; outline = die case c5 master"
   },
   {
-   "name": "rep/bf",
-   "cell": "dsfd_bf",
+   "name": "rep/q_elem/dsfd_qbank_N",
+   "cell": "dsfd_qbank_N",
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 0,
-    "h": 0
+    "w": 60.456,
+    "h": 6.456
    },
    "origin": {
     "x": 0,
@@ -7178,13 +7188,104 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 13,
+   "version": 15,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "assembly": "cluster",
+   "owner": "ds-1010",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "replicated": {
+    "count": 1280,
+    "count_census_c5": 1280,
+    "placement": "die plan floorplan.def (generator); no single origin"
+   },
+   "notes": "v15 per-master row (q-bank relay row N of each q element); replaces the 0 x 0 descriptor row rep/q_elem; outline = die case c5 master"
+  },
+  {
+   "name": "rep/q_elem/dsfd_qbank_S",
+   "cell": "dsfd_qbank_S",
+   "kind": "element",
+   "parent": "s81_layer1",
+   "outline": {
+    "w": 60.456,
+    "h": 6.456
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 15,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "assembly": "cluster",
+   "owner": "ds-1010",
+   "layer_rule": "tile_m5",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "replicated": {
+    "count": 1280,
+    "count_census_c5": 1280,
+    "placement": "die plan floorplan.def (generator); no single origin"
+   },
+   "notes": "v15 per-master row (q-bank relay row S of each q element); replaces the 0 x 0 descriptor row rep/q_elem; outline = die case c5 master"
+  },
+  {
+   "name": "rep/bf/dsfd_bf",
+   "cell": "dsfd_bf",
+   "kind": "element",
+   "parent": "s81_layer1",
+   "outline": {
+    "w": 1002.888,
+    "h": 198.696
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 15,
    "pg_layer": "M5",
    "strap_layer": "M6",
    "signal_max_layer": "M5",
    "assembly": "cluster",
    "owner": "el1011-ds-bf",
-   "notes": "instances 519: positions in the plan floorplan.def; replicated >= 4 -> hardened once and stepped",
    "layer_rule": "tile_m5",
    "view_layers": {
     "pg_layer": "M7",
@@ -7193,16 +7294,22 @@
    },
    "view_cap": "M7",
    "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M5"
+   "layer_cap": "M5",
+   "replicated": {
+    "count": 512,
+    "count_census_c5": 512,
+    "placement": "die plan floorplan.def (generator); no single origin"
+   },
+   "notes": "v15 per-master row (BF frame master); replaces the 0 x 0 descriptor row rep/bf; outline = die case c5 master"
   },
   {
-   "name": "rep/pqc",
-   "cell": "dsfd_sp_pq / pqc tiles",
+   "name": "rep/pqc/dsfd_sp_pq",
+   "cell": "dsfd_sp_pq",
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 0,
-    "h": 0
+    "w": 1672.248,
+    "h": 449.256
    },
    "origin": {
     "x": 0,
@@ -7219,14 +7326,136 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 1,
+   "version": 15,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "assembly": "pending_owner",
    "owner": "el1011-ds-misc",
-   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)",
-   "layer_rule": "cluster"
+   "layer_rule": "cluster",
+   "replicated": {
+    "count": 1,
+    "count_census_c5": 1,
+    "placement": "die plan floorplan.def (generator); no single origin"
+   },
+   "notes": "v15 per-master row (PQ service parent (children below; closed ot_pqc_t_* M5 tiles are its sub_layout)); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master"
+  },
+  {
+   "name": "rep/pqc/dsfd_pq_root",
+   "cell": "dsfd_pq_root",
+   "kind": "element",
+   "parent": "s81_layer1",
+   "outline": {
+    "w": 132.168,
+    "h": 211.656
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 15,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "assembly": "pending_owner",
+   "owner": "el1011-ds-misc",
+   "layer_rule": "cluster",
+   "replicated": {
+    "count": 128,
+    "count_census_c5": 128,
+    "placement": "die plan floorplan.def (generator); no single origin"
+   },
+   "notes": "v15 per-master row (PQ root, one per column); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master",
+   "parent_master": "dsfd_sp_pq"
+  },
+  {
+   "name": "rep/pqc/dsfd_rstg_pq66",
+   "cell": "dsfd_rstg_pq66",
+   "kind": "element",
+   "parent": "s81_layer1",
+   "outline": {
+    "w": 132.168,
+    "h": 8.616
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 15,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "assembly": "pending_owner",
+   "owner": "el1011-ds-misc",
+   "layer_rule": "cluster",
+   "replicated": {
+    "count": 128,
+    "count_census_c5": 128,
+    "placement": "die plan floorplan.def (generator); no single origin"
+   },
+   "notes": "v15 per-master row (PQ return stage 66 b); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master",
+   "parent_master": "dsfd_sp_pq"
+  },
+  {
+   "name": "rep/pqc/dsfd_rstg_pq68",
+   "cell": "dsfd_rstg_pq68",
+   "kind": "element",
+   "parent": "s81_layer1",
+   "outline": {
+    "w": 132.168,
+    "h": 8.616
+   },
+   "origin": {
+    "x": 0,
+    "y": 0
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "N",
+    "layer": "M4"
+   },
+   "version": 15,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "assembly": "pending_owner",
+   "owner": "el1011-ds-misc",
+   "layer_rule": "cluster",
+   "replicated": {
+    "count": 128,
+    "count_census_c5": 128,
+    "placement": "die plan floorplan.def (generator); no single origin"
+   },
+   "notes": "v15 per-master row (PQ return stage 68 b); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master",
+   "parent_master": "dsfd_sp_pq"
   },
   {
    "name": "rep/hrow",
@@ -7262,13 +7491,13 @@
    "layer_rule": "cluster"
   },
   {
-   "name": "rep/engram_c",
-   "cell": "engram_c tiles",
+   "name": "rep/engram_c/dsfd_engram_c",
+   "cell": "dsfd_engram_c",
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 0,
-    "h": 0
+    "w": 1188.0,
+    "h": 432.0
    },
    "origin": {
     "x": 0,
@@ -7285,14 +7514,15 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 1,
+   "version": 15,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
-   "assembly": "pending_owner",
+   "assembly": "cluster",
    "owner": "el1011-ds-misc",
-   "notes": "owner decides tiles_direct vs cluster (GLUE PLACEMENT)",
-   "layer_rule": "cluster"
+   "notes": "v15: one hardened cluster, 8 hard instances + wires, no register in the cluster top; N face M5 (f_ai, t_ag, f_win, t_vm, f_vm, c_*), W face M4 (t_hq, f_hr); origin = generator eng_SE. View to be delivered at physical/s81_ph_views/closed/dsfd_engram_c (el1013-s81-engram).",
+   "layer_rule": "cluster",
+   "die_variant": "layer1e only (Engram home die, instance eng_SE); absent on layer1"
   },
   {
    "name": "sp_vm/g_h[0].g_t[0].u_bg",
@@ -10661,7 +10891,7 @@
   {
    "name": "sp_p2",
    "cell": "ot_mtp_p2_prefix_path",
-   "kind": "element",
+   "kind": "container",
    "parent": "s81_layer1",
    "outline": {
     "w": 878.4,
@@ -10684,15 +10914,16 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 15,
    "pg_layer": "M7",
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "assembly": "tiles_direct",
    "owner": "el1011-ds-mtp",
-   "notes": "v13 MTP P2 selected-path transport (el1011-ds-mtp 07:17, GLUE PLACEMENT): slot ot_mtp_p2_prefix_path_hub DROPPED (hub glue folded into the head), ot_p2h_arith -> ot_p2h_head; three die-placed hard tiles; origin = generator (between capture and collective on the draft-A die). Seams registered both sides, IO 0.2 T, <= ~500 um a stage.",
+   "notes": "v13 MTP P2 selected-path transport (el1011-ds-mtp 07:17, GLUE PLACEMENT): slot ot_mtp_p2_prefix_path_hub DROPPED (hub glue folded into the head), ot_p2h_arith -> ot_p2h_head; three die-placed hard tiles; origin = generator (between capture and collective on the draft-A die). Seams registered both sides, IO 0.2 T, <= ~500 um a stage. v15: container only (no master, no view: the closed 560 x 460 ot_mtp_p2_prefix_path is the pre-v13 monolith, absorbed by xport + head + fadd16); not a census instance.",
    "layer_rule": "cluster",
-   "die_variant": "draft A only (--draft A); absent on layer1"
+   "die_variant": "draft A only (--draft A); absent on layer1",
+   "master": null
   },
   {
    "name": "sp_p2/xport",
@@ -10701,7 +10932,7 @@
    "parent": "sp_p2",
    "outline": {
     "w": 403.2,
-    "h": 228.96
+    "h": 211.68
    },
    "origin": {
     "x": 0.0,
@@ -10720,7 +10951,7 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 15,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
@@ -10735,7 +10966,7 @@
     "signal_max_layer": "M6"
    },
    "view_cap": "M6",
-   "view_status": "legacy cap M6 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically"
+   "view_status": "closed mtp-p2h-xp-7a43b0b52-tc-pk45 (TT +8.17 / FF +3.33 / DRC 0), LEF 403.2 x 211.68; no _tt.lib in the view dir (export-sdc stream)"
   },
   {
    "name": "sp_p2/head",
@@ -10786,13 +11017,13 @@
    "kind": "tile",
    "parent": "sp_p2",
    "outline": {
-    "w": 150.0,
-    "h": 66.15
+    "w": 216.0,
+    "h": 58.32
    },
    "origin": {
-    "x": 587.4,
+    "x": 496.608,
     "y": 194.4,
-    "orient": "R0"
+    "orient": "MX"
    },
    "io_budget": {
     "in_delay_frac": 0.2,
@@ -10806,13 +11037,13 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 15,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
    "layer_rule": "cluster_child",
    "layer_cap": "M6",
-   "notes": "v13 P2 tile: S: f_ab 1025 + ck, rst (M5) <- head t_ab; t_y 560 -> head f_y; closed view 50b05596a",
+   "notes": "v15: closed LEF 216 x 58.32 (mtp-p2h-fa-50b05596a-tc-a/-b, TT +98.70 / FF +2.43 / DRC 0). MEASURED faces of the closed view: f_ab 1025 + ck on N (x 9.7..206.3, M5), t_y 560 on S (x 54.3..161.6): the v13 note (f_ab on S) was the kit plan, not the view. Slot orient MX so f_ab faces head t_ab across the 21.6-um channel, centred on it (lateral <= 44 um, est. crossing 159 b / 831 tracks = 0.19); t_y leaves on the far (north) face and returns over the tile to head f_y (N face, x 478..743): <= ~250 um, registered both ends. x 496.608..712.608 inside sp_p2, top 252.72 < 270; no overlap with head (y <= 172.8) or xport (x <= 403.2).",
    "kit": "s81hc_crrrw_ref",
    "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_p2; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)",
    "view_layers": {
@@ -11488,17 +11719,31 @@
    }
   ]
  },
- "open_items": {
-  "coll_ces": "ces0 / cesn slot 302.4 x 341.28 stands (v13); a closing route at that outline is still owed by the collective lead",
-  "vm_bgr28": "pin ranges recorded v13; scalar ck / rst view owed (clock_pin_rules.dsfd_vm_bgr)",
-  "su_sm": "8 SM stop regions 1,231.2 x 1,058.4 stand (v13); sub_layouts.ot_s81_su_sm (smt + 2 x (16 sml + smc + smr + 8 smd)) is owed by the SU lead; no layout is guessed here",
-  "su_sw": "dsfd_su_t_sw 572.4 x 637.2 wrapper slots stand until the swt / swe / qbe layout is supplied and fit-checked",
-  "hc_cth_growth": "cth 740.88 -> 771.12 NOT adopted: fit check against the corridor and the 26,000 die height pending",
-  "hc_tail_crossing": "hc_s t_tf / f_tr and hc_t f_sf / t_sr widen to 3,056 forward / 2,164 return when dsfd_sp_hc_t lands on main",
-  "min_delay_gaps": {
-   "ot_s81_hc_ctfn": "L 32.0 / H 19.0 (insertion spread 106 ps): -37.0 same-master zero-wire; needs L - H >= 50 + skew",
-   "cfifo cr": "-59.8; needs L - H >= 50 + skew"
-  },
-  "hc_post_midpoint": "WITHDRAWN by the coordinator 2026-10-13: S81 HC POST was accepted with cost under the owner's rule (2.542x unit, 1.653 % end-to-end; ledger on main); the v13 accept position at the top of the HC column stands and no midpoint station is reserved"
+ "open_items": [
+  "coll_ces",
+  "vm_bgr28",
+  "su_sm",
+  "su_sw",
+  "hc_cth_growth",
+  "hc_tail_crossing",
+  "min_delay_gaps",
+  "hc_post_midpoint",
+  "v15 SU slot change (s81su 03:40): kv0/kv1 -> kvt x4 (36.72 x 453.6) + kvq x16 (259.2 sq) + kve/kvp/kvr; qb0-3 -> qbt (572.4 x 453.6) + qbe; sw0-7 -> swt (572.4 x 453.6) + swe: ACCEPTED as the target, NOT folded as slots: the four tiles are not closed, qbt/swt insertion 614-740 ps fails the 300 ps clock rule (half-tap split likely), and no sub-layout origins were posted. Fold with the verdicts.",
+  "v15 fadd16: closed view routes signals on M7 above its cap M6 (view_status INVALID stands); t_y on the far face (MX slot).",
+  "v15 layer1e die case (Engram home) missing from the real-view census.",
+  "v15 no closed slot-shaped view by name for dsfd_bf, ot_v41_rom_elem_q_qxpq_w10, dsfd_pq_root, dsfd_sp_pq (unowned per [s81-slots])."
+ ],
+ "m6_pin_grants": {
+  "rule": "tools/hier_contract/M6_PIN_GRANT.md: exact master, source commit, physical-spec digest, exact bits / face / span; signals and PG stay <= M5",
+  "granted": [],
+  "approved_in_principle_pending_exact_audit": [
+   "dsfd_mtp_seq",
+   "dsfd_mtp_seq_rtt",
+   "dsfd_cap_mtp_ep",
+   "dsfd_coll_mtp_lane",
+   "ot_p2h_fadd16",
+   "dsfd_engram_sink"
+  ],
+  "note": "the 10-12 18:18-20:48 proposals carry pins/um only: no bit list, span, source commit or spec digest, so no grant can be signed yet. The die lead signs each grant when the owner posts the m6_pin_grant block of the M5 kit (m6_pin_grant.py); the closed M6 / M7 views stand meanwhile (owner 10-12 19:00)."
  }
 }
