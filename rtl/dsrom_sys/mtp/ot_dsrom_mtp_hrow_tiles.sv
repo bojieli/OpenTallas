@@ -361,9 +361,18 @@ module ot_dsrom_mtp_hrow_cbcore (
     wire [1023:0] rdo;
     genvar gc;
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_c
+        // Dedicated kept launch copies: chain pin flops wi/ri feed only the
+        // forwarding registers; each macro gets local address/data launch flops.
+        // Capture the same input edge as wi/ri, preserving SRAM and chain latency.
+        (* keep = 1 *) reg [9:0] macro_wa, macro_ra;
+        (* keep = 1 *) reg [255:0] macro_wd;
+        always @(posedge clk) begin
+            macro_wa <= f_w[10:1]; macro_ra <= f_r[10:1];
+            macro_wd <= f_w[15 + 256*gc +: 256];
+        end
         ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(clk),
-            .r_ce_in(re), .r_addr_in(ri[10:1]), .rd_out(rdo[256*gc +: 256]),
-            .w_ce_in(we), .w_addr_in(wi[10:1]), .wd_in(wi[15 + 256*gc +: 256]), .w_mask_in({256{1'b1}}),
+            .r_ce_in(re), .r_addr_in(macro_ra), .rd_out(rdo[256*gc +: 256]),
+            .w_ce_in(we), .w_addr_in(macro_wa), .wd_in(macro_wd), .w_mask_in({256{1'b1}}),
             .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
     end endgenerate
     always @(posedge clk) cap <= rdo;
