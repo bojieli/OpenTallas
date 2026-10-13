@@ -2824,8 +2824,8 @@ def defer_record_merge(j, out, sparse, dry=False):
 
 # AUTO-MERGE (owner 2026-10-10, drive-1010): closures keep reaching main while no agent is alive.  With
 # STATE/main_publish_owner.json {"auto_merge_guarded": true}, a CLOSED job is merged into main by the loop when
-#   - its source branch is claude/*  (Codex / other branches stay with a human),
-#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; at least one bench),
+#   - its source branch is claude/* or codex/* (other namespaces stay with a coordinator),
+#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; behavioral positive and mutant required),
 #   - its spec does not opt out ("auto_merge": false, or "hold_merge": "<reason>"),
 #   - the merge of the VERIFIED source commit (commit_full, not the branch tip) into origin/main is clean, and the
 #     record files (verdict + recorded views) come from the record commit on top.
@@ -2855,8 +2855,8 @@ def auto_merge_guard(j):
     hit = next((h for h in holds if str(spec.get('block', '')).startswith(h) or j['name'].startswith(h)), None)
     if hit:
         return f"held by policy prefix {hit} (gate outside the loop benches)"
-    if not str(spec['source'].get('branch', '')).startswith('claude/'):
-        return f"source branch {spec['source'].get('branch')} is not claude/*"
+    if not str(spec['source'].get('branch', '')).startswith(('claude/', 'codex/')):
+        return f"source branch {spec['source'].get('branch')} is not claude/* or codex/*"
     benches = j.get('benches') or {}
     try:
         waive = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_external_bench_prefixes') or []
@@ -2871,6 +2871,11 @@ def auto_merge_guard(j):
         return f"benches not as expected: {', '.join(bad[:4])}"
     if not any(isinstance(v, dict) and v.get('expect') == 'pass' for v in benches.values()):
         return "no positive bench"
+    if not any(v.get("expect") == "pass" and not re.fullmatch(r"(?:bench_)?lint(?:_.*)?", k, re.I)
+               for k, v in benches.items()):
+        return "no behavioral positive bench (lint alone is not exactness)"
+    if not any(v.get("expect") == "fail" for v in benches.values()):
+        return "no negative bench (mutant evidence required)"
     if not j.get('commit_full'):
         return "no verified source commit"
     return None
@@ -2879,6 +2884,8 @@ def auto_merge_guard(j):
 def auto_merge_closure(j, out, record_paths, dry=False):
     """merge commit_full + the record files into main (clean merges only); returns a status string"""
     why = auto_merge_guard(j)
+    attribution = ("Coordinated by: Codex" if str(j["spec"]["source"].get("branch", "")).startswith("codex/")
+                   else "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>")
     if why:
         if why != "auto-merge policy off":
             append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']} ({j['spec'].get('block')}): AUTO-MERGE skipped: {why}; "
@@ -2896,7 +2903,7 @@ def auto_merge_closure(j, out, record_paths, dry=False):
             m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
                     "merge", "--no-ff", "--no-edit", "-m",
                     f"Merge {j['spec']['source']['branch']} @ {j['commit_full'][:9]} (closure-loop AUTO-MERGE {j['name']}: "
-                    f"{j['spec']['block']} CLOSED, benches as expected)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+                    f"{j['spec']['block']} CLOSED, benches as expected)\n\n{attribution}",
                     j['commit_full']], timeout=1800)
             if m.returncode:
                 conf = sh(["git", "-C", str(mwt), "diff", "--name-only", "--diff-filter=U"], timeout=120).stdout.split()
@@ -2911,7 +2918,7 @@ def auto_merge_closure(j, out, record_paths, dry=False):
         if sh(["git", "-C", str(mwt), "diff", "--cached", "--quiet"], timeout=120).returncode:
             git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m",
                 f"closure-loop AUTO-MERGE record {j['name']} ({j['spec']['block']} CLOSED)\n\n"
-                f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", cwd=mwt)
+                f"{attribution}", cwd=mwt)
         head = git("rev-parse", "HEAD", cwd=mwt).stdout.strip()
         if dry:
             status = f"AUTO-MERGE dry-run {head[:9]} (not pushed)"
