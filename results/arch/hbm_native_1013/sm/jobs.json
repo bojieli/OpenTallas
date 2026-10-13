@@ -28,23 +28,47 @@
     "source_commit": "0720be650",
     "physical_rtl_snapshot_source": "49b00f711",
     "owner": "Codex:hbm-sm-native-manifest",
-    "status": "RUNNING",
+    "status": "NEEDS_HUMAN_CTS_ICG_CLONING_SPINE_CONFLICT",
     "kit": "physical/ref_tile/smn_be_eg_ref",
     "local_gate": "PASS",
     "full_default_shape_lint": "PASS",
     "adoption_gate": "RUNNING_EPYC4_FCHIER_RMAX4096_REQCR1_DEFTRUE_POSITIVE_AND_S1W_MUTANT",
-    "host": "ot-epyc4"
+    "host": "ot-epyc4",
+    "superseded_by": "smn_be_eg_ref-r2-b9a29ac93"
   },
   {
     "name": "smn_be_wg_ref-r1-0720be650",
     "source_commit": "0720be650",
     "physical_rtl_snapshot_source": "49b00f711",
     "owner": "Codex:hbm-sm-native-manifest",
-    "status": "RUNNING",
+    "status": "NEEDS_HUMAN_CTS_ICG_CLONING_SPINE_CONFLICT",
     "kit": "physical/ref_tile/smn_be_wg_ref",
     "local_gate": "PASS",
     "full_default_shape_lint": "PASS",
     "adoption_gate": "RUNNING_EPYC4_FCHIER_RMAX4096_REQCR1_DEFTRUE_POSITIVE_AND_S1W_MUTANT",
-    "host": "ot-epyc4"
+    "host": "ot-epyc4",
+    "superseded_by": "smn_be_wg_ref-r2-b9a29ac93"
+  },
+  {
+    "name": "smn_be_eg_ref-r2-b9a29ac93",
+    "source_commit": "b9a29ac93",
+    "owner": "Codex:hbm-sm-native-manifest",
+    "status": "PREPARED_INTAKE_NEXT",
+    "root_cause": "cg_pushdown clonedone6813sinkcoarseICGinto256beforethrough-ICGspine",
+    "structural_fix": "PreserveexactguardedrootICGandbalancedGCLKspinedistribution",
+    "local_gate": "PASS",
+    "rtl_unchanged": true,
+    "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT"
+  },
+  {
+    "name": "smn_be_wg_ref-r2-b9a29ac93",
+    "source_commit": "b9a29ac93",
+    "owner": "Codex:hbm-sm-native-manifest",
+    "status": "PREPARED_INTAKE_NEXT",
+    "root_cause": "cg_pushdown clonedone6813sinkcoarseICGinto256beforethrough-ICGspine",
+    "structural_fix": "PreserveexactguardedrootICGandbalancedGCLKspinedistribution",
+    "local_gate": "PASS",
+    "rtl_unchanged": true,
+    "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT"
   }
 ]

@@ -1,5 +1,5 @@
 {
- "name": "smn_be_eg_ref-r2-COMMIT",
+ "name": "smn_be_eg_ref-r2-b9a29ac93",
  "block": "ot_hbm_accel_smh_be_eg",
  "ref_tile": true,
  "owner": "Codex:hbm-sm-native-manifest",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "codex/hbm-sm-native-manifest-1013",
-  "commit": "COMMIT",
+  "commit": "b9a29ac93",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm"
   ]
@@ -74,7 +74,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smn_be_eg_ref/smn_be_eg_ref-r2-COMMIT"
+   "to": "results/rtl/ref_tile/smn_be_eg_ref/smn_be_eg_ref-r2-b9a29ac93"
   }
  ],
  "cycles_added": 0,

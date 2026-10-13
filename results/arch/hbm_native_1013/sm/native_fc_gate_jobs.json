@@ -5,14 +5,14 @@
   "host": "ot-epyc4",
   "root": "/srv/opentallas-scratch/claude/codex-sm-native-fch49",
   "positive": {
-    "status": "RUNNING",
+    "status": "WAITING_NATIVE_DEBUG_PROBE_FIX",
     "log": "positive/run.log",
     "result": "positive/result.json",
     "rc": "positive/run.exit",
     "expected": "status=pass, mismatching_ops=0, timeout=null, SM_NATIVE_DEFAULTS_PASS NC8 RMAX4096 REQCR1 TAGW16, CG_LOCKSTEP mismatches0"
   },
   "mutant": {
-    "status": "RUNNING",
+    "status": "WAITING_NATIVE_DEBUG_PROBE_FIX",
     "log": "mutant/run.log",
     "result": "mutant/result.json",
     "rc": "mutant/run.exit",
@@ -27,6 +27,13 @@
       "evidence": "native_fc_gate_setup_failure",
       "arithmetic_verdict": null,
       "correction": "Add exactly pinned49 physical/asap7_memory_macros/{1024x256,128x256} and physical/hbm_accel_macros/512x256 dirs; preserve failures and reuse build paths."
+    },
+    {
+      "status": "COMPILE_TESTBENCH_PROBE_FAILURE",
+      "reason": "TB debug probes assumed parameterized g_fp/g_tp branches; actual native defaults instantiate g_fd/g_tw",
+      "arithmetic_verdict": null,
+      "correction_owner": "/root/hbm_sm_cluster",
+      "evidence": "EPYC4positive/mutant/build/.../build.log; archivedbeforeTBpatch"
     }
   ]
 }
