@@ -9,6 +9,7 @@ import argparse
 import collections
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 
@@ -168,8 +169,53 @@ def compose(outdir):
                'qualification_gates': gate}
     if not receipt['placement_subset_pass']:
         raise ValueError(json.dumps(receipt))
+    # Source-derived VM ring topology, separate from unimplemented physical relays.
+    from hbm_native_vm_component import leaf
+    vmchildren = {c['instance']: c for c in data['vm']['children']}
+    ringstop = vmchildren['u_cw']
+    _, _, pinsets, _ = leaf(ROOT / ringstop['view_lef'])
+    quarters = ['SW', 'SE', 'NW', 'NE']
+    by_namespace = {r['instance']: r for r in regions}
+    links = []
+    for sid, quarter in enumerate(quarters):
+        for direction, delta, stop in [('cw',1,'u_cw'), ('ccw',3,'u_ccw')]:
+            target_sid = (sid+delta)%4
+            source_ns = f'hb_vms_{quarter}'
+            target_ns = f'hb_vms_{quarters[target_sid]}'
+            a = by_namespace[source_ns]['xy_um']
+            b = by_namespace[target_ns]['xy_um']
+            local = vmchildren[stop]['xy_um']
+            distances = [sum(abs(a[axis]+local[axis]+pinsets['l_out']['bits'][bit][axis]
+                                 -b[axis]-local[axis]-pinsets['l_in']['bits'][bit][axis])
+                             for axis in [0,1]) for bit in range(2224)]
+            reach = max(distances)
+            relay_stages = max(0,math.ceil(reach/500)-1)
+            links.append({'direction':direction, 'source_sid':sid, 'target_sid':target_sid,
+                          'source_boundary':[source_ns,direction+'_out'],
+                          'target_boundary':[target_ns,direction+'_in'],
+                          'source_leaf':[source_ns+'/'+stop,'l_out'],
+                          'target_leaf':[target_ns+'/'+stop,'l_in'],
+                          'forward_bits':2224, 'reverse_credit_bits':2,
+                          'max_actual_pin_manhattan_um':round(reach,6),
+                          'minimum_flop_relay_stages_at_500um':relay_stages,
+                          'actual_hard_receiver_credits_per_vc':3,
+                          'optimistic_per_vc_flits_per_cycle_upper_bound_with_raw_flop_relays':
+                              round(min(1,3/max(1,2*relay_stages)),6),
+                          'physical_transport_implemented':False})
+    ring_source = 'rtl/hbm_accel/generic/vm/b2/tb_vms_ring4.sv'
+    transport = {'schema':'opentallas.hbm.native_transport_requirements.v1',
+                 'source_path':ring_source,'source_sha256':sha(ROOT/ring_source),
+                 'ringstop_source_sha256':sha(ROOT/'rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv'),
+                 'quarter_to_sid_candidate':dict(zip(quarters,range(4))),
+                 'quarter_to_sid_status':'Candidate order follows component replicated_instances; production stack mapping gate remains open.',
+                 'ring_links':links,
+                 'requirements':['CW sid+1 and CCW sid-1, with two separate per-VC return credits, are source-derived.',
+                     'Physical relays must retain per-VC credits and bubble injection; no added global barrier.',
+                     'D3 receiver credits cannot cover the long raw-flop loop at full rate. Require elastic credit termination or new qualified buffer views.',
+                     'COLL star producer and all consumer-to-VM adapters still require actual native source bindings and throughput gates.'],
+                 'closed':False}
     outdir.mkdir(parents=True, exist_ok=True)
-    for filename, value in [('candidate.json',candidate), ('receipt.json',receipt)]:
+    for filename, value in [('candidate.json',candidate), ('receipt.json',receipt), ('transport_requirements.json',transport)]:
         (outdir/filename).write_text(json.dumps(value, indent=2)+'\n')
     with (outdir/'placement.tcl').open('w') as f:
         f.write('# Native direct die children only. Partial placement prototype; no full-die closure.\n')
