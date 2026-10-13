@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/coll_col_tile_mga-ct6a-81025983b/record/views/ot_coll_col_tile/ot_coll_col_tile.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/coll_col_tile_mgc-ct6c-81025983b/record/views/ot_coll_col_tile/ot_coll_col_tile.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 1510 of 1510 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_fire M5 (22.992,0.016), c_gidx[0] M5 (22.992,0.016), c_gidx[1] M5 (22.992,0.016))"
  ],
- "summary": "ot_coll_col_tile 194.4 x 129.6: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 1510 blocked-above 0 blocked-same 0; clock clk insertion 285 ps",
+ "summary": "ot_coll_col_tile 194.4 x 129.6: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 1510 blocked-above 0 blocked-same 0; clock clk insertion 293 ps",
  "info": {
   "cell": "ot_coll_col_tile",
   "W": 194.4,
@@ -40,7 +40,7 @@
   "face": {
    "face_pins": 1510,
    "blocked_above": 0,
-   "covered_below": 243,
+   "covered_below": 207,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 285.06,
-    "min_ps": 172.7
+    "max_ps": 293.32,
+    "min_ps": 171.92
    }
   }
  }
