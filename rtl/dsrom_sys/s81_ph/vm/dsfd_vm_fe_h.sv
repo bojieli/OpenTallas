@@ -5,21 +5,28 @@
 // Pin discipline: every leaf input enters a flop, every output leaves a flop.  Exceptions (the same pins are
 // unregistered in the flat module): straps (gid, stride, off, p_t / p_m ties, i_rf ties); ck / cks; rst / rss into
 // ot_dsrom_mtp_rstsync, ot_s81_engine_adapter and dsfd_vm_wfc_ep; the WFC kit pins of dsfd_vm_wfc_ep (f_sw*, f_sr*,
-// t_swg, t_srg, t_ks: the kit owns its pin registers); dv / dt (ot_s81_engine_adapter c side); c_wr (ready of the
-// held c_wv / c_wd output: enable gating only).
+// t_swg, t_srg, t_ks: the kit owns its pin registers); c_wr (ready of the held c_wv / c_wd output: enable gating
+// only).  dv / dt leave a stream-domain pin register in fcn (VMFE_DVR 1).
 // Reset (rule 2): fcn makes rn0 and sends kept out-flop copies; every leaf takes rni on a pin flop (= its rn) and
 // forwards out-flop copies rn_o.  A DIRECT child of fcn releases on the flat module's cycle (rn0 + 2).  fld (ll_ptr
 // rotates from release), fcc and fcw MUST be direct children; the other leaves hold no free-running state.
 `include "dsfd_vm_fe_h_if.svh"
 
 // one port: order register b (in-flop of the leaf for capture lanes, internal otherwise) -> 4 kept slice copies s0
-// (out-pin flops, slice s at [148*s +: 148] = {v, we, row 14, mask 4, d 128}) and the counter copy k (out-pin flop,
-// {v, we, row 14, m 16} = the flat kq[0]).  Rule 1: no stage between b and s0 / k (STALE = the flat mutant).
-module dsfd_vm_fob #(parameter integer STALE = 0) (
+// (out-pin flops) and the counter copy k (out-pin flop, {v, we, row 14, m 16} = the flat kq[0]).  Rule 1: no stage
+// between b and s0 / k (STALE = the flat mutant).
+// S2 (el1013-s81-vmfe/B6): a slice copy carries ONLY the bits that vary for this port; the constants (we of a one-way
+// port, the 4'hf mask of a full-row port, the zero data of a read port) are not registered, not driven on a pin and not
+// relayed: the parent ties them at the dsfd_vm_fsr pins.  Word of slice s at [SW*s +: SW], MSB first:
+//   {v, we (WEV), row 14, mask 4 (MV), d 128 (DF)}      SW = 15 + WEV + 4 MV + 128 DF
+// DX > 0 (read ports whose data field carries a short tag: only slice 0 has it): x_o = d[DX-1:0], one kept out-pin copy.
+module dsfd_vm_fob #(parameter integer STALE = 0, parameter integer WEV = 1, parameter integer MV = 0,
+                     parameter integer DF = 1, parameter integer DX = 0) (
     input  wire clk, input wire rn,
     input  wire i_v, input wire i_we, input wire [13:0] i_row, input wire [15:0] i_m, input wire [511:0] i_d,
-    output wire [591:0] s_o, output wire [31:0] k_o
+    output wire [4*(15 + WEV + 4*MV + 128*DF)-1:0] s_o, output wire [((DX > 0) ? DX : 1)-1:0] x_o, output wire [31:0] k_o
 );
+    localparam integer SW = 15 + WEV + 4*MV + 128*DF;
     reg b_v, b_we; reg [13:0] b_row; reg [15:0] b_m; reg [511:0] b_d;
     always @(posedge clk) begin
         if (!rn) b_v <= 1'b0; else b_v <= i_v;
@@ -38,8 +45,18 @@ module dsfd_vm_fob #(parameter integer STALE = 0) (
     end endgenerate
     genvar gs;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-        dsfd_vm_be_kreg #(.W(148), .ID(600 + gs)) u_s0 (.clk(clk),
-            .d({rn ? c_v : 1'b0, c_we, c_row, c_m[4*gs +: 4], c_d[128*gs +: 128]}), .q(s_o[148*gs +: 148]));
+        wire [SW-1:0] w;
+        assign w[SW-1] = rn ? c_v : 1'b0;
+        if (WEV != 0) begin : g_we assign w[SW-2] = c_we; end
+        assign w[4*MV + 128*DF +: 14] = c_row;
+        if (MV != 0) begin : g_m assign w[128*DF +: 4] = c_m[4*gs +: 4]; end
+        if (DF != 0) begin : g_d assign w[127:0] = c_d[128*gs +: 128]; end
+        dsfd_vm_be_kreg #(.W(SW), .ID(600 + gs)) u_s0 (.clk(clk), .d(w), .q(s_o[SW*gs +: SW]));
+    end
+    if (DX > 0) begin : g_x
+        dsfd_vm_be_kreg #(.W(DX), .ID(604)) u_x0 (.clk(clk), .d(c_d[DX-1:0]), .q(x_o));
+    end else begin : g_nx
+        assign x_o = 1'b0;
     end endgenerate
     (* keep = 1 *) reg k_v; (* keep = 1 *) reg k_we; (* keep = 1 *) reg [13:0] k_row; (* keep = 1 *) reg [15:0] k_m;
     always @(posedge clk) begin
@@ -55,7 +72,7 @@ module dsfd_vm_fxs (
     input  wire [0:0]    ck, input wire rni,
     input  wire [3:0]    w_v, input wire [55:0] w_row, input wire [63:0] w_m, input wire [2047:0] w_d,
     input  wire [15:0]   w_flt,
-    output wire [2367:0] s_o,           // slice-major: slice s, lane j at [(4*s + j)*148 +: 148]
+    output wire [2351:0] s_o,           // LANE-major: lane j, slice s at [(4*j + s)*147 +: 147] = {v, row 14, mask 4, d 128}
     output wire [127:0]  k_o,
     output reg  [3:0]    clf_o,
     output reg  [3:0]    sok_o,
@@ -75,34 +92,99 @@ module dsfd_vm_fxs (
 `endif
     genvar gj, gs;
     generate for (gj = 0; gj < 4; gj = gj + 1) begin : g_p
-        wire [591:0] fs;
         // i_* come straight from the clt pins: the b register of dsfd_vm_fob IS the in-pin flop
-        dsfd_vm_fob u_b (.clk(clk), .rn(rn), .i_v(w_v[gj]), .i_we(1'b1), .i_row(w_row[14*gj +: 14]), .i_m(w_m[16*gj +: 16]),
-            .i_d(w_d[512*gj +: 512]), .s_o(fs), .k_o(k_o[32*gj +: 32]));
-        for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-            assign s_o[(4*gs + gj)*148 +: 148] = fs[148*gs +: 148];
-        end
+        dsfd_vm_fob #(.WEV(0), .MV(1)) u_b (.clk(clk), .rn(rn), .i_v(w_v[gj]), .i_we(1'b1), .i_row(w_row[14*gj +: 14]),
+            .i_m(w_m[16*gj +: 16]), .i_d(w_d[512*gj +: 512]), .s_o(s_o[588*gj +: 588]), .x_o(), .k_o(k_o[32*gj +: 32]));
     end endgenerate
 endmodule
 
-// ================================================================ fxr: relay tile, 4 port words of one slice
+// ================================================================ bundle relay tiles (S2: non-constant bits only)
+// One tile = 4 port words of ONE slice: in-pin flop -> out-pin flop (2 flops a bit), the 4 valid bits reset by the tile's
+// own rni pin flop, payload reset-free.  One hardened master per width class, `VMFE_R tiles in series on every path:
+//   master        bundle  ports            bits (4 v + payload)                                   instances (R 2)
+//   dsfd_vm_fxr   0 .. 3  12+4b .. 15+4b   588 = 4 x {v, row 14, mask 4, d 128}       (we = 1)     32
+//   dsfd_vm_fxa   4       0, 1, 3, 4       447 = 3 x {v, we, row, d 128} + {v, row}   (mask = f)    8
+//   dsfd_vm_fxb   6       8, 9, 10, 11     316 = 2 x {v, row} + 2 x {v, row, d 128}   (we 0 / 1)    8
+//   dsfd_vm_fxc   5       2, 5, 6, 7        61 = 4 x {v, row} + rf                    (we = 0)      8
+//   dsfd_vm_fxd   -       2, 5 .. 9        112 = the slice-0 data tags (4 + 92 + 4 x 4), no valid   2
+// The constants are re-created by ties at the dsfd_vm_fsr pins (the flat reference registers them: same values after
+// reset).  Mid cut of the front end: 14 bundles x 592 = 8,288 b before, 8 x 588 + 2 x (447 + 61 + 316) + 112 = 6,464.
+// capture bundle: 4 lanes of one slice
 (* keep_hierarchy = "yes" *)
 module dsfd_vm_fxr (
     input  wire [0:0]   ck, input wire rni,
-    input  wire [591:0] i, input wire [3:0] i_rf,
-    output reg  [591:0] o, output reg [3:0] o_rf,
+    input  wire [3:0]   i_v, input wire [583:0] i,
+    output reg  [3:0]   o_v, output reg [583:0] o,
     output reg  [1:0]   rn_o
 );
     wire clk = ck[0];
-    reg rn; reg [591:0] q; reg [3:0] q_rf;
+    reg rn; reg [3:0] q_v; reg [583:0] q;
     (* keep = 1 *) reg [1:0] rn_k;
     always @* rn_o = rn_k;
-    integer j;
     always @(posedge clk) begin
         rn <= rni; rn_k <= {2{rn}};
-        q <= i; o <= q; q_rf <= i_rf; o_rf <= q_rf;
-        if (!rn) for (j = 0; j < 4; j = j + 1) begin q[148*j + 147] <= 1'b0; o[148*j + 147] <= 1'b0; end
+        q <= i; o <= q;
+        if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
     end
+endmodule
+// bundle 4: WFC write / read, ctrl A / B
+(* keep_hierarchy = "yes" *)
+module dsfd_vm_fxa (
+    input  wire [0:0]   ck, input wire rni,
+    input  wire [3:0]   i_v, input wire [442:0] i,
+    output reg  [3:0]   o_v, output reg [442:0] o,
+    output reg  [1:0]   rn_o
+);
+    wire clk = ck[0];
+    reg rn; reg [3:0] q_v; reg [442:0] q;
+    (* keep = 1 *) reg [1:0] rn_k;
+    always @* rn_o = rn_k;
+    always @(posedge clk) begin
+        rn <= rni; rn_k <= {2{rn}};
+        q <= i; o <= q;
+        if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
+    end
+endmodule
+// bundle 6: X3, X4 reads, the two landing drain ports
+(* keep_hierarchy = "yes" *)
+module dsfd_vm_fxb (
+    input  wire [0:0]   ck, input wire rni,
+    input  wire [3:0]   i_v, input wire [311:0] i,
+    output reg  [3:0]   o_v, output reg [311:0] o,
+    output reg  [1:0]   rn_o
+);
+    wire clk = ck[0];
+    reg rn; reg [3:0] q_v; reg [311:0] q;
+    (* keep = 1 *) reg [1:0] rn_k;
+    always @* rn_o = rn_k;
+    always @(posedge clk) begin
+        rn <= rni; rn_k <= {2{rn}};
+        q <= i; o <= q;
+        if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
+    end
+endmodule
+// bundle 5: X2, P2RD, X0, X1 reads + rf
+(* keep_hierarchy = "yes" *)
+module dsfd_vm_fxc (
+    input  wire [0:0]   ck, input wire rni,
+    input  wire [3:0]   i_v, input wire [56:0] i,
+    output reg  [3:0]   o_v, output reg [56:0] o,
+    output reg  [1:0]   rn_o
+);
+    wire clk = ck[0];
+    reg rn; reg [3:0] q_v; reg [56:0] q;
+    (* keep = 1 *) reg [1:0] rn_k;
+    always @* rn_o = rn_k;
+    always @(posedge clk) begin
+        rn <= rni; rn_k <= {2{rn}};
+        q <= i; o <= q;
+        if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
+    end
+endmodule
+(* keep_hierarchy = "yes" *)
+module dsfd_vm_fxd (input wire [0:0] ck, input wire [111:0] i, output reg [111:0] o);
+    reg [111:0] q;
+    always @(posedge ck[0]) begin q <= i; o <= q; end
 endmodule
 
 // ================================================================ frg / fra / frr: mid-hop relay tiles
@@ -209,7 +291,7 @@ module dsfd_vm_fld (
     input  wire [0:0]    ck, input wire rni,
     input  wire [9:0]    av, input wire [5259:0] ret, input wire [3:0] ok, input wire [9:0] ovf, input wire [9:0] sflt,
     output wire [9:0]    g,
-    output wire [1183:0] s_o,           // slice s, port 10 + j at [(2*s + j)*148 +: 148]
+    output wire [1143:0] s_o,           // slice s, port 10 + j at [(2*s + j)*143 +: 143] = {v, row 14, d 128}
     output wire [63:0]   k_o,
     output reg  [2:0]    t_cts,
     output reg           ovr_o, output reg sflt_o,
@@ -290,11 +372,11 @@ module dsfd_vm_fld (
     end
     genvar gj, gs;
     generate for (gj = 0; gj < 2; gj = gj + 1) begin : g_p
-        wire [591:0] fs;
-        dsfd_vm_fob u_b (.clk(clk), .rn(rn), .i_v(lp_v[gj]), .i_we(1'b1), .i_row(lp_row[14*gj +: 14]), .i_m(16'hffff),
-            .i_d(lp_d[512*gj +: 512]), .s_o(fs), .k_o(k_o[32*gj +: 32]));
+        wire [571:0] fs;
+        dsfd_vm_fob #(.WEV(0)) u_b (.clk(clk), .rn(rn), .i_v(lp_v[gj]), .i_we(1'b1), .i_row(lp_row[14*gj +: 14]), .i_m(16'hffff),
+            .i_d(lp_d[512*gj +: 512]), .s_o(fs), .x_o(), .k_o(k_o[32*gj +: 32]));
         for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-            assign s_o[(2*gs + gj)*148 +: 148] = fs[148*gs +: 148];
+            assign s_o[(2*gs + gj)*143 +: 143] = fs[143*gs +: 143];
         end
     end endgenerate
 endmodule
@@ -306,7 +388,7 @@ module dsfd_vm_fcc (
     input  wire [0:0]    cks, input wire [0:0] rss,
     input  wire [0:0]    vwe, input wire [13:0] vwa, input wire [511:0] vwd,
     input  wire [0:0]    vre, input wire [13:0] vra,
-    output wire [1183:0] s_o,           // slice s, port 3 + j at [(2*s + j)*148 +: 148]
+    output wire [1151:0] s_o,           // slice s, port 3 + j at [(2*s + j)*144 +: 144] = {v, we, row 14, d 128}
     output wire [63:0]   k_o,
     output wire          so_o,
     output reg  [1:0]    rn_o
@@ -365,19 +447,19 @@ module dsfd_vm_fcc (
 
     // ---- end verbatim
     assign so_o = so_s[1];
-    wire [591:0] fs0, fs1;
+    wire [575:0] fs0, fs1;
 `ifdef OT_SPVM_MUT_STALE
     dsfd_vm_fob #(.STALE(1)) u_b3 (
 `else
     dsfd_vm_fob u_b3 (
 `endif
         .clk(clk), .rn(rn), .i_v(ca_v), .i_we(ca_d[526]), .i_row(ca_d[525:512]), .i_m(16'hffff), .i_d(ca_d[511:0]),
-        .s_o(fs0), .k_o(k_o[31:0]));
+        .s_o(fs0), .x_o(), .k_o(k_o[31:0]));
     dsfd_vm_fob u_b4 (.clk(clk), .rn(rn), .i_v(cb_v), .i_we(cb_d[526]), .i_row(cb_d[525:512]), .i_m(16'hffff),
-        .i_d(cb_d[511:0]), .s_o(fs1), .k_o(k_o[63:32]));
+        .i_d(cb_d[511:0]), .s_o(fs1), .x_o(), .k_o(k_o[63:32]));
     genvar gs;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-        assign s_o[(2*gs)*148 +: 148] = fs0[148*gs +: 148]; assign s_o[(2*gs + 1)*148 +: 148] = fs1[148*gs +: 148];
+        assign s_o[(2*gs)*144 +: 144] = fs0[144*gs +: 144]; assign s_o[(2*gs + 1)*144 +: 144] = fs1[144*gs +: 144];
     end endgenerate
 endmodule
 
@@ -388,7 +470,7 @@ module dsfd_vm_fcw (
     input  wire [0:0]    f_swv, input wire [526:0] f_swd, output wire [0:0] t_swg,
     input  wire [0:0]    f_srv, input wire [30:0]  f_srd, output wire [0:0] t_srg,
     output wire [52:0]   t_ks,
-    output wire [1183:0] s_o,           // slice s, port j at [(2*s + j)*148 +: 148]
+    output wire [635:0]  s_o,           // slice s at [159*s +: 159] = {port 1 {v, row 14}, port 0 {v, we, row 14, d 128}}
     output wire [63:0]   k_o,
     output reg           err_o,         // sticky: kit error | read of a row >= 2^14
     output reg  [1:0]    rn_o
@@ -408,14 +490,14 @@ module dsfd_vm_fcw (
         .m_v(e_v), .m_we(e_we), .m_row(e_row), .m_d(e_d), .m_ov(1'b0), .m_od(512'd0), .m_fault(1'b0),
         .m1_v(e1_v), .m1_row(e1_row), .m1_ov(1'b0), .m1_od(512'd0));
     always @(posedge clk) if (!rn) err_o <= 1'b0; else if (e_err || (e_v && e_row[14]) || (e1_v && e1_row[14])) err_o <= 1'b1;
-    wire [591:0] fs0, fs1;
+    wire [575:0] fs0; wire [59:0] fs1;
     dsfd_vm_fob u_b0 (.clk(clk), .rn(rn), .i_v(e_v && !e_row[14]), .i_we(e_we), .i_row(e_row[13:0]), .i_m(16'hffff),
-        .i_d(e_d), .s_o(fs0), .k_o(k_o[31:0]));
-    dsfd_vm_fob u_b1 (.clk(clk), .rn(rn), .i_v(e1_v && !e1_row[14]), .i_we(1'b0), .i_row(e1_row[13:0]), .i_m(16'hffff),
-        .i_d(512'd0), .s_o(fs1), .k_o(k_o[63:32]));
+        .i_d(e_d), .s_o(fs0), .x_o(), .k_o(k_o[31:0]));
+    dsfd_vm_fob #(.WEV(0), .DF(0)) u_b1 (.clk(clk), .rn(rn), .i_v(e1_v && !e1_row[14]), .i_we(1'b0), .i_row(e1_row[13:0]),
+        .i_m(16'hffff), .i_d(512'd0), .s_o(fs1), .x_o(), .k_o(k_o[63:32]));
     genvar gs;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-        assign s_o[(2*gs)*148 +: 148] = fs0[148*gs +: 148]; assign s_o[(2*gs + 1)*148 +: 148] = fs1[148*gs +: 148];
+        assign s_o[159*gs +: 159] = {fs1[15*gs +: 15], fs0[144*gs +: 144]};
     end endgenerate
 endmodule
 
@@ -431,13 +513,14 @@ module dsfd_vm_fcn (
     output reg  [3:0]    t_rdy,
     input  wire [703:0]  k_i,
     input  wire [15:0]   clf_i, input wire so_i, input wire ovr_i, input wire sflt_i, input wire err_i,
-    output wire [3551:0] s_o,           // slice s, own slot j at [(6*s + j)*148 +: 148]
+    output wire [359:0]  s_o,           // slice s, own slot j at [(6*s + j)*15 +: 15] = {v, row 14}
+    output wire [111:0]  x_o,           // slice-0 data tags: {p9 4, p8 4, p7 4, p6 4, p5 92, p2 4}
     output reg  [9:0]    arm_v, output reg [139:0] arm_base,
     output reg  [3:0]    rf_o,
     output reg  [15:0]   fe_flt,
     output reg  [7:0]    rn_o
 );
-    localparam integer NP = 28, RA = 14, NSLOT = 4, P2D = 40, CQD = 4, KD = 1;
+    localparam integer NP = 28, RA = 14, NSLOT = 4, P2D = 40, CQD = 4, KD = 1, DVR = `VMFE_DVR;
     wire clk = ck[0];
     wire rn0, rns;
     ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn0));
@@ -460,8 +543,18 @@ module dsfd_vm_fcn (
     // every command alike) so the adapter's tag lookup (cd -> cpending[tag] -> admit -> u_cmd, 14 levels) starts at a flop
     reg cv_p; reg [83:0] cd_p;
     always @(posedge cks[0]) begin if (!rns) cv_p <= 1'b0; else cv_p <= cv[0]; cd_p <= cd; end
+    // engine done pin flops (el1013-s81-vmfe/B6, DVR 1 = the hard leaf dsfd_vm_fcn): the adapter's done register sits in its
+    // tag logic (enable, asynchronous clear, 280-load reset), not at the face; dv / dt leave their own stream-domain register
+    wire ad_dv; wire [7:0] ad_dt;
+    generate if (DVR != 0) begin : g_dvr
+        reg dv_q; reg [7:0] dt_q;
+        always @(posedge cks[0]) begin if (!rns) dv_q <= 1'b0; else dv_q <= ad_dv; dt_q <= ad_dt; end
+        assign dv[0] = dv_q; assign dt = dt_q;
+    end else begin : g_ndvr
+        assign dv[0] = ad_dv; assign dt = ad_dt;
+    end endgenerate
     ot_s81_engine_adapter #(.QD(8)) u_ad (
-        .c_clk(cks[0]), .c_rst_n(rss[0]), .c_cmd_v(cv_p), .c_cmd_d(cd_p), .c_done_v(dv[0]), .c_done_tag(dt),
+        .c_clk(cks[0]), .c_rst_n(rss[0]), .c_cmd_v(cv_p), .c_cmd_d(cd_p), .c_done_v(ad_dv), .c_done_tag(ad_dt),
         .fault(ad_flt), .online(ad_on),
         .e_clk(clk), .e_rst_n(rst[0]), .e_cmd_v(ad_v), .e_cmd_d(ad_d), .e_cmd_ready(ad_r), .e_inputs_present(1'b1),
         .e_done_v(ed_v), .e_done_tag(ed_t));
@@ -545,24 +638,24 @@ module dsfd_vm_fcn (
             else arm_vk[l] <= is_larm && larm_g == ((l < 2) ? 4'd0 : (l < 6) ? 4'd4 : (l == 6) ? 4'd5 : (l == 7) ? 4'd6 : 4'd7);
         end
     end
-    // own order registers
-    wire [6*592-1:0] fs; wire [6*32-1:0] ko;
-    dsfd_vm_fob u_b2 (.clk(clk), .rn(rn), .i_v(x_iss[2]), .i_we(1'b0), .i_row(x_row2), .i_m(16'hffff),
-        .i_d({508'd0, x_bus[2]}), .s_o(fs[0*592 +: 592]), .k_o(ko[0*32 +: 32]));
-    dsfd_vm_fob u_b5 (.clk(clk), .rn(rn), .i_v(r_iss), .i_we(1'b0), .i_row(r_base + {7'd0, r_w}), .i_m(16'hffff),
-        .i_d({420'd0, r_id, r_ex, r_sh, r_last, r_w}), .s_o(fs[1*592 +: 592]), .k_o(ko[1*32 +: 32]));
-    dsfd_vm_fob u_b6 (.clk(clk), .rn(rn), .i_v(x_iss[0]), .i_we(1'b0), .i_row(x_row0), .i_m(16'hffff),
-        .i_d({508'd0, x_bus[0]}), .s_o(fs[2*592 +: 592]), .k_o(ko[2*32 +: 32]));
-    dsfd_vm_fob u_b7 (.clk(clk), .rn(rn), .i_v(x_iss[1]), .i_we(1'b0), .i_row(x_row1), .i_m(16'hffff),
-        .i_d({508'd0, x_bus[1]}), .s_o(fs[3*592 +: 592]), .k_o(ko[3*32 +: 32]));
-    dsfd_vm_fob u_b8 (.clk(clk), .rn(rn), .i_v(x_iss[3]), .i_we(1'b0), .i_row(x_row3), .i_m(16'hffff),
-        .i_d({508'd0, x_bus[3]}), .s_o(fs[4*592 +: 592]), .k_o(ko[4*32 +: 32]));
-    dsfd_vm_fob u_b9 (.clk(clk), .rn(rn), .i_v(x_iss[4]), .i_we(1'b0), .i_row(x_row4), .i_m(16'hffff),
-        .i_d({508'd0, x_bus[4]}), .s_o(fs[5*592 +: 592]), .k_o(ko[5*32 +: 32]));
+    // own order registers (read ports: {v, row} a slice; the data tag only in slice 0, on x_o)
+    wire [6*60-1:0] fs; wire [6*32-1:0] ko;
+    dsfd_vm_fob #(.WEV(0), .DF(0), .DX(4)) u_b2 (.clk(clk), .rn(rn), .i_v(x_iss[2]), .i_we(1'b0), .i_row(x_row2), .i_m(16'hffff),
+        .i_d({508'd0, x_bus[2]}), .s_o(fs[0*60 +: 60]), .x_o(x_o[3:0]), .k_o(ko[0*32 +: 32]));
+    dsfd_vm_fob #(.WEV(0), .DF(0), .DX(92)) u_b5 (.clk(clk), .rn(rn), .i_v(r_iss), .i_we(1'b0), .i_row(r_base + {7'd0, r_w}), .i_m(16'hffff),
+        .i_d({420'd0, r_id, r_ex, r_sh, r_last, r_w}), .s_o(fs[1*60 +: 60]), .x_o(x_o[95:4]), .k_o(ko[1*32 +: 32]));
+    dsfd_vm_fob #(.WEV(0), .DF(0), .DX(4)) u_b6 (.clk(clk), .rn(rn), .i_v(x_iss[0]), .i_we(1'b0), .i_row(x_row0), .i_m(16'hffff),
+        .i_d({508'd0, x_bus[0]}), .s_o(fs[2*60 +: 60]), .x_o(x_o[99:96]), .k_o(ko[2*32 +: 32]));
+    dsfd_vm_fob #(.WEV(0), .DF(0), .DX(4)) u_b7 (.clk(clk), .rn(rn), .i_v(x_iss[1]), .i_we(1'b0), .i_row(x_row1), .i_m(16'hffff),
+        .i_d({508'd0, x_bus[1]}), .s_o(fs[3*60 +: 60]), .x_o(x_o[103:100]), .k_o(ko[3*32 +: 32]));
+    dsfd_vm_fob #(.WEV(0), .DF(0), .DX(4)) u_b8 (.clk(clk), .rn(rn), .i_v(x_iss[3]), .i_we(1'b0), .i_row(x_row3), .i_m(16'hffff),
+        .i_d({508'd0, x_bus[3]}), .s_o(fs[4*60 +: 60]), .x_o(x_o[107:104]), .k_o(ko[4*32 +: 32]));
+    dsfd_vm_fob #(.WEV(0), .DF(0), .DX(4)) u_b9 (.clk(clk), .rn(rn), .i_v(x_iss[4]), .i_we(1'b0), .i_row(x_row4), .i_m(16'hffff),
+        .i_d({508'd0, x_bus[4]}), .s_o(fs[5*60 +: 60]), .x_o(x_o[111:108]), .k_o(ko[5*32 +: 32]));
     genvar gj, gs, gp;
     generate for (gj = 0; gj < 6; gj = gj + 1) begin : g_o
         for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-            assign s_o[(6*gs + gj)*148 +: 148] = fs[592*gj + 148*gs +: 148];
+            assign s_o[(6*gs + gj)*15 +: 15] = fs[60*gj + 15*gs +: 15];
         end
     end endgenerate
     // the 28 k copies (kq[0] of the flat KD 2 relay) -> named as the order register for the verbatim counter below,
@@ -763,10 +856,11 @@ module dsfd_vm_fcn (
 endmodule
 
 // ================================================================ parent: wires + leaf instances only
-// fxr bundles of 4 ports: b 0..3 = capture ports 12 + 4b .. 15 + 4b (from fxs b); b 4 = ports 0, 1, 3, 4 (fcw, fcc);
-// b 5 = 2, 5, 6, 7 (fcn; carries rf); b 6 = 8, 9, 10, 11 (fcn, fld).  Every (port, slice) crosses `VMFE_R tiles.
+// Bundles of 4 ports: b 0..3 = capture ports 12 + 4b .. 15 + 4b (from fxs b); b 4 = ports 0, 1, 3, 4 (fcw, fcc);
+// b 5 = 2, 5, 6, 7 (fcn; carries rf); b 6 = 8, 9, 10, 11 (fcn, fld).  Every (port, slice) crosses `VMFE_R relay tiles
+// carrying its non-constant bits (table at the relay masters); the constants are TIED at the dsfd_vm_fsr pins here.
 // Reset tree (parent wiring only, re-routable without touching a leaf): fcn.rn_o -> fld, fcc, fcw, fxs 0..3;
-// fld -> flt 0 -> .. -> flt 9; bundle source -> fxr(b, slice 0, 0) -> stage chain / slice chain; fxr -> fsr.
+// fld -> flt 0 -> .. -> flt 9; bundle source -> relay(b, slice 0, 0) -> stage chain / slice chain; relay -> fsr.
 module dsfd_vm_fe_h (
     input  wire [0:0]    ck,
     input  wire [0:0]    rst,
@@ -796,34 +890,30 @@ module dsfd_vm_fe_h (
     output wire [15:0]    fe_flt
 );
     localparam integer R = `VMFE_R;
-    // port of bundle b, position j
-    function integer bport(input integer b, input integer j);
-        bport = (b < 4) ? 12 + 4*b + j : (b == 4) ? ((j < 2) ? j : j + 1) : (b == 5) ? ((j == 0) ? 2 : j + 4) : j + 8;
-    endfunction
-    wire [28*4*148-1:0] pw;             // port p, slice s at [(4*p + s)*148 +: 148]
+    wire [4*2352-1:0] cap_so;           // fxs gi: lane j, slice s at [2352*gi + (4*j + s)*147 +: 147]
+    wire [4*5-1:0] cap_rno;
     wire [28*32-1:0] kall;
     wire [7:0] rn_cn; wire [1:0] rn_ld, rn_cc, rn_cw;
     wire [9:0] ll_av, ll_ok, ll_ovf, ll_sf, ll_g, ll_rn, la_v; wire [5259:0] ll_ret; wire [139:0] la_b;
     wire [9:0] ll_gx, la_vx; wire [5259:0] ll_retx; wire [139:0] la_bx;   // after the mid-hop relay tiles
     wire [15:0] clf; wire so_w, ovr_w, sflt_w, err_w; wire [3:0] rf_w;
-    wire [3551:0] s_cn; wire [1183:0] s_ld, s_cc, s_cw; wire [63:0] k_ld, k_cc, k_cw;
+    wire [359:0] s_cn; wire [111:0] x_cn; wire [1143:0] s_ld; wire [1151:0] s_cc; wire [635:0] s_cw;
+    wire [63:0] k_ld, k_cc, k_cw;
     // ---------------- capture: 16 clt + 4 fxs
     genvar gi, gj, gs, gb, gr, gp;
     generate for (gi = 0; gi < 4; gi = gi + 1) begin : g_x
         wire [3:0] w_v, sok; wire [55:0] w_row; wire [63:0] w_m; wire [2047:0] w_d; wire [15:0] w_f; wire [4:0] rno;
-        wire [2367:0] so; wire [127:0] ko;
+        wire [127:0] ko;
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_l
             localparam integer G = 4*gi + gj;
             dsfd_vm_clt u_l (.ck(ck), .rn(rno[gj]), .sok(sok[gj]), .gid(G[3:0]), .f_c(f_cap[832*G +: 832]),
                 .w_v(w_v[gj]), .w_row(w_row[14*gj +: 14]), .w_m(w_m[16*gj +: 16]), .w_d(w_d[512*gj +: 512]),
                 .flt(w_f[4*gj +: 4]));
             assign kall[32*(12 + G) +: 32] = ko[32*gj +: 32];
-            for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-                assign pw[(4*(12 + G) + gs)*148 +: 148] = so[(4*gs + gj)*148 +: 148];
-            end
         end
         dsfd_vm_fxs u_x (.ck(ck), .rni(rn_cn[3 + gi]), .w_v(w_v), .w_row(w_row), .w_m(w_m), .w_d(w_d), .w_flt(w_f),
-            .s_o(so), .k_o(ko), .clf_o(clf[4*gi +: 4]), .sok_o(sok), .rn_o(rno));
+            .s_o(cap_so[2352*gi +: 2352]), .k_o(ko), .clf_o(clf[4*gi +: 4]), .sok_o(sok), .rn_o(rno));
+        assign cap_rno[5*gi +: 5] = rno;
     end endgenerate
     // ---------------- landing: 10 flt + fld
     generate for (gi = 0; gi < 10; gi = gi + 1) begin : g_ll
@@ -874,63 +964,183 @@ module dsfd_vm_fe_h (
     dsfd_vm_fcn u_cn (.ck(ck), .rst(rst), .cks(cks), .rss(rss), .cv(cv), .cd(cd), .dv(dv), .dt(dt),
         .f_cq(f_cap[13375:13312]), .f_p2c(f_p2c), .c_wv(c_wv), .c_wd(c_wd), .c_wr(c_wr), .t_rdy(t_rdy),
         .k_i(k_ext), .clf_i(clf), .so_i(so_w), .ovr_i(ovr_w), .sflt_i(sflt_w), .err_i(err_w),
-        .s_o(s_cn), .arm_v(la_v), .arm_base(la_b), .rf_o(rf_w), .fe_flt(fe_flt), .rn_o(rn_cn));
-    generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_cs
-        assign pw[(4*0 + gs)*148 +: 148] = s_cw[(2*gs)*148 +: 148];
-        assign pw[(4*1 + gs)*148 +: 148] = s_cw[(2*gs + 1)*148 +: 148];
-        assign pw[(4*3 + gs)*148 +: 148] = s_cc[(2*gs)*148 +: 148];
-        assign pw[(4*4 + gs)*148 +: 148] = s_cc[(2*gs + 1)*148 +: 148];
-        assign pw[(4*10 + gs)*148 +: 148] = s_ld[(2*gs)*148 +: 148];
-        assign pw[(4*11 + gs)*148 +: 148] = s_ld[(2*gs + 1)*148 +: 148];
-        assign pw[(4*2 + gs)*148 +: 148] = s_cn[(6*gs)*148 +: 148];
-        for (gj = 1; gj < 6; gj = gj + 1) begin : g_j
-            assign pw[(4*(gj + 4) + gs)*148 +: 148] = s_cn[(6*gs + gj)*148 +: 148];
-        end
-    end endgenerate
-    // ---------------- relay tiles + the 4 slice tiles
-    wire [6:0] src_rn = {rn_ld[1], rn_cn[7], rn_cw[0], g_x[3].rno[4], g_x[2].rno[4], g_x[1].rno[4], g_x[0].rno[4]};
-    wire [7*4*R-1:0] xr0, xr1;          // rn_o of fxr (b, s, r) at [(4*b + s)*R + r]
-    wire [7*4*4-1:0] xrf;               // rf at the end of bundle b, slice s
+        .s_o(s_cn), .x_o(x_cn), .arm_v(la_v), .arm_base(la_b), .rf_o(rf_w), .fe_flt(fe_flt), .rn_o(rn_cn));
+    // ---------------- bundle relay tiles + the 4 slice tiles
+    wire [6:0] src_rn = {rn_ld[1], rn_cn[7], rn_cw[0], cap_rno[19], cap_rno[14], cap_rno[9], cap_rno[4]};
+    wire [7*4*R-1:0] xr0, xr1;          // rn_o of relay (b, s, r) at [(4*b + s)*R + r]
     wire [111:0] fi_v, fi_we; wire [1567:0] fi_row; wire [447:0] fi_m; wire [14335:0] fi_d;   // slice-major, as m_*
-    generate for (gb = 0; gb < 7; gb = gb + 1) begin : g_b
-        for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-            wire [591:0] x [0:R]; wire [3:0] xf [0:R];
+    wire [3:0] fi_rf;
+    wire [111:0] xd [0:R];              // slice-0 data tags of the read ports 2, 5 .. 9
+    assign xd[0] = x_cn;
+    generate for (gr = 0; gr < R; gr = gr + 1) begin : g_xd
+        dsfd_vm_fxd u_r (.ck(ck), .i(xd[gr]), .o(xd[gr+1]));
+    end endgenerate
+    generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_bs
+        for (gb = 0; gb < 4; gb = gb + 1) begin : g_c          // capture bundles: 4 lanes of fxs gb -> dsfd_vm_fxr x R
+            wire [3:0] xv [0:R]; wire [583:0] xp [0:R];
             for (gj = 0; gj < 4; gj = gj + 1) begin : g_j
-                localparam integer P = bport(gb, gj);
-                assign x[0][148*gj +: 148] = pw[(4*P + gs)*148 +: 148];
-                assign fi_v[28*gs + P] = x[R][148*gj + 147]; assign fi_we[28*gs + P] = x[R][148*gj + 146];
-                assign fi_row[14*(28*gs + P) +: 14] = x[R][148*gj + 132 +: 14];
-                assign fi_m[4*(28*gs + P) +: 4] = x[R][148*gj + 128 +: 4];
-                assign fi_d[128*(28*gs + P) +: 128] = x[R][148*gj +: 128];
+                localparam integer P = 12 + 4*gb + gj;
+                assign xv[0][gj] = cap_so[2352*gb + (4*gj + gs)*147 + 146];
+                assign xp[0][146*gj +: 146] = cap_so[2352*gb + (4*gj + gs)*147 +: 146];
+                assign fi_v[28*gs + P] = xv[R][gj]; assign fi_we[28*gs + P] = 1'b1;
+                assign fi_row[14*(28*gs + P) +: 14] = xp[R][146*gj + 132 +: 14];
+                assign fi_m[4*(28*gs + P) +: 4] = xp[R][146*gj + 128 +: 4];
+                assign fi_d[128*(28*gs + P) +: 128] = xp[R][146*gj +: 128];
             end
-            if (gb == 5) begin : g_rf assign xf[0] = {rf_w[gs], 3'b000}; end else begin : g_nrf assign xf[0] = 4'd0; end
-            assign xrf[4*(4*gb + gs) +: 4] = xf[R];
             for (gr = 0; gr < R; gr = gr + 1) begin : g_r
                 wire rni_x;
-                if (gs == 0 && gr == 0) begin : g_a assign rni_x = src_rn[gb]; end
-                else if (gs == 0) begin : g_c assign rni_x = xr0[(4*gb)*R + gr - 1]; end
-                else begin : g_d assign rni_x = xr1[(4*gb + gs - 1)*R + gr]; end
+                if (gs == 0 && gr == 0) begin : g_ra assign rni_x = src_rn[gb]; end
+                else if (gs == 0) begin : g_rc assign rni_x = xr0[(4*gb)*R + gr - 1]; end
+                else begin : g_rd assign rni_x = xr1[(4*gb + gs - 1)*R + gr]; end
 `ifdef OT_VMFE_MUT_FXR1
-                if (gb == 1 && gs == 2 && gr == 0) begin : g_mut   // MUTANT: one fxr stage fewer for port 16 of slice 2
-                    wire [591:0] xo;
-                    dsfd_vm_fxr u_r (.ck(ck), .rni(rni_x), .i(x[gr]), .i_rf(xf[gr]), .o(xo), .o_rf(xf[gr+1]),
+                if (gb == 1 && gs == 2 && gr == 0) begin : g_mut   // MUTANT: one relay stage fewer for port 16 of slice 2
+                    wire [3:0] yv; wire [583:0] yp;
+                    dsfd_vm_fxr u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(yv), .o(yp),
                         .rn_o({xr1[(4*gb + gs)*R + gr], xr0[(4*gb + gs)*R + gr]}));
-                    reg [147:0] sk; always @(posedge ck[0]) sk <= x[gr][147:0];
-                    assign x[gr+1] = {xo[591:148], sk};
+                    reg [146:0] sk; always @(posedge ck[0]) sk <= {xv[gr][0], xp[gr][145:0]};
+                    assign xv[gr+1] = {yv[3:1], sk[146]}; assign xp[gr+1] = {yp[583:146], sk[145:0]};
                 end else
 `endif
                 begin : g_t
-                    dsfd_vm_fxr u_r (.ck(ck), .rni(rni_x), .i(x[gr]), .i_rf(xf[gr]), .o(x[gr+1]), .o_rf(xf[gr+1]),
+                    dsfd_vm_fxr u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
                         .rn_o({xr1[(4*gb + gs)*R + gr], xr0[(4*gb + gs)*R + gr]}));
                 end
             end
         end
-    end endgenerate
-    generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_sl
-        // hard child, unchanged: pin flop + out flop; i_rf from bundle 5 (the other bundles relay zeros)
+        if (1) begin : g_b4                 // bundle 4: ports 0, 1, 3, 4 -> dsfd_vm_fxa x R
+            wire [3:0] xv [0:R]; wire [442:0] xp [0:R];
+            if (1) begin : g_p0
+                wire [143:0] sw = s_cw[159*gs +: 144];
+                assign xv[0][0] = sw[143]; assign xp[0][0 +: 143] = sw[142:0];
+                wire [142:0] ew = xp[R][0 +: 143];
+                assign fi_v[28*gs + 0] = xv[R][0]; assign fi_we[28*gs + 0] = ew[142];
+                assign fi_row[14*(28*gs + 0) +: 14] = ew[128 +: 14]; assign fi_m[4*(28*gs + 0) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 0) +: 128] = ew[127:0];
+            end
+            if (1) begin : g_p1
+                wire [14:0] sw = s_cw[159*gs + 144 +: 15];
+                assign xv[0][1] = sw[14]; assign xp[0][143 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][143 +: 14];
+                assign fi_v[28*gs + 1] = xv[R][1]; assign fi_we[28*gs + 1] = 1'b0;
+                assign fi_row[14*(28*gs + 1) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 1) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 1) +: 128] = 128'd0;
+            end
+            if (1) begin : g_p3
+                wire [143:0] sw = s_cc[(2*gs + 0)*144 +: 144];
+                assign xv[0][2] = sw[143]; assign xp[0][157 +: 143] = sw[142:0];
+                wire [142:0] ew = xp[R][157 +: 143];
+                assign fi_v[28*gs + 3] = xv[R][2]; assign fi_we[28*gs + 3] = ew[142];
+                assign fi_row[14*(28*gs + 3) +: 14] = ew[128 +: 14]; assign fi_m[4*(28*gs + 3) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 3) +: 128] = ew[127:0];
+            end
+            if (1) begin : g_p4
+                wire [143:0] sw = s_cc[(2*gs + 1)*144 +: 144];
+                assign xv[0][3] = sw[143]; assign xp[0][300 +: 143] = sw[142:0];
+                wire [142:0] ew = xp[R][300 +: 143];
+                assign fi_v[28*gs + 4] = xv[R][3]; assign fi_we[28*gs + 4] = ew[142];
+                assign fi_row[14*(28*gs + 4) +: 14] = ew[128 +: 14]; assign fi_m[4*(28*gs + 4) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 4) +: 128] = ew[127:0];
+            end
+            for (gr = 0; gr < R; gr = gr + 1) begin : g_r
+                wire rni_x;
+                if (gs == 0 && gr == 0) begin : g_a assign rni_x = src_rn[4]; end
+                else if (gs == 0) begin : g_c assign rni_x = xr0[(4*4)*R + gr - 1]; end
+                else begin : g_d assign rni_x = xr1[(4*4 + gs - 1)*R + gr]; end
+                dsfd_vm_fxa u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
+                    .rn_o({xr1[(4*4 + gs)*R + gr], xr0[(4*4 + gs)*R + gr]}));
+            end
+        end
+        if (1) begin : g_b5                 // bundle 5: ports 2, 5, 6, 7 -> dsfd_vm_fxc x R
+            wire [3:0] xv [0:R]; wire [56:0] xp [0:R];
+            if (1) begin : g_p2
+                wire [14:0] sw = s_cn[(6*gs + 0)*15 +: 15];
+                assign xv[0][0] = sw[14]; assign xp[0][0 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][0 +: 14];
+                assign fi_v[28*gs + 2] = xv[R][0]; assign fi_we[28*gs + 2] = 1'b0;
+                assign fi_row[14*(28*gs + 2) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 2) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 2) +: 128] = (gs == 0) ? {124'd0, xd[R][0 +: 4]} : 128'd0;
+            end
+            if (1) begin : g_p5
+                wire [14:0] sw = s_cn[(6*gs + 1)*15 +: 15];
+                assign xv[0][1] = sw[14]; assign xp[0][14 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][14 +: 14];
+                assign fi_v[28*gs + 5] = xv[R][1]; assign fi_we[28*gs + 5] = 1'b0;
+                assign fi_row[14*(28*gs + 5) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 5) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 5) +: 128] = (gs == 0) ? {36'd0, xd[R][4 +: 92]} : 128'd0;
+            end
+            if (1) begin : g_p6
+                wire [14:0] sw = s_cn[(6*gs + 2)*15 +: 15];
+                assign xv[0][2] = sw[14]; assign xp[0][28 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][28 +: 14];
+                assign fi_v[28*gs + 6] = xv[R][2]; assign fi_we[28*gs + 6] = 1'b0;
+                assign fi_row[14*(28*gs + 6) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 6) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 6) +: 128] = (gs == 0) ? {124'd0, xd[R][96 +: 4]} : 128'd0;
+            end
+            if (1) begin : g_p7
+                wire [14:0] sw = s_cn[(6*gs + 3)*15 +: 15];
+                assign xv[0][3] = sw[14]; assign xp[0][42 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][42 +: 14];
+                assign fi_v[28*gs + 7] = xv[R][3]; assign fi_we[28*gs + 7] = 1'b0;
+                assign fi_row[14*(28*gs + 7) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 7) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 7) +: 128] = (gs == 0) ? {124'd0, xd[R][100 +: 4]} : 128'd0;
+            end
+            assign xp[0][56] = rf_w[gs]; assign fi_rf[gs] = xp[R][56];
+            for (gr = 0; gr < R; gr = gr + 1) begin : g_r
+                wire rni_x;
+                if (gs == 0 && gr == 0) begin : g_a assign rni_x = src_rn[5]; end
+                else if (gs == 0) begin : g_c assign rni_x = xr0[(4*5)*R + gr - 1]; end
+                else begin : g_d assign rni_x = xr1[(4*5 + gs - 1)*R + gr]; end
+                dsfd_vm_fxc u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
+                    .rn_o({xr1[(4*5 + gs)*R + gr], xr0[(4*5 + gs)*R + gr]}));
+            end
+        end
+        if (1) begin : g_b6                 // bundle 6: ports 8, 9, 10, 11 -> dsfd_vm_fxb x R
+            wire [3:0] xv [0:R]; wire [311:0] xp [0:R];
+            if (1) begin : g_p8
+                wire [14:0] sw = s_cn[(6*gs + 4)*15 +: 15];
+                assign xv[0][0] = sw[14]; assign xp[0][0 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][0 +: 14];
+                assign fi_v[28*gs + 8] = xv[R][0]; assign fi_we[28*gs + 8] = 1'b0;
+                assign fi_row[14*(28*gs + 8) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 8) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 8) +: 128] = (gs == 0) ? {124'd0, xd[R][104 +: 4]} : 128'd0;
+            end
+            if (1) begin : g_p9
+                wire [14:0] sw = s_cn[(6*gs + 5)*15 +: 15];
+                assign xv[0][1] = sw[14]; assign xp[0][14 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][14 +: 14];
+                assign fi_v[28*gs + 9] = xv[R][1]; assign fi_we[28*gs + 9] = 1'b0;
+                assign fi_row[14*(28*gs + 9) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 9) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 9) +: 128] = (gs == 0) ? {124'd0, xd[R][108 +: 4]} : 128'd0;
+            end
+            if (1) begin : g_p10
+                wire [142:0] sw = s_ld[(2*gs + 0)*143 +: 143];
+                assign xv[0][2] = sw[142]; assign xp[0][28 +: 142] = sw[141:0];
+                wire [141:0] ew = xp[R][28 +: 142];
+                assign fi_v[28*gs + 10] = xv[R][2]; assign fi_we[28*gs + 10] = 1'b1;
+                assign fi_row[14*(28*gs + 10) +: 14] = ew[128 +: 14]; assign fi_m[4*(28*gs + 10) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 10) +: 128] = ew[127:0];
+            end
+            if (1) begin : g_p11
+                wire [142:0] sw = s_ld[(2*gs + 1)*143 +: 143];
+                assign xv[0][3] = sw[142]; assign xp[0][170 +: 142] = sw[141:0];
+                wire [141:0] ew = xp[R][170 +: 142];
+                assign fi_v[28*gs + 11] = xv[R][3]; assign fi_we[28*gs + 11] = 1'b1;
+                assign fi_row[14*(28*gs + 11) +: 14] = ew[128 +: 14]; assign fi_m[4*(28*gs + 11) +: 4] = 4'hf;
+                assign fi_d[128*(28*gs + 11) +: 128] = ew[127:0];
+            end
+            for (gr = 0; gr < R; gr = gr + 1) begin : g_r
+                wire rni_x;
+                if (gs == 0 && gr == 0) begin : g_a assign rni_x = src_rn[6]; end
+                else if (gs == 0) begin : g_c assign rni_x = xr0[(4*6)*R + gr - 1]; end
+                else begin : g_d assign rni_x = xr1[(4*6 + gs - 1)*R + gr]; end
+                dsfd_vm_fxb u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
+                    .rn_o({xr1[(4*6 + gs)*R + gr], xr0[(4*6 + gs)*R + gr]}));
+            end
+        end
+        // hard child, unchanged: pin flop + out flop; the constant fields and i_rf[2:0] are ties
         dsfd_vm_fsr u_fr (.ck(ck[0]), .rn(xr0[(4*0 + gs)*R + R - 1]),
             .i_v(fi_v[28*gs +: 28]), .i_we(fi_we[28*gs +: 28]), .i_row(fi_row[392*gs +: 392]), .i_mask(fi_m[112*gs +: 112]),
-            .i_d(fi_d[3584*gs +: 3584]), .i_rf(xrf[4*(4*5 + gs) +: 4]),
+            .i_d(fi_d[3584*gs +: 3584]), .i_rf({fi_rf[gs], 3'b000}),
             .o_v(m_v[28*gs +: 28]), .o_we(m_we[28*gs +: 28]), .o_row(m_row[392*gs +: 392]),
             .o_mask(m_mask[112*gs +: 112]), .o_d(m_d[3584*gs +: 3584]), .o_rf(m_rf[4*gs +: 4]));
     end endgenerate
