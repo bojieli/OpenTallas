@@ -3005,6 +3005,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for a_, b_ in spans_:
                 pre_, suf_ = pl['frames'][:a_], pl['frames'][b_:]
                 kept_ = [(f[0], f[1], f[0] + W, f[1] + H) for f in pre_ + suf_]
+                if idx in lifted0 and any(not free(r_) for r_ in kept_):
+                    # r9: a lifted chain keeps the rest of its pass-1 chain only while those sites are still free (run
+                    # f1: 13 chains 'self-overlap': the kept frames had gone to chains repaired before)
+                    continue
                 for r_ in kept_:
                     add_rect(r_)
                 P0 = (pre_[-1][0] + w / 2, pre_[-1][1] + h / 2) if pre_ else P0_

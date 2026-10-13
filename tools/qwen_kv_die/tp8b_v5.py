@@ -101,7 +101,7 @@ def view_pins(master):
     return _VP[master]
 
 
-def adopt_view(M, master, split, rec):
+def adopt_view(M, master, split, rec, pw=None):
     q = M.get(master)
     if q is None:
         return
@@ -117,7 +117,7 @@ def adopt_view(M, master, split, rec):
     for p, sp in list(q.ports.items()):
         if sp[0] not in ('face', 'pins'):
             continue
-        parts = split.get(master, {}).get(p) or [(p, sp[1])]
+        parts = split.get(master, {}).get(p) or [(p, (pw or {}).get((master, p)) or sp[1])]
         names = []
         for sub, nb in parts:
             names += [sub] if (nb == 1 and sub in P) else [f'{sub}[{b}]' for b in range(nb)]
@@ -323,6 +323,37 @@ def apply(v, m, G):
                 i.x = round(i.x + i.w + (RHEAD_OLD_W - i.w) - RHEAD_WH[0], 4)
             i.w, i.h = RHEAD_WH
 
+    # ---------------------------------------------------------------- r9 pin alignment at the die (pin_align FAIL classes)
+    # (1) the attention stack is as tall as the head column it serves (4 engines x (4 heads + ectl) = 8,164.8 um; the
+    #     7,817-um frame put the engine ports at a 1,954-um pitch against the heads' 2,041: head nb words 16-374 um off
+    #     their abutted ports, the last head past the frame)
+    grown = {}
+    for a_ in m['insts']:
+        if a_.master in ('qkd_astk', 'qkd_astk_n'):
+            st = a_.name.split('_', 1)[1]
+            top = max((i.y + i.h for i in m['insts'] if i.master == 'qkd_rhead' and i.name.startswith(f'head_{st}_')), default=None)
+            if top is not None and top - a_.y > a_.h + 1e-3:
+                grown[a_.name] = [a_.h, round(top - a_.y, 4)]
+                a_.h = round(top - a_.y, 4)
+    # (2) write-queue leaf under its CDC leaf: both views are closed and neither orders its pins (w / wi 290 b, jog to 94
+    #     um in a 2.16-um gap).  FIX AT DIE: the leaf is mirrored in x and re-seated (x offset 38.016 inside the CDC
+    #     span, mirror image on the E side) and the stack's 10.8 um of slack per PC goes between the two (gap 8.64 um):
+    #     160 crossing wires on 272 tracks = 0.59
+    reseat = 0
+    cdcs = {i.name: i for i in m['insts'] if i.master == 'qkd_cdc_wleaf'}
+    for i in m['insts']:
+        if i.master != 'qkd_kvwq_leaf_s_w129_m':
+            continue
+        c_ = cdcs.get('cdc_' + i.name.split('_', 1)[1])
+        if c_ is None or not (0.0 <= c_.y - (i.y + i.h) <= 12.0):
+            continue
+        i.orient = {'MX': 'R180', 'R180': 'MX', 'R0': 'MY', 'MY': 'R0'}[i.orient]
+        off = LEAF_DX if c_.orient in ('MY', 'R180') else round(c_.w - i.w - LEAF_DX, 4)
+        i.x = round(c_.x + off, 4)
+        i.y = round(c_.y - LEAF_GAP - i.h, 4)
+        reseat += 1
+    rec['pin_align_die'] = dict(astk_height=grown, kvwq_leaf_reseated=reseat, leaf_dx=LEAF_DX, leaf_gap=LEAF_GAP)
+
     # ---------------------------------------------------------------- T16 KV control strips
     strips = [i for i in m['insts'] if i.master in ('qkd_ctrl', 'qkd_ctrl_n')]
     v.PIN_POS_EXTRA = dict(getattr(v, 'PIN_POS_EXTRA', None) or {})
@@ -517,10 +548,128 @@ def apply(v, m, G):
         for j, (i, p) in enumerate(e):
             peers.setdefault((i, p.lstrip('*')), []).extend(x[0] for q, x in enumerate(e) if q != j)
     _wrap(v, m, G, peers)
+    # r9: a kept KV chain with a hop over the reach on the FINAL pins (a leaf re-seated, a view's real pins adopted) is
+    # handed to the relay plan whole, like a chain with a relay inside a block
+    pos = G._pin_pos(v, m)
+    far = set()
+    for b, c, n, e in m['buses']:
+        if c.endswith('@kv') and len(e) == 2:
+            (xa, ya), (xb, yb) = pos(*e[0]), pos(*e[1])
+            if abs(xa - xb) + abs(ya - yb) > G.RELAY_REACH_OK:
+                far.add(b.split('__r')[0])
+    if far:
+        t2 = _tear_overlapped(v, m, far)
+        rec['torn_kv_chains_over_reach'] = t2
+        m.setdefault('tp8b_kv', {}).setdefault('torn_chains', []).extend(t2)
     return rec
 
 
-def _tear_overlapped(v, m):
+ALIGN_GAP_UM = 30.0
+LEAF_DX, LEAF_GAP = 38.016, 8.64     # kvwq leaf under its CDC leaf (see apply(): pin alignment at the die)
+
+
+def align_abutted(v, model, M, pw, split, rec):
+    """r9 (coordinator 2026-10-13, die pin-readiness audit / tools/hier_contract/pin_align.py): two blocks that face
+    each other across less than ALIGN_GAP_UM exchange a bundle PIN TO PIN: the follower's port takes, bit for bit, the
+    anchor's pin positions (no jog, bit order kept), so nothing has to be jogged in a channel that is not there.
+    Anchor = the closed view (VIEWS), else the master with more instances, else the driver; a follower that is a closed
+    view is never moved (both closed: reported as a pin re-plan candidate, reroute_reason die_window).  A follower port
+    is moved only when every instance pair asks for the same master-local positions."""
+    byi = {i.name: i for i in model['insts']}
+    count = {}
+    for i in model['insts']:
+        count[i.master] = count.get(i.master, 0) + 1
+    tabs = {}
+
+    def pins_of(mn):
+        if mn not in tabs:
+            mst = M[mn]
+            t = {}
+            for nm, layer, r in v.pin_rects(mst, 1, {q: pw.get((mn, q), 0) for q in mst.order}):
+                mm = re.fullmatch(r'(.*)\[(\d+)\]', nm)
+                base, k = (mm.group(1), int(mm.group(2))) if mm else (nm, 0)
+                t.setdefault(base, {})[k] = ((r[0] + r[2]) / 2, (r[1] + r[3]) / 2, layer)
+            tabs[mn] = t
+        return tabs[mn]
+
+    def to_die(i, x, y):
+        return (i.x + (i.w - x if i.orient in ('MY', 'R180') else x), i.y + (i.h - y if i.orient in ('MX', 'R180') else y))
+
+    def to_local(i, X, Y):
+        x, y = X - i.x, Y - i.y
+        return (i.w - x if i.orient in ('MY', 'R180') else x, i.h - y if i.orient in ('MX', 'R180') else y)
+    want, both_closed, skipped = {}, {}, {}
+    for b, c, n, e in model['buses']:
+        if len(e) != 2 or c.split('@')[0] in ('clock_trunk', 'reset') or c == 'phy_dfi':
+            continue
+        (ia, pa), (ib, pb) = e
+        if ia not in byi or ib not in byi or pa.startswith('*') or pb.startswith('*'):
+            continue
+        A, B = byi[ia], byi[ib]
+        if A.master not in M or B.master not in M:
+            continue
+        gx = max(A.x - (B.x + B.w), B.x - (A.x + A.w))
+        gy = max(A.y - (B.y + B.h), B.y - (A.y + A.h))
+        ox = min(A.x + A.w, B.x + B.w) - max(A.x, B.x)
+        oy = min(A.y + A.h, B.y + B.h) - max(A.y, B.y)
+        if 0.0 <= gx <= ALIGN_GAP_UM and oy > 0:
+            axis = 'x'
+        elif 0.0 <= gy <= ALIGN_GAP_UM and ox > 0:
+            axis = 'y'
+        else:
+            continue
+        rank = lambda i_, drv: (0 if i_.master in VIEWS and view_pins(i_.master) else 1, -count[i_.master], 0 if drv else 1)   # noqa: E731
+        (an, ap_), (fo, fp) = ((A, pa), (B, pb)) if rank(A, True) <= rank(B, False) else ((B, pb), (A, pa))
+        if fo.master in VIEWS and view_pins(fo.master):
+            both_closed.setdefault((an.master, ap_, fo.master, fp), []).append(b)
+            continue
+        if ap_ in PERM.get(an.master, {}) or fp in PERM.get(fo.master, {}):
+            continue
+        src = pins_of(an.master).get(ap_)
+        if not src or len(src) < n or any(k not in src for k in range(n)):
+            skipped[(fo.master, fp)] = f'anchor {an.master}.{ap_} has {len(src or ())} of {n} pins'
+            continue
+        if axis == 'x':
+            fdie = 'W' if fo.x >= an.x + an.w - 1e-6 else 'E'
+        else:
+            fdie = 'S' if fo.y >= an.y + an.h - 1e-6 else 'N'
+        fl = fdie
+        if fo.orient in ('MY', 'R180'):
+            fl = {'E': 'W', 'W': 'E'}.get(fl, fl)
+        if fo.orient in ('MX', 'R180'):
+            fl = {'N': 'S', 'S': 'N'}.get(fl, fl)
+        # the anchor's pins must stand on its face toward the follower
+        edge = {'W': an.x + an.w, 'E': an.x, 'S': an.y + an.h, 'N': an.y}[fdie]
+        pos, ok = [], True
+        for k in range(n):
+            X, Y = to_die(an, src[k][0], src[k][1])
+            if abs((X if axis == 'x' else Y) - edge) > 1.0:
+                ok = False
+                break
+            lx, ly = to_local(fo, X, Y)
+            pos.append(round(ly if axis == 'x' else lx, 4))
+        if not ok:
+            skipped[(fo.master, fp)] = f'{an.master}.{ap_} is not on the face toward {fo.master}'
+            continue
+        L = fo.h if axis == 'x' else fo.w
+        if min(pos) < 0.05 or max(pos) > L - 0.05:
+            skipped[(fo.master, fp)] = f'{an.master}.{ap_} pins run past the {fo.master} face ({min(pos):.2f}..{max(pos):.2f} of {L:.2f})'
+            continue
+        want.setdefault((fo.master, fp), set()).add((fl, src[0][2], tuple(pos), an.master + '.' + ap_))
+    done = {}
+    for (mn, p), opts in sorted(want.items()):
+        if len({(o[0], o[2]) for o in opts}) != 1:
+            skipped[(mn, p)] = f'{len(opts)} different positions asked by its instances'
+            continue
+        fl, layer, pos, who = next(iter(opts))
+        lay_ = 'M5' if fl in 'NS' else 'M4'
+        M[mn].ports[p] = ('pins', len(pos), fl, layer if layer in ('M4', 'M5', 'M6', 'M7') and (layer in ('M5', 'M7')) == (fl in 'NS') else lay_, list(pos), 1)
+        done[f'{mn}.{p}'] = who
+    rec.update(aligned=done, skipped={f'{k[0]}.{k[1]}': q for k, q in sorted(skipped.items()) if f'{k[0]}.{k[1]}' not in done},
+               both_closed={f'{k[0]}.{k[1]} -> {k[2]}.{k[3]}': len(q) for k, q in sorted(both_closed.items())})
+
+
+def _tear_overlapped(v, m, over=()):
     """a kept KV chain ('<cl>@kv' segments, relays as placed on the KV die) with a relay frame inside a block of this
     die is handed to _relays whole (its relays dropped, one bus source -> sink of the plain class)"""
     blocks = [i for i in m['insts'] if not i.master.startswith(('qkd_rly', 'qfd_rly'))]
@@ -539,7 +688,8 @@ def _tear_overlapped(v, m):
                 for i in grid.get((gx, gy), ()):
                     if i.x < r.x + r.w - 1e-3 and r.x < i.x + i.w - 1e-3 and i.y < r.y + r.h - 1e-3 and r.y < i.y + i.h - 1e-3:
                         bad.add(r.name)
-    if not bad:
+    over = set(over)          # r9: chains named by the caller (a hop over the reach after a pin / slot move)
+    if not bad and not over:
         return []
     rl = {i.name for i in m['insts'] if i.master.startswith('qkd_rly')}
     chains = {}
@@ -549,7 +699,7 @@ def _tear_overlapped(v, m):
     torn, drop_b, drop_i, add = [], set(), set(), []
     for b0, idxs in sorted(chains.items()):
         mem = {x[0] for j in idxs for x in m['buses'][j][3]}
-        if not (mem & bad):
+        if not (mem & bad) and b0 not in over:
             continue
         segs = sorted((m['buses'][j] for j in idxs), key=lambda s_: (int(s_[0].split('__r')[1]) if '__r' in s_[0] else 0))
         torn.append(b0)
@@ -691,6 +841,11 @@ def _wrap(v, m, G, peers):
                              ('e1', xe - 11.0), ('e2', xe - 11.0), ('s1', xe - 7.0), ('s2', xe - 7.0)):
                     sp = ec.ports[p]
                     ec.ports[p] = sp[:4] + (round(c, 4),) + sp[5:]
+        for mn in ('qkd_astk', 'qkd_astk_n'):
+            q = M.get(mn)
+            hh = {round(i.h, 4) for i in model['insts'] if i.master == mn}
+            if q is not None and len(hh) == 1:
+                q.h = hh.pop()
         # ---- T12 res_ser
         q = M.get('qfd_sp_res_ser')
         if q is not None:
@@ -780,8 +935,8 @@ def _wrap(v, m, G, peers):
                 add_face(q, 'rst_n', 1, 'N', 122.0, 1)
         q = M.get('qfd_io_xfifo')
         if q is not None:
-            for k in range(sum(1 for i in model['insts'] if i.master in IO_CLUSTERS)):
-                add_face(q, f'lf{k}', 1, 'N', 4.0 + 2.0 * k, 1)
+            for j_ in range(sum(1 for i in model['insts'] if i.master in IO_CLUSTERS)):
+                add_face(q, f'lf{j_}', 1, 'N', 4.0 + 2.0 * j_, 1)
         q = M.get(HOST_PHY[0])
         if q is not None and iorec.get('host'):
             h = Master(HOST_PHY[0], HOST_PHY[1], HOST_PHY[2], q.obs_top, q.note + ' | contract v5 T21: re-shaped abstract '
@@ -855,8 +1010,11 @@ def _wrap(v, m, G, peers):
                                       or p.startswith(('mer', 'rf'))))
             replan(model, M, inst, **kw)
         vrec = model.setdefault('tp8b_v5', {}).setdefault('views', {})
-        for mn in VIEWS:
-            adopt_view(M, mn, split, vrec)
+        if k == 1:
+            pw1 = port_widths(model, 1)
+            for mn in VIEWS:
+                adopt_view(M, mn, split, vrec, pw1)
+            align_abutted(v, model, M, pw1, split, model['tp8b_v5'].setdefault('pin_align', {}))
         return M
 
     def port_widths(model, k=1):

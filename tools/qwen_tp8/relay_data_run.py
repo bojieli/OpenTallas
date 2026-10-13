@@ -47,6 +47,21 @@ rst.sort(reverse=True)
 rec['reset'] = dict(reset_tree=m.get('tp8_reset_tree'), reset_named_nets=len(rst),
                     reset_named_over_500=[q for q in rst if q[0] > 500.0], reset_named_worst=rst[:12])
 rec['instances'] = len(m['insts'])
+rec['tp8b_v5'] = {k: (m.get('tp8b_v5') or {}).get(k) for k in ('views', 'pin_align', 'pin_align_die', 'io', 'torn_kv_chains', 'torn_kv_chains_over_reach', 'n_overlaps')}
+# r9 (coordinator 2026-10-13): pin alignment of every die bundle on the generator's own pin rectangles (0 FAIL to pass)
+try:
+    import gzip
+    sys.path.insert(0, 'tools/qwen_tp8')
+    import pin_align_run as PAR
+    pa, rows, pa_line = PAR.record(v, m)
+    (out / 'pin_align.json').write_text(json.dumps(pa, indent=1, default=str) + '\n')
+    with gzip.open(out / 'pin_align_rows.json.gz', 'wt') as fh:
+        json.dump([{k: q for k, q in r_.items() if k != 'why'} for r_ in rows], fh, default=str)
+    rec['pin_align'] = dict(verdict=pa['verdict'], bundles=pa['bundles'], by_verdict=pa['by_verdict'], by_kind=pa['by_kind'],
+                            jog_over_warn=pa['jog_over_warn'], order_not_preserved=pa['order_not_preserved'], line=pa_line)
+except Exception as e:   # noqa: BLE001
+    import traceback
+    rec['pin_align'] = dict(error=repr(e), trace=traceback.format_exc()[-1200:])
 (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
 if '--case' in sys.argv:
     # r9: the chain-ready die case (real case + power abstracts + PDN r5, as `qwen_rom_fulldie_b3r2.py pdn --pdn-rev r5`)
@@ -54,4 +69,6 @@ if '--case' in sys.argv:
     G.case_pdn(v, m, out / 'case', 63.64, 'r5')
 print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
                       unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'],
-                      reset_over_500=len(rec['reset']['reset_named_over_500']), instances=rec['instances'])))
+                      reset_over_500=len(rec['reset']['reset_named_over_500']), instances=rec['instances'],
+                      pin_align=rec['pin_align'].get('by_verdict') or rec['pin_align'].get('error'),
+                      cycles_per_ar_token=cost.get('cycles_per_ar_token'), stages=cost.get('stages_r21'))))
