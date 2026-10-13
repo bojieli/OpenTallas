@@ -125,6 +125,8 @@ TILES.update({
     "ot_s81_hc_crootr_f": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=(".D(RF)) u_rfd", ".D(RF - 1)) u_rfd")),
     "ot_s81_hc_crootr_r": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("s_rd <= rd_r;", "s_rd <= rd_r ^ " + _BIT("RDW", "P_D + 15") + ";")),
     "ot_s81_hc_crootr_w": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("p_w <= w_r;", "p_w <= w_r ^ 2'd2;")),
+    "ot_s81_hc_ccf":      dict(src=_H + "ot_s81_hc_ccf.sv", routed=[dict(HALF=1, RLY=2, RF=5, DW=6, FIFO_SLICE=512, KEEP_POP=1, Y_RELAY=1)],
+                               mut=("ty[YS1-1:0] = yf_head;", "ty[YS1-1:0] = yf_head ^ " + _BIT("YS1", "30") + ";")),
     "ot_s81_hc_crooty_y": dict(src=_CRY, routed=[dict(C=0, FIFO_SLICE=256), dict(C=2, FIFO_SLICE=256)],
                                mut=("p_y <= yh;", "p_y <= yh ^ " + _BIT("YS", "30") + ";")),
 })

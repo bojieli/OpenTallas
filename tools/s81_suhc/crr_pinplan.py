@@ -208,6 +208,12 @@ def ccf_plan(lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot
     # bands from the tile edge towards the column; the W-channel order is mirrored into the E channel
     order = {"W": [0, 2, 4, 1, 3], "E": [1, 3, 0, 2, 4]}
     chan = {"W": (MARGIN, 113.2), "E": (295.7, W - MARGIN)}   # clear of the 5.4 um macro halo
+    # v5 (v4 GRT-0116: all 1,040 markers at the S face, y 2-8, x 0-120 = the W channel, V capacity 21 / usage 22-24 per
+    # gcell: 3 x 512 ch_fd pins at 13.8 /um with their out-hold chains behind them; the E channel at 12.4 /um and the N
+    # face at 16 /um of plain inputs had none).  The S pins of each side now also use 47 um of the 30 um band under the
+    # macro column: W side 9.7 /um, E side 8.8 /um; ~450 nets a side run laterally under the column edge (H band ~1,000
+    # derated tracks).  The N face is unchanged.
+    schan = {"W": (MARGIN, 160.0), "E": (250.4, W - MARGIN)}
     pins = []
     for c in "WE":
         ng = [n_group(f, c) for f in order[c]]
@@ -216,14 +222,14 @@ def ccf_plan(lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot
             ng, sg = [ctl_n] + ng[::-1], [ctl_s] + sg[::-1]
             ng, sg = ng[::-1], sg[::-1]           # E channel: column side first in x, control at the tile edge
         lo, hi = chan[c]
-        pins += face_plan("N", ng, H, ["M5", "M3"], lo=lo, hi=hi) + face_plan("S", sg, H, ["M5", "M3"], lo=lo, hi=hi)
+        pins += face_plan("N", ng, H, ["M5", "M3"], lo=lo, hi=hi) + face_plan("S", sg, H, ["M5", "M3"], lo=schan[c][0], hi=schan[c][1])
     pins += [("W", "sk", "M4", round(0.012 + 0.048 * round((H / 2 - 0.78) / 0.048), 3)),
              ("W", "srs", "M4", round(0.012 + 0.048 * round((H / 2 + 0.78) / 0.048), 3))]
     names = [p[1] for p in pins]
     want = (set(ctl_n) | set(ctl_s) | {f"n_y[{i}]" for i in range(YS1)} | {f"fd_i[{i}]" for i in range(FSW)}
             | {f"ch_fd[{i}]" for i in range(FDW)} | {"sk", "srs"})
     assert len(names) == len(set(names)) and set(names) == want, (len(names), len(want), sorted(want ^ set(names))[:6])
-    txt = emit(pins, H, "S81 HC ccf: channel-only N/S pin plan (no pin over the macro column), slice bands, M5+M3")
+    txt = emit(pins, H, "S81 HC ccf: N pins channel-only, S pins over the channels + 47 um under the macro column (v5), slice bands, M5+M3")
     chk = check(pins, H, "ccf")
     W = keep
     return txt, chk, len(pins)
