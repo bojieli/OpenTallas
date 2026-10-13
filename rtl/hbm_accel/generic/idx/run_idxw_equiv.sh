@@ -4,7 +4,11 @@
 #   base   MUT=0 with the reference at DL=2 (as shipped) and DL=4 (same landing depth as the tiled leaf): must PASS
 #   MUT    1 2 (inherited), 11 (divider stage), 12 (regional pointer copy), 13 (credit seam): must FAIL
 set -uo pipefail
-R=$1; OUT=$2; NFR=${3:-300}; SEEDS=${4:-"1 2 3"}; mkdir -p "$OUT"
+# Exit status (fixed 10-13): 0 only when every build succeeded, every base line is PASS and every mutant line is FAIL.
+# ROOT and OUT are made absolute first: the builds run inside OUT/<tag>, so a relative ROOT used to break every source
+# path, no simulation ran, SUMMARY held empty verdicts and the script still returned 0.
+R=$(realpath "$1"); OUT=$(realpath -m "$2"); NFR=${3:-300}; SEEDS=${4:-"1 2 3"}; mkdir -p "$OUT"
+[ -f "$R/rtl/hbm_accel/generic/idx/tb_hgi_idxw_equiv.sv" ] || { echo "IDXW_EQUIV GATE FAIL: no sources under ROOT $R"; exit 2; }
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 D=$R/rtl/hbm_accel/generic/idx
 SRC="$D/tb_hgi_idxw_equiv.sv $D/ot_hgi_idx_index_w.sv $D/ot_hgi_idx_index_wt.sv $D/ot_hgi_idxw_lane.sv $D/ot_hgi_idxw_qcore.sv
@@ -26,3 +30,15 @@ done
 wait
 cat $OUT/*/line_s* > $OUT/SUMMARY
 cat $OUT/SUMMARY
+rc=0
+for t in base base_rdl4 mut1 mut2 mut11 mut12 mut13; do
+  [ "$(cat $OUT/$t/build.exit 2>/dev/null)" = 0 ] || { echo "IDXW_EQUIV: build of $t FAILED (see $OUT/$t/build.log)"; rc=1; }
+  for s in $SEEDS; do
+    v=$(grep -E '^IDXW_EQUIV (PASS|FAIL)' $OUT/$t/run_s$s.log 2>/dev/null | head -1)
+    case $t in
+      mut*) case "$v" in "IDXW_EQUIV FAIL"*) ;; *) echo "IDXW_EQUIV: mutant $t seed $s not killed ('$v')"; rc=1;; esac;;
+      *)    case "$v" in "IDXW_EQUIV PASS"*) ;; *) echo "IDXW_EQUIV: $t seed $s did not pass ('$v')"; rc=1;; esac;;
+    esac
+  done
+done
+[ $rc = 0 ] && echo "IDXW_EQUIV GATE PASS" | tee $OUT/gate || { echo "IDXW_EQUIV GATE FAIL" | tee $OUT/gate; exit 1; }
