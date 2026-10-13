@@ -388,9 +388,14 @@ def main():
             s["lowered"], s["by_class"] = m, True
         if s.get("lowered") is not None and m == s["lowered"] and \
                 (rss > 0.8 * m * GB or (building and not s.get("by_class"))):
-            if not DRY and set_res(f, unit, m, s["launch"]):
-                log(f"RESTORE {unit} {m} -> {s['launch']} GB: {why}, RSS {rss/GB:.2f} GiB")
-                s["lowered"], s["samples"], s["no_class"], s["by_class"], s["past_peak"] = None, [], True, False, False
+            # v5 (coordinator 2026-10-13 14:05): restoring the full launch value fought ot-heavy-trim (trim charges
+            # observed use + margin, so RSS > 80 % of the charge at once, and every unit went back to its request:
+            # 1,131 GB reserved against 787 GB available on EPYC1).  Raise in steps instead: to max(1.5 x RSS,
+            # RSS + 8 GB), never above the launch value; the unit stays 'lowered' so the next pass can raise again.
+            tgt = min(s["launch"], math.ceil(max(1.5 * rss, rss + 8 * GB) / GB))
+            if tgt > m and not DRY and set_res(f, unit, m, tgt):
+                log(f"RAISE {unit} {m} -> {tgt} GB (launch {s['launch']}): {why}, RSS {rss/GB:.2f} GiB")
+                s["lowered"], s["samples"], s["by_class"] = tgt, [], True
             continue
         new = max(1, math.ceil(max(peak * 1.25, peak + 4 * GB) / GB))
         if (kind is None or new >= m) and s.get("lowered") is None and not s.get("no_class") and m == s["launch"]:
@@ -454,7 +459,7 @@ def free(path):
     except OSError:
         disk = -1
     print(json.dumps(dict(host=os.uname().nodename, avail_gb=avail, reserved_gb=reserved, growth_gb=grow, headroom_gb=head,
-                          running=running, waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
+                          load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=running, waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
                           free_gb=avail - grow - head - sum(wait))))
 
 

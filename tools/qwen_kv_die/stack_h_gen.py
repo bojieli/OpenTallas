@@ -527,9 +527,9 @@ def hsub(s):
 `else
     localparam integer HSUB = 0;
 `endif
-    localparam integer NRI = 2, NRK = 2, NRN = 2;          // head_hs parent relay stages: inputs, K partials, node slice
-    localparam integer HXK = HSUB ? NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
-    localparam integer HXN = HSUB ? NRI + NRN : 0;
+    localparam integer NRS = 1, NRI = 2, NRK = 2, NRN = 2; // head_hs parent relay stages: shared S2b, inputs, K partials, node slice
+    localparam integer HXK = HSUB ? NRS + NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
+    localparam integer HXN = HSUB ? NRS + NRI + NRN : 0;
     ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
                              .LFB(LFB), .ND(ND), .HXK(HXK), .HXN(HXN)) u_ctl (""")
     s = rep(s, """        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
@@ -537,7 +537,7 @@ def hsub(s):
             .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
             .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
             .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));""", """        if (HSUB != 0) begin : g_hs
-        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRI(NRI),
+        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRS(NRS), .NRI(NRI),
                                   .NRK(NRK), .NRN(NRN)) u_head (
             .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
             .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
