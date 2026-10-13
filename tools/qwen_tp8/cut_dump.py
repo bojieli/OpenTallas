@@ -8,6 +8,18 @@ out=Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True); t=time.time()
 D.QWEN_RECIPE='tp8b'; D._QW.clear(); D.QSRC=None
 v,m=D.load_qwen()
 v.write_netlist(m,1,out/'die.v')
+from qwen_rom_fulldie_b3r2 import _pin_pos
+pos=_pin_pos(v,m)
+hops=[]
+for bid,cls,bits,eps in m['buses']:
+    if bid.startswith('tree_') and len(eps)==2:
+        a,b=[pos(*e) for e in eps]
+        hops.append(dict(bus=bid,bits=bits,endpoints=eps,manhattan_um=abs(a[0]-b[0])+abs(a[1]-b[1])))
+json.dump(dict(count=len(hops),max_stage_um=max(h['manhattan_um'] for h in hops),
+               over_500=[h for h in hops if h['manhattan_um']>500],
+               note='Pin-centroid Manhattan distance on generatedplacement; final actualDB snap and STA required'),
+          open(out/'tree_hops.json','w'),indent=1)
+
 json.dump(dict(pad_trim=m.get('tp8_pad_trim'),pads=m.get('tp8_tree_pads'),relays=m.get('r21_relays')),open(out/'pad_placement.json','w'),indent=1)
 ins=[dict(n=i.name, m=getattr(i,'master',''), x=i.x, y=i.y, w=i.w, h=i.h) for i in m['insts']]
 json.dump(dict(insts=ins, buses=[(b,c,bits,[e[0] for e in eps]) for b,c,bits,eps in m['buses']]), open(out/'rom_tp8b.json','w'))
