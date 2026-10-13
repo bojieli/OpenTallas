@@ -98,10 +98,12 @@
    "root": "/srv/opentallas-scratch/claude/tputx-mtp-r5/codex-1012",
    "chain_script": "/srv/opentallas-scratch/claude/tputx-mtp-r5/chain_codex1012.sh",
    "chain_pid": 1645774,
-   "status": "REGEN_RUNNING",
+   "status": "REGEN_FAIL",
    "source": "97515338c source tree + 0d4f53559 overlay, unchanged from predecessor",
    "snapshot_repair": "shard4_subset_provenance.json: original checkpoint layer1 HC/norm payloads, no synthetic values",
-   "vehicle_scope": "MTP and DMA mechanism composition using legacy VM; native B2 per-cluster swap emission still outstanding"
+   "vehicle_scope": "MTP and DMA mechanism composition using legacy VM; native B2 per-cluster swap emission still outstanding",
+   "cause": "machine.eff incorrectly rejects STRIPE4 DMA.STORE O despite implemented striped write path",
+   "ended_at": "2026-10-12T23:32:10-07:00"
   },
   "route": {
    "prior_job": "hgi_dma_back_b2_ref-a-01e2a5600",
@@ -112,6 +114,25 @@
    "exact_and_mutants": "bench_dma_back_exact PASS; bench_dma_back_mut1/2 expected FAIL matched",
    "next_job": "hgi_dma_back_b2_ref-a-01e2a5600-hs-cx",
    "reason": "unchanged rerun mandated for routes launched before Oct12 14:36 hold-flow fix; no closure claim"
+  },
+  "successor2": {
+   "host": "ot-epyc4",
+   "root": "/srv/opentallas-scratch/claude/tputx-mtp-r5/codex-1012r2",
+   "chain_pid": 1693090,
+   "regen_pid": 1693094,
+   "status": "REGEN_RUNNING",
+   "source": "original pinned successor source + ONLY machine.eff STORE operand fix from 1b262b327",
+   "machine_source_sha256": "0c7ccc72c80dcbd93f7b01bc92cbfb152c51d83c3aed7f004b298e70925d0b30",
+   "native_B2": false
   }
+ },
+ "native_b2_swap": {
+  "status": "LOWERING_EXACT_NATIVE_INTEGRATION_PENDING",
+  "source_commit": "1b262b327",
+  "evidence": "b2_native_swap.json",
+  "entry": "Kernels.swap_b2(into,h_allocations,pre_allocation)",
+  "exactness": "8 focused tests PASS, full 20,480-word h and eight-word PRE, STORE/LOAD over all 13slots, compact LOCAL and strided MIRROR, stack/row/early-fence faults detected",
+  "remaining": "caller supplies per-live-record physical allocations and native local-slice dispatch; measure native dispatch-to-fence <=248 and full verify <=1.10*63800; physical DMA BACK -hs-cx route verdict pending",
+  "qualified": false
  }
 }
