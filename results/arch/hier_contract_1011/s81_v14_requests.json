@@ -1,0 +1,120 @@
+{
+  "schema": "s81-contract-request-ledger-v1",
+  "base_contract_version": 13,
+  "target_contract_version": 14,
+  "inspected_main": "3c0ca7dd2b3349d65f8ff2b8b38ea1d8ea23eedd",
+  "status": "pending integration; this ledger does not publish contract v14",
+  "requests": [
+    {
+      "id": "hc-tail-crossing-width",
+      "owner": "HC lead / S81 die lead",
+      "status": "REQUIRED",
+      "evidence": "HC lead RTL audit 2026-10-12: NG256 FDW=O_D104+max(S_RD*512,NP*GS*32)=2920; after ten chain tiles shifted y tail still includes12 half-tiles/1536bits. v13 fd1128 truncates POST operands.",
+      "cut_after": [
+        9,
+        31,
+        51
+      ],
+      "forward": {
+        "fd": 2920,
+        "fv": 7,
+        "rst": 1,
+        "cy": 128,
+        "total": 3056
+      },
+      "return_bits": 1090,
+      "column_count": 3,
+      "total_crossing_bits": 12438,
+      "rough_vertical_capacity_tracks": 93000,
+      "rough_utilization": 0.13374193548387098,
+      "station_count_per_crossing": 7,
+      "added_cycles": {
+        "forward": 7,
+        "return": 7
+      },
+      "actions": [
+        "HC lead exposes full payload in split RTL, preserving chain ordering.",
+        "Die lead widens hc_s t_tf / f_tr and hc_t f_sf / t_sr pin ranges and generator mappings before v14.",
+        "Re-run legal floorplan, pin clashes, reach and control gate; refresh capacity with widened pins."
+      ]
+    },
+    {
+      "id": "su-sm-layout",
+      "owner": "SU lead / S81 die lead",
+      "status": "REQUIRED",
+      "rtl_main": "69c124e5d",
+      "slot_um": {
+        "w": 1231.2,
+        "h": 1058.4
+      },
+      "instances_per_stop": 53,
+      "stop_count": 8,
+      "actions": [
+        "Supply physically legal sub_layouts.ot_s81_su_sm for smt + two heads each16sml+smc+smr+8smd.",
+        "Use counter-shape of equal area if layout does not fit; no guessed adoption from gate alone."
+      ]
+    },
+    {
+      "id": "su-sw-layout",
+      "owner": "SU lead / S81 die lead",
+      "status": "REQUIRED",
+      "rtl_main": "69c124e5d",
+      "masters": [
+        {
+          "master": "dsfd_su_t_swt",
+          "outline_um": {
+            "w": 572.4,
+            "h": 453.6
+          },
+          "source": "physical/ref_tile/s81su_swt_ref/floorplan.json"
+        },
+        {
+          "master": "dsfd_su_t_swe",
+          "outline_um": {
+            "w": 216.0,
+            "h": 216.0
+          },
+          "source": "physical/ref_tile/s81su_swe_ref/floorplan.json"
+        }
+      ],
+      "quant_master": "dsfd_su_t_qbe",
+      "old_slot_um": {
+        "w": 572.4,
+        "h": 637.2
+      },
+      "slot_count": 8,
+      "actions": [
+        "Replace eight dsfd_su_t_sw wrapper slots with die-placed swt/swe/qbe layout.",
+        "Record replica counts, relay placement and registered seams from merged RTL; verify fit before changing contract."
+      ]
+    },
+    {
+      "id": "scalar-clock-views",
+      "owner": "MTP/VM leads / S81 die lead",
+      "status": "REQUIRED",
+      "masters": [
+        "dsfd_mtp_hrow_cbe",
+        "dsfd_mtp_hrow_cbw",
+        "dsfd_mtp_hrow_ing",
+        "dsfd_mtp_hrow_hub",
+        "dsfd_mtp_hrow_bank",
+        "dsfd_vm_bgr"
+      ],
+      "actions": [
+        "Inspect exported closed-view LEF for ck versus ck[0] before die adoption.",
+        "Current die_sens.sh regex accepts ck[0], so CKPIN PASS alone cannot prove scalar-name compatibility; add explicit scalar-name compatibility check."
+      ]
+    },
+    {
+      "id": "closed-tile-layer-policy",
+      "owner": "S81 die lead",
+      "status": "BINDING",
+      "decision": "2026-10-12 19:00 owner narrowing",
+      "actions": [
+        "Retain closed M6/M7 views unless final die GRT overflow over tile requires freed horizontal tracks.",
+        "No bulk slot growth or M5 reroute from withdrawn requests.",
+        "Record M6 pin-only grant for genuinely pin-bound edge tiles when required."
+      ]
+    }
+  ]
+}

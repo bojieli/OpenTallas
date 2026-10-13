@@ -1,5 +1,5 @@
 {
- "name": "hrow5_ing-r5d-COMMIT",
+ "name": "hrow5_ing-r5d-1a91bcdd1",
  "block": "dsfd_mtp_hrow_ing",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-mtp-hrow",
-  "commit": "COMMIT"
+  "commit": "1a91bcdd1"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_ing/hrow5_ing-r5d-COMMIT"
+   "to": "results/rtl/ref_tile/hrow5_ing/hrow5_ing-r5d-1a91bcdd1"
   }
  ],
  "cycles_added": 0,
