@@ -1,0 +1,26 @@
+{
+ "predecessor": "dsfd_vm_bgr28_cmy-r5-8405cb0ba",
+ "verdict": "EARLY_FAIL_HOLD",
+ "hold_ps": -66.363,
+ "repair_iterations": 12800,
+ "repair_buffers": 20849,
+ "margin_endpoints": 14898,
+ "worst_repeated_endpoint": "u.rb_d[0][2070]$_DFF_P_/D",
+ "clock_flops": 63408,
+ "macro_sinks": 8,
+ "macro_leaf_buffers": 0,
+ "macro_sink_wire_um": 433,
+ "fix": "balanced repeated clock spine with dedicated macro leaves; one HB4+driver at every direct input capture",
+ "cycles_added": 0,
+ "rtl_reference": "c01a7a910",
+ "rtl_sha256": "3baaa449e2760962f3004fe47ec37eef6e0755f1a13878b558399a5483078d17",
+ "exact_gate": {
+  "cases_ok": 20,
+  "cases_total": 20,
+  "host": "ot-pve1",
+  "path": "/srv/opentallas-scratch/claude/el1011-ds-vm/bgr-gc01a7a910/gate",
+  "evidence_log": "/home/ubuntu/claude-takeover-20261007/el1011-ds-vm.log 2026-10-12 15:50 PDT"
+ },
+ "local_gate": "WARN 0 fail, ck/rs scalar warning",
+ "diagnostic": "ot-epyc4:/srv/opentallas-scratch2/codex/bgr28-diag"
+}
