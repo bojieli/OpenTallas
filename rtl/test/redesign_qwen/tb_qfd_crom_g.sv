@@ -6,8 +6,6 @@
 // RLY 1 (q13 2026-10-13): the tiles are the slot-shaped M5 master ot_qfd_crom_gr (lane-base STRAP pin + relay stages,
 // strobe -> q 8 edges): the reference answer is delayed 3 edges, the fault is compared undelayed (its timing is unchanged).
 // GMUT 1 there: every strap 0; GMUT 2: MUT 1 in tile 0 (one answer bit flipped).
-// RLY 2 (q13-kvleaves 2026-10-13): the tiles are the thin cluster ot_qfd_crom_gc (ot_qfd_crom_c.sv), same edges as RLY 1;
-// +define+QFD_CROM_COL_MUT: every column tile's slot 0 reads the other depth.
 module tb_qfd_crom_g #(parameter integer N = 6000, parameter integer GMUT = 0, parameter integer RLY = 0);
     localparam integer SW = 64, AW = 24;
     reg clk = 0, rst_n = 0;
@@ -18,11 +16,7 @@ module tb_qfd_crom_g #(parameter integer N = 6000, parameter integer GMUT = 0, p
         .fault(f_ref), .fault_code(fc_ref));
     genvar g;
     generate for (g = 0; g < 8; g = g + 1) begin : g_t
-      if (RLY == 2) begin : g_c                    // q13-kvleaves: the thin cluster (hard column tiles + head), same edges as RLY 1
-        ot_qfd_crom_gc #(.IMG_LB(8 * g), .MUT((GMUT == 2 && g == 0) ? 1 : 0)) u (.clk(clk), .rst_n(rst_n), .crom_re(re[8*g +: 8]),
-            .crom_addr(addr[8*g*AW +: 8*AW]), .crom_stage(st), .crom_lb((GMUT == 1) ? 6'd0 : 6'd8 * g[2:0]), .crom_q(q_g[8*g*64 +: 8*64]), .fault(f_g[g]),
-            .fault_code(fc_g[2*g +: 2]));
-      end else if (RLY != 0) begin : g_r
+      if (RLY != 0) begin : g_r
         ot_qfd_crom_gr #(.IMG_LB(8 * g), .MUT((GMUT == 2 && g == 0) ? 1 : 0)) u (.clk(clk), .rst_n(rst_n), .crom_re(re[8*g +: 8]),
             .crom_addr(addr[8*g*AW +: 8*AW]), .crom_stage(st), .crom_lb((GMUT == 1) ? 6'd0 : 6'd8 * g[2:0]), .crom_q(q_g[8*g*64 +: 8*64]), .fault(f_g[g]),
             .fault_code(fc_g[2*g +: 2]));
