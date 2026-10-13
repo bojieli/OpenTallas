@@ -118,42 +118,42 @@
   },
   {
    "design": "s81",
-   "unit": "SU.HC_PRE_NORM (dsfd_sp_hc_c fused NORM: hc_pre mix + RMSNorm + FP8 act-quant, flat engine HIER 0)",
+   "unit": "SU.HC_PRE_NORM (dsfd_sp_hc_c fused NORM: hc_pre mix + RMSNorm + FP8 act-quant, hierarchical production slab, NG 256)",
    "group": "SU.HC_PRE_NORM",
-   "measured": 449.0,
+   "measured": 713.0,
    "price": 329.9,
    "unit_of_measure": "cycles",
-   "unit_ratio": 1.361,
-   "e2e_loss_pct": 1.178,
+   "unit_ratio": 2.1613,
+   "e2e_loss_pct": 3.566,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 828866.4,
-     "cycles": 838748.4,
-     "added_cycles": 9882.0,
-     "runs_per_token": 81,
-     "critical_runs": 81,
+     "cycles": 859514.4,
+     "added_cycles": 30648.0,
+     "runs_per_token": 80,
+     "critical_runs": 80,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 9882.0,
+     "naive_added_cycles": 30648.0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 1.178
+     "e2e_loss_pct": 3.566
     },
     "mtp": {
      "model": "token-path longest path",
      "base_cycles": 1177516.1,
-     "cycles": 1189350.1,
-     "added_cycles": 11834.0,
-     "runs_per_token": 87,
-     "critical_runs": 87,
+     "cycles": 1214293.7,
+     "added_cycles": 36777.6,
+     "runs_per_token": 86,
+     "critical_runs": 86,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 10614.0,
+     "naive_added_cycles": 32946.6,
      "wave_positions": 5,
-     "wave_added_cycles_per_position": 244.0,
-     "e2e_loss_pct": 0.995
+     "wave_added_cycles_per_position": 766.2,
+     "e2e_loss_pct": 3.029
     }
    },
    "within_unit_limit": true,
@@ -161,7 +161,7 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
    "status": "proposed",
-   "note": "per-layer die bench tb_s81_die_layer L0+L2 at the 1M token, bit-exact, 2 mutants fail: one fused NORM job is 449 cycles in all 4 runs against 327.0-333.9 priced (hc_pre + quant [+ norm.scale]); +122 on each of the 80 critical hc_pre nodes (worst block; ffn is +115)"
+   "note": "per-layer die run tb_s81_die_layer HCH=1 NG=256 nominal link, L0 / L2 / L14 bit-exact, mut_hc + mut_coll fail: NORM 713 cycles in all 6 jobs against the fused price 327.0-333.9 (hc_pre + quant [+ norm.scale]); hc_gate --hier 3 unit bench 727. REPLACES the row at 449 (1.361x, 1.178 %), which was the FLAT engine at the reduced NG 16 shape; the flat engine at NG 256 measures 235-237 (0.71x): the excess is the hierarchical slab's serial forward / return chains, not arithmetic"
   },
   {
    "design": "s81",
@@ -700,8 +700,8 @@
   },
   "s81": {
    "accepted_pct": 1.812,
-   "proposed_pct": 2.652,
-   "accepted_plus_proposed_pct": 4.464,
+   "proposed_pct": 5.04,
+   "accepted_plus_proposed_pct": 6.852,
    "limit_pct": 15.0,
    "accepted_rows": 2,
    "proposed_rows": 4,
