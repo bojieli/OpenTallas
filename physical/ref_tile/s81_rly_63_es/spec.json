@@ -32,12 +32,13 @@
  "route": {
   "pd": 0.45,
   "threads": 4,
-  "peak_ram_gb": 8
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7
  },
  "job": {
   "owner": "Claude:s81-die",
   "branch": "claude/el1011-s81dieit",
-  "tag": "v1",
+  "tag": "v2",
   "purpose": "S81 die relay master dsfd_rly_63_ES (128 instances in the c5 placement, generated outline + interim timing there): real hard tile, 63 b in E / out S, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget",
   "benches": [
    {
