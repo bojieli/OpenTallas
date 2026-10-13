@@ -129,7 +129,7 @@
   {
    "version": 14,
    "when": "2026-10-13 PT",
-   "change": "s81-die: (1) relay_masters: 27 dsfd_rly_<W>_<in><out> masters (29,184 instances, 68% of the generated placeholders) become real hard tiles bound by name; outlines from content (8.64 / 10.8 / 15.12 sq; W 266 / 283: 34.56 x 19.44 N/S, 21.6 x 30.24 E/W), M5 cap, scalar ck / rs, outhold BUF-HB4-BUF as the physical minimum-delay element; seam_rules.min_delay (L - H >= 50 ps + skew on routed FF ETMs). (2) NEW slot hc_post_stn: HC POST accept / dispatch / completion station reserved at the corridor midpoint (coordinator 03:40; ~115 cycles estimated vs 124.19, to be measured). (3) ot_s81_hc_crooty_y clock / control entry SW -> SE (sk, srs on S at x 367.356..368.7, M5; v4-ctl-east). (4) clock_pin_rules.dsfd_vm_bgr scalar; open_items carries ces route, bgr scalar view, SU sm / sw layouts, cth growth fit check, hc tail crossing width and the two min-delay gaps (ctfn, cfifo cr). No slot grew; no price changed."
+   "change": "s81-die: (1) relay_masters: 27 dsfd_rly_<W>_<in><out> masters (29,184 instances, 68% of the generated placeholders) become real hard tiles bound by name; outlines from content (8.64 / 10.8 / 15.12 sq; W 266 / 283: 34.56 x 19.44 N/S, 21.6 x 30.24 E/W), M5 cap, scalar ck / rs, outhold BUF-HB4-BUF as the physical minimum-delay element; seam_rules.min_delay (L - H >= 50 ps + skew on routed FF ETMs). (2) HC POST accept / dispatch station at the corridor midpoint (coordinator 03:40): WITHDRAWN by the coordinator 2026-10-13: S81 HC POST was accepted with cost under the owner's rule (2.542x unit, 1.653 % end-to-end; ledger on main); the v13 accept position at the top of the HC column stands and no midpoint station is reserved; no slot hc_post_stn. (3) ot_s81_hc_crooty_y clock / control entry SW -> SE (sk, srs on S at x 367.356..368.7, M5; v4-ctl-east). (4) clock_pin_rules.dsfd_vm_bgr scalar; open_items carries ces route, bgr scalar view, SU sm / sw layouts, cth growth fit check, hc tail crossing width and the two min-delay gaps (ctfn, cfifo cr). No slot grew; no price changed."
   }
  ],
  "slots": [
@@ -10822,46 +10822,6 @@
    },
    "view_cap": "M6",
    "view_status": "INVALID: closed view routes signals on M7 above its own cap M6; re-route at M5 (m5_reroute_priority.json)"
-  },
-  {
-   "name": "hc_post_stn",
-   "cell": "dsfd_hc_post_stn",
-   "kind": "tile",
-   "parent": "s81_layer1",
-   "outline": {
-    "w": 518.4,
-    "h": 216.0
-   },
-   "origin": {
-    "x": 17961.48,
-    "y": 13219.2,
-    "orient": "R0"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2,
-    "registered_in": true,
-    "registered_out": true
-   },
-   "clock_entry": {
-    "pin": "ck",
-    "face": "E",
-    "layer": "M4"
-   },
-   "target_insertion_ps": 120.0,
-   "version": 14,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_rule": "tile",
-   "status": "RESERVED keep-out (no kit yet): outline provisional, to be re-cut from the station kit",
-   "branches": {
-    "count": 24,
-    "max_dispatch_bits": 409,
-    "completion_bits": 23,
-    "faces": "N: branch groups to the half regions above the corridor; S: to the tail and centre rows below"
-   },
-   "notes": "v14 NEW (coordinator 2026-10-13 03:40 PT): HC POST job accept / dispatch / completion moves from the top of the HC column to the corridor midpoint (18,220.68, 13,327.2); corridor y 12,571.2..14,083.2. Accept at the top gave 127-133 cycles against the immutable 124.19; the midpoint is ESTIMATED ~115 and must be measured by the production bench with the generator's hop counts (hop gate <= 500 um, 24 branches); it is not a price. Provisional 518.4 x 216 = 24 branches x (409 + 23) b split over N / S at 0.096 um a bit. The slot sits in the comb column's N->S crossing lane: the crossing relays of that column (forward 3,056 b / return 2,164 b) and the station share the midpoint rows, so the cut is checked there with the real station pins before any die GRT. Station RTL / kit owner: HC lead."
   }
  ],
  "pdn": {
@@ -11519,6 +11479,7 @@
   "min_delay_gaps": {
    "ot_s81_hc_ctfn": "L 32.0 / H 19.0 (insertion spread 106 ps): -37.0 same-master zero-wire; needs L - H >= 50 + skew",
    "cfifo cr": "-59.8; needs L - H >= 50 + skew"
-  }
+  },
+  "hc_post_midpoint": "WITHDRAWN by the coordinator 2026-10-13: S81 HC POST was accepted with cost under the owner's rule (2.542x unit, 1.653 % end-to-end; ledger on main); the v13 accept position at the top of the HC column stands and no midpoint station is reserved"
  }
 }
