@@ -127,6 +127,32 @@
         "No bulk slot growth or M5 reroute from withdrawn requests.",
         "Record M6 pin-only grant for genuinely pin-bound edge tiles when required."
       ]
+    },
+    {
+      "id": "abut-min-delay-and-etm-reference",
+      "owner": "S81 die lead / tile leads",
+      "status": "REQUIRED PHYSICAL VALIDATION",
+      "evidence": {
+        "failed_die": "c3",
+        "source": "f13695e45",
+        "flat_short_link_model": {
+          "ff_cq_ps": 32,
+          "receiver_hold_ps": 15,
+          "hold_uncertainty_ps": 50
+        },
+        "etm_reference_fix_main": "81f0c3833",
+        "reference_probe": "results/physical/die_iter_1012/s81/etm_clock_reference_20261012/summary.json"
+      },
+      "minimum_end_to_end_delay_ps": 65,
+      "formula": "minimum sender clock-to-output + physical seam delay + receiver pin-to-capture delay >= receiver hold15 + hold uncertainty50 + capture-minus-launch physical clock skew",
+      "zero_skew_shortfall_ps": 33,
+      "clock_requirement": "Preserve physical clock plan targets. ETM normalization compensation is STA-reference-only; column cfifo cr and first relay already share depth (<1ps nominal plan skew).",
+      "actions": [
+        "Verify each adopted real view against minimum-delay contract; do not count interimcq32 as measured closure.",
+        "For deficient abutting links implement a physical buffer/delay chain in a new registered seam or leaf redesign and route/measure atFF; preserve setup/hold uncertainty.",
+        "Synthetic120ps Liberty hold offsets are default-off and planning-only. They cannot satisfy this contract.",
+        "Do not reroute existing closed tiles solely for M5; physical hold defects require an explicit seam fix independent of layer-policy changes."
+      ]
     }
   ]
 }

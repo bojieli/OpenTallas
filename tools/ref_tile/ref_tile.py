@@ -148,6 +148,16 @@ def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
     kits generated before the cut (legacy_layer_kits.json) keep their old PG layer (M6/M7, signals <= M6)."""
     slot = slot or {}
     cap = s.get("layer_cap") or slot.get("layer_cap")
+    grant = s.get("m6_pin_grant") or slot.get("m6_pin_grant")
+    if grant is not None:
+        import m6_pin_grant as M6
+        try:
+            M6.validate(grant, s["top"])
+        except (ValueError, TypeError, KeyError) as ex:
+            raise SpecError(str(ex)) from ex
+        if cap not in (None, "M5") or s.get("pg_layer") not in (None, "M5"):
+            raise SpecError("M6 pin-only grant requires signal/PG layer_cap M5")
+        return "M5", "pin-only grant"
     if cap is None and s["name"] in LEGACY_KITS:
         return LEGACY_KITS[s["name"]], "legacy"
     if cap is None and s.get("pg_layer") not in (None, "M5"):
@@ -177,6 +187,8 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
                        cap_basis="legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)")
         else:
             out.update(pg_layer=cap, rlayers=("M2", cap), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap, cap_basis=why)
+        if s.get("m6_pin_grant") or (slot or {}).get("m6_pin_grant"):
+            out["m6_pin_grant"] = s.get("m6_pin_grant") or slot["m6_pin_grant"]
         if slot:
             ok = {slot.get("layer_cap") or slot.get("pg_layer"), slot.get("view_cap") if why == "legacy" else None}
             if out["pg_layer"] not in ok:
@@ -211,7 +223,7 @@ def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
         pb = r.get("pin_balance") or {}
         used = (h + " " + v + " " + pb.get("h", "") + " " + pb.get("v", "")).split()
         over = sorted({x for x in used if (metal(x) or 0) > metal(lc["rlayers"][1])})
-        if over:
+        if over and not (over == ["M6"] and lc.get("m6_pin_grant")):
             raise SpecError(f"layer contract: pin layers {over} above the tile's signal cap {lc['rlayers'][1]} "
                             f"(pins on M4/M5 under the M5 cap; the parent reaches them from M6)")
     return h, v
@@ -847,6 +859,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     mv = " ".join(f"--macro-view {v}" for v in views)
     spec = {
         "name": name, "block": s["top"], "ref_tile": True,
+        **({"m6_pin_grant": s["m6_pin_grant"]} if s.get("m6_pin_grant") else {}),
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),
         **({"hosts": j["hosts"]} if j.get("hosts") else {}),   # no default host list: the loop places jobs (EPYC2/3 retired 10-12)
@@ -894,6 +907,12 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     s = load_spec(spec_path)
     slot = contract_slot(s)
     lc = layer_contract(s, slot)
+    if lc.get("m6_pin_grant"):
+        import m6_pin_grant as M6
+        raw_spec = json.loads(Path(spec_path).read_text())
+        if M6.spec_digest(raw_spec) != lc["m6_pin_grant"]["source_spec_sha256"]:
+            raise SpecError("M6 pin-only grant physical source-spec SHA256 mismatch")
+        s["m6_pin_grant"] = lc["m6_pin_grant"]
     blocks = blocks_of(s)
     W, H, why = outline(s, slot, area_um2, blocks)
     place_blocks(s, W, H, blocks)
@@ -911,7 +930,8 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
              "clock.sdc": gen_sdc(s, float(s["route"].get("period_ps", 770))),
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),
              **gen_hooks(s, kd), "floorplan.json": json.dumps(fp, indent=1) + "\n",
-             "spec.json": json.dumps({k: v for k, v in s.items()}, indent=1) + "\n"}
+             "spec.json": json.dumps(({**raw_spec, "m6_pin_grant": lc["m6_pin_grant"]} if lc.get("m6_pin_grant")
+                                      else {k: v for k, v in s.items()}), indent=1) + "\n"}
     if blocks:
         files["place.tcl"] = gen_place(s, blocks)
     if s.get("io_tcl") and s.get("orfs_vars", {}).get("POST_TAPCELL_TCL"):
@@ -952,11 +972,22 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--output", str(o / "insertion.json")])
     lef = o / f"{top}.lef"
-    if lef.exists():
+    grant = fp.get("layer_contract", {}).get("m6_pin_grant")
+    if lef.exists() and not grant:
         # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
         # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
         subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])
-    res = child_lint.lint(str(lef), str(o)) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
+    routed_def = None
+    if grant and base is not None:
+        # Require final detailed-route geometry; never GRT or an abstract reconstructed from pins.
+        candidates = [base / n for n in ("6_final.def", "5_route.def") if (base / n).exists()]
+        if candidates:
+            import shutil
+            routed_def = str(o / "pin_only_routed.def")
+            shutil.copyfile(candidates[0], routed_def)
+        (o / "m6_pin_grant.json").write_text(json.dumps(grant, indent=1) + "\n")
+    res = child_lint.lint(str(lef), str(o), cap="M5" if grant else None,
+                          pin_grant=grant, routed_def=routed_def) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])
