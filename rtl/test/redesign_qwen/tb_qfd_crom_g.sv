@@ -42,6 +42,7 @@ module tb_qfd_crom_g #(parameter integer N = 6000, parameter integer GMUT = 0, p
     end
     initial begin
         repeat (4) @(posedge clk); rst_n <= 1;
+        if (RLY != 0) repeat (4) @(posedge clk);   // ot_rst_relay: the tile releases 3 edges after the port
         for (n = 0; n < N; n = n + 1) begin
             rnd; st <= rs % 36;
             rnd; k = rs % 5;
