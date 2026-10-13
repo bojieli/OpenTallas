@@ -1,5 +1,5 @@
 {
- "name": "smh_tile_eg_ref-r4-9231139eb",
+ "name": "smh_tile_eg_ref-r5-COMMIT",
  "block": "ot_hbm_accel_smh_tile_eg",
  "ref_tile": true,
  "owner": "Codex:hbm-sm-cluster",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "codex/hbm-sm-cluster",
-  "commit": "9231139eb"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -110,7 +110,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_tile_eg_ref/smh_tile_eg_ref-r4-9231139eb"
+   "to": "results/rtl/ref_tile/smh_tile_eg_ref/smh_tile_eg_ref-r5-COMMIT"
   }
  ],
  "cycles_added": 0,
