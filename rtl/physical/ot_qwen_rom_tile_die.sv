@@ -46,7 +46,10 @@ module ot_qwen_rom_tile_die #(
     parameter integer TIDR = 0,
     parameter integer LRR = 0,
     parameter integer ANR = 0,            // ot_qwen_rom_tile_w12 ANR (hardcore-1010 D)           // ot_qwen_rom_tile_w12 ARPB (qwen-1010/c)
-    parameter integer BAW = 12
+    parameter integer BAW = 12,
+    // KVH 1 (el1011-q-tile r5 leaf 3): the landing hop, slot decode, landing merge, land_fault and the tile's KV slice are
+    // the hardened ot_qwen_tile_kvl (g_kvh.u_kvl); the statements below stay as the KVH 0 path and drive nothing at KVH 1
+    parameter integer KVH = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -69,8 +72,10 @@ module ot_qwen_rom_tile_die #(
     // ---- landing hop: W pin register, E pin register ---------------------------------------------------------------
     (* keep *) reg [KVL-1:0] li_q;
     (* keep *) reg [KVL-1:0] lo_q;
-    always @(posedge clk) begin li_q <= li; lo_q <= li_q; end
-    assign lo = lo_q;
+    wire [KVL-1:0] kvl_lo;
+    wire           kvl_fault;
+    always @(posedge clk) if (KVH == 0) begin li_q <= li; lo_q <= li_q; end
+    assign lo = (KVH != 0) ? kvl_lo : lo_q;
     // ---- slot decode -----------------------------------------------------------------------------------------------
     wire [LSLOTS-1:0]     s_v;
     wire [LSLOTS*7-1:0]   s_port, s_loc;
@@ -105,14 +110,26 @@ module ot_qwen_rom_tile_die #(
         else land_fault <= land_fault | (|(s_v & ~s_grant));
     // ---- the W12 tile ----------------------------------------------------------------------------------------------
     wire tile_fault;
+    wire         kvh_re;
+    wire [23:0]  kvh_a;
+    wire [511:0] kvh_q;
     ot_qwen_rom_tile_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
-        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .ANR(ANR), .BAW(BAW)) u_tile (
+        .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .ANR(ANR), .BAW(BAW), .KVH(KVH)) u_tile (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .t_out(t_out), .t_vout(t_vout),
         .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(tile_fault),
-        .kvw_ce(kvw_ce), .kvw_addr(kvw_addr), .kvw_data(kvw_data), .kvw_mask(kvw_mask));
+        .kvw_ce(kvw_ce), .kvw_addr(kvw_addr), .kvw_data(kvw_data), .kvw_mask(kvw_mask),
+        .kvh_re(kvh_re), .kvh_a(kvh_a), .kvh_q(kvh_q));
+    generate if (KVH != 0) begin : g_kvh
+        ot_qwen_tile_kvl u_kvl (.clk(clk), .rst_n(rst_n), .tile_id6(tile_id[5:0]), .li(li), .lo(kvl_lo),
+            .kv_re(kvh_re), .kv_a(kvh_a), .kv_q(kvh_q), .land_fault(kvl_fault));
+    end else begin : g_nkvh
+        assign kvl_lo = {KVL{1'b0}};
+        assign kvl_fault = 1'b0;
+        assign kvh_q = 512'd0;
+    end endgenerate
     (* keep *) reg fault_q;    // flop-launched output pin (fault collection is multi-cycle on the die)
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) fault_q <= 1'b0; else fault_q <= tile_fault | land_fault;
+        if (!rst_n) fault_q <= 1'b0; else fault_q <= tile_fault | ((KVH != 0) ? kvl_fault : land_fault);
     assign fault = fault_q;
 endmodule

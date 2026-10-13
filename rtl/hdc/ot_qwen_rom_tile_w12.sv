@@ -109,6 +109,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer TMUT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
+    // KVH 1 (el1011-q-tile r5 leaf 3): the slice address map, request relay and capture line live in the hardened
+    // ot_qwen_tile_kvl; kv_re / kv_addr carry the raw matvec request to it and kvs_rd returns its relayed word (kvs_rd_m)
+    parameter integer KVH = 0,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
     parameter integer KV_VB = 262144,     // first V word (4 heads x 65,536)
     parameter integer KV_HB = 16,         // words per head: 2^KV_HB
@@ -517,6 +520,10 @@ module ot_qwen_rom_tile_logic_w12 #(
         wire [TG*W*8-1:0] kvs_rd_m;
         wire          kv_ce_r;
         wire [KV_AW-1:0] kv_ad_r;
+        if (KVH != 0) begin : g_kvh_rq
+            assign kv_ce_r = 1'b0;
+            assign kv_ad_r = {KV_AW{1'b0}};
+        end else
         if (ROM_PIPE != 0) begin : g_kvrl
             //: ROM_PIPE: the slice request takes the ROM request's relay stages (the write port the same, in the
             //: wrapper), its captured word 2 more stages
@@ -528,6 +535,9 @@ module ot_qwen_rom_tile_logic_w12 #(
             assign kv_ce_r = me_kv_re;
             assign kv_ad_r = is_v ? lv : lk;
         end
+        if (KVH != 0) begin : g_kvh_q
+            assign kvs_rd_m = kvs_rd;
+        end else
         if (MEM_EXTRA != 0) begin : g_kvcap
             reg kv_rd_q;
             reg [TG*W*8-1:0] cap;
@@ -544,8 +554,8 @@ module ot_qwen_rom_tile_logic_w12 #(
         for (e = 0; e < TG * W; e = e + 1) begin : g_x
             assign me_kv_q[32*e +: 32] = e4m3_f32(kvs_rd_m[8*e +: 8]);
         end
-        assign kv_re = 1'b0;
-        assign kv_addr = {TG*AW{1'b0}};
+        assign kv_re = (KVH != 0) ? me_kv_re : 1'b0;
+        assign kv_addr = (KVH != 0) ? me_kv_addr : {TG*AW{1'b0}};
     end else begin : g_kv_global
         assign kvs_r_ce = 1'b0;
         assign kvs_r_addr = {KV_AW{1'b0}};
@@ -605,6 +615,7 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer TIDR = 0,
     parameter integer LRR = 0,
     parameter integer KV_SLICE = 1,       // 0 (el1011-q-tile, r22ko4 qfd_tile_nk): no KV slice macros / write port (attention on the KV die)
+    parameter integer KVH = 0,            // 1 (el1011-q-tile r5 leaf 3, with KV_SLICE 1): the KV slice (macros, write port relay, read relay) is the hardened ot_qwen_tile_kvl beside this module; kvh_* is its seam
     parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
 ) (
     input  wire              clk,
@@ -625,8 +636,14 @@ module ot_qwen_rom_tile_w12 #(
     input  wire              kvw_ce,
     input  wire [6:0]        kvw_addr,
     input  wire [511:0]      kvw_data,
-    input  wire [511:0]      kvw_mask
+    input  wire [511:0]      kvw_mask,
+    // KVH 1: slice read seam to ot_qwen_tile_kvl (matvec request flops out, the leaf's relayed slice word in)
+    output wire              kvh_re,
+    output wire [23:0]       kvh_a,
+    input  wire [511:0]      kvh_q
 );
+    wire [4*24-1:0]       kvh_addr;
+    assign kvh_a = kvh_addr[23:0];
     wire [CODE_BANKS-1:0] rom_ce;
     wire [11:0]           rom_addr, rom_addr_n;
     wire [CODE_BANKS*12-1:0] rom_addr_b;
@@ -636,12 +653,12 @@ module ot_qwen_rom_tile_w12 #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .ANR(ANR), .BAW(BAW)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .ANR(ANR), .BAW(BAW), .KVH((KV_SLICE != 0) ? KVH : 0)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
         .kvs_r_ce(kvs_r_ce), .kvs_r_addr(kvs_r_addr), .kvs_rd(kvs_rd),
-        .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}));
+        .kv_re(kvh_re), .kv_addr(kvh_addr), .kv_q({4*16*32{1'b0}}));
     genvar p, b;
     generate
         //: BAW 12 keeps the original macro path g_col[p].g_bank[b].u_rom (floorplan scripts, die views, runtime
@@ -686,7 +703,7 @@ module ot_qwen_rom_tile_w12 #(
         .q({kvw_addr_r, kvw_data_r, kvw_mask_r}));
     generate
         //: KV_SLICE 0: zero-trip (no slice macros), the slice path keeps g_kv[p].u_kv for the floorplan scripts
-        for (p = 0; p < ((KV_SLICE != 0) ? 2 : 0); p = p + 1) begin : g_kv
+        for (p = 0; p < ((KV_SLICE != 0 && KVH == 0) ? 2 : 0); p = p + 1) begin : g_kv
             ot_sram_1r1w_128x256_m1_r2c2 u_kv (
                 .clk(clk), .r_ce_in(kvs_r_ce), .r_addr_in(kvs_r_addr), .rd_out(kvs_rd[256*p +: 256]),
                 .w_ce_in(kvw_ce_r), .w_addr_in(kvw_addr_r), .wd_in(kvw_data_r[256*p +: 256]),
@@ -696,6 +713,9 @@ module ot_qwen_rom_tile_w12 #(
     endgenerate
     generate if (KV_SLICE == 0) begin : g_nokvs
         assign kvs_rd = 512'd0;
+    end endgenerate
+    generate if (KV_SLICE != 0 && KVH != 0) begin : g_kvh
+        assign kvs_rd = kvh_q;
     end endgenerate
 endmodule
 

@@ -8,20 +8,22 @@
 `timescale 1ns/1ps
 module ot_qwen_rom_tile_w12 #(parameter integer NW = 18, GT = 6144, SMIN = 6, CODE_BANKS = 10, KV_VB = 262144,
     KV_NH = 4, MEM_EXTRA = 0, ACC_LAT = 5, FAST_ISSUE = 0, KV_PREP = 0, MUL_LAT = 5, TREE_LAT = 3, ROM_PIPE = 0, ROM_ARELAY = 1, ROM_CAP2 = 0, ROM_CAPX = 0,
-    LRST = 0, ARPB = 0, MPR = 0, HIER = 0, HIER_HARD = 0, TOREG = 0, TIDR = 0, LRR = 0, ANR = 0, BAW = 12) (
+    LRST = 0, ARPB = 0, MPR = 0, HIER = 0, HIER_HARD = 0, TOREG = 0, TIDR = 0, LRR = 0, ANR = 0, BAW = 12, KVH = 0) (
     input wire clk, input wire rst_n, input wire [15:0] tile_id, input wire ib_go, input wire [3*NW+13*24+13-1:0] ib,
     input wire [127:0] xl, output wire [511:0] t_out, output wire t_vout, input wire [511:0] n_a, input wire [511:0] n_b,
     input wire n_va, output wire [511:0] n_y, output wire n_vy, output wire fault,
-    input wire kvw_ce, input wire [6:0] kvw_addr, input wire [511:0] kvw_data, input wire [511:0] kvw_mask);
+    input wire kvw_ce, input wire [6:0] kvw_addr, input wire [511:0] kvw_data, input wire [511:0] kvw_mask,
+    output wire kvh_re, output wire [23:0] kvh_a, input wire [511:0] kvh_q);
+    assign kvh_re = 1'b0; assign kvh_a = 24'd0;
     assign t_out = 0; assign t_vout = 0; assign n_y = 0; assign n_vy = 0; assign fault = 1'b0;
 endmodule
 module tb_qwen_rom_tile_die;
-    parameter integer N = 20000, NEG = 0;
+    parameter integer N = 20000, NEG = 0, KVH = 0;   // KVH 1: the landing glue is the hardened ot_qwen_tile_kvl (same checks)
     reg clk = 0, rst_n = 0;
     reg [983:0] li = 0;
     wire [983:0] lo; wire fault;
     localparam [15:0] TID = 16'h0a2b;   // column 0x2b
-    ot_qwen_rom_tile_die u (.clk(clk), .rst_n(rst_n), .tile_id(TID), .ib_go(1'b0), .ib({379{1'b0}}), .xl(128'd0), .t_out(),
+    ot_qwen_rom_tile_die #(.KVH(KVH)) u (.clk(clk), .rst_n(rst_n), .tile_id(TID), .ib_go(1'b0), .ib({379{1'b0}}), .xl(128'd0), .t_out(),
         .t_vout(), .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(fault), .li(li), .lo(lo));
     // reference: decode written independently (field offsets from the slot MSB down)
     reg [983:0] li_d;
@@ -40,6 +42,13 @@ module tb_qwen_rom_tile_die;
         .s_loc(rloc), .s_isk(risk), .s_ktail(rkt), .s_sel(rsel), .s_beat(rbeat), .tail_lm(li_d[850 +: 128]),
         .s_grant(rgrant), .tok_v(1'b0), .tok_loc(7'd0), .tok_data(512'd0), .tok_mask(512'd0),
         .kvw_ce(rce), .kvw_addr(raddr), .kvw_data(rdata), .kvw_mask(rmask));
+    wire d_ce; wire [6:0] d_addr; wire [511:0] d_data, d_mask;   // the merge's write port as the die presents it
+    generate if (KVH != 0) begin : g_dk
+        assign d_ce = u.g_kvh.u_kvl.u_c.kvw_ce; assign d_addr = u.g_kvh.u_kvl.u_c.kvw_addr;
+        assign d_data = u.g_kvh.u_kvl.u_c.kvw_data; assign d_mask = u.g_kvh.u_kvl.u_c.kvw_mask;
+    end else begin : g_df
+        assign d_ce = u.kvw_ce; assign d_addr = u.kvw_addr; assign d_data = u.kvw_data; assign d_mask = u.kvw_mask;
+    end endgenerate
     reg rf1, rf2;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin rf1 <= 0; rf2 <= 0; end
         else begin rf1 <= rf1 | (|(rv & ~rgrant)); rf2 <= rf1; end
@@ -53,7 +62,7 @@ module tb_qwen_rom_tile_die;
             @(negedge clk);
             if (i > 6) begin
                 if (lo !== (NEG ? p2 : p1)) bad = bad + 1;
-                if (u.kvw_ce !== rce || (rce && (u.kvw_addr !== raddr || u.kvw_data !== rdata || u.kvw_mask !== rmask)))
+                if (d_ce !== rce || (rce && (d_addr !== raddr || d_data !== rdata || d_mask !== rmask)))
                     bad = bad + 1;
                 if (fault !== rf2) bad = bad + 1;
                 checks = checks + 1; writes = writes + rce;
