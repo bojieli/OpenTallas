@@ -626,6 +626,13 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
     end endgenerate
     // slices
     wire [3:0] bwv_s; wire [562:0] bwd0; wire [511:0] bwd_s [1:3];
+    // SEAM_V[s] = slice s is the split lane-slice.  OT_S81PH_MUT_LOCKSTEP (negative control): slice 3 is the flat slice at
+    // the old latency -- the lockstep assertion below refuses it; with OT_S81PH_LOCKSTEP_NOASSERT the bench must.
+`ifdef OT_S81PH_COLL_CES_SPLIT
+    localparam [3:0] SEAM_V = `ifdef OT_S81PH_MUT_LOCKSTEP 4'b0111 `else 4'b1111 `endif;
+`else
+    localparam [3:0] SEAM_V = 4'b0000;
+`endif
     genvar s;
     generate for (s = 0; s < 4; s = s + 1) begin : g_s
         localparam integer PTW = (s == 0) ? 169 : 129;
@@ -640,10 +647,7 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
         wire [(s == 0 ? 563 : 512)-1:0] bwd;
         wire po;
 `ifdef OT_S81PH_COLL_CES_SPLIT
-        // split lane-slices (route masters).  OT_S81PH_MUT_LOCKSTEP (negative control): slice 3 is the flat slice at the
-        // old latency -- the lockstep assertion below refuses it; with OT_S81PH_LOCKSTEP_NOASSERT the bench must.
-        localparam integer SEAM_S = `ifdef OT_S81PH_MUT_LOCKSTEP (s == 3) ? 0 : `endif 1;
-        if (SEAM_S == 0) begin : g_flat
+        if (!SEAM_V[s]) begin : g_flat                         // split lane-slices (route masters)
             dsfd_coll_ces #(.S(s)) u_s (.ck(c), .rs(r), .e_en(e_en), .rank_i(rank), .qp(qp), .fv_i(fv),
                 .q_v(q_v), .q_d(q_d[s*162 +: 162]), .q_cr(q_cr_s[s]),
                 .xl_v(xlv), .xl_d(xld), .xl_cr(xl_cr_s[s]),
@@ -667,7 +671,6 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
                 .bw_cr(bw_cr[0]), .bw_v(bwv_s[s]), .bw_d(bwd), .lf(slice_f[2*s +: 2]), .pe_o(pe[s]));
         end
 `else
-        localparam integer SEAM_S = 0;
         dsfd_coll_ces #(.S(s)) u_s (.ck(c), .rs(r), .e_en(e_en), .rank_i(rank), .qp(qp), .fv_i(fv),
             .q_v(q_v), .q_d(q_d[s*162 +: 162]), .q_cr(q_cr_s[s]),
             .xl_v(xlv), .xl_d(xld), .xl_cr(xl_cr_s[s]),
@@ -680,11 +683,10 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
         else begin : g_bn assign bwd_s[s] = bwd; end
     end endgenerate
     // LOCKSTEP (s81-cesn 2026-10-13, coordinator rule): no slice may run at a seam latency different from the others
-    localparam integer SEAM_ALL = g_s[0].SEAM_S + g_s[1].SEAM_S + g_s[2].SEAM_S + g_s[3].SEAM_S;
 `ifndef OT_S81PH_LOCKSTEP_NOASSERT
-    generate if (SEAM_ALL != 0 && SEAM_ALL != 4) begin : g_lockstep_refused
+    generate if (SEAM_V != 4'b0000 && SEAM_V != 4'b1111) begin : g_lockstep_refused
         initial begin
-            $display("TB_S81PH_COLL_SYS FAIL lockstep: slices at different seam latencies (%0d of 4 split)", SEAM_ALL);
+            $display("TB_S81PH_COLL_SYS FAIL lockstep: slices at different seam latencies (split mask %b)", SEAM_V);
             $fatal(1, "dsfd_coll_ceh: lockstep violated");
         end
     end endgenerate
