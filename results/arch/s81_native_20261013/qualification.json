@@ -22,24 +22,14 @@
  "qualified_instances": 0,
  "gate_failures": {
   "pair": [
-   "dsfd_cfifo",
-   "dsfd_l2r_vr_564x1__hx_E",
    "dsfd_l2r_vr_564x1__hx_W",
-   "dsfd_m2l_raw_512x1__hl_E0",
-   "dsfd_m2l_raw_512x1__hl_E2",
-   "dsfd_m2l_raw_512x1__hl_W1",
-   "dsfd_m2l_vr_512x1__hix_SW",
-   "dsfd_m2l_vr_512x1__hqe_SW",
-   "dsfd_r2l_vr_1024x1__ha_SW",
    "dsfd_r2l_vr_512x1__hcol",
    "dsfd_r2l_vr_512x1__hsel",
    "dsfd_stnh_512x1",
    "dsfd_stnh_514x1",
    "dsfd_stnh_566x1",
    "dsfd_stnv_512x1",
-   "dsfd_stnv_514x1",
-   "ot_s81_hc_ctfn",
-   "ot_s81_hc_ctfs"
+   "dsfd_stnv_514x1"
   ],
   "tt": [],
   "ff": [],
@@ -85,7 +75,18 @@
   ]
  },
  "gate_open": {
-  "pair": [],
+  "pair": [
+   "dsfd_cfifo",
+   "dsfd_l2r_vr_564x1__hx_E",
+   "dsfd_m2l_raw_512x1__hl_E0",
+   "dsfd_m2l_raw_512x1__hl_E2",
+   "dsfd_m2l_raw_512x1__hl_W1",
+   "dsfd_m2l_vr_512x1__hix_SW",
+   "dsfd_m2l_vr_512x1__hqe_SW",
+   "dsfd_r2l_vr_1024x1__ha_SW",
+   "ot_s81_hc_ctfn",
+   "ot_s81_hc_ctfs"
+  ],
   "tt": [],
   "ff": [],
   "export": [
@@ -123,8 +124,8 @@
    "export_dir": "physical/s81_die_views/views_colck/dsfd_cfifo",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "['dsfd_cfifo_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_cfifo.lef', 'dsfd_cfifo_ff.lib', 'dsfd_cfifo_ss.lib'])"
+     "ok": null,
+     "detail": "['dsfd_cfifo_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_cfifo.lef', 'dsfd_cfifo_ff.lib', 'dsfd_cfifo_ss.lib']); no ODB hash links it to the LEF"
     },
     "tt": {
      "ok": true,
@@ -168,7 +169,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_cfifo_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_cfifo.lef', 'dsfd_cfifo_ff.lib', 'dsfd_cfifo_ss.lib'])",
+    "pair: ['dsfd_cfifo_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_cfifo.lef', 'dsfd_cfifo_ff.lib', 'dsfd_cfifo_ss.lib']); no ODB hash links it to the LEF",
     "lint: dsfd_cfifo 431.976 x 95.016: PG M7 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M8; face pins 1277 blocked-above 1058 blocked-same 5; clock cr[0] insertion 315 ps; clock xf[0] insertion 296 ps | (f) face-pin access: 1058 of 1277 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. cc[0] M5 (136.416,94.824), cc[10] M5 (136.896,94.824), cc[11] M5 (136.944,94.824)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 5 of 1277 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. ck[0] M4 (0.025,46.992), co[0] M5 (182.976,94.777), cr[",
     "clock: clock pins ['ck[0]', 'cr[0]', 'xf[0]']; no FF min/max_clock_tree_path on ['ck[0]']"
    ],
@@ -301,11 +302,12 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "lint",
     "clock"
    ],
-   "open_gates": [],
+   "open_gates": [
+    "pair"
+   ],
    "file_sha256": {
     "lef": "3afd25575a9b112bc3115d0cc52fe349244fa839309b4d801c2d77764d7222dc",
     "tt": "63783f6a0e852d4e1321f0b2130bd9657389718c7fb130a3519f0afa5743bea8",
@@ -320,8 +322,8 @@
    "export_dir": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_E",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "['dsfd_l2r_vr_564x1__hx_E_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_E.lef', 'dsfd_l2r_vr_564x1__hx_E_ff.lib', 'dsfd_l2r_vr_564x1__hx_E_ss.lib'])"
+     "ok": null,
+     "detail": "['dsfd_l2r_vr_564x1__hx_E_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_E.lef', 'dsfd_l2r_vr_564x1__hx_E_ff.lib', 'dsfd_l2r_vr_564x1__hx_E_ss.lib']); no ODB hash links it to the LEF"
     },
     "tt": {
      "ok": true,
@@ -365,7 +367,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_l2r_vr_564x1__hx_E_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_E.lef', 'dsfd_l2r_vr_564x1__hx_E_ff.lib', 'dsfd_l2r_vr_564x1__hx_E_ss.lib'])",
+    "pair: ['dsfd_l2r_vr_564x1__hx_E_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_E.lef', 'dsfd_l2r_vr_564x1__hx_E_ff.lib', 'dsfd_l2r_vr_564x1__hx_E_ss.lib']); no ODB hash links it to the LEF",
     "lint: dsfd_l2r_vr_564x1__hx_E 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 760 blocked-same 1; clock ck[0] insertion 146 ps; clock cks[0] insertion 142 ps | (f) face-pin access: 760 of 1139 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (20.688,0.000), cks[0] M5 (20.880,0.000), fo[0] M5 (21.072,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1139 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. i[495] M4 (0.025,45.696)); fix: tools/hier_contract/abstract_pi"
    ],
    "job": "s81-hend-m221pq-hx-E-pinreg-m5w-9ec0460c9-tt",
@@ -488,10 +490,11 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "lint"
    ],
-   "open_gates": [],
+   "open_gates": [
+    "pair"
+   ],
    "file_sha256": {
     "lef": "80d8aa6980883b871cb3d31804ffabbbcc84dbcfc7122b2904a809c8c06d03e5",
     "tt": "49f9d5e454c72b4c54031499bbac0776945cdfd8a6beb8b7431e7d1adcba1a0e",
@@ -507,7 +510,7 @@
    "gates": {
     "pair": {
      "ok": false,
-     "detail": "['dsfd_l2r_vr_564x1__hx_W_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_W.lef', 'dsfd_l2r_vr_564x1__hx_W_ff.lib', 'dsfd_l2r_vr_564x1__hx_W_ss.lib'])"
+     "detail": "['dsfd_l2r_vr_564x1__hx_W_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:32): it is the extraction of an earlier ODB"
     },
     "tt": {
      "ok": true,
@@ -551,7 +554,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_l2r_vr_564x1__hx_W_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_W.lef', 'dsfd_l2r_vr_564x1__hx_W_ff.lib', 'dsfd_l2r_vr_564x1__hx_W_ss.lib'])",
+    "pair: ['dsfd_l2r_vr_564x1__hx_W_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:32): it is the extraction of an earlier ODB",
     "lint: dsfd_l2r_vr_564x1__hx_W 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 697 blocked-same 2; clock ck[0] insertion 134 ps; clock cks[0] insertion 133 ps | (f) face-pin access: 697 of 1139 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. fo[0] M4 (0.000,21.936), i[0] M4 (69.336,21.936), i[10] M4 (69.336,22.416)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 2 of 1139 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. od[135] M4 (0.025,28.608), od[484] M4 (0.025,45.360)); fix: too"
    ],
    "job": "s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt-arch",
@@ -692,8 +695,8 @@
    "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E0",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "['dsfd_m2l_raw_512x1__hl_E0_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E0.lef', 'dsfd_m2l_raw_512x1__hl_E0_ff.lib', 'dsfd_m2l_raw_512x1__hl_E0_ss.lib'])"
+     "ok": null,
+     "detail": "['dsfd_m2l_raw_512x1__hl_E0_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E0.lef', 'dsfd_m2l_raw_512x1__hl_E0_ff.lib', 'dsfd_m2l_raw_512x1__hl_E0_ss.lib']); no ODB hash links it to the LEF"
     },
     "tt": {
      "ok": true,
@@ -737,7 +740,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_m2l_raw_512x1__hl_E0_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E0.lef', 'dsfd_m2l_raw_512x1__hl_E0_ff.lib', 'dsfd_m2l_raw_512x1__hl_E0_ss.lib'])",
+    "pair: ['dsfd_m2l_raw_512x1__hl_E0_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E0.lef', 'dsfd_m2l_raw_512x1__hl_E0_ff.lib', 'dsfd_m2l_raw_512x1__hl_E0_ss.lib']); no ODB hash links it to the LEF",
     "bench: pass benches NONE; failing mutants NONE (no bench record)",
     "lint: dsfd_m2l_raw_512x1__hl_E0 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 648 blocked-same 2; clock ck[0] insertion 189 ps; clock fi0[0] insertion 187 ps | (f) face-pin access: 648 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (128.088,53.472), di0[100] M4 (128.088,58.272), di0[101] M4 (128.088,58.320)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 2 of 1030 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[426] M4 (0.025,73.968), o[460] M4 (0.025,75.600))"
    ],
@@ -852,11 +855,12 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "bench",
     "lint"
    ],
-   "open_gates": [],
+   "open_gates": [
+    "pair"
+   ],
    "file_sha256": {
     "lef": "f60914314feb4a003eb1ea54cad6dc55eb4fe1c959803368140f4fd11edb495b",
     "tt": "d729d4fb180f670d538aa976db3628c794a5a23d0dcc4f61b76ee38544ee7f17",
@@ -871,8 +875,8 @@
    "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E2",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "['dsfd_m2l_raw_512x1__hl_E2_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E2.lef', 'dsfd_m2l_raw_512x1__hl_E2_ff.lib', 'dsfd_m2l_raw_512x1__hl_E2_ss.lib'])"
+     "ok": null,
+     "detail": "['dsfd_m2l_raw_512x1__hl_E2_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E2.lef', 'dsfd_m2l_raw_512x1__hl_E2_ff.lib', 'dsfd_m2l_raw_512x1__hl_E2_ss.lib']); no ODB hash links it to the LEF"
     },
     "tt": {
      "ok": true,
@@ -916,7 +920,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_m2l_raw_512x1__hl_E2_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E2.lef', 'dsfd_m2l_raw_512x1__hl_E2_ff.lib', 'dsfd_m2l_raw_512x1__hl_E2_ss.lib'])",
+    "pair: ['dsfd_m2l_raw_512x1__hl_E2_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E2.lef', 'dsfd_m2l_raw_512x1__hl_E2_ff.lib', 'dsfd_m2l_raw_512x1__hl_E2_ss.lib']); no ODB hash links it to the LEF",
     "export: export minus verdict: FF -16.87 ps",
     "bench: pass benches NONE; failing mutants NONE (no bench record)",
     "lint: dsfd_m2l_raw_512x1__hl_E2 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 382 blocked-same 0; clock ck[0] insertion 186 ps; clock fi0[0] insertion 199 ps | (f) face-pin access: 382 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[322] M4 (128.088,68.928), di0[323] M4 (128.088,68.976), di0[324] M4 (128.088,69.024)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
@@ -1032,11 +1036,11 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "bench",
     "lint"
    ],
    "open_gates": [
+    "pair",
     "export"
    ],
    "file_sha256": {
@@ -1053,8 +1057,8 @@
    "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_W1",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "['dsfd_m2l_raw_512x1__hl_W1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_W1.lef', 'dsfd_m2l_raw_512x1__hl_W1_ff.lib', 'dsfd_m2l_raw_512x1__hl_W1_ss.lib'])"
+     "ok": null,
+     "detail": "['dsfd_m2l_raw_512x1__hl_W1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_W1.lef', 'dsfd_m2l_raw_512x1__hl_W1_ff.lib', 'dsfd_m2l_raw_512x1__hl_W1_ss.lib']); no ODB hash links it to the LEF"
     },
     "tt": {
      "ok": true,
@@ -1098,7 +1102,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_m2l_raw_512x1__hl_W1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_W1.lef', 'dsfd_m2l_raw_512x1__hl_W1_ff.lib', 'dsfd_m2l_raw_512x1__hl_W1_ss.lib'])",
+    "pair: ['dsfd_m2l_raw_512x1__hl_W1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_W1.lef', 'dsfd_m2l_raw_512x1__hl_W1_ff.lib', 'dsfd_m2l_raw_512x1__hl_W1_ss.lib']); no ODB hash links it to the LEF",
     "export: export minus verdict: FF -17.05 ps",
     "bench: pass benches NONE; failing mutants NONE (no bench record)",
     "lint: dsfd_m2l_raw_512x1__hl_W1 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 710 blocked-same 0; clock ck[0] insertion 191 ps; clock fi0[0] insertion 198 ps | (f) face-pin access: 710 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (51.552,0.000), di0[0] M5 (51.936,0.000), di0[10] M5 (52.416,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
@@ -1214,11 +1218,11 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "bench",
     "lint"
    ],
    "open_gates": [
+    "pair",
     "export"
    ],
    "file_sha256": {
@@ -1235,8 +1239,8 @@
    "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hix_SW",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "['dsfd_m2l_vr_512x1__hix_SW_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hix_SW.lef', 'dsfd_m2l_vr_512x1__hix_SW_ff.lib', 'dsfd_m2l_vr_512x1__hix_SW_ss.lib'])"
+     "ok": null,
+     "detail": "['dsfd_m2l_vr_512x1__hix_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hix_SW.lef', 'dsfd_m2l_vr_512x1__hix_SW_ff.lib', 'dsfd_m2l_vr_512x1__hix_SW_ss.lib']); no ODB hash links it to the LEF"
     },
     "tt": {
      "ok": true,
@@ -1280,7 +1284,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_m2l_vr_512x1__hix_SW_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hix_SW.lef', 'dsfd_m2l_vr_512x1__hix_SW_ff.lib', 'dsfd_m2l_vr_512x1__hix_SW_ss.lib'])",
+    "pair: ['dsfd_m2l_vr_512x1__hix_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hix_SW.lef', 'dsfd_m2l_vr_512x1__hix_SW_ff.lib', 'dsfd_m2l_vr_512x1__hix_SW_ss.lib']); no ODB hash links it to the LEF",
     "bench: pass benches NONE; failing mutants NONE (no bench record)",
     "lint: dsfd_m2l_vr_512x1__hix_SW 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1032 blocked-above 1008 blocked-same 1; clock ck[0] insertion 193 ps; clock fi0[0] insertion 172 ps | (f) face-pin access: 1008 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M5 (51.696,131.544), di0[100] M5 (56.496,131.544), di0[101] M5 (56.544,131.544)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[370] M4 (0.025,71.280)); fix: tools/hier_contrac",
     "current: registry adopted job dsfd_m2l_vr_512x1__hix_sw_m5-m5-5b76815db != bundle job s81-hend-m221pq-hix-SW-a1f23fa0b-mm"
@@ -1396,12 +1400,13 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "bench",
     "lint",
     "current"
    ],
-   "open_gates": [],
+   "open_gates": [
+    "pair"
+   ],
    "file_sha256": {
     "lef": "5bc556377d09c8c22befaaa9f1412e08904da100cbe6d76673ec84453458baa3",
     "tt": "aaa148a61f8bcf7bcafb12a5610ffb442cf569aba49a7647381adee30f2cd5e8",
@@ -1416,8 +1421,8 @@
    "export_dir": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hqe_SW",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "['dsfd_m2l_vr_512x1__hqe_SW_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hqe_SW.lef', 'dsfd_m2l_vr_512x1__hqe_SW_ff.lib', 'dsfd_m2l_vr_512x1__hqe_SW_ss.lib'])"
+     "ok": null,
+     "detail": "['dsfd_m2l_vr_512x1__hqe_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hqe_SW.lef', 'dsfd_m2l_vr_512x1__hqe_SW_ff.lib', 'dsfd_m2l_vr_512x1__hqe_SW_ss.lib']); no ODB hash links it to the LEF"
     },
     "tt": {
      "ok": true,
@@ -1461,7 +1466,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_m2l_vr_512x1__hqe_SW_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hqe_SW.lef', 'dsfd_m2l_vr_512x1__hqe_SW_ff.lib', 'dsfd_m2l_vr_512x1__hqe_SW_ss.lib'])",
+    "pair: ['dsfd_m2l_vr_512x1__hqe_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_vr_512x1__hqe_SW.lef', 'dsfd_m2l_vr_512x1__hqe_SW_ff.lib', 'dsfd_m2l_vr_512x1__hqe_SW_ss.lib']); no ODB hash links it to the LEF",
     "export: export minus verdict: FF -16.29 ps",
     "bench: pass benches NONE; failing mutants NONE (no bench record)",
     "lint: dsfd_m2l_vr_512x1__hqe_SW 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1032 blocked-above 750 blocked-same 1; clock ck[0] insertion 198 ps; clock fi0[0] insertion 188 ps | (f) face-pin access: 750 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (128.088,53.424), di0[100] M4 (128.088,58.224), di0[101] M4 (128.088,58.272)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. ck[0] M5 (51.408,0.053)); fix: tools/hier_contract/",
@@ -1578,12 +1583,12 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "bench",
     "lint",
     "current"
    ],
    "open_gates": [
+    "pair",
     "export"
    ],
    "file_sha256": {
@@ -1600,8 +1605,8 @@
    "export_dir": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_1024x1__ha_SW",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "['dsfd_r2l_vr_1024x1__ha_SW_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_r2l_vr_1024x1__ha_SW.lef', 'dsfd_r2l_vr_1024x1__ha_SW_ff.lib', 'dsfd_r2l_vr_1024x1__ha_SW_ss.lib'])"
+     "ok": null,
+     "detail": "['dsfd_r2l_vr_1024x1__ha_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_r2l_vr_1024x1__ha_SW.lef', 'dsfd_r2l_vr_1024x1__ha_SW_ff.lib', 'dsfd_r2l_vr_1024x1__ha_SW_ss.lib']); no ODB hash links it to the LEF"
     },
     "tt": {
      "ok": true,
@@ -1645,7 +1650,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_r2l_vr_1024x1__ha_SW_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_r2l_vr_1024x1__ha_SW.lef', 'dsfd_r2l_vr_1024x1__ha_SW_ff.lib', 'dsfd_r2l_vr_1024x1__ha_SW_ss.lib'])",
+    "pair: ['dsfd_r2l_vr_1024x1__ha_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_r2l_vr_1024x1__ha_SW.lef', 'dsfd_r2l_vr_1024x1__ha_SW_ff.lib', 'dsfd_r2l_vr_1024x1__ha_SW_ss.lib']); no ODB hash links it to the LEF",
     "lint: dsfd_r2l_vr_1024x1__ha_SW 112.296 x 112.296: PG M7 VDD 10 stripes (87% spread, 100% cov) / VSS 11 stripes (96% spread, 100% cov); strap M8; face pins 2056 blocked-above 1021 blocked-same 0; clock ck[0] insertion 184 ps; clock fi0[0] insertion 183 ps | (f) face-pin access: 1021 of 2056 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (31.248,0.000), di0[0] M5 (31.632,0.000), di0[1000] M5 (79.632,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
    ],
    "job": "s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt",
@@ -1744,10 +1749,11 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "lint"
    ],
-   "open_gates": [],
+   "open_gates": [
+    "pair"
+   ],
    "file_sha256": {
     "lef": "0d407cfdb369bb9bc07ee2ad7d1908bde597d8ead0d38de2624153d794289e02",
     "tt": "fc01c1e36c67d4599331428662706681687e69c973ff4ffddcb83573fee317ca",
@@ -1763,7 +1769,7 @@
    "gates": {
     "pair": {
      "ok": false,
-     "detail": "['dsfd_r2l_vr_512x1__hcol_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_r2l_vr_512x1__hcol.lef', 'dsfd_r2l_vr_512x1__hcol_ff.lib', 'dsfd_r2l_vr_512x1__hcol_ss.lib'])"
+     "detail": "['dsfd_r2l_vr_512x1__hcol_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 04:02): it is the extraction of an earlier ODB"
     },
     "tt": {
      "ok": true,
@@ -1807,7 +1813,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_r2l_vr_512x1__hcol_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_r2l_vr_512x1__hcol.lef', 'dsfd_r2l_vr_512x1__hcol_ff.lib', 'dsfd_r2l_vr_512x1__hcol_ss.lib'])",
+    "pair: ['dsfd_r2l_vr_512x1__hcol_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 04:02): it is the extraction of an earlier ODB",
     "lint: dsfd_r2l_vr_512x1__hcol 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 553 blocked-same 0; clock ck[0] insertion 134 ps; clock fi0[0] insertion 133 ps | (f) face-pin access: 553 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. ck[0] M5 (18.960,0.000), di0[0] M4 (62.856,19.968), di0[100] M4 (62.856,24.768)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
    ],
    "job": "s81-hend-m221pq-hcol-pinreg-f1b64667d-tt",
@@ -1925,7 +1931,7 @@
    "gates": {
     "pair": {
      "ok": false,
-     "detail": "['dsfd_r2l_vr_512x1__hsel_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_r2l_vr_512x1__hsel.lef', 'dsfd_r2l_vr_512x1__hsel_ff.lib', 'dsfd_r2l_vr_512x1__hsel_ss.lib'])"
+     "detail": "['dsfd_r2l_vr_512x1__hsel_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 03:38): it is the extraction of an earlier ODB"
     },
     "tt": {
      "ok": true,
@@ -1969,7 +1975,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_r2l_vr_512x1__hsel_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_r2l_vr_512x1__hsel.lef', 'dsfd_r2l_vr_512x1__hsel_ff.lib', 'dsfd_r2l_vr_512x1__hsel_ss.lib'])",
+    "pair: ['dsfd_r2l_vr_512x1__hsel_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 03:38): it is the extraction of an earlier ODB",
     "lint: dsfd_r2l_vr_512x1__hsel 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 283 blocked-same 4; clock ck[0] insertion 131 ps; clock fi0[0] insertion 130 ps | (f) face-pin access: 283 of 1032 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (62.856,19.968), di0[100] M4 (62.856,24.768), di0[101] M4 (62.856,24.816)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 4 of 1032 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. o[148] M5 (26.256,64.720), o[181] M5 (27.840,64.720), ",
     "current: registry adopted job dsfd_r2l_vr_512x1__hsel_m5-m5-5b76815db != bundle job s81-hend-m221pq-hsel-pinreg-f1b64667d-tt"
    ],
@@ -2089,7 +2095,7 @@
    "gates": {
     "pair": {
      "ok": false,
-     "detail": "['dsfd_stnh_512x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnh_512x1.lef', 'dsfd_stnh_512x1_ff.lib', 'dsfd_stnh_512x1_ss.lib'])"
+     "detail": "['dsfd_stnh_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB"
     },
     "tt": {
      "ok": true,
@@ -2133,7 +2139,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_stnh_512x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnh_512x1.lef', 'dsfd_stnh_512x1_ff.lib', 'dsfd_stnh_512x1_ss.lib'])",
+    "pair: ['dsfd_stnh_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
     "export: export minus verdict: FF +16.38 ps",
     "lint: dsfd_stnh_512x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1026 blocked-above 352 blocked-same 1; clock fi0[0] insertion 102 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 352 of 1026 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (0.000,2.928), di0[100] M4 (0.000,7.728), di0[101] M4 (0.000,7.776)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1026 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. di0[6] M4 ("
    ],
@@ -2251,7 +2257,7 @@
    "gates": {
     "pair": {
      "ok": false,
-     "detail": "['dsfd_stnh_514x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnh_514x1.lef', 'dsfd_stnh_514x1_ff.lib', 'dsfd_stnh_514x1_ss.lib'])"
+     "detail": "['dsfd_stnh_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB"
     },
     "tt": {
      "ok": true,
@@ -2295,7 +2301,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_stnh_514x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnh_514x1.lef', 'dsfd_stnh_514x1_ff.lib', 'dsfd_stnh_514x1_ss.lib'])",
+    "pair: ['dsfd_stnh_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
     "export: export minus verdict: FF +16.34 ps",
     "lint: dsfd_stnh_514x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1030 blocked-above 367 blocked-same 1; clock fi0[0] insertion 104 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 367 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[100] M4 (0.000,7.680), di0[101] M4 (0.000,7.728), di0[102] M4 (0.000,7.776)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT | (f) face-pin access: 1 of 1030 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. di0[142] "
    ],
@@ -2413,7 +2419,7 @@
    "gates": {
     "pair": {
      "ok": false,
-     "detail": "['dsfd_stnh_566x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnh_566x1.lef', 'dsfd_stnh_566x1_ff.lib', 'dsfd_stnh_566x1_ss.lib'])"
+     "detail": "['dsfd_stnh_566x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB"
     },
     "tt": {
      "ok": true,
@@ -2457,7 +2463,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_stnh_566x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnh_566x1.lef', 'dsfd_stnh_566x1_ff.lib', 'dsfd_stnh_566x1_ss.lib'])",
+    "pair: ['dsfd_stnh_566x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
     "export: export minus verdict: FF +15.61 ps",
     "lint: dsfd_stnh_566x1 17.256 x 32.376: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1134 blocked-above 396 blocked-same 0; clock fi0[0] insertion 111 ps | (b) pg: VDD: 1 full-length stripes on M7 (< 2) | (f) face-pin access: 396 of 1134 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[0] M4 (0.000,2.688), di0[100] M4 (0.000,7.488), di0[101] M4 (0.000,7.536)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
    ],
@@ -2575,7 +2581,7 @@
    "gates": {
     "pair": {
      "ok": false,
-     "detail": "['dsfd_stnv_512x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnv_512x1.lef', 'dsfd_stnv_512x1_ff.lib', 'dsfd_stnv_512x1_ss.lib'])"
+     "detail": "['dsfd_stnv_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB"
     },
     "tt": {
      "ok": true,
@@ -2619,7 +2625,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_stnv_512x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnv_512x1.lef', 'dsfd_stnv_512x1_ff.lib', 'dsfd_stnv_512x1_ss.lib'])",
+    "pair: ['dsfd_stnv_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB",
     "export: export minus verdict: FF +15.66 ps"
    ],
    "job": "s81-dsfd-stnv-512x1-2e2d7aa3f-arch",
@@ -2735,7 +2741,7 @@
    "gates": {
     "pair": {
      "ok": false,
-     "detail": "['dsfd_stnv_514x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnv_514x1.lef', 'dsfd_stnv_514x1_ff.lib', 'dsfd_stnv_514x1_ss.lib'])"
+     "detail": "['dsfd_stnv_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB"
     },
     "tt": {
      "ok": true,
@@ -2779,7 +2785,7 @@
     }
    },
    "why": [
-    "pair: ['dsfd_stnv_514x1_tt.lib'] not written by the recorded export (abstract.json lists ['dsfd_stnv_514x1.lef', 'dsfd_stnv_514x1_ff.lib', 'dsfd_stnv_514x1_ss.lib'])",
+    "pair: ['dsfd_stnv_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB",
     "export: export minus verdict: FF +17.29 ps",
     "lint: dsfd_stnv_514x1 30.216 x 17.256: PG M7 VDD 3 stripes (72% spread, 100% cov) / VSS 3 stripes (72% spread, 100% cov); strap M8; face pins 1030 blocked-above 68 blocked-same 0; clock fi0[0] insertion 105 ps | (f) face-pin access: 68 of 1030 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. di0[10] M5 (3.360,0.000), di0[11] M5 (3.408,0.000), di0[12] M5 (3.456,0.000)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
    ],
@@ -3042,8 +3048,8 @@
    "export_dir": "physical/ref_tile/s81hc_ctfn_ref/views/ot_s81_hc_ctfn",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "view exported from /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/routes/s81hc_ctfn_ref_v1_4c6ea9b8c/work/orfs but the closing verdict was measured on /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/cl/eco/pass2/orfs"
+     "ok": null,
+     "detail": "verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/routes/s81hc_ctfn_ref_v1_4c6ea9b8c/work/orfs: the loop installs the ECO ODB there before re-export, but the export records no ODB hash"
     },
     "tt": {
      "ok": true,
@@ -3087,7 +3093,7 @@
     }
    },
    "why": [
-    "pair: view exported from /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/routes/s81hc_ctfn_ref_v1_4c6ea9b8c/work/orfs but the closing verdict was measured on /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/cl/eco/pass2/orfs",
+    "pair: verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/routes/s81hc_ctfn_ref_v1_4c6ea9b8c/work/orfs: the loop installs the ECO ODB there before re-export, but the export records no ODB hash",
     "export: no export-side corner STA record to compare with the verdict",
     "bench: pass benches NONE; failing mutants NONE",
     "thr: no budget row for this master: its parent element's production bench must cover it"
@@ -3174,10 +3180,10 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "bench"
    ],
    "open_gates": [
+    "pair",
     "export",
     "thr"
    ],
@@ -3196,8 +3202,8 @@
    "export_dir": "physical/ref_tile/s81hc_ctfs_ref/views/ot_s81_hc_ctfs",
    "gates": {
     "pair": {
-     "ok": false,
-     "detail": "view exported from /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/routes/s81hc_ctfs_ref_v1_a9cfb97b9/work/orfs but the closing verdict was measured on /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/cl/eco/pass2/orfs"
+     "ok": null,
+     "detail": "verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/routes/s81hc_ctfs_ref_v1_a9cfb97b9/work/orfs: the loop installs the ECO ODB there before re-export, but the export records no ODB hash"
     },
     "tt": {
      "ok": true,
@@ -3241,7 +3247,7 @@
     }
    },
    "why": [
-    "pair: view exported from /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/routes/s81hc_ctfs_ref_v1_a9cfb97b9/work/orfs but the closing verdict was measured on /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/cl/eco/pass2/orfs",
+    "pair: verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/routes/s81hc_ctfs_ref_v1_a9cfb97b9/work/orfs: the loop installs the ECO ODB there before re-export, but the export records no ODB hash",
     "export: no export-side corner STA record to compare with the verdict",
     "bench: pass benches NONE; failing mutants NONE",
     "thr: no budget row for this master: its parent element's production bench must cover it"
@@ -3328,10 +3334,10 @@
    },
    "verdict": "NOT_QUALIFIED",
    "failed_gates": [
-    "pair",
     "bench"
    ],
    "open_gates": [
+    "pair",
     "export",
     "thr"
    ],

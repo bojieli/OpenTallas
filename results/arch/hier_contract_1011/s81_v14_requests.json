@@ -243,6 +243,35 @@
         "Generator: place relays at the real 17.28 outline (site-grid) and read pin positions from the routed LEF; orientation R0 only unless the routed pins stay on track when mirrored.",
         "Bind by master name once each view passes native_view_qualify gates."
       ]
+    },
+    {
+      "id": "hc-post-station-midpoint",
+      "owner": "S81 die lead / HC lead",
+      "status": "COORDINATOR DECISION 2026-10-13 03:40 PT -- BINDING for v14; slot reserved, outline to be sized from the station kit",
+      "decision": "HC POST job accept / dispatch / completion station moves from the top of the HC column to the corridor midpoint. Accept at the top: far tile 17.8 mm away, >= 36 stages each way at <= 500 um, 127-133 cycles against the immutable 124.19; midpoint: ~115 cycles estimated (1.02x of 112.9), to be MEASURED by the production bench, not adopted as a price.",
+      "geometry": {
+        "reserved_centre_um": [
+          18220.68,
+          13327.2
+        ],
+        "corridor_y_um": [
+          12571.2,
+          14083.2
+        ],
+        "branches": 24,
+        "max_dispatch_bits": 409,
+        "completion_bits": 23,
+        "geometric_floor": "19 global + 3 local 500-um stages each way (results/arch/s81_native_20261013/README.md); not a legal relay placement"
+      },
+      "also": [
+        "ot_s81_hc_crooty Y tiles (v4 routes): clock / control entry moves from the SW to the SE corner -> v14 slot clock_entry and the die clock-plan target follow the routed v4 pins.",
+        "dsfd_sp_hc_t (chain-tail split, cut after 9 / 31 / 51, seams 3,056 forward / 2,164 return) is on the HC candidate branch; the HC agent lands it on main; the generator widens hc_s t_tf / f_tr and hc_t f_sf / t_sr after it lands."
+      ],
+      "actions": [
+        "v14: add slot hc_post_stn centred on the reserved point inside the corridor (keep-out for relays / stations of other buses until the kit outline exists), with 24 branch pin groups facing N (10 / 10 / 10 half regions) and S (12 / 10 / 12).",
+        "Generator: route the 24 express branches from this slot with the hop gate (<= 500 um) and count stages per branch into hop_gate.json; the HC throughput bench consumes those counts.",
+        "Cut check at the midpoint rows with the real station pins before any die GRT."
+      ]
     }
   ]
 }

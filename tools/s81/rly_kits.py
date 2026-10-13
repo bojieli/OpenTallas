@@ -21,10 +21,22 @@ ROOT = Path(__file__).resolve().parents[2]
 RTL = "rtl/dsrom_sys/s81_glue"
 
 
-def outline(w: int) -> dict:
-    # generator slot: 17.256 square; the 266/283-bit column relays are 19.416 tall (H = 0.024 mod 0.048: mirrored
-    # placements keep every pin on track)
-    return {"w": 17.256, "h": 19.416 if w > 200 else 17.256}
+def outline(w: int, fi: str, fo: str) -> dict:
+    """Outline from the content, not from the generator's 17.256 placeholder slot (pre-route gate 2026-10-13: W = 63
+    is 18.6% utilised at 17.28 sq; W = 266 / 283 do not fit at all -- PPL-0111, 283 pins at 2 tracks need 27.2 um of
+    face against 17.28, and 128 um2 of flops + 113 um2 of output delay cells exceed the 196 um2 core).
+    Pins take 2 tracks (0.096 um) a bit on the data faces; std = flops + BUF-HB4-BUF per output at ~0.52; every
+    dimension is a multiple of 2.16 um (row 0.27, site 0.054, M4/M5 track 0.048)."""
+    if w <= 2:
+        return {"w": 8.64, "h": 8.64}
+    if w <= 15:
+        return {"w": 10.8, "h": 10.8}
+    if w <= 68:
+        return {"w": 15.12, "h": 15.12}
+    # wide column relays: the data face must hold w pins at 0.096 um
+    if fi in "NS" and fo in "NS":
+        return {"w": 34.56, "h": 19.44}
+    return {"w": 21.6, "h": 30.24}
 
 
 def main() -> int:
@@ -56,7 +68,7 @@ def main() -> int:
             "name": name, "top": mst, "kind": "tile",
             "sources": [f"{RTL}/ot_s81_rly.sv", f"{RTL}/dsfd_rly_masters.sv"],
             "params": {}, "clock_port": "ck", "reset_ports": ["rs"],
-            "outline": outline(w), "macros": [],
+            "outline": outline(w, fi, fo), "macros": [],
             "pins": {f: p for f, p in pins.items() if p},
             "outhold": True,
             "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8},

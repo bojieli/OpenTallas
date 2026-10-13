@@ -23,7 +23,8 @@ It also measures, from the FF ETM, the launch side of the minimum-delay seam bud
 delay minus that clock's min insertion (launch) and the largest input hold requirement (capture), so the die can
 check  cq_min + wire_min >= hold_req + hold_uncertainty + skew  per real seam instead of the interim cq 32 ps model.
 
-Usage: native_view_qualify.py [--manifest M] [--registry EL.json] [--jobs DIR] [--out OUT.json]
+Usage: native_view_qualify.py [--manifest M] [--registry EL.json] [--jobs DIR] [--extra GLOB] [--out OUT.json]
+(registry: curl -s 127.0.0.1:8765/api/elements > EL.json)
 """
 from __future__ import annotations
 
@@ -45,6 +46,13 @@ def sha(p: Path) -> str:
         for b in iter(lambda: f.read(1 << 20), b""):
             h.update(b)
     return h.hexdigest()
+
+
+def git_time(rel: str, human: bool = False):
+    fmt = "%ad" if human else "%at"
+    out = subprocess.run(["git", "-C", str(ROOT), "log", "-1", f"--format={fmt}", "--date=format:%m-%d %H:%M", "--", rel],
+                         capture_output=True, text=True).stdout.strip()
+    return out if human else int(out or 0)
 
 
 def job_of(orfs_dir: str) -> str | None:
@@ -163,11 +171,27 @@ def qualify(master: str, n_inst: int, files: dict, d: Path, reg: dict, jobs: Pat
     elif not js:
         gate("pair", False, f"no job state for {job}: the closing verdict's directory is unknown")
     elif unlisted:
-        gate("pair", False, f"{unlisted} not written by the recorded export (abstract.json lists {sorted(listed)})")
-    elif met.get("orfs_dir") != abs_dir:
-        gate("pair", False, f"view exported from {abs_dir} but the closing verdict was measured on {met.get('orfs_dir')}")
-    elif cs and sta_dir != abs_dir:
-        gate("pair", False, f"view exported from {abs_dir} but its corner STA ran on {sta_dir}")
+        # a corner ETM the recorded export did not write: compare its last commit with the LEF's
+        t_lef = git_time(files["lef"]["path"])
+        old = [u for u in unlisted if git_time(str(Path(files["lef"]["path"]).parent / u)) < t_lef]
+        if old:
+            gate("pair", False, f"{old} committed {git_time(str(Path(files['lef']['path']).parent / old[0]), True)}, BEFORE the "
+                                f"LEF + listed ETMs ({git_time(files['lef']['path'], True)}): it is the extraction of an earlier ODB")
+        else:
+            gate("pair", None, f"{unlisted} written by a separate later extraction, not by the recorded export "
+                               f"(abstract.json lists {sorted(listed)}); no ODB hash links it to the LEF")
+    elif met.get("orfs_dir") != abs_dir or (cs and sta_dir != abs_dir):
+        vd = met.get("orfs_dir") if met.get("orfs_dir") != abs_dir else sta_dir
+        if job and f"/{job}/cl/eco" in (vd or "") and f"/{job}/routes/" in (abs_dir or ""):
+            # closure_loop.eco_install_cmd copies the ECO 6_final.{odb,spef,v} over the route's and re-exports the view
+            # from the route directory, so this CAN be one ODB -- but the export records no ODB hash to prove that the
+            # committed view is the post-install export.  Open until the export carries the hash (or the host ODB is
+            # hashed against the verdict's).
+            gate("pair", None, f"verdict on the ECO pass {vd}; view exported from the route dir {abs_dir}: the loop installs "
+                               "the ECO ODB there before re-export, but the export records no ODB hash"
+                               + (f" (verdict ODB {odbs[0][:12]})" if len(odbs) == 1 else ""))
+        else:
+            gate("pair", False, f"view exported from {abs_dir} but the closing verdict / corner STA was measured on {vd}")
     elif cs and len(odbs) != 1:
         gate("pair", False, f"corner STA names {len(odbs)} ODBs")
     else:
@@ -281,6 +305,9 @@ def main() -> int:
     ap.add_argument("--registry", default=None, help="saved /api/elements JSON")
     ap.add_argument("--jobs", default=str(JOBS))
     ap.add_argument("--contract", default="results/arch/hier_contract_1011/s81.json")
+    ap.add_argument("--extra", default=None,
+                    help="glob of further view LEFs (e.g. 'physical/ref_tile/s81_rly_*/views/*/*.lef'); instance counts from --census")
+    ap.add_argument("--census", default="results/physical/die_iter_1012/s81/real_view_census_20261013/c5_census.json")
     ap.add_argument("--out", default="results/arch/s81_native_20261013/qualification.json")
     a = ap.parse_args()
     man = json.loads((ROOT / a.manifest).read_text())
@@ -314,6 +341,22 @@ def main() -> int:
         else:
             unbound.append({"master": h.get("master"), "instances": hc_n.get(h.get("master"), 0),
                             "why": f"HC leaf without a complete native bundle (missing {h.get('missing')})"})
+    if a.extra:
+        import glob
+        cen = json.loads((ROOT / a.census).read_text())
+        cnt = {m["master"]: m["instances"] for m in cen["masters"]}
+        for lef in sorted(glob.glob(str(ROOT / a.extra))):
+            lef = Path(lef)
+            mst = lef.stem
+            files = {"lef": {"path": str(lef.relative_to(ROOT))}}
+            for c in ("tt", "ff", "ss"):
+                lp = lef.parent / f"{mst}_{c}.lib"
+                if lp.exists():
+                    files[c] = {"path": str(lp.relative_to(ROOT))}
+            for f in files.values():
+                f["sha256"] = sha(ROOT / f["path"])
+            rows.append(qualify(mst, cnt.get(mst, 0), files, lef.parent.relative_to(ROOT), reg, Path(a.jobs), rules))
+            rows[-1]["family"] = "extra"
     tot = sum(r["instances"] or 0 for r in rows)
     q = [r for r in rows if r["verdict"] == "QUALIFIED"]
     out = {"schema": "s81-native-view-qualification-v1", "manifest": a.manifest,
