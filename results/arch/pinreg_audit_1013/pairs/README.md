@@ -11,6 +11,7 @@ The die statement evaluated for every connected pair of placed instances with ea
 | `*_token.json` | uses per token of an added stage, per bus class, with its source. |
 | `insertion_measured_1013.json` | the 35 views whose `insertion.json` was measured today from the closed archive (routed ODB + SPEF). |
 | `s81_v15_pair_gate.json` | `hop_gate.json` of `dsrom_s81_fulldie.py real` (v15 opts) with the per-pair gate: FAIL, 402,553 bits over their pair limit, 6 forwarded hold races. |
+| `qwen_rom_tp8_pair_gate.json` | the relay generator's release gate with the per-pair check (tp8b a1): 29 hops over their pair limit (the exact-bound ones), 0 hold races, direction-bound pairs listed as candidates. |
 
 Re-run: `python3 tools/hier_contract/pinreg_pairs.py s81 --plan s81_v15_plan.json.gz --table view_timing.json --audit ../s81_takeover_reexport.json --token s81_token.json --out s81.json --md s81.md` (same for `qwen`).
 Not judged here: tiles placed inside a parent (S81 collective / SU / HC / VM / P2 tiles): dump the parent in the plan format and run the same command.
