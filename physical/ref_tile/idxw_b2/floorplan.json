@@ -19,12 +19,14 @@
  "std_area_um2": 22000,
  "layer_contract": {
   "children": {},
-  "pg_layer": "M6",
+  "pg_layer": "M5",
   "rlayers": [
    "M2",
-   "M6"
+   "M5"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
  },
  "pins": {
   "W": [
@@ -95,6 +97,7 @@
   "physical/qwen_die_masters/pre_cts_skew.tcl",
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
-  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl"
  ]
 }
