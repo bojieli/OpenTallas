@@ -4,7 +4,7 @@
 // writes are SW owned. Guard checks full addresses before rebase/truncation.
 // Record registered once; owner stays fixed through last native write-done.
 // Physical decomposition and source-matched native production gates pending.
-module ot_hgi_idx_unit_b2_ixw1 #(parameter integer MUT=0)(
+module ot_hgi_idx_unit_b2_ixw1 #(parameter integer MUT=0,parameter integer IXW=1)(   // IXW 2: the tiled adapter (ot_hgi_idx_unit_b2_ixw2)
  input wire clk,rst_n,input wire [2074:0] rec,output reg [2:0] ret,
  output wire [337:0] vmq,input wire [273:0] vmr,
  output wire [135:0] rq,input wire [7:0] rq_cr,input wire [2055:0] rr,
@@ -37,7 +37,7 @@ module ot_hgi_idx_unit_b2_ixw1 #(parameter integer MUT=0)(
   .old_q({384'd0,old_rq}),.old_cr(old_rcr),.old_rsp(old_rr),.rq(rq),.rq_cr(rq_cr),.rr(rr),.fault(read_fault));
  ot_hbm_b2_xwrite_aperture u_write(.clk(clk),.rst_n(rst_n),.permit(busy),.sid(2'd0),.mirror(1'b0),
   .old_q(old_wq),.old_cr(old_wcr),.old_done(old_done),.wq(wq),.wq_cr(wq_cr),.wq_done(wq_done),.fault(write_fault));
- ot_hgi_idx_unit #(.MUT(MUT),.PREF(1),.TOPKW(1),.TWIW(8),.NGLOB(1),.IKS(1),.IKS_EVEN(1),.IXW(1),.IXNL(8),.IXLQ(10)) u_core(
+ ot_hgi_idx_unit #(.MUT(MUT),.PREF(1),.TOPKW(1),.TWIW(8),.NGLOB(1),.IKS(1),.IKS_EVEN(1),.IXW(IXW),.IXNL(8),.IXLQ(10)) u_core(
   .clk(clk),.rst_n(rst_n),.rec(core_rec),.ret(core_ret),.vmq(vmq),.vmr(vmr),
   .wrq(old_rq),.wrq_cr(old_rcr[7:0]),.wrr(old_rr[2055:0]),.rg_req(rg_req),.rg_gnt(rg_gnt),
   .wwq(old_wq),.wwq_cr(old_wcr),.wwq_done(old_done),.wg_req(wg_req),.wg_gnt(wg_gnt),

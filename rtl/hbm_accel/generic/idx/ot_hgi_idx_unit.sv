@@ -170,7 +170,16 @@ module ot_hgi_idx_unit #(
                    dB[1:0] == 2'd1 && dB[4:2] == 3'd0 && dO[1:0] == 2'd1 && dO[4:2] == 3'd5 &&
                    (!has_r || (dR[1:0] == 2'd1 && dR[4:2] == 3'd0)) && (!x_keep || (opnd[2] && dC[1:0] == 2'd1 && dC[67:48] != 20'd0 && dC[67:48] <= 20'd2048)) &&
                    (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && x_iks_ok && x_n_ok;
-    generate if (IXW != 0) begin : g_ixw
+    generate if (IXW == 2) begin : g_ixt          // el1013-idx-tiles: the TILED wide adapter (six hard leaves, wires-only wrapper)
+    assign vmq_x = 338'd0;
+    ot_hgi_idx_index_wt #(.MUT(MUT >= 2 ? MUT - 1 : 0), .NL(IXNL), .LQ(IXLQ)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
+        .keep_en_i(x_keep), .n_i(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank_i(x_rank),
+        .pos_i(NGLOB != 0 ? x_newest : rpos), .a_base_i(a_base[17:0]), .b_base_i(dB_b), .c_base_i(dC_b), .o_base_i(o_base[17:0]), .r_base_i(r_base[17:0]),
+        .d_base_i(dD_b), .d_stride_i(dD_s), .c_stride_i(dC[105:88]), .c_n_i(dC[59:48]), .has_r_i(has_r), .done(x_done), .fault(x_fault),
+        .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .rg_req(rg_req), .rg_gnt(rg_gnt), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done),
+        .wg_req(wg_req), .wg_gnt(wg_gnt),
+        .fs(sel_fs), .qb(sel_qb), .qbr(sel_qbr), .kin(sel_kin), .to(sel_to), .toc(sel_toc), .co(sel_co), .coc(sel_coc), .ev(sel_ev));
+    end else if (IXW != 0) begin : g_ixw
     assign vmq_x = 338'd0;
     ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0), .NL(IXNL), .LQ(IXLQ)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
         .keep_en_i(x_keep), .n_i(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank_i(x_rank),

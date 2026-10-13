@@ -145,12 +145,16 @@ module ot_hgi_idxw_keep #(
         end
         assign osel[P0*11 +: (P1-P0)*11] = v;
     end endgenerate
-    reg [4:0] pk; reg pk_v;
+    // lowest pending match as a one-hot pick (each pick line gates one 11-bit ordinal: no wide binary select)
+    reg [31:0] poh; reg [10:0] pord; reg pk_v, seen;
     always @* begin
-        pk_v = 1'b0; pk = 5'd0;
-        for (l = 31; l >= 0; l = l - 1) if (mb[l]) begin pk_v = 1'b1; pk = 5'(l); end
+        pk_v = |mb; pord = 11'd0; seen = 1'b0;
+        for (l = 0; l < 32; l = l + 1) begin
+            poh[l] = mb[l] && !seen; seen = seen | mb[l];
+            if (poh[l]) pord = pord | osel[l*11 +: 11];
+        end
     end
-    wire [31:0] mb_left = mb & ~((pk_v ? 32'd1 : 32'd0) << pk);
+    wire [31:0] mb_left = mb & ~poh;
     reg ks_v, ks2_v; reg [10:0] ks_ord;
     reg [42:0] khi; reg [31:0] klo;
     // ---- keep bitmap (bit ord), cleared at the frame start by registered clear copies, set by the two one-hot halves
@@ -177,7 +181,7 @@ module ot_hgi_idxw_keep #(
     assign kin_o[0] = kin_v; assign kin_o[2:1] = kin_q;
     always @(posedge clk) begin
         kin_q <= kq;
-        if (pk_v) ks_ord <= osel[pk*11 +: 11];
+        if (pk_v) ks_ord <= pord;
         for (l = 0; l < 43; l = l + 1) khi[l] <= ks_v && ks_ord[10:5] == 6'(l);
         for (l = 0; l < 32; l = l + 1) klo[l] <= ks_ord[4:0] == 5'(l);
     end

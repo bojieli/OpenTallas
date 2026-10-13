@@ -165,7 +165,7 @@ module ot_hgi_idxw_wr #(
         for (i = 0; i < 4; i = i + 1) begin
             hsec = esec[i*3 + {30'd0, ehp[i]}];
             e_ln = hsec[2:0];
-            if (en[i] != 2'd0 && wgnt_q && wg_req_o && !w_used[e_ln] && wcred[e_ln] != '0) begin
+            if (en[i] != 2'd0 && wgnt_q && wg_req_o && !dead && !w_used[e_ln] && wcred[e_ln] != '0) begin
                 e_take[i] = 1'b1; w_used[e_ln] = 1'b1; w_sel[e_ln] = 4'(i*3) + {2'd0, ehp[i]};
             end
         end
@@ -227,7 +227,8 @@ module ot_hgi_idxw_wr #(
             if (flush_q) fl_pend <= 1'b1;
             if (fl_go) begin fl_pend <= 1'b0; fl_wait <= 1'b1; end
             if (fl_wait && all_out && p1_emit == 4'd0) begin fl_wait <= 1'b0; w_done_o <= 1'b1; wg_req_o <= 1'b0; end
-            if (wabort_q) begin wg_req_o <= 1'b0; fl_pend <= 1'b0; fl_wait <= 1'b0; dead <= 1'b1; end
+            if (wabort_q) begin fl_pend <= 1'b0; fl_wait <= 1'b0; dead <= 1'b1; end
+            if (dead && a1_v == 8'd0 && a2_v == 8'd0) wg_req_o <= 1'b0;      // abort: release after the granted sectors left
             if (wstart_q) begin
                 tqn <= 4'd0; dqn <= 4'd0; thp <= 3'd0; dhp <= 3'd0; twp <= 3'd0; dwp <= 3'd0; p1_t <= 1'b0; p1_d <= 1'b0;
                 fl_pend <= 1'b0; fl_wait <= 1'b0; p1_emit <= 4'd0; dead <= 1'b0;

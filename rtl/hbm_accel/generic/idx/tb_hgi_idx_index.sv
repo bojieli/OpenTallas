@@ -14,6 +14,8 @@
 // compare checks them against the same golden.  MUT 2: head weight of the next head; MUT 3: R from the wrong lane.
 module tb_hgi_idx_index;
   parameter integer MUT = 0;
+  parameter integer IXW = 0;           // 1: flat wide adapter, 2: tiled wide adapter (el1013-idx-tiles); 0: packet client
+  parameter integer WRT = 6;           // IXW: wide read lane reply latency (cycles, + 0..2)
   parameter integer LEG = 24;          // relay stages per die net (each direction)
   parameter integer FA = 4;
   parameter integer KEYLEG = 0;       // service key data and credit return stages
@@ -80,9 +82,43 @@ module tb_hgi_idx_index;
   end endgenerate
   // ---- the IDX unit (record -> frame adapter) and its VM model (one request outstanding, 2..6 cycles)
   reg [1818:0] rec = 0; wire [2:0] uret; wire [337:0] vmq; reg [273:0] vmr = 0;
-  ot_hgi_idx_unit #(.MUT(MUT)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
+  // el1013-idx-tiles: IXW = 1 (flat ot_hgi_idx_index_w) / 2 (tiled ot_hgi_idx_index_wt) run IDX.INDEX over an 8-lane VM
+  // wide read / write group served by the wide model below on the same vm memory (IXW = 0: unchanged, ports idle)
+  wire [127:0] wrq; reg [7:0] wrq_cr = 0; reg [8*257-1:0] wrr = 0; wire rg_req; reg rg_gnt = 0;
+  wire [8*280-1:0] wwq; reg [7:0] wwq_cr = 0, wwq_done = 0; wire wg_req; reg wg_gnt = 0;
+  ot_hgi_idx_unit #(.MUT(MUT), .IXW(IXW), .IXNL(8), .IXLQ(8)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
+    .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .rg_req(rg_req), .rg_gnt(rg_gnt), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done),
+    .wg_req(wg_req), .wg_gnt(wg_gnt),
     .sel_fs(fs), .sel_qb(qb), .sel_qbr(qbr), .sel_kin(kin), .sel_to(to), .sel_toc(toc), .sel_co(co), .sel_coc(coc),
     .sel_ev(ev));
+  // wide-lane VM model: a lane serves its requests in order, WRT + 0..2 cycles after the request (never before the
+  // predecessor), credit with the reply; a write lands at once (word mask), credit 1 cycle and done 3 cycles later
+  reg [14:0] wq_sec [0:7][0:15]; integer wq_t [0:7][0:15], wq_h [0:7], wq_n [0:7], wq_last [0:7], wl, ww, wnow = 0, wmaxo = 0;
+  reg [7:0] wd1 = 0, wd2 = 0, wd3 = 0;
+  initial for (wl = 0; wl < 8; wl = wl + 1) begin wq_h[wl] = 0; wq_n[wl] = 0; wq_last[wl] = 0; end
+  always @(posedge ck) if (IXW != 0) begin
+    wnow = wnow + 1; wrq_cr <= 8'd0; rg_gnt <= rg_req; wg_gnt <= wg_req;
+    wwq_cr <= wd1; wwq_done <= wd3; wd3 = wd2; wd2 = wd1; wd1 = 8'd0;
+    for (wl = 0; wl < 8; wl = wl + 1) begin
+      wrr[wl*257 + 256] <= 1'b0;
+      if (wq_n[wl] > 0 && wq_t[wl][wq_h[wl] % 16] <= wnow) begin
+        for (ww = 0; ww < 8; ww = ww + 1) wrr[wl*257 + 32*ww +: 32] <= vm[{wq_sec[wl][wq_h[wl] % 16], 3'(ww)}];
+        wrr[wl*257 + 256] <= 1'b1; wrq_cr[wl] <= 1'b1; wq_h[wl] = wq_h[wl] + 1; wq_n[wl] = wq_n[wl] - 1;
+      end
+      if (wrq[wl*16 + 15]) begin
+        if (wq_n[wl] >= 8 || wrq[wl*16 +: 3] != 3'(wl)) $fatal(1, "wide VM: read lane %0d credit / lane rule", wl);
+        wq_sec[wl][(wq_h[wl] + wq_n[wl]) % 16] = wrq[wl*16 +: 15];
+        wq_last[wl] = (wnow + WRT + ($urandom % 3) > wq_last[wl] + 1) ? wnow + WRT + ($urandom % 3) : wq_last[wl] + 1;
+        wq_t[wl][(wq_h[wl] + wq_n[wl]) % 16] = wq_last[wl]; wq_n[wl] = wq_n[wl] + 1; if (wq_n[wl] > wmaxo) wmaxo = wq_n[wl];
+      end
+      if (wwq[wl*280 + 279]) begin
+        if (wwq[wl*280 + 264 +: 3] != 3'(wl)) $fatal(1, "wide VM: write lane %0d lane rule", wl);
+        for (ww = 0; ww < 8; ww = ww + 1)
+          if (wwq[wl*280 + ww]) vm[{wwq[wl*280 + 264 +: 15], 3'(ww)}] = wwq[wl*280 + 8 + 32*ww +: 32];
+        wd1[wl] = 1'b1;
+      end
+    end
+  end
   // VM model (fast path): up to 4 requests outstanding, pipelined (6..8 cycles, never before the predecessor), in order
   reg [31:0] vm [0:262143];
   reg [337:0] vqq [0:7]; integer vqt [0:7]; integer qh2 = 0, qn2 = 0, maxo2 = 0, tnow = 0, tlast = 0;

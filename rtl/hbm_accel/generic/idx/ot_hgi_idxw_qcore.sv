@@ -103,7 +103,7 @@ module ot_hgi_idxw_qcore #(
         o_base_o <= o_base; r_base_o <= r_base; d_base_o <= d_base; dv_base_o <= d_base + d_stride;
     end
     // ---- frame state
-    localparam [1:0] S_IDLE = 2'd0, S_RUN = 2'd1, S_FLUSH = 2'd2;
+    localparam [1:0] S_IDLE = 2'd0, S_RUN = 2'd1, S_FLUSH = 2'd2, S_ABORT = 2'd3;
     reg [1:0] st; reg bad, sel_done, fs_pend, wbad;
     // ---- chunk walker (the reference's two-stage issuer: walk into a registered descriptor, issue on room)
     reg is_on, is_cv; reg [1:0] is_kind; reg [14:0] is_sec, is_end, c_s0, c_s1, a_s0, cs8;
@@ -120,7 +120,7 @@ module ot_hgi_idxw_qcore #(
     end
     // group-order log {lastC, group, kind, slot, count, sector[14:2]} and the per-leaf counts
     localparam integer GW = 22;
-    reg [GW-1:0] glog [0:15]; reg [3:0] gh, gt; reg [4:0] gn;
+    reg [GW-1:0] glog [0:15]; reg [3:0] gh, gh_b, gt; reg [4:0] gn;   // gh / gh_b: head pointer copies (one a half entry)
     reg [LCB-1:0] lcnt [0:1];               // descriptors sent to leaf g and not yet popped
     reg [LCB-1:0] rdyc [0:1];               // chunks leaf g reported ready and not yet popped
     reg [KCB-1:0] kcred;                    // K-result credits
@@ -130,7 +130,8 @@ module ot_hgi_idxw_qcore #(
     wire ch_g = ch_sec[2];
     wire ch_go = pd_v && st == S_RUN && !bad && lcnt[ch_g] != LCB'(LGD) && gn != 5'd16;
     wire wk_go = st == S_RUN && is_on && !bad && (!pd_v || ch_go);
-    wire [GW-1:0] gq = glog[gh];
+    wire [GW-1:0] gq_a = glog[gh], gq_b = glog[gh_b];
+    wire [GW-1:0] gq = {gq_b[GW-1:11], gq_a[10:0]};
     wire h_last = gq[21], h_g = gq[20]; wire [1:0] h_kind = gq[19:18], h_slot = gq[17:16];
     wire [2:0] h_cnt = gq[15:13]; wire [12:0] h_shi = gq[12:0];
     wire h_av = rdyc[h_g] != '0 || rdy_q[h_g];
@@ -177,9 +178,9 @@ module ot_hgi_idxw_qcore #(
     reg [15:0] wts [0:31];
     wire [31:0] wb;
     generate for (gi = 0; gi < 8; gi = gi + 1) begin : g_b3
-        reg [2:0] b3;
-        (* keep = "true" *) always @(posedge clk) b3 <= b_base[2:0];
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_w
+            reg [2:0] b3;                   // one copy of the static word offset a weight
+            (* keep = "true" *) always @(posedge clk) b3 <= b_base[2:0];
             wire [5:0] bq = {3'd0, b3} + 6'(gi*4 + gj);
             wire hit = xb_v && xb_j == bq[5:3];
             always @(posedge clk) if (hit) wts[gi*4 + gj] <= xs[{bq[2:0], 5'd16} +: 16];
@@ -214,6 +215,7 @@ module ot_hgi_idxw_qcore #(
         xb_j <= bj;
         if (wk_go) begin ch_kind <= nx_kind; ch_sec <= nx_sec; ch_cnt <= nx_cnt; ch_lastc <= nx_kind == K_CV && nx_last; end
     end
+    (* keep = "true" *) always @(posedge clk) if (!rnc[2]) gh_b <= 4'd0; else if (pop) gh_b <= gh_b + 4'd1;
     wire rd_idle = !is_on && !pd_v && gn == 5'd0 && !p1_v && !p2_v && !p3_v && !p4_v;
     wire a_arr = p4_v && p4_kind == K_A;
     // ---- main sequential block (control)
@@ -292,13 +294,17 @@ module ot_hgi_idxw_qcore #(
                         fs_o <= {keep_en, cand_en, k[9:0], n[13:0], rank, pos, 4'd0, 32'd0, 1'b1};
                     end
                     if (rd_idle) rg_req_o <= 1'b0;
-                    if (bad) begin st <= S_IDLE; fault_o <= 1'b1; rg_req_o <= 1'b0; wabort_o <= 1'b1; end
+                    if (bad) begin st <= S_ABORT; fault_o <= 1'b1; wabort_o <= 1'b1; end
                     else if (sel_done && b_idle_q && qsent == 8'd128 && rd_idle && !xb_v) begin
                         st <= S_FLUSH; flush_o <= 1'b1;
                     end
                 end
                 S_FLUSH: if (w_done_q) begin st <= S_IDLE; done_o <= 1'b1; rg_req_o <= 1'b0; end
-                default: st <= S_IDLE;
+                // fault: the read group is released only when every descriptor already sent has been issued and has
+                // landed (the lane leaves issue from their own logs; no request may follow the release)
+                default: if (lcnt[0] == rdyc[0] && lcnt[1] == rdyc[1] && dsc_v == 2'd0 && rdy_q == 2'd0) begin
+                    st <= S_IDLE; rg_req_o <= 1'b0;
+                end
             endcase
         end
     end
