@@ -59,6 +59,7 @@ RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cseq.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crx.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cntree.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccr.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpad.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv",
        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctile.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/lib/ot_skid_buffer.sv",
        "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv", "rtl/hdc/v41x/ot_dsrom_su_add6.sv", "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
