@@ -21,7 +21,7 @@
 //   ot_qfd_emb_cdc          the embedding static port's core <-> HBM crossing (strip engine side on the core clock ck)
 // New in this leaf (glue only):
 //   * command arbiter: the tap's DESC / GO have priority; a KV write hand-off (CDC head h_wv / h_wsec) becomes
-//     cmd 2 {column, bank} when its layer row (ROW0 + sec[15:10]) is the row of the LATEST descriptor sent to the
+//     cmd 2 {column, bank} when its layer row (ROW0 + sec[16:11]) is the row of the LATEST descriptor sent to the
 //     scheduler (command order = the row a queued write lands on), two of the 8 command credits stay reserved for the
 //     tap.  A write of another layer is HELD (never written to a wrong row); held LATE cycles -> fault.
 //   * write timing: h_wcon = the WR column (registered); the CDC returns the completion entry CVL edges after h_wcon at
@@ -31,7 +31,8 @@
 //     after the column (CWL + BL8 + response, the timed model's figure).
 //   * read tags: the PHY returns data only, in RD order.  Every KV RD pushes {open row of the bank [7:0], j} (j = the
 //     PC-local sector {bank[4:2], column, bank[1:0]}); the returned beat pops it:
-//     h_lsec = {1'b0, layer[5:0] = row - ROW0, j[9:0]} (= w_sec[16:0] of ot_qkvd_kv_wq), h_lrow = row[7:0].
+//     h_lsec = {layer[5:0] = row - ROW0, j[9:7], 1'b0, j[6:0]} (= w_sec[16:0] of ot_qkvd_kv_wq: {layer, v, g, t[6],
+//     t[13:9], t[5:3]}), h_lrow = row[7:0].
 //   * registers at every pin: h_wv / h_wsec / h_cv / h_c* / h_fault, pi (PHY return), es (core clock), hrst / rsi are
 //     captured by a flop with no logic in front; h_cred and the kc word are captured by the pin flops the closed
 //     modules already own (read_credit_q, o_d); every output is a flop.
@@ -133,9 +134,11 @@ module qkd_ctrl_pc #(
     reg  [12:0] late_c;
     reg         f_late, f_cmd, f_early;
     wire        cmd_credit;
-    wire [9:0]  wj     = wsec_q[9:0];
-    wire [18:0] wrow   = 19'(ROW0) + {13'd0, wsec_q[15:10]};
-    wire        w_match = (cur_v && cur_row == wrow) || (MUT == 4);
+    // w_sec (ot_qkvd_kv_wq sec_of) = {7'b0, layer[5:0], v, g, t[6], t[13:9], t[5:3]}: the PC-local sector j is the 10
+    // bits {v, g, t[6], t[12:9], t[5:3]} (t[13] = sec[7] is 0 for T <= 8,192; a set bit is out of range and never issued)
+    wire [9:0]  wj     = {wsec_q[10:8], wsec_q[6:0]};
+    wire [18:0] wrow   = 19'(ROW0) + {13'd0, wsec_q[16:11]};
+    wire        w_match = (cur_v && cur_row == wrow && !wsec_q[7]) || (MUT == 4);
     wire        w_pend = hgo && wv_q && hold == 3'd0;
     wire        w_go   = w_pend && w_match && cr > 4'd2 && !tc_v;
     wire        cmd_v  = tc_v | w_go;
@@ -187,7 +190,7 @@ module qkd_ctrl_pc #(
     end
     wire        pcol_v = dv[LW-1], pcol_we = dwe[LW-1], pcol_sr = dsr[LW-1];
     reg         f_wmis;
-    wire [9:0]  cj = csec_q[9:0];
+    wire [9:0]  cj = {csec_q[10:8], csec_q[6:0]};
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) f_wmis <= 1'b0;
         else if (cv_q && dbc[LW] != {cj[9:7], cj[1:0], cj[6:2]}) f_wmis <= 1'b1;
@@ -239,7 +242,7 @@ module qkd_ctrl_pc #(
     wire [16:0]  l_sec;
     wire [7:0]   l_row;
     ot_qfd_kv_landing_ecc #(.ENABLE(1), .INTERLEAVED(1)) u_ecc (
-        .hclk(hclk), .h_rst_n(h_rn), .i_v(kv_v), .i_code(kv_d), .i_sec({1'b0, t_layer[5:0], t_j}), .i_row(t_head[17:10]),
+        .hclk(hclk), .h_rst_n(h_rn), .i_v(kv_v), .i_code(kv_d), .i_sec({t_layer[5:0], t_j[9:7], 1'b0, t_j[6:0]}), .i_row(t_head[17:10]),
         .o_v(l_v), .o_data(l_data), .o_sec(l_sec), .o_row(l_row), .ce(), .ue(), .fault(ecc_fault), .ce_count());
     assign co = {at_s[WDS], av_s[WDS], wcon_q, hand_q, l_data, l_row, l_sec, l_v};
     assign po = {wd, col_col, col_bank, col_we, col_v, row_row, row_bank, row_op, row_v};

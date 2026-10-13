@@ -125,7 +125,7 @@ module tb_qkd_ctrl_pc;
             if (!b_open[p_cb]) bad("RD to a closed bank");
             n_rd++;
             if (row >= ROW0 && row < ROW0 + 64) begin
-                e.sec = {1'b0, 6'(row - ROW0), j}; e.row = 8'(row); e.data = kvmem[(row - ROW0) * 1024 + j];
+                e.sec = {6'(row - ROW0), j[9:7], 1'b0, j[6:0]}; e.row = 8'(row); e.data = kvmem[(row - ROW0) * 1024 + j];
                 w = enc256(e.data);
                 if (n_rd % 37 == 5) begin w[(n_rd * 13) % 288] = ~w[(n_rd * 13) % 288]; n_flip++; end
                 exp_land.push_back(e);
@@ -153,8 +153,8 @@ module tb_qkd_ctrl_pc;
                 if (exp_wr.size() == 0) bad("KV WR column with no handed-off write");
                 else begin
                     automatic wr_t x = exp_wr.pop_front();
-                    if (x.sec[9:0] !== j) bad("KV WR at the wrong bank / column");
-                    if (int'(x.sec[15:10]) + ROW0 != row) bad($sformatf("KV WR on row %0d, posted for layer %0d", row, x.sec[15:10]));
+                    if ({x.sec[10:8], x.sec[6:0]} !== j) bad("KV WR at the wrong bank / column");
+                    if (int'(x.sec[16:11]) + ROW0 != row) bad($sformatf("KV WR on row %0d, posted for layer %0d", row, x.sec[16:11]));
                     if (p_wd !== enc256(x.data)) bad("PHY write data is not the bench's SECDED encoding of the posted sector");
                     kvmem[(row - ROW0) * 1024 + j] = x.data; n_kvw++;
                 end
@@ -253,7 +253,7 @@ module tb_qkd_ctrl_pc;
     task automatic kv_write(input integer layer, input integer j);
         // posted in the hclk domain model of the CDC write queue
         @(negedge hclk);
-        wq[ww].sec = {8'd0, 6'(layer), 10'(j)}; wq[ww].data = pat(100000 + nw * 3 + layer); wq[ww].tag = 9'(nw * 5 + 1);
+        wq[ww].sec = {7'd0, 6'(layer), 3'(j >> 7), 1'b0, 7'(j)}; wq[ww].data = pat(100000 + nw * 3 + layer); wq[ww].tag = 9'(nw * 5 + 1);
         ww = ww + 8'd1; nw++;
     endtask
     integer L, k;
