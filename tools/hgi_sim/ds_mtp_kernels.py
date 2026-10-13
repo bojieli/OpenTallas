@@ -1194,6 +1194,27 @@ def sim(a):
         per_launch.append(dict(e, s2_cycles=round(sch["total_cycles"], 1), s2_start=round(t_launch, 1)))
         t_launch += sch["total_cycles"]
     l0 = [x for x in per_launch if x["kind"] == "layer" and x["Lp"] == 0]
+    # rank 0 owns no HC mix row (its HC_MIX_ROWS and row LOADs are NOPs): the same pricing of a row-owning die's
+    # bodies (rank 3 = mix row 0), per kernel and per kind, so the HC row loads are in a reported number
+    hc_rank, own, own_kern = 3, {k_: 0.0 for k_ in KINDS}, {}
+    for e in eng.launches:
+        body = K.body[hc_rank][(e["k"], e["Lp"])]
+        key = (hc_rank, e["k"], e["Lp"], e["pos"], e["token"])
+        if key not in cache:
+            for r in body:
+                if not hasattr(r, "src_key0"):
+                    sr = getattr(r, "src", None)
+                    r.src_key0 = None if not sr or not isinstance(sr, tuple) else f"{sr[0]}:{sr[1]}"
+                r.src_key = r.src_key0 if r.src_key0 in K.ops else None
+                r.src_extra = []
+                r.layer = e["Lp"]
+            nc = NativeCost(K.ops, body)
+            cache[key] = T.schedule(body, e["pos"], "S2", token=e["token"], cost_fn=lambda r, dyn, L, nc=nc: cf(r, dyn, L, nc))
+        own[e["kind"]] += cache[key]["total_cycles"]
+        own_kern.setdefault(f"{e['kind']}{'' if e['Lp'] == 0 else e['Lp']}", round(cache[key]["total_cycles"], 1))
+    r0_kern = {}
+    for x in per_launch:
+        r0_kern.setdefault(f"{x['kind']}{'' if x['Lp'] == 0 else x['Lp']}", x["s2_cycles"])
     ok_all = bool(accept_ok and all(c["bit_exact_all_ranks"] for c in colres) and (not spec or draft_checks["all_ok"]))
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_sim.v2", golden=str(a.golden),
                drafter="dspark (real, lowered)" if spec else "FORCED (golden drafts; draft kinds END stubs)",
@@ -1208,6 +1229,16 @@ def sim(a):
                            for k_ in KINDS},
                kernel_records={f"{KINDS[k_]}{'' if Lp == 0 else Lp}": len([r for r in K.body[0][(k_, Lp)] if r.unit != "CTL"])
                                for (k_, Lp) in K.body[0] if (k_ not in (3,) or Lp in (0, 1, 37))},
+               hc_plan=plan["name"],
+               s2_first_launch_cycles={k_: v for k_, v in r0_kern.items() if not k_.startswith("layer") or k_ in (
+                   "layer", "layer1", "layer37")},
+               hc_row_rank=dict(rank=hc_rank, s2_job_cycles=round(sum(own.values()), 1),
+                                s2_by_kind={k_: round(v, 1) for k_, v in own.items()},
+                                s2_first_launch_cycles={k_: v for k_, v in own_kern.items() if not k_.startswith(
+                                    "layer") or k_ in ("layer", "layer1", "layer37")},
+                                kernel_records={f"{KINDS[k_]}{'' if Lp == 0 else Lp}": len(
+                                    [r for r in K.body[hc_rank][(k_, Lp)] if r.unit != "CTL"])
+                                    for (k_, Lp) in K.body[hc_rank] if (k_ not in (3,) or Lp in (0, 1, 37))}),
                stubbed=(["layer bodies L1..L39: LABELLED REPLAY of the golden h / pre after the layer "
                          "(L37..39 store their input's main hidden part with real SU records)"] if spec else
                         ["layer bodies L1..L39 (END only)", "head (END reads golden argmax HT[POS])",
