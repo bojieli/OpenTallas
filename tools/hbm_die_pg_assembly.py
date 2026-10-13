@@ -34,7 +34,7 @@ def parse(path):
             mm = re.search(r'\bLAYER (M\d+) ;', ln)
             if mm:
                 layer = mm[1]
-            mm = re.search(r'\bRECT ([\d.-]+) ([\d.-]+) ([\d.-]+) ([\d.-]+) ;', ln)
+            mm = re.search(r'\bRECT\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)\s*;', ln)
             if mm and layer:
                 shapes.append((layer, tuple(map(float, mm.groups()))))
         top = max(int(s[0][1:]) for s in shapes)
