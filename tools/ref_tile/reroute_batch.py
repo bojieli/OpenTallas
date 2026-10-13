@@ -538,11 +538,12 @@ def build_spec(row: dict, rec: dict, f: dict, prev_reason: str = "") -> dict:
     cm = 2 * 2.16
     route_x, grown = {}, []
     # utilisation measured by an earlier gate of this cell (synthesised std area): scale to the target, keep the aspect
-    mu = re.search(r"synthesized std area (\d+) um2 \+ macros (\d+) in core (\d+): util (\d+)%", prev_reason or "")
-    if mu and int(mu.group(4)) / 100 > UTIL_MAX:
-        k = (int(mu.group(4)) / 100 / UTIL_TARGET) ** 0.5
+    # (gate: "synthesized std area .. util 75%"; loop FLOORPLAN_MARGIN: "utilisation 65.4% with the hold-buffer allowance")
+    mu = re.search(r"(?:\butil|utilisation) (\d+(?:\.\d+)?)%", prev_reason or "")
+    if mu and float(mu.group(1)) / 100 > UTIL_MAX - 0.02:
+        k = (float(mu.group(1)) / 100 / UTIL_TARGET) ** 0.5
         W, H = W * k, H * k
-        grown.append(f"util {mu.group(4)}% -> {UTIL_TARGET:.0%}")
+        grown.append(f"util {mu.group(1)}% -> {UTIL_TARGET:.0%}")
     we = max(load["W"], load["E"])
     if we > PIN_FILL * (H - cm) / SLOT_M4:
         H = we * SLOT_M4 / PIN_FILL + cm
@@ -723,7 +724,9 @@ def prepare(row, rec, st) -> dict | None:
     t = st["tiles"].setdefault(row["cell"], {})
     try:
         f = fetch(rec, row["cell"])
-        spec, snap = build_spec(row, rec, f, t.get("reason", "") if t.get("state") == "gate_fail" else "")
+        prev = t.get("reason", "") if t.get("state") == "gate_fail" else \
+            (jload(JOBS / f"{t['job']}.json") or {}).get("reason", "") if t.get("state_m5") == "failed" and t.get("job") else ""
+        spec, snap = build_spec(row, rec, f, prev or "")
         kd = f"physical/ref_tile/{spec['name']}"
         if git("ls-files", "--", kd).strip() and t.get("kit") != kd:
             raise SpecSkip(f"kit dir {kd} exists (not ours)")
@@ -785,6 +788,13 @@ def run(a, rows, closed, st):
             t.update(state="hold", reason=why, at=now())
         elif t.get("state") == "gate_fail" and KEEP_CLOSED.search(t.get("reason", "")):
             t.update(state="keep_closed", reason="keep old closed view (owner 18:20): " + t.get("reason", "")[:300], at=now())
+        elif t.get("state_m5") == "failed" and re.search(
+                r"(TT|FF)[^:]*-\d|hold repair stalled|need >= 1 bench|pin density", 
+                (jload(JOBS / f"{t.get('job')}.json") or {}).get("reason", "")):
+            # a real M5 timing / hold / pin-density regression (or an unbenched record) is not fixed by re-kitting the
+            # same RTL: the old closed view stays (owner 18:20); the compare line already flagged it to the owner
+            t.update(state="keep_closed", reason="keep old closed view; M5 route " + str(
+                (jload(JOBS / f"{t.get('job')}.json") or {}).get("reason", ""))[:250], at=now())
         elif t.get("state_m5") == "failed" and len(t.get("history") or []) >= 2:
             t.update(state="needs_human", reason=f"M5 route failed {len(t['history']) + 1}x after re-kits", at=now())
         else:
