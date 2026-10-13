@@ -75,11 +75,18 @@ module ot_hgi_qdq_wr #(
     // snapshot FIFO: per-lane write count after a record's last write, in record order
     reg [63:0] sq [0:RQ-1]; reg [QW-1:0] sq_t, sq_h; reg [QW:0] sq_n;
     wire sq_push = w_fire && mh_z;
+    // head snapshot in a register (q8b route 67a60693f: TT -175.9, sq_h -> 16:1 x 64 head read -> 8 x count compare ->
+    // fin -> sq_h / sq_n / o_fin, 21 levels).  sh == sq[sq_h] whenever sq_n != 0: both candidates (head, head + 1) are
+    // read from the registered pointer and fin selects one; a push into the slot that becomes the head (the FIFO is
+    // empty after this edge's pop) loads sh with the pushed counts directly.
+    reg [63:0] sh; reg [63:0] sq_pd;
+    wire [QW-1:0] sq_h1 = sq_h + 1'b1;
+    always @* for (integer q = 0; q < 8; q = q + 1) sq_pd[q*8 +: 8] = wcnt[q] + 8'(w_hit[q]);
     reg fin;
     always @* begin
         fin = sq_n != 0;
         for (integer b = 0; b < 8; b = b + 1) begin : cmp
-            reg [7:0] df; df = 8'(dcnt[b] + 8'(f_wdone[b])) - sq[sq_h][b*8 +: 8];
+            reg [7:0] df; df = 8'(dcnt[b] + 8'(f_wdone[b])) - sh[b*8 +: 8];
             if (df[7]) fin = 1'b0;
         end
     end
@@ -118,7 +125,12 @@ module ot_hgi_qdq_wr #(
         if (f_m_v) begin mq_o[mq_t] <= f_m[18:4]; mq_n[mq_t] <= f_m[3:1]; mq_z[mq_t] <= f_m[0]; end
         mh_o <= w_fire ? mq_o[mq_h1] : mq_o[mq_h]; mh_n <= w_fire ? mq_n[mq_h1] : mq_n[mq_h];
         mh_z <= w_fire ? mq_z[mq_h1] : mq_z[mq_h];
-        if (sq_push) for (integer q = 0; q < 8; q = q + 1) sq[sq_t][q*8 +: 8] <= wcnt[q] + 8'(w_hit[q]);
+        if (sq_push) sq[sq_t] <= sq_pd;
+        if (sq_push && sq_n == (QW+1)'(fin)) sh <= sq_pd;          // it becomes the head
+        else sh <= fin ? sq[sq_h1] : sq[sq_h];
+`ifndef SYNTHESIS
+        if (rr_n[0] && sq_n != 0 && sh !== sq[sq_h]) $fatal(1, "FATAL: ot_hgi_qdq_wr head snapshot diverged");
+`endif
         for (integer b = 0; b < 8; b = b + 1) begin
             if (w_fire && w_hit[b]) begin
                 reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));
