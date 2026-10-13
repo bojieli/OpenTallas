@@ -132,7 +132,7 @@ def compose(outdir):
     gate = {'cross_component_source_netlist': False, 'native_hc_leaf_map': False,
             'all_child_closure': False, 'full_die_registered_seam_sta': False,
             'native_exact_mutant_throughput': False, 'native_pdn_ir': False,
-            'signal_grt_drt': False, 'fixed_phy_service_station_integration': False}
+            'signal_grt_drt': False, 'fixed_phy_service_station_integration': False, 'native_vm8_xload_integration': False}
     candidate = {'schema': 'opentallas.hbm.native_die_candidate.v1',
                  'variant': 'r25gqn_v12_native_component_prototype', 'die_um': list(DIE),
                  'placement_grid_um': list(GRID), 'closed': False,
@@ -140,7 +140,11 @@ def compose(outdir):
                  'coverage': {'sm': 32, 'native_sm_tile_clusters': 512,
                               'attention_lo': 32, 'attention_hi': 32, 'vm_slices': 4,
                               'direct_hard_children': len(rows), 'hc': 'unresolved',
-                              'fixed_phy_service_stations': 'not yet integrated'},
+                              'fixed_phy_service_stations': 'not yet integrated',
+                              'vm8': {'required_quarter_components':4,'required_tiles_per_component':25,
+                                      'unique_kits':19,'placed':False,
+                                      'contract':'results/arch/hbm_b2_1012/SPEC.md',
+                                      'planning':'results/physical/vm8_codex_1013/inventory.json'}},
                  'component_regions': regions, 'children': rows,
                  'functional_namespace_maps': maps, 'unresolved_regions': reservations,
                  'qualification_gates': gate,
@@ -148,6 +152,7 @@ def compose(outdir):
                      'SM FC_HIER changes interface latency by two cycles; exact/mutant and throughput gate pending.',
                      'SM and VM internal long seams require protocol-preserving registered transport and timing proof.',
                      'Native HC two SYS1 banks/quarter plus LL8 local and central reducer map pending.',
+                     'B2 retains VM8 for SM xload hb_vm_q: four current VM8 components (25 direct tiles/19 kits each) require native source pin/geometry mapping; do not omit or replace by guessed VMS aliases.',
                      'Real PHY, service, stations, clocks/reset and their nets must be integrated before full-die route.',
                      'Native tile PG exports and all-child TT/FF/lint closure pending; prior upper-grid and historical PG pilot IR is not native die IR.']}
     receipt = {'schema': 'opentallas.hbm.native_candidate_receipt.v1',
