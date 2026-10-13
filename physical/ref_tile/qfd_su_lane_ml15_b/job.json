@@ -1,14 +1,14 @@
 {
- "name": "qfd_su_lane_ml15_b-ml15-e3ca15bd7",
+ "name": "qfd_su_lane_ml15_b-ml15r2-COMMIT",
  "block": "ot_hdc_vstream_lane_t",
  "ref_tile": true,
- "owner": "Codex:qwen_su_ingress",
- "purpose": "Production TP8 SU successor:64-lane parent cannot reuse ML7 hard tile at VL15; local arithmetic pipeline QLA4/QLM5 preserved, each lane boundary registered; M5 leaf, local CTS, parent RD2 registered relay seams. Parent footprint replanned by qwen_die. Added8 memory alignment cycles vs ML7, golden arithmetic unchanged.",
+ "owner": "Claude:el1013-qwen-stalls",
+ "purpose": "ml15r2: first real route of the ML15 lane (ml15 stopped by a bench configuration error, fixed in tb_qfd_su_vm_bv). Production TP8 SU successor:64-lane parent cannot reuse ML7 hard tile at VL15; local arithmetic pipeline QLA4/QLM5 preserved, each lane boundary registered; M5 leaf, local CTS, parent RD2 registered relay seams. Parent footprint replanned by qwen_die. Added8 memory alignment cycles vs ML7, golden arithmetic unchanged.",
  "threads": 16,
  "peak_ram_gb": 128,
  "source": {
-  "branch": "codex/qwen-su-ingress-20261013",
-  "commit": "e3ca15bd7"
+  "branch": "claude/el1013-qwen-stalls-su",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -148,7 +148,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_su_lane_ml15_b/qfd_su_lane_ml15_b-ml15-e3ca15bd7"
+   "to": "results/rtl/ref_tile/qfd_su_lane_ml15_b/qfd_su_lane_ml15_b-ml15r2-COMMIT"
   }
  ],
  "cycles_added": 0,

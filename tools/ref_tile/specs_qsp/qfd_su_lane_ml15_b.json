@@ -113,10 +113,10 @@
     "hold_margin_ns": 0.01
   },
   "job": {
-    "owner": "Codex:qwen_su_ingress",
-    "branch": "codex/qwen-su-ingress-20261013",
-    "tag": "ml15",
-    "purpose": "Production TP8 SU successor:64-lane parent cannot reuse ML7 hard tile at VL15; local arithmetic pipeline QLA4/QLM5 preserved, each lane boundary registered; M5 leaf, local CTS, parent RD2 registered relay seams. Parent footprint replanned by qwen_die. Added8 memory alignment cycles vs ML7, golden arithmetic unchanged.",
+    "owner": "Claude:el1013-qwen-stalls",
+    "branch": "claude/el1013-qwen-stalls-su",
+    "tag": "ml15r2",
+    "purpose": "ml15r2: first real route of the ML15 lane (ml15 stopped by a bench configuration error, fixed in tb_qfd_su_vm_bv). Production TP8 SU successor:64-lane parent cannot reuse ML7 hard tile at VL15; local arithmetic pipeline QLA4/QLM5 preserved, each lane boundary registered; M5 leaf, local CTS, parent RD2 registered relay seams. Parent footprint replanned by qwen_die. Added8 memory alignment cycles vs ML7, golden arithmetic unchanged.",
     "benches": [
       {
         "name": "su_vm_exact_rsram_loff",
@@ -197,7 +197,8 @@
       }
     ],
     "views_to": "physical/ref_tile/qfd_su_lane_ml15_b/views",
-    "record_to": "results/rtl/ref_tile/qfd_su_lane_ml15_b"
+    "record_to": "results/rtl/ref_tile/qfd_su_lane_ml15_b",
+    "structural_change": "No route of this structure has run: both ml15 jobs were stopped 4 minutes in by a bench configuration error (tb_qfd_su_vm_bv built the flat 1+7 vector memory under a VL=15 master); the bench now builds the tiled memory (VMT=1, SX=8) and guards VL == 7 + SX; ML15 lane RTL and kit unchanged."
   },
   "name": "qfd_su_lane_ml15_b",
   "outline": {
