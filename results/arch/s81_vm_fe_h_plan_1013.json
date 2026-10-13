@@ -45,24 +45,24 @@
   "dsfd_vm_fxs": {
    "outline": [
     241.92,
-    17.28
+    23.76
    ],
    "std_cell_area_um2": 1571.46,
    "flops": 4686,
-   "core_um2": 3079.3,
-   "util_std_plus_macro": 0.51,
-   "util_std_cells_only": 0.51
+   "core_um2": 4618.9,
+   "util_std_plus_macro": 0.34,
+   "util_std_cells_only": 0.34
   },
   "dsfd_vm_fxr": {
    "outline": [
     54.0,
-    19.44
+    25.92
    ],
    "std_cell_area_um2": 400.8,
    "flops": 1194,
-   "core_um2": 751.2,
-   "util_std_plus_macro": 0.534,
-   "util_std_cells_only": 0.534
+   "core_um2": 1073.1,
+   "util_std_plus_macro": 0.374,
+   "util_std_cells_only": 0.374
   },
   "dsfd_vm_flt": {
    "outline": [
@@ -88,68 +88,68 @@
   "dsfd_vm_fld": {
    "outline": [
     259.2,
-    32.4
+    47.52
    ],
    "std_cell_area_um2": 3437.56,
    "flops": 8881,
-   "core_um2": 7157.0,
-   "util_std_plus_macro": 0.48,
-   "util_std_cells_only": 0.48
+   "core_um2": 11010.8,
+   "util_std_plus_macro": 0.312,
+   "util_std_cells_only": 0.312
   },
   "dsfd_vm_fcn": {
    "outline": [
     239.76,
-    38.88
+    51.84
    ],
    "std_cell_area_um2": 4227.4,
    "flops": 8282,
-   "core_um2": 8136.8,
-   "util_std_plus_macro": 0.52,
-   "util_std_cells_only": 0.52
+   "core_um2": 11188.1,
+   "util_std_plus_macro": 0.378,
+   "util_std_cells_only": 0.378
   },
   "dsfd_vm_fcc": {
    "outline": [
     181.44,
-    88.56
+    112.32
    ],
    "std_cell_area_um2": 8043.17,
    "flops": 19747,
-   "core_um2": 14920.6,
-   "util_std_plus_macro": 0.539,
-   "util_std_cells_only": 0.539
+   "core_um2": 19129.0,
+   "util_std_plus_macro": 0.42,
+   "util_std_cells_only": 0.42
   },
   "dsfd_vm_fcw": {
    "outline": [
     151.2,
-    30.24
+    38.88
    ],
    "std_cell_area_um2": 2056.64,
    "flops": 5041,
-   "core_um2": 3807.1,
-   "util_std_plus_macro": 0.54,
-   "util_std_cells_only": 0.54
+   "core_um2": 5076.2,
+   "util_std_plus_macro": 0.405,
+   "util_std_cells_only": 0.405
   },
   "dsfd_vm_frr": {
    "outline": [
     43.2,
-    12.96
+    19.44
    ],
    "std_cell_area_um2": 176.39,
    "flops": 526,
-   "core_um2": 335.9,
-   "util_std_plus_macro": 0.525,
-   "util_std_cells_only": 0.525
+   "core_um2": 587.9,
+   "util_std_plus_macro": 0.3,
+   "util_std_cells_only": 0.3
   },
   "dsfd_vm_fra": {
    "outline": [
-    8.64,
-    6.48
+    10.8,
+    8.64
    ],
    "std_cell_area_um2": 5.03,
    "flops": 15,
-   "core_um2": 9.3,
-   "util_std_plus_macro": 0.539,
-   "util_std_cells_only": 0.539
+   "core_um2": 28.0,
+   "util_std_plus_macro": 0.18,
+   "util_std_cells_only": 0.18
   },
   "dsfd_vm_frg": {
    "outline": [
@@ -182,32 +182,32 @@
    [
     54.5,
     908,
-    0.054,
-    563.2
+    0.055,
+    556.8
    ],
    [
     108.5,
     2228,
-    0.133,
-    481.8
+    0.135,
+    475.3
    ],
    [
     162.5,
     2648,
-    0.158,
-    456.0
+    0.16,
+    449.5
    ],
    [
     216.5,
     3976,
-    0.238,
-    374.1
+    0.24,
+    367.6
    ],
    [
     270.5,
     5272,
-    0.315,
-    294.2
+    0.318,
+    287.7
    ],
    [
     324.5,
@@ -218,68 +218,68 @@
    [
     378.5,
     5217,
-    0.294,
-    335.5
+    0.297,
+    329.0
    ],
    [
     432.5,
     5321,
-    0.318,
-    291.2
+    0.321,
+    284.7
    ],
    [
     486.5,
     6536,
-    0.39,
-    216.3
+    0.395,
+    209.8
    ],
    [
     540.5,
     7355,
-    0.439,
-    165.8
+    0.444,
+    159.3
    ],
    [
     594.5,
     7371,
-    0.44,
-    164.8
+    0.445,
+    158.3
    ],
    [
     648.5,
     8272,
-    0.512,
-    87.7
+    0.523,
+    74.7
    ],
    [
     702.5,
     8168,
-    0.521,
-    76.8
+    0.539,
+    57.4
    ],
    [
     756.5,
     7576,
-    0.453,
-    151.2
+    0.468,
+    131.8
    ],
    [
     810.5,
     6794,
-    0.433,
-    161.5
+    0.448,
+    142.1
    ],
    [
     864.5,
     6482,
-    0.387,
-    219.6
+    0.391,
+    213.1
    ],
    [
     918.5,
     6206,
-    0.371,
-    236.7
+    0.375,
+    230.2
    ],
    [
     972.5,
@@ -290,32 +290,32 @@
    [
     1026.5,
     5005,
-    0.299,
-    310.6
+    0.302,
+    304.2
    ],
    [
     1080.5,
     4597,
-    0.275,
-    335.8
+    0.278,
+    329.3
    ],
    [
     1134.5,
     4144,
-    0.233,
-    401.6
+    0.236,
+    395.2
    ],
    [
     1188.5,
     3245,
-    0.194,
-    419.1
+    0.196,
+    412.7
    ],
    [
     1242.5,
     2953,
-    0.176,
-    437.1
+    0.178,
+    430.7
    ],
    [
     1296.5,
@@ -351,20 +351,19 @@
  },
  "lanes_needed": 10,
  "search_decided_outline": {
-  "lanes_placed": 8,
-  "fld_x": 783.0,
+  "lanes_placed": 7,
+  "fld_x": 837.0,
   "lanes": [
-   "EB",
-   "EU1",
    "EU2",
+   "EU1",
    "EA",
-   "A@108",
-   "B@108",
-   "A@1053",
-   "B@837"
+   "EB",
+   "B@162",
+   "B@1053",
+   "A@864"
   ],
   "worst_cut_ratio_at_x": [
-   0.598,
+   0.583,
    685.5
   ]
  },
@@ -377,9 +376,9 @@
  "pass": false,
  "options": {
   "frozen contract (taller outline only)": {
-   "lanes_at_decided_outline": 8,
+   "lanes_at_decided_outline": 7,
    "min_outline_height_for_10_lanes": {
-    "h_um": 730.08,
+    "h_um": 736.56,
     "fld_x": 810.0,
     "lanes": [
      "EA",
@@ -394,7 +393,7 @@
      "B@810"
     ],
     "worst_cut": [
-     0.6,
+     0.596,
      1069.5
     ]
    }
@@ -402,7 +401,7 @@
   "av / ok / ovf / sflt +1 relay stage (reach 950 um)": {
    "lanes_at_decided_outline": 8,
    "min_outline_height_for_10_lanes": {
-    "h_um": 730.08,
+    "h_um": 736.56,
     "fld_x": 810.0,
     "lanes": [
      "EA",
@@ -417,7 +416,7 @@
      "A@810"
     ],
     "worst_cut": [
-     0.6,
+     0.596,
      1069.5
     ]
    }
@@ -425,7 +424,7 @@
   "S2 bundle tiles trimmed to non-constant bits": {
    "lanes_at_decided_outline": 10,
    "min_outline_height_for_10_lanes": {
-    "h_um": 678.24,
+    "h_um": 682.56,
     "fld_x": 837.0,
     "lanes": [
      "EB",
@@ -448,7 +447,7 @@
   "S3 clt re-routed at M5 (M6 free over the clt row)": {
    "lanes_at_decided_outline": 10,
    "min_outline_height_for_10_lanes": {
-    "h_um": 658.8,
+    "h_um": 663.12,
     "fld_x": 810.0,
     "lanes": [
      "EA",
@@ -471,7 +470,7 @@
   "S4 lane returns daisy-chained (one 546-b bus a cut)": {
    "lanes_at_decided_outline": 9,
    "min_outline_height_for_10_lanes": {
-    "h_um": 693.36,
+    "h_um": 706.32,
     "fld_x": 351.0,
     "lanes": [
      "EB",
@@ -494,7 +493,7 @@
   "S2 + S3": {
    "lanes_at_decided_outline": 10,
    "min_outline_height_for_10_lanes": {
-    "h_um": 604.8,
+    "h_um": 609.12,
     "fld_x": 837.0,
     "lanes": [
      "EB",
@@ -517,7 +516,7 @@
   "S3 + S4": {
    "lanes_at_decided_outline": 10,
    "min_outline_height_for_10_lanes": {
-    "h_um": 619.92,
+    "h_um": 635.04,
     "fld_x": 351.0,
     "lanes": [
      "EB",
@@ -532,11 +531,11 @@
      "B@810"
     ],
     "worst_cut": [
-     0.6,
+     0.596,
      815.5
     ]
    }
   }
  },
- "verdict": "FAIL: at most 8 of 10 landing lanes fit 1,520.064 x 691.2 under the frozen contract, in a model that is optimistic (no relay tiles, no local capacity, no descent of the fxs words through the lane rows).  The limit is the E-W cut, not reach: relay stages do not help.  See `options`."
+ "verdict": "FAIL: at most 7 of 10 landing lanes fit 1,520.064 x 691.2 under the frozen contract, in a model that is optimistic (no relay tiles, no local capacity, no descent of the fxs words through the lane rows).  The limit is the E-W cut, not reach: relay stages do not help.  See `options`."
 }

@@ -40,11 +40,13 @@ MAC_W, MAC_H, MAC_X, MAC_Y = 171.288, 77.784, 22.464, 23.76
 LW, LH, LANE_BITS, NLANE = 216.0, 125.28, 546, 10
 AREAS = json.loads((ROOT / 'results/arch/s81_vm_fe_h_areas_1013.json').read_text())['leaves']
 # leaf outlines: the smallest the shared gate accepts (2.16-um lattice, core = outline - 2.16 all round, std <= 0.55 of core,
-# std + macro <= 0.60, macro >= 20 um from every core edge).  clt / fsr = CLOSED views.
+# std + macro <= 0.60, macro >= 20 um from every core edge), THEN grown to what the remote --cts gate measured (B5): ORFS
+# synthesis is ~15 % over the yosys stat and every input pin costs a hold stage (fsr-proven kit: +0.25 um2 an input);
+# sized to (std_orfs + hold) / 0.48.  clt / fsr = CLOSED views.
 VIEWS = {'dsfd_vm_clt': (80.64, 230.04, 'M6 (closed clt8a)'), 'dsfd_vm_fsr': (345.6, 25.92, 'M6 (closed r4b)'),
-         'dsfd_vm_fxs': (241.92, 17.28, 'M5'), 'dsfd_vm_fxr': (54.0, 19.44, 'M5'), 'dsfd_vm_flt': (LW, LH, 'M5'),
-         'dsfd_vm_fld': (259.2, 32.4, 'M5'), 'dsfd_vm_fcn': (239.76, 38.88, 'M5'), 'dsfd_vm_fcc': (181.44, 88.56, 'M5'),
-         'dsfd_vm_fcw': (151.2, 30.24, 'M5'), 'dsfd_vm_frr': (43.2, 12.96, 'M5'), 'dsfd_vm_fra': (8.64, 6.48, 'M5'),
+         'dsfd_vm_fxs': (241.92, 23.76, 'M5'), 'dsfd_vm_fxr': (54.0, 25.92, 'M5'), 'dsfd_vm_flt': (LW, LH, 'M5'),
+         'dsfd_vm_fld': (259.2, 47.52, 'M5'), 'dsfd_vm_fcn': (239.76, 51.84, 'M5'), 'dsfd_vm_fcc': (181.44, 112.32, 'M5'),
+         'dsfd_vm_fcw': (151.2, 38.88, 'M5'), 'dsfd_vm_frr': (43.2, 19.44, 'M5'), 'dsfd_vm_fra': (10.8, 8.64, 'M5'),
          'dsfd_vm_frg': (8.64, 6.48, 'M5')}
 FXS_W, FXS_H = VIEWS['dsfd_vm_fxs'][:2]
 FLD_W, FLD_H = VIEWS['dsfd_vm_fld'][:2]

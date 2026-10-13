@@ -70,5 +70,9 @@ for leaf, (pins, rst, rng, rx, what) in L.items():
                             '(results/arch/s81_vm_fe_h_plan_1013.json: FAIL at 1,520.064 x 691.20, 8 of 10 lanes), so this route is first closure '
                             'evidence of the leaf and is re-routed if its faces move.'}}
     if leaf in ('fcc', 'fcn'): s['sdc_extra'] = [STR]
+    if leaf != 'flt':     # the closed dsfd_vm_fsr kit (pin flop + out flop a bit): recipe 1 with one hold buffer per data input.  Recipe 2 (pin
+        # flops FIRM + in / out hold stages) measured 0.8-1.2 um2 a pin in the gate (fld 164 %, fcn 122 %, fcw 100 % utilisation)
+        s.update(recipe=1, inhold=True, inhold_drv='BUFx4f_ASAP7_75t_R'); s['route']['hold_margin_ns'] = 0.01
+    del s['std_area_um2']
     (out / f'{top}_m5.json').write_text(json.dumps(s, indent=1) + '\n')
     print(top, fp['outline'], {f: len(v) for f, v in pins.items()})
