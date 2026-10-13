@@ -88,9 +88,104 @@
   ],
   "files": {
     "ot_hgi_dma_back.lef": "6ac847c0d1cd6ee2fed6bdb00d84dada80cd8fa2168aded12897a77ecddfcc44",
-    "ot_hgi_dma_back_ff.lib": "2d56b4f29a606aa2a1402e7aebb979f53c7d314f27e2defc4c94557e95cf6f75",
-    "ot_hgi_dma_back_ss.lib": "69c92e3d7db4fab9db074b19ff53b994937e47b39b09af1307fff580b06a86c1",
-    "ot_hgi_dma_back_tt.lib": "4a1bfa2cd010ed8c2b6436caeb9ac4b1eb082df438275543d7c0692684d1f3c5"
+    "ot_hgi_dma_back_ff.lib": "16eb7868d1519ac06c28cf74c263cdf32699a412cae091fdfe4e70ff0db547c5",
+    "ot_hgi_dma_back_ss.lib": "0977100e82aef993cbdbe804e5f77226d55b25f0c536233a4817deeca77578da",
+    "ot_hgi_dma_back_tt.lib": "75e9f122a44c42e1880924568de1e6ea317001a271bb82983be153d7f631bd23"
   },
-  "ok": true
+  "ok": true,
+  "reexport_1013": {
+    "why": "export replayed at the routed verdict's SDC sequence (main abc334b14 / 56328a88a); libraries replaced, LEF kept",
+    "verdict": {
+      "json": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/cl/routed_ioref.a1.json",
+      "sha256": "57c6c1836e2fc9d0470634e6469a13c870baaea2b1f972a461802cac5849c685",
+      "expect_ps": {
+        "tt": 5.25,
+        "ff": 2.53
+      },
+      "tol_ps": 0.05,
+      "work": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/cl/eco-combo1/pass1/orfs",
+      "files": {
+        "/meas/app0_io_ref_routed.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+          "sha256": "f3fa18448d63490d39b8c07680d688a06a8f7c65fdca340dda92d0905b23af4c"
+        },
+        "/src/physical/common_flow/io_ref_routed.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/common_flow/io_ref_routed.sdc",
+          "sha256": "f3fa18448d63490d39b8c07680d688a06a8f7c65fdca340dda92d0905b23af4c"
+        },
+        "/src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc",
+          "sha256": "62c0fcafe94e02624e355c2ea3efdd081b8e83f19bb1b1f9cade65942f02a573"
+        },
+        "/work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.odb": {
+          "host": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/cl/eco-combo1/pass1/orfs/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.odb",
+          "sha256": "9f944977491df0e9b833f2ac6873f7fce32b88cae4eddc21b64d271f628f573d"
+        },
+        "/work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/cl/eco-combo1/pass1/orfs/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.sdc",
+          "sha256": "02a600c4ca4643d7da293d8c5a89c582073be1f38a7ec03e6312ff39b9ff5003"
+        },
+        "/work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.spef": {
+          "host": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/cl/eco-combo1/pass1/orfs/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.spef",
+          "sha256": "d2a54829db8215c6695f4f88c456ff0ab9c8e99e3a8bad4fb1c30d5064078086"
+        }
+      },
+      "check": {
+        "ff": {
+          "export_ps": 2.5279778270714814,
+          "verdict_ps": 2.53,
+          "ok": true
+        },
+        "tt": {
+          "export_ps": 5.247691170495727,
+          "verdict_ps": 5.25,
+          "ok": true
+        }
+      }
+    },
+    "sdc_sequence": {
+      "ss": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      },
+      "ff": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      },
+      "tt": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_ot_hgi_dma_back_asap7_ref_hgi_dma_back_b2_ref_a_01e2a5600_hs_cx/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/hgi_dma_back_b2_ref/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      }
+    },
+    "orfs_dir": "/home/ubuntu/xsdc1013/stage/hgi_dma_back_b2_ref-a-01e2a5600-hs-cx/cl/eco-combo1/pass1/orfs",
+    "old_lib_sha256": {
+      "ss": "0977100e82aef993cbdbe804e5f77226d55b25f0c536233a4817deeca77578da",
+      "ff": "16eb7868d1519ac06c28cf74c263cdf32699a412cae091fdfe4e70ff0db547c5",
+      "tt": "75e9f122a44c42e1880924568de1e6ea317001a271bb82983be153d7f631bd23"
+    }
+  }
 }
