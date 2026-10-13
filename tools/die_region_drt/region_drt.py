@@ -581,7 +581,9 @@ def cut():
     print('DRD pins/guides', json.dumps(stats), flush=True)
     # pin-access audit (ABOVE-ONLY keepout): every kept block's signal pin on layer L must have L+1 free of the
     # die's own shapes (PDN, intruder obstructions) over the pin; the tool itself never obstructs L-1.
-    pa = dict(pins=0, above_blocked_pdn=0, above_blocked_obs=0, examples=[])
+    pa = dict(pins=0, above_blocked_pdn=0, above_blocked_obs=0, examples=[],
+              intruder_pins=0, intruder_above_blocked_pdn=0, intruder_above_blocked_obs=0,
+              intruder_examples=[])
     pdn_by = {}
     for ln, a_, b_, c, d in pdn:
         pdn_by.setdefault(ln, []).append((a_, b_, c, d))
@@ -610,6 +612,23 @@ def cut():
                             if len(pa['examples']) < 10:
                                 pa['examples'].append([it.getInst().getName() + '/' + it.getMTerm().getName(), L1, key])
                     break
+    # Intruder pins become BTerms below, so they cannot be audited as kept
+    # instance ITerms. Include their original exact geometry explicitly.
+    # This changes diagnostics only: never clear actual abstract OBS here.
+    for nm, shapes in ipins.items():
+        for ln, r, owner in shapes:
+            if ln not in up:
+                continue
+            pa['intruder_pins'] += 1
+            L1 = up[ln]
+            for key, src in (('intruder_above_blocked_pdn', pdn_by),
+                             ('intruder_above_blocked_obs', obs_by)):
+                if any(q[0] <= r.xMin() and q[2] >= r.xMax() and
+                       q[1] <= r.yMin() and q[3] >= r.yMax()
+                       for q in src.get(L1, [])):
+                    pa[key] += 1
+                    if len(pa['intruder_examples']) < 10:
+                        pa['intruder_examples'].append([owner, nm, L1, key])
     for i in drop + intr:
         odb.dbInst.destroy(i)
     for bt in list(block.getBTerms()):

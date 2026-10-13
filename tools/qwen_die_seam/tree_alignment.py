@@ -4,7 +4,8 @@ import argparse, collections, functools, hashlib, json
 from pathlib import Path
 from extract import parse
 
-def audit(path, node_latency=3):
+def audit(path, node_latency=3, applied_pads=None):
+    applied_pads = applied_pads or {}
     inst, bus = parse(path)
     slots = {n: dict(master=m, pins=p) for n, (m, p) in inst.items()
              if not m.startswith(('qfd_rly', 'qkd_rly'))}
@@ -47,13 +48,41 @@ def audit(path, node_latency=3):
     def input_arrival(endpoint):
         d = bus[incoming[endpoint]]
         assert len(d['src']) == 1, (endpoint, d['src'])
-        return arrival(d['src'][0]) + d['K']
+        return arrival(d['src'][0]) + d['K'] + applied_pads.get(incoming[endpoint], 0)
     nodes = [n for n, s in slots.items() if s['master'] == 'qfd_tile_nk' and 'n_a' in s['pins']]
     skews = {n: input_arrival(n + '.n_a') - input_arrival(n + '.n_b') for n in nodes}
+    pads = {}
+    @functools.lru_cache(None)
+    def balanced_arrival(endpoint):
+        n, p = endpoint.split('.')
+        if n == 'sp_vector_memory':
+            return 0
+        if slots[n]['master'] == 'qfd_tile_nk':
+            if p == 't_out':
+                return balanced_input(n + '.tap') + 1
+            a, b = balanced_input(n + '.n_a'), balanced_input(n + '.n_b')
+            if a != b:
+                early = n + ('.n_a' if a < b else '.n_b')
+                bn = incoming[early]
+                pads[bn] = dict(extra_cycles=abs(a-b), destination=early, width_bits=bus[bn]['w'],
+                                source=bus[bn]['src'][0])
+            return max(a, b) + node_latency
+        inputs = [e for e in incoming if e.startswith(n + '.')]
+        assert len(inputs) == 1, (n, inputs)
+        return balanced_input(inputs[0]) + 1
+    def balanced_input(endpoint):
+        d = bus[incoming[endpoint]]
+        assert len(d['src']) == 1
+        return balanced_arrival(d['src'][0]) + d['K']
+    for n in nodes:
+        balanced_arrival(n + '.n_y')
     return dict(nodes=len(nodes), misaligned=sum(v != 0 for v in skews.values()),
                 skew_histogram=dict(sorted(collections.Counter(skews.values()).items())),
                 examples=[dict(node=n, skew_cycles=v) for n, v in skews.items() if v][:12],
                 corridor_roots=roots, relay_count=sum(d['K'] for d in bus.values()),
+                proposed_pad_relays=sum(p['extra_cycles'] for p in pads.values()),
+                proposed_storage_bits=sum(p['extra_cycles']*p['width_bits'] for p in pads.values()),
+                proposed_pads=pads,
                 node_latency_cycles=node_latency, limitation='Static bus arrival model only; does not prove bit exactness, relay clock presence, STA, or die closure.')
 
 if __name__ == '__main__':
