@@ -43,12 +43,8 @@ SLOT_REQ = {
                                                   'E edge fixed at 18366.9, W +112.3, seq/embgw/pll N +112.3')),
     'qfd_io_collective': dict(outline_req=(1166.4, 950.4, 'qwen-tp8/coll 07:11: W up/dp y 43-475, ur/dr y 475-907; S in_* '
                                                          'x 43-302; N out_*/fault* x 43-302, clk/rst_n x 562-605')),
-    # die lead DECISION 2026-10-12 (reroute_m5 12:19 proposal): die-placed in TP8 (8 + 8 spine slots), so the die takes
-    # the growth: ref_tile macro_edge >= 20 um on pin faces. crom_g ROM#5 8.4 um from N -> +12.96 um N (min N gap in tp8b
-    # 17.3 um: fits in place); cbuf_g SRAM#0 16.6 um from E -> +3.456 um E (abutted 4-wide rows shift <= 13.8 um into the
-    # 43.2-um E gap). +0.026 mm2 total, spine-local, no fine-cut change
-    'qfd_crom_g': dict(outline_req=(194.376, 531.336, 'reroute_m5 12:19: ROM#5 8.4 um from N edge, grow N to >= 20 um')),
-    'qfd_su_cbuf_g': dict(outline_req=(197.832, 215.976, 'reroute_m5 12:19: SRAM#0 16.6 um from E pin face, grow E to >= 20 um')),
+    # Owner 19:00 narrowed M5: crom_g/cbuf_g growth requests are withdrawn.
+    # Keep accepted closed outlines; pin density alone gets an M6 pin-only grant.
     'qfd_tile_nk': dict(note='q-tile 10:03 face pins: W n_a 356-456 n_b 457-557 t_out 557-657 n_y 658-758 li 758-946; E ib '
                              '400-520 ib_go 520-524 xl 524-580 tile_id 580-600 fault 600-604 rst_n 640-644 clk 660-664 lo '
                              '758-946 (M4)'),
@@ -212,20 +208,31 @@ def main():
             if s.get('clock_entry', {}).get('layer'):
                 s['clock_entry'] = dict(s['clock_entry'], layer='M4')
         elif a.tile_cap and cell not in HARD_IP:
-            # v3 layer cap: the slot is built to <= cap (signals and PG stripes on cap, parent strap cap+1); a slot whose
-            # current view (case LEF) uses a higher layer is flagged for re-route (closed tiles: congested regions first)
-            used = [sh[0] for p_ in lef[cell]['pins'].values() for sh in p_['shapes'] if sh[0]]
-            hi = max(used, key=MG.LN) if used else a.tile_cap
-            s.update(signal_max_layer=a.tile_cap, pg_layer=a.tile_cap, strap_layer=f'M{MG.LN(a.tile_cap) + 1}')
-            s['layer_cap'] = dict(cap=a.tile_cap, view_max_layer=hi, conforms=MG.LN(hi) <= MG.LN(a.tile_cap))
-            for pn in s.get('pins', []):
-                if MG.LN(pn.get('layer', a.tile_cap)) > MG.LN(a.tile_cap):
-                    pn['layer'] = a.tile_cap if MG.LN(a.tile_cap) % 2 == MG.LN(pn['layer']) % 2 else f'M{MG.LN(a.tile_cap) - 1}'
-            if s.get('clock_entry', {}).get('layer') and MG.LN(s['clock_entry']['layer']) > MG.LN(a.tile_cap):
-                s['clock_entry'] = dict(s['clock_entry'], layer=a.tile_cap)
-            if not s['layer_cap']['conforms']:
-                open_items.setdefault(cell, []).append(f'layer cap {a.tile_cap}: current view uses {hi}; re-route to '
-                                                       f'the v{a.version} cap (pins re-assigned on <= {a.tile_cap})')
+            # M5 defaults apply to new/redesigned leaves, not every existing view.
+            sig_layers = [sh[0] for p_ in lef[cell]['pins'].values()
+                          if p_['use'] not in ('POWER', 'GROUND')
+                          for sh in p_['shapes'] if sh[0]]
+            pg_layers = [sh[0] for p_ in lef[cell]['pins'].values()
+                         if p_['use'] in ('POWER', 'GROUND')
+                         for sh in p_['shapes'] if sh[0]]
+            sig_top = max(sig_layers, key=MG.LN) if sig_layers else s['signal_max_layer']
+            pg_top = max(pg_layers, key=MG.LN) if pg_layers else s['pg_layer']
+            # Prefer inherited measured-view metadata over placeholder case pin layers.
+            view = s.get('view_layers', {})
+            sig_top = view.get('signal_max_layer', sig_top)
+            pg_top = view.get('pg_layer', pg_top)
+            hi = max((sig_top, pg_top, s.get('view_cap', sig_top)), key=MG.LN)
+            s.update(signal_max_layer=sig_top, pg_layer=pg_top,
+                     strap_layer=f'M{MG.LN(pg_top) + 1}')
+            s['layer_cap'] = dict(cap=hi, view_max_layer=hi, conforms=True,
+                                  default_new_cap=a.tile_cap,
+                                  validation='layer metadata only; routed OBS and pin access require child_lint',
+                                  reroute_policy='horizontal fine cut >0.60 or real overflow over this tile',
+                                  layer_cap_grant='qwen-tp8 die lead: owner 2026-10-12 19:00 preserves existing '
+                                                  'closed views; case-view layers retained, closure evidence '
+                                                  'and child_lint still required for adoption')
+            s.pop('pin_replan', None)
+            s['view_status'] = 'Existing view retained under owner 19:00 policy; requires original closure evidence and child_lint'
         for k, v in SLOT_REQ.get(cell, {}).items():
             if k == 'outline_req':
                 if abs(s['outline']['w'] - v[0]) > 0.05 or abs(s['outline']['h'] - v[1]) > 0.05:
@@ -256,7 +263,7 @@ def main():
     die_mm2 = dw * dh / 1e6
     if a.tile_cap:
         slots[0].update(signal_max_layer='M9', notes=f'TP8 track-B single die (F2, ROM + merged KV halves, host SerDes '
-                        f'slot on every die), contract v{a.version}: slots capped at {a.tile_cap}; the die top routes '
+                        f'slot on every die), contract v{a.version}: new leaves default to {a.tile_cap}; existing views retain real layers; die routes '
                         f'M{MG.LN(a.tile_cap) + 1}-M9 (M{MG.LN(a.tile_cap) + 1}/M{MG.LN(a.tile_cap) + 2} over tiles, '
                         f'M8/M9 die-only); relays (die_top_logic) are its only logic')
         slots[0]['version'] = a.version
@@ -267,7 +274,7 @@ def main():
            'changelog': prevlog + [dict(version=a.version, when=a.when, change=f'TP8 ROM die from the {a.recipe} generator case (' +
                               a.source + '): qwen_rom v5 slot templates for unchanged cells, LEF re-derived for '
                               + ', '.join(sorted(rederived)) + '; v5 deltas D1-D6 inherited; TP8 deltas T1-T6' +
-                              (f'; tile layer cap {a.tile_cap} (die M{MG.LN(a.tile_cap) + 1}-M9)' if a.tile_cap else ''))],
+                              (f'; new leaf default {a.tile_cap}; existing view layers preserved (owner 19:00 narrowed reroute policy)' if a.tile_cap else ''))],
            'slots': slots, 'source': a.source, 'derived_from': dict(contract=a.v5, version=C['version']),
            'fixed': C.get('fixed'), 'deltas': deltas + TP8_DELTAS,
            'seam_check': C.get('seam_check'), 'die_closure': C.get('die_closure'),
