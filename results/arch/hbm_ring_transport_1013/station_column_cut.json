@@ -1,0 +1,163 @@
+{
+ "schema": "opentallas.hbm.ring_station_column_cut.v1",
+ "author": "Claude:ring-station-1013",
+ "date": "2026-10-13",
+ "status": "cut analysis only; no placement, grant or route. Supersedes the 'four chains interleaved in one 410.4 column' proposal as stated: its M7 cut is over 1.0.",
+ "basis": {
+  "signals_per_directed_link": 2226,
+  "M7_pitch_um": 0.064,
+  "M9_pitch_um": 0.08,
+  "M9_pilot_PG_loss": 0.2451,
+  "source": "results/arch/hbm_native_ring_cut_1013/STUDY.md (pitches, pilot PG), station synth 27,553.36 um2 (sub16)",
+  "note": "a link from station k to station k+1 of the same chain runs vertically over the bodies of the other chains' stations; over any station body (chains-1) links cross. Stations cap at M5 with M6 parent PG, so the links must be on M7 (and M9 if the die lead allocates it to the ring)."
+ },
+ "rows": [
+  {
+   "outline_um": [
+    410.4,
+    138.24
+   ],
+   "chains": 4,
+   "station_pitch_um": 158.24,
+   "chain_period_um": 632.96,
+   "face_gap_um": 494.72,
+   "reach_ok_500": true,
+   "matching_bit_dx_budget_um": 5.28,
+   "layers": [
+    "M7"
+   ],
+   "tracks_over_station": 6412,
+   "signals_crossing_over_a_station": 6678,
+   "cut": 1.041,
+   "cut_ok_0p55": false,
+   "cut_ok_0p60": false,
+   "column_width_with_guards_um": 450.4,
+   "fits_column_600p48": true,
+   "core_util_at_27553um2": 0.507
+  },
+  {
+   "outline_um": [
+    410.4,
+    138.24
+   ],
+   "chains": 4,
+   "station_pitch_um": 158.24,
+   "chain_period_um": 632.96,
+   "face_gap_um": 494.72,
+   "reach_ok_500": true,
+   "matching_bit_dx_budget_um": 5.28,
+   "layers": [
+    "M7",
+    "M9"
+   ],
+   "tracks_over_station": 10285,
+   "signals_crossing_over_a_station": 6678,
+   "cut": 0.649,
+   "cut_ok_0p55": false,
+   "cut_ok_0p60": false,
+   "column_width_with_guards_um": 450.4,
+   "fits_column_600p48": true,
+   "core_util_at_27553um2": 0.507
+  },
+  {
+   "outline_um": [
+    518.4,
+    108.0
+   ],
+   "chains": 4,
+   "station_pitch_um": 128.0,
+   "chain_period_um": 512.0,
+   "face_gap_um": 404.0,
+   "reach_ok_500": true,
+   "matching_bit_dx_budget_um": 96.0,
+   "layers": [
+    "M7",
+    "M9"
+   ],
+   "tracks_over_station": 12991,
+   "signals_crossing_over_a_station": 6678,
+   "cut": 0.514,
+   "cut_ok_0p55": true,
+   "cut_ok_0p60": true,
+   "column_width_with_guards_um": 558.4,
+   "fits_column_600p48": true,
+   "core_util_at_27553um2": 0.517
+  },
+  {
+   "outline_um": [
+    550.8,
+    103.68
+   ],
+   "chains": 4,
+   "station_pitch_um": 123.68,
+   "chain_period_um": 494.72,
+   "face_gap_um": 391.04,
+   "reach_ok_500": true,
+   "matching_bit_dx_budget_um": 108.96,
+   "layers": [
+    "M7",
+    "M9"
+   ],
+   "tracks_over_station": 13803,
+   "signals_crossing_over_a_station": 6678,
+   "cut": 0.484,
+   "cut_ok_0p55": true,
+   "cut_ok_0p60": true,
+   "column_width_with_guards_um": 590.8,
+   "fits_column_600p48": true,
+   "core_util_at_27553um2": 0.507
+  },
+  {
+   "outline_um": [
+    410.4,
+    138.24
+   ],
+   "chains": 2,
+   "station_pitch_um": 158.24,
+   "chain_period_um": 316.48,
+   "face_gap_um": 178.24,
+   "reach_ok_500": true,
+   "matching_bit_dx_budget_um": 321.76,
+   "layers": [
+    "M7"
+   ],
+   "tracks_over_station": 6412,
+   "signals_crossing_over_a_station": 2226,
+   "cut": 0.347,
+   "cut_ok_0p55": true,
+   "cut_ok_0p60": true,
+   "column_width_with_guards_um": 450.4,
+   "fits_column_600p48": true,
+   "core_util_at_27553um2": 0.507
+  },
+  {
+   "outline_um": [
+    550.8,
+    103.68
+   ],
+   "chains": 2,
+   "station_pitch_um": 123.68,
+   "chain_period_um": 247.36,
+   "face_gap_um": 143.68,
+   "reach_ok_500": true,
+   "matching_bit_dx_budget_um": 356.32,
+   "layers": [
+    "M7"
+   ],
+   "tracks_over_station": 8606,
+   "signals_crossing_over_a_station": 2226,
+   "cut": 0.259,
+   "cut_ok_0p55": true,
+   "cut_ok_0p60": true,
+   "column_width_with_guards_um": 590.8,
+   "fits_column_600p48": true,
+   "core_util_at_27553um2": 0.507
+  }
+ ],
+ "findings": [
+  "410.4-wide column, four chains, M7 only: 6,678 signals over 6,412 tracks = cut 1.04. Not routable.",
+  "410.4-wide, M7+M9 (after pilot PG): 0.649, above the 0.60 maximum.",
+  "A wider, flatter station (518.4 x 108 or 550.8 x 103.68) on M7+M9 reaches 0.51 / 0.48 and shortens the face gap to 404 / 391 um; it needs an M9 ring allocation from the die lead and a new kit.",
+  "Two chains per column pass on M7 alone at 410.4 (0.347) but need two device columns (or the portrait pairing), i.e. the structural corridor replan."
+ ]
+}
