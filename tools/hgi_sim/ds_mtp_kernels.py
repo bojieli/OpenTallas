@@ -309,7 +309,15 @@ def golden_spec(a):
 # =================================================================================================================
 EMBB = 1 << 32                       # BF16 embedding rows: EMBB + token * 10,240 (dyn_sel TOKEN)
 MTB = 0x170000000                    # MTP constants (ONE4 = 1, 0, 0, 0)
-COLB = 0x180000000                   # column slot store: COLB + slot * CSTR (dyn_sel TOKEN)
+# Column slot store: STACK-LOCAL COLB + slot * CSTR (dyn_sel TOKEN) on ALL FOUR stacks (h rides the swap on stacks
+# 0..3, PRE on stack 0), so the window must be free in every stack.  It sits above the HC stripe rows (stack-local
+# 30 GiB + <= 169 MB) and above the weight manifest's end on stack 2 (ds_native.MAN_END = stack 2 local 30 GiB).
+# It was 0x180000000 (stack-local 6 GiB): on stack 2 that is flat 70 GiB, INSIDE the weight manifest
+# (layers.0.ffn.experts.w2, expert 44, rows 4,098..4,881 of rank 0's die: measured 2026-10-13) -- every swap-out of
+# rows o = 2 mod 4 overwrote weight rows.  The simulator could not see it (weights come from the checkpoint, the
+# STRIPE4 code bit kept the address out of the manifest lookup) and neither could the e2e bench (SM is a stub there).
+# Kernels.check_colslot_window() now proves the window against the manifest and the HC stripe rows of the program.
+COLB = 31 << 30
 ROPEB = 1 << 31                      # plain RoPE rows: ROPEB + pos * 256 (cos 32 | sin 32, dyn_sel POS)
 # VM tail above ds_native's buffer map (derived from DN.Layout().end at bind time, never hard-coded: the map grows --
 # EGID 144 moved it to 261,440, rule (A)'s bank-phase-0 HC buffers to 261,696): ZT = the END token word of non-head
@@ -530,6 +538,25 @@ class Kernels:
                 self.body[r][(5, 0)] = seeds[r]
                 self.body[r][(9, 0)] = self.dhead(r)
                 self.body[r][(10, 0)] = self.markov(r)
+
+        self.check_colslot_window()
+
+    def check_colslot_window(self):
+        """The column slot windows [stack s local COLB, + NCOLSLOT x CSTR), s = 0..3, hold nothing else: no weight
+        manifest extent, no HC stripe row (8 banks: 20,480 B a stack ... the whole 81,920 B row span is refused), and
+        they stay inside the stack-local space.  (Registered data regions are refused by Hbm.add in the run.)"""
+        DN = self.DN
+        span = NCOLSLOT * CSTR
+        assert COLB % 32 == 0 and 0 <= COLB and COLB + span <= 1 << 35, "column slots leave the stack-local space"
+        for s_ in range(4):
+            lo = (s_ << 35) | COLB
+            for e in self.man.ent:
+                a_, b_ = e["base"], e["base"] + e["estride"] * e["experts"]
+                assert not (a_ < lo + span and lo < b_), \
+                    f"column slot window of stack {s_} [{lo:#x}, +{span}) overlaps weight extent {e['key']} [{a_:#x}, {b_:#x})"
+        for loc in DN.HC_STRIPE:
+            assert not (loc < COLB + span and COLB < loc + 8 * DN.HC_RS * 8 * 4), \
+                f"column slot window overlaps the HC stripe row at stack-local {loc:#x}"
 
     # ---- tables (one region per layer slot, relocated)
     def table_region(self, L):

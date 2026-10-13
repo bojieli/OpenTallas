@@ -28,7 +28,7 @@ module tb_hgi_b2_swapin_grp;
     parameter integer SEED = 1;
     parameter integer LIMIT = 369;       // 1.10 x 335.9 (the swap-in price row)
     localparam integer NB = 8, NL = 8, SBIT = 35;
-    localparam longint COLB = 64'h180000000, CSTR = 64'd131072;
+    localparam longint COLB = 64'h7C0000000, CSTR = 64'd131072;
     localparam integer VMW = 98304;
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     reg g_v = 0, g_last = 0; reg [1:0] g_q = 0; reg [226:0] g_mv = 0;
