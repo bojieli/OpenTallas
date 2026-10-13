@@ -1,5 +1,5 @@
 {
- "name": "s81pq_root_ref-v1-COMMIT",
+ "name": "s81pq_root_ref-v1-023590ae7",
  "block": "ot_s81_pq_ret_root_cam_p",
  "ref_tile": true,
  "owner": "Claude:s81-pqroot",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 44,
  "source": {
   "branch": "s81-pqroot-1013",
-  "commit": "COMMIT",
+  "commit": "023590ae7",
   "extra_paths": [
    "tests"
   ]
@@ -90,7 +90,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_root_ref/s81pq_root_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81pq_root_ref/s81pq_root_ref-v1-023590ae7"
   }
  ],
  "cycles_added": 0,
