@@ -64,6 +64,7 @@ module ot_hgi_hc_unit #(
     // HCP stage k) chained by registered partial-sum seams; no 8x8 bank->group rotation.  Needs HSRC 0, HL = 8 SPL,
     // XMACRO 1.
     parameter integer SYS = 0,
+    parameter integer QPAIR = 0,           // opt-in: group the same SYS banks as four B2 two-bank quarters
     parameter integer XRLY = 4,             // relay stages ctl -> tile (window control, x writes) and back
     parameter integer DRLY = 2,             // relay stages ctl <-> tile 0 / tile 7 (descriptor, chunk sums)
     parameter integer SLM = 8,              // SYS lane multiply / add pipeline depths (1.2 GHz)
@@ -465,6 +466,7 @@ module ot_hgi_hc_unit #(
                 end
             end
             assign xl[g*2*NXM*150 +: 2*NXM*150] = xl_g;
+            if (QPAIR == 0) begin : g_unpaired
             ot_hgi_hc_tile #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .LM(SLM), .LA(SLA)) u_t (
                 .clk(clk), .rst_n(rst_n), .first(g == 0),
                 .d_v(cv[g]), .d_ss(css[g]), .d_nv(cnv[g*(LW+1) +: LW+1]), .d_wa(cwa[g*AW +: AW]), .d_xa(cxa[g*AW +: AW]),
@@ -478,6 +480,21 @@ module ot_hgi_hc_unit #(
                 .hq_v(t_hqv[g*SPL +: SPL]), .hq_rdy(hq_rdy[g*SPL +: SPL]), .hq_addr(t_hqa[g*SPL*HAW +: SPL*HAW]),
                 .hq_len(t_hql[g*SPL*3 +: SPL*3]), .hq_tag(t_hqt[g*SPL*TG +: SPL*TG]), .hr_v(hr_v[g*SPL +: SPL]),
                 .hr_tag(hr_tag[g*SPL*TG +: SPL*TG]), .hr_beat(hr_beat[g*SPL*2 +: SPL*2]), .hr_data(hr_data[g*SPL*256 +: SPL*256]));
+            end else if ((g % 2) == 0) begin : g_pair
+            ot_hgi_hc_quarter #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .LM(SLM), .LA(SLA)) u_q (
+                .clk(clk), .rst_n(rst_n), .first(g == 0),
+                .d_v(cv[g]), .d_ss(css[g]), .d_nv(cnv[g*(LW+1) +: LW+1]), .d_wa(cwa[g*AW +: AW]), .d_xa(cxa[g*AW +: AW]),
+                .o_v(cv[g+2]), .o_ss(css[g+2]), .o_nv(cnv[(g+2)*(LW+1) +: LW+1]), .o_wa(cwa[(g+2)*AW +: AW]),
+                .o_xa(cxa[(g+2)*AW +: AW]), .sum_in(csum[g*W*32 +: W*32]), .sum_out(csum[(g+2)*W*32 +: W*32]),
+                .f_in(cf[g]), .f_out(cf[g+2]),
+                .c_start({g_t[g+1].c[0], c[0]}), .c_rel({g_t[g+1].c[1], c[1]}), .c_base({g_t[g+1].e[0 +: HAW], e[0 +: HAW]}), .c_soff({g_t[g+1].e[HAW +: SPL*HAW], e[HAW +: SPL*HAW]}),
+                .c_nwk({g_t[g+1].e[HAW+SPL*HAW +: SPL*CWW], e[HAW+SPL*HAW +: SPL*CWW]}), .c_bnd({g_t[g+1].e[HAW+SPL*HAW+SPL*CWW +: SPL*AW], e[HAW+SPL*HAW+SPL*CWW +: SPL*AW]}),
+                .c_pbase({g_t[g+1].e[HAW+SPL*HAW+SPL*CWW+SPL*AW +: HAW], e[HAW+SPL*HAW+SPL*CWW+SPL*AW +: HAW]}), .c_pgo({g_t[g+1].c[2], c[2]}), .t_rdy(t_rdy[g +: 2]), .t_flt(t_flt[g +: 2]),
+                .xl_q(xl[g*2*NXM*150 +: 2*(2*NXM*150)]), .xl_cr(), .xl_done(),
+                .hq_v(t_hqv[g*SPL +: 2*(SPL)]), .hq_rdy(hq_rdy[g*SPL +: 2*(SPL)]), .hq_addr(t_hqa[g*SPL*HAW +: 2*(SPL*HAW)]),
+                .hq_len(t_hql[g*SPL*3 +: 2*(SPL*3)]), .hq_tag(t_hqt[g*SPL*TG +: 2*(SPL*TG)]), .hr_v(hr_v[g*SPL +: 2*(SPL)]),
+                .hr_tag(hr_tag[g*SPL*TG +: 2*(SPL*TG)]), .hr_beat(hr_beat[g*SPL*2 +: 2*(SPL*2)]), .hr_data(hr_data[g*SPL*256 +: 2*(SPL*256)]));
+            end
         end
         always @* begin hq_v = t_hqv; hq_addr = t_hqa; hq_len = t_hql; hq_tag = t_hqt; wq_ack = '0; end
         assign p_iss = p_req;                                  // a one-cycle pulse; tile 0 latches and issues it
