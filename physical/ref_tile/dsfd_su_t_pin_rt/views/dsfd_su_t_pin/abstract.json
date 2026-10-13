@@ -77,9 +77,104 @@
   "macro_views": [],
   "files": {
     "dsfd_su_t_pin.lef": "d75e147a1b3343f70eb08918e0e0d5e536f4f65cdf4a32f9afb1bcc211b2598f",
-    "dsfd_su_t_pin_ff.lib": "2bf1a892d84b6d04d0791e107079047c9cf8d25df5c44bff9b7f0b4f8d3c4bfb",
-    "dsfd_su_t_pin_ss.lib": "269528a205933cd8bd8f70d6afc30a0c591253e76c631cd92e57322535e4b639",
-    "dsfd_su_t_pin_tt.lib": "f25fcc7da7c39fc3cc782d515db7a68605ee213c0feaba846b1a3fb5b6ad9cb2"
+    "dsfd_su_t_pin_ff.lib": "3c1560733d11b96ffd2c826c05cf4f11bdef2b58d860362e392ccebbac98f432",
+    "dsfd_su_t_pin_ss.lib": "a5c61d4f03019a1fe55f39f1d76fbe0fc2bd6c024242a3190c37e05188a4ce97",
+    "dsfd_su_t_pin_tt.lib": "94c332ba247a869586f2a7b424fec8ae68deb0600893aa832eb8d04156797b7a"
   },
-  "ok": true
+  "ok": true,
+  "reexport_1013": {
+    "why": "export replayed at the routed verdict's SDC sequence (main abc334b14 / 56328a88a); libraries replaced, LEF kept",
+    "verdict": {
+      "json": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/cl/routed_ioref.a1.json",
+      "sha256": "e166574b8cbc8baeae94aaccd4c15513add86db46e91190710370ad5f6fd4ee5",
+      "expect_ps": {
+        "tt": 132.69,
+        "ff": 20.92
+      },
+      "tol_ps": 0.05,
+      "work": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/cl/eco/pass1/orfs",
+      "files": {
+        "/meas/app0_io_ref_routed.sdc": {
+          "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+          "sha256": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+        },
+        "/src/physical/common_flow/io_ref_routed.sdc": {
+          "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/src/physical/common_flow/io_ref_routed.sdc",
+          "sha256": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+        },
+        "/src/physical/ref_tile/dsfd_su_t_pin_rt/signoff.sdc": {
+          "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/src/physical/ref_tile/dsfd_su_t_pin_rt/signoff.sdc",
+          "sha256": "7470ed168f23c023a38195a9d31f589d32dce965549dd08f2344010adeb378b8"
+        },
+        "/work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.odb": {
+          "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.odb",
+          "sha256": "19b58752d686c14843d88f0cda34611cb1389b1a4246334039fa9058f8a28af7"
+        },
+        "/work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.sdc": {
+          "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.sdc",
+          "sha256": "e9cbc182524f2751d8275cab7ac848d4538f37ef2a04a66925e571772d3232aa"
+        },
+        "/work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.spef": {
+          "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.spef",
+          "sha256": "fdc71b7613946824495de7436e1002fff5c49d1b67ed8f670d93602568e2d3b7"
+        }
+      },
+      "check": {
+        "ff": {
+          "export_ps": 20.921181453914528,
+          "verdict_ps": 20.92,
+          "ok": true
+        },
+        "tt": {
+          "export_ps": 132.6869170092948,
+          "verdict_ps": 132.69,
+          "ok": true
+        }
+      }
+    },
+    "sdc_sequence": {
+      "ss": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/dsfd_su_t_pin_rt/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      },
+      "ff": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/dsfd_su_t_pin_rt/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      },
+      "tt": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_dsfd_su_t_pin_asap7_ref_dsfd_su_t_pin_rt_rt_77e72f74a/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/dsfd_su_t_pin_rt/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      }
+    },
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_su_t_pin_rt-rt-77e72f74a/routes/dsfd_su_t_pin_rt_rt_77e72f74a/work/orfs",
+    "old_lib_sha256": {
+      "ss": "269528a205933cd8bd8f70d6afc30a0c591253e76c631cd92e57322535e4b639",
+      "ff": "2bf1a892d84b6d04d0791e107079047c9cf8d25df5c44bff9b7f0b4f8d3c4bfb",
+      "tt": "f25fcc7da7c39fc3cc782d515db7a68605ee213c0feaba846b1a3fb5b6ad9cb2"
+    }
+  }
 }
