@@ -5,9 +5,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_IN
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
-read_db /in/results/asap7/opentallas_ot_qfd_kv_landing_ecc_asap7_ref_qfd_q5_landing_ecc_p2_p2c_af44ec03d/base/6_final.odb
+read_db /in/results/asap7/opentallas_ot_qfd_kv_landing_ecc_asap7_ref_qfd_q5_landing_ecc_p2_p2c_5620f157b/base/6_final.odb
 read_sdc /interface.sdc
-read_spef /in/results/asap7/opentallas_ot_qfd_kv_landing_ecc_asap7_ref_qfd_q5_landing_ecc_p2_p2c_af44ec03d/base/6_final.spef
+read_spef /in/results/asap7/opentallas_ot_qfd_kv_landing_ecc_asap7_ref_qfd_q5_landing_ecc_p2_p2c_5620f157b/base/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]"
 write_timing_model -library_name ot_qfd_kv_landing_ecc_tt /out/ot_qfd_kv_landing_ecc_tt.lib
