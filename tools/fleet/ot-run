@@ -2,6 +2,7 @@
 """ot-run: run a heavy command on the fleet host with the most free memory (admission is by memory only).
 
   ot-run --mem GB [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] -- <command...>
+  ot-run --status          one line: per host, GB free after reservations and headroom / waiters (count:GB queued)
 
 Asks every host for `ot-heavy-reconcile --free` (MemAvailable - growth still reserved by running ot-heavy jobs -
 headroom - memory already requested by waiters), drops hosts with less than --disk GB (default 20) free under --dir
@@ -25,8 +26,27 @@ def probe(host, d):
         return host, {"error": str(e)[:80]}
 
 
+def status(hosts):
+    """one line an agent can read before choosing where to launch: memory nobody has claimed, per host"""
+    with cf.ThreadPoolExecutor(len(hosts)) as ex:
+        res = dict(ex.map(lambda h: probe(h, None), hosts))
+    out = []
+    for h in hosts:
+        r = res[h]
+        if not r or r.get("error"):
+            out.append(f"{h} unreachable")
+            continue
+        free = r["avail_gb"] - r["growth_gb"] - r["headroom_gb"]      # before waiters; free_gb is after them
+        out.append(f"{h} free {free} GB" + (f" (waiters {r['waiting']}:{r['waiting_gb']} GB)" if r["waiting"] else "")
+                   + f" run {r['running']}")
+    best = max((h for h in hosts if res[h] and not res[h].get("error")), key=lambda h: res[h]["free_gb"], default=None)
+    print("ot-run status: " + " | ".join(out) + (f" | most free after waiters: {best} {res[best]['free_gb']} GB" if best else ""))
+
+
 def main():
     a = sys.argv[1:]
+    if a[:1] == ["--status"]:
+        return status(HOSTS)
     mem, d, disk, hosts, pick = None, None, 20, HOSTS, False
     while a and a[0] != "--":
         o = a.pop(0)
