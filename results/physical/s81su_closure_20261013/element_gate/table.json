@@ -793,5 +793,22 @@
    ]
   }
  ],
- "rtl_fp_gate": null
+ "rtl_fp_gate": {
+  "purpose": "su_gate.py run --hier --fp rtl on the b132ae0da bytes (the routed FP primitive RTL instead of the DPI models)",
+  "host": "ot-epyc1tb",
+  "dir": "/srv/opentallas-scratch/claude/s81su-price",
+  "source": "/srv/opentallas-scratch/claude/s81su-v3/src_comb_b132ae0da",
+  "attempt_1": {
+   "script": "su_gate_rtlfp.sh",
+   "reduced_m0_m1_m5": "OOM-killed at --mem 32 in the Verilator C++ compile (3,215 generated files, 32G peak, no verdict)",
+   "full_m0": "--mem 160, never admitted, withdrawn: cannot fit"
+  },
+  "attempt_2": {
+   "script": "su_gate_rtlfp_red2.sh",
+   "runs": "reduced m0 + m5 at --mem 96 each",
+   "state_at_commit": "waiting for ot-heavy admission, no verdict yet",
+   "collect": "run_rtlfp_red2.log (RED2DONE), red_rtl_b132ae0da.m{0,5}.log, red_rtl_b132ae0da/run_reduced_rtl_m{0,5}_a0_h.json; pass = m0 PASS 0/269 x3 and m5 FAIL"
+  },
+  "note": "reduced is S_RD 2 / SM_H 2 / SW_W 64: it shows the composition is exact on the real FP bytes, not on the routed parameters. No production-shape --fp rtl gate exists or was started."
+ }
 }

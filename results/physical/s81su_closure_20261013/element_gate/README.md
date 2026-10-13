@@ -63,7 +63,7 @@ Mutants live in the control tile and adapter (1, 2), the QN and KV taps (4, redu
 
 ## Per tile
 
-See `table.json` `tiles[]`: routed kit and commit, byte equality, evidence path, the jobs the tile serves with measured, price and ratio, verdict and what is missing. The assignment of the five SM masters to SE or SO follows their roles in the stream log (sml, smc, smr on SE; smd on SO; smt on both) and is not instrumented.
+See `table.json` `tiles[]`: routed kit and commit, byte equality, evidence path, the jobs the tile serves with measured, price and ratio, verdict and what is missing. The assignment of the five SM masters to SE or SO follows the header of `ot_s81_su_sm.sv` (sml lanes, smc sums and smr root on SE; smd divide on SO; smt tap and write-back on both).
 
 | tiles | limiting job | ratio | throughput |
 |---|---|---|---|
