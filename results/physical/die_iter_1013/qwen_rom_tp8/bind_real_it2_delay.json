@@ -1,0 +1,5385 @@
+{
+ "schema": "opentallas.qwen_tp8.real_bind.v1",
+ "case": "it2+delay",
+ "case_dir": "/home/ubuntu/scratch-qwen-tp8-die/it2/case",
+ "netlist": "/home/ubuntu/scratch-qwen-tp8-die/claude_treedly2/die.v",
+ "status_checked": true,
+ "libs": {
+  "dir": "/home/ubuntu/scratch-qwen-tp8-die/it3/libs_real",
+  "lef": [
+   "/home/ubuntu/scratch-qwen-tp8-die/it3/libs_real/elements_real.lef",
+   "/home/ubuntu/scratch-qwen-tp8-die/it3/libs_real/phy_ew.lef"
+  ],
+  "lib_files": {
+   "tt": 7,
+   "ff": 7,
+   "ss": 5
+  },
+  "generated_outlines": {
+   "ot_qwen_tree_delay16_t": {
+    "outline": [
+     92.88,
+     64.8
+    ],
+    "kit": "qfd_tree_delay16_t"
+   },
+   "ot_qwen_tree_delay1_t": {
+    "outline": [
+     12.96,
+     64.8
+    ],
+    "kit": "qfd_tree_delay1_t"
+   }
+  }
+ },
+ "summary": {
+  "masters": 298,
+  "instances": 12827,
+  "by_class_instances": {
+   "placeholder": 12592,
+   "real": 231,
+   "hard_macro": 4
+  },
+  "by_class_masters": {
+   "placeholder": 293,
+   "real": 4,
+   "hard_macro": 1
+  },
+  "slot_mismatch": [
+   "ot_qfd_serdes_112g_x12_phy",
+   "qfd_chead_e",
+   "qfd_chead_w",
+   "qfd_crom_g",
+   "qfd_cst_n",
+   "qfd_cst_s",
+   "qfd_io_serdes",
+   "qfd_su_cbuf_g",
+   "qfd_tt_up4",
+   "qfd_tt_up4_g",
+   "qkd_ectl",
+   "qkd_kvwq_ctl_bin",
+   "qkd_kvwq_leaf_s_w129_m"
+  ]
+ },
+ "masters": {
+  "qfd_rly_444_SN_53x30": {
+   "class": "placeholder",
+   "instances": 1060,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_444_NS_53x30": {
+   "class": "placeholder",
+   "instances": 1056,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_SN_53x30": {
+   "class": "placeholder",
+   "instances": 997,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_NS_53x30": {
+   "class": "placeholder",
+   "instances": 987,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_tile_nk": {
+   "class": "placeholder",
+   "instances": 768,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    311.016,
+    1295.976
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_EW_53x30": {
+   "class": "placeholder",
+   "instances": 463,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "ot_qwen_tree_delay1_t": {
+   "class": "placeholder",
+   "instances": 409,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": null,
+   "candidates": [],
+   "generated_lef": "kit qfd_tree_delay1_t outline 12.96x64.8, pins at the centre"
+  },
+  "qfd_cst_n": {
+   "class": "placeholder",
+   "instances": 384,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_cst-orph2-a75cb556b-tc-hm50",
+   "slot_fit": "pin mismatch",
+   "reason": "view exists, slot mismatch: pin mismatch (physical/qwen_die_masters/views/qfd_cst, cell ot_qwen_die_station)",
+   "case_size": [
+    52.68,
+    103.656
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qfd_cst",
+     "cell": "ot_qwen_die_station",
+     "by_name": false,
+     "slot_fit": "pin mismatch",
+     "closed_job": "qfd_cst-orph2-a75cb556b-tc-hm50",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       52.68,
+       103.656
+      ],
+      "view_size": [
+       52.68,
+       103.656
+      ],
+      "case_pins": {
+       "a": 444,
+       "b": 444,
+       "ck": 1,
+       "tap": 507
+      },
+      "view_pins": {
+       "a_d": 508,
+       "a_r": 1,
+       "b_d": 508,
+       "b_r": 1,
+       "c_d": 1,
+       "c_r": 1,
+       "clk": 1,
+       "rst_n": 1,
+       "t_d": 508,
+       "t_r": 1
+      },
+      "case_bits": 1396,
+      "view_bits": 1531
+     }
+    },
+    {
+     "view": "physical/ref_tile/qfd_cst_m5/views/ot_qwen_die_station",
+     "cell": "ot_qwen_die_station",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 52.68x103.656 vs view 54x103.68)",
+     "closed_job": "qfd_cst_m5-m5-8dcfc40b3",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       52.68,
+       103.656
+      ],
+      "view_size": [
+       54.0,
+       103.68
+      ],
+      "case_pins": {
+       "a": 444,
+       "b": 444,
+       "ck": 1,
+       "tap": 507
+      },
+      "view_pins": {
+       "a_d": 508,
+       "a_r": 1,
+       "b_d": 508,
+       "b_r": 1,
+       "c_d": 1,
+       "c_r": 1,
+       "clk": 1,
+       "rst_n": 1,
+       "t_d": 508,
+       "t_r": 1
+      }
+     }
+    }
+   ],
+   "view_size": [
+    52.68,
+    103.656
+   ]
+  },
+  "qfd_cst_s": {
+   "class": "placeholder",
+   "instances": 384,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_cst-orph2-a75cb556b-tc-hm50",
+   "slot_fit": "pin mismatch",
+   "reason": "view exists, slot mismatch: pin mismatch (physical/qwen_die_masters/views/qfd_cst, cell ot_qwen_die_station)",
+   "case_size": [
+    52.68,
+    103.656
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qfd_cst",
+     "cell": "ot_qwen_die_station",
+     "by_name": false,
+     "slot_fit": "pin mismatch",
+     "closed_job": "qfd_cst-orph2-a75cb556b-tc-hm50",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       52.68,
+       103.656
+      ],
+      "view_size": [
+       52.68,
+       103.656
+      ],
+      "case_pins": {
+       "a": 444,
+       "b": 444,
+       "ck": 1,
+       "tap": 507
+      },
+      "view_pins": {
+       "a_d": 508,
+       "a_r": 1,
+       "b_d": 508,
+       "b_r": 1,
+       "c_d": 1,
+       "c_r": 1,
+       "clk": 1,
+       "rst_n": 1,
+       "t_d": 508,
+       "t_r": 1
+      },
+      "case_bits": 1396,
+      "view_bits": 1531
+     }
+    },
+    {
+     "view": "physical/ref_tile/qfd_cst_m5/views/ot_qwen_die_station",
+     "cell": "ot_qwen_die_station",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 52.68x103.656 vs view 54x103.68)",
+     "closed_job": "qfd_cst_m5-m5-8dcfc40b3",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       52.68,
+       103.656
+      ],
+      "view_size": [
+       54.0,
+       103.68
+      ],
+      "case_pins": {
+       "a": 444,
+       "b": 444,
+       "ck": 1,
+       "tap": 507
+      },
+      "view_pins": {
+       "a_d": 508,
+       "a_r": 1,
+       "b_d": 508,
+       "b_r": 1,
+       "c_d": 1,
+       "c_r": 1,
+       "clk": 1,
+       "rst_n": 1,
+       "t_d": 508,
+       "t_r": 1
+      }
+     }
+    }
+   ],
+   "view_size": [
+    52.68,
+    103.656
+   ]
+  },
+  "qfd_rly_512_WE_53x30": {
+   "class": "placeholder",
+   "instances": 304,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_NS_53x30": {
+   "class": "placeholder",
+   "instances": 248,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_NS_53x60": {
+   "class": "placeholder",
+   "instances": 228,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_EW_53x60": {
+   "class": "placeholder",
+   "instances": 212,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_WE_53x60": {
+   "class": "placeholder",
+   "instances": 200,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_NE_53x30": {
+   "class": "placeholder",
+   "instances": 187,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_SE_53x30": {
+   "class": "placeholder",
+   "instances": 180,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_SN_53x60": {
+   "class": "placeholder",
+   "instances": 155,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_SW_53x30": {
+   "class": "placeholder",
+   "instances": 151,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_WE_53x30": {
+   "class": "placeholder",
+   "instances": 150,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_SN_53x30": {
+   "class": "placeholder",
+   "instances": 149,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_NW_53x30": {
+   "class": "placeholder",
+   "instances": 147,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qkd_rly_1025": {
+   "class": "placeholder",
+   "instances": 144,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.656,
+    53.976
+   ],
+   "candidates": []
+  },
+  "qkd_rly_16": {
+   "class": "placeholder",
+   "instances": 140,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.656,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_EW_53x30": {
+   "class": "placeholder",
+   "instances": 131,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qkd_cdc_wleaf": {
+   "class": "placeholder",
+   "instances": 128,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    183.72,
+    183.72
+   ],
+   "candidates": []
+  },
+  "qkd_kvwq_leaf_s_w129_m": {
+   "class": "placeholder",
+   "instances": 128,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qkd_kvwq_leaf_s_w129_m-b90ad2fab-tc-hm10",
+   "slot_fit": "pin mismatch",
+   "reason": "view exists, slot mismatch: pin mismatch (physical/qwen_die_masters/views/qkd_kvwq_leaf_s_w129_m, cell ot_qkvd_kv_wq_leaf)",
+   "case_size": [
+    129.6,
+    183.6
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qkd_kvwq_leaf_s_w129_m",
+     "cell": "ot_qkvd_kv_wq_leaf",
+     "by_name": true,
+     "slot_fit": "pin mismatch",
+     "closed_job": "qkd_kvwq_leaf_s_w129_m-b90ad2fab-tc-hm10",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       129.6,
+       183.6
+      ],
+      "view_size": [
+       129.6,
+       183.6
+      ],
+      "case_pins": {
+       "c": 293,
+       "ck": 1,
+       "dn": 2,
+       "dp": 2,
+       "lane": 3,
+       "n": 293,
+       "rst_n": 1,
+       "w": 290,
+       "wr": 11
+      },
+      "view_pins": {
+       "c_d": 256,
+       "c_lane": 3,
+       "c_sec": 24,
+       "c_tag": 9,
+       "c_v": 1,
+       "clk": 1,
+       "dn_bad": 1,
+       "dn_v": 1,
+       "dp_bad": 1,
+       "dp_v": 1,
+       "lane": 3,
+       "n_d": 256,
+       "n_lane": 3,
+       "n_sec": 24,
+       "n_tag": 9,
+       "n_v": 1,
+       "rst_n": 1,
+       "w_data": 256,
+       "w_room": 1,
+       "w_sec": 24,
+       "w_tag": 9,
+       "w_v": 1,
+       "wd_tag": 9,
+       "wd_v": 1
+      },
+      "case_bits": 896,
+      "view_bits": 896
+     }
+    },
+    {
+     "view": "physical/qwen_die_masters/views/qkd_kvwq_leaf_s_w129",
+     "cell": "ot_qkvd_kv_wq_leaf",
+     "by_name": false,
+     "slot_fit": "pin mismatch",
+     "closed_job": "qkd_kvwq_leaf_s_w129-a492a872d-tc-hm10",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       129.6,
+       183.6
+      ],
+      "view_size": [
+       129.6,
+       183.6
+      ],
+      "case_pins": {
+       "c": 293,
+       "ck": 1,
+       "dn": 2,
+       "dp": 2,
+       "lane": 3,
+       "n": 293,
+       "rst_n": 1,
+       "w": 290,
+       "wr": 11
+      },
+      "view_pins": {
+       "c_d": 256,
+       "c_lane": 3,
+       "c_sec": 24,
+       "c_tag": 9,
+       "c_v": 1,
+       "clk": 1,
+       "dn_bad": 1,
+       "dn_v": 1,
+       "dp_bad": 1,
+       "dp_v": 1,
+       "lane": 3,
+       "n_d": 256,
+       "n_lane": 3,
+       "n_sec": 24,
+       "n_tag": 9,
+       "n_v": 1,
+       "rst_n": 1,
+       "w_data": 256,
+       "w_room": 1,
+       "w_sec": 24,
+       "w_tag": 9,
+       "w_v": 1,
+       "wd_tag": 9,
+       "wd_v": 1
+      },
+      "case_bits": 896,
+      "view_bits": 896
+     }
+    }
+   ],
+   "view_size": [
+    129.6,
+    183.6
+   ]
+  },
+  "qkd_rhead": {
+   "class": "placeholder",
+   "instances": 128,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    647.976,
+    453.576
+   ],
+   "candidates": []
+  },
+  "ot_qwen_tree_delay8_t": {
+   "class": "real",
+   "instances": 117,
+   "lef": "physical/ref_tile/qfd_tree_delay8_t/views/ot_qwen_tree_delay8_t/ot_qwen_tree_delay8_t.lef",
+   "export": "corrected",
+   "closed_job": "qfd_tree_delay8_t-u52-baaa52fff",
+   "slot_fit": "ok",
+   "reason": "closed view by name, outline and pins fit",
+   "case_size": null,
+   "candidates": [
+    {
+     "view": "physical/ref_tile/qfd_tree_delay8_t/views/ot_qwen_tree_delay8_t",
+     "cell": "ot_qwen_tree_delay8_t",
+     "by_name": true,
+     "slot_fit": "ok",
+     "closed_job": "qfd_tree_delay8_t-u52-baaa52fff",
+     "job_status": "CLOSED",
+     "export": "corrected",
+     "detail": {
+      "case": "no case macro (netlist ports only)",
+      "view_size": [
+       49.68,
+       64.8
+      ]
+     }
+    }
+   ],
+   "view": "physical/ref_tile/qfd_tree_delay8_t/views/ot_qwen_tree_delay8_t",
+   "lib_tt": "physical/ref_tile/qfd_tree_delay8_t/views/ot_qwen_tree_delay8_t/ot_qwen_tree_delay8_t_tt.lib",
+   "lib_ff": "physical/ref_tile/qfd_tree_delay8_t/views/ot_qwen_tree_delay8_t/ot_qwen_tree_delay8_t_ff.lib",
+   "lib_ss": "physical/ref_tile/qfd_tree_delay8_t/views/ot_qwen_tree_delay8_t/ot_qwen_tree_delay8_t_ss.lib"
+  },
+  "qkd_rly_2": {
+   "class": "placeholder",
+   "instances": 116,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.656,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qkd_rly_293": {
+   "class": "placeholder",
+   "instances": 116,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.656,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_WN_53x30": {
+   "class": "placeholder",
+   "instances": 99,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_WS_53x30": {
+   "class": "placeholder",
+   "instances": 95,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_WE_53x60": {
+   "class": "placeholder",
+   "instances": 84,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_EW_53x30": {
+   "class": "placeholder",
+   "instances": 78,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_EW_53x30": {
+   "class": "placeholder",
+   "instances": 76,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_EW_53x60": {
+   "class": "placeholder",
+   "instances": 76,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_ES_53x30": {
+   "class": "placeholder",
+   "instances": 68,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "ot_qwen_tree_delay4_t": {
+   "class": "real",
+   "instances": 66,
+   "lef": "physical/ref_tile/qfd_tree_delay4_t/views/ot_qwen_tree_delay4_t/ot_qwen_tree_delay4_t.lef",
+   "export": "corrected",
+   "closed_job": "qfd_tree_delay4_t-u52-baaa52fff",
+   "slot_fit": "ok",
+   "reason": "closed view by name, outline and pins fit",
+   "case_size": null,
+   "candidates": [
+    {
+     "view": "physical/ref_tile/qfd_tree_delay4_t/views/ot_qwen_tree_delay4_t",
+     "cell": "ot_qwen_tree_delay4_t",
+     "by_name": true,
+     "slot_fit": "ok",
+     "closed_job": "qfd_tree_delay4_t-u52-baaa52fff",
+     "job_status": "CLOSED",
+     "export": "corrected",
+     "detail": {
+      "case": "no case macro (netlist ports only)",
+      "view_size": [
+       28.08,
+       64.8
+      ]
+     }
+    }
+   ],
+   "view": "physical/ref_tile/qfd_tree_delay4_t/views/ot_qwen_tree_delay4_t",
+   "lib_tt": "physical/ref_tile/qfd_tree_delay4_t/views/ot_qwen_tree_delay4_t/ot_qwen_tree_delay4_t_tt.lib",
+   "lib_ff": "physical/ref_tile/qfd_tree_delay4_t/views/ot_qwen_tree_delay4_t/ot_qwen_tree_delay4_t_ff.lib",
+   "lib_ss": "physical/ref_tile/qfd_tree_delay4_t/views/ot_qwen_tree_delay4_t/ot_qwen_tree_delay4_t_ss.lib"
+  },
+  "qfd_rly_1048_NS_54x60": {
+   "class": "placeholder",
+   "instances": 66,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_WE_54x60": {
+   "class": "placeholder",
+   "instances": 65,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_NS_53x30": {
+   "class": "placeholder",
+   "instances": 62,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1024_EW_54x60": {
+   "class": "placeholder",
+   "instances": 61,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    53.544,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_SN_53x30": {
+   "class": "placeholder",
+   "instances": 59,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_WE_53x30": {
+   "class": "placeholder",
+   "instances": 58,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_WE_53x30": {
+   "class": "placeholder",
+   "instances": 57,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_WE_53x60": {
+   "class": "placeholder",
+   "instances": 55,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_NS_53x60": {
+   "class": "placeholder",
+   "instances": 52,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1024_WE_54x60": {
+   "class": "placeholder",
+   "instances": 51,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    53.544,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_SN_54x60": {
+   "class": "placeholder",
+   "instances": 51,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_EW_53x60": {
+   "class": "placeholder",
+   "instances": 50,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_EW_53x60": {
+   "class": "placeholder",
+   "instances": 48,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_512_EN_53x30": {
+   "class": "placeholder",
+   "instances": 46,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_SN_53x60": {
+   "class": "placeholder",
+   "instances": 46,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "ot_qwen_tree_delay3_t": {
+   "class": "real",
+   "instances": 38,
+   "lef": "physical/ref_tile/qfd_tree_delay3_t/views/ot_qwen_tree_delay3_t/ot_qwen_tree_delay3_t.lef",
+   "export": "corrected",
+   "closed_job": "qfd_tree_delay3_t-u52-baaa52fff",
+   "slot_fit": "ok",
+   "reason": "closed view by name, outline and pins fit",
+   "case_size": null,
+   "candidates": [
+    {
+     "view": "physical/ref_tile/qfd_tree_delay3_t/views/ot_qwen_tree_delay3_t",
+     "cell": "ot_qwen_tree_delay3_t",
+     "by_name": true,
+     "slot_fit": "ok",
+     "closed_job": "qfd_tree_delay3_t-u52-baaa52fff",
+     "job_status": "CLOSED",
+     "export": "corrected",
+     "detail": {
+      "case": "no case macro (netlist ports only)",
+      "view_size": [
+       21.6,
+       64.8
+      ]
+     }
+    }
+   ],
+   "view": "physical/ref_tile/qfd_tree_delay3_t/views/ot_qwen_tree_delay3_t",
+   "lib_tt": "physical/ref_tile/qfd_tree_delay3_t/views/ot_qwen_tree_delay3_t/ot_qwen_tree_delay3_t_tt.lib",
+   "lib_ff": "physical/ref_tile/qfd_tree_delay3_t/views/ot_qwen_tree_delay3_t/ot_qwen_tree_delay3_t_ff.lib",
+   "lib_ss": "physical/ref_tile/qfd_tree_delay3_t/views/ot_qwen_tree_delay3_t/ot_qwen_tree_delay3_t_ss.lib"
+  },
+  "qfd_rly_1048_EW_54x60": {
+   "class": "placeholder",
+   "instances": 35,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_NS_53x30": {
+   "class": "placeholder",
+   "instances": 35,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_SN_53x30": {
+   "class": "placeholder",
+   "instances": 32,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_SN_53x60": {
+   "class": "placeholder",
+   "instances": 32,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qkd_ectl": {
+   "class": "placeholder",
+   "instances": 32,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qkd_ectl_b-60db99084-tc-hm10-cl",
+   "slot_fit": "outline mismatch (case 647.976x129.576 vs view 531.36x345.6)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 647.976x129.576 vs view 531.36x345.6) (physical/qwen_die_masters/views/qkd_ectl_b, cell ot_qwen_nearhbm_ectl_h)",
+   "case_size": [
+    647.976,
+    129.576
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qkd_ectl_b",
+     "cell": "ot_qwen_nearhbm_ectl_h",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 647.976x129.576 vs view 531.36x345.6)",
+     "closed_job": "qkd_ectl_b-60db99084-tc-hm10-cl",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       647.976,
+       129.576
+      ],
+      "view_size": [
+       531.36,
+       345.6
+      ],
+      "case_pins": {
+       "ck": 1,
+       "e0": 16,
+       "e1": 16,
+       "e2": 16,
+       "e3": 16,
+       "rq": 16,
+       "rs": 1025,
+       "rst_n": 1,
+       "s0": 34,
+       "s1": 34,
+       "s2": 34,
+       "s3": 34,
+       "si": 634,
+       "so": 425,
+       "t0": 1559,
+       "t1": 1559
+      },
+      "view_pins": 43
+     }
+    }
+   ],
+   "view_size": [
+    531.36,
+    345.6
+   ]
+  },
+  "qfd_rly_551_NS_53x60": {
+   "class": "placeholder",
+   "instances": 29,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_SN_53x30": {
+   "class": "placeholder",
+   "instances": 28,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_NS_53x30": {
+   "class": "placeholder",
+   "instances": 26,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_NS_53x60": {
+   "class": "placeholder",
+   "instances": 25,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_chead_e": {
+   "class": "placeholder",
+   "instances": 24,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_chead_m5-m5-8dcfc40b3",
+   "slot_fit": "outline mismatch (case 52.68x103.656 vs view 54x103.68)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 52.68x103.656 vs view 54x103.68) (physical/ref_tile/qfd_chead_m5/views/ot_qwen_die_station, cell ot_qwen_die_station)",
+   "case_size": [
+    52.68,
+    103.656
+   ],
+   "candidates": [
+    {
+     "view": "physical/ref_tile/qfd_chead_m5/views/ot_qwen_die_station",
+     "cell": "ot_qwen_die_station",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 52.68x103.656 vs view 54x103.68)",
+     "closed_job": "qfd_chead_m5-m5-8dcfc40b3",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       52.68,
+       103.656
+      ],
+      "view_size": [
+       54.0,
+       103.68
+      ],
+      "case_pins": {
+       "ck": 1,
+       "e": 444,
+       "n": 444,
+       "s": 444,
+       "w": 444
+      },
+      "view_pins": {
+       "a_d": 508,
+       "a_r": 1,
+       "b_d": 508,
+       "b_r": 1,
+       "c_d": 508,
+       "c_r": 1,
+       "clk": 1,
+       "rst_n": 1,
+       "t_d": 508,
+       "t_r": 1
+      }
+     }
+    }
+   ],
+   "view_size": [
+    54.0,
+    103.68
+   ]
+  },
+  "qfd_chead_w": {
+   "class": "placeholder",
+   "instances": 24,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_chead_m5-m5-8dcfc40b3",
+   "slot_fit": "outline mismatch (case 52.68x103.656 vs view 54x103.68)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 52.68x103.656 vs view 54x103.68) (physical/ref_tile/qfd_chead_m5/views/ot_qwen_die_station, cell ot_qwen_die_station)",
+   "case_size": [
+    52.68,
+    103.656
+   ],
+   "candidates": [
+    {
+     "view": "physical/ref_tile/qfd_chead_m5/views/ot_qwen_die_station",
+     "cell": "ot_qwen_die_station",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 52.68x103.656 vs view 54x103.68)",
+     "closed_job": "qfd_chead_m5-m5-8dcfc40b3",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       52.68,
+       103.656
+      ],
+      "view_size": [
+       54.0,
+       103.68
+      ],
+      "case_pins": {
+       "ck": 1,
+       "e": 444,
+       "n": 444,
+       "s": 444,
+       "w": 444
+      },
+      "view_pins": {
+       "a_d": 508,
+       "a_r": 1,
+       "b_d": 508,
+       "b_r": 1,
+       "c_d": 508,
+       "c_r": 1,
+       "clk": 1,
+       "rst_n": 1,
+       "t_d": 508,
+       "t_r": 1
+      }
+     }
+    }
+   ],
+   "view_size": [
+    54.0,
+    103.68
+   ]
+  },
+  "qfd_rly_107_SN_53x30": {
+   "class": "placeholder",
+   "instances": 24,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_2085_NS_104x106": {
+   "class": "placeholder",
+   "instances": 24,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    104.088,
+    105.816
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_SN_53x30": {
+   "class": "placeholder",
+   "instances": 24,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_107_NS_53x30": {
+   "class": "placeholder",
+   "instances": 23,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_NS_53x30": {
+   "class": "placeholder",
+   "instances": 20,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_NS_53x60": {
+   "class": "placeholder",
+   "instances": 20,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_551_SN_53x60": {
+   "class": "placeholder",
+   "instances": 20,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_NS_78x80": {
+   "class": "placeholder",
+   "instances": 19,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_SN_53x60": {
+   "class": "placeholder",
+   "instances": 19,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_518_SN_53x60": {
+   "class": "placeholder",
+   "instances": 17,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_WS_53x30": {
+   "class": "placeholder",
+   "instances": 15,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_49_SN_53x30": {
+   "class": "placeholder",
+   "instances": 15,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_548_NS_53x60": {
+   "class": "placeholder",
+   "instances": 15,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_NE_53x30": {
+   "class": "placeholder",
+   "instances": 14,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_519_EW_53x60": {
+   "class": "placeholder",
+   "instances": 14,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_519_NS_53x60": {
+   "class": "placeholder",
+   "instances": 14,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_92_NS_53x30": {
+   "class": "placeholder",
+   "instances": 14,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_201_SN_53x30": {
+   "class": "placeholder",
+   "instances": 13,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_2085_EW_104x106": {
+   "class": "placeholder",
+   "instances": 13,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    104.088,
+    105.816
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_NE_53x60": {
+   "class": "placeholder",
+   "instances": 13,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_WN_53x60": {
+   "class": "placeholder",
+   "instances": 13,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_57_SN_53x30": {
+   "class": "placeholder",
+   "instances": 13,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1024_NS_54x60": {
+   "class": "placeholder",
+   "instances": 12,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    53.544,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_EN_53x30": {
+   "class": "placeholder",
+   "instances": 12,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_EN_53x60": {
+   "class": "placeholder",
+   "instances": 12,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_9_NS_53x30": {
+   "class": "placeholder",
+   "instances": 12,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_SE_53x30": {
+   "class": "placeholder",
+   "instances": 11,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_SW_53x30": {
+   "class": "placeholder",
+   "instances": 11,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_26_SN_53x30": {
+   "class": "placeholder",
+   "instances": 11,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_EN_53x30": {
+   "class": "placeholder",
+   "instances": 11,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_ES_53x60": {
+   "class": "placeholder",
+   "instances": 11,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_SE_53x60": {
+   "class": "placeholder",
+   "instances": 11,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "ot_qwen_tree_delay2_t": {
+   "class": "real",
+   "instances": 10,
+   "lef": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t/ot_qwen_tree_delay2_t.lef",
+   "export": "corrected",
+   "closed_job": "qfd_tree_delay2_t-u52-baaa52fff",
+   "slot_fit": "ok",
+   "reason": "closed view by name, outline and pins fit",
+   "case_size": null,
+   "candidates": [
+    {
+     "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+     "cell": "ot_qwen_tree_delay2_t",
+     "by_name": true,
+     "slot_fit": "ok",
+     "closed_job": "qfd_tree_delay2_t-u52-baaa52fff",
+     "job_status": "CLOSED",
+     "export": "corrected",
+     "detail": {
+      "case": "no case macro (netlist ports only)",
+      "view_size": [
+       17.28,
+       64.8
+      ]
+     }
+    }
+   ],
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "lib_tt": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t/ot_qwen_tree_delay2_t_tt.lib",
+   "lib_ff": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t/ot_qwen_tree_delay2_t_ff.lib",
+   "lib_ss": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t/ot_qwen_tree_delay2_t_ss.lib"
+  },
+  "qfd_rly_1_ES_53x30": {
+   "class": "placeholder",
+   "instances": 10,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_WN_53x30": {
+   "class": "placeholder",
+   "instances": 10,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_NW_53x60": {
+   "class": "placeholder",
+   "instances": 10,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_SW_53x60": {
+   "class": "placeholder",
+   "instances": 10,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_530_WS_53x60": {
+   "class": "placeholder",
+   "instances": 10,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_WE_53x30": {
+   "class": "placeholder",
+   "instances": 9,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1_NW_53x30": {
+   "class": "placeholder",
+   "instances": 9,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_EN_53x60": {
+   "class": "placeholder",
+   "instances": 9,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_crom_g": {
+   "class": "placeholder",
+   "instances": 8,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_crom_g_a-ff3637ce7-tc",
+   "slot_fit": "outline mismatch (case 194.376x518.376 vs view 194.4x518.4)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 194.376x518.376 vs view 194.4x518.4) (physical/qwen_die_masters/views/qfd_crom_g_a, cell ot_qfd_crom_g)",
+   "case_size": [
+    194.376,
+    518.376
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qfd_crom_g_a",
+     "cell": "ot_qfd_crom_g",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 194.376x518.376 vs view 194.4x518.4)",
+     "closed_job": "qfd_crom_g_a-ff3637ce7-tc",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       194.376,
+       518.376
+      ],
+      "view_size": [
+       194.4,
+       518.4
+      ],
+      "case_pins": {
+       "ck": 1,
+       "ra": 206,
+       "rq": 513
+      },
+      "view_pins": {
+       "clk": 1,
+       "crom_addr": 192,
+       "crom_q": 512,
+       "crom_re": 8,
+       "crom_stage": 6,
+       "fault": 1,
+       "fault_code": 2,
+       "rst_n": 1
+      }
+     }
+    },
+    {
+     "view": "physical/qwen_die_masters/views/qfd_crom_gs_a",
+     "cell": "ot_qfd_crom_gs",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 194.376x518.376 vs view 194.4x518.4)",
+     "closed_job": "qfd_crom_gs_a-5bb157d94-tc",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       194.376,
+       518.376
+      ],
+      "view_size": [
+       194.4,
+       518.4
+      ],
+      "case_pins": {
+       "ck": 1,
+       "ra": 206,
+       "rq": 513
+      },
+      "view_pins": {
+       "clk": 1,
+       "crom_addr": 192,
+       "crom_lb": 6,
+       "crom_q": 512,
+       "crom_re": 8,
+       "crom_stage": 6,
+       "fault": 1,
+       "fault_code": 2,
+       "rst_n": 1
+      }
+     }
+    }
+   ],
+   "view_size": [
+    194.4,
+    518.4
+   ]
+  },
+  "qfd_rly_25_EW_53x30": {
+   "class": "placeholder",
+   "instances": 8,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_NE_53x30": {
+   "class": "placeholder",
+   "instances": 8,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_su_cbuf_g": {
+   "class": "placeholder",
+   "instances": 8,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_su_cbuf_g_a-d32ba31e7-tc",
+   "slot_fit": "outline mismatch (case 194.376x215.976 vs view 194.4x216)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 194.376x215.976 vs view 194.4x216) (physical/qwen_die_masters/views/qfd_su_cbuf_g_a, cell ot_qfd_su_cbuf_g)",
+   "case_size": [
+    194.376,
+    215.976
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qfd_su_cbuf_g_a",
+     "cell": "ot_qfd_su_cbuf_g",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 194.376x215.976 vs view 194.4x216)",
+     "closed_job": "qfd_su_cbuf_g_a-d32ba31e7-tc",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       194.376,
+       215.976
+      ],
+      "view_size": [
+       194.4,
+       216.0
+      ],
+      "case_pins": {
+       "ck": 1,
+       "ctl": 25,
+       "fa": 206,
+       "fq": 513,
+       "rdy": 10,
+       "sa": 206,
+       "sq": 512
+      },
+      "view_pins": {
+       "clk": 1,
+       "crom_addr": 192,
+       "crom_q": 512,
+       "crom_re": 8,
+       "crom_stage": 6,
+       "f_addr": 192,
+       "f_fault": 1,
+       "f_q": 512,
+       "f_re": 8,
+       "f_stage": 6,
+       "fault": 1,
+       "fault_code": 2,
+       "grp": 3,
+       "rst_n": 1,
+       "st_rdy": 1,
+       "st_rdy_stage": 6,
+       "stage": 6,
+       "tok_start": 1,
+       "tpos": 18
+      }
+     }
+    },
+    {
+     "view": "physical/qwen_die_masters/views/qfd_su_cbuf_g_b",
+     "cell": "ot_qfd_su_cbuf_g",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 194.376x215.976 vs view 216x259.2)",
+     "closed_job": "qfd_su_cbuf_g_b-d32ba31e7-tc",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       194.376,
+       215.976
+      ],
+      "view_size": [
+       216.0,
+       259.2
+      ],
+      "case_pins": {
+       "ck": 1,
+       "ctl": 25,
+       "fa": 206,
+       "fq": 513,
+       "rdy": 10,
+       "sa": 206,
+       "sq": 512
+      },
+      "view_pins": {
+       "clk": 1,
+       "crom_addr": 192,
+       "crom_q": 512,
+       "crom_re": 8,
+       "crom_stage": 6,
+       "f_addr": 192,
+       "f_fault": 1,
+       "f_q": 512,
+       "f_re": 8,
+       "f_stage": 6,
+       "fault": 1,
+       "fault_code": 2,
+       "grp": 3,
+       "rst_n": 1,
+       "st_rdy": 1,
+       "st_rdy_stage": 6,
+       "stage": 6,
+       "tok_start": 1,
+       "tpos": 18
+      }
+     }
+    }
+   ],
+   "view_size": [
+    194.4,
+    216.0
+   ]
+  },
+  "ot_qwen_tree_delay16_t": {
+   "class": "placeholder",
+   "instances": 7,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": null,
+   "candidates": [],
+   "generated_lef": "kit qfd_tree_delay16_t outline 92.88x64.8, pins at the centre"
+  },
+  "qfd_rly_36_ES_53x30": {
+   "class": "placeholder",
+   "instances": 7,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_WS_53x30": {
+   "class": "placeholder",
+   "instances": 7,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_EW_53x60": {
+   "class": "placeholder",
+   "instances": 7,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_EN_53x60": {
+   "class": "placeholder",
+   "instances": 7,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_26_WE_53x30": {
+   "class": "placeholder",
+   "instances": 6,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_WS_53x30": {
+   "class": "placeholder",
+   "instances": 6,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_444_WE_53x30": {
+   "class": "placeholder",
+   "instances": 6,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_WN_53x60": {
+   "class": "placeholder",
+   "instances": 6,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_SE_53x60": {
+   "class": "placeholder",
+   "instances": 6,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_SW_53x60": {
+   "class": "placeholder",
+   "instances": 6,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_WN_53x60": {
+   "class": "placeholder",
+   "instances": 6,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1024_SN_54x60": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    53.544,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_ES_53x30": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_SW_53x30": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_WN_53x30": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_SW_53x60": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_WE_53x60": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_521_SN_53x60": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_WS_53x60": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qkd_rly_21": {
+   "class": "placeholder",
+   "instances": 5,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.656,
+    30.216
+   ],
+   "candidates": []
+  },
+  "ot_hbm3e_phy": {
+   "class": "hard_macro",
+   "instances": 4,
+   "lef": "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy.lef",
+   "export": "n/a",
+   "closed_job": null,
+   "slot_fit": "ok",
+   "reason": "memory / PHY macro abstract by name (not a routed element)",
+   "case_size": [
+    833.496,
+    12000.12
+   ],
+   "candidates": [
+    {
+     "view": "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy",
+     "cell": "ot_hbm3e_phy",
+     "by_name": true,
+     "slot_fit": "ok",
+     "closed_job": null,
+     "job_status": null,
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       833.496,
+       12000.12
+      ],
+      "view_size": [
+       833.496,
+       12000.12
+      ]
+     }
+    },
+    {
+     "view": "physical/asap7_memory_macros/ot_hbm3e_phy",
+     "cell": "ot_hbm3e_phy",
+     "by_name": true,
+     "slot_fit": "outline mismatch (case 833.496x12000.1 vs view 12000.1x833.49)",
+     "closed_job": null,
+     "job_status": null,
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       833.496,
+       12000.12
+      ],
+      "view_size": [
+       12000.096,
+       833.49
+      ],
+      "case_pins": {
+       "clk": 1,
+       "req_addr": 31,
+       "req_len": 5,
+       "req_rdy": 1,
+       "req_tag": 16,
+       "req_v": 1,
+       "req_wdata": 256,
+       "req_we": 1,
+       "rsp_beat": 128,
+       "rsp_data": 8192,
+       "rsp_rdy": 32,
+       "rsp_tag": 512,
+       "rsp_v": 32,
+       "rst_n": 1
+      },
+      "view_pins": {
+       "clk": 1,
+       "req_addr": 31,
+       "req_len": 5,
+       "req_rdy": 1,
+       "req_tag": 16,
+       "req_v": 1,
+       "req_wdata": 256,
+       "req_we": 1,
+       "rsp_beat": 128,
+       "rsp_data": 8192,
+       "rsp_rdy": 32,
+       "rsp_tag": 512,
+       "rsp_v": 32,
+       "rst_n": 1
+      }
+     }
+    },
+    {
+     "view": "physical/asap7_memory_macros_v2/ot_hbm3e_phy",
+     "cell": "ot_hbm3e_phy",
+     "by_name": true,
+     "slot_fit": "outline mismatch (case 833.496x12000.1 vs view 12000.1x833.49)",
+     "closed_job": null,
+     "job_status": null,
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       833.496,
+       12000.12
+      ],
+      "view_size": [
+       12000.12,
+       833.49
+      ],
+      "case_pins": {
+       "clk": 1,
+       "req_addr": 31,
+       "req_len": 5,
+       "req_rdy": 1,
+       "req_tag": 16,
+       "req_v": 1,
+       "req_wdata": 256,
+       "req_we": 1,
+       "rsp_beat": 128,
+       "rsp_data": 8192,
+       "rsp_rdy": 32,
+       "rsp_tag": 512,
+       "rsp_v": 32,
+       "rst_n": 1
+      },
+      "view_pins": {
+       "clk": 1,
+       "req_addr": 31,
+       "req_len": 5,
+       "req_rdy": 1,
+       "req_tag": 16,
+       "req_v": 1,
+       "req_wdata": 256,
+       "req_we": 1,
+       "rsp_beat": 128,
+       "rsp_data": 8192,
+       "rsp_rdy": 32,
+       "rsp_tag": 512,
+       "rsp_v": 32,
+       "rst_n": 1
+      }
+     }
+    }
+   ],
+   "view": "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy",
+   "lib_tt": "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_tt.lib",
+   "lib_ff": "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_ff.lib",
+   "lib_ss": "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_ss.lib"
+  },
+  "qfd_rly_10_SW_53x30": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_EW_78x80": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_206_NE_53x30": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_206_WE_53x30": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_NW_53x30": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_SW_53x30": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_SE_53x30": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_382_SN_53x30": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_EN_53x60": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_ES_53x60": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_SW_53x60": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_WS_53x60": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_NE_53x60": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_9_SN_53x30": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qkd_kvwq_ctl_bin": {
+   "class": "placeholder",
+   "instances": 4,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qkd_kvwq_ctl_bin_a-9b01712f2-tc-hm10",
+   "slot_fit": "outline mismatch (case 172.776x518.376 vs view 172.8x518.4)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 172.776x518.376 vs view 172.8x518.4) (physical/qwen_die_masters/views/qkd_kvwq_ctl_bin_a, cell ot_qkvd_kv_wq_ctl_binary)",
+   "case_size": [
+    172.776,
+    518.376
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qkd_kvwq_ctl_bin_a",
+     "cell": "ot_qkvd_kv_wq_ctl_binary",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 172.776x518.376 vs view 172.8x518.4)",
+     "closed_job": "qkd_kvwq_ctl_bin_a-9b01712f2-tc-hm10",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       172.776,
+       518.376
+      ],
+      "view_size": [
+       172.8,
+       518.4
+      ],
+      "case_pins": {
+       "ck": 1,
+       "durable": 23,
+       "f0": 293,
+       "f1": 293,
+       "f2": 293,
+       "f3": 293,
+       "fault": 1,
+       "kvn": 1048,
+       "r0": 2,
+       "r1": 2,
+       "r2": 2,
+       "r3": 2,
+       "rst_n": 1
+      },
+      "view_pins": {
+       "clk": 1,
+       "f_d": 1024,
+       "f_lane": 32,
+       "f_sec": 96,
+       "f_tag": 36,
+       "f_v": 4,
+       "fault": 1,
+       "kvw_cr": 1,
+       "kvw_d": 1024,
+       "kvw_layer": 6,
+       "kvw_t": 14,
+       "kvw_v": 1,
+       "kvw_vg": 2,
+       "r_bad": 4,
+       "r_v": 4,
+       "rst_n": 1,
+       "rw_id": 22,
+       "rw_v": 1
+      }
+     }
+    },
+    {
+     "view": "physical/qwen_die_masters/views/qkd_kvwq_ctl_bin_h",
+     "cell": "ot_qkvd_kv_wq_ctl_binary",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 172.776x518.376 vs view 216x648)",
+     "closed_job": "qkd_kvwq_ctl_bin_h-a492a872d-tc-hm10",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       172.776,
+       518.376
+      ],
+      "view_size": [
+       216.0,
+       648.0
+      ],
+      "case_pins": {
+       "ck": 1,
+       "durable": 23,
+       "f0": 293,
+       "f1": 293,
+       "f2": 293,
+       "f3": 293,
+       "fault": 1,
+       "kvn": 1048,
+       "r0": 2,
+       "r1": 2,
+       "r2": 2,
+       "r3": 2,
+       "rst_n": 1
+      },
+      "view_pins": {
+       "clk": 1,
+       "f_d": 1024,
+       "f_lane": 32,
+       "f_sec": 96,
+       "f_tag": 36,
+       "f_v": 4,
+       "fault": 1,
+       "kvw_cr": 1,
+       "kvw_d": 1024,
+       "kvw_layer": 6,
+       "kvw_t": 14,
+       "kvw_v": 1,
+       "kvw_vg": 2,
+       "r_bad": 4,
+       "r_v": 4,
+       "rst_n": 1,
+       "rw_id": 22,
+       "rw_v": 1
+      }
+     }
+    }
+   ],
+   "view_size": [
+    172.8,
+    518.4
+   ]
+  },
+  "qfd_io_serdes": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc",
+   "slot_fit": "outline mismatch (case 2557.85x1563.82 vs view 600.048x600.048)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 2557.85x1563.82 vs view 600.048x600.048) (physical/qwen_die_masters/views/qfd_io_serdes_rxd512, cell ot_qfd_link_adapter)",
+   "case_size": [
+    2557.848,
+    1563.816
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qfd_io_serdes_rxd512",
+     "cell": "ot_qfd_link_adapter",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 2557.85x1563.82 vs view 600.048x600.048)",
+     "closed_job": "qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       2557.848,
+       1563.816
+      ],
+      "view_size": [
+       600.048,
+       600.048
+      ],
+      "case_pins": {
+       "c": 1024,
+       "ck": 1,
+       "r": 1024
+      },
+      "view_pins": {
+       "c_cr": 1,
+       "c_d": 1024,
+       "c_v": 1,
+       "clk": 1,
+       "fault": 1,
+       "r_cr": 1,
+       "r_d": 1024,
+       "r_v": 1,
+       "rst_n": 1,
+       "rx_flit": 1043,
+       "rx_v": 1,
+       "tx_flit": 1043,
+       "tx_up": 1,
+       "tx_v": 1
+      }
+     }
+    }
+   ],
+   "view_size": [
+    600.048,
+    600.048
+   ]
+  },
+  "qfd_rly_1024_ES_54x60": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    53.544,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_EN_54x60": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_ES_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_SN_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_WN_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_201_WE_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_25_NW_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_26_NS_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_SW_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_EN_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_SE_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_NE_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_444_WN_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_NW_53x60": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_SE_53x60": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_NW_53x60": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_57_EW_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_9_EW_53x30": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_sp_band_lanes": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    1131.816
+   ],
+   "candidates": []
+  },
+  "qfd_sp_res_ser": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    518.376
+   ],
+   "candidates": []
+  },
+  "qfd_tt_up4_g": {
+   "class": "placeholder",
+   "instances": 3,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_tt_up4_b-618516521-tc",
+   "slot_fit": "outline mismatch (case 345.576x388.776 vs view 345.6x388.8)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 345.576x388.776 vs view 345.6x388.8) (physical/qwen_die_masters/views/qfd_tt_up4_b, cell ot_qfd_band_upper)",
+   "case_size": [
+    345.576,
+    388.776
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qfd_tt_up4_b",
+     "cell": "ot_qfd_band_upper",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 345.576x388.776 vs view 345.6x388.8)",
+     "closed_job": "qfd_tt_up4_b-618516521-tc",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       345.576,
+       388.776
+      ],
+      "view_size": [
+       345.6,
+       388.8
+      ],
+      "case_pins": {
+       "ck": 1
+      },
+      "view_pins": {
+       "clk": 1,
+       "fault": 1,
+       "lf": 6,
+       "pw": 768,
+       "pw_v": 6,
+       "rst_n": 1,
+       "sel_e": 14,
+       "tt_ty": 384,
+       "tt_use": 1,
+       "tt_v": 1,
+       "tv_e": 14
+      }
+     }
+    },
+    {
+     "view": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper",
+     "cell": "ot_qfd_band_upper",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 345.576x388.776 vs view 64.8x205.2)",
+     "closed_job": "qfd_tt_up4_tp8-rt1-ef228d3d0",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       345.576,
+       388.776
+      ],
+      "view_size": [
+       64.8,
+       205.2
+      ],
+      "case_pins": {
+       "ck": 1
+      },
+      "view_pins": {
+       "clk": 1,
+       "fault": 1,
+       "lf": 3,
+       "pw": 384,
+       "pw_v": 3,
+       "rst_n": 1,
+       "sel_e": 13,
+       "tt_ty": 384,
+       "tt_use": 1,
+       "tt_v": 1,
+       "tv_e": 13
+      }
+     }
+    }
+   ],
+   "view_size": [
+    345.6,
+    388.8
+   ]
+  },
+  "qfd_rly_1048_ES_54x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_SE_54x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_SW_54x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_WN_54x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_107_EN_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_107_NE_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_107_SW_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_NS_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_NW_78x80": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_WE_78x80": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_WS_78x80": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_2085_ES_104x106": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    104.088,
+    105.816
+   ],
+   "candidates": []
+  },
+  "qfd_rly_25_NS_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_25_WE_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_25_WS_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_26_SE_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_26_WN_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_33_WN_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_EN_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_SW_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_36_NW_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_444_EW_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_444_SE_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_49_EW_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_ES_53x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_NE_53x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_548_WE_53x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_551_ES_53x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_551_NE_53x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_551_SW_53x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_551_WE_53x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_563_ES_53x60": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_75_EN_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_75_EW_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_75_SW_53x30": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qkd_astk": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    220.296,
+    7817.016
+   ],
+   "candidates": []
+  },
+  "qkd_astk_n": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    220.296,
+    7817.016
+   ],
+   "candidates": []
+  },
+  "qkd_ctrl": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    247.512,
+    12141.336
+   ],
+   "candidates": []
+  },
+  "qkd_ctrl_n": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    247.512,
+    12141.336
+   ],
+   "candidates": []
+  },
+  "qkd_land": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    172.776,
+    12141.312
+   ],
+   "candidates": []
+  },
+  "qkd_land_n": {
+   "class": "placeholder",
+   "instances": 2,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    172.776,
+    12141.312
+   ],
+   "candidates": []
+  },
+  "ot_qfd_serdes_112g_x12_phy": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": null,
+   "slot_fit": "outline mismatch (case 2399.98x1511.98 vs view 2400.19x1512)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 2399.98x1511.98 vs view 2400.19x1512) (physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy, cell ot_qfd_serdes_112g_x12_phy)",
+   "case_size": [
+    2399.976,
+    1511.976
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy",
+     "cell": "ot_qfd_serdes_112g_x12_phy",
+     "by_name": true,
+     "slot_fit": "outline mismatch (case 2399.98x1511.98 vs view 2400.19x1512)",
+     "closed_job": null,
+     "job_status": null,
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       2399.976,
+       1511.976
+      ],
+      "view_size": [
+       2400.192,
+       1512.0
+      ],
+      "case_pins": {
+       "clk": 1,
+       "fdi": 2085,
+       "rst_n": 1
+      },
+      "view_pins": {
+       "clk": 1,
+       "rst_n": 1,
+       "rx_flit": 1041,
+       "rx_v": 1,
+       "tx_flit": 1041,
+       "tx_up": 1,
+       "tx_v": 1
+      }
+     }
+    }
+   ],
+   "view_size": [
+    2400.192,
+    1512.0
+   ]
+  },
+  "qfd_clkrx": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    412.536,
+    412.536
+   ],
+   "candidates": []
+  },
+  "qfd_io_collective": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    3453.384,
+    1563.816
+   ],
+   "candidates": []
+  },
+  "qfd_io_ucie": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    6394.872,
+    1563.816
+   ],
+   "candidates": []
+  },
+  "qfd_io_xfifo": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    700.248,
+    1563.816
+   ],
+   "candidates": []
+  },
+  "qfd_port_tiles_0": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    1840.296
+   ],
+   "candidates": []
+  },
+  "qfd_port_tiles_0_f1": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    1840.296
+   ],
+   "candidates": []
+  },
+  "qfd_port_tiles_1": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    1840.296
+   ],
+   "candidates": []
+  },
+  "qfd_port_tiles_1_f1": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    1840.296
+   ],
+   "candidates": []
+  },
+  "qfd_port_tiles_2": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    1840.296
+   ],
+   "candidates": []
+  },
+  "qfd_port_tiles_2_f1": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    1840.296
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1024_EN_54x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    53.544,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1024_NW_54x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    53.544,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_NE_54x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_NW_54x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1048_WS_54x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    54.408,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_107_SE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_107_WE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_107_WS_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_EN_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_EW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_NE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_10_SE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_133_NS_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_ES_78x80": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_NE_78x80": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_SE_78x80": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_1538_SN_78x80": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    78.168,
+    79.896
+   ],
+   "candidates": []
+  },
+  "qfd_rly_201_SE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_201_WN_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_2085_NW_104x106": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    104.088,
+    105.816
+   ],
+   "candidates": []
+  },
+  "qfd_rly_25_ES_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_25_NE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_26_NE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_EN_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_ES_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_EW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_NE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_WE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_28_WS_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_ES_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_EW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_NE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_WE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_343_WS_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_382_WE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_382_WN_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_444_EN_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_444_ES_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_444_NW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_476_SW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_49_SW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_49_WN_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_513_WN_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_518_EN_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_518_EW_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_518_SW_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_519_ES_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_519_NE_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_519_SW_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_540_NE_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_548_NE_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_548_WS_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_551_EN_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_551_EW_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_551_NW_53x60": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    60.456
+   ],
+   "candidates": []
+  },
+  "qfd_rly_57_SE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_57_SW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_57_WN_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_75_ES_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_8_EW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_92_ES_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_92_NW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_92_WE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_92_WS_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_9_ES_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_9_NW_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_rly_9_SE_53x30": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    52.68,
+    30.216
+   ],
+   "candidates": []
+  },
+  "qfd_seq_su": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    518.376,
+    518.376
+   ],
+   "candidates": []
+  },
+  "qfd_sp_su64_sfu": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    2058.456
+   ],
+   "candidates": []
+  },
+  "qfd_sp_vector_memory": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    2332.776,
+    2073.576
+   ],
+   "candidates": []
+  },
+  "qfd_tt_ctlm": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    1814.376
+   ],
+   "candidates": []
+  },
+  "qfd_tt_up4": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": "pre-fix",
+   "closed_job": "qfd_tt_up4_b-618516521-tc",
+   "slot_fit": "outline mismatch (case 345.576x388.776 vs view 345.6x388.8)",
+   "reason": "view exists, slot mismatch: outline mismatch (case 345.576x388.776 vs view 345.6x388.8) (physical/qwen_die_masters/views/qfd_tt_up4_b, cell ot_qfd_band_upper)",
+   "case_size": [
+    345.576,
+    388.776
+   ],
+   "candidates": [
+    {
+     "view": "physical/qwen_die_masters/views/qfd_tt_up4_b",
+     "cell": "ot_qfd_band_upper",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 345.576x388.776 vs view 345.6x388.8)",
+     "closed_job": "qfd_tt_up4_b-618516521-tc",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       345.576,
+       388.776
+      ],
+      "view_size": [
+       345.6,
+       388.8
+      ],
+      "case_pins": {
+       "ck": 1,
+       "flt": 1,
+       "lf0": 1,
+       "lf1": 1,
+       "lf2": 1,
+       "pw0": 513,
+       "pw1": 513,
+       "pw2": 513,
+       "sel": 28,
+       "ty": 1538
+      },
+      "view_pins": {
+       "clk": 1,
+       "fault": 1,
+       "lf": 6,
+       "pw": 768,
+       "pw_v": 6,
+       "rst_n": 1,
+       "sel_e": 14,
+       "tt_ty": 384,
+       "tt_use": 1,
+       "tt_v": 1,
+       "tv_e": 14
+      }
+     }
+    },
+    {
+     "view": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper",
+     "cell": "ot_qfd_band_upper",
+     "by_name": false,
+     "slot_fit": "outline mismatch (case 345.576x388.776 vs view 64.8x205.2)",
+     "closed_job": "qfd_tt_up4_tp8-rt1-ef228d3d0",
+     "job_status": "CLOSED",
+     "export": "pre-fix",
+     "detail": {
+      "case_size": [
+       345.576,
+       388.776
+      ],
+      "view_size": [
+       64.8,
+       205.2
+      ],
+      "case_pins": {
+       "ck": 1,
+       "flt": 1,
+       "lf0": 1,
+       "lf1": 1,
+       "lf2": 1,
+       "pw0": 513,
+       "pw1": 513,
+       "pw2": 513,
+       "sel": 28,
+       "ty": 1538
+      },
+      "view_pins": {
+       "clk": 1,
+       "fault": 1,
+       "lf": 3,
+       "pw": 384,
+       "pw_v": 3,
+       "rst_n": 1,
+       "sel_e": 13,
+       "tt_ty": 384,
+       "tt_use": 1,
+       "tt_v": 1,
+       "tv_e": 13
+      }
+     }
+    }
+   ],
+   "view_size": [
+    345.6,
+    388.8
+   ]
+  },
+  "qkd_ahub": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    647.976,
+    647.976
+   ],
+   "candidates": []
+  },
+  "qkd_embgw": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    388.776,
+    388.776
+   ],
+   "candidates": []
+  },
+  "qkd_host": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    518.376
+   ],
+   "candidates": []
+  },
+  "qkd_pll": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    323.976,
+    323.976
+   ],
+   "candidates": []
+  },
+  "qkd_seq": {
+   "class": "placeholder",
+   "instances": 1,
+   "lef": null,
+   "export": null,
+   "closed_job": null,
+   "slot_fit": null,
+   "reason": "no closed view of this master on the source tree",
+   "case_size": [
+    777.576,
+    518.376
+   ],
+   "candidates": []
+  }
+ }
+}
