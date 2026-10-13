@@ -1,5 +1,5 @@
 {
- "name": "s81su_qnt_b1_ref-v5-b1-COMMIT",
+ "name": "s81su_qnt_b1_ref-v5-b1-1d94ca904",
  "block": "dsfd_su_t_qnt",
  "ref_tile": true,
  "owner": "Codex:s81_su_closure",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "codex/s81su-physical-20261013",
-  "commit": "COMMIT"
+  "commit": "1d94ca904"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qnt_b1_ref/s81su_qnt_b1_ref-v5-b1-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_qnt_b1_ref/s81su_qnt_b1_ref-v5-b1-1d94ca904"
   }
  ],
  "cycles_added": 0,
