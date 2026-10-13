@@ -9,7 +9,7 @@
       "id": "hc-tail-crossing-width",
       "owner": "HC lead / S81 die lead",
       "status": "REQUIRED",
-      "evidence": "HC lead RTL audit 2026-10-12: NG256 FDW=O_D104+max(S_RD*512,NP*GS*32)=2920; after ten chain tiles shifted y tail still includes12 half-tiles/1536bits. v13 fd1128 truncates POST operands.",
+      "evidence": "HC lead RTL audit 2026-10-12: NG256 FDW=O_D104+max(S_RD*512,NP*GS*32)=2920; after ten chain tiles shifted y tail still includes12 half-tiles/1536bits. v13 fd1128 truncates POST operands. Corrected return: adopted S_RT4 gives RDW2156+RVW8=2164, not1090. Full NG256 head10/7 stations each direction gate m0 PASS x3 0/1940 cycles6018; mutant1 FAIL x3 1770/1940 (source bb286a82b).",
       "cut_after": [
         9,
         31,
@@ -22,11 +22,11 @@
         "cy": 128,
         "total": 3056
       },
-      "return_bits": 1090,
+      "return_bits": 2164,
       "column_count": 3,
-      "total_crossing_bits": 12438,
+      "total_crossing_bits": 15660,
       "rough_vertical_capacity_tracks": 93000,
-      "rough_utilization": 0.13374193548387098,
+      "rough_utilization": 0.16838709677419356,
       "station_count_per_crossing": 7,
       "added_cycles": {
         "forward": 7,
@@ -36,6 +36,18 @@
         "HC lead exposes full payload in split RTL, preserving chain ordering.",
         "Die lead widens hc_s t_tf / f_tr and hc_t f_sf / t_sr pin ranges and generator mappings before v14.",
         "Re-run legal floorplan, pin clashes, reach and control gate; refresh capacity with widened pins."
+      ],
+      "return": {
+        "S_RT": 4,
+        "rd": 2156,
+        "rv": 8,
+        "total": 2164
+      },
+      "rtl_branch": "codex/s81hc-tail-20261012",
+      "rtl_checkpoint": "59768a15a",
+      "gate_records": [
+        "results/rtl/s81_suhc_20261012/hc_tail_ng256_m0.json",
+        "results/rtl/s81_suhc_20261012/hc_tail_ng256_m1.json"
       ]
     },
     {
@@ -114,6 +126,32 @@
         "Retain closed M6/M7 views unless final die GRT overflow over tile requires freed horizontal tracks.",
         "No bulk slot growth or M5 reroute from withdrawn requests.",
         "Record M6 pin-only grant for genuinely pin-bound edge tiles when required."
+      ]
+    },
+    {
+      "id": "abut-min-delay-and-etm-reference",
+      "owner": "S81 die lead / tile leads",
+      "status": "REQUIRED PHYSICAL VALIDATION",
+      "evidence": {
+        "failed_die": "c3",
+        "source": "f13695e45",
+        "flat_short_link_model": {
+          "ff_cq_ps": 32,
+          "receiver_hold_ps": 15,
+          "hold_uncertainty_ps": 50
+        },
+        "etm_reference_fix_main": "81f0c3833",
+        "reference_probe": "results/physical/die_iter_1012/s81/etm_clock_reference_20261012/summary.json"
+      },
+      "minimum_end_to_end_delay_ps": 65,
+      "formula": "minimum sender clock-to-output + physical seam delay + receiver pin-to-capture delay >= receiver hold15 + hold uncertainty50 + capture-minus-launch physical clock skew",
+      "zero_skew_shortfall_ps": 33,
+      "clock_requirement": "Preserve physical clock plan targets. ETM normalization compensation is STA-reference-only; column cfifo cr and first relay already share depth (<1ps nominal plan skew).",
+      "actions": [
+        "Verify each adopted real view against minimum-delay contract; do not count interimcq32 as measured closure.",
+        "For deficient abutting links implement a physical buffer/delay chain in a new registered seam or leaf redesign and route/measure atFF; preserve setup/hold uncertainty.",
+        "Synthetic120ps Liberty hold offsets are default-off and planning-only. They cannot satisfy this contract.",
+        "Do not reroute existing closed tiles solely for M5; physical hold defects require an explicit seam fix independent of layer-policy changes."
       ]
     }
   ]

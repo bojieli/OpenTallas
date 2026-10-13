@@ -1,0 +1,93 @@
+{
+  "name": "dsfd_su_t_qne",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/routes/s81su_qne_ref_v2_8946ebc79/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -3.355452582454177e-10 min -1.482726719181926e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/routes/s81su_qne_ref_v2_8946ebc79/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/record/views/dsfd_su_t_qne:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/src/physical/ref_tile/s81su_qne_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.0064205852321493e-10 min -1.4104570289497076e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/routes/s81su_qne_ref_v2_8946ebc79/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/record/views/dsfd_su_t_qne:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/src/physical/ref_tile/s81su_qne_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 3.2584157594328644e-11 min -1.4045969942699799e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/routes/s81su_qne_ref_v2_8946ebc79/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/record/views/dsfd_su_t_qne:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/src/physical/ref_tile/s81su_qne_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/src/physical/ref_tile/s81su_qne_ref/signoff.sdc",
+    "sha256": "7920b7c87cc268cd0b211ef9d79aa0be4215dd99b2ed2d79939d76005a67aa7f",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/s81su_qne_ref-v2-8946ebc79/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "files": {
+    "dsfd_su_t_qne.lef": "ce0fe12018939eb8f98a412983c07e08aa73fb7fbed66e6876fcfbe244370905",
+    "dsfd_su_t_qne_ff.lib": "ea7add45a3147a4ce1be2b1deba8d69eb51f696dd5b2d78b19238d8c5abbc580",
+    "dsfd_su_t_qne_ss.lib": "cb0cc1d9e725ab14bf8698b624e31b6bce58e1298c1d5980e46a1f30e2dee7ed",
+    "dsfd_su_t_qne_tt.lib": "d8f5f35615677c31f930dd4c4229065e94e3f66bd0ae3cb3ff88bf8386a58914"
+  },
+  "ok": true
+}
