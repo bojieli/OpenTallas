@@ -37,7 +37,7 @@ KIT = {'ot_qwen_tree_delay1_t': 'qfd_tree_delay1_t', 'ot_qwen_tree_delay2_t': 'q
        'ot_qfd_vm_sctl_t': 'qfd_vm_sctl_t', 'ot_qfd_vm_rr4_t': 'qfd_vm_rr4_t', 'ot_qfd_vm_rr2_t': 'qfd_vm_rr2_t',
        'ot_qfd_vm_xcol_t': 'qfd_vm_xcol_t', 'ot_qfd_vm_xrelay_t': 'qfd_vm_xrelay_t',
        'ot_qfd_vm_fan_t': 'qfd_vm_fan_me'}
-PLANNED = {'ot_qfd_vm_bctl_t': (8.64, 21.6), 'ot_qfd_vm_sctl_t': (8.64, 21.6), 'ot_qfd_vm_rr4_t': (17.28, 216.0),
+PLANNED = {'ot_qfd_vm_bctl_t': (12.96, 38.88), 'ot_qfd_vm_sctl_t': (12.96, 38.88), 'ot_qfd_vm_rr4_t': (17.28, 216.0),
            'ot_qfd_vm_rr2_t': (116.64, 25.92), 'ot_qfd_vm_xcol_t': (142.56, 179.28), 'ot_qfd_vm_fan_t': (4.32, 6.48)}
 GATE = {}; SIZE_SRC = {}
 def _kit(m):
@@ -61,16 +61,21 @@ SUY = (10.8, 276.48, 516.24, 781.92)      # right SU column: an answer leaf (21.
 
 class Plan:
     def __init__(self, sc, band_relays):
-        self.sc = sc; self.band_relays = band_relays
-        self.SW = sc * TW + (sc - 1) * SGAP                     # strip width (tile columns + inner channels)
-        self.sW = 4.32; self.U0 = G(self.sW + self.SW + 4.32); self.sA = G(self.U0 + 380.16 + 4.32); self.U1 = G(self.sA + self.SW + 4.32)
-        self.sB = G(self.U1 + 380.16 + 4.32); self.SI = G(self.sB + self.SW + 4.32); self.SUX = G(self.SI + 21.6)
-        self.RW = G(self.SUX + 235.44 + 6.48); self.EW = G(4 * self.RW + 4.32 + self.SW)
+        self.scs = list(sc) if isinstance(sc, (list, tuple)) else [sc] * 4; self.band_relays = band_relays     # strip tile columns per REGION COLUMN
+        self.geo = []; x = 0.0
+        for c in self.scs:
+            SW = c * TW + (c - 1) * SGAP                        # strip width (tile columns + inner channels)
+            sW = 4.32; U0 = G(sW + SW + 4.32); sA = G(U0 + 380.16 + 4.32); U1 = G(sA + SW + 4.32); sB = G(U1 + 380.16 + 4.32); SI = G(sB + SW + 4.32); SUX = G(SI + 21.6)
+            RW = G(SUX + 235.44 + 6.48); self.geo.append(dict(sc=c, SW=SW, sW=sW, U0=U0, sA=sA, U1=U1, sB=sB, SI=SI, SUX=SUX, RW=RW, X=G(x))); x += RW
+        self.EW = G(x + 4.32 + self.geo[3]['SW']); self.use(0)
         self.size = {m: L.read(ROOT / p)[0] for m, p in VIEW.items()}; self.size.update(NEW)
         self.BAND = max(BAND, G(self.size['ot_qfd_vm_xcol_t'][1] + 8.64))       # the band is as tall as the column leaf needs
         self.ch = []; self.bays = []; self.seams = []; self.me = []
 
-    def origin(self, r): return G(X0 + (r % 4) * self.RW), G(Y0 + (r // 4) * (RH + self.BAND))
+    def use(self, c):
+        for k, v in self.geo[c].items(): setattr(self, k if k != 'X' else 'XO', v)
+
+    def origin(self, r): return G(X0 + self.geo[r % 4]['X']), G(Y0 + (r // 4) * (RH + self.BAND))
 
     def add(self, n, m, x, y, **k):
         c = dict(n=n, m=m, x=G(x), y=G(y), w=self.size[m][0], h=self.size[m][1], orient='R0', layer_cap='M5', **k); self.ch.append(c); return c
@@ -96,7 +101,7 @@ class Plan:
             L1 = abs(a[0] - b[0]) + abs(a[1] - b[1]); self.seams.append(dict(kind=kind, bits=bits, A=[round(a[0], 3), round(a[1], 3)], Q=[round(b[0], 3), round(b[1], 3)],
                                                                          centroid_um=round(L1, 1), est_um=round(L1 + (a[2] + b[2]) / 4, 1)))
         for r in range(8):
-            X, Y = self.origin(r)
+            X, Y = self.origin(r); self.use(r % 4)
             # row read: banks 4h .. 4h + 3 are ONE unit column (4 rows), their 4:1 rung sits beside the column's bx relays in
             # the strip east of it (first tile column), centred on the column; the 2:1 rung in unit column 1 between the two
             rr4 = [A(f'vm_g{r}_rr4_{h}', 'ot_qfd_vm_rr4_t', X + (self.sA, self.sB)[h], Y + 302.4, region=r, half=h) for h in range(2)]
@@ -107,7 +112,7 @@ class Plan:
                 ux = X + (self.U0, self.U1)[b // 4]; yb = Y + ROWY(b % 4); bank = 8 * r + b
                 i_ = A(f'vm_g{r}_b{b}_in', 'ot_qwen_tree_delay2_t', ux, yb + 60.48, region=r, role='wd pin flop + NRI relay')
                 bk = A(f'vm_g{r}_b{b}', 'ot_qfd_vm_bank_t', ux + 21.6, yb, region=r, logical_bank=bank)
-                bc = A(f'vm_g{r}_b{b}_ctl', 'ot_qfd_vm_bctl_t', ux + 246.24, yb + 30.24, region=r)
+                bc = A(f'vm_g{r}_b{b}_ctl', 'ot_qfd_vm_bctl_t', ux + 244.08, yb + 12.96, region=r)
                 bx = A(f'vm_g{r}_b{b}_bx', 'ot_qwen_tree_delay1_t', ux + 244.08, yb + 60.48, region=r, role='bx NRX relay')
                 self.me.append((bc['n'], bc['x'], bc['y']))
                 seam('delay2.q -> bank.wd', face(i_, 'E'), pin(bk, 'wd'), 512); seam('bank.q -> delay1.d', pin(bk, 'q'), face(bx, 'W'), 512)
@@ -124,7 +129,7 @@ class Plan:
             for k, (sx, sy) in enumerate(sus):
                 su = A(f'vm_g{r}_su{k}', 'ot_qfd_vm_su_t', X + sx, Y + sy, region=r, operand=k // 2, su_bank=k % 2)
                 si = A(f'vm_g{r}_su{k}_in', 'ot_qwen_tree_delay2_t', X + sx - 21.6, Y + sy + 86.4, region=r, role='swd pin flop + NRI relay')
-                sc = A(f'vm_g{r}_su{k}_ctl', 'ot_qfd_vm_sctl_t', X + sx - 17.28, Y + sy + 155.52, region=r)
+                sc = A(f'vm_g{r}_su{k}_ctl', 'ot_qfd_vm_sctl_t', X + sx - 21.6, Y + sy + 155.52, region=r)
                 seam('delay2.q -> su.swd', face(si, 'E'), pin(su, 'swd'), 512); seam('sctl.m_* -> su pin flops', face(sc, 'E'), pin(su, 'swm'), 38)
                 seam('su.q (sx) -> su1024.so', pin(su, 'q'), pin(ans[k // 2], 'sx'), 512)
                 if k % 2 == 0: seam('sctl.svc/rtg -> su1024', face(sc, 'E'), pin(ans[k // 2], 'svc'), 2)
@@ -171,7 +176,7 @@ def region_spec(pl, seams, r=0):
     """the region as a die-assembled placement cluster: children (region-relative), the strip slots the die fills with
     relay tiles, every module port with its leaf-pin endpoints and the number of die relay endpoints it needs (greedy
     cover, every endpoint register within `reach` of its pins), the seam table and the region's own cut demand."""
-    X, Y = pl.origin(r); by = {c['n']: c for c in pl.ch if c.get('region') == r}; g = f'vm_g{r}_'
+    X, Y = pl.origin(r); pl.use(r % 4); by = {c['n']: c for c in pl.ch if c.get('region') == r}; g = f'vm_g{r}_'
     def at(n, f='W'):
         c = by[g + n]; x, y = {'W': (c['x'], c['y'] + c['h'] / 2), 'E': (c['x'] + c['w'], c['y'] + c['h'] / 2), 'S': (c['x'] + c['w'] / 2, c['y']), 'N': (c['x'] + c['w'] / 2, c['y'] + c['h'])}[f]
         return dict(leaf=n, master=c['m'], face=f, x=round(x - X, 2), y=round(y - Y, 2))
@@ -234,12 +239,13 @@ def region_spec(pl, seams, r=0):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('out'); ap.add_argument('--strip-cols', type=int, default=2); ap.add_argument('--band-relays', type=int, default=0)
+    ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('out'); ap.add_argument('--strip-cols', default='2', help='tile columns of the relay strips: one number, or one per region column (e.g. 3,4,4,3)'); ap.add_argument('--band-relays', type=int, default=0)
     ap.add_argument('--region-spec', default='')
     ap.add_argument('--size', action='append', default=[], help='MODULE=WxH: what-if outline of a leaf (recorded in the report)')
     a = ap.parse_args(); d = json.loads(Path(a.net).read_text())
     for o in a.size:
         m, v = o.split('='); NEW[m] = tuple(float(t) for t in v.split('x')); SIZE_SRC[m] = 'WHAT-IF --size ' + o
+    a.strip_cols = [int(v) for v in a.strip_cols.split(',')]; a.strip_cols = a.strip_cols * 4 if len(a.strip_cols) == 1 else a.strip_cols
     pl = Plan(a.strip_cols, a.band_relays).build(); ch, bays, size = pl.ch, pl.bays, pl.size
     gone = ('sp_vector_memory', 'sp_su64_sfu'); rly = ('qfd_rly', 'qkd_rly')
     old = [i for i in d['insts'] if i['n'] not in gone and not i['m'].startswith(rly)]
@@ -276,10 +282,10 @@ def main():
                           seams=dict(sk), violating=seam_bad),
         me_tree=met, plane_band=pl.band,
         inputs={str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [a.net, __file__] + [str(ROOT / v) for v in VIEW.values()] + [str(ROOT / 'physical/ref_tile' / k / f) for k in KIT.values() for f in ('floorplan.json', 'gate_result.json') if (ROOT / 'physical/ref_tile' / k / f).exists()]},
-        slot=dict(shape=f'4 x 2 regions of {pl.RW} x {RH} um ({a.strip_cols}-column relay strips sW / sA / sB) + {pl.BAND} um band (one row of 32 bit-plane column leaves) between the rows; region r at column r % 4, row r // 4',
+        slot=dict(shape=f'4 x 2 regions, widths {[g_["RW"] for g_ in pl.geo]} x {RH} um (relay strips sW / sA / sB of {a.strip_cols} tile columns per region column) + {pl.BAND} um band (one row of 32 bit-plane column leaves) between the rows; region r at column r % 4, row r // 4',
                   origin_um=[X0, Y0], size_um=[pl.EW, round(2 * RH + pl.BAND, 3)], area_mm2=round(pl.EW * (2 * RH + pl.BAND) / 1e6, 4), spine_x_um=[round(spine[0], 3), round(spine[1], 3)],
                   bbox_um=[round(min(xs), 3), round(min(ys), 3), round(max(xs), 3), round(max(ys), 3)],
-                  region_origins={r: list(pl.origin(r)) for r in range(8)}, region_um=[pl.RW, RH], strip_x_um=dict(sW=pl.sW, sA=pl.sA, sB=pl.sB), unit_x_um=[pl.U0, pl.U1], su_x_um=pl.SUX,
+                  region_origins={r: list(pl.origin(r)) for r in range(8)}, region_um=[[g_['RW'], RH] for g_ in pl.geo], region_column_geometry=pl.geo, unit_x_um=[pl.geo[0]['U0'], pl.geo[0]['U1']],
                   old_slot_um=[2332.776, 2073.576], request_0420_um=[4708.8, 2347.92]),
         geometry=dict(verdict='PASS' if ok else 'FAIL', hard_overlaps_it2=hard[:8], within_20um_of_it2_hard=near, peer_overlaps=peer[:8], peer_pairs_closer_than_2p16=len(tight),
                       off_2p16_grid=offgrid, inside_envelope=inside, kept_it2_hard_instances=len(old), removed=list(gone), su64_reservation=su64,
