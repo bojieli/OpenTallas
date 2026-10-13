@@ -15,8 +15,8 @@
  "clock": "cts",
  "reset_ports": [],
  "outline": {
-  "w": 300,
-  "h": 300
+  "w": 252,
+  "h": 252
  },
  "layer_cap": "M6",
  "layer_cap_grant": "B2 SPEC D-B2-7 TKM kept inside hb_coll; hardened chain children use M6 beneath M7 parent straps",
@@ -51,8 +51,8 @@
  "job": {
   "owner": "Codex:hbm-front-link",
   "branch": "codex/hbm-front-link",
-  "tag": "r1",
-  "purpose": "B2 retained real TOPK_MERGE value/NaN/tie semantics. Two-stage insertion child reroute through reference flow because historical closed child fails M7OBS and821above-blockedpins; preserve historical view.",
+  "tag": "r2",
+  "purpose": "B2 retained real TOPK_MERGE (D-B2-7) chain child, r4 tile RTL after cx r1 TT -19.94 ps / FF +14.06: stage-I ops (clr/conv/insert) replicated per 2 positions (were 1 flop on 6,989 / 5,733 loads), valid gate removed from the stage-I count by the zero-when-invalid seam contract, outline 300.24 -> 252 (util 31% -> ~44%). Function cycle-identical; no SDC change.",
   "benches": [
    {
     "name": "tkm_matrix_exact",

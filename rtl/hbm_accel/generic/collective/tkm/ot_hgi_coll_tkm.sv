@@ -365,7 +365,7 @@ module ot_hgi_coll_tkm #(
                 r3 = 2'(e2_ge[2]) + 2'(e2_ge[4]) + 2'(e2_ge[5]);
                 eb_v <= e2_v;
                 for (s = 0; s < 4; s = s + 1)
-                    eb[EW*s +: EW] <= tform(((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
+                    eb[EW*s +: EW] <= !e2_v ? {EW{1'b0}} : tform(((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
                                             ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}}));
                 if (e2_v && (ph == P_INS || ph == P_DRAIN)) stat_ins <= stat_ins + 32'd1;
             end
@@ -508,18 +508,28 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
     localparam integer GP = 8;                               // positions a replicated block copy serves
     localparam integer NP = PT + 4;
     localparam integer NGR = (NP + GP - 1) / GP;
+    localparam integer GC = 2;                               // positions a replicated op copy (clr / conv / insert) serves
+    localparam integer NGC = (NP + GC - 1) / GC;
     reg p_clr, p_conv, p_v; reg [TW-1:0] p_tid, p_tt; reg [LW-1:0] p_tl;
-    (* keep *) reg p_vg [0:NGR-1];
     (* keep *) reg [4*EW-1:0] p_bg [0:NGR-1];
-    reg q_clr, q_conv, q_v;
-    (* keep *) reg q_vg [0:NGR-1];
+    reg q_v;
+    // r4 (cx tile route r1: TT -19.94 ps; q_conv 6,989 / q_clr 5,733 loads on one flop each, q_vg in front of the
+    // stage-I count): the stage-I ops are one flop per GC = 2 positions, and the seam CONTRACT is now: ins_b = 0 whenever
+    // ins_v = 0 (the producers' registers zero it: the parent's eb, a tile's ovf_b; checked in simulation), so an invalid
+    // block's compare vectors gt are 0 by construction (lt(x, 0) = 0, valid bits 0) and no valid gate sits in stage I.
+    (* keep *) reg q_clrg [0:NGC-1];
+    (* keep *) reg q_convg [0:NGC-1];
+    (* keep *) reg q_insg [0:NGC-1];
+    (* keep *) reg q_clr_e, q_conv_e, q_ins_e;               // the seam registers' copy (up_out / ovf)
     (* keep *) reg [4*EW-1:0] q_bg [0:NGR-1];
     reg [3:0] gt [0:NP-1];                                   // stage C -> I: block element j beats position q
     always @(posedge clk) begin
         p_clr <= clr; p_conv <= conv; p_v <= ins_v; p_tid <= tid; p_tt <= tau_t; p_tl <= tau_l;
-        for (integer g = 0; g < NGR; g = g + 1) begin p_vg[g] <= ins_v; p_bg[g] <= ins_b; end
-        q_clr <= p_clr; q_conv <= p_conv; q_v <= p_v;
-        for (integer g = 0; g < NGR; g = g + 1) begin q_vg[g] <= p_vg[g]; q_bg[g] <= p_bg[g]; end
+        for (integer g = 0; g < NGR; g = g + 1) p_bg[g] <= ins_b;
+        q_v <= p_v;
+        for (integer g = 0; g < NGC; g = g + 1) begin q_clrg[g] <= p_clr; q_convg[g] <= p_conv; q_insg[g] <= p_v; end
+        q_clr_e <= p_clr; q_conv_e <= p_conv; q_ins_e <= p_v;
+        for (integer g = 0; g < NGR; g = g + 1) q_bg[g] <= p_bg[g];
     end
     reg [EW-1:0] X [0:PT-1];
     wire [EW-1:0] SX [0:NP-1];
@@ -537,7 +547,7 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
             ot_tkm_lt #(.W(KT)) u_c (.a(ka), .b(kb), .lt(lt_));
             assign g2f[4*gp + gj] = lt_;
         end
-        assign cp[gp] = q_vg[gp / GP] ? (3'(gt[gp][0]) + 3'(gt[gp][1]) + 3'(gt[gp][2]) + 3'(gt[gp][3])) : 3'd0;
+        assign cp[gp] = 3'(gt[gp][0]) + 3'(gt[gp][1]) + 3'(gt[gp][2]) + 3'(gt[gp][3]);   // 0 for an invalid block (ins_b = 0)
     end
     for (gg = 0; gg < NGR; gg = gg + 1) begin : g_bb
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_j
@@ -562,7 +572,7 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
                     gn[q]  = gn[q]  | g2f[4*((q - i >= 0) ? q - i : 0) +: 4];
                 end
             for (integer j = 0; j < 4; j = j + 1)
-                if (q_vg[q / GP] && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j))) begin
+                if (q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j))) begin
                     ins[q] = ins[q] | q_bg[q / GP][EW*j +: EW];
                     gn[q]  = gn[q]  | gbf[16*(q / GP) + 4*j +: 4];
                 end
@@ -573,24 +583,32 @@ module ot_hgi_coll_tkm_tile #(parameter integer EW = 85, parameter integer PT = 
     always @(posedge clk) begin : cmp
         for (integer q = 0; q < NP; q = q + 1)
             for (integer j = 0; j < 4; j = j + 1)
-                gt[q][j] <= q_clr ? p_bg[q / GP][EW*j + EW - 1] : gn[q][j];
+                gt[q][j] <= q_clrg[q / GC] ? p_bg[q / GP][EW*j + EW - 1] : gn[q][j];
 `ifndef SYNTHESIS
-        if (q_conv && p_v) $error("ot_hgi_coll_tkm_tile: a block entered stage C while the tile conveys");
+        if (q_conv_e && p_v) $error("ot_hgi_coll_tkm_tile: a block entered stage C while the tile conveys");
+        if (p_v === 1'b0 && p_bg[0] !== {(4*EW){1'b0}}) $error("ot_hgi_coll_tkm_tile: ins_b != 0 with ins_v = 0 (seam contract)");
 `endif
     end
     always @(posedge clk) begin : upd
-        if (q_clr) begin
-            for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= {EW{1'b0}};
-            up_out <= '0; ovf_v <= 1'b0;
-        end else if (q_conv) begin
-            for (integer p_ = 0; p_ < PT - 4; p_ = p_ + 1) X[p_] <= X[p_ + 4];
-            for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin X[PT - 4 + s_] <= up_in[EW*s_ +: EW]; up_out[EW*s_ +: EW] <= X[4 + s_]; end
-            ovf_v <= 1'b0;
-        end else if (q_v) begin
-            for (integer p_ = 0; p_ < PT; p_ = p_ + 1) X[p_] <= ins[p_];
+        // the array: clr > conv > insert, each position on its group's op copy
+        for (integer p_ = 0; p_ < PT; p_ = p_ + 1) begin
+            if (q_clrg[p_ / GC]) X[p_] <= {EW{1'b0}};
+            else if (q_convg[p_ / GC]) begin
+                if (p_ < PT - 4) X[p_] <= X[p_ + 4];
+                else X[p_] <= up_in[EW*(p_ - (PT - 4)) +: EW];
+            end
+            else if (q_insg[p_ / GC]) X[p_] <= ins[p_];
+        end
+        // the seams
+        if (q_clr_e) begin
+            up_out <= '0; ovf_v <= 1'b0; ovf_b <= '0;
+        end else if (q_conv_e) begin
+            for (integer s_ = 0; s_ < 4; s_ = s_ + 1) up_out[EW*s_ +: EW] <= X[4 + s_];
+            ovf_v <= 1'b0; ovf_b <= '0;
+        end else if (q_ins_e) begin
             for (integer s_ = 0; s_ < 4; s_ = s_ + 1) begin ovf_b[EW*s_ +: EW] <= ins[PT + s_]; up_out[EW*s_ +: EW] <= ins[s_]; end
             ovf_v <= ins[PT][EW-1] | ins[PT + 1][EW-1] | ins[PT + 2][EW-1] | ins[PT + 3][EW-1];
-        end else ovf_v <= 1'b0;
+        end else begin ovf_v <= 1'b0; ovf_b <= '0; end
         busy <= p_v || q_v || ovf_v;
         tau_o <= (p_tid == p_tt) ? X[p_tl % PT][EW-1:1] : '0;
     end

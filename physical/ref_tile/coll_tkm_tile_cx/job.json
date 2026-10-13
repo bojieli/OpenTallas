@@ -1,14 +1,14 @@
 {
- "name": "coll_tkm_tile_cx-r1-5ab85cbc7",
+ "name": "coll_tkm_tile_cx-r2-COMMIT",
  "block": "ot_hgi_coll_tkm_tile",
  "ref_tile": true,
  "owner": "Codex:hbm-front-link",
- "purpose": "B2 retained real TOPK_MERGE value/NaN/tie semantics. Two-stage insertion child reroute through reference flow because historical closed child fails M7OBS and821above-blockedpins; preserve historical view.",
+ "purpose": "B2 retained real TOPK_MERGE (D-B2-7) chain child, r4 tile RTL after cx r1 TT -19.94 ps / FF +14.06: stage-I ops (clr/conv/insert) replicated per 2 positions (were 1 flop on 6,989 / 5,733 loads), valid gate removed from the stage-I count by the zero-when-invalid seam contract, outline 300.24 -> 252 (util 31% -> ~44%). Function cycle-identical; no SDC change.",
  "threads": 8,
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/hbm-front-link",
-  "commit": "5ab85cbc7ea01326c516007c819f8cdbe6c05b8e",
+  "commit": "COMMIT",
   "extra_paths": [
    "results/rtl/hgi_unit_tput_20261010"
   ]
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_tkm_tile_cx/coll_tkm_tile_cx-r1-5ab85cbc7"
+   "to": "results/rtl/ref_tile/coll_tkm_tile_cx/coll_tkm_tile_cx-r2-COMMIT"
   }
  ],
  "cycles_added": 0,
