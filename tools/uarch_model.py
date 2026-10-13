@@ -16056,3 +16056,12 @@ def hbm_vm8_pin_clock_bank_model(long_taps=48, short_taps=32):
         additional_register_area_um2=0,
         physical_clock_area_power='unmeasured; retain candidate status until actual CTS cells and clock power are priced',
         adoption='all eight TT setup>=0/FF hold>=0/DRC0 plus transaction/negative gates; no latency or gain credit')
+
+
+def hbm_vm8_root_checker_bank_model():
+    """VM8 local protection banks, registered seams and unchanged-price gate.
+
+    The machine-readable prebuild precedes the RTL. Real bank area, source-
+    matched transaction timings and native ownership debt qualify the candidate.
+    """
+    return json.loads((ROOT / 'results/physical/vm8_root_checker_20261013/prebuild.json').read_text())
