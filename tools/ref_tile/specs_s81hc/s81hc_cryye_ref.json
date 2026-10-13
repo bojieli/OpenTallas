@@ -144,10 +144,10 @@
   "pin_min_tracks": 1
  },
  "job": {
-  "owner": "Codex:s81_hc_closure",
-  "branch": "codex/s81hc-physical-20261012",
-  "tag": "v3-regional-names",
-  "purpose": "[hc-crooty] crooty v3 2-tile split, C=2: y slice tile (far side, above crrf): y_s -> yp -> yp2 -> SRAM FWFT FIFO (11 x 128x256 in 3x4) -> p_y; ~14.1k flops on its own root; replaces s81hc_crootye_ref-v2 (one root over 18.4k flops + 11 macros, hold repair not converging)",
+  "owner": "Claude:s81hc-1013",
+  "branch": "claude/s81hc-1013",
+  "tag": "v4-ctl-east",
+  "purpose": "[hc-crooty] crooty v3 2-tile split, C=2: y slice tile (far side, above crrf): y_s -> yp -> yp2 -> SRAM FWFT FIFO (11 x 128x256 in 3x4) -> p_y; ~14.1k flops on its own root; replaces s81hc_crootye_ref-v2 (one root over 18.4k flops + 11 macros, hold repair not converging) | v4: clock/reset/control pins moved from the SW corner to the E edge channel (v3 EARLY_FAIL_CONGESTION GRT-0116: 11 V gcells in the W edge channel x 2-20 um; hook OT_GRT_TOP_SHADOW ran, hotspot neither over macros nor at the y pins).",
   "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_cryye_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_cryye_ref"

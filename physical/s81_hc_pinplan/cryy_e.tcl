@@ -1,4 +1,7 @@
 # Local YFIFO bank-to-column mapping; matched N/S bits, no dense pin groups.
+# v4 (2026-10-13): sk/srs/yacc/p_req/p_flt enter at the E edge channel (free M5 tracks past p_y), not the SW corner:
+# v3 GRT-0116 (11 gcells, V, x 2-20 um) was the W edge channel carrying col-0 rd_out fan-in + rows 1-3 descending
+# outputs + the clock/reset/control trunk; the E channel carries 384 macro pin nets against 1536 in the W channel.
 place_pin -pin_name {y_s[0]} -layer M5 -location {2.172 300.240} -pin_size {.024 .192} -force_to_die_boundary
 place_pin -pin_name {p_y[0]} -layer M5 -location {2.172 0.000} -pin_size {.024 .192} -force_to_die_boundary
 place_pin -pin_name {y_s[1]} -layer M5 -location {2.316 300.240} -pin_size {.024 .192} -force_to_die_boundary
@@ -5631,8 +5634,8 @@ place_pin -pin_name {y_s[2814]} -layer M5 -location {367.020 300.240} -pin_size 
 place_pin -pin_name {p_y[2814]} -layer M5 -location {367.020 0.000} -pin_size {.024 .192} -force_to_die_boundary
 place_pin -pin_name {y_s[2815]} -layer M5 -location {367.164 300.240} -pin_size {.024 .192} -force_to_die_boundary
 place_pin -pin_name {p_y[2815]} -layer M5 -location {367.164 0.000} -pin_size {.024 .192} -force_to_die_boundary
-place_pin -pin_name {sk} -layer M5 -location {0.300 0.000} -pin_size {.024 .192} -force_to_die_boundary
-place_pin -pin_name {srs} -layer M5 -location {0.876 0.000} -pin_size {.024 .192} -force_to_die_boundary
-place_pin -pin_name {yacc} -layer M5 -location {1.452 0.000} -pin_size {.024 .192} -force_to_die_boundary
-place_pin -pin_name {p_req} -layer M5 -location {2.028 0.000} -pin_size {.024 .192} -force_to_die_boundary
-place_pin -pin_name {p_flt} -layer M5 -location {2.604 0.000} -pin_size {.024 .192} -force_to_die_boundary
+place_pin -pin_name {sk} -layer M5 -location {367.356 0.000} -pin_size {.024 .192} -force_to_die_boundary
+place_pin -pin_name {srs} -layer M5 -location {367.692 0.000} -pin_size {.024 .192} -force_to_die_boundary
+place_pin -pin_name {yacc} -layer M5 -location {368.028 0.000} -pin_size {.024 .192} -force_to_die_boundary
+place_pin -pin_name {p_req} -layer M5 -location {368.364 0.000} -pin_size {.024 .192} -force_to_die_boundary
+place_pin -pin_name {p_flt} -layer M5 -location {368.700 0.000} -pin_size {.024 .192} -force_to_die_boundary
