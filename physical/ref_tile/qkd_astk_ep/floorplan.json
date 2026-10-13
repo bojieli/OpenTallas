@@ -92,7 +92,7 @@
    "inst": "*u_e1",
    "idx": 0,
    "x": 25.92,
-   "y": 54.0,
+   "y": 66.96,
    "w": 55.32,
    "h": 22.44,
    "orient": "R0",
@@ -105,7 +105,7 @@
    "inst": "*u_e2",
    "idx": 0,
    "x": 25.92,
-   "y": 84.24,
+   "y": 110.16,
    "w": 55.32,
    "h": 22.44,
    "orient": "R0",
@@ -118,7 +118,7 @@
    "inst": "*u_e3",
    "idx": 0,
    "x": 25.92,
-   "y": 114.48,
+   "y": 153.36,
    "w": 55.32,
    "h": 22.44,
    "orient": "R0",
@@ -131,7 +131,7 @@
    "inst": "*u_sc0",
    "idx": 0,
    "x": 25.92,
-   "y": 146.88,
+   "y": 196.56,
    "w": 57.048,
    "h": 42.12,
    "orient": "R0",
@@ -144,45 +144,14 @@
    "inst": "*u_sc1",
    "idx": 0,
    "x": 25.92,
-   "y": 198.72,
+   "y": 259.2,
    "w": 57.048,
    "h": 42.12,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_64x128_m1_r2c2#0 / ot_sram_1r1w_64x128_m1_r2c2#0 channel 7.8 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_64x128_m1_r2c2#0 / ot_sram_1r1w_64x128_m1_r2c2#0 channel 7.8 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_64x128_m1_r2c2#0 / ot_sram_1r1w_64x128_m1_r2c2#0 channel 7.8 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_64x128_m1_r2c2#0 / ot_sram_1r1w_256x128_m1_r2c2#0 channel 10.0 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_256x128_m1_r2c2#0 / ot_sram_1r1w_256x128_m1_r2c2#0 channel 9.7 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
