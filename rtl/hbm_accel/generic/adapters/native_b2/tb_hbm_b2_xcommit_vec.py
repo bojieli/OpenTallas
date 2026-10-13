@@ -86,6 +86,8 @@ def cmd_check(a):
             sram.append({t[k]: int(t[k + 1]) for k in range(3, len(t) - 1, 2)})
         elif line.startswith("# xcsum"):
             xs = {t[k]: int(t[k + 1]) for k in range(2, len(t) - 1, 2)}
+        elif line.startswith("# trc"):
+            continue
         elif line.startswith("# total_cycles"):
             total = int(t[-1])
         elif line.startswith("#"):

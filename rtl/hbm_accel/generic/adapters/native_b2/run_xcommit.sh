@@ -41,7 +41,7 @@ for sel in 0 1 2 3 4; do
     mkdir -p "$d"
     for f in seq.hex lines.hex x.hex xc.hex gold.json; do ln -f "$out/vec/$f" "$d/$f"; done
     set +e
-    /usr/bin/time -v "$out/build/Vtb_hbm_b2_xcommit" +DIR="$d" +NOPS="$nops" +SEL=$sel > "$d/run.log" 2>&1
+    /usr/bin/time -v "$out/build/Vtb_hbm_b2_xcommit" +DIR="$d" +NOPS="$nops" +SEL=$sel +TRC=${XC_TRC:-0} > "$d/run.log" 2>&1
     echo $? > "$d/sim.rc"
     python3 "$here/tb_hbm_b2_xcommit_vec.py" check --dir "$d" --sel $sel --out "$d/result.json" > "$d/check.log" 2>&1
     rc=$?

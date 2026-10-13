@@ -150,6 +150,7 @@ module tb_hbm_b2_xcommit;
   end
  endtask
     reg [NBEAT-1:0]      shv [0:XDEPTH-1];
+    integer trc = 0;
     integer e, e0_last, e0_first, e_rel, t_start_e, n_beats, cal;
     integer lastw [0:NS-1]; integer firstr [0:NS-1]; reg rd_seen [0:NS-1];
     integer lat_min [0:NS-1]; integer lat_max [0:NS-1]; integer rmin [0:NS-1]; integer smin [0:NS-1];
@@ -173,6 +174,8 @@ module tb_hbm_b2_xcommit;
     end
     always @(negedge ck_s) begin
         if (rst_n) begin
+            if (trc != 0 && xw_en[SMI] && cal != 0) $fwrite(fo, "# trc beat e %0d t %0t grp %0d\n", e, $realtime, xw_grp[SMI*7 +: 7]);
+            if (trc != 0 && rb_fire) $fwrite(fo, "# trc start e %0d t %0t e0_last %0d\n", e, $realtime, e0_last);
             if (xw_en[SMI]) begin
                 e0_last = e; if (e0_first < 0) e0_first = e; n_beats = n_beats + 1;
                 xs_beat(xw_addr[SMI*7 +: 7], 32'(xw_grp[SMI*7 +: 7]), xw_data[SMI*2048 +: 2048]);
@@ -190,8 +193,8 @@ module tb_hbm_b2_xcommit;
             end
             fin_now <= (fin_tog != fin_seen); fin_seen <= fin_tog;
         end
-        e = e + 1;
     end
+    always @(posedge ck_s) e = e + 1;      // between two sampling steps: every monitor block sees the same edge index
 `define XCM(BR) dut.g_c[gc].g_p[gp].BR.u_t.u.u.g_lf[gj].u_lh.u_xs.u_leaf.g_xm[gx].u_x
 `define XC_MON(BR) \
     integer a, q; \
@@ -213,6 +216,8 @@ module tb_hbm_b2_xcommit;
                 if (bad((cur_xb + a) % XDEPTH)) rb_bad[IDX] = rb_bad[IDX] + 1; \
             rd_seen[IDX] = 0; \
         end \
+        if (trc != 0 && IDX >= 248 && wce && (cal != 0 || e - e0_last >= 26)) \
+            $fwrite(fo, "# trc wce idx %0d e %0d t %0t lat %0d en_l %0d addr %0d\n", IDX, e, $realtime, e - e0_last, m_p[gp].en_l, `XCM(BR).w_addr_in); \
         if (wce && m_p[gp].en_l) begin \
             lastw[IDX] = e; nwr[IDX] = nwr[IDX] + 1; \
             if (cal != 0) begin \
@@ -298,6 +303,7 @@ module tb_hbm_b2_xcommit;
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
         if (!$value$plusargs("NOPS=%d", nops)) nops = 1;
         if (!$value$plusargs("SEL=%d", sel)) sel = 0;
+        if (!$value$plusargs("TRC=%d", trc)) trc = 0;
         seed = 7; cyc = 0; cur = 0; cons_total = 0; line_op = 0; ndone = 0; n_started = 0; ticket = 0;
         $readmemh({dir, "/seq.hex"}, seq);
         $readmemh({dir, "/lines.hex"}, lines);
@@ -372,7 +378,7 @@ module tb_hbm_b2_xcommit;
         total_stale = 0; total_rb = 0; total_wad = 0; total_wg = 0; lat_bad = 0; wl_max = -1;
         for (s = 0; s < NS; s = s + 1) begin
             $fwrite(fo, "# sram %0d c %0d p %0d j %0d m %0d lat_min %0d lat_max %0d nwr %0d rmin %0d smin %0d rb_bad %0d stale %0d\n",
-                    s, s / 32, (s / 16) % 2, (s / 8) % 2, s % 4, lat_min[s], lat_max[s], nwr[s], rmin[s], smin[s], rb_bad[s], stale[s]);
+                    s, s / 16, (s / 8) % 2, (s / 4) % 2, s % 4, lat_min[s], lat_max[s], nwr[s], rmin[s], smin[s], rb_bad[s], stale[s]);
             total_stale = total_stale + stale[s]; total_rb = total_rb + rb_bad[s]; total_wad = total_wad + w_after_drained[s];
             total_wg = total_wg + w_gated[s];
             if (lat_min[s] != lat_max[s]) lat_bad = lat_bad + 1;
