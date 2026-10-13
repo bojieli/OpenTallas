@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "hgi_seq_be",
+ "verdict": "FAIL",
+ "generated": "2026-10-13T08:03:20-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "e1bf45c0f",
+ "clock": {
+  "max_root_sinks": null,
+  "root": null,
+  "cts": true,
+  "tt_insertion_ps": null,
+  "tt_spread_ps": null,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "UNKNOWN",
+  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+ },
+ "items": [
+  {
+   "severity": "FAIL",
+   "check": "io_place",
+   "message": "IO placement failed: [ERROR PPL-0111] 1 constraint(s) does not have available slots for the pins.",
+   "fix": "fix the pin plan / pin layers"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR PPL-0111] 1 constraint(s) does not have available slots for the pins.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=1",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
+   "fix": "read the remote log (textbook lint line 'clock_roots')"
+  }
+ ]
+}

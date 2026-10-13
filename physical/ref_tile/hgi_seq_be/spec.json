@@ -15,11 +15,11 @@
  "params": {},
  "sources": [
   "rtl/hbm_accel/generic/ot_hgi_seq_be.sv",
-  "rtl/hbm_accel/generic/ot_hgi_seq.sv"
+  "rtl/hbm_accel/generic/ot_hgi_seq_hd.sv"
  ],
  "outline": {
   "w": 88.56,
-  "h": 210.6
+  "h": 272.16
  },
  "pins": {
   "E": [
@@ -63,7 +63,7 @@
    "cpl_cycles",
    "cpl_tokx"
   ],
-  "N": [
+  "W": [
    "au_s3_v",
    "au_s3_be",
    "au_s3_tag",
@@ -88,9 +88,7 @@
    "be_s4_sp",
    "be_s4_x",
    "be_s4_j",
-   "be_s4_tag"
-  ],
-  "W": [
+   "be_s4_tag",
    "clk",
    "rst_n",
    "cfg_vocab",
@@ -145,7 +143,7 @@
    "tools/hgi_seq_conformance.py",
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
   ],
-  "purpose": "BE child of the hgi_seq split: record queue (4 entries), head mux + qh copies, indexed resolver / injector, main FSM, doorbell, completion, outst, dispatch payload; ~14.5k flops on its own root (<= 15,000; BE-Q / BE-D cut is the fallback)"
+  "purpose": "BE child of the hgi_seq split: record queue (4 entries), head mux + qh copies, indexed resolver / injector, main FSM, doorbell, completion, outst, dispatch payload; ~14.5k flops on its own root (<= 15,000; BE-Q / BE-D cut is the fallback). Full slot height: the 2,462 E-face dispatch pins need the 272 um face (2,835 M4 slots at 2 tracks; 211 um gave PPL-0111)"
  },
  "macros": [],
  "recipe": 2,

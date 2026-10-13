@@ -7,13 +7,13 @@
   0,
   0,
   88.56,
-  211.68
+  272.16
  ],
  "core": [
   2.16,
   2.16,
   86.4,
-  209.52
+  270.0
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -70,7 +70,7 @@
    "cpl_cycles",
    "cpl_tokx"
   ],
-  "N": [
+  "W": [
    "au_s3_v",
    "au_s3_be",
    "au_s3_tag",
@@ -95,9 +95,7 @@
    "be_s4_sp",
    "be_s4_x",
    "be_s4_j",
-   "be_s4_tag"
-  ],
-  "W": [
+   "be_s4_tag",
    "clk",
    "rst_n",
    "cfg_vocab",
@@ -137,7 +135,7 @@
  "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/ot_hgi_seq_be.sv",
-  "rtl/hbm_accel/generic/ot_hgi_seq.sv",
+  "rtl/hbm_accel/generic/ot_hgi_seq_hd.sv",
   "physical/ref_tile/hgi_seq_be/kit.env",
   "physical/ref_tile/hgi_seq_be/clock.sdc",
   "physical/ref_tile/hgi_seq_be/signoff.sdc",
