@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctnl_pipe_ref-pipe6-COMMIT",
+ "name": "s81hc_ctnl_pipe_ref-pipe6-76d8bf941",
  "block": "ot_s81_hc_ctnl",
  "ref_tile": true,
  "owner": "Codex:hc-ctnl",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/s81hc-physical-20261012",
-  "commit": "COMMIT"
+  "commit": "76d8bf941"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctnl_pipe_ref/s81hc_ctnl_pipe_ref-pipe6-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctnl_pipe_ref/s81hc_ctnl_pipe_ref-pipe6-76d8bf941"
   }
  ],
  "cycles_added": 0,
