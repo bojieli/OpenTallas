@@ -20,7 +20,10 @@ TILES  every closed view (Liberty ETM, OpenSTA write_timing_model) a contract ce
        contract cell's name, and (--alias) a same-family Qwen master (qfd_cst_n -> qfd_cst, qfd_crom_g -> qfd_crom_g_a):
        alias bindings are marked and are candidates only.  A cell with no view is listed as NOT AUDITABLE.
        Every view exported before the export-SDC fix (main abc334b14, 2026-10-13 02:42 PDT) is marked PROVISIONAL: its
-       ETM boundary numbers may be off by tens of ps; re-run after the view is re-exported.
+       ETM boundary numbers may be off by tens of ps; re-run after the view is re-exported.  A view is CORRECTED only by
+       its own record: abstract.json / export.json carries `reexport_1013` (re-export at the routed verdict's sequence)
+       or a `verdict` with `check` / `expect_ps` (exported by the fixed tool).  A view without that record stays
+       PROVISIONAL whatever its commit time (a later commit touching the directory is not a re-export).
 
 HOPS   the die case realised from the contract (netlist + placement) gives every die-level data net = one hop (relays
        and stations are instances, so a net never contains a register).  Qwen: --case DIR (elements.lef, place.tcl,
@@ -232,6 +235,26 @@ def last_commit_time(d):
     return int(t) if t else 0
 
 
+def export_corrected(view):
+    """-> 'reexport_1013' | 'verdict' | None: the view's own record of an export at the routed verdict's sequence."""
+    for n in ('abstract.json', 'export.json'):
+        f = ROOT / view / n
+        if not f.exists():
+            continue
+        try:
+            d = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        if not isinstance(d, dict):
+            continue
+        if d.get('reexport_1013'):
+            return 'reexport_1013'
+        v = d.get('verdict')
+        if isinstance(v, dict) and (v.get('check') or v.get('expect_ps')):
+            return 'verdict'
+    return None
+
+
 def resolve_views(contract, a):
     """cell -> dict(view, binding, instances, slots) for every non-die contract cell (plus census closed masters)."""
     cells = collections.OrderedDict()
@@ -304,7 +327,9 @@ def audit_view(view, a, fix_time):
     ins = json.loads(ij.read_text()) if ij.exists() else None
     rec = dict(view=view, setup_corner=sc, hold_corner=hc, libs={k: v.name for k, v in libs.items()})
     ct = last_commit_time(view)
-    rec['exported_before_export_sdc_fix'] = bool(ct and ct < fix_time)
+    rec['export_sdc_corrected'] = export_corrected(view)
+    rec['committed_before_export_sdc_fix'] = bool(ct and ct < fix_time)
+    rec['exported_before_export_sdc_fix'] = not rec['export_sdc_corrected']
     budget, thr = a.budget_frac * T_PS, a.hold_margin + a.skew
     buses = collections.OrderedDict()
 
@@ -599,8 +624,11 @@ def main(argv=None):
                          min_delay_ps=thr, hold_margin_ps=a.hold_margin, skew_ps=a.skew, period_ps=T_PS,
                          reading='tile share of the cycle: clock->pin <= 0.2 T after the insertion reference, pin->flop '
                                  '(setup at the pin + reference) <= 0.2 T; the die wire owns the remaining 0.6 T'),
-               status=('PROVISIONAL: %d of %d audited views were exported before the export-SDC fix (%s); their boundary '
-                       'numbers may be off by tens of ps' % (prov, len(audited), EXPORT_FIX)) if prov else 'views post export-SDC fix',
+               status=('PROVISIONAL: %d of %d audited views carry no corrected-export record (reexport_1013 / verdict check) '
+                       'after the export-SDC fix (%s); their boundary numbers may be off by tens of ps'
+                       % (prov, len(audited), EXPORT_FIX)) if prov else 'views post export-SDC fix',
+               export_sdc=dict(corrected=len(audited) - prov, pre_fix=prov,
+                               pre_fix_views=sorted({t['view'] for t in audited if t.get('exported_before_export_sdc_fix')})),
                counts=dict(contract_cells=len(tiles), audited=len(audited), not_auditable=len(tiles) - len(audited),
                            violating=len(viol), alias_bound=sum(1 for t in audited if (t['binding'] or '').startswith('ALIAS')),
                            by_flag=dict(collections.Counter(f for t in viol for f in t['flags'])),
@@ -632,6 +660,8 @@ def main(argv=None):
         L.append(f"| {r['rank']} | {r['cell']} | {r['instances']} | {r['setup_corner']} | {' '.join(r['flags'])} | {r['comb_bits']} | {r['out_over_bits']} | "
                  f"{fmt(r['worst_out_ps']).strip()} ({r['worst_out_bus']}) | {r['in_over_bits']} | {fmt(r['worst_in_ps']).strip()} ({r['worst_in_bus']}) | "
                  f"{fmt(r['L_min_ps']).strip()} | {fmt(r['H_max_ps']).strip()} | {fmt(r['min_delay_margin_ps']).strip()} | {r['binding']} |")
+    L += ['', f"Export-SDC: {out['export_sdc']['corrected']} audited cells on corrected views, {prov} still pre-fix"
+              + (': ' + ', '.join(out['export_sdc']['pre_fix_views']) if prov else '') + '.']
     L += ['', 'Not auditable (no closed view): ' + (', '.join(f"{t['cell']} x{t['instances']}" for t in out['not_auditable']) or 'none'), '']
     if hops:
         L += [f"## Hops over {a.reach:.0f} um: {hops['hops_over']} ({hops['bits_over']} bits; {hops['data_hops_over']} data, "
