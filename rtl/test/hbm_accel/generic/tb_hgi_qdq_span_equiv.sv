@@ -8,7 +8,7 @@ module tb_hgi_qdq_span_equiv;
         .wrq_cr(8'd0), .wrr(2056'd0), .wwq_cr(8'd0), .wwq_done(8'd0), .rg_gnt(1'b0), .wg_gnt(1'b0));
     ot_hgi_qdq_q #(.SPANPIPE(1)) staged (.clk(clk), .rst_n(rst_n), .rec(rec),
         .wrq_cr(8'd0), .wrr(2056'd0), .wwq_cr(8'd0), .wwq_done(8'd0), .rg_gnt(1'b0), .wg_gnt(1'b0));
-    reg [334:0] expected [0:4];
+    reg [334:0] expected [0:5];
     wire [334:0] ref_fields = {legacy.fld2, legacy.fast2, legacy.same2, legacy.aend2, legacy.oend2,
         legacy.ab2, legacy.ob2, legacy.n2, legacy.m2, legacy.ars2, legacy.ors2, legacy.hd2};
     wire [334:0] new_fields = {staged.fld2, staged.fast2, staged.same2, staged.aend2, staged.oend2,
@@ -16,10 +16,10 @@ module tb_hgi_qdq_span_equiv;
     integer cycles = 0, checked = 0, k;
     always @(negedge clk) begin
         if (cycles > 20) begin
-            if (new_fields !== expected[4]) $fatal(1, "SPAN_EQ mismatch cycle=%0d new=%h expected=%h", cycles, new_fields, expected[4]);
+            if (new_fields !== expected[5]) $fatal(1, "SPAN_EQ mismatch cycle=%0d new=%h expected=%h", cycles, new_fields, expected[5]);
             checked = checked + 1;
         end
-        for (k = 4; k > 0; k = k - 1) expected[k] = expected[k-1];
+        for (k = 5; k > 0; k = k - 1) expected[k] = expected[k-1];
         expected[0] = ref_fields;
         cycles = cycles + 1;
     end
@@ -40,6 +40,6 @@ module tb_hgi_qdq_span_equiv;
             rec = {21'(n), 21'(n), o, a, h, 1'b0};
         end
         repeat (15) @(posedge clk);
-        $display("PASS HGI_QDQ_SPAN_EQ checked=%0d latency_added=5", checked); $finish;
+        $display("PASS HGI_QDQ_SPAN_EQ checked=%0d latency_added=6", checked); $finish;
     end
 endmodule

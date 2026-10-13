@@ -16,7 +16,7 @@ hdc=(rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.
      rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv)
 src=("${hdc[@]}" physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv
      rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv rtl/hbm_accel/generic/ot_hgi_quant_decode.sv rtl/hbm_accel/generic/ot_hgi_quant_record.sv
-     rtl/lib/ot_rst_relay.sv rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv rtl/hbm_accel/generic/qw/ot_hgi_qdq_lq.sv rtl/hbm_accel/generic/qw/ot_hgi_qdq_q.sv
+     rtl/lib/ot_rst_relay.sv rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv rtl/hbm_accel/generic/qw/ot_hgi_qdq_lq.sv rtl/hbm_accel/generic/qw/ot_hgi_qdq_q.sv rtl/hbm_accel/generic/qw/ot_hgi_qdq_q_pin4.sv
      $B2/ot_vms_bank.sv $B2/ot_vms_hub.sv $B2/ot_vms_rstop.sv $B2/ot_vms_rcl.sv $B2/ot_vms_star.sv $B2/ot_vms_relay.sv $B2/ot_vms_slice.sv
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
      rtl/test/hbm_accel/generic/tb_hgi_qdq_q_tput.sv)

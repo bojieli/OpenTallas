@@ -12,14 +12,21 @@
 // MUT 1: the record header drops the A operand bit -> the unit faults (must FAIL);
 // MUT 2: engine lane-to-sector mutant (assembly takes sector j from lane j ^ 1) -> wrong words (must FAIL).
 module tb_hgi_qdq_q_tput;
- parameter integer MUT = 0, S = 1, SPANPIPE = 0;
+ parameter integer MUT = 0, S = 1, SPANPIPE = 0, PIN4 = 0;
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
  reg [682:0] rec = 0; wire [2:0] ret;
  reg [337:0] bq = 0; wire [273:0] br;
  wire [8*16-1:0] rq; wire [7:0] rq_cr, wq_cr, wq_done; wire [8*257-1:0] rr; wire [8*280-1:0] wq;
+ generate if (PIN4) begin : g_pin4
+ ot_hgi_qdq_q_pin4 #(.MUT(MUT == 2 ? 1 : 0), .SPANPIPE(SPANPIPE)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
+   .wrq(rq), .wrq_cr(rq_cr), .wrr_p0(rr[513:0]), .wrr_p1(rr[1027:514]), .wrr_p2(rr[1541:1028]), .wrr_p3(rr[2055:1542]), .wwq(wq), .wwq_cr(wq_cr), .wwq_done(wq_done),
+   .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1));
+ end else begin : g_core
  ot_hgi_qdq_q #(.MUT(MUT == 2 ? 1 : 0), .SPANPIPE(SPANPIPE)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
    .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(wq), .wwq_cr(wq_cr), .wwq_done(wq_done),
    .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1));
+ end endgenerate
+
  // S relay stages each way (the lanestation + chain flops between the client and the slice face)
  reg [8*16-1:0] rq_d [0:S]; reg [8*280-1:0] wq_d [0:S]; reg [7:0] rcr_d [0:S], wcr_d [0:S], wdn_d [0:S];
  reg [8*257-1:0] rr_d [0:S];

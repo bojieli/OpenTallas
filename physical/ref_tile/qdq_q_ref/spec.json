@@ -1,6 +1,6 @@
 {
  "name": "qdq_q_ref",
- "top": "ot_hgi_qdq_q",
+ "top": "ot_hgi_qdq_q_pin4",
  "kind": "cluster",
  "sources": [
   "rtl/lib/ot_rst_relay.sv",
@@ -9,6 +9,7 @@
   "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv",
   "rtl/hbm_accel/generic/qw/ot_hgi_qdq_lq.sv",
   "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q_pin4.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
  ],
  "params": {
@@ -26,10 +27,10 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
-   "inst": "u_od.g_tile[0].g_m0.u_m",
+   "inst": "u_qdq.u_od.g_tile[0].g_m0.u_m",
    "at": [
-    350.784,
-    367.2
+    259.2,
+    388.8
    ],
    "orient": "R0"
   }
@@ -38,64 +39,64 @@
   {
    "view": "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
    "count": 1,
-   "inst": "g_d3.u_dec.u_dxl",
+   "inst": "u_qdq.g_d3.u_dec.u_dxl",
    "at": [
-    388.8,
+    354.24,
     43.2
    ]
   },
   {
    "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
    "count": 1,
-   "inst": "g_d3.u_dec.u_dbq",
+   "inst": "u_qdq.g_d3.u_dec.u_dbq",
    "at": [
-    388.8,
+    354.24,
     216
    ]
   },
   {
    "view": "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq",
    "count": 1,
-   "inst": "g_d3.u_dec.u_daq",
+   "inst": "u_qdq.g_d3.u_dec.u_daq",
    "at": [
-    216,
+    198.72,
     216
    ]
   },
   {
    "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
    "count": 1,
-   "inst": "g_lq[0].u_lq",
+   "inst": "u_qdq.g_lq[0].u_lq",
    "at": [
-    43.2,
-    216
-   ]
-  },
-  {
-   "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
-   "count": 1,
-   "inst": "g_lq[1].u_lq",
-   "at": [
-    43.2,
+    25.92,
     43.2
    ]
   },
   {
    "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
    "count": 1,
-   "inst": "g_lq[2].u_lq",
+   "inst": "u_qdq.g_lq[1].u_lq",
    "at": [
-    216,
-    43.2
+    25.92,
+    181.44
    ]
   },
   {
    "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
    "count": 1,
-   "inst": "g_lq[3].u_lq",
+   "inst": "u_qdq.g_lq[2].u_lq",
    "at": [
-    43.2,
-    388.8
+    25.92,
+    319.68
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+   "count": 1,
+   "inst": "u_qdq.g_lq[3].u_lq",
+   "at": [
+    25.92,
+    457.92
    ]
   }
  ],
@@ -103,7 +104,10 @@
   "W": [
    "wrq",
    "wrq_cr",
-   "wrr",
+   "wrr_p0",
+   "wrr_p1",
+   "wrr_p2",
+   "wrr_p3",
    "rg_req",
    "rg_gnt"
   ],
@@ -131,10 +135,10 @@
  "job": {
   "owner": "Codex:hbm-qdq-physical",
   "branch": "codex/hbm-qdq-physical",
-  "tag": "q5",
+  "tag": "q6",
   "views_to": "physical/ref_tile/qdq_q_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_q_ref",
-  "purpose": "ot_hgi_qdq_q B2 quarter cluster via ref_tile: track-B decoder (dxl/dbq/daq hard tiles, CLOSED views) + 4 lane-pair response-FIFO leaf tiles (qdq_lq_ref, M5) + result FIFO on one 64x512 SRAM macro (2-entry registered prefetch; was a 64x512 flop array read 64:1), W face = slice read lanes, N face = slice write lanes, S = dispatch rec/ret, clock spine; span product split into 4-bit partials/pair/sum/product/end (+5 ingress edges), reset only lane valid, unconditional decode capture",
+  "purpose": "ot_hgi_qdq_q B2 quarter cluster via ref_tile: track-B decoder (dxl/dbq/daq hard tiles, CLOSED views) + 4 lane-pair response-FIFO leaf tiles (qdq_lq_ref, M5) + result FIFO on one 64x512 SRAM macro (2-entry registered prefetch; was a 64x512 flop array read 64:1), W face = slice read lanes, N face = slice write lanes, S = dispatch rec/ret, clock spine; span product split into 2-bit partials/pair/sum/product/end (+6 ingress edges), reset only lane valid, unconditional decode capture; physical pin4 wrapper separates each514-bit W lane pair adjacent to its FIFO tile, preserving2056-bit response mapping",
   "extra_paths": [
    "compiler",
    "results/rtl/tput_map_1011/ds_qdq_b2"
@@ -151,7 +155,7 @@
    },
    {
     "name": "production_qdq_m0",
-    "cmd": "S=3 MUT=0 QDQ_G=-GSPANPIPE=1 bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m0 && grep -q 'cycles=178 priced=168 S=3' {RUN}/qdq_m0/run.log",
+    "cmd": "S=3 MUT=0 QDQ_G='-GSPANPIPE=1 -GPIN4=1' bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m0 && grep -q 'cycles=179 priced=168 S=3' {RUN}/qdq_m0/run.log",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -160,7 +164,7 @@
    },
    {
     "name": "production_qdq_m1",
-    "cmd": "S=3 MUT=1 QDQ_G=-GSPANPIPE=1 bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m1",
+    "cmd": "S=3 MUT=1 QDQ_G='-GSPANPIPE=1 -GPIN4=1' bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -168,7 +172,7 @@
    },
    {
     "name": "production_qdq_m2",
-    "cmd": "S=3 MUT=2 QDQ_G=-GSPANPIPE=1 bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m2",
+    "cmd": "S=3 MUT=2 QDQ_G='-GSPANPIPE=1 -GPIN4=1' bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m2",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -181,8 +185,27 @@
  ],
  "hard_define": "OT_HARD_CHILDREN",
  "outline": {
-  "w": 544.32,
-  "h": 535.68
+  "w": 501.12,
+  "h": 596.16
+ },
+ "child_lattice_um": 8.64,
+ "pin_ranges": {
+  "wrr_p0": [
+   45.2,
+   155.68
+  ],
+  "wrr_p1": [
+   183.44,
+   293.92
+  ],
+  "wrr_p2": [
+   321.68,
+   432.16
+  ],
+  "wrr_p3": [
+   459.92,
+   570.4
+  ]
  },
  "inter": []
 }
