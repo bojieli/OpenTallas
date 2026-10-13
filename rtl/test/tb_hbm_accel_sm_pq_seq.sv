@@ -92,7 +92,11 @@ module tb_hbm_accel_sm_pq_seq;
     // the adapter contract (set at the negedge with the stimulus): awake while an x beat, a start or an op is in flight
     always @(negedge clk) cg_wake <= !rst_n || xw_en || start || (n_started > ndone) || d_valid;
     always @(posedge clk) if (rst_n) begin
+`ifdef OT_SMH_PRODUCTION_SHAPE
+        if (!dut_g.g_c[0].g_p[0].g_tw.u_t.u.u_cgt.en) cg_gated <= cg_gated + 1;
+`else
         if (!dut_g.g_c[0].g_p[0].g_tp.u_t.u_cgt.en) cg_gated <= cg_gated + 1;
+`endif
         if (g_start_ready !== start_ready || g_busy !== busy || g_d_ready !== d_ready || g_req_v !== req_v ||
             (req_v && (g_req_addr !== req_addr || g_req_tag !== req_tag)) || g_rv !== rv ||
             (rv && (g_rrow !== rrow || g_rdata !== rdata)) || g_fault !== fault || g_arrive !== arrive ||
@@ -103,12 +107,17 @@ module tb_hbm_accel_sm_pq_seq;
         end
     end
 `endif
-`ifdef OT_SMH_FC_HIER
-`define OT_DP dut.g_fp.u_fc.u_is  // hbm-smh/fc: issue / line stream live in front_c's fc_is child
+`ifdef OT_SMH_PRODUCTION_SHAPE
+`define OT_DF dut.g_fd
 `else
-`define OT_DP dut.g_fp.u_fc      // the bench configuration (RMAX 256) instantiates the parameterised pieces; (m3) issue / line stream in the centre strip
+`define OT_DF dut.g_fp
 `endif
-`define OT_DCROW dut.g_fp.u_fs.al[RW-1:0]
+`ifdef OT_SMH_FC_HIER
+`define OT_DP `OT_DF.u_fc.u_is  // hbm-smh/fc: issue / line stream live in front_c's fc_is child
+`else
+`define OT_DP `OT_DF.u_fc      // the bench configuration (RMAX 256) instantiates the parameterised pieces; (m3) issue / line stream in the centre strip
+`endif
+`define OT_DCROW `OT_DF.u_fs.al[RW-1:0]
 `else
     ot_hbm_accel_sm_pq #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
                          .MAX_OUT(512), .HAZ(HAZ), .G1ASB(G1ASB)) dut (
