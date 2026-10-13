@@ -25,7 +25,7 @@ elif [ "${STACK:-p}" = k ]; then
   # STACK=k (el1013-qwen-kvstrips): re-cut H engines + the aggregator strip built from its die masters (qkd_astk_pv /
   # _ep / _ex / _zn / _ctl, rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv) in the die wiring of
   # rtl/test/qwen_kv_die/ot_qwen_nearhbm_attn_stack_k.sv.  env AKMUT=1..4: one leaf mutant; AKRL: relay stations a net.
-  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_k.sv $W/test/qwen_kv_die/ot_qwen_nearhbm_attn_stack_k.sv $W/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv $W/hdc/nearhbm/ot_qkh_subtiles.sv $P/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"
+  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_k.sv $W/test/qwen_kv_die/ot_qwen_nearhbm_attn_stack_k.sv $W/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv $W/hdc/nearhbm/ot_qkh_subtiles.sv"
   DEFS="+define+KVD_LFB=4 +define+KVD_ND=1 +define+KVD_AKMUT=${AKMUT:-0} +define+KVD_AKRL=${AKRL:-1} ${HSUB:++define+KVD_HSUB}"
   mkdir -p $OUT && awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > $OUT/ot_hdc_lzc32_x.sv
   STK="$STK $OUT/ot_hdc_lzc32_x.sv"

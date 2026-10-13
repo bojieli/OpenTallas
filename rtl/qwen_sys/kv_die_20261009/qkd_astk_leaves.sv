@@ -14,8 +14,8 @@
 //                 streams that run cell to cell through registered lanes (4 up, 4 down, lane = head).  The level-7
 //                 cells put the result on a 256-b lane as the hub's P.V beats, in beat order (a token walks the
 //                 heads).  A cut of the strip carries 2 x (8 x 134 + 263) = 2,670 b of P.V traffic.
-//   qkd_astk_ep   one row engine's stack slice: the engine port (si / so of qkd_ectl), its 512 x 128 score SRAM, its
-//                 64 x 512 e SRAM, its copy of M, a station of the stack's command chain (start, T, q beats, M words,
+//   qkd_astk_ep   one row engine's stack slice: the engine port (si / so of qkd_ectl), its score memory and e-row
+//                 memory (4 x ot_sram_1r1w_128x256, 94.8 um wide: a column leaf), its copy of M, a station of the stack's command chain (start, T, q beats, M words,
 //                 K-pass done), of the return chain (score count, running maximum, fault), of the chunk chain and of
 //                 the e-row chain.  The golden's 8-write x 8-read score memory does not exist as a macro, and the
 //                 engines' K pass (positions j = engine) and V pass (groups gam = engine mod 8) slice the positions
@@ -29,7 +29,7 @@
 //                 sums of a block; a chunk at or past T is +0, as in the golden.
 //   qkd_astk_ctl  the stack's port: q / start / T in, layer word out, the hub words (lmax, Z block sums, Z done, P.V
 //                 beats), K-pass completion count, the group count for the tree cells.
-// The tree cells' lanes cross qkd_astk_ep (a full-width leaf: the SRAMs are 171 um wide) and qkd_astk_ex through
+// The tree cells' lanes cross qkd_astk_ep and qkd_astk_ex (leaves of the same 108 um column) through
 // registered feed-through lanes (qkd_astk_lanes), so no hop exceeds a leaf height.
 //
 // EXACTNESS.  The P.V tree is the golden's tree term for term: the leaves are the engines' level-3 group nodes in
@@ -399,11 +399,11 @@ endmodule
 // order j = 0..7 (the golden's sequential chunk sum, element by element); the chunk's eight bf16 e ride with it and
 // come back down the return chain to the slice that owns the group (64 x 512 e SRAM, one row a chunk).
 // so [424:0] in / si [633:0] out   the engine's control tile (qkd_ectl so / si, bit for bit)
-// qi [571:0] in / qo out           command chain {M word 36 = {data 32, hh 2, g, v}, kdone 2, q_data 512, q_beat 6,
-//                                   q_valid, T 14, start}
+// qi [571:0] in                    command bus (a tap) {M word 36 = {data 32, hh 2, g, v}, kdone 2, q_data 512,
+//                                   q_beat 6, q_valid, T 14, start}
 // xi [266:0] in / xo out           return chain {lmax 256, any 2, score count g1 4, g0 4, fault}
 // zi [650:0] in / zo out           chunk chain {e row 512, sum 128, gam 4, k 4, g, token, v} (slice j - 1 -> j)
-// ri [521:0] in / ro out           e rows {row 512, gam 4, k 4, g, v} (slice 7 -> 0; slice 7's ri is its own zo)
+// ri [521:0] in                    e-row bus (a tap) {row 512, gam 4, k 4, g, v}: slice 7's zo, relayed down the strip
 // xa [263:0] out / xe [135:0] in   the slice's four exp leaves qkd_astk_ex (head h: xa[66 h +: 66], xe[34 h +: 34])
 // cr in                            node credit (from the engine's level-4 tree cell)
 // The e read is the engine's one-cycle contract: so[12:0] drives the e SRAM's read port, its output (one of 8 slots)
@@ -416,24 +416,18 @@ module qkd_astk_ep (
     input  wire [424:0]  so,
     output wire [633:0]  si,
     input  wire [571:0]  qi,
-    output wire [571:0]  qo,
     input  wire [266:0]  xi,
     output reg  [266:0]  xo,
     input  wire [650:0]  zi,
     output reg  [650:0]  zo,
     input  wire [521:0]  ri,
-    output wire [521:0]  ro,
     output reg  [263:0]  xa,
     input  wire [135:0]  xe,
     input  wire          cr,
-    input  wire [535:0]  ui0,  output wire [535:0] uo0,  input  wire [535:0] di0,  output wire [535:0] do0,
-    input  wire [262:0]  pi0,  output wire [262:0] po0,  input  wire [5:0]   ci0,  output wire [5:0]   co0,
-    input  wire          tui0, output wire         tuo0, input  wire         tdi0, output wire         tdo0,
-    input  wire          fi0,  output wire         fo0,
-    input  wire [535:0]  ui1,  output wire [535:0] uo1,  input  wire [535:0] di1,  output wire [535:0] do1,
-    input  wire [262:0]  pi1,  output wire [262:0] po1,  input  wire [5:0]   ci1,  output wire [5:0]   co1,
-    input  wire          tui1, output wire         tuo1, input  wire         tdi1, output wire         tdo1,
-    input  wire          fi1,  output wire         fo1
+    input  wire [535:0]  ui,   output wire [535:0] uo,   input  wire [535:0] di,   output wire [535:0] do_,
+    input  wire [262:0]  pi,   output wire [262:0] po,   input  wire [5:0]   ci,   output wire [5:0]   co,
+    input  wire          tui,  output wire         tuo,  input  wire         tdi,  output wire         tdo,
+    input  wire          fi,   output wire         fo
 );
     localparam integer ADD_LAT = 7, SFU_LA = 7, SFU_LM = 7;
     localparam integer XD = 7 * SFU_LM + 8 * SFU_LA + 4;
@@ -441,10 +435,8 @@ module qkd_astk_ep (
     localparam integer DT = 2 + XL + 1;                // sequence word -> SRAM -> xa -> ex -> the xe pin flop
     (* keep *) reg rn_q;
     always @(posedge ck) rn_q <= rst_n;
-    (* keep_hierarchy *) qkd_astk_lanes u_l0 (.ck(ck), .rn(rn_q), .ui(ui0), .uo(uo0), .di(di0), .do_(do0), .pi(pi0), .po(po0),
-        .ci(ci0), .co(co0), .tui(tui0), .tuo(tuo0), .tdi(tdi0), .tdo(tdo0), .fi(fi0), .fo(fo0));
-    (* keep_hierarchy *) qkd_astk_lanes u_l1 (.ck(ck), .rn(rn_q), .ui(ui1), .uo(uo1), .di(di1), .do_(do1), .pi(pi1), .po(po1),
-        .ci(ci1), .co(co1), .tui(tui1), .tuo(tuo1), .tdi(tdi1), .tdo(tdo1), .fi(fi1), .fo(fo1));
+    (* keep_hierarchy *) qkd_astk_lanes u_l (.ck(ck), .rn(rn_q), .ui(ui), .uo(uo), .di(di), .do_(do_), .pi(pi), .po(po),
+        .ci(ci), .co(co), .tui(tui), .tuo(tuo), .tdi(tdi), .tdo(tdo), .fi(fi), .fo(fo));
     (* keep *) reg [4:0] sq_q;
     always @(posedge ck) sq_q <= sq;
     wire [1:0] S = sq_q[4:3];
@@ -469,7 +461,6 @@ module qkd_astk_ep (
         qq[14:1] <= qi[14:1]; qq[533:16] <= qi[533:16]; qq[571:537] <= qi[571:537]; xq[266:11] <= xi[266:11];
         zq[650:2] <= zi[650:2]; rq[521:1] <= ri[521:1]; eq <= xe;
     end
-    assign qo = qq; assign ro = rq;
     wire         start = qq[0];
     wire [13:0]  T = qq[14:1];
     wire [1:0]   kdone = qq[535:534];
@@ -499,10 +490,20 @@ module qkd_astk_ep (
     qkd_astk_seq u_sb (.ck(ck), .rn(rn_q), .start(start), .trig(trig_b), .T(T), .S(S), .v(b_v), .g(b_g), .gam(b_gam), .k(b_k),
                        .klst(b_kl), .busy(b_busy), .sg_o(b_sg));
     // ---- score memory (this engine's positions j = Q), the read towards the exp datapath -------------------------------
-    wire [127:0] sc_rd;
-    ot_sram_1r1w_512x128_m4_r2c2 u_sc (.clk(ck), .r_ce_in(a_v), .r_addr_in({a_g, a_k, a_gam}), .rd_out(sc_rd),
-        .w_ce_in(sc_v), .w_addr_in(sc_a[11:3]), .wd_in(sc_d), .w_mask_in({128{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    // two 128 x 256 macros (one a pass g), two entries a word: address {g, k, gam} = {macro, word 7, half}
+    wire [8:0]   sc_wa = sc_a[11:3];
+    wire [8:0]   sc_ra = {a_g, a_k, a_gam};
+    wire [255:0] sc_q0, sc_q1;
+    reg  [1:0]   sc_rs;                                // {g, half} of the read
+    always @(posedge ck) sc_rs <= {sc_ra[8], sc_ra[0]};
+    ot_sram_1r1w_128x256_m1_r2c2 u_sc0 (.clk(ck), .r_ce_in(a_v && !sc_ra[8]), .r_addr_in(sc_ra[7:1]), .rd_out(sc_q0),
+        .w_ce_in(sc_v && !sc_wa[8]), .w_addr_in(sc_wa[7:1]), .wd_in({sc_d, sc_d}),
+        .w_mask_in({{128{sc_wa[0]}}, {128{!sc_wa[0]}}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    ot_sram_1r1w_128x256_m1_r2c2 u_sc1 (.clk(ck), .r_ce_in(a_v && sc_ra[8]), .r_addr_in(sc_ra[7:1]), .rd_out(sc_q1),
+        .w_ce_in(sc_v && sc_wa[8]), .w_addr_in(sc_wa[7:1]), .wd_in({sc_d, sc_d}),
+        .w_mask_in({{128{sc_wa[0]}}, {128{!sc_wa[0]}}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    wire [255:0] sc_qw = sc_rs[1] ? sc_q1 : sc_q0;
+    wire [127:0] sc_rd = sc_rs[0] ? sc_qw[255:128] : sc_qw[127:0];
     reg          a_v1, a_g1, a_p1;
     wire         a_pos = {1'b0, a_k, S, a_gam, Q} < T;
     always @(posedge ck or negedge rn_q)
@@ -549,9 +550,14 @@ module qkd_astk_ep (
     wire [511:0] e_row;
     reg  [2:0]   jq;
     always @(posedge ck) jq <= so[3:1];
-    ot_sram_1r1w_64x512_m1_r2c2 u_e (.clk(ck), .r_ce_in(so[0]), .r_addr_in({so[12], so[11:8], so[7]}), .rd_out(e_row),
-        .w_ce_in(r_me), .w_addr_in({rq[1], rq[5:2], rq[9]} + ((`KVD_AKMUT == 2) ? 6'd1 : 6'd0)), .wd_in(rq[521:10]),
-        .w_mask_in({512{1'b1}}), .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    wire [6:0]   e_wa = {1'b0, rq[1], rq[5:2], rq[9]} + ((`KVD_AKMUT == 2) ? 7'd1 : 7'd0);
+    wire [6:0]   e_ra = {1'b0, so[12], so[11:8], so[7]};
+    ot_sram_1r1w_128x256_m1_r2c2 u_e0 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[255:0]),
+        .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[265:10]), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    ot_sram_1r1w_128x256_m1_r2c2 u_e1 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[511:256]),
+        .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[521:266]), .w_mask_in({256{1'b1}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     wire [63:0]  e_rd = (jq == 3'd0) ? e_row[0 +: 64] : (jq == 3'd1) ? e_row[64 +: 64] : (jq == 3'd2) ? e_row[128 +: 64] :
                         (jq == 3'd3) ? e_row[192 +: 64] : (jq == 3'd4) ? e_row[256 +: 64] : (jq == 3'd5) ? e_row[320 +: 64] :
                         (jq == 3'd6) ? e_row[384 +: 64] : e_row[448 +: 64];

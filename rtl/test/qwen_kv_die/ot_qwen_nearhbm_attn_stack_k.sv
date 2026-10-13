@@ -6,8 +6,8 @@
 //   8 x ot_qwen_nearhbm_row_engine_h (re-cut H, unchanged), engine 2 r on the W and 2 r + 1 on the E of row r;
 //   per row and column (X / Y): 8 qkd_astk_pv -- at every head a level-4 cell (A) and above it the row's second cell
 //     (B: row 0 level 5 of rows 0 + 1, row 1 level 6, row 2 level 5 of rows 2 + 3, row 3 level 7);
-//   per engine a qkd_astk_ep + 4 x qkd_astk_ex (two a column) between heads 1 and 2 (the lanes cross them);
-//   4 x qkd_astk_zn and the
+//   per engine, in its column between heads 1 and 2: ex, ex, qkd_astk_ep, ex, ex (the column's lanes cross them);
+//   the command bus and the e-row bus run on relay stations with a tap a slice; 4 x qkd_astk_zn and the
 //   qkd_astk_ctl behind slice 7.
 // RL registered relay stations stand on every die net that is not an abutment (the design does not depend on RL: run
 // the layer bench at RL 1 and RL 3).  Same ports as ot_qwen_nearhbm_attn_stack_h; HD 128, R 8, LFB 4 only.
@@ -65,7 +65,7 @@ module ot_qwen_nearhbm_attn_stack_k #(
     output wire [15:0]       ev
 );
     localparam integer RL = `KVD_AKRL;
-    localparam integer NS = 56;                    // lane stations a column: 4 rows x (8 tree cells + 2 x (ep + 2 ex))
+    localparam integer NS = 52;                    // lane stations a column: 4 rows x (8 tree cells + ep + 4 ex)
     generate if (HD != 128 || R != 8 || LFB != 4 || ND != 1) begin : g_bad
         ot_qwen_nearhbm_attn_stack_k_needs_HD128_R8_LFB4_ND1 u_trap ();
     end endgenerate
@@ -90,10 +90,10 @@ module ot_qwen_nearhbm_attn_stack_k #(
     wire [424:0]  so_w [0:7];
     wire [633:0]  si_w [0:7];
     wire [4095:0] nb_w [0:7];
-    wire [571:0]  qi_w [0:8];                      // qi_w[8] = the port's; slice j takes qi_w[j + 1]
+    wire [571:0]  qi_w [0:8];                      // the command bus: qi_w[8] at the port, one relay hop a slice downwards
     wire [266:0]  xo_w [0:8];                      // xo_w[0] = 0; slice j takes xo_w[j], gives xo_w[j + 1]
     wire [650:0]  zo_w [0:8];
-    wire [521:0]  ro_w [0:8];                      // slice j takes ro_w[j + 1]
+    wire [521:0]  ro_w [0:8];                      // the e-row bus: ro_w[8] = slice 7's zo, one relay hop a slice downwards
     wire [7:0]    cr_w;
     assign xo_w[0] = 267'd0; assign zo_w[0] = 651'd0;
     ot_qkd_rly #(.W(572), .D(RL)) u_rq8 (.clk(clk), .rst_n(rst_n), .d(cq_o), .q(qi_w[8]));
@@ -117,7 +117,8 @@ module ot_qwen_nearhbm_attn_stack_k #(
     ot_qkd_rly #(.W(263), .D(RL)) u_rpy (.clk(clk), .rst_n(rst_n), .d(P[1][NS]), .q(py));
     ot_qkd_rly #(.W(2), .D(RL)) u_rf (.clk(clk), .rst_n(rst_n), .d({F[1][NS], F[0][NS]}), .q({cfy, cfx}));
     generate for (e = 0; e < 8; e = e + 1) begin : g_e
-        localparam integer ST = 14 * (e / 2) + 4 + 3 * (e % 2);       // the slice's ep station; its ex leaves are ST + 1, ST + 2
+        localparam integer EC = e % 2;                                // the engine's column
+        localparam integer ST = 13 * (e / 2) + 6;                     // its ep station; ex leaves at ST - 2, ST - 1, ST + 1, ST + 2
         wire rv, rvv, rg;
         wire [12:0] rt;
         ot_qwen_nearhbm_row_engine_h #(.HD(HD), .S(S), .R(R), .E(e), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ),
@@ -131,34 +132,29 @@ module ot_qwen_nearhbm_attn_stack_k #(
             .nb_g(so_w[e][417]), .nb_gam(so_w[e][421:418]), .nb_data(nb_w[e]), .nb_cr(si_w[e][633]),
             .k_done(so_w[e][422]), .v_done(so_w[e][423]), .fault(so_w[e][424]), .ev_k_first(), .ev_v_first());
         assign req_valid[e] = rv; assign req_v[e] = rvv; assign req_g[e] = rg; assign req_t[13*e +: 13] = rt;
-        wire [571:0] qo_e;
         wire [266:0] xo_e, xi_e;
         wire [650:0] zo_e, zi_e;
-        wire [521:0] ro_e, ri_e;
         wire [263:0] xa;
         wire [135:0] xe;
         ot_qkd_rly #(.W(267), .D(RL)) u_rx (.clk(clk), .rst_n(rst_n), .d(xo_w[e]), .q(xi_e));
         ot_qkd_rly #(.W(651), .D((e % 2) ? 0 : RL)) u_rz (.clk(clk), .rst_n(rst_n), .d(zo_w[e]), .q(zi_e));
-        ot_qkd_rly #(.W(522), .D(RL)) u_rr (.clk(clk), .rst_n(rst_n), .d(ro_w[e + 1]), .q(ri_e));
-        qkd_astk_ep u_ep (.ck(clk), .rst_n(rst_n), .sq({SS, 3'(e)}), .so(so_w[e]), .si(si_w[e]), .qi(qi_w[e + 1]), .qo(qo_e),
-            .xi(xi_e), .xo(xo_e), .zi(zi_e), .zo(zo_e), .ri(ri_e), .ro(ro_e), .xa(xa), .xe(xe), .cr(cr_w[e]),
-            .ui0(U[0][ST]), .uo0(U[0][ST+1]), .di0(D[0][ST+1]), .do0(D[0][ST]), .pi0(P[0][ST]), .po0(P[0][ST+1]),
-            .ci0(C[0][ST+1]), .co0(C[0][ST]), .tui0(TU[0][ST]), .tuo0(TU[0][ST+1]), .tdi0(TD[0][ST+1]), .tdo0(TD[0][ST]),
-            .fi0(F[0][ST]), .fo0(F[0][ST+1]),
-            .ui1(U[1][ST]), .uo1(U[1][ST+1]), .di1(D[1][ST+1]), .do1(D[1][ST]), .pi1(P[1][ST]), .po1(P[1][ST+1]),
-            .ci1(C[1][ST+1]), .co1(C[1][ST]), .tui1(TU[1][ST]), .tuo1(TU[1][ST+1]), .tdi1(TD[1][ST+1]), .tdo1(TD[1][ST]),
-            .fi1(F[1][ST]), .fo1(F[1][ST+1]));
+        ot_qkd_rly #(.W(572), .D(RL)) u_rq (.clk(clk), .rst_n(rst_n), .d(qi_w[e + 1]), .q(qi_w[e]));
+        ot_qkd_rly #(.W(522), .D(RL)) u_rr (.clk(clk), .rst_n(rst_n), .d(ro_w[e + 1]), .q(ro_w[e]));
+        qkd_astk_ep u_ep (.ck(clk), .rst_n(rst_n), .sq({SS, 3'(e)}), .so(so_w[e]), .si(si_w[e]), .qi(qi_w[e]),
+            .xi(xi_e), .xo(xo_e), .zi(zi_e), .zo(zo_e), .ri(ro_w[e]), .xa(xa), .xe(xe), .cr(cr_w[e]),
+            .ui(U[EC][ST]), .uo(U[EC][ST+1]), .di(D[EC][ST+1]), .do_(D[EC][ST]), .pi(P[EC][ST]), .po(P[EC][ST+1]),
+            .ci(C[EC][ST+1]), .co(C[EC][ST]), .tui(TU[EC][ST]), .tuo(TU[EC][ST+1]), .tdi(TD[EC][ST+1]), .tdo(TD[EC][ST]),
+            .fi(F[EC][ST]), .fo(F[EC][ST+1]));
         genvar xh;
-        for (xh = 0; xh < 4; xh = xh + 1) begin : g_x                 // heads 0 / 2 in column 0, heads 1 / 3 in column 1
-            localparam integer XC = xh % 2;
-            localparam integer XS = ST + 1 + xh / 2;
+        for (xh = 0; xh < 4; xh = xh + 1) begin : g_x
+            localparam integer XS = (xh < 2) ? ST - 2 + xh : ST - 1 + xh;
             qkd_astk_ex u_ex (.ck(clk), .rst_n(rst_n), .xa(xa[66*xh +: 66]), .xe(xe[34*xh +: 34]),
-                .ui(U[XC][XS]), .uo(U[XC][XS+1]), .di(D[XC][XS+1]), .do_(D[XC][XS]), .pi(P[XC][XS]), .po(P[XC][XS+1]),
-                .ci(C[XC][XS+1]), .co(C[XC][XS]), .tui(TU[XC][XS]), .tuo(TU[XC][XS+1]), .tdi(TD[XC][XS+1]), .tdo(TD[XC][XS]),
-                .fi(F[XC][XS]), .fo(F[XC][XS+1]));
+                .ui(U[EC][XS]), .uo(U[EC][XS+1]), .di(D[EC][XS+1]), .do_(D[EC][XS]), .pi(P[EC][XS]), .po(P[EC][XS+1]),
+                .ci(C[EC][XS+1]), .co(C[EC][XS]), .tui(TU[EC][XS]), .tuo(TU[EC][XS+1]), .tdi(TD[EC][XS+1]), .tdo(TD[EC][XS]),
+                .fi(F[EC][XS]), .fo(F[EC][XS+1]));
         end
-        ot_qkd_rly #(.W(572), .D(RL)) u_rq (.clk(clk), .rst_n(rst_n), .d(qo_e), .q(qi_w[e]));
-        assign xo_w[e + 1] = xo_e; assign zo_w[e + 1] = zo_e; assign ro_w[e] = ro_e;
+        // the other column's stations beside this slice: the other engine of the row fills them
+        assign xo_w[e + 1] = xo_e; assign zo_w[e + 1] = zo_e;
     end endgenerate
     // ---- the tree cells ----------------------------------------------------------------------------------------------------
     wire [1:0] cra_w [0:3];                        // [row][column 0 only is used]
@@ -169,7 +165,7 @@ module ot_qwen_nearhbm_attn_stack_k #(
             wire [9:0] ndo_w [0:3];
             wire [3:0] cra_h, crb_h;
             for (hp = 0; hp < 4; hp = hp + 1) begin : g_h
-                localparam integer ST = 14 * r + ((hp < 2) ? 2 * hp : 10 + 2 * (hp - 2));
+                localparam integer ST = 13 * r + ((hp < 2) ? 2 * hp : 9 + 2 * (hp - 2));
                 localparam integer FAR = (hp == 0 || hp == 3) ? 1 : 0;
                 localparam integer NEAR = (hp == 0) ? 1 : 2;            // the cell the far one takes its control from
                 // level-4 cell: the head's 16 kk slots of this column, kk = 4 (m / 2) + 2 c + m % 2
