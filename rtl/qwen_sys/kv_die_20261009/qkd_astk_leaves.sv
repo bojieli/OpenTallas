@@ -159,30 +159,34 @@ module qkd_astk_pv (
     reg  [2047:0] SA, SB;                              // [512 bb + 32 s +: 32]
     reg  [4:0]   ca, cb;                               // kk slots held (0..16)
     reg          ena, enb;                             // level 4: the store follows the head pins
+    (* keep *) reg [7:0] ena_c, enb_c;                 // the same, one copy a 256 flops of the store
+    (* keep *) reg [47:0] jn_c;                        // jn[2:0], one copy a 32 b of the two operands
     reg          l7b;                                  // level 7: round 0 is in, the stream now fills b
     reg  [2:0]   it;                                   // item: {g, round} (level 7: g)
     reg  [3:0]   jn;                                   // next sub-beat (kk slots 2 jn, 2 jn + 1)
     reg          pace, run, f, ocr;
+    reg  [6:0]   stl;                                  // restart: 127 cycles in which the lanes drain (nothing is taken)
+    wire         quiet = stl == 7'd0;
     reg  [1:0]   tok;
     reg  [5:0]   gap;
     wire         rho = it[0];
     wire         gi  = l7 ? it[0] : it[1];
     wire         pa  = l7 ? (gmax != 5'd0) : (gmax > {1'b0, rho, ath});
     wire         pb  = l7 ? (gmax > 5'd8)  : (gmax > {1'b0, rho, bth});
-    wire         active = run && (l7 ? !it[1] : !it[2]);
-    wire         awv = !l4 && sa[0] && !(l7 && l7b);
-    wire         bwv = !l4 && (l7 ? (sa[0] && l7b) : sb[0]);
+    wire         active = run && quiet && (l7 ? !it[1] : !it[2]);
+    wire         awv = !l4 && sa[0] && !(l7 && l7b) && quiet;
+    wire         bwv = !l4 && (l7 ? (sa[0] && l7b) : sb[0]) && quiet;
     wire [SW-1:0] bws = l7 ? sa : sb;
-    wire         afz = l4 && ena && ncq[0] && ncq[4:1] == (far ? 4'd1 : 4'd2);     // beat 3 is being shifted in
-    wire         bfz = l4 && enb && ndq[0] && ndq[4:1] == (far ? 4'd1 : 4'd2);
+    wire         afz = quiet && l4 && ena && ncq[0] && ncq[4:1] == (far ? 4'd1 : 4'd2);     // beat 3 is being shifted in
+    wire         bfz = quiet && l4 && enb && ndq[0] && ndq[4:1] == (far ? 4'd1 : 4'd2);
     wire [4:0]   need = {jn[2:0] + 4'd1, 1'b0};
     wire         a_ok = !pa || ca >= need;
     wire         b_ok = !pb || cb >= need;
     wire         full = (!pa || ca == 5'd16) && (!pb || cb == 5'd16);
-    wire         tok_in = tdir ? td_q : tu_q;
+    wire         tok_in = (tdir ? td_q : tu_q) && quiet;
     wire         go7 = full && ((h == 2'd0) ? gap == 6'd0 : tok != 2'd0);
     wire         issue = active && (l7 ? (jn != 4'd0 || go7) : ((pa || pb) && a_ok && b_ok && !pace && (ocr || jn != 4'd0)));
-    wire         cr_in = (ym == 2'd1) ? kcu : (ym == 2'd2) ? kcd : lci_q;
+    wire         cr_in = ((ym == 2'd1) ? kcu : (ym == 2'd2) ? kcd : lci_q) && quiet;
     // the operand stores are free again: at the item's last sub-beat; level 7 also when round 0 is in and round 1 may come
     wire         cr_a = (last && pa) || (l7 && awv && ca == 5'd15 && pb);
     wire         cr_b = last && pb && !l7;
@@ -192,8 +196,12 @@ module qkd_astk_pv (
     integer s_, b_;
     always @(posedge ck) begin
         if (l4) begin
-            if (ena) SA <= {wa, SA[2047:512]};
-            if (enb) SB <= {wb, SB[2047:512]};
+            for (s_ = 0; s_ < 8; s_ = s_ + 1) begin        // SA <= {wa, SA[2047:512]} in 8 slices of 64 b a beat
+                if (ena_c[s_]) for (b_ = 0; b_ < 4; b_ = b_ + 1)
+                    SA[512*b_ + 64*s_ +: 64] <= (b_ == 3) ? wa[64*s_ +: 64] : SA[512*(b_ + 1) + 64*s_ +: 64];
+                if (enb_c[s_]) for (b_ = 0; b_ < 4; b_ = b_ + 1)
+                    SB[512*b_ + 64*s_ +: 64] <= (b_ == 3) ? wb[64*s_ +: 64] : SB[512*(b_ + 1) + 64*s_ +: 64];
+            end
         end else begin
             for (s_ = 0; s_ < 16; s_ = s_ + 1) for (b_ = 0; b_ < 4; b_ = b_ + 1) begin
                 if (awv && sa[4:1] == s_) SA[512*b_ + 32*s_ +: 32] <= sa[6 + 32*b_ +: 32];
@@ -204,7 +212,8 @@ module qkd_astk_pv (
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin
             ca <= 5'd0; cb <= 5'd0; ena <= 1'b1; enb <= 1'b1; l7b <= 1'b0; it <= 3'd0; jn <= 4'd0; pace <= 1'b0; run <= 1'b0;
-            f <= 1'b0; tok <= 2'd0; gap <= 6'd0; cra <= 1'b0; crb <= 1'b0; tuo <= 1'b0; tdo <= 1'b0; fo <= 1'b0; ocr <= 1'b1; lco <= 1'b0;
+            ena_c <= 8'hff; enb_c <= 8'hff; jn_c <= 48'd0;
+            f <= 1'b0; tok <= 2'd0; gap <= 6'd0; cra <= 1'b0; crb <= 1'b0; tuo <= 1'b0; tdo <= 1'b0; fo <= 1'b0; ocr <= 1'b1; lco <= 1'b0; stl <= 7'd0;
         end else begin
             cra <= 1'b0; crb <= 1'b0; pace <= 1'b0;
             lco <= !l4 && ((am == 2'd0 && cr_a) || (bm == 2'd0 && cr_b));
@@ -215,9 +224,10 @@ module qkd_astk_pv (
             fo <= fi_q | f;
             if (gap != 6'd0) gap <= gap - 6'd1;
             if (l7 && tok_in) tok <= tok + 2'd1;
-            if (afz) begin ena <= 1'b0; ca <= 5'd16; end
-            if (bfz) begin enb <= 1'b0; cb <= 5'd16; end
-            if (l4 && ((ncq[0] && !ena && ncq[4:1] == 4'd0) || (ndq[0] && !enb && ndq[4:1] == 4'd0))) f <= 1'b1;   // a node over a held one
+            if (afz) begin ena <= 1'b0; ena_c <= 8'h00; ca <= 5'd16; end
+            if (bfz) begin enb <= 1'b0; enb_c <= 8'h00; cb <= 5'd16; end
+            if (stl != 7'd0) stl <= stl - 7'd1;
+            if (quiet && l4 && ((ncq[0] && !ena && ncq[4:1] == 4'd0) || (ndq[0] && !enb && ndq[4:1] == 4'd0))) f <= 1'b1;   // a node over a held one
             if (awv) begin
                 ca <= ca + 5'd1;
                 if (ca == 5'd16 || sa[4:1] != ca[3:0]) f <= 1'b1;
@@ -229,30 +239,30 @@ module qkd_astk_pv (
             end
             if (active && !l7 && !pa && !pb) it <= it + 3'd1;             // nothing under this node in this round
             if (issue) begin
-                jn <= jn + 4'd1; pace <= !l7;
+                jn <= jn + 4'd1; jn_c <= {16{jn[2:0] + 3'd1}}; pace <= !l7;
                 if (last) begin
-                    jn <= 4'd0; it <= it + 3'd1; ca <= 5'd0; cb <= 5'd0; ena <= 1'b1; enb <= 1'b1; l7b <= 1'b0;
+                    jn <= 4'd0; jn_c <= 48'd0; it <= it + 3'd1; ca <= 5'd0; cb <= 5'd0; ena <= 1'b1; enb <= 1'b1; l7b <= 1'b0;
+                    ena_c <= 8'hff; enb_c <= 8'hff;
                     cra <= l4 && pa; crb <= l4 && pb; gap <= 6'd48;
                     if (l7 && h != 2'd0) tok <= tok - 2'd1 + {1'b0, tok_in};
                 end
             end
             if (start) begin
                 ca <= 5'd0; cb <= 5'd0; ena <= 1'b1; enb <= 1'b1; l7b <= 1'b0; it <= 3'd0; jn <= 4'd0; pace <= 1'b0;
-                run <= 1'b1; f <= 1'b0; tok <= 2'd0; gap <= 6'd0; ocr <= 1'b1;
+                ena_c <= 8'hff; enb_c <= 8'hff; jn_c <= 48'd0;
+                run <= 1'b1; f <= 1'b0; tok <= 2'd0; gap <= 6'd0; ocr <= 1'b1; stl <= 7'd127;
             end
-            if (yf) f <= 1'b1;
-            if (pcol) f <= 1'b1;
+            if (quiet && (yf || pcol)) f <= 1'b1;
         end
     // ---- the sub-beat's operands (kk slots 2 jn and 2 jn + 1, 4 beats each), registered, and the 8 adders -------------
     reg  [255:0] a8, b8;
     integer j_, m_;
     always @* begin
         a8 = 256'd0; b8 = 256'd0;
-        for (j_ = 0; j_ < 8; j_ = j_ + 1) if (jn[2:0] == j_)
-            for (m_ = 0; m_ < 2; m_ = m_ + 1) for (b_ = 0; b_ < 4; b_ = b_ + 1) begin
-                a8[32*(4*m_ + b_) +: 32] = SA[512*b_ + 32*(2*j_ + m_) +: 32];
-                b8[32*(4*m_ + b_) +: 32] = SB[512*b_ + 32*(2*j_ + m_) +: 32];
-            end
+        for (m_ = 0; m_ < 2; m_ = m_ + 1) for (b_ = 0; b_ < 4; b_ = b_ + 1) for (j_ = 0; j_ < 8; j_ = j_ + 1) begin
+            if (jn_c[3*(4*m_ + b_) +: 3] == j_) a8[32*(4*m_ + b_) +: 32] = SA[512*b_ + 32*(2*j_ + m_) +: 32];
+            if (jn_c[3*(8 + 4*m_ + b_) +: 3] == j_) b8[32*(4*m_ + b_) +: 32] = SB[512*b_ + 32*(2*j_ + m_) +: 32];
+        end
         if (`KVD_AKMUT == 1) b8[32*3 +: 32] = b8[32*2 +: 32];
     end
     reg          ov;
@@ -530,9 +540,14 @@ module qkd_astk_ep (
     wire [1:0]   go = {kdone[1] && mc1 == 3'd4, kdone[0] && mc0 == 3'd4};
     wire         a_v, a_g, a_kl, a_busy, a_sg, b_v, b_g, b_kl, b_busy, b_sg;
     wire [3:0]   a_gam, a_k, b_gam, b_k;
-    wire         trig = (Q == 3'd0) ? (!a_busy && go[a_sg] && !gone[a_sg]) : tokd[5];
-    wire         trig_b;
-    ot_hdc_delay #(.W(1), .D(DT), .RESET(1)) u_tb (.clk(ck), .rst_n(rn_q), .d(trig), .q(trig_b));
+    // RESTART: a start flushes the delayed trigger and opens a settle window (the exp pipe and the buses drain: no join
+    // check, no e-row write, no token, no pass start) -- a start may follow another one at any distance.
+    reg  [7:0]   stl;
+    wire         quiet = stl == 8'd0;
+    wire         trig = quiet && ((Q == 3'd0) ? (!a_busy && go[a_sg] && !gone[a_sg]) : tokd[5]);
+    reg  [DT-1:0] tb_sr;
+    always @(posedge ck or negedge rn_q) if (!rn_q) tb_sr <= {DT{1'b0}}; else tb_sr <= start ? {DT{1'b0}} : {tb_sr[DT-2:0], trig};
+    wire         trig_b = tb_sr[DT-1];
     qkd_astk_seq u_sa (.ck(ck), .rn(rn_q), .start(start), .trig(trig), .T(T), .S(S), .v(a_v), .g(a_g), .gam(a_gam), .k(a_k),
                        .klst(a_kl), .busy(a_busy), .sg_o(a_sg));
     qkd_astk_seq u_sb (.ck(ck), .rn(rn_q), .start(start), .trig(trig_b), .T(T), .S(S), .v(b_v), .g(b_g), .gam(b_gam), .k(b_k),
@@ -589,9 +604,9 @@ module qkd_astk_ep (
         assign se[h] = sv_[h] && err != 2'd0;
     end endgenerate
     reg          tok1;
-    wire         j_bad = (b_v != e_v) || (eqc[2] != e_v) || (eqc[4] != e_v) || (eqc[6] != e_v) || (!first && (b_v != zq[0] || (b_v && {zq[10:7], zq[6:3], zq[2]} != {b_gam, b_k, b_g})));
+    wire         j_bad = quiet && ((b_v != e_v) || (eqc[2] != e_v) || (eqc[4] != e_v) || (eqc[6] != e_v) || (!first && (b_v != zq[0] || (b_v && {zq[10:7], zq[6:3], zq[2]} != {b_gam, b_k, b_g}))));
     // ---- e rows: this engine's groups (gam = Q, Q + 8), one 512-b row a chunk --------------------------------------------
-    wire         r_me = rq[0] && rq[8:6] == Q;
+    wire         r_me = rq[0] && rq[8:6] == Q && quiet;
     wire [13:0]  rkb = T - 14'd1 - {5'd0, S, 7'd0} - {6'd0, rq[9:6], 3'd0};
     wire [511:0] e_row;
     reg  [2:0]   jq;
@@ -617,16 +632,17 @@ module qkd_astk_ep (
                         (jq == 3'd6) ? e_row[384 +: 64] : e_row[448 +: 64];
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin mc0 <= 3'd0; mc1 <= 3'd0; cyc8 <= 3'd0; xd <= 4'd0; gone <= 2'b00; tokd <= 6'd0; tok1 <= 1'b0; f <= 1'b0;
-                         zo[1:0] <= 2'b00; end
+                         zo[1:0] <= 2'b00; stl <= 8'd0; end
         else begin
             cyc8 <= cyc8 + 3'd1;
-            tokd <= {tokd[4:0], zq[1]};
+            tokd <= {tokd[4:0], zq[1] && quiet};
+            if (stl != 8'd0) stl <= stl - 8'd1;
             tok1 <= trig; zo[1] <= tok1; zo[0] <= sv_[0];
             if (trig && first) gone[a_sg] <= 1'b1;
             if (j_bad || (|se) || (trig && a_busy)) f <= 1'b1;
             if (mv) begin if (mg) mc1 <= mc1 + 3'd1; else mc0 <= mc0 + 3'd1; end
             if (r_me && rq[5:2] == rkb[12:9]) xd[{rq[1], rq[9]}] <= 1'b1;
-            if (start) begin mc0 <= 3'd0; mc1 <= 3'd0; xd <= 4'd0; gone <= 2'b00; tokd <= 6'd0; f <= 1'b0; end
+            if (start) begin mc0 <= 3'd0; mc1 <= 3'd0; xd <= 4'd0; gone <= 2'b00; tokd <= 6'd0; f <= 1'b0; stl <= 8'(DT + 16); tok1 <= 1'b0; zo[1] <= 1'b0; end
         end
     always @(posedge ck) zo[650:2] <= {jd[520:9], sum, jd[8:5], jd[4:1], jd[0]};
     // ---- the engine's inputs ---------------------------------------------------------------------------------------------
@@ -703,7 +719,8 @@ module qkd_astk_zn (
     wire [1:0]  S = zc_q[1:0], L = zc_q[3:2];
     wire [13:0] T = tq[14:1];
     wire        start = tq[0];
-    wire        v = zq[0], g = zq[1];
+    reg  [5:0]  stl;                                    // restart: 32 cycles in which the chain drains
+    wire        v = zq[0] && stl == 6'd0, g = zq[1];
     wire [3:0]  k = zq[5:2], slot = zq[9:6];
     wire [127:0] d = zq[137:10];
     // the right sibling's first chunk: gam = (slot | 1) << L
@@ -726,13 +743,14 @@ module qkd_astk_zn (
         ob <= slot[0] ? d : 128'd0;
     end
     always @(posedge ck or negedge rn_q)
-        if (!rn_q) begin sv <= 16'd0; ov <= 1'b0; f <= 1'b0; fo <= 1'b0; end
+        if (!rn_q) begin sv <= 16'd0; ov <= 1'b0; f <= 1'b0; fo <= 1'b0; stl <= 6'd0; end
         else begin
+            if (stl != 6'd0) stl <= stl - 6'd1;
             ov <= iss; fo <= fi_q | f;
             if (put) begin sv[k] <= 1'b1; if (sv[k]) f <= 1'b1; end
             if (v && slot[0]) begin sv[k] <= 1'b0; if (!sv[k]) f <= 1'b1; end
             if (of) f <= 1'b1;
-            if (start) begin sv <= 16'd0; f <= 1'b0; end
+            if (start) begin sv <= 16'd0; f <= 1'b0; stl <= 6'd32; end
         end
     wire [127:0] y;
     wire [3:0]   yv, ye;
@@ -826,14 +844,17 @@ module qkd_astk_ctl (
     reg          zovf;
     wire         z_ne = zfw != zfr;
     wire [132:0] z_hd = zf_m[zfr[3:0]];
-    always @(posedge ck) if (zq[0]) zf_m[zfw[3:0]] <= {zq[137:10], zq[5:2], zq[1]};
+    always @(posedge ck) if (zq[0] && stl == 7'd0) zf_m[zfw[3:0]] <= {zq[137:10], zq[5:2], zq[1]};
     wire         l_pend = (kdone[0] && !lsent[0]) || (kdone[1] && lsent[0] && !lsent[1]);
     wire         lg = lsent[0];
     wire         zd0 = !zsent[0] && qgo[0] && zn0 == nblk && !z_ne;
     wire         zd1 = !zsent[1] && zsent[0] && qgo[1] && zn1 == nblk && !z_ne;
     // ---- P.V: the two lanes carry the two halves of a beat on the same edge ---------------------------------------------
-    wire         pv_v = pxq[0] && pyq[0];
-    wire         pv_bad = (pxq[0] != pyq[0]) || (pv_v && pxq[6:1] != pyq[6:1]);
+    reg  [6:0]   stl;                                  // restart: 96 cycles in which the lanes and the Z nodes drain
+    wire         quiet = stl == 7'd0;
+    wire         pv_v = pxq[0] && pyq[0] && quiet;
+    wire         pv_bad = quiet && ((pxq[0] != pyq[0]) || (pv_v && pxq[6:1] != pyq[6:1]));
+    wire         z_in = zq[0] && quiet;
     wire [255:0] pdx = (`KVD_AKMUT == 4) ? pyq[262:7] : pxq[262:7];
     wire [255:0] pdy = (`KVD_AKMUT == 4) ? pxq[262:7] : pyq[262:7];
     // a beat's 16 lanes: kk = 4 j + i / 4, bb = i % 4; X holds kk mod 4 = 0, 1 and Y 2, 3 (each {slot 1, slot 0} x 4 beats)
@@ -851,18 +872,19 @@ module qkd_astk_ctl (
             sc0 <= 12'd0; sc1 <= 12'd0; kdone <= 2'b00; lsent <= 2'b00; zsent <= 2'b00; pvd <= 2'b00; lh <= 3'd0; mc0 <= 3'd0;
             mc1 <= 3'd0; zn0 <= 5'd0; zn1 <= 5'd0; zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; zovf <= 1'b0; f <= 1'b0; af <= 1'b0;
             ap[0] <= 1'b0; ap[45:43] <= 3'b000; lt[0] <= 1'b0; qo[0] <= 1'b0; qo[15] <= 1'b0; qo[536:534] <= 3'd0;
-            co[0] <= 1'b0;
+            co[0] <= 1'b0; stl <= 7'd0;
         end else begin
             lt[0] <= start; qo[0] <= start; qo[15] <= aq_q[21]; qo[535:534] <= kdone; qo[536] <= am_q[0]; co[0] <= start;
             ap[0] <= 1'b0; ap[45] <= pv_v; ap[44:43] <= pvd;
-            af <= f | xq[0] | fx_q | fy_q | fz_q | zovf;
+            af <= f | (quiet && (xq[0] | fx_q | fy_q | fz_q)) | zovf;
             if (pv_bad) f <= 1'b1;
             if (pv_v && pxq[5:1] == 5'd31) pvd[pxq[6]] <= 1'b1;
             sc0 <= sc0 + {8'd0, xq[4:1]}; sc1 <= sc1 + {8'd0, xq[8:5]};
             if (sc0 == n_s) kdone[0] <= 1'b1;
             if (sc1 == n_s) kdone[1] <= 1'b1;
             if (am_q[0]) begin if (am_q[1]) mc1 <= mc1 + 3'd1; else mc0 <= mc0 + 3'd1; end
-            if (zq[0]) begin zfw <= zfw + 5'd1; if (zfw[3:0] == zfr[3:0] && zfw[4] != zfr[4]) zovf <= 1'b1; end
+            if (stl != 7'd0) stl <= stl - 7'd1;
+            if (z_in) begin zfw <= zfw + 5'd1; if (zfw[3:0] == zfr[3:0] && zfw[4] != zfr[4]) zovf <= 1'b1; end
             // sideband: lmax first, then the Z block sums, then Z done
             if (l_pend) begin
                 ap[0] <= 1'b1;
@@ -879,6 +901,7 @@ module qkd_astk_ctl (
             if (start) begin
                 sc0 <= 12'd0; sc1 <= 12'd0; kdone <= 2'b00; lsent <= 2'b00; zsent <= 2'b00; pvd <= 2'b00; lh <= 3'd0;
                 mc0 <= 3'd0; mc1 <= 3'd0; zn0 <= 5'd0; zn1 <= 5'd0; zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; f <= 1'b0; zovf <= 1'b0;
+                stl <= 7'd96;
             end
         end
     always @(posedge ck) begin

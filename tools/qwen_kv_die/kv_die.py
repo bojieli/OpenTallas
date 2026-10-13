@@ -239,14 +239,14 @@ BINDINGS['qkd_land_emb'] = dict(module='qkd_land_emb', file=LAND_FILE,
     ports={k: [k] for k in ('emf', 'emr', 'dno', 'upi', 'cri', 'fi', 'gfi', 'mf', 'st', 'ck', 'rst_n')}, classed={})
 
 # el1013-qwen-kvstrips 2026-10-13: the stack aggregator qkd_astk / qkd_astk_n (ot_qwen_nearhbm_attn_stack_h minus its
-# engines) -> two 108 um columns of hardened leaves (rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv; exact bench
+# engines) -> two 162 um columns of hardened leaves (ASTK_W 324 requested) (rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv; exact bench
 # physical/qkd_astk_strip/bench.sh against the golden aggregator; die wiring = rtl/test/qwen_kv_die/
 # ot_qwen_nearhbm_attn_stack_k.sv ot_qkd_astk_strip).  Per row (engines 2 r on the W, 2 r + 1 on the E; rows counted from
 # the end away from the hub) and column, bottom to top: head 0 A, B; head 1 A, B; ex, ex, ep, ex, ex; head 2 A, B;
 # head 3 A, B (A = level-4 tree cell, B = the row's second-level cell); 4 x qkd_astk_zn + qkd_astk_ctl at the hub end.
 ASTK_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv'
-ASTK_LEAF = dict(qkd_astk_pv=(108.0, 103.68), qkd_astk_ex=(108.0, 172.8), qkd_astk_ep=(108.0, 345.6), qkd_astk_zn=(86.4, 86.4),
-                 qkd_astk_ctl=(216.0, 64.8))
+ASTK_LEAF = dict(qkd_astk_pv=(162.0, 103.68), qkd_astk_ex=(162.0, 149.04), qkd_astk_ep=(162.0, 345.6), qkd_astk_zn=(86.4, 86.4),
+                 qkd_astk_ctl=(324.0, 43.2))
 STRIP_FIELDS.update(
     qkd_astk_pv=dict(
         cfg=[('h', 2), ('lvl', 2), ('am', 2), ('bm', 2), ('ym', 2), ('ath', 3), ('bth', 3), ('far', 1), ('tdir', 1)],
@@ -299,7 +299,7 @@ def astk_cfg(h, lvl=0, am=0, bm=0, ym=0, ath=0, bth=0, far=0, tdir=0):
 
 def astk_plan(stack=0):
     """The strip's leaf instances in its own frame (y from the end away from the hub; N stacks: the strip is placed MX).
-    Rows of (name, master, column, y, straps).  Column x = 0 (W, X cells: kk mod 4 < 2) / 108 (E, Y cells)."""
+    Rows of (name, master, column, y, straps).  Column x = 0 (W, X cells: kk mod 4 < 2) / 162 (E, Y cells)."""
     out = []
     ph, eh, xh = ASTK_LEAF['qkd_astk_pv'][1], ASTK_LEAF['qkd_astk_ep'][1], ASTK_LEAF['qkd_astk_ex'][1]
     row_h = ENG_H + GY                       # an engine row
