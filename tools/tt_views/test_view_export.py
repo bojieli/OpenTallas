@@ -159,6 +159,22 @@ class Sequence(unittest.TestCase):
         with self.assertRaises(ve.VerdictError):
             ve.load_job(ar / "job.json", src, None, NICK)
 
+    def test_job_replay_keeps_original_extra_sdc_before_post_sdc(self):
+        ar, src = self.mkjob()
+        extra = ar / "original_extra.sdc"
+        extra.write_text("create_clock -name core_clk -period 1024 [get_ports clk]\n")
+        jb = ve.load_job(ar / "job.json", src, None, NICK, extra)
+        for c in ("ss", "ff"):
+            self.assertEqual(jb["seq"][c][4], "read_sdc /job_extra.sdc")
+            self.assertEqual(jb["seq"][c][5], "read_sdc /src/physical/k/signoff_unc60.sdc")
+        self.assertEqual(jb["files"]["/job_extra.sdc"]["host"], str(extra))
+        self.assertEqual(jb["expect"], {"tt": 7.75, "ff": 18.6})
+
+    def test_job_replay_refuses_missing_original_extra_sdc(self):
+        ar, src = self.mkjob()
+        with self.assertRaises(ve.VerdictError):
+            ve.load_job(ar / "job.json", src, None, NICK, ar / "missing.sdc")
+
     def test_ws(self):
         self.assertEqual(ve.ws_ps("OT_WS max 1.15e-11 min -2e-12"), (11.5, -2.0))
 
