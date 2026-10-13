@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.mtp_hist_view_interface.v1",
+  "top": "ot_mtp_hist_ring_p",
+  "shape": {
+    "TR": 16,
+    "NG": 4,
+    "TW": 17,
+    "PW": 32
+  },
+  "signal_pins": 140,
+  "power_pins": [
+    "VDD",
+    "VSS"
+  ],
+  "lef_and_all_corner_lib_pins_equal": true,
+  "files": {
+    "ot_mtp_hist_ring_p.lef": "d801f033b7a9c82ec9ebb0721ffb4acc5b34f2bda6fc92a844974460f2a9fac2",
+    "ot_mtp_hist_ring_p_ff.lib": "122ba1f4619a81e9fef0b889e2716fe5c879dd1e24a5409bcf3d03b03639f818",
+    "ot_mtp_hist_ring_p_ss.lib": "7445d81b5c4e3abff77024806a6d06ef393d743ee3bf6a54eead95ac7dce40a6",
+    "ot_mtp_hist_ring_p_tt.lib": "a83dd12c000b375bed7d969a875f3371db47430e34233795d8245bdd9016a035"
+  }
+}
