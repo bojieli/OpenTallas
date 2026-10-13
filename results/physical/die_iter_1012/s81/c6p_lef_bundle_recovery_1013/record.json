@@ -1,0 +1,11 @@
+{
+  "schema": "takeover.s81_lef_bundle_recovery/1",
+  "source_commit": "2c095be7767537271f87280f317d51394b58b09a",
+  "original_result": "PLACE_FAIL ORD-2013: dsfd_rly_63_WE missing because concatenated END LIBRARY stops parser afterfirstmaster",
+  "original_place_rc": 1,
+  "original_chain_rc": 1,
+  "original_launcher_rc": 0,
+  "parse_repair_result": "PASS all21masters; macro definitions byte-identical",
+  "parse_otrun_rc": 0,
+  "scope": "existing pathfinding case; pin alignment warn and pair gate disabled were original settings; no binding/geometry/contract/gate selection changed; placement replay pending; not release qualification"
+}

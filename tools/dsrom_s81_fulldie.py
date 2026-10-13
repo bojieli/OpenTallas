@@ -1709,6 +1709,16 @@ def top_pins(m, k=1):
 
 
 # ------------------------------------------------------------------------------------------------ case (a): real
+def bundle_bound_lefs(texts):
+    """Keep every view's declarations and geometry, with one library terminator.
+
+    OpenROAD stops at END LIBRARY. Concatenating complete exported libraries
+    otherwise leaves every bound master after the first unread.
+    """
+    return '\n'.join(re.sub(r'(?m)^\s*END\s+LIBRARY\s*$', '', text).rstrip()
+                     for text in texts) + '\nEND LIBRARY\n'
+
+
 def case_real(m, work):
     work.mkdir(parents=True, exist_ok=True)
     npins = write_lefs(m, 1, work / 'elements.lef')
@@ -1724,7 +1734,7 @@ def case_real(m, work):
     bnd = m.get('bound_views') or {}
     if bnd:                      # the bound masters' real LEFs, verbatim (bound_views() verified their sha256)
         bv_ = bound_views()
-        (work / 'bound_views.lef').write_text('\n'.join(bv_[n_]['text'] for n_ in sorted(bnd)))
+        (work / 'bound_views.lef').write_text(bundle_bound_lefs(bv_[n_]['text'] for n_ in sorted(bnd)))
     write_netlist(m, 1, work / 'die.v')
     # pin ALIGNMENT of every die bundle (owner 2026-10-13, tools/hier_contract/pin_align.py): jog along the shared
     # direction, bit order, pin-to-pin length, from the LEFs written above.  FAIL = the jog alone takes > 0.60 of the
