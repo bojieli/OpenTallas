@@ -396,7 +396,9 @@ def clock_delivery(lat, pin_master, masters, libs, by, vroot):
                     t.update(R_tt_ps=round(r['insertion_in_arcs_ps'][2], 1), source='ESTIMATED: measured_insertion.json / '
                              'calib.json block mean (no insertion.json beside the bound lib)')
             if 'R_tt_ps' not in t:
-                t.update(R_tt_ps=0.0, source='interim pin-registered model (pin = flop): no internal insertion')
+                t.update(R_tt_ps=0.0, source='interim pin-registered model (pin = flop): no internal insertion' if view == 'interim'
+                         else 'UNMEASURED: routed view without insertion.json and without a clock_tree_path on this pin '
+                              '(taken as 0: run ck_insertion.py on the view)')
             R = t['R_tt_ps']
             t['level'] = 'common' if R <= LEVEL_R_PS else 'early_tap'
             t['entry_offset_tt_ps'] = round(-R, 1)                       # required clock arrival at the pin relative to phi
@@ -422,7 +424,7 @@ def clock_delivery(lat, pin_master, masters, libs, by, vroot):
                masters_common=sum(1 for t in tiles.values() if t['level'] == 'common'), masters_early_tap=len(deep),
                early_tap={m_: dict(R_tt_ps=t['R_tt_ps'], tap_before_common_level_ps=t['tap_before_common_level_ps'],
                                    instances=t['instances'], source=t['source']) for m_, t in sorted(deep.items())},
-               estimated_R=sorted(m_ for m_, t in tiles.items() if t['source'].startswith('ESTIMATED')),
+               estimated_R=sorted(m_ for m_, t in tiles.items() if t['source'].startswith(('ESTIMATED', 'UNMEASURED'))),
                spread_defects={m_: t['defect'] for m_, t in sorted(tiles.items()) if 'defect' in t},
                deep_clock_pins=len(deep_pins), tiles=dict(sorted(tiles.items())),
                sta='setup uncertainty + %.0f ps on the clock pins of the early-tap instances (capture side); launch side '
