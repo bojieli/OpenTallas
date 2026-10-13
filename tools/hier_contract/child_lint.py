@@ -293,13 +293,19 @@ def check_contract(m: dict, s: dict, pg_top: str | None, pin_grant: dict | None 
 
 
 # ---------------------------------------------------------------------------------------------------------- driver
+def cap_str(v) -> str | None:
+    """a slot layer_cap / view_cap as a layer name: derived contracts carry the dict form
+    {"cap": "M5", "view_max_layer": ..., "conforms": ...} (qwen_rom_tp8 v3; slot_fit.py reads it the same way)"""
+    return v.get("cap") if isinstance(v, dict) else v
+
+
 def pick_cap(s: dict | None, pg_top: str | None, cap: str | None = None) -> int | None:
     """the cap (top layer of the child's signals AND PG) to lint at: explicit, else the slot's layer_cap / view_cap that the
     view's PG top layer matches (layer_cap when neither does, so the mismatch fails), else None (pre-1012 behaviour)"""
     if cap:
         return metal(cap)
     s = s or {}
-    caps = [c for c in (s.get("layer_cap"), s.get("view_cap")) if c]
+    caps = [c for c in (cap_str(s.get("layer_cap")), cap_str(s.get("view_cap"))) if c]
     if not caps:
         return None
     for c in caps:
@@ -328,7 +334,7 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
         import m6_pin_grant as M6
         try:
             ports = M6.validate(grant, cell)
-            if cap not in (None, "M5") or (s or {}).get("layer_cap") not in (None, "M5"):
+            if cap not in (None, "M5") or cap_str((s or {}).get("layer_cap")) not in (None, "M5"):
                 raise ValueError("M6 pin-only grant requires layer_cap M5, never cap/view_cap M6")
             if pg["top_layer"] != "M5":
                 raise ValueError("M6 pin-only grant requires PG top M5")
@@ -363,8 +369,8 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
         strap_L = metal((s or {}).get("strap_layer")) or ((pg_L + 1) if pg_L else None)
     info["pg_layer"], info["strap_layer"] = (f"M{pg_L}" if pg_L else None), (f"M{strap_L}" if strap_L else None)
     info["cap"] = f"M{cap_L}" if cap_L else None
-    if cap_L and s and s.get("layer_cap") and cap_L != metal(s["layer_cap"]):
-        info["cap_basis"] = f"view_cap (legacy closed view; slot layer_cap {s['layer_cap']} for new routes)"
+    if cap_L and s and cap_str(s.get("layer_cap")) and cap_L != metal(cap_str(s["layer_cap"])):
+        info["cap_basis"] = f"view_cap (legacy closed view; slot layer_cap {cap_str(s['layer_cap'])} for new routes)"
     # (a)
     if "a" not in skip and pg_L:
         for r in m["obs"]:
