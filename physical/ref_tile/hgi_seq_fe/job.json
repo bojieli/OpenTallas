@@ -1,5 +1,5 @@
 {
- "name": "hgi_seq_fe-s1-COMMIT",
+ "name": "hgi_seq_fe-s1-983266320",
  "block": "ot_hgi_seq_fe",
  "ref_tile": true,
  "owner": "Claude:el1013-hbm-seq-split",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbm-seq-split-1013",
-  "commit": "COMMIT",
+  "commit": "983266320",
   "extra_paths": [
    "rtl/hbm_accel/generic",
    "tools/run_hgi_seq_split.py",
@@ -105,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_seq_fe/hgi_seq_fe-s1-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_seq_fe/hgi_seq_fe-s1-983266320"
   }
  ],
  "cycles_added": 0,
