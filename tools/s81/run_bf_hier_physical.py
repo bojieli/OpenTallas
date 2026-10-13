@@ -59,6 +59,12 @@ def command(a):
             '--hold-corners', 'WC', '--slew-margin-percent', '20', '--hold-margin-ns', a.hm, '--orfs-var', 'PLACE_DENSITY_LB_ADDON=',
             '--step-tcl', 'PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl',
             '--step-tcl', 'PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl'] + pins
+    if a.io_tcl:
+        # s81-bf 2026-10-13: exact pin plan (place_pin file) instead of the face regions: run_abi3_physical writes its own
+        # IO_CONSTRAINTS for any --pin-region AFTER an --orfs-var one, so the regions are dropped (front aligned to the
+        # closed column's E-face pins: tools/s81/bf_front_aligned_pins.py)
+        assert pins and cmd[-len(pins):] == pins, 'pin regions not at the tail'
+        cmd = cmd[:-len(pins)] + ['--orfs-var', f'IO_CONSTRAINTS=/src/{a.io_tcl}']
     if a.block == 'front' and a.pinlat:
         cmd += ['--param', f'PINLAT={a.pinlat}']
     cmd += ['--clock-uncertainty-ns', '.060', '--clock-uncertainty-hold-ns', '.025', '--orfs-corner', 'WC',
@@ -87,6 +93,7 @@ def main():
     p.add_argument('--hdly', type=int, default=0, help='column: HB4 hold-delay cells per input bit (bf-hier-1011)')
     p.add_argument('--local-clock-pin', action='store_true', help='root at middle of long right face; compact hierarchy model, default off')
     p.add_argument('--pinlat', type=int, choices=(0,1), default=0)
+    p.add_argument('--io-tcl', default='', help='repo place_pin file replacing the face pin regions (exact abutment pins)')
     p.add_argument('--bxst', type=int, default=2); p.add_argument('--fxst', type=int, default=2); p.add_argument('--extra', default='')
     a = p.parse_args()
     if not a.die_w:
