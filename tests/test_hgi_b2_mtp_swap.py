@@ -133,6 +133,8 @@ def test_refuses_missing_cluster_or_nonlocal_allocation():
         lower_h(legacy("STORE"), {**vm, 3: replace(vm[3], base=98304)})
     with pytest.raises(ValueError):
         lower_h(legacy("STORE"), {**vm, 0: replace(vm[0], indexed=1)})
+    with pytest.raises(ValueError):
+        lower_h(legacy("STORE"), {**vm, 0: replace(vm[0], base=65472)})
 
 
 def test_kernel_entry_retains_fence_and_end_after_parallel_group():

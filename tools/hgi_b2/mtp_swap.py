@@ -29,12 +29,13 @@ class DispatchGroup:
 def _local(d: MDesc, n: int, m: int):
     # Addresses here are AFTER cmdproc slice/range decode, including the
     # local mirror at [65536,98304). The cluster travels beside the record.
+    end = d.base + (m - 1) * d.stride + n
     if (d.space != "VM" or d.fmt not in ("FP32", "U32") or
             (d.n, d.m) != (n, m) or d.istride not in (0, 1) or
             any((d.indexed, d.ibcast, d.n_sel, d.dyn_sel, d.dyn_mul,
                  d.lstride, d.l1stride)) or d.base % 64 or
             (m > 1 and (d.stride < n or d.stride % 64)) or
-            d.base < 0 or d.base + (m - 1) * d.stride + n > 98304):
+            d.base < 0 or end > 98304 or d.base < 65536 < end):
         raise ValueError("swap requires an aligned, resolved local-slice VM descriptor")
 
 
