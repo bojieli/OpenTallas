@@ -7,13 +7,15 @@
   "source_sha256": {
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_packet_mux.sv": "b727f3cb05ab0eda933f187c87536461ae1374ec338fe03fc0a248d01da34dfe",
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_packet_share.sv": "52e4dfd524bfab2946b41ebfa499d5a31f41250b52e652dedc268e428f90f42d",
-    "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_vm8_sm_sink.sv": "caebbaf8241dec9497cd334ec9c25b5dc7a0acf17815bb2e338be75d11ae38ee",
+    "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_vm8_sm_sink.sv": "11e95ba63a32684d267ad45d8b6710d40b2d8ed7f4c7f0f6d1760cb043885f31",
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xload_command.sv": "7ecb76d38b186b562dae76bd36c6440565590da0b849df4c2681ed854c3e8b46",
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xread_aperture.sv": "ffcc456d563c3a4da210af8e22a81dd78414bde0555671c56e313803c19fd9e8",
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xwrite_aperture.sv": "bf2f883197c4520662955c49bd753d20430b1853a8a1646dc412a64e886f2c16",
     "rtl/hbm_accel/generic/adapters/native_b2/run_boundary.sh": "11755e6a47cc6ce3da4c0f38c5cde705d7682466f47b4324814c231d5bc487a8",
+    "rtl/hbm_accel/generic/adapters/native_b2/run_sinkpipe.sh": "126f2feaf79776e763f152ae170710652bb2e9d07caebb1757620c3bc9bbc5d4",
     "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_packet_mux.sv": "1186e8d9b40fa3b4b3b358d58968ee611d6b36f788dfb18a586aaf6f2b90d2f3",
-    "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_vm8_sm_sink.sv": "23f0392d02b7091cef9ecf02617573ae43fc01cc2c73388e37d280190c81f3cb",
+    "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_vm8_sm_sink.sv": "6c7aa56286463d8edb1541f4e5f133b95458c61e463e5049dd25e3e1aef51b8a",
+    "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_vm8_sm_sink_pipe.sv": "378b8aad9d9dca2291beaec8de24527c1a0e32e6619947043a316d0be85aeffe",
     "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_xload_command.sv": "d70e5f9dcdce6c9f3e1e69be1a759d74babdc349ac08ac9a7fa68446c2e880fd",
     "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_xread_aperture.sv": "15ac936ec09aacfb45b2643ebbb353d53d26adaafd0b2284ec184c79b65bd3a3",
     "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_xwrite_aperture.sv": "f85c6e2f6d5fd3d81744e369a8cdfaccebdd249e231eb059867e7e53dcd0ab7d"
@@ -114657,6 +114659,97 @@
       "destination": "lease_owner[191]",
       "source": "held_cmd.owner[191]",
       "latency_edges": 1
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[0]",
+      "source": "vm8.tap_ticket[0]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[1]",
+      "source": "vm8.tap_ticket[1]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[2]",
+      "source": "vm8.tap_ticket[2]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[3]",
+      "source": "vm8.tap_ticket[3]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[4]",
+      "source": "vm8.tap_ticket[4]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[5]",
+      "source": "vm8.tap_ticket[5]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[6]",
+      "source": "vm8.tap_ticket[6]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[7]",
+      "source": "vm8.tap_ticket[7]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[8]",
+      "source": "vm8.tap_ticket[8]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[9]",
+      "source": "vm8.tap_ticket[9]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[10]",
+      "source": "vm8.tap_ticket[10]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[11]",
+      "source": "vm8.tap_ticket[11]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[12]",
+      "source": "vm8.tap_ticket[12]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[13]",
+      "source": "vm8.tap_ticket[13]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[14]",
+      "source": "vm8.tap_ticket[14]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[15]",
+      "source": "vm8.tap_ticket[15]",
+      "latency_edges": 2
     }
-  ]
+  ],
+  "pipelined_sink": {
+    "default_PIPE": 0,
+    "candidate_PIPE": 1,
+    "accepted_beats_per_edge": 1,
+    "ACK_edges_after_accept": 2,
+    "owner192": "opaque unchanged lease; no perbeat field reuse",
+    "dedicated_ticket16": "generation11 bank1 slot4; root allocator checks live collision/wrap/stale/duplicate/perreceiver issued",
+    "ACK_semantics": "native SM INPUT sampling; internal XSRAM commit/readback NOT established",
+    "physical_closed": false,
+    "production_memory_price_qualified": false
+  }
 }
