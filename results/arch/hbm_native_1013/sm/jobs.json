@@ -70,5 +70,18 @@
     "local_gate": "PASS",
     "rtl_unchanged": true,
     "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT"
+  },
+  {
+    "name": "smn_fcxr_ref_fa-r1-2a8f467c0",
+    "source_commit": "2a8f467c0",
+    "owner": "Codex:hbm-sm-native-manifest",
+    "status": "PREPARED_INTAKE_NEXT",
+    "replaces": "smh_fcxr_ref_p35-r2-bc7099159",
+    "root_cause": "Aboveonlykeepoutfrac0.5protectedouterhalfofpin,817aboveOBSblockedinnerhalf",
+    "structural_fix": "Realreroutefullpindepth+0.096halo onabovelayeronly",
+    "local_gate": "PASS",
+    "full_default_TAGW16_lint": "PASS",
+    "rtl_unchanged": true,
+    "adoption_gate": "PENDING_FULLNATIVE_EXACT_MUTANT_THROUGHPUT_AND_PHYSICAL_EXPORT"
   }
 ]

@@ -45,7 +45,7 @@
     "w": 6013.44,
     "h": 2609.28
   },
-  "placement_revision": 2,
+  "placement_revision": 3,
   "placement_status": "nonoverlapping_functional_front_candidate_requires_seam_placement",
   "front_placement_reference": {
     "source_commit": "49b00f711ce5613322f3c0d011f109c78894d1de",
@@ -55,7 +55,9 @@
       898.56,
       1088.64
     ],
-    "note": "Actual view widths218.16supersede oldFC_DIM216.024. No hard front_c master."
+    "native_site_grid_um": 0.432,
+    "east_my_x_delta_um": 0.048,
+    "note": "Actual view widths218.16supersede oldFC_DIM216.024. EastMYx678.192->678.24 snaps oldFC_POS to native0.432sitegrid. No hard front_c master."
   },
   "closed": false,
   "boundary_ports": {
@@ -4143,7 +4145,7 @@
       "view_job": "smh_fcb_ref_p45-r1-a9afd2404-lf",
       "module_text_equal": true,
       "xy_um": [
-        3235.632,
+        3235.68,
         250.56
       ]
     },
@@ -4391,7 +4393,7 @@
       "view_job": "smh_fcxr_ref_p35-r1-a9afd2404-lf",
       "module_text_equal": true,
       "xy_um": [
-        3235.632,
+        3235.68,
         768.96
       ]
     },
@@ -4527,7 +4529,7 @@
       "view_job": "smh_fct_ref_p45-r1-a9afd2404-lf",
       "module_text_equal": true,
       "xy_um": [
-        3235.632,
+        3235.68,
         1123.2
       ]
     },
