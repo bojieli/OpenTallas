@@ -31,10 +31,11 @@ module tb_s81_su_swt_split #(parameter integer MUT = 0, NCYC = 60000);
     reg  [OW-1:0] r_q;
     always @(posedge clk) begin r_q <= r_o; f1 <= f; end
     integer cyc = 0, bad = 0, chk = 0, hold = 4;
-    integer n_desc = 0, n_g = 0, n_u = 0, n_fo = 0, n_fu = 0, n_pass[0:3], n_job = 0, n_wnz = 0;
+    integer n_desc = 0, n_g = 0, n_u = 0, c_fo = 0, c_fu = 0, n_pass[0:3], n_job = 0, n_wnz = 0;
     // traffic generator
     integer state = 0, left = 0, gap = 0, i;
     reg [31:0] rnd;
+    wire ill = cyc > 7 * NCYC / 8;                               // illegal traffic (sticky o_fo) only in the last eighth
     task automatic rdata;
         integer k;
         begin for (k = 0; k < DW / 32; k = k + 1) d[32 * k +: 32] = $urandom; end
@@ -47,13 +48,13 @@ module tb_s81_su_swt_split #(parameter integer MUT = 0, NCYC = 60000);
         if (cyc == NCYC / 2) rst <= 1'b0;                         // a reset in mid traffic
         if (cyc == NCYC / 2 + 5) rst <= 1'b1;
         st <= 1'b0; v <= 0; rdata(); kind <= rnd[3:0]; gsel <= rnd[5:4]; fp4 <= rnd[6]; jid <= rnd[15:8];
-        f <= (rnd[31:20] == 12'h5a5 && cyc > NCYC / 4 && cyc < NCYC / 4 + 4000) ? (32'd1 << rnd[19:15]) : 32'd0;
+        f <= (rnd[31:26] == 6'h25 && cyc > 3 * NCYC / 8 && cyc < 3 * NCYC / 8 + 2000) ? (32'd1 << rnd[19:15]) : 32'd0;   // lane faults: sticky o_fu until the reset
         case (state)
             0: if (rnd[18:16] == 0) begin st <= 1'b1; kind <= (rnd[7:4] < 12) ? 4'd3 : rnd[3:0]; state <= 1; gap <= rnd[21:20]; n_job <= n_job + 1; end
             1: if (gap != 0) gap <= gap - 1;
-               else begin v <= (rnd[27:23] == 0) ? 16'h0003 : 16'h0001; state <= 2; left <= 4 * (1 + rnd[11:9]) * (1 + rnd[14:12]); end
+               else begin v <= (rnd[27:23] == 0 && ill) ? 16'h0003 : 16'h0001; state <= 2; left <= 4 * (1 + rnd[11:9]) * (1 + rnd[14:12]); end
             2: if (rnd[22:20] == 0) v <= 0;                                         // an idle spine cycle
-               else if (rnd[31:25] == 0) v <= {rnd[15:1], 1'b1};                    // a partial operand cycle (fault 5)
+               else if (rnd[31:25] == 0 && ill) v <= {rnd[15:1], 1'b1};                    // a partial operand cycle (fault 5)
                else begin v <= 16'hffff; left <= left - 1; if (left <= 1) state <= 0; end
         endcase
         if (rnd[31:22] == 0 && state == 2) begin st <= 1'b1; kind <= 4'd3; state <= 1; gap <= 0; end   // announce over a running job
@@ -72,15 +73,15 @@ module tb_s81_su_swt_split #(parameter integer MUT = 0, NCYC = 60000);
             if (|n_gv) n_g <= n_g + 1;
             if (|n_uv) n_u <= n_u + 1;
             for (i = 0; i < 4; i = i + 1) if (n_gv[i] || n_uv[i]) n_pass[i] <= n_pass[i] + 1;
-            if (n_fo) n_fo <= n_fo + 1;
-            if (n_fu) n_fu <= n_fu + 1;
+            if (n_fo) c_fo <= c_fo + 1;
+            if (n_fu) c_fu <= c_fu + 1;
             if ((|n_gv) && n_w != 0) n_wnz <= n_wnz + 1;
         end
         if (cyc == NCYC) begin
             $display("SWT_SPLIT mut=%0d cyc=%0d checks=%0d mismatches=%0d jobs=%0d g=%0d u=%0d pass=%0d/%0d/%0d/%0d fo_cyc=%0d fu_cyc=%0d wnz=%0d",
-                     MUT, cyc, chk, bad, n_job, n_g, n_u, n_pass[0], n_pass[1], n_pass[2], n_pass[3], n_fo, n_fu, n_wnz);
+                     MUT, cyc, chk, bad, n_job, n_g, n_u, n_pass[0], n_pass[1], n_pass[2], n_pass[3], c_fo, c_fu, n_wnz);
             if (bad == 0 && chk > NCYC - 100 && n_g > 500 && n_u > 500 && n_pass[0] > 100 && n_pass[1] > 100 && n_pass[2] > 100
-                && n_pass[3] > 100 && n_fo > 10 && n_fu > 10 && n_wnz > 100) $display("SWT_SPLIT PASS");
+                && n_pass[3] > 100 && c_fo > 10 && c_fu > 10 && n_wnz > 100) $display("SWT_SPLIT PASS");
             else $display("SWT_SPLIT FAIL");
             $finish;
         end
