@@ -4,7 +4,7 @@
 // t_sel_e / t_tv_e / p_v_e2 / p_f_e2 / scale_re leave on every band bundle (c0..2, lc0..2, sel): copies of one
 // body output register set.  kvd_* (the ME-side KV descriptor) are not pins: the die takes the descriptor from
 // seq_su (o4_kvd).  tr_fault is tied 0 (retired input).  kok / kwd / fab / cf / ovf: body ports with no bundle.
-// OT_QFD_TT_CTLM_SLOT_MUT (bench mutant only): mx bits 0 and 1 swapped.
+// OT_QFD_TT_CTLM_SLOT_MUT (bench mutant only): xm / xd / c0 bits 0 and 1 swapped.
 module qfd_tt_ctlm (
     input  wire ck,
     output wire [340:0] c0,
@@ -95,7 +95,12 @@ module qfd_tt_ctlm (
     wire [15:0] w_mx_mask;
     wire [511:0] w_mx_data;
     assign w_tr_fault = 16'd0;   // retired: the band faults reach the control element through the upper tile (up_fault); as ot_qfd_spine_band
-    assign c0 = {w_scale_addr[191:0], w_scale_gre[7:0], w_scale_re, w_p_f_e2[112:0], w_p_v_e2, w_t_tv_e[12:0], w_t_sel_e[12:0]};
+    wire [340:0] m_c0 = {w_scale_addr[191:0], w_scale_gre[7:0], w_scale_re, w_p_f_e2[112:0], w_p_v_e2, w_t_tv_e[12:0], w_t_sel_e[12:0]};
+`ifdef OT_QFD_TT_CTLM_SLOT_MUT
+    assign c0 = {m_c0[340:2], m_c0[0], m_c0[1]};
+`else
+    assign c0 = m_c0;
+`endif
     assign w_p_am[101:0] = f0[101:0];
     assign w_p_fault[1:0] = f0[103:102];
     assign lc0 = {w_t_tv_e[12:0], w_t_sel_e[12:0]};
@@ -110,12 +115,7 @@ module qfd_tt_ctlm (
     assign w_land_cnt[15:0] = ld[15:0];
     assign mee = {w_me_clk_en, w_me_clk_en, w_me_clk_en, w_me_clk_en, w_me_clk_en, w_me_clk_en, w_me_clk_en, w_me_clk_en};
     assign w_me_mem_ok = meok;
-    wire [552:0] m_mx = {w_mx_we, w_mx_mask[15:0], w_mx_addr[23:0], w_mx_data[511:0]};
-`ifdef OT_QFD_TT_CTLM_SLOT_MUT
-    assign mx = {m_mx[552:2], m_mx[0], m_mx[1]};
-`else
-    assign mx = m_mx;
-`endif
+    assign mx = {w_mx_we, w_mx_mask[15:0], w_mx_addr[23:0], w_mx_data[511:0]};
     assign w_pw_data[63:0] = pw[63:0];
     assign w_pw_addr[9:0] = pw[73:64];
     assign w_pw_v = pw[74];
@@ -126,9 +126,19 @@ module qfd_tt_ctlm (
     assign w_token[17:0] = st[47:30];
     assign w_h_start = st[48];
     assign w_up_fault = uf;
-    assign xd = {w_x_dv, w_x_dsp[3:0], w_x_dcs[23:0], w_x_dc[23:0]};
+    wire [52:0] m_xd = {w_x_dv, w_x_dsp[3:0], w_x_dcs[23:0], w_x_dc[23:0]};
+`ifdef OT_QFD_TT_CTLM_SLOT_MUT
+    assign xd = {m_xd[52:2], m_xd[0], m_xd[1]};
+`else
+    assign xd = m_xd;
+`endif
     assign w_x_rdy = xr;
-    assign xm = {w_me_acc_o[23:0], w_me_idle_o, w_me_prog_o[15:0], w_m_fin_o, w_m_fidx_o[17:0], w_m_fval_o[31:0]};
+    wire [91:0] m_xm = {w_me_acc_o[23:0], w_me_idle_o, w_me_prog_o[15:0], w_m_fin_o, w_m_fidx_o[17:0], w_m_fval_o[31:0]};
+`ifdef OT_QFD_TT_CTLM_SLOT_MUT
+    assign xm = {m_xm[91:2], m_xm[0], m_xm[1]};
+`else
+    assign xm = m_xm;
+`endif
     assign w_x_orows[15:0] = xs[15:0];
     assign w_x_oprog[15:0] = xs[31:16];
     assign w_x_oidle = xs[32];

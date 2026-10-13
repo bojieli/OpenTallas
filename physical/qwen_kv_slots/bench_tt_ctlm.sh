@@ -3,7 +3,7 @@
 # G 3,072) with u1 = the slot cell driven and observed through its contract bundles (qfd_tt_ctlm_bodyview unpacks with the
 # packing table).  The route top is MEREG 3 (engine wake +1), so the compare is the tb's transaction-level one (TXN 1:
 # per-interface event streams per reset window), as the body's own tp8_txn bench.
-#   bench_tt_ctlm.sh OUT_DIR [mut]     mut: OT_QFD_TT_CTLM_SLOT_MUT (mx bits 0 / 1 swapped inside the cell) must FAIL
+#   bench_tt_ctlm.sh OUT_DIR [mut]     mut: OT_QFD_TT_CTLM_SLOT_MUT (xm, xd and c0 bits 0 / 1 swapped inside the cell) must FAIL
 # Prints "PASS kv_slots tt_ctlm ..." (rc 0) or "FAIL kv_slots tt_ctlm ..." (rc 1).  Verilator.
 set -u
 OUT=$1; MUT=${2:-}

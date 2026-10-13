@@ -33,7 +33,8 @@ def _ctlm():
     return B
 MASTERS['qfd_tt_ctlm'] = dict(
     body='ot_qfd_tt_ctlm_i_fpm_tp8', body_file=RQ + 'ot_qfd_tt_ctlm_i_fpm_tp8.sv', bundles=_ctlm(),
-    rtl='rtl/physical/ot_qfd_tt_ctlm_slot.sv', shim='rtl/test/qfd_tt_ctlm_slot_shim.sv', mutant='mx',
+    rtl='rtl/physical/ot_qfd_tt_ctlm_slot.sv', shim='rtl/test/qfd_tt_ctlm_slot_shim.sv', mutant=['xm', 'xd', 'c0'],   # mx alone was NOT detected (no mx write in the TXN stimulus): argmax word, x descriptor, split-tree selects
+   
     shim_params='#(parameter integer PSRAM = 1, PMUT = 0, HQ2 = 1, MEREG = 3, RRG = 1, PCUT = 1, AUD = 33975, G = 3072, TPMUT = 0) ',
     # body ports with no contract bundle -> extra 1-bit pins (slot_change_request)
     extra=dict(kv_ok='kok', kv_write_drained='kwd', fab_fault='fab', c_fault='cf', ov='ovf'),
