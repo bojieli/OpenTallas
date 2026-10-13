@@ -3,7 +3,7 @@
  "block": "ot_hgi_quant_wide_h",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-fq",
- "purpose": "ot_hgi_quant_wide_h cluster via ref_tile, f3: RTL 41c360152 registered OR2 gather tree + read-head lookahead (f2h CTS SS -382.8 = gq 4-way OR / r_head->mq_sec 20 lv) and outhold pin hold cells on flop-driven outputs (f2h hold -62.1 stalled at wwq output ports 1818 / go_h child-pin 381 / mq_sec 5); 777.6x691.2, 8 rq + 8 wq + dec3 + 64x512 SRAM, clock spine",
+ "purpose": "ot_hgi_quant_wide_h cluster via ref_tile, f3: RTL 41c360152 registered OR2 gather tree + read-head lookahead (f2h CTS SS -382.8 = gq 4-way OR / r_head->mq_sec 20 lv) (variant B: RTL only; outhold variant failed the --cts gate: 9,477 FIRM BUF-HB4-BUF stages at the faces -> spine pad divergence 2.9 ns + DPL-0033) (f2h hold -62.1 stalled at wwq output ports 1818 / go_h child-pin 381 / mq_sec 5); 777.6x691.2, 8 rq + 8 wq + dec3 + 64x512 SRAM, clock spine",
  "threads": 16,
  "peak_ram_gb": 96,
  "source": {
