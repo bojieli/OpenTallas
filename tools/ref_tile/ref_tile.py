@@ -902,6 +902,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     }
     if j.get("no_bench_reason"):
         spec["no_bench_reason"] = j["no_bench_reason"]
+    if j.get("benched_by"):     # composition gate (tools/ref_tile/composition_gates.json): the loop appends its benches
+        spec["benched_by"] = j["benched_by"]
+    if j.get("hold_merge"):     # a physical probe that never merges (not a closure candidate)
+        spec["hold_merge"] = j["hold_merge"]
     return spec
 
 
