@@ -6,11 +6,11 @@ half-region leaf bundles of `manifest.json` (2,387 reference instances with the 
 committed LEF, the ETM contents, the registry throughput gate and the contract clock rules.
 
 **Result: 0 of 21 masters qualify.** No timing or DRC gate fails; the failures are view provenance, pin access and
-bench coverage.
+bench coverage. dsfd_svc_join is the nearest: every gate passes except the open export-side STA comparison.
 
 | gate | failed masters | what it means |
 |---|---:|---|
-| pair | 18 | 15 legacy views: LEF + FF/SS ETM were re-exported 10-11 from the `-arch` archive re-route, the TT ETM is the 10-07 extraction of the earlier route (different ODB). cfifo, ctfn, ctfs: the view was exported from the route ODB but the closing verdict was measured on a later ECO pass (`cl/eco*/pass*/orfs`) |
+| pair | 8 (+10 open) | FAIL, 8 views (five stations, hx_W, hcol, hsel; 1,547 instances): the TT ETM was committed 10-07, before the LEF + FF/SS ETM of a later route / archive re-route (10-08, 10-11): it is the extraction of an earlier ODB. OPEN, 8 views (cfifo, hx_E, hl x3, hix, hqe, ha): TT written by a separate later extraction with no ODB hash linking it to the LEF. OPEN, ctfn / ctfs: verdict on a hold-ECO pass; the loop installs the ECO ODB in the route directory before re-export, but the export records no ODB hash |
 | lint | 15 | child_lint (f): 352-1,058 face pins per master have the tile's own metal on the layer above the pin (no die access: DRT-0073 class); stnh_512 also has one M7 VDD stripe. Only stnv_512x1, svc_join and the four HC leaves are lint-clean |
 | bench | 9 | hl_E0/E2/W1, hix_SW, hqe_SW: the `-mm` job carries no bench record; ctpl/ctfx/ctfn/ctfs: lint only (no behavioural pass + failing mutant on the leaf) |
 | current | 3 | hix_SW, hqe_SW, hsel: the registry's adopted closure is the later M5 route, the bundle is the older view |
