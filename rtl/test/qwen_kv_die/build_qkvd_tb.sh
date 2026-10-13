@@ -35,7 +35,7 @@ fi
 # Opt-in reciprocal local-clock leaf for the hierarchical hub.
 if [ "${RECIPLEAF:-0}" = 1 ]; then
   DEFS="$DEFS +define+QKH_RECIP_LEAF"
-  STK="$STK $W/hdc/nearhbm/ot_qkh_recip_leaf.sv"
+  STK="$STK $W/hdc/nearhbm/ot_qkh_recip_leaf.sv $W/lib/ot_rst_pipe.sv"
 fi
 for a in "$@"; do case $a in -GR=*) RR=${a#-GR=};; -GROM_ST=*) RST=${a#-GROM_ST=};; esac; done
 SRC="$W/test/qwen_kv_die/ot_qkvd_layer_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_buf_tiles.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sl.sv $W/lib/ot_rst_relay.sv \
