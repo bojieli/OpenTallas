@@ -912,6 +912,23 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
         raw_spec = json.loads(Path(spec_path).read_text())
         if M6.spec_digest(raw_spec) != lc["m6_pin_grant"]["source_spec_sha256"]:
             raise SpecError("M6 pin-only grant physical source-spec SHA256 mismatch")
+        import subprocess
+        source_commit = lc["m6_pin_grant"]["source_commit"]
+        exists = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", source_commit + "^{commit}"],
+                                capture_output=True)
+        if exists.returncode:
+            raise SpecError("M6 pin-only grant source commit does not exist")
+        source_paths = list(s["sources"])
+        source_paths += [s[k] for k in ("io_tcl", "post_synth_tcl") if s.get(k)]
+        source_paths += [v for v in s.get("orfs_vars", {}).values() if isinstance(v, str)
+                         and v.endswith((".tcl", ".sdc"))]
+        for path in source_paths:
+            path = path.removeprefix("/src/")
+            file = ROOT / path
+            original = subprocess.run(["git", "-C", str(ROOT), "show", f"{source_commit}:{path}"],
+                                      capture_output=True)
+            if original.returncode or not file.is_file() or original.stdout != file.read_bytes():
+                raise SpecError(f"M6 pin-only grant source differs from approved commit: {path}")
         s["m6_pin_grant"] = lc["m6_pin_grant"]
     blocks = blocks_of(s)
     W, H, why = outline(s, slot, area_um2, blocks)

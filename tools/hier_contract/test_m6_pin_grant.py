@@ -154,10 +154,12 @@ END contact
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'ref_tile'))
         import ref_tile as RT
-        spec = {'name':'fixture','top':'fixture','sources':[], 'clock_port':'ck',
+        spec = {'name':'fixture','top':'fixture','sources':['AGENTS.md'], 'clock_port':'ck',
                 'pins':{'W':['ck']}, 'outline':{'w':43.2,'h':43.2},
                 'layer_cap':'M5','route':{'pin_h':'M4 M6'}}
         grant = copy.deepcopy(GRANT)
+        import subprocess
+        grant['source_commit'] = subprocess.check_output(['git','-C',str(RT.ROOT),'rev-parse','HEAD'],text=True).strip()
         grant['source_spec_sha256'] = M6.spec_digest(spec)
         spec['m6_pin_grant'] = grant
         with tempfile.TemporaryDirectory() as td:
@@ -166,6 +168,9 @@ END contact
             # Actual generation plus regeneration of the saved kit. Only the unused bench lint is mocked.
             with patch.object(RT,'lint_cmd', return_value='true'):
                 result = RT.gen(str(p), out_root=Path(td))
+                with patch.object(Path, 'read_bytes', return_value=b'changed approved source'):
+                    with self.assertRaises(RT.SpecError):
+                        RT.gen(str(p), write=False)
                 saved = Path(td)/result['kit']/'spec.json'
                 RT.gen(str(saved), write=False)
                 changed = json.loads(saved.read_text())

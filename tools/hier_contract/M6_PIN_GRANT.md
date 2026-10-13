@@ -20,8 +20,9 @@ separators) excluding only `m6_pin_grant`, computed by
 `m6_pin_grant.spec_digest`. Generation checks this digest. For granted kits,
 the original source spec is preserved so regenerating the kit/gate checks
 that same source. Changes to routing, outline, sources, ports, or other spec
-fields require a renewed grant. The source commit records the source
-lineage; it does not replace this digest check.
+fields require a renewed grant. Generation also verifies that RTL sources, exact IO Tcl, post-synthesis Tcl,
+and referenced Tcl/SDC flow variables match that source commit byte for byte.
+The immutable source commit and physical-spec digest complement each other.
 
 A grant is written before submission, after the die lead reviews the physical
 spec and exact access plan. It is permission to attempt the route, not a
