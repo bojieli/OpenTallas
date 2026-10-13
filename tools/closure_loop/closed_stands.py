@@ -255,3 +255,68 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
     if bench_gap and full:
         return refuse(f"evidence_gap claimed, but closed {full[-1]} has a behavioural bench + mutant and a routed verdict")
     return admit(f"closed evidence gap ({gaps[last['name']]}); route needed because: {rr['why_route'].strip()[:300]}")
+
+
+# ------------------------------------------------------------------------------------------------------- replay
+def replay(hours=24.0, state=None):
+    """what the gate would have decided for every job the loop ingested in the last `hours`, against the history as it
+    stood when each job was created (closures finished before it).  Read-only."""
+    import collections
+    import datetime as dt
+    import closure_loop as cl
+    import submit_lint
+    if state:
+        cl.STATE = Path(state)
+    jobs = cl.all_jobs()
+    git_ = submit_lint.Git(cl.REPO)
+    memo_s, memo_b = {}, {}
+    show = lambda c, p: memo_s[(c, p)] if (c, p) in memo_s else memo_s.setdefault((c, p), git_.show(c, p))  # noqa: E731
+    blob = lambda c, p: memo_b[(c, p)] if (c, p) in memo_b else memo_b.setdefault((c, p), git_.blob(c, p))  # noqa: E731
+    rv = cl.revoked_closures()
+    ts = lambda s: dt.datetime.fromisoformat(s) if s else None  # noqa: E731
+    now = dt.datetime.now().astimezone()
+    by_block = collections.defaultdict(list)
+    for x in jobs:
+        by_block[(x.get("spec") or {}).get("block")].append(x)
+    rows = []
+    for j in jobs:
+        t0 = ts(j.get("created"))
+        if t0 is None or (now - t0).total_seconds() > hours * 3600:
+            continue
+        spec = j.get("spec_submitted") or j["spec"]
+        hist = [x for x in by_block[spec.get("block")]
+                if x.get("status") != "CLOSED" or (ts(x.get("finished_at") or x.get("updated")) or now) < t0]
+        res = check(spec, j["name"], hist, show, blob, closure_counts=lambda x: cl.closure_counts(x, rv),
+                    bench_gap=cl.bench_evidence_gap, exists=None)
+        rows.append({"job": j["name"], "block": spec.get("block"), "created": j.get("created"), "status": j["status"],
+                     "verdict": res["verdict"], "kind": res.get("kind"), "closed": res.get("closed", [])[-1:],
+                     "rtl": (res.get("facts") or {}).get("rtl"), "evidence_gap": (res.get("facts") or {}).get("evidence_gap")})
+    return rows
+
+
+def main(argv=None):
+    import argparse
+    import collections
+    import json
+    ap = argparse.ArgumentParser(description="CLOSED STANDS gate: replay over the loop's job history (read-only)")
+    ap.add_argument("cmd", choices=["replay"])
+    ap.add_argument("--hours", type=float, default=24.0)
+    ap.add_argument("--state")
+    ap.add_argument("--out")
+    a = ap.parse_args(argv)
+    rows = replay(a.hours, a.state)
+    ref = [r for r in rows if r["verdict"] == "REFUSE"]
+    by = collections.Counter(r["verdict"] for r in rows)
+    st = collections.Counter(r["status"] for r in ref)
+    summary = {"hours": a.hours, "jobs": len(rows), "by_verdict": dict(by), "refused": len(ref),
+               "refused_blocks": len({r["block"] for r in ref}), "refused_by_final_status": dict(st.most_common()),
+               "refused_by_rtl": dict(collections.Counter(r["rtl"] for r in ref)),
+               "refused_closed_evidence_complete": sum(1 for r in ref if not r["evidence_gap"])}
+    print(json.dumps(summary, indent=1))
+    if a.out:
+        Path(a.out).write_text(json.dumps({"summary": summary, "rows": rows}, indent=1) + "\n")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
