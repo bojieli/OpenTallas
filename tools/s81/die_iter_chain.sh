@@ -13,8 +13,8 @@ A="$(cat $S/$R) --cfifo-colck"; [ -n "$KO" ] && A="$(echo "$A" | sed "s/--die [a
 KIND=$(echo "$A" | grep -o -- '--die [a-z0-9]*' | awk '{print $2}'); AK=$(echo "$A" | sed "s/--die $KIND//")
 st(){ echo "$(date -u +%FT%TZ) $*" >> $M/STATUS.log; }
 st "start src $(cat $S/SOURCE_SHA) recipe $R kind $KIND"
-/srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py real $A --work $M/a_real > $M/real_gen.log 2>&1 || { st GEN_FAIL; exit 1; }
-st GEN_DONE
+/srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py real $A --work $M/a_real > $M/real_gen.log 2>&1 || { st "GEN_FAIL $(grep -a 'OT_HOP_GATE\|hop gate' $M/real_gen.log | tail -1)"; exit 1; }
+st "GEN_DONE $(grep -a OT_HOP_GATE $M/real_gen.log | tail -1)"
 ( for w in spine field; do
     I=$M/ir_$w; /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py irm $A --work $I --window $w > $M/ir_gen_$w.log 2>&1 || { st IR_GEN_FAIL $w; continue; }
     /srv/opentallas-scratch/admit.sh 60 -- docker run --rm --name dieit_${TAG}_ir_$w --cpus=16 --memory=120g -v $I:/work -w /work openroad/orfs:asap7lock \

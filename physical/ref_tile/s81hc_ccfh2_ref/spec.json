@@ -108,10 +108,11 @@
   "hold_margin_ns": 0.01
  },
  "job": {
-  "owner": "Claude:s81-suhc-hier-1011",
-  "branch": "main",
-  "tag": "v2m",
-  "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_ccf at the HIER2 parameters; reference tile flow [el1012-flowreq requeue on main HEAD: v1 EARLY_FAIL_CONGESTION over macros on 70eafa55c < eb642d870 (GRT M5/top-layer macro capacity hook) / dc5594311]",
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
+  "owner": "Codex:s81_hc_closure",
+  "branch": "codex/s81hc-physical-20261012",
+  "tag": "v3-regional",
+  "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_ccf at the HIER2 parameters; reference tile flow",
   "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
@@ -120,12 +121,20 @@
   "w": 410.4,
   "h": 542.16
  },
- "why_floorplan": "v3 (ccf v2 89a4bcc13 NEEDS_HUMAN PPL-0111: N face carries 3697 pins (fd_i 1128 + n_y 2560 + fv_i 7 + n_yacc + yfl) but 302.4 um gives 3135 slots): pin-bound outline 410.4 um (~4.25k N slots, 87%), single macro column centred at x 118.8 (W/E channels ~119/~118 um for rd_out/wd_in and wd_in/w_mask edges), y data N->S over the column on M5. Util below 45% is pin-bound (vertical n_y/ch_fd chain must stay on N/S for tile abutment). v2: single macro column replacing the ee56cc32d 2x3 grid (GRT 10k markers in one 20 um channel).",
+ "why_floorplan": "v3 (ccf v2 89a4bcc13 NEEDS_HUMAN PPL-0111: N face carries 3697 pins (fd_i 1128 + n_y 2560 + fv_i 7 + n_yacc + yfl) but 302.4 um gives 3135 slots): pin-bound outline 410.4 um (~4.25k N slots, 87%), single macro column centred at x 118.8 (W/E channels ~119/~118 um for rd_out/wd_in and wd_in/w_mask edges), y data N->S over the column on M5. Util below 45% is pin-bound (vertical n_y/ch_fd chain must stay on N/S for tile abutment). v2: single macro column replacing the ee56cc32d 2x3 grid (GRT 10k markers in one 20 um channel).; v3 five independent512-bit FIFO controllers colocate state/macro; kept128-bit popcopies and512-bit inputrelay break shared3599-load select and long N->macro stages; same outline/clock<15k expected.",
  "params": {
   "HALF": 1,
   "RLY": 2,
-  "RF": 4,
-  "DW": 6
+  "RF": 5,
+  "DW": 6,
+  "FIFO_SLICE": 512,
+  "KEEP_POP": 1,
+  "Y_RELAY": 1
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "S81 contract v13 sp_hc_s/comb: cluster_child grant coordinator2026-10-12 11:40; same M6 as prior ccf, no cap increase",
+ "orfs_vars": {
+  "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff"
  },
  "children": [],
  "inter": []

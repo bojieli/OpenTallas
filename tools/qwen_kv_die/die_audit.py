@@ -22,6 +22,7 @@ def main():
     ap.add_argument('--reach', type=float, default=504.0)
     ap.add_argument('--region-max', type=float, default=5250.0)
     ap.add_argument('--out')
+    ap.add_argument('--all-hops', help='qwen-tp8: write every hop over reach (um, net, bits, pins) to this JSON')
     a = ap.parse_args()
     D = a.case
     size, pins, cur, pin, lay, shapes = {}, collections.defaultdict(dict), None, None, None, {}
@@ -123,6 +124,8 @@ def main():
     area = sum(size[inst[i]][0] * size[inst[i]][1] for i in inst if inst[i] in size)
     fo = max(((len(p), n) for n, p in netpins.items() if not is_clk(n)), default=(0, ''))
     over = [h for h in hops if h[0] > a.reach]
+    if a.all_hops:
+        open(a.all_hops, 'w').write(json.dumps(over) + '\n')
     out = dict(case=D, insts=len(inst), nets=len(netpins), nopin_nets=nopin,
                pin_overlaps=len(pin_ovl), pin_overlap_examples=pin_ovl[:10],
                pin_overlaps_by_master=dict(collections.Counter(o_[0] for o_ in pin_ovl)),
