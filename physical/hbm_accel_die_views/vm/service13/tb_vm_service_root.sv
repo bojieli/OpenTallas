@@ -32,7 +32,7 @@ module tb_vm_service_root;
  endfunction
  reg [7:0] own_id[0:MAXN-1];reg last_f[0:MAXN-1];reg [3:0] tgt[0:MAXN-1],acked_true[0:MAXN-1];
  integer due[0:3][0:MAXN-1];
- integer base=0,n_acc=0,n_rel=0,cyc=0,stalls=0,max_out=0,rewinds=0;
+ integer base=0,n_acc=0,n_rel=0,cyc=0,stalls=0,max_out=0,rewinds=0,fasts=0,pubreads=0;
  integer n_tap[0:3],ap[0:3],lat[0:3],rdy_mode[0:3];
  integer acc_cyc[0:MAXN-1];integer max_a2t=0,max_a2r=0,taps_total=0;
  integer cur_oid=0;
@@ -45,13 +45,18 @@ module tb_vm_service_root;
   integer m;
   begin m=n-base;tick=16'({GENW'((m/32)),1'(m%2),4'((m/2)%16)});end
  endfunction
- integer k,rr;
+ integer k,rr,inj_k=0,wd=0;
+ // global index of the live beat that carries a 5-b tag
+ function automatic integer flight(input [4:0] tag);
+  flight=n_rel+((32+tag-((n_rel-base)%32))%32);
+ endfunction
  // ---------------- monitors (pre-edge values) ----------------
  always @(posedge clk)begin
   cyc<=cyc+1;
   if(rst_n)begin
    if(fault&&!fault_expected)begin $display("unexpected fault code%0d at cycle%0d",fault_code,cyc);$fatal(1,"SERVICE_ROOT FAIL");end
    if(dut.rewind)rewinds=rewinds+1;
+   if(dut.fast)fasts=fasts+1;if(dut.load_pub)pubreads=pubreads+1;
    if(wr_v&&!wr_ready)stalls=stalls+1;
    for(rr=0;rr<4;rr=rr+1)if(tap_v[rr]&&tap_ready[rr])begin
     k=n_tap[rr];while(k<n_acc&&!tgt[k][rr])k=k+1;
@@ -103,13 +108,13 @@ module tb_vm_service_root;
   end
   dut.tb_rd_xor[0]=0;dut.tb_rd_xor[1]=0;dut.tb_wr_xor=0;
   if(inj_armed)for(rr=0;rr<2;rr=rr+1)
-   if(dut.t_v[3][rr]&&dut.t_k[3][rr]==inj_kind&&dut.t_n[3][rr]==5'(inj_seq-base))begin
-    dut.tb_rd_xor[rr]=inj_mask;inj_armed=0;inj_hit=inj_hit+1;
+   if(dut.t_v[3][rr]&&dut.t_k[3][rr]==inj_kind&&(inj_kind||dut.t_n[3][rr]==5'(inj_seq-base)))begin
+    dut.tb_rd_xor[rr]=inj_mask;inj_armed=0;inj_hit=inj_hit+1;inj_k=flight(dut.t_n[3][rr]);
    end
   dut.tb_exp_xor[0]=0;dut.tb_exp_xor[1]=0;
   if(einj_armed)for(rr=0;rr<2;rr=rr+1)
-   if(dut.t_v[3][rr]&&dut.t_k[3][rr]==einj_kind&&dut.t_n[3][rr]==5'(einj_seq-base))begin
-    dut.tb_exp_xor[rr]=einj_mask;dut.tb_exp_word=einj_word;einj_armed=0;einj_hit=einj_hit+1;
+   if(dut.t_v[3][rr]&&dut.t_k[3][rr]==einj_kind&&(einj_kind||dut.t_n[3][rr]==5'(einj_seq-base)))begin
+    dut.tb_exp_xor[rr]=einj_mask;dut.tb_exp_word=einj_word;einj_armed=0;einj_hit=einj_hit+1;inj_k=flight(dut.t_n[3][rr]);
    end
   if(winj_armed&&dut.w0_v&&{dut.w0_slot,dut.w0_bank}==5'(winj_seq-base))begin
    dut.tb_wr_xor=winj_mask;winj_armed=0;winj_hit=winj_hit+1;
@@ -130,6 +135,17 @@ module tb_vm_service_root;
     wr_v=0;
    end
    wr_v=0;wr_last=0;
+  end
+ endtask
+ // hold receiver 0 for n edges: beats behind it are verified but cannot use the verify-read publication, so
+ // the following publications come from publication reads (no rewind once the receiver is ready again)
+ task automatic stall(input integer n);
+  begin rdy_mode[0]=2;tap_ready[0]=0;repeat(n)@(negedge clk);tap_ready[0]=1;rdy_mode[0]=0;repeat(10)@(negedge clk);end
+ endtask
+ task automatic wait_inj(input [255:0] name);
+  begin
+   wd=0;while(inj_armed||einj_armed)begin @(negedge clk);wd=wd+1;if(wd>3000)begin $display("%0s: injection never hit",name);$fatal(1,"SERVICE_ROOT FAIL");end end
+   repeat(3)@(negedge clk);
   end
  endtask
  task automatic drain;
@@ -196,9 +212,10 @@ module tb_vm_service_root;
   $display("SAT beats=600 max_outstanding=%0d held_cycles=%0d",max_out,stalls-s0);
   // ---- B2: random receiver back-pressure, random ACK latency, random producer gaps ----
   lease(5);for(integer q=0;q<4;q=q+1)begin rdy_mode[q]=1;lat[q]=-37;end
-  w=rewinds;send(6000,0,0,5);drain();
+  w=rewinds;c0=fasts;s0=pubreads;send(6000,0,0,5);drain();
   if(rewinds==w)begin $display("no rewind exercised");$fatal(1,"SERVICE_ROOT FAIL");end
-  $display("BACKPRESSURE beats=6000 rewinds=%0d",rewinds-w);
+  $display("BACKPRESSURE beats=6000 rewinds=%0d verify_read_publications=%0d publication_reads=%0d",rewinds-w,fasts-c0,pubreads-s0);
+  if(fasts==c0||pubreads==s0)$fatal(1,"SERVICE_ROOT FAIL both publication paths must be exercised");
   for(integer q=0;q<4;q=q+1)begin rdy_mode[q]=0;lat[q]=2;end
   // ---- B3: receiver masks (two of four, then one) ----
   repeat(2)@(negedge clk);rcv_mask=4'b0110;lease(6);send(300,0,0,3);drain();
@@ -208,47 +225,53 @@ module tb_vm_service_root;
   send((32<<GENW)*WRAPS+77,0,0,0);drain();lat[2]=2;
   if(wrap_epochs-w<WRAPS||wrap_epochs-w>WRAPS+1)begin $display("wrap epochs%0d expected%0d",wrap_epochs-w,WRAPS);$fatal(1,"SERVICE_ROOT FAIL");end
   $display("WRAP GENW=%0d beats=%0d wrap_epochs=%0d",GENW,(32<<GENW)*WRAPS+77,wrap_epochs-w);
-  // ---- D: corrected single-bit reads (verify and publication, data and check bits, both banks) ----
+  // ---- D: corrected single-bit reads (verify and publication reads, data and check bits, both banks) ----
   reset_dut();lease(9);
   fork
-   send(64,0,0,0);
+   send(700,0,0,0);
    begin
-    inj_hit=0;
+    inj_hit=0;repeat(12)@(negedge clk);stall(20);
     for(integer e=0;e<8;e=e+1)begin
-     inj_kind=e[0];inj_seq=base+4+e*5;inj_mask=0;inj_mask[(e*397+11)%2592]=1;inj_armed=1;
-     while(inj_armed)@(negedge clk);
+     inj_kind=e[0];inj_seq=n_acc+3+e[1];inj_mask=0;inj_mask[(e*397+11)%2592]=1;inj_armed=1;wait_inj("single-bit read");
     end
    end
   join
   drain();if(inj_hit!=8)begin $display("single-bit injections%0d",inj_hit);$fatal(1,"SERVICE_ROOT FAIL");end
-  $display("CORRECTED single_bit_reads=8 data exact");
-  // ---- D2: corrected single-bit expected seats (verify and publication, both banks, data and owner islands) ----
+  $display("CORRECTED single_bit_reads=8 (4 verify, 4 publication) data exact");
+  // ---- D2: corrected single-bit expected seats (verify and publication checks, data and owner islands) ----
   reset_dut();lease(22);
   fork
-   send(128,0,0,0);
+   send(700,0,0,0);
    begin
-    einj_hit=0;
+    einj_hit=0;repeat(12)@(negedge clk);stall(20);
     for(integer e=0;e<8;e=e+1)begin
-     einj_kind=e[0];einj_seq=base+5+e*14;einj_word=4'((e*5)%9);einj_mask=0;einj_mask[(e*101+7)%288]=1;einj_armed=1;
-     while(einj_armed)@(negedge clk);
+     einj_kind=e[0];einj_seq=n_acc+3+e[1];einj_word=4'((e*5)%9);einj_mask=0;einj_mask[(e*101+7)%288]=1;einj_armed=1;wait_inj("single-bit expected seat");
     end
    end
   join
   drain();if(einj_hit!=8)begin $display("single-bit expected injections%0d",einj_hit);$fatal(1,"SERVICE_ROOT FAIL");end
   $display("CORRECTED single_bit_expected_seats=8 data exact");
   // ---- negative phases ----
-  reset_dut();lease(23);kb=base+10;einj_kind=0;einj_seq=kb;einj_word=4'd2;einj_mask=0;einj_mask[40]=1;einj_mask[61]=1;einj_armed=1;
-  fault_expected=1;send(40,0,0,0);want_fault(2,"uncorrectable expected seat at verify");never_published(kb,"uncorrectable expected seat at verify");
-  reset_dut();lease(24);kb=base+13;einj_kind=1;einj_seq=kb;einj_word=4'd8;einj_mask=0;einj_mask[150]=1;einj_mask[203]=1;einj_armed=1;
-  fault_expected=1;send(40,0,0,0);want_fault(3,"uncorrectable expected seat at publication");never_published(kb,"uncorrectable expected seat at publication");
-  if(einj_hit!=10)$fatal(1,"expected-seat injection missed");
   reset_dut();lease(10);kb=base+9;inj_kind=0;inj_seq=kb;inj_mask=0;inj_mask[300]=1;inj_mask[317]=1;inj_armed=1;
   fault_expected=1;send(40,0,0,0);want_fault(2,"double-bit verify read");never_published(kb,"double-bit verify read");
-  reset_dut();lease(11);kb=base+12;inj_kind=1;inj_seq=kb;inj_mask=0;inj_mask[2400]=1;inj_mask[2410]=1;inj_armed=1;
-  fault_expected=1;send(40,0,0,0);want_fault(3,"double-bit publication read");never_published(kb,"double-bit publication read");
+  reset_dut();lease(11);fault_expected=1;
+  fork
+   send(400,0,0,0);
+   begin repeat(12)@(negedge clk);stall(20);inj_kind=1;inj_mask=0;inj_mask[2400]=1;inj_mask[2410]=1;inj_armed=1;wait_inj("double-bit publication read");end
+  join
+  want_fault(3,"double-bit publication read");never_published(inj_k,"double-bit publication read");
   reset_dut();lease(12);kb=base+7;winj_seq=kb;winj_mask=code_delta(3,64'h20);winj_armed=1;
   fault_expected=1;send(40,0,0,0);want_fault(2,"valid-code wrong write");never_published(kb,"valid-code wrong write");
   if(winj_hit!=1)$fatal(1,"write injection missed");
+  reset_dut();lease(23);kb=base+10;einj_kind=0;einj_seq=kb;einj_word=4'd2;einj_mask=0;einj_mask[40]=1;einj_mask[61]=1;einj_armed=1;
+  fault_expected=1;send(40,0,0,0);want_fault(2,"uncorrectable expected seat at verify");never_published(kb,"uncorrectable expected seat at verify");
+  reset_dut();lease(24);fault_expected=1;
+  fork
+   send(400,0,0,0);
+   begin repeat(12)@(negedge clk);stall(20);einj_kind=1;einj_word=4'd8;einj_mask=0;einj_mask[150]=1;einj_mask[203]=1;einj_armed=1;wait_inj("uncorrectable expected seat at publication");end
+  join
+  want_fault(3,"uncorrectable expected seat at publication");never_published(inj_k,"uncorrectable expected seat at publication");
+  if(einj_hit!=10)$fatal(1,"expected-seat injection missed");
   // stale ACK for a released ticket
   reset_dut();lease(13);send(20,0,0,0);drain();
   fault_expected=1;inj_ack_t=tick(base+3);inj_ack_o=own(13);inj_ack_v[1]=1;want_fault(4,"stale ACK released ticket");
@@ -276,7 +299,7 @@ module tb_vm_service_root;
   // control upset
   reset_dut();lease(21);send(5,0,0,0);fault_expected=1;dut.tb_upset=1;@(negedge clk);dut.tb_upset=0;
   want_fault(8,"control upset");
-  $display("SERVICE_ROOT PASS GENW=%0d accepted=%0d taps=%0d",GENW,n_acc,taps_total);
+  $display("SERVICE_ROOT PASS GENW=%0d accepted=%0d taps=%0d verify_read_publications=%0d publication_reads=%0d",GENW,n_acc,taps_total,fasts,pubreads);
   $finish;
  end
 endmodule

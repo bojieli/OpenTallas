@@ -6,7 +6,7 @@ V=${VERILATOR:-/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilato
 mkdir -p "$out";if [[ -e $out/source.sha256 ]];then echo refuse_overwriting_receipt;exit 2;fi
 S="$here/vm_service_root.sv $here/vm_service_wordbank.sv $here/vm_service_slice.sv $here/../checker9/vm_ck4.sv $root/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $here/tb_vm_service_root.sv"
 (cd "$root";sha256sum ${S//$root\//}) >"$out/source.sha256"
-cases="exact MUT_SVC_TICKET_REUSE MUT_SVC_ACK3 MUT_SVC_EARLYREL MUT_SVC_STALE MUT_SVC_DUP MUT_SVC_NOVERIFY MUT_SVC_WRAP MUT_SVC_NOQUAR MUT_SVC_LEASE MUT_CK_IGNORE MUT_SERVICE_SERIAL"
+cases="exact MUT_SVC_TICKET_REUSE MUT_SVC_ACK3 MUT_SVC_EARLYREL MUT_SVC_STALE MUT_SVC_DUP MUT_SVC_NOVERIFY MUT_SVC_WRAP MUT_SVC_NOQUAR MUT_SVC_LEASE MUT_SVC_FASTORDER MUT_CK_IGNORE MUT_SERVICE_SERIAL"
 for c in ${CASES:-$cases};do
  (
   d=;[[ $c != exact ]]&&d=-D$c
@@ -16,6 +16,7 @@ for c in ${CASES:-$cases};do
   echo $? >"$out/$c.rc"
   rm -rf "$out/obj_$c"
  ) &
+ while (( $(jobs -rp|wc -l) >= ${PAR:-7} ));do wait -n;done
 done
 wait
 fail=0

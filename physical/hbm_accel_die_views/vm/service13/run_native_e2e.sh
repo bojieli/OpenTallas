@@ -36,6 +36,7 @@ runs=(
 "m_noquar|MUT_SVC_NOQUAR|+INJ_UE=3000 +EXPECT_FAULT=3|fail"
 "m_stale|MUT_SVC_STALE|+INJ_STALE=100 +ACK_DELAY=5 +EXPECT_FAULT=4|fail"
 "m_ticket_reuse|MUT_SVC_TICKET_REUSE|+ACK_DELAY=40|fail"
+"m_fastorder|MUT_SVC_FASTORDER|+TAP_LFSR=2463534242 +TAP_BITS=1|fail"
 )
 [[ -n ${ONLY:-} ]]&&{ sel=();for r in "${runs[@]}";do [[ " $ONLY " == *" ${r%%|*} "* ]]&&sel+=("$r");done;runs=("${sel[@]}"); }
 builds=$(for r in "${runs[@]}";do IFS='|' read -r _ b _ _ <<<"$r";echo "$b";done|sort -u)
@@ -54,7 +55,8 @@ for r in "${runs[@]}";do
    crc=-;if [[ -s beats.txt ]];then python3 -I "$root/tools/vm8_service/xload_flow_compare.py" --expect-sha256 $HASH "$BASE" beats.txt >compare.json 2>compare.err;crc=$?;sha256sum beats.txt >beats.sha256;fi
    echo $crc >compare.rc;rm -f beats.txt
    case $exp in
-    pass) [[ $rc == 0 && $crc == 0 ]]&&grep -q 'E2E PASS records=9' run.log&&v=ok||v=BAD;;
+    pass) [[ $rc == 0 && $crc == 0 ]]&&grep -q 'E2E PASS records=9' run.log&&v=ok||v=BAD
+          [[ $name == rate ]]&&{ grep -q 'rate_ok=1' run.log||v=BAD; };;
     quar) [[ $rc == 0 ]]&&grep -q 'E2E QUARANTINE PASS' run.log&&v=ok||v=BAD;;
     stale) [[ $rc == 0 ]]&&grep -q 'E2E STALE_OWNER PASS' run.log&&v=ok||v=BAD;;
     fail) if [[ $rc != 0 || ( $crc != 0 && $crc != - ) ]];then v=ok;else v=BAD;fi;;

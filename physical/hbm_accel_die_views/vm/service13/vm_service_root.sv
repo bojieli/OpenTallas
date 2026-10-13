@@ -7,9 +7,12 @@
 //   accepted  -> ticket {generation GENW, bank 1, slot 4} allocated (32 outstanding, alternating bank,
 //                row = floor(seq / 2) mod 128; never reused before release),
 //   written   -> SECDED coded into the bank row; the expected copy is kept in the bank's 9 local islands,
-//   verified  -> the row is read back and compared in full against the expected copy (ECC checked),
-//   published -> the row is read AGAIN (ECC, owner and padding checked) and offered, in acceptance order,
-//                to the 4 receivers; each receiver has its own issued bit,
+//   verified  -> the row is read back (the edge after the macro write) and compared in full against the
+//                expected copy (ECC and padding checked),
+//   published -> in acceptance order to the 4 receivers, each with its own issued bit. When the verified
+//                beat is the next one to publish, nothing is in flight ahead of it and the publication
+//                register is free, the verify read itself loads the register (one read, the full check).
+//                Otherwise (receiver back-pressure) the row is read AGAIN (ECC, owner, padding checked),
 //   released  -> only after every targeted receiver returned an ACK that matches owner + ticket; the
 //                release is in acceptance order (native_release / release_ticket / release_last).
 // A bad ACK (stale generation, not live, duplicate, not issued, wrong owner) never sets a bit: it raises the
@@ -20,7 +23,7 @@
 // Owner contract: wr_owner changes only while wr_v is low and is stable two edges before wr_v. A beat
 // accepted under any other owner than the registered lease raises the fault one edge later.
 // Mutants (default off): MUT_SVC_TICKET_REUSE, MUT_SVC_ACK3, MUT_SVC_EARLYREL, MUT_SVC_STALE,
-//   MUT_SVC_DUP, MUT_SVC_NOVERIFY, MUT_SVC_WRAP, MUT_SVC_NOQUAR, MUT_SVC_LEASE.
+//   MUT_SVC_DUP, MUT_SVC_NOVERIFY, MUT_SVC_WRAP, MUT_SVC_NOQUAR, MUT_SVC_LEASE, MUT_SVC_FASTORDER.
 module vm_service_root #(parameter integer GENW=11)(
  input wire clk,rst_n,
  input wire [3:0] rcv_mask,
@@ -41,7 +44,7 @@ module vm_service_root #(parameter integer GENW=11)(
  reg [GENW:0] e_gen[0:NE-1];
  reg [6:0] e_row[0:NE-1];
  reg [3:0] e_target[0:NE-1],e_issued[0:NE-1],e_acked[0:NE-1];
- reg [4:0] alloc_n,rel_n,pub_n;reg [7:0] rowseq;reg [GENW-1:0] gen_round;
+ reg [4:0] alloc_n,rel_n,pub_n,pubd_n; /* pubd_n: next beat to load the publication register */reg [7:0] rowseq;reg [GENW-1:0] gen_round;
  reg [5:0] count,pcount;reg wrap_pend;
  reg [3:0] vptr[0:1];
  // ---------------- lease ----------------
@@ -125,7 +128,17 @@ module vm_service_root #(parameter integer GENW=11)(
  wire res_pub=(res_v[0]&&t_k[5][0])||res_pub_b;
  wire [4:0] res_pub_n=t_n[5][res_pub_b];
  wire res_pub_bad=res_bad[res_pub_b];
- wire load_p=res_pub&&!res_pub_bad&&p_free_next&&!quar;
+ wire load_pub=res_pub&&!res_pub_bad&&p_free_next&&!quar;
+ // verify-read publication: pub_n==pubd_n means no publication read is in flight, so order is kept
+`ifdef MUT_SVC_FASTORDER
+ wire [1:0] fastv={2{p_free_next&&!quar}}&res_v&~t_k[5]&~res_bad;
+`else
+ wire [1:0] fastv={2{(pub_n==pubd_n)&&p_free_next&&!quar}}&res_v&~t_k[5]&~res_bad&{t_n[5][1]==pub_n,t_n[5][0]==pub_n};
+`endif
+ wire fast=|fastv;
+ wire load_p=load_pub||fast;
+ wire lp_b=fast?fastv[1]:res_pub_b;
+ wire [4:0] lp_n=fast?t_n[5][fastv[1]]:res_pub_n;
  wire rewind=res_pub&&!res_pub_bad&&!p_free_next&&!quar;
  wire p_elig=e_live[p_idx]&&e_verified[p_idx]&&(pcount!=0)&&!quar&&!rewind;
  wire [1:0] do_pub={p_elig&&p_idx[4],p_elig&&!p_idx[4]};
@@ -164,16 +177,16 @@ module vm_service_root #(parameter integer GENW=11)(
   t_k[1]<=rq_k;t_k[2]<=t_k[1];t_k[3]<=t_k[2];t_k[4]<=t_k[3];t_k[5]<=t_k[4];
   for(r=0;r<4;r=r+1)begin a_t[r]<=tap_ACK_ticket[r*16+:16];a_oeq[r]<=tap_ACK_owner[r*192+:192]==own_q;end
   if(load_p)begin
-   p_n<=res_pub_n;p_data<=ck_data[res_pub_b][2062:0];p_owner<=ck_data[res_pub_b][2063+:192];
-   p_last<=e_last[idx_of(res_pub_n)];p_target<=e_target[idx_of(res_pub_n)];
-   p_ticket<=16'({e_gen[idx_of(res_pub_n)][GENW-1:0],idx_of(res_pub_n)});
+   p_n<=lp_n;p_data<=ck_data[lp_b][2062:0];p_owner<=ck_data[lp_b][2063+:192];
+   p_last<=e_last[idx_of(lp_n)];p_target<=e_target[idx_of(lp_n)];
+   p_ticket<=16'({e_gen[idx_of(lp_n)][GENW-1:0],idx_of(lp_n)});
   end
   if(rel_ok)begin release_ticket<=16'({e_gen[r_idx][GENW-1:0],r_idx});release_last<=e_last[r_idx];end
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    e_live<=0;e_live_sh<=0;e_written<=0;e_vissued<=0;e_verified<=0;e_last<=0;
-   alloc_n<=0;rel_n<=0;pub_n<=0;rowseq<=0;gen_round<=0;count<=0;pcount<=0;wrap_pend<=0;
+   alloc_n<=0;rel_n<=0;pub_n<=0;pubd_n<=0;rowseq<=0;gen_round<=0;count<=0;pcount<=0;wrap_pend<=0;
    vptr[0]<=0;vptr[1]<=0;eq_lease_q<=0;eq_in_q<=0;acc_q<=0;w0_v<=0;rq_v<=0;
    for(i=1;i<=5;i=i+1)t_v[i]<=0;
    p_v<=0;p_iss<=0;a_v<=0;native_release<=0;fault<=0;fault_code<=0;stale_count<=0;dup_count<=0;wrap_epochs<=0;
@@ -189,7 +202,7 @@ module vm_service_root #(parameter integer GENW=11)(
    w0_v<=acc;
    if(acc)begin
     e_live[a_idx]<=1;e_live_sh[a_idx]<=1;e_gen[a_idx]<={^gen_round,gen_round};e_row[a_idx]<=rowseq[7:1];
-    e_last[a_idx]<=wr_last;e_target[a_idx]<=rcv_mask;e_written[a_idx]<=0;e_vissued[a_idx]<=0;
+    e_last[a_idx]<=wr_last;e_target[a_idx]<=rcv_mask;e_written[a_idx]<=1;e_vissued[a_idx]<=0;
 `ifdef MUT_SVC_NOVERIFY
     e_verified[a_idx]<=1;
 `else
@@ -205,7 +218,6 @@ module vm_service_root #(parameter integer GENW=11)(
     end
    end
    if(wrap_pend&&count==0&&!acc&&!w0_v&&a_v==0&&tap_ACK_v==0)begin wrap_pend<=0;wrap_epochs<=wrap_epochs+16'd1;end
-   if(w0_v)e_written[{w0_bank,w0_slot}]<=1;
    // read issue; a rewind flushes every publication read in flight
    rq_v<=do_pub|do_ver;
    t_v[1]<=rq_v&~({2{rewind}}&rq_k);
@@ -215,9 +227,10 @@ module vm_service_root #(parameter integer GENW=11)(
    back=pub_n-res_pub_n;
    if(rewind)begin pub_n<=res_pub_n;pcount<=pcount+{1'b0,back}+6'(acc);end
    else begin
-    if(|do_pub)pub_n<=pub_n+5'd1;
-    pcount<=pcount+6'(acc)-6'(|do_pub);
+    if((|do_pub)||fast)pub_n<=pub_n+5'd1;
+    pcount<=pcount+6'(acc)-6'((|do_pub)||fast);
    end
+   if(load_p)pubd_n<=lp_n+5'd1;
    // verdicts
    for(i=0;i<2;i=i+1)if(res_v[i])begin
     if(res_bad[i])begin nf=1;nc=t_k[5][i]?F_PUB:F_VERIFY;end
@@ -258,7 +271,7 @@ module vm_service_root #(parameter integer GENW=11)(
    count<=count+6'(acc)-6'(rel_ok);
    // mutable control protection: live shadow, generation parity on use
    if(e_live!=e_live_sh)begin nf=1;nc=F_CTRL;end
-   if(load_p&&^e_gen[idx_of(res_pub_n)])begin nf=1;nc=F_CTRL;end
+   if(load_p&&^e_gen[idx_of(lp_n)])begin nf=1;nc=F_CTRL;end
 `ifdef VM_SVC_FAULT_HOOK
    if(tb_upset)e_live_sh[5]<=~e_live_sh[5];
 `endif
@@ -267,8 +280,10 @@ module vm_service_root #(parameter integer GENW=11)(
  end
 `ifndef SYNTHESIS
  always @(posedge clk)if(rst_n)begin
-  if(slice_rv[0]!==t_v[3])begin $display("tag/slice valid misaligned");$fatal(1,"vm_service_root internal");end
+  if((t_v[3]&~slice_rv[0])!==2'b00)begin /* a rewind clears tags only */ $display("tag/slice valid misaligned");$fatal(1,"vm_service_root internal");end
   if(count>6'd32)$fatal(1,"vm_service_root ticket count overflow");
+  if(fast&&((|do_pub)||res_pub))$fatal(1,"vm_service_root verify-read publication beside a publication read");
+  if(res_pub&&!fault&&res_pub_n!=pubd_n)$fatal(1,"vm_service_root publication verdict out of order");
  end
  initial if(GENW<1||GENW>11)$fatal(1,"GENW 1..11");
 `endif
