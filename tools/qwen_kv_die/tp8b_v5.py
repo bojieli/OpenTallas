@@ -43,6 +43,91 @@ RHEAD_WH, RHEAD_OLD_W = (712.8, 453.6), 648.0   # coordinator 10-13: qkh_head_hs
 CDC_WH = 183.6
 CROM_DH = 32.4
 PC_H, KC_H, NPC = 378.0, 45.36, 32
+# T21 (el1013-qwen-romio, coordinator 10-13): PHY abstracts re-shaped / RXD 512 / FDI on the W face (physical/
+# qwen_missing_phy/tp8_1013, merged from codex/tp8-phy-prepared-1013); flit 1,043 b
+HOST_PHY = ('ot_qfd_serdes_112g_x12_phy', 2320.056, 1563.570)
+FDI_FW = 1043
+FDI_BITS = 1 + 1 + FDI_FW + 1 + FDI_FW          # tx_up, tx_v, tx_flit, rx_v, rx_flit (clk / rst_n are their own pins)
+FDI_Y0, FDI_STEP = 600.0, 0.048                 # W-face pin window of the abstract: 2,091 pins from y 600 at one M4 track
+IO_STRIP_DX = 43.2                              # io_serdes_1 / _2 move W: 127.4-um FDI access strip W of the host PHY
+IO_CLUSTERS = ('qfd_io_serdes', 'qfd_io_ucie')
+# r9: CLOSED views the generator adopts pin for pin (outline checked, every 'face' / 'pins' port takes the view's own
+# pin positions, a split bundle = its view ports LSB first): the relay plan, the contract and the case are then made
+# on the real pins and tools/qwen_tp8/bind_real.py can drop the view's LEF in unchanged
+ROOT = HERE.parents[1]
+VIEWS = {
+    'qfd_cst_s': 'physical/ref_tile/qfd_cst_s/views/qfd_cst_s',
+    'qfd_cst_n': 'physical/ref_tile/qfd_cst_n/views/qfd_cst_n',
+    'qfd_chead_e': 'physical/ref_tile/qfd_chead_e/views/qfd_chead_e',
+    'qfd_chead_w': 'physical/ref_tile/qfd_chead_w/views/qfd_chead_w',
+    'qkd_cdc_wleaf': 'physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf',
+    'qkd_kvwq_leaf_s_w129_m': 'physical/ref_tile/qkd_kvwq_leaf_s_w129_m/views/qkd_kvwq_leaf_s_w129_m',
+    'qkd_kvwq_ctl_bin': 'physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin',
+    'ot_qfd_serdes_112g_x12_phy': 'physical/qwen_missing_phy/tp8_1013/ot_qfd_serdes_112g_x12_phy',
+    'qkd_rstseq': 'physical/ref_tile/qkd_rstseq/views/qkd_rstseq',
+}
+RSTSEQ_KV = 21.6
+_VP = {}
+
+
+def view_pins(master):
+    """(w, h, {pin name: (face, layer, position along the face)}) of a closed view's LEF, or None when it is absent"""
+    if master not in _VP:
+        f = ROOT / VIEWS[master] / f'{master}.lef'
+        if not f.exists():
+            _VP[master] = None
+            return None
+        t = f.read_text()
+        mm = re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', t)
+        w, h = float(mm.group(1)), float(mm.group(2))
+        out = {}
+        for q in re.finditer(r'^\s*PIN (\S+)\s*$(.*?)^\s*END \1\s*$', t, re.M | re.S):
+            r = re.search(r'LAYER (\S+) ;\s*\n\s*RECT ([-\d. ]+) ;', q.group(2))
+            if not r or q.group(1) in ('VDD', 'VSS'):
+                continue
+            x0, y0, x1, y1 = map(float, r.group(2).split()[:4])
+            if x0 <= 1e-6 and x1 < w / 2:
+                fa, pos = 'W', (y0 + y1) / 2
+            elif x1 >= w - 1e-6 and x0 > w / 2:
+                fa, pos = 'E', (y0 + y1) / 2
+            elif y0 <= 1e-6 and y1 < h / 2:
+                fa, pos = 'S', (x0 + x1) / 2
+            elif y1 >= h - 1e-6 and y0 > h / 2:
+                fa, pos = 'N', (x0 + x1) / 2
+            else:
+                continue
+            out[q.group(1)] = (fa, r.group(1), round(pos, 4))
+        _VP[master] = (w, h, out)
+    return _VP[master]
+
+
+def adopt_view(M, master, split, rec):
+    q = M.get(master)
+    if q is None:
+        return
+    vp = view_pins(master)
+    if vp is None:
+        rec[master] = 'view LEF not in this tree: generated pins kept'
+        return
+    w, h, P = vp
+    if abs(q.w - w) > 0.03 or abs(q.h - h) > 0.03:
+        rec[master] = f'outline differs: frame {q.w} x {q.h}, view {w} x {h}: generated pins kept'
+        return
+    done, kept = 0, []
+    for p, sp in list(q.ports.items()):
+        if sp[0] not in ('face', 'pins'):
+            continue
+        parts = split.get(master, {}).get(p) or [(p, sp[1])]
+        names = []
+        for sub, nb in parts:
+            names += [sub] if (nb == 1 and sub in P) else [f'{sub}[{b}]' for b in range(nb)]
+        got = [P.get(n) for n in names]
+        if any(g is None for g in got) or len({(g[0], g[1]) for g in got}) != 1:
+            kept.append(p)
+            continue
+        q.ports[p] = ('pins', len(got), got[0][0], got[0][1], [g[2] for g in got], 1)
+        done += 1
+    rec[master] = dict(view=VIEWS[master], ports_on_view_pins=done, ports_kept_generated=kept)
 SEL_BITS = 26
 STATIONS = {'qfd_cst_s': dict(N=('a', 'in'), S=('b', 'out'), W=('tap', 'out')),
             'qfd_cst_n': dict(S=('b', 'in'), N=('a', 'out'), W=('tap', 'out')),
@@ -61,6 +146,8 @@ SPLIT = {
     # closed qkd_kvwq_ctl_bin-sl1-ecdaf6345 (rtl/physical/ot_qwen_kv_slot_wrappers.sv)
     'qkd_kvwq_ctl_bin': dict(kvn=[('kvn_d', 1047), ('kvn_cr', 1)]),
     'qfd_seq_su': dict(cd=[('cd_d', 547), ('cd_cr', 1)]),
+    # T21: the host PHY abstract's own FDI pins (physical/qwen_missing_phy/tp8_1013, flit 1,043 b at RXD 512)
+    'ot_qfd_serdes_112g_x12_phy': dict(fdi=[('tx_up', 1), ('tx_v', 1), ('tx_flit', 1043), ('rx_v', 1), ('rx_flit', 1043)]),
 }
 # SEAM between two CLOSED views (r8 check, coordinator 10-13): qkd_kvwq_ctl_bin packs f<g>[292:0] = {f_v, f_d 256, f_sec
 # 24, f_lane 3, f_tag 9} and r<g>[1:0] = {r_v, r_bad} (MSB first), the leaf wrapper qkd_kvwq_leaf_s_w129_m takes c / n
@@ -301,8 +388,10 @@ def apply(v, m, G):
 
     # ---------------------------------------------------------------- T18 reset sequencer leaves, new reset nets
     pll, ck = by['pll'], by['clk_rx']
-    rk = v.Inst('rstseq', 'qkd_rstseq', round(v.dn(pll.x - 54.0 - 4.32, v.GX), 4), pll.y, 54.0 - S, 54.0 - S,
+    # r9: qkd_rstseq is the CLOSED leaf (qkd_rstseq-kc1-b4a0a3156, 21.6 x 21.6); its reset input is por_n (PLL lock)
+    rk = v.Inst('rstseq', 'qkd_rstseq', round(v.dn(pll.x - RSTSEQ_KV - 4.32, v.GX), 4), pll.y, RSTSEQ_KV, RSTSEQ_KV,
                 kind='ctl', region='kv_centre', domain=pll.domain)
+    split.setdefault('qkd_rstseq', {})['rsi'] = [('por_n', 1)]
     rr = v.Inst('rstseq_rom', 'qfd_rstseq', round(v.up(ck.x + ck.w + 4.32, v.GX), 4), ck.y, 54.0 - S, 54.0 - S,
                 kind='ctl', region='hub', domain='stream_1p2')
     m['insts'] += [rk, rr]
@@ -330,6 +419,52 @@ def apply(v, m, G):
     B += [('rst_field', 'reset', 1, [('rstseq_rom', 'rso_f')] + field),
           ('rst_spine', 'reset', 1, [('rstseq_rom', 'rso_s')] + spine)]
     rec['reset'] = dict(rst_field=len(field), rst_spine=len(spine), leaves=['rstseq', 'rstseq_rom'])
+
+    # ---------------------------------------------------------------- T21 ROM IO
+    # (a) host SerDes = the re-shaped abstract, E edge kept; its FDI pins are on the W face, so the two SerDes clusters W
+    #     of it move IO_STRIP_DX further W: the freed strip holds the last relays of host_fdi (2,089 b at FW 1,043)
+    hp = by.get('serdes_host')
+    io_rec = dict(host=None, pairs=[])
+    if hp is not None and hp.master == HOST_PHY[0]:
+        old = [hp.x, hp.y, hp.w, hp.h]
+        xe = hp.x + hp.w
+        hp.w, hp.h = HOST_PHY[1], HOST_PHY[2]
+        hp.x = round(v.dn(xe - hp.w, v.GX), 4)
+        moved = []
+        for i in m['insts']:
+            if i.master == 'qfd_io_serdes' and i.x < hp.x:
+                i.x = round(i.x - IO_STRIP_DX, 4)
+                moved.append(i.name)
+        strip = hp.x - max(i.x + i.w for i in m['insts'] if i.master == 'qfd_io_serdes' and i.x < hp.x)
+        B = [(b, c, FDI_BITS if b == 'host_fdi' else n, e) for b, c, n, e in B]
+        io_rec['host'] = dict(old=old, new=[hp.x, hp.y, hp.w, hp.h], moved_w=moved, dx=IO_STRIP_DX, strip_um=round(strip, 3),
+                              fdi_bits=FDI_BITS, fdi='W face M4 y 600-700.344')
+    # (b) the link clusters' words: c / r = data + valid with the flow, credit against it (a paired bus: the credit rides
+    #     the word's relay frames); + rst_n (reset tree rst_io) and fault (to the crossing FIFO block)
+    ion = {i.name: i for i in m['insts'] if i.master in IO_CLUSTERS}
+    nb = []
+    for b, c, n, e in B:
+        if c == 'io' and len(e) == 2 and any(x[0] in ion and x[1] in ('c', 'r') for x in e):
+            # the die bundle keeps its port name (the IO pin plans of the base generator are keyed by it); the view ports
+            # are its split: <p> = {<p>_v, <p>_d[n-1:0]}, <p>_r = <p>_cr
+            (i0, p0), (i1, p1) = e
+            nb.append((b, c, n + 1, [(i0, p0), (i1, p1)]))
+            nb.append((b + '_cr', c, 1, [(i1, p1 + '_r'), (i0, p0 + '_r')]))
+            pair[b] = b + '_cr'
+            for i_, p_ in e:
+                mn = next(q.master for q in m['insts'] if q.name == i_)
+                split.setdefault(mn, {})[p_] = [(p_ + '_d', n), (p_ + '_v', 1)]
+                split.setdefault(mn, {})[p_ + '_r'] = [(p_ + '_cr', 1)]
+                if (mn, p_, n) not in io_rec['pairs']:
+                    io_rec['pairs'].append((mn, p_, n))
+        else:
+            nb.append((b, c, n, e))
+    B = nb
+    if ion:
+        B.append(('rst_io', 'reset', 1, [('rstseq_rom', 'rso_io')] + [(k, 'rst_n') for k in sorted(ion)]))
+        for k, nm in enumerate(sorted(ion)):
+            B.append((f'io_flt_{k}', 'io', 1, [(nm, 'fault'), ('io_xfifo', f'lf{k}')]))
+    rec['io'] = io_rec
 
     # ---------------------------------------------------------------- T7 station word: _d / _r pairs, tap, tie
     nb, npair = [], 0
@@ -610,23 +745,55 @@ def _wrap(v, m, G, peers):
         M.pop('qkd_ctrl', None)
         M.pop('qkd_ctrl_n', None)
         # ---- T18 reset sequencer leaves; PLL lock
-        rk = Master('qkd_rstseq', 54.0 - S, 54.0 - S, 5, 'ot_qwen_sys_rst_seq (KV centre): PLL lock in, one registered '
-                    'reset root per quadrant + centre + forward')
-        rk.face('ck', 1, 'N', 'M5', 27.0, 1)
-        rk.face('rsi', 1, 'W', 'M4', 27.0, 1)
+        rk = Master('qkd_rstseq', RSTSEQ_KV, RSTSEQ_KV, 5, 'ot_qwen_sys_rst_seq (KV centre): PLL lock in (por_n), one '
+                    'registered reset root per quadrant + centre + forward; closed leaf qkd_rstseq-kc1-b4a0a3156 (its '
+                    'boot_* / link_up / soft_rst / rst_st ports have no die net yet: open item, kvcentre)')
+        rk.face('ck', 1, 'N', 'M5', RSTSEQ_KV / 2, 1)
+        rk.face('rsi', 1, 'W', 'M4', RSTSEQ_KV / 2, 1)
         for j, p in enumerate(('rso_WS', 'rso_WN', 'rso_ES', 'rso_EN', 'rso_c', 'rso_fwd')):
-            rk.face(p, 1, 'E' if j % 2 else 'S', 'M4' if j % 2 else 'M5', 10.0 + 6.0 * j, 1)
+            rk.face(p, 1, 'E' if j % 2 else 'S', 'M4' if j % 2 else 'M5', 3.0 + 3.0 * j, 1)
         M['qkd_rstseq'] = rk
         rr = Master('qfd_rstseq', 54.0 - S, 54.0 - S, 5, 'ot_qwen_sys_rst_seq (ROM side): forwarded reset in, roots for '
                     'seq_su, tt_ctlm, the tile field and the spine blocks')
         rr.face('ck', 1, 'N', 'M5', 27.0, 1)
         rr.face('rsi', 1, 'W', 'M4', 27.0, 1)
-        for j, p in enumerate(('rso_seq', 'rso_ctlm', 'rso_f', 'rso_s')):
+        for j, p in enumerate(('rso_seq', 'rso_ctlm', 'rso_f', 'rso_s', 'rso_io')):
             rr.face(p, 1, 'E' if j % 2 else 'S', 'M4' if j % 2 else 'M5', 12.0 + 8.0 * j, 1)
         M['qfd_rstseq'] = rr
         q = M.get('qkd_pll')
         if q is not None and 'lock' not in q.ports:
             q.area('lock', 1, q.w / 2, q.h / 2 + 8.0, 1)
+        # ---- T21 ROM IO: paired link words, cluster rst_n / fault, host PHY abstract outline + W-face FDI
+        iorec = (model.get('tp8b_v5') or {}).get('io') or {}
+        for mn, p, n in iorec.get('pairs', ()):
+            q = M.get(mn)
+            if q is None or p not in q.ports:
+                continue
+            sp = q.ports[p]
+            q.ports[p] = (sp[0], n + 1) + tuple(sp[2:])
+            if sp[0] == 'face':
+                add_face(q, p + '_r', 1, sp[2], sp[4] + (n + 1) * 0.048 * sp[5] / 2 + 0.6, 1, layer=sp[3])
+        for mn in IO_CLUSTERS:
+            q = M.get(mn)
+            if q is not None:
+                add_face(q, 'fault', 1, 'N', 120.0, 1)
+                add_face(q, 'rst_n', 1, 'N', 122.0, 1)
+        q = M.get('qfd_io_xfifo')
+        if q is not None:
+            for k in range(sum(1 for i in model['insts'] if i.master in IO_CLUSTERS)):
+                add_face(q, f'lf{k}', 1, 'N', 4.0 + 2.0 * k, 1)
+        q = M.get(HOST_PHY[0])
+        if q is not None and iorec.get('host'):
+            h = Master(HOST_PHY[0], HOST_PHY[1], HOST_PHY[2], q.obs_top, q.note + ' | contract v5 T21: re-shaped abstract '
+                       '(physical/qwen_missing_phy/tp8_1013), RXD 512, FDI on the W face M4')
+            h.face('clk', 1, 'W', 'M4', FDI_Y0 + 0.012, 1)
+            h.face('rst_n', 1, 'W', 'M4', FDI_Y0 + FDI_STEP + 0.012, 1)
+            h.face('fdi', FDI_BITS, 'W', 'M4', FDI_Y0 + 2 * FDI_STEP + FDI_BITS * FDI_STEP / 2, 1)
+            for p in q.order:
+                if p not in h.ports and p in q.ports and p not in ('fdi', 'clk', 'rst_n'):
+                    h.ports[p] = q.ports[p]
+                    h.order.append(p)
+            M[HOST_PHY[0]] = h
         # ---- T14: the mirrored group keeps R0; its N / S pin faces swap (same x)
         for mn in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_sp_su64_sfu'):
             q = M.get(mn)
@@ -687,6 +854,9 @@ def _wrap(v, m, G, peers):
                 kw = dict(ports=tuple(p for p in q.ports if 'sp_vector_memory' in peers.get((inst, p), ())
                                       or p.startswith(('mer', 'rf'))))
             replan(model, M, inst, **kw)
+        vrec = model.setdefault('tp8b_v5', {}).setdefault('views', {})
+        for mn in VIEWS:
+            adopt_view(M, mn, split, vrec)
         return M
 
     def port_widths(model, k=1):
@@ -733,6 +903,8 @@ def _wrap(v, m, G, peers):
                     for b in range(nb):
                         ren[f'{bundle}[{j}]'] = f'{pn}[{b}]'
                         j += 1
+                if j == 1:
+                    ren[bundle] = parts[0][0]            # a 1-bit bundle emitted without an index
             out = [(ren.get(nm, nm), layer, r) for nm, layer, r in out]
         return out
 

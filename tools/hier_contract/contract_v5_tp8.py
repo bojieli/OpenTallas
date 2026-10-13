@@ -16,6 +16,18 @@ Deltas (lead decisions, el1011-qwen-tp8.log 2026-10-13 r8):
   T21 ROM IO: PHY abstract re-shape <= 2,320.2 x 1,563.8, RXD 512, FDI on W; io_serdes / io_ucie c / r as data + credit
       ports; slots pending the regenerated abstracts (el1013-qwen-romio.log)
   T22 qkd_seq merged-die port set: rf / tf deleted, r_sd 56 b, t_ds 187 b, t_flt deleted (pin list from el1013-qwen-kvcentre)
+r9 (same day, same version: v5 was not issued before):
+  T21 is no longer pending for the host PHY: the slot IS the merged abstract (physical/qwen_missing_phy/tp8_1013, 2320.056 x
+      1563.570, FDI 2,089 b on the W face M4); io_serdes_1 / _2 moved 43.2 um W (FDI access strip); link words = data +
+      valid with the flow, credit against it; cluster rst_n (reset net rst_io) and fault (to io_xfifo lf<k>)
+  T23 closed views are adopted pin for pin by the generator (stations, heads, cdc_wleaf, kvwq leaf / ctl_bin, qkd_rstseq 21.6
+      x 21.6, host PHY): slot pins = the view's LEF pins
+  T24 reset: rst_seq / rst_seq_ctlm / rst_fwd_s join the registered reset tree (tt_ctlm rsi on W)
+  T25 qkd_ectl head pins (e / s / t) stand under the grown head's S-face pin window (far-head nets 458 um)
+  T26 die clock delivery (el1013-pinreg-audit.log): insertion-compensated clock entry per tile; --stamp writes the per-cell
+      entry offsets of a pinreg audit into the slots
+
+    contract_v5_tp8.py --stamp V5.json --clock AUDIT.json     per-cell die clock entry (T26) into the contract, in place
 
     contract_v5_tp8.py --check V5.json [--case CASE]      schema + overlap + span + seams (+ every case instance a slot)
 """
@@ -28,12 +40,12 @@ import contract_v4_tp8 as V4   # noqa: E402
 import contract_v4b_tp8 as V4B   # noqa: E402
 
 V = 5
-LOG = 'el1011-qwen-tp8.log 2026-10-13 r8'
+LOG = 'el1011-qwen-tp8.log 2026-10-13 r8 / r9'
 TILE = (311.04, 1317.6)
 RHEAD = (712.8, 453.6)
 VM = V4.VM
 HARD_MACRO = ('qkd_pll', 'qfd_clkrx', 'ot_hbm3e_phy', 'ot_qfd_serdes_112g_x12_phy')
-PENDING_IO = ('qfd_io_serdes', 'qfd_io_ucie', 'ot_qfd_serdes_112g_x12_phy')
+PENDING_IO = ('qfd_io_serdes', 'qfd_io_ucie')          # r9: the host PHY slot is the merged abstract
 SEAMS_TAP = [('qfd_cst_s', 'tap_d', 'qfd_tile_nk', 'tap'), ('qfd_cst_n', 'tap_d', 'qfd_tile_nk', 'tap'),
              ('qfd_chead_w', 'e_d', 'qfd_sp_vector_memory', 'xw_d'), ('qfd_chead_e', 'w_d', 'qfd_sp_vector_memory', 'xe_d')]
 
@@ -146,11 +158,29 @@ def apply(C, prev=None, when='2026-10-13', source_note=''):
             s['hard_macro'] = True
             s['view_status'] = 'HARD-MACRO ABSTRACT (v5 T19): not a routed tile; LEF + lib owed by el1013-qwen-romio'
         if cell in PENDING_IO:
-            s['pending_view'] = ('v5 T21: PHY abstract re-shaped to <= 2,320.2 x 1,563.8 at RXD 512 (flit 1,043 b), FDI on '
-                                 'the W face y ~600-720 M4; io_serdes / io_ucie = cluster of qfd_link_adp512 + FDI relay '
-                                 'stations + the PHY; c_v + c_d[1023:0] in + c_cr out, r_v + r_d[1023:0] out + r_cr in, '
-                                 'rst_n, fault: the slot takes the regenerated abstract and the cluster pin list when '
-                                 'they are on main (el1013-qwen-romio.log)')
+            s['pending_view'] = ('v5 T21: cluster of qfd_link_adp512 (237.6 x 583.2, in the 237.6-um strip beside the PHY) + '
+                                 'FDI relay stations + the re-shaped PHY abstract (2320.056 x 1563.570, RXD 512, flit 1,043 '
+                                 'b, FDI on its W face); slot pins: c_d[1023:0] + c_v in + c_cr out, r_d[1023:0] + r_v out + '
+                                 'r_cr in, rst_n, fault; the cluster parent is not built (el1013-qwen-romio.log)')
+            s['kind'] = 'parent'
+        if cell == 'ot_qfd_serdes_112g_x12_phy':
+            s['hard_macro'] = True
+            s.pop('pending_view', None)
+            s['view_status'] = ('HARD-MACRO ABSTRACT (v5 T21): physical/qwen_missing_phy/tp8_1013/ot_qfd_serdes_112g_x12_phy '
+                                '(licensed-IP abstract, footprint and boundary timing ASSUMED); not judged by the routed-'
+                                'tile lint (a) / (c) (coordinator 2026-10-13)')
+            s['notes'] = re.sub(r' \| v5 T21.*$', '', s.get('notes', '')) + \
+                ' | v5 T21: host SerDes = the abstract by its own LEF: clk, rst_n, tx_up, tx_v, tx_flit[1042:0], rx_v, ' \
+                'rx_flit[1042:0] on the W face M4 y 600-700.344 (one track); the die reaches them from a 127.4-um strip W ' \
+                'of the macro (the last relays of host_fdi, 2,089 b)'
+        if cell == 'qkd_ectl':
+            s['notes'] = re.sub(r' \| v5 T25.*$', '', s.get('notes', '')) + \
+                ' | v5 T25: e0 / e3, s0 / s3, t0 / t1 stand straight under / over the head pins e / s / ti (head-local x - ' \
+                '64.8: 155.06 / 159.46 / 237.93); e1 / e2 and s1 / s2 beside them (- 11 / - 7 um): far-head nets 458 um'
+        if cell == 'qkd_rstseq':
+            s['notes'] = s.get('notes', '') + ' | r9: the CLOSED leaf qkd_rstseq-kc1-b4a0a3156 (21.6 x 21.6), reset in = ' \
+                'por_n (PLL lock); boot_done / boot_ok / link_up / soft_rst in and boot_go / rst_st / rso_host / rso_link ' \
+                'out have NO die net yet (open item)'
         p = P.get(s['name'])
         if p is not None and sig(p) == sig(s) and cell not in ('qfd_sp_vector_memory', 'qkd_rhead', 'qfd_tile_nk'):
             o = s['origin']
@@ -213,10 +243,35 @@ def apply(C, prev=None, when='2026-10-13', source_note=''):
                     'registered reset tree (0 cycles per token)'),
         dict(id='T20', slots=['qkd_rhead'], status='decided v5 (coordinator grant)',
              change='outline 691.2 x 453.6 (v4 T9) -> 712.8 x 453.6; 4 columns x 32 heads, die width unchanged'),
-        dict(id='T21', slots=list(PENDING_IO), status='decided v5, slots pending the regenerated abstracts',
-             change='ROM IO (el1013-qwen-romio): PHY abstracts instanced by their own LEF (hard macro), re-shaped to <= '
-                    '2,320.2 x 1,563.8, RXD 512, FDI pins on the W face; io_serdes / io_ucie clusters with child '
-                    'qfd_link_adp512 (237.6 x 583.2); c / r = data + credit ports, + rst_n, fault'),
+        dict(id='T21', slots=list(PENDING_IO) + ['ot_qfd_serdes_112g_x12_phy', 'qfd_io_xfifo'],
+             status='decided v5 (abstracts merged from codex/tp8-phy-prepared-1013; cluster parents not built)',
+             change='ROM IO (el1013-qwen-romio): the host SerDes slot is the re-shaped abstract by its own LEF (2320.056 x '
+                    '1563.570, RXD 512, flit 1,043 b, 2,091 pins on the W face M4 y 600-700.344), E edge kept; '
+                    'io_serdes_1 / _2 move 43.2 um W so a 127.4-um strip W of the macro holds the last host_fdi relays '
+                    '(FDI 2,085 -> 2,089 b); io_serdes / io_ucie stay 2557.848 / 6394.872 x 1563.816 cluster slots: the '
+                    'strip beside the PHY inside the cluster is 237.6 um (+80: the re-shape) for qfd_link_adp512; link '
+                    'words c / r = x_d[1023:0] + x_v with the flow and x_cr against it (the credit rides the word\'s relay '
+                    'frames), + rst_n (reset net rst_io from qfd_rstseq.rso_io, clocked by clk_serdes) and fault (1 b to '
+                    'io_xfifo.lf<k>)'),
+        dict(id='T23', slots=['qfd_cst_s', 'qfd_cst_n', 'qfd_chead_e', 'qfd_chead_w', 'qkd_cdc_wleaf', 'qkd_kvwq_leaf_s_w129_m',
+                              'qkd_kvwq_ctl_bin', 'qkd_rstseq', 'ot_qfd_serdes_112g_x12_phy'], status='decided v5 (r9)',
+             change='the generator adopts every CLOSED view pin for pin (tools/qwen_kv_die/tp8b_v5.py VIEWS): the slot pin '
+                    'positions are the view LEF\'s, so the relay plan, this contract and the case are made on the real '
+                    'pins and tools/qwen_tp8/bind_real.py drops the view LEF in unchanged (a master whose view differs in '
+                    'outline or pin set is refused with the reason)'),
+        dict(id='T24', slots=['qfd_rstseq', 'qfd_tt_ctlm', 'qfd_seq_su', 'qkd_rstseq'], status='decided v5 (r9)',
+             change='the ROM-side reset roots rst_seq (seq_su), rst_seq_ctlm (tt_ctlm, pin rsi on the W face) and the '
+                    'forwarded root rst_fwd_s (qkd_rstseq -> qfd_rstseq) are resets, not data: registered repeater trees '
+                    'like every other reset over the reach (0 cycles per token)'),
+        dict(id='T25', slots=['qkd_ectl', 'qkd_rhead'], status='decided v5 (r9)',
+             change='the engine-control leaf\'s head pins follow the grown head (T20): e0 / e3, s0 / s3, t0 / t1 in line '
+                    'with the head\'s S-face pins, so the far-head nets are 458 um (were 564-608 um after T20: 192 nets)'),
+        dict(id='T26', slots=['*'], status='decided (coordinator 2026-10-13 09:25, el1013-pinreg-audit.log)',
+             change='die clock delivery: the die brings the clock to tile X\'s clock pin at phi - R_X (R = insertion.json '
+                    'boundary mean), never a common phase at the pins; hop A -> B: o_A + 0.76 ps/um x L + s_B <= 833.3 - '
+                    '60 - SKEW (90 on one level, 150 across levels); tiles with R <= 300 ps share one level, R > 300 takes '
+                    'an earlier trunk tap; boundary spread <= 80 ps; clock_entry.die_arrival per slot is stamped from '
+                    'the pinreg audit of the case (contract_v5_tp8.py --stamp)'),
         dict(id='T22', slots=['qkd_seq'], status='decided v5 (port list owed by el1013-qwen-kvcentre)',
              change='merged-die sequencer: rf / tf deleted, r_sd[55:0], t_ds[186:0], t_flt deleted, r_kvd from seq_su, '
                     't_pw to tt_ctlm, gq / gr kept; valid / tag / credit ports as x_d + x_cr when ot_qkvd_seq_m is posted')]
@@ -256,7 +311,15 @@ def apply(C, prev=None, when='2026-10-13', source_note=''):
     item('qkd_rhead', 'v5 T20: build qkh_head_hs at 712.8 x 453.6 (el1013-qwen-kvleaves); pin offsets from its LEF at closure')
     item('qfd_tile_nk', 'v5 T14: tile parent at 311.04 x 1,317.6, layer cap M5, tap[507:0], rst_n E (el1011-q-tile)')
     for c in PENDING_IO:
-        item(c, 'v5 T21: slot pending the regenerated PHY abstract / cluster pin list (el1013-qwen-romio)')
+        item(c, 'v5 T21: cluster parent owed (qfd_link_adp512 + FDI relay stations + PHY abstract; el1013-qwen-romio); '
+                'qfd_link_adp512-m5a failed GRT on M4 (11 overflow): structural pin / channel repair first')
+    item('qfd_io_xfifo', 'v5 T21: link words as x_d + x_v + x_cr on both sides; lf0..3 = the link clusters\' fault bits')
+    item('qkd_host', 'v5 T21: host FDI is 2,089 b at RXD 512 (flit 1,043): the adapter in qkd_host follows '
+                     '(el1013-qwen-kvcentre)')
+    item('qkd_rstseq', 'v5 T23: the closed leaf has ports without a die net (boot_done / boot_ok / link_up / soft_rst in; '
+                       'boot_go / rst_st / rso_host / rso_link out): the die nets are owed by el1013-qwen-kvcentre')
+    item('qkd_ectl', 'v5 T25: rebuild the slot tile on the aligned head pins (qkd_ectl_slot-q13r3 failed hold; '
+                     'el1013-qwen-kvleaves)')
     for c in ('qkd_pll', 'qfd_clkrx'):
         item(c, 'v5 T19: hard-macro abstract owed (LEF + SS / TT / FF lib, el1013-qwen-romio)')
     item('qkd_seq', 'v5 T22: ot_qkvd_seq_m port list owed (el1013-qwen-kvcentre); the slot then takes it (v5b)')
@@ -289,7 +352,9 @@ def apply(C, prev=None, when='2026-10-13', source_note=''):
         change='re-derived from the case of the v5 generator (' + LOG + '; tools/hier_contract/contract_v5_tp8.py' +
                (', ' + source_note if source_note else '') + '): T14 tile 1,317.6 / die M6 over tiles / tap 508; T15 SU '
                'group N of the VM; T16 crom +32.4; T17 control strips as leaves + PHY per-PC pins; T18 seq_su bundles; '
-               'T19 reset leaves and trees; T20 rhead 712.8; T21 ROM IO pending; T22 qkd_seq ports.  Slots with a new '
+               'T19 reset leaves and trees; T20 rhead 712.8; T21 ROM IO (host PHY abstract bound, clusters owed); T22 '
+               'qkd_seq ports; T23 closed views adopted pin for pin; T24 ROM reset roots in the tree; T25 ectl head pins; '
+               'T26 die clock delivery.  Slots with a new '
                'outline or pin list: ' + cnt(changed) + '.  New cells: ' + cnt(new_cells) + '.  Removed: ' + cnt(gone) +
                '.  Moved only: ' + cnt(moved) + '.  Every other slot keeps its v4 record')]
     C['version'] = V
@@ -297,6 +362,33 @@ def apply(C, prev=None, when='2026-10-13', source_note=''):
     die['version'] = V
     die['notes'] = re.sub(r'contract v\d+', f'contract v{V}', die.get('notes', ''))
     return C
+
+
+def stamp_clock(C, audit):
+    """T26: per-cell die clock entry (pinreg_audit.py v2 tiles[].die_clock) into every slot of that cell"""
+    T = {t['cell']: t['die_clock'] for t in audit.get('tiles', []) if t.get('die_clock')}
+    n = 0
+    for s in C['slots'][1:]:
+        d = T.get(s['cell'])
+        if not d:
+            continue
+        R = d['reference_ps']
+        ce = s.setdefault('clock_entry', {})
+        ce['die_arrival'] = dict(vs_phi_tt_ps=d['entry_offset_ps'], vs_phi_ff_ps=d.get('entry_offset_ff_ps'),
+                                 reference_ps=R, reference_src=d.get('reference_src'),
+                                 boundary_spread_ps=d.get('boundary_spread_ps'),
+                                 level='common (R <= 300 ps)' if R <= 300.0 else f'early trunk tap by {round(R - 300.0, 1)} ps; its hops at SKEW 150')
+        n += 1
+    r = audit.get('rule', {})
+    C['clock_delivery'] = dict(
+        rule='clock at tile X clock pin = phi - R_X (insertion-compensated); never a common phase at the pins',
+        hop='o_A + w x L + s_B <= T - U - SKEW', period_ps=r.get('period_ps'), setup_unc_ps=r.get('setup_unc_ps'),
+        skew_same_level_ps=r.get('die_skew_ps'), skew_across_levels_ps=150.0, wire_ps_per_um=r.get('wire_ps_per_um'),
+        max_boundary_spread_ps=r.get('max_spread_ps'), level_cap_ps=300.0,
+        source=f"pinreg audit {audit.get('contract')} v{audit.get('contract_version')} @ {audit.get('source_commit')}",
+        cells_stamped=sorted(T), slots_stamped=n,
+        cells_without_view=sorted(q['cell'] for q in audit.get('not_auditable', [])))
+    return n
 
 
 def seams(C):
@@ -336,9 +428,17 @@ def case_slots(C, case):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--check', required=True)
+    ap.add_argument('--check')
     ap.add_argument('--case')
+    ap.add_argument('--stamp', help='contract to stamp in place with --clock (T26)')
+    ap.add_argument('--clock', help='pinreg_audit.py JSON of the case')
     a = ap.parse_args(argv)
+    if a.stamp:
+        C = json.load(open(a.stamp))
+        n = stamp_clock(C, json.load(open(a.clock)))
+        Path(a.stamp).write_text(json.dumps(C, indent=1) + '\n')
+        print(json.dumps(dict(stamped_slots=n, cells=C['clock_delivery']['cells_stamped'])))
+        return 0
     C = json.load(open(a.check))
     res = V4.check(C)
     res['seam_v5'] = seams(C)

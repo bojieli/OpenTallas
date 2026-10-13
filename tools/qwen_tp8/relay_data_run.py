@@ -49,7 +49,9 @@ rec['reset'] = dict(reset_tree=m.get('tp8_reset_tree'), reset_named_nets=len(rst
 rec['instances'] = len(m['insts'])
 (out / 'relay_run.json').write_text(json.dumps(rec, indent=1) + '\n')
 if '--case' in sys.argv:
-    v.case_real(m, out / 'case')
+    # r9: the chain-ready die case (real case + power abstracts + PDN r5, as `qwen_rom_fulldie_b3r2.py pdn --pdn-rev r5`)
+    # of THIS build, so the audited plan and the routed die are one placement
+    G.case_pdn(v, m, out / 'case', 63.64, 'r5')
 print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
                       unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'],
                       reset_over_500=len(rec['reset']['reset_named_over_500']), instances=rec['instances'])))

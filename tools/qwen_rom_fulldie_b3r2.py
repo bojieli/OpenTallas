@@ -3165,6 +3165,14 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return len(keep_) == len(fr)
 
     work = [idx for idx, pl in sorted(plans.items()) if needs_repair(pl)]
+    if _os.environ.get('OT_RELAY_TRACE'):
+        import time as _time
+        _t0 = _time.time()
+        for idx in work:
+            pl_ = plans[idx]
+            print('P2', pl_['bid'], pl_['cl'], pl_['bits'], 'n', len(pl_['frames']), 'cc', round(max(hops_of(pl_))),
+                  'p2p', round(max(p2p_hops(pl_))), 'back', backtracks(pl_),
+                  'path', [(round(a_), round(b_)) for a_, b_ in (pl_.get('path') or [])], flush=True)
     if GATE:
         # r9: every chain that needs repair leaves the grid BEFORE the first search.  Their pass-1 frames are the heaps
         # at the edges of the blocks their plans crossed; left in place they took the sites the earlier repairs needed
@@ -3179,7 +3187,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         pl = plans[idx]
         if not needs_repair(pl):
             continue
-        if repair(idx, pl) or not GATE:
+        _ok1 = repair(idx, pl)
+        if _os.environ.get('OT_RELAY_TRACE'):
+            print('P2R', pl['bid'], _ok1, 'n', len(pl['frames']), round(_time.time() - _t0), 's', unrep.get(pl['bid'], ''), flush=True)
+        if _ok1 or not GATE:
             continue
         if repair(idx, pl, True):
             # r8: last tier before a rip-up: the row-gap sites (relay sites stay in the gaps / corridors; run a1:
@@ -5661,7 +5672,11 @@ def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k
     B = {b[0]: b for b in m['buses']}
     # ---- bd
     head = {}
-    for side, cols in (('W', range(31, -1, -1)), ('E', range(32, v.COLS))):
+    # r9: the head row splits the columns and the rows in HALVES (64 x 24: 31 | 32 and 11 | 12, as before; tp8 48 x 16:
+    # 23 | 24 and 7 | 8 -- the fixed 31 / 11 walked the E head chain into the W side's sum)
+    hc, hr_ = v.COLS // 2, v.ROWS // 2
+    bd_at = None
+    for side, cols in (('W', range(hc - 1, -1, -1)), ('E', range(hc, v.COLS))):
         acc = 0
         for c in cols:
             acc += S(f'head_{c}')
@@ -5669,12 +5684,14 @@ def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k
     bd = 0
     for c in range(v.COLS):
         acc_s, acc_n = head[c], head[c]
-        for r in range(11, -1, -1):
+        for r in range(hr_ - 1, -1, -1):
             acc_s += S(f'cor_{c}_{r}')
-            bd = max(bd, acc_s + S(f'tap_{c}_{r}'))
-        for r in range(12, v.ROWS):
+            if acc_s + S(f'tap_{c}_{r}') > bd:
+                bd, bd_at = acc_s + S(f'tap_{c}_{r}'), (c, r, head[c])
+        for r in range(hr_, v.ROWS):
             acc_n += S(f'cor_{c}_{r}')
-            bd = max(bd, acc_n + S(f'tap_{c}_{r}'))
+            if acc_n + S(f'tap_{c}_{r}') > bd:
+                bd, bd_at = acc_n + S(f'tap_{c}_{r}'), (c, r, head[c])
     # ---- in-block tree: longest leaf -> root
     import re as _re
     tree = 0
@@ -5734,8 +5751,10 @@ def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k
                 hs[b[5:7]] += S(b)
         link = max(link, vs + max(hs.values() or [0]))
     rtl = json.loads((ROOT / ar_job).read_text())['wire_stages']
-    f2 = latency()
-    ops = f2['me_ops_on_token_path']
+    try:
+        ops, ops_src = latency()['me_ops_on_token_path'], 'latency()'
+    except Exception as e:   # noqa: BLE001  (a build tree without the result files latency() reads)
+        ops, ops_src = 217, f'217 = results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json (latency() unavailable: {type(e).__name__})'
     ls = v.link_stages(m)
     cur = dict(bd=bd, tree=tree, tws=tws, ord=ordv, link=link)
     base = dict(bd=rtl['bd'], tree=rtl['nws'] * 4, tws=rtl['tws'], ord=rtl['ord'], link=ls['r2_model_total_stages'])
@@ -5743,7 +5762,8 @@ def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k
     d_link = cur['link'] - base['link']
     per_token = ops * d_op + 2 * 36 * d_link
     return dict(schema='opentallas.qwen-rom-relay-token-cost.v1', stages_r21=cur, stages_rtl=base,
-                me_ops_per_ar_token=ops, delta_per_me_op=d_op, delta_link_per_traversal=d_link,
+                bd_worst_tile=dict(col=bd_at[0], row=bd_at[1], head_stages=bd_at[2], head_roots={f'head_{c}': S(f'head_{c}') for c in (hc - 1, hc)}) if bd_at else None,
+                me_ops_per_ar_token=ops, me_ops_source=ops_src, delta_per_me_op=d_op, delta_link_per_traversal=d_link,
                 cycles_per_ar_token=per_token,
                 basis='one register boundary per die hop (element ports registered); r21 relays add hops; the measured '
                       'token RTL carries the base stages (k_AR0 wire_stages bd / nws x 4 levels / tws / ord, r2 link)')
