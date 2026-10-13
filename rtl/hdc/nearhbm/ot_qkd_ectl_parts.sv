@@ -3,10 +3,11 @@
 // q13-kvleaves 2026-10-13: the near-HBM row-engine control cell qkd_ectl as THREE die leaves (A | B | C, west to east).
 // The one-tile form (qkd_ectl_slot-q13r3: 648 x 129.6 um, 14,806 sinks on one root, TritonCTS insertion 357..538 ps /
 // spread 181, declared spine 616..654 ps; CTS hold repair stalled on 8,710 endpoints) cannot give a 648-um strip one
-// short clock.  Split by the SRAM row (2 + 2 + 1 macros: 254.88 + 254.88 + 138.24 um), each leaf with its own clock root:
+// short clock.  Split by the SRAM row (2 + 2 + 0 macros: 254.88 + 254.88 + 138.24 um), each leaf with its own clock root:
 //   A (W face)  row response pin flops, row FIFO slice [511:0] (2 SRAMs), its S1 / S1b copies, the request relay (rq)
 //   B (middle)  row FIFO slice [1023:512] (2 SRAMs), its S1 / S1b copies, the control / decision words t_c / t_lt
-//   C (E face)  E-face pin stages, the q beat path, the e FIFO (1 SRAM), scores / running max / tags, node-beat tags
+//   C (E face)  E-face pin stages, the q beat path, the e FIFO (its 128 x 64 level in registers: no macro), scores /
+//               running max / tags, node-beat tags
 // No timing loop crosses a seam: every leaf carries a COPY OF THE CONTROL (the same RTL below; synthesis prunes what a
 // leaf does not drive) and a control-only copy of the FIFOs it does not hold.  The copies are identical machines because
 // every die input reaches each of them the same number of flops after its pin (three: pin flop in the leaf at the
@@ -366,8 +367,8 @@ module ot_qkd_ectl_part #(
     end else begin : g_rowsh
         ot_qkd_fifo2_sh #(.D(DQ), .D1(4)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .pop(consume), .nonempty(row_ne));
         assign row = {RWD{1'b0}};
-        ot_nhb_fifo_rows2_h #(.W(64), .D(DQ), .D1(4)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data_p),
-                                               .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count());
+        ot_qkd_efifo2 #(.D1(4)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data_p), .pop(pop_e), .dout(e_word),
+                                     .nonempty(e_ne));
     end endgenerate
 
     // ---- consumption: K pass -----------------------------------------------------------------------------------------
@@ -614,6 +615,61 @@ module ot_qkd_ectl_part #(
                 end
                 if ((|tf) || mac_fault || lt_fault) fault <= 1'b1;
             end
+        end
+    end
+endmodule
+
+// the e FIFO of leaf C: ot_nhb_fifo_rows2_h (W 64) with its 128-row SRAM level held in registers (128 x 64 flops, read
+// registered as the macro's: r_ce at edge n, word at n + 1) -- same control, same cycles, no macro in the 138-um leaf
+// (a 94.8-um macro cannot keep 20 um to both core edges there).
+module ot_qkd_efifo2 #(parameter integer D1 = 4) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        push,
+    input  wire [63:0] din,
+    input  wire        pop,
+    output wire [63:0] dout,
+    output wire        nonempty
+);
+    reg  [6:0] swp, srp;
+    reg  [7:0] scnt;
+    reg        rd_v;
+    reg  [3:0] l1_pend;
+`ifdef KVD_RMUT
+    wire       to_l1   = push && !rd_v && l1_pend < D1;
+`else
+    wire       to_l1   = push && scnt == 8'd0 && !rd_v && l1_pend < D1;
+`endif
+    wire       to_sram = push && !to_l1;
+    wire       rd      = (scnt != 8'd0) && (l1_pend + (to_l1 ? 1 : 0) < D1);
+    // 128 explicit 64-bit registers (no memory array: synthesis needs no memory-bits override) and a 7-level read mux
+    // tree (heap order: node i selects on srp[6 - depth(i)], leaves 127 .. 254 = entries 0 .. 127)
+    wire [63:0] mx [0:254];
+    reg  [63:0] srd;
+    genvar e;
+    generate
+        for (e = 0; e < 128; e = e + 1) begin : g_ent
+            reg [63:0] r;
+            always @(posedge clk) if (to_sram && swp == e) r <= din;
+            assign mx[127 + e] = r;
+        end
+        for (e = 0; e < 127; e = e + 1) begin : g_mx
+            assign mx[e] = srp[6 - ($clog2(e + 2) - 1)] ? mx[2*e + 2] : mx[2*e + 1];
+        end
+    endgenerate
+    always @(posedge clk) if (rd) srd <= mx[0];
+    wire        l1_push = to_l1 || rd_v;
+    wire [63:0] l1_din = rd_v ? srd : din;
+    ot_nhb_fifo_rows_r_h #(.W(64), .D(D1)) u_l1 (.clk(clk), .rst_n(rst_n), .push(l1_push), .din(l1_din), .pop(pop),
+                                              .dout(dout), .nonempty(nonempty), .count());
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin swp <= 0; srp <= 0; scnt <= 0; rd_v <= 1'b0; l1_pend <= 0; end
+        else begin
+            if (to_sram) swp <= swp + 7'd1;
+            if (rd) srp <= srp + 7'd1;
+            scnt <= scnt + (to_sram ? 8'd1 : 8'd0) - (rd ? 8'd1 : 8'd0);
+            rd_v <= rd;
+            l1_pend <= l1_pend + ((to_l1 || rd) ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0);
         end
     end
 endmodule
