@@ -8,7 +8,7 @@
 // nodes in 4 beats under one credit) with data that depends only on the position, so the two sides may run at different
 // times.  Compared per layer: the 8 lmax words, every Z block sum, Z done, the 64 P.V beats, every e the engines read,
 // and no fault.  Layers: T = 8192, 8191, 4097, 2048, 129, 1, 600, 8192 (two of them behind an empty start that the real
-// one overtakes after 60 / 150 cycles); plusarg +T=: that layer only; stack S = parameter.
+// one overtakes after 100 / 150 cycles); plusarg +T=: that layer only; stack S = parameter.
 //   PASS qkd_astk S=<s>: <n> layers exact ...     /    FAIL qkd_astk ...
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkd_astk_feng #(
@@ -335,11 +335,11 @@ module tb_qkd_astk #(
         for (li = 0; li < ntl; li = li + 1) begin
             seed = 32'h1234_5678 + li * 32'h0101_0101;
             T = tl[li][13:0];
-            if (li == 4 || li == 6) begin                 // a start that is overtaken: T 0, then the real start 60 / 150 cycles later
+            if (li == 4 || li == 6) begin                 // a start that is overtaken: T 0, then the real start 100 / 150 cycles later
                 T = 14'd0;
                 @(posedge clk); start <= 1'b1;
                 @(posedge clk); start <= 1'b0;
-                repeat ((li == 4) ? 60 : 150) @(posedge clk);
+                repeat ((li == 4) ? 100 : 150) @(posedge clk);       // (the M words of the empty layer are in before the second start)
                 T = tl[li][13:0];
             end
             @(posedge clk); start <= 1'b1; t0 = cyc;
