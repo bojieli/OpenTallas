@@ -483,11 +483,23 @@ module dsfd_sp_su_h #(
         end else if (TK == 2) begin : g_qbt
             assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
-            ot_s81_su_qbt #(.QB_NB(QB_NB), .S_RD(S_RD), .NPB(NPB)) u_qbt (
-                .clk(sk), .rst_in(rst[t]),
-                .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
-                .dn_v_i(dv[t]), .dn_d_i(dd[t]), .e_v(qe_v), .e_d(qe_d), .e_t(qe_t), .e_ob(qe_ob), .e_f4(qe_f4),
-                .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+            // full configuration (rate-aligned, S_RD == 2 NPB): two half-taps (the high one is the SW data half-tap, hardened
+            // once), cycle for cycle the single tap; reduced shapes: the assembling tap
+            if (S_RD == 2 * NPB) begin : g_sp
+                ot_s81_su_qbtl #(.QB_NB(QB_NB), .S_RD(S_RD), .NPB(NPB)) u_qbtl (
+                    .clk(sk), .rst_in(rst[t]),
+                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                    .dn_v_i(dv[t]), .dn_d_i(dd[t][S_RD*256-1:0]), .e_v(qe_v), .e_d(qe_d[NPB*512-1:0]), .e_t(qe_t), .e_ob(qe_ob),
+                    .e_f4(qe_f4), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+                ot_s81_su_swth #(.S_RD(S_RD)) u_qbth (
+                    .clk(sk), .dn_d_i(dd[t][S_RD*512-1:S_RD*256]), .e_d(qe_d[2*NPB*512-1:NPB*512]));
+            end else begin : g_as
+                ot_s81_su_qbt #(.QB_NB(QB_NB), .S_RD(S_RD), .NPB(NPB)) u_qbt (
+                    .clk(sk), .rst_in(rst[t]),
+                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                    .dn_v_i(dv[t]), .dn_d_i(dd[t]), .e_v(qe_v), .e_d(qe_d), .e_t(qe_t), .e_ob(qe_ob), .e_f4(qe_f4),
+                    .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+            end
         end else if (TK == 5) begin : g_qbe
             // equal-depth relays from the tap (every engine ERL stations: lockstep), positions 2 TI / 2 TI + 1
             wire [1:0] rv; wire [1023:0] rd; wire [23:0] rt; wire [13:0] rob; wire rf4;
