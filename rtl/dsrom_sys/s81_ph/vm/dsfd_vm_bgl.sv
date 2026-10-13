@@ -74,7 +74,9 @@ module dsfd_vm_bgl #(
     wire rst_i = rst_s[1];
     reg [BB-1:0] gidq;
 `ifdef OT_VMBGL_MUT_ID
-    always @(posedge clk) gidq <= {grp, bi} ^ {{(BB-1){1'b0}}, 1'b1};   // MUTANT: neighbour's bank id
+    // MUTANT: leaf 1 answers as bank 0 (two leaves on one id, bank 1 unserved).  NOT bi ^ 1: that permutes the banks
+    // consistently and is functionally invisible (master gate bgl_mut_id PASSed with it, 2026-10-13)
+    always @(posedge clk) gidq <= (bi == 1) ? {grp, {LB{1'b0}}} : {grp, bi};
 `else
     always @(posedge clk) gidq <= {grp, bi};
 `endif
