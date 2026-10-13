@@ -203,7 +203,7 @@ module ot_hgi_w8_bfifo #(parameter integer W=32) (
  assign o_v = cnt != 0;
  assign o_d = head_d;
 `ifdef OT_TOPK_FIFO_HEAD_MUT
- wire [1:0] next_rp = rp; // negative control: stale entry on dequeue
+ wire [1:0] next_rp = (W == 98) ? rp : rp + 1'b1; // stale output head; command/ingress protocol unchanged
 `else
  wire [1:0] next_rp = rp + 1'b1;
 `endif
