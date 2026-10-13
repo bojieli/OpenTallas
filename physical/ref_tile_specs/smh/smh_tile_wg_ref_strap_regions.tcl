@@ -57,7 +57,7 @@ odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk strap_l0_s1]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(257.72*$::sr_dbu)}] [expr {round(1096*$::sr_dbu)}] [expr {round(273.72*$::sr_dbu)}] [expr {round(1104*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(275.0*$::sr_dbu)}] [expr {round(1096*$::sr_dbu)}] [expr {round(291.0*$::sr_dbu)}] [expr {round(1104*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk strap_l0_s1]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -65,12 +65,12 @@ foreach net [$::sr_blk getNets] {
   if {[string first {g_strap[0].u_sr.s1[} $nm] >= 0 } { sr_bind $net $gr; incr nc; incr sn }
 }
 if {$nc != 26} {error "STRAP_REGION strap_l0_s1: expected 26 DFFs, got $nc"}
-sr_place $gr 265.72 1100
+sr_place $gr 283.0 1100
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk strap_l0_s2]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(257.72*$::sr_dbu)}] [expr {round(1056*$::sr_dbu)}] [expr {round(273.72*$::sr_dbu)}] [expr {round(1064*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(275.0*$::sr_dbu)}] [expr {round(1056*$::sr_dbu)}] [expr {round(291.0*$::sr_dbu)}] [expr {round(1064*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk strap_l0_s2]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -78,7 +78,7 @@ foreach net [$::sr_blk getNets] {
   if {[string first {g_strap[0].u_sr.s2[} $nm] >= 0 } { sr_bind $net $gr; incr nc; incr sn }
 }
 if {$nc != 26} {error "STRAP_REGION strap_l0_s2: expected 26 DFFs, got $nc"}
-sr_place $gr 265.72 1060
+sr_place $gr 283.0 1060
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk strap_l0_s3]
@@ -122,7 +122,7 @@ odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk strap_l1_s1]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(257.72*$::sr_dbu)}] [expr {round(946*$::sr_dbu)}] [expr {round(273.72*$::sr_dbu)}] [expr {round(954*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(275.0*$::sr_dbu)}] [expr {round(946*$::sr_dbu)}] [expr {round(291.0*$::sr_dbu)}] [expr {round(954*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk strap_l1_s1]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -130,12 +130,12 @@ foreach net [$::sr_blk getNets] {
   if {[string first {g_strap[1].u_sr.s1[} $nm] >= 0 } { sr_bind $net $gr; incr nc; incr sn }
 }
 if {$nc != 26} {error "STRAP_REGION strap_l1_s1: expected 26 DFFs, got $nc"}
-sr_place $gr 265.72 950
+sr_place $gr 283.0 950
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk strap_l1_s2]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(257.72*$::sr_dbu)}] [expr {round(646*$::sr_dbu)}] [expr {round(273.72*$::sr_dbu)}] [expr {round(654*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(275.0*$::sr_dbu)}] [expr {round(646*$::sr_dbu)}] [expr {round(291.0*$::sr_dbu)}] [expr {round(654*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk strap_l1_s2]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -143,12 +143,12 @@ foreach net [$::sr_blk getNets] {
   if {[string first {g_strap[1].u_sr.s2[} $nm] >= 0 } { sr_bind $net $gr; incr nc; incr sn }
 }
 if {$nc != 26} {error "STRAP_REGION strap_l1_s2: expected 26 DFFs, got $nc"}
-sr_place $gr 265.72 650
+sr_place $gr 283.0 650
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk strap_l1_s3]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(257.72*$::sr_dbu)}] [expr {round(346*$::sr_dbu)}] [expr {round(273.72*$::sr_dbu)}] [expr {round(354*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(275.0*$::sr_dbu)}] [expr {round(346*$::sr_dbu)}] [expr {round(291.0*$::sr_dbu)}] [expr {round(354*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk strap_l1_s3]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -156,7 +156,7 @@ foreach net [$::sr_blk getNets] {
   if {[string first {g_strap[1].u_sr.s3[} $nm] >= 0 } { sr_bind $net $gr; incr nc; incr sn }
 }
 if {$nc != 26} {error "STRAP_REGION strap_l1_s3: expected 26 DFFs, got $nc"}
-sr_place $gr 265.72 350
+sr_place $gr 283.0 350
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk strap_l1_s4]
@@ -177,7 +177,7 @@ puts "STRAP_REGION_PLACED 10 DFFS $sn FIXED_CELLS $::sr_fixed"
 set rn 0
 set rg [odb::dbRegion_create $::sr_blk rst_p0]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(1234.8*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(1242.8*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(1234.8*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(1242.8*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_p0]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -185,12 +185,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.p0$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_p0: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 1238.8
+sr_place $gr 271.2 1238.8
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_n1]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(1196*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(1204*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(1196*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(1204*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_n1]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -198,12 +198,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.n1$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_n1: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 1200
+sr_place $gr 271.2 1200
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_n2]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(1156*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(1164*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(1156*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(1164*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_n2]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -211,12 +211,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.n2$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_n2: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 1160
+sr_place $gr 271.2 1160
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_n3]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(1036*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(1044*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(1036*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(1044*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_n3]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -224,12 +224,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.n3$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_n3: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 1040
+sr_place $gr 271.2 1040
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_f_gn]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(1018*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(1026*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(1018*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(1026*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_f_gn]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -237,12 +237,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.f_gn$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_f_gn: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 1022
+sr_place $gr 271.2 1022
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_f_lhn]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(1010*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(1018*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(1010*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(1018*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_f_lhn]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -250,12 +250,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.f_lhn$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_f_lhn: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 1014
+sr_place $gr 271.2 1014
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_t1]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(896*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(904*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(896*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(904*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_t1]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -263,12 +263,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.t1$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_t1: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 900
+sr_place $gr 271.2 900
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_m2]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(756*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(764*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(756*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(764*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_m2]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -276,12 +276,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.m2$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_m2: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 760
+sr_place $gr 271.2 760
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_m3]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(628*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(636*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(628*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(636*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_m3]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -289,12 +289,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.m3$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_m3: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 632
+sr_place $gr 271.2 632
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_f_gm]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(614*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(622*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(614*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(622*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_f_gm]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -302,12 +302,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.f_gm$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_f_gm: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 618
+sr_place $gr 271.2 618
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_f_ptw]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(606*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(614*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(606*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(614*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_f_ptw]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -315,12 +315,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.f_ptw$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_f_ptw: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 610
+sr_place $gr 271.2 610
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_f_pte]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(598*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(606*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(598*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(606*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_f_pte]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -328,12 +328,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.f_pte$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_f_pte: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 602
+sr_place $gr 271.2 602
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_t2]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(556*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(564*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(556*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(564*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_t2]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -341,12 +341,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.t2$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_t2: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 560
+sr_place $gr 271.2 560
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_s3]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(246*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(254*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(246*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(254*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_s3]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -354,12 +354,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.s3$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_s3: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 250
+sr_place $gr 271.2 250
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_f_gs]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(228*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(236*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(228*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(236*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_f_gs]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -367,12 +367,12 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.f_gs$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_f_gs: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 232
+sr_place $gr 271.2 232
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 set rg [odb::dbRegion_create $::sr_blk rst_f_lhs]
 $rg setRegionType EXCLUSIVE
-odb::dbBox_create $rg [expr {round(245.92000000000002*$::sr_dbu)}] [expr {round(220*$::sr_dbu)}] [expr {round(261.92*$::sr_dbu)}] [expr {round(228*$::sr_dbu)}]
+odb::dbBox_create $rg [expr {round(263.2*$::sr_dbu)}] [expr {round(220*$::sr_dbu)}] [expr {round(279.2*$::sr_dbu)}] [expr {round(228*$::sr_dbu)}]
 set gr [odb::dbGroup_create $::sr_blk rst_f_lhs]
 set nc 0
 foreach net [$::sr_blk getNets] {
@@ -380,7 +380,7 @@ foreach net [$::sr_blk getNets] {
   if {[regexp {u_rt\.f_lhs$} $nm]} { sr_bind $net $gr; incr nc; incr rn }
 }
 if {$nc != 1} {error "RESET_STATION rst_f_lhs: expected 1 register, got $nc"}
-sr_place $gr 253.92000000000002 224
+sr_place $gr 271.2 224
 odb::dbGroup_destroy $gr
 odb::dbRegion_destroy $rg
 if {$rn != 16} {error "RESET_STATION expected 16 registers"}

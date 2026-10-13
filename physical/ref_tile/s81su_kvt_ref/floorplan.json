@@ -79,6 +79,8 @@
   "physical/qwen_die_masters/pre_cts_skew.tcl",
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
-  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81su_taps/s81su_kvt_ref_io.tcl"
  ]
 }

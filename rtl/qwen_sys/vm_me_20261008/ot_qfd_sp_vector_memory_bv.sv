@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+`ifndef OT_QFD_VM_TILE_MOD
+`define OT_QFD_VM_TILE_MOD ot_qfd_vm_grp
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // Die master qfd_sp_vector_memory_bv (qwen-vm-me 2026-10-08): the banked vector memory of qwen-rtl-finish
 // (ot_qfd_sp_vector_memory: 64 row banks, the parallel ME x service) completed with the ports the token bench's
@@ -117,7 +120,14 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer MEE = 0,
     parameter integer VMT = 0,
     parameter integer RV = 1,
-    parameter integer RO = 2
+    parameter integer RO = 2,
+    // qwen-tp8-vm 2026-10-13 (0 = unchanged): BIT-PLANE x transport (requires VMT = 1, XPR >= RO).  The tiles' x words
+    // take XPR me-enabled relay leaves (ot_qfd_vm_xrelay_t), then 32 plane leaves (ot_qfd_vm_xplane_t: pin flop, rot1,
+    // rot2, bv for one bit position of every element) replace the parent's rot1 / rot2 / bv.  x latency
+    // + XPR + 1 - RO engine edges (the x consumer's XVM grows by it); pop, NPP, SU and row paths unchanged.
+    // MUT = 3 / 4 / 5: plane 5's fine rotation / element shift / range count wrong; MUT = 6: a relay free-runs;
+    // MUT = 7: planes 0 and 1 swapped at the leaves' outputs (all must FAIL).
+    parameter integer XPR = 0
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -194,7 +204,9 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer TLX = (VMT != 0) ? 1 + TNI + TNX : 0;
     localparam integer TLR = (VMT != 0) ? 2 + TNI + TNX : 0;
     localparam integer TLS = (VMT != 0) ? 1 + TNI + TNS : 0;
-    localparam integer XS = (VMT != 0) ? RV + RO + 2 + TLX : 0;  // extra engine edges, x path (rot1 at issue + 4 + XS)
+    localparam integer XA = (VMT != 0 && XPR != 0) ? XPR + 1 - RO : 0;   // bit-plane transport: added x edges
+    localparam integer XRN = (VMT != 0 && XPR != 0) ? XPR : RO;          // x relays after the tile's xo register
+    localparam integer XS = (VMT != 0) ? RV + RO + 2 + TLX + XA : 0;  // extra engine edges, x path (rot1 at issue + 4 + XS)
     localparam integer SX = (VMT != 0) ? RV + RO + 1 + TLS : 0;  // extra edges, SU answers
     localparam integer RL = (VMT != 0) ? RV + RO + 5 + TLR : 3;  // row read: r_qr at r_v + 2 (+ RV + RO + 2 + TLR)
     localparam integer NPP = RV + 6 + TLX;                       // tile x FIFO: beats in flight between push and pop
@@ -709,20 +721,32 @@ module ot_qfd_sp_vector_memory_bv #(
                 assign pw[kq] = r;
             end
             wire [8*512-1:0] xo; wire [511:0] ro_t; wire [NSU*NSB*512-1:0] so_t; wire ovf_t;
-            ot_qfd_vm_grp #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
+            `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
                 .USE_MACRO(USE_MACRO), .NPP(NPP), .MEREG((MEE != 0) ? 1 : 0), .NRI(TNI), .NRX(TNX), .NRS(TNS)) u_t (
                 .clk(clk), .rst_n(rst_n), .me_in((MEE != 0) ? me_en_e : me_en),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .xv(d_xv), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
                 .pop(pw[RO-1]), .xo(xo), .ro(ro_t), .so(so_t), .ovf(ovf_t));
-            wire [(RO+1)*8*512-1:0] xw;          // x words: tile register, then RO engine-edge relays
+            wire [(XRN+1)*8*512-1:0] xw;         // x words: tile register, then XRN engine-edge relays
             assign xw[0 +: 8*512] = xo;
-            for (kq = 1; kq <= RO; kq = kq + 1) begin : g_xr
-                reg [8*512-1:0] r;
-                always @(posedge clk) if (mxg) r <= xw[(kq-1)*8*512 +: 8*512];
-                assign xw[kq*8*512 +: 8*512] = r;
+            if (XPR == 0) begin : g_xsoft
+                for (kq = 1; kq <= RO; kq = kq + 1) begin : g_xr
+                    reg [8*512-1:0] r;
+                    always @(posedge clk) if (mxg) r <= xw[(kq-1)*8*512 +: 8*512];
+                    assign xw[kq*8*512 +: 8*512] = r;
+                end
+            end else begin : g_xleaf            // one 512-b relay leaf per bank per stage, own me replica
+                genvar kb;
+                for (kq = 1; kq <= XRN; kq = kq + 1) begin : g_xr
+                    for (kb = 0; kb < 8; kb = kb + 1) begin : g_b
+                        ot_qfd_vm_xrelay_t #(.W(512), .MEREG((MEE != 0) ? 1 : 0),
+                            .MUT((MUT == 6 && g == 0 && kb == 3 && kq == XRN) ? 1 : 0)) u_r (.clk(clk),
+                            .me_e((MEE != 0) ? me_en_e : me_en),
+                            .d(xw[((kq-1)*8 + kb)*512 +: 512]), .q(xw[(kq*8 + kb)*512 +: 512]));
+                    end
+                end
             end
-            assign capx[g*8*512 +: 8*512] = xw[RO*8*512 +: 8*512];
+            assign capx[g*8*512 +: 8*512] = xw[XRN*8*512 +: 8*512];
             wire [511:0] ro_r;
             ot_hdc_delay #(.W(512), .D(RO)) u_rr (.clk(clk), .rst_n(rst_n), .d(ro_t), .q(ro_r));
             assign ro_all[g*512 +: 512] = ro_r;
@@ -741,21 +765,48 @@ module ot_qfd_sp_vector_memory_bv #(
         assign t_ovf = |ovf_all;
     end endgenerate
     reg [NRB*512-1:0] rot1, rot2;
-    wire [LNRB-1:0] rot = s3_a[4 +: LNRB];
-    always @(posedge clk) begin
-        for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB])
-            rot1[i*512 +: 512] <= capx[((i + (rot & ~((NRB >= 8) ? 7 : 0))) % NRB)*512 +: 512];
-    end
-    wire [LNRB-1:0] rotf = s4_a[4 +: LNRB] & ((NRB >= 8) ? 7 : {LNRB{1'b1}});
-    always @(posedge clk) begin
-        for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB]) rot2[i*512 +: 512] <= rot1[((i + ((NRB >= 8) ? rotf : 0)) % NRB)*512 +: 512];
-    end
     reg [BEAT*32-1:0] bv;
-    wire [3:0] sh = s5_a[3:0] + ((MUT == 2) ? 4'd1 : 4'd0);
-    always @(posedge clk) begin
-        for (i = 0; i < BEAT; i = i + 1) if (me_x[(i * 8) / BEAT])
-            bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
-    end
+    wire [BEAT*32-1:0] bvs;
+    generate if (XPR == 0 || VMT == 0) begin : g_rsoft
+        wire [LNRB-1:0] rot = s3_a[4 +: LNRB];
+        always @(posedge clk) begin
+            for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB])
+                rot1[i*512 +: 512] <= capx[((i + (rot & ~((NRB >= 8) ? 7 : 0))) % NRB)*512 +: 512];
+        end
+        wire [LNRB-1:0] rotf = s4_a[4 +: LNRB] & ((NRB >= 8) ? 7 : {LNRB{1'b1}});
+        always @(posedge clk) begin
+            for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB]) rot2[i*512 +: 512] <= rot1[((i + ((NRB >= 8) ? rotf : 0)) % NRB)*512 +: 512];
+        end
+        wire [3:0] sh = s5_a[3:0] + ((MUT == 2) ? 4'd1 : 4'd0);
+        always @(posedge clk) begin
+            for (i = 0; i < BEAT; i = i + 1) if (me_x[(i * 8) / BEAT])
+                bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
+        end
+        assign bvs = bv;
+    end else begin : g_plane
+        //: 32 plane leaves.  Control at the leaves' pins one engine edge before s3: xs_a (a register of the seam
+        //: queue) and nvx, the count of in-range elements of the beat, registered from the queue entry one earlier.
+        localparam integer NVW = $clog2(BEAT + 1);
+        localparam integer QWP = LB + AW + ND + 4;
+        wire [AW-1:0] a_pre = g_xs.qd[(XS-2)*QWP + ND + 4 +: AW];
+        reg  [NVW-1:0] nvx;
+        always @(posedge clk) if (me_c)
+            nvx <= (a_pre >= ELEMS) ? {NVW{1'b0}} : ((ELEMS - a_pre) >= BEAT) ? BEAT[NVW-1:0] : NVW'(ELEMS - a_pre);
+        genvar pl, pb;
+        for (pl = 0; pl < 32; pl = pl + 1) begin : g_p
+            wire [NRB*16-1:0] pd;
+            wire [BEAT-1:0]   pq;
+            for (pb = 0; pb < NRB*16; pb = pb + 1) begin : g_i
+                assign pd[pb] = capx[pb*32 + pl];
+            end
+            ot_qfd_vm_xplane_t #(.NRB(NRB), .MEREG((MEE != 0) ? 1 : 0),
+                .MUT((pl == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0)) u_p (.clk(clk),
+                .me_e((MEE != 0) ? me_en_e : me_en), .d(pd), .c_a(xs_a[LNRB+3:0]), .c_nv(nvx), .q(pq));
+            for (pb = 0; pb < BEAT; pb = pb + 1) begin : g_o
+                assign bvs[pb*32 + ((MUT == 7 && pl < 2) ? 1 - pl : pl)] = pq[pb];
+            end
+        end
+    end endgenerate
     reg [NX*32-1:0] line;
     generate for (c = 0; c < NX; c = c + 1) begin : g_ent
         wire [ND-1:0] hit;
@@ -766,7 +817,7 @@ module ot_qfd_sp_vector_memory_bv #(
             localparam integer MM = (c * DV) % BEAT;
             if (JJ < BMAX) begin : g_ok
                 assign hit[dd] = s6_d[dd] && (s6_j == JJ);
-                assign src[dd*32 +: 32] = bv[MM*32 +: 32];
+                assign src[dd*32 +: 32] = bvs[MM*32 +: 32];
             end else begin : g_no
                 assign hit[dd] = 1'b0;
                 assign src[dd*32 +: 32] = 32'd0;
