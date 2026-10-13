@@ -2,7 +2,7 @@
 # Qwen ROM TP8 track B: build the attention layer step through the MERGED-die KV sequencer (Verilator 5; the two-die
 # form is rtl/test/qwen_kv_die/build_qkvd_tb.sh, whose STACK=h source set this follows).
 #   build_layer_m.sh <outdir> [-GROM_ST=.. -GLINK=.. -GQX=.. -GRX=.. -GKVL=.. -GMUT=..]    env CLUSTER=1: DUT = the
-#   hardened-leaf cluster qkd_seq (rtl/physical/ot_qwen_kv_centre_slots.sv); SEQMUT=1: its wiring mutant.
+#   hardened-leaf cluster qkd_seq (the slots file under rtl); SEQMUT=1: its wiring mutant.
 set -e
 OUT=$1; shift
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -12,7 +12,7 @@ mkdir -p $OUT
 awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > $OUT/ot_hdc_lzc32_only.sv
 STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv $W/hdc/nearhbm/ot_qkh_subtiles.sv"
 DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_ND=${ND:-1} ${CLUSTER:++define+KVD_CLUSTER} ${SEQMUT:++define+OT_QKD_SEQ_MUT}"
-SRC="$W/test/qwen_kv_die/ot_qkvd_layer_m_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv $W/physical/ot_qwen_kv_centre_slots.sv \
+SRC="$W/test/qwen_kv_die/ot_qkvd_layer_m_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv $P/rtl/physical/ot_qwen_kv_centre_slots.sv \
  $W/qwen_sys/ot_qwen_sys_rst_seq.sv $W/lib/ot_reset_sync.sv \
  $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_cbridge.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv \
  $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv $W/lib/ot_rst_relay.sv \

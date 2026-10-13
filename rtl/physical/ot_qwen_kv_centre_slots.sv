@@ -44,12 +44,18 @@ module qkd_seq_core (
     output wire [2:0]    s_kidx,
     output wire          s_kwgo,
     output wire [1:0]    s_kwn,
-    output wire [55:0]   f_aqm,
-    output wire [45:0]   f_kwm,
-    output wire [65:0]   f_kc,
-    input  wire [3:0]    f_cr,
-    input  wire [3:0]    f_af,
-    input  wire [3:0]    f_mf,
+    output wire [27:0]   f_aqm_w,                 // W fans (WS, WN) / E fans (ES, EN): own registered copies
+    output wire [27:0]   f_aqm_e,
+    output wire [22:0]   f_kwm_w,
+    output wire [22:0]   f_kwm_e,
+    output wire [32:0]   f_kc_w,
+    output wire [32:0]   f_kc_e,
+    input  wire [1:0]    f_cr_w,                  // {WN, WS}
+    input  wire [1:0]    f_cr_e,                  // {EN, ES}
+    input  wire [1:0]    f_af_w,
+    input  wire [1:0]    f_af_e,
+    input  wire [1:0]    f_mf_w,
+    input  wire [1:0]    f_mf_e,
     output wire          hs,
     input  wire [519:0]  ar,
     input  wire          hf,
@@ -67,7 +73,8 @@ module qkd_seq_core (
         .dc_cr(r_sd_cr), .kvd(r_kvd), .ar_v(t_ar[519]), .ar_d(t_ar[518:0]), .ar_cr(t_ar_cr), .dh_v(t_ds[528]),
         .dh_d(t_ds[527:0]), .dh_cr(t_ds_cr), .pw_v(t_pw[74]), .pw_addr(t_pw[73:64]), .pw_data(t_pw[63:0]),
         .rflt(t_flt[8]), .rflt_cause(t_flt[7:0]), .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo),
-        .s_kwn(s_kwn), .f_aqm(f_aqm), .f_kwm(f_kwm), .f_kc(f_kc), .f_cr(f_cr), .f_af(f_af), .f_mf(f_mf), .hs(hs),
+        .s_kwn(s_kwn), .f_aqm({f_aqm_e, f_aqm_w}), .f_kwm({f_kwm_e, f_kwm_w}), .f_kc({f_kc_e, f_kc_w}), .f_cr({f_cr_e, f_cr_w}),
+        .f_af({f_af_e, f_af_w}), .f_mf({f_mf_e, f_mf_w}), .hs(hs),
         .a_out_valid(ar[519]), .a_out_g(ar[518]), .a_out_beat(ar[517:512]), .a_out_data(ar[511:0]), .a_hub_fault(hf),
         .hc_v(hc[528]), .hc_d(hc[527:0]), .hc_cr(hc_cr), .tok_v(tk[528]), .tok_d(tk[527:0]), .tok_cr(tk_cr),
         .fault(kst[9]), .fault_cause(kst[8:0]));
@@ -84,13 +91,15 @@ module qkd_seq_xs (
     input  wire [2:0]    kidx,
     input  wire          kwgo,
     input  wire [1:0]    kwn,
-    output wire [255:0]  q,
-    output wire [511:0]  kw
+    output wire [127:0]  q_w,                     // to the W fans / the E fans: own registered copies
+    output wire [127:0]  q_e,
+    output wire [255:0]  kw_w,                    // {word {vg, 1} slice, word {vg, 0} slice}
+    output wire [255:0]  kw_e
 );
     wire rr;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
     ot_qkvd_seq_m_store #(.DW(128), .XS(40), .KD(8)) u_body (.clk(ck), .rst_n(rr), .x_v(x_v), .x_cls(x_cls), .x_d(x_d),
-        .qpop(qpop), .kpop(kpop), .kidx(kidx), .kwgo(kwgo), .kwn(kwn), .q(q), .kw(kw));
+        .qpop(qpop), .kpop(kpop), .kidx(kidx), .kwgo(kwgo), .kwn(kwn), .q({q_e, q_w}), .kw({kw_e, kw_w}));
 endmodule
 
 module qkd_seq_fan (
@@ -168,21 +177,22 @@ module qkd_seq (
     wire          s_qpop, s_kpop, s_kwgo;
     wire [2:0]    s_kidx;
     wire [1:0]    s_kwn;
-    wire [55:0]   f_aqm;
-    wire [45:0]   f_kwm;
-    wire [65:0]   f_kc;
+    wire [27:0]   f_aqm [0:1];
+    wire [22:0]   f_kwm [0:1];
+    wire [32:0]   f_kc  [0:1];
     wire [3:0]    f_cr, f_af, f_mf;
     wire [255:0]  sq  [0:3];
     wire [511:0]  skw [0:3];
     qkd_seq_core u_core (.ck(ck), .rst_n(rst_n), .x3_v(r_x3[523]), .x3_tag(r_x3[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
         .r_sd_cr(r_sd_cr), .r_kvd(r_kvd), .t_ar(t_ar), .t_ar_cr(t_ar_cr), .t_ds(t_ds), .t_ds_cr(t_ds_cr), .t_pw(t_pw),
-        .t_flt(t_flt), .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm(f_aqm),
-        .f_kwm(f_kwm), .f_kc(f_kc), .f_cr(f_cr), .f_af(f_af), .f_mf(f_mf), .hs(hs), .ar(ar), .hf(hf), .hc(hc),
+        .t_flt(t_flt), .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm_w(f_aqm[0]),
+        .f_aqm_e(f_aqm[1]), .f_kwm_w(f_kwm[0]), .f_kwm_e(f_kwm[1]), .f_kc_w(f_kc[0]), .f_kc_e(f_kc[1]), .f_cr_w(f_cr[1:0]),
+        .f_cr_e(f_cr[3:2]), .f_af_w(f_af[1:0]), .f_af_e(f_af[3:2]), .f_mf_w(f_mf[1:0]), .f_mf_e(f_mf[3:2]), .hs(hs), .ar(ar), .hf(hf), .hc(hc),
         .hc_cr(hc_cr), .tk(tk), .tk_cr(tk_cr), .kst(kst));
     genvar s, k;
     generate for (s = 0; s < 4; s = s + 1) begin : g_xs
         qkd_seq_xs u_xs (.ck(ck), .rst_n(rst_n), .x_v(r_x3[523]), .x_cls(r_x3[522:520]), .x_d(r_x3[128*s +: 128]),
-            .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q(sq[s]), .kw(skw[s]));
+            .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q_w(sq[s][127:0]), .q_e(sq[s][255:128]), .kw_w(skw[s][255:0]), .kw_e(skw[s][511:256]));
     end endgenerate
     // the store slices' two copies -> the full words of the W (copy 0) and E (copy 1) fans
     wire [511:0]  fq  [0:1];
@@ -205,8 +215,8 @@ module qkd_seq (
     wire [3:0]    af = {af_EN, af_ES, af_WN, af_WS};
     wire [3:0]    mf = {mf_EN, mf_ES, mf_WN, mf_WS};
     generate for (k = 0; k < 4; k = k + 1) begin : g_fan
-        qkd_seq_fan u_fan (.ck(ck), .rst_n(rst_n), .aqm(f_aqm[28*(k/2) +: 28]), .q(fq[k/2]), .kwm(f_kwm[23*(k/2) +: 23]),
-            .kw(fkw[k/2]), .kc_i(f_kc[33*(k/2) +: 33]), .aq(aq[k]), .kvn(kvn[k]), .kc(kc[k]), .kvn_cr(cr[k]), .af(af[k]),
+        qkd_seq_fan u_fan (.ck(ck), .rst_n(rst_n), .aqm(f_aqm[k/2]), .q(fq[k/2]), .kwm(f_kwm[k/2]),
+            .kw(fkw[k/2]), .kc_i(f_kc[k/2]), .aq(aq[k]), .kvn(kvn[k]), .kc(kc[k]), .kvn_cr(cr[k]), .af(af[k]),
             .mf(mf[k]), .cr_o(f_cr[k]), .af_o(f_af[k]), .mf_o(f_mf[k]));
     end endgenerate
     assign aq_WS = aq[0];   assign aq_WN = aq[1];   assign aq_ES = aq[2];   assign aq_EN = aq[3];
