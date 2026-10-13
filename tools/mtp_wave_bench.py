@@ -43,10 +43,10 @@ SRC = [
     f'{M}/dsfd_mtp_seq_rtt.sv', f'{M}/dsfd_mtp_partner_ep.sv', f'{C}/dsfd_coll_mtp_lane.sv', f'{M}/dsfd_coll_mtp_ep.sv',
     'rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv', f'{C}/ot_s81ph_skid2.sv',
     # primary die
-    f'{M}/ot_dsrom_mtp_seed_launch.sv', f'{M}/ot_dsrom_mtp_hrow.sv',
+    f'{M}/ot_dsrom_mtp_seed_launch.sv', f'{M}/ot_dsrom_mtp_hrow.sv', f'{M}/ot_dsrom_mtp_hrow_bank.sv',   # hrow_rx's hardened bank (el1013)
     # draft die A: P2
     f'{C}/dsfd_coll_p2_lane.sv', f'{D}/ot_mtp_p2_ordered_rows.sv', f'{D}/ot_mtp_p2_prefix.sv', f'{D}/ot_mtp_p2_prefix_native.sv',
-    f'{D}/ot_mtp_p2_prefix_path.sv', f'{D}/dsfd_p2_lnk.sv', f'{D}/dsfd_p2_rtt.sv', 'rtl/v41rom/ot_v41_fadd.sv',
+    f'{D}/ot_mtp_p2_prefix_path.sv', f'{D}/ot_mtp_p2_tiles.sv', f'{D}/dsfd_p2_lnk.sv', f'{D}/dsfd_p2_rtt.sv', 'rtl/v41rom/ot_v41_fadd.sv',
     'rtl/common/ot_prefix.sv', 'rtl/common/ot_secded.sv', 'rtl/common/ot_sc_pfifo.sv',
     # draft head Markov join
     'rtl/v41rom/ot_v41_bmul2.sv', 'rtl/v41rom/ot_dsrom_bmul3.sv', 'rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv',

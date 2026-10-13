@@ -210,53 +210,76 @@ endmodule
 module dsfd_wfc_hep #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
     input  wire clk, rst_n,
     input  wire [USER_W+2*NW:0] ks,          // the kit's stage start {start, user, token, pos}
-    output wire [USER_W+NW+EW:0] hep         // {v, user, pos, epoch}
+    output wire [USER_W+NW+EW:0] hep         // {v, user, pos, epoch}, THREE edges after the start (was one)
 );
-    // el1013-s81-wfcstg 2026-10-13 (clock rule: <= 15k sinks per root): the 2^USER_W x (NW + EW + 1) state (26.6k flops
-    // at 1,024 users) is two hardened banks dsfd_wfc_hep_bank, one per user MSB (13,348 flops each).  Both see every
-    // start; only the addressed bank updates and drives its registered output (the other holds 0), so the OR below is
-    // the flat module's output cycle for cycle (reference dsfd_wfc_hep_flat, bench tools/dsrom_wfc_hep_bench.py).
-    wire [USER_W+NW+EW:0] h0, h1;
-    wire [0:0] ckv = clk, rsv = rst_n;
-    dsfd_wfc_hep_bank #(.NW(NW), .USER_W(USER_W), .EW(EW)) u_b0 (.ckv(ckv), .rsv(rsv), .f_bid(1'b0),
-        .f_st(ks[USER_W+2*NW]), .f_u(ks[2*NW +: USER_W]), .f_p(ks[NW-1:0]), .t_hep(h0));
-    dsfd_wfc_hep_bank #(.NW(NW), .USER_W(USER_W), .EW(EW)) u_b1 (.ckv(ckv), .rsv(rsv), .f_bid(1'b1),
-        .f_st(ks[USER_W+2*NW]), .f_u(ks[2*NW +: USER_W]), .f_p(ks[NW-1:0]), .t_hep(h1));
-    assign hep = h0 | h1;
+    // el1013-s81-wfcstg 2026-10-13: the 2^USER_W x (NW + EW + 1) flop table (26.6k flops; as two 13.3k-flop banks the
+    // pre-route gate refused it: 72k cells, util 70 %, the user pin on 12,661 loads, CTS failed) is the die tile
+    // dsfd_wfc_hep_t below: one 1R1W SRAM macro + pin flops.  The start is registered once before the tile -- in the
+    // sp_wfc cluster that register is leaf dsfd_wfc_vmx_w's t_hks output (register -> wire -> register at the tile
+    // pin) -- so the kit and the cluster are the same function cycle for cycle: t_hep moves +2 serial cycles against
+    // the flop table.  The consumer dsfd_mtp_hrow_src only queues the event (valid-driven FIFO, the VM row read waits
+    // for the row's completion), so a constant delay changes nothing there (benches hep_* / posthep_* / prc_*).
+    reg [USER_W+NW:0] hq;
+    always @(posedge clk) hq <= {ks[USER_W+2*NW], ks[2*NW +: USER_W], ks[NW-1:0]};
+    dsfd_wfc_hep_t #(.NW(NW), .USER_W(USER_W), .EW(EW)) u_t (.ckv(clk), .rsv(rst_n), .f_hks(hq), .t_hep(hep));
 endmodule
 
-// dsfd_wfc_hep_bank: one user-MSB half of the issue-epoch table, a die tile (ckv domain; pin -> read / compare / +1 ->
-// flop, registered output).  2^(USER_W-1) x {last pos NW, epoch EW, seen} + the output register.
-module dsfd_wfc_hep_bank #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
+// dsfd_wfc_hep_t: the issue-epoch table as a die tile (ckv domain).  State per user {last pos NW, epoch EW} in ONE
+// ot_sram_1r1w_512x128_m4_r2c2 (two users a word: user[8:0] = address, user[9] = the 32-bit half, masked write) and a
+// seen bit per user in flops (the reset state; the array powers up random and is never read as valid before its
+// user's first start).  Pipeline, every port a register or the macro's own pin register:
+//   edge 1  pins {start, user, pos} -> pin flops s1 and, in parallel, the macro's read address / enable
+//   edge 2  rd_out (or the previous start's values when it was the same user: the write of start k lands on the edge
+//           that reads for start k + 1, read-before-write) -> compare / +1 -> output register t_hep and the masked
+//           write of {pos, epoch}; seen[user] <= 1
+// A user's first start reports epoch 0 (the value stored for it).
+// Mutants: OT_WFCHEP_MUT_STALE (the epoch never advances), OT_WFCHEP_MUT_NOFWD (no same-user forwarding).
+module dsfd_wfc_hep_t #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
     input  wire [0:0] ckv, rsv,
-    input  wire [0:0] f_bid,                 // bank id strap (the user MSB this tile serves): one master, two instances
-    input  wire [0:0] f_st, input wire [USER_W-1:0] f_u, input wire [NW-1:0] f_p,
-    output reg  [USER_W+NW+EW:0] t_hep       // {v, user, pos, epoch}; 0 unless this bank's user started last cycle
+    input  wire [USER_W+NW:0] f_hks,         // {start, user, pos}, from a flop
+    output wire [USER_W+NW+EW:0] t_hep       // {v, user, pos, epoch}, from a flop; 0 unless a start arrived 2 edges ago
 );
-    localparam integer NB = 1 << (USER_W - 1);
-    reg [NW-1:0] last [0:NB-1]; reg [EW-1:0] ep [0:NB-1]; reg [NB-1:0] seen;
-    wire [USER_W-2:0] a = f_u[USER_W-2:0];
-`ifdef OT_WFCHEP_MUT_BANK
-    wire st = f_st[0];                                     // MUTANT: bank select dropped (both banks answer)
+    localparam integer HW = 32;              // one user's field in the 128-bit word
+    initial if (USER_W != 10 || NW + EW > HW) $fatal(1, "dsfd_wfc_hep_t: the 512 x 128 macro holds 1,024 users x <= 32 b");
+    wire clk = ckv[0];
+    wire f_st = f_hks[USER_W+NW]; wire [USER_W-1:0] f_u = f_hks[NW +: USER_W]; wire [NW-1:0] f_p = f_hks[NW-1:0];
+    reg s1_st; reg [USER_W-1:0] s1_u; reg [NW-1:0] s1_p;                    // pin flops
+    always @(posedge clk) begin s1_st <= f_st && rsv[0]; s1_u <= f_u; s1_p <= f_p; end
+    wire [127:0] rq;
+    wire [NW+EW-1:0] rw = s1_u[USER_W-1] ? rq[HW +: NW+EW] : rq[0 +: NW+EW];
+    reg [(1<<USER_W)-1:0] seen;
+    reg [USER_W+NW+EW:0] o;                                                 // output register = the forwarding source
+`ifdef OT_WFCHEP_MUT_NOFWD
+    wire fwd = 1'b0;                                       // MUTANT: a back-to-back start reads the stale word
 `else
-    wire st = f_st[0] && f_u[USER_W-1] == f_bid[0];
+    wire fwd = o[USER_W+NW+EW] && o[NW+EW +: USER_W] == s1_u;
 `endif
+    wire [NW-1:0] last = fwd ? o[EW +: NW] : rw[EW +: NW];
+    wire [EW-1:0] ep = fwd ? o[EW-1:0] : rw[EW-1:0];
+    wire sn = seen[s1_u];
 `ifdef OT_WFCHEP_MUT_STALE
     wire rew = 1'b0;                                       // MUTANT: the epoch never advances (stale rows served)
 `else
-    wire rew = seen[a] && f_p <= last[a];
+    wire rew = sn && s1_p <= last;
 `endif
-    wire [EW-1:0] e_n = rew ? ep[a] + 1'b1 : ep[a];
-    always @(posedge ckv[0]) begin
-        if (!rsv[0]) begin seen <= '0; t_hep <= '0; end
+    wire [EW-1:0] e_n = !sn ? {EW{1'b0}} : rew ? ep + 1'b1 : ep;
+    always @(posedge clk) begin
+        if (!rsv[0]) begin seen <= '0; o <= '0; end
         else begin
-            t_hep <= st ? {1'b1, f_u, f_p, e_n} : '0;
-            if (st) begin last[a] <= f_p; ep[a] <= seen[a] ? e_n : '0; seen[a] <= 1'b1; end
+            o <= s1_st ? {1'b1, s1_u, s1_p, e_n} : '0;
+            if (s1_st) seen[s1_u] <= 1'b1;
         end
     end
+    wire [HW-1:0] wh = HW'({s1_p, e_n});
+    ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(clk), .r_ce_in(f_st), .r_addr_in(f_u[8:0]), .rd_out(rq),
+        .w_ce_in(s1_st), .w_addr_in(s1_u[8:0]), .wd_in({64'd0, wh, wh}),
+        .w_mask_in({64'd0, {HW{s1_u[USER_W-1]}}, {HW{!s1_u[USER_W-1]}}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    assign t_hep = o;
 endmodule
 
-// reference model of the two-bank dsfd_wfc_hep above (the pre-split module, bench only; never instantiated on a die)
+// reference model of dsfd_wfc_hep_t (the flop-table module, bench only; never instantiated on a die).  A user's first
+// start reports epoch 0 (el1013: it read the never-written ep[u] before, an X in simulation; 0 is what it stored).
 module dsfd_wfc_hep_flat #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
     input  wire clk, rst_n,
     input  wire [USER_W+2*NW:0] ks,          // the kit's stage start {start, user, token, pos}
@@ -265,8 +288,8 @@ module dsfd_wfc_hep_flat #(parameter integer NW = 21, parameter integer USER_W =
     localparam integer NU = 1 << USER_W;
     reg [NW-1:0] last [0:NU-1]; reg [EW-1:0] ep [0:NU-1]; reg [NU-1:0] seen;
     wire st = ks[USER_W+2*NW]; wire [USER_W-1:0] u = ks[2*NW +: USER_W]; wire [NW-1:0] p = ks[NW-1:0];
-wire rew = seen[u] && p <= last[u];
-    wire [EW-1:0] e_n = rew ? ep[u] + 1'b1 : ep[u];
+    wire rew = seen[u] && p <= last[u];
+    wire [EW-1:0] e_n = !seen[u] ? {EW{1'b0}} : rew ? ep[u] + 1'b1 : ep[u];
     always @(posedge clk) begin
         if (!rst_n) begin seen <= '0; hep <= '0; end
         else begin
