@@ -635,6 +635,14 @@ def child_insertions(s: dict) -> dict:
         ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
         vals = [x["max_ps"] for x in ins.values() if x]
         out[view_name(v)] = round(max(vals), 1) if vals else 0.0
+        # spec "child_insertion": "boundary_mean" (die clock rule 10-13: R = the view's insertion.json TT boundary mean,
+        # the sign-off reference): balance the spine to the child's routed boundary-flop mean where the view carries one
+        j = ROOT / v / "insertion.json"
+        if s.get("child_insertion") == "boundary_mean" and j.exists():
+            b = (json.loads(j.read_text()).get("tt") or {}).get("boundary") or {}
+            if b.get("mean") is not None:
+                out[view_name(v)] = round(float(b["mean"]), 1)
+    out.update({k: float(x) for k, x in (s.get("child_insertion_ps") or {}).items()})   # explicit per-master override
     return out
 
 
