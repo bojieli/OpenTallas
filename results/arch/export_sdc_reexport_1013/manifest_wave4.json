@@ -1670,17 +1670,15 @@
     "ff": "24ece5814620e39ceb88955de2fa23bcffb0881307a9125df8fe73a6027aeaf0"
    },
    "new": {
-    "ss": "ef7b2e4922f6151e68397ef643d132ffa0a6a36eb637dd5f589ede3c13ba0c73",
-    "ff": "b2cf762ebb5c21242beb9dcaae32dae2feed13c3ba3624879ce6b221c5b019a0",
-    "tt": "35611c793288edb3e61bbbe7402e6858405a21c97becbdd40784193229089190"
+    "ss": "662cb474cb03cbe5af85ed7a0547d8504904167a636a3482c59010cb02f2acd7",
+    "ff": "24ece5814620e39ceb88955de2fa23bcffb0881307a9125df8fe73a6027aeaf0",
+    "tt": "402e9e793e5ea276eaa7c0402344f1abdd6bb70d3293a5aceb40a3a289b413f0"
    },
-   "changed": [
-    "ss",
-    "ff"
-   ],
+   "changed": [],
    "added": [
     "tt"
-   ]
+   ],
+   "identifier_alias": "qfd_embed_ingress_scale"
   },
   {
    "view": "qfd_embed_ingress_scale_padded",
@@ -1768,17 +1766,15 @@
     "ff": "ff40ad64fbd57cfbde8a3d2bffd0a1032412cb7ea6238bc9122b5370987a15e3"
    },
    "new": {
-    "ss": "662e2671c4e56c48db362a1b8747fb887b0dbf8a82dea2639e4e6b24c400ee28",
-    "ff": "f54a2c44ab31902d51a9c65a3c0a79885748fb70dda3e41b5089530b33c2a986",
-    "tt": "4b3dcdd1bb54907967cc5301309726f53045c67ff02630e10ec69149f5f9a1a9"
+    "ss": "ff29630790c28f0c0cc7d81a4a2f77f000cf758a0ca9f07954022d3972dfe90b",
+    "ff": "ff40ad64fbd57cfbde8a3d2bffd0a1032412cb7ea6238bc9122b5370987a15e3",
+    "tt": "bfd405c24bc186084e9334413712b21f983d262a4cabc80ffe86441d004a96d9"
    },
-   "changed": [
-    "ss",
-    "ff"
-   ],
+   "changed": [],
    "added": [
     "tt"
-   ]
+   ],
+   "identifier_alias": "qfd_embed_ingress_code"
   },
   {
    "view": "qfd_embed_ingress_code_numeric",
@@ -2452,6 +2448,123 @@
    ],
    "added": [],
    "revision_dir": "physical/hbm_export_revisions_1013/hgi_qw_dec_s260-ac62227e1-tc-cl/ot_hgi_qw_dec"
+  },
+  {
+   "view": "dsfd_ctrl",
+   "dir": "physical/s81_ph_views/assembled/dsfd_ctrl",
+   "run": "tools/s81/assemble_views.py@dc420a9f4",
+   "cls": "assembled slab view regenerated from its tiles, every tile carrying a corrected-export record",
+   "old": {
+    "ss": "c3528edaf40f07d1c351bb11fbff2366b9cebbe157f2c52afbc4db99eea0422c",
+    "ff": "e01ffb4780bb1596ec927fb89ffba18860018a333c0cd01f8d1f0d2ae896b0a6",
+    "tt": "c87ad9a5721f40fe8e0cb4f9a10b3064e78f1f94ae41418b09b42dcabb619bde"
+   },
+   "new": {
+    "ss": "c3528edaf40f07d1c351bb11fbff2366b9cebbe157f2c52afbc4db99eea0422c",
+    "ff": "e01ffb4780bb1596ec927fb89ffba18860018a333c0cd01f8d1f0d2ae896b0a6",
+    "tt": "2f6ddcac84879357b733344ef86e6e9f83e79a5d0d0f6a15e50b76acf4c76733"
+   },
+   "changed": [
+    "tt"
+   ],
+   "added": [],
+   "glue_worst_ps": {
+    "old": {
+     "tt_setup": 111.4,
+     "ss_setup": -25.3,
+     "ff_hold": 135.9,
+     "tt_setup_bal": 235.5,
+     "ss_setup_bal": 58.4,
+     "ff_hold_bal": 112.9
+    },
+    "new": {
+     "tt_setup": 160.7,
+     "ss_setup": -25.3,
+     "ff_hold": 135.9,
+     "tt_setup_bal": 230.5,
+     "ss_setup_bal": 58.4,
+     "ff_hold_bal": 112.9
+    }
+   }
+  },
+  {
+   "view": "dsfd_svc",
+   "dir": "physical/s81_ph_views/assembled/dsfd_svc",
+   "run": "tools/s81/assemble_views.py@dc420a9f4",
+   "cls": "assembled slab view regenerated from its tiles, every tile carrying a corrected-export record",
+   "old": {
+    "ss": "889cde72bd544502c836fc5ae4008df3e79b5cf62d3bfc5e01418d6405d8b990",
+    "ff": "dbc9ed013f135eaab84afbc1a93ebe5aa85b239c72385352e53f2abe74b90913",
+    "tt": "d1c6a881fdcdbc01438e406386345855f65c7b469931a98483bcc4f4e8bae1bd"
+   },
+   "new": {
+    "ss": "58f2f3307d98011477777e29b2d2153ff6bf3aef7f150d6429f40cf9d54504a0",
+    "ff": "3b0a0cf93fc796665d67c242ec29a90aa506e4e608837ac0b0af9c47aa555c29",
+    "tt": "1aab2a62f275c0478ae1705a488ff0019c338aa6571ca99a49aa649c66e99060"
+   },
+   "changed": [
+    "ss",
+    "ff",
+    "tt"
+   ],
+   "added": [],
+   "glue_worst_ps": {
+    "old": {
+     "tt_setup": -49.2,
+     "ss_setup": -246.5,
+     "ff_hold": -39.0,
+     "tt_setup_bal": 18.0,
+     "ss_setup_bal": -178.0,
+     "ff_hold_bal": 77.3
+    },
+    "new": {
+     "tt_setup": 4.1,
+     "ss_setup": -241.1,
+     "ff_hold": -36.8,
+     "tt_setup_bal": 77.3,
+     "ss_setup_bal": -178.1,
+     "ff_hold_bal": 43.9
+    }
+   }
+  },
+  {
+   "view": "dsfd_bk_collector",
+   "dir": "physical/s81_ph_views/assembled/dsfd_bk_collector",
+   "run": "tools/s81/assemble_views.py@dc420a9f4",
+   "cls": "assembled slab view regenerated from its tiles, every tile carrying a corrected-export record",
+   "old": {
+    "ss": "b0fe8d1ea5f6c39fe71bf89d4a9ab6ffc6c58dc2d7958a9d8ae24da18bea4bab",
+    "ff": "833bb657e17af0464074e6eeb498030b97d36e1fee2c1550d7b582bd0e62a2cf",
+    "tt": "fcc26b04de986f08f46776129431c8f372564e9ae2cfdebbe534d5337d5d1b83"
+   },
+   "new": {
+    "ss": "585031910b82b7eafe8732ac321e425e453074699881866b3868fe72c4e41871",
+    "ff": "833bb657e17af0464074e6eeb498030b97d36e1fee2c1550d7b582bd0e62a2cf",
+    "tt": "739a62f8db39d76fc9dfa4193dc05f904a0304eb5910d6c3d4faaeba42673bf7"
+   },
+   "changed": [
+    "ss",
+    "tt"
+   ],
+   "added": [],
+   "glue_worst_ps": {
+    "old": {
+     "tt_setup": -266.0,
+     "ss_setup": -578.2,
+     "ff_hold": -97.0,
+     "tt_setup_bal": 1.1,
+     "ss_setup_bal": -244.9,
+     "ff_hold_bal": 38.1
+    },
+    "new": {
+     "tt_setup": -271.7,
+     "ss_setup": -579.0,
+     "ff_hold": -94.9,
+     "tt_setup_bal": -6.6,
+     "ss_setup_bal": -246.3,
+     "ff_hold_bal": 35.6
+    }
+   }
   }
  ]
 }

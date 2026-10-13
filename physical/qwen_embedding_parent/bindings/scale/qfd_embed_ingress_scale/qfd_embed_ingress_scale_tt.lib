@@ -51,7 +51,7 @@ library (qfd_embed_ingress_scale_tt) {
     bit_to : 0;
   }
 
-  cell ("ot_qwen_embedding_ingress_numeric") {
+  cell ("qfd_embed_ingress_scale") {
     area : 39.585 
     is_macro_cell : true;
     pin("clk") {
