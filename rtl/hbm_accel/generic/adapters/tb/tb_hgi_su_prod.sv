@@ -109,7 +109,7 @@ module tb_hgi_su_prod;
 `define RLY 0
 `endif
 `ifndef LQ
-`define LQ 8
+`define LQ 10                         // client credits a lane (ctlw LQ); the VM queue is the power of two >= it
 `endif
 `ifdef CHAIN
     // CHAIN topology (hbm-phys): head at the VM face, RLY relay stations, then station 0 = the SU, 1, 2 (the agents)
@@ -155,7 +155,7 @@ module tb_hgi_su_prod;
         .g_rsp(g_wdone));
 `endif
     assign rq_cr = c_rcr[31:0]; assign rr = c_rr[0 +: 32*257]; assign w2_cr = c_wcr[31:0]; assign w2_done = c_wdone[31:0];
-    ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(`LQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}),
+    ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(1 << $clog2(`LQ))) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}),
         .status(vm_status), .wq(280'd0), .wq_done(), .rq(g_rq), .rq_cr(g_rcr), .rr(g_rr), .w2q(g_wq), .w2q_cr(g_wcr), .w2q_done(g_wdone));
     // ---- agents: bursts of 8 sectors a lane on the free region (sectors AR0.. read-only, AW0.. written), checked
     localparam integer AR0 = 14336, AW0 = 18432, AN = 2048;
@@ -298,6 +298,13 @@ module tb_hgi_su_prod;
         if (`CTLP.a_run) ph[2] = ph[2] + 1;
         if (`CTLP.a_drain) ph[3] = ph[3] + 1;
     end
+`ifdef PHTRACE
+    // el1011-sutput diagnosis: the record pipeline every 4 edges (FRONT state, RUN / DRAIN slots, streamed prefix)
+    always @(posedge clk) if (inrec && cyc % 4 == 0)
+        $display("PT %0d st %0d r %0d/%0d gop %0d cd %0d d %0d/%0d q1 %0d x %0d fs %0d lo %b idle %0d go %0d", cyc, `CTLP.st, `CTLP.r_v,
+                 `CTLP.r_tag, `CTLP.r_gop, `CTLP.r_cdone, `CTLP.d_v, `CTLP.d_tag, `CTLP.q1_v, `CTLP.x_cnt, `CTLP.fs_on,
+                 `CTLP.late_open, `CTLP.idle_q, `CTLP.go);
+`endif
 `else
     always @(posedge clk) if (inrec) begin
         case (`CTLP.st)

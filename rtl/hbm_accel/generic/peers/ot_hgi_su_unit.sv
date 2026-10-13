@@ -869,7 +869,7 @@ module ot_hgi_su_unit #(
                                           //   2 = ot_hgi_su_ctlx on d's lane-local lmem (NS 32): the PRODUCTION engine
     parameter integer MUT_X = 0,          // WIDE = 2 bench mutants (ot_hgi_su_ctlx)
     parameter integer DF = 16,            // WIDE = 2: landed-but-unwritten stage sectors a lane
-    parameter integer LQ = 8,             // WIDE: credits a lane holds (size to the lane-group round trip incl. relays)
+    parameter integer LQ = 10,            // WIDE: credits a lane holds (size to the lane-group round trip incl. relays)
     parameter integer LRLAT = 1,          // WIDE bench: the wide lmem model's read latency (the controller is valid-driven)
     parameter integer MUT_RV = 0,         // WIDE bench: lmem read valid 1 early / 2 late (must FAIL)
     parameter integer MUT_W = 0,          // WIDE bench mutants (ot_hgi_su_ctlw)
@@ -927,7 +927,7 @@ module ot_hgi_su_unit #(
     end endgenerate
     generate if (WIDE == 2) begin : g_xctl
     ot_hgi_su_ctlx #(.N(N), .M(M), .LV(LV), .LWB(LWB), .GLU(GLU), .SLB(SLB), .MUT_DIRTY(MUT_DIRTY), .PAYLOAD_RESET(PAYLOAD_RESET),
-        .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO), .RWB(RWB), .LQ(LQ), .DF(DF), .MUT_X(MUT_X)) u_ctl (.clk(clk),
+        .LG1(LG1), .LG2(LG2), .LG3(LG3), .LGO(LGO), .RWB(RWB), .LQ(1 << $clog2(LQ)), .DF(DF), .MUT_X(MUT_X)) u_ctl (.clk(clk),
         .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a),
         .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o), .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a),
         .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
@@ -1054,7 +1054,7 @@ module ot_hgi_su_ctlw #(
     parameter integer GLU = 0,            // 1: the SFU die body (SFU.GLU records; ot_hgi_su_record GLU mode)
     parameter integer SLB = 16,           // log2 words of the stream-0 landing region (top of the local memory)
     parameter integer MUT_DIRTY = 0,      // mutant: drain whole sectors (overwrites words the op did not write)
-    parameter integer LQ = 8,             // credits a wide lane holds (= the VM lane queue depth)
+    parameter integer LQ = 10,            // credits a wide lane holds (= the VM lane queue depth)
     parameter integer MUT_W = 0,          // bench mutants: 1 stage lands every sector at its lane's first slot (no
                                           //   advance), 2 the drain skips the last sector of each lane, 3 the record
                                           //   retires before its drain writes are in VM (no done wait), 4 no source / live-sink hazard check
@@ -1416,7 +1416,7 @@ module ot_hgi_su_ctlw #(
                             dr_iss = 1'b1;
                             ldr_v_f[b] <= 1'b1; ldr_sec_f[b*LSW +: LSW] <= dg_nx[b];
                             dq_s[b][dq_t[b]] <= {dg_r[b] == 3'd4, dlive_s && dg_r[b] == 3'd4, 21'(dg_nx[b]) - d_dsec[dg_r[b]]};
-                            dq_t[b] <= dq_t[b] + 1'b1;
+                            dq_t[b] <= (dq_t[b] == QB'(LQ - 1)) ? '0 : dq_t[b] + 1'b1;
                         end
                         if (21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b])) begin dg_on[b] <= 1'b0; dg_r[b] <= dg_r[b] + 3'd1; end
                         else dg_nx[b] <= dg_nx[b] + LSW'(32);
@@ -1427,7 +1427,7 @@ module ot_hgi_su_ctlw #(
                     reg [7:0] mk, em; reg v3, l3, r3; reg [20:0] s3;
                     mk = MUT_DIRTY ? 8'hFF : ldr_dm_q[b*8 +: 8];
                     v3 = ldr_rv_q[b]; {r3, l3, s3} = dq_s[b][dq_h[b]]; em = o_mask(s3);
-                    if (v3) dq_h[b] <= dq_h[b] + 1'b1;
+                    if (v3) dq_h[b] <= (dq_h[b] == QB'(LQ - 1)) ? '0 : dq_h[b] + 1'b1;
                     dq_n[b] <= dq_n[b] + dr_iss - v3;
                     if (v3) begin
                         if (fl[b]) wfree = 1'b1;                                    // flushed behind a replay
@@ -2961,7 +2961,7 @@ module ot_hgi_su_ctlw_slice #(
                         if (!(MUT_W == 2 && 21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b]))) begin
                             dr_iss = 1'b1;
                             ldr_v[b] <= 1'b1; ldr_sec[b*LSW +: LSW] <= dg_nx[b];
-                            dq_s[b][dq_t[b]] <= 21'(dg_nx[b]) - d_dsec[dg_r[b]]; dq_t[b] <= dq_t[b] + 1'b1;
+                            dq_s[b][dq_t[b]] <= 21'(dg_nx[b]) - d_dsec[dg_r[b]]; dq_t[b] <= (dq_t[b] == QB'(LQ - 1)) ? '0 : dq_t[b] + 1'b1;
                         end
                         if (21'(dg_nx[b]) + 21'd32 > 21'(dg_end[b])) begin dg_on[b] <= 1'b0; dg_r[b] <= dg_r[b] + 3'd1; end
                         else dg_nx[b] <= dg_nx[b] + LSW'(32);
@@ -2972,7 +2972,7 @@ module ot_hgi_su_ctlw_slice #(
                     reg [7:0] mk; reg v3; reg [20:0] s3;
                     mk = MUT_DIRTY ? 8'hFF : ldr_dm_q[b*8 +: 8];
                     v3 = ldr_rv_q[b]; s3 = dq_s[b][dq_h[b]];
-                    if (v3) dq_h[b] <= dq_h[b] + 1'b1;
+                    if (v3) dq_h[b] <= (dq_h[b] == QB'(LQ - 1)) ? '0 : dq_h[b] + 1'b1;
                     dq_n[b] <= dq_n[b] + dr_iss - v3;
                     if (v3) begin
                         if (mk != 8'd0) begin
