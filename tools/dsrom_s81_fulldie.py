@@ -5713,7 +5713,7 @@ def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
                                                   floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
 
 
-def _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi):
+def _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi, xa=None, xb=None):
     """--lane-pins (s81-die v15): the die y of a straight hub lane, moved to the nearest row where the bus's pin span
     (bits x LANE_PINS tracks) overlaps no other lane's span, and recorded per (slab, port) for _faces_r8, so the pins of
     both slabs stand ON the lane (v14: wq_d pins centred on the hc_s face 3.3 mm N of its lane -> 32 bridge stations).
@@ -5731,7 +5731,11 @@ def _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi):
     a0, a1 = lo + tot / 2, hi - tot / 2
     if a1 < a0:
         raise ValueError(f'--lane-pins: {A.name}.{pa} span {tot:.0f} um > the shared rows {hi - lo:.0f} um')
-    free = lambda c: all(c + half <= s0 or c - half >= s1 for s0, s1 in S)
+    # rows of the lane covered by a placed macro (link macros hl_* at the VCH W edge, 128 x 132) are not lane rows
+    xl_, xh_ = min(xa, xb), max(xa, xb)
+    Sx = S + [(i_.y - 12.0, i_.y + i_.h + 12.0) for i_ in m['insts'] if i_ is not A and i_ is not Bk and min(i_.w, i_.h) >= 60.0
+              and i_.x < xh_ - 1.0 and i_.x + i_.w > xl_ + 1.0 and i_.y < hi and i_.y + i_.h > lo]
+    free = lambda c: all(c + half <= s0 or c - half >= s1 for s0, s1 in Sx)
     cands = sorted((a0 + 4.8 * i for i in range(int((a1 - a0) // 4.8) + 1)), key=lambda c: abs(c - y0))
     c = next((c for c in cands if free(c)), None)
     if c is None:
@@ -5801,7 +5805,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             ky_ = int(pslice(pa)[1]) // 1024
             y_ = lo + (hi - lo) * (ky_ + 0.5) / 8.0
         if LANE_PINS:
-            y_ = _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi)
+            y_ = _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi, fx(A), fx(Bk))
         lane[0] += 1
         path = [(fx(A), y_), (fx(Bk), y_)]
     elif hcA == hcB and same_col and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - (0.0 if {a_, b_} == {'vm', 'pq'} else 60.0):
@@ -5876,8 +5880,17 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
         CH8.bus(name, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
         m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0)
         return
-    sts = CH8.run(name, [bits], path, [cor['vch']] + [cor[k_] for k_ in ('collE', 'collW') if k_ in cor] + xcol, path[0],
-                  reach=reach_um or (CC_REACH if CC_REACH < LINK_STAGE_UM else None))   # collE/W: --coll-split3 column remainder
+    try:
+        sts = CH8.run(name, [bits], path, [cor['vch']] + [cor[k_] for k_ in ('collE', 'collW') if k_ in cor] + xcol, path[0],
+                      reach=reach_um or (CC_REACH if CC_REACH < LINK_STAGE_UM else None))
+    except RuntimeError:
+        if LANE_PINS:   # diagnosis: what stands on the lane
+            x0_, x1_ = min(p_[0] for p_ in path), max(p_[0] for p_ in path)
+            y0_, y1_ = min(p_[1] for p_ in path) - 60.0, max(p_[1] for p_ in path) + 60.0
+            print('LANE_PINS blocked', name, path, 'cor', {k_: v_ for k_, v_ in cor.items() if k_ in ('vch', 'collE', 'collW')},
+                  [(i_.name, i_.master, round(i_.x), round(i_.y), round(i_.w), round(i_.h)) for i_ in m['insts']
+                   if i_.x < x1_ and i_.x + i_.w > x0_ and i_.y < y1_ and i_.y + i_.h > y0_][:40], flush=True)
+        raise   # collE/W: --coll-split3 column remainder
     prev = (A.name, pa)
     for k, (it, s_, hop) in enumerate(sts):
         it.kind, it.domain = 'hstn', dom or A.domain
