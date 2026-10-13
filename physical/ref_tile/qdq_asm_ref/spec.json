@@ -60,16 +60,17 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 24,
+  "pin_min_tracks": 1,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:hbm-qdq-q8",
   "branch": "claude/hbm-qdq-q8",
-  "tag": "q8b",
+  "tag": "q8c",
   "views_to": "physical/ref_tile/qdq_asm_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_asm_ref",
-  "purpose": "QDQ B2 quarter q8b (coordinator option B after q7 EARLY_FAIL: 14.3k cluster flops on a spine that diverged to 1.79 ns): one of four face-anchored M5 leaves under the wires-only ot_hgi_qdq_q, a flop at every pin; composition bench = the production QDQ bench on the B2 slice (183 cycles vs 168 priced, 1.089x) built from this commit. ot_hgi_qdq_asm: issued-beat queue NB 32, lane occupancy, pop decision, select pipeline, 8-lane -> 4-position beat placement (hq pin flops 2,048 -> d_x 1,024; 4.6k flops); in the lane-pair | decoder gap: hq_p1/p2 on W facing lq1/lq2, hq_p0 S / hq_p3 N, d_x on E 60 um from the dxl W face.",
+  "purpose": "QDQ B2 quarter q8b (coordinator option B after q7 EARLY_FAIL: 14.3k cluster flops on a spine that diverged to 1.79 ns): one of four face-anchored M5 leaves under the wires-only ot_hgi_qdq_q, a flop at every pin; composition bench = the production QDQ bench on the B2 slice (183 cycles vs 168 priced, 1.089x) built from this commit. ot_hgi_qdq_asm: issued-beat queue NB 32, lane occupancy, pop decision, select pipeline, 8-lane -> 4-position beat placement (hq pin flops 2,048 -> d_x 1,024; 4.6k flops); in the lane-pair | decoder gap: hq_p1/p2 on W facing lq1/lq2, hq_p0 S / hq_p3 N, d_x on E 60 um from the dxl W face. q8c: pins take every track (pin_min_tracks 1): q8b crashed at IO placement in the route (PPL-0086, a 32-pin group not assigned: hq_p0 / hq_p3 512 pins in a 49.5 um range = 100 % of the 2-track slots; the gate's placement had just fitted); 1-track slots put every face at <= 50 %. Outline, faces and RTL unchanged.",
   "extra_paths": [
    "compiler",
    "results/rtl/tput_map_1011/ds_qdq_b2"
