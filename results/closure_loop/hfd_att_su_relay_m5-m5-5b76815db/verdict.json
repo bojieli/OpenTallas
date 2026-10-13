@@ -1,0 +1,184 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hfd_att_su_relay_m5-m5-5b76815db",
+ "block": "hfd_att_su_relay",
+ "owner": "Claude:el1011-reroute-m5",
+ "source_branch": "claude/el1011-reroute-m5",
+ "record_branch": "codex/closure-record-hfd_att_su_relay_m5-m5-5b76815db",
+ "source_commit": "5b76815db48941fc211b911609f5173f882bef00",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hfd_att_su_relay_m5-m5-5b76815db",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 322.1,
+  "ff_ps": 4.89,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": 219.59,
+  "ss_sensitivity_tns_ps": 0.0,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/hfd_att_su_relay_m5-m5-5b76815db/routes/hfd_att_su_relay_m5_m5_5b76815db/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hfd_att_su_relay_m5-m5-5b76815db/routes/hfd_att_su_relay_m5_m5_5b76815db/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hfd_att_su_relay_m5-m5-5b76815db/routes/hfd_att_su_relay_m5_m5_5b76815db/work/orfs/logs/asap7/opentallas_hfd_att_su_relay_asap7_ref_hfd_att_su_relay_m5_m5_5b76815db/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.052 MB sources in 3 modules, into 0.009 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.007 s (elab=0.000, cvt=0.003, bld=0.000); cpu 0.007 s on 1 threads; allocated 33.137 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_relay_chain": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "pos.log:RELAYCHAIN N=9 cycles=20000 in=13919 out=13899 mismatches=0 latency=9 RELAY_PASS\nneg.log:RELAYCHAIN N=9 cycles=20000 in=13919 out=13899 mismatches=5964 latency=9 RELAY_FAIL\nRELAY_BENCH PASS\n",
+   "track": "parallel"
+  },
+  "bench_relay_chain_mut": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "MISMATCH cyc=26 v 1/1 d0 fde005b2/fde005b3\nMISMATCH cyc=33 v 1/1 d0 c409488e/c409488f\nMISMATCH cyc=40 v 1/1 d0 c4f54c71/c4f54c70\nRELAYCHAIN N=9 cycles=20000 in=13919 out=13899 mismatches=5964 latency=9 RELAY_FAIL\n- /srv/opentallas-scratch/claude/closure-loop/hfd_att_su_relay_m5-m5-5b76815db/bench_src_a1/physical/hbm_accel_die_views/att_su_relay/tb/tb_hfd_att_su_relay.sv:49: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 17us; walltime 0.017 s; speed 952.724 us/s\n- Verilator: cpu 0.017 s on 1 threads; allocated 7 MB\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "relay_asap7_ref_hfd_att_su_relay_m5_m5_5b76815db/base/4_1_cts.log: (single)=TT\nok  routes/hfd_att_su_relay_m5_m5_5b76815db/work/orfs/logs/asap7/opentallas_hfd_att_su_relay_asap7_ref_hfd_att_su_relay_m5_m5_5b76815db/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "submit_checks": {
+  "ref_gate": {
+   "verdict": "WARN",
+   "mode": "refuse",
+   "message": "pins: 1-bit vector ports ['ck', 'rst']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0]) (fix: declare them scalar in RTL) | sources: 1 referenced file(s) do not exist at 5b76815db: ['rtl/hfd_att_su_relay.sv'] (fix: commit them / fix the path)"
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-12T18:04:55-07:00",
+ "job_spec": {
+  "name": "hfd_att_su_relay_m5-m5-5b76815db",
+  "block": "hfd_att_su_relay",
+  "ref_tile": true,
+  "owner": "Claude:el1011-reroute-m5",
+  "purpose": "M5 re-route (reroute_batch.py) of closed hfd_att_su_relay-d578aa824-tc-cl (hfd_att_su_relay, RTL d578aa824): same RTL, outline 43.2x108.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:hbm-phys-1010/idx",
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "source": {
+   "branch": "claude/el1011-reroute-m5",
+   "commit": "5b76815db"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_att_su_relay u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv physical/hbm_accel_die_views/att_su_relay/rtl/hfd_att_su_relay.sv && echo lint-ok",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "relay_chain",
+     "cmd": "bash physical/hbm_accel_die_views/att_su_relay/run_bench.sh {SRC} {RUN}/bench 9",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "relay_chain_mut",
+     "cmd": "cd {RUN}/bench && ./obj/Vtb_hfd_att_su_relay +MUT_RELAY | tee neg2.log; grep -q RELAY_PASS neg2.log",
+     "expect": "fail",
+     "threads": 2,
+     "peak_ram_gb": 4
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/hfd_att_su_relay_m5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hfd_att_su_relay_m5/kit.env {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hfd_att_su_relay_m5 --out {RUN}/record/views/hfd_att_su_relay  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/ref_tile/hfd_att_su_relay_m5/signoff.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/ref_tile/hfd_att_su_relay_m5/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/ref_tile/hfd_att_su_relay_m5/hfd_att_su_relay_m5-m5-5b76815db"
+   }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
