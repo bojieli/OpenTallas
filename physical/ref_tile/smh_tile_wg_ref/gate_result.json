@@ -1,0 +1,170 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "smh_tile_wg_ref",
+ "verdict": "WARN",
+ "generated": "2026-10-13T03:50:17-0700",
+ "host": "ot-epyc1tb",
+ "cts": false,
+ "commit": "c3d1afc65",
+ "clock": {
+  "max_root_sinks": 1005,
+  "root": "port:clk",
+  "cts": false,
+  "tt_insertion_ps": null,
+  "tt_spread_ps": null,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "1,005 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_pt_w#0: origin (302.424, 432.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_pt_e#0: origin (43.224, 432.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_xs#0: origin (302.424, 864.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_bdc#0: origin (388.824, 1080.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_tct#0: origin (43.224, 864.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_tcl#0: origin (172.824, 993.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_tcl#0: origin (43.224, 993.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_xs#0: origin (302.424, 216.024) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_bdc#0: origin (388.824, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_tct#0: origin (43.224, 129.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_tcl#0: origin (172.824, 259.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_hbm_accel_smh_tcl#0: origin (43.224, 259.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_pt_w: (f) face-pin access: 13212 of 13212 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bin[0] M4 (0.156,7.920), bin[1000] M4 (0.156,7.920), bin[1001] M4 (0.156,7.920))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_pt_e: (f) face-pin access: 7411 of 7412 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bm[0] M4 (0.060,9.744), bm[1000] M4 (0.060,9.744), bm[1001] M4 (0.060,9.744))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_xs: (f) face-pin access: 4505 of 4543 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bk1[0] M5 (0.720,0.016), bk1[1000] M5 (0.720,0.016), bk1[1001] M5 (0.720,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_bdc: (f) face-pin access: 1136 of 1136 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (19.968,140.773), fault M5 (19.968,140.773), otag[0] M5 (19.968,140.773))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_tct: (f) face-pin access: 584 of 584 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (147.600,0.016), rst_a M5 (147.600,0.016), fault M6 (194.293,38.848))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_tcl: (f) face-pin access: 517 of 517 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (9.984,120.629), i_first M5 (9.984,120.629), i_v M5 (9.984,120.629))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_tcl: (f) face-pin access: 517 of 517 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (9.984,120.629), i_first M5 (9.984,120.629), i_v M5 (9.984,120.629))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_xs: (f) face-pin access: 4505 of 4543 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bk1[0] M5 (0.720,0.016), bk1[1000] M5 (0.720,0.016), bk1[1001] M5 (0.720,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_bdc: (f) face-pin access: 1136 of 1136 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (19.968,140.773), fault M5 (19.968,140.773), otag[0] M5 (19.968,140.773))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_tct: (f) face-pin access: 584 of 584 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (147.600,0.016), rst_a M5 (147.600,0.016), fault M6 (194.293,38.848))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_tcl: (f) face-pin access: 517 of 517 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (9.984,120.629), i_first M5 (9.984,120.629), i_v M5 (9.984,120.629))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hbm_accel_smh_tcl: (f) face-pin access: 517 of 517 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (9.984,120.629), i_first M5 (9.984,120.629), i_v M5 (9.984,120.629))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  }
+ ]
+}
