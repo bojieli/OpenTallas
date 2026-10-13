@@ -43,6 +43,196 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def bundle_connections(endpoints):
+    """Keep exact Yosys bit identities while coalescing parallel bus lanes."""
+    result = []
+    for bit, eps in endpoints.items():
+        eps = sorted(eps, key=lambda e: (e["instance"], e["port"]))
+        prev = result[-1] if result else None
+        if (prev and bit.isdigit() and prev["bits"][-1].isdigit()
+                and int(bit) == int(prev["bits"][-1]) + 1
+                and len(eps) == len(prev["endpoints"])
+                and all(e["instance"] == q["instance"] and e["port"] == q["port"]
+                        and e["lsb"] == q["lsb"] + q["width"]
+                        for e, q in zip(eps, prev["endpoints"]))):
+            prev["bits"].append(bit)
+            for ep in prev["endpoints"]:
+                ep["width"] += 1
+        else:
+            result.append(dict(net=f"n{bit}", bits=[bit], endpoints=[dict(e) for e in eps],
+                               kind="constant" if bit in ["0", "1", "x"] else "signal"))
+    return result
+
+
+def bundle_boundary(boundary):
+    result = []
+    for row in sorted(boundary, key=lambda e: (e["parent_port"], e["child_instance"], e["child_port"], e["parent_lsb"])):
+        prev = result[-1] if result else None
+        if (prev and all(row[k] == prev[k] for k in ["parent_port", "child_instance", "child_port"])
+                and row["parent_lsb"] == prev["parent_lsb"] + prev["width"]
+                and row["child_lsb"] == prev["child_lsb"] + prev["width"]):
+            prev["width"] += 1
+        else:
+            result.append(dict(row))
+    return result
+
+
+def candidate_placement(half, cells):
+    old = ROOT / f"physical/hbm_attn_tile_r/half_v11/hfd_attn_half_{half}/macro_placement.tcl"
+    pattern = r"-macro_name \{([^}]*)\} -location \{([\d.]+) ([\d.]+)\} -orientation (\w+)"
+    places = {n.replace("\\", ""): (float(x), float(y), o)
+              for n, x, y, o in re.findall(pattern, old.read_text())}
+    if half == "lo":
+        places["g_rt.u_rt"] = (850.014, 300.24, "R0")
+        places["u_kse"] = (1250.046, 20.25, "R0")
+        # Local input clusters around the formatter's actual port faces.
+        for prefix, stage, count, x, y in [("u_pc", 1, 3, 610, 300),
+                                         ("u_pk", 3, 2, 610, 440),
+                                         ("u_pr", 2, 3, 1170, 300),
+                                         ("u_pks", 2, 3, 1170, 440)]:
+            for c in range(count):
+                places[f"{prefix}.gn.g_s[{stage}].g_c[{c}].g_sn.u_b"] = (x, y + 34 * c, "R0")
+        for c in range(3):
+            places[f"u_pks.gn.g_s[0].g_c[{c}].g_sn.u_b"] = (1370, 20 + 34*c, "R0")
+            places[f"u_pks.gn.g_s[1].g_c[{c}].g_sn.u_b"] = (1250, 240 + 34*c, "R0")
+            places[f"u_pc.gn.g_s[1].g_c[{c}].g_sn.u_b"] = (660 + 40*c, 285 - 34*c, "R0")
+            places[f"g_y0.u_mid.gn.g_s[2].g_c[{c}].g_sn.u_b"] = (840, 810 + 110*c, "R0")
+        for c in range(2):
+            places[f"u_pk.gn.g_s[2].g_c[{c}].g_sn.u_b"] = (700, 200 + 34*c, "R0")
+        places["u_pr.gn.g_s[1].g_c[0].g_sn.u_b"] = (1330, 174, "MX")
+        places["u_pq.gn.g_s[1].g_c[0].g_sn.u_b"] = (1450, 122, "R0")
+        places["u_pq.gn.g_s[2].g_c[0].g_sn.u_b"] = (1130, 155, "MX")
+        for s, (x, y) in enumerate([(1590, 122), (1550, 156), (1160, 122), (900, 240)]):
+            places[f"u_pqx.u_hard.gn.g_s[{s}].g_c[0].g_sn.u_b"] = (x, y, "R0")
+        places["u_pq.gn.g_s[3].g_c[0].g_sn.u_b"] = (900, 206, "R0")
+        for c in range(3):
+            places[f"g_y0.u_mid.gn.g_s[0].g_c[{c}].g_sn.u_b"] = (800 + 108 * c, 620, "R0")
+            places[f"g_y0.u_mid.gn.g_s[1].g_c[{c}].g_sn.u_b"] = (800 + 108 * c, 700, "R0")
+            places[f"g_xpp.u_xpp.gn.g_s[0].g_c[{c}].g_sn.u_b"] = (800 + 108 * c, 654, "R0")
+            places[f"u_fr.gn.g_s[0].g_c[{c}].g_sn.u_b"] = (620, 520 + 34 * c, "MX")
+    else:
+        places["g_mt.u_mt"] = (1570, 0, "R0")
+        for c in range(3):
+            places[f"g_y1.u_mid.gn.g_s[0].g_c[{c}].g_sn.u_b"] = (840, 250 + 110*c, "R0")
+        places["g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b"] = (895, 410, "R0")
+    for row in cells:
+        x, y, orient = places[row["instance"]]
+        row.update(xy_um=[round(round(x / .432) * .432, 6), round(round(y / 2.16) * 2.16, 6)],
+                   orientation=orient)
+
+
+def geometry_ledger(component):
+    rows = component["children"]
+    errors = []
+    width, height = component["outline_um"]
+    for i, a in enumerate(rows):
+        ax, ay = a["xy_um"]
+        if ax < 0 or ay < 0 or ax + a["w_um"] > width or ay + a["h_um"] > height:
+            errors.append(dict(kind="outside", instance=a["instance"]))
+        for b in rows[i + 1:]:
+            bx, by = b["xy_um"]
+            if max(ax, bx) < min(ax + a["w_um"], bx + b["w_um"]) and max(ay, by) < min(ay + a["h_um"], by + b["h_um"]):
+                errors.append(dict(kind="overlap", instances=[a["instance"], b["instance"]]))
+    by = {r["instance"]: r for r in rows}
+    pin_cache = {}
+    for row in rows:
+        master = row["logical_module"]
+        if master in pin_cache:
+            continue
+        text = (ROOT / row["view_lef"]).read_text()
+        pins = {}
+        for name, body in re.findall(r"\bPIN\s+(\S+)\s*(.*?)\n\s*END\s+\S+", text, re.S):
+            rect = re.search(r"RECT\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)", body)
+            if rect:
+                x0, y0, x1, y1 = map(float, rect.groups())
+                pins[name] = ((x0 + x1) / 2, (y0 + y1) / 2)
+        pin_cache[master] = pins
+    cuts = {axis: [dict(at_um=extent * f, bits=0) for f in [.25, .5, .75]]
+            for axis, extent in [("x", width), ("y", height)]}
+    seams = {}
+    for conn in component["connections"]:
+        if conn["kind"] == "constant":
+            continue
+        eps = conn["endpoints"]
+        # Clock is separately distributed and balanced, not a data-stage wire.
+        if all(e["port"] == "clk" for e in eps):
+            continue
+        for offset in range(len(conn["bits"])):
+            points = []
+            for e in eps:
+                r = by[e["instance"]]
+                pins = pin_cache[r["logical_module"]]
+                name = f'{e["port"]}[{e["lsb"] + offset}]'
+                point = pins.get(name, pins.get(e["port"]))
+                if point is None:
+                    raise ValueError(f"missing real LEF pin {r['logical_module']}/{name}")
+                x, y = point
+                if r["orientation"] in ["MY", "R180"]:
+                    x = r["w_um"] - x
+                if r["orientation"] in ["MX", "R180"]:
+                    y = r["h_um"] - y
+                points.append((x + r["xy_um"][0], y + r["xy_um"][1], e.get("direction")))
+            if len(points) < 2:
+                continue
+            drivers = [p for p in points if p[2] == "output"]
+            sinks = [p for p in points if p[2] != "output"]
+            # Fanout HPWL covers the whole tree; a stage's wire reach is each
+            # driver->capture segment, not the sum of its two branches.
+            span = max((abs(s[0] - d[0]) + abs(s[1] - d[1])
+                        for d in (drivers or points) for s in (sinks or points)), default=0)
+            key = tuple(sorted({e["instance"] for e in eps}))
+            rec = seams.setdefault(key, dict(instances=list(key), bits=0, max_hpwl_um=0))
+            rec["bits"] += 1
+            rec["max_hpwl_um"] = max(rec["max_hpwl_um"], round(span, 3))
+            for axis, dim in [("x", 0), ("y", 1)]:
+                for cut in cuts[axis]:
+                    if min(p[dim] for p in points) < cut["at_um"] < max(p[dim] for p in points):
+                        cut["bits"] += 1
+    long = [r for r in seams.values() if r["max_hpwl_um"] > 500]
+    for axis, extent in [("x", height), ("y", width)]:
+        # Local component channels can use M2..M7. Conservative 128nm pitch
+        # lower-bounds capacity on each directional layer, reserving 40% for PG
+        # and other users. Actual child OBS remove tracks on EACH layer.
+        for cut in cuts[axis]:
+            layer_capacity = {}
+            for layer in (["M2", "M4", "M6"] if axis == "x" else ["M3", "M5", "M7"]):
+              blocked = []
+              for r in rows:
+                x, y = r["xy_um"]
+                # Count the actual view's OBS, allowing die tracks over closed
+                # leaves when their top layer is below the cut's die layer.
+                text = (ROOT / r["view_lef"]).read_text()
+                obs = text.split("\n  OBS", 1)[-1] if "\n  OBS" in text else ""
+                for part in re.split(r"\bLAYER\s+", obs)[1:]:
+                    if not part.startswith(layer + " ") and not part.startswith(layer + ";"):
+                        continue
+                    for rect in re.findall(r"RECT\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)", part):
+                        x0, y0, x1, y1 = map(float, rect)
+                        if r["orientation"] in ["MY", "R180"]:
+                            x0, x1 = r["w_um"] - x1, r["w_um"] - x0
+                        if r["orientation"] in ["MX", "R180"]:
+                            y0, y1 = r["h_um"] - y1, r["h_um"] - y0
+                        if axis == "x" and x+x0 < cut["at_um"] < x+x1:
+                            blocked.append((y+y0, y+y1))
+                        if axis == "y" and y+y0 < cut["at_um"] < y+y1:
+                            blocked.append((x+x0, x+x1))
+              merged = []
+              for start, end in sorted(blocked):
+                if merged and start <= merged[-1][1]:
+                    merged[-1][1] = max(merged[-1][1], end)
+                else:
+                    merged.append([start, end])
+              free = extent - sum(b - a for a, b in merged)
+              layer_capacity[layer] = dict(free_channel_um=round(free, 3), usable_tracks=int(free / .128 * .6))
+            cut.update(layer_capacity=layer_capacity, usable_tracks=sum(r["usable_tracks"] for r in layer_capacity.values()),
+                       layers="M2..M7 in component channels, actual LEF OBS excluded; conservative128nm pitch")
+            cut["ratio"] = round(cut["bits"] / max(1, cut["usable_tracks"]), 3)
+    return dict(schema="opentallas.native_component.geometry.v1", errors=errors,
+                cuts=cuts, long_data_seams=long, max_data_hpwl_um=max(r["max_hpwl_um"] for r in seams.values()),
+                verdict="PASS" if not errors and not long and all(c["ratio"] <= .6 for v in cuts.values() for c in v) else "FAIL",
+                note="Pin-level logical HPWL and conservative channel ledger; routed RC and clock closure still required.")
+
+
 def prepare(out):
     tile = (ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_die_tile_b.sv").read_text()
     half = (ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv").read_text()
@@ -110,7 +300,8 @@ def main():
         for instance, cell in cells.items():
             for port, bits in cell["connections"].items():
                 for i, bit in enumerate(bits):
-                    endpoints.setdefault(str(bit), []).append(dict(instance=instance, port=port, lsb=i, width=1))
+                    endpoints.setdefault(str(bit), []).append(dict(instance=instance, port=port, lsb=i, width=1,
+                                                                  direction=cell["port_directions"][port]))
         boundary = []
         ports = {}
         for port, desc in netlist["ports"].items():
@@ -126,13 +317,16 @@ def main():
                          boundary_ports=ports,
                          children=[dict(children[v["type"]], instance=k, xy_um=None, orientation="R0")
                                    for k, v in cells.items()],
-                         connections=[dict(net=b, endpoints=e, kind="constant" if b in ["0", "1", "x"] else "signal")
-                                      for b, e in endpoints.items()],
-                         boundary_binding=boundary,
+                         connections=bundle_connections(endpoints),
+                         boundary_binding=bundle_boundary(boundary),
                          unresolved=["Physical placement and real pin-distance/cut verification pending.",
                                      "Die clock distribution must balance actual child ETM insertion.",
                                      "Padded fpipe bank replacement needs exact sequential equivalence gate."],
                          closed=False)
+        candidate_placement(half, component["children"])
+        ledger = geometry_ledger(component)
+        (out / f"{half}.geometry.json").write_text(json.dumps(ledger, indent=1) + "\n")
+        component["geometry_verdict"] = ledger["verdict"]
         (out / f"{half}.component.json").write_text(json.dumps(component, indent=1) + "\n")
         print(f"{half}: {len(cells)} real child instances; {len(boundary)} boundary bindings; no soft cells")
 
