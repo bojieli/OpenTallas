@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Bit-plane VM SYSTEM bench set (tb_qfd_vm_bv_ports, XPR): the whole record with one command.
 
-  tools/qwen_tp8/vm_plane_sysbench_set.py [--src ROOT] [--host ot-epyc1tb] [--only name,name] [--collect]
+  tools/qwen_tp8/vm_plane_sysbench_set.py [--src ROOT] [--host HOST] [--rdir DIR] [--only name,name] [--collect]
 
-Syncs the needed sources of ROOT (default: this checkout) to <host>:~/claude-vm-rtl-1013/A/wt, launches every run
+Syncs the needed sources of ROOT (default: this checkout) to <host>:~/<rdir>/wt (host default: the one `ot-run
+--pick` names, i.e. the most memory free), launches every run
 of RUNS in parallel there (each under `ot-heavy --mem`; nothing is built on localhost), fetches the run logs and
 writes results/rtl/qwen_tp8_vm_plane_20261013/system/{record.json,<name>.log} into THIS checkout.
 --collect skips the launch and rebuilds the record from the logs already on the host.
@@ -21,7 +22,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 REC = "results/rtl/qwen_tp8_vm_plane_20261013/system"
 LEAF_REC = "results/rtl/qwen_tp8_vm_plane_20261013/leaf_miter/record.json"
-RDIR = "claude-vm-rtl-1013/A"
 COMMON = "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1"
 BASE_FILES = [
     "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv",
@@ -51,16 +51,21 @@ R11 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GXPR=10"
 R21 = "-GSEED=7 -GRV=2 -GRO=1 -GVL=15"
 N64 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GNRB=64"
 C_R21 = dict(NRB=16, SW=8, VL=15, su_reads=60170, row_reads=9427, tuples=2683, bursts=1612, land_steps=1603)
+PM = 24   # GB asked for a production-shape run (measured peak: see the record's maxrss_kb)
 C_N64 = dict(NRB=64, SW=8, VL=14, su_reads=60313, row_reads=9296, tuples=2992, bursts=1635, land_steps=1625)
 
 
-def run(name, args, expect, what, counts=None, extra="", mem=8, scratch=None, same_as=None, tree=None):
+def run(name, args, expect, what, counts=None, extra="", mem=8, scratch=None, same_as=None, tree=None, wq=None,
+        prod=None):
     """same_as: a run whose PASS counts this run must reproduce exactly.  tree: the TREE line the log must carry
-    (parameters equal, every requested structure seen moving): the coverage refusal of a tree / owner build."""
+    (parameters equal, every requested structure seen moving): the coverage refusal of a tree / owner build.
+    wq: requirements on the bench's WQ line (the skid capacity rule's model against the memory): a dict of
+    key -> exact value, or key -> ">=N".  prod: 0 / 1 = the PRODUCTION shape through vm_plane_sysbench_prod.sh
+    (0 the tree-less reference at me_want lookahead 3, 1 trees + owners); args are then the extra -G only."""
     return dict(name=name, args=args, extra=extra, expect=expect, what=what, counts=counts, mem=mem, scratch=scratch,
-                same_as=same_as, tree=tree,
-                tile="ot_qfd_vm_region_leaf" if "region_leaf" in extra else "ot_qfd_vm_region_quarter" if extra
-                else "ot_qfd_vm_grp")
+                same_as=same_as, tree=tree, wq=wq, prod=prod,
+                tile="ot_qfd_vm_region_leaf" if ("region_leaf" in extra or prod is not None)
+                else "ot_qfd_vm_region_quarter" if extra else "ot_qfd_vm_grp")
 
 
 # expect: PASS | FAIL | GAP (a mutant the system bench is known not to kill: recorded, never counted as a mutant pass)
@@ -68,8 +73,12 @@ def run(name, args, expect, what, counts=None, extra="", mem=8, scratch=None, sa
 RUNS = [
     run("base_r21", R21 + " -GXVM=22", "PASS", "XPR=0 regression, vmt_r21 shape (RV 2 RO 1), tile ot_qfd_vm_grp", C_R21),
     run("bp_r21", R21 + " -GXVM=32 -GXPR=10", "PASS", "XPR=10, r21 (RV 2 RO 1)", C_R21),
+    # SEED 3 counts re-based 2026-10-13 with the work-conserving skid queue (was 59514 / 8973 / 3016 / 1560 / 1550): a
+    # sequencer row behind a denied one is now written at once, the merge's row of that edge waits, and the engine
+    # stall (me_ok) moves by an edge, which shifts this bench's engine-synchronous random draws.  Every other fixed
+    # count of this set is unchanged by the fix.
     run("bp_s3", "-GSEED=3 -GXVM=31 -GVL=15 -GXPR=10", "PASS", "XPR=10, bench default RV 1 RO 2, stimulus SEED 3",
-        dict(NRB=16, SW=8, VL=15, su_reads=59514, row_reads=8973, tuples=3016, bursts=1560, land_steps=1550)),
+        dict(NRB=16, SW=8, VL=15, su_reads=59467, row_reads=8937, tuples=3002, bursts=1546, land_steps=1536)),
     run("bp_s9", "-GSEED=9 -GXVM=31 -GVL=15 -GXPR=10", "PASS", "XPR=10, bench default RV 1 RO 2, stimulus SEED 9",
         dict(NRB=16, SW=8, VL=15, su_reads=61202, row_reads=9670, tuples=2711, bursts=1583, land_steps=1574)),
     run("bp_r11", "-GSEED=5 -GRV=1 -GRO=1 -GXVM=31 -GVL=14 -GXPR=10", "PASS", "XPR=10, r11 (RV 1 RO 1), SEED 5",
@@ -109,10 +118,30 @@ RUNS = [
     run("mw3_bp_r21", R21 + " -GXVM=32 -GXPR=10 -GMWD=3", "PASS", "REFERENCE: no trees, me_want lookahead 3 (r21)"),
     run("mw3_bp_s3", S3 + " -GXVM=31 -GMWD=3", "PASS", "REFERENCE: no trees, me_want lookahead 3 (s3)"),
     run("mw3_bp_s4", "-GSEED=4 -GVL=15 -GXPR=10 -GXVM=31 -GMWD=3", "PASS", "REFERENCE: no trees, me_want lookahead 3 (SEED 4)"),
-    # SEED 9 at lookahead 3: the TREE-LESS reference itself fails on the WRITE side (w_fault, 1 image word; x = 0).
-    # Recorded, not gated; mw3_base_s9 (XPR 0) says whether the bit plane is involved at all.
-    run("mw3_bp_s9", S9 + " -GXVM=31 -GMWD=3", "INFO", "no trees, lookahead 3, SEED 9: write-side w_fault (open finding)"),
-    run("mw3_base_s9", "-GSEED=9 -GVL=15 -GXVM=22 -GMWD=3", "INFO", "XPR 0 (no bit plane), lookahead 3, SEED 9"),
+    # SEED 9 at lookahead 3 (the 09:05 open finding, CLOSED): at cycle 30,465 the 2-deep head-of-line sequencer skid
+    # queue lost row 381: three row writes on consecutive edges (352, 367, 381), the first denied twice by SU lane
+    # rows on bank 0.  Legal traffic (no spacing rule on the row port): an RTL capacity defect of the base memory.
+    # Fixed by the work-conserving SQD 4 queue + the stated capacity rule; these runs are GATED now, and the queue
+    # must really have held 3 sequencer rows (the old design's overflow point).
+    run("mw3_bp_s9", S9 + " -GXVM=31 -GMWD=3", "PASS", "REFERENCE: no trees, lookahead 3, SEED 9 (3 sequencer rows waiting)",
+        wq=dict(seq=3, model_overflow=0, dut_overflow=0)),
+    run("mw3_base_s9", "-GSEED=9 -GVL=15 -GXVM=22 -GMWD=3", "PASS", "XPR 0 (no bit plane), lookahead 3, SEED 9",
+        dict(NRB=16, SW=8, VL=15, su_reads=61149, row_reads=9469, tuples=2767, bursts=1588, land_steps=1578),
+        wq=dict(seq=3, model_overflow=0, dut_overflow=0)),
+    run("wq_s9_m14", "-GSEED=9 -GVL=15 -GXVM=22 -GMWD=3 -GMUT=14", "FAIL",
+        "mutant: skid queues hold 2 rows (the pre-fix capacity) on SEED 9 lookahead 3: the row is lost again",
+        wq=dict(model_overflow=0, dut_overflow=">=1"), scratch="image=1"),
+    # ---- skid capacity rule, directed (WDIR): SQD sequencer rows on consecutive edges onto one bank that SU lane
+    #      rows hold, two of them the same row, then a reducer element on that bank ----
+    run("wq_d1_base", R21 + " -GXVM=22 -GWDIR=1", "PASS", "directed burst AT the bound, XPR 0: sequencer queue at SQD = 4",
+        wq=dict(seq=4, model_overflow=0, dut_overflow=0)),
+    run("wq_d1_tr", R21 + " -GXVM=36 -GXPR=10 -GWDIR=1 " + T, "PASS", "directed burst AT the bound, ALL trees + owners",
+        wq=dict(seq=4, model_overflow=0, dut_overflow=0), tree=TR),
+    run("wq_d1_m14", R21 + " -GXVM=22 -GWDIR=1 -GMUT=14", "FAIL", "mutant: 2-row skid queues under the directed burst",
+        wq=dict(model_overflow=0, dut_overflow=">=1")),
+    run("wq_d2_failstop", R21 + " -GXVM=22 -GWDIR=2", "FAIL",
+        "one row BEYOND the bound: the rule's model overflows and the memory must raise w_fault (fail-stop, not a mutant "
+        "of the memory: a negative control of the rule)", wq=dict(model_overflow=1, dut_overflow=1), scratch="w1"),
     run("mw3_bp_r11", R11 + " -GXVM=31 -GMWD=3", "PASS", "REFERENCE: no trees, me_want lookahead 3 (r11)"),
     run("tr_m2_r21", R21 + " -GXVM=32 -GXPR=10 -GXMK=2", "PASS", "me tree only (2 levels, me 3 edges early): + 0, XVM 32",
         same_as="mw3_bp_r21", tree=dict(XTK=0, XMK=2, XLO=0, XQR=0)),
@@ -120,7 +149,8 @@ RUNS = [
     run("tr_all_s3", S3 + " -GXVM=35 " + T, "PASS", "ALL trees + owners, RV 1 RO 2 SEED 3: XVM 35", same_as="mw3_bp_s3", tree=TR),
     run("tr_all_s4", "-GSEED=4 -GVL=15 -GXPR=10 -GXVM=35 " + T, "PASS", "ALL trees + owners, RV 1 RO 2 SEED 4: XVM 35",
         same_as="mw3_bp_s4", tree=TR),
-    run("tr_all_s9", S9 + " -GXVM=35 " + T, "INFO", "ALL trees + owners, SEED 9: same write-side w_fault as its reference, x = 0"),
+    run("tr_all_s9", S9 + " -GXVM=35 " + T, "PASS", "ALL trees + owners, RV 1 RO 2 SEED 9: XVM 35", same_as="mw3_bp_s9",
+        tree=TR, wq=dict(seq=3, model_overflow=0, dut_overflow=0)),
     run("tr_all_r11", R11 + " -GXVM=35 " + T, "PASS", "ALL trees + owners, r11: XVM 35", same_as="mw3_bp_r11", tree=TR),
     run("tr_nomee", "-GSEED=3 -GXVM=35 -GVL=15 -GXPR=10 -GMEE=0 -GXTK=3 -GXLO=1 -GXQR=2", "PASS",
         "MEE=0 (no early enable, so no me tree): control trees + owners, XVM 35", same_as="bp_nomee",
@@ -148,6 +178,25 @@ RUNS = [
         None, RL, 32),
     run("n64_tr_rl_m10", N64 + " -GXVM=35 -GXPR=10 -GMUT=10 " + T, "FAIL", "NRB=64 region_leaf + trees, mutant: line leaf 3",
         None, RL, 32),
+    # ---- PRODUCTION SHAPE (vm_plane_sysbench_prod.sh): SW 64, ELEMS 177,808, NRB 64, SMIN 7, SMAX 11, BMAX 8, the
+    #      die's 14 strides, CRB 16, region built from leaves, RV 1 RO 1; bit plane XPR 10, trees XTK 3 / XMK 2,
+    #      owners with XQR 2.  x latency: XVM 24 (tiles) -> 34 (bit plane) -> 38 (owners); SU answer VL 14. ----
+    run("prod_ref", "", "PASS", "PRODUCTION shape, bit plane, NO trees (reference at me_want lookahead 3): XVM 34",
+        mem=PM, prod=0, wq=dict(model_overflow=0, dut_overflow=0)),
+    run("prod_tr", "", "PASS", "PRODUCTION shape, bit plane + ALL trees + owners (XPR 10, XQR 2): XVM 38",
+        mem=PM, prod=1, same_as="prod_ref", tree=TR, wq=dict(model_overflow=0, dut_overflow=0)),
+    run("prod_tr_s9", "-GSEED=9", "PASS", "PRODUCTION shape, trees + owners, SEED 9", mem=PM, prod=1, tree=TR,
+        wq=dict(model_overflow=0, dut_overflow=0)),
+    run("prod_tr_d1", "-GWDIR=1", "PASS", "PRODUCTION shape, trees + owners, directed skid burst at the bound",
+        mem=PM, prod=1, tree=TR, wq=dict(seq=4, model_overflow=0, dut_overflow=0)),
+    run("prod_tr_m1", "-GMUT=1", "FAIL", "PRODUCTION shape mutant: SU read lane select one lane off", mem=PM, prod=1),
+    run("prod_tr_m3", "-GMUT=3", "FAIL", "PRODUCTION shape mutant: plane 5 fine rotation wrong", mem=PM, prod=1),
+    run("prod_tr_m6", "-GMUT=6", "FAIL", "PRODUCTION shape mutant: one x relay free-runs", mem=PM, prod=1),
+    run("prod_tr_m9", "-GMUT=9", "FAIL", "PRODUCTION shape mutant: a me-tree node is transparent", mem=PM, prod=1),
+    run("prod_tr_m10", "-GMUT=10", "FAIL", "PRODUCTION shape mutant: line leaf 3 picks a wrong source", mem=PM, prod=1),
+    run("prod_tr_m13", "-GMUT=13", "FAIL", "PRODUCTION shape mutant: one x_q relay free-runs", mem=PM, prod=1),
+    run("prod_tr_m14", "-GWDIR=1 -GMUT=14", "FAIL", "PRODUCTION shape mutant: 2-row skid queues under the directed burst",
+        mem=PM, prod=1, wq=dict(model_overflow=0, dut_overflow=">=1")),
 ]
 
 
@@ -162,23 +211,36 @@ def sha(p):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default=ROOT)
-    ap.add_argument("--host", default="ot-epyc1tb")
+    ap.add_argument("--host", default="")
+    ap.add_argument("--rdir", default="claude-vm-verif-1013/A")
     ap.add_argument("--only", default="")
     ap.add_argument("--collect", action="store_true")
     a = ap.parse_args()
+    RDIR = a.rdir
+    if not a.host:
+        pk = sh("ot-run --mem 64 --pick -- true")
+        m = re.search(r"-> (\S+)", pk.stdout + pk.stderr)
+        if not m:
+            sys.exit("no host from ot-run --pick: " + (pk.stdout + pk.stderr)[-300:])
+        a.host = m.group(1)
+        print("host", a.host, file=sys.stderr)
     src = os.path.abspath(a.src)
     runs = [r for r in RUNS if not a.only or r["name"] in a.only.split(",")]
     files = BASE_FILES + RL_FILES
     out = os.path.join(ROOT, REC)
     os.makedirs(out, exist_ok=True)
     runner = os.path.join(HERE, "vm_plane_sysbench.sh")
+    prunner = os.path.join(HERE, "vm_plane_sysbench_prod.sh")
     if not a.collect:
         sh(f"ssh {a.host} mkdir -p {RDIR}/wt {RDIR}/b", check=True)
         subprocess.run(["rsync", "-a", "--relative"] + files + [f"{a.host}:{RDIR}/wt/"], cwd=src, check=True)
-        subprocess.run(["rsync", "-a", runner, f"{a.host}:{RDIR}/vm_plane_sysbench.sh"], check=True)
-        lines = [f"cd ~/{RDIR} && rm -f b/*.line"]
+        subprocess.run(["rsync", "-a", runner, prunner, f"{a.host}:{RDIR}/"], check=True)
+        lines = [f"cd ~/{RDIR} && export VM_SYSB_WT=$HOME/{RDIR}/wt VM_SYSB_B=$HOME/{RDIR}/b && "
+                 + " ".join(f"rm -f b/{r['name']}.line;" for r in runs)]
         for r in runs:
             cmd = f"./vm_plane_sysbench.sh {r['name']} {shlex.quote(r['args'])} {r['extra']}"
+            if r["prod"] is not None:
+                cmd = f"./vm_plane_sysbench_prod.sh {r['name']} {r['prod']} {shlex.quote(r['args'])}"
             lines.append(f"( ot-heavy --mem {r['mem']} -- {cmd} > b/{r['name']}.line 2>b/{r['name']}.err ) &")
         lines.append("wait")
         p = subprocess.run(["ssh", a.host, "bash", "-s"], input="\n".join(lines) + "\n", text=True)
@@ -190,6 +252,8 @@ def main():
             f"$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --version; hostname'").stdout.split("\n")
     remote = {l.split()[1]: l.split()[0] for l in rh if re.match(r"^[0-9a-f]{64} ", l)}
     tree_ok = all(remote.get(f) == h for f, h in hashes.items()) and remote.get("../vm_plane_sysbench.sh") == sha(runner)
+    prh = sh(f"ssh {a.host} sha256sum {RDIR}/vm_plane_sysbench_prod.sh").stdout.split()
+    tree_ok = tree_ok and bool(prh) and prh[0] == sha(prunner)
     ver = next((l for l in rh if l.startswith("Verilator")), "?")
     host = [l for l in rh if l.strip()][-1] if rh else "?"
     commit = sh(f"git -C {shlex.quote(src)} rev-parse HEAD").stdout.strip()
@@ -209,10 +273,26 @@ def main():
         leaf = {"error": str(e)}
     leaf_kills = leaf.get("expect") == "FAIL" and leaf.get("got") == "FAIL"
     recs, bad = [], []
+
+    def wq_check(r, o):
+        """The WQ line of the run's log against r['wq'] (the skid capacity rule: model vs memory)."""
+        wl = ""
+        try:
+            wl = next((l for l in open(os.path.join(out, r["name"] + ".log")) if l.startswith("WQ ")), "")
+        except OSError:
+            pass
+        wv = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", wl)}
+        ok = bool(wl)
+        for k, v in r["wq"].items():
+            ok = ok and k in wv and (wv[k] >= int(v[2:]) if isinstance(v, str) else wv[k] == v)
+        o.update(wq_expected=r["wq"], wq_line=wl.strip(), wq_ok=ok)
+        return ok
     for r in runs:
         line = got.get(r["name"], "")
         m = re.search(r"rc=(\S+) ((?:PASS|FAIL) .*?) maxrss_kb=(\d+) wall=([\d.]+) build_s=(\d+)", line)
         o = dict(name=r["name"], what=r["what"], args=f"{COMMON} {r['args']}", extra_verilator_args=r["extra"],
+                 production_shape=r["prod"] is not None,
+                 runner="vm_plane_sysbench_prod.sh %d" % r["prod"] if r["prod"] is not None else "vm_plane_sysbench.sh",
                  tile_module=r["tile"], expected=r["expect"], ot_heavy_mem_gb=r["mem"], scratch_reference=r["scratch"],
                  log=f"{r['name']}.log")
         if not m:
@@ -243,9 +323,13 @@ def main():
                         tv.get(a, 0) >= 100 for k, al in act.items() if need.get(k) for a in al)
                     o.update(tree_expected=need, tree_line=tl.strip(), tree_ok=tree_ok)
                     o["ok"] = o["ok"] and tree_ok
+                if r["wq"]:
+                    o["ok"] = wq_check(r, o) and o["ok"]
             elif r["expect"] == "FAIL":
                 o["ok"] = o["observed"] == "FAIL" and o["rc"] == 0
                 o["scratch_match"] = r["scratch"] in res if r["scratch"] else None
+                if r["wq"]:
+                    o["ok"] = wq_check(r, o) and o["ok"]
             elif r["expect"] == "GAP":
                 # not a mutant-gate pass: the record stays ok only while the leaf miter kills this mutant
                 o["mutant_killed_by_system_bench"] = o["observed"] == "FAIL"
@@ -285,7 +369,8 @@ def main():
         "date": datetime.date.today().isoformat(),
         "ok": not bad and not a.only,
         "not_ok_because": bad + (["partial set (--only)"] if a.only else []),
-        "bench": "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv (top tb_qfd_vm_bv_ports), ELEMS 16384 (NOT the production 177808)",
+        "bench": "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv (top tb_qfd_vm_bv_ports): bench shape ELEMS 16384 / SW 8, and the "
+                 "PRODUCTION shape (runs with production_shape true: ELEMS 177808, SW 64, NRB 64, SMAX 11, 14 strides)",
         "host": host, "launcher": "ot-heavy --mem <ot_heavy_mem_gb> per run, all runs in parallel",
         "verilator": ver, "runner": "tools/qwen_tp8/vm_plane_sysbench.sh", "driver": "tools/qwen_tp8/vm_plane_sysbench_set.py",
         "source_commit": commit, "sources_clean_at_commit": not dirty, "remote_tree_matches_sha256": tree_ok,
