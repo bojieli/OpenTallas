@@ -23,13 +23,15 @@
 //   LGL 3  g_r[0]   fld  out pin g      g_r[1]  dsfd_vm_frg   1 b  x10    g_r[2]  flt in pin g_q        2
 //   LAL 3  ra_v/rb[0] fcn out pin arm_* [1]     dsfd_vm_fra  15 b  x10    [2]     flt in pin ra_q/rb_q  2
 //   LDL 3  dd_r/dr_r[0] flt out pin ret [1]     dsfd_vm_frr 526 b  x10    [2]     fld in pin dd_r/dr_r  2
+//   LVX 1  av / ok / ovf / sflt  flt out pin   dsfd_vm_frv   4 b  x10    av_r / ok_q / ov_q / sf_q  fld in pin   2
 //   KD 2   kq[0]    source leaf out pin k_o  (no mid stage)                kq[1]   fcn in pin            1
 //   FRL 6  s0 source leaf out pin, [fxr in, fxr out] x R (dsfd_vm_fxr 592 b x56), fsr v1 / fsr o         R + 1
 // The lane's own row relay (flat dsfd_vm_ll rv / rd_, AL = LAL stages) stays inside flt.
 `define VMFE_LGL     3           // grant
 `define VMFE_LDL     3           // lane return data (the drain selects on the grant delayed LGL + 2 + LDL = 8)
 `define VMFE_LAL     3           // LARM arm (and the lane's row relay)
-`define VMFE_RTH     17          // landing room threshold = the flat 14 + LAL (16 at LAL 2; +1 row in flight per input stage)
+`define VMFE_LVX     1           // mid-hop relay tiles (dsfd_vm_frv, 4 b x10) on av / ok / ovf / sflt lane -> fld: 2 wires, as g / arm / ret
+`define VMFE_RTH     18          // landing room threshold = the flat 14 + LAL + LVX (+1 row in flight per input / flag stage)
 `define VMFE_DVR     1           // engine done dv / dt on a stream-domain pin register in fcn (flat DVR 1: +1 stream cycle on a done)
 // ---- leaves (each: own ck root <= 15,000 sinks MEASURED by yosys, every pin registered, hop <= 500 um)
 // ---- S2 / S3 (coordinator decision 2026-10-13 14:00, el1013-s81-vmfe/B6; ports FROZEN again after them)

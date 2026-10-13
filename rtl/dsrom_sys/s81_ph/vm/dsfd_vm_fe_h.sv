@@ -206,6 +206,11 @@ endmodule
 module dsfd_vm_frr (input wire [0:0] ck, input wire [525:0] i, output reg [525:0] o);
     always @(posedge ck[0]) o <= i;
 endmodule
+//   dsfd_vm_frv   4 b  {sflt, ovf, ok, av}  flt out flops -> frv -> fld av_r / ok_q / ov_q / sf_q   (`VMFE_LVX: S5, B6)
+(* keep_hierarchy = "yes" *)
+module dsfd_vm_frv (input wire [0:0] ck, input wire [3:0] i, output reg [3:0] o);
+    always @(posedge ck[0]) o <= i;
+endmodule
 
 // ================================================================ flt: one landing lane
 // q_* pin flops of its producer bits, decode, the dsfd_vm_ll lane (same statements; STRIDE / OFF are registered strap
@@ -304,7 +309,7 @@ module dsfd_vm_fld (
     (* keep = 1 *) reg [1:0] rn_k;
     always @(posedge clk) begin rn <= rni; rn_k <= {2{rn}}; end
     always @* rn_o = rn_k;
-    wire [NLL-1:0] ll_av = av; wire [NLL*512-1:0] ll_od; wire [NLL*14-1:0] ll_or;
+    wire [NLL-1:0] ll_avd = av; wire [NLL*512-1:0] ll_od; wire [NLL*14-1:0] ll_or;   // av: after the frv relay tile
     genvar gl;
     generate for (gl = 0; gl < NLL; gl = gl + 1) begin : g_u
         assign ll_od[512*gl +: 512] = ret[526*gl +: 512]; assign ll_or[14*gl +: 14] = ret[526*gl + 512 +: 14];
@@ -342,7 +347,7 @@ module dsfd_vm_fld (
             for (i = 0; i < LSD; i = i + 1) sd_v[i] <= {NLP{1'b0}};
         end else begin
             ll_ptr <= (ll_ptr == NLL - 1) ? 0 : ll_ptr + 1'b1;
-            av_r <= ll_av;
+            av_r <= ll_avd;
             for (li = 0; li < NLL; li = li + 1) lc[li] <= lc[li] + {6'd0, av_r[li]} - {6'd0, ll_tk[li]};
             g_r[0] <= ll_tk;
             for (i = 1; i < LGL; i = i + 1) g_r[i] <= g_r[i-1];
@@ -896,6 +901,7 @@ module dsfd_vm_fe_h (
     wire [7:0] rn_cn; wire [1:0] rn_ld, rn_cc, rn_cw;
     wire [9:0] ll_av, ll_ok, ll_ovf, ll_sf, ll_g, ll_rn, la_v; wire [5259:0] ll_ret; wire [139:0] la_b;
     wire [9:0] ll_gx, la_vx; wire [5259:0] ll_retx; wire [139:0] la_bx;   // after the mid-hop relay tiles
+    wire [9:0] ll_avx, ll_okx, ll_ovfx, ll_sfx;
     wire [15:0] clf; wire so_w, ovr_w, sflt_w, err_w; wire [3:0] rf_w;
     wire [359:0] s_cn; wire [111:0] x_cn; wire [1143:0] s_ld; wire [1151:0] s_cc; wire [635:0] s_cw;
     wire [63:0] k_ld, k_cc, k_cw;
@@ -939,7 +945,7 @@ module dsfd_vm_fe_h (
             .g(ll_gx[gi]), .arm_v(la_vx[gi]), .arm_base(la_bx[14*gi +: 14]),
             .av(ll_av[gi]), .ret(ll_ret[526*gi +: 526]), .ok(ll_ok[gi]), .ovf(ll_ovf[gi]), .sflt(ll_sf[gi]), .rn_o(ll_rn[gi]));
         // mid-hop relay tiles: `VMFE_LGL - 2 / `VMFE_LAL - 2 / `VMFE_LDL - 2 in series on this lane's g / arm / ret
-        wire [0:0] xg [0:`VMFE_LGL-2]; wire [14:0] xa [0:`VMFE_LAL-2]; wire [525:0] xr [0:`VMFE_LDL-2];
+        wire [0:0] xg [0:`VMFE_LGL-2]; wire [14:0] xa [0:`VMFE_LAL-2]; wire [525:0] xr [0:`VMFE_LDL-2]; wire [3:0] xv [0:`VMFE_LVX];
         assign xg[0] = ll_g[gi]; assign xa[0] = {la_v[gi], la_b[14*gi +: 14]}; assign xr[0] = ll_ret[526*gi +: 526];
         for (gj = 0; gj < `VMFE_LGL - 2; gj = gj + 1) begin : g_rg
             dsfd_vm_frg u_r (.ck(ck), .i(xg[gj]), .o(xg[gj+1]));
@@ -952,8 +958,16 @@ module dsfd_vm_fe_h (
         end
         assign ll_gx[gi] = xg[`VMFE_LGL-2]; assign {la_vx[gi], la_bx[14*gi +: 14]} = xa[`VMFE_LAL-2];
         assign ll_retx[526*gi +: 526] = xr[`VMFE_LDL-2];
+        assign xv[0] = {ll_sf[gi], ll_ovf[gi], ll_ok[gi], ll_av[gi]};
+        for (gj = 0; gj < `VMFE_LVX; gj = gj + 1) begin : g_rv
+`ifdef OT_VMFE_MUT_AVBYP
+            if (gi == 3) begin : g_mut assign xv[gj+1] = xv[gj]; end else   // MUTANT: lane 3's flags skip their relay tile
+`endif
+            begin : g_t dsfd_vm_frv u_r (.ck(ck), .i(xv[gj]), .o(xv[gj+1])); end
+        end
+        assign {ll_sfx[gi], ll_ovfx[gi], ll_okx[gi], ll_avx[gi]} = xv[`VMFE_LVX];
     end endgenerate
-    dsfd_vm_fld u_ld (.ck(ck), .rni(rn_cn[0]), .av(ll_av), .ret(ll_retx), .ok(ll_ok[5:2]), .ovf(ll_ovf), .sflt(ll_sf),
+    dsfd_vm_fld u_ld (.ck(ck), .rni(rn_cn[0]), .av(ll_avx), .ret(ll_retx), .ok(ll_okx[5:2]), .ovf(ll_ovfx), .sflt(ll_sfx),
         .g(ll_g), .s_o(s_ld), .k_o(k_ld), .t_cts(t_cts), .ovr_o(ovr_w), .sflt_o(sflt_w), .rn_o(rn_ld));
     // ---------------- central
     dsfd_vm_fcc u_cc (.ck(ck), .rni(rn_cn[1]), .cks(cks), .rss(rss), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
