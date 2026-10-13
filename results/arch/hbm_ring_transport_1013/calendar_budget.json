@@ -1,0 +1,150 @@
+{
+ "schema": "opentallas.hbm.ring_calendar_budget.v1",
+ "author": "Claude:ring-station-1013",
+ "date": "2026-10-13",
+ "status": "FAIL at unchanged budgets; first-order SPEC 5.0 lag model, NOT a compiler exposure run and NOT a qualification",
+ "unchanged_budgets": {
+  "ring_hop_cycles_spec": "12 vertical / 11 horizontal (results/arch/hbm_b2_1012/SPEC.md 5; b2_params.json 12)",
+  "exposed_cycles_per_layer": {
+   "qwen": 93,
+   "ds": 290
+  },
+  "remote_read_round_trip_spec": 50
+ },
+ "measured": {
+  "elastic_station_forward_edges": 4,
+  "S59_total_minus_steady": 240,
+  "S67_total_minus_steady": 272,
+  "source": "results/rtl/hbm_ring_transport_1013/elastic/{d8,s67,sub16} endpoint logs (total_cycles - steady_cycles)",
+  "route_segments": "41..67 (polyline 20.031..33.496 mm at <= 500 um per stage); pin Manhattan 16.38..29.84 mm = 32..59 raw stages"
+ },
+ "model": "lag = max(0, H + 1/b - lead/c), b = c = 64 words/cycle, local lead Qwen 16 / DS 28 cycles (SPEC 5.0)",
+ "rows": [
+  {
+   "case": "spec_price_hop12",
+   "segments": null,
+   "forward_edges_per_station": null,
+   "hop_cycles": 12,
+   "ratio_to_spec_price_12": 1.0,
+   "qwen": {
+    "exposed_per_1hop_remote_record": 0.0,
+    "exposed_per_2hop_remote_record": 8.0,
+    "budget_cycles_per_layer": 93,
+    "one_hop_records_that_fit": "unbounded"
+   },
+   "ds": {
+    "exposed_per_1hop_remote_record": 0.0,
+    "exposed_per_2hop_remote_record": 0.0,
+    "budget_cycles_per_layer": 290,
+    "one_hop_records_that_fit": "unbounded"
+   }
+  },
+  {
+   "case": "raw_relay_1edge_S41",
+   "segments": 41,
+   "forward_edges_per_station": 1,
+   "hop_cycles": 44,
+   "ratio_to_spec_price_12": 3.67,
+   "qwen": {
+    "exposed_per_1hop_remote_record": 28.0,
+    "exposed_per_2hop_remote_record": 72.0,
+    "budget_cycles_per_layer": 93,
+    "one_hop_records_that_fit": 3
+   },
+   "ds": {
+    "exposed_per_1hop_remote_record": 16.0,
+    "exposed_per_2hop_remote_record": 60.0,
+    "budget_cycles_per_layer": 290,
+    "one_hop_records_that_fit": 18
+   }
+  },
+  {
+   "case": "raw_relay_1edge_S67",
+   "segments": 67,
+   "forward_edges_per_station": 1,
+   "hop_cycles": 70,
+   "ratio_to_spec_price_12": 5.83,
+   "qwen": {
+    "exposed_per_1hop_remote_record": 54.0,
+    "exposed_per_2hop_remote_record": 124.0,
+    "budget_cycles_per_layer": 93,
+    "one_hop_records_that_fit": 1
+   },
+   "ds": {
+    "exposed_per_1hop_remote_record": 42.0,
+    "exposed_per_2hop_remote_record": 112.0,
+    "budget_cycles_per_layer": 290,
+    "one_hop_records_that_fit": 6
+   }
+  },
+  {
+   "case": "elastic_4edge_S41",
+   "segments": 41,
+   "forward_edges_per_station": 4,
+   "hop_cycles": 168,
+   "ratio_to_spec_price_12": 14.0,
+   "qwen": {
+    "exposed_per_1hop_remote_record": 152.0,
+    "exposed_per_2hop_remote_record": 320.0,
+    "budget_cycles_per_layer": 93,
+    "one_hop_records_that_fit": 0
+   },
+   "ds": {
+    "exposed_per_1hop_remote_record": 140.0,
+    "exposed_per_2hop_remote_record": 308.0,
+    "budget_cycles_per_layer": 290,
+    "one_hop_records_that_fit": 2
+   }
+  },
+  {
+   "case": "elastic_4edge_S59_measured",
+   "segments": 59,
+   "forward_edges_per_station": 4,
+   "hop_cycles": 240,
+   "ratio_to_spec_price_12": 20.0,
+   "qwen": {
+    "exposed_per_1hop_remote_record": 224.0,
+    "exposed_per_2hop_remote_record": 464.0,
+    "budget_cycles_per_layer": 93,
+    "one_hop_records_that_fit": 0
+   },
+   "ds": {
+    "exposed_per_1hop_remote_record": 212.0,
+    "exposed_per_2hop_remote_record": 452.0,
+    "budget_cycles_per_layer": 290,
+    "one_hop_records_that_fit": 1
+   }
+  },
+  {
+   "case": "elastic_4edge_S67_measured",
+   "segments": 67,
+   "forward_edges_per_station": 4,
+   "hop_cycles": 272,
+   "ratio_to_spec_price_12": 22.67,
+   "qwen": {
+    "exposed_per_1hop_remote_record": 256.0,
+    "exposed_per_2hop_remote_record": 528.0,
+    "budget_cycles_per_layer": 93,
+    "one_hop_records_that_fit": 0
+   },
+   "ds": {
+    "exposed_per_1hop_remote_record": 244.0,
+    "exposed_per_2hop_remote_record": 516.0,
+    "budget_cycles_per_layer": 290,
+    "one_hop_records_that_fit": 1
+   }
+  }
+ ],
+ "findings": [
+  "The 12/11-cycle hop price assumed about 9 relay stages (<= 5 mm). The native die_v12 ring edges are 20..33.5 mm, so even a plain registered relay chain is 44..70 cycles a hop (3.7..5.8x the price) before any elastic storage.",
+  "The D8 elastic station adds 4 forward edges per segment: 168..272 cycles a hop (14..22.7x). One exposed one-hop remote record costs 152..256 (Qwen) / 140..244 (DS) cycles: a single record exceeds the Qwen 93-cycle layer budget, two exceed the DS 290-cycle budget.",
+  "A remote read round trip over the diagonal is 2 x 2 x H + 4 = 676..1,092 cycles against 50.",
+  "Throughput (II 1) is not the problem; latency is. The budgets are not raised and no row is re-priced."
+ ],
+ "structural_options_not_yet_evaluated": [
+  "Shorten the edges: SID order SW0/SE1/NW2/NE3 puts two diagonals on the ring; a geometric order (SW,SE,NE,NW) removes both diagonals and roughly halves the worst edge. Needs the compiler's slice map and the die lead.",
+  "One forward edge per segment: registered relays between elastic stations placed only every k-th segment (credit loop depth 2k+margin <= D), so a hop is about S + 4*S/k cycles.",
+  "Compiler lead: schedule every cross-slice push at least H cycles before its first reader (exposure 0 when lead >= H); needs the real B2 vectors (b2c/vec) through tools/hgi_e2e/b2.py traffic with ring_hop_cycles set to the measured H."
+ ],
+ "next_gate": "tools/hgi_e2e/b2.py traffic on the current B2 Qwen and DS vectors with ring_hop_cycles = measured H per edge; pass only at <= 93 / <= 290 exposed"
+}
