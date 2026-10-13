@@ -509,7 +509,7 @@ def elem_tput(blocks, safe):
     out = dict(status='present', path=TPUT_REL, commit=_TPUT['commit'], generated_utc=d.get('generated_utc'), rule=d.get('rule'),
                qualify_ratio=d.get('qualify_ratio'), elements={}, classes={})
     for b in blocks:
-        out['elements'][b] = (d.get('elements') or {}).get(b)
+        out['elements'][b] = elements.honest_throughput((d.get('elements') or {}).get(b))
         cl = []
         for model, md in (d.get('rom') or {}).items():
             for c in (md or {}).get('classes', []) if isinstance(md, dict) else []:
