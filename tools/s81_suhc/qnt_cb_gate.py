@@ -86,9 +86,9 @@ def main():
         with (run/'run.log').open('w') as log:
             sim=subprocess.run(['/usr/bin/time','-v',str(obj/'Vtb_qnt_cb')],stdout=log,stderr=subprocess.STDOUT)
         text=(run/'run.log').read_text()
-        expected=(mutant==0 and sim.returncode==0 and 'PASS QNT_CB' in text) or (mutant==6 and sim.returncode!=0 and 'FAIL QNT_CB' in text)
+        expected=(mutant==0 and sim.returncode==0 and 'PASS QNT_CB' in text) or (mutant==6 and sim.returncode!=0 and 'FAIL QNT_CB active_data=1' in text)
         verdict=dict(mutant=mutant,build_exit=0,run_exit=sim.returncode,verdict='PASS' if expected else 'UNEXPECTED_RESULT',
-                     negative_control=(mutant==6),summary=next((line for line in text.splitlines() if 'QNT_CB' in line),''))
+                     negative_control=(mutant==6),summary=next((line for line in text.splitlines() if 'active_data=1' in line), next((line for line in text.splitlines() if 'QNT_CB' in line),'')))
         if mutant==0:
             verdict['counts']={key:int(value) for key,value in re.findall(r'(cycles|checks|jobs|starts|resets|valid_rows|valid_cycles|parameter_pulses|fault_cycles|empty|full|uneven|added_cycles)=(\d+)',text)}
         (run/'terminal.json').write_text(json.dumps(verdict,indent=2)+'\n')
