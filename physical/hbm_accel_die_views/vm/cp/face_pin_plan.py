@@ -37,8 +37,8 @@ REL = "physical/hbm_accel_die_views/vm/cp"
 # tile -> (w, h, m5_pg_pitch)
 GEOM = {
     'vm_cp_fw0': (28.08, 498.96, 2.7), 'vm_cp_fw1': (23.76, 498.96, 2.7), 'vm_cp_fw2': (28.08, 598.32, 2.7),
-    'vm_cp_fw3': (21.6, 399.6, 2.7), 'vm_cp_fe0': (15.12, 498.96, 2.7), 'vm_cp_fe1': (23.76, 498.96, 2.7),
-    'vm_cp_fe2': (23.76, 498.96, 2.7), 'vm_cp_fe3': (17.28, 498.96, 2.7), 'vm_cp_rwt': (28.08, 518.4, 2.7),
+    'vm_cp_fw3': (21.6, 399.6, 2.7), 'vm_cp_fe0': (21.6, 498.96, 2.7), 'vm_cp_fe1': (23.76, 498.96, 2.7),
+    'vm_cp_fe2': (23.76, 498.96, 2.7), 'vm_cp_fe3': (25.92, 498.96, 2.7), 'vm_cp_rwt': (28.08, 518.4, 2.7),
     'vm_cp_re': (90.72, 401.76, 5.4),
 }
 # instance origin changes (die level, planning): fw3 follows the fw2 | fw3 seam; relays as candidate_geometry.py
@@ -126,12 +126,12 @@ def layout(kit):
         t = sec['st'][0] - 2 - 2 * len(fclk)
         lone(fclk, 'W', t)
         sec['tap'] = run(B('tap', 0, 2063), ('hi', t - 2))
-        ck = (sec['ph'][1] + sec['tap'][0]) // 2
+        ck = sec['st'][0] - 2      # beside the fclk pins (g2)
     elif kit == 'vm_cp_fw2':
         sec['tap'] = run(B('tap', 0, 2063), ('lo', LO))
         lone(fclk, 'W', sec['tap'][1] + 2)
         sec['ph'] = run(B('ph', 0, 2048), ('hi', HI))
-        ck = (sec['tap'][1] + 14 + sec['ph'][0]) // 2
+        ck = sec['tap'][1] + 12    # beside the fclk pins (g2)
     elif kit == 'vm_cp_fw3':
         sec['f'] = run(B('f_su_NW', 0, 2048), ('lo', LO))
         sec['i'] = run(B('iNW', 0, 512), ('lo', sec['f'][1] + 6))
@@ -143,24 +143,24 @@ def layout(kit):
         t = sec['fu'][0] - 2 - 2 * len(fclk)
         lone(fclk, 'E', t)
         sec['i'] = run(B('iSE', 0, 512), ('hi', t - 2))
-        ck = sec['i'][0] - 8
+        ck = t                     # W, straight across from the E fclk pins (g2)
     elif kit == 'vm_cp_fe1':
         sec['ph'] = run(B('ph', 0, 2048), ('lo', LO))
         t = HI - 2 * len(fclk)
         lone(fclk, 'E', t)
         sec['tap'] = run(B('tap', 0, 2063), ('hi', t - 2))
-        ck = (sec['ph'][1] + sec['tap'][0]) // 2
+        ck = t                     # W, straight across from the E fclk pins (g2)
     elif kit == 'vm_cp_fe2':
         sec['tap'] = run(B('tap', 0, 2063), ('lo', LO))
         lone(fclk, 'E', sec['tap'][1] + 2)
         sec['ph'] = run(B('ph', 0, 2048), ('hi', HI))
-        ck = (sec['tap'][1] + 14 + sec['ph'][0]) // 2
+        ck = sec['tap'][1] + 2     # W, straight across from the E fclk pins (g2)
     elif kit == 'vm_cp_fe3':
         # f_su_NE / ph straight across from RT3.ei (die y 1663.7 ..)
         sec['f'] = run(B('f_su_NE', 0, 2048), ('lo', 3476))
         sec['i'] = run(B('iNE', 0, 512), ('lo', sec['f'][1] + 6))
         lone(fclk, 'E', sec['i'][1] + 2)
-        ck = sec['f'][0] - 8
+        ck = sec['i'][1] + 2       # W, straight across from the E fclk pins (g2)
     elif kit == 'vm_cp_rwt':
         sec['tap'] = run(B('tap', 0, 2063), ('lo', LO))
         sec['st'] = run(B('st', 0, 202), ('hi', HI))

@@ -183,7 +183,7 @@
   },
   "vm_cp_fe0": {
    "outline": [
-    15.12,
+    21.6,
     498.96
    ],
    "m5_pg_pitch": 2.7,
@@ -193,7 +193,7 @@
     "peak_b_per_um": 10.4,
     "cut_fraction": 0.555,
     "span_um": [
-     194.172,
+     292.956,
      496.476
     ]
    },
@@ -209,7 +209,7 @@
    },
    "vertical_cut": {
     "nets_crossing_worst_y": 0,
-    "vertical_tracks": 630,
+    "vertical_tracks": 900,
     "fraction": 0.0
    },
    "sections_tracks": {
@@ -227,7 +227,7 @@
     ]
    },
    "sinks": 1726,
-   "core_um2_per_flop": 3.06
+   "core_um2_per_flop": 4.92
   },
   "vm_cp_fe1": {
    "outline": [
@@ -242,7 +242,7 @@
     "cut_fraction": 0.555,
     "span_um": [
      2.412,
-     495.9
+     496.092
     ]
    },
    "E": {
@@ -319,7 +319,7 @@
   },
   "vm_cp_fe3": {
    "outline": [
-    17.28,
+    25.92,
     498.96
    ],
    "m5_pg_pitch": 2.7,
@@ -329,8 +329,8 @@
     "peak_b_per_um": 10.4,
     "cut_fraction": 0.555,
     "span_um": [
-     166.476,
-     369.852
+     166.86,
+     468.684
     ]
    },
    "E": {
@@ -345,7 +345,7 @@
    },
    "vertical_cut": {
     "nets_crossing_worst_y": 0,
-    "vertical_tracks": 720,
+    "vertical_tracks": 1080,
     "fraction": 0.0
    },
    "sections_tracks": {
@@ -359,7 +359,7 @@
     ]
    },
    "sinks": 2628,
-   "core_um2_per_flop": 2.42
+   "core_um2_per_flop": 4.05
   },
   "vm_cp_rwt": {
    "outline": [
@@ -509,9 +509,9 @@
   },
   "u_fe0": {
    "master": "vm_cp_fe0",
-   "x": 1384.512,
+   "x": 1378.032,
    "y": 0,
-   "w": 15.12,
+   "w": 21.6,
    "h": 498.96,
    "orient": "R0"
   },
@@ -533,9 +533,9 @@
   },
   "u_fe3": {
    "master": "vm_cp_fe3",
-   "x": 1382.352,
+   "x": 1373.712,
    "y": 1496.88,
-   "w": 17.28,
+   "w": 25.92,
    "h": 498.96,
    "orient": "R0"
   },
@@ -719,8 +719,8 @@
    "frm": "u_fe0.ph",
    "to": "u_rb3.ei",
    "bits": 1078,
-   "max_bit_um": 174.1,
-   "mean_bit_um": 173.7,
+   "max_bit_um": 167.6,
+   "mean_bit_um": 167.2,
    "worst_bit": 0
   },
   {
@@ -728,8 +728,8 @@
    "frm": "u_fe3.ph",
    "to": "u_rt3.ei",
    "bits": 2048,
-   "max_bit_um": 153.7,
-   "mean_bit_um": 145.0,
+   "max_bit_um": 145.1,
+   "mean_bit_um": 136.3,
    "worst_bit": 2047
   },
   {

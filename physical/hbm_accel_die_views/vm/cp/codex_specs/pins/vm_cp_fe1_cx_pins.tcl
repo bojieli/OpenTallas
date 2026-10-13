@@ -6164,7 +6164,6 @@ place_pin -pin_name {ph[2044]} -layer M4 -location {0.0000 198.6360} -force_to_d
 place_pin -pin_name {ph[2045]} -layer M4 -location {0.0000 198.7320} -force_to_die_boundary
 place_pin -pin_name {ph[2046]} -layer M4 -location {0.0000 198.8280} -force_to_die_boundary
 place_pin -pin_name {ph[2047]} -layer M4 -location {0.0000 198.9240} -force_to_die_boundary
-place_pin -pin_name {ck} -layer M4 -location {0.0000 248.4600} -force_to_die_boundary
 place_pin -pin_name {tap[0]} -layer M4 -location {0.0000 297.9480} -force_to_die_boundary
 place_pin -pin_name {tap[1]} -layer M4 -location {0.0000 298.0440} -force_to_die_boundary
 place_pin -pin_name {tap[2]} -layer M4 -location {0.0000 298.1400} -force_to_die_boundary
@@ -8228,3 +8227,4 @@ place_pin -pin_name {tap[2059]} -layer M4 -location {0.0000 495.6120} -force_to_
 place_pin -pin_name {tap[2060]} -layer M4 -location {0.0000 495.7080} -force_to_die_boundary
 place_pin -pin_name {tap[2061]} -layer M4 -location {0.0000 495.8040} -force_to_die_boundary
 place_pin -pin_name {tap[2062]} -layer M4 -location {0.0000 495.9000} -force_to_die_boundary
+place_pin -pin_name {ck} -layer M4 -location {0.0000 496.0920} -force_to_die_boundary

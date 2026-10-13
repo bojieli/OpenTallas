@@ -6179,7 +6179,7 @@ place_pin -pin_name {xNW[2064]} -layer M4 -location {0.0000 200.6520} -force_to_
 place_pin -pin_name {xNW[2065]} -layer M4 -location {0.0000 200.7480} -force_to_die_boundary
 place_pin -pin_name {xNW[2066]} -layer M4 -location {0.0000 200.8440} -force_to_die_boundary
 place_pin -pin_name {xNW[2067]} -layer M4 -location {0.0000 200.9400} -force_to_die_boundary
-place_pin -pin_name {ck} -layer M4 -location {0.0000 226.4760} -force_to_die_boundary
+place_pin -pin_name {ck} -layer M4 -location {0.0000 201.0360} -force_to_die_boundary
 place_pin -pin_name {t_su_NW[0]} -layer M4 -location {0.0000 251.8680} -force_to_die_boundary
 place_pin -pin_name {t_quant[0]} -layer M4 -location {0.0000 251.9640} -force_to_die_boundary
 place_pin -pin_name {t_su_NW[1]} -layer M4 -location {0.0000 252.0600} -force_to_die_boundary

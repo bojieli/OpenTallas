@@ -5189,7 +5189,6 @@ place_pin -pin_name {t_su_SW[2044]} -layer M4 -location {0.0000 105.5160} -force
 place_pin -pin_name {t_su_SW[2045]} -layer M4 -location {0.0000 105.6120} -force_to_die_boundary
 place_pin -pin_name {t_su_SW[2046]} -layer M4 -location {0.0000 105.7080} -force_to_die_boundary
 place_pin -pin_name {t_su_SW[2047]} -layer M4 -location {0.0000 105.8040} -force_to_die_boundary
-place_pin -pin_name {ck} -layer M4 -location {0.0000 155.2920} -force_to_die_boundary
 place_pin -pin_name {xSW[0]} -layer M4 -location {0.0000 204.7320} -force_to_die_boundary
 place_pin -pin_name {xSW[1]} -layer M4 -location {0.0000 204.8280} -force_to_die_boundary
 place_pin -pin_name {xSW[2]} -layer M4 -location {0.0000 204.9240} -force_to_die_boundary
@@ -7258,6 +7257,7 @@ place_pin -pin_name {xSW[2064]} -layer M4 -location {0.0000 402.9720} -force_to_
 place_pin -pin_name {xSW[2065]} -layer M4 -location {0.0000 403.0680} -force_to_die_boundary
 place_pin -pin_name {xSW[2066]} -layer M4 -location {0.0000 403.1640} -force_to_die_boundary
 place_pin -pin_name {xSW[2067]} -layer M4 -location {0.0000 403.2600} -force_to_die_boundary
+place_pin -pin_name {ck} -layer M4 -location {0.0000 403.3560} -force_to_die_boundary
 place_pin -pin_name {t_su_SW[0]} -layer M4 -location {0.0000 403.4520} -force_to_die_boundary
 place_pin -pin_name {t_su_SW[1]} -layer M4 -location {0.0000 403.5480} -force_to_die_boundary
 place_pin -pin_name {t_su_SW[2]} -layer M4 -location {0.0000 403.6440} -force_to_die_boundary
