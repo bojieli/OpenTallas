@@ -145,7 +145,7 @@
   {
    "version": 16,
    "when": "2026-10-13 PT",
-   "change": "s81-die: (1) hrow: 4 die-placed leaf slots ing 129.6 sq x3 / hub 216 sq x1 / cbe, cbw 475.2 x 216 x15 each (coordinator 07:55), rep/hrow = container. (2) sp_collective: ce_s0 (ces0, closed) + ce_s1..3 (cesn parent) 302.4 x 341.28 as a 2 x 2 block. (3) sp_capture 129.576 -> 561.6 tall cluster (+432.024). (4) q element row: real view + libs + bound PQ1 bench; M7 pockets kept. (5) pq_root 131.76 x 211.68, ports 68 / 71. (6) bgq28 501.12 -> 622.08 (16 slots re-stacked), new FE slot 1520.064 x 695.52, sp_vm 2730.216 -> 3343.656 (+613.44 N). (7) sp_wfc priced-kit pins t_srd 31 / f_srq 1026 / t_ft 4 / t_hep 36. (8) SU: 14 legacy kv / qb / sw lane-tile slots -> 10 per-master rows (kvt, kvq, kve, kvp, kvr, qbt, qbe, swt reserve, swe) inside the same regions. (9) HC W face on the VM / collective lanes (--lane-pins 2). (10) gather pending, slot unchanged. (11) seam_rules.clock = die clock delivery rule (insertion-compensated entry, tap levels at 300 ps, SKEW 150 on deep-tile hops). NEIGHBOUR COST: the hub column stack above the VM moves N by +613.44 (VM) and the stack above the capture by a further +432.024 (total +1,045.464 for gather / pq / wfc / collective): taken from the free band of the hub column, which is now FULL (v16 GEN: host top y 22,746.9 of 22,749.1; station pockets of ~172 um between pq / wfc / sseq / collective / host kept), die 33 x 26 mm unchanged; the hc_s <-> vm / collective straight lanes move with their slabs (GEN v16: hop gate 500 um, 0 overlaps). No price changed; no closed tile re-shaped."
+   "change": "s81-die: (1) hrow: 4 die-placed leaf slots ing 129.6 sq x3 / hub 216 sq x1 / cbe, cbw 475.2 x 216 x15 each (coordinator 07:55), rep/hrow = container. (2) sp_collective: ce_s0 (ces0, closed) + ce_s1..3 (cesn parent) 302.4 x 341.28 as a 2 x 2 block. (3) sp_capture 129.576 -> 561.6 tall cluster (+432.024). (4) q element row: real view + libs + bound PQ1 bench; M7 pockets kept. (5) pq_root 131.76 x 211.68, ports 68 / 71. (6) bgq28 501.12 -> 622.08 (16 slots re-stacked), new FE slot 1520.064 x 695.52, sp_vm 2730.216 -> 3343.656 (+613.44 N). (7) sp_wfc priced-kit pins t_srd 31 / f_srq 1026 / t_ft 4 / t_hep 36. (8) SU: 14 legacy kv / qb / sw lane-tile slots -> 10 per-master rows (kvt, kvq, kve, kvp, kvr, qbt, qbe, swt reserve, swe) inside the same regions. (9) HC W face on the VM / collective lanes (--lane-pins 2). (10) gather pending, slot unchanged. (11) seam_rules.clock = die clock delivery rule (insertion-compensated entry, tap levels at 300 ps, SKEW 150 on deep-tile hops). NEIGHBOUR COST: the hub column stack above the VM moves N by +613.44 (VM) and the stack above the capture by a further +432.024 (total +1,045.464 for gather / pq / wfc / collective): taken from the free band of the hub column, which is now FULL (v16 GEN: host top y 22,746.9 of 22,749.1; station pockets of ~172 um between pq / wfc / sseq / collective / host kept), die 33 x 26 mm unchanged; the hc_s <-> vm / collective straight lanes move with their slabs (GEN v16: hop gate 500 um, 0 overlaps). No price changed; no closed tile re-shaped. (12) die_pin_audit block (main 7a0c0d10c): pin re-plan list, pin_align 0-FAIL rule for the release GRT, legacy-M7 window decision rule, closed_stands reroute_reason."
   }
  ],
  "slots": [
@@ -12450,7 +12450,8 @@
   "v16 sp_collective ce_s1..3 (cesn) child leaf slots follow the leaf verdicts; lane -> slice relays inside the cluster owed.",
   "v16 sp_gather: step B capacity answer (rows open per root on the real field order) owed; else +430 um N in v17.",
   "v16 dsfd_bf (s81-bf 07:39): tiles_direct request (2 x bf_col 450.144 + bf_front 100.224 in the same frame, two 1.188 um seam channels) NOT folded: LEF / lib exports and the compact199 compose STA are owed first.",
-  "v16 no closed slot-shaped view by name for dsfd_bf, dsfd_pq_root, dsfd_sp_pq."
+  "v16 no closed slot-shaped view by name for dsfd_bf, dsfd_pq_root, dsfd_sp_pq.",
+  "v16 pin readiness (die_pin_audit): pin_align 0 FAIL owed before the release GRT; 28 masters / 1,316 instances FIX BY PIN RE-PLAN to post to the element streams; legacy-M7 windows to be decided on the v16 model."
  ],
  "m6_pin_grants": {
   "rule": "tools/hier_contract/M6_PIN_GRANT.md: exact master, source commit, physical-spec digest, exact bits / face / span; signals and PG stay <= M5",
@@ -12464,5 +12465,862 @@
    "dsfd_engram_sink"
   ],
   "note": "the 10-12 18:18-20:48 proposals carry pins/um only: no bit list, span, source commit or spec digest, so no grant can be signed yet. The die lead signs each grant when the owner posts the m6_pin_grant block of the M5 kit (m6_pin_grant.py); the closed M6 / M7 views stand meanwhile (owner 10-12 19:00)."
+ },
+ "die_pin_audit": {
+  "source": "results/arch/die_pin_audit_1013 (main 7a0c0d10c; audited on contract v14 / s81_layer1_v14.opts, views fd5402b7a); coordinator 2026-10-13: fold into v16",
+  "summary": {
+   "masters": 248,
+   "instances": 56660,
+   "masters_with_lef": 79,
+   "instances_with_lef": 44756,
+   "by_class": {
+    "FIX BY VIEW": {
+     "masters": 2,
+     "instances": 1663
+    },
+    "FIX BY PIN RE-PLAN": {
+     "masters": 28,
+     "instances": 1316
+    },
+    "FIX AT DIE": {
+     "masters": 10,
+     "instances": 23
+    },
+    "ACCEPT": {
+     "masters": 38,
+     "instances": 41753
+    }
+   },
+   "blocked_above_masters": 28,
+   "blocked_above_pins": 26256,
+   "blocked_same_masters": 20,
+   "open_pocket_masters": 57,
+   "slot_mismatch_masters": 13,
+   "errors": 1
+  },
+  "fix_by_pin_replan": {
+   "rule": "the owning element stream re-plans the pins and re-routes with reroute_reason die_window (closed_stands submit gate); requests go through the element streams' logs",
+   "masters": [
+    {
+     "master": "ot_s81_hc_crooty",
+     "instances": 2,
+     "slot": "sp_hc_s/crooty_c0",
+     "view": "physical/s81_ph_views/hc_hier/routes/s81hc-crooth-673aa90b0-tc-yw-pd40/ot_s81_hc_crooty",
+     "blocked_above": 4913,
+     "face_pins": 9981,
+     "mismatch": {
+      "outline": [
+       "outline 575.992 x 200 != slot 575.992 x 300.24"
+      ],
+      "layer": [
+       "routing cap M7 above the slot layer cap M6"
+      ],
+      "insertion": [
+       "estimated clock insertion 494 ps (ot_s81_hc_crooty_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100)"
+      ]
+     },
+     "why": [
+      "FIX BY VIEW: 10 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 8268 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 4913 of 9981 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)",
+      "FIX BY PIN RE-PLAN: child_lint (c) strap layer M7+ not clear: 16316 OBS on M7, 0 signal pins, PG on M7 (child signals must stop below the parent strap layer, or own M6 as full PG stripes and leave M7 f (the tile's own signals reach its strap layer: re-route under the cap)",
+      "FIX AT DIE: outline 575.992 x 200 != slot 575.992 x 300.24 (slot change request or a wrapper at the slot outline)",
+      "ACCEPT: routing cap M7 above the slot layer cap M6 inside a hardened cluster (the cluster's plan owns the layers)",
+      "FIX AT DIE: estimated clock insertion 494 ps (ot_s81_hc_crooty_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100) (die clock tap level per the clock delivery rule)"
+     ]
+    },
+    {
+     "master": "dsfd_vm_be_sl",
+     "instances": 4,
+     "slot": "sp_vm/u_be.g_s[0].u_sl",
+     "view": "physical/s81_ph_views/vm_master/views/dsfd_vm_be_sl",
+     "blocked_above": 1766,
+     "face_pins": 3977,
+     "mismatch": {
+      "names": [
+       "13 slot pins not in the pin plan (e.g. f_m5s, f_mx, f_v5, f_vx)",
+       "4 planned ports the slot does not have (e.g. pm, sflt, sst, xc)"
+      ],
+      "pin_layer": [
+       "N-face pins may land on M7 (slot M3/M5)"
+      ],
+      "layer": [
+       "routing cap M7 above the slot layer cap M6"
+      ]
+     },
+     "why": [
+      "FIX BY VIEW: 15 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 1815 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 1766 of 3977 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)",
+      "FIX BY PIN RE-PLAN: child_lint (c) strap layer M7+ not clear: 3488 OBS on M7, 1297 signal pins, PG on M7 (child signals must stop below the parent strap layer, or own M6 as full PG stripes and leave M7 (the tile's own signals reach its strap layer: re-route under the cap)",
+      "FIX BY PIN RE-PLAN: child_lint (c) 1297 signal pins above the cap M6 (e.g. o_d[0]) (the tile's own signals reach its strap layer: re-route under the cap)",
+      "FIX BY PIN RE-PLAN: pins on another face / layer than the slot: N-face pins may land on M7 (slot M3/M5)",
+      "FIX AT DIE: contract / generator pin names differ from the view: 13 slot pins not in the pin plan (e.g. f_m5s, f_mx, f_v5, f_vx); 4 planned ports the slot does not have (e.g. pm, sflt, sst, xc)",
+      "ACCEPT: routing cap M7 above the slot layer cap M6 inside a hardened cluster (the cluster's plan owns the layers)"
+     ]
+    },
+    {
+     "master": "ot_p2h_xport",
+     "instances": 1,
+     "slot": "sp_p2/xport",
+     "view": "physical/s81_ph_views/closed/ot_p2h_xport",
+     "blocked_above": 0,
+     "face_pins": 1990,
+     "mismatch": {
+      "outline": [
+       "outline 403.2 x 211.68 != slot 403.2 x 228.96"
+      ],
+      "layer": [
+       "routing cap M7 above the slot layer cap M6"
+      ],
+      "insertion": [
+       "estimated clock insertion 439 ps (ot_p2h_xport_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100)"
+      ]
+     },
+     "why": [
+      "FIX BY PIN RE-PLAN: child_lint (c) strap layer M7+ not clear: 7043 OBS on M7, 0 signal pins, PG on M7 (child signals must stop below the parent strap layer, or own M6 as full PG stripes and leave M7 fr (the tile's own signals reach its strap layer: re-route under the cap)",
+      "FIX AT DIE: outline 403.2 x 211.68 != slot 403.2 x 228.96 (slot change request or a wrapper at the slot outline)",
+      "ACCEPT: routing cap M7 above the slot layer cap M6 inside a hardened cluster (the cluster's plan owns the layers)",
+      "FIX AT DIE: estimated clock insertion 439 ps (ot_p2h_xport_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100) (die clock tap level per the clock delivery rule)"
+     ]
+    },
+    {
+     "master": "ot_p2h_fadd16",
+     "instances": 1,
+     "slot": "sp_p2/fadd16",
+     "view": "physical/s81_ph_views/closed/ot_p2h_fadd16",
+     "blocked_above": 1034,
+     "face_pins": 1587,
+     "mismatch": {
+      "outline": [
+       "outline 216 x 58.32 != slot 150 x 66.15"
+      ],
+      "layer": [
+       "routing cap M7 above the slot layer cap M6"
+      ]
+     },
+     "why": [
+      "FIX BY VIEW: 3 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 400 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 1034 of 1587 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)",
+      "FIX BY PIN RE-PLAN: child_lint (c) strap layer M7+ not clear: 1103 OBS on M7, 0 signal pins, PG on M7 (child signals must stop below the parent strap layer, or own M6 as full PG stripes and leave M7 fr (the tile's own signals reach its strap layer: re-route under the cap)",
+      "FIX AT DIE: outline 216 x 58.32 != slot 150 x 66.15 (slot change request or a wrapper at the slot outline)",
+      "ACCEPT: routing cap M7 above the slot layer cap M6 inside a hardened cluster (the cluster's plan owns the layers)"
+     ]
+    },
+    {
+     "master": "dsfd_cfifo",
+     "instances": 128,
+     "slot": null,
+     "view": "physical/s81_die_views/views_colck/dsfd_cfifo",
+     "blocked_above": 1058,
+     "face_pins": 1277,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 5 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 2398 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 1058 of 1277 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_l2r_vr_512x1__hq_SW",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_512x1__hq_SW",
+     "blocked_above": 852,
+     "face_pins": 1035,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 6 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 121 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 852 of 1035 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_l2r_vr_564x1__hx_E",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_E",
+     "blocked_above": 760,
+     "face_pins": 1139,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 1 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 277 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 760 of 1139 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_l2r_vr_564x1__hx_W",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_W",
+     "blocked_above": 697,
+     "face_pins": 1139,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 2 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 399 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 697 of 1139 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_raw_512x1__hl_E0",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E0",
+     "blocked_above": 648,
+     "face_pins": 1030,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 2 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 972 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 648 of 1030 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_raw_512x1__hl_E2",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E2",
+     "blocked_above": 382,
+     "face_pins": 1030,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 956 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 382 of 1030 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_raw_512x1__hl_W1",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_W1",
+     "blocked_above": 710,
+     "face_pins": 1030,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 898 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 710 of 1030 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_512x1__hco_SW",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hco_SW",
+     "blocked_above": 965,
+     "face_pins": 1032,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 959 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 965 of 1032 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_512x1__hix_SW",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hix_SW",
+     "blocked_above": 1008,
+     "face_pins": 1032,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 1 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 1016 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 1008 of 1032 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_512x1__hqe_SW",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hqe_SW",
+     "blocked_above": 750,
+     "face_pins": 1032,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 1 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 996 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 750 of 1032 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_68x10__hr_W5",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_68x10__hr_W5",
+     "blocked_above": 904,
+     "face_pins": 1404,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 2 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 1454 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 904 of 1404 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_E3",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_68x11__hr_E3",
+     "blocked_above": 1434,
+     "face_pins": 1544,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 1 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 1961 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 1434 of 1544 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_E4",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/variant_fill/s81-hend-m221pq-hr-E4-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_E4",
+     "blocked_above": 1273,
+     "face_pins": 1544,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 1375 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 1273 of 1544 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_W1",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/variant_fill/s81-hend-m221pq-hr-W1-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_W1",
+     "blocked_above": 987,
+     "face_pins": 1544,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 2 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 1321 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 987 of 1544 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_W2",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/variant_fill/s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_W2",
+     "blocked_above": 987,
+     "face_pins": 1544,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 2 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 1321 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 987 of 1544 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_W3",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/variant_fill/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_W3",
+     "blocked_above": 1328,
+     "face_pins": 1544,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 1 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 1199 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 1328 of 1544 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_W4",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/variant_fill/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_W4",
+     "blocked_above": 722,
+     "face_pins": 1544,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 2 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 1788 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 722 of 1544 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_r2l_vr_1024x1__ha_SW",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_1024x1__ha_SW",
+     "blocked_above": 1021,
+     "face_pins": 2056,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 946 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 1021 of 2056 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_r2l_vr_512x1__hcol",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hcol",
+     "blocked_above": 553,
+     "face_pins": 1032,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 314 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 553 of 1032 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_r2l_vr_512x1__hsel",
+     "instances": 1,
+     "slot": null,
+     "view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hsel",
+     "blocked_above": 283,
+     "face_pins": 1032,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 4 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 320 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 283 of 1032 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    },
+    {
+     "master": "dsfd_stnh_512x1",
+     "instances": 598,
+     "slot": null,
+     "view": "physical/s81_die_views/views/dsfd_stnh_512x1",
+     "blocked_above": 352,
+     "face_pins": 1026,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 1 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 6 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 352 of 1026 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)",
+      "FIX BY PIN RE-PLAN: child_lint (b) pg: VDD: 1 full-length stripes on M7 (< 2)"
+     ]
+    },
+    {
+     "master": "dsfd_stnh_514x1",
+     "instances": 43,
+     "slot": null,
+     "view": "physical/s81_die_views/views/dsfd_stnh_514x1",
+     "blocked_above": 367,
+     "face_pins": 1030,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 1 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+      "FIX BY VIEW: 8 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 367 of 1030 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)",
+      "FIX BY PIN RE-PLAN: child_lint (b) pg: VDD: 1 full-length stripes on M7 (< 2)"
+     ]
+    },
+    {
+     "master": "dsfd_stnh_566x1",
+     "instances": 391,
+     "slot": null,
+     "view": "physical/s81_die_views/views/dsfd_stnh_566x1",
+     "blocked_above": 396,
+     "face_pins": 1134,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 4 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 396 of 1134 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)",
+      "FIX BY PIN RE-PLAN: child_lint (b) pg: VDD: 1 full-length stripes on M7 (< 2)"
+     ]
+    },
+    {
+     "master": "dsfd_stnv_514x1",
+     "instances": 129,
+     "slot": null,
+     "view": "physical/s81_die_views/views/dsfd_stnv_514x1",
+     "blocked_above": 68,
+     "face_pins": 1030,
+     "mismatch": {},
+     "why": [
+      "FIX BY VIEW: 14 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+      "FIX BY PIN RE-PLAN: 68 of 1030 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+     ]
+    }
+   ]
+  },
+  "fix_by_view": [
+   {
+    "master": "dsfd_stnv_512x1",
+    "instances": 383,
+    "slot": null,
+    "view": "physical/s81_die_views/views/dsfd_stnv_512x1",
+    "blocked_above": 0,
+    "face_pins": 1026,
+    "mismatch": {},
+    "why": [
+     "FIX BY VIEW: 17 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)"
+    ]
+   },
+   {
+    "master": "ot_v41_rom_elem_q_qxpq_w10",
+    "instances": 1280,
+    "slot": null,
+    "view": "physical/s81_die_views/q_elem_qs5f_efs",
+    "blocked_above": 0,
+    "face_pins": 739,
+    "mismatch": {},
+    "why": [
+     "FIX BY VIEW: 6682 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)"
+    ]
+   }
+  ],
+  "fix_at_die": [
+   {
+    "master": "dsfd_su_t_pin",
+    "instances": 4,
+    "slot": "sp_su_s/po0",
+    "view": "physical/ref_tile/dsfd_su_t_pin_rt/views/dsfd_su_t_pin",
+    "blocked_above": 0,
+    "face_pins": 8698,
+    "mismatch": {
+     "insertion": [
+      "estimated clock insertion 497 ps (dsfd_su_t_pin_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100)"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: estimated clock insertion 497 ps (dsfd_su_t_pin_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100) (die clock tap level per the clock delivery rule)"
+    ]
+   },
+   {
+    "master": "ot_s81_hc_crooty_w",
+    "instances": 2,
+    "slot": "sp_hc_s/crooty_c0/w",
+    "view": "physical/ref_tile/s81hc_crywe_ref/views/ot_s81_hc_crooty_w",
+    "blocked_above": 0,
+    "face_pins": 4346,
+    "mismatch": {
+     "outline": [
+      "outline 194.4 x 300.24 != slot 195.264 x 300.24"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: outline 194.4 x 300.24 != slot 195.264 x 300.24 (slot change request or a wrapper at the slot outline)",
+     "ACCEPT: 452 open M5 pockets: the die does not route on M5 over a tile"
+    ]
+   },
+   {
+    "master": "ot_s81_hc_crootr_f",
+    "instances": 2,
+    "slot": "sp_hc_s/crootr_c0/f",
+    "view": "physical/ref_tile/s81hc_crrfe_ref/views/ot_s81_hc_crootr_f",
+    "blocked_above": 0,
+    "face_pins": 6882,
+    "mismatch": {
+     "insertion": [
+      "estimated clock insertion 384 ps (ot_s81_hc_crootr_f_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100)"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: estimated clock insertion 384 ps (ot_s81_hc_crootr_f_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100) (die clock tap level per the clock delivery rule)",
+     "ACCEPT: 2090 open M5 pockets: the die does not route on M5 over a tile"
+    ]
+   },
+   {
+    "master": "ot_s81_hc_crootr_r",
+    "instances": 2,
+    "slot": "sp_hc_s/crootr_c0/r",
+    "view": "physical/ref_tile/s81hc_crrre_ref/views/ot_s81_hc_crootr_r",
+    "blocked_above": 0,
+    "face_pins": 5740,
+    "mismatch": {
+     "insertion": [
+      "estimated clock insertion 361 ps (ot_s81_hc_crootr_r_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100)"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: estimated clock insertion 361 ps (ot_s81_hc_crootr_r_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100) (die clock tap level per the clock delivery rule)",
+     "ACCEPT: 1409 open M5 pockets: the die does not route on M5 over a tile"
+    ]
+   },
+   {
+    "master": "ot_s81_hc_cpin",
+    "instances": 1,
+    "slot": "sp_hc_s/cpin",
+    "view": "physical/ref_tile/s81hc_cpin_ref/views/ot_s81_hc_cpin",
+    "blocked_above": 0,
+    "face_pins": 7444,
+    "mismatch": {
+     "outline": [
+      "outline 576.72 x 200.88 != slot 575.992 x 200"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: outline 576.72 x 200.88 != slot 575.992 x 200 (slot change request or a wrapper at the slot outline)"
+    ]
+   },
+   {
+    "master": "dsfd_coll_lane_w",
+    "instances": 8,
+    "slot": "sp_collective/lane0",
+    "view": "physical/ref_tile/dscoll_lane_w_cxea/views/dsfd_coll_lane_w",
+    "blocked_above": 0,
+    "face_pins": 2144,
+    "mismatch": {
+     "insertion": [
+      "estimated clock insertion 540 ps (dsfd_coll_lane_w_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100)"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: estimated clock insertion 540 ps (dsfd_coll_lane_w_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100) (die clock tap level per the clock delivery rule)",
+     "ACCEPT: 3316 open M5 pockets: the die does not route on M5 over a tile"
+    ]
+   },
+   {
+    "master": "dsfd_coll_ct",
+    "instances": 1,
+    "slot": "sp_collective/ct",
+    "view": "physical/ref_tile/dsfd_coll_ct_rt/views/dsfd_coll_ct",
+    "blocked_above": 0,
+    "face_pins": 4454,
+    "mismatch": {
+     "insertion": [
+      "estimated clock insertion 699 ps (dsfd_coll_ct_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100)"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: estimated clock insertion 699 ps (dsfd_coll_ct_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100) (die clock tap level per the clock delivery rule)"
+    ]
+   },
+   {
+    "master": "ot_mtp_p2_prefix_path",
+    "instances": 1,
+    "slot": "sp_p2",
+    "view": "results/rtl/mtp_p2_rootpipe_20261010/routes/mtp-p2-path-rb4v-a978bdba9-tc-hm20",
+    "blocked_above": 0,
+    "face_pins": 1917,
+    "mismatch": {
+     "outline": [
+      "outline 560 x 460 != slot 878.4 x 270"
+     ],
+     "layer": [
+      "routing cap M7 above the slot layer cap M6"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: outline 560 x 460 != slot 878.4 x 270 (slot change request or a wrapper at the slot outline)",
+     "ACCEPT: routing cap M7 above the slot layer cap M6 (closed tile stands; die tracks it blocks: see the legacy-layer table; re-route only under a hot window, reroute_reason die_window)"
+    ]
+   },
+   {
+    "master": "ot_p2h_head",
+    "instances": 1,
+    "slot": "sp_p2/head",
+    "view": "physical/ref_tile/p2h_head_ref/views/ot_p2h_head",
+    "blocked_above": 0,
+    "face_pins": 3066,
+    "mismatch": {
+     "insertion": [
+      "estimated clock insertion 584 ps (ot_p2h_head_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100)"
+     ]
+    },
+    "why": [
+     "FIX AT DIE: estimated clock insertion 584 ps (ot_p2h_head_tt.lib max_clock_tree_path) vs slot target 250 ps (+-100) (die clock tap level per the clock delivery rule)",
+     "ACCEPT: 4877 open M5 pockets: the die does not route on M5 over a tile"
+    ]
+   },
+   {
+    "master": "dsfd_svc_join",
+    "instances": 1,
+    "slot": null,
+    "view": "physical/s81_ph_views/closed/dsfd_svc_join",
+    "blocked_above": 38,
+    "face_pins": 133,
+    "mismatch": {},
+    "why": [
+     "FIX AT DIE: a better published view of this master exists: bind physical/ref_tile/s81_svcjoin_ref/views/dsfd_svc_join (ACCEPT; top M5, blocked above 0, pockets 279) instead of physical/s81_ph_views/closed/dsfd_svc_join",
+     "FIX BY VIEW: 4 face pins under their own stub OBS (abstract_pin_stub.py moves the stub into the PORT)",
+     "FIX BY VIEW: 266 open M7 pockets on a layer the die routes on (abstract_pin_stub.py pocket fill)",
+     "FIX BY PIN RE-PLAN: 38 of 133 face pins covered by the tile's own metal on the layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)"
+    ]
+   }
+  ],
+  "accept": {
+   "masters": 38,
+   "instances": 41753,
+   "note": "the 27 relay tiles (29,184 instances) are clean"
+  },
+  "pin_align": {
+   "gate": "tools/hier_contract/pin_align.py inside tools/dsrom_s81_fulldie.py real / check (OT_PIN_ALIGN_GATE fail | warn | off)",
+   "v14": "7,181 of 115,030 bundles FAIL (57,921 jog > 20 um, 18,819 reordered, 15,111 u-turns); nearly all FIX AT DIE: generated abstracts whose pins the generator places",
+   "rule": "v16 must pass at 0 FAIL before a die GRT counts for release; OT_PIN_ALIGN_GATE=warn runs are pathfinding only. Fix in the generator pin placement (pins facing the consumer, bit order kept, no u-turns), never in closed tiles",
+   "v16_generator_changes": "--peer-pin-pos (slab ports on the peer pin group, slice-aware, abutting peers first), --lane-pins 2 with the lane's own face stations, --rly-face-reach"
+  },
+  "legacy_m7": {
+   "masters": 27,
+   "instances": 2972,
+   "area_mm2": 151.147,
+   "windows_over_0p60": 333,
+   "only_because_of_legacy": 11,
+   "only_because_of_planned_m6_m7": 49,
+   "decision": "per window, on the v16 case: re-plan the bus around the master first (the die owns the generated pins); a master is re-routed at M5 (reroute_reason die_window) only where no re-plan clears the window. NOT decided per window yet: the audit windows are v14 positions and the v16 stack moved +613 / +1,045 um; re-run legacy_layer_cuts.py on the v16 model",
+   "tiles": [
+    {
+     "master": "ot_v41_rom_elem_q_qxpq_w10",
+     "instances": 1280,
+     "top": "M7",
+     "area_mm2": 144.768
+    },
+    {
+     "master": "dsfd_cfifo",
+     "instances": 128,
+     "top": "M7",
+     "area_mm2": 5.254
+    },
+    {
+     "master": "dsfd_stnh_512x1",
+     "instances": 598,
+     "top": "M7",
+     "area_mm2": 0.312
+    },
+    {
+     "master": "dsfd_stnh_566x1",
+     "instances": 391,
+     "top": "M7",
+     "area_mm2": 0.218
+    },
+    {
+     "master": "dsfd_stnv_512x1",
+     "instances": 383,
+     "top": "M7",
+     "area_mm2": 0.194
+    },
+    {
+     "master": "dsfd_stnv_514x1",
+     "instances": 129,
+     "top": "M7",
+     "area_mm2": 0.067
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_W1",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.025
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_W2",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.025
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_W3",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.025
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_W4",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.025
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_E3",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.025
+    },
+    {
+     "master": "dsfd_m2l_vr_68x11__hr_E4",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.025
+    },
+    {
+     "master": "dsfd_m2l_vr_68x10__hr_W5",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.022
+    },
+    {
+     "master": "dsfd_stnh_514x1",
+     "instances": 43,
+     "top": "M7",
+     "area_mm2": 0.022
+    },
+    {
+     "master": "dsfd_m2l_vr_512x1__hqe_SW",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.017
+    },
+    {
+     "master": "dsfd_m2l_vr_512x1__hix_SW",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.017
+    },
+    {
+     "master": "dsfd_m2l_vr_512x1__hco_SW",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.017
+    },
+    {
+     "master": "dsfd_m2l_raw_512x1__hl_W1",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.017
+    },
+    {
+     "master": "dsfd_m2l_raw_512x1__hl_E0",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.017
+    },
+    {
+     "master": "dsfd_m2l_raw_512x1__hl_E2",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.017
+    },
+    {
+     "master": "dsfd_r2l_vr_1024x1__ha_SW",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.013
+    },
+    {
+     "master": "dsfd_l2r_vr_564x1__hx_W",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.005
+    },
+    {
+     "master": "dsfd_l2r_vr_564x1__hx_E",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.005
+    },
+    {
+     "master": "dsfd_l2r_vr_512x1__hq_SW",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.004
+    },
+    {
+     "master": "dsfd_r2l_vr_512x1__hsel",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.004
+    },
+    {
+     "master": "dsfd_r2l_vr_512x1__hcol",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.004
+    },
+    {
+     "master": "dsfd_svc_join",
+     "instances": 1,
+     "top": "M7",
+     "area_mm2": 0.003
+    }
+   ]
+  },
+  "closed_stands": "submit gate live: a route of a block with a CLOSED published job needs reroute_reason (die_window / slot_change / param_change / rtl_change / evidence_gap) in its spec"
  }
 }
