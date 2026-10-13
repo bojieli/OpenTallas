@@ -319,15 +319,29 @@ def main():
                                    for k, v in cells.items()],
                          connections=bundle_connections(endpoints),
                          boundary_binding=bundle_boundary(boundary),
-                         unresolved=["Physical placement and real pin-distance/cut verification pending.",
+                         ownership=dict(owner="Codex:hbm_norm_attn_physical", integration_owner="Codex:hbm_die_compiler",
+                                        legacy_half_route="retired; expand directly into native die children"),
+                         unresolved=["Actual die/cluster registered-seam STA, detailed routing and IR remain pending.",
                                      "Die clock distribution must balance actual child ETM insertion.",
-                                     "Padded fpipe bank replacement needs exact sequential equivalence gate."],
+                                     "External ports must use real boundary bindings; no whole-half ETM is provided."],
                          closed=False)
         candidate_placement(half, component["children"])
         ledger = geometry_ledger(component)
         (out / f"{half}.geometry.json").write_text(json.dumps(ledger, indent=1) + "\n")
         component["geometry_verdict"] = ledger["verdict"]
+        exact = out / "fpipe_exact.log"
+        mutant = out / "fpipe_mutant.log"
+        component["additional_exactness"] = dict(
+            mechanism="W39,N4 fpipe -> padded closed sn136 banks, same four register edges",
+            proof="SAT arbitrary input/initial-state equivalence after four fill edges, ten edges checked",
+            positive="PASS" if exact.exists() and "no model found: SUCCESS!" in exact.read_text() else "pending",
+            negative="FAIL as required" if mutant.exists() and "model found: FAIL!" in mutant.read_text() else "pending",
+            retained_transaction_gate="results/rtl/hbm_attn_twolevel_lockh_20261012")
         (out / f"{half}.component.json").write_text(json.dumps(component, indent=1) + "\n")
+        (out / f"{half}.placement.tcl").write_text("\n".join(
+            "place_macro -macro_name {" + r["instance"] + "} -location {" + str(r["xy_um"][0]) + " "
+            + str(r["xy_um"][1]) + "} -orientation " + r["orientation"] + " -exact"
+            for r in component["children"]) + "\n")
         print(f"{half}: {len(cells)} real child instances; {len(boundary)} boundary bindings; no soft cells")
 
 
