@@ -68,7 +68,77 @@ def pushed_objects(stderr):
     return int(m[-1]) if m else 0
 
 
-def extract_script(mirror, full, paths, run, receipt=None):
+VIEW_MIN_BYTES = 262144
+VIEW_STORE_DIR = ".viewstore"
+_VIEW_LIST_AWK = r"""awk -F'\t' '{split($1, a, " +"); if (a[1] == "100644" && a[4] + 0 >= %d && $2 ~ /^[A-Za-z0-9_.\/+-]+\.(lib|lef)$/) print a[3], a[4], $2}'"""
+_VIEW_LINK_SH = r"""python3 - "$M" "$VS" "$S" "$VL" <<'OT_VIEWS'
+import os, subprocess, sys
+m, vs, s, vl = sys.argv[1:5]
+rows = [l.rstrip("\n").split(" ", 2) for l in open(vl)]
+def ok(f, sz):
+    try:
+        return os.stat(f).st_size == sz
+    except OSError:
+        return False
+need = sorted({(b, int(sz)) for b, sz, p in rows if not ok(os.path.join(vs, b), int(sz))})
+if need:
+    cat = subprocess.Popen(["git", "--git-dir", m, "cat-file", "--batch"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    for b, sz in need:
+        cat.stdin.write((b + "\n").encode()); cat.stdin.flush()
+        head = cat.stdout.readline().split()
+        if len(head) != 3 or head[1] != b"blob" or int(head[2]) != sz:
+            sys.exit("GIT_MIRROR_VIEW_SIZE " + b)
+        f = os.path.join(vs, b); t = "%s/.tmp.%d.%s" % (vs, os.getpid(), b)
+        with open(t, "wb") as o:
+            left = sz
+            while left:
+                d = cat.stdout.read(min(left, 1 << 22))
+                if not d:
+                    sys.exit("GIT_MIRROR_VIEW_SIZE short read " + b)
+                o.write(d); left -= len(d)
+        cat.stdout.read(1)
+        os.chmod(t, 0o444)
+        if os.path.exists(f) and not ok(f, sz):
+            os.unlink(f)                      # an entry of the wrong size is never linked: rebuilt from the blob
+        try:
+            os.link(t, f)
+        except FileExistsError:
+            pass                              # another job stored the same blob first
+        os.unlink(t)
+    cat.stdin.close(); cat.wait()
+for b, sz, p in rows:
+    d = os.path.join(s, p)
+    os.makedirs(os.path.dirname(d), exist_ok=True)
+    os.link(os.path.join(vs, b), d)
+print("GIT_MIRROR_VIEWS", len(rows), sum(int(r[1]) for r in rows) >> 20, "MB")
+OT_VIEWS
+if [ -z "$(find "$VS/.gc" -mmin -1440 2>/dev/null)" ]; then touch "$VS/.gc"; find "$VS" -maxdepth 1 -type f ! -name .gc -links 1 -mmin +360 -delete 2>/dev/null || true; fi"""
+
+
+def view_store_script(full, paths):
+    """shell lines for extract_script (el1013-fleet3 2026-10-13): closed physical views are not written once per job.
+
+    physical/ at main is 4.7 GB of .lib/.lef (2,034 files >= 256 KiB = 4.0 of the 4.9 GB a job's src holds), and every
+    job extracted its own copy, then copied it again for its benches.  The blobs live ONCE per run root in
+    <dirname RUN>/.viewstore/<git blob id> (mode 0444) and are hard-linked into the job tree; the archive leaves them
+    out (export-ignore through a private core.attributesFile, exact paths).  Content-addressed by blob id, so a commit
+    that changes one view adds one file.  An entry whose size differs from the tree's is rebuilt.  At most daily,
+    entries no job links any more (link count 1, older than 6 h) are deleted."""
+    return [
+        'VS="$(dirname "$RUN")/' + VIEW_STORE_DIR + '"', 'VL="$S.views"', 'ATTR="$S.attr"', 'mkdir -p "$VS"',
+        """trap 'rm -rf "$S" "$T" "$VL" "$ATTR"' EXIT""",
+        f'git --git-dir="$M" ls-tree -r -l {full} -- {" ".join(q(p) for p in paths)} | '
+        + _VIEW_LIST_AWK % VIEW_MIN_BYTES + ' > "$VL"',
+        """awk '{print "/" $3 " export-ignore"}' "$VL" > "$ATTR\"""",
+    ]
+
+
+def view_link_script():
+    """after the archive is in $S: materialise every listed view from the store as a hard link (see view_store_script)"""
+    return [_VIEW_LINK_SH]
+
+
+def extract_script(mirror, full, paths, run, receipt=None, view_store=False):
     """archive full from the mirror into a staging dir, verify, merge into {run}/src; prints GIT_MIRROR_EXTRACTED.
     receipt (source_archive.build_archive): the archive is built with --literal-pathspecs over receipt['paths'] and
     must hash to receipt['archive_sha256']; each required file must hash to its receipt pin (exit 3 on mismatch)."""
@@ -80,9 +150,15 @@ def extract_script(mirror, full, paths, run, receipt=None):
         if "\n" in p or not p:
             raise ValueError(f"bad archive path {p!r}")
     lit = " --literal-pathspecs" if receipt is not None else ""
+    view_store = bool(view_store) and receipt is None    # a receipt pins the sha256 of the WHOLE archive: never thinned
     s = ["set -euo pipefail", f"M={q(mirror)}", f"RUN={q(run)}", 'S="$RUN/.src-mirror.$$"', 'T="$S.tar"',
-         "trap 'rm -rf \"$S\" \"$T\"' EXIT", 'rm -rf "$S"', 'mkdir -p "$S" "$RUN/src"',
-         f'git{lit} --git-dir="$M" archive --format=tar {full} -- {" ".join(q(p) for p in paths)} > "$T"']
+         "trap 'rm -rf \"$S\" \"$T\"' EXIT", 'rm -rf "$S"', 'mkdir -p "$S" "$RUN/src"']
+    if view_store:
+        s += view_store_script(full, paths)
+        s.append(f'git -c core.attributesFile="$ATTR" --git-dir="$M" archive --format=tar {full} -- '
+                 f'{" ".join(q(p) for p in paths)} > "$T"')
+    else:
+        s.append(f'git{lit} --git-dir="$M" archive --format=tar {full} -- {" ".join(q(p) for p in paths)} > "$T"')
     if receipt is not None:
         s.append(f'got=$(sha256sum < "$T" | cut -d" " -f1); [ "$got" = {q(receipt["archive_sha256"])} ] || '
                  '{ echo "GIT_MIRROR_RECEIPT_MISMATCH archive $got" >&2; exit 3; }')
@@ -94,9 +170,13 @@ def extract_script(mirror, full, paths, run, receipt=None):
         lines = "".join(f"{h}  {p}\n" for p, h in sorted(pins.items()))
         s.append(f"( cd \"$S\" && sha256sum -c --quiet --strict ) <<'OT_PINS' || "
                  "{ echo GIT_MIRROR_RECEIPT_MISMATCH required_files >&2; exit 3; }\n" + lines + "OT_PINS")
-    # src untouched until here; a fresh (empty) src is replaced by a rename, a resumed one gets the files copied over
+    if view_store:
+        s += view_link_script()
+    # src untouched until here; a fresh (empty) src is replaced by a rename, a resumed one gets the files copied over.
+    # --remove-destination: an existing file is unlinked, never opened for writing (it may be a 0444 hard link into
+    # the view store, shared with every other job of the host).
     s.append('if [ -z "$(ls -A "$RUN/src")" ]; then rmdir "$RUN/src" && mv "$S" "$RUN/src"; '
-             'else cp -a "$S/." "$RUN/src/"; fi')
+             'else cp -al --remove-destination "$S/." "$RUN/src/"; fi')
     s.append("echo GIT_MIRROR_EXTRACTED")
     return "\n".join(s) + "\n"
 
