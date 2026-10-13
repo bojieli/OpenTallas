@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // QN (el1011-s81su-qn, spec v3): production masters of the split q RMSNorm -> FP8 (rtl ot_s81_su_qn.sv), each hardened
 // once: the tap (x 2, data halves), the 8-lane norm engine (x 32), the reduce (x 1), the act-quant engine (x 8).
-module dsfd_su_t_qnt (
+module dsfd_su_t_qnt #(parameter integer CB = 32) (
     input  wire          ck, rst,
     input  wire          dn_st, input wire [3:0] dn_kind, input wire [1:0] dn_gsel, input wire [7:0] dn_jid,
     input  wire [15:0]   dn_v, input wire [4095:0] dn_d, input wire [32:0] i_f,
@@ -9,7 +9,7 @@ module dsfd_su_t_qnt (
     output wire [1:0]    e_gr, output wire [1:0] e_gw, output wire e_go, output wire [13:0] e_ob, output wire [31:0] e_eps,
     output wire          o_fu, o_fo, o_alive, o_den, o_rdy, output wire [7:0] o_rjid
 );
-    ot_s81_su_qnt #(.N(256), .S_RD(16), .NFI(33)) u_t (
+    ot_s81_su_qnt #(.N(256), .S_RD(16), .NFI(33), .CB(CB)) u_t (
         .clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_gsel_i(dn_gsel), .dn_jid_i(dn_jid),
         .dn_v_i(dn_v), .dn_d_i(dn_d), .i_f(i_f), .e_v(e_v), .e_d(e_d), .e_t(e_t), .e_gq(e_gq), .e_gr(e_gr), .e_gw(e_gw),
         .e_go(e_go), .e_ob(e_ob), .e_eps(e_eps), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),

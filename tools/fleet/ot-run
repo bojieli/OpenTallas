@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+"""ot-run: run a heavy command on the fleet host with the most free memory (admission is by memory only).
+
+  ot-run --mem GB [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] -- <command...>
+
+Asks every host for `ot-heavy-reconcile --free` (MemAvailable - growth still reserved by running ot-heavy jobs -
+headroom - memory already requested by waiters), drops hosts with less than --disk GB (default 20) free under --dir
+(or where --dir does not exist), picks the largest, and runs  ssh <host> "cd DIR && ot-heavy --mem GB -- <command>".
+It syncs nothing: the inputs must already be on the host (name them with --dir so only hosts that have them qualify).
+--pick prints the chosen host and the table and runs nothing.  stdin/stdout/exit status are the remote command's.
+"""
+import concurrent.futures as cf, json, os, shlex, subprocess, sys
+
+HOSTS = ["ot-epyc1tb", "ot-epyc4", "ot-pve1", "ot-agidock128"]
+
+
+def probe(host, d):
+    q = shlex.quote(d or "/")
+    cmd = f"test -d {q} || {{ echo NODIR; exit 0; }}; /usr/local/bin/ot-heavy-reconcile --free {q}"
+    try:
+        r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", host, cmd], capture_output=True,
+                           text=True, timeout=40)
+        return host, (None if "NODIR" in r.stdout else json.loads(r.stdout.strip().splitlines()[-1]))
+    except Exception as e:
+        return host, {"error": str(e)[:80]}
+
+
+def main():
+    a = sys.argv[1:]
+    mem, d, disk, hosts, pick = None, None, 20, HOSTS, False
+    while a and a[0] != "--":
+        o = a.pop(0)
+        if o == "--mem": mem = int(a.pop(0))
+        elif o == "--dir": d = a.pop(0)
+        elif o == "--disk": disk = int(a.pop(0))
+        elif o == "--hosts": hosts = a.pop(0).split(",")
+        elif o == "--pick": pick = True
+        else: sys.exit(__doc__)
+    cmd = a[1:]
+    if mem is None or not (cmd or pick):
+        sys.exit(__doc__)
+    with cf.ThreadPoolExecutor(len(hosts)) as ex:
+        res = dict(ex.map(lambda h: probe(h, d), hosts))
+    ok = {}
+    for h, r in res.items():
+        note = "no " + str(d) if r is None else r.get("error") or ("disk %d GB < %d" % (r["disk_gb"], disk) if r["disk_gb"] < disk else "")
+        if r and not r.get("error"):
+            print(f"ot-run: {h:14s} free {r['free_gb']:5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "
+                  f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB) running {r['running']} disk {r['disk_gb']} GB {note}", file=sys.stderr)
+            if not note:
+                ok[h] = r["free_gb"]
+        else:
+            print(f"ot-run: {h:14s} skipped: {note}", file=sys.stderr)
+    if not ok:
+        sys.exit("ot-run: no host qualifies")
+    best = max(ok, key=ok.get)
+    print(f"ot-run: -> {best}" + ("" if ok[best] >= mem else f" (will queue: {ok[best]} GB free < {mem} GB)"), file=sys.stderr)
+    if pick:
+        print(best)
+        return
+    remote = (f"cd {shlex.quote(d)} && " if d else "") + f"ot-heavy --mem {mem} -- " + " ".join(shlex.quote(x) for x in cmd)
+    os.execvp("ssh", ["ssh", best, remote])
+
+
+if __name__ == "__main__":
+    main()

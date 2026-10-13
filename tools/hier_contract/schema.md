@@ -51,3 +51,13 @@ M8/M9 belong to the die top only.
 * `hier_submit.py` - the closure loop's submit hook: finds the hard-child views a parent spec names and runs
   `child_lint` on each (mode from `~/.local/state/closure_loop/hier_lint.json` `{"mode": "warn"|"refuse"}`, spec
   `"hier_lint": false` opts out), and runs `macro_grid_lint` (always refuse; spec `"macro_grid_lint": false` opts out).
+* `slot_fit.py KIT_DIR` - (owner 2026-10-13: a tile must be known to fit its die slot BEFORE it routes) compares a ref_tile
+  kit with the slot the live contract gives its top cell (the spec's `contract`, else every slot / `sub_layouts` row of
+  that cell): outline, pin faces, pin layers, layer cap, estimated clock insertion vs `target_insertion_ps` (+-100 ps;
+  estimate = spec `est_insertion_ps`, else the cell's previous view). `tools/ref_tile/pre_route_gate.py submit_check`
+  REFUSES a mismatch unless the spec carries `"slot_change_request": "<die lead log line or contract version>"`; then
+  it is a WARN and the request is appended to the die lead's log. A contract named in another's `derived_from` is
+  superseded and not checked.
+* `die_real_census.py` - per master, the die instances bound to a real closed view (exact LEF + exact ETM of a view
+  found by the master's name) against placeholders / generated views; JSON + a README row in
+  `results/physical/die_real_census/`. Die leads run it on every die case and every contract version (`--contract`).
