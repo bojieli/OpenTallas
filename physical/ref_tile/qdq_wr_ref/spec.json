@@ -70,7 +70,7 @@
  "job": {
   "owner": "Claude:hbm-qdq-q8",
   "branch": "claude/hbm-qdq-q8",
-  "tag": "q8b",
+  "tag": "q8c",
   "views_to": "physical/ref_tile/qdq_wr_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_wr_ref",
   "purpose": "QDQ B2 quarter q8b (coordinator option B after q7 EARLY_FAIL: 14.3k cluster flops on a spine that diverged to 1.79 ns): one of four face-anchored M5 leaves under the wires-only ot_hgi_qdq_q, a flop at every pin; composition bench = the production QDQ bench on the B2 slice (183 cycles vs 168 priced, 1.089x) built from this commit. ot_hgi_qdq_wr: result FIFO on one 64x512 SRAM macro behind a 2-entry registered prefetch (ESL 128), y pin flops, write issue on 8 lanes (wwq 2,240 output flops), write credits, snapshot FIFO + finish pulse (5.2k flops + SRAM); at the cluster N face under the wwq pins, y enters on S above the dxl|dbq channel.",
@@ -121,6 +121,7 @@
  "boundary_tcl": [
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
+ "structural_change": "q8c (q8b 67a60693f NEEDS_RTL TT -175.91 / FF +11.5 / DRC 0 on 67 endpoints, all sq_h -> 16:1 x 64 snapshot head read -> 8 lane count compares -> fin -> sq_h / sq_n / o_fin, 21 levels): the snapshot FIFO head is a register (both candidates read from the registered pointer, fin selects; a push into the next head slot loads it directly); same cycle behaviour (production bench 183 cycles, mutants fail, invariant check in every bench)",
  "params": {},
  "children": [],
  "inter": [],
