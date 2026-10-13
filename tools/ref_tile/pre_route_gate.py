@@ -382,6 +382,9 @@ def ship_tar(paths):
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
     fp = json.loads((kd / "floorplan.json").read_text())
     ref = set(fp["referenced"])
+    # Ship the same transitive Tcl/shell dependencies checked by the local gate.
+    # A custom PRE_GLOBAL_PLACE hook may source helpers outside its own folder.
+    ref |= referenced_closure(sorted(ref))[0]
     dirs = {"tools", "rtl", str(kd.relative_to(ROOT)), "physical/qwen_die_masters", "physical/common_flow",
             "physical/hbm_accel_die_views/stations/bench", "physical/hbm_w2_rb_station_20261006"}
     dirs |= {str(Path(p).parent) for p in ref}
