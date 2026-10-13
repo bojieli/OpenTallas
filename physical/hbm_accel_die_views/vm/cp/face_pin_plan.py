@@ -39,7 +39,7 @@ GEOM = {
     'vm_cp_fw0': (28.08, 498.96, 2.7), 'vm_cp_fw1': (23.76, 498.96, 2.7), 'vm_cp_fw2': (28.08, 598.32, 2.7),
     'vm_cp_fw3': (21.6, 399.6, 2.7), 'vm_cp_fe0': (21.6, 498.96, 2.7), 'vm_cp_fe1': (23.76, 498.96, 2.7),
     'vm_cp_fe2': (23.76, 498.96, 2.7), 'vm_cp_fe3': (25.92, 498.96, 2.7), 'vm_cp_rwt': (28.08, 518.4, 2.7),
-    'vm_cp_re': (90.72, 401.76, 5.4),
+    'vm_cp_re': (259.2, 401.76, 5.4),
 }
 # instance origin changes (die level, planning): fw3 follows the fw2 | fw3 seam; relays as candidate_geometry.py
 INST_Y = {"u_rt0": 1373.76, "u_rb3": 224.64, "u_fw3": 2 * 498.96 + 598.32}
@@ -166,18 +166,33 @@ def layout(kit):
         sec['st'] = run(B('st', 0, 202), ('hi', HI))
         ck = (sec['tap'][1] + sec['st'][0]) // 2
     elif kit == 'vm_cp_re':
-        # fork: se in the lower half, ne in the upper half (the 335 um die hop to FE1 / FE2 leaves no y slack);
-        # tap enters straight across from the root's tap_e pins; the tile itself is the switchbox (w 90.72)
+        # FACE3 10-13 (cx4, after cx3 GRT-0116 at the se|ne seam): the fork is done on ONE vertical M3 track column per
+        # bit: tap[k] enters on W (straight across from the root's tap_e pins), turns once into column c(k); se[k]
+        # leaves on the S face and ne[k] on the N face on that same track (3 M3 tracks per column, 0.108 um; M5 free).
+        # No bit is shifted in y inside the tile; the die takes S -> FE1.tap and N -> FE2.tap.  Column order: the bits
+        # with the longest die y run (max of |FE1 pin y - S face|, |FE2 pin y - N face|) get the columns nearest the
+        # E side, so every die hop stays <= 500 um.
+        h = GEOM[kit][1]
+        y_re = dict((n, y) for n, _m, _x, y, *_r in plan.INST)['u_re']
+        need = []
         for i in range(2063):
-            pins[('se', i)] = ('E', LO + 2 * i)
-            pins[('ne', i)] = ('E', LO + 4126 + 12 + 2 * i)
+            d = []
+            for fe, yi, edge in (('vm_cp_fe1', plan.FH, y_re), ('vm_cp_fe2', 2 * plan.FH, y_re + h)):
+                yy = yi + _fe_tap(fe)[i] * T4 + T4O
+                d.append(abs(yy - edge))
+            need.append((max(d), i))
+        need.sort()                                   # smallest need -> westmost column
+        C0, CS = 900, 3
+        for c, (_d, i) in enumerate(need):
+            pins[('se', i)] = ('S', C0 + CS * c)
+            pins[('ne', i)] = ('N', C0 + CS * c)
             pins[('tap', i)] = ('W', 2000 + 2 * i)
         for i in range(201):
             pins[('rdo', i)] = ('W', 64 + 2 * i)
             pins[('rdi', i)] = ('S', 60 + 4 * i)          # M3 track index (x), 0.144 um pitch
         pins[('cfgo', 0)] = ('W', 64 + 2 * 201)
         pins[('cfgi', 0)] = ('N', 80)
-        sec = {'se': (LO, LO + 4126), 'ne': (LO + 4138, LO + 8264), 'tap': (2000, 6126), 'rdo': (64, 468)}
+        sec = {'col': (C0, C0 + CS * 2063), 'tap': (2000, 6126), 'rdo': (64, 468)}
         ck = 1000
     pins[('ck', 0)] = ('W', ck)
     # checks: every port bit placed once, inside the face, >= 2 tracks apart per face
@@ -232,6 +247,17 @@ def layout(kit):
     stats['sinks'] = flops
     stats['core_um2_per_flop'] = round((w - 4.5) * (GEOM[kit][1] - 2.2) / flops, 2)
     return pins, stats
+
+
+_fe = {}
+
+
+def _fe_tap(fe):
+    """FE tile tap pin tracks by bit"""
+    if fe not in _fe:
+        p, _ = layout(fe)
+        _fe[fe] = [p[('tap', i)][1] for i in range(2063)]
+    return _fe[fe]
 
 
 def rwt_sto_order():
@@ -368,6 +394,19 @@ def io_tcl(kit, pins):
 
 def main():
     (CP / "codex_specs" / "pins").mkdir(exist_ok=True)
+    if len(sys.argv) > 2 and sys.argv[1] == "--pins-only":
+        # one tile: its pin file + its hops only (the spec stays as edited by hand: later tags carry structural changes)
+        kit = sys.argv[2]
+        pins, st = layout(kit)
+        (CP / "codex_specs" / "pins" / f"{kit}_cx_pins.tcl").write_text(io_tcl(kit, pins))
+        inst, rows, over = hops()
+        mine = [r for r in rows if kit[6:] in r['frm'].split('.')[0] or kit[6:] in r['to'].split('.')[0]]
+        print(kit, GEOM[kit], {f: st[f] for f in 'WENS' if f in st}, 'overlap', over)
+        for r in mine:
+            print('  ', r)
+        s = spec_of(kit, pins)
+        print('pin_ranges', json.dumps(s['pin_ranges']), 'pins', json.dumps(s['pins']))
+        return 1 if (over or any(r['max_bit_um'] > 500 for r in mine)) else 0
     res = dict(planning_only=True, tiles={})
     for kit in GEOM:
         pins, st = layout(kit)

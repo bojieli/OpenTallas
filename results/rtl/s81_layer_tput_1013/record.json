@@ -1,0 +1,2840 @@
+{
+ "schema": "opentallas.s81_layer_tput.v1",
+ "layers": [
+  {
+   "layer": "L0",
+   "verdict": "PASS",
+   "summary": "SUMMARY jobs=1 layer_cycles=11168 (header 1246 -> H_STORE done 12414) stage_done_cycle=13019 jobs_done=1/1 dones=58/58 phases_released=8 field_phases=8 capture_writes=5048 mismatching_roots=0 coll_words_die0=720 coll_errors=0 coll_incomplete=0 y_exact=640/640 y_bad=0 y_consumed=640 norm_rows_exact=480/480 hstore_rows_exact=640/640 ref_fault=0 dut_fault=0 ctrl_flt=0 fvec=0000 stuck=0 ep_faults=0 gather_stage_fault=0 hc_fcode=0 max_done_latency=9 errors=0 first_coll_send=1111",
+   "ops": [
+    {
+     "k": 0,
+     "id": "L0.hc.gain_attn",
+     "op": "hc.gain_attn",
+     "eng": "hc",
+     "preds": [],
+     "program_dur": 0,
+     "start": 1261,
+     "end": 1434,
+     "measured": 173,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": null
+    },
+    {
+     "k": 1,
+     "id": "L0.hc.gain_ffn",
+     "op": "hc.gain_ffn",
+     "eng": "hc",
+     "preds": [],
+     "program_dur": 0,
+     "start": 1434,
+     "end": 1607,
+     "measured": 173,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": null
+    },
+    {
+     "k": 2,
+     "id": "L0.hc.h_load",
+     "op": "hc.h_load",
+     "eng": "hc",
+     "preds": [],
+     "program_dur": 0,
+     "start": 1889,
+     "end": 2222,
+     "measured": 333,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": null
+    },
+    {
+     "k": 3,
+     "id": "L0.attn.hc.fn",
+     "op": "attn.hc.fn",
+     "eng": "hcx",
+     "preds": [],
+     "program_dur": 229,
+     "start": 1888,
+     "end": 2117,
+     "measured": 229,
+     "price": 229.0,
+     "real": false,
+     "critical": false,
+     "slack": 6778.0,
+     "dispatch_wait": null
+    },
+    {
+     "k": 4,
+     "id": "L0.attn.hc.sumsq",
+     "op": "attn.hc.sumsq",
+     "eng": "hcx",
+     "preds": [],
+     "program_dur": 254,
+     "start": 2119,
+     "end": 2373,
+     "measured": 254,
+     "price": 253.6,
+     "real": false,
+     "critical": false,
+     "slack": 6556.0,
+     "dispatch_wait": null
+    },
+    {
+     "k": 5,
+     "id": "L0.attn.hc.rsqrt",
+     "op": "attn.hc.rsqrt",
+     "eng": "hcx",
+     "preds": [
+      4
+     ],
+     "program_dur": 197,
+     "start": 2375,
+     "end": 2572,
+     "measured": 197,
+     "price": 197.3,
+     "real": false,
+     "critical": false,
+     "slack": 6556.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 6,
+     "id": "L0.attn.hc.pre_post",
+     "op": "attn.hc.pre_post",
+     "eng": "hcx",
+     "preds": [
+      3,
+      5
+     ],
+     "program_dur": 212,
+     "start": 2574,
+     "end": 2786,
+     "measured": 212,
+     "price": 212.3,
+     "real": false,
+     "critical": false,
+     "slack": 6556.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 7,
+     "id": "L0.attn.hc.sinkhorn",
+     "op": "attn.hc.sinkhorn",
+     "eng": "hcx",
+     "preds": [
+      6
+     ],
+     "program_dur": 637,
+     "start": 2788,
+     "end": 3425,
+     "measured": 637,
+     "price": 637.2,
+     "real": false,
+     "critical": false,
+     "slack": 6556.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 8,
+     "id": "L0.attn.hc.coef",
+     "op": "attn.hc.coef",
+     "eng": "hc",
+     "preds": [
+      6,
+      7
+     ],
+     "program_dur": 0,
+     "start": 3427,
+     "end": 3441,
+     "measured": 14,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 9,
+     "id": "L0.attn.hc_pre",
+     "op": "attn.hc_pre",
+     "eng": "hc",
+     "preds": [
+      8
+     ],
+     "program_dur": 3,
+     "start": 3441,
+     "end": 3890,
+     "measured": 449,
+     "price": 327.0,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 10,
+     "id": "L0.attn.a_proj",
+     "op": "attn.a_proj",
+     "eng": "fld",
+     "preds": [
+      9
+     ],
+     "program_dur": 628,
+     "start": 3896,
+     "end": 4091,
+     "measured": 195,
+     "price": 628.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 11,
+     "id": "L0.attn.a_allgather",
+     "op": "attn.a_allgather",
+     "eng": "coll",
+     "preds": [
+      10
+     ],
+     "program_dur": 434,
+     "start": 4091,
+     "end": 4131,
+     "measured": 40,
+     "price": 434.0,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 12,
+     "id": "L0.attn.q_norm.sumsq",
+     "op": "attn.q_norm.sumsq",
+     "eng": "su",
+     "preds": [
+      11
+     ],
+     "program_dur": 3,
+     "start": 4131,
+     "end": 4134,
+     "measured": 3,
+     "price": 3.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 13,
+     "id": "L0.attn.kv_norm.sumsq",
+     "op": "attn.kv_norm.sumsq",
+     "eng": "su",
+     "preds": [
+      11
+     ],
+     "program_dur": 3,
+     "start": 4136,
+     "end": 4139,
+     "measured": 3,
+     "price": 3.0,
+     "real": false,
+     "critical": false,
+     "slack": 512.7,
+     "dispatch_wait": 5
+    },
+    {
+     "k": 14,
+     "id": "L0.attn.rows_allgather",
+     "op": "attn.rows_allgather",
+     "eng": "coll",
+     "preds": [
+      11
+     ],
+     "program_dur": 1024,
+     "start": 4131,
+     "end": 4246,
+     "measured": 115,
+     "price": 1024.0,
+     "real": true,
+     "critical": false,
+     "slack": 725.4,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 15,
+     "id": "L0.attn.q_quant",
+     "op": "attn.q_quant",
+     "eng": "su",
+     "preds": [
+      12
+     ],
+     "program_dur": 288,
+     "start": 4141,
+     "end": 4429,
+     "measured": 288,
+     "price": 288.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 7
+    },
+    {
+     "k": 16,
+     "id": "L0.attn.kv_rope_qdq",
+     "op": "attn.kv_rope_qdq",
+     "eng": "su",
+     "preds": [
+      13
+     ],
+     "program_dur": 283,
+     "start": 4431,
+     "end": 4714,
+     "measured": 283,
+     "price": 283.0,
+     "real": false,
+     "critical": false,
+     "slack": 512.7,
+     "dispatch_wait": 292
+    },
+    {
+     "k": 17,
+     "id": "L0.attn.own_row_write",
+     "op": "attn.own_row_write",
+     "eng": "svc",
+     "preds": [
+      16
+     ],
+     "program_dur": 650,
+     "start": 4714,
+     "end": 5364,
+     "measured": 650,
+     "price": 649.8,
+     "real": false,
+     "critical": false,
+     "slack": 512.7,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 18,
+     "id": "L0.attn.wq_b",
+     "op": "attn.wq_b",
+     "eng": "fld",
+     "preds": [
+      15
+     ],
+     "program_dur": 1040,
+     "start": 4436,
+     "end": 4549,
+     "measured": 113,
+     "price": 1039.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 7
+    },
+    {
+     "k": 19,
+     "id": "L0.attn.q_rope",
+     "op": "attn.q_rope",
+     "eng": "su",
+     "preds": [
+      18
+     ],
+     "program_dur": 118,
+     "start": 4716,
+     "end": 4834,
+     "measured": 118,
+     "price": 117.6,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 167
+    },
+    {
+     "k": 20,
+     "id": "L0.attn.window_load",
+     "op": "attn.window_load",
+     "eng": "svc",
+     "preds": [
+      17,
+      19
+     ],
+     "program_dur": 301,
+     "start": 5366,
+     "end": 5667,
+     "measured": 301,
+     "price": 300.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 21,
+     "id": "L0.attn.scores",
+     "op": "attn.scores",
+     "eng": "svc",
+     "preds": [
+      14,
+      16,
+      19,
+      20
+     ],
+     "program_dur": 104,
+     "start": 5669,
+     "end": 5773,
+     "measured": 104,
+     "price": 103.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 22,
+     "id": "L0.attn.max",
+     "op": "attn.max",
+     "eng": "su",
+     "preds": [
+      21
+     ],
+     "program_dur": 187,
+     "start": 5774,
+     "end": 5961,
+     "measured": 187,
+     "price": 186.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 1
+    },
+    {
+     "k": 23,
+     "id": "L0.attn.exp",
+     "op": "attn.exp",
+     "eng": "su",
+     "preds": [
+      22
+     ],
+     "program_dur": 236,
+     "start": 5963,
+     "end": 6199,
+     "measured": 236,
+     "price": 236.3,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 24,
+     "id": "L0.attn.den",
+     "op": "attn.den",
+     "eng": "su",
+     "preds": [
+      23
+     ],
+     "program_dur": 72,
+     "start": 6201,
+     "end": 6273,
+     "measured": 72,
+     "price": 72.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 25,
+     "id": "L0.attn.pv",
+     "op": "attn.pv",
+     "eng": "svc",
+     "preds": [
+      23
+     ],
+     "program_dur": 144,
+     "start": 6199,
+     "end": 6343,
+     "measured": 144,
+     "price": 143.9,
+     "real": false,
+     "critical": false,
+     "slack": 124.1,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 26,
+     "id": "L0.attn.sink",
+     "op": "attn.sink",
+     "eng": "su",
+     "preds": [
+      22,
+      24
+     ],
+     "program_dur": 196,
+     "start": 6275,
+     "end": 6471,
+     "measured": 196,
+     "price": 196.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 27,
+     "id": "L0.attn.normalize",
+     "op": "attn.normalize",
+     "eng": "su",
+     "preds": [
+      25,
+      26
+     ],
+     "program_dur": 245,
+     "start": 6473,
+     "end": 6718,
+     "measured": 245,
+     "price": 244.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 28,
+     "id": "L0.attn.wo_a",
+     "op": "attn.wo_a",
+     "eng": "fld",
+     "preds": [
+      27
+     ],
+     "program_dur": 2222,
+     "start": 6724,
+     "end": 6841,
+     "measured": 117,
+     "price": 2222.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 29,
+     "id": "L0.attn.z_quant",
+     "op": "attn.z_quant",
+     "eng": "su",
+     "preds": [
+      28
+     ],
+     "program_dur": 80,
+     "start": 6841,
+     "end": 6921,
+     "measured": 80,
+     "price": 80.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 30,
+     "id": "L0.attn.wo_b",
+     "op": "attn.wo_b",
+     "eng": "fld",
+     "preds": [
+      29
+     ],
+     "program_dur": 549,
+     "start": 6928,
+     "end": 7049,
+     "measured": 121,
+     "price": 548.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 7
+    },
+    {
+     "k": 31,
+     "id": "L0.attn.out_allreduce",
+     "op": "attn.out_allreduce",
+     "eng": "coll",
+     "preds": [
+      30
+     ],
+     "program_dur": 827,
+     "start": 7049,
+     "end": 8220,
+     "measured": 1171,
+     "price": 827.0,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 32,
+     "id": "L0.attn.hc_post",
+     "op": "attn.hc_post",
+     "eng": "hc",
+     "preds": [
+      7,
+      31
+     ],
+     "program_dur": 113,
+     "start": 7078,
+     "end": 8243,
+     "measured": 1165,
+     "price": 112.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": -1142
+    },
+    {
+     "k": 33,
+     "id": "L0.ffn.hc.fn",
+     "op": "ffn.hc.fn",
+     "eng": "hcx",
+     "preds": [
+      32
+     ],
+     "program_dur": 229,
+     "start": 8243,
+     "end": 8472,
+     "measured": 229,
+     "price": 229.0,
+     "real": false,
+     "critical": false,
+     "slack": 4776.1,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 34,
+     "id": "L0.ffn.hc.sumsq",
+     "op": "ffn.hc.sumsq",
+     "eng": "hcx",
+     "preds": [
+      32
+     ],
+     "program_dur": 254,
+     "start": 8474,
+     "end": 8728,
+     "measured": 254,
+     "price": 253.6,
+     "real": false,
+     "critical": false,
+     "slack": 4554.2,
+     "dispatch_wait": 231
+    },
+    {
+     "k": 35,
+     "id": "L0.ffn.hc.rsqrt",
+     "op": "ffn.hc.rsqrt",
+     "eng": "hcx",
+     "preds": [
+      34
+     ],
+     "program_dur": 197,
+     "start": 8730,
+     "end": 8927,
+     "measured": 197,
+     "price": 197.3,
+     "real": false,
+     "critical": false,
+     "slack": 4554.2,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 36,
+     "id": "L0.ffn.hc.pre_post",
+     "op": "ffn.hc.pre_post",
+     "eng": "hcx",
+     "preds": [
+      33,
+      35
+     ],
+     "program_dur": 212,
+     "start": 8929,
+     "end": 9141,
+     "measured": 212,
+     "price": 212.3,
+     "real": false,
+     "critical": false,
+     "slack": 4554.2,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 37,
+     "id": "L0.ffn.hc.sinkhorn",
+     "op": "ffn.hc.sinkhorn",
+     "eng": "hcx",
+     "preds": [
+      36
+     ],
+     "program_dur": 637,
+     "start": 9143,
+     "end": 9780,
+     "measured": 637,
+     "price": 637.2,
+     "real": false,
+     "critical": false,
+     "slack": 4554.2,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 38,
+     "id": "L0.ffn.hc.coef",
+     "op": "ffn.hc.coef",
+     "eng": "hc",
+     "preds": [
+      36,
+      37
+     ],
+     "program_dur": 0,
+     "start": 9782,
+     "end": 9796,
+     "measured": 14,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 39,
+     "id": "L0.ffn.hc_pre",
+     "op": "ffn.hc_pre",
+     "eng": "hc",
+     "preds": [
+      32,
+      38
+     ],
+     "program_dur": 9,
+     "start": 9796,
+     "end": 10245,
+     "measured": 449,
+     "price": 333.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 40,
+     "id": "L0.ffn.router",
+     "op": "ffn.router",
+     "eng": "fld",
+     "preds": [
+      39
+     ],
+     "program_dur": 977,
+     "start": 10252,
+     "end": 10373,
+     "measured": 121,
+     "price": 977.2,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 7
+    },
+    {
+     "k": 41,
+     "id": "L0.ffn.softplus_sqrt",
+     "op": "ffn.softplus_sqrt",
+     "eng": "su",
+     "preds": [
+      40
+     ],
+     "program_dur": 186,
+     "start": 10373,
+     "end": 10559,
+     "measured": 186,
+     "price": 185.6,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 42,
+     "id": "L0.ffn.shared_gu",
+     "op": "ffn.shared_gu",
+     "eng": "fld",
+     "preds": [
+      39,
+      40
+     ],
+     "program_dur": 634,
+     "start": 10380,
+     "end": 10495,
+     "measured": 115,
+     "price": 634.0,
+     "real": false,
+     "critical": false,
+     "slack": 144.1,
+     "dispatch_wait": 7
+    },
+    {
+     "k": 43,
+     "id": "L0.ffn.router_allgather",
+     "op": "ffn.router_allgather",
+     "eng": "coll",
+     "preds": [
+      41
+     ],
+     "program_dur": 422,
+     "start": 10559,
+     "end": 10589,
+     "measured": 30,
+     "price": 421.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 44,
+     "id": "L0.ffn.bias",
+     "op": "ffn.bias",
+     "eng": "su",
+     "preds": [
+      43
+     ],
+     "program_dur": 118,
+     "start": 10589,
+     "end": 10707,
+     "measured": 118,
+     "price": 117.6,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 45,
+     "id": "L0.ffn.shared_swiglu",
+     "op": "ffn.shared_swiglu",
+     "eng": "su",
+     "preds": [
+      42
+     ],
+     "program_dur": 246,
+     "start": 10709,
+     "end": 10955,
+     "measured": 246,
+     "price": 245.6,
+     "real": false,
+     "critical": false,
+     "slack": 1243.5,
+     "dispatch_wait": 214
+    },
+    {
+     "k": 46,
+     "id": "L0.ffn.top6",
+     "op": "ffn.top6",
+     "eng": "sel",
+     "preds": [
+      44
+     ],
+     "program_dur": 9,
+     "start": 10707,
+     "end": 10716,
+     "measured": 9,
+     "price": 8.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 47,
+     "id": "L0.ffn.top6_order",
+     "op": "ffn.top6_order",
+     "eng": "sel",
+     "preds": [
+      46
+     ],
+     "program_dur": 44,
+     "start": 10718,
+     "end": 10762,
+     "measured": 44,
+     "price": 44.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 48,
+     "id": "L0.ffn.experts_gu",
+     "op": "ffn.experts_gu",
+     "eng": "fld",
+     "preds": [
+      42,
+      47
+     ],
+     "program_dur": 1240,
+     "start": 10768,
+     "end": 10925,
+     "measured": 157,
+     "price": 1239.8,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 49,
+     "id": "L0.ffn.weights",
+     "op": "ffn.weights",
+     "eng": "su",
+     "preds": [
+      43,
+      47
+     ],
+     "program_dur": 259,
+     "start": 10957,
+     "end": 11216,
+     "measured": 259,
+     "price": 258.9,
+     "real": false,
+     "critical": false,
+     "slack": 983.9,
+     "dispatch_wait": 195
+    },
+    {
+     "k": 50,
+     "id": "L0.ffn.shared_quant",
+     "op": "ffn.shared_quant",
+     "eng": "su",
+     "preds": [
+      45
+     ],
+     "program_dur": 95,
+     "start": 11218,
+     "end": 11313,
+     "measured": 95,
+     "price": 94.7,
+     "real": false,
+     "critical": false,
+     "slack": 1243.5,
+     "dispatch_wait": 263
+    },
+    {
+     "k": 51,
+     "id": "L0.ffn.swiglu",
+     "op": "ffn.swiglu",
+     "eng": "su",
+     "preds": [
+      48
+     ],
+     "program_dur": 3,
+     "start": 11315,
+     "end": 11318,
+     "measured": 3,
+     "price": 3.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 390
+    },
+    {
+     "k": 52,
+     "id": "L0.ffn.route_w",
+     "op": "ffn.route_w",
+     "eng": "su",
+     "preds": [
+      49,
+      51
+     ],
+     "program_dur": 6,
+     "start": 11320,
+     "end": 11326,
+     "measured": 6,
+     "price": 5.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 53,
+     "id": "L0.ffn.quant2",
+     "op": "ffn.quant2",
+     "eng": "su",
+     "preds": [
+      52
+     ],
+     "program_dur": 191,
+     "start": 11328,
+     "end": 11519,
+     "measured": 191,
+     "price": 191.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 54,
+     "id": "L0.ffn.down",
+     "op": "ffn.down",
+     "eng": "fld",
+     "preds": [
+      50,
+      53
+     ],
+     "program_dur": 1518,
+     "start": 11525,
+     "end": 11665,
+     "measured": 140,
+     "price": 1517.7,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 55,
+     "id": "L0.ffn.combine_allreduce",
+     "op": "ffn.combine_allreduce",
+     "eng": "coll",
+     "preds": [
+      54
+     ],
+     "program_dur": 827,
+     "start": 11665,
+     "end": 12302,
+     "measured": 637,
+     "price": 827.0,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 56,
+     "id": "L0.ffn.hc_post",
+     "op": "ffn.hc_post",
+     "eng": "hc",
+     "preds": [
+      37,
+      55
+     ],
+     "program_dur": 113,
+     "start": 11693,
+     "end": 12325,
+     "measured": 632,
+     "price": 112.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": -609
+    },
+    {
+     "k": 57,
+     "id": "L0.hc.h_store",
+     "op": "hc.h_store",
+     "eng": "hc",
+     "preds": [
+      56
+     ],
+     "program_dur": 0,
+     "start": 12325,
+     "end": 12406,
+     "measured": 81,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": 0
+    }
+   ],
+   "classes": {
+    "hc.unpriced": {
+     "runs": 6,
+     "measured": 788,
+     "price": 0.0,
+     "critical": false,
+     "ratio": null
+    },
+    "hc:attn.hc_pre": {
+     "runs": 1,
+     "measured": 449,
+     "price": 327.0,
+     "critical": true,
+     "ratio": 1.373
+    },
+    "coll:attn.a_allgather": {
+     "runs": 1,
+     "measured": 40,
+     "price": 434.0,
+     "critical": true,
+     "ratio": 0.092
+    },
+    "coll:attn.rows_allgather": {
+     "runs": 1,
+     "measured": 115,
+     "price": 1024.0,
+     "critical": false,
+     "ratio": 0.112
+    },
+    "coll:attn.out_allreduce": {
+     "runs": 1,
+     "measured": 1171,
+     "price": 827.0,
+     "critical": true,
+     "ratio": 1.416
+    },
+    "hc:attn.hc_post": {
+     "runs": 1,
+     "measured": 1165,
+     "price": 112.9,
+     "critical": true,
+     "ratio": 10.319
+    },
+    "hc:ffn.hc_pre": {
+     "runs": 1,
+     "measured": 449,
+     "price": 333.9,
+     "critical": true,
+     "ratio": 1.345
+    },
+    "coll:ffn.router_allgather": {
+     "runs": 1,
+     "measured": 30,
+     "price": 421.9,
+     "critical": true,
+     "ratio": 0.071
+    },
+    "coll:ffn.combine_allreduce": {
+     "runs": 1,
+     "measured": 637,
+     "price": 827.0,
+     "critical": true,
+     "ratio": 0.77
+    },
+    "hc:ffn.hc_post": {
+     "runs": 1,
+     "measured": 632,
+     "price": 112.9,
+     "critical": true,
+     "ratio": 5.598
+    }
+   },
+   "layer_path_at_price": 16557.6,
+   "layer_path_measured": 18090.0,
+   "layer_ratio": 1.0925,
+   "bench_layer_cycles": 11168,
+   "dispatch_wait": {
+    "n": 45,
+    "median": 2,
+    "max": 390
+   },
+   "not_covered": {
+    "field_ops": 8,
+    "behavioural_ops": {
+     "hcx": 10,
+     "sel": 2,
+     "su": 19,
+     "svc": 4
+    }
+   },
+   "cases_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
+  },
+  {
+   "layer": "L2",
+   "verdict": "PASS",
+   "summary": "SUMMARY jobs=1 layer_cycles=20360 (header 1264 -> H_STORE done 21624) stage_done_cycle=22229 jobs_done=1/1 dones=75/75 phases_released=10 field_phases=10 capture_writes=5560 mismatching_roots=0 coll_words_die0=728 coll_errors=0 coll_incomplete=0 y_exact=640/640 y_bad=0 y_consumed=640 norm_rows_exact=480/480 hstore_rows_exact=640/640 ref_fault=0 dut_fault=0 ctrl_flt=0 fvec=0000 stuck=0 ep_faults=0 gather_stage_fault=0 hc_fcode=0 max_done_latency=9 errors=0 first_coll_send=1111",
+   "ops": [
+    {
+     "k": 0,
+     "id": "L2.hc.gain_attn",
+     "op": "hc.gain_attn",
+     "eng": "hc",
+     "preds": [],
+     "program_dur": 0,
+     "start": 1279,
+     "end": 1452,
+     "measured": 173,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": null
+    },
+    {
+     "k": 1,
+     "id": "L2.hc.gain_ffn",
+     "op": "hc.gain_ffn",
+     "eng": "hc",
+     "preds": [],
+     "program_dur": 0,
+     "start": 1452,
+     "end": 1625,
+     "measured": 173,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": null
+    },
+    {
+     "k": 2,
+     "id": "L2.hc.h_load",
+     "op": "hc.h_load",
+     "eng": "hc",
+     "preds": [],
+     "program_dur": 0,
+     "start": 1907,
+     "end": 2240,
+     "measured": 333,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": null
+    },
+    {
+     "k": 3,
+     "id": "L2.attn.hc.fn",
+     "op": "attn.hc.fn",
+     "eng": "hcx",
+     "preds": [],
+     "program_dur": 237,
+     "start": 1906,
+     "end": 2143,
+     "measured": 237,
+     "price": 237.0,
+     "real": false,
+     "critical": false,
+     "slack": 17177.3,
+     "dispatch_wait": null
+    },
+    {
+     "k": 4,
+     "id": "L2.attn.hc.sumsq",
+     "op": "attn.hc.sumsq",
+     "eng": "hcx",
+     "preds": [],
+     "program_dur": 251,
+     "start": 2145,
+     "end": 2396,
+     "measured": 251,
+     "price": 250.6,
+     "real": false,
+     "critical": false,
+     "slack": 16966.4,
+     "dispatch_wait": null
+    },
+    {
+     "k": 5,
+     "id": "L2.attn.hc.rsqrt",
+     "op": "attn.hc.rsqrt",
+     "eng": "hcx",
+     "preds": [
+      4
+     ],
+     "program_dur": 197,
+     "start": 2398,
+     "end": 2595,
+     "measured": 197,
+     "price": 197.3,
+     "real": false,
+     "critical": false,
+     "slack": 16966.4,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 6,
+     "id": "L2.attn.hc.pre_post",
+     "op": "attn.hc.pre_post",
+     "eng": "hcx",
+     "preds": [
+      3,
+      5
+     ],
+     "program_dur": 212,
+     "start": 2597,
+     "end": 2809,
+     "measured": 212,
+     "price": 212.3,
+     "real": false,
+     "critical": false,
+     "slack": 16966.4,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 7,
+     "id": "L2.attn.hc.sinkhorn",
+     "op": "attn.hc.sinkhorn",
+     "eng": "hcx",
+     "preds": [
+      6
+     ],
+     "program_dur": 637,
+     "start": 2811,
+     "end": 3448,
+     "measured": 637,
+     "price": 637.2,
+     "real": false,
+     "critical": false,
+     "slack": 16966.4,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 8,
+     "id": "L2.attn.hc.coef",
+     "op": "attn.hc.coef",
+     "eng": "hc",
+     "preds": [
+      6,
+      7
+     ],
+     "program_dur": 0,
+     "start": 3450,
+     "end": 3464,
+     "measured": 14,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 9,
+     "id": "L2.attn.hc_pre",
+     "op": "attn.hc_pre",
+     "eng": "hc",
+     "preds": [
+      8
+     ],
+     "program_dur": 6,
+     "start": 3464,
+     "end": 3913,
+     "measured": 449,
+     "price": 329.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 10,
+     "id": "L2.attn.a_proj",
+     "op": "attn.a_proj",
+     "eng": "fld",
+     "preds": [
+      9
+     ],
+     "program_dur": 3090,
+     "start": 3920,
+     "end": 4115,
+     "measured": 195,
+     "price": 3090.3,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 7
+    },
+    {
+     "k": 11,
+     "id": "L2.attn.a_allgather",
+     "op": "attn.a_allgather",
+     "eng": "coll",
+     "preds": [
+      10
+     ],
+     "program_dur": 434,
+     "start": 4115,
+     "end": 4158,
+     "measured": 43,
+     "price": 434.0,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 12,
+     "id": "L2.attn.q_norm.sumsq",
+     "op": "attn.q_norm.sumsq",
+     "eng": "su",
+     "preds": [
+      11
+     ],
+     "program_dur": 3,
+     "start": 4158,
+     "end": 4161,
+     "measured": 3,
+     "price": 3.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 13,
+     "id": "L2.attn.cmp.pool",
+     "op": "attn.cmp.pool",
+     "eng": "su",
+     "preds": [
+      11
+     ],
+     "program_dur": 290,
+     "start": 4163,
+     "end": 4453,
+     "measured": 290,
+     "price": 289.9,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 5
+    },
+    {
+     "k": 14,
+     "id": "L2.attn.kv_norm.sumsq",
+     "op": "attn.kv_norm.sumsq",
+     "eng": "su",
+     "preds": [
+      11
+     ],
+     "program_dur": 3,
+     "start": 4455,
+     "end": 4458,
+     "measured": 3,
+     "price": 3.0,
+     "real": false,
+     "critical": false,
+     "slack": 5869.1,
+     "dispatch_wait": 297
+    },
+    {
+     "k": 15,
+     "id": "L2.attn.q_quant",
+     "op": "attn.q_quant",
+     "eng": "su",
+     "preds": [
+      12
+     ],
+     "program_dur": 288,
+     "start": 4460,
+     "end": 4748,
+     "measured": 288,
+     "price": 288.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 299
+    },
+    {
+     "k": 16,
+     "id": "L2.attn.kv_rope_qdq",
+     "op": "attn.kv_rope_qdq",
+     "eng": "su",
+     "preds": [
+      14
+     ],
+     "program_dur": 283,
+     "start": 4750,
+     "end": 5033,
+     "measured": 283,
+     "price": 283.0,
+     "real": false,
+     "critical": false,
+     "slack": 5869.1,
+     "dispatch_wait": 292
+    },
+    {
+     "k": 17,
+     "id": "L2.attn.own_row_write",
+     "op": "attn.own_row_write",
+     "eng": "svc",
+     "preds": [
+      16
+     ],
+     "program_dur": 3221,
+     "start": 5033,
+     "end": 8254,
+     "measured": 3221,
+     "price": 3220.6,
+     "real": false,
+     "critical": false,
+     "slack": 5869.1,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 18,
+     "id": "L2.attn.cmp.norm.sumsq",
+     "op": "attn.cmp.norm.sumsq",
+     "eng": "su",
+     "preds": [
+      13
+     ],
+     "program_dur": 187,
+     "start": 5035,
+     "end": 5222,
+     "measured": 187,
+     "price": 186.7,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 582
+    },
+    {
+     "k": 19,
+     "id": "L2.attn.wq_b",
+     "op": "attn.wq_b",
+     "eng": "fld",
+     "preds": [
+      15
+     ],
+     "program_dur": 1560,
+     "start": 4754,
+     "end": 4869,
+     "measured": 115,
+     "price": 1559.6,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 20,
+     "id": "L2.attn.cmp.norm.rsqrt",
+     "op": "attn.cmp.norm.rsqrt",
+     "eng": "su",
+     "preds": [
+      18
+     ],
+     "program_dur": 197,
+     "start": 5224,
+     "end": 5421,
+     "measured": 197,
+     "price": 197.3,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 21,
+     "id": "L2.attn.cmp.norm.scale",
+     "op": "attn.cmp.norm.scale",
+     "eng": "su",
+     "preds": [
+      20
+     ],
+     "program_dur": 75,
+     "start": 5423,
+     "end": 5498,
+     "measured": 75,
+     "price": 74.7,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 22,
+     "id": "L2.attn.cmp.wk",
+     "op": "attn.cmp.wk",
+     "eng": "fld",
+     "preds": [
+      21
+     ],
+     "program_dur": 609,
+     "start": 5504,
+     "end": 5621,
+     "measured": 117,
+     "price": 608.6,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 23,
+     "id": "L2.attn.cmp.row_qdq",
+     "op": "attn.cmp.row_qdq",
+     "eng": "su",
+     "preds": [
+      21
+     ],
+     "program_dur": 156,
+     "start": 5500,
+     "end": 5656,
+     "measured": 156,
+     "price": 156.0,
+     "real": false,
+     "critical": false,
+     "slack": 7704.1,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 24,
+     "id": "L2.attn.cmp.k_norm.sumsq",
+     "op": "attn.cmp.k_norm.sumsq",
+     "eng": "su",
+     "preds": [
+      22
+     ],
+     "program_dur": 186,
+     "start": 5658,
+     "end": 5844,
+     "measured": 186,
+     "price": 185.6,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 37
+    },
+    {
+     "k": 25,
+     "id": "L2.attn.cmp.k_norm.rsqrt",
+     "op": "attn.cmp.k_norm.rsqrt",
+     "eng": "su",
+     "preds": [
+      24
+     ],
+     "program_dur": 197,
+     "start": 5846,
+     "end": 6043,
+     "measured": 197,
+     "price": 197.3,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 26,
+     "id": "L2.attn.cmp.k_norm.scale",
+     "op": "attn.cmp.k_norm.scale",
+     "eng": "su",
+     "preds": [
+      25
+     ],
+     "program_dur": 75,
+     "start": 6045,
+     "end": 6120,
+     "measured": 75,
+     "price": 74.7,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 27,
+     "id": "L2.attn.cmp.k_rope_qdq",
+     "op": "attn.cmp.k_rope_qdq",
+     "eng": "su",
+     "preds": [
+      26
+     ],
+     "program_dur": 147,
+     "start": 6122,
+     "end": 6269,
+     "measured": 147,
+     "price": 146.7,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 28,
+     "id": "L2.attn.idx.q",
+     "op": "attn.idx.q",
+     "eng": "fld",
+     "preds": [
+      19
+     ],
+     "program_dur": 93,
+     "start": 5622,
+     "end": 5745,
+     "measured": 123,
+     "price": 93.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 753
+    },
+    {
+     "k": 29,
+     "id": "L2.attn.q_rope",
+     "op": "attn.q_rope",
+     "eng": "su",
+     "preds": [
+      19
+     ],
+     "program_dur": 118,
+     "start": 6271,
+     "end": 6389,
+     "measured": 118,
+     "price": 117.6,
+     "real": false,
+     "critical": false,
+     "slack": 7407.4,
+     "dispatch_wait": 1402
+    },
+    {
+     "k": 30,
+     "id": "L2.attn.idx.score",
+     "op": "attn.idx.score",
+     "eng": "svc",
+     "preds": [
+      11,
+      28
+     ],
+     "program_dur": 2951,
+     "start": 8256,
+     "end": 11207,
+     "measured": 2951,
+     "price": 2951.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2511
+    },
+    {
+     "k": 31,
+     "id": "L2.attn.idx.newkey",
+     "op": "attn.idx.newkey",
+     "eng": "su",
+     "preds": [
+      27,
+      28
+     ],
+     "program_dur": 118,
+     "start": 6391,
+     "end": 6509,
+     "measured": 118,
+     "price": 117.9,
+     "real": false,
+     "critical": false,
+     "slack": 2815.3,
+     "dispatch_wait": 122
+    },
+    {
+     "k": 32,
+     "id": "L2.attn.idx.topk_local",
+     "op": "attn.idx.topk_local",
+     "eng": "sel",
+     "preds": [
+      30,
+      31
+     ],
+     "program_dur": 2177,
+     "start": 11207,
+     "end": 13384,
+     "measured": 2177,
+     "price": 2177.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 33,
+     "id": "L2.attn.idx.topk_merge",
+     "op": "attn.idx.topk_merge",
+     "eng": "coll",
+     "preds": [
+      32
+     ],
+     "program_dur": 551,
+     "start": 13384,
+     "end": 13421,
+     "measured": 37,
+     "price": 551.0,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 34,
+     "id": "L2.attn.idx.topk_final",
+     "op": "attn.idx.topk_final",
+     "eng": "sel",
+     "preds": [
+      33
+     ],
+     "program_dur": 178,
+     "start": 13421,
+     "end": 13599,
+     "measured": 178,
+     "price": 178.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 35,
+     "id": "L2.attn.gather",
+     "op": "attn.gather",
+     "eng": "col",
+     "preds": [
+      34
+     ],
+     "program_dur": 808,
+     "start": 13599,
+     "end": 14407,
+     "measured": 808,
+     "price": 808.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 36,
+     "id": "L2.attn.window_load",
+     "op": "attn.window_load",
+     "eng": "svc",
+     "preds": [
+      17,
+      29,
+      34
+     ],
+     "program_dur": 266,
+     "start": 13600,
+     "end": 13866,
+     "measured": 266,
+     "price": 265.9,
+     "real": false,
+     "critical": false,
+     "slack": 1575.0,
+     "dispatch_wait": 1
+    },
+    {
+     "k": 37,
+     "id": "L2.attn.rows_allgather",
+     "op": "attn.rows_allgather",
+     "eng": "coll",
+     "preds": [
+      23,
+      35
+     ],
+     "program_dur": 1033,
+     "start": 14407,
+     "end": 14518,
+     "measured": 111,
+     "price": 1032.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 38,
+     "id": "L2.attn.scores",
+     "op": "attn.scores",
+     "eng": "svc",
+     "preds": [
+      16,
+      29,
+      36,
+      37
+     ],
+     "program_dur": 50,
+     "start": 14518,
+     "end": 14568,
+     "measured": 50,
+     "price": 49.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 39,
+     "id": "L2.attn.max",
+     "op": "attn.max",
+     "eng": "su",
+     "preds": [
+      38
+     ],
+     "program_dur": 222,
+     "start": 14569,
+     "end": 14791,
+     "measured": 222,
+     "price": 221.6,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 1
+    },
+    {
+     "k": 40,
+     "id": "L2.attn.exp",
+     "op": "attn.exp",
+     "eng": "su",
+     "preds": [
+      39
+     ],
+     "program_dur": 290,
+     "start": 14793,
+     "end": 15083,
+     "measured": 290,
+     "price": 289.7,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 41,
+     "id": "L2.attn.den",
+     "op": "attn.den",
+     "eng": "su",
+     "preds": [
+      40
+     ],
+     "program_dur": 88,
+     "start": 15085,
+     "end": 15173,
+     "measured": 88,
+     "price": 88.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 42,
+     "id": "L2.attn.pv",
+     "op": "attn.pv",
+     "eng": "svc",
+     "preds": [
+      40
+     ],
+     "program_dur": 272,
+     "start": 15083,
+     "end": 15355,
+     "measured": 272,
+     "price": 271.9,
+     "real": false,
+     "critical": false,
+     "slack": 12.1,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 43,
+     "id": "L2.attn.sink",
+     "op": "attn.sink",
+     "eng": "su",
+     "preds": [
+      39,
+      41
+     ],
+     "program_dur": 196,
+     "start": 15175,
+     "end": 15371,
+     "measured": 196,
+     "price": 196.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 44,
+     "id": "L2.attn.normalize",
+     "op": "attn.normalize",
+     "eng": "su",
+     "preds": [
+      42,
+      43
+     ],
+     "program_dur": 245,
+     "start": 15373,
+     "end": 15618,
+     "measured": 245,
+     "price": 244.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 45,
+     "id": "L2.attn.wo_a",
+     "op": "attn.wo_a",
+     "eng": "fld",
+     "preds": [
+      44
+     ],
+     "program_dur": 2222,
+     "start": 15624,
+     "end": 15745,
+     "measured": 121,
+     "price": 2222.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 46,
+     "id": "L2.attn.z_quant",
+     "op": "attn.z_quant",
+     "eng": "su",
+     "preds": [
+      45
+     ],
+     "program_dur": 80,
+     "start": 15745,
+     "end": 15825,
+     "measured": 80,
+     "price": 80.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 47,
+     "id": "L2.attn.wo_b",
+     "op": "attn.wo_b",
+     "eng": "fld",
+     "preds": [
+      46
+     ],
+     "program_dur": 549,
+     "start": 15832,
+     "end": 15947,
+     "measured": 115,
+     "price": 548.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 7
+    },
+    {
+     "k": 48,
+     "id": "L2.attn.out_allreduce",
+     "op": "attn.out_allreduce",
+     "eng": "coll",
+     "preds": [
+      47
+     ],
+     "program_dur": 827,
+     "start": 15947,
+     "end": 16838,
+     "measured": 891,
+     "price": 827.0,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 49,
+     "id": "L2.attn.hc_post",
+     "op": "attn.hc_post",
+     "eng": "hc",
+     "preds": [
+      7,
+      48
+     ],
+     "program_dur": 113,
+     "start": 15975,
+     "end": 16861,
+     "measured": 886,
+     "price": 112.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": -863
+    },
+    {
+     "k": 50,
+     "id": "L2.ffn.hc.fn",
+     "op": "ffn.hc.fn",
+     "eng": "hcx",
+     "preds": [
+      49
+     ],
+     "program_dur": 229,
+     "start": 16861,
+     "end": 17090,
+     "measured": 229,
+     "price": 229.0,
+     "real": false,
+     "critical": false,
+     "slack": 5903.8,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 51,
+     "id": "L2.ffn.hc.sumsq",
+     "op": "ffn.hc.sumsq",
+     "eng": "hcx",
+     "preds": [
+      49
+     ],
+     "program_dur": 254,
+     "start": 17092,
+     "end": 17346,
+     "measured": 254,
+     "price": 253.6,
+     "real": false,
+     "critical": false,
+     "slack": 5681.8,
+     "dispatch_wait": 231
+    },
+    {
+     "k": 52,
+     "id": "L2.ffn.hc.rsqrt",
+     "op": "ffn.hc.rsqrt",
+     "eng": "hcx",
+     "preds": [
+      51
+     ],
+     "program_dur": 197,
+     "start": 17348,
+     "end": 17545,
+     "measured": 197,
+     "price": 197.3,
+     "real": false,
+     "critical": false,
+     "slack": 5681.8,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 53,
+     "id": "L2.ffn.hc.pre_post",
+     "op": "ffn.hc.pre_post",
+     "eng": "hcx",
+     "preds": [
+      50,
+      52
+     ],
+     "program_dur": 212,
+     "start": 17547,
+     "end": 17759,
+     "measured": 212,
+     "price": 212.3,
+     "real": false,
+     "critical": false,
+     "slack": 5681.8,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 54,
+     "id": "L2.ffn.hc.sinkhorn",
+     "op": "ffn.hc.sinkhorn",
+     "eng": "hcx",
+     "preds": [
+      53
+     ],
+     "program_dur": 637,
+     "start": 17761,
+     "end": 18398,
+     "measured": 637,
+     "price": 637.2,
+     "real": false,
+     "critical": false,
+     "slack": 5681.8,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 55,
+     "id": "L2.ffn.hc.coef",
+     "op": "ffn.hc.coef",
+     "eng": "hc",
+     "preds": [
+      53,
+      54
+     ],
+     "program_dur": 0,
+     "start": 18400,
+     "end": 18414,
+     "measured": 14,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 56,
+     "id": "L2.ffn.hc_pre",
+     "op": "ffn.hc_pre",
+     "eng": "hc",
+     "preds": [
+      49,
+      55
+     ],
+     "program_dur": 9,
+     "start": 18414,
+     "end": 18863,
+     "measured": 449,
+     "price": 333.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 57,
+     "id": "L2.ffn.router",
+     "op": "ffn.router",
+     "eng": "fld",
+     "preds": [
+      56
+     ],
+     "program_dur": 977,
+     "start": 18869,
+     "end": 19027,
+     "measured": 158,
+     "price": 977.2,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 58,
+     "id": "L2.ffn.softplus_sqrt",
+     "op": "ffn.softplus_sqrt",
+     "eng": "su",
+     "preds": [
+      57
+     ],
+     "program_dur": 186,
+     "start": 19027,
+     "end": 19213,
+     "measured": 186,
+     "price": 185.6,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 59,
+     "id": "L2.ffn.shared_gu",
+     "op": "ffn.shared_gu",
+     "eng": "fld",
+     "preds": [
+      56,
+      57
+     ],
+     "program_dur": 634,
+     "start": 19033,
+     "end": 19173,
+     "measured": 140,
+     "price": 634.0,
+     "real": false,
+     "critical": false,
+     "slack": 144.1,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 60,
+     "id": "L2.ffn.router_allgather",
+     "op": "ffn.router_allgather",
+     "eng": "coll",
+     "preds": [
+      58
+     ],
+     "program_dur": 422,
+     "start": 19213,
+     "end": 19243,
+     "measured": 30,
+     "price": 421.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 61,
+     "id": "L2.ffn.bias",
+     "op": "ffn.bias",
+     "eng": "su",
+     "preds": [
+      60
+     ],
+     "program_dur": 118,
+     "start": 19243,
+     "end": 19361,
+     "measured": 118,
+     "price": 117.6,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 62,
+     "id": "L2.ffn.shared_swiglu",
+     "op": "ffn.shared_swiglu",
+     "eng": "su",
+     "preds": [
+      59
+     ],
+     "program_dur": 246,
+     "start": 19363,
+     "end": 19609,
+     "measured": 246,
+     "price": 245.6,
+     "real": false,
+     "critical": false,
+     "slack": 1860.7,
+     "dispatch_wait": 190
+    },
+    {
+     "k": 63,
+     "id": "L2.ffn.top6",
+     "op": "ffn.top6",
+     "eng": "sel",
+     "preds": [
+      61
+     ],
+     "program_dur": 9,
+     "start": 19361,
+     "end": 19370,
+     "measured": 9,
+     "price": 8.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 64,
+     "id": "L2.ffn.top6_order",
+     "op": "ffn.top6_order",
+     "eng": "sel",
+     "preds": [
+      63
+     ],
+     "program_dur": 44,
+     "start": 19372,
+     "end": 19416,
+     "measured": 44,
+     "price": 44.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 65,
+     "id": "L2.ffn.experts_gu",
+     "op": "ffn.experts_gu",
+     "eng": "fld",
+     "preds": [
+      59,
+      64
+     ],
+     "program_dur": 1857,
+     "start": 19422,
+     "end": 19537,
+     "measured": 115,
+     "price": 1856.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 6
+    },
+    {
+     "k": 66,
+     "id": "L2.ffn.weights",
+     "op": "ffn.weights",
+     "eng": "su",
+     "preds": [
+      60,
+      64
+     ],
+     "program_dur": 259,
+     "start": 19611,
+     "end": 19870,
+     "measured": 259,
+     "price": 258.9,
+     "real": false,
+     "critical": false,
+     "slack": 1601.0,
+     "dispatch_wait": 195
+    },
+    {
+     "k": 67,
+     "id": "L2.ffn.shared_quant",
+     "op": "ffn.shared_quant",
+     "eng": "su",
+     "preds": [
+      62
+     ],
+     "program_dur": 95,
+     "start": 19872,
+     "end": 19967,
+     "measured": 95,
+     "price": 94.7,
+     "real": false,
+     "critical": false,
+     "slack": 1860.7,
+     "dispatch_wait": 263
+    },
+    {
+     "k": 68,
+     "id": "L2.ffn.swiglu",
+     "op": "ffn.swiglu",
+     "eng": "su",
+     "preds": [
+      65
+     ],
+     "program_dur": 3,
+     "start": 19969,
+     "end": 19972,
+     "measured": 3,
+     "price": 3.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 432
+    },
+    {
+     "k": 69,
+     "id": "L2.ffn.route_w",
+     "op": "ffn.route_w",
+     "eng": "su",
+     "preds": [
+      66,
+      68
+     ],
+     "program_dur": 6,
+     "start": 19974,
+     "end": 19980,
+     "measured": 6,
+     "price": 5.9,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 70,
+     "id": "L2.ffn.quant2",
+     "op": "ffn.quant2",
+     "eng": "su",
+     "preds": [
+      69
+     ],
+     "program_dur": 191,
+     "start": 19982,
+     "end": 20173,
+     "measured": 191,
+     "price": 191.0,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 2
+    },
+    {
+     "k": 71,
+     "id": "L2.ffn.down",
+     "op": "ffn.down",
+     "eng": "fld",
+     "preds": [
+      67,
+      70
+     ],
+     "program_dur": 2028,
+     "start": 20180,
+     "end": 20327,
+     "measured": 147,
+     "price": 2028.2,
+     "real": false,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 7
+    },
+    {
+     "k": 72,
+     "id": "L2.ffn.combine_allreduce",
+     "op": "ffn.combine_allreduce",
+     "eng": "coll",
+     "preds": [
+      71
+     ],
+     "program_dur": 827,
+     "start": 20327,
+     "end": 21512,
+     "measured": 1185,
+     "price": 827.0,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": 0
+    },
+    {
+     "k": 73,
+     "id": "L2.ffn.hc_post",
+     "op": "ffn.hc_post",
+     "eng": "hc",
+     "preds": [
+      54,
+      72
+     ],
+     "program_dur": 113,
+     "start": 20355,
+     "end": 21535,
+     "measured": 1180,
+     "price": 112.9,
+     "real": true,
+     "critical": true,
+     "slack": 0.0,
+     "dispatch_wait": -1157
+    },
+    {
+     "k": 74,
+     "id": "L2.hc.h_store",
+     "op": "hc.h_store",
+     "eng": "hc",
+     "preds": [
+      73
+     ],
+     "program_dur": 0,
+     "start": 21535,
+     "end": 21616,
+     "measured": 81,
+     "price": null,
+     "real": true,
+     "critical": false,
+     "slack": null,
+     "dispatch_wait": 0
+    }
+   ],
+   "classes": {
+    "hc.unpriced": {
+     "runs": 6,
+     "measured": 788,
+     "price": 0.0,
+     "critical": false,
+     "ratio": null
+    },
+    "hc:attn.hc_pre": {
+     "runs": 1,
+     "measured": 449,
+     "price": 329.9,
+     "critical": true,
+     "ratio": 1.361
+    },
+    "coll:attn.a_allgather": {
+     "runs": 1,
+     "measured": 43,
+     "price": 434.0,
+     "critical": true,
+     "ratio": 0.099
+    },
+    "coll:attn.idx.topk_merge": {
+     "runs": 1,
+     "measured": 37,
+     "price": 551.0,
+     "critical": true,
+     "ratio": 0.067
+    },
+    "coll:attn.rows_allgather": {
+     "runs": 1,
+     "measured": 111,
+     "price": 1032.9,
+     "critical": true,
+     "ratio": 0.107
+    },
+    "coll:attn.out_allreduce": {
+     "runs": 1,
+     "measured": 891,
+     "price": 827.0,
+     "critical": true,
+     "ratio": 1.077
+    },
+    "hc:attn.hc_post": {
+     "runs": 1,
+     "measured": 886,
+     "price": 112.9,
+     "critical": true,
+     "ratio": 7.848
+    },
+    "hc:ffn.hc_pre": {
+     "runs": 1,
+     "measured": 449,
+     "price": 333.9,
+     "critical": true,
+     "ratio": 1.345
+    },
+    "coll:ffn.router_allgather": {
+     "runs": 1,
+     "measured": 30,
+     "price": 421.9,
+     "critical": true,
+     "ratio": 0.071
+    },
+    "coll:ffn.combine_allreduce": {
+     "runs": 1,
+     "measured": 1185,
+     "price": 827.0,
+     "critical": true,
+     "ratio": 1.433
+    },
+    "hc:ffn.hc_post": {
+     "runs": 1,
+     "measured": 1180,
+     "price": 112.9,
+     "critical": true,
+     "ratio": 10.452
+    }
+   },
+   "layer_path_at_price": 28089.4,
+   "layer_path_measured": 28723.0,
+   "layer_ratio": 1.0226,
+   "bench_layer_cycles": 20360,
+   "dispatch_wait": {
+    "n": 60,
+    "median": 2,
+    "max": 2511
+   },
+   "not_covered": {
+    "field_ops": 10,
+    "behavioural_ops": {
+     "col": 1,
+     "hcx": 10,
+     "sel": 4,
+     "su": 29,
+     "svc": 5
+    }
+   },
+   "cases_sha256": "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
+  }
+ ],
+ "delta_by_op": {
+  "attn.hc_pre": 122.0,
+  "attn.a_allgather": -391.0,
+  "attn.rows_allgather": -909.0,
+  "attn.out_allreduce": 344.0,
+  "attn.hc_post": 1052.1,
+  "ffn.hc_pre": 115.1,
+  "ffn.router_allgather": -391.9,
+  "ffn.combine_allreduce": 358.0,
+  "ffn.hc_post": 1067.1,
+  "attn.idx.topk_merge": -514.0
+ },
+ "e2e": {
+  "ar": {
+   "base_cycles": 828866.4,
+   "by_op": {
+    "attn.hc_pre": {
+     "nodes": 40,
+     "added_cycles": 4880.0,
+     "e2e_loss_pct": 0.585
+    },
+    "attn.a_allgather": {
+     "nodes": 40,
+     "added_cycles": -15640.0,
+     "e2e_loss_pct": -1.923
+    },
+    "attn.rows_allgather": {
+     "nodes": 40,
+     "added_cycles": -7272.0,
+     "e2e_loss_pct": -0.885
+    },
+    "attn.out_allreduce": {
+     "nodes": 40,
+     "added_cycles": 13760.0,
+     "e2e_loss_pct": 1.633
+    },
+    "attn.hc_post": {
+     "nodes": 40,
+     "added_cycles": 42084.0,
+     "e2e_loss_pct": 4.832
+    },
+    "ffn.hc_pre": {
+     "nodes": 40,
+     "added_cycles": 4604.0,
+     "e2e_loss_pct": 0.552
+    },
+    "ffn.router_allgather": {
+     "nodes": 40,
+     "added_cycles": -5760.0,
+     "e2e_loss_pct": -0.7
+    },
+    "ffn.combine_allreduce": {
+     "nodes": 40,
+     "added_cycles": 14320.0,
+     "e2e_loss_pct": 1.698
+    },
+    "ffn.hc_post": {
+     "nodes": 40,
+     "added_cycles": 42684.0,
+     "e2e_loss_pct": 4.897
+    },
+    "attn.idx.topk_merge": {
+     "nodes": 8,
+     "added_cycles": -4112.0,
+     "e2e_loss_pct": -0.499
+    },
+    "ALL": {
+     "nodes": 368,
+     "added_cycles": 89548.0,
+     "e2e_loss_pct": 9.75
+    }
+   }
+  },
+  "mtp": {
+   "base_cycles": 1177516.1,
+   "by_op": {
+    "attn.hc_pre": {
+     "nodes": 43,
+     "added_cycles": 5856.0,
+     "e2e_loss_pct": 0.495
+    },
+    "attn.a_allgather": {
+     "nodes": 43,
+     "added_cycles": -18768.0,
+     "e2e_loss_pct": -1.62
+    },
+    "attn.rows_allgather": {
+     "nodes": 8,
+     "added_cycles": -11817.0,
+     "e2e_loss_pct": -1.014
+    },
+    "attn.out_allreduce": {
+     "nodes": 43,
+     "added_cycles": 16512.0,
+     "e2e_loss_pct": 1.383
+    },
+    "attn.hc_post": {
+     "nodes": 43,
+     "added_cycles": 50500.8,
+     "e2e_loss_pct": 4.112
+    },
+    "ffn.hc_pre": {
+     "nodes": 43,
+     "added_cycles": 5524.8,
+     "e2e_loss_pct": 0.467
+    },
+    "ffn.router_allgather": {
+     "nodes": 43,
+     "added_cycles": -18811.2,
+     "e2e_loss_pct": -1.623
+    },
+    "ffn.combine_allreduce": {
+     "nodes": 43,
+     "added_cycles": 17184.0,
+     "e2e_loss_pct": 1.438
+    },
+    "ffn.hc_post": {
+     "nodes": 43,
+     "added_cycles": 51220.8,
+     "e2e_loss_pct": 4.169
+    },
+    "attn.idx.topk_merge": {
+     "nodes": 8,
+     "added_cycles": -6682.0,
+     "e2e_loss_pct": -0.571
+    },
+    "ALL": {
+     "nodes": 360,
+     "added_cycles": 90720.2,
+     "e2e_loss_pct": 7.153
+    }
+   }
+  }
+ },
+ "e2e_over_only": {
+  "ar": {
+   "base_cycles": 828866.4,
+   "by_op": {
+    "attn.hc_pre": {
+     "nodes": 40,
+     "added_cycles": 4880.0,
+     "e2e_loss_pct": 0.585
+    },
+    "attn.out_allreduce": {
+     "nodes": 40,
+     "added_cycles": 13760.0,
+     "e2e_loss_pct": 1.633
+    },
+    "attn.hc_post": {
+     "nodes": 40,
+     "added_cycles": 42084.0,
+     "e2e_loss_pct": 4.832
+    },
+    "ffn.hc_pre": {
+     "nodes": 40,
+     "added_cycles": 4604.0,
+     "e2e_loss_pct": 0.552
+    },
+    "ffn.combine_allreduce": {
+     "nodes": 40,
+     "added_cycles": 14320.0,
+     "e2e_loss_pct": 1.698
+    },
+    "ffn.hc_post": {
+     "nodes": 40,
+     "added_cycles": 42684.0,
+     "e2e_loss_pct": 4.897
+    },
+    "ALL": {
+     "nodes": 240,
+     "added_cycles": 122332.0,
+     "e2e_loss_pct": 12.861
+    }
+   }
+  },
+  "mtp": {
+   "base_cycles": 1177516.1,
+   "by_op": {
+    "attn.hc_pre": {
+     "nodes": 43,
+     "added_cycles": 5856.0,
+     "e2e_loss_pct": 0.495
+    },
+    "attn.out_allreduce": {
+     "nodes": 43,
+     "added_cycles": 16512.0,
+     "e2e_loss_pct": 1.383
+    },
+    "attn.hc_post": {
+     "nodes": 43,
+     "added_cycles": 50500.8,
+     "e2e_loss_pct": 4.112
+    },
+    "ffn.hc_pre": {
+     "nodes": 43,
+     "added_cycles": 5524.8,
+     "e2e_loss_pct": 0.467
+    },
+    "ffn.combine_allreduce": {
+     "nodes": 43,
+     "added_cycles": 17184.0,
+     "e2e_loss_pct": 1.438
+    },
+    "ffn.hc_post": {
+     "nodes": 43,
+     "added_cycles": 51220.8,
+     "e2e_loss_pct": 4.169
+    },
+    "ALL": {
+     "nodes": 258,
+     "added_cycles": 146798.4,
+     "e2e_loss_pct": 11.085
+    }
+   }
+  }
+ }
+}
