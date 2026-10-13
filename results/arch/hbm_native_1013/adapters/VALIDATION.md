@@ -23,3 +23,17 @@ the same full1024row actual-memory vehicle:4096sectors/20485cycles, peak8
 retained producer permissions while the hub remains bounded at4. A fifth
 request/producer before return faults; the owner mutant fails. Native receipts
 are under results/rtl/hbm_native_b2_adapters_1013/native_r2.
+
+The retained command seat passed a nativeP4/K7168 mirror command, global to
+local rebasing, stalled loader command, identity mutation on live input pins,
+x_done before traffic drain, and P8/K7168 mirror overflow refusal. The missing
+rebasing mutant fails. Receipts command_r2 preserve source SHA, rc and logs.
+The real dispatcher must reserve the actual publication/lane resources before
+installed/command acceptance; the seat serializes leases and has not been
+priced against pipelined production commands.
+
+VM8 producer gap is still mandatory: actual xload xw_en is an unstalled pulse
+stream; VM8 staging has serialized wr_ready and only2562063-bit row seats.
+The largest native fragment stream has1664beats. No direct producer binding
+may discard pulses or pretend256seats buffer1664beats. A held emitter or
+measured bounded FIFO needs source-specific throughput/physical qualification.
