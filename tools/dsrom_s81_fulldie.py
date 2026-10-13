@@ -5734,11 +5734,13 @@ def _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi, xa=None, xb=None):
     # rows of the lane covered by a placed macro (link macros hl_* at the VCH W edge, 128 x 132) are not lane rows; 150 um
     # each side stay free for the slab ports that face the macro (g15a run 1: rE2 pushed 840.7 um off hl_E2 by the y span)
     xl_, xh_ = min(xa, xb), max(xa, xb)
-    Sx = S + [(i_.y - 150.0, i_.y + i_.h + 150.0) for i_ in m['insts'] if i_ is not A and i_ is not Bk and min(i_.w, i_.h) >= 60.0
-              and i_.x < xh_ - 1.0 and i_.x + i_.w > xl_ + 1.0 and i_.y < hi and i_.y + i_.h > lo]
-    free = lambda c: all(c + half <= s0 or c - half >= s1 for s0, s1 in Sx)
     cands = sorted((a0 + 4.8 * i for i in range(int((a1 - a0) // 4.8) + 1)), key=lambda c: abs(c - y0))
-    c = next((c for c in cands if free(c)), None)
+    for mg_ in (150.0, 60.0, 12.0):       # run 2: 150 um left sp_hc_s.wq_d (393 um) no rows in the VM overlap -> smaller margins
+        Sx = S + [(i_.y - mg_, i_.y + i_.h + mg_) for i_ in m['insts'] if i_ is not A and i_ is not Bk and min(i_.w, i_.h) >= 60.0
+                  and i_.x < xh_ - 1.0 and i_.x + i_.w > xl_ + 1.0 and i_.y < hi and i_.y + i_.h > lo]
+        c = next((c for c in cands if all(c + half <= s0 or c - half >= s1 for s0, s1 in Sx)), None)
+        if c is not None:
+            break
     if c is None:
         raise ValueError(f'--lane-pins: no free lane rows for {A.name}.{pa} ({tot:.0f} um in {lo:.0f}..{hi:.0f})')
     S.append((c - half, c + half))
