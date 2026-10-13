@@ -47,8 +47,8 @@
  "job": {
   "owner": "Claude:el1011-hbm-b2-vm",
   "branch": "claude/el1011-hbm-b2-vm",
-  "tag": "v05",
-  "purpose": "HBM B2 VM slice hub tile: packet clients reorder buffers, slice routing, CW/CCW PREQ, PRSPs from both ring stops; reset only on control; v05: 2-stage dispatch (grant reg -> one-hot payload AND-OR), registered request alloc one-hot + response hit decode, one-hot head; M5 leaf, 100x540 outline for 4.4k E-face pins on M4",
+  "tag": "v06",
+  "purpose": "HBM B2 VM slice hub tile v06: dispatch G->S->P (one-hot entry select into per-destination-group payload regs, kept one-hot select/grant copies per 57-b slice), sliced head mux with kept h1/write-flag copies, pure pin relays on the N/S ring PRSP inputs; M5 leaf 101.5x540",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/link",
