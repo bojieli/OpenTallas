@@ -583,6 +583,9 @@ module tb_s81_die_layer;
         $readmemh({dir, "/expd.mem"}, ed);
         $readmemh({dir, "/vm_boot.mem"}, vm);
         $readmemh({dir, "/coef.mem"}, coefm);
+        // rows present in the VM at job start (written before this layer: boot_ok.txt, empty unless --coef-split)
+        fd = $fopen({dir, "/boot_ok.txt"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%d\n", w) == 1) mark(w); $fclose(fd); end
         begin : own_load
             reg [511:0] tmp [0:4*MAXR-1];
             $readmemh({dir, "/coll_own.mem"}, tmp);

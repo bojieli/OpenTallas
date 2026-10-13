@@ -95,6 +95,11 @@ def main():
     ap.add_argument('--chain', default=None, help='HC chain fixture (tools/s81_ctrl/die_layer_chain.py) for a layer '
                     'the pinned pickle does not hold')
     ap.add_argument('--ng', type=int, default=16)
+    ap.add_argument('--coef-split', action='store_true', help='two COEF jobs a block instead of one: COEF-a before the '
+                    'NORM reads the row pair that holds this block\'s pre mix (written by the PREVIOUS block\'s '
+                    'hc.pre_post, as the priced token path has it), COEF-b after the NORM reads the block\'s own '
+                    'post / combine rows before the POST.  Same RTL, same golden; without it the single COEF waits '
+                    'for this block\'s whole coefficient chain (fn .. sinkhorn) before the NORM can start')
     ap.add_argument('--seed', type=int, default=11)
     ap.add_argument('--programs', type=Path, default=ROOT / 'results/rtl/s81_ctrl_20261008/programs')
     a = ap.parse_args()
@@ -142,6 +147,22 @@ def main():
         coef[C_BASE + 2 * b] = HG.pack(HG.u32(np.asarray(g['comb'], np.float32).reshape(-1)), 32)
         coef[C_BASE + 2 * b + 1] = HG.pack(list(HG.u32(g['pre'])) + list(HG.u32(g['post'])) + [int(HG.u32([g['eps']])[0])], 32)
 
+    # --coef-split: the early row pair of block b at E_BASE + 2b: row 0 = don't-care combine (zeros, present at job
+    # start), row 1 = {pre, zero post, eps}.  attn: present at job start (the previous layer's ffn.hc.pre_post wrote
+    # it); ffn: written by <L>.attn.hc.pre_fwd, a 1-cycle hcx op that follows <L>.attn.hc.pre_post.
+    E_BASE = C_BASE + 4
+    boot_ok = []
+    if a.coef_split:
+        for b, blk in enumerate(('attn', 'ffn')):
+            g = gold[blk]
+            e1 = HG.pack(list(HG.u32(g['pre'])) + [0] * len(HG.u32(g['post'])) + [int(HG.u32([g['eps']])[0])], 32)
+            vm_boot[E_BASE + 2 * b] = 0
+            boot_ok.append(E_BASE + 2 * b)
+            if b == 0:
+                vm_boot[E_BASE + 1] = e1
+                boot_ok.append(E_BASE + 1)
+            else:
+                coef[E_BASE + 2 * b + 1] = e1
     # ------------------------------------------------------------------ program rewrite (by name, then topological)
     src = layer_ops(a.programs, a.layer)
     eng_ops = [o['id'] for o in src if o['id'].startswith(f'{a.layer}.eng.')]
@@ -182,12 +203,25 @@ def main():
             preds = [p for p in preds if p != f'{L}.eng.add'] + [f'{L}.hc.h_load']   # h reaches the HC through H_LOAD
         if o['eng'] == 'hc':
             if tail == 'hc_pre':
-                add(f'{L}.{blk}.hc.coef', HC_PORT, 0, [f'{L}.{blk}.hc.pre_post', f'{L}.{blk}.hc.sinkhorn'],
-                    hc_arg(2, C_BASE + 2 * b), eng='hc', order=i - 0.5)
-                add(nm, HC_PORT, o['dur'], preds + [f'{L}.{blk}.hc.coef'],
-                    hc_arg(4, O_BASE + 512 * b, gsel=b, quant=1, yout=b), eng='hc', order=i)
+                if a.coef_split:
+                    cpre = [f'{L}.attn.hc.pre_fwd'] if b else []
+                    if b:
+                        add(f'{L}.attn.hc.pre_fwd', HX_PORT, 1, [f'{L}.attn.hc.pre_post'], wrow=E_BASE + 2 * b + 1,
+                            eng='hcx', order=[x['id'] for x in src].index(f'{L}.attn.hc.pre_post') + 0.25)
+                    add(f'{L}.{blk}.hc.coef_a', HC_PORT, 0, cpre + ([f'{L}.hc.h_load'] if not b else []),
+                        hc_arg(2, E_BASE + 2 * b), eng='hc', order=i - 0.5)
+                    add(nm, HC_PORT, o['dur'], preds + [f'{L}.{blk}.hc.coef_a'],
+                        hc_arg(4, O_BASE + 512 * b, gsel=b, quant=1, yout=b), eng='hc', order=i)
+                    add(f'{L}.{blk}.hc.coef', HC_PORT, 0, [f'{L}.{blk}.hc.pre_post', f'{L}.{blk}.hc.sinkhorn', nm],
+                        hc_arg(2, C_BASE + 2 * b), eng='hc', order=i + 0.25)
+                else:
+                    add(f'{L}.{blk}.hc.coef', HC_PORT, 0, [f'{L}.{blk}.hc.pre_post', f'{L}.{blk}.hc.sinkhorn'],
+                        hc_arg(2, C_BASE + 2 * b), eng='hc', order=i - 0.5)
+                    add(nm, HC_PORT, o['dur'], preds + [f'{L}.{blk}.hc.coef'],
+                        hc_arg(4, O_BASE + 512 * b, gsel=b, quant=1, yout=b), eng='hc', order=i)
             elif tail == 'hc_post':
-                add(nm, HC_PORT, o['dur'], preds, hc_arg(3, 0), eng='hc', order=i)
+                add(nm, HC_PORT, o['dur'], preds + ([f'{L}.{blk}.hc.coef'] if a.coef_split else []), hc_arg(3, 0),
+                    eng='hc', order=i)
             else:      # coefficient producers: behavioural on hcx
                 wrow = {'hc.pre_post': C_BASE + 2 * b + 1, 'hc.sinkhorn': C_BASE + 2 * b}.get(tail, -1)
                 add(nm, HX_PORT, o['dur'], preds, wrow=wrow, eng='hcx', order=i)
@@ -255,6 +289,7 @@ def main():
     with open(a.out / 'coef.mem', 'w') as f:
         for r in sorted(coef):
             f.write(f'@{r:x}\n{coef[r]:0128x}\n')
+    (a.out / 'boot_ok.txt').write_text(''.join(f'{r}\n' for r in boot_ok))
     (a.out / 'payload.mem').write_text(''.join(f'{v:0128x}\n' for v in payload))
     with open(a.out / 'expa.mem', 'w') as fa, open(a.out / 'expd.mem', 'w') as fd:
         for r in sorted(run.exp):
@@ -265,7 +300,7 @@ def main():
     meta = dict(layer=a.layer, ng=a.ng, ops=len(prog), field_phases=nph, coll_messages=msgs, coll_records=len(own),
                 y_words=len(ygold), exp_rows=len(run.exp), hstore_rows=nst, golden_checks_vs_pickle=4,
                 program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'], preds=o['preds']) for k, o in enumerate(prog)],
-                cases_sha256=HG.sha(a.cases))
+                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split))
     if fx is not None:
         meta.update(chain_fixture_sha256=HG.sha(a.chain), chain_schema=fx['schema'], chain_checks=fx['checks'],
                     shard=fx['shard'], shard_sha256=fx['shard_sha256'], golden_checks_vs_pickle=0,

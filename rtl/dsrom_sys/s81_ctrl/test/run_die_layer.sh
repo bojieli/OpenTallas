@@ -13,7 +13,8 @@
 # 3 sequential jobs of the layer (the kit lands each HIDDEN payload in the VM).
 # HCH=1: the HC slab is the hierarchical production tuple of tools/s81_suhc/hc_gate.py --hier 3 (HIER 1, HALF 1, CSPLIT 1,
 # TAIL_SPLIT 2, CNL_PIN 1, CHAIN_STEP 6, HEAD_ROWS 10 at NG 256 / 2 below) with the routed pad split, instead of the flat engine.
-# Env: CASES (required), NG (16), FP (rtl|dpi, rtl), HCH (0), LAYERS, VL (verilator), J (build jobs, 16), ADMIT ("" or
+# STIMX: extra die_layer_stim.py options (--coef-split: two COEF jobs a block, see the tool).
+# Env: CASES (required), NG (16), FP (rtl|dpi, rtl), HCH (0), STIMX, LAYERS, VL (verilator), J (build jobs, 16), ADMIT ("" or
 # "/srv/opentallas-scratch/admit.sh <GB> --").  Verdict line: DIE_LAYER_GATE PASS|FAIL.  Fleet hosts only.
 # CHAINS (optional): the HC chain fixture of tools/s81_ctrl/die_layer_chain.py for a layer the pinned CASES pickle does
 # not hold (LAYERS=L14, an Engram layer: its eng.* ops are BEHAVIOURAL at program duration, see the stim tool);
@@ -26,7 +27,7 @@ S=$SRC/rtl/dsrom_sys; P=$S/s81_ph
 CHAINS=${CHAINS:-}
 for L in $LAYERS; do
   CH=""; case $L in L0|L2) ;; *) [ -n "$CHAINS" ] && CH="--chain ${CHAINS//%L/$L}";; esac
-  python3 $SRC/tools/s81_ctrl/die_layer_stim.py $OUT/stim_$L --cases $CASES --layer $L --ng $NG $CH > $OUT/stim_$L.log 2>&1 \
+  python3 $SRC/tools/s81_ctrl/die_layer_stim.py $OUT/stim_$L --cases $CASES --layer $L --ng $NG $CH ${STIMX:-} > $OUT/stim_$L.log 2>&1 \
     || { echo "DIE_LAYER_GATE FAIL stim $L: $(tail -2 $OUT/stim_$L.log)" | tee $OUT/verdicts.log; exit 1; }
 done
 FPF="rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv"
