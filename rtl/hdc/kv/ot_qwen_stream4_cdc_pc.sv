@@ -41,7 +41,19 @@ module ot_qwen_stream4_cdc_pc #(
     // word the receiver consumed), l_v is a one-cycle push of the word on l_* (the receiver queues it), at most LCRED
     // words outstanding.  No input reaches a register enable or a mux select inside the element.
     parameter integer MARGIN = 0,
-    parameter integer LCRED = 6
+    parameter integer LCRED = 6,
+    // WPIPE 1 (q13-cdcw r2 2026-10-13, die cell qkd_cdc_wleaf; default 0 = the structure above, unchanged): the HCLK
+    // read side of the write queue has no wide broadcast and no deep input cone.
+    //   h_wcon is registered at its pin: the completion path (wc pointer, h_cv, h_csec / h_cdata / h_ctag, the
+    //     WR-on-empty fault) runs ONE HCLK edge later than WPIPE 0 (h_cv = two edges after h_wcon).  The pin flop is
+    //     one kept copy per storage column group (WNG) plus the pointer's copy; each group reads the storage through
+    //     its own kept one-hot select register (ot_hdc_v41x_kreg), so no pointer bit drives more than one group
+    //     (the shared wc_bin[0] drove 4,629 mux loads, the port h_wcon 584).
+    //   h_hand keeps its cycle (the controller's same-edge hand-off): the hand-off pointer is kept as three
+    //     registers wh_bin / +1 / +2 and h_wv / h_wsec are computed for both outcomes from registers, so h_hand is
+    //     the select of one final 2:1 mux in front of each flop (was a 7-level cone through the adder and the mux).
+    // No logic is added between a Gray register and its synchroniser.
+    parameter integer WPIPE = 0
 ) (
     // ---- CLK (core) domain ----
     input  wire             clk,
@@ -267,8 +279,22 @@ module ot_qwen_stream4_cdc_pc #(
         always @(posedge clk) if (w_v_i) wmem[wi][HI-1:LO] <= w_in[HI-1:LO];
     end
     wire [WA:0] ww_sb = g2b_w(ww_s[SYNC-1]);
-    wire [WA:0] wh_bin_n = wh_bin + {{WA{1'b0}}, h_hand};
-    wire [WA:0] wc_bin_n = wc_bin + {{WA{1'b0}}, h_wcon};
+    // WPIPE: pin flop of h_wcon (pointer copy; the storage column groups own their copies below)
+    wire        h_wcon_i;
+    generate if (WPIPE != 0) begin : g_wcp
+        (* keep *) reg hwc_q;
+        always @(posedge hclk or negedge h_arst_n) if (!h_arst_n) hwc_q <= 1'b0; else hwc_q <= h_wcon;
+        assign h_wcon_i = hwc_q;
+    end else begin : g_nwcp
+        assign h_wcon_i = h_wcon;
+    end endgenerate
+    // WPIPE: hand-off pointer + 1 and + 2 (registers), so the h_hand outcome is a final 2:1 select
+    reg  [WA:0] wh_p1, wh_p2;
+    wire [WA:0] wh_bin_n = (WPIPE != 0) ? (h_hand ? wh_p1 : wh_bin) : wh_bin + {{WA{1'b0}}, h_hand};
+    wire [WA:0] wc_bin_n = wc_bin + {{WA{1'b0}}, h_wcon_i};
+    always @(posedge hclk or negedge h_rw)
+        if (!h_rw) begin wh_p1 <= 1; wh_p2 <= 2; end
+        else if (WPIPE != 0 && h_hand) begin wh_p1 <= wh_p2; wh_p2 <= wh_p2 + 1'b1; end
     always @(posedge hclk or negedge h_rw) begin
         if (!h_rw) begin
             wh_bin <= 0; wc_bin <= 0; wc_gray <= 0; h_wv <= 1'b0; h_cv <= 1'b0;
@@ -276,16 +302,41 @@ module ot_qwen_stream4_cdc_pc #(
         end else begin
             ww_s[0] <= ww_gray; for (s = 1; s < SYNC; s = s + 1) ww_s[s] <= ww_s[s-1];
             wh_bin <= wh_bin_n; wc_bin <= wc_bin_n; wc_gray <= (wc_bin_n >> 1) ^ wc_bin_n;
-            h_wv <= wh_bin_n != ww_sb;
-            h_cv <= h_wcon;
+            h_wv <= (WPIPE != 0) ? (h_hand ? (wh_p1 != ww_sb) : (wh_bin != ww_sb)) : (wh_bin_n != ww_sb);
+            h_cv <= h_wcon_i;
         end
     end
-    always @(posedge hclk) begin
-        h_wsec <= wmem[wh_bin_n[WA-1:0]][WW-1 -: 24];
-        if (h_wcon) begin
-            h_csec <= wmem[wc_bin[WA-1:0]][WW-1 -: 24]; h_cdata <= wmem[wc_bin[WA-1:0]][TAGW +: 256]; h_ctag <= wmem[wc_bin[WA-1:0]][TAGW-1:0];
+    generate if (WPIPE != 0) begin : g_wrd
+        // hand-off head: both candidates read from registered indices, h_hand selects last
+        wire [23:0] hs0 = wmem[wh_bin[WA-1:0]][WW-1 -: 24];
+        wire [23:0] hs1 = wmem[wh_p1[WA-1:0]][WW-1 -: 24];
+        always @(posedge hclk) h_wsec <= h_hand ? hs1 : hs0;
+        // completion capture: per column group a kept pin flop of h_wcon and a kept one-hot select of the entry
+        wire [WNG*WGW-1:0] c_word;
+        reg  [WNG*WGW-1:0] c_q;
+        wire [WB-1:0] wc_hot_n = {{(WB-1){1'b0}}, 1'b1} << wc_bin_n[WA-1:0];
+        for (genvar gc = 0; gc < WNG; gc = gc + 1) begin : cgrp
+            localparam integer LO = gc * WGW, HI = (LO + WGW > WW) ? WW : LO + WGW;
+            wire [WB-1:0] hot; wire ce;
+            ot_hdc_v41x_kreg #(.W(WB), .R(0)) u_sel (.clk(hclk), .rst_n(1'b1),
+                .d(h_rw ? wc_hot_n : {{(WB-1){1'b0}}, 1'b1}), .q(hot));
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_ce (.clk(hclk), .rst_n(h_arst_n), .d(h_wcon), .q(ce));
+            wire [HI-LO-1:0] acc [0:WB];
+            assign acc[0] = {(HI-LO){1'b0}};
+            for (genvar e = 0; e < WB; e = e + 1) begin : g_or
+                assign acc[e+1] = acc[e] | ({(HI-LO){hot[e]}} & wmem[e][HI-1:LO]);
+            end
+            always @(posedge hclk) if (ce) c_q[HI-1:LO] <= acc[WB];
         end
-    end
+        always @(*) {h_csec, h_cdata, h_ctag} = c_q[WW-1:0];
+    end else begin : g_nwrd
+        always @(posedge hclk) begin
+            h_wsec <= wmem[wh_bin_n[WA-1:0]][WW-1 -: 24];
+            if (h_wcon) begin
+                h_csec <= wmem[wc_bin[WA-1:0]][WW-1 -: 24]; h_cdata <= wmem[wc_bin[WA-1:0]][TAGW +: 256]; h_ctag <= wmem[wc_bin[WA-1:0]][TAGW-1:0];
+            end
+        end
+    end endgenerate
 
     // =========================== write-done: HCLK -> CLK ===========================
     reg [TAGW-1:0] amem [0:AD-1];
@@ -301,7 +352,7 @@ module ot_qwen_stream4_cdc_pc #(
             for (s = 0; s < SYNC; s = s + 1) ar_s[s] <= 0;
         end else begin
             ar_s[0] <= ar_gray; for (s = 1; s < SYNC; s = s + 1) ar_s[s] <= ar_s[s-1];
-            if ((h_lv_i && l_full) || (h_av_i && a_full) || (h_wcon && wc_bin == ww_sb)) h_fault <= 1'b1;
+            if ((h_lv_i && l_full) || (h_av_i && a_full) || (h_wcon_i && wc_bin == ww_sb)) h_fault <= 1'b1;
             aw_bin <= aw_bin_n; aw_gray <= (aw_bin_n >> 1) ^ aw_bin_n;
         end
     end

@@ -24,7 +24,7 @@ from the route's config.mk, /src = the job snapshot): active-edge arrival and sl
 (the SRAM wd_in / addr hold stall of ds-1010 lcrph: one shallow macro leaf, 165-260 ps slew, ~60 ps late).  The verdict is
 rec["macro_clk"]; the closure loop flags it after CTS and its auto-react class f reads it.
 """
-import argparse, json, re, subprocess, tempfile
+import argparse, json, re, subprocess, tempfile, sys
 from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -68,6 +68,40 @@ proc ot_ck_arr {p clk} {
 }
 """
 
+# Same clock-source-port treatment as io_ref_routed.sdc. Routed SDCs can
+# accidentally budget a second clock port as data against the first clock.
+# Such a data arrival is not clock insertion and must not enter this record.
+CLOCK_SETUP_TCL = r"""
+set ot_ck_requested {CLOCK_REQUEST}
+set ot_ck_selected [get_clocks -quiet $ot_ck_requested]
+if {![llength $ot_ck_selected]} {
+  foreach c [all_clocks] {
+    foreach s [get_property $c sources] {
+      if {[get_full_name $s] eq $ot_ck_requested && [llength [get_ports -quiet $ot_ck_requested]]} {
+        lappend ot_ck_selected $c
+      }
+    }
+  }
+}
+set ot_ck_selected [lsort -unique $ot_ck_selected]
+if {[llength $ot_ck_selected] != 1} {
+  error "CK_INSERTION: clock '$ot_ck_requested' must resolve to one clock, found [llength $ot_ck_selected]"
+}
+puts "OT_CK_SELECTED [get_full_name [lindex $ot_ck_selected 0]]"
+foreach c [all_clocks] {
+  foreach s [get_property $c sources] {
+    set sn [get_full_name $s]
+    if {![llength [get_ports -quiet $sn]]} continue
+    foreach refclk [all_clocks] {
+      unset_input_delay -clock $refclk [get_ports $sn]
+      unset_input_delay -clock $refclk -clock_fall [get_ports $sn]
+    }
+    unset_input_delay [get_ports $sn]
+    puts "OT_CK_CLOCK_PORT $sn: data input delays dropped"
+  }
+}
+"""
+
 
 def tcl(corner, db, sdc, routed, clock, mlibs=()):
     C = corner.upper()
@@ -81,14 +115,15 @@ read_db /base/{db}
 read_sdc /base/{sdc}
 {par}
 set_propagated_clock [all_clocks]
+{CLOCK_SETUP_TCL.replace('CLOCK_REQUEST', clock)}
 set regs {{}}
-foreach p [all_registers -clock_pins -clock [get_clocks {{{clock}}}]] {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
+foreach p [all_registers -clock_pins -clock $ot_ck_selected] {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
 set bnd {{}}
 set din [all_inputs -no_clocks]
 if {{[llength $din]}} {{ foreach pe [find_timing_paths -path_delay max -from $din -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe endpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }} }}
 foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe startpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }}
 {ACTIVE_TCL}
-set ot_ck_clk [lindex [get_clocks {{{clock}}}] 0]
+set ot_ck_clk [lindex $ot_ck_selected 0]
 dict for {{i cp}} $regs {{
   set a [ot_ck_arr [get_pins $cp] $ot_ck_clk]
   if {{$a eq "" || $a eq "INF" || $a eq "-INF"}} continue
@@ -194,9 +229,33 @@ def main():
     ap.add_argument("--routed", action="store_true")
     ap.add_argument("--image", default="openroad/orfs:latest")
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--all-clocks", action="store_true", help="measure each external clock in the routed write_sdc, preserving per-pin references")
     ap.add_argument("--route-corner", default="", help="TC/TT: CK_SS_* carry the TT insertion (route-time IO reference)")
     a = ap.parse_args()
     base = a.base.resolve()
+    if a.all_clocks:
+        if not a.routed:
+            raise SystemExit("--all-clocks requires --routed")
+        clocks = re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_ports\s+\{([^}]+)\}\]", (base / "6_final.sdc").read_text(), re.M)
+        if not clocks or any(len(pin.split()) != 1 for name, pin in clocks):
+            raise SystemExit("routed write_sdc must identify each external clock's single source port")
+        if len({pin for name, pin in clocks}) != len(clocks):
+            raise SystemExit("multiple external clocks on one pin: select their references explicitly")
+        records = {}
+        with tempfile.TemporaryDirectory() as td:
+            for index, (name, pin) in enumerate(clocks):
+                out = Path(td) / f"clock_{index}.json"
+                cmd = [sys.executable, str(Path(__file__).resolve()), "--base", str(base), "--routed", "--clock", name,
+                       "--image", a.image, "--route-corner", a.route_corner, "--output", str(out)]
+                subprocess.run(cmd, check=True)
+                rec = json.loads(out.read_text())
+                rec["lib_clock_pin"] = pin
+                rec["clock_mapping_basis"] = f"6_final.sdc create_clock -name {name} [get_ports {{{pin}}}]"
+                records[pin] = rec
+        rec = dict(next(iter(records.values())))
+        rec["clock_measurements"] = records
+        a.output.write_text(json.dumps(rec, indent=1) + "\n")
+        return
     if a.routed:
         db, sdc = "6_final.odb", "6_final.sdc"
     else:
