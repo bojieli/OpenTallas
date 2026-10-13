@@ -38,6 +38,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_s81_die_layer;
     parameter integer MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 45000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
+    // HC slab structure (defaults = the flat engine).  The production slab is the hierarchical tuple of the HC gate
+    // (tools/s81_suhc/hc_gate.py --hier 3): HIER 1, HALF 1, CSPLIT 1, TAIL_SPLIT 2, HEAD_ROWS 10, CNL_PIN 1, CHAIN_STEP 6
+    // at NG 256; build it with +define+TB_HC_HIER (the probes below then read the slab's sequencer tile).
+    parameter integer HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4;
     localparam integer NR = 128, XW = 640, MAXC = 16384, MAXR = 1024, MAXQ = 4096, MAXE = 2048, MAXM = 16, FW = 512,
                        PW = 547, W = 552, LVM = 10;
     localparam integer S_RD = 2, S_WR = 8, H_BASE = 0, G_BASE = 1280, GROWS = 320, C_BASE = 2560, S_BASE = 6144;
@@ -125,7 +129,8 @@ module tb_s81_die_layer;
     reg  y_v = 0; wire y_rdy; reg [NG*32-1:0] y_d = 0;
     wire [S_RD-1:0] rq_v; wire [S_RD*14-1:0] rq_row; reg [S_RD-1:0] rs_v = 0; reg [S_RD*512-1:0] rs_d = 0;
     wire [S_WR-1:0] wq_v; wire [S_WR*14-1:0] wq_row; wire [S_WR*16-1:0] wq_mask; wire [S_WR*512-1:0] wq_d;
-    dsfd_sp_hc_c #(.NG(NG), .D(5120), .S_RD(S_RD), .S_WR(S_WR), .MUT(HMUT)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
+    dsfd_sp_hc_c #(.NG(NG), .D(5120), .S_RD(S_RD), .S_WR(S_WR), .MUT(HMUT), .HIER(HIER), .HALF(HALF), .CSPLIT(CSPLIT),
+                   .TAIL_SPLIT(TAIL_SPLIT), .HEAD_ROWS(HEAD_ROWS), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
         .c_done(d[2]), .c_st(est[2]), .f_inp(hc_inp), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d));
     wire [3:0] hfcode = u_hc.fcode;      // the fault code is internal to dsfd_sp_hc_c since cdb57463d; the flat engine sits in g_flat
@@ -329,8 +334,17 @@ module tb_s81_die_layer;
         for (s = 0; s < S_RD; s = s + 1) rs_d[512 * s +: 512] <= vm[dl_a[LVM - 1][14 * s +: 14]];
     end
     // f_inp: the head descriptor's operands are complete in the VM (dropped on the take cycle)
-    wire [83:0] hq = u_hc.u_hc.g_flat.u_ad.rq;
-    wire        hrv = u_hc.u_hc.g_flat.u_ad.rv;
+`ifdef TB_HC_HIER
+`define HCAD u_hc.u_hc.g_hier.u_cb.u_seq.u_ad
+    wire        hdv = u_hc.u_hc.g_hier.u_cb.u_seq.dd[8];
+    wire [7:0]  hdt = u_hc.u_hc.g_hier.u_cb.u_seq.dd[7:0];
+`else
+`define HCAD u_hc.u_hc.g_flat.u_ad
+    wire        hdv = u_hc.u_hc.g_flat.d_v;
+    wire [7:0]  hdt = u_hc.u_hc.g_flat.d_t;
+`endif
+    wire [83:0] hq = `HCAD.rq;
+    wire        hrv = `HCAD.rv;
     wire        htake = u_hc.u_hc.e_v && u_hc.u_hc.e_r;
     wire [3:0]  hkind = hq[30:27];
     wire [13:0] hbase = hq[20:7];
@@ -348,7 +362,8 @@ module tb_s81_die_layer;
     // HC job start (the core takes the descriptor)
     always @(posedge ck) if (u_hc.u_hc.e_v && u_hc.u_hc.e_r) stt[cj][u_hc.u_hc.e_d[6:0]] = cyc;
     // HC job end: the core's done (the job's last result committed); the controller-pin done follows through the adapter
-    always @(posedge ck) if (u_hc.u_hc.g_flat.d_v) endt[cj][u_hc.u_hc.g_flat.d_t[6:0]] = cyc;
+    // (hierarchical slab: the done the sequencer tile hands its adapter, i.e. after the slab's own DW done delay)
+    always @(posedge ck) if (hdv) endt[cj][hdt[6:0]] = cyc;
     // ---------------- reference roots (as tb_s81ph_gather_capture)
     reg [NR-1:0] s_v; reg [31:0] s_t [0:NR-1]; reg [31:0] s_d [0:NR-1]; reg [NR-1:0] s_e, s_b;
     wire [NR-1:0] rr_v, rr_e, rr_f;

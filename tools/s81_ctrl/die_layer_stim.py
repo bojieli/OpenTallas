@@ -20,6 +20,14 @@ every op whose id starts with "<L>.attn." / "<L>.ffn."), rewritten onto the REAL
       all-gather (mode 1) records: random binary32.
   fld (port 0): real field phases (gen_stim, as tb_s81_die_fld).  others: behavioural (golden durations).
 
+Layers outside the pinned su_cases pickle (L14, an Engram layer): --chain <fixture of tools/s81_ctrl/die_layer_chain.py>
+(the HC golden chain rebuilt from the released checkpoint + the 1M shard, bit-exact against the shard).  The layer's
+<L>.eng.* ops (hh / dot / gate / add, port 10) are BEHAVIOURAL at program duration in this vehicle (no Engram RTL):
+the HIDDEN payload is the layer-ENTRY h (rows 0..639, landed by the package controller); eng.hh / eng.dot start when
+those rows have landed; eng.add at its end writes the golden post-Engram h rows over rows 0..639 (wrow = H_BASE, the
+rows in coef.mem, as the hcx ops land the golden coefficient rows); H_LOAD depends on eng.add and its f_inp waits on
+that write, so the real HC master's attn hc_pre / hc_post consume the post-Engram h.
+
 Files (<out>/): prog.txt (port arg dur np p0..p3 ph cmsg wrow), stim.txt (field phases), coll_msg.txt (mode nrec),
 coll_own.mem (record r, die d at line 4r+d), y_gold.mem (the all-reduce words the HC must receive, in order),
 vm_boot.mem (gain rows), coef.mem (row data written by hcx ops: "@row" + data), payload.mem (640 h rows),
@@ -41,6 +49,8 @@ G_BASE, C_BASE, O_BASE, S_BASE, H_BASE = 1280, 2560, 3072, 6144, 0
 HX_PORT, HC_PORT, COLL_PORT = 9, 2, 3
 GATHER_REC = {'router_allgather': 4, 'a_allgather': 12, 'rows_allgather': 64, 'idx.topk_merge': 8}
 SU_IN_NORM = {'attn': ['quant'], 'ffn': ['norm.scale', 'quant']}
+PINNED = ('L0', 'L2')                                   # the layers of the pinned su_cases pickle (hc_gate.chains_golden)
+ENG_PORT = 10
 
 
 def hc_arg(kind, base, gsel=0, quant=0, yout=0):
@@ -72,7 +82,7 @@ def layer_ops(progdir, L):
         p = json.loads(f.read_text())
         loc = {o['op']: o['id'] for o in p['ops']}
         for o in p['ops']:
-            if o['id'].startswith(f'{L}.attn.') or o['id'].startswith(f'{L}.ffn.'):
+            if o['id'].startswith((f'{L}.attn.', f'{L}.ffn.', f'{L}.eng.')):
                 ops.append(dict(o, preds_id=[loc[q] for q in o['preds']]))
     return ops
 
@@ -81,7 +91,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('out', type=Path)
     ap.add_argument('--cases', required=True)
-    ap.add_argument('--layer', default='L0', choices=['L0', 'L2'])
+    ap.add_argument('--layer', default='L0', help='L0 / L2 (the pinned pickle) or a layer of the --chain fixture (L14)')
+    ap.add_argument('--chain', default=None, help='HC chain fixture (tools/s81_ctrl/die_layer_chain.py) for a layer '
+                    'the pinned pickle does not hold')
     ap.add_argument('--ng', type=int, default=16)
     ap.add_argument('--seed', type=int, default=11)
     ap.add_argument('--programs', type=Path, default=ROOT / 'results/rtl/s81_ctrl_20261008/programs')
@@ -92,10 +104,19 @@ def main():
 
     # ------------------------------------------------------------------ golden chain (hc_gate.chains_golden)
     cases = pickle.loads(Path(a.cases).read_bytes())
-    ch = HG.chains_golden(cases)[0 if a.layer == 'L0' else 1]
+    fx = None
+    if a.layer in PINNED:
+        ch = HG.chains_golden(cases)[PINNED.index(a.layer)]
+    else:
+        assert a.chain, f'{a.layer} is not in the pinned pickle: --chain <fixture> required'
+        import die_layer_chain
+        fx = die_layer_chain.load(a.chain, a.layer)
+        ch = fx['chain']
     run = HG.Run(a.ng)
     h = np.asarray(ch['h'], np.float32).reshape(HG.HC, D)
-    payload = run.h_rows(h)
+    # the HIDDEN payload is the layer-ENTRY h; on an Engram layer the HC reads h only after eng.add rewrote the rows
+    payload = run.h_rows(np.asarray(ch.get('h_in', ch['h']), np.float32).reshape(HG.HC, D))
+    eng_rows = run.h_rows(h) if fx is not None and fx['engram'] else None
     gold = {}
     for b, blk in enumerate(('attn', 'ffn')):
         pre, w, eps, comb, post, y = ch[blk]
@@ -123,6 +144,11 @@ def main():
 
     # ------------------------------------------------------------------ program rewrite (by name, then topological)
     src = layer_ops(a.programs, a.layer)
+    eng_ops = [o['id'] for o in src if o['id'].startswith(f'{a.layer}.eng.')]
+    assert bool(eng_ops) == (eng_rows is not None), (a.layer, eng_ops, 'Engram ops need an Engram chain fixture')
+    if eng_ops:
+        for q, row in enumerate(eng_rows):
+            coef[H_BASE + q] = row
     nodes = {}
 
     def add(name, port, dur, preds, arg=None, cmsg=-1, wrow=-1, eng='', order=0.0):
@@ -132,13 +158,19 @@ def main():
     L = a.layer
     add(f'{L}.hc.gain_attn', HC_PORT, 0, [], hc_arg(5, G_BASE, gsel=0), eng='hc', order=-3)
     add(f'{L}.hc.gain_ffn', HC_PORT, 0, [], hc_arg(5, G_BASE + HG.GROWS, gsel=1), eng='hc', order=-2)
-    add(f'{L}.hc.h_load', HC_PORT, 0, [], hc_arg(0, H_BASE), eng='hc', order=-1)
+    add(f'{L}.hc.h_load', HC_PORT, 0, [f'{L}.eng.add'] if eng_ops else [], hc_arg(0, H_BASE), eng='hc',
+        order=([o['id'] for o in src].index(f'{L}.eng.add') + 0.5 if eng_ops else -1))
     alias = {f'{L}.{blk}.{s}': f'{L}.{blk}.hc_pre' for blk in SU_IN_NORM for s in SU_IN_NORM[blk]}
     names = {o['id'] for o in src}
     msgs = []
     for i, o in enumerate(src):
         nm = o['id']
         blk = nm.split('.')[1]
+        if blk == 'eng':               # behavioural Engram (port 10): eng.add lands the golden post-Engram h rows
+            assert o['port'] == ENG_PORT and o['eng'] == 'eng', o
+            add(nm, ENG_PORT, o['dur'], [p for p in o['preds_id'] if p in names],
+                wrow=(H_BASE if nm == f'{L}.eng.add' else -1), eng='eng', order=i)
+            continue
         b = 0 if blk == 'attn' else 1
         tail = nm.split('.', 2)[2]
         if nm in alias:
@@ -146,6 +178,8 @@ def main():
         preds = [alias.get(p, p) for p in o['preds_id'] if alias.get(p, p) in names]
         if blk == 'ffn' and tail in ('hc.fn', 'hc.sumsq', 'hc_pre'):
             preds.append(f'{L}.attn.hc_post')            # the ffn block reads the h the attn hc_post wrote
+        if eng_ops and blk == 'attn' and tail == 'hc_pre':
+            preds = [p for p in preds if p != f'{L}.eng.add'] + [f'{L}.hc.h_load']   # h reaches the HC through H_LOAD
         if o['eng'] == 'hc':
             if tail == 'hc_pre':
                 add(f'{L}.{blk}.hc.coef', HC_PORT, 0, [f'{L}.{blk}.hc.pre_post', f'{L}.{blk}.hc.sinkhorn'],
@@ -232,6 +266,14 @@ def main():
                 y_words=len(ygold), exp_rows=len(run.exp), hstore_rows=nst, golden_checks_vs_pickle=4,
                 program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'], preds=o['preds']) for k, o in enumerate(prog)],
                 cases_sha256=HG.sha(a.cases))
+    if fx is not None:
+        meta.update(chain_fixture_sha256=HG.sha(a.chain), chain_schema=fx['schema'], chain_checks=fx['checks'],
+                    shard=fx['shard'], shard_sha256=fx['shard_sha256'], golden_checks_vs_pickle=0,
+                    golden_checks_vs_shard=4, payload='layer-entry h (shard h_in)',
+                    engram=dict(ops=eng_ops, port=ENG_PORT, hosting='BEHAVIOURAL at program duration (not Engram RTL)',
+                                h_rows_written_by=f'{L}.eng.add at its end: {len(eng_rows)} golden post-Engram h rows '
+                                                  f'(shard {L}.engram) over VM rows {H_BASE}..{H_BASE + len(eng_rows) - 1}',
+                                h_load_pred=f'{L}.eng.add') if eng_ops else None)
     (a.out / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
     print(f"{a.layer}: {len(prog)} ops, {nph} field phases, {len(msgs)} coll messages ({len(own)} records, "
           f"{len(ygold)} y words), {len(run.exp)} golden VM rows ({nst} H_STORE)")

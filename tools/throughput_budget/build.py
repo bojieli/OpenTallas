@@ -185,6 +185,9 @@ BF_HIER = dict(
     src="results/rtl/s81_bf_arch_20261009/bench/{tcg0,hcol}.json + compose/price.json")
 
 # ROM blocks outside every token-path class: (regex, model, class, forced status or None = the class's, ratio, why)
+S81_LAYER_RECORD = ROOT / "results/rtl/s81_layer_tput_1013/record.json"
+S81_HC_GROUPS = ("SU.HC_POST", "SU.HC_PRE_NORM")
+S81_HC_ELEMENTS = r"^(ot_s81_hc_|ot_dsrom_su_hcpost)"     # the hardened tiles of the HC slab dsfd_sp_hc (HIER) + its POST lane
 ROM_RULES = [
     (r"^ot_s81_bf_native$", "ds_rom", "field", None, None, "bf-hier-1011: HALF_PHL BF, now the fallback (field class)"),
     (r"^(dsfd_m2l_|dsfd_l2r_|dsfd_r2l_|dsfd_stn|dsfd_hstnh_|ot_meso_fifo_|ot_dsrom_ring_dyn)", "ds_rom", "field", None, None,
@@ -949,6 +952,41 @@ def main():
         el[e] = dict(status="EXEMPT", ratio=None, limiting=dict(op="exempt:" + kind, model=(prev or {}).get("model", "-"),
                      status="EXEMPT", ratio=None, owner="tput-map-1011", src=why), ops=(cur or {}).get("ops", []), exempt=kind)
         exempt[e] = dict(kind=kind, why=why, applied=True)
+    # ---- S81 per-layer qualification (owner 2026-10-13: ROM throughput is qualified by a per-layer measured run of
+    # the die composition; unit benches only for critical-path units).  (a) HC slab tiles: the production-shape HC gate
+    # (NG 256, hierarchical slab) is the critical-path unit bench; its ratios are the accepted-cost ledger rows of the
+    # groups below (ACCEPTED once the row is accepted, UNQUALIFIED while it is only proposed).  (b) an element the
+    # per-layer record lists under "registry" takes that row (QUALIFIED by layer with its ratio, or UNQUALIFIED).
+    # Every other S81 entry without a measured ratio reads UNMEASURED (put() above).
+    s81_layer = dict(record=None, hc_rows=[], by_layer=[], hc_elements=[])
+    led = ROOT / "results/arch/accepted_cost_ledger_1013.json"
+    hc_rows = [r for r in (json.loads(led.read_text()).get("rows", []) if led.exists() else [])
+               if r.get("design") == "s81" and r.get("group") in S81_HC_GROUPS and r.get("status") in ("accepted", "proposed")]
+    if hc_rows:
+        for e in sorted(x for x in el if re.match(S81_HC_ELEMENTS, x)):
+            ents = [dict(model="ds_rom", op="HC unit bench: " + r["group"],
+                         status="ACCEPTED" if r["status"] == "accepted" else "UNQUALIFIED", ratio=r["unit_ratio"],
+                         owner="rom-layer-tput-s81", src=f"{r['evidence']}: {r['measured']:g} / {r['price']:g} cycles, e2e loss "
+                         f"{r['e2e_loss_pct']} % ({r['binding_workload']}), ledger row {r['status']}") for r in hc_rows]
+            keep = [o for o in el[e]["ops"] if not o["op"].startswith("class:")]
+            el.pop(e)
+            for o in keep + ents:
+                put(e, o["model"], o["op"], o["status"], o["ratio"], o["owner"], o["src"])
+            s81_layer["hc_elements"].append(e)
+        s81_layer["hc_rows"] = [dict(group=r["group"], ratio=r["unit_ratio"], status=r["status"], e2e_loss_pct=r["e2e_loss_pct"]) for r in hc_rows]
+    if S81_LAYER_RECORD.exists():
+        lrec = json.loads(S81_LAYER_RECORD.read_text())
+        s81_layer["record"] = str(S81_LAYER_RECORD.relative_to(ROOT))
+        for e, r in sorted((lrec.get("registry") or {}).items()):
+            if e not in el:
+                continue
+            keep = [o for o in el[e]["ops"] if not o["op"].startswith("class:")]
+            el.pop(e)
+            for o in keep:
+                put(e, o["model"], o["op"], o["status"], o["ratio"], o["owner"], o["src"])
+            put(e, "ds_rom", "layer:" + r["op"], "QUALIFIED" if r["ratio"] <= QUAL else "UNQUALIFIED", r["ratio"],
+                "rom-layer-tput-s81", s81_layer["record"] + ": " + r["basis"])
+            s81_layer["by_layer"].append(e)
     # ---- build gate: priced ops (per variant) with their native-RTL evidence
     RATES = {"DS": ["DS AR fixed-RTL 2,121.8 tok/s (results/arch/hgi_sim_20261010/ds_rates_g25.json AR.fixed_rtl)",
                     "DS MTP fixed-RTL 3,640.3 tok/s (ds_rates_g25.json MTP.fixed_rtl)",
@@ -978,6 +1016,7 @@ def main():
                rule="AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when "
                     "bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
                qualify_ratio=QUAL,
+               s81_layer=s81_layer,
                hbm_bandwidth_rule="no fixed fraction of HBM peak; fetches are overlapped as the S2 schedule models; "
                                   "a weight / KV path needs only its overlap-aware minimum (owner 10-10 06:58)",
                targets=dict(ds_ar=DS_TARGET, ds_mtp=dict(tau=DS_MTP_TAU, fixed_rtl_tok_s=3640.3,
