@@ -9,7 +9,7 @@ jobs=${2:-32}
 here=rtl/hbm_accel/generic/adapters/native_b2
 mkdir -p "$out"
 if [[ -e $out/source.sha256 ]]; then echo refuse_overwriting_receipt; exit 2; fi
-VER=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator
+VER=${VERILATOR:-/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator}   # VERILATOR=<path> overrides
 [[ -x $VER ]] || VER=$(command -v verilator)
 mapfile -t src < <(python3 - <<'P'
 import os, sys
