@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_su_swiglu_lane_m5-m5-5b76815db/record/views/ot_dsrom_su_swiglu_lane/ot_dsrom_su_swiglu_lane.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 165 of 165 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a[0] M4 (215.773,150.480), a[10] M4 (215.773,150.480), a[11] M4 (215.773,150.480))"
+ ],
+ "summary": "ot_dsrom_su_swiglu_lane 216.0 x 216.0: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 165 blocked-above 0 blocked-same 0; clock clk insertion 328 ps",
+ "info": {
+  "cell": "ot_dsrom_su_swiglu_lane",
+  "W": 216.0,
+  "H": 216.0,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 40,
+     "dir": "V",
+     "spread": 0.975,
+     "coverage": 1.0,
+     "shapes_on_top": 40
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 40,
+     "dir": "V",
+     "spread": 0.975,
+     "coverage": 1.0,
+     "shapes_on_top": 40
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 165,
+   "blocked_above": 0,
+   "covered_below": 30,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 165,
+   "band_examples": [
+    "a[0] M4 (215.773,150.480)",
+    "a[10] M4 (215.773,150.480)",
+    "a[11] M4 (215.773,150.480)",
+    "a[12] M4 (215.773,150.480)",
+    "a[13] M4 (215.773,150.480)",
+    "a[14] M4 (215.773,150.480)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 327.93,
+    "min_ps": 246.03
+   }
+  }
+ }
+}
