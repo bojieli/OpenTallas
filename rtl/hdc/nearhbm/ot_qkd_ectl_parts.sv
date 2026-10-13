@@ -108,10 +108,12 @@ module ot_qkd_ectl_part #(
     // seams: the E-face control word west (C pin flops -> B pin flops -> A pin flops), the row response east
     input  wire [51:0]          x_i,
     output wire [51:0]          x_o,
-    input  wire                 rsv_i,
-    output wire                 rsv_o,
+    input  wire                 rsv_i,        // rsp_valid: A stage 2 -> B pin (B) | B feed-through -> C pin (C)
+    output wire                 rsv_o,        // A: stage 2 (E-face flop); B: the feed-through flop (to C)
+    input  wire                 rvm_i,        // B: A's second capture flop of rsp_valid (stage 1) -> the feed-through
+    output wire                 rvm_o,        // A: second capture flop of rsp_valid (stage 1, mid-leaf: not a pin flop)
     input  wire [511:0]         rsd_i,
-    output wire [511:0]         rsd_o,
+    output wire [511:0]         rsd_o,        // A: E-face flops (stage 2) of row bits [1023:512]
     // head-tile faces (S: t0, N: t1)
     output wire [3:0]           t0_c,
     output wire [3:0]           t1_c,
@@ -173,7 +175,7 @@ module ot_qkd_ectl_part #(
     endgenerate
     // ---- registered boundary: every control copy sees each die input THREE flops after its pin ----------------------------
     // E face (leaf C): {q_valid, nb_cr, exp_done 32, cyc8 3, T 14, start}: C pin -> C +2 | C pin -> B pin -> B +1 | -> A pin
-    // W face (leaf A): rsp_valid (+ the row word for the leaves that hold a slice): A pin -> A +2 | A pin -> B pin -> B +1 | -> C pin
+    // W face (leaf A): rsp_valid (+ the row word for the leaves that hold a slice): A pin -> A +2 | A pin -> A E face -> B pin | A mid -> B mid -> C pin
     localparam integer XW = 52;
     reg  [XW-1:0] x1, x2, x3;
     wire [XW-1:0] x_d = (PART == 3) ? {q_valid_in, nb_cr, exp_done, cyc8_in, T_in, start_in} : x_i;
@@ -193,25 +195,31 @@ module ot_qkd_ectl_part #(
     wire        ocr_q      = xv[50];
     wire        qv_r       = xv[51];
     wire [2:0]  cyc8 = cyc8_r + 3'd3;                     // the free-running counter's current value
-    reg             rv1, rv2, rv3;
+    // rsp_valid: A rv1 (W pin) -> rv2 (E face, to B) -> rv3 | B rv1 (pin, from A rv2) | C rv1 (pin, from B's feed-through)
+    // A's second capture flop rvm and B's feed-through bf (one flop each, placed mid-leaf by the placer: 128 um a side)
+    // carry stage 1 / stage 2 of the valid to C, so that C's pin flop is the third as well.
+    reg             rv1, rv2, rv3, rvm, bf;
     reg  [HD*8-1:0] rsp_data_p;                           // A: W-face pin flops of the whole word
+    reg  [511:0]    rse;                                  // A: E-face flops of B's half (stage 2)
     reg  [RWD-1:0]  rd2, rd3;
     wire            rv_d = (PART == 1) ? rsp_valid_in : rsv_i;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rv1 <= 1'b0; rv2 <= 1'b0; rv3 <= 1'b0; end
-        else begin rv1 <= rv_d; rv2 <= rv1; rv3 <= rv2; end
-    wire            rsp_valid = (PART == 1) ? rv3 : (PART == 2) ? rv2 : rv1;
-    assign rsv_o = rv1;
-    assign rsd_o = rsp_data_p[HD*8-1 -: 512];
+        if (!rst_n) begin rv1 <= 1'b0; rv2 <= 1'b0; rv3 <= 1'b0; rvm <= 1'b0; bf <= 1'b0; end
+        else begin rv1 <= rv_d; rv2 <= rv1; rv3 <= rv2; rvm <= rsp_valid_in; bf <= rvm_i; end
+    wire            rsp_valid = (PART == 1) ? rv3 : rv1;
+    assign rsv_o = (PART == 1) ? rv2 : bf;
+    assign rvm_o = rvm;
+    assign rsd_o = rse;
     always @(posedge clk) begin
         rsp_data_p <= rsp_data_in;
+        rse <= rsp_data_p[HD*8-1 -: 512];
         rd2 <= (PART == 1) ? rsp_data_p[RLO +: RWD] : rsd_i[RWD-1:0];
         rd3 <= rd2;
     end
 `ifdef KVD_ECTL3_MUT_A
-    wire [RWD-1:0]  rsp_data = (PART == 1) ? rd2 : rd3;   // mutant: leaf A's row slice one cycle early against its push
+    wire [RWD-1:0]  rsp_data = (PART == 1) ? rd2 : rd2;   // mutant: leaf A's row slice one cycle early against its push
 `else
-    wire [RWD-1:0]  rsp_data = rd3;                       // third flop after the W pin in both slice leaves
+    wire [RWD-1:0]  rsp_data = (PART == 1) ? rd3 : rd2;   // third flop after the W pin: A local, B its pin flop
 `endif
     reg             er_valid_g, er_valid_o;     // generator register, E-face pin flop
     reg  [11:0]     er_addr_g, er_addr_o;
@@ -642,22 +650,34 @@ module ot_qkd_efifo2 #(parameter integer D1 = 4) (
 `endif
     wire       to_sram = push && !to_l1;
     wire       rd      = (scnt != 8'd0) && (l1_pend + (to_l1 ? 1 : 0) < D1);
-    // 128 explicit 64-bit registers (no memory array: synthesis needs no memory-bits override) and a 7-level read mux
-    // tree (heap order: node i selects on srp[6 - depth(i)], leaves 127 .. 254 = entries 0 .. 127)
-    wire [63:0] mx [0:254];
+    // 128 explicit 64-bit registers (no memory array: synthesis needs no memory-bits override) and, per pair of word bits,
+    // a 7-level read mux tree with its OWN kept copy of the read pointer (ot_nhb_rp_h advances with rd exactly as srp;
+    // one pointer for all 64 trees drove 8,194 select loads).  Heap order: node i selects on rp[6 - depth(i)], leaves
+    // 127 .. 254 = entries 0 .. 127.
+    wire [64*128-1:0] ent;
+    wire [63:0] srd_n;
     reg  [63:0] srd;
-    genvar e;
+    genvar e, b;
     generate
         for (e = 0; e < 128; e = e + 1) begin : g_ent
             reg [63:0] r;
             always @(posedge clk) if (to_sram && swp == e) r <= din;
-            assign mx[127 + e] = r;
+            assign ent[64*e +: 64] = r;
         end
-        for (e = 0; e < 127; e = e + 1) begin : g_mx
-            assign mx[e] = srp[6 - ($clog2(e + 2) - 1)] ? mx[2*e + 2] : mx[2*e + 1];
+        for (b = 0; b < 32; b = b + 1) begin : g_rd
+            wire [6:0] rp;
+            (* keep_hierarchy *) ot_nhb_rp_h #(.AW(7), .D(128)) u_rp (.clk(clk), .rst_n(rst_n), .pop(rd), .q(rp));
+            wire [1:0] mx [0:254];
+            for (e = 0; e < 128; e = e + 1) begin : g_leaf
+                assign mx[127 + e] = ent[64*e + 2*b +: 2];
+            end
+            for (e = 0; e < 127; e = e + 1) begin : g_mx
+                assign mx[e] = rp[6 - ($clog2(e + 2) - 1)] ? mx[2*e + 2] : mx[2*e + 1];
+            end
+            assign srd_n[2*b +: 2] = mx[0];
         end
     endgenerate
-    always @(posedge clk) if (rd) srd <= mx[0];
+    always @(posedge clk) if (rd) srd <= srd_n;
     wire        l1_push = to_l1 || rd_v;
     wire [63:0] l1_din = rd_v ? srd : din;
     ot_nhb_fifo_rows_r_h #(.W(64), .D(D1)) u_l1 (.clk(clk), .rst_n(rst_n), .push(l1_push), .din(l1_din), .pop(pop),
@@ -684,14 +704,15 @@ module qkd_ectl_a (
     output wire [511:0]  t0_row,         // S / N: row bits [511:0] for the two head-tile pairs
     output wire [511:0]  t1_row,
     input  wire [51:0]   x_i,            // E seam: control word from B
-    output wire [512:0]  rs_o            // E seam: {row bits [1023:512] 512, rsp_valid} pin-flop outputs to B
+    output wire [512:0]  rs_o,           // E seam: {row bits [1023:512] 512, rsp_valid}, E-face flops (stage 2), to B
+    output wire          rvm_o           // E seam: rsp_valid stage 1 (for C, through B's feed-through)
 );
     ot_qkd_ectl_part #(.PART(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
         .start_in(1'b0), .T_in(14'd0), .cyc8_in(3'd0), .q_valid_in(1'b0), .q_beat_in(6'd0), .q_data_in(512'd0),
         .exp_done(32'd0), .nb_cr(1'b0), .er_data(64'd0), .er_valid(), .er_addr(), .sc_valid(), .sc_addr(), .sc_data(),
         .lmax(), .lmax_any(), .nb_valid(), .nb_beat(), .nb_g(), .nb_gam(), .k_done(), .v_done(), .fault(), .ev_k_first(),
         .ev_v_first(), .req_valid(rq[0]), .req_v(rq[1]), .req_g(rq[2]), .req_t(rq[15:3]), .rsp_valid_in(rs[0]),
-        .rsp_data_in(rs[1024:1]), .x_i(x_i), .x_o(), .rsv_i(1'b0), .rsv_o(rs_o[0]), .rsd_i(512'd0), .rsd_o(rs_o[512:1]),
+        .rsp_data_in(rs[1024:1]), .x_i(x_i), .x_o(), .rsv_i(1'b0), .rsv_o(rs_o[0]), .rvm_i(1'b0), .rvm_o(rvm_o), .rsd_i(512'd0), .rsd_o(rs_o[512:1]),
         .t0_c(), .t1_c(), .t0_row(t0_row), .t1_row(t1_row), .t0_e(), .t1_e(), .t0_lt(), .t1_lt(), .t0_qv(), .t1_qv(),
         .t0_qb(), .t1_qb(), .t0_qd(), .t1_qd(), .ts0_sc(64'd0), .ts1_sc(64'd0), .ts0_sf(2'd0), .ts1_sf(2'd0),
         .ts0_gf(2'd0), .ts1_gf(2'd0));
@@ -706,7 +727,8 @@ module qkd_ectl_b (
     output wire [15:0]   t0_cl,          // S / N: {lt 12, c 4}
     output wire [15:0]   t1_cl,
     input  wire [512:0]  rs_i,           // W seam: from A
-    output wire [51:0]   x_o,            // W seam: control word to A
+    input  wire          rvm_i,          // W seam: rsp_valid stage 1 from A (feed-through to C)
+    output wire [51:0]   x_o,            // W seam: control word to A (the feed-through flops of x_i)
     input  wire [51:0]   x_i,            // E seam: control word from C
     output wire          rsv_o           // E seam: rsp_valid to C
 );
@@ -715,7 +737,7 @@ module qkd_ectl_b (
         .exp_done(32'd0), .nb_cr(1'b0), .er_data(64'd0), .er_valid(), .er_addr(), .sc_valid(), .sc_addr(), .sc_data(),
         .lmax(), .lmax_any(), .nb_valid(), .nb_beat(), .nb_g(), .nb_gam(), .k_done(), .v_done(), .fault(), .ev_k_first(),
         .ev_v_first(), .req_valid(), .req_v(), .req_g(), .req_t(), .rsp_valid_in(1'b0), .rsp_data_in(1024'd0),
-        .x_i(x_i), .x_o(x_o), .rsv_i(rs_i[0]), .rsv_o(rsv_o), .rsd_i(rs_i[512:1]), .rsd_o(),
+        .x_i(x_i), .x_o(x_o), .rsv_i(rs_i[0]), .rsv_o(rsv_o), .rvm_i(rvm_i), .rvm_o(), .rsd_i(rs_i[512:1]), .rsd_o(),
         .t0_c(t0_cl[3:0]), .t1_c(t1_cl[3:0]), .t0_row(t0_row), .t1_row(t1_row), .t0_e(), .t1_e(), .t0_lt(t0_cl[15:4]),
         .t1_lt(t1_cl[15:4]), .t0_qv(), .t1_qv(), .t0_qb(), .t1_qb(), .t0_qd(), .t1_qd(), .ts0_sc(64'd0), .ts1_sc(64'd0),
         .ts0_sf(2'd0), .ts1_sf(2'd0), .ts0_gf(2'd0), .ts1_gf(2'd0));
@@ -741,7 +763,7 @@ module qkd_ectl_c (
         .lmax(so[409:154]), .lmax_any(so[411:410]), .nb_valid(so[412]), .nb_beat(so[416:413]), .nb_g(so[417]),
         .nb_gam(so[421:418]), .k_done(so[422]), .v_done(so[423]), .fault(so[424]), .ev_k_first(), .ev_v_first(),
         .req_valid(), .req_v(), .req_g(), .req_t(), .rsp_valid_in(1'b0), .rsp_data_in(1024'd0),
-        .x_i(52'd0), .x_o(x_o), .rsv_i(rsv_i), .rsv_o(), .rsd_i(512'd0), .rsd_o(),
+        .x_i(52'd0), .x_o(x_o), .rsv_i(rsv_i), .rsv_o(), .rvm_i(1'b0), .rvm_o(), .rsd_i(512'd0), .rsd_o(),
         .t0_c(), .t1_c(), .t0_row(), .t1_row(), .t0_e({e1, e0}), .t1_e({e3, e2}), .t0_lt(), .t1_lt(),
         .t0_qv(t0_q[0]), .t1_qv(t1_q[0]), .t0_qb(t0_q[6:1]), .t1_qb(t1_q[6:1]), .t0_qd(t0_q[518:7]), .t1_qd(t1_q[518:7]),
         .ts0_sc({s1[31:0], s0[31:0]}), .ts0_sf({s1[32], s0[32]}), .ts0_gf({s1[33], s0[33]}),
@@ -769,12 +791,12 @@ module qkd_ectl3 #(
     wire [4:0]   cfg = {3'(E), 2'(S)};
     wire [51:0]  x_cb, x_ba;
     wire [512:0] rs_ab;
-    wire         rsv_bc;
+    wire         rsv_bc, rvm_ab;
     wire [511:0] a0, a1, b0, b1;
     wire [15:0]  c0, c1;
     wire [518:0] q0, q1;
-    qkd_ectl_a u_a (.ck(ck), .rst_n(rst_n), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(a0), .t1_row(a1), .x_i(x_ba), .rs_o(rs_ab));
-    qkd_ectl_b u_b (.ck(ck), .rst_n(rst_n), .cfg(cfg), .t0_row(b0), .t1_row(b1), .t0_cl(c0), .t1_cl(c1), .rs_i(rs_ab),
+    qkd_ectl_a u_a (.ck(ck), .rst_n(rst_n), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(a0), .t1_row(a1), .x_i(x_ba), .rs_o(rs_ab), .rvm_o(rvm_ab));
+    qkd_ectl_b u_b (.ck(ck), .rst_n(rst_n), .cfg(cfg), .t0_row(b0), .t1_row(b1), .t0_cl(c0), .t1_cl(c1), .rs_i(rs_ab), .rvm_i(rvm_ab),
         .x_o(x_ba), .x_i(x_cb), .rsv_o(rsv_bc));
     qkd_ectl_c u_c (.ck(ck), .rst_n(rst_n), .cfg(cfg), .si(si), .so(so), .e0(e0), .e1(e1), .e2(e2), .e3(e3), .s0(s0),
         .s1(s1), .s2(s2), .s3(s3), .t0_q(q0), .t1_q(q1), .rsv_i(rsv_bc), .x_o(x_cb));
