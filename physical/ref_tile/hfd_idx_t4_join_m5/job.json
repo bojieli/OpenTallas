@@ -1,5 +1,5 @@
 {
- "name": "hfd_idx_t4_join_m5-m5-COMMIT",
+ "name": "hfd_idx_t4_join_m5-m5-5b76815db",
  "block": "hfd_idx_t4_join",
  "ref_tile": true,
  "owner": "Claude:el1011-reroute-m5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/el1011-reroute-m5",
-  "commit": "COMMIT"
+  "commit": "5b76815db"
  },
  "stages": {
   "bench": [
@@ -127,7 +127,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hfd_idx_t4_join_m5/hfd_idx_t4_join_m5-m5-COMMIT"
+   "to": "results/rtl/ref_tile/hfd_idx_t4_join_m5/hfd_idx_t4_join_m5-m5-5b76815db"
   }
  ],
  "cycles_added": 0,

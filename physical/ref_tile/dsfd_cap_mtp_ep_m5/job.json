@@ -1,5 +1,5 @@
 {
- "name": "dsfd_cap_mtp_ep_m5-m5-COMMIT",
+ "name": "dsfd_cap_mtp_ep_m5-m5-5b76815db",
  "block": "dsfd_cap_mtp_ep",
  "ref_tile": true,
  "owner": "Claude:el1011-reroute-m5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-reroute-m5",
-  "commit": "COMMIT"
+  "commit": "5b76815db"
  },
  "stages": {
   "bench": [
@@ -155,7 +155,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_cap_mtp_ep_m5/dsfd_cap_mtp_ep_m5-m5-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_cap_mtp_ep_m5/dsfd_cap_mtp_ep_m5-m5-5b76815db"
   }
  ],
  "cycles_added": 0,

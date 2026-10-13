@@ -1,5 +1,5 @@
 {
- "name": "hfd_att_su_relay_m5-m5-COMMIT",
+ "name": "hfd_att_su_relay_m5-m5-5b76815db",
  "block": "hfd_att_su_relay",
  "ref_tile": true,
  "owner": "Claude:el1011-reroute-m5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1011-reroute-m5",
-  "commit": "COMMIT"
+  "commit": "5b76815db"
  },
  "stages": {
   "bench": [
@@ -85,7 +85,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hfd_att_su_relay_m5/hfd_att_su_relay_m5-m5-COMMIT"
+   "to": "results/rtl/ref_tile/hfd_att_su_relay_m5/hfd_att_su_relay_m5-m5-5b76815db"
   }
  ],
  "cycles_added": 0,

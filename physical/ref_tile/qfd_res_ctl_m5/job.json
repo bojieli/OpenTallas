@@ -1,5 +1,5 @@
 {
- "name": "qfd_res_ctl_m5-m5-COMMIT",
+ "name": "qfd_res_ctl_m5-m5-5b76815db",
  "block": "ot_qfd_res_tiles_ctl",
  "ref_tile": true,
  "owner": "Claude:el1011-reroute-m5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/el1011-reroute-m5",
-  "commit": "COMMIT"
+  "commit": "5b76815db"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_res_ctl_m5/qfd_res_ctl_m5-m5-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_res_ctl_m5/qfd_res_ctl_m5-m5-5b76815db"
   }
  ],
  "cycles_added": 0,

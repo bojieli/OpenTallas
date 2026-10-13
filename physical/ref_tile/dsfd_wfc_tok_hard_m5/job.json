@@ -1,5 +1,5 @@
 {
- "name": "dsfd_wfc_tok_hard_m5-m5-COMMIT",
+ "name": "dsfd_wfc_tok_hard_m5-m5-5b76815db",
  "block": "dsfd_wfc_tok_hard",
  "ref_tile": true,
  "owner": "Claude:el1011-reroute-m5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-reroute-m5",
-  "commit": "COMMIT"
+  "commit": "5b76815db"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_wfc_tok_hard_m5/dsfd_wfc_tok_hard_m5-m5-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_wfc_tok_hard_m5/dsfd_wfc_tok_hard_m5-m5-5b76815db"
   }
  ],
  "cycles_added": 0,
