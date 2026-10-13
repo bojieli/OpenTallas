@@ -47,7 +47,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('plan'); ap.add_argument('out'); ap.add_argument('--ser', type=int, default=1)
     ap.add_argument('--pad-density', type=int, default=1); ap.add_argument('--label', default=''); ap.add_argument('--wcong', type=float, default=0.3); ap.add_argument('--bcong', type=float, default=0.2)
     ap.add_argument('--debug', action='store_true'); ap.add_argument('--slack', type=int, default=0); ap.add_argument('--hopw', type=float, default=0.25); ap.add_argument('--passes', type=int, default=12)
-    ap.add_argument('--repair', type=int, default=3); ap.add_argument('--pf0', type=float, default=0.5); ap.add_argument('--pfg', type=float, default=1.6); ap.add_argument('--hf', type=float, default=0.3)
+    ap.add_argument('--save-routes', default=''); ap.add_argument('--load-routes', default=''); ap.add_argument('--repair', type=int, default=3); ap.add_argument('--pf0', type=float, default=0.5); ap.add_argument('--pfg', type=float, default=1.6); ap.add_argument('--hf', type=float, default=0.3)
     a = ap.parse_args(); d = json.loads(Path(a.net).read_text()); p = json.loads(Path(a.plan).read_text())
     ch = p['children']; bays = p['x_relay_bays']; pins = p['real_pins']; LB = 8 // a.ser
     old = [i for i in d['insts'] if i['n'] not in p['geometry']['removed'] and not i['m'].startswith(('qfd_rly', 'qkd_rly'))]
@@ -167,7 +167,12 @@ def main():
         for k, n in dem.items(): used[k] += sign * n
         return dem
     pf = a.pf0; passes = []
-    for it in range(a.passes):
+    if a.load_routes:                                                # resume: the negotiated routes of an earlier run of the SAME plan
+        import pickle
+        saved = pickle.loads(Path(a.load_routes).read_bytes()); byname = {j['name']: i for i, j in enumerate(jobs)}
+        for n, path in saved['paths'].items(): sol[byname[n]] = (path, place(byname[n], path, +1))
+        passes = saved['passes']
+    for it in range(0 if a.load_routes else a.passes):
         todo = [i for i in range(len(jobs)) if i not in sol or any(used[k] > capof(k) + 1e-6 for k in sol[i][1]) or any(nused[v] > cap[v] for _, v, _ in sol[i][0][:-1])] if it else list(range(len(jobs)))
         for i in todo:
             if i in sol: place(i, sol[i][0], -1); del sol[i]
@@ -212,35 +217,76 @@ def main():
     bad = {i for i in sol if any(used[k] > capof(k) + 1e-6 for k in sol[i][1]) or any(nused[v] > cap[v] for _, v, _ in sol[i][0][:-1])}
     for i in sorted(bad, key=lambda i: jobs[i]['lb']):
         if any(used[k] > capof(k) + 1e-6 for k in sol[i][1]) or any(nused[v] > cap[v] for _, v, _ in sol[i][0][:-1]): place(i, sol[i][0], -1); del sol[i]
+    if a.save_routes:
+        import pickle
+        Path(a.save_routes).write_bytes(pickle.dumps(dict(paths={jobs[i]['name']: v[0] for i, v in sol.items()}, passes=passes)))
     # ---- equalisation: every lane to the common depth D.  A pad stage is a relay with no reach to make: it sits in a bay ON
-    #      the lane's own path (--pad-density 2: pairs go into ot_qfd_vm_xpad2_t, two stages per tile slot).  When the path's
-    #      bays are full, ONE more real relay is inserted in a bay with room between two consecutive path nodes (both new
-    #      hops <= 500 um, their windows booked under hard capacity): it replaces a pad stage and can hold further pads. ----
-    depth = max(DT, max((len(v[0]) - 1 for v in sol.values()), default=0)); pad_bits = 0; pad_fail = 0; pad_tiles2 = 0; inserted = 0
-    padload = collections.defaultdict(float)
-    EM = {u: {e[0]: e for e in E[u]} for u in E}
+    #      the lane's own path (--pad-density 2: pairs go into ot_qfd_vm_xpad2_t, two stages per tile slot).  Pass 1 pads every
+    #      lane in the bays of its routed path.  Pass 2 takes the lanes whose bays are full and routes them again in the
+    #      layered graph (bay, stage): exactly D stages, each a move to another bay (a real relay hop <= 500 um, its windows
+    #      booked under HARD capacity) or a stay (a pad stage), so the lane spends its pads where bays have room. ----
+    depth = max(DT, max((len(v[0]) - 1 for v in sol.values()), default=0)); pad_fail = 0; rerouted_for_pads = 0
+    padload = collections.defaultdict(float); padat = {}
     def spare(b): return cap[b] - nused[b] - padload[b]
-    def fit(keys, bits, credit): return all(used[k] - credit.get(k, 0) + bits <= capof(k) + 1e-6 for k in keys)
-    for i in sorted(sol, key=lambda i: len(sol[i][0])):
-        path, dem = sol[i]; bits = jobs[i]['bits']; rem_ = depth - (len(path) - 1)
+    def charge(nst): return (nst // 2 + nst % 2) if a.pad_density == 2 else nst            # tile-slot units of nst pad stages in one bay
+    def pad_simple(i):
+        path = sol[i][0]; bits = jobs[i]['bits']; rem_ = depth - (len(path) - 1); via = [v for _, v, _ in path[:-1]]; at = collections.Counter()
         while rem_ > 0:
-            via = [v for _, v, _ in path[:-1]]; b = max(via, key=spare); take = min(a.pad_density, rem_)
-            if spare(b) >= bits:
-                padload[b] += bits; pad_bits += take * bits; pad_tiles2 += bits if take == 2 else 0; rem_ -= take; continue
-            ins = None
-            for idx, (u, v, hf) in enumerate(path):
-                credit = collections.Counter(lkeys(u, v, hf)); credit = {k: n * bits for k, n in credit.items()}
-                for w, e1 in EM[u].items():
-                    if w >= NB or w in via or spare(w) < 2 * bits or v not in EM.get(w, {}): continue
-                    e2 = EM[w][v]; o1 = next((h for h, ks in ((True, e1[2]), (False, e1[3])) if fit(ks, bits, credit)), None)
-                    o2 = next((h for h, ks in ((True, e2[2]), (False, e2[3])) if fit(ks, bits, credit)), None)
-                    if o1 is None or o2 is None: continue
-                    k12 = collections.Counter(lkeys(u, w, o1)) + collections.Counter(lkeys(w, v, o2))
-                    if any(used[k] - credit.get(k, 0) + n * bits > capof(k) + 1e-6 for k, n in k12.items()): continue
-                    if ins is None or spare(w) > spare(ins[1]): ins = (idx, w, o1, o2)
-            if ins is None: pad_fail += rem_; break
-            idx, w, o1, o2 = ins; place(i, path, -1); path = path[:idx] + [(path[idx][0], w, o1), (w, path[idx][1], o2)] + path[idx + 1:]
-            sol[i] = (path, place(i, path, +1)); inserted += 1; rem_ -= 1
+            b = max(via, key=lambda n: spare(n) - (charge(at[n] + 1) - charge(at[n])) * bits)
+            add = (charge(at[b] + 1) - charge(at[b])) * bits
+            if spare(b) < add: break
+            padload[b] += add; at[b] += 1; rem_ -= 1
+        padat[i] = at; return rem_
+    def unpad(i):
+        for b, n in padat.pop(i, {}).items(): padload[b] -= charge(n) * jobs[i]['bits']
+    def layered(i, ban):
+        j = jobs[i]; s, g, bits = j['A'], j['Q'], j['bits']; hd = hopd[g]
+        heap = [(0.0, 0, s, -1)]; best = {}; prev = {}; cnt = 0
+        while heap:
+            c, k, u, pu = heapq.heappop(heap)
+            if (u, k) in best: continue
+            best[(u, k)] = c
+            if u == g:
+                seq = []; st = (u, k)
+                while st in prev: seq.append(prev[st][1]); st = prev[st][0]
+                return seq[::-1]
+            if k < depth and u < NB and u not in ban and spare(u) >= 2 * bits and (u, k + 1) not in best and k + 1 + hd.get(u, INF) - 1 <= depth:
+                st = (u, k + 1)
+                if c + 0.15 < prev.get(st, ((), (), float('inf')))[2]: prev[st] = ((u, k), ('stay', u), c + 0.15); heapq.heappush(heap, (c + 0.15, k + 1, u, u))
+            for v, ln, kh, kv in E[u]:
+                if v == g:
+                    if k != depth: continue
+                    k2 = k
+                else:
+                    if v >= NB or k >= depth or spare(v) < bits or k + 1 + hd.get(v, INF) - 1 > depth: continue
+                    k2 = k + 1
+                if (v, k2) in best: continue
+                fh = all(used[x] + bits <= capof(x) + 1e-6 for x in kh); fv = fh or all(used[x] + bits <= capof(x) + 1e-6 for x in kv)
+                if not fv: continue
+                nc = c + 1.0 + ln / 5000.0 + (0.3 * (nused[v] + padload[v]) / cap[v] if v < NB else 0.0); st = (v, k2)
+                if nc < prev.get(st, ((), (), float('inf')))[2]: prev[st] = ((u, k), ('move', u, v, fh), nc); heapq.heappush(heap, (nc, k2, v, u))
+        return None
+    todo2 = [i for i in sorted(sol, key=lambda i: len(sol[i][0])) if pad_simple(i) > 0]
+    for i in todo2:
+        old = sol[i]; bits = jobs[i]['bits']; unpad(i); place(i, old[0], -1); ban = set(); okk = False
+        for _ in range(4):
+            seq = layered(i, ban)
+            if seq is None: break
+            path = [(m[1], m[2], m[3]) for m in seq if m[0] == 'move']; stays = collections.Counter(m[1] for m in seq if m[0] == 'stay')
+            visits = collections.Counter(v for _, v, _ in path[:-1]); dem = collections.Counter()
+            for u, v, hf in path:
+                for x in lkeys(u, v, hf): dem[x] += bits
+            over_b = [b for b in set(visits) | set(stays) if spare(b) < (visits[b] + charge(stays[b])) * bits]
+            if over_b or any(used[x] + n > capof(x) + 1e-6 for x, n in dem.items()):
+                ban |= set(over_b) or set(stays); continue
+            sol[i] = (path, place(i, path, +1)); padat[i] = stays
+            for b, n in stays.items(): padload[b] += charge(n) * bits
+            okk = True; rerouted_for_pads += 1; break
+        if not okk:
+            sol[i] = (old[0], place(i, old[0], +1)); pad_fail += pad_simple(i)
+    pad_bits = sum(n * jobs[i]['bits'] for i, at in padat.items() for n in at.values())
+    pad_tiles2 = sum((n // 2) * jobs[i]['bits'] for i, at in padat.items() for n in at.values()) if a.pad_density == 2 else 0
+    inserted = rerouted_for_pads
     relay_bits = sum(nused.values())
     done = []; fail = [j for i, j in enumerate(jobs) if i not in sol]; legs = []
     for i, (path, dem) in sol.items():
@@ -295,7 +341,7 @@ def main():
         relay_depth=depth, XPR=depth, relay_depth_histogram={str(k): hist[k] for k in sorted(hist)},
         stage_audit=stage_audit, coarse_cuts=coarse, fine_worst=worst[:12], fine_worst_by_axis=worst_by_axis,
         relay=dict(leaf='ot_qfd_vm_xrelay_t (512 b, me-enabled)', bay_tiles=capb // 512, bay_capacity_bits=capb, routed_relay_bits=relay_bits, pad_bits=pad_bits,
-                   pad_density=a.pad_density, pad_stages_unplaced=pad_fail, relays_inserted_for_pads=inserted, spare_bits=round(spare), fill=round(1 - spare / capb, 4),
+                   pad_density=a.pad_density, pad_stages_unplaced=pad_fail, lanes_rerouted_for_pads=inserted, lanes_padded_on_path=len(sol) - len(todo2), spare_bits=round(spare), fill=round(1 - spare / capb, 4),
                    tiles_needed=math.ceil((relay_bits + sum(padload.values())) / 512), pad2_tiles=math.ceil(pad_tiles2 / 512), fullest_bays=[round(v, 3) for v in bayfill[:8]]),
         failed_sample=[j['name'] for j in fail[:12]], failed_by_sink=dict(collections.Counter(j['name'].split('>')[1] for j in fail).most_common(40)),
         route_um=dict(total_bit_mm=round(sum(v['bits'] * v['route_um'] for v in done) / 1e3), max=max((v['route_um'] for v in done), default=0),
