@@ -94,7 +94,7 @@ def candidate_placement(half, cells):
                 places[f"{prefix}.gn.g_s[{stage}].g_c[{c}].g_sn.u_b"] = (x, y + 34 * c, "R0")
         for c in range(3):
             places[f"u_pks.gn.g_s[0].g_c[{c}].g_sn.u_b"] = (1370, 20 + 34*c, "R0")
-            places[f"u_pks.gn.g_s[1].g_c[{c}].g_sn.u_b"] = (1250, 240 + 34*c, "R0")
+            places[f"u_pks.gn.g_s[1].g_c[{c}].g_sn.u_b"] = (1295, [234, 300, 370][c], "R0")
             places[f"u_pc.gn.g_s[1].g_c[{c}].g_sn.u_b"] = (660 + 40*c, 285 - 34*c, "R0")
             places[f"g_y0.u_mid.gn.g_s[2].g_c[{c}].g_sn.u_b"] = (840, 810 + 110*c, "R0")
         for c in range(2):
