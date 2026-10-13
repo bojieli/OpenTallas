@@ -14,8 +14,12 @@ ROOT = Path(__file__).resolve().parents[2]
 SRCS = ['rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv', 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv', 'rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv',
         'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv',
         'rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv', 'rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv',
-        'rtl/lib/ot_async_fifo.sv', 'rtl/lib/ot_reset_sync.sv', 'rtl/common/ot_ratio_cdc_fifo.sv',
-        'physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v']
+        'rtl/lib/ot_async_fifo.sv', 'rtl/lib/ot_reset_sync.sv', 'rtl/common/ot_ratio_cdc_fifo.sv']
+# the SRAM macro is a black box: its behavioural model (64 x 512 registers) is never read
+STUB = """(* blackbox *) module ot_sram_1r1w_64x512_m1_r2c2 (input clk, input r_ce_in, input [5:0] r_addr_in, output [511:0] rd_out,
+    input w_ce_in, input [5:0] w_addr_in, input [511:0] wd_in, input [511:0] w_mask_in, input [1:0] rr_en, input [11:0] rr_addr,
+    input [1:0] cr_en, input [17:0] cr_sel); endmodule
+"""
 LEAVES = ['dsfd_vm_fxs', 'dsfd_vm_fxr', 'dsfd_vm_flt', 'dsfd_vm_fld', 'dsfd_vm_fcc', 'dsfd_vm_fcw', 'dsfd_vm_fcn', 'dsfd_vm_fsr', 'dsfd_vm_clt']
 KIT = ['dsfd_vm_wfc_ep', 'ot_dsrom_mtp_rstsync', 'ot_s81_engine_adapter', 'ot_sram_1r1w_64x512_m1_r2c2']
 CLK = {'ck', 'cks'}
@@ -32,8 +36,9 @@ FF_OK = {'D', 'SRST', 'EN', 'ARST', 'SET', 'CLR'}
 def run(leaf, out, parent=False):
     js = out / f'{leaf}.json'
     bb = (LEAVES if parent else KIT)
-    ys = ''.join(f'read_verilog -sv -DSYNTHESIS -I{ROOT}/rtl/dsrom_sys/s81_ph/vm {ROOT}/{s}\n' for s in SRCS)
-    ys += ''.join(f'blackbox {m}\n' for m in bb if m != leaf)
+    (out / 'sram_stub.v').write_text(STUB)
+    ys = f'read_verilog -sv {out}/sram_stub.v\n' + ''.join(f'read_verilog -sv -DSYNTHESIS -I{ROOT}/rtl/dsrom_sys/s81_ph/vm {ROOT}/{s}\n' for s in SRCS)
+    ys += ''.join(f'blackbox {m}\n' for m in bb if m != leaf and not m.startswith('ot_sram'))
     ys += f'hierarchy -top {leaf}\nproc\nflatten\nopt_expr\nopt_clean\nopt_dff\nopt_expr\nopt_clean\nmemory_collect\nopt_clean\nwrite_json {js}\n'
     (out / f'{leaf}.ys').write_text(ys)
     r = subprocess.run(['yosys', '-q', '-l', str(out / f'{leaf}.log'), str(out / f'{leaf}.ys')], capture_output=True, text=True)
