@@ -85,6 +85,12 @@ COLL = ["-GN=4", "-GLANES=16", "-GTAGW=32", "-GDEPTH=256", "-GLAT=339", "-GBPC_N
 TILE = ["-GGT=6144", "-GNW=18", "-GSMIN=7", "-GCODE_BANKS=5", "-GMEM_EXTRA=1", "-GKV_VB=131072", "-GKV_NH=2"]
 LINK_DEFINES = ["-DGROUPS=6144", "-DCOUNTWIDTH=18", "-DSWIDTH=64", "-DSMAXB=11", "-DTCUTL=7", "-DNWSD=5", "-DXVMD=1",
                 "-DTPD=4", "-DCBANKS=5", "-DSMINV=7"]
+# rom-layer-tput 10-13: QROM_XVM=<n> builds the die with the VM x-read transport at n edges (published selection: 1);
+# a measurement knob for the per-layer cost of extra x-read stages (the TP8 bit-plane VM adds 10), never a release shape
+if os.environ.get("QROM_XVM"):
+    _xvm = int(os.environ["QROM_XVM"])
+    DIE = [f"-GXVM={_xvm}" if g == "-GXVM=1" else g for g in DIE]
+    LINK_DEFINES = [f"-DXVMD={_xvm}" if g == "-DXVMD=1" else g for g in LINK_DEFINES]
 VFLAGS = ["--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
           "-Wno-PINMISSING", "-Wno-LATCH", "-Wno-MULTIDRIVEN"]
 
@@ -156,7 +162,9 @@ def link(bld: Path, steps, prefixes=("die", "coll", "tile")):
         includes.add(f"-I{bld / prefix}")
         includes.update(f"-I{h.parent}" for h in (bld / prefix).rglob("V*.h"))
     exe = bld / "qwen_plain_ar_stream4"
-    sh("link", ["g++", "-std=c++20", "-O2", "-pthread", *LINK_DEFINES, *sorted(includes), HOST,
+    sh("link", ["g++", "-std=c++20", "-O2", "-pthread", *LINK_DEFINES,
+                *(["-DRT_OPTRACE_PA"] if os.environ.get("QROM_OPTRACE") else []),   # op-fetch trace (RT_OPTRACE=1)
+                *sorted(includes), HOST,
                 "-Wl,--start-group", *archives, "-Wl,--end-group",
                 *(f"{vroot}/include/{p}" for p in ("verilated.cpp", "verilated_threads.cpp", "verilated_dpi.cpp")),
                 "-o", exe], bld, steps)
