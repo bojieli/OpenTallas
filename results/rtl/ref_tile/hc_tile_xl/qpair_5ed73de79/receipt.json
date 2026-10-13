@@ -1,0 +1,28 @@
+{
+  "source_commit": "5ed73de79",
+  "command": "XDEF='-DWVM -DSPL=4 -DXMAC -DWMAC -DSYS -DQPAIR' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_hc_unit.sh OUT [MUT]",
+  "remote": "ot-epyc4:/srv/opentallas-scratch/claude/codex-hc-qpair-5ed73de79",
+  "gates": {
+    "exact": {
+      "sha256": "d617ad39435b1540bf942e4a91d825c5a7c09b26f77993b6a3cb1a6aefbbab4e",
+      "detected_pass": true,
+      "detected_fail": false
+    },
+    "mut_mp": {
+      "sha256": "302c8d857dc9d5eba3cab592608fcab0398fbda9d1b668052c7a76af3f0a0f00",
+      "detected_pass": false,
+      "detected_fail": true
+    },
+    "mut_post": {
+      "sha256": "27460ef047828f8f4dfdbbb43ae9181f4e55b47d65ca95b735d1ef657f2c919b",
+      "detected_pass": false,
+      "detected_fail": true
+    },
+    "mut_xl": {
+      "sha256": "7d70709f318932dd8a73a4b4f807081e60185beb76c95fa18fad1b02eb271a69",
+      "detected_pass": false,
+      "detected_fail": true
+    }
+  },
+  "scope": "QPAIR functional assembly exactness; does not qualify residual LOCAL8 candidate00ca532ef or physical timing"
+}

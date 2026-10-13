@@ -1,0 +1,125 @@
+{
+ "name": "hc_tile_ref-c1-7e3baed71",
+ "block": "ot_hgi_hc_tile",
+ "ref_tile": true,
+ "owner": "Claude:el1011-hbm-hcvm",
+ "purpose": "el1011-hbm-hcvm/hc round 5: HC bank tile ot_hgi_hc_tile as a ref_tile CLUSTER = 4 hard lane-group leaves ot_hdc_v41x_hcp_lanes (hc_lanes_ref-r4-6a28f232b CLOSED TT +183.93 / FF +16.65 / DRC 0, child_lint PASS, 204 ps insertion) + glue (4 weight windows x 4 128x256 macros, 2 x-memory 1024x256 macros, request FIFOs, capture + one-hot select regs, descriptor taps). Fixes hc_tile-sys-faa39cbe9 class 1 (one clock root over ~57k sinks): balanced clock spine with leaf targets at each child's insertion; leaves in one column (W face s_i, E face y) so sum_in/sum_out cross no leaf; windows centre band, x macros at the S face; every glue->leaf signal is a register (wd/xd/lvs/sss/ov_r); every output a cluster flop at the face (TOR 1: sum_out + o_* re-registered, since the leaves' y flops sit behind spine + 204 ps child insertion = gate macro->out -771 ps; SYS_LAT +1 per hop; FIFO heads, t_rdy/t_flt); per-window reset regions (860-load reset). Benches: HC unit SYS composition exact + MUT_MP/MUT_POST fail.",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/el1011-hcvm-hc4",
+  "commit": "7e3baed711cc88ce5c649018c89fe8f82987fa83",
+  "extra_paths": [
+   "rtl",
+   "physical/asap7_memory_macros",
+   "physical/ref_tile/hc_lanes_ref/views"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf 'module ot_lint_top; ot_hgi_hc_tile u_top (); endmodule\\n' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_lint_top {RUN}/ot_lint_top.sv +define+OT_WW_MACRO rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_sys_exact",
+    "cmd": "XDEF='-DWVM -DSPL=4 -DXMAC -DWMAC -DSYS' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_hc_unit.sh {RUN}/bench_sys",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^HGI_HC_UNIT PASS"
+   },
+   {
+    "name": "mut_mp",
+    "cmd": "XDEF='-DWVM -DSPL=4 -DXMAC -DWMAC -DSYS' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_hc_unit.sh {RUN}/bench_sys_mp MUT_MP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^HGI_HC_UNIT FAIL errors=[1-9]"
+   },
+   {
+    "name": "mut_post",
+    "cmd": "XDEF='-DWVM -DSPL=4 -DXMAC -DWMAC -DSYS' J=8 bash rtl/hbm_accel/generic/adapters/tb/run_hc_unit.sh {RUN}/bench_sys_post MUT_POST",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^HGI_HC_UNIT FAIL errors=[1-9]"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/hc_tile_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hc_tile_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hc_tile_ref --out {RUN}/record/views/ot_hgi_hc_tile --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-view physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hc_tile_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hc_tile_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hc_tile_ref/hc_tile_ref-c1-7e3baed71"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

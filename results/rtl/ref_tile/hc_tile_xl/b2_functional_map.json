@@ -1,0 +1,121 @@
+{
+  "schema": "opentallas.hc_b2_functional_physical_map.v1",
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "source": "550082537",
+  "contract_version": 11,
+  "historical_physical_envelope": {
+    "quarter_cell": "hfd_hc",
+    "child_cell": "hfd_hc_tile_xl",
+    "quarter_count": 4,
+    "children_per_quarter": 88,
+    "production_qualified": false
+  },
+  "required_functional_blocks": [
+    {
+      "operation": "HC_MIX_ROWS / HCP",
+      "cell": "ot_hgi_hc_tile",
+      "count_die": 8,
+      "count_quarter": 2,
+      "lanes_tile": 32,
+      "lanes_die": 256,
+      "leaf": "ot_hdc_v41x_hcp_lanes",
+      "leaves_tile": 4,
+      "source_job": "hc_tile_xl-c4-550082537-hs"
+    },
+    {
+      "operation": "HC_MIX_POST scalar sigmoid/exponential/Sinkhorn",
+      "cell": "ot_hgi_hc_unit SYS control and post-processing shell",
+      "count_die": 1,
+      "status": "functional RTL exists; real physical shell extraction required"
+    },
+    {
+      "operation": "FUSED.HC_POST / HC_PRE_NORM residual vectors",
+      "cell": "ot_hgi_hc_eng LL",
+      "count_die": 1,
+      "status": "distinct functional RTL and throughput vehicle; physical lane/ctl ownership remains separate"
+    }
+  ],
+  "quarter_candidate": {
+    "cell": "ot_hgi_hc_quarter",
+    "children": 2,
+    "child_outline_um": [
+      656.64,
+      725.76
+    ],
+    "outline_um": [
+      1356.48,
+      756.0
+    ],
+    "placement_um": [
+      [
+        10.8,
+        15.12
+      ],
+      [
+        689.04,
+        15.12
+      ]
+    ],
+    "seam_gap_um": 21.6,
+    "chain_in_bits": 1065,
+    "chain_out_bits": 1065,
+    "x_lanes": 8,
+    "x_forward_bits": 1200,
+    "x_return_bits": 16,
+    "hbm_lanes": 8,
+    "added_pipeline_cycles": 0,
+    "arithmetic_order": "same eight-bank sequential partial-sum chain; pair grouping adds no arithmetic or hop",
+    "track_pitch_um": 0.048,
+    "one_horizontal_layer_seam_tracks": 15120,
+    "seam_min_layer_demand_fraction": 0.07043650793650794,
+    "child_area_um2": 953126.0928,
+    "quarter_area_um2": 1025498.88,
+    "slot_fit": true,
+    "hardened": false,
+    "physical_placement": "two c4 bank clusters placed directly under die; ot_hgi_hc_quarter is only a logical group; no third hardened hierarchy",
+    "outline_um_is": "bounding box of two die-placed child tiles, not new macro"
+  },
+  "missing_gates": [
+    "pair integrated into SYS production unit",
+    "global control/Sinkhorn physical source and timing",
+    "residual LL physical view mapping",
+    "contract replacement from historical 88-lane envelope to two real bank tiles",
+    "full production exact+mutants+throughput",
+    "current fresh child route TT/FF/DRC"
+  ],
+  "residual_candidate": {
+    "status": "CANDIDATE_NOT_ADOPTED",
+    "source_arithmetic": "origin/main ot_hgi_hc_eng_ll.sv lane_ll",
+    "quarter_count": 4,
+    "lanes_quarter": 8,
+    "elements_quarter": 1280,
+    "elements_sector": 8,
+    "sectors_lane": 20,
+    "local_sector_stride": 8,
+    "scalar_post": "post4 plus combination16 words multicast unchanged",
+    "scalar_pre": "pre4 plus final rsqrt multicast unchanged",
+    "pre_chunk_tag": "QID*160 + local_chunk (0..639)",
+    "central_reduction": "collect640 tagged chunk8 sequential squares into original32-leaf blocks then padded20-block heap; same FP32 addition tree and padding order",
+    "finite_buffer_required": {
+      "chunk_words": 640,
+      "chunk_bits": 20480,
+      "valid_bits": 640,
+      "per_lane_up_fifo": 32,
+      "roundtrip_credits": "at least4+2*relays"
+    },
+    "up_chunk_packet_bits": 43,
+    "central_full_row_incoming_bits": 27520,
+    "post_output_sectors_die": 2560,
+    "pre_output_sectors_die": 640,
+    "immutable_price": {
+      "FUSED.HC_POST": 222.7
+    },
+    "physical_missing": [
+      "8-lane local station conversion",
+      "central reduction/control hardened view",
+      "real leaf+lane+quarter mapped die PG/clock",
+      "chunk collector credits and protocol RTL",
+      "exact/prod/mutants at productionD5120"
+    ]
+  }
+}
