@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.hbm.regional_elastic_physical_gate.v1",
+ "owner": "Claude:ring-station-1013",
+ "source_commit": "6d920b6b1",
+ "kit": "physical/ref_tile/vms_elastic_ls16_cx (410.4 x 138.24, locked M5 pins)",
+ "host": "ot-pve1",
+ "scratch": "/srv/opentallas-scratch/claude/ref_gate/vms_elastic_ls16_cx-20261013-032148 (deleted after this receipt, owner rule 10-13)",
+ "verdict": "STOPPED by owner, not a pass: synthesis ok, floorplan-stage repair_timing stalled before pins / PDN / CTS",
+ "synth": {"mapped_cell_area_um2": 27796.46, "flops": 43999},
+ "failure": "pre-placement repair_timing: 4,448 violating endpoints, WNS -145.4 ps at g_sub[*].dout_r/D. Cause: each kept binary read-pointer copy (x1 flop) still drove 128-256 read-mux loads per 16-bit subslice.",
+ "fix": "f64321878: registered one-hot write-enable / read-select per subslice (<= 16 loads per control flop), AND-OR read plane; latency unchanged.",
+ "written_by": "successor agent from the stream COLLECT of 2026-10-13 03:50 PT (numbers as recorded there; the run log was not re-read)"
+}

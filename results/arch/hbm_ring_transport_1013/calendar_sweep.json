@@ -1,0 +1,1478 @@
+{
+ "schema": "opentallas.hbm.ring_calendar_sweep.v1",
+ "author": "Claude:ring-station-1013",
+ "date": "2026-10-13",
+ "status": "first-order model run (tools/hgi_e2e/b2.py SPEC 5.0 exposure on compiler B2 vectors); NOT an RTL measurement, NOT a qualification, nothing re-priced",
+ "model": "b2.traffic with per-edge path latency (min of the two ring directions); stalls are not propagated",
+ "face_cycles_per_hop": 3,
+ "segments_sid": [
+  41,
+  60,
+  42,
+  67
+ ],
+ "segments_geo_estimate": [
+  41,
+  32,
+  42,
+  32
+ ],
+ "bcast_cycles": {
+  "spec": 12,
+  "physical_estimate": 33
+ },
+ "spec_layer": {
+  "ds": {
+   "cycles_per_layer": 14139,
+   "tok_s": 2121.8,
+   "layers": 40
+  },
+  "qwen": {
+   "cycles_per_layer": 35253,
+   "tok_s": 945.5,
+   "layers": 36
+  }
+ },
+ "scenarios": {
+  "spec_price": {
+   "edges": [
+    11,
+    12,
+    11,
+    12
+   ],
+   "bcast": 12,
+   "note": "SPEC 5 price (H 11 / V 12), control row"
+  },
+  "elastic4_sid": {
+   "edges": [
+    168,
+    244,
+    172,
+    272
+   ],
+   "bcast": 12,
+   "note": "measured D8 elastic station on every segment (4 edges)"
+  },
+  "pipe_sid": {
+   "edges": [
+    44,
+    63,
+    45,
+    70
+   ],
+   "bcast": 12,
+   "note": "plain registered stages, one edge a segment, end-to-end credit"
+  },
+  "pipe_geo": {
+   "edges": [
+    44,
+    35,
+    45,
+    35
+   ],
+   "bcast": 12,
+   "note": "plain stages + geometric slice order (vertical edges estimated)"
+  },
+  "hybrid_k8_sid": {
+   "edges": [
+    68,
+    95,
+    69,
+    106
+   ],
+   "bcast": 12,
+   "note": "one elastic station per 8 plain stages"
+  },
+  "pipe_sid_bcast_phys": {
+   "edges": [
+    44,
+    63,
+    45,
+    70
+   ],
+   "bcast": 33,
+   "note": "pipe_sid + the COLL star at its own wire length (estimate)"
+  },
+  "pipe_geo_bcast_phys": {
+   "edges": [
+    44,
+    35,
+    45,
+    35
+   ],
+   "bcast": 33,
+   "note": "pipe_geo + the COLL star at its own wire length (estimate)"
+  },
+  "spec_ring_bcast_phys": {
+   "edges": [
+    11,
+    12,
+    11,
+    12
+   ],
+   "bcast": 33,
+   "note": "ring at price, star at wire length: isolates the star"
+  }
+ },
+ "summary": {
+  "spec_price": {
+   "ds": {
+    "mean_exposed_per_layer": 152.8,
+    "worst_exposed_per_layer": 278.6,
+    "budget": 290,
+    "within_budget_all": true,
+    "vectors": 4,
+    "tok_s_first_order": 2099.1,
+    "loss_pct_vs_priced_tok_s": 1.07,
+    "loss_pct_vs_same_vectors_at_spec_price": 0.0
+   },
+   "qwen": {
+    "mean_exposed_per_layer": 14.0,
+    "worst_exposed_per_layer": 14.0,
+    "budget": 93,
+    "within_budget_all": true,
+    "vectors": 1,
+    "tok_s_first_order": 945.1,
+    "loss_pct_vs_priced_tok_s": 0.04,
+    "loss_pct_vs_same_vectors_at_spec_price": 0.0
+   }
+  },
+  "elastic4_sid": {
+   "ds": {
+    "mean_exposed_per_layer": 3592.3,
+    "worst_exposed_per_layer": 3890.3,
+    "budget": 290,
+    "within_budget_all": false,
+    "vectors": 4,
+    "tok_s_first_order": 1691.9,
+    "loss_pct_vs_priced_tok_s": 20.26,
+    "loss_pct_vs_same_vectors_at_spec_price": 19.4
+   },
+   "qwen": {
+    "mean_exposed_per_layer": 792.0,
+    "worst_exposed_per_layer": 792.0,
+    "budget": 93,
+    "within_budget_all": false,
+    "vectors": 1,
+    "tok_s_first_order": 924.7,
+    "loss_pct_vs_priced_tok_s": 2.2,
+    "loss_pct_vs_same_vectors_at_spec_price": 2.16
+   }
+  },
+  "pipe_sid": {
+   "ds": {
+    "mean_exposed_per_layer": 609.6,
+    "worst_exposed_per_layer": 755.7,
+    "budget": 290,
+    "within_budget_all": false,
+    "vectors": 4,
+    "tok_s_first_order": 2034.1,
+    "loss_pct_vs_priced_tok_s": 4.13,
+    "loss_pct_vs_same_vectors_at_spec_price": 3.1
+   },
+   "qwen": {
+    "mean_exposed_per_layer": 182.0,
+    "worst_exposed_per_layer": 182.0,
+    "budget": 93,
+    "within_budget_all": false,
+    "vectors": 1,
+    "tok_s_first_order": 940.6,
+    "loss_pct_vs_priced_tok_s": 0.51,
+    "loss_pct_vs_same_vectors_at_spec_price": 0.47
+   }
+  },
+  "pipe_geo": {
+   "ds": {
+    "mean_exposed_per_layer": 397.9,
+    "worst_exposed_per_layer": 533.1,
+    "budget": 290,
+    "within_budget_all": false,
+    "vectors": 4,
+    "tok_s_first_order": 2063.7,
+    "loss_pct_vs_priced_tok_s": 2.74,
+    "loss_pct_vs_same_vectors_at_spec_price": 1.69
+   },
+   "qwen": {
+    "mean_exposed_per_layer": 126.0,
+    "worst_exposed_per_layer": 126.0,
+    "budget": 93,
+    "within_budget_all": false,
+    "vectors": 1,
+    "tok_s_first_order": 942.1,
+    "loss_pct_vs_priced_tok_s": 0.36,
+    "loss_pct_vs_same_vectors_at_spec_price": 0.32
+   }
+  },
+  "hybrid_k8_sid": {
+   "ds": {
+    "mean_exposed_per_layer": 1058.3,
+    "worst_exposed_per_layer": 1209.7,
+    "budget": 290,
+    "within_budget_all": false,
+    "vectors": 4,
+    "tok_s_first_order": 1974.0,
+    "loss_pct_vs_priced_tok_s": 6.96,
+    "loss_pct_vs_same_vectors_at_spec_price": 5.96
+   },
+   "qwen": {
+    "mean_exposed_per_layer": 294.0,
+    "worst_exposed_per_layer": 294.0,
+    "budget": 93,
+    "within_budget_all": false,
+    "vectors": 1,
+    "tok_s_first_order": 937.7,
+    "loss_pct_vs_priced_tok_s": 0.83,
+    "loss_pct_vs_same_vectors_at_spec_price": 0.79
+   }
+  },
+  "pipe_sid_bcast_phys": {
+   "ds": {
+    "mean_exposed_per_layer": 914.7,
+    "worst_exposed_per_layer": 1121.3,
+    "budget": 290,
+    "within_budget_all": false,
+    "vectors": 4,
+    "tok_s_first_order": 1992.9,
+    "loss_pct_vs_priced_tok_s": 6.08,
+    "loss_pct_vs_same_vectors_at_spec_price": 5.06
+   },
+   "qwen": {
+    "mean_exposed_per_layer": 237.9,
+    "worst_exposed_per_layer": 237.9,
+    "budget": 93,
+    "within_budget_all": false,
+    "vectors": 1,
+    "tok_s_first_order": 939.2,
+    "loss_pct_vs_priced_tok_s": 0.67,
+    "loss_pct_vs_same_vectors_at_spec_price": 0.63
+   }
+  },
+  "pipe_geo_bcast_phys": {
+   "ds": {
+    "mean_exposed_per_layer": 703.1,
+    "worst_exposed_per_layer": 898.7,
+    "budget": 290,
+    "within_budget_all": false,
+    "vectors": 4,
+    "tok_s_first_order": 2021.3,
+    "loss_pct_vs_priced_tok_s": 4.74,
+    "loss_pct_vs_same_vectors_at_spec_price": 3.71
+   },
+   "qwen": {
+    "mean_exposed_per_layer": 181.9,
+    "worst_exposed_per_layer": 181.9,
+    "budget": 93,
+    "within_budget_all": false,
+    "vectors": 1,
+    "tok_s_first_order": 940.6,
+    "loss_pct_vs_priced_tok_s": 0.51,
+    "loss_pct_vs_same_vectors_at_spec_price": 0.47
+   }
+  },
+  "spec_ring_bcast_phys": {
+   "ds": {
+    "mean_exposed_per_layer": 458.0,
+    "worst_exposed_per_layer": 644.2,
+    "budget": 290,
+    "within_budget_all": false,
+    "vectors": 4,
+    "tok_s_first_order": 2055.2,
+    "loss_pct_vs_priced_tok_s": 3.14,
+    "loss_pct_vs_same_vectors_at_spec_price": 2.09
+   },
+   "qwen": {
+    "mean_exposed_per_layer": 69.9,
+    "worst_exposed_per_layer": 69.9,
+    "budget": 93,
+    "within_budget_all": true,
+    "vectors": 1,
+    "tok_s_first_order": 943.6,
+    "loss_pct_vs_priced_tok_s": 0.2,
+    "loss_pct_vs_same_vectors_at_spec_price": 0.16
+   }
+  }
+ },
+ "rows": [
+  {
+   "vector": "v8_qwen_L0_P8191",
+   "model": "qwen",
+   "scenario": "spec_price",
+   "exposed": 14.0,
+   "budget": 93,
+   "within_budget": true,
+   "remote_records": 13,
+   "records": 34,
+   "remote_words": 6144,
+   "bcast_words": 36368,
+   "layer_loss_pct": 0.04,
+   "top_ops": [
+    [
+     "COLL.ALL_REDUCE_SUM",
+     14.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_qwen_L0_P8191",
+   "model": "qwen",
+   "scenario": "elastic4_sid",
+   "exposed": 792.0,
+   "budget": 93,
+   "within_budget": false,
+   "remote_records": 13,
+   "records": 34,
+   "remote_words": 6144,
+   "bcast_words": 36368,
+   "layer_loss_pct": 2.197,
+   "top_ops": [
+    [
+     "COLL.ALL_REDUCE_SUM",
+     792.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_qwen_L0_P8191",
+   "model": "qwen",
+   "scenario": "pipe_sid",
+   "exposed": 182.0,
+   "budget": 93,
+   "within_budget": false,
+   "remote_records": 13,
+   "records": 34,
+   "remote_words": 6144,
+   "bcast_words": 36368,
+   "layer_loss_pct": 0.514,
+   "top_ops": [
+    [
+     "COLL.ALL_REDUCE_SUM",
+     182.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_qwen_L0_P8191",
+   "model": "qwen",
+   "scenario": "pipe_geo",
+   "exposed": 126.0,
+   "budget": 93,
+   "within_budget": false,
+   "remote_records": 13,
+   "records": 34,
+   "remote_words": 6144,
+   "bcast_words": 36368,
+   "layer_loss_pct": 0.356,
+   "top_ops": [
+    [
+     "COLL.ALL_REDUCE_SUM",
+     126.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_qwen_L0_P8191",
+   "model": "qwen",
+   "scenario": "hybrid_k8_sid",
+   "exposed": 294.0,
+   "budget": 93,
+   "within_budget": false,
+   "remote_records": 13,
+   "records": 34,
+   "remote_words": 6144,
+   "bcast_words": 36368,
+   "layer_loss_pct": 0.827,
+   "top_ops": [
+    [
+     "COLL.ALL_REDUCE_SUM",
+     294.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_qwen_L0_P8191",
+   "model": "qwen",
+   "scenario": "pipe_sid_bcast_phys",
+   "exposed": 237.9,
+   "budget": 93,
+   "within_budget": false,
+   "remote_records": 13,
+   "records": 34,
+   "remote_words": 6144,
+   "bcast_words": 36368,
+   "layer_loss_pct": 0.67,
+   "top_ops": [
+    [
+     "COLL.ALL_REDUCE_SUM",
+     182.0
+    ],
+    [
+     "SM.MATVEC",
+     27.0
+    ],
+    [
+     "SU.VOP",
+     10.9
+    ],
+    [
+     "FUSED.ROW_NORM",
+     9.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_qwen_L0_P8191",
+   "model": "qwen",
+   "scenario": "pipe_geo_bcast_phys",
+   "exposed": 181.9,
+   "budget": 93,
+   "within_budget": false,
+   "remote_records": 13,
+   "records": 34,
+   "remote_words": 6144,
+   "bcast_words": 36368,
+   "layer_loss_pct": 0.513,
+   "top_ops": [
+    [
+     "COLL.ALL_REDUCE_SUM",
+     126.0
+    ],
+    [
+     "SM.MATVEC",
+     27.0
+    ],
+    [
+     "SU.VOP",
+     10.9
+    ],
+    [
+     "FUSED.ROW_NORM",
+     9.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_qwen_L0_P8191",
+   "model": "qwen",
+   "scenario": "spec_ring_bcast_phys",
+   "exposed": 69.9,
+   "budget": 93,
+   "within_budget": true,
+   "remote_records": 13,
+   "records": 34,
+   "remote_words": 6144,
+   "bcast_words": 36368,
+   "layer_loss_pct": 0.198,
+   "top_ops": [
+    [
+     "SM.MATVEC",
+     27.0
+    ],
+    [
+     "COLL.ALL_REDUCE_SUM",
+     14.0
+    ],
+    [
+     "SU.VOP",
+     10.9
+    ],
+    [
+     "FUSED.ROW_NORM",
+     9.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L2",
+   "model": "ds",
+   "scenario": "spec_price",
+   "exposed": 110.6,
+   "budget": 290,
+   "within_budget": true,
+   "remote_records": 53,
+   "records": 105,
+   "remote_words": 93080,
+   "bcast_words": 59187,
+   "layer_loss_pct": 0.776,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     46.0
+    ],
+    [
+     "SU.VOP",
+     26.5
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     19.0
+    ],
+    [
+     "COLL.ROW_GATHER",
+     12.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L2",
+   "model": "ds",
+   "scenario": "elastic4_sid",
+   "exposed": 3531.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 53,
+   "records": 105,
+   "remote_words": 93080,
+   "bcast_words": 59187,
+   "layer_loss_pct": 19.986,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     1156.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     1077.2
+    ],
+    [
+     "FUSED.HC_POST",
+     504.0
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     408.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L2",
+   "model": "ds",
+   "scenario": "pipe_sid",
+   "exposed": 587.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 53,
+   "records": 105,
+   "remote_words": 93080,
+   "bcast_words": 59187,
+   "layer_loss_pct": 3.991,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     241.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     162.2
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     103.0
+    ],
+    [
+     "IDX.INDEX",
+     43.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L2",
+   "model": "ds",
+   "scenario": "pipe_geo",
+   "exposed": 365.1,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 53,
+   "records": 105,
+   "remote_words": 93080,
+   "bcast_words": 59187,
+   "layer_loss_pct": 2.517,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     158.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     78.6
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     75.0
+    ],
+    [
+     "SU.VOP",
+     26.5
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L2",
+   "model": "ds",
+   "scenario": "hybrid_k8_sid",
+   "exposed": 1041.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 53,
+   "records": 105,
+   "remote_words": 93080,
+   "bcast_words": 59187,
+   "layer_loss_pct": 6.862,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     409.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     330.2
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     159.0
+    ],
+    [
+     "IDX.INDEX",
+     99.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L2",
+   "model": "ds",
+   "scenario": "pipe_sid_bcast_phys",
+   "exposed": 874.8,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 53,
+   "records": 105,
+   "remote_words": 93080,
+   "bcast_words": 59187,
+   "layer_loss_pct": 5.827,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     241.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     196.2
+    ],
+    [
+     "SU.VOP",
+     155.6
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     103.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L2",
+   "model": "ds",
+   "scenario": "pipe_geo_bcast_phys",
+   "exposed": 652.2,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 53,
+   "records": 105,
+   "remote_words": 93080,
+   "bcast_words": 59187,
+   "layer_loss_pct": 4.409,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     158.0
+    ],
+    [
+     "SU.VOP",
+     155.6
+    ],
+    [
+     "COLL.ALL_GATHER",
+     112.6
+    ],
+    [
+     "SM.MATVEC",
+     103.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L2",
+   "model": "ds",
+   "scenario": "spec_ring_bcast_phys",
+   "exposed": 397.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 53,
+   "records": 105,
+   "remote_words": 93080,
+   "bcast_words": 59187,
+   "layer_loss_pct": 2.736,
+   "top_ops": [
+    [
+     "SU.VOP",
+     155.6
+    ],
+    [
+     "SM.MATVEC",
+     103.0
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     46.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     41.1
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L14",
+   "model": "ds",
+   "scenario": "spec_price",
+   "exposed": 278.6,
+   "budget": 290,
+   "within_budget": true,
+   "remote_records": 60,
+   "records": 123,
+   "remote_words": 103320,
+   "bcast_words": 97353,
+   "layer_loss_pct": 1.932,
+   "top_ops": [
+    [
+     "SU.VOP",
+     194.5
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     46.0
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     19.0
+    ],
+    [
+     "COLL.ROW_GATHER",
+     12.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L14",
+   "model": "ds",
+   "scenario": "elastic4_sid",
+   "exposed": 3875.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 60,
+   "records": 123,
+   "remote_words": 103320,
+   "bcast_words": 97353,
+   "layer_loss_pct": 21.514,
+   "top_ops": [
+    [
+     "COLL.ALL_GATHER",
+     1253.2
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     1156.0
+    ],
+    [
+     "FUSED.HC_POST",
+     504.0
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     408.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L14",
+   "model": "ds",
+   "scenario": "pipe_sid",
+   "exposed": 755.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 60,
+   "records": 123,
+   "remote_words": 103320,
+   "bcast_words": 97353,
+   "layer_loss_pct": 5.074,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     241.0
+    ],
+    [
+     "SU.VOP",
+     194.5
+    ],
+    [
+     "COLL.ALL_GATHER",
+     162.2
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     103.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L14",
+   "model": "ds",
+   "scenario": "pipe_geo",
+   "exposed": 533.1,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 60,
+   "records": 123,
+   "remote_words": 103320,
+   "bcast_words": 97353,
+   "layer_loss_pct": 3.633,
+   "top_ops": [
+    [
+     "SU.VOP",
+     194.5
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     158.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     78.6
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     75.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L14",
+   "model": "ds",
+   "scenario": "hybrid_k8_sid",
+   "exposed": 1209.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 60,
+   "records": 123,
+   "remote_words": 103320,
+   "bcast_words": 97353,
+   "layer_loss_pct": 7.881,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     409.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     330.2
+    ],
+    [
+     "SU.VOP",
+     194.5
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     159.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L14",
+   "model": "ds",
+   "scenario": "pipe_sid_bcast_phys",
+   "exposed": 1121.3,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 60,
+   "records": 123,
+   "remote_words": 103320,
+   "bcast_words": 97353,
+   "layer_loss_pct": 7.348,
+   "top_ops": [
+    [
+     "SU.VOP",
+     351.1
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     241.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     230.2
+    ],
+    [
+     "SM.MATVEC",
+     120.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L14",
+   "model": "ds",
+   "scenario": "pipe_geo_bcast_phys",
+   "exposed": 898.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 60,
+   "records": 123,
+   "remote_words": 103320,
+   "bcast_words": 97353,
+   "layer_loss_pct": 5.976,
+   "top_ops": [
+    [
+     "SU.VOP",
+     351.1
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     158.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     146.6
+    ],
+    [
+     "SM.MATVEC",
+     120.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L14",
+   "model": "ds",
+   "scenario": "spec_ring_bcast_phys",
+   "exposed": 644.2,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 60,
+   "records": 123,
+   "remote_words": 103320,
+   "bcast_words": 97353,
+   "layer_loss_pct": 4.358,
+   "top_ops": [
+    [
+     "SU.VOP",
+     351.1
+    ],
+    [
+     "SM.MATVEC",
+     120.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     75.1
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     46.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L20",
+   "model": "ds",
+   "scenario": "spec_price",
+   "exposed": 118.6,
+   "budget": 290,
+   "within_budget": true,
+   "remote_records": 54,
+   "records": 106,
+   "remote_words": 95380,
+   "bcast_words": 62771,
+   "layer_loss_pct": 0.832,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     46.0
+    ],
+    [
+     "SU.VOP",
+     26.5
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     19.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     15.1
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L20",
+   "model": "ds",
+   "scenario": "elastic4_sid",
+   "exposed": 3890.3,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 54,
+   "records": 106,
+   "remote_words": 95380,
+   "bcast_words": 62771,
+   "layer_loss_pct": 21.578,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     1156.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     1085.2
+    ],
+    [
+     "FUSED.HC_POST",
+     504.0
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     408.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L20",
+   "model": "ds",
+   "scenario": "pipe_sid",
+   "exposed": 641.3,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 54,
+   "records": 106,
+   "remote_words": 95380,
+   "bcast_words": 62771,
+   "layer_loss_pct": 4.339,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     241.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     170.2
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     103.0
+    ],
+    [
+     "COLL.TOPK_MERGE",
+     76.3
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L20",
+   "model": "ds",
+   "scenario": "pipe_geo",
+   "exposed": 406.4,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 54,
+   "records": 106,
+   "remote_words": 95380,
+   "bcast_words": 62771,
+   "layer_loss_pct": 2.794,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     158.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     86.6
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     75.0
+    ],
+    [
+     "COLL.TOPK_MERGE",
+     48.3
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L20",
+   "model": "ds",
+   "scenario": "hybrid_k8_sid",
+   "exposed": 1151.3,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 54,
+   "records": 106,
+   "remote_words": 95380,
+   "bcast_words": 62771,
+   "layer_loss_pct": 7.53,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     409.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     338.2
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     159.0
+    ],
+    [
+     "COLL.TOPK_MERGE",
+     132.3
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L20",
+   "model": "ds",
+   "scenario": "pipe_sid_bcast_phys",
+   "exposed": 953.6,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 54,
+   "records": 106,
+   "remote_words": 95380,
+   "bcast_words": 62771,
+   "layer_loss_pct": 6.318,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     241.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     187.2
+    ],
+    [
+     "SU.VOP",
+     163.8
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     103.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L20",
+   "model": "ds",
+   "scenario": "pipe_geo_bcast_phys",
+   "exposed": 718.7,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 54,
+   "records": 106,
+   "remote_words": 95380,
+   "bcast_words": 62771,
+   "layer_loss_pct": 4.837,
+   "top_ops": [
+    [
+     "SU.VOP",
+     163.8
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     158.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     103.6
+    ],
+    [
+     "SM.MATVEC",
+     103.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L20",
+   "model": "ds",
+   "scenario": "spec_ring_bcast_phys",
+   "exposed": 430.9,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 54,
+   "records": 106,
+   "remote_words": 95380,
+   "bcast_words": 62771,
+   "layer_loss_pct": 2.957,
+   "top_ops": [
+    [
+     "SU.VOP",
+     163.8
+    ],
+    [
+     "SM.MATVEC",
+     103.0
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     46.0
+    ],
+    [
+     "HC.HC_MIX_POST",
+     34.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L24",
+   "model": "ds",
+   "scenario": "spec_price",
+   "exposed": 103.5,
+   "budget": 290,
+   "within_budget": true,
+   "remote_records": 52,
+   "records": 103,
+   "remote_words": 93072,
+   "bcast_words": 58163,
+   "layer_loss_pct": 0.727,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     46.0
+    ],
+    [
+     "SU.VOP",
+     26.5
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     19.0
+    ],
+    [
+     "COLL.ROW_GATHER",
+     12.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L24",
+   "model": "ds",
+   "scenario": "elastic4_sid",
+   "exposed": 3071.6,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 52,
+   "records": 103,
+   "remote_words": 93072,
+   "bcast_words": 58163,
+   "layer_loss_pct": 17.847,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     1156.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     681.1
+    ],
+    [
+     "FUSED.HC_POST",
+     504.0
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     408.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L24",
+   "model": "ds",
+   "scenario": "pipe_sid",
+   "exposed": 453.6,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 52,
+   "records": 103,
+   "remote_words": 93072,
+   "bcast_words": 58163,
+   "layer_loss_pct": 3.108,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     241.0
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     103.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     71.1
+    ],
+    [
+     "SU.VOP",
+     26.5
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L24",
+   "model": "ds",
+   "scenario": "pipe_geo",
+   "exposed": 287.0,
+   "budget": 290,
+   "within_budget": true,
+   "remote_records": 52,
+   "records": 103,
+   "remote_words": 93072,
+   "bcast_words": 58163,
+   "layer_loss_pct": 1.989,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     158.0
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     75.0
+    ],
+    [
+     "SU.VOP",
+     26.5
+    ],
+    [
+     "COLL.ALL_GATHER",
+     15.5
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L24",
+   "model": "ds",
+   "scenario": "hybrid_k8_sid",
+   "exposed": 830.6,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 52,
+   "records": 103,
+   "remote_words": 93072,
+   "bcast_words": 58163,
+   "layer_loss_pct": 5.549,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     409.0
+    ],
+    [
+     "COLL.ALL_GATHER",
+     183.1
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     159.0
+    ],
+    [
+     "IDX.INDEX",
+     35.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L24",
+   "model": "ds",
+   "scenario": "pipe_sid_bcast_phys",
+   "exposed": 709.2,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 52,
+   "records": 103,
+   "remote_words": 93072,
+   "bcast_words": 58163,
+   "layer_loss_pct": 4.776,
+   "top_ops": [
+    [
+     "FUSED.HC_PRE_NORM",
+     241.0
+    ],
+    [
+     "SU.VOP",
+     158.1
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     103.0
+    ],
+    [
+     "SM.MATVEC",
+     103.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L24",
+   "model": "ds",
+   "scenario": "pipe_geo_bcast_phys",
+   "exposed": 542.6,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 52,
+   "records": 103,
+   "remote_words": 93072,
+   "bcast_words": 58163,
+   "layer_loss_pct": 3.696,
+   "top_ops": [
+    [
+     "SU.VOP",
+     158.1
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     158.0
+    ],
+    [
+     "SM.MATVEC",
+     103.0
+    ],
+    [
+     "COLL.GROUP_REDUCE_MCAST",
+     75.0
+    ]
+   ]
+  },
+  {
+   "vector": "v8_ds_L24",
+   "model": "ds",
+   "scenario": "spec_ring_bcast_phys",
+   "exposed": 359.1,
+   "budget": 290,
+   "within_budget": false,
+   "remote_records": 52,
+   "records": 103,
+   "remote_words": 93072,
+   "bcast_words": 58163,
+   "layer_loss_pct": 2.477,
+   "top_ops": [
+    [
+     "SU.VOP",
+     158.1
+    ],
+    [
+     "SM.MATVEC",
+     103.0
+    ],
+    [
+     "FUSED.HC_PRE_NORM",
+     46.0
+    ],
+    [
+     "COLL.ROW_GATHER",
+     33.0
+    ]
+   ]
+  }
+ ]
+}
