@@ -35,6 +35,39 @@
    "note": "pop-flop (PQ) kv_end: the 4-credit class 6 is round-trip bound at 0.40 words/cycle, was 0.44 (ratio 1.10, at the limit); class 6 is HCTL (qkd_host -> sequencer: START / CSR / STOP / status, host-driven, CONTRACT.md) and carries 0 words in a token step; the token classes (sbuf, 8+ credits) hold 1 word/cycle, so the measured attention layer step (1,814) does not move"
   },
   {
+   "design": "qwen_rom",
+   "unit": "VM.XREAD (TP8 bit-plane VM x transport, +16 edges per x read: XPR 12 / XQR 2 / RO 1)",
+   "group": "VM.XREAD",
+   "measured": 38.0,
+   "price": 22.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.7273,
+   "e2e_loss_pct": 1.367,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 252887.0,
+     "added_cycles": 3456.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 3456.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.367
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/qwen_layer_tput_1013/xvm17_bd57/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-13",
+   "status": "proposed",
+   "note": "per-layer TP4 vehicle with QROM_XVM 17 / QROM_BD 57 (40 wire stages kept): L0 / L1 / L2 6,231 / 5,576 / 5,576 against 6,151 / 5,480 / 5,480, exact, compensation mutant fails; +96 cycles a layer (+80 on L0, +16 head bound) = 3,456 cycles a token. unit = the VM x-read latency on r21 (XVM 22 -> 38). +14 (XPR 10) measures 1.198 %, +10 0.859 %. Coordinator 10-13 12:25: acceptable; PROPOSED at the plan's upper value until the VM stream posts the placed XPR / XQR (asked in el1013-qwen-vm.log). TP4 reference composition, not a native TP8 run"
+  },
+  {
    "design": "s81",
    "unit": "MTP p2.core_transaction (ot_mtp_p2_prefix_path)",
    "group": "MTP.p2.core_transaction",
@@ -691,11 +724,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 0,
-   "proposed_pct": 0.0,
-   "accepted_plus_proposed_pct": 0.0,
+   "proposed_pct": 1.367,
+   "accepted_plus_proposed_pct": 1.367,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 1,
+   "proposed_rows": 2,
    "headroom_pct": 15.0
   },
   "s81": {

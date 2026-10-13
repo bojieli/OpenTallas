@@ -707,6 +707,7 @@ BOUND_SLOWDOWN, BOUND_RATE = 10.0, 0.01
 # priced layer; unit benches only for critical-path units).  The record gives each operator class its measured ratio; an
 # element of the class that the per-layer vehicle does not hold (a priced adder: relays, native ports ...) is UNMEASURED.
 QWEN_LAYER = ROOT / "results/rtl/qwen_layer_tput_1013/record.json"
+QWEN_DIE_TERMS = ROOT / "results/rtl/qwen_layer_tput_1013/die_terms.json"
 
 
 def qwen_layer():
@@ -718,7 +719,18 @@ def qwen_layer():
         return None
     src = (f"{QWEN_LAYER.relative_to(ROOT)} @ {d['source_sha']}: per-layer run ({L['name']} chained, exact, mutant fails) "
            f"measured {L['measured_cycles']} / priced {L['priced_vehicle_scope']:.0f} = {L['ratio']}; {R['basis']}")
-    return dict(ratio=R["class_ratio"], layer_ratio=L["ratio"], src=src,
+    # die-level terms measured on the same vehicle at the priced station / stage counts (qwen_rom_die_terms.py): an
+    # element class the s22ml7 vehicle lacks takes the ratio of the run that holds its term (exact runs only)
+    die = []
+    if QWEN_DIE_TERMS.exists():
+        dt = json.loads(QWEN_DIE_TERMS.read_text())
+        for k, g in dt.get("registry", {}).items():
+            t = dt["terms"].get(k, {})
+            if g.get("ratio") is not None and t.get("exact"):
+                die.append((re.compile(g["elements"]), g["ratio"],
+                            f"{QWEN_DIE_TERMS.relative_to(ROOT)} {k}: {t['measured_layer']} measured / {t['priced_layer']:.0f} priced "
+                            f"layer = {t['ratio']} (term {t['measured_delta']} / {t['priced_delta']:.0f} cycles), exact, {t['params']}"))
+    return dict(ratio=R["class_ratio"], layer_ratio=L["ratio"], src=src, die=die,
                 skip=[(re.compile(rx), why) for rx, why in R["not_in_vehicle_elements"]])
 
 
@@ -727,6 +739,9 @@ def qwen_layer_status(ql, cls, e):
     name stays 'class:<cls>' (suffix '') so that a class bench record still replaces the row it measures."""
     if ql is None or cls not in ql["ratio"]:
         return None
+    for rx, r, dsrc in ql.get("die", []):
+        if rx.match(e):
+            return ("QUALIFIED" if r <= QUAL else "UNQUALIFIED"), r, "", "by layer (die term): " + dsrc
     for rx, why in ql["skip"]:
         if rx.match(e):
             return "UNMEASURED", None, "", "by layer: NOT in the per-layer vehicle: " + why + "; " + ql["src"]
