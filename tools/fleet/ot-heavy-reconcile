@@ -459,7 +459,7 @@ def free(path):
     except OSError:
         disk = -1
     print(json.dumps(dict(host=os.uname().nodename, avail_gb=avail, reserved_gb=reserved, growth_gb=grow, headroom_gb=head,
-                          running=running, waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
+                          load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=running, waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
                           free_gb=avail - grow - head - sum(wait))))
 
 
