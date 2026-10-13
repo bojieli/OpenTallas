@@ -55,6 +55,9 @@
 //   ym   result besides lo: 0 none, 1 into up lane h, 2 into down lane h (level 7: the P.V lane)
 //   ath / bth  first leaf slot (mod 8) under each child: the child is present in round rho when gmax > 8 rho + th
 //   far  the node control comes through the neighbouring cell (one cycle later)       tdir  token lane (0 up, 1 down)
+// FLOW CONTROL: an operand store holds one item, so every stream has one credit: a cell starts an item only with the
+// credit of the store it feeds (the cell above: lci; a lane: that lane's credit bit, which travels against the
+// stream) and answers its own producers when its stores are free again (the engines: cra / crb).
 // Frame: N is the hub end (the cell is flipped MX in the stacks whose hub is to the S).
 module qkd_astk_pv (
     input  wire          ck,
@@ -78,6 +81,12 @@ module qkd_astk_pv (
     output wire [262:0]  po,          // N
     input  wire [5:0]    ci,          // N  {gmax, start}
     output wire [5:0]    co,          // S
+    input  wire          lci,         // N  credit from the local consumer (the cell above)
+    output reg           lco,         // S  credit to the local producer (the cell below)
+    input  wire [3:0]    kui,         // N  credits of the up lanes (they travel down)
+    output wire [3:0]    kuo,         // S
+    input  wire [3:0]    kdi,         // S  credits of the down lanes (they travel up)
+    output wire [3:0]    kdo,         // N
     input  wire          tui,         // S  token lanes
     output reg           tuo,         // N
     input  wire          tdi,         // N
@@ -97,16 +106,19 @@ module qkd_astk_pv (
     // ---- pin flops: control lane, node control, tokens, fault ---------------------------------------------------------
     (* keep *) reg [5:0] cq;
     (* keep *) reg [9:0] ncq, ndq;
-    (* keep *) reg       tu_q, td_q, fi_q;
+    (* keep *) reg       tu_q, td_q, fi_q, lci_q, kcu, kcd;      // kcu / kcd: the own lane's credit (this cell produces)
     always @(posedge ck or negedge rn_q)
-        if (!rn_q) begin cq[0] <= 1'b0; ncq[0] <= 1'b0; ndq[0] <= 1'b0; tu_q <= 1'b0; td_q <= 1'b0; fi_q <= 1'b0; end
-        else begin cq[0] <= ci[0]; ncq[0] <= nc[0]; ndq[0] <= nd[0]; tu_q <= tui; td_q <= tdi; fi_q <= fi; end
+        if (!rn_q) begin cq[0] <= 1'b0; ncq[0] <= 1'b0; ndq[0] <= 1'b0; tu_q <= 1'b0; td_q <= 1'b0; fi_q <= 1'b0; lci_q <= 1'b0;
+                         kcu <= 1'b0; kcd <= 1'b0; end
+        else begin cq[0] <= ci[0]; ncq[0] <= nc[0]; ndq[0] <= nd[0]; tu_q <= tui; td_q <= tdi; fi_q <= fi; lci_q <= lci;
+                   kcu <= (h == 2'd0) ? kui[0] : (h == 2'd1) ? kui[1] : (h == 2'd2) ? kui[2] : kui[3];
+                   kcd <= (h == 2'd0) ? kdi[0] : (h == 2'd1) ? kdi[1] : (h == 2'd2) ? kdi[2] : kdi[3]; end
     always @(posedge ck) begin cq[5:1] <= ci[5:1]; ncq[9:1] <= nc[9:1]; ndq[9:1] <= nd[9:1]; end
     assign co = cq; assign nco = ncq; assign ndo = ndq;
     wire       start = cq[0];
     wire [4:0] gmax = cq[5:1];
     // ---- lanes: one register a lane a cell (the output pin); the own lane's input has its own flop --------------------
-    wire          yf, pcol;
+    wire          yf, pcol, cr_u, cr_d;
     (* keep *) reg [SW-1:0] tu, td, lq;
     reg  [SW-1:0] yw;                                  // the result stream register (lo and the lane injection)
     wire [SW-1:0] ui_h = (h == 2'd0) ? ui[0 +: SW] : (h == 2'd1) ? ui[SW +: SW] : (h == 2'd2) ? ui[2*SW +: SW] : ui[3*SW +: SW];
@@ -118,11 +130,14 @@ module qkd_astk_pv (
     genvar gk;
     generate for (gk = 0; gk < 4; gk = gk + 1) begin : g_lane
         wire mine = h == gk;
-        reg          uv, dv;
+        reg          uv, dv, kuv, kdv;
         reg [SW-2:0] ud, dd;
         always @(posedge ck or negedge rn_q)
-            if (!rn_q) begin uv <= 1'b0; dv <= 1'b0; end
+            if (!rn_q) begin uv <= 1'b0; dv <= 1'b0; kuv <= 1'b0; kdv <= 1'b0; end
             else begin
+                // credits: a consumer of the lane answers its producer; a producer takes the credit off the lane
+                kuv <= (mine && blk_u) ? cr_u : (mine && ym == 2'd1 && !l7) ? 1'b0 : kui[gk];
+                kdv <= (mine && blk_d) ? cr_d : (mine && ym == 2'd2 && !l7) ? 1'b0 : kdi[gk];
                 uv <= (mine && inj_u) ? 1'b1 : (mine && blk_u) ? 1'b0 : ui[SW*gk];
                 dv <= (mine && inj_d) ? 1'b1 : (mine && blk_d) ? 1'b0 : di[SW*gk];
             end
@@ -132,6 +147,7 @@ module qkd_astk_pv (
         end
         assign uo[SW*gk +: SW] = {ud, uv};
         assign do_[SW*gk +: SW] = {dd, dv};
+        assign kuo[gk] = kuv; assign kdo[gk] = kdv;
     end endgenerate
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin tu[0] <= 1'b0; td[0] <= 1'b0; lq[0] <= 1'b0; end
@@ -146,7 +162,7 @@ module qkd_astk_pv (
     reg          l7b;                                  // level 7: round 0 is in, the stream now fills b
     reg  [2:0]   it;                                   // item: {g, round} (level 7: g)
     reg  [3:0]   jn;                                   // next sub-beat (kk slots 2 jn, 2 jn + 1)
-    reg          pace, run, f;
+    reg          pace, run, f, ocr;
     reg  [1:0]   tok;
     reg  [5:0]   gap;
     wire         rho = it[0];
@@ -165,7 +181,13 @@ module qkd_astk_pv (
     wire         full = (!pa || ca == 5'd16) && (!pb || cb == 5'd16);
     wire         tok_in = tdir ? td_q : tu_q;
     wire         go7 = full && ((h == 2'd0) ? gap == 6'd0 : tok != 2'd0);
-    wire         issue = active && (l7 ? (jn != 4'd0 || go7) : ((pa || pb) && a_ok && b_ok && !pace));
+    wire         issue = active && (l7 ? (jn != 4'd0 || go7) : ((pa || pb) && a_ok && b_ok && !pace && (ocr || jn != 4'd0)));
+    wire         cr_in = (ym == 2'd1) ? kcu : (ym == 2'd2) ? kcd : lci_q;
+    // the operand stores are free again: at the item's last sub-beat; level 7 also when round 0 is in and round 1 may come
+    wire         cr_a = (last && pa) || (l7 && awv && ca == 5'd15 && pb);
+    wire         cr_b = last && pb && !l7;
+    assign       cr_u = (am == 2'd1 && cr_a) || (bm == 2'd1 && cr_b);
+    assign       cr_d = (am == 2'd2 && cr_a) || (bm == 2'd2 && cr_b);
     wire         last = issue && jn == 4'd7;
     integer s_, b_;
     always @(posedge ck) begin
@@ -182,9 +204,12 @@ module qkd_astk_pv (
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin
             ca <= 5'd0; cb <= 5'd0; ena <= 1'b1; enb <= 1'b1; l7b <= 1'b0; it <= 3'd0; jn <= 4'd0; pace <= 1'b0; run <= 1'b0;
-            f <= 1'b0; tok <= 2'd0; gap <= 6'd0; cra <= 1'b0; crb <= 1'b0; tuo <= 1'b0; tdo <= 1'b0; fo <= 1'b0;
+            f <= 1'b0; tok <= 2'd0; gap <= 6'd0; cra <= 1'b0; crb <= 1'b0; tuo <= 1'b0; tdo <= 1'b0; fo <= 1'b0; ocr <= 1'b1; lco <= 1'b0;
         end else begin
             cra <= 1'b0; crb <= 1'b0; pace <= 1'b0;
+            lco <= !l4 && ((am == 2'd0 && cr_a) || (bm == 2'd0 && cr_b));
+            if (cr_in) begin ocr <= 1'b1; if (ocr && !l7) f <= 1'b1; end
+            if (issue && jn == 4'd0 && !l7) ocr <= 1'b0;
             tuo <= (l7 && !tdir) ? last : tu_q;
             tdo <= (l7 && tdir) ? last : td_q;
             fo <= fi_q | f;
@@ -213,7 +238,7 @@ module qkd_astk_pv (
             end
             if (start) begin
                 ca <= 5'd0; cb <= 5'd0; ena <= 1'b1; enb <= 1'b1; l7b <= 1'b0; it <= 3'd0; jn <= 4'd0; pace <= 1'b0;
-                run <= 1'b1; f <= 1'b0; tok <= 2'd0; gap <= 6'd0;
+                run <= 1'b1; f <= 1'b0; tok <= 2'd0; gap <= 6'd0; ocr <= 1'b1;
             end
             if (yf) f <= 1'b1;
             if (pcol) f <= 1'b1;
@@ -282,6 +307,10 @@ module qkd_astk_lanes (
     output wire [262:0]  po,
     input  wire [5:0]    ci,
     output wire [5:0]    co,
+    input  wire [3:0]    kui,
+    output wire [3:0]    kuo,
+    input  wire [3:0]    kdi,
+    output wire [3:0]    kdo,
     input  wire          tui,
     output wire          tuo,
     input  wire          tdi,
@@ -293,6 +322,7 @@ module qkd_astk_lanes (
     (* keep *) reg [262:0] pq;
     (* keep *) reg [5:0]   cq;
     (* keep *) reg         tu_q, td_q, f_q;
+    (* keep *) reg [3:0]   ku_q, kd_q;
     genvar k;
     generate for (k = 0; k < 4; k = k + 1) begin : g_v
         always @(posedge ck or negedge rn)
@@ -301,10 +331,11 @@ module qkd_astk_lanes (
         always @(posedge ck) begin uq[134*k + 1 +: 133] <= ui[134*k + 1 +: 133]; dq[134*k + 1 +: 133] <= di[134*k + 1 +: 133]; end
     end endgenerate
     always @(posedge ck or negedge rn)
-        if (!rn) begin pq[0] <= 1'b0; cq[0] <= 1'b0; tu_q <= 1'b0; td_q <= 1'b0; f_q <= 1'b0; end
-        else begin pq[0] <= pi[0]; cq[0] <= ci[0]; tu_q <= tui; td_q <= tdi; f_q <= fi; end
+        if (!rn) begin pq[0] <= 1'b0; cq[0] <= 1'b0; tu_q <= 1'b0; td_q <= 1'b0; f_q <= 1'b0; ku_q <= 4'd0; kd_q <= 4'd0; end
+        else begin pq[0] <= pi[0]; cq[0] <= ci[0]; tu_q <= tui; td_q <= tdi; f_q <= fi; ku_q <= kui; kd_q <= kdi; end
     always @(posedge ck) begin pq[262:1] <= pi[262:1]; cq[5:1] <= ci[5:1]; end
     assign uo = uq; assign do_ = dq; assign po = pq; assign co = cq; assign tuo = tu_q; assign tdo = td_q; assign fo = f_q;
+    assign kuo = ku_q; assign kdo = kd_q;
 endmodule
 
 // ---- the exp datapath of one head of one engine slice: e = exp(s - M), one position a cycle -------------------------
@@ -319,6 +350,7 @@ module qkd_astk_ex (
     output reg  [33:0]   xe,
     input  wire [535:0]  ui,   output wire [535:0] uo,   input  wire [535:0] di,   output wire [535:0] do_,
     input  wire [262:0]  pi,   output wire [262:0] po,   input  wire [5:0]   ci,   output wire [5:0]   co,
+    input  wire [3:0]    kui,  output wire [3:0]   kuo,  input  wire [3:0]   kdi,  output wire [3:0]   kdo,
     input  wire          tui,  output wire         tuo,  input  wire         tdi,  output wire         tdo,
     input  wire          fi,   output wire         fo
 );
@@ -327,7 +359,7 @@ module qkd_astk_ex (
     (* keep *) reg rn_q;
     always @(posedge ck) rn_q <= rst_n;
     (* keep_hierarchy *) qkd_astk_lanes u_l (.ck(ck), .rn(rn_q), .ui(ui), .uo(uo), .di(di), .do_(do_), .pi(pi), .po(po),
-        .ci(ci), .co(co), .tui(tui), .tuo(tuo), .tdi(tdi), .tdo(tdo), .fi(fi), .fo(fo));
+        .ci(ci), .co(co), .kui(kui), .kuo(kuo), .kdi(kdi), .kdo(kdo), .tui(tui), .tuo(tuo), .tdi(tdi), .tdo(tdo), .fi(fi), .fo(fo));
     (* keep *) reg [65:0] xq;
     always @(posedge ck or negedge rn_q) if (!rn_q) xq[0] <= 1'b0; else xq[0] <= xa[0];
     always @(posedge ck) xq[65:1] <= xa[65:1];
@@ -426,6 +458,7 @@ module qkd_astk_ep (
     input  wire          cr,
     input  wire [535:0]  ui,   output wire [535:0] uo,   input  wire [535:0] di,   output wire [535:0] do_,
     input  wire [262:0]  pi,   output wire [262:0] po,   input  wire [5:0]   ci,   output wire [5:0]   co,
+    input  wire [3:0]    kui,  output wire [3:0]   kuo,  input  wire [3:0]   kdi,  output wire [3:0]   kdo,
     input  wire          tui,  output wire         tuo,  input  wire         tdi,  output wire         tdo,
     input  wire          fi,   output wire         fo
 );
@@ -436,7 +469,7 @@ module qkd_astk_ep (
     (* keep *) reg rn_q;
     always @(posedge ck) rn_q <= rst_n;
     (* keep_hierarchy *) qkd_astk_lanes u_l (.ck(ck), .rn(rn_q), .ui(ui), .uo(uo), .di(di), .do_(do_), .pi(pi), .po(po),
-        .ci(ci), .co(co), .tui(tui), .tuo(tuo), .tdi(tdi), .tdo(tdo), .fi(fi), .fo(fo));
+        .ci(ci), .co(co), .kui(kui), .kuo(kuo), .kdi(kdi), .kdo(kdo), .tui(tui), .tuo(tuo), .tdi(tdi), .tdo(tdo), .fi(fi), .fo(fo));
     (* keep *) reg [4:0] sq_q;
     always @(posedge ck) sq_q <= sq;
     wire [1:0] S = sq_q[4:3];
