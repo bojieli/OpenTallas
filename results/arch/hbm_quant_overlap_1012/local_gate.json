@@ -1,0 +1,125 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_hgi_qw_rq': 'M6', 'ot_hgi_qw_wq': 'M6', 'ot_hgi_qw_dxl': 'M6', 'ot_hgi_qw_dbq': 'M6', 'ot_hgi_qw_daq': 'M6'}",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_rq: (f) face-pin access: 2214 of 2214 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_hit_p[0] M4 (85.571,47.904), c_hit_p[1] M4 (85.571,47.904), c_hit_p[2] M4 (85.571,47.904))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_rq: (f) face-pin access: 2214 of 2214 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_hit_p[0] M4 (85.571,47.904), c_hit_p[1] M4 (85.571,47.904), c_hit_p[2] M4 (85.571,47.904))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_rq: (f) face-pin access: 2214 of 2214 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_hit_p[0] M4 (85.571,47.904), c_hit_p[1] M4 (85.571,47.904), c_hit_p[2] M4 (85.571,47.904))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_rq: (f) face-pin access: 2214 of 2214 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_hit_p[0] M4 (85.571,47.904), c_hit_p[1] M4 (85.571,47.904), c_hit_p[2] M4 (85.571,47.904))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_rq: (f) face-pin access: 2214 of 2214 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_hit_p[0] M4 (85.571,47.904), c_hit_p[1] M4 (85.571,47.904), c_hit_p[2] M4 (85.571,47.904))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_rq: (f) face-pin access: 2214 of 2214 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_hit_p[0] M4 (85.571,47.904), c_hit_p[1] M4 (85.571,47.904), c_hit_p[2] M4 (85.571,47.904))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_rq: (f) face-pin access: 2214 of 2214 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_hit_p[0] M4 (85.571,47.904), c_hit_p[1] M4 (85.571,47.904), c_hit_p[2] M4 (85.571,47.904))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_rq: (f) face-pin access: 2214 of 2214 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_hit_p[0] M4 (85.571,47.904), c_hit_p[1] M4 (85.571,47.904), c_hit_p[2] M4 (85.571,47.904))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_wq: (f) face-pin access: 1730 of 1730 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_sec[0] M4 (0.060,40.176), c_sec[10] M4 (0.060,40.176), c_sec[11] M4 (0.060,40.176))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_wq: (f) face-pin access: 1730 of 1730 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_sec[0] M4 (0.060,40.176), c_sec[10] M4 (0.060,40.176), c_sec[11] M4 (0.060,40.176))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_wq: (f) face-pin access: 1730 of 1730 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_sec[0] M4 (0.060,40.176), c_sec[10] M4 (0.060,40.176), c_sec[11] M4 (0.060,40.176))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_wq: (f) face-pin access: 1730 of 1730 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_sec[0] M4 (0.060,40.176), c_sec[10] M4 (0.060,40.176), c_sec[11] M4 (0.060,40.176))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_wq: (f) face-pin access: 1730 of 1730 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_sec[0] M4 (0.060,40.176), c_sec[10] M4 (0.060,40.176), c_sec[11] M4 (0.060,40.176))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_wq: (f) face-pin access: 1730 of 1730 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_sec[0] M4 (0.060,40.176), c_sec[10] M4 (0.060,40.176), c_sec[11] M4 (0.060,40.176))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_wq: (f) face-pin access: 1730 of 1730 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_sec[0] M4 (0.060,40.176), c_sec[10] M4 (0.060,40.176), c_sec[11] M4 (0.060,40.176))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_wq: (f) face-pin access: 1730 of 1730 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_sec[0] M4 (0.060,40.176), c_sec[10] M4 (0.060,40.176), c_sec[11] M4 (0.060,40.176))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_dxl: (f) face-pin access: 4097 of 4097 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (1.968,120.277), xs[0] M5 (1.968,120.277), xs[1000] M5 (1.968,120.277))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_dbq: (f) face-pin access: 2582 of 2583 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bfo M5 (83.664,0.016), bvo M5 (83.664,0.016), byo[0] M5 (83.664,0.016))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_hgi_qw_daq: (f) face-pin access: 3089 of 3098 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bfo M6 (129.493,107.328), bvo M6 (129.493,107.328), byo[0] M6 (129.493,107.328))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  }
+ ]
+}

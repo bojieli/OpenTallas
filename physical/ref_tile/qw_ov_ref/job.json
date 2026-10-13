@@ -1,0 +1,91 @@
+{
+ "name": "qw_ov_ref-ov3-cl-COMMIT",
+ "block": "ot_hgi_quant_wide_ov",
+ "ref_tile": true,
+ "owner": "Claude:el1013-quant-tput",
+ "purpose": "Opt-in WQ3 record-overlap quant cluster: continuous per-beat header/destination, RAW/WAR/WAW hazard serialization, finite compact descriptors and ordered per-lane retirement; reserve x270..570,y336.96..388.8 seam. Price168 preserved; production184/168 exact plus lane-map/header/premature-retire mutants and delayed-lane/RAW controls. New drained output binds unit packet-fallback wait; cmd unused SUT bits carry frontend A/O span ends. Canonical WQ2/f3/f3p preserved. Physical ov2: identical seam reservation moved POST_TAPCELL to PRE_TAPCELL before fixed tap/endcap insertion (ov1 DPL0033 1148 fixed cells in removed seam rows); RTL, clock and budgets unchanged. NativeASAP7tapcell ignores dbBlockage: PRE hook explicitly splits192 native rows at270/570.024, with384 legal boundarycaps and zero seam-intersecting rows/taps; stopped3_5dp checks actualold3_4 logical netlist+positions with only fresh rows/taps replaced. Physical ov3 (Claude 10-13): clock spine with subtree-common padding (OT_SPINE_TREE_PAD=1, main clock_spine.tcl) + measured-best restore; the per-leaf padding ran away on the same outline/children in qw_h3/qw_h3p (165,891 / 190,931 spine cells, arrival to 4,428 ps, hold -764.7 ps). RTL, SDC, outline, seam and price unchanged.",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "codex/el1012-hbm-fq-cx",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_quant_wide_ov #(.DEC3(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_HARD_CHILDREN --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/qw/ot_hgi_quant_wide_ov.sv rtl/hbm_accel/generic/qw/ot_hgi_qw_rq.sv rtl/hbm_accel/generic/qw/ot_hgi_qw_wq.sv rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/qw_ov_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qw_ov_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qw_ov_ref --out {RUN}/record/views/ot_hgi_quant_wide_ov --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 --macro-view physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq --macro-view physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq --macro-view physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl --macro-view physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq --macro-view physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qw_ov_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq",
+   "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
+   "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
+   "physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq",
+   "physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qw_ov_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qw_ov_ref/qw_ov_ref-ov3-cl-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "no_bench_reason": "Source-pinned fleet gate record results/rtl/hbm_quant_overlap_1012; WQ3 OVERLAP1 DEC3 Verilator5.050 production184/168 words3328, skew control exact, header/lane/early-retire mutants fail; RAW dependency gate exact. Adoption awaits this cluster closure."
+}
