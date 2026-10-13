@@ -9,5 +9,6 @@
   "original_obstructions_restored": true,
   "pass": true,
   "guard_sha256": "3af575b292eee585948a1e1d64f286512af533fe026bab61a37799845a5b88df",
-  "log": "OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\nCX_SU_SWE SRAM access keepout created 4\nCX_SU_SWE SRAM access keepout removed 4\nSWE_ACTUAL_GUARD_PASS 4create4remove originalOBSrestored\n"
+  "log": "OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\nCX_SU_SWE SRAM access keepout created 4\nCX_SU_SWE SRAM access keepout removed 4\nSWE_ACTUAL_GUARD_PASS 4create4remove originalOBSrestored\n",
+  "scope_correction": "Original test used literal hook filenames; deployment copied filenames were not exercised. Old source88e9b3f15 silently skipped copied hook names. This receipt proves original geometry create/remove only, not deployed hook execution."
 }
