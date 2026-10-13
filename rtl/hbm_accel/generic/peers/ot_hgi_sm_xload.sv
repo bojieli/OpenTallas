@@ -232,7 +232,7 @@ module ot_hgi_sm_xload #(
     generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
         for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
             // per-macro pin flops (kept: one copy a macro, so no register drives pins across the field)
-            (* keep = 1 *) reg       rp_ce;  (* keep = 1 *) reg [6:0] rp_a;   (* keep = 1 *) reg rp_sel;
+            (* keep = 1 *) reg       rp_ce; (* keep = 1 *) reg rp_fire;  (* keep = 1 *) reg [6:0] rp_a;   (* keep = 1 *) reg rp_sel;
             (* keep = 1 *) reg       wp_ce;  (* keep = 1 *) reg [6:0] wp_a;   reg [15:0] wp_d;  reg [15:0] wp_m;
             // smmv 3b wide landing pins (WVM): a full 256-b row (16 lanes x BF16 of t-value gt) at word {g mod 16, p}
             (* keep = 1 *) reg       vp_ce;  (* keep = 1 *) reg [6:0] vp_a;   reg [255:0] vp_d;
@@ -243,8 +243,12 @@ module ot_hgi_sm_xload #(
             wire [255:0] rd;
             wire [3:0] lsl = w1_l[gq] ^ ((MUT_M != 0) ? 4'd1 : 4'd0);
             always @(posedge clk or negedge rst_c) begin
-                if (!rst_c) begin rp_ce <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; vp_ce <= 1'b0; end
-                else begin if(macro_go)begin rp_ce <= rv[1] && r1_oh[gq][gt]; rp_sel <= rp_ce; end wp_ce <= w1_v[gq];
+                if (!rst_c) begin rp_ce <= 1'b0; rp_fire <= 1'b0; rp_sel <= 1'b0; wp_ce <= 1'b0; vp_ce <= 1'b0; end
+                else begin
+                    // Freeze the SRAM's own synchronous read stage too. Predict the next local
+                    // enable phase in a PIN FLOP; a paused pipeline must not overwrite its pending read.
+                    rp_fire <= ((XW_FLOW==0)||go_ctl) && (macro_go ? (rv[1] && r1_oh[gq][gt]) : rp_ce);
+                    if(macro_go)begin rp_ce <= rv[1] && r1_oh[gq][gt]; rp_sel <= rp_ce; end wp_ce <= w1_v[gq];
                            vp_ce <= (WVM != 0) && cv_v && cv_h == (gq / 2); end
             end
             always @(posedge clk) begin
@@ -259,7 +263,7 @@ module ot_hgi_sm_xload #(
                 assign wmask[16 * gs +: 16] = {16{wp_m[gs]}};
             end
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk),
-                .r_ce_in(rp_ce), .r_addr_in(rp_a), .rd_out(rd),
+                .r_ce_in(rp_fire), .r_addr_in(rp_a), .rd_out(rd),
                 .w_ce_in(wp_ce || vp_ce), .w_addr_in(vp_ce ? vp_a : wp_a), .wd_in(vp_ce ? vp_d : {16{wp_d}}),
                 .w_mask_in(vp_ce ? {256{1'b1}} : wmask), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
             assign cap[gt * 4 + gq] = cq;
