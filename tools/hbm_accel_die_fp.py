@@ -1437,6 +1437,9 @@ def build_r25gq_net(variant):
                 # each) on a 57.1-um S face (58.32 minus the 2-track + 0.5-um end margins) and masters() refused it.
                 # Size each face to its bus: bits on the 0.048 track + both end margins + 1 um, on the placement grid.
                 need_ = bits * 0.048 + 2 * (2 * 0.048 + 0.5) + 1.0
+                # 10-13: the k = 16 GRT bundle model (`check`, grt) packs ceil(bits / 16) pins at 16 tracks with a
+                # 2-bundle end margin: 1,200 b = 57.6 um on 56.0 um was refused the same way (pin_clashes(m, 16))
+                need_ = max(need_, math.ceil(bits / 16) * 16 * 0.048 + 2 * (2 * 16 * 0.048 + 0.5) + 0.5)
                 sw_, sh_ = max(sw_, up(need_, GX)), max(sh_, up(need_, GY))
             else:       # a wide registered bus: a thin relay bank across the route, its faces as long as the bus needs
                 ln_ = up(bits * 0.048 + 20.0, GY)
