@@ -144,6 +144,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--run", type=Path, required=True)
     ap.add_argument("--xvm", type=Path, default=None)
+    ap.add_argument("--xvm-edges", type=int, default=10, help="extra VM read edges in the reference latency probe (default 10)")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--sha", default="")
     ap.add_argument("--host", default="")
@@ -243,24 +244,28 @@ def main():
              dict(item="LM head on the stationed core", added_cycles=head_rec["delta"], grade="measured")]
     hand = {}
     # VM bit-plane x read + 10 edges
-    vm = dict(unit="VM.XREAD", branch="claude/qwen-tp8-vm-1013 @ 31dbda816", edges_per_x_read=10, x_reads_per_token=217,
-              bound_cycles=2170, bound_loss_pct=round(AC.loss_pct(T, T + 2170), 3),
-              unit_bench="tb_qfd_vm_bv_ports: XVM 22 -> 32 on r21 (measured by the VM stream); pop / SU / row / write paths + 0")
+    edges = a.xvm_edges
+    assert edges > 0, "VM latency probe needs a positive edge count"
+    vm = dict(unit="VM.XREAD", branch="claude/qwen-tp8-vm-1013 @ 31dbda816" if edges == 10 else "reference latency sensitivity probe",
+              edges_per_x_read=edges, x_reads_per_token=217,
+              bound_cycles=217 * edges, bound_loss_pct=round(AC.loss_pct(T, T + 217 * edges), 3),
+              unit_bench=("tb_qfd_vm_bv_ports: XVM 22 -> 32 on r21 (measured by the VM stream); pop / SU / row / write paths + 0" if edges == 10 else "Reference-model latency probe of the later VM handoff; native VM hardware is not in this vehicle"))
     if a.xvm and (a.xvm / "result.json").exists():
         xr = J(a.xvm / "result.json")
         xs = xr["stage_cycles"]
         d = {k: xs[k] - pos["stage_cycles"][k] for k in xs}
-        added = d["L0"] + 35 * d[a.layer] + 10
-        vm.update(measured=dict(vehicle="the same vehicle built with QROM_XVM=11 (VM x-read transport 1 -> 11 edges)",
+        added = d["L0"] + 35 * d[a.layer] + edges
+        vm.update(measured=dict(vehicle=f"the same vehicle built with QROM_XVM={edges + 1} (VM x-read transport 1 -> {edges + 1} edges)",
                                 exact=xr["exact"], layer_x_mismatches=xr["layer_x_mismatches"], kv_mismatches=xr["kv_mismatches"],
-                                stage_cycles=xs, delta_per_layer=d, head_delta_bound=10,
+                                stage_cycles=xs, delta_per_layer=d, head_delta_bound=edges,
                                 added_cycles_per_token=added, e2e_loss_pct=round(AC.loss_pct(T, T + added), 3),
-                                x_reads_on_critical_path_per_layer=round(d[a.layer] / 10, 2),
+                                x_reads_on_critical_path_per_layer=round(d[a.layer] / edges, 2),
                                 executable_sha256=xr.get("executable_sha256")), status="MEASURED per layer")
-        items.append(dict(item="VM bit-plane x read + 10 edges (XPR 10)", per_layer=d[a.layer], l0=d["L0"], added_cycles=added, grade="measured"))
+        items.append(dict(item=f"VM bit-plane x read + {edges} edges (latency probe)", per_layer=d[a.layer], l0=d["L0"], added_cycles=added, grade="measured layers + head bound"))
     else:
         vm.update(measured=None, status="UNMEASURED per layer (bound only)")
-        items.append(dict(item="VM bit-plane x read + 10 edges (XPR 10)", added_cycles=2170, grade="bound (217 x reads x 10, all on the critical path)"))
+        items.append(dict(item=f"VM bit-plane x read + {edges} edges (latency probe)", added_cycles=217 * edges,
+                          grade=f"bound (217 x reads x {edges}, all on the critical path)"))
     hand["vm_bitplane_x_read"] = vm
     hand["reset_tree"] = dict(per_token_cycles=0, grade="by construction",
                               note="registered reset tree: power-on only; traffic start gated 85 cycles after root release (qwen-tp8 die, 10-13 04:16)")

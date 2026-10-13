@@ -71,17 +71,19 @@
   "pd": 0.35,
   "threads": 16,
   "peak_ram_gb": 64,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:hbm-sm-native-manifest",
-  "branch": "codex/hbm-sm-native-manifest-1013",
-  "tag": "r1",
-  "purpose": "Native FCXR physical pin access correction: r2bc709 GRT protected onlyouterhalf ofM4Epin(OT_PK_FRAC0.5);817/5286above-layerOBS intersectedunprotectedinnerhalf. Protectfullpindepth+0.096umhalo onABOVElayeronly; keepownlayer/belowaccess, exactpinplan/RTL/TAGW16/outline/clock/latencyunchanged. NoOBSdeletion/alias/collectretry. Source49immutableRTLsnapshots;production4096FC_HIERgatepending.",
-  "no_bench_reason": "Physical reference reroute of module-text-equal source49/bc709/a9 acceptedfunctionalimplementation; fullRMAX4096REQCR1DEFtrue FC_HIERexact+S1Wmutant gates runseparately andadoptionrequires them. No RTL change.",
+  "owner": "Claude:el1013-smh-r11",
+  "branch": "claude/el1013-smh-r11",
+  "tag": "r2",
+  "purpose": "Native FCXR physical pin access correction: r2bc709 GRT protected onlyouterhalf ofM4Epin(OT_PK_FRAC0.5);817/5286above-layerOBS intersectedunprotectedinnerhalf. Protectfullpindepth+0.096umhalo onABOVElayeronly; keepownlayer/belowaccess, exactpinplan/RTL/TAGW16/outline/clock/latencyunchanged. NoOBSdeletion/alias/collectretry. Source49immutableRTLsnapshots;production4096FC_HIERgatepending. r2 (Claude el1013-smh-r11): kit recipe 2 boundary; composition gate smn_native_sm_fch bound (exact + S1W/late32/hold0 mutants).",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm"
-  ]
+  ],
+  "benched_by": "smn_native_sm_fch",
+  "structural_change": "boundary rebuilt on kit recipe 2: pin flops FIRM at the pins plus hold stages at every input and output pin, hold margin 30 ps (r1: TT +343.3 / FF -6.2, misses only on the boundary -- FF in->reg -5.7, reg->out -6.2, reg->reg +10.2 -- and the post-route hold ECO stalled at -2.7 after 6,393 cells); pin plan, outline, RTL, clock and latency unchanged"
  },
  "layer_cap": "M6",
  "layer_cap_grant": "coordinator el1012 io_tcl audit: same-contract re-route of an existing SMH child (closed @a9afd2404/10db43429 with region-grouped pins); the SMH parents (pdn_smh_tile_hier.tcl / front_c) take child PG on M6 under their M7 straps, so the child keeps M6 PG until the parent is re-cut to the M5 contract",
@@ -104,7 +106,14 @@
    "actualnativeconfig/productionarithmetic/throughput/seamqualification"
   ]
  },
+ "recipe": 2,
  "params": {},
  "children": [],
- "inter": []
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
 }
