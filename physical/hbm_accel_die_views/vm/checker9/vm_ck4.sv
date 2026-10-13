@@ -47,12 +47,13 @@ module vm_ck4 #(parameter integer LOCAL_REGIONS=0)(input wire ck, input wire rst
  reg write_q,cap_valid;
  wire [287:0] repaired;
  wire [255:0] sample_data,expected_data;
- wire [3:0] sample_ue;
+ wire [3:0] sample_ue,expected_ue;
  for(genvar k=0;k<4;k=k+1)begin:words
   assign repaired[k*72+:72]=repair(sample_q[k*72+:72],sample_syn_q[k*8+:8]);
   assign sample_data[k*64+:64]=payload(repaired[k*72+:72]);
   assign expected_data[k*64+:64]=payload(repair(expected_q[k*72+:72],expected_syn_q[k*8+:8]));
   assign sample_ue[k]=ue(sample_syn_q[k*8+:8]);
+  assign expected_ue[k]=ue(expected_syn_q[k*8+:8]);
  end
  always @(posedge ck)begin
   owner_mask_q<=owner_mask_i;padding_mask_q<=padding_mask_i;write_q<=write_i;
@@ -78,7 +79,7 @@ module vm_ck4 #(parameter integer LOCAL_REGIONS=0)(input wire ck, input wire rst
 `ifdef MUT_CK_IGNORE
     error_o<=0;
 `else
-    error_o<=!cap_valid || (|sample_ue) || (|(sample_data&padding_mask_q))
+    error_o<=!cap_valid || (|sample_ue) || (|expected_ue) || (|(sample_data&padding_mask_q))
       || (|((sample_data^expected_data)&(write_q?256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:owner_mask_q)));
 `endif
    end

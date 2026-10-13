@@ -58,6 +58,11 @@ module tb_vm_ck4;
   padding_mask_i=0;
   // Single-bit correction of expected seat must match the legacy decoder too.
   for(integer b=0;b<288;b=b+1)begin expected_i=clean^(288'd1<<b);run(clean,0,1);end
+  for(integer w=0;w<4;w=w+1)
+   for(integer a=0;a<72;a=a+1)for(integer b=a+1;b<72;b=b+1)begin
+    expected_i=clean^(288'd1<<(w*72+a))^(288'd1<<(w*72+b));run(clean,1,1);
+   end
+  expected_i=clean;
   @(negedge ck);rst_n=0;@(negedge ck);rst_n=1;check_i=1;
   @(negedge ck);if(valid_o||!error_o)$fatal(1,"CK4 stale capture consumed after reset");
   // Native required checker throughput: one independently encoded/corrected row per cycle.
@@ -74,6 +79,6 @@ module tb_vm_ck4;
    end
   end
   $display("VM_CK4_STREAM PASS beats=2048 cycles=2050 initiation_interval=1");
-  $display("VM_CK4 PASS cases=%0d single=576 double=10224 identity=512 padding=256",cases);$finish;
+  $display("VM_CK4 PASS cases=%0d single=576 sample_double=10224 expected_double=10224 identity=512 padding=256",cases);$finish;
  end
 endmodule
