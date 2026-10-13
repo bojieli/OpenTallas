@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_seq_su",
+ "verdict": "WARN",
+ "generated": "2026-10-13T09:30:53-0700",
+ "host": "ot-epyc4",
+ "cts": true,
+ "commit": "a064cb6e5",
+ "clock": {
+  "max_root_sinks": 14444,
+  "root": "port:ck",
+  "cts": true,
+  "tt_insertion_ps": 705.6,
+  "tt_spread_ps": 151.0,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "14,444 sinks on the largest root <= 15,000; measured TT insertion 705.6 ps, leaf spread 151.0 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 8349 um2 + macros 26639 in core 264254: util 13%",
+   "fix": "set \"std_area_um2\": 8349 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_body.u_ctrl.h_rd$_DFFE_PN0P_ -> u_body.u_ctrl.ready_q$_DFF_PN0_/D: ~642 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 13.3% outside 45%-65% (std 8414 + macro 26639 um2 in 264112 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ]
+}
