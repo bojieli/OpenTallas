@@ -1,7 +1,7 @@
 // ot_hgi_seq_split.sv -- wires-only parent of the R25GQ sequencer split (el1013-hbm-seq-split, 2026-10-13).
 // Same parameters and ports as ot_hgi_seq; three hardened children (own reset synchroniser each) and the five
 // registered seams of ot_hgi_seq_seam.svh.  NO flop, NO gate here: every seam net is child TX flop -> child RX flop.
-// (generated once by el1013-seq-split-gen/gen_parent.py from the child port lists; edit by hand from now on)
+// Child placement on the 347.76 x 272.16 slot: FE (0, 0) 248.4 x 211.68, BE (259.2, 0) 88.56 x 211.68, AU (0, 216) 347.76 x 56.16.
 `default_nettype none
 module ot_hgi_seq_split #(
     parameter integer RW   = 4096,        // ring words (16 B); a power of two
@@ -152,7 +152,11 @@ module ot_hgi_seq_split #(
     wire [17:0]     au_s3_ian;    // au -> be
     wire            au_s3_inb;    // au -> be
     wire            au_s3_ihbm;    // au -> be
-    ot_hgi_seq_fe #(.RW(RW), .NOS(NOS), .USE_MACRO(USE_MACRO), .DS_TPL(DS_TPL), .DS_WIN(DS_WIN), .DS_SCAN(DS_SCAN), .DS_TOPK(DS_TOPK), .DS_HDL(DS_HDL), .QD(QD), .FD(FD), .IKS_I(IKS_I)) u_fe (
+    ot_hgi_seq_fe
+`ifndef OT_HGI_SEQ_HARD            // hardened children (ref_tile cluster) are built at the routed parameters
+        #(.RW(RW), .NOS(NOS), .USE_MACRO(USE_MACRO), .DS_TPL(DS_TPL), .DS_WIN(DS_WIN), .DS_SCAN(DS_SCAN), .DS_TOPK(DS_TOPK), .DS_HDL(DS_HDL), .QD(QD), .FD(FD), .IKS_I(IKS_I))
+`endif
+        u_fe (
         .clk(clk),
         .rst_n(rst_n),
         .md_d(md_d),
@@ -210,7 +214,11 @@ module ot_hgi_seq_split #(
         .fe_s2i_sut(fe_s2i_sut),
         .fe_s2i_np0(fe_s2i_np0)
     );
-    ot_hgi_seq_au #(.RW(RW), .NOS(NOS), .USE_MACRO(USE_MACRO), .DS_TPL(DS_TPL), .DS_WIN(DS_WIN), .DS_SCAN(DS_SCAN), .DS_TOPK(DS_TOPK), .DS_HDL(DS_HDL), .QD(QD), .FD(FD), .IKS_I(IKS_I)) u_au (
+    ot_hgi_seq_au
+`ifndef OT_HGI_SEQ_HARD            // hardened children (ref_tile cluster) are built at the routed parameters
+        #(.RW(RW), .NOS(NOS), .USE_MACRO(USE_MACRO), .DS_TPL(DS_TPL), .DS_WIN(DS_WIN), .DS_SCAN(DS_SCAN), .DS_TOPK(DS_TOPK), .DS_HDL(DS_HDL), .QD(QD), .FD(FD), .IKS_I(IKS_I))
+`endif
+        u_au (
         .clk(clk),
         .rst_n(rst_n),
         .rank(rank),
@@ -266,7 +274,11 @@ module ot_hgi_seq_split #(
         .au_s3_inb(au_s3_inb),
         .au_s3_ihbm(au_s3_ihbm)
     );
-    ot_hgi_seq_be #(.RW(RW), .NOS(NOS), .USE_MACRO(USE_MACRO), .DS_TPL(DS_TPL), .DS_WIN(DS_WIN), .DS_SCAN(DS_SCAN), .DS_TOPK(DS_TOPK), .DS_HDL(DS_HDL), .QD(QD), .FD(FD), .IKS_I(IKS_I)) u_be (
+    ot_hgi_seq_be
+`ifndef OT_HGI_SEQ_HARD            // hardened children (ref_tile cluster) are built at the routed parameters
+        #(.RW(RW), .NOS(NOS), .USE_MACRO(USE_MACRO), .DS_TPL(DS_TPL), .DS_WIN(DS_WIN), .DS_SCAN(DS_SCAN), .DS_TOPK(DS_TOPK), .DS_HDL(DS_HDL), .QD(QD), .FD(FD), .IKS_I(IKS_I))
+`endif
+        u_be (
         .clk(clk),
         .rst_n(rst_n),
         .cfg_vocab(cfg_vocab),
