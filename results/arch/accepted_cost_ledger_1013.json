@@ -64,8 +64,9 @@
    "evidence": "results/rtl/dsrom_mtp_wave_bench_20261011/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
-   "note": "wave bench charge p2.core_transaction 6,092 measured / 5,467 price; the step charges it three times (mtp.0-2 rank prefixes, node mc.p2.selected_path = 3 x (5,467 - 348)), on the critical path; MTP only"
+   "status": "accepted",
+   "note": "wave bench charge p2.core_transaction 6,092 measured / 5,467 price; the step charges it three times (mtp.0-2 rank prefixes, node mc.p2.selected_path = 3 x (5,467 - 348)), on the critical path; MTP only",
+   "accepted_date": "2026-10-13"
   },
   {
    "design": "s81",
@@ -111,8 +112,9 @@
    "evidence": "results/rtl/s81hc_throughput_20261013/baseline.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
-   "note": "twelve production POST jobs at 286-287 cycles against the immutable 112.9 (source 3c62573d5); 80 runs a token (attn + ffn x 40 layers), all on the critical path; in MTP the slowest verify stage holds two, paid again at each of the 5 wave positions; the 6 draft-block hc_post nodes (641.3, another vehicle) are not touched.  CURRENT BASELINE: to be replaced by the POST express measurement (post_express_spec.json)."
+   "status": "accepted",
+   "note": "twelve production POST jobs at 286-287 cycles against the immutable 112.9 (source 3c62573d5); 80 runs a token (attn + ffn x 40 layers), all on the critical path; in MTP the slowest verify stage holds two, paid again at each of the 5 wave positions; the 6 draft-block hc_post nodes (641.3, another vehicle) are not touched.  CURRENT BASELINE: to be replaced by the POST express measurement (post_express_spec.json).",
+   "accepted_date": "2026-10-13"
   },
   {
    "design": "r25gq",
@@ -509,13 +511,13 @@
    "headroom_pct": 15.0
   },
   "s81": {
-   "accepted_pct": 0,
-   "proposed_pct": 1.812,
+   "accepted_pct": 1.812,
+   "proposed_pct": 0,
    "accepted_plus_proposed_pct": 1.812,
    "limit_pct": 15.0,
-   "accepted_rows": 0,
-   "proposed_rows": 2,
-   "headroom_pct": 15.0
+   "accepted_rows": 2,
+   "proposed_rows": 0,
+   "headroom_pct": 13.188
   },
   "r25gq": {
    "accepted_pct": 0,
