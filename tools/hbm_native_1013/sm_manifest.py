@@ -87,9 +87,17 @@ def main():
     front=[c for c in children if '_front_' in c['logical_module'] or '_fc_' in c['logical_module']]
     fw=898.56  # prior FC_HIER center-band contract; actual inherited masters retain actual dimensions
     be=[c for c in children if '_be_' in c['logical_module']]; bh=math.ceil(max(c['h_um'] for c in be)/gap)*gap
-    fy=0
+    fx=4*(tw+gap)
+    # Functional front layout from source-pinned FC_POS (not obsolete H3_TILE dimensions).
+    fc_xy={'u_bc':(254.88,4.32,'R0'),'u_is':(254.88,494.64,'R0'),'u_xl':(298.08,786.24,'R0'),'u_tw':(4.32,872.64,'R0'),'u_te':(678.192,872.64,'MY'),'u_rw':(4.32,518.4,'R0'),'u_re':(678.192,518.4,'MY'),'u_bw':(4.32,0,'R0'),'u_be':(678.192,0,'MY')}
+    fs=next(c for c in front if c['logical_module'].endswith('front_s')); fn=next(c for c in front if c['logical_module'].endswith('front_n'))
+    fc_y=fs['h_um']+gap; fc_h=1088.64
+    fs['xy_um']=[round(fx+(fw-fs['w_um'])/2,3),0]
+    fn['xy_um']=[round(fx+(fw-fn['w_um'])/2,3),round(fc_y+fc_h+gap,3)]
     for c in front:
-        c['xy_um']=[round(4*(tw+gap),3),round(fy,3)]; fy+=(c['h_um'] or 0)+gap
+        if '_fc_' in c['logical_module']:
+            x,y,orient=fc_xy[c['instance'].split('.')[-1]]; c['xy_um']=[round(fx+x,3),round(fc_y+y,3)]; c['orientation']=orient
+    fy=fn['xy_um'][1]+fn['h_um']
     for c in children:
         match=re.search(r'g_c\[(\d+)\](?:\.g_p\[(\d+)\])?',c['instance'])
         if not match: continue
@@ -99,7 +107,7 @@ def main():
         c['xy_um']=[round(x,3),round(y,3)]
     width=round(8*(tw+gap)+fw,3); height=round(max(fy, bh+gap+2*(th+gap)),3)
     unresolved=[{'instance':c['instance'],'logical_module':c['logical_module'],'reason':c['closure_status'],'owner':'/root/hbm_sm_cluster' if '_tile_' in c['logical_module'] else '/root/hbm_sm_native_manifest','required':['source equivalence','TT setup and FF hold','DRC zero','child_lint','PG export and native seam timing','throughput qualification']} for c in children]
-    manifest={'schema':'opentallas.native_component.v1','component':'sm','logical_module':top,'source_commit':commit,'source_file':RTL,'source_sha256':hashlib.sha256(source.encode()).hexdigest(),'boundary_elaboration_defines':['OT_SMH_CG','OT_SMH_FC_HIER','SYNTHESIS'],'defines':['OT_SMH_CG','OT_SMH_FC_HIER','OT_SMH_CG_ENREG','OT_SMH_XLK','OT_FP_DATA_NORST','OT_SMH_DRST0','OT_SMH_RSTRELAY','OT_SMH_HIER','OT_SMH_PTW_OHDLY','SYNTHESIS'],'parameters':{'NC':8,'SUB':4,'RPT':2,'LBS':2,'LSB':16,'IL':8,'RMAX':4096,'LEV':4,'XD':128,'MAX_OUT':512,'TCK':1,'PIO':2,'HAZ':1,'NOUT':4,'ENABLE_INT8':0,'PIPE_INT8':0,'REQCR':1},'outline_um':{'w':width,'h':height},'placement_status':'nonoverlapping_candidate_requires_seam_placement','closed':False,'boundary_ports':ports,'children':children,'connections':connections,'boundary_binding':binding,'constant_binding':constants,'unresolved':unresolved,'preconditions':['Hard tiles placed directly on die; no hardened full-SM master','front_c expands to nine children under OT_SMH_FC_HIER; no hardened front_c parent','FC_HIER adds two cycles to row bundles and tile-row-1 x-write; must price and exactness qualify','Tile R5 closure must publish real M7 PG LEF plus TT/FF/SS libs before placement can qualify','M8 die ties to M7 tile PG, M9 distribution candidate; continuity/IR remain open','Candidate packing requires registered relays for every long seam; no placement-only timing claim','Legacy hfd_sm 3214.08x1131.84 outline is not native coverage']}
+    manifest={'schema':'opentallas.native_component.v1','component':'sm','logical_module':top,'source_commit':commit,'source_file':RTL,'source_sha256':hashlib.sha256(source.encode()).hexdigest(),'boundary_elaboration_defines':['OT_SMH_CG','OT_SMH_FC_HIER','SYNTHESIS'],'defines':['OT_SMH_CG','OT_SMH_FC_HIER','OT_SMH_CG_ENREG','OT_SMH_XLK','OT_FP_DATA_NORST','OT_SMH_DRST0','OT_SMH_RSTRELAY','OT_SMH_HIER','OT_SMH_PTW_OHDLY','SYNTHESIS'],'parameters':{'NC':8,'SUB':4,'RPT':2,'LBS':2,'LSB':16,'IL':8,'RMAX':4096,'LEV':4,'XD':128,'MAX_OUT':512,'TCK':1,'PIO':2,'HAZ':1,'NOUT':4,'ENABLE_INT8':0,'PIPE_INT8':0,'REQCR':1},'outline_um':{'w':width,'h':height},'placement_revision':2,'placement_status':'nonoverlapping_functional_front_candidate_requires_seam_placement','front_placement_reference':{'source_commit':commit,'source_file':'tools/hbm_accel_smh_physical.py','table':'FC_POS','front_c_soft_band_um':[898.56,1088.64],'note':'Actual view widths218.16supersede oldFC_DIM216.024. No hard front_c master.'},'closed':False,'boundary_ports':ports,'children':children,'connections':connections,'boundary_binding':binding,'constant_binding':constants,'unresolved':unresolved,'preconditions':['Hard tiles placed directly on die; no hardened full-SM master','front_c expands to nine children under OT_SMH_FC_HIER; no hardened front_c parent','FC_HIER adds two cycles to row bundles and tile-row-1 x-write; must price and exactness qualify','Tile R5 closure must publish real M7 PG LEF plus TT/FF/SS libs before placement can qualify','M8 die ties to M7 tile PG, M9 distribution candidate; continuity/IR remain open','Candidate packing requires registered relays for every long seam; no placement-only timing claim','Legacy hfd_sm 3214.08x1131.84 outline is not native coverage']}
     # Coalesce adjacent bits only if every endpoint advances by one; preserve exact permutations.
     compact=[]
     for row in sorted(connections,key=lambda r:int(r['net'][1:])):

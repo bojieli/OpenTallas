@@ -19,5 +19,14 @@
     "expected": "exit0 under expect-fail, status=fail, mismatching_ops>0, timeout=null, production-default assertion present, no compile/runtime setup failure"
   },
   "admission": "ot-heavy --mem64 each; measured880GiB EPYC4 available,259GiB scratchfree atlaunch",
-  "source_note": "All RTL/tools archivedfrom49, only tool--rmax/cache patch9924 and TBDEFassert910 overrides; no live physical RTL edits."
+  "source_note": "All RTL/tools archivedfrom49, only tool--rmax/cache patch9924 and TBDEFassert910 overrides; no live physical RTL edits.",
+  "prior_attempts": [
+    {
+      "status": "COMPILE_SETUP_FAILURE",
+      "reason": "RTL/tools archive omitted three behavioral SRAM model dirs",
+      "evidence": "native_fc_gate_setup_failure",
+      "arithmetic_verdict": null,
+      "correction": "Add exactly pinned49 physical/asap7_memory_macros/{1024x256,128x256} and physical/hbm_accel_macros/512x256 dirs; preserve failures and reuse build paths."
+    }
+  ]
 }

@@ -30,10 +30,11 @@ for net in manifest['connections']:
                 width=c['boundary_ports'][e['port']]['width']; name=e['port']+('['+str(e['lsb']+k)+']' if width>1 else '')
                 p=pins.get(c['view_lef'],{}).get(name)
                 if p is None: coords=[]; break
-                coords.append([p[0]+c['xy_um'][0],p[1]+c['xy_um'][1]])
+                px=c['w_um']-p[0] if c['orientation']=='MY' else p[0]
+                coords.append([px+c['xy_um'][0],p[1]+c['xy_um'][1]])
             if len(coords)==2:
                 d=abs(coords[0][0]-coords[1][0])+abs(coords[0][1]-coords[1][1]); row['max_manhattan_um']=max(row['max_manhattan_um'],d)
             else: row['missing_pin_bits']+=1
 rows=[{'endpoints':list(key),**row,'minimum_500um_segments':math.ceil(row['max_manhattan_um']/500),'closed':False,'owner':'/root/hbm_die_compiler'} for key,row in sorted(pairs.items())]
-(OUT/'view_audit.json').write_text(json.dumps(audits,indent=2)+'\n'); (OUT/'seam_reach.json').write_text(json.dumps({'method':'Actual inherited LEF first RECT center, R0 placement; absent tile R5 export means tile seam lengths not measurable. Exact per-bit connectivity comes from component.json. Center packing is a candidate, not timing evidence.','rows':rows,'unmeasured_tile_seams':True,'all_rows_closed':False},indent=2)+'\n')
+(OUT/'view_audit.json').write_text(json.dumps(audits,indent=2)+'\n'); (OUT/'seam_reach.json').write_text(json.dumps({'method':'Actual inherited LEF first RECT center, R0/MY placement; absent tile R5 export means tile seam lengths not measurable. Exact per-bit connectivity comes from component.json. Center packing is a candidate, not timing evidence.','rows':rows,'unmeasured_tile_seams':True,'all_rows_closed':False},indent=2)+'\n')
 print(json.dumps({'view_audits':{k:v['rc'] for k,v in audits.items()},'seam_pairs':len(rows),'max_measurable_manhattan_um':max(r['max_manhattan_um'] for r in rows)}))
