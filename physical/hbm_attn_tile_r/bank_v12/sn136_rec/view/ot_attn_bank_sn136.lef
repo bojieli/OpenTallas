@@ -16,6 +16,10 @@ MACRO ot_attn_bank_sn136
       LAYER M6 ;
         RECT  0 5.952 0.192 5.984 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.144 5.952 3.397 5.984 ;
+    END
   END clk
   PIN d[0]
     DIRECTION INPUT ;
@@ -2908,7 +2912,6 @@ MACRO ot_attn_bank_sn136
      RECT  2.245 1.664 2.341 3.552 ;
      RECT  0.613 8.832 2.915 10.092 ;
      RECT  2.341 1.664 3.011 3.616 ;
-     RECT  0.144 5.952 3.397 5.984 ;
      RECT  2.915 9.228 3.397 10.092 ;
      RECT  3.397 5.12 3.589 5.984 ;
      RECT  3.011 2.572 4.405 3.616 ;

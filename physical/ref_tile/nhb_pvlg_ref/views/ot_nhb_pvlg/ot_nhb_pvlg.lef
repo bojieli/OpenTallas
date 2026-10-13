@@ -4416,6 +4416,10 @@ MACRO ot_nhb_pvlg
       LAYER M5 ;
         RECT  83.664 0 83.688 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  83.664 0.016 83.688 0.179 ;
+    END
   END v
   PIN y[0]
     DIRECTION OUTPUT ;
@@ -22173,7 +22177,6 @@ MACRO ot_nhb_pvlg
      RECT  148.312 2.418 148.504 148.782 ;
     LAYER M5 ;
      RECT  0.72 0.016 38.28 0.117 ;
-     RECT  83.664 0.016 83.688 0.179 ;
      RECT  112.08 0.016 115.08 0.179 ;
      RECT  57.024 0.117 57.048 0.181 ;
      RECT  112.176 0.179 115.08 0.227 ;

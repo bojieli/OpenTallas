@@ -39,8 +39,8 @@
  "job": {
   "owner": "Claude:el1011-ds-mtp",
   "branch": "claude/el1011-ds-mtp-hrow",
-  "tag": "r5",
-  "purpose": "el1011-ds-mtp hrow-r5 2026-10-12 (owner GLUE PLACEMENT; rev-3 cluster mtp-hrow3-e33f9cff1-tc-sp FAILED reg2reg -7.7 ns, 140,653 flops on one root): dsfd_mtp_hrow as tiles placed by the S81 die -- 30 chain bank tiles (bank + its chain stage, W->E cbe / E->W cbw snake per part), 3 ingress tiles (drain receiver: the never-filled 22x514 RTT queue removed; write ordering delay inside), 1 hub; every tile < 15k clock sinks. This tile: dsfd_mtp_hrow_ing x3.",
+  "tag": "r5d",
+  "purpose": "el1011-ds-mtp 2026-10-12 ing r5d: re-route of the CLOSED hrow5_ing-r5-6d3c31c2b (TT +300.84 / FF +1.56) with scalar ck/rst/t_hpg ports (the closed view exported PIN ck[0]/rst[0]/t_hpg[0]; the die netlist needs a scalar clock pin). Logic unchanged.",
   "benches": [
    {
     "name": "hrow_tiles_pos",
