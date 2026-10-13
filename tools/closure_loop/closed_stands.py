@@ -247,6 +247,26 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
                           "\"rtl_boundary\": {\"top\": ..., \"sources\": [...]})")
         unv = [n for n, (st, _) in rtl.items() if st == "unknown"]
         return admit(rtl[last["name"]][1] + (f" (not verifiable against {', '.join(unv[:3])})" if unv else " (verified)"))
+    if kind == "pin_register":
+        pc = rr.get("pair_cost_ps")
+        if not txt("source", 3):
+            return refuse("pin_register needs \"source\": the pin-register audit JSON the view was judged in "
+                          "(tools/hier_contract/pinreg_audit.py v2, insertion-compensated)")
+        if exists is not None and not exists(rr["source"].strip()):
+            return refuse(f"pin_register source file {rr['source']!r} does not exist (absolute path, or a path on the "
+                          f"job's commit / origin/main)")
+        if not txt("cell", 3):
+            return refuse("pin_register needs \"cell\": the audited cell (the view's lib cell)")
+        if not txt("fix", 20):
+            return refuse("pin_register needs \"fix\": what the new kit changes so the pin flops sit at the pins "
+                          "(kit recipe 2, RTL pin flops, a split): a re-route of the same kit repeats the defect")
+        if not _num(pc):
+            return refuse("pin_register needs the measured \"pair_cost_ps\" (o + s of the view in the audit)")
+        if pc <= TL.PIN_REGISTER_PAIR_MAX_PS:
+            return refuse(f"pin_register pair cost {pc} ps is not above {TL.PIN_REGISTER_PAIR_MAX_PS} ps: the view "
+                          f"closes a hop within its reach (relay within the reach), the closed view stands")
+        return admit(f"{rr['cell']} is a pin-register violation: pair cost {pc} ps > {TL.PIN_REGISTER_PAIR_MAX_PS} ps "
+                     f"({rr['source']}); fix: {rr['fix'].strip()[:200]}")
     # evidence_gap
     if not txt("why_route", 20):
         return refuse("evidence_gap needs \"why_route\": why a ROUTE is needed (a missing bench is bound to the closed "
