@@ -23,7 +23,7 @@ SRC="$X/hfd_idx_lib.sv $X/hfd_idx_score.sv $X/hfd_idx_sel.sv
  $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_index.sv $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_index_w.sv
  $R/rtl/hbm_accel/generic/idx/ot_hgi_idx_unit.sv $R/rtl/hbm_accel/generic/idx/tb_hgi_idx_index.sv ${HGI_IDXW_EXTRA_SRC:-}"
 python3 tools/hbm_idx_die_bench.py prepare --work "$OUT/vec" > "$OUT/prepare.log" 2>&1 || { echo "HGI_IDX_INDEX_W ERROR prepare"; tail -5 "$OUT/prepare.log"; exit 2; }
-( cd "$OUT" && "$V" --binary --timing -O2 -j ${NC:-8} -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKANDNBLK -Wno-MULTIDRIVEN \
+( cd "$OUT" && "$V" --binary --timing ${HGI_IDXW_VOPT:--O2} -j ${NC:-8} -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKANDNBLK -Wno-MULTIDRIVEN \
     -Wno-MODMISSING -I$R/rtl/hbm_accel/generic -I$R/rtl/hbm_accel/generic/idx --top-module tb_hgi_idx_index -GMUT=$M -GIXW=$IXW -Mdir obj $SRC > build.log 2>&1 ) \
   || { echo "HGI_IDX_INDEX_W ERROR build"; grep -m5 -E "%Error" "$OUT/build.log"; exit 2; }
 ( cd "$OUT" && ./obj/Vtb_hgi_idx_index +DIR=$OUT/vec +ODIR=. +SEED=7 +GAP=3 > sim.log 2>&1 ); src=$?
