@@ -1,0 +1,254 @@
+{
+ "name": "s81sp_capc_cl",
+ "top": "dsfd_sp_capture_c",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "outline": {
+  "w": 1727.976,
+  "h": 561.6
+ },
+ "why_floorplan": "slot change requested (el1011-s81die.log [s81-spwfc/sp3] 10-13): contract v14 slot 1727.976 x 129.576 = 0.224 mm2 cannot hold the capture (closed leaves 8 x g2 118.8x162 + 8 x x 118.8x270 + ctl 86.4x324 = 0.439 mm2 of outline, ~0.17 mm2 of std cells). Children MX (inputs N, outputs S): g2 row over x row, 8 columns at 172.8 um pitch (43.2 um child lattice, >= 20 um channels and edge margins), 54 um bus channel under the N face, ctl in the centre gap; ctl <-> group buses take the KST = 1 station (two hops <= 400 um).",
+ "children": [
+  {
+   "view": "physical/ref_tile/dsfd_capt_ctl_m5/views/dsfd_capt_ctl",
+   "count": 1,
+   "inst": "u_ctl",
+   "at": [
+    820.8,
+    172.8
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2",
+   "count": 1,
+   "inst": "*g_t?0?*u_g",
+   "at": [
+    129.6,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_x_m5/views/dsfd_capt_x",
+   "count": 1,
+   "inst": "*g_t?0?*u_x",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2",
+   "count": 1,
+   "inst": "*g_t?1?*u_g",
+   "at": [
+    302.4,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_x_m5/views/dsfd_capt_x",
+   "count": 1,
+   "inst": "*g_t?1?*u_x",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2",
+   "count": 1,
+   "inst": "*g_t?2?*u_g",
+   "at": [
+    475.2,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_x_m5/views/dsfd_capt_x",
+   "count": 1,
+   "inst": "*g_t?2?*u_x",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2",
+   "count": 1,
+   "inst": "*g_t?3?*u_g",
+   "at": [
+    648.0,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_x_m5/views/dsfd_capt_x",
+   "count": 1,
+   "inst": "*g_t?3?*u_x",
+   "at": [
+    648.0,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2",
+   "count": 1,
+   "inst": "*g_t?4?*u_g",
+   "at": [
+    950.4,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_x_m5/views/dsfd_capt_x",
+   "count": 1,
+   "inst": "*g_t?4?*u_x",
+   "at": [
+    950.4,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2",
+   "count": 1,
+   "inst": "*g_t?5?*u_g",
+   "at": [
+    1123.2,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_x_m5/views/dsfd_capt_x",
+   "count": 1,
+   "inst": "*g_t?5?*u_x",
+   "at": [
+    1123.2,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2",
+   "count": 1,
+   "inst": "*g_t?6?*u_g",
+   "at": [
+    1296.0,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_x_m5/views/dsfd_capt_x",
+   "count": 1,
+   "inst": "*g_t?6?*u_x",
+   "at": [
+    1296.0,
+    43.2
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2",
+   "count": 1,
+   "inst": "*g_t?7?*u_g",
+   "at": [
+    1468.8,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_x_m5/views/dsfd_capt_x",
+   "count": 1,
+   "inst": "*g_t?7?*u_x",
+   "at": [
+    1468.8,
+    43.2
+   ],
+   "orient": "MX"
+  }
+ ],
+ "pins": {
+  "N": [
+   "ck",
+   "f_gather",
+   "t_cd"
+  ],
+  "S": [
+   "rst",
+   "t_vm",
+   "ckv",
+   "rsv"
+  ]
+ },
+ "refglob": "*",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64
+ },
+ "job": {
+  "owner": "Claude:s81-spwfc",
+  "branch": "s81-spwfc-1013",
+  "tag": "v1",
+  "purpose": "S81 die master dsfd_sp_capture_c as a cluster over the CLOSED M5 capture leaves (dsfd_capt_ctl/g2/x -m5-5b76815db); cluster logic = 872 station flops + t_cd; lockstep bench vs ctrl_c/dsfd_sp_capture_c.sv under the gather->capture golden",
+  "benches": [
+   {
+    "name": "capc_lockstep_exact",
+    "cmd": "bash tools/s81_ph/capc_bench.sh {RUN}/bench t1 'mix mix11 mix12 mix13 trace err over range rreq'",
+    "expect": "pass",
+    "pass_regex": "^CAPC_BENCH PASS",
+    "min_count_regex": "CAPC_BENCH PASS cases=([0-9]+)",
+    "threads": 12,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "capc_mut_kswap",
+    "cmd": "bash tools/s81_ph/capc_bench.sh {RUN}/bench m1 'mix' S81PH_CAPC_MUT_KSWAP",
+    "expect": "fail",
+    "fail_regex": "CAPC_BENCH FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "tools/s81_ph",
+   "rtl/v41rom",
+   "rtl/proto",
+   "rtl/gpu",
+   "rtl/hdc",
+   "rtl/common",
+   "rtl/dsrom_sys/rd64_capture",
+   "rtl/dsrom_sys/s81_ph"
+  ],
+  "views_to": "physical/ref_tile/s81sp_capc_cl/views",
+  "record_to": "results/rtl/ref_tile/s81sp_capc_cl"
+ }
+}
