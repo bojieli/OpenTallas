@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  120.96,
-  120.96
+  131.76,
+  131.76
  ],
  "core": [
   2.16,
   2.16,
-  118.8,
-  118.8
+  129.6,
+  129.6
  ],
- "why": "util 0.5 of std 6600 + macros 0 um2",
- "std_area_um2": 6600,
+ "why": "util 0.5 of std 8000 + macros 0 um2",
+ "std_area_um2": 8000,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -98,6 +98,7 @@
   "physical/qwen_die_masters/pre_cts_skew.tcl",
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
-  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl"
  ]
 }

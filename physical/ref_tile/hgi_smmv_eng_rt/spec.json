@@ -68,16 +68,19 @@
  },
  "job": {
   "owner": "Claude:el1011-hbm-smmv-b",
-  "branch": "claude/el1011-hbm-smmv-b",
-  "tag": "r2",
-  "purpose": "SM.MATVEC track B per-cluster record engine (B2, NSM 8): record window W4, pipelined decode + exact divide, HW x-slot ring + verified XR reuse, two-edge SM stations, in-order retire; r2: held-input multi-edge arithmetic (<=12 carry bits an edge) for decode products, SM stations and the x allocator (r1 TT -141.17: all ripple chains)",
+  "branch": "main",
+  "tag": "r3",
+  "purpose": "SM.MATVEC track B per-cluster record engine (B2, NSM 8): record window W4, pipelined decode + exact divide, HW x-slot ring + verified XR reuse, two-edge SM stations, in-order retire; r2: held-input multi-edge arithmetic (<=12 carry bits an edge) for decode products, SM stations and the x allocator (r1 TT -141.17: all ripple chains) | r3 (smmv-bx on main 357764a5c): production params W 8 / XQ 2 (record window 8, two x loads in flight), XR hit without waiting for in-flight loads, empty-ring allocator restart; std area 6600 -> 8000 for the 8-entry window. Bench tb_hgi_smmv_tput L1 xr PASS 6,392 (1.73x of 3,689.1), noxr 7,520, L0 xr 5,760 (1.95x of 2,950.4); MUT_XRS / MUT_B8E / MUT_EARLY FAIL",
   "no_bench_reason": "bit-exact + throughput gate is the hand-run tb_hgi_smmv_tput (NCL 4) on ot-epyc4 (/srv/opentallas-scratch/claude/smmvb); benches gate adoption, not launch",
   "views_to": "physical/ref_tile/hgi_smmv_eng_rt/views",
   "record_to": "results/rtl/ref_tile/hgi_smmv_eng_rt"
  },
- "std_area_um2": 6600,
+ "std_area_um2": 8000,
  "util": 0.5,
- "params": {},
+ "params": {
+  "W": 8,
+  "XQ": 2
+ },
  "macros": [],
  "children": [],
  "inter": []
