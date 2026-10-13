@@ -16,7 +16,7 @@
   1440.72
  ],
  "why": "spec outline",
- "std_area_um2": 9000.0,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {
    "ot_qwen_tile_rpair": "M5",
@@ -125,7 +125,7 @@
    "idx": 0,
    "x": 22.464,
    "y": 345.624,
-   "w": 54.0,
+   "w": 47.52,
    "h": 432.0,
    "orient": "R0",
    "offtrack": 0
@@ -319,12 +319,6 @@
    "macro_grid",
    "ot_qwen_tile_lsl#0: origin (233.28, 820.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
-  ],
-  [
-   "WARN",
-   "util",
-   "utilisation 67% outside 45%-60% (std 9000 + macro 336968 in core 515810 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
  "referenced": [

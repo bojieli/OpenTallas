@@ -314,14 +314,15 @@
  "slot_change_request": "qfd_tile_nk r5 (hardened leaves rpair x5 + node + lsl x8) needs outline 362.88 x 1442.88 um (slot 311.04 x 1296): the CLOSED rpair leaf is 311.04 wide with W-face pins and N-face r_q, so the tile is >= 311.04 + 2 x (20 + 2.16) wide, and 5 rpair rows (5 x 151.2) + 4 lsl rows (4 x 164.16) + margins = 1442.88 tall (8.64 um cluster lattice). Pin faces and pin offsets from the tile's S edge are UNCHANGED (W n_a 356.4-455.9, n_b 457-556.5, t_out 557.5-657, n_y 658-757.5; E ib 400-520, ib_go 520-524, xl 524-580, tile_id 580-600, fault 600-604, rst_n 640-644, clk 660-664; M4). Clock: target_insertion 175 ps is not reachable (rpair leaf alone 309 ps TT routed, lsl 191.6): request tile insertion ~ 520-560 ps TT (final number from the routed view's insertion.json).",
  "structural_change": "hardened leaves rpair x5 + node + lsl x8 on their own short clock roots, top root = tile glue only (sink count from the remote gate), replaces the flat 34k-48k-sink root of qfd_tile_nk_h4 / h3s (TT -272 / -100); new floorplan r5-fp1 (2 rpair rows S + lane block with the W-edge node strip + 3 mirrored rpair rows N), RQR return relay",
  "job": {
-  "owner": "Claude:q14-node",
+  "owner": "Claude:q15-tile",
   "branch": "claude/q14-tile-parent",
   "tag": "fp1",
   "purpose": "TP8 NK die tile from hardened leaves (spec r5, floorplan r5-fp1): 5 x ot_qwen_tile_rpair (ROM bank rows, own ROM clock), ot_qwen_tile_node (W-edge strip: n_a/n_b/n_y pins + t_out feed-through pin registers), 8 x ot_qwen_tile_lsl; top glue (u_me control, XTX rungs, relays, RQR group registers) on one spine root. Outline 362.88 x 1442.88 (slot change request: the closed rpair leaf is 311.04 wide).",
   "benches_from": "tools/ref_tile/specs_qtile_r5/qfd_tile_nk_r5_benches.json",
-  "cycles_added": 3,
+  "cycles_added": 4,
   "structural_change": "hardened leaves rpair x5 + node + lsl x8, top root = glue only, replaces the flat 34k-sink root",
   "views_to": "physical/ref_tile/qfd_tile_nk_r5/views",
   "record_to": "results/rtl/ref_tile/qfd_tile_nk_r5"
- }
+ },
+ "child_insertion": "boundary_mean"
 }
