@@ -1,5 +1,5 @@
 {
- "name": "qkd_ectl_slot-q13r3-COMMIT",
+ "name": "qkd_ectl_slot-q13r3-4800fafd7",
  "block": "qkd_ectl",
  "ref_tile": true,
  "owner": "Claude:q13-ectl",
@@ -11,7 +11,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/q13-ectl",
-  "commit": "COMMIT",
+  "commit": "4800fafd7",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009",
    "results/arch/hier_contract_1012"
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ectl_slot/qkd_ectl_slot-q13r3-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ectl_slot/qkd_ectl_slot-q13r3-4800fafd7"
   }
  ],
  "cycles_added": 0,
