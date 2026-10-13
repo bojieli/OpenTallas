@@ -1,0 +1,85 @@
+{
+  "name": "ot_dsrom_window_column_halfwrite_distributed",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/routes/ot_dsrom_window_column_halfwrite_distrib_m5_m5_5b76815db/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.122690829191697e-11 min -5.6725124597534204e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/routes/ot_dsrom_window_column_halfwrite_distrib_m5_m5_5b76815db/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/record/views/ot_dsrom_window_column_halfwrite_distributed:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/src/physical/ref_tile/ot_dsrom_window_column_halfwrite_distrib_m5/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.9250173677320959e-10 min -5.658679080866591e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/routes/ot_dsrom_window_column_halfwrite_distrib_m5_m5_5b76815db/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/record/views/ot_dsrom_window_column_halfwrite_distributed:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/src/physical/ref_tile/ot_dsrom_window_column_halfwrite_distrib_m5/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.312454034341215e-10 min -5.6763593825337466e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/routes/ot_dsrom_window_column_halfwrite_distrib_m5_m5_5b76815db/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/record/views/ot_dsrom_window_column_halfwrite_distributed:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/src/physical/ref_tile/ot_dsrom_window_column_halfwrite_distrib_m5/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/ot_dsrom_window_column_halfwrite_distrib_m5-m5-5b76815db/src/physical/ref_tile/ot_dsrom_window_column_halfwrite_distrib_m5/signoff.sdc",
+    "sha256": "a7ee0edcc4fef7184e63f2602cd59034fd1731fa09ae9b8c91c4f04879050e41",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_window_column_halfwrite_distributed.lef": "be954adeb62ab716fab038ac1b056e0c855f0a81deaab0304285f08943fc1820",
+    "ot_dsrom_window_column_halfwrite_distributed_ff.lib": "a598847899b9d0b5ca6343575ffb30db1548c8d4f7990c5a3692b4c3505170e1",
+    "ot_dsrom_window_column_halfwrite_distributed_ss.lib": "49dcb5f8c99fc2363b27cf8a369e35461563482934652166ae1ddca85e181e82",
+    "ot_dsrom_window_column_halfwrite_distributed_tt.lib": "52212b789ba55f843819c49bd072be8f9a2a825b339b6c7bd623f87580e05f5f"
+  },
+  "ok": true
+}
