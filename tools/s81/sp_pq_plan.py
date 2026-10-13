@@ -26,7 +26,7 @@ VIEWS = {
     "bc": f"{RT}/ot_pqc_t_bc_m5/views/ot_pqc_t_bc",
 }
 BC_PLAN = dict(w=43.2, h=190.08, lo=10.0, hi=180.0, n=1630)      # kit pin plan until the routed view exists
-W_CL, H_CL = 1671.84, 449.28                                     # slot 1672.248 x 449.256 on the 2.16 lattice
+W_CL, H_CL = 1667.52, 449.28                                     # slot 1672.248 x 449.256 on the 8.64 cluster lattice
 
 
 def lef(path: Path):
@@ -92,24 +92,26 @@ def plan_default():
     # halves: quantiser over its x_q pin registers (36.7 um shuffle channel); the BF16 x-buffer pair over the quantiser's
     # inner end (x_q reaches it on M7 over the quantiser, 32.4 um landing channel); 60 um corridor above the pairs
     P["u_xin0"] = ("xin", 118.8, 32.4, "MX")
-    P["u_xin1"] = ("xin", 723.6, 32.4, "MX")
+    P["u_xin1"] = ("xin", 712.8, 32.4, "MX")
     P["u_aq0"] = ("aq", 0.0, 86.4, "R180")
-    P["u_aq1"] = ("aq", 669.6, 86.4, "MX")
-    P["u_ix0"] = ("ix", 54.0, 291.6, "R180")
-    P["u_ix2"] = ("ix", 172.8, 291.6, "R180")
-    P["u_ix1"] = ("ix", 680.4, 291.6, "MX")
-    P["u_ix3"] = ("ix", 799.2, 291.6, "MX")
-    # centre: returns + q buffer at the S edge, controller and the first relay stages above
+    P["u_aq1"] = ("aq", 658.8, 86.4, "MX")
+    # (T_IX carries M3 and M5 pins on its N / S faces: no x-mirrored origin keeps both on track, so every T_IX is MX
+    #  and takes the controller's signals on its W face)
+    P["u_ix0"] = ("ix", 64.8, 291.6, "MX")
+    P["u_ix2"] = ("ix", 183.6, 291.6, "MX")
+    P["u_ix1"] = ("ix", 658.8, 291.6, "MX")
+    P["u_ix3"] = ("ix", 777.6, 291.6, "MX")
+    # centre: returns + q buffer at the S edge; first relay stages, controller (signals W, ROM E) and the merge above
     P["u_ret0"] = ("ret", 313.2, 43.2, "R0")
     P["u_qb"] = ("qb", 421.2, 108.0, "R0")
     P["u_ret1"] = ("ret", 540.0, 43.2, "R0")
     P["u_bc0a"] = ("bc", 302.4, 226.8, "R0")
-    P["u_ctl"] = ("ctl", 367.2, 259.2, "R0")
-    P["u_bc0b"] = ("bc", 529.2, 226.8, "R0")
+    P["u_bc0b"] = ("bc", 367.2, 226.8, "R0")
+    P["u_ctl"] = ("ctl", 432.0, 259.2, "MY")
     P["u_bc1"] = ("bc", 594.0, 226.8, "R0")
     # E of the E half: the shared relay column to the E face
     for k in range(5):
-        P[f"u_bt{k + 1}"] = ("bc", 972.0 + 64.8 * k, 226.8, "R0")
+        P[f"u_bt{k + 1}"] = ("bc", 961.2 + 64.8 * k, 226.8, "R0")
     return P
 
 

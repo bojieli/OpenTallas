@@ -14,7 +14,7 @@
   "count": 1,
   "inst": "u_xin1",
   "at": [
-   1069.2,
+   1058.4,
    32.4
   ],
   "orient": "MX"
@@ -34,7 +34,7 @@
   "count": 1,
   "inst": "u_aq1",
   "at": [
-   1015.2,
+   1004.4,
    86.4
   ],
   "orient": "MX"
@@ -44,27 +44,27 @@
   "count": 1,
   "inst": "u_ix0",
   "at": [
-   399.6,
+   410.4,
    291.6
   ],
-  "orient": "R180"
+  "orient": "MX"
  },
  {
   "view": "physical/ref_tile/pqc_ix_rt/views/ot_pqc_t_ix",
   "count": 1,
   "inst": "u_ix2",
   "at": [
-   518.4,
+   529.2,
    291.6
   ],
-  "orient": "R180"
+  "orient": "MX"
  },
  {
   "view": "physical/ref_tile/pqc_ix_rt/views/ot_pqc_t_ix",
   "count": 1,
   "inst": "u_ix1",
   "at": [
-   1026.0,
+   1004.4,
    291.6
   ],
   "orient": "MX"
@@ -74,7 +74,7 @@
   "count": 1,
   "inst": "u_ix3",
   "at": [
-   1144.8,
+   1123.2,
    291.6
   ],
   "orient": "MX"
@@ -120,24 +120,24 @@
   "orient": "R0"
  },
  {
-  "view": "physical/ref_tile/ot_pqc_t_ctl16_m5/views/ot_pqc_t_ctl16",
-  "count": 1,
-  "inst": "u_ctl",
-  "at": [
-   712.8,
-   259.2
-  ],
-  "orient": "R0"
- },
- {
   "view": "physical/ref_tile/ot_pqc_t_bc_m5/views/ot_pqc_t_bc",
   "count": 1,
   "inst": "u_bc0b",
   "at": [
-   874.8,
+   712.8,
    226.8
   ],
   "orient": "R0"
+ },
+ {
+  "view": "physical/ref_tile/ot_pqc_t_ctl16_m5/views/ot_pqc_t_ctl16",
+  "count": 1,
+  "inst": "u_ctl",
+  "at": [
+   777.6,
+   259.2
+  ],
+  "orient": "MY"
  },
  {
   "view": "physical/ref_tile/ot_pqc_t_bc_m5/views/ot_pqc_t_bc",
@@ -154,7 +154,7 @@
   "count": 1,
   "inst": "u_bt1",
   "at": [
-   1317.6,
+   1306.8,
    226.8
   ],
   "orient": "R0"
@@ -164,7 +164,7 @@
   "count": 1,
   "inst": "u_bt2",
   "at": [
-   1382.4,
+   1371.6,
    226.8
   ],
   "orient": "R0"
@@ -174,7 +174,7 @@
   "count": 1,
   "inst": "u_bt3",
   "at": [
-   1447.2,
+   1436.4,
    226.8
   ],
   "orient": "R0"
@@ -184,7 +184,7 @@
   "count": 1,
   "inst": "u_bt4",
   "at": [
-   1512.0,
+   1501.2,
    226.8
   ],
   "orient": "R0"
@@ -194,7 +194,7 @@
   "count": 1,
   "inst": "u_bt5",
   "at": [
-   1576.8,
+   1566.0,
    226.8
   ],
   "orient": "R0"
