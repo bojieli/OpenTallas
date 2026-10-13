@@ -107,17 +107,22 @@
   "OT_MEG_MASTER": "ot_rom_4096x266_m8",
   "OT_MEG_EXPECT": 6,
   "OT_MEG_BAND": "2.16",
-  "OT_MEG_EDGES": "EW"
+  "OT_MEG_EDGES": "EW",
+  "OT_SPINE_LEAF_N": 8,
+  "OT_SPINE_BIN": 40,
+  "OT_SPINE_SEG": 100,
+  "OT_SPINE_TOL_PS": 10,
+  "OT_SPINE_ITERS": 10
  },
  "boundary_tcl": [
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
- "structural_change": "slot-shaped M5 re-design of qfd_crom_g (closed qfd_crom_g_a-ff3637ce7-tc: TT +2.59, signals to M7, pins S/W): all pins + clock on the N face on M5, macros in one column with W 43.2 / E 29.4 um pin channels, halo 2.16 -> 5.4 um, macro pin-edge M5 guard; RTL relay stages (RLY 1, strobe->q 5 -> 8 edges): column address register after the macro-column select, one {ce,addr} register per macro beside its pins, lane select register before the output station at the pins, so no stage carries logic plus the 518-um column wire; lane-base STRAP pin crom_lb (crom_gs) so ONE hardened master serves the 8 groups (LB 0 of ot_qfd_crom_g faults in groups 1-7); r2 (gate c2f759ff8: rst_n 347 loads): the rst_n port drives only a 2-sync + 2 kept-copy reset relay (pin stations + decode + faults / valid side band; release 3 edges after the port), the per-macro {ce, addr} relay registers carry no reset, kit recipe 2 (pin hold stages + pin flops), the address decode is combinational next-state with reset only on the valid / fault strobes (no reset-as-enable on datapath registers)",
+ "structural_change": "balanced pre-placed clock spine (physical/common_flow/clock_spine.tcl: <= 8 sinks per 40-um leaf bin, 100-um segments, leaves padded to equal measured arrival) in place of the TritonCTS tree: q13a failed on REGISTER-TO-REGISTER clock skew (TT -9.84 t_kind -> ce0, FF hold -66.62 n_cap -> s_w; leaf arrival 430..621 ps, spread 178, over the 550-um column of six ROM macros); --cts gate with the spine: leaf spread 33.7 ps (insertion 636.7 ps, set by the 550-um column from the N-face clock pin). RTL, outline, pins and edges unchanged (strobe -> q 8). A thin cluster of hard column tiles was built and benched (bit-exact) but does not fit: ref_tile keeps every macro / child >= 20 um from its block's core edge, so 3 two-macro column tiles + head need ~210 x 714 um against the 194.4 x 518.4 slot",
  "job": {
-  "owner": "Claude:q13-cromcbuf",
+  "owner": "Claude:q13-kvleaves",
   "branch": "claude/q13-cromcbuf",
-  "tag": "q13a",
-  "purpose": "slot-shaped M5 re-design of qfd_crom_g (closed qfd_crom_g_a-ff3637ce7-tc: TT +2.59, signals to M7, pins S/W): all pins + clock on the N face on M5, macros in one column with W 43.2 / E 29.4 um pin channels, halo 2.16 -> 5.4 um, macro pin-edge M5 guard; RTL relay stages (RLY 1, strobe->q 5 -> 8 edges): column address register after the macro-column select, one {ce,addr} register per macro beside its pins, lane select register before the output station at the pins, so no stage carries logic plus the 518-um column wire; lane-base STRAP pin crom_lb (crom_gs) so ONE hardened master serves the 8 groups (LB 0 of ot_qfd_crom_g faults in groups 1-7)",
+  "tag": "q16s",
+  "purpose": "q13-kvleaves: qfd_crom_g_m5 with a balanced clock spine (leaf spread 178 -> 34 ps at the --cts gate) after q13a TT -9.84 / FF -66.62 on register-to-register clock skew; same RTL / outline / pins / edges as q13a (slot-shaped M5 tile, crom_lb strap, strobe -> q 8).",
   "benches": [
    {
     "name": "lint",
@@ -162,10 +167,12 @@
      "verilator"
     ]
    }
-  ]
+  ],
+  "structural_change": "balanced pre-placed clock spine (physical/common_flow/clock_spine.tcl: <= 8 sinks per 40-um leaf bin, 100-um segments, leaves padded to equal measured arrival) in place of the TritonCTS tree: q13a failed on REGISTER-TO-REGISTER clock skew (TT -9.84 t_kind -> ce0, FF hold -66.62 n_cap -> s_w; leaf arrival 430..621 ps, spread 178, over the 550-um column of six ROM macros); --cts gate with the spine: leaf spread 33.7 ps (insertion 636.7 ps, set by the 550-um column from the N-face clock pin). RTL, outline, pins and edges unchanged (strobe -> q 8). A thin cluster of hard column tiles was built and benched (bit-exact) but does not fit: ref_tile keeps every macro / child >= 20 um from its block's core edge, so 3 two-macro column tiles + head need ~210 x 714 um against the 194.4 x 518.4 slot"
  },
  "layer_cap": "M5",
  "recipe": 2,
+ "clock": "spine",
  "children": [],
  "inter": [],
  "inhold": true,

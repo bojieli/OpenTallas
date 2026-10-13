@@ -2,24 +2,24 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "qfd_crom_g_m5",
  "verdict": "PASS",
- "generated": "2026-10-13T08:11:44-0700",
+ "generated": "2026-10-13T13:19:25-0700",
  "host": "ot-epyc1tb",
  "cts": true,
- "commit": "cc57861dc",
+ "commit": "b549b13a4",
  "clock": {
   "max_root_sinks": 3192,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 621.2,
-  "tt_spread_ps": 178.5,
-  "declared_clock": null,
+  "tt_insertion_ps": 636.7,
+  "tt_spread_ps": 33.7,
+  "declared_clock": "spine",
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "3,192 sinks on the largest root <= 15,000; measured TT insertion 621.2 ps, leaf spread 178.5 ps"
+  "text": "3,192 sinks on the largest root <= 15,000; measured TT insertion 636.7 ps, leaf spread 33.7 ps"
  },
  "items": []
 }
