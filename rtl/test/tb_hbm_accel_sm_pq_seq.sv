@@ -227,7 +227,13 @@ module tb_hbm_accel_sm_pq_seq;
             t_firstline[op] = -1; t_done[op] = -1;
         end
         fo = $fopen({dir, "/out.txt"}, "w");
+`ifdef OT_SMH_RSTPIN
+        // el1013-smh-r11: the gated tile's reset contract (rst_n low >= 32 edges with the wake high; the late-wake mutant's
+        // gate opens 33 edges late, so the bench holds 96)
+        repeat (96) @(posedge clk);
+`else
         repeat (4) @(posedge clk);
+`endif
         rst_n = 1;
         @(posedge clk);
         xptr = 0;
