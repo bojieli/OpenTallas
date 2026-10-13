@@ -39,10 +39,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:ds-hrow-1012",
+  "owner": "Claude:el1011-ds-mtp",
   "branch": "codex/ds-hrow-1012",
-  "tag": "r7-cx",
-  "purpose": "r6 guard silently skipped after flow renamed caller pre_global_route_pre_grt.tcl; fix suffix dispatch and assert 8 creations/removals. Actual spine ran. Separate macro launch issue: cbe wi1->SRAM2.waddr0 TT-15.75, macro wd FF-5.78; cbw FF-9.02. Add kept per-macro write-data and read/write-address capture copies from same original f input edge as chain flops; forwarding flops now independent of SRAM launch, no latency change. Exact positive/mutant gates required.",
+  "tag": "r8a-cl",
+  "purpose": "r8a (claude-hrow 10-13): r7 cbe DRC 21 = M4 stubs from M5 tracks just inside the east SRAM edge (x 442.81..443.10, first tracks past the 0.30 um guard) shorting the macro M4 OBS; guard ran 8/8 but only moved the VIA45 drop deeper. Fix: 6.0 um M5 no-entry strip inside every vertical SRAM edge (M5 over SRAM = N-S pass-through only, edge pins reached planar on M4). RTL identical to r7 3aa148b79 (isolates the route fix). Pass: DRC 0, TT/FF >= 0, child_lint c+f at M5, hrow_tiles pos PASS / mut FAIL; log must print CX_HROW created 8 strip 6.0 / removed 8.",
   "benches": [
    {
     "name": "hrow_tiles_pos",
