@@ -1,6 +1,16 @@
 {
  "_doc": "Composition gates a sub-tile may name with spec \"benched_by\" (tools/ref_tile/README.md, 'Behavioural bench at submit'). The loop reads THIS file from main (the daemon tree), never from the job's branch, and appends each gate's benches to the job as <gate>_<name>; they run in the job's own source snapshot, so the composition is built from the sub-tile's RTL at its source commit. Every gate needs >= 1 behavioural expect=pass bench and >= 1 expect=fail mutant.",
  "gates": {
+  "s81_vm_fe_h_lockstep": {
+   "what": "S81 VM front end hierarchy dsfd_vm_fe_h (16 clt, 4 fxs, fxr relay tiles, 10 flt, fld, fcc, fcw, fcn, frg / fra / frr, 4 fsr; parent = wires) as a shadow of the flat dsfd_vm_fe at the hierarchy's stage counts: every FE output bit-exact every cycle on gold_s1 (LOCKSTEP_OK, mismatches 0); mutant: one fxr stage fewer on port 16 of slice 2 must break lockstep (LOCKSTEP_BAD). For the FE leaf masters, which have no golden of their own. Mechanics only: production throughput is the ROM per-layer gate.",
+   "extra_paths": ["rtl/dsrom_sys/s81_ph", "rtl/dsrom_sys/mtp", "rtl/dsrom_sys/s81_ctrl", "rtl/lib", "rtl/common", "tools/s81_vm", "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2", "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"],
+   "benches": [
+    {"name": "exact", "expect": "pass", "threads": 8, "peak_ram_gb": 40, "needs": ["verilator"], "pass_regex": "SPVM_lk_gold_s1: PASS \\(expect pass\\) -> OK", "min_count_regex": "LOCKSTEP cycles=(\\d+)",
+     "cmd": "python3 tools/s81_vm/s81_vm_gate.py one lk_gold_s1 --out {RUN}/bench/lk_gold_s1"},
+    {"name": "mutant", "expect": "fail", "threads": 8, "peak_ram_gb": 40, "needs": ["verilator"], "fail_regex": "SPVM_lk_mut_fxr1: FAIL \\(expect fail\\) -> OK",
+     "cmd": "python3 tools/s81_vm/s81_vm_gate.py one lk_mut_fxr1 --out {RUN}/bench/lk_mut_fxr1"}
+   ]
+  },
   "s81hc_ng64": {
    "what": "S81 HC slab composition, NG64, hierarchical (root tile + column chains): bit-exact against the DPI golden; mutant 1 (no write-back) must fail",
    "benches": [

@@ -103,7 +103,7 @@
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "files": {
-    "ot_p2h_xport.lef": "7958f6d94596298ab753abbd04c9d7249db69edcc25b301e6fbfaa19fcbfac7d",
+    "ot_p2h_xport.lef": "9fb8544253d5b0ab81a835ea82ce5b010ad7107a0fedd68176390c669ee13997",
     "ot_p2h_xport_ff.lib": "39188fd31b6a40caa13e8d118d173bfa4e27b0f2b1b3cee4f73f1c05c0989eb6",
     "ot_p2h_xport_ss.lib": "3ae2f2cd1830db90d0f7d3eff132d13df68bced0418da54db8c145400684e49d",
     "ot_p2h_xport_tt.lib": "284a166e1c1651a608bcc51e77605543ffa23d261ffe374c313f2fefe63eb895"
@@ -207,5 +207,15 @@
         ]
       }
     }
+  },
+  "abstract_pin_stub_1013": {
+    "when": "2026-10-13",
+    "by": "el1013-die-pin-audit",
+    "tool": "tools/hier_contract/abstract_pin_stub.py",
+    "old_sha256": "7958f6d94596298ab753abbd04c9d7249db69edcc25b301e6fbfaa19fcbfac7d",
+    "new_sha256": "9fb8544253d5b0ab81a835ea82ce5b010ad7107a0fedd68176390c669ee13997",
+    "pockets_closed": 2106,
+    "layer": "M7",
+    "note": "own-top-layer pockets closed (OT_OBS_CLOSED marker); pins, outline and timing views unchanged"
   }
 }
