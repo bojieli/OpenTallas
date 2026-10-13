@@ -1,5 +1,5 @@
 {
- "name": "s81su_qnt_cb32_ref-v6-cb32-COMMIT",
+ "name": "s81su_qnt_cb32_ref-v6-cb32-c904b01fb",
  "block": "dsfd_su_t_qnt",
  "ref_tile": true,
  "owner": "Codex:s81_su_closure",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "codex/s81su-physical-20261013",
-  "commit": "COMMIT"
+  "commit": "c904b01fb"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qnt_cb32_ref/s81su_qnt_cb32_ref-v6-cb32-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_qnt_cb32_ref/s81su_qnt_cb32_ref-v6-cb32-c904b01fb"
   }
  ],
  "cycles_added": 0,
