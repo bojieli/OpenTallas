@@ -41,15 +41,15 @@ def main():
     lim = G.HOP_GATE_UM or 500.0
     hg = HG.gate(m['insts'], m['buses'], texts, G.pslice, limit_um=lim, ss_um=G.SS_REACH_UM, top=100000)
     (work / 'hop_gate_full.json').write_text(json.dumps(hg, indent=1) + '\n')
-    pa = None
+    pal = None
     if hasattr(G, 'pin_align_gate'):      # owner 2026-10-13 pin alignment gate of `real` (never raises here: reported)
-        pa = G.pin_align_gate(m, texts, work / 'pin_align.json', raise_on_fail=False)
+        pal = G.pin_align_gate(m, texts, work / 'pin_align.json', raise_on_fail=False)
     leg = G.legality(m)
     pc = G.pin_clashes(m)
     chk = dict(legality=leg, generated_pin_clashes=len(pc), pin_clash_examples=pc[:20],
                hop_fix=m.get('hop_fix'), relay_progress_fix=m.get('relay_progress_fix'), v15=m.get('v15'),
                hop_gate=dict((k, v) for k, v in hg.items() if k != 'classes'),
-               pin_align=None if pa is None else {k_: pa.get(k_) for k_ in ('verdict', 'bundles', 'bits', 'by_verdict', 'jog_max',
+               pin_align=None if pal is None else {k_: pal.get(k_) for k_ in ('verdict', 'bundles', 'bits', 'by_verdict', 'jog_max',
                                                                              'jog_over_warn', 'order_not_preserved', 'cut_limit')})
     chk.update(lane_pins=m.get('lane_pins'), rly_face_reach=dict(n=len(m.get('rly_face_reach', [])),
                                                                  examples=m.get('rly_face_reach', [])[:10]))
@@ -100,7 +100,7 @@ def main():
                        regions=[dict(r) for r in m['regions']]), f, default=str)
     print('V15DUMP legality overlaps=%d outside=%d pin_clashes=%d hop_gate %s max %.1f over%g=%d over_ss=%d pin_align %s' % (
         leg['overlaps'], leg['outside'], len(pc), hg['verdict'], hg['max_um'], lim, hg['bits_over_limit'], hg['bits_over_ss'],
-        None if pa is None else (pa['verdict'], pa.get('by_verdict'))))
+        None if pal is None else (pal['verdict'], pal.get('by_verdict'))))
 
 
 if __name__ == '__main__':

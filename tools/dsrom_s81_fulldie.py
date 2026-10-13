@@ -7150,10 +7150,13 @@ def _faces_r8(m, Mx, it, ports):
                 bw = bwf(ports[p_][1])
                 want = _peer_pos(m, it, p_, f) - bw / 2
                 rem = sum(bwf(ports[q][1]) + 2.0 for q in lst[lst.index(p_) + 1:])
-                pos = min(max(pos, want), L - 0.4 - rem - bw)
+                pos = max(pos, min(max(pos, want), L - 0.4 - rem - bw))   # never back onto the previous port (v16 run 3:
+                #                                    with reserved ranges ahead the room clamp fell below pos: sp_vm f_wfc on t_wfc)
                 for r0_, r1_ in sorted(resv):             # step over the centred wide ports
                     if pos < r1_ and pos + bw > r0_:      # (sorted: one pass in an arbitrary order could step INTO a
                         pos = r1_ + 1.0                   #  range already visited -- v15 dsfd_svc_c hs[1:0] on rk[23:22])
+                if pos + bw > L - 0.2:
+                    raise ValueError(f'{Mx.name} face {f}: port {p_} ends at {pos + bw:.1f} um > {L:.1f} (reserved ranges leave no room)')
                 Mx.face(p_, ports[p_][1], f, 'M4' if f in 'EW' else 'M5', pos + bw / 2, 1)
                 pos += bw + 2.0
 
