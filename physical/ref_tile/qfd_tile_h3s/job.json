@@ -1,14 +1,14 @@
 {
- "name": "qfd_tile_h3s-r3-f37684361",
+ "name": "qfd_tile_h3s-r4-cx-COMMIT",
  "block": "ot_qwen_rom_tile_die",
  "ref_tile": true,
- "owner": "Claude:el1011-q-tile",
- "purpose": "q-tile r3 structural fix of r2 (h3c-r2 GRT repair_timing stuck at TT -233 ps on u_me g_hier g_sl[*].g_hd.u_lh/x_d, h3s GRT -126 / CTS -201 on the same x_d path: s2_x -> BF16 round (32-b kept add) + mask/mux -> unregistered broadcast of 128 b to all 8 hard leaves spread over y 43-1264 um (up to ~640 um from the S2 band), i.e. logic + >500 um wire in one stage). RTL: XTX=2 registered transmit rungs per leaf (ot_qwen_tx_ff, keep_hierarchy, one copy per leaf and rung; rung 1 takes the ROUNDED x; v/first/split/w delayed with it; XDD += XTX so the valid/tag/split lines meet the leaves' results; +2 cycles latency, arithmetic and order unchanged). Floorplan: ROM row pitch 84.24 -> 95.04 um (row gaps 21.3 -> 32.1 um, band y 421.2-864.3) for the macro-leaf clock spine buffers and ROM-edge escape where h3s-r2 hit DRT-0255 (n_b[106] at x 7-11 y 478, clkbuf_sp nets at x 31-35 in the col-0 row gaps y 518/693). Pins, leaves, outline unchanged.",
+ "owner": "Codex:qwen_tile",
+ "purpose": "q-tile r3 structural fix of r2 (h3c-r2 GRT repair_timing stuck at TT -233 ps on u_me g_hier g_sl[*].g_hd.u_lh/x_d, h3s GRT -126 / CTS -201 on the same x_d path: s2_x -> BF16 round (32-b kept add) + mask/mux -> unregistered broadcast of 128 b to all 8 hard leaves spread over y 43-1264 um (up to ~640 um from the S2 band), i.e. logic + >500 um wire in one stage). RTL: XTX=2 registered transmit rungs per leaf (ot_qwen_tx_ff, keep_hierarchy, one copy per leaf and rung; rung 1 takes the ROUNDED x; v/first/split/w delayed with it; XDD += XTX so the valid/tag/split lines meet the leaves' results; +2 cycles latency, arithmetic and order unchanged). Floorplan: ROM row pitch 84.24 -> 95.04 um (row gaps 21.3 -> 32.1 um, band y 421.2-864.3) for the macro-leaf clock spine buffers and ROM-edge escape where h3s-r2 hit DRT-0255 (n_b[106] at x 7-11 y 478, clkbuf_sp nets at x 31-35 in the col-0 row gaps y 518/693). Pins, leaves, outline unchanged. Alignment correction preserves Claude uncommitted patch: t_vout, array/spine and bench XD include XTX=2.",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
-  "branch": "claude/el1011-q-tile",
-  "commit": "f37684361"
+  "branch": "codex/q-tile-takeover-1013",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -166,7 +166,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_h3s/qfd_tile_h3s-r3-f37684361"
+   "to": "results/rtl/ref_tile/qfd_tile_h3s/qfd_tile_h3s-r4-cx-COMMIT"
   }
  ],
  "cycles_added": 2,
