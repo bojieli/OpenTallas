@@ -912,6 +912,23 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
         raw_spec = json.loads(Path(spec_path).read_text())
         if M6.spec_digest(raw_spec) != lc["m6_pin_grant"]["source_spec_sha256"]:
             raise SpecError("M6 pin-only grant physical source-spec SHA256 mismatch")
+        import subprocess
+        source_commit = lc["m6_pin_grant"]["source_commit"]
+        exists = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", source_commit + "^{commit}"],
+                                capture_output=True)
+        if exists.returncode:
+            raise SpecError("M6 pin-only grant source commit does not exist")
+        source_paths = list(s["sources"])
+        source_paths += [s[k] for k in ("io_tcl", "post_synth_tcl") if s.get(k)]
+        source_paths += [v for v in s.get("orfs_vars", {}).values() if isinstance(v, str)
+                         and v.endswith((".tcl", ".sdc"))]
+        for path in source_paths:
+            path = path.removeprefix("/src/")
+            file = ROOT / path
+            original = subprocess.run(["git", "-C", str(ROOT), "show", f"{source_commit}:{path}"],
+                                      capture_output=True)
+            if original.returncode or not file.is_file() or original.stdout != file.read_bytes():
+                raise SpecError(f"M6 pin-only grant source differs from approved commit: {path}")
         s["m6_pin_grant"] = lc["m6_pin_grant"]
     blocks = blocks_of(s)
     W, H, why = outline(s, slot, area_um2, blocks)
@@ -964,6 +981,9 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    grant = fp.get("layer_contract", {}).get("m6_pin_grant")
+    if grant:
+        cmd += ["--pin-only-tech"]
     for v in macro_views:
         cmd += ["--macro-view", str(ROOT / v)]
     rc = subprocess.run(cmd).returncode
@@ -972,7 +992,6 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--output", str(o / "insertion.json")])
     lef = o / f"{top}.lef"
-    grant = fp.get("layer_contract", {}).get("m6_pin_grant")
     if lef.exists() and not grant:
         # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
         # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
@@ -987,7 +1006,8 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
             shutil.copyfile(candidates[0], routed_def)
         (o / "m6_pin_grant.json").write_text(json.dumps(grant, indent=1) + "\n")
     res = child_lint.lint(str(lef), str(o), cap="M5" if grant else None,
-                          pin_grant=grant, routed_def=routed_def) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
+                          pin_grant=grant, routed_def=routed_def,
+                          tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])

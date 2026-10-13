@@ -16078,3 +16078,12 @@ def qwen_tree_delay_leaf_model(width_bits=512, depth=21, outline_um=(129.6, 259.
         routing_assumption='adjacent serial columns, M4 horizontal pitch0.048um,30%PG reserve; actual cut/GRT must validate',
         area_gate='use actual synthesis area; no fabricated area or timing view',
         adoption='exact+mutants; real reference tile TT/FF/DRC/childlint; actual die slot/pin/clock/cut binding')
+
+
+def hbm_vm8_root_checker_bank_model():
+    """VM8 local protection banks, registered seams and unchanged-price gate.
+
+    The machine-readable prebuild precedes the RTL. Real bank area, source-
+    matched transaction timings and native ownership debt qualify the candidate.
+    """
+    return json.loads((ROOT / 'results/physical/vm8_root_checker_20261013/prebuild.json').read_text())
