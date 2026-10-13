@@ -3763,8 +3763,9 @@ def failure_text(j):
 # ECO-MISS IN THE VERDICT (2026-10-13 finishing recipe, item 4).  (i) a hold ECO whose passes all finished unclean
 # (hold_eco.sh rc=9, result.json = its least-bad pass) puts that pass's TT / FF / DRC into the NEEDS_RTL verdict instead
 # of "no result (rc=9)".  (ii) a layer-cap-leak refusal (rc=11: route wire above MAX_ROUTING_LAYER, the kit's GRT macro
-# hook left the top layer raised) says what happens next: one automatic re-route (auto-react class h) when the job's
-# commit carries the kit fix dc5594311, else "regenerate the kit".
+# hook left the top layer raised) says what happens next: one automatic re-route (auto-react class h), also for a kit
+# that predates dc5594311 (the loop copies the fixed grt_macro_top_layer*.tcl into every job snapshot; coordinator
+# 2026-10-13); a successor that leaks again says "regenerate the kit" and gets no further automatic route.
 GRT_CAP_FIX = "dc5594311"
 ECO_RC_LAYER_CAP = 11
 
@@ -3787,11 +3788,13 @@ def eco_miss_note(j):
     e = j.get("eco") or {}
     if e.get("rc") == ECO_RC_LAYER_CAP:
         if j["spec"].get("auto_react_parent"):
-            nxt = "second refusal after the automatic re-route: fix the kit's layer cap"
+            nxt = ("second refusal after the automatic re-route: regenerate the kit (ref_tile.py env/job on current "
+                   "main); no further automatic route")
         elif kit_has_grt_cap_fix(j):
             nxt = "one automatic re-route with the current kit recipe follows (auto-react h)"
         else:
-            nxt = f"the kit predates {GRT_CAP_FIX}: regenerate the kit (ref_tile.py env/job on current main) and re-route"
+            nxt = (f"the kit predates {GRT_CAP_FIX}; one automatic re-route follows (auto-react h: the loop ships the "
+                   f"fixed grt_macro_top_layer*.tcl into the job snapshot)")
         return f"hold ECO refused, route wire above its layer cap (rc=11); {nxt}"
     res = e.get("result")
     if isinstance(res, dict) and e.get("rc") not in (None, 0):
@@ -6565,9 +6568,9 @@ def release_deep(jobs, now=None):
 #      calibrate flagged macro clock-pin slew / lateness (calib.json macro_clk), and whose CTS ran WITHOUT the macro
 #      clustering default -> successor <job>-arf, same commit: the default (macro_cts_cluster.tcl, shipped into the
 #      snapshot by hold_corners_patch.py) now applies.  Checked before c (the macro clock is the root of the stall).
-#   h  LAYER-CAP LEAK (2026-10-13): the hold ECO refused the route (hold_eco.sh rc=11) and the job's commit carries the
-#      kit fix dc5594311 -> successor <job>-arh, same commit, one re-route; an older kit is not re-routed (the verdict
-#      and the owner log say: regenerate the kit).  Checked before a/b.
+#   h  LAYER-CAP LEAK (2026-10-13): the hold ECO refused the route (hold_eco.sh rc=11) -> successor <job>-arh, same
+#      commit, one re-route (a kit older than dc5594311 too: the fixed GRT hook is shipped into the snapshot); if the
+#      successor leaks again the verdict and the owner log say: regenerate the kit.  Checked before a/b.
 # A successor is a new spec dropped into DROP: intake (validate, route key, submit lint) applies as for any job.  Never
 # loosens a constraint (no clock / uncertainty / margin / SDC change; hold margins stay the existing defaults).  At most
 # one action per job per class (j["auto_react"] = {class: successor or "in-place"}); a successor (spec
@@ -6790,9 +6793,11 @@ def ar_plan(j):
     spec = j["spec"]
     if j["status"] == "NEEDS_RTL" and eco_layer_cap_refused(j):     # before a/b: an in-place ECO would be refused again
         if spec.get("auto_react_parent"):
-            return None, None, "layer-cap leak again after the automatic re-route: fix the kit's layer cap"
-        if not kit_has_grt_cap_fix(j):
-            return None, None, f"layer-cap leak; the kit predates {GRT_CAP_FIX}: regenerate the kit and re-route"
+            return None, None, ("layer-cap leak again after the automatic re-route: regenerate the kit and re-route "
+                                "(no further automatic route)")
+        if not kit_has_grt_cap_fix(j):      # coordinator 2026-10-13: the loop ships the fixed hook into old kits too
+            return "h", "successor", (f"hold ECO refused for a layer-cap leak; the kit predates {GRT_CAP_FIX} -> one "
+                                      f"re-route with the fixed grt_macro_top_layer*.tcl shipped into the snapshot")
         return "h", "successor", "hold ECO refused for a layer-cap leak -> one re-route with the current kit recipe"
     if ar_hold_window(j):
         return "a", "in-place", "hold-only miss within 30 ps -> narrow KEEPWIRES hold ECO"
@@ -6981,7 +6986,8 @@ def auto_react(jobs, now=None):
                 elif cls == "h":
                     def mut(s):
                         s.setdefault("structural_change", "re-route under the current kit recipe: the GRT macro hook "
-                                     "restores the DRT top layer (dc5594311), so no wire lands above the layer cap")
+                                     "restores the DRT top layer (dc5594311, shipped into the snapshot for older "
+                                     "kits), so no wire lands above the layer cap")
                 else:
                     knob = drt_recipe(j)
 

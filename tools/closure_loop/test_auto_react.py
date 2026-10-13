@@ -386,12 +386,18 @@ class ClassH(Base):
             self.assertEqual(cl.ar_plan(j2)[0], None)
             self.assertIn("second refusal", cl.eco_miss_note(j2))
 
-    def test_old_kit_says_regenerate(self):
+    def test_old_kit_reroutes_once_then_says_regenerate(self):
         with patch.object(cl, "kit_has_grt_cap_fix", return_value=False):
-            self.assertEqual(self.run_pass(self.lj()), [("j", "none")])
-            self.assertIsNone(self.drop("j-arh"))
+            self.assertEqual(self.run_pass(self.lj()), [("j", "h:j-arh")])
+            s = self.drop("j-arh")
+            self.assertEqual((s["auto_react_parent"], s["auto_react_class"]), ("j", "h"))
+            self.assertIn("predates dc5594311; one automatic re-route", cl.eco_miss_note(self.lj()))
+            j2 = self.lj(name="j-arh", spec=spec("j-arh", auto_react_parent="j", auto_react_class="h"))
+            self.assertEqual(self.run_pass(j2), [("j-arh", "none")])
+            self.assertIsNone(self.drop("j-arh-arh"))
             self.assertIn("regenerate the kit", (self.tk / "hbm-phys-1010.log").read_text())
-            self.assertIn("predates dc5594311: regenerate the kit", cl.eco_miss_note(self.lj()))
+            self.assertIn("regenerate the kit", cl.eco_miss_note(j2))
+            self.assertIn("no further automatic route", cl.eco_miss_note(j2))
 
     def test_kit_fix_is_an_ancestor_check(self):
         calls = []
