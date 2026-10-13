@@ -250,8 +250,12 @@ def contract_slot(path: str, slot: str) -> dict:
     raise ValueError(f"slot {slot} not in {path}")
 
 
-def check_contract(m: dict, s: dict, pg_top: str | None) -> list[str]:
+def check_contract(m: dict, s: dict, pg_top: str | None, pin_grant: dict | None = None) -> list[str]:
     bad = []
+    granted_ports = {}
+    if pin_grant:
+        import m6_pin_grant as M6
+        granted_ports = M6.validate(pin_grant, m["name"])
     ow, oh = float(s["outline"]["w"]), float(s["outline"]["h"])
     if abs(ow - m["W"]) > 0.001 or abs(oh - m["H"]) > 0.001:
         bad.append(f"outline {m['W']} x {m['H']} != contract {ow} x {oh}")
@@ -271,7 +275,8 @@ def check_contract(m: dict, s: dict, pg_top: str | None) -> list[str]:
     wrong = []
     for n in sorted(set(want) & set(have)):
         p, rs = want[n], have[n]["rects"]
-        ok = [r for r in rs if (not p.get("layer") or r[0] == p["layer"]) and
+        ok = [r for r in rs if (not p.get("layer") or r[0] == p["layer"] or
+              (granted_ports and M6.approved(n, r, m, granted_ports))) and
               (not p.get("face") or face_of(r, m["W"], m["H"]) == p["face"])]
         if not ok:
             got = ", ".join(sorted({f"{r[0]}/{face_of(r, m['W'], m['H']) or 'interior'}" for r in rs}))
@@ -307,7 +312,8 @@ def pick_cap(s: dict | None, pg_top: str | None, cap: str | None = None) -> int 
 
 
 def lint(lef_path: str, libs: str | None = None, contract: str | None = None, slot: str | None = None,
-         skip: set | None = None, cap: str | None = None) -> dict:
+         skip: set | None = None, cap: str | None = None, pin_grant: dict | None = None,
+         routed_def: str | None = None, tech_lef: str | None = None) -> dict:
     skip = skip or set()
     text = Path(lef_path).read_text(errors="replace")
     m = parse_lef(text, slot_cell(contract, slot))
@@ -316,7 +322,40 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
     fails, warns, info = [], [], {"cell": cell, "W": W, "H": H}
     pg = check_pg(m)
     info["pg"] = pg
-    cap_L = pick_cap(s, pg["top_layer"], cap)
+    grant = pin_grant if pin_grant is not None else (s or {}).get("m6_pin_grant")
+    allowed = set()
+    if grant is not None:
+        import m6_pin_grant as M6
+        try:
+            ports = M6.validate(grant, cell)
+            if cap not in (None, "M5") or (s or {}).get("layer_cap") not in (None, "M5"):
+                raise ValueError("M6 pin-only grant requires layer_cap M5, never cap/view_cap M6")
+            if pg["top_layer"] != "M5":
+                raise ValueError("M6 pin-only grant requires PG top M5")
+            unknown = set(ports) - set(m["pins"])
+            if unknown:
+                raise ValueError(f"grant names unknown ports: {sorted(unknown)[:4]}")
+            for n, p in m["pins"].items():
+                for r in p["rects"]:
+                    if (metal(r[0]) or 0) > 5:
+                        if not M6.approved(n, r, m, ports):
+                            raise ValueError(f"ungranted/oversized high PORT geometry {n}/{r[0]}")
+                        allowed.add(n)
+            if re.search(r"\b(?:POLYGON|PATH|VIA)\b", text):
+                raise ValueError("pin-only audit requires explicit LEF RECT geometry, not unparsed POLYGON/PATH/VIA")
+            if not routed_def:
+                raise ValueError("pin-only grant requires raw routed DEF evidence")
+            bad, evidence = M6.audit_def(routed_def, m, ports, tech_lef)
+            fails += ["(c) M6 pin-only: " + b for b in bad]
+            import hashlib
+            evidence["lef_sha256"] = hashlib.sha256(text.encode()).hexdigest()
+            evidence["granted_by"] = grant["granted_by"]
+            evidence["m6_ports"] = sorted(allowed)
+            info["m6_pin_grant"] = evidence
+        except (ValueError, OSError, TypeError, KeyError) as ex:
+            fails.append(f"(c) M6 pin-only: {ex}")
+            allowed = set()
+    cap_L = 5 if grant is not None else pick_cap(s, pg["top_layer"], cap)
     if cap_L:
         pg_L, strap_L = cap_L, cap_L + 1
     else:
@@ -338,9 +377,9 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
     if "b" not in skip and not pg["ok"]:
         fails.append("(b) pg: " + "; ".join(pg["why"]))
     # (c)
-    if "c" not in skip and strap_L:
+    if ("c" not in skip or grant is not None) and strap_L:
         hi_obs = sorted({r[0] for r in m["obs"] if (metal(r[0]) or 0) >= strap_L})
-        hi_sig = sorted({n for n, p in m["pins"].items() if not is_pg(n, p)
+        hi_sig = sorted({n for n, p in m["pins"].items() if not is_pg(n, p) and n not in allowed
                          for r in p["rects"] if (metal(r[0]) or 0) >= strap_L})
         hi_pg = sorted({r[0] for n, p in m["pins"].items() if is_pg(n, p) for r in p["rects"]
                         if (metal(r[0]) or 0) >= strap_L})
@@ -351,7 +390,7 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
                          f"the parent strap layer, or own M{strap_L - 1} as full PG stripes and leave M{strap_L} free)")
         smax = cap_L or metal((s or {}).get("signal_max_layer"))
         if smax:
-            over = sorted({n for n, p in m["pins"].items() if not is_pg(n, p)
+            over = sorted({n for n, p in m["pins"].items() if not is_pg(n, p) and n not in allowed
                            for r in p["rects"] if (metal(r[0]) or 0) > smax})
             if over:
                 fails.append(f"(c) {len(over)} signal pins above the {'cap' if cap_L else 'contract signal_max_layer'} M{smax} "
@@ -369,7 +408,7 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
         sc = dict(s, pg_layer=f"M{cap_L}") if cap_L else s
         if cap_L and pg["top_layer"] and metal(pg["top_layer"]) < cap_L:
             sc["pg_layer"] = pg["top_layer"]       # a legacy view with PG one layer below its recorded cap
-        fails += [f"(e) contract {s.get('_die')}/{slot} v{s.get('_version')}: {b}" for b in check_contract(m, sc, pg["top_layer"])]
+        fails += [f"(e) contract {s.get('_die')}/{slot} v{s.get('_version')}: {b}" for b in check_contract(m, sc, pg["top_layer"], grant if allowed else None)]
     # (f)
     fa = face_access(m)
     info["face"] = fa
@@ -426,12 +465,15 @@ def main(argv=None) -> int:
     ap.add_argument("--slot")
     ap.add_argument("--skip", default="", help="comma list of checks to skip (a..g)")
     ap.add_argument("--cap", help="lint at this layer cap (M5 / M6 ...): strap = cap + 1, no signal pin above the cap")
+    ap.add_argument("--pin-grant", help="JSON M6 pin-only grant; requires --routed-def")
+    ap.add_argument("--tech-lef", help="exact technology LEF read by the route (named via RECT geometry)")
+    ap.add_argument("--routed-def", help="raw routed DEF for independent nonpin metal and PORT geometry audit")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
     if bool(a.contract) != bool(a.slot):
         ap.error("--contract and --slot go together")
     try:
-        r = lint(a.lef, a.libs, a.contract, a.slot, {x.strip() for x in a.skip.split(",") if x.strip()}, a.cap)
+        r = lint(a.lef, a.libs, a.contract, a.slot, {x.strip() for x in a.skip.split(",") if x.strip()}, a.cap, json.loads(Path(a.pin_grant).read_text()) if a.pin_grant else None, a.routed_def, a.tech_lef)
     except (OSError, ValueError, KeyError) as ex:
         print(f"ERROR: {ex}")
         return 2

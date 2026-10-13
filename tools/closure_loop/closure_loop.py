@@ -1912,7 +1912,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
-           "../hier_contract/abstract_pin_stub.py", "../../physical/common_flow/grt_macro_top_layer.tcl",
+           "../hier_contract/abstract_pin_stub.py", "../hier_contract/m6_pin_grant.py", "../../physical/common_flow/grt_macro_top_layer.tcl",
            "../../physical/common_flow/grt_macro_top_layer_post.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
@@ -2420,7 +2420,8 @@ def launch_stage(j, st, cmd):
         _src = j.get("stage_source", f"{j['run']}/src")
         env += (f"[ -f {_src}/tools/hier_contract/child_lint.py ] && ! [ -f {_src}/tools/hier_contract/child_lint.py.job ] && "
                 f"cp {_src}/tools/hier_contract/child_lint.py {_src}/tools/hier_contract/child_lint.py.job; "
-                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py\n")
+                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py; "
+                f"cp -f {j['run']}/cl/m6_pin_grant.py {_src}/tools/hier_contract/m6_pin_grant.py\n")
         # LOOP-PIN-STUB (2026-10-12): the loop's child_lint (ba4d5d136) refuses a pin's own same-layer route stub written as
         # OBS; ref_tile export runs abstract_pin_stub.py on the view before the lint, but only from ba4d5d136 on.  A job
         # synced earlier got the new lint WITHOUT the view fix (smh_fcbc_ref_p40-r1-9214bae8b: 10 stub pins, collect
@@ -5152,7 +5153,7 @@ def pick_view_lef(paths, block):
     return next((p for p in cand if Path(p).stem == block), None)
 
 
-def child_lint_view(lef_text, checks):
+def child_lint_view(lef_text, checks, pin_grant=None, def_text=None, tech_text=None):
     """child_lint on a view LEF text: (fails restricted to checks, summary)"""
     if str(CHILD_LINT_DIR) not in sys.path:
         sys.path.insert(0, str(CHILD_LINT_DIR))
@@ -5160,10 +5161,24 @@ def child_lint_view(lef_text, checks):
     with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as fh:
         fh.write(lef_text)
         tmp = fh.name
+    def_path, tech_path = None, None
     try:
-        res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks))
+        if def_text is not None:
+            with tempfile.NamedTemporaryFile("w", suffix=".def", delete=False) as df:
+                df.write(def_text)
+                def_path = df.name
+        if tech_text is not None:
+            with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as tf:
+                tf.write(tech_text)
+                tech_path = tf.name
+        res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks), pin_grant=pin_grant,
+                              cap="M5" if pin_grant else None, routed_def=def_path, tech_lef=tech_path)
     finally:
         os.unlink(tmp)
+        if def_path:
+            os.unlink(def_path)
+        if tech_path:
+            os.unlink(tech_path)
     return [x for x in res["fails"] if x[1:2] in checks], res.get("summary", "")
 
 
@@ -5185,6 +5200,9 @@ def pin_stub_fix(lef_text):
 def child_lint_gate(j):
     """None = pass / not a tile view; else the (c)/(f) failure text.  Raises on ssh failure (the commit is re-tried)."""
     checks = child_lint_gate_checks(j["spec"])
+    grant = j["spec"].get("m6_pin_grant")
+    if grant is not None:
+        checks |= {"c", "f"}  # a pin-only grant never authorizes skipping physical evidence
     if not checks:
         return None
     blk = j["spec"]["block"]
@@ -5199,7 +5217,7 @@ def child_lint_gate(j):
     t = ssh(j["host"], f"cat {shlex.quote(lef)}", timeout=300)
     if t.returncode != 0 or "MACRO" not in t.stdout:
         raise RuntimeError(f"child-lint gate: could not read {lef}: {(t.stderr or '')[-200:]}")
-    text, moved = pin_stub_fix(t.stdout)
+    text, moved = (t.stdout, "") if grant else pin_stub_fix(t.stdout)
     if moved:
         # PIN-STUB (73e17f447, ot_qkvd_sbuf DRT-0073): write_abstract_lef writes a face pin's own same-layer route stub
         # as OBS over the pin; child_lint (f) now refuses that.  Moving the stub into the pin's PORT is the exact view
@@ -5209,7 +5227,18 @@ def child_lint_gate(j):
         if w.returncode != 0:
             raise RuntimeError(f"child-lint gate: could not write the pin-stub view {lef}: {(w.stderr or '')[-200:]}")
         event(j, f"child-lint gate: abstract_pin_stub moved {moved} into their pins' PORTs in {lef}")
-    fails, summ = child_lint_view(text, checks)
+    def_text, tech_text = None, None
+    if grant:
+        # Raw routed geometry copied by ref_tile export, not a modified abstract.
+        def_file = str(Path(lef).parent / "pin_only_routed.def")
+        dt = ssh(j["host"], f"cat {shlex.quote(def_file)}", timeout=300)
+        if dt.returncode != 0:
+            return "M6 pin-only grant missing raw routed DEF evidence"
+        def_text = dt.stdout
+        tech_file = str(Path(lef).parent / "pin_only_tech.lef")
+        tt = ssh(j["host"], f"cat {shlex.quote(tech_file)}", timeout=300)
+        tech_text = tt.stdout if tt.returncode == 0 else None
+    fails, summ = child_lint_view(text, checks, grant, def_text, tech_text)
     j["child_lint"] = dict(lef=lef, checks="".join(sorted(checks)), fails=fails, summary=summ[:400], at=now_iso())
     return "; ".join(fails) if fails else None
 

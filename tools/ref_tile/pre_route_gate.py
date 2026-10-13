@@ -268,7 +268,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
             mm = re.search(rf"^{k}='([^']*)'", env, re.M)
             pins_used |= set(mm.group(1).split()) if mm else set()
         over = sorted(x for x in pins_used if re.fullmatch(r"M\d+", x) and int(x[1:]) > cap_n)
-        if over:
+        if over and not (over == ["M6"] and fresh_lc.get("m6_pin_grant")):
             g.add("FAIL", "layer", f"pin layers {over} above the tile cap {rl.group(1)}: the parent strap layer would "
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
     g.add("INFO", "layer", f"{spec['kind']}: PG {lc['pg_layer']} stripes as pins, signals {lc['rlayers'][0]}-"
@@ -382,6 +382,9 @@ def ship_tar(paths):
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
     fp = json.loads((kd / "floorplan.json").read_text())
     ref = set(fp["referenced"])
+    # Ship the same transitive Tcl/shell dependencies checked by the local gate.
+    # A custom PRE_GLOBAL_PLACE hook may source helpers outside its own folder.
+    ref |= referenced_closure(sorted(ref))[0]
     dirs = {"tools", "rtl", str(kd.relative_to(ROOT)), "physical/qwen_die_masters", "physical/common_flow",
             "physical/hbm_accel_die_views/stations/bench", "physical/hbm_w2_rb_station_20261006"}
     dirs |= {str(Path(p).parent) for p in ref}
