@@ -1,5 +1,5 @@
 {
- "name": "qfd_tile_h3c-r4-cx-COMMIT",
+ "name": "qfd_tile_h3c-r4-cx-8c59114fe",
  "block": "ot_qwen_rom_tile_die",
  "ref_tile": true,
  "owner": "Codex:qwen_tile",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "codex/q-tile-takeover-1013",
-  "commit": "COMMIT"
+  "commit": "8c59114fe2fbca93e61935ccdf22c9b2271716c0"
  },
  "stages": {
   "bench": [
@@ -166,7 +166,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_h3c/qfd_tile_h3c-r4-cx-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tile_h3c/qfd_tile_h3c-r4-cx-8c59114fe"
   }
  ],
  "cycles_added": 2,

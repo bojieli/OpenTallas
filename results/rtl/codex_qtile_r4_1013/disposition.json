@@ -1,0 +1,27 @@
+{
+  "source_commit": "8c59114fe2fbca93e61935ccdf22c9b2271716c0",
+  "patch_origin": "Claude uncommitted stable three-file XTX alignment correction, snapshotted with before/after SHA256 equality; inherited source untouched",
+  "failure": "r3 event0 exact mismatch; t_vout and external array/spine tags omitted XTX2 latency",
+  "physical_spec": "el1011-q-tile.log 2026-10-12 22:05 r3; regional2 transmit rungs, ROM row pitch95.04",
+  "candidates": [
+    "qfd_tile_h3c-r4-cx-8c59114fe",
+    "qfd_tile_h3s-r4-cx-8c59114fe"
+  ],
+  "dispositions": {
+    "qfd_tile": "open; r4c/s regional transmit candidates supersede r3 exact failure",
+    "qfd_tile_e": "open; same canonical tile topology, orientation changes remain die-level contract evidence; no closed e replacement claim",
+    "qfd_tile_nk": "open integration; NK wrapper has XTX but r4 candidates route KV-capable tile_die; die lead asked explicit full-view equivalence or dedicated NK route",
+    "qfd_tile_lsl": "accepted closed lsl6 keepout-aware ECO views+pin stubPORT fix; no redundant leaf reroute; scoped M5 candidate failure does not invalidate accepted view"
+  },
+  "exactness": {
+    "s1": "PASS5496writes,16addedcycles",
+    "s5": "PASS5744writes,16addedcycles",
+    "m3": "FAIL request/address mutant",
+    "all_source_hashes_match": true
+  },
+  "production_gate": {
+    "status": "unverified on current XTX2 source",
+    "existing_budget": "qfd_tile/e/nk/lsl QUALIFIED via old qwen_rom token_path_20261009 class record; no per-tile ratio or current production bench",
+    "current_full_lane_gate": "EPYC4 /srv/opentallas-scratch2/claude/codex-qtile-r4-gate; W16 actual8leaf configuration with GT16 compositional exact bench; not a production workload claim"
+  }
+}
