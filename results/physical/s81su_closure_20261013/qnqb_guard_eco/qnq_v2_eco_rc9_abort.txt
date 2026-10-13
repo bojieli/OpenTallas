@@ -1,0 +1,12 @@
+        0 |       0 |       0 |            0 |    +0.0% | -26.653 | -2126.447 | u_q.cb_q[2]$_DFF_P_/D
+       10 |       0 |      19 |            0 |    +0.0% | -13.825 | -1950.158 | u_q.o_d[107]$_SDFF_PP0_/D
+       20 |       0 |      38 |            0 |    +0.0% | -12.472 | -1820.330 | u_q.y_q[958]$_DFF_P_/D
+       30 |       0 |      56 |            0 |    +0.0% | -10.724 | -1705.005 | u_q.y_q[467]$_DFF_P_/D
+       40 |       0 |      74 |            0 |    +0.0% |  -9.983 | -1601.742 | u_q.y_q[678]$_DFF_P_/D
+       50 |       0 |      94 |            0 |    +0.0% |  -9.413 | -1504.906 | u_q.y_q[39]$_DFF_P_/D
+       60 |       0 |     114 |            0 |    +0.0% |  -8.952 | -1412.748 | u_q.y_q[451]$_DFF_P_/D
+       70 |       0 |     134 |            0 |    +0.0% |  -8.528 | -1324.698 | u_q.nq_q[9]$_DFF_P_/D
+Signal 6 received
+Stack trace:
+/usr/include/c++/11/bits/stl_vector.h:1063: std::vector<_Tp, _Alloc>::const_reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) const [with _Tp = int; _Alloc = std::allocator<int>; std::vector<_Tp, _Alloc>::const_reference = const int&; std::vector<_Tp, _Alloc>::size_
+ 7# grt::GlobalRouter::removeWireUsage(odb::dbWire*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad

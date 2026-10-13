@@ -1,0 +1,31 @@
+OT_ECO pre session mm
+worst slack max 97.90
+worst slack min -5.17
+OT_ECO pre_ws ss 97.903244 ff -5.169365
+OT_ECO filter: 2066 endpoints repaired, 0 excluded (tight/infeasible stay as they are)
+OT_ECO face-pin keepout: add (above only 1)
+OT_ECO macro-edge via guard: add
+OT_MACRO_EDGE_GUARD: created 4 on M5 (depth 1.2 um, pin stub 0.024 um free)
+OT_ECO route guides from the db: 1
+OT_ECO route_strategy incremental_original_guides
+[INFO RSZ-0046] Found 2066 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 2169 hold buffers.
+OT_ECO reroute: 3118 new/moved/resized instances, 71420 wires stripped, 0 nets frozen
+[INFO DRT-0199]   Number of violations = 9589.
+[INFO DRT-0199]   Number of violations = 1170.
+[INFO DRT-0199]   Number of violations = 624.
+[INFO DRT-0199]   Number of violations = 9.
+[INFO DRT-0199]   Number of violations = 4.
+[INFO DRT-0199]   Number of violations = 4.
+[INFO DRT-0199]   Number of violations = 4.
+[INFO DRT-0199]   Number of violations = 4.
+[INFO DRT-0199]   Number of violations = 0.
+OT_ECO face-pin keepout: remove
+OT_ECO macro-edge via guard: remove
+OT_MACRO_EDGE_GUARD: removed 4 on M5
+worst slack max 105.14
+worst slack min 23.49
+OT_ECO post_ws ss 105.142342 ff 23.489321
+OT_ECO done
+0
+6_final.odb 6_final.sdc 6_final.spef 6_final.v eco_drc.rpt env_ff.sdc env_ss.sdc 
