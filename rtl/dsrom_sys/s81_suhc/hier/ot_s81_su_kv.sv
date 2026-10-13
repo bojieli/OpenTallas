@@ -25,7 +25,8 @@
 // exps row obase + N / 64 (one masked write a group of 8 blocks: N / 256 writes), y rows obase + N / 64 + 1 + b.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_kvt #(
-    parameter integer N = 512, S_RD = 16, NFI = 65, MUT = 0
+    parameter integer N = 512, S_RD = 16, NFI = 65, MUT = 0,
+    parameter integer NB = 64                       // offset-copy banks over the 128 data bits (bit-local floorplan)
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -51,7 +52,7 @@ module ot_s81_su_kvt #(
     localparam [3:0] K_KV = 1, K_GK = 7;
     localparam integer NPK = 5;                    // parameter rows of a KV job (descriptor, cos lo / hi, sin lo / hi)
 `ifndef SYNTHESIS
-    initial if ((1 << LL) != L || L < 2 || S_RD > L) $fatal(1, "ot_s81_su_kvt: N / 16 a power of two >= max(2, S_RD)");
+    initial if ((1 << LL) != L || L < 2 || S_RD > L || NB < 1 || NB > 128) $fatal(1, "ot_s81_su_kvt: N / 16 a power of two >= max(2, S_RD)");
 `endif
     reg rr0, rr1;
     always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
@@ -77,11 +78,15 @@ module ot_s81_su_kvt #(
     wire [LL-1:0] rl_n = dq_st ? {LL{1'b0}} : rl + pc;     // mod L
     wire [4+PCW:0] sr_s = {{(PCW+1){1'b0}}, sr} + {5'd0, pc};
     wire [3:0]    sr_n = dq_st ? 4'd0 : (sr_s >= 8) ? 4'd8 : sr_s[3:0];
-    // the rotation offset off = (rows before - np) mod L, REGISTERED, one kept copy a position (as the QN tap)
+    // the rotation offset off = (rows before - np) mod L, REGISTERED, one kept copy a BIT BANK (el1013 s81su-kvsw: the
+    // tap is floorplanned bit-local -- bit b of all S_RD slots and all L positions shares one 3.3 um band of the pin
+    // faces, so the 16 -> L rotation of a bit never leaves its band; the copy that selects it sits in the band too:
+    // copy c drives bits [128 c / NB, 128 (c + 1) / NB) of every position, copy NB the valid bit.  The former copy a
+    // POSITION drove 129 selects spread over the whole 400 um face.  Every copy holds the same value: no value change.)
     wire [LL-1:0] off_n = rl_n - {{(LL > 3 ? LL - 3 : 0){1'b0}}, np_n};
-    wire [LL*L-1:0] kq;
+    wire [LL*(NB+1)-1:0] kq;
     genvar gj;
-    generate for (gj = 0; gj < L; gj = gj + 1) begin : g_off
+    generate for (gj = 0; gj <= NB; gj = gj + 1) begin : g_off
         ot_s81_su_qn_keep_ff #(.W(LL)) u_k (.clk(clk), .rst_n(rst_n), .d(off_n), .q(kq[LL * gj +: LL]));
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
@@ -108,15 +113,16 @@ module ot_s81_su_kvt #(
     localparam integer RB = 128 + 1;
     reg [L*RB-1:0] rv [0:LL];
     always @(*) begin : rot
-        integer s, k;
+        integer s, k, b;
         rv[0] = 0;
         for (s = 0; s < S_RD; s = s + 1) rv[0][RB * s +: RB] = {opv[s], dq_d[128 * s +: 128]};
         for (k = 0; k < LL; k = k + 1)
-            for (s = 0; s < L; s = s + 1) begin : pos
-                reg [LL-1:0] off;
-                off = kq[LL * s +: LL];
-                rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
-            end
+            for (s = 0; s < L; s = s + 1)
+                for (b = 0; b < RB; b = b + 1) begin : pos
+                    reg [LL-1:0] off;
+                    off = kq[LL * ((b == 128) ? NB : (b * NB) / 128) +: LL];
+                    rv[k + 1][RB * s + b] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) + b] : rv[k][RB * s + b];
+                end
     end
     always @(posedge clk) begin : oreg
         integer j, s;
