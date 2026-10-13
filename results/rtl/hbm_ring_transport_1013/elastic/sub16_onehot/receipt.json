@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.hbm.elastic_transport_candidate.v1",
+ "owner": "Claude:ring-station-1013",
+ "source_commit": "f64321878",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_elastic.sv": "0125334da1faac6e2482bb30f89ca62edb026a8a28ecc127be6eedaee366cbfa",
+  "rtl/hbm_accel/generic/vm/b2/tb_vms_elastic.sv": "6d95c15372757f15151148a51ef2efca9e26f593c030fb947f8926198659245a",
+  "rtl/hbm_accel/generic/vm/b2/run_ring_transport.sh": "c254d7c8dcc1ef755645601268c8b3621054a2613e14736af01955fffaaae7c5"
+ },
+ "change": "registered one-hot write-enable / read-select (16 each) + take copy per <= 16-bit payload subslice, AND-OR read plane; <= 16 loads per control flop; forward latency unchanged (4 edges a station)",
+ "host": "ot-epyc4 /srv/opentallas-scratch2/claude/ring-station-1013/bench4 (ot-heavy --mem 12), wrapper RING_REGIONAL_PHY, S 67, D 8",
+ "positive": {
+  "exact_vc0": "2048 / 2048 steady, rate 1.000, total 2317",
+  "exact_vc1": "2048 / 2048 steady, rate 1.000, total 2317",
+  "exact_mixed": "4096 / 4096 steady, rate 1.000, total 4365",
+  "stall_vc0": "2048 / 2944, total 3216, order / drain exact",
+  "stall_vc1": "2048 / 2944, total 3216",
+  "stall_mixed": "4096 / 5891, total 6194",
+  "endpoint_D8_HF8": "1000 / 1000 steady, total 1272",
+  "wrap_SID3_CW": "1000 / 1000 steady, total 1272",
+  "wrap_SID3_CCW": "1000 / 1000 steady, total 1272"
+ },
+ "mutants": {
+  "mutant1_credit_drop": "exit 134, TIMEOUT rec=64,0",
+  "mutant2_vc_credit_swap": "exit 134, LOCAL_CREDIT stage=32 vc=1",
+  "mutant_sub_one_read_select_copy_wrong": "exit 134, ORDER vc=0 seq=0"
+ },
+ "totals_identical_to": "sub16_lctl (6d920b6b1) and s67",
+ "source_only": true,
+ "physical_qualified": false,
+ "qualified": false,
+ "note": "source-only behavioural proof; the physical gate is results/physical/hbm_ring_transport_1013/pre_route_ls16_c"
+}
