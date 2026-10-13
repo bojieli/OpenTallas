@@ -1,5 +1,5 @@
 {
- "name": "s81hc_crrfw_ref-v2-pinplan-COMMIT",
+ "name": "s81hc_crrfw_ref-v2-pinplan-f41de6496",
  "block": "ot_s81_hc_crootr_f",
  "ref_tile": true,
  "owner": "Claude:s81hc-1013",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/s81hc-1013",
-  "commit": "COMMIT"
+  "commit": "f41de6496"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_crrfw_ref/s81hc_crrfw_ref-v2-pinplan-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_crrfw_ref/s81hc_crrfw_ref-v2-pinplan-f41de6496"
   }
  ],
  "cycles_added": 0,
