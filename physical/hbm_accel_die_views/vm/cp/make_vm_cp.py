@@ -144,8 +144,12 @@ T3, T3O, T4, T4O = 0.036, 0.009, 0.048, 0.012
 RW, RH = 302.4, 432.0
 R_WD0, R_CK, R_TW0, R_WR0 = 50, 4150, 4158, 8290            # W face M4 tracks: wd_i[i] = R_WD0 + 2i, tap_w[j], wr_i[i]
 R_RST, R_RD0, R_CFG, R_TE0 = 2160, 2170, 2574, 2600         # E face: rd_i straight below tap_e; tap_e straight across RE.tap
-R_S0 = 1106                                                 # S face first M3 track (pins centred on the face)
+R_S0 = 334                                                  # S face first M3 track (pins centred on the face)
 R_N0 = 70
+# S / N pin pitch: alternately 2 and 3 M3 tracks (2.5 on average = 11.1 pins/um).  cx1 placed every S / N pin on 2
+# tracks = 13.9 pins/um on one layer and was refused at the floorplan lint (FLOORPLAN_MARGIN pin_density > 12 b/um/layer
+# over 100 um: S/M3 13.9 @40, N/M3 13.9 @3) before any placement; the S face now uses 278 of its 302.4 um.
+SN = lambda i: (5 * i) // 2
 
 def _bottleneck(cost):
     """rows -> distinct columns minimising the largest cost (threshold + Kuhn matching)"""
@@ -187,17 +191,19 @@ def root_plan():
     for n in range(768): seq += [f'wd0[{n}]', f'rd0[{n}]']
     seq += [f'cmd2[{i}]' for i in range(10)] + ['rv2']
     for n in range(768): seq += [f'wd2[{n}]', f'rd2[{n}]']
-    for i, nm in enumerate(seq): pins[nm] = ('S', R_S0 + 2 * i)
+    for i, nm in enumerate(seq): pins[nm] = ('S', R_S0 + SN(i))
     # N face: status at the W end, slice 1, slice 3 data tail, unused, owner words at the E end
     seq = [f'st_o[{i}]' for i in range(202)] + [f'cmd1[{i}]' for i in range(10)] + ['rv1']
     for n in range(768): seq += [f'wd1[{n}]', f'rd1[{n}]']
     seq += [f'cmd3[{i}]' for i in range(10)] + ['rv3']
     for n in range(224): seq += [f'wd3[{n}]', f'rd3[{n}]']
-    for i, nm in enumerate(seq): pins[nm] = ('N', R_N0 + 2 * i)
+    for i, nm in enumerate(seq): pins[nm] = ('N', R_N0 + SN(i))
+    n_end = R_N0 + SN(len(seq) - 1)
     own = []
     for n in range(224, 512): own += [f'wd3[{n}]', f'rd3[{n}]']
-    e0 = round(RW / T3) - 70 - 2 * len(own)
-    for i, nm in enumerate(own): pins[nm] = ('N', e0 + 2 * i)
+    e0 = round(RW / T3) - 70 - SN(len(own) - 1)
+    assert e0 > n_end + 2, (e0, n_end)
+    for i, nm in enumerate(own): pins[nm] = ('N', e0 + SN(i))
     xy = lambda nm: ((0.0 if pins[nm][0] == 'W' else RW, pins[nm][1] * T4 + T4O) if pins[nm][0] in 'WE'
                      else (pins[nm][1] * T3 + T3O, 0.0 if pins[nm][0] == 'S' else RH))
     mh = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])

@@ -59,36 +59,36 @@
    199.212
   ],
   "cmd0": [
-   39.825,
-   40.473
+   12.033,
+   12.825
   ],
   "cmd1": [
-   17.073,
-   17.721
+   20.709,
+   21.501
   ],
   "cmd2": [
-   151.209,
-   151.857
+   151.245,
+   152.073
   ],
   "cmd3": [
-   128.457,
-   129.105
+   159.921,
+   160.749
   ],
   "rd0": [
-   40.689,
-   151.137
+   13.113,
+   151.173
   ],
   "rd1": [
-   17.937,
-   128.385
+   21.789,
+   159.849
   ],
   "rd2": [
-   152.073,
-   262.521
+   152.325,
+   290.385
   ],
   "rd3": [
-   129.321,
-   299.817
+   161.001,
+   299.889
   ],
   "rd_i": [
    104.172,
@@ -99,24 +99,24 @@
    103.692
   ],
   "rv0": [
-   40.545,
-   40.545
+   12.933,
+   12.933
   ],
   "rv1": [
-   17.793,
-   17.793
+   21.609,
+   21.609
   ],
   "rv2": [
-   151.929,
-   151.929
+   152.145,
+   152.145
   ],
   "rv3": [
-   129.177,
-   129.177
+   160.821,
+   160.821
   ],
   "st_o": [
    2.529,
-   17.001
+   20.601
   ],
   "tap_e": [
    124.812,
@@ -127,20 +127,20 @@
    397.548
   ],
   "wd0": [
-   40.617,
+   13.005,
    151.065
   ],
   "wd1": [
-   17.865,
-   128.313
+   21.681,
+   159.741
   ],
   "wd2": [
-   152.001,
-   262.449
+   152.253,
+   290.313
   ],
   "wd3": [
-   129.249,
-   299.745
+   160.929,
+   299.817
   ],
   "wd_i": [
    2.412,
@@ -169,9 +169,9 @@
  "children": [],
  "inter": [],
  "job": {
-  "owner": "Claude:vm8-face3-1013",
+  "owner": "Claude:vm8-face4-1013",
   "branch": "claude/vm8-face-1013",
-  "tag": "cx1",
+  "tag": "cx2",
   "purpose": "[vm8cp] VM8 top-down re-plan tile vm_cp_root (results/arch/hier_contract_1011/vm8_replan.md)",
   "extra_paths": [
    "physical/hbm_accel_die_views/vm",
@@ -205,8 +205,8 @@
   "views_to": "physical/ref_tile/vm_cp_root_cx/views",
   "record_to": "results/rtl/ref_tile/vm_cp_root_cx"
  },
- "structural_change": "cp1 (the only route, vm_cp_root-cp1-2370c0876): post-CTS TT -609 ps, 9,373 failing endpoints, 13,727 sinks at 356 ps insertion. Path classes read from its 4_cts_final.rpt / preroute_gate.json / textbook_lint.json: (1) pins -> control_code through the accept and next-state logic, 18 levels (rd_i[3] -> control_code[0] -707.7 ps at 770); (2) pin rd_i[0]/wr_i[15] -> the load enable of 2,592 seat flops (io WS -366.8, 3,012 io endpoints below 0; nets of 2,592-5,187 loads); (3) seat/sampled -> SECDED decode -> 2,304-bit compare -> chk_err_q (-531.8) and seat -> decode -> owner compare -> next state -> encode -> control_code (23 levels, 897 ps); (4) state -> fault -> mem_cmd pins unregistered (-341.5); (5) one async reset flop on 5,504 loads. cx1 is a re-timed root (ot_hfd_vm_root_p): every pin is a register (request inputs and rv in the wrapper; seat = slice write-data pin registers; sampled = slice read-data pin registers; four command registers; one tap rank per face; status); accept, seat load (data then parity), command, capture, syndrome, per-word verdict, reduction and load are separate registered stages with per-word replicated enables (36 copies) and 11 replicated synchronous resets; the read row is loaded into the seat as read and the seat scrubs itself in place, so the far-face tap/status ranks take raw seat bits over wire-only paths (<= 456.5 um by a bottleneck word-to-pin-block assignment); smp_enc_q and rd_hold are gone. ~14.5k sinks on one root (<= 15k). Latency: write +6 root cycles, read +8 (measured in the bench, posted to codex-vm8-service-1013.log). Pins locked per bit (M4 W/E, M3 S/N, 2 tracks), M5 cap, recipe 2.",
- "slot_change_request": "el1011-hbmdie.log FACE3 2026-10-13 SLOT_CHANGE_REQUEST vm_cp_root_cx cx1: outline unchanged 302.4 x 432.0; layer cap M5 (cp1 was M6); st_o moved W -> N (west end); pins per bit (codex_specs/pins/vm_cp_root_cx_pins.tcl); slice bit order permuted (root_plan)",
+ "structural_change": "cp1 (the only route, vm_cp_root-cp1-2370c0876): post-CTS TT -609 ps, 9,373 failing endpoints, 13,727 sinks at 356 ps insertion. Path classes read from its 4_cts_final.rpt / preroute_gate.json / textbook_lint.json: (1) pins -> control_code through the accept and next-state logic, 18 levels (rd_i[3] -> control_code[0] -707.7 ps at 770); (2) pin rd_i[0]/wr_i[15] -> the load enable of 2,592 seat flops (io WS -366.8, 3,012 io endpoints below 0; nets of 2,592-5,187 loads); (3) seat/sampled -> SECDED decode -> 2,304-bit compare -> chk_err_q (-531.8) and seat -> decode -> owner compare -> next state -> encode -> control_code (23 levels, 897 ps); (4) state -> fault -> mem_cmd pins unregistered (-341.5); (5) one async reset flop on 5,504 loads. cx1 is a re-timed root (ot_hfd_vm_root_p): every pin is a register (request inputs and rv in the wrapper; seat = slice write-data pin registers; sampled = slice read-data pin registers; four command registers; one tap rank per face; status); accept, seat load (data then parity), command, capture, syndrome, per-word verdict, reduction and load are separate registered stages with per-word replicated enables (36 copies) and 11 replicated synchronous resets; the read row is loaded into the seat as read and the seat scrubs itself in place, so the far-face tap/status ranks take raw seat bits over wire-only paths (<= 456.5 um by a bottleneck word-to-pin-block assignment); smp_enc_q and rd_hold are gone. ~14.5k sinks on one root (<= 15k). Latency measured end to end on the 25-tile bench (latency_vm_cp.sh): +6 cycles per write, +10 per read against the previous root (posted to codex-vm8-service-1013.log). Pins locked per bit (M4 W/E 2 tracks; M3 S/N alternately 2 and 3 tracks), M5 cap, recipe 2. cx2: cx1-0ec026dc7 was refused at the floorplan lint before placement (pin density S/M3 and N/M3 13.9 b/um > 12 over 100 um); the S / N pins are now spread to 11.1 b/um over the whole face (S 12.0-290.4 um), seat words re-assigned to pin blocks by the same bottleneck rule (in-tile wire-only paths <= 482.3 um, die hops <= 497.1 um).",
+ "slot_change_request": "el1011-hbmdie.log FACE3 2026-10-13 SLOT_CHANGE_REQUEST vm_cp_root_cx cx1/cx2: outline unchanged 302.4 x 432.0; layer cap M5 (cp1 was M6); st_o moved W -> N (west end); pins per bit (codex_specs/pins/vm_cp_root_cx_pins.tcl); slice bit order permuted (root_plan); cx2: S/N pins at 2.5 M3 tracks (11.1 b/um), ranges in the spec",
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
