@@ -9,8 +9,13 @@
 // own-stack records (cluster q: source rows q + 4j of its LOCAL slice -> stack q) and PRE into a one-record group on
 // cluster 0.  Three modules:
 //   ot_hgi_b2_swap_disp  (S, spine side: glue of the cmdproc tile, beside ot_hgi_b2_disp)
-//     in   beats {v, last, cluster 2, move 227} (ot_hgi_dma_mover move word, TOKEN already resolved), one a cycle, into a
-//          2-entry pin FIFO; g_rdy is a flop;
+//     in   beats {v, last, cluster 2, move 227} (ot_hgi_dma_mover move word, TOKEN already resolved), one a cycle.
+//          REGISTER AT THE PIN ([mtp-phys] pin audit 2026-10-13): g_v / g_last / g_q / g_mv enter an UNCONDITIONAL
+//          capture stage (no logic before the flop); the accept is decided one edge later from the captured valid and
+//          the ready of the edge it was sent on (rdy_d); g_rdy is a flop computed from internal state only, so it cannot
+//          see the beat in the capture stage nor the one being sent: the FIFO is 4 deep and ready needs <= 2 occupied;
+//          a beat for a cluster that already holds one in the open group (a duplicate cluster) is a sticky FAULT (S
+//          holds one record a cluster; it used to stall);
 //     hold a group's beats, one slot a cluster; the beat flagged LAST releases every held beat and itself on the SAME
 //          edge (one registered down link a cluster: {v, move}); a cluster is never made to wait for another cluster;
 //     credit 2 a cluster (the endpoint station depth), returned by the engine's mv_src: outstanding = 2 - credit;
@@ -44,11 +49,12 @@ module ot_hgi_b2_swap_disp #(
     output reg                done,            // one pulse a completed release (the CTL.FENCE answer)
     output reg                fault            // sticky
 );
-    // ---------------------------------------------------------------- pin FIFO (2 entries, written from the pins)
-    reg [226:0] f_mv [0:1]; reg [1:0] f_q [0:1]; reg [1:0] f_l;
-    reg wp, rp; reg [1:0] cnt; reg rdy_q;
+    // ---------------------------------------------------------------- pin capture stage + FIFO (4 entries)
+    reg p_v, p_l, rdy_d; reg [1:0] p_q; reg [226:0] p_mv;
+    reg [226:0] f_mv [0:3]; reg [1:0] f_q [0:3]; reg [3:0] f_l;
+    reg [1:0] wp, rp; reg [2:0] cnt; reg rdy_q;
     assign g_rdy = rdy_q;
-    wire push = g_v && rdy_q;
+    wire push = p_v && rdy_d;
     wire [1:0] hq = f_q[rp]; wire hl = f_l[rp]; wire [226:0] hmv = f_mv[rp];
     // ---------------------------------------------------------------- hold slots, credits, up pin flops
     reg [3:0] hv; reg [226:0] h_mv [0:3];
@@ -74,11 +80,11 @@ module ot_hgi_b2_swap_disp #(
         pop = 1'b0; rel = 1'b0; snd = 4'd0;
         if (MUT == 4) begin
             // serialized mutant: every beat goes to its hold slot; one held record leaves when nothing is outstanding
-            pop = cnt != 2'd0 && !hv[hq];
+            pop = cnt != 3'd0 && !hv[hq];
             if (&none_out && !(|dv)) begin
                 if (hv[0]) snd = 4'b0001; else if (hv[1]) snd = 4'b0010; else if (hv[2]) snd = 4'b0100; else if (hv[3]) snd = 4'b1000;
             end
-        end else if (cnt != 2'd0 && !hv[hq]) begin
+        end else if (cnt != 3'd0 && !hv[hq]) begin
             if (!hl) pop = 1'b1;
             else if (cr_ok) begin pop = 1'b1; rel = 1'b1; snd = tgt; end
         end
@@ -97,25 +103,28 @@ module ot_hgi_b2_swap_disp #(
     // ---------------------------------------------------------------- join
     reg [3:0] ok_c;
     always @* for (q = 0; q < 4; q = q + 1) ok_c[q] = ((MUT == 3) || none_out[q]) && u_quiet[q];
-    wire fq_c = &ok_c && cnt == 2'd0 && hv == 4'd0 && dv == 4'd0 && !fault && !(|u_fault);
+    wire fq_c = &ok_c && cnt == 3'd0 && !p_v && hv == 4'd0 && dv == 4'd0 && !fault && !(|u_fault);
     // ---------------------------------------------------------------- data (no reset)
     always @(posedge clk) begin
-        if (push) begin f_mv[wp] <= g_mv; f_q[wp] <= g_q; f_l[wp] <= g_last; end
+        p_mv <= g_mv; p_q <= g_q; p_l <= g_last;
+        if (push) begin f_mv[wp] <= p_mv; f_q[wp] <= p_q; f_l[wp] <= p_l; end
         if (pop && !rel) h_mv[hq] <= hmv;
         for (q = 0; q < 4; q = q + 1) if (snd_x[q]) d_mv[q] <= s_mv[q];
     end
     // ---------------------------------------------------------------- control
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wp <= 1'b0; rp <= 1'b0; cnt <= 2'd0; rdy_q <= 1'b0; hv <= 4'd0; dv <= 4'd0; dirty <= 1'b0;
+            wp <= 2'd0; rp <= 2'd0; cnt <= 3'd0; rdy_q <= 1'b0; rdy_d <= 1'b0; p_v <= 1'b0; hv <= 4'd0; dv <= 4'd0; dirty <= 1'b0;
             u_src <= 4'd0; u_quiet <= 4'd0; u_fault <= 4'd0; fence_quiet <= 1'b0; done <= 1'b0; fault <= 1'b0;
             for (q = 0; q < 4; q = q + 1) cred[q] <= 2'd2;
         end else begin
             for (q = 0; q < 4; q = q + 1) begin u_src[q] <= up[q*3]; u_quiet[q] <= up[q*3 + 1]; u_fault[q] <= up[q*3 + 2]; end
-            if (push) wp <= ~wp;
-            if (pop) rp <= ~rp;
-            cnt <= cnt + {1'b0, push} - {1'b0, pop};
-            rdy_q <= (cnt + {1'b0, push} - {1'b0, pop}) != 2'd2;
+            p_v <= g_v; rdy_d <= rdy_q;
+            if (push) wp <= wp + 2'd1;
+            if (pop) rp <= rp + 2'd1;
+            cnt <= cnt + {2'd0, push} - {2'd0, pop};
+            rdy_q <= (cnt + {2'd0, push} - {2'd0, pop}) <= 3'd2;
+            if (MUT != 4 && cnt != 3'd0 && hv[hq]) fault <= 1'b1;        // a second record for a cluster in one group
             for (q = 0; q < 4; q = q + 1) begin
                 if (snd[q]) hv[q] <= 1'b0;
                 else if (pop && !rel && hq == q[1:0]) hv[q] <= 1'b1;

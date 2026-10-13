@@ -1,0 +1,109 @@
+{
+ "record": "qwen_tp8_vm_region_leaf_miter",
+ "date": "2026-10-13",
+ "host": "ot-epyc1tb via ot-heavy --mem 12 (11 builds in parallel; measured peak RSS of a run 4.3 MB, wall < 0.5 s)",
+ "tool": "verilator 5.050; flop counts yosys 0.52 (/usr/bin/yosys on ot-epyc1tb): proc; flatten; opt_clean; simplemap; stat (no merging)",
+ "shape": "region NBK 8 / NSB 2 / NSU 3 / FSW 32 / NPP 12 / MEREG 1 / NRI 2 / NRX 2 / NRS 1 = production; behavioural memories USE_MACRO 0 with DEPTH 8 / LAW 3 / DEPTHS 8 / LAWS 3 (NOT the production depths 174 / 695); 6,000 main cycles + 6 reset + 160 overflow cycles, xo / ro / so / ovf compared on every clock",
+ "runner": "tools/qwen_tp8/vm_region_leaf_miter.sh all",
+ "reference": "ot_qfd_vm_region_quarter (flat, unchanged)",
+ "candidate": "ot_qfd_vm_region_leaf",
+ "sources_sha256": {
+  "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_region_leaf.sv": "14590cf300c8a3c70b75d32e7577c4e57780c168cbd11454258366b2e5981fd8",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "b3bb8eac2fc370839ecb51b5a7ea56cc62813a2a660ca70ecc04a9cad0663fae",
+  "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+  "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+  "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "0b2b6543629ff162d0420e304cd769c2e760664300d6726bfb1acf3ea4527ef6",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/physical/ot_qwen_tree_delay.sv": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+  "rtl/physical/ot_qwen_tree_delay_tiles.sv": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+  "tools/qwen_tp8/vm_region_leaf_miter.sh": "f2211a8e6117e278227230d2925fed89c15c2eb46a5f4cb1423ecc9dfd191531"
+ },
+ "verdict": "PASS",
+ "mutants_killed": 8,
+ "mutants_total": 8,
+ "non_vacuity_refusal": "pushes, pops >= CYCLES/16; row reads, SU answers, stalls >= CYCLES/8; engine edges >= CYCLES/2; pop-pin garbage on non-engine edges >= CYCLES/32; FIFO at NPP - 3 deep >= CYCLES/64 cycles; xo / ro / so changes >= half the pops / row reads / SU answers; nonzero compared 32-b words >= 64 x CYCLES; ovf high 8..150 cycles of the 160-cycle overflow run; ovf in the main run = bench error",
+ "flops_production_shape": {
+  "ot_qfd_vm_gctl_t": 883,
+  "ot_qfd_vm_rowrd_t": 1664,
+  "ot_qfd_vm_delay1_t": 512,
+  "ot_qfd_vm_delay2_t": 1024,
+  "note": "gctl_t at its defaults LAW 8 / LAWS 10 / NPP 12 (135 async-reset + 748 plain) = exact RTL count. yosys generic synth -flatten leaves 849 (34 fewer; which registers it merged or removed was NOT analysed) -- the physical flow must check that keep / dont_touch on g_rg.r / mg / pg and g_xg.r is honoured. Predecessor estimates were 916 (gctl) and 1,664 (rowrd).",
+  "region_new_leaf_flops": 20979
+ },
+ "instances_per_region": {
+  "ot_qfd_vm_gctl_t": 1,
+  "ot_qfd_vm_rowrd_t": 1,
+  "ot_qfd_vm_delay1_t": 8,
+  "ot_qfd_vm_delay2_t": 14,
+  "note": "matches the spec count (8 + 14): 8 wd + 6 swd relays, one per su_t; 10 delay2_t (8 wd + 2 swd, each swd relay driving 3 su_t pins) is cycle-identical if the floorplan prefers it"
+ },
+ "runs": {
+  "ok": {
+   "args": "-GSEED=1 (overflow run: pushes without pops)",
+   "expect": "PASS",
+   "got": "PASS",
+   "line": "PASS qfd_vm_region_leaf SEED=1 OVFMODE=0 exact 6166 checks: pushes=1967 pops=1964 row_reads=2010 su_answers=1785 stalls=1501 pop_garbage=733 deep=577 xo_chg=1959 ro_chg=1920 so_chg=1715 nonzero_words=1465191 ovf_cycles=144"
+  },
+  "ok_s2": {
+   "args": "-GSEED=2 -GOVFMODE=1 (overflow run: pops on the drained FIFO)",
+   "expect": "PASS",
+   "got": "PASS",
+   "line": "PASS qfd_vm_region_leaf SEED=2 OVFMODE=1 exact 6166 checks: pushes=1925 pops=1921 row_reads=2096 su_answers=1804 stalls=1562 pop_garbage=762 deep=526 xo_chg=2021 ro_chg=2000 so_chg=1733 nonzero_words=1467528 ovf_cycles=147"
+  },
+  "ok_s3_tree": {
+   "args": "-GSEED=3 +define+OT_QFD_VM_DELAY1_MOD=ot_qwen_tree_delay1_t +define+OT_QFD_VM_DELAY2_MOD=ot_qwen_tree_delay2_t (existing tree delay masters bound as the data relays)",
+   "expect": "PASS",
+   "got": "PASS",
+   "line": "PASS qfd_vm_region_leaf SEED=3 OVFMODE=0 exact 6166 checks: pushes=1936 pops=1930 row_reads=2030 su_answers=1826 stalls=1528 pop_garbage=752 deep=351 xo_chg=1922 ro_chg=1924 so_chg=1740 nonzero_words=1465194 ovf_cycles=147"
+  },
+  "mut1": {
+   "args": "-GLEAF_MUT=1 rowrd_t: slice 5 4:1 select replica one bank off",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_region_leaf LEAF_MUT=1 errors=6139 of 6166 (xo 0 ro 6139 so 0 ovf 0)"
+  },
+  "mut2": {
+   "args": "-GLEAF_MUT=2 gctl_t: row tag rdc one edge short",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_region_leaf LEAF_MUT=2 errors=3732 of 6166 (xo 0 ro 3732 so 0 ovf 0)"
+  },
+  "mut3": {
+   "args": "-GLEAF_MUT=3 gctl_t: pop replica pg of bank 3 stuck",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_region_leaf LEAF_MUT=3 errors=6108 of 6166 (xo 6108 ro 0 so 0 ovf 0)"
+  },
+  "mut4": {
+   "args": "-GLEAF_MUT=4 wd relay of bank 5 one stage short (delay1 for delay2)",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_region_leaf LEAF_MUT=4 errors=6101 of 6166 (xo 6101 ro 659 so 0 ovf 0)"
+  },
+  "mut5": {
+   "args": "-GLEAF_MUT=5 bx relay of bank 2 one stage short (wire for delay1)",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_region_leaf LEAF_MUT=5 errors=2779 of 6166 (xo 2580 ro 321 so 0 ovf 0)"
+  },
+  "mut6": {
+   "args": "-GLEAF_MUT=6 swd relay of SU (1,0) one stage short",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_region_leaf LEAF_MUT=6 errors=6129 of 6166 (xo 0 ro 0 so 6129 ovf 0)"
+  },
+  "mut7": {
+   "args": "-GLEAF_MUT=7 gctl_t: central push xpush one edge short (only cnt / ovf see it: proves ovf is compared on the edge)",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_region_leaf LEAF_MUT=7 errors=1 of 6166 (xo 0 ro 0 so 0 ovf 1)"
+  },
+  "mut8": {
+   "args": "-GLEAF_MUT=8 gctl_t: SU tag svc one edge short",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_region_leaf LEAF_MUT=8 errors=5906 of 6166 (xo 0 ro 0 so 5906 ovf 0)"
+  }
+ }
+}

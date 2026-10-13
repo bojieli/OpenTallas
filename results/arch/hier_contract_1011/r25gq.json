@@ -159,7 +159,7 @@
   {
    "version": 11,
    "when": "2026-10-13",
-   "change": "v11a: ot_su12_sfu sub-slot 207.36 x 336.96 (the sfu_lane_cl_rta kit outline, no closed view) -> 216 x 330.48 = the CLOSED ring3 view physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu, same 64 origins (x gap 34.56 um, y inside the old 336.96); pin faces of the view (70 groups, all W, M4/M6) on hb_sfu_SW/u_tile_0. Generator: tile_slots() / lef_face_pins() in tools/hbm_accel_die_hier_contract.py"
+   "change": "v11a: ot_su12_sfu sub-slot 207.36 x 336.96 (the sfu_lane_cl_rta kit outline, no closed view) -> 216 x 330.48 = the CLOSED ring3 view physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu, same 64 origins (x gap 34.56 um, y inside the old 336.96); pin faces of the view (81 contiguous bus runs, all W, M4/M6) on hb_sfu_SW/u_tile_0. Generator: tile_slots() / lef_face_pins() in tools/hbm_accel_die_hier_contract.py"
   }
  ],
  "slots": [
@@ -25497,16 +25497,82 @@
      "offset": 155.58
     },
     {
-     "name": "ld_c[1199:0]",
+     "name": "ld_c[237:0]",
      "face": "W",
      "layer": "M4",
-     "offset": 181.249
+     "offset": 219.612
     },
     {
-     "name": "ld_c[1069:238]",
+     "name": "ld_c[493:334]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 144.684
+    },
+    {
+     "name": "ld_c[621:558]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 30.636
+    },
+    {
+     "name": "ld_c[781:718]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 103.212
+    },
+    {
+     "name": "ld_c[973:942]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 127.02
+    },
+    {
+     "name": "ld_c[1037:1006]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 130.092
+    },
+    {
+     "name": "ld_c[1199:1070]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 294.528
+    },
+    {
+     "name": "ld_c[333:238]",
      "face": "W",
      "layer": "M6",
-     "offset": 148.65
+     "offset": 41.744
+    },
+    {
+     "name": "ld_c[557:494]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 65.296
+    },
+    {
+     "name": "ld_c[717:622]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 301.84
+    },
+    {
+     "name": "ld_c[941:782]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 182.442
+    },
+    {
+     "name": "ld_c[1005:974]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 135.952
+    },
+    {
+     "name": "ld_c[1069:1038]",
+     "face": "W",
+     "layer": "M6",
+     "offset": 20.24
     },
     {
      "name": "ls[3:0]",
