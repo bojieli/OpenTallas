@@ -7,13 +7,13 @@
   0,
   0,
   237.6,
-  583.2
+  777.6
  ],
  "core": [
   2.16,
   2.16,
   235.44,
-  581.0400000000001
+  775.44
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -37,7 +37,7 @@
    "r_d",
    "r_cr"
   ],
-  "N": [
+  "E": [
    "tx_up",
    "tx_v",
    "tx_flit",
@@ -49,7 +49,7 @@
    "rst_n",
    "fault"
   ],
-  "E": []
+  "N": []
  },
  "clock_port": "ck",
  "blocks": [
@@ -57,10 +57,10 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
-   "inst": "*g_t?0?.*u_m",
+   "inst": "*g_grp?0?.*u_m",
    "idx": 0,
    "x": 31.536,
-   "y": 86.4,
+   "y": 73.44,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -70,7 +70,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
-   "inst": "*g_t?1?.*u_m",
+   "inst": "*g_grp?1?.*u_m",
    "idx": 0,
    "x": 31.536,
    "y": 138.24,
@@ -83,10 +83,10 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
-   "inst": "*g_t?2?.*u_m",
+   "inst": "*g_grp?2?.*u_m",
    "idx": 0,
    "x": 31.536,
-   "y": 190.08,
+   "y": 203.04,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -96,10 +96,10 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
-   "inst": "*g_t?3?.*u_m",
+   "inst": "*g_grp?3?.*u_m",
    "idx": 0,
    "x": 31.536,
-   "y": 241.92,
+   "y": 267.84,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -109,10 +109,10 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
-   "inst": "*g_t?4?.*u_m",
+   "inst": "*g_grp?4?.*u_m",
    "idx": 0,
    "x": 31.536,
-   "y": 293.76,
+   "y": 332.64,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -122,20 +122,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
-   "inst": "*g_t?5?.*u_m",
-   "idx": 0,
-   "x": 31.536,
-   "y": 345.6,
-   "w": 174.12,
-   "h": 29.736,
-   "orient": "R0",
-   "offtrack": 0
-  },
-  {
-   "kind": "macro",
-   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
-   "master": "ot_sram_1r1w_512x128_m4_r2c2",
-   "inst": "*g_t?6?.*u_m",
+   "inst": "*g_grp?5?.*u_m",
    "idx": 0,
    "x": 31.536,
    "y": 397.44,
@@ -148,17 +135,37 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "master": "ot_sram_1r1w_512x128_m4_r2c2",
-   "inst": "*g_t?7?.*u_m",
+   "inst": "*g_grp?6?.*u_m",
    "idx": 0,
    "x": 31.536,
-   "y": 449.28,
+   "y": 462.24,
+   "w": 174.12,
+   "h": 29.736,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "master": "ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_grp?7?.*u_m",
+   "idx": 0,
+   "x": 31.536,
+   "y": 527.04,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "237.6 x 777.6 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
  "referenced": [
   "rtl/physical/ot_qwen_romio_slots.sv",
   "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv",
