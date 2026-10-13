@@ -18,6 +18,15 @@
 // from the same vector memory.  Random back-to-back ops, dense and KV-sourced,
 // splits SMIN..SMAX.  MUTANT = 1 swaps the ROM slices of tiles 0 and 1 and
 // must fail.
+//
+// PROD = 1 (production throughput bench, results/rtl/tput_map_1011/qwen_rom_tile_xtx2): the four production
+// Qwen AR-layer weight ops of one TP4 die (tools/hdc_program.py build_program me() with scale_bases, G.split_for,
+// GROUPS 6144; the decoded stage program results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verify_P8187/optrace/
+// program_decode_p4_then_p1.txt ops 1 / 16 / 20 / 24) issued one at a time, each into an idle engine.  The
+// original and the unpruned engine are not built (r_* / u_* mirror mono); the exactness check is array == pruned
+// monolithic engine as event streams (result writes, scale reads, maxima, argmax) plus the exact added latency
+// XD + ORD.  Per op it prints, for the array, the go-accept edge -> the edge that commits the last result write
+// (cycles), -> the first edge a next go would be accepted (ready), and the same two spans of the monolithic engine.
 // ==? (reference bits never assigned -- X after reset -- are don't-care) where the simulator has four states;
 // (the two-state simulator has no X to mask and rejects a non-constant ==? right-hand side)
 `ifdef VERILATOR
@@ -45,7 +54,12 @@ module tb_qwen_me_partition_w12;
     parameter integer ROM_PIPE = 0, ROM_ARELAY = 1, LRST = 0, ROM_MUT = 0, BAW = 12, ROM_CAP2 = 0, ROM_CAPX = 0;
     parameter integer ARPB = 0, TMUT = 0, MPR = 0, HIER = 0, HIER_HARD = 0, TOREG = 0, TIDR = 0, LRR = 0, XTX = 0, RPH = 0, RQR = 0, NDH = 0, BMUT = 0;      // qwen-1010/c: per-bank ROM address register / bench mutants
     parameter integer ANR = 0;                 // hardcore-1010 D: valid-only adder resets + HSPLIT
-    localparam integer IL = 8, AW = 24, NW = 16;
+    parameter integer PROD = 0;                // 1: the directed production-op throughput mode (header)
+    parameter integer NW = 16;                 // count width (18 on the die)
+    parameter integer PSH = 0;                 // PROD at a reduced GT = 6144 >> PSH: every op's split is PSH lower (same rows, k, rounds, words); W < 16: nout * W / 16
+    parameter integer CBANKS = 0;              // code ROM banks a tile (0: 8192 >> BAW; 5 on the die at BAW 12)
+    localparam integer IL = 8, AW = 24;
+    localparam integer GW = (PROD != 0) ? 16 : 8;   // event-tag group width
     localparam integer NT = GT / TG, NXC = 1 << SMAX, LT = $clog2(TG);
     localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + ((ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0) + RQR) : 0) + TOREG + ((HIER > 0 && HIER_HARD != 0) ? XTX : 0);   // TOREG: the tiles' t_out pin registers
     localparam integer ZERO_WIRE = (XD == 0 && ORD == 0);
@@ -116,8 +130,24 @@ module tb_qwen_me_partition_w12;
         .ov(P``_ov), .o_we(P``_o_we), .o_addr(P``_o_addr), .o_mask(P``_o_mask), .o_data(P``_o_data), \
         .am_idx(P``_am_idx), .am_val(P``_am_val), .am_any(P``_am_any), .mx_we(P``_mx_we), .mx_addr(P``_mx_addr), \
         .mx_mask(P``_mx_mask), .mx_data(P``_mx_data), .progress(P``_progress), .fault(P``_fault)
+    generate if (PROD == 0) begin : g_full
     ot_hdc_matvec_ref #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1)) u_ref (`MV_CONN(r));
     ot_qwen_w12_matvec #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1)) u_unp (`MV_CONN(u));
+    end else begin : g_prod
+        // PROD: the original and the unpruned engine are not built; their scalar / maxima / argmax ports mirror
+        // mono (those checks are then vacuous) and their requests and result writes are silent
+`define MV_MIRROR(P) \
+        assign {P``_ready, P``_idle, P``_ov, P``_am_any, P``_mx_we, P``_fault} = {m_ready, m_idle, m_ov, m_am_any, m_mx_we, 1'b0}; \
+        assign {P``_wrom_re, P``_scale_re, P``_kv_re} = 3'b000; \
+        assign {P``_wrom_addr, P``_mx_addr} = {{AW{1'b0}}, m_mx_addr}; \
+        assign P``_scale_gre = {GT{1'b0}}; assign P``_x_re = {GT{1'b0}}; assign P``_o_we = {GT{1'b0}}; \
+        assign P``_scale_addr = {GT*AW{1'b0}}; assign P``_kv_addr = {GT*AW{1'b0}}; assign P``_x_addr = {GT*AW{1'b0}}; \
+        assign P``_o_addr = {GT*AW{1'b0}}; assign P``_o_mask = {GT*W{1'b0}}; assign P``_o_data = {GT*W*32{1'b0}}; \
+        assign {P``_am_idx, P``_am_val} = {m_am_idx, m_am_val}; \
+        assign {P``_mx_mask, P``_mx_data, P``_progress} = {m_mx_mask, m_mx_data, m_progress};
+        `MV_MIRROR(r)
+        `MV_MIRROR(u)
+    end endgenerate
     ot_qwen_w12_matvec #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
                     .SMIN(SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_mono (`MV_CONN(m));
 
@@ -129,7 +159,7 @@ module tb_qwen_me_partition_w12;
     wire [NXC-1:0] a_x_re;
     wire [NXC*AW-1:0] a_x_addr;
     reg  [NXC*32-1:0] a_x_q;
-    localparam integer CB = 8192 >> BAW;             // the same 8,192 words in 2^BAW-word banks (2 at BAW 12, 4 at 11)
+    localparam integer CB = (CBANKS != 0) ? CBANKS : (8192 >> BAW);             // the same 8,192 words in 2^BAW-word banks (2 at BAW 12, 4 at 11)
     wire [NT*CB-1:0] a_t_rom_ce;
     wire [NT*12-1:0] a_t_rom_addr;
     reg  [NT*2*CB*266-1:0] a_t_rom_rd;
@@ -156,6 +186,8 @@ module tb_qwen_me_partition_w12;
         .mx_mask(a_mx_mask), .mx_data(a_mx_data), .progress(a_progress), .fault(a_fault));
 
     // ---- memory service (registered, hold when not read) -------------------------
+    reg mut_rt = 1'b0;                        // +MUTANT at run time == MUTANT = 1 (one PROD build serves both runs)
+    initial if ($test$plusargs("MUTANT")) mut_rt = 1'b1;
     integer g, l, b, pc;
 `define MV_MEM(P) \
         if (P``_wrom_re) for (g = 0; g < GT * W; g = g + 1) P``_wrom_q[8*g +: 8] <= rom(P``_wrom_addr, g); \
@@ -165,8 +197,10 @@ module tb_qwen_me_partition_w12;
             if (P``_x_re[g]) P``_x_q[32*g +: 32] <= xv(P``_x_addr[g*AW +: AW]); \
         end
     always @(posedge clk) begin
+        if (PROD == 0) begin
         `MV_MEM(r)
         `MV_MEM(u)
+        end
         `MV_MEM(m)
         for (g = 0; g < GT; g = g + 1) begin
             if (a_scale_gre[g]) for (l = 0; l < W; l = l + 1) a_scale_q[16*(g*W+l) +: 16] <= scl(a_scale_addr[g*AW +: AW], l);
@@ -181,7 +215,7 @@ module tb_qwen_me_partition_w12;
                         for (l = 0; l < 2 * W; l = l + 1)
                             a_t_rom_rd[((g*2 + pc)*CB + b)*266 + 8*l +: 8] <=
                                 rom(b * (1 << BAW) + a_t_rom_addr[g*12 +: 12],
-                                    (((MUTANT != 0 && g < 2) ? (1 - g) : g) * TG + 2*pc) * W + l);
+                                    ((((MUTANT != 0 || mut_rt) && g < 2) ? (1 - g) : g) * TG + 2*pc) * W + l);
                     end
         for (g = 0; g < NXC; g = g + 1)
             if (a_x_re[g]) a_x_q[32*g +: 32] <= xv(a_x_addr[g*AW +: AW]);
@@ -231,19 +265,19 @@ module tb_qwen_me_partition_w12;
     integer cyc = 0, errors = 0, n_wr_r = 0, n_wr_m = 0, n_wr_a = 0, n_mx = 0;
     integer first_ov_m = -1, first_ov_a = -1;
     // event queues: result writes (group, addr, mask, data), maxima words, argmax states, scale reads
-    reg [AW+W+W*32+8-1:0] qm [0:65535];
-    reg [AW+W+W*32+8-1:0] qa [0:65535];
+    reg [AW+W+W*32+GW-1:0] qm [0:65535];
+    reg [AW+W+W*32+GW-1:0] qa [0:65535];
     reg [AW+W+W*32-1:0] xr [0:4095];
     reg [AW+W+W*32-1:0] xm [0:4095];
     reg [AW+W+W*32-1:0] xa [0:4095];
     reg [NW+32:0] amr [0:4095];
     reg [NW+32:0] amm [0:4095];
     reg [NW+32:0] ama [0:4095];
-    reg [AW+8-1:0] scm [0:65535];
-    reg [AW+W+W*32+8-1:0] qr [0:65535];
-    reg [AW+8-1:0] scr [0:65535];
+    reg [AW+GW-1:0] scm [0:65535];
+    reg [AW+W+W*32+GW-1:0] qr [0:65535];
+    reg [AW+GW-1:0] scr [0:65535];
     integer nqr = 0, nscr = 0, first_ov_r = -1;
-    reg [AW+8-1:0] sca [0:65535];
+    reg [AW+GW-1:0] sca [0:65535];
     integer nqm = 0, nqa = 0, nxr = 0, nxm = 0, nxa = 0, namr = 0, namm = 0, nama = 0, nscm = 0, nsca = 0;
     reg [NW+32:0] lam_r = 0, lam_m = 0, lam_a = 0;
 
@@ -254,6 +288,9 @@ module tb_qwen_me_partition_w12;
         end
     endtask
 
+    integer p_issue = -1, p_lastw_a = -1, p_lastw_m = -1, p_rdy_a = -1, p_rdy_m = -1, p_low_a = 0, p_low_m = 0;
+    integer p_idle_a = -1, p_wr0 = 0, p_firstw_a = -1, pi;
+    reg [8*8-1:0] p_name;
     parameter integer MAXCYC = 400000;
     always @(negedge clk) if (rst_n) begin
         cyc = cyc + 1;
@@ -268,7 +305,7 @@ module tb_qwen_me_partition_w12;
              r_mx_we, r_mx_addr, r_mx_mask, r_mx_data, r_progress, r_fault}) fail("unpruned != original", -1);
         // pruned monolithic == original on requests, writes, progress
         // (==? : bits the reference has never assigned -- X after reset -- are don't-care)
-        if (KV_PREP != 0) begin
+        if (KV_PREP != 0 || PROD != 0) begin
         end else if (LX != 0) begin
             if (!({m_ready, m_wrom_re, m_wrom_addr, m_kv_re, m_kv_addr, m_x_re, m_x_addr} `EQX
                   {r_ready, r_wrom_re, r_wrom_addr, r_kv_re, r_kv_addr, r_x_re, r_x_addr}))
@@ -277,7 +314,7 @@ module tb_qwen_me_partition_w12;
              m_ov, m_o_we, m_o_mask, m_progress, m_fault} `EQX
             {r_ready, r_wrom_re, r_wrom_addr, r_scale_re, r_scale_gre, r_kv_re, r_kv_addr, r_x_re, r_x_addr,
              r_ov, r_o_we, r_o_mask, r_progress, r_fault})) fail("pruned != original (requests/writes)", -1);
-        if (!EV) for (g = 0; g < GT; g = g + 1) begin
+        if (!EV && PROD == 0) for (g = 0; g < GT; g = g + 1) begin
             if (r_scale_gre[g] === 1'b1 && m_scale_addr[g*AW +: AW] !== r_scale_addr[g*AW +: AW]) fail("pruned scale_addr", g);
             if (r_o_we[g] === 1'b1 && ({m_o_addr[g*AW +: AW], m_o_data[g*W*32 +: W*32]} !==
                               {r_o_addr[g*AW +: AW], r_o_data[g*W*32 +: W*32]})) fail("pruned result word", g);
@@ -307,16 +344,16 @@ module tb_qwen_me_partition_w12;
         // event streams
         if (m_ov && first_ov_m < 0) first_ov_m = cyc;
         if (r_ov && first_ov_r < 0) first_ov_r = cyc;
-        for (g = 0; g < GT; g = g + 1) begin
-            if (r_o_we[g] === 1'b1) begin qr[nqr] = {g[7:0], r_o_addr[g*AW +: AW], r_o_mask[g*W +: W], r_o_data[g*W*32 +: W*32]}; nqr = nqr + 1; end
-            if (r_scale_gre[g] === 1'b1) begin scr[nscr] = {g[7:0], r_scale_addr[g*AW +: AW]}; nscr = nscr + 1; end
+        if (PROD == 0) for (g = 0; g < GT; g = g + 1) begin
+            if (r_o_we[g] === 1'b1) begin qr[nqr] = {g[GW-1:0], r_o_addr[g*AW +: AW], r_o_mask[g*W +: W], r_o_data[g*W*32 +: W*32]}; nqr = nqr + 1; end
+            if (r_scale_gre[g] === 1'b1) begin scr[nscr] = {g[GW-1:0], r_scale_addr[g*AW +: AW]}; nscr = nscr + 1; end
         end
         if (a_ov && first_ov_a < 0) first_ov_a = cyc;
         for (g = 0; g < GT; g = g + 1) begin
-            if (m_o_we[g]) begin qm[nqm] = {g[7:0], m_o_addr[g*AW +: AW], m_o_mask[g*W +: W], m_o_data[g*W*32 +: W*32]}; nqm = nqm + 1; end
-            if (a_o_we[g]) begin qa[nqa] = {g[7:0], a_o_addr[g*AW +: AW], a_o_mask[g*W +: W], a_o_data[g*W*32 +: W*32]}; nqa = nqa + 1; end
-            if (m_scale_gre[g]) begin scm[nscm] = {g[7:0], m_scale_addr[g*AW +: AW]}; nscm = nscm + 1; end
-            if (a_scale_gre[g]) begin sca[nsca] = {g[7:0], a_scale_addr[g*AW +: AW]}; nsca = nsca + 1; end
+            if (m_o_we[g]) begin qm[nqm] = {g[GW-1:0], m_o_addr[g*AW +: AW], m_o_mask[g*W +: W], m_o_data[g*W*32 +: W*32]}; nqm = nqm + 1; end
+            if (a_o_we[g]) begin qa[nqa] = {g[GW-1:0], a_o_addr[g*AW +: AW], a_o_mask[g*W +: W], a_o_data[g*W*32 +: W*32]}; nqa = nqa + 1; end
+            if (m_scale_gre[g]) begin scm[nscm] = {g[GW-1:0], m_scale_addr[g*AW +: AW]}; nscm = nscm + 1; end
+            if (a_scale_gre[g]) begin sca[nsca] = {g[GW-1:0], a_scale_addr[g*AW +: AW]}; nsca = nsca + 1; end
         end
         if (r_mx_we) begin xr[nxr] = {r_mx_addr, r_mx_mask, r_mx_data}; nxr = nxr + 1; end
         if (m_mx_we) begin xm[nxm] = {m_mx_addr, m_mx_mask, m_mx_data}; nxm = nxm + 1; end
@@ -324,7 +361,39 @@ module tb_qwen_me_partition_w12;
         if ({r_am_any, r_am_idx, r_am_val} !== lam_r) begin lam_r = {r_am_any, r_am_idx, r_am_val}; amr[namr] = lam_r; namr = namr + 1; end
         if ({m_am_any, m_am_idx, m_am_val} !== lam_m) begin lam_m = {m_am_any, m_am_idx, m_am_val}; amm[namm] = lam_m; namm = namm + 1; end
         if ({a_am_any, a_am_idx, a_am_val} !== lam_a) begin lam_a = {a_am_any, a_am_idx, a_am_val}; ama[nama] = lam_a; nama = nama + 1; end
+        // PROD spans: go is high on the negedge before its accepting edge (cycle N); a write seen on negedge M is
+        // committed by edge M; ready seen high (after it fell) on negedge R lets edge R accept the next go
+        if (PROD != 0) begin
+            if (go) begin
+                p_issue = cyc; p_lastw_a = -1; p_lastw_m = -1; p_rdy_a = -1; p_rdy_m = -1; p_low_a = 0; p_low_m = 0;
+                p_idle_a = -1; p_wr0 = nqa; p_firstw_a = -1;
+            end else if (p_issue >= 0) begin
+                if (|a_o_we) begin p_lastw_a = cyc; if (p_firstw_a < 0) p_firstw_a = cyc; end
+                if (|m_o_we) p_lastw_m = cyc;
+                if (!a_ready) p_low_a = 1; else if (p_low_a != 0 && p_rdy_a < 0) p_rdy_a = cyc;
+                if (!m_ready) p_low_m = 1; else if (p_low_m != 0 && p_rdy_m < 0) p_rdy_m = cyc;
+                if (a_idle && p_low_a != 0 && p_idle_a < 0) p_idle_a = cyc;
+            end
+        end
     end
+
+    // ---- PROD: the four production weight ops of one Qwen3-8B TP4 die (header) ------------
+    task automatic prod_op(input integer n);
+        begin
+            // hdc_program.me(): wsrc 0, ts = k * IL, ks = IL, js = 1, xks = 1, xcs = k, round, ots = IL, ojs = 1, oen
+            i_wsrc = 0; i_jsh = 0; i_js = 1; i_ks = IL; i_xks = 1; i_xjs = 0; i_round = 1; i_ots = IL; i_ojs = 1;
+            i_oen = 1; i_mmode = 0; i_rmax = 0; i_amax = 0; i_mbase = 0;
+            case (n)   //            rows / die      rounds        k / split     split (G.split_for)
+                0: begin p_name = "qkv";     i_nout = 1536; i_tiles = 1; i_k = 8;  i_split = 9; i_wbase = 100;   i_wcs = 0;    i_xbase = 0;     i_obase = 0;    end
+                1: begin p_name = "o_proj";  i_nout = 4096; i_tiles = 3; i_k = 2;  i_split = 9; i_wbase = 4090;  i_wcs = 2000; i_xbase = 8192;  i_obase = 1024; end
+                2: begin p_name = "gate_up"; i_nout = 6144; i_tiles = 1; i_k = 32; i_split = 7; i_wbase = 8000;  i_wcs = 5000; i_xbase = 16384; i_obase = 2048; end
+                default: begin p_name = "down"; i_nout = 4096; i_tiles = 3; i_k = 6; i_split = 9; i_wbase = 16500; i_wcs = 9000; i_xbase = 24576; i_obase = 4096; end
+            endcase
+            i_ts = i_k * IL; i_xcs = i_k;
+            i_split = i_split - PSH;
+            i_nout = i_nout * W / 16;          // W < 16: the same row -> slot / group / round map on W-lane words
+        end
+    endtask
 
     integer n, busy;
     initial begin
@@ -333,6 +402,22 @@ module tb_qwen_me_partition_w12;
         repeat (4) @(posedge clk);
         rst_n = 1;
         ops = 0;
+        if (PROD != 0) begin
+            for (pi = 0; pi < 4; pi = pi + 1) begin
+                prod_op(pi);
+                busy = 0;
+                while (busy < 8) begin @(posedge clk); #0.1; busy = (m_idle && a_idle && m_ready && a_ready) ? busy + 1 : 0; end
+                go = 1; @(posedge clk); #0.1; go = 0; ops = ops + 1;
+                repeat (4) @(posedge clk);
+                busy = 0;
+                while (busy < 8) begin @(posedge clk); #0.1; busy = (m_idle && a_idle && m_ready && a_ready) ? busy + 1 : 0; end
+                repeat (XD + ORD + 16) @(posedge clk);
+                $display("PROD op=%0s nout=%0d k=%0d tiles=%0d split=%0d cycles=%0d ready=%0d writes=%0d first_write=%0d idle=%0d mono_cycles=%0d mono_ready=%0d",
+                         p_name, i_nout, i_k, i_tiles, i_split, p_lastw_a - p_issue, p_rdy_a - p_issue, nqa - p_wr0,
+                         p_firstw_a - p_issue, p_idle_a - p_issue, p_lastw_m - p_issue, p_rdy_m - p_issue);
+                if (p_lastw_a < 0 || p_rdy_a < 0) begin $display("FAIL PROD op %0d: no result write or ready never returned", pi); errors = errors + 1; end
+            end
+        end else
         while (ops < NOPS) begin
             @(posedge clk);
             #0.1;
@@ -364,7 +449,7 @@ module tb_qwen_me_partition_w12;
         if (namr != namm || namm != nama) begin $display("FAIL argmax change counts %0d %0d %0d", namr, namm, nama); errors = errors + 1; end
         for (n = 0; n < namr && n < namm && n < nama; n = n + 1)
             if (amr[n] !== amm[n] || amm[n] !== ama[n]) begin if (errors < 20) $display("FAIL argmax event %0d", n); errors = errors + 1; end
-        if (EV) begin
+        if (EV && PROD == 0) begin
             if (nqr != nqm) begin $display("FAIL result write count ref=%0d mono=%0d", nqr, nqm); errors = errors + 1; end
             for (n = 0; n < nqr && n < nqm; n = n + 1)
                 if (qr[n] !== qm[n]) begin if (errors < 20) $display("FAIL ref/mono result write event %0d", n); errors = errors + 1; end
@@ -382,7 +467,7 @@ module tb_qwen_me_partition_w12;
         if (errors == 0 && nqm > 0)
             $display("PASS GT=%0d TG=%0d SMIN=%0d SMAX=%0d TCUT=%0d BD=%0d XVM=%0d NWS=%0d TWS=%0d ORD=%0d ops=%0d cycles=%0d result_writes=%0d maxima=%0d argmax_changes=%0d scale_reads=%0d latency_added=%0d ACC_LAT=%0d TREE_LAT=%0d FAST_ISSUE=%0d KV_PREP=%0d adder_latency_added=%0d",
                      GT, TG, SMIN, SMAX, TCUT, BD, XVM, NWS, TWS, ORD, ops, cyc, nqm, nxm, namm, nscm, first_ov_a - first_ov_m,
-                     ACC_LAT, TREE_LAT, FAST_ISSUE, KV_PREP, first_ov_m - first_ov_r);
+                     ACC_LAT, TREE_LAT, FAST_ISSUE, KV_PREP, (PROD != 0) ? -1 : (first_ov_m - first_ov_r));
         else $display("FAIL errors=%0d writes=%0d", errors, nqm);
         $finish;
     end
