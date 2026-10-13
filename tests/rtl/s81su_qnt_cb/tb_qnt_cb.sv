@@ -91,13 +91,10 @@ task tick;
   cycles=cycles+1;
   if (cycles>8) begin
    checks=checks+1;
-   if (cb32_all !== ref_all || cb16_all !== ref_all || default_all !== ref_all) begin
-    $display("FAIL QNT_CB cycle=%0d MUT=%0d ev_ref=%h ev_cb32=%h ev_cb16=%h diff32=%h diff16=%h diff_default=%h",cycles,MUT,ref_e_v,cb32_e_v,cb16_e_v,cb32_all^ref_all,cb16_all^ref_all,default_all^ref_all);
-    // The negative must corrupt a row that an engine actually consumes.
-    if(MUT==0 || (|active_data_bad)) begin
-     $display("FAIL QNT_CB active_data=%0d cycle=%0d MUT=%0d ev_ref=%h",|active_data_bad,cycles,MUT,ref_e_v);
-     $fatal(1,"cycle-by-cycle output mismatch");
-    end
+   if ((MUT==0 && (cb32_all !== ref_all || cb16_all !== ref_all || default_all !== ref_all)) ||
+       (MUT!=0 && (|active_data_bad))) begin
+    $display("FAIL QNT_CB active_data=%0d cycle=%0d MUT=%0d ev_ref=%h ev_cb32=%h ev_cb16=%h diff32=%h diff16=%h diff_default=%h",|active_data_bad,cycles,MUT,ref_e_v,cb32_e_v,cb16_e_v,cb32_all^ref_all,cb16_all^ref_all,default_all^ref_all);
+    $fatal(1,"cycle-by-cycle output mismatch");
    end
    if (|ref_e_v) valid_cycles=valid_cycles+1;
    for (integer b=0;b<16;b=b+1) if(ref_e_v[b]) begin valid_rows=valid_rows+1; counts[b]=counts[b]+1; end
