@@ -1,0 +1,93 @@
+{
+  "name": "ot_hcoll_port",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/routes/hcoll_port_cx_r2_ddb173c36/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -1.4503243050967285e-10 min -1.966312668244541e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/routes/hcoll_port_cx_r2_ddb173c36/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/record/views/ot_hcoll_port:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/src/physical/ref_tile/hcoll_port_cx/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 9.363188002708966e-11 min -1.7942133889725653e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/routes/hcoll_port_cx_r2_ddb173c36/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/record/views/ot_hcoll_port:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/src/physical/ref_tile/hcoll_port_cx/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.150279954094003e-12 min -1.874526645018193e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/routes/hcoll_port_cx_r2_ddb173c36/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/record/views/ot_hcoll_port:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/src/physical/ref_tile/hcoll_port_cx/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/src/physical/ref_tile/hcoll_port_cx/signoff.sdc",
+    "sha256": "a3023c53741010fe78b85f35edfa5b687ffce07353b4a6f0e9528a94b52d6509",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/hcoll_port_cx-r2-ddb173c36/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_hcoll_port.lef": "c80e844b9a32c740c0384e086faef94ab4f19f69c524cdf90458897b9c52d917",
+    "ot_hcoll_port_ff.lib": "d6aae5f5fbb93ce81e27526103c6543f5eea72018e46ab831ccece9300a296eb",
+    "ot_hcoll_port_ss.lib": "2fbec2f81d49273673524f9cfd8919750ecd0fe845f2b29724cafb33bb2320a7",
+    "ot_hcoll_port_tt.lib": "187db7f9ccfe6abcadf76f3cacc2cee42678564a71e070ec02a7e5e5539b5665"
+  },
+  "ok": true
+}

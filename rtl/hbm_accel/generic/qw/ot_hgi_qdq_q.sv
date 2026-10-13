@@ -32,6 +32,7 @@ module ot_hgi_qdq_q #(
     parameter integer OD  = 64,     // result FIFO beats (>= decode latency 26 + write round trip at S=3)
     parameter integer RQ  = 16,     // record queue
     parameter integer DEC3 = 1,     // decoder: 1 = ot_hgi_qw_dec3 (track B: dxl / dbq / daq tiles), 0 = ot_hgi_qw_dec (one tile)
+    parameter integer SPANPIPE = 0, // opt-in: seven local span stages (+6 edges), exact 52-bit product
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -57,8 +58,8 @@ module ot_hgi_qdq_q #(
         f_rst <= rst_n; f_rec <= rec; f_rg <= rg_gnt; f_wg <= wg_gnt;
         f_rcr <= wrq_cr; f_wcr <= wwq_cr; f_wdone <= wwq_done;
     end
-    wire [2:0] rr_n;                                  // 0 front / queue, 1 walks / lanes, 2 decode tile
-    ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
+    wire [5:0] rr_n;                                  // 0 front / queue, 1 walks / lanes, 2 decode tile
+    ot_rst_relay #(.REGIONS(6)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
     // ---------------------------------------------------------------- record binding + front S1..S3
     wire [1408:0] cmd; wire nfault;
     ot_hgi_quant_record u_rec (.clk(clk), .rst_n(rr_n[0]), .rec(f_rec), .cmd(cmd), .nfault(nfault));
@@ -78,12 +79,59 @@ module ot_hgi_qdq_q #(
                  an1[2:0] == 0 && (am1 == 20'd1 || (ars1[2:0] == 0 && ors1[2:0] == 0 && ars1 >= {12'd0, an1} && ors1 >= {12'd0, on1}));
     reg fld2, fast2, same2; reg [63:0] aend2, oend2; reg [39:0] ab2, ob2; reg [19:0] n2, m2; reg [31:0] ars2, ors2;
     reg [17:0] hd2;                                   // {unit 4, op 6, block 8}: the decode's only header fields
+    generate if (SPANPIPE == 0) begin : g_span_legacy
     always @(posedge clk) begin
         fld2 <= fld1; fast2 <= fast1; same2 <= ars1 == ors1; ab2 <= ab1; ob2 <= ob1; n2 <= an1; m2 <= am1;
         ars2 <= ars1; ors2 <= ors1; hd2 <= {s1_h[127:118], s1_h[71:64]};
         aend2 <= {24'd0, ab1} + (64'(am1) - 64'd1) * 64'(ars1) + 64'(an1) - 64'd1;
         oend2 <= {24'd0, ob1} + (64'(om1) - 64'd1) * 64'(ors1) + 64'(on1) - 64'd1;
     end
+    end else begin : g_span_pipe
+        // Physical stages: row decrement -> ten 2x32 partial products -> adjacent pairs -> nibble pairs -> pair sum ->
+        // final product -> one end-address add.  The maximum legal product is 52 bits (20x32), so no 64-bit
+        // multiply or multiply-plus-add cone remains.  Invalid zero-row descriptors still fail fld1.
+        reg [19:0] rows_a, rows_o;
+        reg [31:0] stride_a, stride_o;
+        reg [33:0] pa [0:9], po [0:9];
+        reg [35:0] nibble_a [0:4], nibble_o [0:4];
+        reg [39:0] pair_a [0:1], pair_o [0:1]; reg [35:0] last_a, last_o;
+        reg [47:0] sum_a, sum_o; reg [35:0] last_a2, last_o2;
+        reg [51:0] prod_a, prod_o;
+        reg [40:0] base_n_a, base_n_o, offset_a [0:5], offset_o [0:5];
+        reg [2:0] flags [0:6]; reg [39:0] bases_a [0:6], bases_o [0:6];
+        reg [19:0] ns [0:6], ms [0:6]; reg [31:0] rss_a [0:6], rss_o [0:6]; reg [17:0] headers [0:6];
+        integer k;
+        always @(posedge clk) begin
+            rows_a <= am1 - 20'd1; rows_o <= om1 - 20'd1; stride_a <= ars1; stride_o <= ors1;
+            base_n_a <= {1'b0, ab1} + 41'(an1); base_n_o <= {1'b0, ob1} + 41'(on1);
+            offset_a[0] <= base_n_a - 41'd1; offset_o[0] <= base_n_o - 41'd1;
+            for (k = 1; k < 6; k = k + 1) begin offset_a[k] <= offset_a[k-1]; offset_o[k] <= offset_o[k-1]; end
+            for (k = 0; k < 10; k = k + 1) begin
+                pa[k] <= rows_a[k*2 +: 2] * stride_a; po[k] <= rows_o[k*2 +: 2] * stride_o;
+            end
+            for (k = 0; k < 5; k = k + 1) begin
+                nibble_a[k] <= 36'(pa[k*2]) + (36'(pa[k*2+1]) << 2);
+                nibble_o[k] <= 36'(po[k*2]) + (36'(po[k*2+1]) << 2);
+            end
+            pair_a[0] <= 40'(nibble_a[0]) + (40'(nibble_a[1]) << 4); pair_o[0] <= 40'(nibble_o[0]) + (40'(nibble_o[1]) << 4);
+            pair_a[1] <= 40'(nibble_a[2]) + (40'(nibble_a[3]) << 4); pair_o[1] <= 40'(nibble_o[2]) + (40'(nibble_o[3]) << 4);
+            last_a <= nibble_a[4]; last_o <= nibble_o[4];
+            sum_a <= 48'(pair_a[0]) + (48'(pair_a[1]) << 8); sum_o <= 48'(pair_o[0]) + (48'(pair_o[1]) << 8);
+            last_a2 <= last_a; last_o2 <= last_o;
+            prod_a <= 52'(sum_a) + (52'(last_a2) << 16); prod_o <= 52'(sum_o) + (52'(last_o2) << 16);
+            aend2 <= 64'(prod_a) + 64'(offset_a[4]); oend2 <= 64'(prod_o) + 64'(offset_o[4]);
+            flags[0] <= {fld1, fast1, ars1 == ors1}; bases_a[0] <= ab1; bases_o[0] <= ob1;
+            ns[0] <= an1; ms[0] <= am1; rss_a[0] <= ars1; rss_o[0] <= ors1; headers[0] <= {s1_h[127:118], s1_h[71:64]};
+            for (k = 1; k < 7; k = k + 1) begin
+                flags[k] <= flags[k-1]; bases_a[k] <= bases_a[k-1]; bases_o[k] <= bases_o[k-1];
+                ns[k] <= ns[k-1]; ms[k] <= ms[k-1]; rss_a[k] <= rss_a[k-1]; rss_o[k] <= rss_o[k-1]; headers[k] <= headers[k-1];
+            end
+        end
+        always @* begin
+            {fld2, fast2, same2} = flags[6]; ab2 = bases_a[6]; ob2 = bases_o[6]; n2 = ns[6]; m2 = ms[6];
+            ars2 = rss_a[6]; ors2 = rss_o[6]; hd2 = headers[6];
+        end
+    end endgenerate
     // S3: eligibility; everything an entry needs, narrowed to the slice address space
     reg el3; reg [17:0] alo3, ahi3, olo3, ohi3; reg [14:0] as3, os3, rs3, ws3; reg [15:0] bpr3; reg [2:0] nsl3;
     reg [19:0] m3; reg [17:0] hd3;
@@ -95,9 +143,16 @@ module ot_hgi_qdq_q #(
         bpr3 <= 16'((n2 + 20'd31) >> 5); nsl3 <= (n2[4:0] == 5'd0) ? 3'd4 : {1'b0, n2[4:3]};
         m3 <= m2; hd3 <= hd2;
     end
-    always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin s1_v <= 0; s2_v <= 0; s3_v <= 0; end
-        else begin s1_v <= cmd[0]; s2_v <= s1_v; s3_v <= s2_v; end
+    generate if (SPANPIPE == 0) begin : g_valid_legacy
+        always @(posedge clk or negedge rr_n[0])
+            if (!rr_n[0]) begin s1_v <= 0; s2_v <= 0; s3_v <= 0; end
+            else begin s1_v <= cmd[0]; s2_v <= s1_v; s3_v <= s2_v; end
+    end else begin : g_valid_pipe
+        reg [5:0] span_v;
+        always @(posedge clk or negedge rr_n[0])
+            if (!rr_n[0]) begin s1_v <= 0; span_v <= 0; s2_v <= 0; s3_v <= 0; end
+            else begin s1_v <= cmd[0]; span_v <= {span_v[4:0], s1_v}; s2_v <= span_v[5]; s3_v <= s2_v; end
+    end endgenerate
     // ---------------------------------------------------------------- record queue
     reg [RQ-1:0] q_v, q_rej, q_snv;
     reg [RQ-1:0] q_dep [0:RQ-1];
@@ -223,40 +278,47 @@ module ot_hgi_qdq_q #(
         if (!rr_n[0]) begin
             q_v <= 0; q_rej <= 0; q_snv <= 0; qt <= 0; rp <= 0; hd <= 0; occ <= 0; bad <= 0; ret <= 0;
             rg_req <= 0; wg_req <= 0; rg_ok <= 0; wg_ok <= 0;
-            for (e = 0; e < RQ; e = e + 1) q_dep[e] <= '0;
+
         end else begin
             rg_req <= q_v != 0; wg_req <= q_v != 0;
             rg_ok <= rg_req && f_rg; wg_ok <= wg_req && f_wg;
             // enqueue
             if (s3_v) begin
-                q_v[qt] <= 1'b1; q_rej[qt] <= !el3; q_snv[qt] <= 1'b0; q_dep[qt] <= el3 ? dep3 : '0; qt <= qt + 1'b1;
+                q_v[qt] <= 1'b1; q_rej[qt] <= !el3; q_snv[qt] <= 1'b0; qt <= qt + 1'b1;
             end
-            // a retired entry stops blocking its dependants
-            for (e = 0; e < RQ; e = e + 1) if (rt_ok) q_dep[e][hd] <= 1'b0;
-            if (s3_v && rt_ok) q_dep[qt][hd] <= 1'b0;
+
             if (n_load || n_skip) rp <= rp + 1'b1;
             if (w_fire && mq_z[mq_h]) q_snv[mq_e[mq_h]] <= 1'b1;
             if (rt_ok) begin q_v[hd] <= 1'b0; hd <= hd + 1'b1; end
             if (vo && qfault) bad <= 1'b1;
             if (dfault || od_ovf || e_ovf != 0) bad <= 1'b1;   // e_ovf: lane FIFO overrun in a tile   // result-store overrun (bounded by resv; fail closed)
             occ <= occ + (QW+1)'(cmd[0]) - (QW+1)'(rt_ok);
-            ret <= {rt_ok && rt_fault || nfault, rt_ok, (occ + (QW+1)'(cmd[0]) - (QW+1)'(rt_ok)) <= (QW+1)'(RQ - 4)};
+            ret <= {rt_ok && rt_fault || nfault, rt_ok, (occ + (QW+1)'(cmd[0]) - (QW+1)'(rt_ok)) <= (QW+1)'(RQ - (SPANPIPE ? 10 : 4))};
+        end
+    end
+    // Queue dependency masks have a separate, equally staged reset root (256 sinks at RQ16).
+    always @(posedge clk or negedge rr_n[3]) begin
+        if (!rr_n[3]) begin for (integer qe = 0; qe < RQ; qe = qe + 1) q_dep[qe] <= '0; end
+        else begin
+            if (s3_v) q_dep[qt] <= el3 ? dep3 : '0;
+            for (integer qe = 0; qe < RQ; qe = qe + 1) if (rt_ok) q_dep[qe][hd] <= 1'b0;
+            if (s3_v && rt_ok) q_dep[qt][hd] <= 1'b0;
         end
     end
     always @(posedge clk or negedge rr_n[1]) begin
         if (!rr_n[1]) begin
             r_act <= 0; r_e <= 0; r_row <= 0; r_m <= 0; r_beat <= 0; r_bpr <= 0; r_nsl <= 0; r_rsec <= 0; r_osec <= 0;
             r_rs <= 0; r_ws <= 0; b_t <= 0; b_h <= 0; b_used <= 0; resv <= 0; od_n <= 0; mq_h <= 0; mq_t <= 0;
-            d_v <= 0; wrq <= '0; wwq <= '0; c_pop <= '0; s1_lv <= 0; s2_lv <= 0; s3_lv <= 0;
+            d_v <= 0; s1_lv <= 0; s2_lv <= 0; s3_lv <= 0;
             for (b = 0; b < 8; b = b + 1) begin
-                rcr[b] <= LQ[CW-1:0]; wcr[b] <= LQ[CW-1:0]; lf_n[b] <= 0; lf_r[b] <= 0;
-                wcnt[b] <= 0; dcnt[b] <= 0;
+                wrq[b*16 + 15] <= 1'b0; wwq[b*280 + 279] <= 1'b0;
             end
         end else begin
-            wrq <= '0; wwq <= '0; s1_lv <= l_fire; s2_lv <= s1_lv; s3_lv <= s2_lv; d_v <= s3_lv;
+            for (integer qb = 0; qb < 8; qb = qb + 1) begin wrq[qb*16 + 15] <= 1'b0; wwq[qb*280 + 279] <= 1'b0; end
+            s1_lv <= l_fire; s2_lv <= s1_lv; s3_lv <= s2_lv; d_v <= s3_lv;
             // ---- read walk: one beat (<= 4 sectors) a cycle; the next record loads on the last beat
             if (r_issue) begin
-                for (b = 0; b < 8; b = b + 1) if (r_hit[b]) wrq[b*16 +: 16] <= {1'b1, 15'(r_sec0 + 15'(3'(b - r_sec0[2:0])))};
+                for (b = 0; b < 8; b = b + 1) if (r_hit[b]) wrq[b*16 + 15] <= 1'b1;
                 b_t <= b_t + 1'b1;
                 if (r_lastbeat) begin r_beat <= 0; r_row <= r_row + 1'b1; r_rsec <= r_rsec + r_rs; r_osec <= r_osec + r_ws; end
                 else r_beat <= r_beat + 1'b1;
@@ -266,8 +328,28 @@ module ot_hgi_qdq_q #(
                 r_act <= 1'b1; r_e <= rp; r_row <= 0; r_beat <= 0; r_m <= q_m[rp]; r_bpr <= q_bpr[rp]; r_nsl <= q_nsl[rp];
                 r_rsec <= q_as[rp]; r_osec <= q_os[rp]; r_rs <= q_rs[rp]; r_ws <= q_ws[rp];
             end
-            // ---- lanes: credits, response FIFOs, issued / popped
-            for (b = 0; b < 8; b = b + 1) begin : lanes
+            b_used <= b_used + (SW+1)'(r_issue) - (SW+1)'(l_fire);
+            if (l_fire) begin b_h <= b_h + 1'b1; mq_t <= mq_t + 1'b1; end
+            // ---- decode results -> result FIFO; write the head result on its 1..4 lanes
+            od_n <= od_n + (OW+1)'(vo) - (OW+1)'(w_fire);
+            resv <= resv + (OW+1)'(l_fire) - (OW+1)'(w_fire);
+            if (w_fire) begin
+                for (b = 0; b < 8; b = b + 1) if (w_hit[b]) begin : wr
+                    wwq[b*280 + 279] <= 1'b1;
+                end
+                mq_h <= mq_h + 1'b1;
+            end
+        end
+    end
+    generate for (genvar gr = 0; gr < 2; gr = gr + 1) begin : g_credit_region
+        always @(posedge clk or negedge rr_n[4+gr]) begin
+            if (!rr_n[4+gr]) begin
+                for (integer b = gr*4; b < gr*4+4; b = b + 1) begin
+                    c_pop[b] <= 0; rcr[b] <= LQ[CW-1:0]; wcr[b] <= LQ[CW-1:0]; lf_n[b] <= 0; lf_r[b] <= 0;
+                    wcnt[b] <= 0; dcnt[b] <= 0;
+                end
+            end else begin
+            for (integer b = gr*4; b < gr*4+4; b = b + 1) begin : lanes
                 reg push, pop, iss, wr;
                 push = e_push[b]; pop = l_fire && h_hit[b]; iss = r_issue && r_hit[b]; wr = w_fire && w_hit[b];
                 c_pop[b] <= pop;
@@ -277,21 +359,21 @@ module ot_hgi_qdq_q #(
                 lf_r[b] <= lf_r[b] + (LW+1)'(iss) - (LW+1)'(pop);
                 wcnt[b] <= wcnt[b] + 8'(wr); dcnt[b] <= dcnt[b] + 8'(f_wdone[b]);
             end
-            b_used <= b_used + (SW+1)'(r_issue) - (SW+1)'(l_fire);
-            if (l_fire) begin b_h <= b_h + 1'b1; mq_t <= mq_t + 1'b1; end
-            // ---- decode results -> result FIFO; write the head result on its 1..4 lanes
-            od_n <= od_n + (OW+1)'(vo) - (OW+1)'(w_fire);
-            resv <= resv + (OW+1)'(l_fire) - (OW+1)'(w_fire);
-            if (w_fire) begin
-                for (b = 0; b < 8; b = b + 1) if (w_hit[b]) begin : wr
+            end
+        end
+    end endgenerate
+    // Address/payload flops are written separately from resettable valid strobes.  Keeping both slices in one
+    // asynchronous always block creates Yosys ALDFF feedback for the unreset payload bits.
+    always @(posedge clk) begin
+        for (integer b = 0; b < 8; b = b + 1) begin
+            if (r_issue && r_hit[b]) wrq[b*16 +: 15] <= 15'(r_sec0 + 15'(3'(b - r_sec0[2:0])));
+            if (w_fire && w_hit[b]) begin
                     reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));
                     // decoded constant-index sector select (one-hot AND-OR, no runtime part-select)
                     c = ({128{s == 2'd0}} & od_head[127:0]) | ({128{s == 2'd1}} & od_head[255:128]) |
                         ({128{s == 2'd2}} & od_head[383:256]) | ({128{s == 2'd3}} & od_head[511:384]);
                     for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};
-                    wwq[b*280 +: 280] <= {1'b1, 15'(w_sec0 + 15'(s)), d, 8'hff};
-                end
-                mq_h <= mq_h + 1'b1;
+                    wwq[b*280 +: 279] <= {15'(w_sec0 + 15'(s)), d, 8'hff};
             end
         end
     end
@@ -307,7 +389,8 @@ module ot_hgi_qdq_q #(
         end
         s1_l <= h_l; s1_n <= h_n; s1_hd <= q_hd[bq_e[b_h]];
         s2_l <= s1_l; s2_n <= s1_n; s2_hd <= s1_hd; s3_l <= s2_l; s3_n <= s2_n; s3_hd <= s2_hd;
-        if (s3_lv) begin d_x <= h_x; d_h <= {s3_hd[17:8], 46'd0, s3_hd[7:0], 64'd0}; end
+        // Decoder consumes data only when d_v: no 2k-load data enable is needed.
+        d_x <= h_x; d_h <= {s3_hd[17:8], 46'd0, s3_hd[7:0], 64'd0};
         if (l_fire) begin
             mq_o[mq_t] <= bq_o[b_h]; mq_n[mq_t] <= h_n; mq_e[mq_t] <= bq_e[b_h]; mq_z[mq_t] <= bq_z[b_h];
         end

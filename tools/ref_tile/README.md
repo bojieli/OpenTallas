@@ -35,12 +35,13 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `inhold` | true: one dont_touch hold buffer per data input -> capture flop before global placement (leaf_inhold.tcl; hold-only input-capture misses on a sound tile) |
 | `outhold` | true: flop-driven outputs get lead BUF -> HB4 -> BUF FIRM at the pin before global placement (leaf_iohold.tcl, runs leaf_inhold.tcl too when `inhold`; hold-only reg->output misses at the routed IO ref) |
 | `io_flop_at_pins` | `{"cols": N}`: every port's single launch/capture flop FIRM at its own pin before global placement, N staggered rows per face (qwen_die_masters/io_flop_at_pins.tcl, released to DPL by out_flop_release.tcl); for RTL that already registers every port at the face but whose face registers GPL pulls into the core (qkd_d2d_ref reg->out -740 ps). Not combinable with outhold/inhold |
+| `recipe` | kit recipe = the generator defaults (kit.env `RECIPE=<n>`, no line = 1). Not set: an existing kit keeps the recipe in its kit.env, a NEW kit takes 2. **1**: hold margin 10 ps, macro halo 2.16 um, no pin hook unless asked, `io_flop_at_pins` cannot be combined with `inhold` / `outhold`. **2** (owner 10-13 finishing recipe): `route.hold_margin_ns` 0.030, `route.macro_halo_um` 5.4, `inhold` + `outhold` + `io_flop_at_pins {"cols": 4}` on, combined through the kit files `pre_gpl.tcl` (hold stages, then pin flops traced through them: `OT_OFLOP_HOPS=8`) and `pre_dpl.tcl` (both releases). Each item is a default: the spec value wins, `false` switches a hook off; no default pin hooks when the spec owns a `POST_TAPCELL_TCL` / `PRE_GLOBAL_PLACE_TCL` hook, no default hold stages with `route.hold_delay`. `pin_balance` stays opt-in (needs per-port `pin_ranges`). M5 re-routes of closed tiles (reroute_batch.py) pin recipe 1. |
 | `sdc_extra` | repo SDC files inlined at the end of clock.sdc and signoff.sdc (a second clock domain, e.g. a CDC adapter's controller clock; s81 hc cseq) |
 | `inter`, `refglob`, `io_budget {in,out}` | die-context IO (io_ref_skew.sdc), 0.2 / 0.2 T default |
 | `forwarded_clock` | cluster with a forwarded-clock subtree (keeps the forwarding inverter, own root) |
 | `spine_through_icg` | cluster whose clock port enters ONE tile clock gate (ICG) that clocks the rest (SM tile `ot_cg_tile`): the spine is built on the ICG output net (`OT_SPINE_THROUGH_ICG=1`, log `OT_SPINE through ICG`) |
 | `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v, pin_balance}` | route knobs (770 ps over-constraint); `pin_balance: true` places pins uniformly over each face region alternating the pin_h / pin_v layers per 32-pin chunk (OT_PIN_BALANCE_H/V) for dense faces |
-| `job {owner, branch, tag, purpose, benches, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields |
+| `job {owner, branch, tag, purpose, benches, benched_by, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields; `benches` / `benched_by`: see "Behavioural bench at submit" |
 
 ## What the kit does by construction (pitfall -> mechanism)
 
@@ -79,6 +80,54 @@ setup path classes (in/reg/macro -> reg/out/macro). `--job SPEC` checks any loop
 Closure loop: at submit, a job with `"ref_tile": true` runs the local gate on its kit at the source commit (REFUSE on
 FAIL); every other job gets the source-sync check in WARN (mode file `~/.local/state/closure_loop/ref_gate.json`
 `{"mode": "warn"|"refuse"|"off", "other": "warn"|"refuse"|"off"}`).
+
+## Behavioural bench at submit (owner 2026-10-13)
+
+A ref_tile job is a closure candidate: its CLOSED is offered to the guarded auto-merge, which needs a behavioural
+positive bench (expect `pass`, not a lint) AND a mutant (expect `fail`). The loop applies the same definition at intake
+(`closure_loop.py` `bench_evidence_gap`, shared by `auto_merge_guard` and `bench_gate_at_submit`) and REFUSES a job
+that lacks it (`SUBMIT_LINT BENCH_REQUIRED`) before any compute. The auto `lint` bench does not count, and
+`no_bench_reason` alone no longer admits a ref_tile job. Three ways to satisfy it:
+
+1. `job.benches`: the tile's own bit-exact bench and its mutant
+   (`{"name", "cmd", "expect": "pass"|"fail", "pass_regex"/"fail_regex", "min_count_regex", "threads", "peak_ram_gb"}`).
+2. `job.benched_by: "<gate>"` for a sub-tile with no golden of its own (HC column/root pieces, SU bank slices): the name
+   of a composition gate in `tools/ref_tile/composition_gates.json` (`s81hc_ng64`, `s81hc_ng256`, `s81su_full`, `vm8_cp`). At
+   intake the loop appends the gate's positive bench and mutant to the job as `<gate>_exact` / `<gate>_mutant`; they run
+   in the job's own source snapshot, i.e. the composition built from the sub-tile's RTL at the job's source commit, and
+   the merge guard requires both results. The registry is read from main (the daemon tree), never from the job's
+   branch: add a new gate there first (>= 1 behavioural pass + >= 1 mutant, `extra_paths` if it needs unsynced dirs).
+   A gate that must be built with branch-specific parameters goes in `job.benches` instead.
+3. A physical probe that must never merge: `"hold_merge": "<reason>"` in the job spec (not a closure candidate; it
+   cannot be adopted from that job).
+
+`closure_loop.py validate JOB.json` reports the refusal locally. Mode: `ref_gate.json` `"bench"` (ref_tile jobs,
+default `refuse`) / `"bench_other"` (every other job, default `warn`). Jobs ingested before the gate, and auto-react
+successors of those, are not refused.
+
+## Measured clock rule and structure-repeat limit (owner 2026-10-13)
+
+**Clock rule.** Up to 15,000 sinks on one clock root pass. A larger root is allowed only with pre-route clock-tree
+evidence measured by `pre_route_gate.py <kit> --remote <host> --cts` on that kit: TT insertion delay at most 300 ps and
+leaf arrival spread at most 80 ps. The three numbers are constants in `tools/textbook_lint.py`
+(`CLK_ROOT_SINKS_MAX`, `CLK_INSERTION_MAX_PS`, `CLK_SPREAD_MAX_PS`). Sinks are counted on the synthesized netlist: flops
+plus one per hard-child or macro clock pin. A declared spine does not waive the rule and there is no spec waiver; the fix
+is hardened leaves with their own roots. CLOSED tiles are not re-judged.
+
+- The gate prints a `clock_rule` item for every kit, with the measured insertion and spread when `--cts` ran, and a
+  `--remote` run writes `<kit>/gate_result.json`. Commit that file with the kit: the submit gate reads it.
+- At submit a `ref_tile` job is REFUSED when the kit's gate result shows more than 15,000 sinks without passing
+  numbers, or when the kit has no gate result and the block's latest synthesized design in the loop's history had more
+  than 15,000 sinks.
+- A kit with no gate result and no history is judged by the in-flow lint right after synthesis: the job ends
+  `FLOORPLAN_MARGIN` before placement. `textbook_lint: false` and `waive` do not switch this check off.
+- `STATE/ref_gate.json` `"clock": "refuse" | "warn" | "off"` sets the mode (default refuse).
+
+**Structure-repeat limit.** A block with two or more terminal failed routes since its last CLOSED (NEEDS_RTL,
+EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec carries
+`"structural_change": "<one sentence>"`; otherwise the job is REFUSED at submit. Hold-overlay re-runs (name suffix
+`-hs`) are exempt. Mode: `STATE/ref_gate.json` `"structure_repeat"` (default refuse). Tests for both rules:
+`tools/closure_loop/test_rule_enforcement.py`.
 
 ## Validation (2026-10-11)
 

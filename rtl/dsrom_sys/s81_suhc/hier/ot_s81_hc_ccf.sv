@@ -9,6 +9,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_ccf #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
+    parameter integer FIFO_SLICE = 0, KEEP_POP = 0, Y_RELAY = 0,
     parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW
 ) (
     input  wire                 sk, srs,
@@ -43,11 +44,19 @@ module ot_s81_hc_ccf #(
     localparam integer YB = $clog2(YD + FP);
     localparam integer YDC = 1 << YB;
     assign ch_rst = rs_n;
-    // the POST pop selects the y slice into ch_fd: one kept copy of the pop bit per 256-bit slice of the data field
+    // the POST pop selects the y slice into ch_fd: one kept copy of the pop bit per 128-bit slice of the data field
     // (no 3,600-load select net; textbook high_fanout class 2)
-    localparam integer NPS = (FDD + 255) / 256;
-    reg [NPS-1:0] pop_s;
-    always @(posedge sk or negedge rs_n) if (!rs_n) pop_s <= 0; else pop_s <= {NPS{fv_i[S_RD]}};
+    localparam integer NPS = (FDD + 127) / 128;
+    wire [NPS-1:0] pop_s;
+    generate if(KEEP_POP) begin:g_pop_keep
+        for(genvar k=0;k<NPS;k=k+1) begin:g_k
+            ot_s81_hc_ccf_keep_ff u_k(.clk(sk),.rst_n(rs_n),.d(fv_i[S_RD]),.q(pop_s[k]));
+        end
+    end else begin:g_pop_old
+        reg [NPS-1:0] p;
+        always @(posedge sk or negedge rs_n) if(!rs_n) p<=0; else p<={NPS{fv_i[S_RD]}};
+        assign pop_s=p;
+    end endgenerate
     reg [FVW-1:0] fv_p;
     reg [FSW-1:0] fd_p;
     reg           ya;
@@ -60,8 +69,30 @@ module ot_s81_hc_ccf #(
     wire [YS1-1:0] yf_head;
     wire           yf_hv, yf_ovf;
     generate if (L1 > 0) begin : g_yf
-        ot_fifo_sram_fwft #(.W(YS1), .DEPTH(YDC), .MACRO(0), .ESL(256)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(y1),
-            .pop(pop), .hv(yf_hv), .head(yf_head), .ovf(yf_ovf));
+        if(FIFO_SLICE>0) begin:g_slice
+            localparam integer NF=(YS1+FIFO_SLICE-1)/FIFO_SLICE;
+            wire [NF-1:0] valid,overflow;
+            for(genvar f=0;f<NF;f=f+1) begin:g_f
+                localparam integer LO=f*FIFO_SLICE,FW=(YS1-LO<FIFO_SLICE)?YS1-LO:FIFO_SLICE;
+                wire [FW-1:0] yd;
+                wire yp;
+                if(Y_RELAY) begin:g_relay
+                    reg [FW-1:0] yd_q;
+                    always @(posedge sk) yd_q<=y1[LO+:FW];
+                    ot_s81_hc_ccf_keep_ff u_v(.clk(sk),.rst_n(rs_n),.d(ya),.q(yp));
+                    assign yd=yd_q;
+                end else begin:g_direct
+                    assign yd=y1[LO+:FW];assign yp=ya;
+                end
+                ot_fifo_sram_fwft #(.W(FW),.DEPTH(YDC),.MACRO(0),.ESL(256)) u_yf(
+                    .clk(sk),.rst_n(rs_n),.push(yp),.wdata(yd),.pop(pop),
+                    .hv(valid[f]),.head(yf_head[LO+:FW]),.ovf(overflow[f]));
+            end
+            assign yf_hv=&valid;assign yf_ovf=|overflow;
+        end else begin:g_full
+            ot_fifo_sram_fwft #(.W(YS1), .DEPTH(YDC), .MACRO(0), .ESL(256)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(y1),
+                .pop(pop), .hv(yf_hv), .head(yf_head), .ovf(yf_ovf));
+        end
     end else begin : g_nyf
         assign yf_head = {YS1{1'b0}}; assign yf_hv = 1'b0; assign yf_ovf = 1'b0;
     end endgenerate
@@ -82,8 +113,15 @@ module ot_s81_hc_ccf #(
             ty = {FDD{1'b0}}; tf = {FDD{1'b0}};
             ty[YS1-1:0] = yf_head;
             tf[S_RD*512-1:0] = fd_p[O_D +: S_RD * 512];
-            for (k = 0; k < FDD; k = k + 1) t[k] = pop_s[k / 256] ? ty[k] : tf[k];
+            for (k = 0; k < FDD; k = k + 1) t[k] = pop_s[k / 128] ? ty[k] : tf[k];
             ch_fd[O_D +: FDD] <= t;
         end
     end
+endmodule
+
+// Separate synthesis-preserved local select/valid drivers, <=128 data-bit consumers.
+module ot_s81_hc_ccf_keep_ff(input wire clk,rst_n,d,output wire q);
+    (* keep="true" *) reg q_k;
+    always @(posedge clk or negedge rst_n) if(!rst_n) q_k<=1'b0;else q_k<=d;
+    assign q=q_k;
 endmodule
