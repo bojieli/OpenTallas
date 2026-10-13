@@ -1,5 +1,5 @@
 {
- "name": "hgi_smmv_eng_rt-r3-COMMIT",
+ "name": "hgi_smmv_eng_rt-r3-a4f2eb79e",
  "block": "ot_hgi_smmv",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-smmv-b",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "main",
-  "commit": "COMMIT"
+  "commit": "a4f2eb79e"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_smmv_eng_rt/hgi_smmv_eng_rt-r3-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_smmv_eng_rt/hgi_smmv_eng_rt-r3-a4f2eb79e"
   }
  ],
  "cycles_added": 0,
