@@ -1,24 +1,27 @@
 `timescale 1ns/1ps
 `default_nettype none
-// HEAD leaf of the record-overlap quant cluster (el1013-hbm-quant-split): control, descriptors, gather tail, decoder
-// tiles and result SRAM.  The lane faces, rq/wq quads and first gather stage are in 4 x ot_hgi_qw_lg2.
-// Physical plan / measured cuts: results/arch/hbm_quant_overlap_1012/.
-// Children and wide seams are unchanged from quant_wide_h RTL 41c360152.
+// CONTROL head leaf of the record-overlap quant cluster (el1013-hbm-quant-split): command relay, descriptors, hazard
+// scheduler, read issue, issued-beat queue, gather pop, per-lane retirement.  The former head ot_hgi_qw_ovh had 17.4k
+// clock sinks after synthesis trimming (over the 15k rule), so it is two leaves: this one and the DATA head
+// ot_hgi_qw_ovd (gather tail, result capture, result-FIFO SRAM and the whole write side).  The lane faces, rq/wq quads
+// and first gather stage are in 4 x ot_hgi_qw_lg2; the decoder tiles are children of the wires-only parent.
+// Seam control <-> data, a register at both pins, no datapath cycle added (existing register pairs are re-assigned):
+//   c_gv  = gv[4]  -> data 'launch'      c_gh = gh[5] -> data gh6 (decode header)
+//   c_mw* = the meta-write registers -> data RX, meta written one edge later (read >= 5 edges after: exact)
+//   c_busy -> data RX: write grant / w_fire enable (a record's first result is >= 20 edges after its go; the late fall
+//             only holds an enable while od_n == 0)
+//   d_wf  = w_fire registered in data -> RX here: resv falls two edges later (conservative: only delays a pop at a
+//           result FIFO within 2 of full)
+//   d_bad = sticky fault in data -> RX here ('bad'); the fault output rises one cycle later than in the one-head RTL
 // Eight compact descriptors stay live until per-lane cumulative output targets retire.
 // Continuous read/result pointers and per-beat compact header/output-sector metadata permit
 // unrelated records to overlap; earlier live read/write spans serialize all RAW/WAR/WAW hazards.
 // cmd[192:129]/[256:193] carry frontend-pipelined A/O span ends in unused SUT words.
 // MUT=1 corrupts lane/sector gather; MUT=2 retires without lane completion (negative control).
-module ot_hgi_qw_ovh #(
+module ot_hgi_qw_ovc #(
     parameter integer NB = 32,
     parameter integer LQ = 16,
-    parameter integer MUT = 0,
-    // decoder track: 0 = ot_hgi_qw_dec (one tile, g_d1.u_dec), 1 = ot_hgi_qw_dec3 (dxl/dbq/daq tiles, g_d3.u_dec)
-`ifdef OT_QW_DEC3
-    parameter integer DEC3 = 1
-`else
-    parameter integer DEC3 = 0
-`endif
+    parameter integer MUT = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -30,31 +33,38 @@ module ot_hgi_qw_ovh #(
     output reg           fault,
     // lane-group leaves (4 x ot_hgi_qw_lg2): every output below is a register of this head, every input a leaf register
     output wire [3:0]        l_rst_n,
-    output wire [31:0]       l_hit_r, l_hit_p, l_wv,
-    output wire [32*15-1:0]  l_rs, l_wsec,
-    output wire [32*4-1:0]   l_sl, l_ws,
-    output wire [511:0]      l_wy,
-    input  wire [4*1024-1:0] l_gp,
-    input  wire [31:0]       l_push, l_rcr, l_wcr, l_done,
+    output wire [31:0]       l_hit_r, l_hit_p,
+    output wire [32*15-1:0]  l_rs,
+    output wire [32*4-1:0]   l_sl,
+    input  wire [31:0]       l_push, l_rcr, l_done,
+    // data head (ot_hgi_qw_ovd)
+    output wire              d_rst_n,
+    output wire              c_gv,
+    output wire [17:0]       c_gh,
+    output wire              c_mw_v,
+    output wire [5:0]        c_mw_a,
+    output wire [14:0]       c_mw_sec,
+    output wire [2:0]        c_mw_n,
+    output reg               c_busy,
+    input  wire              d_wf,
+    input  wire              d_bad,
     output reg               rg_req,
-    input  wire              rg_gnt,
-    output reg               wg_req,
-    input  wire              wg_gnt
+    input  wire              rg_gnt
 );
     localparam integer LD = 4;                  // = ot_hgi_qw_rq production default
     localparam integer OD = 64, OW = 6;         // = SRAM words
     localparam integer SW = $clog2(NB), CW = $clog2(LQ + 1), LW = $clog2(LD);
     // ---------------------------------------------------------------- face flops (pure: no logic, reset or enable)
-    reg f_rst, f_go, f_rg, f_wg;
+    reg f_rst, f_go, f_rg;
     reg [1408:0] f_cmd;
     always @(posedge clk) begin
-        f_rst <= rst_n; f_go <= go; f_cmd <= cmd; f_rg <= rg_gnt; f_wg <= wg_gnt;
+        f_rst <= rst_n; f_go <= go; f_cmd <= cmd; f_rg <= rg_gnt;
     end
-    wire [6:0] rr_n;                            // 0 control, 1 counters / relays, 2 decoder tiles, 3..6 lane-group leaves
+    wire [6:0] rr_n;                            // 0 control, 1 counters / relays, 2 data head, 3..6 lane-group leaves
     ot_rst_relay #(.REGIONS(7)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
-    assign l_rst_n = rr_n[6:3];
+    assign l_rst_n = rr_n[6:3]; assign d_rst_n = rr_n[2];
     // ---------------------------------------------------------------- record registers
-    wire busy; reg bad, c_done, c_fault;            // centre done / fault (registered again at the pins)
+    wire busy; reg bad, c_done, wf_r;               // bad / wf_r: RX flops of the data head's sticky fault and w_fire pulse
     reg [127:0] hdr;
     reg [19:0] m;
     reg [31:0] rs, ws;
@@ -73,38 +83,34 @@ module ot_hgi_qw_ovh #(
     always @(posedge clk) begin p_cmd0 <= f_cmd; p_cmd <= p_cmd0; end
     // registered status outputs (idle may only lag: it drops two cycles after go and rises a cycle after busy falls)
     always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin idle <= 1'b1; drained <= 1'b1; done <= 0; fault <= 0; rg_req <= 0; wg_req <= 0; end
+        if (!rr_n[0]) begin idle <= 1'b1; drained <= 1'b1; done <= 0; fault <= 0; rg_req <= 0; c_busy <= 0; bad <= 0; wf_r <= 0; end
         else begin
             idle <= !take && !p_go0 && !p_go && n_live < 7 && !bad;
             drained <= !busy && !take && !p_go0 && !p_go;
-            done <= c_done; fault <= c_fault; rg_req <= busy; wg_req <= busy;
+            done <= c_done; fault <= bad; rg_req <= busy; c_busy <= busy; bad <= d_bad; wf_r <= d_wf;
         end
-    reg rg_ok, wg_ok;
-    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin rg_ok <= 0; wg_ok <= 0; end
-        else begin rg_ok <= busy && f_rg; wg_ok <= busy && f_wg; end
+    reg rg_ok;
+    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) rg_ok <= 0; else rg_ok <= busy && f_rg;
     // ---------------------------------------------------------------- tiles
-    wire [1023:0] gp [0:3];                    // leaf pair gather registers
-    wire [31:0] e1_push = l_push, e1_rcr = l_rcr, e1_wcr = l_wcr, e1_done = l_done;   // leaf output registers
+    wire [31:0] e1_push = l_push, e1_rcr = l_rcr, e1_done = l_done;   // leaf output registers
     genvar gi;
-    generate for (gi = 0; gi < 4; gi = gi + 1) begin : g_gp assign gp[gi] = l_gp[gi*1024 +: 1024]; end endgenerate
     // event relays (tile face -> centre): two stages (a corner quad of the 778 x 691 cluster is ~560 um from the centre
     // counters); a later event only returns a credit / count later, so every decision stays conservative and exact.
-    reg [31:0] ev_push, ev_rcr, ev_wcr, ev_done;
+    reg [31:0] ev_push, ev_rcr, ev_done;
     always @(posedge clk or negedge rr_n[1])
         if (!rr_n[1]) begin
-            ev_push <= 0; ev_rcr <= 0; ev_wcr <= 0; ev_done <= 0;
+            ev_push <= 0; ev_rcr <= 0; ev_done <= 0;
         end else begin
-            ev_push <= e1_push; ev_rcr <= e1_rcr; ev_wcr <= e1_wcr; ev_done <= e1_done;
+            ev_push <= e1_push; ev_rcr <= e1_rcr; ev_done <= e1_done;
         end
     // ---------------------------------------------------------------- counters (take last cycle's hit vectors)
-    reg [CW-1:0] rcr [0:31], wcr [0:31];
+    reg [CW-1:0] rcr [0:31];
     reg [LW:0] lf_n [0:31], lf_r [0:31];
-    reg [31:0] hit_r, hit_p, hit_w;
+    reg [31:0] hit_r, hit_p;
     always @(posedge clk or negedge rr_n[1])
-        if (!rr_n[1]) for (integer b = 0; b < 32; b = b + 1) begin rcr[b] <= LQ[CW-1:0]; wcr[b] <= LQ[CW-1:0]; lf_n[b] <= 0; lf_r[b] <= 0; end
+        if (!rr_n[1]) for (integer b = 0; b < 32; b = b + 1) begin rcr[b] <= LQ[CW-1:0]; lf_n[b] <= 0; lf_r[b] <= 0; end
         else for (integer b = 0; b < 32; b = b + 1) begin
             rcr[b] <= rcr[b] + CW'(ev_rcr[b]) - CW'(hit_r[b]);
-            wcr[b] <= wcr[b] + CW'(ev_wcr[b]) - CW'(hit_w[b]);
             lf_n[b] <= lf_n[b] + (LW+1)'(ev_push[b]) - (LW+1)'(hit_p[b]);
             lf_r[b] <= lf_r[b] + (LW+1)'(hit_r[b]) - (LW+1)'(hit_p[b]);
         end
@@ -112,8 +118,7 @@ module ot_hgi_qw_ovh #(
     reg [4:0] bq_l [0:NB-1]; reg [2:0] bq_n [0:NB-1];
     reg [17:0] bq_hd [0:NB-1]; reg [14:0] bq_dst [0:NB-1];
     reg [SW-1:0] r_tail, r_head; reg [SW:0] r_used;
-    reg [14:0] mq_sec [0:OD-1]; reg [2:0] mq_n [0:OD-1]; reg [OW-1:0] mq_h, mq_t;
-    reg [OW-1:0] od_h, od_t; reg [OW:0] od_n, resv;
+    reg [OW-1:0] mq_t; reg [OW:0] resv;         // meta FIFO tail (the FIFO itself is in the data head); reserved results
     // ---------------------------------------------------------------- decisions
     // el1011-hbm-fq 10-11 (class 5, ha/hb-d63ee120c od_h -> sec_iss / u_od.r_ce 17 levels): every credit decision is a
     // 32-lane vector AND (one-hot lane window from a register), no 32:1 lane muxes; the write head (sector, count, lane
@@ -140,14 +145,6 @@ module ot_hgi_qw_ovh #(
     always @* for (integer b = 0; b < 32; b = b + 1) h_ok_l[b] = lf_n[b] > (LW+1)'(hit_p[b]);
     wire h_ok = (r_used != 0) && &(~hh_ln | h_ok_l);
     wire l_fire = busy && h_ok && resv < OD;
-    // write head lookahead: hd_* = meta of entry od_h, re-read every edge for the next od_h.  Exact: an entry counts in od_n
-    // only after its gather/decode/capture pipeline (>= 5 edges after its meta write), so mq is settled when hd reads it.
-    reg [14:0] hd_sec; reg [2:0] hd_n; reg [31:0] hd_ln;
-    wire [14:0] w_sec0 = hd_sec; wire [2:0] w_n = hd_n;
-    reg [31:0] w_ok_l;
-    always @* for (integer b = 0; b < 32; b = b + 1) w_ok_l[b] = wcr[b] > CW'(hit_w[b]);
-    wire w_cr_ok = &(~hd_ln | w_ok_l);
-    wire w_fire = busy && !bad && wg_ok && od_n != 0 && w_cr_ok;
     wire [SW-1:0] r_head1 = r_head + 1'b1;
     wire c0_b = r_issue && (r_used == 0), c1_b = r_issue && (r_used == 1);
     wire [4:0] c0_l = c0_b ? r_sec[4:0] : bq_l[r_head];  wire [2:0] c0_n = c0_b ? r_nsec : bq_n[r_head];
@@ -165,13 +162,6 @@ module ot_hgi_qw_ovh #(
             hh_dst <= c0_b ? read_dst : bq_dst[r_head];
         end
     end
-    wire [OW-1:0] od_hn = w_fire ? od_h + 1'b1 : od_h;
-    always @(posedge clk) begin
-        hd_sec <= mq_sec[od_hn]; hd_n <= mq_n[od_hn]; hd_ln <= lanes(mq_sec[od_hn][4:0], mq_n[od_hn]);
-    end
-    // registered SRAM read issue (next to u_od): rf_* = w_fire / od_h / head meta one edge later
-    reg rf_v; reg [OW-1:0] rf_a; reg [14:0] rf_sec; reg [2:0] rf_n;
-    always @(posedge clk) begin rf_a <= od_h; rf_sec <= w_sec0; rf_n <= w_n; end
     // ---------------------------------------------------------------- per-lane sectors / slots (registered, then relayed)
     reg [14:0] rs1 [0:31]; reg [3:0] sl1 [0:31];
     always @(posedge clk)
@@ -186,55 +176,16 @@ module ot_hgi_qw_ovh #(
     // +1 edge of gather latency; gv follows (5 deep).
     // el1013 seam rule (register at the pin): each leaf's gp is captured by its own pure head pin flop gpf[k]; the
     // former go_h OR2 is folded into the lx stage (one OR4 of four local registers next to the decoder).  Same latency.
-    reg [1023:0] gpf [0:3]; reg [1023:0] lx;
-    reg [4:0] gv; reg launch;
-    always @(posedge clk) begin
-        for (integer h = 0; h < 4; h = h + 1) gpf[h] <= gp[h];
-        lx <= (gpf[0] | gpf[1]) | (gpf[2] | gpf[3]);
-    end
-    always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin gv <= 0; launch <= 0; end
-        else begin gv <= {gv[3:0], |hit_p}; launch <= gv[4]; end
-    reg [17:0] gh [0:6];
+    // (the gpf / lx registers and the decode launch are in the data head; this leaf keeps the valid and header delay
+    // lines up to the seam: gv[4] and gh[5] are the TX registers, 'launch' and gh6 the data head's RX registers)
+    reg [4:0] gv;
+    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) gv <= 0; else gv <= {gv[3:0], |hit_p};
+    reg [17:0] gh [0:5];
     always @(posedge clk) begin
         gh[0] <= hh_hd;
-        for (integer i=1; i<7; i=i+1) gh[i] <= gh[i-1];
+        for (integer i=1; i<6; i=i+1) gh[i] <= gh[i-1];
     end
-    wire [127:0] beat_header = {gh[6][17:8],46'd0,gh[6][7:0],64'd0};
-    // ---------------------------------------------------------------- decode tile, result capture, SRAM FIFO
-    wire d_vo, d_f, d_df; wire [511:0] d_y;
-    generate if (DEC3 != 0) begin : g_d3
-        // track B (el1011-hbm-fq 10-12): the decoder as three hardened tiles (dxl / dbq / daq), same ports and timing
-        ot_hgi_qw_dec3 u_dec (.clk(clk), .rst_n(rr_n[2]), .v(launch), .header(beat_header), .x(lx), .vo(d_vo), .y(d_y),
-            .fault(d_f), .decode_fault(d_df));
-    end else begin : g_d1
-        ot_hgi_qw_dec u_dec (.clk(clk), .rst_n(rr_n[2]), .v(launch), .header(beat_header), .x(lx), .vo(d_vo), .y(d_y),
-            .fault(d_f), .decode_fault(d_df));
-    end endgenerate
-    reg yc_v, yc_f, yc_df; reg [511:0] yc;
-    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin yc_v <= 0; yc_f <= 0; yc_df <= 0; end
-        else begin yc_v <= d_vo; yc_f <= d_vo && d_f; yc_df <= d_df; end
-    always @(posedge clk) yc <= d_y;
-    wire [511:0] od_rd;
-    ot_sram_1r1w_64x512_m1_r2c2 u_od (.clk(clk), .r_ce_in(rf_v), .r_addr_in(rf_a), .rd_out(od_rd),
-        .w_ce_in(yc_v), .w_addr_in(od_t), .wd_in(yc), .w_mask_in({512{1'b1}}),
-        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
-    // write beat: capture the SRAM read, per-lane valid / slot / sector a cycle later, relay to the write quads
-    reg [511:0] wc_y; reg wm_v; reg [14:0] wm_sec; reg [2:0] wm_n;
-    reg [31:0] wv1; reg [3:0] ws1 [0:31]; reg [14:0] wsec1 [0:31];
-    always @(posedge clk) begin
-        wc_y <= od_rd;
-        wm_sec <= rf_sec; wm_n <= rf_n;
-        for (integer b = 0; b < 32; b = b + 1) begin
-            ws1[b] <= 4'(1) << 2'(b - wm_sec[4:0]); wsec1[b] <= wm_sec + 15'(5'(b - wm_sec[4:0]));
-        end
-    end
-    always @(posedge clk or negedge rr_n[1])
-        if (!rr_n[1]) begin rf_v <= 0; wm_v <= 0; wv1 <= 0; end
-        else begin
-            rf_v <= w_fire; wm_v <= rf_v;
-            for (integer b = 0; b < 32; b = b + 1) wv1[b] <= wm_v && (5'(b - wm_sec[4:0]) < 5'(wm_n));
-        end
+    assign c_gv = gv[4]; assign c_gh = gh[5];
     // Compact descriptors are admitted independently of output retirement.  A slot remains live
     // until all of its output lanes retire, so dependent spans serialize at the issue scheduler.
     localparam integer RQ=8, TW=9;
@@ -311,13 +262,12 @@ module ot_hgi_qw_ovh #(
     wire retire_record = n_live != 0 && target_valid[c_ret] && ((MUT==2) || (retire_all && retire_all_id == c_ret)) && !bad;
     always @(posedge clk or negedge rr_n[0]) begin
         if (!rr_n[0]) begin
-            bad<=0; c_done<=0; c_fault<=0; hdr<=0; m<=0; rs<=0; ws<=0;
+            c_done<=0; hdr<=0; m<=0; rs<=0; ws<=0;
             nsec_last<=0; beats_row<=0; b1<=0; r_row<=0; r_left<=0; r_last<=0;
             r_sec<=0; r_nrowbase<=0; rd_done<=1;
-            r_tail<=0; r_head<=0; r_used<=0; mq_h<=0; mq_t<=0;
-            od_h<=0; od_t<=0; od_n<=0; resv<=0;
+            r_tail<=0; r_head<=0; r_used<=0; mq_t<=0; resv<=0;
             w_row<=0; w_beat<=0; w_rowbase<=0;
-            hit_r<=0; hit_p<=0; hit_w<=0;
+            hit_r<=0; hit_p<=0;
             c_tail<=0; c_issue<=0; c_ret<=0; active_id<=0;
             n_live<=0; n_pending<=0; live<=0; target_valid<=0;
             for(integer b=0;b<32;b=b+1) begin issued[b]<=0; retired[b]<=0; end
@@ -325,7 +275,6 @@ module ot_hgi_qw_ovh #(
             c_done <= retire_record;
             hit_r <= r_issue ? lanes(r_sec[4:0],r_nsec) : 32'd0;
             hit_p <= l_fire ? hh_ln : 32'd0;
-            hit_w <= w_fire ? hd_ln : 32'd0;
             n_live <= n_live + 4'(p_go) - 4'(retire_record);
             n_pending <= n_pending + 4'(p_go) - 4'(load_record);
             if (p_go) begin c_tail<=c_tail+1'b1; live[c_tail]<=1; end
@@ -360,11 +309,7 @@ module ot_hgi_qw_ovh #(
             end
             if (l_fire) begin r_head<=r_head+1'b1; mq_t<=mq_t+1'b1; end
             r_used<=r_used+(SW+1)'(r_issue)-(SW+1)'(l_fire);
-            if (yc_v) begin od_t<=od_t+1'b1; if(yc_f) begin bad<=1;c_fault<=1;end end
-            if(yc_df) begin bad<=1;c_fault<=1;end
-            od_n<=od_n+(OW+1)'(yc_v)-(OW+1)'(w_fire);
-            resv<=resv+(OW+1)'(l_fire)-(OW+1)'(w_fire);
-            if(w_fire) begin od_h<=od_h+1'b1;mq_h<=mq_h+1'b1;end
+            resv<=resv+(OW+1)'(l_fire)-(OW+1)'(wf_r);
         end
     end
     always @(posedge clk) if (p_go) begin
@@ -375,21 +320,19 @@ module ot_hgi_qw_ovh #(
         caend[c_tail]<=p_cmd[129 +:32];
         coend[c_tail]<=p_cmd[193 +:32];
     end
-    // meta write one edge after l_fire (mw_*: l_fire only loads a few control flops, not the 64-entry write enables).
-    // Exact: hd reads an entry only once it counts in od_n, >= 6 edges after this write.
+    // meta write: registered here one edge after l_fire (TX), registered again in the data head (RX), then written.
     reg mw_v; reg [OW-1:0] mw_a; reg [14:0] mw_sec; reg [2:0] mw_n;
     always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) mw_v <= 0; else mw_v <= l_fire;
     always @(posedge clk) begin mw_a <= mq_t; mw_sec <= hh_dst; mw_n <= h_n; end
     always @(posedge clk) begin
         if (r_issue) begin bq_l[r_tail] <= r_sec[4:0]; bq_n[r_tail] <= r_nsec; bq_hd[r_tail]<={hdr[127:118],hdr[71:64]}; bq_dst[r_tail]<=read_dst; end
-        if (mw_v) begin mq_sec[mw_a] <= mw_sec; mq_n[mw_a] <= mw_n; end
     end
     // leaf-facing outputs: stage-1 registers of the former two-stage relays (stage 2 is the leaf pin register)
     generate for (gi = 0; gi < 32; gi = gi + 1) begin : g_lo
         assign l_rs[gi*15 +: 15] = rs1[gi]; assign l_sl[gi*4 +: 4] = sl1[gi];
-        assign l_ws[gi*4 +: 4] = ws1[gi]; assign l_wsec[gi*15 +: 15] = wsec1[gi];
     end endgenerate
-    assign l_hit_r = hit_r; assign l_hit_p = hit_p; assign l_wv = wv1; assign l_wy = wc_y;
-    initial if (NB+OD+LQ+16>=256 || NB < 8 || (NB & (NB - 1)) != 0 || (LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_quant_wide_h: NB / LQ");
+    assign l_hit_r = hit_r; assign l_hit_p = hit_p;
+    assign c_mw_v = mw_v; assign c_mw_a = mw_a; assign c_mw_sec = mw_sec; assign c_mw_n = mw_n;
+    initial if (NB+OD+LQ+16>=256 || NB < 8 || (NB & (NB - 1)) != 0 || (LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_qw_ovc: NB / LQ");
 endmodule
 `default_nettype wire
