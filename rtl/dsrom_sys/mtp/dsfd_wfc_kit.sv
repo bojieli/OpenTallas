@@ -210,16 +210,62 @@ endmodule
 module dsfd_wfc_hep #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
     input  wire clk, rst_n,
     input  wire [USER_W+2*NW:0] ks,          // the kit's stage start {start, user, token, pos}
+    output wire [USER_W+NW+EW:0] hep         // {v, user, pos, epoch}
+);
+    // el1013-s81-wfcstg 2026-10-13 (clock rule: <= 15k sinks per root): the 2^USER_W x (NW + EW + 1) state (26.6k flops
+    // at 1,024 users) is two hardened banks dsfd_wfc_hep_bank, one per user MSB (13,348 flops each).  Both see every
+    // start; only the addressed bank updates and drives its registered output (the other holds 0), so the OR below is
+    // the flat module's output cycle for cycle (reference dsfd_wfc_hep_flat, bench tools/dsrom_wfc_hep_bench.py).
+    wire [USER_W+NW+EW:0] h0, h1;
+    wire [0:0] ckv = clk, rsv = rst_n;
+    dsfd_wfc_hep_bank #(.NW(NW), .USER_W(USER_W), .EW(EW), .BANK(0)) u_b0 (.ckv(ckv), .rsv(rsv),
+        .f_st(ks[USER_W+2*NW]), .f_u(ks[2*NW +: USER_W]), .f_p(ks[NW-1:0]), .t_hep(h0));
+    dsfd_wfc_hep_bank #(.NW(NW), .USER_W(USER_W), .EW(EW), .BANK(1)) u_b1 (.ckv(ckv), .rsv(rsv),
+        .f_st(ks[USER_W+2*NW]), .f_u(ks[2*NW +: USER_W]), .f_p(ks[NW-1:0]), .t_hep(h1));
+    assign hep = h0 | h1;
+endmodule
+
+// dsfd_wfc_hep_bank: one user-MSB half of the issue-epoch table, a die tile (ckv domain; pin -> read / compare / +1 ->
+// flop, registered output).  2^(USER_W-1) x {last pos NW, epoch EW, seen} + the output register.
+module dsfd_wfc_hep_bank #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4,
+                           parameter integer BANK = 0) (
+    input  wire [0:0] ckv, rsv,
+    input  wire [0:0] f_st, input wire [USER_W-1:0] f_u, input wire [NW-1:0] f_p,
+    output reg  [USER_W+NW+EW:0] t_hep       // {v, user, pos, epoch}; 0 unless this bank's user started last cycle
+);
+    localparam integer NB = 1 << (USER_W - 1);
+    reg [NW-1:0] last [0:NB-1]; reg [EW-1:0] ep [0:NB-1]; reg [NB-1:0] seen;
+    wire [USER_W-2:0] a = f_u[USER_W-2:0];
+`ifdef OT_WFCHEP_MUT_BANK
+    wire st = f_st[0];                                     // MUTANT: bank select dropped (both banks answer)
+`else
+    wire st = f_st[0] && f_u[USER_W-1] == BANK[0];
+`endif
+`ifdef OT_WFCHEP_MUT_STALE
+    wire rew = 1'b0;                                       // MUTANT: the epoch never advances (stale rows served)
+`else
+    wire rew = seen[a] && f_p <= last[a];
+`endif
+    wire [EW-1:0] e_n = rew ? ep[a] + 1'b1 : ep[a];
+    always @(posedge ckv[0]) begin
+        if (!rsv[0]) begin seen <= '0; t_hep <= '0; end
+        else begin
+            t_hep <= st ? {1'b1, f_u, f_p, e_n} : '0;
+            if (st) begin last[a] <= f_p; ep[a] <= seen[a] ? e_n : '0; seen[a] <= 1'b1; end
+        end
+    end
+endmodule
+
+// reference model of the two-bank dsfd_wfc_hep above (the pre-split module, bench only; never instantiated on a die)
+module dsfd_wfc_hep_flat #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
+    input  wire clk, rst_n,
+    input  wire [USER_W+2*NW:0] ks,          // the kit's stage start {start, user, token, pos}
     output reg  [USER_W+NW+EW:0] hep         // {v, user, pos, epoch}
 );
     localparam integer NU = 1 << USER_W;
     reg [NW-1:0] last [0:NU-1]; reg [EW-1:0] ep [0:NU-1]; reg [NU-1:0] seen;
     wire st = ks[USER_W+2*NW]; wire [USER_W-1:0] u = ks[2*NW +: USER_W]; wire [NW-1:0] p = ks[NW-1:0];
-`ifdef OT_WFCHEP_MUT_STALE
-    wire rew = 1'b0;                                       // MUTANT: the epoch never advances (stale rows served)
-`else
-    wire rew = seen[u] && p <= last[u];
-`endif
+wire rew = seen[u] && p <= last[u];
     wire [EW-1:0] e_n = rew ? ep[u] + 1'b1 : ep[u];
     always @(posedge clk) begin
         if (!rst_n) begin seen <= '0; hep <= '0; end
