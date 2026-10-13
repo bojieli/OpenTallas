@@ -15,7 +15,9 @@
    "tools/hgi_seq_vectors.py",
    "tools/hgi_seq_ds.py",
    "tools/hgi_seq_conformance.py",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/run_hgi_seq_g24.py",
+   "tools/hbm_generic_iface.py"
   ]
  },
  "stages": {
@@ -26,6 +28,28 @@
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "seqsplit_exact",
+    "cmd": "python3 tools/run_hgi_seq_split.py --out {RUN}/seqsplit_gate --jobs 4",
+    "expect": "pass",
+    "pass_regex": "GATE PASS",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "seqsplit_mut",
+    "cmd": "python3 tools/run_hgi_seq_split.py --out {RUN}/seqsplit_mut --only positive --defs OT_HGI_SEQ_MUT_SEAM_HOLD",
+    "expect": "fail",
+    "fail_regex": "HGI_SEQ_SPLIT FAIL|Assertion failed",
+    "threads": 4,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ]
