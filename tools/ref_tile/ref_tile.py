@@ -17,6 +17,10 @@ existing ORFS path (tools/run_abi3_physical.py, the route_master.sh invocation t
   pre_cts.tcl / pre_grt.tcl / post_drt.tcl   composed step hooks (io_ref boundary, pin-access keepout, fwd clock)
   floorplan.json   the geometry the pre-route gate checks (outline, util, macro rects, channels, pin faces)
   job.json         closure-loop spec ("ref_tile": true) -> drop into the loop intake after committing the kit
+  pre_gpl.tcl / pre_dpl.tcl   (recipe 2, pin flops + pin hold stages) the one PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook
+
+Kit recipe (kit.env RECIPE=<n>; no line = 1): the generator defaults a kit was built with.  A kit keeps its recipe on every
+regeneration; a NEW kit takes RECIPE_LATEST; spec "recipe" overrides (see apply_recipe).
 """
 from __future__ import annotations
 
@@ -51,6 +55,17 @@ HALO_UM = 2.16          # placement halo around every macro (hard blockage)
 UTIL_LO, UTIL_HI = 0.45, 0.60
 UTIL_TARGET = 0.52
 FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
+# Kit recipe = the generator DEFAULTS (owner 10-13 finishing recipe, el1013-finishing-recipe part B).
+#   1  kits generated before 2026-10-13: hold margin 10 ps, macro halo 2.16 um, no boundary hook unless the spec asks, and
+#      io_flop_at_pins cannot be combined with inhold / outhold.  Such a kit regenerates byte-identically (no RECIPE line).
+#   2  hold margin 30 ps, macro halo 5.4 um, hold cells at the pins (inhold + outhold) AND the pin flops FIRM at the pins
+#      (io_flop_at_pins), combined through the kit-local pre_gpl.tcl / pre_dpl.tcl.  Every item is only a default: the
+#      spec's own value wins (inhold / outhold / io_flop_at_pins false switch a hook off).
+RECIPE_LATEST = 2
+RECIPE_HOLD_MARGIN_NS = 0.030
+RECIPE_HALO_UM = 5.4
+# a spec that already owns the boundary placement keeps it (no default pin hooks on top of it)
+RECIPE_OWN_HOOK_VARS = ("POST_TAPCELL_TCL", "PRE_GLOBAL_PLACE_TCL", "PRE_DETAIL_PLACE_TCL")
 
 
 class SpecError(ValueError):
@@ -68,6 +83,61 @@ def snap(v: float, g: float) -> float:
 def metal(layer):
     m = re.fullmatch(r"M(\d+)", str(layer or ""))
     return int(m.group(1)) if m else None
+
+
+# --------------------------------------------------------------------------------------------- recipe
+def kit_recipe(s: dict, out_root: Path | None = None) -> int:
+    """spec "recipe", else the RECIPE= line of the kit's existing kit.env, else 1 when a kit.env exists (generated before
+    recipes), else RECIPE_LATEST (a new kit)."""
+    v = s.get("recipe")
+    if v is None:
+        env = (out_root or ROOT) / kit_dir(s) / "kit.env"
+        if env.is_file():
+            m = re.search(r"^RECIPE=(\d+)\s*$", env.read_text(errors="replace"), re.M)
+            v = int(m.group(1)) if m else 1
+        else:
+            v = RECIPE_LATEST
+    if isinstance(v, bool) or not isinstance(v, int) or not 1 <= v <= RECIPE_LATEST:
+        raise SpecError(f"spec: recipe must be an integer 1..{RECIPE_LATEST}, got {v!r}")
+    return v
+
+
+def apply_recipe(s: dict, recipe: int) -> dict:
+    """write the recipe's defaults into the spec (in place; idempotent).  Recipe 1 leaves the spec untouched."""
+    if recipe < 2:
+        return s
+    s["recipe"] = recipe
+    r = s["route"]
+    r.setdefault("hold_margin_ns", RECIPE_HOLD_MARGIN_NS)
+    r.setdefault("macro_halo_um", RECIPE_HALO_UM)
+    own = [k for k in RECIPE_OWN_HOOK_VARS if k in s.get("orfs_vars", {})]
+    if not own:
+        s.setdefault("io_flop_at_pins", {"cols": 4, "allow_none": True})
+        # route.hold_delay: the RTL already carries its own kept HB delay cells at the boundary
+        if not r.get("hold_delay"):
+            s.setdefault("inhold", True)
+            s.setdefault("outhold", True)
+    return s
+
+
+def pin_hook_wrapper(s: dict) -> bool:
+    """recipe 2: pin flops AND pin hold stages -> one kit-local PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook"""
+    return bool(s.get("io_flop_at_pins") and (s.get("inhold") or s.get("outhold")) and s.get("recipe", 1) >= 2)
+
+
+def gen_pin_hooks(s: dict) -> dict:
+    if not pin_hook_wrapper(s):
+        return {}
+    hold = "leaf_iohold.tcl" if s.get("outhold") else "leaf_inhold.tcl"
+    pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (kit recipe 2): the hold stages are inserted FIRM at the pins first, then every",
+               "# port's single launch / capture flop is traced THROUGH them (OT_OFLOP_HOPS) and fixed at its pin.  ORFS takes",
+               "# one hook per step, so the two repo hooks are sourced from this kit file.",
+               f"source /src/physical/dsrom_window_source/{hold}",
+               f"source /src/{QDM}/io_flop_at_pins.tcl"]
+    pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
+               "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
+               f"source /src/{QDM}/out_flop_release.tcl"]
+    return {"pre_gpl.tcl": "\n".join(pre_gpl) + "\n", "pre_dpl.tcl": "\n".join(pre_dpl) + "\n"}
 
 
 # --------------------------------------------------------------------------------------------- spec
@@ -116,7 +186,11 @@ def contract_slot(s: dict) -> dict | None:
     c = s.get("contract")
     if not c:
         return None
-    return child_lint.contract_slot(str(ROOT / c["file"]), c["slot"])
+    slot = child_lint.contract_slot(str(ROOT / c["file"]), c["slot"])
+    if isinstance(slot, dict) and isinstance(slot.get("layer_cap"), dict):
+        # derived contracts (qwen_rom_tp8 v3) carry {"cap": "M5", "view_max_layer": ..., "conforms": ...}: the cap is "cap"
+        slot = dict(slot, layer_cap=slot["layer_cap"].get("cap"))
+    return slot
 
 
 def view_name(view: str) -> str:
@@ -322,7 +396,8 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
         raise SpecError("outline: give outline {w,h}, a contract slot, or std_area_um2 / --area-um2 (the synthesis "
                         "smoke of pre_route_gate.py --remote reports it) with util (default 0.52)")
     util = float(s.get("util", UTIL_TARGET))
-    mac = sum((b["w"] + 2 * HALO_UM) * (b["h"] + 2 * HALO_UM) for b in blocks)
+    halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
+    mac = sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks)
     core = (area + mac) / util
     ar = float(s.get("aspect", 1.0))                   # w / h
     w = math.sqrt(core * ar) + 2 * CORE_MARGIN
@@ -622,7 +697,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"] + btcl
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
-            "post_drt.tcl": "\n".join(post_drt) + "\n", **files}
+            "post_drt.tcl": "\n".join(post_drt) + "\n", **files, **gen_pin_hooks(s)}
 
 
 def shq(v: str) -> str:
@@ -699,6 +774,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # register stages + 6,860 hold buffers in one 24-um strip, GRT stuck at ~3,000 markers; the closed hand kit
             # placed pins at floorplan: W 3705 / E 3705).  The kit's post_tapcell.tcl places the exact pins first.
             vv = f"/src/{kd}/post_tapcell.tcl"
+            # ... and post_iop.tcl re-applies them after place_pins (el1013-smh-r11, see the kit file below)
+            if "POST_IO_PLACEMENT_TCL" not in s.get("orfs_vars", {}):
+                extra.append(f"--orfs-var POST_IO_PLACEMENT_TCL=/src/{kd}/post_iop.tcl")
         extra.append(f"--orfs-var {k}={vv}")
     # spec "post_synth_tcl": a repo POST_SYNTH hook, e.g. physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl
     # for a top with inout terminals (ORFS never buffers an inout: the post-GRT repair stops with RSZ-0074 "found route to
@@ -712,19 +790,35 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
+    # route.synth_keep_modules: hierarchy kept through synthesis (ABC re-ripples a pipelined fp adder once it is flattened
+    # into its context; the hbm norm group closed only with its fp add/mul stages kept, idle1012)
+    if s["route"].get("synth_keep_modules"):
+        extra.append("--orfs-var " + shq("SYNTH_KEEP_MODULES=" + " ".join(s["route"]["synth_keep_modules"])))
     if s["route"].get("lb_addon") is None:
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
+    wrap = pin_hook_wrapper(s)
     if s.get("io_flop_at_pins"):
         # spec "io_flop_at_pins" {"cols": N} (el1011-q-kvd 2026-10-12): every port's single launch / capture flop FIRM at its
         # own pin (qwen_die_masters/io_flop_at_pins.tcl, N staggered rows per face), released to DPL before detailed placement.
         # qkd_d2d_ref-q8-2f8712b99-hs: all 2,674 output face registers (r_d / tx_flit, already relayed from the buffers in RTL)
         # were pulled 200-345 um into the core by timing-driven GPL -> reg->out TT -740 at 770 against the 0.2 T link budget.
-        if s.get("outhold") or s.get("inhold"):
-            raise SpecError("spec: io_flop_at_pins and outhold/inhold both use PRE_GLOBAL_PLACE")
-        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl")
-        extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
+        if (s.get("outhold") or s.get("inhold")) and not wrap:
+            raise SpecError("spec: io_flop_at_pins and outhold/inhold both use PRE_GLOBAL_PLACE (kit recipe 1); "
+                            'set "recipe": 2 to combine them through the kit-local pre_gpl.tcl / pre_dpl.tcl')
+        if wrap:
+            extra.append(f"--step-tcl PRE_GLOBAL_PLACE={kd}/pre_gpl.tcl")
+            extra.append(f"--step-tcl PRE_DETAIL_PLACE={kd}/pre_dpl.tcl")
+            # opt-in knobs of io_flop_at_pins.tcl: walk flop <-> port through the inserted BUF / HB4 / BUF stage on top of
+            # the <= 3 synthesis INV / BUF (default 4 hops stops inside the stage)
+            extra.append("--orfs-var OT_OFLOP_HOPS=8")
+        else:
+            extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl")
+            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
+        if s["io_flop_at_pins"].get("allow_none"):
+            # the recipe default: a tile without a single-flop port (pure macro / child feed-through) is not an error
+            extra.append("--orfs-var OT_OFLOP_ALLOW_NONE=1")
         extra.append(f"--orfs-var OT_OFLOP_COLS={int(s['io_flop_at_pins'].get('cols', 4))}")
         # "macro_pins": ["pop", ...] -> OT_MPFLOP_PINS: the flop driving each such hard-child input pin is anchored at the pin too
         # (el1011-q-kvd 2026-10-12: sbuf pop is a ~660 ps internal cone; ot_qkvd_d2d PQ drives it from a dedicated flop)
@@ -736,14 +830,15 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     if s.get("outhold"):
         # spec 'outhold' (hc-cpin 2026-10-12): flop-driven outputs get lead BUF -> HB4 -> BUF FIRM at the pin (R2O hold-only
         # miss at the routed IO ref); with 'inhold' the same hook first runs leaf_inhold.tcl (one PRE_GLOBAL_PLACE hook)
-        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_iohold.tcl")
+        if not wrap:
+            extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_iohold.tcl")
         extra.append(f"--orfs-var OT_IOHOLD_IN={1 if s.get('inhold') else 0}")
-        if not s.get("inhold"):
+        if not s.get("inhold") and not wrap:
             extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     if s.get("inhold"):
         # spec 'inhold': one dont_touch hold buffer between every data input port and its single capture flop, inserted
         # before global placement (owner 10-10: a hold-only miss on input captures -> delay stage at the inputs, no ECO)
-        if not s.get("outhold"):
+        if not s.get("outhold") and not wrap:
             extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/dsrom_window_source/leaf_inhold.tcl")
         # the hold cell sits AT its input pin with a strong resizable driver after it (vm8 181753c60), FIRM through GPL and
         # released before DPL: seeding it at the capture flop left a long dont_touch-loaded port net -> GPL repair_design
@@ -751,7 +846,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         drv = s.get("inhold_drv", "BUFx4f_ASAP7_75t_R")
         if drv:
             extra.append(f"--orfs-var OT_INHOLD_DRV={drv}")
-            extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
+            if not wrap:
+                extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
@@ -761,7 +857,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
-        *cts_sink_env(r), ""])
+        *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
 
 def cts_sink_env(r: dict) -> list:
@@ -803,8 +899,10 @@ def referenced_paths(s: dict, kd: str) -> list:
         out += ["physical/dsrom_window_source/leaf_iohold.tcl", "physical/dsrom_window_source/leaf_inhold_release.tcl"]
     if s.get("inhold"):
         out.append("physical/dsrom_window_source/leaf_inhold.tcl")
-        if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R"):
+        if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R") or pin_hook_wrapper(s):
             out.append("physical/dsrom_window_source/leaf_inhold_release.tcl")
+    if pin_hook_wrapper(s):
+        out += [f"{kd}/pre_gpl.tcl", f"{kd}/pre_dpl.tcl"]
     if s.get("post_synth_tcl"):
         out.append(s["post_synth_tcl"])
     if s["route"].get("hold_delay"):
@@ -850,7 +948,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
     lint = lint_cmd(s)
-    benches = j.get("benches") or []
+    benches = list(j.get("benches") or [])
+    if j.get("benches_from"):     # shared bench template (e.g. tools/s81_suhc/hc_gate_benches.json: the HC composition gate)
+        have = {b.get("name") for b in benches}
+        benches += [b for b in json.loads((ROOT / j["benches_from"]).read_text())["benches"] if b.get("name") not in have]
     if not any(b.get("name") == "lint" for b in benches):
         benches = [{"name": "lint", "cmd": lint, "expect": "pass", "threads": 1, "peak_ram_gb": 4,
                     "needs": ["verilator"]}] + benches
@@ -899,12 +1000,22 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     }
     if j.get("no_bench_reason"):
         spec["no_bench_reason"] = j["no_bench_reason"]
+    if j.get("benched_by"):     # composition gate (tools/ref_tile/composition_gates.json): the loop appends its benches
+        spec["benched_by"] = j["benched_by"]
+    if j.get("hold_merge"):     # a physical probe that never merges (not a closure candidate)
+        spec["hold_merge"] = j["hold_merge"]
+    # closure loop STRUCTURE_REPEAT lint (owner 10-13): after two failed routes the next submission states what changed
+    # in the structure; the sentence is written once in the tile spec (top level, or under "job") and must reach job.json
+    sc = s.get("structural_change") or j.get("structural_change")
+    if isinstance(sc, str) and sc.strip():
+        spec["structural_change"] = sc.strip()
     return spec
 
 
 def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None, out_root: Path = ROOT,
         write: bool = True) -> dict:
     s = load_spec(spec_path)
+    apply_recipe(s, kit_recipe(s, out_root))
     slot = contract_slot(s)
     lc = layer_contract(s, slot)
     if lc.get("m6_pin_grant"):
@@ -960,6 +1071,26 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             "# then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when\n"
             "# a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)\n"
             "foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
+        # el1013-smh-r11 2026-10-13: this ORFS sources IO_CONSTRAINTS at 2_1_floorplan ONLY (floorplan.tcl), not at
+        # 3_2_place_iop, so after the unplace above place_pins placed EVERY port by wirelength and the exact plan was lost
+        # (smh_tile_eg_ref r10: 7,766 of 7,766 ports re-placed; clk / cgi on the W face, gin on the E face on M4, 50 of the
+        # 200 gout on S; the boundary flops stayed FIRM at the planned positions).  POST_IO_PLACEMENT: place the exact pins
+        # again, check every port is back on its planned spot, and rewrite the stage result the next step loads.
+        files["post_iop.tcl"] = (
+            "# ref_tile: re-apply the exact abutment pin plan after place_pins (IO_CONSTRAINTS is sourced only at\n"
+            "# 2_1_floorplan; the POST_TAPCELL hook unplaced the ports so place_pins could run) and save the stage result\n"
+            "set ot_blk [ord::get_db_block]\n"
+            "foreach bt [$ot_blk getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n"
+            f"source /src/{s['io_tcl']}\n"
+            "set ot_n 0; set ot_miss {}\n"
+            "foreach bt [$ot_blk getBTerms] {\n"
+            "  if {[$bt getSigType] in {POWER GROUND}} continue\n"
+            "  if {[llength [$bt getBPins]] == 0} { lappend ot_miss [$bt getName] } else { incr ot_n }\n"
+            "}\n"
+            "if {[llength $ot_miss]} { error \"REF_TILE exact pin plan: [llength $ot_miss] ports left unplaced ([lrange $ot_miss 0 4])\" }\n"
+            "puts \"REF_TILE exact pin plan re-applied after place_pins: $ot_n ports\"\n"
+            "orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb\n"
+            "write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl\n")
     job = gen_job(s, kd, commit, blocks)
     files["job.json"] = json.dumps(job, indent=1) + "\n"
     if write:
@@ -973,7 +1104,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
 # --------------------------------------------------------------------------------------------- export
 def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     """exact-shape abstract (write_abstract_lef, never -bloat_occupied_layers) + TT/FF/SS timing models from the routed
-    odb + spef at the sign-off SDC, the routed clock insertion (ck_insertion.py), then child_lint of the result."""
+    odb + spef at the VERDICT's constraint sequence (tools/tt_views/view_export.py), the routed clock insertion (ck_insertion.py), then child_lint of the result."""
     import subprocess
     fp = json.loads((ROOT / kit / "floorplan.json").read_text())
     top = fp["top"]
@@ -981,6 +1112,12 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    # EXPORT-SDC (2026-10-13): view_export replays the route's VERDICT constraint sequence (closure-loop run: routed
+    # 6_final.sdc, SPEF, post-SDCs, io_ref_routed.sdc last) and fails when its TT / FF slack differs from the verdict.
+    # Outside a loop run there is no verdict to replay: the same order from the kit (never signoff.sdc INSTEAD of the
+    # routed SDC: s81su SMT exported FF -19.69 against a +3.66 verdict that way).
+    for f in (ROOT / kit / "signoff.sdc", ROOT / "physical/common_flow/io_ref_routed.sdc"):
+        cmd += ["--post-sdc", str(f)]
     grant = fp.get("layer_contract", {}).get("m6_pin_grant")
     if grant:
         cmd += ["--pin-only-tech"]
@@ -1041,6 +1178,7 @@ def main(argv=None) -> int:
         if a.cmd == "job":
             r = gen(a.spec, a.area_um2, a.commit, write=False)
             s = load_spec(a.spec)
+            apply_recipe(s, kit_recipe(s))
             job = gen_job(s, kit_dir(s), a.commit, place_blocks(s, *r["outline"], blocks_of(s)))
             p = ROOT / kit_dir(s) / "job.json"
             p.write_text(json.dumps(job, indent=1) + "\n")

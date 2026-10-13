@@ -82,15 +82,15 @@
   "peak_ram_gb": 96
  },
  "job": {
-  "owner": "Codex:hbm-sm-native-manifest",
-  "branch": "codex/hbm-sm-native-manifest-1013",
-  "tag": "r3",
-  "purpose": "Native WG backend resize-legality correction afterr2 actualCTS: rootICGexclusion/spineconstructionpassedcheck_placement with6813sinks1875spinecells; laterrepair_timing resized342cells andmadeFIRM cgi/resetcone bufferfootprints overlap(2pairs). Post-spine callback releasesonlycombinationalconecellstoPLACED so ordinaryresize/legalization canmove them; preserveICG/raw-clockregisteranchors/spinebuffers, RTL/ENA/HOLD/period/latency/pinplan/outline. ActualSTA/DRC/childlint andproductiongates stillmandatory.",
+  "owner": "Claude:el1013-smh-r11",
+  "branch": "claude/el1013-smh-r11",
+  "tag": "r4",
+  "purpose": "Native WG backend r4: r3 recipe (47a0591e9, resize-legal cone, root ICG kept) re-run on main with the per-clock-class boundary reference (56328a88a) after r3 NEEDS_RTL FF hold -11.6 / R2O window 178@-189.8 measured with the pre-class reference; no RTL, SDC period, pin plan or outline change. Behavioural qualification by composition gate smn_native_sm (exact + s1w mutant + late32 + hold0, production shape).",
   "benches": [],
   "extra_paths": [
    "results/arch/hbm_native_1013/sm"
   ],
-  "no_bench_reason": "Module-text-equal historical arithmetic gate retained; new route is a reference-flow/clock-spine/above-face-keepout replacement. Full RMAX4096 FC_HIER exact+mutant+throughput must pass before adoption. Physical and logical source pinned49b00f711 snapshots, not reduced shape."
+  "benched_by": "smn_native_sm"
  },
  "native_preconditions": {
   "status": "R3_PREPARED_AFTER_DPL_RESIZE_VERDICT",

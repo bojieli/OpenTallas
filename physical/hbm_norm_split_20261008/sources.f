@@ -19,3 +19,4 @@ rtl/hdc/ot_hdc_prefix.sv
 rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv
 rtl/hdc/v41x/ot_dsrom_su_norm.sv
 rtl/hdc/v41x/ot_hbm_norm_split.sv
+rtl/hdc/v41x/ot_hbm_norm_split_p.sv

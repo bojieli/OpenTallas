@@ -853,6 +853,9 @@ def prepare(row, rec, st) -> dict | None:
         prev = t.get("reason", "") if t.get("state") == "gate_fail" else \
             (jload(JOBS / f"{t['job']}.json") or {}).get("reason", "") if t.get("state_m5") == "failed" and t.get("job") else ""
         spec, snap = build_spec(row, rec, f, prev or "")
+        # an M5 re-route is the CLOSED tile under a lower cap, not a new design: it keeps the recipe its closed route was
+        # generated with (kit recipe 1 unless the closed spec says otherwise), never the new-kit default
+        spec.setdefault("recipe", 1)
         kd = f"physical/ref_tile/{spec['name']}"
         if git("ls-files", "--", kd).strip() and t.get("kit") != kd:
             raise SpecSkip(f"kit dir {kd} exists (not ours)")

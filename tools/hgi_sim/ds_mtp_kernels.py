@@ -374,7 +374,10 @@ class Kernels:
     LABELLED REPLAY bodies (load the golden h / pre after the layer; layers 37..39 first store their input's main hidden
     part with real SU records)."""
 
-    def __init__(self, m, spec=False):
+    def __init__(self, m, spec=False, b2_swap=None):
+        """b2_swap (opt-in, default None = the legacy swap bodies, unchanged): callable rank -> (h_allocations,
+        pre_allocation) read from the live B2 record-liveness allocator (hgi_b2.mtp_swap.allocations_from_placement);
+        the swap bodies (0, 0) / (1, 0) are then swap_b2's native dispatch groups."""
         from hgi_sim import ds_native as DN
         from hgi_sim.records import MDesc, Rec
         from hgi_sim.qwen_compiler import Builder, sut
@@ -396,8 +399,7 @@ class Kernels:
                 for r in range(self.TP):
                     self.body[r][(k, Lp)] = [self.end()]
         for r in range(self.TP):
-            self.body[r][(0, 0)] = self.swap(True)
-            self.body[r][(1, 0)] = self.swap(False)
+            self.body[r][(0, 0)], self.body[r][(1, 0)] = self.swap_bodies(r, b2_swap)
             self.body[r][(2, 0)] = self.embed()
             self.body[r][(6, 0)] = self.embed()           # demb = the embedding kernel (token y or the noise id)
             if not spec:
@@ -506,6 +508,14 @@ class Kernels:
                 b.add(self.Rec("DMA", "STORE", desc=dict(A=vm, O=hb), tag=f"swapout.{nm}", family="swap"),
                       [nm], [f"COL.{nm}"])
         return b.recs + ([] if into else [self.fence()]) + [self.end()]
+
+    def swap_bodies(self, rank, b2_swap=None):
+        """(swapin, swapout) bodies of one rank: the legacy records unless the caller opted in with b2_swap."""
+        if b2_swap is None:
+            return self.swap(True), self.swap(False)
+        h_allocations, pre_allocation = b2_swap(rank)
+        return (self.swap_b2(True, h_allocations, pre_allocation),
+                self.swap_b2(False, h_allocations, pre_allocation))
 
     def swap_b2(self, into, h_allocations, pre_allocation):
         """Native B2 swap groups for the allocator's CURRENT record lifetime.

@@ -19,6 +19,14 @@ set ot_gap [expr {[info exists ::env(OT_OFLOP_GAP)] ? $::env(OT_OFLOP_GAP) : 1.0
 # outnumber 4 x (face length / flop width) gets overlapping FIRM sites and DPL pushes the overflow away from the pins
 # (coll cb S face: 2,100 t_vm + 592 f_vm flops on 680 um, t_vm[0] 270 ps of wire from its pin, kps TT -65).
 set ot_cols [expr {[info exists ::env(OT_OFLOP_COLS)] ? $::env(OT_OFLOP_COLS) : 4}]
+# Opt-in knobs (el1013-finishing-recipe 2026-10-13, ref_tile kit recipe 2; unset = the behaviour above, unchanged):
+#   OT_OFLOP_HOPS (default 4): cells walked between a port and its flop, the flop included.  With the pin hold stages
+#     inserted first by the same hook (leaf_iohold.tcl: flop -> [INV/BUF <= 3] -> BUF -> HB4 -> BUF -> port; leaf_inhold.tcl:
+#     port -> HB4 -> BUF -> flop D) the default stops inside the stage and the flop stays unanchored.
+#   OT_OFLOP_ALLOW_NONE=1: finding no pin flop is reported, not an error (a default-on hook on a tile whose ports all
+#     feed macros / hard children).
+set ot_hops [expr {[info exists ::env(OT_OFLOP_HOPS)] && $::env(OT_OFLOP_HOPS) ne "" ? $::env(OT_OFLOP_HOPS) : 4}]
+set ot_allow_none [expr {[info exists ::env(OT_OFLOP_ALLOW_NONE)] && $::env(OT_OFLOP_ALLOW_NONE) eq "1"}]
 proc ot_of_drv {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return $it } }
   return ""
@@ -69,7 +77,7 @@ foreach bt [$ot_blk getBTerms] {
   if {$io eq "OUTPUT"} {
     set d [ot_of_drv $net]; if {$d eq ""} { incr ot_skip; continue }
     set inst [$d getInst]
-    for {set hop 0} {$hop < 4} {incr hop} {
+    for {set hop 0} {$hop < $ot_hops} {incr hop} {
       if {[ot_of_isff $inst]} { set ff $inst; break }
       if {![ot_of_isbuf $inst]} break
       set nxt ""
@@ -85,7 +93,7 @@ foreach bt [$ot_blk getBTerms] {
   } elseif {$io eq "INPUT"} {
     if {[$net getSigType] eq "CLOCK"} continue
     set s [ot_of_sink $net]; if {$s eq ""} { incr ot_skip; continue }
-    for {set hop 0} {$hop < 4} {incr hop} {
+    for {set hop 0} {$hop < $ot_hops} {incr hop} {
       set inst [$s getInst]
       if {[ot_of_isff $inst]} {
         if {[[$s getMTerm] getName] eq "D"} { set ff $inst }
@@ -197,4 +205,4 @@ set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
 foreach n $ot_list { puts $fh $n }
 close $fh
 puts "OT_IOFLOP fixed $ot_n output-port and $ot_ni input-port flops at their pins ($ot_skip ports not single-flop)"
-if {$ot_n + $ot_ni == 0} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }
+if {$ot_n + $ot_ni == 0 && !$ot_allow_none} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }

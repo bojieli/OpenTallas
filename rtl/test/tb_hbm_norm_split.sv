@@ -2,6 +2,8 @@
 // Transaction-level bench of the partitioned HBM norm engine (stream hbm-norm-split 2026-10-08).  ONE DUT per build:
 //   default            : ot_hbm_norm_engine_view (the flat MEM1 view, the reference)
 //   +define+OT_NSPLIT_G8  : ot_hbm_norm_split_view_g8   (8 x ot_hbm_norm_grp8 + top)
+//   +define+OT_NSPLIT_G8X : ot_hbm_norm_split_view_g8x (REP=1 + one relay stage on every input / output)
+//   +define+OT_NSPLIT_G8P : ot_hbm_norm_split_view_g8p (conservative-1011 textbook rebuild: gtile8 + seam relay chains)
 //   +define+OT_NSPLIT_G16 : ot_hbm_norm_split_view_g16  (4 x ot_hbm_norm_grp16 + top)
 // Stimulus = tb_su_norm_mem_lockstep's: R rows back to back (row 0 the DS1M golden row, row k the golden x rotated by
 // 37k), row k+1's go issued the cycle THIS DUT's rstd appears (overlapping x writes and scale reads), gain ROM
@@ -28,7 +30,15 @@ module tb_hbm_norm_split #(parameter integer R = 4, parameter integer HUB_IN = 3
     wire [7:0] y_i, q_i;
     wire [N*32-1:0] y, ro; wire [31:0] r;
     wire [2*256-1:0] qc; wire [2*10-1:0] qe; wire [2*512-1:0] qy;
-`ifdef OT_NSPLIT_G8
+`ifdef OT_NSPLIT_G8P
+    ot_hbm_norm_split_view_g8p dut (
+`elsif OT_NSPLIT_G8X
+    ot_hbm_norm_split_view_g8x dut (
+`elsif OT_NSPLIT_G8R
+    ot_hbm_norm_split_view_g8r dut (
+`elsif OT_NSPLIT_G16R
+    ot_hbm_norm_split_view_g16r dut (
+`elsif OT_NSPLIT_G8
     ot_hbm_norm_split_view_g8 dut (
 `elsif OT_NSPLIT_G16
     ot_hbm_norm_split_view_g16 dut (

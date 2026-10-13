@@ -515,6 +515,11 @@ def main():
     ap.add_argument('--bf-compose', type=Path, help='composed BF pair record (bf_hier_compose_sta.py compose.json) of the '
                     'die\'s BF blocks: the front clock tap; default the col600 record')
     ap.add_argument('--index-out', type=Path, help='also write the master -> view index (JSON) here')
+    ap.add_argument('--legacy-unqualified-libs', action='store_true',
+                    help='S81 DIE 2026-10-13: keep the tree-scan binding of routed-view ETMs (closed / assembled) of masters '
+                         'that are NOT in the view-binding table (not QUALIFIED by tools/s81/native_view_qualify.py). '
+                         'Default: such a master is timed with the interim pin-registered lib and listed under '
+                         'unqualified_views_not_bound; only for re-running a kit of an earlier case')
     a = ap.parse_args()
     S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(shlex.split(a.s81_opts) + ['--die', a.die]))
     m = S.build()
@@ -528,6 +533,23 @@ def main():
     rec = dict(masters={}, clocks=[])
     vroot = a.views_root.resolve()
     cls_ = {c: closed_libs(c, vroot, a.label) for c in ('ss', 'tt', 'ff')}
+    # S81 DIE 2026-10-13 binding rule: a die master takes a routed-view ETM ONLY through the view-binding table (the
+    # generator's --view-binding / OT_S81_VIEW_BINDING, built from qualification.json by tools/s81/view_binding.py); the
+    # bound master's three corner libs are the table's (same export as the LEF the die places).  The constant-bound hard
+    # macros (S.REAL_FILES: cfg ROM, PHY, SerDes, UCIe, q element -- real LEF by generator constant) are outside the
+    # native qualification and keep their liberty by cell name; every master with a GENERATED outline needs the table.
+    bound = S.bound_views(vroot) if hasattr(S, 'bound_views') else {}     # --gen-root of an earlier generator: no table
+    not_bound = {}
+
+    def qualified_only():
+        for c_ in ('ss', 'tt', 'ff'):
+            for mst in first:
+                if mst in bound:
+                    cls_[c_][mst] = (S._view_path(bound[mst][c_], vroot), 'closed')
+                elif not a.legacy_unqualified_libs and mst in cls_[c_] and mst not in S.REAL_FILES:
+                    not_bound.setdefault(mst, {})[c_] = str(cls_[c_].pop(mst)[0].relative_to(vroot))
+    S._init_real()
+    qualified_only()
     psites = hold_pad_sites(m)
     by_ = {it.name: it for it in m['insts']}
     # a pad lives inside an INTERIM stage: a master with a routed view in any corner carries its own (real) timing
@@ -571,6 +593,10 @@ def main():
                 index.pop('dsfd_sp_collective', None)
             if a.require_qualified_collective:
                 raise ValueError('UNQUALIFIED split3cr collective: ' + '; '.join(binding['problems']))
+    qualified_only()                         # the colck / collective overrides above obey the same rule
+    rec['view_binding'] = dict(table=getattr(S, 'VIEW_BINDING', None), bound_masters=sorted(m_ for m_ in bound if m_ in first),
+                               legacy_unqualified_libs=bool(a.legacy_unqualified_libs),
+                               unqualified_views_not_bound=dict(sorted(not_bound.items())))
     for corner in ('ss', 'tt', 'ff'):
         cl = cls_[corner]
         cells, libs = [], set()
@@ -585,7 +611,7 @@ def main():
                     aj = json.loads((src[0].parent / 'assembled.json').read_text())
                     r_.update(tiles=list(parts.get(mst, ())), glue_worst_ps=aj['glue_worst_ps'],
                               tiles_ss_as_tt=aj['corners']['tt']['tiles_ss_as_tt'])
-                r_['libs'][corner] = str(src[0].relative_to(vroot)) + (' (SS as TT)' if src is not cl.get(mst) else '')
+                r_['libs'][corner] = (str(src[0].relative_to(vroot)) if src[0].is_relative_to(vroot) else str(src[0])) + (' (SS as TT)' if src is not cl.get(mst) else '')
                 continue
             if mst in rp:      # real macro without a lib: its die ports, bit names from the real port map
                 ports = {}
@@ -727,7 +753,8 @@ def main():
         idx = dict(schema='opentallas.s81.die_view_index.v1', die=a.die, label=a.label, s81_opts=a.s81_opts,
                    counts=dict(n), instances={k: sum(cnt[m_] for m_, v in rec['masters'].items() if v['view'] == k) for k in n},
                    masters={k: dict(v, instances=cnt[k]) for k, v in sorted(rec['masters'].items())},
-                   routed_insertion=rec.get('routed_insertion'), collective_binding=rec.get('collective_binding'))
+                   routed_insertion=rec.get('routed_insertion'), collective_binding=rec.get('collective_binding'),
+                   view_binding=rec.get('view_binding'))
         a.index_out.parent.mkdir(parents=True, exist_ok=True)
         a.index_out.write_text(json.dumps(idx, indent=1) + '\n')
     print(json.dumps(dict(n), indent=0), len(srcs), 'clock sources')

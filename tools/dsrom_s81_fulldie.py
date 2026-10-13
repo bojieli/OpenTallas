@@ -372,6 +372,135 @@ def _init_real():
         REAL_FILES[real_lef(rel)['name']] = rel
 
 
+# ------------------------------------------------------------------------------------------------ by-name view binding
+# S81 DIE 2026-10-13: a die master is bound to its REAL routed view (LEF + TT/FF/SS ETM of one export) BY MASTER NAME,
+# from a table built by tools/s81/view_binding.py out of results/arch/s81_native_20261013/qualification.json: only a
+# master that tools/s81/native_view_qualify.py calls QUALIFIED (and whose export replayed the verdict SDC sequence,
+# main abc334b14) is in the table.  Every other generated master stays a placeholder (binding_ledger.json says why).
+# --view-binding / OT_S81_VIEW_BINDING: table path (repo-relative or absolute); 'none' binds nothing.
+VIEW_BINDING_DEFAULT = 'results/arch/s81_native_20261013/view_binding.json'
+VIEW_BINDING = os.environ.get('OT_S81_VIEW_BINDING', VIEW_BINDING_DEFAULT)
+VIEW_BINDING_SCHEMA = 's81-view-binding-v1'
+_BOUND = {}
+
+
+def _view_path(rel, root=None):
+    return Path(rel) if Path(rel).is_absolute() else Path(root or ROOT) / rel
+
+
+def bound_views(root=None):
+    """{master: dict(lef, tt, ff, ss (paths as in the table), w, h, pins {name: direction}, text, job, export_dir)} of
+    the view-binding table.  Hard errors: unknown schema, an entry that is not QUALIFIED, a missing file, a file whose
+    sha256 differs from the table (the view changed after it was qualified), a LEF whose MACRO is not the master, a
+    corner liberty without that cell."""
+    key = (VIEW_BINDING, str(root or ROOT))
+    if key in _BOUND:
+        return _BOUND[key]
+    out = {}
+    if VIEW_BINDING and VIEW_BINDING != 'none':
+        tp = _view_path(VIEW_BINDING, root)
+        if not tp.exists():
+            raise SystemExit(f'VIEW_BINDING: table {tp} not found (--view-binding none binds nothing)')
+        tab = json.loads(tp.read_text())
+        if tab.get('schema') != VIEW_BINDING_SCHEMA:
+            raise SystemExit(f'VIEW_BINDING: {tp} schema {tab.get("schema")!r}, expected {VIEW_BINDING_SCHEMA!r}')
+        for mst, rec in sorted(tab.get('bound', {}).items()):
+            if rec.get('verdict') != 'QUALIFIED':
+                raise SystemExit(f'VIEW_BINDING: {mst} is in the table without a QUALIFIED verdict ({rec.get("verdict")!r})')
+            r_ = dict(job=rec.get('job'), export_dir=rec.get('export_dir'))
+            for k_ in ('lef', 'tt', 'ff', 'ss'):
+                f_ = rec.get('files', {}).get(k_) or {}
+                fp = _view_path(f_.get('path', ''), root)
+                if not f_.get('path') or not fp.is_file():
+                    raise SystemExit(f'VIEW_BINDING: {mst} {k_} view file missing: {f_.get("path")!r}')
+                raw = fp.read_bytes()
+                if hashlib.sha256(raw).hexdigest() != f_.get('sha256'):
+                    raise SystemExit(f'VIEW_BINDING: {mst} {k_} {f_["path"]} sha256 differs from the table: the view '
+                                     'changed after it was qualified (re-run tools/s81/view_binding.py)')
+                r_[k_] = f_['path']
+                if k_ == 'lef':
+                    r_['text'] = raw.decode()
+                elif not re.search(r'^\s*cell\s*\(\s*"?' + re.escape(mst) + r'"?\s*\)', raw.decode(errors='ignore'), re.M):
+                    raise SystemExit(f'VIEW_BINDING: {mst} {k_} liberty {f_["path"]} has no cell {mst}')
+            macros = re.findall(r'^MACRO (\S+)', r_['text'], re.M)
+            if macros != [mst]:
+                raise SystemExit(f'VIEW_BINDING: {mst} LEF {r_["lef"]} defines MACRO {macros}, expected exactly [{mst}]')
+            sm = re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', r_['text'])
+            r_['w'], r_['h'] = float(sm.group(1)), float(sm.group(2))
+            pins = {}
+            for pm in re.finditer(r'\n\s*PIN (\S+)\s*\n(.*?)\n\s*END \1', r_['text'], re.S):
+                if re.search(r'USE\s+(POWER|GROUND)', pm.group(2)):
+                    continue
+                dm = re.search(r'DIRECTION\s+(\w+)', pm.group(2))
+                pins[pm.group(1)] = dm.group(1).upper() if dm else None
+            r_['pins'] = pins
+            out[mst] = r_
+    _BOUND[key] = out
+    return out
+
+
+def bound_view_pin_faults(mst, view, ports):
+    """Faults of a bound view's LEF signal pins against the die netlist's ports of that master (ports: {port: (dir,
+    bits)}, finalize_r8's pdir).  A die port of n bits is the LEF pins port[0..n-1] (a 1-bit port: port[0] or port);
+    every die port bit must have its pin with the same direction and the LEF must carry no other signal pin."""
+    faults, seen = [], set()
+    for p_, (d_, n_) in sorted(ports.items()):
+        names = [f'{p_}[{i}]' for i in range(n_)]
+        if n_ == 1 and names[0] not in view['pins'] and p_ in view['pins']:
+            names = [p_]
+        miss = [x for x in names if x not in view['pins']]
+        if miss:
+            faults.append(f'die port {p_}[{n_}] ({d_}): {len(miss)} LEF pin(s) missing, e.g. {miss[0]}')
+        for x in names:
+            seen.add(x)
+            ld = view['pins'].get(x)
+            if ld in ('INPUT', 'OUTPUT') and ld.lower() != d_:
+                faults.append(f'pin {x}: LEF DIRECTION {ld}, die netlist {d_}')
+                break
+    extra = sorted(set(view['pins']) - seen)
+    if extra:
+        faults.append(f'{len(extra)} LEF signal pin(s) with no die port, e.g. {extra[:3]}')
+    return faults
+
+
+def apply_view_binding(m, pdir):
+    """Bind the table's masters present on this die (end of finalize_r8, before any LEF / DEF / netlist is written):
+    hard error on a pin-name mismatch with the die netlist, on a non-R0 instance and on a real outline larger than the
+    generated slot (the placer chose that slot from the GENERATED outline; it does not re-place).  A fitting instance
+    keeps the slot origin and takes the real LEF SIZE.  m['bound_views'] records what was bound."""
+    if 'bound_views' in m:
+        return m['bound_views']
+    bv = bound_views()
+    rec = {}
+    for it in m['insts'] if bv else ():
+        v = bv.get(it.master)
+        if v is None:
+            continue
+        if it.master in REAL_FILES:
+            raise SystemExit(f'VIEW_BINDING: {it.master} is a constant-bound hard macro (REAL_FILES), not a table master')
+        r_ = rec.get(it.master)
+        if r_ is None:
+            faults = bound_view_pin_faults(it.master, v, pdir.get(it.master, {}))
+            if faults:
+                raise SystemExit(f'VIEW_BINDING: {it.master} LEF {v["lef"]} does not match the die netlist ports: '
+                                 + '; '.join(faults[:8]))
+            r_ = rec[it.master] = dict(lef=v['lef'], libs={c: v[c] for c in ('tt', 'ff', 'ss')}, size_um=[v['w'], v['h']],
+                                       generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0)
+        if it.orient != 'R0':
+            raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: bound views are placed R0 only')
+        if v['w'] > it.w + 1e-6 or v['h'] > it.h + 1e-6:
+            raise SystemExit(f'VIEW_BINDING: {it.master} real outline {v["w"]} x {v["h"]} exceeds the generated slot '
+                             f'{it.w:.3f} x {it.h:.3f} of {it.name}: the placer sizes slots from the generated outline '
+                             '(results/arch/s81_native_20261013/BINDING.md, placer assumptions)')
+        it.w, it.h = v['w'], v['h']
+        r_['instances'] += 1
+    m['bound_views'] = rec
+    if rec:
+        print('OT_VIEW_BINDING %d masters / %d instances bound from %s' % (len(rec), sum(r_['instances'] for r_ in rec.values()),
+              VIEW_BINDING), file=sys.stderr)
+    return rec
+
+
 # ------------------------------------------------------------------------------------------------ field map
 def region_bounds():
     return [math.floor(r * PAIRS / ROOTS) for r in range(ROOTS + 1)]
@@ -1159,7 +1288,7 @@ def pin_clashes(m, k=1, space=0.024 - 1e-6):
     _init_real()
     out = []
     for name, mst in M.items():
-        if k == 1 and name in REAL_FILES:
+        if k == 1 and (name in REAL_FILES or name in m.get('bound_views', ())):
             continue
         rects = sorted(pin_rects(mst, k, {p: pw.get((name, p), 0) for p in mst.order}), key=lambda r: (r[1], r[2][0]))
         by = defaultdict(list)
@@ -1182,8 +1311,8 @@ def write_lefs(m, k, path):
     _init_real()
     txt, npins = [], 0
     for name, mst in M.items():
-        if k == 1 and name in REAL_FILES:
-            continue
+        if k == 1 and (name in REAL_FILES or name in m.get('bound_views', ())):
+            continue             # real LEF: constant-bound hard macro, or a bound view (case_real: bound_views.lef)
         wmap = {p: pw.get((name, p), 0) for p in mst.order}
         for p in mst.order:
             if wmap[p] == 0:
@@ -1546,7 +1675,25 @@ def case_real(m, work):
             continue
         (work / nm).write_text(_lef_text(rel))
     (work / 'snap.tcl').write_text((ROOT / SNAP_LIB).read_text())
+    bnd = m.get('bound_views') or {}
+    if bnd:                      # the bound masters' real LEFs, verbatim (bound_views() verified their sha256)
+        bv_ = bound_views()
+        (work / 'bound_views.lef').write_text('\n'.join(bv_[n_]['text'] for n_ in sorted(bnd)))
     write_netlist(m, 1, work / 'die.v')
+    if HOP_GATE_UM:
+        # s81-die v14 (2026-10-12): hard hop gate before PLACE / GRT (c3: -17.7 ns TT on 2.3 mm unbuffered hub hops;
+        # c5: a 1,025 um svc_SW.rv -> ctrl_SW.rd hop) -- every data bit, pin to pin, from the LEFs written above
+        sys.path.insert(0, str(ROOT / 'tools' / 's81'))
+        import die_hop_gate as HG
+        lefs = [(work / f).read_text() for f in ('elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef',
+                                                 'ucie.lef', 'head_a.lef', 'head_b.lef') + (('bound_views.lef',) if bnd else ())
+                if (work / f).exists()]
+        hg = HG.gate(m['insts'], m['buses'], lefs, pslice, limit_um=HOP_GATE_UM, ss_um=SS_REACH_UM)
+        (work / 'hop_gate.json').write_text(json.dumps(hg, indent=1) + '\n')
+        print('OT_HOP_GATE %s max %.1f um bits>%g: %d bits>%g(SS): %d' % (hg['verdict'], hg['max_um'], HOP_GATE_UM,
+              hg['bits_over_limit'], SS_REACH_UM, hg['bits_over_ss']), file=sys.stderr)
+        if hg['verdict'] != 'PASS':
+            raise SystemExit(f'hop gate FAIL: {hg["bits_over_limit"]} bits over {HOP_GATE_UM} um (see {work}/hop_gate.json)')
     W, H = DIE
     # ot_mts::place rescans every placed macro per call (O(n^2): 8k of 24k instances in 31 min); the floorplan is
     # built on the snap lattice, so snap each origin (snap_origin, no neighbour scan) and let the one sweep-line
@@ -1567,7 +1714,7 @@ proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag [expr {{$r/1024}}] MB [clock seconds]" }}
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
-foreach f {{q_elem.lef cfg.lef phy.lef serdes.lef ucie.lef {'head_a.lef head_b.lef ' if HEAD_BUNDLES else ''}elements.lef}} {{ read_lef /work/$f }}
+foreach f {{q_elem.lef cfg.lef phy.lef serdes.lef ucie.lef {'head_a.lef head_b.lef ' if HEAD_BUNDLES else ''}{'bound_views.lef ' if bnd else ''}elements.lef}} {{ read_lef /work/$f }}
 read_verilog /work/die.v
 link_design dsfd_die
 mem linked
@@ -1620,6 +1767,8 @@ write_db /work/floorplan.odb
     (work / 'run.tcl').write_text(tcl)
     man = dict(case='a', instances=len(m['insts']), generated_pins=npins, nets_bits=sum(b[2] for b in m['buses']),
                variant=m['variant'])
+    if bnd:
+        man['bound_views'] = dict(table=VIEW_BINDING, masters=bnd)
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     return man
 
@@ -2619,6 +2768,8 @@ COLL_SLAB_H = None             # --coll-slab-h H (s81die-1011 hier contract v1):
 VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
 ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre slabs moved to an E-column sub-column
 ECOL_W = 518.4
+CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
+HOP_GATE_UM = None             # --hop-gate UM (s81-die v14): real mode fails when any data bit's pin-to-pin hop > UM
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -6455,6 +6606,7 @@ def finalize_r8(m):
     for it in m['insts']:
         if it.kind == 'hend':
             it.power_w = 5 * sum(b for d, b in pdir[it.master].values() if d == 'input') * FLOP_CLK_W * 1.5
+    apply_view_binding(m, pdir)
     return pdir
 
 
@@ -6711,6 +6863,7 @@ def _faces_r8(m, Mx, it, ports):
         # inter-region skew bound was 197.2 ps > 150 (m221pq_r3 clock plan).
         east = _peer_pos(m, it, 'cks', 'N') > Mx.w / 2       # the end the svc 'ck' takes (same net, same peer sort)
         _lay(Mx, 'N', P_(['cks']), 'M5', start=(Mx.w - 62.0) if east else 2.0)
+        m.setdefault('_laid', {})[Mx.name] = Mx
     else:   # hub slabs, band blocks, services: each port on the face toward its peers, ordered by peer position
         faces = defaultdict(list)
         for p_ in sorted(ports):
@@ -6777,6 +6930,16 @@ def _faces_r8(m, Mx, it, ports):
                     resv.append((c_ - 1.0, c_ + bw + 1.0))
                     c_ += bw + 2.0
                 lst = [p_ for p_ in lst if p_ not in wide]
+            if CTRL_SVC_ALIGN and it.kind == 'svc' and f in 'NS':
+                # --ctrl-svc-align (s81-die v14): the stack client's controller-facing ports take the EXACT x of the
+                # controller bits they connect to (bit for bit, both faces M5), so the ~20k-bit rq / rd interface
+                # crosses the abut gap straight on its M5 tracks.  v13 centred each face's ports independently: svc
+                # rq / r_data sat 488 um E of ctrl rq / rd and rv 1,025 um off (c3 GRT: 20% of the overflow in the
+                # 0.4 mm pinch at x 7.2-7.6 mm, M7-M9)
+                for p_, cen_, bw_ in _ctrl_aligned(m, it, Mx, lst, ports, f):
+                    Mx.face(p_, ports[p_][1], f, 'M5', cen_, 1)
+                    resv.append((cen_ - bw_ / 2 - 1.0, cen_ + bw_ / 2 + 1.0))
+                    lst = [q_ for q_ in lst if q_ != p_]
             pos = 0.4                     # band blocks / services: at their peers' positions where they fit
             for p_ in lst:
                 bw = bwf(ports[p_][1])
@@ -6788,6 +6951,41 @@ def _faces_r8(m, Mx, it, ports):
                         pos = r1_ + 1.0
                 Mx.face(p_, ports[p_][1], f, 'M4' if f in 'EW' else 'M5', pos + bw / 2, 1)
                 pos += bw + 2.0
+
+
+def _ctrl_aligned(m, it, Mx, lst, ports, f):
+    """--ctrl-svc-align: [(port, centre, width)] for the ports of `it` (a stack client) whose single peer is a laid
+    controller master: centre chosen so that bit b of the port lands on the controller's pin of the same net bit"""
+    by_ = m['_by']
+    laid = m.get('_laid', {})
+    out = []
+    fx_ = lambda o: o.orient in ('MY', 'R180')
+    for p_ in lst:
+        for _bid, _c, _w, eps_ in m['_nets_of'].get((it.name, p_), []):
+            pe_ = [(i_, q_) for i_, q_ in eps_ if i_ != it.name and i_ in by_]
+            if len(pe_) != 1 or by_[pe_[0][0]].kind != 'ctrl':
+                continue
+            ct_ = by_[pe_[0][0]]
+            cm_ = laid.get(ct_.master)
+            base_, lo_, _hi = pslice(pe_[0][1])
+            mine_ = pslice([q_ for i_, q_ in eps_ if i_ == it.name][0])
+            sp_ = cm_.ports.get(base_) if cm_ is not None else None
+            if sp_ is None or sp_[0] != 'face' or sp_[2] not in 'NS' or fx_(ct_) != fx_(it) or mine_[1] not in (None, 0):
+                continue
+            _, n_, _f, ly_, c_, pt_ = sp_
+            off_, pp_ = TRK[ly_]
+            step_ = pp_ * pt_
+            st_ = max(c_ - n_ * step_ / 2, 2 * pp_)
+            if st_ + n_ * step_ > ct_.w - 2 * pp_:
+                st_ = ct_.w - 2 * pp_ - n_ * step_
+            first_ = off_ + math.ceil((st_ - off_) / pp_ - 1e-9) * pp_
+            x_ = first_ + (lo_ or 0) * step_                       # ctrl master frame, bit lo
+            xd_ = ct_.x + (ct_.w - x_ if fx_(ct_) else x_)         # die
+            xl_ = (it.x + it.w - xd_) if fx_(it) else (xd_ - it.x)  # client master frame
+            nb_ = ports[p_][1]                                      # (both mirrored: bits ascend in both frames)
+            out.append((p_, xl_ + nb_ * step_ / 2, nb_ * step_))
+            break
+    return out
 
 
 def _pnum(p_):
@@ -7254,6 +7452,10 @@ def die_options(ap):
                     'the TIERS frame columns per tier and half (default 10,11,11,11,11,10 = 128 frames); with --bf-hier the '
                     'die stays 33 x 26 mm (no widening) and the columns must fit it (e.g. 8,8,8,8,8,8 = 96 frames at col600); '
                     'frames (= PQ roots) = 2 x the sum')
+    ap.add_argument('--ctrl-svc-align', action='store_true', help='s81-die v14: the stack client (dsfd_svc_c) '
+                    'controller-facing pins take the x of the controller bits they connect to (straight M5 abut crossing)')
+    ap.add_argument('--hop-gate', type=float, help='s81-die v14: real mode hard gate: every data bit pin-to-pin '
+                    'hop <= UM (tools/s81/die_hop_gate.py; hop_gate.json in --work)')
     ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
                     'within both reaches may take up to N extra stations (+1 cycle each on that hop; dry-run chosen); default 0')
     ap.add_argument('--fwd-iface', action='store_true', help='s81-gen 2026-10-09: host-write (with --ctrl-rq) and layer1e '
@@ -7307,6 +7509,8 @@ def die_options(ap):
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
     ap.add_argument('--contract', help='s81-die-iter 2026-10-12: hier contract JSON (repo path): SU / HC / VM / centre slab outlines')
+    ap.add_argument('--view-binding', help='S81 DIE 2026-10-13: by-name real view table (tools/s81/view_binding.py; repo path or '
+                    'absolute); default OT_S81_VIEW_BINDING or ' + VIEW_BINDING_DEFAULT + "; 'none' binds nothing")
     ap.add_argument('--suhc-v2', action='store_true', help='s81die-1011: su_hc contract v2 (one SU in su_s, one HC in hc_s, VM '
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
@@ -7329,7 +7533,9 @@ def die_options(ap):
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
-    global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS
+    global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS, VIEW_BINDING
+    if getattr(a, 'view_binding', None):
+        VIEW_BINDING = a.view_binding
     CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
     CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
     CTRL_BINDINGS = None
@@ -7460,7 +7666,7 @@ def apply_options(a):
         if COLL_P2_LANE and getattr(a, 'draft', None) != 'A':
             raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
         COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr_%s.json' % ('mtpl' if COLL_MTP_LANE else 'p2l')
-    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, LANES_W, COL_W8, COL_PITCH8, DIE
+    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, HOP_GATE_UM, CTRL_SVC_ALIGN, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
     if getattr(a, 'bf_hier_compact', False):
         assert BF_HIER is None, '--bf-hier and --bf-hier-compact are exclusive'
@@ -7520,6 +7726,8 @@ def apply_options(a):
         assert (Q_ELEM_FRAME_H or 0) >= 0 and (getattr(a, 'elem_h', None) or ELEM_FRAME_H) >= BF_ROUTE_H + 8.64 - 1e-6, \
             '--bf-hier: the BF frame (--elem-h) must hold the routed BF blocks (BF_ROUTE_H) + halos'
     HOP_EXTRA = int(getattr(a, 'hop_extra', 0) or 0)
+    HOP_GATE_UM = getattr(a, 'hop_gate', None)
+    CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
     CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'
     if a.die == 'layer1e':
