@@ -10,8 +10,10 @@
 // producing stage, s81-ctl); it is a die pin, never tied here.  Latency vs dsfd_sp_hc: +1 cycle each way.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_hc_c #(
-    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, MUT = 0, AMUT = 0
+    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, S_RT = 4, HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, MUT = 0, AMUT = 0
 ) (
+    output wire [TFW-1:0] t_tf0,t_tf1,t_tf2,
+    input wire [TRW-1:0] f_tr0,f_tr1,f_tr2,
     input  wire [0:0]          ck,
     input  wire [0:0]          rst,                    // async die reset (active low)
     input  wire [84:0]         c_cmd,
@@ -30,6 +32,8 @@ module dsfd_sp_hc_c #(
     output wire [S_WR*16-1:0]  wq_mask,
     output wire [S_WR*512-1:0] wq_d
 );
+    localparam integer TFW=104+((S_RD*512>((NG/8+2)/3)*8*32)?S_RD*512:((NG/8+2)/3)*8*32)+S_RD+5+129;
+    localparam integer TRW=S_RT+24*S_RT+8+512*S_RT+S_RT+4;
     // the slab's fault code stays inside (diagnostic); the die fault is c_st[0] -> the sequencer's s<e> (no die sink
     // exists for a per-slab code: keeping it a pin left it unbound in the die port audit)
     wire [3:0] fcode;
@@ -42,7 +46,8 @@ module dsfd_sp_hc_c #(
     always @(posedge ck[0]) cd_q <= c_cmd[83:0];
     wire dv, flt, onl;
     wire [7:0] dt;
-    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT)) u_hc (
+    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT),.S_RT(S_RT),.HIER(HIER),.HALF(HALF),.CSPLIT(CSPLIT),.TAIL_SPLIT(TAIL_SPLIT)) u_hc (
+        .t_tf0(t_tf0),.t_tf1(t_tf1),.t_tf2(t_tf2),.f_tr0(f_tr0),.f_tr1(f_tr1),.f_tr2(f_tr2),
         .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
         .inp(f_inp[0]), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt), .online(onl), .fcode(fcode));

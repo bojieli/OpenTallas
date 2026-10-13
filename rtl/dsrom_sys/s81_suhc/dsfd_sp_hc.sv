@@ -244,7 +244,7 @@ module dsfd_sp_hc #(
             wire [NCOL*TRW-1:0] tr;
             dsfd_sp_hc_t #(.NG(NG),.D(D),.S_RD(S_RD),.S_RT(S_RT),.WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),
                           .NCOL(NCOL),.GS(GS),.RLY(RLY),.HEAD_ROWS(HEAD_ROWS)) u_tail (
-                .sk(sk),.f_sf0(tf[0+:TFW]),.f_sf1(tf[TFW+:TFW]),.f_sf2(tf[2*TFW+:TFW]),
+                .ck(sk),.f_sf0(tf[0+:TFW]),.f_sf1(tf[TFW+:TFW]),.f_sf2(tf[2*TFW+:TFW]),
                 .t_sr0(tr[0+:TRW]),.t_sr1(tr[TRW+:TRW]),.t_sr2(tr[2*TRW+:TRW]));
             // Models the die's existing seven common-clock stations; reset is an in-band forward bit.
             ot_hdc_delay #(.W(NCOL*TFW),.D(7),.RESET(0)) u_fwd (.clk(sk),.rst_n(srs),.d(sf),.q(tf));
@@ -301,7 +301,7 @@ endmodule
 
 // Wire-only chain assembly; each cth instance retains its existing hardened local roots.
 module ot_s81_hc_chain_segment #(
-    parameter integer NG=256,D=5120,NCOL=3,GS=8,S_RD=2,S_RT=2,WIN=2,WOUT=2,ML=5,AL=4,RLY=2,
+    parameter integer NG=256,D=5120,NCOL=3,GS=8,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,RLY=2,
     parameter integer BC=0,LC=22,START=0,COUNT=10,
     parameter integer FVW=S_RD+5, RVW=S_RT+4,
     parameter integer FDW=104+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
@@ -344,10 +344,10 @@ module ot_s81_hc_chain_segment #(
 endmodule
 
 module dsfd_sp_hc_t #(
-    parameter integer NG=256,D=5120,S_RD=2,S_RT=2,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,
+    parameter integer NG=256,D=5120,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,
     parameter integer FDW=104+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW
-)(input wire sk,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2);
+ )(input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2);
     localparam integer NS=NG/GS,NP=(NS+NCOL-1)/NCOL,L1=(NS-2*NP>0)?NS-2*NP:0;
     wire [NCOL*TFW-1:0] sf={f_sf2,f_sf1,f_sf0};
     wire [NCOL*TRW-1:0] sr;
@@ -358,7 +358,7 @@ module dsfd_sp_hc_t #(
         localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
         ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
             .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH)) u_tail (
-            .sk(sk),.rst_in(sf[c*TFW+128+FDW+FVW]),.fv_in(sf[c*TFW+128+FDW+:FVW]),
+            .sk(ck),.rst_in(sf[c*TFW+128+FDW+FVW]),.fv_in(sf[c*TFW+128+FDW+:FVW]),
             .fd_in(sf[c*TFW+128+:FDW]),.cy_in(sf[c*TFW+:128]),.rv_in({RVW{1'b0}}),.rd_in({RDW{1'b0}}),
             .rst_out(),.fv_out(),.fd_out(),.cy_out(),.rv_out(sr[c*TRW+RDW+:RVW]),.rd_out(sr[c*TRW+:RDW]));
     end endgenerate
