@@ -1,5 +1,5 @@
 {
- "name": "dscoll_lane_w_cxea-cxea2-COMMIT",
+ "name": "dscoll_lane_w_cxea-cxea2-f22cf02e5",
  "block": "dsfd_coll_lane_w",
  "ref_tile": true,
  "owner": "Codex:el1011-ds-coll",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "codex/dscoll-1012",
-  "commit": "COMMIT"
+  "commit": "f22cf02e5"
  },
  "stages": {
   "bench": [
@@ -105,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_lane_w_cxea/dscoll_lane_w_cxea-cxea2-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_lane_w_cxea/dscoll_lane_w_cxea-cxea2-f22cf02e5"
   }
  ],
  "cycles_added": 0,
