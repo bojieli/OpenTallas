@@ -120,13 +120,13 @@ module tb_vm_service_root;
   begin cur_oid=oid;wr_owner=own(oid);repeat(4)@(negedge clk);end
  endtask
  task automatic send(input integer nb,input integer on,input integer off,input integer rnd);
-  integer s,b;
+  integer s,b,w;
   begin
    for(b=0;b<nb&&!fault;b=b+1)begin
     if(on>0&&b>0&&(b%on)==0)repeat(off)@(negedge clk);
     if(rnd>0)begin lf=lf^(lf<<13);lf=lf^(lf>>17);lf=lf^(lf<<5);if((lf%rnd)==0)repeat(1+(lf[11:8]%7))@(negedge clk);end
     wr_v=1;wr_data=beat(n_acc);wr_last=(b==nb-1);s=n_acc;
-    @(negedge clk);while(n_acc==s&&!fault)@(negedge clk);
+    @(negedge clk);w=0;while(n_acc==s&&!fault)begin @(negedge clk);w=w+1;if(w>100000)begin $display("beat%0d never accepted",s);$fatal(1,"SERVICE_ROOT FAIL");end end
     wr_v=0;
    end
    wr_v=0;wr_last=0;
@@ -184,7 +184,7 @@ module tb_vm_service_root;
   lease(1);c0=cyc;s0=stalls;a0=n_acc;max_a2t=0;max_a2r=0;max_out=0;
   send(1664,0,0,0);r0=cyc;drain();
   if(stalls!=s0||r0-c0!=1664)begin $display("II1 stream stalled: stalls%0d cycles%0d",stalls-s0,r0-c0);$fatal(1,"SERVICE_ROOT FAIL");end
-  $display("RATE stream beats=1664 accept_cycles=%0d stalls=0 accept_to_tap=%0d accept_to_release=%0d drain_after_last=%0d max_outstanding=%0d",r0-c0,max_a2t,max_a2r,cyc-r0,max_out);
+  $fflush();$display("RATE stream beats=1664 accept_cycles=%0d stalls=0 accept_to_tap=%0d accept_to_release=%0d drain_after_last=%0d max_outstanding=%0d",r0-c0,max_a2t,max_a2r,cyc-r0,max_out);
   // ---- A2: production bursts 26 (FP8) and 104 (BF16) with short gaps, new lease each ----
   lease(2);s0=stalls;send(1664,26,5,0);drain();
   lease(3);send(1664,104,20,0);drain();

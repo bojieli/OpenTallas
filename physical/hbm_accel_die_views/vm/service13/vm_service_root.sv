@@ -149,6 +149,7 @@ module vm_service_root #(parameter integer GENW=11)(
  wire rel_ok=(count!=0)&&e_live[r_idx]&&(e_issued[r_idx]==e_target[r_idx])&&rel_acked;
  assign drained=(count==0)&&!w0_v&&!native_release&&!p_v;
  wire lease_load=!eq_lease_q&&eq_in_q&&(count==0)&&!w0_v&&!acc;
+ wire eq_in=wr_owner==own_in_q;
  integer i,r;reg [4:0] ai;reg [GENW-1:0] ag;reg [15:0] hi;reg nf;reg [3:0] nc;reg [4:0] back;
  always @(posedge clk)begin
   own_in_q<=wr_owner;
@@ -179,7 +180,8 @@ module vm_service_root #(parameter integer GENW=11)(
    for(i=0;i<NE;i=i+1)begin e_gen[i]<=0;e_row[i]<=0;e_target[i]<=0;e_issued[i]<=0;e_acked[i]<=0;end
   end else begin
    nf=0;nc=0;
-   eq_in_q<=wr_owner==own_in_q;eq_lease_q<=(wr_owner==own_q)&&!lease_load;acc_q<=acc;
+   // on the load edge own_q takes own_in_q, so the lease compare of that edge is the input compare
+   eq_in_q<=eq_in;eq_lease_q<=lease_load?eq_in:(wr_owner==own_q);acc_q<=acc;
 `ifndef MUT_SVC_LEASE
    if(acc_q&&!eq_lease_q)begin nf=1;nc=F_LEASE;end
 `endif
