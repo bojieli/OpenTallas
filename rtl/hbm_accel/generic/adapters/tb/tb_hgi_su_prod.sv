@@ -329,6 +329,25 @@ module tb_hgi_su_prod;
     always @(posedge clk) begin if (rst_n && done) begin t_ret[k] = cyc; k = k + 1; end if (rst_n && fault) nf = nf + 1; end
     // controller phase census (st sampled each edge while a record is in the unit)
     integer ph [0:4]; reg inrec = 0;
+`ifdef SV
+`ifdef SVDBG
+    // ot_hgi_sv_unit diagnosis: every fault source at its first edge, and the controller state every 5,000 edges of a stall
+    reg svf_seen = 0;
+    always @(posedge clk) if (rst_n && !svf_seen && (`CTLP.dfault || `CTLP.rnfault || `CTLP.bkfault || `CTLP.lm_err_q || `CTLP.st_err || `CTLP.ad_fault)) begin
+        svf_seen <= 1;
+        $display("SVFAULT cyc %0d retired %0d d %0d rn %0d bk %0d lm %0d st %0d ad %0d | dstt %0d rk %0d lo %0d hi %0d too_big %0d a_two %0d ffr %b free %b stallc %0d cnt %0d rs %0d",
+                 cyc, k, `CTLP.dfault, `CTLP.rnfault, `CTLP.bkfault, `CTLP.lm_err_q, `CTLP.st_err, `CTLP.ad_fault, `CTLP.dstt, `CTLP.rk,
+                 `CTLP.cur_lo, `CTLP.cur_hi, `CTLP.too_big, `CTLP.a_two, `CTLP.ffr, `CTLP.fr_free, `CTLP.stallc, `CTLP.cnt, `CTLP.rs_r);
+        $fflush;
+    end
+    always @(posedge clk) if (inrec && cyc - last_prog > 4000 && cyc % 5000 == 0) begin
+        $display("SVSTALL cyc %0d retired %0d dstt %0d rk %0d rs %0d cnt %0d hfault %0d halted %0d fr_st %0d%0d%0d%0d fr_pin %0d %0d %0d %0d tail %b open %0d hst %h go %0d idle %0d x_cnt %0d cr_cnt %0d",
+                 cyc, k, `CTLP.dstt, `CTLP.rk, `CTLP.rs_r, `CTLP.cnt, `CTLP.hfault, halted, `CTLP.fr_st[3], `CTLP.fr_st[2], `CTLP.fr_st[1], `CTLP.fr_st[0],
+                 `CTLP.fr_pin[3], `CTLP.fr_pin[2], `CTLP.fr_pin[1], `CTLP.fr_pin[0], `CTLP.fr_tail, `CTLP.open_v, `CTLP.hst, `CTLP.go, `CTLP.idle, `CTLP.x_cnt, `CTLP.cr_cnt);
+        $fflush;
+    end
+`endif
+`endif
 `ifdef WIDE
     // the wide unit pipelines records: count each slot's busy edges (they overlap)
     always @(posedge clk) if (inrec) begin
