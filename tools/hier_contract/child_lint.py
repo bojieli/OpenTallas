@@ -313,7 +313,7 @@ def pick_cap(s: dict | None, pg_top: str | None, cap: str | None = None) -> int 
 
 def lint(lef_path: str, libs: str | None = None, contract: str | None = None, slot: str | None = None,
          skip: set | None = None, cap: str | None = None, pin_grant: dict | None = None,
-         routed_def: str | None = None) -> dict:
+         routed_def: str | None = None, tech_lef: str | None = None) -> dict:
     skip = skip or set()
     text = Path(lef_path).read_text(errors="replace")
     m = parse_lef(text, slot_cell(contract, slot))
@@ -345,7 +345,7 @@ def lint(lef_path: str, libs: str | None = None, contract: str | None = None, sl
                 raise ValueError("pin-only audit requires explicit LEF RECT geometry, not unparsed POLYGON/PATH/VIA")
             if not routed_def:
                 raise ValueError("pin-only grant requires raw routed DEF evidence")
-            bad, evidence = M6.audit_def(routed_def, m, ports)
+            bad, evidence = M6.audit_def(routed_def, m, ports, tech_lef)
             fails += ["(c) M6 pin-only: " + b for b in bad]
             import hashlib
             evidence["lef_sha256"] = hashlib.sha256(text.encode()).hexdigest()
@@ -466,13 +466,14 @@ def main(argv=None) -> int:
     ap.add_argument("--skip", default="", help="comma list of checks to skip (a..g)")
     ap.add_argument("--cap", help="lint at this layer cap (M5 / M6 ...): strap = cap + 1, no signal pin above the cap")
     ap.add_argument("--pin-grant", help="JSON M6 pin-only grant; requires --routed-def")
+    ap.add_argument("--tech-lef", help="exact technology LEF read by the route (named via RECT geometry)")
     ap.add_argument("--routed-def", help="raw routed DEF for independent nonpin metal and PORT geometry audit")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
     if bool(a.contract) != bool(a.slot):
         ap.error("--contract and --slot go together")
     try:
-        r = lint(a.lef, a.libs, a.contract, a.slot, {x.strip() for x in a.skip.split(",") if x.strip()}, a.cap, json.loads(Path(a.pin_grant).read_text()) if a.pin_grant else None, a.routed_def)
+        r = lint(a.lef, a.libs, a.contract, a.slot, {x.strip() for x in a.skip.split(",") if x.strip()}, a.cap, json.loads(Path(a.pin_grant).read_text()) if a.pin_grant else None, a.routed_def, a.tech_lef)
     except (OSError, ValueError, KeyError) as ex:
         print(f"ERROR: {ex}")
         return 2
