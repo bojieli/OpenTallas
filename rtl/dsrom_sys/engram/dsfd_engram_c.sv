@@ -72,20 +72,22 @@ module dsfd_engram_c #(
 
     // ---------------- cluster clock entry (el1013-s81-engram 2026-10-13): the 8 hardened children have different
     // internal clock insertion (TT max_clock_tree_path of the installed views: win 182, io 281, sink 294, ws 297,
-    // lkp 365, pbc 454, pbb 462 ps).  The top tree reaches 8 clock pins and cannot see inside the children, so each
-    // child's clock enters through a kept delay chain (ot_hdly, HB4xp67, dont_touch'ed by hdly_dont_touch.tcl) of
-    // target - insertion, target = the slowest child: every child's flops then see the clock at the same time
+    // lkp 365, pbc 454, pbb 462 ps) and the top tree reaches their 8 clock pins at different times (CTS-stop runs,
+    // el1013-s81-engram.log).  The top tree cannot see inside the children, so each child's clock enters through
+    // ot_engc_ck_entry: N kept HB4xp67 delay cells + one BUFx12 pin driver, placed at the child's clock pin
+    // (physical/s81_engc_tiles/compose/ck_entry_{keep,place}.tcl).  N = (latest child - this child) / stage delay,
+    // "child" = top-tree arrival + internal insertion, so every child's flops see the clock at the same time
     // (pin arrival + insertion spread <= 80 ps, measured in the CTS-stop gate).  A wire in simulation.
-    localparam integer CKN_WIN = 6, CKN_IO = 4, CKN_SINK = 4, CKN_WS = 4, CKN_LKP = 2, CKN_PBC = 0, CKN_PBB = 0;
+    localparam integer CKN_WIN = 8, CKN_IO = 7, CKN_SINK = 3, CKN_WS = 5, CKN_LKP = 4, CKN_PB0 = 2, CKN_PB1 = 2, CKN_PB2 = 1;
     wire ck_win, ck_io, ck_sink, ck_ws, ck_lkp, ck_pb0, ck_pb2, ck_pb1;
-    ot_hdly #(.W(1), .N(CKN_WIN))  u_hdly_ck_win  (.a(ck[0]), .y(ck_win));
-    ot_hdly #(.W(1), .N(CKN_IO))   u_hdly_ck_io   (.a(ck[0]), .y(ck_io));
-    ot_hdly #(.W(1), .N(CKN_SINK)) u_hdly_ck_sink (.a(ck[0]), .y(ck_sink));
-    ot_hdly #(.W(1), .N(CKN_WS))   u_hdly_ck_ws   (.a(ck[0]), .y(ck_ws));
-    ot_hdly #(.W(1), .N(CKN_LKP))  u_hdly_ck_lkp  (.a(ck[0]), .y(ck_lkp));
-    ot_hdly #(.W(1), .N(CKN_PBC))  u_hdly_ck_pb0  (.a(ck[0]), .y(ck_pb0));
-    ot_hdly #(.W(1), .N(CKN_PBC))  u_hdly_ck_pb2  (.a(ck[0]), .y(ck_pb2));
-    ot_hdly #(.W(1), .N(CKN_PBB))  u_hdly_ck_pb1  (.a(ck[0]), .y(ck_pb1));
+    ot_engc_ck_entry #(.N(CKN_WIN))  u_hdly_ck_win  (.a(ck[0]), .y(ck_win));
+    ot_engc_ck_entry #(.N(CKN_IO))   u_hdly_ck_io   (.a(ck[0]), .y(ck_io));
+    ot_engc_ck_entry #(.N(CKN_SINK)) u_hdly_ck_sink (.a(ck[0]), .y(ck_sink));
+    ot_engc_ck_entry #(.N(CKN_WS))   u_hdly_ck_ws   (.a(ck[0]), .y(ck_ws));
+    ot_engc_ck_entry #(.N(CKN_LKP))  u_hdly_ck_lkp  (.a(ck[0]), .y(ck_lkp));
+    ot_engc_ck_entry #(.N(CKN_PB0))  u_hdly_ck_pb0  (.a(ck[0]), .y(ck_pb0));
+    ot_engc_ck_entry #(.N(CKN_PB2))  u_hdly_ck_pb2  (.a(ck[0]), .y(ck_pb2));
+    ot_engc_ck_entry #(.N(CKN_PB1))  u_hdly_ck_pb1  (.a(ck[0]), .y(ck_pb1));
 
     ot_engc_t_win u_win (
         .ck(ck_win), .rst(rst[0]), .f_win(f_win), .t_collective(t_collective[0]),
@@ -137,4 +139,16 @@ module dsfd_engram_c #(
         .in_slot(f_ai[47:36]), .in_d(f_ai[1103:48]), .st_v(f_ai[1107:1104]), .st_slot(f_ai[1119:1108]),
         .st_bad(f_ai[1123:1120]), .wr_en(s_we), .wr_addr(s_wa), .wr_data(s_wd), .rdy(s_rdy), .perr(s_perr),
         .rel_v(vrel_sk[0]), .rel_slot(vrel_sk[3:1]));
+endmodule
+
+// One child's clock entry: N delay cells (ot_hdly) and the pin driver (an HB4xp67 cannot drive a child's clock pin:
+// 190-237 ps slew at TT in CTS-stop run c5).  Identity in simulation.
+module ot_engc_ck_entry #(parameter integer N = 0) (input wire a, output wire y);
+    wire d;
+    ot_hdly #(.W(1), .N(N)) u_dly (.a(a), .y(d));
+`ifdef SYNTHESIS
+    (* keep *) BUFx12_ASAP7_75t_R u_drv (.A(d), .Y(y));
+`else
+    assign y = d;
+`endif
 endmodule
