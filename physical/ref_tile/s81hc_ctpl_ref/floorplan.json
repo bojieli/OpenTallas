@@ -32,17 +32,17 @@
   "N": [
    "fv",
    "fdx",
+   "grp",
+   "half",
+   "rst_in"
+  ],
+  "S": [
    "hpr",
    "hov",
    "pwb",
    "phs",
    "pob",
    "hpo",
-   "grp",
-   "half",
-   "rst_in"
-  ],
-  "S": [
    "hov_d",
    "hnz_d",
    "pflt_d"
@@ -99,6 +99,7 @@
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
-  "physical/common_flow/grt_macro_top_layer.tcl"
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_hc_pinplan/ctpl.tcl"
  ]
 }
