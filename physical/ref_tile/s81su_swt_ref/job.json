@@ -1,14 +1,14 @@
 {
- "name": "s81su_swt_ref-v1-cbafa4c7a",
+ "name": "s81su_swt_ref-v2-COMMIT",
  "block": "dsfd_su_t_swt",
  "ref_tile": true,
- "owner": "Claude:el1011-s81su-sw",
- "purpose": "el1011-s81su-sw PHYSICAL SPEC SW v3: ot_s81_su_swt, the SW tap at the down-spine stop (one 8,192 b pass register + pass valids / tag / route weight / lim / obase; replaces 8 x ~2.7M-flop dsfd_su_t_sw); reference tile flow, M5 cap",
+ "owner": "Claude:el1013-s81su-kvsw",
+ "purpose": "el1011-s81su-sw PHYSICAL SPEC SW v3: ot_s81_su_swt, the SW tap at the down-spine stop (one 8,192 b pass register + pass valids / tag / route weight / lim / obase; replaces 8 x ~2.7M-flop dsfd_su_t_sw); reference tile flow, M5 cap | el1013 kvsw v2: explicit io_tcl (tools/s81_suhc/su_tap_io.py): every second track over the whole face, bit i in/out on one track (W->E M4, S->N M5 between PG stripes): 10.4 / 8.8 b/um (v1: 20 b/um, FLOORPLAN_MARGIN)",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/el1011-s81su",
-  "commit": "cbafa4c7a"
+  "branch": "claude/el1013-s81su-kvsw",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_swt_ref/s81su_swt_ref-v1-cbafa4c7a"
+   "to": "results/rtl/ref_tile/s81su_swt_ref/s81su_swt_ref-v2-COMMIT"
   }
  ],
  "cycles_added": 0,

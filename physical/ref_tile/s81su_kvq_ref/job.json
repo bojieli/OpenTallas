@@ -1,14 +1,14 @@
 {
- "name": "s81su_kvq_ref-v1-00167e741",
+ "name": "s81su_kvq_ref-v2-COMMIT",
  "block": "dsfd_su_t_kvq",
  "ref_tile": true,
- "owner": "Claude:el1011-s81su",
- "purpose": "el1011-s81su PHYSICAL SPEC KV v3: the KV act-quant engine (x16, qbe/qnq pattern, actquant_f12 XSRAM): y row, codes pair row, gathered exps row, one write slot (replaces dsfd_su_t_kv0/kv1, 942k flops one root each); reference tile flow, M5 layer cap",
+ "owner": "Claude:el1013-s81su-kvsw",
+ "purpose": "el1011-s81su PHYSICAL SPEC KV v3: the KV act-quant engine (x16, qbe/qnq pattern, actquant_f12 XSRAM): y row, codes pair row, gathered exps row, one write slot (replaces dsfd_su_t_kv0/kv1, 942k flops one root each); reference tile flow, M5 layer cap | el1013 kvsw v2: kit regenerated on main with the GRT macro-top-layer hook (eb642d870/dc5594311); the v1 kit (00167e741) predated it and failed GRT-0116 at 28.7 % total usage (10.5k overflow, zero M5 supply over the 2 SRAMs)",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/el1011-s81su-kv",
-  "commit": "00167e741"
+  "branch": "claude/el1013-s81su-kvsw",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_kvq_ref/s81su_kvq_ref-v1-00167e741"
+   "to": "results/rtl/ref_tile/s81su_kvq_ref/s81su_kvq_ref-v2-COMMIT"
   }
  ],
  "cycles_added": 0,
