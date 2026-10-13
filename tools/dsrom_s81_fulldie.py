@@ -5731,9 +5731,10 @@ def _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi, xa=None, xb=None):
     a0, a1 = lo + tot / 2, hi - tot / 2
     if a1 < a0:
         raise ValueError(f'--lane-pins: {A.name}.{pa} span {tot:.0f} um > the shared rows {hi - lo:.0f} um')
-    # rows of the lane covered by a placed macro (link macros hl_* at the VCH W edge, 128 x 132) are not lane rows
+    # rows of the lane covered by a placed macro (link macros hl_* at the VCH W edge, 128 x 132) are not lane rows; 150 um
+    # each side stay free for the slab ports that face the macro (g15a run 1: rE2 pushed 840.7 um off hl_E2 by the y span)
     xl_, xh_ = min(xa, xb), max(xa, xb)
-    Sx = S + [(i_.y - 12.0, i_.y + i_.h + 12.0) for i_ in m['insts'] if i_ is not A and i_ is not Bk and min(i_.w, i_.h) >= 60.0
+    Sx = S + [(i_.y - 150.0, i_.y + i_.h + 150.0) for i_ in m['insts'] if i_ is not A and i_ is not Bk and min(i_.w, i_.h) >= 60.0
               and i_.x < xh_ - 1.0 and i_.x + i_.w > xl_ + 1.0 and i_.y < hi and i_.y + i_.h > lo]
     free = lambda c: all(c + half <= s0 or c - half >= s1 for s0, s1 in Sx)
     cands = sorted((a0 + 4.8 * i for i in range(int((a1 - a0) // 4.8) + 1)), key=lambda c: abs(c - y0))
