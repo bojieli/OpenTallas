@@ -43,6 +43,8 @@ module tb_dsfd_sp_vm;
     parameter integer EARLYC = 0;
     parameter integer LA = 12;              // capture lane row entries (DUT)            // negative control: read a region right after its ARMN (before done)
     parameter integer NSVC = 1;
+    parameter integer LBP = 0;              // MODE 4 back-pressure: the collective offers 4 words EVERY cycle (1,024 words) so its
+                                            // lanes fill past the room threshold and t_cts[0] must drop (and hold the producer)
     localparam integer QD = 4, NB = 32, NP = 28, NROW = 16384, POOL = 64, MARK = 32767, NR = 128, CP = 12;
 
     reg clk = 0, cks = 0;
@@ -552,7 +554,7 @@ module tb_dsfd_sp_vm;
                 if (lq_hc.size() >= 2 && (MODE != 0 || rnd(82) % 3 == 0)) begin
                     f_hc[512] <= 1'b1; f_hc[511:0] <= lq_hc.pop_front(); f_hc[1025] <= 1'b1; f_hc[1024:513] <= lq_hc.pop_front(); l_pend = l_pend - 2;
                 end
-                if (lq_coll.size() != 0 && t_cts[0] && cyc % 2 == 0) begin : cw
+                if (lq_coll.size() != 0 && t_cts[0] && (LBP != 0 || cyc % 2 == 0)) begin : cw
                     integer w; reg [3:0] mk4; mk4 = 4'd0;
                     f_coll[0] <= 1'b1; f_coll[2:1] <= 2'd1;
                     for (w = 0; w < 4; w = w + 1) if (lq_coll.size() != 0) begin
@@ -712,7 +714,7 @@ module tb_dsfd_sp_vm;
                 if (cyc == 200) begin
                     tp_t0 = cyc;
                     if (MODE == 4) begin
-                        lphase(0, 0, 2048, 128, 1); lphase(5, 1, 2304, 64, 2); lphase(6, 2, 4096, 680, 3); lphase(4, 3, 6144, 320, 4);
+                        lphase(0, 0, 2048, 128, 1); lphase(5, 1, 2304, 64, 2); lphase(6, 2, 4096, 680, 3); lphase(4, 3, 6144, (LBP != 0) ? 1024 : 320, 4);
                     end else lphase(7, 0, 2048, 128, 5);
                     l_start = cyc + 40;
                 end

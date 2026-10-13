@@ -37,6 +37,7 @@ CASES = {
     'mut_noalign': dict(params=dict(MODE=3, BROWS=16), defines=['OT_SPVM_MUT_NOALIGN'], expect='fail'),
     'land_attn': dict(params=dict(MODE=4), expect='pass'),
     'land_hc': dict(params=dict(MODE=5), expect='pass'),
+    'land_bp': dict(params=dict(MODE=4, LBP=1), expect='pass'),     # collective back-pressure: t_cts[0] must drop
     'mut_lsmall': dict(params=dict(MODE=4), defines=['OT_SPVM_MUT_LSMALL'], expect='fail'),
     'mut_np16': dict(params=dict(MODE=2, BROWS=128, BNP=0, BSKEW=3), defines=['OT_SPVM_MUT_NP16'], expect='fail'),
     'mut_rlat': dict(params=dict(SEED=1, NCYC=20000), defines=['OT_SPVM_MUT_RLAT'], expect='fail'),
@@ -45,15 +46,18 @@ CASES = {
 # hierarchy as a shadow (lk_*: every FE output bit-exact every cycle), hierarchy-only mutants (must break lockstep) and
 # every case above with the hierarchy SUBSTITUTED for the flat FE (h_*: same expectation; pass cases also need LOCKSTEP_OK)
 REF = ['OT_SPVM_REF_FRL']; LK = REF + ['OT_SPVM_FE_H']; SUB = LK + ['OT_SPVM_FE_H_SUBST']
-LOCK_SET = ['gold_s1', 'gold_s2', 'tp', 'burst_r128', 'burst_r128_np2', 'land_attn', 'land_hc', 'align_neg']
+LOCK_SET = ['gold_s1', 'gold_s2', 'tp', 'burst_r128', 'burst_r128_np2', 'land_attn', 'land_hc', 'land_bp', 'align_neg']
 _base = dict(CASES)
 CASES['ref_gold_s1'] = dict(_base['gold_s1'], defines=REF)
 CASES['ref_tp'] = dict(_base['tp'], defines=REF)
+CASES['ref_land_attn'] = dict(_base['land_attn'], defines=REF)
+CASES['ref_land_bp'] = dict(_base['land_bp'], defines=REF)
 for _n in LOCK_SET:
     CASES['lk_' + _n] = dict(_base[_n], defines=LK, regex2='LOCKSTEP_OK')
 CASES['lk_mut_fxr1'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_VMFE_MUT_FXR1'], expect='fail', regex='LOCKSTEP_BAD')
 CASES['lk_mut_gbyp'] = dict(params=dict(MODE=4), defines=LK + ['OT_VMFE_MUT_GBYP'], expect='fail', regex='LOCKSTEP_BAD')
 CASES['lk_mut_kqskip'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_VMFE_MUT_KQSKIP'], expect='fail', regex='LOCKSTEP_BAD')
+CASES['lk_mut_wnqdrop'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_VMFE_MUT_WNQDROP'], expect='fail', regex='LOCKSTEP_BAD')
 for _n, _c in _base.items():
     CASES['h_' + _n] = dict(_c, defines=_c.get('defines', []) + SUB, **({'regex2': 'LOCKSTEP_OK'} if _c['expect'] == 'pass' else {}))
 FEH_SRC = 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv'

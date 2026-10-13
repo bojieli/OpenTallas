@@ -20,7 +20,7 @@ STUB = """(* blackbox *) module ot_sram_1r1w_64x512_m1_r2c2 (input clk, input r_
     input w_ce_in, input [5:0] w_addr_in, input [511:0] wd_in, input [511:0] w_mask_in, input [1:0] rr_en, input [11:0] rr_addr,
     input [1:0] cr_en, input [17:0] cr_sel); endmodule
 """
-LEAVES = ['dsfd_vm_fxs', 'dsfd_vm_fxr', 'dsfd_vm_flt', 'dsfd_vm_fld', 'dsfd_vm_fcc', 'dsfd_vm_fcw', 'dsfd_vm_fcn', 'dsfd_vm_fsr', 'dsfd_vm_clt']
+LEAVES = ['dsfd_vm_fxs', 'dsfd_vm_fxr', 'dsfd_vm_frg', 'dsfd_vm_fra', 'dsfd_vm_frr', 'dsfd_vm_flt', 'dsfd_vm_fld', 'dsfd_vm_fcc', 'dsfd_vm_fcw', 'dsfd_vm_fcn', 'dsfd_vm_fsr', 'dsfd_vm_clt']
 KIT = ['dsfd_vm_wfc_ep', 'ot_dsrom_mtp_rstsync', 'ot_s81_engine_adapter', 'ot_sram_1r1w_64x512_m1_r2c2']
 CLK = {'ck', 'cks'}
 EXEMPT = {   # leaf -> ports legally unregistered at the pin (reason in the dsfd_vm_fe_h.sv header)
@@ -37,9 +37,13 @@ def run(leaf, out, parent=False):
     js = out / f'{leaf}.json'
     bb = (LEAVES if parent else KIT)
     (out / 'sram_stub.v').write_text(STUB)
-    ys = f'read_verilog -sv {out}/sram_stub.v\n' + ''.join(f'read_verilog -sv -DSYNTHESIS -I{ROOT}/rtl/dsrom_sys/s81_ph/vm {ROOT}/{s}\n' for s in SRCS)
-    ys += ''.join(f'blackbox {m}\n' for m in bb if m != leaf and not m.startswith('ot_sram'))
-    ys += f'hierarchy -top {leaf}\nproc\nflatten\nopt_expr\nopt_clean\nopt_dff\nopt_expr\nopt_clean\nmemory_collect\nopt_clean\nwrite_json {js}\n'
+    # -defer: only the modules under the leaf are elaborated (a plain read elaborates every module of dsfd_sp_vm.sv at
+    # its defaults, the bgq memories included: the first run sat in yosys for 40 min); the black boxes are therefore
+    # made AFTER hierarchy, by name pattern (parameterised kit children are $paramod\\<name>\\...)
+    ys = f'read_verilog -sv {out}/sram_stub.v\n' + ''.join(f'read_verilog -sv -defer -DSYNTHESIS -I{ROOT}/rtl/dsrom_sys/s81_ph/vm {ROOT}/{s}\n' for s in SRCS)
+    ys += f'hierarchy -top {leaf}\n'
+    ys += ''.join(f'blackbox {m} $paramod*{m}*\n' for m in bb if m != leaf and not m.startswith('ot_sram'))
+    ys += f'setattr -mod -unset keep_hierarchy *\nproc\nflatten\nopt_expr\nopt_clean\nopt_dff\nopt_expr\nopt_clean\nmemory_collect\nopt_clean\nwrite_json {js}\n'
     (out / f'{leaf}.ys').write_text(ys)
     r = subprocess.run(['yosys', '-q', '-l', str(out / f'{leaf}.log'), str(out / f'{leaf}.ys')], capture_output=True, text=True)
     if r.returncode:
@@ -94,6 +98,11 @@ def check_parent(out):
     for c in m['cells'].values():
         if c['type'] not in LEAVES:
             other[c['type']] = other.get(c['type'], 0) + 1
+    # no parent input may reach a parent output without a leaf in between (wires-only AND no feed-through)
+    ins = {b for p in m['ports'].values() if p['direction'] == 'input' for b in p['bits'] if isinstance(b, int)}
+    thru = sorted(pn for pn, p in m['ports'].items() if p['direction'] == 'output' and any(b in ins for b in p['bits']))
+    if thru:
+        other['feedthrough:' + ','.join(thru)] = len(thru)
     inst = {}
     for c in m['cells'].values():
         if c['type'] in LEAVES:

@@ -671,8 +671,9 @@ module dsfd_vm_fe #(
 `endif
         (* keep = 1 *) reg [1:0] rr_ll;
         always @(posedge clk) rr_ll <= {rr_ll[0], rn0};
-        // room flag padded by the relay latency added in v3 (8 -> 16 rows)
-        dsfd_vm_ll #(.DEPTH(DP), .MACRO(LMACRO), .STRIDE(ST), .OFF(OF), .AL(LAL), .RTH(16)) u_ll (.clk(clk), .rn(rr_ll[1]),
+        // room flag padded by the relay latency added in v3 (8 -> 16 rows at LAL 2; +1 row per further input stage:
+        // a row in the LAL relay is in flight and not yet counted when room_ok is formed)
+        dsfd_vm_ll #(.DEPTH(DP), .MACRO(LMACRO), .STRIDE(ST), .OFF(OF), .AL(LAL), .RTH(14 + LAL)) u_ll (.clk(clk), .rn(rr_ll[1]),
             .in_v(ll_iv[gll]), .in_d(ll_id[512*gll +: 512]), .arm_v(ll_arm[gll]), .arm_base(arg[13:0]),
             .o_av(ll_av[gll]), .g(g_r[LGL-1][gll]), .o_v(ll_ov_v[gll]), .o_row(ll_or[14*gll +: 14]), .o_d(ll_od[512*gll +: 512]),
             .room_ok(ll_ok[gll]), .ovf(ll_ov[gll]));
@@ -1569,9 +1570,10 @@ module dsfd_sp_vm_m #(
     localparam integer ED = (EP == 0) ? 0 : EP + 1;
 `ifdef OT_SPVM_REF_FRL
     `include "dsfd_vm_fe_h_if.svh"
-    localparam integer FRL = `VMFE_FRL, FKD = `VMFE_KD, FLDL = `VMFE_LDL;   // the hierarchy's stage counts (lockstep reference)
+    // the hierarchy's stage counts (lockstep reference)
+    localparam integer FRL = `VMFE_FRL, FKD = `VMFE_KD, FLDL = `VMFE_LDL, FLGL = `VMFE_LGL, FLAL = `VMFE_LAL;
 `else
-    localparam integer FRL = 2, FKD = 1, FLDL = 2;
+    localparam integer FRL = 2, FKD = 1, FLDL = 2, FLGL = 2, FLAL = 2;
 `endif
                                         // el1011-ds-vm/fe: FE order register -> slice pin relay stages (shifts f_* and o_*
                                         // alike: MD, the tile-3 f_* -> o_* skew, is unchanged)
@@ -1583,7 +1585,7 @@ module dsfd_sp_vm_m #(
     wire [NS*4-1:0] fmrf; wire [15:0] f_flt;
     wire [0:0] f_swg, f_srg, f_dv, f_cwv; wire [52:0] f_ks; wire [7:0] f_dt; wire [2:0] f_cts; wire [9:0] f_cwd; wire [NSLOT-1:0] f_rdy;
     dsfd_vm_fe #(.NS(NS), .VF(VF), .VR(VR), .NSLOT(NSLOT), .P2D(P2D), .CQD(CQD), .LA(LA), .LTO(LTO), .NSVC(NSVC), .LD(LD),
-                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LDL(FLDL)) u_fe (
+                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LAL(FLAL), .LGL(FLGL), .LDL(FLDL)) u_fe (
         .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(f_swg), .f_srv(f_srv), .f_srd(f_srd),
         .t_srg(f_srg), .t_ks(f_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
         .cv(cv), .cd(cd), .dv(f_dv), .dt(f_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(f_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
