@@ -45,6 +45,7 @@
       "properties": {
         "name": {"type": "string", "description": "slot (instance) name, unique in the die"},
         "cell": {"type": "string", "description": "LEF MACRO / module name built for the slot"},
+        "m6_pin_grant": {"$ref": "m6_pin_grant.schema.json"},
         "kind": {"enum": ["die", "parent", "element", "tile"]},
         "parent": {"type": ["string", "null"], "description": "enclosing slot name; null for the die top"},
         "outline": {"type": "object", "required": ["w", "h"],

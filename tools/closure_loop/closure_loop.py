@@ -1912,7 +1912,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
            "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
-           "../hier_contract/abstract_pin_stub.py", "../../physical/common_flow/grt_macro_top_layer.tcl",
+           "../hier_contract/abstract_pin_stub.py", "../hier_contract/m6_pin_grant.py", "../../physical/common_flow/grt_macro_top_layer.tcl",
            "../../physical/common_flow/grt_macro_top_layer_post.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
@@ -2420,7 +2420,8 @@ def launch_stage(j, st, cmd):
         _src = j.get("stage_source", f"{j['run']}/src")
         env += (f"[ -f {_src}/tools/hier_contract/child_lint.py ] && ! [ -f {_src}/tools/hier_contract/child_lint.py.job ] && "
                 f"cp {_src}/tools/hier_contract/child_lint.py {_src}/tools/hier_contract/child_lint.py.job; "
-                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py\n")
+                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py; "
+                f"cp -f {j['run']}/cl/m6_pin_grant.py {_src}/tools/hier_contract/m6_pin_grant.py\n")
         # LOOP-PIN-STUB (2026-10-12): the loop's child_lint (ba4d5d136) refuses a pin's own same-layer route stub written as
         # OBS; ref_tile export runs abstract_pin_stub.py on the view before the lint, but only from ba4d5d136 on.  A job
         # synced earlier got the new lint WITHOUT the view fix (smh_fcbc_ref_p40-r1-9214bae8b: 10 stub pins, collect
@@ -2823,8 +2824,8 @@ def defer_record_merge(j, out, sparse, dry=False):
 
 # AUTO-MERGE (owner 2026-10-10, drive-1010): closures keep reaching main while no agent is alive.  With
 # STATE/main_publish_owner.json {"auto_merge_guarded": true}, a CLOSED job is merged into main by the loop when
-#   - its source branch is claude/*  (Codex / other branches stay with a human),
-#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; at least one bench),
+#   - its source branch is claude/* or codex/* (other namespaces stay with a coordinator),
+#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; behavioral positive and mutant required),
 #   - its spec does not opt out ("auto_merge": false, or "hold_merge": "<reason>"),
 #   - the merge of the VERIFIED source commit (commit_full, not the branch tip) into origin/main is clean, and the
 #     record files (verdict + recorded views) come from the record commit on top.
@@ -2854,8 +2855,8 @@ def auto_merge_guard(j):
     hit = next((h for h in holds if str(spec.get('block', '')).startswith(h) or j['name'].startswith(h)), None)
     if hit:
         return f"held by policy prefix {hit} (gate outside the loop benches)"
-    if not str(spec['source'].get('branch', '')).startswith('claude/'):
-        return f"source branch {spec['source'].get('branch')} is not claude/*"
+    if not str(spec['source'].get('branch', '')).startswith(('claude/', 'codex/')):
+        return f"source branch {spec['source'].get('branch')} is not claude/* or codex/*"
     benches = j.get('benches') or {}
     try:
         waive = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_external_bench_prefixes') or []
@@ -2870,6 +2871,11 @@ def auto_merge_guard(j):
         return f"benches not as expected: {', '.join(bad[:4])}"
     if not any(isinstance(v, dict) and v.get('expect') == 'pass' for v in benches.values()):
         return "no positive bench"
+    if not any(v.get("expect") == "pass" and not re.fullmatch(r"(?:bench_)?lint(?:_.*)?", k, re.I)
+               for k, v in benches.items()):
+        return "no behavioral positive bench (lint alone is not exactness)"
+    if not any(v.get("expect") == "fail" for v in benches.values()):
+        return "no negative bench (mutant evidence required)"
     if not j.get('commit_full'):
         return "no verified source commit"
     return None
@@ -2878,6 +2884,8 @@ def auto_merge_guard(j):
 def auto_merge_closure(j, out, record_paths, dry=False):
     """merge commit_full + the record files into main (clean merges only); returns a status string"""
     why = auto_merge_guard(j)
+    attribution = ("Coordinated by: Codex" if str(j["spec"]["source"].get("branch", "")).startswith("codex/")
+                   else "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>")
     if why:
         if why != "auto-merge policy off":
             append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']} ({j['spec'].get('block')}): AUTO-MERGE skipped: {why}; "
@@ -2895,7 +2903,7 @@ def auto_merge_closure(j, out, record_paths, dry=False):
             m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
                     "merge", "--no-ff", "--no-edit", "-m",
                     f"Merge {j['spec']['source']['branch']} @ {j['commit_full'][:9]} (closure-loop AUTO-MERGE {j['name']}: "
-                    f"{j['spec']['block']} CLOSED, benches as expected)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+                    f"{j['spec']['block']} CLOSED, benches as expected)\n\n{attribution}",
                     j['commit_full']], timeout=1800)
             if m.returncode:
                 conf = sh(["git", "-C", str(mwt), "diff", "--name-only", "--diff-filter=U"], timeout=120).stdout.split()
@@ -2910,7 +2918,7 @@ def auto_merge_closure(j, out, record_paths, dry=False):
         if sh(["git", "-C", str(mwt), "diff", "--cached", "--quiet"], timeout=120).returncode:
             git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m",
                 f"closure-loop AUTO-MERGE record {j['name']} ({j['spec']['block']} CLOSED)\n\n"
-                f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", cwd=mwt)
+                f"{attribution}", cwd=mwt)
         head = git("rev-parse", "HEAD", cwd=mwt).stdout.strip()
         if dry:
             status = f"AUTO-MERGE dry-run {head[:9]} (not pushed)"
@@ -5145,7 +5153,7 @@ def pick_view_lef(paths, block):
     return next((p for p in cand if Path(p).stem == block), None)
 
 
-def child_lint_view(lef_text, checks):
+def child_lint_view(lef_text, checks, pin_grant=None, def_text=None):
     """child_lint on a view LEF text: (fails restricted to checks, summary)"""
     if str(CHILD_LINT_DIR) not in sys.path:
         sys.path.insert(0, str(CHILD_LINT_DIR))
@@ -5153,10 +5161,18 @@ def child_lint_view(lef_text, checks):
     with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as fh:
         fh.write(lef_text)
         tmp = fh.name
+    def_path = None
     try:
-        res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks))
+        if def_text is not None:
+            with tempfile.NamedTemporaryFile("w", suffix=".def", delete=False) as df:
+                df.write(def_text)
+                def_path = df.name
+        res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks), pin_grant=pin_grant,
+                              cap="M5" if pin_grant else None, routed_def=def_path)
     finally:
         os.unlink(tmp)
+        if def_path:
+            os.unlink(def_path)
     return [x for x in res["fails"] if x[1:2] in checks], res.get("summary", "")
 
 
@@ -5178,6 +5194,9 @@ def pin_stub_fix(lef_text):
 def child_lint_gate(j):
     """None = pass / not a tile view; else the (c)/(f) failure text.  Raises on ssh failure (the commit is re-tried)."""
     checks = child_lint_gate_checks(j["spec"])
+    grant = j["spec"].get("m6_pin_grant")
+    if grant is not None:
+        checks |= {"c", "f"}  # a pin-only grant never authorizes skipping physical evidence
     if not checks:
         return None
     blk = j["spec"]["block"]
@@ -5192,7 +5211,7 @@ def child_lint_gate(j):
     t = ssh(j["host"], f"cat {shlex.quote(lef)}", timeout=300)
     if t.returncode != 0 or "MACRO" not in t.stdout:
         raise RuntimeError(f"child-lint gate: could not read {lef}: {(t.stderr or '')[-200:]}")
-    text, moved = pin_stub_fix(t.stdout)
+    text, moved = (t.stdout, "") if grant else pin_stub_fix(t.stdout)
     if moved:
         # PIN-STUB (73e17f447, ot_qkvd_sbuf DRT-0073): write_abstract_lef writes a face pin's own same-layer route stub
         # as OBS over the pin; child_lint (f) now refuses that.  Moving the stub into the pin's PORT is the exact view
@@ -5202,7 +5221,15 @@ def child_lint_gate(j):
         if w.returncode != 0:
             raise RuntimeError(f"child-lint gate: could not write the pin-stub view {lef}: {(w.stderr or '')[-200:]}")
         event(j, f"child-lint gate: abstract_pin_stub moved {moved} into their pins' PORTs in {lef}")
-    fails, summ = child_lint_view(text, checks)
+    def_text = None
+    if grant:
+        # Raw routed geometry copied by ref_tile export, not a modified abstract.
+        def_file = str(Path(lef).parent / "pin_only_routed.def")
+        dt = ssh(j["host"], f"cat {shlex.quote(def_file)}", timeout=300)
+        if dt.returncode != 0:
+            return "M6 pin-only grant missing raw routed DEF evidence"
+        def_text = dt.stdout
+    fails, summ = child_lint_view(text, checks, grant, def_text)
     j["child_lint"] = dict(lef=lef, checks="".join(sorted(checks)), fails=fails, summary=summ[:400], at=now_iso())
     return "; ".join(fails) if fails else None
 
