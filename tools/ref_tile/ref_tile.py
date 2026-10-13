@@ -116,7 +116,11 @@ def contract_slot(s: dict) -> dict | None:
     c = s.get("contract")
     if not c:
         return None
-    return child_lint.contract_slot(str(ROOT / c["file"]), c["slot"])
+    slot = child_lint.contract_slot(str(ROOT / c["file"]), c["slot"])
+    if isinstance(slot, dict) and isinstance(slot.get("layer_cap"), dict):
+        # derived contracts (qwen_rom_tp8 v3) carry {"cap": "M5", "view_max_layer": ..., "conforms": ...}: the cap is "cap"
+        slot = dict(slot, layer_cap=slot["layer_cap"].get("cap"))
+    return slot
 
 
 def view_name(view: str) -> str:
@@ -715,6 +719,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
+    # route.synth_keep_modules: hierarchy kept through synthesis (ABC re-ripples a pipelined fp adder once it is flattened
+    # into its context; the hbm norm group closed only with its fp add/mul stages kept, idle1012)
+    if s["route"].get("synth_keep_modules"):
+        extra.append("--orfs-var " + shq("SYNTH_KEEP_MODULES=" + " ".join(s["route"]["synth_keep_modules"])))
     if s["route"].get("lb_addon") is None:
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
@@ -909,6 +917,11 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         spec["benched_by"] = j["benched_by"]
     if j.get("hold_merge"):     # a physical probe that never merges (not a closure candidate)
         spec["hold_merge"] = j["hold_merge"]
+    # closure loop STRUCTURE_REPEAT lint (owner 10-13): after two failed routes the next submission states what changed
+    # in the structure; the sentence is written once in the tile spec (top level, or under "job") and must reach job.json
+    sc = s.get("structural_change") or j.get("structural_change")
+    if isinstance(sc, str) and sc.strip():
+        spec["structural_change"] = sc.strip()
     return spec
 
 

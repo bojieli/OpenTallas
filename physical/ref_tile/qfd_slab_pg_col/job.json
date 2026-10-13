@@ -1,14 +1,14 @@
 {
- "name": "qfd_slab_pg_col-c1-COMMIT",
+ "name": "qfd_slab_pg_col-c2-a89b702eb",
  "block": "ot_qwen_slab_pg_col",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8/slab3",
- "purpose": "qwen-tp8/slab3 2026-10-12: ot_qwen_slab_port_group (s14o TP8 GT 3072 GID 47) v1-v3 EARLY_FAIL_HOLD at 4_1_cts (-77 -> -55 -> -30.8 flat, 24,483 register sinks + 16 ROM clock pins on ONE root over 777x456 um, TT clock latency 610..963 ps). Structural fix: the group becomes a cluster of hardened sub-tiles, each with its own pin-flop row and local clock root: 4x ot_qwen_slab_pg_col (one ROM column: R2 copy, 4 x decode+ROM+C4 capture, M5 merge, registered m5 face) and 4x ot_qwen_slab_pg_lanes (4 FP32 multiplier lanes, IN_STAGE face registers); the cluster keeps request/tag/cacc/argmax/oreg on the clock spine. Same cycles, bit-exact benches unchanged (TP4 + TP8 PASS, 3 mutants FAIL). | this kit: the ROM column sub-tile.",
+ "purpose": "qwen-tp8/slab3 2026-10-12: ot_qwen_slab_port_group (s14o TP8 GT 3072 GID 47) v1-v3 EARLY_FAIL_HOLD at 4_1_cts (-77 -> -55 -> -30.8 flat, 24,483 register sinks + 16 ROM clock pins on ONE root over 777x456 um, TT clock latency 610..963 ps). Structural fix: the group becomes a cluster of hardened sub-tiles, each with its own pin-flop row and local clock root: 4x ot_qwen_slab_pg_col (one ROM column: R2 copy, 4 x decode+ROM+C4 capture, M5 merge, registered m5 face) and 4x ot_qwen_slab_pg_lanes (4 FP32 multiplier lanes, IN_STAGE face registers); the cluster keeps request/tag/cacc/argmax/oreg on the clock spine. Same cycles, bit-exact benches unchanged (TP4 + TP8 PASS, 3 mutants FAIL). | this kit: the ROM column sub-tile. | c2 (2026-10-12 PT): c1 routed TT +132.35 / FF -21.09 / DRC 12. FF miss is ONLY reg->out m5[*] flops -> m5 port (246 ep, -21.09; all reg->reg >= 0) at the routed IO ref (QDM ref = ROM-capture cap4 clock, 266-284 ps, later than the face m5 flops) -> sanctioned outhold (BUF-HB4-BUF FIRM at each m5 pin) on a sound leaf. DRC 12 = M4 shorts/spacing at ROM g_bank[2] pin edge (x 151.56) -> macro halo 2.16 -> 4.32 um so std cells leave the ROM M4 pin column free for access. pd 0.55",
  "threads": 16,
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/el1011-qwen-slab2",
-  "commit": "COMMIT",
+  "commit": "a89b702eb",
   "extra_paths": [
    "src",
    "results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json",
@@ -146,7 +146,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_slab_pg_col/qfd_slab_pg_col-c1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_slab_pg_col/qfd_slab_pg_col-c2-a89b702eb"
   }
  ],
  "cycles_added": 0,
