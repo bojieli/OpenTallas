@@ -69,13 +69,6 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/hbm_accel_die_views/vm/cp/codex_specs/pins/vm_cp_re_cx_pins.tcl",
-  "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/vm_cp_re_cx/pre_gpl.tcl",
-  "physical/ref_tile/vm_cp_re_cx/pre_dpl.tcl"
+  "physical/hbm_accel_die_views/vm/cp/codex_specs/vm_cp_re_fixed_place.tcl"
  ]
 }
