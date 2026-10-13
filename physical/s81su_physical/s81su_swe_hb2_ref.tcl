@@ -2,7 +2,7 @@
 # Real delay cells, unchanged clocks/boundary obligations; zero cycles added.
 set ::env(OT_INHOLD_MASTER) HB4xp67_ASAP7_75t_R
 set ::env(OT_INHOLD_DRV) BUFx4f_ASAP7_75t_R
-source physical/dsrom_window_source/leaf_inhold.tcl
+source /src/physical/dsrom_window_source/leaf_inhold.tcl
 set su_hd_block [ord::get_db_block]
 set su_hd_master [[ord::get_db] findMaster HB2xp67_ASAP7_75t_R]
 if {$su_hd_master eq "NULL"} {error "SUHOLD delay master missing"}
