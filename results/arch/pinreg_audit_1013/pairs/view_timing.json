@@ -1,6 +1,6 @@
 {
 "schema":"opentallas.pair_timing.v1",
-"source_commit":"93338b757",
+"source_commit":"80ca30a2a",
 "tool":"tools/hier_contract/pinreg_pairs.py table",
 "note":"O / S at the setup corner (TT), l / h at FF, raw ETM arcs from the clock pin, worst bit of the bus; R = insertion.json boundary mean per clock pin (null = not measured: such pairs are reported, not judged)",
 "masters":{
@@ -3501,7 +3501,7 @@
 "edge":"r",
 "O":null,
 "l":null,
-"S":179.5,
+"S":262.7,
 "h":61.3
 }
 ]
@@ -3513,7 +3513,7 @@
 {
 "clk":"ck[0]",
 "edge":"r",
-"O":547.2,
+"O":289.8,
 "l":172.8,
 "S":null,
 "h":null

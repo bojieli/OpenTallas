@@ -1,6 +1,6 @@
 # Per-pair die hop check: qwen_rom_tp8
 
-Tool `tools/hier_contract/pinreg_pairs.py` at 050b83a05; case `results/arch/pinreg_audit_1013/pairs/qwen_rom_tp8_plan.json.gz`; 11,902 instances, 14,740 data hops / 6,580,701 bits (pin centroid to pin centroid (Manhattan) of the two ports, generator pin model).
+Tool `tools/hier_contract/pinreg_pairs.py` at 80ca30a2a; case `results/arch/pinreg_audit_1013/pairs/qwen_rom_tp8_plan.json.gz`; 11,902 instances, 14,740 data hops / 6,580,701 bits (pin centroid to pin centroid (Manhattan) of the two ports, generator pin model).
 
 Rule: TREE `o_A + 0.76 L + s_B <= W - 60 - SKEW` (SKEW 90, 150 when an R is over 300 ps), hold `l_A + 0.112 L - h_B >= 100` at FF; FWD (forwarded clock beside the bus) on the real forwarded edge; a side without a view takes the flat share 151.7 ps (two placeholders = 500 um). Relay class `^qfd_cst_[ns]$`: o 197.2 / s 162.5 ps.
 

@@ -2,7 +2,7 @@
  "schema": "opentallas.pinreg_pairs.v1",
  "die": "ds_rom_s81_layer1",
  "tool": "tools/hier_contract/pinreg_pairs.py",
- "source_commit": "050b83a05",
+ "source_commit": "80ca30a2a",
  "case": {
   "source": "results/arch/pinreg_audit_1013/pairs/s81_v15_plan.json.gz",
   "instances": 56928,
@@ -651,7 +651,7 @@
    "passed": 1,
    "cross": 0,
    "not_evaluable": 0,
-   "worst_setup_ps": 46.4,
+   "worst_setup_ps": 303.8,
    "worst_hold_ps": -108.6,
    "instances": 1,
    "view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hsel",
@@ -1991,6 +1991,54 @@
   },
   {
    "cls": "lane",
+   "src": "dsfd_stnh_#x#",
+   "src_pin": "do#",
+   "dst": "dsfd_r#l_vr_#x#__hsel",
+   "dst_pin": "di#",
+   "model": "FWD",
+   "real_ends": 2,
+   "bind": "exact",
+   "hops": 1,
+   "bits": 514,
+   "max_um": 305.9,
+   "status": {
+    "hold": 1
+   },
+   "worst_setup_ps": 445.3,
+   "worst_hold_ps": -108.6,
+   "reach_um": 5930.7,
+   "o": 59.9,
+   "s": 262.7,
+   "fixes": {
+    "edge:dst": 1
+   },
+   "cycles": 0,
+   "example": {
+    "net": "sel_de",
+    "a": "f_sel_32.do0",
+    "b": "hsel.di0",
+    "um": 305.9,
+    "avail": 773.3,
+    "window": 833.3,
+    "sense": "inverted",
+    "clock_um": 330.6
+   },
+   "masters": [
+    "dsfd_r2l_vr_512x1__hsel",
+    "dsfd_stnh_514x1"
+   ],
+   "fix_example": {
+    "fix": "edge",
+    "relays": 0,
+    "pinreg": [
+     "dst"
+    ],
+    "cycles": 0,
+    "need_ps": 108.6
+   }
+  },
+  {
+   "cls": "lane",
    "src": "dsfd_stnv_#x#",
    "src_pin": "do#",
    "dst": "dsfd_m#l_vr_#x#__hix_SW",
@@ -2131,54 +2179,6 @@
     ],
     "cycles": 0,
     "need_ps": 94.3
-   }
-  },
-  {
-   "cls": "lane",
-   "src": "dsfd_stnh_#x#",
-   "src_pin": "do#",
-   "dst": "dsfd_r#l_vr_#x#__hsel",
-   "dst_pin": "di#",
-   "model": "FWD",
-   "real_ends": 2,
-   "bind": "exact",
-   "hops": 1,
-   "bits": 514,
-   "max_um": 305.9,
-   "status": {
-    "hold": 1
-   },
-   "worst_setup_ps": 528.5,
-   "worst_hold_ps": -108.6,
-   "reach_um": 7025.4,
-   "o": 59.9,
-   "s": 179.5,
-   "fixes": {
-    "edge:dst": 1
-   },
-   "cycles": 0,
-   "example": {
-    "net": "sel_de",
-    "a": "f_sel_32.do0",
-    "b": "hsel.di0",
-    "um": 305.9,
-    "avail": 773.3,
-    "window": 833.3,
-    "sense": "inverted",
-    "clock_um": 330.6
-   },
-   "masters": [
-    "dsfd_r2l_vr_512x1__hsel",
-    "dsfd_stnh_514x1"
-   ],
-   "fix_example": {
-    "fix": "edge",
-    "relays": 0,
-    "pinreg": [
-     "dst"
-    ],
-    "cycles": 0,
-    "need_ps": 108.6
    }
   },
   {
@@ -2781,40 +2781,6 @@
     "dsfd_stnh_566x1",
     "dsfd_stnv_256x1",
     "dsfd_stnv_566x1"
-   ]
-  },
-  {
-   "cls": "local",
-   "src": "dsfd_r#l_vr_#x#__hsel",
-   "src_pin": "o",
-   "dst": "dsfd_hstnh_#",
-   "dst_pin": "di",
-   "model": "TREE",
-   "real_ends": 1,
-   "bind": "exact",
-   "hops": 1,
-   "bits": 515,
-   "max_um": 76.9,
-   "status": {
-    "pass": 1
-   },
-   "worst_setup_ps": 46.4,
-   "worst_hold_ps": null,
-   "reach_um": 138.0,
-   "o": 426.8,
-   "s": 151.7,
-   "fixes": {},
-   "cycles": 0,
-   "example": {
-    "net": "hsel_o_g0_sp_vm",
-    "a": "hsel.o",
-    "b": "g_hsel_o_sp_vm_0.di",
-    "um": 76.9,
-    "avail": 683.3
-   },
-   "masters": [
-    "dsfd_hstnh_515",
-    "dsfd_r2l_vr_512x1__hsel"
    ]
   },
   {
@@ -8579,6 +8545,40 @@
    "masters": [
     "dsfd_hstnh_1",
     "dsfd_sp_hc_c"
+   ]
+  },
+  {
+   "cls": "local",
+   "src": "dsfd_r#l_vr_#x#__hsel",
+   "src_pin": "o",
+   "dst": "dsfd_hstnh_#",
+   "dst_pin": "di",
+   "model": "TREE",
+   "real_ends": 1,
+   "bind": "exact",
+   "hops": 1,
+   "bits": 515,
+   "max_um": 76.9,
+   "status": {
+    "pass": 1
+   },
+   "worst_setup_ps": 303.8,
+   "worst_hold_ps": null,
+   "reach_um": 476.7,
+   "o": 169.4,
+   "s": 151.7,
+   "fixes": {},
+   "cycles": 0,
+   "example": {
+    "net": "hsel_o_g0_sp_vm",
+    "a": "hsel.o",
+    "b": "g_hsel_o_sp_vm_0.di",
+    "um": 76.9,
+    "avail": 683.3
+   },
+   "masters": [
+    "dsfd_hstnh_515",
+    "dsfd_r2l_vr_512x1__hsel"
    ]
   },
   {

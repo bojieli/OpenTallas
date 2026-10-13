@@ -2,7 +2,7 @@
  "schema": "opentallas.pinreg_pairs.v1",
  "die": "qwen_rom_tp8",
  "tool": "tools/hier_contract/pinreg_pairs.py",
- "source_commit": "050b83a05",
+ "source_commit": "80ca30a2a",
  "case": {
   "source": "results/arch/pinreg_audit_1013/pairs/qwen_rom_tp8_plan.json.gz",
   "instances": 11902,
