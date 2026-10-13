@@ -170,8 +170,8 @@
   "peak_ram_gb": 112
  },
  "job": {
-  "owner": "Claude:q13-kvh",
-  "branch": "claude/q13-kvh",
+  "owner": "Claude:el1013-qwen-stalls",
+  "branch": "claude/el1013-qwen-stalls-ahub",
   "tag": "q13c",
   "purpose": "q13c = q13b resubmitted with structural_change (q13b was REFUSED by STRUCTURE_REPEAT before running; no route of this structure exists). q13b: q13 EARLY_FAIL_SETUP (post-CTS) = raw rst_n port net across the 1,175 um cluster (port -> hard-tile rst_n pins -722 ps, port -> ot_rst_relay async clear -611 ps) + output flops not at the N pins (out_data flop -> port -190). Fix: ot_rst_pipe (pin synchroniser + per-region 2-stage flop chains for the 8 control regions and each of the 12 hard tiles), io_flop_at_pins cols 8. Rest as q13: hardened reciprocal leaf in the east column with 2+2 seam relays; benches exact PASS / pbmut FAIL were green on q13.",
   "benches": [
