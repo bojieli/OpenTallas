@@ -1,5 +1,5 @@
 {
- "name": "s81su_swe_spx_ref-v4-spx-COMMIT",
+ "name": "s81su_swe_spx_ref-v4-spx-1ec43dde7",
  "block": "dsfd_su_t_swe",
  "ref_tile": true,
  "owner": "Codex:s81_su_closure",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "codex/s81su-physical-20261013",
-  "commit": "COMMIT"
+  "commit": "1ec43dde7"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_swe_spx_ref/s81su_swe_spx_ref-v4-spx-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_swe_spx_ref/s81su_swe_spx_ref-v4-spx-1ec43dde7"
   }
  ],
  "cycles_added": 0,
