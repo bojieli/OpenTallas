@@ -185,7 +185,8 @@
   },
   "physical": "NOT routed. S belongs in the cmdproc tile (beside ot_hgi_b2_disp); E in each cluster DMA unit tile at the ot_hgi_dma_back mv pin. New wires if the move-level link is kept: 4 x (228 down + 3 up) = 924 b, 10 relay stages each way; cut check x15 spine 0.584 -> 0.590 (two links) / 0.596 (all four) <= 0.60. Zero-wire alternative: carry the four records on the existing ot_hgi_b2_disp cb/rb buses with b2_dma_q BACK=1.",
   "swap_in": "NOT covered: ot_hgi_dma_back is VM -> HBM only; swap-in is DMA FRONT / the mover (die config FRONT 0)",
-  "qualified": true,
-  "qualified_scope": "bench gate of the dispatcher COMPONENT only (exact PASS + mutants FAIL + ratio 0.815 <= 1.10). TT/FF/DRC/child_lint not run: no element gate claim; MTP.VERIFY stays NO_PASSING_VEHICLE."
+  "qualified": false,
+  "bench_gate_pass": true,
+  "qualified_note": "NOT qualified (element gate needs TT/FF/DRC/child_lint). Passed: bench gate of the dispatcher COMPONENT only (exact PASS + mutants FAIL + ratio 0.815 <= 1.10). TT/FF/DRC/child_lint not run: no element gate claim; MTP.VERIFY stays NO_PASSING_VEHICLE."
  }
 }
