@@ -51,8 +51,10 @@ R11 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GXPR=10"
 R21 = "-GSEED=7 -GRV=2 -GRO=1 -GVL=15"
 N64 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GNRB=64"
 C_R21 = dict(NRB=16, SW=8, VL=15, su_reads=60170, row_reads=9427, tuples=2683, bursts=1612, land_steps=1603)
-PM = 12   # GB asked for a production-shape run (8 parallel compiles of the verilated model; the simulation is 75 MB)
-C_N64 = dict(NRB=64, SW=8, VL=14, su_reads=60313, row_reads=9296, tuples=2992, bursts=1635, land_steps=1625)
+PM = 48   # GB for a production-shape run with trees: the verilation alone peaks above 12 GB (12 GB runs were OOM-killed)
+# NRB 64 counts re-based 2026-10-13 with the work-conserving skid queue, as SEED 3 below (was 60313 / 9296 / 2992 / 1635 /
+# 1625); the four tile variants (grp, region_quarter, region_leaf, with and without the bit plane) still agree exactly.
+C_N64 = dict(NRB=64, SW=8, VL=14, su_reads=60379, row_reads=9334, tuples=2909, bursts=1615, land_steps=1606)
 
 
 def run(name, args, expect, what, counts=None, extra="", mem=4, scratch=None, same_as=None, tree=None, wq=None,
@@ -76,7 +78,7 @@ RUNS = [
     # SEED 3 counts re-based 2026-10-13 with the work-conserving skid queue (was 59514 / 8973 / 3016 / 1560 / 1550): a
     # sequencer row behind a denied one is now written at once, the merge's row of that edge waits, and the engine
     # stall (me_ok) moves by an edge, which shifts this bench's engine-synchronous random draws.  Every other fixed
-    # count of this set is unchanged by the fix.
+    # count of this set except the NRB 64 shape (C_N64) is unchanged by the fix.
     run("bp_s3", "-GSEED=3 -GXVM=31 -GVL=15 -GXPR=10", "PASS", "XPR=10, bench default RV 1 RO 2, stimulus SEED 3",
         dict(NRB=16, SW=8, VL=15, su_reads=59467, row_reads=8937, tuples=3002, bursts=1546, land_steps=1536)),
     run("bp_s9", "-GSEED=9 -GXVM=31 -GVL=15 -GXPR=10", "PASS", "XPR=10, bench default RV 1 RO 2, stimulus SEED 9",
@@ -182,7 +184,7 @@ RUNS = [
     #      die's 14 strides, CRB 16, region built from leaves, RV 1 RO 1; bit plane XPR 10, trees XTK 3 / XMK 2,
     #      owners with XQR 2.  x latency: XVM 24 (tiles) -> 34 (bit plane) -> 38 (owners); SU answer VL 14. ----
     run("prod_ref", "", "PASS", "PRODUCTION shape, bit plane, NO trees (reference at me_want lookahead 3): XVM 34",
-        mem=PM, prod=0, wq=dict(model_overflow=0, dut_overflow=0)),
+        mem=12, prod=0, wq=dict(model_overflow=0, dut_overflow=0)),
     run("prod_tr", "", "PASS", "PRODUCTION shape, bit plane + ALL trees + owners (XPR 10, XQR 2): XVM 38",
         mem=PM, prod=1, same_as="prod_ref", tree=TR, wq=dict(model_overflow=0, dut_overflow=0)),
     run("prod_tr_s9", "-GSEED=9", "PASS", "PRODUCTION shape, trees + owners, SEED 9", mem=PM, prod=1, tree=TR,
