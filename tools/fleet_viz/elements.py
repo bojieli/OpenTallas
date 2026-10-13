@@ -35,7 +35,7 @@ abstract manifests) falling back to the cleaned job purpose, cached in <state>/e
 ({families: {name: blurb}, elements: {el: {summary, about, family}}}) load first and override the cache; rows carry summary, about,
 family and family_about (empty about/family when no manual entry). Throughput qualification (AGENTS.md, owner 2026-10-10) comes from the latest
 <repo>/results/arch/throughput_budget_*/budget.json (working tree, else origin/main): each row gets `throughput`
-(status QUALIFIED / UNQUALIFIED / UNQUALIFIED_NO_BENCH, worst measured/price ratio, limiting op, owner) and `gate`
+(status QUALIFIED / UNMEASURED (a price, no measured ratio) / UNQUALIFIED / UNQUALIFIED_NO_BENCH, worst measured/price ratio, limiting op, owner) and `gate`
 ('CLOSED-TIMING, THROUGHPUT-UNQUALIFIED' until the unit's production-shape bench is within 1.10 of its price). Area comes from the best job's ORFS report (6_report.json, else the route
 metrics) fetched over ssh in the background and cached in <state>/element_area.json.
 """
@@ -411,7 +411,7 @@ class Elements:
                 doc = json.loads(text)
                 for e, v in (doc.get('elements') or {}).items():
                     if isinstance(v, dict) and v.get('status'):
-                        d[e] = dict(v, budget=src, qualify_ratio=doc.get('qualify_ratio', 1.10))
+                        d[e] = dict(honest_throughput(v), budget=src, qualify_ratio=doc.get('qualify_ratio', 1.10))
         except Exception as e:
             self.log('elements: throughput budget: %s' % e); d = self.tpk[1]
         self.tpk = (key, d)
@@ -725,6 +725,20 @@ def change_key(d):
                        json.dumps(r.get('evidence_history', []), sort_keys=True),
                        (r.get('throughput') or {}).get('status'), (r.get('throughput') or {}).get('ratio')) for r in d['rows']))
 
+def honest_throughput(v):
+    """Registry honesty (owner 2026-10-13, el1013-rule-enforcement): a unit with a price but no measured production
+    ratio is UNMEASURED, never QUALIFIED.  Applied to the element entry, its limiting op and every op row of a budget
+    entry as read (the committed budget.json predates the rule; tools/throughput_budget/build.py now writes it too)."""
+    def fix(o):
+        if isinstance(o, dict) and o.get('status') == 'QUALIFIED' and not isinstance(o.get('ratio'), (int, float)):
+            o = dict(o, status='UNMEASURED', status_was='QUALIFIED')
+        return o
+    if not isinstance(v, dict): return v
+    v = dict(v)
+    if isinstance(v.get('ops'), list): v['ops'] = [fix(o) for o in v['ops']]
+    if isinstance(v.get('limiting'), dict): v['limiting'] = fix(v['limiting'])
+    return fix(v)
+
 def gate_text(category, tq):
     """AGENTS.md throughput qualification: timing closure alone never qualifies a unit."""
     timing = 'CLOSED-TIMING' if category.startswith('closed') else 'OPEN-TIMING'
@@ -732,6 +746,7 @@ def gate_text(category, tq):
     st = tq.get('status')
     return timing + (', THROUGHPUT-QUALIFIED' if st == 'QUALIFIED' else ', THROUGHPUT-QUALIFIED-BY-BOUND' if st == 'QUALIFIED_BY_BOUND'
                      else ', THROUGHPUT-ACCEPTED' if st == 'ACCEPTED' else ', THROUGHPUT-EXEMPT' if st == 'EXEMPT'
+                     else ', THROUGHPUT-UNMEASURED' if st == 'UNMEASURED'
                      else ', THROUGHPUT-UNQUALIFIED')
 
 def throughput_text(tq):

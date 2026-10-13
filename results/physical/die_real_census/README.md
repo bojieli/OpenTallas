@@ -10,3 +10,4 @@ One row per (die, case): instances bound to a real closed view (exact LEF + exac
 | qwen_rom_tp8 | v3 | contract | main c23342b9f | 2069 | 0 | 0 | 0 | 4 | 2065 | 0.00 | 0 / 44 | 2026-10-13 03:10 PDT |
 | s81_layer1 | v13 | contract | main c23342b9f | 165 | 20 | 0 | 0 | 0 | 145 | 12.12 | 9 / 45 | 2026-10-13 03:11 PDT |
 | hbm_r25gqn | v11 | contract | main c23342b9f | 769 | 482 | 0 | 0 | 13 | 274 | 62.68 | 4 / 86 | 2026-10-13 03:11 PDT |
+| s81_layer1 | v14 | contract | main a17ddd16e + outline tol | 166 | 21 | 0 | 0 | 0 | 145 | 12.65 | 10 / 46 | 2026-10-13 04:27 PDT |
