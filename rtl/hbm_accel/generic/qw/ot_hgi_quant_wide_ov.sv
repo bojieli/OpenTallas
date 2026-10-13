@@ -265,6 +265,11 @@ module ot_hgi_quant_wide_ov #(
     localparam integer RQ=8, TW=9;
     reg [2:0] c_tail, c_issue, c_ret, active_id;
     reg [3:0] n_live, n_pending;
+    // Kept local address copies limit each descriptor-bank select to one narrow field.
+    (* keep *) reg [2:0] desc_sel [0:11];
+    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0])
+        for(integer i=0;i<12;i=i+1) desc_sel[i]<=0;
+    else for(integer i=0;i<12;i=i+1) desc_sel[i]<=load_record ? c_issue+1'b1 : c_issue;
     reg [7:0] live, target_valid;
     reg [17:0] ch [0:RQ-1];
     reg [19:0] cn [0:RQ-1], cm [0:RQ-1];
@@ -281,9 +286,9 @@ module ot_hgi_quant_wide_ov #(
         for (integer i=0; i<RQ; i=i+1)
             // issued earlier descriptors are live; pending later descriptors do not constrain this head.
             if (live[i] && (((3'(i)-c_ret)&3'd7) < ((c_issue-c_ret)&3'd7)))
-                if ((cab[c_issue] <= coend[i] && caend[c_issue] >= cob[i]) ||
-                    (cob[c_issue] <= caend[i] && coend[c_issue] >= cab[i]) ||
-                    (cob[c_issue] <= coend[i] && coend[c_issue] >= cob[i])) hazard = 1;
+                if ((cab[desc_sel[0]] <= coend[i] && caend[desc_sel[1]] >= cob[i]) ||
+                    (cob[desc_sel[2]] <= caend[i] && coend[desc_sel[3]] >= cab[i]) ||
+                    (cob[desc_sel[2]] <= coend[i] && coend[desc_sel[3]] >= cob[i])) hazard = 1;
     end
     wire load_record = n_pending != 0 && (rd_done || r_end) && !hazard && !bad;
     assign busy = n_live != 0;
@@ -291,19 +296,39 @@ module ot_hgi_quant_wide_ov #(
     // stale results when the completion head changes.  TW=9 signed modular differences are
     // safe because NB+OD+LD <256 bounds all outstanding sectors in any one lane.
     reg [7:0] retire_q;
+    (* keep *) reg [2:0] target_sel [0:7];
+    (* keep *) reg [7:0] tc_valid;
+    (* keep *) reg [2:0] tc_id [0:7];
+    reg [TW-1:0] tc_value [0:31];
+    reg target_ready; reg [2:0] target_ready_id;
+    always @(posedge clk or negedge rr_n[1])
+        if(!rr_n[1]) begin
+            tc_valid<=0;target_ready<=0;target_ready_id<=0;
+            for(integer q=0;q<8;q=q+1) begin target_sel[q]<=0;tc_id[q]<=0;end
+        end else begin
+            target_ready<=r_end;target_ready_id<=active_id;
+            for(integer q=0;q<8;q=q+1) begin
+                tc_valid[q]<=r_end;tc_id[q]<=active_id;target_sel[q]<=c_ret;
+            end
+        end
+    always @(posedge clk) begin
+        for(integer b=0;b<32;b=b+1) tc_value[b]<=issued[b]+TW'(output_lanes[b]);
+        for(integer q=0;q<8;q=q+1) if(tc_valid[q])
+            for(integer b=0;b<4;b=b+1) target[tc_id[q]][q*4+b]<=tc_value[q*4+b];
+    end
     reg [2:0] retire_q_id;
     wire retire_all = &retire_q;
     wire [2:0] retire_all_id = retire_q_id;
     always @(posedge clk or negedge rr_n[1])
         if (!rr_n[1]) begin retire_q<=0; retire_q_id<=0; end
         else begin
-            retire_q_id <= c_ret;
+            retire_q_id <= target_sel[0];
             for (integer q=0;q<8;q=q+1) begin
-                retire_q[q] <= target_valid[c_ret] &&
-                    ($signed(retired[q*4]+TW'(ev_done[q*4])-target[c_ret][q*4]) >= 0) &&
-                    ($signed(retired[q*4+1]+TW'(ev_done[q*4+1])-target[c_ret][q*4+1]) >= 0) &&
-                    ($signed(retired[q*4+2]+TW'(ev_done[q*4+2])-target[c_ret][q*4+2]) >= 0) &&
-                    ($signed(retired[q*4+3]+TW'(ev_done[q*4+3])-target[c_ret][q*4+3]) >= 0);
+                retire_q[q] <= target_valid[target_sel[q]] &&
+                    ($signed(retired[q*4]+TW'(ev_done[q*4])-target[target_sel[q]][q*4]) >= 0) &&
+                    ($signed(retired[q*4+1]+TW'(ev_done[q*4+1])-target[target_sel[q]][q*4+1]) >= 0) &&
+                    ($signed(retired[q*4+2]+TW'(ev_done[q*4+2])-target[target_sel[q]][q*4+2]) >= 0) &&
+                    ($signed(retired[q*4+3]+TW'(ev_done[q*4+3])-target[target_sel[q]][q*4+3]) >= 0);
             end
         end
     // Explicit signed comparisons avoid unsigned wrap and tolerate later completions on other lanes.
@@ -346,19 +371,16 @@ module ot_hgi_quant_wide_ov #(
                     w_beat<=w_beat+1'b1;
                 end
             end
-            if (r_end) begin
-                target_valid[active_id]<=1;
-                for(integer b=0;b<32;b=b+1) target[active_id][b]<=issued[b]+TW'(output_lanes[b]);
-            end
+            if (target_ready) target_valid[target_ready_id]<=1;
             if (load_record) begin
                 c_issue<=c_issue+1'b1; active_id<=c_issue;
-                hdr<={ch[c_issue][17:8],46'd0,ch[c_issue][7:0],64'd0};
-                m<=cm[c_issue]; rs<=cars[c_issue]; ws<=cors[c_issue];
-                r_sec<=cab[c_issue][17:3]; r_nrowbase<=cab[c_issue]+cars[c_issue];
-                w_rowbase<=cob[c_issue]; w_beat<=0;
-                beats_row<=16'((cn[c_issue]+20'd31)>>5); r_left<=16'((cn[c_issue]+20'd31)>>5);
-                b1<=cn[c_issue]<=32; r_last<=cn[c_issue]<=32;
-                nsec_last<=cn[c_issue][4:0]==0 ? 4'd4 : 4'(cn[c_issue][4:3]);
+                hdr<={ch[desc_sel[8]][17:8],46'd0,ch[desc_sel[8]][7:0],64'd0};
+                m<=cm[desc_sel[5]]; rs<=cars[desc_sel[6]]; ws<=cors[desc_sel[7]];
+                r_sec<=cab[desc_sel[0]][17:3]; r_nrowbase<=cab[desc_sel[0]]+cars[desc_sel[6]];
+                w_rowbase<=cob[desc_sel[2]]; w_beat<=0;
+                beats_row<=16'((cn[desc_sel[4]]+20'd31)>>5); r_left<=16'((cn[desc_sel[4]]+20'd31)>>5);
+                b1<=cn[desc_sel[4]]<=32; r_last<=cn[desc_sel[4]]<=32;
+                nsec_last<=cn[desc_sel[4]][4:0]==0 ? 4'd4 : 4'(cn[desc_sel[4]][4:3]);
                 r_row<=0; rd_done<=0;
             end
             if (l_fire) begin r_head<=r_head+1'b1; mq_t<=mq_t+1'b1; end
@@ -387,6 +409,6 @@ module ot_hgi_quant_wide_ov #(
         if (r_issue) begin bq_l[r_tail] <= r_sec[4:0]; bq_n[r_tail] <= r_nsec; bq_hd[r_tail]<={hdr[127:118],hdr[71:64]}; bq_dst[r_tail]<=read_dst; end
         if (mw_v) begin mq_sec[mw_a] <= mw_sec; mq_n[mw_a] <= mw_n; end
     end
-    initial if (NB+OD+LD>=256 || NB < 8 || (NB & (NB - 1)) != 0 || (LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_quant_wide_h: NB / LQ");
+    initial if (NB+OD+LQ+16>=256 || NB < 8 || (NB & (NB - 1)) != 0 || (LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_quant_wide_h: NB / LQ");
 endmodule
 `default_nettype wire
