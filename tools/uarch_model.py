@@ -16056,3 +16056,34 @@ def hbm_vm8_pin_clock_bank_model(long_taps=48, short_taps=32):
         additional_register_area_um2=0,
         physical_clock_area_power='unmeasured; retain candidate status until actual CTS cells and clock power are priced',
         adoption='all eight TT setup>=0/FF hold>=0/DRC0 plus transaction/negative gates; no latency or gain credit')
+
+
+def qwen_tree_delay_leaf_model(width_bits=512, depth=21, outline_um=(129.6, 259.2)):
+    """Fixed-cycle arrival padding; candidate sizing, no route/ETM qualification."""
+    if width_bits < 1 or depth < 0:
+        raise ValueError('positive width and nonnegative depth required')
+    w, h = outline_um
+    if min(w, h) <= 0:
+        raise ValueError('positive outline required')
+    return dict(schema='opentallas.qwen-tree-delay-leaf-model.v1',
+        width_bits=width_bits, depth=depth, MACs_per_cycle=0,
+        memory_bytes_per_cycle=0, boundary_bits_per_cycle=width_bits,
+        pipeline_storage_bits=width_bits*depth, clock_sinks=width_bits*depth,
+        cycles_added=depth, clock_root_limit=15000,
+        candidate_clock_root_fits=(width_bits*depth <= 15000),
+        outline_um=dict(w=w,h=h), outline_area_um2=w*h,
+        stage_columns=max(1,depth), stage_column_width_um=w/max(1,depth),
+        stage_cut_demand_bits=width_bits, stage_cut_tracks_M4=h/.048*.70,
+        stage_cut_ratio=width_bits/(h/.048*.70),
+        routing_assumption='adjacent serial columns, M4 horizontal pitch0.048um,30%PG reserve; actual cut/GRT must validate',
+        area_gate='use actual synthesis area; no fabricated area or timing view',
+        adoption='exact+mutants; real reference tile TT/FF/DRC/childlint; actual die slot/pin/clock/cut binding')
+
+
+def hbm_vm8_root_checker_bank_model():
+    """VM8 local protection banks, registered seams and unchanged-price gate.
+
+    The machine-readable prebuild precedes the RTL. Real bank area, source-
+    matched transaction timings and native ownership debt qualify the candidate.
+    """
+    return json.loads((ROOT / 'results/physical/vm8_root_checker_20261013/prebuild.json').read_text())
