@@ -47,7 +47,7 @@
 //   bx (10-12): the cursor no longer claims a buffer before issuing (that held each buffer for the whole VM round trip,
 //   ~3.3 edges a wave); it issues on landing credits into an LD 32 landing FIFO (after the quantisers) and a per-tpair
 //   meta FIFO; THREE tpair buffers in a ring are opened by the write stage at the FIFO head, and emission chains buffer
-//   to buffer, so the slice group sustains one wave an edge.  Mutant MUT_B8E: a buffer emits after its FIRST landing.
+//   to buffer, so the slice group sustains one wave an edge.  Mutant MUT_B8E: a buffer emits after its FIRST landing (still filling).
 // The x-store write SEQUENCE is unchanged (tb_hgi_xload_lock vs the flop x-load ot_hgi_sm_xload_old); latency +6
 // edges a beat (pipelined) and +3 edges a landing (once a group: emission waits for the write pipe to drain).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -596,9 +596,11 @@ module ot_hgi_sm_xload #(
         wire [2047:0] f0 [0:NFR-1];            // beat 0 of each fragment (the emitted beat)
         reg em; reg ep; reg [6:0] ebt;
         reg em_n, ep_n; reg [1:0] eb_n; reg [6:0] ebt_n; reg fr_end, edn_n;
-        // a buffer is complete when its LAST wave LANDED in the fragment (MUT_B8E: as soon as its first wave landed)
+        // a buffer is complete when its LAST wave LANDED in the fragment.  MUT_B8E: it emits as soon as its FIRST wave
+        // landed, still filling (r1's mutant only dropped the 2-edge mfull wait after the LAST pop, which the registered
+        // emission start already covers: 13,352 = base at +XLJIT=64, so it was not a bug and could not be killed)
         function automatic rdy_b(input [1:0] b);
-            rdy_b = bst[b] == 2'd2 && (memp[b] || ((MUT_B8E != 0) ? (mgot[b] != 7'd0) : mfull[b]));
+            rdy_b = (bst[b] == 2'd2 && (memp[b] || mfull[b])) || (MUT_B8E != 0 && bst[b] != 2'd0 && mgot[b] != 7'd0);
         endfunction
         wire est = !em && rdy_b(eb);
         always @* begin
