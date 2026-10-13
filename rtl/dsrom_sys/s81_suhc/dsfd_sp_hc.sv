@@ -19,7 +19,7 @@ module dsfd_sp_hc #(
                                                          //    pins / y FIFO + ot_s81_hc_crootr chain root)
     // 0: existing chain; 1: expose upper seam to die stations + dsfd_sp_hc_t;
     // 2: compose upper/stations/tail for transaction-level exactness (never harden this wrapper).
-    parameter integer TAIL_SPLIT = 0, HEAD_ROWS = 10,
+    parameter integer TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = AL,
     parameter integer RLY = HALF ? 2 : 1                 // sub-tile relays a hop
 ) (
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
@@ -208,7 +208,7 @@ module dsfd_sp_hc #(
                 localparam [7:0] TID = BC + p;
                 if (HALF) begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
                 ot_s81_hc_cth #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
-                                .ML(ML), .AL(AL), .RLY(RLY)) u_t (
+                                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_t (
                     .clk(sk), .rst_in(p == 0 ? ch_rst[c] : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
                     .last(p == LC - 1),
                     .fv_in(p == 0 ? ch_fv[c * FVW +: FVW] : fvo[p > 0 ? p - 1 : 0]),
@@ -249,7 +249,7 @@ module dsfd_sp_hc #(
             wire [NCOL*TFW-1:0] tf;
             wire [NCOL*TRW-1:0] tr;
             dsfd_sp_hc_t #(.NG(NG),.D(D),.S_RD(S_RD),.S_RT(S_RT),.WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),
-                          .NCOL(NCOL),.GS(GS),.RLY(RLY),.HEAD_ROWS(HEAD_ROWS)) u_tail (
+                          .NCOL(NCOL),.GS(GS),.RLY(RLY),.HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP)) u_tail (
                 .ck(sk),.f_sf0(tf[0+:TFW]),.f_sf1(tf[TFW+:TFW]),.f_sf2(tf[2*TFW+:TFW]),
                 .t_sr0(tr[0+:TRW]),.t_sr1(tr[TRW+:TRW]),.t_sr2(tr[2*TRW+:TRW]));
             // Models the die's existing seven common-clock stations; reset is an in-band forward bit.
@@ -262,7 +262,7 @@ module dsfd_sp_hc #(
             localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
             wire [127:0] cy;
             ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
-                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.BC(BC),.LC(LC),.START(0),.COUNT(NH)) u_head (
+                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.BC(BC),.LC(LC),.START(0),.COUNT(NH)) u_head (
                 .sk(sk),.rst_in(ch_rst[c]),.fv_in(ch_fv[c*FVW+:FVW]),.fd_in(ch_fd[c*FDW+:FDW]),.cy_in(128'd0),
                 .rv_in(sr[c*TRW+RDW+:RVW]),.rd_in(sr[c*TRW+:RDW]),
                 .rst_out(sf[c*TFW+128+FDW+FVW]),.fv_out(sf[c*TFW+128+FDW+:FVW]),
@@ -309,7 +309,7 @@ endmodule
 // Wire-only chain assembly; each cth instance retains its existing hardened local roots.
 module ot_s81_hc_chain_segment #(
     parameter integer NG=256,D=5120,NCOL=3,GS=8,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,RLY=2,
-    parameter integer BC=0,LC=22,START=0,COUNT=10,
+    parameter integer BC=0,LC=22,START=0,COUNT=10,CNL_PIN=0,CHAIN_STEP=AL,
     parameter integer FVW=S_RD+5, RVW=S_RT+4,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer RDW=S_RT+24*S_RT+8+512*S_RT
@@ -329,7 +329,7 @@ module ot_s81_hc_chain_segment #(
                 localparam [7:0] TID = BC + START + p;
                 if (1) begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
                 ot_s81_hc_cth #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
-                                .ML(ML), .AL(AL), .RLY(RLY)) u_t (
+                                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_t (
                     .clk(sk), .rst_in(p == 0 ? rst_in : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
                     .last(START + p == LC - 1),
                     .fv_in(p == 0 ? fv_in : fvo[p > 0 ? p - 1 : 0]),
@@ -351,7 +351,7 @@ module ot_s81_hc_chain_segment #(
 endmodule
 
 module dsfd_sp_hc_t #(
-    parameter integer NG=256,D=5120,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,
+    parameter integer NG=256,D=5120,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,CNL_PIN=0,CHAIN_STEP=AL,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW
  )(input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2);
@@ -364,7 +364,7 @@ module dsfd_sp_hc_t #(
         localparam integer LC=((c==1)?L1:NP)*2,BC=((c==0)?0:(c==1)?NP:NP+L1)*2;
         localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
         ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
-            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH)) u_tail (
+            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH)) u_tail (
             .sk(ck),.rst_in(sf[c*TFW+128+FDW+FVW]),.fv_in(sf[c*TFW+128+FDW+:FVW]),
             .fd_in(sf[c*TFW+128+:FDW]),.cy_in(sf[c*TFW+:128]),.rv_in({RVW{1'b0}}),.rd_in({RDW{1'b0}}),
             .rst_out(),.fv_out(),.fd_out(),.cy_out(),.rv_out(sr[c*TRW+RDW+:RVW]),.rd_out(sr[c*TRW+:RDW]));
