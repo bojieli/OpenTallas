@@ -1,9 +1,11 @@
 // tb_dsfd_vm_bgl_lockstep (el1013-s81-bgq28): the 8-leaf dsfd_vm_bgq28h against the flat dsfd_vm_bgr (bgq28 parameters),
 // same stimulus, flop memories on both sides.  f_* and o_v / o_d must be equal cycle for cycle at a fixed offset of
 // DL = 10 cycles (hop 16 vs 6); the sticky status (o_f, o_o) is compared after the drain.  RANDOM stimulus over all 28
-// ports (reads on ports 0..9 only) and all 32 bank ids -- NOT the production trace.  PASS is refused without coverage.
+// ports (reads on ports 0..9 only) and all 32 bank ids; TRACE = 1 replays the PRODUCTION trace instead (+trace=FILE:
+// the request bus at the head of slice 0 of dsfd_sp_vm_m, recorded by the master gate's tp / gold cases built with
+// +define+OT_SPVM_BGTRACE; lines "cycle v we row mask d", idle cycles omitted).  PASS is refused without coverage.
 module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer NCYC = 200000, parameter integer GRP = 1,
-                                 parameter integer RATE = 8);
+                                 parameter integer RATE = 8, parameter integer TRACE = 0);
     localparam integer NP = 28, NPR = 10, RA = 14, DL = 10;
     reg clk = 0, rs = 0; always #5 clk = ~clk;
     reg [NP-1:0] i_v = 0, i_we = 0; reg [NP*RA-1:0] i_row = 0; reg [NP*4-1:0] i_m = 0; reg [NP*128-1:0] i_d = 0;
@@ -42,10 +44,44 @@ module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer N
             nret = nret + $countones(bov);
         end
     end
-    integer s;
+    integer s, tfd, tc, tc0, tcur, tlines, npu;
+    string tfile;
+    reg [NP-1:0] tv, twe; reg [NP*RA-1:0] trow; reg [NP*4-1:0] tm; reg [NP*128-1:0] td;
+    // coverage counters of the op just driven on port pp (ports are visited in ascending order within a cycle)
+    task automatic count_op(input integer pp);
+        reg [4:0] b; integer kk;
+        begin
+            b = i_row[pp*RA +: 5];
+            if (i_v[pp]) begin
+                nops = nops + 1; cp[pp] = cp[pp] + 1;
+                if (b[4:3] == GRP) begin
+                    cb[b[2:0]] = cb[b[2:0]] + 1;
+                    if (!i_we[pp]) begin
+                        nrd = nrd + 1;
+                        for (kk = 0; kk < pp && kk < NPR; kk = kk + 1) if (i_v[kk] && !i_we[kk] && seen[kk] == b) ndup = ndup + 1;
+                    end
+                end
+            end
+            if (pp < NPR) seen[pp] = b;
+        end
+    endtask
     initial begin
         s = SEED; for (k = 0; k < 8; k = k + 1) cb[k] = 0; for (k = 0; k < NP; k = k + 1) cp[k] = 0;
         repeat (20) @(posedge clk); rs = 1; repeat (20) @(posedge clk); run = 1;
+        if (TRACE != 0) begin
+            if (!$value$plusargs("trace=%s", tfile)) begin $display("NO_TRACE"); $display("FAIL"); $finish; end
+            tfd = $fopen(tfile, "r");
+            if (tfd == 0) begin $display("NO_TRACE %0s", tfile); $display("FAIL"); $finish; end
+            tc0 = -1; tcur = 0; tlines = 0;
+            while ($fscanf(tfd, "%d %h %h %h %h %h\n", tc, tv, twe, trow, tm, td) == 6) begin
+                if (tc0 < 0) tc0 = tc;
+                while (tcur < tc - tc0) begin @(negedge clk); i_v = 0; tcur = tcur + 1; end
+                @(negedge clk); tcur = tcur + 1; tlines = tlines + 1;
+                i_v = tv; i_we = twe; i_row = trow; i_m = tm; i_d = td;
+                for (p = 0; p < NP; p = p + 1) count_op(p);
+            end
+            $display("TRACE lines %0d span %0d cycles", tlines, tcur);
+        end else
         repeat (NCYC) begin
             @(negedge clk);
             for (p = 0; p < NP; p = p + 1) begin
@@ -55,17 +91,7 @@ module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer N
                 i_row[p*RA +: RA] = {4'd0, 5'($urandom(s + 13) % 32), bk};
                 i_m[p*4 +: 4] = $urandom(s + 17) % 16;
                 i_d[p*128 +: 128] = {$urandom(s + 19), $urandom(s + 23), $urandom(s + 29), $urandom(s + 31)};
-                if (i_v[p]) begin
-                    nops = nops + 1; cp[p] = cp[p] + 1;
-                    if (bk[4:3] == GRP) begin
-                        cb[bk[2:0]] = cb[bk[2:0]] + 1;
-                        if (!i_we[p]) begin
-                            nrd = nrd + 1;
-                            for (k = 0; k < p && k < NPR; k = k + 1) if (i_v[k] && !i_we[k] && seen[k] == bk) ndup = ndup + 1;
-                        end
-                    end
-                end
-                if (p < NPR) seen[p] = bk;
+                count_op(p);
             end
         end
         @(negedge clk); i_v = 0; repeat (200) @(posedge clk);
@@ -74,9 +100,17 @@ module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer N
                  NCYC, nops, nrd, nret, ndup, bof, boo, nerr);
         begin : cov
             integer bad; bad = 0;
+            npu = 0; for (k = 0; k < NP; k = k + 1) if (cp[k] >= 100) npu = npu + 1;
             for (k = 0; k < 8; k = k + 1) if (cb[k] < 100) bad = bad + 1;
-            for (k = 0; k < NP; k = k + 1) if (cp[k] < 100) bad = bad + 1;
-            if (nrd < 1000 || nret < 1000 || ndup < 20 || boo < 2) bad = bad + 1;
+            if (TRACE != 0) begin
+                // production shape: the ports / collisions are whatever the master issues; the bank, read and return
+                // floors stay, and the port census is printed
+                $display("TRACE_COVERAGE ports_used %0d of %0d own_reads %0d returned %0d", npu, NP, nrd, nret);
+                if (npu < 10 || nrd < 1000 || nret < 1000) bad = bad + 1;
+            end else begin
+                if (npu != NP) bad = bad + 1;
+                if (nrd < 1000 || nret < 1000 || ndup < 20 || boo < 2) bad = bad + 1;
+            end
             if (bad != 0) begin $display("COVERAGE_REFUSED %0d items", bad); $display("FAIL"); $finish; end
         end
         if (nerr == 0) $display("PASS"); else $display("FAIL");

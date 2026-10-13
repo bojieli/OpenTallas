@@ -1,0 +1,189 @@
+{
+ "name": "dsfd_vm_bgl28_a",
+ "top": "dsfd_vm_bgl28",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 77.76
+ },
+ "pins": {
+  "N": [
+   "i_v",
+   "i_we",
+   "i_row",
+   "i_mask",
+   "i_d",
+   "r_v",
+   "r_d",
+   "r_f",
+   "r_o"
+  ],
+  "S": [
+   "f_v",
+   "f_we",
+   "f_row",
+   "f_mask",
+   "f_d",
+   "o_v",
+   "o_d",
+   "o_f",
+   "o_o"
+  ],
+  "W": [
+   "ck",
+   "rs",
+   "grp",
+   "bi"
+  ],
+  "E": []
+ },
+ "pin_ranges": {
+  "i_v": [
+   2.4,
+   4.144
+  ],
+  "f_v": [
+   2.4,
+   4.144
+  ],
+  "i_we": [
+   4.144,
+   5.888
+  ],
+  "f_we": [
+   4.144,
+   5.888
+  ],
+  "i_row": [
+   5.888,
+   30.302
+  ],
+  "f_row": [
+   5.888,
+   30.302
+  ],
+  "i_mask": [
+   30.302,
+   37.277
+  ],
+  "f_mask": [
+   30.302,
+   37.277
+  ],
+  "i_d": [
+   37.277,
+   260.491
+  ],
+  "f_d": [
+   37.277,
+   260.491
+  ],
+  "r_v": [
+   260.49,
+   261.49
+  ],
+  "o_v": [
+   260.49,
+   261.49
+  ],
+  "r_d": [
+   261.49,
+   341.21
+  ],
+  "o_d": [
+   261.49,
+   341.21
+  ],
+  "r_f": [
+   341.21,
+   342.2
+  ],
+  "o_f": [
+   341.21,
+   342.2
+  ],
+  "r_o": [
+   342.2,
+   343.2
+  ],
+  "o_o": [
+   342.2,
+   343.2
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_pins.tcl",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    85.536,
+    23.76
+   ],
+   "orient": "MY",
+   "inst": "*u_m"
+  }
+ ],
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "pin_v": "M3 M5",
+  "pin_h": "M4"
+ },
+ "job": {
+  "owner": "Claude:el1013-s81-bgq28",
+  "branch": "claude/s81-bgq28-1013",
+  "tag": "r1",
+  "purpose": "el1013-s81-bgq28: one-bank VM leaf (x8 under dsfd_vm_bgq28h). 345.6 x 77.76 (SRAM >= 20 um from the N/S pin faces on the 2.16 lattice), M5 cap, N/S pins at the flat tile x/layer; whole-leaf macro cut 5,441 / 11,387 = 0.478.",
+  "benches": [
+   {
+    "name": "exact_gold",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold gold",
+    "expect": "pass",
+    "pass_regex": "BGL_gold: PASS",
+    "min_count_regex": "returned (\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "exact_trace",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/trace trace",
+    "expect": "pass",
+    "pass_regex": "BGL_trace: PASS",
+    "min_count_regex": "returned (\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "neg_relay",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_RELAY mut_RELAY",
+    "expect": "fail",
+    "fail_regex": "BGL_mut_RELAY: FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "neg_order",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ORDER mut_ORDER",
+    "expect": "fail",
+    "fail_regex": "BGL_mut_ORDER: FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ],
+  "views_to": "physical/ref_tile/dsfd_vm_bgl28_a/views",
+  "record_to": "results/rtl/ref_tile/dsfd_vm_bgl28_a"
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "structural_change": "the flat 8-bank tile dsfd_vm_bgr (63,416 sinks on one root, 5,441 feed-through bits over an 8-macro column, GRT 20,000 markers) is replaced by 8 identical one-bank hard leaves dsfd_vm_bgl28, every N/S bit registered at both pin faces (leaf hop 2), one SRAM and one clock root of ~14.5k sinks a leaf, under a wires-only parent"
+}
