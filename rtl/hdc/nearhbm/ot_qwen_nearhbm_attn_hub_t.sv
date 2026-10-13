@@ -191,8 +191,14 @@ module ot_qwen_nearhbm_attn_hub_t #(
     reg [2:0]  rh;
     wire [31:0] ry;
     wire        rvo, rfault;
+`ifdef QKH_RECIP_LEAF
+    // Hardened leaf adds two registered boundary cycles. rcnt advances on rvo,
+    // so result identity remains unchanged; no fixed reciprocal latency used.
+    ot_qkh_recip_leaf u_recip (.clk(clk), .rst_n(rl[6]), .v(rv1), .x(rx), .y(ry), .vo(rvo), .fault(rfault));
+`else
     ot_qwen_nearhbm_recip_p #(.LA(7), .LM(7)) u_recip (.clk(clk), .rst_n(rl[6]), .v(rv1), .x(rx), .y(ry), .vo(rvo),
                                                      .fault(rfault));
+`endif
     reg [2:0]  rcnt;
     reg [31:0] rz [0:7];
     reg [1:0]  rz_ok;
