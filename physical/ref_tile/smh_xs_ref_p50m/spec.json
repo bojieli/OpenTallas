@@ -121,14 +121,14 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 64,
-  "hold_margin_ns": 0.02,
+  "hold_margin_ns": 0.01,
   "pin_h": "M4"
  },
  "job": {
   "owner": "Claude:el1011-hbm-smmv-b",
   "branch": "claude/el1011-hbm-smt",
-  "tag": "r2",
-  "purpose": "[smmv-b/smt] ot_hbm_accel_smh_xs mirror-safe re-route (PD 0.5): closed p50/p45 recipe (region pins, no io_tcl; exact-io_tcl p50x/p40x/t40 all GRT-0116 at <=347 gcells overflow on the 3,000-pin S face) with H face pins on M4 only -> leaf-1 MX/R180 copy on the asap7 tracks | r2: r1-b749b74bf routed TT +84.86/+91.04 DRC 0 but FF -17.07 (p50m) / -21.09 (p45m): input-port captures rl1->u_rl2 (187 paths) and bk1->u_bkd2 (203) = INPUT hold -> inhold (dont_touch hold buffer at each data input, before GPL); u_leaf r0w->w3 / w3->w3b reg->reg -2.3 ps -> hold margin 0.01 -> 0.02 ns (the hold ECO crashed rc 9 in repairHold)",
+  "tag": "r3",
+  "purpose": "[smmv-b/smt] ot_hbm_accel_smh_xs mirror-safe re-route (PD 0.5): closed p50/p45 recipe (region pins, no io_tcl; exact-io_tcl p50x/p40x/t40 all GRT-0116 at <=347 gcells overflow on the 3,000-pin S face) with H face pins on M4 only -> leaf-1 MX/R180 copy on the asap7 tracks | r2: r1-b749b74bf routed TT +84.86/+91.04 DRC 0 but FF -17.07 (p50m) / -21.09 (p45m): input-port captures rl1->u_rl2 (187 paths) and bk1->u_bkd2 (203) = INPUT hold -> inhold (dont_touch hold buffer at each data input, before GPL); u_leaf r0w->w3 / w3->w3b reg->reg -2.3 ps -> hold margin 0.01 -> 0.02 ns (the hold ECO crashed rc 9 in repairHold) | r3: r2 (margin 0.02) EARLY_FAIL_HOLD at 4_1_cts (-103.57 -> -81.4 stalled, 8,007 endpoints in margin; r1 at margin 0.01 converged from -106.35) -> margin back to 0.01, keep inhold",
   "no_bench_reason": "exactness is gated by the SM tile cluster lockstep bench under OT_SMH_HIER (ec948f1fc, ot-epyc4 w_hier2: 12 ops exact, CG_LOCKSTEP mismatches 0, PASS 8270 cycles) plus its late32/hold0 mutants, carried by the tile-cluster job; this child job re-routes unchanged RTL (xs round 4 be99a7db9: ot_hdly hold-delay landing stage)",
   "views_to": "physical/ref_tile/smh_xs_ref_p50m/views",
   "record_to": "results/rtl/ref_tile/smh_xs_ref_p50m"
