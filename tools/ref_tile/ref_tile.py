@@ -148,6 +148,16 @@ def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
     kits generated before the cut (legacy_layer_kits.json) keep their old PG layer (M6/M7, signals <= M6)."""
     slot = slot or {}
     cap = s.get("layer_cap") or slot.get("layer_cap")
+    grant = s.get("m6_pin_grant") or slot.get("m6_pin_grant")
+    if grant is not None:
+        import m6_pin_grant as M6
+        try:
+            M6.validate(grant, s["top"])
+        except (ValueError, TypeError, KeyError) as ex:
+            raise SpecError(str(ex)) from ex
+        if cap not in (None, "M5") or s.get("pg_layer") not in (None, "M5"):
+            raise SpecError("M6 pin-only grant requires signal/PG layer_cap M5")
+        return "M5", "pin-only grant"
     if cap is None and s["name"] in LEGACY_KITS:
         return LEGACY_KITS[s["name"]], "legacy"
     if cap is None and s.get("pg_layer") not in (None, "M5"):
@@ -177,6 +187,8 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
                        cap_basis="legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)")
         else:
             out.update(pg_layer=cap, rlayers=("M2", cap), strap_layer=f"M{metal(cap) + 1}", layer_cap=cap, cap_basis=why)
+        if s.get("m6_pin_grant") or (slot or {}).get("m6_pin_grant"):
+            out["m6_pin_grant"] = s.get("m6_pin_grant") or slot["m6_pin_grant"]
         if slot:
             ok = {slot.get("layer_cap") or slot.get("pg_layer"), slot.get("view_cap") if why == "legacy" else None}
             if out["pg_layer"] not in ok:
@@ -211,7 +223,7 @@ def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
         pb = r.get("pin_balance") or {}
         used = (h + " " + v + " " + pb.get("h", "") + " " + pb.get("v", "")).split()
         over = sorted({x for x in used if (metal(x) or 0) > metal(lc["rlayers"][1])})
-        if over:
+        if over and not (over == ["M6"] and lc.get("m6_pin_grant")):
             raise SpecError(f"layer contract: pin layers {over} above the tile's signal cap {lc['rlayers'][1]} "
                             f"(pins on M4/M5 under the M5 cap; the parent reaches them from M6)")
     return h, v
@@ -581,7 +593,7 @@ HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 def gen_hooks(s: dict, kd: str) -> dict:
     fwd = bool(s.get("forwarded_clock"))
-    spine = s["kind"] == "cluster" and s.get("clock", "spine") == "spine"
+    spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
                + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
                + ("; cluster: balanced clock spine with child-insertion leaf targets (sourced FIRST, so the io_ref wrapper"
@@ -656,7 +668,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
         h = float(s["route"].get("macro_halo_um", HALO_UM))
         extra.append(f"--macro-place-halo {h} {h}")
-    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+    if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
         # child's internal insertion, so the flops next to it ran one insertion EARLY: qkd_d2d_ref (sbuf 505 ps) left 499
@@ -797,7 +809,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(s["post_synth_tcl"])
     if s["route"].get("hold_delay"):
         out.append(HDLY_TCL)
-    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+    if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
@@ -847,6 +859,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     mv = " ".join(f"--macro-view {v}" for v in views)
     spec = {
         "name": name, "block": s["top"], "ref_tile": True,
+        **({"m6_pin_grant": s["m6_pin_grant"]} if s.get("m6_pin_grant") else {}),
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),
         **({"hosts": j["hosts"]} if j.get("hosts") else {}),   # no default host list: the loop places jobs (EPYC2/3 retired 10-12)
@@ -894,6 +907,29 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     s = load_spec(spec_path)
     slot = contract_slot(s)
     lc = layer_contract(s, slot)
+    if lc.get("m6_pin_grant"):
+        import m6_pin_grant as M6
+        raw_spec = json.loads(Path(spec_path).read_text())
+        if M6.spec_digest(raw_spec) != lc["m6_pin_grant"]["source_spec_sha256"]:
+            raise SpecError("M6 pin-only grant physical source-spec SHA256 mismatch")
+        import subprocess
+        source_commit = lc["m6_pin_grant"]["source_commit"]
+        exists = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", source_commit + "^{commit}"],
+                                capture_output=True)
+        if exists.returncode:
+            raise SpecError("M6 pin-only grant source commit does not exist")
+        source_paths = list(s["sources"])
+        source_paths += [s[k] for k in ("io_tcl", "post_synth_tcl") if s.get(k)]
+        source_paths += [v for v in s.get("orfs_vars", {}).values() if isinstance(v, str)
+                         and v.endswith((".tcl", ".sdc"))]
+        for path in source_paths:
+            path = path.removeprefix("/src/")
+            file = ROOT / path
+            original = subprocess.run(["git", "-C", str(ROOT), "show", f"{source_commit}:{path}"],
+                                      capture_output=True)
+            if original.returncode or not file.is_file() or original.stdout != file.read_bytes():
+                raise SpecError(f"M6 pin-only grant source differs from approved commit: {path}")
+        s["m6_pin_grant"] = lc["m6_pin_grant"]
     blocks = blocks_of(s)
     W, H, why = outline(s, slot, area_um2, blocks)
     place_blocks(s, W, H, blocks)
@@ -911,7 +947,8 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
              "clock.sdc": gen_sdc(s, float(s["route"].get("period_ps", 770))),
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),
              **gen_hooks(s, kd), "floorplan.json": json.dumps(fp, indent=1) + "\n",
-             "spec.json": json.dumps({k: v for k, v in s.items()}, indent=1) + "\n"}
+             "spec.json": json.dumps(({**raw_spec, "m6_pin_grant": lc["m6_pin_grant"]} if lc.get("m6_pin_grant")
+                                      else {k: v for k, v in s.items()}), indent=1) + "\n"}
     if blocks:
         files["place.tcl"] = gen_place(s, blocks)
     if s.get("io_tcl") and s.get("orfs_vars", {}).get("POST_TAPCELL_TCL"):
@@ -936,7 +973,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
 # --------------------------------------------------------------------------------------------- export
 def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     """exact-shape abstract (write_abstract_lef, never -bloat_occupied_layers) + TT/FF/SS timing models from the routed
-    odb + spef at the sign-off SDC, the routed clock insertion (ck_insertion.py), then child_lint of the result."""
+    odb + spef at the VERDICT's constraint sequence (tools/tt_views/view_export.py), the routed clock insertion (ck_insertion.py), then child_lint of the result."""
     import subprocess
     fp = json.loads((ROOT / kit / "floorplan.json").read_text())
     top = fp["top"]
@@ -944,6 +981,15 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    # EXPORT-SDC (2026-10-13): view_export replays the route's VERDICT constraint sequence (closure-loop run: routed
+    # 6_final.sdc, SPEF, post-SDCs, io_ref_routed.sdc last) and fails when its TT / FF slack differs from the verdict.
+    # Outside a loop run there is no verdict to replay: the same order from the kit (never signoff.sdc INSTEAD of the
+    # routed SDC: s81su SMT exported FF -19.69 against a +3.66 verdict that way).
+    for f in (ROOT / kit / "signoff.sdc", ROOT / "physical/common_flow/io_ref_routed.sdc"):
+        cmd += ["--post-sdc", str(f)]
+    grant = fp.get("layer_contract", {}).get("m6_pin_grant")
+    if grant:
+        cmd += ["--pin-only-tech"]
     for v in macro_views:
         cmd += ["--macro-view", str(ROOT / v)]
     rc = subprocess.run(cmd).returncode
@@ -952,11 +998,22 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--output", str(o / "insertion.json")])
     lef = o / f"{top}.lef"
-    if lef.exists():
+    if lef.exists() and not grant:
         # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
         # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
         subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])
-    res = child_lint.lint(str(lef), str(o)) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
+    routed_def = None
+    if grant and base is not None:
+        # Require final detailed-route geometry; never GRT or an abstract reconstructed from pins.
+        candidates = [base / n for n in ("6_final.def", "5_route.def") if (base / n).exists()]
+        if candidates:
+            import shutil
+            routed_def = str(o / "pin_only_routed.def")
+            shutil.copyfile(candidates[0], routed_def)
+        (o / "m6_pin_grant.json").write_text(json.dumps(grant, indent=1) + "\n")
+    res = child_lint.lint(str(lef), str(o), cap="M5" if grant else None,
+                          pin_grant=grant, routed_def=routed_def,
+                          tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])

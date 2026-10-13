@@ -916,6 +916,12 @@ def build_r25gq(variant):
         it_hc_ = put(f'hb_hc_{q}', 'hb_hc_SW', hc_x, hc_y, hc_w, hc_h)
         if (V.get('hc_orient') or {}).get(q):     # contract v10: ONE hfd_hc master -> its tap face maps to every station
             it_hc_.orient = V['hc_orient'][q]
+        if V.get('hc_track_origins'):
+            # Actual ASAP7 site/track intersection (OpenROAD HC-only readback).
+            # Preserve the closed geometry; make the model use the placed origin.
+            phase = 0.216 if it_hc_.orient == 'MY' else 0.0
+            it_hc_.x = round(phase + math.floor((it_hc_.x - phase) / 0.432 + 0.5) * 0.432, 6)
+            it_hc_.y = round(math.floor(it_hc_.y / 8.64 + 0.5 - 1e-9) * 8.64, 6)
         rmap[f'hb_hc_{q}'] = f'hb_hc_{q}'
         ty0 = up(qy + (qh - at_h0) / 2, GY)
         if V.get('attn_tall'):      # S top below the die equator with half the >= 346 um central corridor
@@ -1399,6 +1405,11 @@ def build_r25gq_net(variant):
             j_, i_ = divmod(kk, G.nx)
             if bits <= 1400:        # a 58 x 71 um station holds ~1,450 pins a face (2,224-b vmap: 2,400 was too many)
                 sw_, sh_ = 58.32, 71.28
+                # v10 STA smoke 10-12: a 1,200-b vmap station (hfd_stn_q1200) put 57.6 um of pins (one M5 track
+                # each) on a 57.1-um S face (58.32 minus the 2-track + 0.5-um end margins) and masters() refused it.
+                # Size each face to its bus: bits on the 0.048 track + both end margins + 1 um, on the placement grid.
+                need_ = bits * 0.048 + 2 * (2 * 0.048 + 0.5) + 1.0
+                sw_, sh_ = max(sw_, up(need_, GX)), max(sh_, up(need_, GY))
             else:       # a wide registered bus: a thin relay bank across the route, its faces as long as the bus needs
                 ln_ = up(bits * 0.048 + 20.0, GY)
                 k2 = pth[max(0, ix - 1)] if ix else pth[min(len(pth) - 1, 1)]
@@ -5147,12 +5158,12 @@ def masters(m, k=1):
         ff_ = m['variant'].get('face_force') or {}
         if isinstance(ff_, dict) and any(isinstance(k_, str) for k_ in ff_):    # a JSON variant: 'master|port' keys
             ff_ = {tuple(k_.split('|')) if isinstance(k_, str) else k_: v_ for k_, v_ in ff_.items()}
-        mlg_ = re.fullmatch(r'([tf])_(lg[WE]2?)_(rdn|wdn|rup|wup)', port)
+        mlg_ = re.fullmatch(r'([tf])_(lg(?:[WE]2?|[NS][EW]))_(rdn|wdn|rup|wup)', port)
         if mlg_:        # chain nets: down buses keep the old t_ / f_ face, up buses enter / leave on the opposite one
             port_ff = (mlg_.group(1) if mlg_.group(3).endswith('dn') else {'t': 'f', 'f': 't'}[mlg_.group(1)]) + '_' + mlg_.group(2)
         else:
             port_ff = port
-        mst_ = re.fullmatch(r'([tf])_(lg[WE]2?)(c?)_(rdn|wdn|rup|wup)', port)
+        mst_ = re.fullmatch(r'([tf])_(lg(?:[WE]2?|[NS][EW]))(c?)_(rdn|wdn|rup|wup)', port)
         if mst_ and mname.startswith('hfd_stn_lg') and (m.get('lane_station_face') or {}).get(it.name):
             # a lane-group client station: the full-width tap on the face toward its client, the chain on the opposite
             # (outer) face -- a mid-chain station's upstream and downstream share the outer face
@@ -6206,6 +6217,31 @@ def r25gq_v10():
     return v
 
 
+def r25gq_v10_hclegal():
+    """Placement successor preserving the closed HC master: use only R0/MY.
+
+    In nanometers, M4 pins need y=0 mod48 in R0, while M6 needs
+    y=0 mod64. A y mirror requires y=24 mod48 and y=0 mod64,
+    whose residues disagree mod16. MX/R180 therefore have no legal origin.
+    Move the SE/NW tap stations to the master's physical N face and
+    rebuild all die relays; the v10 routed/clock case is not reusable.
+    """
+    v = r25gq_v10()
+    v['hc_orient'] = dict(SW='R0', SE='MY', NW='R0', NE='MY')
+    v['hc_track_origins'] = True
+    v['lane_stations'] = {
+        q: dict(cfg, stations=tuple(
+            (st[0], st[1], 'N', *st[3:]) if st[1] == f'hb_hc_{q}' else st
+            for st in cfg['stations']))
+        for q, cfg in v['lane_stations'].items()}
+    v['face_force'] = dict(v['face_force'])
+    for q in ('SE', 'NW'):
+        for suf, _ in B2_CHAIN8:
+            for d in ('t', 'f'):
+                v['face_force'][(f'hfd_stn_lg{q}2', f'{d}_lg{q}_{suf}')] = 'N'
+    return v
+
+
 def r25gq_v9():
     """contract v9 = v8 + D22 (the HGI HC unit slot hb_hgi_hc; see HGI_HC_PORTS)"""
     ls_ = R25GQ['lane_stations']
@@ -6226,7 +6262,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gqn_pr9=r25gq_v9(), r25gqn_b2=r25gq_b2(), r25gqn_v10=r25gq_v10(), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gqn_pr9=r25gq_v9(), r25gqn_b2=r25gq_b2(), r25gqn_v10=r25gq_v10(), r25gqn_v10_hclegal=r25gq_v10_hclegal(), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

@@ -18,7 +18,7 @@ set -u
 D=${D:-/srv/opentallas-scratch/claude/hbmdie-v10}
 SRC=${SRC:-$D/src_120f11b14}
 V=${V:-r25gqn_v10}
-B=$D/sta; W=$B/case; G=${G:-$D/grt_${V}}
+B=${STA_ROOT:-$D/sta}; W=$B/case; G=${G:-$D/grt_${V}}
 S=$D/sta_summary.json; R=$D/results; mkdir -p $R
 MEM_PLACE=${MEM_PLACE:-64}; MEM_GRT=${MEM_GRT:-160}; CPU=${CPU:-16}
 export PYTHONHASHSEED=0
