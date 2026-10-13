@@ -1,14 +1,14 @@
 {
- "name": "hrow5_cbw-r5d-COMMIT",
+ "name": "hrow5_cbw-r5g-194034df4",
  "block": "dsfd_mtp_hrow_cbw",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
- "purpose": "el1011-ds-mtp 2026-10-12 cbw r5d: hrow5_cbw-r5c-4829659c5 TT +116.41 / DRC 0 (GRT hook worked), NEEDS_RTL FF -22.14 only (hold ECO rc=9, pre-b1e49e8f1 config). FF classes (path_summary, signoff SDC + routed IO ref): reg2reg chain stage u_c.wi -> u_c.t_w -22.14 (33 D; pin flop -> out flop across the 216-um tile, no logic, capture leaf late) and u_c.di -> u_c.t_d -6.13 (24); outputs t_w -10.53 (101) / t_d -7.68 (62) / t_r -4.96; inputs f_w -> wi -5.18 (56) / f_d -> di -3.91 (108). Fix: outhold + inhold (delay stages at the ports, by construction) and hold margin 0.01 -> 0.03 for the reg2reg chain stage; scalar ck/rst (die clock pin). On main >= b1e49e8f1.",
+ "purpose": "el1011-ds-mtp 2026-10-12 hrow5_cbw r5g: r5f (halo 5.4) still DRC 7/12, all M4 Short/Spacing at the EAST edge pins (x 443.4) of the EAST-column SRAMs only. Asymmetry: the macro's x=174.72 pin set (w_mask_in 256 tied + wd_in 120 + redundancy) routes clean when it faces the 62.9 um central channel (west column) and fails when it faces the 31.75 um outer channel (east column); the x=0 set (rd_out/addr/wd_in 136) is clean facing the outer west channel. Fix (floorplan, structural): east column mirrored MY so the floorplan is mirror-symmetric -- both columns' tie-heavy mask/wd pin sets face the central channel, both rd_out/addr sets face an outer channel. Pin counts per channel unchanged (828 central, ~415 per outer). RTL/benches unchanged; halo 5.4 kept.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-mtp-hrow",
-  "commit": "COMMIT"
+  "commit": "194034df4"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_cbw/hrow5_cbw-r5d-COMMIT"
+   "to": "results/rtl/ref_tile/hrow5_cbw/hrow5_cbw-r5g-194034df4"
   }
  ],
  "cycles_added": 0,
