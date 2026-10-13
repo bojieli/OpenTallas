@@ -1,0 +1,119 @@
+{
+ "name": "ot_qwen_tile_lsl_m5-m5-COMMIT",
+ "block": "ot_qwen_tile_lsl",
+ "ref_tile": true,
+ "owner": "Claude:el1011-reroute-m5",
+ "purpose": "M5 re-route (reroute_batch.py) of closed qfd_tile_lsl6-e032e6e6f-tc-hm0-cl (ot_qwen_tile_lsl, RTL e032e6e6f, snapshot of 7 drifted files): same RTL, outline 99.792x140.4, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-q-tile",
+ "threads": 8,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/el1011-reroute-m5",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qwen_tile_lsl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_tile_lsl.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv physical/ref_tile/ot_qwen_tile_lsl_m5/src/rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rom_pipe_exact_anr",
+    "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_qwen_tile_lsl_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_qwen_tile_lsl_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param SEED=1 --workdir {RUN}/bench/rom_pipe_exact_anr --result {RUN}/bench/rom_pipe_exact_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"\n}",
+    "expect": "pass",
+    "pass_regex": "^PASS rom_pipe",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "[m5rr: run on the e032e6e6f snapshot overlay of physical/ref_tile/ot_qwen_tile_lsl_m5/src]"
+   },
+   {
+    "name": "rom_pipe_exact_anr_s5",
+    "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_qwen_tile_lsl_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_qwen_tile_lsl_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param SEED=5 --workdir {RUN}/bench/rom_pipe_exact_anr_s5 --result {RUN}/bench/rom_pipe_exact_anr_s5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr_s5.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"\n}",
+    "expect": "pass",
+    "pass_regex": "^PASS rom_pipe",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "[m5rr: run on the e032e6e6f snapshot overlay of physical/ref_tile/ot_qwen_tile_lsl_m5/src]"
+   },
+   {
+    "name": "rom_pipe_tmut2_anr",
+    "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_qwen_tile_lsl_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_qwen_tile_lsl_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param SEED=2 --param TMUT=2 --workdir {RUN}/bench/rom_pipe_tmut2_anr --result {RUN}/bench/rom_pipe_tmut2_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_tmut2_anr.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"\n}",
+    "expect": "fail",
+    "fail_regex": "MUTVERDICT FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "[m5rr: run on the e032e6e6f snapshot overlay of physical/ref_tile/ot_qwen_tile_lsl_m5/src]"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/ot_qwen_tile_lsl_m5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/ot_qwen_tile_lsl_m5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/ot_qwen_tile_lsl_m5 --out {RUN}/record/views/ot_qwen_tile_lsl  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/ot_qwen_tile_lsl_m5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/ot_qwen_tile_lsl_m5/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/ot_qwen_tile_lsl_m5/ot_qwen_tile_lsl_m5-m5-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}
