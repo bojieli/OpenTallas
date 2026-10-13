@@ -51,11 +51,11 @@ R11 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GXPR=10"
 R21 = "-GSEED=7 -GRV=2 -GRO=1 -GVL=15"
 N64 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GNRB=64"
 C_R21 = dict(NRB=16, SW=8, VL=15, su_reads=60170, row_reads=9427, tuples=2683, bursts=1612, land_steps=1603)
-PM = 24   # GB asked for a production-shape run (measured peak: see the record's maxrss_kb)
+PM = 12   # GB asked for a production-shape run (8 parallel compiles of the verilated model; the simulation is 75 MB)
 C_N64 = dict(NRB=64, SW=8, VL=14, su_reads=60313, row_reads=9296, tuples=2992, bursts=1635, land_steps=1625)
 
 
-def run(name, args, expect, what, counts=None, extra="", mem=8, scratch=None, same_as=None, tree=None, wq=None,
+def run(name, args, expect, what, counts=None, extra="", mem=4, scratch=None, same_as=None, tree=None, wq=None,
         prod=None):
     """same_as: a run whose PASS counts this run must reproduce exactly.  tree: the TREE line the log must carry
     (parameters equal, every requested structure seen moving): the coverage refusal of a tree / owner build.
@@ -98,16 +98,16 @@ RUNS = [
         "the DUT and the reference, so the bench does not pin the latency rule by itself; recorded, not gated",
         scratch="PASS row_reads=9422"),
     run("n64_base", N64 + " -GXVM=21", "PASS", "NRB=64 XPR=0, default tile ot_qfd_vm_grp (the scratch n64_base shape)",
-        C_N64, mem=24),
-    run("n64_base_rq", N64 + " -GXVM=21", "PASS", "NRB=64 XPR=0, region tile ot_qfd_vm_region_quarter", C_N64, RQ, 24),
-    run("n64_bp_rq", N64 + " -GXVM=31 -GXPR=10", "PASS", "NRB=64 XPR=10, region tile", C_N64, RQ, 24),
+        C_N64, mem=8),
+    run("n64_base_rq", N64 + " -GXVM=21", "PASS", "NRB=64 XPR=0, region tile ot_qfd_vm_region_quarter", C_N64, RQ, 8),
+    run("n64_bp_rq", N64 + " -GXVM=31 -GXPR=10", "PASS", "NRB=64 XPR=10, region tile", C_N64, RQ, 8),
     run("n64_bp_rq_m3", N64 + " -GXVM=31 -GXPR=10 -GMUT=3", "FAIL", "NRB=64 region tile, mutant: plane 5 fine rotation",
-        None, RQ, 24, "x=38574"),
+        None, RQ, 8, "x=38574"),
     run("n64_bp_rq_m6", N64 + " -GXVM=31 -GXPR=10 -GMUT=6", "FAIL", "NRB=64 region tile, mutant: one relay free-runs",
-        None, RQ, 24, "x=249"),
+        None, RQ, 8, "x=249"),
     # ---- the region built from leaves only (ot_qfd_vm_region_leaf: gctl_t, rowrd_t, delay leaves) ----
-    run("n64_base_rl", N64 + " -GXVM=21", "PASS", "NRB=64 XPR=0, region tile ot_qfd_vm_region_leaf", C_N64, RL, 24),
-    run("n64_bp_rl", N64 + " -GXVM=31 -GXPR=10", "PASS", "NRB=64 XPR=10, region_leaf tile", C_N64, RL, 24),
+    run("n64_base_rl", N64 + " -GXVM=21", "PASS", "NRB=64 XPR=0, region tile ot_qfd_vm_region_leaf", C_N64, RL, 8),
+    run("n64_bp_rl", N64 + " -GXVM=31 -GXPR=10", "PASS", "NRB=64 XPR=10, region_leaf tile", C_N64, RL, 8),
     # ---- trees and owners in the parent.  Control trees alone and owners alone keep the stimulus (same counts as the
     #      committed runs); the me tree needs me_want 3 negedges ahead (MWD 3), which shifts the bench's random stream:
     #      its reference is the tree-less run at the same MWD. ----
@@ -171,13 +171,13 @@ RUNS = [
     run("tr_all_r21_m12", R21 + " -GXVM=36 -GXPR=10 -GMUT=12 " + T, "FAIL", "mutant: a line-control tree node is transparent"),
     run("tr_all_r21_m13", R21 + " -GXVM=36 -GXPR=10 -GMUT=13 " + T, "FAIL", "mutant: one x_q relay free-runs"),
     run("mw3_n64_bp_rq", N64 + " -GXVM=31 -GXPR=10 -GMWD=3", "PASS", "REFERENCE: NRB=64 region_quarter, no trees, lookahead 3",
-        None, RQ, 24),
+        None, RQ, 8),
     run("n64_tr_rl", N64 + " -GXVM=35 -GXPR=10 " + T, "PASS", "NRB=64, region_leaf tile, ALL trees + owners: XVM 35",
-        None, RL, 32, same_as="mw3_n64_bp_rq", tree=TR),
+        None, RL, 8, same_as="mw3_n64_bp_rq", tree=TR),
     run("n64_tr_rl_m9", N64 + " -GXVM=35 -GXPR=10 -GMUT=9 " + T, "FAIL", "NRB=64 region_leaf + trees, mutant: me-tree node",
-        None, RL, 32),
+        None, RL, 8),
     run("n64_tr_rl_m10", N64 + " -GXVM=35 -GXPR=10 -GMUT=10 " + T, "FAIL", "NRB=64 region_leaf + trees, mutant: line leaf 3",
-        None, RL, 32),
+        None, RL, 8),
     # ---- PRODUCTION SHAPE (vm_plane_sysbench_prod.sh): SW 64, ELEMS 177,808, NRB 64, SMIN 7, SMAX 11, BMAX 8, the
     #      die's 14 strides, CRB 16, region built from leaves, RV 1 RO 1; bit plane XPR 10, trees XTK 3 / XMK 2,
     #      owners with XQR 2.  x latency: XVM 24 (tiles) -> 34 (bit plane) -> 38 (owners); SU answer VL 14. ----
