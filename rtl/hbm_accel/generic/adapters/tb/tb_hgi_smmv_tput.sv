@@ -6,7 +6,10 @@
 // ot_hbm_accel_smh + 30 shadows) -> ot_hgi_smmv_pub (record-pipelined) -> ot_hgi_vm_unit.
 // Shadows: SM s replays real SM (s mod 2); per record r it is active iff M_r > s Q_r, emits rows < R_s(r) of the op the
 // real SM is emitting (row pointer) and toggles its own arrive only for ops it is active in (arrive pointer).
-// Mutants (must FAIL): MUT_ROW (pub drops s Q), MUT_SLOT (every x at slot 0), MUT_EARLY (retire on issue).
+// Mutants (must FAIL): MUT_ROW (pub drops s Q), MUT_SLOT (every x at slot 0), MUT_EARLY (retire on issue: caught by
+// the RETIRE SCOREBOARD -- every retire must follow its record's pub_done and its real SMs' arrives),
+// MUT_XRS (an XR hit reads the previous load's slot), MUT_B8E (BW8: a fragment emits before its last wave lands; run
+// with +XLJIT=n so a tpair's waves land apart).
 // B2 (+define+NCL=4): NCL cluster engines of NSM/NCL SMs each (strap sm_base = c NSM/NCL), each with its own x loader
 // and record-pipelined pub on the VM; every record goes to all clusters (accepted when all are ready) and retires when
 // the last cluster retires it.  Real SMs 0/1 sit in cluster 0; x writes of clusters > 0 reach shadows only.
@@ -31,6 +34,16 @@ module tb_hgi_smmv_tput;
     localparam integer ME = 1;
 `else
     localparam integer ME = 0;
+`endif
+`ifdef MUT_B8E
+    localparam integer MB8E = 1;
+`else
+    localparam integer MB8E = 0;
+`endif
+`ifdef MUT_XRS
+    localparam integer MXR = 1;
+`else
+    localparam integer MXR = 0;
 `endif
 `ifndef WIN
 `define WIN 4
@@ -67,8 +80,9 @@ module tb_hgi_smmv_tput;
 `else
     localparam integer MB8 = 0;
 `endif
-    integer xlup, xldn, xlbk;
+    integer xlup, xldn, xlbk, xljit;
     initial begin
+        if (!$value$plusargs("XLJIT=%d", xljit)) xljit = 0;   // BW8 slice model: + 0..XLJIT random edges a bank response (in order a lane)
         if (!$value$plusargs("XLUP=%d", xlup)) xlup = 4;
         if (!$value$plusargs("XLDN=%d", xldn)) xldn = 4;
         if (!$value$plusargs("XLBK=%d", xlbk)) xlbk = 3;
@@ -96,7 +110,7 @@ module tb_hgi_smmv_tput;
     integer errors = 0, cyc = 0;
     always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0; reg [937:0] cur; reg rec_v = 0;
-    wire rec_rdy; wire [NCL-1:0] c_rdy, c_done, c_fault, c_halt, c_pfault, c_xfault; wire [NCL*3-1:0] c_iss;
+    wire rec_rdy; wire [NCL-1:0] c_pdone; wire [NCL-1:0] c_rdy, c_done, c_fault, c_halt, c_pfault, c_xfault; wire [NCL*3-1:0] c_iss;
     wire fault = |c_fault;
     assign rec_rdy = &c_rdy;
     wire [NSM*CW-1:0] sm_cmd; wire [NSM*4-1:0] sm_ret; wire [2:0] iss_seq = c_iss[2:0];
@@ -110,13 +124,14 @@ module tb_hgi_smmv_tput;
 `endif
     wire [NCL*NXC*338-1:0] xq; wire [NCL*NXC*274-1:0] xr; wire [NCL*NPC*338-1:0] pq; wire [NCL*NPC*274-1:0] pr;
     wire [273:0] tr; reg [337:0] tq = 0;
+    reg wd_fire = 0;                        // deadlock: every cluster dumps its engine state once, then FAIL
     genvar cl;
     generate for (cl = 0; cl < NCL; cl = cl + 1) begin : g_cl
         wire x_v, x_rdy, x_done, x_fault, pub_v, pub_rdy, pub_done, pub_fault;
         wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
         wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q; wire [6:0] x_xb;
         wire l_en; wire [6:0] l_addr, l_grp; wire [2047:0] l_data;
-        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
+        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .MUT_XRS(MXR), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
             .rec_v(rec_v && rec_rdy), .rec_rdy(c_rdy[cl]),
             .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
             .rec_n_b(cur[937:917]), .rec_done(c_done[cl]), .rec_fault(c_fault[cl]), .halted(c_halt[cl]), .x_v(x_v), .x_rdy(x_rdy),
@@ -126,7 +141,7 @@ module tb_hgi_smmv_tput;
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
             .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]), .sm_cr(rv[cl*NSL +: NSL]));
         wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
-        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
             .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
             .x_fault(x_fault), .xw_en(l_en), .xw_addr(l_addr), .xw_grp(l_grp), .xw_data(l_data),
             .vmq(xq[cl*NXC*338 +: NXC*338]), .vmr(xr[cl*NXC*274 +: NXC*274]),
@@ -147,7 +162,9 @@ module tb_hgi_smmv_tput;
                 end
                 if (lh[b] != lt[b] && lq_t[b][lh[b] % 256] <= cyc) begin            // the bank takes one an edge
                     cr_t[b][ct[b] % 256] = cyc + xldn; ct[b] = ct[b] + 1;
-                    rs_t[b][rt2[b] % 256] = cyc + xlbk + xldn; rs_d[b][rt2[b] % 256] = xmem[lq_s[b][lh[b] % 256]]; rt2[b] = rt2[b] + 1;
+                    rs_t[b][rt2[b] % 256] = cyc + xlbk + xldn + ((xljit > 0) ? longint'($urandom % (xljit + 1)) : 0);
+                    if (rt2[b] > 0 && rs_t[b][rt2[b] % 256] < rs_t[b][(rt2[b] - 1) % 256]) rs_t[b][rt2[b] % 256] = rs_t[b][(rt2[b] - 1) % 256];
+                    rs_d[b][rt2[b] % 256] = xmem[lq_s[b][lh[b] % 256]]; rt2[b] = rt2[b] + 1;
                     lh[b] = lh[b] + 1;
                 end
                 if (ch[b] != ct[b] && cr_t[b][ch[b] % 256] <= cyc) begin wrq_cr[b] <= 1'b1; ch[b] = ch[b] + 1; end
@@ -164,7 +181,17 @@ module tb_hgi_smmv_tput;
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_rv(rv[cl*NSL +: NSL]), .sm_rrow(rrow[cl*NSL*12 +: NSL*12]),
             .sm_rdata(rdata[cl*NSL*256 +: NSL*256]), .vmq(pq[cl*NPC*338 +: NPC*338]), .vmr(pr[cl*NPC*274 +: NPC*274]),
             .s0_v(), .s0_idx(), .s0_data());
-        assign c_pfault[cl] = pub_fault; assign c_xfault[cl] = x_fault;
+        assign c_pfault[cl] = pub_fault; assign c_xfault[cl] = x_fault; assign c_pdone[cl] = pub_done;
+        integer n_xt = 0, n_xd = 0, n_pd = 0, n_rt = 0; reg wd_pr = 0;
+        always @(posedge clk) if (rst_n) begin
+            if (x_v && x_rdy) n_xt = n_xt + 1; if (x_done) n_xd = n_xd + 1; if (pub_done) n_pd = n_pd + 1; if (c_done[cl]) n_rt = n_rt + 1;
+            if (wd_fire && !wd_pr) begin
+                wd_pr = 1'b1;
+                $display("  CL %0d: x taken %0d done %0d, pub_done %0d, retired %0d | tail %0d xp %0d ip %0d rh %0d ppc %0d pdc %0d xn %0d x_v %b e_xd %b e_xr %b used %0d ap %0d a_ok %b xo %0d xo_v %b go %b fq %b fld %b rdy %b halt %b",
+                         cl, n_xt, n_xd, n_pd, n_rt, u_a.tail, u_a.xp, u_a.ip, u_a.rh, u_a.ppc, u_a.pdc, u_a.xn, u_a.x_v, u_a.e_xd, u_a.e_xr,
+                         u_a.used, u_a.ap, u_a.a_ok, u_a.xo, u_a.xo_v, u_a.go, u_a.fq_v, u_a.fld_v, u_a.rdy_r, u_a.halt_q);
+            end
+        end
     end endgenerate
     ot_hgi_vm_unit #(.NC(NCL * (NXC + NPC) + 1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
     integer lines_req [0:NREAL-1];
@@ -218,6 +245,7 @@ module tb_hgi_smmv_tput;
     // per real SM: the list of records it took (start handshakes), a row pointer and an arrive pointer into it
     integer opl [0:NREAL-1][0:4095]; integer opn [0:NREAL-1]; integer rowp [0:NREAL-1]; integer rown [0:NREAL-1];
     integer arrp [0:NREAL-1]; reg [NREAL-1:0] arr_q;
+    reg sb_arr [0:NREAL-1][0:NREC-1];        // retire scoreboard: real SM q arrived for record r
     integer rr0, ar0, rr1, ar1;               // front records (row / arrive) of real SM 0 / 1
     always @* begin rr0 = (rowp[0] < opn[0]) ? opl[0][rowp[0]] : 0; rr1 = (rowp[1] < opn[1]) ? opl[1][rowp[1]] : 0; end
     integer q0;
@@ -247,8 +275,36 @@ module tb_hgi_smmv_tput;
                 for (s3 = NREAL; s3 < NSM; s3 = s3 + 1)
                     if (s3 % NREAL == q0 && rows_of(opl[q0][arrp[q0]], s3) > 0) sh_arr[s3] <= ~sh_arr[s3];
                 if (q0 == 0 && opl[0][arrp[0]] < NREC) a0_c[opl[0][arrp[0]]] = cyc;
+                if (opl[q0][arrp[q0]] < NREC) sb_arr[q0][opl[q0][arrp[q0]]] = 1'b1;
                 arrp[q0] = arrp[q0] + 1;
             end
+        end
+    end
+    // RETIRE SCOREBOARD (smmv-b 10-12): a retire must FOLLOW its record's completion.  Per cluster, the i-th retire
+    // needs the cluster's i-th pub_done (the record's publication is done, in order) and, in cluster 0, an arrive of
+    // every real SM active in record i.  A retire-on-issue engine (MUT_EARLY) retires before both -> FAIL here, even
+    // when the late writes still land before the end-of-run VM readback (which is why MUT_EARLY used to pass).
+    integer sb_ret [0:NCL-1]; integer sb_pd [0:NCL-1]; integer sb_c, sb_q, sb_e = 0;
+    initial begin
+        for (sb_c = 0; sb_c < NCL; sb_c = sb_c + 1) begin sb_ret[sb_c] = 0; sb_pd[sb_c] = 0; end
+        for (sb_q = 0; sb_q < NREAL; sb_q = sb_q + 1) for (sb_c = 0; sb_c < NREC; sb_c = sb_c + 1) sb_arr[sb_q][sb_c] = 1'b0;
+    end
+    always @(posedge clk) if (rst_n) begin
+        for (sb_c = 0; sb_c < NCL; sb_c = sb_c + 1) begin
+            if (c_done[sb_c]) begin
+                if (sb_pd[sb_c] <= sb_ret[sb_c]) begin
+                    if (sb_e < 10) $display("ERR RETIRE-EARLY cluster %0d record %0d retired at cycle %0d before its publication was done (%0d pub_done)", sb_c, sb_ret[sb_c], cyc, sb_pd[sb_c]);
+                    sb_e = sb_e + 1; errors = errors + 1;
+                end
+                if (sb_c == 0 && sb_ret[0] < NREC)
+                    for (sb_q = 0; sb_q < NREAL; sb_q = sb_q + 1)
+                        if (rows_of(sb_ret[0], sb_q) > 0 && !sb_arr[sb_q][sb_ret[0]]) begin
+                            if (sb_e < 10) $display("ERR RETIRE-EARLY cluster 0 record %0d retired at cycle %0d before real SM %0d arrived", sb_ret[0], cyc, sb_q);
+                            sb_e = sb_e + 1; errors = errors + 1;
+                        end
+                sb_ret[sb_c] = sb_ret[sb_c] + 1;
+            end
+            if (c_pdone[sb_c]) sb_pd[sb_c] = sb_pd[sb_c] + 1;
         end
     end
     task automatic vm_sec(input we, input [31:0] sec, input [255:0] data, output [255:0] qd);
@@ -261,17 +317,17 @@ module tb_hgi_smmv_tput;
         end
     endtask
     // per-record trace of cluster 0
-    integer nxp = 0, nip = 0, npd = 0, xlq [0:NREC-1], xlh = 0, xlt = 0; reg [2:0] xp_q = 0, ip_q = 0;
+    integer nxp = 0, nip = 0, npd = 0, xlq [0:NREC-1], xlh = 0, xlt = 0; reg [7:0] xp_q = 0, ip_q = 0; reg ld_q = 0;
     initial for (integer z = 0; z < NREC; z = z + 1) begin xi_c[z] = -1; xd_c[z] = -1; is_c[z] = -1; a0_c[z] = -1; pd_c[z] = -1; end
     always @(posedge clk) if (rst_n) begin
-        xp_q <= g_cl[0].u_a.xp; ip_q <= g_cl[0].u_a.ip;
-        if (g_cl[0].u_a.xp != xp_q && nxp < NREC) begin
+        xp_q <= 8'(g_cl[0].u_a.xp); ip_q <= 8'(g_cl[0].u_a.ip); ld_q <= g_cl[0].u_a.x_ld_go;
+        if (8'(g_cl[0].u_a.xp) != xp_q && nxp < NREC) begin
             xi_c[nxp] = cyc;
-            if (g_cl[0].x_v) begin xlq[xlt] = nxp; xlt = xlt + 1; end else xd_c[nxp] = cyc;   // load / XR hit
+            if (ld_q) begin xlq[xlt] = nxp; xlt = xlt + 1; end else xd_c[nxp] = cyc;   // load / XR hit
             nxp = nxp + 1;
         end
         if (g_cl[0].x_done && xlh < xlt) begin xd_c[xlq[xlh]] = cyc; xlh = xlh + 1; end
-        if (g_cl[0].u_a.ip != ip_q && nip < NREC) begin is_c[nip] = cyc; nip = nip + 1; end
+        if (8'(g_cl[0].u_a.ip) != ip_q && nip < NREC) begin is_c[nip] = cyc; nip = nip + 1; end
         if (g_cl[0].pub_done && npd < NREC) begin pd_c[npd] = cyc; npd = npd + 1; end
     end
     integer j, t, k, nf, r, prev_ret, busy_sum;
@@ -283,12 +339,15 @@ module tb_hgi_smmv_tput;
     always @(posedge clk) if (rst_n) begin
         if (!wd_on || (|rv) || (|c_done) || g_sm[0].req_v || g_sm[1].req_v) wd_last = cyc;
         else if (cyc - wd_last > wd) begin
+            if (!wd_fire) begin
             $display("ERR DEADLOCK: no row / line request / retire for %0d cycles at cycle %0d (retired %0d of %0d, CR %0d AD %0d)", wd, cyc, k, NREC, CRB, `TB_AD);
             for (wi = 0; wi < NREAL; wi = wi + 1)
                 $display("  SM %0d: cr_s %0d rr_s %0d rr_nz %0d d_pend %0d st_pend %0d lines_req %0d", wi,
                          g_cl[0].u_a.cr_s[wi*$clog2(`TB_AD+1) +: $clog2(`TB_AD+1)], g_cl[0].u_a.rr_s[wi*13 +: 13],
                          g_cl[0].u_a.rr_nz[wi], g_cl[0].u_a.d_pend[wi], g_cl[0].u_a.st_pend[wi], lines_req[wi]);
-            $display("HGI_SMMV_TPUT FAIL deadlock"); $finish;
+            end
+            if (wd_fire) begin $display("HGI_SMMV_TPUT FAIL deadlock"); $finish; end
+            wd_fire = 1'b1; wd_last = cyc - wd;            // one more edge: the clusters dump, then FAIL
         end
     end
     reg [255:0] qd; reg [31:0] lastsec;

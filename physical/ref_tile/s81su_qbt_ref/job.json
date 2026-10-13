@@ -1,20 +1,20 @@
 {
- "name": "s81su_qbt_ref-v1-COMMIT",
+ "name": "s81su_qbt_ref-v3-fff1d24b0",
  "block": "dsfd_su_t_qbt",
  "ref_tile": true,
  "owner": "Claude:el1011-s81su",
- "purpose": "el1011-s81su PHYSICAL SPEC QB v3: ot_s81_su_qbt, the QB down-spine tap (pin flops + registered 16-row rotation to the 8 engines); reference tile flow",
+ "purpose": "el1011-s81su PHYSICAL SPEC QB v3b: ot_s81_su_qbt, the QB down-spine tap, aligned at the source (S_RD == L): one 8,192 b data register + tags/obase to the 8 engines, no rotation/hold (~8.45k flops); outline pin-bound (8,192 + 8,192 data pins on 4 edges ~11 pins/um), util WARN accepted; reference tile flow [M5 layer cap re-kit 10-12] ; M5: W/E faces M4-only -> h 453.6 um + pins every track (pin_min_tracks 1): W/E ~4.1-4.7k pins on 9.45k M4 tracks (<=0.50), N/S 4096 on 11.9k M5 (0.34); 2-track slots gave PPL-0111",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1011-s81su",
-  "commit": "COMMIT"
+  "commit": "fff1d24b0"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module dsfd_su_t_qbt rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qb.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_su_t_qbt u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qb.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qbt_ref/s81su_qbt_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_qbt_ref/s81su_qbt_ref-v3-fff1d24b0"
   }
  ],
  "cycles_added": 0,

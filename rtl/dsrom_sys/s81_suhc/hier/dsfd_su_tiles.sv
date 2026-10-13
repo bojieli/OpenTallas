@@ -3,90 +3,9 @@
 // SW_W 1024, SM_H 16, SM_LPH 16, S_RD 16, S_WR 16, LM 5, LA 4); pins: tools/s81_suhc/su_tiles_plan.py.  Engine tiles
 // take the down-spine row data split dn_dl / dn_dh by face.  Every master <= ~600 x 600 um.
 // dsfd_su_t_qn0 / dsfd_su_t_qn1 replaced by the QN v3 split masters (dsfd_su_t_qn.sv)
-module dsfd_su_t_kv0 (
-    input  wire          ck, rst,
-    input  wire          dn_st, input wire [3:0] dn_kind, input wire [1:0] dn_gsel, input wire dn_fp4,
-    input  wire [7:0]    dn_jid, input wire [15:0] dn_v,
-    input  wire [4095:0] dn_dl, input wire [4095:0] dn_dh,
-    input  wire          x_pp_v_i, input wire [7:0] x_pp_i_i, input wire [31:0] x_pp_d_i,
-    input  wire          x_rb_v_i, input wire [31:0] x_rb_d_i,
-    output wire          x_pp_v_o, output wire [7:0] x_pp_i_o, output wire [31:0] x_pp_d_o,
-    output wire          x_rb_v_o, output wire [31:0] x_rb_d_o,
-    output wire [7:0] o_v, output wire [111:0] o_a, output wire [127:0] o_m, output wire [4095:0] o_d,
-    output wire          o_fu, o_fo, o_alive, o_den, o_rdy, output wire [7:0] o_rjid
-);
-    ot_s81_su_tile #(.TK(1), .TI(0), .NT(2), .QN_N(256), .KV_N(512), .QB_NB(32), .SW_W(1024), .SM_H(16), .SM_LPH(16),
-                     .SM_NVMAX(40), .S_RD(16), .S_WR(16), .LM(5), .LA(4), .MUT(0)) u_t (
-        .clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_gsel_i(dn_gsel), .dn_fp4_i(dn_fp4),
-        .dn_jid_i(dn_jid), .dn_v_i(dn_v), .dn_d_i({dn_dh, dn_dl}),
-        .x_pp_v_i(x_pp_v_i), .x_pp_i_i(x_pp_i_i), .x_pp_d_i(x_pp_d_i), .x_rb_v_i(x_rb_v_i), .x_rb_d_i(x_rb_d_i),
-        .x_pp_v_o(x_pp_v_o), .x_pp_i_o(x_pp_i_o), .x_pp_d_o(x_pp_d_o), .x_rb_v_o(x_rb_v_o), .x_rb_d_o(x_rb_d_o),
-        .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
-        .o_rdy(o_rdy), .o_rjid(o_rjid));
-endmodule
-module dsfd_su_t_kv1 (
-    input  wire          ck, rst,
-    input  wire          dn_st, input wire [3:0] dn_kind, input wire [1:0] dn_gsel, input wire dn_fp4,
-    input  wire [7:0]    dn_jid, input wire [15:0] dn_v,
-    input  wire [4095:0] dn_dl, input wire [4095:0] dn_dh,
-    input  wire          x_pp_v_i, input wire [7:0] x_pp_i_i, input wire [31:0] x_pp_d_i,
-    input  wire          x_rb_v_i, input wire [31:0] x_rb_d_i,
-    output wire          x_pp_v_o, output wire [7:0] x_pp_i_o, output wire [31:0] x_pp_d_o,
-    output wire          x_rb_v_o, output wire [31:0] x_rb_d_o,
-    output wire [7:0] o_v, output wire [111:0] o_a, output wire [127:0] o_m, output wire [4095:0] o_d,
-    output wire          o_fu, o_fo, o_alive, o_den, o_rdy, output wire [7:0] o_rjid
-);
-    ot_s81_su_tile #(.TK(1), .TI(1), .NT(2), .QN_N(256), .KV_N(512), .QB_NB(32), .SW_W(1024), .SM_H(16), .SM_LPH(16),
-                     .SM_NVMAX(40), .S_RD(16), .S_WR(16), .LM(5), .LA(4), .MUT(0)) u_t (
-        .clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_gsel_i(dn_gsel), .dn_fp4_i(dn_fp4),
-        .dn_jid_i(dn_jid), .dn_v_i(dn_v), .dn_d_i({dn_dh, dn_dl}),
-        .x_pp_v_i(x_pp_v_i), .x_pp_i_i(x_pp_i_i), .x_pp_d_i(x_pp_d_i), .x_rb_v_i(x_rb_v_i), .x_rb_d_i(x_rb_d_i),
-        .x_pp_v_o(x_pp_v_o), .x_pp_i_o(x_pp_i_o), .x_pp_d_o(x_pp_d_o), .x_rb_v_o(x_rb_v_o), .x_rb_d_o(x_rb_d_o),
-        .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
-        .o_rdy(o_rdy), .o_rjid(o_rjid));
-endmodule
-module dsfd_su_t_sw (
-    input  wire          ck, rst,
-    input  wire          dn_st, input wire [3:0] dn_kind, input wire [1:0] dn_gsel, input wire dn_fp4,
-    input  wire [7:0]    dn_jid, input wire [15:0] dn_v,
-    input  wire [4095:0] dn_dl, input wire [4095:0] dn_dh,
-    input  wire          x_pp_v_i, input wire [7:0] x_pp_i_i, input wire [31:0] x_pp_d_i,
-    input  wire          x_rb_v_i, input wire [31:0] x_rb_d_i,
-    output wire          x_pp_v_o, output wire [7:0] x_pp_i_o, output wire [31:0] x_pp_d_o,
-    output wire          x_rb_v_o, output wire [31:0] x_rb_d_o,
-    output wire [1:0] o_v, output wire [27:0] o_a, output wire [31:0] o_m, output wire [1023:0] o_d,
-    output wire          o_fu, o_fo, o_alive, o_den, o_rdy, output wire [7:0] o_rjid
-);
-    ot_s81_su_tile #(.TK(3), .TI(0), .NT(8), .QN_N(256), .KV_N(512), .QB_NB(32), .SW_W(1024), .SM_H(16), .SM_LPH(16),
-                     .SM_NVMAX(40), .S_RD(16), .S_WR(16), .LM(5), .LA(4), .MUT(0)) u_t (
-        .clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_gsel_i(dn_gsel), .dn_fp4_i(dn_fp4),
-        .dn_jid_i(dn_jid), .dn_v_i(dn_v), .dn_d_i({dn_dh, dn_dl}),
-        .x_pp_v_i(x_pp_v_i), .x_pp_i_i(x_pp_i_i), .x_pp_d_i(x_pp_d_i), .x_rb_v_i(x_rb_v_i), .x_rb_d_i(x_rb_d_i),
-        .x_pp_v_o(x_pp_v_o), .x_pp_i_o(x_pp_i_o), .x_pp_d_o(x_pp_d_o), .x_rb_v_o(x_rb_v_o), .x_rb_d_o(x_rb_d_o),
-        .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
-        .o_rdy(o_rdy), .o_rjid(o_rjid));
-endmodule
-module dsfd_su_t_sm (
-    input  wire          ck, rst,
-    input  wire          dn_st, input wire [3:0] dn_kind, input wire [1:0] dn_gsel, input wire dn_fp4,
-    input  wire [7:0]    dn_jid, input wire [15:0] dn_v,
-    input  wire [4095:0] dn_dl, input wire [4095:0] dn_dh,
-    input  wire          x_pp_v_i, input wire [7:0] x_pp_i_i, input wire [31:0] x_pp_d_i,
-    input  wire          x_rb_v_i, input wire [31:0] x_rb_d_i,
-    output wire          x_pp_v_o, output wire [7:0] x_pp_i_o, output wire [31:0] x_pp_d_o,
-    output wire          x_rb_v_o, output wire [31:0] x_rb_d_o,
-    output wire [1:0] o_v, output wire [27:0] o_a, output wire [31:0] o_m, output wire [1023:0] o_d,
-    output wire          o_fu, o_fo, o_alive, o_den, o_rdy, output wire [7:0] o_rjid
-);
-    ot_s81_su_tile #(.TK(4), .TI(0), .NT(8), .QN_N(256), .KV_N(512), .QB_NB(32), .SW_W(1024), .SM_H(16), .SM_LPH(16),
-                     .SM_NVMAX(40), .S_RD(16), .S_WR(16), .LM(5), .LA(4), .MUT(0)) u_t (
-        .clk(ck), .rst_in(rst), .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_gsel_i(dn_gsel), .dn_fp4_i(dn_fp4),
-        .dn_jid_i(dn_jid), .dn_v_i(dn_v), .dn_d_i({dn_dh, dn_dl}),
-        .x_pp_v_i(x_pp_v_i), .x_pp_i_i(x_pp_i_i), .x_pp_d_i(x_pp_d_i), .x_rb_v_i(x_rb_v_i), .x_rb_d_i(x_rb_d_i),
-        .x_pp_v_o(x_pp_v_o), .x_pp_i_o(x_pp_i_o), .x_pp_d_o(x_pp_d_o), .x_rb_v_o(x_rb_v_o), .x_rb_d_o(x_rb_d_o),
-        .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
-        .o_rdy(o_rdy), .o_rjid(o_rjid));
-endmodule
+// dsfd_su_t_kv0 / dsfd_su_t_kv1 replaced by the KV v3 split masters (dsfd_su_t_kv.sv)
+// dsfd_su_t_sm replaced by the SM v3 split masters (dsfd_su_t_sm.sv)
+// dsfd_su_t_sw replaced by the SW v3 split masters (dsfd_su_t_sw.sv: dsfd_su_t_swt + dsfd_su_t_swe; quant = dsfd_su_t_qbe)
 // pin owner: 4 VM read + 4 VM write slots of the slab pins
 module dsfd_su_t_pin (
     input  wire ck, rst,
@@ -111,7 +30,7 @@ module dsfd_su_t_ctl (
     input  wire up_fu, up_fo, up_alive, up_den, up_rdy, input wire [7:0] up_rjid
 );
     ot_s81_su_ctl #(.QN_N(256), .KV_N(512), .QB_NB(32), .SW_W(1024), .SM_H(16), .SM_LPH(16), .S_RD(16), .S_WR(16),
-                    .NSW(8), .NQB(16), .NQN(4), .NKV(2), .MUT(0), .AMUT(0)) u_c (
+                    .NSW(16), .NQB(16), .NQN(4), .NKV(2), .MUT(0), .AMUT(0)) u_c (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_o),
         .p_rq_v(p_rq_v), .p_rq_row(p_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),

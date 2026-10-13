@@ -32,6 +32,10 @@ MACRO ot_hbm_accel_smh_fc_is
       LAYER M5 ;
         RECT  24.24 0 24.264 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  24.24 0.016 24.264 0.131 ;
+    END
   END fm[10]
   PIN fm[11]
     DIRECTION OUTPUT ;
@@ -54954,7 +54958,6 @@ MACRO ot_hbm_accel_smh_fc_is
      RECT  112.08 0.016 118.92 0.085 ;
      RECT  5.904 0.016 13.992 0.131 ;
      RECT  15.984 0.016 23.016 0.131 ;
-     RECT  24.24 0.016 24.264 0.131 ;
      RECT  141.264 0.016 147.336 0.133 ;
      RECT  32.208 0.016 108.936 0.179 ;
      RECT  25.824 0.085 29.928 0.229 ;

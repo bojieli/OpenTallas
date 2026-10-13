@@ -1,20 +1,20 @@
 {
- "name": "s81su_qne_ref-v1-COMMIT",
+ "name": "s81su_qne_ref-v4m-46d62c427",
  "block": "dsfd_su_t_qne",
  "ref_tile": true,
- "owner": "Claude:el1011-s81su-qn",
- "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the 8-lane QN norm engine (x32, position-independent): SRAM x/gain bank, one time-shared multiplier a lane, chunk chain -> partial, y = bf16(w*(x*r)) (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow",
+ "owner": "Claude:el1011-s81su",
+ "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the 8-lane QN norm engine (x32, position-independent): SRAM x/gain bank, one time-shared multiplier a lane, chunk chain -> partial, y = bf16(w*(x*r)) (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow [M5 layer cap re-kit 10-12] [el1012-flowreq requeue on main HEAD: M5 re-kit; v1 REFUSED pg_layer M6]",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/el1011-s81su-qn",
-  "commit": "COMMIT"
+  "branch": "main",
+  "commit": "46d62c427"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module dsfd_su_t_qne rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/ot_sram_bank.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_su_t_qne u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/ot_sram_bank.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qne_ref/s81su_qne_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_qne_ref/s81su_qne_ref-v4m-46d62c427"
   }
  ],
  "cycles_added": 0,

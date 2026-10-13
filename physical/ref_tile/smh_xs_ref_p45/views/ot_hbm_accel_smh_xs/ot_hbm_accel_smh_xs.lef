@@ -17128,6 +17128,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M6 ;
         RECT  302.331 36.8 302.4 36.832 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  302.245 36.8 302.352 36.832 ;
+    END
   END o_iw[127]
   PIN o_iw[128]
     DIRECTION OUTPUT ;
@@ -17424,6 +17428,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M6 ;
         RECT  302.331 94.784 302.4 94.816 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  302.245 94.784 302.352 94.816 ;
+    END
   END o_iw[160]
   PIN o_iw[161]
     DIRECTION OUTPUT ;
@@ -17663,6 +17671,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M6 ;
         RECT  0 142.272 0.069 142.304 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 142.272 3.443 142.304 ;
     END
   END o_iw[188]
   PIN o_iw[189]
@@ -17911,6 +17923,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M4 ;
         RECT  302.316 30.576 302.4 30.6 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  301.525 30.576 302.364 30.6 ;
     END
   END o_iw[215]
   PIN o_iw[216]
@@ -18784,6 +18800,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M6 ;
         RECT  0 137.536 0.069 137.568 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.016 137.536 5.749 137.568 ;
+    END
   END o_iw[313]
   PIN o_iw[314]
     DIRECTION OUTPUT ;
@@ -19184,6 +19204,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M5 ;
         RECT  95.184 157.596 95.208 157.68 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  95.184 157.525 95.208 157.648 ;
+    END
   END o_iw[359]
   PIN o_iw[35]
     DIRECTION OUTPUT ;
@@ -19464,6 +19488,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M6 ;
         RECT  302.331 13.12 302.4 13.152 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  302.245 13.12 302.352 13.152 ;
+    END
   END o_iw[390]
   PIN o_iw[391]
     DIRECTION OUTPUT ;
@@ -19472,6 +19500,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M4 ;
         RECT  0 127.44 0.084 127.464 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 127.44 1.181 127.464 ;
+    END
   END o_iw[391]
   PIN o_iw[392]
     DIRECTION OUTPUT ;
@@ -19479,6 +19511,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M4 ;
         RECT  302.316 133.104 302.4 133.128 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  302.291 133.104 302.364 133.128 ;
     END
   END o_iw[392]
   PIN o_iw[393]
@@ -19535,6 +19571,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M4 ;
         RECT  302.316 54.576 302.4 54.6 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  301.489 54.576 302.364 54.6 ;
     END
   END o_iw[399]
   PIN o_iw[39]
@@ -19695,6 +19735,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M5 ;
         RECT  70.8 157.596 70.824 157.68 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  70.8 157.525 70.824 157.648 ;
     END
   END o_iw[416]
   PIN o_iw[417]
@@ -20151,6 +20195,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M4 ;
         RECT  302.316 85.488 302.4 85.512 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  302.281 85.488 302.364 85.512 ;
     END
   END o_iw[468]
   PIN o_iw[469]
@@ -20936,6 +20984,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M4 ;
         RECT  302.316 22.224 302.4 22.248 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  301.489 22.224 302.364 22.248 ;
+    END
   END o_iw[556]
   PIN o_iw[557]
     DIRECTION OUTPUT ;
@@ -21152,6 +21204,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M6 ;
         RECT  302.331 14.784 302.4 14.816 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  301.477 14.784 302.352 14.816 ;
+    END
   END o_iw[580]
   PIN o_iw[581]
     DIRECTION OUTPUT ;
@@ -21272,6 +21328,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M6 ;
         RECT  302.331 58.176 302.4 58.208 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  302.245 58.176 302.352 58.208 ;
+    END
   END o_iw[594]
   PIN o_iw[595]
     DIRECTION OUTPUT ;
@@ -21295,6 +21355,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M4 ;
         RECT  0 129.744 0.084 129.768 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 129.744 2.408 129.768 ;
     END
   END o_iw[597]
   PIN o_iw[598]
@@ -21528,6 +21592,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M4 ;
         RECT  0 125.616 0.084 125.64 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 125.616 0.137 125.64 ;
+    END
   END o_iw[622]
   PIN o_iw[623]
     DIRECTION OUTPUT ;
@@ -21551,6 +21619,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M4 ;
         RECT  0 131.184 0.084 131.208 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 131.184 2.408 131.208 ;
     END
   END o_iw[625]
   PIN o_iw[626]
@@ -21632,6 +21704,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M5 ;
         RECT  21.36 157.596 21.384 157.68 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  21.36 157.525 21.384 157.648 ;
+    END
   END o_iw[634]
   PIN o_iw[635]
     DIRECTION OUTPUT ;
@@ -21647,6 +21723,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M6 ;
         RECT  302.331 93.376 302.4 93.408 ;
+    END
+    PORT
+      LAYER M6 ;
+        RECT  301.477 93.376 302.352 93.408 ;
     END
   END o_iw[636]
   PIN o_iw[637]
@@ -21872,6 +21952,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M4 ;
         RECT  302.316 126 302.4 126.024 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  300.913 126 302.364 126.024 ;
+    END
   END o_iw[661]
   PIN o_iw[662]
     DIRECTION OUTPUT ;
@@ -21967,6 +22051,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M5 ;
         RECT  96.528 157.596 96.552 157.68 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  96.528 156.709 96.552 157.648 ;
     END
   END o_iw[672]
   PIN o_iw[673]
@@ -22392,6 +22480,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M4 ;
         RECT  302.316 6.864 302.4 6.888 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  301.489 6.864 302.364 6.888 ;
+    END
   END o_iw[71]
   PIN o_iw[720]
     DIRECTION OUTPUT ;
@@ -22552,6 +22644,10 @@ MACRO ot_hbm_accel_smh_xs
       LAYER M6 ;
         RECT  302.331 96.576 302.4 96.608 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  301.477 96.576 302.352 96.608 ;
+    END
   END o_iw[738]
   PIN o_iw[739]
     DIRECTION OUTPUT ;
@@ -22623,6 +22719,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M4 ;
         RECT  0 133.008 0.084 133.032 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 133.008 1.181 133.032 ;
     END
   END o_iw[746]
   PIN o_iw[747]
@@ -22719,6 +22819,10 @@ MACRO ot_hbm_accel_smh_xs
     PORT
       LAYER M5 ;
         RECT  294 157.596 294.024 157.68 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  293.904 157.525 294.024 157.648 ;
     END
   END o_iw[757]
   PIN o_iw[758]
@@ -48627,7 +48731,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  0.06 135.024 0.097 135.816 ;
      RECT  0.06 46.512 0.133 56.616 ;
      RECT  0.097 100.656 0.133 113.784 ;
-     RECT  0.06 125.616 0.137 125.64 ;
      RECT  0.133 38.976 0.181 39 ;
      RECT  0.133 40.128 0.181 40.152 ;
      RECT  0.133 41.136 0.181 42.216 ;
@@ -48639,8 +48742,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  0.565 38.208 0.605 42.216 ;
      RECT  0.133 44.352 1.141 44.376 ;
      RECT  0.517 31.632 1.181 36.984 ;
-     RECT  0.06 127.44 1.181 127.464 ;
-     RECT  0.06 133.008 1.181 133.032 ;
      RECT  0.133 45.6 1.217 56.616 ;
      RECT  1.181 31.92 1.717 36.984 ;
      RECT  0.605 38.208 1.717 39 ;
@@ -48677,8 +48778,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  1.717 94.416 2.408 96.936 ;
      RECT  1.717 98.352 2.408 114.408 ;
      RECT  1.717 117.792 2.408 119.112 ;
-     RECT  0.06 129.744 2.408 129.768 ;
-     RECT  0.06 131.184 2.408 131.208 ;
      RECT  0.097 134.88 2.408 135.816 ;
      RECT  1.717 139.488 2.408 139.704 ;
      RECT  2.408 2.016 2.437 155.532 ;
@@ -54397,21 +54496,14 @@ MACRO ot_hbm_accel_smh_xs
      RECT  301.523 133.104 302.291 134.568 ;
      RECT  302.245 136.128 302.291 137.016 ;
      RECT  302.209 139.968 302.291 149.544 ;
-     RECT  301.489 6.864 302.364 6.888 ;
      RECT  302.281 10.032 302.364 10.344 ;
-     RECT  301.489 22.224 302.364 22.248 ;
      RECT  302.281 25.392 302.364 26.28 ;
      RECT  301.489 28.368 302.364 29.448 ;
-     RECT  301.525 30.576 302.364 30.6 ;
      RECT  301.489 31.824 302.364 32.136 ;
      RECT  302.281 47.184 302.364 49.032 ;
      RECT  301.525 50.352 302.364 52.104 ;
-     RECT  301.489 54.576 302.364 54.6 ;
      RECT  301.523 67.056 302.364 69 ;
      RECT  301.489 70.8 302.364 71.208 ;
-     RECT  302.281 85.488 302.364 85.512 ;
-     RECT  300.913 126 302.364 126.024 ;
-     RECT  302.291 133.104 302.364 133.128 ;
      RECT  302.291 143.28 302.364 149.544 ;
      RECT  300.949 154.32 302.364 154.536 ;
     LAYER M5 ;
@@ -58685,7 +58777,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  270.384 157.477 275.112 157.525 ;
      RECT  276.24 157.333 281.736 157.525 ;
      RECT  243.312 157.477 255.624 157.619 ;
-     RECT  21.36 157.525 21.384 157.648 ;
      RECT  22.8 156.757 23.976 157.648 ;
      RECT  30.288 156.853 30.408 157.648 ;
      RECT  32.4 157.525 35.784 157.648 ;
@@ -58694,7 +58785,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  48.336 157.525 51.72 157.648 ;
      RECT  52.848 157.525 62.856 157.648 ;
      RECT  63.888 157.525 69.192 157.648 ;
-     RECT  70.8 157.525 70.824 157.648 ;
      RECT  72.048 157.525 74.856 157.648 ;
      RECT  77.04 157.525 78.696 157.648 ;
      RECT  80.112 157.525 81.192 157.648 ;
@@ -58702,8 +58792,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  85.2 157.525 86.856 157.648 ;
      RECT  89.328 157.525 91.944 157.648 ;
      RECT  93.648 157.525 93.96 157.648 ;
-     RECT  95.184 157.525 95.208 157.648 ;
-     RECT  96.528 156.709 96.552 157.648 ;
      RECT  98.256 154.789 99.912 157.648 ;
      RECT  102.096 156.853 102.504 157.648 ;
      RECT  103.536 157.525 106.344 157.648 ;
@@ -58733,7 +58821,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  286.8 155.845 288.168 157.648 ;
      RECT  289.2 157.477 290.088 157.648 ;
      RECT  292.08 156.757 292.776 157.648 ;
-     RECT  293.904 157.525 294.024 157.648 ;
      RECT  295.44 156.421 295.56 157.648 ;
      RECT  46.032 157.648 46.056 157.667 ;
      RECT  105.84 157.648 105.864 157.667 ;
@@ -58773,7 +58860,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  3.349 55.296 3.397 56.032 ;
      RECT  3.157 76.928 3.397 76.96 ;
      RECT  3.157 93.632 3.397 102.304 ;
-     RECT  0.016 142.272 3.443 142.304 ;
      RECT  2.16 58.016 3.493 58.688 ;
      RECT  2.16 68.816 3.493 69.488 ;
      RECT  2.773 14.816 3.539 16.8 ;
@@ -58808,7 +58894,6 @@ MACRO ot_hbm_accel_smh_xs
      RECT  4.451 7.808 5.605 9.504 ;
      RECT  4.211 25.616 5.605 26.288 ;
      RECT  4.595 34.944 5.747 56.032 ;
-     RECT  0.016 137.536 5.749 137.568 ;
      RECT  5.747 55.296 5.795 56.032 ;
      RECT  4.787 14.656 5.941 15.488 ;
      RECT  5.653 17.088 5.941 18.272 ;
@@ -60707,17 +60792,10 @@ MACRO ot_hbm_accel_smh_xs
      RECT  302.149 62.016 302.245 63.072 ;
      RECT  301.477 64.704 302.245 66.144 ;
      RECT  301.571 133.952 302.245 144.096 ;
-     RECT  302.245 13.12 302.352 13.152 ;
-     RECT  301.477 14.784 302.352 14.816 ;
      RECT  301.477 16.192 302.352 17.76 ;
      RECT  300.325 20.16 302.352 21.6 ;
-     RECT  302.245 36.8 302.352 36.832 ;
      RECT  301.477 43.072 302.352 43.488 ;
-     RECT  302.245 58.176 302.352 58.208 ;
      RECT  302.245 61.632 302.352 66.144 ;
-     RECT  301.477 93.376 302.352 93.408 ;
-     RECT  302.245 94.784 302.352 94.816 ;
-     RECT  301.477 96.576 302.352 96.608 ;
      RECT  302.245 133.696 302.352 144.096 ;
   END
 END ot_hbm_accel_smh_xs

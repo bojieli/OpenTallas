@@ -28,11 +28,21 @@ module dsfd_sp_su_h #(
     // act-quant engines; spine stops: the tap, then the quant engines (the norm engines and the reduce hang off the tap)
     parameter integer NQE = QN_N / 8,
     parameter integer NQQ = QN_N / 32,
-    parameter integer NKV = (KV_N >= 128) ? 2 : 1,
+    // KV (el1011-s81su-kv, spec v3): a tap (4 data quarters) + NKE = KV_N / 8 norm engines (the last 8: RoPE) + 4 half
+    // trees + a reduce + NKQ = KV_N / 32 act-quant engines; ONE spine stop (the tap's; the engines' slots merge there).
+    // NKV = the exps-row writes of a KV vector (one a group of 8 blocks; the control tile's rows_out)
+    parameter integer NKV = KV_N / 256,
+    parameter integer NKE = KV_N / 8,
+    parameter integer NKQ = KV_N / 32,
     // QB (el1011-s81su, spec v3): one tap + NPB engines (rate-matched to the down spine: NPB = S_RD / 2 blocks a pass)
     parameter integer NPB = (S_RD / 2 > 2) ? S_RD / 2 : 2,
     parameter integer ERL = (S_RD >= 16) ? 3 : 1,      // tap -> engine relays, equal depth on every engine (lockstep)
     parameter integer NSW = (SW_W >= 128) ? SW_W / 128 : 1,
+    // SW (el1011-s81su-sw, spec v3): one tap + NSWQ act-quant engines (the QB master) on the spine, NSWQ * 2 * 16 / SLPE
+    // ... lane engines off the tap (SLPE lanes each, rate-matched: a beat takes >= SLPE spine cycles); ERS equal-depth
+    // relay stations tap -> lane engine (and lane faults back), <= 500 um a station over the ~3.2 x 2 mm SW region
+    parameter integer NSWQ = (S_RD / 2 > 2) ? S_RD / 2 : 2,
+    parameter integer ERS = (S_RD >= 16) ? 5 : 1,
     parameter integer NSM = (SM_H >= 2) ? SM_H / 2 : 1,
     parameter integer NPO = (S_RD >= 16 && S_WR >= 16) ? 4 : 1,
     // relay stations on every pin owner link (spine slices and control seams), the same depth on every link so the
@@ -42,6 +52,8 @@ module dsfd_sp_su_h #(
     // and on the controller pulse nets c_cmd / c_done between the slab's N-face pins and the control tile (cck domain;
     // ~2.25 mm in the su_s composition: 5 stations for <= 500 um)
     parameter integer SRD = (S_RD >= 16) ? 2 : 1,
+    // SM stop (spec v3): relay stations on every link between its masters (a stop ~1.3 x 1.0 mm: 2 for <= 500 um)
+    parameter integer SRL = (S_RD >= 16) ? 2 : 1,
     parameter integer NRC = (S_RD >= 16) ? 5 : 1
 ) (
     input  wire                cck, crs,
@@ -65,7 +77,23 @@ module dsfd_sp_su_h #(
 );
     localparam integer NQB = 1 + NPB;                  // QB stops: the tap, then the engines
     localparam integer NQN = 1 + NQQ;                  // QN stops: the tap, then the quant engines
-    localparam integer NTL = NQN + NKV + NQB + NSW + NSM;
+    localparam integer NSWS = 1 + NSWQ;                // SW stops: the tap, then the quant engines
+    localparam integer NTL = NQN + 1 + NQB + NSWS + NSM;
+    localparam integer SLPE = (SW_W / (8 * S_RD) > 16) ? 16 : (SW_W / (8 * S_RD) < 1) ? 1 : SW_W / (8 * S_RD);
+    localparam integer SL = 2 * NSWQ, SNPS = (SW_W / 16) / SL, SEPR = 16 / SLPE, SNCH = SL * SEPR, SNE = SNCH * SNPS;
+    // SW tap -> lane engines, lane chains -> quant engines
+    wire [SL*512-1:0]    sw_d;
+    wire [SNPS-1:0]      sw_gv, sw_uv;
+    wire [11:0]          sw_t;
+    wire [31:0]          sw_w, sw_lim;
+    wire [13:0]          sw_ob;
+    wire [SNCH-1:0]      sw_f;                         // chain-head lane faults, relayed into the tap
+    wire [SNE-1:0]       sc_v, sc_f;                   // engine e = ch * SNPS + P: its chain output
+    wire [SNE*16*SLPE-1:0] sc_d;
+    wire [SNE*12-1:0]    sc_t;
+    wire                 snxv [0:NSWQ-1];
+    wire [255:0]         snxq [0:NSWQ-1];
+    wire [9:0]           snxe [0:NSWQ-1];
     localparam integer QL = QN_N / 16;                 // QN tap positions (rows a vector)
     localparam integer DQ_ = 1280;                     // q width (the golden's DQ)
     // QB tap -> engines (positions 2b / 2b + 1 to engine b) and the engines' pair exchange
@@ -115,7 +143,7 @@ module dsfd_sp_su_h #(
     wire [S_WR-1:0]    p_uv;
     wire               rst_c;
     ot_s81_su_ctl #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
-                    .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(QB_NB / 2), .NQN(QN_N / 64), .NKV(NKV), .MUT(MUT), .AMUT(AMUT)) u_ctl (
+                    .S_RD(S_RD), .S_WR(S_WR), .NSW((SW_W >= 64) ? SW_W / 64 : 1), .NQB(QB_NB / 2), .NQN(QN_N / 64), .NKV(NKV), .MUT(MUT), .AMUT(AMUT)) u_ctl (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(cc_v), .c_cmd_d(cc_d), .c_done_v(cd_v),
         .c_done_tag(cd_t), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_c),
         .p_rq_v(c_rq_v), .p_rq_row(c_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),
@@ -190,10 +218,145 @@ module dsfd_sp_su_h #(
         wire go, rf; wire [31:0] eps;
         ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_gv (.clk(sk), .rst_n(rst[0]), .d(qt_go), .q(go));
         ot_hdc_delay #(.W(32), .D(ERL)) u_gd (.clk(sk), .rst_n(rst[0]), .d(qt_eps), .q(eps));
-        ot_s81_su_qnr #(.NE(NQE), .NV(DQ_ / QN_N), .D(DQ_), .LM(LM), .LA(LA)) u_qnr (
-            .clk(sk), .rst_in(rst[0]), .i_go(go), .i_eps(eps), .p_v(qp_v), .p_p(qp_p), .p_d(qp_d), .r_v(qr_v), .r_d(qr_d),
-            .o_f(rf));
+        // two half trees (engines 0..NQE/2-1, NQE/2..NQE-1) -> the reduce (NE 2: the golden tree's top add, vector
+        // levels, / D, + eps, rsqrt); each half is its own hardened tile (<= 15k sinks)
+        wire [1:0] hv, hp, hf; wire [63:0] hd;
+        genvar hh;
+        for (hh = 0; hh < 2; hh = hh + 1) begin : g_qnh
+            ot_s81_su_qnh #(.NE(NQE / 2), .LA(LA)) u_qnh (
+                .clk(sk), .rst_in(rst[0]), .i_go(go), .p_v(qp_v[hh * (NQE / 2) +: NQE / 2]),
+                .p_p(qp_p[hh * (NQE / 2) +: NQE / 2]), .p_d(qp_d[hh * 16 * NQE +: 16 * NQE]), .s_v(hv[hh]), .s_p(hp[hh]),
+                .s_d(hd[32 * hh +: 32]), .o_f(hf[hh]));
+        end
+        ot_s81_su_qnr #(.NE(2), .NV(DQ_ / QN_N), .D(DQ_), .LM(LM), .LA(LA)) u_qnr (
+            .clk(sk), .rst_in(rst[0]), .i_go(go), .i_eps(eps), .p_v(hv), .p_p(hp), .p_d(hd), .p_f(hf), .r_v(qr_v),
+            .r_d(qr_d), .o_f(rf));
         ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rf (.clk(sk), .rst_n(rst[0]), .d(rf), .q(qn_f[NQE]));
+    end endgenerate
+
+
+    // ------------------------------------------------------------------ KV: norm engines + reduce + quant (off the spine)
+    localparam integer KL = KV_N / 16;                 // KV tap positions (rows a vector)
+    localparam integer NRP = 64 / 8;                   // RoPE engines (RD 64)
+    wire [KL-1:0]       kt_v  [0:3];
+    wire [KL*128-1:0]   kt_d  [0:3];
+    wire [511:0]        kt_cs [0:3];
+    wire                kt_gk, kt_go;
+    wire [1:0]          kt_gr, kt_gw;
+    wire [13:0]         kt_ob;
+    wire [31:0]         kt_eps;
+    wire [NKE:0]        kv_f;
+    wire [NKE-1:0]      ky_v, kp_v;
+    wire [NKE*256-1:0]  ky_d;
+    wire [NKE*32-1:0]   kp_d;
+    wire                kr_v;
+    wire [31:0]         kr_d;
+    wire [NKQ-1:0]      kq_v, kq_fu, kq_fo, kq_al, kq_de, kq_ev;
+    wire [NKQ*14-1:0]   kq_a;
+    wire [NKQ*16-1:0]   kq_m;
+    wire [NKQ*512-1:0]  kq_d;
+    wire [NKQ*10-1:0]   kq_ee;
+    wire                kqxv [0:NKQ-1];
+    wire [255:0]        kqxq [0:NKQ-1];
+    genvar ke;
+    generate for (ke = 0; ke < NKE; ke = ke + 1) begin : g_kve
+        // engine ke = position ke / 2, data half ke % 2 = quarters 2 (ke % 2), 2 (ke % 2) + 1; equal-depth relays
+        localparam integer KP = ke / 2, KH = ke % 2;
+        wire iv, igk, ef, pv, yv; wire [255:0] ix, yd; wire [1:0] igr, igw; wire [31:0] pd; wire rv; wire [31:0] rd;
+        ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_iv (.clk(sk), .rst_n(rst[0]), .d(kt_v[2 * KH][KP]), .q(iv));
+        ot_hdc_delay #(.W(256 + 5), .D(ERL)) u_id (.clk(sk), .rst_n(rst[0]),
+            .d({kt_d[2 * KH + 1][128 * KP +: 128], kt_d[2 * KH][128 * KP +: 128], kt_gk, kt_gr, kt_gw}),
+            .q({ix, igk, igr, igw}));
+        ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[0]), .d(kr_v), .q(rv));
+        ot_hdc_delay #(.W(32), .D(ERL)) u_rd (.clk(sk), .rst_n(rst[0]), .d(kr_d), .q(rd));
+        if (ke >= NKE - NRP) begin : g_rp
+            // RoPE engine k: cos / sin of lane pairs 4 k .. 4 k + 3 = quarter k % 4 of param rows 1 / 2 (cos), 3 / 4 (sin)
+            localparam integer K = ke - (NKE - NRP);
+            wire [127:0] cc, sn;
+            ot_hdc_delay #(.W(256), .D(ERL)) u_cs (.clk(sk), .rst_n(rst[0]),
+                .d({kt_cs[K % 4][(K < 4 ? 256 : 384) +: 128], kt_cs[K % 4][(K < 4 ? 0 : 128) +: 128]}), .q({sn, cc}));
+            ot_s81_su_kve #(.RP(1), .LM(LM), .LA(LA)) u_kve (
+                .clk(sk), .rst_in(rst[0]), .i_v(iv), .i_x(ix), .i_gk(igk), .i_gr(igr), .i_gw(igw), .i_cos(cc), .i_sin(sn),
+                .r_v(rv), .r_d(rd), .p_v(pv), .p_d(pd), .y_v(yv), .y(yd), .o_f(ef));
+        end else begin : g_np
+            ot_s81_su_kve #(.RP(0), .LM(LM), .LA(LA)) u_kve (
+                .clk(sk), .rst_in(rst[0]), .i_v(iv), .i_x(ix), .i_gk(igk), .i_gr(igr), .i_gw(igw), .i_cos(128'd0),
+                .i_sin(128'd0), .r_v(rv), .r_d(rd), .p_v(pv), .p_d(pd), .y_v(yv), .y(yd), .o_f(ef));
+        end
+        assign ky_v[ke] = yv; assign ky_d[256 * ke +: 256] = yd;
+        ot_hdc_delay #(.W(2), .D(ERL), .RESET(1)) u_pv (.clk(sk), .rst_n(rst[0]), .d({pv, ef}), .q({kp_v[ke], kv_f[ke]}));
+        ot_hdc_delay #(.W(32), .D(ERL)) u_pd (.clk(sk), .rst_n(rst[0]), .d(pd), .q(kp_d[32 * ke +: 32]));
+    end endgenerate
+    generate if (1) begin : g_kvr
+        localparam integer NKH = NKE / 16;
+        wire go, rf; wire [31:0] eps;
+        ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_gv (.clk(sk), .rst_n(rst[0]), .d(kt_go), .q(go));
+        ot_hdc_delay #(.W(32), .D(ERL)) u_gd (.clk(sk), .rst_n(rst[0]), .d(kt_eps), .q(eps));
+        // NKH half trees of 16 engines (the QN master qnh) -> the reduce (NE NKH: the golden tree's top levels)
+        wire [NKH-1:0] hv, hp, hf; wire [NKH*32-1:0] hd;
+        genvar hh;
+        for (hh = 0; hh < NKH; hh = hh + 1) begin : g_kvh
+            ot_s81_su_qnh #(.NE(16), .LA(LA)) u_qnh (
+                .clk(sk), .rst_in(rst[0]), .i_go(go), .p_v(kp_v[16 * hh +: 16]), .p_p(16'd0),
+                .p_d(kp_d[512 * hh +: 512]), .s_v(hv[hh]), .s_p(hp[hh]), .s_d(hd[32 * hh +: 32]), .o_f(hf[hh]));
+        end
+        ot_s81_su_qnr #(.NE(NKH), .NV(1), .D(KV_N), .LM(LM), .LA(LA)) u_kvr (
+            .clk(sk), .rst_in(rst[0]), .i_go(go), .i_eps(eps), .p_v(hv), .p_p(hp), .p_d(hd), .p_f(hf), .r_v(kr_v),
+            .r_d(kr_d), .o_f(rf));
+        ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rf (.clk(sk), .rst_n(rst[0]), .d(rf), .q(kv_f[NKE]));
+    end endgenerate
+    genvar kb;
+    generate for (kb = 0; kb < NKQ; kb = kb + 1) begin : g_kvq
+        // block kb = norm engines 4 kb .. 4 kb + 3; e gather of blocks 8 (kb / 8) .. into engine kb % 8 == 7
+        wire rv; wire [1023:0] ry; wire [13:0] rob; wire [7:0] gv; wire [79:0] ge;
+        ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[0]), .d(ky_v[4 * kb]), .q(rv));
+        ot_hdc_delay #(.W(1024 + 14), .D(ERL)) u_rd (.clk(sk), .rst_n(rst[0]), .d({ky_d[1024 * kb +: 1024], kt_ob}),
+                                                    .q({ry, rob}));
+        if (kb % 8 == 7) begin : g_gl
+            ot_hdc_delay #(.W(8), .D(ERL), .RESET(1)) u_gv (.clk(sk), .rst_n(rst[0]), .d(kq_ev[kb - 7 +: 8]), .q(gv));
+            ot_hdc_delay #(.W(80), .D(ERL)) u_ge (.clk(sk), .rst_n(rst[0]), .d(kq_ee[10 * (kb - 7) +: 80]), .q(ge));
+        end else begin : g_g0
+            assign gv = 8'd0; assign ge = 80'd0;
+        end
+        wire [3:0] CB = kb;
+        wire ov, ofu, ofo, oal, ode, ord; wire [13:0] oa; wire [15:0] om; wire [511:0] od; wire [7:0] orj;
+        ot_s81_su_kvq #(.N(KV_N), .MLAT(LM)) u_kvq (
+            .clk(sk), .rst_in(rst[0]), .cfg_b(CB), .i_v(rv), .i_y(ry), .i_ob(rob), .nx_i_v(kqxv[kb ^ 1]),
+            .nx_i_q(kqxq[kb ^ 1]), .nx_o_v(kqxv[kb]), .nx_o_q(kqxq[kb]), .e_o_v(kq_ev[kb]), .e_o_e(kq_ee[10 * kb +: 10]),
+            .g_i_v(gv), .g_i_e(ge), .o_v(ov), .o_a(oa), .o_m(om), .o_d(od), .o_fu(ofu), .o_fo(ofo), .o_alive(oal),
+            .o_den(ode), .o_rdy(ord), .o_rjid(orj));
+        // to the KV stop: equal-depth relays + (S_WR < NKQ, reduced shapes only) a phase of 8 cycles a slot group so
+        // the engines sharing slot kb % S_WR never write in the same cycle (full shape: 0)
+        localparam integer PH = ERL + 8 * (kb / S_WR);
+        ot_hdc_delay #(.W(5), .D(PH), .RESET(1)) u_ov (.clk(sk), .rst_n(rst[0]), .d({ov, ofu, ofo, oal, ode}),
+            .q({kq_v[kb], kq_fu[kb], kq_fo[kb], kq_al[kb], kq_de[kb]}));
+        ot_hdc_delay #(.W(14 + 16 + 512), .D(PH)) u_od (.clk(sk), .rst_n(rst[0]), .d({oa, om, od}),
+            .q({kq_a[14 * kb +: 14], kq_m[16 * kb +: 16], kq_d[512 * kb +: 512]}));
+    end endgenerate
+
+    // ------------------------------------------------------------------ SW: lane engines (off the spine, chains)
+    genvar sch, sp;
+    generate for (sch = 0; sch < SNCH; sch = sch + 1) begin : g_swc
+        // chain sch = pass row sch / SEPR, chunk sch % SEPR; engine P of the chain owns that chunk of pass P
+        for (sp = 0; sp < SNPS; sp = sp + 1) begin : g_swe
+            localparam integer E = sch * SNPS + sp;
+            wire gv, uv; wire [32*SLPE-1:0] d; wire [11:0] et; wire [31:0] ew, el;
+            ot_hdc_delay #(.W(2), .D(ERS), .RESET(1)) u_iv (.clk(sk), .rst_n(rst[0]), .d({sw_gv[sp], sw_uv[sp]}), .q({gv, uv}));
+            ot_hdc_delay #(.W(32 * SLPE + 12 + 64), .D(ERS)) u_id (.clk(sk), .rst_n(rst[0]),
+                .d({sw_d[512 * (sch / SEPR) + 32 * SLPE * (sch % SEPR) +: 32 * SLPE], sw_t, sw_w, sw_lim}), .q({d, et, ew, el}));
+            wire civ, cif; wire [16*SLPE-1:0] cid; wire [11:0] cit;
+            if (sp == SNPS - 1) begin : g_tail
+                assign civ = 1'b0; assign cif = 1'b0; assign cid = 0; assign cit = 12'd0;
+            end else begin : g_link
+                assign civ = sc_v[E + 1]; assign cif = sc_f[E + 1]; assign cid = sc_d[16 * SLPE * (E + 1) +: 16 * SLPE];
+                assign cit = sc_t[12 * (E + 1) +: 12];
+            end
+            ot_s81_su_swe #(.LPE(SLPE), .LM(LM), .LA(LA)) u_swe (
+                .clk(sk), .rst_in(rst[0]), .i_gv(gv), .i_uv(uv), .i_d(d), .i_t(et), .i_w(ew), .i_lim(el),
+                .c_iv(civ), .c_id(cid), .c_it(cit), .c_if(cif), .c_ov(sc_v[E]), .c_od(sc_d[16 * SLPE * E +: 16 * SLPE]),
+                .c_ot(sc_t[12 * E +: 12]), .c_of(sc_f[E]));
+        end
+        ot_hdc_delay #(.W(1), .D(ERS), .RESET(1)) u_fr (.clk(sk), .rst_n(rst[0]), .d(sc_f[sch * SNPS]), .q(sw_f[sch]));
     end endgenerate
 
     // ------------------------------------------------------------------ engine tiles
@@ -202,13 +365,14 @@ module dsfd_sp_su_h #(
     wire        xrv [0:NTL]; wire [31:0] xrd [0:NTL];
     genvar t;
     generate for (t = 0; t < NTL; t = t + 1) begin : g_t
-        localparam integer B1 = NQN, B2 = NQN + NKV, B3 = B2 + NQB, B4 = B3 + NSW;
+        localparam integer B1 = NQN, B2 = NQN + 1, B3 = B2 + NQB, B4 = B3 + NSWS;
         // TK 2: the QB tap (no write slots), TK 5: QB engine TI (slots 2 TI, 2 TI + 1)
-        // TK 6: the QN tap (no write slots), TK 7: QN quant engine TI (slot TI)
-        localparam integer TK = (t == 0) ? 6 : (t < B1) ? 7 : (t < B2) ? 1 : (t == B2) ? 2 : (t < B3) ? 5 : (t < B4) ? 3 : 4;
-        localparam integer TI = (t < B1) ? (t == 0 ? 0 : t - 1) : (t < B2) ? t - B1 : (t < B3) ? (t == B2 ? 0 : t - B2 - 1) : (t < B4) ? t - B3 : t - B4;
-        localparam integer NT = (t < B1) ? NQQ : (t < B2) ? NKV : (t < B3) ? NPB : (t < B4) ? NSW : NSM;
-        localparam integer WS = (TK == 2 || TK == 6) ? 0 : (TK == 7) ? 1 : S_WR / NT, W0 = TI * WS;
+        // TK 6: the QN tap (no write slots), TK 7: QN quant engine TI (slot TI), TK 8: the KV stop (tap + all S_WR slots)
+        // TK 12: the SW tap (no write slots), TK 13: SW quant engine TI (the QB master; slots 2 TI, 2 TI + 1)
+        localparam integer TK = (t == 0) ? 6 : (t < B1) ? 7 : (t < B2) ? 8 : (t == B2) ? 2 : (t < B3) ? 5 : (t == B3) ? 12 : (t < B4) ? 13 : 4;
+        localparam integer TI = (t < B1) ? (t == 0 ? 0 : t - 1) : (t < B2) ? t - B1 : (t < B3) ? (t == B2 ? 0 : t - B2 - 1) : (t < B4) ? (t == B3 ? 0 : t - B3 - 1) : t - B4;
+        localparam integer NT = (t < B1) ? NQQ : (t < B2) ? 1 : (t < B3) ? NPB : (t < B4) ? NSWQ : NSM;
+        localparam integer WS = (TK == 2 || TK == 6 || TK == 12) ? 0 : (TK == 7) ? 1 : (TK == 8) ? S_WR : S_WR / NT, W0 = TI * WS;
         localparam integer WSX = (WS > 0) ? WS : 1;
         wire [WSX-1:0] o_v; wire [WSX*14-1:0] o_a; wire [WSX*16-1:0] o_m; wire [WSX*512-1:0] o_d;
         wire o_fu, o_fo, o_alive, o_den, o_rdy; wire [7:0] o_rjid;
@@ -269,6 +433,53 @@ module dsfd_sp_su_h #(
                 .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
                 .o_rdy(o_rdy), .o_rjid(o_rjid));
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+        end else if (TK == 8) begin : g_kv
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+            // four data quarters, identical control; quarter 0 carries the job fields, the status and the faults
+            wire tfu, tfo, tal, tde, trd; wire [7:0] trj;
+            genvar u;
+            for (u = 0; u < 4; u = u + 1) begin : g_u
+                wire [S_RD*128-1:0] dq;
+                genvar s2;
+                for (s2 = 0; s2 < S_RD; s2 = s2 + 1) begin : g_s
+                    assign dq[128 * s2 +: 128] = dd[t][512 * s2 + 128 * u +: 128];
+                end
+                wire ugk, ugo, ufu, ufo, ual, ude, urd; wire [1:0] ugr, ugw; wire [13:0] uob; wire [31:0] uep; wire [7:0] urj;
+                ot_s81_su_kvt #(.N(KV_N), .S_RD(S_RD), .NFI(NKE + 1), .MUT(MUT)) u_kvt (
+                    .clk(sk), .rst_in(rst[t]),
+                    .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_jid_i(dji[t]), .dn_v_i(dv[t]), .dn_d_i(dq),
+                    .i_f(u == 0 ? kv_f : {(NKE + 1){1'b0}}), .e_v(kt_v[u]), .e_d(kt_d[u]), .e_gk(ugk), .e_gr(ugr),
+                    .e_gw(ugw), .e_go(ugo), .e_ob(uob), .e_eps(uep), .e_cs(kt_cs[u]), .o_fu(ufu), .o_fo(ufo),
+                    .o_alive(ual), .o_den(ude), .o_rdy(urd), .o_rjid(urj));
+                if (u == 0) begin : g_u0
+                    assign kt_gk = ugk; assign kt_gr = ugr; assign kt_gw = ugw; assign kt_go = ugo; assign kt_ob = uob;
+                    assign kt_eps = uep;
+                    assign tfu = ufu; assign tfo = ufo; assign tal = ual; assign tde = ude; assign trd = urd; assign trj = urj;
+                end
+            end
+            // the quant engines' slots: engine b on slot b % S_WR (phased apart when shared)
+            reg [S_WR-1:0] mv; reg [S_WR*14-1:0] ma; reg [S_WR*16-1:0] mm; reg [S_WR*512-1:0] md;
+            always @(*) begin : mrg
+                integer b;
+                mv = 0; ma = 0; mm = 0; md = 0;
+                for (b = 0; b < NKQ; b = b + 1) if (kq_v[b]) begin
+                    mv[b % S_WR] = 1'b1;
+                    ma[14 * (b % S_WR) +: 14] = ma[14 * (b % S_WR) +: 14] | kq_a[14 * b +: 14];
+                    mm[16 * (b % S_WR) +: 16] = mm[16 * (b % S_WR) +: 16] | kq_m[16 * b +: 16];
+                    md[512 * (b % S_WR) +: 512] = md[512 * (b % S_WR) +: 512] | kq_d[512 * b +: 512];
+                end
+            end
+            assign o_v = mv; assign o_a = ma; assign o_m = mm; assign o_d = md;
+            assign o_fu = tfu | (|kq_fu); assign o_fo = tfo | (|kq_fo); assign o_alive = tal & (&kq_al);
+            assign o_den = tde & (&kq_de); assign o_rdy = trd; assign o_rjid = trj;
+`ifndef SYNTHESIS
+            always @(posedge sk) if (rst[t]) begin : sc
+                integer b, c;
+                for (b = 0; b < NKQ; b = b + 1) for (c = b + 1; c < NKQ; c = c + 1)
+                    if (kq_v[b] && kq_v[c] && (b % S_WR) == (c % S_WR))
+                        $fatal(1, "dsfd_sp_su_h: KV quant engines %0d and %0d write slot %0d in one cycle", b, c, b % S_WR);
+            end
+`endif
         end else if (TK == 2) begin : g_qbt
             assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
@@ -290,6 +501,118 @@ module dsfd_sp_su_h #(
                 .i_vlo(rv[0]), .i_vhi(rv[1]), .i_lo(rd[511:0]), .i_hi(rd[1023:512]), .i_tlo(rt[11:0]), .i_thi(rt[23:12]),
                 .i_ob(rob), .i_f4(rf4), .nx_i_v(nxv[PN]), .nx_i_q(nxq[PN]), .nx_i_e(nxe[PN]),
                 .nx_o_v(nxv[TI]), .nx_o_q(nxq[TI]), .nx_o_e(nxe[TI]),
+                .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
+                .o_rdy(o_rdy), .o_rjid(o_rjid));
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+        end else if (TK == 4) begin : g_sm
+            // SM (el1011-s81su-sm, spec v3): tap/out smt + per head 16 lanes sml, sum smc, root smr, 8 divide smd;
+            // every intra-stop link through SRL equal-depth relays (lanes in lockstep)
+            localparam integer NPS = (S_RD < 5) ? S_RD : 5;
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+            wire s_v, p_v, c_v, cs_v, e_v, o_vv, den_v, f_any; wire [1023:0] e_d; wire [511:0] o_dd;
+            wire [6:0] c_nv; wire [2:0] c_lt; wire [31:0] c_scale; wire [63:0] c_sink; wire [4:0] cs_i; wire [63:0] cs_d;
+            wire [1:0] hden_v; wire [15:0] hf;
+            wire [3:0] CTI = TI;
+            ot_s81_su_smt #(.SM_H(SM_H), .SM_LPH(SM_LPH), .S_RD(S_RD), .WS(WS), .MUT(MUT)) u_smt (
+                .clk(sk), .rst_in(rst[t]), .cfg_ti(CTI), .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_jid_i(dji[t]),
+                .dn_v_i(dv[t]), .dn_p_i(dd[t][0 +: NPS * 512]),
+                .s_v(s_v), .p_v(p_v), .c_v(c_v), .c_nv(c_nv), .c_lt(c_lt), .c_scale(c_scale), .c_sink(c_sink),
+                .cs_v(cs_v), .cs_i(cs_i), .cs_d(cs_d), .e_v_i(e_v), .e_d_i(e_d), .o_v_i(o_vv), .o_d_i(o_dd),
+                .den_v_i(hden_v[0]), .f_i(f_any),
+                .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
+                .o_rdy(o_rdy), .o_rjid(o_rjid));
+            assign f_any = |hf;
+            // relayed copies (SRL stations) of the tap's outputs: one copy per destination group
+            wire rs_v, rp_v, rc_v, rcs_v; wire [1023:0] rd_d; wire [6:0] rc_nv; wire [2:0] rc_lt; wire [31:0] rc_scale;
+            wire [63:0] rc_sink; wire [4:0] rcs_i; wire [63:0] rcs_d;
+            ot_hdc_delay #(.W(4), .D(SRL), .RESET(1)) u_tv (.clk(sk), .rst_n(rst[t]), .d({s_v, p_v, c_v, cs_v}),
+                .q({rs_v, rp_v, rc_v, rcs_v}));
+            ot_hdc_delay #(.W(7 + 3 + 32 + 64 + 5 + 64), .D(SRL)) u_td (.clk(sk), .rst_n(rst[t]),
+                .d({c_nv, c_lt, c_scale, c_sink, cs_i, cs_d}), .q({rc_nv, rc_lt, rc_scale, rc_sink, rcs_i, rcs_d}));
+            // the stop's operand rows (spine slots 2 TI, 2 TI + 1) straight to the engines: SRL + 2 stations (the tap's
+            // pin + valid registers), so they meet their valids at the engines' pin flops
+            ot_hdc_delay #(.W(1024), .D(SRL + 2)) u_tdd (.clk(sk), .rst_n(rst[t]), .d(dd[t][1024 * TI +: 1024]), .q(rd_d));
+            wire [1:0] he_v; wire [1:0] ho_v;
+            genvar h, ln, pp;
+            for (h = 0; h < 2; h = h + 1) begin : g_h
+                wire [15:0] l_mxv, l_ev, l_es, l_el; wire [511:0] l_mx, l_e;
+                wire mv, dv0; wire [31:0] nmb, den;
+                wire rmv, rdv; wire [31:0] rnmb, rden;
+                ot_hdc_delay #(.W(2), .D(SRL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[t]), .d({mv, dv0}), .q({rmv, rdv}));
+                ot_hdc_delay #(.W(64), .D(SRL)) u_rd (.clk(sk), .rst_n(rst[t]), .d({nmb, den}), .q({rnmb, rden}));
+                for (ln = 0; ln < 16; ln = ln + 1) begin : g_l
+                    wire sken = (ln == 0);
+                    ot_s81_su_sml #(.NVMAX(SM_NVMAX), .LM(LM), .LA(LA)) u_sml (
+                        .clk(sk), .rst_in(rst[t]), .sk_en(sken), .i_cv(rc_v), .i_nv(rc_nv), .i_scale(rc_scale),
+                        .i_sink(rc_sink[32 * h +: 32]), .i_sv(rs_v), .i_s(rd_d[512 * h + 32 * ln +: 32]),
+                        .i_mv(rmv), .i_nmb(rnmb), .o_mxv(l_mxv[ln]), .o_mx(l_mx[32 * ln +: 32]),
+                        .o_ev(l_ev[ln]), .o_es(l_es[ln]), .o_el(l_el[ln]), .o_e(l_e[32 * ln +: 32]));
+                end
+                // lane outputs relayed to the sum / root / tap
+                wire rl_mxv, rl_ev, rl_el, rl_skv; wire [511:0] rl_mx, rl_e; wire [31:0] rl_sk;
+                ot_hdc_delay #(.W(4), .D(SRL), .RESET(1)) u_lv (.clk(sk), .rst_n(rst[t]),
+                    .d({l_mxv[1], l_ev[1], l_el[1], l_ev[0] && l_es[0]}), .q({rl_mxv, rl_ev, rl_el, rl_skv}));
+                ot_hdc_delay #(.W(512 + 512 + 32), .D(SRL)) u_ld (.clk(sk), .rst_n(rst[t]), .d({l_mx, l_e, l_e[31:0]}),
+                    .q({rl_mx, rl_e, rl_sk}));
+                wire c_ov, c_ol; wire [31:0] c_os; wire rc_ov, rc_ol; wire [31:0] rc_os;
+                ot_s81_su_smc #(.LPH(16), .LA(LA)) u_smc (.clk(sk), .rst_in(rst[t]), .i_v(rl_ev), .i_l(rl_el), .i_e(rl_e),
+                    .o_v(c_ov), .o_l(c_ol), .o_s(c_os));
+                ot_hdc_delay #(.W(2), .D(SRL), .RESET(1)) u_cv (.clk(sk), .rst_n(rst[t]), .d({c_ov, c_ol}), .q({rc_ov, rc_ol}));
+                ot_hdc_delay #(.W(32), .D(SRL)) u_cd (.clk(sk), .rst_n(rst[t]), .d(c_os), .q(rc_os));
+                ot_s81_su_smr #(.LPH(16), .LA(LA)) u_smr (.clk(sk), .rst_in(rst[t]), .i_cv(rc_v), .i_lt(rc_lt),
+                    .i_mxv(rl_mxv), .i_mx(rl_mx), .i_skv(rl_skv), .i_sk(rl_sk), .i_vv(rc_ov), .i_vl(rc_ol), .i_vs(rc_os),
+                    .o_mv(mv), .o_nmb(nmb), .o_dv(dv0), .o_den(den));
+                assign hden_v[h] = rdv;
+                // divide engines (one RoPE pair each)
+                wire [7:0] d_ov, d_f; wire [255:0] d_o;
+                for (pp = 0; pp < 8; pp = pp + 1) begin : g_p
+                    wire [2:0] CP = pp;
+                    ot_s81_su_smd #(.LPH(16), .LM(LM), .LA(LA), .STALEDEN(MUT == 5)) u_smd (
+                        .clk(sk), .rst_in(rst[t]), .cfg_p(CP), .i_pv(rp_v), .i_pa(rd_d[512 * h + 64 * pp +: 64]),
+                        .i_dv(rdv), .i_den(rden), .i_csv(rcs_v), .i_csi(rcs_i), .i_csd(rcs_d),
+                        .o_ov(d_ov[pp]), .o_o(d_o[32 * pp +: 32]), .o_f(d_f[pp]));
+                end
+                assign hf[8 * h +: 8] = d_f;
+                // e / o rows to the tap
+                wire [255:0] rd_o; wire rd_ov;
+                ot_hdc_delay #(.W(1), .D(SRL), .RESET(1)) u_ov (.clk(sk), .rst_n(rst[t]), .d(d_ov[0]), .q(rd_ov));
+                ot_hdc_delay #(.W(256), .D(SRL)) u_od (.clk(sk), .rst_n(rst[t]), .d(d_o), .q(rd_o));
+                assign e_d[512 * h +: 512] = rl_e;
+                assign o_dd[256 * h +: 256] = rd_o;
+                assign he_v[h] = rl_ev;
+                assign ho_v[h] = rd_ov;
+            end
+            assign e_v = he_v[0];
+            assign o_vv = ho_v[0];
+            assign den_v = hden_v[0];
+        end else if (TK == 12) begin : g_swt
+            assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+            ot_s81_su_swt #(.SW_W(SW_W), .S_RD(S_RD), .NSQ(NSWQ), .NCH(SNCH)) u_swt (
+                .clk(sk), .rst_in(rst[t]),
+                .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_fp4_i(df4[t]), .dn_jid_i(dji[t]),
+                .dn_v_i(dv[t]), .dn_d_i(dd[t]), .i_f(sw_f), .e_d(sw_d), .e_gv(sw_gv), .e_uv(sw_uv), .e_t(sw_t), .e_w(sw_w),
+                .e_lim(sw_lim), .e_ob(sw_ob), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy),
+                .o_rjid(o_rjid));
+        end else if (TK == 13) begin : g_swq
+            // quant engine TI: lo = the chain heads of pass row 2 TI, hi = row 2 TI + 1 (words {bf16, 16'h0})
+            wire [1023:0] x; wire [13:0] rob;
+            genvar hc, hj;
+            for (hc = 0; hc < 2 * SEPR; hc = hc + 1) begin : g_c
+                for (hj = 0; hj < SLPE; hj = hj + 1) begin : g_j
+                    assign x[32 * (SLPE * hc + hj) +: 32] =
+                        {sc_d[((2 * TI * SEPR + hc) * SNPS) * 16 * SLPE + 16 * hj +: 16], 16'h0000};
+                end
+            end
+            ot_hdc_delay #(.W(14), .D(ERS)) u_ob (.clk(sk), .rst_n(rst[t]), .d(sw_ob), .q(rob));
+            localparam integer PN = TI ^ 1;
+            localparam integer HL = (2 * TI * SEPR) * SNPS, HH = ((2 * TI + 1) * SEPR) * SNPS;
+            wire [3:0] CB = TI;
+            ot_s81_su_qbe #(.QB_NB(SW_W / 32), .NPB(NSWQ)) u_qbe (
+                .clk(sk), .rst_in(rst[t]), .cfg_b(CB),
+                .i_vlo(sc_v[HL]), .i_vhi(sc_v[HH]), .i_lo(x[511:0]), .i_hi(x[1023:512]), .i_tlo(sc_t[12 * HL +: 12]),
+                .i_thi(sc_t[12 * HH +: 12]), .i_ob(rob), .i_f4(1'b0), .nx_i_v(snxv[PN]), .nx_i_q(snxq[PN]), .nx_i_e(snxe[PN]),
+                .nx_o_v(snxv[TI]), .nx_o_q(snxq[TI]), .nx_o_e(snxe[TI]),
                 .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
                 .o_rdy(o_rdy), .o_rjid(o_rjid));
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;

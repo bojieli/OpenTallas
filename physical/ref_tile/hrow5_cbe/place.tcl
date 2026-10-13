@@ -20,7 +20,9 @@ proc ot_ref_pick {by master pat} {
   foreach i [dict get $by $master] {
     set n [ot_ref_strip [$i getName]]
     if {[lsearch -exact $used $n] >= 0} continue
-    if {$pat ne "" && ![string match [ot_ref_strip $pat] $n]} continue
+    set sp [ot_ref_strip $pat]
+    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)
+    if {$pat ne "" && $sp ne $n && ![string match $sp $n]} continue
     lappend used $n; return $i
   }
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
@@ -30,13 +32,13 @@ set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
 $i setOrient R0; $i setLocation [expr {round(31.104 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 31.104 25.92 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(268.704 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 268.704 25.92 R0"
+$i setOrient MY; $i setLocation [expr {round(268.704 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 268.704 25.92 MY"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
 $i setOrient R0; $i setLocation [expr {round(31.104 * $dbu)}] [expr {round(120.96 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 31.104 120.96 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(268.704 * $dbu)}] [expr {round(120.96 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 268.704 120.96 R0"
+$i setOrient MY; $i setLocation [expr {round(268.704 * $dbu)}] [expr {round(120.96 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 268.704 120.96 MY"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 4} { error "ref_tile place: expected 4 macros, netlist has $nb" }

@@ -16,6 +16,10 @@ MACRO ot_attn_bank_sn544
       LAYER M6 ;
         RECT  0 5.952 0.192 5.984 ;
     END
+    PORT
+      LAYER M6 ;
+        RECT  0.144 5.952 0.613 5.984 ;
+    END
   END clk
   PIN d[0]
     DIRECTION INPUT ;
@@ -10426,7 +10430,6 @@ MACRO ot_attn_bank_sn544
      RECT  70.896 11.728 70.92 11.795 ;
      RECT  81.072 11.728 81.096 11.795 ;
     LAYER M6 ;
-     RECT  0.144 5.952 0.613 5.984 ;
      RECT  0 2.572 1.093 3.436 ;
      RECT  1.093 2.24 1.669 3.436 ;
      RECT  1.669 2.24 2.821 4.192 ;
