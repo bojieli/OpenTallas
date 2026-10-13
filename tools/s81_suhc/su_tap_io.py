@@ -127,15 +127,8 @@ def through_tap(w: float, h: float, w_ctl: list, e_ctl: list) -> Plan:
     return p
 
 
-def qbt() -> Plan:
-    w_ctl = ["ck", "rst", "dn_st", *bits("dn_kind", 4), *bits("dn_gsel", 2), "dn_fp4", *bits("dn_jid", 8), *bits("dn_v", 16)]
-    e_ctl = [*bits("e_v", 16), *bits("e_t", 192), *bits("e_ob", 14), "e_f4", "o_fu", "o_fo", "o_alive", "o_den", "o_rdy",
-             *bits("o_rjid", 8)]
-    return through_tap(572.4, 453.6, w_ctl, e_ctl)
-
-
 def half_tap(w_ctl: list, e_ctl: list, din: str, dout: str) -> Plan:
-    """SW half-tap column (36.72 x 453.6, as kvt / qnt): 4,096 data bits W -> E, bit i in and out on the same M4 track,
+    """SW / QB half-tap column (36.72 x 453.6, as kvt / qnt): 4,096 data bits W -> E, bit i in and out on the same M4 track,
     every second track (393 um of the 453.6-um face, 10.4 b/um); the control low on both faces, next to data bit 0
     (the descriptor words the control captures are bits 0..511)."""
     p = Plan(36.72, 453.6)
@@ -146,6 +139,13 @@ def half_tap(w_ctl: list, e_ctl: list, din: str, dout: str) -> Plan:
     p.run("W", bits(din, 4096), k0)
     p.run("E", bits(dout, 4096), k0)
     return p
+
+
+def qbtl() -> Plan:
+    w_ctl = ["ck", "rst", "dn_st", *bits("dn_kind", 4), *bits("dn_gsel", 2), "dn_fp4", *bits("dn_jid", 8), *bits("dn_v", 16)]
+    e_ctl = [*bits("e_v", 16), *bits("e_t", 192), *bits("e_ob", 14), "e_f4", "o_fu", "o_fo", "o_alive", "o_den", "o_rdy",
+             *bits("o_rjid", 8)]
+    return half_tap(w_ctl, e_ctl, "dn_dl", "e_dl")
 
 
 def swtl() -> Plan:
@@ -186,7 +186,7 @@ def kvt() -> Plan:
     return p
 
 
-TILES = {"s81su_qbt_ref": (qbt, "dsfd_su_t_qbt: straight-through bit tracks, every second track"),
+TILES = {"s81su_qbtl_ref": (qbtl, "dsfd_su_t_qbtl: QB half-tap (slots 0-7 + control), 4,096 straight M4 bit tracks W -> E; slots 8-15 = dsfd_su_t_swth"),
          "s81su_swtl_ref": (swtl, "dsfd_su_t_swtl: SW half-tap (slots 0-7 + control), 4,096 straight M4 bit tracks W -> E"),
          "s81su_swth_ref": (swth, "dsfd_su_t_swth: SW half-tap (slots 8-15), 4,096 straight M4 bit tracks W -> E"),
          "s81su_kvt_ref": (kvt, "dsfd_su_t_kvt: bit-local bands (16 slots W, 32 positions E), control at mid height")}
