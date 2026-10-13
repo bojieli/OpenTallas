@@ -1,0 +1,167 @@
+{
+ "ot_hgi_idxw_lane": {
+  "flops": 6469,
+  "cells": 14392,
+  "max_nonclock_fanout": 72,
+  "top_fanout_nets": [
+   [
+    "$\\lg$rdreg[0]$q[2]",
+    72
+   ],
+   [
+    "rnc[1]",
+    70
+   ],
+   [
+    "$abc$25157$new_n5663[0]",
+    65
+   ],
+   [
+    "$abc$25157$new_n5670[0]",
+    65
+   ],
+   [
+    "$abc$25157$new_n6108[0]",
+    65
+   ],
+   [
+    "$abc$25157$new_n6110[0]",
+    65
+   ]
+  ],
+  "reset_pin_loads_max": 70,
+  "check": true
+ },
+ "ot_hgi_idxw_qcore": {
+  "flops": 10479,
+  "cells": 95112,
+  "max_nonclock_fanout": 129,
+  "top_fanout_nets": [
+   [
+    "rnc[2]",
+    129
+   ],
+   [
+    "$\\glog$rdreg[1]$q[2]",
+    106
+   ],
+   [
+    "p3_g[0]",
+    84
+   ],
+   [
+    "$abc$119820$new_n16843[0]",
+    71
+   ],
+   [
+    "g_b3[1].g_w[0].bq[3]",
+    69
+   ],
+   [
+    "g_b3[6].g_w[0].bq[2]",
+    68
+   ]
+  ],
+  "reset_pin_loads_max": 91,
+  "check": true
+ },
+ "ot_hgi_idxw_keep": {
+  "flops": 12703,
+  "cells": 36778,
+  "max_nonclock_fanout": 109,
+  "top_fanout_nets": [
+   [
+    "ki_ci[0]",
+    109
+   ],
+   [
+    "g_cp[5].cp[1]",
+    66
+   ],
+   [
+    "g_cp[5].cp[2]",
+    66
+   ],
+   [
+    "g_cp[5].cp[5]",
+    66
+   ],
+   [
+    "g_cp[5].cp[0]",
+    66
+   ],
+   [
+    "g_cp[5].cp[3]",
+    66
+   ]
+  ],
+  "reset_pin_loads_max": 61,
+  "check": true
+ },
+ "ot_hgi_idxw_beat": {
+  "flops": 6925,
+  "cells": 21414,
+  "max_nonclock_fanout": 64,
+  "top_fanout_nets": [
+   [
+    "$abc$62098$new_n11255[0]",
+    64
+   ],
+   [
+    "$abc$62098$new_n10259[0]",
+    64
+   ],
+   [
+    "$abc$62098$new_n11258[0]",
+    64
+   ],
+   [
+    "$abc$62098$new_n11260[0]",
+    64
+   ],
+   [
+    "$abc$62098$new_n11263[0]",
+    64
+   ],
+   [
+    "$abc$62098$new_n11265[0]",
+    64
+   ]
+  ],
+  "reset_pin_loads_max": 26,
+  "check": true
+ },
+ "ot_hgi_idxw_wr": {
+  "flops": 12233,
+  "cells": 96598,
+  "max_nonclock_fanout": 100,
+  "top_fanout_nets": [
+   [
+    "$abc$134997$auto$opt_dff.cc:360:combine_resets$10425[0]",
+    100
+   ],
+   [
+    "wstart_q[0]",
+    77
+   ],
+   [
+    "rnc[2]",
+    68
+   ],
+   [
+    "$abc$134997$new_n73176[0]",
+    65
+   ],
+   [
+    "$abc$134997$new_n73206[0]",
+    65
+   ],
+   [
+    "$abc$134997$new_n14423[0]",
+    64
+   ]
+  ],
+  "reset_pin_loads_max": 99,
+  "check": true
+ }
+}
