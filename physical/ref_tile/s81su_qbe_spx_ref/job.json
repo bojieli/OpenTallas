@@ -1,5 +1,5 @@
 {
- "name": "s81su_qbe_spx_ref-v5-spx-COMMIT",
+ "name": "s81su_qbe_spx_ref-v5-spx-2df2353b8",
  "block": "dsfd_su_t_qbe",
  "ref_tile": true,
  "owner": "Claude:el1013-s81su-qnqb",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1013-s81su-qnqb",
-  "commit": "COMMIT"
+  "commit": "2df2353b8"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qbe_spx_ref/s81su_qbe_spx_ref-v5-spx-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_qbe_spx_ref/s81su_qbe_spx_ref-v5-spx-2df2353b8"
   }
  ],
  "cycles_added": 0,
