@@ -55,6 +55,8 @@ def pg_audit(path):
 def generate(a):
     m = read(a.model)
     pg = pg_audit(a.lef)
+    if a.pg_lef:
+        pg.update(pg_audit(a.pg_lef))
     vp = BUMP_ARRAY / math.sqrt(0.5)
     x0, y0, x1, y1 = a.window
     guard = 2 * vp
@@ -99,10 +101,10 @@ def generate(a):
            f' SIZE {tw:.6f} BY {th:.6f} ;']
     for net, offset in (('VDD', 1.35), ('VSS', 4.05)):
         lef += [f' PIN {net}', ' DIRECTION INOUT ;', f' USE {"POWER" if net == "VDD" else "GROUND"} ;', ' PORT', ' LAYER M7 ;']
-        yy = offset
-        while yy + .24 < th:
-            lef.append(f' RECT 0.1 {yy:.6f} {tw - .1:.6f} {yy + .288:.6f} ;')
-            yy += 5.4
+        xx = offset
+        while xx + .288 < tw:
+            lef.append(f' RECT {xx:.6f} 0.1 {xx + .288:.6f} {th - .1:.6f} ;')
+            xx += 5.4
         lef += [' END', f' END {net}']
     lef += ['END hbm_ir_load', 'END LIBRARY']
     (a.out / 'loads.lef').write_text('\n'.join(lef) + '\n')
@@ -160,7 +162,7 @@ puts OT_DONE
 '''
     (a.out / 'run.tcl').write_text(t)
     manifest = dict(schema='opentallas.hbm.ir_window.v1', source_commit=m.get('source_commit'),
-                    input_sha256={str(a.model): sha(a.model), str(a.lef): sha(a.lef)},
+                    input_sha256={str(p): sha(p) for p in (a.model, a.lef, a.pg_lef, Path(__file__)) if p},
                     inner_um=a.window, solved_um=[bx, by, ex, ey], guard_um=guard,
                     load_tile_um=[tw, th], peak_w=sum(loads.values()), die_peak_w=sum(by_kind.values()),
                     die_peak_w_by_kind=dict(by_kind), loads=len(loads),
@@ -210,6 +212,7 @@ if __name__ == '__main__':
     p.add_argument('mode', choices=['generate', 'record'])
     p.add_argument('--model', type=Path)
     p.add_argument('--lef', type=Path)
+    p.add_argument('--pg-lef', type=Path, help='real-view LEF separately loaded by the STA case')
     p.add_argument('--window', type=float, nargs=4)
     p.add_argument('--coverage', type=float, default=.0878)
     p.add_argument('--out', type=Path, required=True)
