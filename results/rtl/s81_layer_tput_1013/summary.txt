@@ -1,0 +1,26 @@
+L0 PASS bench layer cycles 11168 path price 16557.6 measured 18090.0 1.0925 {'n': 45, 'median': 2, 'max': 390}
+   hc.unpriced                  runs 6 measured    788 price      0.0 ratio None crit False
+   hc:attn.hc_pre               runs 1 measured    449 price    327.0 ratio 1.373 crit True
+   coll:attn.a_allgather        runs 1 measured     40 price    434.0 ratio 0.092 crit True
+   coll:attn.rows_allgather     runs 1 measured    115 price   1024.0 ratio 0.112 crit False
+   coll:attn.out_allreduce      runs 1 measured   1171 price    827.0 ratio 1.416 crit True
+   hc:attn.hc_post              runs 1 measured   1165 price    112.9 ratio 10.319 crit True
+   hc:ffn.hc_pre                runs 1 measured    449 price    333.9 ratio 1.345 crit True
+   coll:ffn.router_allgather    runs 1 measured     30 price    421.9 ratio 0.071 crit True
+   coll:ffn.combine_allreduce   runs 1 measured    637 price    827.0 ratio 0.77 crit True
+   hc:ffn.hc_post               runs 1 measured    632 price    112.9 ratio 5.598 crit True
+L2 PASS bench layer cycles 20360 path price 28089.4 measured 28723.0 1.0226 {'n': 60, 'median': 2, 'max': 2511}
+   hc.unpriced                  runs 6 measured    788 price      0.0 ratio None crit False
+   hc:attn.hc_pre               runs 1 measured    449 price    329.9 ratio 1.361 crit True
+   coll:attn.a_allgather        runs 1 measured     43 price    434.0 ratio 0.099 crit True
+   coll:attn.idx.topk_merge     runs 1 measured     37 price    551.0 ratio 0.067 crit True
+   coll:attn.rows_allgather     runs 1 measured    111 price   1032.9 ratio 0.107 crit True
+   coll:attn.out_allreduce      runs 1 measured    891 price    827.0 ratio 1.077 crit True
+   hc:attn.hc_post              runs 1 measured    886 price    112.9 ratio 7.848 crit True
+   hc:ffn.hc_pre                runs 1 measured    449 price    333.9 ratio 1.345 crit True
+   coll:ffn.router_allgather    runs 1 measured     30 price    421.9 ratio 0.071 crit True
+   coll:ffn.combine_allreduce   runs 1 measured   1185 price    827.0 ratio 1.433 crit True
+   hc:ffn.hc_post               runs 1 measured   1180 price    112.9 ratio 10.452 crit True
+ar {"attn.hc_pre": {"nodes": 40, "added_cycles": 4880.0, "e2e_loss_pct": 0.585}, "attn.a_allgather": {"nodes": 40, "added_cycles": -15640.0, "e2e_loss_pct": -1.923}, "attn.rows_allgather": {"nodes": 40, "added_cycles": -7272.0, "e2e_loss_pct": -0.885}, "attn.out_allreduce": {"nodes": 40, "added_cycles": 13760.0, "e2e_loss_pct": 1.633}, "attn.hc_post": {"nodes": 40, "added_cycles": 42084.0, "e2e_loss_pct": 4.832}, "ffn.hc_pre": {"nodes": 40, "added_cycles": 4604.0, "e2e_loss_pct": 0.552}, "ffn.router_allgather": {"nodes": 40, "added_cycles": -5760.0, "e2e_loss_pct": -0.7}, "ffn.combine_allreduce": {"nodes": 40, "added_cycles": 14320.0, "e2e_loss_pct": 1.698}, "ffn.hc_post": {"nodes": 40, "added_cycles": 42684.0, "e2e_loss_pct": 4.897}, "attn.idx.topk_merge": {"nodes": 8, "added_cycles": -4112.0, "e2e_loss_pct": -0.499}, "ALL": {"nodes": 368, "added_cycles": 89548.0, "e2e_loss_pct": 9.75}}
+mtp {"attn.hc_pre": {"nodes": 43, "added_cycles": 5856.0, "e2e_loss_pct": 0.495}, "attn.a_allgather": {"nodes": 43, "added_cycles": -18768.0, "e2e_loss_pct": -1.62}, "attn.rows_allgather": {"nodes": 8, "added_cycles": -11817.0, "e2e_loss_pct": -1.014}, "attn.out_allreduce": {"nodes": 43, "added_cycles": 16512.0, "e2e_loss_pct": 1.383}, "attn.hc_post": {"nodes": 43, "added_cycles": 50500.8, "e2e_loss_pct": 4.112}, "ffn.hc_pre": {"nodes": 43, "added_cycles": 5524.8, "e2e_loss_pct": 0.467}, "ffn.router_allgather": {"nodes": 43, "added_cycles": -18811.2, "e2e_loss_pct": -1.623}, "ffn.combine_allreduce": {"nodes": 43, "added_cycles": 17184.0, "e2e_loss_pct": 1.438}, "ffn.hc_post": {"nodes": 43, "added_cycles": 51220.8, "e2e_loss_pct": 4.169}, "attn.idx.topk_merge": {"nodes": 8, "added_cycles": -6682.0, "e2e_loss_pct": -0.571}, "ALL": {"nodes": 360, "added_cycles": 90720.2, "e2e_loss_pct": 7.153}}
+over-only {'ar': {'nodes': 240, 'added_cycles': 122332.0, 'e2e_loss_pct': 12.861}, 'mtp': {'nodes': 258, 'added_cycles': 146798.4, 'e2e_loss_pct': 11.085}}
