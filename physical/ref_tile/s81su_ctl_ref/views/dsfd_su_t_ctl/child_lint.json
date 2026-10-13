@@ -4,9 +4,10 @@
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 833 of 887 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cmd_d[0] M5 (255.312,214.933), c_cmd_d[10] M5 (255.312,214.933), c_cmd_d[11] M5 (255.312,214.933))"
+  "(f) face-pin access: 833 of 887 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_cmd_d[0] M5 (255.312,214.933), c_cmd_d[10] M5 (255.312,214.933), c_cmd_d[11] M5 (255.312,214.933))",
+  "(g) clock insertion: no TT lib (pass --libs) - parent CTS cannot see the tile's insertion delay"
  ],
- "summary": "dsfd_su_t_ctl 572.4 x 216.0: PG M6 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M7; face pins 887 blocked-above 0 blocked-same 0; clock cck insertion 119 ps; clock sk insertion 336 ps",
+ "summary": "dsfd_su_t_ctl 572.4 x 216.0: PG M6 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M7; face pins 887 blocked-above 0 blocked-same 0; pockets M6 0 (closed)",
  "info": {
   "cell": "dsfd_su_t_ctl",
   "W": 572.4,
@@ -54,15 +55,17 @@
     "c_cmd_d[14] M5 (255.312,214.933)"
    ]
   },
-  "clock_insertion": {
-   "cck": {
-    "max_ps": 119.03,
-    "min_ps": 93.75
+  "pockets": {
+   "layer": "M6",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "added": 247
    },
-   "sk": {
-    "max_ps": 336.09,
-    "min_ps": 253.54
-   }
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }
