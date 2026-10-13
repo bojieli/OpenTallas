@@ -310,14 +310,17 @@ def golden_spec(a):
 EMBB = 1 << 32                       # BF16 embedding rows: EMBB + token * 10,240 (dyn_sel TOKEN)
 MTB = 0x170000000                    # MTP constants (ONE4 = 1, 0, 0, 0)
 # Column slot store: STACK-LOCAL COLB + slot * CSTR (dyn_sel TOKEN) on ALL FOUR stacks (h rides the swap on stacks
-# 0..3, PRE on stack 0), so the window must be free in every stack.  It sits above the HC stripe rows (stack-local
-# 30 GiB + <= 169 MB) and above the weight manifest's end on stack 2 (ds_native.MAN_END = stack 2 local 30 GiB).
-# It was 0x180000000 (stack-local 6 GiB): on stack 2 that is flat 70 GiB, INSIDE the weight manifest
-# (layers.0.ffn.experts.w2, expert 44, rows 4,098..4,881 of rank 0's die: measured 2026-10-13) -- every swap-out of
-# rows o = 2 mod 4 overwrote weight rows.  The simulator could not see it (weights come from the checkpoint, the
-# STRIPE4 code bit kept the address out of the manifest lookup) and neither could the e2e bench (SM is a stub there).
-# Kernels.check_colslot_window() now proves the window against the manifest and the HC stripe rows of the program.
-COLB = 31 << 30
+# 0..3, PRE on stack 0), so the window must be free in every stack AND inside a stack's physical bytes.  It sits in
+# ds_native's reserved DATA WINDOW (stack-local 20 GiB + 512 MiB on every stack; the weight manifest skips it), above
+# the 256 MiB kept there for the HC stripe rows.
+# It was 0x180000000 (stack-local 6 GiB): on stack 2 that is flat 70 GiB, INSIDE the weight manifest's address map
+# (layers.0.ffn.experts.w2, expert 44, rows 4,098..4,881: measured 2026-10-13 with the vehicle's manifest) -- on the
+# dies that own those rows every swap-out of rows o = 2 mod 4 wrote over weight rows.  The simulator could not see it
+# (weights come from the checkpoint, the STRIPE4 code bit kept the address out of the manifest lookup) and neither
+# could the e2e bench (SM is a stub there).  Kernels.check_colslot_window() proves the window against the manifest,
+# the HC stripe rows and the stack capacity.  (A first move to stack-local 31 GiB faulted every RTL engine: above
+# STACK_BYTES, suite s5.)
+COLB = (20 << 30) + (256 << 20)
 ROPEB = 1 << 31                      # plain RoPE rows: ROPEB + pos * 256 (cos 32 | sin 32, dyn_sel POS)
 # VM tail above ds_native's buffer map (derived from DN.Layout().end at bind time, never hard-coded: the map grows --
 # EGID 144 moved it to 261,440, rule (A)'s bank-phase-0 HC buffers to 261,696): ZT = the END token word of non-head
@@ -542,12 +545,14 @@ class Kernels:
         self.check_colslot_window()
 
     def check_colslot_window(self):
-        """The column slot windows [stack s local COLB, + NCOLSLOT x CSTR), s = 0..3, hold nothing else: no weight
-        manifest extent, no HC stripe row (8 banks: 20,480 B a stack ... the whole 81,920 B row span is refused), and
-        they stay inside the stack-local space.  (Registered data regions are refused by Hbm.add in the run.)"""
+        """The column slot windows [stack s local COLB, + NCOLSLOT x CSTR), s = 0..3, hold nothing else: they lie in
+        the reserved data window and inside the stack's physical bytes, and no weight manifest extent and no HC stripe
+        row (its whole 81,920 B span) overlaps them.  (Registered data regions are refused by Hbm.add in the run.)"""
         DN = self.DN
         span = NCOLSLOT * CSTR
-        assert COLB % 32 == 0 and 0 <= COLB and COLB + span <= 1 << 35, "column slots leave the stack-local space"
+        assert COLB % 32 == 0 and DN.DATA_WIN + (256 << 20) <= COLB and COLB + span <= DN.DATA_WIN + DN.DATA_WIN_BYTES, \
+            "column slots outside the reserved data window"
+        assert COLB + span <= DN.STACK_BYTES, "column slots beyond the stack's physical bytes"
         for s_ in range(4):
             lo = (s_ << 35) | COLB
             for e in self.man.ent:

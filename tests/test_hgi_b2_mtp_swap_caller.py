@@ -32,7 +32,7 @@ from hgi_sim.records import MDesc, Rec, encode_program
 from hgi_sim.qwen_compiler import Builder
 from hgi_sim.machine import Hbm, Die, Machine, UNITS, u_dma_load, u_dma_store
 
-COLB, CSTR = 31 << 30, 1 << 17      # independent of ds_mtp_kernels (asserted equal below)
+COLB, CSTR = (20 << 30) + (256 << 20), 1 << 17      # independent of ds_mtp_kernels (asserted equal below)
 WB = 0x100000                          # the stand-in consumer's weight rows
 POISON = 0x7F812345
 
@@ -346,9 +346,9 @@ def test_default_path_is_the_legacy_swap_byte_for_byte():
     assert encode_program(swapin) == encode_program(real(K, True))
     assert encode_program(swapout) == encode_program(real(K, False))
     # the encoded legacy bodies: origin/main 6e5c22c1c's Kernels.swap with ONE change, the column slot base COLB moved
-    # from stack-local 6 GiB (inside the weight manifest on stack 2) to 31 GiB (2026-10-13); nothing else differs
+    # from stack-local 6 GiB (inside the weight manifest on stack 2) into the reserved data window (20.25 GiB; 2026-10-13); nothing else differs
     assert hashlib.sha256(encode_program(swapin)).hexdigest() == LEGACY_SHA["in"]
     assert hashlib.sha256(encode_program(swapout)).hexdigest() == LEGACY_SHA["out"]
 
 
-LEGACY_SHA = {"in": "429112099892a8fc95483e559cfa0ac0713980aca3d1108cbbdc548024e93ed6", "out": "73dcc938fe1f2505df71f40d57ca6a7c0d450b3e4f69ec8ff376095898fed2a5"}
+LEGACY_SHA = {"in": "13be167c893993ba4832fcf542cbd141383fefe8a189e254431e5b3f6b31c3ba", "out": "0396f34b90d3e15f44543a6d73f5e3d305d0a870c2d73e74cc369ac3867712d1"}

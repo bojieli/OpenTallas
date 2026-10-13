@@ -144,6 +144,26 @@ HC_ROW_SECT = 8 * HC_RS              # sectors of one fn row (2,560 = 81,920 B =
 HC_SET_BYTES = (4 + 24 * HC_ROW_SECT) * 32
 HC_STRIPE_LOC = 30 << 30             # STRIPE4 HC rows: stack-local base (24 GiB) of the striped row region (4 stacks)
 HC_STRIPE = {}                       # stack-local row base -> (layer, which, row o)
+# Physical stack capacity: the die's loader / DMA engines refuse a stack-local byte address >= STACK_BYTES
+# (rtl ot_hbm_loader_service_join / ot_hgi_dma_back STACK_BYTES = 22,500,000,000 = 20.95 GiB; stack = address [36:35]).
+STACK_BYTES = 22_500_000_000
+# DATA WINDOW (2026-10-13): stack-local [DATA_WIN, DATA_WIN + DATA_WIN_BYTES) is reserved ON EVERY STACK for data rows
+# that live on all four stacks (the MTP column slots: ds_mtp_kernels.COLB).  Inside the physical capacity; the weight
+# manifest (stack 2 upwards) skips it (Manifest.place), a fixed-base extent in it is refused.  NOT yet moved into it
+# (their owners regenerate vectors): the HC stripe rows -- HC_STRIPE_LOC = stack-local 30 GiB is ABOVE STACK_BYTES, so
+# the real die's loader address check refuses every HC row prefetch; the first 256 MiB of the window is kept for them.
+DATA_WIN = 20 << 30
+DATA_WIN_BYTES = 512 << 20
+assert DATA_WIN + DATA_WIN_BYTES <= STACK_BYTES
+
+
+def data_window_hit(base, size):
+    """end of the reserved data window that [base, base + size) intersects on some stack, else None"""
+    for s_ in range(4):
+        lo = (s_ << 35) + DATA_WIN
+        if base < lo + DATA_WIN_BYTES and lo < base + size:
+            return lo + DATA_WIN_BYTES
+    return None
 # E-HOME (owner rule, lead GO 10-10): each Engram table lives in the HBM of 4 home dies (layer 1: ranks 0-3, layer 14:
 # ranks 4-7), 288 B rows {256 B E4M3 codes | 8 B UE8M0 | 24 B 0}, rows split contiguously over the 4 homes
 EG_HOMES = [[0, 1, 2, 3], [4, 5, 6, 7]]
@@ -307,6 +327,10 @@ class Manifest:
             base = -(-base // 544) * 544
             ex = dict(lines=True, gk=gk, gbytes=8 * SM_LB)
         size = rb * rows * n_experts
+        skip = data_window_hit(base, size)
+        if skip is not None:                 # the extent would cross a stack's reserved data window: place it after
+            base = -(-skip // 544) * 544 if lines else skip
+            assert data_window_hit(base, size) is None, (key, base, size)
         if base + size > MAN_END:
             raise MC.Fault(3, f"per-die HBM footprint: {key} ends at {(base + size) / 2**30:.1f} GiB > the "
                               f"{MAN_END / 2**30:.0f} GiB manifest window of the die's 128 GiB")
@@ -319,6 +343,8 @@ class Manifest:
 
     def place_at(self, key, base, rows, cols, fmt):
         """a fixed-base extent (IKS key regions: row-aligned, independent of placement order)"""
+        if data_window_hit(base, int(-(-cols * ESZ[fmt] // 32) * 32) * rows) is not None:
+            raise MC.Fault(3, f"fixed-base extent {key} at {base:#x} lies in a stack's reserved data window")
         rb = -(-int(cols * ESZ[fmt]) // 32) * 32
         e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=1, estride=rb * rows)
         self.ent.append(e)

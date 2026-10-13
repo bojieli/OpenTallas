@@ -13,7 +13,7 @@ from hgi_b2.mtp_swap import lower_h, lower_pre
 from hgi_sim.records import MDesc, Rec
 from hgi_sim.machine import Hbm, Die, Machine, Fault, u_dma_load, u_dma_store
 
-COLB, CSTR = 31 << 30, 1 << 17
+COLB, CSTR = (20 << 30) + (256 << 20), 1 << 17
 
 
 def legacy(op):
