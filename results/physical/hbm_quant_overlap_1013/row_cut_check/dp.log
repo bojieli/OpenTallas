@@ -1,0 +1,146 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq/ot_hgi_qw_dbq_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl/ot_hgi_qw_dxl_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq/ot_hgi_qw_rq_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq/ot_hgi_qw_wq_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq/ot_hgi_qw_dbq_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl/ot_hgi_qw_dxl_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq/ot_hgi_qw_rq_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq/ot_hgi_qw_wq_ff.lib
+read_db /work/results/asap7/opentallas_ot_hgi_quant_wide_ov_asap7_ref_qw_ov_ref_ov1_cx_c8c47022e/base/3_4_place_resized.odb
+read_sdc /work/results/asap7/opentallas_ot_hgi_quant_wide_ov_asap7_ref_qw_ov_ref_ov1_cx_c8c47022e/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_place_out_flop_release.tcl
+OT_OFLOP released 18023 output-port flops for DPL
+detailed_placement
+[INFO DPL-0006] Core area: 531150.57 um^2
+[INFO DPL-0007] Movable instances area: 23095.46 um^2
+[INFO DPL-0008] Fixed instances area within core: 169414.64 um^2
+[INFO DPL-0009] Utilization: 36.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (5 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 205195 cells
+[INFO DPL-0393]   height 288 row(s): 1 cells
+[INFO DPL-0393]   height 376 row(s): 16 cells
+[INFO DPL-0393]   height 448 row(s): 2 cells
+[INFO DPL-0393]   height 480 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |     222352 |      5432 |     55841
+        1 |     152148 |      3059 |     39856
+        2 |      86527 |      2557 |     32629
+        3 |      54354 |      2128 |     25757
+        4 |      38628 |      1801 |     19763
+        5 |      29542 |      1489 |     14960
+        6 |      20972 |      1302 |     11539
+        7 |      15161 |      1041 |      8926
+        8 |      10482 |       836 |      6608
+        9 |       7261 |       667 |      4928
+       10 |       5021 |       521 |      3836
+       20 |        463 |        67 |       396
+       30 |        119 |        19 |       100
+       40 |         90 |        14 |        76
+       50 |         10 |         2 |         8
+       53 |         10 |         2 |         8
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 10 for 3 consecutive iterations.
+Using old diamond search for 2 remaining illegal cells.
+diamond recovery: recovered 1/2 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 30.99s
+Placement Analysis
+---------------------------------
+total displacement     293432.1 u
+average displacement        1.4 u
+max displacement          151.3 u
+original HPWL         5835385.9 u
+legalized HPWL        6052656.3 u
+delta HPWL                    4 %
+
+Took 31 seconds: detailed_placement
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 71030 fixed cells.
+[INFO DPL-0318] Collected 161573 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (775440, 689040)
+[INFO DPL-0310] Assigned 161573 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 6.053833e+09.
+[INFO DPL-0302] End of matching; objective is 6.050269e+09, improvement is 0.06 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 6.026726e+09.
+[INFO DPL-0307] End of global swaps; objective is 6.026726e+09, improvement is 0.39 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 6.024509e+09.
+[INFO DPL-0309] End of vertical swaps; objective is 6.024509e+09, improvement is 0.04 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 6.019453e+09.
+[INFO DPL-0305] End of reordering; objective is 6.019453e+09, improvement is 0.08 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 3231460 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 3231460, swaps 206550, moves 1116700 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 6.017996e+09, Scratch cost 5.998028e+09, Incremental cost 5.998028e+09, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 5.998028e+09.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.33 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.331808 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 33406 cell flips.
+[INFO DPL-0384] End of flipping; objective is 5.988948e+09, improvement is 0.18 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL          6052656.3 u ( 3485410.2,  2567246.1)
+Final HPWL             5987058.0 u ( 3435906.5,  2551151.5)
+Delta HPWL                  -1.1 % (      -1.4,       -0.6)
+
+Took 58 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 12911 instances
+[INFO DPL-0021] HPWL before          5987058.0 u
+[INFO DPL-0022] HPWL after           5986863.2 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Took 6 seconds: estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+make: *** [Makefile:511: do-3_5_place_dp] Terminated

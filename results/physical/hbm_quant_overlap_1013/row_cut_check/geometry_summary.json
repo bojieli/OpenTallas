@@ -16,6 +16,10 @@
  "logic_before_sha256": "f16a190d2317dbd0013ffcd68045b68bd1443c74ef50bdeba699d620239d8cbc",
  "logic_after_sha256": "f16a190d2317dbd0013ffcd68045b68bd1443c74ef50bdeba699d620239d8cbc",
  "signature_fields": "every non-TAP instance name/master/location/orientation/status plus each pin/net name",
- "detailed_placement": "in progress, no closure claim",
- "rtl_sha256": "f7245ccd0315421dbcd92c3c16299471e7f7e3a7ac10ff144710eb3fa319acf0"
+ "detailed_placement": "PASS native detailed_placement + check_placement; normal automatic metric tail cancelled after success",
+ "rtl_sha256": "f7245ccd0315421dbcd92c3c16299471e7f7e3a7ac10ff144710eb3fa319acf0",
+ "full_stage_exit": "cancelled_after_successful_geometry_check; not RC0, not timing signoff",
+ "sta_scope": "geometry only; no TT/SS setup/hold claim",
+ "physical_kit_source": "493cb25e6",
+ "rtl_unchanged_vs_c8c47022e": true
 }

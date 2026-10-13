@@ -31,3 +31,11 @@ RTL, outline, macros, IO, clock, SDC, cut budget, link budget and price are unch
 The source-exact5.050 proof remains184/168 cycles with3328 exact production words,
 skew/RAW controls passing and header/lane/premature-retire mutants failing. The
 physical cluster remains unclosed until the new route completes TT/FF/DRC/lint.
+
+The actual stopped3_5 check passed with no DPL-0033 and "Placement violations .".
+Its automatic report_metrics tail was stopped only after that successful geometry
+check, in the exact trial container730ac43e5c12. The full-stage exit is
+cancelled_after_successful_geometry_check, not RC0 and not timing signoff.
+No second placement or SS advisory was run to manufacture a completion marker.
+The fresh geometry and deterministic swap reproduce the checked state; the new
+actual TT/FF route must produce its own complete checkpoints and signoff.
