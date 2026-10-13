@@ -104,6 +104,30 @@ that lacks it (`SUBMIT_LINT BENCH_REQUIRED`) before any compute. The auto `lint`
 default `refuse`) / `"bench_other"` (every other job, default `warn`). Jobs ingested before the gate, and auto-react
 successors of those, are not refused.
 
+## Measured clock rule and structure-repeat limit (owner 2026-10-13)
+
+**Clock rule.** Up to 15,000 sinks on one clock root pass. A larger root is allowed only with pre-route clock-tree
+evidence measured by `pre_route_gate.py <kit> --remote <host> --cts` on that kit: TT insertion delay at most 300 ps and
+leaf arrival spread at most 80 ps. The three numbers are constants in `tools/textbook_lint.py`
+(`CLK_ROOT_SINKS_MAX`, `CLK_INSERTION_MAX_PS`, `CLK_SPREAD_MAX_PS`). Sinks are counted on the synthesized netlist: flops
+plus one per hard-child or macro clock pin. A declared spine does not waive the rule and there is no spec waiver; the fix
+is hardened leaves with their own roots. CLOSED tiles are not re-judged.
+
+- The gate prints a `clock_rule` item for every kit, with the measured insertion and spread when `--cts` ran, and a
+  `--remote` run writes `<kit>/gate_result.json`. Commit that file with the kit: the submit gate reads it.
+- At submit a `ref_tile` job is REFUSED when the kit's gate result shows more than 15,000 sinks without passing
+  numbers, or when the kit has no gate result and the block's latest synthesized design in the loop's history had more
+  than 15,000 sinks.
+- A kit with no gate result and no history is judged by the in-flow lint right after synthesis: the job ends
+  `FLOORPLAN_MARGIN` before placement. `textbook_lint: false` and `waive` do not switch this check off.
+- `STATE/ref_gate.json` `"clock": "refuse" | "warn" | "off"` sets the mode (default refuse).
+
+**Structure-repeat limit.** A block with two or more terminal failed routes since its last CLOSED (NEEDS_RTL,
+EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec carries
+`"structural_change": "<one sentence>"`; otherwise the job is REFUSED at submit. Hold-overlay re-runs (name suffix
+`-hs`) are exempt. Mode: `STATE/ref_gate.json` `"structure_repeat"` (default refuse). Tests for both rules:
+`tools/closure_loop/test_rule_enforcement.py`.
+
 ## Validation (2026-10-11)
 
 See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job names).

@@ -60,6 +60,13 @@ module ot_qkvd_d2d #(
     // link slot of a decided grant is the next cycle (tx_up one more cycle of latency); RX: r_v / r_d one cycle later.
     // Order, values and credits unchanged; simulation checks every cycle that each shadow's empty equals the tile's.
     parameter integer PQ  = 0,
+    // PF (q13-kvh 2026-10-13; 0 = unchanged; needs HT and IRL): every hard-buffer PUSH pin is driven straight from its own
+    // kept flop beside the macro pin (ot_qkvd_pop_ff, as the PQ pop pins).  The flop's D is the SAME decode taken one
+    // relay stage earlier (RX: rq_v / rq_f header instead of rq2_v / rq2_h; TX: ci_v instead of ci2_v), so it carries the
+    // same value on the same cycle as rb_push / ce_v: no latency, order or credit change (simulation checks equality every
+    // cycle).  Why: q10 4_cts (SS): rq2_v -> 5 levels of class decode -> 155 ps unbuffered wire (slew 492) -> u_rb/push
+    // (lib setup 137 ps) = -262; the decode now sits before a flop and the pin sees only clk->Q + a local wire.
+    parameter integer PF  = 0,
     parameter integer FW  = 8 + 8 + 1 + 3 + W
 ) (
     input  wire            clk,
@@ -81,7 +88,8 @@ module ot_qkvd_d2d #(
     output reg             fault,
     output reg  [4:0]      fault_cause
 );
-    localparam integer PQE = (PQ != 0 && HT != 0) ? 1 : 0;      // PQ applies to the hardened buffers only
+    localparam integer PQE = (PQ != 0 && HT != 0) ? 1 : 0;
+    localparam integer PFE = (PF != 0 && HT != 0 && IRL != 0) ? 1 : 0;   // PF applies to the hardened buffers behind the IRL relays      // PQ applies to the hardened buffers only
     // ---- reset copy ----
     // el1011-q-kvd 2026-10-11: two kept copies of the same 2-stage synchroniser (identical release cycle): rs for the
     // parent control flops, rs_t for the hardened buffer tiles' rst_n pins (route qkd_d2d_h-305021c34: one rs net drove
@@ -177,14 +185,26 @@ module ot_qkvd_d2d #(
                 assign sh_e = 1'b0; assign sh_ne = 1'b0;
                 assign tx_ne[i] = !ib_empty[i];
             end
+            wire psh_i;
+            if (PFE != 0) begin : g_pf
+                wire pf;                                                              // push pin flop (same cycle as ce_v[i] = ci2_v[i])
+                ot_qkvd_pop_ff u_pf (.clk(clk), .rst_n(rs), .d(ci_v[i]), .q(pf));
+                assign psh_i = pf;
+`ifndef SYNTHESIS
+                always @(posedge clk) if (rs && pf !== ce_v[i])
+                    $display("ERROR ot_qkvd_d2d PF: TX class %0d push flop %b != ce_v %b at %0t", i, pf, ce_v[i], $time);
+`endif
+            end else begin : g_npf
+                assign psh_i = ce_v[i];
+            end
             if (IBD[8*i +: 8] > 8) begin : g_s
-                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .din(ce_d[W*i +: W]), .pop(pop_i),
+                ot_qkvd_sbuf u_ib (.clk(clk), .rst_n(rs_t), .push(psh_i), .din(ce_d[W*i +: W]), .pop(pop_i),
                     .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
                 if (PQE != 0) begin : g_sh
                     ot_qkvd_sbuf_shadow u_sh (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .pop(gq[i]), .empty(sh_e), .ne_next(sh_ne));
                 end
             end else begin : g_f
-                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .din(ce_d[W*i +: W]), .pop(pop_i),
+                ot_qkvd_fbuf8 u_ib (.clk(clk), .rst_n(rs_t), .push(psh_i), .din(ce_d[W*i +: W]), .pop(pop_i),
                     .dout(ib_head[W*i +: W]), .empty(ib_empty[i]));
                 if (PQE != 0) begin : g_sh
                     ot_qkvd_fbuf8_shadow u_sh (.clk(clk), .rst_n(rs_t), .push(ce_v[i]), .pop(gq[i]), .empty(sh_e), .ne_next(sh_ne));
@@ -244,14 +264,27 @@ module ot_qkvd_d2d #(
                 assign sh_e = 1'b0; assign sh_ne = 1'b0;
                 assign rx_ne[j] = !rb_empty[j];
             end
+            wire psh_j;
+            if (PFE != 0) begin : g_pf
+                wire pf;                                                              // push pin flop (same cycle as rb_push[j])
+                ot_qkvd_pop_ff u_pf (.clk(clk), .rst_n(rs),
+                                     .d(rq_v && rq_f[W + 3] && (rq_f[W +: 3] == 3'(RXB + j))), .q(pf));
+                assign psh_j = pf;
+`ifndef SYNTHESIS
+                always @(posedge clk) if (rs && pf !== rb_push[j])
+                    $display("ERROR ot_qkvd_d2d PF: RX class %0d push flop %b != rb_push %b at %0t", j, pf, rb_push[j], $time);
+`endif
+            end else begin : g_npf
+                assign psh_j = rb_push[j];
+            end
             if (RBD[8*j +: 8] > 8) begin : g_s
-                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(re_w[W*j +: W]), .pop(pop_j),
+                ot_qkvd_sbuf u_rb (.clk(clk), .rst_n(rs_t), .push(psh_j), .din(re_w[W*j +: W]), .pop(pop_j),
                     .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
                 if (PQE != 0) begin : g_sh
                     ot_qkvd_sbuf_shadow u_sh (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .pop(rq_q[j]), .empty(sh_e), .ne_next(sh_ne));
                 end
             end else begin : g_f
-                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .din(re_w[W*j +: W]), .pop(pop_j),
+                ot_qkvd_fbuf8 u_rb (.clk(clk), .rst_n(rs_t), .push(psh_j), .din(re_w[W*j +: W]), .pop(pop_j),
                     .dout(rb_head[W*j +: W]), .empty(rb_empty[j]));
                 if (PQE != 0) begin : g_sh
                     ot_qkvd_fbuf8_shadow u_sh (.clk(clk), .rst_n(rs_t), .push(rb_push[j]), .pop(rq_q[j]), .empty(sh_e), .ne_next(sh_ne));
