@@ -45,9 +45,11 @@
 //                         done).  FE: run_f <= 0, fetching <= 0.  BE drops alloc / item / result RX while !run_q.
 //  be_qpop            1   pulse (FE only), decision = flat q_pop.  FE: q_cred + 1.
 //  be_lv_v            1   pulse (FE only) + be_lv_cnt 16 = flat lv_rsp / lv_rcnt.
-//  be_inj_hold        1   level (FE only).  BE raises the TX flop when the injector takes an entry (J_IDLE -> J_INJ), issues
-//                         its first be_inj no earlier than INJ_WAIT full cycles after the first cycle the TX flop is 1,
-//                         and clears it in the cycle after the last be_inj.  FE: fe_pop2 gets
+//  be_inj_hold        1   level (FE only).  BE raises the TX flop when the injector takes an entry (decision cycle d:
+//                         J_IDLE -> J_INJ; the TX flop is 1 from d + 1), issues its first be_inj in cycle d + INJ_WAIT
+//                         (as built 10-13: FE's last item is issued in d + 1 and is in the S1 TX flop in d + 2; a be_inj
+//                         of cycle i is in the S4 TX flop in i + 1, so i = d + 1 collides and i = d + 2 is the minimum),
+//                         and clears the TX flop with the last be_inj (the flop is 1 exactly while jst == J_INJ).  FE: fe_pop2 gets
 //                         && !(rcl == RC_DSP && be_inj_hold_r) in place of the flat be_inj term.
 // ---------------------------------------------------------------- AU -> FE
 //  au_tbl_ok          1   level = tbc[6] (TX flop).  FE uses au_tbl_ok_r in fe_hcap.
@@ -82,6 +84,8 @@ localparam integer SEAM_JL_WAIT  = 6;   // jl TX 1 + RX 1 + kern_off 1 + kz TX 1
 //  OT_HGI_SEQ_MUT_SEAM_CRED  FE: q_cred initialised to QD + 1            (dropped-credit class: queue overrun)
 //  OT_HGI_SEQ_MUT_SEAM_QPOP  FE: every 2nd be_qpop_r ignored              (dropped credit: decode stalls)
 //  OT_HGI_SEQ_MUT_SEAM_HOLD  BE: first be_inj SEAM_INJ_WAIT - 1 early     (off-by-one hold: S1 / S4 collide)
-//  OT_HGI_SEQ_MUT_SEAM_RST   AU: av / tbc on the raw rst_n instead of its synchroniser AND no av flush on be_js
-//                            (stale reset copy: a result of the previous job lands in the new queue)
+//  OT_HGI_SEQ_MUT_SEAM_RST   AU: av / tbc on the raw rst_n instead of its synchroniser, no av flush on be_js AND no tbc
+//                            restart on the job load (stale reset copy: the DYN table of the previous job / of the
+//                            reset is used by the next job; as built 10-13 -- the av flush alone cannot fail, the
+//                            pipe is always empty at a job start)
 //  the flat mutants OT_HGI_SEQ_MUT_WAIT / _LOOP / _IDXL / _TOKX stay, in the child that holds the logic.
