@@ -5,13 +5,14 @@ module vm_root_ctl9(
  input wire clk,por_n,wr_v,wr_bank,rd_v,rd_bank,wr_ACK_ready,mem_rd_v,
  input wire [6:0] wr_addr,rd_addr,
  input wire [3:0] tap_ready,tap_ACK_v,
- input wire [767:0] tap_ACK_owner,input wire [191:0] seat_owner_i,
+ input wire [191:0] ack0,ack1,ack2,ack3,seat_owner_i,
  input wire [8:0] bank_bad,checker_err,checker_valid,
  output wire wr_ready,rd_ready,wr_ACK_v,native_release,drained,fault,
  output wire [3:0] tap_v,
  output wire mem_cmd_v,mem_cmd_we,mem_cmd_bank,output wire [6:0] mem_cmd_addr,
- output wire accept_o,return_o,capture_o,check_o,load_o,write_o,write_accept_o);
+ output wire accept_o,return_o,capture_o,check_o,load_o,write_o,write_accept_o,hold_o);
  localparam SEATP=1,FREG=1;
+ wire [767:0] tap_ACK_owner={ack3,ack2,ack1,ack0};
  function [71:0] encode64(input [63:0] data);
   begin encode64={^{data[0],data[1],data[2],data[4],data[5],data[7],data[10],data[11],data[12],data[14],data[17],data[18],data[21],data[23],data[24],data[26],data[27],data[29],data[32],data[33],data[36],data[38],data[39],data[41],data[44],data[46],data[47],data[50],data[51],data[53],data[56],data[57],data[58],data[60],data[63]},data[63],data[62],data[61],data[60],data[59],data[58],data[57],^{data[57],data[58],data[59],data[60],data[61],data[62],data[63]},data[56],data[55],data[54],data[53],data[52],data[51],data[50],data[49],data[48],data[47],data[46],data[45],data[44],data[43],data[42],data[41],data[40],data[39],data[38],data[37],data[36],data[35],data[34],data[33],data[32],data[31],data[30],data[29],data[28],data[27],data[26],^{data[26],data[27],data[28],data[29],data[30],data[31],data[32],data[33],data[34],data[35],data[36],data[37],data[38],data[39],data[40],data[41],data[42],data[43],data[44],data[45],data[46],data[47],data[48],data[49],data[50],data[51],data[52],data[53],data[54],data[55],data[56]},data[25],data[24],data[23],data[22],data[21],data[20],data[19],data[18],data[17],data[16],data[15],data[14],data[13],data[12],data[11],^{data[11],data[12],data[13],data[14],data[15],data[16],data[17],data[18],data[19],data[20],data[21],data[22],data[23],data[24],data[25],data[41],data[42],data[43],data[44],data[45],data[46],data[47],data[48],data[49],data[50],data[51],data[52],data[53],data[54],data[55],data[56]},data[10],data[9],data[8],data[7],data[6],data[5],data[4],^{data[4],data[5],data[6],data[7],data[8],data[9],data[10],data[18],data[19],data[20],data[21],data[22],data[23],data[24],data[25],data[33],data[34],data[35],data[36],data[37],data[38],data[39],data[40],data[49],data[50],data[51],data[52],data[53],data[54],data[55],data[56]},data[3],data[2],data[1],^{data[1],data[2],data[3],data[7],data[8],data[9],data[10],data[14],data[15],data[16],data[17],data[22],data[23],data[24],data[25],data[29],data[30],data[31],data[32],data[37],data[38],data[39],data[40],data[45],data[46],data[47],data[48],data[53],data[54],data[55],data[56],data[60],data[61],data[62],data[63]},data[0],^{data[0],data[2],data[3],data[5],data[6],data[9],data[10],data[12],data[13],data[16],data[17],data[20],data[21],data[24],data[25],data[27],data[28],data[31],data[32],data[35],data[36],data[39],data[40],data[43],data[44],data[47],data[48],data[51],data[52],data[55],data[56],data[58],data[59],data[62],data[63]},^{data[0],data[1],data[3],data[4],data[6],data[8],data[10],data[11],data[13],data[15],data[17],data[19],data[21],data[23],data[25],data[26],data[28],data[30],data[32],data[34],data[36],data[38],data[40],data[42],data[44],data[46],data[48],data[50],data[52],data[54],data[56],data[57],data[59],data[61],data[63]}}; end
  endfunction
@@ -31,8 +32,12 @@ module vm_root_ctl9(
   reg [6:0] addr,next_addr;
   reg [3:0] sent,next_sent,acked,next_acked;
   reg [71:0] control_code;
-  reg [4*72-1:0] validity; // authoritative coded256 valid bits, cold reset only
+  wire [4*72-1:0] validity; // authoritative coded256 valid bits, cold reset only
   wire [255:0] valid_bits;wire [3:0] valid_UE;
+  // A decoded validity shadow is ready before WACK drains. The coded words
+  // remain authoritative; UE is still captured directly by bad_cv_q.
+  reg [255:0] valid_bits_pipe;
+  always @(posedge clk)valid_bits_pipe<=valid_bits;
   for(genvar k=0;k<4;k=k+1)begin:validity_decode
    wire [65:0] d=decode64(validity[k*72+:72]);
    assign valid_bits[k*64+:64]=d[63:0];assign valid_UE[k]=d[65];
@@ -54,7 +59,19 @@ module vm_root_ctl9(
   assign wr_ACK_v=state==WACK&&!fault;
   assign drained=state==IDLE&&!fault;
   assign native_release=state==PUBLISH&&(&acked)&&!fault;
-  reg [255:0] next_valid;
+  wire [255:0] next_valid=valid_bits_pipe|(256'd1<<{bank,addr});
+  for(genvar r=0;r<4;r=r+1)begin:validity_regions
+   (* keep = "true", dont_touch = "true" *) reg region_por_n;
+   reg [71:0] coded;
+   always @(posedge clk or negedge por_n)begin
+    if(!por_n)region_por_n<=0;else region_por_n<=1;
+   end
+   always @(posedge clk or negedge region_por_n)begin
+    if(!region_por_n)coded<=0;
+    else if(state==LOAD&&!chk_err_q&&is_write)coded<=encode64(next_valid[r*64+:64]);
+   end
+   assign validity[r*72+:72]=coded;
+  end
   // SRAMs in the tiles (column slices): one command per WRITE / VERIFY / READ cycle, the macros' enables
   assign mem_cmd_v=(state==WRITE||state==VERIFY||state==READ)&&!fault;
   assign mem_cmd_we=state==WRITE;assign mem_cmd_bank=bank;assign mem_cmd_addr=addr;
@@ -68,13 +85,12 @@ module vm_root_ctl9(
    if(!fault)case(state)
     IDLE:begin
      next_sent=0;next_acked=0;
-     if(wf)begin next_bank=wr_bank;next_addr=wr_addr;next_is_write=1;next_state=SEAT;end
+     if(wf)begin next_bank=wr_bank;next_addr=wr_addr;next_is_write=1;next_state=WRITE;end
      if(rf)begin
-      if(!valid_bits[{rd_bank,rd_addr}])next_sticky=1;
-      else begin next_bank=rd_bank;next_addr=rd_addr;next_is_write=0;next_state=SEAT;end
+      if(!valid_bits_pipe[{rd_bank,rd_addr}])next_sticky=1;
+      else begin next_bank=rd_bank;next_addr=rd_addr;next_is_write=0;next_state=READ;end
      end
     end
-    SEAT:next_state=is_write?WRITE:READ;
     WRITE:next_state=VERIFY;
     VERIFY,READ:next_state=WAIT_RD;
     WAIT_RD:if(mem_rd_v)next_state=CAPTURE;
@@ -101,15 +117,11 @@ module vm_root_ctl9(
   always @(posedge clk or negedge por_n)begin
    if(!por_n)begin
     state<=IDLE;bank<=0;addr<=0;is_write<=0;sticky<=0;sent<=0;acked<=0;
-    control_code<=0;validity<=0;bad_cv_q<=0;
+    control_code<=0;bad_cv_q<=0;
    end else begin
     state<=next_state;bank<=next_bank;addr<=next_addr;is_write<=next_is_write;
     sticky<=next_sticky;sent<=next_sent;acked<=next_acked;control_code<=encode64(next_control);
     bad_cv_q<=control_bad||(|valid_UE);
-    if(SEATP!=0&&state==LOAD&&!chk_err_q&&is_write)begin
-     next_valid=valid_bits;next_valid[{bank,addr}]=1;
-     for(integer k=0;k<4;k=k+1)validity[k*72+:72]<=encode64(next_valid[k*64+:64]);
-    end
    end
   end
  assign accept_o=(ld_w||ld_r)&&por_n;
@@ -119,5 +131,6 @@ module vm_root_ctl9(
  assign check_o=state==CHECK&&!fault;
  assign load_o=state==LOAD&&!chk_err_q&&!is_write;
  assign write_o=is_write;
+ assign hold_o=next_state!=IDLE;
 endmodule
 `default_nettype wire

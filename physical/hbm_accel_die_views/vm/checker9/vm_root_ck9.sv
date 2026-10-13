@@ -28,22 +28,23 @@ module vm_root_ck9 #(parameter integer ENABLE=0,parameter integer SEATP=1,parame
   assign drained=1;assign fault=0;
   assign mem_cmd_v=0;assign mem_cmd_we=0;assign mem_cmd_bank=0;assign mem_cmd_addr=0;assign mem_wd=0;
  end else begin:on
-  wire accept_o,return_o,capture_o,check_o,load_o,write_o,write_accept_o;
+  wire accept_o,return_o,capture_o,check_o,load_o,write_o,write_accept_o,hold_o;
   wire [2591:0] seat;wire [2303:0] seat_data;
   wire [8:0] bank_bad,checker_err,checker_valid;
   wire [191:0] seat_owner_i=seat_data[2063+:192];
   wire [2303:0] raw=write_accept_o?{49'b0,wr_owner,wr_data}:{49'b0,rd_owner,2063'b0};
-  vm_root_ctl9 u_ctrl(.*);
+  vm_root_ctl9 u_ctrl(.ack0(tap_ACK_owner[0+:192]),.ack1(tap_ACK_owner[192+:192]),
+   .ack2(tap_ACK_owner[384+:192]),.ack3(tap_ACK_owner[576+:192]),.*);
   for(genvar b=0;b<9;b=b+1)begin:checker_banks
    if(b==8)begin:owner
     vm_ck4_state_owner u_bank(.ck(clk),.rst_n(por_n),.accept_i(accept_o),.return_i(return_o),
-     .capture_i(capture_o),.check_i(check_o),.load_i(load_o),.write_i(write_o),
+     .capture_i(capture_o),.check_i(check_o),.load_i(load_o),.write_i(write_o),.hold_i(hold_o),
      .raw_i(raw[b*256+:256]),.returned_i(mem_rd[b*288+:288]),
      .seat_code_o(seat[b*288+:288]),.seat_data_o(seat_data[b*256+:256]),
      .seat_bad_o(bank_bad[b]),.checker_error_o(checker_err[b]),.checker_valid_o(checker_valid[b]));
    end else begin:data_bank
     vm_ck4_state_data u_bank(.ck(clk),.rst_n(por_n),.accept_i(accept_o),.return_i(return_o),
-     .capture_i(capture_o),.check_i(check_o),.load_i(load_o),.write_i(write_o),
+     .capture_i(capture_o),.check_i(check_o),.load_i(load_o),.write_i(write_o),.hold_i(hold_o),
      .raw_i(raw[b*256+:256]),.returned_i(mem_rd[b*288+:288]),
      .seat_code_o(seat[b*288+:288]),.seat_data_o(seat_data[b*256+:256]),
      .seat_bad_o(bank_bad[b]),.checker_error_o(checker_err[b]),.checker_valid_o(checker_valid[b]));

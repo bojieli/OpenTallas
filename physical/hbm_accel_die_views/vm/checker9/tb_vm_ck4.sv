@@ -22,6 +22,7 @@ module tb_vm_ck4;
  endfunction
 
  integer cases=0;reg [287:0] clean;reg [255:0] raw;
+ reg [287:0] stream_expected[0:1];
  task run(input [287:0] sample,input bit want_error,input bit want_repair);
   begin
    @(negedge ck);sample_i=sample;capture_i=1;check_i=0;
@@ -57,8 +58,27 @@ module tb_vm_ck4;
   padding_mask_i=0;
   // Single-bit correction of expected seat must match the legacy decoder too.
   for(integer b=0;b<288;b=b+1)begin expected_i=clean^(288'd1<<b);run(clean,0,1);end
+  for(integer w=0;w<4;w=w+1)
+   for(integer a=0;a<72;a=a+1)for(integer b=a+1;b<72;b=b+1)begin
+    expected_i=clean^(288'd1<<(w*72+a))^(288'd1<<(w*72+b));run(clean,1,1);
+   end
+  expected_i=clean;
   @(negedge ck);rst_n=0;@(negedge ck);rst_n=1;check_i=1;
   @(negedge ck);if(valid_o||!error_o)$fatal(1,"CK4 stale capture consumed after reset");
-  $display("VM_CK4 PASS cases=%0d single=576 double=10224 identity=512 padding=256",cases);$finish;
+  // Native required checker throughput: one independently encoded/corrected row per cycle.
+  write_i=1;owner_mask_i=0;padding_mask_i=0;check_i=0;
+  for(integer n=0;n<2050;n=n+1)begin
+   @(negedge ck);
+   if(n>=2)begin
+    if(!valid_o||error_o||repaired_o!==stream_expected[(n-2)%2])$fatal(1,"CK4 stream lost/mixed row=%0d",n-2);
+   end
+   capture_i=n<2048;check_i=n>0&&n<2049;
+   if(n<2048)begin
+    for(integer w=0;w<4;w=w+1)clean[w*72+:72]=encode64(64'(n+1)^(64'h12345678abcdef01<<(w+1)));
+    expected_i=clean;sample_i=clean^(288'd1<<(n%288));stream_expected[n%2]=clean;
+   end
+  end
+  $display("VM_CK4_STREAM PASS beats=2048 cycles=2050 initiation_interval=1");
+  $display("VM_CK4 PASS cases=%0d single=576 sample_double=10224 expected_double=10224 identity=512 padding=256",cases);$finish;
  end
 endmodule
