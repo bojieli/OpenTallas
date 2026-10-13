@@ -17,7 +17,7 @@ module tb_hgi_xp;
     .rec_sec(r[45:31]), .rec_nsec(r[30:20]), .cmd_v, .cmd_rdy, .cmd_sec, .cmd_nsec, .cmd_id, .done_v, .done_id,
     .iss_v, .iss_xb, .iss_seq, .cdone_v, .ret_v, .ret_seq, .fault(f_s));
   ot_hgi_xp_rd #(.MUT_DROP(MUT_DROP)) u_r (.clk, .rst, .cmd_v, .cmd_rdy, .cmd_sec, .cmd_nsec, .cmd_id, .rq_v, .rq_sec, .rs_v, .rs_d,
-    .wave_v, .wave_d, .wave_n, .wave_last, .wave_id, .wave_idx, .fault(f_r));
+    .wave_v, .wave_d, .wave_n, .wave_last, .wave_id, .wave_idx, .fault(f_r), .rq_cr(8'd0), .wave_rdy(1'b1), .wave_pop());
   function automatic logic [31:0] xw(input logic [14:0] s, input integer j); return ({14'd0, s, 3'(j)} * 32'h9E3779B1) ^ 32'hA5A51013; endfunction
   // VM lanes
   logic [14:0] lq [8][$]; integer lt [8][$];

@@ -19,7 +19,30 @@
 // record writes: A < 200,000 words, O >= 200,000).  +define+XQ=n: engine loads in flight.  +define+MUT_B8: BW8 mutant.
 // Per-record trace (cluster 0): xi = x stage (load issued / XR hit), xd = x done, is = SM issue done, a0 = real SM 0
 // done (arrive), pd = publication done.
+// XP (+define+XP, owner 10-13 redesign step 5): the x loader of every cluster is the NEW x plane ot_hgi_xp_load (wave
+// reader + feed-forward quantise / pack; block-dot AND BF16 x on the 8-lane slice group) and the real SMs take their x
+// writes from the registered spine ot_hgi_xp_spine (SM s taps stage s).  Needs WVM8 (the slice model).  Mutants:
+// MUT_WDROP (a wave never reaches the pack stage), MUT_BEAT (a beat never leaves), MUT_LANE (waves land one lane off).
+// +define+XSPD=n: n relay stages between the pack stage and SM 0 (placement: slice 7 - 17 mm from the SMs).
 module tb_hgi_smmv_tput;
+`ifndef XSPD
+`define XSPD 0
+`endif
+`ifdef MUT_WDROP
+    localparam integer MWD = 1;
+`else
+    localparam integer MWD = 0;
+`endif
+`ifdef MUT_BEAT
+    localparam integer MBT = 1;
+`else
+    localparam integer MBT = 0;
+`endif
+`ifdef MUT_LANE
+    localparam integer MLN = 1;
+`else
+    localparam integer MLN = 0;
+`endif
 `ifdef MUT_ROW
     localparam integer MW = 1;
 `else
@@ -141,7 +164,12 @@ module tb_hgi_smmv_tput;
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
             .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]), .sm_cr(rv[cl*NSL +: NSL]));
         wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
-        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+`ifdef XP
+        ot_hgi_xp_load #(.NXC(NXC), .XDD(`XSPD + 12), .MUT_WDROP(MWD), .MUT_BEAT(MBT), .MUT_LANE(MLN)) u_x (
+`else
+        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (
+`endif
+            .clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
             .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
             .x_fault(x_fault), .xw_en(l_en), .xw_addr(l_addr), .xw_grp(l_grp), .xw_data(l_data),
             .vmq(xq[cl*NXC*338 +: NXC*338]), .vmr(xr[cl*NXC*274 +: NXC*274]),
@@ -195,6 +223,18 @@ module tb_hgi_smmv_tput;
     end endgenerate
     ot_hgi_vm_unit #(.NC(NCL * (NXC + NPC) + 1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
     integer lines_req [0:NREAL-1];
+    wire [NREAL-1:0] sxw_en; wire [NREAL*7-1:0] sxw_addr, sxw_grp; wire [NREAL*2048-1:0] sxw_data;
+`ifdef XP
+    wire [7:0] sp_en; wire [8*7-1:0] sp_addr, sp_grp; wire [8*2048-1:0] sp_data;
+    ot_hgi_xp_spine #(.NS(8), .PRE(`XSPD)) u_spine (.clk(clk), .rst(!rst_n), .i_en(xw_en), .i_addr(xw_addr), .i_grp(xw_grp), .i_data(xw_data),
+        .o_en(sp_en), .o_addr(sp_addr), .o_grp(sp_grp), .o_data(sp_data));
+    assign sxw_en = sp_en[NREAL-1:0]; assign sxw_addr = sp_addr[NREAL*7-1:0]; assign sxw_grp = sp_grp[NREAL*7-1:0];
+    assign sxw_data = sp_data[NREAL*2048-1:0];
+    integer n_beat = 0;
+    always @(posedge clk) if (rst_n && xw_en) n_beat = n_beat + 1;
+`else
+    assign sxw_en = {NREAL{xw_en}}; assign sxw_addr = {NREAL{xw_addr}}; assign sxw_grp = {NREAL{xw_grp}}; assign sxw_data = {NREAL{xw_data}};
+`endif
     wire [NREAL-1:0] arr_real;
     // record being issued (the engine's issue pointer advances once a record)
     integer rec_iss = 0; reg [2:0] iss_q = 0;
@@ -217,7 +257,7 @@ module tb_hgi_smmv_tput;
             .start_ready(start_ready), .op_rows(c[9:1]), .op_c(c[29:14]), .op_g(c[37:30]), .op_gs(c[38]),
             .op_fmt(c[40:39]), .op_xb(c[47:41]), .busy(busy), .d_valid(c[48]), .d_ready(d_ready), .d_base(c[80:49]),
             .d_lines(c[104:81]), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr), .req_tag(req_tag), .rsp_v(rsp_v),
-            .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data),
+            .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(sxw_en[s]), .xw_addr(sxw_addr[s*7 +: 7]), .xw_grp(sxw_grp[s*7 +: 7]), .xw_data(sxw_data[s*2048 +: 2048]),
             .rv(rv[s]), .rrow(rrow8), .rdata(rdata[s*256 +: 256]), .fault(fault_s), .arrive(arrive),
             .release_in(c[105]), .released(released));
         // HBM line model: in-order, ready at max(request + LAT, previous ready + LB x 32 / BW) (milli-cycles)

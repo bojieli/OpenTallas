@@ -4,11 +4,16 @@
 //                  Per-lane credits == per-lane landing space; loads issue back to back with no gap cycle.
 // ot_hgi_xp_sched: record window (in-order retire), verified x-slot reuse, load admission by range overlap, issue when
 //                  the slot is complete.  Record N+1.. load under record N's weight stream.
-module ot_hgi_xp_rd #(parameter integer CR = 16, parameter integer XQ = 4, parameter integer MUT_DROP = 0) (
+// REAL JOIN (10-13, step 5): cmd_nsec 0 = a NULL wave (no lane, zero data: an x unit with no element inside K keeps its
+//   place in the wave order); wave_rdy = pop hold from the pack stage (unit pacing, combinational from its tag head, T1 /
+//   T2 abut); wave_pop = the pop this edge (wave_v one edge later); RQC > 0 = lane REQUEST credits (B2 lanestation queue,
+//   rq_cr returns one a lane), on top of the landing credits.
+module ot_hgi_xp_rd #(parameter integer CR = 16, parameter integer XQ = 4, parameter integer RQC = 0, parameter integer MUT_DROP = 0) (
     input  logic clk, input logic rst,
     input  logic cmd_v, output logic cmd_rdy, input logic [14:0] cmd_sec, input logic [10:0] cmd_nsec, input logic [3:0] cmd_id,
     output logic [7:0] rq_v, output logic [7:0][14:0] rq_sec,           // lane requests (pin flops)
     input  logic [7:0] rs_v, input logic [7:0][255:0] rs_d,             // lane responses, in order per lane
+    input  logic [7:0] rq_cr, input logic wave_rdy, output logic wave_pop,
     output logic wave_v, output logic [2047:0] wave_d, output logic [3:0] wave_n, output logic wave_last,
     output logic [3:0] wave_id, output logic [7:0] wave_idx, output logic fault);
   // command queue (flops, XQ deep)
@@ -17,6 +22,8 @@ module ot_hgi_xp_rd #(parameter integer CR = 16, parameter integer XQ = 4, param
   // cursor
   logic act; logic [14:0] c_sec; logic [10:0] c_rem; logic [3:0] c_id; logic [7:0] c_idx;
   logic [7:0][4:0] cr;                                                  // credits a lane
+  logic [7:0] rs_vq; logic [7:0][255:0] rs_dq;                          // lane response pin flops
+  logic [7:0][5:0] qc;                                                  // request credits a lane (RQC)
   // wave meta fifo (16)
   logic [16:0] mq [16]; logic [4:0] mq_n; logic [3:0] mq_r, mq_w;
   // landing fifos (16 deep storage, bounded to CR by credits)
@@ -27,17 +34,18 @@ module ot_hgi_xp_rd #(parameter integer CR = 16, parameter integer XQ = 4, param
     n_now = (c_rem > 11'd8) ? 4'd8 : c_rem[3:0];
     last_now = c_rem <= 11'd8;
     can = act && (mq_n < 5'd16);
-    for (int l = 0; l < 8; l++) if (l < n_now && cr[l] == 0) can = 1'b0;
+    for (int l = 0; l < 8; l++) if (l < n_now && (cr[l] == 0 || (RQC != 0 && qc[l] == 0))) can = 1'b0;
     take_cmd = (cq_n != 0) && (!act || (can && last_now));
     {m_idx, m_id, m_last, m_n} = mq[mq_r];
-    pop = mq_n != 0;
+    pop = (mq_n != 0) && wave_rdy;
     for (int l = 0; l < 8; l++) if (l < m_n && lf_n[l] == 0) pop = 1'b0;
+    wave_pop = pop;
   end
   always_ff @(posedge clk) begin
-    rq_v <= '0; wave_v <= 1'b0;
+    rq_v <= '0; wave_v <= 1'b0; rs_vq <= rs_v; rs_dq <= rs_d;
     if (cmd_v && cmd_rdy) begin
       cq[cq_w] <= {cmd_id, cmd_nsec, cmd_sec}; cq_w <= (cq_w == XQ-1) ? '0 : cq_w + 1'b1;
-      if (cmd_sec[2:0] != 0 || cmd_nsec == 0) fault <= 1'b1;
+      if (cmd_sec[2:0] != 0 && cmd_nsec != 0) fault <= 1'b1;
     end
     cq_n <= cq_n + (cmd_v && cmd_rdy) - take_cmd;
     if (can) begin
@@ -54,8 +62,9 @@ module ot_hgi_xp_rd #(parameter integer CR = 16, parameter integer XQ = 4, param
       logic iss, lpop;
       iss = can && (l < n_now); lpop = pop && (l < m_n);
       cr[l] <= cr[l] - iss + lpop;
-      if (rs_v[l]) begin lf[l][lf_w[l]] <= rs_d[l]; lf_w[l] <= lf_w[l] + 1'b1; if (lf_n[l] >= 5'(CR)) fault <= 1'b1; end
-      lf_n[l] <= lf_n[l] + rs_v[l] - lpop;
+      qc[l] <= qc[l] - iss + rq_cr[l];
+      if (rs_vq[l]) begin lf[l][lf_w[l]] <= rs_dq[l]; lf_w[l] <= lf_w[l] + 1'b1; if (lf_n[l] >= 5'(CR)) fault <= 1'b1; end
+      lf_n[l] <= lf_n[l] + rs_vq[l] - lpop;
       if (lpop) lf_r[l] <= lf_r[l] + 1'b1;
       if (pop) wave_d[256*l +: 256] <= (l < m_n) ? lf[l][lf_r[l]] : '0;
     end
@@ -66,8 +75,8 @@ module ot_hgi_xp_rd #(parameter integer CR = 16, parameter integer XQ = 4, param
     end
     if (rst) begin
       cq_n <= '0; cq_r <= '0; cq_w <= '0; act <= 1'b0; mq_n <= '0; mq_r <= '0; mq_w <= '0; fault <= 1'b0;
-      lf_r <= '0; lf_w <= '0; lf_n <= '0; rq_v <= '0; wave_v <= 1'b0;
-      for (int l = 0; l < 8; l++) cr[l] <= 5'(CR);
+      lf_r <= '0; lf_w <= '0; lf_n <= '0; rq_v <= '0; wave_v <= 1'b0; rs_vq <= '0;
+      for (int l = 0; l < 8; l++) begin cr[l] <= 5'(CR); qc[l] <= 6'(RQC); end
     end
   end
 endmodule
