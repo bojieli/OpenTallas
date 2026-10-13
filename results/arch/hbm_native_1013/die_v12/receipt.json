@@ -1107,6 +1107,7 @@
   "hc_reservation_overlap_count": 0,
   "placement_subset_pass": true,
   "full_die_placement_pass": false,
+  "missing_lef_children": 512,
   "missing_tt_children": 832,
   "qualification_gates": {
     "cross_component_source_netlist": false,
@@ -1116,6 +1117,7 @@
     "native_exact_mutant_throughput": false,
     "native_pdn_ir": false,
     "signal_grt_drt": false,
-    "fixed_phy_service_station_integration": false
+    "fixed_phy_service_station_integration": false,
+    "native_vm8_xload_integration": false
   }
 }
