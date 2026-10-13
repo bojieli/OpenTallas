@@ -161,8 +161,8 @@ TILE_STATUS = {   # child_lint (main) on the latest view, hbmdie-1011/lint 10-11
     'hfd_hc_tile_xl': 'CLOSED 5c35b1a6e TT +10.37 / FF +4.70 / DRC 0; child_lint FAIL (f) 449/837 edge pins (acc M4 W) -> '
                       'conservative-1011 pka05 above-only pin-access re-route RUNNING',
     'hfd_vm8_tile': 'routes hbm_vm8st2/3_* running (36); no closed view',
-    'ot_su12_sfu_lane_cluster': 'chain-hard lane cluster routing (el1011-hbm-sfu); ring3 view aa5dd28d5 child_lint FAIL (c) 4769 '
-                                'M7 OBS, (f) 1186',
+    'ot_su12_sfu_lane_cluster': 'CLOSED ring3 view sfu_lane_ring3_rt-rt-ae5899467 (216 x 330.48, PG M6, child_lint PASS, '
+                                'clk insertion 368 ps); sub-slot = that view (8 x 2, pitch 250.56 / 423.36, SFUT=2)',
     'ot_hdc_v41x_idx_hslice': 'r2 121c75340 (signals <= M6, PG M6) in hold ECO (FF -1.6); r1 a791d4196 FAILS (c) M7 signals',
 }
 NO3_DECISION = dict(
@@ -187,6 +187,46 @@ VM_TUNIT = dict(
     flip='TUNIT=1 when hgi_vm_bt{a,b} + the 32-tile VM parent close (el1011-hbm-hcvm); until then 0')
 
 
+SFU_LANE_VIEW = ROOT / 'physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu'
+SFU_SUB_XY = [(round(25.92 + c * 250.56, 3), (86.4, 509.76)[r]) for r in range(2) for c in range(8)]
+
+
+def lef_face_pins(lef, macro):
+    """(w, h, contract pins) of a closed view's LEF: buses grouped per (base, face, layer), offset = mean pin centre
+    along the face; PG pins skipped."""
+    txt = Path(lef).read_text()
+    body = txt[txt.index(f'MACRO {macro}'):]
+    w, h = map(float, re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', body).groups())
+    grp = {}
+    for m in re.finditer(r'\n\s+PIN\s+(\S+)(.*?)\n\s+END\s+\1', body, re.S):
+        nm, pb = m.group(1), m.group(2)
+        if re.search(r'USE\s+(POWER|GROUND)', pb):
+            continue
+        r = re.search(r'LAYER\s+(M\d+)\s*;\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', pb)
+        if not r:
+            continue
+        x0, y0, x1, y1 = map(float, r.groups()[1:])
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        face = min((cx, 'W'), (w - cx, 'E'), (cy, 'S'), (h - cy, 'N'))[1]
+        b = re.fullmatch(r'(.*)\[(\d+)\]', nm)
+        g = grp.setdefault((b.group(1) if b else nm, face, r.group(1)), [[], []])
+        g[0].append(int(b.group(2)) if b else None)
+        g[1].append(cy if face in 'EW' else cx)
+    pins = []
+    for (bn, face, lay), (ix, off) in sorted(grp.items()):
+        if ix == [None]:
+            pins.append(dict(name=bn, face=face, layer=lay, offset=round(off[0], 3)))
+            continue
+        run = []   # contiguous index runs: a bus split over two layers interleaves
+        for i, o in sorted(zip(ix, off)) + [(None, 0.0)]:
+            if run and (i is None or i != run[-1][0] + 1):
+                pins.append(dict(name=f'{bn}[{run[-1][0]}:{run[0][0]}]', face=face, layer=lay,
+                                 offset=round(sum(o_ for _, o_ in run) / len(run), 3)))
+                run = []
+            run.append((i, o))
+    return w, h, pins
+
+
 def tile_slots(slots):
     """Die-placed tile sub-slots (TWO-LEVEL): {parent cell: [tile dicts in the parent frame]}."""
     src = json.loads(TILE_SRC.read_text()) if TILE_SRC.exists() else {}
@@ -203,9 +243,13 @@ def tile_slots(slots):
                               pg='M7', strap='M8', sig=f"M{t['obs_top']}", ck=dict(pin=f"ckt{t['name'][-1]}", face='N', layer='M7'),
                               status=TILE_STATUS['hfd_vm8_tile']) for t in tl]
     if 'hfd_sfu' in slots:
-        out['hfd_sfu'] = [dict(name=f'u_tile_{k}', cell='ot_su12_sfu', w=159.84, h=330.48, x=x, y=y, orient='R0',
+        # v10 grid (8 x 2, pitch 250.56 / 423.36, origin 25.92 / 86.4); outline + pin faces = the CLOSED ring3 view
+        # (216 x 330.48; the v10 207.36 x 336.96 was the sfu_lane_cl_rta kit outline, which no closed view has)
+        vw, vh, vpins = lef_face_pins(SFU_LANE_VIEW / 'ot_su12_sfu.lef', 'ot_su12_sfu')
+        out['hfd_sfu'] = [dict(name=f'u_tile_{k}', cell='ot_su12_sfu', w=vw, h=vh, x=x, y=y, orient='R0',
                                pg='M6', strap='M7', sig='M6', ck=dict(pin='clk', face='W', layer='M4'),
-                               status=TILE_STATUS['ot_su12_sfu_lane_cluster']) for k, (x, y) in enumerate(SFU_LANE_XY)]
+                               status=TILE_STATUS['ot_su12_sfu_lane_cluster'], **({'pins': vpins} if k == 0 else {}))
+                          for k, (x, y) in enumerate(SFU_SUB_XY)]
     if 'hfd_idx_score_native_grid' in slots:
         g = IDX_HSLICE
         out['hfd_idx_score_native_grid'] = [
@@ -368,7 +412,8 @@ def to_schema(rec, a):
                     outline=dict(w=t['w'], h=t['h']), origin=dict(x=t['x'], y=t['y'], orient=t['orient']),
                     io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True),
                     clock_entry=t['ck'], pg_layer=t['pg'], strap_layer=t['strap'], signal_max_layer=t['sig'],
-                    version=a.version, notes=f"die-placed tile (two-level); {t['status']}"))
+                    version=a.version, notes=f"die-placed tile (two-level); {t['status']}",
+                    **({'pins': t['pins']} if t.get('pins') else {})))
     return dict(schema='opentallas.hier_contract.v1', die='hbm_r25gq', version=a.version, owner='hbmdie-1011',
                 updated=__import__('datetime').datetime.now().astimezone().isoformat(timespec='minutes'),
                 clock_period_ps=PERIOD_PS,
