@@ -1,5 +1,5 @@
 #!/bin/bash
-# ot-heavy v6 (2026-10-13 owner: growth charged to a running unit is capped from its own observed peak after 5 min, plus a real-memory floor of 20 % of RAM); v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
+# ot-heavy v7 (2026-10-13: --tag LABEL (shown in ps; ot-run cancels its own waiter by it), --max-wait SEC (exit 75 'NOT RUN' instead of waiting for ever), an 'admitted' line on stderr after a wait); v6 (2026-10-13 owner: growth charged to a running unit is capped from its own observed peak after 5 min, plus a real-memory floor of 20 % of RAM); v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
 # Runs a large build / bench under a hard memory cap and admits it only when the host's memory allows:
 #   ot-heavy --mem <GB> [--slots-class big|small (ignored)] -- <command...>
 # Admission: MemAvailable - (growth still reserved by running ot-heavy jobs) >= MEM + HEADROOM_GB (/etc/ot-heavy.conf).
@@ -10,11 +10,13 @@
 # Unknown classes are charged their request.  The headroom is kept, so a job is never admitted beyond MemAvailable.
 # The size is looked up again on every attempt, so a queued waiter picks up a class measured while it waits.
 set -u
-MEM=""
+MEM=""; TAG=""; MAXWAIT=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --mem) MEM="$2"; shift 2;;
     --slots-class) shift 2;;
+    --tag) TAG="$2"; shift 2;;
+    --max-wait) MAXWAIT="$2"; shift 2;;
     --) shift; break;;
     *) break;;
   esac
@@ -24,7 +26,7 @@ HEADROOM_GB=32
 [ -f /etc/ot-heavy.conf ] && . /etc/ot-heavy.conf
 D=/var/tmp/ot-heavy; mkdir -p $D 2>/dev/null; chmod 1777 $D 2>/dev/null
 UNIT="oth-$(id -un)-$$-$(date +%s)"
-waited=0
+waited=0; T0=$(date +%s)
 LASTRES=""
 while :; do
   [ -f /etc/ot-heavy.conf ] && . /etc/ot-heavy.conf   # v5: every attempt, so a headroom change reaches queued waiters
@@ -73,9 +75,15 @@ while :; do
     [ "$RES" != "$MEM" ] && echo "$(date -Is) $UNIT DOWNSIZE request ${MEM}G -> reserved ${RES}G ($NOTE)" >> "$D/admit.log"
     echo "$(date -Is) $UNIT mem ${MEM}G avail ${avail}G grow ${grow}G: $*" >> "$D/admit.log"
     flock -u 8; exec 8>&-
+    # v7: say that the command starts NOW (after a wait, or for ot-run, which refuses to report an exit status of a
+    # command it never saw start)
+    { [ $waited = 1 ] || [ -n "$TAG" ]; } && echo "ot-heavy: admitted on $(hostname) as $UNIT after $(( $(date +%s) - T0 )) s${TAG:+ OT_RUN_START $TAG}" >&2
     exec systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 -- "$@"
   fi
   flock -u 8; exec 8>&-
   [ $waited = 0 ] && echo "ot-heavy: waiting for memory on $(hostname): need ${RES}+${HEADROOM_GB} GB, available ${avail} GB minus ${grow} GB reserved growth (real floor ${REAL_FLOOR} GB)" >&2
-  waited=1; sleep 20
+  waited=1
+  case "$MAXWAIT" in ''|*[!0-9]*) ;; *) [ $(( $(date +%s) - T0 )) -ge "$MAXWAIT" ] && { echo "ot-heavy: NOT RUN: no memory on $(hostname) within ${MAXWAIT} s (need ${RES}+${HEADROOM_GB} GB, available ${avail} GB minus ${grow} GB reserved growth): $*" >&2; exit 75; };; esac
+  sleep 20
 done
+echo "ot-heavy: NOT RUN: internal error, admission loop ended: $*" >&2; exit 70   # unreachable; never fall off the end with 0
