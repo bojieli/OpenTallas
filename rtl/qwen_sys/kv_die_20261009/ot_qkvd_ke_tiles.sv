@@ -252,10 +252,12 @@ module ot_qkvd_ke_ctl (
     wire [7:0] FCR [0:NT-1];
     wire [7:0] RBD [0:NR-1];
     wire [7:0] OCR [0:NR-1];
-    assign IBD[0] = cfg_ucx;  assign IBD[1] = cfg_ucx; assign IBD[2] = 8'd4;
-    assign FCR[0] = cfg_fcr0; assign FCR[1] = 8'd32;   assign FCR[2] = 8'd4;
+    reg [7:0] s_ucx, s_qd, s_fcr0;       // strap pin flops (static values; no reset: valid before the reset releases)
+    always @(posedge clk) begin s_ucx <= cfg_ucx; s_qd <= cfg_qd; s_fcr0 <= cfg_fcr0; end
+    assign IBD[0] = s_ucx;    assign IBD[1] = s_ucx;   assign IBD[2] = 8'd4;
+    assign FCR[0] = s_fcr0;   assign FCR[1] = 8'd32;   assign FCR[2] = 8'd4;
     assign RBD[0] = 8'd4;     assign RBD[1] = 8'd32;   assign RBD[2] = 8'd8;  assign RBD[3] = 8'd32;
-    assign OCR[0] = 8'd4;     assign OCR[1] = cfg_qd;  assign OCR[2] = 8'd8;  assign OCR[3] = 8'd32;
+    assign OCR[0] = 8'd4;     assign OCR[1] = s_qd;    assign OCR[2] = 8'd8;  assign OCR[3] = 8'd32;
     reg ini;                             // 0 on the first clock after reset: the strap reset values are in effect
     always @(posedge clk or negedge rs) if (!rs) ini <= 1'b0; else ini <= 1'b1;
 
