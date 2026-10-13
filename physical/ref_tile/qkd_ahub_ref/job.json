@@ -1,9 +1,9 @@
 {
- "name": "qkd_ahub_ref-q13b-COMMIT",
+ "name": "qkd_ahub_ref-q13c-COMMIT",
  "block": "ot_qwen_nearhbm_attn_hub_t",
  "ref_tile": true,
  "owner": "Claude:q13-kvh",
- "purpose": "q13b: q13 EARLY_FAIL_SETUP (post-CTS) = raw rst_n port net across the 1,175 um cluster (port -> hard-tile rst_n pins -722 ps, port -> ot_rst_relay async clear -611 ps) + output flops not at the N pins (out_data flop -> port -190). Fix: ot_rst_pipe (pin synchroniser + per-region 2-stage flop chains for the 8 control regions and each of the 12 hard tiles), io_flop_at_pins cols 8. Rest as q13: hardened reciprocal leaf in the east column with 2+2 seam relays; benches exact PASS / pbmut FAIL were green on q13.",
+ "purpose": "q13c = q13b resubmitted with structural_change (q13b was REFUSED by STRUCTURE_REPEAT before running; no route of this structure exists). q13b: q13 EARLY_FAIL_SETUP (post-CTS) = raw rst_n port net across the 1,175 um cluster (port -> hard-tile rst_n pins -722 ps, port -> ot_rst_relay async clear -611 ps) + output flops not at the N pins (out_data flop -> port -190). Fix: ot_rst_pipe (pin synchroniser + per-region 2-stage flop chains for the 8 control regions and each of the 12 hard tiles), io_flop_at_pins cols 8. Rest as q13: hardened reciprocal leaf in the east column with 2+2 seam relays; benches exact PASS / pbmut FAIL were green on q13.",
  "threads": 16,
  "peak_ram_gb": 112,
  "source": {
@@ -96,7 +96,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ahub_ref/qkd_ahub_ref-q13b-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ahub_ref/qkd_ahub_ref-q13c-COMMIT"
   }
  ],
  "cycles_added": 0,

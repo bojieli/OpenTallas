@@ -172,8 +172,8 @@
  "job": {
   "owner": "Claude:q13-kvh",
   "branch": "claude/q13-kvh",
-  "tag": "q13b",
-  "purpose": "q13b: q13 EARLY_FAIL_SETUP (post-CTS) = raw rst_n port net across the 1,175 um cluster (port -> hard-tile rst_n pins -722 ps, port -> ot_rst_relay async clear -611 ps) + output flops not at the N pins (out_data flop -> port -190). Fix: ot_rst_pipe (pin synchroniser + per-region 2-stage flop chains for the 8 control regions and each of the 12 hard tiles), io_flop_at_pins cols 8. Rest as q13: hardened reciprocal leaf in the east column with 2+2 seam relays; benches exact PASS / pbmut FAIL were green on q13.",
+  "tag": "q13c",
+  "purpose": "q13c = q13b resubmitted with structural_change (q13b was REFUSED by STRUCTURE_REPEAT before running; no route of this structure exists). q13b: q13 EARLY_FAIL_SETUP (post-CTS) = raw rst_n port net across the 1,175 um cluster (port -> hard-tile rst_n pins -722 ps, port -> ot_rst_relay async clear -611 ps) + output flops not at the N pins (out_data flop -> port -190). Fix: ot_rst_pipe (pin synchroniser + per-region 2-stage flop chains for the 8 control regions and each of the 12 hard tiles), io_flop_at_pins cols 8. Rest as q13: hardened reciprocal leaf in the east column with 2+2 seam relays; benches exact PASS / pbmut FAIL were green on q13.",
   "benches": [
    {
     "name": "hubt_rl_layer_exact",
@@ -197,7 +197,8 @@
    }
   ],
   "views_to": "physical/ref_tile/qkd_ahub_ref/views",
-  "record_to": "results/rtl/ref_tile/qkd_ahub_ref"
+  "record_to": "results/rtl/ref_tile/qkd_ahub_ref",
+  "structural_change": "Reset is no longer one asynchronous port net spanning the 1,175 um cluster (q8/q13: ot_rst_relay cleared from the rst_n port, hard-tile rst_n pins on the port net): ot_rst_pipe = a 2-flop synchroniser at the pin + an own 2-stage plain-flop chain per control region (8) and per hard tile (12); output flops are placed at the N pins (io_flop_at_pins cols 8); versus q8 the reciprocal is a hardened local-root leaf with 2+2 seam relays (hub flops 14,793 -> 6,080 on the root)."
  },
  "macros": [],
  "inter": [],
