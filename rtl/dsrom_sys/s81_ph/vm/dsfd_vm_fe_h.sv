@@ -99,16 +99,18 @@ module dsfd_vm_fxs (
 endmodule
 
 // ================================================================ bundle relay tiles (S2: non-constant bits only)
-// One tile = 4 port words of ONE slice: in-pin flop -> out-pin flop (2 flops a bit), the 4 valid bits reset by the tile's
-// own rni pin flop, payload reset-free.  One hardened master per width class, `VMFE_R tiles in series on every path:
-//   master        bundle  ports            bits (4 v + payload)                                   instances (R 2)
-//   dsfd_vm_fxr   0 .. 3  12+4b .. 15+4b   588 = 4 x {v, row 14, mask 4, d 128}       (we = 1)     32
-//   dsfd_vm_fxa   4       0, 1, 3, 4       447 = 3 x {v, we, row, d 128} + {v, row}   (mask = f)    8
-//   dsfd_vm_fxb   6       8, 9, 10, 11     316 = 2 x {v, row} + 2 x {v, row, d 128}   (we 0 / 1)    8
-//   dsfd_vm_fxc   5       2, 5, 6, 7        61 = 4 x {v, row} + rf                    (we = 0)      8
-//   dsfd_vm_fxd   -       2, 5 .. 9        112 = the slice-0 data tags (4 + 92 + 4 x 4), no valid   2
+// One tile = the port words of ONE slice of one bundle: in-pin flop -> out-pin flop (2 flops a bit), the valid bits reset
+// by the tile's own rni pin flop, payload reset-free.  One hardened master per bundle class, `VMFE_R tiles in series:
+//   master        bundle  ports                    bits (v + payload)                                        instances (R 2)
+//   dsfd_vm_fxr   0 .. 3  12+4b .. 15+4b           588 = 4 x {v, row 14, mask 4, d 128}          (we = 1)     32
+//   dsfd_vm_fxa   4       0, 1, 3, 4               447 = 3 x {v, we, row, d 128} + {v, row}      (mask = f)    8
+//   dsfd_vm_fxb   5       2, 5 .. 9, 10, 11        489 = 6 x {v, row} + 2 x {v, row, d 128} + rf + 112 tags   8
+// The 112 tag bits (the slice-0 data of the read ports 2, 5 .. 9) ride in the bundle-5 tiles of slice 0; the same pins
+// of the slice 1 .. 3 instances are strapped 0 AT the tile (no wire, no cut) and their outputs are left open: a separate
+// 112-b master (and a 61-b one for the six {v, row} words) would be tiles of the size class that closed timing but
+// could not be exported (dsfd_vm_fra / frg: child_lint (b) / (f)).
 // The constants are re-created by ties at the dsfd_vm_fsr pins (the flat reference registers them: same values after
-// reset).  Mid cut of the front end: 14 bundles x 592 = 8,288 b before, 8 x 588 + 2 x (447 + 61 + 316) + 112 = 6,464.
+// reset).  Mid cut of the front end: 14 bundles x 592 = 8,288 b before, 8 x 588 + 2 x (447 + 377) + 112 = 6,464 now.
 // capture bundle: 4 lanes of one slice
 (* keep_hierarchy = "yes" *)
 module dsfd_vm_fxr (
@@ -145,71 +147,44 @@ module dsfd_vm_fxa (
         if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
     end
 endmodule
-// bundle 6: X3, X4 reads, the two landing drain ports
+// bundle 5: the six read ports, the two landing drain ports, rf, the slice-0 tags
 (* keep_hierarchy = "yes" *)
 module dsfd_vm_fxb (
     input  wire [0:0]   ck, input wire rni,
-    input  wire [3:0]   i_v, input wire [311:0] i,
-    output reg  [3:0]   o_v, output reg [311:0] o,
+    input  wire [7:0]   i_v, input wire [480:0] i,
+    output reg  [7:0]   o_v, output reg [480:0] o,
     output reg  [1:0]   rn_o
 );
     wire clk = ck[0];
-    reg rn; reg [3:0] q_v; reg [311:0] q;
+    reg rn; reg [7:0] q_v; reg [480:0] q;
     (* keep = 1 *) reg [1:0] rn_k;
     always @* rn_o = rn_k;
     always @(posedge clk) begin
         rn <= rni; rn_k <= {2{rn}};
         q <= i; o <= q;
-        if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
+        if (!rn) begin q_v <= 8'd0; o_v <= 8'd0; end else begin q_v <= i_v; o_v <= q_v; end
     end
-endmodule
-// bundle 5: X2, P2RD, X0, X1 reads + rf
-(* keep_hierarchy = "yes" *)
-module dsfd_vm_fxc (
-    input  wire [0:0]   ck, input wire rni,
-    input  wire [3:0]   i_v, input wire [56:0] i,
-    output reg  [3:0]   o_v, output reg [56:0] o,
-    output reg  [1:0]   rn_o
-);
-    wire clk = ck[0];
-    reg rn; reg [3:0] q_v; reg [56:0] q;
-    (* keep = 1 *) reg [1:0] rn_k;
-    always @* rn_o = rn_k;
-    always @(posedge clk) begin
-        rn <= rni; rn_k <= {2{rn}};
-        q <= i; o <= q;
-        if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
-    end
-endmodule
-(* keep_hierarchy = "yes" *)
-module dsfd_vm_fxd (input wire [0:0] ck, input wire [111:0] i, output reg [111:0] o);
-    reg [111:0] q;
-    always @(posedge ck[0]) begin q <= i; o <= q; end
 endmodule
 
-// ================================================================ frg / fra / frr: mid-hop relay tiles
-// One flop a bit (the flop is the in-pin AND the out-pin register), one hardened master per width class, NO reset:
-// every source register is reset in its own leaf and every receiving pin register is reset (or reset-free datapath) in
-// the receiving leaf, exactly as the flat relay stage it implements.  Owners of the stages: dsfd_vm_fe_h_if.svh.
-//   dsfd_vm_frg   1 b  grant         fld g_r[0]      -> frg (g_r[1])  -> flt g_q   (g_r[2])
-//   dsfd_vm_fra  15 b  LARM arm      fcn ra_v/rb[0]  -> fra ([1])     -> flt ra_q / rb_q ([2])
-//   dsfd_vm_frr 526 b  lane return   flt dd_r/dr_r[0]-> frr ([1])     -> fld dd_r / dr_r ([2])
+// ================================================================ frm: the mid-hop relay tile of ONE landing lane
+// One flop a bit (the flop is the in-pin AND the out-pin register), NO reset: every source register is reset in its own
+// leaf and every receiving pin register is reset (or reset-free datapath) in the receiving leaf, exactly as the flat
+// relay stage it implements.  One tile a lane carries the four mid stages of that lane (B6: the separate 1-b / 15-b / 4-b
+// tiles dsfd_vm_frg / fra closed timing but cannot be exported as hard views: PG stripes and face pins of a 10.8 x 8.64
+// tile fail child_lint (b) / (f); they are relays of the SAME hop, so they are one tile):
+//   r 526 b  lane return        flt dd_r/dr_r[0]  -> frm ([1]) -> fld dd_r / dr_r ([2])          LDL
+//   f   4 b  {sflt, ovf, ok, av} flt out flops    -> frm       -> fld sf_q / ov_q / ok_q / av_r   LVX
+//   g   1 b  grant              fld g_r[0]        -> frm ([1]) -> flt g_q ([2])                   LGL
+//   a  15 b  LARM {v, base}     fcn ra_v/rb[0]    -> frm ([1]) -> flt ra_q / rb_q ([2])           LAL
 (* keep_hierarchy = "yes" *)
-module dsfd_vm_frg (input wire [0:0] ck, input wire [0:0] i, output reg [0:0] o);
-    always @(posedge ck[0]) o <= i;
-endmodule
-(* keep_hierarchy = "yes" *)
-module dsfd_vm_fra (input wire [0:0] ck, input wire [14:0] i, output reg [14:0] o);
-    always @(posedge ck[0]) o <= i;
-endmodule
-(* keep_hierarchy = "yes" *)
-module dsfd_vm_frr (input wire [0:0] ck, input wire [525:0] i, output reg [525:0] o);
-    always @(posedge ck[0]) o <= i;
-endmodule
-//   dsfd_vm_frv   4 b  {sflt, ovf, ok, av}  flt out flops -> frv -> fld av_r / ok_q / ov_q / sf_q   (`VMFE_LVX: S5, B6)
-(* keep_hierarchy = "yes" *)
-module dsfd_vm_frv (input wire [0:0] ck, input wire [3:0] i, output reg [3:0] o);
-    always @(posedge ck[0]) o <= i;
+module dsfd_vm_frm (
+    input  wire [0:0]   ck,
+    input  wire [525:0] r_i, output reg [525:0] r_o,
+    input  wire [3:0]   f_i, output reg [3:0]   f_o,
+    input  wire [0:0]   g_i, output reg [0:0]   g_o,
+    input  wire [14:0]  a_i, output reg [14:0]  a_o
+);
+    always @(posedge ck[0]) begin r_o <= r_i; f_o <= f_i; g_o <= g_i; a_o <= a_i; end
 endmodule
 
 // ================================================================ flt: one landing lane
@@ -300,14 +275,14 @@ module dsfd_vm_fld (
     output wire [63:0]   k_o,
     output reg  [2:0]    t_cts,
     output reg           ovr_o, output reg sflt_o,
-    output reg  [1:0]    rn_o
+    output reg  [0:0]    rn_o           // to landing lane 0 (the lane chain)
 );
     // LGL / LDL 1 here = this leaf's own stage of each relay (g_r[0] out pin, dd_r in pin); LSD = the full round trip
     localparam integer NSVC = 1, NLL = 10, NLP = 2, LGL = 1, LDL = 1, LSD = `VMFE_LGL + 2 + `VMFE_LDL;
     wire clk = ck[0];
     reg rn;
-    (* keep = 1 *) reg [1:0] rn_k;
-    always @(posedge clk) begin rn <= rni; rn_k <= {2{rn}}; end
+    (* keep = 1 *) reg [0:0] rn_k;
+    always @(posedge clk) begin rn <= rni; rn_k <= rn; end
     always @* rn_o = rn_k;
     wire [NLL-1:0] ll_avd = av; wire [NLL*512-1:0] ll_od; wire [NLL*14-1:0] ll_or;   // av: after the frv relay tile
     genvar gl;
@@ -861,8 +836,8 @@ module dsfd_vm_fcn (
 endmodule
 
 // ================================================================ parent: wires + leaf instances only
-// Bundles of 4 ports: b 0..3 = capture ports 12 + 4b .. 15 + 4b (from fxs b); b 4 = ports 0, 1, 3, 4 (fcw, fcc);
-// b 5 = 2, 5, 6, 7 (fcn; carries rf); b 6 = 8, 9, 10, 11 (fcn, fld).  Every (port, slice) crosses `VMFE_R relay tiles
+// Bundles: b 0..3 = capture ports 12 + 4b .. 15 + 4b (from fxs b); b 4 = ports 0, 1, 3, 4 (fcw, fcc); b 5 = ports 2,
+// 5 .. 9 (fcn), 10, 11 (fld), rf and the slice-0 tags.  Every (port, slice) crosses `VMFE_R relay tiles
 // carrying its non-constant bits (table at the relay masters); the constants are TIED at the dsfd_vm_fsr pins here.
 // Reset tree (parent wiring only, re-routable without touching a leaf): fcn.rn_o -> fld, fcc, fcw, fxs 0..3;
 // fld -> flt 0 -> .. -> flt 9; bundle source -> relay(b, slice 0, 0) -> stage chain / slice chain; relay -> fsr.
@@ -898,7 +873,7 @@ module dsfd_vm_fe_h (
     wire [4*2352-1:0] cap_so;           // fxs gi: lane j, slice s at [2352*gi + (4*j + s)*147 +: 147]
     wire [4*5-1:0] cap_rno;
     wire [28*32-1:0] kall;
-    wire [7:0] rn_cn; wire [1:0] rn_ld, rn_cc, rn_cw;
+    wire [7:0] rn_cn; wire [0:0] rn_ld; wire [1:0] rn_cc, rn_cw;
     wire [9:0] ll_av, ll_ok, ll_ovf, ll_sf, ll_g, ll_rn, la_v; wire [5259:0] ll_ret; wire [139:0] la_b;
     wire [9:0] ll_gx, la_vx; wire [5259:0] ll_retx; wire [139:0] la_bx;   // after the mid-hop relay tiles
     wire [9:0] ll_avx, ll_okx, ll_ovfx, ll_sfx;
@@ -944,28 +919,20 @@ module dsfd_vm_fe_h (
         dsfd_vm_flt u_t (.ck(ck), .rni(rni_l), .p_v(pv), .p_t(pt), .p_m(pm), .p_d(pd), .p_flt(pf), .stride(ST), .off(OF),
             .g(ll_gx[gi]), .arm_v(la_vx[gi]), .arm_base(la_bx[14*gi +: 14]),
             .av(ll_av[gi]), .ret(ll_ret[526*gi +: 526]), .ok(ll_ok[gi]), .ovf(ll_ovf[gi]), .sflt(ll_sf[gi]), .rn_o(ll_rn[gi]));
-        // mid-hop relay tiles: `VMFE_LGL - 2 / `VMFE_LAL - 2 / `VMFE_LDL - 2 in series on this lane's g / arm / ret
-        wire [0:0] xg [0:`VMFE_LGL-2]; wire [14:0] xa [0:`VMFE_LAL-2]; wire [525:0] xr [0:`VMFE_LDL-2]; wire [3:0] xv [0:`VMFE_LVX];
-        assign xg[0] = ll_g[gi]; assign xa[0] = {la_v[gi], la_b[14*gi +: 14]}; assign xr[0] = ll_ret[526*gi +: 526];
-        for (gj = 0; gj < `VMFE_LGL - 2; gj = gj + 1) begin : g_rg
-            dsfd_vm_frg u_r (.ck(ck), .i(xg[gj]), .o(xg[gj+1]));
+        // the lane's mid-hop relay tile (one stage on g / arm / ret / flags: the contract's LGL 3, LAL 3, LDL 3, LVX 1)
+        if (`VMFE_LGL != 3 || `VMFE_LAL != 3 || `VMFE_LDL != 3 || `VMFE_LVX != 1) begin : g_cfg
+            dsfd_vm_frm_stage_mismatch u_err ();
         end
-        for (gj = 0; gj < `VMFE_LAL - 2; gj = gj + 1) begin : g_ra
-            dsfd_vm_fra u_r (.ck(ck), .i(xa[gj]), .o(xa[gj+1]));
-        end
-        for (gj = 0; gj < `VMFE_LDL - 2; gj = gj + 1) begin : g_rr
-            dsfd_vm_frr u_r (.ck(ck), .i(xr[gj]), .o(xr[gj+1]));
-        end
-        assign ll_gx[gi] = xg[`VMFE_LGL-2]; assign {la_vx[gi], la_bx[14*gi +: 14]} = xa[`VMFE_LAL-2];
-        assign ll_retx[526*gi +: 526] = xr[`VMFE_LDL-2];
-        assign xv[0] = {ll_sf[gi], ll_ovf[gi], ll_ok[gi], ll_av[gi]};
-        for (gj = 0; gj < `VMFE_LVX; gj = gj + 1) begin : g_rv
+        wire [3:0] fo;
+        dsfd_vm_frm u_m (.ck(ck), .r_i(ll_ret[526*gi +: 526]), .r_o(ll_retx[526*gi +: 526]),
+            .f_i({ll_sf[gi], ll_ovf[gi], ll_ok[gi], ll_av[gi]}), .f_o(fo), .g_i(ll_g[gi]), .g_o(ll_gx[gi]),
+            .a_i({la_v[gi], la_b[14*gi +: 14]}), .a_o({la_vx[gi], la_bx[14*gi +: 14]}));
 `ifdef OT_VMFE_MUT_AVBYP
-            if (gi == 3) begin : g_mut assign xv[gj+1] = xv[gj]; end else   // MUTANT: lane 3's flags skip their relay tile
+        if (gi == 3) begin : g_mut            // MUTANT: lane 3's flags skip their relay stage
+            assign {ll_sfx[gi], ll_ovfx[gi], ll_okx[gi], ll_avx[gi]} = {ll_sf[gi], ll_ovf[gi], ll_ok[gi], ll_av[gi]};
+        end else
 `endif
-            begin : g_t dsfd_vm_frv u_r (.ck(ck), .i(xv[gj]), .o(xv[gj+1])); end
-        end
-        assign {ll_sfx[gi], ll_ovfx[gi], ll_okx[gi], ll_avx[gi]} = xv[`VMFE_LVX];
+        begin : g_f assign {ll_sfx[gi], ll_ovfx[gi], ll_okx[gi], ll_avx[gi]} = fo; end
     end endgenerate
     dsfd_vm_fld u_ld (.ck(ck), .rni(rn_cn[0]), .av(ll_avx), .ret(ll_retx), .ok(ll_okx[5:2]), .ovf(ll_ovfx), .sflt(ll_sfx),
         .g(ll_g), .s_o(s_ld), .k_o(k_ld), .t_cts(t_cts), .ovr_o(ovr_w), .sflt_o(sflt_w), .rn_o(rn_ld));
@@ -980,15 +947,10 @@ module dsfd_vm_fe_h (
         .k_i(k_ext), .clf_i(clf), .so_i(so_w), .ovr_i(ovr_w), .sflt_i(sflt_w), .err_i(err_w),
         .s_o(s_cn), .x_o(x_cn), .arm_v(la_v), .arm_base(la_b), .rf_o(rf_w), .fe_flt(fe_flt), .rn_o(rn_cn));
     // ---------------- bundle relay tiles + the 4 slice tiles
-    wire [6:0] src_rn = {rn_ld[1], rn_cn[7], rn_cw[0], cap_rno[19], cap_rno[14], cap_rno[9], cap_rno[4]};
-    wire [7*4*R-1:0] xr0, xr1;          // rn_o of relay (b, s, r) at [(4*b + s)*R + r]
+    wire [5:0] src_rn = {rn_cn[7], rn_cw[0], cap_rno[19], cap_rno[14], cap_rno[9], cap_rno[4]};
+    wire [6*4*R-1:0] xr0, xr1;          // rn_o of relay (b, s, r) at [(4*b + s)*R + r]
     wire [111:0] fi_v, fi_we; wire [1567:0] fi_row; wire [447:0] fi_m; wire [14335:0] fi_d;   // slice-major, as m_*
     wire [3:0] fi_rf;
-    wire [111:0] xd [0:R];              // slice-0 data tags of the read ports 2, 5 .. 9
-    assign xd[0] = x_cn;
-    generate for (gr = 0; gr < R; gr = gr + 1) begin : g_xd
-        dsfd_vm_fxd u_r (.ck(ck), .i(xd[gr]), .o(xd[gr+1]));
-    end endgenerate
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_bs
         for (gb = 0; gb < 4; gb = gb + 1) begin : g_c          // capture bundles: 4 lanes of fxs gb -> dsfd_vm_fxr x R
             wire [3:0] xv [0:R]; wire [583:0] xp [0:R];
@@ -1064,15 +1026,16 @@ module dsfd_vm_fe_h (
                     .rn_o({xr1[(4*4 + gs)*R + gr], xr0[(4*4 + gs)*R + gr]}));
             end
         end
-        if (1) begin : g_b5                 // bundle 5: ports 2, 5, 6, 7 -> dsfd_vm_fxc x R
-            wire [3:0] xv [0:R]; wire [56:0] xp [0:R];
+        if (1) begin : g_b5                 // bundle 5: ports 2, 5, 6, 7, 8, 9, 10, 11 -> dsfd_vm_fxb x R
+            wire [7:0] xv [0:R]; wire [480:0] xp [0:R];
             if (1) begin : g_p2
                 wire [14:0] sw = s_cn[(6*gs + 0)*15 +: 15];
                 assign xv[0][0] = sw[14]; assign xp[0][0 +: 14] = sw[13:0];
                 wire [13:0] ew = xp[R][0 +: 14];
                 assign fi_v[28*gs + 2] = xv[R][0]; assign fi_we[28*gs + 2] = 1'b0;
                 assign fi_row[14*(28*gs + 2) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 2) +: 4] = 4'hf;
-                assign fi_d[128*(28*gs + 2) +: 128] = (gs == 0) ? {124'd0, xd[R][0 +: 4]} : 128'd0;
+                if (gs == 0) begin : g_tag assign fi_d[128*(28*gs + 2) +: 128] = {124'd0, xp[R][369 +: 4]}; end
+                else begin : g_ntag assign fi_d[128*(28*gs + 2) +: 128] = 128'd0; end
             end
             if (1) begin : g_p5
                 wire [14:0] sw = s_cn[(6*gs + 1)*15 +: 15];
@@ -1080,7 +1043,8 @@ module dsfd_vm_fe_h (
                 wire [13:0] ew = xp[R][14 +: 14];
                 assign fi_v[28*gs + 5] = xv[R][1]; assign fi_we[28*gs + 5] = 1'b0;
                 assign fi_row[14*(28*gs + 5) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 5) +: 4] = 4'hf;
-                assign fi_d[128*(28*gs + 5) +: 128] = (gs == 0) ? {36'd0, xd[R][4 +: 92]} : 128'd0;
+                if (gs == 0) begin : g_tag assign fi_d[128*(28*gs + 5) +: 128] = {36'd0, xp[R][373 +: 92]}; end
+                else begin : g_ntag assign fi_d[128*(28*gs + 5) +: 128] = 128'd0; end
             end
             if (1) begin : g_p6
                 wire [14:0] sw = s_cn[(6*gs + 2)*15 +: 15];
@@ -1088,7 +1052,8 @@ module dsfd_vm_fe_h (
                 wire [13:0] ew = xp[R][28 +: 14];
                 assign fi_v[28*gs + 6] = xv[R][2]; assign fi_we[28*gs + 6] = 1'b0;
                 assign fi_row[14*(28*gs + 6) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 6) +: 4] = 4'hf;
-                assign fi_d[128*(28*gs + 6) +: 128] = (gs == 0) ? {124'd0, xd[R][96 +: 4]} : 128'd0;
+                if (gs == 0) begin : g_tag assign fi_d[128*(28*gs + 6) +: 128] = {124'd0, xp[R][465 +: 4]}; end
+                else begin : g_ntag assign fi_d[128*(28*gs + 6) +: 128] = 128'd0; end
             end
             if (1) begin : g_p7
                 wire [14:0] sw = s_cn[(6*gs + 3)*15 +: 15];
@@ -1096,59 +1061,52 @@ module dsfd_vm_fe_h (
                 wire [13:0] ew = xp[R][42 +: 14];
                 assign fi_v[28*gs + 7] = xv[R][3]; assign fi_we[28*gs + 7] = 1'b0;
                 assign fi_row[14*(28*gs + 7) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 7) +: 4] = 4'hf;
-                assign fi_d[128*(28*gs + 7) +: 128] = (gs == 0) ? {124'd0, xd[R][100 +: 4]} : 128'd0;
+                if (gs == 0) begin : g_tag assign fi_d[128*(28*gs + 7) +: 128] = {124'd0, xp[R][469 +: 4]}; end
+                else begin : g_ntag assign fi_d[128*(28*gs + 7) +: 128] = 128'd0; end
             end
-            assign xp[0][56] = rf_w[gs]; assign fi_rf[gs] = xp[R][56];
-            for (gr = 0; gr < R; gr = gr + 1) begin : g_r
-                wire rni_x;
-                if (gs == 0 && gr == 0) begin : g_a assign rni_x = src_rn[5]; end
-                else if (gs == 0) begin : g_c assign rni_x = xr0[(4*5)*R + gr - 1]; end
-                else begin : g_d assign rni_x = xr1[(4*5 + gs - 1)*R + gr]; end
-                dsfd_vm_fxc u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
-                    .rn_o({xr1[(4*5 + gs)*R + gr], xr0[(4*5 + gs)*R + gr]}));
-            end
-        end
-        if (1) begin : g_b6                 // bundle 6: ports 8, 9, 10, 11 -> dsfd_vm_fxb x R
-            wire [3:0] xv [0:R]; wire [311:0] xp [0:R];
             if (1) begin : g_p8
                 wire [14:0] sw = s_cn[(6*gs + 4)*15 +: 15];
-                assign xv[0][0] = sw[14]; assign xp[0][0 +: 14] = sw[13:0];
-                wire [13:0] ew = xp[R][0 +: 14];
-                assign fi_v[28*gs + 8] = xv[R][0]; assign fi_we[28*gs + 8] = 1'b0;
+                assign xv[0][4] = sw[14]; assign xp[0][56 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][56 +: 14];
+                assign fi_v[28*gs + 8] = xv[R][4]; assign fi_we[28*gs + 8] = 1'b0;
                 assign fi_row[14*(28*gs + 8) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 8) +: 4] = 4'hf;
-                assign fi_d[128*(28*gs + 8) +: 128] = (gs == 0) ? {124'd0, xd[R][104 +: 4]} : 128'd0;
+                if (gs == 0) begin : g_tag assign fi_d[128*(28*gs + 8) +: 128] = {124'd0, xp[R][473 +: 4]}; end
+                else begin : g_ntag assign fi_d[128*(28*gs + 8) +: 128] = 128'd0; end
             end
             if (1) begin : g_p9
                 wire [14:0] sw = s_cn[(6*gs + 5)*15 +: 15];
-                assign xv[0][1] = sw[14]; assign xp[0][14 +: 14] = sw[13:0];
-                wire [13:0] ew = xp[R][14 +: 14];
-                assign fi_v[28*gs + 9] = xv[R][1]; assign fi_we[28*gs + 9] = 1'b0;
+                assign xv[0][5] = sw[14]; assign xp[0][70 +: 14] = sw[13:0];
+                wire [13:0] ew = xp[R][70 +: 14];
+                assign fi_v[28*gs + 9] = xv[R][5]; assign fi_we[28*gs + 9] = 1'b0;
                 assign fi_row[14*(28*gs + 9) +: 14] = ew[0 +: 14]; assign fi_m[4*(28*gs + 9) +: 4] = 4'hf;
-                assign fi_d[128*(28*gs + 9) +: 128] = (gs == 0) ? {124'd0, xd[R][108 +: 4]} : 128'd0;
+                if (gs == 0) begin : g_tag assign fi_d[128*(28*gs + 9) +: 128] = {124'd0, xp[R][477 +: 4]}; end
+                else begin : g_ntag assign fi_d[128*(28*gs + 9) +: 128] = 128'd0; end
             end
             if (1) begin : g_p10
                 wire [142:0] sw = s_ld[(2*gs + 0)*143 +: 143];
-                assign xv[0][2] = sw[142]; assign xp[0][28 +: 142] = sw[141:0];
-                wire [141:0] ew = xp[R][28 +: 142];
-                assign fi_v[28*gs + 10] = xv[R][2]; assign fi_we[28*gs + 10] = 1'b1;
+                assign xv[0][6] = sw[142]; assign xp[0][84 +: 142] = sw[141:0];
+                wire [141:0] ew = xp[R][84 +: 142];
+                assign fi_v[28*gs + 10] = xv[R][6]; assign fi_we[28*gs + 10] = 1'b1;
                 assign fi_row[14*(28*gs + 10) +: 14] = ew[128 +: 14]; assign fi_m[4*(28*gs + 10) +: 4] = 4'hf;
                 assign fi_d[128*(28*gs + 10) +: 128] = ew[127:0];
             end
             if (1) begin : g_p11
                 wire [142:0] sw = s_ld[(2*gs + 1)*143 +: 143];
-                assign xv[0][3] = sw[142]; assign xp[0][170 +: 142] = sw[141:0];
-                wire [141:0] ew = xp[R][170 +: 142];
-                assign fi_v[28*gs + 11] = xv[R][3]; assign fi_we[28*gs + 11] = 1'b1;
+                assign xv[0][7] = sw[142]; assign xp[0][226 +: 142] = sw[141:0];
+                wire [141:0] ew = xp[R][226 +: 142];
+                assign fi_v[28*gs + 11] = xv[R][7]; assign fi_we[28*gs + 11] = 1'b1;
                 assign fi_row[14*(28*gs + 11) +: 14] = ew[128 +: 14]; assign fi_m[4*(28*gs + 11) +: 4] = 4'hf;
                 assign fi_d[128*(28*gs + 11) +: 128] = ew[127:0];
             end
+            assign xp[0][368] = rf_w[gs]; assign fi_rf[gs] = xp[R][368];
+            if (gs == 0) begin : g_tg assign xp[0][369 +: 112] = x_cn; end else begin : g_ntg assign xp[0][369 +: 112] = 112'd0; end
             for (gr = 0; gr < R; gr = gr + 1) begin : g_r
                 wire rni_x;
-                if (gs == 0 && gr == 0) begin : g_a assign rni_x = src_rn[6]; end
-                else if (gs == 0) begin : g_c assign rni_x = xr0[(4*6)*R + gr - 1]; end
-                else begin : g_d assign rni_x = xr1[(4*6 + gs - 1)*R + gr]; end
+                if (gs == 0 && gr == 0) begin : g_a assign rni_x = src_rn[5]; end
+                else if (gs == 0) begin : g_c assign rni_x = xr0[(4*5)*R + gr - 1]; end
+                else begin : g_d assign rni_x = xr1[(4*5 + gs - 1)*R + gr]; end
                 dsfd_vm_fxb u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
-                    .rn_o({xr1[(4*6 + gs)*R + gr], xr0[(4*6 + gs)*R + gr]}));
+                    .rn_o({xr1[(4*5 + gs)*R + gr], xr0[(4*5 + gs)*R + gr]}));
             end
         end
         // hard child, unchanged: pin flop + out flop; the constant fields and i_rf[2:0] are ties

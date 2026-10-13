@@ -16,21 +16,21 @@
 `define VMFE_R       2           // fxr relay TILES in series on every b -> slice path (2 flops each)  [R 1 needs a 2nd H layer]
 `define VMFE_FRL     (2 + 2*`VMFE_R)   // order register -> slice pins: s0, [fxr in, fxr out] x R, fsr v1, fsr o
 `define VMFE_KD      2           // b (leaf out-pin) -> [relay] -> kq in-pin of fcn; ARM ops delayed alike (kq_arm*)
-// STAGE OWNERS (coordinator decision 2026-10-13: LGL 3, LDL 3, LAL 3; the parent holds 0 cells): first stage = out-pin
-// flop of the source leaf, LAST stage = in-pin flop of the receiving leaf, every mid-hop stage = one relay tile
-// (a single flop a bit, one hardened master per width class, placed mid-way; no reset pin):
-//   relay  stage 0 (owner)              mid stage (owner)                 last stage (owner)            wires
-//   LGL 3  g_r[0]   fld  out pin g      g_r[1]  dsfd_vm_frg   1 b  x10    g_r[2]  flt in pin g_q        2
-//   LAL 3  ra_v/rb[0] fcn out pin arm_* [1]     dsfd_vm_fra  15 b  x10    [2]     flt in pin ra_q/rb_q  2
-//   LDL 3  dd_r/dr_r[0] flt out pin ret [1]     dsfd_vm_frr 526 b  x10    [2]     fld in pin dd_r/dr_r  2
-//   LVX 1  av / ok / ovf / sflt  flt out pin   dsfd_vm_frv   4 b  x10    av_r / ok_q / ov_q / sf_q  fld in pin   2
-//   KD 2   kq[0]    source leaf out pin k_o  (no mid stage)                kq[1]   fcn in pin            1
-//   FRL 6  s0 source leaf out pin, [fxr in, fxr out] x R (dsfd_vm_fxr 592 b x56), fsr v1 / fsr o         R + 1
+// STAGE OWNERS (coordinator decision 2026-10-13: LGL 3, LDL 3, LAL 3; B6: LVX 1; the parent holds 0 cells): first stage =
+// out-pin flop of the source leaf, LAST stage = in-pin flop of the receiving leaf, the mid-hop stage of all four lane
+// relays = ONE relay tile a lane, dsfd_vm_frm (546 b, a single flop a bit, placed mid-way, no reset pin):
+//   relay  stage 0 (owner)                 mid stage                  last stage (owner)                  wires
+//   LGL 3  g_r[0]   fld  out pin g         frm g   1 b                g_r[2]  flt in pin g_q              2
+//   LAL 3  ra_v/rb[0] fcn out pin arm_*    frm a  15 b                [2]     flt in pin ra_q/rb_q        2
+//   LDL 3  dd_r/dr_r[0] flt out pin ret    frm r 526 b                [2]     fld in pin dd_r/dr_r        2
+//   LVX 1  av / ok / ovf / sflt flt out    frm f   4 b                av_r / ok_q / ov_q / sf_q  fld in   2
+//   KD 2   kq[0]    source leaf out pin k_o  (no mid stage)           kq[1]   fcn in pin                  1
+//   FRL 6  s0 source leaf out pin, [relay in, relay out] x R (bundle relay masters, S2 below), fsr v1 / fsr o   R + 1
 // The lane's own row relay (flat dsfd_vm_ll rv / rd_, AL = LAL stages) stays inside flt.
 `define VMFE_LGL     3           // grant
 `define VMFE_LDL     3           // lane return data (the drain selects on the grant delayed LGL + 2 + LDL = 8)
 `define VMFE_LAL     3           // LARM arm (and the lane's row relay)
-`define VMFE_LVX     1           // mid-hop relay tiles (dsfd_vm_frv, 4 b x10) on av / ok / ovf / sflt lane -> fld: 2 wires, as g / arm / ret
+`define VMFE_LVX     1           // mid-hop stage (in dsfd_vm_frm) on av / ok / ovf / sflt lane -> fld: 2 wires, as g / arm / ret (flat LVX 1)
 `define VMFE_RTH     18          // landing room threshold = the flat 14 + LAL + LVX (+1 row in flight per input / flag stage)
 `define VMFE_DVR     1           // engine done dv / dt on a stream-domain pin register in fcn (flat DVR 1: +1 stream cycle on a done)
 // ---- leaves (each: own ck root <= 15,000 sinks MEASURED by yosys, every pin registered, hop <= 500 um)
@@ -41,9 +41,10 @@
 //        ports 0, 3, 4         144 = {v, we, row 14, d 128}               mask = f
 //        ports 10, 11 (fld)    143 = {v, row 14, d 128}                   we = 1, mask = f
 //        ports 1, 2, 5 .. 9     15 = {v, row 14}                          we = 0, mask = f, d = 0 except the slice-0 tag
-//        slice-0 tags (fcn x_o) 112 = p2 4, p5 92, p6 .. p9 4 each        (own relay master dsfd_vm_fxd)
-//      relay masters: dsfd_vm_fxr 588 b x32, fxa 447 b x8 (bundle 4), fxb 316 b x8 (bundle 6), fxc 61 b x8 (bundle 5 + rf),
-//      fxd 112 b x2.  Mid cut 8,288 -> 6,464 b.  Stage counts unchanged (FRL 6): no cycle delta.
+//        slice-0 tags (fcn x_o) 112 = p2 4, p5 92, p6 .. p9 4 each        (in the bundle-5 tiles of slice 0)
+//      relay masters: dsfd_vm_fxr 588 b x32 (capture), fxa 447 b x8 (bundle 4: ports 0, 1, 3, 4), fxb 489 b x8 (bundle 5:
+//      ports 2, 5 .. 11, rf and the tags; the tag pins of the slice 1 .. 3 instances are strapped at the tile).
+//      Mid cut 8,288 -> 6,464 b.  Stage counts unchanged (FRL 6): no cycle delta.
 //  S3  dsfd_vm_clt is re-routed at M5 (M6 over the clt row is the parent's).  Its KEY -> AGE stage (24-26 levels, -113 ps
 //      at M5) is cut by forming the tag compare and both touch vectors from registers one cycle ahead (dsfd_vm_cl RT 1):
 //      bit-exact and cycle-exact to the closed clt8a RTL (bench tb_dsfd_vm_cl_rt), so NO cycle is added and the flat
@@ -55,10 +56,9 @@
 //                   clt flt 4x4 -> OR -> clf_o[3:0] (out flop);  out: s_o[4*4*147] LANE-major (lane j, slice s at
 //                   [(4j + s)*147]; u_s0 kept copies = out-pin flops, one per slice, NEVER merged), k_o[4*KW] (kept copy
 //                   of b {v,we,row,m} at a pin, 1 cycle after b)
-//  dsfd_vm_fxr x32 / fxa x8 / fxb x8 / fxc x8   relay tile of 4 port words of one slice: i_v[3:0], i[payload] in-pin flop
-//                   -> out-pin flop; valid bits reset by its own rni pin flop.  7 bundles x 4 slices x R tiles = 56 at R 2.
-//                   Bundles: 0..3 = capture ports 12+4b..15+4b (fxr), 4 = ports 0,1,3,4 (fxa), 5 = 2,5,6,7 + rf (fxc),
-//                   6 = 8,9,10,11 (fxb).  dsfd_vm_fxd x2: the 112 slice-0 tag bits, 2 flops a bit, no reset.
+//  dsfd_vm_fxr x32 / fxa x8 / fxb x8   relay tile of the port words of one slice of one bundle: i_v, i[payload] in-pin flop
+//                   -> out-pin flop; valid bits reset by its own rni pin flop.  6 bundles x 4 slices x R tiles = 48 at R 2.
+//                   Bundles: 0..3 = capture ports 12+4b..15+4b (fxr), 4 = ports 0,1,3,4 (fxa), 5 = ports 2,5..11 + rf + tags (fxb).
 //  dsfd_vm_flt x10  landing lane: q_* pin flops of ITS producer bits + decode + dsfd_vm_ll + rr_ll.
 //                   pins in: p_v p_t[1:0] p_m p_d[511:0] p_flt (non-collective producers strap t=0 m=1), stride[2:0] off[1:0]
 //                   straps, g (g_r[LGL-1] in-pin), arm_v arm_base[13:0] (LAL-1 in-pin);  out: av (flop), ret[LW-1:0]
@@ -73,7 +73,7 @@
 //                   flit is taken from the pin flop and no slot is ever read); fcw uses ot_dsrom_mtp_lrx_rtt_ar
 //                   (pin flops + one grant flop; fatal if its consumer ever stalls).  The flat reference KEEPS the
 //                   slots: lockstep proves the two bit-exact at 0 cycles.  The read receiver's 30 x 31 queue stays.
-//  dsfd_vm_frg x10 / dsfd_vm_fra x10 / dsfd_vm_frr x10   mid-hop relay tiles (table above)
+//  dsfd_vm_frm x10  the lane's mid-hop relay tile (table above; replaces frg / fra / frr of 693940a56)
 //  dsfd_vm_fcn x1   u_rs/u_rss, u_ad (cv_p/cd_p), command decode, id_r, cq, P2RD, 5 X streamers, b of ports 2,5,6,7,8,9
 //                   + s0 + k_o, kq[KD-1] in-pin of all 28 k copies, K/K2/slots, done mux, c_w*, t_rdy, cq_p, fe_flt,
 //                   rf_o = |fe_flt (out flop, to the 4 fsr i_rf[3] through the same fxr chain: sticky, +1 + 2R cycles)
