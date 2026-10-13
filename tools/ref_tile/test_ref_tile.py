@@ -122,6 +122,15 @@ class Job(unittest.TestCase):
         self.assertEqual(RT.gen_job(s, RT.kit_dir(s), "0123456789ab", [])["structural_change"], "row split")
 
 
+    def test_contract_slot_layer_cap_dict(self):
+        # qwen_rom_tp8 v3 slots carry layer_cap as {"cap": "M5", "view_max_layer": ..., "conforms": ...}
+        s = {"name": "x", "top": "x", "contract": {"file": "results/arch/hier_contract_1012/qwen_rom_tp8.json",
+                                                   "slot": "s_0_0"}}
+        slot = RT.contract_slot(s)
+        self.assertEqual(slot["layer_cap"], "M5")
+        self.assertEqual(RT.tile_cap(s, slot), ("M5", "contract"))
+
+
 class Rtl(unittest.TestCase):
     def test_runtime_partselect_loop_multiplicity(self):
         src = """module m(input clk, input [3:0] a, input [511:0] d, output reg [8191:0] bb);
