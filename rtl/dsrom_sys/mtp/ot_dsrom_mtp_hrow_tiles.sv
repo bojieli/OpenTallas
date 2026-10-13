@@ -344,7 +344,10 @@ module ot_dsrom_mtp_hrow_cbcore (
     input  wire [14:0]   f_r,  output wire [14:0]   t_r,
     input  wire [1024:0] f_d,  output wire [1024:0] t_d
 );
-    reg [1038:0] wi, wo; reg [14:0] ri, ro; reg [1024:0] di, dq; reg [3:0] id; reg [1023:0] cap; reg s1, s2;
+    // wi/ri carry keep too: without it yosys opt_merge folds each un-kept chain pin flop into the kept macro launch
+    // copy with the same D (r7 netlist: wi/ri 5 cells each; one flop drove SRAM wd_in AND the forwarding register).
+    (* keep = 1 *) reg [1038:0] wi; (* keep = 1 *) reg [14:0] ri;
+    reg [1038:0] wo; reg [14:0] ro; reg [1024:0] di, dq; reg [3:0] id; reg [1023:0] cap; reg s1, s2;
     wire we = wi[0] && wi[14:11] == id;
     wire re = ri[0] && ri[14:11] == id;
     always @(posedge clk or negedge rn)
@@ -361,9 +364,18 @@ module ot_dsrom_mtp_hrow_cbcore (
     wire [1023:0] rdo;
     genvar gc;
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_c
+        // Dedicated kept launch copies: chain pin flops wi/ri feed only the
+        // forwarding registers; each macro gets local address/data launch flops.
+        // Capture the same input edge as wi/ri, preserving SRAM and chain latency.
+        (* keep = 1 *) reg [9:0] macro_wa, macro_ra;
+        (* keep = 1 *) reg [255:0] macro_wd;
+        always @(posedge clk) begin
+            macro_wa <= f_w[10:1]; macro_ra <= f_r[10:1];
+            macro_wd <= f_w[15 + 256*gc +: 256];
+        end
         ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(clk),
-            .r_ce_in(re), .r_addr_in(ri[10:1]), .rd_out(rdo[256*gc +: 256]),
-            .w_ce_in(we), .w_addr_in(wi[10:1]), .wd_in(wi[15 + 256*gc +: 256]), .w_mask_in({256{1'b1}}),
+            .r_ce_in(re), .r_addr_in(macro_ra), .rd_out(rdo[256*gc +: 256]),
+            .w_ce_in(we), .w_addr_in(macro_wa), .wd_in(macro_wd), .w_mask_in({256{1'b1}}),
             .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
     end endgenerate
     always @(posedge clk) cap <= rdo;
