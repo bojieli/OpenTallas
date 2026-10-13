@@ -1,24 +1,24 @@
 {
   "name": "ot_vms_bank",
-  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/routes/vms_bank_v04_98ae25577_h/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/routes/vms_bank_v08_bb49c6813/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max -3.118506564092627e-10 min -1.3967874079590104e-10",
+      "ws": "OT_WS max -3.1981250980805953e-10 min -1.5641465900273488e-10",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/routes/vms_bank_v04_98ae25577_h/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/routes/vms_bank_v08_bb49c6813/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/record/views/ot_vms_bank:/out",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/record/views/ot_vms_bank:/out",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/src/physical/ref_tile/vms_bank/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/src/physical/ref_tile/vms_bank/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -29,20 +29,20 @@
     "ff": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max 4.265493513955221e-11 min -1.2138878791034813e-10",
+      "ws": "OT_WS max 6.730027646284498e-11 min -1.3171111423737614e-10",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/routes/vms_bank_v04_98ae25577_h/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/routes/vms_bank_v08_bb49c6813/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/record/views/ot_vms_bank:/out",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/record/views/ot_vms_bank:/out",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/src/physical/ref_tile/vms_bank/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/src/physical/ref_tile/vms_bank/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -53,20 +53,20 @@
     "tt": {
       "returncode": 0,
       "done": true,
-      "ws": "OT_WS max -2.273448096445918e-11 min -1.2408482574777224e-10",
+      "ws": "OT_WS max -1.1987022485726584e-11 min -1.3889928096588733e-10",
       "image": "openroad/orfs:latest",
       "command": [
         "docker",
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/routes/vms_bank_v04_98ae25577_h/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/routes/vms_bank_v08_bb49c6813/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/record/views/ot_vms_bank:/out",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/record/views/ot_vms_bank:/out",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/src/physical/ref_tile/vms_bank/signoff.sdc:/interface.sdc:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/src/physical/ref_tile/vms_bank/signoff.sdc:/interface.sdc:ro",
         "-v",
-        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
         "openroad/orfs:latest",
         "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
         "-no_init",
@@ -76,18 +76,21 @@
     }
   },
   "interface_sdc": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/src/physical/ref_tile/vms_bank/signoff.sdc",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/src/physical/ref_tile/vms_bank/signoff.sdc",
     "sha256": "d04eb1102d0d03fee3446cc41095a11fea111428b23d107dcd1497f6f37d4d0a",
     "purpose": "interface timing extraction, not a new leaf signoff verdict"
   },
   "macro_views": [
-    "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v04-98ae25577-h/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+    "/srv/opentallas-scratch2/claude/closure-loop/vms_bank-v08-bb49c6813/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "vt_flavours_added": [
+    "L"
   ],
   "files": {
-    "ot_vms_bank.lef": "bde86045e1546097af30c8be23a48a8591dc2651221ee006bc56beb408f315b1",
-    "ot_vms_bank_ff.lib": "eee496deefe86374252855c95a4e8705f12df83d5fca85a89c3cdab2e5ba012d",
-    "ot_vms_bank_ss.lib": "e8c6c652c243a38fbebbab34a57099f4c5e3cc0f02a13018364ec18f25f1ab01",
-    "ot_vms_bank_tt.lib": "22eade24a5628b9fc6828c976f514e60e2ceb24dd50c4d5e30ec97e259210f21"
+    "ot_vms_bank.lef": "7688007a17c93b5f1a36d7faa8543a107f086ab0644c0c5f99b1fb1bf649d14b",
+    "ot_vms_bank_ff.lib": "2c880ba23f1e79db39168a983b9559dbaea1f44a69ce63bdc341485cc36d61ac",
+    "ot_vms_bank_ss.lib": "d31daf3c217e8311f20632921ec01bb5aa7d67e716318b79154031c295bc0ee1",
+    "ot_vms_bank_tt.lib": "01a51e67e86e62047cbc95ea13f3a01b06eb6bb1bf9360b400b5a348f40f3758"
   },
   "ok": true
 }

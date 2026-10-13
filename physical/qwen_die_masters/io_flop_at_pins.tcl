@@ -131,6 +131,68 @@ foreach c [lsort -real -index 1 $cand] {
   lappend ot_list [$ff getName]
   if {$io eq "INPUT"} { incr ot_ni } else { incr ot_n }
 }
+# OT_MPFLOP_PINS (el1011-q-kvd 2026-10-12, optional; comma-separated pin names, e.g. "pop"): also anchor the flop that
+# drives each such INPUT pin of a hard macro / hardened child (directly or through <= 3 single-fanout INV / BUF), FIRM
+# just outside the macro halo (OT_MPFLOP_GAP um, default 2.7) on the macro edge nearest the pin.  qkd_d2d_ref-q8-aeca40e24:
+# the sbuf pop pin is a ~660 ps internal cone, so the parent may spend only ~110 ps (clk->Q + wire) on it -- the RTL
+# drives it from a dedicated flop (ot_qkvd_d2d PQ), this places that flop at the pin.  Released at PRE_DETAIL_PLACE with
+# the port flops (same list file).  Placement only, 0 cycles.
+set ot_nm 0
+if {[info exists ::env(OT_MPFLOP_PINS)] && $::env(OT_MPFLOP_PINS) ne ""} {
+  set mpins [split $::env(OT_MPFLOP_PINS) ","]
+  set mgap [expr {[info exists ::env(OT_MPFLOP_GAP)] ? $::env(OT_MPFLOP_GAP) : 2.7}]
+  set mskip 0
+  foreach inst [$ot_blk getInsts] {
+    if {![[$inst getMaster] isBlock]} continue
+    set mb [$inst getBBox]
+    set mx0 [expr {double([$mb xMin]) / $ot_dbu}]; set mx1 [expr {double([$mb xMax]) / $ot_dbu}]
+    set my0 [expr {double([$mb yMin]) / $ot_dbu}]; set my1 [expr {double([$mb yMax]) / $ot_dbu}]
+    foreach it [$inst getITerms] {
+      if {![$it isInputSignal] || [lsearch -exact $mpins [[$it getMTerm] getName]] < 0} continue
+      set net [$it getNet]; if {$net eq "NULL"} { incr mskip; continue }
+      set d [ot_of_drv $net]; if {$d eq ""} { incr mskip; continue }
+      set ff ""; set fi [$d getInst]
+      for {set hop 0} {$hop < 4} {incr hop} {
+        if {[ot_of_isff $fi]} { set ff $fi; break }
+        if {![ot_of_isbuf $fi]} break
+        set nxt ""
+        foreach i2 [$fi getITerms] {
+          if {![$i2 isInputSignal]} continue
+          set n2 [$i2 getNet]; if {$n2 eq "NULL"} continue
+          set d2 [ot_of_drv $n2]
+          if {$d2 ne "" && [llength [$n2 getITerms]] == 2} { set nxt [$d2 getInst] }
+        }
+        if {$nxt eq ""} break
+        set fi $nxt
+      }
+      if {$ff eq ""} { incr mskip; puts "OT_MPFLOP skip [$inst getName]/[[$it getMTerm] getName]: driver is not a flop"; continue }
+      set fn [$ff getName]
+      if {[dict exists $ot_seen $fn]} continue
+      dict set ot_seen $fn 1
+      if {[catch {set pb [$it getBBox]}] || $pb eq "" || $pb eq "NULL"} {
+        set px [expr {($mx0 + $mx1) / 2.0}]; set py [expr {($my0 + $my1) / 2.0}]
+      } else {
+        set px [expr {double([$pb xMin] + [$pb xMax]) / 2.0 / $ot_dbu}]; set py [expr {double([$pb yMin] + [$pb yMax]) / 2.0 / $ot_dbu}]
+      }
+      set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]
+      set h [expr {double([[$ff getMaster] getHeight]) / $ot_dbu}]
+      set dl [expr {$px - $mx0}]; set dr [expr {$mx1 - $px}]; set dbo [expr {$py - $my0}]; set dt [expr {$my1 - $py}]
+      set dm [expr {min($dl, $dr, $dbo, $dt)}]
+      if {$dl == $dm} { set x [expr {$mx0 - $mgap - $w}]; set y $py
+      } elseif {$dr == $dm} { set x [expr {$mx1 + $mgap}]; set y $py
+      } elseif {$dbo == $dm} { set x $px; set y [expr {$my0 - $mgap - $h}]
+      } else { set x $px; set y [expr {$my1 + $mgap}] }
+      set x [expr {max($cx0, min($x, $cx1 - $w))}]; set y [expr {max($cy0, min($y, $cy1 - $h))}]
+      $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
+      $ff setPlacementStatus FIRM
+      lappend ot_list $fn
+      incr ot_nm
+      puts [format "OT_MPFLOP %s -> %s/%s at (%.2f, %.2f)" $fn [$inst getName] [[$it getMTerm] getName] $x $y]
+    }
+  }
+  puts "OT_MPFLOP fixed $ot_nm macro-input-pin flops beside their pins ($mskip pins not flop-driven)"
+  if {$ot_nm == 0} { error "OT_MPFLOP: OT_MPFLOP_PINS=$::env(OT_MPFLOP_PINS) matched no flop-driven macro pin (netlist changed?)" }
+}
 set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
 foreach n $ot_list { puts $fh $n }
 close $fh
