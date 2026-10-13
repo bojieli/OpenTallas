@@ -263,6 +263,17 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "heap_reverse_mutant",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/mrev -DIW=8 -DHW=8 -DHUBC -DSHORT -DOT_TOPK_HEAP_MUT_REV",
+    "expect": "fail",
+    "fail_regex": "HGI_TOPK_HEAP FAIL errors",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "extra_paths": [
