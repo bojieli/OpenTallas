@@ -77,14 +77,18 @@ def spec(w: int, flow: str, owner: str, branch: str) -> dict:
     pins[fi].append("i")
     pins[fo].append("o")
     pins[cf] += ["ck", "rs"]
-    small = max(o["w"], o["h"]) <= 21.6
+    # E-W strips wider than 136 b (21.6 um of core width between two pin faces 2.8 pins a row tall): kit recipe 2 fixes
+    # the flops AND the hold cells at both faces, nothing is left to place and global placement diverges (pre-route gate
+    # 10-13: target density -1.6, GPL-0305 on 304 / 624 / 1136 WE; the N-S strips pass).  They take recipe 1 + outhold,
+    # the configuration the S81 E-W relay of this shape closed with (dsfd_rly_266_WE, 21.6 x 30.24).
+    tall = flow in ("WE", "EW") and w > 136
     return {
         "name": name, "top": mst, "kind": "tile",
-        "sources": [f"{RTL}/ot_hbm_rly.sv", f"{RTL}/hbfd_rly_masters.sv"],
+        "sources": ["rtl/lib/ot_rst_relay.sv", f"{RTL}/ot_hbm_rly.sv", f"{RTL}/hbfd_rly_masters.sv"],
         "params": {}, "clock_port": "ck", "reset_ports": ["rs"],
         "outline": o, "macros": [],
         "pins": {f: p for f, p in pins.items() if p},
-        "outhold": True,
+        "outhold": True, **({"recipe": 1} if tall else {}),
         # 2.7-um M5 PG pitch on the 21.6-um side so every net has >= 2 full-length stripes over > 50 % of the tile
         # (child_lint (b); the S81 relay family closed at this pitch)
         "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8, "m5_pg_pitch": 2.7},

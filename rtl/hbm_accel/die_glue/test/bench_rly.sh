@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bit-exact bench of one HBM die relay master (Verilator 5.050).  usage: bench_rly.sh <pass|mut> <master> <W> <work dir>
-# pass: 20,000 random words, o must equal the previous cycle's i on every cycle and every bit; async clear checked
+# pass: 20,000 words (random but for 8 zero words under the two reset releases), o must equal the previous cycle's i on every cycle and every bit; async clear checked
 #       mid-stream.   mut: the same bench on the OT_HBM_RLY_MUT build (bit 0 inverted in the register) -- must FAIL.
 set -u
 mode=$1; M=$2; W=$3; O=$4
@@ -18,7 +18,9 @@ module tb;
     for (n = 0; n < 20000; n = n + 1) begin
       @(negedge ck); if (o !== ex) err = err + 1;
       if (n == 9000) begin rs = 0; #1 if (o !== '0) err = err + 1; ex = '0; #1 rs = 1; end
-      for (int b = 0; b < $W; b++) i[b] = \$urandom;
+      // the words under a reset release (the first 4, and 4 after the mid-stream clear) are zero: a class > 256 b
+      // releases its flops 3 clock edges after rs (registered reset relay)
+      if (n < 4 || (n >= 9000 && n < 9004)) i = '0; else for (int b = 0; b < $W; b++) i[b] = \$urandom;
       @(posedge ck); ex = i;
     end
     \$display("RLY_BENCH %s %0d errors in %0d words (%s W=%0d)", err ? "FAIL" : "PASS", err, n, "$M", $W);
@@ -28,6 +30,6 @@ endmodule
 EOT
 DEF=""; [ "$mode" = mut ] && DEF="-DOT_HBM_RLY_MUT"
 verilator --binary --timing -Wno-fatal -Wno-WIDTH $DEF --top-module tb -Mdir "$O/obj" -o tb \
-  "$O/tb.sv" rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/hbm_accel/die_glue/hbfd_rly_masters.sv > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
+  "$O/tb.sv" rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/hbm_accel/die_glue/hbfd_rly_masters.sv > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
 "$O/obj/tb" | tee "$O/bench.log" | grep RLY_BENCH
 grep -q 'RLY_BENCH PASS' "$O/bench.log"

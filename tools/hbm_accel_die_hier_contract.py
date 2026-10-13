@@ -759,7 +759,6 @@ def main(argv=None):
     rec['schema'] = 'hbmdie-1011 detail (sidecar of the opentallas.hier_contract.v1 file ' + a.out.name + ')'
     detail.write_text(json.dumps(rec, indent=1) + '\n')
     con = to_schema(rec, a)
-    a.out.with_name(a.out.stem + f'_v{a.version}_generated.json').write_text(json.dumps(con, indent=1, ensure_ascii=False) + '\n')
     summary = None
     if a.base:
         con, summary = merge_base(con, json.loads(a.base.read_text()), a.version, a.note or f'v{a.version}')

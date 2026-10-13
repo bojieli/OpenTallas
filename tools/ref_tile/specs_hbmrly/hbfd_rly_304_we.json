@@ -3,6 +3,7 @@
  "top": "hbfd_rly_304_WE",
  "kind": "tile",
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
   "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv"
  ],
@@ -29,6 +30,7 @@
   ]
  },
  "outhold": true,
+ "recipe": 1,
  "route": {
   "pd": 0.45,
   "threads": 4,
