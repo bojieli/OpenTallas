@@ -715,6 +715,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
+    # route.synth_keep_modules: hierarchy kept through synthesis (ABC re-ripples a pipelined fp adder once it is flattened
+    # into its context; the hbm norm group closed only with its fp add/mul stages kept, idle1012)
+    if s["route"].get("synth_keep_modules"):
+        extra.append("--orfs-var " + shq("SYNTH_KEEP_MODULES=" + " ".join(s["route"]["synth_keep_modules"])))
     if s["route"].get("lb_addon") is None:
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
