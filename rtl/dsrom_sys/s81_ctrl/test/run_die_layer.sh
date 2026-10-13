@@ -10,13 +10,18 @@
 # 3 sequential jobs of the layer (the kit lands each HIDDEN payload in the VM).
 # Env: CASES (required), NG (16), FP (rtl|dpi, rtl), LAYERS, VL (verilator), J (build jobs, 16), ADMIT ("" or
 # "/srv/opentallas-scratch/admit.sh <GB> --").  Verdict line: DIE_LAYER_GATE PASS|FAIL.  Fleet hosts only.
+# CHAINS (optional): the HC chain fixture of tools/s81_ctrl/die_layer_chain.py for a layer the pinned CASES pickle does
+# not hold (LAYERS=L14, an Engram layer: its eng.* ops are BEHAVIOURAL at program duration, see the stim tool);
+# CHAINS may hold "%L", replaced by the layer name.  Unset: L0 / L2 exactly as before.
 set -u
 SRC=$1; OUT=$2; MODES=${3:-"base seqc mut_ep mut_drop mut_hc mut_coll mut_inp mut_seqc"}
 NG=${NG:-16}; FP=${FP:-rtl}; LAYERS=${LAYERS:-"L0 L2"}; VL=${VL:-verilator}; J=${J:-16}; ADMIT=${ADMIT:-}
 mkdir -p $OUT
 S=$SRC/rtl/dsrom_sys; P=$S/s81_ph
+CHAINS=${CHAINS:-}
 for L in $LAYERS; do
-  python3 $SRC/tools/s81_ctrl/die_layer_stim.py $OUT/stim_$L --cases $CASES --layer $L --ng $NG > $OUT/stim_$L.log 2>&1 \
+  CH=""; case $L in L0|L2) ;; *) [ -n "$CHAINS" ] && CH="--chain ${CHAINS//%L/$L}";; esac
+  python3 $SRC/tools/s81_ctrl/die_layer_stim.py $OUT/stim_$L --cases $CASES --layer $L --ng $NG $CH > $OUT/stim_$L.log 2>&1 \
     || { echo "DIE_LAYER_GATE FAIL stim $L: $(tail -2 $OUT/stim_$L.log)" | tee $OUT/verdicts.log; exit 1; }
 done
 FPF="rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv"
@@ -47,13 +52,15 @@ LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.s
  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
  $FPF rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv"
-FILES=$(for f in $LIST; do echo $SRC/$f; done | awk '!seen[$0]++')
+# the hierarchical HC slab modules dsfd_sp_hc.sv names since 10-12 (HIER generate; the bench keeps HIER 0): without them the build fails
+FILES=$( (for f in $LIST; do echo $SRC/$f; done; ls $SRC/rtl/dsrom_sys/s81_suhc/hier/*.sv) | awk '!seen[$0]++')
 if [ $FP = dpi ]; then
   mkdir -p $OUT/dpi_rest
   ( cd $SRC && python3 -c "import sys; sys.path.insert(0,'tools/s81_suhc'); import hc_gate; from pathlib import Path; [print(p) for p in hc_gate.dpi_rest(Path('$OUT/dpi_rest'))]" ) > $OUT/dpi_rest.list
   FILES="$(cat $OUT/dpi_rest.list) $(echo "$FILES" | grep -v '/rtl/hdc/ot_hdc_prefix.sv')"
 fi
 sha256sum $FILES $SRC/tools/s81_ctrl/die_layer_stim.py $SRC/tools/s81_suhc/hc_gate.py > $OUT/sources.sha256
+[ -n "$CHAINS" ] && sha256sum $SRC/tools/s81_ctrl/die_layer_chain.py $(for L in $LAYERS; do f=${CHAINS//%L/$L}; [ -f "$f" ] && echo $f; done | sort -u) >> $OUT/sources.sha256
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 for m in $MODES; do
   case $m in base) X="";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";;

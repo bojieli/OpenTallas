@@ -149,6 +149,9 @@ module ot_qkvd_layer_tb #(
 `ifdef KVD_HT
                      , .HT(1)                        // el1011-q-kvd: hardened link-buffer tiles
 `endif
+`ifdef KVD_PQ
+                     , .PQ(`KVD_PQ)                  // q13b-kvend: 2 = pin-registered link-buffer tiles
+`endif
 `ifdef KVD_PF
                      , .PF(1)                        // q13-kvh: push pin flops at the hardened buffers
 `endif

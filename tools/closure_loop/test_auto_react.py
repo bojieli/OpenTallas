@@ -492,6 +492,38 @@ class ClassG(Base):
         self.assertFalse(cl.ar_near_miss(j)[0])
         self.assertEqual(cl.ar_near_miss(self.nm(ff=-60.0, drc=20)), (True, "hold"))
 
+    WIN = ("== /r/j/routes/x/ot_hold_stall_cts.rpt\nOT_HOLD_STALL NEEDS_RTL stage=cts reason=stalled\n"
+           "class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)\n"
+           "%s\ntop pin groups (class start -> end, bus indices folded):\n      2     -56.2  I2O ck -> qNW[*]\n")
+
+    def test_feedthrough_window_is_structural_not_a_near_miss(self):
+        # vm_cp_fw3_cx-cx1-eca45f5dc: FF -44.7, window I2O=2@-56.2 (ck -> qNW[*]); its -arg1/-arg2 failed the same way
+        j = self.nm(ff=-44.73, drc=0, stage_idx=1, hold_window=self.WIN % "I2O            2     -56.2  ck -> qNW[580]",
+                    reason="FF hold -44.7: route hold repair stalled; window I2O=2@-56.2 I2O=2@-49.6")
+        self.assertEqual(cl.ar_near_miss(j), (True, "hold"))           # in the band by the numbers alone
+        self.assertIn("2 input-to-output", cl.feedthrough_window(j))
+        self.assertEqual(self.run_pass(j), [("j", "none")])            # judged once, nothing routed
+        cls, kind, why = cl.ar_plan(self.nm(ff=-44.73, drc=0, hold_window=j["hold_window"]))
+        self.assertEqual((cls, kind), (None, None))
+        self.assertIn("pin register missing: structural", why)
+        self.assertFalse(list(self.tk.rglob("j-arg*")))
+        self.assertIn("pin register missing: structural", cl.load_job("j")["reason"])
+        self.assertNotIn("g", cl.load_job("j").get("auto_react") or {})
+
+    def test_feedthrough_window_from_the_reason_alone(self):
+        j = self.nm(ff=-52.0, drc=0, reason="FF hold -52.0: route hold repair stalled; window I2O=2@-62.0 I2O=2@-55.1")
+        self.assertIn("worst -62.0", cl.feedthrough_window(j))
+        self.assertIsNone(cl.ar_plan(j)[0])
+
+    def test_register_window_is_still_a_near_miss(self):
+        # R2R / I2R / R2O residue is what a hold margin can finish; an I2O class with no violating endpoint is no defect
+        for row, reason in (("R2R          310     -41.0  a -> b\nI2O            0       3.1  ck -> q", ""),
+                            ("I2R           20      -7.1  d -> r", "FF hold -11.5: route hold repair stalled; window I2R=20@-7.1"),
+                            ("R2O            4     -12.0  r -> q", "")):
+            j = self.nm(ff=-45.0, drc=0, hold_window=self.WIN.split("top pin")[0] % row, reason=reason)
+            self.assertEqual(cl.feedthrough_window(j), "", row)
+            self.assertEqual(cl.ar_plan(j)[0], "g", row)
+
     def test_class_a_first_then_variants(self):
         j = self.nm(ff=-11.5, drc=0, stage_idx=1)
         with patch.object(cl, "_at_verdict", return_value=True):
