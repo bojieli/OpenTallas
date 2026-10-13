@@ -131,7 +131,7 @@
  "job": {
   "owner": "Codex:hbm-qdq-physical",
   "branch": "codex/hbm-qdq-physical",
-  "tag": "q4",
+  "tag": "q5",
   "views_to": "physical/ref_tile/qdq_q_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_q_ref",
   "purpose": "ot_hgi_qdq_q B2 quarter cluster via ref_tile: track-B decoder (dxl/dbq/daq hard tiles, CLOSED views) + 4 lane-pair response-FIFO leaf tiles (qdq_lq_ref, M5) + result FIFO on one 64x512 SRAM macro (2-entry registered prefetch; was a 64x512 flop array read 64:1), W face = slice read lanes, N face = slice write lanes, S = dispatch rec/ret, clock spine; span product split into 4-bit partials/pair/sum/product/end (+5 ingress edges), reset only lane valid, unconditional decode capture",
@@ -141,15 +141,6 @@
   ],
   "benches": [
    {
-    "name": "production_qdq_exact_mutants",
-    "cmd": "set -o pipefail; S=3 QDQ_G=-GSPANPIPE=1 bash tools/hgi_unit_tput/run_qdq_q.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_s3; grep -q 'FATAL: fault after 0 dones' {RUN}/qdq_s3/m1.log; grep -q 'FATAL: 2898 of 3328 words mismatch' {RUN}/qdq_s3/m2.log; grep -q 'cycles=178 priced=168 S=3' {RUN}/qdq_s3/m0.log; cat {RUN}/qdq_s3/m0.log",
-    "expect": "pass",
-    "pass_regex": "PASS HGI_QDQ_Q_TPUT",
-    "min_count_regex": "records=([1-9][0-9]*) words=3328",
-    "threads": 24,
-    "peak_ram_gb": 32
-   },
-   {
     "name": "descriptor_span_equivalence",
     "cmd": "bash tools/hgi_unit_tput/run_qdq_span_equiv.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/span_eq; cat {RUN}/span_eq/run.log",
     "expect": "pass",
@@ -157,6 +148,31 @@
     "min_count_regex": "checked=([1-9][0-9]*)",
     "threads": 8,
     "peak_ram_gb": 16
+   },
+   {
+    "name": "production_qdq_m0",
+    "cmd": "S=3 MUT=0 QDQ_G=-GSPANPIPE=1 bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m0 && grep -q 'cycles=178 priced=168 S=3' {RUN}/qdq_m0/run.log",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "PASS HGI_QDQ_Q_TPUT",
+    "min_count_regex": "records=([1-9][0-9]*) words=3328"
+   },
+   {
+    "name": "production_qdq_m1",
+    "cmd": "S=3 MUT=1 QDQ_G=-GSPANPIPE=1 bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "FATAL: fault after 0 dones"
+   },
+   {
+    "name": "production_qdq_m2",
+    "cmd": "S=3 MUT=2 QDQ_G=-GSPANPIPE=1 bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "FATAL: 2898 of 3328 words mismatch"
    }
   ]
  },

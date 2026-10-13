@@ -311,10 +311,11 @@ module ot_hgi_qdq_q #(
                 wcnt[b] <= 0; dcnt[b] <= 0;
             end
         end else begin
-            wrq <= '0; wwq <= '0; s1_lv <= l_fire; s2_lv <= s1_lv; s3_lv <= s2_lv; d_v <= s3_lv;
+            for (integer qb = 0; qb < 8; qb = qb + 1) begin wrq[qb*16 + 15] <= 1'b0; wwq[qb*280 + 279] <= 1'b0; end
+            s1_lv <= l_fire; s2_lv <= s1_lv; s3_lv <= s2_lv; d_v <= s3_lv;
             // ---- read walk: one beat (<= 4 sectors) a cycle; the next record loads on the last beat
             if (r_issue) begin
-                for (b = 0; b < 8; b = b + 1) if (r_hit[b]) wrq[b*16 +: 16] <= {1'b1, 15'(r_sec0 + 15'(3'(b - r_sec0[2:0])))};
+                for (b = 0; b < 8; b = b + 1) if (r_hit[b]) wrq[b*16 + 15] <= 1'b1;
                 b_t <= b_t + 1'b1;
                 if (r_lastbeat) begin r_beat <= 0; r_row <= r_row + 1'b1; r_rsec <= r_rsec + r_rs; r_osec <= r_osec + r_ws; end
                 else r_beat <= r_beat + 1'b1;
@@ -342,14 +343,24 @@ module ot_hgi_qdq_q #(
             resv <= resv + (OW+1)'(l_fire) - (OW+1)'(w_fire);
             if (w_fire) begin
                 for (b = 0; b < 8; b = b + 1) if (w_hit[b]) begin : wr
+                    wwq[b*280 + 279] <= 1'b1;
+                end
+                mq_h <= mq_h + 1'b1;
+            end
+        end
+    end
+    // Address/payload flops are written separately from resettable valid strobes.  Keeping both slices in one
+    // asynchronous always block creates Yosys ALDFF feedback for the unreset payload bits.
+    always @(posedge clk) begin
+        for (integer b = 0; b < 8; b = b + 1) begin
+            if (r_issue && r_hit[b]) wrq[b*16 +: 15] <= 15'(r_sec0 + 15'(3'(b - r_sec0[2:0])));
+            if (w_fire && w_hit[b]) begin
                     reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));
                     // decoded constant-index sector select (one-hot AND-OR, no runtime part-select)
                     c = ({128{s == 2'd0}} & od_head[127:0]) | ({128{s == 2'd1}} & od_head[255:128]) |
                         ({128{s == 2'd2}} & od_head[383:256]) | ({128{s == 2'd3}} & od_head[511:384]);
                     for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};
-                    wwq[b*280 +: 280] <= {1'b1, 15'(w_sec0 + 15'(s)), d, 8'hff};
-                end
-                mq_h <= mq_h + 1'b1;
+                    wwq[b*280 +: 279] <= {15'(w_sec0 + 15'(s)), d, 8'hff};
             end
         end
     end
