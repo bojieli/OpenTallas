@@ -3439,6 +3439,24 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         # net's pin centroids): no data net over RELAY_REACH_UM; a miss is an error, never a kept 'unrepaired' chain
         pos2 = _pin_pos(v, m)
         over, hmax = [], 0.0
+        # pinreg-pairs 2026-10-13 (el1013-pinreg-audit.log): every hop is ALSO judged on its own pair of real views
+        # (tools/hier_contract/pair_check.py Gate, table results/arch/pinreg_audit_1013/pairs/view_timing.json or
+        # $OT_PAIR_TIMING): limit = min(RELAY_REACH_UM, (T - 60 - SKEW - o_src - s_dst) / 0.76); the flat RELAY_REACH_UM
+        # stays the rule of every hop without a view on either end (the interim relay masters).  A pair bound only by
+        # direction (die port names that are not the view's) is listed, not failed.  OT_QWEN_PAIR_GATE=0 = flat rule.
+        pg_, pair_over = None, []
+        import os as _os2
+        if _os2.environ.get('OT_QWEN_PAIR_GATE', '1') != '0':
+            sys.path.insert(0, str(ROOT / 'tools' / 'hier_contract'))
+            try:
+                import pair_check as _PC
+            except ImportError:                      # a tree without main's tools/hier_contract/pair_check.py: flat rule
+                _PC = None
+            if _PC is not None:
+                cn_ = {(e[0], e[1].lstrip('*')): re.sub(r'_r\d+$', '', b_) for b_, c_, n_, eps_ in m['buses'] if c_ == 'clock_trunk'
+                       for e in eps_}
+                pg_ = _PC.Gate(default_um=RELAY_REACH_UM, clock_net=cn_)
+                by_ = {i.name: i for i in m['insts']}
         for bid, cl, bits, eps in m['buses']:
             if cl in RELAY_NEVER or len(eps) < 2:
                 continue
@@ -3447,7 +3465,22 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             hmax = max(hmax, L_)
             if L_ > RELAY_REACH_UM:
                 over.append((bid, cl, bits, round(L_, 1)))
+            elif pg_ is not None and cl != 'constant':
+                for e_, q_ in zip(eps[1:], pts_[1:]):
+                    lim_ = pg_.limit(eps[0][0], getattr(by_[eps[0][0]], 'master', ''), eps[0][1].lstrip('*'),
+                                     e_[0], getattr(by_[e_[0]], 'master', ''), e_[1].lstrip('*'))
+                    Lp_ = abs(pts_[0][0] - q_[0]) + abs(pts_[0][1] - q_[1])
+                    if Lp_ > lim_:
+                        pair_over.append((bid, cl, bits, round(Lp_, 1), lim_))
+        if pair_over:
+            over += [t_[:4] for t_ in pair_over if t_[:4] not in over]
         m['r21_relays'].update(reach_um=RELAY_REACH_UM, max_pin_to_pin_um=round(hmax, 1), over_reach=sorted(over, key=lambda t: -t[3]))
+        if pg_ is not None:
+            m['r21_relays']['pair_check'] = dict(
+                table_masters=len(pg_.t), hops=dict(pg_.used), over_pair_limit=sorted(pair_over, key=lambda t: t[4] - t[3])[:200],
+                hold_fail=[list(k_) + [h_] for k_, h_ in sorted(pg_.hold.items(), key=lambda kv: kv[1])],
+                tightest=sorted((l_, k_[0] + '.' + k_[1], k_[2] + '.' + k_[3]) for k_, l_ in pg_.pairs.items() if l_ < RELAY_REACH_UM)[:60],
+                candidates_bound_by_direction=sorted((l_, k_[0] + '.' + k_[1], k_[2] + '.' + k_[3]) for k_, l_ in pg_.candidates.items())[:60])
         if _os.environ.get('OT_RELAY_DUMP'):
             import json as _json
             _rep = {r[0]: r for r in repaired}
