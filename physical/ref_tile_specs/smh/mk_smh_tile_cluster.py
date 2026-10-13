@@ -161,7 +161,18 @@ def spec(variant):
         "orfs_vars": {"OT_CG_EXCLUDE": "*u_cgt.u_cg.u_icg", "OT_SPINE_SYM": "1", "OT_SPINE_TREE_PAD": "1", "POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
         "refglob": "*",
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96},
-        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r11",
+        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r13",
+                # r13 (el1013-smh-r11, 10-13): eg r11 / wg r12 died at 4_1_cts with DPL-0033 -- the spine's THROUGH_ICG move
+                # left the ICG enable cone FIRM but resizable; repair_timing sized the cgi input buffer over an abutting
+                # FIRM AND3.  Fixed in physical/common_flow/clock_spine.tcl (main 8e4929331).
+                "structural_change": (
+                    "clock root rebuilt: only the tile ICG and its enable registers are fixed beside the clk pin and "
+                    "they are dont_touch; the ICG enable cone (input buffer of cgi + gates) is movable and legalised "
+                    "(r11/r12: cone cells FIRM yet resizable -> input2099 sized to BUFx12f over FIRM _0956_, DPL-0033 "
+                    "at CTS in both tiles; spine errors if a moved cell is fixed and resizable)"
+                    + ("" if variant == "eg" else "; wg station plan mirrors about the PLACED centre channel "
+                       "(x 259.2-302.4; reset 271.2, strap 283.0), every station window asserted clear of each child "
+                       "+ halo at generation")),
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
@@ -176,6 +187,58 @@ def spec(variant):
                           "print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' "
                           "{RUN}/b_mut_strap_region.json; test $rc -eq 0"))} ]},
     }
+
+
+HALO = 2.16            # ref_tile macro-place halo (rows are cut this far from every child)
+SBX, SBY = 8.0, 4.0    # station search window half extents (sr_place)
+
+
+def child_boxes(variant):
+    """(eg x, x0, y0, x1, y1) of every child as PLACED for this variant.  wg children are NOT the die mirror of eg: a
+    mirrored origin W - x - w is off the 43.2-um child lattice (W = 14.6 pitches), so spec() snaps it and the whole wg
+    image sits 17.28 um east of the die mirror."""
+    out = []
+    for kind, _inst, x, y, _o in EG:
+        w, h = DIM[kind]
+        px = x if variant == "eg" else round(round((W - x - w) / L) * L, 3)
+        out.append((x, px, y, px + w, y + h))
+    return out
+
+
+def channel(variant):
+    """free N-S centre channel (x_lo, x_hi) between the two child columns AS PLACED"""
+    b = child_boxes(variant)
+    wcol = [r for r in b if r[0] < CH_X]          # pt_w column (W in eg, E in wg)
+    ecol = [r for r in b if r[0] > CH_X]
+    left, right = (wcol, ecol) if variant == "eg" else (ecol, wcol)
+    lo, hi = max(r[3] for r in left), min(r[1] for r in right)
+    assert hi - lo >= 2 * (SBX + HALO + 0.5), f"{variant}: centre channel {lo}-{hi} narrower than a station window"
+    return lo, hi
+
+
+def station_x(variant, x):
+    """eg station x -> this variant.  A station in the centre channel is mirrored about the CHANNEL centre of the placed
+    wg image (r11 wg crash 10-13: the die mirror W - x put the reset stations at x 253.9, inside tcl h0 at 172.8-259.2:
+    'STRAP_REGION no legal station site for u_rt.n3'); a station outside it is mirrored about the die (it follows the
+    N / S pins, which are the die mirror)."""
+    if variant == "eg":
+        return x
+    elo, ehi = channel("eg")
+    if elo <= x <= ehi:
+        wlo, whi = channel("wg")
+        return round((wlo + whi) / 2 - (x - (elo + ehi) / 2), 3)
+    return round(W - x, 3)
+
+
+def station_check(variant, name, x, y):
+    """the whole search window must be legal rows: inside the core and clear of every child + halo (0.5 um for the
+    mirrored-pin track shift of a placed origin).  Fails at generation, not in the route."""
+    m = HALO + 0.5
+    assert m + SBX <= x <= W - m - SBX and m + SBY <= y <= H - m - SBY, f"{variant} {name}: window ({x}, {y}) leaves the core"
+    for _ex, x0, y0, x1, y1 in child_boxes(variant):
+        if x + SBX > x0 - m and x - SBX < x1 + m and y + SBY > y0 - m and y - SBY < y1 + m:
+            raise AssertionError(f"{variant} station {name} window ({x}, {y}) +-({SBX}, {SBY}) overlaps a child + halo "
+                                 f"at x {x0}-{x1} y {y0}-{y1}")
 
 
 def strap_regions(variant):
@@ -224,8 +287,9 @@ def strap_regions(variant):
              "  }; error \"STRAP_REGION register not found\"", "}"]
     for leaf, ps in enumerate(points):
         for stage, (x,y) in enumerate(ps):
-            if variant == "wg": x = W-x
+            x = station_x(variant, x)
             name=f"strap_l{leaf}_s{stage}"
+            station_check(variant, name, x, y)
             lines += [f"set rg [odb::dbRegion_create $::sr_blk {name}]", "$rg setRegionType EXCLUSIVE",
                       f"odb::dbBox_create $rg [expr {{round({x-8}*$::sr_dbu)}}] [expr {{round({y-4}*$::sr_dbu)}}] [expr {{round({x+8}*$::sr_dbu)}}] [expr {{round({y+4}*$::sr_dbu)}}]",
                       f"set gr [odb::dbGroup_create $::sr_blk {name}]", "set nc 0",
@@ -241,8 +305,9 @@ def strap_regions(variant):
            "t2": 560, "s3": 250, "f_gs": 232, "f_lhs": 224}
     lines += ["set rn 0"]
     for reg, y in rst.items():
-        x = rx if variant == "eg" else W - rx
+        x = station_x(variant, rx)
         name = f"rst_{reg}"
+        station_check(variant, name, x, y)
         lines += [f"set rg [odb::dbRegion_create $::sr_blk {name}]", "$rg setRegionType EXCLUSIVE",
                   f"odb::dbBox_create $rg [expr {{round({x-8}*$::sr_dbu)}}] [expr {{round({y-4}*$::sr_dbu)}}] [expr {{round({x+8}*$::sr_dbu)}}] [expr {{round({y+4}*$::sr_dbu)}}]",
                   f"set gr [odb::dbGroup_create $::sr_blk {name}]", "set nc 0",

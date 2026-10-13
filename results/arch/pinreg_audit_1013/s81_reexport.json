@@ -3,7 +3,7 @@
  "die": "ds_rom_s81_layer1",
  "contract": "results/arch/hier_contract_1011/s81.json",
  "contract_version": 14,
- "source_commit": "f43c2d3cc",
+ "source_commit": "0f63a4d25",
  "rule": {
   "budget_ps": 166.7,
   "budget_frac": 0.2,
@@ -14,10 +14,10 @@
   "period_ps": 833.333,
   "reading": "tile share of the cycle: clock->pin <= 0.2 T after the insertion reference, pin->flop (setup at the pin + reference) <= 0.2 T; the die wire owns the remaining 0.6 T"
  },
- "status": "PROVISIONAL: 34 of 47 audited views carry no corrected-export record (reexport_1013 / verdict check) after the export-SDC fix (abc334b14); their boundary numbers may be off by tens of ps",
+ "status": "PROVISIONAL: 33 of 47 audited views carry no corrected-export record (reexport_1013 / verdict check) after the export-SDC fix (abc334b14); their boundary numbers may be off by tens of ps",
  "export_sdc": {
-  "corrected": 13,
-  "pre_fix": 34,
+  "corrected": 14,
+  "pre_fix": 33,
   "pre_fix_views": [
    "physical/redesign_ds/routes/dsfd_coll_cbf-cbh-c2e836720-tc-cl-p2/dsfd_coll_cbf",
    "physical/redesign_ds/routes/dsfd_coll_cbq-cbh-390208180-tc-cl-p4/dsfd_coll_cbq",
@@ -44,7 +44,6 @@
    "physical/s81_ph_views/assembled/dsfd_ctrl",
    "physical/s81_ph_views/closed/dsfd_svc_join",
    "physical/s81_ph_views/closed/ot_p2h_fadd16",
-   "physical/s81_ph_views/closed/ot_p2h_xport",
    "physical/s81_ph_views/hc_hier/routes/s81hc-crooth-673aa90b0-tc-yw-pd40/ot_s81_hc_crooty",
    "physical/s81_ph_views/vm_master/views/dsfd_vm_be_sl",
    "physical/variant_fill/s81-hend-m221pq-hr-E4-a1f23fa0b-mm-vf-hm25/dsfd_m2l_vr_68x11__hr_E4",
@@ -59,10 +58,10 @@
   "contract_cells": 72,
   "audited": 47,
   "not_auditable": 25,
-  "violating": 46,
+  "violating": 45,
   "alias_bound": 0,
   "by_flag": {
-   "out_over": 40,
+   "out_over": 39,
    "in_over": 33,
    "min_delay": 21
   },
@@ -1018,29 +1017,6 @@
   },
   {
    "rank": 40,
-   "cell": "ot_p2h_xport",
-   "instances": 1,
-   "flags": [
-    "out_over"
-   ],
-   "view": "physical/s81_ph_views/closed/ot_p2h_xport",
-   "binding": "cell / view name",
-   "provisional": true,
-   "setup_corner": "ss",
-   "comb_bits": 0,
-   "out_over_bits": 271,
-   "in_over_bits": 0,
-   "worst_out_ps": 210.2,
-   "worst_out_bus": "t_inr",
-   "worst_in_ps": 135.6,
-   "worst_in_bus": "f_in",
-   "L_min_ps": 69.2,
-   "H_max_ps": null,
-   "min_delay_margin_ps": null,
-   "pins": 1991
-  },
-  {
-   "rank": 41,
    "cell": "dsfd_stnv_512x1",
    "instances": 383,
    "flags": [
@@ -1063,7 +1039,7 @@
    "pins": 1027
   },
   {
-   "rank": 42,
+   "rank": 41,
    "cell": "dsfd_stnh_566x1",
    "instances": 391,
    "flags": [
@@ -1086,7 +1062,7 @@
    "pins": 1135
   },
   {
-   "rank": 43,
+   "rank": 42,
    "cell": "dsfd_stnh_512x1",
    "instances": 598,
    "flags": [
@@ -1109,7 +1085,7 @@
    "pins": 1027
   },
   {
-   "rank": 44,
+   "rank": 43,
    "cell": "dsfd_stnh_514x1",
    "instances": 43,
    "flags": [
@@ -1132,7 +1108,7 @@
    "pins": 1031
   },
   {
-   "rank": 45,
+   "rank": 44,
    "cell": "dsfd_stnv_514x1",
    "instances": 129,
    "flags": [
@@ -1155,7 +1131,7 @@
    "pins": 1031
   },
   {
-   "rank": 46,
+   "rank": 45,
    "cell": "dsfd_coll_cbf",
    "instances": 1,
    "flags": [
@@ -8151,36 +8127,36 @@
    ],
    "binding": "cell / view name",
    "view": "physical/s81_ph_views/closed/ot_p2h_xport",
-   "setup_corner": "ss",
+   "setup_corner": "tt",
    "hold_corner": "ff",
    "libs": {
     "ff": "ot_p2h_xport_ff.lib",
-    "ss": "ot_p2h_xport_ss.lib"
+    "ss": "ot_p2h_xport_ss.lib",
+    "tt": "ot_p2h_xport_tt.lib"
    },
-   "export_sdc_corrected": null,
-   "committed_before_export_sdc_fix": true,
-   "exported_before_export_sdc_fix": true,
+   "export_sdc_corrected": "reexport_1013",
+   "committed_before_export_sdc_fix": false,
+   "exported_before_export_sdc_fix": false,
    "lib_cell": "ot_p2h_xport",
    "clocks": {
     "ck": {
-     "ref_ps": 483.5,
-     "min_ps": 436.0,
-     "max_ps": 531.0,
+     "ref_ps": 365.0,
+     "min_ps": 323.0,
+     "max_ps": 406.9,
      "src": "lib midrange"
     }
    },
-   "note": "SS-only view (no TT lib): out/in are SS numbers against the TT budget",
    "summary": {
     "pins": 1991,
     "buses": 9,
     "comb_bits": 0,
-    "out_over_bits": 271,
+    "out_over_bits": 0,
     "in_over_bits": 0,
     "no_clock_arc_out_bits": 0,
     "no_setup_arc_in_bits": 2,
-    "worst_out_ps": 210.2,
+    "worst_out_ps": 147.7,
     "worst_out_bus": "t_inr",
-    "worst_in_ps": 135.6,
+    "worst_in_ps": 100.2,
     "worst_in_bus": "f_in",
     "L_min_ps": 69.2,
     "L_min_bus": "t_c",
@@ -8191,15 +8167,13 @@
     "min_delay_bits_in": 0,
     "clock_out_bits": 0
    },
-   "flags": [
-    "out_over"
-   ],
+   "flags": [],
    "buses": {
     "f_or": {
      "dir": "input",
      "bits": 1,
      "out_ps": null,
-     "in_ps": 45.8,
+     "in_ps": 26.4,
      "L_ps": null,
      "H_ps": null,
      "comb_bits": 0,
@@ -8218,7 +8192,7 @@
      "dir": "input",
      "bits": 1,
      "out_ps": null,
-     "in_ps": 3.8,
+     "in_ps": 2.2,
      "L_ps": null,
      "H_ps": null,
      "comb_bits": 0,
@@ -8271,7 +8245,7 @@
      "dir": "input",
      "bits": 103,
      "out_ps": null,
-     "in_ps": 39.5,
+     "in_ps": 21.9,
      "L_ps": null,
      "H_ps": null,
      "comb_bits": 0,
@@ -8290,7 +8264,7 @@
      "dir": "input",
      "bits": 1210,
      "out_ps": null,
-     "in_ps": 135.6,
+     "in_ps": 100.2,
      "L_ps": null,
      "H_ps": null,
      "comb_bits": 0,
@@ -8308,7 +8282,7 @@
     "t_c": {
      "dir": "output",
      "bits": 2,
-     "out_ps": 147.3,
+     "out_ps": 98.4,
      "in_ps": null,
      "L_ps": 69.2,
      "H_ps": null,
@@ -8327,12 +8301,12 @@
     "t_inr": {
      "dir": "output",
      "bits": 2,
-     "out_ps": 210.2,
+     "out_ps": 147.7,
      "in_ps": null,
      "L_ps": 84.1,
      "H_ps": null,
      "comb_bits": 0,
-     "out_over_bits": 2,
+     "out_over_bits": 0,
      "in_over_bits": 0,
      "no_clock_arc_bits": 0,
      "no_setup_arc_bits": 0,
@@ -8346,12 +8320,12 @@
     "t_o": {
      "dir": "output",
      "bits": 670,
-     "out_ps": 186.1,
+     "out_ps": 123.2,
      "in_ps": null,
      "L_ps": 69.2,
      "H_ps": null,
      "comb_bits": 0,
-     "out_over_bits": 269,
+     "out_over_bits": 0,
      "in_over_bits": 0,
      "no_clock_arc_bits": 0,
      "no_setup_arc_bits": 0,
