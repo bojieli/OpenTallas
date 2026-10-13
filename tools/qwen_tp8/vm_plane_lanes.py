@@ -54,11 +54,24 @@ def main():
         K = {}
         for q in range(16):
             for top in (0, 1):   # planned pins: banks of the bottom region row on the S face, top row on the N face
-                K[q, top] = term((pl[2 * q + 1]['x'] - 1.08, pl[2 * q]['y'] + (pl[2 * q]['h'] if top else 0.0)), f'xplane{2*q}_{2*q+1}.{"N" if top else "S"}')
+                # PHYS 2026-10-13: the kit has ALL d pins on the N face (q on S), so both region rows land on N
+                K[q, top] = term((pl[2 * q + 1]['x'] - 2.16, pl[2 * q]['y'] + pl[2 * q]['h']), f'xplane{2*q}_{2*q+1}.N')
         row = {c['logical_bank']: c['region'] // 4 for c in ch if c['m'] == 'ot_qfd_vm_bank_t'}
         for (b, h), s in S.items():
             for q in range(16): jobs.append(dict(name=f'b{b}_h{h}_planes{2*q}_{2*q+1}', stage=0, A=s, Q=K[q, row[b]], bits=16))
     P = np.round(np.array(P), 3); N = len(P)
+    # ---- per-stage wire audit (PHYS 2026-10-13).  A stage = launch register pin -> capture register pin.  Estimated pin-to-pin
+    # length = centre-to-centre L1 + an end allowance: xfifo8 xo terminal: half its N face (a lane's 16 pins = 2 bit positions of
+    # 8 elements, spread over the face); plane terminal: plane width + 2.16 (the lane feeds the bank's pins of BOTH planes of the
+    # pair, bank-major along the face); a relay bay facing a terminal: 51 um (which of its 2 x 2 tiles, pin on the tile face).
+    # bay -> bay: 0 (tiles and pin order are assignable so that the pins face each other; pin-level assignment NOT done here).
+    AL = np.zeros(N); TERM_BAY = 51.0
+    if a.mode == 'plane':
+        xw = next(c['w'] for c in ch if c['m'] == 'ot_qfd_vm_xfifo8_t') / 2; pw = pl[0]['w'] + 2.16
+        for v in S.values(): AL[v] = xw
+        for v in K.values(): AL[v] = pw
+    def est(u, v, d):
+        return d + AL[u] + AL[v] + (TERM_BAY if (u >= NB) != (v >= NB) else 0.0)
     # ---- cut bookkeeping ----
     ccache = {}; used = collections.defaultdict(int)
     # Demand along a cut axis only changes at a node coordinate, so one booking line per interval between consecutive
@@ -83,7 +96,8 @@ def main():
     E = collections.defaultdict(list)
     for u in range(N):
         dist = np.abs(P[:, 0] - P[u, 0]) + np.abs(P[:, 1] - P[u, 1])
-        for v in np.nonzero((dist <= 500.0) & (dist > 0))[0]: E[u].append((int(v), float(dist[v]), lkeys(u, int(v), True), lkeys(u, int(v), False)))
+        for v in np.nonzero((dist <= 500.0) & (dist > 0))[0]:
+            if est(u, int(v), float(dist[v])) <= 500.0: E[u].append((int(v), float(dist[v]), lkeys(u, int(v), True), lkeys(u, int(v), False)))
     nused = collections.defaultdict(int)
     def rem(keys): return min((capof(k) - used[k] for k in keys), default=float('inf'))
     def route(s, g, bits):
@@ -115,12 +129,13 @@ def main():
             if any(used[k] + n > capof(k) for k, n in dem.items()): path = None
         if path is None: fail.append(j); continue
         for k, n in dem.items(): used[k] += n
-        ln = 0.0
+        ln = 0.0; hops = []
         for u, v, hf in path:
+            hops.append(round(est(u, v, float(abs(P[u, 0] - P[v, 0]) + abs(P[u, 1] - P[v, 1]))), 1))
             if v != j['Q']: nused[v] += j['bits']
             (x1, y1), (x2, y2) = P[u], P[v]; mid = (x2, y1) if hf else (x1, y2)
             legs.append((x1, y1, mid[0], mid[1], j['bits'])); legs.append((mid[0], mid[1], x2, y2, j['bits'])); ln += abs(x1 - x2) + abs(y1 - y2)
-        done.append(dict(name=j['name'], stage=j['stage'], bits=j['bits'], relay_stages=len(path) - 1, route_um=round(ln, 1),
+        done.append(dict(name=j['name'], stage=j['stage'], bits=j['bits'], relay_stages=len(path) - 1, route_um=round(ln, 1), stage_um=hops,
                          lower_um=round(float(abs(P[j['A'], 0] - P[j['Q'], 0]) + abs(P[j['A'], 1] - P[j['Q'], 1])), 1),
                          A=[float(v) for v in P[j['A']]], Q=[float(v) for v in P[j['Q']]], via=[name[v] for _, v, _ in path[:-1]]))
     # ---- independent fine scan of the booked legs ----
@@ -164,9 +179,15 @@ def main():
         # the bank's helper: six stage registers of 512 b + selects, and the equalisation of its four lanes
         helper = dict(leaf='rotation helper per bank (NEW, unsized)', sinks_per_root=6 * 512 + 6 * 16, note='plus the lane relays in ot_qfd_vm_xrelay_t leaves (528 sinks per root)')
     else:
-        helper = dict(leaf='ot_qfd_vm_xplane_t', sinks_per_root=3 * 1024 + 80, note='lane relays in ot_qfd_vm_xrelay_t leaves (528 sinks per root)')
+        helper = dict(leaf='ot_qfd_vm_xplane_t', sinks_per_root=p['clock_roots']['ot_qfd_vm_xplane_t']['sinks_per_root'], note='lane relays in ot_qfd_vm_xrelay_t leaves (%d sinks per root)' % p['clock_roots']['ot_qfd_vm_xrelay_t']['sinks_per_root'])
     ok = not fail and (not worst or worst[0]['util'] <= LIM) and pad <= spare and max(c['util'] for c in coarse) <= LIM
-    rep = dict(status='PLAN_ONLY', owner='claude/qwen-tp8-vm-1013', mode=a.mode,
+    allst = [h for v in done for h in v.get('stage_um', [])]
+    stage_audit = dict(rule='every stage (register pin -> wire -> register pin) <= 500 um, estimated pin to pin (see AL / TERM_BAY in the tool)',
+                       stages=len(allst), max_um=max(allst, default=0), over_500=sum(h > 500 for h in allst), over_450=sum(h > 450 for h in allst),
+                       allowance_um=dict(xfifo8_xo=float(AL[NB]) if N > NB else 0, plane=float(AL[-1]) if N > NB else 0, bay_facing_terminal=TERM_BAY, bay_to_bay=0.0),
+                       not_proven='bay-to-bay stages assume the pin-level assignment (tile of the bay, pin order) that makes the pins face each other')
+    ok = ok and stage_audit['over_500'] == 0
+    rep = dict(status='PLAN_REAL_SIZES', owner='claude/qwen-tp8-vm-phys', mode=a.mode, stage_audit=stage_audit,
         inputs={str(v): hashlib.sha256(Path(v).read_bytes()).hexdigest() for v in (a.net, a.plan, __file__)},
         verdict='PASS_PLAN_LEVEL' if ok else 'REJECT', limit=LIM, lanes_requested=len(jobs), lanes_routed=len(done), lanes_failed=len(fail),
         bits_requested=sum(j['bits'] for j in jobs), bits_routed=sum(v['bits'] for v in done),
@@ -188,6 +209,6 @@ def main():
     Path(a.out).write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps({k: rep[k] for k in ('mode', 'verdict', 'lanes_requested', 'lanes_routed', 'lanes_failed', 'bits_requested', 'bits_routed', 'relay_depth_per_stage',
                                           'added_x_latency_engine_edges', 'failed_by_stage', 'route_um')}))
-    print('coarse', json.dumps(coarse)); print('fine', json.dumps(worst[:3])); print('relay', json.dumps(rep['relay'])[:400]); print('sat', json.dumps(saturated)[:1500], zero); print('fsink', json.dumps(rep['failed_by_sink'])[:900])
+    print('stage_audit', json.dumps(stage_audit)); print('coarse', json.dumps(coarse)); print('fine', json.dumps(worst[:3])); print('relay', json.dumps(rep['relay'])[:400]); print('sat', json.dumps(saturated)[:1500], zero); print('fsink', json.dumps(rep['failed_by_sink'])[:900])
 
 if __name__ == '__main__': main()

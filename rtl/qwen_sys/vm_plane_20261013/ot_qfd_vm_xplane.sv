@@ -67,8 +67,7 @@ module ot_qfd_vm_xplane_t #(
     // PHYS 2026-10-13 (pre-route gate: one me register drove 7,331 loads): the me register is REPLICATED, one copy
     // per register rank (pf / r1 / r2 / q) and per group of GB = 8 banks (128 flops), plus one for the control
     // pipe: 4 * NRB / 8 + 1 copies, each <= 128 enables.  Every copy samples the same me_e pin on the same edge,
-    // so the port and cycle behaviour are unchanged.  rot1 / rot2 / bv are decoded one-hot selects over CONSTANT
-    // slices (AND-OR), not runtime-indexed part-selects.
+    // so the port and cycle behaviour are unchanged.
     localparam integer GB = 8;
     localparam integer NG = NRB / GB;
     wire [NG-1:0] me_pf, me_r1, me_r2, me_q;
@@ -99,31 +98,20 @@ module ot_qfd_vm_xplane_t #(
     reg [LNRB+3:0]   a3, a4, a5;
     reg [NVW-1:0]    n3, n4, n5;
     wire [LNRB-1:0]  rc = a3[4 +: LNRB] & ~{{(LNRB-3){1'b0}}, 3'b111};
-    wire [LNRB:0]    rf = {{(LNRB-2){1'b0}}, a4[6:4]} + ((MUT == 1) ? 1 : 0);
+    wire [LNRB-1:0]  rf = {{(LNRB-3){1'b0}}, a4[6:4]} + ((MUT == 1) ? 1 : 0);
     wire [4:0]       sh = {1'b0, a5[3:0]} + ((MUT == 2) ? 5'd1 : 5'd0);
-    // one-hot selects: rc is a multiple of 8 (NRB / 8 values), rf is 0 .. 7 (8 with MUT 1), sh is 0 .. 15 (16 with MUT 2)
-    reg [NG-1:0] oc;
-    reg [8:0]    of;
-    reg [16:0]   os;
+    // next-state of the three mux ranks: the parent's expressions (mux trees: the gate measured 4,164 um2 for this
+    // form against 6,248 um2 for a one-hot AND-OR decode, so the indexed form stays)
     reg [NRB*16-1:0] r1n, r2n;
     reg [BEAT-1:0]   qn;
-    integer i, k;
+    integer i;
     always @* begin
-        for (k = 0; k < NG; k = k + 1) oc[k] = (rc == k * 8);
-        for (k = 0; k < 9; k = k + 1) of[k] = (rf == k);
-        for (k = 0; k < 17; k = k + 1) os[k] = (sh == k);
-        r1n = 0; r2n = 0; qn = 0;
         for (i = 0; i < NRB; i = i + 1) begin
-            for (k = 0; k < NG; k = k + 1)
-                r1n[i*16 +: 16] = r1n[i*16 +: 16] | (pf[((i + k * 8) % NRB)*16 +: 16] & {16{oc[k]}});
-            for (k = 0; k < 9; k = k + 1)
-                r2n[i*16 +: 16] = r2n[i*16 +: 16] | (r1[((i + k) % NRB)*16 +: 16] & {16{of[k]}});
+            r1n[i*16 +: 16] = pf[((i + rc) % NRB)*16 +: 16];
+            r2n[i*16 +: 16] = r1[((i + rf) % NRB)*16 +: 16];
         end
-        for (i = 0; i < BEAT; i = i + 1) begin
-            for (k = 0; k < 17; k = k + 1)
-                if (i + k < NRB * 16) qn[i] = qn[i] | (r2[i + k] & os[k]);
-            if (!(i < n5 || MUT == 3)) qn[i] = 1'b0;
-        end
+        for (i = 0; i < BEAT; i = i + 1)
+            qn[i] = (i < n5 || MUT == 3) ? r2[i + sh] : 1'b0;
     end
     always @(posedge clk) if (me_c) begin
         a3 <= c_a; n3 <= c_nv;

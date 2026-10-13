@@ -31,8 +31,22 @@ SINKS = {'ot_qfd_vm_bank_t': 1600, 'ot_qfd_vm_su_t': 1600, 'ot_qfd_vm_xfifo8_t':
          'ot_qwen_tree_delay1_t': 512, 'ot_qwen_tree_delay2_t': 1024, 'ot_qfd_vm_rowrd_t': 1536 + 16 * 8,
          'ot_qfd_vm_gctl_t': 2 * (8 * 8 * 2 + 8 * 16 + 6 * 10 + 2 * 10 + 2 * 16 + 30) + 120, 'ot_qfd_vm_xplane_t': 3 * 1024 + 80,
          'ot_qfd_vm_xrelay_t': 512 + 16}
-NEW = {'ot_qwen_tree_delay1_t': (10.8, 64.8), 'ot_qwen_tree_delay2_t': (17.28, 64.8), 'ot_qfd_vm_rowrd_t': (86.4, 64.8),
-       'ot_qfd_vm_gctl_t': (86.4, 43.2), 'ot_qfd_vm_xplane_t': (129.6, 43.2), 'ot_qfd_vm_xrelay_t': (17.28, 64.8)}
+# PHYS 2026-10-13: outlines and clock sinks of the sized leaves are READ from their ref_tile kits (floorplan.json = the
+# outline the kit routes; gate_result.json = the synthesized netlist of pre_route_gate.py --remote --cts), not planned.
+KIT = {'ot_qwen_tree_delay1_t': 'qfd_tree_delay1_t', 'ot_qwen_tree_delay2_t': 'qfd_tree_delay2_t', 'ot_qfd_vm_rowrd_t': 'qfd_vm_rowrd_t',
+       'ot_qfd_vm_gctl_t': 'qfd_vm_gctl_t', 'ot_qfd_vm_xplane_t': 'qfd_vm_xplane_t', 'ot_qfd_vm_xrelay_t': 'qfd_vm_xrelay_t'}
+GATE = {}
+def _kit(m):
+    d = ROOT / 'physical/ref_tile' / KIT[m]; die = json.loads((d / 'floorplan.json').read_text())['die']
+    g = d / 'gate_result.json'
+    if g.exists():
+        r = json.loads(g.read_text()); GATE[m] = dict(verdict=r['verdict'], commit=r.get('commit'), clock=r.get('clock', {}).get('text'),
+            tt_insertion_ps=r.get('clock', {}).get('tt_insertion_ps'), tt_spread_ps=r.get('clock', {}).get('tt_spread_ps'),
+            util=[i['message'] for i in r['items'] if i['check'] in ('util', 'textbook.util_channel')][:1])
+        if r.get('clock', {}).get('max_root_sinks'): SINKS[m] = r['clock']['max_root_sinks']
+    return (round(die[2] - die[0], 4), round(die[3] - die[1], 4))
+NEW = {m: _kit(m) for m in KIT}
+UNPLACED = {'ot_qfd_vm_rowrd_t': 'bx is 4,096 pins = 393 um of ONE M5-cap face (kit outline 397.44 x 12.96); the free span between two relay strips is 391 um, and no point is within 500 um of all eight bx relays (they span 427.68 x 615.6 um -> max L1 >= 521.6 um): the leaf must be split (per unit column / bank-row pair) or the far banks need one more bx relay stage (RTL owner)'}
 X0, Y0, RW, RH, GAP, BAND = 13284.0, 17249.76, 1166.4, 1080.0, 0.0, 187.92
 UX = (47.52, 475.2)                    # unit columns (in relay | bank | bx relay | xfifo8 pair), 380.16 wide, between the relay strips
 FOLD = (0, 3, 1, 2)                     # column slot of r % 4: shift 8 hops 2,1,2,1 slots, shift 16 hops 3,1
@@ -57,13 +71,13 @@ def build():
             add(f'vm_g{r}_b{b}', 'ot_qfd_vm_bank_t', ux + 21.6, yb, region=r, logical_bank=bank)
             add(f'vm_g{r}_b{b}_bx', 'ot_qwen_tree_delay1_t', ux + 244.08, yb + 60.48, region=r, role='bx NRX relay')
             for h in range(2):
-                add(f'vm_g{r}_b{b}_xf{h}', 'ot_qfd_vm_xfifo8_t', ux + 259.2, yb + (21.6, 108.0)[h], region=r, logical_bank=bank, bits=[256 * h, 256 * h + 255])
+                add(f'vm_g{r}_b{b}_xf{h}', 'ot_qfd_vm_xfifo8_t', ux + 259.2, yb + (12.96, 129.6)[h], region=r, logical_bank=bank, bits=[256 * h, 256 * h + 255])
         su = [(924.48, 10.8 + 257.04 * k) for k in range(4)] + [(UX[0] + 21.6, 831.6), (UX[1] + 21.6, 831.6)]
         for k, (sx, sy) in enumerate(su):
             add(f'vm_g{r}_su{k}', 'ot_qfd_vm_su_t', X + sx, Y + sy, region=r, operand=k // 2, su_bank=k % 2)
             add(f'vm_g{r}_su{k}_in', 'ot_qwen_tree_delay2_t', X + sx - 21.6, Y + sy + 86.4, region=r, role='swd pin flop + NRI relay (per SU bank replica)')
         for k in range(3): add(f'vm_g{r}_ans{k}', 'ot_qfd_vm_su1024_t', X + UX[0] + 265.68, Y + 831.6 + 43.2 * k, region=r, operand=k)
-        add(f'vm_g{r}_rowrd', 'ot_qfd_vm_rowrd_t', X + UX[1] + 265.68, Y + 831.6, region=r)
+        if 'ot_qfd_vm_rowrd_t' not in UNPLACED: add(f'vm_g{r}_rowrd', 'ot_qfd_vm_rowrd_t', X + UX[1] + 265.68, Y + 831.6, region=r)
         add(f'vm_g{r}_gctl', 'ot_qfd_vm_gctl_t', X + UX[1] + 265.68, Y + 918.0, region=r)
         for nm, bx in (('sW', 4.32), ('sA', 432.0), ('sB', 859.68)) + ((('sE', RW + 4.32),) if FOLD[r % 4] == 3 else ()):
             strip(f'vm_g{r}_{nm}', X + bx, Y, r)
@@ -71,7 +85,8 @@ def build():
     # 32 plane leaves in 8 groups of 4 (two abutting pairs, one per band row) centred on the eight middle relay strips, so a
     # lane's last hop is vertical from the strip (a horizontal jog inside the band windows is what saturated the first cut)
     PX = [X0 + sl * RW + bx for sl, bx in ((0, 859.68), (1, 4.32), (1, 432.0), (1, 859.68), (2, 4.32), (2, 432.0), (3, 4.32), (3, 432.0))]   # not (2, 859.68): 1.1-2.2k existing vertical bits per window there
-    for j in range(32): add(f'vm_xplane_{j}', 'ot_qfd_vm_xplane_t', PX[j // 4] + (-114.48, 19.44)[j % 2], yb + (4.32, 129.6)[(j % 4) // 2], plane=j, region=-1)
+    PW, PH = size['ot_qfd_vm_xplane_t']
+    for j in range(32): add(f'vm_xplane_{j}', 'ot_qfd_vm_xplane_t', PX[j // 4] + (15.12 - PW, 19.44)[j % 2], yb + (4.32, G(BAND - 4.32 - PH))[(j % 4) // 2], plane=j, region=-1)
     # centre-cut relief: the strips of the two middle columns continue two nodes (268 um, one fine window) below the bottom
     # row and above the top row wherever the it2 placement leaves >= 20 um (main() drops the others)
     for r in range(8):
@@ -82,6 +97,31 @@ def build():
                     y = Y - 4.32 - 133.92 * (k + 1) if r < 4 else Y + RH + 4.32 + 133.92 * k
                     bays.append(dict(n=f'vm_g{r}_{nm}_x{k}', x=G(X + bx), y=G(y), w=36.72, h=131.76, tiles=4, region=r, optional=True))
     return ch, bays, size
+
+def seam_audit(ch):
+    """every inter-leaf seam of ot_qfd_vm_region_leaf (launch leaf register -> wire -> capture leaf register), per region:
+    box = Manhattan gap between the two leaf outlines (a LOWER bound of the wire), centre = centre to centre.  Rule <= 500 um."""
+    by = {c['n']: c for c in ch}; out = collections.defaultdict(lambda: dict(n=0, box_max=0.0, centre_max=0.0, over_500_box=0, worst=None))
+    def gap(a, b):
+        dx = max(0.0, a['x'] - b['x'] - b['w'], b['x'] - a['x'] - a['w']); dy = max(0.0, a['y'] - b['y'] - b['h'], b['y'] - a['y'] - a['h']); return dx + dy
+    def cen(a, b): return abs(a['x'] + a['w'] / 2 - b['x'] - b['w'] / 2) + abs(a['y'] + a['h'] / 2 - b['y'] - b['h'] / 2)
+    def S(kind, a, b):
+        if a not in by or b not in by: return
+        g, c = gap(by[a], by[b]), cen(by[a], by[b]); o = out[kind]; o['n'] += 1; o['over_500_box'] += g > 500
+        if g >= o['box_max']: o.update(box_max=round(g, 1), worst=[a, b])
+        o['centre_max'] = max(o['centre_max'], round(c, 1))
+    for r in range(8):
+        g = f'vm_g{r}_'
+        for b in range(8):
+            S('bank.q -> delay1.d', g + f'b{b}', g + f'b{b}_bx'); S('delay2.q -> bank.wd', g + f'b{b}_in', g + f'b{b}')
+            S('gctl.m_re/ra/we/wl/wm/rtg -> bank pin flops', g + 'gctl', g + f'b{b}'); S('delay1.q (bx) -> rowrd.t1', g + f'b{b}_bx', g + 'rowrd')
+            for h in range(2): S('delay1.q (bx) -> xfifo8.fe', g + f'b{b}_bx', g + f'b{b}_xf{h}'); S('gctl.xg/pgw/rtg -> xfifo8', g + 'gctl', g + f'b{b}_xf{h}')
+        for k in range(6):
+            S('delay2.q -> su.swd', g + f'su{k}_in', g + f'su{k}'); S('gctl.m_sre/sra/swe/swl/swm/rtg -> su pin flops', g + 'gctl', g + f'su{k}')
+            S('su.q (sx) -> su1024.so', g + f'su{k}', g + f'ans{k // 2}')
+        for c in range(3): S('gctl.svc/rtg -> su1024', g + 'gctl', g + f'ans{c}')
+        S('gctl.rdc/rtg -> rowrd', g + 'gctl', g + 'rowrd')
+    return dict(out)
 
 def ov(a, b, gap=0.0):
     return a['x'] < b['x'] + b['w'] + gap - 1e-6 and b['x'] < a['x'] + a['w'] + gap - 1e-6 and a['y'] < b['y'] + b['h'] + gap - 1e-6 and b['y'] < a['y'] + a['h'] + gap - 1e-6
@@ -105,12 +145,20 @@ def main():
     cnt = collections.Counter(c['m'] for c in ch); area = {m: round(n * size[m][0] * size[m][1] / 1e6, 4) for m, n in cnt.items()}
     relay_tiles = sum(b['tiles'] for b in bays)
     roots = {m: dict(instances=n, sinks_per_root=SINKS[m], new_leaf=m in NEW and not m.startswith('ot_qwen_tree')) for m, n in cnt.items()}
+    for m in UNPLACED: roots[m] = dict(instances=8, sinks_per_root=SINKS[m], new_leaf=True, unplaced=True)
     roots['ot_qfd_vm_xrelay_t'] = dict(instances_max=relay_tiles, sinks_per_root=SINKS['ot_qfd_vm_xrelay_t'], new_leaf=True)
     pins = {m: {b: dict(n=v['n'], dir=v['dir'], faces=v['faces'], layers=v['layers'], centroid=v['centroid'], bbox=v['bbox'])
                 for b, v in L.groups(ROOT / p)[1].items()} for m, p in VIEW.items()}
+    seams = seam_audit(ch); seam_bad = {k: v for k, v in seams.items() if v['over_500_box']}
     ok = hard == 0 and near == 0 and peer == 0 and offgrid == 0 and min(xs) > spine[0] + 20 and max(xs) < spine[1] - 20 and not any(ov(a, su64, 20.0) for a in objs)
-    rep = dict(status='LEAF_PLAN_ONLY', owner='claude/qwen-tp8-vm-1013',
-        inputs={str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [net, __file__] + [str(ROOT / v) for v in VIEW.values()]},
+    rep = dict(status='LEAF_PLAN_REAL_SIZES', owner='claude/qwen-tp8-vm-phys',
+        verdict='PASS' if ok and not seam_bad and not UNPLACED else 'REJECT', unplaced_leaves=UNPLACED, kit_gates=GATE,
+        region_seams=dict(rule='leaf register -> wire <= 500 um -> leaf register; box = outline-to-outline Manhattan gap (lower bound)', seams=seams,
+                          violating={k: v['over_500_box'] for k, v in seam_bad.items()}),
+        plane_band=dict(band_um=BAND, plane_outline_um=list(size['ot_qfd_vm_xplane_t']), rows_y_um=[4.32, G(BAND - 4.32 - size['ot_qfd_vm_xplane_t'][1])],
+                        channel_between_rows_um=round(G(BAND - 4.32 - size['ot_qfd_vm_xplane_t'][1]) - 4.32 - size['ot_qfd_vm_xplane_t'][1], 3),
+                        fits=2 * size['ot_qfd_vm_xplane_t'][1] + 3 * 4.32 <= BAND),
+        inputs={str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [net, __file__] + [str(ROOT / v) for v in VIEW.values()] + [str(ROOT / 'physical/ref_tile' / k / f) for k in KIT.values() for f in ('floorplan.json', 'gate_result.json') if (ROOT / 'physical/ref_tile' / k / f).exists()]},
         slot=dict(shape='4 x 2 regions of 1166.4 x 1080 um (three full-height x-relay strips each) + 187.92 um x-plane band between the rows (r and r + 4 stacked); planes in 8 groups of 4 on the middle strips',
                   origin_um=[round(min(xs), 3), round(min(ys), 3)], size_um=[round(max(xs) - min(xs), 3), round(max(ys) - min(ys), 3)],
                   area_mm2=round((max(xs) - min(xs)) * (max(ys) - min(ys)) / 1e6, 4), spine_x_um=[round(spine[0], 3), round(spine[1], 3)],
@@ -124,12 +172,9 @@ def main():
         leaf_count=dict(cnt), leaf_area_mm2=area, closed_child_area_mm2=round(sum(area[m] for m in VIEW), 4),
         placed_leaf_area_mm2=round(sum(area.values()), 4), x_relay_bay_tiles=relay_tiles, x_relay_bay_area_mm2=round(relay_tiles * 17.28 * 64.8 / 1e6, 4),
         clock_roots=roots, max_sinks_per_root=max(v['sinks_per_root'] for v in roots.values()), root_rule='<= 15000 sinks per root: every leaf is its own root; no group-level tree',
-        sizing=dict(delay_tiles='closed-kit outlines (physical/ref_tile/qfd_tree_delay{1,2}_t), views under closure as qfd_tree_delay{N}_t-u52-baaa52fff',
-                    xplane='3 x 1024 flops (pin, rot1, rot2) + 2 x 1024 mux8: ~2.9k um2 cells in 5,599 um2 (util 0.52)',
-                    xrelay='512 enabled flops + 16 me replicas in 1,120 um2 (delay2 outline; mux + DFF per bit ~0.55 um2 -> util ~0.27)',
-                    rowrd='1,536 flops + 512 x (4:1 AND-OR x 2 + 2:1) in 5,599 um2', gctl='~1,000 flops in 3,732 um2'),
+        sizing={m: dict(kit='physical/ref_tile/' + KIT[m], outline_um=list(NEW[m]), sinks_per_root=SINKS[m], gate=GATE.get(m)) for m in KIT},
         optional_bays_dropped_for_clearance=dropped, real_pins=pins, children=ch, x_relay_bays=bays)
     Path(out).write_text(json.dumps(rep, indent=1) + '\n')
-    print(json.dumps({k: rep[k] for k in ('slot', 'geometry', 'leaf_count', 'leaf_area_mm2', 'closed_child_area_mm2', 'placed_leaf_area_mm2', 'x_relay_bay_tiles', 'max_sinks_per_root')}, default=str)[:2600])
+    print(json.dumps({k: rep[k] for k in ('verdict', 'plane_band', 'region_seams', 'sizing', 'slot', 'geometry', 'leaf_count', 'leaf_area_mm2', 'closed_child_area_mm2', 'placed_leaf_area_mm2', 'x_relay_bay_tiles', 'max_sinks_per_root')}, default=str)[:6000])
 
 if __name__ == '__main__': main()
