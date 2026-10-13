@@ -103,7 +103,9 @@ def surgery(v, m, compact_seq=False):
             i.master = 'qfd_tile_nk'
     dx = g['x_arr_w'] - MARGIN
     xr = g['x_eband']
-    assert min(i.x for i in keep) >= dx - 1e-6 and max(i.x + i.w for i in keep) <= xr + 1e-6, 'kept outside the bands'
+    # qwen-tp8 tp8b (F2): the IO row is longer than the narrower 48-column field until _tp8b_f2 re-places it in the S band
+    chk = [i for i in keep if not (getattr(v, 'BAND_OF', None) and i.kind in ('io', 'xfifo'))]
+    assert min(i.x for i in chk) >= dx - 1e-6 and max(i.x + i.w for i in chk) <= xr + 1e-6, 'kept outside the bands'
     for i in keep:
         i.x = round(i.x - dx, 4)
     W = round(xr - dx + MARGIN, 4)
@@ -303,7 +305,7 @@ def _wrap_masters(v, m):
     def masters(model, k=1, port_bits=None):
         tiles = [i for i in model['insts'] if i.master == 'qfd_tile_nk']
         for i in tiles:
-            i.master = 'qfd_tile_e' if i.name.split('_')[1].isdigit() and int(i.name.split('_')[1]) >= 32 else 'qfd_tile'
+            i.master = 'qfd_tile_e' if i.name.split('_')[1].isdigit() and int(i.name.split('_')[1]) >= v.COLS // 2 else 'qfd_tile'
         sqi = next((i for i in model['insts'] if i.name == 'sp_constants_sequencer'), None)
         sq_wh = (sqi.w, sqi.h) if sqi is not None else None
         if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):
@@ -912,7 +914,7 @@ def _option4(v, m, rec):
     add_b += [('o4_sel', 'tree_spine', B['sel'], [('tt_ctlm', 'sel'), ('tt_up4_0', 'sel')]),
               ('o4_upf', 'tree_spine', B['up_flt'], [('tt_up4_0', 'flt'), ('tt_ctlm', 'uf')]),
               ('tt_ty', 'tree_spine', 1538, [('tt_up4_0', 'ty'), ('sp_band_lanes_0', 'tt')])]
-    for b in range(6):
+    for b in range(getattr(v, 'NBANDS', 6)):
         add_b += [(f'pword_{b}', 'tree_spine', 513, [(f'sp_band_lanes_{b}', 'pw'), ('tt_up4_0', f'pw{b}')]),
                   (f'tt_lf{b}', 'tree_spine', 1, [(f'sp_band_lanes_{b}', 'f'), ('tt_up4_0', f'lf{b}')])]
     for k in range(8):
@@ -967,7 +969,7 @@ def _o4_masters(v, m, ghosts):
         for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']), ('meok', 1)):
             c.face(p, bits, 'E', 'M4', y + bits * 0.096 / 2, 2)
             y += bits * 0.096 + 4.0
-        for b in range(6):
+        for b in range(getattr(v, 'NBANDS', 6)):
             c.face(f'c{b}', 343, 'W', 'M4', 80.0 + b * 290.0, 1)
             c.face(f'f{b}', 107, 'W', 'M4', 80.0 + b * 290.0 + 220.0, 1)
             c.face(f'lc{b}', 28, 'W', 'M4', 80.0 + b * 290.0 + 260.0, 1)
@@ -984,7 +986,7 @@ def _o4_masters(v, m, ghosts):
         # site is within reach (r22ko4 tt_lf / pword / tt_ty hops 512-683 um); ty (closed plan: E, abutted by
         # tile 1) joins them on W.  One M4 track per bit: 4,622 b = 222 um of the 388.8-um face.
         y = 16.0
-        for b in range(6):
+        for b in range(getattr(v, 'NBANDS', 6)):
             u4.face(f'pw{b}', 513, 'W', 'M4', y + 513 * 0.048 / 2, 1)
             y += 513 * 0.048 + 1.0
             u4.face(f'lf{b}', 1, 'W', 'M4', y + 0.5, 1)
@@ -1032,7 +1034,7 @@ def _o4_masters(v, m, ghosts):
                 su.ports.pop(p)
                 su.order.remove(p)
         sui, seq_i = ins['sp_su64_sfu'], ins['seq_su']
-        yc = min(sui.h - 60.0, max(60.0, seq_i.y + seq_i.h / 2 - sui.y))      # facing seq_su across the channel
+        yc = min(sui.h - 60.0, max(80.0, seq_i.y + seq_i.h / 2 - sui.y))      # facing seq_su across the channel
         su.face('si', B['su_iss'], 'E', 'M4', yc - 60.0, 1)
         su.face('sd', B['su_st'], 'E', 'M4', yc + 20.0, 1)
         su.face('acc', B['su_acc'], 'E', 'M4', yc + 40.0, 2)
