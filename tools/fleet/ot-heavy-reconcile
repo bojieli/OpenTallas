@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ot-heavy-reconcile v3: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
+"""ot-heavy-reconcile v4: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
 
 ot-heavy charges every running job `reservation - current use` of future growth.  This pass (cron, every 5 min, all
 hosts) lowers a reservation to ceil(max(peak * 1.25, peak + 4 GB)) once the job is provably past its memory peak:
@@ -26,6 +26,12 @@ past its peak (proved); the local table is merged with sizes.fleet.json (all hos
 The unit's MemoryMax stays the request; a class-sized unit gets its request back when its RSS passes 80 % of the charge
 (building alone does not restore it: the class peak already contains the build).
 
+v4 (coordinator 2026-10-13 07:40, reservations again held 690-800 GB of 830-870 GB available on the EPYCs): the gate
+families FAST (ref_gate_*, view_export*, run_case*, relay_*) are lowered to ceil(max(1.25 x peak, peak + 4 GB)) after
+FAST_S = 3 min of flat RSS whatever runs inside (their class key carries the element name, so a new element was a new,
+unproved class and kept its 24 GB for the whole gate); restored at RSS > 80 % of the charge.  SEED: a ref_gate_* request
+whose own class has no measurement is charged 10 GB at admission (the family measures 0.6-7.3 GB).  cron: every 2 min.
+
 usage: ot-heavy-reconcile [--dry-run] [--verbose]     one pass
        ot-heavy-reconcile --free [DIR]                 JSON: memory free after reservations, waiters, disk (for ot-run)
        ot-heavy-reconcile --sizes                      print the learned table
@@ -39,6 +45,9 @@ D = "/var/tmp/ot-heavy"
 STATE, LOG, LOCK = f"{D}/reconcile.state.json", f"{D}/reconcile.log", f"{D}/admit.lock"
 PEAKS, SIZES, FLEET = f"{D}/peaks.tsv", f"{D}/sizes.json", f"{D}/sizes.fleet.json"
 FLAT_S = 10 * 60
+FAST_S = 3 * 60
+FAST = re.compile(r"^(ref_gate_|view_export|run_case|relay_)")
+SEED = {"ref_gate_": 10}          # GB charged at first sight when the exact class has no measurement yet
 GB = 1 << 30
 WRAPPERS = {"bash", "sh", "dash", "tee", "tail", "time", "env", "timeout", "stdbuf", "nice", "cat", "sleep", "docker",
             "tini", "docker-init"}
@@ -245,6 +254,10 @@ def sizes():
 def admit_size(mem, cls, table=None):
     """(GB charged, why) when a request is over 2x the measured peak of its class, else None"""
     e = (sizes() if table is None else table).get(cls)
+    if cls not in ("?", "cd") and (not e or e["n"] + e.get("proved", 0) < 1):
+        for pre, gb in SEED.items():
+            if cls.startswith(pre) and gb < mem:
+                return gb, f"family '{pre}*' seed {gb}G (class '{cls}' not measured yet)"
     if cls in ("?", "cd") or not e or e["n"] + e.get("proved", 0) < 1 or mem <= 2 * e["peak_gb"]:
         return None
     res = math.ceil(max(1.5 * e["peak_gb"], e["peak_gb"] + 8))
@@ -344,7 +357,14 @@ def main():
         vals = [x[1] for x in s["samples"]]
         flat = max(vals) - min(vals) <= max(0.05 * max(vals), GB // 2)
         kind, peak, why = None, max(hwm, max(vals)), f"procs {comms}"
-        if building:
+        fast = bool(FAST.match(s["cls"] or ""))
+        if fast:                                           # v4: gate families, lowered whatever runs inside
+            peak = max(peak, cgpeak)
+            if len(vals) >= 2 and span >= FAST_S and flat:
+                kind, why = "fast", f"RSS flat {min(vals)/GB:.2f}..{max(vals)/GB:.2f} GiB over {span/60:.0f} min, procs {comms}"
+            else:
+                why = f"waiting for the 3-min flat window ({span/60:.0f} min, flat={flat}), procs {comms}"
+        elif building:
             s["samples"], why = [], f"building ({building})"
         elif ndock != len(cs) or len(cdirs) != len(cs):
             why = f"docker job without a unique container ({len(cs)}/{ndock})"
@@ -388,7 +408,7 @@ def main():
         if DRY or set_res(f, unit, m, new):
             freed += m - new
             log(f"LOWER {unit} {m} -> {new} GB ({kind}) [{s['cls']}]: peak {peak/GB:.2f} GiB, RSS {rss/GB:.2f} GiB; {why}")
-            s["lowered"], s["by_class"], s["past_peak"] = new, False, True
+            s["lowered"], s["by_class"], s["past_peak"] = new, kind == "fast", kind != "fast"
     if DRY:
         return
     for u in [u for u in st if u not in seen]:

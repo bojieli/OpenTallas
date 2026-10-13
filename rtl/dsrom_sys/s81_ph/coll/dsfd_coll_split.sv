@@ -65,7 +65,10 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8, par
     // PCR (el1011-ds-coll 2026-10-11, RSL only, default 0): the upstream credit pulse leaves a SECOND kept flop (a relay
     // station at the i_cr pin, anchored by io_flop_at_pins), so `send` -> the far-face pin is a full reg -> reg cycle
     // and the pin flop -> port is a few um.  +1 cycle on the credit return only (landing D covers it).
-    parameter integer PCR = 0) (
+    parameter integer PCR = 0,
+    // DO (s81-cesn 2026-10-13, RSL 0 only, default 0 = byte-identical): the downstream receiver's landing depth when it
+    // differs from this relay's own D (the split lane-slice core lands in DO slots, the relay keeps D for its sender)
+    parameter integer DO = 0) (
     input  wire clk, input wire rst_n,
     input  wire i_v, output wire i_cr, input wire [W-1:0] i_d,     // upstream link (valid / data in, credit pulse out)
     output wire o_v, input wire o_cr, output wire [W-1:0] o_d      // downstream link (valid / data out, credit pulse in)
@@ -102,7 +105,7 @@ module ot_s81ph_cr_relay #(parameter integer W = 8, parameter integer D = 8, par
     generate if (RSL == 0) begin : g_std
     ot_link_credit_rx #(.W(W), .DEPTH(D), .OREG(0), .WFREE(1)) u_rx (.clk(clk), .rst_n(rst_n), .l_valid(xi_v), .l_data(xi_d), .l_credit(xi_cr),
         .o_valid(m_v), .o_ready(m_r), .o_data(m_d), .fault(f));
-    ot_link_credit_tx #(.W(W), .CRED(CX)) u_tx (.clk(clk), .rst_n(rst_n), .i_valid(m_v), .i_ready(m_r), .i_data(m_d),
+    ot_link_credit_tx #(.W(W), .CRED((DO != 0) ? DO - D + CX : CX)) u_tx (.clk(clk), .rst_n(rst_n), .i_valid(m_v), .i_ready(m_r), .i_data(m_d),
         .l_valid(xo_v), .l_data(xo_d), .l_credit(xo_cr));
     end else begin : g_rsl
         localparam integer SW = (W + RSL - 1) / RSL;          // bits per slice (last slice may be short)
