@@ -26,7 +26,8 @@
 //                           answer tag chain (svc; the j = 0 leaf drives su1024_t[c]).  The two swe / swl / swm words
 //                           each enter three leaves (one pin flop per consumer; they were one pin flop fanned to three).
 //    2 x ot_qfd_vm_rr4_t    the 4:1 rung of the row read for banks 4h .. 4h + 3 (16 FSW-32 slices: select replicas +
-//                           one AND-OR level into t1), with its own row tag chain.  2,048 bx pins on two faces.
+//                           one AND-OR level into t1), with its own row tag chain.  Banks 4h .. 4h + 3 are one unit
+//                           column of the region, so the leaf sits beside their four bx relays (2,048 pins, W face).
 //    1 x ot_qfd_vm_rr2_t    the 2:1 rung into ro (own tag chain) + the region's FIFO occupancy / ovf counter.
 //    8 x ot_qfd_vm_bank_t, 6 x ot_qfd_vm_su_t, 16 x ot_qfd_vm_xfifo8_t, 3 x ot_qfd_vm_su1024_t: closed views, unchanged.
 //   14 x ot_qfd_vm_delay2_t (wd per bank, swd per SU bank) and 8 x ot_qfd_vm_delay1_t (bq -> bx): unchanged
@@ -183,8 +184,7 @@ module ot_qfd_vm_region_leaf #(
         ot_qfd_vm_rr4_t u_r4 (
 `endif
             .clk(clk), .rst_n(rst_n), .rqb(rqb[1:0]),
-            .bx_w({bx[(4*h + 2)*512 +: 512], bx[(4*h + 0)*512 +: 512]}), .bx_e({bx[(4*h + 3)*512 +: 512], bx[(4*h + 1)*512 +: 512]}),
-            .t1(t1[h*512 +: 512]));
+            .bx(bx[h*2048 +: 2048]), .t1(t1[h*512 +: 512]));
     end endgenerate
     localparam integer R2MUT = (ROW_MUT != 0) ? 1 : (LEAF_MUT == 12) ? 2 : (LEAF_MUT == 7) ? 3 : 0;
 `ifndef OT_QFD_VM_HARD
@@ -330,11 +330,9 @@ module ot_qfd_vm_rr4_t #(
     input  wire          clk,
     input  wire          rst_n,
     input  wire [1:0]    rqb,
-    input  wire [1023:0] bx_w,          // bx of banks 4h + 0, 4h + 2 (unit column 0): W face
-    input  wire [1023:0] bx_e,          // bx of banks 4h + 1, 4h + 3 (unit column 1): E face
+    input  wire [2047:0] bx,            // bx of banks 4h .. 4h + 3 (one unit column, bank-major = bottom to top): W face
     output wire [511:0]  t1
 );
-    wire [2047:0] bx = {bx_e[1023:512], bx_w[1023:512], bx_e[511:0], bx_w[511:0]};
     reg rt;
     always @(posedge clk or negedge rst_n) if (!rst_n) rt <= 1'b0; else rt <= 1'b1;
     (* keep = "true", dont_touch = "true" *) reg [3:0] r;

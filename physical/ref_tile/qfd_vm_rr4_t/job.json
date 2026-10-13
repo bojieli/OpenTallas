@@ -3,7 +3,7 @@
  "block": "ot_qfd_vm_rr4_t",
  "ref_tile": true,
  "owner": "Claude:qwen_tp8_vm_plan",
- "purpose": "Qwen TP8 VM row-read 4:1 rung (2 per region, 16 per die): 16 FSW-32 slices, select replicas + one AND-OR level over four banks' bx into t1, own row tag chain; 603 flops, one root; 2,048 bx pins on two faces (was rowrd_t: 4,096 on one). Bench = region-leaf miter + the two rr4 mutants.",
+ "purpose": "Qwen TP8 VM row-read 4:1 rung (2 per region, 16 per die): 16 FSW-32 slices, select replicas + one AND-OR level over four banks' bx into t1, own row tag chain; 603 flops, one root; 2,048 bx pins on the W face, beside the four bx relays of its unit column (was rowrd_t: 4,096 pins, no legal place). Bench = region-leaf miter + the two rr4 mutants.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {

@@ -6,9 +6,10 @@
 What changed against the first plan (REJECT with real leaf sizes, el1013-qwen-vm.log 08:35):
   region   one control leaf (gctl_t) and one row-read leaf (rowrd_t) per region are dissolved (RTL: ot_qfd_vm_region_leaf):
            8 x bctl_t beside the bank's bx relay, 6 x sctl_t beside the SU write relay, 2 x rr4_t + 1 x rr2_t in the
-           middle strip (4:1 rung between its four bx relays, 2:1 rung between the two).  The bank ring is no longer
-           folded (the rotation lives in the plane leaves): bank b sits at unit column b % 2, row b // 2, so banks
-           4h .. 4h + 3 are one 2 x 2 quad around their rr4_t.  The SU answer leaves sit between their two SU banks.
+           strips (rr4[h] beside the bx relays of unit column h, rr2 beside rr4[1]).  The bank ring is no longer folded
+           (the rotation lives in the plane leaves): bank b sits at unit column b // 4, row b % 4, so banks 4h .. 4h + 3
+           are ONE column and their bx reaches the 4:1 rung vertically (no 512-b bus crosses a bank: a 2 x 2 quad
+           put 1,024 b across every lane window of the region).  The SU answer leaves sit between their two SU banks.
   band     ONE row of 32 bit-plane column leaves (ot_qfd_vm_xcol_t = plane + line of one bit position in one leaf: as
            two leaves the 1,008-b bv plane between them took a third of every band window): the lower region row's
            lanes land on its S face (d_lo), the upper row's on its N face (d_hi), the x_q plane leaves on W / E.
@@ -37,7 +38,7 @@ KIT = {'ot_qwen_tree_delay1_t': 'qfd_tree_delay1_t', 'ot_qwen_tree_delay2_t': 'q
        'ot_qfd_vm_xcol_t': 'qfd_vm_xcol_t', 'ot_qfd_vm_xrelay_t': 'qfd_vm_xrelay_t',
        'ot_qfd_vm_fan_t': 'qfd_vm_fan_me'}
 PLANNED = {'ot_qfd_vm_bctl_t': (8.64, 21.6), 'ot_qfd_vm_sctl_t': (8.64, 21.6), 'ot_qfd_vm_rr4_t': (17.28, 216.0),
-           'ot_qfd_vm_rr2_t': (17.28, 151.2), 'ot_qfd_vm_xcol_t': (142.56, 179.28), 'ot_qfd_vm_fan_t': (4.32, 6.48)}
+           'ot_qfd_vm_rr2_t': (116.64, 25.92), 'ot_qfd_vm_xcol_t': (142.56, 179.28), 'ot_qfd_vm_fan_t': (4.32, 6.48)}
 GATE = {}; SIZE_SRC = {}
 def _kit(m):
     d = ROOT / 'physical/ref_tile' / KIT[m]
@@ -75,10 +76,12 @@ class Plan:
         c = dict(n=n, m=m, x=G(x), y=G(y), w=self.size[m][0], h=self.size[m][1], orient='R0', layer_cap='M5', **k); self.ch.append(c); return c
 
     def strip(self, n, x, y, r, blocked=()):
-        """full-height strip: sc tile columns x 10 nodes (pitch 99.36); blocked = (y0, y1) spans of the LAST column held by another leaf (the row-read rungs, nearest to unit column 1)"""
+        """full-height strip: sc tile columns x 10 nodes (pitch 99.36); blocked = (column, y0, y1) spans held by another leaf
+        (the row-read rungs).  A node keeps its free columns when they are contiguous."""
         th = self.size['ot_qfd_vm_xrelay_t'][1]; NP = G(th + 2.16)
         for k in range(int((RH - 4.32) // NP)):
-            yy = G(y + 4.32 + NP * k); cols = [c for c in range(self.sc) if not (c == self.sc - 1 and any(a < yy - y + th + 2.16 and yy - y - 2.16 < b for a, b in blocked))]
+            yy = G(y + 4.32 + NP * k); cols = [c for c in range(self.sc) if not any(c == bc and a < yy - y + th + 2.16 and yy - y - 2.16 < b for bc, a, b in blocked)]
+            cols = [c for c in cols if all(m in cols for m in range(cols[0], c))] if cols else cols       # contiguous run from the first free column
             if cols: self.bays.append(dict(n=f'{n}_{k}', x=G(x + cols[0] * (TW + SGAP)), y=yy, w=G(len(cols) * TW + (len(cols) - 1) * SGAP), h=th, tiles=len(cols), region=r))
 
     def build(self):
@@ -94,13 +97,14 @@ class Plan:
                                                                          centroid_um=round(L1, 1), est_um=round(L1 + (a[2] + b[2]) / 4, 1)))
         for r in range(8):
             X, Y = self.origin(r)
-            rrx = X + self.sA + (self.sc - 1) * (TW + SGAP)
-            rr4 = [A(f'vm_g{r}_rr4_{h}', 'ot_qfd_vm_rr4_t', rrx, Y + (103.68, 507.6)[h], region=r, half=h) for h in range(2)]
-            rr2 = A(f'vm_g{r}_rr2', 'ot_qfd_vm_rr2_t', rrx, Y + 341.28, region=r)
+            # row read: banks 4h .. 4h + 3 are ONE unit column (4 rows), their 4:1 rung sits beside the column's bx relays in
+            # the strip east of it (first tile column), centred on the column; the 2:1 rung in unit column 1 between the two
+            rr4 = [A(f'vm_g{r}_rr4_{h}', 'ot_qfd_vm_rr4_t', X + (self.sA, self.sB)[h], Y + 302.4, region=r, half=h) for h in range(2)]
+            rr2 = A(f'vm_g{r}_rr2', 'ot_qfd_vm_rr2_t', X + self.U1 + 261.36, Y + 399.6, region=r)   # the free row between the x FIFOs of bank rows 1 and 2, level with both rr4 leaves
             self.me.append((rr2['n'], rr2['x'], rr2['y']))
-            for h in range(2): seam('rr4.t1 -> rr2.ro', face(rr4[h], 'E', 108.0), face(rr2, 'WE'[h], 75.6), 512)
+            seam('rr4[0].t1 -> rr2.ro', face(rr4[0], 'E', 108.0), face(rr2, 'N', 58.32), 512); seam('rr4[1].t1 -> rr2.ro', face(rr4[1], 'E', 108.0), face(rr2, 'S', 58.32), 512)
             for b in range(8):
-                ux = X + (self.U0, self.U1)[b % 2]; yb = Y + ROWY(b // 2); bank = 8 * r + b
+                ux = X + (self.U0, self.U1)[b // 4]; yb = Y + ROWY(b % 4); bank = 8 * r + b
                 i_ = A(f'vm_g{r}_b{b}_in', 'ot_qwen_tree_delay2_t', ux, yb + 60.48, region=r, role='wd pin flop + NRI relay')
                 bk = A(f'vm_g{r}_b{b}', 'ot_qfd_vm_bank_t', ux + 21.6, yb, region=r, logical_bank=bank)
                 bc = A(f'vm_g{r}_b{b}_ctl', 'ot_qfd_vm_bctl_t', ux + 246.24, yb + 30.24, region=r)
@@ -108,7 +112,7 @@ class Plan:
                 self.me.append((bc['n'], bc['x'], bc['y']))
                 seam('delay2.q -> bank.wd', face(i_, 'E'), pin(bk, 'wd'), 512); seam('bank.q -> delay1.d', pin(bk, 'q'), face(bx, 'W'), 512)
                 seam('bctl.m_* -> bank pin flops', face(bc, 'W'), pin(bk, 'wm'), 34); seam('bctl.rtg -> bank.rst_n', face(bc, 'W'), pin(bk, 'rst_n'), 1)
-                seam('delay1.q (bx) -> rr4.t1', face(bx, 'E'), face(rr4[b // 4], 'WE'[b % 2], 108.0), 512)
+                q4 = rr4[b // 4]; seam('delay1.q (bx) -> rr4.t1', face(bx, 'E'), (q4['x'], q4['y'] + (b % 4 + 0.5) * q4['h'] / 4, q4['h'] / 4), 512)   # the bank of row k takes quarter k of the W face
                 for h in range(2):
                     xf = A(f'vm_g{r}_b{b}_xf{h}', 'ot_qfd_vm_xfifo8_t', ux + 259.2, yb + (12.96, 129.6)[h], region=r, logical_bank=bank, bits=[256 * h, 256 * h + 255])
                     self.me.append((xf['n'], xf['x'] + xf['w'], xf['y'] + 20.0))
@@ -124,8 +128,8 @@ class Plan:
                 seam('delay2.q -> su.swd', face(si, 'E'), pin(su, 'swd'), 512); seam('sctl.m_* -> su pin flops', face(sc, 'E'), pin(su, 'swm'), 38)
                 seam('su.q (sx) -> su1024.so', pin(su, 'q'), pin(ans[k // 2], 'sx'), 512)
                 if k % 2 == 0: seam('sctl.svc/rtg -> su1024', face(sc, 'E'), pin(ans[k // 2], 'svc'), 2)
-            self.strip(f'vm_g{r}_sW', X + self.sW, Y, r); self.strip(f'vm_g{r}_sA', X + self.sA, Y, r, blocked=((103.68, 319.68), (341.28, 492.48), (507.6, 723.6)))
-            self.strip(f'vm_g{r}_sB', X + self.sB, Y, r)
+            self.strip(f'vm_g{r}_sW', X + self.sW, Y, r); self.strip(f'vm_g{r}_sA', X + self.sA, Y, r, blocked=((0, 302.4, 518.4),))
+            self.strip(f'vm_g{r}_sB', X + self.sB, Y, r, blocked=((0, 302.4, 518.4),))
             if r % 4 == 3: self.strip(f'vm_g{r}_sE', X + self.RW + 4.32, Y, r)
         # ---- band: one row of 32 bit-plane column leaves (d_lo S, d_hi N, x_q plane W / E) ----
         yb = Y0 + RH; PW, PH = s['ot_qfd_vm_xcol_t']; pitch = G((self.EW - 8.64 - PW) / 31 // 2.16 * 2.16); self.BAND = max(BAND, G(PH + 8.64))
@@ -163,8 +167,75 @@ def me_tree(sinks, reach=450.0, fan=16):
                 slot_me_pins=[dict(x=n[1], y=n[2], level1_nodes=n[3]) for n in l0])
 
 
+def region_spec(pl, seams, r=0):
+    """the region as a die-assembled placement cluster: children (region-relative), the strip slots the die fills with
+    relay tiles, every module port with its leaf-pin endpoints and the number of die relay endpoints it needs (greedy
+    cover, every endpoint register within `reach` of its pins), the seam table and the region's own cut demand."""
+    X, Y = pl.origin(r); by = {c['n']: c for c in pl.ch if c.get('region') == r}; g = f'vm_g{r}_'
+    def at(n, f='W'):
+        c = by[g + n]; x, y = {'W': (c['x'], c['y'] + c['h'] / 2), 'E': (c['x'] + c['w'], c['y'] + c['h'] / 2), 'S': (c['x'] + c['w'] / 2, c['y']), 'N': (c['x'] + c['w'] / 2, c['y'] + c['h'])}[f]
+        return dict(leaf=n, master=c['m'], face=f, x=round(x - X, 2), y=round(y - Y, 2))
+    def cover(pts, reach=450.0):
+        left = sorted(pts, key=lambda q: (q['y'], q['x'])); n = 0; worst = 0.0
+        while left:
+            grp = [left[0]]
+            for q in left[1:]:
+                cx = sum(t['x'] for t in grp + [q]) / (len(grp) + 1); cy = sum(t['y'] for t in grp + [q]) / (len(grp) + 1)
+                if all(abs(t['x'] - cx) + abs(t['y'] - cy) <= reach for t in grp + [q]): grp.append(q)
+            cx = sum(t['x'] for t in grp) / len(grp); cy = sum(t['y'] for t in grp) / len(grp); worst = max(worst, max(abs(t['x'] - cx) + abs(t['y'] - cy) for t in grp))
+            ids = {id(t) for t in grp}; left = [q for q in left if id(q) not in ids]; n += 1
+        return n, round(worst, 1)
+    B = [at(f'b{b}_ctl', 'S') for b in range(8)]; SC = {k: at(f'su{k}_ctl', 'W') for k in range(6)}; R4 = [at(f'rr4_{h}', 'S') for h in range(2)]; R2 = at('rr2', 'W')
+    XF = [at(f'b{b}_xf{h}', 'E') for b in range(8) for h in range(2)]
+    ports = {
+        're / ra / we / wl / wm [bank g]': dict(dir='in', bits='8 x 34', pins_per_bit=1, endpoints=[[B[b]] for b in range(8)]),
+        'xv': dict(dir='in', bits=1, endpoints=[B + [R2]]), 'pop': dict(dir='in', bits=1, endpoints=[B + [R2]]),
+        'me_in': dict(dir='in', bits=1, endpoints=[B + XF + [R2]], note='me tree sinks: the die me tree ends at these pins (leaf plan me_tree)'),
+        'rst_n': dict(dir='in', bits=1, endpoints=[B + list(SC.values()) + R4 + [R2]], note='asynchronous: reaches only the reset relays of the control leaves'),
+        'rq': dict(dir='in', bits=1, endpoints=[[R2]]), 'rqb': dict(dir='in', bits=3, endpoints=[R4 + [R2]], note='rqb[1:0] -> both rr4_t, rqb[2] -> rr2_t'),
+        'sre / sra [copy c, bank j]': dict(dir='in', bits='6 x 11', endpoints=[[SC[k]] for k in range(6)]),
+        'swe / swl / swm [bank j]': dict(dir='in', bits='2 x 27', endpoints=[[SC[k] for k in range(6) if by[g + f'su{k}']['su_bank'] == j] for j in range(2)]),
+        'sv [copy c]': dict(dir='in', bits='3 x 1', endpoints=[[SC[k] for k in range(6) if by[g + f'su{k}']['operand'] == c] for c in range(3)]),
+        'wd [bank g]': dict(dir='in', bits='8 x 512', endpoints=[[at(f'b{b}_in', 'W')] for b in range(8)]),
+        'swd [bank j]': dict(dir='in', bits='2 x 512', endpoints=[[at(f'su{k}_in', 'W') for k in range(6) if by[g + f'su{k}']['su_bank'] == j] for j in range(2)]),
+        'xo': dict(dir='out', bits='16 x 256', endpoints=[[at(f'b{b}_xf{h}', 'N')] for b in range(8) for h in range(2)], note='the x lanes start here (vm_plane_lanes.py)'),
+        'ro': dict(dir='out', bits=512, endpoints=[[at('rr2', 'N')]]), 'ovf': dict(dir='out', bits=1, endpoints=[[at('rr2', 'S')]]),
+        'so [copy c]': dict(dir='out', bits='3 x 1024', endpoints=[[at(f'ans{c}', 'N')] for c in range(3)])}
+    for v in ports.values():
+        cov = [cover(e) for e in v['endpoints']]; v['leaf_pins_per_net'] = max(len(e) for e in v['endpoints'])
+        if v['dir'] == 'in': v['die_relay_endpoints_per_net'] = max(c[0] for c in cov); v['max_wire_um'] = max(c[1] for c in cov)
+    kids = [dict(n=c['n'][len(g):], m=c['m'], x=round(c['x'] - X, 2), y=round(c['y'] - Y, 2), w=c['w'], h=c['h'], **{k: c[k] for k in ('role', 'logical_bank', 'bits', 'operand', 'su_bank', 'half') if k in c}) for c in by.values()]
+    slots = [dict(n=b['n'][len(g):], x=round(b['x'] - X, 2), y=round(b['y'] - Y, 2), w=b['w'], h=b['h'], tiles=b['tiles']) for b in pl.bays if b['region'] == r and b['n'].startswith(g) and '_sE_' not in b['n']]
+    # the region's own wires across its mid lines (L model, as the lane tool books them)
+    sg = [s_ for s_ in pl.seams if X <= s_['A'][0] <= X + pl.RW and Y <= s_['A'][1] <= Y + RH]
+    def cut(ax, cp):
+        k = 0 if ax == 'x' else 1; bits = 0
+        for s_ in sg:
+            a0, q0 = s_['A'], s_['Q']; legs = ((a0[0], q0[0]),) if ax == 'x' else ((a0[1], q0[1]),)
+            bits += s_['bits'] * any(min(l) < cp < max(l) for l in legs)
+        return bits
+    cuts = [dict(ax='x', pos_um=round(v, 1), seam_bits=cut('x', X + v), tracks_M6_M8_75pct=round(0.75 * RH * (1 / 0.064 + 1 / 0.080))) for v in (pl.U0 + 250.0, pl.sA - 2.0, pl.U1 + 120.0, pl.U1 + 250.0, pl.sB - 2.0, pl.SUX + 235.0)] + \
+           [dict(ax='y', pos_um=v, seam_bits=cut('y', Y + v), tracks_M7_M9_75pct=round(0.75 * pl.RW * (1 / 0.064 + 1 / 0.080))) for v in (113.4, 318.6, 410.4, 523.8, 729.0, 825.0, 1000.0)]
+    for c in cuts: c['util'] = round(c['seam_bits'] / (c.get('tracks_M6_M8_75pct') or c.get('tracks_M7_M9_75pct')), 4)
+    return dict(name='qfd_vm_region', module='ot_qfd_vm_region_leaf (rtl/qwen_sys/vm_plane_20261013; instances and wires only)', instances=8,
+        kind='DIE-ASSEMBLED PLACEMENT CLUSTER (not hardened): one relative placement, stamped 8 times; the die top instantiates the leaves and routes the seams',
+        why_not_hardened=['every child is a closed / hardenable leaf with registers at its pins and every seam is leaf register -> wire <= 500 um -> leaf register: the region holds no logic, no flop and no clock tree to harden',
+                          'the relay strips inside the outline hold DIE relay tiles whose lanes differ per region: a hard block could not contain them',
+                          'the x lanes cross the region on M6 / M7 over its M5-capped leaves (the centre cut needs M6 + M8: 16,384 lane bits + 2.2 k existing against 22.0 k M8 tracks alone = 0.85); a region hardened with the standard cluster cap (signals M7, die M8+ only) would take that away',
+                          'if the die lead wants fewer die instances later: harden per UNIT COLUMN (4 banks + 8 FIFOs + relays + control + rr4, 380 x 1,080, between two strips) with signals capped at M5 + M7 and M6 left to the die; the region-crossing nets (t1 of rr4[0], SU answers) stay die nets'],
+        outline_um=[pl.RW, RH], origins_um={k: list(pl.origin(k)) for k in range(8)}, orient='R0 (every child R0: mirrored closed leaves would put their M5 clk / rst_n pins half a track off)',
+        layers=dict(children='M2-M5 signals and PG (closed views / kits RLAYERS M2 M5)', seams='die nets: M6 / M7 over the leaves, M2-M5 in the channels; booked in the die cut model (vm_plane_lanes.py region_seam_bits)', parent_strap='M6 (cap + 1)'),
+        clock='no region clock tree: every leaf is its own root; the die delivers one tap per leaf at phi - R(leaf) (R = the leaf view insertion.json boundary mean; new leaves: measured at their route)',
+        reset='rst_n is asynchronous and reaches only the reset relays (rt, r) of bctl_t x 8, sctl_t x 6, rr4_t x 2, rr2_t; every other async clear is driven by a leaf-local r flop',
+        children=kids, child_count=dict(collections.Counter(k['m'] for k in kids)), relay_strip_slots=slots, relay_strip_tiles=sum(b['tiles'] for b in slots),
+        ports=ports, seams={k: v for k, v in seams.items() if not k.startswith('xplane')}, own_cut_demand=cuts,
+        added_edges='0 on every path against ot_qfd_vm_region_quarter (region miter: every clock, xo / ro / so / ovf)',
+        bench='results/rtl/qwen_tp8_vm_plane_20261013/region_leaf_miter/record.json (3 PASS, 12 mutants FAIL); system: results/rtl/qwen_tp8_vm_plane_20261013/system/record.json')
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('out'); ap.add_argument('--strip-cols', type=int, default=2); ap.add_argument('--band-relays', type=int, default=0)
+    ap.add_argument('--region-spec', default='')
     ap.add_argument('--size', action='append', default=[], help='MODULE=WxH: what-if outline of a leaf (recorded in the report)')
     a = ap.parse_args(); d = json.loads(Path(a.net).read_text())
     for o in a.size:
@@ -218,8 +289,11 @@ def main():
         root_rule='<= 15000 sinks per root: every leaf is its own root; no region-level tree',
         sizing={m: dict(source=SIZE_SRC[m], outline_um=list(NEW[m]), sinks_per_root=SINKS.get(m), gate=GATE.get(m)) for m in KIT},
         real_pins=pins, children=ch, x_relay_bays=bays, seam_segments=pl.seams, me_sinks=len(me_sinks))
+    rspec = region_spec(pl, dict(sk))
+    if a.region_spec: Path(a.region_spec).write_text(json.dumps(dict(status='REGION_CLUSTER_SPEC', owner='claude/qwen-tp8-vm-phys', plan_options=rep['options'], **rspec), indent=1) + '\n')
     Path(a.out).write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps({k: rep[k] for k in ('verdict', 'options', 'plane_band', 'slot', 'geometry', 'leaf_count', 'x_relay_bay_tiles', 'max_sinks_per_root')}, default=str)[:3000])
+    print('region_ports', json.dumps({k: {m: v[m] for m in ('leaf_pins_per_net', 'die_relay_endpoints_per_net', 'max_wire_um') if m in v} for k, v in rspec['ports'].items()})); print('region_cuts', json.dumps(rspec['own_cut_demand']))
     print('seams', json.dumps(dict(sk))); print('me', json.dumps({k: v for k, v in met.items() if k != 'slot_me_pins'}))
 
 if __name__ == '__main__': main()

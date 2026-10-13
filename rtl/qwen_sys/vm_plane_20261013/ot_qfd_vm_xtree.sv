@@ -95,31 +95,69 @@ module ot_qfd_vm_xline_t #(
             ov[gi] <= o_v; osp[gi*4 +: 4] <= o_sp;
         end
     end
-    // line and the replication stage as PROCEDURAL loops over constant indices (PLAN 2026-10-13: the per-entry generate
-    // form -- 2,048 x (14 + 17) generate scopes -- kept the ORFS yosys front end in elaboration for > 20 minutes; a
-    // loop body with constant-folded indices elaborates in seconds).  Same expressions: the last hit of DSET wins,
-    // the source is bv[(c * DV) % BEAT] of beat (c * DV) / BEAT, x_q[c] takes line[c mod 2^sp] through one CONSTANT
-    // line entry per sp value (17 with the mutant's + 1) -- never a run-time index into pd or line.
-    reg [NX-1:0] line, pick, anyhit, qn;
-    integer c, dd, sv;
+    // line and the replication stage: one ot_qfd_vm_xline_grp per GE = 128 entries (PLAN 2026-10-13).  As ONE module the
+    // 2,048 x (14 + 17) per-entry terms kept the ORFS yosys front end in elaboration for > 15 minutes in every form tried
+    // (per-entry generate scopes, one procedural if-chain, straight-line vector loops); a group module has 128 entries
+    // and elaborates in seconds, NG = 16 parameterisations.  Same expressions, same flops, same edges.
+    wire [NX-1:0] line;
+    wire [NX-1:0] qw;
+    genvar gg;
+    generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_grp
+        localparam integer NE = (NX - gg * GE < GE) ? (NX - gg * GE) : GE;
+        ot_qfd_vm_xline_grp #(.NRB(NRB), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET), .BASE(gg * GE), .NE(NE), .MUT(MUT)) u_g (
+            .clk(clk), .me(me[gg]), .pd(pd), .pv(pv[gg]), .pdd(pdd[gg*ND +: ND]), .pj(pj[gg*LB +: LB]), .psp(psp[gg*4 +: 4]),
+            .ov(ov[gg]), .osp(osp[gg*4 +: 4]), .line_all(line), .line(line[gg*GE +: NE]), .q(qw[gg*GE +: NE]));
+    end endgenerate
+    always @* q = qw;
+endmodule
+
+// NE entries BASE .. BASE + NE - 1 of line and of the x_q replication stage of one bit position (see ot_qfd_vm_xline_t).
+// line[c] takes bv[(c * DV) % BEAT] of beat (c * DV) / BEAT of descriptor DV (the LAST hit of DSET wins) when c < 2^sp;
+// x_q[c] takes line[c mod 2^sp] through one CONSTANT line entry per sp value (17 with the mutant's + 1).
+module ot_qfd_vm_xline_grp #(
+    parameter integer NRB = 64,
+    parameter integer SMAX = 11,
+    parameter integer BMAX = 8,
+    parameter integer ND = 14,
+    parameter [ND*8-1:0] DSET = {8'd96, 8'd64, 8'd48, 8'd32, 8'd24, 8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0},
+    parameter integer BASE = 0,
+    parameter integer NE = 128,
+    parameter integer MUT = 0
+) (
+    input  wire                     clk,
+    input  wire                     me,
+    input  wire [(NRB-1)*16-1:0]    pd,
+    input  wire                     pv,
+    input  wire [ND-1:0]            pdd,
+    input  wire [$clog2(BMAX):0]    pj,
+    input  wire [3:0]               psp,
+    input  wire                     ov,
+    input  wire [3:0]               osp,
+    input  wire [(1<<SMAX)-1:0]     line_all,
+    output reg  [NE-1:0]            line,
+    output reg  [NE-1:0]            q
+);
+    localparam integer BEAT = (NRB - 1) * 16;
+    wire [4:0] osw = {1'b0, osp} + ((MUT == 3) ? 5'd1 : 5'd0);
+    reg [NE-1:0] pick, anyhit, qn;
+    integer e, dd, sv;
     always @* begin
-        for (c = 0; c < NX; c = c + 1) begin
-            pick[c] = 1'b0; anyhit[c] = 1'b0;
+        for (e = 0; e < NE; e = e + 1) begin
+            pick[e] = 1'b0; anyhit[e] = 1'b0;
             for (dd = 0; dd < ND; dd = dd + 1)
-                if (((c * DSET[dd*8 +: 8]) / BEAT < BMAX) && pdd[(c / GE)*ND + dd]
-                    && (pj[(c / GE)*LB +: LB] == (c * DSET[dd*8 +: 8]) / BEAT)) begin
-                    pick[c] = pd[((c * DSET[dd*8 +: 8]) % BEAT + ((MUT == 1 && c == 5) ? 1 : 0)) % BEAT];
-                    anyhit[c] = 1'b1;
+                if ((((BASE + e) * DSET[dd*8 +: 8]) / BEAT < BMAX) && pdd[dd] && (pj == ((BASE + e) * DSET[dd*8 +: 8]) / BEAT)) begin
+                    pick[e] = pd[(((BASE + e) * DSET[dd*8 +: 8]) % BEAT + ((MUT == 1 && BASE + e == 5) ? 1 : 0)) % BEAT];
+                    anyhit[e] = 1'b1;
                 end
-            qn[c] = 1'b0;
+            qn[e] = 1'b0;
             for (sv = 0; sv <= 16; sv = sv + 1)
-                if (({1'b0, osp[(c / GE)*4 +: 4]} + ((MUT == 3) ? 5'd1 : 5'd0)) == sv) qn[c] = line[c & ((1 << sv) - 1)];
+                if (osw == sv) qn[e] = line_all[(BASE + e) & ((1 << sv) - 1)];
         end
     end
     always @(posedge clk) begin
-        for (c = 0; c < NX; c = c + 1) begin
-            if (me[c / GE] && pv[c / GE] && anyhit[c] && (c < (1 << psp[(c / GE)*4 +: 4]) || MUT == 2)) line[c] <= pick[c];
-            if (me[c / GE] && ov[c / GE]) q[c] <= qn[c];
+        for (e = 0; e < NE; e = e + 1) begin
+            if (me && pv && anyhit[e] && ((BASE + e) < (1 << psp) || MUT == 2)) line[e] <= pick[e];
+            if (me && ov) q[e] <= qn[e];
         end
     end
 endmodule
