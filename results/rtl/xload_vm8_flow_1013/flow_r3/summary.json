@@ -1,0 +1,538 @@
+{
+ "git_sha": "d1c3ab6b8",
+ "branch": "claude/vm8-service-1013",
+ "host": "ot-epyc1tb",
+ "verilator": "5.050",
+ "remote_src": "/srv/opentallas-scratch/claude/vm8svc-1013/producer/src_d1c3ab6b8",
+ "remote_out": "/srv/opentallas-scratch/claude/vm8svc-1013/producer/flow_r3_d1c3ab6b8",
+ "baseline_beats": "/srv/opentallas-scratch/codex/xload-vm8-flow-1013/beats.txt",
+ "baseline_beats_sha256": "89d4eb743a8b31c01e170f4d291f7e6a29edab79e5f14f7d6e28b8f055c96329",
+ "baseline_normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+ "credit_scheme": {
+  "seats": 4,
+  "circulation": 2,
+  "stop_reserve": 2,
+  "go_rule": "go_ctl <= cr_next >= 2",
+  "stop_path": "cr_next(t) -> go_ctl(t+1) -> go_em/local_emit/region_go(t+2) -> emit_go gates grant(t+2); grant(t+1) is uncontrolled",
+  "return_path": "grant(s) -> px_en(s+1) -> seat0/hv(s+2) -> pop(s+2), counted in cr_next(s+2)",
+  "previous_defect": "cr_next > 2 with four seats: steady-state cr_next = 2 at one beat an edge, so go dropped every third edge"
+ },
+ "gate_a_always_ready": {
+  "baseline_service": [
+   2164,
+   181,
+   139,
+   11648,
+   499,
+   545,
+   26366,
+   2111,
+   4159
+  ],
+  "flow_service": [
+   2165,
+   183,
+   141,
+   11649,
+   501,
+   547,
+   26367,
+   2113,
+   4161
+  ],
+  "ratio": [
+   1.00046,
+   1.01105,
+   1.01439,
+   1.00009,
+   1.00401,
+   1.00367,
+   1.00004,
+   1.00095,
+   1.00048
+  ],
+  "max_ratio": 1.01439,
+  "limit": 1.1,
+  "max_contiguous": [
+   16,
+   16,
+   4,
+   56,
+   14,
+   14,
+   104,
+   26,
+   26
+  ],
+  "baseline_max_contiguous": [
+   16,
+   16,
+   4,
+   56,
+   14,
+   14,
+   104,
+   26,
+   26
+  ],
+  "exact": true,
+  "pass": true
+ },
+ "gate_b_back_pressure": {
+  "flow_p13": {
+   "plusargs": "+SINK_PERIOD=13",
+   "exact": true,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570"
+  },
+  "flow_lfsr_a_half": {
+   "plusargs": "+SINK_LFSR=2463534242 +SINK_BITS=1",
+   "exact": true,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570"
+  },
+  "flow_lfsr_b_quart": {
+   "plusargs": "+SINK_LFSR=88172645 +SINK_BITS=2",
+   "exact": true,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570"
+  },
+  "flow_lfsr_c_eighth": {
+   "plusargs": "+SINK_LFSR=3141592653 +SINK_BITS=3",
+   "exact": true,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570"
+  }
+ },
+ "gate_c_default_path": {
+  "beats_sha256": "89d4eb743a8b31c01e170f4d291f7e6a29edab79e5f14f7d6e28b8f055c96329",
+  "byte_identical_to_baseline": true,
+  "cycle_mismatches": 0,
+  "service": [
+   2164,
+   181,
+   139,
+   11648,
+   499,
+   545,
+   26366,
+   2111,
+   4159
+  ]
+ },
+ "gate_d_mutants": {
+  "MUT_XW_CREDIT (stop reserve 1)": {
+   "mut_credit_p13": {
+    "run_rc": 1,
+    "invariant_fatal": true,
+    "fails": true
+   },
+   "mut_credit_lfsr_a": {
+    "run_rc": 1,
+    "invariant_fatal": true,
+    "fails": true
+   },
+   "mut_credit_p1": {
+    "run_rc": 0,
+    "invariant_fatal": false,
+    "fails": false
+   }
+  },
+  "MUT_XW_RDPIN (macro read pin not frozen)": {
+   "mut_rdpin_p13": {
+    "run_rc": 0,
+    "payload_mismatches": 570,
+    "compare_rc": 1,
+    "fails": true
+   },
+   "mut_rdpin_lfsr_a": {
+    "run_rc": 0,
+    "payload_mismatches": 278,
+    "compare_rc": 1,
+    "fails": true
+   },
+   "mut_rdpin_p1": {
+    "run_rc": 0,
+    "payload_mismatches": 0,
+    "compare_rc": 0,
+    "fails": false
+   }
+  },
+  "note": "the *_p1 mutant runs pass by construction: an always-ready sink never stalls the pipeline, so neither defect is exercised; the back-pressure runs are the discriminating ones"
+ },
+ "runs": {
+  "base_flow0": {
+   "run_rc": 0,
+   "compare_rc": 0,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 0,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+   "exact": true,
+   "beats_sha256": "89d4eb743a8b31c01e170f4d291f7e6a29edab79e5f14f7d6e28b8f055c96329",
+   "service": [
+    2164,
+    181,
+    139,
+    11648,
+    499,
+    545,
+    26366,
+    2111,
+    4159
+   ],
+   "max_contiguous": [
+    16,
+    16,
+    4,
+    56,
+    14,
+    14,
+    104,
+    26,
+    26
+   ]
+  },
+  "flow_lfsr_a_half": {
+   "run_rc": 0,
+   "compare_rc": 0,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+   "exact": true,
+   "beats_sha256": "91823f5f9473561b5a2bb81bcfb6eef6d33b359a031489e9c420c5290ab6fb89",
+   "service": [
+    2232,
+    209,
+    146,
+    12314,
+    835,
+    566,
+    27911,
+    3528,
+    4191
+   ],
+   "max_contiguous": [
+    8,
+    5,
+    6,
+    7,
+    9,
+    5,
+    9,
+    8,
+    8
+   ]
+  },
+  "flow_lfsr_b_quart": {
+   "run_rc": 0,
+   "compare_rc": 0,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+   "exact": true,
+   "beats_sha256": "6fc55b89f984cddf42b719bc8731ebca9432fe4631480ea71b841ae321a2bae3",
+   "service": [
+    2374,
+    349,
+    237,
+    13609,
+    1629,
+    898,
+    30929,
+    6835,
+    6689
+   ],
+   "max_contiguous": [
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  "flow_lfsr_c_eighth": {
+   "run_rc": 0,
+   "compare_rc": 0,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+   "exact": true,
+   "beats_sha256": "2b8ec1e50d6b84de7dbf18a8d984ed58a6e995e1e7a018b4aef914b567eb1119",
+   "service": [
+    2599,
+    629,
+    527,
+    16701,
+    3384,
+    1820,
+    37496,
+    13033,
+    13179
+   ],
+   "max_contiguous": [
+    4,
+    2,
+    2,
+    4,
+    3,
+    3,
+    4,
+    3,
+    4
+   ]
+  },
+  "flow_p1": {
+   "run_rc": 0,
+   "compare_rc": 0,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+   "exact": true,
+   "beats_sha256": "2f7ef2794a41ba719ada72b5b2a82c21d88d934ec9c49e6c405eb0d4b613c7b1",
+   "service": [
+    2165,
+    183,
+    141,
+    11649,
+    501,
+    547,
+    26367,
+    2113,
+    4161
+   ],
+   "max_contiguous": [
+    16,
+    16,
+    4,
+    56,
+    14,
+    14,
+    104,
+    26,
+    26
+   ]
+  },
+  "flow_p13": {
+   "run_rc": 0,
+   "compare_rc": 0,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+   "exact": true,
+   "beats_sha256": "a1565a53cf21315bb7b6606e16511bbc9b1b50e67285b375caf023ac897816d4",
+   "service": [
+    3110,
+    1071,
+    668,
+    19596,
+    5140,
+    2982,
+    44634,
+    21702,
+    21728
+   ],
+   "max_contiguous": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "mut_credit_lfsr_a": {
+   "run_rc": 1,
+   "compare_rc": 1,
+   "records_pass": false,
+   "invariant_fatal": true,
+   "beats": 1,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 1,
+   "normalized_sha256": "b417dd0ef715ee78a1903d626358d6d6799ed683a9a60492607176507f7e4369",
+   "exact": false,
+   "beats_sha256": "c2d1d409159455f186937b7f1d4bae8bec0bc0f258dd419f05a89ab2772dd4ea",
+   "service": [],
+   "max_contiguous": []
+  },
+  "mut_credit_p1": {
+   "run_rc": 0,
+   "compare_rc": 0,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+   "exact": true,
+   "beats_sha256": "2f7ef2794a41ba719ada72b5b2a82c21d88d934ec9c49e6c405eb0d4b613c7b1",
+   "service": [
+    2165,
+    183,
+    141,
+    11649,
+    501,
+    547,
+    26367,
+    2113,
+    4161
+   ],
+   "max_contiguous": [
+    16,
+    16,
+    4,
+    56,
+    14,
+    14,
+    104,
+    26,
+    26
+   ]
+  },
+  "mut_credit_p13": {
+   "run_rc": 1,
+   "compare_rc": 1,
+   "records_pass": false,
+   "invariant_fatal": true,
+   "beats": 0,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 0,
+   "normalized_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "exact": false,
+   "beats_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "service": [],
+   "max_contiguous": []
+  },
+  "mut_rdpin_lfsr_a": {
+   "run_rc": 0,
+   "compare_rc": 1,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 278,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "c9835fa492586b70443f618f0ae245f15a8aabc8d6bf0fc6e50277450d9b7fd7",
+   "exact": false,
+   "beats_sha256": "81bf8ba3ad203253fdf02d665b8cfec0654aeecb1b821526150e1c68a6164e23",
+   "service": [
+    2232,
+    209,
+    146,
+    12314,
+    835,
+    566,
+    27911,
+    3528,
+    4191
+   ],
+   "max_contiguous": [
+    8,
+    5,
+    6,
+    7,
+    9,
+    5,
+    9,
+    8,
+    8
+   ]
+  },
+  "mut_rdpin_p1": {
+   "run_rc": 0,
+   "compare_rc": 0,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 0,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "1c1d69aa905b131e6dd4c11d0a9c2c87c0ae20ab8e78dadc7dd304c16aac5570",
+   "exact": true,
+   "beats_sha256": "2f7ef2794a41ba719ada72b5b2a82c21d88d934ec9c49e6c405eb0d4b613c7b1",
+   "service": [
+    2165,
+    183,
+    141,
+    11649,
+    501,
+    547,
+    26367,
+    2113,
+    4161
+   ],
+   "max_contiguous": [
+    16,
+    16,
+    4,
+    56,
+    14,
+    14,
+    104,
+    26,
+    26
+   ]
+  },
+  "mut_rdpin_p13": {
+   "run_rc": 0,
+   "compare_rc": 1,
+   "records_pass": true,
+   "invariant_fatal": false,
+   "beats": 6680,
+   "payload_mismatches": 570,
+   "cycle_mismatches": 6680,
+   "normalized_sha256": "2cf619889d0287bfec6c87cbeab79a43237b7e8c45941800f17b1cf51aba1c6e",
+   "exact": false,
+   "beats_sha256": "2c77b1cfd170c6a27014f07da21bc8bf72c925242269018a94a7e60e85644986",
+   "service": [
+    3110,
+    1071,
+    668,
+    19596,
+    5140,
+    2982,
+    44634,
+    21702,
+    21728
+   ],
+   "max_contiguous": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  }
+ },
+ "scope": "Verilator RTL retention and throughput of the producer transport only; no physical closure of the XW_FLOW=1 build, and native ticket/owner/allocator/ECC integration is outside this record."
+}

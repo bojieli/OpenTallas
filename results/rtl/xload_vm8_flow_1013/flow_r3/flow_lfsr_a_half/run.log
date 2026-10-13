@@ -1,0 +1,14 @@
+CADENCE id=0 K=5120 P=1 fmt=0 beats=160 max_contiguous=8 first=212 last=2229 service=2232
+CADENCE id=1 K=5120 P=1 fmt=1 beats=80 max_contiguous=5 first=45 last=206 service=209
+CADENCE id=2 K=5120 P=1 fmt=2 beats=48 max_contiguous=6 first=47 last=143 service=146
+CADENCE id=3 K=7168 P=4 fmt=0 beats=784 max_contiguous=7 first=789 last=12311 service=12314
+CADENCE id=4 K=7168 P=4 fmt=1 beats=392 max_contiguous=9 first=58 last=832 service=835
+CADENCE id=5 K=7168 P=4 fmt=2 beats=224 max_contiguous=5 first=71 last=563 service=566
+CADENCE id=6 K=8192 P=8 fmt=0 beats=1664 max_contiguous=9 first=1559 last=27908 service=27911
+CADENCE id=7 K=16384 P=8 fmt=1 beats=1664 max_contiguous=8 first=69 last=3525 service=3528
+CADENCE id=8 K=32768 P=8 fmt=2 beats=1664 max_contiguous=8 first=101 last=4188 service=4191
+XLOAD_CADENCE PASS records=9
+- rtl/hbm_accel/generic/adapters/tb/tb_xload_cadence.sv:91: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 104us; walltime 22.534 s; speed 4.617 us/s
+- Verilator: cpu 22.526 s on 1 threads; allocated 12 MB
