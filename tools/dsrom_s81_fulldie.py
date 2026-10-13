@@ -1740,7 +1740,15 @@ def case_real(m, work):
         lefs = [(work / f).read_text() for f in ('elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef',
                                                  'ucie.lef', 'head_a.lef', 'head_b.lef') + (('bound_views.lef',) if bnd else ())
                 if (work / f).exists()]
-        hg = HG.gate(m['insts'], m['buses'], lefs, pslice, limit_um=HOP_GATE_UM, ss_um=SS_REACH_UM)
+        # pinreg-pairs 2026-10-13: every hop is judged on ITS pair's real views (pair_check.Gate; the timing table is
+        # results/arch/pinreg_audit_1013/pairs/view_timing.json or $OT_PAIR_TIMING); the flat --hop-gate UM stays the
+        # limit of placeholder pairs and the ceiling of all.  OT_S81_PAIR_GATE=0 restores the flat rule.
+        pair = None
+        if os.environ.get('OT_S81_PAIR_GATE', '1') != '0':
+            sys.path.insert(0, str(ROOT / 'tools' / 'hier_contract'))
+            import pair_check as PC
+            pair = PC.Gate(default_um=HOP_GATE_UM, buses=[(b_, c_, n_, [(e_[0], pslice(e_[1])[0]) for e_ in eps_]) for b_, c_, n_, eps_ in m['buses']])
+        hg = HG.gate(m['insts'], m['buses'], lefs, pslice, limit_um=HOP_GATE_UM, ss_um=SS_REACH_UM, pair=pair)
         (work / 'hop_gate.json').write_text(json.dumps(hg, indent=1) + '\n')
         print('OT_HOP_GATE %s max %.1f um bits>%g: %d bits>%g(SS): %d' % (hg['verdict'], hg['max_um'], HOP_GATE_UM,
               hg['bits_over_limit'], SS_REACH_UM, hg['bits_over_ss']), file=sys.stderr)
