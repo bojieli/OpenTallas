@@ -44,7 +44,7 @@
  "job": {
   "owner": "Codex:s81hc-physical",
   "branch": "codex/s81hc-physical-20261012",
-  "tag": "v3-outhold",
+  "tag": "v4-outhold-splice",
   "purpose": "[hc-crooty] crooty v3 2-tile split, C=2: VM write slots tile (comb side, above crrw): p_w (2172, S) -> w_c -> wq_* (2172, N) at 10.5 pins/um, one 300-um stage; ~4.3k flops on its own root; replaces s81hc_crootye_ref-v2",
   "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_crywe_ref/views",

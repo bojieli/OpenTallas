@@ -15,7 +15,12 @@ foreach bit {0 543 1086 1629} {
  set dst [lindex $loads 0]
  set n [odb::dbNet_create $b [format "ot_wv_extra_n%d" $bit]]
  set i [odb::dbInst_create $b $m [format "ot_wv_extra_%d" $bit]]
+ # Temporarily release only the original local hold input while splicing;
+ # restore both protections before any placement/repair step.
+ set di [$dst getInst];set idt [$di isDoNotTouch];set ndt [$old isDoNotTouch]
+ $di setDoNotTouch 0;$old setDoNotTouch 0
  $dst disconnect;[$i findITerm A] connect $old;[$i findITerm Y] connect $n;$dst connect $n
+ $di setDoNotTouch $idt;$old setDoNotTouch $ndt
  set x 0;set y 0
  foreach bp [$bt getBPins] {foreach box [$bp getBoxes] {set x [expr {([$box xMin]+[$box xMax])/2}];set y [expr {([$box yMin]+[$box yMax])/2}];break};break}
  set ca [$b getCoreArea]
