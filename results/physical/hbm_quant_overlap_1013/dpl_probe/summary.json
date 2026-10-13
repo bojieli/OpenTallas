@@ -1,0 +1,31 @@
+{
+  "job": "qw_ov_ref-ov1-cx-c8c47022e",
+  "attempt": 2,
+  "source_commit": "c8c47022e",
+  "phase": "3_5_place_dp",
+  "odb": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/qw_ov_ref-ov1-cx-c8c47022e/routes/qw_ov_ref_ov1_cx_c8c47022e/work/orfs/results/asap7/opentallas_ot_hgi_quant_wide_ov_asap7_ref_qw_ov_ref_ov1_cx_c8c47022e/base/3_5_place_dp-failed.odb",
+  "preserved_by": ".keep at actual job run root",
+  "offenders": 1148,
+  "master": "TAPCELL_ASAP7_75t_R",
+  "placement_status": "LOCKED",
+  "width_um": 0.108,
+  "bbox_union_um": [
+    276.588,
+    336.96,
+    551.124,
+    388.8
+  ],
+  "adjacent_cell_overlaps": 0,
+  "edge_spacing_violations": 0,
+  "padding_violations": 0,
+  "clock_spine_cells": 0,
+  "maximum_standard_cell_width_um": 1.62,
+  "maximum_standard_cell_master": "BUFx24_ASAP7_75t_R",
+  "primary_tool": "OpenROAD 26Q3-1510-g6cb3f2b704, read failed ODB under ot-heavy --mem 8",
+  "classification": "All 1148 fixed tap/endcap instances are wholly within hard seam x270..570/y336.96..388.8 created by POST_TAPCELL hook. The reserved region invalidates their placement rows. Failure precedes CTS; no spine insertions exist.",
+  "remedy_to_verify": "Reserve seam in PRE_TAPCELL; generate fresh authoritative tap/row geometry, import only standard-cell placements by name from retained 3_4 checkpoint, detailed-place/check before new route.",
+  "provenance": {
+    "cells.tsv": "149e59f800a746105043529b253d6ca420bc7bd5ccc3c8840273a20edd6cb5cd",
+    "probe.tcl": "6d8ea0481379e8ff5550dd7d6476ef16bf884ab9bf132e040c8e372772e484cf"
+  }
+}
