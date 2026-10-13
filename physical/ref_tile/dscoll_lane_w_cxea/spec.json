@@ -156,8 +156,8 @@
  "job": {
   "owner": "Codex:el1011-ds-coll",
   "branch": "codex/dscoll-1012",
-  "tag": "cxea",
-  "purpose": "rth passes timing TT15.49 FF8.74, DRC21 SRAM E edge. Reserve interior M5 E-edge via tracks to keep VIA45 M4 pads out of original macro OBS; preserve M4 planar/exterior M5 pin access. No halo claim and no constraint relaxation.",
+  "tag": "cxea2",
+  "purpose": "Correct actual ORFS copied hook dispatch (*_pre_cts.tcl/*_pre_grt.tcl/*_post_drt.tcl); predecessor silently skipped hook because it matched only literal names. rth passes timing TT15.49 FF8.74, DRC21 SRAM E edge. Reserve interior M5 E-edge via tracks to keep VIA45 M4 pads out of original macro OBS; preserve M4 planar/exterior M5 pin access. No halo claim and no constraint relaxation.",
   "views_to": "physical/ref_tile/dscoll_lane_w_cxea/views",
   "record_to": "results/rtl/ref_tile/dscoll_lane_w_cxea",
   "benches": [
