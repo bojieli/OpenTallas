@@ -899,6 +899,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     }
     if j.get("no_bench_reason"):
         spec["no_bench_reason"] = j["no_bench_reason"]
+    if j.get("benched_by"):     # composition gate (tools/ref_tile/composition_gates.json): the loop appends its benches
+        spec["benched_by"] = j["benched_by"]
+    if j.get("hold_merge"):     # a physical probe that never merges (not a closure candidate)
+        spec["hold_merge"] = j["hold_merge"]
     return spec
 
 
@@ -973,7 +977,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
 # --------------------------------------------------------------------------------------------- export
 def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     """exact-shape abstract (write_abstract_lef, never -bloat_occupied_layers) + TT/FF/SS timing models from the routed
-    odb + spef at the sign-off SDC, the routed clock insertion (ck_insertion.py), then child_lint of the result."""
+    odb + spef at the VERDICT's constraint sequence (tools/tt_views/view_export.py), the routed clock insertion (ck_insertion.py), then child_lint of the result."""
     import subprocess
     fp = json.loads((ROOT / kit / "floorplan.json").read_text())
     top = fp["top"]
@@ -981,6 +985,12 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    # EXPORT-SDC (2026-10-13): view_export replays the route's VERDICT constraint sequence (closure-loop run: routed
+    # 6_final.sdc, SPEF, post-SDCs, io_ref_routed.sdc last) and fails when its TT / FF slack differs from the verdict.
+    # Outside a loop run there is no verdict to replay: the same order from the kit (never signoff.sdc INSTEAD of the
+    # routed SDC: s81su SMT exported FF -19.69 against a +3.66 verdict that way).
+    for f in (ROOT / kit / "signoff.sdc", ROOT / "physical/common_flow/io_ref_routed.sdc"):
+        cmd += ["--post-sdc", str(f)]
     grant = fp.get("layer_contract", {}).get("m6_pin_grant")
     if grant:
         cmd += ["--pin-only-tech"]

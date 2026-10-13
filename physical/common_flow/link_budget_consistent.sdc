@@ -48,7 +48,7 @@ proc ot_lb_reg_lat {} {
     }
   }
   set r [dict create]
-  if {!$has_block} { return $r }
+  set ::ot_lb_arr [dict create]    ;# CLOCK-CLASS: clock -> every standard-cell register clock arrival
   foreach ck $pins {
     set a {}
     foreach pr {arrival_max_rise arrival_max_fall} { set v [get_property $ck $pr]; if {[string is double -strict $v]} { lappend a $v } }
@@ -56,6 +56,8 @@ proc ot_lb_reg_lat {} {
     set a [tcl::mathfunc::min {*}$a]
     foreach c [get_property $ck clocks] {
       set n [get_full_name $c]
+      dict lappend ::ot_lb_arr $n $a
+      if {!$has_block} continue
       if {![dict exists $r $n]} { dict set r $n [list $a $a 1]; continue }
       lassign [dict get $r $n] lo hi k
       dict set r $n [list [expr {min($lo, $a)}] [expr {max($hi, $a)}] [incr k]]
@@ -63,6 +65,47 @@ proc ot_lb_reg_lat {} {
   }
   return $r
 }
+# CLOCK-CLASS 2026-10-13 (export-sdc; smh_tile_eg r10, codex/hbm-sm-cluster 4a8f09870): one L per clock is wrong for a
+# block with two clock classes on one port clock (9 raw flops + ICG at 0.5 ps beside 967 gated flops at TT ~1.9 ns: L
+# 950.6 = the midrange, matching no flop; 3,905 outputs -783..-974 against ot_lb_v_core_clk).  The standard-cell
+# register arrivals of a clock are split into classes wherever neighbours are more than OT_IOREF_CLASS_GAP apart
+# (default max(0.25 T, 150 ps)); L is the mid of the DOMINANT class (most registers), and a port whose first register
+# is in another class k gets its consistent max delay referenced to that class (input + (Lk - L0), output - (Lk - L0)).
+# The adjustment is recorded in ::ot_cls_adj so physical/common_flow/io_ref_routed.sdc (read last at sign-off, same
+# rule, all registers of the port checked) replaces it instead of adding its own.  One class = unchanged.
+proc ot_lb_split {vals gap} {
+  set out {}; set lo ""; set hi ""; set n 0
+  foreach v [lsort -real $vals] {
+    if {$lo eq ""} { set lo $v; set hi $v; set n 1; continue }
+    if {$v - $hi > $gap} { lappend out [list $lo $hi $n]; set lo $v; set n 0 }
+    set hi $v; incr n
+  }
+  if {$lo ne ""} { lappend out [list $lo $hi $n] }
+  return $out
+}
+proc ot_lb_class_of {v cls} {
+  set best 0; set bd ""; set i 0
+  foreach c $cls {
+    lassign $c lo hi
+    set d [expr {$v < $lo ? $lo - $v : ($v > $hi ? $v - $hi : 0.0)}]
+    if {$bd eq "" || $d < $bd} { set bd $d; set best $i }
+    incr i
+  }
+  return $best
+}
+proc ot_lb_inst_arr {inst} {
+  foreach cp {CLK clk CK ck} {
+    set ck [get_pins -quiet "[string map {/ .} [$inst getName]]/$cp"]
+    if {[llength $ck] == 0} { set ck [get_pins -quiet "[$inst getName]/$cp"] }
+    if {[llength $ck] == 0} continue
+    set a {}
+    foreach pr {arrival_max_rise arrival_max_fall} { set v [get_property $ck $pr]; if {[string is double -strict $v]} { lappend a $v } }
+    if {[llength $a]} { return [tcl::mathfunc::min {*}$a] }
+  }
+  return ""
+}
+if {![info exists ::ot_cls_adj]} { set ::ot_cls_adj [dict create] }
+set ::ot_lb_cls [dict create]   ;# clock -> {classes dominant L0}
 set ot_lb_vmap [dict create]
 catch {unset ot_lb_reglat}
 foreach c $ot_lb_clks {
@@ -89,6 +132,19 @@ foreach c $ot_lb_clks {
     lassign [dict get $ot_lb_reglat $cn] lo hi ot_lb_nreg
     set L [expr {($lo + $hi) / 2.0}]
     set ot_lb_ref "std_regs $ot_lb_nreg (macro pins excluded)"
+  }
+  if {[ot_lb_get OT_IOREF_CLASS 1] ne "0" && [dict exists $::ot_lb_arr $cn]} {
+    set ot_lb_cl [ot_lb_split [dict get $::ot_lb_arr $cn] [ot_lb_get OT_IOREF_CLASS_GAP [expr {max(0.25 * $T, 150.0)}]]]
+    if {[llength $ot_lb_cl] > 1} {
+      set ot_lb_dom 0; set i 0
+      foreach c $ot_lb_cl { if {[lindex $c 2] > [lindex $ot_lb_cl $ot_lb_dom 2]} { set ot_lb_dom $i }; incr i }
+      lassign [lindex $ot_lb_cl $ot_lb_dom] lo hi ot_lb_nreg
+      set L [expr {($lo + $hi) / 2.0}]
+      set ot_lb_ref "class $ot_lb_dom of [llength $ot_lb_cl] clock classes, std_regs $ot_lb_nreg"
+      dict set ::ot_lb_cls $cn [list $ot_lb_cl $ot_lb_dom $L]
+      set i 0
+      foreach c $ot_lb_cl { puts [format "OT_LINK_BUDGET clock %s class %d%s %.1f..%.1f n %d" $cn $i [expr {$i == $ot_lb_dom ? " dominant" : ""}] [lindex $c 0] [lindex $c 1] [lindex $c 2]]; incr i }
+    }
   }
   set B [expr {$T - 60.0 - $ot_lb_skew - $ot_lb_link}]
   set S [expr {$ot_lb_sfrac * $B}]; set R [expr {$B - $S}]
@@ -137,7 +193,7 @@ proc ot_lb_domain {portname dir} {
       set inst [$it getInst]
       if {$dir eq "in" && ![$it isInputSignal]} continue
       if {$dir eq "out" && ![$it isOutputSignal]} continue
-      if {[ot_lb_is_seq $inst]} { set d [ot_lb_clk_of_inst $inst]; if {$d ne ""} { return $d }; continue }
+      if {[ot_lb_is_seq $inst]} { set d [ot_lb_clk_of_inst $inst]; if {$d ne ""} { set ::ot_lb_hit $inst; return $d }; continue }
       foreach it2 [$inst getITerms] {
         if {$dir eq "in" && [$it2 isOutputSignal]} { lappend nets [$it2 getNet] }
         if {$dir eq "out" && [$it2 isInputSignal]} { set nn [$it2 getNet]; if {$nn ne "NULL" && [$nn getSigType] ni {POWER GROUND CLOCK}} { lappend nets $nn } }
@@ -145,6 +201,18 @@ proc ot_lb_domain {portname dir} {
     }
   }
   return ""
+}
+# CLOCK-CLASS: (Lk - L0) of the class of the register ot_lb_domain just reached; 0 on the dominant class / one class
+proc ot_lb_class_delta {d} {
+  if {![dict exists $::ot_lb_cls $d] || ![info exists ::ot_lb_hit] || $::ot_lb_hit eq ""} { return 0.0 }
+  lassign [dict get $::ot_lb_cls $d] cls dom L0
+  if {[[$::ot_lb_hit getMaster] isBlock]} { return 0.0 }
+  set a [ot_lb_inst_arr $::ot_lb_hit]
+  if {$a eq ""} { return 0.0 }
+  set k [ot_lb_class_of $a $cls]
+  if {$k == $dom} { return 0.0 }
+  lassign [lindex $cls $k] lo hi
+  return [expr {($lo + $hi) / 2.0 - $L0}]
 }
 set ot_lb_gsrc {}
 foreach c [all_clocks] { foreach s [get_property $c sources] { lappend ot_lb_gsrc [get_full_name $s] } }
@@ -161,19 +229,25 @@ set ot_lb_multi [expr {[dict size $ot_lb_vmap] > 1}]
 set ot_lb_n [dict create]
 foreach p $ot_lb_in {
   set d $ot_lb_default
+  set ::ot_lb_hit ""
   set x [ot_lb_domain [get_full_name $p] in]
   if {$x eq "FWD"} { dict incr ot_lb_n "in:skip_fwd"; continue }
   if {$x ne ""} { set d $x }
   lassign [dict get $ot_lb_vmap $d] vc imax omax
+  set ot_lb_cd [ot_lb_class_delta $d]
+  if {$ot_lb_cd != 0.0} { set imax [expr {$imax + $ot_lb_cd}]; dict set ::ot_cls_adj "in,$vc,[get_full_name $p]" $ot_lb_cd; dict incr ot_lb_n "in:$d:class" }
   set_input_delay -max -add_delay $imax -clock $vc $p
   dict incr ot_lb_n "in:$d"
 }
 foreach p $ot_lb_out {
   set d $ot_lb_default
+  set ::ot_lb_hit ""
   set x [ot_lb_domain [get_full_name $p] out]
   if {$x eq "FWD"} { dict incr ot_lb_n "out:skip_fwd"; continue }
   if {$x ne ""} { set d $x }
   lassign [dict get $ot_lb_vmap $d] vc imax omax
+  set ot_lb_cd [ot_lb_class_delta $d]
+  if {$ot_lb_cd != 0.0} { set omax [expr {$omax - $ot_lb_cd}]; dict set ::ot_cls_adj "out,$vc,[get_full_name $p]" [expr {-$ot_lb_cd}]; dict incr ot_lb_n "out:$d:class" }
   set_output_delay -max -add_delay $omax -clock $vc $p
   dict incr ot_lb_n "out:$d"
 }
