@@ -1084,6 +1084,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
+        if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
+            _reset_tree(v, m)     # after the relays: legalised against the FINAL placement
         if before_relays is not None:
             _regions_from_placement(m)   # the relays joined region clocks: re-file + split to the measured cap again
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
@@ -3142,6 +3144,442 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     return m['r21_relays']
 
 
+# ------------------------------------------------------------------------------------------------ registered reset tree
+# owner 2026-10-13 (die timing by construction): a reset is an inter-tile signal like any other: register at the pin ->
+# wire <= 500 um -> register at the pin.  A reset net whose pin bounding box (half perimeter, the pinreg audit's measure)
+# exceeds RELAY_REACH_UM is replaced by a registered tree of 1-bit repeaters, clocked by the domain of its sinks.
+RST_REP = 'qfd_rst_rep'          # ot_qwen_rst_rep PAD=0: 1 input flop + 2 registered outputs (q0, q1) = 2 cycles
+RST_PAD = 'qfd_rst_rep_p8'       # ot_qwen_rst_rep PAD=8: 8 pad flops between the input and the output rank = 10 cycles
+RST_PAD_LV = 5                   # one pad cell = 5 repeater levels (10 cycles)
+RST_W, RST_H = 5.184, 2.16       # 12 GX x 1 GY (<= 5.4 x 2.16: 96 sites x 8 rows), M1-M3
+RST_PITCH_UM = 220.0             # trunk lattice
+RST_LEAF_UM = 200.0              # sinks of one lattice cell share a leaf repeater
+RST_NET_UM = 470.0               # build limit per net (cell centres); the emitted pins are re-checked at RST_OK_UM
+RST_OK_UM = 480.0
+RST_GAP_UM = 2.16                # clearance to every other instance
+
+
+def _hp(pts):
+    return max(p[0] for p in pts) - min(p[0] for p in pts) + max(p[1] for p in pts) - min(p[1] for p in pts)
+
+
+class _RstOcc:
+    """occupancy of the placement (the `free` / `add_rect` grid of _relays) + nearest legal site search."""
+    BK = 250.0
+
+    def __init__(self, rects, W, H, gx, gy):
+        self.g, self.W, self.H, self.gx, self.gy = {}, W, H, gx, gy
+        for r in rects:
+            self.add(r)
+
+    def _cells(self, r, gap=0.0):
+        BK = self.BK
+        return [(i, j) for i in range(int((r[0] - gap) // BK), int((r[2] + gap) // BK) + 1)
+                for j in range(int((r[1] - gap) // BK), int((r[3] + gap) // BK) + 1)]
+
+    def add(self, r):
+        for c in self._cells(r):
+            self.g.setdefault(c, []).append(r)
+
+    def remove(self, r):
+        for c in self._cells(r):
+            self.g[c].remove(r)
+
+    def hit(self, r, gap):
+        for c in self._cells(r, gap):
+            for q in self.g.get(c, ()):
+                if q[0] < r[2] + gap - 1e-6 and r[0] < q[2] + gap - 1e-6 and q[1] < r[3] + gap - 1e-6 and r[1] < q[3] + gap - 1e-6:
+                    return q
+        return None
+
+    def free(self, r, gap):
+        return r[0] >= gap and r[1] >= gap and r[2] <= self.W - gap and r[3] <= self.H - gap and self.hit(r, gap) is None
+
+    def site(self, tx, ty, box=None, lim=600.0, w=RST_W, h=RST_H, gap=RST_GAP_UM):
+        """lower-left corner (on the GX / GY lattice) of a free w x h frame near the centre (tx, ty); `box` =
+        (x0, y0, x1, y1) limits the frame centre.  Best-first over edge projections: a blocked candidate is pushed
+        past each edge of the block that stops it (so a target inside a block, or between abutting blocks, walks out
+        to the nearest channel); the nearest free candidate within `lim` um (Manhattan, from the target) wins."""
+        import heapq
+        gx, gy = self.gx, self.gy
+        heap, seen, best, pops = [(0.0, tx, ty)], set(), None, 0
+        while heap and pops < 4000:
+            d, cx, cy = heapq.heappop(heap)
+            pops += 1
+            if d > lim or (best is not None and d >= best[0]):
+                break
+            x0 = round(math.floor((cx - w / 2) / gx + 1e-9) * gx, 6)
+            y0 = round(math.floor((cy - h / 2) / gy + 1e-9) * gy, 6)
+            r = (x0, y0, x0 + w, y0 + h)
+            if r[0] < gap or r[1] < gap or r[2] > self.W - gap or r[3] > self.H - gap:
+                continue
+            if box and not (box[0] <= x0 + w / 2 <= box[2] and box[1] <= y0 + h / 2 <= box[3]):
+                continue
+            q = self.hit(r, gap)
+            if q is None:
+                dd = abs(x0 + w / 2 - tx) + abs(y0 + h / 2 - ty)
+                if best is None or dd < best[0]:
+                    best = (dd, x0, y0)
+                continue
+            for nx, ny in ((q[0] - gap - w / 2 - gx, cy), (q[2] + gap + w / 2 + gx, cy),
+                           (cx, q[1] - gap - h / 2 - gy), (cx, q[3] + gap + h / 2 + gy)):
+                key = (round(nx, 1), round(ny, 1))
+                if key not in seen:
+                    seen.add(key)
+                    heapq.heappush(heap, (abs(nx - tx) + abs(ny - ty), nx, ny))
+        return None if best is None else (best[1], best[2])
+
+
+def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
+    """nets: [dict(bid, dom, drv=(inst, port, (x, y)), sinks=[(inst, port, (x, y))])].  Returns (cells, wires, stats,
+    errors): cells [(name, master, x, y, bid)], wires [(net, bid, [(inst, port)])] (driver first).  Pure geometry: the
+    caller supplies pin positions and the placement rectangles, and re-checks the emitted pins."""
+    import collections
+    occ = _RstOcc(rects, W, H, gx, gy)
+    P = pitch
+    cells, wires, errors, per = [], [], [], {}
+    trees = []
+    for net in nets:
+        bid = net['bid']
+        N = {}                                  # node id -> dict(x, y (frame corner), kids, sinks)
+        seq = [0]
+
+        def new(tx, ty, box=None, _N=N, _seq=seq, _bid=bid):
+            s = occ.site(tx, ty, box)
+            if s is None:
+                return None
+            occ.add((s[0], s[1], s[0] + RST_W, s[1] + RST_H))
+            k = _seq[0]
+            _seq[0] += 1
+            _N[k] = dict(x=s[0], y=s[1], kids=[], sinks=[], pad=0, master=RST_REP,
+                         mv=abs(s[0] + RST_W / 2 - tx) + abs(s[1] + RST_H / 2 - ty))
+            return k
+
+        def c_(k, _N=N):
+            return (_N[k]['x'] + RST_W / 2, _N[k]['y'] + RST_H / 2)
+        # 1. leaf repeaters: the sinks of one RST_LEAF_UM cell, the repeater at the free site nearest their centroid;
+        #    a group that does not fit one net is split per sink (repeater nearest each pin)
+        grp = collections.defaultdict(list)
+        for s in net['sinks']:
+            grp[(int(s[2][0] // RST_LEAF_UM), int(s[2][1] // RST_LEAF_UM))].append(s)
+        leaves = []
+        work = [grp[k] for k in sorted(grp)]
+        while work:
+            ss = work.pop(0)
+            tx = sum(s[2][0] for s in ss) / len(ss)
+            ty = sum(s[2][1] for s in ss) / len(ss)
+            k = new(tx, ty)
+            if k is not None and _hp([c_(k)] + [s[2] for s in ss]) <= RST_NET_UM:
+                N[k]['sinks'] = ss
+                leaves.append(k)
+                continue
+            if k is not None:
+                occ.remove((N[k]['x'], N[k]['y'], N[k]['x'] + RST_W, N[k]['y'] + RST_H))
+                del N[k]
+            if len(ss) == 1:
+                errors.append(dict(net=bid, kind='sink_unreachable', pin=f'{ss[0][0]}.{ss[0][1]}', at=[round(q, 1) for q in ss[0][2]]))
+            else:
+                work = [[s] for s in ss] + work
+        # 2. root repeater at the driver pin
+        d = net['drv']
+        root = new(d[2][0], d[2][1])
+        if root is None or _hp([c_(root), d[2]]) > RST_NET_UM:
+            errors.append(dict(net=bid, kind='driver_unreachable', pin=f'{d[0]}.{d[1]}', at=[round(q, 1) for q in d[2]]))
+            continue
+        # 3. trunk: lattice cells with a free site within pitch / 4 of the centre (else anywhere in the cell); BFS tree
+        #    from the root's cell over neighbour cells whose sites are within one net of each other
+        tent = {}
+
+        def usable(c):
+            if c not in tent:
+                cx, cy = (c[0] + 0.5) * P, (c[1] + 0.5) * P
+                if not (0 <= cx <= W and 0 <= cy <= H):
+                    tent[c] = None
+                else:
+                    tent[c] = occ.site(cx, cy, box=(cx - P / 4, cy - P / 4, cx + P / 4, cy + P / 4), lim=P) or \
+                        occ.site(cx, cy, box=(cx - P / 2, cy - P / 2, cx + P / 2, cy + P / 2), lim=2 * P)
+            return tent[c]
+
+        def attach(k):
+            """the usable trunk cell nearest node k."""
+            x, y = c_(k)
+            c0 = (int(x // P), int(y // P))
+            best = None
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    c = (c0[0] + dx, c0[1] + dy)
+                    s = usable(c)
+                    if s is not None:
+                        dd = abs(s[0] + RST_W / 2 - x) + abs(s[1] + RST_H / 2 - y)
+                        if dd <= RST_NET_UM - 60 and (best is None or dd < best[0]):
+                            best = (dd, c)
+            return best and best[1]
+        rc = attach(root)
+        want = {}
+        for k in leaves:
+            c = attach(k)
+            if c is None:
+                errors.append(dict(net=bid, kind='leaf_no_trunk_cell', at=[round(q, 1) for q in c_(k)]))
+            else:
+                want.setdefault(c, []).append(k)
+        if rc is None:
+            errors.append(dict(net=bid, kind='root_no_trunk_cell', at=[round(q, 1) for q in c_(root)]))
+            continue
+        par, todo, left = {rc: None}, collections.deque([rc]), set(want) - {rc}
+        bx = [min(c[0] for c in list(want) + [rc]) - 3, min(c[1] for c in list(want) + [rc]) - 3,
+              max(c[0] for c in list(want) + [rc]) + 3, max(c[1] for c in list(want) + [rc]) + 3]
+        while todo and left:
+            c = todo.popleft()
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                n = (c[0] + dx, c[1] + dy)
+                if n not in par and bx[0] <= n[0] <= bx[2] and bx[1] <= n[1] <= bx[3] and usable(n) is not None and \
+                        abs(tent[n][0] - tent[c][0]) + abs(tent[n][1] - tent[c][1]) <= RST_NET_UM - 30:
+                    par[n] = c
+                    left.discard(n)
+                    todo.append(n)
+        for c in sorted(left):
+            errors.append(dict(net=bid, kind='trunk_unreachable', cell=list(c), leaves=len(want[c])))
+        on = set()
+        for c in want:
+            while c is not None and c in par and c not in on:
+                on.add(c)
+                c = par[c]
+        on.add(rc)
+        node = {}
+        for c in sorted(on, key=lambda c: (abs(c[0] - rc[0]) + abs(c[1] - rc[1]), c)):
+            cx, cy = (c[0] + 0.5) * P, (c[1] + 0.5) * P
+            node[c] = new(tent[c][0] + RST_W / 2, tent[c][1] + RST_H / 2, box=(cx - P / 2, cy - P / 2, cx + P / 2, cy + P / 2))
+            assert node[c] is not None, (bid, c)
+        N[root]['kids'] = [node[rc]]
+        for c in on:
+            if par[c] is not None:
+                N[node[par[c]]]['kids'].append(node[c])
+            N[node[c]]['kids'] += want.get(c, [])
+        # 4. collinear pass-through nodes dropped while the hop still fits one net
+        todo = [root]
+        while todo:
+            p = todo.pop()
+            while len(N[p]['kids']) == 1:
+                k = N[p]['kids'][0]
+                if N[k]['sinks'] or len(N[k]['kids']) != 1 or _hp([c_(p), c_(N[k]['kids'][0])]) > RST_NET_UM - 20:
+                    break
+                N[p]['kids'] = N[k]['kids']
+                occ.remove((N[k]['x'], N[k]['y'], N[k]['x'] + RST_W, N[k]['y'] + RST_H))
+                del N[k]
+            todo += N[p]['kids']
+        # 5. outputs: the kids of a node in <= 2 nets (first fit); more nets -> an auxiliary repeater beside the node
+        #    takes the shallower groups.  Heights (repeater levels below a node) bottom-up.
+        order, todo = [], [root]
+        while todo:
+            p = todo.pop()
+            order.append(p)
+            todo += N[p]['kids']
+        ht = {}
+        for p in reversed(order):
+            if N[p]['sinks']:
+                N[p]['outs'] = [[('sink', s) for s in N[p]['sinks']]]
+                ht[p] = 0
+                continue
+            groups = []
+            for k in sorted(N[p]['kids'], key=lambda k: -ht[k]):
+                for g_ in groups:
+                    if _hp([c_(p)] + [c_(o) for o in g_] + [c_(k)]) <= RST_NET_UM:
+                        g_.append(k)
+                        break
+                else:
+                    if _hp([c_(p), c_(k)]) > RST_NET_UM:
+                        errors.append(dict(net=bid, kind='hop_over', um=round(_hp([c_(p), c_(k)]), 1), at=[round(q, 1) for q in c_(k)]))
+                    groups.append([k])
+            groups.sort(key=lambda g_: -max(ht[k] for k in g_))
+            cur = p
+            while len(groups) > 2:
+                a = new(*c_(cur))
+                assert a is not None, (bid, 'aux')
+                N[cur]['outs'] = [[('node', k) for k in groups[0]], [('node', a)]]
+                N[cur]['kids'] = groups[0] + [a]
+                groups = groups[1:]
+                cur = a
+            N[cur]['outs'] = [[('node', k) for k in g_] for g_ in groups]
+            N[cur]['kids'] = [k for g_ in groups for k in g_]
+            q = cur                                # heights of the auxiliary chain, then the node
+            while True:
+                ht[q] = 1 + max(ht[k] for k in N[q]['kids'])
+                if q == p:
+                    break
+                q = next(o for o in N if q in N[o]['kids'])
+        trees.append(dict(net=net, N=N, root=root, ht=ht, new=new, c_=c_))
+    # 6. equal depth: every leaf of a domain at the domain's maximum.  The slack of an edge (parent height - 1 - child
+    #    height) is padded ON THAT EDGE, as near the root as the tree allows (shared by the whole subtree), by a pad
+    #    chain beside the child: RST_PAD cells (5 levels each) + plain repeaters.
+    hdom = {}
+    for t in trees:
+        hdom[t['net']['dom']] = max(hdom.get(t['net']['dom'], 0), t['ht'][t['root']])
+    for t in trees:
+        net, N, root, ht, new, c_ = t['net'], t['N'], t['root'], t['ht'], t['new'], t['c_']
+        bid = net['bid']
+        pads = [0, 0]
+
+        def chain(k, lv):
+            """pad chain of lv levels in front of node k; returns the node that takes k's place in its parent's net."""
+            head, prev = None, None
+            for mst in [RST_PAD] * (lv // RST_PAD_LV) + [RST_REP] * (lv % RST_PAD_LV):
+                a = new(*c_(k))
+                assert a is not None, (bid, 'pad')
+                N[a]['master'] = mst
+                pads[mst == RST_PAD] += 1
+                if prev is None:
+                    head = a
+                else:
+                    N[prev]['outs'] = [[('node', a)]]
+                prev = a
+            if prev is not None:
+                N[prev]['outs'] = [[('node', k)]]
+            return head if head is not None else k
+        first = chain(root, hdom[net['dom']] - ht[root])
+        for p in [k for k in N if k in ht and not N[k]['sinks']]:
+            N[p]['outs'] = [[(kind, chain(o, ht[p] - 1 - ht[o])) if kind == 'node' else (kind, o) for kind, o in g_]
+                            for g_ in N[p]['outs']]
+        # 7. emit; depth of every sink in cycles (2 per repeater, 10 per pad cell)
+        name = {k: f'rstt_{bid}_{k}' for k in N}
+        wires.append((bid, bid, [(net['drv'][0], net['drv'][1]), (name[first], 'd')]))
+        dep, todo, nn, mx = set(), [(first, 0)], 0, _hp([net['drv'][2], c_(first)])
+        while todo:
+            k, cyc = todo.pop()
+            cyc += 10 if N[k]['master'] == RST_PAD else 2
+            for j, g_ in enumerate(N[k]['outs']):
+                nn += 1
+                eps, pts = [(name[k], f'q{j}')], [c_(k)]
+                for kind, o in g_:
+                    if kind == 'sink':
+                        eps.append((o[0], o[1]))
+                        pts.append(o[2])
+                        dep.add(cyc)
+                    else:
+                        eps.append((name[o], 'd'))
+                        pts.append(c_(o))
+                        todo.append((o, cyc))
+                mx = max(mx, _hp(pts))
+                wires.append((f'{bid}__t{nn}', bid, eps))
+        for k in sorted(N):
+            cells.append((name[k], N[k]['master'], N[k]['x'], N[k]['y'], bid, round(N[k]['mv'], 2)))
+        per[bid] = dict(dom=net['dom'], sinks=len(net['sinks']), repeaters=len(N) - pads[0] - pads[1], pad_rep=pads[0],
+                        pad_p8=pads[1], nets=nn + 1, max_net_um=round(mx, 1), levels=ht[root] + 1,
+                        depth_cycles=sorted(dep))
+    return cells, wires, per, errors
+
+
+def _reset_tree(v, m):
+    """tp8 reset tree (owner 2026-10-13 release gate; plan results/arch/qwen_tp8_1013/reset_tree_plan.json): every bus of
+    class 'reset' longer than RELAY_REACH_UM pin to pin (bounding box of the pin centroids, as pinreg_audit.py) becomes a
+    registered tree of 1-bit repeaters (RST_REP: clk + d on W, q0 on E, q1 on N; 1 input flop + 2 registered outputs,
+    2 cycles), every site LEGALISED on the GX / GY lattice against the final placement (after the relays) with RST_GAP_UM
+    clearance, every net (one driver + its sinks) <= RST_OK_UM.  Each tree is clocked by the clock net of its sinks
+    (clk_core_<q>, clk_hbm_<q>, the KV core clock): assertion and release are synchronous to the leaf domain.  EQUAL
+    DEPTH per domain (bus name less the quadrant suffix): the slack of every tree edge is padded by a pad chain beside
+    the child (RST_PAD cells of 10 cycles + plain repeaters), so every sink of a domain leaves reset in the same cycle.
+    Power-on only: 0 cycles per token.  Raises on any reset net left over the reach."""
+    import os as _os
+    by = {i.name: i for i in m['insts']}
+    pos = _pin_pos(v, m)
+    ckof = {}
+    for bid, cl, bits, eps in m['buses']:
+        if cl == 'clock_trunk':
+            for i, p in eps:
+                ckof.setdefault(i, []).append((bid, p))
+    nets, ck_of_bus, idx_of = [], {}, {}
+    for idx, (bid, cl, bits, eps) in enumerate(m['buses']):
+        if cl != 'reset' or len(eps) < 2:
+            continue
+        pts = [pos(*e) for e in eps]
+        if _hp(pts) <= RELAY_REACH_UM:
+            continue
+        if bits != 1:
+            raise ValueError(f'reset tree: {bid} is {bits} b')
+        d = next((j for j, e in enumerate(eps) if re.match(r'rso|hrst$|crst$', e[1].lstrip('*'))), 0)
+        sinks = [(e[0], e[1], pts[j]) for j, e in enumerate(eps) if j != d]
+        # the clock of the sinks: the clock net on the sink instance (a CDC leaf has two: h_* pins ride hclk)
+        vote = {}
+        for i, p, _ in sinks:
+            c = ckof.get(i, [])
+            if len(c) > 1:
+                hb = p.lstrip('*').startswith('h')
+                c = [q for q in c if q[1].lstrip('*').startswith('h') == hb] or c
+            if c:
+                vote[c[0][0]] = vote.get(c[0][0], 0) + 1
+        if not vote:
+            raise ValueError(f'reset tree: {bid} sinks carry no clock net')
+        ck_of_bus[bid] = max(sorted(vote), key=lambda k: vote[k])
+        idx_of[bid] = idx
+        nets.append(dict(bid=bid, dom=re.sub(r'_(?:[WE][SN]|c)$', '', bid), drv=(eps[d][0], eps[d][1], pts[d]), sinks=sinks,
+                         domain=by[sinks[0][0]].domain))
+    rec = dict(reach_um=RELAY_REACH_UM, long_reset_nets=len(nets), repeaters=0, pad_cells=0, nets=0, max_net_um=0.0)
+    m['tp8_reset_tree'] = rec
+    if not nets:
+        return rec
+    rects = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
+    cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
+    if errors:
+        rec.update(errors=errors, per_net=per)
+        if _os.environ.get('OT_RESET_GATE') == 'warn':     # diagnosis only: the long nets are left in place and reported
+            return rec
+        raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
+    dom_inst = {n['bid']: n['domain'] for n in nets}
+    ck_add = {}
+    for nm, mst, x, y, bid, _ in cells:
+        m['insts'].append(v.Inst(nm, mst, x, y, RST_W, RST_H, kind='reset_rep', region='reset_tree', domain=dom_inst[bid]))
+        ck_add.setdefault(ck_of_bus[bid], []).append((nm, 'clk'))
+    drop = set(idx_of.values())
+    B = [b for j, b in enumerate(m['buses']) if j not in drop]
+    B = [(bid, cl, bits, eps + ck_add.pop(bid)) if bid in ck_add else (bid, cl, bits, eps) for bid, cl, bits, eps in B]
+    assert not ck_add, sorted(ck_add)
+    m['buses'] = B + [(nm, 'reset', 1, eps) for nm, _, eps in wires]
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        for mn, pad in ((RST_REP, 0), (RST_PAD, 8)):
+            M = v.Master(mn, RST_W, RST_H, 3, f'reset tree repeater (ot_qwen_rst_rep PAD={pad}): 1 input flop + {pad} pad '
+                         f'flops + 2 registered outputs, standard cells M1-M3, clk + d on W, q0 on E, q1 on N')
+            M.face('clk', 1, 'W', 'M4', RST_H * 0.3)
+            M.face('d', 1, 'W', 'M4', RST_H * 0.7)
+            M.face('q0', 1, 'E', 'M4', RST_H / 2)
+            M.face('q1', 1, 'N', 'M5', RST_W / 2)
+            o[mn] = M
+        return o
+    v.masters = masters
+    # the release rule on the emitted pins (the audit's measure), every reset-class net of the die
+    pos = _pin_pos(v, m)
+    over, mx = [], 0.0
+    for bid, cl, bits, eps in m['buses']:
+        if cl != 'reset' or len(eps) < 2:
+            continue
+        L_ = _hp([pos(*e) for e in eps])
+        if bid in per or '__t' in bid:
+            mx = max(mx, L_)
+        if L_ > (RST_OK_UM if '__t' in bid else RELAY_REACH_UM):
+            over.append((bid, round(L_, 1)))
+    deps = {}
+    for bid, r in per.items():
+        deps.setdefault(r['dom'], set()).update(r['depth_cycles'])
+    # legalisation: distance (Manhattan, um) from each requested point (lattice cell centre for a trunk node, sink
+    # centroid for a leaf, the node it pads / fans out for a pad or auxiliary cell) to the legal site taken
+    moved = sorted(c[5] for c in cells)
+    rec.update(repeaters=sum(r['repeaters'] for r in per.values()), pad_rep=sum(r['pad_rep'] for r in per.values()),
+               pad_p8=sum(r['pad_p8'] for r in per.values()), cells=len(cells), nets=len(wires), max_net_um=round(mx, 1),
+               depth_cycles={d_: sorted(s) for d_, s in deps.items()}, max_depth_cycles=max(max(s) for s in deps.values()),
+               pads='pad chains beside the child of each slack edge: qfd_rst_rep_p8 (10 cycles) + qfd_rst_rep (2 cycles)',
+               masters=[RST_REP, RST_PAD], frame_um=[RST_W, RST_H], gap_um=RST_GAP_UM, lattice_um=RST_PITCH_UM,
+               clock_of={b_: ck_of_bus[b_] for b_ in sorted(ck_of_bus)}, per_net=per, over=over,
+               legalised=dict(sites=len(moved), moved_over_1um=sum(1 for q in moved if q > 1.0), median_um=moved[len(moved) // 2],
+                              p90_um=moved[len(moved) * 9 // 10], max_um=moved[-1]),
+               cycles_per_token=0)
+    if any(len(s) != 1 for s in deps.values()):
+        raise ValueError(f'reset tree: unequal leaf depth {rec["depth_cycles"]}')
+    if over and _os.environ.get('OT_RESET_GATE') != 'warn':
+        raise ValueError(f'reset tree: {len(over)} reset nets over the reach: {over[:8]}')
+    return rec
+
+
 def _pin_pos(v, m):
     """(inst, port) -> die position of the port's pin centroid (instance orientation applied)."""
     M = v.masters(m, 1)
@@ -4978,7 +5416,8 @@ def record(v, m):
                 region_sink_spans=spans, region_sink_span_max_mm=round(span_max / 1000, 4),
                 regions_over_5p25_measured=sorted(k for k, s in spans.items() if max(s['span_um']) > REGION_MAX_MM * 1000),
                 spine_vertical_cut_bits=spine_cut(m, [3000, 8800, 12000, 18000, 25000]),
-                link_stages=v.link_stages(m), bword_stages=bword_stages(v, m))
+                link_stages=v.link_stages(m), bword_stages=bword_stages(v, m),
+                **({'tp8_reset_tree': m['tp8_reset_tree']} if m.get('tp8_reset_tree') else {}))
 
 
 GCELL_OVER_TCL = r"""
@@ -5317,7 +5756,10 @@ def main(argv=None):
             # clock / reset / forwarded-clock nets are built by CTS / the reset tree on reserved shielded tracks, not
             # by the signal router: a 1-bit net is one k-bundled wire (16 tracks), so 150 region / link clock nets
             # converging on the hub root read as ~2,400 tracks there (r18e i5: M9 1.35 around the hub)
-            m = dict(m, buses=[b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')])
+            # reset-tree 2026-10-13: with the registered reset tree (m['tp8_reset_tree']) every reset net is an
+            # ordinary registered <= 500 um signal hop between repeaters: it is ROUTED like data, only clocks are CTS's
+            rt = (m.get('tp8_reset_tree') or {}).get('cells')
+            m = dict(m, buses=[b for b in m['buses'] if b[1] not in (('clock_trunk',) if rt else ('clock_trunk', 'reset'))])
         man = v.case_grt(m, work, a.k, a.tag, a.iters)
         (work / 'run.tcl').write_text((work / 'run.tcl').read_text().replace('mem done', GCELL_OVER_TCL + 'mem done'))
         man.update(b3r2=record(v, m), producer=__file__)
