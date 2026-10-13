@@ -16,11 +16,11 @@ module tb_vms_elastic;
   initial if(D!=8) $fatal(1,"Regional physical candidate is fixed D8");
   ot_vms_elastic_regional u(.clk(clk),.data_clk({9{clk}}),.rst_n(rst_n),.f_in(f[i]),.f_out(f[i+1]),.cr_in(cr[i+1]),.cr_out(localcr));
   always @(negedge clk) if(rst_n) for(integer v=0;v<2;v=v+1)
-   if(u.u.count[v]>D || u.u.credit[v]>D) $fatal(1,"LOCAL_CREDIT stage=%0d vc=%0d",i,v);
+   if(u.u.u_ctl.count[v]>D || u.u.u_ctl.credit[v]>D) $fatal(1,"LOCAL_CREDIT stage=%0d vc=%0d",i,v);
 `else
   ot_vms_elastic #(.D(D)) u(.clk({10{clk}}),.rst_n(rst_n),.f_in(f[i]),.f_out(f[i+1]),.cr_in(cr[i+1]),.cr_out(localcr));
   always @(negedge clk) if(rst_n) for(integer v=0;v<2;v=v+1)
-   if(u.count[v]>D || u.credit[v]>D) $fatal(1,"LOCAL_CREDIT stage=%0d vc=%0d",i,v);
+   if(u.u_ctl.count[v]>D || u.u_ctl.credit[v]>D) $fatal(1,"LOCAL_CREDIT stage=%0d vc=%0d",i,v);
 `endif
  end
  integer cyc=0,iss[0:1],rec[0:1],returned[0:1],credits[0:1],pend[0:1],first=-1,last=-1;

@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.hbm.regional_elastic_physical_gate.v1",
+ "owner": "Claude:ring-station-1013",
+ "source_commit": "4a141b4a3",
+ "source_sha256": {"rtl/hbm_accel/generic/vm/b2/ot_vms_elastic.sv": "b3548f5a9205fb50ed4a898520da5c3d341b71194ea2e45f32fcc9e2ad2d23cc"},
+ "kit": "physical/ref_tile/vms_elastic_ls16_cx (410.4 x 138.24, locked M5 pins)",
+ "host": "ot-pve1",
+ "scratch": "/srv/opentallas-scratch/claude/ref_gate/vms_elastic_ls16_cx-20261013-024358 (.keep)",
+ "verdict": "STOPPED by owner, not a pass: synthesis ok, floorplan-stage repair_timing stalled",
+ "synth": {"mapped_cell_area_um2": 27553.3569, "cells": 208028, "flops": 43723, "reset_flops": 1486, "keep_regs_hook": "190 register cells per module definition = 1,390 kept control copies flat"},
+ "failure": "pre-placement repair_timing: 5,466 violating endpoints, WNS -255.702 ps, worst u.g_chunk[0].u.g_sub[0].rp_r[0]/D; 2,760 iterations in 27 min with WNS unchanged. Cause: the single primary control (clk root 0) computed take / vc / head[vc] combinationally and drove all 139 subslice copies on nine other regional roots.",
+ "fix": "one identical control FSM copy per payload chunk on that chunk's regional clock (ot_vms_elastic_ctl); no control net crosses a root; latency and function unchanged (S67 totals identical)."
+}
