@@ -5,7 +5,9 @@
   "PSRAM": 1,
   "HQ2": 1,
   "RRG": 1,
-  "PCUT": 1
+  "PCUT": 1,
+  "D": 8,
+  "G": 3072
  },
  "order": "LSB-first",
  "clock": "ck -> clk",
@@ -1237,28 +1239,23 @@
     {
      "port": "r_rank",
      "lsb": 513,
-     "width": 2,
+     "width": 3,
      "dir": "in",
      "against_flow": false
     },
     {
      "port": "r_err",
-     "lsb": 515,
-     "width": 1,
-     "dir": "in",
-     "against_flow": false
-    },
-    {
-     "port": "r_valid",
      "lsb": 516,
      "width": 1,
      "dir": "in",
      "against_flow": false
     },
     {
-     "port": null,
+     "port": "r_valid",
      "lsb": 517,
-     "width": 1
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
     }
    ]
   },
@@ -1386,15 +1383,6 @@
    ],
    "flow": "in",
    "peer": "d2d_rom.flt"
-  },
-  {
-   "bundle": "cc",
-   "bits": [
-    517,
-    517
-   ],
-   "flow": "in",
-   "peer": "io_xfifo.o_coll_seq"
   }
  ],
  "cell_ports": [
@@ -1514,9 +1502,9 @@
    "width": 1
   },
   {
-   "port": "cc_d",
+   "port": "cc",
    "dir": "in",
-   "width": 517
+   "width": 518
   },
   {
    "port": "rsi",

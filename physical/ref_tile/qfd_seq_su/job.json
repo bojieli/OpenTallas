@@ -3,7 +3,7 @@
  "block": "qfd_seq_su",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-romspine",
- "purpose": "Qwen ROM TP8 contract v4b slot cell qfd_seq_su (1 instance seq_su, 518.376^2): first slot-shaped view under the die master name. Body = ot_qfd_seq_su_bi PSRAM 1 / HQ2 1 / RRG 1 / PCUT 1 unchanged (closed as qfd_seq_su_bi-febra-dace0dae3 at 518.4^2, M8 era); the wrapper is WIRING ONLY (generated from the packing table), every body port is an IS/OS = 1 pin flop. 2 x ot_sram_1r1w_64x512_m1_r2c2 program store. Cut: 3,593 pin bits over 4 faces of 518 um (N 1,651 b on M5 = 0.31 of the 10,799 N-face M3/M5 tracks at 48 nm; the widest internal cut is the 1,024-b program word between the two SRAMs and the head FIFO, 1,024 b over ~4 x 518 um / 0.048 um x 0.5 usable = 0.05) <= 0.60. Clock: sinks per root measured by the --cts gate (gate_result.json).",
+ "purpose": "Qwen ROM TP8 contract v4b slot cell qfd_seq_su (1 instance seq_su, 518.376^2): first slot-shaped view under the die master name. Body = ot_qfd_seq_su_bi PSRAM 1 / HQ2 1 / RRG 1 / PCUT 1 at the TP8 setting D 8 / G 3,072 (qwen-tp8/seq f8aa5e43a, cherry-picked: 3-bit collective rank) (closed as qfd_seq_su_bi-febra-dace0dae3 at 518.4^2, M8 era); the wrapper is WIRING ONLY (generated from the packing table), every body port is an IS/OS = 1 pin flop. 2 x ot_sram_1r1w_64x512_m1_r2c2 program store. Cut: 3,594 pin bits over 4 faces of 518 um (N 1,651 b on M5 = 0.31 of the 10,799 N-face M3/M5 tracks at 48 nm; the widest internal cut is the 1,024-b program word between the two SRAMs and the head FIFO, 1,024 b over ~4 x 518 um / 0.048 um x 0.5 usable = 0.05) <= 0.60. Clock: sinks per root measured by the --cts gate (gate_result.json).",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
@@ -32,7 +32,19 @@
     "needs": [
      "verilator"
     ],
-    "note": "the body's exact lockstep bench (tb_qfd_seq_su_bi_psram, u0 = reference body PSRAM 0 / HQ2 0) with u1 = this cell driven and observed through its contract bundles (unpacked by the packing table): 20,997 cycles, 400 VM writes, 786 collective beats, every output bit compared every cycle"
+    "note": "the body's exact lockstep bench (tb_qfd_seq_su_bi_psram TP_D 8 / TP_G 3,072, u0 = reference body PSRAM 0 / HQ2 0) with u1 = this cell driven and observed through its contract bundles (unpacked by the packing table): 20,997 cycles, 400 VM writes, 786 collective beats, every output bit compared every cycle"
+   },
+   {
+    "name": "slot_argmax_gather",
+    "cmd": "bash physical/qwen_kv_slots/bench_seq_su.sh {RUN}/bench/am am",
+    "expect": "pass",
+    "pass_regex": "^PASS kv_slots seq_su",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "TP8 argmax gather through the cell's cd / cc bundles: the bench is the 8-rank collective, golden = first strictly-greatest record (>= 20 checks), plus lockstep with the reference body"
    },
    {
     "name": "slot_mutant",
