@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 13,
+ "version": 14,
  "owner": "s81die-1011",
- "updated": "2026-10-12",
+ "updated": "2026-10-13",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "rule": "m5_tile_cap_20261012",
@@ -53,11 +53,12 @@
  "seam_rules": {
   "registered": "every tile-to-tile seam registered on both sides (pin flop in, flop out; child_lint io flags)",
   "reach_um_per_stage": 500.0,
-  "relays": "longer seams get die-top relay stations (last segment <= ~100 um at a die pin)",
+  "relays": "longer seams get die-top relay stations (last segment <= ~100 um at a die pin); v14: relays are the real hard tiles of relay_masters, bound by name",
   "io_budget": "0.2 T in / 0.2 T out per tile; the die top owns the remaining 0.6 T per seam stage",
   "clock": "each tile clock pin balanced to target_insertion_ps (provisional 120 ps; re-budget from routed CTS)",
   "check": "die closure, not element closure: die-region routes (tiles as fixed macros, relays/stations only logic, M8/M9 straps) signed off TT setup >= 0 / FF hold >= 0 / DRC 0; prerequisite: tools/hier_contract/child_lint.py PASS on every placed tile",
-  "channels": "every column boundary of an abutted tile array whose tiles carry W- or E-face pins is a >= 20-um channel on the M7 PG / 0.064 M7 / 0.096 M5 / 0.054 site grids (43.2 = lcm multiple): VM bgq28 43.2, HC 43.2, SU 86.4 (spine jogs); N/S abutment chains keep zero gap; die-level nets into a channel are relayed <= 500 um a stage"
+  "channels": "every column boundary of an abutted tile array whose tiles carry W- or E-face pins is a >= 20-um channel on the M7 PG / 0.064 M7 / 0.096 M5 / 0.054 site grids (43.2 = lcm multiple): VM bgq28 43.2, HC 43.2, SU 86.4 (spine jogs); N/S abutment chains keep zero gap; die-level nets into a channel are relayed <= 500 um a stage",
+  "min_delay": "every abutted or short seam: sender L - receiver H >= 50 ps + capture-minus-launch clock skew, measured on the routed FF ETMs (L = min clock-to-output - max insertion, H = hold - min insertion); a deficient master is fixed physically at its own pins (outhold / inhold), never by a Liberty offset"
  },
  "changelog": [
   {
@@ -124,6 +125,11 @@
    "version": 13,
    "when": "2026-10-12",
    "change": "M5 tile layer contract (results/arch/hier_contract_1011/layer_usage_1012.md (coordinator decision, main f964f6b2d)): new tile routes cap signals AND PG at M5 (strap M6, pins M4/M5, keepout M6; M6 by layer_cap_grant only; die signals M6/M7 over tiles; M8/M9 die power/global). 5 die-placed tile slots bumped, 147 cluster children at M6 (coordinator 10-12 11:40) (view_cap = closed view's own cap; 5 views INVALID: signals above their own cap; 0 already <= M5; 0 need a pin re-plan off M6+); unchanged: 13 cluster, 0 hard IP, 0 die-layer slots. Tool: tools/hier_contract/m5_layer_bump.py contracts"
+  },
+  {
+   "version": 14,
+   "when": "2026-10-13 PT",
+   "change": "s81-die: (1) relay_masters: 27 dsfd_rly_<W>_<in><out> masters (29,184 instances, 68% of the generated placeholders) become real hard tiles bound by name; outlines from content (8.64 / 10.8 / 15.12 sq; W 266 / 283: 34.56 x 19.44 N/S, 21.6 x 30.24 E/W), M5 cap, scalar ck / rs, outhold BUF-HB4-BUF as the physical minimum-delay element; seam_rules.min_delay (L - H >= 50 ps + skew on routed FF ETMs). (2) NEW slot hc_post_stn: HC POST accept / dispatch / completion station reserved at the corridor midpoint (coordinator 03:40; ~115 cycles estimated vs 124.19, to be measured). (3) ot_s81_hc_crooty_y clock / control entry SW -> SE (sk, srs on S at x 367.356..368.7, M5; v4-ctl-east). (4) clock_pin_rules.dsfd_vm_bgr scalar; open_items carries ces route, bgr scalar view, SU sm / sw layouts, cth growth fit check, hc tail crossing width and the two min-delay gaps (ctfn, cfifo cr). No slot grew; no price changed."
   }
  ],
  "slots": [
@@ -1821,12 +1827,15 @@
     "registered_out": true
    },
    "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M4"
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 14,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
@@ -1839,7 +1848,7 @@
    "view_cap": "M7",
    "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
    "layer_cap": "M6",
-   "notes": "v13 crooty v3 sub-tile (kit s81hc_cryyw_ref); N y_s, S p_y/p_req/p_flt/yacc/sk/srs",
+   "notes": "v13 crooty v3 sub-tile (kit s81hc_cryyw_ref); N y_s, S p_y/p_req/p_flt/yacc/sk/srs | v14: clock / control (sk, srs) enter on S at tile x 367.356..368.7 (M5, E edge = SE corner; was SW) per the v4-ctl-east kits (claude/s81hc-1013 65a659a58; W channel GRT-0116 relieved); kit outline 369.36 x 300.24 inside the 369.792 slot; the die clock plan targets this pin.",
    "kit": "s81hc_crrrw_ref",
    "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_hc_s/crootr_c0; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
   },
@@ -2145,12 +2154,15 @@
     "registered_out": true
    },
    "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M4"
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
    },
    "target_insertion_ps": 250.0,
-   "version": 13,
+   "version": 14,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
@@ -2163,7 +2175,7 @@
    "view_cap": "M7",
    "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
    "layer_cap": "M6",
-   "notes": "v13 crooty v3 sub-tile (kit s81hc_cryye_ref); N y_s, S p_y/p_req/p_flt/yacc/sk/srs",
+   "notes": "v13 crooty v3 sub-tile (kit s81hc_cryye_ref); N y_s, S p_y/p_req/p_flt/yacc/sk/srs | v14: clock / control (sk, srs) enter on S at tile x 367.356..368.7 (M5, E edge = SE corner; was SW) per the v4-ctl-east kits (claude/s81hc-1013 65a659a58; W channel GRT-0116 relieved); this instance is MY, so the entry is at the region's W side in the die frame; kit outline 369.36 x 300.24 inside the 369.792 slot; the die clock plan targets this pin.",
    "kit": "s81hc_crrre_ref",
    "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_hc_s/crootr_c2; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
   },
@@ -10810,6 +10822,46 @@
    },
    "view_cap": "M6",
    "view_status": "INVALID: closed view routes signals on M7 above its own cap M6; re-route at M5 (m5_reroute_priority.json)"
+  },
+  {
+   "name": "hc_post_stn",
+   "cell": "dsfd_hc_post_stn",
+   "kind": "tile",
+   "parent": "s81_layer1",
+   "outline": {
+    "w": 518.4,
+    "h": 216.0
+   },
+   "origin": {
+    "x": 17961.48,
+    "y": 13219.2,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "ck",
+    "face": "E",
+    "layer": "M4"
+   },
+   "target_insertion_ps": 120.0,
+   "version": 14,
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_rule": "tile",
+   "status": "RESERVED keep-out (no kit yet): outline provisional, to be re-cut from the station kit",
+   "branches": {
+    "count": 24,
+    "max_dispatch_bits": 409,
+    "completion_bits": 23,
+    "faces": "N: branch groups to the half regions above the corridor; S: to the tail and centre rows below"
+   },
+   "notes": "v14 NEW (coordinator 2026-10-13 03:40 PT): HC POST job accept / dispatch / completion moves from the top of the HC column to the corridor midpoint (18,220.68, 13,327.2); corridor y 12,571.2..14,083.2. Accept at the top gave 127-133 cycles against the immutable 124.19; the midpoint is ESTIMATED ~115 and must be measured by the production bench with the generator's hop counts (hop gate <= 500 um, 24 branches); it is not a price. Provisional 518.4 x 216 = 24 branches x (409 + 23) b split over N / S at 0.096 um a bit. The slot sits in the comb column's N->S crossing lane: the crossing relays of that column (forward 3,056 b / return 2,164 b) and the station share the midpoint rows, so the cut is checked there with the real station pins before any die GRT. Station RTL / kit owner: HC lead."
   }
  ],
  "pdn": {
@@ -10879,6 +10931,12 @@
    "rst": "scalar",
    "status": "REQUIRED, OPEN",
    "note": "v13: rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv (+ _bank.sv) still declare input wire [0:0] ck, rst -> LEF ck[0] (same defect as svc_join b3c4341ce); ds-mtp makes them scalar and re-routes (ing is CLOSED with ck[0]); the die binds only scalar-ck views."
+  },
+  "dsfd_vm_bgr": {
+   "ck": "scalar",
+   "rst": "scalar",
+   "view": "OPEN: bgr28 r5 declares ck / rst [0:0]",
+   "note": "v14: bind bgr28 only from a view whose LEF clock pin is scalar ck (qualify gate 'scalar'); pin ranges are the v13 v4c record"
   }
  },
  "sub_layouts": {
@@ -11001,5 +11059,466 @@
    }
   ],
   "note": "v13: no S81 slot asked for M6; SU / HC / collective cluster children keep the coordinator 11:40 grant"
+ },
+ "relay_masters": {
+  "rule": "every dsfd_rly_<W>_<in><out> is a real hard tile (tools/ref_tile), bound by master name; no generated outline or interim timing model once its view qualifies (tools/s81/native_view_qualify.py)",
+  "function": "one register stage, asynchronous active-low clear rs, scalar ck / rs on the third face (rtl/dsrom_sys/s81_glue/ot_s81_rly.sv)",
+  "layers": {
+   "layer_cap": "M5",
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "pins": "M4 on E/W faces, M5 on N/S faces, 2 tracks (0.096 um) a bit"
+  },
+  "outline_classes_um": {
+   "w<=2": [
+    8.64,
+    8.64
+   ],
+   "w<=15": [
+    10.8,
+    10.8
+   ],
+   "w<=68": [
+    15.12,
+    15.12
+   ],
+   "w>=266 N/S": [
+    34.56,
+    19.44
+   ],
+   "w>=266 E/W": [
+    21.6,
+    30.24
+   ]
+  },
+  "outline_basis": "from content after the pre-route gate (2026-10-13): flops + BUF-HB4-BUF per output at ~0.5 util, data face >= W x 0.096 um; the 17.256 generated slot does not hold W 266 / 283 (PPL-0111) and is 18.6% utilised at W 63",
+  "generator": "place at the kit outline on the site grid (not the 17.256 placeholder), pins from the routed LEF, R0 only unless mirrored pins stay on track; W 266 / 283 need the wider column slot (34.56 x 19.44 or 21.6 x 30.24)",
+  "min_delay": {
+   "element": "outhold BUF-HB4-BUF FIRM at every output pin",
+   "accept": "routed FF ETM: L - H >= 50 ps + skew, L = min clock-to-output - max insertion, H = hold - min insertion",
+   "pre_route_cts": "9 masters over every width / outline class gated --cts, 0 fail: FF insertion 0 (W 1) .. 64.5 ps (W 283), spread <= 3.2 ps, pre-route hold WNS +132..+193 ps (results/rtl/ref_tile/s81_rly_gate_20261013/gates.json)"
+  },
+  "jobs": "27 closure-loop jobs s81_rly_<w>_<ff>-v1-05805dc84 submitted 2026-10-13 (no host list)",
+  "bench": "rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass (20,000 words exact) + mut (bit 0 inverted, must fail), in every job spec",
+  "instances_total": 29184,
+  "masters": [
+   {
+    "master": "dsfd_rly_63_WE",
+    "kit": "physical/ref_tile/s81_rly_63_we",
+    "w": 63,
+    "in_face": "W",
+    "out_face": "E",
+    "ctl_face": "N",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 7808,
+    "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_63_NS",
+    "kit": "physical/ref_tile/s81_rly_63_ns",
+    "w": 63,
+    "in_face": "N",
+    "out_face": "S",
+    "ctl_face": "E",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 3968,
+    "view": "physical/ref_tile/s81_rly_63_ns/views/dsfd_rly_63_NS",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_63_WS",
+    "kit": "physical/ref_tile/s81_rly_63_ws",
+    "w": 63,
+    "in_face": "W",
+    "out_face": "S",
+    "ctl_face": "N",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 3456,
+    "view": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_2_NS",
+    "kit": "physical/ref_tile/s81_rly_2_ns",
+    "w": 2,
+    "in_face": "N",
+    "out_face": "S",
+    "ctl_face": "E",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 1118,
+    "view": "physical/ref_tile/s81_rly_2_ns/views/dsfd_rly_2_NS",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_15_SN",
+    "kit": "physical/ref_tile/s81_rly_15_sn",
+    "w": 15,
+    "in_face": "S",
+    "out_face": "N",
+    "ctl_face": "E",
+    "outline": {
+     "w": 10.8,
+     "h": 10.8
+    },
+    "instances": 918,
+    "view": "physical/ref_tile/s81_rly_15_sn/views/dsfd_rly_15_SN",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_63_NE",
+    "kit": "physical/ref_tile/s81_rly_63_ne",
+    "w": 63,
+    "in_face": "N",
+    "out_face": "E",
+    "ctl_face": "S",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 896,
+    "view": "physical/ref_tile/s81_rly_63_ne/views/dsfd_rly_63_NE",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_66_NS",
+    "kit": "physical/ref_tile/s81_rly_66_ns",
+    "w": 66,
+    "in_face": "N",
+    "out_face": "S",
+    "ctl_face": "E",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 896,
+    "view": "physical/ref_tile/s81_rly_66_ns/views/dsfd_rly_66_NS",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_1_WE",
+    "kit": "physical/ref_tile/s81_rly_1_we",
+    "w": 1,
+    "in_face": "W",
+    "out_face": "E",
+    "ctl_face": "N",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_1_we/views/dsfd_rly_1_WE",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_266_SN",
+    "kit": "physical/ref_tile/s81_rly_266_sn",
+    "w": 266,
+    "in_face": "S",
+    "out_face": "N",
+    "ctl_face": "E",
+    "outline": {
+     "w": 34.56,
+     "h": 19.44
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_266_WE",
+    "kit": "physical/ref_tile/s81_rly_266_we",
+    "w": 266,
+    "in_face": "W",
+    "out_face": "E",
+    "ctl_face": "N",
+    "outline": {
+     "w": 21.6,
+     "h": 30.24
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_283_SN",
+    "kit": "physical/ref_tile/s81_rly_283_sn",
+    "w": 283,
+    "in_face": "S",
+    "out_face": "N",
+    "ctl_face": "E",
+    "outline": {
+     "w": 34.56,
+     "h": 19.44
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_283_WE",
+    "kit": "physical/ref_tile/s81_rly_283_we",
+    "w": 283,
+    "in_face": "W",
+    "out_face": "E",
+    "ctl_face": "N",
+    "outline": {
+     "w": 21.6,
+     "h": 30.24
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_2_ES",
+    "kit": "physical/ref_tile/s81_rly_2_es",
+    "w": 2,
+    "in_face": "E",
+    "out_face": "S",
+    "ctl_face": "N",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_2_es/views/dsfd_rly_2_ES",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_2_EW",
+    "kit": "physical/ref_tile/s81_rly_2_ew",
+    "w": 2,
+    "in_face": "E",
+    "out_face": "W",
+    "ctl_face": "N",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_2_WE",
+    "kit": "physical/ref_tile/s81_rly_2_we",
+    "w": 2,
+    "in_face": "W",
+    "out_face": "E",
+    "ctl_face": "N",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_2_WS",
+    "kit": "physical/ref_tile/s81_rly_2_ws",
+    "w": 2,
+    "in_face": "W",
+    "out_face": "S",
+    "ctl_face": "N",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_2_ws/views/dsfd_rly_2_WS",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_54_EW",
+    "kit": "physical/ref_tile/s81_rly_54_ew",
+    "w": 54,
+    "in_face": "E",
+    "out_face": "W",
+    "ctl_face": "N",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 640,
+    "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_2_NW",
+    "kit": "physical/ref_tile/s81_rly_2_nw",
+    "w": 2,
+    "in_face": "N",
+    "out_face": "W",
+    "ctl_face": "S",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 512,
+    "view": "physical/ref_tile/s81_rly_2_nw/views/dsfd_rly_2_NW",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_2_SN",
+    "kit": "physical/ref_tile/s81_rly_2_sn",
+    "w": 2,
+    "in_face": "S",
+    "out_face": "N",
+    "ctl_face": "E",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 512,
+    "view": "physical/ref_tile/s81_rly_2_sn/views/dsfd_rly_2_SN",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_63_WN",
+    "kit": "physical/ref_tile/s81_rly_63_wn",
+    "w": 63,
+    "in_face": "W",
+    "out_face": "N",
+    "ctl_face": "S",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 512,
+    "view": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_66_SN",
+    "kit": "physical/ref_tile/s81_rly_66_sn",
+    "w": 66,
+    "in_face": "S",
+    "out_face": "N",
+    "ctl_face": "E",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 512,
+    "view": "physical/ref_tile/s81_rly_66_sn/views/dsfd_rly_66_SN",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_1_EW",
+    "kit": "physical/ref_tile/s81_rly_1_ew",
+    "w": 1,
+    "in_face": "E",
+    "out_face": "W",
+    "ctl_face": "N",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 384,
+    "view": "physical/ref_tile/s81_rly_1_ew/views/dsfd_rly_1_EW",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_63_SE",
+    "kit": "physical/ref_tile/s81_rly_63_se",
+    "w": 63,
+    "in_face": "S",
+    "out_face": "E",
+    "ctl_face": "N",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 384,
+    "view": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_2_NE",
+    "kit": "physical/ref_tile/s81_rly_2_ne",
+    "w": 2,
+    "in_face": "N",
+    "out_face": "E",
+    "ctl_face": "S",
+    "outline": {
+     "w": 8.64,
+     "h": 8.64
+    },
+    "instances": 290,
+    "view": "physical/ref_tile/s81_rly_2_ne/views/dsfd_rly_2_NE",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_68_EW",
+    "kit": "physical/ref_tile/s81_rly_68_ew",
+    "w": 68,
+    "in_face": "E",
+    "out_face": "W",
+    "ctl_face": "N",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 256,
+    "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_15_EN",
+    "kit": "physical/ref_tile/s81_rly_15_en",
+    "w": 15,
+    "in_face": "E",
+    "out_face": "N",
+    "ctl_face": "S",
+    "outline": {
+     "w": 10.8,
+     "h": 10.8
+    },
+    "instances": 234,
+    "view": "physical/ref_tile/s81_rly_15_en/views/dsfd_rly_15_EN",
+    "status": "kit + bench + mutant; route pending"
+   },
+   {
+    "master": "dsfd_rly_63_ES",
+    "kit": "physical/ref_tile/s81_rly_63_es",
+    "w": 63,
+    "in_face": "E",
+    "out_face": "S",
+    "ctl_face": "N",
+    "outline": {
+     "w": 15.12,
+     "h": 15.12
+    },
+    "instances": 128,
+    "view": "physical/ref_tile/s81_rly_63_es/views/dsfd_rly_63_ES",
+    "status": "kit + bench + mutant; route pending"
+   }
+  ]
+ },
+ "open_items": {
+  "coll_ces": "ces0 / cesn slot 302.4 x 341.28 stands (v13); a closing route at that outline is still owed by the collective lead",
+  "vm_bgr28": "pin ranges recorded v13; scalar ck / rst view owed (clock_pin_rules.dsfd_vm_bgr)",
+  "su_sm": "8 SM stop regions 1,231.2 x 1,058.4 stand (v13); sub_layouts.ot_s81_su_sm (smt + 2 x (16 sml + smc + smr + 8 smd)) is owed by the SU lead; no layout is guessed here",
+  "su_sw": "dsfd_su_t_sw 572.4 x 637.2 wrapper slots stand until the swt / swe / qbe layout is supplied and fit-checked",
+  "hc_cth_growth": "cth 740.88 -> 771.12 NOT adopted: fit check against the corridor and the 26,000 die height pending",
+  "hc_tail_crossing": "hc_s t_tf / f_tr and hc_t f_sf / t_sr widen to 3,056 forward / 2,164 return when dsfd_sp_hc_t lands on main",
+  "min_delay_gaps": {
+   "ot_s81_hc_ctfn": "L 32.0 / H 19.0 (insertion spread 106 ps): -37.0 same-master zero-wire; needs L - H >= 50 + skew",
+   "cfifo cr": "-59.8; needs L - H >= 50 + skew"
+  }
  }
 }

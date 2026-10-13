@@ -155,6 +155,15 @@ class ThroughputGateTest(unittest.TestCase):
             os.utime(b / 'budget.json', (time.time() + 5, time.time() + 5))
             self.assertEqual(row()['gate'], 'CLOSED-TIMING, THROUGHPUT-QUALIFIED')
             self.assertEqual(model.compute()['throughput_summary']['HBM accelerator'], {'QUALIFIED': 1})
+            # registry honesty (owner 2026-10-13): a price with no measured production ratio is UNMEASURED
+            e = ent('QUALIFIED', None); e['limiting'].update(status='QUALIFIED', ratio=None); e['ops'] = [dict(e['limiting'])]
+            (b / 'budget.json').write_text(json.dumps(dict(qualify_ratio=1.1, elements=dict(ot_hgi_hc_unit=e))))
+            os.utime(b / 'budget.json', (time.time() + 10, time.time() + 10))
+            r = row()
+            self.assertEqual(r['gate'], 'CLOSED-TIMING, THROUGHPUT-UNMEASURED')
+            self.assertEqual((r['throughput']['status'], r['throughput']['limiting']['status'], r['throughput']['ops'][0]['status']),
+                             ('UNMEASURED',) * 3)
+            self.assertEqual(model.compute()['throughput_summary']['HBM accelerator'], {'UNMEASURED': 1})
 
 
 if __name__ == '__main__': unittest.main()

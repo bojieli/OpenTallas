@@ -699,6 +699,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # register stages + 6,860 hold buffers in one 24-um strip, GRT stuck at ~3,000 markers; the closed hand kit
             # placed pins at floorplan: W 3705 / E 3705).  The kit's post_tapcell.tcl places the exact pins first.
             vv = f"/src/{kd}/post_tapcell.tcl"
+            # ... and post_iop.tcl re-applies them after place_pins (el1013-smh-r11, see the kit file below)
+            if "POST_IO_PLACEMENT_TCL" not in s.get("orfs_vars", {}):
+                extra.append(f"--orfs-var POST_IO_PLACEMENT_TCL=/src/{kd}/post_iop.tcl")
         extra.append(f"--orfs-var {k}={vv}")
     # spec "post_synth_tcl": a repo POST_SYNTH hook, e.g. physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl
     # for a top with inout terminals (ORFS never buffers an inout: the post-GRT repair stops with RSZ-0074 "found route to
@@ -712,6 +715,10 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     # PD means what the spec says: ORFS's PLACE_DENSITY_LB_ADDON (0.05 in run_abi3's config) silently replaces PLACE_DENSITY
     # by lower-bound + addon (qkd_nhb_pbst: PD 0.50 -> target 0.1075, cells spread over 4.9% of the outline, GPL-0305
     # divergence with M2-M6 routing).  The addon is cleared for every kit; spec route.lb_addon re-enables it explicitly.
+    # route.synth_keep_modules: hierarchy kept through synthesis (ABC re-ripples a pipelined fp adder once it is flattened
+    # into its context; the hbm norm group closed only with its fp add/mul stages kept, idle1012)
+    if s["route"].get("synth_keep_modules"):
+        extra.append("--orfs-var " + shq("SYNTH_KEEP_MODULES=" + " ".join(s["route"]["synth_keep_modules"])))
     if s["route"].get("lb_addon") is None:
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
@@ -850,7 +857,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
     lint = lint_cmd(s)
-    benches = j.get("benches") or []
+    benches = list(j.get("benches") or [])
+    if j.get("benches_from"):     # shared bench template (e.g. tools/s81_suhc/hc_gate_benches.json: the HC composition gate)
+        have = {b.get("name") for b in benches}
+        benches += [b for b in json.loads((ROOT / j["benches_from"]).read_text())["benches"] if b.get("name") not in have]
     if not any(b.get("name") == "lint" for b in benches):
         benches = [{"name": "lint", "cmd": lint, "expect": "pass", "threads": 1, "peak_ram_gb": 4,
                     "needs": ["verilator"]}] + benches
@@ -903,6 +913,11 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         spec["benched_by"] = j["benched_by"]
     if j.get("hold_merge"):     # a physical probe that never merges (not a closure candidate)
         spec["hold_merge"] = j["hold_merge"]
+    # closure loop STRUCTURE_REPEAT lint (owner 10-13): after two failed routes the next submission states what changed
+    # in the structure; the sentence is written once in the tile spec (top level, or under "job") and must reach job.json
+    sc = s.get("structural_change") or j.get("structural_change")
+    if isinstance(sc, str) and sc.strip():
+        spec["structural_change"] = sc.strip()
     return spec
 
 
@@ -964,6 +979,26 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             "# then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when\n"
             "# a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)\n"
             "foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
+        # el1013-smh-r11 2026-10-13: this ORFS sources IO_CONSTRAINTS at 2_1_floorplan ONLY (floorplan.tcl), not at
+        # 3_2_place_iop, so after the unplace above place_pins placed EVERY port by wirelength and the exact plan was lost
+        # (smh_tile_eg_ref r10: 7,766 of 7,766 ports re-placed; clk / cgi on the W face, gin on the E face on M4, 50 of the
+        # 200 gout on S; the boundary flops stayed FIRM at the planned positions).  POST_IO_PLACEMENT: place the exact pins
+        # again, check every port is back on its planned spot, and rewrite the stage result the next step loads.
+        files["post_iop.tcl"] = (
+            "# ref_tile: re-apply the exact abutment pin plan after place_pins (IO_CONSTRAINTS is sourced only at\n"
+            "# 2_1_floorplan; the POST_TAPCELL hook unplaced the ports so place_pins could run) and save the stage result\n"
+            "set ot_blk [ord::get_db_block]\n"
+            "foreach bt [$ot_blk getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n"
+            f"source /src/{s['io_tcl']}\n"
+            "set ot_n 0; set ot_miss {}\n"
+            "foreach bt [$ot_blk getBTerms] {\n"
+            "  if {[$bt getSigType] in {POWER GROUND}} continue\n"
+            "  if {[llength [$bt getBPins]] == 0} { lappend ot_miss [$bt getName] } else { incr ot_n }\n"
+            "}\n"
+            "if {[llength $ot_miss]} { error \"REF_TILE exact pin plan: [llength $ot_miss] ports left unplaced ([lrange $ot_miss 0 4])\" }\n"
+            "puts \"REF_TILE exact pin plan re-applied after place_pins: $ot_n ports\"\n"
+            "orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb\n"
+            "write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl\n")
     job = gen_job(s, kd, commit, blocks)
     files["job.json"] = json.dumps(job, indent=1) + "\n"
     if write:
