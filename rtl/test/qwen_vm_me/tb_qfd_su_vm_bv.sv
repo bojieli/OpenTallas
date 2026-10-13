@@ -376,10 +376,13 @@ module tb_qfd_su_vm_bv;
         $display("SU_LAT ops=%0d ref_avg=%0d.%02d dut_avg=%0d.%02d delta_min=%0d delta_max=%0d ref_min=%0d ref_max=%0d (SW=%0d IS=%0d OS=%0d CRX=%0d VL=%0d)",
                  lat_n, r_sum / (lat_n ? lat_n : 1), (100 * r_sum / (lat_n ? lat_n : 1)) % 100, d_sum / (lat_n ? lat_n : 1),
                  (100 * d_sum / (lat_n ? lat_n : 1)) % 100, d_min, d_max, r_min, r_max, SW, IS, OS, CRX, VL);
-        if (vbad == 0 && bad == 0 && hbad == 0 && nr[4] > OPS && d_fault == r_fault && ops == OPS && !m_wf && !m_wh && !m_xf && !m_xh)
+        // vacuity floor on VM write events, in LANES (el1013: the old floor nr[4] > OPS was written at SW = 8, where an event is 8 lanes;
+        // at the production SW = 64 the same 120 ops make 76 events of 64 lanes = 4,864 lanes and every compare is exact, yet it printed FAIL):
+        // lanes written > 8 x OPS (one SW=8 row per op) and events > OPS / 2
+        if (vbad == 0 && bad == 0 && hbad == 0 && nr[4] * SW > OPS * 8 && nr[4] * 2 > OPS && d_fault == r_fault && ops == OPS && !m_wf && !m_wh && !m_xf && !m_xh)
             $display("PASS qfd_su_vm_bv SW=%0d IS=%0d OS=%0d CRX=%0d VL=%0d ops=%0d va/vb/vc/crom/vm/red/kv events %0d/%0d/%0d/%0d/%0d/%0d/%0d", SW, IS, OS, CRX, VL, ops, nr[0], nr[1], nr[2], nr[3], nr[4], nr[5], nr[6]);
         else
-            $display("FAIL qfd_su_vm_bv vm_answer_bad=%0d vm_mismatch=%0d port_streams_differing=%0d faults r%0d d%0d vm w_fault %0d w_hazard %0d ops=%0d vm_write_events=%0d (floor > %0d) x_fault %0d x_hazard %0d", vbad, bad, hbad, r_fault, d_fault, m_wf, m_wh, ops, nr[4], OPS, m_xf, m_xh);
+            $display("FAIL qfd_su_vm_bv vm_answer_bad=%0d vm_mismatch=%0d port_streams_differing=%0d faults r%0d d%0d vm w_fault %0d w_hazard %0d ops=%0d vm_write_events=%0d (floors: events x SW %0d > %0d lanes, events > %0d) x_fault %0d x_hazard %0d", vbad, bad, hbad, r_fault, d_fault, m_wf, m_wh, ops, nr[4], nr[4] * SW, OPS * 8, OPS / 2, m_xf, m_xh);
         $finish;
     end
 endmodule
