@@ -293,6 +293,21 @@ module qkd_astk_pv (
     always @(posedge ck or negedge rn_q) if (!rn_q) pq[0] <= 1'b0; else pq[0] <= pown | pi[0];
     always @(posedge ck) pq[PW-1:1] <= pown ? {y8, ytag[0], h, ytag[3:1]} : pi[PW-1:1];
     assign po = pq;
+`ifdef KVD_AKDBG
+    reg f_d;
+    always @(posedge ck) begin
+        f_d <= f;
+        if (f && !f_d) $display("AKDBG %m t=%0t fault: cfg=%h it=%0d jn=%0d ca=%0d cb=%0d ena=%b enb=%b ocr=%b", $time, cf, it, jn, ca, cb, ena, enb, ocr);
+        if (l4 && ((ncq[0] && !ena && ncq[4:1] == 4'd0) || (ndq[0] && !enb && ndq[4:1] == 4'd0))) $display("AKDBG %m t=%0t node over a held one nc=%h nd=%h", $time, ncq, ndq);
+        if (awv && (ca == 5'd16 || sa[4:1] != ca[3:0])) $display("AKDBG %m t=%0t a stream idx %0d at count %0d", $time, sa[4:1], ca);
+        if (bwv && (cb == 5'd16 || bws[4:1] != cb[3:0])) $display("AKDBG %m t=%0t b stream idx %0d at count %0d", $time, bws[4:1], cb);
+        if (cr_in && ocr && !l7) $display("AKDBG %m t=%0t credit over credit", $time);
+        if (yf) $display("AKDBG %m t=%0t adder error", $time);
+        if (pcol) $display("AKDBG %m t=%0t P.V lane collision", $time);
+        if (l4 && (afz || bfz)) $display("AKDBG %m t=%0t node in a=%b b=%b g=%b/%b gam=%0d/%0d it=%0d", $time, afz, bfz, ncq[5], ndq[5], ncq[9:6], ndq[9:6], it);
+        if (l7 && issue && jn == 0) $display("AKDBG %m t=%0t emit g=%b h=%0d", $time, gi, h);
+    end
+`endif
 endmodule
 
 // ---- one column's lanes through a leaf that only passes them (qkd_astk_ep / qkd_astk_ex) ---------------------------
@@ -438,8 +453,8 @@ endmodule
 // ri [521:0] in                    e-row bus (a tap) {row 512, gam 4, k 4, g, v}: slice 7's zo, relayed down the strip
 // xa [263:0] out / xe [135:0] in   the slice's four exp leaves qkd_astk_ex (head h: xa[66 h +: 66], xe[34 h +: 34])
 // cr in                            node credit (from the engine's level-4 tree cell)
-// The e read is the engine's one-cycle contract: so[12:0] drives the e SRAM's read port, its output (one of 8 slots)
-// drives si[632:569]; every other port is a flop at the pin.  A slice starts its pass 6 cycles after the token of the
+// The e read: address flop at the pin, SRAM, one of 8 slots, output flop at the pin = 3 cycles (the engine is built with
+// KVD_ERL 3; the golden's contract is 1): every port is a flop at the pin.  A slice starts its pass 6 cycles after the token of the
 // slice below, so the partial sum of a chunk meets this slice's e on the same edge whatever the wire between them.
 module qkd_astk_ep (
     input  wire          ck,
@@ -484,13 +499,13 @@ module qkd_astk_ep (
     (* keep *) reg         cr_q;
     (* keep *) reg [7:0]   eqc;                        // the four leaves' {fault, v}
     always @(posedge ck or negedge rn_q)
-        if (!rn_q) begin so_q[13] <= 1'b0; so_q[424] <= 1'b0; qq[0] <= 1'b0; qq[15] <= 1'b0; qq[536:534] <= 3'd0; xq[10:0] <= 11'd0;
+        if (!rn_q) begin so_q[0] <= 1'b0; so_q[13] <= 1'b0; so_q[424] <= 1'b0; qq[0] <= 1'b0; qq[15] <= 1'b0; qq[536:534] <= 3'd0; xq[10:0] <= 11'd0;
                          zq[1:0] <= 2'b00; rq[0] <= 1'b0; eqc <= 8'd0; cr_q <= 1'b0; end
-        else begin so_q[13] <= so[13]; so_q[424] <= so[424]; qq[0] <= qi[0]; qq[15] <= qi[15]; qq[536:534] <= qi[536:534];
+        else begin so_q[0] <= so[0]; so_q[13] <= so[13]; so_q[424] <= so[424]; qq[0] <= qi[0]; qq[15] <= qi[15]; qq[536:534] <= qi[536:534];
                    xq[10:0] <= xi[10:0]; zq[1:0] <= zi[1:0]; rq[0] <= ri[0];
                    eqc <= {xe[103:102], xe[69:68], xe[35:34], xe[1:0]}; cr_q <= cr; end
     always @(posedge ck) begin
-        so_q[12:0] <= so[12:0]; so_q[423:14] <= so[423:14];
+        so_q[12:1] <= so[12:1]; so_q[423:14] <= so[423:14];
         qq[14:1] <= qi[14:1]; qq[533:16] <= qi[533:16]; qq[571:537] <= qi[571:537]; xq[266:11] <= xi[266:11];
         zq[650:2] <= zi[650:2]; rq[521:1] <= ri[521:1]; eq <= xe;
     end
@@ -580,20 +595,21 @@ module qkd_astk_ep (
     wire [13:0]  rkb = T - 14'd1 - {5'd0, S, 7'd0} - {6'd0, rq[9:6], 3'd0};
     wire [511:0] e_row;
     reg  [2:0]   jq;
-    always @(posedge ck) jq <= so[3:1];
+    reg  [63:0]  e_rdq;
+    always @(posedge ck) jq <= so_q[3:1];
     // four 64 x 128 macros side by side in address: a quarter of the row each, {g, k, gam[3]}
     wire [5:0]   e_wa = {rq[1], rq[5:2], rq[9]} + ((`KVD_AKMUT == 2) ? 6'd1 : 6'd0);
-    wire [5:0]   e_ra = {so[12], so[11:8], so[7]};
-    ot_sram_1r1w_64x128_m1_r2c2 u_e0 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[127:0]),
+    wire [5:0]   e_ra = {so_q[12], so_q[11:8], so_q[7]};
+    ot_sram_1r1w_64x128_m1_r2c2 u_e0 (.clk(ck), .r_ce_in(so_q[0]), .r_addr_in(e_ra), .rd_out(e_row[127:0]),
         .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[137:10]), .w_mask_in({128{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(14'd0));
-    ot_sram_1r1w_64x128_m1_r2c2 u_e1 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[255:128]),
+    ot_sram_1r1w_64x128_m1_r2c2 u_e1 (.clk(ck), .r_ce_in(so_q[0]), .r_addr_in(e_ra), .rd_out(e_row[255:128]),
         .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[265:138]), .w_mask_in({128{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(14'd0));
-    ot_sram_1r1w_64x128_m1_r2c2 u_e2 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[383:256]),
+    ot_sram_1r1w_64x128_m1_r2c2 u_e2 (.clk(ck), .r_ce_in(so_q[0]), .r_addr_in(e_ra), .rd_out(e_row[383:256]),
         .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[393:266]), .w_mask_in({128{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(14'd0));
-    ot_sram_1r1w_64x128_m1_r2c2 u_e3 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[511:384]),
+    ot_sram_1r1w_64x128_m1_r2c2 u_e3 (.clk(ck), .r_ce_in(so_q[0]), .r_addr_in(e_ra), .rd_out(e_row[511:384]),
         .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[521:394]), .w_mask_in({128{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(14'd0));
     wire [63:0]  e_rd = (jq == 3'd0) ? e_row[0 +: 64] : (jq == 3'd1) ? e_row[64 +: 64] : (jq == 3'd2) ? e_row[128 +: 64] :
@@ -619,7 +635,13 @@ module qkd_astk_ep (
     always @(posedge ck or negedge rn_q)
         if (!rn_q) xdq <= 32'd0;
         else for (b_ = 0; b_ < 32; b_ = b_ + 1) xdq[b_] <= (b_[2:0] == Q) && xd[b_[4:3]];
-    assign si = {cr_q, e_rd, xdq, qq[533:15], cyc8, qq[14:0]};
+    // every engine input from its own register at the pin; the e word is registered behind the SRAM (KVD_ERL 3)
+    (* keep *) reg [569:0] sio;
+    always @(posedge ck) begin e_rdq <= e_rd; sio[17:1] <= {cyc8, qq[14:1]}; sio[536:19] <= qq[533:16]; end
+    always @(posedge ck or negedge rn_q)
+        if (!rn_q) begin sio[0] <= 1'b0; sio[18] <= 1'b0; sio[569:537] <= 33'd0; end
+        else begin sio[0] <= qq[0]; sio[18] <= qq[15]; sio[568:537] <= xdq; sio[569] <= cr_q; end
+    assign si = {sio[569], e_rdq, sio[568:0]};
     // ---- return chain: score count, running maximum, fault ----------------------------------------------------------------
     function automatic fgt(input [31:0] a, input [31:0] b);
         fgt = (a[31] != b[31]) ? !a[31] : (!a[31] ? (a[30:0] > b[30:0]) : (a[30:0] < b[30:0]));
@@ -640,6 +662,16 @@ module qkd_astk_ep (
             xo[8:5] <= xq[8:5] + {3'd0, sc_v && sc_a[11]};
             xo[10:9] <= xq[10:9] | la;
         end
+`ifdef KVD_AKDBG
+    always @(posedge ck) begin
+        if (rn_q && j_bad) $display("AKDBG %m t=%0t join: b_v=%b e_v=%b%b%b%b zq.v=%b tags %h vs %h", $time, b_v, eqc[0], eqc[2], eqc[4], eqc[6], zq[0], zq[10:2], {b_gam, b_k, b_g});
+        if (|se) $display("AKDBG %m t=%0t chunk adder error", $time);
+        if (trig && a_busy) $display("AKDBG %m t=%0t trigger while busy", $time);
+        if (so_q[424]) $display("AKDBG %m t=%0t ENGINE fault", $time);
+        if (e_f) $display("AKDBG %m t=%0t exp fault", $time);
+        if (trig) $display("AKDBG %m t=%0t pass start sg=%b", $time, a_sg);
+    end
+`endif
 endmodule
 
 // ---- Z tree node: one level of the golden's pairwise tree over the 16 chunk sums of a block ----------------------------
@@ -716,6 +748,9 @@ module qkd_astk_zn (
     assign of = |ye;
     always @(posedge ck or negedge rn_q) if (!rn_q) zo[0] <= 1'b0; else zo[0] <= yt[9];
     always @(posedge ck) zo[137:1] <= {y, yt[8:5], yt[4:1], yt[0]};
+`ifdef KVD_AKDBG
+    always @(posedge ck) if (rn_q && ((put && sv[k]) || (v && slot[0] && !sv[k]) || of)) $display("AKDBG %m t=%0t Z node: put=%b slot=%0d k=%0d sv=%b of=%b", $time, put, slot, k, sv[k], of);
+`endif
 endmodule
 
 // ---- the stack's port -------------------------------------------------------------------------------------------------------
@@ -857,4 +892,12 @@ module qkd_astk_ctl (
         else if (z_ne) ap[42:1] <= {z_s, 1'b1, z_hd[4:1], zh, z_hd[0], 2'd1};
         else ap[42:1] <= {32'd0, 1'b1, 4'd0, 2'd0, zd1, 2'd2};
     end
+`ifdef KVD_AKDBG
+    always @(posedge ck) begin
+        if (rn_q && pv_bad) $display("AKDBG %m t=%0t P.V lanes apart: x %b beat %0d g %b, y %b beat %0d g %b", $time, pxq[0], pxq[5:1], pxq[6], pyq[0], pyq[5:1], pyq[6]);
+        if (zovf) $display("AKDBG %m t=%0t Z queue overflow", $time);
+        if (xq[0] | fx_q | fy_q | fz_q) $display("AKDBG %m t=%0t fault in: chain %b x %b y %b z %b", $time, xq[0], fx_q, fy_q, fz_q);
+        if (start) $display("AKDBG %m t=%0t start T=%0d", $time, T);
+    end
+`endif
 endmodule

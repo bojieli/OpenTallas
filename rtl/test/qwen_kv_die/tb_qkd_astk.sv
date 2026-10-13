@@ -12,7 +12,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkd_astk_feng #(
     parameter integer S = 0,
-    parameter integer E = 0
+    parameter integer E = 0,
+    parameter integer ERL = 1                 // e read latency (the golden: 1; the die slice: 3 = KVD_ERL)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -56,8 +57,11 @@ module ot_qkd_astk_feng #(
     reg [1:0]   cred;
     reg [255:0] lm;
     reg [1:0]   la;
-    reg         erq, erq2;
-    reg [11:0]  erq_a, erq2_a;
+    reg         erq;
+    reg [11:0]  erq_a;
+    reg [ERL:0] erd_v;
+    reg [11:0]  erd_a [0:ERL];
+    integer     d_;
     reg [15:0]  lf;
     wire [13:0] tk = {k, 9'd0} + base_s + {6'd0, gam[3:0], 3'd0} + E;          // K pass: position (k, gam, j = E)
     wire [3:0]  vgam = {rnd, 3'(E)};
@@ -65,12 +69,14 @@ module ot_qkd_astk_feng #(
     integer h_, c_;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= IDLE; so <= 425'd0; done <= 1'b0; ev <= 1'b0; cred <= 2'd1; lm <= 256'd0; la <= 2'b00; erq <= 1'b0; erq2 <= 1'b0;
+            st <= IDLE; so <= 425'd0; done <= 1'b0; ev <= 1'b0; cred <= 2'd1; lm <= 256'd0; la <= 2'b00; erq <= 1'b0; erd_v <= 0;
             lf <= 16'hACE1; g <= 1'b0; rnd <= 1'b0; k <= 4'd0; gam <= 5'd0; j <= 3'd0; wt <= 4'd0; beat <= 2'd0;
         end else begin
             lf <= {lf[14:0], lf[15] ^ lf[13] ^ lf[12] ^ lf[10]};
             so[0] <= 1'b0; so[13] <= 1'b0; so[412] <= 1'b0;
-            erq2 <= erq; erq2_a <= erq_a; ev <= erq2; ea <= erq2_a; ed <= si[632:569]; erq <= 1'b0;   // data the cycle after er_valid
+            // er_valid is out the cycle after erq; its data is on si ERL cycles after that
+            erd_v <= {erd_v[ERL-1:0], erq}; erd_a[0] <= erq_a; for (d_ = 1; d_ <= ERL; d_ = d_ + 1) erd_a[d_] <= erd_a[d_-1];
+            ev <= erd_v[ERL-1]; ea <= erd_a[ERL-1]; ed <= si[632:569]; erq <= 1'b0;
             if (si[633]) cred <= cred + 2'd1;
             // the running maximum follows the score by one cycle
             if (so[13]) begin
@@ -239,7 +245,7 @@ module tb_qkd_astk #(
         wire [95:0] ea;
         wire [511:0] ed;
         for (e = 0; e < 8; e = e + 1) begin : g_e
-            ot_qkd_astk_feng #(.S(S), .E(e)) u_f (.clk(clk), .rst_n(rst_n), .seed(seed), .si(si_f[d][634*e +: 634]),
+            ot_qkd_astk_feng #(.S(S), .E(e), .ERL(d ? 3 : 1)) u_f (.clk(clk), .rst_n(rst_n), .seed(seed), .si(si_f[d][634*e +: 634]),
                 .so(so_f[d][425*e +: 425]), .nb(nb_f[d][4096*e +: 4096]), .done(e_done[d][e]), .ev(ev[e]),
                 .ea(ea[12*e +: 12]), .ed(ed[64*e +: 64]));
         end
