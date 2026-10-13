@@ -368,5 +368,71 @@ class HostDown(unittest.TestCase):
             self.assertEqual(f._choose(dict(threads=4, peak_ram_gb=8)), ("b", None))
 
 
+class ClassH(Base):
+    """item 4: ECO rc=9 keeps the least-bad pass in the verdict; rc=11 (layer-cap leak) re-routes once on a current kit"""
+
+    def lj(self, **kw):
+        return job(metrics=dict(ss_ps=3.0, ff_ps=-12.0, drc=0), eco=dict(tried=True, rc=11, result=None), **kw)
+
+    def test_current_kit_reroutes_once(self):
+        with patch.object(cl, "kit_has_grt_cap_fix", return_value=True):
+            self.assertEqual(self.run_pass(self.lj()), [("j", "h:j-arh")])
+            s = self.drop("j-arh")
+            self.assertEqual((s["auto_react_parent"], s["auto_react_class"]), ("j", "h"))
+            self.assertIn("dc5594311", s["structural_change"])
+            self.assertIn("automatic re-route", cl.eco_miss_note(self.lj()))
+            # the successor leaking again is not re-routed a second time
+            j2 = self.lj(name="j-arh", spec=spec("j-arh", auto_react_parent="j", auto_react_class="h"))
+            self.assertEqual(cl.ar_plan(j2)[0], None)
+            self.assertIn("second refusal", cl.eco_miss_note(j2))
+
+    def test_old_kit_reroutes_once_then_says_regenerate(self):
+        with patch.object(cl, "kit_has_grt_cap_fix", return_value=False):
+            self.assertEqual(self.run_pass(self.lj()), [("j", "h:j-arh")])
+            s = self.drop("j-arh")
+            self.assertEqual((s["auto_react_parent"], s["auto_react_class"]), ("j", "h"))
+            self.assertIn("predates dc5594311; one automatic re-route", cl.eco_miss_note(self.lj()))
+            j2 = self.lj(name="j-arh", spec=spec("j-arh", auto_react_parent="j", auto_react_class="h"))
+            self.assertEqual(self.run_pass(j2), [("j-arh", "none")])
+            self.assertIsNone(self.drop("j-arh-arh"))
+            self.assertIn("regenerate the kit", (self.tk / "hbm-phys-1010.log").read_text())
+            self.assertIn("regenerate the kit", cl.eco_miss_note(j2))
+            self.assertIn("no further automatic route", cl.eco_miss_note(j2))
+
+    def test_kit_fix_is_an_ancestor_check(self):
+        calls = []
+
+        def fake_sh(cmd, **k):
+            calls.append(cmd)
+            return SimpleNamespace(returncode=1, stdout="", stderr="")
+        with patch.object(cl, "sh", fake_sh):
+            self.assertFalse(cl.kit_has_grt_cap_fix(self.lj()))
+        self.assertEqual(calls[0][3:], ["merge-base", "--is-ancestor", "dc5594311", "abcdef123"])
+
+    def test_rc9_least_bad_in_verdict(self):
+        j = job(metrics=dict(ss_ps=40.0, ff_ps=-9.0, drc=0),
+                eco=dict(tried=True, rc=9, result={"pass": 2, "tt_ps": 38.1, "ff_ps": -1.35, "drc": 4, "chosen": "least_bad"}))
+        self.assertIn("least-bad pass 2 TT 38.1 / FF -1.35 ps / DRC 4", cl.eco_miss_note(j))
+        self.assertIn("hold ECO missed (rc=9)", cl.failure_text(j).split("\n")[0])
+        self.assertIsNone(cl.eco_miss_note(job(metrics=dict(ss_ps=1, ff_ps=1, drc=0))))
+
+    def test_hold_eco_sh_keeps_least_bad(self):
+        import subprocess
+        src = (HERE / "hold_eco.sh").read_text()
+        tail = src[src.index('if [ -z "$best" ]; then'):]
+        tail = tail[:tail.index("\nfi\n") + 4]
+        self.assertIn("rank", src)
+        d = self.d / "eco"
+        (d / "pass2").mkdir(parents=True)
+        (d / "pass2" / "corner_sta.json").write_text("{}")
+        (d / "pass2" / "result.json").write_text(json.dumps({"pass": 2, "ff_ps": -1.35, "drc": 4, "score": -1e9}))
+        r = subprocess.run(["bash", "-c", f'best=""; lb={d}/pass2; OUT={d}\n{tail}'], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 9, r.stderr)
+        res = json.loads((d / "result.json").read_text())
+        self.assertEqual((res["chosen"], res["ff_ps"], res["drc"]), ("least_bad", -1.35, 4))
+        r = subprocess.run(["bash", "-c", f'best=""; lb=""; OUT={d}\n{tail}'], capture_output=True, text=True)
+        self.assertIn("no ECO pass produced a result", r.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()

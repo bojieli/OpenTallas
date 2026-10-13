@@ -73,14 +73,728 @@ def _isa_bits():
     return sum(w for n, w in I.FIELDS), me
 
 
+# ---- qwen-tp8 (results/arch/qwen_tp8_1012/SPEC.md sections 1, 2, 5): the TP8 track-A ROM die.  G = 3,072 lane groups
+# = 768 qfd_tile_nk (the TP4 tile, unchanged) in 64 columns x 12 rows = 3 bands of 4 tile rows (TP4: 6); port groups
+# 16 per band (48); the spine keeps its column; ROW_GAP um of routing channel between tile rows sizes the die to the
+# spec outline (slot share <= 60 %, channels >= 35 %).  Opt-in (recipe tp8a); every other recipe is unchanged.
+TP8 = None
+
+
+def _band_tgt(v, rows, b):
+    """y centre of band b's tile rows (tp8b F2: the centroid of the band's blocks, v.BAND_BLOCKS)."""
+    bb = getattr(v, 'BAND_BLOCKS', None)
+    if bb:
+        ys = [rows[r0] + (rows[r0 + 3] + v.TILE_SLOT[1] - rows[r0]) / 2 for c0, r0 in bb[b]]
+        return sum(ys) / len(ys)
+    return (rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2
+
+
+def _tp8_globals(cfg):
+    global PORT_GROUPS, BANDS, RTL_PORT_GROUPS, TP8
+    TP8 = dict(cfg)
+    BANDS = cfg['bands']
+    PORT_GROUPS = GROUPS_PER_BAND * BANDS
+    RTL_PORT_GROUPS = 8 * BANDS
+
+
+def _tp8_base(v, cfg):
+    v.ROWS = 4 * cfg['bands']
+    v.NBANDS = cfg['bands']
+    v.CH_ROWS = tuple(cfg['ch_rows'])
+    v.ROW_GAP = cfg['row_gap']
+    # TP8 per-die spine content: port groups halve (3 bands), scale rows 452,144 / 609,376 (SPEC section 1)
+    sc = dict(port_tiles=0.5, scale_rom=452144 / 609376)
+    v.SPINE_BLOCKS = [(n, a * sc.get(n, 1.0), d, s) for n, a, d, s in v.SPINE_BLOCKS]
+    # IO band (SPEC section 3): the two-level collective (in-package pre-fold + owner-half select / all-gather around
+    # the 4-rank fold) gets a 1.5x TP4 budget outline; the CDC cluster widens for the 3 SerDes word pairs
+    v.IO_BLOCKS = [(n, a * (cfg.get('coll_scale', 1.5) if n == 'collective' else 1.0), d) for n, a, d in v.IO_BLOCKS]
+    v.IOX_W = cfg.get('iox_w', 700.128)
+    if cfg.get('f2'):
+        _tp8b_base(v, cfg)
+    if cfg.get('tile_body'):
+        # contract v2 (SPEC 5, tile slot width): the GT 3,072 qfd_tile_nk cluster (ref_tile kit qfd_tile_nk_tp8, 311.04 x
+        # 1,296 um) + the unchanged 52.704-um qfd_cst corridor; r19 takes the slot pitch from KV_TILE_W
+        v.KV_TILE_W = round(cfg['tile_body'] + v.CORR, 6)
+        v.TILE_SLOT = (v.KV_TILE_W, cfg.get('tile_h', v.TILE_SLOT[1]))
+        v.TILE_BODY_W = cfg['tile_body']
+        if cfg.get('f2'):
+            # tp8b F2: column pitch = tile slot + the column channel (station corridor + spread tree legs)
+            v.KV_TILE_W = cfg['f2']['col_pitch']
+            v.TILE_SLOT = (v.KV_TILE_W, cfg.get('tile_h', v.TILE_SLOT[1]))
+    if cfg.get('tree_pads'):
+        _tp = json.loads((ROOT / cfg['tree_pads']).read_text())
+        v.TREE_PADS = _tp['pads']
+        v.TREE_PAD_TARGETS = _tp.get('targets', {})     # total relays per padded leg (unpadded relays + pads)
+
+
+# ---- qwen-tp8 tp8b (results/arch/qwen_tp8_1012/SPEC.md section 0 / 5, floorplan F2, track B single die): 48 columns x
+# 16 rows of qfd_tile_nk at the 311.04 x 1,296 slot (column pitch = slot + column channel), 3 compact bands of 16 4x4
+# blocks (band 0 = block-row 0 + the 4 near-spine blocks of block-row 1; band 1 = the other 8 of block-row 1 + the 8
+# near-spine blocks of block-row 2; band 2 = the other 4 of block-row 2 + block-row 3), the spine column widened to the
+# F2 4,589 um with the KV-centre sub-column, the KV die halves on the W / E edges, ALL IO in one S band under a 400-um
+# IO word channel.
+def _tp8b_bands(cols, rows, bc=4, br=4):
+    nbc, half = cols // bc, cols // bc // 2
+    blocks = {}
+    for c0 in range(0, cols, bc):
+        for r0 in range(0, rows, br):
+            k = c0 // bc
+            side = 'W' if k < half else 'E'
+            dist = (half - 1 - k) if side == 'W' else (k - half)      # 0 = next to the spine
+            row = r0 // br
+            if row == 0 or (row == 1 and dist <= 1):
+                band = 0
+            elif row == 1 or (row == 2 and dist <= 3):
+                band = 1
+            else:
+                band = 2
+            blocks[(c0, r0)] = (band, side, dist)
+    out, members = {}, {}
+    for b in range(3):
+        mem = [cr for cr, t in blocks.items() if t[0] == b]
+        w = sorted((cr for cr in mem if blocks[cr][1] == 'W'), key=lambda cr: (-blocks[cr][2], cr[1]))
+        e = sorted((cr for cr in mem if blocks[cr][1] == 'E'), key=lambda cr: (blocks[cr][2], cr[1]))
+        assert len(w) == len(e) == 8, ('tp8b band', b, len(w), len(e))
+        for k, cr in enumerate(w + e):
+            out[cr] = (b, k)
+        members[b] = w + e
+    return out, members
+
+
+def _tp8b_base(v, cfg):
+    f2 = cfg['f2']
+    v.COLS, v.ROWS = f2['cols'], f2['rows']
+    bmap, members = _tp8b_bands(v.COLS, v.ROWS, *v.BLOCK)
+    v.BAND_OF = lambda b, c0, r0: bmap[(c0, r0)]
+    v.BAND_BLOCKS = members
+
+
+def _yshift(m, g, ys, dy, skip=()):
+    """everything at or above y = ys moves up by dy (instances not in skip, regions, geo y values)."""
+    for i in m['insts']:
+        if i.name not in skip and i.y >= ys - 1e-3:
+            i.y = round(i.y + dy, 4)
+    for key in ('regions', 'clock_regions'):
+        out = []
+        for r in m.get(key, []):
+            x0, y0, x1, y1 = r['rect']
+            if y0 >= ys - 1e-3:
+                y0, y1 = y0 + dy, y1 + dy
+            elif y1 > ys + 1e-3:
+                y1 = y1 + dy
+            out.append(dict(r, rect=[x0, round(y0, 4), x1, round(y1, 4)]))
+        m[key] = out
+    for k in list(g):
+        val = g[k]
+        if k.startswith(('y', 'mid', 'row_y', 'ch_y', 'stack_cy')):
+            if isinstance(val, (int, float)) and val >= ys - 1e-3:
+                g[k] = round(val + dy, 4)
+            elif isinstance(val, list) and val and all(isinstance(q, (int, float)) for q in val):
+                g[k] = [round(q + dy, 4) if q >= ys - 1e-3 else q for q in val]
+
+
+def _tp8b_f2(v, m):
+    """tp8b F2 re-floorplan after the tp8a spine / IO surgery, before the relays (they are derived from this placement)."""
+    from qwen_kv_die import rom_r22k as R
+    f2 = TP8['f2']
+    g = m['geo']
+    by = {i.name: i for i in m['insts']}
+    W = m['die']['w']
+    S = v.SHAVE
+    half = v.COLS // 2
+    pitch = v.TILE_SLOT[0]
+    xw_end = m['col_x'](half - 1) + pitch          # W field end (spine W face)
+    xe0 = m['col_x'](half)                          # E field start
+    spine_w = xe0 - xw_end
+    # (1) the KV-centre sub-column (qkd_seq / host / ahub / embgw) on the spine's E side: spine -> f2 spine_w
+    kvc = v.up(f2['spine_w'] - spine_w, v.GX)
+    if kvc > 0:
+        W = R._spine_relay_channel(v, m, g, xe0, kvc, W)
+    g['tp8b_kvc_x'] = [round(xe0, 4), round(xe0 + kvc, 4)]
+    # (1b) qwen-tp8/die it3 (fine cuts, coordinator 10-12: use the x margin of the 33-mm field): widen the W spine relay
+    # channel by f2['w_ch'] and open a full-height A|B relay channel of f2['ab_ch'] between spine sub-columns W (port /
+    # lane slabs) and M (SU / tree top / constants) -- the tree top's W face was abutted on all four sides and every
+    # long spine word stacked in the one 225-um W channel.  SPINE_CHANNEL_X gets the A|B lane (load-balanced in _relays).
+    wch, ab = v.up(f2.get('w_ch', 0.0), v.GX), v.up(f2.get('ab_ch', 0.0), v.GX)
+    if wch or ab:
+        xa, xb = by['sp_port_tiles_0'].x, by['sp_su64_sfu'].x
+        chx0 = list(getattr(v, 'SPINE_CHANNEL_X', None) or [])
+        if ab:
+            W = R._spine_relay_channel(v, m, g, xb, ab, W)
+        if wch:
+            W = R._spine_relay_channel(v, m, g, xa, wch, W)
+        if ab:
+            # the VM stays centred on the SU / control-tile stack it abuts (su_vm / tt_mx words cross that seam
+            # face to face); its W edge now leaves the widened W channel + ab free at its height
+            by['sp_vector_memory'].x = round(by['sp_vector_memory'].x + ab, 4)
+        lanes = [round(chx0[0] + wch / 2, 3)] if chx0 else []
+        if ab:
+            lanes.append(round(xb + wch + ab / 2, 3))
+        lanes += [round(x + wch + ab, 3) for x in chx0[1:]]
+        v.SPINE_CHANNEL_X = lanes
+        v.SPINE_LANE_BALANCE = True
+        v.TILE_CLUSTER = True        # coordinator 12:15: qfd_tile_nk is a cluster slot, die M8+ over it
+        xe0 = round(xe0 + wch + ab, 4)
+        ck = by.get('clk_rx')
+        if ck is not None and ab:
+            # the forwarded-clock receiver sat in sub-column W right where the KV-half words (aq / emf / emr) and the
+            # VM result words cross the spine (fine x-cut 0.74 over it): it moves to sub-column M above the tree top
+            t2 = by['tt_up4_2']
+            ck.x, ck.y = round(t2.x, 4), round(v.dn(t2.y + t2.h + 1200.0, v.GY), 4)
+        g['tp8b_kvc_x'] = [round(x + wch + ab, 4) for x in g['tp8b_kvc_x']]
+        g['tp8b_spine_channels'] = dict(w_ch=wch, ab_ch=ab, lanes=lanes)
+    # (2) the KV-die halves: W strip + channel left of the W field, E strip + channel right of the E field
+    kvs = v.up(f2['kv_w'] + f2['kv_ch'], v.GX)
+    W = R._spine_relay_channel(v, m, g, 0.0, kvs, W)
+    g['tp8b_kv_w'] = [round(v.EDGE if hasattr(v, 'EDGE') else 0.0, 4), round(kvs, 4)]
+    g['tp8b_kvc_x'] = [round(x + kvs, 4) for x in g['tp8b_kvc_x']]     # recorded before the W strip shifted the core
+    W = round(W + kvs, 4)
+    g['tp8b_kv_e'] = [round(W - kvs, 4), round(W, 4)]
+    chx = getattr(v, 'SPINE_CHANNEL_X', None)
+    if chx:
+        v.SPINE_CHANNEL_X = [round(x + kvs + (kvc if x >= xe0 - 1e-3 else 0.0), 3) for x in chx]
+        if getattr(v, 'SPINE_LANE_BALANCE', False):
+            # it3: two more lanes in the KV-centre column (W and E of its blocks)
+            # (>= 300 um from the E spine lane so the two never share a 260-um window); the KV centre's own words
+            # run in this column too: _relays pre-loads these lanes (SPINE_LANE_PRELOAD bits over the die height)
+            k0 = g['tp8b_kvc_x'][0]
+            v.SPINE_CHANNEL_X = sorted(v.SPINE_CHANNEL_X + [round(k0 + 320.0, 3), round(k0 + 650.0, 3)])
+            v.SPINE_LANE_PRELOAD = {round(k0 + 320.0, 3): 1000.0, round(k0 + 650.0, 3): 2500.0}
+    # (3) IO band S: the core moves up by IO_DEPTH + the IO word channel; the IO blocks go to the S edge
+    v.IO_SOUTH_BAND = True
+    io = [i for i in m['insts'] if i.kind in ('io', 'xfifo')]
+    ion = {i.name for i in io}
+    y_io_old = min(i.y for i in io)
+    ch = v.up(f2['io_chan'], v.GY)
+    dy = v.up(v.IO_DEPTH + ch, v.GY)
+    y_edge = g['y0']
+    _yshift(m, g, 0.0, dy, skip=ion)
+    for i in io:
+        i.y = round(y_edge, 4)
+    m['regions'] = [r for r in m['regions'] if r['name'] not in ('io_band', 'io_chan')]
+    xa, xb = m['col_x'](0), m['col_x'](v.COLS - 1) + pitch
+    m['regions'] += [dict(name='io_band', kind='io', rect=[xa, y_edge, xb, y_edge + v.IO_DEPTH]),
+                     dict(name='io_chan', kind='channel', rect=[xa, y_edge + v.IO_DEPTH, xb, y_edge + dy])]
+    # the IO row keeps its x order (SerDes 1 / 2, collective, xfifo, UCIe, SerDes 0), centred on the spine
+    io.sort(key=lambda i: i.x)
+    iog = f2.get('io_gap')
+    if iog:
+        # it3: >= io_gap between IO blocks (the abutted row left 2-41 um, so the xfifo <-> SerDes words' relays sat on
+        # the die edge and hopped 3.5 mm diagonally over the UCIe PHY); host_serdes: a reserved slot for the KV host
+        # SerDes PHY between the collective and the xfifo (filled by _tp8b_kv)
+        x_ = x00 = io[0].x
+        for i in io:
+            if f2.get('host_serdes') and i.name == 'io_collective':
+                # W of the collective: the slot must not split the collective | xfifo | UCIe words (11 kb face to face)
+                g['tp8b_host_slot_dx'] = round(v.up(x_, v.GX) - x00, 4)
+                x_ = v.up(x_, v.GX) + f2['host_serdes_w'] + iog
+            i.x = round(v.up(x_, v.GX), 4)
+            x_ = i.x + i.w + iog
+    span = io[-1].x + io[-1].w - io[0].x
+    xc = (m['col_x'](half - 1) + pitch + m['col_x'](half)) / 2 - kvc / 2      # the ROM spine (W of the KV centre)
+    sx = v.dn(xc - (by['io_collective'].x + by['io_collective'].w / 2 - io[0].x) - io[0].x, v.GX)
+    sx = max(sx, v.up(xa, v.GX) - io[0].x)
+    sx = min(sx, v.dn(xb - io[-1].x - io[-1].w - S, v.GX))
+    for i in io:
+        i.x = round(i.x + sx, 4)
+    if 'tp8b_host_slot_dx' in g:
+        g['tp8b_host_slot'] = [round(x00 + sx + g.pop('tp8b_host_slot_dx'), 4), round(y_edge, 4)]
+    g['y_io'] = g['y_top']          # the relays' corridor top (the IO band no longer sits above the field)
+    H = v.up(g['y_top'] + v.EDGE if hasattr(v, 'EDGE') else g['y_top'] + 21.6, v.GY)
+    m['die'] = dict(m['die'], w=W, h=H, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
+    # (4) the constant ROM row gets a >= f2['crom_ch'] um word channel to the buffer rows above it
+    cr = [i for i in m['insts'] if i.name.startswith('crom_g_')]
+    cb = [i for i in m['insts'] if i.name.startswith('cbuf_g_')]
+    if cr and cb:
+        gap = min(b_.y for b_ in cb) - max(c.y + c.h + S for c in cr)
+        need = f2.get('crom_ch', 151.2) - gap
+        if need > 0:
+            for c in cr:
+                c.y = round(v.dn(c.y - need, v.GY), 4)
+        g['tp8b_crom_ch_um'] = round(min(b_.y for b_ in cb) - max(c.y + c.h + S for c in cr), 3)
+    ov = []
+    ins = [i for i in m['insts']]
+    ins.sort(key=lambda i: i.x)
+    for a_ in range(len(ins)):
+        p = ins[a_]
+        for b_ in range(a_ + 1, len(ins)):
+            q = ins[b_]
+            if q.x >= p.x + p.w - 1e-3:
+                break
+            if q.y < p.y + p.h - 1e-3 and p.y < q.y + q.h - 1e-3:
+                ov.append((p.name, q.name))
+    m['tp8b'] = dict(die_um=[W, H], spine_w=round(spine_w + kvc, 3), kvc_w=kvc, kv_strip_w=kvs, io_dy=dy,
+                     io_x=[round(io[0].x, 3), round(io[-1].x + io[-1].w, 3)], overlaps=ov[:20], n_overlaps=len(ov))
+    if ov:
+        raise SystemExit(f'tp8b: {len(ov)} overlaps, e.g. {ov[:6]}')
+
+
+def _gate_track_lattice(lef, m):
+    """Fail the case generation (seconds, locally) instead of the remote case (minutes): every BLOCK master must
+    have a legal origin on the ASAP7 track lattice in R0/MX/MY/R180 (tools/check_macro_track_alignment.py, the
+    same residue rule as physical/common/ot_macro_track_snap.tcl).  Origins themselves are snapped to that lattice
+    by ot_mts in place.tcl; a master with no legal residue cannot be snapped anywhere."""
+    import importlib.util
+    f = Path(__file__).resolve().parent / 'check_macro_track_alignment.py'
+    spec = importlib.util.spec_from_file_location('ot_mta', f)
+    mta = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mta)
+    res = mta.run([str(lef)], mta.ASAP7_TRACKS_NM, mta.ASAP7_LAYERS)
+    bad = {r['macro']: {lay: s['no_legal_origin'] for lay, s in r.get('summary', {}).items() if s.get('no_legal_origin')}
+           for r in res['macros']}
+    bad = {k: v for k, v in bad.items() if v}
+    m['track_lattice'] = dict(blocks=len(res['macros']), no_legal_origin=bad)
+    if bad:
+        raise SystemExit(f'track lattice: {len(bad)} masters have no legal origin: {dict(list(bad.items())[:6])}')
+
+
+KV_DROP = ('d2d_kv', 'ucie_rom', 'ckb_kv', 'serdes_host')       # KV-die D2D / UCIe / clock bump / host SerDes: gone on one die
+ROM_DROP = ('ucie_kv', 'd2d_rom', 'ckb_rom', 'rs_bump')
+KV_CENTRE = ('pll', 'embgw', 'seq', 'ahub', 'host')              # N -> S in the KV-centre sub-column (the KV PLL is the die PLL)
+# ROM-side D2D words re-terminated on the KV centre (the D2D pair is a wire on one die): bus -> (KV inst, port, bits or None)
+KV_SHORT = dict(x3=('seq', 'r_x3', None), seq_d2d=('seq', 'r_sd', None), o4_kvd=('seq', 'r_kvd', None),
+                attn_ret=('seq', 't_ar', None), d2d_seq=('seq', 't_ds', None), d2d_flt=('seq', 't_flt', None),
+                o4_pw=('seq', 't_pw', None), emb=('embgw', 't_eq', 1024), emb_a=('embgw', 'r_ea', None),
+                emb_cr=('embgw', 't_ecr', None))
+
+
+def _tp8b_kv(v, m):
+    """tp8b (track B, single die type): the KV die's two halves (HBM PHYs + CDC strips + landings + attention stacks,
+    their own buses and relays) land unrotated in the W / E strips reserved by _tp8b_f2, the KV centre blocks (PLL,
+    embedding gateway, KV sequencer, attention hub, host) in the KV-centre sub-column E of the ROM spine; the D2D pair
+    (ROM d2d_rom/ucie_kv, KV d2d_kv/ucie_rom), the clock / reset bumps and the KV host SerDes are dropped and their words
+    re-terminated directly (ROM peers <-> KV seq / embgw).  Embedding ingress is 1,024 b (embgw -> su64 eq).  Every
+    word between the centre and a half is a new die wire, relayed by _relays (classes as on the KV die); the halves'
+    own relayed words keep their KV-die relays (class '<cl>@kv', in RELAY_SKIP)."""
+    global RELAY_SKIP
+    from qwen_kv_die import kv_die as K
+    g = m['geo']
+    mk = K.build(kv_wq_mirror=True)
+    KM = dict(K.masters(mk, 1))         # pins from the KV-die placement (same W | centre | E order on this die)
+    KPW = dict(K.port_widths(mk, 1))
+    Wk, Hk = mk['die']['w'], mk['die']['h']
+    W, H = m['die']['w'], m['die']['h']
+    kby = {i.name: i for i in mk['insts']}
+    xs = [(i.x, i.x + i.w) for i in mk['insts'] if i.name not in KV_DROP + KV_CENTRE and not i.master.startswith('qkd_rly')]
+    w_end = max(b for a, b in xs if a < Wk / 2)
+    e_beg = min(a for a, b in xs if a >= Wk / 2)
+    assert w_end <= g['tp8b_kv_w'][1] - 50 and Wk - e_beg <= g['tp8b_kv_e'][1] - g['tp8b_kv_e'][0] - 50, (w_end, Wk - e_beg)
+    dy = v.dn((g['y0'] + g['y_top'] - Hk) / 2 if Hk <= g['y_top'] - g['y0'] else (H - Hk) / 2, v.GY)
+    dxe = v.dn(W - Wk, v.GX)
+    side = {}
+    for i in mk['insts']:
+        if i.name in KV_DROP or i.name in KV_CENTRE:
+            continue
+        cx = i.x + i.w / 2
+        side[i.name] = 'W' if cx < Wk / 2 else 'E'
+    # chains: base bus -> its segments; a chain touching a centre / dropped block loses its KV relays (re-relayed here)
+    def base(b):
+        return b.split('__r')[0]
+    chains = {}
+    for bus in mk['buses']:
+        chains.setdefault(base(bus[0]), []).append(bus)
+    keep_rly, nb = set(), []
+    for b0, segs in chains.items():
+        ends = [e for s_ in segs for e in s_[3] if not kby[e[0]].master.startswith('qkd_rly')]
+        rl = {e[0] for s_ in segs for e in s_[3] if kby[e[0]].master.startswith('qkd_rly')}
+        cl, bits = segs[0][1], segs[0][2]
+        if any(e[0] in KV_DROP for e in ends):
+            continue                                   # D2D / bump / SerDes words: re-terminated below or gone
+        if len(segs) == 1 and len(segs[0][3]) != 2:
+            nb.append((b0, cl, bits, [e for e in segs[0][3] if e[0] not in KV_DROP]))
+            continue
+        if any(e[0] in KV_CENTRE for e in ends) or len({side.get(e[0]) for e in ends}) > 1:
+            nb.append((b0, cl, bits, [segs[0][3][0], segs[-1][3][-1]] if len(segs) > 1 else segs[0][3]))
+            continue
+        keep_rly |= rl
+        nb += [(bid, cl if cl in RELAY_SKIP else f'{cl}@kv', bt, eps) for bid, cl_, bt, eps in segs for cl in (cl_,)]
+    # main 758ccc84c: KV relays now sit on their driver's clk_core trunk; a dropped (re-relayed) KV relay leaves the
+    # multi-pin trunks with it, the kept ones keep their ck
+    nb = [(b_, c_, t_, [e for e in eps_ if not (kby[e[0]].master.startswith('qkd_rly') and e[0] not in keep_rly)])
+          if len(eps_) != 2 else (b_, c_, t_, eps_) for b_, c_, t_, eps_ in nb]
+    RELAY_SKIP = tuple(RELAY_SKIP) + tuple(sorted({b[1] for b in nb if b[1].endswith('@kv')}))
+    new = []
+    for i in mk['insts']:
+        if i.name in KV_DROP or i.name in KV_CENTRE:
+            continue
+        if i.master.startswith('qkd_rly') and i.name not in keep_rly:
+            continue
+        sd = side.get(i.name, 'W' if i.x < Wk / 2 else 'E')
+        i.x = round(i.x + (dxe if sd == 'E' else 0.0), 4)
+        i.y = round(i.y + dy, 4)
+        new.append(i)
+    # it17 (layer plan A, die M8+ over the tile_nk clusters): the KV strip head stacks (4 groups of 4 qkd_rhead + 1
+    # qkd_ectl per stack column, abutted 7.8 mm) left KV-half words no crossing height but the stack ends (it16: all
+    # W words in ONE row gap, 0.875).  Open a crossing channel of kv_xch um between consecutive head groups (groups
+    # shift up by j * kv_xch, astk spans the stack unchanged); the channels (M4-M9 free, relay sites) are recorded in
+    # v.KV_XCH per strip side for _relays (<= KV_XCH_CAP b per channel)
+    xch = TP8['f2'].get('kv_xch')
+    v.KV_XCH = {}
+    if xch:
+        import re as _re
+        heads = [i for i in new if _re.match(r'(head|ectl)_[WE][SN]_\d+', i.name)]
+        cols = {}
+        for i in heads:
+            sd, sn, c = _re.match(r'\w+?_([WE])([SN])_(\d+)', i.name).groups()
+            cols.setdefault((sd, sn, round(i.x, 1)), {}).setdefault(int(c), []).append(i)
+        for (sd, sn, cx), grp in sorted(cols.items()):
+            order = sorted(grp, key=lambda c: min(i.y for i in grp[c]))
+            spans = [(min(i.y for i in grp[c]), max(i.y + i.h for i in grp[c])) for c in order]
+            x0_, x1_ = cx, max(i.x + i.w for c in order for i in grp[c])
+            mv = []
+            for j, c in enumerate(order):
+                ya, yb = spans[j]
+                yb = yb + 2000.0 if j == len(order) - 1 else yb     # the top group carries the relays above the stack
+                sh = round(j * xch, 4)
+                # the group and every short block / kept relay over its span in the column (astk is taller than a
+                # group and stays); membership on the unshifted placement
+                mv += [(i, sh) for i in new if sh and i.h < 1000.0 and i.x < x1_ - 1.0 and x0_ + 1.0 < i.x + i.w
+                       and ya - 1.0 <= i.y + i.h / 2 <= yb + 1.0]
+            for i, sh in mv:
+                i.y = round(i.y + sh, 4)
+            chs = [round(spans[j][0] + (j - 0.5) * xch, 3) for j in range(1, len(order))]
+            v.KV_XCH.setdefault(sd, set()).update(chs)
+        v.KV_XCH = {k: sorted(x) for k, x in v.KV_XCH.items()}
+        v.KV_XCH_STRIP = {sd: (min(i.x for i in heads if f'_{sd}' in i.name[4:7]), max(i.x + i.w for i in heads if f'_{sd}' in i.name[4:7]))
+                          for sd in v.KV_XCH}
+    # KV centre column (E of the ROM spine), centred on the die's mid-height
+    x0, x1 = g['tp8b_kvc_x']
+    gap = 2 * v.GY
+    tot = sum(kby[n].h for n in KV_CENTRE) + gap * (len(KV_CENTRE) - 1)
+    y = v.dn((g['y0'] + g['y_top']) / 2 + tot / 2, v.GY)
+    for n in KV_CENTRE:
+        i = kby[n]
+        y = v.dn(y - i.h, v.GY)
+        xc_ = x1 - 120.0 - 389.0 if TP8['f2'].get('kvc_east') else (x0 + x1) / 2   # it3: E-aligned centre stack
+        i.x, i.y = round(v.dn(xc_ - i.w / 2, v.GX), 4), round(y, 4)
+        y -= gap
+        new.append(i)
+    gone = [i for i in m['insts'] if i.name in ROM_DROP]
+    m['insts'] = [i for i in m['insts'] if i.name not in ROM_DROP] + new
+    # ROM-side buses: drop the D2D / bump words, re-terminate the D2D peers on the KV centre
+    rb, short = [], {}
+    for bid, cl, bits, eps in m['buses']:
+        if bid in KV_SHORT:
+            kn, kp, kb = KV_SHORT[bid]
+            eps = [(kn, kp) if e[0] == 'd2d_rom' else e for e in eps]
+            bits = kb or bits
+            short[bid] = (kn, kp, bits, 'W')
+            rb.append((bid, cl, bits, eps))
+            continue
+        if bid == 'pll_fwd':
+            rb.append((bid, cl, bits, [('pll', 'pll_fwd')] + [e for e in eps if e[0] not in ROM_DROP]))
+            continue
+        if bid == 'rst_fwd_s':
+            rb.append((bid, cl, bits, [('pll', 'rso_fwd')] + [e for e in eps if e[0] not in ROM_DROP]))
+            continue
+        eps = [e for e in eps if e[0] not in ROM_DROP]
+        if len(eps) >= 2:
+            rb.append((bid, cl, bits, eps))
+    m['buses'] = rb + [(f'kv.{b}' if b in {x[0] for x in rb} else b, cl, bits, eps) for b, cl, bits, eps in nb]
+    m['regions'] += [dict(name='kv_w', kind='kv_half', rect=[0.0, dy, w_end, dy + Hk]),
+                     dict(name='kv_e', kind='kv_half', rect=[e_beg + dxe, dy, W, dy + Hk]),
+                     dict(name='kv_centre', kind='kv_centre', rect=[x0, y, x1, y + tot + gap])]
+    m['tp8b_kv'] = dict(kv_die_um=[Wk, Hk], dy=dy, dxe=dxe, w_end=round(w_end, 3), e_beg=round(e_beg + dxe, 3),
+                        kept_relays=len(keep_rly), insts=len(new), buses=len(nb), short=sorted(short), emb_ingress_b=1024)
+    # qwen-tp8/die it3 (coordinator 10-12, single die type): EVERY die carries the KV host SerDes slot (serdes_host,
+    # 112G x12 PHY) and the 2,085-b host FDI ingress host.fdi <-> serdes_host.fdi; only the dies wired to a host use it.
+    # The PHY sits on a die edge (S IO row first, then N edge) in the free slot nearest the KV-centre column (the host
+    # block's x), 20-um halo; its clock / reset join the KV centre's (clk_core_c / rst_core_c roots at the KV PLL).
+    if TP8['f2'].get('host_serdes'):
+        hs = kby['serdes_host']
+        halo = 20.0
+        xh = (x0 + x1) / 2
+        occ = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
+
+        def hs_free(xa, ya):
+            return all(not (a < xa + hs.w + halo and xa - halo < c and b < ya + hs.h + halo and ya - halo < d)
+                       for a, b, c, d in occ)
+        spot = None
+        if 'tp8b_host_slot' in g:
+            xs0, ys0 = g['tp8b_host_slot']
+            spot = (v.up(xs0, v.GX), ys0)      # reserved by _tp8b_f2 (the overlap check below guards it)
+        for ya in () if spot else (min(i.y for i in m['insts'] if i.kind in ('io', 'xfifo')), v.dn(H - hs.h - 21.6, v.GY)):
+            xs_ = [v.dn(halo + k * 10.8, v.GX) for k in range(int((W - hs.w - 2 * halo) / 10.8))]
+            ok = [x_ for x_ in xs_ if hs_free(x_, ya)]
+            if ok:
+                spot = (min(ok, key=lambda x_: abs(x_ + hs.w / 2 - xh)), ya)
+                break
+        if spot is None:
+            raise SystemExit('tp8b kv: no edge slot for the host SerDes')
+        hs.x, hs.y = round(spot[0], 4), round(spot[1], 4)
+        m['insts'].append(hs)
+        fdi = next(bt for b0, cl_, bt, eps in mk['buses'] if base(b0) == 'host_fdi')
+        m['buses'].append(('host_fdi', 'd2d_fdi', fdi, [('host', 'fdi'), ('serdes_host', 'fdi')]))
+        m['tp8b_kv'].update(host_serdes=dict(xy=[hs.x, hs.y], wh=[hs.w, hs.h], fdi_bits=fdi))
+    # the KV centre's own clock / reset trees (clk_core_c / rst_core_c from the KV PLL to seq / embgw / ahub / host
+    # [+ serdes_host]) were dropped with the D2D / UCIe ends: re-add them over the blocks present on this die
+    have = {i.name for i in m['insts']}
+    for b0, cl_, bt, eps in mk['buses']:
+        if base(b0) in ('clk_core_c', 'rst_core_c') and b0 == base(b0):
+            keep_e = [e for e in eps if e[0] in have]
+            m['buses'].append((b0, cl_, bt, keep_e))
+            m['tp8b_kv'].setdefault('centre_trees', []).append([b0, len(keep_e)])
+    ins = sorted(m['insts'], key=lambda i: i.x)
+    ov = []
+    for a_ in range(len(ins)):
+        p = ins[a_]
+        for b_ in range(a_ + 1, len(ins)):
+            q = ins[b_]
+            if q.x >= p.x + p.w - 1e-3:
+                break
+            if q.y < p.y + p.h - 1e-3 and p.y < q.y + q.h - 1e-3:
+                ov.append((p.name, q.name))
+    out = [i.name for i in ins if i.x < -1e-3 or i.y < -1e-3 or i.x + i.w > W + 1e-3 or i.y + i.h > H + 1e-3]
+    m['tp8b_kv'].update(n_overlaps=len(ov), overlaps=ov[:20], n_outside=len(out), outside=out[:20])
+    if ov or out:
+        raise SystemExit(f'tp8b kv: {len(ov)} overlaps {ov[:6]}, {len(out)} outside {out[:6]}')
+    base_m, base_pw = v.masters, v.port_widths
+
+    def masters(model, k=1, port_bits=None):
+        # the TP4 master builders still read the dropped D2D frames by name: give them a view that has them
+        o = base_m(dict(model, insts=list(model['insts']) + gone), k, port_bits)
+        for name, q in KM.items():
+            o.setdefault(name, q)
+        sq, eg = o['qkd_seq'], o['qkd_embgw']
+        ref = sq.ports.get('rf') or sq.ports.get('d2df')
+        lay = ref[3] if ref and ref[0] == 'face' else 'M5'
+        def occupied(mm, face):
+            # intervals (along the face) already taken by face groups on that face, any layer
+            occ = []
+            for q in mm.ports.values():
+                if q and q[0] == 'face' and q[2] == face:
+                    h = q[1] * q[5] * 0.048 / 2
+                    occ.append((q[4] - h, q[4] + h))
+            return sorted(occ)
+
+        for bid, (kn, kp, bits, face) in sorted(short.items()):
+            mm = sq if kn == 'seq' else eg
+            if kp in mm.ports:
+                continue
+            # a pin layer must run across its face: the N/S faces take the seq 'rf' layer (vertical, M5), the E/W
+            # faces a horizontal layer (M4).  An M5 pin on a W/E face sits at x = depth/2 (0.096), off the M5 x
+            # lattice the N/S pins fix -> 'ot_mts: qkd_embgw R0 x has no legal origin' (it2 case_r22k).  On M4 the
+            # words share the face with the KV-half M4 groups, so each takes the first free gap (first fit, 4-um
+            # gaps) instead of a private running offset from the face start.
+            span = bits * 0.048 * 2
+            L_ = mm.h if face in 'EW' else mm.w
+            at = 8.0
+            for a0, a1 in occupied(mm, face):
+                if at + span + 4.0 <= a0:
+                    break
+                at = max(at, a1 + 4.0)
+            if at + span > L_ - 2.0:
+                raise ValueError(f'tp8b kv short {kp}: {bits} b do not fit the {mm.name} {face} face')
+            mm.face(kp, bits, face, lay if face in 'NS' else 'M4', at + span / 2, 2)
+        su = o.get('qfd_sp_su64_sfu') or next((q for q in o.values() if 'eq' in q.ports and q.name.endswith('su64_sfu')), None)
+        if su is not None and su.ports['eq'][0] == 'face':
+            sp = su.ports['eq']
+            su.ports['eq'] = (sp[0], 1024) + sp[2:]
+        return o
+
+    def port_widths(model, k=1):
+        w = base_pw(model, k)
+        for key, val in KPW.items():
+            w.setdefault(key, val)
+        for bid, (kn, kp, bits, face) in short.items():
+            w[('qkd_seq' if kn == 'seq' else 'qkd_embgw', kp)] = bits
+        return w
+    v.masters, v.port_widths = masters, port_widths
+
+
+def _tp8_io(v, m):
+    """qwen-tp8 IO band: 3 SerDes ports (one per remote package, K4 board; TP4: 1 adapter for 2 destinations).  SerDes
+    k = 1, 2 are placed W of the collective (MY: their S-face word pins at the end toward the collective); each gets
+    its own collective s<k> / sr<k> words through the IO-band CDC cluster (i_/o_serdes_tx<k>, i_/o_serdes_rx<k>) and
+    the SerDes link clock."""
+    by = {i.name: i for i in m['insts']}
+    col, s0, iox = by['io_collective'], by['io_serdes'], m['io']['xfifo']
+    n = TP8.get('serdes', 3)
+    x = col.x
+    new = []
+    for k in range(1, n):
+        x = v.dn(x - 10 * v.GX - (s0.w + v.SHAVE), v.GX)
+        it = v.Inst(f'io_serdes_{k}', s0.master, x, s0.y, s0.w, s0.h, 'MY', kind=s0.kind, region=s0.region,
+                    domain=s0.domain)
+        for o in m['insts']:
+            assert not (o.x < it.x + it.w and it.x < o.x + o.w and o.y < it.y + it.h and it.y < o.y + o.h), \
+                f'tp8 io: {it.name} overlaps {o.name}'
+        new.append(it)
+    m['insts'] += new
+    bits = next(b for bid, cl, b, eps in m['buses'] if bid == 'serdes_tx')
+    rbits = next(b for bid, cl, b, eps in m['buses'] if bid == 'serdes_rx')
+    B = []
+    for bid, cl, b, eps in m['buses']:
+        if bid == 'clk_serdes':
+            eps = list(eps) + [(it.name, 'ck') for it in new]
+        B.append((bid, cl, b, eps))
+    for k, it in enumerate(new, 1):
+        B += [(f'serdes_tx{k}', 'io', bits, [('io_collective', f's{k}'), (iox.name, f'i_serdes_tx{k}')]),
+              (f'serdes_tx{k}_x', 'io', bits, [(iox.name, f'o_serdes_tx{k}'), (it.name, 'c')]),
+              (f'serdes_rx{k}', 'io', rbits, [(it.name, 'r'), (iox.name, f'i_serdes_rx{k}')]),
+              (f'serdes_rx{k}_x', 'io', rbits, [(iox.name, f'o_serdes_rx{k}'), ('io_collective', f'sr{k}')])]
+    m['buses'] = B
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        C = o['qfd_io_collective']
+        for q in range(1, n):
+            for p0 in ('s', 'sr'):
+                spec = C.ports[p0]
+                assert spec[0] == 'face', (p0, spec)
+                along = C.w if spec[2] in 'NS' else C.h
+                span = spec[1] * 0.048 * spec[5] + 4.0
+                c = spec[4] - q * span if spec[4] - q * span - span / 2 > 2.0 else spec[4] + q * span
+                assert span / 2 + 2.0 <= c <= along - span / 2 - 2.0, ('tp8 collective pin', p0, q, c, along)
+                C.face(f'{p0}{q}', spec[1], spec[2], spec[3], c, spec[5])
+        X = o['qfd_io_xfifo']
+        for q in range(1, n):
+            for p0, j in (('o_serdes_tx', 0), ('i_serdes_rx', 1)):
+                spec = X.ports.get(f'{p0}{q}')
+                if spec is not None and spec[0] == 'face' and spec[2] in 'NS':
+                    span = spec[1] * 0.048 * spec[5] + 4.0
+                    X.ports[f'{p0}{q}'] = spec[:4] + (400.0 + (2 * (q - 1) + j) * span + span / 2,) + spec[5:]
+        return o
+    v.masters = masters
+    m['tp8_io'] = dict(serdes=[s0.name] + [i.name for i in new], collective_um=[round(col.w, 3), round(col.h, 3)],
+                       xfifo_um=[round(iox.w, 3), round(iox.h, 3)])
+
+
+def _tp8_spine(v, m):
+    """qwen-tp8 contract v2: the 26.0-mm reticle width.  At the 363.744-um slot pitch the 64 columns take 23.28 mm, so the
+    spine gets <= 2.68 mm: three abutted 777.6-um sub-columns W | M | E between two full-height cfg['spine_gap'] edge
+    relay channels (SPINE_CHANNEL_X; _seam_free moves pins off the W|M and M|E seams), and the near-square VM (3 x
+    777.6, qwendie-1011 decision: its x path cannot cross a one-column cut) spans all three in a y window where the W
+    and E sub-columns are free (vertical spine words pass it in the edge channels).  The SU / VM / control-tile / up4 / constant-store stack (abutted
+    faces, ROM row at one height) moves up as one rigid body into the first such window inside its link-channel
+    segment; the S-edge UCIe PHY + d2d_rom join the M sub-column.  Everything else keeps its y."""
+    from qwen_kv_die import rom_r22k as R
+    g = m['geo']
+    by = {i.name: i for i in m['insts']}
+    su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
+    cw, gap = 777.6, TP8['spine_gap']
+    x0 = round(g['x_spine'], 4)
+    xL = round(x0 + gap, 4)
+    xM, xE = round(xL + cw, 4), round(xL + 2 * cw, 4)
+    W = m['die']['w']
+    xm0 = su.x
+    left_sub = [i for i in m['insts'] if xm0 - cw - 1.0 <= i.x < xm0 - 1e-3 and i.name != vm.name and i.kind != 'tile'
+                and i.y < g['y_top'] and i.x >= x0 + cw - 1e-3]
+    # W edge channel, then M abutting W, E abutting M, then the E edge channel before the E tile field
+    W = R._spine_relay_channel(v, m, g, x0, gap, W)
+    xs = su.x
+    W = R._spine_relay_channel(v, m, g, round(xs, 4), round(xM - xs, 4), W)
+    xs = by['sp_port_tiles_0_f1'].x
+    W = R._spine_relay_channel(v, m, g, round(xs, 4), round(xE - xs, 4), W)
+    W = R._spine_relay_channel(v, m, g, round(xE + cw, 4), gap, W)
+    for i in left_sub:
+        i.x = round(xM + (i.x - gap - (xm0 - cw)), 4)      # moved by the W edge channel only
+    # the small S-edge glue that sat in the old W | M channel (rs_bump, ckb_rom) steps W of the moved PHY / d2d column
+    lsn = {i.name for i in left_sub}
+    for i in m['insts']:
+        if i.name in lsn or i.kind in ('tile', 'station', 'head') or i.y >= g['y_top']:
+            continue
+        if any(i.x < j.x + j.w + v.SHAVE and j.x < i.x + i.w + v.SHAVE and i.y < j.y + j.h + v.SHAVE and j.y < i.y + i.h + v.SHAVE
+               for j in left_sub):
+            i.x = round(v.dn(xM - i.w - v.SHAVE - 4.32, v.GX), 4)
+    vm.x = xL
+    # the rigid stack and the window search
+    stack = [vm, su] + [by[n] for n in by if n.startswith(('tt_ctlm', 'tt_up4_', 'cbuf_g_', 'crom_g_'))]
+    sn = {i.name for i in stack}
+    S = v.SHAVE
+    fixed = [i for i in m['insts'] if i.name not in sn and i.kind not in ('tile', 'station', 'head')
+             and i.y < g['y_top'] and i.x + i.w > xL - 1e-3 and i.x < xE + cw + 1e-3]
+    chans = [(r['rect'][1], r['rect'][3]) for r in m['regions'] if r['name'].startswith('hchan_')]
+    seg = [(lo, hi) for lo, hi in zip([g['y0']] + [b for a, b in sorted(set(chans))],
+                                      [a for a, b in sorted(set(chans))] + [g['y_top']])]
+    y_lo, y_hi = min(i.y for i in stack), max(i.y + i.h + S for i in stack)
+    seg0 = next((lo, hi) for lo, hi in seg if lo - 1e-3 <= vm.y < hi)
+
+    def ov(a0, a1, b_):
+        return a0 < b_.y + b_.h + S and b_.y < a1
+
+    Lcol = [b_ for b_ in fixed if b_.x < xM - 1e-3]
+
+    def chain(seed):
+        # the W sub-column blocks abutting (in y) the seeds: the band slab stack moves as one rigid group
+        grp = set(seed)
+        while True:
+            more = {c.name for c in Lcol if c.name not in grp and any(
+                abs(c.y - (by[q].y + by[q].h + S)) < 3 * v.GY or abs(by[q].y - (c.y + c.h + S)) < 3 * v.GY for q in grp)}
+            if not more:
+                return grp
+            grp |= more
+
+    def fit(dy):
+        """None when the stack cannot sit at dy; else the W-column group to move and its new y origin offset"""
+        if y_lo + dy < seg0[0] - 1e-3 or y_hi + dy > seg0[1] + 1e-3:
+            return None
+        for a in stack:
+            ay0, ay1 = a.y + dy, a.y + dy + a.h + S
+            # the SU keeps an open E face (seq_su issue word si, 476 b: its S face is the constant buffers', N the VM's)
+            ax1 = xE + cw if a is su else a.x + a.w + S
+            for b_ in fixed:
+                if b_ in Lcol and a is vm:
+                    continue
+                if a.x < b_.x + b_.w + S and b_.x < ax1 and ov(ay0, ay1, b_):
+                    return None
+        vy0, vy1 = vm.y + dy, vm.y + dy + vm.h + S
+        hitL = [b_.name for b_ in Lcol if ov(vy0, vy1, b_)]
+        if not hitL:
+            return (set(), 0.0)
+        grp = chain(hitL)
+        gy0 = min(by[q].y for q in grp)
+        gy1 = max(by[q].y + by[q].h + S for q in grp)
+        rest = [b_ for b_ in Lcol if b_.name not in grp]
+        for ny in sorted((v.up(vy1 + v.GY, v.GY), v.dn(vy0 - v.GY - (gy1 - gy0), v.GY)), key=lambda t: abs(t - gy0)):
+            if ny < seg0[0] - 1e-3 or ny + (gy1 - gy0) > seg0[1] + 1e-3:
+                continue
+            if any(ov(ny, ny + gy1 - gy0, b_) for b_ in rest):
+                continue
+            return (grp, ny - gy0)
+        return None
+    dy, mv = None, None
+    for k in range(0, int(max(seg0[1] - y_lo, y_hi - seg0[0]) / v.GY) + 1):
+        for d_ in ((k * v.GY,) if k == 0 else (-k * v.GY, k * v.GY)):
+            r_ = fit(d_)
+            if r_ is not None:
+                dy, mv = d_, r_
+                break
+        if dy is not None:
+            break
+    if dy is None:
+        occ = sorted((round(b_.x), round(b_.y), round(b_.y + b_.h), b_.name) for b_ in fixed)
+        raise SystemExit(f'tp8 spine: no window for the VM stack in segment {seg0} (W {W:.1f}); stack '
+                         f'{sorted((round(a.x), round(a.y), round(a.y + a.h), a.name) for a in stack)}; fixed {occ}')
+    for i in stack:
+        i.y = round(i.y + dy, 4)
+    for q in mv[0]:
+        by[q].y = round(by[q].y + mv[1], 4)
+    # seq_su (cbuf ctl / rdy x 8, SU issue / status / count, VM vrd / vrq / vwr, d2d words) leaves the far N end of the
+    # E sub-column for the slot between the constant ROM row and the SU's E face: its 20+ words no longer cross the VM
+    # window (the edge channels carry only the control-tile snapshots and the collective words past it)
+    sq = by.get('seq_su')
+    crt = max(by[f'crom_g_{k}'].y + by[f'crom_g_{k}'].h + S for k in range(8))
+    if sq is not None and su.y - crt >= sq.h + S + 4 * v.GY:
+        sq.x = round(v.up(xE + 43.2, v.GX), 4)
+        sq.y = round(v.dn(crt + (su.y - crt - sq.h - S) / 2, v.GY), 4)
+    v.SPINE_CHANNEL_X = [round(x0 + gap / 2, 3), round(xE + cw + gap / 2, 3)]
+    m['die'] = dict(m['die'], w=W, mm2=round(W * m['die']['h'] / 1e6, 3), margin_mm2=round(858 - W * m['die']['h'] / 1e6, 3))
+    m['tp8_spine'] = dict(sub_x=[xL, xM, xE], cw=cw, gap=gap, spine_w=round(xE + cw + gap - x0, 3), vm_xy=[vm.x, vm.y],
+                          stack_dy=round(dy, 3), seq_su_xy=[sq.x, sq.y] if sq is not None else None, w_group_moved=sorted(mv[0]), w_group_dy=round(mv[1], 3), segment=list(seg0), moved_left_sub=[i.name for i in left_sub], die_w=W)
+
+
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
              tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
-             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, seam_free=False, station_word=0):
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None, seam_free=False, station_word=0, tp8=None):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
+    if tp8:
+        _tp8_globals(tp8)
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
     v = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(v)
@@ -103,6 +817,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         v.CORRIDOR_BITS = station_word
         v.TAP_BITS = station_word
     v.REGION_PG = {r: (.48 / PG.bump_pitch(c, 90) if c else 0.) for r, c in F.REGION_PG.items()}
+    if tp8:
+        _tp8_base(v, tp8)
     # ---- meso FIFO slots and F2 storage
     st_extra_um2 = (TAP_FIFO_BITS + F2_STATION_EXTRA_BITS) * FIFO_MM2_PER_BIT * 1e6
     st_extra_h = v.up(st_extra_um2 / v.CORR, v.GY)
@@ -127,7 +843,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     v.CORR_M9_ADJ = corr_m9_adj
     if r19:
         v.TILE_SLOT = (v.KV_TILE_W, v.TILE_SLOT[1])
-        v.TILE_BODY_W = v.KV_TILE_W - v.CORR
+        # qwen-tp8 coordinator DECISION 2026-10-12 12:15: the qfd_tile_nk cluster slot is 311.04 x 1296; tp8b's F2
+        # column pitch (394.848) is slot + station corridor + a 31-um die channel, so the body keeps tile_body (it had
+        # taken pitch - corridor = 342.12 and the die lost that channel over the M8+-only cluster)
+        v.TILE_BODY_W = tp8['tile_body'] if tp8 and tp8.get('tile_body') and tp8.get('f2') else v.KV_TILE_W - v.CORR
     if corr_um:
         # r20e: a wider corridor (tree-word M9 legs crowd the corridors); the tile body keeps its width, the slot grows
         body = v.TILE_BODY_W
@@ -152,6 +871,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         # scale bus is slab-internal); central blocks around the hub; constant ROM beside SU64
         w0 = m['geo']['spine_w_needed']
         w = v.up(w0 + widen_um, 2 * v.GX)
+        if tp8:
+            # qwen-tp8: the spine columns keep the TP4 777.6 um width (closed d2d_rom / su64_sfu / ctlm / slab views)
+            w = round(2 * tp8.get('spine_cw', 777.6) + v.VCH, 3)
         m = v.build(spine_w=w, tree_mode='banded')
         m['geo']['spine_w_needed'] = w0
         m['geo']['b3r3_spine_w'] = w
@@ -192,6 +914,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         _edge_gap(v, m, edge_gap)
     if east_mirror:
         _east_mirror(v, m)
+    if TP8 and TP8.get('root_spread'):
+        _root_spread(v, m)
     groups = _group_map(v, m)
     _spine_buses(v, m, groups)
     if bw_align:
@@ -256,6 +980,18 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     if emb_hbm:
         _emb_hbm(v, m)        # before the relays: the SU <-> hub embedding words get their relay chains
     m['b3r2']['r21c_emb_hbm'] = emb_hbm
+    if tp8 and before_relays is not None:
+        _br0 = before_relays
+
+        def before_relays(v_, m_):
+            _br0(v_, m_)
+            if TP8.get('spine_gap'):
+                _tp8_spine(v_, m_)
+            _tp8_io(v_, m_)
+            if TP8.get('f2'):
+                _tp8b_f2(v_, m_)
+                if TP8['f2'].get('kv'):
+                    _tp8b_kv(v_, m_)
     if before_relays is not None:
         # Opt-in system composition: actual slots/ports precede relay discovery.
         # Default recipes retain their existing geometry and master contracts.
@@ -381,7 +1117,12 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
                 if pn in M_.ports:
                     M_.ports.pop(pn)
                     M_.order.remove(pn)
-            taken = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f]
+            # qwen-tp8 v2: a VM wider than the SU may carry other pin groups on its S face outside the SU's span
+            # (seq_su's all-reduce words rise beside the SU into the VM's S face E of it); anything inside the
+            # abutted span is still refused
+            lo_f, hi_f = (off, off + su.w) if M_ is q else (0.0, su.w)
+            taken = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f
+                     and sp[4] + sp[1] * p * sp[5] / 2 + lo > lo_f and sp[4] - sp[1] * p * sp[5] / 2 - lo < hi_f]
             if taken:
                 raise ValueError(f'su_vm_abut: {M_.name} {f} face already holds {taken}')
         s.face('va', SU_VM_A_BITS, 'N', 'M5', a_c, 1)
@@ -440,7 +1181,7 @@ def _rtl_finish(v, m):
           ('tt_xr', 'tree_spine', 1, [('sp_vector_memory', 'xr'), ('sp_tree_top', 'xr')]),
           ('tt_mx', 'tree_spine', TT_MX_BITS, [('sp_tree_top', 'mx'), ('sp_vector_memory', 'mx')]),
           ('emb_cr', 'io', 1, [('io_embedding_rom', 'acr'), ('sp_su64_sfu', 'ecr')])]
-    for b in range(6):
+    for b in range(BANDS):
         B += [(f'tt_c{b}', 'tree_spine', TT_BAND_C_BITS, [('sp_tree_top', f'c{b}'), (f'sp_port_tiles_{b}', 'tc')]),
               (f'tt_f{b}', 'tree_spine', TT_BAND_F_BITS, [(f'sp_port_tiles_{b}', 'tf'), ('sp_tree_top', f'f{b}')])]
     m['buses'] = B
@@ -475,7 +1216,7 @@ def _rtl_finish(v, m):
         tt.face('xd', TT_XD_BITS, 'S', 'M5', 100.0, 2)
         tt.face('xr', 1, 'S', 'M5', 140.0, 2)
         tt.face('mx', TT_MX_BITS, 'S', 'M5', 400.0, 1)
-        for b in range(6):
+        for b in range(BANDS):
             tt.face(f'c{b}', TT_BAND_C_BITS, 'W', 'M4', 150.0 + b * 480.0, 1)
             tt.face(f'f{b}', TT_BAND_F_BITS, 'W', 'M4', 150.0 + b * 480.0 + 220.0, 1)
         vm.face('xd', TT_XD_BITS, 'N', 'M5', 640.0, 1)
@@ -492,7 +1233,7 @@ def _rtl_finish(v, m):
             if 'o' in em.ports:
                 em.ports['o'] = em.ports['o'][:1] + (EMB_RSP_BITS,) + em.ports['o'][2:]
             em.face('acr', 1, 'S', 'M5', em.w - 200.0, 1)
-        for b in range(6):
+        for b in range(BANDS):
             mn = f'qfd_port_tiles_{b}'
             if mn in o:
                 P = o[mn]
@@ -594,7 +1335,7 @@ def _repack_r21m(v, m):
     # band slabs (r17 over W / E / M, held to their band's column segment); the W primary carries the serializer
     # below it and the band-lane block above it
     rows = g['row_y']
-    tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
+    tgt = [_band_tgt(v, rows, b) for b in range(BANDS)]
     order = sorted(range(BANDS), key=lambda b: abs(tgt[b] - g['mid']))
     m['band_slabs'] = {}
     per = PORT_GROUPS // (2 * BANDS)
@@ -774,9 +1515,20 @@ def _io_south(v):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
-        for mn, port, centre in (('qfd_io_xfifo', 'o_serdes_tx', 300.0), ('qfd_io_xfifo', 'i_serdes_rx', 360.0),
-                                 ('qfd_io_serdes', 'c', 30.0), ('qfd_io_serdes', 'r', 90.0),
-                                 ('qfd_io_embedding_rom', 'o', None), ('qfd_io_embedding_rom', 'a', -1.0)):
+        at_s = getattr(v, 'IO_SOUTH_BAND', False)
+        lst = [('qfd_io_xfifo', 'o_serdes_tx', 300.0), ('qfd_io_xfifo', 'i_serdes_rx', 360.0),
+               ('qfd_io_serdes', 'c', 30.0), ('qfd_io_serdes', 'r', 90.0),
+               ('qfd_io_embedding_rom', 'o', None), ('qfd_io_embedding_rom', 'a', -1.0)]
+        if at_s:
+            # qwen-tp8/die it4 (tp8b: IO band at the S edge, core to the N): every SerDes word leaves its CDC cluster /
+            # SerDes on the core-facing N face into the IO word channel (the S face is the die edge; the xfifo's
+            # tx1/tx2/rx1/rx2 sat on its W face in the 4-um gap abutting the collective) -- serdes 1/2 words at the
+            # xfifo's W end (toward serdes 1/2), serdes 0 words toward its E end (clear of the seq/coll pins at 630+)
+            lst = [('qfd_io_xfifo', 'o_serdes_tx2', 40.0), ('qfd_io_xfifo', 'i_serdes_rx2', 100.0),
+                   ('qfd_io_xfifo', 'o_serdes_tx1', 160.0), ('qfd_io_xfifo', 'i_serdes_rx1', 220.0),
+                   ('qfd_io_xfifo', 'o_serdes_tx', 450.0), ('qfd_io_xfifo', 'i_serdes_rx', 510.0),
+                   ('qfd_io_serdes', 'c', 30.0), ('qfd_io_serdes', 'r', 90.0)]
+        for mn, port, centre in lst:
             M = o.get(mn)
             if M is None or port not in M.ports:
                 continue
@@ -785,7 +1537,7 @@ def _io_south(v):
             if centre == -1.0:
                 c = M.w - 60.0 - M.ports['o'][1] * 0.048 - 40.0     # beside the word, west of it
             mx = any(it.master == mn and it.orient in ('MX', 'R180') for it in model['insts'])
-            M.ports[port] = ('face', bits, 'N' if mx else 'S', 'M5', c, 1)
+            M.ports[port] = ('face', bits, ('S' if mx else 'N') if at_s else ('N' if mx else 'S'), 'M5', c, 1)
         # spine blocks whose words sat as area pins inside the body (a relay can only be beside a macro): the tree
         # top's port-slab words, its result word and done to its E face (the vertical channel), the sequencer's
         # collective / embedding-address / done words to its W face (the channel), the VM's tree-result word to E
@@ -980,8 +1732,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for dx, dy in sorted(cands, key=lambda t: abs(t[0]) + abs(t[1])):
                 x0 = v.dn(x - w / 2 + dx, v.GX)
                 y0 = v.dn(y - h / 2 + dy, v.GY)
-                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None:
-                    continue           # never over a tile body
+                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None and not cur_tight[0]:
+                    continue           # never over a tile body (it4: a KV row-run relay may sit in a row gap; free()
+                    #                    still refuses any tile overlap)
                 if free((x0, y0, x0 + w, y0 + h)):
                     return x0, y0
         return None
@@ -993,10 +1746,311 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         yb = max(yb, ya + 1.0)
         return sum(max(0.0, min(b_, yb) - max(a_, ya)) for a_, b_ in corr_used.get(c, ())) / (yb - ya)
 
-    def poly_of(cl, P0, P1):
+    # qwen-tp8/die it3: spine lane balancing (SPINE_LANE_BALANCE): a long vertical spine word takes the lane (spine relay
+    # channel) that minimises detour + the worst 260-um window load it would see; a lane whose straight run would
+    # cross a hard block (> 0.04 mm2) is not eligible.  lane_bits[x] = per-260-um-bin bits already assigned.
+    LBIN = 260.0
+    lane_bits = {x: [0.0] * (int(m['die']['h'] // LBIN) + 2) for x in (getattr(v, 'SPINE_CHANNEL_X', None) or [])}
+    big = [(it.x, it.y, it.x + it.w, it.y + it.h) for it in m['insts'] if it.w * it.h > 4e4]
+    for x_, b_ in (getattr(v, 'SPINE_LANE_PRELOAD', None) or {}).items():
+        if x_ in lane_bits:
+            lane_bits[x_] = [b_] * len(lane_bits[x_])
+    cur_bits = [0]
+    io_sub = [[], [], [], []]
+    IO_SUB_F = (0.1, 0.37, 0.63, 0.9)
+    # it4 (fine cuts): KV-half words (KV centre <-> W / E KV strip) run in a row gap across the field, not via the IO
+    # channel (pass-2 search sent kvn_* down to the IO channel and back up: 80 relays, 1 kb stacked on the serdes words)
+    KVC_NAMES = ('pll', 'embgw', 'seq', 'ahub', 'host')
+    gap_bits = {}
+    gap_tot, gap_id, xch_bits = {}, {}, {}     # it17: aggregate per row gap; bits per head-stack crossing channel
+    KV_GAP_CAP, KV_XCH_CAP = 4000.0, 1600.0
+    kv_gaps = []
+    gap_set = set()
+    cur_tight = [False]
+    e_rot = [0]
+    tight_stride = set()     # it4: buses on the KV row-run rule place relays at pitch - 70 (frame snapping at the field /
+    #                          strip edges overshot RMAX by 10-70 um, and the pass-2 search then rerouted them via the IO channel)
+    if getattr(v, 'SPINE_LANE_BALANCE', False) and g.get('row_y'):
+        ry = sorted(g['row_y'])
+        th = v.TILE_SLOT[1]
+        if getattr(v, 'TILE_CLUSTER', False):
+            # coordinator DECISION 2026-10-12 12:15: qfd_tile_nk is a CLUSTER slot (M2-M7 inside), the die has only
+            # M8+ over it (0.75 x 260 um x M8 = 2,438 b per fine window): a KV-half word (530-1,048 b) runs in a row gap
+            # (M4-M8 free), on one of three sub-lanes per gap, never over a tile row
+            kv_gaps = sorted(round(a + th + (b - a - th) * f, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0
+                             for f in (0.25, 0.5, 0.75))
+            gap_set = set(kv_gaps)
+            gap_id = {round(a + th + (b - a - th) * f, 3): k for k, (a, b) in enumerate(zip(ry, ry[1:])) for f in (0.25, 0.5, 0.75)}
+        else:
+            kv_gaps = [round((a + th + b) / 2, 3) for a, b in zip(ry, ry[1:]) if b - (a + th) > 120.0]
+            # over-tile runs too (M6+ over the M5-capped tiles, relays in the corridors): the KV strips' head stacks
+            # leave crossing heights only below / between / above their stacks, which are mostly over tile rows
+            gap_set = set(kv_gaps)
+            kv_gaps = sorted(kv_gaps + [round(a + th * f, 3) for a in ry for f in (0.25, 0.5, 0.75)])
+    io_ch = next(((r['rect'][1], r['rect'][3]) for r in m['regions'] if r['name'] == 'io_chan'), None) \
+        if getattr(v, 'SPINE_LANE_BALANCE', False) else None
+
+    def lane_pick(chx, P0, P1, lb):
+        ya, yb = sorted((P0[1], P1[1]))
+        ka, kb = int(ya // LBIN), int(yb // LBIN) + 1
+        best = None
+        for x in chx:
+            if any(a < x < c and b < yb - 1.0 and ya + 1.0 < d for a, b, c, d in big):
+                continue
+            det = abs(x - P0[0]) + abs(x - P1[0])
+            pk = max(lb[x][ka:kb]) + cur_bits[0]
+            cost = det + 6000.0 * pk / 4900.0     # it4: 4000 -> 6000 (tt_ty + 4 bwords stacked on the E spine lane)
+            if FIELD_ALLOC:
+                # it24: every placed chain is booked: the lane's fine windows at their cut-model caps
+                cost += 20000.0 * max(0.0, vr(x, ya, yb, cur_bits[0]) - 1.0) + 600.0 * vr(x, ya, yb)
+            if best is None or cost < best[0]:
+                best = (cost, x)
+        if best is None:
+            best = (0, min(chx, key=lambda x: abs(x - P0[0]) + abs(x - P1[0])))
+        x = best[1]
+        for k in range(ka, min(kb, len(lb[x]))):
+            lb[x][k] += cur_bits[0]
+        return x
+
+    def io_lane(lo, hi, subs, allow=None):
+        """it4: the IO sub-lane whose 260-um bin, then lane, carries the fewest bits over this word's x span.
+        it17: the KV host link (host_fdi, 2,085 b) owns the top sub-lane; the SerDes / IO words share the two bottom
+        ones (> 260 um from it), so no fine window holds the 4 kb of SerDes words and the host link together"""
+        def ov(j):
+            return sum(b_ for a_, c_, b_ in io_sub[j] if a_ < hi and lo < c_)
+        binl = lambda j: sum(ov(q) for q in range(len(subs)) if int(subs[q] // 260.0) == int(subs[j] // 260.0))  # noqa: E731
+        k = min(allow if allow is not None else range(len(subs)), key=lambda j: (binl(j), ov(j), j))
+        io_sub[k].append((lo, hi, cur_bits[0]))
+        return k
+
+    # it17 (layer plan A: die M8 H / M9 V only over the tile_nk clusters): a field allocator.  Every routed path's
+    # horizontal / vertical legs are booked per 260-um window (the fine-cut grid: windows at multiples of 260 um);
+    # an over-tile horizontal leg is admitted only while its windows stay <= HCAP (2 x 512 b + slack of M8's 2,438
+    # tracks), else it jogs into the nearest row-gap sub-lane (M4-M8 free, <= GCAP); a vertical corridor leg takes the
+    # corridor (column) whose windows stay lowest, capped at VCAP.  Classes it places: tree words and every other
+    # field-to-field / field-to-spine word (corridor-class words keep their own corridor and are only booked).
+    FBIN = 260.0
+    hb, vb = {}, {}
+    HCAP, GCAP, VCAP = 1400.0, 4000.0, 1800.0
+    FIELD_ALLOC = bool(getattr(v, 'TILE_CLUSTER', False)) and bool(kv_gaps)
+    if FIELD_ALLOC:
+        # it19: 480-um IO channel (tp8b): SerDes words on the two bottom sub-lanes (frames inside the 1,560-1,820
+        # fine window), the 2,085-b host_fdi relay frame (106 um) on a top sub-lane low enough to fit under the
+        # channel top (at 0.9 it was pushed down into the SerDes window: 0.754)
+        IO_SUB_F = (0.08, 0.30, 0.55, 0.85)
+    ry_ = sorted(g.get('row_y') or [])
+    th_ = v.TILE_SLOT[1]
+
+    def over_tile(y):
+        k = bisect.bisect_right(ry_, y) - 1
+        return k >= 0 and ry_[k] - 1.0 <= y <= ry_[k] + th_ + 1.0
+
+    ABIN = 50.0     # it19: along-the-leg resolution = the fine-cut line spacing (a 260-um bin at a pin end charged
+    #                 every leg the full load of the pin stubs that only cross part of it: phantom 1.9 kb)
+
+    def _bins(a, b, st=ABIN):
+        a, b = sorted((a, b))
+        return range(int(a // st), int(b // st) + 1)
+
+    def hload(y, xa, xb):
+        yb_ = int(y // FBIN)
+        xa, xb = sorted((xa, xb))
+        return max((hb.get((yb_, k), 0.0) for k in _bins(xa + 1.0, xb - 1.0)), default=0.0) if xb - xa > 2.0 else 0.0
+
+    def vload(x, ya, yb):
+        xb_ = int(x // FBIN)
+        ya, yb = sorted((ya, yb))
+        return max((vb.get((xb_, k), 0.0) for k in _bins(ya + 1.0, yb - 1.0)), default=0.0) if yb - ya > 2.0 else 0.0
+
+    # it24: per-window caps from the cut model itself (results/arch/qwen_tp8_1012/cuts.py usable(), CAP_MODE v3) x
+    # CAP_FRAC, instead of the flat HCAP / GCAP / VCAP (a corridor window over a tile row has 3.4-4.3 kb usable, so a
+    # flat 1.8 kb refused corridors with room; a row-gap window ~8 kb).  Each 50-um bin's cap is the min of the usable
+    # tracks at the two cut lines bounding it (the fine scan cuts every 50 um).
+    CAP_FRAC = 0.58
+    _ucache = {}
+    if FIELD_ALLOC:
+        import sys as _sys
+        _cdir = str(Path(__file__).resolve().parents[1] / 'results' / 'arch' / 'qwen_tp8_1012')
+        if _cdir not in _sys.path:
+            _sys.path.insert(0, _cdir)
+        import cuts as _cuts
+        _cm0 = _cuts.CAP_MODE
+        _cuts.CAP_MODE = 'v3'
+        _bm = _cuts.block_model([dict(x=i.x, y=i.y, w=i.w, h=i.h, m=getattr(i, 'master', '')) for i in m['insts']])
+        _cuts.CAP_MODE = _cm0
+        import numpy as _np
+        _ed = {'x': _np.arange(0.0, m['die']['h'] + FBIN, FBIN), 'y': _np.arange(0.0, m['die']['w'] + FBIN, FBIN)}
+
+    def _ucap(ax, k):
+        """usable x CAP_FRAC per 260-um window along the cut line ax = k * ABIN"""
+        if (ax, k) not in _ucache:
+            _ucache[(ax, k)] = _cuts.usable(ax, k * ABIN, _ed[ax], *_bm)[0] * CAP_FRAC
+        return _ucache[(ax, k)]
+
+    def hcap(yw, k):
+        """cap of the horizontal-leg bin (window yw, along-x bin k): vertical cut lines at k*ABIN, (k+1)*ABIN"""
+        a, b = _ucap('x', k), _ucap('x', k + 1)
+        j = min(yw, len(a) - 1)
+        return float(min(a[j], b[j]))
+
+    def vcap(xw, k):
+        a, b = _ucap('y', k), _ucap('y', k + 1)
+        j = min(xw, len(a) - 1)
+        return float(min(a[j], b[j]))
+
+    def hr(y, xa, xb, bits=0.0):
+        """max over the leg's bins of (booked + bits) / cap"""
+        yb_ = int(y // FBIN)
+        xa, xb = sorted((xa, xb))
+        if xb - xa <= 2.0:
+            return 0.0
+        return max((hb.get((yb_, k), 0.0) + bits) / hcap(yb_, k) for k in _bins(xa + 1.0, xb - 1.0))
+
+    def vr(x, ya, yb, bits=0.0):
+        xb_ = int(x // FBIN)
+        ya, yb = sorted((ya, yb))
+        if yb - ya <= 2.0:
+            return 0.0
+        return max((vb.get((xb_, k), 0.0) + bits) / vcap(xb_, k) for k in _bins(ya + 1.0, yb - 1.0))
+
+    def book(path, bits):
+        for (xa, ya), (xb, yb) in zip(path, path[1:]):
+            if abs(ya - yb) < 1e-6 and abs(xa - xb) > 1e-6:
+                for k in _bins(xa, xb):
+                    hb[(int(ya // FBIN), k)] = hb.get((int(ya // FBIN), k), 0.0) + bits
+            elif abs(xa - xb) < 1e-6 and abs(ya - yb) > 1e-6:
+                for k in _bins(ya, yb):
+                    vb[(int(xa // FBIN), k)] = vb.get((int(xa // FBIN), k), 0.0) + bits
+
+    def near_corr(x, toward):
+        """the corridor next to a tile face pin at x, on the side toward `toward`"""
+        sc = side_cols(x)
+        cand = [cx_list[c] for c in sc if (cx_list[c] >= x - 1.0 if toward >= x else cx_list[c] <= x + 1.0)]
+        return min(cand, key=lambda q: abs(q - x)) if cand else min((cx_list[c] for c in sc), key=lambda q: abs(q - x))
+
+    def hleg(P, xt, bits):
+        """legs taking pin P horizontally to corridor x = xt: at the pin's height when its windows have room (or the
+        run stays within one column pitch), else via the nearest row-gap sub-lane with room. -> (points, cost)"""
+        xa, ya = P
+        if abs(xt - xa) < 1.0:
+            return [], 0.0
+        if not over_tile(ya) or abs(xt - xa) < 480.0 or hr(ya, xa, xt, bits) <= 1.0:
+            return [(xt, ya)], 0.0
+        xn = near_corr(xa, xt)
+        best = None
+        for yg in kv_gaps:
+            if hr(yg, xn, xt, bits) > 1.0 or vr(xn, ya, yg, bits) > 1.0:
+                continue
+            c_ = 2.0 * abs(yg - ya) + 3000.0 * hr(yg, xn, xt)
+            if best is None or c_ < best[0]:
+                best = (c_, yg)
+        if best is None:
+            # it19: graded (a flat 5000 kept tree words out of a free neighbour corridor: 0.72)
+            return [(xt, ya)], 1500.0 + 3000.0 * max(0.0, hr(ya, xa, xt, bits) - 1.0)
+        yg = best[1]
+        return [(xn, ya), (xn, yg), (xt, yg)], best[0]
+
+    def field_route(P0, P1, bits):
+        lo, hi = sorted((P0[0], P1[0]))
+        sc = side_cols(P0[0])
+        cs = [c for c in sc if lo - 1200.0 <= cx_list[c] <= hi + 1200.0] or \
+            [min(sc, key=lambda c: abs(cx_list[c] - (lo + hi) / 2))]
+        best = None
+        for c in cs:
+            xc = cx_list[c]
+            la, ca = hleg(P0, xc, bits)
+            lb, cb = hleg(P1, xc, bits)
+            ya_ = la[-1][1] if la else P0[1]
+            yb_ = lb[-1][1] if lb else P1[1]
+            vl = vload(xc, ya_, yb_)
+            cost = ca + cb + 2.0 * max(0.0, lo - xc, xc - hi) + 20000.0 * max(0.0, vr(xc, ya_, yb_, bits) - 1.0) + 600.0 * vr(xc, ya_, yb_)
+            if _os.environ.get('OT_FA_DBG') and _dbg_cur[0].startswith(_os.environ['OT_FA_DBG']):
+                print('FA_C', _dbg_cur[0], xc, round(ca), round(cb), round(vl), round(cost), la, lb, flush=True)
+                _pf = [(k * ABIN, round(vb.get((int(xc // FBIN), k), 0))) for k in _bins(ya_ + 1, yb_ - 1)]
+                print('FA_V', xc, [q for q in _pf if q[1] >= vl - 1][:3], [q for q in _pf if q[1] > 0][::6], flush=True)
+            if best is None or cost < best[0]:
+                best = (cost, la, lb)
+        _, la, lb = best
+        return [P0] + la + lb[::-1] + [P1]
+
+    def exit_jog(Pf, Po, xc, ya_, bits):
+        """it19: a field-exit tail that would run over a tile body at Po's height into a full window (4 words over
+        the first E-field tile next to the KV-centre face: 0.92) drops to a true row gap instead, runs it to the strip
+        just outside the field on Po's side and climbs there to Po. -> (tail, cost, vload) or None"""
+        if not gap_set or not over_tile(Po[1]) or abs(xc - Po[0]) < 200.0 or hr(Po[1], xc, Po[0], bits) <= 1.0:
+            return None
+        F = fw if Pf[0] < (fw[2] + fe[0]) / 2 else fe
+        if F[0] - 1.0 <= Po[0] <= F[2] + v.CORR + 1.0:
+            return None
+        xg = F[0] - 60.0 if Po[0] < F[0] else F[2] + v.CORR + 60.0
+        if (xg - Po[0]) * (xg - xc) > 0:
+            return None
+        best = None
+        for yg in gap_set:
+            if any(a < xg < c and min(yg, Po[1]) < d and b < max(yg, Po[1]) for a, b, c, d in big):
+                continue
+            if hr(yg, xc, xg, bits) > 1.0:
+                continue
+            vl = max(vr(xc, ya_, yg), vr(xg, yg, Po[1]))
+            c_ = 2.0 * (abs(yg - ya_) + abs(yg - Po[1])) + 3000.0 * hr(yg, xc, xg)
+            if best is None or c_ < best[0]:
+                best = (c_, yg, vl)
+        if best is None:
+            return None
+        _, yg, vl = best
+        return [(xc, yg), (xg, yg), (xg, Po[1])], best[0], vl
+
+    def field_exit(Pf, Po, bits):
+        """a field pin to a block outside the field (spine / KV centre): vertical in the column corridor whose windows
+        stay lowest, the over-tile leg toward Po at Po's height while it has room, else in a row gap to the field edge
+        corridor and up / down that corridor."""
+        sc = side_cols(Pf[0])
+        edge = min(sc, key=lambda c: abs(cx_list[c] - Po[0]))
+        cs = sorted(sc, key=lambda c: abs(cx_list[c] - Po[0]))[:10]
+        best = None
+        for c in cs:
+            xc = cx_list[c]
+            la, ca = hleg(Pf, xc, bits)
+            ya_ = la[-1][1] if la else Pf[1]
+            xe = cx_list[edge]
+            run = abs(xc - xe) > 420.0 and over_tile(Po[1]) and hr(Po[1], xc, xe, bits) > 1.0
+            if run:
+                lb, cb = hleg((xe, Po[1]), xc, bits)     # same rule mirrored: the edge corridor carries the jog
+                tail = lb[::-1] + [(xe, Po[1])]
+                vl = max(vr(xc, ya_, lb[-1][1]), vr(xe, lb[-1][1], Po[1]))
+            else:
+                tail, cb = [(xc, Po[1])], 0.0
+                vl = vr(xc, ya_, Po[1])
+                tj = exit_jog(Pf, Po, xc, ya_, bits)
+                if tj is not None:
+                    tail, cb, vl = tj
+            # it24: vl is the window fill ratio (booked / cap); + bits / cap as the excess test
+            vx = vl + bits / max(1.0, min(vcap(int(xc // FBIN), k) for k in _bins(min(ya_, Po[1]), max(ya_, Po[1]))))
+            cost = ca + cb + abs(xc - Po[0]) / 4.0 + 20000.0 * max(0.0, vx - 1.0) + 600.0 * vl
+            if best is None or cost < best[0]:
+                best = (cost, la, tail)
+        _, la, tail = best
+        if _os.environ.get('OT_FA_DBG') and _dbg_cur[0].startswith(_os.environ['OT_FA_DBG']):
+            print('FA_X', _dbg_cur[0], Pf, Po, best[0], la, tail, flush=True)
+        return [Pf] + la + tail + [Po]
+
+    _dbg_cur = ['']
+
+    def poly_of(cl, P0, P1, bid=None, eps=None):
+        _dbg_cur[0] = bid or ''
         f0, f1 = in_field(*P0), in_field(*P1)
-        if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0):
+        if _os.environ.get('OT_FA_DBG') and bid and bid.startswith(_os.environ['OT_FA_DBG']):
+            print('FA_DBG', bid, cl, P0, P1, f0, f1, FIELD_ALLOC, list(side_cols(P0[0]))[:2], flush=True)
+        if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0 and not (FIELD_ALLOC and f0 and f1 and not cl.startswith('kvn'))):
+            # it19: under FIELD_ALLOC a same-x field word goes through field_route too (the straight vertical
+            # shortcut stacked 3 x 512-b tree words + a corridor word in one column channel: 0.72 / 0.68 / 0.65)
             return [P0, P1]
+        if FIELD_ALLOC and cl != 'corridor' and not cl.startswith('kvn') and f0 and f1 and side_cols(P0[0]) == side_cols(P1[0]):
+            return field_route(P0, P1, cur_bits[0])
+        if FIELD_ALLOC and f0 != f1 and not cl.startswith('kvn'):
+            Pf, Po = (P0, P1) if f0 else (P1, P0)
+            path = field_exit(Pf, Po, cur_bits[0])
+            return path if f0 else path[::-1]
         if f0 and f1 and side_cols(P0[0]) == side_cols(P1[0]):
             xm = (P0[0] + P1[0]) / 2
             lo, hi = sorted((P0[0], P1[0]))
@@ -1010,12 +2064,126 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             xc = cx_list[min(cs, key=lambda c: load(c, Pf[1], Po[1]) + abs(cx_list[c] - Po[0]) / 2000.0)]
             path = [Pf, (xc, Pf[1]), (xc, Po[1]), Po]
             return path if f0 else path[::-1]
+        if io_ch is not None and max(P0[1], P1[1]) < io_ch[0] and abs(P0[0] - P1[0]) > 500.0:
+            # it3: an IO-row word between two IO blocks that are not neighbours runs in the IO word channel above the
+            # row (its straight run would cross the UCIe / collective PHY bodies: relays fell on the die edge and hopped
+            # 1.3-3.5 mm over the PHY)
+            lo_, hi_ = sorted((P0[0], P1[0]))
+            if any(a < hi_ - 1.0 and lo_ + 1.0 < c and b < min(P0[1], P1[1]) + 1.0 < d for a, b, c, d in big):
+                # two sub-lanes over the channel height, least-loaded first (one centre line stacked every word
+                # in one 260-um window)
+                # it4: four sub-lanes (one word per lane where possible: shared lanes stacked relays at the faces)
+                hch = io_ch[1] - io_ch[0]
+                subs = [io_ch[0] + hch * f for f in IO_SUB_F]
+                k_ = io_lane(lo_, hi_, subs, allow=(0, 1) if FIELD_ALLOC else None)
+                return [P0, (P0[0], subs[k_]), (P1[0], subs[k_]), P1]
+        if io_ch is not None and bid is not None and bid.split('__r')[0] == 'host_fdi' and abs(P0[0] - P1[0]) > 500.0 \
+                and (P0[1] < io_ch[0]) != (P1[1] < io_ch[0]):
+            # it4: the KV host link drops down a spine lane into its own IO-channel sub-lane, then along it to the host
+            # SerDes face (it staircased across the field's bottom row into the serdes words' window)
+            Pa, Pi = (P0, P1) if P1[1] < io_ch[0] else (P1, P0)
+            hch = io_ch[1] - io_ch[0]
+            subs = [io_ch[0] + hch * f for f in IO_SUB_F]
+            k_ = io_lane(*sorted((P0[0], P1[0])), subs, allow=(3,) if FIELD_ALLOC else None)
+            chx = getattr(v, 'SPINE_CHANNEL_X', None)
+            xl = lane_pick(chx, Pa, (Pa[0], subs[k_]), lane_bits) if chx else Pa[0]
+            path = [Pa, (xl, Pa[1]), (xl, subs[k_]), (Pi[0], subs[k_]), Pi]
+            return path if Pa is P0 else path[::-1]
+        if kv_gaps and eps is not None and len(eps) == 2:
+            n0, n1 = eps[0][0], eps[1][0]
+            strip = lambda P: P[0] < fw[0] - 1.0 or P[0] > fe[2] + v.CORR + 1.0      # noqa: E731
+            kc0, kc1 = n0 in KVC_NAMES, n1 in KVC_NAMES
+            if (kc0 and strip(P1)) or (kc1 and strip(P0)):
+                Pc, Ps = (P0, P1) if kc0 else (P1, P0)
+                F = fw if Ps[0] < Pc[0] else fe
+                chx = getattr(v, 'SPINE_CHANNEL_X', None) or [Pc[0]]
+                kvl = [x for x in chx if abs(x - Pc[0]) < 1500.0] or [Pc[0]]
+                best = None
+                sd_ = 'W' if Ps[0] < Pc[0] else 'E'
+                xs_ = (getattr(v, 'KV_XCH_STRIP', None) or {}).get(sd_)
+                # it17: the jog column between the field and the strip's head stacks (W: E of the stacks; E: W of them)
+                fe_ = F[0] if sd_ == 'W' else F[2] + v.CORR
+                xj = round((xs_[1] + fe_) / 2 if sd_ == 'W' else (xs_[0] + fe_) / 2, 3) if xs_ else None
+
+                def clear(y_, xa_, xb_):
+                    lo_, hi_ = sorted((xa_, xb_))
+                    return not any(a < hi_ - 1.0 and lo_ + 1.0 < c and b < y_ + 35.0 and y_ - 35.0 < d and c - a > 350.0
+                                   and not (a <= Ps[0] <= c)
+                                   and not (a <= Pc[0] <= c and b <= Pc[1] <= d) and not (F[0] - 1 <= a and c <= F[2] + v.CORR + 1)
+                                   for a, b, c, d in big)
+                for yg in kv_gaps:
+                    gid = gap_id.get(yg)
+                    if gid is not None and gap_tot.get(gid, 0.0) + cur_bits[0] > KV_GAP_CAP:
+                        continue                 # it17: <= ~4 kb aggregate per row gap (all its sub-lanes)
+                    if clear(yg, Pc[0], Ps[0]):
+                        opts = [(yg, None)]
+                    elif xj is not None and clear(yg, Pc[0], xj):
+                        opts = [(yg, yc) for yc in v.KV_XCH.get(sd_, ())
+                                if xch_bits.get((sd_, yc), 0.0) + cur_bits[0] <= KV_XCH_CAP]
+                    else:
+                        continue
+                    for yg_, yc in opts:
+                        yr = yg_ if yc is None else yc
+                        det = abs(yg_ - Pc[1]) + abs(yg_ - yr) + abs(yr - Ps[1])
+                        cost = det + 6000.0 * (gap_bits.get(yg_, 0.0) + cur_bits[0]) / 1000.0 + (0.0 if yg_ in gap_set else 600.0) \
+                            + (6000.0 * (xch_bits.get((sd_, yc), 0.0) + cur_bits[0]) / 1000.0 if yc is not None else 0.0)
+                        if FIELD_ALLOC:
+                            # it24: the run's fine windows (cut-model caps): three sub-lanes of one gap share a window
+                            cost += 20000.0 * max(0.0, hr(yg_, Pc[0], Ps[0], cur_bits[0]) - 1.0) + 600.0 * hr(yg_, Pc[0], Ps[0])
+                        if best is None or cost < best[0]:
+                            best = (cost, yg_, yc)
+                if best is not None:
+                    yg, yc = best[1], best[2]
+                    gap_bits[yg] = gap_bits.get(yg, 0.0) + cur_bits[0]
+                    if gap_id.get(yg) is not None:
+                        gap_tot[gap_id[yg]] = gap_tot.get(gap_id[yg], 0.0) + cur_bits[0]
+                    if yc is not None:
+                        xch_bits[(sd_, yc)] = xch_bits.get((sd_, yc), 0.0) + cur_bits[0]
+                    yr = yg if yc is None else yc
+                    tight_stride.add(bid)
+                    if Ps[0] > Pc[0]:
+                        # E-bound: the KV centre's E face is next to the E field: run up / down its first corridor
+                        # it4b: E-bound words run up / down the 120-um gap between the KV centre stack and the E
+                        # field (their pins are on that face): the corridor legs + horizontal stubs from the pins
+                        # stacked 3.2 kb in one window (0.69)
+                        xl = round((Pc[0] + F[0]) / 2, 3) if 0.0 < F[0] - Pc[0] < 200.0 else \
+                            min((x for x in cx_list if x > Pc[0]), default=Pc[0])
+                        if FIELD_ALLOC:
+                            # it19: E-bound kvn words pick, by booked vertical load, among the KVc|E-field gap and
+                            # the first two E-field corridors (all on the fixed gap crowded the KV-centre E face:
+                            # 0.69 / 0.67)
+                            xo = [xl] + sorted(x for x in cx_list if x > Pc[0] + 1.0 and abs(x - xl) > 1.0)[:2]
+                            # it24: + the stub from the KVc E-face pin to the lane at pin height (a corridor lane's stub
+                            # crosses the KVc|E gap with every other E-face word: 0.74 at x 18550)
+                            xl = min(xo, key=lambda q: (vr(q, Pc[1], yg, cur_bits[0]) > 1.0 or hr(Pc[1], Pc[0], q, cur_bits[0]) > 1.0,
+                                                        2000.0 * max(vr(q, Pc[1], yg), hr(Pc[1], Pc[0], q)) + 0.3 * abs(q - Pc[0])))
+                    else:
+                        xl = lane_pick(kvl, Pc, (Pc[0], yg), lane_bits) if all(x in lane_bits for x in kvl) else kvl[0]
+                    fa, fb = (F[2] + v.CORR, F[0]) if Ps[0] < Pc[0] else (xl, F[2] + v.CORR)
+                    jog = [] if yc is None else [(xj, yg), (xj, yc)]
+                    path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg)] + jog + [(Ps[0], yr), Ps]
+                    bs = by.get(eps[1][0] if kc0 else eps[0][0])
+                    if bs is not None and abs(Ps[1] - yr) > 1.0:
+                        # it4: approach a strip pin from its own face: a pin on the N / S face of a block between the
+                        # run height and the pin (wctl: the kvn leg ran up through its 518-um body, hop 575 um) is
+                        # reached from a side channel beside the block, then along the face
+                        top, bot = bs.y + bs.h, bs.y
+                        face_n = abs(Ps[1] - top) < 2.0
+                        face_s = abs(Ps[1] - bot) < 2.0
+                        if (face_n and yr < bot) or (face_s and yr > top):
+                            xs = bs.x + bs.w + 65.0 if Ps[0] < Pc[0] else bs.x - 65.0
+                            ya = Ps[1] + (60.0 if face_n else -60.0)
+                            path = [Pc, (xl, Pc[1]), (xl, yg), (fa, yg), (fb, yg)] + jog + [(xs, yr), (xs, ya), (Ps[0], ya), Ps]
+                    return path if Pc is P0 else path[::-1]
         chx = getattr(v, 'SPINE_CHANNEL_X', None)
         if chx and abs(P0[1] - P1[1]) > 1000.0 and min(chx) - 1500.0 < P0[0] < max(chx) + 1500.0 \
-                and min(chx) - 1500.0 < P1[0] < max(chx) + 1500.0:
+                and min(chx) - 1500.0 < P1[0] < max(chx) + 1500.0 and lane_bits is not None:
             # r22k (kv-die KV2): a long vertical spine word runs in the spine relay channel nearest its two pins (the
             # spine columns abut blocks end to end: a leg over them has no relay site)
-            xc = min(chx, key=lambda x: abs(x - P0[0]) + abs(x - P1[0]))
+            if getattr(v, 'SPINE_LANE_BALANCE', False):
+                xc = lane_pick(chx, P0, P1, lane_bits)
+            else:
+                xc = min(chx, key=lambda x: abs(x - P0[0]) + abs(x - P1[0]))
             return [P0, (xc, P0[1]), (xc, P1[1]), P1]
         return [P0, (P0[0], P1[1]), P1]
 
@@ -1050,7 +2218,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     ck_add = {}
     stats, B, fck_drop, fck_new, insts, worst, spill = {}, [], set(), [], [], [], []
     stage_of = {}
-    order = {'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
+    # it24: the KV host link (d2d_fdi) places first: its spine lane + IO sub-lane relay sites never depend on the
+    # order of the other classes (it22: kvn before trees took its sites and it staircased into the SerDes window)
+    order = {'d2d_fdi': -1, 'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
     buses = sorted(enumerate(m['buses']), key=lambda t: (order.get(t[1][1], 3), t[0]))
     keep = {}
     def relay_frame(bits, cl):
@@ -1064,18 +2234,118 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             return w, RELAY_V_H - v.SHAVE
         return w, max(v.up(span1, v.GY), BWP_H) - v.SHAVE
 
+    # ---- qwen-tp8 v2: tree-leg pad columns are RESERVED before the bulk relays (it1/v2g: placed after them, the
+    # corridors next to the node were full and pads scattered up to 850 um from their sink).  Each padded leg gets
+    # one contiguous column of `pad` frames in one corridor flanking its sink tile, starting at the sink's height and
+    # growing toward the source; the bulk relays then route source -> far end of the column (P1 override), so
+    # consecutive pads are one frame apart and the last pad is within reach of the M8 tree pins at the tile middle.
+    tpads = getattr(v, 'TREE_PADS', None) or {}
+    pre_pads, pre_far = {}, {}
+    if tpads:
+        bidx0 = {bid: idx for idx, (bid, cl, bits, eps) in buses}
+        for bid, npad in sorted(tpads.items(), key=lambda t: -t[1]):
+            if bid not in bidx0:
+                raise ValueError(f'tree pads: no bus {bid}')
+            idx = bidx0[bid]
+            _, cl, bits, eps = m['buses'][idx]
+            P0, P1 = pos(*eps[0]), pos(*eps[1])
+            w, h = relay_frame(bits, cl)
+            sgn = 1 if P0[1] >= P1[1] else -1
+            best = None
+            for c_ in sorted(range(COLS), key=lambda c: abs(corr_x0[c] + v.CORR / 2 - P1[0]))[:2]:
+                x0 = corr_x0[c_]
+                got, y = [], P1[1] - h / 2
+                for k in range(npad):
+                    hit = None
+                    for t in range(0, int(600.0 / v.GY)):
+                        y0 = v.dn(y + sgn * t * v.GY, v.GY)
+                        r = (x0, y0, x0 + w + v.SHAVE, y0 + h + v.SHAVE)
+                        if y0 >= g['y0'] and r[3] <= die_top and free(r) and \
+                                not any(q[1] < r[3] - 1e-6 and r[1] < q[3] - 1e-6 for q in got):
+                            hit = r
+                            break
+                    if hit is None:
+                        break
+                    got.append(hit)
+                    y = hit[1] + sgn * (h + v.SHAVE)
+                if len(got) < npad:
+                    continue
+                cen = [((q[0] + q[2]) / 2, (q[1] + q[3]) / 2) for q in got]
+                hops = [abs(cen[0][0] - P1[0]) + abs(cen[0][1] - P1[1])] + \
+                       [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(cen, cen[1:])]
+                if best is None or max(hops) < best[0]:
+                    best = (max(hops), got, cen)
+            if best is None or best[0] > RMAX:
+                continue                      # fall back to the post-bulk walk below
+            for q in best[1]:
+                add_rect(q)
+            # chain order: far end first, the frame nearest the sink last
+            pre_pads[idx] = [(q[0], q[1], w, h) for q in reversed(best[1])]
+            pre_far[idx] = best[2][-1]
+    def hops_of(pl):
+        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
+        return [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:])]
+    def backtracks(pl):
+        """qwendie-1011 (textbook audit class 4 / fp_margin_lint far_side): a relay farther (Manhattan) from the next
+        chain point than its predecessor is (+ 20 um) -- the chain doubles back."""
+        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
+        mh = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])   # noqa: E731
+        return any(mh(pts[i], pts[i + 1]) > mh(pts[i - 1], pts[i + 1]) + 20.0 for i in range(1, len(pts) - 1))
+
+    def chain_path(P0, frames, P1, poly):
+        """it24: the rectilinear route of a PLACED relay chain (each hop an L whose corner lies nearer the allocator's
+        poly) -- what the allocator books, so its load model is the placement, not the plan"""
+        pts = [P0] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in frames] + [P1]
+
+        def dpoly(q):
+            best_ = 1e18
+            for (xa_, ya_), (xb_, yb_) in zip(poly, poly[1:]):
+                qx = min(max(q[0], min(xa_, xb_)), max(xa_, xb_))
+                qy = min(max(q[1], min(ya_, yb_)), max(ya_, yb_))
+                best_ = min(best_, abs(q[0] - qx) + abs(q[1] - qy))
+            return best_
+        out = [pts[0]]
+        for a, b in zip(pts, pts[1:]):
+            if abs(a[0] - b[0]) > 1e-6 and abs(a[1] - b[1]) > 1e-6:
+                out.append(min(((a[0], b[1]), (b[0], a[1])), key=dpoly))
+            out.append(b)
+        return out
+
+    def unplace(frames):
+        for f in frames:
+            r_ = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
+            for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
+                for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
+                    lst = grid.get((gx, gy), [])
+                    if r_ in lst:
+                        lst.remove(r_)
+            cc_ = corr_of(f[0] + f[2] / 2)
+            if cc_ is not None and (f[1], f[1] + f[3]) in corr_used.get(cc_, []):
+                corr_used[cc_].remove((f[1], f[1] + f[3]))
+
+    def replace_frames(frames):
+        for f in frames:
+            add_rect((f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE))
+            cc_ = corr_of(f[0] + f[2] / 2)
+            if cc_ is not None:
+                corr_used.setdefault(cc_, []).append((f[1], f[1] + f[3]))
+    booked = {}          # it24: idx -> (booked rectilinear chain route, bits)
+    feedback = []        # it24: (bid, max hop before, after, accepted)
     plans = {}
+    import os as _os
+    _only = tuple(q for q in _os.environ.get('OT_RELAY_ONLY', '').split(',') if q)   # debug: relay only these buses
+    _dbg = set(q for q in _os.environ.get('OT_RELAY_DBG', '').split(',') if q)
     for idx, (bid, cl, bits, eps) in buses:
-        if cl in RELAY_SKIP or len(eps) != 2:
+        if cl in RELAY_SKIP or len(eps) != 2 or (_only and not bid.startswith(_only)):
             keep[idx] = [(bid, cl, bits, eps)]
             continue
-        P0, P1 = pos(*eps[0]), pos(*eps[1])
+        P0, P1 = pos(*eps[0]), pre_far.get(idx) or pos(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
         if d <= RMAX:
             keep[idx] = [(bid, cl, bits, eps)]
             continue
-        path = poly_of(cl, P0, P1)
-        cands, L = candidates(path)
+        cur_bits[0] = bits
+        path = poly_of(cl, P0, P1, bid=bid, eps=eps)
         span1 = bits * 0.048 + 4.0
         span2 = bits * 0.096 + 4.0
 
@@ -1090,51 +2360,106 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             w, h = frame(c)
             sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, c[3], tol)
             return None if sp is None else (sp[0], sp[1], w, h)
-        frames, s_last, ycur = [], 0.0, None
-        # qwendie-1011: a TERMINAL_TIGHT endpoint (an unregistered element input: ctlm c* carries p_am into the
-        # fixed-latency argmax loop) gets its relay within `tight` um of the pin; same relay count (checked by the caller)
-        tt_ = getattr(v, 'TERMINAL_TIGHT', {})
-        tight0 = tt_.get(tuple(eps[0]))
-        tight1 = tt_.get(tuple(eps[-1]))
-        while L - s_last > (tight1 if tight1 and len(frames) else pitch) or (tight0 and not frames and L > tight0):
-            hi_ = tight0 if (tight0 and not frames) else pitch
-            reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + hi_]
-            if not reach:
-                nxt = [c for c in cands if c[0] > s_last + 1.0]
-                if not nxt:
-                    break
-                reach = nxt[:1]
-            if ycur is not None:      # a horizontal run keeps the height of its previous relay (no zig-zag)
-                reach = [(c[0], c[1], ycur, c[3], c[4]) if c[4] == 'h' and abs(ycur - c[2]) < 400.0 else c
-                         for c in reach]
-            got = None
-            for tol in (20.0, 80.0, 200.0):
-                for c in reach[::-1]:
-                    sp = _try(c, tol)
-                    if sp is not None:
-                        got = (c, sp)
+        def _chain(path):
+            cands, L = candidates(path)
+            frames, s_last, ycur = [], 0.0, None
+            # qwendie-1011: a TERMINAL_TIGHT endpoint (an unregistered element input: ctlm c* carries p_am into the
+            # fixed-latency argmax loop) gets its relay within `tight` um of the pin; same relay count (checked by the caller)
+            tt_ = getattr(v, 'TERMINAL_TIGHT', {})
+            tight0 = tt_.get(tuple(eps[0]))
+            tight1 = tt_.get(tuple(eps[-1]))
+            pitch_b = pitch - 70.0 if bid in tight_stride else pitch
+            cur_tight[0] = bid in tight_stride
+            while L - s_last > (tight1 if tight1 and len(frames) else pitch_b) or (tight0 and not frames and L > tight0):
+                hi_ = tight0 if (tight0 and not frames) else pitch_b
+                reach = [c for c in cands if s_last + 1.0 < c[0] <= s_last + hi_]
+                if not reach:
+                    nxt = [c for c in cands if c[0] > s_last + 1.0]
+                    if not nxt:
                         break
-                if got is not None:
-                    break
-            if got is None:
-                c = reach[-1]
-                sp = _try(c, None)
-                if sp is None:
-                    raise ValueError(f'relays: no free spot for {bid} near ({c[1]:.0f}, {c[2]:.0f})')
-                got = (c, sp)
-            x0, y0, w, h = got[1]
-            add_rect((x0, y0, x0 + w + v.SHAVE, y0 + h + v.SHAVE))
-            cc_ = corr_of(x0 + w / 2)
-            if cc_ is not None:
-                corr_used.setdefault(cc_, []).append((y0, y0 + h))
-            frames.append((x0, y0, w, h))
-            ycur = y0 + h / 2 if got[0][4] == 'h' else None
-            s_last = got[0][0]
-        plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=frames, d=d)
+                    reach = nxt[:1]
+                if ycur is not None:      # a horizontal run keeps the height of its previous relay (no zig-zag)
+                    reach = [(c[0], c[1], ycur, c[3], c[4]) if (c[4] == 'h' or (c[4] == 'o' and bid in tight_stride))
+                             and abs(ycur - c[2]) < 400.0 else c for c in reach]
+                got = None
+                for tol in (20.0, 80.0, 200.0):
+                    for c in reach[::-1]:
+                        sp = _try(c, tol)
+                        if sp is not None:
+                            got = (c, sp)
+                            break
+                    if got is not None:
+                        break
+                if got is None:
+                    c = reach[-1]
+                    sp = _try(c, None)
+                    if sp is None:
+                        raise ValueError(f'relays: no free spot for {bid} near ({c[1]:.0f}, {c[2]:.0f})')
+                    got = (c, sp)
+                x0, y0, w, h = got[1]
+                add_rect((x0, y0, x0 + w + v.SHAVE, y0 + h + v.SHAVE))
+                cc_ = corr_of(x0 + w / 2)
+                if cc_ is not None:
+                    corr_used.setdefault(cc_, []).append((y0, y0 + h))
+                frames.append((x0, y0, w, h))
+                ycur = y0 + h / 2 if (got[0][4] == 'h' or (got[0][4] == 'o' and bid in tight_stride and ycur is not None)) else None
+                s_last = got[0][0]
+                if _dbg and bid in _dbg:
+                    print('DBG', bid, 'L', round(L), 'path', [(round(a), round(b)) for a, b in path] if len(frames) == 1 else '',
+                          'c', [round(q) if isinstance(q, float) else q for q in got[0]], 'at', (round(x0), round(y0)))
+            return frames
 
-    def hops_of(pl):
-        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
-        return [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:])]
+        frames = _chain(path)
+        if FIELD_ALLOC and cl != 'corridor' and not cl.startswith('kvn') and (in_field(*P0) or in_field(*P1)):
+            # it24: feedback from placement to the allocator.  A chain whose relays could not keep <= RMAX hops (or that
+            # doubles back) would go to the pass-2 search, which wanders off the booked route (tree_26_1_4b: booked
+            # corridor 19220, placed down the KVc|E gap and back over t_24_8: 0.92).  Instead the stretch where the
+            # chain failed gets a phantom full load and the allocator picks again (<= 2 tries; the best chain wins).
+            def _bad(fr):
+                pl_ = dict(P0=P0, P1=P1, frames=fr)
+                return max(hops_of(pl_)) > RMAX + 25.0 or backtracks(pl_)
+            for _try_n in range(2):
+                if not _bad(frames):
+                    break
+                pts_ = [P0] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in frames] + [P1]
+                hs_ = hops_of(dict(P0=P0, P1=P1, frames=frames))
+                j_ = max(range(len(hs_)), key=lambda q: hs_[q])
+                (ax_, ay_), (bx_, by_) = pts_[j_], pts_[j_ + 1]
+                box = (min(ax_, bx_) - 60.0, min(ay_, by_) - 60.0, max(ax_, bx_) + 60.0, max(ay_, by_) + 60.0)
+                ph = []
+                for (xa_, ya_), (xb_, yb_) in zip(path, path[1:]):
+                    xa2, xb2 = max(min(xa_, xb_), box[0]), min(max(xa_, xb_), box[2])
+                    ya2, yb2 = max(min(ya_, yb_), box[1]), min(max(ya_, yb_), box[3])
+                    if abs(xa_ - xb_) < 1e-6 and box[0] <= xa_ <= box[2] and yb2 > ya2:
+                        ph.append([(xa_, ya2), (xa_, yb2)])
+                    elif abs(ya_ - yb_) < 1e-6 and box[1] <= ya_ <= box[3] and xb2 > xa2:
+                        ph.append([(xa2, ya_), (xb2, ya_)])
+                if not ph:
+                    break
+                for q in ph:
+                    book(q, 1e6)
+                path2 = poly_of(cl, P0, P1, bid=bid, eps=eps)
+                for q in ph:
+                    book(q, -1e6)
+                if path2 == path:
+                    break
+                unplace(frames)
+                frames2 = _chain(path2)
+                ok2 = not _bad(frames2)
+                feedback.append((bid, round(max(hs_)), round(max(hops_of(dict(P0=P0, P1=P1, frames=frames2)))), ok2))
+                if ok2:
+                    path, frames = path2, frames2
+                else:
+                    unplace(frames2)
+                    replace_frames(frames)
+                    break
+        if FIELD_ALLOC:
+            # it24: book the PLACED chain (the allocator's load model = the placement)
+            cp_ = chain_path(P0, frames, P1, path)
+            book(cp_, bits)
+            booked[idx] = (cp_, bits)
+        plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=frames, d=d, path=path)
+
     # ---- pass 2: a bus whose relays could not keep <= RMAX hops (crowded lane, a spine macro in the way)
     # is re-placed by a breadth-first search over every free relay spot of the die: wires may cross any macro on
     # M8/M9, only the relays need free area, so the fewest-relay chain with every hop <= pitch is found exactly
@@ -1158,10 +2483,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         return False
         return True
 
-    def sites(w, h):
+    def sites(w, h, gaps=False):
         """lower-left corners where a w x h relay frame fits: every corridor slot (32.4 um steps) and a 21.6 um grid
-        over the free area outside the tile arrays."""
-        key = (round(w, 3), round(h, 3))
+        over the free area outside the tile arrays (gaps: also the free in-field area, i.e. the row gaps)."""
+        key = (round(w, 3), round(h, 3), gaps)
         if key in site_cache:
             return site_cache[key]
         pts = []
@@ -1177,7 +2502,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for x in np.arange(0.0, m['die']['w'] - w, step):
             for y in np.arange(0.0, m['die']['h'] - h, step):
                 x0, y0 = v.up(float(x), v.GX), v.up(float(y), v.GY)
-                if in_field(x0 + w / 2, y0 + h / 2) and y0 + h <= die_top + 1.0:
+                if in_field(x0 + w / 2, y0 + h / 2) and y0 + h <= die_top + 1.0 and not gaps:
                     continue
                 if free0((x0, y0, x0 + w, y0 + h)):
                     pts.append((x0, y0))
@@ -1185,14 +2510,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         site_cache[key] = (arr, cKDTree(arr + np.array([w / 2, h / 2])) if len(arr) else None)
         return site_cache[key]
 
-    def backtracks(pl):
-        """qwendie-1011 (textbook audit class 4 / fp_margin_lint far_side): a relay farther (Manhattan) from the next
-        chain point than its predecessor is (+ 20 um) -- the chain doubles back."""
-        pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
-        mh = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])   # noqa: E731
-        return any(mh(pts[i], pts[i + 1]) > mh(pts[i - 1], pts[i + 1]) + 20.0 for i in range(1, len(pts) - 1))
 
-    repaired, unrepaired = [], []
+    repaired, unrepaired, off_plan = [], [], []
     for idx, pl in sorted(plans.items()):
         hs = hops_of(pl)
         if max(hs) <= RMAX + 25.0 and not backtracks(pl):
@@ -1200,7 +2519,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         bits = pl['bits']
         w, h = relay_frame(bits, pl['cl'])
         W, H = w + v.SHAVE, h + v.SHAVE
-        arr, tree = sites(W, H)
+        arr, tree = sites(W, H, pl['bid'] in tight_stride)
         if tree is None:
             unrepaired.append(pl['bid'])
             continue
@@ -1219,11 +2538,37 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         dP1 = np.abs(ctr[:, 0] - P1[0]) + np.abs(ctr[:, 1] - P1[1])
         ok_cache = {}
 
+        near = None
+        # it24: under FIELD_ALLOC every repaired chain stays near its (allocator-booked) route: within 450 um (KV row
+        # runs, as before), 300 um (field words), 120 um (the host link in its IO sub-lane: it22 wandered into the
+        # SerDes window); only if that search fails does the unconstrained one run, and the bus is listed off_plan
+        near_r = 450.0 if pl['bid'] in tight_stride else (
+            (120.0 if pl['cl'] == 'd2d_fdi' else 300.0) if FIELD_ALLOC and pl.get('path') else None)
+        if near_r is not None:
+            # it4: a KV row-run word is repaired within 450 um of its planned path (the unconstrained search wandered
+            # down to the IO channel and back: 80-140 relays on words planned at 50-90)
+            near = np.full(len(ctr), np.inf)
+            arcp = np.zeros(len(ctr))
+            s0_ = 0.0
+            for (xa_, ya_), (xb_, yb_) in zip(pl['path'], pl['path'][1:]):
+                qx = np.clip(ctr[:, 0], min(xa_, xb_), max(xa_, xb_))
+                qy = np.clip(ctr[:, 1], min(ya_, yb_), max(ya_, yb_))
+                dd = np.abs(ctr[:, 0] - qx) + np.abs(ctr[:, 1] - qy)
+                better = dd < near
+                arcp = np.where(better, s0_ + np.abs(qx - xa_) + np.abs(qy - ya_), arcp)
+                near = np.minimum(near, dd)
+                s0_ += abs(xb_ - xa_) + abs(yb_ - ya_)
+            near = near <= near_r
+            # progress along the planned path (not toward the load: the run detours by design)
+            dP1 = s0_ - arcp
+        dP1_free = np.abs(ctr[:, 0] - P1[0]) + np.abs(ctr[:, 1] - P1[1])
+
         def ok(i):
             if i not in ok_cache:
                 x0, y0 = arr[i]
-                ok_cache[i] = free((x0, y0, x0 + W, y0 + H))
+                ok_cache[i] = (near is None or bool(near[i])) and free((x0, y0, x0 + W, y0 + H))
             return ok_cache[i]
+        near_cons = near
         def bfs(De, mono):
             start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i)]
             par = {i: -1 for i in start}
@@ -1241,7 +2586,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         if j not in par and (not mono or dP1[j] < dP1[i]) and ok(j):
                             par[j] = i
                             nxt.append(j)
-                nxt.sort(key=lambda j: abs(ctr[j][0] - P1[0]) + abs(ctr[j][1] - P1[1]))
+                nxt.sort(key=lambda j: dP1[j])
                 front = nxt[:4000]
             return hit, par, start
 
@@ -1254,9 +2599,22 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         # search only when the pass-1 hops are too long; a pass-1 chain whose hops pass is never replaced by a worse one
         need = max(hs) > RMAX + 25.0
         found, why = None, ''
-        for De, mono in ((D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)):
+        tries = [(D, True), (D, False), (430.0 - max(W, H) / 2, True), (430.0 - max(W, H) / 2, False)]
+        if near_cons is not None and FIELD_ALLOC and pl['bid'] not in tight_stride:
+            tries = [(De_, mo_, True) for De_, mo_ in tries] + [(De_, mo_, False) for De_, mo_ in tries]
+        else:
+            tries = [(De_, mo_, True) for De_, mo_ in tries]
+        off = False
+        for De, mono, cons in tries:
             if not mono and not need:
                 continue
+            if found is not None and not cons and not off:
+                break                    # a constrained chain exists: never trade it for an off-plan one
+            if not cons and not off:
+                off = True
+                near = None
+                dP1 = dP1_free
+                ok_cache.clear()
             hit, par, start = bfs(De, mono)
             if hit is None:
                 why = f"start {len(start)}, visited {len(par)}, sites {len(arr)}, D {D:.0f}"
@@ -1294,6 +2652,121 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         old = len(pl['frames'])
         pl['frames'] = frames
         repaired.append((pl['bid'], old, len(frames), round(max(hops_of(pl)), 1)))
+        if off:
+            off_plan.append(pl['bid'])
+        if idx in booked:
+            # it24: re-book the repaired chain in place of the pass-1 one
+            book(booked[idx][0], -bits)
+            cp_ = chain_path(P0, frames, P1, pl['path'])
+            book(cp_, bits)
+            booked[idx] = (cp_, bits)
+    # ---- qwen-tp8 tree-leg pads (tools/qwen_die_seam/tree_pads.py: the array bench's arrival model on the unpadded
+    # netlist): a tree word whose leg arrives early at its node gets `pad` extra relays at its sink end, in the
+    # corridor the node tile's W-face tree pins face, so both legs of every node arrive on the same cycle
+    targets = getattr(v, 'TREE_PAD_TARGETS', {}) or {}
+    pad_trim = dict(trimmed=0, extended=0, over=[])
+    extra = {}
+    for idx, fr_ in pre_pads.items():
+        _, cl, bits, eps = m['buses'][idx]
+        bid_ = m['buses'][idx][0]
+        nb_ = len(plans[idx]['frames']) if idx in plans else 0
+        if bid_ in targets:
+            # the bulk relays now end at the column's far end: keep exactly target - bulk pads (nearest the sink),
+            # so the leg's register depth is the balanced one whatever the bulk planner did
+            need = targets[bid_] - nb_
+            if need < 0:
+                pad_trim['over'].append(bid_)
+                need = 0
+            if need < len(fr_):
+                pad_trim['trimmed'] += len(fr_) - need
+                fr_ = fr_[len(fr_) - need:] if need else []
+            elif need > len(fr_):
+                pad_trim['extended'] += need - len(fr_)
+                extra[bid_] = need - len(fr_)
+        if idx not in plans:
+            P0 = pos(*eps[0])
+            plans[idx] = dict(bid=m['buses'][idx][0], cl=cl, bits=bits, eps=eps, P0=P0, P1=None, frames=[], d=0.0)
+            keep.pop(idx, None)
+        pl = plans[idx]
+        pl['P1'] = pos(*eps[1])
+        pl['frames'] = list(pl['frames']) + fr_
+        pl['d'] = abs(pl['P0'][0] - pl['P1'][0]) + abs(pl['P0'][1] - pl['P1'][1])
+    pre_ids = {m['buses'][i][0] for i in pre_pads}
+    tpads = {b: n for b, n in tpads.items() if b not in pre_ids}
+    tpads.update(extra)
+    m['tp8_pad_trim'] = pad_trim
+
+    def pad_spot(x, y, w, h, rings=200):
+        # nearest free frame anywhere (corridor, row-gap channel, spine): free() rejects every instance rect
+        for ring in range(rings):
+            st = ring * 4 * v.GY
+            cands = [(0, 0)] if ring == 0 else \
+                [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
+                [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
+            for dx, dy in sorted(cands, key=lambda t_: abs(t_[0]) + abs(t_[1])):
+                x0, y0 = v.dn(x - w / 2 + dx, v.GX), v.dn(y - h / 2 + dy, v.GY)
+                if y0 >= g['y0'] and y0 + h <= die_top and free((x0, y0, x0 + w, y0 + h)):
+                    return x0, y0
+        return None
+    pad_done = {}
+    if tpads:
+        bidx = {bid: idx for idx, (bid, cl, bits, eps) in buses}
+        for bid, npad in sorted(tpads.items()):
+            if bid not in bidx:
+                raise ValueError(f'tree pads: no bus {bid}')
+            idx = bidx[bid]
+            if idx not in plans:
+                _, cl, bits, eps = m['buses'][idx]
+                P0, P1 = pos(*eps[0]), pos(*eps[1])
+                plans[idx] = dict(bid=bid, cl=cl, bits=bits, eps=eps, P0=P0, P1=P1, frames=[],
+                                  d=abs(P0[0] - P1[0]) + abs(P0[1] - P1[1]))
+                keep.pop(idx, None)
+            pl = plans[idx]
+            w, h = relay_frame(pl['bits'], pl['cl'])
+            x1, y1 = pl['P1']
+            cc = corr_of(x1 - v.CORR / 2)
+            got = []
+            # the pads sit on the segment from the sink back to the bus's last relay (or its source): pad j at
+            # (j + 1) / (npad + 1) of the way, each at the nearest free spot (every hop ~ segment / (npad + 1))
+            fq = pl['frames'][-1] if pl['frames'] else None
+            Q = (fq[0] + fq[2] / 2, fq[1] + fq[3] / 2) if fq else pl['P0']
+            px, py = x1 - v.CORR / 2, y1
+            leg_c = None
+            for j in range(npad):
+                # a walk from the sink toward Q: each pad nearest the point 1 / (pads left + 1) of the way from the
+                # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
+                fr = 1.0 / (npad - j + 1)
+                qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
+                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
+                if sp is None and cc is None:
+                    # contract v2: qfd_tile_nk's tree pins are area pins inside the body (x 10-223 um), so the sink
+                    # is in no corridor: take the nearer of the two corridors flanking the walk point (y search
+                    # +-400 um), never the row gap ~650 um away (it1: 1,226 hops over reach)
+                    # one corridor per leg (v2g audit: alternating between the two flanking corridors zigzagged the
+                    # chain, 68 hops of 700-830 um): the first pad picks it, the rest walk along it
+                    best = None
+                    for c_ in ([leg_c] if leg_c is not None else
+                               sorted(range(COLS), key=lambda c: abs(cx_list[c] - qx))[:2]):
+                        s_ = place(cx_list[c_], qy, w + v.SHAVE, h + v.SHAVE, c_, 400.0)
+                        if s_ is not None:
+                            d_ = abs(s_[0] + w / 2 - qx) + abs(s_[1] + h / 2 - qy)
+                            if best is None or d_ < best[0]:
+                                best = (d_, s_, c_)
+                    sp = best[1] if best else None
+                    if best:
+                        leg_c = best[2]
+                if sp is None:
+                    sp = pad_spot(qx, qy, w + v.SHAVE, h + v.SHAVE)
+                if sp is None:
+                    raise ValueError(f'tree pads: no free spot for {bid} pad {j}')
+                add_rect((sp[0], sp[1], sp[0] + w + v.SHAVE, sp[1] + h + v.SHAVE))
+                got.append((sp[0], sp[1], w, h))
+                px, py = sp[0] + w / 2, sp[1] + h / 2
+            got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
+            pl['frames'] = list(pl['frames']) + got
+            pad_done[bid] = npad
+    m['tp8_tree_pads'] = dict(buses=len(pad_done) + len(pre_pads), relays=sum(pad_done.values()) + sum(
+        len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done))
     # ---- emit relays and hops
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
@@ -1357,6 +2830,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     for j, (bid, cl, bits, eps) in enumerate(B):
         if bid in ck_add:
             B[j] = (bid, cl, bits, eps + ck_add.pop(bid))
+    # qwen-tp8/die it4 (relay ck audit, coordinator 10-12): a stream relay in a clock region that had no sink yet (the
+    # KV-strip tail relays of the E KV-half words: 100 relays) named a clk_r<k> net that did not exist and was left with
+    # its ck unconnected; such a region now gets its own net from the region-clock root (pll_r<k>, as _regions_from_placement)
+    root_ = next((e[0] for b_ in B if re.fullmatch(r'clk_r\d+', b_[0]) for e in b_[3] if e[1].startswith('pll_r')), None)
+    for key in [k_ for k_ in ck_add if re.fullmatch(r'clk_r\d+', k_)]:
+        if root_ is not None:
+            B.append((key, 'clock_trunk', 1, [(root_, 'pll_' + key[4:])] + ck_add.pop(key)))
     missing = sorted(ck_add)
     m['buses'] = B + fck_new
     m['r21_stage_of'] = stage_of
@@ -1364,6 +2844,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
                           repaired_examples=repaired[:20], unrepaired=unrepaired,
+                          repaired_all=[r[0] for r in repaired], off_plan=off_plan, feedback=feedback,
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
                           relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
     base = v.masters
@@ -1795,7 +3276,7 @@ def _repack_band(v, m):
     m['insts'] = [i for i in m['insts'] if not i.name.startswith(('sp_port_tiles', 'sp_scale_rom'))]
     cols, free = _spine_free(v, m, central)
     rows = g['row_y']
-    tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
+    tgt = [_band_tgt(v, rows, b) for b in range(BANDS)]
     port_g = next(a for n, a, *_ in v.SPINE_BLOCKS if n == 'port_tiles') / PORT_GROUPS
     scale_g = next(a for n, a, *_ in v.SPINE_BLOCKS if n == 'scale_rom') / PORT_GROUPS
     for c in free:
@@ -1901,7 +3382,7 @@ def _repack_b3r3(v, m):
                        ('constants_sequencer', y_cs, h_cs, 'E')):
         parts.append(dict(name=n, col=c, y=round(y, 3), h=h))
     rows = g['row_y']
-    tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
+    tgt = [_band_tgt(v, rows, b) for b in range(BANDS)]
     half = (area['port_tiles'] + area['scale_rom']) / (2 * BANDS)
     h_sl = hh(half)
     if getattr(v, 'SLAB_GROUP_H', 0.0):
@@ -2089,6 +3570,16 @@ def _spine_buses(v, m, gm):
             # Port group = 16 * band + cidx.  (The b2/b3 generator used port bw{blk % 16}, which puts two block
             # words of one band on the same slab pin, e.g. blocks 0 and 48 on port_tiles_0.bw0.)
             g = GROUPS_PER_BAND * (blk % BANDS) + blk // BANDS
+            bof = getattr(v, 'BAND_OF', None)
+            if bof is not None:
+                # qwen-tp8 tp8b (F2 compact bands): the block's band / port index come from the band map (v.BAND_OF,
+                # _tp8b_bands), not the legacy 'blk = BANDS * cidx + band' order -- with 4 block rows and 3 bands that
+                # order put every third block on a far band's slab (block words up to 18 mm long, stacked in the W
+                # spine channel: fine cuts 1.0-1.9).  The block is the one holding the word's root tile.
+                mm_ = re.match(r't_(\d+)_(\d+)$', eps[0][0])
+                c_, r_ = int(mm_.group(1)), int(mm_.group(2))
+                band_, k_ = bof(blk, c_ - c_ % v.BLOCK[0], r_ - r_ % v.BLOCK[1])
+                g = GROUPS_PER_BAND * band_ + k_
             slab = gm['port'][g]
             # the overflow slab holds groups of two bands: its pins are named by port group
             pin = f'g{g}' if slab == gm.get('overflow_slab') else f'bw{g % GROUPS_PER_BAND}'
@@ -2514,6 +4005,36 @@ def _channel_pins(v, model, out, bits, far, k):
                 out[it.master].face(port, nb, face, 'M4', y - it.y, pitch)
                 placed[(it.master, port)] = (face, round(y, 1), pitch)
     model.setdefault('b3r6_channel', {}).update({f'{a}.{b}': v_ for (a, b), v_ in placed.items()})
+
+
+def _root_spread(v, m):
+    """qwen-tp8 contract v2 (TP4 e9 finding, el1011-qwendie 03:50): the morton host rule puts every block root (and so
+    the 16 block words of a band and their waypoints) in ONE tile row (local row 1), which overflowed the M8 / M6 H
+    rows over that row.  Re-host each block's tree with its local row index XORed with (block column mod 4): XOR on
+    the row bits is an automorphism of the morton pair tree (every level's partner keeps its distance), so every leg
+    keeps its length and the reduction order is unchanged (ROM slice placement is a compile-time map, as in
+    _east_mirror); the roots land on local rows 1, 0, 3, 2 -> four distinct rows per band."""
+    bc, br = v.BLOCK
+    rx = re.compile(r't_(\d+)_(\d+)$')
+
+    def mp(inst):
+        mm = rx.match(inst)
+        if not mm:
+            return inst
+        c, r = int(mm.group(1)), int(mm.group(2))
+        r0 = r - r % br
+        return f't_{c}_{r0 + ((r - r0) ^ ((c // bc) % br))}'
+    out, n = [], 0
+    for bid, cl, bits, eps in m['buses']:
+        if cl == 'tree_block' or bid.startswith('bword_'):
+            neps = [(mp(i), p) if p in ('t_out', 'n_a', 'n_b', 'n_y') else (i, p) for i, p in eps]
+            n += neps != eps
+            eps = neps
+        out.append((bid, cl, bits, eps))
+    m['buses'] = out
+    roots = sorted({int(rx.match(e[0]).group(2)) for bid, cl, bits, eps in out if bid.startswith('bword_')
+                    for e in eps[:1] if rx.match(e[0])})
+    m['geo']['tp8_root_spread'] = dict(remapped_buses=n, root_rows=roots)
 
 
 def _east_mirror(v, m):
@@ -3360,6 +4881,7 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
         PG.F = pg_f
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
+    _gate_track_lattice(work / 'elements.lef', m)
     meta = (write_pdn_r5 if rev == 'r5' else write_pdn_r4)(v, m, work / 'pdn.tcl', bump_um)['meta']
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
