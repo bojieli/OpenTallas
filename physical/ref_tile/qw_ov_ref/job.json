@@ -1,5 +1,5 @@
 {
- "name": "qw_ov_ref-ov2-cx-COMMIT",
+ "name": "qw_ov_ref-ov2-cx-493cb25e6",
  "block": "ot_hgi_quant_wide_ov",
  "ref_tile": true,
  "owner": "Codex:el1012-hbm-fq-cx",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "codex/el1012-hbm-fq-cx",
-  "commit": "COMMIT"
+  "commit": "493cb25e6"
  },
  "stages": {
   "bench": [
@@ -78,7 +78,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qw_ov_ref/qw_ov_ref-ov2-cx-COMMIT"
+   "to": "results/rtl/ref_tile/qw_ov_ref/qw_ov_ref-ov2-cx-493cb25e6"
   }
  ],
  "cycles_added": 0,
