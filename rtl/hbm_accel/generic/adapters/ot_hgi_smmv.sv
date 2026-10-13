@@ -168,9 +168,14 @@ module ot_hgi_smmv #(
     reg [7:0] nf; reg fits_r; reg [6:0] a_st; reg [7:0] a_ws; reg a_okr;
     wire [7:0] nfw = {e_g[ix(xp)], 3'b000};
     always @(posedge clk) begin : alq
-        reg ft; ft = ({1'b0, ap} + nfw) <= 8'd128;
+        // bx (10-12, deadlock at L1 xr cycle 94,847): an EMPTY ring (used 0: no live record holds a slot) restarts at
+        // address 0 with no wrap waste.  Before, a record with 8 op_g > ap after a wrap point (here nf 128 at ap 64,
+        // left there by a load before four X REUSE hits) needed waste 128 - ap + nf > 128 forever: ap only moves on
+        // an allocation, so the x stage never allocated again and every SM went idle.  used is read 2 edges early,
+        // but only an x event (which restarts al_age) raises it, so used 0 here is still 0 at the allocation.
+        reg ft, em; em = (used == 8'd0); ft = em || ({1'b0, ap} + nfw) <= 8'd128;
         nf <= nfw; fits_r <= ft;
-        a_st <= (MUT_SLOT != 0) ? 7'd0 : (ft ? ap : 7'd0);
+        a_st <= (MUT_SLOT != 0 || em) ? 7'd0 : (ft ? ap : 7'd0);
         a_ws <= (MUT_SLOT != 0 || ft) ? 8'd0 : (8'd128 - {1'b0, ap});
         a_okr <= (MUT_SLOT != 0) || ({1'b0, used} + a_ws + nf <= 9'd128);
     end
