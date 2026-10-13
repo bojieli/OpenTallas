@@ -1,9 +1,14 @@
 #!/bin/bash
-# ot-heavy v3 (2026-10-13: counts docker memory via use.<unit>, warns on over-sized requests; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
+# ot-heavy v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
 # Runs a large build / bench under a hard memory cap and admits it only when the host's memory allows:
 #   ot-heavy --mem <GB> [--slots-class big|small (ignored)] -- <command...>
 # Admission: MemAvailable - (growth still reserved by running ot-heavy jobs) >= MEM + HEADROOM_GB (/etc/ot-heavy.conf).
-# Each job runs in its own systemd user scope with MemoryMax=MEM (no swap), so it cannot exceed its reservation.
+# Each job runs in its own systemd user scope with MemoryMax=MEM (no swap), so it cannot exceed its request.
+# v4: when MEM > 2x the measured peak of the command's class (ot-heavy-reconcile --sizes; local table merged with the
+# fleet table), the RESERVATION charged for admission is ceil(max(1.5 x peak, peak + 8 GB)) instead of MEM.  MemoryMax
+# stays MEM; ot-heavy-reconcile gives the unit its full request back when its RSS passes 80 % of the reservation.
+# Unknown classes are charged their request.  The headroom is kept, so a job is never admitted beyond MemAvailable.
+# The size is looked up again on every attempt, so a queued waiter picks up a class measured while it waits.
 set -u
 MEM=""
 while [ $# -gt 0 ]; do
@@ -19,11 +24,14 @@ HEADROOM_GB=32
 [ -f /etc/ot-heavy.conf ] && . /etc/ot-heavy.conf
 D=/var/tmp/ot-heavy; mkdir -p $D 2>/dev/null; chmod 1777 $D 2>/dev/null
 UNIT="oth-$(id -un)-$$-$(date +%s)"
-# sizes learned by ot-heavy-reconcile: warn (never refuse) when the request is over 2x the measured peak of this class
-HINT=$(timeout 10 /usr/local/bin/ot-heavy-reconcile --size "$MEM" -- "$@" 2>/dev/null)
-[ -n "$HINT" ] && { echo "ot-heavy: $HINT" >&2; echo "$(date -Is) $UNIT $HINT: $*" >> "$D/admit.log"; }
 waited=0
+LASTRES=""
 while :; do
+  RES=$MEM; NOTE=""
+  OUT=$(timeout 15 /usr/local/bin/ot-heavy-reconcile --admit "$MEM" -- "$@" 2>/dev/null)   # "<GB> <why>" or nothing
+  case "${OUT%% *}" in ''|*[!0-9]*) ;; *) [ "${OUT%% *}" -lt "$MEM" ] && { RES=${OUT%% *}; NOTE=${OUT#* }; };; esac
+  [ "$RES" != "$MEM" ] && [ "$RES" != "$LASTRES" ] && echo "ot-heavy: request ${MEM}G is charged ${RES}G ($NOTE); the cap stays ${MEM}G" >&2
+  LASTRES=$RES
   exec 8>>"$D/admit.lock"; flock 8
   avail=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo)
   grow=0
@@ -41,13 +49,14 @@ while :; do
     case "$use" in ''|*[!0-9]*) use=0;; esac
     g=$(( m - cur / 1073741824 - use )); [ $g -gt 0 ] && grow=$((grow + g))
   done
-  if [ $((avail - grow)) -ge $((MEM + HEADROOM_GB)) ]; then
-    echo "$UNIT $MEM" > "$D/res.$UNIT"
+  if [ $((avail - grow)) -ge $((RES + HEADROOM_GB)) ]; then
+    echo "$UNIT $RES" > "$D/res.$UNIT"
+    [ "$RES" != "$MEM" ] && echo "$(date -Is) $UNIT DOWNSIZE request ${MEM}G -> reserved ${RES}G ($NOTE)" >> "$D/admit.log"
     echo "$(date -Is) $UNIT mem ${MEM}G avail ${avail}G grow ${grow}G: $*" >> "$D/admit.log"
     flock -u 8; exec 8>&-
     exec systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 -- "$@"
   fi
   flock -u 8; exec 8>&-
-  [ $waited = 0 ] && echo "ot-heavy: waiting for memory on $(hostname): need ${MEM}+${HEADROOM_GB} GB, available ${avail} GB minus ${grow} GB reserved growth" >&2
+  [ $waited = 0 ] && echo "ot-heavy: waiting for memory on $(hostname): need ${RES}+${HEADROOM_GB} GB, available ${avail} GB minus ${grow} GB reserved growth" >&2
   waited=1; sleep 20
 done

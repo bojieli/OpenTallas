@@ -12,8 +12,8 @@
   "rs"
  ],
  "outline": {
-  "w": 10.8,
-  "h": 10.8
+  "w": 15.12,
+  "h": 15.12
  },
  "macros": [],
  "pins": {
@@ -38,7 +38,7 @@
  "job": {
   "owner": "Claude:s81-die",
   "branch": "claude/el1011-s81dieit",
-  "tag": "v2",
+  "tag": "v3",
   "purpose": "S81 die relay master dsfd_rly_15_SN (918 instances in the c5 placement, generated outline + interim timing there): real hard tile, 15 b in S / out N, ck+rs E, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget",
   "benches": [
    {
