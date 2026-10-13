@@ -1,5 +1,5 @@
 {
- "name": "ot_qwen_tile_kvl-k1-COMMIT",
+ "name": "ot_qwen_tile_kvl-k1-47c4631f3",
  "block": "ot_qwen_tile_kvl",
  "ref_tile": true,
  "owner": "Claude:q13-tile-kvl",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q13-tile-kvl",
-  "commit": "COMMIT",
+  "commit": "47c4631f3",
   "extra_paths": [
    "rtl/test",
    "physical/asap7_memory_macros"
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_qwen_tile_kvl/ot_qwen_tile_kvl-k1-COMMIT"
+   "to": "results/rtl/ref_tile/ot_qwen_tile_kvl/ot_qwen_tile_kvl-k1-47c4631f3"
   }
  ],
  "cycles_added": 0,
