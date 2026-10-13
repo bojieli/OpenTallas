@@ -384,6 +384,30 @@ def pin_insertion(mst, pin, libs):
     return v
 
 
+def sta_latency_lines(lat, pin_master, libs, corner, ci):
+    """Translate physical clock-pin targets to OpenSTA's ETM-normalized clock reference.
+
+    OpenSTA subtracts min/max_clock_tree_path from ETM I/O timing tables. The physical balance already
+    subtracts that insertion from the pin target, so using that target unchanged subtracts it twice.
+    Compensate only explicit ETM tree paths, separately for early/late; preserve physical targets in the record.
+    """
+    lines, correction = [], {}
+    for pin, v in sorted(lat.items()):
+        mst, port = pin_master[pin], pin.split('/')[1].split('[')[0]
+        lp = libs[corner].get(mst, (None,))[0]
+        tree = pin_tree_insertion(lp, port) if lp else {}
+        pins = f'[get_pins -quiet {{{pin} {pin}[0]}}]'
+        if tree:
+            early = tree.get('min', tree.get('max', 0.0))
+            late = tree.get('max', tree.get('min', 0.0))
+            lines.extend([f'set_clock_latency -min {v[ci] + early:.6f} {pins}\n',
+                          f'set_clock_latency -max {v[ci] + late:.6f} {pins}\n'])
+            correction[pin] = dict(physical_pin_ps=v[ci], early_etm_ps=early, late_etm_ps=late)
+        else:
+            lines.append(f'set_clock_latency {v[ci]:.6f} {pins}\n')
+    return ''.join(lines), correction
+
+
 def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=None):
     """in place: lat[pin] = planned [ss, ff, tt] arrival -> pin latency so that every flop arrives at plan + D
     (D = the deepest in-arc insertion per corner within the pin's clock tree: the trunk, or one column tree, which
@@ -485,6 +509,9 @@ def main():
                     help='closure-loop routed block clock insertion: the in-arc insertion of closed / assembled views, '
                          'subtracted from their planned pin latency (balanced die tree, balance_latency)')
     ap.add_argument('--require-qualified-collective', action='store_true', help='reject an unqualified opt-in split3CR collective instead of writing an interim planning kit')
+    ap.add_argument('--planning-hold-pads', action='store_true',
+                    help='planning sensitivity only: model unbuilt 120 ps FF receiver delay chains; '
+                         'the default kit uses unpadded timing and never treats these chains as physical evidence')
     ap.add_argument('--bf-compose', type=Path, help='composed BF pair record (bf_hier_compose_sta.py compose.json) of the '
                     'die\'s BF blocks: the front clock tap; default the col600 record')
     ap.add_argument('--index-out', type=Path, help='also write the master -> view index (JSON) here')
@@ -505,7 +532,12 @@ def main():
     by_ = {it.name: it for it in m['insts']}
     # a pad lives inside an INTERIM stage: a master with a routed view in any corner carries its own (real) timing
     psites = {i: v for i, v in psites.items() if not any(by_[i].master in cls_[c] for c in cls_)}
+    # A Liberty hold offset is not an implemented delay chain. Keep the required sites as a contract request,
+    # and change the timing model only when the caller explicitly requests a planning sensitivity.
+    required_pad_sites = {i: sorted(p) for i, p in sorted(psites.items())}
     pads = defaultdict(set)                  # padded cell -> padded data ports
+    if not a.planning_hold_pads:
+        psites = {}
     for inst, ps_ in psites.items():
         pads[by_[inst].master + PAD_SUFFIX] |= ps_
     if psites:
@@ -517,8 +549,10 @@ def main():
             assert k_ == 1, ('hold pad: instance not in die.v', inst, mst)
         (a.out / 'die.v').write_text(txt)
     rec['hold_pads'] = dict(ff_ps=HOLD_PAD_FF, scale=PAD_SCALE, near_um=PAD_NEAR_UM, instances=len(psites),
+                            planning_only=bool(a.planning_hold_pads), physically_implemented=False,
+                            required_sites=required_pad_sites,
                             cells={c: sorted(v) for c, v in sorted(pads.items())},
-                            rule='interim glue input driven by a closed hend within near_um: in-stage delay chain')
+                            rule='unverified receiver-delay target for interim glue driven by a closed hend within near_um')
     if getattr(S, 'CFIFO_COLCK', False):
         # ds-1010 2026-10-10: --cfifo-colck binds the colck cfifo view (its column side clocked from cr); the kit itself
         # selects it (chains used to sed the lib paths AFTER the kit had balanced the column tree with the plain view)
@@ -636,9 +670,11 @@ def main():
             grp[pk] = bid if bid.startswith('ck_col_') else 'trunk'
         bal = balance_latency(lat, {k_: by[k_.split('/')[0]].master for k_ in lat}, rec['masters'], mi, cls_, grp, parts)
         rec['routed_insertion'] = dict(file=str(a.measured), **bal)
+        pin_master = {k_: by[k_.split('/')[0]].master for k_ in lat}
         for ci, corner in ((0, 'ss'), (1, 'ff'), (2, 'tt')):
-            (a.out / f'latency_{corner}.tcl').write_text(''.join(
-                f'set_clock_latency {v[ci]:.1f} [get_pins -quiet {{{k_} {k_}[0]}}]\n' for k_, v in sorted(lat.items())))
+            text, correction = sta_latency_lines(lat, pin_master, cls_, corner, ci)
+            (a.out / f'latency_{corner}.tcl').write_text(text)
+            rec.setdefault('sta_etm_reference_compensation', {})[corner] = correction
         rec['tt_latency'] = 'estimate: mean of the CTS-validated SS and FF sink insertion'
         tap = bf_front_tap(rec['masters'], lat, by, a.views_root.resolve(), a.bf_compose)
         if tap:
