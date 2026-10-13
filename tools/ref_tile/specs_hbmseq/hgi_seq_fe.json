@@ -1,0 +1,140 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "children": [],
+ "inter": [],
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "rtl/hbm_accel/generic",
+  "OT_MEG_MASTER": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "OT_MEG_EXPECT": 2
+ },
+ "name": "hgi_seq_fe",
+ "top": "ot_hgi_seq_fe",
+ "params": {
+  "USE_MACRO": 1
+ },
+ "sources": [
+  "rtl/hbm_accel/generic/ot_hgi_seq_fe.sv",
+  "rtl/hbm_accel/generic/ot_hgi_seq.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "outline": {
+  "w": 248.4,
+  "h": 210.6
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    23.76
+   ],
+   "orient": "R0",
+   "inst": "*u_ring0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    116.64
+   ],
+   "orient": "R0",
+   "inst": "*u_ring1"
+  }
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "md_d",
+   "md_k"
+  ],
+  "N": [
+   "f_req_v",
+   "f_req_rdy",
+   "f_req_addr",
+   "f_rsp_v",
+   "f_rsp_data",
+   "au_tbl_ok",
+   "fe_s1_v",
+   "fe_s1_base",
+   "fe_s1_lstr",
+   "fe_s1_l1str",
+   "fe_s1_str",
+   "fe_s1_dmul",
+   "fe_s1_dsel",
+   "fe_s1_nsel",
+   "fe_s1_n",
+   "fe_s1_idx",
+   "fe_s1_sp",
+   "fe_s1_L",
+   "fe_s1_L1",
+   "fe_s1_slot",
+   "fe_s1_j",
+   "fe_s1_tag",
+   "fe_s1_last",
+   "fe_s1_isI",
+   "fe_s1_hi",
+   "fe_s1_et",
+   "fe_hslot"
+  ],
+  "E": [
+   "be_jl_v",
+   "be_jl_entry",
+   "be_jl_kernel",
+   "be_jl_loff",
+   "be_jl_pos",
+   "be_js",
+   "be_stop",
+   "be_qpop",
+   "be_lv_v",
+   "be_lv_cnt",
+   "be_inj_hold",
+   "fe_kz",
+   "fe_s2a_v",
+   "fe_s2a_tag",
+   "fe_s2a_hdr",
+   "fe_s2a_kind",
+   "fe_s2a_rdy0",
+   "fe_s2a_L",
+   "fe_s2a_L1",
+   "fe_s2i_v",
+   "fe_s2i_d",
+   "fe_s2i_tag",
+   "fe_s2i_slot",
+   "fe_s2i_sut",
+   "fe_s2i_np0"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "structural_change": "hgi_seq flat (25,081 sinks on one root; v25s/v26s/v27a/v27b all failed FF hold on short reg->reg hops across spine leaves) is replaced by three hardened children with their own clock roots and reset synchronisers under a wires-only parent: five registered valid/credit seams, queue-full -> FE credit counter, injector stall -> registered hold",
+ "job": {
+  "owner": "Claude:el1013-hbm-seq-split",
+  "branch": "claude/hbm-seq-split-1013",
+  "tag": "s1",
+  "extra_paths": [
+   "rtl/hbm_accel/generic",
+   "tools/run_hgi_seq_split.py",
+   "tools/hgi_seq_vectors.py",
+   "tools/hgi_seq_ds.py",
+   "tools/hgi_seq_conformance.py",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "purpose": "FE child of the hgi_seq split: fetch FIFO, 64 KB ring, reader, lazy FIFO, parser, loops, image address; ~4.65k flops + 2 macro clock pins on its own root. Ring macros RE-PLACED (not the v26s place.tcl): R0 at x 22.464, y 23.76 / 116.64, >= 20 um to every core edge, 22.4 um channel, halo 5.4 um, temporary M5 keepout over the macro pin-edge bands (macro_edge_m5_guard: the v26s DRC was an M4 spacing short at the u_ring1 pin edge, a VIA45 dropped next to a 24 nm M4 pin stub)"
+ }
+}
