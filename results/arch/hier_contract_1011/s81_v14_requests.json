@@ -247,7 +247,7 @@
   {
    "id": "hc-post-station-midpoint",
    "owner": "S81 die lead / HC lead",
-   "status": "COORDINATOR DECISION 2026-10-13 03:40 PT -- BINDING for v14; slot reserved, outline to be sized from the station kit",
+   "status": "WITHDRAWN",
    "decision": "HC POST job accept / dispatch / completion station moves from the top of the HC column to the corridor midpoint. Accept at the top: far tile 17.8 mm away, >= 36 stages each way at <= 500 um, 127-133 cycles against the immutable 124.19; midpoint: ~115 cycles estimated (1.02x of 112.9), to be MEASURED by the production bench, not adopted as a price.",
    "geometry": {
     "reserved_centre_um": [
@@ -272,7 +272,7 @@
     "Generator: route the 24 express branches from this slot with the hop gate (<= 500 um) and count stages per branch into hop_gate.json; the HC throughput bench consumes those counts.",
     "Cut check at the midpoint rows with the real station pins before any die GRT."
    ],
-   "v14": "FOLDED"
+   "v14": "NOT FOLDED: WITHDRAWN by the coordinator 2026-10-13: S81 HC POST was accepted with cost under the owner's rule (2.542x unit, 1.653 % end-to-end; ledger on main); the v13 accept position at the top of the HC column stands and no midpoint station is reserved"
   }
  ]
 }
