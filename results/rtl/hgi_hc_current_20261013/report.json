@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.hgi_current_hc_tput.v1",
+  "status": "PROVISIONAL_EXACT_MUTANTS_PENDING",
+  "source_commit": "5500825372f17be4de3cd43011f26ec76cf82017",
+  "job": "hc_tile_xl-c4-550082537-hs",
+  "host": "ot-epyc1tb",
+  "bench_run": "/srv/opentallas/claude/closure-loop/hc_tile_xl-c4-550082537-hs/bench_sys",
+  "operation": "HC.HC_MIX_POST",
+  "production_case": 15,
+  "production_shape": {
+    "model": "DeepSeek V4.1",
+    "residual_D": 5120,
+    "raw_mix_words": 24,
+    "output_words": 24,
+    "positions": 1,
+    "sinkhorn_iterations": 20
+  },
+  "rtl_service_cycles": 540,
+  "immutable_budget_cycles": 540,
+  "ratio": 1.0,
+  "qualification_threshold": 1.1,
+  "exactness": "case15 checked against golden in existing SYS bench; final overall PASS pending",
+  "mutants": "existing closure track MP/POST/XL pending",
+  "scope": "Production scalar tail only. Does not qualify HC_MIX_ROWS or legacy HC_MIX, nor residual FUSED.HC_POST. Timing route pending."
+}
