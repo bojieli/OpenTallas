@@ -73,11 +73,22 @@ module ot_qwen_nearhbm_attn_hub_t #(
     reg [3:0]    siv_b, piv_b;
     reg [7:0]    sit_b;  reg [3:0] sig_b;  reg [7:0] sih_b;  reg [15:0] sik_b;  reg [3:0] sia_b;  reg [127:0] sid_b;
     reg [3:0]    pig_b;
+    // q13e (el1013-qwen-stalls 2026-10-13; q13d post-CTS: port pi_* -> beat-store tile pins -527 ps, 2,583 endpoints:
+    // the P beats ran from the S port straight to the W-face pins of the four hard tiles, unregistered): the whole P
+    // input group is captured in pin flops (_a, one per bit AT the S pins) and everything behind -- the beat-store
+    // tiles and this hub's own P control -- reads the _a copy.  The P stream is one edge later, uniformly (the store
+    // write and the P counters keep their relative timing).
+    reg [3:0]    piv_a;
+    reg [3:0]    pig_a;
+    reg [23:0]   pib_a;
+    reg [2047:0] pid_a;
+    always @(posedge clk or negedge rl[0]) if (!rl[0]) piv_a <= 4'd0; else piv_a <= pi_valid;
+    always @(posedge clk) begin pig_a <= pi_g; pib_a <= pi_beat; pid_a <= pi_data; end
     always @(posedge clk or negedge rl[0])
         if (!rl[0]) begin start_b <= 1'b0; siv_b <= 4'd0; piv_b <= 4'd0; end
-        else begin start_b <= start; siv_b <= si_valid; piv_b <= pi_valid; end
+        else begin start_b <= start; siv_b <= si_valid; piv_b <= piv_a; end
     always @(posedge clk) begin
-        sit_b <= si_type; sig_b <= si_g; sih_b <= si_hh; sik_b <= si_k; sia_b <= si_any; sid_b <= si_data; pig_b <= pi_g;
+        sit_b <= si_type; sig_b <= si_g; sih_b <= si_hh; sik_b <= si_k; sia_b <= si_any; sid_b <= si_data; pig_b <= pig_a;
     end
     reg [31:0]  lm_we_n;
     reg [511:0] zs_we_n;
@@ -311,8 +322,8 @@ module ot_qwen_nearhbm_attn_hub_t #(
     wire [2047:0] sr;
     genvar gs, gl;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-        ot_nhb_pbst u_pbst (.clk(clk), .rst_n(rc[4 + gs]), .pv(pi_valid[gs]), .pgi(pi_g[gs]), .pbeat(pi_beat[6*gs +: 6]),
-                            .pdata(pi_data[512*gs +: 512]), .ra({pg, pp[4:0]}), .sr(sr[512*gs +: 512]));
+        ot_nhb_pbst u_pbst (.clk(clk), .rst_n(rc[4 + gs]), .pv(piv_a[gs]), .pgi(pig_a[gs]), .pbeat(pib_a[6*gs +: 6]),
+                            .pdata(pid_a[512*gs +: 512]), .ra({pg, pp[4:0]}), .sr(sr[512*gs +: 512]));
     end endgenerate
     wire [5:0]   phh6 = pp / BPH;
     wire [31:0]  rzv = rz[{pg, phh6[1:0]}];
