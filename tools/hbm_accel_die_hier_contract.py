@@ -227,6 +227,76 @@ def lef_face_pins(lef, macro):
     return w, h, pins
 
 
+# contract v12: cells of the generator's child slots (m['child_slots']) and of its die slots.  A cell with a closed
+# view takes its outline and pin faces from the view LEF; the others carry the granted plan until their stream posts.
+CHILD_VIEWS = {
+    'ot_hgi_coll_tkm_tile': dict(view='physical/ref_tile/coll_tkm_tile_cx/views/ot_hgi_coll_tkm_tile', pg='M6', strap='M7',
+                                 sig='M6', ck=dict(pin='clk', face='W', layer='M4'),
+                                 status='CLOSED coll_tkm_tile_cx-r1-5ab85cbc7 (TT +13.94 / FF +14.06 / DRC 0; 300.24 sq); '
+                                        'child of the TKM cluster, MX columns on the M4 track residue'),
+    'ot_hcoll_port': dict(view='physical/ref_tile/hcoll_port_cx/views/ot_hcoll_port', pg='M6', strap='M7', sig='M6',
+                          ck=dict(pin='clk', face='W', layer='M4'),
+                          status='CLOSED hcoll_port_cx (TT +43.48 / FF +17.18 / DRC 0, exact PASS, mutant FAIL, child_lint PASS)'),
+    'ot_hgi_dma_back': dict(view='physical/ref_tile/hgi_dma_back_b2_ref/views/ot_hgi_dma_back', pg='M6', strap='M7', sig='M6',
+                            ck=dict(pin='clk', face='W', layer='M6'),
+                            status='CLOSED hgi_dma_back_b2_ref-a-01e2a5600-hs-cx (TT +5.25 / FF +2.53 / DRC 0, exact + 2 '
+                                   'mutants); W pins M4 + M6 -> R0 / MY only'),
+}
+CHILD_PLAN = {
+    'ot_hgi_sv_lane2': dict(pg='M5', strap='M6', sig='M5', ck=dict(pin='clk', face='W', layer='M4'), target_insertion_ps=300,
+                            status='GRANTED v12, no view: SU.VOP lane leaf (M5 leaf, <= 8.5k sinks, one root; N = VM wide-lane '
+                                   'pins aligned to the die VM pin ranges, S = bank ports, E / W = head relay chain, hop <= 500 um; '
+                                   'LQ 8); outline = the reference leaf 95.04 x 103.68 until the stream posts the final one'),
+    'ot_hgi_sv_head': dict(pg='M5', strap='M6', sig='M5', ck=dict(pin='clk', face='W', layer='M4'), target_insertion_ps=300,
+                           status='GRANTED v12, no view: SU.VOP head (<= 6k sinks target, 7.1k by hand accepted, one root); '
+                                  'outline 216 x 216 is the die estimate from the flop count, to be replaced by the stream'),
+    'ot_hgi_qdq_q_pin4': dict(pg='M6', strap='M7', sig='M7', ck=dict(pin='clk', face='S', layer='M5'), target_insertion_ps=750,
+                              status='GRANTED v12 (SLOT_CHANGE_REQUEST qdq_q_ref 10-13 08:05): cluster 622.08 x 596.16, four '
+                                     'face-anchored leaves (fr S, asm, wr N, core W); pins H M4 + M6, V M5, route cap M7; clock '
+                                     'insertion target 650-750 ps incl. ~210 ps child insertion (unmeasured estimate; the q7 '
+                                     'measurement 1.79 ns was a diverged spine)',
+                              pins=[dict(name='wrq[127:0]', face='W', layer='M4'), dict(name='wrq_cr', face='W', layer='M4'),
+                                    dict(name='rg_req', face='W', layer='M4'), dict(name='rg_gnt', face='W', layer='M4'),
+                                    dict(name='wrr_p0', face='W', layer='M4', offset=100.44),
+                                    dict(name='wrr_p1', face='W', layer='M4', offset=238.68),
+                                    dict(name='wrr_p2', face='W', layer='M4', offset=376.92),
+                                    dict(name='wrr_p3', face='W', layer='M4', offset=515.16),
+                                    dict(name='wwq[2239:0]', face='N', layer='M5'), dict(name='wwq_cr', face='N', layer='M5'),
+                                    dict(name='wwq_done', face='N', layer='M5'), dict(name='wg_req', face='N', layer='M5'),
+                                    dict(name='wg_gnt', face='N', layer='M5'), dict(name='clk', face='S', layer='M5'),
+                                    dict(name='rst_n', face='S', layer='M5'), dict(name='rec[682:0]', face='S', layer='M5'),
+                                    dict(name='ret', face='S', layer='M5')]),
+}
+
+
+def child_tiles(m):
+    """{parent cell: [tile dicts]} from the generator's granted child slots (m['child_slots']); region entries (cluster
+    logic strips) stay in the detail sidecar only"""
+    out = {}
+    for par, ch in (m.get('child_slots') or {}).items():
+        seen, tl = set(), []
+        for c in ch:
+            if c.get('kind') == 'region':
+                continue
+            cell = c['cell']
+            plan = CHILD_VIEWS.get(cell) or CHILD_PLAN[cell]
+            w, h = c['wh']
+            pins = None
+            if cell in CHILD_VIEWS:
+                vw, vh, vpins = lef_face_pins(ROOT / plan['view'] / f'{cell}.lef', cell)
+                assert abs(vw - w) < 1e-3 and abs(vh - h) < 1e-3, ('child slot is not its closed view', cell, (w, h), (vw, vh))
+                pins = vpins
+            elif plan.get('pins'):
+                pins = plan['pins']
+            tl.append(dict(name=c['name'], cell=cell, w=w, h=h, x=c['xy'][0], y=c['xy'][1], orient=c.get('orient', 'R0'),
+                           pg=plan['pg'], strap=plan['strap'], sig=plan['sig'], ck=plan['ck'], status=plan['status'],
+                           **({'target_insertion_ps': plan['target_insertion_ps']} if plan.get('target_insertion_ps') else {}),
+                           **({'pins': pins} if pins and cell not in seen else {})))
+            seen.add(cell)
+        out[par] = tl
+    return out
+
+
 def tile_slots(slots):
     """Die-placed tile sub-slots (TWO-LEVEL): {parent cell: [tile dicts in the parent frame]}."""
     src = json.loads(TILE_SRC.read_text()) if TILE_SRC.exists() else {}
@@ -405,6 +475,12 @@ def to_schema(rec, a):
                              ('' if k_ == 0 else f"; pins as {sl['instances'][0]['name']}")))
             if k_ == 0:
                 s_['pins'] = pins
+            if sl.get('view'):      # closed leaf placed by the die: its view's pins, layers and clock entry
+                v_ = sl['view']
+                s_.update(pg_layer=v_['pg'], strap_layer=v_['strap'], signal_max_layer=v_['sig'], clock_entry=v_['ck'],
+                          notes=f"die-placed tile (two-level); {v_['status']}" + ('' if k_ == 0 else f"; pins as {sl['instances'][0]['name']}"))
+                if k_ == 0:
+                    s_['pins'] = sl['view_pins']
             slots.append(s_)
             for t in rec.get('tiles', {}).get(cell, []):
                 slots.append(dict(
@@ -413,6 +489,7 @@ def to_schema(rec, a):
                     io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True),
                     clock_entry=t['ck'], pg_layer=t['pg'], strap_layer=t['strap'], signal_max_layer=t['sig'],
                     version=a.version, notes=f"die-placed tile (two-level); {t['status']}",
+                    **({'target_insertion_ps': t['target_insertion_ps']} if t.get('target_insertion_ps') else {}),
                     **({'pins': t['pins']} if t.get('pins') else {})))
     return dict(schema='opentallas.hier_contract.v1', die='hbm_r25gq', version=a.version, owner='hbmdie-1011',
                 updated=__import__('datetime').datetime.now().astimezone().isoformat(timespec='minutes'),
@@ -424,8 +501,52 @@ def to_schema(rec, a):
                 slots=slots)
 
 
+def merge_base(new, base, version, note):
+    """A new contract version on top of the published one.  A slot whose cell, outline, origin and pins (name, face,
+    offset) are unchanged keeps the published record (its layer plan, grants and view status are post-passes the
+    generator does not know); a changed or new slot takes the generated record at this version, with the published
+    layer of every pin that kept its name, face and offset (M5 re-route kits moved pins off M6+) and its hand grants.
+    Returns (contract, summary)."""
+    def key(s_):
+        pk = sorted((p_['name'], p_['face'], round(p_.get('offset', -1.0), 2)) for p_ in s_.get('pins') or [])
+        return (s_['cell'], round(s_['outline']['w'], 3), round(s_['outline']['h'], 3), round(s_['origin']['x'], 3),
+                round(s_['origin']['y'], 3), s_['origin'].get('orient', 'R0'), s_.get('parent'), tuple(pk))
+    B = {s_['name']: s_ for s_ in base['slots']}
+    out, n = [], dict(unchanged=0, changed=0, new=0, removed=0, pin_layers_kept=0)
+    changed, added = [], []
+    for s_ in new['slots']:
+        b_ = B.get(s_['name'])
+        if b_ is not None and key(b_) == key(s_):
+            out.append(b_)
+            n['unchanged'] += 1
+            continue
+        s_ = dict(s_, version=version)
+        if b_ is not None and b_['cell'] == s_['cell']:
+            bl = {(p_['name'], p_['face'], round(p_.get('offset', -1.0), 2)): p_['layer'] for p_ in b_.get('pins') or []}
+            for p_ in s_.get('pins') or []:
+                l_ = bl.get((p_['name'], p_['face'], round(p_.get('offset', -1.0), 2)))
+                if l_ and l_ != p_['layer']:
+                    p_['layer'] = l_
+                    n['pin_layers_kept'] += 1
+            for k_ in ('m6_pin_grant',):
+                if k_ in b_:
+                    s_[k_] = b_[k_]
+            if b_.get('layer_cap_grant') and not str(b_['layer_cap_grant']).startswith('coordinator 2026-10-12 11:40'):
+                s_.update(layer_cap=b_['layer_cap'], layer_cap_grant=b_['layer_cap_grant'])
+        (changed if b_ is not None else added).append(s_['name'])
+        n['changed' if b_ is not None else 'new'] += 1
+        out.append(s_)
+    gone = sorted(set(B) - {s_['name'] for s_ in new['slots']})
+    n['removed'] = len(gone)
+    con = dict(base, version=version, updated=new['updated'], slots=out,
+               changelog=list(base.get('changelog', [])) + [dict(version=version, when=new['updated'][:10], change=note)])
+    return con, dict(n, changed_slots=changed, new_slots=added, removed_slots=gone)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
+    ap.add_argument('--base', type=Path, help='published contract JSON: write the new version as a merge on top of it '
+                    '(unchanged slots keep their record; then the M5 layer plan is re-applied)')
     ap.add_argument('--out', type=Path, default=ROOT / 'results/arch/hier_contract_1011/r25gq.json')
     ap.add_argument('--version', type=int, default=1)
     ap.add_argument('--note', default='')
@@ -469,7 +590,15 @@ def main(argv=None):
             io_budget=dict(IO_DEFAULT),
             layers=dict(signal_top=f'M{min(obs, 7)}', pg='M7 stripes (PG pins)', die_strap='M8', violations=viol),
         )
+    for mn, cv in CHILD_VIEWS.items():      # a die slot of a closed leaf: the view's own outline and pin faces
+        if mn in slots:
+            vw, vh, vpins = lef_face_pins(ROOT / cv['view'] / f'{mn}.lef', mn)
+            assert [round(vw, 3), round(vh, 3)] == slots[mn]['outline_um'], ('die slot is not its closed view', mn)
+            slots[mn].update(view_pins=vpins, view=cv, pin_source=f"{cv['view']}/{mn}.lef (closed view)")
     tiles = tile_slots(slots)
+    for par, tl in child_tiles(m).items():
+        assert par in slots, ('child slots of a cell with no die slot', par)
+        tiles[par] = tiles.get(par, []) + tl
     rec = dict(
         schema='hier-contract/0 (provisional HBM R25GQ; migrate to tools/hier_contract/)',
         die='hbm_r25gq', variant=a.variant, version=a.version,
@@ -485,6 +614,8 @@ def main(argv=None):
         waypoints=dict(wp),
         unplaced_handoffs=dict(UNPLACED, **{'ot_hbm_native_frame_station_rb_NO2/NO3/NO3_SAFE (hbm-no3)': NO3_DECISION}),
         tiles={k: v for k, v in tiles.items()},
+        child_slots=m.get('child_slots') or {},
+        params=dict(xp=m['variant'].get('xp')) if m['variant'].get('xp') else {},
         vm_tunit=VM_TUNIT,
         seam_check=SEAM_CHECK,
         die_top_implementation=dict(
@@ -559,7 +690,20 @@ def main(argv=None):
     detail = a.out.with_name(a.out.stem + '_detail.json')
     rec['schema'] = 'hbmdie-1011 detail (sidecar of the opentallas.hier_contract.v1 file ' + a.out.name + ')'
     detail.write_text(json.dumps(rec, indent=1) + '\n')
-    a.out.write_text(json.dumps(to_schema(rec, a), indent=1) + '\n')
+    con = to_schema(rec, a)
+    summary = None
+    if a.base:
+        con, summary = merge_base(con, json.loads(a.base.read_text()), a.version, a.note or f'v{a.version}')
+    a.out.write_text(json.dumps(con, indent=1, ensure_ascii=False) + '\n')
+    if a.base:      # the layer plan by hierarchy (idempotent), then the true date back (the tool stamps its own)
+        sys.path.insert(0, str(ROOT / 'tools/hier_contract'))
+        import m5_layer_bump as M5
+        lay = M5.bump(a.out, M5.measured_top())
+        d_ = json.loads(a.out.read_text())
+        d_['updated'] = con['updated']
+        a.out.write_text(json.dumps(d_, indent=1, ensure_ascii=False) + '\n')
+        a.out.with_name(a.out.stem + f'_v{a.version}_merge.json').write_text(json.dumps(dict(summary, layer_plan=lay), indent=1) + '\n')
+        print(json.dumps(dict(merge={k: v for k, v in summary.items() if not k.endswith('_slots')}, layer_plan=lay)))
     print(json.dumps(dict(out=str(a.out), slots=len(slots), waypoints=sum(wp.values()),
                           clusters=sorted(k for k, v in slots.items() if v['hierarchy']['decision'] == 'hardened_cluster'),
                           relays=rec['relays'].get('segments_over_reach_physical_only'))))
