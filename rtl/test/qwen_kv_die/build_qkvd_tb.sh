@@ -16,7 +16,8 @@ elif [ "${STACK:-p}" = h ]; then
   # STACK=h: re-cut H (re-cut D with the row engine as hard sub-tiles: 4 head tiles + an engine control tile)
   # el1011-q-kvd-head: env HSUB=1 -> the hierarchical head tile (ot_qwen_nearhbm_head_hs, KVD_HSUB); HSMUT=1 its mutant
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv $W/hdc/nearhbm/ot_qkh_subtiles.sv $W/lib/ot_rst_relay.sv"
-  DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_ND=${ND:-1} ${HMUT:++define+KVD_HMUT} ${RMUT:++define+KVD_RMUT} ${VMUT:++define+KVD_VMUT} ${HSUB:++define+KVD_HSUB} ${HSMUT:++define+KVD_HSMUT}"
+  DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_ND=${ND:-1} ${HMUT:++define+KVD_HMUT} ${RMUT:++define+KVD_RMUT} ${VMUT:++define+KVD_VMUT} ${HSUB:++define+KVD_HSUB} ${HSMUT:++define+KVD_HSMUT} ${ESLOT:++define+KVD_ECTL_SLOT}"
+  # q13-ectl: env ESLOT=1 -> the control tile in its TP8 contract slot structure (KVD_ECTL_SLOT: pin stages / relays, D1 4)
   # the head_hs sub-tiles use the real ot_hdc_fp32_add_lat_nr, whose ot_hdc_lzc32 lives in ot_hdc_fastfp.sv (the rest of
   # that file collides with the bench's fast-FP stand-ins): extract that one module verbatim
   mkdir -p $OUT && awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > $OUT/ot_hdc_lzc32_x.sv
