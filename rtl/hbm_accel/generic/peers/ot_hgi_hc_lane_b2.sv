@@ -1,6 +1,9 @@
 // B2 contiguous quarter lane from source-pinned original LL arithmetic.
 // Local sector stride8; PRE chunk tag QID*160+local chunk restores full D5120 golden order.
 // Global scalar weights/rstd supplied by the central controller; retirement retains all credit waits.
+// MUT (bench negatives, must FAIL; 2 / 4 / 5 as ot_hgi_hc_lane_ll): 6 lane 0 reads its sectors with m pairs swapped
+//   (local stride map); 13 the legacy 32-bank phase mask (bank map; differs at a non-zero bank phase); 7 PRE chunk tag
+//   rotated by one inside the quarter (a non-golden association); 8 PRE chunk tag of quarter 3 - QID (block order).
 module ot_hgi_hc_lane_b2 #(
     parameter integer D   = 1280,             // contiguous quarter of production D5120
     parameter integer BANKS = 8,
@@ -87,7 +90,7 @@ module ot_hgi_hc_lane_b2 #(
     wire scr_mine = c_scr && dd_q[$clog2(BANKS)-1:0] == lid_q[$clog2(BANKS)-1:0];
     always @(posedge clk) begin
         if (c_job) begin post <= dd_q[45]; pk <= dd_q[46] && !dd_q[45]; a_s <= dd_q[14:0]; b_s <= dd_q[29:15]; o_s <= dd_q[44:30];
-                         u <= 10'((lid_q - dd_q[$clog2(BANKS)-1:0]) & (BANKS-1)); end
+                         u <= (MUT == 13) ? 10'((lid_q - dd_q[4:0]) & 5'd31) : 10'((lid_q - dd_q[$clog2(BANKS)-1:0]) & (BANKS-1)); end
         if (c_wgt) wt[128*dx_q[2:0] +: 128] <= dd_q;
         if (c_rstd) rh <= dd_q[31:0];
     end
@@ -98,7 +101,8 @@ module ot_hgi_hc_lane_b2 #(
     reg ph_b;                                // PRE: issuing the gain (phase B)
     reg [MB:0] gs, gp;                       // HC_POST: sectors started / fully pushed (FIFO admission)
     reg [FB-1:0] occ;
-    wire [9:0] i_s = u + 10'(im * BANKS);         // the row sector of m
+    wire [MB-1:0] im_x = (MUT == 6 && lid_q == 5'd0 && im < MB'(NM)) ? (im ^ MB'(1)) : im;
+    wire [9:0] i_s = u + 10'(im_x * BANKS);       // the row sector of m
     wire rd_done = ph_b ? (im == NG) : (im == MB'(NM));
     reg  iss; reg [14:0] isec;
     always @* begin
@@ -329,6 +333,7 @@ module ot_hgi_hc_lane_b2 #(
     always @(posedge clk) begin
         up_d[255:32] <= rd_q[255:32];
         up_d[31:0]   <= cs_v ? acc[7] : rd_q[31:0];
-        up_x         <= cs_v ? (10'(QID * SD) + c_i) : {2'd0, scx};
+        up_x         <= !cs_v ? {2'd0, scx} : (MUT == 7) ? (10'(QID * SD) + ((c_i == 10'(SD - 1)) ? 10'd0 : c_i + 10'd1)) :
+                        (MUT == 8) ? (10'((3 - QID) * SD) + c_i) : (10'(QID * SD) + c_i);
     end
 endmodule
