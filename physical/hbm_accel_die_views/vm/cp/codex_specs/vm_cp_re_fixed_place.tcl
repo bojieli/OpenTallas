@@ -32,6 +32,30 @@ proc ot_fp_ports { inst dir } {
   }
   return $out
 }
+proc ot_fp_flops { inst dir } {
+  # sequential cells reached from inst going backward (dir=in) / forward (dir=out) through <= 4 combinational cells
+  set seen [dict create]; set front [list $inst]; set out {}
+  for { set h 0 } { $h < 5 && [llength $front] } { incr h } {
+    set nxt {}
+    foreach i $front {
+      foreach it [$i getITerms] {
+        if { ![$it isInputSignal] && ![$it isOutputSignal] } { continue }
+        if { ($dir eq "in") != [$it isInputSignal] } { continue }
+        set n [$it getNet]; if { $n eq "NULL" || [$n getSigType] ne "SIGNAL" } { continue }
+        if { [$n getName] eq $::env(OT_FP_CLK) || [llength [$n getITerms]] > 64 } { continue }
+        foreach jt [$n getITerms] {
+          set j [$jt getInst]
+          if { $j eq $i || [dict exists $seen $j] } { continue }
+          if { ($dir eq "in") == [$jt isInputSignal] } { continue }
+          dict set seen $j 1
+          if { [[$j getMaster] isSequential] } { lappend out $j } else { lappend nxt $j }
+        }
+      }
+    }
+    set front $nxt
+  }
+  return $out
+}
 proc ot_fp_xy { b } { set r [$b getBBox]; return [list [expr {([$r xMin]+[$r xMax])/2}] [expr {([$r yMin]+[$r yMax])/2}]] }
 proc ot_fp_face { b core } {
   lassign [ot_fp_xy $b] x y
@@ -45,12 +69,26 @@ proc ot_re_fixed_place { args } {
   set r0 [lindex $rows 0]; set sw [[$r0 getSite] getWidth]; set rh [[$r0 getSite] getHeight]
   set x0 [lindex [$r0 getOrigin] 0]; set y0 [lindex [$r0 getOrigin] 1]; set nr [llength $rows]
   set xmax [expr {$x0 + [$r0 getSiteCount]*$sw}]
-  set tgt [dict create]; set col {}; set rest {}
+  set tgt [dict create]; set col {}; set rest {}; set mid {}; set npin 0
   foreach i [$block getInsts] {
     if { [$i isPlaced] || [$i isFixed] } { continue }
     if { ![[$i getMaster] isSequential] } { lappend rest $i; continue }
     set ins [ot_fp_ports $i in]; set outs [ot_fp_ports $i out]
-    if { ![llength $ins] || ![llength $outs] } { lappend rest $i; continue }
+    # cx5 (FACE4): three ranks per fork bit.  A flop that sees only an input port sits AT that pin, one that sees only
+    # an output port AT that pin, one that sees no port (the corner rank) is placed after the loop from its neighbours.
+    if { ![llength $ins] && ![llength $outs] } { lappend mid $i; continue }
+    if { ![llength $outs] } { set pb [lindex $ins 0] } else { if { [llength $ins] } { set pb "" } else { set pb [lindex $outs 0] } }
+    if { $pb ne "" } {
+      lassign [ot_fp_xy $pb] px py; incr npin
+      if { [ot_fp_face $pb $core] eq "V" } {
+        # S / N pin flop: the pins sit 0.108 um apart, a flop is ~1.1 um wide: stagger the flops over the NR rows
+        # next to the face (cx5 first gate: DPL-0033, 2,063 flops asked for one row)
+        lappend vpin([expr {$py < ([$core yMin]+[$core yMax])/2 ? "S" : "N"}]) [list $px $i]
+      } else {
+        dict set tgt $i [list $px $py]
+      }
+      continue
+    }
     set pi [lindex $ins 0]; set po [lindex $outs 0]
     if { [ot_fp_face $pi $core] eq "H" && [ot_fp_face $po $core] eq "H" } {
       lappend col [list [lindex [ot_fp_xy $pi] 1] $i]
@@ -67,6 +105,30 @@ proc ot_re_fixed_place { args } {
     set x [expr {$x0 + $m + ($xmax - $x0 - 2*$m - 30*$sw) * $k / [expr {max(1,$n-1)}]}]
     dict set tgt [lindex $c 1] [list $x [lindex $c 0]]; incr k
   }
+  foreach f {S N} {
+    if { ![info exists vpin($f)] } { continue }
+    set lst [lsort -integer -index 0 $vpin($f)]; set nv [llength $lst]
+    set w [[[lindex [lindex $lst 0] 1] getMaster] getWidth]
+    set nrw [expr {int(ceil(double($nv) * ($w + $sw) * 2.0 / ($xmax - $x0)))}]
+    set k 0
+    foreach e $lst {
+      set r [expr {$k % $nrw}]
+      set y [expr {$f eq "S" ? $y0 + $r*$rh : $y0 + ($nr-1-$r)*$rh}]
+      dict set tgt [lindex $e 1] [list [lindex $e 0] $y]; incr k
+    }
+    puts "OT_FIXED_PLACE vm_cp_re: $nv $f pin flops staggered over $nrw rows"
+  }
+  # corner rank: x of the pin flop it feeds (S / N pin column), y of the pin flop that feeds it (W pin row)
+  set ncorner 0
+  foreach i $mid {
+    set fi [ot_fp_flops $i in]; set fo [ot_fp_flops $i out]
+    set p {}
+    foreach a $fi { if { [dict exists $tgt $a] } { foreach b $fo { if { [dict exists $tgt $b] } {
+      set p [list [lindex [dict get $tgt $b] 0] [lindex [dict get $tgt $a] 1]]; break } }; break } }
+    if { $p eq "" } { lappend rest $i; continue }
+    dict set tgt $i $p; incr ncorner
+  }
+  puts "OT_FIXED_PLACE vm_cp_re: $npin pin flops, $ncorner corner-rank flops"
   set nflop [dict size $tgt]; set atport 0; set atflop 0
   foreach i $rest {
     set p {}
