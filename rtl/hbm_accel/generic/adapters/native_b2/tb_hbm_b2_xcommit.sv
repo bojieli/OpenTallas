@@ -18,9 +18,9 @@ module tb_hbm_b2_xcommit;
     parameter integer D = 27, SMI = 5, MAXOPS = 32, LAT = 60, JIT = 40, STALL = 20000;
     localparam integer SUB = 4, LBS = 2, LSB = 16, NC = 8, XDEPTH = 128, RMAX = 4096;
     localparam integer RW = 12, XW = 7, XC = 3152, FRAGW = NC * XC, NBEAT = 13, NW = 10, NX = 5, NS = 256;
-    reg clk = 0, rst_n = 0, ck_s = 1;
+    reg clk = 0, rst_n = 0, ck_s = 0;
     always #0.5 clk = ~clk;                       // rises at 0.5 + k
-    initial begin #0.25; forever #0.5 ck_s = ~ck_s; end   // falls at 0.25 + k: a quarter cycle before the rising edge
+    initial begin #0.25; forever #0.5 ck_s = ~ck_s; end   // from 0: rises at 0.75 + k, FALLS at 0.25 + k = a quarter cycle before the rising edge (r7 trace: with ck_s = 1 it fell at 0.75 + k, a quarter cycle AFTER the edge)
     // ---------------- the real PIPE1 sink ----------------
     reg tap_v = 0; wire tap_ready; reg [2062:0] tap_data = 0; reg [15:0] tap_ticket = 0;
     wire tap_ACK_v; wire [191:0] tap_ACK_owner; wire [15:0] tap_ACK_ticket;
@@ -216,7 +216,7 @@ module tb_hbm_b2_xcommit;
                 if (bad((cur_xb + a) % XDEPTH)) rb_bad[IDX] = rb_bad[IDX] + 1; \
             rd_seen[IDX] = 0; \
         end \
-        if (trc != 0 && IDX >= 248 && wce && (cal != 0 || e - e0_last >= 26)) \
+        if (trc != 0 && wce && ((cal != 0 && (IDX < 8 || IDX >= 248)) || (IDX >= 248 && e - e0_last >= 26))) \
             $fwrite(fo, "# trc wce idx %0d e %0d t %0t lat %0d en_l %0d addr %0d\n", IDX, e, $realtime, e - e0_last, m_p[gp].en_l, `XCM(BR).w_addr_in); \
         if (wce && m_p[gp].en_l) begin \
             lastw[IDX] = e; nwr[IDX] = nwr[IDX] + 1; \
