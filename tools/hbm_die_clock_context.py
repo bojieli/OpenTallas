@@ -16,6 +16,20 @@ PERIOD_PS = {'clk_stream': 833.333, 'clk_serial': 1111.111,
              'clk_hbm': 1024.0, 'clk_link': 833.333}
 
 
+def clock_domain(region):
+    """Map generated CTS branch identities to their unchanged PLL domain."""
+    tree = region.split(':', 1)[0]
+    if tree in PERIOD_PS:
+        return tree
+    # hbm_accel_die_fp clock relays split a trunk into clk_<domain>_ck_* nets.
+    # Keep each branch's measured insertion/region; only its clock identity is
+    # shared, so synchronous paths between branches remain timed.
+    for domain in PERIOD_PS:
+        if tree.startswith(domain + '_ck_'):
+            return domain
+    raise ValueError(f'unknown clock tree {tree}')
+
+
 def read(path):
     p = Path(path)
     return json.loads(gzip.decompress(p.read_bytes()) if p.suffix == '.gz' else p.read_bytes())
@@ -46,7 +60,7 @@ def contract(model, plan, sheets, no_sheet_ok=False):
         for n, c in enumerate(('ss', 'ff')):
             targets[region][n] = max(targets[region][n], raw[n] + ins[c] + early)
         sinks[key] = dict(instance=inst, port=port, master=master, region=region,
-                          domain=region.split(':', 1)[0], raw_cts_ps=raw,
+                          domain=clock_domain(region), raw_cts_ps=raw,
                           internal_ps={c: ins[c] for c in ('ss', 'ff')},
                           insertion_grade=ins['grade'], insertion_source=ins['source'])
     for key, sink in sinks.items():
