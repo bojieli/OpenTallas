@@ -50,7 +50,7 @@ DEPTHS=(16,8,4,3,2,1);DT={};pin_source={}
 def lef_pins(lef):
  t=Path(lef).read_text();size=re.search(r'SIZE ([\d.]+) BY ([\d.]+)',t);acc=collections.defaultdict(list)
  for m in re.finditer(r'PIN (\w+)\[\d+\](.*?)END \1\[',t,re.S):
-  for r in re.finditer(r'RECT ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+)',m[2]):
+  for r in re.finditer(r'RECT\s+([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+)',m[2]):
    acc[m[1]].append(((float(r[1])+float(r[3]))/2,(float(r[2])+float(r[4]))/2));break
  cen={k:[sum(p[0] for p in v)/len(v),sum(p[1] for p in v)/len(v)] for k,v in acc.items()}
  return float(size[1]),float(size[2]),cen
