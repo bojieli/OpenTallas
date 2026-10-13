@@ -1,0 +1,23 @@
+{
+  "source_commit": "3b2c8d0db",
+  "sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_wm.sv": "be6a80804a9107f350fb5b0add7395a82508202a94cd660618183b3c82fa1567",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_sfu_wm.sv": "ee74fd174e0fab8182e97ee0a9702ae2415012131c87db86466cb433ba5322fe"
+  },
+  "host": "ot-epyc1tb",
+  "admission_gb": 2,
+  "verilator": "5.050",
+  "exact": {
+    "rc": 0,
+    "records": 8,
+    "base_lanes": "all 0..7",
+    "sectors": "25..32"
+  },
+  "mutant": {
+    "MUT_WM": 1,
+    "rc": 1,
+    "errors": 228,
+    "mechanism": "issue-counted prefix permits stale consumer reads during delayed writes"
+  },
+  "scope": "isolated committed-sector prefix mechanism; not wired to SFU drain or SM x-load; not production throughput qualification"
+}
