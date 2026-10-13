@@ -7,5 +7,17 @@
   "original_launcher_rc": 0,
   "parse_repair_result": "PASS all21masters; macro definitions byte-identical",
   "parse_otrun_rc": 0,
-  "scope": "existing pathfinding case; pin alignment warn and pair gate disabled were original settings; no binding/geometry/contract/gate selection changed; placement replay pending; not release qualification"
+  "scope": "same existing pathfinding case: originalpin_alignwarn/pairdisabled; no binding/geometry/contract/gate selection changes; placementnowpassed, originalGRT/STA resumed; no release qualification",
+  "placement_replay": {
+    "returncode": 0,
+    "otrun_marker": "RAN",
+    "instances": 57081,
+    "overlaps": 0,
+    "outside": 0,
+    "on_track": "PASS",
+    "macro_no_access": 0,
+    "pin_access": "DONE",
+    "observed_pa_peak_mb": 44363.93,
+    "future_placement_memory_gb": 56
+  }
 }
