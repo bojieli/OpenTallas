@@ -50,6 +50,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
     ap.add_argument('--cases', default='qwen_T512,qwen_T1024,ds_L0,ds_L20,ring_wrap')
+    ap.add_argument('--streams', type=int, default=1,
+                    help='DS cases: independent back-to-back records per op (distinct K / V rows, q / p / score / O '
+                         'areas), QK x N then PV x N; the steady-state service is the retire-to-retire interval')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -153,14 +156,16 @@ def main():
         elif name in ('ds_L0', 'ring_wrap'):
             pos1 = 1048576 if name == 'ds_L0' else 1000
             rs, vm, hb, ex, info = att_pair(1, 512, 128, 0, kfmt, 128, pos1, 1 << 34, (1 << 34) + (1 << 30), 0, 0,
-                                            0, 4096, 8192, 12288, 136, 'ds_L0' if name == 'ds_L0' else 'wrap')
+                                            0, 4096, 8192, 12288, 136, 'ds_L0' if name == 'ds_L0' else 'wrap',
+                                            heads_kv=a.streams)
             for i in info:
                 i.update(price=DS_PRICE[128])
             add(name, rs, vm, hb, ex, dict(vehicle='ds', T=128, lanes=1, hd=512, fmt=kfmt, ring=128, pos1=pos1,
                                            records=info))
         elif name == 'ds_L20':
             rs, vm, hb, ex, info = att_pair(1, 512, 128, 512, kfmt, 128, 1048576, 1 << 34, (1 << 34) + (1 << 30),
-                                            (1 << 34) + (1 << 29), 0, 0, 4096, 8192, 12288, 648, 'ds_L20')
+                                            (1 << 34) + (1 << 29), 0, 0, 4096, 8192, 12288, 648, 'ds_L20',
+                                            heads_kv=a.streams)
             for i in info:
                 i.update(price=DS_PRICE[640])
             add(name, rs, vm, hb, ex, dict(vehicle='ds', T=640, lanes=1, hd=512, fmt=kfmt, ring=128, nc=512,
