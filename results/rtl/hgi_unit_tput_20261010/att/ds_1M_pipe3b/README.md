@@ -1,8 +1,16 @@
-# Attention record-overlap validation (in progress)
+# Attention record-overlap validation: QUALIFIED
 
 Source: `045a720dc` on `claude/el1011-hbm-attn-tput`. PIPE=3; DS production geometry H4/D512/NL4, KV8 fmt7, KVL17, RIF128, KLAT104. Four QK then four PV records per case; no simulator repricing.
 
-The positive DS run is still compiling on ot-epyc4 at `/srv/opentallas-scratch/claude/att3/045a720dc/o_pos`. No positive DS exactness or throughput qualification is claimed yet.
+Positive DS run (ot-epyc4, `o_pos`): HGI_ATT_TPUT PASS on 3 shards, 0 wrong words (2560/4608/2560 checked; `run.log`), ATT_TPUT_GATE PASS (`gate.txt`, `bench_report.json`).
+
+| case | T | price | steady-state service (cycles/record) | ratio | gate 1.10x |
+|---|---|---|---|---|---|
+| ds_L0 QK / PV | 128 | 147.1 | 146 / 146 | 0.992x | 161.9 |
+| ds_L20 QK / PV | 640 | 339.1 | 274 / 274 | 0.808x | 373.0 |
+| ring_wrap QK / PV | 128 | 147.1 | 146 / 146 | 0.992x | 161.9 |
+
+Dispatch-to-retirement latency (not gated): T128 204 (QK) / 223 (PV), T640 332 / 351. The 104-cycle KV latency is hidden by record overlap at T128 already, so the one-record-ahead KV issue stage is not needed.
 
 Completed evidence:
 
