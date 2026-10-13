@@ -30,5 +30,5 @@ cmd[cmd.index('-Mdir')+1]=str(obj)
 with (dst/'build.log').open('w')as f:
  f.write(shlex.join(cmd)+'\n');f.flush();subprocess.run(cmd,cwd=src,stdout=f,stderr=subprocess.STDOUT,check=True)
 exe=obj/'Vtb_s81_hc_master';run=base/'3c-full/runs/golden_L0_L2';
-with (dst/'run.log').open('w')as f:subprocess.run([str(exe),'+DIR='+str(run),'+HC_TRACE'],cwd=src,stdout=f,stderr=subprocess.STDOUT,check=True)
+with (dst/'run.log').open('w')as f:subprocess.run([str(exe),'+HC_TRACE'],cwd=run,stdout=f,stderr=subprocess.STDOUT,check=True)
 (dst/'DONE').write_text('build and existing production golden vector rc0\n')
