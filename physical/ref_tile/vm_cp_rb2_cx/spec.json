@@ -77,31 +77,10 @@
    "rtl/common",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "benches": [
-   {
-    "name": "vm_cp_bench",
-    "cmd": "bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/vmcp",
-    "expect": "pass",
-    "threads": 16,
-    "peak_ram_gb": 32,
-    "needs": [
-     "verilator"
-    ],
-    "min_count_regex": "events=(\\d+)/"
-   },
-   {
-    "name": "vm_cp_bench_mut_xbus",
-    "cmd": "VM_CP_MUT=XBUS bash physical/hbm_accel_die_views/vm/cp/run_vm_cp.sh {RUN}/bench/vmcp_mut",
-    "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 32,
-    "needs": [
-     "verilator"
-    ]
-   }
-  ],
+  "benches": [],
   "views_to": "physical/ref_tile/vm_cp_rb2_cx/views",
-  "record_to": "results/rtl/ref_tile/vm_cp_rb2_cx"
+  "record_to": "results/rtl/ref_tile/vm_cp_rb2_cx",
+  "no_bench_reason": "Physical-only M5 PG/pin and actual output boundary delay station rebuild; source RTL byte-identical to 2370c0876 (identity results/physical/vm8_codex_1013/rtl_identity.json). Exact VM_CP_BENCH PASS and XBUS/RELAY mutant detection pinned da9cd8d8d physical/hbm_accel_die_views/vm/cp/bench_b89f43b23_v5050.log; current route source 2370c0876 benches positive rc0/XBUS rc1 immutable state in inventory.json. Production throughput remains OPEN, not qualified by this reuse."
  },
  "params": {},
  "macros": [],

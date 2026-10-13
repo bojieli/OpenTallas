@@ -139,9 +139,12 @@ def compose(outdir):
                  'final_signoff_eligible': False, 'hard_parent_created': False,
                  'coverage': {'sm': 32, 'native_sm_tile_clusters': 512,
                               'attention_lo': 32, 'attention_hi': 32, 'vm_slices': 4,
-                              'direct_hard_children': len(rows), 'hc': 'unresolved',
+                              'native_hard_children': len(rows),
+                              'real_lef_children':sum(bool(r.get('view_lef')) for r in rows),
+                              'geometry_only_open_tile_children':sum(not r.get('view_lef') for r in rows),
+                              'hc': 'unresolved',
                               'fixed_phy_service_stations': 'not yet integrated',
-                              'vm8': {'required_quarter_components':4,'required_tiles_per_component':25,
+                              'vm8': {'required_union_regions':1,'required_total_tiles':25,'logical_quarter_views':4,
                                       'unique_kits':19,'placed':False,
                                       'contract':'results/arch/hbm_b2_1012/SPEC.md',
                                       'planning':'results/physical/vm8_codex_1013/inventory.json'}},
@@ -152,7 +155,7 @@ def compose(outdir):
                      'SM FC_HIER changes interface latency by two cycles; exact/mutant and throughput gate pending.',
                      'SM and VM internal long seams require protocol-preserving registered transport and timing proof.',
                      'Native HC two SYS1 banks/quarter plus LL8 local and central reducer map pending.',
-                     'B2 retains VM8 for SM xload hb_vm_q: four current VM8 components (25 direct tiles/19 kits each) require native source pin/geometry mapping; do not omit or replace by guessed VMS aliases.',
+                     'B2 retains VM8 for SM xload hb_vm_q: one current VM8 union region (25 total direct tiles/19 kits across four logical quarters) require native source pin/geometry mapping; do not omit or replace by guessed VMS aliases.',
                      'Real PHY, service, stations, clocks/reset and their nets must be integrated before full-die route.',
                      'Native tile PG exports and all-child TT/FF/lint closure pending; prior upper-grid and historical PG pilot IR is not native die IR.']}
     receipt = {'schema': 'opentallas.hbm.native_candidate_receipt.v1',
@@ -170,6 +173,7 @@ def compose(outdir):
                'hc_reservation_overlap_count': len(reserved_collisions),
                'placement_subset_pass': not (collisions or outside or offgrid or reserved_collisions),
                'full_die_placement_pass': False,
+               'missing_lef_children':sum(not r.get('view_lef') for r in rows),
                'missing_tt_children': sum(not r.get('view_lib',{}).get('tt') for r in rows),
                'qualification_gates': gate}
     if not receipt['placement_subset_pass']:
