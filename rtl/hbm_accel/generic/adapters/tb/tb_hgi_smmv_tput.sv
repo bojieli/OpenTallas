@@ -80,6 +80,16 @@ module tb_hgi_smmv_tput;
 `else
     localparam integer MB8 = 0;
 `endif
+`ifdef FW8
+    localparam integer FW = 1;
+`else
+    localparam integer FW = 0;
+`endif
+`ifdef MUT_F8
+    localparam integer MF8 = 1;
+`else
+    localparam integer MF8 = 0;
+`endif
     integer xlup, xldn, xlbk, xljit;
     initial begin
         if (!$value$plusargs("XLJIT=%d", xljit)) xljit = 0;   // BW8 slice model: + 0..XLJIT random edges a bank response (in order a lane)
@@ -141,7 +151,7 @@ module tb_hgi_smmv_tput;
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
             .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]), .sm_cr(rv[cl*NSL +: NSL]));
         wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
-        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .FW8(FW), .MUT_F8(MF8), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
             .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
             .x_fault(x_fault), .xw_en(l_en), .xw_addr(l_addr), .xw_grp(l_grp), .xw_data(l_data),
             .vmq(xq[cl*NXC*338 +: NXC*338]), .vmr(xr[cl*NXC*274 +: NXC*274]),
