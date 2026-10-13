@@ -115,8 +115,9 @@ def ov(a, b, e=1e-4):
     return min(a[2], b[2]) - max(a[0], b[0]) > e and min(a[3], b[3]) - max(a[1], b[1]) > e
 
 
-def apply(C, when='2026-10-13', regen=None, source_note=''):
-    """v3 (or a fresh derivation) -> v4, in place; returns C"""
+def apply(C, when='2026-10-13', regen=None, source_note='', skip=()):
+    """v3 (or a fresh derivation) -> v4, in place; returns C.  skip: cells a later version owns (v5: the generator
+    places qkd_rhead and the VM region itself, so their outline / origin are the case's)"""
     regen = regen or {}
     die = C['slots'][0]
     changed = collections.Counter()
@@ -151,7 +152,7 @@ def apply(C, when='2026-10-13', regen=None, source_note=''):
                               'ck) N/M5; pin offsets from the LEF when the view closes (offset_pending_view)')
                 s['version'] = V
                 changed[cell] += 1
-        elif cell == 'qkd_rhead':
+        elif cell == 'qkd_rhead' and cell not in skip:
             if abs(s['outline']['w'] - RHEAD_WH[0]) > 1e-6:
                 o = s['origin']
                 # the nb face (cell E) looks at the astk column: that edge stays, the slot grows away from it
@@ -186,7 +187,7 @@ def apply(C, when='2026-10-13', regen=None, source_note=''):
                 s.pop('pin_replan', None)
                 s['version'] = V
                 changed[cell] += 1
-        elif cell == 'qfd_sp_vector_memory':
+        elif cell == 'qfd_sp_vector_memory' and cell not in skip:
             if abs(s['outline']['w'] - VM['w']) > 1e-6:
                 old = rect(s)
                 s['outline'] = dict(w=VM['w'], h=VM['h'])

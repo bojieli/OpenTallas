@@ -59,14 +59,17 @@ SPLIT = {
         wr=[('w_room', 1), ('wd_v', 1), ('wd_tag', 9)],
         cf=[('c_fault', 1)]),
     # closed qkd_kvwq_ctl_bin-sl1-ecdaf6345 (rtl/physical/ot_qwen_kv_slot_wrappers.sv)
-    'qkd_kvwq_ctl_bin': dict(
-        kvn=[('kvn_d', 1047), ('kvn_cr', 1)],
-        **{f'f{g}': [('f%d_v' % g, 1), ('f%d_d' % g, 256), ('f%d_sec' % g, 24), ('f%d_lane' % g, 3), ('f%d_tag' % g, 9)]
-           for g in range(4)},
-        **{f'r{g}': [('r%d_v' % g, 1), ('r%d_bad' % g, 1)] for g in range(4)},
-        durable=[('rw_v', 1), ('rw_id', 22)]),
+    'qkd_kvwq_ctl_bin': dict(kvn=[('kvn_d', 1047), ('kvn_cr', 1)]),
     'qfd_seq_su': dict(cd=[('cd_d', 547), ('cd_cr', 1)]),
 }
+# SEAM between two CLOSED views (r8 check, coordinator 10-13): qkd_kvwq_ctl_bin packs f<g>[292:0] = {f_v, f_d 256, f_sec
+# 24, f_lane 3, f_tag 9} and r<g>[1:0] = {r_v, r_bad} (MSB first), the leaf wrapper qkd_kvwq_leaf_s_w129_m takes c / n
+# [292:0] = {tag 9, lane 3, sec 24, d 256, v} and dn / dp[1:0] = {bad, v}: the field ORDER is reversed.  The die net keeps
+# the leaf order (the feed chain is leaf to leaf); at the control leaf's pins the die wires field to field: a
+# permutation of the net, MSB first as (hi, lo) net slices.  No logic, no cycle; the wires cross inside one 14-um bundle.
+PERM = {'qkd_kvwq_ctl_bin': dict(
+    **{f'f{g}': [(0, 0), (256, 1), (280, 257), (283, 281), (292, 284)] for g in range(4)},
+    **{f'r{g}': [(0, 0), (1, 1)] for g in range(4)})}
 PHY_PC = (('rsp_v', 1), ('rsp_rdy', 1), ('rsp_beat', 4), ('rsp_tag', 16), ('rsp_data', 256))          # 278 b per PC
 PHY_REQ = (('req_v', 1), ('req_rdy', 1), ('req_we', 1), ('req_len', 5), ('req_tag', 16), ('req_addr', 31),
            ('req_wdata', 256))                                                                          # 311 b
@@ -738,7 +741,11 @@ def _wrap(v, m, G, peers):
                 else:
                     pn = port.lstrip('*')
                     parts = split.get(byi[inst].master, {}).get(pn) if k == 1 else None
-                    if parts:
+                    perm = PERM.get(byi[inst].master, {}).get(pn) if k == 1 else None
+                    if perm:
+                        conns[inst].append(f'.{pn}({{' + ', '.join(
+                            f'{net}[{hi}:{lo}]' if hi != lo else f'{net}[{hi}]' for hi, lo in perm) + '})')
+                    elif parts:
                         j = 0
                         for sub, nb in parts:
                             conns[inst].append(f'.{sub}({net}[{j + nb - 1}:{j}])')

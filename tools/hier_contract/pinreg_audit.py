@@ -434,6 +434,7 @@ def hops_qwen_case(case, contract, reach):
     """die_audit.py's class-4 walk at the 500 um rule, with the endpoint masters kept per hop."""
     D = Path(case)
     size, pins, cur, pin = {}, collections.defaultdict(dict), None, None
+    bitpin = collections.defaultdict(dict)        # cell -> full pin name -> (x, y): for concatenated connections
     for lef in sorted(D.glob('*.lef')):
         for ln in open(lef):
             s = ln.strip()
@@ -450,6 +451,7 @@ def hops_qwen_case(case, contract, reach):
                 d[0] += (float(t[1]) + float(t[3])) / 2
                 d[1] += (float(t[2]) + float(t[4])) / 2
                 d[2] += 1
+                bitpin[cur][pin] = ((float(t[1]) + float(t[3])) / 2, (float(t[2]) + float(t[4])) / 2)
                 pin = None
     pos = {}
     for ln in open(D / 'place.tcl'):
@@ -459,11 +461,49 @@ def hops_qwen_case(case, contract, reach):
     txt = (D / 'die.v').read_text()
     width = {m.group(2): int(m.group(1)) + 1 for m in re.finditer(r'wire \[(\d+):0\] (\S+);', txt)}
     inst, netpins = {}, collections.defaultdict(list)
+    netbits = collections.defaultdict(list)        # net -> [(inst, full pin name)] of concatenated connections
     for m in re.finditer(r'^\s+(\w+) (\S+) \((.*?)\);', txt, re.M):
         mst, nm, body = m.groups()
         inst[nm] = mst
-        for p in re.finditer(r'\.(\w+)\((\S+?)\)', body):
-            netpins[p.group(2)].append((nm, p.group(1)))
+        for p in re.finditer(r'\.(\w+)\(([^()]*)\)', body):
+            port, ex = p.group(1), p.group(2).strip()
+            if re.fullmatch(r"\d+'[bdh][0-9a-fA-F_]+", ex):
+                continue                              # a constant (strap, chain end, tied ready): not a net
+            if ex.startswith('{'):
+                # contract v5 die.v: a concatenation, MSB first (a hard-macro bus pin fed bit by bit from several nets,
+                # or one net wired field to field): every element is measured at its own pin bit
+                el = []
+                for e in ex.strip('{}').split(','):
+                    e = e.strip()
+                    q = re.fullmatch(r'(\w+)\[(\d+)(?::(\d+))?\]', e)
+                    if q:
+                        hi, lo = int(q.group(2)), int(q.group(3) if q.group(3) is not None else q.group(2))
+                        el += [q.group(1)] * (hi - lo + 1)
+                    else:
+                        el.append(e if re.fullmatch(r'\w+', e) else None)
+                seen_ = set()
+                for j, net in enumerate(el):
+                    if net is None:
+                        continue
+                    pn = f'{port}[{len(el) - 1 - j}]'
+                    if pn in bitpin.get(mst, {}):
+                        netbits[net].append((nm, pn))
+                    elif net not in seen_:
+                        netpins[net].append((nm, port))
+                    seen_.add(net)
+                continue
+            # a slice of a net (one die bundle = several view ports) is that net
+            netpins[re.sub(r'\[\d+(?::\d+)?\]$', '', ex)].append((nm, port))
+    for net, l in netbits.items():
+        by_i = collections.defaultdict(list)
+        for i, pn in l:
+            by_i[i].append(pn)
+        for i, pns in by_i.items():
+            xs_ = [bitpin[inst[i]][q][0] for q in pns]
+            ys_ = [bitpin[inst[i]][q][1] for q in pns]
+            key = '@bits:' + net
+            pins[inst[i]][key + ':' + i] = [sum(xs_), sum(ys_), len(pns)]
+            netpins[net].append((i, key + ':' + i))
 
     def pinxy(i, p):
         if i not in pos or inst[i] not in size:
