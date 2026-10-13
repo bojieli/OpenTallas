@@ -133,3 +133,20 @@ Runs (EPYC1 /srv/opentallas-scratch/claude/s81pdn/): v1 = tiles + thin rule (spi
 v1f = anchored grids (field PSM PASS, 57.9 / 71.9 mV at the q element centres); v4 = real-abstract tiles (field
 29.7 / 40.2 mV, edge column); v5 = guard band (table above).
 
+
+## Collection at 2026-10-12 18:42 PT
+
+Source-pinned raw status and GRT tails: `collect_20261012/summary.json` and sibling logs.
+All three runs remain in GRT; no final overflow or STA/cap-sensitivity verdict exists.
+
+| Run | Contract | GRT progress | IR spine VDD/VSS (mV) | IR field VDD/VSS (mV) |
+|---|---|---|---|---|
+| c3 | v11 | extra iteration24/30 |16.70 /28.01 |29.53 /31.38 |
+| c4 | v12 | extra iteration9/30 |16.70 /28.01 |29.53 /31.38 |
+| c5 | v13 | extra iteration5/30 |14.38 /15.65 |29.53 /31.38 |
+
+Values above are inner-window IR against35mV. Existing chains run nominal TT/FF/SS,
+OCV0.95/1.05, and cap sensitivity x1.40/x2.44 after GRT; do not duplicate these jobs.
+V14 integration requests are recorded in `results/arch/hier_contract_1011/s81_v14_requests.json`;
+v14 is not published. HC crossing needs fd2920 (forward3056 including controls), replacing
+v13 fd1128; the current runs therefore do not validate the widened HC split.

@@ -19,7 +19,6 @@
   "file": "results/arch/hier_contract_1011/s81.json",
   "slot": "sp_su_s/ctl"
  },
- "pg_layer": "M7",
  "macros": [],
  "pins": {
   "N": [
@@ -68,10 +67,10 @@
   "hold_margin_ns": 0.01
  },
  "job": {
-  "owner": "Claude:el1011-s81su-ctl",
-  "branch": "claude/el1011-s81su-ctl",
-  "tag": "v1",
-  "purpose": "el1011-s81su-ctl: dsfd_su_t_ctl after the structural fix of route dsfd_su_t_ctl_rt-rt-77e72f74a (TT -57.24: one class rv_q[14]/[12] -> u_core.rs_pn, the 16-slot first-response priority ripple, 13 AO/OA levels) -> balanced 2:1 mux tree (log2 16 levels, same function, 0 cycles); wrapper NQB 16 / NQN 4 (QB v3, QN split) to match the slab; ~2.2k sinks; contract slot s81.json sp_su_s/ctl",
+  "owner": "Claude:el1011-s81su",
+  "branch": "claude/el1011-s81su",
+  "tag": "v2",
+  "purpose": "el1011-s81su: dsfd_su_t_ctl re-kit for SW v3 (ctl NSW 8 -> 16: the SW exps rows are written a beat by the 16 SW quant slots); M5 layer cap (pg_layer M7 dropped), kit on main >= dc5594311; contract slot s81.json sp_su_s/ctl",
   "benches": [
    {
     "name": "exact_full_hier",

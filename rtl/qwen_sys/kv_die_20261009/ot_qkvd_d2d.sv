@@ -166,8 +166,10 @@ module ot_qkvd_d2d #(
             assign cnt = oc[$clog2(IBD[8*i +: 8]+1)-1:0];
             wire pop_i, sh_e, sh_ne;
             if (PQE != 0) begin : g_pq
-                (* keep *) reg pp;                                                    // pop pin flop, at the macro
-                always @(posedge clk or negedge rs) if (!rs) pp <= 1'b0; else pp <= gnt[i];
+                // pop pin flop, at the macro: its own kept module so opt_merge cannot fold it into gq[i] (same D) and
+                // load it with the 528-bit head mux (q9-b: merged flop -> BUF tree, OT_MPFLOP found 0 of 7).
+                wire pp;
+                ot_qkvd_pop_ff u_pp (.clk(clk), .rst_n(rs), .d(gnt[i]), .q(pp));
                 assign pop_i = pp;
                 assign tx_ne[i] = sh_ne;
             end else begin : g_npq
@@ -233,8 +235,8 @@ module ot_qkvd_d2d #(
             assign cnt = oc[$clog2(RBD[8*j +: 8]+1)-1:0];
             wire pop_j, sh_e, sh_ne;
             if (PQE != 0) begin : g_pq
-                (* keep *) reg pp;                                                    // pop pin flop, at the macro
-                always @(posedge clk or negedge rs) if (!rs) pp <= 1'b0; else pp <= rdec[j];
+                wire pp;                                                              // pop pin flop (see g_tx)
+                ot_qkvd_pop_ff u_pp (.clk(clk), .rst_n(rs), .d(rdec[j]), .q(pp));
                 assign pop_j = pp;
                 assign rx_ne[j] = sh_ne;
             end else begin : g_npq
@@ -416,4 +418,13 @@ module ot_qkvd_fbuf8_shadow (
         else begin push_q <= push; oc <= oc + (push_q ? 4'd1 : 4'd0) - (pop ? 4'd1 : 4'd0); end
     assign empty   = (oc == 4'd0);
     assign ne_next = ({1'b0, oc} + (push_q ? 5'd1 : 5'd0)) > (pop ? 5'd1 : 5'd0);
+endmodule
+
+// el1011-q-kvd 2026-10-12 (q10): dedicated pop pin flop of one hardened link buffer.  keep_hierarchy stops Yosys opt_merge
+// from folding it into the logically identical grant register (which also drives the head mux / counters), so the macro's
+// pop pin is driven by exactly this flop and io_flop_at_pins OT_MPFLOP can anchor it beside the pin.  Fixed width (Yosys
+// asserts on parameterised keep_hierarchy modules), as ot_qwen_mpr_reg.
+(* keep_hierarchy *)
+module ot_qkvd_pop_ff (input wire clk, input wire rst_n, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
 endmodule

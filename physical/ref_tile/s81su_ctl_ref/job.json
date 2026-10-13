@@ -1,14 +1,14 @@
 {
- "name": "s81su_ctl_ref-v1-COMMIT",
+ "name": "s81su_ctl_ref-v2-cbafa4c7a",
  "block": "dsfd_su_t_ctl",
  "ref_tile": true,
- "owner": "Claude:el1011-s81su-ctl",
- "purpose": "el1011-s81su-ctl: dsfd_su_t_ctl after the structural fix of route dsfd_su_t_ctl_rt-rt-77e72f74a (TT -57.24: one class rv_q[14]/[12] -> u_core.rs_pn, the 16-slot first-response priority ripple, 13 AO/OA levels) -> balanced 2:1 mux tree (log2 16 levels, same function, 0 cycles); wrapper NQB 16 / NQN 4 (QB v3, QN split) to match the slab; ~2.2k sinks; contract slot s81.json sp_su_s/ctl",
+ "owner": "Claude:el1011-s81su",
+ "purpose": "el1011-s81su: dsfd_su_t_ctl re-kit for SW v3 (ctl NSW 8 -> 16: the SW exps rows are written a beat by the 16 SW quant slots); M5 layer cap (pg_layer M7 dropped), kit on main >= dc5594311; contract slot s81.json sp_su_s/ctl",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/el1011-s81su-ctl",
-  "commit": "COMMIT",
+  "branch": "claude/el1011-s81su",
+  "commit": "cbafa4c7a",
   "extra_paths": [
    "results/rtl/hbm_su_fused_compiler_20261005"
   ]
@@ -17,7 +17,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module dsfd_su_t_ctl rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_su_t_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -90,7 +90,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_ctl_ref/s81su_ctl_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_ctl_ref/s81su_ctl_ref-v2-cbafa4c7a"
   }
  ],
  "cycles_added": 0,
