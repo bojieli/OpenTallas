@@ -13,7 +13,7 @@ here) and the largest move of a pin group's centroid between the generated frame
 made on the frame's pins: hops grow by up to that much).
 
     bind_real.py --case CASE --repo ROOT [--view MASTER=DIR ...] [--skip MASTER ...] --out bind.json
-                 [--lef-out FILE]   (default: CASE/elements.lef rewritten in place, original kept as elements_gen.lef)
+                 [--lef-out FILE]   (default: CASE/elements.lef rewritten in place, original kept as elements.lef.gen)
 View search order per master: --view, physical/ref_tile/<master>/views/<master>, physical/ref_tile/*/views/<master>,
 physical/qwen_die_masters/views/<master>, physical/qwen_missing_phy/tp8_1013/<master>, physical/qwen_missing_phy/<master>.
 """
@@ -117,7 +117,7 @@ def main():
     a = ap.parse_args()
     case, root = Path(a.case), Path(a.repo).resolve()
     explicit = dict(q.split('=', 1) for q in a.view)
-    src = case / 'elements_gen.lef'
+    src = case / 'elements.lef.gen'          # not *.lef: the case readers glob the LEFs
     if not src.exists():
         shutil.copy(case / 'elements.lef', src)
     text = src.read_text()
