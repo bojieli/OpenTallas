@@ -1,5 +1,5 @@
 {
- "name": "qkd_d2d_ref-q10-COMMIT",
+ "name": "qkd_d2d_ref-q10-736f2a09e",
  "block": "ot_qkvd_kv_end",
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 112,
  "source": {
   "branch": "claude/el1011-q-kvd",
-  "commit": "COMMIT"
+  "commit": "736f2a09e"
  },
  "stages": {
   "bench": [
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_d2d_ref/qkd_d2d_ref-q10-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_d2d_ref/qkd_d2d_ref-q10-736f2a09e"
   }
  ],
  "cycles_added": 0,

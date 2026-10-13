@@ -13,8 +13,8 @@
  "clock_port": "hclk",
  "reset_ports": [],
  "outline": {
-  "w": 230.0,
-  "h": 230.0
+  "w": 43.2,
+  "h": 43.2
  },
  "macros": [],
  "pins": {
@@ -47,8 +47,8 @@
  "job": {
   "owner": "Claude:el1011-q-kvd",
   "branch": "claude/el1011-q-kvd",
-  "tag": "p2",
-  "purpose": "ot_qfd_kv_landing_ecc redesign: M5 re-route qfd_q5_landing_ecc_m5-m5-8dcfc40b3 TT -169.88 all input->reg (reg2reg +237, out +227), 0 macros. RTL PIPE 2: every input pin-flopped at the face (no enable/logic; io_flop_at_pins), per-word SECDED syndrome+overall parity registered, then correction/CE/UE into the original output registers. +2 hclk landing latency (stated; parent LD 64 absorbs the credit hold). Bit-exact vs PIPE 0 (= original) cycle-shifted.",
+  "tag": "p2c",
+  "purpose": "ot_qfd_kv_landing_ecc redesign: M5 re-route qfd_q5_landing_ecc_m5-m5-8dcfc40b3 TT -169.88 all input->reg (reg2reg +237, out +227), 0 macros. RTL PIPE 2: every input pin-flopped at the face (no enable/logic; io_flop_at_pins), per-word SECDED syndrome+overall parity registered, then correction/CE/UE into the original output registers. +2 hclk landing latency (stated; parent LD 64 absorbs the credit hold). Bit-exact vs PIPE 0 (= original) cycle-shifted. Successor floorplan: 43.2-square pin-density minimum vs inherited 230-square/1% utilization; synthesis 541 um2, 945 flops, longest reach <=86.4 um.",
   "benches": [
    {
     "name": "landing_pipe_eq",

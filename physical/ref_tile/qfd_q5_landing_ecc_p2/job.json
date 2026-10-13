@@ -1,14 +1,14 @@
 {
- "name": "qfd_q5_landing_ecc_p2-p2-COMMIT",
+ "name": "qfd_q5_landing_ecc_p2-p2c-736f2a09e",
  "block": "ot_qfd_kv_landing_ecc",
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
- "purpose": "ot_qfd_kv_landing_ecc redesign: M5 re-route qfd_q5_landing_ecc_m5-m5-8dcfc40b3 TT -169.88 all input->reg (reg2reg +237, out +227), 0 macros. RTL PIPE 2: every input pin-flopped at the face (no enable/logic; io_flop_at_pins), per-word SECDED syndrome+overall parity registered, then correction/CE/UE into the original output registers. +2 hclk landing latency (stated; parent LD 64 absorbs the credit hold). Bit-exact vs PIPE 0 (= original) cycle-shifted.",
+ "purpose": "ot_qfd_kv_landing_ecc redesign: M5 re-route qfd_q5_landing_ecc_m5-m5-8dcfc40b3 TT -169.88 all input->reg (reg2reg +237, out +227), 0 macros. RTL PIPE 2: every input pin-flopped at the face (no enable/logic; io_flop_at_pins), per-word SECDED syndrome+overall parity registered, then correction/CE/UE into the original output registers. +2 hclk landing latency (stated; parent LD 64 absorbs the credit hold). Bit-exact vs PIPE 0 (= original) cycle-shifted. Successor floorplan: 43.2-square pin-density minimum vs inherited 230-square/1% utilization; synthesis 541 um2, 945 flops, longest reach <=86.4 um.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/el1011-q-kvd",
-  "commit": "COMMIT"
+  "commit": "736f2a09e"
  },
  "stages": {
   "bench": [
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_q5_landing_ecc_p2/qfd_q5_landing_ecc_p2-p2-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_q5_landing_ecc_p2/qfd_q5_landing_ecc_p2-p2c-736f2a09e"
   }
  ],
  "cycles_added": 0,
