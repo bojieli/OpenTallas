@@ -2,12 +2,18 @@
 // ---------------------------------------------------------------------------
 // qkd_cdc_wleaf: the die cell of the KV write-side CDC leaf (Qwen3-8B ROM TP8 contract v3, 128 instances; KV die
 // tools/qwen_kv_die/kv_die.py BINDINGS['qkd_cdc_wleaf']).  A pure rename of ot_qwen_stream4_cdc_pc at the routed
-// parameters (MARGIN 1: every data input registered at its pin in its own domain, every output a flop; LCRED 6,
+// parameters (MARGIN 1, r2: LD 32 + WPIPE 1: every data input registered at its pin in its own domain, every output a flop; LCRED 6,
 // SYNC 2, RSEL 1, RNG 10 = the closed qfd_cdc_eco_h1 structure), so the hardened view carries the slot's cell name and
 // the real RTL port names.  Die bus -> ports (BINDINGS order): ho = {h_cred, h_wv, h_wsec, h_cv, h_csec, h_cdata,
 // h_ctag, h_fault} E; hi = {h_lv, h_lsec, h_lrow, h_ldata, h_hand, h_wcon, h_av, h_atag} N; co = {l_v, l_sec, l_row,
 // l_data, l_pop} W; wi = {w_v, w_sec, w_data, w_tag} S; wr = {w_room, wd_v, wd_tag} S; cf = c_fault S; clk N
 // (contract clock_entry ck); hclk, c_arst_n, h_arst_n W.  No logic here.
+// r2 2026-10-13 (clock rule: the r1 kit had 19,280 hclk sinks, measured TT insertion 442.7 ps): (1) landing depth LD
+// 64 -> 32 = the controller's credit count (ot_qwen_hbm_stream4_* CRED 32, fault above it): every RD holds a credit
+// and credits return from the synchronised read pointer the full flag uses, so occupancy never exceeds 32; the
+// storage is 32 x 281 flops (hclk root ~10.4k sinks).  CONTRACT: controller CRED <= 32.  (2) WPIPE 1: h_wcon is a
+// pin flop (h_cv / h_c* one HCLK edge later: h_cv = two edges after h_wcon), per-group kept selects; h_hand is a
+// final 2:1 select.  See ot_qwen_stream4_cdc_pc WPIPE.
 // ---------------------------------------------------------------------------
 module qkd_cdc_wleaf (
     input  wire         clk,
@@ -44,7 +50,7 @@ module qkd_cdc_wleaf (
     input  wire [8:0]   h_atag,
     output wire         h_fault
 );
-    ot_qwen_stream4_cdc_pc #(.TAGW(9), .LD(64), .WB(16), .AD(64), .SYNC(2), .RSEL(1), .RNG(10), .MARGIN(1), .LCRED(6)) u_cdc (
+    ot_qwen_stream4_cdc_pc #(.TAGW(9), .LD(32), .WB(16), .AD(64), .SYNC(2), .RSEL(1), .RNG(10), .MARGIN(1), .LCRED(6), .WPIPE(1)) u_cdc (
         .clk(clk), .c_arst_n(c_arst_n), .l_v(l_v), .l_sec(l_sec), .l_row(l_row), .l_data(l_data), .l_pop(l_pop),
         .w_v(w_v), .w_sec(w_sec), .w_data(w_data), .w_tag(w_tag), .w_room(w_room), .wd_v(wd_v), .wd_tag(wd_tag),
         .c_fault(c_fault), .hclk(hclk), .h_arst_n(h_arst_n), .h_lv(h_lv), .h_lsec(h_lsec), .h_lrow(h_lrow),
