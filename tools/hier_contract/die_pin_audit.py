@@ -359,7 +359,114 @@ def md(rec):
     return "\n".join(L)
 
 
+# ------------------------------------------------------------------------------------------------------ report
+def align_class(c, real):
+    """class of a flagged bundle class (pin_align record `classes` row) given the masters that have a published view"""
+    dm, lm = c["drv"].split(".")[0], c["load"].split(".")[0]
+    n_real = (dm in real) + (lm in real)
+    rigid = c.get("jog_max", 0.0) > 0 and abs(c.get("jog_max", 0.0) - c.get("jog_mean", 0.0)) <= 0.1 * c["jog_max"]
+    order_bad = any(k in ("reversed", "interleaved") for k in c.get("order", {}))
+    if c["kind"] == "uturn":
+        return "FIX AT DIE", "u-turn: move the slot / relay so the two faces look at each other, or flip the instance"
+    if n_real == 0:
+        return "FIX AT DIE", "both ends are generated abstracts: the die pin plan places them (centre the port on its peer)"
+    if n_real == 1:
+        return "FIX AT DIE", f"one end is a closed view ({dm if dm in real else lm}): move the generated end / the relay to face its pins"
+    if order_bad and c["kind"] == "straight":
+        return "FIX BY PIN RE-PLAN", "both ends are closed views and the bit order is not preserved: mirror the instance at the die if legal, else re-plan one tile's pin order (reroute_reason slot_change)"
+    if rigid:
+        return "FIX AT DIE", "both ends are closed views with one common offset: shift the slot / relay by the jog"
+    return "FIX BY PIN RE-PLAN", "both ends are closed views with different pin pitch / spread: re-plan one tile's pin range (pin_ranges; reroute_reason slot_change), or accept the jog with a lane"
+
+
+def report(out, dies):
+    """README.md of the audit directory from <die>_masters.json, <die>_pin_align.json, <die>_legacy_layers.json"""
+    out = Path(out)
+    L = ["# Die pin-readiness audit, 2026-10-13 (both ROM dies)", "",
+         "Owner question: will covered or badly placed pins still break the die route?  Tools: tools/hier_contract/"
+         "die_pin_audit.py (master tables: child_lint --strict-pockets + slot fit on every published LEF), pin_align.py "
+         "(bundle alignment; gate in the generators' check step and slot_fit), legacy_layer_cuts.py (die tracks under "
+         "M6 / M7 tiles).  Per-die detail: <die>_masters.md, <die>_pin_align.json, <die>_legacy_layers.md.", ""]
+    summ = {}
+    for die in dies:
+        mf, pf, lf = (out / f"{die}_masters.json", out / f"{die}_pin_align.json", out / f"{die}_legacy_layers.json")
+        if not mf.exists():
+            continue
+        M = json.loads(mf.read_text())
+        ok = [r for r in M["masters"] if not r.get("error")]
+        real = {r["master"] for r in ok if r.get("macro") == r["master"]}
+        s = M["summary"]
+        L += [f"## {die} (contract v{M['contract_version']}, views {M['ref']})", "",
+              f"**Masters**: {s['masters_with_lef']} of {s['masters']} masters have a published LEF "
+              f"({s['instances_with_lef']} of {s['instances']} instances). Face pins blocked from above: "
+              f"{s['blocked_above_pins']} pins on {s['blocked_above_masters']} masters; own-stub OBS on {s['blocked_same_masters']} "
+              f"masters; open pockets on {s['open_pocket_masters']} masters ({sum(1 for r in ok if r['pockets'].get('count') and not r['pockets'].get('marker') and (CL.metal(r['pockets'].get('layer')) or 0) >= DIE_ROUTE_MIN_METAL)} on a die layer >= M6); "
+              f"slot mismatch on {s['slot_mismatch_masters']} masters.", "",
+              "| class | masters | instances | masters |", "|---|---:|---:|---|"]
+        for c in RANK:
+            rows = [r for r in ok if r["class"] == c]
+            names = ", ".join(f"{r['master']} x{r['instances']}" for r in sorted(rows, key=lambda r: -r["instances"])[:14])
+            L.append(f"| {c} | {len(rows)} | {sum(r['instances'] for r in rows)} | {names}{' ...' if len(rows) > 14 else ''} |")
+        summ[die] = dict(masters=s, by_class={c: [sum(1 for r in ok if r["class"] == c), sum(r["instances"] for r in ok if r["class"] == c)] for c in RANK})
+        L.append("")
+        if pf.exists():
+            P = json.loads(pf.read_text())
+            fl = [c for c in P["classes"] if c["worst"] != "OK"]
+            for c in fl:
+                c["class"], c["fix"] = align_class(c, real)
+            ac = collections.Counter(c["class"] for c in fl)
+            L += [f"**Pin alignment** ({P.get('generator', '')} {P.get('qwen_recipe') or ''}; pins: {P.get('pin_source', 'LEFs')}; "
+                  f"published-view overlay on {P.get('published_view_overlay', {}).get('masters', 0)} masters / "
+                  f"{P.get('published_view_overlay', {}).get('ports', 0)} ports): {P['bundles']} bundles / {P['bits']} bits "
+                  f"({P['bits_without_pin']} bits without a pin). Verdict {P['verdict']}: FAIL {P['by_verdict'].get('FAIL', 0)}, WARN "
+                  f"{P['by_verdict'].get('WARN', 0)}, OK {P['by_verdict'].get('OK', 0)} bundles. Jog > {P['warn_um']:g} um: "
+                  f"{P['jog_over_warn']['bundles']} bundles / {P['jog_over_warn']['bits']} bits (max {P['jog_max']:.1f} um); bit order not "
+                  f"preserved: {P['order_not_preserved']['bundles']} bundles / {P['order_not_preserved']['bits']} bits; kinds "
+                  + ", ".join(f"{k} {v}" for k, v in P["by_kind"].items()) + f"; pin-to-pin length mean {P.get('len_mean')} / max "
+                  f"{P.get('len_max')} um.", "",
+                  "Jog distribution of straight bundles (max jog per bundle): "
+                  + "; ".join(f"{k} um: {v['bundles']} bundles / {v['bits']} bits" for k, v in P["jog_hist_um"].items()) + ".", "",
+                  f"Flagged bundle classes: {len(fl)} ({', '.join(f'{k} {v}' for k, v in ac.items())}).", "",
+                  "| driver -> load | kind | bundles | bits | jog max / mean um | gap min um | jog cut max | order | len max um | verdict | class | example |",
+                  "|---|---|---:|---:|---|---:|---:|---|---:|---|---|---|"]
+            for c in fl[:60]:
+                ex = c.get("example") or {}
+                L.append(f"| {c['drv']} -> {c['load']} | {c['kind']} | {c['bundles']} | {c['bits']} | {c['jog_max']:g} / {c['jog_mean']:g} | "
+                         f"{c['gap_min'] if c['gap_min'] is not None else '-'} | {c['jog_cut_max'] if c['jog_cut_max'] is not None else '-'} | "
+                         + " ".join(f"{k} {v}" for k, v in c["order"].items())
+                         + f" | {c['len_max']:g} | {c['worst']} | {c['class']} | {ex.get('bus', '')} {ex.get('drv', '')} -> {ex.get('load', '')} |")
+            if len(fl) > 60:
+                L.append(f"| ... {len(fl) - 60} more classes in {pf.name} | | | | | | | | | | | |")
+            L.append("")
+            summ[die]["pin_align"] = dict(verdict=P["verdict"], bundles=P["bundles"], bits=P["bits"], by_verdict=P["by_verdict"],
+                                          jog_over_warn=P["jog_over_warn"], order_not_preserved=P["order_not_preserved"],
+                                          jog_max=P["jog_max"], flagged_classes=len(fl), flagged_by_class=dict(ac),
+                                          by_kind=P["by_kind"], bits_without_pin=P["bits_without_pin"])
+            (out / f"{die}_pin_align_classes.json").write_text(json.dumps(fl, indent=1) + "\n")
+        if lf.exists():
+            G = json.loads(lf.read_text())
+            g, w = G["summary"], G["cut_windows"]
+            L += [f"**Legacy M6 / M7 tiles** (die-placed, measured view top >= M6): {g['legacy_masters']} masters / "
+                  f"{g['legacy_instances']} instances, {g['legacy_area_mm2']} mm2; they block {g['legacy_m6_track_mm']} track-mm of die "
+                  f"M6 and {g['legacy_m7_track_mm']} track-mm of die M7. Cut windows (260 um): {w['windows_over_limit']} positions over "
+                  f"{w['limit']}, of which {w['windows_over_limit_only_because_of_legacy']} only because legacy tiles hold M6 / M7. "
+                  f"Detail: {die}_legacy_layers.md.", ""]
+            summ[die]["legacy"] = dict(g, windows_over_limit=w["windows_over_limit"],
+                                       windows_over_only_legacy=w["windows_over_limit_only_because_of_legacy"])
+    (out / "README.md").write_text("\n".join(L) + "\n")
+    (out / "summary.json").write_text(json.dumps(summ, indent=1) + "\n")
+    return summ
+
+
 def main(argv=None) -> int:
+    if (argv if argv is not None else sys.argv[1:])[:1] == ["report"]:
+        ap = argparse.ArgumentParser()
+        ap.add_argument("mode")
+        ap.add_argument("--out", required=True)
+        ap.add_argument("--die", action="append", required=True)
+        a = ap.parse_args(argv)
+        print(json.dumps(report(a.out, a.die), indent=1)[:3000])
+        return 0
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("mode", choices=["masters"])
     ap.add_argument("--die", required=True)

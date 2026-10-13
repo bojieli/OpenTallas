@@ -55,6 +55,7 @@ class Bundle(unittest.TestCase):
         self.assertEqual(r["verdict"], "FAIL")
         self.assertAlmostEqual(r["jog_cut"], 512 / (PA.CAP_PER_UM * 20.0), places=3)
         self.assertIn("jog cut 0.81 > 0.6", r["why"][0])
+        self.assertIn("jog 60.0 um > 20", r["why"][1])
         # the same shift across a 60-um channel is 0.27 of its tracks: a warning, not a failure
         r = PA.bundle(bus(512, 100.0, 10.0, "E"), bus(512, 160.0, 70.0, "W"))
         self.assertEqual((r["verdict"], r["jog_cut"] < 0.60), ("WARN", True))
@@ -92,14 +93,29 @@ class Bundle(unittest.TestCase):
         r = PA.bundle(bus(16, 100.0, 10.0, "E"), bus(16, 40.0, 10.0, "W"))           # the load lies behind the face
         self.assertEqual(r["kind"], "uturn")
 
-    def test_corner_nested_or_crossing(self):
-        # driver E face at x 100 (y 10..), load S face at y 200 (x 150..): an L
+    def test_corner_order_is_reported_not_judged(self):
+        # driver E face at x 100 (y 10..), load S face at y 200 (x 150..): an L; one H and one V segment per bit on
+        # different layers, so the track demand is the same in either order
         a = bus(16, 100.0, 10.0, "E")
         nested = [(150.0 + (15 - i) * 0.096, 200.0, "S", "M5") for i in range(16)]   # lowest bit turns farthest out
         crossing = [(150.0 + i * 0.096, 200.0, "S", "M5") for i in range(16)]
-        self.assertEqual(PA.bundle(a, nested)["verdict"], "OK")
+        r = PA.bundle(a, nested)
+        self.assertEqual((r["kind"], r["verdict"], r["order"]), ("corner", "OK", "nested"))
         r = PA.bundle(a, crossing)
-        self.assertEqual((r["kind"], r["verdict"], r["order"]), ("corner", "WARN", "reversed"))
+        self.assertEqual((r["kind"], r["verdict"], r["order"]), ("corner", "OK", "crossing"))
+
+    def test_narrow_gap_short_jog_is_a_warning(self):
+        # 99 wires shifted 9.4 um beside a 2.4-um gap: over the channel's 75 tracks, but a jog under 20 um
+        r = PA.bundle(bus(99, 100.0, 10.0, "E"), bus(99, 102.4, 19.4, "W"))
+        self.assertEqual(r["verdict"], "WARN")
+        self.assertGreater(r["jog_cut"], 0.60)
+        self.assertIn("spills onto the die's over-tile tracks", r["why"][0])
+
+    def test_judge_from_stored_row(self):
+        r = PA.bundle(bus(512, 100.0, 10.0, "E"), bus(512, 120.0, 70.0, "W"))
+        self.assertEqual(PA.judge(r)[0], "FAIL")
+        self.assertEqual(PA.judge(r, cut_limit=0.9)[0], "WARN")
+        self.assertAlmostEqual(r["window_share"], 512 / (PA.OVER_TILE_PER_UM * 260.0), places=3)
 
     def test_area_pin_is_length_only(self):
         r = PA.bundle([(10.0, 10.0, None, "M8")], [(300.0, 90.0, "W", "M4")])

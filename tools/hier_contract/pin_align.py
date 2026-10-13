@@ -15,7 +15,7 @@ die binds, instance orientation applied):
                       wrap around a tile (reported, WARN)
             area      a pin that is not on a face of its macro (area pin, PHY bump field): length only
   jog       straight: |offset perpendicular to the travel axis| per bit: max / mean / min
-  order     preserved / reversed / interleaved (share of bit pairs that cross); corner bundles: nested or not
+  order     preserved / reversed / interleaved (share of bit pairs that cross); corner bundles: nested / crossing
   length    pin-to-pin Manhattan per bit: max / mean
   gap       distance between the two faces along the travel axis (the channel the jog has to be made in)
   jog_cross the largest number of the bundle's jog wires crossing one line parallel to the travel axis
@@ -26,9 +26,15 @@ Capacity is the die leads' cut rule (results/arch/qwen_tp8_1012/cuts.py usable()
 either direction.
 
 Verdict per bundle
-  WARN  max jog > WARN_UM (20 um), or bit order not preserved, or kind uturn
-  FAIL  jog_cut > CUT_LIMIT (0.60, the top of the owner's 0.55-0.60 cut rule: the jog ALONE fills the channel, before any
-        through traffic), or an abutted bundle (gap < ABUT_UM) with a jog above one track.
+  WARN  max jog > WARN_UM (20 um), or bit order of a straight bundle not preserved, or kind uturn, or a jog cut above
+        the limit with a jog of at most 20 um (a short detour beside a narrow gap)
+  FAIL  max jog > 20 um AND jog_cut > CUT_LIMIT (0.60, the top of the owner's 0.55-0.60 cut rule): the jog ALONE needs
+        more perpendicular tracks than the channel between the two faces has, before any through traffic, so it spills
+        onto the die's over-tile tracks (M6 / M7 / die layer over the neighbouring tiles) -- demand the cut tables do not
+        contain; `window_share` = the jog wires as a share of a 260-um fine cut window over tiles (5,484 tracks).  Also
+        FAIL: an abutted bundle (gap < ABUT_UM) with a jog above one track.
+  A corner bundle (an L) uses one horizontal and one vertical segment per bit on different layers: its track demand
+  does not depend on the bit order, so `order` nested / crossing is reported and not judged.
 FAIL_UM (36 um) is the same rule as one length for checks that see only one end (slot_fit: a new tile's planned pin
 range against its contract slot span): the contract's minimum channel is 20 um = 630 perpendicular tracks, 0.60 of them =
 378 jog wires; a bus at the relay pin pitch (2 tracks, 0.096 um a bit) shifted by J puts J / 0.096 wires across the cut,
@@ -62,6 +68,8 @@ TRACK_UM = 0.048
 PITCH_UM = {"M4": 0.048, "M5": 0.048, "M6": 0.064, "M7": 0.064, "M8": 0.080, "M9": 0.080}
 # cuts.py usable(), channel case: die layer 75 % + M6/M7 75 % + M4/M5 50 % (same sum for both directions)
 CAP_PER_UM = 0.75 / PITCH_UM["M8"] + 0.75 / PITCH_UM["M6"] + 0.50 / PITCH_UM["M4"]
+FINE_UM = 260.0                  # the cut tables' fine window (results/arch/qwen_tp8_1012/cuts.py FINE)
+OVER_TILE_PER_UM = 0.75 / PITCH_UM["M8"] + 0.75 / PITCH_UM["M6"]     # die layer + M6 / M7 over an M5-capped tile: 21.09
 MIN_CHANNEL_UM = 20.0            # tools/hier_contract/schema.md: >= 20 um channels
 RELAY_PIN_PITCH_UM = 0.096       # contract relay_masters: 2 tracks a bit
 FAIL_UM = round(CUT_LIMIT * CAP_PER_UM * MIN_CHANNEL_UM * RELAY_PIN_PITCH_UM)     # 36
@@ -239,6 +247,28 @@ def max_cross(lo, hi):
     return best
 
 
+def judge(rec, warn_um=WARN_UM, cut_limit=CUT_LIMIT):
+    """verdict + reasons of a bundle record from its measured fields (so a stored row can be re-judged)"""
+    why_w, why_f = [], []
+    kind = rec.get("kind")
+    if kind == "straight":
+        jog, gap, cut, cross, order = rec["jog_max"], rec["gap"], rec.get("jog_cut"), rec["jog_cross"], rec["order"]
+        if jog > warn_um:
+            why_w.append(f"jog {jog:.1f} um > {warn_um:g}")
+        if order != "preserved":
+            why_w.append(f"bit order {order}" + (f" ({rec.get('cross_share', 0):.0%} of pairs cross)" if order == "interleaved" else ""))
+        if cut is not None and cut > cut_limit:
+            msg = (f"jog cut {cut:.2f} > {cut_limit:g}: {cross} jog wires in a {gap:.1f} um channel "
+                   f"({rec.get('cap_tracks', 0):.0f} tracks): the jog spills onto the die's over-tile tracks "
+                   f"({rec.get('window_share', 0):.1%} of a {FINE_UM:g}-um cut window)")
+            (why_f if jog > warn_um else why_w).append(msg)
+        if cut is None and jog > TRACK_UM + EPS:
+            why_f.append(f"abutted faces (gap {gap:.3f} um) with a jog of {jog:.3f} um")
+    elif kind == "uturn":
+        why_w.append(f"u-turn: driver face {rec['face'][0]}, load face {rec['face'][1]}")
+    return ("FAIL" if why_f else "WARN" if why_w else "OK"), why_f + why_w
+
+
 def bundle(A, B, warn_um=WARN_UM, cut_limit=CUT_LIMIT, cap_per_um=CAP_PER_UM):
     """A, B: per-bit (X, Y, face, layer) of the driver and the load pins (same length >= 1) -> the bundle record"""
     n = len(A)
@@ -248,7 +278,6 @@ def bundle(A, B, warn_um=WARN_UM, cut_limit=CUT_LIMIT, cap_per_um=CAP_PER_UM):
     lb = collections.Counter(b[3] for b in B).most_common(1)[0][0]
     L = [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(A, B)]
     rec = {"bits": n, "face": [fa, fb], "layer": [la, lb], "len_max": round(max(L), 3), "len_mean": round(sum(L) / n, 3)}
-    why_w, why_f = [], []
     if fa is None or fb is None:
         rec.update(kind="area", order="n/a")
         return dict(rec, verdict="OK", why=[])
@@ -273,34 +302,18 @@ def bundle(A, B, warn_um=WARN_UM, cut_limit=CUT_LIMIT, cap_per_um=CAP_PER_UM):
         cut = cross / (cap_per_um * gap) if gap >= ABUT_UM else None
         rec.update(axis="xy"[t], gap=round(gap, 3), jog_max=round(max(jog), 3), jog_mean=round(sum(jog) / n, 3),
                    jog_min=round(min(jog), 3), order=order, cross_share=round(share, 4), jog_cross=cross,
-                   jog_cut=round(cut, 4) if cut is not None else None)
-        if max(jog) > warn_um:
-            why_w.append(f"jog {max(jog):.1f} um > {warn_um:g}")
-        if order != "preserved":
-            why_w.append(f"bit order {order}" + (f" ({share:.0%} of pairs cross)" if order == "interleaved" else ""))
-        if cut is not None and cut > cut_limit:
-            why_f.append(f"jog cut {cut:.2f} > {cut_limit:g}: {cross} jog wires in a {gap:.1f} um channel "
-                         f"({cap_per_um * gap:.0f} tracks)")
-        if cut is None and max(jog) > TRACK_UM + EPS:
-            why_f.append(f"abutted faces (gap {gap:.3f} um) with a jog of {max(jog):.3f} um")
+                   jog_cut=round(cut, 4) if cut is not None else None, cap_tracks=round(cap_per_um * gap, 1),
+                   window_share=round(cross / (OVER_TILE_PER_UM * FINE_UM), 4))
     elif kind == "corner":
-        # an L (driver wire leaves along its normal, turns once, enters the load face) does not cross another bit of the
-        # bundle when the pin nearer to the load's face plane lands on the load pin nearer to the driver's face plane
+        # an L has one horizontal and one vertical segment per bit, on different layers: it needs the same tracks in
+        # either bit order, so the order is reported (nested = planar without a layer change at the turn) and not judged
         ka = [(a[p] - sum(b[p] for b in B) / n) * nb[p] for a in A]      # distance of the driver pin from the load face
         kb = [(b[t] - sum(a[t] for a in A) / n) * na[t] for b in B]      # distance of the load pin from the driver face
         order, share = order_of(ka, kb)
-        rec.update(order="preserved" if order == "preserved" else order, cross_share=round(share, 4))
-        if order != "preserved":
-            why_w.append(f"corner bundle not nested: {order}" + (f" ({share:.0%} of pairs cross)" if order == "interleaved" else ""))
-            span = max(max(ka) - min(ka), max(kb) - min(kb))
-            cut = n * share / (cap_per_um * span) if span >= ABUT_UM else None
-            rec["jog_cut"] = round(cut, 4) if cut is not None else None
-            if cut is not None and cut > cut_limit:
-                why_f.append(f"corner crossing cut {cut:.2f} > {cut_limit:g}")
+        rec.update(order="nested" if order == "preserved" else "crossing", cross_share=round(share, 4))
     else:
         rec.update(order="n/a")
-        why_w.append(f"u-turn: driver face {fa}, load face {fb}, load {'behind' if ahead < 0 else 'beside'} the driver face")
-    rec.update(verdict="FAIL" if why_f else "WARN" if why_w else "OK", why=why_f + why_w)
+    rec["verdict"], rec["why"] = judge(rec, warn_um, cut_limit)
     return rec
 
 
@@ -336,7 +349,7 @@ def analyze(insts, buses, lef_texts, names=None, exempt_cls=EXEMPT_CLS, warn_um=
 
 
 def analyze_points(insts, buses, locate, exempt_cls=EXEMPT_CLS, warn_um=WARN_UM, cut_limit=CUT_LIMIT,
-                   cap_per_um=CAP_PER_UM, top=200):
+                   cap_per_um=CAP_PER_UM, top=200, rows_out=None):
     """the die record from a pin locator: locate(inst, port, bits) -> per bit (X, Y, face, layer) in the die frame, or
     None for a bit without a pin (the generators' own pin tables: tools/die_top_lint.py pin_align_record)"""
     by = {it.name: it for it in insts}
@@ -375,6 +388,8 @@ def analyze_points(insts, buses, locate, exempt_cls=EXEMPT_CLS, warn_um=WARN_UM,
                      load_master=ib.master, load_port=port_base(lp),
                      at=[round(A[0][0]), round(A[0][1]), round(B[0][0]), round(B[0][1])])
             rows.append(r)
+    if rows_out is not None:
+        rows_out.extend(rows)
     return summarise(rows, missing, miss_ex, warn_um, cut_limit, cap_per_um, top)
 
 
@@ -423,6 +438,7 @@ def summarise(rows, missing=0, miss_ex=None, warn_um=WARN_UM, cut_limit=CUT_LIMI
     orders = collections.Counter(r["order"] for r in rows)
     jog20 = [r for r in rows if r.get("jog_max", 0.0) > warn_um]
     bad_order = [r for r in rows if r["order"] in ("reversed", "interleaved")]
+    spill = [r for r in rows if r["verdict"] == "FAIL"]
     flagged = sorted((r for r in rows if r["verdict"] != "OK"),
                      key=lambda r: ({"FAIL": 0, "WARN": 1}[r["verdict"]], -(r.get("jog_cut") or 0), -r.get("jog_max", 0.0)))
     return {"schema": SCHEMA, "warn_um": warn_um, "cut_limit": cut_limit, "cap_per_um": round(cap_per_um, 3), "fail_um": FAIL_UM,
@@ -431,6 +447,9 @@ def summarise(rows, missing=0, miss_ex=None, warn_um=WARN_UM, cut_limit=CUT_LIMI
             "verdict": "FAIL" if v.get("FAIL") else "PASS", "by_verdict": dict(v), "by_kind": dict(kinds), "by_order": dict(orders),
             "jog_over_warn": {"bundles": len(jog20), "bits": sum(r["bits"] for r in jog20)},
             "order_not_preserved": {"bundles": len(bad_order), "bits": sum(r["bits"] for r in bad_order)},
+            "fail_spill": {"bundles": len(spill), "bits": sum(r["bits"] for r in spill),
+                           "jog_wires": sum(r.get("jog_cross", 0) for r in spill),
+                           "bundles_over_5pct_of_a_window": sum(1 for r in spill if r.get("window_share", 0) >= 0.05)},
             "jog_max": max((r.get("jog_max", 0.0) for r in rows), default=0.0),
             "jog_hist_um": hist, "len_max": max((r["len_max"] for r in rows), default=0.0),
             "len_mean": round(sum(r["len_mean"] * r["bits"] for r in rows) / max(1, sum(r["bits"] for r in rows)), 1),
@@ -439,11 +458,24 @@ def summarise(rows, missing=0, miss_ex=None, warn_um=WARN_UM, cut_limit=CUT_LIMI
 
 
 def line(rec):
-    return ("OT_PIN_ALIGN %s bundles %d bits %d: FAIL %d WARN %d (jog > %g um: %d bundles / %d bits, max %.1f um; order not "
-            "preserved: %d bundles; u-turn %d); bits without pin %d" %
+    return ("OT_PIN_ALIGN %s bundles %d bits %d: FAIL %d (jog spills past the channel) WARN %d (jog > %g um: %d bundles / %d "
+            "bits, max %.1f um; order not preserved: %d bundles; u-turn %d); bits without pin %d" %
             (rec["verdict"], rec["bundles"], rec["bits"], rec["by_verdict"].get("FAIL", 0), rec["by_verdict"].get("WARN", 0),
              rec["warn_um"], rec["jog_over_warn"]["bundles"], rec["jog_over_warn"]["bits"], rec["jog_max"],
              rec["order_not_preserved"]["bundles"], rec["by_kind"].get("uturn", 0), rec["bits_without_pin"]))
+
+
+def rejudge(rows, warn_um=WARN_UM, cut_limit=CUT_LIMIT, top=200):
+    """a record from stored bundle rows (tools/die_top_lint.py pin_align <die>_pin_align_rows.json.gz) under the
+    current verdict rule"""
+    for r in rows:
+        if r.get("kind") == "corner" and r.get("order") in ("preserved", "reversed", "interleaved"):
+            r["order"] = "nested" if r["order"] == "preserved" else "crossing"      # rows written before the L rule
+        if r.get("kind") == "straight":
+            r.setdefault("cap_tracks", round(CAP_PER_UM * r["gap"], 1))
+            r.setdefault("window_share", round(r["jog_cross"] / (OVER_TILE_PER_UM * FINE_UM), 4))
+        r["verdict"], r["why"] = judge(r, warn_um, cut_limit)
+    return summarise(rows, 0, None, warn_um, cut_limit, CAP_PER_UM, top)
 
 
 def gate_mode():
