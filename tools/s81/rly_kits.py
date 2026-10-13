@@ -62,6 +62,7 @@ def main() -> int:
         v.append(f"    ot_s81_rly #(.W({w})) u (.ck(ck), .rs(rs), .i(i), .o(o));")
         v.append("endmodule")
         name = f"s81_rly_{w}_{ff.lower()}"
+        small = outline(w, fi, fo)["w"] <= 15.12
         pins = {f: [] for f in "NSEW"}
         pins[fi].append("i"); pins[fo].append("o"); pins[cf] += ["ck", "rs"]
         spec = {
@@ -71,9 +72,11 @@ def main() -> int:
             "outline": outline(w, fi, fo), "macros": [],
             "pins": {f: p for f, p in pins.items() if p},
             "outhold": True,
-            "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8},
+            # small tiles (<= 15.12 um): M5 PG at 2.7 um so each net has >= 2 full-length stripes spanning > 50% of the tile
+            # (v1 export child_lint (b): 1 stripe a net at 8.64, 36% span at 15.12; the 21.6 / 34.56 um masters closed at 5.4)
+            "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8, **({"m5_pg_pitch": 2.7} if small else {})},
             "job": {
-                "owner": a.owner, "branch": a.branch, "tag": "v1",
+                "owner": a.owner, "branch": a.branch, "tag": "v2" if small else "v1",
                 "purpose": f"S81 die relay master {mst} ({n} instances in the c5 placement, generated outline + interim "
                            f"timing there): real hard tile, {w} b in {fi} / out {fo}, ck+rs {cf}, scalar ck/rs, M5 cap, one "
                            "register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps "
