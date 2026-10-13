@@ -1585,6 +1585,873 @@
     "tt"
    ],
    "added": []
+  },
+  {
+   "view": "qfd_embed_ingress_code",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_ingress_code",
+   "run": "qfd_embed_ingress_code-0e025d03c",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists); SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 159.28725005665,
+     "verdict_ps": 159.29,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 234.21620198860182,
+     "verdict_ps": 234.22,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "c65808bea302482e6389374053006c34f5816bd71ce4b6c499145bf578344753",
+    "ff": "f9fa9a6292d22577f8f2b22056b3f859ebc869dd15839f42eeeb4cfcfa3ec15b"
+   },
+   "new": {
+    "ss": "c65808bea302482e6389374053006c34f5816bd71ce4b6c499145bf578344753",
+    "ff": "f9fa9a6292d22577f8f2b22056b3f859ebc869dd15839f42eeeb4cfcfa3ec15b",
+    "tt": "2a49b2b40b46d1777cc927abbe5cf55979950eeb9cec0650dd86e6273758b0e9"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_embed_ingress_scale",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_ingress_scale",
+   "run": "qfd_embed_ingress_scale-0e025d03c",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists); SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 160.94464649896167,
+     "verdict_ps": 160.94,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 236.47819813454873,
+     "verdict_ps": 236.48,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "5e2a931de45b2a44da137ac16381149b360aed2aba291f38c9a94b0815dc26b0",
+    "ff": "a8ff4474ba2bcd814afb4d838e8b0f0f765386894f3deb4fd131ca7a489eb1ba"
+   },
+   "new": {
+    "ss": "5e2a931de45b2a44da137ac16381149b360aed2aba291f38c9a94b0815dc26b0",
+    "ff": "a8ff4474ba2bcd814afb4d838e8b0f0f765386894f3deb4fd131ca7a489eb1ba",
+    "tt": "5438dbf12021c553966ad294054604e3a468443582b5681a4b18fe8fa2f2dd79"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_embed_ingress_scale",
+   "dir": "physical/qwen_embedding_parent/bindings/scale/qfd_embed_ingress_scale",
+   "run": "qfd_embed_ingress_scale_numeric-82c12047d",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists); SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 16.91906337253357,
+     "verdict_ps": 16.92,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 110.23432167078795,
+     "verdict_ps": 110.23,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "662cb474cb03cbe5af85ed7a0547d8504904167a636a3482c59010cb02f2acd7",
+    "ff": "24ece5814620e39ceb88955de2fa23bcffb0881307a9125df8fe73a6027aeaf0"
+   },
+   "new": {
+    "ss": "ef7b2e4922f6151e68397ef643d132ffa0a6a36eb637dd5f589ede3c13ba0c73",
+    "ff": "b2cf762ebb5c21242beb9dcaae32dae2feed13c3ba3624879ce6b221c5b019a0",
+    "tt": "35611c793288edb3e61bbbe7402e6858405a21c97becbdd40784193229089190"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_embed_ingress_scale_padded",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_ingress_scale_padded",
+   "run": "qfd_embed_ingress_scale_padded-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff; SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 50.3451585975867,
+     "verdict_ps": 50.35,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 224.21187129140208,
+     "verdict_ps": 224.21,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "6283b15c9c7125d3bd6ed8d6988032e61ffbce225f83ba87c404371d983a9958",
+    "ff": "e9a8e82e8b62702c99247abca1323a99e9595a81990ee18a3ab62d8e6176bab5"
+   },
+   "new": {
+    "ss": "6283b15c9c7125d3bd6ed8d6988032e61ffbce225f83ba87c404371d983a9958",
+    "ff": "e9a8e82e8b62702c99247abca1323a99e9595a81990ee18a3ab62d8e6176bab5",
+    "tt": "7bc1499552f3a8aa581cbd857862bc877433739dfe324b8138365a289d7513f9"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_embed_ingress_code_padded",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_ingress_code_padded",
+   "run": "qfd_embed_ingress_code_padded-3d5ad2a4ftt",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff; SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 48.74031733770323,
+     "verdict_ps": 48.74,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 225.41662980657406,
+     "verdict_ps": 225.42,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "8474e7c735383018e8438706ec03b43b10dab9e940a5cc455e487a35802b6b10",
+    "ff": "e00bbe008a865a8f246b22781c908c32e26a685d21112a4a56cd135744353a85"
+   },
+   "new": {
+    "ss": "19a22437b141eecc5bbcffa858182d3a3d4e443b9b2210d4bb1659738fcb2b91",
+    "ff": "e00bbe008a865a8f246b22781c908c32e26a685d21112a4a56cd135744353a85",
+    "tt": "62a79d64b6e02e024fda84a440c65d9ff415a97305842e386f6bfa257ca8aee8"
+   },
+   "changed": [
+    "ss"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_embed_ingress_code",
+   "dir": "physical/qwen_embedding_parent/bindings/code/qfd_embed_ingress_code",
+   "run": "qfd_embed_ingress_code_numeric-82c12047d",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against SS-era sign-off receipt: SS setup / FF hold (no TT verdict exists); SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 18.50272712822232,
+     "verdict_ps": 18.5,
+     "ok": true
+    },
+    "ss": {
+     "export_ps": 113.23014748043647,
+     "verdict_ps": 113.23,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "ff29630790c28f0c0cc7d81a4a2f77f000cf758a0ca9f07954022d3972dfe90b",
+    "ff": "ff40ad64fbd57cfbde8a3d2bffd0a1032412cb7ea6238bc9122b5370987a15e3"
+   },
+   "new": {
+    "ss": "662e2671c4e56c48db362a1b8747fb887b0dbf8a82dea2639e4e6b24c400ee28",
+    "ff": "f54a2c44ab31902d51a9c65a3c0a79885748fb70dda3e41b5089530b33c2a986",
+    "tt": "4b3dcdd1bb54907967cc5301309726f53045c67ff02630e10ec69149f5f9a1a9"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "qfd_embed_ingress_code_numeric",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_ingress_code_numeric",
+   "run": "qfd_embed_ingress_code_numeric-82c12047d-lbc",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt; SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 48.32496902640315,
+     "verdict_ps": 48.32,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 225.25270537698816,
+     "verdict_ps": 225.25,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "f0a27db245f30ff291986471fabc58940b38950bb9716d723be1ab72725f7e8b",
+    "ff": "be1aa0606a1a4e7300a4eb7421061388f84672579134c6b44a3da890405e6efe"
+   },
+   "new": {
+    "ss": "86e69210c75cd57d933642732527338f4fb90013068a6eb41c9c643c3e006474",
+    "ff": "be1aa0606a1a4e7300a4eb7421061388f84672579134c6b44a3da890405e6efe",
+    "tt": "c15f821494fb7cdeabb8bdfb6b1a7dbb8a8259e1ff9998059621060823c44993"
+   },
+   "changed": [
+    "ss"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "ot_hgi_qw_wq",
+   "dir": "physical/hgi_quant_wide_views/ac62227e1_wq_w38/ot_hgi_qw_wq",
+   "run": "hgi_qw_wq_w38-ac62227e1-tc-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 26.070451353277235,
+     "verdict_ps": 26.07,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 251.71492668008,
+     "verdict_ps": 251.71,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "93e3b7ef3a4120a021a8fef6d18b7a7a419b9b0146b1038fd9ce464c339d744b",
+    "ff": "4fe609c8a95b9893edf000fe9edda0566e9b048740ceb3a69f5e2b85e1d00b4a",
+    "tt": "35d4a841f26dcdfe7ba6ca588221d8633fa8ca2b0e10e1adfa0eebdf49e3a173"
+   },
+   "new": {
+    "ss": "93e3b7ef3a4120a021a8fef6d18b7a7a419b9b0146b1038fd9ce464c339d744b",
+    "ff": "4fe609c8a95b9893edf000fe9edda0566e9b048740ceb3a69f5e2b85e1d00b4a",
+    "tt": "35d4a841f26dcdfe7ba6ca588221d8633fa8ca2b0e10e1adfa0eebdf49e3a173"
+   },
+   "changed": [],
+   "added": [],
+   "revision_dir": "physical/hbm_export_revisions_1013/hgi_qw_wq_w38-ac62227e1-tc-cl/ot_hgi_qw_wq"
+  },
+  {
+   "view": "qfd_embed_ingress_scale_numeric",
+   "dir": "physical/qwen_die_masters/views/qfd_embed_ingress_scale_numeric",
+   "run": "qfd_embed_ingress_scale_numeric-82c12047d-lbc",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt; SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 48.35912920109209,
+     "verdict_ps": 48.36,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 224.77619765481904,
+     "verdict_ps": 224.78,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "21bd9caef9ec5337fa15d7fb1bd18e3cba5e0aa98fa17fda26e0392c37eedbd8",
+    "ff": "e3a52341b517902ac4d595b949e8f9c997c20c23e38ec0a33a8051df27abb997"
+   },
+   "new": {
+    "ss": "f3d1dd3c37195f7a6271dfbd94c45c5f6e3068e5db3f99d264aab2c7d11df6f3",
+    "ff": "e3a52341b517902ac4d595b949e8f9c997c20c23e38ec0a33a8051df27abb997",
+    "tt": "4d30bde167f33817a3602e7691f094c69b31a2203dba643be3179ea990cdcb4b"
+   },
+   "changed": [
+    "ss"
+   ],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "dsfd_ctrl_ctr",
+   "dir": "physical/s81_ph_views/closed/dsfd_ctrl_ctr",
+   "run": "s81ph-dsfd_ctrl_ctr-003f8e1b8",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against job metrics TT setup (setup_corner tt) / FF hold; sequence from the SS receipt; SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 8.411271679165111,
+     "verdict_ps": 8.41,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 375.8917066498668,
+     "verdict_ps": 375.89,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "c8dc963c7a2c94496dd677c8e80dd46017e8460c7b2d1f9664860303598caacc",
+    "ff": "bbbf72e6f1c4ea9e083210977f59d1e379f3851333922d80fe9976d9bcdc51e4",
+    "tt": "58eac14fdda95d29fa407cdeb7c31792149124855d033d6397c66485d7b2d4d6"
+   },
+   "new": {
+    "ss": "c8dc963c7a2c94496dd677c8e80dd46017e8460c7b2d1f9664860303598caacc",
+    "ff": "bbbf72e6f1c4ea9e083210977f59d1e379f3851333922d80fe9976d9bcdc51e4",
+    "tt": "65377ee6c3cc9e229a13023de011c7a75e3da1113ba667f732decbdbe743a80a"
+   },
+   "changed": [
+    "tt"
+   ],
+   "added": []
+  },
+  {
+   "view": "ot_s81_head_delay8x32",
+   "dir": "physical/s81_die_views/hbglue_tc/6ce4b64fd/view",
+   "run": "s81-head-delay8x32-tc-6ce4b64fd",
+   "cls": "no routed_ioref verdict: replay of the archived corner_sta sign-off sequence, checked against receipt setup_tt / hold_ff; SPEF re-extracted with the flow's RCX",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 1.4277329318801435,
+     "verdict_ps": 1.43,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 170.4650032241517,
+     "verdict_ps": 170.47,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "a099bf0e785dae0b249fdf6e36e6c0e71cdbdd7d5d9a3c37d70fbdf4526e6cda",
+    "ff": "dd570cc368d36feb1e3b6028ad7c312ac44f7c8a015d17801bdd265875879719",
+    "tt": "36fa41919009e51b3d7b5c912508ef247f1b488f520f1d2bc1ce56c34782be8d"
+   },
+   "new": {
+    "ss": "a099bf0e785dae0b249fdf6e36e6c0e71cdbdd7d5d9a3c37d70fbdf4526e6cda",
+    "ff": "dd570cc368d36feb1e3b6028ad7c312ac44f7c8a015d17801bdd265875879719",
+    "tt": "36fa41919009e51b3d7b5c912508ef247f1b488f520f1d2bc1ce56c34782be8d"
+   },
+   "changed": [],
+   "added": []
+  },
+  {
+   "view": "hfd_hc_hub",
+   "dir": "physical/s81_pq_hier/results/el1011-pqc-ctl-a-cc60cd537-tc-cl/views/hfd_hc_hub",
+   "run": "hfd_hc_hub-cons1011-5f27090d5-tc-pd40-hm0-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 15.264872699205512,
+     "verdict_ps": 15.26,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 207.60604346747868,
+     "verdict_ps": 207.61,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "884c77d9b58b557646340cd6033c8f0acb2915ddcee5d6a9b39717cd50e1e096",
+    "ff": "58fee48142b7a2f5ccbb0fd20f1855093d640270b61143671e089fd586464f90"
+   },
+   "new": {
+    "ss": "884c77d9b58b557646340cd6033c8f0acb2915ddcee5d6a9b39717cd50e1e096",
+    "ff": "bd4da4867d159860e451110babde4fbba7df93560f3fbfa32cb46ce7afab5a11",
+    "tt": "41e793f8da610290ba3e7c31ad325a2791e149b0936f7ac72f6e546e7c9144ec"
+   },
+   "changed": [
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ],
+   "revision_dir": "physical/hbm_export_revisions_1013/hfd_hc_hub-cons1011-5f27090d5-tc-pd40-hm0-cl/hfd_hc_hub"
+  },
+  {
+   "view": "ot_dsrom_su_swiglu_lane",
+   "dir": "physical/s81_die_views/swiglu/view_esum_10/view",
+   "run": "s81-swiglu-esum-435a62a41-hm10-tt",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 3.190170350109156,
+     "verdict_ps": 3.19,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 167.0490412664094,
+     "verdict_ps": 167.05,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "824b9ac3dc3d2b13103a1fd720d5a698fc0f9c18a90f3771cc1fb75576b7dbeb",
+    "ff": "ef834c6694db316839335385eda19989f8c471e161f77d1e7265967a226652c3"
+   },
+   "new": {
+    "ss": "824b9ac3dc3d2b13103a1fd720d5a698fc0f9c18a90f3771cc1fb75576b7dbeb",
+    "ff": "ef834c6694db316839335385eda19989f8c471e161f77d1e7265967a226652c3",
+    "tt": "56c216e9ae8b89359d86016bda29a42fe9768c75d93dd64acae63b0d3043ce7b"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "ot_dsrom_su_swiglu_lane",
+   "dir": "physical/s81_die_views/swiglu/view_esum_25/view",
+   "run": "s81-swiglu-esum-435a62a41-hm25-tt",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 8.78128125769706,
+     "verdict_ps": 8.78,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 164.3938873918671,
+     "verdict_ps": 164.39,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "7fe5a1697f4c2357ae426c72255a321e0921c2c0df859254ab55e3be7fcd6f02",
+    "ff": "a3219870385a55fbce7d3a1ef3e8ea003604e52307be495989dba7b7393f43ad"
+   },
+   "new": {
+    "ss": "7fe5a1697f4c2357ae426c72255a321e0921c2c0df859254ab55e3be7fcd6f02",
+    "ff": "a3219870385a55fbce7d3a1ef3e8ea003604e52307be495989dba7b7393f43ad",
+    "tt": "35f458e5f187572907313057e94baaee951e241e6e3ba65ab9a12bd96c4a0436"
+   },
+   "changed": [],
+   "added": [
+    "tt"
+   ]
+  },
+  {
+   "view": "ot_attn_bank_ew544",
+   "dir": "physical/hbm_attn_tile_r/bank_m5/ew544_rec/view",
+   "run": "hbm_attn_bank_ew544-m5pdn-905d2ec04-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 24.431012768388882,
+     "verdict_ps": 24.43,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 408.75539064622046,
+     "verdict_ps": 408.76,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "624709b021800cd0c3f8f95ff1c538b3dde943ca7afe316e3263f76642fdc940",
+    "ff": "618332fdd6e42598302984c9982ccdf5363a642866922bafd36e0068d9dd4ac0"
+   },
+   "new": {
+    "ss": "99a093e2c294e42f004a4971a5e2b9a1ec588a401ad851016ab85d99e65bed16",
+    "ff": "bf91d99a00c1cf6ac269cb5b7d369aec1be57e8823c6794361734777fccd6f02",
+    "tt": "ecd18cf975dce6f1b5326beaf09e5610c2f318f0a5ef80429069d112e1d14a5f"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_ew544-m5pdn-905d2ec04-tc-iotime-h1-cl/ot_attn_bank_ew544"
+  },
+  {
+   "view": "ot_attn_bank_ew544",
+   "dir": "physical/hbm_attn_tile_r/bank_v11/ew544_reca/view",
+   "run": "hbm_attn_bank_ew544-cl11a-04424cd9f-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 36.65372172445558,
+     "verdict_ps": 36.65,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 406.89507319058293,
+     "verdict_ps": 406.9,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "7b0ff670ec55053e0ead51169a6e430efc7e388f92757e3b9309a7df3f196dfb",
+    "ff": "44dd04cf49a7b53e20b0c5cbaff5ef934bea3c10e74d982c9a627ea4e72b1c69",
+    "tt": "210a0618c977574cb406d9bd188096a8cf3935c408dee16db52e56e4ef21904b"
+   },
+   "new": {
+    "ss": "943dc066f5b8902dde504667ad9e24f7936bd91cc6209f3f1bba3029a2a46563",
+    "ff": "87d331fc194ab6d29f5d846168b14699b0551e2fb350ab91df16c87790de5df6",
+    "tt": "a6d6e8aaadf67d8d9dc4f0494e802588d23057642eced808483018853c950e0f"
+   },
+   "changed": [
+    "ss",
+    "ff",
+    "tt"
+   ],
+   "added": [],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_ew544-cl11a-04424cd9f-tc-iotime-h1-cl/ot_attn_bank_ew544"
+  },
+  {
+   "view": "ot_attn_bank_sn136",
+   "dir": "physical/hbm_attn_tile_r/bank_m5/sn136_rec/view",
+   "run": "hbm_attn_bank_sn136-m5pdn-905d2ec04-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 35.8052337778858,
+     "verdict_ps": 35.81,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 431.46342054711795,
+     "verdict_ps": 431.46,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "b0da04630c651fb1283d4e52dbe793dc2968ba7fbc77c186d66c7199f7ff4bbd",
+    "ff": "0b3af5fd13e6a32844a6b41b4cd20f3eacd58bdce5291c1bab7e899bc785ce4a"
+   },
+   "new": {
+    "ss": "f725e91a7e08499ba104400537b3a59481dfa26e6c550cb7498cc0c962d53e17",
+    "ff": "6d18d7afce78835e3f850117614ead1def84e3c6fc3a66fa8969e36bb33a38f7",
+    "tt": "ca7702d6191d1142dff76cf8f8664d625f81a2be0610e17476f212b34a589b0f"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_sn136-m5pdn-905d2ec04-tc-iotime-h1-cl/ot_attn_bank_sn136"
+  },
+  {
+   "view": "ot_attn_bank_ew136",
+   "dir": "physical/hbm_attn_tile_r/bank_m5/ew136_rec/view",
+   "run": "hbm_attn_bank_ew136-m5pdn-905d2ec04-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 34.19283606254098,
+     "verdict_ps": 34.19,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 431.13362879765305,
+     "verdict_ps": 431.13,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "9ebc8184849958a4f47b9dec66b860c5f14ca9aa6f5d461ce6fa7e560f90750f",
+    "ff": "2098092237f5f19b27084aa65c23ea35f00ee5d2ae010886f0ac49686ca06399"
+   },
+   "new": {
+    "ss": "5560fbea6e6acf46f4cbb7a2de3611e30da3cf345b4da416ff4917b5794c83ba",
+    "ff": "5ea36b95992c8b505f754160eb549a5fa25c653c0c7411d7234c2d99ef4ada85",
+    "tt": "237c0dc2fd3cf1041f97e7cb2186cb2eeef89ca9a6e4c92930b3570ee593bfa6"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_ew136-m5pdn-905d2ec04-tc-iotime-h1-cl/ot_attn_bank_ew136"
+  },
+  {
+   "view": "ot_attn_bank_sn136",
+   "dir": "physical/hbm_attn_tile_r/bank_v7/sn136_rec/view",
+   "run": "hbm_attn_bank_sn136-midpdn-15bed538d-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 34.815220151251935,
+     "verdict_ps": 34.82,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 430.06598282602226,
+     "verdict_ps": 430.07,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "c65110ce85714897d87304fd87b2af27dda1850aa2aaa5c486e91041a627eb6b",
+    "ff": "253c7d35b078a01afef6bb38001998900fcfe39601fcb7cf5e276a6ca836b9fb"
+   },
+   "new": {
+    "ss": "9aa59d48ac9d778c3173a1cc0ff8ea1f7539277566d4504f367bc2d3737c2c0a",
+    "ff": "ce50731d7e397bdf3af16769665c833c9a414ed46554590e0edf787cb10002a2",
+    "tt": "becee74bd56311f52f1c4ca6ff515d5dad07b60aea8c1970d25015f689436bac"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_sn136-midpdn-15bed538d-tc-iotime-h1-cl/ot_attn_bank_sn136"
+  },
+  {
+   "view": "ot_attn_bank_sn544",
+   "dir": "physical/hbm_attn_tile_r/bank_v7/sn544_rec/view",
+   "run": "hbm_attn_bank_sn544-midpdn-15bed538d-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 32.96510286965315,
+     "verdict_ps": 32.97,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 409.7946981751477,
+     "verdict_ps": 409.79,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "a5e61d6f5d22aec2be02020ea998a7eff87c6e9ad3b1c4e1d4a33cf36f9bea7a",
+    "ff": "247cd7c1798352519f763911ac83c46c6fb97161757651cbbc2bc3372a1458f7"
+   },
+   "new": {
+    "ss": "0267f847d4eaecfb8778dca961993df409fbd6ff7dfa301bfc0bfbace8aaf164",
+    "ff": "8ff0188513ec48cd10b860b87aeb97bdd98b9756ca7184dbfe9b78d462c4f560",
+    "tt": "483cab64ce2fcb323d8afdf60c82316f4561b1d54006840bb33573dc24c14265"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_sn544-midpdn-15bed538d-tc-iotime-h1-cl/ot_attn_bank_sn544"
+  },
+  {
+   "view": "ot_attn_bank_sn544",
+   "dir": "physical/hbm_attn_tile_r/bank_m5/sn544_rec/view",
+   "run": "hbm_attn_bank_sn544-m5pdn-905d2ec04-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 33.47315480350943,
+     "verdict_ps": 33.47,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 410.872558198605,
+     "verdict_ps": 410.87,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "9b1b57c13660d5feb338ad8d470c991d8e53188669f1ab98a140d4726608ae7b",
+    "ff": "4344f01f38ac6af40a4ddc46790d3835134acf5c6b90b6c785f9ea5e6ca04436"
+   },
+   "new": {
+    "ss": "1cdbbd2a707f1875eb70336be2f77ad2dd22c7ac308715831a307761345f11be",
+    "ff": "8fa518ef488202ac895505086e7f74c8ab95c41629e6d4ad6d71d275193c5706",
+    "tt": "f2f4840ab45c8a8aae1bfae4e74dce2bdd55a51ce06791c01a28e7fcaaba80be"
+   },
+   "changed": [
+    "ss",
+    "ff"
+   ],
+   "added": [
+    "tt"
+   ],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_sn544-m5pdn-905d2ec04-tc-iotime-h1-cl/ot_attn_bank_sn544"
+  },
+  {
+   "view": "ot_attn_bank_sn136",
+   "dir": "physical/hbm_attn_tile_r/bank_v12/sn136_rec/view",
+   "run": "hbm_attn_bank_sn136-cl12-6ee746757-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 17.68991203521253,
+     "verdict_ps": 17.69,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 430.14944384189846,
+     "verdict_ps": 430.15,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "c8eaccfc2ced9cd6b95401bce9bed180cf54fd2f467ad648a3479e6bb1afda5d",
+    "ff": "7a29d18231e2e906d163e00f63f857aecc2cda9f7619a15e1c4108baf51ef2b2",
+    "tt": "d3aa79ec2d996faedd0d94dd256f041c391a8cb0b2af8b75fb345664cc4c4205"
+   },
+   "new": {
+    "ss": "24c1c7e2db35de5bf2d5f74d6c4b2ae0d0113b78db450bcff451d1de1901cff7",
+    "ff": "31aa6a37a7ec218bf362b76c6da3a32142accc9d1e66a203c210b6531ee77d13",
+    "tt": "e7122fde7b6689acdc7735e504cf69d1dfaee156507360158515c327f55e8477"
+   },
+   "changed": [
+    "ss",
+    "ff",
+    "tt"
+   ],
+   "added": [],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_sn136-cl12-6ee746757-tc-iotime-h1-cl/ot_attn_bank_sn136"
+  },
+  {
+   "view": "ot_attn_bank_sn136",
+   "dir": "physical/hbm_attn_tile_r/bank_v11/sn136_recb/view",
+   "run": "hbm_attn_bank_sn136-cl11b-ac0cd0588-tc-iotime-h1-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 17.79490443887255,
+     "verdict_ps": 17.79,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 430.3701284236183,
+     "verdict_ps": 430.37,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "5b0836886fc23571681d61299add7caab68d3593f03acd030d8865db0cdaf502",
+    "ff": "364f2efa5013158391c7eecfca11a76ea9550453169d3204a713b6747fd3dc87",
+    "tt": "1433802b4167ef92204e100613b9596d2f70ba42d074b1e3f65f48d09f736727"
+   },
+   "new": {
+    "ss": "d4f74e1d0dfc61065dd06a3361bd7cc8d226fb3297e2ca29f76f75b7146b7404",
+    "ff": "773fffe32e19ccc18738c14cfe6ac0cae9c200abf8ab43e9b954b0d07c86a1c4",
+    "tt": "2b71aab1b085ec17bd2981c2871785df70911800facd823f936a67bf6f471cec"
+   },
+   "changed": [
+    "ss",
+    "ff",
+    "tt"
+   ],
+   "added": [],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_attn_bank_sn136-cl11b-ac0cd0588-tc-iotime-h1-cl/ot_attn_bank_sn136"
+  },
+  {
+   "view": "ot_su12_light",
+   "dir": "physical/hbm_accel_die_views/su/lane_pk2/ot_su12_light",
+   "run": "hbm_su_lane_pk2-0be5f1bec-tc-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 0.07448208716454019,
+     "verdict_ps": 0.07,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 152.74359554950934,
+     "verdict_ps": 152.74,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "ea5b53d49a4e7630d27b0b71e1f2fba9e81646ad71dafae779b228d4cb58816c",
+    "ff": "82a764b4b78a26352b3a336da06d6e9f1f8d45a622369d20e5eb7780c4eeca37",
+    "tt": "d990ff9ad03efce204e7aa878c2834911123e7f6bea1b2af0e9614cadc5a5ff0"
+   },
+   "new": {
+    "ss": "56456d22ef31487f852b01b4ab11c311cdc22b49b0e3105410c97eb00339de19",
+    "ff": "a30d2fcdf4a8ee7185b4dd504607b7db90efc2d199a647991569cce40f26d8e7",
+    "tt": "cb9c8e3dc65cd987ba00421728cd180234eed2990922f9327bd30417da44aa87"
+   },
+   "changed": [
+    "ss",
+    "ff",
+    "tt"
+   ],
+   "added": [],
+   "revision_dir": "physical/hbm_export_revisions_1013/hbm_su_lane_pk2-0be5f1bec-tc-cl/ot_su12_light"
+  },
+  {
+   "view": "ot_hgi_qw_dec",
+   "dir": "physical/hgi_quant_wide_views/2b1df5142_dec_s260/ot_hgi_qw_dec",
+   "run": "hgi_qw_dec_s260-2b1df5142-tc-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 18.40327890079152,
+     "verdict_ps": 18.4,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 50.84477283645583,
+     "verdict_ps": 50.84,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "c61a28ce662023acca1b26906c88f94e3ba21856312a02bcbf0c41e11eae610f",
+    "ff": "9c320ddafbf1b364cb93eb917dd4060e2ca0e9af7bac68a1941674c973fb7379",
+    "tt": "e9a68f9c4cff1bbf53cf71024800ad29d645b2ab87c688e5d07eb15662be473a"
+   },
+   "new": {
+    "ss": "3f663e6dbd02f04b3adbc89d888269264e9f51e31d762efa778d4fab2c7e0fd3",
+    "ff": "bf5343f6a99813c3bcf1f9e508c881cefdd061ebbb226b00c8cfc61dcc1a27e5",
+    "tt": "093e20206006c7e0b6ad2e812de00d074b7cbc927f856e368f8987463863127a"
+   },
+   "changed": [
+    "ss",
+    "ff",
+    "tt"
+   ],
+   "added": [],
+   "revision_dir": "physical/hbm_export_revisions_1013/hgi_qw_dec_s260-2b1df5142-tc-cl/ot_hgi_qw_dec"
+  },
+  {
+   "view": "ot_hgi_qw_dec",
+   "dir": "physical/hgi_quant_wide_views/ac62227e1_dec_s260/ot_hgi_qw_dec",
+   "run": "hgi_qw_dec_s260-ac62227e1-tc-cl",
+   "cls": "archive-only: verdict Tcl regenerated and sha-proven, archive ODB/SPEF, export checked against the routed_ioref verdict",
+   "verdict_check": {
+    "ff": {
+     "export_ps": 21.238510949928013,
+     "verdict_ps": 21.24,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 40.81368576436262,
+     "verdict_ps": 40.81,
+     "ok": true
+    }
+   },
+   "old": {
+    "ss": "358efec31ce2f8653236bedc3b038a252acb40991e3c142c5ea005903c3e2750",
+    "ff": "606bba0b9fb49e56f6653581cfb5640ca87492794b010d1a1aee99bca1016220",
+    "tt": "204a6e0190421eb9d6d9bad666dba512cf3436f99ce1d3a29e0a11002fcc3aec"
+   },
+   "new": {
+    "ss": "358efec31ce2f8653236bedc3b038a252acb40991e3c142c5ea005903c3e2750",
+    "ff": "606bba0b9fb49e56f6653581cfb5640ca87492794b010d1a1aee99bca1016220",
+    "tt": "87a1374ae9b0fd40e46ec14d80896ec7b65e88bb0e282cb0690e0510d762bef7"
+   },
+   "changed": [
+    "tt"
+   ],
+   "added": [],
+   "revision_dir": "physical/hbm_export_revisions_1013/hgi_qw_dec_s260-ac62227e1-tc-cl/ot_hgi_qw_dec"
   }
  ]
 }
