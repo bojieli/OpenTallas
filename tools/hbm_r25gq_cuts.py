@@ -193,6 +193,8 @@ def main(argv=None):
     ap.add_argument('--out', type=Path, required=True, help='output stem (.json and .md)')
     ap.add_argument('--title', default='')
     ap.add_argument('--note', action='append', default=[])
+    ap.add_argument('--dump-model', type=Path, help='also write the light model pickle (--model input of this tool and '
+                    'of tools/hbm_die_rly_kits.py --map)')
     a = ap.parse_args(argv)
     if a.model:
         m = pickle.loads(a.model.read_bytes())
@@ -201,6 +203,10 @@ def main(argv=None):
         sys.argv = [sys.argv[0]]
         import hbm_accel_die_fp as F
         m = F.build(F.variant_arg(a.ds_var))
+        if a.dump_model:
+            a.dump_model.write_bytes(pickle.dumps(dict(
+                insts={i.name: (i.master, i.kind, i.x, i.y, i.w, i.h, i.orient) for i in m['insts']}, buses=m['buses'],
+                geo=m['geo'], phys=m.get('phys_relays'))))
     res = run(m, [n for n in a.around.split(',') if n])
     worst = max(res.values(), key=lambda r: r['util'])
     a.out.parent.mkdir(parents=True, exist_ok=True)

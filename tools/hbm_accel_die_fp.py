@@ -5537,6 +5537,11 @@ def masters(m, k=1):
             # and three SU result pins took their face from another copy's peer and faced away on the mirrors)
             face = FACE_FIX[(mname, port)]
             along = ly if face in 'EW' else lx
+        if (mname, port) in (m['variant'].get('face_keep') or {}):
+            # contract v12: a published slot face is an interface (clusters are built to it): a port stays on its
+            # published face when a neighbour's move would only re-seat its first station (the route bends instead)
+            face = m['variant']['face_keep'][(mname, port)]
+            along = ly if face in 'EW' else lx
         if mname == 'hfd_sm' and port in ('x', 'c') and m['variant'].get('sm_xmid'):
             along = sum(sm_span[face]) / 2      # r12 option: x / c pins centred in their pin region (row-neutral)
         items[mname][face].append((along, port))
@@ -6142,7 +6147,7 @@ def r15_record(m):
 
 def write_sdc(path, m=None):
     if m is not None and m['variant'].get('clk_dom'):
-        Path(path).write_text(SDC_R15)
+        Path(path).write_text(SDC_R15 + (vm8_fwd_clock_sdc() if m['variant'].get('vm8_fwd_clocks') else ''))
         return
     Path(path).write_text("""# HBM accelerator die clock domains (AGENTS.md clock domains), tools/hbm_accel_die_fp.py
 create_clock -name clk_stream -period 0.833 [get_pins {hb_vm/ck sm*/ck hb_cmdproc/ck hb_coll/pll}]
@@ -6191,6 +6196,74 @@ set_clock_uncertainty -hold 0.025 [all_clocks]
 #   L*  endpoint core <-> pclk: inside ot_hbm_accel_tu_endpoint
 set_clock_groups -asynchronous -group {clk_stream} -group {clk_serial} -group {clk_hbm} -group {clk_link}
 """
+
+
+VM8_FACE_TILES = ('fe0', 'fe1', 'fe2', 'fe3', 'fw0', 'fw1', 'fw2', 'fw3')
+
+
+def vm8_fwd_clock_ports(root=None):
+    """{tile cell: [forwarded-clock output ports]} of the eight VM8 face tiles, read from the tile route SDC (the
+    `set_false_path -to` lines of physical/ref_tile/vm_cp_<t>_cx/clock.sdc are the single source of the port list)"""
+    root = Path(root) if root else Path(__file__).resolve().parents[1]
+    out = {}
+    for t in VM8_FACE_TILES:
+        txt = (root / f'physical/ref_tile/vm_cp_{t}_cx/clock.sdc').read_text()
+        ports = re.findall(r'^set_false_path -to \[get_ports \{([^}]+)\}\]', txt, re.M)
+        assert ports, ('no forwarded-clock port in the tile SDC', t)
+        out[f'vm_cp_{t}'] = ports
+    return out
+
+
+def vm8_fwd_clock_etm_arcs(root=None, corners=('tt', 'ff', 'ss')):
+    """the tile ETMs must KEEP the ck -> forwarded-clock port arc (the tile SDC false-paths the port as data; an
+    extraction that dropped the arc would hide the forwarded-clock insertion from die timing).  Returns
+    {cell: {port: {corner: timing_type or None}}}; None = the arc is missing."""
+    root = Path(root) if root else Path(__file__).resolve().parents[1]
+    out = {}
+    for cell, ports in vm8_fwd_clock_ports(root).items():
+        out[cell] = {p: {} for p in ports}
+        for c in corners:
+            lib = root / f'physical/ref_tile/{cell}_cx/views/{cell}/{cell}_{c}.lib'
+            txt = lib.read_text() if lib.exists() else ''
+            for p in ports:
+                i = txt.find(f'pin("{p}")')
+                j = txt.find('\n    pin(', i + 1) if i >= 0 else -1
+                blk = txt[i:j if j > 0 else len(txt)] if i >= 0 else ''
+                k = blk.find('related_pin : "ck"')
+                tt = re.search(r'timing_type : (\w+)', blk[k:]) if k >= 0 else None
+                out[cell][p][c] = (tt.group(1) if tt else 'combinational') if k >= 0 else None
+    return out
+
+
+def vm8_fwd_clock_sdc(root=None):
+    """die SDC section (coordinator decision 10-13, FACE2): each VM8 face tile forwards ~ck on its fclk ports
+    (ot_fwd_clk_inv at the face).  The TILE SDC false-paths those ports (they are clocks, not data; closed tiles
+    stand), so the DIE defines each as a generated clock of the tile's own clock pin -- its latency is then the tile
+    ETM's ck -> port arc, i.e. the tile's routed insertion -- and every receiver that captures with it is timed against
+    it through the die net.  Instances are found by cell, so the section holds for any hierarchy the die top uses."""
+    o = ['', '# ---- VM8 forwarded clocks (generated clocks; form of physical/rom_clock/fwd_hop2.sdc)',
+         '# tile SDC: set_false_path -to <fclk ports> (data budget does not apply); tile ETM: the ck -> port arc is KEPT',
+         '# (tools/hbm_accel_die_fp.py vm8_fwd_clock_etm_arcs checks every corner); the receiving capture flops are',
+         '# clocked by the die net of the port, so they are referenced to the generated clock by propagation.',
+         'set vm8_fck {}']
+    for cell, ports in vm8_fwd_clock_ports(root).items():
+        # OpenSTA / OpenROAD: get_cells returns a Tcl list (there is no foreach_in_collection)
+        o.append(f'foreach vm8_c [get_cells -quiet -hierarchical -filter "ref_name == {cell}"] {{')
+        o.append('  set vm8_n [get_full_name $vm8_c]')
+        o.append('  foreach vm8_p {' + ' '.join('{' + p + '}' for p in ports) + '} {')
+        o.append('    set vm8_k fck_[string map {/ _ . _ [ _ ] ""} ${vm8_n}_${vm8_p}]')
+        o.append('    create_generated_clock -name $vm8_k -source [get_pins ${vm8_n}/ck] -divide_by 1 -invert '
+                 '[get_pins [format {%s/%s} $vm8_n $vm8_p]]')
+        o.append('    lappend vm8_fck $vm8_k')
+        o.append('  }')
+        o.append('}')
+    o += ['# the forwarded clocks are synchronous to clk_stream (their master) and to each other; cut only to the others',
+          'if {[llength $vm8_fck]} {',
+          '  set_clock_groups -asynchronous -name vm8_fwd -group [get_clocks $vm8_fck] -group {clk_serial clk_hbm clk_link}',
+          '  set_clock_uncertainty -setup 0.060 [get_clocks $vm8_fck]',
+          '  set_clock_uncertainty -hold 0.025 [get_clocks $vm8_fck]',
+          '}', '']
+    return '\n'.join(o)
 
 
 def pdn_plan(m, cov=None):
@@ -6628,8 +6701,14 @@ def r25gq_v12():
     v['face_force'] = dict(v['face_force'])
     for p_, f_ in (('f_mv', 'W'), ('t_mv', 'W'), ('f_vr2r', 'N'), ('t_vr2q', 'N'), ('t_wd', 'S'), ('f_wdc', 'S')):
         v['face_force'][('ot_hgi_dma_back', p_)] = f_     # the closed leaf's pin faces (master frame)
+    # published (contract v11) faces of slice ports whose peer station moved with hb_tkm / the DBK slots: kept
+    v['face_keep'] = {('hfd_hgi_vms_NW', 'f_lgNW_wup'): 'W', ('hfd_hgi_vms_NW', 't_lgNW_rdn'): 'W',
+                      ('hfd_hgi_vms_NW', 't_ringc_SW'): 'S', ('hfd_hgi_vms_NW', 'f_ring_SW'): 'S',
+                      ('hfd_hgi_vms_SW', 'f_xl_rup'): 'E', ('hfd_hgi_vms_SW', 'f_hgi_vmap'): 'W',
+                      ('hfd_hgi_vms_SW', 'f_hgi_hc'): 'N'}
     v['child_slots'] = r25gq_v12_children()
     v['xp'] = dict(landing_credits_per_lane=16, bank_queue_credit=10)     # SM.MATVEC x plane (el1013-hbm-redesign-smmv)
+    v['vm8_fwd_clocks'] = True      # die SDC: the VM8 face tiles' forwarded clocks are generated clocks (FACE2 10-13)
     return v
 
 
@@ -6660,7 +6739,13 @@ def child_slots_check(cs, insts):
             (x, y), (w, h) = c['xy'], c['wh']
             assert x >= -1e-6 and y >= -1e-6 and x + w <= P.w + 1e-6 and y + h <= P.h + 1e-6, \
                 ('child slot outside its parent', mst, c['name'], (x, y, w, h), (P.w, P.h))
-            for n2, b in boxes:
+            if c.get('within'):     # a grandchild: inside the named child slot (a wires-only cluster), parent frame
+                wb = dict(boxes)[c['within']]
+                assert x >= wb[0] - 1e-6 and y >= wb[1] - 1e-6 and x + w <= wb[2] + 1e-6 and y + h <= wb[3] + 1e-6, \
+                    ('grandchild outside its cluster slot', mst, c['name'], c['within'])
+            for (n2, b), c2 in zip(boxes, ch):
+                if n2 == c.get('within') or (c2.get('within') and c2['within'] != c.get('within') and False):
+                    continue
                 assert x + w <= b[0] + 1e-6 or b[2] <= x + 1e-6 or y + h <= b[1] + 1e-6 or b[3] <= y + 1e-6, \
                     ('child slots overlap', mst, c['name'], n2)
             boxes.append((c['name'], (x, y, x + w, y + h)))
@@ -6676,6 +6761,7 @@ DBK_WH = (293.76, 293.76)                                       # ot_hgi_dma_bac
 QDQ_WH = (622.08, 596.16)                                       # ot_hgi_qdq_q_pin4 (qdq_q_ref q8 outline)
 QUANT_H = 648.0                                                 # hfd_quant: 358.56 -> 648.0 (QDQ + 2 x 25.92)
 HCOLL_WH = (406.08, 401.76)                                     # ot_hcoll_port (hcoll_port_cx view)
+SEQ_WH, SEQ_XY = (347.76, 272.16), (43.2, 561.6)                # ot_hgi_seq_split slot (unchanged) / origin in hfd_cmdproc
 SV_LEAF_WH, SV_HEAD_WH = (95.04, 103.68), (216.0, 216.0)        # ot_hgi_sv_lane2 (reference leaf) / ot_hgi_sv_head (est.)
 
 
@@ -6700,7 +6786,16 @@ def r25gq_v12_children():
                xy=(2016.144 - 21.6 - SV_LEAF_WH[0], 367.2 + k * 129.6), orient='R0') for k in range(16)]
     su.append(dict(name='u_head', cell='ot_hgi_sv_head', wh=SV_HEAD_WH,
                    xy=(2016.144 - 21.6 - SV_LEAF_WH[0] - 43.2 - SV_HEAD_WH[0], (2808.0 - SV_HEAD_WH[1]) / 2), orient='R0'))
-    return dict(hfd_coll_tkm=tkm, hfd_coll=hcoll, hfd_su=su,
+    # sequencer (el1013-hbm-seq-split): the slot is unchanged, 347.76 x 272.16, now a wires-only cluster of three
+    # hardened leaves on their own clock roots (FE 4,683 / AU 7,517 / BE 14,491 sinks; worst internal cut 0.40 at the AU
+    # E face).  Its origin in hfd_cmdproc is the die's choice until the cmdproc floorplan (b2-cp) pins it: W third,
+    # mid height (W = cfg / clock, N = fetch, E = dispatch, S = doorbell / VM / completion, as hgi_seq_v26s).
+    sx, sy = SEQ_XY
+    seq = [dict(name='u_seq', cell='ot_hgi_seq_split', wh=SEQ_WH, xy=(sx, sy), orient='R0', kind='cluster'),
+           dict(name='u_seq.u_fe', cell='ot_hgi_seq_fe', wh=(248.4, 211.68), xy=(sx, sy), orient='R0', within='u_seq'),
+           dict(name='u_seq.u_be', cell='ot_hgi_seq_be', wh=(88.56, 272.16), xy=(sx + 259.2, sy), orient='R0', within='u_seq'),
+           dict(name='u_seq.u_au', cell='ot_hgi_seq_au', wh=(254.88, 56.16), xy=(sx, sy + 216.0), orient='R0', within='u_seq')]
+    return dict(hfd_coll_tkm=tkm, hfd_coll=hcoll, hfd_su=su, hfd_cmdproc=seq,
                 hfd_quant=[dict(name='u_qdq', cell='ot_hgi_qdq_q_pin4', wh=QDQ_WH, xy=(25.92, 25.92), orient='R0')])
 
 

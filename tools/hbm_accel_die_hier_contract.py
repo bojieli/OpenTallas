@@ -241,8 +241,26 @@ CHILD_VIEWS = {
                             ck=dict(pin='clk', face='W', layer='M6'),
                             status='CLOSED hgi_dma_back_b2_ref-a-01e2a5600-hs-cx (TT +5.25 / FF +2.53 / DRC 0, exact + 2 '
                                    'mutants); W pins M4 + M6 -> R0 / MY only'),
+    'ot_hgi_seq_au': dict(view='physical/ref_tile/hgi_seq_au/views/ot_hgi_seq_au', pg='M5', strap='M6', sig='M5',
+                          ck=dict(pin='clk', face='W', layer='M4'),
+                          status='CLOSED hgi_seq_au-s1 (el1013-hbm-seq-split; --cts 254.0 ps / 23.6 ps, 7,517 sinks, one root); '
+                                 'leaf of the wires-only sequencer cluster u_seq'),
+    'ot_hgi_seq_be': dict(view='physical/ref_tile/hgi_seq_be/views/ot_hgi_seq_be', pg='M5', strap='M6', sig='M5',
+                          ck=dict(pin='clk', face='W', layer='M4'),
+                          status='CLOSED hgi_seq_be-s1-26d458185 (TT +33.76 / FF +22.49 / DRC 0, seqsplit exact PASS, mutant '
+                                 'FAIL; 14,491 sinks, one root); leaf of the wires-only sequencer cluster u_seq'),
 }
 CHILD_PLAN = {
+    'ot_hgi_seq_split': dict(pg='M7', strap='M8', sig='M7', ck=dict(pin='clk', face='W', layer='M4'), target_insertion_ps=300,
+                             status='GRANTED v12, slot UNCHANGED 347.76 x 272.16 (was the flat hgi_seq_v2 tile): wires-only '
+                                    'cluster of three hardened leaves (u_fe, u_be, u_au), five registered seams, child TX '
+                                    'flop -> hop <= 350 um -> child RX flop; pin faces as hgi_seq_v26s (N fetch, E dispatch, '
+                                    'S doorbell / VM / completion, W cfg / clock); lockstep gate PASS 159 programs, '
+                                    'CP.FETCH 0.953x of price; origin in hfd_cmdproc provisional (b2-cp floorplan)'),
+    'ot_hgi_seq_fe': dict(pg='M5', strap='M6', sig='M5', ck=dict(pin='clk', face='W', layer='M4'), target_insertion_ps=300,
+                          status='GRANTED v12, NO VIEW: hgi_seq_fe-s1-983266320 NEEDS_RTL (TT -59.64 / FF +15.24 / DRC 0; '
+                                 '--cts 386.3 ps / 127.8 ps is over the 300 / 80 rule at 4,683 sinks: structural FE change '
+                                 'owed by el1013-hbm-seq-split); slot 248.4 x 211.68 (kit outline 248.4 x 210.6)'),
     'ot_hgi_sv_lane2': dict(pg='M5', strap='M6', sig='M5', ck=dict(pin='clk', face='W', layer='M4'), target_insertion_ps=300,
                             status='GRANTED v12, no view: SU.VOP lane leaf (M5 leaf, <= 8.5k sinks, one root; N = VM wide-lane '
                                    'pins aligned to the die VM pin ranges, S = bank ports, E / W = head relay chain, hop <= 500 um; '
@@ -289,7 +307,8 @@ def child_tiles(m):
             elif plan.get('pins'):
                 pins = plan['pins']
             tl.append(dict(name=c['name'], cell=cell, w=w, h=h, x=c['xy'][0], y=c['xy'][1], orient=c.get('orient', 'R0'),
-                           pg=plan['pg'], strap=plan['strap'], sig=plan['sig'], ck=plan['ck'], status=plan['status'],
+                           pg=plan['pg'], strap=plan['strap'], sig=plan['sig'], ck=plan['ck'],
+                           status=plan['status'] + (f"; inside cluster slot {c['within']}" if c.get('within') else ''),
                            **({'target_insertion_ps': plan['target_insertion_ps']} if plan.get('target_insertion_ps') else {}),
                            **({'pins': pins} if pins and cell not in seen else {})))
             seen.add(cell)
@@ -501,46 +520,95 @@ def to_schema(rec, a):
                 slots=slots)
 
 
+def _pin_bits(name):
+    m_ = re.search(r'\[(\d+):(\d+)\]$', name)
+    return int(m_.group(1)) - int(m_.group(2)) + 1 if m_ else 1
+
+
 def merge_base(new, base, version, note):
-    """A new contract version on top of the published one.  A slot whose cell, outline, origin and pins (name, face,
-    offset) are unchanged keeps the published record (its layer plan, grants and view status are post-passes the
-    generator does not know); a changed or new slot takes the generated record at this version, with the published
-    layer of every pin that kept its name, face and offset (M5 re-route kits moved pins off M6+) and its hand grants.
+    """A new contract version on top of the published one, with STABLE PINS: the generator orders the pins of a face
+    by where the peers sit, so a moved neighbour re-orders pins of blocks nobody asked to change (v12 trial: sm0 ck /
+    rst swapped, hb_vm_se, hb_loader, hb_hgi_idx re-ordered).  A published pin is an interface tiles were built to:
+
+      * same cell, outline, origin and port set       -> the published record, untouched
+      * same cell and outline, origin moved           -> the published record at the new origin (this version)
+      * same cell and outline, ports added / removed  -> published pins kept where they are (face, offset, layer);
+        a face that gains or loses a port takes the generated plan of that whole face (listed in the summary)
+      * outline changed, or a new slot                -> the generated record
+    Post-pass fields the generator does not know (layer plan, grants, view status) stay on every kept record.
     Returns (contract, summary)."""
-    def key(s_):
-        pk = sorted((p_['name'], p_['face'], round(p_.get('offset', -1.0), 2)) for p_ in s_.get('pins') or [])
-        return (s_['cell'], round(s_['outline']['w'], 3), round(s_['outline']['h'], 3), round(s_['origin']['x'], 3),
-                round(s_['origin']['y'], 3), s_['origin'].get('orient', 'R0'), s_.get('parent'), tuple(pk))
     B = {s_['name']: s_ for s_ in base['slots']}
-    out, n = [], dict(unchanged=0, changed=0, new=0, removed=0, pin_layers_kept=0)
-    changed, added = [], []
+    out = []
+    n = dict(unchanged=0, origin_moved=0, ports_changed=0, outline_changed=0, new=0, removed=0, pins_kept=0, pins_added=0,
+             pins_relocated=0, pins_removed=0)
+    lists = dict(origin_moved=[], ports_changed=[], outline_changed=[], new=[])
+    relocated = []
+    same_xy = lambda a_, b_: all(abs(a_['origin'][k_] - b_['origin'][k_]) < 1e-3 for k_ in ('x', 'y')) and \
+        a_['origin'].get('orient', 'R0') == b_['origin'].get('orient', 'R0')
     for s_ in new['slots']:
         b_ = B.get(s_['name'])
-        if b_ is not None and key(b_) == key(s_):
+        if b_ is None or b_['cell'] != s_['cell']:
+            out.append(dict(s_, version=version))
+            n['new'] += 1
+            lists['new'].append(s_['name'])
+            continue
+        if any(abs(b_['outline'][k_] - s_['outline'][k_]) > 1e-3 for k_ in ('w', 'h')):
+            r_ = dict(s_, version=version)
+            for k_ in ('m6_pin_grant',):
+                if k_ in b_:
+                    r_[k_] = b_[k_]
+            out.append(r_)
+            n['outline_changed'] += 1
+            lists['outline_changed'].append(s_['name'])
+            continue
+        bp = {p_['name']: p_ for p_ in b_.get('pins') or []}
+        gp = {p_['name']: p_ for p_ in s_.get('pins') or []}
+        ports_same = (not bp) or set(bp) == set(gp)       # a slot published without pins ("pins as <first copy>") stays so
+        if ports_same and same_xy(b_, s_) and b_.get('parent') == s_.get('parent'):
             out.append(b_)
             n['unchanged'] += 1
             continue
-        s_ = dict(s_, version=version)
-        if b_ is not None and b_['cell'] == s_['cell']:
-            bl = {(p_['name'], p_['face'], round(p_.get('offset', -1.0), 2)): p_['layer'] for p_ in b_.get('pins') or []}
-            for p_ in s_.get('pins') or []:
-                l_ = bl.get((p_['name'], p_['face'], round(p_.get('offset', -1.0), 2)))
-                if l_ and l_ != p_['layer']:
-                    p_['layer'] = l_
-                    n['pin_layers_kept'] += 1
-            for k_ in ('m6_pin_grant',):
-                if k_ in b_:
-                    s_[k_] = b_[k_]
-            if b_.get('layer_cap_grant') and not str(b_['layer_cap_grant']).startswith('coordinator 2026-10-12 11:40'):
-                s_.update(layer_cap=b_['layer_cap'], layer_cap_grant=b_['layer_cap_grant'])
-        (changed if b_ is not None else added).append(s_['name'])
-        n['changed' if b_ is not None else 'new'] += 1
-        out.append(s_)
+        r_ = dict(b_, version=version, origin=s_['origin'])
+        if s_.get('parent') is not None:
+            r_['parent'] = s_['parent']
+        if ports_same:
+            n['origin_moved'] += 1
+            lists['origin_moved'].append(s_['name'])
+            out.append(r_)
+            continue
+        # the faces that gain or lose a port are re-planned as a whole (a published face is packed at 2 tracks a bit:
+        # hb_vms_NW E had no 100-um stretch left for the 2,065-b DBK read lane); a port the generator moves between
+        # two faces re-plans both.  Every other face keeps its published pins.
+        replan = {p_['face'] for nm, p_ in gp.items() if nm not in bp} | {p_['face'] for nm, p_ in bp.items() if nm not in gp}
+        while True:
+            more = {f_ for nm, p_ in gp.items() if nm in bp and bp[nm]['face'] != p_['face'] and
+                    (p_['face'] in replan or bp[nm]['face'] in replan) for f_ in (p_['face'], bp[nm]['face'])} - replan
+            if not more:
+                break
+            replan |= more
+        pins = []
+        for nm, p_ in gp.items():
+            if p_['face'] in replan:
+                pins.append(p_)
+                n['pins_added' if nm not in bp else 'pins_relocated'] += 1
+            else:
+                pins.append(bp[nm])
+                n['pins_kept'] += 1
+        n['pins_removed'] += sum(1 for nm in bp if nm not in gp)
+        relocated.append((s_['name'], ''.join(sorted(replan))))
+        r_['pins'] = pins
+        ck_ = (s_.get('clock_entry') or {})
+        r_['clock_entry'] = s_['clock_entry'] if ck_.get('face') in replan else b_.get('clock_entry', s_.get('clock_entry'))
+        n['ports_changed'] += 1
+        lists['ports_changed'].append(s_['name'])
+        out.append(r_)
     gone = sorted(set(B) - {s_['name'] for s_ in new['slots']})
     n['removed'] = len(gone)
     con = dict(base, version=version, updated=new['updated'], slots=out,
                changelog=list(base.get('changelog', [])) + [dict(version=version, when=new['updated'][:10], change=note)])
-    return con, dict(n, changed_slots=changed, new_slots=added, removed_slots=gone)
+    return con, dict(n, origin_moved_slots=lists['origin_moved'], ports_changed_slots=lists['ports_changed'],
+                     outline_changed_slots=lists['outline_changed'], new_slots=lists['new'], removed_slots=gone,
+                     replanned_faces=relocated)
 
 
 def main(argv=None):
@@ -691,6 +759,7 @@ def main(argv=None):
     rec['schema'] = 'hbmdie-1011 detail (sidecar of the opentallas.hier_contract.v1 file ' + a.out.name + ')'
     detail.write_text(json.dumps(rec, indent=1) + '\n')
     con = to_schema(rec, a)
+    a.out.with_name(a.out.stem + f'_v{a.version}_generated.json').write_text(json.dumps(con, indent=1, ensure_ascii=False) + '\n')
     summary = None
     if a.base:
         con, summary = merge_base(con, json.loads(a.base.read_text()), a.version, a.note or f'v{a.version}')
