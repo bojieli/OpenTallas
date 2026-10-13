@@ -11,7 +11,7 @@
   "bits192_129": "frontend aend_q 64-bit inclusive A span end; eligible bound <262144 means hardened scheduler stores low32",
   "bits256_193": "frontend oend_q 64-bit inclusive O span end; eligible bound <262144 means hardened scheduler stores low32"
  },
- "physical_reservation": "x270..570,y336.96..388.8 placement blockage via POST_TAPCELL_TCL",
- "route_job": "qw_ov_ref-ov1-cx-c8c47022e",
+ "physical_reservation": "x270..570,y336.96..388.8 PRE_TAPCELL hard blockage + site-aligned native row splits, right sites begin570.024; native tapcell inserts caps/taps afterward",
+ "route_job": "ov2-cx pending stopped-stage verification",
  "adoption_requirement": "Own cluster TT>=0 FF>=0 DRC0 child_lint + source-exact composition gate; bind drained and span-sideband at die integration, then explicitly switch to WQ3; do not fold/qualify canonical WQ2 with this record"
 }

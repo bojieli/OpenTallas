@@ -108,3 +108,30 @@ mutant. The bench counts returned acknowledgements independently and checks ever
 lane target at each completion, in addition to golden VM words. WQ=3 is not the
 canonical closed/routed WQ=2 element until a new ref_tile cluster closes and the
 composed parent explicitly adopts the variant. Price remains168.
+
+## Physical repair after ov1 placement failure (2026-10-13)
+
+Actual ov1 failed DPL-0033 twice at detailed placement, with zero overlaps and zero
+padding violations. The rejected 1,148 instances are exclusively fixed PHY_EDGE /
+TAP_TAP cells in rows1240..1431, coinciding with the reserved y336.96..388.8 seam.
+The reservation ran POST_TAPCELL: row cutting removed rows already occupied by
+fixed tap/endcap cells. This is an ordering fault, not a congested arithmetic cone.
+
+Move the unchanged x270..570 / y336.96..388.8 hard placement reservation to
+PRE_TAPCELL_TCL. ORFS tapcell then cuts the reserved rows before adding fixed
+endcaps/taps. Preserve outline, macros, IO, local clocks, wire-stage distances,
+layer/cut budget, RTL, 184/168 price proof, and every clock/SDC/hold constraint.
+Validate the stopped floorplan/tapcell and detailed-placement stages on the fleet
+using the same synthesis and standard-cell placement checkpoint. Preserve old
+attempts. No SS advisory or unchanged full-route retry is evidence for this fix.
+
+The stopped PRE-only experiment disproved the initial ordering fix: native ASAP7
+tapcell ignores dbBlockage while cutting rows, and inserted the same1,148 taps
+inside the seam. Preserve that failure as pre_only_1148. PRE_TAPCELL must therefore
+both create the same hard placement blockage and explicitly split native site
+rows at the seam boundaries before insertion. Use each row's actual origin,
+site count and spacing; floor the left segment and ceil the right segment so no
+remaining site crosses the reserved x interval. Preserve orientation and site
+master; delete only intersecting row segments, never logical instances. Then let
+native tapcell cut macro halos and create new boundary caps/taps on surviving
+segments. Verify zero new tap/cap bboxes inside the seam and check placement.

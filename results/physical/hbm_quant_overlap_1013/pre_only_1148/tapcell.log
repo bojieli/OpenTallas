@@ -1,0 +1,43 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_3_floorplan_tapcell tapcell
+Running tapcell.tcl, stage 2_3_floorplan_tapcell
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq/ot_hgi_qw_dbq_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl/ot_hgi_qw_dxl_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq/ot_hgi_qw_rq_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq/ot_hgi_qw_wq_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq/ot_hgi_qw_dbq_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl/ot_hgi_qw_dxl_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_rq_ref/views/ot_hgi_qw_rq/ot_hgi_qw_rq_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qw_wq_ref/views/ot_hgi_qw_wq/ot_hgi_qw_wq_ff.lib
+read_db /work/results/asap7/opentallas_ot_hgi_quant_wide_ov_asap7_ref_qw_ov_ref_ov1_cx_c8c47022e/base/2_2_floorplan_macro.odb
+read_sdc /work/results/asap7/opentallas_ot_hgi_quant_wide_ov_asap7_ref_qw_ov_ref_ov1_cx_c8c47022e/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /src/physical/hbm_quant_overlap/reserve_seam.tcl
+OT_QUANT_SEAM reserved x270..570 y336.96..388.8 (300um central decoder seam)
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO ODB-0303] The initial 2544 rows (36430080 sites) were cut with 20 shapes for a total of 10544 rows (23811392 sites).
+[INFO TAP-0004] Inserted 5088 endcaps.
+[INFO TAP-0005] Inserted 23299 tapcells.
+Design area 186747 um^2 35% utilization.
+write_db /work/results/asap7/opentallas_ot_hgi_quant_wide_ov_asap7_ref_qw_ov_ref_ov1_cx_c8c47022e/base/2_3_floorplan_tapcell.odb
+Elapsed time: 0:03.93[h:]min:sec. CPU time: user 3.72 sys 0.18 (99%). Peak memory: 565484KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            3            552 dde28bd0d5edc2af8a0d
