@@ -92,6 +92,13 @@ class Net:
             if len(p) < 2 or c in drop: continue      # clock nets are one tree each, built by CTS in the spine channel
             for a, q in (list(zip(p, p[1:])) if len(p) == 2 else [(p[0], t) for t in p[1:]]):
                 A, Q = cl(a, cen(q)), cl(q, cen(a))   # pin on the face toward the peer
+                # die lead r9 (2026-10-13): two ABUTTED blocks (gap <= 1 um) exchange the bus face to face over the
+                # shared edge: no die wire.  The centre projection drew a jog along the seam when one block is much
+                # wider than the other (SU 778 um on the 4,709-um VM N face: 8,511 b 'crossing' 388 um of x cuts)
+                ox = min(a['x'] + a['w'], q['x'] + q['w']) - max(a['x'], q['x'])
+                oy = min(a['y'] + a['h'], q['y'] + q['h']) - max(a['y'], q['y'])
+                if (ox > 0 and -1.0 <= -oy <= 1.0) or (oy > 0 and -1.0 <= -ox <= 1.0):
+                    continue
                 seg.append((A[0], A[1], Q[0], Q[1], bits)); cls.append(c)
         self.S = np.array(seg); self.C = np.array(cls)
 

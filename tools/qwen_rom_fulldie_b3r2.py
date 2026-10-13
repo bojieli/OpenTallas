@@ -2148,7 +2148,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     _dbg_cur = ['']
 
-    def poly_of(cl, P0, P1, bid=None, eps=None):
+    def _poly0(cl, P0, P1, bid=None, eps=None):
         _dbg_cur[0] = bid or ''
         f0, f1 = in_field(*P0), in_field(*P1)
         if _os.environ.get('OT_FA_DBG') and bid and bid.startswith(_os.environ['OT_FA_DBG']):
@@ -2308,6 +2308,171 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 xc = min(chx, key=lambda x: abs(x - P0[0]) + abs(x - P1[0]))
             return [P0, (xc, P0[1]), (xc, P1[1]), P1]
         return [P0, (P0[0], P1[1]), P1]
+
+    # ---- r9 (die lead 2026-10-13, contract v5): WALLS.  A block longer than one hop along a wire has no relay site
+    # inside it (the bit-plane VM region spans the spine: 4,709 x 2,348 um; the KV-centre column; the SU group), so a
+    # planned leg through it put its relays in a heap at the block edge and left the chain to the pass-2 search (run
+    # b2: every N-S spine word crossed the VM; x3 / emb found no free site near the SU for the heaps of the others).
+    # A word whose planned path runs > WALL_HIT um inside a wall is re-planned on a rectilinear grid (block edges +-
+    # WALL_CL, the spine lanes, the column corridors, the row gaps, the two pins) by a shortest-path search: an edge
+    # inside a wall is not allowed, the cost is length + turns + the fill of the fine windows it would see (cut model
+    # caps, as every other field allocation) with this word added.
+    WALL_UM, WALL_CL, WALL_HIT = 320.0, 45.0, 30.0
+    _is_tile = lambda it: getattr(it, 'master', '').startswith('qfd_tile')     # noqa: E731
+    big_nt = [(it.x, it.y, it.x + it.w, it.y + it.h) for it in m['insts'] if it.w * it.h > 4e4 and not _is_tile(it)]
+    _wl = {}
+    wall_log = []
+
+    def _walls(ax, c):
+        """merged wall intervals on the line y = c (ax 'h': intervals in x) or x = c (ax 'v': intervals in y): big
+        blocks whose interior holds the line, merged across gaps a relay frame does not fit (< 60 um), kept when
+        longer than WALL_UM (a tile row is no wall for a horizontal wire: relays in every column corridor)"""
+        key = (ax, round(c, 2))
+        if key not in _wl:
+            if ax == 'h':
+                iv = sorted((a_, c_) for a_, b_, c_, d_ in big if b_ < c < d_)
+            else:
+                iv = sorted((b_, d_) for a_, b_, c_, d_ in big if a_ < c < c_)
+            out = []
+            for lo, hi in iv:
+                if out and lo - out[-1][1] < 60.0:
+                    out[-1][1] = max(out[-1][1], hi)
+                else:
+                    out.append([lo, hi])
+            _wl[key] = [(lo, hi) for lo, hi in out if hi - lo > WALL_UM]
+        return _wl[key]
+
+    _wi = {}
+
+    def _wall_iv(ax, c):
+        """walls SEALING the line: stretches where both sides of the line (c - 3, c + 3) lie inside a wall.  A line along
+        a block face with a free channel beside it is open (the relays stand in the channel); a line inside a block, or
+        along the seam of two abutted blocks, is not."""
+        key = (ax, round(c, 2))
+        if key not in _wi:
+            A_, B_, out = _walls(ax, c - 3.0), _walls(ax, c + 3.0), []
+            for a0, a1 in A_:
+                for b0, b1 in B_:
+                    lo, hi = max(a0, b0), min(a1, b1)
+                    if hi - lo > 1.0:
+                        out.append((lo, hi))
+            _wi[key] = out
+        return _wi[key]
+
+    def _wall_hit(pa, pb):
+        (xa, ya), (xb, yb) = pa, pb
+        if abs(ya - yb) < 1e-6:
+            lo, hi, W_ = min(xa, xb), max(xa, xb), _wall_iv('h', ya)
+        elif abs(xa - xb) < 1e-6:
+            lo, hi, W_ = min(ya, yb), max(ya, yb), _wall_iv('v', xa)
+        else:
+            return 0.0
+        return sum(max(0.0, min(hi, b_ - 2.0) - max(lo, a_ + 2.0)) for a_, b_ in W_)
+
+    def _inside_big(P):
+        return any(a_ + 2.0 < P[0] < c_ - 2.0 and b_ + 2.0 < P[1] < d_ - 2.0 for a_, b_, c_, d_ in big)
+
+    def wall_route(P0, P1, bits):
+        import heapq
+        Wd, Hd = m['die']['w'], m['die']['h']
+        x0, x1 = max(0.0, min(P0[0], P1[0]) - 2600.0), min(Wd, max(P0[0], P1[0]) + 2600.0)
+        y0, y1 = max(0.0, min(P0[1], P1[1]) - 1600.0), min(Hd, max(P0[1], P1[1]) + 1600.0)
+        keepx, keepy = {P0[0], P1[0]}, {P0[1], P1[1]}
+        xs, ys = set(), set()
+        for a_, b_, c_, d_ in big_nt:
+            if a_ < x1 and c_ > x0 and b_ < y1 and d_ > y0:
+                xs |= {a_ - WALL_CL, c_ + WALL_CL}
+                ys |= {b_ - WALL_CL, d_ + WALL_CL}
+        keepx |= {x for x in cx_list if x0 <= x <= x1}
+        xs |= set(getattr(v, 'SPINE_CHANNEL_X', None) or [])
+        ys |= {y for y in (gap_set or ()) if y0 <= y <= y1}
+        for F_ in fields:
+            ys |= {F_[1] - WALL_CL, F_[3] + WALL_CL}
+            xs |= {F_[0] - WALL_CL, F_[2] + v.CORR + WALL_CL}
+
+        def lines(keep_, more, lo, hi):
+            out = sorted(q for q in keep_ if lo - 1e-6 <= q <= hi + 1e-6)
+            for q in sorted(more):
+                if lo <= q <= hi and all(abs(q - k_) > 8.0 for k_ in out):
+                    out.append(q)
+            return sorted(out)
+        X, Y = lines(keepx, xs, x0, x1), lines(keepy, ys, y0, y1)
+        ix = {q: i for i, q in enumerate(X)}
+        iy = {q: i for i, q in enumerate(Y)}
+        if len(X) * len(Y) > 400000:
+            return None
+        ecost = {}
+
+        def edge(i, j, d):
+            """cost of the edge from node (i, j) one step in direction d (0 E, 1 N, 2 W, 3 S); None = not allowed"""
+            i2, j2 = i + (1, 0, -1, 0)[d], j + (0, 1, 0, -1)[d]
+            if not (0 <= i2 < len(X) and 0 <= j2 < len(Y)):
+                return None
+            key = (min(i, i2), min(j, j2), d & 1)
+            if key not in ecost:
+                pa, pb = (X[i], Y[j]), (X[i2], Y[j2])
+                L_ = abs(pa[0] - pb[0]) + abs(pa[1] - pb[1])
+                if _wall_hit(pa, pb) > 1.0:
+                    ecost[key] = None
+                else:
+                    c_ = L_
+                    if FIELD_ALLOC and L_ > 2.0:
+                        f_ = hr(pa[1], pa[0], pb[0], bits) if d & 1 == 0 else vr(pa[0], pa[1], pb[1], bits)
+                        c_ += L_ * 0.5 * min(f_, 1.0) + 20000.0 * max(0.0, f_ - 1.0) * max(L_, 50.0) / 260.0
+                    ecost[key] = c_
+            return ecost[key], i2, j2
+        src, dst = (ix[P0[0]], iy[P0[1]]), (ix[P1[0]], iy[P1[1]])
+        dist, par = {}, {}
+        heap = [(0.0, src[0], src[1], -1)]
+        dist[(src[0], src[1], -1)] = 0.0
+        end = None
+        while heap:
+            c0, i, j, d0 = heapq.heappop(heap)
+            if c0 > dist.get((i, j, d0), 1e18) + 1e-9:
+                continue
+            if (i, j) == dst:
+                end = (i, j, d0)
+                break
+            for d in range(4):
+                if d0 >= 0 and (d - d0) % 4 == 2:
+                    continue
+                e_ = edge(i, j, d)
+                if e_ is None or e_[0] is None:
+                    continue
+                c1 = c0 + e_[0] + (90.0 if d0 >= 0 and d != d0 else 0.0)
+                k_ = (e_[1], e_[2], d)
+                if c1 < dist.get(k_, 1e18):
+                    dist[k_] = c1
+                    par[k_] = (i, j, d0)
+                    heapq.heappush(heap, (c1, e_[1], e_[2], d))
+        if end is None:
+            return None
+        pts, k_ = [], end
+        while k_ is not None:
+            pts.append((X[k_[0]], Y[k_[1]]))
+            k_ = par.get(k_)
+        pts = pts[::-1]
+        out = [pts[0]]
+        for q in pts[1:]:
+            if len(out) >= 2 and ((abs(out[-2][0] - out[-1][0]) < 1e-6 and abs(out[-1][0] - q[0]) < 1e-6) or
+                                  (abs(out[-2][1] - out[-1][1]) < 1e-6 and abs(out[-1][1] - q[1]) < 1e-6)):
+                out[-1] = q
+            elif abs(q[0] - out[-1][0]) + abs(q[1] - out[-1][1]) > 1e-6:
+                out.append(q)
+        return out
+
+    def poly_of(cl, P0, P1, bid=None, eps=None):
+        path = _poly0(cl, P0, P1, bid=bid, eps=eps)
+        if not getattr(v, 'WALL_AVOID', False) or cl == 'corridor' or cl.startswith('kvn') or cl == 'd2d_fdi':
+            return path
+        hit = sum(_wall_hit(a_, b_) for a_, b_ in zip(path, path[1:]))
+        if hit <= WALL_HIT or _inside_big(P0) or _inside_big(P1):
+            return path
+        alt = wall_route(P0, P1, cur_bits[0])
+        L0 = sum(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) for a_, b_ in zip(path, path[1:]))
+        L1 = sum(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) for a_, b_ in zip(alt, alt[1:])) if alt else None
+        wall_log.append((bid, cl, cur_bits[0], round(hit), round(L0), None if L1 is None else round(L1)))
+        return alt or path
 
     def candidates(path):
         """(arc, x, y, corr) points a relay may take along the path."""
@@ -2687,6 +2852,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
 
     repaired, unrepaired, off_plan, cut_over = [], [], [], []
+    lifted0 = set()      # r9: chains lifted off the grid at the start of pass 2 (their pass-1 frames are not restored)
     unrep = {}           # r8: bid -> reason (a chain repaired by a later rip-up pass leaves the list)
     rep_at = {}          # r8: idx of every chain pass 2 re-placed
     hop_chk = [None]     # r6: the load test of the span search (None outside it)
@@ -2942,8 +3108,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 frames, why = [], 'self-overlap'
         if not frames:
             unrep[pl['bid']] = why
-            for r_ in own:
-                add_rect(r_)
+            if idx not in lifted0:
+                for r_ in own:
+                    add_rect(r_)
             if unbooked:
                 book(booked[idx][0], bits)
             return False
@@ -2970,7 +3137,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # old frames back where they are still free and is re-repaired where they are not (span search around the lost
     # frames).  One rip-up round per failing chain; a second failure restores the victims untouched.
     RIP_UM = 450.0
-    rip_log, gap_tier = [], []
+    rip_log, gap_tier, retry_log = [], [], []
 
     def _bad_pts(pl):
         pts_ = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
@@ -2998,6 +3165,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return len(keep_) == len(fr)
 
     work = [idx for idx, pl in sorted(plans.items()) if needs_repair(pl)]
+    if GATE:
+        # r9: every chain that needs repair leaves the grid BEFORE the first search.  Their pass-1 frames are the heaps
+        # at the edges of the blocks their plans crossed; left in place they took the sites the earlier repairs needed
+        # (run b2: x3 'start 0', emb 'end free 0' beside the SU) and were gone by the end of the pass.
+        for idx in work:
+            unplace(plans[idx]['frames'])
+            lifted0.add(idx)
     ripped = set()
     rounds = 0
     while work:
@@ -3028,6 +3202,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for j in redo:
             ripped.discard(j)
         work = redo + work
+    if GATE:
+        # r9: the chains still open are searched again once everything else stands (their sites may have been held by a
+        # chain that has since moved); a chain that stays open keeps its pass-1 frames and is reported
+        for _rnd in range(3):
+            pend = [idx for idx, pl in sorted(plans.items()) if idx in lifted0 and pl['bid'] in unrep]
+            got_ = [idx for idx in pend if repair(idx, plans[idx]) or repair(idx, plans[idx], True)]
+            retry_log.append((len(pend), len(got_)))
+            if not got_ or len(got_) == len(pend):
+                break
     unrepaired[:] = [f'{b_} ({w_})' for b_, w_ in unrep.items()]
     # ---- qwen-tp8 tree-leg pads (tools/qwen_die_seam/tree_pads.py: the array bench's arrival model on the unpadded
     # netlist): a tree word whose leg arrives early at its node gets `pad` extra relays at its sink end, in the
@@ -3224,6 +3407,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
                           repaired_examples=repaired[:20], unrepaired=unrepaired, cut_over=cut_over,
                           repaired_all=[r[0] for r in repaired], off_plan=off_plan, feedback=feedback, rip_up=rip_log, gap_tier=gap_tier,
+                          wall_avoid=wall_log, retry=retry_log,
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
                           relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
     base = v.masters

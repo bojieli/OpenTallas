@@ -172,7 +172,11 @@ def apply(v, m, G):
     # ---------------------------------------------------------------- T13 tt_up4: one cluster, sel 26 b
     ug = [i.name for i in m['insts'] if i.master == 'qfd_tt_up4_g']
     drop_insts(ug)
-    B = [(b, c, SEL_BITS if b == 'o4_sel' else n, e) for b, c, n, e in B if not any(x[0] in ug for x in e)]
+    # r9: a removed cell leaves a multi-pin net (clock, reset) by its own pin only; its 2-pin data buses go with it
+    # (run b2 dropped the whole net: clk_r22 / clk_r96 = 199 + 136 sinks, tt_ctlm, tt_up4_0 and the VM without a clock)
+    ugs = set(ug)
+    B = [(b, c, SEL_BITS if b == 'o4_sel' else n, [x for x in e if x[0] not in ugs]) for b, c, n, e in B
+         if c in ('clock_trunk', 'reset') or not any(x[0] in ugs for x in e)]
     rec['tt_up4'] = dict(removed=ug, sel_bits=SEL_BITS)
 
     # ---------------------------------------------------------------- T17 seq_su bundles
@@ -206,6 +210,7 @@ def apply(v, m, G):
         i.x, i.y = round(i.x + dx, 4), round(su_new[1] + su.h + d, 4)
     su.x, su.y = su_new[0], su_new[1]
     v.SU_VM_NORTH = True
+    v.WALL_AVOID = True          # r9: the VM region spans the spine: planned paths go round walls (_relays)
     ck = by.get('clk_rx')
     bl = by.get('sp_band_lanes_1')
     if ck is not None and bl is not None:
@@ -315,6 +320,10 @@ def apply(v, m, G):
         nb.append((b, c, n, e))
     B = nb
     B.append(('pll_lock', 'spine_local', 1, [('pll', 'lock'), ('rstseq', 'rsi')]))
+    # r9: the two ROM-side reset roots (seq_su, tt_ctlm) are resets like rst_field / rst_spine: class 'reset', so a root
+    # farther than the reach from its sink becomes a registered repeater tree (_reset_tree), not a 1-b data relay chain
+    # (run b2: rst_seq_ctlm, 17 data relays, ended on tt_ctlm's area pin at the block centre: no relay site in reach)
+    B = [(b, 'reset' if b in ('rst_seq', 'rst_seq_ctlm', 'rst_fwd_s') else c, n, e) for b, c, n, e in B]
     field = [(i.name, 'rst_n') for i in m['insts'] if i.master in STATIONS or i.master == 'qfd_tile_nk']
     spine = [(i.name, 'rst_n') for i in m['insts'] if i.master in ('qfd_sp_res_ser', 'qfd_tt_up4', 'qfd_crom_g',
                                                                     'qfd_su_cbuf_g')]
@@ -535,6 +544,18 @@ def _wrap(v, m, G, peers):
             r.face('nb', q.ports['nb'][1], 'E', 'M6', 226.8, 2)
             r.face("ck", 1, "N", "M7", 356.4, 1)
             M['qkd_rhead'] = r
+            # r9: the engine-control leaf's head pins follow the head's S-face window.  An ectl serves 2 heads below
+            # (far, near) and 2 above (near, far); a far head's e / s / ti pin is one head (457.9 um) away, so its ectl
+            # pin must stand straight above / below it (run b2: 150 / 138 / 105 um of x offset = 608 / 596 / 564 um pin
+            # to pin on 192 nets).  The near heads' e / s pins sit beside the far ones (11 / 7 um).
+            ec = M.get('qkd_ectl')
+            if ec is not None:
+                dx = RHEAD_WH[0] - RHEAD_OLD_W           # head-local x - dx = ectl-local x (both orientations)
+                xe, xs, xt = (round(r.ports[p][4] - dx, 4) for p in ('e', 's', 'ti'))
+                for p, c in (('e0', xe), ('e3', xe), ('s0', xs), ('s3', xs), ('t0', xt), ('t1', xt),
+                             ('e1', xe - 11.0), ('e2', xe - 11.0), ('s1', xe - 7.0), ('s2', xe - 7.0)):
+                    sp = ec.ports[p]
+                    ec.ports[p] = sp[:4] + (round(c, 4),) + sp[5:]
         # ---- T12 res_ser
         q = M.get('qfd_sp_res_ser')
         if q is not None:
@@ -662,6 +683,7 @@ def _wrap(v, m, G, peers):
                 for j in range(3):
                     q.face(f'mer{j}', 1, 'W', 'M4', 0.0, 1)
                     q.face(f'rf{j}', 1, 'W', 'M4', 0.0, 1)
+                add_face(q, 'rsi', 1, 'W', 944.0, 1)     # r9: reset entry at the W face (was an area pin at the centre)
                 kw = dict(ports=tuple(p for p in q.ports if 'sp_vector_memory' in peers.get((inst, p), ())
                                       or p.startswith(('mer', 'rf'))))
             replan(model, M, inst, **kw)
