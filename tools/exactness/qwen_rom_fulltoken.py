@@ -156,7 +156,9 @@ def link(bld: Path, steps, prefixes=("die", "coll", "tile")):
         includes.add(f"-I{bld / prefix}")
         includes.update(f"-I{h.parent}" for h in (bld / prefix).rglob("V*.h"))
     exe = bld / "qwen_plain_ar_stream4"
-    sh("link", ["g++", "-std=c++20", "-O2", "-pthread", *LINK_DEFINES, *sorted(includes), HOST,
+    sh("link", ["g++", "-std=c++20", "-O2", "-pthread", *LINK_DEFINES,
+                *(["-DRT_OPTRACE_PA"] if os.environ.get("QROM_OPTRACE") else []),   # op-fetch trace (RT_OPTRACE=1)
+                *sorted(includes), HOST,
                 "-Wl,--start-group", *archives, "-Wl,--end-group",
                 *(f"{vroot}/include/{p}" for p in ("verilated.cpp", "verilated_threads.cpp", "verilated_dpi.cpp")),
                 "-o", exe], bld, steps)
