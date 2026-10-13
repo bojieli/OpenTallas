@@ -5612,6 +5612,7 @@ NEAR_MISS_JSON = STATE / "near_miss_retain.json"
 # ORFS objects under the job's ORFS work trees.  Kept: 6_final.*, 5_2_route.odb, every log / report / json (metrics).
 BULK_RELEASE_SH = r"""set -u
 R=%(run)s
+if [ -e "$R/.keep" ]; then echo "RETAIN owner diagnostic .keep"; exit 4; fi
 if [ "${NEAR_MISS_RELEASE:-0}" != 1 ] && python3 - "$R" <<'NMPY'
 import json, os, sys
 r = sys.argv[1].rstrip("/")
@@ -5691,6 +5692,32 @@ def closed_blocks(jobs):
     return {x["spec"].get("block") for x in jobs if closure_counts(x, rv)}
 
 
+def release_source_index(jobs):
+    """Counting closures indexed by immutable revision, not just a reused block name."""
+    rv = revoked_closures()
+    out = {}
+    for x in jobs:
+        if closure_counts(x, rv):
+            commit = x.get("commit_full") or (x.get("spec", {}).get("source") or {}).get("commit") or ""
+            out.setdefault(x["spec"].get("block"), set()).add(commit)
+    return out
+
+
+def source_mismatch_retained(j, index):
+    """An older/different-source closure cannot retire an unclosed candidate's diagnostics.
+
+    Missing or abbreviated closure revisions cannot prove equivalence. Exact source
+    identity is conservative; an owner can retire/archive unique diagnostics explicitly.
+    """
+    if j.get("status") == "CLOSED":
+        return False
+    versions = index.get(j.get("spec", {}).get("block"))
+    if versions is None:
+        return False
+    commit = j.get("commit_full") or (j.get("spec", {}).get("source") or {}).get("commit") or ""
+    return not (re.fullmatch(r"[0-9a-f]{40}", commit) and commit in versions)
+
+
 def near_miss(j, closed=None):
     """a non-CLOSED job whose route verdict is TT >= NEAR_MISS_PS and FF >= NEAR_MISS_PS (and not both >= the line),
     while its element (spec block) has no counting CLOSED job: its route tree is retained"""
@@ -5709,14 +5736,16 @@ def write_near_miss_retain(jobs, closed=None):
     """STATE/near_miss_retain.json: run dirs (+ ORFS dir) of retained near-miss routes, read by tools/fleet/fleet_sweep.py"""
     closed = closed_blocks(jobs) if closed is None else closed
     rows = []
+    sources = release_source_index(jobs)
     for x in jobs:
-        if x.get("run") and x.get("host") and near_miss(x, closed):
+        mismatch = source_mismatch_retained(x, sources)
+        if x.get("run") and x.get("host") and (near_miss(x, closed) or mismatch):
             m = x.get("metrics") or {}
             rows.append(dict(job=x["name"], block=x["spec"].get("block"), host=x["host"], run=x["run"],
                              orfs_dir=m.get("orfs_dir"), tt_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"),
-                             status=x["status"]))
+                             status=x["status"], reason="source-mismatched closure" if mismatch else "near miss"))
     body = dict(schema="opentallas.closure_loop.near_miss_retain.v1", generated=now_iso(), threshold_ps=NEAR_MISS_PS,
-                rule="non-closed route with TT >= threshold and FF >= threshold keeps its route tree until its block closes",
+                rule="retain near misses and unclosed source revisions not covered by a source-identical closure",
                 jobs=sorted(rows, key=lambda r: r["job"]))
     try:
         tmp = NEAR_MISS_JSON.with_suffix(".tmp")
@@ -5744,6 +5773,7 @@ def release_bulk(jobs):
     """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk --
     except a near miss (near_miss()) whose block has not closed: it keeps its route tree (NEAR-MISS RETENTION)."""
     closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
     write_near_miss_retain(jobs, closed)
     n = 0
     for x in jobs:
@@ -5751,7 +5781,7 @@ def release_bulk(jobs):
             break
         if x.get("bulk_released") or not x.get("host") or not x.get("run") or x["status"] not in TERMINAL:
             continue
-        if bf_exempt(x):
+        if bf_exempt(x) or source_mismatch_retained(x, sources):
             continue
         if x["status"] == "CLOSED" or not (x["status"] == "CANCELLED" or x["spec"].get("block") in closed):
             continue
@@ -5761,7 +5791,7 @@ def release_bulk(jobs):
             continue
         with job_lock(x["name"]):
             j = load_job(x["name"])
-            if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED":
+            if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED" or source_mismatch_retained(j, sources):
                 continue
             # the block is closed (or the job has no near-miss verdict): a near-miss corner_sta may be released
             rel = "NEAR_MISS_RELEASE=1\n" if j["spec"].get("block") in closed else ""
@@ -6118,6 +6148,7 @@ def mem_guard(jobs, fleet, now=None):
 def release_deep(jobs, now=None):
     """DEEP RELEASE of up to DEEP_RELEASE_PER_TICK terminal jobs (see DEEP_RELEASE_PY)"""
     closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
     hosts = {h["name"] for h in hosts_table()}
     shared = {}
     for x in jobs:
@@ -6135,7 +6166,7 @@ def release_deep(jobs, now=None):
         if n >= DEEP_RELEASE_PER_TICK:
             break
         mode = deep_release_mode(x, closed, ev, now)
-        if not mode:
+        if not mode or source_mismatch_retained(x, sources):
             continue
         run = x["run"].rstrip("/")
         if any(y["status"] not in TERMINAL or _terminal_age_h(y, now) < DEEP_RELEASE_AGE_H
@@ -6143,7 +6174,7 @@ def release_deep(jobs, now=None):
             continue                                    # a sibling job still uses the run dir
         with job_lock(x["name"]):
             j = load_job(x["name"])
-            if mode != deep_release_mode(j, closed, ev, now):
+            if mode != deep_release_mode(j, closed, ev, now) or source_mismatch_retained(j, sources):
                 continue
             commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
             if commit and subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
