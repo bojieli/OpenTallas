@@ -133,7 +133,7 @@ for {set r 0} {$r < 9} {incr r} {
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 # Clock creation must precede input-delay assignment for the new clock ports.
-remove_input_delay [get_ports {data_clk*}]
+unset_input_delay -clock core_clk [get_ports {data_clk*}]
 if {[get_property [get_clocks core_clk] is_propagated]} {
  set_propagated_clock [get_clocks {ring_data_*}]
 }

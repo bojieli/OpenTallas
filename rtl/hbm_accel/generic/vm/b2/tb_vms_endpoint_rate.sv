@@ -10,7 +10,12 @@ module tb_vms_endpoint_rate;
  wire [2223:0] f[0:S];wire [1:0] cr[0:S];
  assign lo=f[S];assign cr[S]=lc;
  for(genvar i=0;i<S;i=i+1) begin:g_station
+`ifdef RING_REGIONAL_PHY
+  initial if(D!=8) $fatal(1,"Regional physical candidate is fixed D8");
+  ot_vms_elastic_regional u(.clk(clk),.data_clk({9{clk}}),.rst_n(rst_n),.f_in(f[i]),.f_out(f[i+1]),.cr_in(cr[i+1]),.cr_out(cr[i]));
+`else
   ot_vms_elastic #(.D(D)) u(.clk({10{clk}}),.rst_n(rst_n),.f_in(f[i]),.f_out(f[i+1]),.cr_in(cr[i+1]),.cr_out(cr[i]));
+`endif
  end
  wire [1:0] ic; wire [7:0] eg_cr; wire [2207:0] xq;
  wire [287:0] rce; wire [263:0] cco; wire ri_cr,wki_cr,wko_cr,ack,busy; wire [2:0] wko;
