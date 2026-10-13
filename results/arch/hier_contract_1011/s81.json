@@ -11030,14 +11030,6 @@
    "pins": "M4 on E/W faces, M5 on N/S faces, 2 tracks (0.096 um) a bit"
   },
   "outline_classes_um": {
-   "w<=2": [
-    8.64,
-    8.64
-   ],
-   "w<=15": [
-    10.8,
-    10.8
-   ],
    "w<=68": [
     15.12,
     15.12
@@ -11051,7 +11043,7 @@
     30.24
    ]
   },
-  "outline_basis": "from content after the pre-route gate (2026-10-13): flops + BUF-HB4-BUF per output at ~0.5 util, data face >= W x 0.096 um; the 17.256 generated slot does not hold W 266 / 283 (PPL-0111) and is 18.6% utilised at W 63",
+  "outline_basis": "from content after the pre-route gate (2026-10-13): flops + BUF-HB4-BUF per output at ~0.5 util, data face >= W x 0.096 um; the 17.256 generated slot does not hold W 266 / 283 (PPL-0111) and is 18.6% utilised at W 63; W <= 15 also 15.12 sq: 8.64 / 10.8 closed timing but their M5 PG span (31% / 50%) fails the export child_lint (b); M5 PG pitch 2.7 on the 15.12 masters",
   "generator": "place at the kit outline on the site grid (not the 17.256 placeholder), pins from the routed LEF, R0 only unless mirrored pins stay on track; W 266 / 283 need the wider column slot (34.56 x 19.44 or 21.6 x 30.24)",
   "min_delay": {
    "element": "outhold BUF-HB4-BUF FIRM at every output pin",
@@ -11075,7 +11067,8 @@
     },
     "instances": 7808,
     "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_63_NS",
@@ -11090,7 +11083,8 @@
     },
     "instances": 3968,
     "view": "physical/ref_tile/s81_rly_63_ns/views/dsfd_rly_63_NS",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_63_WS",
@@ -11105,7 +11099,8 @@
     },
     "instances": 3456,
     "view": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_2_NS",
@@ -11115,12 +11110,13 @@
     "out_face": "S",
     "ctl_face": "E",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 1118,
     "view": "physical/ref_tile/s81_rly_2_ns/views/dsfd_rly_2_NS",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_15_SN",
@@ -11130,12 +11126,13 @@
     "out_face": "N",
     "ctl_face": "E",
     "outline": {
-     "w": 10.8,
-     "h": 10.8
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 918,
     "view": "physical/ref_tile/s81_rly_15_sn/views/dsfd_rly_15_SN",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_63_NE",
@@ -11150,7 +11147,8 @@
     },
     "instances": 896,
     "view": "physical/ref_tile/s81_rly_63_ne/views/dsfd_rly_63_NE",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_66_NS",
@@ -11165,7 +11163,8 @@
     },
     "instances": 896,
     "view": "physical/ref_tile/s81_rly_66_ns/views/dsfd_rly_66_NS",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_1_WE",
@@ -11175,12 +11174,13 @@
     "out_face": "E",
     "ctl_face": "N",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_1_we/views/dsfd_rly_1_WE",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_266_SN",
@@ -11195,7 +11195,8 @@
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v1"
    },
    {
     "master": "dsfd_rly_266_WE",
@@ -11210,7 +11211,8 @@
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v1"
    },
    {
     "master": "dsfd_rly_283_SN",
@@ -11225,7 +11227,8 @@
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v1"
    },
    {
     "master": "dsfd_rly_283_WE",
@@ -11240,7 +11243,8 @@
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v1"
    },
    {
     "master": "dsfd_rly_2_ES",
@@ -11250,12 +11254,13 @@
     "out_face": "S",
     "ctl_face": "N",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_2_es/views/dsfd_rly_2_ES",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_2_EW",
@@ -11265,12 +11270,13 @@
     "out_face": "W",
     "ctl_face": "N",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_2_WE",
@@ -11280,12 +11286,13 @@
     "out_face": "E",
     "ctl_face": "N",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_2_WS",
@@ -11295,12 +11302,13 @@
     "out_face": "S",
     "ctl_face": "N",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_2_ws/views/dsfd_rly_2_WS",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_54_EW",
@@ -11315,7 +11323,8 @@
     },
     "instances": 640,
     "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_2_NW",
@@ -11325,12 +11334,13 @@
     "out_face": "W",
     "ctl_face": "S",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 512,
     "view": "physical/ref_tile/s81_rly_2_nw/views/dsfd_rly_2_NW",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_2_SN",
@@ -11340,12 +11350,13 @@
     "out_face": "N",
     "ctl_face": "E",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 512,
     "view": "physical/ref_tile/s81_rly_2_sn/views/dsfd_rly_2_SN",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_63_WN",
@@ -11360,7 +11371,8 @@
     },
     "instances": 512,
     "view": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_66_SN",
@@ -11375,7 +11387,8 @@
     },
     "instances": 512,
     "view": "physical/ref_tile/s81_rly_66_sn/views/dsfd_rly_66_SN",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_1_EW",
@@ -11385,12 +11398,13 @@
     "out_face": "W",
     "ctl_face": "N",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 384,
     "view": "physical/ref_tile/s81_rly_1_ew/views/dsfd_rly_1_EW",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_63_SE",
@@ -11405,7 +11419,8 @@
     },
     "instances": 384,
     "view": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_2_NE",
@@ -11415,12 +11430,13 @@
     "out_face": "E",
     "ctl_face": "S",
     "outline": {
-     "w": 8.64,
-     "h": 8.64
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 290,
     "view": "physical/ref_tile/s81_rly_2_ne/views/dsfd_rly_2_NE",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_68_EW",
@@ -11435,7 +11451,8 @@
     },
     "instances": 256,
     "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    },
    {
     "master": "dsfd_rly_15_EN",
@@ -11445,12 +11462,13 @@
     "out_face": "N",
     "ctl_face": "S",
     "outline": {
-     "w": 10.8,
-     "h": 10.8
+     "w": 15.12,
+     "h": 15.12
     },
     "instances": 234,
     "view": "physical/ref_tile/s81_rly_15_en/views/dsfd_rly_15_EN",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v3"
    },
    {
     "master": "dsfd_rly_63_ES",
@@ -11465,7 +11483,8 @@
     },
     "instances": 128,
     "view": "physical/ref_tile/s81_rly_63_es/views/dsfd_rly_63_ES",
-    "status": "kit + bench + mutant; route pending"
+    "status": "kit + bench + mutant; route pending",
+    "kit_tag": "v2"
    }
   ]
  },
