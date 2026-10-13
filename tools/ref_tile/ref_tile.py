@@ -1014,6 +1014,11 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     sc = s.get("structural_change") or j.get("structural_change")
     if isinstance(sc, str) and sc.strip():
         spec["structural_change"] = sc.strip()
+    # closure loop CLOSED_STANDS gate (owner 10-12 / gate 10-13): a block that already has a CLOSED, published job is
+    # routed again only with a reason the loop can verify; written once in the tile spec (top level, or under "job")
+    rr = s.get("reroute_reason") or j.get("reroute_reason")
+    if isinstance(rr, dict) and rr.get("kind"):
+        spec["reroute_reason"] = rr
     return spec
 
 

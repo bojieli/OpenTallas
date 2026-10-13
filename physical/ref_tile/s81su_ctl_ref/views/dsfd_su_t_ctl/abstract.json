@@ -76,7 +76,7 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_su_t_ctl.lef": "51b3bd1e2ed78b56686e0471ce37731a3d51cac027624c725adf89c3fb6255e9",
+    "dsfd_su_t_ctl.lef": "0636d9c9839eac0eecaaa37d72bebb6c35c03c7aad7b387db225c2f3426d426a",
     "dsfd_su_t_ctl_ff.lib": "bac3285e5711818b436de2c115553cefe247c8c9f389278701de74cb3349b956",
     "dsfd_su_t_ctl_ss.lib": "eb10a656237406ea4372513a171172fa1b20ecd480ace73b4f8decf22543acd8",
     "dsfd_su_t_ctl_tt.lib": "ee63675c25c5ef8c1a13823b1a5e0bce0ea15ca92fdcd5e2afa4ebf5e919e85b"
@@ -169,5 +169,15 @@
       "ff": "983f70965f45b927aff5f812243c5de5dc5089f538f1478eec0f6f22215c5a88",
       "tt": "cd2dd19ea8f7f0698701d1713e2a26181d30bbaea3d9e45ea9202c77984b4234"
     }
+  },
+  "abstract_pin_stub_1013": {
+    "when": "2026-10-13",
+    "by": "el1013-die-pin-audit",
+    "tool": "tools/hier_contract/abstract_pin_stub.py",
+    "old_sha256": "51b3bd1e2ed78b56686e0471ce37731a3d51cac027624c725adf89c3fb6255e9",
+    "new_sha256": "0636d9c9839eac0eecaaa37d72bebb6c35c03c7aad7b387db225c2f3426d426a",
+    "pockets_closed": 247,
+    "layer": "M6",
+    "note": "own-top-layer pockets closed (OT_OBS_CLOSED marker); pins, outline and timing views unchanged"
   }
 }

@@ -1512,6 +1512,52 @@ def _lint_pin_pt(m):
     return pt
 
 
+def die_lef_texts(m):
+    """the LEF texts of a die case without a work directory (check mode): generated abstracts + the real macros"""
+    import tempfile
+    _init_real()
+    with tempfile.TemporaryDirectory() as td:
+        write_lefs(m, 1, Path(td) / 'elements.lef')
+        texts = [(Path(td) / 'elements.lef').read_text()]
+    for rel in (Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF) + ((HEAD_A_LEF, HEAD_B_LEF) if HEAD_BUNDLES else ()):
+        try:
+            texts.append(_lef_text(rel))
+        except OSError:
+            pass
+    if m.get('bound_views'):
+        bv_ = bound_views()
+        texts.append('\n'.join(bv_[n_]['text'] for n_ in sorted(m['bound_views'])))
+    return texts
+
+
+def pin_align_gate(m, lef_texts, out=None, raise_on_fail=True):
+    """tools/hier_contract/pin_align.py on the die's bundles; prints one OT_PIN_ALIGN line; returns the record.
+    OT_PIN_ALIGN_GATE: fail (default) | warn | off."""
+    hc = str(ROOT / 'tools' / 'hier_contract')
+    if hc not in sys.path:
+        sys.path.insert(0, hc)
+    import pin_align as PA
+    mode = PA.gate_mode()
+    if mode == 'off':
+        return None
+    rp = real_ports()
+
+    def names(it, port, bits):
+        base, lo, _hi = pslice(port)
+        lo = lo or 0
+        t = rp.get(it.master, {}).get(base)
+        return t[lo:lo + bits] if t is not None else [f'{base}[{lo + i}]' for i in range(bits)]
+    rec = PA.analyze(m['insts'], m['buses'], lef_texts, names)
+    if out is not None:
+        Path(out).write_text(json.dumps(rec, indent=1) + '\n')
+    print(PA.line(rec), file=sys.stderr)
+    if rec['verdict'] == 'FAIL' and mode == 'fail' and raise_on_fail:
+        raise SystemExit(f'pin align FAIL: {rec["by_verdict"].get("FAIL", 0)} bundles whose jog alone takes > '
+                         f'{rec["cut_limit"]:g} of the channel' + (f' (see {out})' if out else '')
+                         + '; OT_PIN_ALIGN_GATE=warn builds anyway')
+    return rec
+
+
 def margin_lint(m):
     import fp_margin_lint as FPL
     # s81-gen: per-segment walk (the per-chain walk ran > 5 h on the S81 layer1 die; same tests, same verdict)
@@ -1680,6 +1726,12 @@ def case_real(m, work):
         bv_ = bound_views()
         (work / 'bound_views.lef').write_text('\n'.join(bv_[n_]['text'] for n_ in sorted(bnd)))
     write_netlist(m, 1, work / 'die.v')
+    # pin ALIGNMENT of every die bundle (owner 2026-10-13, tools/hier_contract/pin_align.py): jog along the shared
+    # direction, bit order, pin-to-pin length, from the LEFs written above.  FAIL = the jog alone takes > 0.60 of the
+    # channel tracks between the two faces (OT_PIN_ALIGN_GATE=warn|off to build anyway)
+    pin_align_gate(m, [(work / f).read_text() for f in ('elements.lef', 'q_elem.lef', 'cfg.lef', 'phy.lef', 'serdes.lef',
+                                                         'ucie.lef', 'head_a.lef', 'head_b.lef', 'bound_views.lef')
+                       if (work / f).exists()], work / 'pin_align.json')
     if HOP_GATE_UM:
         # s81-die v14 (2026-10-12): hard hop gate before PLACE / GRT (c3: -17.7 ns TT on 2.3 mm unbuffered hub hops;
         # c5: a 1,025 um svc_SW.rv -> ctrl_SW.rd hop) -- every data bit, pin to pin, from the LEFs written above
@@ -8004,6 +8056,14 @@ def main(argv=None):
                                                   'field_round_trip_cycles')}, indent=1))
         ml = margin_lint(m)
         print(json.dumps(dict(margin_lint=ml), indent=1))
+        pa = pin_align_gate(m, die_lef_texts(m), (a.work / 'pin_align.json') if getattr(a, 'work', None) else None,
+                            raise_on_fail=False)
+        if pa is not None:
+            print(json.dumps(dict(pin_align={k_: pa[k_] for k_ in ('verdict', 'bundles', 'bits', 'by_verdict', 'by_kind',
+                                                                    'by_order', 'jog_over_warn', 'order_not_preserved',
+                                                                    'jog_max', 'jog_hist_um', 'bits_without_pin')}), indent=1))
+            if pa['verdict'] == 'FAIL' and os.environ.get('OT_PIN_ALIGN_GATE', 'fail') == 'fail':
+                return 3
         return 3 if ml['verdict'] == 'FAIL' else 0
     if a.mode == 'check':
         print(json.dumps(legality(m), indent=1))
