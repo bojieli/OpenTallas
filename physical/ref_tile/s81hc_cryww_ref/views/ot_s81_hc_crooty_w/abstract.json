@@ -1,0 +1,85 @@
+{
+  "name": "ot_s81_hc_crooty_w",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/routes/s81hc_cryww_ref_v3_outhold_276e553ee/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -7.541589575055241e-11 min -2.6861513013898275e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/routes/s81hc_cryww_ref_v3_outhold_276e553ee/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/record/views/ot_s81_hc_crooty_w:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/src/physical/ref_tile/s81hc_cryww_ref/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.3590761849258115e-10 min -6.731834534257075e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/routes/s81hc_cryww_ref_v3_outhold_276e553ee/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/record/views/ot_s81_hc_crooty_w:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/src/physical/ref_tile/s81hc_cryww_ref/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 5.663569613290065e-11 min -5.197289820735307e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/routes/s81hc_cryww_ref_v3_outhold_276e553ee/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/record/views/ot_s81_hc_crooty_w:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/src/physical/ref_tile/s81hc_cryww_ref/signoff.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/s81hc_cryww_ref-v3-outhold-276e553ee/src/physical/ref_tile/s81hc_cryww_ref/signoff.sdc",
+    "sha256": "c5b9b4058e78feedbb86d4f027f4114e037d3db428395b1bb1dbe44b91c9b38e",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "ot_s81_hc_crooty_w.lef": "28ee27a29b09793062513df43bd1055ec5994e367afc637dec48d6d3f011cd88",
+    "ot_s81_hc_crooty_w_ff.lib": "d482d04bc858164494e106581e3f3926307bdd2a2e8b2062b7ef11ffdc364c48",
+    "ot_s81_hc_crooty_w_ss.lib": "378f5fb64273f1587fbd5289300145bd6bb88c1cec9041f387ffd1146dbf620f",
+    "ot_s81_hc_crooty_w_tt.lib": "8044fa1973146fa585216e80a345d218b12aaf3f52221da474ec349b8dc6a9c8"
+  },
+  "ok": true
+}
