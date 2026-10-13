@@ -441,4 +441,28 @@ foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[r
 if {[llength $gl] != 50} {error "G_STATION grd2_l1: expected 50 registers, got [llength $gl]"}
 sr_place_win $gl 310.72 16.0 330.72 28.0
 incr gn [llength $gl]
-puts "G_STATION_PLACED 7 DFFS $gn FIXED_CELLS $::sr_fixed"
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[0\]\.u_lh\.xb_[a-z0-9]+(\[[0-9]+\])?\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] < 1000 || [llength $gl] > 1084} {error "G_STATION xb_l0: expected 1000..1084 registers, got [llength $gl]"}
+sr_place_win $gl 393.72 1038.84 493.72 1062.84
+puts "X_STATION xb_l0 [llength $gl]"
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[0\]\.u_lh\.xf_[a-z0-9]+(\[[0-9]+\])?\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] < 480 || [llength $gl] > 531} {error "G_STATION xf_l0: expected 480..531 registers, got [llength $gl]"}
+sr_place_win $gl 265.72 1127.68 345.72 1141.68
+puts "X_STATION xf_l0 [llength $gl]"
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[1\]\.u_lh\.xb_[a-z0-9]+(\[[0-9]+\])?\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] < 1000 || [llength $gl] > 1084} {error "G_STATION xb_l1: expected 1000..1084 registers, got [llength $gl]"}
+sr_place_win $gl 393.72 190.88 493.72 210.88
+puts "X_STATION xb_l1 [llength $gl]"
+incr gn [llength $gl]
+set gl {}
+foreach i [$::sr_blk getInsts] {set nm [string map {\\ {}} [$i getName]]; if {[regexp {g_lf\[1\]\.u_lh\.xf_[a-z0-9]+(\[[0-9]+\])?\$_DFF} $nm] && [string match DFF* [[$i getMaster] getName]]} {lappend gl $i}}
+if {[llength $gl] < 480 || [llength $gl] > 531} {error "G_STATION xf_l1: expected 480..531 registers, got [llength $gl]"}
+sr_place_win $gl 263.8 288.0 297.8 312.0
+puts "X_STATION xf_l1 [llength $gl]"
+incr gn [llength $gl]
+puts "G_STATION_PLACED 11 DFFS $gn FIXED_CELLS $::sr_fixed"

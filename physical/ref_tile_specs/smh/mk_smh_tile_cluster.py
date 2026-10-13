@@ -66,7 +66,7 @@ EG = [("pt_w", "*u_ptw", 43.2, Y_BAND, "R0"), ("pt_e", "*u_pte", 388.8, Y_BAND, 
       ("tcl", "*g_lf?1?.u_lh.u_tcc.u_h1", 518.4, round(Y_BAND - 172.8, 3), "R0")]
 MYO = {"R0": "MY", "MX": "R180"}
 DEFINES = ["OT_SMH_CG_ENREG", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SMH_RSTPIN", "OT_SMH_HIER",
-           "OT_SMH_PTW_OHDLY", "OT_SMH_PINREG", "OT_SMH_PRODUCTION_SHAPE"]
+           "OT_SMH_PTW_OHDLY", "OT_SMH_PINREG", "OT_SMH_XREL", "OT_SMH_PRODUCTION_SHAPE"]
 BDEF = " ".join(f"--define {d}" for d in DEFINES)
 BENCH = ("W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg " + BDEF +
          " {mut}--cg-gap 300 --build-jobs 8 --workdir $W --out {{RUN}}/b_{n}.json > {{RUN}}/b_{n}.log 2>&1; rc=$?; "
@@ -165,7 +165,7 @@ def spec(variant):
         # launches); the wake pin's kept HB4 hold stage (ot_hdly u_hdly_cgi) dont_touch'ed at PRE_FLOORPLAN
         "io_flop_at_pins": {"cols": 6, "allow_none": True},
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96, "hold_delay": True},
-        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r14",
+        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r15",
                 # r14 (el1013-smh-r14, 10-13): r13 passed CTS and was stopped EARLY_FAIL_SETUP (3,985 / 3,885 endpoints).
                 # Diagnosis in el1011-hbm-smh.log: 95 % = rin / bin ports straight into pt_w's pins (the child spends
                 # 240-530 ps pin -> landing flops), the rest g-lane pin registers left mid-wire by the placer.
@@ -177,7 +177,12 @@ def spec(variant):
                     "registers sit at fixed stations (<= 700 um a hop, G1 midway between bdc and tct outputs); two "
                     "kept HB4 hold cells on the wake pin (r13 FF hold -37.5 ps at cgi -> wq, repair stalled on the "
                     "fixed root cells).  r13: post-CTS TT -816 ps / 3,906 endpoints in the session budget (S = R = "
-                    "223 ps): port -> pt_w 3,705 (-419 worst), reg -> gout 99 (-465), gin -> reg 67 (-327)"),
+                    "223 ps): port -> pt_w 3,705 (-419 worst), reg -> gout 99 (-465), gin -> reg 67 (-327).  r15 "
+                    "(r14 --cts gate re-timed at the sign-off reference: the only setup class left was xs o_ix / o_iw "
+                    "-> tcl h1, 630-1,023 um of wire between two hard children, -65 / -103 ps on 112 / 176 "
+                    "endpoints): OT_SMH_XREL = one leaf-owned register on every operand / control bit between the x "
+                    "store and BOTH columns (1,084 + 531 flops a leaf, +1 cycle on both columns and every tile alike), "
+                    "at fixed stations midway (<= ~300 um a hop)"),
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
@@ -261,6 +266,17 @@ G_ST = [("g_pass2", r"g_gl\[[0-9]\]\.u_[dv]2/q\[[0-9]+\]\$_DFF", 100, CH_X, 670.
         ("g1_l1", r"g_lf\[1\]\.u_lh\.g[ytvf](_q)?(\[[0-9]+\])?\$_DFF", 50, CH_X - 7.2, 100.0, 10.0, 7.0),
         ("grd1_l1", r"g_lf\[1\]\.u_gr[dv]1/q\[[0-9]+\]\$_DFF", 50, 335.0, 62.0, 10.0, 6.0),
         ("grd2_l1", r"g_lf\[1\]\.u_gr[dv]2/q\[[0-9]+\]\$_DFF", 50, 310.0, 22.0, 10.0, 6.0)]
+# el1013-smh-r15 OT_SMH_XREL: the leaf operand relay registers between the x store and the two columns.
+#   xb_* (-> bdc, 1,084): in the xs | bdc gap (58 um leaf 0, 30 um leaf 1), under / over the bdc operand pins
+#   xf_* (-> BF16 columns, 531): leaf 0 above the x store beside the centre channel (xs N pins -> ~300 um -> station ->
+#   ~230 um -> tcl h1 N pins); leaf 1 in the centre channel between the x store's S pins and the tcl N pins
+# (name, instance regexp, (min, max) flops, eg x, y, half x, half y): synthesis may trim unused tag / operand bits
+YG0 = round((Y_XS0 + DIM["xs"][1] + Y_BDC0) / 2, 2)
+YG1 = round((Y_BDC1 + DIM["bdc"][1] + Y_XS1) / 2, 2)
+X_ST = [("xb_l0", r"g_lf\[0\]\.u_lh\.xb_[a-z0-9]+(\[[0-9]+\])?\$_DFF", (1000, 1084), 187.0, YG0, 50.0, 12.0),
+        ("xf_l0", r"g_lf\[0\]\.u_lh\.xf_[a-z0-9]+(\[[0-9]+\])?\$_DFF", (480, 531), 325.0, round(Y_XS0 + DIM["xs"][1] + 113.0, 2), 40.0, 7.0),
+        ("xb_l1", r"g_lf\[1\]\.u_lh\.xb_[a-z0-9]+(\[[0-9]+\])?\$_DFF", (1000, 1084), 187.0, YG1, 50.0, 10.0),
+        ("xf_l1", r"g_lf\[1\]\.u_lh\.xf_[a-z0-9]+(\[[0-9]+\])?\$_DFF", (480, 531), CH_X, round(Y_XS1 + 84.0, 2), 17.0, 12.0)]
 
 
 def g_stations(variant):
@@ -295,7 +311,16 @@ def g_stations(variant):
                   f"sr_place_win $gl {round(x - hx, 3)} {round(y - hy, 3)} {round(x + hx, 3)} {round(y + hy, 3)}",
                   "incr gn [llength $gl]"]
         tot += n
-    lines += [f"puts \"G_STATION_PLACED {len(G_ST)} DFFS $gn FIXED_CELLS $::sr_fixed\""]
+    for name, rex, (lo, hi), x, y, hx, hy in X_ST:
+        x = station_x(variant, x)
+        station_check(variant, name, x, y, hx, hy)
+        lines += ["set gl {}",
+                  "foreach i [$::sr_blk getInsts] {set nm [string map {\\\\ {}} [$i getName]]; "
+                  f"if {{[regexp {{{rex}}} $nm] && [string match DFF* [[$i getMaster] getName]]}} {{lappend gl $i}}}}",
+                  f"if {{[llength $gl] < {lo} || [llength $gl] > {hi}}} {{error \"G_STATION {name}: expected {lo}..{hi} registers, got [llength $gl]\"}}",
+                  f"sr_place_win $gl {round(x - hx, 3)} {round(y - hy, 3)} {round(x + hx, 3)} {round(y + hy, 3)}",
+                  f"puts \"X_STATION {name} [llength $gl]\"", "incr gn [llength $gl]"]
+    lines += [f"puts \"G_STATION_PLACED {len(G_ST) + len(X_ST)} DFFS $gn FIXED_CELLS $::sr_fixed\""]
     return lines
 
 
