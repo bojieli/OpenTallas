@@ -381,7 +381,17 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     generate for (g = 0; g < N; g = g + 1) begin : g_lnd
         assign ln_d[g*FW +: FW] = s0_d[g];
     end endgenerate
-    assign ln_v = red_in;
+    // LSEAM: ln_v leaves its OWN flop (register at the pin): lnv_q == s0_v && !s0_mode on every cycle (same enable, the
+    // next value of that product: s0_v <= pop, s0_mode <= head_mode on a pop).  LSEAM 0: the port is unused.
+    reg lnv_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) lnv_q <= 1'b0;
+        else if (!g_stall) lnv_q <= pop && !head_mode;
+    assign ln_v = (LSEAM != 0) ? lnv_q : red_in;
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && LSEAM != 0 && lnv_q !== red_in) begin
+        $display("TB_S81PH_COLL_SYS FAIL lane-seam valid flop differs from s0_v && !s0_mode"); $fatal(1, "LSEAM ln_v"); end
+`endif
     generate if (LSEAM != 0) begin : g_seam
         // landing flops of the lane leaves' output flops (pin flop both ends)
         reg [FW-1:0] y_q; reg [LANES-1:0] yv_q, pe_q; reg [2*LANES-1:0] ye_q;

@@ -25,7 +25,7 @@ P=$S/rtl/dsrom_sys/s81_ph
   $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
   --Mdir obj > build.log 2>&1 ) || { echo "BUILD_FAIL" > $O/$L.log; tail -30 $O/$L/build.log >> $O/$L.log; cat $O/$L.log; exit 2; }
 $O/$L/obj/Vtb_s81ph_coll_sys > $O/$L.log 2>&1
-grep -E "CYCLES|TB_S81PH_COLL_SYS" $O/$L.log | tail -3
+grep -E "CYCLES|^COV |TB_S81PH_COLL_SYS" $O/$L.log | tail -4
 # COLL_MAX_CYCLES (ds-1010 2026-10-10, optional): a PASS that took more than this many DUT cycles fails -- go-back-N
 # retransmission keeps a broken endpoint transaction-exact (link EP RXPIPE mutant: PASS at 39,544 vs 3,011 cycles).
 if [ -n "${COLL_MAX_CYCLES:-}" ]; then

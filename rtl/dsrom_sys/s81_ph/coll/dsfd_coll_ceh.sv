@@ -754,7 +754,13 @@ module dsfd_coll_cesl (input wire ck, input wire rs, input wire e_en, input wire
     wire [31:0] ab, cd; wire av, cv; wire [1:0] ae, ce;
     ot_hdc_fp32_add_fast u_ab (.clk(ck), .rst_n(erst_n), .valid_in(v_q), .a(d_q[31:0]), .b(d_q[63:32]), .y(ab), .err(ae), .valid_out(av));
     ot_hdc_fp32_add_fast u_cd (.clk(ck), .rst_n(erst_n), .valid_in(v_q), .a(d_q[95:64]), .b(d_q[127:96]), .y(cd), .err(ce), .valid_out(cv));
+`ifdef OT_S81PH_MUT_CESL
+    // negative control (lane leaf): the second level adds (a + b) to itself, the (c + d) half is lost
+    ot_hdc_fp32_add_fast u_y (.clk(ck), .rst_n(erst_n), .valid_in(av), .a(ab), .b(ab), .y(o_y), .err(o_ye), .valid_out(o_yv));
+    wire unused_cd = &{1'b0, cd};
+`else
     ot_hdc_fp32_add_fast u_y (.clk(ck), .rst_n(erst_n), .valid_in(av), .a(ab), .b(cd), .y(o_y), .err(o_ye), .valid_out(o_yv));
+`endif
     reg [2:0] pe_d;                                           // first-level errors, aligned to o_ye (the engine's err_delay)
     always @(posedge ck or negedge erst_n) if (!erst_n) pe_d <= 3'd0; else pe_d <= {pe_d[1:0], (|ae) || (|ce)};
     assign o_pe = pe_d[2];
@@ -771,8 +777,14 @@ module dsfd_coll_cesx #(parameter integer XD = 6, parameter integer XLD = 3) (in
     always @(posedge ck or negedge rst_n) if (!rst_n) begin en_q <= 1'b0; erst_n <= 1'b0; end else begin en_q <= e_en; erst_n <= en_q; end
     genvar q;
     generate for (q = 0; q < 2; q = q + 1) begin : g_q
+`ifdef OT_S81PH_MUT_CESX
+        // negative control (xl relay leaf): the two parity links' data leave on each other's link
+        ot_s81ph_cr_relay #(.W(163), .D(XD), .DO(XLD)) u_r (.clk(ck), .rst_n(erst_n), .i_v(i_v[q]), .i_cr(i_cr[q]),
+            .i_d(i_d[q*163 +: 163]), .o_v(o_v[q]), .o_cr(o_cr[q]), .o_d(o_d[(1-q)*163 +: 163]));
+`else
         ot_s81ph_cr_relay #(.W(163), .D(XD), .DO(XLD)) u_r (.clk(ck), .rst_n(erst_n), .i_v(i_v[q]), .i_cr(i_cr[q]),
             .i_d(i_d[q*163 +: 163]), .o_v(o_v[q]), .o_cr(o_cr[q]), .o_d(o_d[q*163 +: 163]));
+`endif
     end endgenerate
 endmodule
 // pass-through relay leaf: the five pass-through lane links (lane tiles, XD credits) -> relay -> core landing (PTD slots)
@@ -784,8 +796,15 @@ module dsfd_coll_cesp #(parameter integer PTW = 129, parameter integer XD = 6, p
     wire rst_n = rst_s[1];
     genvar l;
     generate for (l = 0; l < 5; l = l + 1) begin : g_l
+`ifdef OT_S81PH_MUT_CESP
+        // negative control (pass-through relay leaf): lanes 0 and 1 leave with each other's data
+        localparam integer LO = (l == 0) ? 1 : (l == 1) ? 0 : l;
+        ot_s81ph_cr_relay #(.W(PTW), .D(XD), .DO(PTD)) u_r (.clk(ck), .rst_n(rst_n), .i_v(i_v[l]), .i_cr(i_cr[l]),
+            .i_d(i_d[l*PTW +: PTW]), .o_v(o_v[l]), .o_cr(o_cr[l]), .o_d(o_d[LO*PTW +: PTW]));
+`else
         ot_s81ph_cr_relay #(.W(PTW), .D(XD), .DO(PTD)) u_r (.clk(ck), .rst_n(rst_n), .i_v(i_v[l]), .i_cr(i_cr[l]),
             .i_d(i_d[l*PTW +: PTW]), .o_v(o_v[l]), .o_cr(o_cr[l]), .o_d(o_d[l*PTW +: PTW]));
+`endif
     end endgenerate
 endmodule
 // output-stage leaf (ONE master for ces0 and cesn): the lane-slice's last two register stages.  i_* = the core's w1
