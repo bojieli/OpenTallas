@@ -69,6 +69,6 @@ if [ -n "${HSUB:-}" ] && [ -z "${NR_REAL:-}" ]; then
   SRC="${SRC/$W\/hdc\/ot_hdc_fp32_add_lat_nr.sv/$OUT/ot_hdc_fp32_add_lat_nr_rest.sv $W/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv}"
 fi
 $VL --cc --exe --build -j 16 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
-  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${SBP:++define+KVD_SBP=$SBP} ${HT:++define+KVD_HT} ${PF:++define+KVD_PF} ${HUBT:++define+KVD_HUBT} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
+  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${SBP:++define+KVD_SBP=$SBP} ${HT:++define+KVD_HT} ${PF:++define+KVD_PF} ${PQ:++define+KVD_PQ=$PQ} ${HUBT:++define+KVD_HUBT} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
   -CFLAGS "-O1 -DKVD_R=$RR -DKVD_ROM_ST=$RST" --Mdir $OUT -o Vtb $SRC $CPP > $OUT/build.log 2>&1
 echo built $OUT
