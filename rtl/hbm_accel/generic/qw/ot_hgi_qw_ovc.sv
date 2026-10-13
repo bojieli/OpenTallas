@@ -8,8 +8,7 @@
 // Seam control <-> data, a register at both pins, no datapath cycle added (existing register pairs are re-assigned):
 //   c_gv  = gv[4]  -> data 'launch'      c_gh = gh[5] -> data gh6 (decode header)
 //   c_mw* = the meta-write registers -> data RX, meta written one edge later (read >= 5 edges after: exact)
-//   c_busy -> data RX: write grant / w_fire enable (a record's first result is >= 20 edges after its go; the late fall
-//             only holds an enable while od_n == 0)
+//   c_wg  = busy && write grant (registered here, the grant pins are on this head's die face) -> data RX: w_fire enable
 //   d_wf  = w_fire registered in data -> RX here: resv falls two edges later (conservative: only delays a pop at a
 //           result FIFO within 2 of full)
 //   d_bad = sticky fault in data -> RX here ('bad'); the fault output rises one cycle later than in the one-head RTL
@@ -45,20 +44,22 @@ module ot_hgi_qw_ovc #(
     output wire [5:0]        c_mw_a,
     output wire [14:0]       c_mw_sec,
     output wire [2:0]        c_mw_n,
-    output reg               c_busy,
+    output reg               c_wg,        // busy && write grant (the data head's write enable)
     input  wire              d_wf,
     input  wire              d_bad,
     output reg               rg_req,
-    input  wire              rg_gnt
+    input  wire              rg_gnt,
+    output reg               wg_req,
+    input  wire              wg_gnt
 );
     localparam integer LD = 4;                  // = ot_hgi_qw_rq production default
     localparam integer OD = 64, OW = 6;         // = SRAM words
     localparam integer SW = $clog2(NB), CW = $clog2(LQ + 1), LW = $clog2(LD);
     // ---------------------------------------------------------------- face flops (pure: no logic, reset or enable)
-    reg f_rst, f_go, f_rg;
+    reg f_rst, f_go, f_rg, f_wg;
     reg [1408:0] f_cmd;
     always @(posedge clk) begin
-        f_rst <= rst_n; f_go <= go; f_cmd <= cmd; f_rg <= rg_gnt;
+        f_rst <= rst_n; f_go <= go; f_cmd <= cmd; f_rg <= rg_gnt; f_wg <= wg_gnt;
     end
     wire [6:0] rr_n;                            // 0 control, 1 counters / relays, 2 data head, 3..6 lane-group leaves
     ot_rst_relay #(.REGIONS(7)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
@@ -83,11 +84,11 @@ module ot_hgi_qw_ovc #(
     always @(posedge clk) begin p_cmd0 <= f_cmd; p_cmd <= p_cmd0; end
     // registered status outputs (idle may only lag: it drops two cycles after go and rises a cycle after busy falls)
     always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin idle <= 1'b1; drained <= 1'b1; done <= 0; fault <= 0; rg_req <= 0; c_busy <= 0; bad <= 0; wf_r <= 0; end
+        if (!rr_n[0]) begin idle <= 1'b1; drained <= 1'b1; done <= 0; fault <= 0; rg_req <= 0; wg_req <= 0; c_wg <= 0; bad <= 0; wf_r <= 0; end
         else begin
             idle <= !take && !p_go0 && !p_go && n_live < 7 && !bad;
             drained <= !busy && !take && !p_go0 && !p_go;
-            done <= c_done; fault <= bad; rg_req <= busy; c_busy <= busy; bad <= d_bad; wf_r <= d_wf;
+            done <= c_done; fault <= bad; rg_req <= busy; wg_req <= busy; c_wg <= busy && f_wg; bad <= d_bad; wf_r <= d_wf;
         end
     reg rg_ok;
     always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) rg_ok <= 0; else rg_ok <= busy && f_rg;

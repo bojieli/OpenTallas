@@ -14,12 +14,13 @@ module ot_hgi_qw_ovd #(
     input  wire          clk,
     input  wire          rst_n,
     // lane-group leaves
-    input  wire [4*1024-1:0] l_gp,
-    input  wire [31:0]       l_wcr,
-    output wire [31:0]       l_wv,
-    output wire [32*15-1:0]  l_wsec,
-    output wire [32*4-1:0]   l_ws,
-    output wire [511:0]      l_wy,
+    // lane-group leaves, one port set a leaf row (each on the face toward its row; the write data has one kept copy a row)
+    input  wire [1023:0]     l_gp0, l_gp1, l_gp2, l_gp3,
+    input  wire [7:0]        l_wcr0, l_wcr1, l_wcr2, l_wcr3,
+    output wire [7:0]        l_wv0, l_wv1, l_wv2, l_wv3,
+    output wire [8*15-1:0]   l_wsec0, l_wsec1, l_wsec2, l_wsec3,
+    output wire [8*4-1:0]    l_ws0, l_ws1, l_ws2, l_ws3,
+    output wire [511:0]      l_wy0, l_wy1, l_wy2, l_wy3,
     // control head
     input  wire              c_gv,
     input  wire [17:0]       c_gh,
@@ -27,7 +28,7 @@ module ot_hgi_qw_ovd #(
     input  wire [5:0]        c_mw_a,
     input  wire [14:0]       c_mw_sec,
     input  wire [2:0]        c_mw_n,
-    input  wire              c_busy,
+    input  wire              c_wg,        // control head: busy && write grant, registered
     output reg               d_wf,
     output reg               d_bad,
     // decoder tiles (parent level)
@@ -38,13 +39,11 @@ module ot_hgi_qw_ovd #(
     input  wire              d_vo,
     input  wire              d_f,
     input  wire              d_df,
-    input  wire [511:0]      d_y,
-    output reg               wg_req,
-    input  wire              wg_gnt
+    input  wire [511:0]      d_y
 );
     localparam integer OD = 64, OW = 6;         // = SRAM words
     localparam integer CW = $clog2(LQ + 1);
-    reg f_rst, f_wg; always @(posedge clk) begin f_rst <= rst_n; f_wg <= wg_gnt; end
+    reg f_rst; always @(posedge clk) f_rst <= rst_n;
     wire [2:0] rr_n;                            // 0 control, 1 counters / relays, 2 decoder tiles
     ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
     assign dec_rst_n = rr_n[2];
@@ -53,15 +52,15 @@ module ot_hgi_qw_ovd #(
         for (integer j = 0; j < 4; j = j + 1) if (j < nn) lanes[5'(l0 + j)] = 1'b1;
     endfunction
     // ---------------------------------------------------------------- seam RX from the control head
-    reg busy, mw_v; reg [OW-1:0] mw_a; reg [14:0] mw_sec; reg [2:0] mw_n;
+    reg wg_ok, mw_v; reg [OW-1:0] mw_a; reg [14:0] mw_sec; reg [2:0] mw_n;
     always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin busy <= 0; mw_v <= 0; x_v <= 0; end
-        else begin busy <= c_busy; mw_v <= c_mw_v; x_v <= c_gv; end      // x_v = the one-head 'launch'
+        if (!rr_n[0]) begin wg_ok <= 0; mw_v <= 0; x_v <= 0; end
+        else begin wg_ok <= c_wg; mw_v <= c_mw_v; x_v <= c_gv; end       // x_v = the one-head 'launch'
     always @(posedge clk) begin mw_a <= c_mw_a; mw_sec <= c_mw_sec; mw_n <= c_mw_n; x_hd <= c_gh; end   // x_hd = gh[6]
     // ---------------------------------------------------------------- gather tail: one pure pin register a leaf, then OR4
     reg [1023:0] gpf [0:3];
     always @(posedge clk) begin
-        for (integer h = 0; h < 4; h = h + 1) gpf[h] <= l_gp[h*1024 +: 1024];
+        gpf[0] <= l_gp0; gpf[1] <= l_gp1; gpf[2] <= l_gp2; gpf[3] <= l_gp3;
         x <= (gpf[0] | gpf[1]) | (gpf[2] | gpf[3]);
     end
     // ---------------------------------------------------------------- result capture, SRAM FIFO
@@ -71,15 +70,12 @@ module ot_hgi_qw_ovd #(
     always @(posedge clk) yc <= d_y;
     reg [14:0] mq_sec [0:OD-1]; reg [2:0] mq_n [0:OD-1];
     reg [OW-1:0] od_h, od_t; reg [OW:0] od_n;
-    reg wg_ok;
-    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin wg_ok <= 0; wg_req <= 0; end
-        else begin wg_ok <= busy && f_wg; wg_req <= busy; end
     // write credits (take last cycle's hit vector)
     reg [31:0] ev_wcr, hit_w; reg [CW-1:0] wcr [0:31];
     always @(posedge clk or negedge rr_n[1])
         if (!rr_n[1]) begin ev_wcr <= 0; for (integer b = 0; b < 32; b = b + 1) wcr[b] <= LQ[CW-1:0]; end
         else begin
-            ev_wcr <= l_wcr;
+            ev_wcr <= {l_wcr3, l_wcr2, l_wcr1, l_wcr0};
             for (integer b = 0; b < 32; b = b + 1) wcr[b] <= wcr[b] + CW'(ev_wcr[b]) - CW'(hit_w[b]);
         end
     // write head lookahead: hd_* = meta of entry od_h, re-read every edge for the next od_h.  Exact: an entry counts in od_n
@@ -89,7 +85,7 @@ module ot_hgi_qw_ovd #(
     reg [31:0] w_ok_l;
     always @* for (integer b = 0; b < 32; b = b + 1) w_ok_l[b] = wcr[b] > CW'(hit_w[b]);
     wire w_cr_ok = &(~hd_ln | w_ok_l);
-    wire w_fire = busy && !d_bad && wg_ok && od_n != 0 && w_cr_ok;
+    wire w_fire = !d_bad && wg_ok && od_n != 0 && w_cr_ok;   // wg_ok implies busy
     wire [OW-1:0] od_hn = w_fire ? od_h + 1'b1 : od_h;
     always @(posedge clk) begin
         hd_sec <= mq_sec[od_hn]; hd_n <= mq_n[od_hn]; hd_ln <= lanes(mq_sec[od_hn][4:0], mq_n[od_hn]);
@@ -112,10 +108,11 @@ module ot_hgi_qw_ovd #(
         .w_ce_in(yc_v), .w_addr_in(od_t), .wd_in(yc), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     // write beat: capture the SRAM read, per-lane valid / slot / sector a cycle later, relay to the write quads
-    reg [511:0] wc_y; reg wm_v; reg [14:0] wm_sec; reg [2:0] wm_n;
+    (* keep *) reg [511:0] wc_y [0:3];           // one copy a leaf row (each ~400 um from this head: no shared 4-leaf net)
+    reg wm_v; reg [14:0] wm_sec; reg [2:0] wm_n;
     reg [31:0] wv1; reg [3:0] ws1 [0:31]; reg [14:0] wsec1 [0:31];
     always @(posedge clk) begin
-        wc_y <= od_rd;
+        for (integer r = 0; r < 4; r = r + 1) wc_y[r] <= od_rd;
         wm_sec <= rf_sec; wm_n <= rf_n;
         for (integer b = 0; b < 32; b = b + 1) begin
             ws1[b] <= 4'(1) << 2'(b - wm_sec[4:0]); wsec1[b] <= wm_sec + 15'(5'(b - wm_sec[4:0]));
@@ -127,11 +124,15 @@ module ot_hgi_qw_ovd #(
             rf_v <= w_fire; wm_v <= rf_v;
             for (integer b = 0; b < 32; b = b + 1) wv1[b] <= wm_v && (5'(b - wm_sec[4:0]) < 5'(wm_n));
         end
+    wire [32*4-1:0] ws_f; wire [32*15-1:0] wsec_f;
     genvar gi;
     generate for (gi = 0; gi < 32; gi = gi + 1) begin : g_lo
-        assign l_ws[gi*4 +: 4] = ws1[gi]; assign l_wsec[gi*15 +: 15] = wsec1[gi];
+        assign ws_f[gi*4 +: 4] = ws1[gi]; assign wsec_f[gi*15 +: 15] = wsec1[gi];
     end endgenerate
-    assign l_wv = wv1; assign l_wy = wc_y;
+    assign {l_wv3, l_wv2, l_wv1, l_wv0} = wv1;
+    assign {l_ws3, l_ws2, l_ws1, l_ws0} = ws_f;
+    assign {l_wsec3, l_wsec2, l_wsec1, l_wsec0} = wsec_f;
+    assign l_wy0 = wc_y[0]; assign l_wy1 = wc_y[1]; assign l_wy2 = wc_y[2]; assign l_wy3 = wc_y[3];
     initial if ((LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_qw_ovd: LQ");
 endmodule
 `default_nettype wire
