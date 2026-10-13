@@ -15,7 +15,8 @@ $V --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fa
    -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports \
    -GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 $g "$@" --Mdir "$B/$n" \
    rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv \
-   rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv \
+   rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv \
+   rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv \
    rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv \
    rtl/hdc/ot_hdc_delay.sv > "$B/$n.build.log" 2>&1 \
    || { echo "$n BUILD-FAIL $(grep -m1 -E 'Error|terminated|Killed' "$B/$n.build.log" | cut -c1-160)"; exit 2; }

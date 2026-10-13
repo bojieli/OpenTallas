@@ -26,6 +26,11 @@ module tb_qfd_vm_bv_ports;
                                                            // (VMT: pass XVM + RV + RO + 7 and VL = 7 + RV + RO + 5)
     parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
     parameter integer XPR = 0;                 // bit-plane x transport (qwen-tp8-vm 1013): pass XVM + XPR + 1 - RO
+    // qwen-tp8-vm-rtl 1013: registered control trees (XTK levels), me tree (XMK levels: me_en_t is me_en XMK + 1 edges
+    // early, an earlier tap of the stall loop: needs XMK <= RSD - 2), line / x_q leaf owners (XLO; pass XVM + XQR + 2).
+    // MWD: me_want lookahead depth in negedges (0 = XMK + 1); a tree-less run at the same MWD has the same stimulus.
+    parameter integer XTK = 0, XMK = 0, XMF = 16, XLO = 0, XQR = 0, MWD = 0;
+    localparam integer WD = (MWD != 0) ? MWD : XMK + 1;
     parameter [ND*8-1:0] DSET = {8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0};
     localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NB = 6, NS = 8;
     localparam integer XR0 = 0, RD0 = XRN, SQ0 = XRN + 1024, MX0 = XRN + 2048, RS0 = XRN + 3072, RSN = 5120, SU0 = XRN + 8192;
@@ -33,7 +38,8 @@ module tb_qfd_vm_bv_ports;
     always #0.5 clk = ~clk;
     integer seed;
     // ---- DUT inputs ----
-    reg me_want_nx, started_nx;
+    reg me_want_nx, started_nx, started_t;
+    reg [WD-1:0] wq;                           // me_want lookahead: wq[k] is me_want k + 1 negedges ahead
     reg me_want, x_dv, w_v, r_v, rd_v, mx_we;
     wire me_en;
     reg [AW-1:0] x_dc, x_dcs, rd_addr, mx_addr;
@@ -71,8 +77,9 @@ module tb_qfd_vm_bv_ports;
             .o_data(l_data[gb*512 +: 512]), .o_cr(l_cr[gb]), .rok(l_ok[gb]), .fault(l_fault[gb]));
     end endgenerate
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
-        .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR)) dut (
-        .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
+        .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
+        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR)) dut (
+        .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e), .me_en_t(me_en_t), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),
         .s_re0(s_re0), .s_re1(s_re1), .s_a0(s_a0), .s_a1(s_a1), .s_q(s_q),
         .sw_mask(sw_mask), .sw_a0(sw_a0), .sw_a1(sw_a1), .sw_data(sw_data),
@@ -89,12 +96,53 @@ module tb_qfd_vm_bv_ports;
     assign me_en = me_want && (okd[RSD-1] || !started_e);
     // MEE: the same enable one edge early (me_want drawn one negedge ahead; okd one shift earlier; started one ahead)
     wire me_en_e = me_want_nx && (okd[RSD-2] || !started_nx);
+    // XMK: the same enable XMK + 1 edges early: me_want XMK + 1 ahead and the stall loop tapped XMK stages earlier
+    wire me_en_t;
+    generate if (XMK != 0) begin : g_met
+        if (RSD - 2 - XMK < 0) begin : g_bad
+            initial begin $display("FAIL qfd_vm_bv_ports XMK %0d needs RSD >= %0d", XMK, XMK + 2); $finish; end
+        end
+        assign me_en_t = wq[XMK] && (okd[(RSD-2-XMK >= 0) ? RSD-2-XMK : 0] || !started_t);
+    end else begin : g_nmet
+        assign me_en_t = me_en_e;
+    end endgenerate
     reg  me_eq;
-    integer bad_me;
-    initial bad_me = 0;
+    reg  [XMK:0] me_tq;
+    integer bad_me, n_tchk, t_run, n_mt, n_pc, n_lq;
+    initial begin bad_me = 0; n_tchk = 0; me_tq = 0; t_run = 0; n_mt = 0; n_pc = 0; n_lq = 0; end
+    // Coverage of the tree / owner build.  The references below exist only when the memory really elaborated the
+    // requested structure (a build that asks for XMK / XTK / XLO and still gets the broadcast or the flat line / x_q
+    // does not compile), and each structure must be seen moving, else the run FAILS as vacuous.
+    generate
+        if (XMK != 0) begin : g_cv_m
+            reg p;
+            always @(posedge clk) begin p <= dut.g_met.mq[0]; if (started_e && p !== dut.g_met.mq[0]) n_mt = n_mt + 1; end
+        end
+        if (XTK != 0) begin : g_cv_c
+            reg [15:0] p;
+            always @(posedge clk) begin
+                p <= dut.g_plane.g_ct.u_ct.q[15:0];
+                if (started_e && p !== dut.g_plane.g_ct.u_ct.q[15:0]) n_pc = n_pc + 1;
+            end
+        end
+        if (XLO != 0) begin : g_cv_l
+            reg [31:0] p;
+            always @(posedge clk) begin
+                p <= dut.g_xown.xr[31:0];
+                if (started_e && p !== dut.g_xown.xr[31:0]) n_lq = n_lq + 1;
+            end
+        end
+    endgenerate
+    wire tree_vac = (XMK != 0 && (n_mt < 100 || n_tchk < 1000)) || (XTK != 0 && n_pc < 100) || (XLO != 0 && n_lq < 100);
     always @(posedge clk) begin
         me_eq <= me_en_e;
         if (MEE != 0 && started_nx && me_eq !== me_en) bad_me = bad_me + 1;
+        me_tq <= {me_tq, me_en_t};
+        if (started_e) t_run = t_run + 1;
+        if (XMK != 0 && started_e && t_run > XMK + 4) begin
+            n_tchk = n_tchk + 1;
+            if (me_tq[XMK] !== me_en) bad_me = bad_me + 1;
+        end
     end
     // ---- reference memory ----
     reg [31:0] vm [0:ELEMS-1];
@@ -214,7 +262,7 @@ module tb_qfd_vm_bv_ports;
     endtask
     initial begin
         seed = SEED; bad_x = 0; bad_s = 0; bad_r = 0; bad_land = 0; bad_img = 0; n_s = 0; n_r = 0; n_land = 0; tuples = 0;
-        started = -1; nburst = 0; land_seen = 0; rw_p = 0; rr_p = 0; started_e = 0; started_nx = 0;
+        started = -1; nburst = 0; land_seen = 0; rw_p = 0; rr_p = 0; started_e = 0; started_nx = 0; started_t = 0; wq = {WD{1'b1}};
         for (i = 0; i < ELEMS; i = i + 1) vm[i] = 0;
         for (i = 0; i < ELEMS / 16; i = i + 1) shadow[i] = 0;
         for (i = 0; i < RSN / 16; i = i + 1) lastw[i] = -1;
@@ -233,7 +281,9 @@ module tb_qfd_vm_bv_ports;
             for (l = 0; l < 16; l = l + 1) w_data[32*l +: 32] = $random(seed);
         end
         @(negedge clk); w_v = 0;
-        repeat (19) @(negedge clk);
+        repeat (19 - XMK) @(negedge clk);
+        started_t = 1;
+        repeat (XMK) @(negedge clk);
         started_nx = 1;
         @(negedge clk);
         started_e = 1;
@@ -257,7 +307,9 @@ module tb_qfd_vm_bv_ports;
             end
             // ---- engine: its registers (burst, maxima, x descriptor) change only after an engine edge ----
             eng_prev = en_edge;
-            if (MEE != 0) begin me_want = me_want_nx; me_want_nx = ($random(seed) & 7) != 0; end
+            if (MEE != 0) begin
+                me_want = wq[0]; wq = wq >> 1; wq[WD-1] = ($random(seed) & 7) != 0; me_want_nx = wq[0];
+            end
             else me_want = ($random(seed) & 7) != 0;
             if (eng_prev) begin
                 b_ov = 0; b_we = 0; mx_we = 0;
@@ -312,13 +364,25 @@ module tb_qfd_vm_bv_ports;
         // drain: no new traffic, the engine runs until every burst landed
         b_ov = 0; b_we = 0; mx_we = 0; x_dv = 0; s_re0 = 0; sw_mask = 0; rd_v = 0; w_v = 0; r_v = 0;
         // MEE: the loop's last negedge already advanced me_want; only the lookahead (not yet seen by an edge) becomes 1
-        if (MEE != 0) begin me_want_nx = 1; @(negedge clk); end
+        // (WD > 1: the older lookahead entries were already shown to the memory as me_en_t / me_en_e: they are played out)
+        if (MEE != 0) begin
+            wq[WD-1] = 1'b1; me_want_nx = wq[0];
+            for (i = 0; i < WD; i = i + 1) begin
+                @(negedge clk);
+                if (i < WD - 1) begin me_want = wq[0]; wq = wq >> 1; wq[WD-1] = 1'b1; me_want_nx = wq[0]; end
+            end
+        end
         me_want = 1;
         for (i = 0; i < 20000 && land_cnt != nburst[15:0]; i = i + 1) @(negedge clk);
         repeat (40) @(negedge clk);
         for (i = 0; i < ELEMS; i = i + 1)
             if (shadow[i / 16][32*(i % 16) +: 32] !== vm[i]) bad_img = bad_img + 1;
         if (bad_me != 0) $display("me_en_e lookahead mismatches %0d", bad_me);
+        if (XTK != 0 || XMK != 0 || XLO != 0)
+            $display("TREE XTK=%0d XMK=%0d XMF=%0d XLO=%0d XQR=%0d me_consumers=%0d me_toggles=%0d me_t_checks=%0d pctl_changes=%0d xline_changes=%0d",
+                     XTK, XMK, XMF, XLO, XQR, dut.NMC, n_mt, n_tchk, n_pc, n_lq);
+        if (tree_vac) $display("FAIL qfd_vm_bv_ports TREE-VACUOUS x=%0d", bad_x);
+        else
         if (bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
             !w_hazard && !(|l_fault) && land_cnt == nburst[15:0] && nburst > 500 && n_s > 1000 && n_r > 1000 && tuples > 500)
             $display("PASS qfd_vm_bv_ports NRB=%0d SW=%0d VL=%0d su_reads=%0d row_reads=%0d tuples=%0d bursts=%0d land_steps=%0d cycles=%0d",

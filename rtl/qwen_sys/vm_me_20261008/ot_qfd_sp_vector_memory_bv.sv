@@ -127,18 +127,36 @@ module ot_qfd_sp_vector_memory_bv #(
     // + XPR + 1 - RO engine edges (the x consumer's XVM grows by it); pop, NPP, SU and row paths unchanged.
     // MUT = 3 / 4 / 5: plane 5's fine rotation / element shift / range count wrong; MUT = 6: a relay free-runs;
     // MUT = 7: planes 0 and 1 swapped at the leaves' outputs (all must FAIL).
-    parameter integer XPR = 0
+    parameter integer XPR = 0,
+    // qwen-tp8-vm-rtl 2026-10-13 (all 0 = unchanged; need XPR != 0 and VMT = 1).  Registered trees and leaf owners
+    // around the bit plane (ot_qfd_vm_xtree.sv), so that NO x-transport logic and no one-edge broadcast stays here:
+    //   XTK  levels of the two CONTROL trees (ot_qfd_vm_fantree, EN 1): plane control {beat address, in-range count}
+    //        and the line / x_q control.  Each is tapped XTK engine edges early in the seam queue / the s and h
+    //        pipelines, so the leaves see it on the original edge: latency + 0.
+    //   XMK  levels of the me tree (EN 0, MEE = 1): me_en_t is me_en (XMK + 1) edges early; the tree's last level is
+    //        the me_e of every relay / plane / region / fan / line / face leaf, <= XMF sinks per node.
+    //   XLO  1: line and x_q are owned by leaves: 32 x ot_qfd_vm_xline_t, XQR x_q relay stages (ot_qfd_vm_xrelay_t)
+    //        and ot_qfd_vm_xqface_t at the consumer face.  x latency + XQR + 2 engine edges (the x consumer's XVM
+    //        grows by it; the schedule here runs against XVM - XQR - 2).
+    // MUT = 8: a plane-control tree node is transparent; 9: a me-tree node; 10: line leaf 3 picks a wrong source;
+    // 11: face 0 free-runs; 12: a line-control tree node is transparent; 13: one x_q relay free-runs (all must FAIL).
+    parameter integer XTK = 0,
+    parameter integer XMK = 0,
+    parameter integer XMF = 16,
+    parameter integer XLO = 0,
+    parameter integer XQR = 0
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
     input  wire                    me_en,
     input  wire                    me_en_e,        // MEE: me_en one edge early
+    input  wire                    me_en_t,        // XMK: me_en (XMK + 1) edges early (unused when XMK = 0)
     // x descriptor (tree top)
     input  wire                    x_dv,
     input  wire [AW-1:0]           x_dc,
     input  wire [AW-1:0]           x_dcs,
     input  wire [3:0]              x_dsp,
-    output reg  [(1<<SMAX)*32-1:0] x_q,
+    output wire [(1<<SMAX)*32-1:0] x_q,
     output wire                    x_rdy,
     output reg                     x_fault,
     output reg                     x_hazard,
@@ -195,6 +213,10 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer BEAT = (NRB - 1) * 16;
     localparam integer LB = $clog2(BMAX) + 1;
     localparam integer HL = XVM + 2;
+    localparam integer XBP = (VMT != 0 && XPR != 0) ? 1 : 0;                  // bit-plane transport built
+    localparam integer XOWN = (XBP != 0 && XLO != 0) ? 1 : 0;                 // line / x_q owned by leaves
+    localparam integer XO = (XOWN != 0) ? XQR + 2 : 0;                        // their added x edges
+    localparam integer XVMI = XVM - XO;                                       // the schedule's x latency
     // XS: the tile FIFO is pushed 4 clocks after the beat's issue edge (relays RV, pin flop, macro, capture); the pop
     // must land at least one edge later (a same-edge pop of an empty FIFO reads the entry being written: gate 18:3x
     // DBG OVF push=1 pop=1 cnt=0), so the pop source is one stage later than the push and x gains RV + RO + 2 edges.
@@ -245,6 +267,35 @@ module ot_qfd_sp_vector_memory_bv #(
     end else begin : g_mep
         assign me_c = me_en;
         assign me_x = {8{me_en}};
+    end endgenerate
+    // ---- me_e of every x-transport LEAF (qwen-tp8-vm-rtl 2026-10-13).  Consumers in physical order: per region the
+    //      tile and its 8 x XRN x relays; the 32 planes and their control tree; the 32 line leaves, their control tree,
+    //      the x_q relays and the faces.  XMK = 0: all take the me_en_e broadcast (as before).  XMK > 0: the last level
+    //      of the me tree, <= XMF consumers per node. ----
+    localparam integer RWX = (NX >= 512) ? 512 : NX;            // x_q relay leaf width (one plane, RWX elements)
+    localparam integer NQS = NX / RWX;
+    localparam integer FW = (NX * 32 >= 1024) ? 1024 : NX * 32; // x_q face leaf width (element-major)
+    localparam integer NF = (NX * 32) / FW;
+    localparam integer MCG = 1 + 8 * XRN;
+    localparam integer MB_P = ((NRB >= 8) ? NRB / 8 : 1) * MCG;
+    localparam integer MB_PC = MB_P + 32;
+    localparam integer MB_L = MB_PC + XTK * 8;
+    localparam integer MB_LC = MB_L + 32 * XOWN;
+    localparam integer MB_QR = MB_LC + XTK * 8 * XOWN;
+    localparam integer MB_F = MB_QR + 32 * NQS * XQR * XOWN;
+    localparam integer NMC = MB_F + NF * XOWN;
+    wire [NMC-1:0] me_lf;
+    generate if (XBP != 0 && XMK != 0 && MEE != 0) begin : g_met
+        localparam integer NML = (NMC + XMF - 1) / XMF;
+        wire [NML-1:0] mq;
+        ot_qfd_vm_fantree #(.W(1), .K(XMK), .NLAST(NML), .FO(XMF), .NS(NML), .EN(0),
+            .MUTL((MUT == 9) ? XMK - 1 : -1), .MUTI(0)) u_met (.clk(clk), .me_e({(XMK*NML){1'b0}}), .d(me_en_t), .q(mq));
+        genvar mc;
+        for (mc = 0; mc < NMC; mc = mc + 1) begin : g_c
+            assign me_lf[mc] = mq[(mc * NML) / NMC];
+        end
+    end else begin : g_mef
+        assign me_lf = {NMC{(MEE != 0) ? me_en_e : me_en}};
     end endgenerate
     // =================================================================================================================
     // x path (copy 0), as ot_qfd_sp_vector_memory
@@ -300,8 +351,8 @@ module ot_qfd_sp_vector_memory_bv #(
     always @(*) begin
         bi_v = 1'b0; bi_j = 0; bi_dc = 0; bi_d = 0; bi_sp = 0; bi_n = 0; bi_end = 0;
         for (a = 0; a < HL; a = a + 1)
-            if (h_new[a] && a + h_b[a] >= XVM - 7 - XS && a <= XVM - 8 - XS) begin
-                bi_v = 1'b1; bi_j = a + h_b[a] - (XVM - 7 - XS); bi_dc = h_dc[a]; bi_d = h_d[a]; bi_sp = h_sp[a];
+            if (h_new[a] && a + h_b[a] >= XVMI - 7 - XS && a <= XVMI - 8 - XS) begin
+                bi_v = 1'b1; bi_j = a + h_b[a] - (XVMI - 7 - XS); bi_dc = h_dc[a]; bi_d = h_d[a]; bi_sp = h_sp[a];
                 bi_end = h_dc[a] + h_span[a];
                 bi_n = bi_n + 1'b1;
             end
@@ -723,7 +774,7 @@ module ot_qfd_sp_vector_memory_bv #(
             wire [8*512-1:0] xo; wire [511:0] ro_t; wire [NSU*NSB*512-1:0] so_t; wire ovf_t;
             `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
                 .USE_MACRO(USE_MACRO), .NPP(NPP), .MEREG((MEE != 0) ? 1 : 0), .NRI(TNI), .NRX(TNX), .NRS(TNS)) u_t (
-                .clk(clk), .rst_n(rst_n), .me_in((MEE != 0) ? me_en_e : me_en),
+                .clk(clk), .rst_n(rst_n), .me_in(me_lf[g*MCG]),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .xv(d_xv), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
                 .pop(pw[RO-1]), .xo(xo), .ro(ro_t), .so(so_t), .ovf(ovf_t));
@@ -741,7 +792,7 @@ module ot_qfd_sp_vector_memory_bv #(
                     for (kb = 0; kb < 8; kb = kb + 1) begin : g_b
                         ot_qfd_vm_xrelay_t #(.W(512), .MEREG((MEE != 0) ? 1 : 0),
                             .MUT((MUT == 6 && g == 0 && kb == 3 && kq == XRN) ? 1 : 0)) u_r (.clk(clk),
-                            .me_e((MEE != 0) ? me_en_e : me_en),
+                            .me_e(me_lf[g*MCG + 1 + (kq-1)*8 + kb]),
                             .d(xw[((kq-1)*8 + kb)*512 +: 512]), .q(xw[(kq*8 + kb)*512 +: 512]));
                     end
                 end
@@ -767,6 +818,7 @@ module ot_qfd_sp_vector_memory_bv #(
     reg [NRB*512-1:0] rot1, rot2;
     reg [BEAT*32-1:0] bv;
     wire [BEAT*32-1:0] bvs;
+    wire [32*BEAT-1:0] pq_all;                             // the planes' q, plane-major (bit plane only)
     generate if (XPR == 0 || VMT == 0) begin : g_rsoft
         wire [LNRB-1:0] rot = s3_a[4 +: LNRB];
         always @(posedge clk) begin
@@ -784,14 +836,26 @@ module ot_qfd_sp_vector_memory_bv #(
         end
         assign bvs = bv;
     end else begin : g_plane
-        //: 32 plane leaves.  Control at the leaves' pins one engine edge before s3: xs_a (a register of the seam
-        //: queue) and nvx, the count of in-range elements of the beat, registered from the queue entry one earlier.
+        //: 32 plane leaves.  Control at the leaves' pins one engine edge before s3: the beat address (seam-queue
+        //: entry XS-1) and nvx, the count of in-range elements of that beat.  XTK = 0: both are broadcast in one edge.
+        //: XTK > 0: the same word of the entry XTK places earlier goes through XTK engine-enabled fan levels (1 -> 2
+        //: -> 8 nodes -> 4 planes at XTK 3), so the planes see it on the same edge.
         localparam integer NVW = $clog2(BEAT + 1);
         localparam integer QWP = LB + AW + ND + 4;
-        wire [AW-1:0] a_pre = g_xs.qd[(XS-2)*QWP + ND + 4 +: AW];
+        localparam integer PCW = LNRB + 4 + NVW;
+        wire [AW-1:0] a_pre = g_xs.qd[(XS-2-XTK)*QWP + ND + 4 +: AW];
+        wire [AW-1:0] a_tap = g_xs.qd[(XS-1-XTK)*QWP + ND + 4 +: AW];
         reg  [NVW-1:0] nvx;
         always @(posedge clk) if (me_c)
             nvx <= (a_pre >= ELEMS) ? {NVW{1'b0}} : ((ELEMS - a_pre) >= BEAT) ? BEAT[NVW-1:0] : NVW'(ELEMS - a_pre);
+        wire [32*PCW-1:0] pcq;
+        if (XTK == 0) begin : g_cb
+            assign pcq = {32{a_tap[LNRB+3:0], nvx}};
+        end else begin : g_ct
+            ot_qfd_vm_fantree #(.W(PCW), .K(XTK), .NLAST(8), .FO(4), .NS(32), .EN(1), .MEREG((MEE != 0) ? 1 : 0),
+                .MUTL((MUT == 8) ? XTK - 1 : -1), .MUTI(1)) u_ct (.clk(clk), .me_e(me_lf[MB_PC +: XTK*8]),
+                .d({a_tap[LNRB+3:0], nvx}), .q(pcq));
+        end
         genvar pl, pb;
         for (pl = 0; pl < 32; pl = pl + 1) begin : g_p
             wire [NRB*16-1:0] pd;
@@ -801,41 +865,100 @@ module ot_qfd_sp_vector_memory_bv #(
             end
             ot_qfd_vm_xplane_t #(.NRB(NRB), .MEREG((MEE != 0) ? 1 : 0),
                 .MUT((pl == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0)) u_p (.clk(clk),
-                .me_e((MEE != 0) ? me_en_e : me_en), .d(pd), .c_a(xs_a[LNRB+3:0]), .c_nv(nvx), .q(pq));
+                .me_e(me_lf[MB_P + pl]), .d(pd), .c_a(pcq[pl*PCW + NVW +: LNRB+4]), .c_nv(pcq[pl*PCW +: NVW]), .q(pq));
+            assign pq_all[((MUT == 7 && pl < 2) ? 1 - pl : pl)*BEAT +: BEAT] = pq;
             for (pb = 0; pb < BEAT; pb = pb + 1) begin : g_o
-                assign bvs[pb*32 + ((MUT == 7 && pl < 2) ? 1 - pl : pl)] = pq[pb];
+                assign bvs[pb*32 + pl] = pq_all[pl*BEAT + pb];
             end
         end
     end endgenerate
-    reg [NX*32-1:0] line;
-    generate for (c = 0; c < NX; c = c + 1) begin : g_ent
-        wire [ND-1:0] hit;
-        wire [ND*32-1:0] src;
-        for (dd = 0; dd < ND; dd = dd + 1) begin : g_d
-            localparam integer DV = DSET[dd*8 +: 8];
-            localparam integer JJ = (c * DV) / BEAT;
-            localparam integer MM = (c * DV) % BEAT;
-            if (JJ < BMAX) begin : g_ok
-                assign hit[dd] = s6_d[dd] && (s6_j == JJ);
-                assign src[dd*32 +: 32] = bvs[MM*32 +: 32];
-            end else begin : g_no
-                assign hit[dd] = 1'b0;
-                assign src[dd*32 +: 32] = 32'd0;
+    wire       co_v = h_new[XVMI-1];
+    wire [3:0] co_sp = h_sp[XVMI-1];
+    generate if (XOWN == 0) begin : g_lflat
+        reg [NX*32-1:0] line;
+        reg [NX*32-1:0] x_q_r;
+        for (c = 0; c < NX; c = c + 1) begin : g_ent
+            wire [ND-1:0] hit;
+            wire [ND*32-1:0] src;
+            for (dd = 0; dd < ND; dd = dd + 1) begin : g_d
+                localparam integer DV = DSET[dd*8 +: 8];
+                localparam integer JJ = (c * DV) / BEAT;
+                localparam integer MM = (c * DV) % BEAT;
+                if (JJ < BMAX) begin : g_ok
+                    assign hit[dd] = s6_d[dd] && (s6_j == JJ);
+                    assign src[dd*32 +: 32] = bvs[MM*32 +: 32];
+                end else begin : g_no
+                    assign hit[dd] = 1'b0;
+                    assign src[dd*32 +: 32] = 32'd0;
+                end
+            end
+            reg [31:0] pick;
+            integer kk;
+            always @(*) begin
+                pick = 32'd0;
+                for (kk = 0; kk < ND; kk = kk + 1) if (hit[kk]) pick = src[kk*32 +: 32];
+            end
+            always @(posedge clk) if (me_x[(c * 8) / NX] && s6_bv && (|hit) && c < (1 << s6_sp)) line[c*32 +: 32] <= pick;
+        end
+        always @(posedge clk) if (co_v) begin
+            for (i = 0; i < NX; i = i + 1) if (me_x[(i * 8) / NX]) x_q_r[i*32 +: 32] <= line[(i & ((1 << co_sp) - 1))*32 +: 32];
+        end
+        assign x_q = x_q_r;
+    end else begin : g_xown
+        //: line / x_q in LEAVES ONLY (no flop and no logic here).  32 x ot_qfd_vm_xline_t, one per bit position: its
+        //: control {s6 line write, co capture} comes through an engine-enabled fan tree tapped XTK stages early (s
+        //: pipeline, below it the seam queue; h pipeline for co), its q is the flat x_q plane one engine edge late.
+        //: Then XQR relay stages (RWX-b ot_qfd_vm_xrelay_t, plane-major) and the element-major face leaves.
+        localparam integer QWL = LB + AW + ND + 4;
+        localparam integer LCW = 1 + ND + LB + 4 + 1 + 4;
+        localparam integer SWW = 1 + ND + LB + 4;
+        wire [7*SWW-1:0] stg;                                  // the line-write word at stage n (6 = s6 ... 3 = s3)
+        assign stg[6*SWW +: SWW] = {s6_bv, s6_d, s6_j, s6_sp};
+        assign stg[5*SWW +: SWW] = {s5_bv, s5_d, s5_j, s5_sp};
+        assign stg[4*SWW +: SWW] = {s4_bv, s4_d, s4_j, s4_sp};
+        assign stg[3*SWW +: SWW] = {s3_bv, s3_d, s3_j, s3_sp};
+        genvar sq;
+        for (sq = 0; sq < 3; sq = sq + 1) begin : g_sq          // stage 2 = seam-queue entry XS-1, 1 = XS-2, 0 = XS-3
+            assign stg[sq*SWW +: SWW] = {g_xs.qb[XS-3+sq], g_xs.qd[(XS-3+sq)*QWL + 4 +: ND],
+                                         g_xs.qd[(XS-3+sq)*QWL + ND + 4 + AW +: LB], g_xs.qd[(XS-3+sq)*QWL +: 4]};
+        end
+        wire [LCW-1:0] lc_d = {stg[(6-XTK)*SWW +: SWW], h_new[XVMI-1-XTK], h_sp[XVMI-1-XTK]};
+        wire [32*LCW-1:0] lcq;
+        if (XTK == 0) begin : g_cb
+            assign lcq = {32{lc_d}};
+        end else begin : g_ct
+            ot_qfd_vm_fantree #(.W(LCW), .K(XTK), .NLAST(8), .FO(4), .NS(32), .EN(1), .MEREG((MEE != 0) ? 1 : 0),
+                .MUTL((MUT == 12) ? XTK - 1 : -1), .MUTI(2)) u_ct (.clk(clk), .me_e(me_lf[MB_LC +: XTK*8]),
+                .d(lc_d), .q(lcq));
+        end
+        wire [(XQR+1)*32*NX-1:0] xr;                           // plane-major x_q: line leaf q, then XQR relay stages
+        genvar lp, lk, ls, lf, lb;
+        for (lp = 0; lp < 32; lp = lp + 1) begin : g_l
+            wire [LCW-1:0] w = lcq[lp*LCW +: LCW];
+            ot_qfd_vm_xline_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET),
+                .MEREG((MEE != 0) ? 1 : 0), .MUT((MUT == 10 && lp == 3) ? 1 : 0)) u_l (.clk(clk), .me_e(me_lf[MB_L + lp]),
+                .d(pq_all[lp*BEAT +: BEAT]), .c_v(w[LCW-1]), .c_d(w[LB + 9 +: ND]), .c_j(w[9 +: LB]), .c_sp(w[8:5]),
+                .o_v(w[4]), .o_sp(w[3:0]), .q(xr[lp*NX +: NX]));
+        end
+        for (lk = 1; lk <= XQR; lk = lk + 1) begin : g_r
+            for (lp = 0; lp < 32; lp = lp + 1) begin : g_p
+                for (ls = 0; ls < NQS; ls = ls + 1) begin : g_s
+                    ot_qfd_vm_xrelay_t #(.W(RWX), .MEREG((MEE != 0) ? 1 : 0),
+                        .MUT((MUT == 13 && lk == XQR && lp == 7 && ls == 0) ? 1 : 0)) u_r (.clk(clk),
+                        .me_e(me_lf[MB_QR + ((lk-1)*32 + lp)*NQS + ls]),
+                        .d(xr[((lk-1)*32 + lp)*NX + ls*RWX +: RWX]), .q(xr[(lk*32 + lp)*NX + ls*RWX +: RWX]));
+                end
             end
         end
-        reg [31:0] pick;
-        integer kk;
-        always @(*) begin
-            pick = 32'd0;
-            for (kk = 0; kk < ND; kk = kk + 1) if (hit[kk]) pick = src[kk*32 +: 32];
+        for (lf = 0; lf < NF; lf = lf + 1) begin : g_f
+            wire [FW-1:0] fd;
+            for (lb = 0; lb < FW; lb = lb + 1) begin : g_b
+                assign fd[lb] = xr[(XQR*32 + ((lf*FW + lb) % 32))*NX + (lf*FW + lb) / 32];
+            end
+            ot_qfd_vm_xqface_t #(.W(FW), .MEREG((MEE != 0) ? 1 : 0), .MUT((MUT == 11 && lf == 0) ? 1 : 0)) u_f (
+                .clk(clk), .me_e(me_lf[MB_F + lf]), .d(fd), .q(x_q[lf*FW +: FW]));
         end
-        always @(posedge clk) if (me_x[(c * 8) / NX] && s6_bv && (|hit) && c < (1 << s6_sp)) line[c*32 +: 32] <= pick;
     end endgenerate
-    wire       co_v = h_new[XVM-1];
-    wire [3:0] co_sp = h_sp[XVM-1];
-    always @(posedge clk) if (co_v) begin
-        for (i = 0; i < NX; i = i + 1) if (me_x[(i * 8) / NX]) x_q[i*32 +: 32] <= line[(i & ((1 << co_sp) - 1))*32 +: 32];
-    end
 
     // ---- SU operand copies ----
     wire [NSU-1:0] su_hz;

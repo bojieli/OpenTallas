@@ -27,6 +27,7 @@ BASE_FILES = [
     "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv",
     "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
     "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv",
     "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv",
     "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv",
     "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv",
@@ -38,15 +39,28 @@ RQ_FILES = [
     "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv",
 ]
 RQ = "+define+OT_QFD_VM_TILE_MOD=ot_qfd_vm_region_quarter " + " ".join(RQ_FILES)
+RL_FILES = RQ_FILES + ["rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv"]
+RL = "+define+OT_QFD_VM_TILE_MOD=ot_qfd_vm_region_leaf " + " ".join(RL_FILES)
+# trees + owners (qwen-tp8-vm-rtl): control trees 3 levels (+0 edges), me tree 2 levels (me 3 edges early), line / x_q
+# leaf owners with 2 x_q relay stages (+ XQR + 2 = 4 edges: XVM 32 -> 36 on r21, 31 -> 35 on the RO 2 / r11 shapes).
+T = "-GXTK=3 -GXMK=2 -GXLO=1 -GXQR=2"
+TR = dict(XTK=3, XMK=2, XLO=1, XQR=2)
+S3 = "-GSEED=3 -GVL=15 -GXPR=10"
+S9 = "-GSEED=9 -GVL=15 -GXPR=10"
+R11 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GXPR=10"
 R21 = "-GSEED=7 -GRV=2 -GRO=1 -GVL=15"
 N64 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GNRB=64"
 C_R21 = dict(NRB=16, SW=8, VL=15, su_reads=60170, row_reads=9427, tuples=2683, bursts=1612, land_steps=1603)
 C_N64 = dict(NRB=64, SW=8, VL=14, su_reads=60313, row_reads=9296, tuples=2992, bursts=1635, land_steps=1625)
 
 
-def run(name, args, expect, what, counts=None, extra="", mem=8, scratch=None):
+def run(name, args, expect, what, counts=None, extra="", mem=8, scratch=None, same_as=None, tree=None):
+    """same_as: a run whose PASS counts this run must reproduce exactly.  tree: the TREE line the log must carry
+    (parameters equal, every requested structure seen moving): the coverage refusal of a tree / owner build."""
     return dict(name=name, args=args, extra=extra, expect=expect, what=what, counts=counts, mem=mem, scratch=scratch,
-                tile="ot_qfd_vm_region_quarter" if extra else "ot_qfd_vm_grp")
+                same_as=same_as, tree=tree,
+                tile="ot_qfd_vm_region_leaf" if "region_leaf" in extra else "ot_qfd_vm_region_quarter" if extra
+                else "ot_qfd_vm_grp")
 
 
 # expect: PASS | FAIL | GAP (a mutant the system bench is known not to kill: recorded, never counted as a mutant pass)
@@ -82,6 +96,58 @@ RUNS = [
         None, RQ, 24, "x=38574"),
     run("n64_bp_rq_m6", N64 + " -GXVM=31 -GXPR=10 -GMUT=6", "FAIL", "NRB=64 region tile, mutant: one relay free-runs",
         None, RQ, 24, "x=249"),
+    # ---- the region built from leaves only (ot_qfd_vm_region_leaf: gctl_t, rowrd_t, delay leaves) ----
+    run("n64_base_rl", N64 + " -GXVM=21", "PASS", "NRB=64 XPR=0, region tile ot_qfd_vm_region_leaf", C_N64, RL, 24),
+    run("n64_bp_rl", N64 + " -GXVM=31 -GXPR=10", "PASS", "NRB=64 XPR=10, region_leaf tile", C_N64, RL, 24),
+    # ---- trees and owners in the parent.  Control trees alone and owners alone keep the stimulus (same counts as the
+    #      committed runs); the me tree needs me_want 3 negedges ahead (MWD 3), which shifts the bench's random stream:
+    #      its reference is the tree-less run at the same MWD. ----
+    run("tr_k3_r21", R21 + " -GXVM=32 -GXPR=10 -GXTK=3", "PASS", "control trees only (3 levels): x latency + 0, XVM 32",
+        C_R21, tree=dict(XTK=3, XMK=0, XLO=0, XQR=0)),
+    run("tr_lo0_r21", R21 + " -GXVM=34 -GXPR=10 -GXLO=1", "PASS", "line / x_q owners only, XQR 0: x latency + 2, XVM 34",
+        C_R21, tree=dict(XTK=0, XMK=0, XLO=1, XQR=0)),
+    run("mw3_bp_r21", R21 + " -GXVM=32 -GXPR=10 -GMWD=3", "PASS", "REFERENCE: no trees, me_want lookahead 3 (r21)"),
+    run("mw3_bp_s3", S3 + " -GXVM=31 -GMWD=3", "PASS", "REFERENCE: no trees, me_want lookahead 3 (s3)"),
+    run("mw3_bp_s4", "-GSEED=4 -GVL=15 -GXPR=10 -GXVM=31 -GMWD=3", "PASS", "REFERENCE: no trees, me_want lookahead 3 (SEED 4)"),
+    # SEED 9 at lookahead 3: the TREE-LESS reference itself fails on the WRITE side (w_fault, 1 image word; x = 0).
+    # Recorded, not gated; mw3_base_s9 (XPR 0) says whether the bit plane is involved at all.
+    run("mw3_bp_s9", S9 + " -GXVM=31 -GMWD=3", "INFO", "no trees, lookahead 3, SEED 9: write-side w_fault (open finding)"),
+    run("mw3_base_s9", "-GSEED=9 -GVL=15 -GXVM=22 -GMWD=3", "INFO", "XPR 0 (no bit plane), lookahead 3, SEED 9"),
+    run("mw3_bp_r11", R11 + " -GXVM=31 -GMWD=3", "PASS", "REFERENCE: no trees, me_want lookahead 3 (r11)"),
+    run("tr_m2_r21", R21 + " -GXVM=32 -GXPR=10 -GXMK=2", "PASS", "me tree only (2 levels, me 3 edges early): + 0, XVM 32",
+        same_as="mw3_bp_r21", tree=dict(XTK=0, XMK=2, XLO=0, XQR=0)),
+    run("tr_all_r21", R21 + " -GXVM=36 -GXPR=10 " + T, "PASS", "ALL trees + owners, r21: XVM 36", same_as="mw3_bp_r21", tree=TR),
+    run("tr_all_s3", S3 + " -GXVM=35 " + T, "PASS", "ALL trees + owners, RV 1 RO 2 SEED 3: XVM 35", same_as="mw3_bp_s3", tree=TR),
+    run("tr_all_s4", "-GSEED=4 -GVL=15 -GXPR=10 -GXVM=35 " + T, "PASS", "ALL trees + owners, RV 1 RO 2 SEED 4: XVM 35",
+        same_as="mw3_bp_s4", tree=TR),
+    run("tr_all_s9", S9 + " -GXVM=35 " + T, "INFO", "ALL trees + owners, SEED 9: same write-side w_fault as its reference, x = 0"),
+    run("tr_all_r11", R11 + " -GXVM=35 " + T, "PASS", "ALL trees + owners, r11: XVM 35", same_as="mw3_bp_r11", tree=TR),
+    run("tr_nomee", "-GSEED=3 -GXVM=35 -GVL=15 -GXPR=10 -GMEE=0 -GXTK=3 -GXLO=1 -GXQR=2", "PASS",
+        "MEE=0 (no early enable, so no me tree): control trees + owners, XVM 35", same_as="bp_nomee",
+        tree=dict(XTK=3, XMK=0, XLO=1, XQR=2)),
+    run("mw4_rsd5_bp_r21", R21 + " -GXVM=32 -GXPR=10 -GMWD=4 -GRSD=5", "PASS",
+        "REFERENCE: no trees, me_want lookahead 4, stall loop RSD 5"),
+    run("tr_all_m3_r21", R21 + " -GXVM=36 -GXPR=10 -GXTK=3 -GXMK=3 -GXLO=1 -GXQR=2 -GRSD=5", "PASS",
+        "ALL trees + owners with a 3-level me tree (me 4 edges early: needs the stall loop RSD >= 5)",
+        same_as="mw4_rsd5_bp_r21", tree=dict(XTK=3, XMK=3, XLO=1, XQR=2)),
+    run("tr_all_r21_lat", R21 + " -GXVM=35 -GXPR=10 " + T, "INFO",
+        "XVM one edge SHORT of the rule with trees + owners (35 instead of 36): recorded, not gated"),
+    run("tr_all_r21_m3", R21 + " -GXVM=36 -GXPR=10 -GMUT=3 " + T, "FAIL", "trees + owners, mutant: plane 5 fine rotation"),
+    run("tr_all_r21_m6", R21 + " -GXVM=36 -GXPR=10 -GMUT=6 " + T, "FAIL", "trees + owners, mutant: one relay free-runs"),
+    run("tr_all_r21_m8", R21 + " -GXVM=36 -GXPR=10 -GMUT=8 " + T, "FAIL", "mutant: a plane-control tree node is transparent"),
+    run("tr_all_r21_m9", R21 + " -GXVM=36 -GXPR=10 -GMUT=9 " + T, "FAIL", "mutant: a me-tree node is transparent"),
+    run("tr_all_r21_m10", R21 + " -GXVM=36 -GXPR=10 -GMUT=10 " + T, "FAIL", "mutant: line leaf 3 picks a wrong source"),
+    run("tr_all_r21_m11", R21 + " -GXVM=36 -GXPR=10 -GMUT=11 " + T, "FAIL", "mutant: x_q face 0 free-runs"),
+    run("tr_all_r21_m12", R21 + " -GXVM=36 -GXPR=10 -GMUT=12 " + T, "FAIL", "mutant: a line-control tree node is transparent"),
+    run("tr_all_r21_m13", R21 + " -GXVM=36 -GXPR=10 -GMUT=13 " + T, "FAIL", "mutant: one x_q relay free-runs"),
+    run("mw3_n64_bp_rq", N64 + " -GXVM=31 -GXPR=10 -GMWD=3", "PASS", "REFERENCE: NRB=64 region_quarter, no trees, lookahead 3",
+        None, RQ, 24),
+    run("n64_tr_rl", N64 + " -GXVM=35 -GXPR=10 " + T, "PASS", "NRB=64, region_leaf tile, ALL trees + owners: XVM 35",
+        None, RL, 32, same_as="mw3_n64_bp_rq", tree=TR),
+    run("n64_tr_rl_m9", N64 + " -GXVM=35 -GXPR=10 -GMUT=9 " + T, "FAIL", "NRB=64 region_leaf + trees, mutant: me-tree node",
+        None, RL, 32),
+    run("n64_tr_rl_m10", N64 + " -GXVM=35 -GXPR=10 -GMUT=10 " + T, "FAIL", "NRB=64 region_leaf + trees, mutant: line leaf 3",
+        None, RL, 32),
 ]
 
 
@@ -102,7 +168,7 @@ def main():
     a = ap.parse_args()
     src = os.path.abspath(a.src)
     runs = [r for r in RUNS if not a.only or r["name"] in a.only.split(",")]
-    files = BASE_FILES + RQ_FILES
+    files = BASE_FILES + RL_FILES
     out = os.path.join(ROOT, REC)
     os.makedirs(out, exist_ok=True)
     runner = os.path.join(HERE, "vm_plane_sysbench.sh")
@@ -162,6 +228,21 @@ def main():
             o["expected_counts"] = exp_cnt
             if r["expect"] == "PASS":
                 o["ok"] = o["observed"] == "PASS" and o["rc"] == 0 and cnt_ok
+                if r["tree"]:
+                    # coverage refusal: the log must carry the bench's TREE line with the requested parameters and
+                    # every requested structure moving (the bench itself does not compile if the structure is absent)
+                    tl = ""
+                    try:
+                        tl = next((l for l in open(os.path.join(out, r["name"] + ".log")) if l.startswith("TREE ")), "")
+                    except OSError:
+                        pass
+                    tv = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", tl)}
+                    need = dict(r["tree"])
+                    act = {"XMK": ["me_toggles", "me_t_checks"], "XTK": ["pctl_changes"], "XLO": ["xline_changes"]}
+                    tree_ok = bool(tl) and all(tv.get(k) == v for k, v in need.items()) and all(
+                        tv.get(a, 0) >= 100 for k, al in act.items() if need.get(k) for a in al)
+                    o.update(tree_expected=need, tree_line=tl.strip(), tree_ok=tree_ok)
+                    o["ok"] = o["ok"] and tree_ok
             elif r["expect"] == "FAIL":
                 o["ok"] = o["observed"] == "FAIL" and o["rc"] == 0
                 o["scratch_match"] = r["scratch"] in res if r["scratch"] else None
@@ -180,10 +261,19 @@ def main():
 
     def same(x, y):
         return x in by and y in by and by[x].get("counts") is not None and by[x].get("counts") == by[y].get("counts")
+    for r in runs:
+        if r["same_as"]:
+            o = by[r["name"]]
+            o["same_counts_as"] = r["same_as"]
+            o["same_counts_ok"] = same(r["name"], r["same_as"])
+            if not o["same_counts_ok"]:
+                o["ok"] = False
+                bad.append(r["name"] + "-counts-differ-from-" + r["same_as"])
     cross = {}
     if not a.only:
         cross = {"xpr0_eq_xpr10_r21": same("base_r21", "bp_r21"), "n64_base_rq_eq_bp_rq": same("n64_base_rq", "n64_bp_rq"),
-                 "n64_grp_eq_region_tile": same("n64_base", "n64_base_rq")}
+                 "n64_grp_eq_region_tile": same("n64_base", "n64_base_rq"),
+                 "n64_region_leaf_eq_quarter": same("n64_base_rl", "n64_base_rq") and same("n64_bp_rl", "n64_bp_rq")}
         bad += [k for k, v in cross.items() if not v]
     if not tree_ok:
         bad.append("remote-tree-differs-from-hashed-sources")
