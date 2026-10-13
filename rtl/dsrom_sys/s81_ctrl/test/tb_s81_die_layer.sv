@@ -121,10 +121,10 @@ module tb_s81_die_layer;
     reg  y_v = 0; wire y_rdy; reg [NG*32-1:0] y_d = 0;
     wire [S_RD-1:0] rq_v; wire [S_RD*14-1:0] rq_row; reg [S_RD-1:0] rs_v = 0; reg [S_RD*512-1:0] rs_d = 0;
     wire [S_WR-1:0] wq_v; wire [S_WR*14-1:0] wq_row; wire [S_WR*16-1:0] wq_mask; wire [S_WR*512-1:0] wq_d;
-    wire [3:0] hfcode;
     dsfd_sp_hc_c #(.NG(NG), .D(5120), .S_RD(S_RD), .S_WR(S_WR), .MUT(HMUT)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
         .c_done(d[2]), .c_st(est[2]), .f_inp(hc_inp), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row),
-        .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .fcode(hfcode));
+        .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d));
+    wire [3:0] hfcode = u_hc.fcode;      // the fault code is internal to dsfd_sp_hc_c since cdb57463d; the flat engine sits in g_flat
     // ---------------- DUT: the TP4 collective group (port 3 of die 0)
     wire [514:0] rx [0:3][0:7];
     wire [511:0] tx [0:3][0:7];
@@ -319,8 +319,8 @@ module tb_s81_die_layer;
         for (s = 0; s < S_RD; s = s + 1) rs_d[512 * s +: 512] <= vm[dl_a[LVM - 1][14 * s +: 14]];
     end
     // f_inp: the head descriptor's operands are complete in the VM (dropped on the take cycle)
-    wire [83:0] hq = u_hc.u_hc.u_ad.rq;
-    wire        hrv = u_hc.u_hc.u_ad.rv;
+    wire [83:0] hq = u_hc.u_hc.g_flat.u_ad.rq;
+    wire        hrv = u_hc.u_hc.g_flat.u_ad.rv;
     wire        htake = u_hc.u_hc.e_v && u_hc.u_hc.e_r;
     wire [3:0]  hkind = hq[30:27];
     wire [13:0] hbase = hq[20:7];
@@ -338,7 +338,7 @@ module tb_s81_die_layer;
     // HC job start (the core takes the descriptor)
     always @(posedge ck) if (u_hc.u_hc.e_v && u_hc.u_hc.e_r) stt[cj][u_hc.u_hc.e_d[6:0]] = cyc;
     // HC job end: the core's done (the job's last result committed); the controller-pin done follows through the adapter
-    always @(posedge ck) if (u_hc.u_hc.d_v) endt[cj][u_hc.u_hc.d_t[6:0]] = cyc;
+    always @(posedge ck) if (u_hc.u_hc.g_flat.d_v) endt[cj][u_hc.u_hc.g_flat.d_t[6:0]] = cyc;
     // ---------------- reference roots (as tb_s81ph_gather_capture)
     reg [NR-1:0] s_v; reg [31:0] s_t [0:NR-1]; reg [31:0] s_d [0:NR-1]; reg [NR-1:0] s_e, s_b;
     wire [NR-1:0] rr_v, rr_e, rr_f;
@@ -661,6 +661,8 @@ module tb_s81_die_layer;
 `else
         kit_ok = 1;
 `endif
+        // per-op timing dump (rom-layer-tput 2026-10-13): cycles of every op of job 0, for the per-class throughput record
+        for (w = 0; w < nop; w = w + 1) $display("OPT %0d port %0d dur %0d start %0d end %0d", w, o_port[w], o_dur[w], stt[0][w], endt[0][w]);
         $display("SUMMARY jobs=%0d layer_cycles=%0d (header %0d -> H_STORE done %0d) stage_done_cycle=%0d jobs_done=%0d/%0d dones=%0d/%0d phases_released=%0d field_phases=%0d capture_writes=%0d mismatching_roots=%0d coll_words_die0=%0d coll_errors=%0d coll_incomplete=%0d y_exact=%0d/%0d y_bad=%0d y_consumed=%0d norm_rows_exact=%0d/%0d hstore_rows_exact=%0d/%0d ref_fault=%0d dut_fault=%0d ctrl_flt=%0d fvec=%h stuck=%0d ep_faults=%0d gather_stage_fault=%0d hc_fcode=%0d max_done_latency=%0d errors=%0d first_coll_send=%0d",
                  JOBS, t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
                  y_ok, NY * JOBS, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);

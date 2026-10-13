@@ -47,7 +47,8 @@ LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.s
  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
  $FPF rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv"
-FILES=$(for f in $LIST; do echo $SRC/$f; done | awk '!seen[$0]++')
+# the hierarchical HC slab modules dsfd_sp_hc.sv names since 10-12 (HIER generate; the bench keeps HIER 0): without them the build fails
+FILES=$( (for f in $LIST; do echo $SRC/$f; done; ls $SRC/rtl/dsrom_sys/s81_suhc/hier/*.sv) | awk '!seen[$0]++')
 if [ $FP = dpi ]; then
   mkdir -p $OUT/dpi_rest
   ( cd $SRC && python3 -c "import sys; sys.path.insert(0,'tools/s81_suhc'); import hc_gate; from pathlib import Path; [print(p) for p in hc_gate.dpi_rest(Path('$OUT/dpi_rest'))]" ) > $OUT/dpi_rest.list
