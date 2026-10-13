@@ -132,8 +132,8 @@ endmodule
 // the 4th descriptor).
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_svc_join #(parameter integer NS = 4, MUT = 0, EPMUT = 0) (
-    input  wire [0:0]       ck,
-    input  wire [0:0]       rst,
+    input  wire             ck,     // scalar: the hard view's clock pin is ck (was [0:0] -> LEF ck[0], unbound by the die netlist)
+    input  wire             rst,
     input  wire [84:0]      c_cmd,
     output wire [8:0]       c_done,
     output wire [1:0]       c_st,
@@ -141,12 +141,12 @@ module dsfd_svc_join #(parameter integer NS = 4, MUT = 0, EPMUT = 0) (
     input  wire [2*NS-1:0]  j_dn
 );
     reg [1:0] rs_q;
-    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
+    always @(posedge ck or negedge rst) if (!rst) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
     wire rn = rs_q[1];
     wire j_v, j_new; wire [83:0] j_d, j_new_d; wire ep_fault;
     reg j_done, jf;
-    ot_s81_slab_ep #(.QD(8), .JQ(8), .MUT(EPMUT)) u_ep (.c_clk(ck[0]), .c_rst_n(rst[0]), .c_cmd(c_cmd), .c_done(c_done),
-        .c_st(c_st), .e_clk(ck[0]), .e_rst_n(rn), .j_v(j_v), .j_d(j_d), .j_new(j_new), .j_new_d(j_new_d),
+    ot_s81_slab_ep #(.QD(8), .JQ(8), .MUT(EPMUT)) u_ep (.c_clk(ck), .c_rst_n(rst), .c_cmd(c_cmd), .c_done(c_done),
+        .c_st(c_st), .e_clk(ck), .e_rst_n(rn), .j_v(j_v), .j_d(j_d), .j_new(j_new), .j_new_d(j_new_d),
         .j_present(1'b1), .j_done(j_done), .slab_fault(jf), .ep_fault(ep_fault));
     reg [2*NS-1:0] dn_q; reg [3:0] cnt [0:NS-1]; reg [3:0] ncmd;
     integer s; reg all, any;
@@ -154,7 +154,7 @@ module dsfd_svc_join #(parameter integer NS = 4, MUT = 0, EPMUT = 0) (
         all = 1'b1; any = 1'b0;
         for (s = 0; s < NS; s = s + 1) begin if (cnt[s] == 0) all = 1'b0; else any = 1'b1; end
     end
-    always @(posedge ck[0] or negedge rn)
+    always @(posedge ck or negedge rn)
         if (!rn) begin j_cmd <= 0; dn_q <= 0; j_done <= 1'b0; jf <= 1'b0; ncmd <= 0; for (s = 0; s < NS; s = s + 1) cnt[s] <= 0; end
         else begin
             dn_q <= j_dn;

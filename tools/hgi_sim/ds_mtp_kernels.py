@@ -311,7 +311,26 @@ EMBB = 1 << 32                       # BF16 embedding rows: EMBB + token * 10,24
 MTB = 0x170000000                    # MTP constants (ONE4 = 1, 0, 0, 0)
 COLB = 0x180000000                   # column slot store: COLB + slot * CSTR (dyn_sel TOKEN)
 ROPEB = 1 << 31                      # plain RoPE rows: ROPEB + pos * 256 (cos 32 | sin 32, dyn_sel POS)
-ZT, HT = 261440, 261504              # VM (above ds_native's map end 261,440 since EGID 144): the END token word of non-head kernels (0); the head stub's table HT[pos]
+# VM tail above ds_native's buffer map (derived from DN.Layout().end at bind time, never hard-coded: the map grows --
+# EGID 144 moved it to 261,440, rule (A)'s bank-phase-0 HC buffers to 261,696): ZT = the END token word of non-head
+# kernels (0, 64-word slot); HT = the head stub's table HT[pos] (HT_N positions); QV = the WTAB row of the launch's
+# position (16 words).  bind_vm_tail() sets them before any kernel / export uses them.
+ZT = HT = QV = None
+HT_N = 64
+
+
+def bind_vm_tail():
+    """Place ZT / HT / QV 64-word aligned right above the ds_native map end; refuse a map that leaves no room."""
+    global ZT, HT, QV
+    from hgi_sim import ds_native as DN
+    end = DN.Layout().end
+    ZT = -(-end // 64) * 64
+    HT = ZT + 64
+    QV = HT + HT_N
+    assert QV + 16 <= DN.MC.VM_WORDS, (end, ZT, HT, QV, DN.MC.VM_WORDS)
+    return ZT, HT, QV
+
+
 # PRE rides the swap as one whole 32 B sector (8 words: the 4 pre-mix words + 4 words of the 64-word-aligned VM PRE
 # slot): an HBM write is whole sectors (the DMA write paths have no byte enables; the mover refuses a partial sector)
 SLOT = (("h", 0, 20480), ("PRE", 81920, 8))
@@ -341,7 +360,6 @@ GOLDB = 0x200000000                  # LABELLED REPLAY: golden h / pre after lay
 GSTR, GPOS = 81952, 16
 MHB = 0x280000000                    # main hidden parts (layers 37..39 inputs), ring of 16 positions x 61,440 B
 MEMB = 0x290000000                   # Markov-head embedding rows (BF16 x 256) by token: MEMB + token * 512
-QV = 261568                          # VM: the WTAB row of the launch's position (16 words)
 WROW = 2048
 
 
@@ -366,6 +384,7 @@ class Kernels:
         self.DN, self.W, self.MDesc, self.Rec, self.Builder, self.sut, self.I = DN, W, MDesc, Rec, Builder, sut, I
         self.m, self.TP, self.spec = m, DN.TP, spec
         self.lay, self.man = DN.Layout(), DN.Manifest()
+        bind_vm_tail()
         assert self.lay.end <= ZT and QV + 16 <= DN.MC.VM_WORDS
         self.low = DN.Lower(m, 1, self.lay, self.man)
         self.ops = {}
@@ -447,7 +466,8 @@ class Kernels:
         return recs
 
     # ---- records
-    def end(self, base=ZT, POS=False):
+    def end(self, base=None, POS=False):
+        base = ZT if base is None else base
         A = self.MDesc(space="VM", fmt="U32", base=base, n=1, dyn_sel=1 if POS else 0, dyn_mul=1 if POS else 0)
         return self.Rec("CTL", "END", wait=0xFFFE, desc=dict(A=A), tag="end" + (".head_stub" if POS else ""))
 
@@ -486,6 +506,20 @@ class Kernels:
                 b.add(self.Rec("DMA", "STORE", desc=dict(A=vm, O=hb), tag=f"swapout.{nm}", family="swap"),
                       [nm], [f"COL.{nm}"])
         return b.recs + ([] if into else [self.fence()]) + [self.end()]
+
+    def swap_b2(self, into, h_allocations, pre_allocation):
+        """Native B2 swap groups for the allocator's CURRENT record lifetime.
+
+        h_allocations maps cluster -> resolved LOCAL/MIRROR descriptor for
+        rows q+4*j. pre_allocation is PRE's resolved stack-zero descriptor.
+        The cmdproc must dispatch every group's records in one beat. This
+        explicit entry point keeps the legacy vehicle unchanged until its
+        caller supplies the native B2 allocator and local-slice engines.
+        """
+        from hgi_b2.mtp_swap import lower_h, lower_pre
+        legacy = self.swap(into)
+        h, pre = legacy[:2]
+        return [lower_h(h, h_allocations), lower_pre(pre, 0, pre_allocation), *legacy[2:]]
 
     def embed(self):
         b = self.Builder(None)
@@ -901,6 +935,7 @@ def sim(a):
                 d.hbm.add(MEMB + t * 512, row.copy(), f"MEMB{t}")
         d.vm[ZT] = 0
         if not spec:
+            assert npos <= HT_N, npos
             d.vm[HT:HT + npos] = [gd["positions"][p]["argmax"] for p in range(npos)]
     golib = W.Executor(m, None, 1, [], DN.VARIANT)
     units = DN.ds_units(m, K.man, golib)

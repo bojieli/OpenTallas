@@ -25,12 +25,12 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import common as C  # noqa: E402
-from att_unit_bench import pack, sectors  # noqa: E402
+from att_unit_bench import pack, sectors, kv8_rows  # noqa: E402
 from hgi_sim import lib as A  # noqa: E402
 from hgi_sim import machine as MC  # noqa: E402
 
 F = np.float32
-FMT = dict(FP32=0, BF16=1, FP8E4M3=2)
+FMT = dict(FP32=0, BF16=1, FP8E4M3=2, KV8=7)   # KV8: the DS packed fmt 7 row (hd E4M3 codes + one UE8M0 scale sector)
 FIRST_ACCESS, BW, ATT_FIXED = 104.0, 3166.7, 225.0      # hgi_sim.timing: MEAS hbm.first_access, hbm B/cyc, ATT.fixed
 DS_PRICE = {128: 147.144, 640: 339.144}                   # NativeCost ATT = walk(attend tile rows) / 2 (T128 / T640)
 
@@ -50,6 +50,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
     ap.add_argument('--cases', default='qwen_T512,qwen_T1024,ds_L0,ds_L20,ring_wrap')
+    ap.add_argument('--streams', type=int, default=1,
+                    help='DS cases: independent back-to-back records per op (distinct K / V rows, q / p / score / O '
+                         'areas), QK x N then PV x N; the steady-state service is the retire-to-retire interval')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -68,17 +71,33 @@ def main():
                  heads_kv=1):
         """records QK x heads_kv then PV x heads_kv; returns (records, vm, hbm, expected, record info)"""
         T = nb + nc
-        st = hd * (4 if fmt == 'FP32' else 1)
+        st = hd * (4 if fmt == 'FP32' else 1) + (32 if fmt == 'KV8' else 0)
         rs, vm, hb, ex, info = [], {}, [], {}, []
         prm = lanes | ((hd // 64 - 1) << 4) | ((1 << 8) if ring_m else 0)
         pending_pv = []
         for kv in range(heads_kv):
-            K = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
-            V = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
+            if fmt == 'KV8':                           # packed rows (bytes) + the golden's qdq values
+                Kr, K = kv8_rows(rng, T, hd)
+                Vr, V = kv8_rows(rng, T, hd)
+            else:
+                K = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
+                V = A.to_fp8(rng.standard_normal((T, hd)).astype(F))
+                Kr = Vr = None
             q = A.to_bf16(rng.standard_normal((lanes, hd)).astype(F))
             p = A.to_bf16(rng.uniform(0, 1, (lanes, T)).astype(F))
             kb, vb = kbase + kv * (1 << 26), vbase + kv * (1 << 26)
-            for base, M in ((kb, K), (vb, V)):
+            for base, M, Mr in ((kb, K, Kr), (vb, V, Vr)):
+                if Mr is not None:                     # KV8 rows: bytes as stored (pitch st)
+                    if ring_m:
+                        ring = [bytes(st)] * ring_m
+                        for t in range(nb):
+                            ring[(pos1 - nb + t) % ring_m] = Mr[t]
+                        hb.append((base, b''.join(ring)))
+                    else:
+                        hb.append((base, b''.join(Mr[:nb])))
+                    if nc:
+                        hb.append((base + (cbk - kbase), b''.join(Mr[nb:])))
+                    continue
                 if ring_m:                             # list row t (t < nb) lives at slot (pos1 - nb + t) mod m
                     ring = np.zeros((ring_m, hd), F)
                     for t in range(nb):
@@ -123,6 +142,10 @@ def main():
         return rs, vm, sectors(hb), ex, info
 
     for name in a.cases.split(','):
+        # ds8_L0 / ds8_L20 / ring8_wrap (hbm-attn-tput 10-12): the same DS shapes with the PRODUCTION KV row, the packed
+        # fmt 7 KV8 row (512 E4M3 codes + one UE8M0 scale sector, pitch 544; the price's "rows x FP8")
+        kfmt = 'KV8' if name in ('ds8_L0', 'ds8_L20', 'ring8_wrap') else 'FP32'
+        name = {'ds8_L0': 'ds_L0', 'ds8_L20': 'ds_L20', 'ring8_wrap': 'ring_wrap'}.get(name, name)
         if name.startswith('qwen_T'):
             T = int(name[6:])
             rs, vm, hb, ex, info = att_pair(4, 128, T, 0, 'FP8E4M3', 0, T, 1 << 34, (1 << 34) + (1 << 30), 0, 0,
@@ -132,18 +155,20 @@ def main():
             add(name, rs, vm, hb, ex, dict(vehicle='qwen', T=T, lanes=4, hd=128, fmt='FP8E4M3', ring=0, records=info))
         elif name in ('ds_L0', 'ring_wrap'):
             pos1 = 1048576 if name == 'ds_L0' else 1000
-            rs, vm, hb, ex, info = att_pair(1, 512, 128, 0, 'FP32', 128, pos1, 1 << 34, (1 << 34) + (1 << 30), 0, 0,
-                                            0, 4096, 8192, 12288, 136, 'ds_L0' if name == 'ds_L0' else 'wrap')
+            rs, vm, hb, ex, info = att_pair(1, 512, 128, 0, kfmt, 128, pos1, 1 << 34, (1 << 34) + (1 << 30), 0, 0,
+                                            0, 4096, 8192, 12288, 136, 'ds_L0' if name == 'ds_L0' else 'wrap',
+                                            heads_kv=a.streams)
             for i in info:
                 i.update(price=DS_PRICE[128])
-            add(name, rs, vm, hb, ex, dict(vehicle='ds', T=128, lanes=1, hd=512, fmt='FP32', ring=128, pos1=pos1,
+            add(name, rs, vm, hb, ex, dict(vehicle='ds', T=128, lanes=1, hd=512, fmt=kfmt, ring=128, pos1=pos1,
                                            records=info))
         elif name == 'ds_L20':
-            rs, vm, hb, ex, info = att_pair(1, 512, 128, 512, 'FP32', 128, 1048576, 1 << 34, (1 << 34) + (1 << 30),
-                                            (1 << 34) + (1 << 29), 0, 0, 4096, 8192, 12288, 648, 'ds_L20')
+            rs, vm, hb, ex, info = att_pair(1, 512, 128, 512, kfmt, 128, 1048576, 1 << 34, (1 << 34) + (1 << 30),
+                                            (1 << 34) + (1 << 29), 0, 0, 4096, 8192, 12288, 648, 'ds_L20',
+                                            heads_kv=a.streams)
             for i in info:
                 i.update(price=DS_PRICE[640])
-            add(name, rs, vm, hb, ex, dict(vehicle='ds', T=640, lanes=1, hd=512, fmt='FP32', ring=128, nc=512,
+            add(name, rs, vm, hb, ex, dict(vehicle='ds', T=640, lanes=1, hd=512, fmt=kfmt, ring=128, nc=512,
                                            records=info))
         else:
             raise SystemExit(f'unknown case {name}')

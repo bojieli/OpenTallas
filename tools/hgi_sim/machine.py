@@ -120,6 +120,11 @@ class Die:
 
 # STREAM ids by wiring (spec 2.4: fixed by the die's wiring).  PROVISIONAL table (hbm-sim -> hgi-takeover): a STREAM
 # descriptor's base is the stream id; the producer's O and the consumer's A must name the wired pair.
+# hgi_b2 (B2 four-cluster die, tools/hgi_b2): observer of every reduction that B2 may split across clusters, called with
+# (kind, op, t) where t is [rows, n] with the reduced axis last (SU segs before the reduction; ATT.PV the p x V terms per
+# head, positions last).  None in every normal run; it never changes a result.
+RED_HOOK = None
+
 STREAM_WIRING = {0: ("SM", "SU"),           # SM results into the SU lane registers
                  1: ("SU", "ARGMAX"),       # SU reduction output into the argmax unit (hb_su_red_mtp_am)
                  2: ("SM", "ARGMAX")}       # the LM-head matvec into the argmax unit
@@ -223,11 +228,14 @@ class Machine:
             n = die.dyn[d.n_sel] if d.n_sel else d.n
         ist = 0 if d.ibcast else (d.istride or 1)
         if d.space == "HBM" and base >> 37:
-            # bits [39:37] are the row-stripe code (spec 3.6): only a DMA.LOAD A may carry one (code 1 = STRIPE4); any
+            # bits [39:37] are the row-stripe code (spec 3.6): DMA.LOAD A or DMA.STORE O may carry code 1; any
             # other HBM base >= 2^37 is outside the die's 128 GiB and would alias the code
             c = self.cur
-            if not (base >> 37 == 1 and c is not None and (c.unit, c.op) == ("DMA", "LOAD") and d == c.desc.get("A")):
-                raise Fault(3, f"HBM base {base:#x} >= 2^37 outside a STRIPE-coded DMA.LOAD A")
+            stripe_operand = (c is not None and c.unit == "DMA" and
+                              ((c.op == "LOAD" and d == c.desc.get("A")) or
+                               (c.op == "STORE" and d == c.desc.get("O"))))
+            if not (base >> 37 == 1 and stripe_operand):
+                raise Fault(3, f"HBM base {base:#x} >= 2^37 outside a STRIPE-coded DMA operand")
         return base, n, d.m, d.stride, ist
 
     def vm_addrs(self, d, die, L, no=None, ni=None):
@@ -641,6 +649,8 @@ def u_att_pv(M: Machine, r: Rec, L):
             raise Fault(3, "PV: probability count != V rows")
         p = M.vm_read(a, die, L, lanes, P).reshape(lanes, P)
         for h in range(lanes):
+            if RED_HOOK is not None:
+                RED_HOOK("PV", 1, A.mul(np.asarray(p[h], dtype=F)[:, None], Vr).T)
             _write_row(M, o, die, L, h, A.att_pv(p[h], Vr))
 
 
@@ -1020,6 +1030,8 @@ def u_su_vop(M: Machine, r: Rec, L):
         if f["red"]:
             v = A.mul(out, out) if f["red_sq"] else out
             segs = v.reshape(1, -1) if (f["red_whole"] or f["red_tree"]) else v.reshape(no, ni)
+            if RED_HOOK is not None:
+                RED_HOOK("SU", int(f["red"]), segs)
             if f["red"] == I.RED_SUM:
                 vals = A.csum(segs)
             elif f["red"] == I.RED_MAX:

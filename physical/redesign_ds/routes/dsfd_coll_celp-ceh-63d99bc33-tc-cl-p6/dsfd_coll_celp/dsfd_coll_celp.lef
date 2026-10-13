@@ -16,6 +16,10 @@ MACRO dsfd_coll_celp
       LAYER M5 ;
         RECT  7.68 169.908 7.704 170.1 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  7.68 169.333 7.704 169.936 ;
+    END
   END ck
   PIN f_li_d[0]
     DIRECTION INPUT ;
@@ -248,6 +252,10 @@ MACRO dsfd_coll_celp
       LAYER M4 ;
         RECT  0 70.752 0.192 70.776 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 70.752 0.133 70.776 ;
+    END
   END f_li_d[125]
   PIN f_li_d[126]
     DIRECTION INPUT ;
@@ -399,6 +407,10 @@ MACRO dsfd_coll_celp
     PORT
       LAYER M4 ;
         RECT  0 72.384 0.192 72.408 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 72.384 0.133 72.408 ;
     END
   END f_li_d[142]
   PIN f_li_d[143]
@@ -839,6 +851,10 @@ MACRO dsfd_coll_celp
     PORT
       LAYER M4 ;
         RECT  0 77.184 0.192 77.208 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 77.184 0.133 77.208 ;
     END
   END f_li_d[192]
   PIN f_li_d[193]
@@ -1847,6 +1863,10 @@ MACRO dsfd_coll_celp
     PORT
       LAYER M4 ;
         RECT  0 88.032 0.192 88.056 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 88.032 0.133 88.056 ;
     END
   END f_li_d[305]
   PIN f_li_d[306]
@@ -3087,6 +3107,10 @@ MACRO dsfd_coll_celp
     PORT
       LAYER M4 ;
         RECT  0 101.472 0.192 101.496 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 101.472 0.133 101.496 ;
     END
   END f_li_d[445]
   PIN f_li_d[446]
@@ -4888,6 +4912,10 @@ MACRO dsfd_coll_celp
       LAYER M4 ;
         RECT  0 19.392 0.192 19.416 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 19.392 0.133 19.416 ;
+    END
   END f_lo_d[148]
   PIN f_lo_d[149]
     DIRECTION OUTPUT ;
@@ -5447,6 +5475,10 @@ MACRO dsfd_coll_celp
     PORT
       LAYER M4 ;
         RECT  0 25.344 0.192 25.368 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 25.344 0.133 25.368 ;
     END
   END f_lo_d[210]
   PIN f_lo_d[211]
@@ -6039,6 +6071,10 @@ MACRO dsfd_coll_celp
     PORT
       LAYER M4 ;
         RECT  0 31.872 0.192 31.896 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 31.872 0.133 31.896 ;
     END
   END f_lo_d[278]
   PIN f_lo_d[279]
@@ -6640,6 +6676,10 @@ MACRO dsfd_coll_celp
       LAYER M4 ;
         RECT  0 38.304 0.192 38.328 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 38.304 0.133 38.328 ;
+    END
   END f_lo_d[345]
   PIN f_lo_d[346]
     DIRECTION OUTPUT ;
@@ -6991,6 +7031,10 @@ MACRO dsfd_coll_celp
     PORT
       LAYER M4 ;
         RECT  0 42.144 0.192 42.168 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 42.144 0.133 42.168 ;
     END
   END f_lo_d[385]
   PIN f_lo_d[386]
@@ -7792,6 +7836,10 @@ MACRO dsfd_coll_celp
       LAYER M4 ;
         RECT  0 50.784 0.192 50.808 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 50.784 0.133 50.808 ;
+    END
   END f_lo_d[475]
   PIN f_lo_d[476]
     DIRECTION OUTPUT ;
@@ -8439,6 +8487,10 @@ MACRO dsfd_coll_celp
     PORT
       LAYER M4 ;
         RECT  0 57.792 0.192 57.816 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 57.792 0.133 57.816 ;
     END
   END f_lo_d[548]
   PIN f_lo_d[549]
@@ -17840,6 +17892,10 @@ MACRO dsfd_coll_celp
       LAYER M5 ;
         RECT  10.176 169.908 10.2 170.1 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  10.176 169.583 10.2 169.936 ;
+    END
   END rs
   PIN x_flt[0]
     DIRECTION INPUT ;
@@ -21800,28 +21856,16 @@ MACRO dsfd_coll_celp
      RECT  0.06 11.904 0.133 12.408 ;
      RECT  0.06 14.592 0.133 15.096 ;
      RECT  0.06 16.224 0.133 16.728 ;
-     RECT  0.06 19.392 0.133 19.416 ;
      RECT  0.06 20.544 0.133 21.048 ;
      RECT  0.06 23.232 0.133 23.736 ;
-     RECT  0.06 25.344 0.133 25.368 ;
      RECT  0.06 27.552 0.133 28.056 ;
      RECT  0.06 29.184 0.133 29.688 ;
-     RECT  0.06 31.872 0.133 31.896 ;
      RECT  0.06 33.504 0.133 34.008 ;
-     RECT  0.06 38.304 0.133 38.328 ;
      RECT  0.06 40.512 0.133 41.016 ;
-     RECT  0.06 42.144 0.133 42.168 ;
      RECT  0.06 44.832 0.133 45.336 ;
      RECT  0.06 46.464 0.133 46.968 ;
      RECT  0.06 49.152 0.133 49.656 ;
-     RECT  0.06 50.784 0.133 50.808 ;
-     RECT  0.06 57.792 0.133 57.816 ;
      RECT  0.06 62.112 0.133 62.616 ;
-     RECT  0.06 70.752 0.133 70.776 ;
-     RECT  0.06 72.384 0.133 72.408 ;
-     RECT  0.06 77.184 0.133 77.208 ;
-     RECT  0.06 88.032 0.133 88.056 ;
-     RECT  0.06 101.472 0.133 101.496 ;
      RECT  0.097 112.416 0.133 112.44 ;
      RECT  0.133 5.376 0.156 8.664 ;
      RECT  0.133 9.696 0.156 12.984 ;
@@ -27941,8 +27985,6 @@ MACRO dsfd_coll_celp
      RECT  54.24 169.313 54.36 169.583 ;
      RECT  59.64 169.313 59.76 169.583 ;
      RECT  2.4 169.525 2.712 169.936 ;
-     RECT  7.68 169.333 7.704 169.936 ;
-     RECT  10.176 169.583 10.2 169.936 ;
     LAYER M6 ;
      RECT  0 76.596 0.309 77.46 ;
      RECT  0 87.396 0.501 88.26 ;

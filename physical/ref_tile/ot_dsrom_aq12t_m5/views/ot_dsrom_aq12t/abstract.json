@@ -1,0 +1,93 @@
+{
+  "name": "ot_dsrom_aq12t",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/routes/ot_dsrom_aq12t_m5_m5_e5e8e058b/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -1.643221114733251e-10 min -5.989611584489296e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/routes/ot_dsrom_aq12t_m5_m5_e5e8e058b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/record/views/ot_dsrom_aq12t:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/src/physical/ref_tile/ot_dsrom_aq12t_m5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.021689204934063e-10 min -8.433338749558317e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/routes/ot_dsrom_aq12t_m5_m5_e5e8e058b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/record/views/ot_dsrom_aq12t:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/src/physical/ref_tile/ot_dsrom_aq12t_m5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.3886847227695398e-10 min -7.153902470413698e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/routes/ot_dsrom_aq12t_m5_m5_e5e8e058b/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/record/views/ot_dsrom_aq12t:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/src/physical/ref_tile/ot_dsrom_aq12t_m5/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/src/physical/ref_tile/ot_dsrom_aq12t_m5/signoff.sdc",
+    "sha256": "9ff296f9349c64603a53f5537d4726f95667e7a6b17d483e0f71fba64f58c4f8",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/ot_dsrom_aq12t_m5-m5-e5e8e058b/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_dsrom_aq12t.lef": "49948f6be0993a3a19576a44b1b91aeb9258e6126ea8dcd1abbf212b3ed96185",
+    "ot_dsrom_aq12t_ff.lib": "8901396d100bb1f2733760b7b34ff4decda8092f6ba3d05fe6c1a49fafa0fb19",
+    "ot_dsrom_aq12t_ss.lib": "dd8b9091e37246e19efaedd20de8803ffb04f8c5b90a0e4e39dc9cbca606c750",
+    "ot_dsrom_aq12t_tt.lib": "79292508c38bf95e4212d655a907fb8b56070243899aea2a3a77e04759085d57"
+  },
+  "ok": true
+}

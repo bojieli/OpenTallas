@@ -1,0 +1,93 @@
+{
+  "name": "ot_p2h_head",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/routes/p2h_head_ref_r5_bc9de2c89/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.8558588827110043e-10 min -1.5043458145846955e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/routes/p2h_head_ref_r5_bc9de2c89/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/record/views/ot_p2h_head:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/src/physical/ref_tile/p2h_head_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.0961509477880327e-11 min -1.3722195602028364e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/routes/p2h_head_ref_r5_bc9de2c89/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/record/views/ot_p2h_head:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/src/physical/ref_tile/p2h_head_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -5.553957294068823e-11 min -1.317506659326284e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/routes/p2h_head_ref_r5_bc9de2c89/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/record/views/ot_p2h_head:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/src/physical/ref_tile/p2h_head_ref/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/src/physical/ref_tile/p2h_head_ref/signoff.sdc",
+    "sha256": "7f3cdec46edf89db7df3699b13d059876349e69ca3f7af1a41ab860813e73e47",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/p2h_head_ref-r5-bc9de2c89/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_p2h_head.lef": "76a81a50fca5322738ef3e9e92ce3bd4de26e1a2250c399b311d82db6eaeb6b0",
+    "ot_p2h_head_ff.lib": "038f32915236bef4bd1bbbcba43e3ca96b450cf02d46539c2ba7347c15d79653",
+    "ot_p2h_head_ss.lib": "4167029c114ac3047fa72f7311234479f594baf05f5b66c8e1472cd27eafaba3",
+    "ot_p2h_head_tt.lib": "0fb4420fc5b53980d0495955098a0c04e260e8ab6c7106c79f835170ba959263"
+  },
+  "ok": true
+}

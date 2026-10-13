@@ -46,6 +46,7 @@ module ot_hgi_idx_unit #(
     // ot_hgi_idx_index_w, whose VM traffic rides the die's 32-lane VM wide read / write groups (the wr* / ww* ports,
     // ot_hgi_vm_lanestation client format; tie the grants high for a dedicated group).  IXW = 0 ties them off.
     parameter integer IXW = 0,
+    parameter integer IXLQ = 8,        // wide lane credit capacity; B2 RRS3 requires 10
     parameter integer IXNL = 8         // IXW lanes (HBM B2 slice-local lane group)
 ) (
     input  wire          clk,
@@ -171,7 +172,7 @@ module ot_hgi_idx_unit #(
                    (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && x_iks_ok && x_n_ok;
     generate if (IXW != 0) begin : g_ixw
     assign vmq_x = 338'd0;
-    ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0), .NL(IXNL)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
+    ot_hgi_idx_index_w #(.MUT(MUT >= 2 ? MUT - 1 : 0), .NL(IXNL), .LQ(IXLQ)) u_index (.clk(clk), .rst_n(rst_n), .go_i(NGLOB != 0 ? x_go2 : x_go), .k_i(k), .cand_en_i(x_cand),
         .keep_en_i(x_keep), .n_i(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank_i(x_rank),
         .pos_i(NGLOB != 0 ? x_newest : rpos), .a_base_i(a_base[17:0]), .b_base_i(dB_b), .c_base_i(dC_b), .o_base_i(o_base[17:0]), .r_base_i(r_base[17:0]),
         .d_base_i(dD_b), .d_stride_i(dD_s), .c_stride_i(dC[105:88]), .c_n_i(dC[59:48]), .has_r_i(has_r), .done(x_done), .fault(x_fault),

@@ -64,7 +64,15 @@ module ot_hgi_dma_front #(
                                           //   XP) = a SELECT rung (lane offset, the quarter / half of the sector, s18 registered), the
                                           //   CONVERSION rung on the pre-selected bits, and a pure output register at the VM-lane pins.
                                           //   +2 cycles out.
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer B2 = 0,             // el1011-hbm-b2 (2026-10-12): 1 = the front of B2 cluster QID (one cluster a stack): only
+                                          //   stack QID's request lane / data lanes exist (the other lanes' outputs are constant 0,
+                                          //   their inputs unused, their lane FIFOs / macros not built); a STRIPE4 strided row or an
+                                          //   indexed-stream row on another stack is SKIPPED (no request, not counted: the cluster of
+                                          //   that stack serves it, the dispatcher sends both forms to all four clusters); any other
+                                          //   row on another stack faults (fail-closed).  0 = today (bit-identical).
+    parameter integer QID = 0,
+    parameter integer MUT_B2 = 0          // bench: 1 serve stack (QID + 1) mod 4's rows on lane QID, 2 drive lane (QID + 1) mod 4
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -97,6 +105,9 @@ module ot_hgi_dma_front #(
     localparam integer LW = $clog2(LD);
     localparam integer BW = $clog2(NB);
     localparam integer RW = $clog2(NIN);
+    localparam integer QS = (MUT_B2 == 1) ? (QID + 1) % 4 : QID;      // B2: the stack served
+    localparam integer LQ = (MUT_B2 == 2) ? (QID + 1) % 4 : QID;      // B2: the lane driven / built
+    localparam integer NLB = (B2 != 0) ? NL : NIN;                     // lanes built
     function automatic [31:0] i8_f(input [7:0] c);
         reg [7:0] a; reg [2:0] p; integer k;
         begin
@@ -138,6 +149,7 @@ module ot_hgi_dma_front #(
     reg [36:0] wa; reg [31:0] wd;                           // that row's source byte address, VM word address
     reg [23:0] rsec, r_off;                                 // sectors a row, the chunk's first sector (all window rows)
     reg r_done;
+    reg s4;                                                 // B2: the strided move is STRIPE4 (other stacks' rows: skip)
     reg [31:0] issued, wrote;                               // destination sectors requested / acknowledged
     assign mv_rdy = rc && !busy && !cv_q && !ixc_q && !mv_fault;
     // ---------------------------------------------------------------- indexed row stream state
@@ -263,8 +275,9 @@ module ot_hgi_dma_front #(
     reg [NIN-1:0] x_oh [0:NB-1]; reg [NB-1:0] x_v, x2_v, x3_v, wo_v;    // the registered pick (x2_v: XP's AND-OR rung)
     wire [3:0] kmask = (ks == 2'd0) ? 4'b0001 : (ks == 2'd1) ? 4'b0011 : 4'b1111;
     genvar g;
-    generate for (g = 0; g < NIN; g = g + 1) begin : lg
-        wire lr = rl[g / NL];
+    generate for (g = 0; g < NLB; g = g + 1) begin : lg
+        localparam integer GI = (B2 != 0) ? LQ * NL + g : g;          // the lane index (B2: stack LQ's lanes only)
+        wire lr = rl[GI / NL];
         reg dv; reg [269:0] dd_q;                             // pin flop
         reg [LW-1:0] h, t; reg [LW:0] n;                      // lane FIFO
         reg [17:0] qs [0:LD-1];                               // its entries' VM sectors
@@ -274,23 +287,23 @@ module ot_hgi_dma_front #(
         reg [3:0] ov; reg [17:0] ob; reg cr;
         reg [NB-1:0] rqv; reg [NB-1:0] skm [0:2];             // XP: the active buffer's requested banks; a skid entry's
         reg [NB-1:0] gb;                                      //     the banks that granted this lane this cycle
-        always @* begin gb = '0; for (integer b = 0; b < NB; b = b + 1) gb[b] = oh[b][g]; end
-        assign rqv_w[g*NB +: NB] = rqv;
+        always @* begin gb = '0; for (integer b = 0; b < NB; b = b + 1) gb[b] = oh[b][GI]; end
+        assign rqv_w[GI*NB +: NB] = rqv;
         wire rdi  = n != '0 && ({1'b0, sn} + {2'd0, rv}) < 3'd3;
         wire full = n == (LW+1)'(LD) && !rdi;
         wire ok   = dv && !full;
-        wire fin  = (ov & ~gnt[g]) == 4'd0;
+        wire fin  = (ov & ~gnt[GI]) == 4'd0;
         wire ld   = fin && sn != 2'd0;
-        assign dv_w[g] = dv; assign dtag_w[g*4 +: 4] = dd_q[267:264];
-        assign lflt_w[g] = dv && (dd_q[268] || full);
-        assign ov_w[g*4 +: 4] = ov; assign ob_w[g*18 +: 18] = ob;
-        assign ls_w[g*274 +: 274] = bf[pa];
-        assign dd_cr[g] = cr;
+        assign dv_w[GI] = dv; assign dtag_w[GI*4 +: 4] = dd_q[267:264];
+        assign lflt_w[GI] = dv && (dd_q[268] || full);
+        assign ov_w[GI*4 +: 4] = ov; assign ob_w[GI*18 +: 18] = ob;
+        assign ls_w[GI*274 +: 274] = bf[pa];
+        assign dd_cr[GI] = cr;
         ot_sram_1r1w_128x256_m1_r2c2 u_q (.clk(clk), .r_ce_in(rdi), .r_addr_in(7'(h)), .rd_out(rd),
             .w_ce_in(ok), .w_addr_in(7'(t)), .wd_in(dd_q[255:0]), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
         always @(posedge clk) begin                           // data: no reset
-            dd_q <= dd[g*270 +: 270];
+            dd_q <= dd[GI*270 +: 270];
             if (ok) qs[t] <= tg_dsec[dd_q[267:264]] + (18'(dd_q[263:256]) << ks);
             if (rdi) rs <= qs[h];
             if (rv) begin sk[st] <= {rs, rd}; skm[st] <= bmask(rs, kmask); end
@@ -301,7 +314,7 @@ module ot_hgi_dma_front #(
                 dv <= 1'b0; h <= '0; t <= '0; n <= '0; rv <= 1'b0; sh <= 2'd0; st <= 2'd0; sn <= 2'd0;
                 ap <= 1'b0; pa <= 1'b0; ov <= 4'd0; cr <= 1'b0; rqv <= '0;
             end else begin
-                dv <= dd[g*270 + 269];
+                dv <= dd[GI*270 + 269];
                 if (ok) t <= t + 1'b1;
                 if (rdi) h <= h + 1'b1;
                 n <= n + (LW+1)'(ok) - (LW+1)'(rdi);
@@ -312,7 +325,16 @@ module ot_hgi_dma_front #(
                 sn <= sn + 2'(rv) - 2'(ld);
                 pa <= ap;
                 if (ld) begin ap <= !ap; ov <= kmask; rqv <= skm[sh]; end
-                else begin ov <= ov & ~gnt[g]; rqv <= rqv & ~gb; end
+                else begin ov <= ov & ~gnt[GI]; rqv <= rqv & ~gb; end
+            end
+        end
+    end endgenerate
+    generate if (B2 != 0) begin : lgz                       // B2: the lanes not built (other stacks)
+        for (g = 0; g < NIN; g = g + 1) begin : z
+            if (g / NL != LQ) begin : t0
+                assign dv_w[g] = 1'b0; assign dtag_w[g*4 +: 4] = 4'd0; assign lflt_w[g] = 1'b0; assign ov_w[g*4 +: 4] = 4'd0;
+                assign ob_w[g*18 +: 18] = 18'd0; assign ls_w[g*274 +: 274] = 274'd0; assign dd_cr[g] = 1'b0;
+                assign rqv_w[g*NB +: NB] = '0;
             end
         end
     end endgenerate
@@ -351,7 +373,7 @@ module ot_hgi_dma_front #(
         end
     end endgenerate
     // the indexed request of this cycle (head row of the queue, its next run of <= 256 sectors)
-    reg ix_try, ix_bad, ix_go, ix_pop; reg [36:0] ix_a; reg [8:0] ix_rn; reg [1:0] ix_st;
+    reg ix_try, ix_bad, ix_go, ix_pop, ix_sk; reg [36:0] ix_a; reg [8:0] ix_rn; reg [1:0] ix_st, ix_li;
     always @* begin : ixreq
         reg [36:0] e; reg [23:0] rem;
         ix_try = busy && ixm && !r_done && ft != 5'd16 && rq_n != 3'd0;
@@ -360,16 +382,18 @@ module ot_hgi_dma_front #(
         ix_rn = (rem > 24'd256) ? 9'd256 : rem[8:0];
         e = ix_a + {19'd0, ix_rn, 5'd0} - 37'd1;
         ix_st = ix_a[SBIT +: 2];
-        ix_bad = ix_try && (e[SBIT +: 2] != ix_st ||
+        ix_li = (B2 != 0) ? 2'(LQ) : ix_st;
+        ix_sk = (B2 != 0) && ix_try && ix_st != 2'(QS);              // B2: another stack's row (its cluster serves it)
+        ix_bad = ix_try && !ix_sk && (e[SBIT +: 2] != ix_st ||
                             ({1'b0, ix_a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, ix_rn, 5'd0}) > (SBIT+1)'(STACK_BYTES));
-        ix_go = ix_try && !ix_bad && ((XQ != 0) ? !sk_v[ix_st] : (!dq[ix_st*51 + 50] || dq_rdy[ix_st]));
+        ix_go = ix_try && !ix_bad && !ix_sk && ((XQ != 0) ? !sk_v[ix_li] : (!dq[ix_li*51 + 50] || dq_rdy[ix_li]));
         ix_pop = r_off + {15'd0, ix_rn} == rsec;
     end
     // ---------------------------------------------------------------- sequential
     integer i, s, t;
     always @(posedge clk or negedge rc) begin
         if (!rc) begin
-            cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; wl_v <= '0; x_v <= '0; x2_v <= '0; x3_v <= '0; wo_v <= '0; rr_ge <= '1;
+            cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; s4 <= 1'b0; mv_fault <= 1'b0; dq <= '0; wl_v <= '0; x_v <= '0; x2_v <= '0; x3_v <= '0; wo_v <= '0; rr_ge <= '1;
             tag_busy <= 16'd0; rr <= '0; r_done <= 1'b1;
             issued <= 32'd0; wrote <= 32'd0;
             ixc_q <= 1'b0; ixm <= 1'b0; ids_left <= 20'd0; i1_v <= 1'b0; i2_v <= 1'b0; i3_v <= 1'b0; i4_v <= 1'b0; ix_first <= 1'b0;
@@ -422,6 +446,7 @@ module ot_hgi_dma_front #(
             if (cv_q) begin
                 cv_q <= 1'b0; busy <= 1'b1; sf <= cm_q[4:2];
                 ks <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 2'd0 : (cm_q[4:2] == 3'd1) ? 2'd1 : 2'd2;
+                s4 <= cm_q[44:42] == 3'd1;
                 ra <= cm_q[41:5]; sst <= {5'd0, cm_q[76:45]} + ((cm_q[44:42] == 3'd1) ? (37'd1 << SBIT) : 37'd0); rdw <= cm_q[129:98]; dst_w <= cm_q[169:138];
                 // sectors a row = n x esize / 32
                 rsec <= (cm_q[4:2] == 3'd0 || cm_q[4:2] == 3'd5) ? 24'(cm_q[226:206] >> 3) :
@@ -436,8 +461,8 @@ module ot_hgi_dma_front #(
             if (ix_try) begin
                 if (ix_bad) mv_fault <= 1'b1;
                 else if (ix_go) begin
-                    if (XQ != 0) begin pu = 1'b1; pu_s = ix_st; pu_d = {1'b1, ft[3:0], ix_rn, ix_a}; end
-                    else dq[ix_st*51 +: 51] <= {1'b1, ft[3:0], ix_rn, ix_a};
+                    if (XQ != 0) begin pu = 1'b1; pu_s = ix_li; pu_d = {1'b1, ft[3:0], ix_rn, ix_a}; end
+                    else dq[ix_li*51 +: 51] <= {1'b1, ft[3:0], ix_rn, ix_a};
                     tag_busy[ft[3:0]] <= 1'b1;
                     tg_dsec[ft[3:0]] <= rq_ds[rq_h] + (18'(r_off) << ks);
                     tg_left[ft[3:0]] <= ix_rn;
@@ -448,23 +473,32 @@ module ot_hgi_dma_front #(
                         if (ids_left == 20'd0 && rq_n == 3'd1 && !i1_v && !i2_v && !i3_v && !i4_v) r_done <= 1'b1;
                     end
                 end
+                else if (ix_sk) begin                                  // B2: the whole row skipped in one cycle
+                    r_off <= 24'd0; rq_h <= rq_h + 2'd1;
+                    if (ids_left == 20'd0 && rq_n == 3'd1 && !i1_v && !i2_v && !i3_v && !i4_v) r_done <= 1'b1;
+                end
             end
             if (busy && !ixm && !r_done && ft != 5'd16) begin : rq
-                reg [36:0] a, e; reg [23:0] rem; reg [8:0] rn; reg [1:0] st;
+                reg [36:0] a, e; reg [23:0] rem; reg [8:0] rn; reg [1:0] st, li; reg sk;
                 a = wa + {r_off[22:0], 5'd0};
                 rem = rsec - r_off;
                 rn = (rem > 24'd256) ? 9'd256 : rem[8:0];
                 e = a + {19'd0, rn, 5'd0} - 37'd1;
                 st = a[SBIT +: 2];
-                if (e[SBIT +: 2] != st || ({1'b0, a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, rn, 5'd0}) > (SBIT+1)'(STACK_BYTES))
+                li = (B2 != 0) ? 2'(LQ) : st;
+                sk = (B2 != 0) && st != 2'(QS);                        // B2: a row of another stack
+                if (sk && !s4) mv_fault <= 1'b1;                       // B2: only STRIPE4 rows may sit elsewhere (fail-closed)
+                else if (!sk && (e[SBIT +: 2] != st || ({1'b0, a[SBIT-1:0]} + {{(SBIT-13){1'b0}}, rn, 5'd0}) > (SBIT+1)'(STACK_BYTES)))
                     mv_fault <= 1'b1;
-                else if ((XQ != 0) ? !sk_v[st] : (!dq[st*51 + 50] || dq_rdy[st])) begin
-                    if (XQ != 0) begin pu = 1'b1; pu_s = st; pu_d = {1'b1, ft[3:0], rn, a}; end
-                    else dq[st*51 +: 51] <= {1'b1, ft[3:0], rn, a};
-                    tag_busy[ft[3:0]] <= 1'b1;
-                    tg_dsec[ft[3:0]] <= 18'(wd >> 3) + (18'(r_off) << ks);
-                    tg_left[ft[3:0]] <= rn;
-                    issued <= issued + ({23'd0, rn} << ks);
+                else if (sk || ((XQ != 0) ? !sk_v[li] : (!dq[li*51 + 50] || dq_rdy[li]))) begin
+                    if (!sk) begin                                     // (a skipped STRIPE4 chunk: the window just advances)
+                        if (XQ != 0) begin pu = 1'b1; pu_s = li; pu_d = {1'b1, ft[3:0], rn, a}; end
+                        else dq[li*51 +: 51] <= {1'b1, ft[3:0], rn, a};
+                        tag_busy[ft[3:0]] <= 1'b1;
+                        tg_dsec[ft[3:0]] <= 18'(wd >> 3) + (18'(r_off) << ks);
+                        tg_left[ft[3:0]] <= rn;
+                        issued <= issued + ({23'd0, rn} << ks);
+                    end
                     if (wi != wn) begin wi <= wi + 2'd1; wa <= wa + sst; wd <= wd + dst_w; end
                     else if (r_off + {15'd0, rn} != rsec) begin            // next chunk of the window
                         wi <= 2'd0; wa <= ra; wd <= rdw; r_off <= r_off + {15'd0, rn};
@@ -482,7 +516,7 @@ module ot_hgi_dma_front #(
             begin : rqcnt
                 reg psh, pp;
                 psh = i4_v && !i4_a[37];
-                pp = ix_go && ix_pop;
+                pp = (ix_go && ix_pop) || ix_sk;
                 rq_n <= rq_n + {2'd0, psh} - {2'd0, pp};
             end
             // ---- lanes: a beat that is a fault or finds its lane FIFO full

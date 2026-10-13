@@ -19,9 +19,10 @@
   "ws_min": "1.1701778435124766e-11"
  },
  "files": {
-  "ot_qkvd_sbuf.lef": "9c8ede65df5b6797f61db520ed7c86a3d35fd8c6b592d6e6a984b2552ac57386",
+  "ot_qkvd_sbuf.lef": "d264c48d14891ba80d4fa865a544a760953489885fa80062e5b5434c3a6d102a",
   "ot_qkvd_sbuf_ff.lib": "d7ac7792324a568771777c52c2ba6d1d13b79753fadc6d57a0e376e6647de72f",
   "ot_qkvd_sbuf_ss.lib": "64dd16b633d30f9ec9ec5bd3d15475901e08c77e97acf3444f01ed40b9761923",
   "ot_qkvd_sbuf_tt.lib": "cbfdf8da651b9ef6582820db8811eee1dda78f9979a8a0e5da34a909e440a324"
- }
+ },
+ "pin_stub_fix": "2026-10-12 tools/hier_contract/abstract_pin_stub.py: the W-face pins clk/pop/rst_n had their own M4 route stub (x 0.06-0.131, the pin net's ROUTED M4 in the closed DEF) exported as OBS overlapping the pin -> parent DRT-0073 'No access point for .../pop' (qkd_d2d_ref-q8, R0 and MX alike; reproduced standalone). The stub is now part of each pin's PORT."
 }

@@ -34,7 +34,7 @@ TT_LIB = '''library(x) { time_unit : "1ps"; cell ("tile") { pin("clk") { directi
 
 
 class ChildLint(unittest.TestCase):
-    def run_lint(self, text, libs=None, contract=None, slot=None, skip=None):
+    def run_lint(self, text, libs=None, contract=None, slot=None, skip=None, cap=None):
         with tempfile.TemporaryDirectory() as td:
             p = Path(td) / "tile.lef"
             p.write_text(text)
@@ -45,7 +45,7 @@ class ChildLint(unittest.TestCase):
             if contract:
                 cp = Path(td) / "die.json"
                 cp.write_text(json.dumps(contract))
-            return child_lint.lint(str(p), td if libs is not None else None, str(cp) if cp else None, slot, skip)
+            return child_lint.lint(str(p), td if libs is not None else None, str(cp) if cp else None, slot, skip, cap)
 
     def checks(self, r):
         return {f[1] for f in r["fails"]}
@@ -78,6 +78,27 @@ class ChildLint(unittest.TestCase):
         self.assertEqual(r["info"]["face"]["blocked_above"], 1)
         self.assertIn("pin_access_pregrt.tcl", " ".join(r["fails"]))
 
+    def test_face_pin_same_layer_stub_obs_fails(self):
+        # ot_qkvd_sbuf (73e17f447): the pin's own M5 route stub exported as OBS overlapping the pin -> no access point
+        r = self.run_lint(lef(obs=[("M5", 5.006, 0.05, 5.018, 0.6)]))
+        self.assertIn("f", self.checks(r))
+        self.assertEqual(r["info"]["face"]["blocked_same"], 1)
+        self.assertIn("abstract_pin_stub.py", " ".join(r["fails"]))
+
+    def test_face_pin_same_layer_edge_touch_is_fine(self):
+        # same-layer OBS that only abuts the pin edge (x 5.024) or its top (y 0.192) is not a block
+        r = self.run_lint(lef(obs=[("M5", 5.024, 0.0, 5.3, 0.5), ("M5", 4.9, 0.192, 5.1, 0.6)]))
+        self.assertEqual(r["info"]["face"]["blocked_same"], 0)
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+
+    def test_face_pin_same_layer_band_over_many_pins_warns(self):
+        # one same-layer OBS rect across two pins' inner ends = exporter edge-band decomposition: WARN, not FAIL
+        r = self.run_lint(lef(sig=(("a", "M5", 5.0, 0.0), ("b", "M5", 7.0, 0.0)), obs=[("M5", 4.0, 0.1, 9.0, 0.4)]))
+        self.assertEqual(r["info"]["face"]["blocked_same"], 0)
+        self.assertEqual(r["info"]["face"]["band_same"], 2)
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertTrue(any("several pins" in w for w in r["warns"]))
+
     def test_libs_and_insertion(self):
         r = self.run_lint(lef(), libs={"tt": TT_LIB, "ff": ""})
         self.assertIn("d", self.checks(r))
@@ -97,6 +118,35 @@ class ChildLint(unittest.TestCase):
         e = [f for f in r["fails"] if f.startswith("(e)")]
         self.assertTrue(any("outline" in f for f in e) and any("PG layer" in f for f in e))
         self.assertTrue(any("missing" in f for f in e) and any("face/layer" in f for f in e))
+
+    # 2026-10-12 layer contract: tiles cap signals AND PG at M5 (strap M6); closed legacy views lint at their own view_cap
+    def test_cap_m5_clean_and_strap_m6(self):
+        r = self.run_lint(lef(pg="M5", sig=(("a", "M4", 0.0, 5.0),)), cap="M5")
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertEqual((r["info"]["cap"], r["info"]["strap_layer"]), ("M5", "M6"))
+        r = self.run_lint(lef(pg="M5", obs=[("M6", 8, 2, 9, 3)]), cap="M5")
+        self.assertIn("c", self.checks(r))
+
+    def test_cap_m5_signal_pin_above_cap_fails(self):
+        r = self.run_lint(lef(pg="M5", sig=(("a", "M6", 0.0, 5.0),)), cap="M5")
+        self.assertIn("c", self.checks(r))
+
+    def test_slot_view_cap_keeps_legacy_view_valid(self):
+        slot = {"name": "u_t", "cell": "tile", "outline": {"w": 20.0, "h": 10.0}, "pg_layer": "M5", "strap_layer": "M6",
+                "signal_max_layer": "M5", "layer_cap": "M5", "view_cap": "M7",
+                "pins": [{"name": "a", "face": "S", "layer": "M5"}]}
+        c = {"die": "d", "version": 3, "slots": [slot]}
+        r = self.run_lint(lef(pg="M7"), contract=c, slot="u_t")          # legacy M7 view, clean at its own cap
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertEqual((r["info"]["cap"], r["info"]["strap_layer"]), ("M7", "M8"))
+        r = self.run_lint(lef(pg="M7", obs=[("M8", 1, 1, 2, 2)]), contract=c, slot="u_t")   # breaks even its own cap
+        self.assertIn("c", self.checks(r))
+        r = self.run_lint(lef(pg="M5"), contract=c, slot="u_t")          # a new M5 route
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertEqual(r["info"]["cap"], "M5")
+        c2 = {"die": "d", "version": 3, "slots": [dict(slot, view_cap=None)]}
+        r = self.run_lint(lef(pg="M7"), contract=c2, slot="u_t")         # no recorded view cap: M7 view fails the M5 slot
+        self.assertTrue({"c", "e"} <= self.checks(r), r["fails"])
 
 
 class FakeGit:

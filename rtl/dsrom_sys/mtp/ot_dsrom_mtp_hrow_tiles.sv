@@ -1,18 +1,13 @@
-// dsfd_mtp_hrow TWO-LEVEL composition (el1011-ds-mtp 2026-10-11, owner rule TWO-LEVEL HIERARCHY): the row store as
-// hardened tiles placed directly by the S81 die, no intermediate parent route.
-//   dsfd_mtp_hrow_ing   x 3  beside part link pin p: link receiver (RTT) + ingress header / beat FSM; registered write
-//                            command t_wc (to the part's bank pairs) and event t_ev (to the hub); part id is a strap pin
-//   dsfd_mtp_hrow_hub   x 1  seed-client receiver, clear, central tag unit (registered lookup + hazard retry), read
-//                            commands t_rc0..2, final 3:1 OR + response / fault flops
-//   dsfd_mtp_hrow_pnode x 15 one per bank pair: pin flops, bank-enable decode (pair id strap), shared address / data to
-//                            its 2 banks, registered 2:1 OR of their responses
-//   dsfd_mtp_hrow_por   x 3  one per part: registered 5:1 OR of the pair responses
-//   dsfd_mtp_hrow_bank  x 30 (CLOSED)
-// Every tile port lands in / leaves from a flop. Every tile-to-tile seam is a DIE-LEVEL seam (relays placed by the die);
-// the relay counts below are the die contract. Ordering (as rev 3): event ing -> hub CQ edges, read command hub -> pair
-// pin flop CQ + DD - 1 edges, write command ing -> pair pin flop WDLY + DD - 1 edges with WDLY = 2 CQ + 1; every pair
-// of a part sees the same depth (die relays padded equal per class). Return depth is uniform per read (in order).
-// Hard tiles take no parameter overrides: their defaults are the hardened configuration.
+// dsfd_mtp_hrow as hardened tiles placed directly by the S81 die (el1011-ds-mtp; rev 5 hrow-r5 2026-10-12, owner GLUE
+// PLACEMENT: per-bank glue inside the bank tiles, no tile over 15k clock sinks).
+//   dsfd_mtp_hrow_ing x 3  beside part link pin p: drain link receiver + ingress header / beat FSM + WK-edge write
+//                          delay; registered write command t_wc (to its chain head) and event t_ev (to the hub)
+//   dsfd_mtp_hrow_hub x 1  seed-client receiver, clear, central tag unit (registered lookup + hazard retry), read
+//                          commands t_rc0..2, final 3:1 OR + response / fault flops
+//   dsfd_mtp_hrow_cbe x 15 / dsfd_mtp_hrow_cbw x 15  chain bank tiles (one bank each; see the rev-5 note below)
+// Every tile port lands in / leaves from a flop.  Tile-to-tile seams outside the chains are DIE-LEVEL seams (relays
+// placed by the die); the relay counts in dsfd_mtp_hrow_tc are the die contract.  Hard tiles take no parameter
+// overrides: their defaults are the hardened configuration.
 
 // die relay (composition model of a die-level relay station chain): N registered stages, bit 0 (valid) reset
 module ot_dsrom_mtp_hrow_rly #(parameter integer W = 1, parameter integer N = 0) (
@@ -34,11 +29,12 @@ endmodule
 
 module dsfd_mtp_hrow_ing #(
     parameter integer NW = 21, parameter integer USER_W = 10, parameter integer MAXU = 8, parameter integer RS = 16,
-    parameter integer PB = 80, parameter integer FWD_P = 9, parameter integer RET_P = 9
+    parameter integer PB = 80, parameter integer FWD_P = 9, parameter integer RET_P = 9,
+    parameter integer WK = 7       // write-side ordering delay (edges) inside the tile
 ) (
-    input  wire [0:0]    ck, rst,
+    input  wire          ck, rst,
     input  wire [514:0]  f_hp,                 // part link {flit 514, valid}
-    output wire [0:0]    t_hpg,                // its grant
+    output wire          t_hpg,                // its grant
     input  wire [1:0]    f_pid,                // strap: part index
     output wire [1038:0] t_wc,                 // write command {d 1024, a 14, v}
     output wire [20:0]   t_ev,                 // event {kind, v, slot 7, pos 8, epoch 4}
@@ -54,21 +50,22 @@ module dsfd_mtp_hrow_ing #(
     localparam integer EV = 2 + SW + 12;
     initial if (WC != 1039 || EV != 21) $fatal(1, "hrow_ing: port widths assume the hardened configuration");
     wire rn;
-    ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
+    ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn));
     reg [1:0] pid;
-    always @(posedge ck[0]) pid <= f_pid;
+    always @(posedge ck) pid <= f_pid;
     wire iv; wire [513:0] d;
-    ot_dsrom_mtp_lrx_rtt #(.W(514), .D(FWD_P + RET_P + 4), .ENABLE_RTT(1), .OUTPUT_PIPE(1),
-                           .FORWARD_HOPS(FWD_P), .RETURN_HOPS(RET_P)) u_rx (
-        .clk(ck[0]), .rst_n(rn), .l_valid(f_hp[0]), .l_ready(t_hpg[0]), .l_data(f_hp[514:1]),
-        .c_valid(iv), .c_ready(1'b1), .c_data(d));
+    // rev 5: the ingress always takes its flits (c_ready = 1), so the RTT receiver's FWD_P + RET_P + 4 deep queue never
+    // holds a flit (cnt stays 0, every grant is 1): ot_dsrom_mtp_hrow_drx is that receiver with the dead queue removed
+    // (identical l_ready / c_valid / c_data sequences; -11.3k flops a part)
+    ot_dsrom_mtp_hrow_drx #(.W(514)) u_rx (
+        .clk(ck), .rst_n(rn), .l_valid(f_hp[0]), .l_ready(t_hpg), .l_data(f_hp[514:1]), .c_valid(iv), .c_data(d));
     reg inh, ihalf; reg [SW-1:0] islot; reg [6:0] ibeat; reg [511:0] ilo; reg [1:0] flt;
     reg [EV-1:0] ev0; reg [WC-1:0] wc0;
     wire [1:0] hq = d[1:0]; wire [3:0] he = d[5:2]; wire [NW-1:0] hp = d[6 +: NW]; wire [UB-1:0] hu = d[6 + NW +: UB];
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin inh <= 1'b0; ihalf <= 1'b0; flt <= 2'b0; ev0 <= '0; wc0[0] <= 1'b0; islot <= '0; ibeat <= 7'd0; end
+    always @(posedge ck or negedge rn)
+        if (!rn) begin inh <= 1'b0; ihalf <= 1'b0; flt <= 2'b0; ev0 <= '0; islot <= '0; ibeat <= 7'd0; end
         else begin
-            ev0[EV-2] <= 1'b0; wc0[0] <= 1'b0;
+            ev0[EV-2] <= 1'b0;
             if (iv) begin
                 if (d[513]) begin
                     if (hq != pid || inh) flt[0] <= 1'b1;
@@ -77,7 +74,6 @@ module dsfd_mtp_hrow_ing #(
                 end else if (!inh) flt[1] <= 1'b1;
                 else if (!ihalf) ihalf <= 1'b1;
                 else begin
-                    wc0[0] <= 1'b1;
                     ihalf <= 1'b0; ibeat <= ibeat + 7'd1;
                     if (d[512]) begin
                         inh <= 1'b0; ev0[EV-2] <= 1'b1; ev0[EV-1] <= 1'b0; ev0[0 +: 12 + SW] <= {islot, 12'd0};
@@ -86,8 +82,24 @@ module dsfd_mtp_hrow_ing #(
                 end
             end
         end
-    always @(posedge ck[0]) if (iv && !d[513] && inh && !ihalf) ilo <= d[511:0];
-    always @(posedge ck[0]) if (iv && !d[513] && inh && ihalf) wc0[WC-1:1] <= {d[511:0], ilo, DB'(islot) * DB'(PB) + DB'(ibeat)};
+    // rev 5: the write side runs WK edges behind the FSM (the ordering delay WDLY = 2 CQ + 1 lives here, on the 528-b
+    // half-beat stream {d 512, a 14, hi, lo}, not on die relays of the 1,039-b assembled command); the assembly below
+    // is the rev-3 assembly delayed by exactly WK edges
+    wire lo_s = iv && !d[513] && inh && !ihalf;
+    wire hi_s = iv && !d[513] && inh && ihalf;      // = the edge at which rev 3 set wc0[0]
+    localparam integer KW = 2 + DB + 512;
+    reg [KW-1:0] kd [0:WK-1];
+    genvar gk;
+    generate for (gk = 0; gk < WK; gk = gk + 1) begin : g_k
+        always @(posedge ck or negedge rn) if (!rn) kd[gk][1:0] <= 2'b0;
+            else kd[gk][1:0] <= (gk == 0) ? {hi_s, lo_s} : kd[(gk == 0) ? 0 : gk-1][1:0];
+        always @(posedge ck) kd[gk][KW-1:2] <= (gk == 0) ? {d[511:0], DB'(islot) * DB'(PB) + DB'(ibeat)}
+                                                            : kd[(gk == 0) ? 0 : gk-1][KW-1:2];
+    end endgenerate
+    wire [KW-1:0] kq = kd[WK-1];
+    always @(posedge ck or negedge rn) if (!rn) wc0[0] <= 1'b0; else wc0[0] <= kq[1];
+    always @(posedge ck) if (kq[0]) ilo <= kq[KW-1 -: 512];
+    always @(posedge ck) if (kq[1]) wc0[WC-1:1] <= {kq[KW-1 -: 512], ilo, kq[2 +: DB]};
     assign t_wc = wc0; assign t_ev = ev0; assign t_flt = flt;
 endmodule
 
@@ -95,9 +107,9 @@ module dsfd_mtp_hrow_hub #(
     parameter integer USER_W = 10, parameter integer MAXU = 8, parameter integer RS = 16, parameter integer PB = 80,
     parameter integer AW = 24, parameter integer FWD_Q = 6, parameter integer RET_Q = 6
 ) (
-    input  wire [0:0]      ck, rst,
+    input  wire            ck, rst,
     input  wire [AW:0]     f_vrq,              // seed client request {addr, valid}
-    output wire [0:0]      t_vrq,              // grant
+    output wire            t_vrq,              // grant
     output wire [1024:0]   t_vrs,              // response {data, valid}
     input  wire [USER_W:0] f_clr,
     output wire [2:0]      t_flt,
@@ -117,13 +129,13 @@ module dsfd_mtp_hrow_hub #(
     localparam integer EV = 2 + SW + 12;
     initial if (RC != 15 || EV != 21) $fatal(1, "hrow_hub: port widths assume the hardened configuration");
     wire rn_c;
-    ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn_c));
-    wire clk = ck[0];
+    ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn_c));
+    wire clk = ck;
     // seed client receiver
     wire q_v, q_r; wire [AW-1:0] q_a;
     ot_dsrom_mtp_lrx_rtt #(.W(AW), .D(FWD_Q + RET_Q + 4), .ENABLE_RTT(1), .OUTPUT_PIPE(1),
                            .FORWARD_HOPS(FWD_Q), .RETURN_HOPS(RET_Q)) u_q (
-        .clk(clk), .rst_n(rn_c), .l_valid(f_vrq[0]), .l_ready(t_vrq[0]), .l_data(f_vrq[AW:1]),
+        .clk(clk), .rst_n(rn_c), .l_valid(f_vrq[0]), .l_ready(t_vrq), .l_data(f_vrq[AW:1]),
         .c_valid(q_v), .c_ready(q_r), .c_data(q_a));
     // pin flops
     reg [USER_W:0] i_clr;
@@ -149,16 +161,19 @@ module dsfd_mtp_hrow_hub #(
     always @(posedge clk) begin r_d <= pr[0][1024:1] | pr[1][1024:1] | pr[2][1024:1]; o_rs[1024:1] <= r_d; end
     assign t_vrs = o_rs;
     // ---------------- central tag unit (as rev 3 ot_dsrom_mtp_hrow_store)
-    reg [11:0] tag  [0:NP-1][0:NS-1];
-    reg        cmp  [0:NP-1][0:NS-1];
-    reg        wg   [0:NP-1][0:NS-1];
-    reg        rg   [0:NP-1][0:NS-1];
-    reg        ld   [0:NP-1][0:NS-1];
-    reg        f0;
+    // r5d (hub r5c TT -8.08 / WC -71: ABC folded the r5c dual lookup back into ONE lookup on an adv-selected key, so
+    // v2 -> adv again drove the 128:1 tag/cmp mux selects through 8 buffer levels): both lookup results AND the select
+    // are registered (okn2/okh2/hzn2/hzh2 + sel2, same enable as the old ok2/hz2), ok2/hz2 = sel2 ? n : h after the
+    // flops -- no logic path from v2 into the tag muxes exists for synthesis to recreate.  Same values every cycle.
+    // Per-part tag state is built per part / per slot with its own reset synchroniser per half part (6 x 256 async
+    // loads instead of one 1,573-load reset net; textbook class 2); key registers are per part (replicated selects).
+    localparam integer NR = 2;
     reg [AW-1:0] sk [0:1]; reg [1:0] skn; reg skw, skr;
     reg qr_q;
     assign q_r = qr_q;
-    reg v2, ok2, hz2; reg [SW-1:0] s2; reg [1:0] p2; reg [6:0] pb2; reg [DB-1:0] a2;
+    reg v2, okn2, okh2, hzn2, hzh2, sel2; reg [SW-1:0] s2; reg [1:0] p2; reg [6:0] pb2; reg [DB-1:0] a2;
+    wire ok2 = sel2 ? okn2 : okh2;
+    wire hz2 = sel2 ? hzn2 : hzh2;
     wire issue = v2 && ok2 && !hz2;
     wire adv = !v2 || issue;
     wire take = adv && skn != 0;
@@ -170,42 +185,94 @@ module dsfd_mtp_hrow_hub #(
     wire [1:0] l_part = (l_beat < 8'd80) ? 2'd0 : (l_beat < 8'd160) ? 2'd1 : 2'd2;
     wire [6:0] l_pb = l_beat - (l_part == 2'd0 ? 8'd0 : l_part == 2'd1 ? 8'd80 : 8'd160);
     reg [7:0] pos2; reg [3:0] ep2;
-    wire [SW-1:0] ks = adv ? {l_u, l_pos[SB-1:0]} : s2;
-    wire [7:0] kpos = adv ? l_pos : pos2;
-    wire [3:0] kep = adv ? l_ep : ep2;
-    wire [1:0] kpart = adv ? l_part : p2;
-    reg k_ok; integer pi;
-    always @(*) begin
-        k_ok = 1'b1;
-        for (pi = 0; pi < NP; pi = pi + 1) begin
-`ifdef OT_HROW_MUT_NOPART
-            if (pi == kpart)
-`endif
-            begin
-`ifdef OT_HROW_MUT_NOEPOCH
-                if (!(cmp[pi][ks] && tag[pi][ks][11:4] == kpos)) k_ok = 1'b0;
-`else
-                if (!(cmp[pi][ks] && tag[pi][ks] == {kpos, kep})) k_ok = 1'b0;
-`endif
-            end
-        end
+    reg [1:0] hk_part, hs_part; reg [SW-1:0] hz_ks, hz_hs;
+    wire        sk_push = q_v && qr_q;
+    wire        skr_n   = skr ^ take;
+    wire [AW-1:0] la_n  = (sk_push && skw == skr_n) ? q_a : sk[skr_n];
+    wire [7:0]  ln_beat = la_n[7:0];
+    always @(posedge clk) begin
+        hk_part <= (ln_beat < 8'd80) ? 2'd0 : (ln_beat < 8'd160) ? 2'd1 : 2'd2;
+        hz_ks <= {la_n[16 +: UB], la_n[8 +: SB]};
+        if (take) begin hs_part <= l_part; hz_hs <= {l_u, l_pos[SB-1:0]}; end
     end
-    reg k_hz; integer ei;
+    wire clr_u = c_v && c_user < MAXU;
+    wire [NP*NR-1:0] rn_a;
+    wire [NP-1:0] ok_n_p, ok_h_p, f0_p;
+    genvar gp, gs, gr;
+    generate
+        for (gr = 0; gr < NP * NR; gr = gr + 1) begin : g_rs
+            ot_dsrom_mtp_rstsync u_rsa (.clk(clk), .rst_n_async(rst), .rst_n(rn_a[gr]));
+        end
+        for (gp = 0; gp < NP; gp = gp + 1) begin : g_p
+            reg [11:0] tag [0:NS-1];
+            wire [NS-1:0] cmp, wg, rg, ld;
+            wire          ev_v = ev_c[gp][EV-2];
+            wire          ev_w = ev_c[gp][EV-1];
+            wire [SW-1:0] ev_s = ev_c[gp][12 +: SW];
+            for (gs = 0; gs < NS; gs = gs + 1) begin : g_s
+                wire rn = rn_a[gp * NR + (gs * NR) / NS];
+                reg cmp_r, wg_r, rg_r, ld_r;
+                assign cmp[gs] = cmp_r; assign wg[gs] = wg_r; assign rg[gs] = rg_r; assign ld[gs] = ld_r;
+                wire hit = ev_v && ev_s == gs;
+                wire clr = clr_u && c_user[UB-1:0] == (gs >> SB);
+                always @(posedge clk or negedge rn)
+                    if (!rn) begin cmp_r <= 1'b0; wg_r <= 1'b0; rg_r <= 1'b0; ld_r <= 1'b0; end
+                    else begin
+                        if (issue && pb2 == 7'd79 && p2 == gp && s2 == gs) rg_r <= wg_r;
+                        if (hit) begin
+                            if (ev_w) begin cmp_r <= 1'b0; wg_r <= ~wg_r; ld_r <= 1'b1; end
+                            else cmp_r <= 1'b1;
+                        end
+                        if (clr) begin cmp_r <= 1'b0; ld_r <= 1'b0; end
+                    end
+            end
+            reg f0r;
+            assign f0_p[gp] = f0r;
+            always @(posedge clk or negedge rn_a[gp * NR])
+                if (!rn_a[gp * NR]) f0r <= 1'b0;
+                else if (ev_v && ev_w && ld[ev_s] && tag[ev_s][11:4] != ev_c[gp][11:4] && rg[ev_s] != wg[ev_s]) f0r <= 1'b1;
+            always @(posedge clk) if (ev_v && ev_w) tag[ev_s] <= ev_c[gp][11:0];
+            // per-part key copies: next skid head (hk*) and held entry (hs*)
+            reg [SW-1:0] hk_s, hs_s; reg [7:0] hk_pos, hs_pos; reg [3:0] hk_ep, hs_ep;
+            always @(posedge clk) begin
+                hk_s <= {la_n[16 +: UB], la_n[8 +: SB]}; hk_pos <= la_n[15:8]; hk_ep <= la_n[UB+16 +: 4];
+                if (take) begin hs_s <= {l_u, l_pos[SB-1:0]}; hs_pos <= l_pos; hs_ep <= l_ep; end
+            end
+`ifdef OT_HROW_MUT_NOEPOCH
+            wire okn = cmp[hk_s] && tag[hk_s][11:4] == hk_pos;
+            wire okh = cmp[hs_s] && tag[hs_s][11:4] == hs_pos;
+`else
+            wire okn = cmp[hk_s] && tag[hk_s] == {hk_pos, hk_ep};
+            wire okh = cmp[hs_s] && tag[hs_s] == {hs_pos, hs_ep};
+`endif
+`ifdef OT_HROW_MUT_NOPART
+            assign ok_n_p[gp] = okn || hk_part != gp;
+            assign ok_h_p[gp] = okh || hs_part != gp;
+`else
+            assign ok_n_p[gp] = okn;
+            assign ok_h_p[gp] = okh;
+`endif
+        end
+    endgenerate
+    wire k_ok_n = &ok_n_p;
+    wire k_ok_h = &ok_h_p;
+    wire f0 = |f0_p;
+    reg k_hz_n, k_hz_h; integer ei;
     always @(*) begin
-        k_hz = c_v && c_user < MAXU && c_user[UB-1:0] == ks[SW-1:SB];
-        for (ei = 0; ei < NP; ei = ei + 1)
-            if (ev_c[ei][EV-2] && ev_c[ei][EV-1] && ev_c[ei][12 +: SW] == ks) k_hz = 1'b1;
+        k_hz_n = c_v && c_user < MAXU && c_user[UB-1:0] == hz_ks[SW-1:SB];
+        k_hz_h = c_v && c_user < MAXU && c_user[UB-1:0] == hz_hs[SW-1:SB];
+        for (ei = 0; ei < NP; ei = ei + 1) begin
+            if (ev_c[ei][EV-2] && ev_c[ei][EV-1] && ev_c[ei][12 +: SW] == hz_ks) k_hz_n = 1'b1;
+            if (ev_c[ei][EV-2] && ev_c[ei][EV-1] && ev_c[ei][12 +: SW] == hz_hs) k_hz_h = 1'b1;
+        end
     end
     reg [RC-1:0] rcq [0:NP-1];
     assign t_rc0 = rcq[0]; assign t_rc1 = rcq[1]; assign t_rc2 = rcq[2];
-    integer p, s;
+    integer p;
     always @(posedge clk or negedge rn_c)
         if (!rn_c) begin
-            skn <= 2'd0; skw <= 1'b0; skr <= 1'b0; qr_q <= 1'b0; v2 <= 1'b0; f0 <= 1'b0;
-            for (p = 0; p < NP; p = p + 1) begin
-                rcq[p][0] <= 1'b0;
-                for (s = 0; s < NS; s = s + 1) begin cmp[p][s] <= 1'b0; wg[p][s] <= 1'b0; rg[p][s] <= 1'b0; ld[p][s] <= 1'b0; end
-            end
+            skn <= 2'd0; skw <= 1'b0; skr <= 1'b0; qr_q <= 1'b0; v2 <= 1'b0;
+            for (p = 0; p < NP; p = p + 1) rcq[p][0] <= 1'b0;
         end else begin
             if (q_v && qr_q) begin sk[skw] <= q_a; skw <= ~skw; end
             if (take) skr <= ~skr;
@@ -213,34 +280,15 @@ module dsfd_mtp_hrow_hub #(
             qr_q <= (skn + (q_v && qr_q) - take) < 2'd2;
             if (adv) v2 <= take;
             if (adv ? take : 1'b1) begin
-                ok2 <= k_ok; hz2 <= k_hz;
+                okn2 <= k_ok_n; okh2 <= k_ok_h; hzn2 <= k_hz_n; hzh2 <= k_hz_h; sel2 <= adv;
             end
             if (take) begin
                 s2 <= {l_u, l_pos[SB-1:0]}; p2 <= l_part; pb2 <= l_pb; pos2 <= l_pos; ep2 <= l_ep;
                 a2 <= DB'({l_u, l_pos[SB-1:0]}) * DB'(PB) + DB'(l_pb);
             end
             for (p = 0; p < NP; p = p + 1) rcq[p][0] <= issue && p2 == p;
-            if (issue && pb2 == 7'd79) rg[p2][s2] <= wg[p2][s2];
-            for (p = 0; p < NP; p = p + 1)
-                if (ev_c[p][EV-2]) begin
-                    if (ev_c[p][EV-1]) begin
-                        if (ld[p][ev_c[p][12 +: SW]] && tag[p][ev_c[p][12 +: SW]][11:4] != ev_c[p][11:4] &&
-                            rg[p][ev_c[p][12 +: SW]] != wg[p][ev_c[p][12 +: SW]]) f0 <= 1'b1;
-                        cmp[p][ev_c[p][12 +: SW]] <= 1'b0; wg[p][ev_c[p][12 +: SW]] <= ~wg[p][ev_c[p][12 +: SW]];
-                        ld[p][ev_c[p][12 +: SW]] <= 1'b1;
-                    end else cmp[p][ev_c[p][12 +: SW]] <= 1'b1;
-                end
-            if (c_v && c_user < MAXU)
-                for (p = 0; p < NP; p = p + 1) for (s = 0; s < RS; s = s + 1) begin
-                    cmp[p][{c_user[UB-1:0], SB'(s)}] <= 1'b0; ld[p][{c_user[UB-1:0], SB'(s)}] <= 1'b0;
-                end
         end
-    always @(posedge clk) begin
-        for (p = 0; p < NP; p = p + 1) begin
-            rcq[p][RC-1:1] <= a2;
-            if (ev_c[p][EV-2] && ev_c[p][EV-1]) tag[p][ev_c[p][12 +: SW]] <= ev_c[p][11:0];
-        end
-    end
+    always @(posedge clk) for (p = 0; p < NP; p = p + 1) rcq[p][RC-1:1] <= a2;
     reg [2:0] fq;
     always @(posedge clk or negedge rn_c) if (!rn_c) fq <= 3'd0;
         else fq <= {fq[2] | pflt[0][1] | pflt[1][1] | pflt[2][1], fq[1] | pflt[0][0] | pflt[1][0] | pflt[2][0], fq[0] | f0};
@@ -249,111 +297,146 @@ module dsfd_mtp_hrow_hub #(
     assign t_flt = o_flt;
 endmodule
 
-// one bank pair: pin flops, enable decode against the pair-id strap, shared address / data, registered 2:1 OR
-module dsfd_mtp_hrow_pnode (
-    input  wire [0:0]    ck, rst,
-    input  wire [1038:0] f_wc,                 // write command {d 1024, a 14, v}
-    input  wire [14:0]   f_rc,                 // read command {a 14, v}
-    input  wire [3:0]    f_qid,                // strap: index of the pair's first bank in its part (2 q)
-    output wire [1033:0] t_wd,                 // {wd 1024, wa 10} to both banks
-    output wire [1:0]    t_we,                 // write enable bank 2q / 2q+1
-    output wire [9:0]    t_ra,
-    output wire [1:0]    t_re,
-    input  wire [1024:0] f_bt0, f_bt1,         // bank responses {rd, valid}
-    output wire [1024:0] t_po                  // pair response {d, v}
+// ---------------------------------------------------------------------------------------------------------------
+// rev 5 (el1011-ds-mtp hrow-r5 2026-10-12, owner GLUE PLACEMENT; the rev-3 cluster carried 140,653 flops on one clock
+// root and failed reg2reg -7.7 ns on bwd -> bank f_w, a 1,039-b register fanning out to 2 banks across the store).
+// The per-bank glue goes INTO the bank tiles: a part's 10 banks form a systolic chain.  Write and read commands enter
+// the chain head and move one tile every 2 edges (pin flop -> out flop); each bank decodes its own enables against a
+// bank-id strap; the response bus runs the SAME way and each bank ORs its (valid-gated) data in at its out flop, so
+// every bank of a part answers at the chain end at the same depth (in order, no collisions: one read a cycle, one bank
+// a read).  No pair nodes, no part ORs, no store-wide relay trees.  Tiles (every port on a pin flop / out flop):
+//   dsfd_mtp_hrow_ing x 3 (drain receiver + FSM + WK-edge write delay), dsfd_mtp_hrow_hub x 1 (unchanged),
+//   dsfd_mtp_hrow_cbe x 15 (chain W -> E), dsfd_mtp_hrow_cbw x 15 (chain E -> W; same core, mirrored pin plan, so the
+//   snake turns without a mirrored macro): part p = row a: 5 x cbe, row b: 5 x cbw; head and end on the same (west)
+//   side next to the ing tiles and the hub.
+// ---------------------------------------------------------------------------------------------------------------
+
+// receiver for a consumer that is always ready: the ot_dsrom_mtp_lrx_rtt_core sequences with c_ready = 1 (queue empty
+// for ever: push needs ne, ne needs push; every grant = (0 + inflight <= D - 1) = 1)
+module ot_dsrom_mtp_hrow_drx #(parameter integer W = 514) (
+    input  wire         clk, rst_n,
+    input  wire         l_valid,
+    output wire         l_ready,
+    input  wire [W-1:0] l_data,
+    output wire         c_valid,
+    output wire [W-1:0] c_data
 );
-    wire rn;
-    ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
-    reg [1038:0] wl; reg [14:0] rl; reg [3:0] qid; reg [1024:0] b0, b1;
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin wl[0] <= 1'b0; rl[0] <= 1'b0; b0[0] <= 1'b0; b1[0] <= 1'b0; end
-        else begin wl[0] <= f_wc[0]; rl[0] <= f_rc[0]; b0[0] <= f_bt0[0]; b1[0] <= f_bt1[0]; end
-    always @(posedge ck[0]) begin
-        wl[1038:1] <= f_wc[1038:1]; rl[14:1] <= f_rc[14:1]; qid <= f_qid; b0[1024:1] <= f_bt0[1024:1]; b1[1024:1] <= f_bt1[1024:1];
+    reg live, g0, pv, valid; reg [W-1:0] pd, data;
+    always @(posedge clk) live <= rst_n;
+    always @(posedge clk) begin pv <= l_valid; pd <= l_data; end
+    always @(posedge clk) begin
+        g0 <= live;
+        valid <= live && pv;
+        if (live && pv) data <= pd;
     end
-    reg [1:0] bwe, bre; reg [9:0] bwa, bra; reg [1023:0] bwd; reg [1024:0] po;
-    wire [3:0] q1 = qid + 4'd1;
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin bwe <= 2'b0; bre <= 2'b0; po[0] <= 1'b0; end
-        else begin
-            bwe[0] <= wl[0] && wl[14:11] == qid; bwe[1] <= wl[0] && wl[14:11] == q1;
-            bre[0] <= rl[0] && rl[14:11] == qid; bre[1] <= rl[0] && rl[14:11] == q1;
-            po[0] <= b0[0] | b1[0];
-        end
-    always @(posedge ck[0]) begin bwa <= wl[10:1]; bwd <= wl[1038:15]; bra <= rl[10:1]; po[1024:1] <= b0[1024:1] | b1[1024:1]; end
-    assign t_wd = {bwd, bwa}; assign t_we = bwe; assign t_ra = bra; assign t_re = bre; assign t_po = po;
+    assign l_ready = g0; assign c_valid = valid; assign c_data = data;
 endmodule
 
-// one part: registered 5:1 OR of its pair responses
-module dsfd_mtp_hrow_por (
-    input  wire [0:0]    ck, rst,
-    input  wire [1024:0] f_q0, f_q1, f_q2, f_q3, f_q4,
-    output wire [1024:0] t_pp
+// chain bank core: one bank (4 x ot_sram_1r1w_1024x256 side by side in bits) + its chain stage
+//   write {d 1024, a 14, v}: pin flop wi (bank write enable = v && a[13:10] == id, at the edge after wi: as rev-3's
+//   bank pin flop), out flop wo; read {a 14, v}: ri / ro likewise; response {d, v}: pin flop di, out flop
+//   dq = di | (capture & valid): the bank's data joins the bus 3 edges after ri (rev-3 bank latency), so a bank k hops
+//   down the chain answers at the end 2 N + 1 edges after the head pin flop for every k
+module ot_dsrom_mtp_hrow_cbcore (
+    input  wire          clk, rn,
+    input  wire [3:0]    bid,
+    input  wire [1038:0] f_w,  output wire [1038:0] t_w,
+    input  wire [14:0]   f_r,  output wire [14:0]   t_r,
+    input  wire [1024:0] f_d,  output wire [1024:0] t_d
 );
-    wire rn;
-    ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
-    reg [1024:0] q0, q1, q2, q3, q4, pp;
-    always @(posedge ck[0] or negedge rn)
-        if (!rn) begin q0[0] <= 1'b0; q1[0] <= 1'b0; q2[0] <= 1'b0; q3[0] <= 1'b0; q4[0] <= 1'b0; pp[0] <= 1'b0; end
-        else begin q0[0] <= f_q0[0]; q1[0] <= f_q1[0]; q2[0] <= f_q2[0]; q3[0] <= f_q3[0]; q4[0] <= f_q4[0];
-                   pp[0] <= q0[0] | q1[0] | q2[0] | q3[0] | q4[0]; end
-    always @(posedge ck[0]) begin
-        q0[1024:1] <= f_q0[1024:1]; q1[1024:1] <= f_q1[1024:1]; q2[1024:1] <= f_q2[1024:1];
-        q3[1024:1] <= f_q3[1024:1]; q4[1024:1] <= f_q4[1024:1];
-        pp[1024:1] <= q0[1024:1] | q1[1024:1] | q2[1024:1] | q3[1024:1] | q4[1024:1];
+    reg [1038:0] wi, wo; reg [14:0] ri, ro; reg [1024:0] di, dq; reg [3:0] id; reg [1023:0] cap; reg s1, s2;
+    wire we = wi[0] && wi[14:11] == id;
+    wire re = ri[0] && ri[14:11] == id;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin wi[0] <= 1'b0; wo[0] <= 1'b0; ri[0] <= 1'b0; ro[0] <= 1'b0; di[0] <= 1'b0; dq[0] <= 1'b0;
+                       s1 <= 1'b0; s2 <= 1'b0; end
+        else begin wi[0] <= f_w[0]; wo[0] <= wi[0]; ri[0] <= f_r[0]; ro[0] <= ri[0]; di[0] <= f_d[0];
+                   dq[0] <= di[0] | s2; s1 <= re; s2 <= s1; end
+    always @(posedge clk) begin
+        id <= bid;
+        wi[1038:1] <= f_w[1038:1]; wo[1038:1] <= wi[1038:1];
+        ri[14:1] <= f_r[14:1]; ro[14:1] <= ri[14:1];
+        di[1024:1] <= f_d[1024:1]; dq[1024:1] <= di[1024:1] | (cap & {1024{s2}});
     end
-    assign t_pp = pp;
+    wire [1023:0] rdo;
+    genvar gc;
+    generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_c
+        ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(clk),
+            .r_ce_in(re), .r_addr_in(ri[10:1]), .rd_out(rdo[256*gc +: 256]),
+            .w_ce_in(we), .w_addr_in(wi[10:1]), .wd_in(wi[15 + 256*gc +: 256]), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
+    end endgenerate
+    always @(posedge clk) cap <= rdo;
+    assign t_w = wo; assign t_r = ro; assign t_d = dq;
 endmodule
 
-// RTL composition of the tiles as the die places them (die relays modelled by ot_dsrom_mtp_hrow_rly); same ports as
-// dsfd_mtp_hrow; the composition bench (tools/mtp_hrow_gate.py --tiles) runs on this
+// the two hardened chain tiles (same core; cbe: in on W, out on E; cbw: in on E, out on W -- pin plans in the specs)
+module dsfd_mtp_hrow_cbe (
+    input  wire       ck, rst, input wire [3:0] f_bid,
+    input  wire [1038:0] f_w, output wire [1038:0] t_w, input wire [14:0] f_r, output wire [14:0] t_r,
+    input  wire [1024:0] f_d, output wire [1024:0] t_d);
+    wire rn;
+    ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn));
+    ot_dsrom_mtp_hrow_cbcore u_c (.clk(ck), .rn(rn), .bid(f_bid), .f_w(f_w), .t_w(t_w), .f_r(f_r), .t_r(t_r),
+                                  .f_d(f_d), .t_d(t_d));
+endmodule
+module dsfd_mtp_hrow_cbw (
+    input  wire       ck, rst, input wire [3:0] f_bid,
+    input  wire [1038:0] f_w, output wire [1038:0] t_w, input wire [14:0] f_r, output wire [14:0] t_r,
+    input  wire [1024:0] f_d, output wire [1024:0] t_d);
+    wire rn;
+    ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn));
+    ot_dsrom_mtp_hrow_cbcore u_c (.clk(ck), .rn(rn), .bid(f_bid), .f_w(f_w), .t_w(t_w), .f_r(f_r), .t_r(t_r),
+                                  .f_d(f_d), .t_d(t_d));
+endmodule
+
+// composition model (the die): tiles + die relays.  Die contract (ordering, exact as rev 3):
+//   E = CQ - 1 relays ing -> hub (events, faults); R = CQ relays hub -> chain head (read commands);
+//   WD = 2 CQ + 1 - WK relays ing -> chain head (write commands; 0 at CQ = 3: the head bank abuts its ing tile);
+//   P relays chain end -> hub, EQUAL for the three parts (R equal too); chain hops: tile to tile, no relay.
 module dsfd_mtp_hrow_tc #(
     parameter integer NW = 21, parameter integer USER_W = 10, parameter integer MAXU = 8, parameter integer RS = 16,
     parameter integer AW = 24, parameter integer FWD_P = 9, parameter integer RET_P = 9,
     parameter integer FWD_Q = 6, parameter integer RET_Q = 6,
-    parameter integer CQ = 3, parameter integer DD = 2, parameter integer RD = 2, parameter integer RP = 4
+    parameter integer CQ = 3, parameter integer WK = 7, parameter integer P = 2
 ) (
-    input  wire [0:0]     ck, rst,
+    input  wire           ck, rst,
     input  wire [514:0]   f_hp0, f_hp1, f_hp2,
     output wire [2:0]     t_hpg,
     input  wire [AW:0]    f_vrq,
-    output wire [0:0]     t_vrq,
+    output wire           t_vrq,
     output wire [1024:0]  t_vrs,
     input  wire [USER_W:0] f_clr,
     output wire [2:0]     t_flt
 );
-    localparam integer WDLY = 2 * CQ + 1;
-    initial if (DD < 2 || CQ < 1) $fatal(1, "hrow_tc: DD >= 2 (the pair pin flop is the last distribution stage), CQ >= 1");
+    localparam integer WD = 2 * CQ + 1 - WK;
+    initial if (CQ < 1 || WD < 0) $fatal(1, "hrow_tc: CQ >= 1 and WK <= 2 CQ + 1");
     wire rn;
-    ot_dsrom_mtp_rstsync u_rs (.clk(ck[0]), .rst_n_async(rst[0]), .rst_n(rn));
+    ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn));
     wire [514:0] fin [0:2];
     assign fin[0] = f_hp0; assign fin[1] = f_hp1; assign fin[2] = f_hp2;
     wire [20:0] ev [0:2]; wire [20:0] evh [0:2]; wire [1:0] ifl [0:2]; wire [1:0] iflh [0:2];
     wire [14:0] rc [0:2]; wire [1024:0] pp [0:2]; wire [1024:0] pph [0:2];
-    genvar gp, gq;
+    genvar gp, gk;
     generate for (gp = 0; gp < 3; gp = gp + 1) begin : g_part
-        wire [1038:0] wc, wroot; wire [14:0] rroot;
-        dsfd_mtp_hrow_ing #(.NW(NW), .USER_W(USER_W), .MAXU(MAXU), .RS(RS), .FWD_P(FWD_P), .RET_P(RET_P)) u_ig (
+        wire [1038:0] wc; wire [1038:0] cw [0:10]; wire [14:0] cr [0:10]; wire [1024:0] cd [0:10];
+        dsfd_mtp_hrow_ing #(.NW(NW), .USER_W(USER_W), .MAXU(MAXU), .RS(RS), .FWD_P(FWD_P), .RET_P(RET_P), .WK(WK)) u_ig (
             .ck(ck), .rst(rst), .f_hp(fin[gp]), .t_hpg(t_hpg[gp]), .f_pid(gp[1:0]), .t_wc(wc), .t_ev(ev[gp]), .t_flt(ifl[gp]));
-        ot_dsrom_mtp_hrow_rly #(.W(21), .N(CQ - 1)) u_ev (.clk(ck[0]), .rst_n(rn), .i(ev[gp]), .o(evh[gp]));
-        ot_dsrom_mtp_hrow_rly #(.W(2), .N(CQ - 1)) u_if (.clk(ck[0]), .rst_n(rn), .i(ifl[gp]), .o(iflh[gp]));
-        ot_dsrom_mtp_hrow_rly #(.W(1039), .N(WDLY)) u_wd (.clk(ck[0]), .rst_n(rn), .i(wc), .o(wroot));
-        ot_dsrom_mtp_hrow_rly #(.W(15), .N(CQ)) u_rc (.clk(ck[0]), .rst_n(rn), .i(rc[gp]), .o(rroot));
-        wire [1024:0] qo [0:4];
-        for (gq = 0; gq < 5; gq = gq + 1) begin : g_q
-            wire [1038:0] wl; wire [14:0] rl; wire [1033:0] wd; wire [1:0] we, re; wire [9:0] ra;
-            wire [1024:0] bt0, bt1, po;
-            ot_dsrom_mtp_hrow_rly #(.W(1039), .N(DD - 2)) u_dw (.clk(ck[0]), .rst_n(rn), .i(wroot), .o(wl));
-            ot_dsrom_mtp_hrow_rly #(.W(15), .N(DD - 2)) u_dr (.clk(ck[0]), .rst_n(rn), .i(rroot), .o(rl));
-            dsfd_mtp_hrow_pnode u_pn (.ck(ck), .rst(rst), .f_wc(wl), .f_rc(rl), .f_qid(4'(2 * gq)), .t_wd(wd), .t_we(we),
-                                      .t_ra(ra), .t_re(re), .f_bt0(bt0), .f_bt1(bt1), .t_po(po));
-            dsfd_mtp_hrow_bank u_b0 (.ck(ck), .rst(rst), .f_w({wd, we[0]}), .f_r({ra, re[0]}), .t_d(bt0));
-            dsfd_mtp_hrow_bank u_b1 (.ck(ck), .rst(rst), .f_w({wd, we[1]}), .f_r({ra, re[1]}), .t_d(bt1));
-            ot_dsrom_mtp_hrow_rly #(.W(1025), .N(RD)) u_rd (.clk(ck[0]), .rst_n(rn), .i(po), .o(qo[gq]));
+        ot_dsrom_mtp_hrow_rly #(.W(21), .N(CQ - 1)) u_ev (.clk(ck), .rst_n(rn), .i(ev[gp]), .o(evh[gp]));
+        ot_dsrom_mtp_hrow_rly #(.W(2), .N(CQ - 1)) u_if (.clk(ck), .rst_n(rn), .i(ifl[gp]), .o(iflh[gp]));
+        ot_dsrom_mtp_hrow_rly #(.W(1039), .N(WD)) u_wd (.clk(ck), .rst_n(rn), .i(wc), .o(cw[0]));
+        ot_dsrom_mtp_hrow_rly #(.W(15), .N(CQ)) u_rc (.clk(ck), .rst_n(rn), .i(rc[gp]), .o(cr[0]));
+        assign cd[0] = '0;
+        for (gk = 0; gk < 10; gk = gk + 1) begin : g_c
+            if (gk < 5) begin : g_e
+                dsfd_mtp_hrow_cbe u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(cw[gk+1]), .f_r(cr[gk]),
+                                       .t_r(cr[gk+1]), .f_d(cd[gk]), .t_d(cd[gk+1]));
+            end else begin : g_w
+                dsfd_mtp_hrow_cbw u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(cw[gk+1]), .f_r(cr[gk]),
+                                       .t_r(cr[gk+1]), .f_d(cd[gk]), .t_d(cd[gk+1]));
+            end
         end
-        dsfd_mtp_hrow_por u_po (.ck(ck), .rst(rst), .f_q0(qo[0]), .f_q1(qo[1]), .f_q2(qo[2]), .f_q3(qo[3]), .f_q4(qo[4]),
-                                .t_pp(pp[gp]));
-        ot_dsrom_mtp_hrow_rly #(.W(1025), .N(RP)) u_rp (.clk(ck[0]), .rst_n(rn), .i(pp[gp]), .o(pph[gp]));
+        ot_dsrom_mtp_hrow_rly #(.W(1025), .N(P)) u_rp (.clk(ck), .rst_n(rn), .i(cd[10]), .o(pph[gp]));
     end endgenerate
     dsfd_mtp_hrow_hub #(.USER_W(USER_W), .MAXU(MAXU), .RS(RS), .AW(AW), .FWD_Q(FWD_Q), .RET_Q(RET_Q)) u_hub (
         .ck(ck), .rst(rst), .f_vrq(f_vrq), .t_vrq(t_vrq), .t_vrs(t_vrs), .f_clr(f_clr), .t_flt(t_flt),

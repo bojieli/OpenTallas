@@ -3384,6 +3384,10 @@ MACRO dsfd_coll_cbq
       LAYER M5 ;
         RECT  45.984 0 46.008 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  45.984 0.144 46.008 0.491 ;
+    END
   END ck
   PIN flt_i
     DIRECTION INPUT ;
@@ -3391,6 +3395,10 @@ MACRO dsfd_coll_cbq
     PORT
       LAYER M4 ;
         RECT  77.568 170.112 77.76 170.136 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  77.389 170.112 77.58 170.136 ;
     END
   END flt_i
   PIN flt_o
@@ -3400,6 +3408,10 @@ MACRO dsfd_coll_cbq
       LAYER M4 ;
         RECT  0 170.112 0.192 170.136 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 170.112 0.248 170.136 ;
+    END
   END flt_o
   PIN rs
     DIRECTION INPUT ;
@@ -3407,6 +3419,10 @@ MACRO dsfd_coll_cbq
     PORT
       LAYER M5 ;
         RECT  50.784 0 50.808 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  50.784 0.144 50.808 1.187 ;
     END
   END rs
   PIN t_vm[0]
@@ -6775,6 +6791,10 @@ MACRO dsfd_coll_cbq
     PORT
       LAYER M5 ;
         RECT  43.824 0 43.848 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  43.824 0.144 43.848 0.227 ;
     END
   END ts
   PIN VDD
@@ -15759,7 +15779,6 @@ MACRO dsfd_coll_cbq
      RECT  37.476 339.869 37.494 340.109 ;
      RECT  39.708 339.629 39.726 340.109 ;
     LAYER M4 ;
-     RECT  0.025 170.112 0.248 170.136 ;
      RECT  0.248 0.528 0.352 339.672 ;
      RECT  0.352 0.798 0.544 339.402 ;
      RECT  0.544 109.392 0.94 109.416 ;
@@ -31689,11 +31708,8 @@ MACRO dsfd_coll_cbq
      RECT  74.677 170.256 75.848 170.328 ;
      RECT  75.848 0.528 75.952 339.672 ;
      RECT  75.952 0.798 76.144 339.402 ;
-     RECT  77.389 170.112 77.58 170.136 ;
     LAYER M5 ;
-     RECT  43.824 0.144 43.848 0.227 ;
      RECT  2.4 0.144 42.648 0.371 ;
-     RECT  45.984 0.144 46.008 0.491 ;
      RECT  2.4 0.371 42.264 0.611 ;
      RECT  0.24 0.517 0.36 0.787 ;
      RECT  48.84 0.517 48.96 0.787 ;
@@ -31703,7 +31719,6 @@ MACRO dsfd_coll_cbq
      RECT  70.44 0.517 70.56 0.787 ;
      RECT  75.84 0.517 75.96 0.787 ;
      RECT  2.496 0.611 42.264 1.187 ;
-     RECT  50.784 0.144 50.808 1.187 ;
      RECT  3.072 1.187 22.152 1.763 ;
      RECT  48.84 0.787 49.152 2.101 ;
      RECT  50.256 1.957 50.28 2.283 ;

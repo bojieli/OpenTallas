@@ -211,6 +211,51 @@ proc ot_sp_emit {n innet px py} {
   }
 }
 
+# Opt-in safe balancing keeps a measured best clock topology.  Rollback reconnects
+# each surviving leaf to its old input net, then deletes ONLY subsequently added
+# pad instances/nets.  No ODB reload: all surviving Tcl object handles stay valid.
+proc ot_sp_checkpoint {} {
+  set inputs [dict create]
+  foreach n [dict keys $::ot_sp_members] {
+    set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    dict set inputs $n [[$b findITerm $::ot_sp_in] getNet]
+  }
+  return [dict create inputs $inputs insts $::ot_sp_insts nbuf $::ot_sp_nbuf npad $::ot_sp_npad used $::ot_sp_used]
+}
+proc ot_sp_restore {saved} {
+  dict for {n net} [dict get $saved inputs] {
+    set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    set p [$b findITerm $::ot_sp_in]
+    $p disconnect; $p connect $net
+  }
+  set added [lrange $::ot_sp_insts [llength [dict get $saved insts]] end]
+  set nets {}
+  foreach b $added { lappend nets [[$b findITerm $::ot_sp_out] getNet] }
+  # Destroy instances first: no net is destroyed while a pad pin still references it.
+  foreach b [lreverse $added] { odb::dbInst_destroy $b }
+  foreach net [lreverse $nets] { odb::dbNet_destroy $net }
+  set ::ot_sp_insts [dict get $saved insts]
+  set ::ot_sp_nbuf [dict get $saved nbuf]
+  set ::ot_sp_npad [dict get $saved npad]
+  set ::ot_sp_used [dict get $saved used]
+  puts "OT_SPINE restored best checkpoint; removed [llength $added] pad cells"
+}
+proc ot_sp_keep_best {a} {
+  set vals [dict values $a]
+  set spread [expr {[tcl::mathfunc::max {*}$vals] - [tcl::mathfunc::min {*}$vals]}]
+  if {![info exists ::ot_sp_best_spread] || $spread < $::ot_sp_best_spread} {
+    set ::ot_sp_best_spread $spread
+    set ::ot_sp_best_state [ot_sp_checkpoint]
+    return 1
+  }
+  if {$spread > $::ot_sp_best_spread + 0.001} {
+    puts "OT_SPINE overshoot $spread ps vs best $::ot_sp_best_spread ps; restoring measured best"
+    ot_sp_restore $::ot_sp_best_state
+    return 0
+  }
+  return 1
+}
+
 # insert `count` pad buffers in front of leaf n's buffer (between its driver net and its A pin)
 proc ot_sp_pad {n count} {
   set lb [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
@@ -252,6 +297,55 @@ proc ot_clock_spine {} {
   set bt [$blk findBTerm $port]
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
   set net0 [$bt getNet]
+  # OT_SPINE_THROUGH_ICG=1 (el1011-hbm-smt 2026-10-12): the port clock enters ONE tile clock gate (ICG*, e.g. the SM tile's
+  # ot_cg_tile) that clocks everything else.  A spine on the port net would see only the ICG and its few enable flops and
+  # leave the whole gated network without a tree; build the spine on the ICG's GCLK net instead, rooted at the ICG output.
+  # The port net keeps the ICG + its enable registers (local, beside the clk / cgi pins), so the ENA check stays balanced.
+  set ::ot_sp_root_xy ""
+  if {[ot_sp_env OT_SPINE_THROUGH_ICG 0] eq "1"} {
+    set icgs {}
+    foreach it [$net0 getITerms] {
+      if {[$it getIoType] ne "INPUT"} continue
+      if {[string match ICG* [[[$it getInst] getMaster] getName]]} { lappend icgs [$it getInst] }
+    }
+    if {[llength $icgs] != 1} { error "OT_SPINE_THROUGH_ICG: port $port drives [llength $icgs] ICG cells (need exactly 1)" }
+    set g [lindex $icgs 0]
+    # the ICG and every other cell on the port net (its enable registers) move next to the clock pin below: placed by the
+    # global placer at the centroid of the whole gated network they sat ~600 um from the pin on an unbuffered port net
+    # (SM tile cluster gate: leaf arrivals 1.3-2.7 ns before padding, 3.5 ns after)
+    set ::ot_sp_icg_move {}
+    foreach it [$net0 getITerms] {
+      set i [$it getInst]
+      if {![[$i getMaster] isBlock] && [lsearch -exact $::ot_sp_icg_move $i] < 0} { lappend ::ot_sp_icg_move $i }
+    }
+    # + their local logic (counter / enable cone): cells within 6 net hops over nets of fanout <= 16, capped at 400 cells
+    set front $::ot_sp_icg_move
+    for {set d 0} {$d < 6 && [llength $front]} {incr d} {
+      set nxt {}
+      foreach i $front {
+        foreach it [$i getITerms] {
+          set n [$it getNet]
+          if {$n eq "NULL" || $n eq ""} continue
+          if {[$n getSigType] in {POWER GROUND CLOCK} || $n eq $net0} continue
+          if {[llength [$n getITerms]] > 17 || [llength [$n getBTerms]] > 0 && [llength [$n getITerms]] > 4} continue
+          foreach jt [$n getITerms] {
+            set j [$jt getInst]
+            if {[[$j getMaster] isBlock] || [lsearch -exact $::ot_sp_icg_move $j] >= 0} continue
+            if {[llength $::ot_sp_icg_move] >= 400} break
+            lappend ::ot_sp_icg_move $j; lappend nxt $j
+          }
+        }
+      }
+      set front $nxt
+    }
+    set ::ot_sp_icg $g
+    set gt [$g findITerm GCLK]
+    set net0 [$gt getNet]
+    lassign [$gt getAvgXY] ok gx gy
+    if {!$ok} { lassign [$g getLocation] gx gy }
+    set ::ot_sp_root_xy [list $gx $gy]
+    puts "OT_SPINE through ICG [$g getName]: spine on net [$net0 getName]"
+  }
   set ::ot_sp_seg [expr {int([ot_sp_env OT_SPINE_SEG 150] * $u)}]
   set bin [expr {[ot_sp_env OT_SPINE_BIN 60] * $u}]
   set lmax [ot_sp_env OT_SPINE_LEAF_N 8]
@@ -301,6 +395,23 @@ proc ot_clock_spine {} {
       for {set x [$b xMin]} {$x < [$b xMax]} {incr x $::ot_sp_sw} { dict set ::ot_sp_used "$y,$x" 1 }
     }
   }
+  if {$::ot_sp_root_xy ne ""} {
+    set pb0 [$bt getBBox]
+    set qx [expr {([$pb0 xMin] + [$pb0 xMax]) / 2}]; set qy [expr {([$pb0 yMin] + [$pb0 yMax]) / 2}]
+    set qx [expr {min(max($qx, $::ot_sp_cx0), $::ot_sp_cx1 - 20 * $u)}]; set qy [expr {min(max($qy, $::ot_sp_cy0), $::ot_sp_cy1 - 20 * $u)}]
+    set cw0 $::ot_sp_cw
+    foreach i $::ot_sp_icg_move {
+      set ::ot_sp_cw [[$i getMaster] getWidth]; set ::ot_sp_retry 0
+      lassign [ot_sp_legal $qx $qy] lx ly
+      if {[dict exists $::ot_sp_rowor $ly]} { $i setOrient [dict get $::ot_sp_rowor $ly] }
+      $i setLocation $lx $ly; $i setPlacementStatus FIRM
+    }
+    set ::ot_sp_cw $cw0
+    lassign [[$::ot_sp_icg findITerm GCLK] getAvgXY] ok gx gy
+    if {!$ok} { lassign [$::ot_sp_icg getLocation] gx gy }
+    set ::ot_sp_root_xy [list $gx $gy]
+    puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] port-net cells (ICG + enable regs) moved beside the clock pin"
+  }
   # sinks -> bins -> leaves
   set bins [dict create]; set ns 0
   foreach it [$net0 getITerms] {
@@ -333,6 +444,7 @@ proc ot_clock_spine {} {
   set root [ot_sp_split [dict keys $::ot_sp_members]]
   set pb [$bt getBBox]
   set px [expr {([$pb xMin] + [$pb xMax]) / 2}]; set py [expr {([$pb yMin] + [$pb yMax]) / 2}]
+  if {$::ot_sp_root_xy ne ""} { lassign $::ot_sp_root_xy px py }
   set ::ot_sp_leafnet [dict create]; set ::ot_sp_npad [dict create]
   foreach n [dict keys $::ot_sp_members] { dict set ::ot_sp_npad $n 0 }
   ot_sp_emit $root $net0 [expr {min(max($px, $::ot_sp_cx0), $::ot_sp_cx1 - $::ot_sp_cw)}] [expr {min(max($py, $::ot_sp_cy0), $::ot_sp_cy1 - $::ot_sp_rh)}]
@@ -343,6 +455,8 @@ proc ot_clock_spine {} {
   set fstage [ot_sp_env OT_SPINE_FINE_PS 14]
   set tol [ot_sp_env OT_SPINE_TOL_PS 25]
   set prev ""; set padded [dict create]; set mode coarse
+  set safe [expr {[ot_sp_env OT_SPINE_SAFE_BALANCE 0] eq "1"}]
+  unset -nocomplain ::ot_sp_best_spread ::ot_sp_best_state
   for {set it 0} {$it <= $iters} {incr it} {
     set a [ot_sp_leaf_arrivals]
     set vals [dict values $a]
@@ -355,12 +469,23 @@ proc ot_clock_spine {} {
       if {$mode eq "coarse"} { set stage $m } else { set fstage $m }
     }
     puts [format "OT_SPINE iter %d (%s) leaves %d sinks %d cells %d leaf arrival %.1f..%.1f ps (spread %.1f) pad %.1f / %.1f ps" $it $mode $nl $ns $::ot_sp_nbuf $mn $mx [expr {$mx - $mn}] $stage $fstage]
+    if {$safe && ![ot_sp_keep_best $a]} {
+      set restored [ot_sp_leaf_arrivals]
+      set rv [dict values $restored]
+      set rsp [expr {[tcl::mathfunc::max {*}$rv] - [tcl::mathfunc::min {*}$rv]}]
+      puts "OT_SPINE restored measured spread $rsp ps (best $::ot_sp_best_spread)"
+      if {$rsp > $::ot_sp_best_spread + 1.0} { error "OT_SPINE best-checkpoint restore changed measured spread" }
+      break
+    }
     if {$it == $iters || $mx - $mn <= $tol} break
     if {$mode eq "coarse" && $mx - $mn < 1.6 * $stage} { set mode fine; set ::ot_sp_pm $::ot_sp_pmf }
     set st [expr {$mode eq "coarse" ? $stage : $fstage}]
     set prev $a; set padded [dict create]
     dict for {n v} $a {
       set c [expr {int(floor(($mx - $v - 0.5 * $tol) / $st))}]
+      # Small measured steps prevent a noisy fine-delay estimate from inserting
+      # a long chain in one round.  Record the ACTUAL count for the next estimate.
+      if {$safe} { set c [expr {min($c, $mode eq "fine" ? 1 : 3)}] }
       if {$c > 0} { ot_sp_pad $n $c; dict set padded $n $c }
     }
     if {[dict size $padded] == 0} break

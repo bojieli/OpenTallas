@@ -1,0 +1,93 @@
+{
+  "name": "ot_hgi_topk_lane_tile",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/routes/hgi_topk_lane_rt_e_w8d_ddcb17468/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -1.6442847083908418e-10 min -9.883316387515606e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/routes/hgi_topk_lane_rt_e_w8d_ddcb17468/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/record/views/ot_hgi_topk_lane_tile:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/src/physical/ref_tile/hgi_topk_lane_rt_e/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.4091466882248938e-10 min -1.2797475579251483e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/routes/hgi_topk_lane_rt_e_w8d_ddcb17468/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/record/views/ot_hgi_topk_lane_tile:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/src/physical/ref_tile/hgi_topk_lane_rt_e/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 6.944450570145477e-11 min -1.195316623459064e-10",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/routes/hgi_topk_lane_rt_e_w8d_ddcb17468/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/record/views/ot_hgi_topk_lane_tile:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/src/physical/ref_tile/hgi_topk_lane_rt_e/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/src/physical/ref_tile/hgi_topk_lane_rt_e/signoff.sdc",
+    "sha256": "f15da8f8ee49318c3bac317782e0d1b77a0e11a0ea8829958beb6f92e08179d5",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/hgi_topk_lane_rt_e-w8d-ddcb17468/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "files": {
+    "ot_hgi_topk_lane_tile.lef": "f146811f529ca00d714e39cf8b1f1286d76e6090100c30de012bca0e19846f09",
+    "ot_hgi_topk_lane_tile_ff.lib": "9af6923469ee53aab315e439fb924f957e5107233e1d0ad84fa6931ca436dcdb",
+    "ot_hgi_topk_lane_tile_ss.lib": "47d85df735a453d61ad420ba28c1efc5aab66756be9e25cadd624cb38ff56f56",
+    "ot_hgi_topk_lane_tile_tt.lib": "6fb8650374cdc1629c85aff4c7270d0224218b2495eb6b12269fc2f62fbbf199"
+  },
+  "ok": true
+}

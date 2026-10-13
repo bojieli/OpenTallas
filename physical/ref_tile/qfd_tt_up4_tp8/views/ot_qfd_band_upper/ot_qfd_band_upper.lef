@@ -3176,6 +3176,10 @@ MACRO ot_qfd_band_upper
       LAYER M5 ;
         RECT  40.176 0 40.2 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  40.176 0.016 40.2 2.137 ;
+    END
   END sel_e[11]
   PIN sel_e[12]
     DIRECTION INPUT ;
@@ -6367,6 +6371,10 @@ MACRO ot_qfd_band_upper
     PORT
       LAYER M5 ;
         RECT  41.424 0 41.448 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  41.424 0.016 41.448 2.407 ;
     END
   END tv_e[11]
   PIN tv_e[12]
@@ -19858,7 +19866,6 @@ MACRO ot_qfd_band_upper
      RECT  64.739 20.496 64.793 20.52 ;
      RECT  64.764 26.064 64.793 26.088 ;
     LAYER M5 ;
-     RECT  40.176 0.016 40.2 2.137 ;
      RECT  40.176 2.137 40.32 2.245 ;
      RECT  2.4 2.137 2.52 2.407 ;
      RECT  7.8 2.137 7.92 2.407 ;
@@ -19868,7 +19875,6 @@ MACRO ot_qfd_band_upper
      RECT  29.4 2.137 29.52 2.407 ;
      RECT  34.8 2.137 34.92 2.407 ;
      RECT  39.36 2.245 40.32 2.407 ;
-     RECT  41.424 0.016 41.448 2.407 ;
      RECT  45.6 2.137 45.72 2.407 ;
      RECT  51 2.137 51.12 2.407 ;
      RECT  56.4 2.137 56.52 2.407 ;

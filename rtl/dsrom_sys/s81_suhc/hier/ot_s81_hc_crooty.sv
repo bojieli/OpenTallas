@@ -73,7 +73,6 @@ module ot_s81_hc_crooty #(
     localparam integer YB = $clog2(YD);
     reg  [YS-1:0] yp, yp2;
     reg           ya, pr;
-    reg  [YS-1:0] yf [0:YD-1];
     reg  [YB:0]   yn;
     reg  [YB-1:0] yw, yr;
     always @(posedge sk) begin yp <= y_s; yp2 <= yp; end
@@ -86,11 +85,49 @@ module ot_s81_hc_crooty #(
             yn <= yn + ya - pr;
             if ((ya && !pr && yn == YD) || (pr && yn == 0)) p_flt <= 1'b1;
         end
-    always @(posedge sk) begin
-        if (ya) yf[yw] <= yp2;
-        p_y <= yf[yr];                                            // the head, registered (valid the cycle after pr)
-    end
+    // y slice FIFO in SRAM (v2, 2026-10-12: the YD x YS flop array was 45k of the tile's 57.9k flops on one clock
+    // root): ot_fifo_sram_fwft over ceil(YS / 256) ot_sram_1r1w_128x256 macros with its 2-entry register head, so a
+    // record pushed in cycle k is the head in k + 1 -- the timing of the flop array it replaces (yw / yr kept for
+    // the occupancy fault only).
+    wire [YS-1:0] yh;
+    wire          yhv, yovf;
+    ot_fifo_sram_fwft #(.W(YS), .DEPTH(YD), .MACRO(2)) u_yf (.clk(sk), .rst_n(rs_n), .push(ya), .wdata(yp2),
+        .pop(pr), .hv(yhv), .head(yh), .ovf(yovf));
+    always @(posedge sk) p_y <= yh;                               // the head, registered (valid the cycle after pr)
     // writes: capture, pin flops
+    reg [4*WSL-1:0] w_c;
+    always @(posedge sk) w_c <= p_w;
+    integer s;
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) begin wq_v <= 0; end
+        else for (s = 0; s < 4; s = s + 1) wq_v[s] <= w_c[WSL * s];
+    always @(posedge sk)
+        for (s = 0; s < 4; s = s + 1) begin
+            wq_row[14 * s +: 14] <= w_c[WSL * s + 1 +: 14];
+            wq_mask[16 * s +: 16] <= w_c[WSL * s + 15 +: 16];
+            wq_d[512 * s +: 512] <= w_c[WSL * s + 31 +: 512];
+        end
+endmodule
+
+
+// Standalone v3 W leaf; top assembly adoption remains separately gated.
+module ot_s81_hc_crooty_w #(
+    parameter integer NG = 256, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, C = 0, YD = 16
+) (
+    input  wire                 sk,
+    input  wire                 srs,
+    input  wire [4*WSL-1:0]     p_w,
+    output reg  [3:0]           wq_v,
+    output reg  [4*14-1:0]      wq_row,
+    output reg  [4*16-1:0]      wq_mask,
+    output reg  [4*512-1:0]     wq_d
+);
+    localparam integer WSL = 1 + 14 + 16 + 512;                  // a write slot {v, row, mask, d}
+    // tile-local reset relay (2 flops at the pin): the srs port drives exactly one flop; every reset of the tile
+    // is the relay output (no pin-to-register reset path, no reset-removal hold flood off an input port)
+    reg [1:0] rsr;
+    always @(posedge sk) rsr <= {rsr[0], srs};
+    wire rs_n = rsr[1];
     reg [4*WSL-1:0] w_c;
     always @(posedge sk) w_c <= p_w;
     integer s;
