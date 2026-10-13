@@ -31,5 +31,21 @@
     "DRC": 0,
     "child_lint": "cf PASS"
   },
-  "limits": "DPI arithmetic production gate, real routed arithmetic physical source; whole HC family is not adopted by this leaf qualification."
+  "limits": "DPI arithmetic production gate, real routed arithmetic physical source; whole HC family is not adopted by this leaf qualification.",
+  "throughput": {
+    "family_cycles": 6392,
+    "prior_measured_cycles": 6018,
+    "regression_ratio": 1.0621468926553672,
+    "immutable_post_price_cycles": 112.9,
+    "production_post_cycles": [
+      286,
+      287
+    ],
+    "production_post_price_ratio": [
+      2.5332152347209917,
+      2.5420726306465897
+    ],
+    "qualification": "OPEN pricegap, priorbaseline is not simulatorprice"
+  },
+  "main_integration": "Leaf-only PIN_STAGE0 default retained; physical master opts PIN_STAGE1. Pending parent assembly/physical and family throughput qualification."
 }
