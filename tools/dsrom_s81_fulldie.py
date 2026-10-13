@@ -4602,6 +4602,8 @@ CTRL_C_MASTERS = dict(gather='dsfd_sp_gather_c', capture='dsfd_sp_capture_c', co
                       # s81die-1011/ctrl: HC (engine 2) endpoint in hc_s = dsfd_sp_hc_c (dsfd_sp_hc, hc_gate PASS); the
                       # su_hc contract v2 makes HC one logical slab (hc_n folds into it when the suhc floorplan lands)
                       hc_s='dsfd_sp_hc_c', su_s='dsfd_sp_su_c', eng='dsfd_engram_c')
+LANE_PINS = 0                   # --lane-pins [P] (s81-die v15): a hub port on a straight VCH station lane takes its pins centred on
+                                #   that lane (P-track pitch) on both slabs; lanes are allocated without overlapping pin spans
 PEER_SPAN_CENTRE = False        # --peer-span-centre (s81-die-iter 2026-10-12): wide face-to-face groups centred on the span shared with the peer
 RTL_HUB_WIDTHS = False          # --rtl-hub-widths (s81die-1011/ctrl, die lead decision 2026-10-11)
 # the gated hub masters' real interfaces (DIE_FLD_GATE: 12 root lanes gather -> capture, the tiled capture's VM writes;
@@ -5711,6 +5713,35 @@ def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
                                                   floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
 
 
+def _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi):
+    """--lane-pins (s81-die v15): the die y of a straight hub lane, moved to the nearest row where the bus's pin span
+    (bits x LANE_PINS tracks) overlaps no other lane's span, and recorded per (slab, port) for _faces_r8, so the pins of
+    both slabs stand ON the lane (v14: wq_d pins centred on the hc_s face 3.3 mm N of its lane -> 32 bridge stations).
+    The 8 t_hc_y slices are one 8,192-b port at each end: one span, lane k on the centre of slice k."""
+    S, LP = m.setdefault('_lane_spans', []), m.setdefault('_lane_pin', {})
+    pw = 0.048 * LANE_PINS
+    ba, bb = pslice(pa)[0], pslice(pb)[0]
+    grp = pa.startswith('t_hc_y[')
+    off = (int(pslice(pa)[1]) // 1024 - 3.5) * 1024 * pw if grp else 0.0
+    if grp and (A.name, ba) in LP:
+        return LP[(A.name, ba)] + off
+    tot = (8 if grp else 1) * bits * pw
+    half = max(tot, 17.3) / 2 + 6.0
+    y0 = (lo + hi) / 2 if grp else y_
+    a0, a1 = lo + tot / 2, hi - tot / 2
+    if a1 < a0:
+        raise ValueError(f'--lane-pins: {A.name}.{pa} span {tot:.0f} um > the shared rows {hi - lo:.0f} um')
+    free = lambda c: all(c + half <= s0 or c - half >= s1 for s0, s1 in S)
+    cands = sorted((a0 + 4.8 * i for i in range(int((a1 - a0) // 4.8) + 1)), key=lambda c: abs(c - y0))
+    c = next((c for c in cands if free(c)), None)
+    if c is None:
+        raise ValueError(f'--lane-pins: no free lane rows for {A.name}.{pa} ({tot:.0f} um in {lo:.0f}..{hi:.0f})')
+    S.append((c - half, c + half))
+    LP[(A.name, ba)] = LP[(Bk.name, bb)] = c
+    m.setdefault('lane_pins', {})[f'{A.name}.{ba}->{Bk.name}.{bb}'] = dict(y_um=round(c, 3), span_um=round(tot, 3), bits=(8 if grp else 1) * bits, pitch_tracks=LANE_PINS)
+    return c + off
+
+
 def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
     """r9 (S81-RERUN): a hub slab-to-slab bus staged by common-clock stations (ot_fwd_link_stage clocked by the
     driver slab's domain clock, so no crossing and one cycle per station) every <= 430.56 um.  Spine-column slabs
@@ -5769,6 +5800,8 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             # counter put lane 7 onto an occupied row: no first-station spot at the VCH W edge)
             ky_ = int(pslice(pa)[1]) // 1024
             y_ = lo + (hi - lo) * (ky_ + 0.5) / 8.0
+        if LANE_PINS:
+            y_ = _lane_pin_alloc(m, A, Bk, pa, pb, bits, y_, lo, hi)
         lane[0] += 1
         path = [(fx(A), y_), (fx(Bk), y_)]
     elif hcA == hcB and same_col and max(A.y, Bk.y) - min(A.y + A.h, Bk.y + Bk.h) <= CC_REACH - (0.0 if {a_, b_} == {'vm', 'pq'} else 60.0):
@@ -6891,8 +6924,20 @@ def _faces_r8(m, Mx, it, ports):
             # --rtl-hub-widths (s81die-1011/ctrl): the wide face-to-face hub ports (>= 2,048 b: gather -> capture lanes,
             # capture -> VM, the VM row slots) are centred on their faces FIRST, so both ends of an abutting pair line
             # up (the pin-relay rule: a die hop over 100 um gets relays, and the 21.6 um abut gap has no room for them)
+            lres_ = []
+            if LANE_PINS and it.kind == 'hub' and f in 'EW':
+                # --lane-pins: ports of a straight VCH lane stand on the lane's die y (both slabs), LANE_PINS-track pitch
+                lp_ = m.get('_lane_pin', {})
+                for p_ in [q_ for q_ in lst if (it.name, q_) in lp_]:
+                    bw = bwf(ports[p_][1]) * LANE_PINS
+                    cen_ = lp_[(it.name, p_)] - it.y
+                    cen_ = L - cen_ if it.orient in ('MX', 'R180') else cen_
+                    cen_ = min(max(cen_, 0.4 + bw / 2), L - 0.4 - bw / 2)
+                    Mx.face(p_, ports[p_][1], f, 'M4', cen_, LANE_PINS)
+                    lres_.append((cen_ - bw / 2 - 1.0, cen_ + bw / 2 + 1.0))
+                    lst = [q_ for q_ in lst if q_ != p_]
             wide = [p_ for p_ in lst if RTL_HUB_WIDTHS and it.kind == 'hub' and ports[p_][1] >= 2048] if it.kind == 'hub' else []
-            resv = []
+            resv = list(lres_)
             if wide:
                 tw_ = sum(bwf(ports[p_][1]) + 2.0 for p_ in wide) - 2.0
                 ctr_ = L / 2
@@ -6917,6 +6962,9 @@ def _faces_r8(m, Mx, it, ports):
                             ctr_ = (lo_ + hi_) / 2 - org_
                             ctr_ = L - ctr_ if flip_ else ctr_
                 c_ = min(max(ctr_ - tw_ / 2, 0.4), L - 0.4 - tw_)
+                for r0_, r1_ in sorted(lres_):            # --lane-pins: the centred group steps past the lane ports
+                    if c_ < r1_ and c_ + tw_ > r0_:
+                        c_ = r1_ + 1.0
                 if '_bus_of' not in m:
                     bo_ = {}
                     for bid_, _c, _b, eps_ in m['buses']:
@@ -7515,6 +7563,9 @@ def die_options(ap):
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
+    ap.add_argument('--lane-pins', type=int, nargs='?', const=2, default=0, help='s81-die v15: hub ports of a straight VCH '
+                    'station lane take their pins centred on the lane at P-track pitch (default 2) on both slabs; lanes '
+                    'are allocated with non-overlapping pin spans; the 8 t_hc_y slices follow the slices of the one port')
     ap.add_argument('--peer-span-centre', action='store_true', help='s81-die-iter: with --rtl-hub-widths, centre each '
                     'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
     ap.add_argument('--rtl-hub-widths', action='store_true', help='s81die-1011 (die lead decision): W hub column gather -> '
@@ -7542,7 +7593,8 @@ def apply_options(a):
     global CTRL_ADAPTERS, RTL_HUB_WIDTHS
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
     RTL_HUB_WIDTHS = bool(getattr(a, 'rtl_hub_widths', False))
-    global PEER_SPAN_CENTRE
+    global PEER_SPAN_CENTRE, LANE_PINS
+    LANE_PINS = int(getattr(a, 'lane_pins', 0) or 0)
     PEER_SPAN_CENTRE = bool(getattr(a, 'peer_span_centre', False))
     global SUHC_V2, SUHC_V2_HC_N
     SUHC_V2 = bool(getattr(a, 'suhc_v2', False))
