@@ -25,7 +25,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 54.0,
+  "w": 47.52,
   "h": 432.0
  },
  "pins": {
@@ -111,14 +111,20 @@
   "threads": 8,
   "peak_ram_gb": 32,
   "pin_h": "M4",
-  "pin_v": "M5"
+  "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "pin_min_tracks": 1
  },
- "std_area_um2_measured": 8642,
+ "std_area_um2_measured": 8875,
  "job": {
   "owner": "Claude:q14-node",
   "branch": "claude/q14-tile-parent",
   "tag": "r5",
-  "purpose": "q-tile spec r5 leaf 2 (r5-fp1): ot_qwen_tile_node = the W12 ROM tile's upper tree node (a/b/va pin flops -> 16 FP32 pair adders LAT 7 -> y/vy pin registers, fault pin register) + the tile's t_out/t_vout TOREG pin registers as a registered feed-through (t_d/t_vd on the E seam -> W pins) + ot_rst_relay (4 regions). W-edge strip 54 x 432 placed at tile (22.464, 345.6): its W pins sit at the tile's W-face pin offsets (n_a 356.4-455.9, n_b 457-556.5, t_out 557.5-657, n_y 658-757.5), M4. Own short clock root (~12.1k sinks); removes the node + t_out flop->port classes from the flat 34-48k-sink tile root.",
+  "purpose": "q-tile spec r5 leaf 2 (r5-fp1): ot_qwen_tile_node = the W12 ROM tile's upper tree node (a/b/va pin flops -> 16 FP32 pair adders LAT 7 -> y/vy pin registers, fault pin register) + the tile's t_out/t_vout TOREG pin registers as a registered feed-through (t_d/t_vd on the E seam -> W pins) + ot_rst_relay (4 regions). W-edge strip 47.52 x 432 placed at tile (22.464, 345.6): its W pins sit at the tile's W-face pin offsets (n_a 356.4-455.9, n_b 457-556.5, t_out 557.5-657, n_y 658-757.5), M4. Own short clock root (~12.1k sinks); removes the node + t_out flop->port classes from the flat 34-48k-sink tile root.",
   "benches": [
    {
     "name": "tile_r5_node_exact",
