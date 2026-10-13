@@ -29,6 +29,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -59,13 +60,40 @@ def base(name: str) -> str:
 
 
 # ------------------------------------------------------------------------------------------------------ contracts
-def load_contracts(repo: Path) -> list[dict]:
-    """live contracts under repo: [{"file", "die", "version", "data"}], superseded ones dropped"""
+CONTRACT_REFS = ("origin/main", "main")
+
+
+def _git(repo: Path, *args) -> str | None:
+    try:
+        r = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
+def load_contracts(repo: Path, ref: str | None = None) -> list[dict]:
+    """live contracts: [{"file", "die", "version", "data"}], superseded ones dropped.  ref None = the working tree of
+    repo; a git ref = the files at that ref (the closure loop's repo is an object store whose checkout is stale, so the
+    submit gate reads origin/main)"""
+    texts = {}
+    if ref is None:
+        for p in sorted(repo.glob(CONTRACT_GLOB)):
+            try:
+                texts[str(p.relative_to(repo))] = p.read_text()
+            except OSError:
+                continue
+    else:
+        ls = _git(repo, "ls-tree", "-r", "--name-only", ref, "results/arch/") or ""
+        for f in sorted(ls.split("\n")):
+            if re.fullmatch(r"results/arch/hier_contract_[^/]*/[^/]+\.json", f):
+                tx = _git(repo, "show", f"{ref}:{f}")
+                if tx is not None:
+                    texts[f] = tx
     out, dead = [], set()
-    for p in sorted(repo.glob(CONTRACT_GLOB)):
+    for f, tx in texts.items():
         try:
-            d = json.loads(p.read_text())
-        except (OSError, ValueError):
+            d = json.loads(tx)
+        except ValueError:
             continue
         if not isinstance(d, dict) or d.get("schema") != SCHEMA or not isinstance(d.get("slots"), list):
             continue
@@ -73,9 +101,20 @@ def load_contracts(repo: Path) -> list[dict]:
         if isinstance(src, dict) and src.get("contract"):
             dead.add(str(src["contract"]))
         if d.get("superseded_by"):
-            dead.add(str(p.relative_to(repo)))
-        out.append({"file": str(p.relative_to(repo)), "die": str(d.get("die", p.stem)), "version": d.get("version"), "data": d})
+            dead.add(f)
+        out.append({"file": f, "die": str(d.get("die", Path(f).stem)), "version": d.get("version"), "data": d})
     return [c for c in out if c["file"] not in dead]
+
+
+def live_contracts(repo: Path, commit: str = "") -> tuple[list[dict], str]:
+    """(contracts, where) for the submit gate: origin/main of the repo, else main, else the job's commit, else the
+    working tree"""
+    for ref in (*CONTRACT_REFS, commit):
+        if ref:
+            cs = load_contracts(repo, ref)
+            if cs:
+                return cs, ref
+    return load_contracts(repo), "worktree"
 
 
 def _entry(c: dict, s: dict) -> dict:

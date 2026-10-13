@@ -557,15 +557,15 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
 def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:
     """SLOT FIT (owner 2026-10-13, tools/hier_contract/slot_fit.py): a tile with a slot in a die contract must fit it
     BEFORE it routes -- outline, pin faces, pin layers, layer cap and the estimated clock insertion against the LIVE
-    contract in repo (the kit's own commit when the repo has none).  A mismatch FAILs (REFUSED at submit) unless the
+    contract (origin/main of the repo's object store, else main, the job's commit, the working tree).  A mismatch FAILs (REFUSED at submit) unless the
     spec carries "slot_change_request": "<die lead log line or contract version>": then it is a WARN and the request is
     appended to the die lead's log."""
     import slot_fit
-    cs = slot_fit.load_contracts(Path(repo)) or slot_fit.load_contracts(ROOT)
+    cs, ref = slot_fit.live_contracts(Path(repo), commit)
     res = slot_fit.check(kd, Path(repo), job, cs)
     if res["status"] == "no_slot":
         return res
-    where = f"slot {res['slot']} of {res['contract']} v{res['version']}"
+    where = f"slot {res['slot']} of {res['contract']} v{res['version']} ({ref})"
     for n in res["notes"]:
         g.add("INFO", "slot_fit", f"{where}: {n}")
     if res["status"] == "fit":
