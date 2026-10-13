@@ -77,11 +77,11 @@ def _metal(layer):
     return int(m[1]) if m else 0
 
 
-def audit_def(path, model, ports):
+def audit_def(path, model, ports, tech_lef=None):
     """Check raw routed DEF, independently of abstract OBS stripping or PORT rewriting.
 
     M6 via landing rectangles are allowed only inside that net's approved M6 BPin.
-    Via definitions must be present in DEF; unresolved technology vias fail closed.
+    Via definitions must be in DEF or the exact read-tech LEF; unresolved vias fail closed.
     """
     text = Path(path).read_text()
     um = re.search(r'UNITS\s+DISTANCE\s+MICRONS\s+(\d+)\s*;', text)
@@ -141,11 +141,30 @@ def audit_def(path, model, ports):
     if blockage and any(_metal(l) > 5 for l in re.findall(r'\bLAYER\s+(M\d+)\b', blockage[1])):
         fails.append('raw DEF has above-M5 blockages/OBS')
     vias = {}
+    tech_sha = None
+    if tech_lef:
+        technology = Path(tech_lef).read_text()
+        tech_sha = hashlib.sha256(technology.encode()).hexdigest()
+        for name, body in re.findall(r'(?ms)^\s*VIA\s+(\S+)(?:\s+DEFAULT)?\s*$(.*?)^\s*END\s+\1\s*$', technology):
+            layer, rects = None, []
+            for line in body.splitlines():
+                lm = re.search(r'\bLAYER\s+(\S+)\s*;', line)
+                if lm:
+                    layer = lm[1]
+                rm = re.search(r'\bRECT\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*;', line)
+                if rm and layer:
+                    rects.append((layer,*map(float,rm.groups())))
+            vias[name] = (rects or None) if not re.search(r"\b(?:POLYGON|PATH)\b", body) else None
     if re.search(r'(?m)^\s*VIAS\s+\d+', text):
         for name, body in _section(text, 'VIAS'):
             rects = re.findall(r'\+\s+RECT\s+(\S+)\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)', body)
-            if not rects:  # generated-rule vias require explicit expansion; no layer guess from name
-                vias[name] = None
+            if not rects:
+                # A lower-only generated-rule via cannot touch above-cap metal. High ones need exact boxes.
+                layers = re.search(r'\+\s+LAYERS\s+(\S+)\s+(\S+)\s+(\S+)', body)
+                if layers and 0 < _metal(layers[1]) <= 5 and 0 < _metal(layers[3]) <= 5:
+                    vias[name] = []
+                else:
+                    vias[name] = None
             else:
                 vias[name] = [(l,*[int(x)/scale for x in (a,b,c,d)]) for l,a,b,c,d in rects]
     for section in ('NETS', 'SPECIALNETS'):
@@ -157,6 +176,8 @@ def audit_def(path, model, ports):
             # Via after a route coordinate. Lower wire layer does not prove a via stays below cap.
             route = re.split(r'\+\s*(?:ROUTED|FIXED|COVER)\s+', body)[1:]
             for path in route:
+                if re.search(r"\bDO\s+\d+\s+BY\s+\d+", path):
+                    fails.append(f"{section} {name}: unexpanded via array")
                 last = None
                 for match in re.finditer(r'\(\s*(-?\d+|\*)\s+(-?\d+|\*)(?:\s+[^)]*)?\)(?:\s+([A-Za-z_][\w./-]*))?', path):
                     if last is None and '*' in (match[1],match[2]):
@@ -170,13 +191,17 @@ def audit_def(path, model, ports):
                     if via not in vias or vias[via] is None:
                         fails.append(f'{section} {name}: unresolved via {via}; expand DEF via geometry')
                         continue
+                    om = re.match(r'\s+(FN|FS|FE|FW|N|S|E|W)\b', path[match.end():])
+                    orient = om[1] if om else 'N'
                     for layer,a,b,c,d in vias[via]:
                         if _metal(layer) <= 5:
                             continue
-                        r = (layer,a+xy[0],b+xy[1],c+xy[0],d+xy[1])
+                        points = [point(x,y,orient) for x,y in [(a,b),(a,d),(c,b),(c,d)]]
+                        r = (layer,min(x for x,y in points)+xy[0],min(y for x,y in points)+xy[1],
+                             max(x for x,y in points)+xy[0],max(y for x,y in points)+xy[1])
                         if section == 'SPECIALNETS' or layer != 'M6' or not any(
                                 p[0] == layer and p[1] <= r[1]+.001 and p[2] <= r[2]+.001
                                 and p[3] >= r[3]-.001 and p[4] >= r[4]-.001 for p in contacts.get(name, [])):
                             fails.append(f'{section} {name}: above-M5 via {via} outside granted PORT')
     return fails, {'def_sha256': hashlib.sha256(text.encode()).hexdigest(), 'def': str(path),
-                   'm6_def_ports': sorted(high_def)}
+                   'm6_def_ports': sorted(high_def), 'tech_lef_sha256': tech_sha}

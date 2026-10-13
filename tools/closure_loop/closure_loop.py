@@ -5153,7 +5153,7 @@ def pick_view_lef(paths, block):
     return next((p for p in cand if Path(p).stem == block), None)
 
 
-def child_lint_view(lef_text, checks, pin_grant=None, def_text=None):
+def child_lint_view(lef_text, checks, pin_grant=None, def_text=None, tech_text=None):
     """child_lint on a view LEF text: (fails restricted to checks, summary)"""
     if str(CHILD_LINT_DIR) not in sys.path:
         sys.path.insert(0, str(CHILD_LINT_DIR))
@@ -5161,18 +5161,24 @@ def child_lint_view(lef_text, checks, pin_grant=None, def_text=None):
     with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as fh:
         fh.write(lef_text)
         tmp = fh.name
-    def_path = None
+    def_path, tech_path = None, None
     try:
         if def_text is not None:
             with tempfile.NamedTemporaryFile("w", suffix=".def", delete=False) as df:
                 df.write(def_text)
                 def_path = df.name
+        if tech_text is not None:
+            with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as tf:
+                tf.write(tech_text)
+                tech_path = tf.name
         res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks), pin_grant=pin_grant,
-                              cap="M5" if pin_grant else None, routed_def=def_path)
+                              cap="M5" if pin_grant else None, routed_def=def_path, tech_lef=tech_path)
     finally:
         os.unlink(tmp)
         if def_path:
             os.unlink(def_path)
+        if tech_path:
+            os.unlink(tech_path)
     return [x for x in res["fails"] if x[1:2] in checks], res.get("summary", "")
 
 
@@ -5221,7 +5227,7 @@ def child_lint_gate(j):
         if w.returncode != 0:
             raise RuntimeError(f"child-lint gate: could not write the pin-stub view {lef}: {(w.stderr or '')[-200:]}")
         event(j, f"child-lint gate: abstract_pin_stub moved {moved} into their pins' PORTs in {lef}")
-    def_text = None
+    def_text, tech_text = None, None
     if grant:
         # Raw routed geometry copied by ref_tile export, not a modified abstract.
         def_file = str(Path(lef).parent / "pin_only_routed.def")
@@ -5229,7 +5235,10 @@ def child_lint_gate(j):
         if dt.returncode != 0:
             return "M6 pin-only grant missing raw routed DEF evidence"
         def_text = dt.stdout
-    fails, summ = child_lint_view(text, checks, grant, def_text)
+        tech_file = str(Path(lef).parent / "pin_only_tech.lef")
+        tt = ssh(j["host"], f"cat {shlex.quote(tech_file)}", timeout=300)
+        tech_text = tt.stdout if tt.returncode == 0 else None
+    fails, summ = child_lint_view(text, checks, grant, def_text, tech_text)
     j["child_lint"] = dict(lef=lef, checks="".join(sorted(checks)), fails=fails, summary=summ[:400], at=now_iso())
     return "; ".join(fails) if fails else None
 
