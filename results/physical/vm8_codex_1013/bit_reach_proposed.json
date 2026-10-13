@@ -1,0 +1,9996 @@
+{
+ "schema": "opentallas.vm8.bit_reach.v1",
+ "planning_only": true,
+ "statement": "Per-bit pin-to-pin Manhattan distance of every die-level hop of hfd_vm_cp.sv, pins from exported LEFs where a view exists and from the route's own IO-constraint Tcl otherwise. A lower bound of the routed wire, not routed reach, not a closure.",
+ "rule": {
+  "limit_um": 500.0,
+  "warn_um": 450.0,
+  "basis": "SS wire reach 504 um per 833 ps stage"
+ },
+ "inputs": {
+  "netlist": "physical/hbm_accel_die_views/vm/cp/hfd_vm_cp.sv",
+  "netlist_sha256": "135745d99f4937838c663fbf6581a22be2f43f7237398ee92b805d6d9f16fa9d",
+  "origins": "candidate_geometry.py moves {\"u_rt0\": [null, 1373.76], \"u_rb3\": [null, 224.64]}",
+  "origin_overrides": [
+   "u_rb3=1252.8,226.8",
+   "u_rt0=131.76,1382.4",
+   "u_rwa=153.36,522.72",
+   "u_re=978.48,804.24"
+  ],
+  "kit_per_master": {
+   "vm_cp_fe0": "vm_cp_fe0",
+   "vm_cp_fe1": "vm_cp_fe1",
+   "vm_cp_fe2": "vm_cp_fe2",
+   "vm_cp_fe3": "vm_cp_fe3",
+   "vm_cp_fw0": "vm_cp_fw0",
+   "vm_cp_fw1": "vm_cp_fw1",
+   "vm_cp_fw2": "vm_cp_fw2",
+   "vm_cp_fw3": "vm_cp_fw3",
+   "vm_cp_rb": "vm_cp_rb_cx2",
+   "vm_cp_rb2": "vm_cp_rb2_cx",
+   "vm_cp_re": "vm_cp_re",
+   "vm_cp_root": "vm_cp_root",
+   "vm_cp_rt": "vm_cp_rt_cx2",
+   "vm_cp_rt2": "vm_cp_rt2_cx2",
+   "vm_cp_rwa": "vm_cp_rwa_cx2",
+   "vm_cp_rwb": "vm_cp_rwb_cx2",
+   "vm_cp_rwt": "vm_cp_rwt",
+   "vm_cp_slice2": "vm_cp_slice2",
+   "vm_cp_slice3": "vm_cp_slice3_cx"
+  }
+ },
+ "region_um": [
+  1399.632,
+  2000.112
+ ],
+ "instances": {
+  "u_fw0": {
+   "master": "vm_cp_fw0",
+   "kit": "vm_cp_fw0",
+   "x": 0,
+   "y": 0,
+   "w": 12.96,
+   "h": 498.96,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_fw1": {
+   "master": "vm_cp_fw1",
+   "kit": "vm_cp_fw1",
+   "x": 0,
+   "y": 498.96,
+   "w": 12.96,
+   "h": 498.96,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_fw2": {
+   "master": "vm_cp_fw2",
+   "kit": "vm_cp_fw2",
+   "x": 0,
+   "y": 997.92,
+   "w": 17.28,
+   "h": 498.96,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_fw3": {
+   "master": "vm_cp_fw3",
+   "kit": "vm_cp_fw3",
+   "x": 0,
+   "y": 1496.8799999999999,
+   "w": 12.96,
+   "h": 498.96,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_fe0": {
+   "master": "vm_cp_fe0",
+   "kit": "vm_cp_fe0",
+   "x": 1386.672,
+   "y": 0,
+   "w": 12.96,
+   "h": 498.96,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_fe1": {
+   "master": "vm_cp_fe1",
+   "kit": "vm_cp_fe1",
+   "x": 1386.672,
+   "y": 498.96,
+   "w": 12.96,
+   "h": 498.96,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_fe2": {
+   "master": "vm_cp_fe2",
+   "kit": "vm_cp_fe2",
+   "x": 1386.672,
+   "y": 997.92,
+   "w": 12.96,
+   "h": 498.96,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_fe3": {
+   "master": "vm_cp_fe3",
+   "kit": "vm_cp_fe3",
+   "x": 1386.672,
+   "y": 1496.8799999999999,
+   "w": 12.96,
+   "h": 498.96,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_rb0": {
+   "master": "vm_cp_rb",
+   "kit": "vm_cp_rb_cx2",
+   "x": 172.8,
+   "y": 172.8,
+   "w": 30.24,
+   "h": 302.4,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_rb1": {
+   "master": "vm_cp_rb",
+   "kit": "vm_cp_rb_cx2",
+   "x": 518.4,
+   "y": 172.8,
+   "w": 30.24,
+   "h": 302.4,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_rb2": {
+   "master": "vm_cp_rb2",
+   "kit": "vm_cp_rb2_cx",
+   "x": 864.0,
+   "y": 172.8,
+   "w": 21.6,
+   "h": 302.4,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_rb3": {
+   "master": "vm_cp_rb",
+   "kit": "vm_cp_rb_cx2",
+   "x": 1252.8,
+   "y": 226.8,
+   "w": 30.24,
+   "h": 302.4,
+   "orient": "R0",
+   "moved_from_plan": true
+  },
+  "u_rt0": {
+   "master": "vm_cp_rt",
+   "kit": "vm_cp_rt_cx2",
+   "x": 131.76,
+   "y": 1382.4,
+   "w": 30.24,
+   "h": 388.8,
+   "orient": "R0",
+   "moved_from_plan": true
+  },
+  "u_rt1": {
+   "master": "vm_cp_rt",
+   "kit": "vm_cp_rt_cx2",
+   "x": 518.4,
+   "y": 1468.8,
+   "w": 30.24,
+   "h": 388.8,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_rt2": {
+   "master": "vm_cp_rt2",
+   "kit": "vm_cp_rt2_cx2",
+   "x": 864.0,
+   "y": 1468.8,
+   "w": 30.24,
+   "h": 388.8,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_rt3": {
+   "master": "vm_cp_rt",
+   "kit": "vm_cp_rt_cx2",
+   "x": 1209.6,
+   "y": 1468.8,
+   "w": 30.24,
+   "h": 388.8,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_rwa": {
+   "master": "vm_cp_rwa",
+   "kit": "vm_cp_rwa_cx2",
+   "x": 153.36,
+   "y": 522.72,
+   "w": 21.6,
+   "h": 259.2,
+   "orient": "R0",
+   "moved_from_plan": true
+  },
+  "u_rwb": {
+   "master": "vm_cp_rwb",
+   "kit": "vm_cp_rwb_cx2",
+   "x": 129.6,
+   "y": 1274.4,
+   "w": 12.96,
+   "h": 108.0,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_rwt": {
+   "master": "vm_cp_rwt",
+   "kit": "vm_cp_rwt",
+   "x": 129.6,
+   "y": 734.4,
+   "w": 15.12,
+   "h": 518.4,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_re": {
+   "master": "vm_cp_re",
+   "kit": "vm_cp_re",
+   "x": 978.48,
+   "y": 804.24,
+   "w": 21.6,
+   "h": 388.8,
+   "orient": "R0",
+   "moved_from_plan": true
+  },
+  "u_root": {
+   "master": "vm_cp_root",
+   "kit": "vm_cp_root",
+   "x": 345.6,
+   "y": 777.6,
+   "w": 302.4,
+   "h": 432.0,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_s0": {
+   "master": "vm_cp_slice3",
+   "kit": "vm_cp_slice3_cx",
+   "x": 345.6,
+   "y": 540.0,
+   "w": 259.2,
+   "h": 216.0,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_s2": {
+   "master": "vm_cp_slice3",
+   "kit": "vm_cp_slice3_cx",
+   "x": 604.8,
+   "y": 540.0,
+   "w": 259.2,
+   "h": 216.0,
+   "orient": "R0",
+   "moved_from_plan": false
+  },
+  "u_s1": {
+   "master": "vm_cp_slice3",
+   "kit": "vm_cp_slice3_cx",
+   "x": 345.6,
+   "y": 1231.2,
+   "w": 259.2,
+   "h": 216.0,
+   "orient": "MX",
+   "moved_from_plan": false
+  },
+  "u_s3": {
+   "master": "vm_cp_slice2",
+   "kit": "vm_cp_slice2",
+   "x": 604.8,
+   "y": 1231.2,
+   "w": 259.2,
+   "h": 216.0,
+   "orient": "MX",
+   "moved_from_plan": false
+  }
+ },
+ "legality": {
+  "overlap": [],
+  "out_of_region": []
+ },
+ "coordinate_sources": {
+  "vm_cp_fw0": {
+   "kind": "plan",
+   "kit": "vm_cp_fw0",
+   "kit_env_sha256": "28032fa6bdf6811e5ba36c6824f4d8213f602c598eb5c8dec7c4b743a95d04b7",
+   "spec_sha256": "b463161ed5ed20a907d173edc257d2468cc6164edcc04566376522aaf8c30432",
+   "floorplan_sha256": "52c5d8f0a08e9b1f2cdb5389af71c40eb00cdb2ec123c63a5688b371acb1159a",
+   "die": [
+    0,
+    0,
+    12.96,
+    498.96
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_fw1": {
+   "kind": "plan",
+   "kit": "vm_cp_fw1",
+   "kit_env_sha256": "f0072aaa21b56f24498b4f0c22ffc665988bbc1589faa1720f6b9cead2f58d91",
+   "spec_sha256": "6667cca93d08d51f409e42a38f9d1a2d1ce1e1921c304df103b9c6dd752bb0a7",
+   "floorplan_sha256": "b7fe1675d416f23f18af58cb1b1711d54349f78018d32fc33c58e00ae7dc4fb9",
+   "die": [
+    0,
+    0,
+    12.96,
+    498.96
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_fw2": {
+   "kind": "plan",
+   "kit": "vm_cp_fw2",
+   "kit_env_sha256": "aae94035dffc845697377cb00cdc271aca9ae904da9e2e5ca3a2698df6b13e78",
+   "spec_sha256": "baa8235b4242117a804002f5037ee09da7278746cf2a2ab1b7d933365cdf6354",
+   "floorplan_sha256": "8c00b03336a2a08e4ed1f43ae1411202945aa577934013096aa0ed36a1d56015",
+   "die": [
+    0,
+    0,
+    17.28,
+    498.96
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_fw3": {
+   "kind": "plan",
+   "kit": "vm_cp_fw3",
+   "kit_env_sha256": "46e6744c95fd4e8df4262200569c33dba1362d528e0fd615fbc52b2d8a0f8e52",
+   "spec_sha256": "837a08fe99abf596246236ccbdf105f71f70366a33b9108447d4df4923602584",
+   "floorplan_sha256": "246efdad77109fe9ae0b44dadcc071a441e92bfec04f71a9a16a8ef6220f3ae4",
+   "die": [
+    0,
+    0,
+    12.96,
+    498.96
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_fe0": {
+   "kind": "plan",
+   "kit": "vm_cp_fe0",
+   "kit_env_sha256": "41faca7861a79c5d1de917207a4b66460e2eeec3002a0e1f6e88bd3b0cda96d9",
+   "spec_sha256": "19d8d416ec7840195848b669505e00a2a92201fb08cdc2f8ffd7779350653bd5",
+   "floorplan_sha256": "ee0dac484477c68e832c8b6048081114b3dcbf75574cdb6eefb8a44510bdb9b3",
+   "die": [
+    0,
+    0,
+    12.96,
+    498.96
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_fe1": {
+   "kind": "plan",
+   "kit": "vm_cp_fe1",
+   "kit_env_sha256": "d31321cd6009f6a2243c1119f8a9a54e7d482c9a0bd964bccad5a182e3eeab64",
+   "spec_sha256": "93516c684724f3f3f4ae6fd7e4307654c8d6ec2f3905ada5027e1a818c0d5b32",
+   "floorplan_sha256": "40e74eeb0599635fb9988445f989a355ae540cf88eb1f5de03ef7cd27a6b9481",
+   "die": [
+    0,
+    0,
+    12.96,
+    498.96
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_fe2": {
+   "kind": "plan",
+   "kit": "vm_cp_fe2",
+   "kit_env_sha256": "9b313744094885ae0577c463ac63438e32e38e1927d422863aad0f5b488586f7",
+   "spec_sha256": "074a537b0b2e7e0257d97c483d8f82f008d81a3a58eb8d3241e7338f1fc28be9",
+   "floorplan_sha256": "6dbe549af3f64f3b309bd18a58e5a86dcd6dc026374b31351d864a0e4e4df2a4",
+   "die": [
+    0,
+    0,
+    12.96,
+    498.96
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_fe3": {
+   "kind": "plan",
+   "kit": "vm_cp_fe3",
+   "kit_env_sha256": "0541c8f837d67210855ae194bf9c28101c6e71adfb51a57836014581b929e3bd",
+   "spec_sha256": "98264c40b03b55c892e1fe41e8778ce836e66cd5a4db6045d430ef29dc5e3121",
+   "floorplan_sha256": "5e335df7b9f9fd5b92a3280f1ff5df2ba06adcb7712cadeda367c27917667cc9",
+   "die": [
+    0,
+    0,
+    12.96,
+    498.96
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_rb": {
+   "kind": "plan",
+   "kit": "vm_cp_rb_cx2",
+   "kit_env_sha256": "905e8e070bb2c82a7cc0c9a7fb457471410e1f491d57cd1830690e59401b794c",
+   "spec_sha256": "ee37877f0bfa21922e5a64c3ea2e2af5b26d290f2a20c453c86d9f547c98b863",
+   "floorplan_sha256": "347fa605c24f70029933992a1fffd3d3236575664f6093da85f34b61196e3d5e",
+   "die": [
+    0,
+    0,
+    30.24,
+    302.4
+   ],
+   "layer_cap": "M5",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_rb2": {
+   "kind": "plan",
+   "kit": "vm_cp_rb2_cx",
+   "kit_env_sha256": "c2a18eb2ce08ceb798703ae95a8cd40faf58dc156151e27a1d10efd3aec2faab",
+   "spec_sha256": "7ec3103888a06f326bc08b963e6cf7c1c0a9863d699238c62562eb26408fd035",
+   "floorplan_sha256": "e12603b79f050c8b2eaa0ed6ba84376cdbeb5df533f3a35ab79d44e7a97b1b34",
+   "die": [
+    0,
+    0,
+    21.6,
+    302.4
+   ],
+   "layer_cap": "M5",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_rt": {
+   "kind": "plan",
+   "kit": "vm_cp_rt_cx2",
+   "kit_env_sha256": "c859b3cc8692a55f585d00ec443d75080fe5ebf59e545ed2c9893cd3bfec61d1",
+   "spec_sha256": "dcb2a6c12fce004218239d2d13fc8f39aafccc76ec9161310af5a0b68b516539",
+   "floorplan_sha256": "d3a0d36cb8ec26ec487e92dc0ceb633bd31410fcc42e93a0b2450c6dc84a63ef",
+   "die": [
+    0,
+    0,
+    30.24,
+    388.8
+   ],
+   "layer_cap": "M5",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_rt2": {
+   "kind": "plan",
+   "kit": "vm_cp_rt2_cx2",
+   "kit_env_sha256": "2782e5f7ab5be3ffc4235956fac796f83a38b3aaf1f1f00a97043673cc9d7909",
+   "spec_sha256": "980b5dae4093d5d4401fb9026bbdb14c08cfa7b69781e46afe72334b0ed8aa2a",
+   "floorplan_sha256": "ea5c758d98a54eeeb587f1333010395d243be2cc75eaad0e7398d06bc1d25c68",
+   "die": [
+    0,
+    0,
+    30.24,
+    388.8
+   ],
+   "layer_cap": "M5",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_rwa": {
+   "kind": "plan",
+   "kit": "vm_cp_rwa_cx2",
+   "kit_env_sha256": "ec4c28b47b4d9cd850817b784fae9547c0009fcf8d6463c75ad168e73b41c38f",
+   "spec_sha256": "8f072a7c23a978ec846b4ab336ba712714c2a6adc682d4fb21478cddc67dfa5e",
+   "floorplan_sha256": "aacaca616543569ea3277b046fec8267e8c0e2e150b05b22a9da6c5194344083",
+   "die": [
+    0,
+    0,
+    21.6,
+    259.2
+   ],
+   "layer_cap": "M5",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_rwb": {
+   "kind": "lef",
+   "path": "results/physical/vm8_codex_1013/rwb_cx1_collect/vm_cp_rwb.lef",
+   "lef_sha256": "e8bc9125694d93496746510f117809857552794c9b639e404bdd6a79eab3f522",
+   "die": [
+    0,
+    0,
+    12.96,
+    108.0
+   ],
+   "kit": "vm_cp_rwb_cx2",
+   "layer_cap": "M5",
+   "plan_vs_lef": {
+    "max_dev_um": 0.0245,
+    "wrong_face": 0,
+    "missing_in_lef": 0,
+    "plan_kit_env_sha256": "87f4458f599dd76dcd0bf5507bd6ac317d54052402af91b11c466fd2aaa6b3a0"
+   }
+  },
+  "vm_cp_rwt": {
+   "kind": "plan",
+   "kit": "vm_cp_rwt",
+   "kit_env_sha256": "20fb92738e947501c4cabcdee71f0f89bc96789814893a80c36bccc5ebc4a781",
+   "spec_sha256": "c25b657d7d19f60b253ef91465bd0864f0f573756e9a23c7aff1641404a7730b",
+   "floorplan_sha256": "ad55e7945d0dc308f25fed5709c9ea8539a37ad9249b6b20fe1aaa8dadbec7f1",
+   "die": [
+    0,
+    0,
+    15.12,
+    518.4
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_re": {
+   "kind": "plan",
+   "kit": "vm_cp_re",
+   "kit_env_sha256": "726109f8f1144d4ce3c8f66e2a22255f0efc6ad53dd2900595f09f4c144b28d0",
+   "spec_sha256": "4293d51a4c60a749dccc21ee1a75ef99f3b4e4756ac087f7ab49faffb7fc295d",
+   "floorplan_sha256": "2ed140c193ab44fc37bfaee0882b7a82a662e6a105f4ee95f287b42b6996ad9c",
+   "die": [
+    0,
+    0,
+    21.6,
+    388.8
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_root": {
+   "kind": "plan",
+   "kit": "vm_cp_root",
+   "kit_env_sha256": "8453aae97380bd70a2e49785912394b19d987ebec1a304db321f3bdf58896706",
+   "spec_sha256": "5998e19510502416b3943047c84efaaf3d14d9c4f1d919d6db26b7b74c8a52ca",
+   "floorplan_sha256": "6dd4c9274fa458fa8747d14fb3e6504c5bf5d578f23ee3a034a085136be32e20",
+   "die": [
+    0,
+    0,
+    302.4,
+    432.0
+   ],
+   "layer_cap": "M6",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4 M6",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_slice3": {
+   "kind": "plan",
+   "kit": "vm_cp_slice3_cx",
+   "kit_env_sha256": "a682603c8d92f542e91ca1693505e6524a7ef9ee76b75812a97b6d0fa42077dd",
+   "spec_sha256": "6a02cd063c614700be675bdbf9c91039329fa27376fe108263f8389efc2231e3",
+   "floorplan_sha256": "ea77164201da63314229800713f45b3f9d488ff554e23d7a536e8e25e6c7cae9",
+   "die": [
+    0,
+    0,
+    259.2,
+    216.0
+   ],
+   "layer_cap": "M5",
+   "pin_env": {
+    "OT_PIN_GROUP_MAX": "1",
+    "OT_PIN_BALANCE_H": "M4",
+    "OT_PIN_BALANCE_V": "M3 M5"
+   }
+  },
+  "vm_cp_slice2": {
+   "kind": "lef",
+   "path": "physical/ref_tile/vm_cp_slice2/views/vm_cp_slice2/vm_cp_slice2.lef",
+   "lef_sha256": "406da4169510f3c32414ce0013f413746e187fccccbdfccf98f498079dd96ed7",
+   "die": [
+    0,
+    0,
+    259.2,
+    216.0
+   ],
+   "kit": "vm_cp_slice2",
+   "layer_cap": "M6",
+   "plan_vs_lef": {
+    "max_dev_um": 0.0244,
+    "wrong_face": 0,
+    "missing_in_lef": 0,
+    "plan_kit_env_sha256": "37509638fbb936e18decffa95fcb768226624e26a0964d746047875e44d06700"
+   }
+  }
+ },
+ "summary": {
+  "instances": 25,
+  "kits": 19,
+  "hops": 52,
+  "nets": 52,
+  "hop_bits": 60270,
+  "worst_um": 445.8,
+  "worst_hop": "u_rt0.eo>u_rt1.wi",
+  "hops_gt_500": 0,
+  "bits_gt_500": 0,
+  "hops_gt_450": 0,
+  "bits_gt_450": 0,
+  "lef_masters": [
+   "vm_cp_rwb",
+   "vm_cp_slice2"
+  ],
+  "plan_masters": [
+   "vm_cp_fe0",
+   "vm_cp_fe1",
+   "vm_cp_fe2",
+   "vm_cp_fe3",
+   "vm_cp_fw0",
+   "vm_cp_fw1",
+   "vm_cp_fw2",
+   "vm_cp_fw3",
+   "vm_cp_rb",
+   "vm_cp_rb2",
+   "vm_cp_re",
+   "vm_cp_root",
+   "vm_cp_rt",
+   "vm_cp_rt2",
+   "vm_cp_rwa",
+   "vm_cp_rwt",
+   "vm_cp_slice3"
+  ],
+  "legal": true,
+  "cuts_over_limit_no_jog": [
+   "x=15.12",
+   "x=73.44",
+   "x=149.04",
+   "x=157.68",
+   "x=167.40",
+   "x=173.88",
+   "x=189.00",
+   "x=274.32",
+   "x=432.00",
+   "x=533.52",
+   "x=576.72",
+   "x=626.40",
+   "x=756.00",
+   "x=874.80",
+   "x=889.92",
+   "x=936.36",
+   "x=989.28",
+   "x=1104.84",
+   "x=1224.72",
+   "x=1246.32",
+   "y=351.00",
+   "y=487.08",
+   "y=510.84",
+   "y=525.96",
+   "y=534.60",
+   "y=637.20",
+   "y=745.20",
+   "y=766.80",
+   "y=779.76",
+   "y=793.08",
+   "y=1414.80",
+   "y=1458.00",
+   "y=1482.84",
+   "y=1634.04"
+  ],
+  "cuts_over_limit_reach_jog": [
+   "y=351.00",
+   "y=487.08",
+   "y=510.84",
+   "y=525.96",
+   "y=534.60",
+   "y=1414.80",
+   "y=1458.00",
+   "y=1482.84",
+   "y=1634.04"
+  ],
+  "cuts_over_limit_with_lower_layer": [],
+  "worst_cut_reach_jog": [
+   0.935,
+   "y=1634.04",
+   "M7"
+  ],
+  "worst_cut_with_lower_layer": [
+   0.437,
+   "y=1634.04",
+   "M7"
+  ],
+  "self_check_failed": []
+ },
+ "hops": [
+  {
+   "net": "n_rt0_eo",
+   "frm": "u_rt0.eo",
+   "to": "u_rt1.wi",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 445.8,
+   "min_um": 444.3,
+   "mean_um": 445.05,
+   "p99_um": 445.785,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 445.8,
+     "dx_um": 356.4,
+     "dy_um": 89.4,
+     "driver_xy": [
+      162.0,
+      1384.447
+     ],
+     "load_xy": [
+      518.4,
+      1473.846
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 445.799,
+     "dx_um": 356.4,
+     "dy_um": 89.399,
+     "driver_xy": [
+      162.0,
+      1384.541
+     ],
+     "load_xy": [
+      518.4,
+      1473.939
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 445.798,
+     "dx_um": 356.4,
+     "dy_um": 89.398,
+     "driver_xy": [
+      162.0,
+      1384.634
+     ],
+     "load_xy": [
+      518.4,
+      1474.032
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 445.797,
+     "dx_um": 356.4,
+     "dy_um": 89.397,
+     "driver_xy": [
+      162.0,
+      1384.728
+     ],
+     "load_xy": [
+      518.4,
+      1474.125
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 445.797,
+     "dx_um": 356.4,
+     "dy_um": 89.397,
+     "driver_xy": [
+      162.0,
+      1384.822
+     ],
+     "load_xy": [
+      518.4,
+      1474.218
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt",
+    "vm_cp_rt"
+   ]
+  },
+  {
+   "net": "n_rt0_wo",
+   "frm": "u_rt0.wo",
+   "to": "u_fw2.ph",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "W>E",
+   "max_um": 445.346,
+   "min_um": 388.814,
+   "mean_um": 417.08,
+   "p99_um": 444.794,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 445.346,
+     "dx_um": 114.48,
+     "dy_um": 330.866,
+     "driver_xy": [
+      131.76,
+      1578.846
+     ],
+     "load_xy": [
+      17.28,
+      1247.98
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 445.319,
+     "dx_um": 114.48,
+     "dy_um": 330.839,
+     "driver_xy": [
+      131.76,
+      1578.939
+     ],
+     "load_xy": [
+      17.28,
+      1248.101
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 2,
+     "um": 445.291,
+     "dx_um": 114.48,
+     "dy_um": 330.811,
+     "driver_xy": [
+      131.76,
+      1579.032
+     ],
+     "load_xy": [
+      17.28,
+      1248.221
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 445.263,
+     "dx_um": 114.48,
+     "dy_um": 330.783,
+     "driver_xy": [
+      131.76,
+      1579.125
+     ],
+     "load_xy": [
+      17.28,
+      1248.342
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 4,
+     "um": 445.236,
+     "dx_um": 114.48,
+     "dy_um": 330.756,
+     "driver_xy": [
+      131.76,
+      1579.218
+     ],
+     "load_xy": [
+      17.28,
+      1248.463
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt",
+    "vm_cp_fw2"
+   ]
+  },
+  {
+   "net": "n_rt1_wo",
+   "frm": "u_rt1.wo",
+   "to": "u_rt0.ei",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "W>E",
+   "max_um": 444.3,
+   "min_um": 442.8,
+   "mean_um": 443.55,
+   "p99_um": 444.285,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 444.3,
+     "dx_um": 356.4,
+     "dy_um": 87.9,
+     "driver_xy": [
+      518.4,
+      1665.246
+     ],
+     "load_xy": [
+      162.0,
+      1577.347
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 444.299,
+     "dx_um": 356.4,
+     "dy_um": 87.899,
+     "driver_xy": [
+      518.4,
+      1665.339
+     ],
+     "load_xy": [
+      162.0,
+      1577.441
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 444.298,
+     "dx_um": 356.4,
+     "dy_um": 87.898,
+     "driver_xy": [
+      518.4,
+      1665.432
+     ],
+     "load_xy": [
+      162.0,
+      1577.534
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 444.297,
+     "dx_um": 356.4,
+     "dy_um": 87.897,
+     "driver_xy": [
+      518.4,
+      1665.525
+     ],
+     "load_xy": [
+      162.0,
+      1577.628
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 444.297,
+     "dx_um": 356.4,
+     "dy_um": 87.897,
+     "driver_xy": [
+      518.4,
+      1665.618
+     ],
+     "load_xy": [
+      162.0,
+      1577.722
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt",
+    "vm_cp_rt"
+   ]
+  },
+  {
+   "net": "n_rb2_rd",
+   "frm": "u_rb2.rd",
+   "to": "u_re.rdi",
+   "bits": 201,
+   "driver_bits": 201,
+   "load_bits": 201,
+   "net_bits": 201,
+   "faces": "N>S",
+   "max_um": 443.52,
+   "min_um": 443.52,
+   "mean_um": 443.52,
+   "p99_um": 443.52,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 443.52,
+     "dx_um": 114.48,
+     "dy_um": 329.04,
+     "driver_xy": [
+      866.044,
+      475.2
+     ],
+     "load_xy": [
+      980.524,
+      804.24
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 1,
+     "um": 443.52,
+     "dx_um": 114.48,
+     "dy_um": 329.04,
+     "driver_xy": [
+      866.131,
+      475.2
+     ],
+     "load_xy": [
+      980.611,
+      804.24
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 2,
+     "um": 443.52,
+     "dx_um": 114.48,
+     "dy_um": 329.04,
+     "driver_xy": [
+      866.219,
+      475.2
+     ],
+     "load_xy": [
+      980.699,
+      804.24
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 3,
+     "um": 443.52,
+     "dx_um": 114.48,
+     "dy_um": 329.04,
+     "driver_xy": [
+      866.306,
+      475.2
+     ],
+     "load_xy": [
+      980.786,
+      804.24
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 4,
+     "um": 443.52,
+     "dx_um": 114.48,
+     "dy_um": 329.04,
+     "driver_xy": [
+      866.394,
+      475.2
+     ],
+     "load_xy": [
+      980.874,
+      804.24
+     ],
+     "layers": "M3>M3"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb2",
+    "vm_cp_re"
+   ]
+  },
+  {
+   "net": "n_re_se",
+   "frm": "u_re.se",
+   "to": "u_fe1.tap",
+   "bits": 2063,
+   "driver_bits": 2063,
+   "load_bits": 2063,
+   "net_bits": 2063,
+   "faces": "E>W",
+   "max_um": 443.275,
+   "min_um": 388.925,
+   "mean_um": 416.1,
+   "p99_um": 442.748,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 443.275,
+     "dx_um": 386.592,
+     "dy_um": 56.683,
+     "driver_xy": [
+      1000.08,
+      806.287
+     ],
+     "load_xy": [
+      1386.672,
+      749.604
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 443.248,
+     "dx_um": 386.592,
+     "dy_um": 56.656,
+     "driver_xy": [
+      1000.08,
+      806.38
+     ],
+     "load_xy": [
+      1386.672,
+      749.723
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2,
+     "um": 443.222,
+     "dx_um": 386.592,
+     "dy_um": 56.63,
+     "driver_xy": [
+      1000.08,
+      806.473
+     ],
+     "load_xy": [
+      1386.672,
+      749.843
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 443.196,
+     "dx_um": 386.592,
+     "dy_um": 56.604,
+     "driver_xy": [
+      1000.08,
+      806.566
+     ],
+     "load_xy": [
+      1386.672,
+      749.962
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 4,
+     "um": 443.169,
+     "dx_um": 386.592,
+     "dy_um": 56.577,
+     "driver_xy": [
+      1000.08,
+      806.659
+     ],
+     "load_xy": [
+      1386.672,
+      750.081
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_re",
+    "vm_cp_fe1"
+   ]
+  },
+  {
+   "net": "n_re_ne",
+   "frm": "u_re.ne",
+   "to": "u_fe2.tap",
+   "bits": 2063,
+   "driver_bits": 2063,
+   "load_bits": 2063,
+   "net_bits": 2063,
+   "faces": "E>W",
+   "max_um": 442.635,
+   "min_um": 388.285,
+   "mean_um": 415.46,
+   "p99_um": 442.108,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 2062,
+     "um": 442.635,
+     "dx_um": 386.592,
+     "dy_um": 56.043,
+     "driver_xy": [
+      1000.08,
+      1190.193
+     ],
+     "load_xy": [
+      1386.672,
+      1246.236
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2061,
+     "um": 442.608,
+     "dx_um": 386.592,
+     "dy_um": 56.016,
+     "driver_xy": [
+      1000.08,
+      1190.1
+     ],
+     "load_xy": [
+      1386.672,
+      1246.117
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2060,
+     "um": 442.582,
+     "dx_um": 386.592,
+     "dy_um": 55.99,
+     "driver_xy": [
+      1000.08,
+      1190.007
+     ],
+     "load_xy": [
+      1386.672,
+      1245.997
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2059,
+     "um": 442.556,
+     "dx_um": 386.592,
+     "dy_um": 55.964,
+     "driver_xy": [
+      1000.08,
+      1189.914
+     ],
+     "load_xy": [
+      1386.672,
+      1245.878
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2058,
+     "um": 442.529,
+     "dx_um": 386.592,
+     "dy_um": 55.937,
+     "driver_xy": [
+      1000.08,
+      1189.821
+     ],
+     "load_xy": [
+      1386.672,
+      1245.759
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_re",
+    "vm_cp_fe2"
+   ]
+  },
+  {
+   "net": "n_fw3_ph",
+   "frm": "u_fw3.ph",
+   "to": "u_rt0.wi",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 437.843,
+   "min_um": 288.317,
+   "mean_um": 363.08,
+   "p99_um": 436.383,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 2047,
+     "um": 437.843,
+     "dx_um": 118.8,
+     "dy_um": 319.043,
+     "driver_xy": [
+      12.96,
+      1896.797
+     ],
+     "load_xy": [
+      131.76,
+      1577.754
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 2046,
+     "um": 437.77,
+     "dx_um": 118.8,
+     "dy_um": 318.97,
+     "driver_xy": [
+      12.96,
+      1896.631
+     ],
+     "load_xy": [
+      131.76,
+      1577.661
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2045,
+     "um": 437.697,
+     "dx_um": 118.8,
+     "dy_um": 318.897,
+     "driver_xy": [
+      12.96,
+      1896.465
+     ],
+     "load_xy": [
+      131.76,
+      1577.568
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 2044,
+     "um": 437.624,
+     "dx_um": 118.8,
+     "dy_um": 318.824,
+     "driver_xy": [
+      12.96,
+      1896.299
+     ],
+     "load_xy": [
+      131.76,
+      1577.475
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2043,
+     "um": 437.551,
+     "dx_um": 118.8,
+     "dy_um": 318.751,
+     "driver_xy": [
+      12.96,
+      1896.133
+     ],
+     "load_xy": [
+      131.76,
+      1577.382
+     ],
+     "layers": "M6>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_fw3",
+    "vm_cp_rt"
+   ]
+  },
+  {
+   "net": "n_rb3_eo",
+   "frm": "u_rb3.eo",
+   "to": "u_fe1.ph",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 425.522,
+   "min_um": 375.804,
+   "mean_um": 400.663,
+   "p99_um": 425.036,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 2047,
+     "um": 425.522,
+     "dx_um": 103.632,
+     "dy_um": 321.89,
+     "driver_xy": [
+      1283.04,
+      423.594
+     ],
+     "load_xy": [
+      1386.672,
+      745.484
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 2046,
+     "um": 425.498,
+     "dx_um": 103.632,
+     "dy_um": 321.866,
+     "driver_xy": [
+      1283.04,
+      423.499
+     ],
+     "load_xy": [
+      1386.672,
+      745.365
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2045,
+     "um": 425.473,
+     "dx_um": 103.632,
+     "dy_um": 321.841,
+     "driver_xy": [
+      1283.04,
+      423.404
+     ],
+     "load_xy": [
+      1386.672,
+      745.245
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 2044,
+     "um": 425.449,
+     "dx_um": 103.632,
+     "dy_um": 321.817,
+     "driver_xy": [
+      1283.04,
+      423.309
+     ],
+     "load_xy": [
+      1386.672,
+      745.126
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2043,
+     "um": 425.425,
+     "dx_um": 103.632,
+     "dy_um": 321.793,
+     "driver_xy": [
+      1283.04,
+      423.214
+     ],
+     "load_xy": [
+      1386.672,
+      745.007
+     ],
+     "layers": "M4>M6"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb",
+    "vm_cp_fe1"
+   ]
+  },
+  {
+   "net": "n_rwa_o",
+   "frm": "u_rwa.o",
+   "to": "u_root.wd_i",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 425.506,
+   "min_um": 368.334,
+   "mean_um": 396.92,
+   "p99_um": 424.947,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 425.506,
+     "dx_um": 170.64,
+     "dy_um": 254.866,
+     "driver_xy": [
+      174.96,
+      524.782
+     ],
+     "load_xy": [
+      345.6,
+      779.648
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 425.478,
+     "dx_um": 170.64,
+     "dy_um": 254.838,
+     "driver_xy": [
+      174.96,
+      524.907
+     ],
+     "load_xy": [
+      345.6,
+      779.745
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 2,
+     "um": 425.45,
+     "dx_um": 170.64,
+     "dy_um": 254.81,
+     "driver_xy": [
+      174.96,
+      525.032
+     ],
+     "load_xy": [
+      345.6,
+      779.842
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 425.422,
+     "dx_um": 170.64,
+     "dy_um": 254.782,
+     "driver_xy": [
+      174.96,
+      525.156
+     ],
+     "load_xy": [
+      345.6,
+      779.938
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 4,
+     "um": 425.394,
+     "dx_um": 170.64,
+     "dy_um": 254.754,
+     "driver_xy": [
+      174.96,
+      525.281
+     ],
+     "load_xy": [
+      345.6,
+      780.035
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rwa",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_fe0_ph",
+   "frm": "u_fe0.ph",
+   "to": "u_rb3.ei",
+   "bits": 1078,
+   "driver_bits": 1078,
+   "load_bits": 1078,
+   "net_bits": 1078,
+   "faces": "W>E",
+   "max_um": 425.139,
+   "min_um": 134.007,
+   "mean_um": 279.573,
+   "p99_um": 422.436,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 425.139,
+     "dx_um": 103.632,
+     "dy_um": 321.507,
+     "driver_xy": [
+      1386.672,
+      103.183
+     ],
+     "load_xy": [
+      1283.04,
+      424.69
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 424.869,
+     "dx_um": 103.632,
+     "dy_um": 321.237,
+     "driver_xy": [
+      1386.672,
+      103.548
+     ],
+     "load_xy": [
+      1283.04,
+      424.785
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 2,
+     "um": 424.598,
+     "dx_um": 103.632,
+     "dy_um": 320.966,
+     "driver_xy": [
+      1386.672,
+      103.914
+     ],
+     "load_xy": [
+      1283.04,
+      424.88
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 424.328,
+     "dx_um": 103.632,
+     "dy_um": 320.696,
+     "driver_xy": [
+      1386.672,
+      104.279
+     ],
+     "load_xy": [
+      1283.04,
+      424.975
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 4,
+     "um": 424.058,
+     "dx_um": 103.632,
+     "dy_um": 320.426,
+     "driver_xy": [
+      1386.672,
+      104.645
+     ],
+     "load_xy": [
+      1283.04,
+      425.07
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_fe0",
+    "vm_cp_rb"
+   ]
+  },
+  {
+   "net": "n_rb2_eo",
+   "frm": "u_rb2.eo",
+   "to": "u_rb3.wi",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 424.2,
+   "min_um": 422.234,
+   "mean_um": 423.217,
+   "p99_um": 424.18,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 424.2,
+     "dx_um": 367.2,
+     "dy_um": 57.0,
+     "driver_xy": [
+      885.6,
+      174.848
+     ],
+     "load_xy": [
+      1252.8,
+      231.847
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 424.199,
+     "dx_um": 367.2,
+     "dy_um": 56.999,
+     "driver_xy": [
+      885.6,
+      174.943
+     ],
+     "load_xy": [
+      1252.8,
+      231.941
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 424.198,
+     "dx_um": 367.2,
+     "dy_um": 56.998,
+     "driver_xy": [
+      885.6,
+      175.038
+     ],
+     "load_xy": [
+      1252.8,
+      232.035
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 424.197,
+     "dx_um": 367.2,
+     "dy_um": 56.997,
+     "driver_xy": [
+      885.6,
+      175.133
+     ],
+     "load_xy": [
+      1252.8,
+      232.13
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 424.196,
+     "dx_um": 367.2,
+     "dy_um": 56.996,
+     "driver_xy": [
+      885.6,
+      175.228
+     ],
+     "load_xy": [
+      1252.8,
+      232.224
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb2",
+    "vm_cp_rb"
+   ]
+  },
+  {
+   "net": "n_fw0_wd",
+   "frm": "u_fw0.wd",
+   "to": "u_rwa.i",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 423.347,
+   "min_um": 368.133,
+   "mean_um": 395.74,
+   "p99_um": 422.807,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 2047,
+     "um": 423.347,
+     "dx_um": 140.4,
+     "dy_um": 282.947,
+     "driver_xy": [
+      12.96,
+      496.912
+     ],
+     "load_xy": [
+      153.36,
+      779.858
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 2046,
+     "um": 423.32,
+     "dx_um": 140.4,
+     "dy_um": 282.92,
+     "driver_xy": [
+      12.96,
+      496.816
+     ],
+     "load_xy": [
+      153.36,
+      779.735
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2045,
+     "um": 423.293,
+     "dx_um": 140.4,
+     "dy_um": 282.893,
+     "driver_xy": [
+      12.96,
+      496.72
+     ],
+     "load_xy": [
+      153.36,
+      779.612
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 2044,
+     "um": 423.266,
+     "dx_um": 140.4,
+     "dy_um": 282.866,
+     "driver_xy": [
+      12.96,
+      496.623
+     ],
+     "load_xy": [
+      153.36,
+      779.489
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2043,
+     "um": 423.239,
+     "dx_um": 140.4,
+     "dy_um": 282.839,
+     "driver_xy": [
+      12.96,
+      496.527
+     ],
+     "load_xy": [
+      153.36,
+      779.366
+     ],
+     "layers": "M6>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_fw0",
+    "vm_cp_rwa"
+   ]
+  },
+  {
+   "net": "n_rb3_wo",
+   "frm": "u_rb3.wo",
+   "to": "u_rb2.ei",
+   "bits": 1078,
+   "driver_bits": 1078,
+   "load_bits": 1078,
+   "net_bits": 1078,
+   "faces": "W>E",
+   "max_um": 422.234,
+   "min_um": 421.2,
+   "mean_um": 421.717,
+   "p99_um": 422.224,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 422.234,
+     "dx_um": 367.2,
+     "dy_um": 55.034,
+     "driver_xy": [
+      1252.8,
+      425.723
+     ],
+     "load_xy": [
+      885.6,
+      370.69
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 422.233,
+     "dx_um": 367.2,
+     "dy_um": 55.033,
+     "driver_xy": [
+      1252.8,
+      425.817
+     ],
+     "load_xy": [
+      885.6,
+      370.785
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 422.232,
+     "dx_um": 367.2,
+     "dy_um": 55.032,
+     "driver_xy": [
+      1252.8,
+      425.911
+     ],
+     "load_xy": [
+      885.6,
+      370.88
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 422.231,
+     "dx_um": 367.2,
+     "dy_um": 55.031,
+     "driver_xy": [
+      1252.8,
+      426.006
+     ],
+     "load_xy": [
+      885.6,
+      370.975
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 422.23,
+     "dx_um": 367.2,
+     "dy_um": 55.03,
+     "driver_xy": [
+      1252.8,
+      426.1
+     ],
+     "load_xy": [
+      885.6,
+      371.07
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb",
+    "vm_cp_rb2"
+   ]
+  },
+  {
+   "net": "n_rt2_cfg",
+   "frm": "u_rt2.cfg",
+   "to": "u_re.cfgi",
+   "bits": 1,
+   "driver_bits": 1,
+   "load_bits": 1,
+   "net_bits": 1,
+   "faces": "S>N",
+   "max_um": 393.48,
+   "min_um": 393.48,
+   "mean_um": 393.48,
+   "p99_um": 393.48,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 393.48,
+     "dx_um": 117.72,
+     "dy_um": 275.76,
+     "driver_xy": [
+      871.56,
+      1468.8
+     ],
+     "load_xy": [
+      989.28,
+      1193.04
+     ],
+     "layers": "M3>M3"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt2",
+    "vm_cp_re"
+   ]
+  },
+  {
+   "net": "n_rb0_wo",
+   "frm": "u_rb0.wo",
+   "to": "u_fw1.ph",
+   "bits": 1078,
+   "driver_bits": 1078,
+   "load_bits": 1078,
+   "net_bits": 1078,
+   "faces": "W>E",
+   "max_um": 385.555,
+   "min_um": 289.169,
+   "mean_um": 337.362,
+   "p99_um": 384.66,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 1077,
+     "um": 385.555,
+     "dx_um": 159.84,
+     "dy_um": 225.715,
+     "driver_xy": [
+      172.8,
+      473.153
+     ],
+     "load_xy": [
+      12.96,
+      698.868
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 1076,
+     "um": 385.466,
+     "dx_um": 159.84,
+     "dy_um": 225.626,
+     "driver_xy": [
+      172.8,
+      473.059
+     ],
+     "load_xy": [
+      12.96,
+      698.684
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1075,
+     "um": 385.376,
+     "dx_um": 159.84,
+     "dy_um": 225.536,
+     "driver_xy": [
+      172.8,
+      472.965
+     ],
+     "load_xy": [
+      12.96,
+      698.501
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 1074,
+     "um": 385.287,
+     "dx_um": 159.84,
+     "dy_um": 225.447,
+     "driver_xy": [
+      172.8,
+      472.87
+     ],
+     "load_xy": [
+      12.96,
+      698.317
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1073,
+     "um": 385.197,
+     "dx_um": 159.84,
+     "dy_um": 225.357,
+     "driver_xy": [
+      172.8,
+      472.776
+     ],
+     "load_xy": [
+      12.96,
+      698.133
+     ],
+     "layers": "M4>M6"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb",
+    "vm_cp_fw1"
+   ]
+  },
+  {
+   "net": "n_rwb_o",
+   "frm": "u_rwb.o",
+   "to": "u_root.wr_i",
+   "bits": 217,
+   "driver_bits": 217,
+   "load_bits": 217,
+   "net_bits": 217,
+   "faces": "E>W",
+   "max_um": 375.665,
+   "min_um": 301.991,
+   "mean_um": 338.839,
+   "p99_um": 374.982,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 216,
+     "um": 375.665,
+     "dx_um": 203.04,
+     "dy_um": 172.625,
+     "driver_xy": [
+      142.56,
+      1380.156
+     ],
+     "load_xy": [
+      345.6,
+      1207.531
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 215,
+     "um": 375.323,
+     "dx_um": 203.04,
+     "dy_um": 172.283,
+     "driver_xy": [
+      142.56,
+      1379.676
+     ],
+     "load_xy": [
+      345.6,
+      1207.393
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 214,
+     "um": 374.982,
+     "dx_um": 203.04,
+     "dy_um": 171.942,
+     "driver_xy": [
+      142.56,
+      1379.196
+     ],
+     "load_xy": [
+      345.6,
+      1207.254
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 213,
+     "um": 374.64,
+     "dx_um": 203.04,
+     "dy_um": 171.6,
+     "driver_xy": [
+      142.56,
+      1378.716
+     ],
+     "load_xy": [
+      345.6,
+      1207.116
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 212,
+     "um": 374.298,
+     "dx_um": 203.04,
+     "dy_um": 171.258,
+     "driver_xy": [
+      142.56,
+      1378.236
+     ],
+     "load_xy": [
+      345.6,
+      1206.978
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rwb",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_rt3_eo",
+   "frm": "u_rt3.eo",
+   "to": "u_fe2.ph",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 367.323,
+   "min_um": 314.665,
+   "mean_um": 340.994,
+   "p99_um": 366.809,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 367.323,
+     "dx_um": 146.832,
+     "dy_um": 220.491,
+     "driver_xy": [
+      1239.84,
+      1470.847
+     ],
+     "load_xy": [
+      1386.672,
+      1250.356
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 367.297,
+     "dx_um": 146.832,
+     "dy_um": 220.465,
+     "driver_xy": [
+      1239.84,
+      1470.941
+     ],
+     "load_xy": [
+      1386.672,
+      1250.475
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 2,
+     "um": 367.272,
+     "dx_um": 146.832,
+     "dy_um": 220.44,
+     "driver_xy": [
+      1239.84,
+      1471.034
+     ],
+     "load_xy": [
+      1386.672,
+      1250.595
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 367.246,
+     "dx_um": 146.832,
+     "dy_um": 220.414,
+     "driver_xy": [
+      1239.84,
+      1471.128
+     ],
+     "load_xy": [
+      1386.672,
+      1250.714
+     ],
+     "layers": "M4>M6"
+    },
+    {
+     "bit": 4,
+     "um": 367.22,
+     "dx_um": 146.832,
+     "dy_um": 220.388,
+     "driver_xy": [
+      1239.84,
+      1471.222
+     ],
+     "load_xy": [
+      1386.672,
+      1250.833
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt",
+    "vm_cp_fe2"
+   ]
+  },
+  {
+   "net": "n_re_rd",
+   "frm": "u_re.rdo",
+   "to": "u_root.rd_i",
+   "bits": 201,
+   "driver_bits": 201,
+   "load_bits": 201,
+   "net_bits": 201,
+   "faces": "W>E",
+   "max_um": 357.025,
+   "min_um": 330.514,
+   "mean_um": 341.52,
+   "p99_um": 356.643,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 357.025,
+     "dx_um": 330.48,
+     "dy_um": 26.545,
+     "driver_xy": [
+      978.48,
+      806.381
+     ],
+     "load_xy": [
+      648.0,
+      779.836
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 356.834,
+     "dx_um": 330.48,
+     "dy_um": 26.354,
+     "driver_xy": [
+      978.48,
+      806.663
+     ],
+     "load_xy": [
+      648.0,
+      780.309
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2,
+     "um": 356.643,
+     "dx_um": 330.48,
+     "dy_um": 26.163,
+     "driver_xy": [
+      978.48,
+      806.945
+     ],
+     "load_xy": [
+      648.0,
+      780.782
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 356.452,
+     "dx_um": 330.48,
+     "dy_um": 25.972,
+     "driver_xy": [
+      978.48,
+      807.228
+     ],
+     "load_xy": [
+      648.0,
+      781.255
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 4,
+     "um": 356.262,
+     "dx_um": 330.48,
+     "dy_um": 25.782,
+     "driver_xy": [
+      978.48,
+      807.51
+     ],
+     "load_xy": [
+      648.0,
+      781.728
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_re",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_re_cfg",
+   "frm": "u_re.cfgo",
+   "to": "u_root.cfg_i",
+   "bits": 1,
+   "driver_bits": 1,
+   "load_bits": 1,
+   "net_bits": 1,
+   "faces": "W>E",
+   "max_um": 342.271,
+   "min_um": 342.271,
+   "mean_um": 342.271,
+   "p99_um": 342.271,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 342.271,
+     "dx_um": 330.48,
+     "dy_um": 11.791,
+     "driver_xy": [
+      978.48,
+      864.099
+     ],
+     "load_xy": [
+      648.0,
+      875.89
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_re",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_root_te",
+   "frm": "u_root.tap_e",
+   "to": "u_re.tap",
+   "bits": 2063,
+   "driver_bits": 2063,
+   "load_bits": 2063,
+   "net_bits": 2063,
+   "faces": "E>W",
+   "max_um": 336.839,
+   "min_um": 333.841,
+   "mean_um": 335.34,
+   "p99_um": 336.81,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 2062,
+     "um": 336.839,
+     "dx_um": 330.48,
+     "dy_um": 6.359,
+     "driver_xy": [
+      648.0,
+      1107.544
+     ],
+     "load_xy": [
+      978.48,
+      1101.185
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2061,
+     "um": 336.838,
+     "dx_um": 330.48,
+     "dy_um": 6.358,
+     "driver_xy": [
+      648.0,
+      1107.433
+     ],
+     "load_xy": [
+      978.48,
+      1101.075
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2060,
+     "um": 336.836,
+     "dx_um": 330.48,
+     "dy_um": 6.356,
+     "driver_xy": [
+      648.0,
+      1107.321
+     ],
+     "load_xy": [
+      978.48,
+      1100.965
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2059,
+     "um": 336.835,
+     "dx_um": 330.48,
+     "dy_um": 6.355,
+     "driver_xy": [
+      648.0,
+      1107.21
+     ],
+     "load_xy": [
+      978.48,
+      1100.855
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2058,
+     "um": 336.833,
+     "dx_um": 330.48,
+     "dy_um": 6.353,
+     "driver_xy": [
+      648.0,
+      1107.098
+     ],
+     "load_xy": [
+      978.48,
+      1100.745
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_re"
+   ]
+  },
+  {
+   "net": "n_fw3_wr",
+   "frm": "u_fw3.wr",
+   "to": "u_rwb.i",
+   "bits": 217,
+   "driver_bits": 217,
+   "load_bits": 217,
+   "net_bits": 217,
+   "faces": "E>W",
+   "max_um": 336.01,
+   "min_um": 293.23,
+   "mean_um": 314.62,
+   "p99_um": 335.632,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 336.01,
+     "dx_um": 116.64,
+     "dy_um": 219.37,
+     "driver_xy": [
+      12.96,
+      1499.014
+     ],
+     "load_xy": [
+      129.6,
+      1279.644
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 335.845,
+     "dx_um": 116.64,
+     "dy_um": 219.205,
+     "driver_xy": [
+      12.96,
+      1499.281
+     ],
+     "load_xy": [
+      129.6,
+      1280.076
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 2,
+     "um": 335.632,
+     "dx_um": 116.64,
+     "dy_um": 218.992,
+     "driver_xy": [
+      12.96,
+      1499.548
+     ],
+     "load_xy": [
+      129.6,
+      1280.556
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 335.419,
+     "dx_um": 116.64,
+     "dy_um": 218.779,
+     "driver_xy": [
+      12.96,
+      1499.815
+     ],
+     "load_xy": [
+      129.6,
+      1281.036
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 4,
+     "um": 335.207,
+     "dx_um": 116.64,
+     "dy_um": 218.567,
+     "driver_xy": [
+      12.96,
+      1500.083
+     ],
+     "load_xy": [
+      129.6,
+      1281.516
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_fw3",
+    "vm_cp_rwb"
+   ]
+  },
+  {
+   "net": "n_fw0_ph",
+   "frm": "u_fw0.ph",
+   "to": "u_rb0.wi",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 335.614,
+   "min_um": 230.542,
+   "mean_um": 283.078,
+   "p99_um": 334.588,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 335.614,
+     "dx_um": 159.84,
+     "dy_um": 175.774,
+     "driver_xy": [
+      12.96,
+      2.073
+     ],
+     "load_xy": [
+      172.8,
+      177.847
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 335.563,
+     "dx_um": 159.84,
+     "dy_um": 175.723,
+     "driver_xy": [
+      12.96,
+      2.218
+     ],
+     "load_xy": [
+      172.8,
+      177.941
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 2,
+     "um": 335.512,
+     "dx_um": 159.84,
+     "dy_um": 175.672,
+     "driver_xy": [
+      12.96,
+      2.364
+     ],
+     "load_xy": [
+      172.8,
+      178.035
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 335.46,
+     "dx_um": 159.84,
+     "dy_um": 175.62,
+     "driver_xy": [
+      12.96,
+      2.509
+     ],
+     "load_xy": [
+      172.8,
+      178.13
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 4,
+     "um": 335.409,
+     "dx_um": 159.84,
+     "dy_um": 175.569,
+     "driver_xy": [
+      12.96,
+      2.655
+     ],
+     "load_xy": [
+      172.8,
+      178.224
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_fw0",
+    "vm_cp_rb"
+   ]
+  },
+  {
+   "net": "n_rb0_eo",
+   "frm": "u_rb0.eo",
+   "to": "u_rb1.wi",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 318.36,
+   "min_um": 316.394,
+   "mean_um": 317.377,
+   "p99_um": 318.34,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 318.36,
+     "dx_um": 315.36,
+     "dy_um": 3.0,
+     "driver_xy": [
+      203.04,
+      174.848
+     ],
+     "load_xy": [
+      518.4,
+      177.847
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 318.359,
+     "dx_um": 315.36,
+     "dy_um": 2.999,
+     "driver_xy": [
+      203.04,
+      174.943
+     ],
+     "load_xy": [
+      518.4,
+      177.941
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 318.358,
+     "dx_um": 315.36,
+     "dy_um": 2.998,
+     "driver_xy": [
+      203.04,
+      175.038
+     ],
+     "load_xy": [
+      518.4,
+      178.035
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 318.357,
+     "dx_um": 315.36,
+     "dy_um": 2.997,
+     "driver_xy": [
+      203.04,
+      175.133
+     ],
+     "load_xy": [
+      518.4,
+      178.13
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 318.356,
+     "dx_um": 315.36,
+     "dy_um": 2.996,
+     "driver_xy": [
+      203.04,
+      175.228
+     ],
+     "load_xy": [
+      518.4,
+      178.224
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb",
+    "vm_cp_rb"
+   ]
+  },
+  {
+   "net": "n_rb1_eo",
+   "frm": "u_rb1.eo",
+   "to": "u_rb2.wi",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 318.36,
+   "min_um": 316.394,
+   "mean_um": 317.377,
+   "p99_um": 318.34,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 318.36,
+     "dx_um": 315.36,
+     "dy_um": 3.0,
+     "driver_xy": [
+      548.64,
+      174.848
+     ],
+     "load_xy": [
+      864.0,
+      177.847
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 318.359,
+     "dx_um": 315.36,
+     "dy_um": 2.999,
+     "driver_xy": [
+      548.64,
+      174.943
+     ],
+     "load_xy": [
+      864.0,
+      177.941
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 318.358,
+     "dx_um": 315.36,
+     "dy_um": 2.998,
+     "driver_xy": [
+      548.64,
+      175.038
+     ],
+     "load_xy": [
+      864.0,
+      178.035
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 318.357,
+     "dx_um": 315.36,
+     "dy_um": 2.997,
+     "driver_xy": [
+      548.64,
+      175.133
+     ],
+     "load_xy": [
+      864.0,
+      178.13
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 318.356,
+     "dx_um": 315.36,
+     "dy_um": 2.996,
+     "driver_xy": [
+      548.64,
+      175.228
+     ],
+     "load_xy": [
+      864.0,
+      178.224
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb",
+    "vm_cp_rb2"
+   ]
+  },
+  {
+   "net": "n_rt1_eo",
+   "frm": "u_rt1.eo",
+   "to": "u_rt2.wi",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 318.36,
+   "min_um": 316.86,
+   "mean_um": 317.61,
+   "p99_um": 318.345,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 318.36,
+     "dx_um": 315.36,
+     "dy_um": 3.0,
+     "driver_xy": [
+      548.64,
+      1470.847
+     ],
+     "load_xy": [
+      864.0,
+      1473.846
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 318.359,
+     "dx_um": 315.36,
+     "dy_um": 2.999,
+     "driver_xy": [
+      548.64,
+      1470.941
+     ],
+     "load_xy": [
+      864.0,
+      1473.939
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 318.358,
+     "dx_um": 315.36,
+     "dy_um": 2.998,
+     "driver_xy": [
+      548.64,
+      1471.034
+     ],
+     "load_xy": [
+      864.0,
+      1474.032
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 318.357,
+     "dx_um": 315.36,
+     "dy_um": 2.997,
+     "driver_xy": [
+      548.64,
+      1471.128
+     ],
+     "load_xy": [
+      864.0,
+      1474.125
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 318.357,
+     "dx_um": 315.36,
+     "dy_um": 2.997,
+     "driver_xy": [
+      548.64,
+      1471.222
+     ],
+     "load_xy": [
+      864.0,
+      1474.218
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt",
+    "vm_cp_rt2"
+   ]
+  },
+  {
+   "net": "n_rt2_eo",
+   "frm": "u_rt2.eo",
+   "to": "u_rt3.wi",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "E>W",
+   "max_um": 318.36,
+   "min_um": 316.86,
+   "mean_um": 317.61,
+   "p99_um": 318.345,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 318.36,
+     "dx_um": 315.36,
+     "dy_um": 3.0,
+     "driver_xy": [
+      894.24,
+      1470.847
+     ],
+     "load_xy": [
+      1209.6,
+      1473.846
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 318.359,
+     "dx_um": 315.36,
+     "dy_um": 2.999,
+     "driver_xy": [
+      894.24,
+      1470.941
+     ],
+     "load_xy": [
+      1209.6,
+      1473.939
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 318.358,
+     "dx_um": 315.36,
+     "dy_um": 2.998,
+     "driver_xy": [
+      894.24,
+      1471.034
+     ],
+     "load_xy": [
+      1209.6,
+      1474.032
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 318.357,
+     "dx_um": 315.36,
+     "dy_um": 2.997,
+     "driver_xy": [
+      894.24,
+      1471.128
+     ],
+     "load_xy": [
+      1209.6,
+      1474.125
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 318.357,
+     "dx_um": 315.36,
+     "dy_um": 2.997,
+     "driver_xy": [
+      894.24,
+      1471.222
+     ],
+     "load_xy": [
+      1209.6,
+      1474.218
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt2",
+    "vm_cp_rt"
+   ]
+  },
+  {
+   "net": "n_rt2_wo",
+   "frm": "u_rt2.wo",
+   "to": "u_rt1.ei",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "W>E",
+   "max_um": 316.86,
+   "min_um": 315.36,
+   "mean_um": 316.11,
+   "p99_um": 316.845,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 316.86,
+     "dx_um": 315.36,
+     "dy_um": 1.5,
+     "driver_xy": [
+      864.0,
+      1665.246
+     ],
+     "load_xy": [
+      548.64,
+      1663.747
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 316.859,
+     "dx_um": 315.36,
+     "dy_um": 1.499,
+     "driver_xy": [
+      864.0,
+      1665.339
+     ],
+     "load_xy": [
+      548.64,
+      1663.841
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 316.858,
+     "dx_um": 315.36,
+     "dy_um": 1.498,
+     "driver_xy": [
+      864.0,
+      1665.432
+     ],
+     "load_xy": [
+      548.64,
+      1663.934
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 316.857,
+     "dx_um": 315.36,
+     "dy_um": 1.497,
+     "driver_xy": [
+      864.0,
+      1665.525
+     ],
+     "load_xy": [
+      548.64,
+      1664.028
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 316.857,
+     "dx_um": 315.36,
+     "dy_um": 1.497,
+     "driver_xy": [
+      864.0,
+      1665.618
+     ],
+     "load_xy": [
+      548.64,
+      1664.122
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt2",
+    "vm_cp_rt"
+   ]
+  },
+  {
+   "net": "n_rt3_wo",
+   "frm": "u_rt3.wo",
+   "to": "u_rt2.ei",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "W>E",
+   "max_um": 316.86,
+   "min_um": 315.36,
+   "mean_um": 316.11,
+   "p99_um": 316.845,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 316.86,
+     "dx_um": 315.36,
+     "dy_um": 1.5,
+     "driver_xy": [
+      1209.6,
+      1665.246
+     ],
+     "load_xy": [
+      894.24,
+      1663.747
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 316.859,
+     "dx_um": 315.36,
+     "dy_um": 1.499,
+     "driver_xy": [
+      1209.6,
+      1665.339
+     ],
+     "load_xy": [
+      894.24,
+      1663.841
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 316.858,
+     "dx_um": 315.36,
+     "dy_um": 1.498,
+     "driver_xy": [
+      1209.6,
+      1665.432
+     ],
+     "load_xy": [
+      894.24,
+      1663.934
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 316.857,
+     "dx_um": 315.36,
+     "dy_um": 1.497,
+     "driver_xy": [
+      1209.6,
+      1665.525
+     ],
+     "load_xy": [
+      894.24,
+      1664.028
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 316.857,
+     "dx_um": 315.36,
+     "dy_um": 1.497,
+     "driver_xy": [
+      1209.6,
+      1665.618
+     ],
+     "load_xy": [
+      894.24,
+      1664.122
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rt",
+    "vm_cp_rt2"
+   ]
+  },
+  {
+   "net": "n_rb1_wo",
+   "frm": "u_rb1.wo",
+   "to": "u_rb0.ei",
+   "bits": 1078,
+   "driver_bits": 1078,
+   "load_bits": 1078,
+   "net_bits": 1078,
+   "faces": "W>E",
+   "max_um": 316.394,
+   "min_um": 315.36,
+   "mean_um": 315.877,
+   "p99_um": 316.384,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 316.394,
+     "dx_um": 315.36,
+     "dy_um": 1.034,
+     "driver_xy": [
+      518.4,
+      371.723
+     ],
+     "load_xy": [
+      203.04,
+      370.69
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 316.393,
+     "dx_um": 315.36,
+     "dy_um": 1.033,
+     "driver_xy": [
+      518.4,
+      371.817
+     ],
+     "load_xy": [
+      203.04,
+      370.785
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 316.392,
+     "dx_um": 315.36,
+     "dy_um": 1.032,
+     "driver_xy": [
+      518.4,
+      371.911
+     ],
+     "load_xy": [
+      203.04,
+      370.88
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 316.391,
+     "dx_um": 315.36,
+     "dy_um": 1.031,
+     "driver_xy": [
+      518.4,
+      372.006
+     ],
+     "load_xy": [
+      203.04,
+      370.975
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 316.39,
+     "dx_um": 315.36,
+     "dy_um": 1.03,
+     "driver_xy": [
+      518.4,
+      372.1
+     ],
+     "load_xy": [
+      203.04,
+      371.07
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb",
+    "vm_cp_rb"
+   ]
+  },
+  {
+   "net": "n_rb2_wo",
+   "frm": "u_rb2.wo",
+   "to": "u_rb1.ei",
+   "bits": 1078,
+   "driver_bits": 1078,
+   "load_bits": 1078,
+   "net_bits": 1078,
+   "faces": "W>E",
+   "max_um": 316.394,
+   "min_um": 315.36,
+   "mean_um": 315.877,
+   "p99_um": 316.384,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 316.394,
+     "dx_um": 315.36,
+     "dy_um": 1.034,
+     "driver_xy": [
+      864.0,
+      371.723
+     ],
+     "load_xy": [
+      548.64,
+      370.69
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 316.393,
+     "dx_um": 315.36,
+     "dy_um": 1.033,
+     "driver_xy": [
+      864.0,
+      371.817
+     ],
+     "load_xy": [
+      548.64,
+      370.785
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 2,
+     "um": 316.392,
+     "dx_um": 315.36,
+     "dy_um": 1.032,
+     "driver_xy": [
+      864.0,
+      371.911
+     ],
+     "load_xy": [
+      548.64,
+      370.88
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 316.391,
+     "dx_um": 315.36,
+     "dy_um": 1.031,
+     "driver_xy": [
+      864.0,
+      372.006
+     ],
+     "load_xy": [
+      548.64,
+      370.975
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 4,
+     "um": 316.39,
+     "dx_um": 315.36,
+     "dy_um": 1.03,
+     "driver_xy": [
+      864.0,
+      372.1
+     ],
+     "load_xy": [
+      548.64,
+      371.07
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rb2",
+    "vm_cp_rb"
+   ]
+  },
+  {
+   "net": "n_fe3_ph",
+   "frm": "u_fe3.ph",
+   "to": "u_rt3.ei",
+   "bits": 2048,
+   "driver_bits": 2048,
+   "load_bits": 2048,
+   "net_bits": 2048,
+   "faces": "W>E",
+   "max_um": 301.605,
+   "min_um": 146.879,
+   "mean_um": 212.691,
+   "p99_um": 299.719,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 301.605,
+     "dx_um": 146.832,
+     "dy_um": 154.773,
+     "driver_xy": [
+      1386.672,
+      1508.974
+     ],
+     "load_xy": [
+      1239.84,
+      1663.747
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 301.511,
+     "dx_um": 146.832,
+     "dy_um": 154.679,
+     "driver_xy": [
+      1386.672,
+      1509.162
+     ],
+     "load_xy": [
+      1239.84,
+      1663.841
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 2,
+     "um": 301.416,
+     "dx_um": 146.832,
+     "dy_um": 154.584,
+     "driver_xy": [
+      1386.672,
+      1509.35
+     ],
+     "load_xy": [
+      1239.84,
+      1663.934
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 301.322,
+     "dx_um": 146.832,
+     "dy_um": 154.49,
+     "driver_xy": [
+      1386.672,
+      1509.538
+     ],
+     "load_xy": [
+      1239.84,
+      1664.028
+     ],
+     "layers": "M6>M4"
+    },
+    {
+     "bit": 4,
+     "um": 301.228,
+     "dx_um": 146.832,
+     "dy_um": 154.396,
+     "driver_xy": [
+      1386.672,
+      1509.726
+     ],
+     "load_xy": [
+      1239.84,
+      1664.122
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_fe3",
+    "vm_cp_rt"
+   ]
+  },
+  {
+   "net": "n_s2_rd",
+   "frm": "u_s2.rd",
+   "to": "u_root.rd2",
+   "bits": 768,
+   "driver_bits": 768,
+   "load_bits": 768,
+   "net_bits": 768,
+   "faces": "N>S",
+   "max_um": 236.407,
+   "min_um": 185.667,
+   "mean_um": 211.037,
+   "p99_um": 235.944,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 767,
+     "um": 236.407,
+     "dx_um": 214.807,
+     "dy_um": 21.6,
+     "driver_xy": [
+      860.76,
+      756.0
+     ],
+     "load_xy": [
+      645.953,
+      777.6
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 766,
+     "um": 236.341,
+     "dx_um": 214.741,
+     "dy_um": 21.6,
+     "driver_xy": [
+      860.599,
+      756.0
+     ],
+     "load_xy": [
+      645.859,
+      777.6
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 765,
+     "um": 236.275,
+     "dx_um": 214.675,
+     "dy_um": 21.6,
+     "driver_xy": [
+      860.439,
+      756.0
+     ],
+     "load_xy": [
+      645.765,
+      777.6
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 764,
+     "um": 236.208,
+     "dx_um": 214.608,
+     "dy_um": 21.6,
+     "driver_xy": [
+      860.279,
+      756.0
+     ],
+     "load_xy": [
+      645.67,
+      777.6
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 763,
+     "um": 236.142,
+     "dx_um": 214.542,
+     "dy_um": 21.6,
+     "driver_xy": [
+      860.118,
+      756.0
+     ],
+     "load_xy": [
+      645.576,
+      777.6
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_slice3",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_s3_rd",
+   "frm": "u_s3.rd",
+   "to": "u_root.rd3",
+   "bits": 512,
+   "driver_bits": 512,
+   "load_bits": 512,
+   "net_bits": 512,
+   "faces": "N>N",
+   "max_um": 236.308,
+   "min_um": 171.552,
+   "mean_um": 203.921,
+   "p99_um": 235.658,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 511,
+     "um": 236.308,
+     "dx_um": 214.708,
+     "dy_um": 21.6,
+     "driver_xy": [
+      860.652,
+      1231.2
+     ],
+     "load_xy": [
+      645.944,
+      1209.6
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 510,
+     "um": 236.178,
+     "dx_um": 214.578,
+     "dy_um": 21.6,
+     "driver_xy": [
+      860.409,
+      1231.2
+     ],
+     "load_xy": [
+      645.831,
+      1209.6
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 509,
+     "um": 236.054,
+     "dx_um": 214.454,
+     "dy_um": 21.6,
+     "driver_xy": [
+      860.172,
+      1231.2
+     ],
+     "load_xy": [
+      645.718,
+      1209.6
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 508,
+     "um": 235.9,
+     "dx_um": 214.3,
+     "dy_um": 21.6,
+     "driver_xy": [
+      859.905,
+      1231.2
+     ],
+     "load_xy": [
+      645.605,
+      1209.6
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 507,
+     "um": 235.8,
+     "dx_um": 214.2,
+     "dy_um": 21.6,
+     "driver_xy": [
+      859.692,
+      1231.2
+     ],
+     "load_xy": [
+      645.492,
+      1209.6
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_slice2",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_root_tw",
+   "frm": "u_root.tap_w",
+   "to": "u_rwt.tap",
+   "bits": 2063,
+   "driver_bits": 2063,
+   "load_bits": 2063,
+   "net_bits": 2063,
+   "faces": "W>E",
+   "max_um": 203.079,
+   "min_um": 200.88,
+   "mean_um": 201.817,
+   "p99_um": 203.053,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 203.079,
+     "dx_um": 200.88,
+     "dy_um": 2.199,
+     "driver_xy": [
+      345.6,
+      980.643
+     ],
+     "load_xy": [
+      144.72,
+      978.444
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 203.078,
+     "dx_um": 200.88,
+     "dy_um": 2.198,
+     "driver_xy": [
+      345.6,
+      980.73
+     ],
+     "load_xy": [
+      144.72,
+      978.532
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2,
+     "um": 203.077,
+     "dx_um": 200.88,
+     "dy_um": 2.197,
+     "driver_xy": [
+      345.6,
+      980.816
+     ],
+     "load_xy": [
+      144.72,
+      978.62
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 203.075,
+     "dx_um": 200.88,
+     "dy_um": 2.195,
+     "driver_xy": [
+      345.6,
+      980.903
+     ],
+     "load_xy": [
+      144.72,
+      978.708
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 4,
+     "um": 203.074,
+     "dx_um": 200.88,
+     "dy_um": 2.194,
+     "driver_xy": [
+      345.6,
+      980.989
+     ],
+     "load_xy": [
+      144.72,
+      978.795
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_rwt"
+   ]
+  },
+  {
+   "net": "n_root_st",
+   "frm": "u_root.st_o",
+   "to": "u_rwt.st",
+   "bits": 202,
+   "driver_bits": 202,
+   "load_bits": 202,
+   "net_bits": 202,
+   "faces": "W>E",
+   "max_um": 201.679,
+   "min_um": 201.414,
+   "mean_um": 201.546,
+   "p99_um": 201.677,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 201,
+     "um": 201.679,
+     "dx_um": 200.88,
+     "dy_um": 0.799,
+     "driver_xy": [
+      345.6,
+      1177.557
+     ],
+     "load_xy": [
+      144.72,
+      1178.356
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 200,
+     "um": 201.678,
+     "dx_um": 200.88,
+     "dy_um": 0.798,
+     "driver_xy": [
+      345.6,
+      1177.47
+     ],
+     "load_xy": [
+      144.72,
+      1178.268
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 199,
+     "um": 201.677,
+     "dx_um": 200.88,
+     "dy_um": 0.797,
+     "driver_xy": [
+      345.6,
+      1177.384
+     ],
+     "load_xy": [
+      144.72,
+      1178.18
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 198,
+     "um": 201.675,
+     "dx_um": 200.88,
+     "dy_um": 0.795,
+     "driver_xy": [
+      345.6,
+      1177.297
+     ],
+     "load_xy": [
+      144.72,
+      1178.093
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 197,
+     "um": 201.674,
+     "dx_um": 200.88,
+     "dy_um": 0.794,
+     "driver_xy": [
+      345.6,
+      1177.211
+     ],
+     "load_xy": [
+      144.72,
+      1178.005
+     ],
+     "layers": "M6>M6"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_rwt"
+   ]
+  },
+  {
+   "net": "n_s2_rv",
+   "frm": "u_s2.rv",
+   "to": "u_root.rv2",
+   "bits": 1,
+   "driver_bits": 1,
+   "load_bits": 1,
+   "net_bits": 1,
+   "faces": "N>S",
+   "max_um": 185.6,
+   "min_um": 185.6,
+   "mean_um": 185.6,
+   "p99_um": 185.6,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 185.6,
+     "dx_um": 164.0,
+     "dy_um": 21.6,
+     "driver_xy": [
+      736.621,
+      756.0
+     ],
+     "load_xy": [
+      572.621,
+      777.6
+     ],
+     "layers": "M3>M3"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_slice3",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_s2_wd",
+   "frm": "u_root.wd2",
+   "to": "u_s2.wd",
+   "bits": 768,
+   "driver_bits": 768,
+   "load_bits": 768,
+   "net_bits": 768,
+   "faces": "S>N",
+   "max_um": 185.534,
+   "min_um": 134.794,
+   "mean_um": 160.164,
+   "p99_um": 185.071,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 767,
+     "um": 185.534,
+     "dx_um": 163.934,
+     "dy_um": 21.6,
+     "driver_xy": [
+      571.527,
+      777.6
+     ],
+     "load_xy": [
+      735.461,
+      756.0
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 766,
+     "um": 185.468,
+     "dx_um": 163.868,
+     "dy_um": 21.6,
+     "driver_xy": [
+      571.433,
+      777.6
+     ],
+     "load_xy": [
+      735.3,
+      756.0
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 765,
+     "um": 185.402,
+     "dx_um": 163.802,
+     "dy_um": 21.6,
+     "driver_xy": [
+      571.339,
+      777.6
+     ],
+     "load_xy": [
+      735.14,
+      756.0
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 764,
+     "um": 185.335,
+     "dx_um": 163.735,
+     "dy_um": 21.6,
+     "driver_xy": [
+      571.244,
+      777.6
+     ],
+     "load_xy": [
+      734.98,
+      756.0
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 763,
+     "um": 185.269,
+     "dx_um": 163.669,
+     "dy_um": 21.6,
+     "driver_xy": [
+      571.15,
+      777.6
+     ],
+     "load_xy": [
+      734.819,
+      756.0
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_slice3"
+   ]
+  },
+  {
+   "net": "n_s3_rv",
+   "frm": "u_s3.rv",
+   "to": "u_root.rv3",
+   "bits": 1,
+   "driver_bits": 1,
+   "load_bits": 1,
+   "net_bits": 1,
+   "faces": "N>N",
+   "max_um": 171.405,
+   "min_um": 171.405,
+   "mean_um": 171.405,
+   "p99_um": 171.405,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 171.405,
+     "dx_um": 149.804,
+     "dy_um": 21.6,
+     "driver_xy": [
+      736.965,
+      1231.2
+     ],
+     "load_xy": [
+      587.16,
+      1209.6
+     ],
+     "layers": "M3>M3"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_slice2",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_s3_wd",
+   "frm": "u_root.wd3",
+   "to": "u_s3.wd",
+   "bits": 512,
+   "driver_bits": 512,
+   "load_bits": 512,
+   "net_bits": 512,
+   "faces": "N>N",
+   "max_um": 171.308,
+   "min_um": 106.529,
+   "mean_um": 138.916,
+   "p99_um": 170.67,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 511,
+     "um": 171.308,
+     "dx_um": 149.708,
+     "dy_um": 21.6,
+     "driver_xy": [
+      586.048,
+      1209.6
+     ],
+     "load_xy": [
+      735.756,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 510,
+     "um": 171.154,
+     "dx_um": 149.554,
+     "dy_um": 21.6,
+     "driver_xy": [
+      585.935,
+      1209.6
+     ],
+     "load_xy": [
+      735.489,
+      1231.2
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 509,
+     "um": 171.054,
+     "dx_um": 149.454,
+     "dy_um": 21.6,
+     "driver_xy": [
+      585.822,
+      1209.6
+     ],
+     "load_xy": [
+      735.276,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 508,
+     "um": 170.912,
+     "dx_um": 149.312,
+     "dy_um": 21.6,
+     "driver_xy": [
+      585.709,
+      1209.6
+     ],
+     "load_xy": [
+      735.021,
+      1231.2
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 507,
+     "um": 170.8,
+     "dx_um": 149.2,
+     "dy_um": 21.6,
+     "driver_xy": [
+      585.596,
+      1209.6
+     ],
+     "load_xy": [
+      734.796,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_slice2"
+   ]
+  },
+  {
+   "net": "n_rwt_sw",
+   "frm": "u_rwt.sw",
+   "to": "u_fw1.tap",
+   "bits": 2063,
+   "driver_bits": 2063,
+   "load_bits": 2063,
+   "net_bits": 2063,
+   "faces": "W>E",
+   "max_um": 154.074,
+   "min_um": 128.267,
+   "mean_um": 141.17,
+   "p99_um": 153.823,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 154.074,
+     "dx_um": 116.64,
+     "dy_um": 37.434,
+     "driver_xy": [
+      129.6,
+      736.443
+     ],
+     "load_xy": [
+      12.96,
+      699.009
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 154.061,
+     "dx_um": 116.64,
+     "dy_um": 37.421,
+     "driver_xy": [
+      129.6,
+      736.528
+     ],
+     "load_xy": [
+      12.96,
+      699.106
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2,
+     "um": 154.049,
+     "dx_um": 116.64,
+     "dy_um": 37.409,
+     "driver_xy": [
+      129.6,
+      736.613
+     ],
+     "load_xy": [
+      12.96,
+      699.204
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 154.036,
+     "dx_um": 116.64,
+     "dy_um": 37.396,
+     "driver_xy": [
+      129.6,
+      736.698
+     ],
+     "load_xy": [
+      12.96,
+      699.302
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 4,
+     "um": 154.024,
+     "dx_um": 116.64,
+     "dy_um": 37.384,
+     "driver_xy": [
+      129.6,
+      736.783
+     ],
+     "load_xy": [
+      12.96,
+      699.399
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rwt",
+    "vm_cp_fw1"
+   ]
+  },
+  {
+   "net": "n_s2_cmd",
+   "frm": "u_root.cmd2",
+   "to": "u_s2.cmd",
+   "bits": 10,
+   "driver_bits": 10,
+   "load_bits": 10,
+   "net_bits": 10,
+   "faces": "S>N",
+   "max_um": 134.728,
+   "min_um": 134.133,
+   "mean_um": 134.43,
+   "p99_um": 134.728,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 9,
+     "um": 134.728,
+     "dx_um": 113.128,
+     "dy_um": 21.6,
+     "driver_xy": [
+      498.195,
+      777.6
+     ],
+     "load_xy": [
+      611.323,
+      756.0
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 8,
+     "um": 134.662,
+     "dx_um": 113.062,
+     "dy_um": 21.6,
+     "driver_xy": [
+      498.101,
+      777.6
+     ],
+     "load_xy": [
+      611.163,
+      756.0
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 7,
+     "um": 134.596,
+     "dx_um": 112.996,
+     "dy_um": 21.6,
+     "driver_xy": [
+      498.007,
+      777.6
+     ],
+     "load_xy": [
+      611.002,
+      756.0
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 6,
+     "um": 134.53,
+     "dx_um": 112.93,
+     "dy_um": 21.6,
+     "driver_xy": [
+      497.912,
+      777.6
+     ],
+     "load_xy": [
+      610.842,
+      756.0
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 5,
+     "um": 134.464,
+     "dx_um": 112.864,
+     "dy_um": 21.6,
+     "driver_xy": [
+      497.818,
+      777.6
+     ],
+     "load_xy": [
+      610.682,
+      756.0
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_slice3"
+   ]
+  },
+  {
+   "net": "n_rwt_st",
+   "frm": "u_rwt.sto",
+   "to": "u_fw1.st",
+   "bits": 970,
+   "driver_bits": 970,
+   "load_bits": 970,
+   "net_bits": 970,
+   "faces": "W>E",
+   "max_um": 128.255,
+   "min_um": 116.641,
+   "mean_um": 122.213,
+   "p99_um": 128.142,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 128.255,
+     "dx_um": 116.64,
+     "dy_um": 11.615,
+     "driver_xy": [
+      129.6,
+      912.931
+     ],
+     "load_xy": [
+      12.96,
+      901.316
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 1,
+     "um": 128.242,
+     "dx_um": 116.64,
+     "dy_um": 11.602,
+     "driver_xy": [
+      129.6,
+      913.016
+     ],
+     "load_xy": [
+      12.96,
+      901.413
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 2,
+     "um": 128.23,
+     "dx_um": 116.64,
+     "dy_um": 11.59,
+     "driver_xy": [
+      129.6,
+      913.101
+     ],
+     "load_xy": [
+      12.96,
+      901.511
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 3,
+     "um": 128.217,
+     "dx_um": 116.64,
+     "dy_um": 11.577,
+     "driver_xy": [
+      129.6,
+      913.186
+     ],
+     "load_xy": [
+      12.96,
+      901.609
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 4,
+     "um": 128.205,
+     "dx_um": 116.64,
+     "dy_um": 11.565,
+     "driver_xy": [
+      129.6,
+      913.271
+     ],
+     "load_xy": [
+      12.96,
+      901.706
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rwt",
+    "vm_cp_fw1"
+   ]
+  },
+  {
+   "net": "n_s0_rd",
+   "frm": "u_s0.rd",
+   "to": "u_root.rd0",
+   "bits": 768,
+   "driver_bits": 768,
+   "load_bits": 768,
+   "net_bits": 768,
+   "faces": "N>S",
+   "max_um": 126.907,
+   "min_um": 76.167,
+   "mean_um": 101.537,
+   "p99_um": 126.444,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 767,
+     "um": 126.907,
+     "dx_um": 105.307,
+     "dy_um": 21.6,
+     "driver_xy": [
+      601.56,
+      756.0
+     ],
+     "load_xy": [
+      496.253,
+      777.6
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 766,
+     "um": 126.841,
+     "dx_um": 105.241,
+     "dy_um": 21.6,
+     "driver_xy": [
+      601.399,
+      756.0
+     ],
+     "load_xy": [
+      496.159,
+      777.6
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 765,
+     "um": 126.775,
+     "dx_um": 105.175,
+     "dy_um": 21.6,
+     "driver_xy": [
+      601.239,
+      756.0
+     ],
+     "load_xy": [
+      496.065,
+      777.6
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 764,
+     "um": 126.708,
+     "dx_um": 105.108,
+     "dy_um": 21.6,
+     "driver_xy": [
+      601.079,
+      756.0
+     ],
+     "load_xy": [
+      495.97,
+      777.6
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 763,
+     "um": 126.642,
+     "dx_um": 105.042,
+     "dy_um": 21.6,
+     "driver_xy": [
+      600.918,
+      756.0
+     ],
+     "load_xy": [
+      495.876,
+      777.6
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_slice3",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_rwt_nw",
+   "frm": "u_rwt.nw",
+   "to": "u_fw2.tap",
+   "bits": 2063,
+   "driver_bits": 2063,
+   "load_bits": 2063,
+   "net_bits": 2063,
+   "faces": "W>E",
+   "max_um": 114.8,
+   "min_um": 114.8,
+   "mean_um": 114.8,
+   "p99_um": 114.8,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 203,
+     "um": 114.8,
+     "dx_um": 112.32,
+     "dy_um": 2.48,
+     "driver_xy": [
+      129.6,
+      1026.863
+     ],
+     "load_xy": [
+      17.28,
+      1024.383
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 214,
+     "um": 114.8,
+     "dx_um": 112.32,
+     "dy_um": 2.48,
+     "driver_xy": [
+      129.6,
+      1028.186
+     ],
+     "load_xy": [
+      17.28,
+      1025.706
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 232,
+     "um": 114.8,
+     "dx_um": 112.32,
+     "dy_um": 2.48,
+     "driver_xy": [
+      129.6,
+      1030.35
+     ],
+     "load_xy": [
+      17.28,
+      1027.87
+     ],
+     "layers": "M4>M4"
+    },
+    {
+     "bit": 243,
+     "um": 114.8,
+     "dx_um": 112.32,
+     "dy_um": 2.48,
+     "driver_xy": [
+      129.6,
+      1031.672
+     ],
+     "load_xy": [
+      17.28,
+      1029.192
+     ],
+     "layers": "M6>M6"
+    },
+    {
+     "bit": 272,
+     "um": 114.8,
+     "dx_um": 112.32,
+     "dy_um": 2.48,
+     "driver_xy": [
+      129.6,
+      1035.158
+     ],
+     "load_xy": [
+      17.28,
+      1032.678
+     ],
+     "layers": "M4>M4"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_rwt",
+    "vm_cp_fw2"
+   ]
+  },
+  {
+   "net": "n_s3_cmd",
+   "frm": "u_root.cmd3",
+   "to": "u_s3.cmd",
+   "bits": 10,
+   "driver_bits": 10,
+   "load_bits": 10,
+   "net_bits": 10,
+   "faces": "N>N",
+   "max_um": 106.396,
+   "min_um": 105.273,
+   "mean_um": 105.833,
+   "p99_um": 106.396,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 9,
+     "um": 106.396,
+     "dx_um": 84.796,
+     "dy_um": 21.6,
+     "driver_xy": [
+      527.264,
+      1209.6
+     ],
+     "load_xy": [
+      612.06,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 8,
+     "um": 106.278,
+     "dx_um": 84.678,
+     "dy_um": 21.6,
+     "driver_xy": [
+      527.151,
+      1209.6
+     ],
+     "load_xy": [
+      611.829,
+      1231.2
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 7,
+     "um": 106.142,
+     "dx_um": 84.542,
+     "dy_um": 21.6,
+     "driver_xy": [
+      527.038,
+      1209.6
+     ],
+     "load_xy": [
+      611.58,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 6,
+     "um": 106.036,
+     "dx_um": 84.436,
+     "dy_um": 21.6,
+     "driver_xy": [
+      526.925,
+      1209.6
+     ],
+     "load_xy": [
+      611.361,
+      1231.2
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 5,
+     "um": 105.888,
+     "dx_um": 84.288,
+     "dy_um": 21.6,
+     "driver_xy": [
+      526.812,
+      1209.6
+     ],
+     "load_xy": [
+      611.1,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_slice2"
+   ]
+  },
+  {
+   "net": "n_s1_rd",
+   "frm": "u_s1.rd",
+   "to": "u_root.rd1",
+   "bits": 768,
+   "driver_bits": 768,
+   "load_bits": 768,
+   "net_bits": 768,
+   "faces": "N>N",
+   "max_um": 98.024,
+   "min_um": 61.609,
+   "mean_um": 79.817,
+   "p99_um": 97.692,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 767,
+     "um": 98.024,
+     "dx_um": 76.424,
+     "dy_um": 21.6,
+     "driver_xy": [
+      601.56,
+      1231.2
+     ],
+     "load_xy": [
+      525.136,
+      1209.6
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 766,
+     "um": 97.977,
+     "dx_um": 76.377,
+     "dy_um": 21.6,
+     "driver_xy": [
+      601.399,
+      1231.2
+     ],
+     "load_xy": [
+      525.023,
+      1209.6
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 765,
+     "um": 97.929,
+     "dx_um": 76.329,
+     "dy_um": 21.6,
+     "driver_xy": [
+      601.239,
+      1231.2
+     ],
+     "load_xy": [
+      524.91,
+      1209.6
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 764,
+     "um": 97.882,
+     "dx_um": 76.282,
+     "dy_um": 21.6,
+     "driver_xy": [
+      601.079,
+      1231.2
+     ],
+     "load_xy": [
+      524.797,
+      1209.6
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 763,
+     "um": 97.834,
+     "dx_um": 76.234,
+     "dy_um": 21.6,
+     "driver_xy": [
+      600.918,
+      1231.2
+     ],
+     "load_xy": [
+      524.684,
+      1209.6
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_slice3",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_s0_rv",
+   "frm": "u_s0.rv",
+   "to": "u_root.rv0",
+   "bits": 1,
+   "driver_bits": 1,
+   "load_bits": 1,
+   "net_bits": 1,
+   "faces": "N>S",
+   "max_um": 76.101,
+   "min_um": 76.101,
+   "mean_um": 76.101,
+   "p99_um": 76.101,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 76.101,
+     "dx_um": 54.5,
+     "dy_um": 21.6,
+     "driver_xy": [
+      477.422,
+      756.0
+     ],
+     "load_xy": [
+      422.921,
+      777.6
+     ],
+     "layers": "M3>M3"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_slice3",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_s0_wd",
+   "frm": "u_root.wd0",
+   "to": "u_s0.wd",
+   "bits": 768,
+   "driver_bits": 768,
+   "load_bits": 768,
+   "net_bits": 768,
+   "faces": "S>N",
+   "max_um": 76.034,
+   "min_um": 25.294,
+   "mean_um": 50.664,
+   "p99_um": 75.571,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 767,
+     "um": 76.034,
+     "dx_um": 54.434,
+     "dy_um": 21.6,
+     "driver_xy": [
+      421.827,
+      777.6
+     ],
+     "load_xy": [
+      476.261,
+      756.0
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 766,
+     "um": 75.968,
+     "dx_um": 54.368,
+     "dy_um": 21.6,
+     "driver_xy": [
+      421.733,
+      777.6
+     ],
+     "load_xy": [
+      476.1,
+      756.0
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 765,
+     "um": 75.902,
+     "dx_um": 54.302,
+     "dy_um": 21.6,
+     "driver_xy": [
+      421.639,
+      777.6
+     ],
+     "load_xy": [
+      475.94,
+      756.0
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 764,
+     "um": 75.835,
+     "dx_um": 54.235,
+     "dy_um": 21.6,
+     "driver_xy": [
+      421.544,
+      777.6
+     ],
+     "load_xy": [
+      475.78,
+      756.0
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 763,
+     "um": 75.769,
+     "dx_um": 54.169,
+     "dy_um": 21.6,
+     "driver_xy": [
+      421.45,
+      777.6
+     ],
+     "load_xy": [
+      475.619,
+      756.0
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_slice3"
+   ]
+  },
+  {
+   "net": "n_s1_rv",
+   "frm": "u_s1.rv",
+   "to": "u_root.rv1",
+   "bits": 1,
+   "driver_bits": 1,
+   "load_bits": 1,
+   "net_bits": 1,
+   "faces": "N>N",
+   "max_um": 61.561,
+   "min_um": 61.561,
+   "mean_um": 61.561,
+   "p99_um": 61.561,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 0,
+     "um": 61.561,
+     "dx_um": 39.961,
+     "dy_um": 21.6,
+     "driver_xy": [
+      477.422,
+      1231.2
+     ],
+     "load_xy": [
+      437.461,
+      1209.6
+     ],
+     "layers": "M3>M3"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_slice3",
+    "vm_cp_root"
+   ]
+  },
+  {
+   "net": "n_s1_wd",
+   "frm": "u_root.wd1",
+   "to": "u_s1.wd",
+   "bits": 768,
+   "driver_bits": 768,
+   "load_bits": 768,
+   "net_bits": 768,
+   "faces": "N>N",
+   "max_um": 61.513,
+   "min_um": 25.098,
+   "mean_um": 43.306,
+   "p99_um": 61.181,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 767,
+     "um": 61.513,
+     "dx_um": 39.913,
+     "dy_um": 21.6,
+     "driver_xy": [
+      436.348,
+      1209.6
+     ],
+     "load_xy": [
+      476.261,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 766,
+     "um": 61.466,
+     "dx_um": 39.866,
+     "dy_um": 21.6,
+     "driver_xy": [
+      436.235,
+      1209.6
+     ],
+     "load_xy": [
+      476.1,
+      1231.2
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 765,
+     "um": 61.418,
+     "dx_um": 39.818,
+     "dy_um": 21.6,
+     "driver_xy": [
+      436.122,
+      1209.6
+     ],
+     "load_xy": [
+      475.94,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 764,
+     "um": 61.371,
+     "dx_um": 39.771,
+     "dy_um": 21.6,
+     "driver_xy": [
+      436.009,
+      1209.6
+     ],
+     "load_xy": [
+      475.78,
+      1231.2
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 763,
+     "um": 61.323,
+     "dx_um": 39.723,
+     "dy_um": 21.6,
+     "driver_xy": [
+      435.896,
+      1209.6
+     ],
+     "load_xy": [
+      475.619,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_slice3"
+   ]
+  },
+  {
+   "net": "n_s0_cmd",
+   "frm": "u_root.cmd0",
+   "to": "u_s0.cmd",
+   "bits": 10,
+   "driver_bits": 10,
+   "load_bits": 10,
+   "net_bits": 10,
+   "faces": "S>N",
+   "max_um": 25.228,
+   "min_um": 24.633,
+   "mean_um": 24.931,
+   "p99_um": 25.228,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 9,
+     "um": 25.228,
+     "dx_um": 3.628,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.495,
+      777.6
+     ],
+     "load_xy": [
+      352.123,
+      756.0
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 8,
+     "um": 25.162,
+     "dx_um": 3.562,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.401,
+      777.6
+     ],
+     "load_xy": [
+      351.963,
+      756.0
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 7,
+     "um": 25.096,
+     "dx_um": 3.496,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.307,
+      777.6
+     ],
+     "load_xy": [
+      351.802,
+      756.0
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 6,
+     "um": 25.03,
+     "dx_um": 3.43,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.212,
+      777.6
+     ],
+     "load_xy": [
+      351.642,
+      756.0
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 5,
+     "um": 24.964,
+     "dx_um": 3.364,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.118,
+      777.6
+     ],
+     "load_xy": [
+      351.482,
+      756.0
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_slice3"
+   ]
+  },
+  {
+   "net": "n_s1_cmd",
+   "frm": "u_root.cmd1",
+   "to": "u_s1.cmd",
+   "bits": 10,
+   "driver_bits": 10,
+   "load_bits": 10,
+   "net_bits": 10,
+   "faces": "N>N",
+   "max_um": 25.05,
+   "min_um": 24.624,
+   "mean_um": 24.837,
+   "p99_um": 25.05,
+   "bits_gt_500": 0,
+   "bits_gt_450": 0,
+   "worst_bits": [
+    {
+     "bit": 9,
+     "um": 25.05,
+     "dx_um": 3.45,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.673,
+      1209.6
+     ],
+     "load_xy": [
+      352.123,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 8,
+     "um": 25.003,
+     "dx_um": 3.403,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.56,
+      1209.6
+     ],
+     "load_xy": [
+      351.963,
+      1231.2
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 7,
+     "um": 24.956,
+     "dx_um": 3.356,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.447,
+      1209.6
+     ],
+     "load_xy": [
+      351.802,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    },
+    {
+     "bit": 6,
+     "um": 24.908,
+     "dx_um": 3.308,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.334,
+      1209.6
+     ],
+     "load_xy": [
+      351.642,
+      1231.2
+     ],
+     "layers": "M3>M3"
+    },
+    {
+     "bit": 5,
+     "um": 24.861,
+     "dx_um": 3.261,
+     "dy_um": 21.6,
+     "driver_xy": [
+      348.221,
+      1209.6
+     ],
+     "load_xy": [
+      351.482,
+      1231.2
+     ],
+     "layers": "M5>M5"
+    }
+   ],
+   "coord_source": [
+    "vm_cp_root",
+    "vm_cp_slice3"
+   ]
+  }
+ ],
+ "nets": [
+  {
+   "net": "n_fe0_ph",
+   "bits": 1078,
+   "loads": 1,
+   "hpwl_max_um": 425.139,
+   "hpwl_mean_um": 279.573,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_fe3_ph",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 301.605,
+   "hpwl_mean_um": 212.691,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_fw0_ph",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 335.614,
+   "hpwl_mean_um": 283.078,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_fw0_wd",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 423.347,
+   "hpwl_mean_um": 395.74,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_fw3_ph",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 437.843,
+   "hpwl_mean_um": 363.08,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_fw3_wr",
+   "bits": 217,
+   "loads": 1,
+   "hpwl_max_um": 336.01,
+   "hpwl_mean_um": 314.62,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb0_eo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 318.36,
+   "hpwl_mean_um": 317.377,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb0_wo",
+   "bits": 1078,
+   "loads": 1,
+   "hpwl_max_um": 385.555,
+   "hpwl_mean_um": 337.362,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb1_eo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 318.36,
+   "hpwl_mean_um": 317.377,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb1_wo",
+   "bits": 1078,
+   "loads": 1,
+   "hpwl_max_um": 316.394,
+   "hpwl_mean_um": 315.877,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb2_eo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 424.2,
+   "hpwl_mean_um": 423.217,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb2_rd",
+   "bits": 201,
+   "loads": 1,
+   "hpwl_max_um": 443.52,
+   "hpwl_mean_um": 443.52,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb2_wo",
+   "bits": 1078,
+   "loads": 1,
+   "hpwl_max_um": 316.394,
+   "hpwl_mean_um": 315.877,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb3_eo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 425.522,
+   "hpwl_mean_um": 400.663,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rb3_wo",
+   "bits": 1078,
+   "loads": 1,
+   "hpwl_max_um": 422.234,
+   "hpwl_mean_um": 421.717,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_re_cfg",
+   "bits": 1,
+   "loads": 1,
+   "hpwl_max_um": 342.271,
+   "hpwl_mean_um": 342.271,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_re_ne",
+   "bits": 2063,
+   "loads": 1,
+   "hpwl_max_um": 442.635,
+   "hpwl_mean_um": 415.46,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_re_rd",
+   "bits": 201,
+   "loads": 1,
+   "hpwl_max_um": 357.025,
+   "hpwl_mean_um": 341.52,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_re_se",
+   "bits": 2063,
+   "loads": 1,
+   "hpwl_max_um": 443.275,
+   "hpwl_mean_um": 416.1,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_root_st",
+   "bits": 202,
+   "loads": 1,
+   "hpwl_max_um": 201.679,
+   "hpwl_mean_um": 201.547,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_root_te",
+   "bits": 2063,
+   "loads": 1,
+   "hpwl_max_um": 336.839,
+   "hpwl_mean_um": 335.34,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_root_tw",
+   "bits": 2063,
+   "loads": 1,
+   "hpwl_max_um": 203.079,
+   "hpwl_mean_um": 201.817,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt0_eo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 445.8,
+   "hpwl_mean_um": 445.05,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt0_wo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 445.346,
+   "hpwl_mean_um": 417.08,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt1_eo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 318.36,
+   "hpwl_mean_um": 317.61,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt1_wo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 444.3,
+   "hpwl_mean_um": 443.55,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt2_cfg",
+   "bits": 1,
+   "loads": 1,
+   "hpwl_max_um": 393.48,
+   "hpwl_mean_um": 393.48,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt2_eo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 318.36,
+   "hpwl_mean_um": 317.61,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt2_wo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 316.86,
+   "hpwl_mean_um": 316.11,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt3_eo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 367.323,
+   "hpwl_mean_um": 340.994,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rt3_wo",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 316.86,
+   "hpwl_mean_um": 316.11,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rwa_o",
+   "bits": 2048,
+   "loads": 1,
+   "hpwl_max_um": 425.506,
+   "hpwl_mean_um": 396.92,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rwb_o",
+   "bits": 217,
+   "loads": 1,
+   "hpwl_max_um": 375.665,
+   "hpwl_mean_um": 338.839,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rwt_nw",
+   "bits": 2063,
+   "loads": 1,
+   "hpwl_max_um": 114.8,
+   "hpwl_mean_um": 114.8,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rwt_st",
+   "bits": 970,
+   "loads": 1,
+   "hpwl_max_um": 128.255,
+   "hpwl_mean_um": 122.213,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_rwt_sw",
+   "bits": 2063,
+   "loads": 1,
+   "hpwl_max_um": 154.074,
+   "hpwl_mean_um": 141.17,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s0_cmd",
+   "bits": 10,
+   "loads": 1,
+   "hpwl_max_um": 25.228,
+   "hpwl_mean_um": 24.93,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s0_rd",
+   "bits": 768,
+   "loads": 1,
+   "hpwl_max_um": 126.907,
+   "hpwl_mean_um": 101.537,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s0_rv",
+   "bits": 1,
+   "loads": 1,
+   "hpwl_max_um": 76.101,
+   "hpwl_mean_um": 76.101,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s0_wd",
+   "bits": 768,
+   "loads": 1,
+   "hpwl_max_um": 76.034,
+   "hpwl_mean_um": 50.664,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s1_cmd",
+   "bits": 10,
+   "loads": 1,
+   "hpwl_max_um": 25.05,
+   "hpwl_mean_um": 24.837,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s1_rd",
+   "bits": 768,
+   "loads": 1,
+   "hpwl_max_um": 98.024,
+   "hpwl_mean_um": 79.817,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s1_rv",
+   "bits": 1,
+   "loads": 1,
+   "hpwl_max_um": 61.561,
+   "hpwl_mean_um": 61.561,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s1_wd",
+   "bits": 768,
+   "loads": 1,
+   "hpwl_max_um": 61.513,
+   "hpwl_mean_um": 43.306,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s2_cmd",
+   "bits": 10,
+   "loads": 1,
+   "hpwl_max_um": 134.728,
+   "hpwl_mean_um": 134.43,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s2_rd",
+   "bits": 768,
+   "loads": 1,
+   "hpwl_max_um": 236.407,
+   "hpwl_mean_um": 211.037,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s2_rv",
+   "bits": 1,
+   "loads": 1,
+   "hpwl_max_um": 185.6,
+   "hpwl_mean_um": 185.6,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s2_wd",
+   "bits": 768,
+   "loads": 1,
+   "hpwl_max_um": 185.534,
+   "hpwl_mean_um": 160.164,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s3_cmd",
+   "bits": 10,
+   "loads": 1,
+   "hpwl_max_um": 106.396,
+   "hpwl_mean_um": 105.833,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s3_rd",
+   "bits": 512,
+   "loads": 1,
+   "hpwl_max_um": 236.308,
+   "hpwl_mean_um": 203.921,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s3_rv",
+   "bits": 1,
+   "loads": 1,
+   "hpwl_max_um": 171.405,
+   "hpwl_mean_um": 171.405,
+   "hpwl_bits_gt_500": 0
+  },
+  {
+   "net": "n_s3_wd",
+   "bits": 512,
+   "loads": 1,
+   "hpwl_max_um": 171.308,
+   "hpwl_mean_um": 138.916,
+   "hpwl_bits_gt_500": 0
+  }
+ ],
+ "external_pins": [
+  {
+   "pin": "u_fw0.f_su_SW",
+   "bits": 2048,
+   "top_port": "f_su_SW"
+  },
+  {
+   "pin": "u_fw0.iSW",
+   "bits": 512,
+   "top_port": "iSW"
+  },
+  {
+   "pin": "u_fw0.qSW",
+   "bits": 582,
+   "top_port": "qSW"
+  },
+  {
+   "pin": "u_fw1.t_su_SW",
+   "bits": 2048,
+   "top_port": "t_su_SW"
+  },
+  {
+   "pin": "u_fw1.xSW",
+   "bits": 2068,
+   "top_port": "xSW"
+  },
+  {
+   "pin": "u_fw2.t_su_NW",
+   "bits": 2048,
+   "top_port": "t_su_NW"
+  },
+  {
+   "pin": "u_fw2.t_router",
+   "bits": 512,
+   "top_port": "t_router"
+  },
+  {
+   "pin": "u_fw2.t_quant",
+   "bits": 1024,
+   "top_port": "t_quant"
+  },
+  {
+   "pin": "u_fw2.xNW",
+   "bits": 2068,
+   "top_port": "xNW"
+  },
+  {
+   "pin": "u_fw3.f_su_NW",
+   "bits": 2048,
+   "top_port": "f_su_NW"
+  },
+  {
+   "pin": "u_fw3.iNW",
+   "bits": 512,
+   "top_port": "iNW"
+  },
+  {
+   "pin": "u_fw3.qNW",
+   "bits": 582,
+   "top_port": "qNW"
+  },
+  {
+   "pin": "u_fe0.f_su_SE",
+   "bits": 2048,
+   "top_port": "f_su_SE"
+  },
+  {
+   "pin": "u_fe0.iSE",
+   "bits": 512,
+   "top_port": "iSE"
+  },
+  {
+   "pin": "u_fe0.qSE",
+   "bits": 582,
+   "top_port": "qSE"
+  },
+  {
+   "pin": "u_fe1.t_su_SE",
+   "bits": 2048,
+   "top_port": "t_su_SE"
+  },
+  {
+   "pin": "u_fe1.xSE",
+   "bits": 2068,
+   "top_port": "xSE"
+  },
+  {
+   "pin": "u_fe2.t_su_NE",
+   "bits": 2048,
+   "top_port": "t_su_NE"
+  },
+  {
+   "pin": "u_fe2.xNE",
+   "bits": 2068,
+   "top_port": "xNE"
+  },
+  {
+   "pin": "u_fe3.f_su_NE",
+   "bits": 2048,
+   "top_port": "f_su_NE"
+  },
+  {
+   "pin": "u_fe3.iNE",
+   "bits": 512,
+   "top_port": "iNE"
+  },
+  {
+   "pin": "u_fe3.qNE",
+   "bits": 582,
+   "top_port": "qNE"
+  },
+  {
+   "pin": "u_root.rst",
+   "bits": 1,
+   "top_port": "rst"
+  },
+  {
+   "pin": "u_s0.rst",
+   "bits": 1,
+   "top_port": "rst"
+  },
+  {
+   "pin": "u_s2.rst",
+   "bits": 1,
+   "top_port": "rst"
+  },
+  {
+   "pin": "u_s1.rst",
+   "bits": 1,
+   "top_port": "rst"
+  },
+  {
+   "pin": "u_s3.rst",
+   "bits": 1,
+   "top_port": "rst"
+  }
+ ],
+ "cuts": {
+  "method": "cheap die-channel cut: every hop bit is one die wire.  A vertical cut line x = c (mid-way between two consecutive\n    tile edges) is crossed by the bits whose two pins lie on either side; they cross it on a horizontal layer (M6, 15.6\n    tracks/um), somewhere inside the y interval of their two pins (pass no_jog) or inside that interval widened on both\n    sides by half the reach the bit has left, (500 - pin distance) / 2 (pass reach_jog: the most a wire may detour and\n    still be a 500 um hop).  Free tracks: the cut line outside every tile, plus the M6 above an M5-capped tile (ASSUMED\n    free: its own PG is M5; a die M6 strap over it is not subtracted); a tile capped at M6 (or its M7 grid, for the\n    horizontal cut lines whose wires are M7) blocks its whole extent.  Hall bound on a 2.16 um lattice: for every window\n    of the cut line, bits that must cross INSIDE it / free tracks inside it; demand = the worst window.  Same for\n    horizontal cut lines with M7.  Third pass reach_jog_plus_lower_layer_in_gaps: as reach_jog, plus the next lower layer\n    of the same direction (M4 under M6, M5 under M7, 20.8 tracks/um) where NO tile lies under the cut line -- only valid if\n    the die route is granted those layers in its channels.",
+  "tracks_per_um": {
+   "M6": 15.625,
+   "M7": 15.625
+  },
+  "limit": 0.55,
+  "layer_cap_overrides": {
+   "vm_cp_root": "M5"
+  },
+  "lines": [
+   {
+    "cut": "x=15.12",
+    "wire_layer": "M6",
+    "bits": 10472,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 2048,
+     "u_fw0.wd>u_rwa.i": 2048,
+     "u_fw3.ph>u_rt0.wi": 2048,
+     "u_fw3.wr>u_rwb.i": 217,
+     "u_rb0.wo>u_fw1.ph": 1078,
+     "u_rwt.sto>u_fw1.st": 970,
+     "u_rwt.sw>u_fw1.tap": 2063
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       997.92,
+       1496.88
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.657,
+     "window_um": [
+      980.64,
+      993.6
+     ],
+     "bits_in_window": 133,
+     "free_tracks_in_window": 202,
+     "over_limit": true,
+     "extra_free_um_for_limit": 2.52
+    },
+    "reach_jog": {
+     "demand": 0.526,
+     "window_um": [
+      0.0,
+      1188.0
+     ],
+     "bits_in_window": 8207,
+     "free_tracks_in_window": 15592,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.226,
+     "window_um": [
+      0.0,
+      1188.0
+     ],
+     "bits_in_window": 8207,
+     "free_tracks_in_window": 36382,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=73.44",
+    "wire_layer": "M6",
+    "bits": 14583,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 2048,
+     "u_fw0.wd>u_rwa.i": 2048,
+     "u_fw3.ph>u_rt0.wi": 2048,
+     "u_fw3.wr>u_rwb.i": 217,
+     "u_rb0.wo>u_fw1.ph": 1078,
+     "u_rt0.wo>u_fw2.ph": 2048,
+     "u_rwt.nw>u_fw2.tap": 2063,
+     "u_rwt.sto>u_fw1.st": 970,
+     "u_rwt.sw>u_fw1.tap": 2063
+    },
+    "tiles_under": [],
+    "no_jog": {
+     "demand": 0.657,
+     "window_um": [
+      980.64,
+      993.6
+     ],
+     "bits_in_window": 133,
+     "free_tracks_in_window": 202,
+     "over_limit": true,
+     "extra_free_um_for_limit": 2.52
+    },
+    "reach_jog": {
+     "demand": 0.484,
+     "window_um": [
+      0.0,
+      1926.72
+     ],
+     "bits_in_window": 14574,
+     "free_tracks_in_window": 30105,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.207,
+     "window_um": [
+      0.0,
+      1926.72
+     ],
+     "bits_in_window": 14574,
+     "free_tracks_in_window": 70245,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=130.68",
+    "wire_layer": "M6",
+    "bits": 9270,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 2048,
+     "u_fw0.wd>u_rwa.i": 2048,
+     "u_fw3.ph>u_rt0.wi": 2048,
+     "u_rb0.wo>u_fw1.ph": 1078,
+     "u_rt0.wo>u_fw2.ph": 2048
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rwb",
+      "layer_cap": "M5",
+      "span_um": [
+       1274.4,
+       1382.4
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       734.4,
+       1252.8
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.461,
+     "window_um": [
+      300.24,
+      781.92
+     ],
+     "bits_in_window": 3124,
+     "free_tracks_in_window": 6783,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.451,
+     "window_um": [
+      0.0,
+      818.64
+     ],
+     "bits_in_window": 5174,
+     "free_tracks_in_window": 11474,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.193,
+     "window_um": [
+      0.0,
+      818.64
+     ],
+     "bits_in_window": 5174,
+     "free_tracks_in_window": 26774,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=137.16",
+    "wire_layer": "M6",
+    "bits": 5174,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 2048,
+     "u_fw0.wd>u_rwa.i": 2048,
+     "u_rb0.wo>u_fw1.ph": 1078
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rt0",
+      "layer_cap": "M5",
+      "span_um": [
+       1382.4,
+       1771.2
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwb",
+      "layer_cap": "M5",
+      "span_um": [
+       1274.4,
+       1382.4
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       734.4,
+       1252.8
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.461,
+     "window_um": [
+      300.24,
+      781.92
+     ],
+     "bits_in_window": 3124,
+     "free_tracks_in_window": 6783,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.451,
+     "window_um": [
+      0.0,
+      818.64
+     ],
+     "bits_in_window": 5174,
+     "free_tracks_in_window": 11474,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.193,
+     "window_um": [
+      0.0,
+      818.64
+     ],
+     "bits_in_window": 5174,
+     "free_tracks_in_window": 26774,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=143.64",
+    "wire_layer": "M6",
+    "bits": 5391,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 2048,
+     "u_fw0.wd>u_rwa.i": 2048,
+     "u_rb0.wo>u_fw1.ph": 1078,
+     "u_rwb.o>u_root.wr_i": 217
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rt0",
+      "layer_cap": "M5",
+      "span_um": [
+       1382.4,
+       1771.2
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       734.4,
+       1252.8
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.461,
+     "window_um": [
+      300.24,
+      781.92
+     ],
+     "bits_in_window": 3124,
+     "free_tracks_in_window": 6783,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.451,
+     "window_um": [
+      0.0,
+      818.64
+     ],
+     "bits_in_window": 5174,
+     "free_tracks_in_window": 11474,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.193,
+     "window_um": [
+      0.0,
+      818.64
+     ],
+     "bits_in_window": 5174,
+     "free_tracks_in_window": 26774,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=149.04",
+    "wire_layer": "M6",
+    "bits": 7656,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 2048,
+     "u_fw0.wd>u_rwa.i": 2048,
+     "u_rb0.wo>u_fw1.ph": 1078,
+     "u_root.st_o>u_rwt.st": 202,
+     "u_root.tap_w>u_rwt.tap": 2063,
+     "u_rwb.o>u_root.wr_i": 217
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rt0",
+      "layer_cap": "M5",
+      "span_um": [
+       1382.4,
+       1771.2
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.741,
+     "window_um": [
+      1123.2,
+      1125.36
+     ],
+     "bits_in_window": 25,
+     "free_tracks_in_window": 33,
+     "over_limit": true,
+     "extra_free_um_for_limit": 0.75
+    },
+    "reach_jog": {
+     "demand": 0.404,
+     "window_um": [
+      0.0,
+      818.64
+     ],
+     "bits_in_window": 5174,
+     "free_tracks_in_window": 12791,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.173,
+     "window_um": [
+      0.0,
+      818.64
+     ],
+     "bits_in_window": 5174,
+     "free_tracks_in_window": 29846,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=157.68",
+    "wire_layer": "M6",
+    "bits": 5608,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 2048,
+     "u_rb0.wo>u_fw1.ph": 1078,
+     "u_root.st_o>u_rwt.st": 202,
+     "u_root.tap_w>u_rwt.tap": 2063,
+     "u_rwb.o>u_root.wr_i": 217
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rt0",
+      "layer_cap": "M5",
+      "span_um": [
+       1382.4,
+       1771.2
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       522.72,
+       781.92
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.741,
+     "window_um": [
+      1123.2,
+      1125.36
+     ],
+     "bits_in_window": 25,
+     "free_tracks_in_window": 33,
+     "over_limit": true,
+     "extra_free_um_for_limit": 0.75
+    },
+    "reach_jog": {
+     "demand": 0.291,
+     "window_um": [
+      829.44,
+      1328.4
+     ],
+     "bits_in_window": 2265,
+     "free_tracks_in_window": 7796,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.138,
+     "window_um": [
+      0.0,
+      756.0
+     ],
+     "bits_in_window": 3125,
+     "free_tracks_in_window": 22702,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=167.40",
+    "wire_layer": "M6",
+    "bits": 9704,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 2048,
+     "u_rb0.wo>u_fw1.ph": 1078,
+     "u_root.st_o>u_rwt.st": 202,
+     "u_root.tap_w>u_rwt.tap": 2063,
+     "u_rt0.eo>u_rt1.wi": 2048,
+     "u_rt1.wo>u_rt0.ei": 2048,
+     "u_rwb.o>u_root.wr_i": 217
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       522.72,
+       781.92
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.741,
+     "window_um": [
+      1123.2,
+      1125.36
+     ],
+     "bits_in_window": 25,
+     "free_tracks_in_window": 33,
+     "over_limit": true,
+     "extra_free_um_for_limit": 0.75
+    },
+    "reach_jog": {
+     "demand": 0.497,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 8201,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.213,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 19136,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=173.88",
+    "wire_layer": "M6",
+    "bits": 6578,
+    "hops": {
+     "u_root.st_o>u_rwt.st": 202,
+     "u_root.tap_w>u_rwt.tap": 2063,
+     "u_rt0.eo>u_rt1.wi": 2048,
+     "u_rt1.wo>u_rt0.ei": 2048,
+     "u_rwb.o>u_root.wr_i": 217
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rb0",
+      "layer_cap": "M5",
+      "span_um": [
+       172.8,
+       475.2
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       522.72,
+       781.92
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.741,
+     "window_um": [
+      1123.2,
+      1125.36
+     ],
+     "bits_in_window": 25,
+     "free_tracks_in_window": 33,
+     "over_limit": true,
+     "extra_free_um_for_limit": 0.75
+    },
+    "reach_jog": {
+     "demand": 0.497,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 8201,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.213,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 19136,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=189.00",
+    "wire_layer": "M6",
+    "bits": 8626,
+    "hops": {
+     "u_root.st_o>u_rwt.st": 202,
+     "u_root.tap_w>u_rwt.tap": 2063,
+     "u_rt0.eo>u_rt1.wi": 2048,
+     "u_rt1.wo>u_rt0.ei": 2048,
+     "u_rwa.o>u_root.wd_i": 2048,
+     "u_rwb.o>u_root.wr_i": 217
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rb0",
+      "layer_cap": "M5",
+      "span_um": [
+       172.8,
+       475.2
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.741,
+     "window_um": [
+      1123.2,
+      1125.36
+     ],
+     "bits_in_window": 25,
+     "free_tracks_in_window": 33,
+     "over_limit": true,
+     "extra_free_um_for_limit": 0.75
+    },
+    "reach_jog": {
+     "demand": 0.497,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 8201,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.213,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 19136,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=274.32",
+    "wire_layer": "M6",
+    "bits": 11752,
+    "hops": {
+     "u_rb0.eo>u_rb1.wi": 2048,
+     "u_rb1.wo>u_rb0.ei": 1078,
+     "u_root.st_o>u_rwt.st": 202,
+     "u_root.tap_w>u_rwt.tap": 2063,
+     "u_rt0.eo>u_rt1.wi": 2048,
+     "u_rt1.wo>u_rt0.ei": 2048,
+     "u_rwa.o>u_root.wd_i": 2048,
+     "u_rwb.o>u_root.wr_i": 217
+    },
+    "tiles_under": [],
+    "no_jog": {
+     "demand": 0.741,
+     "window_um": [
+      1123.2,
+      1125.36
+     ],
+     "bits_in_window": 25,
+     "free_tracks_in_window": 33,
+     "over_limit": true,
+     "extra_free_um_for_limit": 0.75
+    },
+    "reach_jog": {
+     "demand": 0.497,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 8201,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.213,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 19136,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=432.00",
+    "wire_layer": "M6",
+    "bits": 7823,
+    "hops": {
+     "u_rb0.eo>u_rb1.wi": 2048,
+     "u_rb1.wo>u_rb0.ei": 1078,
+     "u_rt0.eo>u_rt1.wi": 2048,
+     "u_rt1.wo>u_rt0.ei": 2048,
+     "u_s0.rd>u_root.rd0": 85,
+     "u_s0.rv>u_root.rv0": 1,
+     "u_root.wd0>u_s0.wd": 277,
+     "u_root.wd1>u_s1.wd": 238
+    },
+    "tiles_under": [
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       777.6,
+       1209.6
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s0",
+      "layer_cap": "M5",
+      "span_um": [
+       540.0,
+       756.0
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s1",
+      "layer_cap": "M5",
+      "span_um": [
+       1231.2,
+       1447.2
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.978,
+     "window_um": [
+      756.0,
+      779.76
+     ],
+     "bits_in_window": 363,
+     "free_tracks_in_window": 371,
+     "over_limit": true,
+     "extra_free_um_for_limit": 18.48
+    },
+    "reach_jog": {
+     "demand": 0.497,
+     "window_um": [
+      1358.64,
+      1883.52
+     ],
+     "bits_in_window": 4075,
+     "free_tracks_in_window": 8201,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.236,
+     "window_um": [
+      1356.48,
+      1883.52
+     ],
+     "bits_in_window": 4089,
+     "free_tracks_in_window": 17325,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=533.52",
+    "wire_layer": "M6",
+    "bits": 1280,
+    "hops": {
+     "u_s0.rd>u_root.rd0": 425,
+     "u_s1.rd>u_root.rd1": 425,
+     "u_root.cmd2>u_s2.cmd": 10,
+     "u_root.wd2>u_s2.wd": 364,
+     "u_root.cmd3>u_s3.cmd": 10,
+     "u_root.wd3>u_s3.wd": 46
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rb1",
+      "layer_cap": "M5",
+      "span_um": [
+       172.8,
+       475.2
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt1",
+      "layer_cap": "M5",
+      "span_um": [
+       1468.8,
+       1857.6
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       777.6,
+       1209.6
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s0",
+      "layer_cap": "M5",
+      "span_um": [
+       540.0,
+       756.0
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s1",
+      "layer_cap": "M5",
+      "span_um": [
+       1231.2,
+       1447.2
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 2.152,
+     "window_um": [
+      756.0,
+      779.76
+     ],
+     "bits_in_window": 799,
+     "free_tracks_in_window": 371,
+     "over_limit": true,
+     "extra_free_um_for_limit": 69.21
+    },
+    "reach_jog": {
+     "demand": 0.121,
+     "window_um": [
+      555.12,
+      978.48
+     ],
+     "bits_in_window": 799,
+     "free_tracks_in_window": 6615,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.113,
+     "window_um": [
+      555.12,
+      978.48
+     ],
+     "bits_in_window": 799,
+     "free_tracks_in_window": 7065,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=576.72",
+    "wire_layer": "M6",
+    "bits": 8782,
+    "hops": {
+     "u_rb1.eo>u_rb2.wi": 2048,
+     "u_rb2.wo>u_rb1.ei": 1078,
+     "u_rt1.eo>u_rt2.wi": 2048,
+     "u_rt2.wo>u_rt1.ei": 2048,
+     "u_s0.rd>u_root.rd0": 155,
+     "u_s1.rd>u_root.rd1": 155,
+     "u_root.cmd2>u_s2.cmd": 10,
+     "u_s2.rd>u_root.rd2": 32,
+     "u_s2.rv>u_root.rv2": 1,
+     "u_root.wd2>u_s2.wd": 768,
+     "u_root.cmd3>u_s3.cmd": 10,
+     "u_root.wd3>u_s3.wd": 429
+    },
+    "tiles_under": [
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       777.6,
+       1209.6
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s0",
+      "layer_cap": "M5",
+      "span_um": [
+       540.0,
+       756.0
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s1",
+      "layer_cap": "M5",
+      "span_um": [
+       1231.2,
+       1447.2
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 2.602,
+     "window_um": [
+      756.0,
+      779.76
+     ],
+     "bits_in_window": 966,
+     "free_tracks_in_window": 371,
+     "over_limit": true,
+     "extra_free_um_for_limit": 88.65
+    },
+    "reach_jog": {
+     "demand": 0.461,
+     "window_um": [
+      1380.24,
+      1948.32
+     ],
+     "bits_in_window": 4093,
+     "free_tracks_in_window": 8876,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.212,
+     "window_um": [
+      1380.24,
+      1948.32
+     ],
+     "bits_in_window": 4093,
+     "free_tracks_in_window": 19316,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=626.40",
+    "wire_layer": "M6",
+    "bits": 9260,
+    "hops": {
+     "u_rb1.eo>u_rb2.wi": 2048,
+     "u_rb2.wo>u_rb1.ei": 1078,
+     "u_rt1.eo>u_rt2.wi": 2048,
+     "u_rt2.wo>u_rt1.ei": 2048,
+     "u_s2.rd>u_root.rd2": 560,
+     "u_s2.rv>u_root.rv2": 1,
+     "u_root.wd2>u_s2.wd": 681,
+     "u_s3.rd>u_root.rd3": 338,
+     "u_s3.rv>u_root.rv3": 1,
+     "u_root.wd3>u_s3.wd": 457
+    },
+    "tiles_under": [
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       777.6,
+       1209.6
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s2",
+      "layer_cap": "M5",
+      "span_um": [
+       540.0,
+       756.0
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s3",
+      "layer_cap": "M6",
+      "span_um": [
+       1231.2,
+       1447.2
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 3.345,
+     "window_um": [
+      756.0,
+      779.76
+     ],
+     "bits_in_window": 1242,
+     "free_tracks_in_window": 371,
+     "over_limit": true,
+     "extra_free_um_for_limit": 120.76
+    },
+    "reach_jog": {
+     "demand": 0.523,
+     "window_um": [
+      1373.76,
+      1948.32
+     ],
+     "bits_in_window": 4096,
+     "free_tracks_in_window": 7830,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.224,
+     "window_um": [
+      1373.76,
+      1948.32
+     ],
+     "bits_in_window": 4096,
+     "free_tracks_in_window": 18270,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=756.00",
+    "wire_layer": "M6",
+    "bits": 10578,
+    "hops": {
+     "u_rb1.eo>u_rb2.wi": 2048,
+     "u_rb2.wo>u_rb1.ei": 1078,
+     "u_re.cfgo>u_root.cfg_i": 1,
+     "u_re.rdo>u_root.rd_i": 201,
+     "u_root.tap_e>u_re.tap": 2063,
+     "u_rt1.eo>u_rt2.wi": 2048,
+     "u_rt2.wo>u_rt1.ei": 2048,
+     "u_s2.rd>u_root.rd2": 654,
+     "u_s3.rd>u_root.rd3": 437
+    },
+    "tiles_under": [
+     {
+      "inst": "u_s2",
+      "layer_cap": "M5",
+      "span_um": [
+       540.0,
+       756.0
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s3",
+      "layer_cap": "M6",
+      "span_um": [
+       1231.2,
+       1447.2
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 1.762,
+     "window_um": [
+      756.0,
+      779.76
+     ],
+     "bits_in_window": 654,
+     "free_tracks_in_window": 371,
+     "over_limit": true,
+     "extra_free_um_for_limit": 52.34
+    },
+    "reach_jog": {
+     "demand": 0.523,
+     "window_um": [
+      1373.76,
+      1948.32
+     ],
+     "bits_in_window": 4096,
+     "free_tracks_in_window": 7830,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.224,
+     "window_um": [
+      1373.76,
+      1948.32
+     ],
+     "bits_in_window": 4096,
+     "free_tracks_in_window": 18270,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=874.80",
+    "wire_layer": "M6",
+    "bits": 2366,
+    "hops": {
+     "u_rb2.rd>u_re.rdi": 100,
+     "u_re.cfgo>u_root.cfg_i": 1,
+     "u_re.rdo>u_root.rd_i": 201,
+     "u_root.tap_e>u_re.tap": 2063,
+     "u_rt2.cfg>u_re.cfgi": 1
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rb2",
+      "layer_cap": "M5",
+      "span_um": [
+       172.8,
+       475.2
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt2",
+      "layer_cap": "M5",
+      "span_um": [
+       1468.8,
+       1857.6
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.566,
+     "window_um": [
+      874.8,
+      1103.76
+     ],
+     "bits_in_window": 2024,
+     "free_tracks_in_window": 3577,
+     "over_limit": true,
+     "extra_free_um_for_limit": 6.56
+    },
+    "reach_jog": {
+     "demand": 0.33,
+     "window_um": [
+      790.56,
+      1188.0
+     ],
+     "bits_in_window": 2052,
+     "free_tracks_in_window": 6210,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.142,
+     "window_um": [
+      790.56,
+      1188.0
+     ],
+     "bits_in_window": 2052,
+     "free_tracks_in_window": 14490,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=889.92",
+    "wire_layer": "M6",
+    "bits": 5593,
+    "hops": {
+     "u_rb2.eo>u_rb3.wi": 2048,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_rb3.wo>u_rb2.ei": 1078,
+     "u_re.cfgo>u_root.cfg_i": 1,
+     "u_re.rdo>u_root.rd_i": 201,
+     "u_root.tap_e>u_re.tap": 2063,
+     "u_rt2.cfg>u_re.cfgi": 1
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rt2",
+      "layer_cap": "M5",
+      "span_um": [
+       1468.8,
+       1857.6
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.568,
+     "window_um": [
+      174.96,
+      527.04
+     ],
+     "bits_in_window": 3122,
+     "free_tracks_in_window": 5501,
+     "over_limit": true,
+     "extra_free_um_for_limit": 11.21
+    },
+    "reach_jog": {
+     "demand": 0.465,
+     "window_um": [
+      138.24,
+      565.92
+     ],
+     "bits_in_window": 3105,
+     "free_tracks_in_window": 6682,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.199,
+     "window_um": [
+      138.24,
+      565.92
+     ],
+     "bits_in_window": 3105,
+     "free_tracks_in_window": 15592,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=936.36",
+    "wire_layer": "M6",
+    "bits": 9689,
+    "hops": {
+     "u_rb2.eo>u_rb3.wi": 2048,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_rb3.wo>u_rb2.ei": 1078,
+     "u_re.cfgo>u_root.cfg_i": 1,
+     "u_re.rdo>u_root.rd_i": 201,
+     "u_root.tap_e>u_re.tap": 2063,
+     "u_rt2.cfg>u_re.cfgi": 1,
+     "u_rt2.eo>u_rt3.wi": 2048,
+     "u_rt3.wo>u_rt2.ei": 2048
+    },
+    "tiles_under": [],
+    "no_jog": {
+     "demand": 0.684,
+     "window_um": [
+      1820.88,
+      1848.96
+     ],
+     "bits_in_window": 300,
+     "free_tracks_in_window": 438,
+     "over_limit": true,
+     "extra_free_um_for_limit": 6.83
+    },
+    "reach_jog": {
+     "demand": 0.465,
+     "window_um": [
+      138.24,
+      565.92
+     ],
+     "bits_in_window": 3105,
+     "free_tracks_in_window": 6682,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.199,
+     "window_um": [
+      138.24,
+      565.92
+     ],
+     "bits_in_window": 3105,
+     "free_tracks_in_window": 15592,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=989.28",
+    "wire_layer": "M6",
+    "bits": 7322,
+    "hops": {
+     "u_rb2.eo>u_rb3.wi": 2048,
+     "u_rb2.rd>u_re.rdi": 100,
+     "u_rb3.wo>u_rb2.ei": 1078,
+     "u_rt2.eo>u_rt3.wi": 2048,
+     "u_rt3.wo>u_rt2.ei": 2048
+    },
+    "tiles_under": [
+     {
+      "inst": "u_re",
+      "layer_cap": "M6",
+      "span_um": [
+       804.24,
+       1193.04
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.684,
+     "window_um": [
+      1820.88,
+      1848.96
+     ],
+     "bits_in_window": 300,
+     "free_tracks_in_window": 438,
+     "over_limit": true,
+     "extra_free_um_for_limit": 6.83
+    },
+    "reach_jog": {
+     "demand": 0.465,
+     "window_um": [
+      138.24,
+      565.92
+     ],
+     "bits_in_window": 3105,
+     "free_tracks_in_window": 6682,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.199,
+     "window_um": [
+      138.24,
+      565.92
+     ],
+     "bits_in_window": 3105,
+     "free_tracks_in_window": 15592,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=1104.84",
+    "wire_layer": "M6",
+    "bits": 11348,
+    "hops": {
+     "u_rb2.eo>u_rb3.wi": 2048,
+     "u_rb3.wo>u_rb2.ei": 1078,
+     "u_re.ne>u_fe2.tap": 2063,
+     "u_re.se>u_fe1.tap": 2063,
+     "u_rt2.eo>u_rt3.wi": 2048,
+     "u_rt3.wo>u_rt2.ei": 2048
+    },
+    "tiles_under": [],
+    "no_jog": {
+     "demand": 0.684,
+     "window_um": [
+      1820.88,
+      1848.96
+     ],
+     "bits_in_window": 300,
+     "free_tracks_in_window": 438,
+     "over_limit": true,
+     "extra_free_um_for_limit": 6.83
+    },
+    "reach_jog": {
+     "demand": 0.477,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 8640,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.204,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 20160,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=1224.72",
+    "wire_layer": "M6",
+    "bits": 7252,
+    "hops": {
+     "u_rb2.eo>u_rb3.wi": 2048,
+     "u_rb3.wo>u_rb2.ei": 1078,
+     "u_re.ne>u_fe2.tap": 2063,
+     "u_re.se>u_fe1.tap": 2063
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rt3",
+      "layer_cap": "M5",
+      "span_um": [
+       1468.8,
+       1857.6
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.568,
+     "window_um": [
+      174.96,
+      527.04
+     ],
+     "bits_in_window": 3122,
+     "free_tracks_in_window": 5501,
+     "over_limit": true,
+     "extra_free_um_for_limit": 11.21
+    },
+    "reach_jog": {
+     "demand": 0.477,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 8640,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.204,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 20160,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=1246.32",
+    "wire_layer": "M6",
+    "bits": 11348,
+    "hops": {
+     "u_fe3.ph>u_rt3.ei": 2048,
+     "u_rb2.eo>u_rb3.wi": 2048,
+     "u_rb3.wo>u_rb2.ei": 1078,
+     "u_re.ne>u_fe2.tap": 2063,
+     "u_re.se>u_fe1.tap": 2063,
+     "u_rt3.eo>u_fe2.ph": 2048
+    },
+    "tiles_under": [],
+    "no_jog": {
+     "demand": 0.568,
+     "window_um": [
+      174.96,
+      527.04
+     ],
+     "bits_in_window": 3122,
+     "free_tracks_in_window": 5501,
+     "over_limit": true,
+     "extra_free_um_for_limit": 11.21
+    },
+    "reach_jog": {
+     "demand": 0.477,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 8640,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.204,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 20160,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=1267.92",
+    "wire_layer": "M6",
+    "bits": 8222,
+    "hops": {
+     "u_fe3.ph>u_rt3.ei": 2048,
+     "u_re.ne>u_fe2.tap": 2063,
+     "u_re.se>u_fe1.tap": 2063,
+     "u_rt3.eo>u_fe2.ph": 2048
+    },
+    "tiles_under": [
+     {
+      "inst": "u_rb3",
+      "layer_cap": "M5",
+      "span_um": [
+       226.8,
+       529.2
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.532,
+     "window_um": [
+      749.52,
+      1246.32
+     ],
+     "bits_in_window": 4126,
+     "free_tracks_in_window": 7762,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.477,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 8640,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.204,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 20160,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "x=1334.86",
+    "wire_layer": "M6",
+    "bits": 11348,
+    "hops": {
+     "u_fe0.ph>u_rb3.ei": 1078,
+     "u_fe3.ph>u_rt3.ei": 2048,
+     "u_rb3.eo>u_fe1.ph": 2048,
+     "u_re.ne>u_fe2.tap": 2063,
+     "u_re.se>u_fe1.tap": 2063,
+     "u_rt3.eo>u_fe2.ph": 2048
+    },
+    "tiles_under": [],
+    "no_jog": {
+     "demand": 0.532,
+     "window_um": [
+      749.52,
+      1246.32
+     ],
+     "bits_in_window": 4126,
+     "free_tracks_in_window": 7762,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.477,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 8640,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.204,
+     "window_um": [
+      721.44,
+      1274.4
+     ],
+     "bits_in_window": 4119,
+     "free_tracks_in_window": 20160,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=86.40",
+    "wire_layer": "M7",
+    "bits": 580,
+    "hops": {
+     "u_fw0.ph>u_rb0.wi": 580
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw0",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe0",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.229,
+     "window_um": [
+      0.0,
+      174.96
+     ],
+     "bits_in_window": 580,
+     "free_tracks_in_window": 2531,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.144,
+     "window_um": [
+      0.0,
+      270.0
+     ],
+     "bits_in_window": 580,
+     "free_tracks_in_window": 4016,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.062,
+     "window_um": [
+      0.0,
+      270.0
+     ],
+     "bits_in_window": 580,
+     "free_tracks_in_window": 9371,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=199.80",
+    "wire_layer": "M7",
+    "bits": 1711,
+    "hops": {
+     "u_fe0.ph>u_rb3.ei": 265,
+     "u_fw0.ph>u_rb0.wi": 1125,
+     "u_rb0.eo>u_rb1.wi": 29,
+     "u_rb1.eo>u_rb2.wi": 29,
+     "u_rb2.eo>u_rb3.wi": 263
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw0",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe0",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rb0",
+      "layer_cap": "M5",
+      "span_um": [
+       172.8,
+       203.04
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rb1",
+      "layer_cap": "M5",
+      "span_um": [
+       518.4,
+       548.64
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rb2",
+      "layer_cap": "M5",
+      "span_um": [
+       864.0,
+       885.6
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.444,
+     "window_um": [
+      0.0,
+      174.96
+     ],
+     "bits_in_window": 1125,
+     "free_tracks_in_window": 2531,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.258,
+     "window_um": [
+      0.0,
+      291.6
+     ],
+     "bits_in_window": 1125,
+     "free_tracks_in_window": 4353,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.118,
+     "window_um": [
+      0.0,
+      291.6
+     ],
+     "bits_in_window": 1125,
+     "free_tracks_in_window": 9528,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=351.00",
+    "wire_layer": "M7",
+    "bits": 3314,
+    "hops": {
+     "u_fe0.ph>u_rb3.ei": 679,
+     "u_fw0.ph>u_rb0.wi": 209,
+     "u_fw0.wd>u_rwa.i": 530,
+     "u_rb0.eo>u_rb1.wi": 13,
+     "u_rb1.eo>u_rb2.wi": 13,
+     "u_rb2.eo>u_rb3.wi": 586,
+     "u_rb3.eo>u_fe1.ph": 1284
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw0",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe0",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rb0",
+      "layer_cap": "M5",
+      "span_um": [
+       172.8,
+       203.04
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rb1",
+      "layer_cap": "M5",
+      "span_um": [
+       518.4,
+       548.64
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rb2",
+      "layer_cap": "M5",
+      "span_um": [
+       864.0,
+       885.6
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rb3",
+      "layer_cap": "M5",
+      "span_um": [
+       1252.8,
+       1283.04
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 1.212,
+     "window_um": [
+      1283.04,
+      1386.72
+     ],
+     "bits_in_window": 1963,
+     "free_tracks_in_window": 1619,
+     "over_limit": true,
+     "extra_free_um_for_limit": 124.79
+    },
+    "reach_jog": {
+     "demand": 0.559,
+     "window_um": [
+      1220.4,
+      1401.84
+     ],
+     "bits_in_window": 1471,
+     "free_tracks_in_window": 2632,
+     "over_limit": true,
+     "extra_free_um_for_limit": 2.69
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.267,
+     "window_um": [
+      1220.4,
+      1401.84
+     ],
+     "bits_in_window": 1471,
+     "free_tracks_in_window": 5512,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=487.08",
+    "wire_layer": "M7",
+    "bits": 6093,
+    "hops": {
+     "u_fe0.ph>u_rb3.ei": 395,
+     "u_fw0.wd>u_rwa.i": 1945,
+     "u_rb0.wo>u_fw1.ph": 1078,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_rb3.eo>u_fe1.ph": 2048,
+     "u_rb3.wo>u_rb2.ei": 426
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw0",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe0",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rb3",
+      "layer_cap": "M5",
+      "span_um": [
+       1252.8,
+       1283.04
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 1.509,
+     "window_um": [
+      1283.04,
+      1386.72
+     ],
+     "bits_in_window": 2443,
+     "free_tracks_in_window": 1619,
+     "over_limit": true,
+     "extra_free_um_for_limit": 180.64
+    },
+    "reach_jog": {
+     "demand": 0.778,
+     "window_um": [
+      1220.4,
+      1401.84
+     ],
+     "bits_in_window": 2048,
+     "free_tracks_in_window": 2632,
+     "over_limit": true,
+     "extra_free_um_for_limit": 69.83
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.372,
+     "window_um": [
+      1220.4,
+      1401.84
+     ],
+     "bits_in_window": 2048,
+     "free_tracks_in_window": 5512,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=510.84",
+    "wire_layer": "M7",
+    "bits": 5584,
+    "hops": {
+     "u_fe0.ph>u_rb3.ei": 172,
+     "u_fw0.wd>u_rwa.i": 2048,
+     "u_rb0.wo>u_fw1.ph": 1024,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_rb3.eo>u_fe1.ph": 1965,
+     "u_rb3.wo>u_rb2.ei": 174
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rb3",
+      "layer_cap": "M5",
+      "span_um": [
+       1252.8,
+       1283.04
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 1.32,
+     "window_um": [
+      1283.04,
+      1386.72
+     ],
+     "bits_in_window": 2137,
+     "free_tracks_in_window": 1619,
+     "over_limit": true,
+     "extra_free_um_for_limit": 145.04
+    },
+    "reach_jog": {
+     "demand": 0.746,
+     "window_um": [
+      1220.4,
+      1401.84
+     ],
+     "bits_in_window": 1965,
+     "free_tracks_in_window": 2632,
+     "over_limit": true,
+     "extra_free_um_for_limit": 60.17
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.356,
+     "window_um": [
+      1220.4,
+      1401.84
+     ],
+     "bits_in_window": 1965,
+     "free_tracks_in_window": 5512,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=525.96",
+    "wire_layer": "M7",
+    "bits": 5066,
+    "hops": {
+     "u_fe0.ph>u_rb3.ei": 13,
+     "u_fw0.wd>u_rwa.i": 2048,
+     "u_rb0.wo>u_fw1.ph": 942,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_rb3.eo>u_fe1.ph": 1839,
+     "u_rb3.wo>u_rb2.ei": 13,
+     "u_rwa.o>u_root.wd_i": 10
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rb3",
+      "layer_cap": "M5",
+      "span_um": [
+       1252.8,
+       1283.04
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       153.36,
+       174.96
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 1.181,
+     "window_um": [
+      0.0,
+      174.96
+     ],
+     "bits_in_window": 2990,
+     "free_tracks_in_window": 2531,
+     "over_limit": true,
+     "extra_free_um_for_limit": 185.93
+    },
+    "reach_jog": {
+     "demand": 0.738,
+     "window_um": [
+      0.0,
+      272.16
+     ],
+     "bits_in_window": 2990,
+     "free_tracks_in_window": 4050,
+     "over_limit": true,
+     "extra_free_um_for_limit": 88.73
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.338,
+     "window_um": [
+      1222.56,
+      1401.84
+     ],
+     "bits_in_window": 1839,
+     "free_tracks_in_window": 5433,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=534.60",
+    "wire_layer": "M7",
+    "bits": 4933,
+    "hops": {
+     "u_fw0.wd>u_rwa.i": 1992,
+     "u_rb0.wo>u_fw1.ph": 895,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_rb3.eo>u_fe1.ph": 1766,
+     "u_rwa.o>u_root.wd_i": 79
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       153.36,
+       174.96
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 1.141,
+     "window_um": [
+      0.0,
+      174.96
+     ],
+     "bits_in_window": 2887,
+     "free_tracks_in_window": 2531,
+     "over_limit": true,
+     "extra_free_um_for_limit": 173.94
+    },
+    "reach_jog": {
+     "demand": 0.719,
+     "window_um": [
+      0.0,
+      270.0
+     ],
+     "bits_in_window": 2886,
+     "free_tracks_in_window": 4016,
+     "over_limit": true,
+     "extra_free_um_for_limit": 78.79
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.323,
+     "window_um": [
+      0.0,
+      270.0
+     ],
+     "bits_in_window": 2886,
+     "free_tracks_in_window": 8921,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=637.20",
+    "wire_layer": "M7",
+    "bits": 3506,
+    "hops": {
+     "u_fw0.wd>u_rwa.i": 1159,
+     "u_rb0.wo>u_fw1.ph": 336,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_rb3.eo>u_fe1.ph": 907,
+     "u_rwa.o>u_root.wd_i": 903
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       153.36,
+       174.96
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s0",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       604.8
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s2",
+      "layer_cap": "M5",
+      "span_um": [
+       604.8,
+       864.0
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.591,
+     "window_um": [
+      0.0,
+      174.96
+     ],
+     "bits_in_window": 1495,
+     "free_tracks_in_window": 2531,
+     "over_limit": true,
+     "extra_free_um_for_limit": 11.96
+    },
+    "reach_jog": {
+     "demand": 0.41,
+     "window_um": [
+      0.0,
+      246.24
+     ],
+     "bits_in_window": 1495,
+     "free_tracks_in_window": 3645,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.192,
+     "window_um": [
+      0.0,
+      397.44
+     ],
+     "bits_in_window": 2398,
+     "free_tracks_in_window": 12487,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=745.20",
+    "wire_layer": "M7",
+    "bits": 2626,
+    "hops": {
+     "u_fw0.wd>u_rwa.i": 282,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_rb3.eo>u_fe1.ph": 3,
+     "u_rwa.o>u_root.wd_i": 1769,
+     "u_rwt.sw>u_fw1.tap": 371
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       153.36,
+       174.96
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_s0",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       604.8
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s2",
+      "layer_cap": "M5",
+      "span_um": [
+       604.8,
+       864.0
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.655,
+     "window_um": [
+      174.96,
+      347.76
+     ],
+     "bits_in_window": 1769,
+     "free_tracks_in_window": 2700,
+     "over_limit": true,
+     "extra_free_um_for_limit": 33.05
+    },
+    "reach_jog": {
+     "demand": 0.408,
+     "window_um": [
+      0.0,
+      408.24
+     ],
+     "bits_in_window": 2422,
+     "free_tracks_in_window": 5940,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.209,
+     "window_um": [
+      112.32,
+      408.24
+     ],
+     "bits_in_window": 1769,
+     "free_tracks_in_window": 8482,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=766.80",
+    "wire_layer": "M7",
+    "bits": 5827,
+    "hops": {
+     "u_fw0.wd>u_rwa.i": 107,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_re.se>u_fe1.tap": 144,
+     "u_rwa.o>u_root.wd_i": 1943,
+     "u_rwt.sw>u_fw1.tap": 338,
+     "u_root.cmd0>u_s0.cmd": 10,
+     "u_s0.rd>u_root.rd0": 768,
+     "u_s0.rv>u_root.rv0": 1,
+     "u_root.wd0>u_s0.wd": 768,
+     "u_root.cmd2>u_s2.cmd": 10,
+     "u_s2.rd>u_root.rd2": 768,
+     "u_s2.rv>u_root.rv2": 1,
+     "u_root.wd2>u_s2.wd": 768
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       153.36,
+       174.96
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.72,
+     "window_um": [
+      174.96,
+      347.76
+     ],
+     "bits_in_window": 1943,
+     "free_tracks_in_window": 2700,
+     "over_limit": true,
+     "extra_free_um_for_limit": 53.29
+    },
+    "reach_jog": {
+     "demand": 0.436,
+     "window_um": [
+      110.16,
+      410.4
+     ],
+     "bits_in_window": 1943,
+     "free_tracks_in_window": 4455,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.195,
+     "window_um": [
+      110.16,
+      410.4
+     ],
+     "bits_in_window": 1943,
+     "free_tracks_in_window": 9945,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=779.76",
+    "wire_layer": "M7",
+    "bits": 2818,
+    "hops": {
+     "u_fw0.wd>u_rwa.i": 1,
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_re.se>u_fe1.tap": 253,
+     "u_rwa.o>u_root.wd_i": 2045,
+     "u_rwt.sw>u_fw1.tap": 318
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwa",
+      "layer_cap": "M5",
+      "span_um": [
+       153.36,
+       174.96
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       648.0
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.757,
+     "window_um": [
+      174.96,
+      347.76
+     ],
+     "bits_in_window": 2045,
+     "free_tracks_in_window": 2700,
+     "over_limit": true,
+     "extra_free_um_for_limit": 65.16
+    },
+    "reach_jog": {
+     "demand": 0.452,
+     "window_um": [
+      108.0,
+      412.56
+     ],
+     "bits_in_window": 2045,
+     "free_tracks_in_window": 4522,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.235,
+     "window_um": [
+      108.0,
+      412.56
+     ],
+     "bits_in_window": 2045,
+     "free_tracks_in_window": 8707,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=793.08",
+    "wire_layer": "M7",
+    "bits": 2803,
+    "hops": {
+     "u_rb2.rd>u_re.rdi": 201,
+     "u_re.rdo>u_root.rd_i": 29,
+     "u_re.se>u_fe1.tap": 365,
+     "u_rwa.o>u_root.wd_i": 1909,
+     "u_rwt.sw>u_fw1.tap": 299
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       648.0
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.707,
+     "window_um": [
+      174.96,
+      347.76
+     ],
+     "bits_in_window": 1909,
+     "free_tracks_in_window": 2700,
+     "over_limit": true,
+     "extra_free_um_for_limit": 49.34
+    },
+    "reach_jog": {
+     "demand": 0.422,
+     "window_um": [
+      108.0,
+      412.56
+     ],
+     "bits_in_window": 1909,
+     "free_tracks_in_window": 4522,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.208,
+     "window_um": [
+      108.0,
+      412.56
+     ],
+     "bits_in_window": 1909,
+     "free_tracks_in_window": 9157,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=901.08",
+    "wire_layer": "M7",
+    "bits": 1201,
+    "hops": {
+     "u_re.se>u_fe1.tap": 250,
+     "u_root.tap_e>u_re.tap": 33,
+     "u_rwa.o>u_root.wd_i": 791,
+     "u_rwt.sw>u_fw1.tap": 127
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw1",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe1",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_re",
+      "layer_cap": "M6",
+      "span_um": [
+       978.48,
+       1000.08
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       648.0
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.293,
+     "window_um": [
+      174.96,
+      347.76
+     ],
+     "bits_in_window": 791,
+     "free_tracks_in_window": 2700,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.175,
+     "window_um": [
+      108.0,
+      412.56
+     ],
+     "bits_in_window": 791,
+     "free_tracks_in_window": 4522,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.086,
+     "window_um": [
+      108.0,
+      412.56
+     ],
+     "bits_in_window": 791,
+     "free_tracks_in_window": 9157,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1095.48",
+    "wire_layer": "M7",
+    "bits": 328,
+    "hops": {
+     "u_re.ne>u_fe2.tap": 245,
+     "u_root.tap_e>u_re.tap": 57,
+     "u_root.tap_w>u_rwt.tap": 5,
+     "u_rwt.nw>u_fw2.tap": 21
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_re",
+      "layer_cap": "M6",
+      "span_um": [
+       978.48,
+       1000.08
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       648.0
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.041,
+     "window_um": [
+      978.48,
+      1386.72
+     ],
+     "bits_in_window": 245,
+     "free_tracks_in_window": 6040,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.038,
+     "window_um": [
+      954.72,
+      1401.84
+     ],
+     "bits_in_window": 245,
+     "free_tracks_in_window": 6446,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.016,
+     "window_um": [
+      954.72,
+      1401.84
+     ],
+     "bits_in_window": 245,
+     "free_tracks_in_window": 15041,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1201.32",
+    "wire_layer": "M7",
+    "bits": 570,
+    "hops": {
+     "u_re.ne>u_fe2.tap": 377,
+     "u_rt2.cfg>u_re.cfgi": 1,
+     "u_rwb.o>u_root.wr_i": 172,
+     "u_rwt.nw>u_fw2.tap": 20
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_root",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       648.0
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.062,
+     "window_um": [
+      1000.08,
+      1386.72
+     ],
+     "bits_in_window": 377,
+     "free_tracks_in_window": 6040,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.057,
+     "window_um": [
+      965.52,
+      1401.84
+     ],
+     "bits_in_window": 377,
+     "free_tracks_in_window": 6615,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.024,
+     "window_um": [
+      965.52,
+      1401.84
+     ],
+     "bits_in_window": 377,
+     "free_tracks_in_window": 15435,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1220.40",
+    "wire_layer": "M7",
+    "bits": 3038,
+    "hops": {
+     "u_re.ne>u_fe2.tap": 217,
+     "u_rt2.cfg>u_re.cfgi": 1,
+     "u_rwb.o>u_root.wr_i": 217,
+     "u_rwt.nw>u_fw2.tap": 21,
+     "u_root.cmd1>u_s1.cmd": 10,
+     "u_s1.rd>u_root.rd1": 768,
+     "u_s1.rv>u_root.rv1": 1,
+     "u_root.wd1>u_s1.wd": 768,
+     "u_root.cmd3>u_s3.cmd": 10,
+     "u_s3.rd>u_root.rd3": 512,
+     "u_s3.rv>u_root.rv3": 1,
+     "u_root.wd3>u_s3.wd": 512
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.39,
+     "window_um": [
+      349.92,
+      600.48
+     ],
+     "bits_in_window": 1528,
+     "free_tracks_in_window": 3915,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.192,
+     "window_um": [
+      43.2,
+      991.44
+     ],
+     "bits_in_window": 2793,
+     "free_tracks_in_window": 14580,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.082,
+     "window_um": [
+      43.2,
+      991.44
+     ],
+     "bits_in_window": 2793,
+     "free_tracks_in_window": 34020,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1242.00",
+    "wire_layer": "M7",
+    "bits": 275,
+    "hops": {
+     "u_re.ne>u_fe2.tap": 36,
+     "u_rt2.cfg>u_re.cfgi": 1,
+     "u_rwb.o>u_root.wr_i": 217,
+     "u_rwt.nw>u_fw2.tap": 21
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwt",
+      "layer_cap": "M6",
+      "span_um": [
+       129.6,
+       144.72
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_s1",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       604.8
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s3",
+      "layer_cap": "M6",
+      "span_um": [
+       604.8,
+       864.0
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.068,
+     "window_um": [
+      129.6,
+      347.76
+     ],
+     "bits_in_window": 217,
+     "free_tracks_in_window": 3172,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.037,
+     "window_um": [
+      0.0,
+      444.96
+     ],
+     "bits_in_window": 238,
+     "free_tracks_in_window": 6446,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.018,
+     "window_um": [
+      0.0,
+      444.96
+     ],
+     "bits_in_window": 238,
+     "free_tracks_in_window": 12971,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1263.60",
+    "wire_layer": "M7",
+    "bits": 459,
+    "hops": {
+     "u_rt0.wo>u_fw2.ph": 130,
+     "u_rt2.cfg>u_re.cfgi": 1,
+     "u_rt3.eo>u_fe2.ph": 111,
+     "u_rwb.o>u_root.wr_i": 217
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_s1",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       604.8
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s3",
+      "layer_cap": "M6",
+      "span_um": [
+       604.8,
+       864.0
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.073,
+     "window_um": [
+      0.0,
+      131.76
+     ],
+     "bits_in_window": 130,
+     "free_tracks_in_window": 1788,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.057,
+     "window_um": [
+      0.0,
+      162.0
+     ],
+     "bits_in_window": 130,
+     "free_tracks_in_window": 2261,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.026,
+     "window_um": [
+      0.0,
+      444.96
+     ],
+     "bits_in_window": 347,
+     "free_tracks_in_window": 13522,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1328.40",
+    "wire_layer": "M7",
+    "bits": 1536,
+    "hops": {
+     "u_fw3.wr>u_rwb.i": 105,
+     "u_rt0.wo>u_fw2.ph": 667,
+     "u_rt2.cfg>u_re.cfgi": 1,
+     "u_rt3.eo>u_fe2.ph": 654,
+     "u_rwb.o>u_root.wr_i": 109
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rwb",
+      "layer_cap": "M5",
+      "span_um": [
+       129.6,
+       142.56
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s1",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       604.8
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s3",
+      "layer_cap": "M6",
+      "span_um": [
+       604.8,
+       864.0
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 0.432,
+     "window_um": [
+      0.0,
+      131.76
+     ],
+     "bits_in_window": 772,
+     "free_tracks_in_window": 1788,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.282,
+     "window_um": [
+      0.0,
+      168.48
+     ],
+     "bits_in_window": 667,
+     "free_tracks_in_window": 2362,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.127,
+     "window_um": [
+      0.0,
+      168.48
+     ],
+     "bits_in_window": 667,
+     "free_tracks_in_window": 5242,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1414.80",
+    "wire_layer": "M7",
+    "bits": 3598,
+    "hops": {
+     "u_fw3.ph>u_rt0.wi": 295,
+     "u_fw3.wr>u_rwb.i": 217,
+     "u_rt0.eo>u_rt1.wi": 324,
+     "u_rt0.wo>u_fw2.ph": 1384,
+     "u_rt2.cfg>u_re.cfgi": 1,
+     "u_rt3.eo>u_fe2.ph": 1377
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rt0",
+      "layer_cap": "M5",
+      "span_um": [
+       131.76,
+       162.0
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s1",
+      "layer_cap": "M5",
+      "span_um": [
+       345.6,
+       604.8
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_s3",
+      "layer_cap": "M6",
+      "span_um": [
+       604.8,
+       864.0
+      ],
+      "blocks": true
+     }
+    ],
+    "no_jog": {
+     "demand": 1.06,
+     "window_um": [
+      0.0,
+      131.76
+     ],
+     "bits_in_window": 1896,
+     "free_tracks_in_window": 1788,
+     "over_limit": true,
+     "extra_free_um_for_limit": 106.15
+    },
+    "reach_jog": {
+     "demand": 0.55,
+     "window_um": [
+      0.0,
+      237.6
+     ],
+     "bits_in_window": 1895,
+     "free_tracks_in_window": 3442,
+     "over_limit": true,
+     "extra_free_um_for_limit": 0.19
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.262,
+     "window_um": [
+      0.0,
+      179.28
+     ],
+     "bits_in_window": 1384,
+     "free_tracks_in_window": 5276,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1458.00",
+    "wire_layer": "M7",
+    "bits": 5243,
+    "hops": {
+     "u_fw3.ph>u_rt0.wi": 759,
+     "u_fw3.wr>u_rwb.i": 217,
+     "u_rt0.eo>u_rt1.wi": 785,
+     "u_rt0.wo>u_fw2.ph": 1742,
+     "u_rt2.cfg>u_re.cfgi": 1,
+     "u_rt3.eo>u_fe2.ph": 1739
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rt0",
+      "layer_cap": "M5",
+      "span_um": [
+       131.76,
+       162.0
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 1.519,
+     "window_um": [
+      0.0,
+      131.76
+     ],
+     "bits_in_window": 2718,
+     "free_tracks_in_window": 1788,
+     "over_limit": true,
+     "extra_free_um_for_limit": 201.8
+    },
+    "reach_jog": {
+     "demand": 0.789,
+     "window_um": [
+      0.0,
+      237.6
+     ],
+     "bits_in_window": 2717,
+     "free_tracks_in_window": 3442,
+     "over_limit": true,
+     "extra_free_um_for_limit": 95.84
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.367,
+     "window_um": [
+      0.0,
+      237.6
+     ],
+     "bits_in_window": 2717,
+     "free_tracks_in_window": 7402,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1482.84",
+    "wire_layer": "M7",
+    "bits": 6027,
+    "hops": {
+     "u_fw3.ph>u_rt0.wi": 1027,
+     "u_fw3.wr>u_rwb.i": 217,
+     "u_rt0.eo>u_rt1.wi": 954,
+     "u_rt0.wo>u_fw2.ph": 1948,
+     "u_rt1.eo>u_rt2.wi": 31,
+     "u_rt2.eo>u_rt3.wi": 31,
+     "u_rt3.eo>u_fe2.ph": 1819
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw2",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       17.28
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe2",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rt0",
+      "layer_cap": "M5",
+      "span_um": [
+       131.76,
+       162.0
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt1",
+      "layer_cap": "M5",
+      "span_um": [
+       518.4,
+       548.64
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt2",
+      "layer_cap": "M5",
+      "span_um": [
+       864.0,
+       894.24
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt3",
+      "layer_cap": "M5",
+      "span_um": [
+       1209.6,
+       1239.84
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 1.784,
+     "window_um": [
+      0.0,
+      131.76
+     ],
+     "bits_in_window": 3192,
+     "free_tracks_in_window": 1788,
+     "over_limit": true,
+     "extra_free_um_for_limit": 256.95
+    },
+    "reach_jog": {
+     "demand": 0.927,
+     "window_um": [
+      0.0,
+      237.6
+     ],
+     "bits_in_window": 3191,
+     "free_tracks_in_window": 3442,
+     "over_limit": true,
+     "extra_free_um_for_limit": 151.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.431,
+     "window_um": [
+      0.0,
+      237.6
+     ],
+     "bits_in_window": 3191,
+     "free_tracks_in_window": 7402,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1634.04",
+    "wire_layer": "M7",
+    "bits": 4975,
+    "hops": {
+     "u_fe3.ph>u_rt3.ei": 666,
+     "u_fw3.ph>u_rt0.wi": 1583,
+     "u_rt0.eo>u_rt1.wi": 324,
+     "u_rt0.wo>u_fw2.ph": 1454,
+     "u_rt1.eo>u_rt2.wi": 18,
+     "u_rt1.wo>u_rt0.ei": 606,
+     "u_rt2.eo>u_rt3.wi": 18,
+     "u_rt3.eo>u_fe2.ph": 306
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw3",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe3",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rt0",
+      "layer_cap": "M5",
+      "span_um": [
+       131.76,
+       162.0
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt1",
+      "layer_cap": "M5",
+      "span_um": [
+       518.4,
+       548.64
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt2",
+      "layer_cap": "M5",
+      "span_um": [
+       864.0,
+       894.24
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt3",
+      "layer_cap": "M5",
+      "span_um": [
+       1209.6,
+       1239.84
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 1.636,
+     "window_um": [
+      0.0,
+      131.76
+     ],
+     "bits_in_window": 3037,
+     "free_tracks_in_window": 1856,
+     "over_limit": true,
+     "extra_free_um_for_limit": 234.6
+    },
+    "reach_jog": {
+     "demand": 0.935,
+     "window_um": [
+      0.0,
+      220.32
+     ],
+     "bits_in_window": 3028,
+     "free_tracks_in_window": 3240,
+     "over_limit": true,
+     "extra_free_um_for_limit": 144.99
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.437,
+     "window_um": [
+      0.0,
+      220.32
+     ],
+     "bits_in_window": 3028,
+     "free_tracks_in_window": 6929,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   },
+   {
+    "cut": "y=1814.40",
+    "wire_layer": "M7",
+    "bits": 963,
+    "hops": {
+     "u_fe3.ph>u_rt3.ei": 17,
+     "u_fw3.ph>u_rt0.wi": 497,
+     "u_rt1.wo>u_rt0.ei": 443,
+     "u_rt2.wo>u_rt1.ei": 3,
+     "u_rt3.wo>u_rt2.ei": 3
+    },
+    "tiles_under": [
+     {
+      "inst": "u_fw3",
+      "layer_cap": "M6",
+      "span_um": [
+       0,
+       12.96
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_fe3",
+      "layer_cap": "M6",
+      "span_um": [
+       1386.67,
+       1399.63
+      ],
+      "blocks": true
+     },
+     {
+      "inst": "u_rt1",
+      "layer_cap": "M5",
+      "span_um": [
+       518.4,
+       548.64
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt2",
+      "layer_cap": "M5",
+      "span_um": [
+       864.0,
+       894.24
+      ],
+      "blocks": false
+     },
+     {
+      "inst": "u_rt3",
+      "layer_cap": "M5",
+      "span_um": [
+       1209.6,
+       1239.84
+      ],
+      "blocks": false
+     }
+    ],
+    "no_jog": {
+     "demand": 0.268,
+     "window_um": [
+      0.0,
+      131.76
+     ],
+     "bits_in_window": 497,
+     "free_tracks_in_window": 1856,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog": {
+     "demand": 0.189,
+     "window_um": [
+      0.0,
+      181.44
+     ],
+     "bits_in_window": 497,
+     "free_tracks_in_window": 2632,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    },
+    "reach_jog_plus_lower_layer_in_gaps": {
+     "demand": 0.081,
+     "window_um": [
+      0.0,
+      181.44
+     ],
+     "bits_in_window": 497,
+     "free_tracks_in_window": 6142,
+     "over_limit": false,
+     "extra_free_um_for_limit": 0.0
+    }
+   }
+  ]
+ },
+ "proposed_fixes": [],
+ "margin_balance": null,
+ "cut_findings": [
+  {
+   "cut": "y=351.00",
+   "wire_layer": "M7",
+   "window_um": [
+    1220.4,
+    1401.84
+   ],
+   "bits_in_window": 1471,
+   "free_tracks": 2632,
+   "demand": 0.559,
+   "demand_with_lower_layer_in_gaps": 0.267,
+   "options": {
+    "free_more_um_of_this_layer": 2.69,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fe0"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fe0.ph>u_rb3.ei": 679,
+    "u_fw0.ph>u_rb0.wi": 209,
+    "u_fw0.wd>u_rwa.i": 530,
+    "u_rb0.eo>u_rb1.wi": 13,
+    "u_rb1.eo>u_rb2.wi": 13,
+    "u_rb2.eo>u_rb3.wi": 586,
+    "u_rb3.eo>u_fe1.ph": 1284
+   }
+  },
+  {
+   "cut": "y=487.08",
+   "wire_layer": "M7",
+   "window_um": [
+    1220.4,
+    1401.84
+   ],
+   "bits_in_window": 2048,
+   "free_tracks": 2632,
+   "demand": 0.778,
+   "demand_with_lower_layer_in_gaps": 0.372,
+   "options": {
+    "free_more_um_of_this_layer": 69.83,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fe0"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fe0.ph>u_rb3.ei": 395,
+    "u_fw0.wd>u_rwa.i": 1945,
+    "u_rb0.wo>u_fw1.ph": 1078,
+    "u_rb2.rd>u_re.rdi": 201,
+    "u_rb3.eo>u_fe1.ph": 2048,
+    "u_rb3.wo>u_rb2.ei": 426
+   }
+  },
+  {
+   "cut": "y=510.84",
+   "wire_layer": "M7",
+   "window_um": [
+    1220.4,
+    1401.84
+   ],
+   "bits_in_window": 1965,
+   "free_tracks": 2632,
+   "demand": 0.746,
+   "demand_with_lower_layer_in_gaps": 0.356,
+   "options": {
+    "free_more_um_of_this_layer": 60.17,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fe1"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fe0.ph>u_rb3.ei": 172,
+    "u_fw0.wd>u_rwa.i": 2048,
+    "u_rb0.wo>u_fw1.ph": 1024,
+    "u_rb2.rd>u_re.rdi": 201,
+    "u_rb3.eo>u_fe1.ph": 1965,
+    "u_rb3.wo>u_rb2.ei": 174
+   }
+  },
+  {
+   "cut": "y=525.96",
+   "wire_layer": "M7",
+   "window_um": [
+    0.0,
+    272.16
+   ],
+   "bits_in_window": 2990,
+   "free_tracks": 4050,
+   "demand": 0.738,
+   "demand_with_lower_layer_in_gaps": 0.338,
+   "options": {
+    "free_more_um_of_this_layer": 88.73,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fw1"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fe0.ph>u_rb3.ei": 13,
+    "u_fw0.wd>u_rwa.i": 2048,
+    "u_rb0.wo>u_fw1.ph": 942,
+    "u_rb2.rd>u_re.rdi": 201,
+    "u_rb3.eo>u_fe1.ph": 1839,
+    "u_rb3.wo>u_rb2.ei": 13,
+    "u_rwa.o>u_root.wd_i": 10
+   }
+  },
+  {
+   "cut": "y=534.60",
+   "wire_layer": "M7",
+   "window_um": [
+    0.0,
+    270.0
+   ],
+   "bits_in_window": 2886,
+   "free_tracks": 4016,
+   "demand": 0.719,
+   "demand_with_lower_layer_in_gaps": 0.323,
+   "options": {
+    "free_more_um_of_this_layer": 78.79,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fw1"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fw0.wd>u_rwa.i": 1992,
+    "u_rb0.wo>u_fw1.ph": 895,
+    "u_rb2.rd>u_re.rdi": 201,
+    "u_rb3.eo>u_fe1.ph": 1766,
+    "u_rwa.o>u_root.wd_i": 79
+   }
+  },
+  {
+   "cut": "y=1414.80",
+   "wire_layer": "M7",
+   "window_um": [
+    0.0,
+    237.6
+   ],
+   "bits_in_window": 1895,
+   "free_tracks": 3442,
+   "demand": 0.55,
+   "demand_with_lower_layer_in_gaps": 0.262,
+   "options": {
+    "free_more_um_of_this_layer": 0.19,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fw2"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fw3.ph>u_rt0.wi": 295,
+    "u_fw3.wr>u_rwb.i": 217,
+    "u_rt0.eo>u_rt1.wi": 324,
+    "u_rt0.wo>u_fw2.ph": 1384,
+    "u_rt2.cfg>u_re.cfgi": 1,
+    "u_rt3.eo>u_fe2.ph": 1377
+   }
+  },
+  {
+   "cut": "y=1458.00",
+   "wire_layer": "M7",
+   "window_um": [
+    0.0,
+    237.6
+   ],
+   "bits_in_window": 2717,
+   "free_tracks": 3442,
+   "demand": 0.789,
+   "demand_with_lower_layer_in_gaps": 0.367,
+   "options": {
+    "free_more_um_of_this_layer": 95.84,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fw2"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fw3.ph>u_rt0.wi": 759,
+    "u_fw3.wr>u_rwb.i": 217,
+    "u_rt0.eo>u_rt1.wi": 785,
+    "u_rt0.wo>u_fw2.ph": 1742,
+    "u_rt2.cfg>u_re.cfgi": 1,
+    "u_rt3.eo>u_fe2.ph": 1739
+   }
+  },
+  {
+   "cut": "y=1482.84",
+   "wire_layer": "M7",
+   "window_um": [
+    0.0,
+    237.6
+   ],
+   "bits_in_window": 3191,
+   "free_tracks": 3442,
+   "demand": 0.927,
+   "demand_with_lower_layer_in_gaps": 0.431,
+   "options": {
+    "free_more_um_of_this_layer": 151.0,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fw2"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fw3.ph>u_rt0.wi": 1027,
+    "u_fw3.wr>u_rwb.i": 217,
+    "u_rt0.eo>u_rt1.wi": 954,
+    "u_rt0.wo>u_fw2.ph": 1948,
+    "u_rt1.eo>u_rt2.wi": 31,
+    "u_rt2.eo>u_rt3.wi": 31,
+    "u_rt3.eo>u_fe2.ph": 1819
+   }
+  },
+  {
+   "cut": "y=1634.04",
+   "wire_layer": "M7",
+   "window_um": [
+    0.0,
+    220.32
+   ],
+   "bits_in_window": 3028,
+   "free_tracks": 3240,
+   "demand": 0.935,
+   "demand_with_lower_layer_in_gaps": 0.437,
+   "options": {
+    "free_more_um_of_this_layer": 144.99,
+    "rebuild_M5_capped_so_die_tracks_pass_over": [
+     "vm_cp_fw3"
+    ],
+    "grant_lower_layer_in_tile_free_channel": "passes",
+    "check": "rerun with --layer-cap MASTER=M5 / --origin"
+   },
+   "hops": {
+    "u_fe3.ph>u_rt3.ei": 666,
+    "u_fw3.ph>u_rt0.wi": 1583,
+    "u_rt0.eo>u_rt1.wi": 324,
+    "u_rt0.wo>u_fw2.ph": 1454,
+    "u_rt1.eo>u_rt2.wi": 18,
+    "u_rt1.wo>u_rt0.ei": 606,
+    "u_rt2.eo>u_rt3.wi": 18,
+    "u_rt3.eo>u_fe2.ph": 306
+   }
+  }
+ ],
+ "self_check": {
+  "instances_25": {
+   "ok": true,
+   "detail": 25
+  },
+  "kits_19": {
+   "ok": true,
+   "detail": 19
+  },
+  "hops_52": {
+   "ok": true,
+   "detail": 52
+  },
+  "hop_bits_equal_rtl_port_widths": {
+   "ok": true,
+   "detail": []
+  },
+  "every_net_one_driver_and_a_load": {
+   "ok": true,
+   "detail": []
+  },
+  "no_unconnected_tile_pin": {
+   "ok": true,
+   "detail": []
+  },
+  "every_pin_bit_placed_on_its_spec_face": {
+   "ok": true,
+   "detail": []
+  },
+  "no_coincident_pins": {
+   "ok": true,
+   "detail": []
+  },
+  "rtl_ports_match_plan_table": {
+   "ok": true,
+   "detail": []
+  },
+  "pin_bits_conserved": {
+   "ok": true,
+   "detail": {
+    "tile_pin_bits": 151113,
+    "hop_bits": 60270,
+    "external_pin_bits": 30573
+   }
+  },
+  "top_ports_all_bound": {
+   "ok": true,
+   "detail": []
+  },
+  "lef_matches_plan_vm_cp_rwb": {
+   "ok": true,
+   "detail": {
+    "max_dev_um": 0.0245,
+    "wrong_face": 0,
+    "missing_in_lef": 0,
+    "plan_kit_env_sha256": "87f4458f599dd76dcd0bf5507bd6ac317d54052402af91b11c466fd2aaa6b3a0"
+   }
+  },
+  "lef_matches_plan_vm_cp_slice2": {
+   "ok": true,
+   "detail": {
+    "max_dev_um": 0.0244,
+    "wrong_face": 0,
+    "missing_in_lef": 0,
+    "plan_kit_env_sha256": "37509638fbb936e18decffa95fcb768226624e26a0964d746047875e44d06700"
+   }
+  },
+  "nominal_origins_reproduce_known_failures": {
+   "ok": true,
+   "detail": {
+    "u_rb3.eo>u_fe1.ph": 522.722,
+    "u_rt0.wo>u_fw2.ph": 572.786
+   }
+  }
+ },
+ "unmeasured": [
+  "routed die wire length / detours (no die route exists)",
+  "track snap of planned pins (LEF kits: see coordinate_sources[*].plan_vs_lef)",
+  "SS timing of each hop (driver strength, load, M6/M7 RC, clock skew between tiles)",
+  "kits being rebuilt (face / fork / root): rerun with --kit / --lef"
+ ]
+}
