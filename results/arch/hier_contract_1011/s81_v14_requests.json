@@ -3,7 +3,7 @@
   "base_contract_version": 13,
   "target_contract_version": 14,
   "inspected_main": "3c0ca7dd2b3349d65f8ff2b8b38ea1d8ea23eedd",
-  "status": "pending integration; this ledger does not publish contract v14",
+  "status": "pending integration; this ledger does not publish contract v14 (2026-10-13: six requests folded from the stream log by the Claude S81 die lead)",
   "requests": [
     {
       "id": "hc-tail-crossing-width",
@@ -152,6 +152,96 @@
         "For deficient abutting links implement a physical buffer/delay chain in a new registered seam or leaf redesign and route/measure atFF; preserve setup/hold uncertainty.",
         "Synthetic120ps Liberty hold offsets are default-off and planning-only. They cannot satisfy this contract.",
         "Do not reroute existing closed tiles solely for M5; physical hold defects require an explicit seam fix independent of layer-policy changes."
+      ]
+    },
+    {
+      "id": "hc-cth-strip-growth",
+      "owner": "HC lead / S81 die lead",
+      "status": "PENDING FIT CHECK (not adopted)",
+      "evidence": "codex-hc 2026-10-12 23:35 and 2026-10-13 00:49 PT (el1011-s81die.log): ctrn return strip 12.96 -> 34.56 um (v2 m4 6d62: FF -15.28 -> +10 with 1,664 ECO hold buffers, then DPL overlaps); ctnl 95.04 -> 97.2 um (std 7,617 um2 / core 12,541 = 60.7% -> 59.3%, immutable pipe6 76d8bf941)",
+      "geometry": {
+        "cth_slot_um": {
+          "w": 576.72,
+          "h_v13": 740.88,
+          "h_requested": 771.12
+        },
+        "delta_um": {
+          "ctrn": 21.6,
+          "ctnl_per_row": 2.16,
+          "ctnl_rows": 4,
+          "per_cth": 30.24
+        },
+        "slab_delta_um": {
+          "sp_hc_s_10_rows": 302.4,
+          "sp_hc_t_12_rows": 362.88
+        }
+      },
+      "actions": [
+        "Die lead: plan-check the 10 upper / 12 tail rows at 771.12 against the corridor y 12,571.2..14,083.2 and the die 26,000 height; grant only with a legal plan (0 overlaps, hop gate) or return a counter-shape of equal area.",
+        "No density, clock or layer relaxation in place of the growth."
+      ]
+    },
+    {
+      "id": "hc-inner-comb-remap",
+      "owner": "HC lead / S81 die lead",
+      "status": "PENDING (inner-slot remap, no top growth asked)",
+      "evidence": "codex-hc 2026-10-13 00:49 PT: RET_EXTRA1 return alignment adds 2 metadata register stages in CCR and 2 return CPAD stages; CPAD as hard tiles <= 15k roots (forward 13 stages 8+5 of 1,135 b, return 12 stages 1+6+5 of 2,156 b) in a strip beside the 410.4 x 542.16 CCF inside the 575.992 x 640 comb slot (leaf w <= 138.24)",
+      "actions": [
+        "HC lead supplies kit areas and the pin plan; die lead records the inner layout as sub_layouts once the kits pass the pre-route gate."
+      ]
+    },
+    {
+      "id": "vm-bgr28-pins-and-clock",
+      "owner": "VM lead / S81 die lead",
+      "status": "RECORDED v13 (pins); scalar clock OPEN",
+      "evidence": "el1011-ds-vm/bgq28 2026-10-12 12:22 PT (bgr28 v4c 3ac033956): N/S i_d / f_d pins also in x [259.66, 343.2]; outline 345.6 x 501.12 (v12). Coordinator 18:20 PT: dsfd_vm_bgr r5 declares ck/rst [0:0]",
+      "actions": [
+        "Bind bgr28 only from a view whose LEF clock pin is scalar ck; tools/s81/native_view_qualify.py gate 'scalar' enforces contract clock_pin_rules at qualification."
+      ]
+    },
+    {
+      "id": "coll-ces-outline",
+      "owner": "collective lead / S81 die lead",
+      "status": "ADOPTED v13 (302.4 x 341.28); a closing route at that outline still owed",
+      "evidence": "el1011-ds-coll 2026-10-12 12:36 PT; contract v13 change (3)",
+      "actions": [
+        "Keep the v13 slot; qualify the ces0/cesn view when a route closes."
+      ]
+    },
+    {
+      "id": "native-view-requalification",
+      "owner": "S81 die lead / tile leads / exporter owner",
+      "status": "REQUIRED",
+      "evidence": "results/arch/s81_native_20261013/qualification.json (tools/s81/native_view_qualify.py, 2026-10-13): 0 of 21 native bundles qualify; pair 18, child_lint (f) 15, bench 9, current 3, clock 1",
+      "actions": [
+        "Exporter: one export per closing ODB (after ECO) with the verdict's SDC sequence, writing LEF + TT/FF/SS + corner STA together.",
+        "Stations (5 masters, 1,544 instances), cfifo (128) and the hend views: re-route through tools/ref_tile (above-only pin keepout, M5 cap, scalar clocks); the present views have 352-1,058 face pins blocked from above.",
+        "HC leaves ctpl/ctfx/ctfn/ctfs: behavioural bench + failing mutant on the leaf or on the cth composition of these exact leaves; ctfn insertion spread 106 ps fails the minimum-delay budget (-37 ps same-master zero-wire)."
+      ]
+    },
+    {
+      "id": "relay-masters",
+      "owner": "S81 die lead",
+      "status": "KITS BUILT, ROUTES PENDING",
+      "evidence": "c5 census: 27 dsfd_rly_<W>_<fi><fo> masters, 29,184 instances, all generated outline + interim timing. Kits physical/ref_tile/s81_rly_* (tools/s81/rly_kits.py), RTL rtl/dsrom_sys/s81_glue, bench + mutant",
+      "geometry": {
+        "outline_um": {
+          "w": 17.28,
+          "h": 17.28,
+          "h_w266_w283": 19.44
+        },
+        "generated_slot_um": {
+          "w": 17.256,
+          "h": 17.256,
+          "h_w266_w283": 19.416
+        },
+        "pins": "data in face fi / out face fo (M4 on E/W, M5 on N/S), scalar ck + rs on the third face; W = 1 masters have scalar i / o",
+        "layer_cap": "M5"
+      },
+      "min_delay": "outhold BUF-HB4-BUF at each output pin; accept on the routed FF ETM: L - H >= 50 ps",
+      "actions": [
+        "Generator: place relays at the real 17.28 outline (site-grid) and read pin positions from the routed LEF; orientation R0 only unless the routed pins stay on track when mirrored.",
+        "Bind by master name once each view passes native_view_qualify gates."
       ]
     }
   ]
