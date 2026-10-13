@@ -22,5 +22,20 @@
   "evidence_log": "/home/ubuntu/claude-takeover-20261007/el1011-ds-vm.log 2026-10-12 15:50 PDT"
  },
  "local_gate": "WARN 0 fail, ck/rs scalar warning",
- "diagnostic": "ot-epyc4:/srv/opentallas-scratch2/codex/bgr28-diag"
+ "diagnostic": "ot-epyc4:/srv/opentallas-scratch2/codex/bgr28-diag",
+ "diagnostic_complete": true,
+ "diagnostic_measured": {
+  "input_path": "i_d[2070] -> u.rb_d[0][2070]/D",
+  "input_hold_wc_ps": -175.31,
+  "input_external_min_ps": 377.66,
+  "capture_clock_wc_ps": 560.94,
+  "internal_path": "u.rb_d[0][1683]/Q -> u.rb_d[1][1683]/D",
+  "internal_hold_ps": -81.34,
+  "reset_input_removal_ps": -134.42
+ },
+ "caveats": [
+  "Pre-repair diagnostic; original early-fail plateau -66.363ps was after12800 repair iterations.",
+  "Reset-input removal is also negative; balanced spine does not by itself prove reset removal closed. Signoff must check it.",
+  "Source file unchanged; earlier20/20 gate reused, job still runs exact gold/mutant before adoption."
+ ]
 }

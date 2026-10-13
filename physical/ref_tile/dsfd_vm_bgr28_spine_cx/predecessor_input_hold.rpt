@@ -1,0 +1,62 @@
+[WARNING STA-0168] unknown field nets.
+Startpoint: i_d[2070] (input port clocked by core_clk)
+Endpoint: u.rb_d[0][2070]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        377.66  377.66 v input external delay
+     1    0.94  150.00    0.00  377.66 v i_d[2070] (in)
+                150.17    0.05  377.71 v input3499/A (BUFx2_ASAP7_75t_R)
+     1    0.64   12.60   47.86  425.58 v input3499/Y (BUFx2_ASAP7_75t_R)
+                 12.60    0.03  425.61 v u.rb_d[0][2070]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                                425.61   data arrival time
+
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+     1   19.20    0.00    0.00    0.00 ^ ck[0] (in)
+                 59.49   18.77   18.77 ^ wire135581/A (BUFx16f_ASAP7_75t_R)
+     2   13.11   15.95   32.91   51.68 ^ wire135581/Y (BUFx16f_ASAP7_75t_R)
+                 27.54    7.24   58.92 ^ clkbuf_regs_0_core_clk/A (BUFx24_ASAP7_75t_R)
+     1    2.54    9.24   28.16   87.08 ^ clkbuf_regs_0_core_clk/Y (BUFx24_ASAP7_75t_R)
+                  9.24    0.14   87.22 ^ clkbuf_0_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     2   16.63   15.75   24.55  111.77 ^ clkbuf_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 23.08    5.62  117.39 ^ clkbuf_1_1_0_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     1    5.74   10.66   27.32  144.71 ^ clkbuf_1_1_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 11.93    2.09  146.80 ^ clkbuf_1_1_1_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     1    9.19   11.58   23.94  170.74 ^ clkbuf_1_1_1_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 19.28    5.19  175.93 ^ clkbuf_1_1_2_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     2   16.24   16.15   27.44  203.37 ^ clkbuf_1_1_2_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 24.34    5.95  209.32 ^ clkbuf_2_3_0_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     1    8.86   11.67   28.12  237.44 ^ clkbuf_2_3_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 18.46    4.88  242.32 ^ clkbuf_2_3_1_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     2   13.96   14.87   27.02  269.35 ^ clkbuf_2_3_1_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 21.28    5.09  274.44 ^ clkbuf_3_7_0_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     2   12.06   12.92   27.41  301.85 ^ clkbuf_3_7_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 21.86    5.61  307.47 ^ clkbuf_4_14_0_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     2   11.15   12.64   27.57  335.04 ^ clkbuf_4_14_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 21.12    5.50  340.53 ^ clkbuf_5_29_0_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     4   11.20   13.41   28.01  368.55 ^ clkbuf_5_29_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 13.51    0.58  369.13 ^ clkbuf_7_116_0_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+     2    6.04   10.75   24.24  393.37 ^ clkbuf_7_116_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 10.94    0.92  394.28 ^ clkbuf_8_233__f_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+    17   60.39   13.04   24.13  418.41 ^ clkbuf_8_233__f_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                239.52   75.45  493.86 ^ clkbuf_leaf_1082_ck[0]_regs/A (BUFx24_ASAP7_75t_R)
+    22   16.15   23.73   66.51  560.36 ^ clkbuf_leaf_1082_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                 23.80    0.58  560.94 ^ u.rb_d[0][2070]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                         25.00  585.94   clock uncertainty
+                          0.00  585.94   clock reconvergence pessimism
+                         14.98  600.92   library hold time
+                                600.92   data required time
+-----------------------------------------------------------------------------
+                                600.92   data required time
+                               -425.61   data arrival time
+-----------------------------------------------------------------------------
+                               -175.31   slack (VIOLATED)
+
+
