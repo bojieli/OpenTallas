@@ -2,6 +2,7 @@
 # CLAUDE S81-PH coll v2 exact gate (mtp-colllane-1011: + the dedicated MTP lane with +define+OT_S81PH_COLL_MTPL +define+TB_MTP): tb_s81ph_coll_sys (4-die TP4 group of dsfd_sp_collective vs four C8 engines
 # built with RANK 0..3; transaction-level: every reduce word / gather beat in order per die, pass-through flits in
 # order) on the tiled slab (default) or the v1 flat slab (-DS81PH_COLL_V1).  Run from the repo root.
+# dsfd_coll_ceh.sv is FIRST: it declares the package s81ph_ces_cov the bench reads (split lane-slice coverage refusal).
 #   run_coll_bench.sh <out dir> <label> [-G.. / -D..]      -> <out>/<label>.log; exit 0 iff PASS
 set -u
 O=$1; L=$2; shift 2
@@ -9,8 +10,8 @@ S=$(pwd); mkdir -p $O/$L
 P=$S/rtl/dsrom_sys/s81_ph
 ( cd $O/$L && verilator --binary -j 8 --timing -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINCONNECTEMPTY -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
   -Wno-PINMISSING -DOT_S81PH_PLL_MODEL --top-module tb_s81ph_coll_sys "$@" \
-  $P/test/tb_s81ph_coll_sys.sv $P/dsfd_sp_collective.sv $P/coll/dsfd_coll_ck.sv $P/coll/dsfd_coll_core.sv $P/coll/dsfd_coll_split.sv \
-  $P/coll/ot_s81ph_coll_lane.sv $P/coll/ot_s81ph_skid2.sv $P/coll/dsfd_coll_cbh.sv $P/coll/dsfd_coll_ceh.sv $P/coll/ot_s81ph_ckbuf.sv \
+  $P/coll/dsfd_coll_ceh.sv $P/test/tb_s81ph_coll_sys.sv $P/dsfd_sp_collective.sv $P/coll/dsfd_coll_ck.sv $P/coll/dsfd_coll_core.sv $P/coll/dsfd_coll_split.sv \
+  $P/coll/ot_s81ph_coll_lane.sv $P/coll/ot_s81ph_skid2.sv $P/coll/dsfd_coll_cbh.sv $P/coll/ot_s81ph_ckbuf.sv \
   $P/ot_s81ph_coll_core.sv $P/ot_s81ph_coll_rstc.sv $P/ot_s81_pll_bb.sv $P/ot_s81ph_link_ep.sv $P/ot_s81ph_link_gbx.sv \
   $P/ot_s81ph_mem1r1w.sv $P/ot_s81ph_rfifo.sv \
   $P/coll/dsfd_coll_mtp_lane.sv $P/test/tb_mtp_lane_io.sv $S/rtl/dsrom_sys/mtp/dsfd_coll_mtp_ep.sv \

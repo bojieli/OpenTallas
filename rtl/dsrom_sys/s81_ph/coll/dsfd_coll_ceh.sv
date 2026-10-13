@@ -19,6 +19,23 @@
 // Every tile synchronises rs itself; every seam is a credit link or a registered stream (pin flop both ends).
 `timescale 1ns/1ps
 
+// COVERAGE of the split lane-slice seams (bench only: Verilator builds with OT_S81PH_COLL_CES_SPLIT; never synthesised).
+// Every wires-only parent counts the beats that cross each of its seams; tb_s81ph_coll_sys REFUSES a pass in which a
+// seam carried nothing, a parent is missing, or the ces0 and cesn counts differ (lockstep).  [k]: 0 = ces0, 1 = cesn.
+`ifdef OT_S81PH_COLL_CES_SPLIT
+`ifdef VERILATOR
+package s81ph_ces_cov;
+    int unsigned inst [0:1];                                  // parents elaborated
+    int unsigned ln [0:1], lny [0:1];                         // lane seam: operands out, sums back (per lane beat)
+    int unsigned xl [0:1][1:3];                               // xl relay -> core, per remote source
+    int unsigned xli [0:1][1:3];                              // FIFO tile -> xl relay
+    int unsigned pt [0:1][0:4];                               // pass-through relay -> core, per lane
+    int unsigned pti [0:1][0:4];                              // lane tile -> pass-through relay
+    int unsigned ow [0:1], bw [0:1];                          // core -> output leaf, output leaf -> face
+endpackage
+`endif
+`endif
+
 // ------------------------------------------------------------------------------------------------ remote FIFO tile
 module dsfd_coll_cef #(parameter integer PW = 547, parameter integer PD = 256, parameter integer XD = 6) (
     input  wire              ck, input wire rs,
@@ -63,6 +80,9 @@ endmodule
 // reduce +2 cycles), and the xl / pass-through links arrive from relay leaves (dsfd_coll_cesx / cesp, D XD towards the
 // sender, +2 cycles each way) into XLD / PTD-deep landings here.  All four slices of a composition MUST use the same
 // SEAM (they run in lockstep with no cross-slice wire): dsfd_coll_ceh asserts it.
+// With SEAM the OUTPUT STAGE (bd_q / bh_q / bv_q, the header error OR and the bw pin registers: 1,078 flops in cesn,
+// 1,180 in ces0) is the dsfd_coll_ceso leaf: the core's last flops w1_v / w1_d / w1_h leave on ow_*.  Same flops, same
+// cycles (zero added latency); it takes the cesn core from 14,889 to ~13.8k sinks and ces0's below 15k.
 module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parameter integer OQX_D = 16,
     parameter integer SEAM = 0, parameter integer XLD = 3, parameter integer PTD = 2) (
     input  wire              ck, input wire rs,
@@ -80,7 +100,9 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     input  wire [4:0]        pt_v, input wire [5*(S == 0 ? 169 : 129)-1:0] pt_d, output wire [4:0] pt_cr,
     // output to cb
     input  wire              bw_cr,
-    output reg               bw_v, output reg [(S == 0 ? 563 : 512)-1:0] bw_d,
+    output reg               bw_v, output reg [(S == 0 ? 563 : 512)-1:0] bw_d,   // SEAM: tied 0 (dsfd_coll_ceso drives the face)
+    // SEAM: output seam to the dsfd_coll_ceso leaf (the registered word one stage before the old bd_q / bh_q)
+    output wire              ow_v, output wire [511:0] ow_d, output wire [50:0] ow_h,
     // slice faults to ceq, header error bits to / from slice 0
     output reg  [1:0]        lf,                            // {e_flt, mq_flt}
     output reg               pe_o, input wire [3:1] pe_i,
@@ -271,18 +293,26 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     // ---- output: +1 stage where slice 0 ORs the other slices' error bits into the header, then the pin registers
     reg w1_v; reg [4*SFW-1:0] w1_d; reg [50:0] w1_h; reg [4*SFW-1:0] bd_q; reg [50:0] bh_q; reg bv_q;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin w1_v <= 1'b0; bv_q <= 1'b0; bw_v <= 1'b0; pe_o <= 1'b0; lf <= 2'd0; end
+        if (!rst_n) begin w1_v <= 1'b0; pe_o <= 1'b0; lf <= 2'd0; end
         else begin
-            w1_v <= oq_push; bv_q <= w1_v; bw_v <= bv_q; pe_o <= pe;
+            w1_v <= oq_push; pe_o <= pe;
             lf <= {e_flt, mq_flt};
         end
+    always @(posedge ck) begin w1_d <= b_d; w1_h <= hdr; end
+    assign ow_v = w1_v; assign ow_d = w1_d; assign ow_h = w1_h;
+    // pe_q (pin flops) holds the other slices' error bits of the word now in bd_q / bh_q (emit + 2)
+    generate if (SEAM != 0) begin : g_oseam                    // the output stage is the dsfd_coll_ceso leaf
+        always @(*) begin bw_v = 1'b0; bw_d = {(S == 0 ? 563 : 512){1'b0}}; bv_q = 1'b0; bd_q = {4*SFW{1'b0}}; bh_q = 51'd0; end
+        wire unused_o = &{1'b0, bv_q, bd_q, bh_q, pe_q};
+    end else begin : g_oflat
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin bv_q <= 1'b0; bw_v <= 1'b0; end
+        else begin bv_q <= w1_v; bw_v <= bv_q; end
     always @(posedge ck) begin
-        w1_d <= b_d; w1_h <= hdr;
         bd_q <= w1_d;
         bh_q <= w1_h;
     end
-    // pe_q (pin flops) holds the other slices' error bits of the word now in bd_q / bh_q (emit + 2)
-    generate if (S == 0) begin : g_o0
+    if (S == 0) begin : g_o0
 `ifdef OT_S81PH_MUT_CEH
         always @(posedge ck) bw_d <= {bd_q, bh_q};            // negative control: the other slices' errors are lost
 `else
@@ -291,6 +321,7 @@ module dsfd_coll_ces #(parameter integer S = 0, parameter integer XD = 6, parame
     end else begin : g_on
         always @(posedge ck) bw_d <= bd_q;
         wire unused_h = &{1'b0, bh_q, pe_q};
+    end
     end endgenerate
     wire unused_ok = &{1'b0, o_rank, e_code, o_d, e_txv[0], e_cro[1:0]};
 endmodule
@@ -654,7 +685,7 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
                 .tx_v(tx_v_s[s]), .tx_d(tx_d_s[s]), .tx_rdy(tx_rdy), .cr_i(cr_i), .cr_o(cr_o_s[s]),
                 .pt_v(p_v), .pt_d(ptd), .pt_cr(p_cr_s[s]),
                 .bw_cr(bw_cr[0]), .bw_v(bwv_s[s]), .bw_d(bwd), .lf(slice_f[2*s +: 2]), .pe_o(pe[s]), .pe_i(pe[3:1]),
-                .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
+                .ow_v(), .ow_d(), .ow_h(), .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
         end else if (s == 0) begin : g_sp0
             dsfd_coll_ces0 u_s (.ck(c), .rs(r), .e_en(e_en), .rank_i(rank), .qp(qp), .fv_i(fv),
                 .q_v(q_v), .q_d(q_d[s*162 +: 162]), .q_cr(q_cr_s[s]),
@@ -677,7 +708,7 @@ module dsfd_coll_ceh #(parameter integer OD = 16, parameter integer CR = 1, para
             .tx_v(tx_v_s[s]), .tx_d(tx_d_s[s]), .tx_rdy(tx_rdy), .cr_i(cr_i), .cr_o(cr_o_s[s]),
             .pt_v(p_v), .pt_d(ptd), .pt_cr(p_cr_s[s]),
             .bw_cr(bw_cr[0]), .bw_v(bwv_s[s]), .bw_d(bwd), .lf(slice_f[2*s +: 2]), .pe_o(pe[s]), .pe_i(pe[3:1]),
-            .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
+            .ow_v(), .ow_d(), .ow_h(), .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
 `endif
         if (s == 0) begin : g_b0 assign bwd0 = bwd; end
         else begin : g_bn assign bwd_s[s] = bwd; end
@@ -757,6 +788,27 @@ module dsfd_coll_cesp #(parameter integer PTW = 129, parameter integer XD = 6, p
             .i_d(i_d[l*PTW +: PTW]), .o_v(o_v[l]), .o_cr(o_cr[l]), .o_d(o_d[l*PTW +: PTW]));
     end endgenerate
 endmodule
+// output-stage leaf (ONE master for ces0 and cesn): the lane-slice's last two register stages.  i_* = the core's w1
+// flops; bd_q / bh_q / bv_q are the pin flops, bw_v / bw_d the face registers; slice 0 ORs the other slices' error
+// bits (pe_i, pin flops) into header bit 15.  cesn ties i_h / pe_i to 0 and takes bw_d[562:51].  Same reset as the
+// core's output stage (rs synchronised here), same cycles: the flat slice's flops, moved.
+module dsfd_coll_ceso (input wire ck, input wire rs, input wire i_v, input wire [511:0] i_d, input wire [50:0] i_h,
+    input wire [3:1] pe_i, output reg bw_v, output reg [562:0] bw_d);
+    reg [1:0] rst_s;
+    always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    wire rst_n = rst_s[1];
+    reg bv_q; reg [511:0] bd_q; reg [50:0] bh_q; reg [3:1] pe_q;   // pin flops
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin bv_q <= 1'b0; bw_v <= 1'b0; pe_q <= 3'd0; end
+        else begin bv_q <= i_v; bw_v <= bv_q; pe_q <= pe_i; end
+    always @(posedge ck) begin bd_q <= i_d; bh_q <= i_h; end
+`ifdef OT_S81PH_MUT_CEH
+    always @(posedge ck) bw_d <= {bd_q, bh_q};                // negative control: the other slices' errors are lost
+    wire unused_pe = &{1'b0, pe_q};
+`else
+    always @(posedge ck) bw_d <= {bd_q, bh_q[50:16], bh_q[15] | (|pe_q), bh_q[14:0]};
+`endif
+endmodule
 // parameter-free leaf masters
 module dsfd_coll_cesp0 (input wire ck, input wire rs, input wire [4:0] i_v, input wire [5*169-1:0] i_d, output wire [4:0] i_cr,
     output wire [4:0] o_v, output wire [5*169-1:0] o_d, input wire [4:0] o_cr);
@@ -770,24 +822,26 @@ module dsfd_coll_cesc0 (input wire ck, input wire rs, input wire e_en, input wir
     input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
     input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
     input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
-    input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [562:0] bw_d,
-    output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i,
+    input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr,
+    output wire ow_v, output wire [511:0] ow_d, output wire [50:0] ow_h,
+    output wire [1:0] lf, output wire pe_o,
     output wire ln_v, output wire [511:0] ln_d, input wire [127:0] ln_y, input wire [3:0] ln_yv, input wire [7:0] ln_ye,
     input wire [3:0] ln_pe);
-    dsfd_coll_ces #(.S(0), .SEAM(1)) u (.*);
+    dsfd_coll_ces #(.S(0), .SEAM(1)) u (.*, .bw_v(), .bw_d(), .pe_i(3'd0));
 endmodule
 module dsfd_coll_cescn (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
     input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
     input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
     input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
-    input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [511:0] bw_d,
+    input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr,
+    output wire ow_v, output wire [511:0] ow_d,
     output wire [1:0] lf, output wire pe_o,
     output wire ln_v, output wire [511:0] ln_d, input wire [127:0] ln_y, input wire [3:0] ln_yv, input wire [7:0] ln_ye,
     input wire [3:0] ln_pe);
-    dsfd_coll_ces #(.S(1), .SEAM(1)) u (.*, .pe_i(3'd0));
+    dsfd_coll_ces #(.S(1), .SEAM(1)) u (.*, .bw_v(), .bw_d(), .ow_h(), .pe_i(3'd0));
 endmodule
 // wires-only parent of the split lane-slice (S = 0: ces0, else cesn): 4 lane leaves, 3 xl relay leaves, 1 pass-through
-// relay leaf, the core.  No logic and no flop here: every seam is leaf flop -> wire -> leaf flop.
+// relay leaf, 1 output-stage leaf, the core.  No logic and no flop here: every seam is leaf flop -> wire -> leaf flop.
 module dsfd_coll_cess #(parameter integer S = 0, parameter integer PTW = (S == 0) ? 169 : 129, parameter integer BW = (S == 0) ? 563 : 512) (
     input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
     input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
@@ -798,6 +852,7 @@ module dsfd_coll_cess #(parameter integer S = 0, parameter integer PTW = (S == 0
     wire ln_v; wire [511:0] ln_d; wire [127:0] ln_y; wire [3:0] ln_yv, ln_pe; wire [7:0] ln_ye;
     wire [7:0] cx_v, cx_cr; wire [8*163-1:0] cx_d;
     wire [4:0] cp_v, cp_cr; wire [5*PTW-1:0] cp_d;
+    wire ow_v; wire [511:0] ow_d; wire [50:0] ow_h; wire [562:0] ob_d;
     assign cx_v[1:0] = 2'b00; assign cx_d[2*163-1:0] = {2*163{1'b0}}; assign xl_cr[1:0] = 2'b00;
     genvar g;
     generate
@@ -814,18 +869,44 @@ module dsfd_coll_cess #(parameter integer S = 0, parameter integer PTW = (S == 0
             dsfd_coll_cesp0 u_p (.ck(ck), .rs(rs), .i_v(pt_v), .i_d(pt_d), .i_cr(pt_cr), .o_v(cp_v), .o_d(cp_d), .o_cr(cp_cr));
             dsfd_coll_cesc0 u_c (.ck(ck), .rs(rs), .e_en(e_en), .rank_i(rank_i), .qp(qp), .fv_i(fv_i), .q_v(q_v), .q_d(q_d),
                 .q_cr(q_cr), .xl_v(cx_v), .xl_d(cx_d), .xl_cr(cx_cr), .tx_v(tx_v), .tx_d(tx_d), .tx_rdy(tx_rdy), .cr_i(cr_i),
-                .cr_o(cr_o), .pt_v(cp_v), .pt_d(cp_d), .pt_cr(cp_cr), .bw_cr(bw_cr), .bw_v(bw_v), .bw_d(bw_d), .lf(lf),
-                .pe_o(pe_o), .pe_i(pe_i), .ln_v(ln_v), .ln_d(ln_d), .ln_y(ln_y), .ln_yv(ln_yv), .ln_ye(ln_ye), .ln_pe(ln_pe));
+                .cr_o(cr_o), .pt_v(cp_v), .pt_d(cp_d), .pt_cr(cp_cr), .bw_cr(bw_cr), .ow_v(ow_v), .ow_d(ow_d), .ow_h(ow_h), .lf(lf),
+                .pe_o(pe_o), .ln_v(ln_v), .ln_d(ln_d), .ln_y(ln_y), .ln_yv(ln_yv), .ln_ye(ln_ye), .ln_pe(ln_pe));
+            dsfd_coll_ceso u_o (.ck(ck), .rs(rs), .i_v(ow_v), .i_d(ow_d), .i_h(ow_h), .pe_i(pe_i), .bw_v(bw_v), .bw_d(ob_d));
+            assign bw_d = ob_d;
         end else begin : g_n
             dsfd_coll_cespn u_p (.ck(ck), .rs(rs), .i_v(pt_v), .i_d(pt_d), .i_cr(pt_cr), .o_v(cp_v), .o_d(cp_d), .o_cr(cp_cr));
             dsfd_coll_cescn u_c (.ck(ck), .rs(rs), .e_en(e_en), .rank_i(rank_i), .qp(qp), .fv_i(fv_i), .q_v(q_v), .q_d(q_d),
                 .q_cr(q_cr), .xl_v(cx_v), .xl_d(cx_d), .xl_cr(cx_cr), .tx_v(tx_v), .tx_d(tx_d), .tx_rdy(tx_rdy), .cr_i(cr_i),
-                .cr_o(cr_o), .pt_v(cp_v), .pt_d(cp_d), .pt_cr(cp_cr), .bw_cr(bw_cr), .bw_v(bw_v), .bw_d(bw_d), .lf(lf),
+                .cr_o(cr_o), .pt_v(cp_v), .pt_d(cp_d), .pt_cr(cp_cr), .bw_cr(bw_cr), .ow_v(ow_v), .ow_d(ow_d), .lf(lf),
                 .pe_o(pe_o), .ln_v(ln_v), .ln_d(ln_d), .ln_y(ln_y), .ln_yv(ln_yv), .ln_ye(ln_ye), .ln_pe(ln_pe));
-            wire unused_pe = &{1'b0, pe_i};
+            assign ow_h = 51'd0;
+            dsfd_coll_ceso u_o (.ck(ck), .rs(rs), .i_v(ow_v), .i_d(ow_d), .i_h(ow_h), .pe_i(3'd0), .bw_v(bw_v), .bw_d(ob_d));
+            assign bw_d = ob_d[562:51];
+            wire unused_pe = &{1'b0, pe_i, ob_d[50:0]};
         end
     endgenerate
     wire unused_ok = &{1'b0, cx_cr[1:0]};
+`ifdef OT_S81PH_COLL_CES_SPLIT
+`ifdef VERILATOR
+    // bench-only seam coverage (see package s81ph_ces_cov); blocking adds: many parents count in one time step
+    localparam integer K = (S == 0) ? 0 : 1;
+    initial s81ph_ces_cov::inst[K] = s81ph_ces_cov::inst[K] + 1;
+    always @(posedge ck) begin
+        if (ln_v) s81ph_ces_cov::ln[K] = s81ph_ces_cov::ln[K] + 1;
+        for (integer i = 0; i < 4; i = i + 1) if (ln_yv[i]) s81ph_ces_cov::lny[K] = s81ph_ces_cov::lny[K] + 1;
+        for (integer i = 1; i < 4; i = i + 1) begin
+            if (cx_v[2*i] || cx_v[2*i+1]) s81ph_ces_cov::xl[K][i] = s81ph_ces_cov::xl[K][i] + 1;
+            if (xl_v[2*i] || xl_v[2*i+1]) s81ph_ces_cov::xli[K][i] = s81ph_ces_cov::xli[K][i] + 1;
+        end
+        for (integer i = 0; i < 5; i = i + 1) begin
+            if (cp_v[i]) s81ph_ces_cov::pt[K][i] = s81ph_ces_cov::pt[K][i] + 1;
+            if (pt_v[i]) s81ph_ces_cov::pti[K][i] = s81ph_ces_cov::pti[K][i] + 1;
+        end
+        if (ow_v) s81ph_ces_cov::ow[K] = s81ph_ces_cov::ow[K] + 1;
+        if (bw_v) s81ph_ces_cov::bw[K] = s81ph_ces_cov::bw[K] + 1;
+    end
+`endif
+`endif
 endmodule
 // ---- route masters of the lane-slice: OT_S81PH_COLL_CES_SPLIT selects the split structure for BOTH (one define, so no
 // committed configuration can mix seam latencies); without it both are the flat slices (the closed ces0 view).
@@ -853,7 +934,7 @@ module dsfd_coll_ces0 (input wire ck, input wire rs, input wire e_en, input wire
     input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
     input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [562:0] bw_d,
     output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i);
-    dsfd_coll_ces #(.S(0)) u (.*, .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
+    dsfd_coll_ces #(.S(0)) u (.*, .ow_v(), .ow_d(), .ow_h(), .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
 endmodule
 module dsfd_coll_cesn (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
     input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
@@ -861,7 +942,7 @@ module dsfd_coll_cesn (input wire ck, input wire rs, input wire e_en, input wire
     input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
     input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [511:0] bw_d,
     output wire [1:0] lf, output wire pe_o);
-    dsfd_coll_ces #(.S(1)) u (.*, .pe_i(3'd0), .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
+    dsfd_coll_ces #(.S(1)) u (.*, .pe_i(3'd0), .ow_v(), .ow_d(), .ow_h(), .ln_v(), .ln_d(), .ln_y(128'd0), .ln_yv(4'd0), .ln_ye(8'd0), .ln_pe(4'd0));
 endmodule
 `endif
 module dsfd_coll_cele (input wire ck, input wire rs, input wire e_en, output wire f_lo_v, input wire f_lo_r,
