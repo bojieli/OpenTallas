@@ -31,6 +31,14 @@ module tb_hgi_smmv_tput;
 `ifndef XCR
 `define XCR 16
 `endif
+`ifndef SMMV_DE
+`define SMMV_DE 0
+`endif
+`ifdef MUT_DE
+    localparam integer MDE = 1;      // el1013: the start pass does not wait for the x (must FAIL: stale x under the op)
+`else
+    localparam integer MDE = 0;
+`endif
 `ifdef MUT_WDROP
     localparam integer MWD = 1;
 `else
@@ -157,7 +165,7 @@ module tb_hgi_smmv_tput;
         wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
         wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q; wire [6:0] x_xb;
         wire l_en; wire [6:0] l_addr, l_grp; wire [2047:0] l_data;
-        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .MUT_XRS(MXR), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
+        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .MUT_XRS(MXR), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL), .DE(`SMMV_DE), .MUT_DE(MDE)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
             .rec_v(rec_v && rec_rdy), .rec_rdy(c_rdy[cl]),
             .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
             .rec_n_b(cur[937:917]), .rec_done(c_done[cl]), .rec_fault(c_fault[cl]), .halted(c_halt[cl]), .x_v(x_v), .x_rdy(x_rdy),
@@ -205,6 +213,18 @@ module tb_hgi_smmv_tput;
         end
         if (cl == 0) begin : g_xw
             assign xw_en = l_en; assign xw_addr = l_addr; assign xw_grp = l_grp; assign xw_data = l_data;
+        end
+        // +SMT=1: engine issue trace of cluster 0 (every change of the issue / publication pointers and the pending masks)
+        if (cl == 0) begin : g_et
+            integer smt_e; initial if (!$value$plusargs("SMT=%d", smt_e)) smt_e = 0;
+            reg [63:0] et_q = 0;
+            wire [63:0] et = {u_a.tail[3:0], u_a.xp[3:0], u_a.ip[3:0], u_a.rh[3:0], u_a.ppc[3:0], u_a.pdc[3:0], u_a.go, u_a.fq_v, u_a.fld_v, u_a.pub_v,
+                              u_a.st_pend[7:0], u_a.d_pend[7:0], u_a.e_xd[7:0], u_a.xn[1:0]} ^ {60'd0, u_a.dp[3:0]} ^ {59'd0, u_a.dgo, 4'd0};
+            always @(posedge clk) if (rst_n && smt_e != 0) begin
+                et_q <= et;
+                if (et != et_q) $display("SME %0d tail %0d xp %0d ip %0d rh %0d ppc %0d pdc %0d go %b fq %b fld %b pub_v %b st_pend %b d_pend %b e_xd %b xn %0d dp %0d dgo %b",
+                    cyc, u_a.tail, u_a.xp, u_a.ip, u_a.rh, u_a.ppc, u_a.pdc, u_a.go, u_a.fq_v, u_a.fld_v, u_a.pub_v, u_a.st_pend, u_a.d_pend, u_a.e_xd, u_a.xn, u_a.dp, u_a.dgo);
+            end
         end
         ot_hgi_smmv_pub #(.NSM(NSL), .NPC(NPC), .W(`WIN), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
             .pub_v(pub_v), .pub_rdy(pub_rdy),

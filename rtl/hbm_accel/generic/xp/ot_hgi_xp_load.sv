@@ -28,7 +28,8 @@
 //   pipe depth) waits for the pipe to drain.
 // Refusals (x_fault, sticky): A not VM, A.base not 8-SECTOR aligned (compiler obligation: lane = sector[2:0]), P != 1,
 //   K = 0, block-dot K not a multiple of 32, a non-finite block-dot element, reader fault, buffer overrun.
-// Mutants: MUT_WDROP (the 11th wave never reaches the pack stage), MUT_BEAT (the 38th beat never leaves),
+// Mutants: MUT_WDROP (the 11th wave never reaches the pack stage), MUT_BEAT (the 37th beat never leaves: a beat 0, which carries
+//          block-dot lanes 0 .. 7; the 38th was a beat 1, which an FP8 load (lanes 0 .. 3 only) never reads -> not killed),
 //          MUT_LANE (block-dot waves land one lane off).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_xp_pack #(parameter integer NBF = 3, parameter integer TW = 25, parameter integer MUT_BEAT = 0, parameter integer MUT_LANE = 0) (
@@ -128,7 +129,7 @@ module ot_hgi_xp_pack #(parameter integer NBF = 3, parameter integer TW = 25, pa
             end
         end
         // xw pin flops
-        xw_en <= e1_v && !(MUT_BEAT != 0 && nbeat == 16'd37); xw_addr <= e1_addr; xw_grp <= e1_grp; xw_eop <= e1_v && e1_eop;
+        xw_en <= e1_v && !(MUT_BEAT != 0 && nbeat == 16'd36); xw_addr <= e1_addr; xw_grp <= e1_grp; xw_eop <= e1_v && e1_eop;
         xw_data <= ob[0] | ob[1] | ob[2];
         if (e1_v) nbeat <= nbeat + 16'd1;
         if (rst) begin
