@@ -470,7 +470,7 @@ module ot_hgi_sm_xload #(
                 if (wl_p == pp - 4'd1) begin wl_pend <= 1'b0; wl_next <= ({1'b0, wl_sb} + 9'd16 < {1'b0, gn}); end
             end
             if (sb_adv) begin wl_next <= 1'b0; wl_pend <= 1'b1; for (integer z = 0; z < 16; z = z + 1) wcnt[z] <= 5'd0; end
-            if (wm && w_fault) x_fault <= 1'b1;
+            if ((wm && w_fault) || (fw && f_fault)) x_fault <= 1'b1;
             vq_v <= {NXC{1'b0}};
             if (issue || bd_issue) begin vq_v[cf] <= 1'b1; cbusy[cf] <= 1'b1; end
             for (integer ch = 0; ch < NXC; ch = ch + 1) if (take[ch]) hv[ch] <= 1'b1;
