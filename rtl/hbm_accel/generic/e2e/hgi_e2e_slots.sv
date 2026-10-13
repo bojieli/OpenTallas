@@ -297,16 +297,16 @@ module hgi_e2e_fused_slot #(
     hgi_e2e_vmc #(.UNIT(4), .LAT(VLAT)) u_vm (.clk(clk), .rst_n(rst_n), .q(mq), .r(mr));
     hgi_e2e_vmw #(.UNIT(4), .NW(1), .DX(VDX)) u_vmw (.clk(clk), .rst_n(rst_n), .wl(wl), .done(wl_done));
 `ifdef E2E_FUSED_DEBUG
-    // fault-source report (debug builds): the adapter state, its internal SU unit's state, the vec's refusal flags
+    // fault-source report (debug builds): the adapter state and its fault flags
     reg seen = 1'b0; longint c = 0;
     always @(posedge clk) begin
         c <= c + 1;
         if (u_f.s_v && u_f.s_rdy) $display("E2E FUSED DBG cyc %0d sub-op: sut %h a %h n %0d o %h", c, u_f.s_sut[141:0], u_f.s_a[87:0], u_f.s_n, u_f.s_o[87:0]);
         if (rst_n && (u_f.s_fault || rec_fault) && !seen) begin
             seen <= 1'b1;
-            $display("E2E FUSED FAULT cyc %0d: adapter st %0d s_fault %0d su_unit st %0d su_rec fault %0d vec fault %0d p_bad %0d lw_lim %0d",
-                     c, u_f.st, u_f.s_fault, u_f.g_unit.u_su.st, u_f.g_unit.u_su.u_rec.rec_fault, u_f.g_unit.u_su.vfault,
-                     u_f.g_unit.u_su.u_vec.p_bad, u_f.g_unit.u_su.SBASE);
+            // (only names every build of the slot has: the internal SU unit's hierarchy differs by UNIT / WIDE and the
+            //  old deep references -- u_su.st, u_su.u_rec, u_su.SBASE -- stopped elaborating: stage D 2026-10-13)
+            $display("E2E FUSED FAULT cyc %0d: adapter st %0d s_fault %0d rec_fault %0d", c, u_f.st, u_f.s_fault, rec_fault);
         end
     end
 `endif
