@@ -11,6 +11,9 @@ Compares a ref_tile kit (spec.json + floorplan.json + kit.env) with the slot the
   pin_layer   the layer the kit uses on a face (kit.env PIN_H for E/W, PIN_V for N/S) vs the contract pin layers /
               slot pin_layers
   layer_cap   kit routing cap (RLAYERS) vs slot layer_cap (else pg_layer)
+  pin_align   (owner 2026-10-13) a port the tile spec plans in a range ("pin_ranges") vs the span the slot gives it:
+              more than 20 um outside = a note, more than 36 um = a mismatch (tools/hier_contract/pin_align.py: the jog
+              of a relay-pitch bus then fills 0.60 of a 20-um die channel by itself)
   insertion   estimated clock insertion vs slot target_insertion_ps (+-100 ps, child_lint (g)); the estimate is the
               spec's est_insertion_ps, else the cell's previous view in the kit (TT lib max_clock_tree_path, else
               insertion.json).  No estimate = a note, not a mismatch.
@@ -37,7 +40,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import child_lint  # noqa: E402
-import pin_align  # noqa: E402
+try:
+    import pin_align  # noqa: E402
+except ImportError:      # a tree that ships slot_fit.py without pin_align.py: the one-ended alignment check is skipped
+    pin_align = None
 
 SCHEMA = "opentallas.hier_contract.v1"
 CONTRACT_GLOB = "results/arch/hier_contract_*/*.json"
@@ -278,7 +284,7 @@ def compare(k: dict, s: dict) -> tuple[list[str], list[str]]:
     # kit range lies outside it is a jog in the die channel: > WARN_UM a note, > FAIL_UM a mismatch (the jog of a bus
     # at the relay pin pitch then fills 0.60 of a 20-um channel by itself).  Slot pins still waiting for the view's
     # offsets (offset_pending_view) and ports without a planned range are not judged.
-    rng = k.get("pin_ranges") or {}
+    rng = (k.get("pin_ranges") or {}) if pin_align is not None else {}
     for p in s.get("pins") or []:
         if not isinstance(p, dict) or p.get("offset_pending_view") or base(p.get("name") or "") not in rng:
             continue
