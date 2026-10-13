@@ -193,7 +193,11 @@ module tb_hgi_su_prod;
     ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(1 << $clog2(`LQ))) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}),
         .status(vm_status), .wq(280'd0), .wq_done(), .rq(g_rq), .rq_cr(g_rcr), .rr(g_rr), .w2q(g_wq), .w2q_cr(g_wcr), .w2q_done(g_wdone));
     // ---- agents: bursts of 8 sectors a lane on the free region (sectors AR0.. read-only, AW0.. written), checked
+`ifdef SU_AUX
+    localparam integer AN = 2048;                        // AR0 / AW0: su_aux.svh (clear of the vectors' sectors)
+`else
     localparam integer AR0 = 14336, AW0 = 18432, AN = 2048;
+`endif
     function automatic [255:0] apat(input integer sct, input integer it);
         for (integer w = 0; w < 8; w = w + 1) apat[32*w +: 32] = 32'(sct * 7919 + w * 131 + it * 1000003) ^ 32'hC3C3_0000;
     endfunction
@@ -366,7 +370,12 @@ module tb_hgi_su_prod;
             nvi = casem[c][127:96]; ve0 = casem[c][95:64]; nve = casem[c][63:32]; cid = casem[c][30:0]; sfu = casem[c][31];
             if (sfu != GL) continue;
 `ifndef SHARED
+`ifdef SU_AUX
+            // SINK_UNSTAGED runs on the unit as the previous case left it (its local memory holds that case's data)
+            if (cid != SU_CASE || c == 0) begin rst_n = 0; repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk); end
+`else
             rst_n = 0; repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk);
+`endif
 `endif
             for (j = 0; j < nvi; j = j + 1) vm_sec(1'b1, vmim[vi0 + j][287:256], vmim[vi0 + j][255:0], qd);
             k = 0; nf = 0; for (j = 0; j < 5; j = j + 1) ph[j] = 0;
@@ -401,8 +410,9 @@ module tb_hgi_su_prod;
             // the priced cost of this case's records (su_prod.json 'priced' x 10, generated: the bench never prices)
             pr = 0; for (j = 0; j < nr; j = j + 1) pr = pr + pricem[r0 + j];
             for (j = 0; j < nr; j = j + 1) $display("PRICE %0d %0d priced %0d.%0d", cid, j, pricem[r0 + j] / 10, pricem[r0 + j] % 10);
-            $display("THROUGHPUT case %0d%s: service %0d price sum %0d.%0d (%0d records) ratio service/price %0.3f", cid,
-                     cid == SU_CASE ? " SINK_UNSTAGED (exactness only)" : "", t1 - t0, pr / 10, pr % 10, nr, (t1 - t0) * 10.0 / pr);
+            $display("THROUGHPUT case %0d: service %0d price sum %0d.%0d (%0d records) ratio service/price %0.3f", cid,
+                     t1 - t0, pr / 10, pr % 10, nr, (t1 - t0) * 10.0 / pr);
+            if (cid == SU_CASE) $display("THROUGHPUT case %0d is SINK_UNSTAGED: exactness only, not a production price", cid);
 `endif
 `ifdef SV_WALK
             $display("WALK case %0d strided-sink frame walks %0d", cid, `SV_WALK - walk0);
@@ -425,8 +435,9 @@ module tb_hgi_su_prod;
                 words = words + 8;
             end
 `ifdef SU_AUX
-            $display("CASECHK %0d%s: %0d sink sectors, %0d guard words; errors %0d (written words %0d, guard words %0d)", cid,
-                     cid == SU_CASE ? " SINK_UNSTAGED" : "", nve, n_gd, errors - e0, e_wr, e_gd);
+            $display("CASECHK %0d: %0d sink sectors, %0d guard words; errors %0d (written words %0d, guard words %0d)", cid,
+                     nve, n_gd, errors - e0, e_wr, e_gd);
+            if (cid == SU_CASE) $display("CASECHK %0d is SINK_UNSTAGED", cid);
 `endif
             cases = cases + 1;
         end
