@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_gctl_t-gc1-COMMIT",
+ "name": "qfd_vm_gctl_t-gc1-d1415868a",
  "block": "ot_qfd_vm_gctl_t",
  "ref_tile": true,
  "owner": "Claude:qwen_tp8_vm_phys",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-tp8-vm-phys",
-  "commit": "COMMIT",
+  "commit": "d1415868a",
   "extra_paths": [
    "rtl/qwen_sys/vm_me_20261008",
    "rtl/qwen_sys/vm_die_split_20261012",
@@ -129,7 +129,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_gctl_t/qfd_vm_gctl_t-gc1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_gctl_t/qfd_vm_gctl_t-gc1-d1415868a"
   }
  ],
  "cycles_added": 0,
