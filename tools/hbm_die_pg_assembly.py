@@ -198,11 +198,39 @@ puts OT_DONE
     print(json.dumps(m))
 
 
+def record(a):
+    out=a.out
+    m=json.loads((out/'manifest.json').read_text())
+    log=(out/'run.log').read_text()
+    rc=(out/'run.exit').read_text().strip()
+    w,h=m['outline_um'];guard=2*45/math.sqrt(.5)
+    rails={}
+    for net in ('VDD','VSS'):
+        inner=[];all_nodes=[]
+        for line in (out/f'ir_{net}.rpt').read_text().splitlines()[1:]:
+            c=line.split(',')
+            if len(c)<6:continue
+            x,y,v=map(float,c[3:6]);drop=(.7-v) if net=='VDD' else v
+            all_nodes.append(drop)
+            if guard<=x<=w-guard and guard<=y<=h-guard:inner.append(drop)
+        rails[net]=dict(inner_nodes=len(inner),inner_worst_mv=max(inner,default=float('inf'))*1000,
+                        full_worst_mv=max(all_nodes,default=float('inf'))*1000)
+    bound=sum(r['inner_worst_mv'] for r in rails.values())
+    r=dict(schema='opentallas.hbm.real_pg_result.v1',manifest=m,exit=rc,done='OT_DONE' in log,
+           pdn_pass='OT_PDN PASS' in log,grid_connected=all(f'OT_PG net={n} PASS' in log for n in rails),
+           rails=rails,inner_guard_um=guard,inner_rail_sum_mv=bound,budget_mv=35,
+           interface_window_pass=rc=='0' and 'OT_DONE' in log and bound<=35,
+           final_signoff_eligible=False)
+    (out/'result.json').write_text(json.dumps(r,indent=2)+'\n')
+    print(json.dumps(dict(exit=rc,rails=rails,inner_rail_sum_mv=bound,interface_window_pass=r['interface_window_pass'])))
+
+
 if __name__ == '__main__':
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('mode', choices=['vm','sm'])
+    p.add_argument('mode', choices=['vm','sm','record'])
     p.add_argument('--root',type=Path)
     p.add_argument('--sm-lef',type=Path)
     p.add_argument('--density',type=float,default=1.05)
     p.add_argument('--out',type=Path,required=True)
-    generate(p.parse_args())
+    a=p.parse_args()
+    (record if a.mode=='record' else generate)(a)
