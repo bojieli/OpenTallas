@@ -881,7 +881,7 @@ def known_clock_sinks(block_jobs):
         t = _job_time(x)
         if best is None or t > best[0]:
             best = (t, n)
-    return best[1] if best else None
+    return (best[1] or None) if best else None      # lint lines without a clock count (older lint, small root): unknown
 
 
 def _job_time(j):
