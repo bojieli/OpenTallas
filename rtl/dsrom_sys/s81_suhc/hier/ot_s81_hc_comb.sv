@@ -110,15 +110,18 @@ module ot_s81_hc_comb #(
 `ifdef OT_S81_HC_COMB_HARD
  `define OT_HCC_P
  `define OT_HCC_F
+ `define OT_HCC_R
 `ifndef SYNTHESIS
     initial if (NG != 256 || D != 5120 || NCOL != 3 || GS != 8 || S_RD != 2 || S_WR != 8 || S_RT != 4 || ML != 5 ||
                 AL != 4 || MUT != 0 || AMUT != 0 || RF != 1 || RT != 1 || RW != 2 || YD != 16 || HALF != 0 ||
-                RLY != 1 || DW != 3 + RW)
+                RLY != 1 || DW != 3 + RW || RET_EXTRA != 0)
         $fatal(1, "ot_s81_hc_comb: OT_S81_HC_COMB_HARD needs the hardened configuration (the tiles' defaults)");
 `endif
 `else
  `define OT_HCC_P #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL), \
      .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW))
+ `define OT_HCC_R #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL), \
+     .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW), .RET_EXTRA(RET_EXTRA))
  `define OT_HCC_F #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL), \
      .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW), \
      .FIFO_SLICE(512), .KEEP_POP(1), .Y_RELAY(1))
@@ -182,10 +185,10 @@ module ot_s81_hc_comb #(
         .w_ex(w_ex), .e_ex(e_ex), .c_rvt(r_crv[S_RT]), .c_pi(r_cpi), .c_ex(r_ex1), .ngo_i(ngo),
         .ss_v(t_ssv), .ss(t_ss), .tflt(t_flt));
 
-    ot_s81_hc_ccr `OT_HCC_P u_cr (
+    ot_s81_hc_ccr `OT_HCC_R u_cr (
         .sk(sk), .srs(srs), .ch_rv(ch_rv), .ch_rd(ch_rd), .crd_o(r_crd), .crv_o(r_crv), .cpi_o(r_cpi), .ex1_o(r_ex1));
 
-    ot_s81_hc_cpad `OT_HCC_P u_pd (
+    ot_s81_hc_cpad `OT_HCC_R u_pd (
         .sk(sk), .srs(srs), .crd_i(r_crd), .crd_o(p_crd), .fv_i(c_fv), .fd_i(c_fd), .fv_o(p_fv), .fd_o(p_fd));
 
     ot_s81_hc_ccf `OT_HCC_F u_cf (
