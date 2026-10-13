@@ -10,9 +10,13 @@
 //   is compared (a stray write fails).
 //   Cluster models: svc READ per stack (request lane, NL data lanes, credit LD a lane, HOPS wire stages each way, first
 //   beat of a request RLAT edges after it; as tb_hgi_dma_front at full rate); VM wide WRITE NB lanes, done 2 edges later.
-//   PASS = every slice exact, no fault, fence_quiet / done never before the last VM sector landed.  The cycles are
-//   REPORTED: there is no price row for the swap-in (UNMEASURED-vs-price).
-//   MUT (S): 1 clusters 1 / 2 swapped, 2 cluster 2's destination base + 256, 3 the join ignores the outstanding count.
+//   PASS = every slice exact, no fault, fence_quiet / done never before the last VM sector landed, and dispatch -> done
+//   <= LIMIT in every run.  PRICE ROW (results/rtl/tput_map_1011/mtp_verify/record.json native_b2_swap_in): 336 cycles
+//   = the simulator's S2 price of the swapin body (335.9: DMA.LOAD h 81,920 B + DMA.LOAD PRE 32 B + END; DMA.LOAD =
+//   HBM first access 104 + bytes / bw, issue interval 4), the swap-in term of the 63,800 MTP.VERIFY price (5 columns x
+//   (swapin 335.9 + embed 326.0 + L0 body 11,861.9 + swapout 241.0)); LIMIT = 1.10 x = 369.
+//   MUT (S): 1 clusters 1 / 2 swapped, 2 cluster 2's destination base + 256, 3 the join ignores the outstanding count,
+//   4 SERIALIZED group (exact, but must fail the throughput check).
 module tb_hgi_b2_swapin_grp;
     parameter integer MUT = 0;
     parameter integer DHOPS = 10;
@@ -20,6 +24,7 @@ module tb_hgi_b2_swapin_grp;
     parameter integer RLAT = 40;
     parameter integer LD = 16;
     parameter integer SEED = 1;
+    parameter integer LIMIT = 369;       // 1.10 x 335.9 (the swap-in price row)
     localparam integer NB = 8, NL = 8, SBIT = 35;
     localparam longint COLB = 64'h180000000, CSTR = 64'd131072;
     localparam integer VMW = 98304;
@@ -166,9 +171,10 @@ module tb_hgi_b2_swapin_grp;
             sl = '{0, 0, 5, 12, 12, 7}; mi = '{0, 1, 0, 0, 1, 1};
             for (integer k = 0; k < 6 && errors == 0; k++) run(sl[k], mi[k]);
         end
-        if (errors == 0 && !fault)
-            $display("TB_HGI_B2_SWAPIN_GRP PASS (MUT %0d DHOPS %0d HOPS %0d RLAT %0d LD %0d) exact, worst dispatch -> done %0d cycles (UNMEASURED-vs-price: no swap-in price row)",
-                     MUT, DHOPS, HOPS, RLAT, LD, tp_max);
+        if (errors == 0 && !fault && tp_max > LIMIT) $display("TB THROUGHPUT FAIL: %0d cycles > limit %0d (price 336)", tp_max, LIMIT);
+        if (errors == 0 && !fault && tp_max <= LIMIT)
+            $display("TB_HGI_B2_SWAPIN_GRP PASS (MUT %0d DHOPS %0d HOPS %0d RLAT %0d LD %0d) exact, worst dispatch -> done %0d cycles (price 336, limit %0d, ratio %0.3f)",
+                     MUT, DHOPS, HOPS, RLAT, LD, tp_max, LIMIT, real'(tp_max) / 336.0);
         else $display("TB_HGI_B2_SWAPIN_GRP FAIL (MUT %0d) errors %0d worst %0d cycles", MUT, errors, tp_max);
         $finish;
     end

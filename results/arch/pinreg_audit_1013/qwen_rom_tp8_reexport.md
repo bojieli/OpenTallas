@@ -1,5 +1,7 @@
 # Pin-register audit: qwen_rom_tp8 (contract v4, f43c2d3cc)
 
+> **TILE VERDICTS SUPERSEDED (10-13 09:10, el1013-pinreg-audit.log):** `out_over` / `in_over` here judge each side against 0.2 T = 166.7 ps, which is the share the sign-off SDC gives the OUTSIDE, not the tile. The die statement is the pair equation with insertion-compensated clock entry: see `qwen_rom_tp8_compensated.md`, `s81_compensated.md`, `ranked_compensated.md`. The hop tables (> 500 um) and the min-delay / combinational columns stand.
+
 Rule: clock->pin and pin->flop each <= 166.7 ps (0.2 T), hop <= 500 um, L - H >= 100 ps (50 + skew 50).
 
 **PROVISIONAL: 6 of 13 audited views carry no corrected-export record (reexport_1013 / verdict check) after the export-SDC fix (abc334b14); their boundary numbers may be off by tens of ps**
