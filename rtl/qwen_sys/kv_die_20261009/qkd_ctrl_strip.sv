@@ -2,8 +2,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // Qwen3-8B ROM TP8 die (track B: KV merged into the one die type), HBM controller strip qkd_ctrl / qkd_ctrl_n
 // (el1013-qwen-kvstrips 2026-10-13, coordinator-accepted slot change): the 247.512 x 12,141.336 strip slot becomes
-//   32 x qkd_ctrl_pc  (one hardened master, 247.512 x 375.816 at 378 um pitch, PC k at strip y = 378 k)
-//    1 x qkd_ctrl_kc  (the kc stream-command crossing, 247.512 x 43.176, N end of the strip, y = 12,096)
+//   32 x qkd_ctrl_pc  (one hardened master, 246.24 x 172.8 beside its CDC, 378 um pitch: PC k at strip y = 378 k + 190.08)
+//    1 x qkd_ctrl_kc  (the kc stream-command crossing, 64.8 x 43.2, N end of the strip, y = 12,096)
 // and nothing else: the strip parent holds no logic and no routed wire longer than one abutment.
 //
 // qkd_ctrl_pc = ONE HBM3E pseudo-channel of the stack, HBM controller clock pll_hbm (1,024 ps), every block a closed
@@ -95,7 +95,8 @@ module qkd_ctrl_pc #(
     end endgenerate
     reg [6:0] dsel, dcnt;
     reg       hgo;
-    always @(posedge hclk) dsel <= dtab[pc];
+    (* keep *) reg [4:0] pc_q;
+    always @(posedge hclk) begin pc_q <= pc; dsel <= dtab[pc_q]; end
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) begin dcnt <= 7'd0; hgo <= 1'b0; end
         else if (dcnt == dsel) hgo <= 1'b1;
