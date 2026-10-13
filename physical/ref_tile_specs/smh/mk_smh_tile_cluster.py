@@ -173,7 +173,18 @@ def strap_regions(variant):
     points = [[(300,H-12),(365,1100),(365,1060),(300,1060),(260,Y_XS0+DIM["xs"][1]+12)],
               [(340,H-12),(365,950),(365,650),(365,350),(260,Y_XS1-16)]]
     lines = ["# Generated kept strap-stage fences: no child/clock/pin budget change.",
-             "set sb [ord::get_db_block]", "set su [[ord::get_db_tech] getDbUnitsPerMicron]", "set sn 0"]
+             "set sb [ord::get_db_block]", "set su [[ord::get_db_tech] getDbUnitsPerMicron]", "set sn 0",
+             "proc sr_bind {net group} {",
+             "  for {set hop 0} {$hop < 5} {incr hop} {",
+             "    set driver {}; foreach it [$net getITerms] {if {[$it isOutputSignal]} {lappend driver $it}}",
+             "    if {[llength $driver] != 1} {error \"STRAP_REGION ambiguous driver\"}",
+             "    set si [[lindex $driver 0] getInst]; set master [[$si getMaster] getName]",
+             "    $group addInst $si",
+             "    if {[string match *DFF* $master]} {return 1}",
+             "    if {![regexp {^(INV|BUF)} $master]} {error \"STRAP_REGION non-register logic $master\"}",
+             "    set ins {}; foreach it [$si getITerms] {if {[$it isInputSignal]} {lappend ins [$it getNet]}}",
+             "    if {[llength $ins] != 1} {error \"STRAP_REGION buffer input ambiguity\"}; set net [lindex $ins 0]",
+             "  }; error \"STRAP_REGION register not found\"", "}"]
     for leaf, ps in enumerate(points):
         for stage, (x,y) in enumerate(ps):
             if variant == "wg": x = W-x
@@ -181,8 +192,8 @@ def strap_regions(variant):
             lines += [f"set rg [odb::dbRegion_create $sb {name}]", "$rg setRegionType EXCLUSIVE",
                       f"odb::dbBox_create $rg [expr {{round({x-8}*$su)}}] [expr {{round({y-4}*$su)}}] [expr {{round({x+8}*$su)}}] [expr {{round({y+4}*$su)}}]",
                       f"set gr [odb::dbGroup_create $sb {name}]", "$rg addGroup $gr", "set nc 0",
-                      "foreach net [$sb getNets] {", "  set nm [string map {\\ {}} [$net getName]]",
-                      f"  if {{[string first {{g_strap[{leaf}].u_sr.s{stage}[}} $nm] >= 0 }} {{ foreach it [$net getITerms] {{ set si [$it getInst]; if {{[$it isOutputSignal] && [string match *DFF* [[$si getMaster] getName]]}} {{ $gr addInst $si; incr nc; incr sn }} }} }}",
+                      "foreach net [$sb getNets] {", "  set nm [string map {\\\\ {}} [$net getName]]",
+                      f"  if {{[string first {{g_strap[{leaf}].u_sr.s{stage}[}} $nm] >= 0 }} {{ sr_bind $net $gr; incr nc; incr sn }}",
                       "}", f"if {{$nc != 26}} {{error \"STRAP_REGION {name}: expected 26 DFFs, got $nc\"}}"]
     lines += ["if {$sn != 260} {error \"STRAP_REGION expected 260 DFFs\"}", "puts \"STRAP_REGION_FENCES 10 DFFS $sn\""]
     (OUT/f"smh_tile_{variant}_ref_strap_regions.tcl").write_text("\n".join(lines)+"\n")
