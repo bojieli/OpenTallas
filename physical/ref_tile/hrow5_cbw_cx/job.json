@@ -1,5 +1,5 @@
 {
- "name": "hrow5_cbw_cx-r8b-cl-COMMIT",
+ "name": "hrow5_cbw_cx-r8b-cl-b05bb421d",
  "block": "dsfd_mtp_hrow_cbw",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/ds-hrow-1012",
-  "commit": "COMMIT"
+  "commit": "b05bb421d"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_cbw_cx/hrow5_cbw_cx-r8b-cl-COMMIT"
+   "to": "results/rtl/ref_tile/hrow5_cbw_cx/hrow5_cbw_cx-r8b-cl-b05bb421d"
   }
  ],
  "cycles_added": 0,
