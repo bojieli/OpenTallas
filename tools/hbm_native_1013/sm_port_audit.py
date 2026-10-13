@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+"""Compare all source-elaborated default-shape port bits with inherited hard-view pins."""
+import collections,json,re
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]; OUT=ROOT/'results/arch/hbm_native_1013/sm'
+m=json.load(open(OUT/'component.json')); rows={}
+for c in m['children']:
+ typ=c['logical_module']
+ if typ in rows: continue
+ expected=set()
+ for port,p in c['boundary_ports'].items():
+  expected.update([port] if p['width']==1 else [f'{port}[{i}]' for i in range(p['width'])])
+ row={'logical_module':typ,'production_params':m['parameters'],'defines':m['defines'],'source_commit':m['source_commit'],'source_expected_bits':len(expected),'view_source_commit':c.get('view_source_commit'),'record_job':c.get('view_job'),'closed':False,'note':'Exact physical pin census is necessary; recorded default parameter/define/dependency provenance and production arithmetic remain separate gates.'}
+ lef=c['view_lef']
+ if not lef: row['status']='OPEN_NO_NATIVE_EXPORT'; rows[typ]=row; continue
+ pins=set(re.findall(r'\bPIN\s+(\S+)',(ROOT/lef).read_text()))-{'VDD','VSS','VPWR','VGND'}
+ row['lef']={'path':lef,'missing':sorted(expected-pins),'extra':sorted(pins-expected),'pass':expected==pins}; libs={}
+ for corner,p in c['view_lib'].items():
+  text=(ROOT/p).read_text(); pins=set(re.findall(r'(?<![\w])pin\s*\(\s*"?([^"\s\)]+)"?\s*\)',text)) - {'VDD','VSS','VPWR','VGND'}
+  libs[corner]={'path':p,'missing':sorted(expected-pins),'extra':sorted(pins-expected),'pass':expected==pins}
+ row['lib']=libs; row['status']='PORT_BITS_MATCH_NATIVE_DEFAULTS' if row['lef']['pass'] and all(v['pass'] for v in libs.values()) else 'OPEN_PORT_MISMATCH'; row['all_corners_present']=set(libs)=={'tt','ff','ss'}
+ rows[typ]=row
+(OUT/'port_audit.json').write_text(json.dumps(rows,indent=2)+'\n')
+print(json.dumps({k:{'status':r['status'],'all_corners':r.get('all_corners_present')} for k,r in rows.items()}))
