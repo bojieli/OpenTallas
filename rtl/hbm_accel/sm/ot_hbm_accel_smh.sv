@@ -2062,8 +2062,11 @@ module ot_hbm_accel_smh_front_s #(
     // ---------------- results: lane landing, deskew, pins (m2, unchanged) ----------------
     // el1013-smh-r14 OT_SMH_PINREG: the gated tile lands rin / bin in its own pin registers (+1 row-bundle register per
     // tile hop), so a column's results arrive 1 more cycle per hop: the deskew is (5 + PT4 + PINR) a hop
+    // OT_SMH_MUT_PINR_DESKEW (bench mutant only): the front keeps the 5 + PT4 deskew against pin-registered tiles
     localparam integer PINR =
-`ifdef OT_SMH_PINREG
+`ifdef OT_SMH_MUT_PINR_DESKEW
+        0;
+`elsif OT_SMH_PINREG
         1;
 `else
         0;
