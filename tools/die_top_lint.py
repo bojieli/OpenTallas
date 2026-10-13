@@ -2560,6 +2560,27 @@ def run_pin_align(die, out, tag='', views_json=None):
     return 1 if rec['verdict'] == 'FAIL' and PA.gate_mode() == 'fail' else 0
 
 
+def run_model(die, out, tag=''):
+    """mode model: the die model as the cut tools read it (results/arch/qwen_tp8_1012/cuts.py Net,
+    tools/hier_contract/legacy_layer_cuts.py): instances, buses by instance, and per master the OBS top layer the
+    generator assumes (generated abstract obs_top; real LEF macros: their own)"""
+    m, pw, M, tool = build(die)
+    obs = {n: getattr(mst, 'obs_top', None) for n, mst in M.items()}
+    for rel in real_lefs(die):
+        r = S.real_lef(rel)
+        obs[r['name']] = r['obs_top']
+    out.mkdir(parents=True, exist_ok=True)
+    rec = dict(die=die, generator=tool, generator_tag=gen_tag(tool.split()[0], gen_root(die)),
+               qwen_recipe=QWEN_RECIPE if die == 'qwen_rom' else None, s81_opts=S81_OPTS if die.startswith('s81r8') else None,
+               insts=[dict(n=i.name, m=i.master, x=round(i.x, 3), y=round(i.y, 3), w=round(i.w, 3), h=round(i.h, 3),
+                           orient=i.orient, kind=getattr(i, 'kind', '')) for i in m['insts']],
+               buses=[(str(b), c, bits, [e[0] for e in eps if e[0] != 'TOP']) for b, c, bits, eps in m['buses']],
+               masters_obs_top=obs)
+    (out / f'{die}{tag}_model.json').write_text(json.dumps(rec) + '\n')
+    print(json.dumps(dict(instances=len(rec['insts']), buses=len(rec['buses']), masters=len(obs))))
+    return 0
+
+
 def run_lint(die, out, top_fix=False, tag=''):
     m, pw, M, tool = build(die, top_fix)
     R8_ACTIVE[0] = die.startswith('s81r8')
@@ -2646,7 +2667,7 @@ def run_lint(die, out, top_fix=False, tag=''):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum', 'pin_align'])
+    ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum', 'pin_align', 'model'])
     ap.add_argument('--pin-align-views', help='pin_align: tools/hier_contract/die_pin_audit.py <die>_masters.json; ports '
                     'whose pins are in a published view take the view pin positions')
     ap.add_argument('--top')
@@ -2673,6 +2694,8 @@ def main(argv=None):
         (a.out / f'{a.top}_verilator_summary.json').write_text(json.dumps(s, indent=1) + '\n')
         print(json.dumps(s, indent=1))
         return 0
+    if a.mode == 'model':
+        return run_model(a.die, a.out, a.tag)
     if a.mode == 'pin_align':
         return run_pin_align(a.die, a.out, a.tag, a.pin_align_views)
     if a.mode == 'lint':

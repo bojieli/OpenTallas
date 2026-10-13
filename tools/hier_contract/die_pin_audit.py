@@ -20,7 +20,8 @@ order FIX BY PIN RE-PLAN > FIX BY VIEW > FIX AT DIE > ACCEPT: a re-route re-expo
   FIX BY PIN RE-PLAN   the routed tile covers its own face pins on the layer above (no via access: DRT-0073 class), or
                        its pins sit on another face / layer than the slot: re-route with reroute_reason
   FIX AT DIE           the view is sound but the contract / generator does not describe it: outline, pin names
-                       (aggregated vs split ports), clock entry; a slot change, a relay or a lane move
+                       (aggregated vs split ports), clock entry; a slot change, a relay or a lane move; or the die binds
+                       a worse view than one that is published (every published view of a master is audited: other_views)
   ACCEPT               nothing that breaks a die route (legacy M6 / M7 inside a hardened cluster, pockets on a layer the
                        die does not route on over tiles, hard-IP abstracts)
 
@@ -50,6 +51,7 @@ import view_slot_fit as VSF  # noqa: E402
 SCHEMA = "opentallas.die_pin_audit.v1"
 HARD_RE = r"asap7_memory|pdie_macros|missing_phy|hbm3e|_phy(/|$)"
 DIE_ROUTE_MIN_METAL = 6      # over a tile capped at M5 the die routes on M6 and above
+OUTLINE_TOL_UM = 0.05
 CLASSES = ("FIX BY VIEW", "FIX BY PIN RE-PLAN", "FIX AT DIE", "ACCEPT")
 RANK = ("FIX BY PIN RE-PLAN", "FIX BY VIEW", "FIX AT DIE", "ACCEPT")
 
@@ -173,6 +175,11 @@ def classify(r):
     if fa["blocked_above"]:
         put("FIX BY PIN RE-PLAN", f"{fa['blocked_above']} of {fa['face_pins']} face pins covered by the tile's own metal on the "
                                   f"layer above (no via access; re-route with the pin keepout hook, reroute_reason evidence_gap / slot_change)")
+    for f in r.get("child_lint", {}).get("fails", []):
+        if f.startswith("(c)"):
+            put("FIX BY PIN RE-PLAN", "child_lint " + f[:170] + " (the tile's own signals reach its strap layer: re-route under the cap)")
+        elif f.startswith(("(a)", "(b)")):
+            put("FIX BY VIEW" if f.startswith("(a)") else "FIX BY PIN RE-PLAN", "child_lint " + f[:170])
     if "face" in cat or "pin_layer" in cat:
         put("FIX BY PIN RE-PLAN", "pins on another face / layer than the slot: " + "; ".join((cat.get("face") or []) + (cat.get("pin_layer") or []))[:260])
     if "outline" in cat:
@@ -242,6 +249,10 @@ def audit_master(store, cell, info, contract_path, contract):
         if s.get("cell") != macro:
             bad.append(f"slot cell {s.get('cell')} != view macro {macro}")
         b, n = SF.compare(k, s_cmp)
+        ow, oh = float(s["outline"]["w"]), float(s["outline"]["h"])
+        if abs(ow - m["W"]) <= OUTLINE_TOL_UM and abs(oh - m["H"]) <= OUTLINE_TOL_UM and any(x.startswith("outline") for x in b):
+            b = [x for x in b if not x.startswith("outline")]      # the generators shave 0.024 um off an abutted slot
+            n.append(f"outline {m['W']:g} x {m['H']:g} within {OUTLINE_TOL_UM} um of the slot {ow:g} x {oh:g} (abutment shave)")
         bad += b
         notes += n
         r["slot_layers"] = dict(layer_cap=CL.cap_str(s.get("layer_cap")), view_cap=vcap, pg_layer=s.get("pg_layer"),
@@ -289,7 +300,30 @@ def collect(a):
         if view is None:
             noview.append(dict(master=cell, instances=info["instances"], kinds=sorted(info["kinds"])))
             continue
-        out.append(audit_master(store, cell, dict(info, view=view, binding=how), a.contract, contract))
+        row = audit_master(store, cell, dict(info, view=view, binding=how), a.contract, contract)
+        alts = []
+        for v2 in store.by_name(cell):
+            if v2 == view:
+                continue
+            r2 = audit_master(store, cell, dict(info, view=v2, binding="alternative"), a.contract, contract)
+            if r2.get("error"):
+                continue
+            alts.append(dict(view=v2, cls=r2["class"], top_layer=r2["top_layer"], blocked_above=r2["face"]["blocked_above"],
+                             blocked_same=r2["face"]["blocked_same"], pockets=r2["pockets"].get("count") or 0,
+                             pocket_marker=bool(r2["pockets"].get("marker")), slot_fit=r2["slot_fit"]["status"],
+                             mismatch=sorted(r2["mismatch"])))
+        if alts:
+            row["other_views"] = alts
+            better = [x for x in alts if not row.get("error") and RANK.index(x["cls"]) > RANK.index(row["class"])
+                      and not ({"outline", "cell"} & set(x["mismatch"]))]
+            if better and row["class"] in ("FIX BY PIN RE-PLAN", "FIX BY VIEW"):
+                b_ = max(better, key=lambda x: (RANK.index(x["cls"]), -x["blocked_above"], -x["pockets"], -view_rank(x["view"])))
+                row["why"].insert(0, f"FIX AT DIE: a better published view of this master exists: bind {b_['view']} "
+                                     f"({b_['cls']}; top {b_['top_layer']}, blocked above {b_['blocked_above']}, pockets "
+                                     f"{b_['pockets']}) instead of {view}")
+                row["class_of_bound_view"] = row["class"]
+                row["class"] = "FIX AT DIE" if b_["cls"] == "ACCEPT" else b_["cls"]
+        out.append(row)
         print(f"  {cell}: {out[-1].get('class') or out[-1].get('error')}", file=sys.stderr)
     return contract, out, noview
 
@@ -308,6 +342,8 @@ def md(rec):
         pk = r["pockets"]
         pks = "-" if not pk.get("count") else f"{pk['layer']} {pk['count']}" + (" (marked)" if pk.get("marker") else "")
         sf = r["slot_fit"]["status"] + ("" if not r["mismatch"] else ": " + ", ".join(r["mismatch"]))
+        lf = sorted({f[:3] for f in r["child_lint"]["fails"]})
+        sf += "" if not lf else "; lint " + " ".join(lf)
         L.append(f"| {r['master']} | {r['instances']} | {r['top_layer']} (PG {r['pg_top']}) | "
                  + " ".join(f"{k} {v}" for k, v in r["pins"].items())
                  + f" | {r['face']['face_pins']} | {r['face']['blocked_above']} ({r['face']['blocked_above_pct']:g} %) | "
