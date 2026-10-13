@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Qwen ROM-side IO slot cells: bench through the cell's own ports (two cells back to back through the PHY pipe model,
 # rtl/test/tb_qfd_link_adp512.sv = tb_qfd_link_adapter.sv with the DUT swapped by sed for qfd_link_adp512).
-#   bench.sh OUT_DIR CASE      CASE = exact | rate | stall | mut
+#   bench.sh OUT_DIR CASE      CASE = exact | rate | stall | mut | mut2
 #     exact  1,500 words each way, random traffic + back-pressure, LAT 223, bit-exact in order, no fault
 #     rate   line-rate sweep point at LAT 229 (223 PHY + 6 FDI relay stages of the cluster parent), >= 0.950 words/cycle
 #     stall  3,000 words, long receiver stalls
 #     mut    stall + MUT=1 (one extra link credit): must FAIL
+#     mut2   exact + MUT=2 (slice 7's replicated skid read pointer does not advance): must FAIL
 # Prints "PASS romio_slots <case> ..." (rc 0) or "FAIL romio_slots <case> ..." (rc 1).
 set -u
 OUT=$1; CASE=$2
@@ -18,6 +19,7 @@ case "$CASE" in
   rate)  P="$P -P$T.LAT=229 -P$T.N=2000 -P$T.RATE=1 -P$T.MINRATE=950" ;;
   stall) P="$P -P$T.LAT=223 -P$T.N=3000 -P$T.STALL=1 -P$T.SW=1500" ;;
   mut)   P="$P -P$T.LAT=223 -P$T.N=3000 -P$T.STALL=1 -P$T.SW=1500 -P$T.MUT=1" ;;
+  mut2)  P="$P -P$T.LAT=223 -P$T.N=1500 -P$T.MUT=2" ;;
   *) echo "FAIL romio_slots $CASE unknown case"; exit 1 ;;
 esac
 iverilog -g2012 -s $T $P -o "$OUT/$T.$CASE" "$R/rtl/test/$T.sv" "$R/rtl/physical/ot_qwen_romio_slots.sv" \

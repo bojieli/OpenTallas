@@ -32,7 +32,7 @@ module qfd_link_adp512 #(
     input  wire [1042:0] rx_flit,
     output wire          fault
 );
-    ot_qfd_link_adapter #(.W(1024), .RXD(512), .SRAM(1), .PINREG(1), .MUT(MUT)) u_body (
+    ot_qfd_link_adapter #(.W(1024), .RXD(512), .SRAM(1), .PINREG(1), .NG(8), .MUT(MUT)) u_body (
         .clk(ck), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .c_cr(c_cr), .r_v(r_v), .r_d(r_d), .r_cr(r_cr),
         .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .fault(fault));
 endmodule
