@@ -20,7 +20,8 @@ class TestV4(unittest.TestCase):
 
     def test_fixed_point(self):
         self.assertGreaterEqual(self.C['version'], 4)
-        again = V4.apply(json.loads(json.dumps(self.C)), self.C['updated'], self.R)
+        import contract_v4b_tp8 as V4B   # addendum b (T12 / T13) is applied on top of the v4 patch
+        again = V4B.apply(V4.apply(json.loads(json.dumps(self.C)), self.C['updated'], self.R))
         self.assertEqual(again, self.C)
 
     def test_checks(self):

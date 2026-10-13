@@ -55,6 +55,11 @@
    "version": 4,
    "when": "2026-10-13",
    "change": "slot change answers (el1011-qwen-tp8.log 2026-10-13; tools/hier_contract/contract_v4_tp8.py): T7 stations / heads _d/_r pairs + rst_n, heads 509 b (qfd_chead_e 24, qfd_chead_w 24, qfd_cst_n 384, qfd_cst_s 384); T8 qkd_cdc_wleaf 183.6 sq + RTL ports (128); T9 qkd_rhead cluster 691.2 x 453.6 option A (128); T10 VM region envelope 4708.8 x 2347.92 at (13284.0, 17249.76); T11 ot_qwen_rst_rep_t planned master; other slots unchanged (version 3)"
+  },
+  {
+   "version": 4,
+   "when": "2026-10-13",
+   "change": "v4b: T12 qfd_sp_res_ser cluster slot 777.6 x 518.4 (option B); T13 qfd_tt_up4 cluster NL 4 / NB 3 / LG 12 x 4, sel 26 b, qfd_tt_up4_g removed (tools/hier_contract/contract_v4b_tp8.py)"
   }
  ],
  "slots": [
@@ -111555,10 +111560,10 @@
   {
    "name": "sp_res_ser_0",
    "cell": "qfd_sp_res_ser",
-   "kind": "element",
+   "kind": "parent",
    "outline": {
-    "w": 777.576,
-    "h": 518.376
+    "w": 777.6,
+    "h": 518.4
    },
    "pins": [
     {
@@ -111596,6 +111601,33 @@
       339.996,
       339.996
      ]
+    },
+    {
+     "name": "rst_n[0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      392.0,
+      392.0
+     ]
+    },
+    {
+     "name": "me_en[0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      396.0,
+      396.0
+     ]
+    },
+    {
+     "name": "fault[0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      360.0,
+      360.0
+     ]
     }
    ],
    "io_budget": {
@@ -111610,39 +111642,46 @@
     "layer": "M5",
     "offset": 388.788
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "notes": "evidence: {\"category\": \"superseded\", \"tt\": null, \"ff\": null, \"drc\": null, \"job\": null, \"source_commit\": null}",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M8",
-    "strap_layer": "M9",
-    "signal_max_layer": "M5"
-   },
-   "view_cap": "M8",
-   "view_status": "legacy cap M8 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "pg_layer": "M7",
+   "strap_layer": "M7",
+   "signal_max_layer": "M7",
+   "notes": "v4b T12: option B (coordinator 2026-10-13); +2 capture cycles absorbed in RS (rok margin)",
    "layer_cap": {
-    "cap": "M5",
-    "view_max_layer": "M8",
-    "conforms": false
+    "cap": "M7",
+    "view_max_layer": null,
+    "conforms": true
    },
-   "pin_replan": "contract pins / clock entry on M6 above the cap: move to M4 (H) / M5 (V) before a new route",
    "parent": "qwen_rom_tp8",
    "origin": {
     "x": 13670.208,
     "y": 4747.68,
     "orient": "R0"
    },
-   "version": 3
+   "version": 4,
+   "sub_layout": {
+    "grid": [
+     3,
+     3
+    ],
+    "cell_um": [
+     259.2,
+     172.8
+    ],
+    "leaves": {
+     "ot_qfd_res_slot_tile (re-shaped 259.2 x 172.8, job qfd_res_slot_rs-s1-c724a7101)": 8,
+     "ctl + N-face pin flops of i[4424:0] + one relay stage for the bottom row": 1
+    },
+    "wiring": "i words over the tiles on M6/M7; est. cut 3 x 555 b per 259.2-um column on M7 ~ 0.4 (estimate of el1013-qwen-elements-r6, not gate-checked)",
+    "clock": "parent flops from a delayed entry matched to the tile insertion (re-measure after the re-shape; rh view = 509 ps SS)"
+   }
   },
   {
    "name": "sp_res_ser_1",
    "cell": "qfd_sp_res_ser",
-   "kind": "element",
+   "kind": "parent",
    "outline": {
-    "w": 777.576,
-    "h": 518.376
+    "w": 777.6,
+    "h": 518.4
    },
    "pins": [
     {
@@ -111680,6 +111719,33 @@
       339.996,
       339.996
      ]
+    },
+    {
+     "name": "rst_n[0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      392.0,
+      392.0
+     ]
+    },
+    {
+     "name": "me_en[0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      396.0,
+      396.0
+     ]
+    },
+    {
+     "name": "fault[0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      360.0,
+      360.0
+     ]
     }
    ],
    "io_budget": {
@@ -111694,39 +111760,46 @@
     "layer": "M5",
     "offset": 388.788
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "notes": "evidence: {\"category\": \"superseded\", \"tt\": null, \"ff\": null, \"drc\": null, \"job\": null, \"source_commit\": null}",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M8",
-    "strap_layer": "M9",
-    "signal_max_layer": "M5"
-   },
-   "view_cap": "M8",
-   "view_status": "legacy cap M8 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "pg_layer": "M7",
+   "strap_layer": "M7",
+   "signal_max_layer": "M7",
+   "notes": "v4b T12: option B (coordinator 2026-10-13); +2 capture cycles absorbed in RS (rok margin)",
    "layer_cap": {
-    "cap": "M5",
-    "view_max_layer": "M8",
-    "conforms": false
+    "cap": "M7",
+    "view_max_layer": null,
+    "conforms": true
    },
-   "pin_replan": "contract pins / clock entry on M6 above the cap: move to M4 (H) / M5 (V) before a new route",
    "parent": "qwen_rom_tp8",
    "origin": {
     "x": 13670.208,
     "y": 13020.48,
     "orient": "R0"
    },
-   "version": 3
+   "version": 4,
+   "sub_layout": {
+    "grid": [
+     3,
+     3
+    ],
+    "cell_um": [
+     259.2,
+     172.8
+    ],
+    "leaves": {
+     "ot_qfd_res_slot_tile (re-shaped 259.2 x 172.8, job qfd_res_slot_rs-s1-c724a7101)": 8,
+     "ctl + N-face pin flops of i[4424:0] + one relay stage for the bottom row": 1
+    },
+    "wiring": "i words over the tiles on M6/M7; est. cut 3 x 555 b per 259.2-um column on M7 ~ 0.4 (estimate of el1013-qwen-elements-r6, not gate-checked)",
+    "clock": "parent flops from a delayed entry matched to the tile insertion (re-measure after the re-shape; rh view = 509 ps SS)"
+   }
   },
   {
    "name": "sp_res_ser_2",
    "cell": "qfd_sp_res_ser",
-   "kind": "element",
+   "kind": "parent",
    "outline": {
-    "w": 777.576,
-    "h": 518.376
+    "w": 777.6,
+    "h": 518.4
    },
    "pins": [
     {
@@ -111764,6 +111837,33 @@
       339.996,
       339.996
      ]
+    },
+    {
+     "name": "rst_n[0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      392.0,
+      392.0
+     ]
+    },
+    {
+     "name": "me_en[0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      396.0,
+      396.0
+     ]
+    },
+    {
+     "name": "fault[0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      360.0,
+      360.0
+     ]
     }
    ],
    "io_budget": {
@@ -111778,31 +111878,38 @@
     "layer": "M5",
     "offset": 388.788
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "notes": "evidence: {\"category\": \"superseded\", \"tt\": null, \"ff\": null, \"drc\": null, \"job\": null, \"source_commit\": null}",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M8",
-    "strap_layer": "M9",
-    "signal_max_layer": "M5"
-   },
-   "view_cap": "M8",
-   "view_status": "legacy cap M8 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "pg_layer": "M7",
+   "strap_layer": "M7",
+   "signal_max_layer": "M7",
+   "notes": "v4b T12: option B (coordinator 2026-10-13); +2 capture cycles absorbed in RS (rok margin)",
    "layer_cap": {
-    "cap": "M5",
-    "view_max_layer": "M8",
-    "conforms": false
+    "cap": "M7",
+    "view_max_layer": null,
+    "conforms": true
    },
-   "pin_replan": "contract pins / clock entry on M6 above the cap: move to M4 (H) / M5 (V) before a new route",
    "parent": "qwen_rom_tp8",
    "origin": {
     "x": 13670.208,
     "y": 19679.76,
     "orient": "R0"
    },
-   "version": 3
+   "version": 4,
+   "sub_layout": {
+    "grid": [
+     3,
+     3
+    ],
+    "cell_um": [
+     259.2,
+     172.8
+    ],
+    "leaves": {
+     "ot_qfd_res_slot_tile (re-shaped 259.2 x 172.8, job qfd_res_slot_rs-s1-c724a7101)": 8,
+     "ctl + N-face pin flops of i[4424:0] + one relay stage for the bottom row": 1
+    },
+    "wiring": "i words over the tiles on M6/M7; est. cut 3 x 555 b per 259.2-um column on M7 ~ 0.4 (estimate of el1013-qwen-elements-r6, not gate-checked)",
+    "clock": "parent flops from a delayed entry matched to the tile insertion (re-measure after the re-shape; rh view = 509 ps SS)"
+   }
   },
   {
    "name": "sp_su64_sfu",
@@ -211634,7 +211741,7 @@
      ]
     },
     {
-     "name": "sel[27:0]",
+     "name": "sel[25:0]",
      "face": "N",
      "layer": "M5",
      "span_um": [
@@ -211729,7 +211836,7 @@
   {
    "name": "tt_up4_0",
    "cell": "qfd_tt_up4",
-   "kind": "element",
+   "kind": "parent",
    "outline": {
     "w": 345.576,
     "h": 388.776
@@ -211799,7 +211906,7 @@
      ]
     },
     {
-     "name": "sel[27:0]",
+     "name": "sel[25:0]",
      "face": "S",
      "layer": "M5",
      "span_um": [
@@ -211814,6 +211921,15 @@
      "span_um": [
       99.9,
       173.676
+     ]
+    },
+    {
+     "name": "rst_n[0]",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      176.0,
+      176.0
      ]
     }
    ],
@@ -211832,157 +211948,33 @@
    "pg_layer": "M5",
    "strap_layer": "M6",
    "signal_max_layer": "M5",
-   "notes": "TP8 re-derived from the tp8a case LEF (outline / ports changed by the tp8a recipe); budget placeholder until re-closed | v5: evidence: {\"category\": \"closed (TT era)\", \"tt\": 219.95, \"ff\": 18.95, \"drc\": 0, \"job\": \"qfd_tt_up4_b-618516521-tc\", \"source_commit\": \"618516521862d0a8769ed729956a92395b568596\"}",
+   "notes": "v4b T13: the 2 x 2 group of r22k is one cluster in this slot; qfd_tt_up4_g removed",
    "parent": "qwen_rom_tp8",
    "origin": {
     "x": 14847.84,
     "y": 14834.88,
     "orient": "R0"
    },
-   "version": 3,
+   "version": 4,
    "layer_cap": {
     "cap": "M5",
     "view_max_layer": "M8",
     "conforms": false
+   },
+   "sub_layout": {
+    "leaves": {
+     "ot_qfd_band_upper NL 4 NB 3 LG 12 (kit physical/ref_tile/qfd_tt_up4_tp8, 64.8 x 205.2)": 4,
+     "pin-flop / fan-out cell": 1
+    },
+    "params": {
+     "NL": 4,
+     "NB": 3,
+     "LG": 12,
+     "leaves": 4,
+     "lanes": 16
+    },
+    "ports": "pw0..2[512:0] = 16 lanes x 32 b + v (4 leaves x 128 b), lf0..2, ty[1537:0] = 4 x 384 b + 2, sel[25:0] = 2 x (LG + 1) broadcast to the 4 leaves, flt = OR of the leaf faults (registered); ty stays on W (the relay channel): the leaves' E-face ty goes to W-face pin flops inside the cluster"
    }
-  },
-  {
-   "name": "tt_up4_1",
-   "cell": "qfd_tt_up4_g",
-   "kind": "element",
-   "outline": {
-    "w": 345.576,
-    "h": 388.776
-   },
-   "pins": [],
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2,
-    "registered_in": true,
-    "registered_out": true
-   },
-   "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M5",
-    "offset": 172.788
-   },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M8",
-    "strap_layer": "M9",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M8",
-   "view_status": "legacy cap M8 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": {
-    "cap": "M5",
-    "view_max_layer": "M8",
-    "conforms": false
-   },
-   "pin_replan": "contract pins / clock entry on M6 above the cap: move to M4 (H) / M5 (V) before a new route",
-   "parent": "qwen_rom_tp8",
-   "origin": {
-    "x": 15193.872,
-    "y": 14834.88,
-    "orient": "R0"
-   },
-   "version": 3
-  },
-  {
-   "name": "tt_up4_2",
-   "cell": "qfd_tt_up4_g",
-   "kind": "element",
-   "outline": {
-    "w": 345.576,
-    "h": 388.776
-   },
-   "pins": [],
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2,
-    "registered_in": true,
-    "registered_out": true
-   },
-   "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M5",
-    "offset": 172.788
-   },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M8",
-    "strap_layer": "M9",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M8",
-   "view_status": "legacy cap M8 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": {
-    "cap": "M5",
-    "view_max_layer": "M8",
-    "conforms": false
-   },
-   "pin_replan": "contract pins / clock entry on M6 above the cap: move to M4 (H) / M5 (V) before a new route",
-   "parent": "qwen_rom_tp8",
-   "origin": {
-    "x": 14847.84,
-    "y": 15225.84,
-    "orient": "R0"
-   },
-   "version": 3
-  },
-  {
-   "name": "tt_up4_3",
-   "cell": "qfd_tt_up4_g",
-   "kind": "element",
-   "outline": {
-    "w": 345.576,
-    "h": 388.776
-   },
-   "pins": [],
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2,
-    "registered_in": true,
-    "registered_out": true
-   },
-   "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M5",
-    "offset": 172.788
-   },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M8",
-    "strap_layer": "M9",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M8",
-   "view_status": "legacy cap M8 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": {
-    "cap": "M5",
-    "view_max_layer": "M8",
-    "conforms": false
-   },
-   "pin_replan": "contract pins / clock entry on M6 above the cap: move to M4 (H) / M5 (V) before a new route",
-   "parent": "qwen_rom_tp8",
-   "origin": {
-    "x": 15193.872,
-    "y": 15225.84,
-    "orient": "R0"
-   },
-   "version": 3
   },
   {
    "name": "ahub",
@@ -289075,6 +289067,23 @@
    "slots": [],
    "status": "planned (open item; sites not legalised)",
    "change": "channel master ot_qwen_rst_rep_t (1-b reset repeater, <= 5.4 x 2.16 um, M1-M3): 1,160 instances of the registered reset tree, results/arch/qwen_tp8_1013/reset_tree_plan.json @ claude/qwen-tp8-relay-1013 (431ce7827)"
+  },
+  {
+   "id": "T12",
+   "slots": [
+    "qfd_sp_res_ser"
+   ],
+   "status": "decided v4b (coordinator option B)",
+   "change": "cluster slot 777.6 x 518.4 (3 x 3 of 259.2 x 172.8); + rst_n, me_en, fault; +2 capture cycles in RS"
+  },
+  {
+   "id": "T13",
+   "slots": [
+    "qfd_tt_up4",
+    "qfd_tt_ctlm"
+   ],
+   "status": "decided v4b",
+   "change": "tt_up4 = one cluster of 4 x ot_qfd_band_upper NL 4 / NB 3 / LG 12 in slot tt_up4_0; sel 28 -> 26 b; qfd_tt_up4_g (3 slots, no pins) removed: 0.403 mm2 back to the relay channel"
   }
  ],
  "seam_check": {
@@ -289363,9 +289372,9 @@
    25870.32
   ],
   "die_mm2": 822.306,
-  "slot_mm2": 494.115,
-  "slot_share": 0.6009,
-  "channel_share": 0.3991,
+  "slot_mm2": 493.712,
+  "slot_share": 0.6004,
+  "channel_share": 0.3996,
   "slots_by_cell_mm2": {
    "ot_hbm3e_phy": 40.008,
    "ot_qfd_serdes_112g_x12_phy": 3.629,
@@ -289394,7 +289403,6 @@
    "qfd_tile_nk": 309.587,
    "qfd_tt_ctlm": 1.411,
    "qfd_tt_up4": 0.134,
-   "qfd_tt_up4_g": 0.403,
    "qkd_ahub": 0.42,
    "qkd_astk": 3.444,
    "qkd_astk_n": 3.444,
@@ -289662,9 +289670,7 @@
    "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)"
   ],
   "qfd_sp_res_ser": [
-   "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)",
-   "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)",
-   "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)"
+   "v4b T12: build the 3 x 3 cluster parent over the re-shaped tile (qfd_res_slot_rs); bench + mutant; gate-check the M7 cut"
   ],
   "qfd_sp_su64_sfu": [
    "ckx: M8 area pin -> W face (D4 review)"
@@ -289709,13 +289715,7 @@
    "rsi: M8 area pin -> E face (D4 review)"
   ],
   "qfd_tt_up4": [
-   "flt: M8 face pin -> E face (D4 review)",
-   "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)"
-  ],
-  "qfd_tt_up4_g": [
-   "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)",
-   "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)",
-   "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)"
+   "v4b T13: build the cluster wrapper (4 x NL-4 leaf + pin flops) at 345.576 x 388.776; confirm LG 12 (sel 26 b) against the TP8 tt_ctlm RTL before routing; die generator: drop tt_up4_1..3 (tools/qwen_kv_die/rom_r22k.py ups, qwen_rom_fulldie_b3r2.py lines using tt_up4_2) and narrow o4_sel"
   ],
   "qkd_ahub": [
    "layer cap M5: current view uses M8; re-route to the v3 cap (pins re-assigned on <= M5)",
