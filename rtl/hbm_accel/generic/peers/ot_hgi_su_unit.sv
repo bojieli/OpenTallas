@@ -1402,7 +1402,11 @@ module ot_hgi_su_ctlw #(
         assign dn_st[NSL] = 1'b1; assign dn_dr[NSL] = 1'b1; assign dn_ov[NSL] = 1'b0;
 `endif
         for (genvar g = 0; g < NIN; g = g + 1) begin : g_s
+`ifdef OT_CTLW_SLICE_H   // el1013-hbm-qdq opt-in (default off): the slice as the physical cluster of four hard 2-lane leaves
+            ot_hgi_su_ctlw_slice_h #(.SL(g), .NL(8), .LWB(LWB), .LQ(LQ), .MUT_W(MUT_W), .MUT_DIRTY(MUT_DIRTY), .LQSRAM(0)) u_slice (
+`else
             ot_hgi_su_ctlw_slice #(.SL(g), .NL(8), .LWB(LWB), .LQ(LQ), .MUT_W(MUT_W), .MUT_DIRTY(MUT_DIRTY), .LQSRAM(SLICES >= 2 ? 1 : 0)) u_slice (
+`endif
                 .clk(clk), .rst_n(rst_n), .sl_i(2'(g)), .wst_go_i(c_go_s[g]), .wdr_go_i(c_go_d[g]),
                 .lo_i(c_lo_v[g]), .hi_i(c_hi_v[g]), .lb_i(c_lb_v[g]), .rv_i(c_rv_v[g]), .dsec_i(c_dsec_v[g]),
                 .d_lo_i(c_dlo_v[g]), .d_hi_i(c_dhi_v[g]), .d_lb_i(c_dlb_v[g]), .d_rv_i(c_drv_v[g]), .d_dsec_i(c_ddsec_v[g]), .d_os_i(c_os[g]),
@@ -1421,14 +1425,27 @@ module ot_hgi_su_ctlw #(
         // go blanking: a done seen within BL edges of its go belongs to the previous burst.  Worst path, slice 3: go
         // ctlw -> s0 .. s3 pins (4), lane done (1), s3 combine (1), back s2 / s1 / s0 (2 each: 6), the capture here (1)
         // = 13 (the single-slice hub path was 4 with BL 6): BL = 15
+`ifdef OT_CTLW_SLICE_H
+        // slice_h: 3 forward edges a hop and 4 back (N-face flag flop, leaf pin flop, leaf flag, AND4): go -> s3 f0 (10),
+        // fm (11), leaf pin flop (12), lane done (13), leaf flag (14), s3 AND4 (15), back s2 / s1 / s0 (4 each: 27),
+        // the capture here (28): BL = 30
+        localparam integer BL = 30;
+        reg h_wst, h_wdr, h_ovf; reg [4:0] bl_st, bl_dr;
+`else
         localparam integer BL = 15;
         reg h_wst, h_wdr, h_ovf; reg [3:0] bl_st, bl_dr;
+`endif
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin h_wst <= 1'b1; h_wdr <= 1'b1; h_ovf <= 1'b0; bl_st <= '0; bl_dr <= '0; end
             else begin
                 h_wst <= dn_st[0]; h_wdr <= dn_dr[0]; h_ovf <= dn_ov[0];
+`ifdef OT_CTLW_SLICE_H
+                bl_st <= wst_go ? 5'(BL) : (bl_st != 0 ? bl_st - 5'd1 : 5'd0);
+                bl_dr <= wdr_go ? 5'(BL) : (bl_dr != 0 ? bl_dr - 5'd1 : 5'd0);
+`else
                 bl_st <= wst_go ? 4'(BL) : (bl_st != 0 ? bl_st - 4'd1 : 4'd0);
                 bl_dr <= wdr_go ? 4'(BL) : (bl_dr != 0 ? bl_dr - 4'd1 : 4'd0);
+`endif
             end
         assign wst_done = h_wst && bl_st == 0 && !wst_go;
         assign wdr_done = h_wdr && bl_dr == 0 && !wdr_go;

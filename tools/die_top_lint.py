@@ -2532,15 +2532,26 @@ def pin_align_record(die, m, M, ports_w, real, views=None, top=200):
             out.append(to_die(it, x, y) + (f, lay.get(key)))
         return out + [None] * (bits - len(out))
     buses = [(b[0], b[1], b[2], [e for e in b[3] if e[0] != 'TOP']) for b in m['buses']]
-    rec = PA.analyze_points(m['insts'], buses, locate, top=top)
+    rows = []
+    rec = PA.analyze_points(m['insts'], buses, locate, top=top, rows_out=rows)
     rec.update(die=die, pin_source='generator pin table (tools/die_top_lint.py pin_table)', published_view_overlay=ov)
+    PIN_ALIGN_ROWS[:] = rows
     return rec, PA
+
+
+PIN_ALIGN_ROWS = []       # every bundle row of the last pin_align_record (mode pin_align writes them beside the record)
 
 
 def run_pin_align(die, out, tag='', views_json=None):
     """mode pin_align: build the die model, write <out>/<die><tag>_pin_align.json; exit code 1 on FAIL (gate mode fail)"""
     m, pw, M, tool = build(die)
     R8_ACTIVE[0] = die.startswith('s81r8')
+    GLUE_CASE[0] = None
+    if R8_ACTIVE[0]:          # as run_lint: the r8 glue masters are bound from the case's own glue RTL
+        out.mkdir(parents=True, exist_ok=True)
+        gp_ = (out / f'{die}{tag}_glue.sv').resolve()
+        gp_.write_text(S.glue_rtl(m))
+        GLUE_CASE[0] = str(gp_)
     real = real_blocks(die, m)
     views = {}
     if views_json:
@@ -2556,6 +2567,9 @@ def run_pin_align(die, out, tag='', views_json=None):
                [m.get('die', {}).get('w'), m.get('die', {}).get('h')] if isinstance(m.get('die'), dict) else None)
     out.mkdir(parents=True, exist_ok=True)
     (out / f'{die}{tag}_pin_align.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
+    import gzip
+    with gzip.open(out / f'{die}{tag}_pin_align_rows.json.gz', 'wt') as fh:      # every bundle: re-judge / re-tabulate offline
+        json.dump([{k_: v_ for k_, v_ in r_.items() if k_ != 'why'} for r_ in PIN_ALIGN_ROWS], fh)
     print(PA.line(rec))
     return 1 if rec['verdict'] == 'FAIL' and PA.gate_mode() == 'fail' else 0
 

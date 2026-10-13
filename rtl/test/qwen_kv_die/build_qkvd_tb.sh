@@ -40,7 +40,7 @@ fi
 for a in "$@"; do case $a in -GR=*) RR=${a#-GR=};; -GROM_ST=*) RST=${a#-GROM_ST=};; esac; done
 SRC="$W/test/qwen_kv_die/ot_qkvd_layer_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_buf_tiles.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sl.sv $W/lib/ot_rst_relay.sv \
  $W/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_cbridge.sv \
- $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv $P/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
+ $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_ke_cluster.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_ke_tiles.sv $P/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
  $W/test/nearhbm/ot_qwen_nearhbm_attn_die_tb.sv \
  $STK \
  $W/test/nearhbm/ot_qwen_nearhbm_attn_hub_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv $W/hdc/nearhbm/ot_nhb_tiles.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_t.sv $W/hdc/ot_hdc_fp32_add_lat_nr.sv $W/hdc/ot_hdc_prefix.sv \
@@ -68,6 +68,6 @@ if [ -n "${HSUB:-}" ] && [ -z "${NR_REAL:-}" ]; then
   SRC="${SRC/$W\/hdc\/ot_hdc_fp32_add_lat_nr.sv/$OUT/ot_hdc_fp32_add_lat_nr_rest.sv $W/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv}"
 fi
 $VL --cc --exe --build -j 16 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
-  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${SBP:++define+KVD_SBP=$SBP} ${HT:++define+KVD_HT} ${PF:++define+KVD_PF} ${PQ:++define+KVD_PQ=$PQ} ${HUBT:++define+KVD_HUBT} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
+  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS ${HPS:++define+KVD_HPSRAM=1} ${PBMUT:++define+KVD_PBMUT} ${SBD:++define+KVD_SBD=$SBD} ${SBP:++define+KVD_SBP=$SBP} ${HT:++define+KVD_HT} ${PF:++define+KVD_PF} ${SPL:++define+KVD_SPL} ${PQ:++define+KVD_PQ=$PQ} ${HUBT:++define+KVD_HUBT} ${FSBMUT:++define+KVD_FSBMUT} "$@" \
   -CFLAGS "-O1 -DKVD_R=$RR -DKVD_ROM_ST=$RST" --Mdir $OUT -o Vtb $SRC $CPP > $OUT/build.log 2>&1
 echo built $OUT

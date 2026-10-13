@@ -10,9 +10,11 @@ the die owns M6 (horizontal wires) and M7 (vertical wires) at 75 % besides its o
 
 Per die-placed instance the top layer is, in this order: the MEASURED top layer of the master's published view
 (die_pin_audit <die>_masters.json; only a view of the master itself, not a family alias), else what the contract
-declares for the slot (max of signal_max_layer / pg_layer), else the OBS top of the generator's abstract.  Classes:
+declares for the slot (max of signal_max_layer / pg_layer), else the contract's default cap (M5: relays and other
+die-placed masters without a slot row; the generator abstract's OBS top is recorded but is not a layer plan).  Classes:
   legacy    measured view top >= M6 on a master that is not hard IP (the M5 rule is for these)
-  planned   no view yet; the contract / generator plans M6+ over it (clusters by plan, placeholders)
+  planned   no view yet; the contract plans M6+ over it and the die cut model (cuts.py) does NOT count it as a cluster
+  cluster   the cut model's own cluster list (cuts.py CLUSTER: die layer only, already in the die leads' tables)
   hard_ip   memory / PHY macro abstracts (die layer only, as cuts.py HARD_IP)
   m5        top <= M5
 Cut scan: every 260-um window (cuts.py FINE) on cut lines every 50 um, bits from the die model's buses (cuts.py Net:
@@ -57,14 +59,17 @@ def tops(model, masters, contract):
             continue
         d = max([metal(s.get(k)) or 0 for k in ("signal_max_layer", "pg_layer")])
         decl[s["cell"]] = max(decl.get(s["cell"], 0), d)
+    cap = metal((contract.get("layer_defaults") or {}).get("layer_cap")) or 5
     out = {}
     for m in sorted({i["m"] for i in model["insts"]}):
         g = model.get("masters_obs_top", {}).get(m)
         r = meas.get(m)
         mt = metal(r["top_layer"]) if r else None
         hard = bool(HARD_RE.search(m)) or bool(r and r.get("hard_ip"))
-        top, src = (mt, "measured view") if mt is not None else (decl[m], "contract") if decl.get(m) else (g or 0, "generator abstract")
-        cls = "hard_ip" if hard else "legacy" if (mt or 0) >= 6 else "planned" if mt is None and top >= 6 else "m5"
+        top, src = ((mt, "measured view") if mt is not None else (decl[m], "contract") if decl.get(m)
+                    else (cap, "contract default cap (no slot row, no view)"))
+        cls = ("hard_ip" if hard else "legacy" if (mt or 0) >= 6 else
+               "cluster" if mt is None and top >= 6 and m in C.CLUSTER else "planned" if mt is None and top >= 6 else "m5")
         out[m] = dict(top=top, source=src, cls=cls, measured=mt, declared=decl.get(m), generator=g,
                       view=(r or {}).get("view"))
     return out
@@ -93,7 +98,7 @@ class Scan:
         hi, lo, lw = ("M8", "M6", "M4") if ax == "x" else ("M9", "M7", "M5")
         L = np.diff(edges)
         lo_n = metal(lo)
-        hard = self.cls == "hard_ip"
+        hard = (self.cls == "hard_ip") | (self.cls == "cluster")      # cuts.py: die layer only over hard IP and CLUSTER
         ch = (L - self.cover(ax, cp, edges, self.big)) * CH_DERATE * C.TPU[lw]          # M4 / M5: channels only
         base = DERATE * L * C.TPU[hi] + ch
         blk = {
@@ -120,6 +125,7 @@ class Scan:
         n_hot = len(res)
         n_over = sum(1 for r in res if r[0] > LIMIT)
         n_legacy_over = sum(1 for r in res if r[0] > LIMIT >= r[5])
+        n_plan_over = sum(1 for r in res if r[5] > LIMIT >= r[6])
         out = []
         for u, ax, cp, w0, bits, u5, ua in res:
             if any(ax == o["ax"] and abs(cp - o["pos"]) < 400 and abs(w0 - o["win"][0]) < 600 for o in out):
@@ -127,16 +133,19 @@ class Scan:
             p0, o0 = (0, 1) if ax == "x" else (1, 0)
             lo_n = 6 if ax == "x" else 7
             s = (self.box[:, p0] < cp) & (cp < self.box[:, p0 + 2]) & (self.box[:, o0] < w0 + C.FINE) & (self.box[:, o0 + 2] > w0)
-            who = collections.Counter()
-            for i in np.nonzero(s & (self.cls == "legacy") & (self.top >= lo_n))[0]:
-                who[self.mst[i]] += float(min(w0 + C.FINE, self.box[i, o0 + 2]) - max(w0, self.box[i, o0]))
+            who, plan = collections.Counter(), collections.Counter()
+            for i in np.nonzero(s & (self.top >= lo_n) & ((self.cls == "legacy") | (self.cls == "planned")))[0]:
+                (who if self.cls[i] == "legacy" else plan)[self.mst[i]] += float(
+                    min(w0 + C.FINE, self.box[i, o0 + 2]) - max(w0, self.box[i, o0]))
             out.append(dict(ax=ax, pos=round(cp), win=[round(w0), round(w0 + C.FINE)], bits=bits, util=round(u, 3),
                             util_if_legacy_m5=round(u5, 3), util_all_m5=round(ua, 3),
-                            legacy_over_window_um={k: round(v, 1) for k, v in who.most_common(6)}))
+                            legacy_over_window_um={k: round(v, 1) for k, v in who.most_common(6)},
+                            planned_over_window_um={k: round(v, 1) for k, v in plan.most_common(4)}))
             if len(out) >= top:
                 break
         return dict(hot_threshold=hot, limit=LIMIT, windows_scanned_hot=n_hot, windows_over_limit=n_over,
-                    windows_over_limit_only_because_of_legacy=n_legacy_over, distinct=out)
+                    windows_over_limit_only_because_of_legacy=n_legacy_over,
+                    windows_over_limit_only_because_of_planned_m6_m7=n_plan_over, distinct=out)
 
 
 def table(model, T):
@@ -177,12 +186,15 @@ def md(rec):
     L += ["", f"## Cut windows (260 um, util >= {w['hot_threshold']})", "",
           f"{w['windows_scanned_hot']} window positions >= {w['hot_threshold']}, {w['windows_over_limit']} over {w['limit']}; "
           f"{w['windows_over_limit_only_because_of_legacy']} of those are over {w['limit']} ONLY because legacy tiles hold M6 / M7 "
-          f"(they drop to <= {w['limit']} with the legacy tiles at M5).", "",
-          "| cut | window | bits | util (views as closed) | util (legacy at M5) | util (all tiles M5) | legacy tiles over the window (um) |",
-          "|---|---|---:|---:|---:|---:|---|"]
+          f"(they drop to <= {w['limit']} with the legacy tiles at M5); {w['windows_over_limit_only_because_of_planned_m6_m7']} "
+          f"more are over {w['limit']} only because of tiles the CONTRACT plans on M6 / M7 (clusters): over them the die has its "
+          f"own layer only, which a cut table that counts them as M5-capped does not show.", "",
+          "| cut | window | bits | util (closed views + contract layers) | util (legacy at M5) | util (all tiles M5) | legacy tiles over the window (um) | planned M6+ tiles over the window (um) |",
+          "|---|---|---:|---:|---:|---:|---|---|"]
     for r in w["distinct"]:
         L.append(f"| {r['ax']} = {r['pos']} | {r['win'][0]}..{r['win'][1]} | {r['bits']} | {r['util']} | {r['util_if_legacy_m5']} | "
-                 f"{r['util_all_m5']} | " + (", ".join(f"{k} {v:g}" for k, v in r["legacy_over_window_um"].items()) or "-") + " |")
+                 f"{r['util_all_m5']} | " + (", ".join(f"{k} {v:g}" for k, v in r["legacy_over_window_um"].items()) or "-") + " | "
+                 + (", ".join(f"{k} {v:g}" for k, v in r["planned_over_window_um"].items()) or "-") + " |")
     return "\n".join(L) + "\n"
 
 

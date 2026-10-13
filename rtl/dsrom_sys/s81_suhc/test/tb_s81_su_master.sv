@@ -10,9 +10,16 @@
 // row write counts in early= and fails the run even when the row lands later.  Prints per job its engine start / done (slab cycles) and
 // SUG jobs= done= err= rows= fault= code= cyc= bad_tag= early=  then SUG PASS / SUG FAIL.
 `ifdef SU_HIER
-`define CORE dut.u_ctl.u_core
+`define CORE `SU_CTL.u_core
 `else
 `define CORE dut.u_core
+`endif
+// the control tile's scope: with -DSU_TILE_TOPS (gate s81su_tiles, tools/s81_suhc/su_tile_tops.py) the slab instantiates the
+// routed top dsfd_su_t_ctl (core instance u_c) inside the generated block g_tt0_u_ctl
+`ifdef SU_TILE_TOPS
+`define SU_CTL dut.g_tt0_u_ctl.u_ctl.u_c
+`else
+`define SU_CTL dut.u_ctl
 `endif
 module tb_s81_su_master;
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40;

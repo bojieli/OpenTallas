@@ -101,7 +101,7 @@ library (ot_engc_t_pbc_ff) {
   }
 
   cell ("ot_engc_t_pbc") {
-    area : 3148.000 
+    area : 45710.352 
     is_macro_cell : true;
     pin("ck") {
       direction : input;
@@ -114,7 +114,7 @@ library (ot_engc_t_pbc_ff) {
           values("251.40793");
         }
         cell_fall(scalar) {
-          values("263.02881");
+          values("263.02875");
         }
       }
       timing() {
@@ -124,7 +124,7 @@ library (ot_engc_t_pbc_ff) {
           values("339.17209");
         }
         cell_fall(scalar) {
-          values("357.69458");
+          values("357.69452");
         }
       }
     }
