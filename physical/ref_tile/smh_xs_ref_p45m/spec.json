@@ -121,20 +121,21 @@
   "pd": 0.45,
   "threads": 16,
   "peak_ram_gb": 64,
-  "hold_margin_ns": 0.01,
+  "hold_margin_ns": 0.02,
   "pin_h": "M4"
  },
  "job": {
   "owner": "Claude:el1011-hbm-smmv-b",
   "branch": "claude/el1011-hbm-smt",
-  "tag": "r1",
-  "purpose": "[smmv-b/smt] ot_hbm_accel_smh_xs mirror-safe re-route (PD 0.45): closed p50/p45 recipe (region pins, no io_tcl; exact-io_tcl p50x/p40x/t40 all GRT-0116 at <=347 gcells overflow on the 3,000-pin S face) with H face pins on M4 only -> leaf-1 MX/R180 copy on the asap7 tracks",
+  "tag": "r2",
+  "purpose": "[smmv-b/smt] ot_hbm_accel_smh_xs mirror-safe re-route (PD 0.45): closed p50/p45 recipe (region pins, no io_tcl; exact-io_tcl p50x/p40x/t40 all GRT-0116 at <=347 gcells overflow on the 3,000-pin S face) with H face pins on M4 only -> leaf-1 MX/R180 copy on the asap7 tracks | r2: r1-b749b74bf routed TT +84.86/+91.04 DRC 0 but FF -17.07 (p50m) / -21.09 (p45m): input-port captures rl1->u_rl2 (187 paths) and bk1->u_bkd2 (203) = INPUT hold -> inhold (dont_touch hold buffer at each data input, before GPL); u_leaf r0w->w3 / w3->w3b reg->reg -2.3 ps -> hold margin 0.01 -> 0.02 ns (the hold ECO crashed rc 9 in repairHold)",
   "no_bench_reason": "exactness is gated by the SM tile cluster lockstep bench under OT_SMH_HIER (ec948f1fc, ot-epyc4 w_hier2: 12 ops exact, CG_LOCKSTEP mismatches 0, PASS 8270 cycles) plus its late32/hold0 mutants, carried by the tile-cluster job; this child job re-routes unchanged RTL (xs round 4 be99a7db9: ot_hdly hold-delay landing stage)",
   "views_to": "physical/ref_tile/smh_xs_ref_p45m/views",
   "record_to": "results/rtl/ref_tile/smh_xs_ref_p45m"
  },
  "layer_cap": "M6",
  "layer_cap_grant": "coordinator el1012 (as smh_xs_ref_p40x): the closed xs p50/p45 @0fbf9bc20 recipe (region-grouped pins, M6 routing) with horizontal face pins on M4 ONLY: the closed views carry 362 M4 + 318 M6 face pins, and ASAP7 M4 (y 12/48) and M6 (y 16/64) tracks have no common mirror residue (MX needs y0+H = 8 mod 16 for M4 and 0 mod 16 for M6), so the SM tile cluster's leaf-1 MX/R180 xs cannot sit on track; M6 stays a routing layer only",
+ "inhold": true,
  "params": {},
  "children": [],
  "inter": []
