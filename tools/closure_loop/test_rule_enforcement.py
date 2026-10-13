@@ -141,6 +141,7 @@ class GateClock(unittest.TestCase):
         self.assertEqual(cl.known_clock_sinks(jobs), 48503)
         self.assertEqual(cl.known_clock_sinks(jobs[1:]), 900)
         self.assertIsNone(cl.known_clock_sinks(jobs[2:]))
+        self.assertIsNone(cl.known_clock_sinks([dict(name="d", updated="x", textbook_lint={"lines": ["textbook_lint: PASS t"]})]))
 
     def test_cfg_reaches_the_in_flow_lint(self):
         j = dict(name="t", spec={"ref_tile": True}, clock_rule={"mode": "refuse", "evidence": GOOD, "closed_stands": False})
