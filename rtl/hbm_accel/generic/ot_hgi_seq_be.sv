@@ -122,26 +122,26 @@ module ot_hgi_seq_be #(
 );
 `include "ot_hgi_seq_seam.svh"
     // ---- pins: hold-delay stage + pin flop on every input (as the flat design)
-    wire [18-1:0] cfg_vocab_h; ot_hgi_seq_hdly #(.W(18), .N(2)) u_hdly_cfg_vocab (.a(cfg_vocab), .y(cfg_vocab_h));
-    wire [21-1:0] cfg_ctx_max_h; ot_hgi_seq_hdly #(.W(21), .N(2)) u_hdly_cfg_ctx_max (.a(cfg_ctx_max), .y(cfg_ctx_max_h));
-    wire [1-1:0] hold_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_hold (.a(hold), .y(hold_h));
-    wire [1-1:0] db_v_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_db_v (.a(db_v), .y(db_v_h));
-    wire [18-1:0] db_token_h; ot_hgi_seq_hdly #(.W(18), .N(2)) u_hdly_db_token (.a(db_token), .y(db_token_h));
-    wire [20-1:0] db_pos_h; ot_hgi_seq_hdly #(.W(20), .N(2)) u_hdly_db_pos (.a(db_pos), .y(db_pos_h));
-    wire [32-1:0] db_job_h; ot_hgi_seq_hdly #(.W(32), .N(2)) u_hdly_db_job (.a(db_job), .y(db_job_h));
-    wire [4-1:0] db_gen_h; ot_hgi_seq_hdly #(.W(4), .N(2)) u_hdly_db_gen (.a(db_gen), .y(db_gen_h));
-    wire [2-1:0] db_entry_h; ot_hgi_seq_hdly #(.W(2), .N(2)) u_hdly_db_entry (.a(db_entry), .y(db_entry_h));
-    wire [4-1:0] db_ncol_h; ot_hgi_seq_hdly #(.W(4), .N(2)) u_hdly_db_ncol (.a(db_ncol), .y(db_ncol_h));
-    wire [4-1:0] db_kernel_h; ot_hgi_seq_hdly #(.W(4), .N(2)) u_hdly_db_kernel (.a(db_kernel), .y(db_kernel_h));
-    wire [32-1:0] db_loff_h; ot_hgi_seq_hdly #(.W(32), .N(2)) u_hdly_db_loff (.a(db_loff), .y(db_loff_h));
-    wire [1-1:0] vr_rdy_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_vr_rdy (.a(vr_rdy), .y(vr_rdy_h));
-    wire [1-1:0] vr_rsp_v_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_vr_rsp_v (.a(vr_rsp_v), .y(vr_rsp_v_h));
-    wire [32-1:0] vr_rsp_data_h; ot_hgi_seq_hdly #(.W(32), .N(2)) u_hdly_vr_rsp_data (.a(vr_rsp_data), .y(vr_rsp_data_h));
-    wire [16-1:0] u_rdy_h; ot_hgi_seq_hdly #(.W(16), .N(2)) u_hdly_u_rdy (.a(u_rdy), .y(u_rdy_h));
-    wire [16-1:0] u_done_h; ot_hgi_seq_hdly #(.W(16), .N(2)) u_hdly_u_done (.a(u_done), .y(u_done_h));
-    wire [16-1:0] u_fault_h; ot_hgi_seq_hdly #(.W(16), .N(2)) u_hdly_u_fault (.a(u_fault), .y(u_fault_h));
-    wire [1-1:0] wr_quiet_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_wr_quiet (.a(wr_quiet), .y(wr_quiet_h));
-    wire [1-1:0] cpl_rdy_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_cpl_rdy (.a(cpl_rdy), .y(cpl_rdy_h));
+    wire [18-1:0] cfg_vocab_h; ot_hgi_seq_hd #(.W(18), .N(2)) u_hdly_cfg_vocab (.a(cfg_vocab), .y(cfg_vocab_h));
+    wire [21-1:0] cfg_ctx_max_h; ot_hgi_seq_hd #(.W(21), .N(2)) u_hdly_cfg_ctx_max (.a(cfg_ctx_max), .y(cfg_ctx_max_h));
+    wire [1-1:0] hold_h; ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_hold (.a(hold), .y(hold_h));
+    wire [1-1:0] db_v_h; ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_db_v (.a(db_v), .y(db_v_h));
+    wire [18-1:0] db_token_h; ot_hgi_seq_hd #(.W(18), .N(2)) u_hdly_db_token (.a(db_token), .y(db_token_h));
+    wire [20-1:0] db_pos_h; ot_hgi_seq_hd #(.W(20), .N(2)) u_hdly_db_pos (.a(db_pos), .y(db_pos_h));
+    wire [32-1:0] db_job_h; ot_hgi_seq_hd #(.W(32), .N(2)) u_hdly_db_job (.a(db_job), .y(db_job_h));
+    wire [4-1:0] db_gen_h; ot_hgi_seq_hd #(.W(4), .N(2)) u_hdly_db_gen (.a(db_gen), .y(db_gen_h));
+    wire [2-1:0] db_entry_h; ot_hgi_seq_hd #(.W(2), .N(2)) u_hdly_db_entry (.a(db_entry), .y(db_entry_h));
+    wire [4-1:0] db_ncol_h; ot_hgi_seq_hd #(.W(4), .N(2)) u_hdly_db_ncol (.a(db_ncol), .y(db_ncol_h));
+    wire [4-1:0] db_kernel_h; ot_hgi_seq_hd #(.W(4), .N(2)) u_hdly_db_kernel (.a(db_kernel), .y(db_kernel_h));
+    wire [32-1:0] db_loff_h; ot_hgi_seq_hd #(.W(32), .N(2)) u_hdly_db_loff (.a(db_loff), .y(db_loff_h));
+    wire [1-1:0] vr_rdy_h; ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_vr_rdy (.a(vr_rdy), .y(vr_rdy_h));
+    wire [1-1:0] vr_rsp_v_h; ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_vr_rsp_v (.a(vr_rsp_v), .y(vr_rsp_v_h));
+    wire [32-1:0] vr_rsp_data_h; ot_hgi_seq_hd #(.W(32), .N(2)) u_hdly_vr_rsp_data (.a(vr_rsp_data), .y(vr_rsp_data_h));
+    wire [16-1:0] u_rdy_h; ot_hgi_seq_hd #(.W(16), .N(2)) u_hdly_u_rdy (.a(u_rdy), .y(u_rdy_h));
+    wire [16-1:0] u_done_h; ot_hgi_seq_hd #(.W(16), .N(2)) u_hdly_u_done (.a(u_done), .y(u_done_h));
+    wire [16-1:0] u_fault_h; ot_hgi_seq_hd #(.W(16), .N(2)) u_hdly_u_fault (.a(u_fault), .y(u_fault_h));
+    wire [1-1:0] wr_quiet_h; ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_wr_quiet (.a(wr_quiet), .y(wr_quiet_h));
+    wire [1-1:0] cpl_rdy_h; ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_cpl_rdy (.a(cpl_rdy), .y(cpl_rdy_h));
     reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg hold_r;
     reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r;
     // ---- reset: this child's OWN release synchroniser, three kept copies (boundary, FSM / queue control, outst)

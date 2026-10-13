@@ -82,11 +82,11 @@ module ot_hgi_seq_fe #(
 );
 `include "ot_hgi_seq_seam.svh"
     // ---- pins: hold-delay stage + pin flop on every input (as the flat design)
-    wire [160-1:0] md_d_h; ot_hgi_seq_hdly #(.W(160), .N(2)) u_hdly_md_d (.a(md_d), .y(md_d_h));
-    wire [11*32-1:0] md_k_h; ot_hgi_seq_hdly #(.W(11*32), .N(2)) u_hdly_md_k (.a(md_k), .y(md_k_h));
-    wire [1-1:0] f_req_rdy_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_f_req_rdy (.a(f_req_rdy), .y(f_req_rdy_h));
-    wire [1-1:0] f_rsp_v_h; ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_f_rsp_v (.a(f_rsp_v), .y(f_rsp_v_h));
-    wire [256-1:0] f_rsp_data_h; ot_hgi_seq_hdly #(.W(256), .N(2)) u_hdly_f_rsp_data (.a(f_rsp_data), .y(f_rsp_data_h));
+    wire [160-1:0] md_d_h; ot_hgi_seq_hd #(.W(160), .N(2)) u_hdly_md_d (.a(md_d), .y(md_d_h));
+    wire [11*32-1:0] md_k_h; ot_hgi_seq_hd #(.W(11*32), .N(2)) u_hdly_md_k (.a(md_k), .y(md_k_h));
+    wire [1-1:0] f_req_rdy_h; ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_f_req_rdy (.a(f_req_rdy), .y(f_req_rdy_h));
+    wire [1-1:0] f_rsp_v_h; ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_f_rsp_v (.a(f_rsp_v), .y(f_rsp_v_h));
+    wire [256-1:0] f_rsp_data_h; ot_hgi_seq_hd #(.W(256), .N(2)) u_hdly_f_rsp_data (.a(f_rsp_data), .y(f_rsp_data_h));
     reg [159:0] md_d_r; reg [11*32-1:0] md_k_r; reg f_rsp_v_r; reg [255:0] f_rsp_data_r;
     // ---- reset: this child's OWN release synchroniser, two kept copies (boundary / fetch state, parser)
     (* keep = 1 *) reg [1:0] rs_q, rs_f;
@@ -132,13 +132,13 @@ module ot_hgi_seq_fe #(
         end else begin : g_64k                                  // bank = word pointer bit 11 (sector bit 10)
             wire [255:0] q0, q1; reg rb_q, rb_qq; reg [255:0] q0_r, q1_r, wd0_q, wd1_q; reg we0_q, we1_q; reg [9:0] wa0_q, wa1_q;
             wire [255:0] wd0_d, wd1_d;     // v2.3: hold-delay stage flop -> macro write data (FF hold -4.2 ps)
-            ot_hgi_seq_hdly #(.W(256), .N(2)) u_hdly_wd0 (.a(wd0_q), .y(wd0_d));
-            ot_hgi_seq_hdly #(.W(256), .N(2)) u_hdly_wd1 (.a(wd1_q), .y(wd1_d));
+            ot_hgi_seq_hd #(.W(256), .N(2)) u_hdly_wd0 (.a(wd0_q), .y(wd0_d));
+            ot_hgi_seq_hd #(.W(256), .N(2)) u_hdly_wd1 (.a(wd1_q), .y(wd1_d));
             // v2.4 (route 8447139d1 FF hold: wd1_q -> u_ring1/wd_in -15.5, we1_q -> w_ce_in -7.6): two kept HB4 stages on
             // the macro write data / enables (flop -> macro hold, the macro's clock pin sits late in the tree)
             wire we0_d, we1_d;
-            ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_we0 (.a(we0_q), .y(we0_d));
-            ot_hgi_seq_hdly #(.W(1), .N(2)) u_hdly_we1 (.a(we1_q), .y(we1_d));
+            ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_we0 (.a(we0_q), .y(we0_d));
+            ot_hgi_seq_hd #(.W(1), .N(2)) u_hdly_we1 (.a(we1_q), .y(we1_d));
             always @(posedge clk) begin
                 rb_q <= rd_ptr[11]; rb_qq <= rb_q;
                 if (!rb_q) q0_r <= q0;                          // the bank read on the previous edge
@@ -204,6 +204,13 @@ module ot_hgi_seq_fe #(
         be_jl_entry_r <= be_jl_entry; be_jl_kernel_r <= be_jl_kernel; be_jl_loff_r <= be_jl_loff; be_jl_pos_r <= be_jl_pos;
         be_lv_cnt_r <= be_lv_cnt;
     end
+    // returned queue credit (be_qpop, two seam flops after the BE's pop)
+    reg qpop_sk;
+`ifdef OT_HGI_SEQ_MUT_SEAM_QPOP
+    wire cred_inc = be_qpop_r && !qpop_sk;                // NEGATIVE CONTROL: every 2nd returned credit dropped
+`else
+    wire cred_inc = be_qpop_r;
+`endif
     // ---- job load: the image address (flat S_IDLE / S_DB / S_DB2 arithmetic, run as a 3-edge chain after the jl RX)
     (* keep = 1 *) reg run_f;         // the FE's run flag (set on be_js_r, cleared on be_stop_r)
     reg [1:0] db_entry_q; reg pos0;      // the job's entry; pos == 0 (the record predicates)
@@ -301,7 +308,7 @@ module ot_hgi_seq_fe #(
     reg [QB:0] q_cred; reg [QB-1:0] qt;
     // ---- FE control (combinational from flops)
     wire        job_start = be_js_r;     // the BE's job start, two seam flops later
-    wire        fe_hcap  = run_f && fs == F_H && fq_th[0] && settle == 2'd0 && au_tbl_ok_r && q_cred != {(QB+1){1'b0}};
+    wire        fe_hcap  = run_f && fs == F_H && fq_th[0] && settle == 2'd0 && au_tbl_ok_r && (q_cred != {(QB+1){1'b0}} || cred_inc);   // a credit returning this cycle is usable now
     wire        fe_halloc = fe_hcap && hw_rc != RC_DISC;               // dispatch / END / TOKX / header fault entry
     // v2.3 (route 905100ec5 limiter hw -> e_hdr, TT -187): the header's queue entry is written the cycle AFTER the
     // header pop from registered state (h, hq_kind, hq_rdy0) under a per-entry registered enable (ha_e) -- the
@@ -483,12 +490,6 @@ module ot_hgi_seq_fe #(
     localparam [QB:0] CRED0 = QD + 1;                     // NEGATIVE CONTROL: one credit too many (queue overrun)
 `else
     localparam [QB:0] CRED0 = QD;
-`endif
-    reg qpop_sk;
-`ifdef OT_HGI_SEQ_MUT_SEAM_QPOP
-    wire cred_inc = be_qpop_r && !qpop_sk;                // NEGATIVE CONTROL: every 2nd returned credit dropped
-`else
-    wire cred_inc = be_qpop_r;
 `endif
     wire cred_dec = fe_halloc || fe_aalloc;               // one credit an alloc sent (header alloc, FENCE / LOOP-from-VM)
     always @(posedge clk or negedge rn_f)

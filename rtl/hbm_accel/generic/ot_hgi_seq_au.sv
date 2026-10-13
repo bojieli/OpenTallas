@@ -79,7 +79,7 @@ module ot_hgi_seq_au #(
 );
 `include "ot_hgi_seq_seam.svh"
     // ---- pin: rank (hold-delay stage + pin flop, as the flat design)
-    wire [8-1:0] rank_h; ot_hgi_seq_hdly #(.W(8), .N(2)) u_hdly_rank (.a(rank), .y(rank_h));
+    wire [8-1:0] rank_h; ot_hgi_seq_hd #(.W(8), .N(2)) u_hdly_rank (.a(rank), .y(rank_h));
     reg [7:0] rank_r;
     always @(posedge clk) rank_r <= rank_h;
     // ---- reset: this child's OWN release synchroniser (R3 / R4)
@@ -150,7 +150,7 @@ module ot_hgi_seq_au #(
     // (tbc declared above)             // table build counter: slot tbc[5:3], capture at tbc[2:0] == 7; done at 64
     wire [2:0] h_slot = tbc[5:3];
     reg [20:0] ps, p1, q_p1, q_n2, q_ns1, q_ns2, q_win, q_sc1, q_sc2, q_scr, q_ps;
-    wire [19:0] pos_d; ot_hgi_seq_hdly #(.W(20), .N(2)) u_hdly_pos (.a(pos), .y(pos_d));   // v2.3: FF hold -8.6 ps pos -> p1
+    wire [19:0] pos_d; ot_hgi_seq_hd #(.W(20), .N(2)) u_hdly_pos (.a(pos), .y(pos_d));   // v2.3: FF hold -8.6 ps pos -> p1
     reg [20:0] q_sc1b, q_psb;
     reg [31:0] dsq [16:40];
     wire [28:0] rp0 = rank_r[0] ? {8'd0, q_sc1}       : 29'd0, rp1 = rank_r[1] ? {7'd0, q_sc1, 1'b0} : 29'd0,
