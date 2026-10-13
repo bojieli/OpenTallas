@@ -90,6 +90,10 @@ module tb_hgi_su_prod;
 `define MUT_V 0
 `endif
     ot_hgi_sv_unit #(.N(`N), .M(`M), .LV(`LV), .LWB(`LWB), .LQ(`LQ), .MUT_V(`MUT_V)
+`ifdef EP0
+        , .EP0(`EP0)
+`endif
+       
 `else
     ot_hgi_su_unit #(.N(`N), .M(`M), .LV(`LV), .LWB(`LWB), .GLU(GL), .MUT_DIRTY(MD)
 `endif

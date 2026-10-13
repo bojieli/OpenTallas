@@ -11,11 +11,12 @@ VL=${VERILATOR:-$( [ -x "$HOME/.local/opentallas-tools/verilator-5.050/bin/veril
 mkdir -p "$OUT"
 [ -f "$OUT/vec/su_sizes.svh" ] || python3 "$ROOT/tools/hgi_unitrate/su_prod_vec.py" --out "$OUT/vec" ${VEC:-}
 [ -n "${MUTV:-}" ] && SV=1; [ -n "${SV:-}" ] && WIDE=1
-TAG="n${N:-64}${SV:+_sv}${MUTV:+_mutv$MUTV}${UNIT:+_$UNIT}${WIDE:+_wide}${WIDE2:+_x}${MUTX:+_mutx$MUTX}${SHARED:+_shared}${CHAIN:+_chain}${ARBMUT:+_arbmut}${RLY:+_rly$RLY}${LQ:+_lq$LQ}${LRLAT:+_lat$LRLAT}${MUTRV:+_mutrv$MUTRV}${MUT:+_$MUT}${MUTW:+_mutw$MUTW}${SLICES:+_sl$SLICES}"
+TAG="n${N:-64}${SV:+_sv}${MUTV:+_mutv$MUTV}${EP0:+_ep$EP0}${UNIT:+_$UNIT}${WIDE:+_wide}${WIDE2:+_x}${MUTX:+_mutx$MUTX}${SHARED:+_shared}${CHAIN:+_chain}${ARBMUT:+_arbmut}${RLY:+_rly$RLY}${LQ:+_lq$LQ}${LRLAT:+_lat$LRLAT}${MUTRV:+_mutrv$MUTRV}${MUT:+_$MUT}${MUTW:+_mutw$MUTW}${SLICES:+_sl$SLICES}"
 D="-DN=${N:-64} -DM=${M:-64} -DLV=${LV:-7} -DLWB=${LWB:-18}"
 [ -n "${SLICES:-}" ] && D="$D -DOT_CTLW_SLICES=$SLICES"   # el1011-hbm-sfu: ctlw as 4 hardened 8-lane slices
 [ -f "$OUT/vec/su_aux.svh" ] && D="$D -DSU_AUX"
 SVF=""; [ -n "${SV:-}" ] && { D="$D -DSV"; SVF="${SVFILE:-rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv}"; }; [ -n "${MUTV:-}" ] && D="$D -DMUT_V=$MUTV"
+[ -n "${EP0:-}" ] && D="$D -DEP0=$EP0"   # ot_hgi_sv_unit: frame epoch after a scrub (14: the in-place sink wraps 15 -> 1)
 [ "${UNIT:-su}" = sfu ] && D="$D -DSFU"; [ -n "${WIDE:-}" ] && D="$D -DWIDE"; [ -n "${WIDE2:-}" ] && D="$D -DWIDE -DWIDE2"; [ -n "${MUTX:-}" ] && D="$D -DMUT_X=$MUTX"; [ -n "${XDBG:-}" ] && D="$D -DXDBG -DWDOG=20000"; [ -n "${SHARED:-}" ] && D="$D -DSHARED"; [ -n "${CHAIN:-}" ] && D="$D -DSHARED -DCHAIN"; [ -n "${ARBMUT:-}" ] && D="$D -DARBMUT"; [ -n "${RLY:-}" ] && D="$D -DRLY=$RLY"; [ -n "${LQ:-}" ] && D="$D -DLQ=$LQ"; [ -n "${LRLAT:-}" ] && D="$D -DLRLAT=$LRLAT"; [ -n "${MUTRV:-}" ] && D="$D -DMUT_RV=$MUTRV"; [ -n "${MUT:-}" ] && D="$D -D$MUT"; [ -n "${MUTW:-}" ] && D="$D -DMUT_W=$MUTW"
 L="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv
    rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv

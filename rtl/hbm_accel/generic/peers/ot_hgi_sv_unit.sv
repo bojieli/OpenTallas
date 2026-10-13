@@ -110,7 +110,7 @@ endmodule
 //   wrq / ldr flop (edge 4).  Status flops show a load from edge 2 on (done cleared, prefix 0).
 //   Every pin is a flop here; payload flops (wrr, lsw_d, ldr_d, wwq data) have no reset.
 // =====================================================================================================================
-module ot_hgi_sv_lane2 #(parameter integer L0 = 0, LQ = 10, NSJ = 6, MUT_V = 0) (
+module ot_hgi_sv_lane2 #(parameter integer L0 = 0, LQ = 8, NSJ = 6, MUT_V = 0) (
   input wire clk, input wire rst_n,
   output wire [2*16-1:0] wrq, input wire [1:0] wrq_cr, input wire [2*257-1:0] wrr,
   output wire [2*280-1:0] wwq, input wire [1:0] wwq_cr, input wire [1:0] wwq_done,
@@ -375,7 +375,7 @@ endmodule
 // ot_hgi_sv_ctl  -- HEAD controller of the SU.VOP redesign (el1013-hbm-redesign-suvop, DESIGN.md section 4)
 //
 // Record life (ring of NS = 8 slots, ring order = program order):
-//   take (adapter op) -> DECODE (serial span multiply, 2-edge classify against the REGION TABLE, in-place decision,
+//   take (adapter op) -> DECODE (3-edge span multiply, 2-edge classify against the REGION TABLE, in-place decision,
 //   allocation walk O, R, A..D) -> word FIFO (wl = head, q1, the decode register w is the third place) ->
 //   STAGE jobs (job queue -> NSJ leaf stage slots, lookahead LA = 2 records ahead of RUN) -> RUN (one record in the
 //   vec; streamed x_cnt credits) -> DRAIN O (2 leaf drain slots, live frontier) / DRAIN R (packet client) -> RETIRE.
@@ -422,13 +422,13 @@ endmodule
 //    job is busy and the blanked shome / dhome is seen, 5-edge cool-down before the next request.
 //
 // DEVIATIONS from DESIGN.md (stated, see the report):
-//  D1 span multiply is SERIAL (one shared 4 x (8 x 24) pipeline, 9 edges for the 6 regions) instead of 6 parallel
-//     ones in 4 edges: -1.5k flops, the decode is never on the service path (it runs ahead of RUN).
+//  D1 (closed 10-13) span multiply: 6 parallel 4 x (8 x 24) pipelines, 3 edges (+0.8k flops over the serial form).
 //  D2 the word FIFO is {wl, q1} + the decode register w (three decoded words: RUN + 2 ahead = the stage lookahead).
 //  D3 allocation order is O, R, then A..D (sink table entries are mandatory and are taken first); every region
 //     takes two edges (decide / relocate).
 //  D4 SRC table entries only for staged sources in a dedicated frame (the brief's "optional" form).
-//  D5 an in-place sink is refused when the frame epoch is 15 or when another source of the record overlaps the entry.
+//  D5 an in-place sink is refused when another source of the record overlaps the entry (epoch 15 wraps to 1 in place:
+//     the frame is closed to allocation and scrubbed when freed).
 //  D6 RSINK forwards need a dense R (rso == 1 or one result).
 // KNOWN GAPS (record fault): STREAM records, a_ind != 0, a region that does not fit one frame at its lo[7:0]
 //  offset, R span > 56 words, any operand word >= 2^18, a nop record while the ring holds 7 entries.
@@ -441,7 +441,8 @@ module ot_hgi_sv_ctl #(
     parameter integer PAYLOAD_RESET = 1,
     parameter integer GLU = 0,
     parameter integer SLB = 16,
-    parameter integer LQ = 10,
+    parameter integer LQ = 8,              // ONE constant = ot_hgi_vm_unit LQ (VM lane queue depth, power of two) = the credits a lane holds
+    parameter integer EP0 = 0,             // frame epoch after a scrub (bench: 14 makes the chain's in-place sink wrap 15 -> 1)
     parameter integer MUT_V = 0,          // 3 in-place gate off, 4 forward reader takes no pin, 6 scalar bypass slot ^ 1
     parameter integer NSJ = 6
 ) (
@@ -604,7 +605,7 @@ module ot_hgi_sv_ctl #(
     reg [13:0] dfr [0:1];
     reg [NSJ-1:0] ssel; reg dsel;
     // ---- frames
-    reg [1:0] fr_st [0:3]; reg [3:0] fr_ep [0:3]; reg [5:0] fr_pin [0:3]; reg [3:0] sc_ld;
+    reg [1:0] fr_st [0:3]; reg [3:0] fr_ep [0:3]; reg [5:0] fr_pin [0:3]; reg [3:0] sc_ld; reg [3:0] fr_wrap;
     // ---- faults
     reg hfault, dfault, rnfault, bkfault;
     // ---- events
@@ -661,7 +662,17 @@ module ot_hgi_sv_ctl #(
     localparam [3:0] D_IDLE = 4'd0, D_MUL = 4'd1, D_CL0 = 4'd2, D_CL1 = 4'd3, D_SK0 = 4'd4, D_SK1 = 4'd5, D_AA = 4'd6,
                      D_AB = 4'd7, D_HOLD = 4'd8, D_FAULT = 4'd9;
     reg [3:0] dstt; reg [3:0] mph; reg [2:0] rk; reg [3:0] stallc;
-    reg [15:0] pa, pc; reg [23:0] pb, pd; reg [31:0] pq0, pq1, pq2, pq3; reg [39:0] pacc;
+    // span multiply: 6 regions in parallel, 3 edges (partial products, sum, extent); the (n - 1) factors are
+    // registered at take, so stage 1 is a 3:1 select and the 8 x 24 products only
+    reg [15:0] no_m1, ni_m1, nih_m1;
+    reg [31:0] pq0 [0:5]; reg [31:0] pq1 [0:5]; reg [31:0] pq2 [0:5]; reg [31:0] pq3 [0:5]; reg [39:0] pacc [0:5];
+    reg [15:0] m_a [0:5]; reg [15:0] m_c [0:5]; reg [18:0] mhi [0:5]; reg [5:0] m_badv;
+    always @* for (integer k = 0; k < 6; k = k + 1) begin
+        m_a[k] = (k == 5 && (redwhole || redtree)) ? 16'd0 : no_m1;
+        m_c[k] = (k == 5) ? 16'd0 : (bhalf && (k == 1 || k == 3)) ? nih_m1 : ni_m1;
+        mhi[k] = {1'b0, c_base[k][17:0]} + {1'b0, pacc[k][17:0]};
+        m_badv[k] = c_used[k] && (c_base[k][23:18] != 6'd0 || pacc[k][39:18] != 22'd0 || mhi[k][18]);
+    end
     reg [17:0] lo [0:5]; reg [17:0] hi [0:5]; reg [5:0] rv;
     reg [7:0] h_in [0:3]; reg [7:0] h_eq [0:3]; reg [7:0] h_ov [0:3]; reg [7:0] s_ov [0:1]; reg [7:0] s_ovs [0:1];
     reg [7:0] o_eq; reg [3:0] sv_s;
@@ -745,7 +756,14 @@ module ot_hgi_sv_ctl #(
         for (integer q = 0; q < 4; q = q + 1)
             if (rv[q] && !f_ipc[q] && ((f_hit[q] && f_e[q] == ip_e) || h_ov[q][ip_e])) ip_bad = 1'b1;
     end
-    wire ip_on_n = ip_c && !ip_bad && tb_v[ip_e] && fr_ep[tb_lb[ip_e][17:16]] != 4'd15;
+    wire ip_on_n = ip_c && !ip_bad && tb_v[ip_e];
+    // in-place epoch: +1, and 15 WRAPS to 1.  Safe: the in-place span was written whole at the previous epoch by its
+    // dense owner (stored epoch != the new one in every sector of the span), the drain reads only behind the write
+    // frontier, and the frame takes no further allocation (an open bump frame is closed at the wrap) and is
+    // scrubbed when it is freed (fr_wrap), so no sector outside the span is ever read at a wrapped epoch.
+    wire [1:0] ip_f = tb_lb[ip_e][17:16];
+    wire       ip_wrap = fr_ep[ip_f] == 4'd15;
+    wire [3:0] ip_ep = ip_wrap ? 4'd1 : fr_ep[ip_f] + 4'd1;
     // first-hit one-hots (D_CL1)
     reg [7:0] fh [0:3]; reg [7:0] tb_osd;
     always @* begin
@@ -754,9 +772,6 @@ module ot_hgi_sv_ctl #(
         end
         for (integer e = 0; e < 8; e = e + 1) tb_osd[e] = tb_kind[e] == K_OS && tb_dense[e];
     end
-    wire [18:0] mhi = {1'b0, c_base[mph[2:0] - 3'd3][17:0]} + {1'b0, pacc[17:0]};
-    wire [2:0]  mk3 = mph[2:0] - 3'd3;                                            // region whose extent lands (mph 3..8)
-    wire        m_bad = c_used[mk3] && (c_base[mk3][23:18] != 6'd0 || pacc[39:18] != 22'd0 || mhi[18]);
     // releases
     wire [11:0] relc = sl_cpin[rp];
     wire [3:0]  relp = sl_rpin[rp];
@@ -769,7 +784,7 @@ module ot_hgi_sv_ctl #(
             tb_v <= 8'd0; tb_fok <= 8'd0; tb_live <= 8'd0; tb_dense <= 8'd0; tb_stg <= 8'd0;
             open_v <= 1'b0; opf <= 2'd0; bp <= 17'd0; rf_own <= 4'd0;
             for (integer f = 0; f < 4; f = f + 1) begin
-                fr_st[f] <= F_SCRUB; fr_ep[f] <= 4'd0; fr_pin[f] <= 6'd0; rf_pin[f] <= 3'd0;
+                fr_st[f] <= F_SCRUB; fr_ep[f] <= 4'd0; fr_wrap[f] <= 1'b0; fr_pin[f] <= 6'd0; rf_pin[f] <= 3'd0;
             end
             sl_ov <= 8'd0; sl_odense <= 8'd0; sl_olive <= 8'd0; sl_oovs <= 8'd0; sl_rv <= 8'd0; sl_opin <= 8'd0;
             ip_on <= 1'b0; ip_c <= 1'b0; f_used <= 8'd0; f_hit <= 4'd0; f_ipc <= 4'd0; rv <= 6'd0; a_stg <= 1'b0; a_big <= 1'b0;
@@ -783,11 +798,11 @@ module ot_hgi_sv_ctl #(
                 dec = (ev_cd ? {3'd0, relc[3*f +: 3]} : 6'd0) + ((ev_ret && sl_opin[rh] && sl_olsec[rh][14:13] == 2'(f)) ? 6'd1 : 6'd0);
                 fr_pin[f] <= fr_pin[f] + {5'd0, inc} - dec;
                 if (fr_st[f] == F_HELD && fr_pin[f] == 6'd0 && !inc) begin       // nobody left: FREE, its entries die
-                    fr_st[f] <= (fr_ep[f] == 4'd15) ? F_SCRUB : F_FREE;
+                    fr_st[f] <= (fr_ep[f] == 4'd15 || fr_wrap[f]) ? F_SCRUB : F_FREE;
                     for (integer e = 0; e < 8; e = e + 1)
                         if (tb_kind[e] != K_RS && tb_lb[e][17:16] == 2'(f)) tb_v[e] <= 1'b0;
                 end
-                if (ev_scd && scd_f == 2'(f)) begin fr_st[f] <= F_FREE; fr_ep[f] <= 4'd0; end
+                if (ev_scd && scd_f == 2'(f)) begin fr_st[f] <= F_FREE; fr_ep[f] <= 4'(EP0); fr_wrap[f] <= 1'b0; end
                 // rfile slot f: reader pins released at compute done, the owner at retire
                 if (ev_cd && relp[f]) rf_pin[f] <= rf_pin[f] - 3'd1;
                 if (ev_ret && sl_rv[rh] && sl_rslot[rh] == 2'(f)) rf_own[f] <= 1'b0;
@@ -804,26 +819,26 @@ module ot_hgi_sv_ctl #(
                 D_IDLE: begin
                     op_rdy_r <= (cnt <= 4'd4) && !hfault && !take;
                     if (take) begin
-                        w <= op_w[627:0]; dslot <= rt; mph <= 4'd0; f_used <= 8'd0; ip_on <= 1'b0; stallc <= 4'd0;
+                        w <= op_w[627:0]; dslot <= rt; mph <= 4'd0;
+                        no_m1 <= op_w[0 +: 16] - 16'd1; ni_m1 <= op_w[16 +: 16] - 16'd1; nih_m1 <= ((op_w[16 +: 16] + 16'd1) >> 1) - 16'd1; f_used <= 8'd0; ip_on <= 1'b0; stallc <= 4'd0;
                         sl_ov[rt] <= 1'b0; sl_rv[rt] <= 1'b0; sl_opin[rt] <= 1'b0; sl_oovs[rt] <= 1'b0; sl_odense[rt] <= 1'b0;
                         sl_olive[rt] <= 1'b0; sl_cpin[rt] <= 12'd0; sl_rpin[rt] <= 4'd0;
                         if (strm != 2'd0 || op_w[136 +: 2] != 2'd0) begin dfault <= 1'b1; dstt <= D_FAULT; end   // known gaps
                         else dstt <= D_MUL;
                     end
                 end
-                // SPAN: (nr - 1) so + (ni - 1) si, one region an edge through one 4 x (8 x 24) pipeline (9 edges)
+                // SPAN: (nr - 1) so + (ni - 1) si, all 6 regions at once: products, sum, extent (3 edges)
                 D_MUL: begin
-                    if (mph <= 4'd5) begin
-                        pa <= c_nr[mph[2:0]] - 16'd1; pb <= c_so[mph[2:0]]; pc <= c_ni[mph[2:0]] - 16'd1; pd <= c_si[mph[2:0]];
+                    for (integer k = 0; k < 6; k = k + 1) begin
+                        pq0[k] <= {24'd0, m_a[k][7:0]} * {8'd0, c_so[k]}; pq1[k] <= {24'd0, m_a[k][15:8]} * {8'd0, c_so[k]};
+                        pq2[k] <= {24'd0, m_c[k][7:0]} * {8'd0, c_si[k]}; pq3[k] <= {24'd0, m_c[k][15:8]} * {8'd0, c_si[k]};
+                        pacc[k] <= {8'd0, pq0[k]} + {pq1[k], 8'd0} + {8'd0, pq2[k]} + {pq3[k], 8'd0};
                     end
-                    pq0 <= {24'd0, pa[7:0]} * {8'd0, pb}; pq1 <= {24'd0, pa[15:8]} * {8'd0, pb};
-                    pq2 <= {24'd0, pc[7:0]} * {8'd0, pd}; pq3 <= {24'd0, pc[15:8]} * {8'd0, pd};
-                    pacc <= {8'd0, pq0} + {pq1, 8'd0} + {8'd0, pq2} + {pq3, 8'd0};
-                    if (mph >= 4'd3) begin
-                        if (mk3 == 3'd0 && cpair) begin lo[0] <= c_base[0][17:0] & ~18'd1; hi[0] <= mhi[17:0] | 18'd1; end
-                        else begin lo[mk3] <= c_base[mk3][17:0]; hi[mk3] <= mhi[17:0]; end
-                        if (m_bad) begin dfault <= 1'b1; dstt <= D_FAULT; end     // an operand word >= 2^18
-                        else if (mph == 4'd8) begin dstt <= D_CL0; rv <= c_used; end
+                    if (mph == 4'd2) begin
+                        for (integer k = 0; k < 6; k = k + 1) begin lo[k] <= c_base[k][17:0]; hi[k] <= mhi[k][17:0]; end
+                        if (cpair) begin lo[0] <= c_base[0][17:0] & ~18'd1; hi[0] <= mhi[0][17:0] | 18'd1; end
+                        if (m_badv != 6'd0) begin dfault <= 1'b1; dstt <= D_FAULT; end   // an operand word >= 2^18
+                        else begin dstt <= D_CL0; rv <= c_used; end
                     end
                     mph <= mph + 4'd1;
                 end
@@ -883,8 +898,11 @@ module ot_hgi_sv_ctl #(
                         dstt <= D_AB; stallc <= 4'd0;
                         a_stg <= is_src && !fw_ok; a_big <= a_large; a_lo <= cur_lo;
                         if (ipnow) begin                                           // IN PLACE: e's local words, a new epoch
-                            a_lb <= tb_lb[ip_e]; a_ep <= fr_ep[tb_lb[ip_e][17:16]] + 4'd1;
-                            fr_ep[tb_lb[ip_e][17:16]] <= fr_ep[tb_lb[ip_e][17:16]] + 4'd1;
+                            a_lb <= tb_lb[ip_e]; a_ep <= ip_ep; fr_ep[ip_f] <= ip_ep;
+                            if (ip_wrap) begin
+                                fr_wrap[ip_f] <= 1'b1;
+                                if (open_v && opf == ip_f) begin fr_st[ip_f] <= F_HELD; open_v <= 1'b0; end
+                            end
                             tb_own[ip_e] <= dslot; tb_live[ip_e] <= 1'b1; tb_fok[ip_e] <= 1'b1;
                         end else if (rk == 3'd5) begin                             // R: an rfile slot, lb == lo (mod 8)
                             a_lb <= {1'b1, 10'd0, rfs[1:0], 3'd0, cur_lo[2:0]};
@@ -1352,7 +1370,7 @@ module ot_hgi_sv_ctl #(
                 if (aa_go) $display("SV %0d  alloc slot %0d rk %0d %s lb %0d frame %0d ep %0d vic %0d rfs %0d bp %0d", dg_cyc, dslot, rk,
                     ipnow ? "INPLACE" : rk == 3'd5 ? "RFILE" : fw_ok ? (fw_rs ? "BYPASS" : "FWD") : is_src ? "STAGE" : "SINK",
                     ipnow ? tb_lb[ip_e] : rk == 3'd5 ? {1'b1, 10'd0, rfs[1:0], 3'd0, cur_lo[2:0]} : fw_ok ? tb_lb[fe] : ra_lb,
-                    d_pin_f, ipnow ? fr_ep[tb_lb[ip_e][17:16]] + 4'd1 : ra_ep, vic, rfs, bp);
+                    d_pin_f, ipnow ? ip_ep : ra_ep, vic, rfs, bp);
                 if (ev_dd) $display("SV %0d decoded slot %0d", dg_cyc, dslot);
                 if (ld_st) $display("SV %0d load STAGE leaf slot %0d rec slot %0d vsec %0d n %0d lsec %0d strm %0d", dg_cyc, fj[2:0], jh_own,
                     jq_vsec[jh], jq_n[jh], jq_lsec[jh], jq_strm[jh]);
@@ -1443,7 +1461,8 @@ module ot_hgi_sv_unit #(
     parameter integer PAYLOAD_RESET = 1,
     parameter integer GLU = 0,
     parameter integer SLB = 16,
-    parameter integer LQ = 10,
+    parameter integer LQ = 8,              // ONE constant = ot_hgi_vm_unit LQ (VM lane queue depth, power of two) = the credits a lane holds
+    parameter integer EP0 = 0,             // frame epoch after a scrub (bench: 14 makes the chain's in-place sink wrap 15 -> 1)
     parameter integer MUT_V = 0
 ) (
     input  wire          clk,
@@ -1478,6 +1497,9 @@ module ot_hgi_sv_unit #(
     localparam integer AW = 24, NR = N / 8, NSJ = 6, CW = 83 + NSJ, SW = NSJ + 33;
     initial if (LWB != 18) begin $display("ot_hgi_sv_unit: LWB must be 18 (4 frames of 2^16 words + rfile at a[18])"); $finish; end
     wire go, ready, idle, vfault, ofault, ro; wire [669:0] wl;
+    generate if ((1 << $clog2(LQ)) != LQ) begin : g_lq_must_be_pow2
+        ot_hgi_sv_unit_LQ_must_equal_the_VM_lane_queue_depth_a_power_of_two u_trap ();
+    end endgenerate
     wire [7:0] x_seq, x_dseq; wire [15:0] x_cnt;
     wire [15:0] wep; wire [3:0] rf_clr; wire rf_rv, rf_rrv; wire [4:0] rf_rsec; wire [255:0] rf_rd; wire [7:0] rf_rm;
     wire lm_bank_err; wire [15:0] walks;
@@ -1489,7 +1511,7 @@ module ot_hgi_sv_unit #(
     wire [N*32-1:0] vm_wdata, kv_wdata; wire [NR-1:0] res_we; wire [NR*AW-1:0] res_addr; wire [NR*32-1:0] res_data;
     wire [7:0] cr_seq, cr_dseq, cr_rseq; wire [15:0] cr_cnt, emitted; wire de, dr, ds; wire [7:0] es, rsq, ss;
 
-    ot_hgi_sv_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .PAYLOAD_RESET(PAYLOAD_RESET), .GLU(GLU), .SLB(SLB), .LQ(LQ),
+    ot_hgi_sv_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .PAYLOAD_RESET(PAYLOAD_RESET), .GLU(GLU), .SLB(SLB), .LQ(LQ), .EP0(EP0),
                     .MUT_V(MUT_V), .NSJ(NSJ)) u_ctl (
         .clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a),
         .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o), .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a),
