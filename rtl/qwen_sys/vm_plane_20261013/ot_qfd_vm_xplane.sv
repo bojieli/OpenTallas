@@ -29,15 +29,24 @@ module ot_qfd_vm_xrelay_t #(
     input  wire [W-1:0] d,
     output reg  [W-1:0] q
 );
-    wire me;
-    generate if (MEREG != 0) begin : g_mr
-        (* keep = "true", dont_touch = "true" *) reg me_r;
-        always @(posedge clk) me_r <= me_e;
-        assign me = me_r;
-    end else begin : g_mp
-        assign me = me_e;
+    // PHYS 2026-10-13: the me register is REPLICATED, one copy per MEG = 128 data flops (every copy samples the same
+    // me_e pin on the same edge, so the leaf's port and cycle behaviour are unchanged).  One copy drove all W enables.
+    localparam integer MEG = 128;
+    localparam integer NME = (W + MEG - 1) / MEG;
+    genvar g;
+    generate for (g = 0; g < NME; g = g + 1) begin : g_me
+        localparam integer LO = g * MEG;
+        localparam integer N = (W - LO < MEG) ? (W - LO) : MEG;
+        wire me;
+        if (MEREG != 0) begin : g_mr
+            (* keep = "true", dont_touch = "true" *) reg me_r;
+            always @(posedge clk) me_r <= me_e;
+            assign me = me_r;
+        end else begin : g_mp
+            assign me = me_e;
+        end
+        always @(posedge clk) if (me || MUT == 1) q[LO +: N] <= d[LO +: N];
     end endgenerate
-    always @(posedge clk) if (me || MUT == 1) q <= d;
 endmodule
 
 module ot_qfd_vm_xplane_t #(
@@ -55,30 +64,78 @@ module ot_qfd_vm_xplane_t #(
     localparam integer LNRB = $clog2(NRB);
     localparam integer BEAT = (NRB - 1) * 16;
     localparam integer NVW = $clog2(BEAT + 1);
-    wire me;
-    generate if (MEREG != 0) begin : g_mr
-        (* keep = "true", dont_touch = "true" *) reg me_r;
-        always @(posedge clk) me_r <= me_e;
-        assign me = me_r;
-    end else begin : g_mp
-        assign me = me_e;
-    end endgenerate
+    // PHYS 2026-10-13 (pre-route gate: one me register drove 7,331 loads): the me register is REPLICATED, one copy
+    // per register rank (pf / r1 / r2 / q) and per group of GB = 8 banks (128 flops), plus one for the control
+    // pipe: 4 * NRB / 8 + 1 copies, each <= 128 enables.  Every copy samples the same me_e pin on the same edge,
+    // so the port and cycle behaviour are unchanged.  rot1 / rot2 / bv are decoded one-hot selects over CONSTANT
+    // slices (AND-OR), not runtime-indexed part-selects.
+    localparam integer GB = 8;
+    localparam integer NG = NRB / GB;
+    wire [NG-1:0] me_pf, me_r1, me_r2, me_q;
+    wire          me_c;
+    genvar g;
+    generate
+        for (g = 0; g < NG; g = g + 1) begin : g_me
+            if (MEREG != 0) begin : g_mr
+                (* keep = "true", dont_touch = "true" *) reg m_pf;
+                (* keep = "true", dont_touch = "true" *) reg m_r1;
+                (* keep = "true", dont_touch = "true" *) reg m_r2;
+                (* keep = "true", dont_touch = "true" *) reg m_q;
+                always @(posedge clk) begin m_pf <= me_e; m_r1 <= me_e; m_r2 <= me_e; m_q <= me_e; end
+                assign me_pf[g] = m_pf; assign me_r1[g] = m_r1; assign me_r2[g] = m_r2; assign me_q[g] = m_q;
+            end else begin : g_mp
+                assign me_pf[g] = me_e; assign me_r1[g] = me_e; assign me_r2[g] = me_e; assign me_q[g] = me_e;
+            end
+        end
+        if (MEREG != 0) begin : g_mr
+            (* keep = "true", dont_touch = "true" *) reg me_r;
+            always @(posedge clk) me_r <= me_e;
+            assign me_c = me_r;
+        end else begin : g_mp
+            assign me_c = me_e;
+        end
+    endgenerate
     reg [NRB*16-1:0] pf, r1, r2;
     reg [LNRB+3:0]   a3, a4, a5;
     reg [NVW-1:0]    n3, n4, n5;
     wire [LNRB-1:0]  rc = a3[4 +: LNRB] & ~{{(LNRB-3){1'b0}}, 3'b111};
-    wire [LNRB-1:0]  rf = {{(LNRB-3){1'b0}}, a4[6:4]} + ((MUT == 1) ? 1 : 0);
+    wire [LNRB:0]    rf = {{(LNRB-2){1'b0}}, a4[6:4]} + ((MUT == 1) ? 1 : 0);
     wire [4:0]       sh = {1'b0, a5[3:0]} + ((MUT == 2) ? 5'd1 : 5'd0);
-    integer i;
-    always @(posedge clk) if (me) begin
-        pf <= d; a3 <= c_a; n3 <= c_nv;
+    // one-hot selects: rc is a multiple of 8 (NRB / 8 values), rf is 0 .. 7 (8 with MUT 1), sh is 0 .. 15 (16 with MUT 2)
+    reg [NG-1:0] oc;
+    reg [8:0]    of;
+    reg [16:0]   os;
+    reg [NRB*16-1:0] r1n, r2n;
+    reg [BEAT-1:0]   qn;
+    integer i, k;
+    always @* begin
+        for (k = 0; k < NG; k = k + 1) oc[k] = (rc == k * 8);
+        for (k = 0; k < 9; k = k + 1) of[k] = (rf == k);
+        for (k = 0; k < 17; k = k + 1) os[k] = (sh == k);
+        r1n = 0; r2n = 0; qn = 0;
+        for (i = 0; i < NRB; i = i + 1) begin
+            for (k = 0; k < NG; k = k + 1)
+                r1n[i*16 +: 16] = r1n[i*16 +: 16] | (pf[((i + k * 8) % NRB)*16 +: 16] & {16{oc[k]}});
+            for (k = 0; k < 9; k = k + 1)
+                r2n[i*16 +: 16] = r2n[i*16 +: 16] | (r1[((i + k) % NRB)*16 +: 16] & {16{of[k]}});
+        end
+        for (i = 0; i < BEAT; i = i + 1) begin
+            for (k = 0; k < 17; k = k + 1)
+                if (i + k < NRB * 16) qn[i] = qn[i] | (r2[i + k] & os[k]);
+            if (!(i < n5 || MUT == 3)) qn[i] = 1'b0;
+        end
+    end
+    always @(posedge clk) if (me_c) begin
+        a3 <= c_a; n3 <= c_nv;
         a4 <= a3; n4 <= n3;
         a5 <= a4; n5 <= n4;
-        for (i = 0; i < NRB; i = i + 1) begin
-            r1[i*16 +: 16] <= pf[((i + rc) % NRB)*16 +: 16];
-            r2[i*16 +: 16] <= r1[((i + rf) % NRB)*16 +: 16];
-        end
-        for (i = 0; i < BEAT; i = i + 1)
-            q[i] <= (i < n5 || MUT == 3) ? r2[i + sh] : 1'b0;
     end
+    generate for (g = 0; g < NG; g = g + 1) begin : g_rk
+        localparam integer LO = g * GB * 16;
+        localparam integer NQ = (BEAT - LO < GB * 16) ? (BEAT - LO) : GB * 16;
+        always @(posedge clk) if (me_pf[g]) pf[LO +: GB*16] <= d[LO +: GB*16];
+        always @(posedge clk) if (me_r1[g]) r1[LO +: GB*16] <= r1n[LO +: GB*16];
+        always @(posedge clk) if (me_r2[g]) r2[LO +: GB*16] <= r2n[LO +: GB*16];
+        always @(posedge clk) if (me_q[g])  q[LO +: NQ] <= qn[LO +: NQ];
+    end endgenerate
 endmodule

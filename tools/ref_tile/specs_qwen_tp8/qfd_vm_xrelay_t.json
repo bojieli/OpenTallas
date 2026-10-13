@@ -36,7 +36,6 @@
  "route": {
   "pd": 0.5,
   "period_ps": 770,
-  "hold_margin_ns": 0.01,
   "threads": 8,
   "peak_ram_gb": 16
  },
@@ -44,7 +43,7 @@
   "owner": "Claude:qwen_tp8_vm_phys",
   "branch": "claude/qwen-tp8-vm-phys",
   "tag": "xr1",
-  "purpose": "Qwen TP8 VM x-lane relay leaf: 512 me-enabled flops + own me replica (513 flops, one root), delay2_t outline. 328 routed + pads per die. Bench = leaf miter (10-relay lane + plane) + relay free-run mutant.",
+  "purpose": "Qwen TP8 VM x-lane relay leaf: 512 me-enabled flops + 4 me replicas (516 flops, one root), delay2_t outline so relay strips stay uniform. 328 routed + pads per die. Bench = leaf miter (10-relay lane + plane) + relay free-run mutant.",
   "benches": [
    {
     "name": "lf_ok",

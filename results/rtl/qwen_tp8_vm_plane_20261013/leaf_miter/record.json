@@ -7,7 +7,7 @@
  "runner": "tools/qwen_tp8/vm_xplane_leaf_miter.sh",
  "sources": {
   "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xplane.sv": "c33695aa24c89734d34633b6ceea528b50c5be7632bdd16a7b03a36901c53015",
-  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "89a51b9867b524c70ef39c1e50bbad882f0a7f6ca58ea295de94ebf2891b88eb"
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "5bc082082efd2f96b25114137003e0d565c2246645613c1b699f6d3ff52bc3db"
  },
  "note": "The miter committed at 72fb54c27 was VACUOUS ($urandom(seed) re-seeds per call under Verilator: me_e stuck at 0, 0 range-edge beats, every mutant passed). Fixed with xorshift64 stimulus and a non-vacuity refusal (moves, stalls, range-edge beats).",
  "verdict": "PASS",
@@ -48,5 +48,6 @@
    "got": "FAIL",
    "line": "FAIL qfd_vm_xplane errors=670 of 2923"
   }
- }
+ },
+ "rerun_phys_20261013": "Re-run 07:50 PDT by claude/qwen-tp8-vm-phys after the leaf-internal edit (me register replicated per rank and 8-bank group in xplane_t, per 128 b in xrelay_t; rot1 / rot2 / bv as decoded one-hot AND-OR): identical verdicts and counts on all six runs."
 }
