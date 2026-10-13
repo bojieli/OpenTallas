@@ -964,6 +964,9 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    grant = fp.get("layer_contract", {}).get("m6_pin_grant")
+    if grant:
+        cmd += ["--pin-only-tech"]
     for v in macro_views:
         cmd += ["--macro-view", str(ROOT / v)]
     rc = subprocess.run(cmd).returncode
@@ -972,7 +975,6 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--output", str(o / "insertion.json")])
     lef = o / f"{top}.lef"
-    grant = fp.get("layer_contract", {}).get("m6_pin_grant")
     if lef.exists() and not grant:
         # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
         # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
@@ -987,7 +989,8 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
             shutil.copyfile(candidates[0], routed_def)
         (o / "m6_pin_grant.json").write_text(json.dumps(grant, indent=1) + "\n")
     res = child_lint.lint(str(lef), str(o), cap="M5" if grant else None,
-                          pin_grant=grant, routed_def=routed_def) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
+                          pin_grant=grant, routed_def=routed_def,
+                          tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])

@@ -7,6 +7,7 @@ synthetic, because no closed M5-wire/PG + M6-pin fixture currently exists.
 """
 import copy
 import json
+import re
 from pathlib import Path
 import tempfile
 import unittest
@@ -69,12 +70,16 @@ GRANT = {'schema': M6.SCHEMA, 'master': 'fixture', 'granted_by': 'test die lead'
 
 
 class GrantTests(unittest.TestCase):
-    def lint(self, lef=LEF, routed=DEF, grant=GRANT, **kw):
+    def lint(self, lef=LEF, routed=DEF, grant=GRANT, tech=None, **kw):
         with tempfile.TemporaryDirectory() as td:
             p, d = Path(td)/'fixture.lef', Path(td)/'fixture.def'
             p.write_text(lef)
             if routed is not None:
                 d.write_text(routed)
+            if tech is not None:
+                t = Path(td)/"tech.lef"
+                t.write_text(tech)
+                kw["tech_lef"] = str(t)
             return CL.lint(str(p), cap='M5', pin_grant=grant,
                            routed_def=str(d) if routed is not None else None, **kw)
 
@@ -117,6 +122,30 @@ class GrantTests(unittest.TestCase):
         self.assertEqual(self.lint(routed=DEF.replace('RECT M6', 'RECT M7'))['verdict'], 'FAIL')
         self.assertEqual(self.lint(routed=DEF.replace('( 21600 * ) contact', '( 21500 * ) contact'))['verdict'], 'FAIL')
         self.assertEqual(self.lint(routed=DEF.replace('contact ;', 'unknown ;'))['verdict'], 'FAIL')
+
+    def test_rotated_or_array_contact_cannot_hide_geometry(self):
+        self.assertEqual(self.lint(routed=DEF.replace('contact ;','contact E ;'))['verdict'], 'FAIL')
+        self.assertEqual(self.lint(routed=DEF.replace('contact ;','contact DO 2 BY 1 STEP 100 0 ;'))['verdict'], 'FAIL')
+
+    def test_exact_read_tech_via_geometry(self):
+        technology = """VIA contact DEFAULT
+ LAYER M5 ;
+ RECT -0.07 -0.016 0 0.016 ;
+ LAYER V5 ;
+ RECT -0.04 -0.01 -0.02 0.01 ;
+ LAYER M6 ;
+ RECT -0.07 -0.016 0 0.016 ;
+END contact
+"""
+        routed = re.sub(r'VIAS 1 ;.*?END VIAS', 'VIAS 0 ;\\nEND VIAS', DEF, flags=re.S)
+        self.assertEqual(self.lint(routed=routed,tech=technology)['verdict'], 'PASS')
+        self.assertEqual(self.lint(routed=routed,tech=technology.replace('LAYER M6','LAYER M7'))['verdict'], 'FAIL')
+
+    def test_generated_rule_via_only_allowed_below_cap(self):
+        for layer in ('M5','M6'):
+            routed = DEF.replace('VIAS 1 ;', 'VIAS 2 ;\n- lowgen + VIARULE M5_M4 + LAYERS M4 V4 ' + layer + ' ;')
+            routed = routed.replace('( 20000 293136 )', '( 20000 293136 ) lowgen')
+            self.assertEqual(self.lint(routed=routed)['verdict'], 'PASS' if layer == 'M5' else 'FAIL')
 
     def test_skips_cannot_override_pin_only_evidence(self):
         self.assertEqual(self.lint(routed=None, skip=set('abcdefg'))['verdict'], 'FAIL')

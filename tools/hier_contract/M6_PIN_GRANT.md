@@ -37,9 +37,11 @@ hashes beside the exported view. LEF M6 PORT rectangles must match actual
 DEF PINS rectangles in both directions. Every M6 OBS and M6/M7 route or PG
 shape fails, even when an abstract omitted it. A signal via may have an M6
 landing only completely inside that net's authorized M6 PORT; its remaining
-metal is M5 or below. Every used via requires explicit RECT definitions in
-DEF. Expand generated/technology vias into DEF geometry before export;
-unresolved vias fail closed. POLYGON/PATH and unparsed geometry are not
+metal is M5 or below. Named technology vias use the exact read-tech LEF snapshot emitted by
+view_export; its hash is in the audit. DEF-defined vias use explicit RECTs.
+Generated-rule vias whose declared routing layers both stop at M5 are safe
+without a high-layer footprint. High generated-rule vias require expanded
+RECT geometry; unresolved vias fail closed. POLYGON/PATH and unparsed geometry are not
 accepted by this conservative audit. Do not replace real OBS with strips
 or move above-cap route stubs into PORTs to make the audit pass.
 
