@@ -850,7 +850,10 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
     lint = lint_cmd(s)
-    benches = j.get("benches") or []
+    benches = list(j.get("benches") or [])
+    if j.get("benches_from"):     # shared bench template (e.g. tools/s81_suhc/hc_gate_benches.json: the HC composition gate)
+        have = {b.get("name") for b in benches}
+        benches += [b for b in json.loads((ROOT / j["benches_from"]).read_text())["benches"] if b.get("name") not in have]
     if not any(b.get("name") == "lint" for b in benches):
         benches = [{"name": "lint", "cmd": lint, "expect": "pass", "threads": 1, "peak_ram_gb": 4,
                     "needs": ["verilator"]}] + benches

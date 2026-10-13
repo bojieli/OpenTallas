@@ -144,6 +144,7 @@
   "pin_min_tracks": 1
  },
  "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Claude:s81hc-1013",
   "branch": "claude/s81hc-1013",
   "tag": "v4-ctl-east",

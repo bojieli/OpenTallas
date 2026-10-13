@@ -85,6 +85,7 @@
   "hold_margin_ns": 0.01
  },
  "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Codex:hc-ctnl",
   "branch": "codex/s81hc-physical-20261012",
   "tag": "fixed-lane",
