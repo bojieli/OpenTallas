@@ -61,7 +61,7 @@
    "inst": "*g_t?0?.*u_m",
    "idx": 0,
    "x": 35.856,
-   "y": 95.04,
+   "y": 90.72,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -74,7 +74,7 @@
    "inst": "*g_t?1?.*u_m",
    "idx": 0,
    "x": 35.856,
-   "y": 144.72,
+   "y": 142.56,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -87,7 +87,7 @@
    "inst": "*g_t?2?.*u_m",
    "idx": 0,
    "x": 35.856,
-   "y": 194.4,
+   "y": 192.24,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -113,7 +113,7 @@
    "inst": "*g_t?4?.*u_m",
    "idx": 0,
    "x": 35.856,
-   "y": 295.92,
+   "y": 293.76,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -139,7 +139,7 @@
    "inst": "*g_t?6?.*u_m",
    "idx": 0,
    "x": 35.856,
-   "y": 395.28,
+   "y": 397.44,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -152,7 +152,7 @@
    "inst": "*g_t?7?.*u_m",
    "idx": 0,
    "x": 35.856,
-   "y": 444.96,
+   "y": 447.12,
    "w": 174.12,
    "h": 29.736,
    "orient": "R0",
@@ -207,24 +207,6 @@
    "macro_edge",
    "ot_sram_1r1w_512x128_m4_r2c2#0 3.9 um from the E core edge (< 20 um, a pin face)",
    "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 / ot_sram_1r1w_512x128_m4_r2c2#0 channel 19.9 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 / ot_sram_1r1w_512x128_m4_r2c2#0 channel 19.9 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_512x128_m4_r2c2#0 / ot_sram_1r1w_512x128_m4_r2c2#0 channel 19.9 um (< 20 um)",
-   "spread the macros or abut them deliberately (gap 0, no cells)"
   ],
   [
    "FAIL",
