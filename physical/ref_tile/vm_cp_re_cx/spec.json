@@ -120,5 +120,12 @@
  "orfs_vars": {
   "PRE_GLOBAL_PLACE_TCL": "physical/hbm_accel_die_views/vm/cp/codex_specs/vm_cp_re_fixed_place.tcl"
  },
- "slot_change_request": "el1011-hbmdie.log FACE3 2026-10-13 SLOT_CHANGE_REQUEST vm_cp_re_cx cx4: outline 259.2 x 401.76 (was 90.72 x 401.76, origin unchanged VM (950.4, 806.4)); se on S, ne on N (were E), M3, per-bit columns x 32.4-255.1; tap/rdo/cfgo/ck W, rdi S, cfgi N unchanged"
+ "slot_change_request": "el1011-hbmdie.log FACE3 2026-10-13 SLOT_CHANGE_REQUEST vm_cp_re_cx cx4: outline 259.2 x 401.76 (was 90.72 x 401.76, origin unchanged VM (950.4, 806.4)); se on S, ne on N (were E), M3, per-bit columns x 32.4-255.1; tap/rdo/cfgo/ck W, rdi S, cfgi N unchanged",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/pinreg_audit_1013/vm8_cp.json",
+  "cell": "vm_cp_re",
+  "pair_cost_ps": 751.5,
+  "fix": "registers at the W tap pin, at the S (se) and N (ne) pins and a corner rank between them; rdi / cfgi pin registers (+2 / +1 cycles)"
+ }
 }
