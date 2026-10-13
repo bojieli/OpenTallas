@@ -209,6 +209,7 @@ module ot_qkvd_emb_strip_c #(
         assign crc_lin[gk] = (^(crc_m & MK[287:0])) ^ MK[288];
     end endgenerate
     reg [31:0] crc_q; reg cv;
+    reg b1p, b_bad, b_ok; reg [NPC-1:0] b_oh;   // B1's registered pre-step
     always @(posedge clk) crc_q <= crc_lin;
     wire [17:0] ft = ih[17:0];
     wire [28:0] fsl = scale_loc(ft);
@@ -218,7 +219,7 @@ module ot_qkvd_emb_strip_c #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             iw <= 0; ir <= 0; i_cr <= 1'b0; st <= IDLE; tw <= 0; s_m <= 0; w_m <= 0; s_we <= 1'b0;
-            csum <= 0; wcnt <= 0; cv <= 1'b0; stat_v <= 1'b0; fa <= 1'b0; fca <= 0;
+            csum <= 0; wcnt <= 0; cv <= 1'b0; b1p <= 1'b0; stat_v <= 1'b0; fa <= 1'b0; fca <= 0;
             for (p = 0; p < NPC; p = p + 1) cred[p] <= CQ'(SQD);
             all1 <= 1'b1; allf <= 1'b1; ge2 <= {NPC{1'b1}};
         end else begin : fsm
@@ -255,22 +256,27 @@ module ot_qkvd_emb_strip_c #(
                     dec[sl_q[26:22]] = 1'b1;
                     ir <= ir + 1'b1; i_cr <= 1'b1; st <= IDLE;
                 end
-                B1: begin
-                    if (!bl[25] || bl[24:23] != stk) begin
-                        fa <= 1'b1; fca[1] <= 1'b1; ir <= ir + 1'b1; i_cr <= 1'b1; st <= IDLE;
-                    end else if ((TWIN != 0) ? ge2[bl[22:18]] : (cred[bl[22:18]] != 0)) begin
-                        s_m <= {{(NPC-1){1'b0}}, 1'b1} << bl[22:18]; w_m <= {{(NPC-1){1'b0}}, 1'b1} << bl[22:18];
+                B1: if (!b1p) begin
+                    // el1013-qwen-kvstrips: the address check, the PC's credit and its one-hot are registered first
+                    // (the first gate's worst stage ran from the sector register through the credit update to allf)
+                    b1p <= 1'b1; b_bad <= !bl[25] || bl[24:23] != stk; b_oh <= {{(NPC-1){1'b0}}, 1'b1} << bl[22:18];
+                    b_ok <= (TWIN != 0) ? ge2[bl[22:18]] : (cred[bl[22:18]] != 0);
+                end else begin
+                    if (b_bad) begin
+                        fa <= 1'b1; fca[1] <= 1'b1; ir <= ir + 1'b1; i_cr <= 1'b1; st <= IDLE; b1p <= 1'b0;
+                    end else if (b_ok) begin
+                        s_m <= b_oh; w_m <= b_oh;
                         s_we <= 1'b1; s_bank <= bl[17:13]; s_col <= bl[12:8]; s_row <= 19'(ROW0) + 19'(bl[7:0]);
                         w_d <= bd;
-                        dec[bl[22:18]] = 1'b1;
-                        cv <= 1'b1; wcnt <= wcnt + 1'b1;
+                        dec = b_oh;
+                        cv <= 1'b1; wcnt <= wcnt + 1'b1; b1p <= 1'b0;
                         if (TWIN != 0) st <= B2; else begin ir <= ir + 1'b1; i_cr <= 1'b1; st <= IDLE; end
-                    end
+                    end else b_ok <= (TWIN != 0) ? ge2[bl[22:18]] : (cred[bl[22:18]] != 0);   // a credit only comes back
                 end
                 B2: begin   // the twin copy: bank ^ 2 (other bank-group pair), TWIN_ROFF rows away
-                    s_m <= {{(NPC-1){1'b0}}, 1'b1} << bl[22:18]; w_m <= {{(NPC-1){1'b0}}, 1'b1} << bl[22:18];
+                    s_m <= b_oh; w_m <= b_oh;
                     s_we <= 1'b1; s_bank <= bl[17:13] ^ 5'd2; s_col <= bl[12:8]; s_row <= 19'(19'(ROW0) + 19'(bl[7:0]) + 19'(TWIN_ROFF));
-                    dec[bl[22:18]] = 1'b1;
+                    dec = b_oh;
                     ir <= ir + 1'b1; i_cr <= 1'b1; st <= IDLE;
                 end
                 default: st <= IDLE;
