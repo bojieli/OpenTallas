@@ -22,6 +22,9 @@ elif [ "${STACK:-p}" = h ]; then
   # that file collides with the bench's fast-FP stand-ins): extract that one module verbatim
   mkdir -p $OUT && awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > $OUT/ot_hdc_lzc32_x.sv
   STK="$STK $OUT/ot_hdc_lzc32_x.sv"
+  # q13-kvleaves: env ECTL3=1 -> the row-engine control cell as its three hard die leaves (qkd_ectl_a / _b / _c,
+  # rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv; slot timing, DQ 128 only)
+  if [ -n "${ECTL3:-}" ]; then DEFS="$DEFS +define+KVD_ECTL3"; STK="$STK $W/hdc/nearhbm/ot_qkd_ectl_parts.sv"; fi
 elif [ "${STACK:-p}" = e ]; then
   # STACK=e: re-cut E (D with levels 1-3 on the lane loop adders; rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv)
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_e.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv"

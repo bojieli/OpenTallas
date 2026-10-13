@@ -1085,7 +1085,12 @@ module ot_qwen_nearhbm_row_engine_h #(
     localparam integer NRI = 2, NRK = 2, NRN = 2;          // head_hs parent relay stages: inputs, K partials, node slice
     localparam integer HXK = HSUB ? NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
     localparam integer HXN = HSUB ? NRI + NRN : 0;
-    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
+`ifdef KVD_ECTL3
+    ot_qkd_ectl3_h
+`else
+    ot_qwen_nearhbm_ectl_h
+`endif
+                           #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
                              .LFB(LFB), .ND(ND), .HXK(HXK), .HXN(HXN)) u_ctl (
         .clk(clk), .rst_n(rst_n), .start_in(start_in), .T_in(T_in), .cyc8_in(cyc8_in), .q_valid_in(q_valid_in),
         .q_beat_in(q_beat_in), .q_data_in(q_data_in), .exp_done(exp_done), .req_valid(req_valid), .req_v(req_v),

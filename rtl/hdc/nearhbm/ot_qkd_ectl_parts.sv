@@ -782,3 +782,100 @@ module qkd_ectl3 #(
     assign t0 = {q0[518:7], q0[6:1], q0[0], c0[15:4], b0, a0, c0[3:0]};
     assign t1 = {q1[518:7], q1[6:1], q1[0], c1[15:4], b1, a1, c1[3:0]};
 endmodule
+
+`ifndef SYNTHESIS
+// the three leaves behind ot_qwen_nearhbm_ectl_h's own ports: the row engine's control instance when the stack is built
+// with +define+KVD_ECTL3 (layer bench).  The leaves are hard (no parameters): the engine must use their configuration.
+module ot_qkd_ectl3_h #(
+    parameter integer HD = 128,
+    parameter integer S = 0,
+    parameter integer R = 1,
+    parameter integer E = 0,
+    parameter integer ADD_LAT = 7,
+    parameter integer MUL_LAT = 6,
+    parameter integer DQ = 32,
+    parameter [31:0]  SCALE = 32'h3DB504F3,
+    parameter integer LFB = 4,
+    parameter integer ND = 1,
+    parameter integer HXK = 0,
+    parameter integer HXN = 0
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,
+    input  wire                 start_in,
+    input  wire [13:0]          T_in,
+    input  wire [2:0]           cyc8_in,
+    input  wire                 q_valid_in,
+    input  wire [5:0]           q_beat_in,
+    input  wire [511:0]         q_data_in,
+    input  wire [31:0]          exp_done,
+    output wire                 req_valid,
+    output wire                 req_v,
+    output wire                 req_g,
+    output wire [12:0]          req_t,
+    input  wire                 rsp_valid_in,
+    input  wire [HD*8-1:0]      rsp_data_in,
+    output wire                 er_valid,
+    output wire [11:0]          er_addr,
+    input  wire [63:0]          er_data,
+    output wire                 sc_valid,
+    output wire [11:0]          sc_addr,
+    output wire [127:0]         sc_data,
+    output wire [2*4*32-1:0]    lmax,
+    output wire [1:0]           lmax_any,
+    output wire                 nb_valid,
+    output wire [3:0]           nb_beat,
+    output wire                 nb_g,
+    output wire [3:0]           nb_gam,
+    input  wire                 nb_cr,
+    output wire                 k_done,
+    output wire                 v_done,
+    output wire                 fault,
+    output wire                 ev_k_first,
+    output wire                 ev_v_first,
+    output wire [3:0]           t0_c,
+    output wire [3:0]           t1_c,
+    output wire [HD*8-1:0]      t0_row,
+    output wire [HD*8-1:0]      t1_row,
+    output wire [31:0]          t0_e,
+    output wire [31:0]          t1_e,
+    output wire [11:0]          t0_lt,
+    output wire [11:0]          t1_lt,
+    output wire                 t0_qv,
+    output wire                 t1_qv,
+    output wire [5:0]           t0_qb,
+    output wire [5:0]           t1_qb,
+    output wire [511:0]         t0_qd,
+    output wire [511:0]         t1_qd,
+    input  wire [2*32-1:0]      ts0_sc,
+    input  wire [2*32-1:0]      ts1_sc,
+    input  wire [1:0]           ts0_sf,
+    input  wire [1:0]           ts1_sf,
+    input  wire [1:0]           ts0_gf,
+    input  wire [1:0]           ts1_gf
+);
+    initial if (HD != 128 || R != 8 || DQ != 128 || ADD_LAT != 7 || MUL_LAT != 6 || LFB != 4 || ND != 1 || HXK != 0 || HXN != 0) begin
+        $display("ERROR ot_qkd_ectl3_h: the hard leaves are HD 128 R 8 DQ 128 ADD_LAT 7 MUL_LAT 6 LFB 4 ND 1 HXK 0 HXN 0"); $fatal(1);
+    end
+    wire [15:0]   e0, e1, e2, e3;
+    wire [1558:0] t0, t1;
+    wire [15:0]   rq;
+    wire [424:0]  so;
+    qkd_ectl3 #(.S(S), .E(E)) u3 (.ck(clk), .rst_n(rst_n), .e0(e0), .e1(e1), .e2(e2), .e3(e3),
+        .s0({ts0_gf[0], ts0_sf[0], ts0_sc[31:0]}), .s1({ts0_gf[1], ts0_sf[1], ts0_sc[63:32]}),
+        .s2({ts1_gf[0], ts1_sf[0], ts1_sc[31:0]}), .s3({ts1_gf[1], ts1_sf[1], ts1_sc[63:32]}), .t0(t0), .t1(t1), .rq(rq),
+        .rs({rsp_data_in, rsp_valid_in}),
+        .si({nb_cr, er_data, exp_done, q_data_in, q_beat_in, q_valid_in, cyc8_in, T_in, start_in}), .so(so));
+    assign {req_t, req_g, req_v, req_valid} = rq;
+    assign er_valid = so[0];  assign er_addr = so[12:1];  assign sc_valid = so[13];  assign sc_addr = so[25:14];
+    assign sc_data = so[153:26];  assign lmax = so[409:154];  assign lmax_any = so[411:410];  assign nb_valid = so[412];
+    assign nb_beat = so[416:413];  assign nb_g = so[417];  assign nb_gam = so[421:418];  assign k_done = so[422];
+    assign v_done = so[423];  assign fault = so[424];
+    assign ev_k_first = u3.u_c.u.ev_k_first;  assign ev_v_first = u3.u_c.u.ev_v_first;     // bench cycle markers
+    assign t0_c = t0[3:0];  assign t0_row = t0[1027:4];  assign t0_lt = t0[1039:1028];  assign t0_qv = t0[1040];
+    assign t0_qb = t0[1046:1041];  assign t0_qd = t0[1558:1047];
+    assign t1_c = t1[3:0];  assign t1_row = t1[1027:4];  assign t1_lt = t1[1039:1028];  assign t1_qv = t1[1040];
+    assign t1_qb = t1[1046:1041];  assign t1_qd = t1[1558:1047];
+    assign t0_e = {e1, e0};  assign t1_e = {e3, e2};
+endmodule
+`endif

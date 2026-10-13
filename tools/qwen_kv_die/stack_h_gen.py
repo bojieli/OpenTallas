@@ -963,8 +963,20 @@ def ectl_slot(s):
     return s
 
 
+def ectl3(s):
+    """q13-kvleaves 2026-10-13: +define+KVD_ECTL3 puts the three hard die leaves of the control cell (qkd_ectl_a / _b / _c behind
+    ot_qkd_ectl3_h, rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv) in the row engine in place of the one-tile control."""
+    a = '    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),\n'
+    i = s.index('module ot_qwen_nearhbm_row_engine_h #(')
+    if s.count(a, i) != 1:
+        raise SystemExit(f'ectl3: anchor found {s.count(a, i)} times in the row engine, expected 1')
+    b = ('`ifdef KVD_ECTL3\n    ot_qkd_ectl3_h\n`else\n    ot_qwen_nearhbm_ectl_h\n`endif\n'
+         '                           #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),\n')
+    return s[:i] + s[i:].replace(a, b)
+
+
 def main():
-    txt = ectl_slot(generate())
+    txt = ectl3(ectl_slot(generate()))
     if '--check' in sys.argv:
         sys.exit(0 if DST.exists() and DST.read_text() == txt else 1)
     DST.write_text(txt)
