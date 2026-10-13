@@ -184,11 +184,13 @@ module ot_hgi_qw_ovh #(
     // stage over ~300 um of 1,024-bit wire.)  Now every stage is one OR2 of two neighbours: gp[k] = the two side-by-side
     // tiles of row k (registered between them), go_h[h] = two adjacent rows, lx = the two halves next to the decoder.
     // +1 edge of gather latency; gv follows (5 deep).
-    reg [1023:0] go_h [0:1]; reg [1023:0] lx;
+    // el1013 seam rule (register at the pin): each leaf's gp is captured by its own pure head pin flop gpf[k]; the
+    // former go_h OR2 is folded into the lx stage (one OR4 of four local registers next to the decoder).  Same latency.
+    reg [1023:0] gpf [0:3]; reg [1023:0] lx;
     reg [4:0] gv; reg launch;
     always @(posedge clk) begin
-        for (integer h = 0; h < 2; h = h + 1) go_h[h] <= gp[h*2] | gp[h*2 + 1];
-        lx <= go_h[0] | go_h[1];
+        for (integer h = 0; h < 4; h = h + 1) gpf[h] <= gp[h];
+        lx <= (gpf[0] | gpf[1]) | (gpf[2] | gpf[3]);
     end
     always @(posedge clk or negedge rr_n[0])
         if (!rr_n[0]) begin gv <= 0; launch <= 0; end
