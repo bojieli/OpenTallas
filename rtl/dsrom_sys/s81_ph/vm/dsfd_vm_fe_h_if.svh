@@ -26,12 +26,15 @@
 //  dsfd_vm_fxs x4   order tile of 4 capture lanes (ports 12+4i .. 15+4i).  in: 4 x clt w_* (b = in-pin flop, v reset),
 //                   clt flt 4x4 -> OR -> clf_o[3:0] (out flop);  out: s_o[NS*4*SW] (u_s0 kept copies = out-pin flops,
 //                   one per slice, NEVER merged), k_o[4*KW] (kept copy of b {v,we,row,m} at a pin, 1 cycle after b)
-//  dsfd_vm_fxr      relay tile: i[4*SW*K] in-pin flop -> out-pin flop o; valid bits reset by its own rn pin flop;
-//                   one view (K ports of one slice bundle; K fixed after the cut measurement), mirrored for westward
+//  dsfd_vm_fxr x56  relay tile: i[4*SW] in-pin flop -> out-pin flop o (+ i_rf[3:0] -> o_rf alike); valid bits reset by
+//                   its own rni pin flop.  FIXED at 4 port words of one slice (592 b): 7 bundles x 4 slices x R tiles =
+//                   56 instances at R 2.  Bundles: 0..3 = capture ports 12+4b..15+4b, 4 = ports 0,1,3,4, 5 = 2,5,6,7
+//                   (carries rf), 6 = 8,9,10,11.
 //  dsfd_vm_flt x10  landing lane: q_* pin flops of ITS producer bits + decode + dsfd_vm_ll + rr_ll.
 //                   pins in: p_v p_t[1:0] p_m p_d[511:0] p_flt (non-collective producers strap t=0 m=1), stride[2:0] off[1:0]
-//                   straps, g (g_r[LGL-1] in-pin), arm_v arm_base[13:0] (LAL-1 in-pin);  out: av (flop), ret[LW-1:0]+ret_v
-//                   (dd_r[0]), ok (flop), ovf (flop), sflt (flop: l_src_flt term)
+//                   straps, g (g_r[LGL-1] in-pin), arm_v arm_base[13:0] (LAL-1 in-pin);  out: av (flop), ret[LW-1:0]
+//                   (dd_r[0]; NO ret_v: the drain selects on its own delayed grant, as the flat module), ok (flop),
+//                   ovf (flop), sflt (flop: l_src_flt term)
 //  dsfd_vm_fld x1   drain: av_r (in-pin), lc, ll_ptr, arbiter, g_r[0] (out), sd_*, dd_r[LDL-1] (in), lp_*, b of ports
 //                   10,11 + their 4 s0 copies + k_o; cts: ok_q <= ok pins, t_cts <= {0,1,&ok_q[5:2]}; ll_ovr, l_src_flt
 //  dsfd_vm_fcc x1   ctrl CDC (the ONLY two-clock leaf with fcn): s_* pin flops (cks), u_cc0/1, pop, b of ports 3,4 + s0
@@ -45,10 +48,22 @@
 //  1 b_* of a port is the OUT-side register of the leaf that sources it; its 4 slice copies s0 (kept, ID-distinct) are
 //    one cycle later in the SAME leaf and leave on a pin; all 28 ports therefore keep ONE op order (the 4 slices and the
 //    counter see the same order).  No leaf may add a stage between b and s0 or between b and k_o for one port only.
-//  2 reset: rn0 is produced in fcn and leaves on an out flop; every leaf takes rn on an in-pin flop and passes rn_o on
-//    an out flop to the next leaf (chain, <= 500 um a hop).  Release is skewed by chain position; the bench holds
-//    stimulus idle for the chain length after release and SAYS so.  The flat reference gets the same idle window.
+//  2 reset (AS BUILT, proven in lockstep): rn0 is produced in fcn and leaves on 8 kept out flops rn_o; every leaf takes
+//    its reset on the in-pin flop of pin `rni` (= its internal rn) and forwards kept out-flop copies rn_o.  The TREE is
+//    parent wiring only (re-routable without touching a leaf): fcn.rn_o -> fld, fcc, fcw, fxs 0..3 (DIRECT children:
+//    release on the flat module's cycle, rn0 + 2); fld -> flt 0 -> .. -> flt 9 (2 cycles a hop: flt 9 releases 21
+//    cycles after the flat lane); fxs -> its 4 clt; bundle source -> fxr chain -> fsr.  fld MUST be a direct child
+//    (ll_ptr rotates from release).  fcc and fcw STAY direct children (decision 2026-10-13): fcc's serial-side CDC
+//    pointers (u_cc0 / u_cc1) and its pop cadence start from rn, and a later release would shift every ctrl op against
+//    the flat order; fcw's kit endpoint is released by its own rst synchroniser, so only err_o and the b valid bits
+//    hang on rni there, but fcn has the kept copy and the hop is short, so nothing is gained by chaining it.
+//    The bench holds stimulus idle for LK_IDLE = 28 cycles after release (checked: no op may leave either FE in the
+//    window) and the flat reference gets the same window.
 //  3 faults are sticky; inter-leaf fault wires are flop -> wire -> flop and may add cycles to fe_flt / m_rf only.
 //  4 mutants OT_SPVM_MUT_STALE / _DROPW / _NP16 / _LSMALL / _EARLY keep their flat meaning inside the leaf that owns
 //    the logic (STALE: fcc port 3 between b and s0; NP16: sok generated in the fxs that feeds the lane pair).
+//  5 lockstep reference: flat dsfd_vm_fe under `OT_SPVM_REF_FRL at FRL `VMFE_FRL / KD `VMFE_KD / LDL `VMFE_LDL (dsfd_sp_vm_m
+//    takes them from this file); +define+OT_SPVM_FE_H = hierarchy as a shadow, +OT_SPVM_FE_H_SUBST = hierarchy drives.
+//    Hierarchy-only mutants: OT_VMFE_MUT_FXR1 (one fxr stage fewer, port 16 slice 2), OT_VMFE_MUT_GBYP (flt grant pin
+//    flop bypassed), OT_VMFE_MUT_KQSKIP (ARM ops skip their kq stage).
 `endif

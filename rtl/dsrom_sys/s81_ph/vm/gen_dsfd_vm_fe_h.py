@@ -128,9 +128,6 @@ module dsfd_vm_fxr (
     integer j;
     always @(posedge clk) begin
         rn <= rni; rn_k <= {2{rn}};
-`ifdef OT_VMFE_MUT_RNSTUCK
-        rn_k <= 2'b11;                  // MUTANT: rn_o stuck released
-`endif
         q <= i; o <= q; q_rf <= i_rf; o_rf <= q_rf;
         if (!rn) for (j = 0; j < 4; j = j + 1) begin q[148*j + 147] <= 1'b0; o[148*j + 147] <= 1'b0; end
     end
@@ -412,11 +409,16 @@ module dsfd_vm_fcn (
     end endgenerate
     // ARM ops: pre-register p_* + kq[0] below = the flat kq_arm*[0 .. 1]
     reg p_armb, p_armr, p_arm; reg [23:0] p_arg; reg [7:0] p_tag; reg [9:0] p_user;
+`ifdef OT_VMFE_MUT_KQSKIP
+    // MUTANT: the ARM ops skip their kq stage (reach the counter one cycle ahead of the port ops)
+    always @* begin p_armb = is_armb; p_armr = is_armr; p_arm = is_arm; p_arg = arg; p_tag = ctag; p_user = ad_d[82:73]; end
+`else
     always @(posedge clk) begin
         if (!rn) begin p_armb <= 1'b0; p_armr <= 1'b0; p_arm <= 1'b0; end
         else begin p_armb <= is_armb; p_armr <= is_armr; p_arm <= is_arm; end
         p_arg <= arg; p_tag <= ctag; p_user <= ad_d[82:73];
     end
+`endif
     // ---- verbatim from the flat dsfd_vm_fe (six kq stage-0 sources substituted by the generator)
 @CNT@    // ---- end verbatim
     // FE status: fault wires from the other leaves enter pin flops (sticky sources; rule 3)

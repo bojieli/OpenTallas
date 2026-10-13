@@ -788,9 +788,20 @@ module dsfd_vm_fe #(
     // dsfd_vm_fsr (pin flop + output flop, FRL 2 fixed) sitting directly above bgq column s at the S face.  The valid copy
     // folds the synchronous reset into its D (rn ? c_vv : 0, as before); the tile's valid reset is its pin-flopped rn, fed
     // from a kept per-slice copy of rn0 so the tile sees rr_c[1] exactly.  m_rf is registered inside the tile (was here).
+`ifdef OT_SPVM_REF_FRL
+    // LOCKSTEP REFERENCE of the hierarchy dsfd_vm_fe_h (el1013-s81-vmfe): FRL - 2 behavioural relay stages between the
+    // stage-0 register and the hard dsfd_vm_fsr (= the R dsfd_vm_fxr tiles, 2 flops each); m_rf sees |fe_flt FRL - 1
+    // cycles later (fcn out flop + the same relay chain).  Simulation reference only, never a physical view.
+    localparam integer FRX = FRL - 2;
+    if (FRL < 2) begin : g_frl
+        dsfd_vm_fsr_hard_frl_mismatch u_err ();
+    end
+`else
+    localparam integer FRX = 0;
     if (FRL != 2) begin : g_frl
         dsfd_vm_fsr_hard_frl_mismatch u_err ();    // elaboration error: the hardened dsfd_vm_fsr is FRL 2 (two stages)
     end
+`endif
     integer s;
     genvar gsl, gp;
     generate for (gsl = 0; gsl < NS; gsl = gsl + 1) begin : g_sl
@@ -805,11 +816,25 @@ module dsfd_vm_fe #(
         (* keep = 1 *) reg rr_f;
         always @(posedge clk) rr_f <= rn0;
         reg [3:0] rf_d;
-        always @* rf_d = {|fe_flt, 3'b000};
+        wire [W0-1:0] s0x;
+        if (FRX == 0) begin : g_nx
+            always @* rf_d = {|fe_flt, 3'b000};
+            assign s0x = s0;
+        end else begin : g_x                // reference relay (OT_SPVM_REF_FRL only)
+            reg [W0-1:0] xq [0:FRX-1]; reg [FRX:0] xrf; reg rr_x; integer xi;
+            always @(posedge clk) begin
+                rr_x <= rr_f;
+                xq[0] <= s0; for (xi = 1; xi < FRX; xi = xi + 1) xq[xi] <= xq[xi-1];
+                if (!rr_x) for (xi = 0; xi < FRX; xi = xi + 1) xq[xi][W0-1 -: NP] <= {NP{1'b0}};
+                xrf <= {xrf[FRX-1:0], |fe_flt};
+            end
+            always @* rf_d = {xrf[FRX], 3'b000};
+            assign s0x = xq[FRX-1];
+        end
         // hard child: NO parameter overrides (one view for all 4 slices)
         dsfd_vm_fsr u_fr (.ck(clk), .rn(rr_f),
-            .i_v(s0[W0-1 -: NP]), .i_we(s0[W0-NP-1 -: NP]), .i_row(s0[W0-2*NP-1 -: NP*RA]), .i_mask(s0[NP*128 +: NP*4]),
-            .i_d(s0[0 +: NP*128]), .i_rf(rf_d),
+            .i_v(s0x[W0-1 -: NP]), .i_we(s0x[W0-NP-1 -: NP]), .i_row(s0x[W0-2*NP-1 -: NP*RA]), .i_mask(s0x[NP*128 +: NP*4]),
+            .i_d(s0x[0 +: NP*128]), .i_rf(rf_d),
             .o_v(m_v[gsl*NP +: NP]), .o_we(m_we[gsl*NP +: NP]), .o_row(m_row[gsl*NP*RA +: NP*RA]),
             .o_mask(m_mask[gsl*NP*4 +: NP*4]), .o_d(m_d[gsl*NP*128 +: NP*128]), .o_rf(m_rf[gsl*4 +: 4]));
     end endgenerate
@@ -1542,19 +1567,51 @@ module dsfd_sp_vm_m #(
     localparam integer EP = 2;
 `endif
     localparam integer ED = (EP == 0) ? 0 : EP + 1;
-    localparam integer FRL = 2;         // el1011-ds-vm/fe: FE order register -> slice pin relay stages (shifts f_* and o_*
+`ifdef OT_SPVM_REF_FRL
+    `include "dsfd_vm_fe_h_if.svh"
+    localparam integer FRL = `VMFE_FRL, FKD = `VMFE_KD, FLDL = `VMFE_LDL;   // the hierarchy's stage counts (lockstep reference)
+`else
+    localparam integer FRL = 2, FKD = 1, FLDL = 2;
+`endif
+                                        // el1011-ds-vm/fe: FE order register -> slice pin relay stages (shifts f_* and o_*
                                         // alike: MD, the tile-3 f_* -> o_* skew, is unchanged)
     localparam integer MD = 4 * NSTG + QD + 9 - 4 * (NSTG + 1) + ED;
     wire [NS*NP-1:0] mv, mwe; wire [NS*NP*RA-1:0] mrow; wire [NS*NP*4-1:0] mm; wire [NS*NP*128-1:0] md;
     wire [NS*4-1:0] mrf; wire [15:0] fe_flt;
     wire p2c;
+    wire [NS*NP-1:0] fmv, fmwe; wire [NS*NP*RA-1:0] fmrow; wire [NS*NP*4-1:0] fmm; wire [NS*NP*128-1:0] fmd;
+    wire [NS*4-1:0] fmrf; wire [15:0] f_flt;
+    wire [0:0] f_swg, f_srg, f_dv, f_cwv; wire [52:0] f_ks; wire [7:0] f_dt; wire [2:0] f_cts; wire [9:0] f_cwd; wire [NSLOT-1:0] f_rdy;
     dsfd_vm_fe #(.NS(NS), .VF(VF), .VR(VR), .NSLOT(NSLOT), .P2D(P2D), .CQD(CQD), .LA(LA), .LTO(LTO), .NSVC(NSVC), .LD(LD),
-                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL)) u_fe (
-        .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(t_swg), .f_srv(f_srv), .f_srd(f_srd),
-        .t_srg(t_srg), .t_ks(t_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
-        .cv(cv), .cd(cd), .dv(dv), .dt(dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(t_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
-        .c_wv(c_wv), .c_wd(c_wd), .c_wr(c_wr), .t_rdy(t_rdy), .f_p2c(p2c),
-        .m_v(mv), .m_we(mwe), .m_row(mrow), .m_mask(mm), .m_d(md), .m_rf(mrf), .fe_flt(fe_flt));
+                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LDL(FLDL)) u_fe (
+        .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(f_swg), .f_srv(f_srv), .f_srd(f_srd),
+        .t_srg(f_srg), .t_ks(f_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
+        .cv(cv), .cd(cd), .dv(f_dv), .dt(f_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(f_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
+        .c_wv(f_cwv), .c_wd(f_cwd), .c_wr(c_wr), .t_rdy(f_rdy), .f_p2c(p2c),
+        .m_v(fmv), .m_we(fmwe), .m_row(fmrow), .m_mask(fmm), .m_d(fmd), .m_rf(fmrf), .fe_flt(f_flt));
+`ifdef OT_SPVM_FE_H
+    // The hierarchy dsfd_vm_fe_h on the SAME FE inputs.  OT_SPVM_FE_H alone: shadow (the flat reference drives the system);
+    // with OT_SPVM_FE_H_SUBST: SUBSTITUTED (the hierarchy drives every FE output; the flat instance stays as the bench's order-register probe
+    // and lockstep reference).  Needs OT_SPVM_REF_FRL (same stage counts).
+    wire [NS*NP-1:0] hmv, hmwe; wire [NS*NP*RA-1:0] hmrow; wire [NS*NP*4-1:0] hmm; wire [NS*NP*128-1:0] hmd;
+    wire [NS*4-1:0] hmrf; wire [15:0] h_flt;
+    wire [0:0] h_swg, h_srg, h_dv, h_cwv; wire [52:0] h_ks; wire [7:0] h_dt; wire [2:0] h_cts; wire [9:0] h_cwd; wire [3:0] h_rdy;
+    dsfd_vm_fe_h u_feh (
+        .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(h_swg), .f_srv(f_srv), .f_srd(f_srd),
+        .t_srg(h_srg), .t_ks(h_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
+        .cv(cv), .cd(cd), .dv(h_dv), .dt(h_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(h_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
+        .c_wv(h_cwv), .c_wd(h_cwd), .c_wr(c_wr), .t_rdy(h_rdy), .f_p2c(p2c),
+        .m_v(hmv), .m_we(hmwe), .m_row(hmrow), .m_mask(hmm), .m_d(hmd), .m_rf(hmrf), .fe_flt(h_flt));
+`endif
+`ifdef OT_SPVM_FE_H_SUBST
+    assign mv = hmv; assign mwe = hmwe; assign mrow = hmrow; assign mm = hmm; assign md = hmd; assign mrf = hmrf;
+    assign fe_flt = h_flt; assign t_swg = h_swg; assign t_srg = h_srg; assign t_ks = h_ks; assign dv = h_dv; assign dt = h_dt;
+    assign t_cts = h_cts; assign c_wv = h_cwv; assign c_wd = h_cwd; assign t_rdy = h_rdy;
+`else
+    assign mv = fmv; assign mwe = fmwe; assign mrow = fmrow; assign mm = fmm; assign md = fmd; assign mrf = fmrf;
+    assign fe_flt = f_flt; assign t_swg = f_swg; assign t_srg = f_srg; assign t_ks = f_ks; assign dv = f_dv; assign dt = f_dt;
+    assign t_cts = f_cts; assign c_wv = f_cwv; assign c_wd = f_cwd; assign t_rdy = f_rdy;
+`endif
     wire [NS*NPR-1:0] ov; wire [NS*NPR*128-1:0] od; wire [NS*4-1:0] of; wire [NS*3-1:0] oo;
     wire [NP-1:0] f0v, f0we; wire [NP*128-1:0] f0d;
     genvar h, t;
