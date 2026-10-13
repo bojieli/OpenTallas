@@ -4,7 +4,7 @@
 // replicas and one-hot pointer epochs are preserved inside this boundary.
 // DONT add another pin-register stage without matching every epoch/data path.
 module ot_qfd_vm_xfifo32_t #(
-    parameter integer NPP=7,
+    parameter integer NPP=12,
     parameter integer FSW=32,
     parameter integer MEREG=1,
     parameter integer MUT=0
