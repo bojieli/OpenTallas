@@ -1,5 +1,5 @@
 {
- "name": "s81su_qnh_ref-v4m-COMMIT",
+ "name": "s81su_qnh_ref-v4m-46d62c427",
  "block": "dsfd_su_t_qnh",
  "ref_tile": true,
  "owner": "Claude:el1011-s81su",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "main",
-  "commit": "COMMIT"
+  "commit": "46d62c427"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qnh_ref/s81su_qnh_ref-v4m-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_qnh_ref/s81su_qnh_ref-v4m-46d62c427"
   }
  ],
  "cycles_added": 0,
