@@ -22,7 +22,7 @@
 // phase starts at the rstd, which reaches every engine in the same cycle, so the y of a block leave in one cycle.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_qnt #(
-    parameter integer N = 256, S_RD = 16, NFI = 33, MUT = 0
+    parameter integer N = 256, S_RD = 16, NFI = 33, MUT = 0, CB = 32
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -47,7 +47,7 @@ module ot_s81_su_qnt #(
     localparam integer L = N / 16, LL = $clog2(L);
     localparam [3:0] K_QN = 0, K_GQ = 6;
 `ifndef SYNTHESIS
-    initial if ((1 << LL) != L || L < 2 || S_RD > L) $fatal(1, "ot_s81_su_qnt: N / 16 a power of two >= max(2, S_RD)");
+    initial if ((1 << LL) != L || L < 2 || S_RD > L || CB < 1 || CB > 256 || 256 % CB != 0) $fatal(1, "ot_s81_su_qnt: N / 16 a power of two >= max(2, S_RD)");
 `endif
     reg rr0, rr1;
     always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
@@ -84,6 +84,23 @@ module ot_s81_su_qnt #(
         ot_s81_su_qn_keep_ff #(.W(KW)) u_k (.clk(clk), .rst_n(rst_n), .d(off_n),
                                             .q(kq[KW * gj +: KW]));
     end endgenerate
+    // Opt-in physical control banks: bit-interleaved face plans spread a position's 256 data bits over the full
+    // strip. CB32/16 keeps one offset copy beside each data bank (select fanout32/16), while the original copy drives
+    // only the nine metadata bits. Same offset, clock edge, mux levels and registers; CB256 preserves the original.
+    localparam integer DB = 256 / ((CB > 0) ? CB : 256);
+    wire [KW*L*DB-1:0] kqd;
+    genvar gp, gb;
+    generate if (CB < 256) begin : g_data_ctrl
+        for (gp = 0; gp < L; gp = gp + 1) begin : g_pos
+            for (gb = 0; gb < DB; gb = gb + 1) begin : g_bank
+                ot_s81_su_qn_keep_ff #(.W(KW)) u_k (.clk(clk), .rst_n(rst_n),
+                    .d(off_n ^ ((MUT == 6) ? {{(KW-1){1'b0}},1'b1} : {KW{1'b0}})),
+                    .q(kqd[KW*(gp*DB+gb) +: KW]));
+            end
+        end
+    end else begin : g_original_ctrl
+        assign kqd = kq;
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin mine <= 1'b0; gq <= 1'b0; gsel <= 2'd0; jid <= 8'd0; ra <= 16'd0; pc_r <= 0; st_r <= 1'b0; end
         else begin
@@ -97,7 +114,7 @@ module ot_s81_su_qnt #(
     localparam integer RB = 256 + 8 + 1;
     reg [L*RB-1:0] rv [0:LL];
     always @(*) begin : rot
-        integer s, k;
+        integer s, k, b;
         reg [15:0] ix;
         rv[0] = 0;
         for (s = 0; s < S_RD; s = s + 1) begin
@@ -109,6 +126,11 @@ module ot_s81_su_qnt #(
                 reg [LL-1:0] off;
                 off = kq[KW * s +: KW];
                 rv[k + 1][RB * s +: RB] = off[k] ? rv[k][RB * ((s - (1 << k) + L) % L) +: RB] : rv[k][RB * s +: RB];
+                if (CB < 256)
+                    for (b = 0; b < DB; b = b + 1)
+                        rv[k + 1][RB*s+CB*b +: CB] = kqd[KW*(s*DB+b)+k]
+                            ? rv[k][RB*((s-(1<<k)+L)%L)+CB*b +: CB]
+                            : rv[k][RB*s+CB*b +: CB];
             end
     end
     always @(posedge clk) begin : oreg

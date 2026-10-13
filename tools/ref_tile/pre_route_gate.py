@@ -24,7 +24,9 @@ REMOTE (--remote HOST, minutes, on the fleet via ot-heavy): the real ORFS synthe
 fails here, not after hours), floorplan + PDN + IO placement of the kit (PDN-0217/0233/0006, PPL-0061 surface here),
 then the netlist textbook lint (clock root size / span, high fanout + reset on datapath, logic behind pins, ICG enable
 from a port, logic depth, > 500 um wire per stage) on the synthesized netlist + the placed-IO floorplan, and the pin
-plan against the SYNTHESIZED port names.  --cts continues through CTS and reports clock insertion spread (ck_insertion)
+plan against the SYNTHESIZED port names.  MEASURED CLOCK RULE (owner 2026-10-13, constants in tools/textbook_lint.py):
+> 15,000 sinks on one clock root FAILs unless this run's --cts measured TT insertion <= 300 ps and leaf spread <= 80 ps;
+a declared spine does not waive it.  A --remote run writes <kit>/gate_result.json (commit it: the submit gate reads it).  --cts continues through CTS and reports clock insertion spread (ck_insertion)
 and the worst-path classes.
 Exit 0 PASS / WARN, 1 FAIL, 2 usage.
 """
@@ -451,6 +453,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         if not mm:
             continue
         tag, chk, msg = mm.groups()
+        if chk in TL.HARD_CHECKS:
+            continue                    # the measured clock rule is judged below, after the CTS numbers
         if tag == "PASS" or not chk or " cells " in line[:200] and " flops " in line[:200] and ":" not in line[15:40]:
             g.add("INFO", "textbook", line[len("textbook_lint: "):][:300])
             continue
@@ -481,6 +485,73 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
             g.add("INFO", "clock_spine", line[:300])
         for line in re.findall(r"^GATE_PC (.*)$", out, re.M):
             g.add("INFO", "path_classes", line)
+    clock_item(g, clock_record(out, cts, spec))
+
+
+CLOCK_RESULT = "gate_result.json"       # <kit>/gate_result.json: the kit's gate result (commit it with the kit)
+
+
+def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
+    """the clock evidence of one remote gate run: sinks of the largest root from the synthesized netlist (textbook
+    lint 'clock_roots' line) and, with --cts, the measured TT insertion (latest leaf arrival) and leaf arrival spread
+    (max - min over all register clock pins, ck_insertion.py 'all')."""
+    rec = {"max_root_sinks": None, "root": None, "cts": bool(cts), "tt_insertion_ps": None, "tt_spread_ps": None,
+           "declared_clock": (spec or {}).get("clock"),
+           "limits": {"sinks": TL.CLK_ROOT_SINKS_MAX, "insertion_ps": TL.CLK_INSERTION_MAX_PS,
+                      "spread_ps": TL.CLK_SPREAD_MAX_PS}}
+    m = re.search(r"textbook_lint: INFO clock_roots max_root_sinks=(\d+) root=(\S+)", out)
+    if m:
+        rec["max_root_sinks"], rec["root"] = int(m.group(1)), m.group(2)
+    ck = re.search(r"^GATE_CK .*?\btt insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
+    if cts and ck:
+        lo, hi = float(ck.group(1)), float(ck.group(2))
+        rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
+    ok, text = TL.clock_rule(rec["max_root_sinks"], rec)
+    rec["verdict"] = "PASS" if ok and rec["max_root_sinks"] is not None else ("UNKNOWN" if ok else "REFUSE")
+    rec["text"] = text
+    return rec
+
+
+def clock_item(g: Gate, rec: dict) -> None:
+    """measured clock rule (owner 2026-10-13, constants in textbook_lint.py): reported for every kit."""
+    g.clock = rec
+    if rec["verdict"] == "REFUSE":
+        g.add("FAIL", "clock_rule", rec["text"] + ("" if rec["cts"] else " -- this gate ran without --cts")
+              + (f" (declared clock '{rec['declared_clock']}' does not waive it)" if rec.get("declared_clock") else ""),
+              TL.CLOCK_RULE_FIX)
+    elif rec["verdict"] == "UNKNOWN":
+        g.add("WARN", "clock_rule", "the synthesized netlist's clock sinks were not reported: " + rec["text"],
+              "read the remote log (textbook lint line 'clock_roots')")
+    else:
+        g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
+
+
+def kit_clock_evidence(kd: Path) -> dict | None:
+    try:
+        d = json.loads((kd / CLOCK_RESULT).read_text())
+        return d["clock"] if isinstance(d.get("clock"), dict) else None
+    except (OSError, ValueError, KeyError, AttributeError):
+        return None
+
+
+def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, closed_stands: bool = False) -> dict:
+    """SUBMIT side of the measured clock rule.  The kit's committed gate result decides when it exists; without one the
+    sink count of this block's latest synthesized design (known_sinks, from the loop's job history) does.  A kit with no
+    gate result and no history passes here and is judged by the in-flow lint right after synthesis (FLOORPLAN_MARGIN,
+    before placement).  closed_stands: a CLOSED tile is not re-judged."""
+    ev = kit_clock_evidence(kd)
+    n = (ev or {}).get("max_root_sinks")
+    if not isinstance(n, int):          # the kit's own gate result outranks history (a rebuilt tile proves itself)
+        n = known_sinks if isinstance(known_sinks, int) else None
+    ok, text = TL.clock_rule(n if isinstance(n, int) else None, ev)
+    res = {"evidence": ev, "sinks": n, "ok": ok, "text": text, "closed_stands": bool(closed_stands)}
+    g.clock = res
+    if ok or closed_stands:
+        g.add("INFO", "clock_rule", text + (" (CLOSED tile: stands)" if closed_stands and not ok else ""))
+    else:
+        src = "kit gate_result.json" if ev and ev.get("max_root_sinks") == n else "this block's latest synthesized design"
+        g.add("FAIL", "clock_rule", f"{text} [{src}]", TL.CLOCK_RULE_FIX)
+    return res
 
 
 TEXTBOOK_FIX = {
@@ -532,6 +603,14 @@ def main(argv=None) -> int:
     except RT.SpecError as ex:
         g.add("FAIL", "spec", str(ex), "fix the tile spec")
     g.print()
+    if a.remote and getattr(g, "clock", None) and "kd" in locals():
+        out = {"schema": "opentallas.ref_tile.gate_result.v1", "kit": kd.name, "verdict": g.verdict,
+               "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": a.remote, "cts": bool(a.cts),
+               "commit": subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short=9", "HEAD"], capture_output=True,
+                                        text=True).stdout.strip(),
+               "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+        (kd / CLOCK_RESULT).write_text(json.dumps(out, indent=1) + "\n")
+        print(f"GATE: {kd.name}/{CLOCK_RESULT} written (clock evidence for the submit gate: commit it with the kit)")
     if a.json:
         Path(a.json).write_text(json.dumps({"verdict": g.verdict, "items": g.items}, indent=1) + "\n")
     return 1 if g.verdict == "FAIL" else 0
@@ -584,7 +663,8 @@ def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") ->
     return res
 
 
-def submit_check(spec: dict, repo: str | None = None) -> dict:
+def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = None,
+                 closed_stands: bool = False, clock_mode: str = "refuse") -> dict:
     """closure-loop submit hook: the LOCAL gate on a job spec AT ITS SOURCE COMMIT (kit / pins / RTL / children /
     source-sync for "ref_tile": true; source-sync only for any other job).  {"verdict": PASS|WARN|REFUSE|SKIP, "message"}.
     Never raises."""
@@ -612,6 +692,12 @@ def submit_check(spec: dict, repo: str | None = None) -> dict:
                         check_sources(g, spec, json.loads((Path(td) / kit / "floorplan.json").read_text())
                                       .get("referenced", []), commit)
                         check_slot_fit(g, Path(td) / kit, spec, repo, commit)
+                        if clock_mode != "off":
+                            check_clock_evidence(g, Path(td) / kit, known_sinks, closed_stands)
+                            if clock_mode != "refuse":
+                                for i in g.items:
+                                    if i["check"] == "clock_rule" and i["severity"] == "FAIL":
+                                        i["severity"] = "WARN"
             else:
                 ROOT = RT.ROOT = Path(repo)
                 check_sources(g, spec, (), commit)
@@ -623,7 +709,8 @@ def submit_check(spec: dict, repo: str | None = None) -> dict:
     warns = [i for i in g.items if i["severity"] == "WARN"]
     msg = " | ".join(f"{i['check']}: {i['message']}" + (f" (fix: {i['fix']})" if i["fix"] else "")
                      for i in (fails or warns))[:1500]
-    return {"verdict": "REFUSE" if fails else ("WARN" if warns else "PASS"), "message": msg or "pre-route gate PASS"}
+    return {"verdict": "REFUSE" if fails else ("WARN" if warns else "PASS"), "message": msg or "pre-route gate PASS",
+            "clock": getattr(g, "clock", None)}
 
 if __name__ == "__main__":
     sys.exit(main())

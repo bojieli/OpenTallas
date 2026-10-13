@@ -27,10 +27,9 @@ def outline(w: int, fi: str, fo: str) -> dict:
     face against 17.28, and 128 um2 of flops + 113 um2 of output delay cells exceed the 196 um2 core).
     Pins take 2 tracks (0.096 um) a bit on the data faces; std = flops + BUF-HB4-BUF per output at ~0.52; every
     dimension is a multiple of 2.16 um (row 0.27, site 0.054, M4/M5 track 0.048)."""
-    if w <= 2:
-        return {"w": 8.64, "h": 8.64}
-    if w <= 15:
-        return {"w": 10.8, "h": 10.8}
+    # W <= 15 also take 15.12: at 8.64 / 10.8 (v2 routes, timing closed) the M5 PG stripes inside the 2.16-um margins span
+    # 31% / 50% of the tile and the exported view fails child_lint (b) (>= 2 stripes a net over > 50%); 15.12 is the
+    # smallest outline of this margin / 2.7-um pitch that passes (54%), proven on the W 54-68 masters
     if w <= 68:
         return {"w": 15.12, "h": 15.12}
     # wide column relays: the data face must hold w pins at 0.096 um
@@ -62,6 +61,7 @@ def main() -> int:
         v.append(f"    ot_s81_rly #(.W({w})) u (.ck(ck), .rs(rs), .i(i), .o(o));")
         v.append("endmodule")
         name = f"s81_rly_{w}_{ff.lower()}"
+        small = outline(w, fi, fo)["w"] <= 15.12
         pins = {f: [] for f in "NSEW"}
         pins[fi].append("i"); pins[fo].append("o"); pins[cf] += ["ck", "rs"]
         spec = {
@@ -71,9 +71,11 @@ def main() -> int:
             "outline": outline(w, fi, fo), "macros": [],
             "pins": {f: p for f, p in pins.items() if p},
             "outhold": True,
-            "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8},
+            # small tiles (<= 15.12 um): M5 PG at 2.7 um so each net has >= 2 full-length stripes spanning > 50% of the tile
+            # (v1 export child_lint (b): 1 stripe a net at 8.64, 36% span at 15.12; the 21.6 / 34.56 um masters closed at 5.4)
+            "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8, **({"m5_pg_pitch": 2.7} if small else {})},
             "job": {
-                "owner": a.owner, "branch": a.branch, "tag": "v1",
+                "owner": a.owner, "branch": a.branch, "tag": ("v3" if w <= 15 else "v2") if small else "v1",
                 "purpose": f"S81 die relay master {mst} ({n} instances in the c5 placement, generated outline + interim "
                            f"timing there): real hard tile, {w} b in {fi} / out {fo}, ck+rs {cf}, scalar ck/rs, M5 cap, one "
                            "register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps "

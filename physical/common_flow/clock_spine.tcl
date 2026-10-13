@@ -453,6 +453,7 @@ proc ot_clock_spine {} {
       set i [$it getInst]
       if {![[$i getMaster] isBlock] && [lsearch -exact $::ot_sp_icg_move $i] < 0} { lappend ::ot_sp_icg_move $i }
     }
+    set ::ot_sp_icg_port $::ot_sp_icg_move
     # + their local logic (counter / enable cone): cells within 6 net hops over nets of fanout <= 16, capped at 400 cells
     set front $::ot_sp_icg_move
     for {set d 0} {$d < 6 && [llength $front]} {incr d} {
@@ -539,13 +540,22 @@ proc ot_clock_spine {} {
       set ::ot_sp_cw [[$i getMaster] getWidth]; set ::ot_sp_retry 0
       lassign [ot_sp_legal $qx $qy] lx ly
       if {[dict exists $::ot_sp_rowor $ly]} { $i setOrient [dict get $::ot_sp_rowor $ly] }
-      $i setLocation $lx $ly; $i setPlacementStatus FIRM
+      # Only the cells ON the port net (the ICG and its enable registers: their clock pins define the root) stay FIRM, and a
+      # FIRM cell is dont_touch: the resizer sizes a FIRM cell in place and the legaliser cannot move it or a FIRM
+      # neighbour (SM tile cluster eg r11 / wg r12: the cgi input buffer of the moved cone was sized up to BUFx12f by
+      # repair_timing over the abutting FIRM AND3 -> DPL-0033 at 4_1_cts in both tiles).  The enable cone itself is left
+      # movable (PLACED on the free sites found here), so any later sizing is legalised by detailed_placement.
+      $i setLocation $lx $ly
+      if {[lsearch -exact $::ot_sp_icg_port $i] >= 0} { $i setPlacementStatus FIRM; $i setDoNotTouch 1 } else { $i setPlacementStatus PLACED }
+    }
+    foreach i $::ot_sp_icg_move {
+      if {[$i getPlacementStatus] in {FIRM LOCKED} && ![$i isDoNotTouch]} { error "OT_SPINE: moved cell [$i getName] is fixed but resizable" }
     }
     set ::ot_sp_cw $cw0
     lassign [[$::ot_sp_icg findITerm GCLK] getAvgXY] ok gx gy
     if {!$ok} { lassign [$::ot_sp_icg getLocation] gx gy }
     set ::ot_sp_root_xy [list $gx $gy]
-    puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] port-net cells (ICG + enable regs) moved beside the clock pin"
+    puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] cells moved beside the clock pin ([llength $::ot_sp_icg_port] port-net cells FIRM + dont_touch, enable cone movable)"
   }
   # sinks -> bins -> leaves
   set bins [dict create]; set ns 0
