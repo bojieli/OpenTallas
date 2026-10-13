@@ -6,13 +6,7 @@
 import argparse
 import json
 import shutil
-import sys
 from pathlib import Path
-
-import numpy as np
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from hgi_b2 import b2 as B  # noqa: E402
 
 OUT = Path(__file__).resolve().parents[2] / "results/rtl/hbm_b2_1012"
 
@@ -22,7 +16,9 @@ def main():
     ap.add_argument("vec", nargs="+", type=Path)
     ap.add_argument("--host", required=True)
     ap.add_argument("--root", required=True)
+    ap.add_argument("--exposed", type=Path, help="json {vehicle dir name: harness_b2 traffic result line / numbers}")
     a = ap.parse_args()
+    exposed = json.loads(a.exposed.read_text()) if a.exposed else {}
     rows = []
     for d in a.vec:
         v = json.loads((d / "b2/verdict.json").read_text())
@@ -41,13 +37,15 @@ def main():
                          wall_s=[p1["wall_s"], v.get("pass2_wall_s")],
                          location=f"{a.host}:{a.root}/{d.name}",
                          first_violations=v["first_violations"][:5]))
+        if a.exposed and d.name in exposed:
+            rows[-1]["exposed"] = exposed[d.name]
         if not v.get("mutant"):
             dst = OUT / d.name
             dst.mkdir(parents=True, exist_ok=True)
-            for f in ("verdict.json", "pass1.json", "slice.npy"):
+            # placement.json = rank 0's segment table in SPEC.md 2a addresses (pass 2 writes it from the per-die
+            # liveness placement; the per-die classes stay at location: b2/cls_per_die.npz)
+            for f in ("verdict.json", "pass1.json", "slice.npy", "placement.json"):
                 shutil.copy(d / "b2" / f, dst / f)
-            # the segment table in SPEC.md 2a addresses (re-derived from the pass-1 classes; same placement)
-            (dst / "placement.json").write_text(json.dumps(B.Placement(np.load(d / "b2" / "cls.npy")).table(), default=int) + "\n")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "summary.json").write_text(json.dumps(dict(
         schema="opentallas.hgi_b2.summary.v1",
@@ -60,7 +58,8 @@ def main():
     for r in rows:
         rc = r["ring_cycles"] or {}
         print(r["vehicle"], "exact", r["exact"], "viol", r["violations"], "mutant", r["mutant"], "fits", r["capacity"]["fits"],
-              "ring/layer", rc.get("max_layer_cycles"), "budget", rc.get("budget_cycles_per_layer"))
+              "serial ring/layer", rc.get("max_layer_cycles"), "EXPOSED", (r.get("exposed") or {}).get("exposed"),
+              "budget", rc.get("budget_cycles_per_layer"))
 
 
 if __name__ == "__main__":
