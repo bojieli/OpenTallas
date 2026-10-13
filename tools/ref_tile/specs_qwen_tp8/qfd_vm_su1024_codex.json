@@ -38,13 +38,14 @@
     "cts_sink": {
       "size": 12,
       "diameter_um": 20
-    }
+    },
+    "pin_v": "M3 M5"
   },
   "job": {
     "owner": "Codex:qwen_tp8_vm_split",
     "branch": "codex/qwen-tp8-die-takeover-1012",
-    "tag": "ans1",
-    "purpose": "Existing regional SU1024 answer register stages hardened as M5 leaf. Original sg and 32 local sv_k replicas preserve exact two-epoch enable. 1057 clock sinks/root, zero added latency; three leaves per region. Source-pinned full region miter plus independent SU answer gate. Native 1024-bit N/S faces full-face parent utilization .562; exact physical pin gate required.",
+    "tag": "ans2",
+    "purpose": "Existing regional SU1024 answer register stages hardened as M5 leaf. Original sg and 32 local sv_k replicas preserve exact two-epoch enable. 1057 clock sinks/root, zero added latency; three leaves per region. Source-pinned full region miter plus independent SU answer gate. Native 1024-bit N/S faces full-face parent utilization .562; exact physical pin gate required. Native IO corrected to supported M3+M5 vertical pin layers after measured default M5-only PPL-0111; no layer above M5.",
     "merge_target": "codex/qwen-tp8-die-takeover-1012",
     "benches": [
       {

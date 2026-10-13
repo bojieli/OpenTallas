@@ -1,9 +1,9 @@
 {
- "name": "qfd_vm_su1024_codex-ans1-COMMIT",
+ "name": "qfd_vm_su1024_codex-ans2-COMMIT",
  "block": "ot_qfd_vm_su1024_t",
  "ref_tile": true,
  "owner": "Codex:qwen_tp8_vm_split",
- "purpose": "Existing regional SU1024 answer register stages hardened as M5 leaf. Original sg and 32 local sv_k replicas preserve exact two-epoch enable. 1057 clock sinks/root, zero added latency; three leaves per region. Source-pinned full region miter plus independent SU answer gate. Native 1024-bit N/S faces full-face parent utilization .562; exact physical pin gate required.",
+ "purpose": "Existing regional SU1024 answer register stages hardened as M5 leaf. Original sg and 32 local sv_k replicas preserve exact two-epoch enable. 1057 clock sinks/root, zero added latency; three leaves per region. Source-pinned full region miter plus independent SU answer gate. Native 1024-bit N/S faces full-face parent utilization .562; exact physical pin gate required. Native IO corrected to supported M3+M5 vertical pin layers after measured default M5-only PPL-0111; no layer above M5.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
@@ -91,7 +91,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_su1024_codex/qfd_vm_su1024_codex-ans1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_su1024_codex/qfd_vm_su1024_codex-ans2-COMMIT"
   }
  ],
  "cycles_added": 0,

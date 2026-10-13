@@ -16,7 +16,7 @@
   19.44
  ],
  "why": "spec outline",
- "std_area_um2": 650.0,
+ "std_area_um2": 550.07424,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -45,7 +45,14 @@
  },
  "clock_port": "clk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 39% outside 45%-60% (std 550 + macro 0 in core 1418 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv",
   "physical/ref_tile/qfd_vm_su1024_codex/kit.env",
