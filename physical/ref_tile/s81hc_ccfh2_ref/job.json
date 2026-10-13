@@ -1,14 +1,14 @@
 {
- "name": "s81hc_ccfh2_ref-v1-70eafa55c",
+ "name": "s81hc_ccfh2_ref-v2m-COMMIT",
  "block": "ot_s81_hc_ccf",
  "ref_tile": true,
  "owner": "Claude:s81-suhc-hier-1011",
- "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_ccf at the HIER2 parameters; reference tile flow",
+ "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_ccf at the HIER2 parameters; reference tile flow [el1012-flowreq requeue on main HEAD: v1 EARLY_FAIL_CONGESTION over macros on 70eafa55c < eb642d870 (GRT M5/top-layer macro capacity hook) / dc5594311]",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "commit": "70eafa55c"
+  "branch": "main",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ccfh2_ref/s81hc_ccfh2_ref-v1-70eafa55c"
+   "to": "results/rtl/ref_tile/s81hc_ccfh2_ref/s81hc_ccfh2_ref-v2m-COMMIT"
   }
  ],
  "cycles_added": 0,

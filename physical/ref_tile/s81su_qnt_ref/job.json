@@ -1,13 +1,13 @@
 {
- "name": "s81su_qnt_ref-v2-COMMIT",
+ "name": "s81su_qnt_ref-v4m-COMMIT",
  "block": "dsfd_su_t_qnt",
  "ref_tile": true,
  "owner": "Claude:el1011-s81su",
- "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the QN tap (x2, data halves): pin flops, row numbering, registered rotation of the operand rows into 16 positions x 256 b (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow [M5 layer cap re-kit 10-12]",
+ "purpose": "el1011-s81su PHYSICAL SPEC QN v3: the QN tap (x2, data halves): pin flops, row numbering, registered rotation of the operand rows into 16 positions x 256 b (replaces dsfd_su_t_qn0/qn1, 450,764 flops one root); reference tile flow [M5 layer cap re-kit 10-12] [el1012-flowreq requeue on main HEAD: M5 re-kit; v1 REFUSED pg_layer M6]",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/el1011-s81su",
+  "branch": "main",
   "commit": "COMMIT"
  },
  "stages": {
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_qnt_ref/s81su_qnt_ref-v2-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_qnt_ref/s81su_qnt_ref-v4m-COMMIT"
   }
  ],
  "cycles_added": 0,
