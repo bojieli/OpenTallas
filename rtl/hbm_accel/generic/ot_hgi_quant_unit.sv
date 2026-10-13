@@ -20,7 +20,7 @@ module ot_hgi_quant_unit #(
     parameter integer WLQ = 16,        // lane credits (WIDE)
     parameter integer WMUT = 0,        // bench: ot_hgi_quant_wide MUT; 3 = every record forced to the packet path
     parameter integer WNB = 16, WOD = 32,
-    parameter integer WQ = 0           // el1011-hbm-fq: 1 = ot_hgi_quant_wide_q (flat lane-quad), 2 = ot_hgi_quant_wide_h (hierarchical tiles)
+    parameter integer WQ = 0           // el1011-hbm-fq: 1 = ot_hgi_quant_wide_q (flat lane-quad), 2 = ot_hgi_quant_wide_h (hierarchical tiles), 3 = opt-in record overlap
 ) (
     input  wire          clk,
     input  wire          rst_n,

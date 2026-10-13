@@ -1,0 +1,95 @@
+{
+ "rtl_source": "c8c47022e",
+ "rtl_hash_evidence": "results/arch/hbm_quant_overlap_1012/r4_rtl_hashes.json",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "host": "ot-epyc4",
+ "production_price_unchanged": 168,
+ "adoption": "OPT-IN WQ3; pending physical cluster closure, WQ2 unchanged",
+ "cases": {
+  "production/m0": {
+   "expect_pass": true,
+   "rc": 0,
+   "pass_marker": true,
+   "records": 8,
+   "words": 3328,
+   "cycles": 184,
+   "priced": 168
+  },
+  "production/m1": {
+   "expect_pass": false,
+   "rc": 1,
+   "pass_marker": false
+  },
+  "production/w1": {
+   "expect_pass": false,
+   "rc": 1,
+   "pass_marker": false
+  },
+  "production/w3": {
+   "expect_pass": true,
+   "rc": 0,
+   "pass_marker": true,
+   "records": 8,
+   "words": 3328,
+   "cycles": 2319,
+   "priced": 168
+  },
+  "production/sk": {
+   "expect_pass": true,
+   "rc": 0,
+   "pass_marker": true,
+   "records": 8,
+   "words": 3328,
+   "cycles": 222,
+   "priced": 168
+  },
+  "production/r2": {
+   "expect_pass": false,
+   "rc": 1,
+   "pass_marker": false
+  },
+  "raw/m0": {
+   "expect_pass": true,
+   "rc": 0,
+   "pass_marker": true,
+   "records": 2,
+   "words": 640,
+   "cycles": 171,
+   "priced": 36
+  },
+  "raw/m1": {
+   "expect_pass": false,
+   "rc": 1,
+   "pass_marker": false
+  },
+  "raw/w1": {
+   "expect_pass": false,
+   "rc": 1,
+   "pass_marker": false
+  },
+  "raw/w3": {
+   "expect_pass": true,
+   "rc": 0,
+   "pass_marker": true,
+   "records": 2,
+   "words": 640,
+   "cycles": 453,
+   "priced": 36
+  },
+  "raw/sk": {
+   "expect_pass": true,
+   "rc": 0,
+   "pass_marker": true,
+   "records": 2,
+   "words": 640,
+   "cycles": 247,
+   "priced": 36
+  },
+  "raw/r2": {
+   "expect_pass": false,
+   "rc": 1,
+   "pass_marker": false
+  }
+ },
+ "production_ratio": 1.0952380952380953
+}

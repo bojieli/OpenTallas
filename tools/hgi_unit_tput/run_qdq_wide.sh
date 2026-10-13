@@ -2,10 +2,11 @@
 # FUSED.QDQ WIDE throughput bench (tput-gate-1010): tb_hgi_quant_wide_tput (Verilator): m0 PASS; m1 (header A bit) and
 # w1 (wide tag mutant) FAIL; w3 (forced packet path) PASS (control).
 # usage (from the repo root): tools/hgi_unit_tput/run_qdq.sh <vectors dir> <out dir>
-# env: OVERLAP (0 historical serial issuer; 1 issue on ready independently of completions), QDQ_DEFS (extra Verilator defines, e.g. +define+OT_QW_DEC3 for the 3-tile decoder), SERIAL_SHAPE (0|1), WQ (0|1|2: 1 flat lane-quad ot_hgi_quant_wide_q, 2 hierarchical ot_hgi_quant_wide_h), VERILATOR
+# env: OVERLAP (0 historical serial issuer; 1 issue on ready independently of completions), QDQ_DEFS (extra Verilator defines, e.g. +define+OT_QW_DEC3 for the 3-tile decoder), SERIAL_SHAPE (0|1), WQ (0|1|2: 1 flat lane-quad ot_hgi_quant_wide_q, 2 hierarchical ot_hgi_quant_wide_h, 3 opt-in record-overlap), VERILATOR
 set -euo pipefail
 vec=$(realpath "$1"); out=$(realpath -m "$2"); mkdir -p "$out"
 VL=${VERILATOR:-verilator}
+"$VL" --version > "$out/tool_version"
 hdc=(rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv
      rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv)
 src=("${hdc[@]}" physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv
@@ -26,6 +27,6 @@ for c in "${cfg[@]}"; do t=${c%%:*}
 done
 ok=1
 positive=(m0 w3); negative=(m1 w1); if [ "${WQ:-0}" = 3 ]; then positive+=(sk); negative+=(r2); fi
-for t in "${positive[@]}"; do grep -q "PASS HGI_QDQ_WIDE_TPUT" "$out/$t.log" || ok=0; done
-for t in "${negative[@]}"; do grep -q "PASS HGI_QDQ_WIDE_TPUT" "$out/$t.log" && ok=0; grep -qE "FATAL|MISMATCH" "$out/$t.log" || ok=0; done   # a mutant must FAIL in simulation, not in the build
+for t in "${positive[@]}"; do [ "$(cat "$out/$t.rc")" = 0 ] || ok=0; grep -q "PASS HGI_QDQ_WIDE_TPUT" "$out/$t.log" || ok=0; done
+for t in "${negative[@]}"; do [ "$(cat "$out/$t.rc")" != 0 ] || ok=0; grep -q "PASS HGI_QDQ_WIDE_TPUT" "$out/$t.log" && ok=0; grep -qE "FATAL|MISMATCH" "$out/$t.log" || ok=0; done   # a mutant must FAIL in simulation, not in the build
 [ $ok = 1 ] && echo "QDQ_WIDE_TPUT GATE PASS (positive cases PASS, negative cases FAIL)" | tee "$out/gate" || { echo "QDQ_WIDE_TPUT GATE FAIL" | tee "$out/gate"; exit 1; }
