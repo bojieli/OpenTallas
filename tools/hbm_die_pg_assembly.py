@@ -140,7 +140,8 @@ set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name top -voltage_domains CORE
 '''
     for ly in (('M7', 'M8', 'M9') if a.mode == 'vm' else ('M9',)):
-        tcl += f'add_pdn_stripe -grid top -layer {ly} -width 0.48 -pitch 4.896 -spacing 1.968 -offset 2.16\n'
+        width = .544 if ly == 'M7' else .48
+        tcl += f'add_pdn_stripe -grid top -layer {ly} -width {width:.3f} -pitch 4.896 -spacing {4.896 / 2 - width:.3f} -offset 2.16\n'
     if a.mode == 'vm':
         tcl += 'add_pdn_connect -grid top -layers {M7 M8}\nadd_pdn_connect -grid top -layers {M8 M9}\n'
     groups = {}

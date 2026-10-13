@@ -71,7 +71,7 @@ initialize_floorplan -die_area {{0 0 32.4 32.4}} -core_area {{0 0 32.4 32.4}} -s
     for i in range(4):
         y=4.32+i*5.4
         for n,x in ((f'b{i}',4.32),(f'f{i}',10.8),(f'v{i}',12.096)):
-            t+=f'place_cell -inst_name {n} -origin {{{x} {y}}} -orient R0 -status FIRM\n'
+            t+=f'set inst [[ord::get_db_block] findInst {n}]\n$inst setLocation {round(x*1000)} {round(y*1000)}\n$inst setOrient R0\n$inst setPlacementStatus FIRM\n'
     t+='''check_placement
 add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power
 add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
@@ -79,8 +79,8 @@ global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name native -voltage_domains CORE -pins {M5}
 add_pdn_stripe -grid native -layer M1 -width 0.018 -followpins
-add_pdn_stripe -grid native -layer M2 -width 0.048 -pitch 1.08 -spacing 0.492 -offset 0.27
-add_pdn_stripe -grid native -layer M3 -width 0.048 -pitch 1.08 -spacing 0.492 -offset 0.27
+add_pdn_stripe -grid native -layer M2 -width 0.018 -followpins
+add_pdn_stripe -grid native -layer M3 -width 0.09 -pitch 1.08 -spacing 0.45 -offset 0.27
 add_pdn_stripe -grid native -layer M4 -width 0.12 -pitch 2.16 -spacing 0.96 -offset 0.54
 add_pdn_stripe -grid native -layer M5 -width 0.12 -pitch 2.16 -spacing 0.96 -offset 0.54
 foreach pair {{M1 M2} {M2 M3} {M3 M4} {M4 M5}} { add_pdn_connect -grid native -layers $pair }
