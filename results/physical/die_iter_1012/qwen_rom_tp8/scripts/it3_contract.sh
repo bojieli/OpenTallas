@@ -13,8 +13,8 @@ cd $WT || exit 1; SRC=$(git rev-parse --short=9 HEAD); log "it3 start src $SRC"
 echo $SRC > $L/gen_case/SOURCE_COMMIT; echo "--recipe $RC --pdn-rev r5" > $L/gen_case/SOURCE_NOTE
 log "gen: $(tail -1 $L/gen.log | cut -c1-300)"
 python3 tools/qwen_tp8/relay_ck_check.py $L/gen_case/die.v > $L/relay_ck_gen.log 2>&1; log "relay ck (gen) rc=$? $(cut -c1-200 $L/relay_ck_gen.log)"
-[ -f $L/plan/physical_model.json ] || { log "NO plan/physical_model.json (run tools/qwen_tp8/cut_dump.py $L/plan first)"; exit 1; }
-python3 tools/qwen_tp8/freeze_actual_case.py $L/gen_case $L/plan/physical_model.json $L/model_gen.json > $L/freeze.log 2>&1 || { log "FREEZE FAIL $(tail -1 $L/freeze.log | cut -c1-300)"; exit 1; }
+[ -f ${TEMPLATE:-$L/plan/physical_model.json} ] || { log "NO plan/physical_model.json (run tools/qwen_tp8/cut_dump.py $L/plan first)"; exit 1; }
+python3 tools/qwen_tp8/freeze_actual_case.py $L/gen_case ${TEMPLATE:-$L/plan/physical_model.json} $L/model_gen.json > $L/freeze.log 2>&1 || { log "FREEZE FAIL $(tail -1 $L/freeze.log | cut -c1-300)"; exit 1; }
 KO=$(python3 -c "
 import sys; sys.path.insert(0,'tools'); import die_top_lint as D
 print(' '.join('--keepout '+','.join(str(q) for q in r['rect']) for r in D.QWEN_RECIPES['$RC']['tp8']['f2'].get('reserve',[])))")
