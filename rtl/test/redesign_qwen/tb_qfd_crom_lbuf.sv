@@ -105,6 +105,7 @@ module tb_qfd_crom_lbuf #(parameter integer MUT = 0, parameter integer FLP = 11,
         re = 0; addr = 0; cst = 0; stage_tb = 0; tok_start_tb = 0; tpos = 100;
         repeat (5) @(posedge clk);
         rst_n = 1;
+        if (TILE != 0) repeat (4) @(posedge clk);  // ot_rst_relay: the tile releases 3 edges after the port
         for (t = 0; t < NTOK; t = t + 1) begin
             if (GATE == 0) begin @(posedge clk); tok_start_tb <= 1; tpos <= 100 + t; stage_tb <= 0;
                 @(posedge clk); tok_start_tb <= 0; end

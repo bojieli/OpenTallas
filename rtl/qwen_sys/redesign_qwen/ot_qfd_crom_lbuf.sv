@@ -57,7 +57,11 @@ module ot_qfd_crom_lbuf #(
     parameter integer PINREG = 0,
     parameter integer FLS = 0,
     parameter integer FLMAX = 31,
-    parameter integer FLW = 5
+    parameter integer FLW = 5,
+    // RSTR = 1 (q13 r2, die tile): the rst_n port drives only an ot_rst_relay (2 sync + 1 relay flop, three kept region
+    //           copies: SU answer side / prefetcher / tag line + context); release is 3 edges after the port, the same
+    //           edge in every region.  Inputs are ignored until then (the die holds reset >= 3 edges before traffic).
+    parameter integer RSTR = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -83,6 +87,19 @@ module ot_qfd_crom_lbuf #(
     output reg               fault,
     output reg  [1:0]        fault_code
 );
+    wire rst_a, rst_b, rst_c;                  // region resets: SU answer side / prefetcher / tag line + context
+    generate if (RSTR != 0) begin : g_rr
+        // the ot_rst_relay structure (rtl/lib/ot_rst_relay.sv), in line: this file is compiled by many benches without rtl/lib
+        (* async_reg = "true" *) reg [1:0] rr_s;
+        (* keep = "true", dont_touch = "true" *) reg [2:0] rr_q;      // one kept copy per region
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin rr_s <= 2'b00; rr_q <= 3'd0; end
+            else begin rr_s <= {rr_s[0], 1'b1}; rr_q <= {3{rr_s[1]}}; end
+        end
+        assign {rst_c, rst_b, rst_a} = rr_q;
+    end else begin : g_nrr
+        assign rst_a = rst_n; assign rst_b = rst_n; assign rst_c = rst_n;
+    end endgenerate
     //: far-ROM answer pin flops (PINREG 1): nothing but a flop behind f_q / f_fault
     wire [SW*64-1:0] f_q_i;
     wire             f_fault_i;
@@ -90,7 +107,7 @@ module ot_qfd_crom_lbuf #(
         reg [SW*64-1:0] f_q_r;
         reg             f_fault_r;
         always @(posedge clk) f_q_r <= f_q;
-        always @(posedge clk or negedge rst_n) if (!rst_n) f_fault_r <= 1'b0; else f_fault_r <= f_fault;
+        always @(posedge clk or negedge rst_c) if (!rst_c) f_fault_r <= 1'b0; else f_fault_r <= f_fault;
         assign f_q_i = f_q_r; assign f_fault_i = f_fault_r;
     end else begin : g_nfpin
         assign f_q_i = f_q; assign f_fault_i = f_fault;
@@ -99,7 +116,7 @@ module ot_qfd_crom_lbuf #(
     reg  [LW-1:0]  stage_q;
     reg  [NW-1:0]  tpos_q, tpos1_q;
     reg            tok_q;
-    always @(posedge clk or negedge rst_n) if (!rst_n) tok_q <= 1'b0; else tok_q <= tok_start;
+    always @(posedge clk or negedge rst_c) if (!rst_c) tok_q <= 1'b0; else tok_q <= tok_start;
     always @(posedge clk) begin stage_q <= stage; tpos_q <= tpos; tpos1_q <= tpos_q + 1'b1; end
     localparam integer RB = 8;                 // local row bits (>= 148)
     localparam [2:0] K_ZERO = 3'd0, K_QSC = 3'd1, K_WIDE = 3'd2, K_NARROW = 3'd3, K_BAD = 3'd4;
@@ -122,7 +139,7 @@ module ot_qfd_crom_lbuf #(
     //: (qualified by the stage it was computed for, so a stage change is never answered by the previous stage's flag)
     reg st_rdy_r;
     reg [LW-1:0] st_rdy_s;
-    always @(posedge clk or negedge rst_n) if (!rst_n) st_rdy_r <= 1'b0; else st_rdy_r <= res_stage && (stage_q != 0 || res_rope);
+    always @(posedge clk or negedge rst_c) if (!rst_c) st_rdy_r <= 1'b0; else st_rdy_r <= res_stage && (stage_q != 0 || res_rope);
     always @(posedge clk) st_rdy_s <= stage_q;
     assign st_rdy = st_rdy_r; assign st_rdy_stage = st_rdy_s;
 
@@ -157,8 +174,8 @@ module ot_qfd_crom_lbuf #(
     wire [3 + RB - 1:0] rt_d = {f_kind, (f_kind == F_ROPE) ? f_slot : (par(f_st) ^ ((MUT == 2) ? 1'b1 : 1'b0)), f_r};
     localparam integer PR = (PINREG != 0) ? 1 : 0;
     generate if (FLS == 0) begin : g_flp
-        ot_hdc_delay #(.W(1), .D(FLP + 1 + PR), .RESET(1)) u_rv (.clk(clk), .rst_n(rst_n), .d(issue), .q(rv_done));
-        ot_hdc_delay #(.W(3 + RB), .D(FLP + 1 + PR)) u_rt (.clk(clk), .rst_n(rst_n), .d(rt_d), .q({rt_kind, rt_sel, rt_row}));
+        ot_hdc_delay #(.W(1), .D(FLP + 1 + PR), .RESET(1)) u_rv (.clk(clk), .rst_n(rst_c), .d(issue), .q(rv_done));
+        ot_hdc_delay #(.W(3 + RB), .D(FLP + 1 + PR)) u_rt (.clk(clk), .rst_n(rst_c), .d(rt_d), .q({rt_kind, rt_sel, rt_row}));
     end else begin : g_fls
         localparam integer TD = FLMAX + PR;    // deepest tap
         localparam integer TW = 3 + RB;
@@ -179,8 +196,8 @@ module ot_qfd_crom_lbuf #(
         end
         reg             v_o;
         reg  [TW-1:0]   t_o;
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin v_line <= {TD{1'b0}}; v_o <= 1'b0; end
+        always @(posedge clk or negedge rst_c) begin
+            if (!rst_c) begin v_line <= {TD{1'b0}}; v_o <= 1'b0; end
             else begin v_line <= v_tap[TD-1:0]; v_o <= v_m; end
         end
         always @(posedge clk) begin t_line <= t_tap[TW*TD-1:0]; t_o <= t_m; end
@@ -188,8 +205,8 @@ module ot_qfd_crom_lbuf #(
         assign {rt_kind, rt_sel, rt_row} = t_o;
     end endgenerate
     integer la, lw, ld, lr, lo;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_b) begin
+        if (!rst_b) begin
             busy <= 1'b0; f_kind <= F_NONE; f_re <= 0; val_n <= 2'b00; val_f <= 1'b0; val_r <= 2'b00; f_out <= 0;
             pend_rope <= 1'b0; tok_pend <= 1'b0;
         end else begin
@@ -246,14 +263,14 @@ module ot_qfd_crom_lbuf #(
     wire [SW-1:0]    re1;
     wire [SW*AW-1:0] a1;
     wire [LW-1:0]    st1;
-    ot_hdc_delay #(.W(SW), .D(1), .RESET(1)) u_is_re (.clk(clk), .rst_n(rst_n), .d(crom_re), .q(re1));
-    ot_hdc_delay #(.W(SW*AW + LW), .D(1)) u_is_a (.clk(clk), .rst_n(rst_n), .d({crom_addr, crom_stage}), .q({a1, st1}));
+    ot_hdc_delay #(.W(SW), .D(1), .RESET(1)) u_is_re (.clk(clk), .rst_n(rst_a), .d(crom_re), .q(re1));
+    ot_hdc_delay #(.W(SW*AW + LW), .D(1)) u_is_a (.clk(clk), .rst_n(rst_a), .d({crom_addr, crom_stage}), .q({a1, st1}));
     reg [SW-1:0]    t_v, t_miss;
     reg [SW*3-1:0]  t_kind;
     reg [SW*RB-1:0] t_row;
     reg [SW*2-1:0]  t_bank;                    // 0 / 1 narrow, 2 F, 3 rope (t_row[0] = rope slot)
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin t_v <= 0; t_miss <= 0; end
+    always @(posedge clk or negedge rst_a) begin
+        if (!rst_a) begin t_v <= 0; t_miss <= 0; end
         else begin
             for (ld = 0; ld < SW; ld = ld + 1) begin : g_dec
                 reg [AW-1:0] a, off;
@@ -295,8 +312,8 @@ module ot_qfd_crom_lbuf #(
     reg [SW-1:0]   m_v, c_v;
     reg [SW*3-1:0] m_kind, c_kind;
     reg [SW*64-1:0] m_w, c_w;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin m_v <= 0; c_v <= 0; end
+    always @(posedge clk or negedge rst_a) begin
+        if (!rst_a) begin m_v <= 0; c_v <= 0; end
         else begin m_v <= t_v & ~t_miss; c_v <= m_v; end
     end
     reg grp_dis;                               // SRAM: lanes of one group disagree on the row (contract violation)
@@ -358,15 +375,24 @@ module ot_qfd_crom_lbuf #(
                 wire [6:0] rm = ra[9] ? {1'b0, ra[5:0]} : ra[7] ? {1'b1, ra[8], ra[4:0]} : ra[6:0];
                 wire [6:0] wm = wa[9] ? {1'b0, wa[5:0]} : wa[7] ? {1'b1, wa[8], wa[4:0]} : wa[6:0];
                 wire [3*256-1:0] rdm;
-                reg  [1:0] rs_q;
-                always @(posedge clk) rs_q <= rs;
+                // q13 r2: one select register PER LANE (32 answer bits each; one register for the 256-bit mux was 512
+                // loads).  A lane that is not answering from its group macro (rope / hardwired) does not use rd, so its
+                // copy is gated with the lane's own decode: the copies are logically distinct and are never merged.
+                reg  [8*2-1:0] rs_q;
+                integer q;
+                always @(posedge clk) for (q = 0; q < 8; q = q + 1)
+                    rs_q[q*2 +: 2] <= (t_bank[(gg*8 + q)*2 +: 2] != 2'd3) ? rs : 2'd0;
                 genvar mm;
                 for (mm = 0; mm < 3; mm = mm + 1) begin : g_m
                     ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(ce && rs == mm), .r_addr_in(rm),
                         .rd_out(rdm[mm*256 +: 256]), .w_ce_in(wce && ws == mm), .w_addr_in(wm), .wd_in(wd),
                         .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
                 end
-                assign rd[gg*256 +: 256] = (rs_q == 2'd0) ? rdm[0 +: 256] : (rs_q == 2'd1) ? rdm[256 +: 256] : rdm[512 +: 256];
+                genvar ql;
+                for (ql = 0; ql < 8; ql = ql + 1) begin : g_ql
+                    assign rd[gg*256 + ql*32 +: 32] = (rs_q[ql*2 +: 2] == 2'd0) ? rdm[ql*32 +: 32] :
+                        (rs_q[ql*2 +: 2] == 2'd1) ? rdm[256 + ql*32 +: 32] : rdm[512 + ql*32 +: 32];
+                end
             end
         end
         always @(posedge clk) begin
@@ -405,8 +431,8 @@ module ot_qfd_crom_lbuf #(
             endcase
         end
     end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin fault <= 1'b0; fault_code <= 2'd0; end
+    always @(posedge clk or negedge rst_a) begin
+        if (!rst_a) begin fault <= 1'b0; fault_code <= 2'd0; end
         else if (!fault && ((|t_miss) || f_fault_i || grp_dis)) begin fault <= 1'b1; fault_code <= (|t_miss) ? 2'd1 : f_fault_i ? 2'd2 : 2'd3; end
     end
 endmodule
@@ -477,7 +503,7 @@ module ot_qfd_su_cbuf_g (
 `endif
     reg [2:0] grp_q;                           // strap pin flop
     always @(posedge clk) grp_q <= grp;
-    ot_qfd_crom_lbuf #(.SW(8), .SRAM(2), .FLP(11), .PINREG(1), .FLS(1), .FLMAX(31), .FLW(5), .MUT(`OT_CBUF_G_MUT)) u_b (
+    ot_qfd_crom_lbuf #(.SW(8), .SRAM(2), .FLP(11), .PINREG(1), .FLS(1), .FLMAX(31), .FLW(5), .RSTR(1), .MUT(`OT_CBUF_G_MUT)) u_b (
         .clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos),
         .lane_base({18'd0, grp_q, 3'd0}), .st_rdy(st_rdy), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
