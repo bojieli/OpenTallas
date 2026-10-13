@@ -82,5 +82,40 @@
     "contract replacement from historical 88-lane envelope to two real bank tiles",
     "full production exact+mutants+throughput",
     "current fresh child route TT/FF/DRC"
-  ]
+  ],
+  "residual_candidate": {
+    "status": "CANDIDATE_NOT_ADOPTED",
+    "source_arithmetic": "origin/main ot_hgi_hc_eng_ll.sv lane_ll",
+    "quarter_count": 4,
+    "lanes_quarter": 8,
+    "elements_quarter": 1280,
+    "elements_sector": 8,
+    "sectors_lane": 20,
+    "local_sector_stride": 8,
+    "scalar_post": "post4 plus combination16 words multicast unchanged",
+    "scalar_pre": "pre4 plus final rsqrt multicast unchanged",
+    "pre_chunk_tag": "QID*160 + local_chunk (0..639)",
+    "central_reduction": "collect640 tagged chunk8 sequential squares into original32-leaf blocks then padded20-block heap; same FP32 addition tree and padding order",
+    "finite_buffer_required": {
+      "chunk_words": 640,
+      "chunk_bits": 20480,
+      "valid_bits": 640,
+      "per_lane_up_fifo": 32,
+      "roundtrip_credits": "at least4+2*relays"
+    },
+    "up_chunk_packet_bits": 43,
+    "central_full_row_incoming_bits": 27520,
+    "post_output_sectors_die": 2560,
+    "pre_output_sectors_die": 640,
+    "immutable_price": {
+      "FUSED.HC_POST": 222.7
+    },
+    "physical_missing": [
+      "8-lane local station conversion",
+      "central reduction/control hardened view",
+      "real leaf+lane+quarter mapped die PG/clock",
+      "chunk collector credits and protocol RTL",
+      "exact/prod/mutants at productionD5120"
+    ]
+  }
 }
