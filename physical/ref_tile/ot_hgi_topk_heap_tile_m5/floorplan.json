@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  261.36,
-  261.36
+  259.2,
+  259.2
  ],
  "core": [
   2.16,
   2.16,
-  259.2,
-  259.2
+  257.03999999999996,
+  257.03999999999996
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -29,84 +29,82 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "W": [
+  "N": [
    "clk",
    "clr_go",
-   "k",
-   "op_ext",
-   "op_v",
-   "op_x",
-   "rst_n"
-  ],
-  "E": [
    "ext_d",
    "ext_v",
    "idle",
+   "k",
    "op_cr",
-   "root_key"
+   "op_ext",
+   "op_v",
+   "op_x",
+   "root_key",
+   "rst_n"
   ]
  },
  "clock_port": "clk",
  "blocks": [
   {
    "kind": "macro",
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 25.92,
-   "y": 47.52,
+   "x": 24.624,
+   "y": 45.36,
    "w": 94.824,
-   "h": 41.04,
+   "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   },
   {
    "kind": "macro",
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 1,
-   "x": 140.832,
-   "y": 47.52,
+   "x": 139.536,
+   "y": 45.36,
    "w": 94.824,
-   "h": 41.04,
+   "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   },
   {
    "kind": "macro",
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": null,
    "idx": 2,
-   "x": 25.92,
-   "y": 110.16,
+   "x": 24.624,
+   "y": 108.0,
    "w": 94.824,
-   "h": 41.04,
+   "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   },
   {
    "kind": "macro",
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
    "master": "ot_sram_1r1w_256x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 25.92,
-   "y": 172.8,
-   "w": 172.8,
-   "h": 41.04,
+   "x": 24.624,
+   "y": 170.64,
+   "w": 172.824,
+   "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
  "findings": [],
  "referenced": [
-  "rtl/lib/ot_rst_relay.sv",
   "physical/ref_tile/ot_hgi_topk_heap_tile_m5/src/rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
-  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
   "physical/ref_tile/ot_hgi_topk_heap_tile_m5/kit.env",
   "physical/ref_tile/ot_hgi_topk_heap_tile_m5/clock.sdc",
   "physical/ref_tile/ot_hgi_topk_heap_tile_m5/signoff.sdc",
@@ -122,14 +120,15 @@
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
-  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
-  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
-  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
-  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
-  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
-  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib",
-  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib",
-  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib",
   "physical/ref_tile/ot_hgi_topk_heap_tile_m5/place.tcl"
  ]
 }

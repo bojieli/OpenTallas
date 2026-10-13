@@ -120,6 +120,11 @@ class Die:
 
 # STREAM ids by wiring (spec 2.4: fixed by the die's wiring).  PROVISIONAL table (hbm-sim -> hgi-takeover): a STREAM
 # descriptor's base is the stream id; the producer's O and the consumer's A must name the wired pair.
+# hgi_b2 (B2 four-cluster die, tools/hgi_b2): observer of every reduction that B2 may split across clusters, called with
+# (kind, op, t) where t is [rows, n] with the reduced axis last (SU segs before the reduction; ATT.PV the p x V terms per
+# head, positions last).  None in every normal run; it never changes a result.
+RED_HOOK = None
+
 STREAM_WIRING = {0: ("SM", "SU"),           # SM results into the SU lane registers
                  1: ("SU", "ARGMAX"),       # SU reduction output into the argmax unit (hb_su_red_mtp_am)
                  2: ("SM", "ARGMAX")}       # the LM-head matvec into the argmax unit
@@ -641,6 +646,8 @@ def u_att_pv(M: Machine, r: Rec, L):
             raise Fault(3, "PV: probability count != V rows")
         p = M.vm_read(a, die, L, lanes, P).reshape(lanes, P)
         for h in range(lanes):
+            if RED_HOOK is not None:
+                RED_HOOK("PV", 1, A.mul(np.asarray(p[h], dtype=F)[:, None], Vr).T)
             _write_row(M, o, die, L, h, A.att_pv(p[h], Vr))
 
 
@@ -1020,6 +1027,8 @@ def u_su_vop(M: Machine, r: Rec, L):
         if f["red"]:
             v = A.mul(out, out) if f["red_sq"] else out
             segs = v.reshape(1, -1) if (f["red_whole"] or f["red_tree"]) else v.reshape(no, ni)
+            if RED_HOOK is not None:
+                RED_HOOK("SU", int(f["red"]), segs)
             if f["red"] == I.RED_SUM:
                 vals = A.csum(segs)
             elif f["red"] == I.RED_MAX:

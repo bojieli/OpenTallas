@@ -1399,6 +1399,11 @@ def build_r25gq_net(variant):
             j_, i_ = divmod(kk, G.nx)
             if bits <= 1400:        # a 58 x 71 um station holds ~1,450 pins a face (2,224-b vmap: 2,400 was too many)
                 sw_, sh_ = 58.32, 71.28
+                # v10 STA smoke 10-12: a 1,200-b vmap station (hfd_stn_q1200) put 57.6 um of pins (one M5 track
+                # each) on a 57.1-um S face (58.32 minus the 2-track + 0.5-um end margins) and masters() refused it.
+                # Size each face to its bus: bits on the 0.048 track + both end margins + 1 um, on the placement grid.
+                need_ = bits * 0.048 + 2 * (2 * 0.048 + 0.5) + 1.0
+                sw_, sh_ = max(sw_, up(need_, GX)), max(sh_, up(need_, GY))
             else:       # a wide registered bus: a thin relay bank across the route, its faces as long as the bus needs
                 ln_ = up(bits * 0.048 + 20.0, GY)
                 k2 = pth[max(0, ix - 1)] if ix else pth[min(len(pth) - 1, 1)]

@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
-"""M5 re-route batch (owner 2026-10-12): re-route every die-used closed tile through tools/ref_tile at the M5 layer cap.
+"""M5 re-route batch: re-route a closed tile through tools/ref_tile at the M5 layer cap ONLY where a die window needs it.
+
+NARROWED SCOPE (owner 2026-10-12 19:00, supersedes the bulk re-route): a closed tile is selected only when it sits under
+  (a) a die fine cut with util > --cut-thr (0.6) in the direction its M5 cap frees: ax 'x' cuts (horizontal wires,
+      M6). Vertical cuts do not justify this reroute. Inputs: the
+      cut JSON (--cuts, default the Qwen TP8 tp8b_cuts_v3.json; entries 'fine' + 'fine_tree') and the die placement
+      next to it (--placement, default rom_tp8b.json: insts n/m/x/y/w/h).  A placed master under the window selects
+      itself only. Children inside an M7 hardened cluster cannot free die tracks by rerouting to M5.
+  (b) real die-GRT overflow over the tile footprint (--grt REPORT[:PLACEMENT], repeatable; OpenROAD congestion report
+      'bbox = ( x0, y0 ) - ( x1, y1 ) on Layer Mn' or JSON {"boxes":[{"rect":[x0,y0,x1,y1]}]}; PLACEMENT = an insts
+      JSON as above or a hier contract; HBM / DeepSeek tiles qualify only this way).
+  Every other closed tile keeps its closed (M6/M7) view and stays CLOSED.  No outline growth: a tile whose pins do not
+  fit M4/M5 at its closed outline gets an M6 PIN-ONLY layer_cap_grant proposal in its die lead's log (no kit); a tile
+  that would need a larger outline for utilisation / macro fit keeps its closed view.
 
   plan     (default, dry-run) inventory + classification, writes nothing but the state file's "plan" section
   run      generate kits for the selected tiles, local + remote pre-route gate (spread over the fleet via ot-heavy),
@@ -12,8 +25,8 @@
 
 Selection (one pass, deterministic):
   used cells   = every cell placed by a die contract (results/arch/hier_contract_1011/{qwen_rom,qwen_kv,s81,r25gq}.json
-                 and any newer *.json contract with "slots"), plus hard children of placed clusters (contract slots whose
-                 parent is a cluster slot), plus Qwen die-master cfg --macro-view children (blocked_pin_sweep.parent_index)
+                 and any newer *.json contract with "slots"); the inventory also includes cluster children, but
+                 those children have no die-window evidence and cannot qualify for this reroute.
   excluded     superseded/withdrawn (claude-takeover superseded_elements.json); HBM central-VM fallback track (hfd_vm_*,
                vm_cp_* / make_vm_cp.py specs, ot_hgi_vm_unit); B2-changed HBM units (results/arch/hbm_b2_1012/SPEC.md
                section 6); Qwen TP8 PARAMETER CHANGE / REDESIGN / REMOVED elements (results/arch/qwen_tp8_1012/
@@ -78,6 +91,20 @@ B2_CHANGED = re.compile(r"^(hfd_hgi_vms?|ot_vms_|ot_hgi_vm_|hfd_stn_lg[EW]|hb_st
                         r"hfd_quant|ot_hgi_quant|hfd_hc_eng|ot_hgi_hc_eng|hfd_coll$|ot_hgi_coll$|hfd_hgi_idx|"
                         r"ot_hgi_idx_(unit|index)|hfd_dma|ot_hgi_dma|hgi_vmw|hgi_vmr2|ot_hgi_lane(chain|station|arb))")
 MEMORY = re.compile(r"^ot_(sram|rom)_\d")
+# retry pass (coordinator 2026-10-12 18:00): pin capacity at the M5 cap.  PPL slots measured on the gate (hfd_stn_r19:
+# 683 M4 slots on a 66.96-um W face = 0.098 um/slot at PIN_MIN_TRACKS 2): W/E faces have one horizontal pin layer (M4),
+# N/S faces M5 (0.096 um/slot) plus M3 (0.072 um/slot) when M5 alone is too full.  A face loaded beyond PIN_FILL of its
+# capacity grows the tile along that face (height for W/E, width for N/S), never the layer cap (M6 only by grant).
+SLOT_M4, SLOT_M5, SLOT_M3 = 0.096, 0.096, 0.072
+PIN_FILL = 0.85
+UTIL_TARGET, UTIL_MAX = 0.52, 0.62
+SYNTH_VARS = ("SYNTH_HDL_FRONTEND", "SYNTH_MEMORY_MAX_BITS", "SYNTH_KEEP_MODULES", "SYNTH_CANONICALIZE_TCL")
+# cells the retry pass must not re-kit (die lead / contract decision pending)
+HOLD = {"qfd_crom_g": "waits for Qwen TP8 contract v3 (larger outlines)",
+        "qfd_su_cbuf_g": "waits for Qwen TP8 contract v3 (larger outlines)"}
+# a closed view whose netlist fails the textbook lint structurally (reset / port fanout in the thousands) is not fixed
+# by a re-route; per the owner's 18:20 rule the closed tile stays CLOSED on its old view
+KEEP_CLOSED = re.compile(r"textbook\.high_fanout")
 LOCK = threading.Lock()
 
 
@@ -189,6 +216,8 @@ def records() -> tuple[dict, dict, set]:
         hit = next((r for r in lst if r["job"] == job), None)
         if hit:
             hit["archive"] = str(d)
+            # the daemon's "updated" moves on every later touch (archive, auto-merge); order by the closure time
+            hit["when"] = man.get("closed_at") or hit["when"]
         else:
             lst.append({"job": job, "when": man.get("closed_at") or "", "spec": spec, "host": None, "run": None,
                         "archive": str(d), "commit": man.get("commit") or (spec.get("source") or {}).get("commit")})
@@ -218,7 +247,99 @@ def lint_fails() -> set:
     return {r["job"] for r in d.get("records", []) if r.get("c_fail") or r.get("f_fail")}
 
 
-def plan() -> dict:
+# ------------------------------------------------------------------------------------------------------ window scope
+TP8_CUTS = Path("/home/ubuntu/scratch-qwen-tp8-die/it27/tp8b_cuts_v3.json")
+CUT_THR = 0.6
+
+
+def _insts(p: Path) -> list[dict]:
+    """placement as [{n, m, x, y, w, h}] from an insts JSON (rom_tp8b.json) or a hier contract (die-level slots)"""
+    d = jload(p, {}) or {}
+    if isinstance(d.get("insts"), list):
+        return [i for i in d["insts"] if all(k in i for k in ("m", "x", "y", "w", "h"))]
+    out = []
+    slots = d.get("slots") or []
+    die_names = {s.get("name") for s in slots if s.get("kind") == "die"}
+    for s in slots:
+        if s.get("parent") and s["parent"] not in die_names:
+            continue  # a hardened child is not placed directly at the die
+        if s.get("kind") == "die" or not s.get("cell") or not s.get("origin"):
+            continue
+        out.append({"n": s["name"], "m": s["cell"], "x": float(s["origin"]["x"]), "y": float(s["origin"]["y"]),
+                    "w": float(s["outline"]["w"]), "h": float(s["outline"]["h"])})
+    return out
+
+
+def _hit(i: dict, x0, y0, x1, y1) -> bool:
+    return i["x"] < x1 and i["x"] + i["w"] > x0 and i["y"] < y1 and i["y"] + i["h"] > y0
+
+
+def hot_cuts(cuts: Path, thr: float) -> list[dict]:
+    d = jload(cuts, {}) or {}
+    seen, out = set(), []
+    for c in (d.get("fine") or []) + (d.get("fine_tree") or []):
+        k = (c["ax"], c["pos"], tuple(c["win"]))
+        if c["ax"] != "x" or k in seen or float(c.get("util", 0)) <= thr:
+            continue
+        seen.add(k)
+        out.append(c)
+    return out
+
+
+def grt_boxes(report: Path) -> list[tuple]:
+    """overflow boxes (x0, y0, x1, y1, layer) of a die GRT congestion report"""
+    t = report.read_text(errors="replace")
+    if report.suffix == ".json":
+        d = json.loads(t)
+        return [(*map(float, b["rect"]), b.get("layer", "")) for b in d.get("boxes", [])]
+    return [(float(a), float(b), float(c), float(e), ly) for a, b, c, e, ly in re.findall(
+        r"bbox\s*=\s*\(\s*([\d.]+),\s*([\d.]+)\s*\)\s*-\s*\(\s*([\d.]+),\s*([\d.]+)\s*\)\s*on Layer\s*(\S*)", t)]
+
+
+def window_scope(cuts: Path, placement: Path | None, grts: list[str], thr: float) -> dict:
+    """cell -> [why]: direct die masters under a horizontal hot window or die-GRT overflow"""
+    scope: dict[str, list] = {}
+
+    def add(master: str, why: dict):
+        scope.setdefault(master, []).append(why)
+
+    if cuts and cuts.exists():
+        ins = _insts(placement or cuts.with_name("rom_tp8b.json"))
+        for c in hot_cuts(cuts, thr):
+            lo, hi = c["win"]
+            box = (c["pos"], lo, c["pos"], hi) if c["ax"] == "x" else (lo, c["pos"], hi, c["pos"])
+            for m in sorted({i["m"] for i in ins if _hit(i, box[0] - 1e-3, box[1], box[2] + 1e-3, box[3])
+                             or _hit(i, box[0], box[1] - 1e-3, box[2], box[3] + 1e-3)}):
+                add(m, {"src": cuts.name, "ax": c["ax"], "pos": c["pos"], "win": c["win"], "util": c["util"],
+                        "frees": "M6" if c["ax"] == "x" else "M7"})
+    for g in grts or []:
+        rep, _, pl = g.partition(":")
+        ins = _insts(Path(pl)) if pl else []
+        for b in grt_boxes(Path(rep)):
+            for m in sorted({i["m"] for i in ins if _hit(i, *b[:4])}):
+                add(m, {"src": Path(rep).name, "grt_overflow": list(b[:4]), "layer": b[4], "frees": "M6"})
+    return scope
+
+
+_ALIAS: dict = {}
+
+
+def design_alias(closed: dict) -> dict:
+    """DESIGN_NAME -> record block, from the archived ORFS config.mk of every closed block's newest record"""
+    if not _ALIAS:
+        for b, recs in closed.items():
+            a = next((r["archive"] for r in reversed(recs) if r.get("archive")), None)
+            if not a:
+                continue
+            for c in Path(a).glob("run/routes/*/work/orfs/config.mk"):
+                dn = mk(c.read_text(errors="replace")).get("DESIGN_NAME")
+                if dn and dn != b:
+                    _ALIAS.setdefault(dn, b)
+                break
+    return _ALIAS
+
+
+def plan(scope: dict | None = None) -> dict:
     cells = used_cells()
     ex = exclusions()
     closed, live, pending = records()
@@ -228,11 +349,18 @@ def plan() -> dict:
     for cell, c in sorted(cells.items()):
         row = {"cell": cell, "slots": c["count"], "dies": sorted(x for x in c["dies"] if x)}
         recs = closed.get(cell, [])
+        if not recs and scope is not None and cell in scope:
+            # the closed record is filed under its job block, not the LEF / DESIGN_NAME (ot_qwen_tile_lsl <- qfd_tile_lsl)
+            recs = closed.get(design_alias(closed).get(cell), [])
+            if recs:
+                closed[cell] = recs
         rec = recs[-1] if recs else None
         spec = rec["spec"] if rec else {}
         purpose = json.dumps(spec)[:20000] if spec else ""
         reason = None
-        if cell in ex["superseded"]:
+        if scope is not None and cell not in scope:
+            reason = "not under a hot die window / die-GRT overflow (owner 19:00): closed view stands"
+        elif cell in ex["superseded"]:
             reason = "superseded"
         elif VM_FALLBACK.search(cell) or "make_vm_cp" in purpose:
             reason = "fallback (central VM, not used)"
@@ -261,6 +389,8 @@ def plan() -> dict:
             3 if (rec and rec["job"] in lf) or c.get("audit") else 4
         if p:
             row["rank"] = p.get("rank")
+        if scope is not None and cell in scope:
+            row["windows"] = scope[cell]
         row["state"] = "skip" if reason else "eligible"
         if reason:
             row["reason"] = reason
@@ -294,8 +424,10 @@ def fetch(rec: dict, block: str) -> dict:
         cfg = cfgs[0].read_text(errors="replace") if cfgs else ""
         lefs = [p for p in [a / "final" / f"{block}.lef", a / "final" / f"{block}.lef.zst",
                             *sorted((a / "final").glob("*.lef")), *sorted((a / "final").glob("*.lef.zst")),
-                            *sorted(a.glob("run/routes/*/view/*.lef")), *sorted(a.glob("run/record/**/*.lef"))]
+                            *sorted(a.glob("run/routes/*/view/*.lef")), *sorted(a.glob("run/routes/*/views/*.lef")),
+                            *sorted(a.glob("run/record/**/*.lef"))]
                 if p.exists() and "_bloat" not in p.name and "/macros/" not in str(p)]
+        lefs.sort(key=lambda p: p.name.split(".")[0] != block)     # the cell's own view first (stable otherwise)
         lef = (subprocess.run(["zstd", "-dcf", str(lefs[0])], capture_output=True).stdout.decode(errors="replace")
                if lefs and lefs[0].name.endswith(".zst") else lefs[0].read_text(errors="replace") if lefs else "")
         net = next((str(x) for x in (a / "final/6_final.v", a / "final/6_final.v.zst") if x.exists()), "")
@@ -376,7 +508,15 @@ class SpecSkip(Exception):
     pass
 
 
-def build_spec(row: dict, rec: dict, f: dict) -> dict:
+class GrantNeeded(SpecSkip):
+    """pins do not fit M4/M5 at the closed outline: propose an M6 pin-only grant, never grow the tile"""
+
+
+class KeepClosed(SpecSkip):
+    """the M5 kit would need a larger outline (utilisation / macro fit): the closed view stays"""
+
+
+def build_spec(row: dict, rec: dict, f: dict, prev_reason: str = "") -> dict:
     cell, commit = row["cell"], rec["commit"]
     if not commit:
         raise SpecSkip("closed record has no source commit")
@@ -470,6 +610,41 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
                     snap.append(tok)
             except SpecSkip:
                 pass
+    # retry pass (dsfd_p2_lnk / dsfd_coll_p2_ep bench BUILD_ERROR 2026-10-12: tools/mtp_fixlat_gate.py names its RTL by
+    # module name, so HEAD's ot_mtp_p2_prefix_path.sv (new ot_p2h_* children) met the closed-commit dsfd_p2_lnk.sv):
+    # every file of the source / bench directories (and of the files the benches reference) that changed since the
+    # closed commit joins the snapshot, so the bench and the route see the closed commit's directory, not a mix
+    import pre_route_gate as PRG
+    btoks = sorted({tok for b in benches for tok in re.findall(r"(?<![\w{/.-])((?:rtl|tools|physical|results|docs)/[\w./-]+\.\w+)",
+                                                                 b.get("cmd", ""))})
+    try:
+        clos, _, _ = PRG.referenced_closure(sorted(set(srcs) | set(btoks)), commit)
+    except Exception:  # noqa: BLE001
+        clos = set()
+    dirs = {str(Path(x).parent) for x in set(srcs) | set(btoks) | set(clos)
+            if x.startswith(("rtl/", "results/")) or (x.startswith("tools/") and x.endswith((".v", ".sv", ".svh", ".vh")))}
+    if dirs:
+        diff = git("diff", "--name-only", "--no-renames", commit, "HEAD", "--", *sorted(dirs), check=False).split()
+        for x in diff:
+            if str(Path(x).parent) in dirs and git("cat-file", "-t", f"{commit}:{x}", check=False).strip() == "blob":
+                snap.append(x)
+    # files outside the loop's synced paths (tools rtl physical Makefile) the route / benches read
+    synced = PRG.DEFAULT_SRC_PATHS
+    extra = sorted({str(Path(x).parent) for x in set(srcs) | set(btoks) | set(clos)
+                    if not any(x == s_ or x.startswith(s_ + "/") for s_ in synced) and (ROOT / x).exists()})
+    # synthesis settings of the closed config.mk the RTL needs (slang frontend for SV packages / import, memory bits)
+    for k in SYNTH_VARS:
+        val = (v.get(k) or "").strip()
+        if not val or (k == "SYNTH_MEMORY_MAX_BITS" and val.isdigit() and int(val) <= 65536):
+            continue
+        if val.startswith("/"):
+            rp = repo_path(val)
+            if rp is None or not (ROOT / rp).exists():
+                continue
+            val = rp
+        if re.search(r"\s", val):
+            continue
+        orfs_vars[k] = val
     snap = sorted(set(snap))
     if snap:
         srcs = [f"{kd}/src/{s}" if s in snap else s for s in srcs]
@@ -483,13 +658,38 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
     # vertical-face pin capacity at the M5 cap: PPL keeps PIN_MIN_TRACKS=2 on the vertical pin layer (M5, 48 nm pitch),
     # so a N/S face holds ~W/0.096 pins on M5 alone; a face fuller than 90% of that gets M3 too (M3 M5, both under the
     # cap; ot_pqc_t_ix: 1,024 xw pins on a 97.2-um N face, PPL-0111 with M5 only, its closed view had M3 + M5)
-    ns = {fc: sum(faces[b].get(fc, 0) for b in faces) for fc in ("N", "S")}
-    route_x = {"pin_v": "M3 M5"} if max(ns.values()) > 0.9 * W / 0.096 else {}
+    W0, H0 = W, H
+    bits = {b: max(1, sum(fc.values())) for b, fc in faces.items()}
+    load = {fc: sum(bits[b] for b in pins.get(fc, [])) for fc in ("N", "S", "W", "E")}
+    cm = 2 * 2.16
+    route_x, grow = {}, []
+    # owner 19:00: NO outline growth.  The closed outline is the slot; a face whose pins exceed PIN_FILL of its M4/M5
+    # capacity gets an M6 PIN-ONLY layer_cap_grant proposal (die lead decides), a tile whose utilisation needs a
+    # bigger outline keeps its closed view (gate: "synthesized std area .. util 75%"; loop FLOORPLAN_MARGIN)
+    mu = re.search(r"(?:\butil|utilisation) (\d+(?:\.\d+)?)%", prev_reason or "")
+    if mu and float(mu.group(1)) / 100 > UTIL_MAX - 0.02:
+        raise KeepClosed(f"utilisation {mu.group(1)}% at the closed outline would need a larger slot (no growth)")
+    we = max(load["W"], load["E"])
+    if we > PIN_FILL * (H - cm) / SLOT_M4:
+        grow.append(f"W/E face {we} pins > {PIN_FILL:.0%} of M4 capacity on {H:.1f} um")
+    ns_ = max(load["N"], load["S"])
+    if ns_ > PIN_FILL * (W - cm) / SLOT_M5:
+        route_x = {"pin_v": "M3 M5"}
+        if ns_ > PIN_FILL * (W - cm) * (1 / SLOT_M5 + 1 / SLOT_M3):
+            grow.append(f"N/S face {ns_} pins > {PIN_FILL:.0%} of M3+M5 capacity on {W:.1f} um")
+    tot = sum(bits.values())
+    if tot > PIN_FILL * 2 * (W + H - 2 * cm) / SLOT_M4:
+        grow.append(f"perimeter {tot} pins")
+    if grow:
+        raise GrantNeeded("; ".join(grow))
+    W, H = round(W, 3), round(H, 3)
+    if W < 3 * 5.4:
+        route_x["m5_pg_pitch"] = 2.7      # narrow tile: M5 PG pins must span >= 50% of the width (child_lint (b))
     contract = None
     for f_, d in contracts():
         for sl in d["slots"]:
-            if sl.get("cell") == cell and sl.get("layer_cap") == "M5" and abs(float(sl["outline"]["w"]) - W) < 0.01 and \
-                    abs(float(sl["outline"]["h"]) - H) < 0.01:
+            if sl.get("cell") == cell and sl.get("layer_cap") == "M5" and abs(float(sl["outline"]["w"]) - W0) < 0.01 and \
+                    abs(float(sl["outline"]["h"]) - H0) < 0.01:
                 contract = {"file": str(f_.relative_to(ROOT)), "slot": sl["name"]}
                 break
         if contract:
@@ -506,7 +706,7 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
                             f"{', snapshot of ' + str(len(snap)) + ' drifted files' if snap else ''}): same RTL, "
                             f"outline {W}x{H}, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, "
                             f"pins M4/M5, parent strap M6). Orig owner {rec['spec'].get('owner')}"),
-                "benches": benches,
+                "benches": benches, **({"extra_paths": extra} if extra else {}),
                 **({} if benches else {"no_bench_reason": f"closed record {rec['job']} had no benches"})},
         "m5rr": {"cell": cell, "closed_job": rec["job"], "closed_commit": commit, "snapshot": snap,
                  "orig_owner": rec["spec"].get("owner")},
@@ -645,7 +845,14 @@ def prepare(row, rec, st) -> dict | None:
     t = st["tiles"].setdefault(row["cell"], {})
     try:
         f = fetch(rec, row["cell"])
-        spec, snap = build_spec(row, rec, f)
+        top = max((int(x) for x in re.findall(r"LAYER M(\d+)\b", f.get("lef") or "")), default=0)
+        if f.get("lef") and top <= 5:
+            raise SpecSkip("closed view already at or below M5 (nothing to free)")
+        if row.get("windows") and top < 7 and all(w.get("frees") == "M7" for w in row["windows"]):
+            raise SpecSkip(f"only vertical (M7) hot windows over it and its closed view tops at M{top}")
+        prev = t.get("reason", "") if t.get("state") == "gate_fail" else \
+            (jload(JOBS / f"{t['job']}.json") or {}).get("reason", "") if t.get("state_m5") == "failed" and t.get("job") else ""
+        spec, snap = build_spec(row, rec, f, prev or "")
         kd = f"physical/ref_tile/{spec['name']}"
         if git("ls-files", "--", kd).strip() and t.get("kit") != kd:
             raise SpecSkip(f"kit dir {kd} exists (not ours)")
@@ -653,6 +860,12 @@ def prepare(row, rec, st) -> dict | None:
         SPECS.mkdir(parents=True, exist_ok=True)
         sp = SPECS / f"{spec['name']}.json"
         sp.write_text(json.dumps(spec, indent=1) + "\n")
+        # macros that leave the core / sit < 20 um from a pin face at the closed outline: no growth (owner 19:00)
+        if "outline" in spec:
+            fnd = [x for x in RT.gen(str(sp), write=False)["findings"] if x[0] == "FAIL" and x[1] in ("macro_outside", "macro_edge")]
+            if fnd:
+                sp.unlink()
+                raise KeepClosed("macros do not fit the closed outline at M5 (" + " ".join(str(x[2]) for x in fnd)[:200] + ")")
         RT.gen(str(sp))
         check_rlayers(kd, spec)
         if t.get("state_m5") == "failed":
@@ -664,19 +877,46 @@ def prepare(row, rec, st) -> dict | None:
                  owner=rec["spec"].get("owner"), at=now())
         return {"cell": row["cell"], "kd": kd, "spec": sp, "mem": max(24, min(64, spec["route"]["peak_ram_gb"] // 2))}
     except (SpecSkip, Exception) as ex:  # noqa: BLE001
-        kind = "skip" if isinstance(ex, SpecSkip) else "error"
+        kind = "grant_proposed" if isinstance(ex, GrantNeeded) else "keep_closed" if isinstance(ex, KeepClosed) else \
+            "skip" if isinstance(ex, SpecSkip) else "error"
         t.update(state=kind, reason=f"{type(ex).__name__}: {ex}"[:400], closed_job=rec["job"], at=now())
         log(rec["spec"].get("owner"), f"{row['cell']}: M5 re-route {kind}: {t['reason']}")
+        if isinstance(ex, GrantNeeded):
+            t["dies"] = row.get("dies", [])
+            propose_grant(row["cell"], t, f"pins do not fit M4/M5 at the closed outline: {ex}")
         return None
 
 
 def run(a, rows, closed, st):
     sel = [r for r in rows if r["state"] == "eligible" and r["priority"] in a.priorities
-           and (st["tiles"].get(r["cell"], {}).get("state") not in ("submitted", "skip", "gate_fail")
+           and (st["tiles"].get(r["cell"], {}).get("state") not in ("submitted", "skip", "gate_fail", "grant_proposed",
+                                                                     "keep_closed")
                 or (a.retry and st["tiles"].get(r["cell"], {}).get("state") in ("gate_fail", "error"))
                 or (a.retry and st["tiles"].get(r["cell"], {}).get("state_m5") == "failed"))]
     if a.only:
         sel = [r for r in sel if r["cell"] in a.only]
+    keep = []
+    for r in sel:
+        t = st["tiles"].get(r["cell"], {})
+        why = HOLD.get(r["cell"])
+        if why:
+            t.update(state="hold", reason=why, at=now())
+        elif t.get("state") == "gate_fail" and KEEP_CLOSED.search(t.get("reason", "")):
+            t.update(state="keep_closed", reason="keep old closed view (owner 18:20): " + t.get("reason", "")[:300], at=now())
+        elif t.get("state_m5") == "failed" and re.search(
+                r"(TT|FF)[^:]*-\d|hold repair stalled|need >= 1 bench|pin density", 
+                (jload(JOBS / f"{t.get('job')}.json") or {}).get("reason", "")):
+            # a real M5 timing / hold / pin-density regression (or an unbenched record) is not fixed by re-kitting the
+            # same RTL: the old closed view stays (owner 18:20); the compare line already flagged it to the owner
+            t.update(state="keep_closed", reason="keep old closed view; M5 route " + str(
+                (jload(JOBS / f"{t.get('job')}.json") or {}).get("reason", ""))[:250], at=now())
+        elif t.get("state_m5") == "failed" and len(t.get("history") or []) >= 2:
+            t.update(state="needs_human", reason=f"M5 route failed {len(t['history']) + 1}x after re-kits", at=now())
+        else:
+            keep.append(r)
+            continue
+        log(t.get("owner"), f"{r['cell']}: M5 re-route {t['state']}: {t['reason'][:300]}")
+    sel = keep
     sel = sel[: a.limit] if a.limit else sel
     print(f"run: {len(sel)} tiles (priorities {a.priorities})")
     preps = []
@@ -724,14 +964,17 @@ def run(a, rows, closed, st):
     for p in ok:
         st["tiles"][p["cell"]].update(state="committed", commit=c1)
     save_state(st)
-    submit(st)
+    submit(st, {r["cell"]: r.get("windows", []) for r in rows if r["state"] == "eligible"})
 
 
-def submit(st: dict):
+def submit(st: dict, scope: dict):
     """drop every committed (gated, pushed) kit's job spec into the loop intake once; re-checks live jobs first"""
     _, live, pending = records()
     for cell, t in sorted(st["tiles"].items()):
         if t.get("state") != "committed":
+            continue
+        if cell not in scope:
+            log(t.get("owner"), f"{cell}: M5 submit withheld: no current die-window evidence; closed view stands")
             continue
         jp = ROOT / t["kit"] / "job.json"
         job = json.loads(jp.read_text())
@@ -757,7 +1000,7 @@ def submit(st: dict):
 
 
 # ------------------------------------------------------------------------------------------------------ compare
-DIE_LOG = {"qwen_rom.json": "el1011-qwendie.log", "qwen_kv.json": "el1011-q-kvd.log", "s81.json": "el1011-s81die.log",
+DIE_LOG = {"qwen_rom.json": "el1011-qwen-tp8.log", "qwen_kv.json": "el1011-q-kvd.log", "s81.json": "el1011-s81die.log",
            "r25gq.json": "el1011-hbmdie.log"}
 WORSE_SLACK_PS = 20.0
 PIN_DENSE = 1.5          # signal pin rects per um of tile perimeter: an edge tile whose faces are pin-limited at M4/M5
@@ -832,18 +1075,19 @@ def propose_grant(cell: str, t: dict, why: str):
                 t.get("grant_proposed") != DIE_LOG[f_.name]:
             with LOCK, open(TAKE / DIE_LOG[f_.name], "a") as fh:
                 fh.write(f"{dt.datetime.now().strftime('%m-%d %H:%M')} [reroute_m5] PROPOSAL to the {d.get('die')} die "
-                         f"lead: layer_cap_grant M6 for {cell} (pin-dense edge tile; {why}). Not iterating at M5; "
-                         f"grant -> set slot layer_cap M6 + layer_cap_grant, then reroute_batch.py re-generates.\n")
+                         f"lead: M6 PIN-ONLY layer_cap_grant for {cell} (signals/PG stay <= M5, pins may use M6; {why}). Outline "
+                         f"NOT grown; grant -> set slot layer_cap M6 + layer_cap_grant, then reroute_batch.py re-generates.\n")
             t["grant_proposed"] = DIE_LOG[f_.name]
     if not t.get("grant_proposed"):          # placed through a parent cfg (cluster child): the die by name prefix
         lg = next((v for k, v in (("hgi_", "el1011-hbmdie.log"), ("ot_hgi", "el1011-hbmdie.log"), ("hfd_", "el1011-hbmdie.log"),
-                                  ("qkd_", "el1011-q-kvd.log"), ("qfd_", "el1011-qwendie.log"), ("dsfd_", "el1011-s81die.log"),
+                                  ("qkd_", "el1011-qwen-tp8.log"), ("qfd_", "el1011-qwen-tp8.log"),
+                                  ("ot_qwen", "el1011-qwen-tp8.log"), ("dsfd_", "el1011-s81die.log"),
                                   ("ot_dsrom", "el1011-s81die.log"), ("ot_pqc", "el1011-s81die.log"))
                    if cell.startswith(k) or any(str(x).startswith("cfg:" + k) for x in t.get("dies", []))), None)
         if lg:
             with LOCK, open(TAKE / lg, "a") as fh:
                 fh.write(f"{dt.datetime.now().strftime('%m-%d %H:%M')} [reroute_m5] PROPOSAL to the die lead: "
-                         f"layer_cap_grant M6 for {cell} (pin-dense edge tile; {why}). Not iterating at M5.\n")
+                         f"M6 PIN-ONLY layer_cap_grant for {cell} (signals/PG stay <= M5; {why}). Outline NOT grown.\n")
             t["grant_proposed"] = lg
 
 
@@ -891,10 +1135,15 @@ def main(argv=None) -> int:
     ap.add_argument("--no-submit", action="store_true")
     ap.add_argument("--retry", action="store_true", help="also re-kit + re-gate gate_fail / error tiles and submitted "
                     "tiles whose M5 route ended NEEDS_HUMAN / FAILED (state_m5 failed)")
+    ap.add_argument("--cuts", type=Path, default=TP8_CUTS, help="die cut JSON (fine / fine_tree; ax x = horizontal wires)")
+    ap.add_argument("--placement", type=Path, help="die placement for --cuts (default: rom_tp8b.json next to it)")
+    ap.add_argument("--grt", action="append", default=[], help="die GRT congestion report[:placement] (repeatable)")
+    ap.add_argument("--cut-thr", type=float, default=CUT_THR, help="fine-cut util above which a window needs the tracks")
     a = ap.parse_args(argv)
     st = load_state()
     if a.cmd == "submit":
-        submit(st)
+        scope = window_scope(a.cuts, a.placement, a.grt, a.cut_thr)
+        submit(st, {r["cell"]: r.get("windows", []) for r in plan(scope)["rows"] if r["state"] == "eligible"})
         return 0
     if a.cmd == "compare":
         compare(st)
@@ -903,14 +1152,16 @@ def main(argv=None) -> int:
         from collections import Counter
         print(Counter(t.get("state") for t in st["tiles"].values()))
         return 0
-    p = plan()
+    scope = window_scope(a.cuts, a.placement, a.grt, a.cut_thr)
+    print(f"window scope: {len(scope)} cells under hot windows / GRT overflow: {sorted(scope)}")
+    p = plan(scope)
     rows = p["rows"]
     for r in rows:
         t = st["tiles"].get(r["cell"], {})
         if t.get("state") == "submitted" and not (a.retry and t.get("state_m5") == "failed"):
             r["state"], r["reason"] = "skip", "submitted by this batch"
     from collections import Counter
-    st["plan"] = {"at": now(), "eligible": sum(r["state"] == "eligible" for r in rows),
+    st["plan"] = {"at": now(), "scope": {k: v for k, v in scope.items()}, "eligible": sum(r["state"] == "eligible" for r in rows),
                   "by_priority": dict(Counter(r["priority"] for r in rows if r["state"] == "eligible")),
                   "skipped": dict(Counter(r.get("reason") for r in rows if r["state"] == "skip")), "rows": rows}
     print(json.dumps({k: v for k, v in st["plan"].items() if k != "rows"}, indent=1))

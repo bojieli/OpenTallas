@@ -1,14 +1,14 @@
 {
- "name": "qkd_d2d_ref-q8-aeca40e24",
+ "name": "qkd_d2d_ref-q10-736f2a09e",
  "block": "ot_qkvd_kv_end",
  "ref_tile": true,
  "owner": "Claude:el1011-q-kvd",
- "purpose": "q-kvd R8: KV end cluster (qkd_d2d slot 777.576x518.376) structural setup fix on a commit >= de53a3b7c (hold MM after parasitic estimation + OT_SPINE_MACRO_LEAF): q5b TT -613 at CTS = rq_f -> RX sbuf din 814 ps of wire. Fix: RTL input/output relays (+1 cycle each way, HT builds; RX word replicated per receive buffer) + explicit floorplan (buffers at their input faces, RX MX din-up). Benches ht_layer_exact (HT=1, relays in) PASS / ht_layer_mut FAIL",
+ "purpose": "q-kvd q10: q9-b NEEDS_HUMAN (OT_MPFLOP matched 0 of 7 pop pins): Yosys opt_merge folded each kept pop flop g_pq.pp into the identical grant register (gq / rq_q), so the pop pin hung off a BUF tree that also loads the 528-bit head mux. RTL: pop flop is now its own (* keep_hierarchy *) ot_qkvd_pop_ff per buffer (7), driving only the macro pop pin (Yosys check: 7 instances, fanout 1). Rest as q9: PQ registered pops from shadow occupancy, OT_MPFLOP anchors at the pin. Pair stress HT0/HT1 PASS 71.4k words. Benches ht_layer_exact PASS / ht_layer_mut FAIL.",
  "threads": 16,
  "peak_ram_gb": 112,
  "source": {
   "branch": "claude/el1011-q-kvd",
-  "commit": "aeca40e24"
+  "commit": "736f2a09e"
  },
  "stages": {
   "bench": [
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_d2d_ref/qkd_d2d_ref-q8-aeca40e24"
+   "to": "results/rtl/ref_tile/qkd_d2d_ref/qkd_d2d_ref-q10-736f2a09e"
   }
  ],
  "cycles_added": 0,
