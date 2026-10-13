@@ -1325,6 +1325,13 @@ def ds_units(m, man, golib):
 
     def dma_store(M, r, L):
         o = r.desc["O"]
+        if o.space == "HBM" and o.base >> 37 == 1:
+            # a STRIPE4 data row (the MTP column swap-out, the mirror of dma_load's guard): bits [39:37] are the stripe
+            # code, not an address >= WBASE, so the index-key branch below must not see it; the HC weight rows that
+            # share the code are read-only
+            if (o.base & ((1 << 35) - 1)) in HC_STRIPE:
+                raise MC.Fault(3, f"STRIPE4 store {o.base:#x} into an HC weight row")
+            return base_store(M, r, L)
         if o.space == "HBM" and (o.base >= WBASE or (IKS[0] and KBASE <= o.base < CKBASE)):   # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
