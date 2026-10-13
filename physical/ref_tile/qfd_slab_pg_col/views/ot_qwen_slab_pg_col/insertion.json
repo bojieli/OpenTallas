@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col_mga-c5a-81025983b/routes/qfd_slab_pg_col_mga_c5a_81025983b/work/orfs/results/asap7/opentallas_ot_qwen_slab_pg_col_asap7_ref_qfd_slab_pg_col_mga_c5a_81025983b/base",
+ "base": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col_mgc-c5c-81025983b/routes/qfd_slab_pg_col_mgc_c5c_81025983b/work/orfs/results/asap7/opentallas_ot_qwen_slab_pg_col_asap7_ref_qfd_slab_pg_col_mgc_c5c_81025983b/base",
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "ck",
@@ -8,51 +8,51 @@
  "ss": {
   "boundary": {
    "n": 285,
-   "mean": 299.9,
+   "mean": 298.6,
    "min": 284.7,
-   "max": 313.8
+   "max": 313.1
   },
   "all": {
    "n": 1873,
-   "mean": 320.2,
-   "min": 266.4,
-   "max": 405.0
+   "mean": 323.9,
+   "min": 266.3,
+   "max": 461.3
   },
   "errors": [],
   "macros": {
    "n": 4,
    "nets": 2,
    "max_per_net": 2,
-   "reg_mean": 320.2,
-   "max_slew": 98.5,
-   "max_late": -46.6,
+   "reg_mean": 323.9,
+   "max_slew": 99.4,
+   "max_late": -50.2,
    "pins": [
     {
      "pin": "g_bank[0].u_rom/clk",
-     "arr": 273.6,
-     "slew": 98.5,
-     "late": -46.6,
+     "arr": 273.7,
+     "slew": 99.4,
+     "late": -50.2,
      "net": "clknet_1_0_0_clk"
     },
     {
      "pin": "g_bank[1].u_rom/clk",
-     "arr": 271.6,
-     "slew": 92.8,
-     "late": -48.6,
+     "arr": 271.5,
+     "slew": 92.9,
+     "late": -52.4,
      "net": "clknet_1_1_0_clk"
     },
     {
      "pin": "g_bank[2].u_rom/clk",
-     "arr": 267.8,
-     "slew": 83.2,
-     "late": -52.4,
+     "arr": 267.7,
+     "slew": 83.4,
+     "late": -56.2,
      "net": "clknet_1_0_0_clk"
     },
     {
      "pin": "g_bank[3].u_rom/clk",
-     "arr": 266.4,
+     "arr": 266.3,
      "slew": 79.0,
-     "late": -53.8,
+     "late": -57.6,
      "net": "clknet_1_1_0_clk"
     }
    ]
@@ -62,51 +62,51 @@
  "tt": {
   "boundary": {
    "n": 285,
-   "mean": 227.8,
-   "min": 212.4,
-   "max": 245.0
+   "mean": 226.4,
+   "min": 212.5,
+   "max": 244.4
   },
   "all": {
    "n": 1873,
-   "mean": 246.3,
+   "mean": 249.4,
    "min": 203.8,
-   "max": 321.2
+   "max": 370.2
   },
   "errors": [],
   "macros": {
    "n": 4,
    "nets": 2,
    "max_per_net": 2,
-   "reg_mean": 246.3,
-   "max_slew": 97.8,
-   "max_late": -34.8,
+   "reg_mean": 249.4,
+   "max_slew": 98.7,
+   "max_late": -37.7,
    "pins": [
     {
      "pin": "g_bank[0].u_rom/clk",
-     "arr": 211.5,
-     "slew": 97.8,
-     "late": -34.8,
+     "arr": 211.7,
+     "slew": 98.7,
+     "late": -37.7,
      "net": "clknet_1_0_0_clk"
     },
     {
      "pin": "g_bank[1].u_rom/clk",
-     "arr": 209.5,
-     "slew": 91.8,
-     "late": -36.8,
+     "arr": 209.4,
+     "slew": 91.9,
+     "late": -40.0,
      "net": "clknet_1_1_0_clk"
     },
     {
      "pin": "g_bank[2].u_rom/clk",
      "arr": 205.6,
-     "slew": 81.1,
-     "late": -40.7,
+     "slew": 81.3,
+     "late": -43.8,
      "net": "clknet_1_0_0_clk"
     },
     {
      "pin": "g_bank[3].u_rom/clk",
      "arr": 204.0,
      "slew": 76.7,
-     "late": -42.3,
+     "late": -45.4,
      "net": "clknet_1_1_0_clk"
     }
    ]
@@ -116,51 +116,51 @@
  "ff": {
   "boundary": {
    "n": 285,
-   "mean": 186.1,
+   "mean": 184.7,
    "min": 170.5,
-   "max": 204.1
+   "max": 203.7
   },
   "all": {
    "n": 1873,
-   "mean": 202.9,
+   "mean": 205.6,
    "min": 163.9,
-   "max": 270.4
+   "max": 314.2
   },
   "errors": [],
   "macros": {
    "n": 4,
    "nets": 2,
    "max_per_net": 2,
-   "reg_mean": 202.9,
-   "max_slew": 102.5,
-   "max_late": -26.4,
+   "reg_mean": 205.6,
+   "max_slew": 103.4,
+   "max_late": -28.9,
    "pins": [
     {
      "pin": "g_bank[0].u_rom/clk",
-     "arr": 176.5,
-     "slew": 102.5,
-     "late": -26.4,
+     "arr": 176.7,
+     "slew": 103.4,
+     "late": -28.9,
      "net": "clknet_1_0_0_clk"
     },
     {
      "pin": "g_bank[1].u_rom/clk",
      "arr": 174.3,
-     "slew": 96.2,
-     "late": -28.6,
+     "slew": 96.3,
+     "late": -31.3,
      "net": "clknet_1_1_0_clk"
     },
     {
      "pin": "g_bank[2].u_rom/clk",
      "arr": 170.2,
-     "slew": 84.2,
-     "late": -32.7,
+     "slew": 84.4,
+     "late": -35.4,
      "net": "clknet_1_0_0_clk"
     },
     {
      "pin": "g_bank[3].u_rom/clk",
      "arr": 168.5,
      "slew": 79.5,
-     "late": -34.4,
+     "late": -37.1,
      "net": "clknet_1_1_0_clk"
     }
    ]
@@ -176,24 +176,24 @@
   "outliers": []
  },
  "env": {
-  "CK_SS_MEAN": 300,
-  "CK_SS_ALL_MEAN": 320,
+  "CK_SS_MEAN": 299,
+  "CK_SS_ALL_MEAN": 324,
   "CK_SS_MIN": 285,
   "CK_SS_ALL_MIN": 266,
-  "CK_SS_MAX": 314,
-  "CK_SS_ALL_MAX": 405,
-  "CK_TT_MEAN": 228,
-  "CK_TT_ALL_MEAN": 246,
+  "CK_SS_MAX": 313,
+  "CK_SS_ALL_MAX": 461,
+  "CK_TT_MEAN": 226,
+  "CK_TT_ALL_MEAN": 249,
   "CK_TT_MIN": 212,
   "CK_TT_ALL_MIN": 204,
-  "CK_TT_MAX": 245,
-  "CK_TT_ALL_MAX": 321,
-  "CK_FF_MEAN": 186,
-  "CK_FF_ALL_MEAN": 203,
+  "CK_TT_MAX": 244,
+  "CK_TT_ALL_MAX": 370,
+  "CK_FF_MEAN": 185,
+  "CK_FF_ALL_MEAN": 206,
   "CK_FF_MIN": 170,
   "CK_FF_ALL_MIN": 164,
   "CK_FF_MAX": 204,
-  "CK_FF_ALL_MAX": 270,
+  "CK_FF_ALL_MAX": 314,
   "CK_ROUTE_REF": "SS"
  }
 }
