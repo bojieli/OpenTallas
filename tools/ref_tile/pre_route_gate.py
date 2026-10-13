@@ -14,6 +14,9 @@ LOCAL (seconds; also run by the closure loop at submit for "ref_tile": true jobs
                 names (PPL-0061), the clock port planned
   rtl           textbook_lint.py rtl: runtime-indexed wide part-selects (yosys SHARE stall), hard-child #() overrides
   children      tools/hier_contract/child_lint.py (a)-(g) on every hard child; TT/FF/SS libs of every macro view
+  slot_fit      (submit only, owner 2026-10-13) a tile with a slot in a die contract fits it: outline, pin faces, pin
+                layers, layer cap, estimated clock insertion (tools/hier_contract/slot_fit.py); a mismatch is REFUSED
+                unless the spec carries "slot_change_request" (then WARN + a line in the die lead's log)
   sources       every file the flow reads (kit hooks, the scripts they source, views, RTL) exists and lies inside the
                 job's synced source paths (the loop copies only source.paths + extra_paths: hbm-no3 'No rule to make
                 target /src/physical/redesign_ds/coll_split/pin_access_pregrt.tcl')
@@ -545,8 +548,40 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
         subprocess.run(["tar", "-x", "-C", str(dst)], input=a.stdout, check=True)
     arch([kit, "physical/qwen_die_masters/io_ref_skew.sdc"])
     sp = json.loads((dst / kit / "spec.json").read_text())
-    arch(list(sp.get("sources", [])) + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
+    # sdc_extra too: without it RT.gen raised FileNotFoundError and the whole gate went SKIP for every kit that has one
+    arch(list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
+         + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
          + ([sp["contract"]["file"]] if sp.get("contract") else []))
+
+
+def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:
+    """SLOT FIT (owner 2026-10-13, tools/hier_contract/slot_fit.py): a tile with a slot in a die contract must fit it
+    BEFORE it routes -- outline, pin faces, pin layers, layer cap and the estimated clock insertion against the LIVE
+    contract in repo (the kit's own commit when the repo has none).  A mismatch FAILs (REFUSED at submit) unless the
+    spec carries "slot_change_request": "<die lead log line or contract version>": then it is a WARN and the request is
+    appended to the die lead's log."""
+    import slot_fit
+    cs = slot_fit.load_contracts(Path(repo)) or slot_fit.load_contracts(ROOT)
+    res = slot_fit.check(kd, Path(repo), job, cs)
+    if res["status"] == "no_slot":
+        return res
+    where = f"slot {res['slot']} of {res['contract']} v{res['version']}"
+    for n in res["notes"]:
+        g.add("INFO", "slot_fit", f"{where}: {n}")
+    if res["status"] == "fit":
+        g.add("INFO", "slot_fit", f"{res['top']} fits {where}")
+        return res
+    msg = f"{res['top']} does not fit {where}: " + "; ".join(res["mismatches"])
+    req = res.get("slot_change_request")
+    if req:
+        log = slot_fit.append_request(res, str(job.get("name", res["kit"])), commit)
+        g.add("WARN", "slot_fit", f"{msg} -- routes on slot_change_request {str(req)[:160]!r}"
+              + (f" (appended to {log.name})" if log else " (no die lead log for this die: tell the lead)"))
+    else:
+        g.add("FAIL", "slot_fit", msg, "build the tile to its slot, or get the slot changed by the die lead and put "
+              "\"slot_change_request\": \"<die lead log line or contract version>\" in the spec (check before submit: "
+              "tools/hier_contract/slot_fit.py KIT_DIR)")
+    return res
 
 
 def submit_check(spec: dict, repo: str | None = None) -> dict:
@@ -576,6 +611,7 @@ def submit_check(spec: dict, repo: str | None = None) -> dict:
                         ROOT = RT.ROOT = Path(repo)
                         check_sources(g, spec, json.loads((Path(td) / kit / "floorplan.json").read_text())
                                       .get("referenced", []), commit)
+                        check_slot_fit(g, Path(td) / kit, spec, repo, commit)
             else:
                 ROOT = RT.ROOT = Path(repo)
                 check_sources(g, spec, (), commit)
