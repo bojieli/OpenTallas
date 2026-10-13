@@ -712,7 +712,7 @@
     "needs": [
      "verilator"
     ],
-    "note": "the KV-end attention layer step through the CLUSTER (Verilator, STACK=h): 7 vectors x VM stall 0/1 x launch by dc ATTN / by kvd descriptor, bit-exact against tools/qwen_nearhbm_attn_ref.py"
+    "note": "the KV-end attention layer step as a whole decode step through the CLUSTER (Verilator, STACK=h): 7 vectors x VM stall 0 / 1 = 14 runs, all bit-exact against the golden; step 1,794 cycles at context 8192 (two-die 1,842); measured 10-13 on ot-agidock128"
    },
    {
     "name": "layer_cluster_wire_mutant",
