@@ -14,8 +14,8 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
 [WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
-QDM PINFLOP reference: 30 input pin flops, median arrival 62.226643 (range 62.111080 .. 62.328823)
-QDM reference pin u_c.cmd_d_q[16]$_DFF_P_/CLK clock arrival max 62.226643 min 0.000000 skew 90 hold 50
+QDM PINFLOP reference: 30 input pin flops, median arrival 62.268814 (range 62.135216 .. 62.457718)
+QDM reference pin u_c.cmd_d_q[26]$_DFF_P_/CLK clock arrival max 62.268814 min 0.000000 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
-OT_WS max 1.7701193288921502e-10 min -1.0852159448848653e-10
+OT_WS max 1.4098477940649445e-10 min -1.2159928619581706e-10
 OT_EXPORT_DONE
