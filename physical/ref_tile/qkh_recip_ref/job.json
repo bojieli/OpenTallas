@@ -1,5 +1,5 @@
 {
- "name": "qkh_recip_ref-cx1-COMMIT",
+ "name": "qkh_recip_ref-cx1-df9bba544",
  "block": "ot_qkh_recip_leaf",
  "ref_tile": true,
  "owner": "Codex:q-kvd",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/q-kvd-1012",
-  "commit": "COMMIT"
+  "commit": "df9bba544"
  },
  "stages": {
   "bench": [
@@ -91,7 +91,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_recip_ref/qkh_recip_ref-cx1-COMMIT"
+   "to": "results/rtl/ref_tile/qkh_recip_ref/qkh_recip_ref-cx1-df9bba544"
   }
  ],
  "cycles_added": 0,
