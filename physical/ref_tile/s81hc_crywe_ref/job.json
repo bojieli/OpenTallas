@@ -1,5 +1,5 @@
 {
- "name": "s81hc_crywe_ref-v3-outhold-023c1ba75",
+ "name": "s81hc_crywe_ref-v4-outhold-splice-a7343353d",
  "block": "ot_s81_hc_crooty_w",
  "ref_tile": true,
  "owner": "Codex:s81hc-physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/s81hc-physical-20261012",
-  "commit": "023c1ba75d121a6991ba68469123696bdbd23d48"
+  "commit": "a7343353d"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_crywe_ref/s81hc_crywe_ref-v3-outhold-023c1ba75"
+   "to": "results/rtl/ref_tile/s81hc_crywe_ref/s81hc_crywe_ref-v4-outhold-splice-a7343353d"
   }
  ],
  "cycles_added": 0,
