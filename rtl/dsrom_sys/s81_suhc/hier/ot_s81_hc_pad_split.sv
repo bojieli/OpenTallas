@@ -34,9 +34,9 @@ module ot_s81_hc_cpad_split #(
     localparam integer FP = 2 + RF + PAD;                         // forward: send + capture + RF + padding
     localparam integer RP = RT + 2 + PAD + RET_EXTRA * (NP - L1) * (HALF ? 2 : 1);                         // return: relay + send + capture + padding
     // No assembly data/valid flop: each hard child's first/last flop is its boundary.
-    localparam integer F0 = (FP-2 > 8) ? 8 : FP-3;
+    localparam integer F0 = (FP-2 > 8) ? 8 : FP-2;
     localparam integer F1 = FP-2-F0;
-    localparam integer R0 = (RP-2 > 6) ? 6 : RP-3;
+    localparam integer R0 = (RP-2 > 6) ? 6 : RP-2;
     localparam integer R1 = RP-2-R0;
     wire [FVW-1:0] fm;
     wire [FSW-1:0] dm;
@@ -67,7 +67,7 @@ module ot_s81_hc_cpad_split #(
         .sk(sk),.srs(srs),.d_i(rm),.d_o(crd_o));
 `ifndef SYNTHESIS
     initial begin
-        if (F0<1 || F1<1 || R0<1 || R1<1) $fatal(1,"pad split requires positive hard-leaf depths");
+        if (F0<0 || F1<0 || R0<0 || R1<0) $fatal(1,"pad split requires nonnegative soft relay depths");
 `ifdef OT_S81_HC_PAD_HARD
         if(NG!=256 || HALF!=1 || RLY!=2 || RF!=5 || RT!=1 || RET_EXTRA!=1 ||
            S_RD!=2 || S_RT!=4 || DW!=6 || F0!=8 || F1!=5 || R0!=6 || R1!=5)

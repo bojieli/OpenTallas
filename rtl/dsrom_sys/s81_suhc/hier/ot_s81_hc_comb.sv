@@ -185,10 +185,10 @@ module ot_s81_hc_comb #(
         .w_ex(w_ex), .e_ex(e_ex), .c_rvt(r_crv[S_RT]), .c_pi(r_cpi), .c_ex(r_ex1), .ngo_i(ngo),
         .ss_v(t_ssv), .ss(t_ss), .tflt(t_flt));
 
-    ot_s81_hc_ccr `OT_HCC_R u_cr (
+    ot_s81_hc_ccr_align `OT_HCC_R u_cr (
         .sk(sk), .srs(srs), .ch_rv(ch_rv), .ch_rd(ch_rd), .crd_o(r_crd), .crv_o(r_crv), .cpi_o(r_cpi), .ex1_o(r_ex1));
 
-    ot_s81_hc_cpad `OT_HCC_R u_pd (
+    ot_s81_hc_cpad_split `OT_HCC_R u_pd (
         .sk(sk), .srs(srs), .crd_i(r_crd), .crd_o(p_crd), .fv_i(c_fv), .fd_i(c_fd), .fv_o(p_fv), .fd_o(p_fd));
 
     ot_s81_hc_ccf `OT_HCC_F u_cf (
