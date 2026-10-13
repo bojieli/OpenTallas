@@ -375,5 +375,168 @@
   "worst_cut_ratio_at_x": null
  },
  "pass": false,
+ "options": {
+  "frozen contract (taller outline only)": {
+   "lanes_at_decided_outline": 8,
+   "min_outline_height_for_10_lanes": {
+    "h_um": 730.08,
+    "fld_x": 810.0,
+    "lanes": [
+     "EA",
+     "EB",
+     "EU1",
+     "EU2",
+     "A@135",
+     "B@135",
+     "A@1053",
+     "B@1053",
+     "B@378",
+     "B@810"
+    ],
+    "worst_cut": [
+     0.6,
+     1069.5
+    ]
+   }
+  },
+  "av / ok / ovf / sflt +1 relay stage (reach 950 um)": {
+   "lanes_at_decided_outline": 8,
+   "min_outline_height_for_10_lanes": {
+    "h_um": 730.08,
+    "fld_x": 810.0,
+    "lanes": [
+     "EA",
+     "EU1",
+     "EB",
+     "EU2",
+     "A@0",
+     "B@0",
+     "A@1053",
+     "B@1053",
+     "A@243",
+     "A@810"
+    ],
+    "worst_cut": [
+     0.6,
+     1069.5
+    ]
+   }
+  },
+  "S2 bundle tiles trimmed to non-constant bits": {
+   "lanes_at_decided_outline": 10,
+   "min_outline_height_for_10_lanes": {
+    "h_um": 678.24,
+    "fld_x": 837.0,
+    "lanes": [
+     "EB",
+     "EU2",
+     "EA",
+     "EU1",
+     "B@162",
+     "A@162",
+     "B@1053",
+     "A@1053",
+     "A@405",
+     "A@810"
+    ],
+    "worst_cut": [
+     0.596,
+     1096.5
+    ]
+   }
+  },
+  "S3 clt re-routed at M5 (M6 free over the clt row)": {
+   "lanes_at_decided_outline": 10,
+   "min_outline_height_for_10_lanes": {
+    "h_um": 658.8,
+    "fld_x": 810.0,
+    "lanes": [
+     "EA",
+     "EB",
+     "EU1",
+     "EU2",
+     "A@135",
+     "B@135",
+     "A@1053",
+     "B@1053",
+     "B@378",
+     "B@810"
+    ],
+    "worst_cut": [
+     0.597,
+     1069.5
+    ]
+   }
+  },
+  "S4 lane returns daisy-chained (one 546-b bus a cut)": {
+   "lanes_at_decided_outline": 9,
+   "min_outline_height_for_10_lanes": {
+    "h_um": 693.36,
+    "fld_x": 351.0,
+    "lanes": [
+     "EB",
+     "EA",
+     "EU2",
+     "EU1",
+     "B@0",
+     "A@0",
+     "B@1053",
+     "A@1053",
+     "A@243",
+     "B@810"
+    ],
+    "worst_cut": [
+     0.599,
+     815.5
+    ]
+   }
+  },
+  "S2 + S3": {
+   "lanes_at_decided_outline": 10,
+   "min_outline_height_for_10_lanes": {
+    "h_um": 604.8,
+    "fld_x": 837.0,
+    "lanes": [
+     "EB",
+     "EU2",
+     "EA",
+     "EU1",
+     "B@162",
+     "A@162",
+     "B@1053",
+     "A@1053",
+     "A@405",
+     "A@810"
+    ],
+    "worst_cut": [
+     0.598,
+     1096.5
+    ]
+   }
+  },
+  "S3 + S4": {
+   "lanes_at_decided_outline": 10,
+   "min_outline_height_for_10_lanes": {
+    "h_um": 619.92,
+    "fld_x": 351.0,
+    "lanes": [
+     "EB",
+     "EA",
+     "EU2",
+     "EU1",
+     "B@0",
+     "A@0",
+     "B@1053",
+     "A@1053",
+     "A@243",
+     "B@810"
+    ],
+    "worst_cut": [
+     0.6,
+     815.5
+    ]
+   }
+  }
+ },
  "verdict": "FAIL: at most 8 of 10 landing lanes fit 1,520.064 x 691.2 under the frozen contract, in a model that is optimistic (no relay tiles, no local capacity, no descent of the fxs words through the lane rows).  The limit is the E-W cut, not reach: relay stages do not help.  See `options`."
 }
