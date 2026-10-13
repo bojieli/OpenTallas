@@ -116,7 +116,11 @@ def contract_slot(s: dict) -> dict | None:
     c = s.get("contract")
     if not c:
         return None
-    return child_lint.contract_slot(str(ROOT / c["file"]), c["slot"])
+    slot = child_lint.contract_slot(str(ROOT / c["file"]), c["slot"])
+    # contract v3 (qwen_rom_tp8) carries layer_cap as {"cap", "view_max_layer", "conforms"}: the cap is the plan
+    if isinstance(slot, dict) and isinstance(slot.get("layer_cap"), dict):
+        slot = dict(slot, layer_cap=slot["layer_cap"].get("cap"))
+    return slot
 
 
 def view_name(view: str) -> str:

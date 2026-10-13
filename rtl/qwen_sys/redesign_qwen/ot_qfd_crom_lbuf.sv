@@ -45,7 +45,19 @@ module ot_qfd_crom_lbuf #(
     // SRAM = 1: the narrow banks are one ot_sram_1r1w_1024x256 per 8-lane group (rows: bank 0 at 0, bank 1 at 256, HEAD at
     // 512; the banking contract makes every lane of a group read one row, as the ROM's narrow macro columns), rope rows
     // in flops.  Same answers, same edges (the macro's read register is the e3 stage).  0 = behavioural flop arrays.
-    parameter integer SRAM = 0
+    parameter integer SRAM = 0,
+    // q13 2026-10-13 (hardened die tile, owner rule: registers at every face pin; a hardened constant must not go stale
+    // with the die's relay count):
+    // PINREG = 1: f_q / f_fault are captured by a flop at the pin before any use (the fill write is one edge later; the
+    //             far latency seen at the pins is unchanged).
+    // FLS = 1:    the far latency is the STATIC STRAP f_lat (0 .. FLMAX edges strobe -> answer at the pins, registered at
+    //             the pin) instead of the parameter FLP: the request tag line is FLMAX + PINREG long and f_lat selects its
+    //             tap (one flop after the tap mux, so the tag's total depth is f_lat + 1 + PINREG = FLP + 1 + PINREG).
+    //             Only the 1 + 11 b tag line is affected (no data-path delay line); f_lat = FLP is cycle-exact FLS 0.
+    parameter integer PINREG = 0,
+    parameter integer FLS = 0,
+    parameter integer FLMAX = 31,
+    parameter integer FLW = 5
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -67,9 +79,22 @@ module ot_qfd_crom_lbuf #(
     output reg  [LW-1:0]     f_stage,
     input  wire [SW*64-1:0]  f_q,
     input  wire              f_fault,
+    input  wire [FLW-1:0]    f_lat,           // strap (FLS 1): far ROM strobe -> answer edges at this block's pins
     output reg               fault,
     output reg  [1:0]        fault_code
 );
+    //: far-ROM answer pin flops (PINREG 1): nothing but a flop behind f_q / f_fault
+    wire [SW*64-1:0] f_q_i;
+    wire             f_fault_i;
+    generate if (PINREG != 0) begin : g_fpin
+        reg [SW*64-1:0] f_q_r;
+        reg             f_fault_r;
+        always @(posedge clk) f_q_r <= f_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) f_fault_r <= 1'b0; else f_fault_r <= f_fault;
+        assign f_q_i = f_q_r; assign f_fault_i = f_fault_r;
+    end else begin : g_nfpin
+        assign f_q_i = f_q; assign f_fault_i = f_fault;
+    end endgenerate
     //: context pin flops (stage / token / position and position + 1 registered: the prefetch decisions start at flops)
     reg  [LW-1:0]  stage_q;
     reg  [NW-1:0]  tpos_q, tpos1_q;
@@ -129,9 +154,39 @@ module ot_qfd_crom_lbuf #(
     wire issue = busy && (f_r < f_n);
     wire rv_done;
     wire [1:0] rt_kind; wire rt_sel; wire [RB-1:0] rt_row;
-    ot_hdc_delay #(.W(1), .D(FLP + 1), .RESET(1)) u_rv (.clk(clk), .rst_n(rst_n), .d(issue), .q(rv_done));
-    ot_hdc_delay #(.W(3 + RB), .D(FLP + 1)) u_rt (.clk(clk), .rst_n(rst_n),
-        .d({f_kind, (f_kind == F_ROPE) ? f_slot : (par(f_st) ^ ((MUT == 2) ? 1'b1 : 1'b0)), f_r}), .q({rt_kind, rt_sel, rt_row}));
+    wire [3 + RB - 1:0] rt_d = {f_kind, (f_kind == F_ROPE) ? f_slot : (par(f_st) ^ ((MUT == 2) ? 1'b1 : 1'b0)), f_r};
+    localparam integer PR = (PINREG != 0) ? 1 : 0;
+    generate if (FLS == 0) begin : g_flp
+        ot_hdc_delay #(.W(1), .D(FLP + 1 + PR), .RESET(1)) u_rv (.clk(clk), .rst_n(rst_n), .d(issue), .q(rv_done));
+        ot_hdc_delay #(.W(3 + RB), .D(FLP + 1 + PR)) u_rt (.clk(clk), .rst_n(rst_n), .d(rt_d), .q({rt_kind, rt_sel, rt_row}));
+    end else begin : g_fls
+        localparam integer TD = FLMAX + PR;    // deepest tap
+        localparam integer TW = 3 + RB;
+        localparam [FLW:0] PRV = PR;
+        reg  [FLW-1:0]  lat_q;                 // the strap's pin flop (static)
+        always @(posedge clk) lat_q <= f_lat;
+        reg  [TD:1]     v_line;
+        reg  [TW*TD-1:0] t_line;
+        wire [TD:0]     v_tap = {v_line, issue};
+        wire [TW*(TD+1)-1:0] t_tap = {t_line, rt_d};
+        wire [FLW:0]    sel = {1'b0, lat_q} + PRV;
+        reg             v_m;
+        reg  [TW-1:0]   t_m;
+        integer ti;
+        always @(*) begin                      // the tap mux (static select)
+            v_m = 1'b0; t_m = {TW{1'b0}};
+            for (ti = 0; ti <= TD; ti = ti + 1) if (sel == ti) begin v_m = v_tap[ti]; t_m = t_tap[ti*TW +: TW]; end
+        end
+        reg             v_o;
+        reg  [TW-1:0]   t_o;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin v_line <= {TD{1'b0}}; v_o <= 1'b0; end
+            else begin v_line <= v_tap[TD-1:0]; v_o <= v_m; end
+        end
+        always @(posedge clk) begin t_line <= t_tap[TW*TD-1:0]; t_o <= t_m; end
+        assign rv_done = v_o;
+        assign {rt_kind, rt_sel, rt_row} = t_o;
+    end endgenerate
     integer la, lw, ld, lr, lo;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -286,11 +341,33 @@ module ot_qfd_crom_lbuf #(
             always @(*) begin
                 wce = rv_done && (rt_kind == F_STAGE || rt_kind == F_HEADB);
                 wa = (rt_kind == F_HEADB) ? {2'b10, rt_row} : {1'b0, rt_sel, rt_row};
-                for (k = 0; k < 8; k = k + 1) wd[k*32 +: 32] = f_q[(gg*8 + k)*64 +: 32];
+                for (k = 0; k < 8; k = k + 1) wd[k*32 +: 32] = f_q_i[(gg*8 + k)*64 +: 32];
             end
+            if (SRAM == 1) begin : g_m1
             ot_sram_1r1w_1024x256_m2_r2c2 u_m (.clk(clk), .r_ce_in(ce), .r_addr_in(ra), .rd_out(rd[gg*256 +: 256]),
                 .w_ce_in(wce), .w_addr_in(wa), .wd_in(wd), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+            end else begin : g_m3
+                // SRAM = 2 (q13 2026-10-13, the M5 die tile): the same 360 rows in THREE ot_sram_1r1w_128x256 (94.8 x 41.0 um:
+                // 20 um channels on every side inside the 194.4 um slot; the 174.7 um 1024-row macro leaves 7.6 um
+                // pin-edge channels).  Row {bank, r}: bank 0 / 1 rows 0..127 -> macro 0 / 1 row r; bank 0 / 1 rows
+                // 128..147 -> macro 2 rows 64 + 32 bank + (r - 128); HEAD rows 0..63 -> macro 2 rows 0..63.
+                // Same answers, same edges (each macro's read register is the e3 stage; the macro select rides beside it).
+                wire [1:0] rs = ra[9] ? 2'd2 : ra[7] ? 2'd2 : {1'b0, ra[8]};
+                wire [1:0] ws = wa[9] ? 2'd2 : wa[7] ? 2'd2 : {1'b0, wa[8]};
+                wire [6:0] rm = ra[9] ? {1'b0, ra[5:0]} : ra[7] ? {1'b1, ra[8], ra[4:0]} : ra[6:0];
+                wire [6:0] wm = wa[9] ? {1'b0, wa[5:0]} : wa[7] ? {1'b1, wa[8], wa[4:0]} : wa[6:0];
+                wire [3*256-1:0] rdm;
+                reg  [1:0] rs_q;
+                always @(posedge clk) rs_q <= rs;
+                genvar mm;
+                for (mm = 0; mm < 3; mm = mm + 1) begin : g_m
+                    ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(ce && rs == mm), .r_addr_in(rm),
+                        .rd_out(rdm[mm*256 +: 256]), .w_ce_in(wce && ws == mm), .w_addr_in(wm), .wd_in(wd),
+                        .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+                end
+                assign rd[gg*256 +: 256] = (rs_q == 2'd0) ? rdm[0 +: 256] : (rs_q == 2'd1) ? rdm[256 +: 256] : rdm[512 +: 256];
+            end
         end
         always @(posedge clk) begin
             m_kind <= t_kind; c_kind <= m_kind;
@@ -321,16 +398,16 @@ module ot_qfd_crom_lbuf #(
     always @(posedge clk) if (rv_done) begin
         for (lw = 0; lw < SW; lw = lw + 1) begin : g_fw
             case (rt_kind)
-                F_STAGE: if (SRAM != 0) ; else if (rt_sel) bn1[lw*NWIN + rt_row] <= f_q[lw*64 +: 32]; else bn0[lw*NWIN + rt_row] <= f_q[lw*64 +: 32];
-                F_HEADB: if (SRAM == 0) bf[lw*NHD + rt_row] <= f_q[lw*64 +: 32];
-                F_ROPE:  if (rt_sel) br1[lw] <= f_q[lw*64 +: 64]; else br0[lw] <= f_q[lw*64 +: 64];
+                F_STAGE: if (SRAM != 0) ; else if (rt_sel) bn1[lw*NWIN + rt_row] <= f_q_i[lw*64 +: 32]; else bn0[lw*NWIN + rt_row] <= f_q_i[lw*64 +: 32];
+                F_HEADB: if (SRAM == 0) bf[lw*NHD + rt_row] <= f_q_i[lw*64 +: 32];
+                F_ROPE:  if (rt_sel) br1[lw] <= f_q_i[lw*64 +: 64]; else br0[lw] <= f_q_i[lw*64 +: 64];
                 default: ;
             endcase
         end
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin fault <= 1'b0; fault_code <= 2'd0; end
-        else if (!fault && ((|t_miss) || f_fault || grp_dis)) begin fault <= 1'b1; fault_code <= (|t_miss) ? 2'd1 : f_fault ? 2'd2 : 2'd3; end
+        else if (!fault && ((|t_miss) || f_fault_i || grp_dis)) begin fault <= 1'b1; fault_code <= (|t_miss) ? 2'd1 : f_fault_i ? 2'd2 : 2'd3; end
     end
 endmodule
 
@@ -359,7 +436,7 @@ module ot_qfd_su_cbuf (
     ot_qfd_crom_lbuf #(.SRAM(1), .FLP(11)) u_b (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .st_rdy(st_rdy),
         .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q), .f_fault(f_fault), .fault(fault), .fault_code(fault_code),
-        .lane_base(24'd0));
+        .lane_base(24'd0), .f_lat(5'd0));
 endmodule
 
 
@@ -367,6 +444,12 @@ endmodule
 // SRAM, its lanes' answer pipeline and its own copy of the (deterministic) prefetcher, strapped with its lane base.
 // 8 instances side by side form the SU's constant buffer; every copy sees the same stage / token inputs, so the copies
 // fill in lockstep (st_rdy of any copy stands for all).  No top parameters.
+// q13 2026-10-13 (Qwen ROM TP8 slot, M5 tile): every face pin is a flop -- f_q / f_fault get their pin register (PINREG),
+// the grp strap is registered -- and the far-ROM latency is the static strap f_lat (FLS; r22k's value was the constant
+// 11 = crom 5 + 3 + 3 relays): one hardened tile serves any relay count / ROM depth of the die (0 .. 31 edges from the
+// f_re pin flop to the answer at the f_q pin).  The die ties f_lat to its crom_g strobe -> q edges + the relays both ways.
+// Storage: three ot_sram_1r1w_128x256 (SRAM 2) so every macro keeps 20 um channels inside the 194.4 um slot.
+// Negative controls: +define+OT_CBUF_G_MUT=<1|2> (the core's MUT).
 module ot_qfd_su_cbuf_g (
     input  wire              clk,
     input  wire              rst_n,
@@ -385,11 +468,18 @@ module ot_qfd_su_cbuf_g (
     output wire [5:0]        f_stage,
     input  wire [8*64-1:0]   f_q,
     input  wire              f_fault,
+    input  wire [4:0]        f_lat,            // strap: far ROM strobe -> answer edges at the pins (r22k: 11)
     output wire              fault,
     output wire [1:0]        fault_code
 );
-    ot_qfd_crom_lbuf #(.SW(8), .SRAM(1), .FLP(11)) u_b (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+`ifndef OT_CBUF_G_MUT
+`define OT_CBUF_G_MUT 0
+`endif
+    reg [2:0] grp_q;                           // strap pin flop
+    always @(posedge clk) grp_q <= grp;
+    ot_qfd_crom_lbuf #(.SW(8), .SRAM(2), .FLP(11), .PINREG(1), .FLS(1), .FLMAX(31), .FLW(5), .MUT(`OT_CBUF_G_MUT)) u_b (
+        .clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos),
-        .lane_base({18'd0, grp, 3'd0}), .st_rdy(st_rdy), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
-        .f_fault(f_fault), .fault(fault), .fault_code(fault_code));
+        .lane_base({18'd0, grp_q, 3'd0}), .st_rdy(st_rdy), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
+        .f_fault(f_fault), .f_lat(f_lat), .fault(fault), .fault_code(fault_code));
 endmodule
