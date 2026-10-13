@@ -324,6 +324,11 @@ class Manifest:
         self.ent.append(e)
         return e
 
+    def holds(self, addr):
+        """is addr inside a placed extent?  The stack bits make flat addresses >= WBASE that are NOT weights (a data
+        region on stack 2 / 3: the MTP column slots' rows there), so "an address >= WBASE" is not "a weight"."""
+        return any(e["base"] <= addr < e["base"] + e["estride"] * e["experts"] for e in self.ent)
+
     def find(self, addr):
         for e in self.ent:
             if e["base"] <= addr < e["base"] + e["estride"] * e["experts"]:
@@ -1388,6 +1393,8 @@ def ds_units(m, man, golib):
             return base_load(M, r, L)               # a STRIPE4 data row (the MTP column swap), not an HC weight row
         if not (a.space == "HBM" and a.base >= WBASE):
             return base_load(M, r, L)
+        if a.base >> 37 == 0 and not man.holds(a.base):
+            return base_load(M, r, L)               # a linear data region on stack 2 / 3 (native MTP swap rows)
         for die in M.dies:
             base, n, _, _, _ = M.eff(a, die, L)
             if base >> 37 == 1 and (base & ((1 << 35) - 1)) in HC_STRIPE:   # STRIPE4 HC weight row, 8 bank segments
@@ -1432,7 +1439,8 @@ def ds_units(m, man, golib):
             if (o.base & ((1 << 35) - 1)) in HC_STRIPE:
                 raise MC.Fault(3, f"STRIPE4 store {o.base:#x} into an HC weight row")
             return base_store(M, r, L)
-        if o.space == "HBM" and (o.base >= WBASE or (IKS[0] and KBASE <= o.base < CKBASE)):   # index key -> key store (G16)
+        if o.space == "HBM" and ((o.base >= WBASE and man.holds(o.base)) or
+                                 (IKS[0] and KBASE <= o.base < CKBASE)):                     # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
                 golib.st.ik[int(e["key"][7:])][grp] = M.read(r.desc["A"], die, L)
