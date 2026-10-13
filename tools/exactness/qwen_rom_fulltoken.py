@@ -95,6 +95,15 @@ if os.environ.get("QROM_XVM"):
     LINK_DEFINES = [f"-DXVMD={_xvm}" if g == "-DXVMD=1" else g for g in LINK_DEFINES]
 if os.environ.get("QROM_BD"):
     DIE = [f"-GBD={int(os.environ['QROM_BD'])}" if g == "-GBD=41" else g for g in DIE]
+# rom-layer-tput 10-13: the die's other wire-stage counts, to put the PRICED r21 die relays (results/rtl/
+# qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json: bd 41 -> 77, tws 38 -> 93, ord 7 -> 10, link 46 -> 72 =
+# +95 per ME op, +26 per link traversal) into the per-layer vehicle: QROM_TWS / QROM_ORD (die) and QROM_LAT (the
+# package link's latency, published 339).  Measurement knobs like QROM_XVM / QROM_BD, never a release shape.
+for _k, _d in (("TWS", 38), ("ORD", 7)):
+    if os.environ.get("QROM_" + _k):
+        DIE = [f"-G{_k}={int(os.environ['QROM_' + _k])}" if g == f"-G{_k}={_d}" else g for g in DIE]
+if os.environ.get("QROM_LAT"):
+    COLL = [f"-GLAT={int(os.environ['QROM_LAT'])}" if g == "-GLAT=339" else g for g in COLL]
 VFLAGS = ["--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
           "-Wno-PINMISSING", "-Wno-LATCH", "-Wno-MULTIDRIVEN"]
 
