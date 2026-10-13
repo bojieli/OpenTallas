@@ -100,14 +100,14 @@
   "pd": 0.55,
   "threads": 8,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01,
+  "hold_margin_ns": 0.05,
   "hold_delay": true
  },
  "job": {
   "owner": "Claude:el1011-hbm-b2-cp",
   "branch": "claude/el1011-hbm-b2-cp",
-  "tag": "v24e",
-  "purpose": "ot_hgi_seq v2.4 RTL unchanged, hgi_seq_v2e floorplan 347.76x272.16 pd 0.55: GRT-0116 fix (v24 acb7765d9 route): 93% of overflow (19.2k of 20.6k gcell-units) sat on zero-capacity gcells over the two 1024x256 SRAMs (OBS M1-M4; under the M5 cap nothing crosses a macro), stacked mid-tile at x 61.8-236.5 with pins on BOTH faces (W: rd_out 256 + wd 136 + addr; E: wd 120 + 294 ties), so rd/wd and the FIFO logic on both sides crossed the macro wall (up to 145 H / 81 V nets per gcell row/column with capacity 0). Fix: macros moved to the WEST edge, stacked, mirrored MY so the main face points into one contiguous logic region; outer face (wd 120 + ties) on a 30 um west channel; no net needs to cross a macro.",
+  "tag": "v24h",
+  "purpose": "ot_hgi_seq v2.4 RTL unchanged, v2e west-edge SRAM floorplan, kit regenerated on main (>= dc5594311). v24e-1d8a783b5-hs: TT +30.84 / DRC 0 / FF -37.19; every top FF class is input port -> pin flop (md_d/md_k/cfg_*/db_*/f_rsp_data/u_done/u_fault -> *_r), already behind 2 kept HB4 (hold_delay); no SRAM-pin or reg->reg class. In-route repair reached FF +10.01 at GRT (margin 10) and the routed IO re-STA lost 47 ps -> route hold margin 50 ps (setup-aware repair, TT +30.84 headroom) + outhold (flop-driven outputs BUF->HB4->BUF at the pin) so neither IO face depends on the post-route ECO (it crashed rc=9).",
   "extra_paths": [
    "rtl/hbm_accel/generic/tb",
    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
@@ -139,6 +139,7 @@
   "h": 272.16
  },
  "layer_cap": "M5",
+ "outhold": true,
  "children": [],
  "inter": []
 }
