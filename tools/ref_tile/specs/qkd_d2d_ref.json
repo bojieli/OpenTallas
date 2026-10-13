@@ -128,8 +128,8 @@
  "job": {
   "owner": "Claude:el1011-q-kvd",
   "branch": "claude/el1011-q-kvd",
-  "tag": "q8",
-  "purpose": "q-kvd R8: KV end cluster (qkd_d2d slot 777.576x518.376) structural setup fix on a commit >= de53a3b7c (hold MM after parasitic estimation + OT_SPINE_MACRO_LEAF): q5b TT -613 at CTS = rq_f -> RX sbuf din 814 ps of wire. Fix: RTL input/output relays (+1 cycle each way, HT builds; RX word replicated per receive buffer) + explicit floorplan (buffers at their input faces, RX MX din-up). Benches ht_layer_exact (HT=1, relays in) PASS / ht_layer_mut FAIL",
+  "tag": "q9",
+  "purpose": "q-kvd d2d-io2 q9: KV end cluster TX/RX pop timing (q8-aeca40e24 TT -611 = up_q -> 647 ps TX arbitration -> sbuf pop pin, ~660 ps internal pop cone). RTL ot_qkvd_d2d PQ (HT builds): every hard-buffer pop from a kept flop decided one cycle ahead from registered shadow occupancy (exact mirror of sbuf/fbuf8 control); kit anchors that flop at the pop pin (io_flop_at_pins.macro_pins). +1 cycle TX slot / RX face. Benches ht_layer_exact PASS / ht_layer_mut FAIL.",
   "benches": [
    {
     "name": "ht_layer_exact",
@@ -155,5 +155,11 @@
   "views_to": "physical/ref_tile/qkd_d2d_ref/views",
   "record_to": "results/rtl/ref_tile/qkd_d2d_ref"
  },
- "floorplan_note": "q8 (el1011-q-kvd 2026-10-12): link buffers at their INPUT faces -- TX buffers R0 on the S row under t_d (east half of S), RX buffers MX (din up) on the N rows under rx_flit (east half of N); RTL IRL/ORL relays (HT=1): one kept relay register per receive buffer next to its din, output relays toward r_d (S west) / tx_flit (N west); every parent hop <= ~480 um by pin/din geometry (q5b: rq_f -> sbuf din 814 ps of wire, RX sbufs had been placed at the S face)"
+ "floorplan_note": "q8 (el1011-q-kvd 2026-10-12): link buffers at their INPUT faces -- TX buffers R0 on the S row under t_d (east half of S), RX buffers MX (din up) on the N rows under rx_flit (east half of N); RTL IRL/ORL relays (HT=1): one kept relay register per receive buffer next to its din, output relays toward r_d (S west) / tx_flit (N west); every parent hop <= ~480 um by pin/din geometry (q5b: rq_f -> sbuf din 814 ps of wire, RX sbufs had been placed at the S face)",
+ "io_flop_at_pins": {
+  "cols": 12,
+  "macro_pins": [
+   "pop"
+  ]
+ }
 }

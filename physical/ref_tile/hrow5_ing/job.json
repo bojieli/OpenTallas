@@ -1,14 +1,14 @@
 {
- "name": "hrow5_ing-r5-6d3c31c2b",
+ "name": "hrow5_ing-r5d-COMMIT",
  "block": "dsfd_mtp_hrow_ing",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-mtp",
- "purpose": "el1011-ds-mtp hrow-r5 2026-10-12 (owner GLUE PLACEMENT; rev-3 cluster mtp-hrow3-e33f9cff1-tc-sp FAILED reg2reg -7.7 ns, 140,653 flops on one root): dsfd_mtp_hrow as tiles placed by the S81 die -- 30 chain bank tiles (bank + its chain stage, W->E cbe / E->W cbw snake per part), 3 ingress tiles (drain receiver: the never-filled 22x514 RTT queue removed; write ordering delay inside), 1 hub; every tile < 15k clock sinks. This tile: dsfd_mtp_hrow_ing x3.",
+ "purpose": "el1011-ds-mtp 2026-10-12 ing r5d: re-route of the CLOSED hrow5_ing-r5-6d3c31c2b (TT +300.84 / FF +1.56) with scalar ck/rst/t_hpg ports (the closed view exported PIN ck[0]/rst[0]/t_hpg[0]; the die netlist needs a scalar clock pin). Logic unchanged.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1011-ds-mtp-hrow",
-  "commit": "6d3c31c2b"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hrow5_ing/hrow5_ing-r5-6d3c31c2b"
+   "to": "results/rtl/ref_tile/hrow5_ing/hrow5_ing-r5d-COMMIT"
   }
  ],
  "cycles_added": 0,

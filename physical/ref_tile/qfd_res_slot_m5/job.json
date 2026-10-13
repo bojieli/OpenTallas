@@ -1,14 +1,14 @@
 {
- "name": "qfd_res_slot_m5-m5-8dcfc40b3",
+ "name": "qfd_res_slot_m5-m5b-46d62c427",
  "block": "ot_qfd_res_slot_tile",
  "ref_tile": true,
  "owner": "Claude:el1011-reroute-m5",
- "purpose": "M5 re-route (reroute_batch.py) of closed qfd_res_slot-3eb23e910-original-eco-e4 (qfd_res_slot, RTL 3eb23e910, snapshot of 1 drifted files): same RTL, outline 259.2x324.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:qwen-1010/c (for Codex:res-ser-tiles)",
+ "purpose": "M5 re-route (reroute_batch.py) of closed qfd_res_slot-3eb23e910-original-eco-e4 (qfd_res_slot, RTL 3eb23e910, snapshot of 1 drifted files): same RTL, outline 259.2x324.0, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:qwen-1010/c (for Codex:res-ser-tiles) [el1012-flowreq requeue on main HEAD: m5 kit 8dcfc40b3 sits in the eb642d870..dc5594311 M6-leak window (1 macro): DRC 5 / FF -6.39]",
  "threads": 8,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/el1011-reroute-m5",
-  "commit": "8dcfc40b3"
+  "branch": "main",
+  "commit": "46d62c427"
  },
  "stages": {
   "bench": [
@@ -73,7 +73,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_res_slot_m5/qfd_res_slot_m5-m5-8dcfc40b3"
+   "to": "results/rtl/ref_tile/qfd_res_slot_m5/qfd_res_slot_m5-m5b-46d62c427"
   }
  ],
  "cycles_added": 0,
