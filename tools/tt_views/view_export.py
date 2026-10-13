@@ -8,6 +8,7 @@ and run next to the route:
     python3 view_export.py --orfs-dir W/work/orfs --name NAME --out DIR [--interface-sdc F] [--macro-view D ...]
                            [--corners ss,ff,tt] [--image openroad/orfs:latest] [--tmp-dir T]
                            [--verdict-json F | --no-verdict] [--sdc-name N] [--post-sdc F ...] [--verdict-tol PS]
+                           [--job-json F --src DIR [--cl-dir D] [--job-extra-sdc F]] [--expect-tt PS] [--expect-ff PS] [--require-check]
 
 CONSTRAINT SEQUENCE (export-sdc 2026-10-13).  A view must carry the timing its route was SIGNED OFF with, so the
 constraints are read in the verdict's own order, never a substitute:
@@ -20,8 +21,19 @@ constraints are read in the verdict's own order, never a substitute:
      timed on another ODB / SPEF than the one being exported is refused (stale verdict), not skipped.
   2. CORNER_STA REPLAY (a loop run without a routed_ioref verdict): the constraint section of the route's own
      corner_sta Tcl (<orfs>/w18_sta_{ss,ff}.tcl), verbatim; recorded as unchecked.
+  2b. JOB REPLAY (--job-json F --src DIR; an ARCHIVED or legacy-lane route whose verdict Tcl is gone: closed_archive
+     <block>/<run>/job.json, <RUN>/cl/job.json): the sequence is rebuilt from the job record's OWN sign-off fields --
+     metrics.sdc_name, SPEF, set_propagated_clock, metrics.post_sdc in order (read from DIR = the job commit's tree plus
+     its flow overlay, mounted /src; setup_post_sdc in the SS / TT sessions only), then what the routed_ioref re-STA
+     inserted / replaced / appended (files of --cl-dir, default F's directory or its run/cl) -- and CHECKED against the
+     job's verdict (routed_ioref.a<N>.json when clean, else metrics tt_ps / ff_ps).  A post-SDC that is not in DIR fails
+     the export.  (el1013-s81-wfcstg: three WFC views were exported by hand with --no-verdict --post-sdc
+     cl/io_ref_routed.sdc only; the jobs' post_sdc -- signoff_unc60.sdc, region_die150_union.sdc: the 833 ps sign-off
+     clock / uncertainty over a 770 ps route SDC -- were left out, TT read -55 / +37 against verdicts +7.75 / +141.65
+     and nothing failed, because a --post-sdc export had no expectation to fail against.)
   3. --post-sdc F ... (no verdict to replay): routed <--sdc-name>, SPEF, set_propagated_clock, then each F in order
-     (tools/w18/corner_sta.py's order).
+     (tools/w18/corner_sta.py's order).  UNCHECKED unless --expect-tt / --expect-ff name the sign-off slack; the record
+     says checked=false and --require-check turns an unchecked export into a failure (exit 5).
   4. legacy (none of these): the routed 6_final.sdc, or --interface-sdc read INSTEAD of it.  This is an interface extraction
      for hand flows; it is NOT the sign-off sequence (s81su SMT: FF -19.69 exported vs +3.66 verdict).
 With a verdict replay --interface-sdc is recorded but does not change the sequence.
@@ -154,6 +166,55 @@ def corner_sta_sections(orfs):
     return dict(sec=sec, src=src, work=orfs, files=dict(sorted(host.items())))
 
 
+def load_job(jobj, src, cl, rel, extra_sdc=None):
+    """JOB REPLAY: -> dict(seq{ss,ff}, expect{tt,ff}, files, basis) rebuilt from a closure-loop job record"""
+    j = json.loads(jobj.read_text())
+    m = j.get("metrics") or {}
+    if "post_sdc" not in m or "sdc_name" not in m:
+        raise VerdictError(f"{jobj}: metrics carry no sdc_name / post_sdc (not a corner_sta sign-off record)")
+    if cl is None:
+        cl = next((d for d in (jobj.parent / "run" / "cl", jobj.parent) if d.is_dir()
+                   and (list(d.glob("routed_ioref.a*.json")) or d.name == "cl")), jobj.parent)
+    exp, basis, ins, rpl, app = {}, "job metrics", [], {}, []
+    for vj in sorted(cl.glob("routed_ioref.a*.json"), key=lambda p: p.name, reverse=True):
+        r = json.loads(vj.read_text())
+        ok = all((r.get(k) or {}).get("worst_slack_ps") is not None and not (r.get(k) or {}).get("errors")
+                 and not (r.get(k) or {}).get("error") for k in ("setup_tt", "hold_ff"))
+        if ok:
+            exp = dict(tt=float(r["setup_tt"]["worst_slack_ps"]), ff=float(r["hold_ff"]["worst_slack_ps"]))
+            ins, rpl, app = r.get("inserted") or [], r.get("replaced") or {}, r.get("appended") or []
+            basis = vj.name
+        break                                  # the NEWEST attempt decides (an unclean one = corner_sta metrics stand)
+    if not exp:
+        tt = m.get("tt_ps", m.get("ss_ps") if str(m.get("setup_corner", "")).lower() == "tt" else None)
+        if tt is None or m.get("ff_ps") is None:
+            raise VerdictError(f"{jobj}: no TT setup / FF hold verdict in metrics")
+        exp = dict(tt=float(tt), ff=float(m["ff_ps"]))
+    files = {}
+
+    def need(cont, host):
+        if not host.is_file():
+            raise VerdictError(f"job replay: {cont} -> {host} missing (pass --src = the job commit tree + flow overlay)")
+        files[cont] = dict(host=str(host), sha256=sha(host))
+        return f"read_sdc {cont}"
+    seq = {}
+    for c in ("ss", "ff"):
+        s = [f"read_db /in/{rel}/6_final.odb", f"read_sdc /in/{rel}/{m['sdc_name']}",
+             f"read_spef /in/{rel}/6_final.spef", "set_propagated_clock [all_clocks]"]
+        # Legacy corner_sta wrappers recorded their literal extra SDC separately
+        # from metrics.post_sdc. Replay that original file before the post-SDCs.
+        if extra_sdc is not None:
+            s.append(need("/job_extra.sdc", extra_sdc))
+        s += [need(f"/cl/{Path(f).name}", cl / Path(f).name) for f in ins]
+        s += ["set_propagated_clock [all_clocks]"] if ins else []
+        for p in list(m["post_sdc"]) + (list(m.get("setup_post_sdc") or []) if c == "ss" else []):
+            s.append(need(f"/cl/{Path(rpl[p]).name}", cl / Path(rpl[p]).name) if p in rpl else need(f"/src/{p}", src / p))
+        s += [need(f"/cl/{Path(f).name}", cl / Path(f).name) for f in app]
+        seq[c] = s
+    return dict(seq=seq, expect=exp, files=files, basis=basis, cl=cl, job=j.get("name"),
+                commit=(j.get("spec") or {}).get("source", {}).get("commit"), overlay=(j.get("flow_overlay") or {}).get("commit"))
+
+
 def ws_ps(line):
     m = re.match(r"OT_WS max (\S+) min (\S+)", line or "")
     return (float(m.group(1)) * 1e12, float(m.group(2)) * 1e12) if m else (None, None)
@@ -175,6 +236,14 @@ def main():
     ap.add_argument("--post-sdc", action="append", default=[], type=Path,
                     help="read after the routed SDC, SPEF and set_propagated_clock, in order (corner_sta.py's order)")
     ap.add_argument("--verdict-tol", type=float, default=0.05, help="ps; export session slack vs the verdict")
+    ap.add_argument("--job-json", type=Path, help="closure-loop job record to rebuild the sign-off sequence from (2b)")
+    ap.add_argument("--job-extra-sdc", type=Path,
+                    help="original corner_sta.json extra_sdc saved as a file; replay before the job's post-SDCs")
+    ap.add_argument("--src", type=Path, help="job commit tree (+ flow overlay) holding the job's post-SDCs (/src)")
+    ap.add_argument("--cl-dir", type=Path, help="the run's cl/ dir (routed_ioref json + appended SDCs); default by --job-json")
+    ap.add_argument("--expect-tt", type=float, help="ps; sign-off TT setup slack the export session must reproduce")
+    ap.add_argument("--expect-ff", type=float, help="ps; sign-off FF hold slack the export session must reproduce")
+    ap.add_argument("--require-check", action="store_true", help="an export with no verdict to check against fails (5)")
     ap.add_argument("--pin-only-tech", action="store_true", help="snapshot exact read-tech LEF for M6 contact-via audit")
     a = ap.parse_args()
     orfs, out = a.orfs_dir.resolve(), a.out.resolve()
@@ -193,11 +262,16 @@ def main():
         mounts += ["-v", f"{isdc}:/interface.sdc:ro"]
         rec["interface_sdc"] = dict(path=str(isdc), sha256=sha(isdc),
                                     purpose="interface timing extraction, not a new leaf signoff verdict")
-    vd = None
-    for k in ("verdict", "sdc_sequence"):
+    vd = jb = None
+    for k in ("verdict", "sdc_sequence", "checked"):
         rec.pop(k, None)
     try:
-        vj = None if a.no_verdict else find_verdict(orfs, a.verdict_json)
+        if a.job_json is not None:
+            if a.src is None:
+                raise VerdictError("--job-json needs --src")
+            jb = load_job(a.job_json.resolve(), a.src.resolve(), a.cl_dir.resolve() if a.cl_dir else None, rel,
+                          a.job_extra_sdc.resolve() if a.job_extra_sdc is not None else None)
+        vj = None if (a.no_verdict or jb is not None) else find_verdict(orfs, a.verdict_json)
         if vj is not None:
             vd = load_verdict(vj, orfs, base)
     except (VerdictError, OSError, ValueError) as ex:
@@ -208,7 +282,18 @@ def main():
         print(f"VIEW_EXPORT FAIL verdict sequence: {ex}")
         raise SystemExit(4)
     cs = None
-    if vd is None and not a.no_verdict and len(orfs.parents) > 3 and (orfs.parents[3] / "cl").is_dir():
+    expect = dict(vd["expect"]) if vd is not None else dict(jb["expect"]) if jb is not None else {}
+    for c, v in (("tt", a.expect_tt), ("ff", a.expect_ff)):
+        if v is not None:
+            expect[c] = v
+    if jb is not None:
+        mounts += ["-v", f"{a.src.resolve()}:/src:ro", "-v", f"{jb['cl']}:/cl:ro"]
+        if a.job_extra_sdc is not None:
+            mounts += ["-v", f"{a.job_extra_sdc.resolve()}:/job_extra.sdc:ro"]
+        rec["verdict"] = dict(json=None, job_json=str(a.job_json.resolve()), job=jb["job"], commit=jb["commit"],
+                              overlay=jb["overlay"], basis=jb["basis"], expect_ps=jb["expect"], tol_ps=a.verdict_tol,
+                              files=jb["files"], check={})
+    if vd is None and jb is None and not a.no_verdict and len(orfs.parents) > 3 and (orfs.parents[3] / "cl").is_dir():
         cs = corner_sta_sections(orfs)
         if cs is not None:
             mounts += ["-v", f"{cs['work']}:/work:ro", "-v", f"{cs['src']}:/src:ro"]
@@ -221,7 +306,7 @@ def main():
         if a.interface_sdc is not None:
             rec["interface_sdc"]["in_verdict_sequence"] = rec["interface_sdc"]["sha256"] in \
                 {f["sha256"] for f in vd["files"].values()}
-    elif a.post_sdc:
+    elif a.post_sdc and jb is None:
         for i, f in enumerate(a.post_sdc):
             mounts += ["-v", f"{f.resolve()}:/post{i}.sdc:ro"]
     rec["sdc_sequence"] = {}
@@ -245,6 +330,8 @@ def main():
         if vd is not None:
             # the verdict's own constraint section, verbatim (SS / TT = the setup session, FF = the hold session)
             seq, mode = list(vd["sec"]["ff" if c == "ff" else "ss"]), "verdict"
+        elif jb is not None:
+            seq, mode = list(jb["seq"]["ff" if c == "ff" else "ss"]), "job_replay"
         elif cs is not None:
             seq, mode = list(cs["sec"]["ff" if c == "ff" else "ss"]), "corner_sta_tcl"
         elif a.post_sdc:
@@ -274,12 +361,14 @@ def main():
         (out / f"export_{c}.log").write_text(log)
         ws = [l for l in log.splitlines() if l.startswith("OT_WS")]
         done = "OT_EXPORT_DONE" in log
-        if vd is not None and c in ("tt", "ff"):
+        if c in expect:
             # the exported session IS the verdict session: TT setup / FF hold must reproduce the verdict's numbers
             got = ws_ps(ws[-1] if ws else None)[0 if c == "tt" else 1]
-            want = vd["expect"][c]
+            want = expect[c]
             ok = got is not None and abs(got - want) <= a.verdict_tol + 0.005     # the verdict json is rounded to 0.01
-            rec["verdict"]["check"][c] = dict(export_ps=got, verdict_ps=want, ok=ok)
+            rec.setdefault("verdict", dict(json=None, expect_ps=expect, tol_ps=a.verdict_tol,
+                                           basis="--expect-tt / --expect-ff")).setdefault("check", {})[c] = \
+                dict(export_ps=got, verdict_ps=want, ok=ok)
             if not ok:
                 print(f"VIEW_EXPORT FAIL {c}: export session {got} ps vs verdict {want} ps (tol {a.verdict_tol})")
             done = done and ok
@@ -288,9 +377,18 @@ def main():
     rec["files"] = {f.name: sha(f) for f in sorted(out.iterdir()) if f.suffix in (".lef", ".lib")}
     want = [f"{a.name}.lef"] + [f"{a.name}_{c}.lib" for c in ("ss", "ff", "tt")]
     rec["ok"] = all(v.get("done") for v in rec["corners"].values()) and all(w in rec["files"] for w in want)
+    # CHECKED = the TT setup and FF hold of this export session were both compared with a sign-off verdict
+    chk = (rec.get("verdict") or {}).get("check") or {}
+    rec["checked"] = all(chk.get(c, {}).get("ok") for c in ("tt", "ff"))
+    unchecked = [c for c in a.corners.split(",") if c in ("tt", "ff") and c not in chk]
+    if unchecked:
+        print(f"VIEW_EXPORT UNCHECKED {','.join(unchecked)}: no sign-off verdict to compare this session with "
+              "(pass --job-json/--src, --verdict-json or --expect-tt/--expect-ff)")
     recp.write_text(json.dumps(rec, indent=2) + "\n")
-    print(json.dumps({k: rec[k] for k in ("name", "ok", "files")}))
-    raise SystemExit(0 if all(rec["corners"][c]["done"] for c in a.corners.split(",")) else 1)
+    print(json.dumps({k: rec[k] for k in ("name", "ok", "checked", "files")}))
+    if not all(rec["corners"][c]["done"] for c in a.corners.split(",")):
+        raise SystemExit(1)
+    raise SystemExit(5 if unchecked and a.require_check else 0)
 
 
 if __name__ == "__main__":
