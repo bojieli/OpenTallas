@@ -228,11 +228,14 @@ class Machine:
             n = die.dyn[d.n_sel] if d.n_sel else d.n
         ist = 0 if d.ibcast else (d.istride or 1)
         if d.space == "HBM" and base >> 37:
-            # bits [39:37] are the row-stripe code (spec 3.6): only a DMA.LOAD A may carry one (code 1 = STRIPE4); any
+            # bits [39:37] are the row-stripe code (spec 3.6): DMA.LOAD A or DMA.STORE O may carry code 1; any
             # other HBM base >= 2^37 is outside the die's 128 GiB and would alias the code
             c = self.cur
-            if not (base >> 37 == 1 and c is not None and (c.unit, c.op) == ("DMA", "LOAD") and d == c.desc.get("A")):
-                raise Fault(3, f"HBM base {base:#x} >= 2^37 outside a STRIPE-coded DMA.LOAD A")
+            stripe_operand = (c is not None and c.unit == "DMA" and
+                              ((c.op == "LOAD" and d == c.desc.get("A")) or
+                               (c.op == "STORE" and d == c.desc.get("O"))))
+            if not (base >> 37 == 1 and stripe_operand):
+                raise Fault(3, f"HBM base {base:#x} >= 2^37 outside a STRIPE-coded DMA operand")
         return base, n, d.m, d.stride, ist
 
     def vm_addrs(self, d, die, L, no=None, ni=None):
