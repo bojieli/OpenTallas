@@ -32,7 +32,7 @@ module vm_root_ctl9(
   reg [6:0] addr,next_addr;
   reg [3:0] sent,next_sent,acked,next_acked;
   reg [71:0] control_code;
-  reg [4*72-1:0] validity; // authoritative coded256 valid bits, cold reset only
+  wire [4*72-1:0] validity; // authoritative coded256 valid bits, cold reset only
   wire [255:0] valid_bits;wire [3:0] valid_UE;
   // A decoded validity shadow is ready before WACK drains. The coded words
   // remain authoritative; UE is still captured directly by bad_cv_q.
@@ -59,7 +59,19 @@ module vm_root_ctl9(
   assign wr_ACK_v=state==WACK&&!fault;
   assign drained=state==IDLE&&!fault;
   assign native_release=state==PUBLISH&&(&acked)&&!fault;
-  reg [255:0] next_valid;
+  wire [255:0] next_valid=valid_bits_pipe|(256'd1<<{bank,addr});
+  for(genvar r=0;r<4;r=r+1)begin:validity_regions
+   (* keep = "true", dont_touch = "true" *) reg region_por_n;
+   reg [71:0] coded;
+   always @(posedge clk or negedge por_n)begin
+    if(!por_n)region_por_n<=0;else region_por_n<=1;
+   end
+   always @(posedge clk or negedge region_por_n)begin
+    if(!region_por_n)coded<=0;
+    else if(state==LOAD&&!chk_err_q&&is_write)coded<=encode64(next_valid[r*64+:64]);
+   end
+   assign validity[r*72+:72]=coded;
+  end
   // SRAMs in the tiles (column slices): one command per WRITE / VERIFY / READ cycle, the macros' enables
   assign mem_cmd_v=(state==WRITE||state==VERIFY||state==READ)&&!fault;
   assign mem_cmd_we=state==WRITE;assign mem_cmd_bank=bank;assign mem_cmd_addr=addr;
@@ -105,15 +117,11 @@ module vm_root_ctl9(
   always @(posedge clk or negedge por_n)begin
    if(!por_n)begin
     state<=IDLE;bank<=0;addr<=0;is_write<=0;sticky<=0;sent<=0;acked<=0;
-    control_code<=0;validity<=0;bad_cv_q<=0;
+    control_code<=0;bad_cv_q<=0;
    end else begin
     state<=next_state;bank<=next_bank;addr<=next_addr;is_write<=next_is_write;
     sticky<=next_sticky;sent<=next_sent;acked<=next_acked;control_code<=encode64(next_control);
     bad_cv_q<=control_bad||(|valid_UE);
-    if(SEATP!=0&&state==LOAD&&!chk_err_q&&is_write)begin
-     next_valid=valid_bits_pipe;next_valid[{bank,addr}]=1;
-     for(integer k=0;k<4;k=k+1)validity[k*72+:72]<=encode64(next_valid[k*64+:64]);
-    end
    end
   end
  assign accept_o=(ld_w||ld_r)&&por_n;
