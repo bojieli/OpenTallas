@@ -2770,6 +2770,7 @@ ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre s
 ECOL_W = 518.4
 CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
 HOP_GATE_UM = None             # --hop-gate UM (s81-die v14): real mode fails when any data bit's pin-to-pin hop > UM
+RLY_FACE_REACH = 0.0           # --rly-face-reach UM (s81-die v16): last column relay's out face by its worst load
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
 HOST_FACE_UM = 129.6           # --fwd-iface: host slab height floor (pin face for the forwarded lanes)
@@ -5651,6 +5652,26 @@ def _col_relays(m, P):
             fi, fo = fc(pa), fc(pb)
             if fo == fi:
                 fo = dict(N='S', S='N', E='W', W='E')[fi]
+            if RLY_FACE_REACH and k == len(chain) - 2:
+                # --rly-face-reach UM (s81-die v16): the LAST column relay drives every load of the net, not only the
+                # farthest one its out face was turned to.  v15 run 4: y_xa_<r>_<s>_0 (dsfd_rly_283_WE) sat in the
+                # --xb-rgap site E of the slot station with its out pins on the E face (toward the E element bank),
+                # 507.1 um pin to pin from the next station's xai (8,309 bits > 500).  When the default out face
+                # centre is farther than UM from a load pin, the relay takes the out face with the smallest worst-load
+                # distance; it stays a STRAIGHT master (in face opposite: the existing dsfd_rly_<W>_SN / _WE kits, no
+                # new corner master) when the driver is within UM of that in face.
+                fpt_ = dict(E=(it.x + it.w, it.y + it.h / 2), W=(it.x, it.y + it.h / 2),
+                            N=(it.x + it.w / 2, it.y + it.h), S=(it.x + it.w / 2, it.y))
+                lds_ = [ep_pt(e, True) for e in eps[1:] if e[0] in by]
+                wl_ = {f_: max(_mh(fpt_[f_], q_) for q_ in lds_) for f_ in 'NSEW'} if lds_ else None
+                if wl_ and wl_[fo] > RLY_FACE_REACH:
+                    opp_ = dict(N='S', S='N', E='W', W='E')
+                    fb_ = min(wl_, key=lambda f_: (wl_[f_], f_))
+                    if fb_ != fo:
+                        fi2_ = opp_[fb_] if _mh(pa, fpt_[opp_[fb_]]) <= RLY_FACE_REACH else (fi if fi != fb_ else opp_[fb_])
+                        m.setdefault('rly_face_reach', []).append((it.name, fi + fo, fi2_ + fb_, round(wl_[fo], 1),
+                                                                   round(wl_[fb_], 1)))
+                        fi, fo = fi2_, fb_
             it.master = f'dsfd_rly_{bits}_{fi}{fo}'
             RLY_FACES[it.master] = (fi, fo)
         out.append((bid, cls, bits, [prev] + list(eps[1:])))
@@ -5892,7 +5913,7 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
             y0_, y1_ = min(p_[1] for p_ in path) - 60.0, max(p_[1] for p_ in path) + 60.0
             print('LANE_PINS blocked', name, path, 'cor', {k_: v_ for k_, v_ in cor.items() if k_ in ('vch', 'collE', 'collW')},
                   [(i_.name, i_.master, round(i_.x), round(i_.y), round(i_.w), round(i_.h)) for i_ in m['insts']
-                   if i_.x < x1_ and i_.x + i_.w > x0_ and i_.y < y1_ and i_.y + i_.h > y0_][:40], flush=True)
+                   if i_.x < x1_ and i_.x + i_.w > x0_ and i_.y < y1_ and i_.y + i_.h > y0_][:40], file=sys.stderr, flush=True)
         raise   # collE/W: --coll-split3 column remainder
     prev = (A.name, pa)
     for k, (it, s_, hop) in enumerate(sts):
@@ -7579,6 +7600,9 @@ def die_options(ap):
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
+    ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
+                    'the out face nearest its worst load when the default face centre is > UM from a load pin (straight '
+                    'master kept: in face opposite)')
     ap.add_argument('--lane-pins', type=int, nargs='?', const=2, default=0, help='s81-die v15: hub ports of a straight VCH '
                     'station lane take their pins centred on the lane at P-track pitch (default 2) on both slabs; lanes '
                     'are allocated with non-overlapping pin spans; the 8 t_hc_y slices follow the slices of the one port')
@@ -7794,6 +7818,8 @@ def apply_options(a):
         assert (Q_ELEM_FRAME_H or 0) >= 0 and (getattr(a, 'elem_h', None) or ELEM_FRAME_H) >= BF_ROUTE_H + 8.64 - 1e-6, \
             '--bf-hier: the BF frame (--elem-h) must hold the routed BF blocks (BF_ROUTE_H) + halos'
     HOP_EXTRA = int(getattr(a, 'hop_extra', 0) or 0)
+    global RLY_FACE_REACH
+    RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))

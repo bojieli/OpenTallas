@@ -46,7 +46,25 @@ def main():
     chk = dict(legality=leg, generated_pin_clashes=len(pc), pin_clash_examples=pc[:20],
                hop_fix=m.get('hop_fix'), relay_progress_fix=m.get('relay_progress_fix'), v15=m.get('v15'),
                hop_gate=dict((k, v) for k, v in hg.items() if k != 'classes'))
+    chk.update(lane_pins=m.get('lane_pins'), rly_face_reach=dict(n=len(m.get('rly_face_reach', [])),
+                                                                 examples=m.get('rly_face_reach', [])[:10]))
     (work / 'plan_check.json').write_text(json.dumps(chk, indent=1, default=str) + '\n')
+    # stage record for the layer-throughput stream: pin-to-pin register stages per hub bus + the field round trip
+    import hub_stage_count as HS
+    try:
+        rec = G.plan_record_r8(m)
+        frt = rec.get('field_round_trip_cycles')
+        if frt:
+            frt = {k_: v_ for k_, v_ in frt.items() if k_ != 'hop_fix'}
+    except Exception as e_:                      # the plan record is a report, never a gate
+        frt = dict(error=repr(e_))
+    import collections
+    rm_ = collections.Counter(it.master for it in m['insts'] if it.kind in ('rly', 'hstn') or it.master.startswith('dsfd_rly_'))
+    (work / 'stage_counts.json').write_text(json.dumps(dict(
+        tool='tools/s81/c5diag_v15_dump.py', hub_pin_to_pin_stages=dict(sorted(HS.count(m).items())),
+        hub_chain_record=m.get('hub_stations'), hop_fix=m.get('hop_fix'), col_relays=m.get('col_relays'),
+        lane_pins=m.get('lane_pins'), field_round_trip_cycles=frt, relay_masters=dict(sorted(rm_.items()))),
+        indent=1, default=str) + '\n')
     pins = HG.read_pins(texts)
     by = {it.name: it for it in m['insts']}
     hops = []
