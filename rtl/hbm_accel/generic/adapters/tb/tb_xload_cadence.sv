@@ -46,6 +46,7 @@ module tb_xload_cadence;
    n=k;p=slots;fmt=f;stride=k;count=0;run=0;maxrun=0;first=-1;last=-1;prev=-2;
    startcyc=cyc; @(negedge clk);x_v=1;@(negedge clk);x_v=0;
    timeout=0;while(!done&&timeout<200000)begin @(negedge clk);timeout=timeout+1;end
+   repeat(2)@(negedge clk); // x_done and final xw pins launch together; sample the final sink edge
    expected=((k+(f==0?511:f==1?1023:2047))/(f==0?512:f==1?1024:2048))*8*((slots*3152+2047)/2048);
    if(!done||fault||count!=expected)$fatal(1,"cadence failed k%0d p%0d f%0d count%0d expected%0d fault%0d",k,slots,f,count,expected,fault);
    $display("CADENCE id=%0d K=%0d P=%0d fmt=%0d beats=%0d max_contiguous=%0d first=%0d last=%0d service=%0d",id,k,slots,f,count,maxrun,first-startcyc,last-startcyc,cyc-startcyc);
