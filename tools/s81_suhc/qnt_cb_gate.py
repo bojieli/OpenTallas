@@ -28,14 +28,28 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--candidate-commit', required=True)
     ap.add_argument('--output', type=Path, required=True)
+    ap.add_argument('--pinned-sources-dir', type=Path, help='minimal git-show export with immutable source binding')
     args = ap.parse_args()
     repo = Path(__file__).resolve().parents[2]
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
-    cand_commit = subprocess.check_output(['git', 'rev-parse', args.candidate_commit], cwd=repo, text=True).strip()
-    ref_commit = subprocess.check_output(['git', 'rev-parse', REF], cwd=repo, text=True).strip()
-    cand_full, cand = extract(repo, cand_commit)
-    ref_full, ref = extract(repo, ref_commit)
+    if args.pinned_sources_dir:
+        src = args.pinned_sources_dir
+        export = json.loads((src/'export_binding.json').read_text())
+        cand_commit, ref_commit = export['candidate_commit'], export['reference_commit']
+        if not cand_commit.startswith(args.candidate_commit) or not ref_commit.startswith(REF):
+            raise RuntimeError('export commit mismatch')
+        cand_full = (src/'candidate_full.sv').read_bytes()
+        ref_full = (src/'reference_full.sv').read_bytes()
+        if sha(cand_full) != export['candidate_full_sha256'] or sha(ref_full) != export['reference_full_sha256']:
+            raise RuntimeError('export source hash mismatch')
+        cand = cand_full.split(MARK.encode(), 1)[0]
+        ref = ref_full.split(MARK.encode(), 1)[0]
+    else:
+        cand_commit = subprocess.check_output(['git', 'rev-parse', args.candidate_commit], cwd=repo, text=True).strip()
+        ref_commit = subprocess.check_output(['git', 'rev-parse', REF], cwd=repo, text=True).strip()
+        cand_full, cand = extract(repo, cand_commit)
+        ref_full, ref = extract(repo, ref_commit)
     renamed = ref.replace(b'ot_s81_su_qnt', b'ot_s81_su_qnt_reference').replace(b'ot_s81_su_qn_keep_ff', b'ot_s81_su_qn_keep_ff_reference')
     checked_ref = (repo/'tests/rtl/s81su_qnt_cb/reference_69c124e5d.sv').read_bytes()
     if checked_ref != renamed:
