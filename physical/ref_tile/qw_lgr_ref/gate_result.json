@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qw_lgr_ref",
+ "verdict": "WARN",
+ "generated": "2026-10-13T13:49:19-0700",
+ "host": "ot-agidock128",
+ "cts": true,
+ "commit": "dc8951f0b",
+ "clock": {
+  "max_root_sinks": 16053,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": 217.0,
+  "tt_spread_ps": 13.0,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "16,053 sinks on one clock root > 15,000, allowed by evidence: measured TT insertion 217.0 ps, leaf spread 13.0 ps (<= 300 ps / <= 80 ps)"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 16,053 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. e_push[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  }
+ ]
+}

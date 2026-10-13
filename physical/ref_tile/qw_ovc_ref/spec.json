@@ -1,0 +1,92 @@
+{
+ "name": "qw_ovc_ref",
+ "top": "ot_hgi_qw_ovc",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 190.08,
+  "h": 64.8
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "S": [
+   "clk",
+   "rst_n",
+   "go",
+   "cmd",
+   "idle",
+   "drained",
+   "done",
+   "fault",
+   "rg_req",
+   "rg_gnt",
+   "wg_req",
+   "wg_gnt"
+  ],
+  "W": [
+   "l_rst_n",
+   "l_hit_r",
+   "l_hit_p",
+   "l_rs",
+   "l_sl",
+   "l_push",
+   "l_rcr",
+   "l_done"
+  ],
+  "N": [
+   "d_rst_n",
+   "c_gv",
+   "c_gh",
+   "c_mw_v",
+   "c_mw_a",
+   "c_mw_sec",
+   "c_mw_n",
+   "c_wg",
+   "d_wf",
+   "d_bad"
+  ]
+ },
+ "refglob": "*f_cmd*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "quant_wide_ov flat cluster (38,353 flops + 20 macro clock pins on one root: ov1 crash, ov2 cancelled at 32-38k sinks with 495-727 ps CTS spread, ov3 EARLY_FAIL_HOLD) is replaced by a wires-only parent over hardened M5 leaves with their own clock roots: control head ot_hgi_qw_ovc, data head ot_hgi_qw_ovd (result SRAM + write side), 4 x read lane-group leaf ot_hgi_qw_lgr, 4 x write lane-group leaf ot_hgi_qw_lgw, the three closed decoder tiles; a register at both pins of every seam, no cycle added (gate quant_wide_ov: 184 cycles vs 168 priced = 1.095x, unchanged)",
+ "job": {
+  "owner": "Claude:el1013-hbm-quant-split",
+  "branch": "claude/hbm-quant-split-1013",
+  "tag": "w1",
+  "purpose": "WQ3 quant cluster control head: command face flops + relays, 8 compact descriptors, hazard scheduler, read issue, issued-beat queue, gather pop, per-lane retirement; S face on the cluster S pins, W face toward the read leaves, N face = the registered seam to the data head.",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ]
+ },
+ "why_floorplan": "cluster S face under the command / status / grant pins (216, 21.6): W face toward the read leaves (row 0 at 70 um, row 3 at ~600 um: the longest hop of the cluster, 168 b; a uniform control relay = +1 cycle with a ledger row is the fallback), N face = the registered seam to the data head 173 um above",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "inhold": true,
+ "outhold": true
+}

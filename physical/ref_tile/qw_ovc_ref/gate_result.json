@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qw_ovc_ref",
+ "verdict": "WARN",
+ "generated": "2026-10-13T13:38:16-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "dc8951f0b",
+ "clock": {
+  "max_root_sinks": 8416,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": 188.7,
+  "tt_spread_ps": 23.6,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "8,416 sinks on the largest root <= 15,000; measured TT insertion 188.7 ps, leaf spread 23.6 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset u_rst.rst_n[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 951 loads (951 flops, e.g. active_id[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset u_rst.rst_n[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 515 loads (515 flops, e.g. ev_done[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage desc_sel[2][0]$_DFF_PN0_ -> r_nrowbase[10]$_DFFE_PN0P_/D: ~655 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  }
+ ]
+}
