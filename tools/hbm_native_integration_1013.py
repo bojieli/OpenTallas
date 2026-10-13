@@ -56,7 +56,7 @@ def overlaps(rows):
     return found
 
 
-def compose(outdir, attention_shift_um=436.32):
+def compose(outdir, attention_shift_um=436.32, track_legal=False, variant='r25gqn_v12_native_component_prototype'):
     data = {key: json.loads((ROOT / value).read_text()) for key, value in COMPONENTS.items()}
     rows, regions, maps = [], [], []
     names = set()
@@ -141,6 +141,32 @@ def compose(outdir, attention_shift_um=436.32):
             row['integration_grid_correction_um']=delta
         if row['instance'] in names:raise ValueError('VM8 instance collision')
         names.add(row['instance']);rows.append(row)
+    track_shifts, track_unsolved = [], []
+    if track_legal:
+        import hbm_native_pin_track_audit_1013 as tracks
+        lefs, solved = {}, {}
+        for row in rows:
+            if not row.get('view_lef'):
+                continue
+            ox, oy = tracks.nm(row['xy_um'][0]), tracks.nm(row['xy_um'][1])
+            key = (row['view_lef'], row['orientation'], ox % 1728, oy % 8640)
+            if key not in solved:
+                if row['view_lef'] not in lefs:
+                    lefs[row['view_lef']] = tracks.parse(ROOT / row['view_lef'])
+                w, h, pins = lefs[row['view_lef']]
+                nx, ny = tracks.legal_origin(pins, row['orientation'], w, h, ox, oy)
+                solved[key] = (None if nx is None else nx - ox, None if ny is None else ny - oy)
+            dx, dy = solved[key]
+            if dx is None or dy is None:
+                track_unsolved.append({'instance': row['instance'], 'master': row['logical_module'],
+                                       'orientation': row['orientation'], 'axis_without_solution':
+                                       [a for a, v in zip('xy', (dx, dy)) if v is None]})
+                continue
+            if dx or dy:
+                row['pre_track_xy_um'] = list(row['xy_um'])
+                row['xy_um'] = [round((ox + dx) / 1000, 6), round((oy + dy) / 1000, 6)]
+                row['track_legal_shift_nm'] = [dx, dy]
+                track_shifts.append((row['logical_module'], row['orientation'], dx, dy))
     corridors=[dict(name='ring_S_1100',direction='H',layer='M6',rect_um=[21.6,11721.6,32962.688,12821.6],keep_clear_new_devices=True),
                dict(name='ring_N_1100',direction='H',layer='M6',rect_um=[21.6,24703.2,32962.688,25803.2],keep_clear_new_devices=True)]
     device_columns=[]
@@ -157,7 +183,7 @@ def compose(outdir, attention_shift_um=436.32):
     collisions = overlaps(rows)
     outside = [r['instance'] for r in rows if rect(r)[0] < 0 or rect(r)[1] < 0
                or rect(r)[2] > DIE[0] or rect(r)[3] > DIE[1]]
-    offgrid = [r['instance'] for r in rows if any(abs(v / g - round(v / g)) > 1e-5
+    offgrid = [r['instance'] for r in rows if 'track_legal_shift_nm' not in r and any(abs(v / g - round(v / g)) > 1e-5
                for v,g in zip(r['xy_um'], GRID))]
     reserved_collisions = overlaps(rows + reservations)
     boundary_bits = sum(sum(p['width'] for p in m['boundary_ports'].values()) for m in maps)
@@ -166,7 +192,7 @@ def compose(outdir, attention_shift_um=436.32):
             'native_exact_mutant_throughput': False, 'native_pdn_ir': False,
             'signal_grt_drt': False, 'fixed_phy_service_station_integration': False, 'native_vm8_xload_integration': False}
     candidate = {'schema': 'opentallas.hbm.native_die_candidate.v1',
-                 'variant': 'r25gqn_v12_native_component_prototype', 'die_um': list(DIE),
+                 'variant': variant, 'die_um': list(DIE),
                  'placement_grid_um': list(GRID), 'closed': False,
                  'final_signoff_eligible': False, 'hard_parent_created': False,
                  'coverage': {'sm': 32, 'native_sm_tile_clusters': 512,
@@ -218,6 +244,15 @@ def compose(outdir, attention_shift_um=436.32):
                'placement_subset_pass': not (collisions or outside or offgrid or reserved_collisions or corridor_device_hits or column_device_hits),
                'full_die_placement_pass': False,
                'missing_lef_children':sum(not r.get('view_lef') for r in rows),
+               'track_legalisation': {'applied': track_legal,
+                   'rule': 'every signal/clock pin of a real-LEF child has an on-track RECT at its die origin; nearest origin within +-288 nm x / +-96 nm y',
+                   'shifted_instances': len(track_shifts),
+                   'shift_classes': [dict(master=k[0], orientation=k[1], shift_nm=[k[2], k[3]], instances=v)
+                                     for k, v in sorted(collections.Counter(track_shifts).items())],
+                   'unsolved_instances': len(track_unsolved),
+                   'unsolved_classes': [dict(master=k[0], orientation=k[1], axes=list(k[2]), instances=v) for k, v in sorted(
+                       collections.Counter((u['master'], u['orientation'], tuple(u['axis_without_solution'])) for u in track_unsolved).items())],
+                   'geometry_only_children_not_audited': sum(not r.get('view_lef') for r in rows)},
                'missing_tt_children': sum(not r.get('view_lib',{}).get('tt') for r in rows),
                'qualification_gates': gate}
     if not receipt['placement_subset_pass']:
@@ -282,5 +317,9 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, default=ROOT/'results/arch/hbm_native_1013/die_v12')
     parser.add_argument('--attention-shift-um',type=float,default=436.32)
+    parser.add_argument('--track-legal',action='store_true',help='move each real-LEF child to its nearest pin-on-track origin (v13)')
+    parser.add_argument('--variant',default='r25gqn_v12_native_component_prototype')
     args=parser.parse_args()
-    compose(args.out,args.attention_shift_um)
+    import sys
+    sys.path.insert(0,str(Path(__file__).resolve().parent))
+    compose(args.out,args.attention_shift_um,args.track_legal,args.variant)
