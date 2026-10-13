@@ -30,7 +30,7 @@ except Exception as e:   # noqa: BLE001
 r = dict(m.get('r21_relays') or {})
 rec = dict(schema='opentallas.qwen-tp8.relay-data-run.v1', recipe='tp8b', die=m['die'], build_s=round(time.time() - t),
            relays={k: r.get(k) for k in ('pitch_um', 'max_um', 'relays', 'masters', 'classes', 'clock_nets_missing', 'repaired',
-                                         'unrepaired', 'cut_over', 'off_plan', 'rip_up', 'gap_tier', 'wall_avoid', 'retry', 'relay_flop_bits', 'relay_area_mm2', 'reach_um',
+                                         'unrepaired', 'cut_over', 'off_plan', 'rip_up', 'gap_tier', 'wall_avoid', 'retry', 'jog_fix', 'relay_flop_bits', 'relay_area_mm2', 'reach_um',
                                          'max_pin_to_pin_um', 'over_reach')},
            tp8b_kv={k: (m.get('tp8b_kv') or {}).get(k) for k in ('kept_relays', 'torn_chains', 'pin_moves')},
            stage_of=m.get('r21_stage_of'), masters=sorted({i['m'] for i in ins if '_rly' in i['m']}),

@@ -1088,6 +1088,16 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         _regions_from_placement(m)   # the surgery moved blocks: region clocks follow the FINAL placement
     if relay_pitch:
         _io_south(v)
+        if getattr(v, 'V5_FINAL_MASTERS', None):
+            # r9: the v5 pin rules that must have the last word (closed views pin for pin, abutted bundles pin to pin,
+            # credit pins beside their words) run after every other pin-plan wrapper and before the relay plan
+            _bm = v.masters
+
+            def _mfinal(model, k=1, port_bits=None, _bm=_bm):
+                o = _bm(model, k, port_bits)
+                v.V5_FINAL_MASTERS(model, o, k)
+                return o
+            v.masters = _mfinal
         _relays(v, m, relay_pitch)
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
             _reset_tree(v, m)     # after the relays: legalised against the FINAL placement
@@ -2463,8 +2473,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     def poly_of(cl, P0, P1, bid=None, eps=None):
         path = _poly0(cl, P0, P1, bid=bid, eps=eps)
-        if not getattr(v, 'WALL_AVOID', False) or cl == 'corridor' or cl.startswith('kvn') or cl == 'd2d_fdi':
+        if not getattr(v, 'WALL_AVOID', False) or cl == 'corridor':
             return path
+        if cl.startswith('kvn') or cl == 'd2d_fdi' or (bid or '') in tight_stride:
+            # a planned run (KV row run, host link): only the leg that crosses a wall is taken round it
+            out_, ch_ = [path[0]], False
+            for a_, b_ in zip(path, path[1:]):
+                sub = wall_route(a_, b_, cur_bits[0]) if _wall_hit(a_, b_) > WALL_HIT and not _inside_big(a_) and not _inside_big(b_) else None
+                if sub:
+                    out_ += sub[1:]
+                    ch_ = True
+                else:
+                    out_.append(b_)
+            if ch_:
+                wall_log.append((bid, cl, cur_bits[0], 'leg', len(path), len(out_)))
+            return out_
         hit = sum(_wall_hit(a_, b_) for a_, b_ in zip(path, path[1:]))
         if hit <= WALL_HIT or _inside_big(P0) or _inside_big(P1):
             return path
@@ -2581,7 +2604,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     GATE = bool(getattr(v, 'RELAY_REACH_GATE', False))
 
-    def pin_pts(pl):
+    def pin_pts(pl, faces=None):
         """relay-data 2026-10-13: the chain's pins as the emit step below draws them (port a at the centre of the face
         toward the previous point, b toward the next; both neighbours on one side: b takes the other axis)"""
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
@@ -2600,8 +2623,37 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 fo = ('E' if dx >= 0 else 'W') if fi in 'NS' else ('N' if dy >= 0 else 'S')
             fp = {'E': (x0 + w, y0 + h / 2), 'W': (x0, y0 + h / 2), 'N': (x0 + w / 2, y0 + h), 'S': (x0 + w / 2, y0)}
             out += [fp[fi], fp[fo]]
+            if faces is not None:
+                faces += [fi, fo]
         out.append(pl['P1'])
         return out
+
+    # r9 (coordinator 2026-10-13, tools/hier_contract/pin_align.py): a relay standing closer to its peer's pin face than
+    # the bus needs to jog (gap < bits / JOG_TRK_UM) must stand IN FRONT of the pin (jog <= 20 um): the jog alone would
+    # take more than 0.60 of the tracks between the two faces.  JOG_TRK_UM = 0.60 x 31.51 tracks per um of channel.
+    JOG_TRK_UM, JOG_OK_UM = 0.60 * 31.51, 20.0
+    OPPF = {'E': 'W', 'W': 'E', 'N': 'S', 'S': 'N'}
+
+    def jog_bad(pl):
+        """indices k of the frames with a too-near, offset pin pair (to the previous point: -k-1, to the next: k)"""
+        fc = []
+        q = pin_pts(pl, fc)
+        n = len(pl['frames'])
+        bad = []
+        need = pl['bits'] / JOG_TRK_UM
+        for k in range(n + 1):                       # hop k: point k (out pin) -> point k + 1 (in pin)
+            a_, b_ = q[2 * k], q[2 * k + 1]
+            fa = fc[2 * k - 1] if k >= 1 else None           # out face of frame k - 1
+            fb = fc[2 * k] if k < n else None                # in face of frame k
+            if fa is not None and fb is not None and fb != OPPF[fa]:
+                continue                                      # an L between two relays: not judged
+            f_ = fa or fb
+            if f_ is None:
+                continue
+            gap, jog = (abs(a_[0] - b_[0]), abs(a_[1] - b_[1])) if f_ in 'EW' else (abs(a_[1] - b_[1]), abs(a_[0] - b_[0]))
+            if jog > JOG_OK_UM and gap < need:
+                bad.append(k)
+        return bad
 
     def p2p_hops(pl):
         """pin-to-pin hop lengths of a chain (the audit's measure); the allocator's own measure (hops_of) is centre to
@@ -3227,6 +3279,58 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if not got_ or len(got_) == len(pend):
                 break
     unrepaired[:] = [f'{b_} ({w_})' for b_, w_ in unrep.items()]
+    # ---- r9 pin alignment of the relay hops: a frame of a too-near, offset pair slides to the nearest free spot where
+    # every hop it touches is either in front of its peer or far enough to jog, within the reach
+    jog_log = []
+    if GATE:
+        for idx, pl in sorted(plans.items()):
+            if not pl['frames'] or pl['bid'] in unrep:
+                continue
+            for _it in range(6):
+                bad = jog_bad(pl)
+                if not bad:
+                    break
+                n_ = len(pl['frames'])
+                fixed = False
+                for hk in bad:
+                    for fk in ([hk] if hk < n_ else []) + ([hk - 1] if hk >= 1 else []):
+                        x0, y0, w_, h_ = pl['frames'][fk]
+                        r0 = (x0, y0, x0 + w_ + v.SHAVE, y0 + h_ + v.SHAVE)
+                        rm_rect(r0)
+                        inc = corr_of(x0 + w_ / 2) is not None and in_field(x0 + w_ / 2, y0 + h_ / 2)
+                        cands = []
+                        for ix in ([0] if inc else range(-24, 25)):
+                            for iy in range(-24, 25):
+                                cands.append((abs(ix) + abs(iy), ix * 20 * v.GX, iy * 4 * v.GY))
+                        got = None
+                        for _, dx_, dy_ in sorted(cands):
+                            if dx_ == 0 and dy_ == 0:
+                                continue
+                            x1, y1 = v.dn(x0 + dx_, v.GX), v.dn(y0 + dy_, v.GY)
+                            if not inc and in_field(x1 + w_ / 2, y1 + h_ / 2) and corr_of(x1 + w_ / 2) is None and pl['cl'] != 'head_chain':
+                                continue
+                            if not free((x1, y1, x1 + w_ + v.SHAVE, y1 + h_ + v.SHAVE)):
+                                continue
+                            tr = dict(pl, frames=pl['frames'][:fk] + [(x1, y1, w_, h_)] + pl['frames'][fk + 1:])
+                            if max(p2p_hops(tr)) > RELAY_REACH_OK or max(hops_of(tr)) > RMAX + 25.0:
+                                continue
+                            nb = jog_bad(tr)
+                            if len(nb) < len(bad) and not any(q_ in nb for q_ in (fk, fk + 1) if q_ not in bad):
+                                got = (x1, y1)
+                                break
+                        if got is None:
+                            add_rect(r0)
+                            continue
+                        pl['frames'][fk] = (got[0], got[1], w_, h_)
+                        add_rect((got[0], got[1], got[0] + w_ + v.SHAVE, got[1] + h_ + v.SHAVE))
+                        jog_log.append((pl['bid'], fk, round(got[0] - x0, 1), round(got[1] - y0, 1)))
+                        fixed = True
+                        break
+                    if fixed:
+                        break
+                if not fixed:
+                    jog_log.append((pl['bid'], 'open', bad))
+                    break
     # ---- qwen-tp8 tree-leg pads (tools/qwen_die_seam/tree_pads.py: the array bench's arrival model on the unpadded
     # netlist): a tree word whose leg arrives early at its node gets `pad` extra relays at its sink end, in the
     # corridor the node tile's W-face tree pins face, so both legs of every node arrive on the same cycle
@@ -3422,7 +3526,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
                           repaired_examples=repaired[:20], unrepaired=unrepaired, cut_over=cut_over,
                           repaired_all=[r[0] for r in repaired], off_plan=off_plan, feedback=feedback, rip_up=rip_log, gap_tier=gap_tier,
-                          wall_avoid=wall_log, retry=retry_log,
+                          wall_avoid=wall_log, retry=retry_log, jog_fix=jog_log,
                           relay_flop_bits=sum(s['relay_bits'] for s in stats.values()),
                           relay_area_mm2=round(sum(i.w * i.h for i in insts) / 1e6, 3))
     base = v.masters
@@ -5906,6 +6010,8 @@ def write_pdn_r4(v, m, path, bump_um):
     meta = []
     insts = sorted(m['insts'], key=lambda it: -len(it.name))      # -instances is a pattern: longest name first
     for i, it in enumerate(insts):
+        if min(it.w, it.h) < 3.0:
+            continue              # r9: no macro grid for a cell without rails of its own (reset-tree repeaters)
         g = f'pg_{i}'
         L.append(f'define_pdn_grid -macro -instances {{{it.name}}} -voltage_domains CORE -name {g} -starts_with GROUND '
                  '-grid_over_boundary')
@@ -5977,7 +6083,13 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
         PG.F = v
     try:
         for name, mst in M.items():
-            text, _ = PG.powered_lef(mst, 1, {q: pw.get((name, q), 0) for q in mst.order})
+            wm_ = {q: pw.get((name, q), 0) for q in mst.order}
+            if min(mst.w, mst.h) < 3.0:
+                # r9: a cell too small for its own rails (the reset-tree repeater, 5.184 x 2.16) is die-top standard-cell
+                # logic: no power abstract, no macro grid (it is powered by the die's std-cell rails when it is placed)
+                text, _ = v.lef_text(mst, 1, wm_)
+            else:
+                text, _ = PG.powered_lef(mst, 1, wm_)
             parts.append(text)
     finally:
         PG.F = pg_f

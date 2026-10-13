@@ -851,7 +851,9 @@ def _wrap(v, m, G, peers):
         if q is not None:
             q.w, q.h = 777.6, 518.4
             add_face(q, 'rst_n', 1, 'N', 392.0, 1)
-            add_face(q, 'me_en', 1, 'N', 396.0, 1)
+            # r9: me_en on E beside the head leaf (the N face is abutted by the port slab: run f2 found no relay site in
+            # reach of an N-face pin at x 396)
+            add_face(q, 'me_en', 1, 'E', 330.0, 1)
             add_face(q, 'fault', 1, 'E', 360.0, 1)
         # ---- T13 tt_up4 / tt_ctlm sel, rst_n; T15 crom; cbuf rst_n
         for mn in ('qfd_tt_up4', 'qfd_tt_ctlm'):
@@ -920,14 +922,7 @@ def _wrap(v, m, G, peers):
             q.area('lock', 1, q.w / 2, q.h / 2 + 8.0, 1)
         # ---- T21 ROM IO: paired link words, cluster rst_n / fault, host PHY abstract outline + W-face FDI
         iorec = (model.get('tp8b_v5') or {}).get('io') or {}
-        for mn, p, n in iorec.get('pairs', ()):
-            q = M.get(mn)
-            if q is None or p not in q.ports:
-                continue
-            sp = q.ports[p]
-            q.ports[p] = (sp[0], n + 1) + tuple(sp[2:])
-            if sp[0] == 'face':
-                add_face(q, p + '_r', 1, sp[2], sp[4] + (n + 1) * 0.048 * sp[5] / 2 + 0.6, 1, layer=sp[3])
+        io_pairs(model, M)
         for mn in IO_CLUSTERS:
             q = M.get(mn)
             if q is not None:
@@ -1009,13 +1004,30 @@ def _wrap(v, m, G, peers):
                 kw = dict(ports=tuple(p for p in q.ports if 'sp_vector_memory' in peers.get((inst, p), ())
                                       or p.startswith(('mer', 'rf'))))
             replan(model, M, inst, **kw)
+        final(model, M, k)
+        return M
+
+    def io_pairs(model, M):
+        """T21: a link word's credit pin stands beside the word on the same face (wherever the word's pin plan put it)"""
+        for mn, p, n in ((model.get('tp8b_v5') or {}).get('io') or {}).get('pairs', ()):
+            q = M.get(mn)
+            if q is None or p not in q.ports:
+                continue
+            sp = q.ports[p]
+            q.ports[p] = (sp[0], n + 1) + tuple(sp[2:])
+            if sp[0] == 'face':
+                add_face(q, p + '_r', 1, sp[2], sp[4] + (n + 1) * 0.048 * sp[5] / 2 + 0.6, 1, layer=sp[3])
+
+    def final(model, M, k=1):
+        """the pin rules with the last word (also run again after every other pin-plan wrapper: v.V5_FINAL_MASTERS)"""
+        io_pairs(model, M)
         vrec = model.setdefault('tp8b_v5', {}).setdefault('views', {})
         if k == 1:
-            pw1 = port_widths(model, 1)
+            pw1 = v.port_widths(model, 1)
             for mn in VIEWS:
                 adopt_view(M, mn, split, vrec, pw1)
             align_abutted(v, model, M, pw1, split, model['tp8b_v5'].setdefault('pin_align', {}))
-        return M
+    v.V5_FINAL_MASTERS = final
 
     def port_widths(model, k=1):
         w = base_pw(model, k)
