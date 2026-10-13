@@ -12,13 +12,19 @@
 // MUT 1: the record header drops the A operand bit -> the unit faults (must FAIL);
 // MUT 2: transport mutant 4 (responses paired with the newest request) -> wrong words (must FAIL).
 module tb_hgi_quant_wide_tput;
- parameter integer MUT = 0, SERIAL_SHAPE = 0, WMUT = 0, LQ = 16, WQ = 0, OVERLAP = 0;
+ parameter integer MUT = 0, SERIAL_SHAPE = 0, WMUT = 0, LQ = 16, WQ = 0, OVERLAP = 0, ACKSKEW = 0, DEPENDENCY = 0;
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
  reg [682:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; wire [273:0] vmr0;
  reg [337:0] bq = 0; wire [273:0] br; wire [18:0] status;
  wire [32*16-1:0] rq; wire [31:0] rq_cr, w2_cr, w2_done; wire [32*257-1:0] rr; wire [32*280-1:0] w2q;
+ wire [31:0] ack;
+ generate if (ACKSKEW != 0) begin : g_skew
+  reg [ACKSKEW-1:0] delayed = 0;
+  always @(posedge clk) if (!rst_n) delayed<=0; else delayed<={delayed[ACKSKEW-2:0],w2_done[0]};
+  assign ack={w2_done[31:1],delayed[ACKSKEW-1]};
+ end else assign ack=w2_done; endgenerate
  ot_hgi_quant_unit #(.MUT(MUT == 2 ? 4 : 0), .SERIAL_SHAPE(SERIAL_SHAPE), .WIDE(1), .WLQ(LQ), .WMUT(WMUT), .WQ(WQ)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
-   .vmq(vmq), .vmr(vmr0), .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(w2q), .wwq_cr(w2_cr), .wwq_done(w2_done),
+   .vmq(vmq), .vmr(vmr0), .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(w2q), .wwq_cr(w2_cr), .wwq_done(ack),
    .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1));
  ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(LQ)) vm (.clk(clk), .rst_n(rst_n), .cq({bq, vmq}), .cr({br, vmr0}), .status(status),
    .wq(280'd0), .wq_done(), .rq(rq), .rq_cr(rq_cr), .rr(rr), .w2q(w2q), .w2q_cr(w2_cr), .w2q_done(w2_done));
@@ -30,10 +36,15 @@ module tb_hgi_quant_wide_tput;
  // for each completion before presenting the next record, which cannot exercise record overlap.
  integer retired = 0, issue_at [0:15], ret_at [0:15];
  reg measure = 0;
+ integer lane_acks[0:31], lane_target[0:15][0:31];
+ always @(posedge clk) if (measure) for(integer b=0;b<32;b=b+1) lane_acks[b]=lane_acks[b]+integer'(ack[b]);
  always @(negedge clk) if (measure && OVERLAP) begin
   if (ret[2]) $fatal(1, "FATAL: record %0d fault (MUT %0d)", retired, MUT);
   if (ret[1]) begin
    if (retired >= nrec) $fatal(1, "FATAL: extra completion");
+   if (WQ==3 && WMUT!=3) for(integer b=0;b<32;b=b+1)
+    if (lane_acks[b] < lane_target[retired][b])
+     $fatal(1,"FATAL: premature retirement record %0d lane %0d ack %0d target %0d",retired,b,lane_acks[b],lane_target[retired][b]);
    ret_at[retired] = cyc - t0;
    $display("TPUT %0d op %0d n %0d issue %0d ret %0d cost %0d", retired, op[retired], n[retired], issue_at[retired], ret_at[retired], cost[retired]);
    retired = retired + 1;
@@ -61,9 +72,14 @@ module tb_hgi_quant_wide_tput;
   repeat (4) @(posedge clk); rst_n = 1; repeat (4) @(posedge clk);
   for (k = 0; k < nrec; k = k + 1) begin           // preload (untimed)
    fn = $sformatf("%s/in_%0d.hex", dir, k); $readmemh(fn, gin, 0, n[k] / 8 - 1);
-   for (s = 0; s < n[k] / 8; s = s + 1) vm_write(15'(ab[k] / 8 + s), gin[s]);
+   for (s = 0; s < n[k] / 8; s = s + 1) if (!(DEPENDENCY && k==1)) vm_write(15'(ab[k] / 8 + s), gin[s]);
   end
   repeat (8) @(negedge clk);
+  for(integer b=0;b<32;b=b+1) lane_acks[b]=0;
+  for(integer r=0;r<nrec;r=r+1) begin
+   for(integer b=0;b<32;b=b+1) lane_target[r][b]= r==0 ? 0 : lane_target[r-1][b];
+   for(integer s=0;s<n[r]/8;s=s+1) lane_target[r][(ob[r]/8+s)%32]=lane_target[r][(ob[r]/8+s)%32]+1;
+  end
   t0 = cyc; measure = 1;
   for (k = 0; k < nrec; k = k + 1) begin
    while (!ret[0]) @(negedge clk);

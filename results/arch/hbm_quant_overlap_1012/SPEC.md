@@ -78,3 +78,33 @@ operations, dependencies, finite credits and delayed lane completions. Require
 m0 exact, w3 packet exact, m1/w1 fail in simulation, and <=1.10 unchanged price.
 No reprice or output-hold budget changes. f3/f3p jobs remain untouched. A new route
 must use ref_tile, registered drain/ready pins, and the current die contract.
+
+## Implemented opt-in prototype, WQ=3
+
+Separate `ot_hgi_quant_wide_ov` preserves WQ=2 and live f3/f3p jobs. Eight compact
+live descriptors feed a continuous scheduler; each beat holds its 18-bit header
+and 15-bit destination sector. The unused SUT words of the command carry the
+frontend's already pipelined A/O span ends, avoiding a new multiplier behind the
+cluster pins. Earlier live descriptors enforce RAW, WAR and WAW interval hazards.
+
+Completion counters use 9-bit modular arithmetic. Per-lane outstanding targets
+are bounded by NB+OD+LD <256: at most NB issued-but-not-gathered beats plus OD
+reserved-but-not-written beats and LD seam slack. Later completions cannot replace
+a missing lane. Local quad predicates forward that lane's incoming done event,
+then an eight-quad reduction drives the registered ordered completion. This
+removes two extra completion edges in the first prototype without changing the
+lane retirement obligation. Descriptor tags reject stale reduction results.
+
+Measured OBS cut screen at 206ee8ef9 requires the **300 um x=270..570 central
+seam corridor** between y=336.96 and388.8 reserved for decoder metadata/data:
+its2602-bit demand ratio0.270 passes; the120.96 um tile-width-only corridor ratio
+0.670 fails. Full midpoint buses must remain regional, since forcing all6303
+bits into the central corridor ratio0.654 fails. No RTL wide bus replication
+was added. This reservation must appear in the ref_tile kit as placement blockages
+and registered gather/decoder placement; global cut PASS alone cannot substitute.
+
+WQ=3 now adds a40-cycle lane0 acknowledgement skew control and a premature-retire
+mutant. The bench counts returned acknowledgements independently and checks every
+lane target at each completion, in addition to golden VM words. WQ=3 is not the
+canonical closed/routed WQ=2 element until a new ref_tile cluster closes and the
+composed parent explicitly adopts the variant. Price remains168.
