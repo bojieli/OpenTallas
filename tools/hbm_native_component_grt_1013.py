@@ -18,8 +18,11 @@ Conventions taken from the die GRT case generator (tools/hbm_accel_die_fp.py cas
 cmd_die / parse_case_log): place -> layer adjustments -> set_routing_layers -> `global_route -verbose -allow_congestion
 -congestion_iterations N -congestion_report_file` -> `report_wire_length -net * -global_route` -> the S81 gcell dump
 tail; layer adjustments M2 / M3 1.0, M4 / M5 = the die variant's grt_m45 (0.5) in channels, M6 / M7 = VIA_OBS (0.05);
-overflow parsed from the last `^Total` line; 1'bz in bus concatenations for unconnected bits.
+overflow parsed from the last `^Total` line.
 Differences (stated, not hidden):
+  * an unconnected bit inside a partly connected bus gets a private one-pin wire u[i] (GRT skips degree-1 nets), not
+    the 1'bz of hbm_accel_die_fp.write_netlist: OpenROAD 26Q3 ties every 1'bz to ONE net `zero_` (measured here: 1,472
+    / 2,448 terminals on the attention lo / VM slice), which would join unrelated open pins into a fabricated net;
   * k = 1 with the platform tech LEF / make_tracks.tcl (as case_real), not the bundled tech LEF of case_grt (k >= 8);
   * signal layers M2-M7, not M2-M9: the hierarchy contract keeps M8 / M9 for die power / global;
   * blocks are NOT blocked by region adjustments over their outlines: every child's own LEF OBS decides;
@@ -236,9 +239,12 @@ def cmd_gen(a):
             else:
                 cls['unlisted_unconnected'] += 1
 
-    # ---- netlist (bus concatenation, 1'bz for unconnected bits, as hbm_accel_die_fp.write_netlist)
+    # ---- netlist (bus concatenation as hbm_accel_die_fp.write_netlist; open bits on private wires)
     V = [f'// tools/hbm_native_component_grt_1013.py: {ns} internal bit nets (k = 1, real pins)', 'module nat_win ();']
     V.append(f'  wire [{max(len(routed) - 1, 0)}:0] n;')
+    n_open = 0
+    uidx = len(V)
+    V.append('')
     for ch in sorted(by_child):
         c = by_child[ch]
         pins = masters[c['logical_module']][0]
@@ -257,9 +263,17 @@ def cmd_gen(a):
                          and re.fullmatch(re.escape(base) + r'\[\d+\]', p))
             if idx != list(range(len(idx))):
                 sys.exit(f'REFUSE: LEF bus {c["logical_module"]}.{base} is not contiguous from 0')
-            cat = ', '.join(bits.get(j, "1'bz") for j in range(len(idx) - 1, -1, -1))
+            cat = []
+            for j in range(len(idx) - 1, -1, -1):
+                if j in bits:
+                    cat.append(bits[j])
+                else:           # a private one-pin wire per unconnected bit (see the docstring: not 1'bz)
+                    cat.append(f'u[{n_open}]')
+                    n_open += 1
+            cat = ', '.join(cat)
             parts.append(f'.{esc(base)}({{{cat}}})')
         V.append(f'  {c["logical_module"]} {c["instance"]} (' + ', '.join(parts) + ');')
+    V[uidx] = f'  wire [{max(n_open - 1, 0)}:0] u;'
     V.append('endmodule\n')
     (work / 'die.v').write_text('\n'.join(V))
 
