@@ -41,6 +41,16 @@
    "exact": true,
    "next_token": 24,
    "cycles": 3048
+  },
+  "probe_mutant": {
+   "exact": false,
+   "simulator_returncode": 3,
+   "launcher_validator_returncode": 1,
+   "layer_x_mismatches": 16384,
+   "stage": "L0",
+   "what": "Same latency parameters with split-exact compensation disabled (--comp0)",
+   "fails_as_required": true,
+   "executable_sha256": "1bd44028e03639b75ba5882be2c5771488376ae21b2ec5e58e29673d6af1b973"
   }
  },
  "layer": {
@@ -508,7 +518,7 @@
    "x_reads_per_token": 217,
    "bound_cycles": 3472,
    "bound_loss_pct": 1.373,
-   "unit_bench": "tb_qfd_vm_bv_ports: XVM 22 -> 32 on r21 (measured by the VM stream); pop / SU / row / write paths + 0",
+   "unit_bench": "Latency-only TP4 reference probe; native VM hardware is not in the vehicle",
    "measured": {
     "vehicle": "the same vehicle built with QROM_XVM=17 (VM x-read transport 1 -> 17 edges)",
     "exact": true,
@@ -528,7 +538,13 @@
     "added_cycles_per_token": 3456,
     "e2e_loss_pct": 1.367,
     "x_reads_on_critical_path_per_layer": 6.0,
-    "executable_sha256": "f0bae4092e4d2556aac576c3708742dd3a4d4fb9a1692d416d72a169b45697e2"
+    "executable_sha256": "f0bae4092e4d2556aac576c3708742dd3a4d4fb9a1692d416d72a169b45697e2",
+    "params": {
+     "QROM_XVM": 17,
+     "QROM_BD": 57,
+     "wire_stages_kept": 40
+    },
+    "token_loss_grade": "Derived token-path composition from measured L0 plus35 hot layers, with unmeasured head bound; no measured full-token/nativeTP8 claim."
    },
    "status": "MEASURED per layer"
   },
@@ -636,6 +652,19 @@
  },
  "accepted_cost": {
   "rows_added": [],
-  "why": "no unit of the measured layer is over 1.10 against its price"
+  "why": "No accepted-cost ledger changes during coordinator takeover; final native scope/design choice queued for Claude."
+ },
+ "measurement_config": {
+  "backend": "TP4 reference composition, SU_ML7, P8191, payload/checkpoint unchanged",
+  "extra_vm_edges": 16,
+  "QROM_XVM": 17,
+  "QROM_BD": 57,
+  "wire_stages_kept": 40,
+  "ratio_vs_existing_vehicle_price": {
+   "L0": 1.013006,
+   "L1": 1.017518,
+   "L2": 1.017518
+  },
+  "native_tp8_qualification": false
  }
 }
