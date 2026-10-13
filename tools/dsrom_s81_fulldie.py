@@ -3310,7 +3310,14 @@ def _anchor(Mx, it, port):
     p = Mx.ports.get(pslice(port)[0]) if Mx is not None else None
     if not p or p[0] != 'face':
         return None
-    _, _, face, _, c, _ = p
+    _, n_, face, ly_, c, pt_ = p
+    lo_, hi_ = pslice(port)[1:]
+    if PEER_PIN_POS and lo_ is not None and hi_ is not None and n_ > (hi_ - lo_ + 1) and ly_ in TRK:
+        # s81-die v16: the anchor of a SLICE of a port is the centre of that slice's pins, not of the whole group
+        # (v16 run 2: the outer slices of the 8,192-b y_d group, 786 um of pins, were anchored at the group centre,
+        # up to 344 um from their own lane, so --pin-relay added an off-lane relay behind the lane's last station)
+        st_ = TRK[ly_][1] * pt_
+        c = c - n_ * st_ / 2 + (lo_ + hi_ + 1) / 2.0 * st_
     ax, ay = {'N': (c, Mx.h), 'S': (c, 0.0), 'E': (Mx.w, c), 'W': (0.0, c)}[face]
     if it.orient in ('MY', 'R180'):
         ax = it.w - ax
@@ -3329,7 +3336,7 @@ def hop_plan(m):
             continue
         d = by[eps[0][0]]
         a = _anchor(M.get(d.master), d, eps[0][1]) or (d.x + d.w / 2, d.y + d.h / 2)
-        R = HOP_R_FWD if cls in HOP_FWD_CLS else (HOP_R_HUB if cls == 'hub' and HOP_R_HUB else HOP_R_CC)
+        R0_ = HOP_R_FWD if cls in HOP_FWD_CLS else HOP_R_CC
         for e in eps[1:]:
             if e[0] == 'TOP':
                 continue
@@ -3337,6 +3344,8 @@ def hop_plan(m):
             b = _anchor(M.get(l_.master), l_, e[1]) or (l_.x + l_.w / 2, l_.y + l_.h / 2)
             L = _mh(a, b)
             hard = PIN_RELAY and not (is_glue(d.master) and is_glue(l_.master))
+            # --hop-r-hub: only the BRIDGES (a slab pin at one end); station-to-station hops of a chain keep --hop-r-cc
+            R = HOP_R_HUB if (cls == 'hub' and HOP_R_HUB and not (is_glue(d.master) and is_glue(l_.master))) else R0_
             if L > R or (hard and L > PIN_SEG):
                 plan[(eps[0][0], eps[0][1], e[0], e[1])] = (round(L, 1), a, b, cls)
     return plan
@@ -5073,9 +5082,10 @@ def _hop_fix(m, P):
                 continue
             L, a, b, _ = plan[key]
             fwd = cls in HOP_FWD_CLS
-            R = HOP_R_FWD if fwd else (HOP_R_HUB if cls == 'hub' and HOP_R_HUB else HOP_R_CC)
-            n = math.ceil(L / (R - 20.0) - 1e-9) - 1
             d0, l0 = by[eps[0][0]], by[e[0]]
+            R = HOP_R_FWD if fwd else (HOP_R_HUB if (cls == 'hub' and HOP_R_HUB and not (is_glue(d0.master) and is_glue(l0.master)))
+                                       else HOP_R_CC)
+            n = math.ceil(L / (R - 20.0) - 1e-9) - 1
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
             if fwd:
                 fport = 'fi' + e[1][2:] if e[1].startswith('di') else None
@@ -7114,6 +7124,27 @@ def _faces_r8(m, Mx, it, ports):
                     Mx.face(p_, ports[p_][1], f, 'M5', cen_, 1)
                     resv.append((cen_ - bw_ / 2 - 1.0, cen_ + bw_ / 2 + 1.0))
                     lst = [q_ for q_ in lst if q_ != p_]
+            if PEER_PIN_POS and it.orient == 'R0':
+                # --peer-pin-pos: a port whose single peer ABUTS this face (link end / station within 30 um) goes on
+                # the peer's pin group FIRST and is reserved; the sequential packing below then steps over it.  v16
+                # run 2: two ports of one abutting link end (o and the lane return) wanted the same 25 um, the second
+                # was pushed 27.6 um along the face: 515 b jogging in the 6-um gap.
+                for p_ in list(lst):
+                    pe_ = {i_ for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p_), []) for i_, _q in eps_
+                           if i_ != it.name and i_ in m['_by']}
+                    if len(pe_) != 1:
+                        continue
+                    o_ = m['_by'][next(iter(pe_))]
+                    g_ = dict(E=o_.x - (it.x + it.w), W=it.x - (o_.x + o_.w), N=o_.y - (it.y + it.h), S=it.y - (o_.y + o_.h))[f]
+                    if not (0.0 <= g_ <= 30.0) or o_.master not in (m.get('_laid_all') or {}):
+                        continue
+                    bw = bwf(ports[p_][1])
+                    c0_ = min(max(_peer_pos(m, it, p_, f) - bw / 2, 0.4), L - 0.4 - bw)
+                    if any(c0_ < r1_ and c0_ + bw > r0_ for r0_, r1_ in resv):
+                        continue
+                    Mx.face(p_, ports[p_][1], f, 'M4' if f in 'EW' else 'M5', c0_ + bw / 2, 1)
+                    resv.append((c0_ - 1.0, c0_ + bw + 1.0))
+                    lst.remove(p_)
             pos = 0.4                     # band blocks / services: at their peers' positions where they fit
             for p_ in lst:
                 bw = bwf(ports[p_][1])
@@ -7187,10 +7218,18 @@ def _peer_pos(m, it, port, f):
                 px, py = o.x + o.w / 2, o.y + o.h / 2
                 sp_ = la[o.master].ports.get(pslice(p_)[0]) if o.master in la else None
                 if sp_ and sp_[0] == 'face':
+                    c_ = sp_[4]
+                    lo_, hi_ = pslice(p_)[1:]
+                    if lo_ is not None and hi_ is not None and sp_[1] > (hi_ - lo_ + 1) and sp_[3] in TRK:
+                        # the peer's SLICE of this net: fields of one station group keep the station's bit order
+                        # (v16 run 2: sp_wfc t_swv / t_swd / t_srv / t_srd all wanted the station centre, were laid in
+                        # name order = reversed against di[0:559]; t_swv ended 515 um from its bit)
+                        st_ = TRK[sp_[3]][1] * sp_[5]
+                        c_ = c_ - sp_[1] * st_ / 2 + (lo_ + hi_ + 1) / 2.0 * st_
                     if sp_[2] in 'EW':
-                        py = o.y + (o.h - sp_[4] if o.orient in ('MX', 'R180') else sp_[4])
+                        py = o.y + (o.h - c_ if o.orient in ('MX', 'R180') else c_)
                     else:
-                        px = o.x + (o.w - sp_[4] if o.orient in ('MY', 'R180') else sp_[4])
+                        px = o.x + (o.w - c_ if o.orient in ('MY', 'R180') else c_)
                 xs.append(px)
                 ys.append(py)
     if not xs:
