@@ -5,7 +5,7 @@ For each unit / op class on each target's dataflow:
   budget   = the simulator price the token is charged for the op (per record and per token, S2 schedule), scaled to
              the target table rate, plus the items / cycle the unit must sustain at that price (production shape);
   measured = the production-shape throughput bench (RTL cycles over the same records' price) -> ratio;
-  status   = QUALIFIED (ratio <= 1.10) | UNQUALIFIED (ratio > 1.10) | UNQUALIFIED_NO_BENCH (no production-shape number);
+  status   = QUALIFIED (measured ratio <= 1.10) | UNMEASURED (a price, no measured production ratio) | UNQUALIFIED (ratio > 1.10) | UNQUALIFIED_NO_BENCH (no production-shape number);
   impact   = the token cycles the op's measured ratio costs on the S2 schedule (op scaled alone, everything else at
              price) -- the bottleneck rank.  A unit qualifies only with a committed production-shape bench.
 
@@ -762,10 +762,15 @@ def main():
                     impact_tok_s=r["impact_tok_s"], budget_cycles_per_record=r["price_cycles_per_record"],
                     budget_at_target=r["budget_cycles_per_record_at_target"], owner=r["owner"]) for i, r in enumerate(rank)]
     # registry gate: element -> worst status over the ops it serves (DS first, then Qwen, then ROM classes)
-    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "ACCEPTED": 2, "EXEMPT": 2.5, "QUALIFIED_BY_BOUND": 3, "QUALIFIED": 4}
+    order = {"UNQUALIFIED": 0, "UNQUALIFIED_NO_BENCH": 1, "UNMEASURED": 1.5, "ACCEPTED": 2, "EXEMPT": 2.5,
+             "QUALIFIED_BY_BOUND": 3, "QUALIFIED": 4}
     el = {}
 
     def put(e, target, op, st, ratio, owner, src):
+        # registry honesty (owner 2026-10-13): a priced row with no measured production ratio is UNMEASURED, never
+        # QUALIFIED (the ROM class rule "95 % of the class's cycles are measured node prices" is not a unit's ratio)
+        if st == "QUALIFIED" and not isinstance(ratio, (int, float)):
+            st = "UNMEASURED"
         cur = el.get(e)
         ent = dict(op=op, model=target, status=st, ratio=ratio, owner=owner, src=src)
         if cur is None:

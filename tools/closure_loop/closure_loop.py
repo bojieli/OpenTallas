@@ -861,7 +861,94 @@ def hier_lint_at_submit(j):
 # source-sync check only (the hbm-no3 "No rule to make target /src/physical/redesign_ds/..." class).  Modes from
 # STATE/ref_gate.json {"mode": "refuse"|"warn"|"off" (ref_tile jobs, default refuse), "other": ... (default warn)};
 # spec "ref_gate": false opts out.  Never blocks intake on the gate's own error (verdict SKIP).
-def ref_gate_at_submit(j):
+def known_clock_sinks(block_jobs):
+    """sinks on the largest clock root of the block's LATEST synthesized design, from the in-flow textbook lint lines the
+    loop keeps on each job (None: no job of the block has lint data)."""
+    best = None
+    for x in block_jobs:
+        lines = (x.get("textbook_lint") or {}).get("lines") or []
+        if not lines:
+            continue
+        n = 0
+        for l in lines:
+            m = re.search(r"clock_roots max_root_sinks=(\d+)", l)
+            if m:
+                n = max(n, int(m.group(1)))
+                continue
+            m = re.search(r"clock_domain: clock root .*?: ([\d,]+) flops > .*?(?:, (\d+) macro clock pins)?[;)]", l)
+            if m:
+                n = max(n, int(m.group(1).replace(",", "")) + int(m.group(2) or 0))
+        t = _job_time(x)
+        if best is None or t > best[0]:
+            best = (t, n)
+    return (best[1] or None) if best else None      # lint lines without a clock count (older lint, small root): unknown
+
+
+def _job_time(j):
+    return str(j.get("finished_at") or j.get("updated") or j.get("created") or "")
+
+
+# STRUCTURE-REPEAT LIMIT (owner 2026-10-13, el1013-rule-enforcement; the Qwen die tile was routed four times as one flat
+# block).  An element (spec "block") with >= STRUCTURE_REPEAT_MAX terminal failed routes since its last CLOSED --
+# NEEDS_RTL, EARLY_FAIL_*, or a NEEDS_HUMAN route crash -- takes a new submission only when the spec says what changed
+# in the structure: "structural_change": "<one sentence>".  Hold-overlay re-runs (name suffix -hs) are exempt.  Mode
+# from STATE/ref_gate.json "structure_repeat": "refuse" (default) | "warn" | "off".
+STRUCTURE_REPEAT_MAX = 2
+HOLD_RERUN_RE = re.compile(r"-hs(-[a-z0-9]{1,4})?$")
+
+
+def terminal_route_failure(j):
+    st, why = j.get("status"), str(j.get("reason") or "")
+    if st == "NEEDS_RTL" or st in EARLY_FAIL:
+        return True
+    return st == "NEEDS_HUMAN" and why.startswith("route crashed") and "LOST:" not in why[:80]
+
+
+def failed_routes_since_closed(block, jobs, exclude=None):
+    mine = [x for x in jobs if x["spec"].get("block") == block and x["name"] != exclude]
+    last = max((str(x.get("finished_at") or _closed_at(x)) for x in mine if x["status"] == "CLOSED"), default="")
+    return sorted(x["name"] for x in mine if terminal_route_failure(x) and _job_time(x)[:16] > last[:16])
+
+
+def structure_repeat_at_submit(j, jobs=None):
+    spec = j["spec"]
+    if j["status"] != "QUEUED" or "route" not in (spec.get("stages") or {}) or HOLD_RERUN_RE.search(j["name"]):
+        return
+    try:
+        cfg = json.loads((STATE / "ref_gate.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    mode = str(cfg.get("structure_repeat", "refuse"))
+    if mode == "off":
+        return
+    fails = failed_routes_since_closed(spec.get("block"), jobs if jobs is not None else all_jobs(), j["name"])
+    if len(fails) < STRUCTURE_REPEAT_MAX:
+        return
+    sc = spec.get("structural_change")
+    if isinstance(sc, str) and len(sc.strip()) >= 12:
+        j.setdefault("submit_checks", {})["structure_repeat"] = {"verdict": "PASS", "failed_routes": len(fails),
+                                                                 "structural_change": sc.strip()[:400]}
+        event(j, f"STRUCTURE-REPEAT: {len(fails)} failed routes of {spec.get('block')} since its last CLOSED; "
+                 f"structural_change: {sc.strip()[:300]}")
+        log(f"[{j['name']}] structure-repeat: {len(fails)} failed routes; structural_change: {sc.strip()[:200]}")
+        return
+    msg = (f"{spec.get('block')} has {len(fails)} terminal failed routes since its last CLOSED "
+           f"({', '.join(fails[-4:])}): a new route needs a changed structure (fix: add \"structural_change\": "
+           f"\"<one sentence: what is structurally different from the failed routes>\" to the spec; a re-route of the "
+           f"same structure is not accepted; hold-overlay re-runs (-hs) are exempt)")
+    j.setdefault("submit_checks", {})["structure_repeat"] = {"verdict": "REFUSE" if mode == "refuse" else "WARN",
+                                                             "mode": mode, "failed_routes": len(fails), "message": msg}
+    if mode == "refuse":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT STRUCTURE_REPEAT: {msg}"[:1500]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    else:
+        event(j, f"STRUCTURE_REPEAT WARN ({mode}): {msg}")
+        log(f"[{j['name']}] structure-repeat WARN: {len(fails)} failed routes, no structural_change")
+
+
+def ref_gate_at_submit(j, jobs=None):
     if j["status"] != "QUEUED" or j["spec"].get("ref_gate") is False:
         return
     try:
@@ -874,10 +961,23 @@ def ref_gate_at_submit(j):
     try:
         sys.path.insert(0, str(HERE.parent / "ref_tile"))
         import pre_route_gate  # noqa: E402
-        res = pre_route_gate.submit_check(j["spec"], str(REPO))
+        kw = {}
+        if j["spec"].get("ref_tile"):
+            # MEASURED CLOCK RULE (owner 2026-10-13; constants + rule text in tools/textbook_lint.py).  ref_gate.json
+            # "clock": "refuse" (default) | "warn" | "off".
+            blk, c9 = j["spec"].get("block"), str((j["spec"].get("source") or {}).get("commit", ""))[:9]
+            mine = [x for x in (jobs if jobs is not None else all_jobs()) if x["spec"].get("block") == blk]
+            kw = dict(known_sinks=known_clock_sinks(mine), clock_mode=str(cfg.get("clock", "refuse")),
+                      closed_stands=any(x["status"] == "CLOSED" and
+                                        str((x["spec"].get("source") or {}).get("commit", ""))[:9] == c9 for x in mine))
+        res = pre_route_gate.submit_check(j["spec"], str(REPO), **kw)
     except Exception as ex:  # noqa: BLE001
         event(j, f"ref gate skipped: {type(ex).__name__}: {str(ex)[:200]}")
         return
+    if isinstance(res.get("clock"), dict):
+        j["clock_rule"] = dict(res["clock"], mode=kw.get("clock_mode"))      # textbook_cfg() hands it to the in-flow lint
+        event(j, f"CLOCK-RULE at submit: {res['clock'].get('text', '')[:300]}"
+                 + (" (CLOSED tile: stands)" if res["clock"].get("closed_stands") else ""))
     v = res.get("verdict")
     if v == "SKIP":
         event(j, f"ref gate: {res.get('message', '')[:300]}")
@@ -1039,6 +1139,7 @@ def ingest():
     except subprocess.TimeoutExpired:
         pass
     keys = route_keys()
+    hist = None
     for origin, spec in load_sources():
         name = spec.get("name") or Path(origin.split(":")[-1]).stem
         policy_path = STATE / 'main_publish_owner.json'
@@ -1093,14 +1194,18 @@ def ingest():
                 ledger(j, f"REFUSED: {j['reason']}")
             else:
                 event(j, f"ingested from {origin}")
-                bench_gate_at_submit(j)              # seconds, before the commit-reading lints
+                if hist is None:
+                    hist = all_jobs()                # one read per ingest pass that sees a new job
+                structure_repeat_at_submit(j, hist)  # no compute: job history only
+                if j["status"] == "QUEUED":
+                    bench_gate_at_submit(j)          # seconds, before the commit-reading lints
                 if j["status"] == "QUEUED":
                     j.setdefault("submit_checks", {}).setdefault("bench_gate", {"verdict": "PASS"})
                     lint_at_submit(j)
                 if j["status"] == "QUEUED":
                     hier_lint_at_submit(j)
                 if j["status"] == "QUEUED":
-                    ref_gate_at_submit(j)
+                    ref_gate_at_submit(j, hist)
                 if j["status"] == "QUEUED":
                     bench_paths_at_submit(j)
         save_job(j)
@@ -2445,6 +2550,10 @@ def textbook_cfg(j):
         cfg["mode"] = "off"
     elif isinstance(sp, dict):
         cfg.update({k: sp[k] for k in ("mode", "set", "waive", "refuse_checks") if k in sp})
+    cr = j.get("clock_rule")
+    if isinstance(cr, dict):     # measured clock rule: only jobs ingested under it (never an older in-flight job)
+        cfg["clock"] = {"enforce": cr.get("mode") == "refuse" and bool(j["spec"].get("ref_tile")),
+                        "evidence": cr.get("evidence"), "closed_stands": bool(cr.get("closed_stands"))}
     return cfg
 
 
