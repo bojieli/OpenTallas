@@ -1,0 +1,52 @@
+{
+ "record": "qwen_tp8_vm_xplane_leaf_miter",
+ "date": "2026-10-13",
+ "host": "ot-epyc1tb via ot-heavy --mem 4 (measured peak 4 MB run)",
+ "tool": "verilator 5.050",
+ "shape": "NRB 16, ELEMS 16384, XPR 10, 3000 cycles (NOT the production NRB 64 / ELEMS 177808)",
+ "runner": "tools/qwen_tp8/vm_xplane_leaf_miter.sh",
+ "sources": {
+  "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xplane.sv": "c33695aa24c89734d34633b6ceea528b50c5be7632bdd16a7b03a36901c53015",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "89a51b9867b524c70ef39c1e50bbad882f0a7f6ca58ea295de94ebf2891b88eb"
+ },
+ "note": "The miter committed at 72fb54c27 was VACUOUS ($urandom(seed) re-seeds per call under Verilator: me_e stuck at 0, 0 range-edge beats, every mutant passed). Fixed with xorshift64 stimulus and a non-vacuity refusal (moves, stalls, range-edge beats).",
+ "verdict": "PASS",
+ "runs": {
+  "lf_ok": {
+   "args": "",
+   "expect": "PASS",
+   "got": "PASS",
+   "line": "PASS qfd_vm_xplane NRB=16 XPR=10 exact 2923 checks, 546 range-edge beats, 770 stalls, +11 engine edges"
+  },
+  "lf_ok_s2": {
+   "args": "-GSEED=2",
+   "expect": "PASS",
+   "got": "PASS",
+   "line": "PASS qfd_vm_xplane NRB=16 XPR=10 exact 2923 checks, 548 range-edge beats, 777 stalls, +11 engine edges"
+  },
+  "lf_p1": {
+   "args": "-GPMUT=1 plane 5 fine rotation one bank off",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_xplane errors=2921 of 2923"
+  },
+  "lf_p2": {
+   "args": "-GPMUT=2 plane 5 element shift one off",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_xplane errors=2922 of 2923"
+  },
+  "lf_p3": {
+   "args": "-GPMUT=3 plane 5 ignores the in-range count (the mutant the system bench cannot kill)",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_xplane errors=562 of 2923"
+  },
+  "lf_r1": {
+   "args": "-GRMUT=1 relay stage 3 bank 9 free-runs",
+   "expect": "FAIL",
+   "got": "FAIL",
+   "line": "FAIL qfd_vm_xplane errors=670 of 2923"
+  }
+ }
+}

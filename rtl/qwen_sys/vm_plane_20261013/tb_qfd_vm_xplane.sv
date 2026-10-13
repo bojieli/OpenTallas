@@ -55,22 +55,32 @@ module tb_qfd_vm_xplane;
         end
         for (i = 0; i < BEAT; i = i + 1) bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
     end
-    integer cyc, w, errors = 0, checks = 0, edge_beats = 0, stalls = 0, seed;
+    // Stimulus generator: xorshift64 (2026-10-13: `rnd(0)` re-seeds on every call under Verilator, so the first
+    // version of this bench held me_e at 0 for the whole run and compared two idle pipelines: every mutant PASSED).
+    // The run is refused as vacuous unless engine edges, stalls and range-edge beats all occurred.
+    reg [63:0] rng;
+    function automatic [31:0] rnd(input integer dummy);
+        begin rng = rng ^ (rng << 13); rng = rng ^ (rng >> 7); rng = rng ^ (rng << 17); rnd = rng[47:16]; end
+    endfunction
+    integer cyc, w, errors = 0, checks = 0, edge_beats = 0, stalls = 0, moves = 0;
     initial begin
-        seed = SEED;
+        rng = 64'h9E3779B97F4A7C15 ^ {32'd0, SEED[31:0]} ^ ({32'd0, SEED[31:0]} << 32);
         for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin
             @(negedge clk);
-            me_e = (($urandom(seed) % 4) != 0);
-            if (!me_e) stalls = stalls + 1;
-            for (w = 0; w < NRB*16; w = w + 1) xo[w*32 +: 32] = $urandom(seed);
+            me_e = ((rnd(0) % 4) != 0);
+            if (!me_e) stalls = stalls + 1; else moves = moves + 1;
+            for (w = 0; w < NRB*16; w = w + 1) xo[w*32 +: 32] = rnd(0);
             // one address in three within 2 beats of the end of the memory (range mask), the rest anywhere
-            a_in = (($urandom(seed) % 3) == 0) ? ELEMS - 1 - ($urandom(seed) % (2*BEAT)) : $urandom(seed) % ELEMS;
+            a_in = ((rnd(0) % 3) == 0) ? ELEMS - 1 - (rnd(0) % (2*BEAT)) : rnd(0) % ELEMS;
             if (a_in + BEAT > ELEMS) edge_beats = edge_beats + 1;
             @(posedge clk); #1;
             if (cyc > 4 * (L + 8)) begin
                 checks = checks + 1;
                 if (bvs !== bv) begin errors = errors + 1; if (errors < 4) $display("xplane mismatch cyc %0d", cyc); end
             end
+        end
+        if (moves < CYCLES / 2 || stalls < CYCLES / 8 || edge_beats < CYCLES / 8) begin
+            $display("FAIL qfd_vm_xplane VACUOUS moves=%0d stalls=%0d edge_beats=%0d", moves, stalls, edge_beats); $fatal(1, "FAIL");
         end
         if (errors != 0) begin $display("FAIL qfd_vm_xplane errors=%0d of %0d", errors, checks); $fatal(1, "FAIL"); end
         $display("PASS qfd_vm_xplane NRB=%0d XPR=%0d exact %0d checks, %0d range-edge beats, %0d stalls, +%0d engine edges",
