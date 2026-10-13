@@ -6,10 +6,13 @@ sys.path.insert(0,'tools'); sys.path.insert(0,'results/arch/qwen_tp8_1012')
 import die_top_lint as D, cuts as C
 out=Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True); t=time.time()
 D.QWEN_RECIPE='tp8b'; D._QW.clear(); D.QSRC=None
-v,m=D.load_qwen()
+v,m=D.load_qwen()[:2]
 v.write_netlist(m,1,out/'die.v')
 from qwen_rom_fulldie_b3r2 import _pin_pos
 pos=_pin_pos(v,m)
+json.dump(dict(insts=[dict(n=i.name,m=i.master,x=i.x,y=i.y,w=i.w,h=i.h,orient=i.orient) for i in m['insts']],
+               buses=m['buses'], endpoint_pos={f'{i}.{p}':pos(i,p) for _,_,_,eps in m['buses'] for i,p in eps}),
+          open(out/'physical_model.json','w'))
 hops=[]
 for bid,cls,bits,eps in m['buses']:
     if bid.startswith('tree_') and len(eps)==2:
