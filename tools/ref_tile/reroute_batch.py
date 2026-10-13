@@ -78,6 +78,20 @@ B2_CHANGED = re.compile(r"^(hfd_hgi_vms?|ot_vms_|ot_hgi_vm_|hfd_stn_lg[EW]|hb_st
                         r"hfd_quant|ot_hgi_quant|hfd_hc_eng|ot_hgi_hc_eng|hfd_coll$|ot_hgi_coll$|hfd_hgi_idx|"
                         r"ot_hgi_idx_(unit|index)|hfd_dma|ot_hgi_dma|hgi_vmw|hgi_vmr2|ot_hgi_lane(chain|station|arb))")
 MEMORY = re.compile(r"^ot_(sram|rom)_\d")
+# retry pass (coordinator 2026-10-12 18:00): pin capacity at the M5 cap.  PPL slots measured on the gate (hfd_stn_r19:
+# 683 M4 slots on a 66.96-um W face = 0.098 um/slot at PIN_MIN_TRACKS 2): W/E faces have one horizontal pin layer (M4),
+# N/S faces M5 (0.096 um/slot) plus M3 (0.072 um/slot) when M5 alone is too full.  A face loaded beyond PIN_FILL of its
+# capacity grows the tile along that face (height for W/E, width for N/S), never the layer cap (M6 only by grant).
+SLOT_M4, SLOT_M5, SLOT_M3 = 0.096, 0.096, 0.072
+PIN_FILL = 0.85
+UTIL_TARGET, UTIL_MAX = 0.52, 0.62
+SYNTH_VARS = ("SYNTH_HDL_FRONTEND", "SYNTH_MEMORY_MAX_BITS", "SYNTH_KEEP_MODULES", "SYNTH_CANONICALIZE_TCL")
+# cells the retry pass must not re-kit (die lead / contract decision pending)
+HOLD = {"qfd_crom_g": "waits for Qwen TP8 contract v3 (larger outlines)",
+        "qfd_su_cbuf_g": "waits for Qwen TP8 contract v3 (larger outlines)"}
+# a closed view whose netlist fails the textbook lint structurally (reset / port fanout in the thousands) is not fixed
+# by a re-route; per the owner's 18:20 rule the closed tile stays CLOSED on its old view
+KEEP_CLOSED = re.compile(r"textbook\.high_fanout")
 LOCK = threading.Lock()
 
 
@@ -376,7 +390,7 @@ class SpecSkip(Exception):
     pass
 
 
-def build_spec(row: dict, rec: dict, f: dict) -> dict:
+def build_spec(row: dict, rec: dict, f: dict, prev_reason: str = "") -> dict:
     cell, commit = row["cell"], rec["commit"]
     if not commit:
         raise SpecSkip("closed record has no source commit")
@@ -470,6 +484,41 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
                     snap.append(tok)
             except SpecSkip:
                 pass
+    # retry pass (dsfd_p2_lnk / dsfd_coll_p2_ep bench BUILD_ERROR 2026-10-12: tools/mtp_fixlat_gate.py names its RTL by
+    # module name, so HEAD's ot_mtp_p2_prefix_path.sv (new ot_p2h_* children) met the closed-commit dsfd_p2_lnk.sv):
+    # every file of the source / bench directories (and of the files the benches reference) that changed since the
+    # closed commit joins the snapshot, so the bench and the route see the closed commit's directory, not a mix
+    import pre_route_gate as PRG
+    btoks = sorted({tok for b in benches for tok in re.findall(r"(?<![\w{/.-])((?:rtl|tools|physical|results|docs)/[\w./-]+\.\w+)",
+                                                                 b.get("cmd", ""))})
+    try:
+        clos, _, _ = PRG.referenced_closure(sorted(set(srcs) | set(btoks)), commit)
+    except Exception:  # noqa: BLE001
+        clos = set()
+    dirs = {str(Path(x).parent) for x in set(srcs) | set(btoks) | set(clos)
+            if x.startswith(("rtl/", "results/")) or (x.startswith("tools/") and x.endswith((".v", ".sv", ".svh", ".vh")))}
+    if dirs:
+        diff = git("diff", "--name-only", "--no-renames", commit, "HEAD", "--", *sorted(dirs), check=False).split()
+        for x in diff:
+            if str(Path(x).parent) in dirs and git("cat-file", "-t", f"{commit}:{x}", check=False).strip() == "blob":
+                snap.append(x)
+    # files outside the loop's synced paths (tools rtl physical Makefile) the route / benches read
+    synced = PRG.DEFAULT_SRC_PATHS
+    extra = sorted({str(Path(x).parent) for x in set(srcs) | set(btoks) | set(clos)
+                    if not any(x == s_ or x.startswith(s_ + "/") for s_ in synced) and (ROOT / x).exists()})
+    # synthesis settings of the closed config.mk the RTL needs (slang frontend for SV packages / import, memory bits)
+    for k in SYNTH_VARS:
+        val = (v.get(k) or "").strip()
+        if not val or (k == "SYNTH_MEMORY_MAX_BITS" and val.isdigit() and int(val) <= 65536):
+            continue
+        if val.startswith("/"):
+            rp = repo_path(val)
+            if rp is None or not (ROOT / rp).exists():
+                continue
+            val = rp
+        if re.search(r"\s", val):
+            continue
+        orfs_vars[k] = val
     snap = sorted(set(snap))
     if snap:
         srcs = [f"{kd}/src/{s}" if s in snap else s for s in srcs]
@@ -483,20 +532,49 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
     # vertical-face pin capacity at the M5 cap: PPL keeps PIN_MIN_TRACKS=2 on the vertical pin layer (M5, 48 nm pitch),
     # so a N/S face holds ~W/0.096 pins on M5 alone; a face fuller than 90% of that gets M3 too (M3 M5, both under the
     # cap; ot_pqc_t_ix: 1,024 xw pins on a 97.2-um N face, PPL-0111 with M5 only, its closed view had M3 + M5)
-    ns = {fc: sum(faces[b].get(fc, 0) for b in faces) for fc in ("N", "S")}
-    route_x = {"pin_v": "M3 M5"} if max(ns.values()) > 0.9 * W / 0.096 else {}
+    W0, H0 = W, H
+    bits = {b: max(1, sum(fc.values())) for b, fc in faces.items()}
+    load = {fc: sum(bits[b] for b in pins.get(fc, [])) for fc in ("N", "S", "W", "E")}
+    cm = 2 * 2.16
+    route_x, grown = {}, []
+    # utilisation measured by an earlier gate of this cell (synthesised std area): scale to the target, keep the aspect
+    # (gate: "synthesized std area .. util 75%"; loop FLOORPLAN_MARGIN: "utilisation 65.4% with the hold-buffer allowance")
+    mu = re.search(r"(?:\butil|utilisation) (\d+(?:\.\d+)?)%", prev_reason or "")
+    if mu and float(mu.group(1)) / 100 > UTIL_MAX - 0.02:
+        k = (float(mu.group(1)) / 100 / UTIL_TARGET) ** 0.5
+        W, H = W * k, H * k
+        grown.append(f"util {mu.group(1)}% -> {UTIL_TARGET:.0%}")
+    we = max(load["W"], load["E"])
+    if we > PIN_FILL * (H - cm) / SLOT_M4:
+        H = we * SLOT_M4 / PIN_FILL + cm
+        grown.append(f"W/E face {we} pins on M4")
+    ns_ = max(load["N"], load["S"])
+    if ns_ > PIN_FILL * (W - cm) / SLOT_M5:
+        route_x = {"pin_v": "M3 M5"}
+        if ns_ > PIN_FILL * (W - cm) * (1 / SLOT_M5 + 1 / SLOT_M3):
+            W = ns_ / (PIN_FILL * (1 / SLOT_M5 + 1 / SLOT_M3)) + cm
+            grown.append(f"N/S face {ns_} pins on M3+M5")
+    # whole perimeter (PPL-0024 counts positions over all faces on one layer each: ot_pqc_t_bc 3,262 > 2,912)
+    tot = sum(bits.values())
+    if tot > PIN_FILL * 2 * (W + H - 2 * cm) / SLOT_M4:
+        k = tot / (PIN_FILL * 2 * (W + H - 2 * cm) / SLOT_M4)
+        W, H = W * k, H * k
+        grown.append(f"perimeter {tot} pins")
+    W, H = round(W, 3), round(H, 3)
+    if W < 3 * 5.4:
+        route_x["m5_pg_pitch"] = 2.7      # narrow tile: M5 PG pins must span >= 50% of the width (child_lint (b))
     contract = None
     for f_, d in contracts():
         for sl in d["slots"]:
-            if sl.get("cell") == cell and sl.get("layer_cap") == "M5" and abs(float(sl["outline"]["w"]) - W) < 0.01 and \
-                    abs(float(sl["outline"]["h"]) - H) < 0.01:
+            if sl.get("cell") == cell and sl.get("layer_cap") == "M5" and abs(float(sl["outline"]["w"]) - W0) < 0.01 and \
+                    abs(float(sl["outline"]["h"]) - H0) < 0.01:
                 contract = {"file": str(f_.relative_to(ROOT)), "slot": sl["name"]}
                 break
         if contract:
             break
     spec = {
         "name": name, "top": v["DESIGN_NAME"], "kind": "tile", "sources": srcs, "params": params,
-        "clock_port": clk, "reset_ports": rst, **({"contract": contract} if contract else {"outline": {"w": W, "h": H}}), "macros": macros, "pins": pins,
+        "clock_port": clk, "reset_ports": rst, **({"contract": contract} if contract and not grown else {"outline": {"w": W, "h": H}}), "macros": macros, "pins": pins,
         **({"defines": defines} if defines else {}), **({"orfs_vars": orfs_vars} if orfs_vars else {}),
         **({"post_synth_tcl": post_synth} if post_synth else {}), **({"sdc_extra": sdc_x} if sdc_x else {}),
         "route": {"pd": float(v.get("PLACE_DENSITY", 0.55) or 0.55), "threads": 8, **route_x,
@@ -506,9 +584,10 @@ def build_spec(row: dict, rec: dict, f: dict) -> dict:
                             f"{', snapshot of ' + str(len(snap)) + ' drifted files' if snap else ''}): same RTL, "
                             f"outline {W}x{H}, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, "
                             f"pins M4/M5, parent strap M6). Orig owner {rec['spec'].get('owner')}"),
-                "benches": benches,
+                "benches": benches, **({"extra_paths": extra} if extra else {}),
                 **({} if benches else {"no_bench_reason": f"closed record {rec['job']} had no benches"})},
         "m5rr": {"cell": cell, "closed_job": rec["job"], "closed_commit": commit, "snapshot": snap,
+                 **({"grown": {"from": [W0, H0], "to": [W, H], "why": grown}} if grown else {}),
                  "orig_owner": rec["spec"].get("owner")},
     }
     return spec, snap
@@ -645,7 +724,9 @@ def prepare(row, rec, st) -> dict | None:
     t = st["tiles"].setdefault(row["cell"], {})
     try:
         f = fetch(rec, row["cell"])
-        spec, snap = build_spec(row, rec, f)
+        prev = t.get("reason", "") if t.get("state") == "gate_fail" else \
+            (jload(JOBS / f"{t['job']}.json") or {}).get("reason", "") if t.get("state_m5") == "failed" and t.get("job") else ""
+        spec, snap = build_spec(row, rec, f, prev or "")
         kd = f"physical/ref_tile/{spec['name']}"
         if git("ls-files", "--", kd).strip() and t.get("kit") != kd:
             raise SpecSkip(f"kit dir {kd} exists (not ours)")
@@ -653,7 +734,29 @@ def prepare(row, rec, st) -> dict | None:
         SPECS.mkdir(parents=True, exist_ok=True)
         sp = SPECS / f"{spec['name']}.json"
         sp.write_text(json.dumps(spec, indent=1) + "\n")
+        # retry pass: macros that leave the core / sit < 20 um from a pin face (dsfd_coll_cef, ot_engc_t_pbb/pbc,
+        # ot_hgi_sm_pub_slice) -> grow the outline on the failing axis until ref_tile's row placement fits
+        for _ in range(16):
+            if "outline" not in spec:
+                break
+            fnd = [x for x in RT.gen(str(sp), write=False)["findings"] if x[0] == "FAIL" and x[1] in ("macro_outside", "macro_edge")]
+            if not fnd:
+                break
+            msg = " ".join(str(x[2]) for x in fnd)
+            gw = bool(re.search(r"the [EW] core edge|leaves the core", msg))
+            gh = bool(re.search(r"the [NS] core edge|leaves the core", msg))
+            o = spec["outline"]
+            g = spec["m5rr"].setdefault("grown", {"from": [o["w"], o["h"]], "why": []})
+            o["w"], o["h"] = round(o["w"] * (1.1 if gw else 1), 3), round(o["h"] * (1.1 if gh else 1), 3)
+            g["to"] = [o["w"], o["h"]]
+            if "macro fit" not in g["why"]:
+                g["why"].append("macro fit")
+            sp.write_text(json.dumps(spec, indent=1) + "\n")
         RT.gen(str(sp))
+        if spec["m5rr"].get("grown"):
+            gr = spec["m5rr"]["grown"]
+            log(rec["spec"].get("owner"), f"{row['cell']}: M5 re-route outline grown {gr['from'][0]}x{gr['from'][1]} -> "
+                f"{gr['to'][0]}x{gr['to'][1]} um ({'; '.join(gr['why'])}); same pin faces -- die lead: update the slot")
         check_rlayers(kd, spec)
         if t.get("state_m5") == "failed":
             # --retry of a submitted M5 route that ended NEEDS_HUMAN / FAILED: keep its history, re-kit, new job name
@@ -677,6 +780,28 @@ def run(a, rows, closed, st):
                 or (a.retry and st["tiles"].get(r["cell"], {}).get("state_m5") == "failed"))]
     if a.only:
         sel = [r for r in sel if r["cell"] in a.only]
+    keep = []
+    for r in sel:
+        t = st["tiles"].get(r["cell"], {})
+        why = HOLD.get(r["cell"])
+        if why:
+            t.update(state="hold", reason=why, at=now())
+        elif t.get("state") == "gate_fail" and KEEP_CLOSED.search(t.get("reason", "")):
+            t.update(state="keep_closed", reason="keep old closed view (owner 18:20): " + t.get("reason", "")[:300], at=now())
+        elif t.get("state_m5") == "failed" and re.search(
+                r"(TT|FF)[^:]*-\d|hold repair stalled|need >= 1 bench|pin density", 
+                (jload(JOBS / f"{t.get('job')}.json") or {}).get("reason", "")):
+            # a real M5 timing / hold / pin-density regression (or an unbenched record) is not fixed by re-kitting the
+            # same RTL: the old closed view stays (owner 18:20); the compare line already flagged it to the owner
+            t.update(state="keep_closed", reason="keep old closed view; M5 route " + str(
+                (jload(JOBS / f"{t.get('job')}.json") or {}).get("reason", ""))[:250], at=now())
+        elif t.get("state_m5") == "failed" and len(t.get("history") or []) >= 2:
+            t.update(state="needs_human", reason=f"M5 route failed {len(t['history']) + 1}x after re-kits", at=now())
+        else:
+            keep.append(r)
+            continue
+        log(t.get("owner"), f"{r['cell']}: M5 re-route {t['state']}: {t['reason'][:300]}")
+    sel = keep
     sel = sel[: a.limit] if a.limit else sel
     print(f"run: {len(sel)} tiles (priorities {a.priorities})")
     preps = []

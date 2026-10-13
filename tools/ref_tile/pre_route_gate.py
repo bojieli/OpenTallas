@@ -82,6 +82,9 @@ def rtl_ports(sources, top, root=None):
         p = root / f
         if p.exists():
             texts.append(p.read_text(errors="replace"))
+    # a module named through a macro (`define X top ... module `X: dsfd_coll_cb / cbf) is not seen by the text parser
+    texts = [re.sub(r"\bmodule\s+`(\w+)", lambda m: f"module {top}" if re.search(
+        rf"`define\s+{m.group(1)}\s+{re.escape(top)}\b", tx) else m.group(0), tx) for tx in texts]
     mods = TL.rtl_modules(texts)
     if top not in mods:
         return None
