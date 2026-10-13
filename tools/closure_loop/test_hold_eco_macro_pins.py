@@ -123,6 +123,7 @@ class MacroPinCoverage(unittest.TestCase):
         route = source[source.index("set ra [expr"):source.index("filler_placement")]
         with tempfile.TemporaryDirectory() as tmp:
             output = self.run_tcl(r'''
+set ot_eco_pk 0; set ot_eco_meg 0
 proc envd {n d} {if {[info exists ::env($n)]} {return $::env($n)}; return $d}
 unset -nocomplain ::env(OT_ALLOW_FRESH_GRT)
 namespace eval grt {proc have_routes {} {return $::have_guides}}
