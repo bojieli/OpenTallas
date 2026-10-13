@@ -1,0 +1,175 @@
+{
+ "name": "qkd_d2d_p2_ref",
+ "top": "ot_qkvd_kv_end",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_buf_tiles_bb.v"
+ ],
+ "params": {
+  "QD": 48,
+  "UCX": 48,
+  "HT": 1,
+  "PF": 1,
+  "PQ": 2
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+   "count": 1,
+   "inst": "*g_tx?0?*",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+   "count": 1,
+   "inst": "*g_tx?1?*",
+   "at": [
+    388.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+   "count": 1,
+   "inst": "*g_tx?2?*",
+   "at": [
+    648.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+   "count": 1,
+   "inst": "*g_rx?1?*",
+   "at": [
+    129.6,
+    302.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+   "count": 1,
+   "inst": "*g_rx?3?*",
+   "at": [
+    388.8,
+    302.4
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+   "count": 1,
+   "inst": "*g_rx?2?*",
+   "at": [
+    648.0,
+    216.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+   "count": 1,
+   "inst": "*g_rx?0?*",
+   "at": [
+    648.0,
+    345.6
+   ],
+   "orient": "MX"
+  }
+ ],
+ "outline": {
+  "w": 777.576,
+  "h": 518.376
+ },
+ "pins": {
+  "S": [
+   "r_v",
+   "r_cr",
+   "r_d",
+   "t_v",
+   "t_cr",
+   "t_d"
+  ],
+  "N": [
+   "tx_up",
+   "tx_v",
+   "tx_flit",
+   "rx_v",
+   "rx_flit"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "fault",
+   "fault_cause"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 112,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:q13b-kvend",
+  "branch": "claude/q13b-kvend",
+  "tag": "q15",
+  "purpose": "q13b-kvend: ot_qkvd_kv_end on the pin-registered link-buffer tiles (PQ=2, PF=1, HT=1), replacing qkd_d2d_ref-q10 (TT -134.7 / FF -215.8 / DRC 35 on the old sbuf child view). +1 cycle per link hop.",
+  "benches": [
+   {
+    "name": "p2_ht_layer_exact",
+    "cmd": "PQ=2 PF=1 HT=1 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/ht_pos",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 128,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "p2_ht_layer_mut",
+    "cmd": "PQ=2 PF=1 HT=1 bash tools/qwen_kv_die/bench_gate.sh neg {RUN}/bench/ht_neg 2",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_p2_ref/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_p2_ref",
+  "structural_change": "link buffers replaced by the pin-registered M5-leaf tiles ot_qkvd_sbufp / ot_qkvd_fbuf8p (every face pin registered, pop registered per slice inside the tile) with ot_qkvd_d2d PQ=2 (pops issued two cycles ahead from shadows, +1 cycle per link hop, full rate) and PF=1 push pin flops; the old-flow ot_qkvd_sbuf view (clock insertion 505/280 ps, unregistered pop cone, M4-M6 pin faces) made the q10 spine run away (L 2.5 ns, FF hold -216 on input-port -> register paths) and left 35 parent-over-child shorts"
+ },
+ "floorplan_note": "q8 (el1011-q-kvd 2026-10-12): link buffers at their INPUT faces -- TX buffers R0 on the S row under t_d (east half of S), RX buffers MX (din up) on the N rows under rx_flit (east half of N); RTL IRL/ORL relays (HT=1): one kept relay register per receive buffer next to its din, output relays toward r_d (S west) / tx_flit (N west); every parent hop <= ~480 um by pin/din geometry (q5b: rq_f -> sbuf din 814 ps of wire, RX sbufs had been placed at the S face)",
+ "io_flop_at_pins": {
+  "cols": 12,
+  "macro_pins": [
+   "pop",
+   "push"
+  ]
+ },
+ "structural_change": "link buffers replaced by the pin-registered M5-leaf tiles ot_qkvd_sbufp / ot_qkvd_fbuf8p (every face pin registered, pop registered per slice inside the tile) with ot_qkvd_d2d PQ=2 (pops issued two cycles ahead from shadows, +1 cycle per link hop, full rate) and PF=1 push pin flops; the old-flow ot_qkvd_sbuf view (clock insertion 505/280 ps, unregistered pop cone, M4-M6 pin faces) made the q10 spine run away (L 2.5 ns, FF hold -216 on input-port -> register paths) and left 35 parent-over-child shorts",
+ "recipe": 2,
+ "inhold": true,
+ "outhold": true
+}
