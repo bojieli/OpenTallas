@@ -1,6 +1,6 @@
 FAIL qfd_vm_bv_ports x=249 su=0 row=0 land=0 image=0 faults x0 xh0 w0 wh0 ser000000 landed=1635/1635 su_reads=60313
-- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:329: Verilog $finish
+- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:393: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 41us; walltime 2.239 s; speed 18.444 us/s
-- Verilator: cpu 2.237 s on 1 threads; allocated 11 MB
-maxrss_kb=8348 wall=2.24
+- Verilator: $finish at 41us; walltime 7.206 s; speed 5.731 us/s
+- Verilator: cpu 7.193 s on 1 threads; allocated 12 MB
+maxrss_kb=8500 wall=7.20
