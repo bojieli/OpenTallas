@@ -230,7 +230,8 @@ module tb_s81_die_layer;
     reg acc_err;
     // HC y bus FIFO (die 0's all-reduce words, in order)
     reg [511:0] yq [0:MAXQ-1];
-    integer ywr = 0, yrd = 0, y_ok = 0, y_bad = 0;
+    integer ywr = 0, yrd = 0, y_ok = 0, y_bad = 0, yi;
+    localparam integer YB = NG / 16;
     function automatic integer ready_op(input integer jb, input integer op);
         integer i, r;
         begin
@@ -291,9 +292,10 @@ module tb_s81_die_layer;
     end
     // y bus to the HC: in order, valid while a word is buffered
     always @(posedge ck) begin
-        if (y_v && y_rdy) yrd = yrd + 1;
-        y_v <= (yrd < ywr);
-        y_d <= yq[yrd];
+        // one HC y beat = NG lanes x 32 b = YB all-reduce words of 16 (NG 16: one word a beat; NG 256: 16 words a beat)
+        if (y_v && y_rdy) yrd = yrd + YB;
+        y_v <= (yrd + YB <= ywr);
+        for (yi = 0; yi < YB; yi = yi + 1) y_d[512 * yi +: 512] <= yq[yrd + yi];
     end
     // ---------------- bench VM (HC rows, HIDDEN payload, coefficient rows) + row-completion state
     reg [511:0] vm [0:16383];
@@ -336,8 +338,8 @@ module tb_s81_die_layer;
     // f_inp: the head descriptor's operands are complete in the VM (dropped on the take cycle)
 `ifdef TB_HC_HIER
 `define HCAD u_hc.u_hc.g_hier.u_cb.u_seq.u_ad
-    wire        hdv = u_hc.u_hc.g_hier.u_cb.u_seq.dd[8];
-    wire [7:0]  hdt = u_hc.u_hc.g_hier.u_cb.u_seq.dd[7:0];
+    wire        hdv = u_hc.u_hc.g_hier.u_cb.u_seq.d_v;
+    wire [7:0]  hdt = u_hc.u_hc.g_hier.u_cb.u_seq.d_t;
 `else
 `define HCAD u_hc.u_hc.g_flat.u_ad
     wire        hdv = u_hc.u_hc.g_flat.d_v;
@@ -353,7 +355,7 @@ module tb_s81_die_layer;
         case (hkind)
             4'd0: hpres = (hbase == H_BASE) && (hcnt == XW) && (!eng_h || eng_done);
             4'd2: hpres = vm_ok[hbase] && vm_ok[hbase + 1];
-            4'd3: hpres = (yrd < ywr) || y_v;
+            4'd3: hpres = (yrd + YB <= ywr) || y_v;
             4'd5: hpres = (hbase == G_BASE) ? (gcnt[0] == GROWS) : (hbase == G_BASE + GROWS) ? (gcnt[1] == GROWS) : 1'b0;
             default: hpres = 1'b1;
         endcase
@@ -362,7 +364,8 @@ module tb_s81_die_layer;
     // HC job start (the core takes the descriptor)
     always @(posedge ck) if (u_hc.u_hc.e_v && u_hc.u_hc.e_r) stt[cj][u_hc.u_hc.e_d[6:0]] = cyc;
     // HC job end: the core's done (the job's last result committed); the controller-pin done follows through the adapter
-    // (hierarchical slab: the done the sequencer tile hands its adapter, i.e. after the slab's own DW done delay)
+    // (hierarchical slab: the sequencer tile's done BEFORE its DW-cycle done delay to the adapter: the cycle the next
+    // job can be taken, the same event as the flat core's done)
     always @(posedge ck) if (hdv) endt[cj][hdt[6:0]] = cyc;
     // ---------------- reference roots (as tb_s81ph_gather_capture)
     reg [NR-1:0] s_v; reg [31:0] s_t [0:NR-1]; reg [31:0] s_d [0:NR-1]; reg [NR-1:0] s_e, s_b;
