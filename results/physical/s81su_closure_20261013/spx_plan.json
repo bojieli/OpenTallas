@@ -34,8 +34,26 @@
     "drc_cause": "5 SRAM M4edge short/spacing violations at x215.269..215.317, y55/145/209/212um",
     "cts_ff_clock_spread_ps": 187.1,
     "new_kit": "s81su_qnq_spx_ref",
-    "progressing_sibling_preserved": "s81su_qnq_hb1_ref-v3-hb1-ab43f2fe0"
+    "progressing_sibling_preserved": "HB1 nowterminal; replaced by spx16/sp8 actualclock candidates",
+    "fresh_hb1_terminal": {
+      "tt_ps": 74.01,
+      "ff_ps": -25.34,
+      "drc": "3 actual M4edge short/spacing, including clknet5_30",
+      "hold": "y_q\u2192s0_x-25.34, d2q\u2192o_d-11.51, tag-line-10.4, output-9.95, g2_sig\u2192r1_t-9.49, ae/r2_c/q captures-7..8",
+      "actual_hook_count": "1318 inputHB4 +2062 internalHB1"
+    }
   },
   "guard_correction": "Match copied suffix*pre_grt.tcl/*post_drt.tcl, logactualcaller and assert4create/remove; old geometry test retained with corrected scope",
-  "adopted": false
+  "adopted": false,
+  "variants": {
+    "qnq": [
+      "spx16",
+      "sp8"
+    ],
+    "swe": [
+      "spx16",
+      "sp8"
+    ],
+    "swe_original_hb2_preserved": true
+  }
 }

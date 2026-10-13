@@ -12,7 +12,7 @@ set su_hd_n 0
 set su_hd_guardnets {}
 foreach su_hd_ff [$su_hd_block getInsts] {
  set su_hd_name [string map {\\ ""} [$su_hd_ff getName]]
- if {![regexp {^u_q\.(d1q\[|d2q\[|o_d\[|a_b\[|y_q\[|u_aq\.(s0_x\[|g1_sig\[|g_lv\[[0-9]+\]\.g_n\[[0-9]+\]\.a[01]\[))} $su_hd_name]} continue
+ if {![regexp {^u_q\.(d1q\[|d2q\[|o_d\[|a_b\[|ae\[|y_q\[|u_tg\..*\.g_line\.line\[|u_aq\.(s0_x\[|g1_sig\[|r1_t\[|r2_c\[|q\[|g_lv\[[0-9]+\]\.g_n\[[0-9]+\]\.a[01]\[))} $su_hd_name]} continue
  if {![string match DFF* [[$su_hd_ff getMaster] getName]]} continue
  set su_hd_d [$su_hd_ff findITerm D]
  if {$su_hd_d eq "NULL"} continue

@@ -3,7 +3,7 @@
  "block": "dsfd_su_t_qnq",
  "ref_tile": true,
  "owner": "Codex:s81_su_closure",
- "purpose": "Codex measured qnq successor: balanced actual local clock spine, <=16 sinks/40um leaf bin and100um clock segment, 10ps padding tolerance; real input/internal/SRAM wd_in capture delays and preserved interior M5 via access. Same RTL, slot, clocks, boundary budgets and cycles. Prior terminal evidence preserved; progressing sibling unchanged.",
+ "purpose": "Codex measured qnq successor: balanced actual local clock spine, <=16 sinks/40um leaf bin and100um clock segment, 10ps padding tolerance; real input/internal/SRAM wd_in capture delays and preserved interior M5 via access. Same RTL, slot, clocks, boundary budgets and cycles. Prior terminal evidence preserved; progressing sibling unchanged.; fresh HB1 terminalTT74.01/FF-25.34/DRC3: added measured s0_x, tag-line, ae, r1_t/r2_c/q captures; access guard handles real clock+data M4edge violations",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
