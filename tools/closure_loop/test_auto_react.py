@@ -434,5 +434,150 @@ class ClassH(Base):
         self.assertIn("no ECO pass produced a result", r.stdout)
 
 
+RR = ("export X=1; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/k/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 "
+      "bash tools/ref_tile/ref_route.sh physical/ref_tile/k/kit.env {LABEL} {RUN}/routes")
+
+
+class ClassG(Base):
+    """finishing recipe C: a ref_tile near miss gets its PD / HM variants from the loop itself"""
+
+    def setUp(self):
+        super().setUp()
+        p = patch.object(cl.submit_lint.Git, "show", lambda self_, c, path: "TOP=x\nPD=0.5\nNC=16\n")
+        p.start()
+        self.addCleanup(p.stop)
+
+    def nm(self, name="j", ff=-11.5, drc=2, **kw):
+        sp = spec(name, ref_tile=True, route_hold_margin_ns=0.01, stages=dict(route=dict(cmd=RR)), **kw.pop("sp", {}))
+        return job(name=name, spec=sp, metrics=dict(ss_ps=80.5, ff_ps=ff, drc=drc), **kw)
+
+    def test_hold_near_miss_drops_two_variants_in_one_pass(self):
+        self.assertEqual(self.run_pass(self.nm()), [("j", "g:j-arg1,j-arg2")])
+        a, b = self.drop("j-arg1"), self.drop("j-arg2")
+        self.assertIn(" PD=0.5 HM=0.03 bash tools/ref_tile/ref_route.sh physical/ref_tile/k/kit.env {LABEL}", a["stages"]["route"]["cmd"])
+        self.assertIn(" PD=0.45 HM=0.05 bash tools/ref_tile/ref_route.sh", b["stages"]["route"]["cmd"])
+        self.assertNotIn("HM=0.01", a["stages"]["route"]["cmd"])
+        self.assertIn("OT_MM_FF_SDC='physical/ref_tile/k/signoff.sdc' SRC={SRC}", a["stages"]["route"]["cmd"])
+        self.assertEqual((a["route_hold_margin_ns"], b["route_hold_margin_ns"]), (0.03, 0.05))
+        self.assertEqual((a["variant_group"], a["auto_react_parent"], a["auto_react_class"]), ("j-arg", "j", "g1"))
+        self.assertNotIn("structural_change", a)
+        self.assertEqual(cl.load_job("j")["auto_react"]["g"], ["j-arg1", "j-arg2"])
+
+    def test_drc_only_near_miss_moves_density(self):
+        self.run_pass(self.nm(ff=3.0, drc=7))
+        a, b = self.drop("j-arg1"), self.drop("j-arg2")
+        self.assertIn(" PD=0.45 HM=0.01 bash", a["stages"]["route"]["cmd"])
+        self.assertIn(" PD=0.55 HM=0.01 bash", b["stages"]["route"]["cmd"])
+
+    def test_hold_margin_cap(self):
+        j = self.nm()
+        j["spec"]["route_hold_margin_ns"] = 0.03
+        j["spec"]["stages"]["route"]["cmd"] = RR.replace("HM=0.01 ", "")
+        self.assertEqual([(c, p, h) for c, p, h, _ in cl.near_miss_variants(j, "hold")], [("g1", 0.5, 0.05), ("g2", 0.45, 0.05)])
+        j["spec"]["route_hold_margin_ns"] = 0.06
+        self.assertEqual([h for _, _, h, _ in cl.near_miss_variants(j, "hold")], [0.06, 0.06])
+
+    def test_band(self):
+        for kw in (dict(ff=-61.0), dict(drc=21), dict(ff=2.0, drc=0), dict(failed_checks=["x"]),
+                   dict(benches={"b": {"ok": False}}), dict(sp=dict(auto_react_parent="p", auto_react_class="g1"))):
+            self.assertEqual(cl.ar_near_miss(self.nm(**kw)), (False, None), kw)
+        j = self.nm()
+        j["metrics"]["ss_ps"] = -1.0
+        self.assertFalse(cl.ar_near_miss(j)[0])
+        j = self.nm()
+        j["spec"]["ref_tile"] = False
+        self.assertFalse(cl.ar_near_miss(j)[0])
+        j = self.nm()
+        j["spec"]["stages"]["route"]["cmd"] = "bash physical/x/route.sh {LABEL}"
+        self.assertFalse(cl.ar_near_miss(j)[0])
+        self.assertEqual(cl.ar_near_miss(self.nm(ff=-60.0, drc=20)), (True, "hold"))
+
+    def test_class_a_first_then_variants(self):
+        j = self.nm(ff=-11.5, drc=0, stage_idx=1)
+        with patch.object(cl, "_at_verdict", return_value=True):
+            self.assertEqual(cl.ar_plan(j)[0], "a")
+            j["eco"] = dict(tried=True, keepwires=True, rc=9)
+            self.assertEqual(cl.ar_plan(j)[0], "g")
+
+    def test_slots_follow_the_route_key(self):
+        (self.d / "state" / "route_keys.json").write_text(json.dumps({"blk@abcdef123": ["j", "other"]}))
+        self.assertEqual(self.run_pass(self.nm()), [("j", "g:j-arg1")])
+        self.assertIsNone(self.drop("j-arg2"))
+        (self.d / "state" / "route_keys.json").write_text(json.dumps({"blk@abcdef123": ["j", "o1", "o2"]}))
+        self.assertEqual(self.run_pass(self.nm(name="k")), [("k", "none")])
+        self.assertIn("no route slot left", (self.tk / "hbm-phys-1010.log").read_text())
+
+    def test_no_second_round(self):
+        v = self.nm(name="j-arg1", sp=dict(auto_react_parent="j", auto_react_class="g1"))
+        self.assertEqual(self.run_pass(v), [("j-arg1", "none")])
+        self.assertIsNone(self.drop("j-arg1-arg1"))
+
+    def queued(self, name, **sp):
+        j = job(name=name, status="QUEUED", spec=spec(name, **sp))
+        j.pop("finished_at")
+        return j
+
+    def test_structure_repeat_exemption_only_for_the_loops_variants(self):
+        fails = [job(name=f"f{i}") for i in range(2)]
+        parent = self.nm()
+        parent["auto_react"] = {"g": ["j-arg1", "j-arg2"]}
+        for x in (*fails, parent):
+            cl.save_job(x)
+        hist = cl.all_jobs()
+        v = self.queued("j-arg1", auto_react_parent="j", auto_react_class="g1")
+        cl.structure_repeat_at_submit(v, hist)
+        self.assertEqual(v["status"], "QUEUED")
+        self.assertEqual(v["submit_checks"]["structure_repeat"]["verdict"], "EXEMPT")
+        self.assertEqual(v["submit_checks"]["structure_repeat"]["class"], "near_miss_finishing")
+        self.assertIn("near_miss_finishing", v["structure_exempt"])
+        # a third name, a self-claimed class, another block or another commit get no exemption
+        for name, kw in (("j-arg3", dict(auto_react_parent="j", auto_react_class="g3")),
+                         ("mine", dict(auto_react_parent="j", auto_react_class="g1")),
+                         ("j-arg2", dict(auto_react_parent="j", auto_react_class="g2", block="other")),
+                         ("j-arg2", dict(auto_react_parent="j", auto_react_class="g2",
+                                         source=dict(branch="main", commit="ffffff000")))):
+            x = self.queued(name, **kw)
+            if kw.get("block"):
+                for f in fails:
+                    f["spec"]["block"] = "other"
+                cl.structure_repeat_at_submit(x, [dict(f) for f in fails])
+                for f in fails:
+                    f["spec"]["block"] = "blk"
+            else:
+                cl.structure_repeat_at_submit(x, hist)
+            self.assertEqual(x["status"], "REFUSED", (name, kw))
+
+    def test_exemption_is_in_the_verdict(self):
+        v = self.queued("j-arg1")
+        v["structure_exempt"] = "exemption class near_miss_finishing: variant g1 of near miss j"
+        with patch.object(cl, "ledger") as led:
+            cl.finish(v, "NEEDS_RTL", "x", "NEEDS_RTL: TT 1 / FF -2")
+        self.assertIn("near_miss_finishing", led.call_args[0][1])
+        self.assertTrue(any("verdict note" in e for e in v["events"]))
+
+    def test_closed_cancels_queued_siblings_only(self):
+        w = job(name="j-arg1", status="RUNNING", spec=spec("j-arg1"))
+        q, r, s = self.queued("j-arg2"), self.queued("ready"), self.queued("launched")
+        r["status"] = s["status"] = "READY"
+        run = job(name="running", status="RUNNING", spec=spec("running"))
+        oth = self.queued("othercommit", source=dict(branch="main", commit="ffffff000"))
+        ob = self.queued("otherblock", block="b2")
+        for x in (w, q, r, s, run, oth, ob):
+            cl.save_job(x)
+        (self.d / "state" / "route_keys.json").write_text(json.dumps({"blk@abcdef123": ["j", "j-arg1", "launched"]}))
+        with patch.object(cl, "viz_elem_export"), patch.dict(os.environ, {"CL_CLOSED_ARCHIVE": "0"}):
+            cl.finish(w, "CLOSED", "closed", "CLOSED")
+        st = {n: cl.load_job(n) for n in ("j-arg2", "ready", "launched", "running", "othercommit", "otherblock")}
+        self.assertEqual({n: x["status"] for n, x in st.items()},
+                         {"j-arg2": "CANCELLED", "ready": "CANCELLED", "launched": "READY", "running": "RUNNING",
+                          "othercommit": "QUEUED", "otherblock": "QUEUED"})
+        self.assertEqual(st["j-arg2"]["reason"], "sibling j-arg1 CLOSED")
+        self.assertTrue(st["j-arg2"]["cancelled_at"])
+        self.assertTrue(any("queued siblings cancelled: j-arg2, ready" in e for e in w["events"]))
+        with patch.object(cl, "viz_elem_export"), patch.object(cl, "cancel_queued_siblings") as c:
+            cl.finish(self.queued("z"), "NEEDS_RTL", "x", "x")
+            c.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()
