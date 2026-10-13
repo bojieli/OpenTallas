@@ -1,0 +1,127 @@
+{
+ "name": "idxw_b2",
+ "top": "ot_hgi_idx_index_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/idx/ot_hgi_idx_index_w.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "wrq",
+   "wrq_cr",
+   "wrr",
+   "rg_req",
+   "rg_gnt"
+  ],
+  "S": [
+   "wwq",
+   "wwq_cr",
+   "wwq_done",
+   "wg_req",
+   "wg_gnt"
+  ],
+  "N": [
+   "fs",
+   "qb",
+   "qbr",
+   "kin",
+   "to",
+   "toc",
+   "co",
+   "coc",
+   "ev"
+  ],
+  "E": [
+   "clk",
+   "rst_n",
+   "go_i",
+   "k_i",
+   "cand_en_i",
+   "keep_en_i",
+   "n_i",
+   "rank_i",
+   "pos_i",
+   "a_base_i",
+   "b_base_i",
+   "c_base_i",
+   "o_base_i",
+   "r_base_i",
+   "d_base_i",
+   "d_stride_i",
+   "c_stride_i",
+   "c_n_i",
+   "has_r_i",
+   "done",
+   "fault"
+  ]
+ },
+ "refglob": "*rcr_q*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "pin_h": "M4",
+  "pin_v": "M3 M5"
+ },
+ "job": {
+  "owner": "Claude:el1013-idxw-v3",
+  "branch": "claude/el1013-idxw-v3",
+  "tag": "v3",
+  "purpose": "el1011-hbm-idxs: IDX.INDEX wide-lane frame adapter ot_hgi_idx_index_w (HBM B2, 8-lane slice-local wide read/write client): structural throughput redesign of the 8.60x IDX.INDEX record (serial packet-client keep walk / query stream / 1-lane compaction). ~30k flops, every port registered, sync reset from a local flop, no datapath reset. v3 (el1013-idxw-v3): exact lane-coherent pin plan after v2's PPL-0111 (W 2,194 / E 2,258 pins on 2,190 M4 slots): W M4 read group, S M3+M5 write group, N M3+M5 selector, E M4 frame command; outline unchanged, M5 cap, no M6. Conservative flat line; the regional split is el1013-idx-tiles.",
+  "benches": [
+   {
+    "name": "idxw_index_exact",
+    "cmd": "bash tools/hgi_idx_index_w_bench.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "^HGI_IDX_INDEX_W PASS \\(4 frames",
+    "min_count_regex": "(\\d+) topk lanes",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "idxw_head_weight_mutant",
+    "cmd": "bash tools/hgi_idx_index_w_bench.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "^HGI_IDX_INDEX_W FAIL compare",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "idxw_r_lane_mutant",
+    "cmd": "bash tools/hgi_idx_index_w_bench.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "fail_regex": "^HGI_IDX_INDEX_W FAIL compare",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   }
+  ],
+  "views_to": "physical/ref_tile/idxw_b2/views",
+  "record_to": "results/rtl/ref_tile/idxw_b2",
+  "extra_paths": [
+   "results/rtl/hbm_index_path_20261005/connected_29a9_r1/input"
+  ]
+ },
+ "std_area_um2": 22000,
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_tcl": "physical/ref_tile_specs/hbm_idx/idxw_b2_pins.tcl"
+}

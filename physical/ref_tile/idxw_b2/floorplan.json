@@ -36,7 +36,7 @@
    "rg_req",
    "rg_gnt"
   ],
-  "E": [
+  "S": [
    "wwq",
    "wwq_cr",
    "wwq_done",
@@ -54,7 +54,7 @@
    "coc",
    "ev"
   ],
-  "S": [
+  "E": [
    "clk",
    "rst_n",
    "go_i",
@@ -98,6 +98,7 @@
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
-  "physical/common_flow/grt_macro_top_layer.tcl"
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile_specs/hbm_idx/idxw_b2_pins.tcl"
  ]
 }

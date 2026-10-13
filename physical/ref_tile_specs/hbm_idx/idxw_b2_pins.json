@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.idxw_b2.pin_plan.v1",
+ "die": [
+  0,
+  0,
+  211.68,
+  211.68
+ ],
+ "min_tracks": 2,
+ "faces": {
+  "W": {
+   "pins": 2194,
+   "layers": {
+    "M4": {
+     "pins": 2194,
+     "min_gap_tracks": 2,
+     "lo": 0.588,
+     "hi": 211.116
+    }
+   }
+  },
+  "E": {
+   "pins": 235,
+   "layers": {
+    "M4": {
+     "pins": 235,
+     "min_gap_tracks": 11,
+     "lo": 42.012,
+     "hi": 165.564
+    }
+   }
+  },
+  "S": {
+   "pins": 2258,
+   "layers": {
+    "M3": {
+     "pins": 1247,
+     "min_gap_tracks": 2,
+     "lo": 6.057,
+     "hi": 205.533
+    },
+    "M5": {
+     "pins": 1011,
+     "min_gap_tracks": 3,
+     "lo": 6.156,
+     "hi": 205.644
+    }
+   }
+  },
+  "N": {
+   "pins": 2172,
+   "layers": {
+    "M3": {
+     "pins": 1199,
+     "min_gap_tracks": 2,
+     "lo": 6.057,
+     "hi": 205.533
+    },
+    "M5": {
+     "pins": 973,
+     "min_gap_tracks": 3,
+     "lo": 6.156,
+     "hi": 205.644
+    }
+   }
+  }
+ },
+ "v2_failure": {
+  "job": "idxw_b2-v2-c08e87086",
+  "error": "PPL-0111",
+  "slots_per_m4_face": 2190,
+  "W": {
+   "group": "VM wide read",
+   "pins": 2194
+  },
+  "E": {
+   "group": "VM wide write",
+   "pins": 2258
+  }
+ }
+}

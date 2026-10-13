@@ -14,6 +14,11 @@
 // compare checks them against the same golden.  MUT 2: head weight of the next head; MUT 3: R from the wrong lane.
 module tb_hgi_idx_index;
   parameter integer MUT = 0;
+  // el1013-idxw-v3: IXW = 1 runs the frame on the WIDE-LANE adapter ot_hgi_idx_index_w (unit IXW 1, 8 lanes) against a
+  // lane model of the VM wide read / write groups on the same vm[] image (ot_hgi_vm_lanestation client format, as
+  // hgi_e2e_vmlanes: a lane credit returns at the bank pop, in-order responses after 5..7 cycles, done 2 cycles after a
+  // write).  The model is fatal on a sector on the wrong lane.  Unit MUT 2 / 3 = adapter MUT 1 / 2.
+  parameter integer IXW = 0;
   parameter integer LEG = 24;          // relay stages per die net (each direction)
   parameter integer FA = 4;
   parameter integer KEYLEG = 0;       // service key data and credit return stages
@@ -80,9 +85,11 @@ module tb_hgi_idx_index;
   end endgenerate
   // ---- the IDX unit (record -> frame adapter) and its VM model (one request outstanding, 2..6 cycles)
   reg [1818:0] rec = 0; wire [2:0] uret; wire [337:0] vmq; reg [273:0] vmr = 0;
-  ot_hgi_idx_unit #(.MUT(MUT)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
+  wire [8*16-1:0] wrq; reg [7:0] wrq_cr = 0, wwq_cr = 0, wwq_done = 0; reg [8*257-1:0] wrr = 0; wire [8*280-1:0] wwq;
+  ot_hgi_idx_unit #(.MUT(MUT), .IXW(IXW), .IXNL(8)) u_unit (.clk(ck), .rst_n(rst), .rec(rec), .ret(uret), .vmq(vmq), .vmr(vmr),
     .sel_fs(fs), .sel_qb(qb), .sel_qbr(qbr), .sel_kin(kin), .sel_to(to), .sel_toc(toc), .sel_co(co), .sel_coc(coc),
-    .sel_ev(ev));
+    .sel_ev(ev), .wrq(wrq), .wrq_cr(wrq_cr), .wrr(wrr), .rg_req(), .rg_gnt(1'b1), .wwq(wwq), .wwq_cr(wwq_cr),
+    .wwq_done(wwq_done), .wg_req(), .wg_gnt(1'b1));
   // VM model (fast path): up to 4 requests outstanding, pipelined (6..8 cycles, never before the predecessor), in order
   reg [31:0] vm [0:262143];
   reg [337:0] vqq [0:7]; integer vqt [0:7]; integer qh2 = 0, qn2 = 0, maxo2 = 0, tnow = 0, tlast = 0;
@@ -102,6 +109,35 @@ module tb_hgi_idx_index;
       vqq[(qh2 + qn2) % 8] = vmq;
       tlast = (tnow + 6 + ($urandom % 3) > tlast + 1) ? tnow + 6 + ($urandom % 3) : tlast + 1;
       vqt[(qh2 + qn2) % 8] = tlast; qn2 = qn2 + 1; if (qn2 > maxo2) maxo2 = qn2;
+    end
+  end
+  // VM wide-lane model (IXW = 1): lane b <-> bank b = sector mod 8
+  reg [255:0] wl_d [0:7][0:63]; integer wl_due [0:7][0:63]; integer wl_h [0:7], wl_t [0:7], wl_ld [0:7];
+  reg [7:0] wl_d1 = 0, wl_d2 = 0; integer wl_c = 0, wl_rd = 0, wl_wr = 0, wl_b, wl_w, wl_sec, wl_dd;
+  initial for (wl_b = 0; wl_b < 8; wl_b = wl_b + 1) begin wl_h[wl_b] = 0; wl_t[wl_b] = 0; wl_ld[wl_b] = 0; end
+  always @(posedge ck) begin
+    wl_c = wl_c + 1; wrr <= '0; wrq_cr <= '0; wwq_cr <= '0; wl_d2 <= wl_d1; wwq_done <= wl_d2; wl_d1 <= '0;
+    if (rst) for (wl_b = 0; wl_b < 8; wl_b = wl_b + 1) begin
+      if (wrq[wl_b*16 + 15]) begin
+        wl_sec = int'(wrq[wl_b*16 +: 15]);
+        if (IXW == 0) $fatal(1, "IXW 0: wide read request");
+        if (wl_sec % 8 != wl_b) $fatal(1, "VM wide read lane %0d got sector %0d", wl_b, wl_sec);
+        if (wl_t[wl_b] - wl_h[wl_b] >= 64) $fatal(1, "VM wide read lane %0d response ring overflow", wl_b);
+        for (wl_w = 0; wl_w < 8; wl_w = wl_w + 1) wl_d[wl_b][wl_t[wl_b] % 64][32*wl_w +: 32] = vm[{15'(wl_sec), 3'(wl_w)}];
+        wl_dd = wl_c + 5 + ($urandom % 3); if (wl_dd < wl_ld[wl_b]) wl_dd = wl_ld[wl_b]; wl_ld[wl_b] = wl_dd;
+        wl_due[wl_b][wl_t[wl_b] % 64] = wl_dd; wl_t[wl_b] = wl_t[wl_b] + 1; wrq_cr[wl_b] <= 1'b1; wl_rd = wl_rd + 1;
+      end
+      if (wl_h[wl_b] < wl_t[wl_b] && wl_due[wl_b][wl_h[wl_b] % 64] <= wl_c) begin
+        wrr[wl_b*257 +: 257] <= {1'b1, wl_d[wl_b][wl_h[wl_b] % 64]}; wl_h[wl_b] = wl_h[wl_b] + 1;
+      end
+      if (wwq[wl_b*280 + 279]) begin
+        wl_sec = int'(wwq[wl_b*280 + 264 +: 15]);
+        if (IXW == 0) $fatal(1, "IXW 0: wide write request");
+        if (wl_sec % 8 != wl_b) $fatal(1, "VM wide write lane %0d got sector %0d", wl_b, wl_sec);
+        for (wl_w = 0; wl_w < 8; wl_w = wl_w + 1)
+          if (wwq[wl_b*280 + wl_w]) vm[{15'(wl_sec), 3'(wl_w)}] = wwq[wl_b*280 + 8 + 32*wl_w +: 32];
+        wwq_cr[wl_b] <= 1'b1; wl_d1[wl_b] <= 1'b1; wl_wr = wl_wr + 1;
+      end
     end
   end
   hfd_idx_sel #(.T(T), .LA(LA)) u_x (.ck(ck), .rst(rst), .fs(fs), .qb(qb), .qbr(qbr), .kin(kin), .qo(qo), .si(si), .sc(sc),
@@ -233,6 +269,8 @@ module tb_hgi_idx_index;
       if (f_expfault[fr]) break;
     end
     $fclose(fd_s); $fclose(fd_t); $fclose(fd_c); $fclose(fd_f);
+    if (IXW != 0 && (wl_rd == 0 || wl_wr == 0 || maxo2 != 0)) $fatal(1, "IXW 1: the frames did not ride the wide lanes (rd %0d wr %0d packet %0d)", wl_rd, wl_wr, maxo2);
+    if (IXW != 0) $display("HGIIDX_WIDE lane_reads=%0d lane_writes=%0d packet_requests=%0d", wl_rd, wl_wr, maxo2);
     $display("HGIIDX_END frames=%0d", nframes);
     $finish;
   end
