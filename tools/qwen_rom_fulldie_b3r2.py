@@ -2807,8 +2807,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                 continue
                             hit, par, start = bfs(De, mono)
                             if hit is None:
+                                _e = tree.query_ball_point(P1, De, p=1)     # sites at the load end: all / free / reached
                                 why = (f"span {a_}-{b_} of {nfr}, start {len(start)}, visited {len(par)}, sites {len(arr)}, "
-                                       f"D {D:.0f}, corridor {r_}, load {lim}")
+                                       f"D {D:.0f}, De {De:.0f}, corridor {r_}, load {lim}, end sites {len(_e)} / free "
+                                       f"{sum(1 for i_ in _e if ok(i_))} / reached {sum(1 for i_ in _e if i_ in par)}, "
+                                       f"P0 ({P0[0]:.0f}, {P0[1]:.0f}) P1 ({P1[0]:.0f}, {P1[1]:.0f})")
                                 continue
                             cand = pre_ + chain_of(hit, par) + suf_
                             plc = dict(pl, frames=cand)
