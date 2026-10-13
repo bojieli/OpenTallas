@@ -214,8 +214,16 @@ def lef_face_pins(lef, macro):
         g[1].append(cy if face in 'EW' else cx)
     pins = []
     for (bn, face, lay), (ix, off) in sorted(grp.items()):
-        nm = bn if ix == [None] else f'{bn}[{max(ix)}:{min(ix)}]'
-        pins.append(dict(name=nm, face=face, layer=lay, offset=round(sum(off) / len(off), 3)))
+        if ix == [None]:
+            pins.append(dict(name=bn, face=face, layer=lay, offset=round(off[0], 3)))
+            continue
+        run = []   # contiguous index runs: a bus split over two layers interleaves
+        for i, o in sorted(zip(ix, off)) + [(None, 0.0)]:
+            if run and (i is None or i != run[-1][0] + 1):
+                pins.append(dict(name=f'{bn}[{run[-1][0]}:{run[0][0]}]', face=face, layer=lay,
+                                 offset=round(sum(o_ for _, o_ in run) / len(run), 3)))
+                run = []
+            run.append((i, o))
     return w, h, pins
 
 
