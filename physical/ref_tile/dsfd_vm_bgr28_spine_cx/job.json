@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_bgr28_spine_cx-r6-cx-9bb4638b6",
+ "name": "dsfd_vm_bgr28_spine_cx-r6-cx-1ebc2fa74",
  "block": "dsfd_vm_bgq28",
  "ref_tile": true,
  "owner": "Codex:deepseek-elements/vm_fix",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "codex/bgr28-spine",
-  "commit": "9bb4638b6"
+  "commit": "1ebc2fa74"
  },
  "stages": {
   "bench": [
@@ -89,7 +89,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_bgr28_spine_cx/dsfd_vm_bgr28_spine_cx-r6-cx-9bb4638b6"
+   "to": "results/rtl/ref_tile/dsfd_vm_bgr28_spine_cx/dsfd_vm_bgr28_spine_cx-r6-cx-1ebc2fa74"
   }
  ],
  "cycles_added": 0,
