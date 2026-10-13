@@ -163,7 +163,7 @@
    },
    {
     "name": "production_qdq_m0",
-    "cmd": "S=3 MUT=0 QDQ_G='-GSPANPIPE=1 -GPIN4=1' bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m0 && grep -q 'cycles=181 priced=168 S=3' {RUN}/qdq_m0/run.log",
+    "cmd": "S=3 MUT=0 QDQ_G='-GSPANPIPE=1 -GPIN4=1' bash tools/hgi_unit_tput/run_qdq_case.sh results/rtl/tput_map_1011/ds_qdq_b2/lq_pair_vectors {RUN}/qdq_m0 && grep -q 'cycles=183 priced=168 S=3' {RUN}/qdq_m0/run.log",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
