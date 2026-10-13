@@ -66,7 +66,7 @@
  "aspect": 1.0,
  "job": {
   "owner": "Claude:el1011-s81su-sw",
-  "branch": "claude/el1011-s81su-sw",
+  "branch": "claude/el1011-s81su",
   "tag": "v1",
   "purpose": "el1011-s81su-sw PHYSICAL SPEC SW v3: ot_s81_su_swe, the position-independent SwiGLU lane engine (one lane pipeline over 8 lanes, g/u/w wait lines in 2 SRAM 128x256, registered chain to the QB act-quant master), hardened once and stepped x128 (replaces 8 x ~2.7M-flop dsfd_su_t_sw); reference tile flow, M5 cap",
   "no_bench_reason": "bit-exactness is gated on the slab dsfd_sp_su_h (tools/s81_suhc/su_gate.py --hier full m0 PASS + m1/m5 FAIL, reduced m0 PASS + mutants FAIL; el1011-s81-suhc-hier-1011.log [su]); the sub-tile alone has no golden",
