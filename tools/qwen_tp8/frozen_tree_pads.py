@@ -67,6 +67,21 @@ def allocate(src,dst,count,clk):
  assert mh(prev,sink)<=498+1e-6
  return names
 
+def allocate_legal(src,dst,count,clk):
+ global serial
+ first=serial;start=len(new)
+ for total in range(count,count+12):
+  try:return allocate(src,dst,total,clk)
+  except RuntimeError:
+   # Undo a partial attempt before changing depth. No orphan placement or clock.
+   for n in list(new[start:])[::-1]:
+    r=I[n];x,y,X,Y=rect(r)
+    for gx in range(int(x//250),int(X//250)+1):
+     for gy in range(int(y//250),int(Y//250)+1):G[gx,gy].remove((x,y,X,Y))
+    del I[n];newclock.pop(n);P.pop(n+'.a');P.pop(n+'.b');D['insts'].pop()
+   del new[start:];serial=first
+ raise RuntimeError(f'No legal registered detour after 12 depth candidates: {src}->{dst}')
+
 def emit(path):
  binds={};decl=[];treeb=[]
  for b,(src,rs,dst) in chains.items():
@@ -98,16 +113,25 @@ for b,(src,rs,dst) in list(chains.items()):
  expanded=[];prev=src;clk=inst[dst.split('.')[0]][1]['ck']
  for next_ep in [r+'.a' for r in rs]+[dst]:
   distance=mh(P[prev],P[next_ep]);n=max(0,math.ceil(distance/450)-1)
-  if n:expanded+=allocate(prev,next_ep,n,clk);repairs+=n
+  if n:
+   added=allocate_legal(prev,next_ep,n,clk);expanded+=added;repairs+=len(added)
   if next_ep!=dst:
    r=next_ep.split('.')[0];expanded.append(r);prev=r+'.b'
  chains[b]=(src,expanded,dst)
 emit(out/'reach_repaired.v');before=tree_alignment.audit(str(out/'reach_repaired.v'))
-for b,pad in sorted(before['proposed_pads'].items(),key=lambda t:-t[1]['extra_cycles']):
- src,rs,dst=chains[b];prev=rs[-1]+'.b' if rs else src;clk=inst[dst.split('.')[0]][1]['ck']
- rs+=allocate(prev,dst,pad['extra_cycles'],clk);chains[b]=(src,rs,dst)
+current=before;rounds=[]
+for iteration in range(12):
+ if current['misaligned']==0:break
+ prior=len(new)
+ for b,pad in sorted(current['proposed_pads'].items(),key=lambda t:-t[1]['extra_cycles']):
+  src,rs,dst=chains[b];prev=rs[-1]+'.b' if rs else src;clk=inst[dst.split('.')[0]][1]['ck']
+  added=allocate_legal(prev,dst,pad['extra_cycles'],clk)
+  rs+=added;chains[b]=(src,rs,dst)
+ emit(out/f'balance_round{iteration}.v');current=tree_alignment.audit(str(out/f'balance_round{iteration}.v'))
+ rounds.append(dict(round=iteration,added=len(new)-prior,misaligned=current['misaligned']))
+ if current['misaligned']==0:break
 treeb=emit(out/'die.v');after=tree_alignment.audit(str(out/'die.v'))
-assert after['misaligned']==0,after['misaligned']
+assert after['misaligned']==0,dict(misaligned=after['misaligned'],rounds=rounds)
 hops=[]
 for b,c,w,eps in treeb:
  e0,e1=['.'.join(e) for e in eps];dist=mh(P[e0],P[e1]);hops.append(dict(bus=b,stage_um=dist));assert dist<=500+1e-6,(b,dist)
@@ -118,7 +142,7 @@ for n,clk in newclock.items():
 D['endpoint_pos']=P
 (out/'physical_model.json').write_text(json.dumps(D))
 (out/'rom_tp8b.json').write_text(json.dumps(dict(insts=D['insts'],buses=[(b,c,w,[e[0] for e in eps]) for b,c,w,eps in D['buses']])))
-rec=dict(source_model=a.physical_model,new_relays=len(new),reach_repair_relays=repairs,
+rec=dict(source_model=a.physical_model,new_relays=len(new),reach_repair_relays=repairs,balance_rounds=rounds,
          balance_relays=len(new)-repairs,before_misaligned=before['misaligned'],after_misaligned=after['misaligned'],
          max_tree_stage_um=max(h['stage_um'] for h in hops),existing_instances_moved=0,
          limitation='Generated pin-centroid reach only; actual macro-lattice, clock regeneration, real abstract views, full cuts, STA and exact die seam gate remain required')
