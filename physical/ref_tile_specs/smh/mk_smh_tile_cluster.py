@@ -161,7 +161,12 @@ def spec(variant):
         "orfs_vars": {"OT_CG_EXCLUDE": "*u_cgt.u_cg.u_icg", "OT_SPINE_SYM": "1", "OT_SPINE_TREE_PAD": "1", "POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
         "refglob": "*",
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96},
-        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r11",
+        "job": {"owner": "Claude:el1013-smh-r11", "branch": "claude/el1013-smh-r11", "tag": "r11" if variant == "eg" else "r12",
+                **({} if variant == "eg" else {"structural_change": (
+                    "station plan rebuilt: strap and reset stations mirror about the PLACED wg centre channel "
+                    "(x 259.2-302.4; reset 271.2, strap 283.0) instead of the die mirror that put 16 reset stations "
+                    "inside tcl h0; every station window asserted inside the core and clear of each child + halo at "
+                    "generation")}),
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
