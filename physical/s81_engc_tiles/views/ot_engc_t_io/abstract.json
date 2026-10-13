@@ -1,0 +1,42 @@
+{
+  "name": "ot_engc_t_io",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/el1011-engc-io-b-109a69d35-tc-cl/routes/el1011_engc_io_b_109a69d35_tc_cl/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 8.705314247237084e-12 min -5.281837467396855e-11",
+      "image": "openroad/orfs:asap7lock",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/el1011-engc-io-b-109a69d35-tc-cl/routes/el1011_engc_io_b_109a69d35_tc_cl/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/scratch-dsmisc-engc/vsrc/physical/s81_engc_tiles/views/ot_engc_t_io:/out",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_engc_t_io.lef": "a1291de10fea88c88964f896d06efc261e4a1fee558fe8ae543c7cf7c6ed28fd",
+    "ot_engc_t_io_ff.lib": "975a1d9e5a3b165ec63387c5f54737c514869c98595c0ef2494850186f5cc230",
+    "ot_engc_t_io_ss.lib": "e10b0b94bc92e67e7e61fcf18b169594378b140f8fc6e882944a5f1ec0690e46",
+    "ot_engc_t_io_tt.lib": "e9c85c26cc888657653e47edbe6afdc1b43bc1b42523b01b26644fea7303221e"
+  },
+  "ok": true
+}

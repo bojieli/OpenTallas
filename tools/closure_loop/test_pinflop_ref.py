@@ -135,10 +135,57 @@ puts [exec grep -E "_delay" /tmp/y.sdc]
         mn = lambda o, p: float(re.search(r"set_input_delay (\S+) -clock \[get_clocks \{vclk\}\] -min -add_delay \[get_ports \{%s\}\]" % p, o).group(1))
         om = lambda o: float(re.search(r"set_output_delay (\S+) -clock \[get_clocks \{vclk\}\] -min", o).group(1))
         self.assertEqual(mn(outs[False], "a"), 0.0)                  # off: unchanged
-        self.assertIn("OT_IOREF_PF input pin flops 2", outs[True])
+        self.assertRegex(outs[True], r"OT_IOREF_PF \S+ input pin flops 2 ")
         self.assertGreater(mn(outs[True], "a"), 0.0)                 # pin flops later than the boundary mean
         self.assertEqual(om(outs[True]), om(outs[False]))            # outputs keep the boundary mean
 
+    def test_openroad_two_clocks_each_own_pinflop_mean(self):
+        """mtp-wfc 2026-10-11: two port clocks (ck / ckv as dsfd_wfc_crp): each moved virtual clock's inputs shift by the
+        pin-flop mean of ITS real clock.  The core pin flops sit behind a buffer (later than the core boundary mean), the
+        ser pin flop IS the ser boundary: the ser input keeps min 0 (the old first-clock mean shifted it by the core's)."""
+        if subprocess.run(["docker", "image", "inspect", IMAGE], capture_output=True).returncode:
+            self.skipTest("no ORFS image")
+        net = """module top(input clk, input ckv, input a, input b, input c, input e, output q1);
+  wire cd, ck2, ck3;
+  BUFx2_ASAP7_75t_R u_ck (.A(clk), .Y(ck2));
+  BUFx2_ASAP7_75t_R u_ck3 (.A(ck2), .Y(ck3));
+  DFFHQNx1_ASAP7_75t_R r1 (.CLK(ck3), .D(a), .QN());
+  DFFHQNx1_ASAP7_75t_R r2 (.CLK(ck3), .D(b), .QN());
+  AND2x2_ASAP7_75t_R u_a (.A(c), .B(b), .Y(cd));
+  DFFHQNx1_ASAP7_75t_R r3 (.CLK(clk), .D(cd), .QN(q1));
+  DFFHQNx1_ASAP7_75t_R s1 (.CLK(ckv), .D(e), .QN());
+endmodule
+"""
+        head = TCL.split("source /w/pinflop_ref.tcl")[0]
+        body = """create_clock -name ser_clk -period 1111 [get_ports ckv]
+create_clock -name vclk -period 833
+create_clock -name vclk_s -period 1111
+set_clock_latency 100 [get_clocks {vclk vclk_s}]
+set ot_ci [get_ports {a b c}]
+set_input_delay 316.6 -clock vclk $ot_ci
+set_input_delay -min 0 -clock vclk $ot_ci
+set_input_delay 372.2 -clock vclk_s [get_ports e]
+set_input_delay -min 0 -clock vclk_s [get_ports e]
+set_output_delay 316.6 -clock vclk [all_outputs]
+set_output_delay -min 0 -clock vclk [all_outputs]
+set_propagated_clock [get_clocks {core_clk ser_clk}]
+set ::env(OT_IOREF_INPUT_PF) 1
+source /w/io_ref_routed.sdc
+write_sdc /tmp/y.sdc
+puts [exec grep -E "_delay" /tmp/y.sdc]
+"""
+        with tempfile.TemporaryDirectory() as t:
+            Path(t, "t.v").write_text(net)
+            Path(t, "t.tcl").write_text(head + body)
+            shutil.copy(ROOT / "physical/common_flow/io_ref_routed.sdc", Path(t, "io_ref_routed.sdc"))
+            r = subprocess.run(["docker", "run", "--rm", "-v", f"{t}:/w", IMAGE,
+                                "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad", "-no_init", "-exit",
+                                "/w/t.tcl"], capture_output=True, text=True, timeout=600)
+            out = r.stdout + r.stderr
+        import re
+        mn = lambda ck, p: float(re.search(r"set_input_delay (\S+) -clock \[get_clocks \{%s\}\] -min -add_delay \[get_ports \{%s\}\]" % (ck, p), out).group(1))
+        self.assertGreater(mn("vclk", "a"), 0.0, out[-3000:])        # core pin flops later than the core boundary mean
+        self.assertAlmostEqual(mn("vclk_s", "e"), 0.0, places=1, msg=out[-3000:])   # ser: its own pin-flop mean = boundary
 
 if __name__ == "__main__":
     unittest.main()

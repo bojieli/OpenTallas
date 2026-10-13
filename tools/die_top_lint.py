@@ -130,14 +130,31 @@ QWEN_R22KS = dict(QWEN_R22K, before_relays=_R22K.surgery_s, seam_free=True)   # 
 # r22ko4 (qwen-1010/a 2026-10-10, opt-in): r22k with the option-4 control plane (tree-top control tile + 4 upper tiles,
 # seq_su by the SU, constant buffer / ROM group tiles; rom_r22k._option4), seam-free pin faces as r22ks (the control
 # tile's S face meets the VM)
-QWEN_R22KO4 = dict(QWEN_R21C, before_relays=_R22K.surgery_o4, seam_free=True)
+QWEN_R22KO4 = dict(QWEN_R21C, before_relays=_R22K.surgery_o4, seam_free=True, station_word=509)   # v5 D5 (qwendie-1012)
 # r22ksv (qwen-1010/a, opt-in): r22ks + the sequencer <-> VM all-reduce word path (rom_r22k._vm_ar; r22ko4 has it too)
 QWEN_R22KSV = dict(QWEN_R22K, before_relays=_R22K.surgery_vm, seam_free=True)
-R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv')
+# tp8a (qwen-tp8 2026-10-12, results/arch/qwen_tp8_1012/SPEC.md track A): the TP8 ROM die = r22ko4 with 768 tiles
+# (64 columns x 12 rows, 3 bands of 4 rows), 48 port groups, ROW_GAP routing channel between tile rows to the 25.0 x 23.0
+# mm spec outline, link channels before rows 2 and 10 (the M column segment between them holds the SU + VM + tree-top stack), an IO band with the two-level collective and 3 SerDes
+# contract v2 (qwen-tp8/die 2026-10-12): the GT 3,072 tile_nk cluster slot (311.04 x 1,296 um body + 52.704 cst corridor),
+# the spine re-packed to three 777.6 sub-columns + two spine_gap relay channels (VM square across all three) for the
+# 26.0-mm reticle width (qwen_rom_fulldie_b3r2._tp8_spine)
+QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=669.6, tile_body=311.04, tile_h=1296.0,
+                                           spine_gap=171.936, root_spread=True,
+                                           tree_pads='results/arch/hier_contract_1012/qwen_rom_tp8_tree_pads.json'))
+# tp8b (qwen-tp8/die 2026-10-12, SPEC section 0 / 5 floorplan F2, track B single die): 48 x 16 qfd_tile_nk at the 311.04 x 1,296
+# slot (column pitch 394.848 = slot + 83.8-um column channel; row gap 190.08), 3 compact bands of 16 blocks, the spine
+# widened to 4,589 um (KV-centre sub-column), KV-die halves 3.7 mm + 100-um channel on the W / E edges, all IO in one S
+# band under a 400-um IO word channel (qwen_rom_fulldie_b3r2._tp8b_f2)
+QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=190.08, tile_body=311.04, tile_h=1296.0,
+                                       spine_gap=171.936, root_spread=True,
+                                       f2=dict(cols=48, rows=16, col_pitch=394.848, spine_w=4589.0, kv_w=3700.0,
+                                               kv_ch=100.0, io_chan=480.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4)))
+R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
                 'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT, 'r21c': QWEN_R21C, 'r22k': QWEN_R22K,
-                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS, 'r22ko4': QWEN_R22KO4, 'r22ksv': QWEN_R22KSV}
+                'r22kcs': QWEN_R22KCS, 'r22ks': QWEN_R22KS, 'r22ko4': QWEN_R22KO4, 'r22ksv': QWEN_R22KSV, 'tp8a': QWEN_TP8A, 'tp8b': QWEN_TP8B}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -228,15 +245,99 @@ def _untern(expr):
         expr = e
 
 
+def _top_tern(expr):
+    """an unparenthesised top-level SV ternary c ? a : b (branches may hold parentheses) -> python (a) if (c) else (b)"""
+    depth, q, nest = 0, -1, 0
+    for i, ch in enumerate(expr):
+        depth += ch == '('
+        depth -= ch == ')'
+        if depth:
+            continue
+        if ch == '?':
+            if q < 0:
+                q = i
+            else:
+                nest += 1
+        elif ch == ':' and q >= 0:
+            if nest:
+                nest -= 1
+            else:
+                return f'(({_top_tern(expr[q + 1:i])}) if ({expr[:q]}) else ({_top_tern(expr[i + 1:])}))'
+    return expr
+
+
 def _eval(expr, env):
-    e = _untern(expr).replace('$clog2', 'clog2')
+    e = _top_tern(_untern(expr)).replace('$clog2', 'clog2')
     e = re.sub(r"\d+'[dD](\d+)", r'\1', e)
     return int(eval(e, {'clog2': clog2, '__builtins__': {}}, dict(env)))  # noqa: S307
 
 
-def parse_module(path, module, params=None):
-    """{'params': {...}, 'ports': {name: (dir, width)}} of an ANSI module header."""
-    t = _strip((ROOT / path).read_text())
+_DIRECTIVE = re.compile(r'^[ \t]*`(ifdef|ifndef|elsif|else|endif|define|undef|include)\b[ \t]*(.*)$')
+
+
+def _preprocess(path, defines=None, _seen=None):
+    """Minimal SV preprocessor for header parsing: `include (relative to the file, then rtl/ and the repo root),
+    `define / `undef of argument-less macros (line continuations joined) and `NAME expanded in the text.  `ifdef /
+    `ifndef / `elsif / `else / `endif select which `define / `undef / `include directives take effect (against `defines`,
+    name -> text; default none = the plain build); the module text of every branch is kept, as _strip always did, so a
+    header's `ifdef-guarded ports stay in the port union the die lints expect.  Comments are stripped first."""
+    path = Path(path) if Path(path).is_absolute() else ROOT / path
+    defs = {} if defines is None else defines
+    seen = set() if _seen is None else _seen
+    t = re.sub(r'//[^\n]*', '', re.sub(r'/\*.*?\*/', '', path.read_text(), flags=re.S))
+    t = re.sub(r'\\\n', ' ', t)
+    out, stack = [], []          # stack of [this branch active, some branch already taken]
+
+    def active():
+        return all(a for a, _ in stack)
+
+    def expand(line):
+        for _ in range(16):      # nested macros
+            n_ = re.sub(r'`([A-Za-z_]\w*)', lambda m_: defs.get(m_.group(1), m_.group(0))
+                        if m_.group(1) in defs else m_.group(0), line)
+            if n_ == line:
+                break
+            line = n_
+        return line
+    for ln in t.split('\n'):
+        dm = _DIRECTIVE.match(ln)
+        if not dm:
+            out.append(expand(ln))   # text of every branch is kept (the parser's historical union of `ifdef ports);
+            continue                 # only directives (`define / `undef / `include) follow the active branch
+        kw, arg = dm.group(1), dm.group(2).strip()
+        name = (re.match(r'[A-Za-z_]\w*', arg) or [''])[0]
+        if kw in ('ifdef', 'ifndef'):
+            c = (name in defs) == (kw == 'ifdef')
+            stack.append([c, c])
+        elif kw == 'elsif':
+            c = not stack[-1][1] and name in defs
+            stack[-1] = [c, stack[-1][1] or c]
+        elif kw == 'else':
+            stack[-1] = [not stack[-1][1], True]
+        elif kw == 'endif':
+            stack.pop()
+        elif not active():
+            pass
+        elif kw == 'define':
+            defs[name] = arg[len(name):].strip()
+        elif kw == 'undef':
+            defs.pop(name, None)
+        elif kw == 'include':
+            f = arg.strip('"<> ')
+            for base in (path.parent, ROOT / 'rtl', ROOT):
+                if (base / f).exists():
+                    if (base / f).resolve() not in seen:
+                        seen.add((base / f).resolve())
+                        _preprocess(base / f, defs, seen)      # headers contribute their defines only
+                    break
+        out.append('')
+    return '\n'.join(out)
+
+
+def parse_module(path, module, params=None, defines=None):
+    """{'params': {...}, 'ports': {name: (dir, width)}} of an ANSI module header (after `define / `ifdef / `include
+    preprocessing with `defines`, default: none defined)."""
+    t = _strip(_preprocess(path, dict(defines or {})))
     mm = re.search(r'\bmodule\s+' + re.escape(module) + r'\b', t)
     if not mm:
         raise KeyError(f'{module} not in {path}')
@@ -787,6 +888,7 @@ QLINK = 1056          # qwen_rom_fulldie LINK_TRACKS: 512 each way + 32 control 
 def dirs_qwen(bid, cls, bits, eps, j, port):
     """Qwen die (qwen_rom_fulldie buses(): endpoint 0 is always the upstream / source end)."""
     bid = re.sub(r'__r\d+$', '', bid)                  # r21: a relay hop keeps its bus's rule
+    cls = cls.split('@')[0]                            # tp8b: KV-die buses merged onto the ROM die carry '<cls>@kv'
     if cls in ('corridor', 'head_chain', 'tap'):
         return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
     bid = bid[:-2] if bid.endswith('_x') else bid      # r18: second half of a bus through a CDC cluster
@@ -836,7 +938,7 @@ def dirs_hbm(bid, cls, bits, eps, j, port):
 
 def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('x_trunk', 'x_leaf', 'result_leaf', 'result_trunk', 'expert_req', 'kv_rows', 'attn_chain', 'attn_root',
-               'idx_sel',                    # R25GQ 10-10: one class a net type, endpoint 0 drives
+               'idx_sel', 'kv_credit',       # R25GQ 10-10: one class a net type, endpoint 0 drives
                'attn_kv', 'attn_out', 'attn_operand', 'attn_input', 'attn_query', 'attn_packet'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'weight':     # line + tag + valid down, ready back (TF7 / r15 sm_rtl_w: no ready)
@@ -929,6 +1031,10 @@ def endpoint_dirs(die, real, by, bus, j):
     rule = (dirs_s81 if die.startswith('s81') else dirs_qwen if die in ('qwen_rom', 'qwen_kv') else dirs_hbm)(bid, cls, bits, eps, j, port)
     if rule == 'complement':
         others = [k for k in range(len(eps)) if k != j and by[eps[k][0]].master in real]
+        if not others and len(eps) == 2:
+            # qwen-tp8/die (tp8b merges the KV die's qkd_* CDC leaves / controllers onto the ROM die, neither bound to
+            # RTL in the qwen_rom binding): no real end to complement -> the Qwen bus convention, endpoint 0 upstream
+            return [(0, bits, 'out' if j == 0 else 'in')], None
         assert len(others) == 1, (bid, j)
         oseg, _ = endpoint_dirs(die, real, by, bus, others[0])
         flip = {'in': 'out', 'out': 'in', 'io': 'io', 'missing': 'missing'}
@@ -2269,9 +2375,15 @@ def margin(die, m):
             return H.margin_lint(m)
         if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE in R22K_FAMILY):
             import fp_margin_lint as FPL
+            lp = None
+            if die == 'qwen_rom' and 'vm' in _QW:
+                # qwendie-1011: far-side against the load's actual pin (generator pin map), not the load block's centre
+                v_, m_, B_ = _QW['vm']
+                # (fp_margin_lint pin_pt(inst, port), hbmdie-1011's interface for the same rule)
+                lp = B_._pin_pos(v_, m_)
             return FPL.die_margin(m['insts'], [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
                                   {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
-                                  reach_um=504.0, sliver_um=12.0)
+                                  reach_um=504.0, sliver_um=12.0, pin_pt=lp)
     except Exception as ex:  # noqa: BLE001 - a lint add-on must not hide the connectivity findings
         return dict(verdict='ERROR', error=f'{type(ex).__name__}: {ex}')
     return dict(verdict='N/A')
@@ -2436,7 +2548,7 @@ def main(argv=None):
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
-                                                              'r21c', 'r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv'])
+                                                              'r21c', 'r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '

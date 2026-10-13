@@ -1,14 +1,25 @@
 `timescale 1ns/1ps
-module tb_xload_lock;  // hgi-adapters: banked x-load vs the pre-restructure x-load (ot_hgi_sm_xload_old = git show 861b57fde:rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv), 10 random commands, every x-store write identical
+module tb_xload_lock;  // FILL-9 2026-10-10: ub = the SRAM-macro x-load, ua = the flop-banked one (tb/ref/ot_hgi_sm_xload_old.sv, fa53a9ea4); -DMUT_T / -DMUT_M must FAIL.  hgi-adapters: banked x-load vs the pre-restructure x-load (ot_hgi_sm_xload_old = git show 861b57fde:rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv), 10 random commands, every x-store write identical
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 3, errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 3; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg x_v = 0; reg [39:0] x_base = 0; reg [20:0] x_n = 0; reg [3:0] x_p = 0; reg [31:0] x_stride = 0;
     wire rdy_a, rdy_b, done_a, done_b, f_a, f_b, en_a, en_b; wire [6:0] ad_a, ad_b, gr_a, gr_b; wire [2047:0] d_a, d_b;
     wire [4*338-1:0] qa, qb; wire [4*274-1:0] ra, rb; wire [273:0] tra, trb; reg [337:0] tq = 0;
     ot_hgi_sm_xload_old ua (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(rdy_a), .x_base(x_base), .x_n(x_n), .x_p(x_p),
         .x_stride(x_stride), .x_space(2'd1), .x_fmt(2'd0), .x_done(done_a), .x_fault(f_a), .xw_en(en_a), .xw_addr(ad_a),
         .xw_grp(gr_a), .xw_data(d_a), .vmq(qa), .vmr(ra));
-    ot_hgi_sm_xload ub (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(rdy_b), .x_base(x_base), .x_n(x_n), .x_p(x_p),
+`ifdef MUT_T
+    localparam integer MT = 1;
+`else
+    localparam integer MT = 0;
+`endif
+`ifdef MUT_M
+    localparam integer MM = 1;
+`else
+    localparam integer MM = 0;
+`endif
+    ot_hgi_sm_xload #(.MUT_T(MT), .MUT_M(MM)) ub (.clk(clk), .rst_n(rst_n), .x_xb(7'd0), .x_v(x_v), .x_rdy(rdy_b), .x_base(x_base), .x_n(x_n), .x_p(x_p),
         .x_stride(x_stride), .x_space(2'd1), .x_fmt(2'd0), .x_done(done_b), .x_fault(f_b), .xw_en(en_b), .xw_addr(ad_b),
         .xw_grp(gr_b), .xw_data(d_b), .vmq(qb), .vmr(rb));
     ot_hgi_vm_unit #(.NC(5)) va (.clk(clk), .rst_n(rst_n), .cq({tq, qa}), .cr({tra, ra}), .status());

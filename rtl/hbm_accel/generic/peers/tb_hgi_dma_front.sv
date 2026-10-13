@@ -7,24 +7,63 @@
 // hgi-1010/c: INDEXED ROW STREAM loads (ix_cmd + id list with random gaps; ids >= 2^16, duplicates, multi-run rows, rows on
 // every stack): row e of VM must equal the decode of HBM row abase + id_e x dyn_mul; MUT 3 (high partial product dropped)
 // and MUT 4 (destination pointer advancing every other row) must FAIL.
+// el1011-hbm-b2 (2026-10-12): B2 = 1 runs FOUR fronts (B2 cluster QID 0..3), each on its own stack's request / data lanes and
+// its own VM wide port; a dispatcher model sends a strided LOAD to onehot(source stack) or, STRIPE4, to all four, an indexed
+// stream to all four; done = every targeted front done.  The svc model serves lane s from stack s's memory by the LOCAL
+// address (stack bits := s), so a front on the wrong lane / serving the wrong rows reads wrong data.  S4 = 1 (forced by B2)
+// issues the stack-striped loads as STRIPE4 (code 1, stride 0: the same addresses as code 0 stride SB) -- a code-0 move
+// spanning stacks faults on B2 (checked last).  Prints HASH (VM image after every check) for B2 = 0 / 1 comparison.
+// MUT_B2 1 (rows of stack QID + 1 on lane QID) / 2 (requests on lane QID + 1) must FAIL.
 module tb_hgi_dma_front;
     parameter integer MUT = 0;
+    parameter integer B2 = 0;
+    parameter integer MUT_B2 = 0;
+    parameter integer S4 = 0;
+    localparam integer NQ = (B2 != 0) ? 4 : 1;
+    localparam integer S4E = (B2 != 0) ? 1 : S4;
     parameter integer LD = 16;     // front lane buffer = svc initial credit
     parameter integer HOPS = 3;    // registered die-wire stages each way (data svc -> front, credit front -> svc)
     parameter integer NL = 8;      // svc data lanes a stack (lane l = idx % NL)
     parameter integer NB = 32;     // VM wide lanes (banks)
-    parameter integer PCX4 = 0;    // HBM supply a stack in sectors per 4 cycles (99 = 3.80 TB/s a die at 1.2 GHz); 0 = unlimited
+    parameter integer PCX4 = 0;
+    parameter integer XP = 0;      // hbm-fq/dma 10-11: the textbook rebuild (registered X1 request vectors, X2 split, count rungs)
+    parameter integer XQ = 0;      // hbm-fq/mvf 10-11: X2 select rung + conversion rung + pin output register (needs XP)
+    parameter integer AP = 0;      // hgi-1010 b: the weight aperture (VM words >= 2^18, 2 slots of 32,768): 281-b lanes, random
+                                   //   per-bank wl_rdy stops (no lane may carry a sector 5+ edges into a stop), slot loads
+    localparam integer VMW = AP ? 327680 : 262144, LWW = 280 + AP;    // HBM supply a stack in sectors per 4 cycles (99 = 3.80 TB/s a die at 1.2 GHz); 0 = unlimited
     localparam integer NS = 4, NIN = NS * NL, BW = $clog2(NB);
     localparam integer SBIT = 20; localparam longint SB = 1048576;   // 1 MiB stacks in the bench
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     reg mv_v = 0; reg [226:0] mv = 0; wire mv_rdy, mv_done, mv_fault;
     reg ix_v = 0; reg [175:0] ix_cmd = 0; wire ix_rdy; reg id_v = 0; reg [31:0] id = 0; wire id_rdy;
     wire [NS*51-1:0] dq; reg [NS-1:0] dq_rdy = 0; reg [NIN*270-1:0] dd_m = 0; wire [NIN*270-1:0] dd; wire [NIN-1:0] dd_cr;
-    wire [NB*280-1:0] wl; reg [NB-1:0] wl_done = 0;
-    ot_hgi_dma_front #(.NS(NS), .NL(NL), .SBIT(SBIT), .STACK_BYTES(36'(SB)), .NB(NB), .LD(LD), .MUT(MUT)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v),
-        .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done), .mv_fault(mv_fault),
-        .ix_v(ix_v), .ix_rdy(ix_rdy), .ix_cmd(ix_cmd), .id_v(id_v), .id_rdy(id_rdy), .id(id), .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
-        .wl(wl), .wl_done(wl_done));
+    reg [NB-1:0] wl_rdy = '1; integer rlow [0:NB-1];
+    // ---- the front(s): B2 = 0 one front; B2 = 1 four (dispatcher model: tgt = the targeted quadrants of this command)
+    reg [NQ-1:0] tgt = '1; reg [NQ-1:0] dn = '0;
+    wire [NQ-1:0] q_rdy, q_done, q_fault, q_ixrdy, q_idrdy;
+    wire [NS*51-1:0] q_dq [0:NQ-1]; wire [NIN-1:0] q_cr [0:NQ-1]; wire [NB*LWW-1:0] q_wl [0:NQ-1]; reg [NB-1:0] q_wd [0:NQ-1];
+    wire id_all = &q_idrdy;
+    genvar gq;
+    generate for (gq = 0; gq < NQ; gq = gq + 1) begin : fq
+        ot_hgi_dma_front #(.NS(NS), .NL(NL), .SBIT(SBIT), .STACK_BYTES(36'(SB)), .NB(NB), .LD(LD), .AP(AP), .XP(XP), .XQ(XQ), .MUT(MUT),
+                           .B2(B2), .QID(gq), .MUT_B2(MUT_B2)) dut (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && tgt[gq]),
+            .mv_rdy(q_rdy[gq]), .mv(mv), .mv_done(q_done[gq]), .mv_fault(q_fault[gq]),
+            .ix_v(ix_v && tgt[gq]), .ix_rdy(q_ixrdy[gq]), .ix_cmd(ix_cmd), .id_v(id_v && ((B2 != 0) ? id_all : 1'b1)), .id_rdy(q_idrdy[gq]),
+            .id(id), .dq(q_dq[gq]), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(q_cr[gq]), .wl(q_wl[gq]), .wl_done(q_wd[gq]), .wl_rdy(wl_rdy));
+        assign dq[gq*51 +: 51] = q_dq[gq][gq*51 +: 51];        // stack gq's request lane = quadrant gq's (B2 = 0: all from q0)
+        if (B2 == 0) begin : one
+            for (genvar s2 = 1; s2 < NS; s2 = s2 + 1) begin : o assign dq[s2*51 +: 51] = q_dq[0][s2*51 +: 51]; end
+        end
+    end endgenerate
+    always @(posedge clk) for (integer q = 0; q < NQ; q = q + 1) if (q_done[q]) dn[q] = 1'b1;
+    assign mv_rdy = &(q_rdy | ~tgt); assign ix_rdy = &(q_ixrdy | ~tgt); assign id_rdy = id_all;
+    assign mv_done = (B2 != 0) ? (&(dn | ~tgt)) : q_done[0];       // B2: a level until the next command
+    assign mv_fault = |q_fault;
+    always @* begin : crs reg [NIN-1:0] c; c = '0; for (integer q = 0; q < NQ; q = q + 1) c = c | q_cr[q]; dd_cr_r = c; end
+    reg [NIN-1:0] dd_cr_r; assign dd_cr = dd_cr_r;
+    function automatic [NQ-1:0] route(input [226:0] w);        // the B2 dispatcher: HBM source -> onehot(stack) / STRIPE4 -> all
+        route = (NQ == 1) ? '1 : (w[44:42] == 3'd1) ? '1 : NQ'(1) << w[5 + SBIT +: 2];
+    endfunction
     // ---- memories
     // HBM byte at address a: a full 64-bit mix (every address bit reaches every data bit; hgi-1010/c: the old hash
     // (a * K + (a >> 7) * K2) >> 3 ignored address bits >= 11, so a high-address error went unseen)
@@ -32,14 +71,25 @@ module tb_hgi_dma_front;
         longint x;
         begin x = a ^ (a >> 31); x = x * 64'h9E3779B97F4A7C15; x = x ^ (x >> 29); x = x * 64'hBF58476D1CE4E5B9; hb = 8'(x >> 40); end
     endfunction
-    reg [31:0] vm [0:262143];
-    reg [NB-1:0] wl_d1 = 0;
-    always @(posedge clk) begin
-        wl_d1 <= 0; wl_done <= wl_d1;
-        for (integer p = 0; p < NB; p = p + 1) if (wl[p*280 + 279]) begin
-            if ((wl[p*280 + 264 +: 15] % NB) != p) $fatal(1, "wide lane %0d carries bank %0d", p, wl[p*280 + 264 +: 15] % NB);
-            for (integer w = 0; w < 8; w = w + 1) if (wl[p*280 + w]) vm[{wl[p*280 + 264 +: 15], 3'(w)}] = wl[p*280 + 8 + 32*w +: 32];
-            wl_d1[p] <= 1'b1;
+    reg [31:0] vm [0:VMW-1];
+    reg [NB-1:0] wl_d1 [0:NQ-1];
+    initial for (integer q = 0; q < NQ; q = q + 1) begin wl_d1[q] = 0; q_wd[q] = 0; end
+    always @(posedge clk) for (integer q = 0; q < NQ; q = q + 1) begin : vmq
+        reg [NB*LWW-1:0] wl;
+        wl = q_wl[q];
+        wl_d1[q] <= 0; q_wd[q] <= wl_d1[q];
+        for (integer p = 0; p < NB; p = p + 1) begin
+            if (AP != 0) begin                                // random stops; the front must honour them within 4 edges
+                if (rlow[p] >= 5 && wl[p*LWW + LWW - 1]) $fatal(1, "lane %0d sent %0d edges into a stop", p, rlow[p]);
+                wl_rdy[p] <= ($urandom % 16) != 0 ? (wl_rdy[p] || ($urandom % 4) == 0) : 1'b0;
+                rlow[p] = wl_rdy[p] ? 0 : rlow[p] + 1;
+            end
+            if (wl[p*LWW + LWW - 1]) begin : lane
+                reg [17:0] s; s = {2'd0, wl[p*LWW + 264 +: 15]} + ((AP != 0 && wl[p*LWW + 279]) ? 18'd32768 : 18'd0);
+                if ((s % NB) != p) $fatal(1, "wide lane %0d carries bank %0d", p, s % NB);
+                for (integer w = 0; w < 8; w = w + 1) if (wl[p*LWW + w]) vm[{s, 3'(w)}] = wl[p*LWW + 8 + 32*w +: 32];
+                wl_d1[q][p] <= 1'b1;
+            end
         end
     end
     // ---- svc model: per stack a request queue; per lane a beat queue in idx order; credit 4 a lane
@@ -52,6 +102,7 @@ module tb_hgi_dma_front;
     assign dd = (HOPS == 0) ? dd_m : dpipe[HOPS-1];
     assign cr_in = (HOPS == 0) ? dd_cr : cpipe[HOPS-1];
     initial for (integer i = 0; i < NIN; i = i + 1) begin cr[i] = LD; lh[i] = 0; lt[i] = 0; end
+    initial for (integer p = 0; p < NB; p = p + 1) rlow[p] = 0;
     integer tok [0:NS-1]; longint sched = 0;
     initial for (integer s = 0; s < NS; s = s + 1) begin tok[s] = 0; rq_n[s] = 0; rq_h[s] = 0; nxt[s] = 0; end
     always @(posedge clk) if (rst_n) begin
@@ -65,6 +116,7 @@ module tb_hgi_dma_front;
                 reg [49:0] r; reg [255:0] sd; longint a; integer l;
                 r = rq[s][rq_h[s] % 64];
                 a = longint'(r[36:0]) + 32 * nxt[s];
+                a = (a & ~(longint'(3) << SBIT)) | (longint'(s) << SBIT);   // lane s = stack s's memory (local address)
                 for (integer b = 0; b < 32; b = b + 1) sd[8*b +: 8] = hb(a + b);
                 l = s * NL + (nxt[s] % NL); if (PCX4 != 0) tok[s] = tok[s] - 4; sched = sched + 1;
                 lb[l][lt[l] % 1024] = {1'b1, 1'b0, r[49:46], 8'(nxt[s]), sd}; lt[l] = lt[l] + 1;
@@ -100,6 +152,12 @@ module tb_hgi_dma_front;
         end
     endfunction
     function automatic [31:0] i8(input [7:0] c); i8 = f32(real'($signed(c))); if (c == 0) i8 = 0; endfunction
+    longint unsigned lsd = 64'h2545F4914F6CDD1D;                   // vector generator (independent of the timing $urandom)
+    function automatic longint unsigned lcg; lsd = lsd * 64'd6364136223846793005 + 64'd1442695040888963407; lcg = lsd >> 33; endfunction
+    longint vh = 0;                                            // VM image hash, chained over every checked load
+    task automatic vhash;
+        for (integer w = 0; w < VMW; w = w + 1) vh = (vh ^ longint'({vm[w], 32'(w)})) * 64'h100000001B3;
+    endtask
     integer full = 0; initial full = $test$plusargs("FULL");     // +FULL: the svc model at its full rate (no gaps)
     integer errs = 0, cyc = 0, tbytes = 0, tcyc = 0;
     always @(posedge clk) cyc <= cyc + 1;
@@ -108,10 +166,12 @@ module tb_hgi_dma_front;
         integer es, t0, o, i, e0; longint a; reg [31:0] want;
         begin
             es = (f == 0 || f == 5) ? 4 : (f == 1) ? 2 : 1; e0 = errs;
-            for (i = 0; i < 262144; i = i + 1) vm[i] = 32'hA5A5_0000 + i;
+            for (i = 0; i < VMW; i = i + 1) vm[i] = 32'hA5A5_0000 + i;
             mv = 0; mv[1:0] = 0; mv[4:2] = f; mv[44:5] = 40'(sbase); mv[76:45] = 32'(sstr); mv[92:77] = 1;
             mv[94:93] = 1; mv[97:95] = 0; mv[137:98] = 40'(dbase); mv[169:138] = 32'(dstr); mv[185:170] = 1;
             mv[205:186] = 20'(m); mv[226:206] = 21'(n);
+            if (S4E != 0 && sstr == SB) begin mv[44:42] = 3'd1; mv[76:45] = 32'd0; end     // the same rows as STRIPE4
+            tgt = route(mv); dn = '0;
             @(negedge clk); mv_v = 1; t0 = cyc; while (!mv_rdy) begin @(negedge clk); if (cyc - t0 > 50000) $fatal(1, "FATAL front never ready (previous load stuck)"); end @(negedge clk); mv_v = 0; t0 = cyc;
             while (!mv_done && !mv_fault && cyc - t0 < 50000) @(negedge clk);
             if (!mv_done) begin $display("FAIL load f %0d m %0d n %0d: done %0d fault %0d", f, m, n, mv_done, mv_fault); errs = errs + 1; end
@@ -132,13 +192,14 @@ module tb_hgi_dma_front;
                 end
                 begin : untouched
                     integer w, o2, hit, bad; bad = 0;
-                    for (w = 0; w < 262144; w = w + 1) begin
+                    for (w = 0; w < VMW; w = w + 1) begin
                         hit = 0;
                         for (o2 = 0; o2 < m; o2 = o2 + 1) if (w >= dbase + o2 * dstr && w < dbase + o2 * dstr + n) hit = 1;
                         if (!hit && vm[w] !== 32'hA5A5_0000 + w) bad = bad + 1;
                     end
                     if (bad != 0) begin $display("FAIL f %0d: %0d words outside the destination changed", f, bad); errs = errs + 1; end
                 end
+                vhash();
                 if (errs != e0) $display("  load f %0d: %0d errors", f, errs - e0);
                 $display("LOAD f %0d m %0d n %0d: %0d cycles, %0.1f destination B / cycle, %0.1f source B / cycle = %0.1f %% of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)",
                          f, m, n, cyc - t0, (m * n * 4.0) / (cyc - t0), (m * n * es * 1.0) / (cyc - t0), 100.0 * (m * n * es * 1.0) / (cyc - t0) / 3166.7);
@@ -152,14 +213,15 @@ module tb_hgi_dma_front;
         integer es, t0, o, i, e0, k; longint a; reg [31:0] want;
         begin
             es = (f == 0 || f == 5) ? 4 : (f == 1) ? 2 : 1; e0 = errs;
-            for (i = 0; i < 262144; i = i + 1) vm[i] = 32'hA5A5_0000 + i;
+            for (i = 0; i < VMW; i = i + 1) vm[i] = 32'hA5A5_0000 + i;
             for (i = 0; i < cnt; i = i + 1) begin
-                ids_t[i] = 32'($urandom % idmax);
-                if (i > 0 && ($urandom % 8) == 0) ids_t[i] = ids_t[i - 1];           // duplicates
+                ids_t[i] = 32'(lcg() % idmax);
+                if (i > 0 && (lcg() % 8) == 0) ids_t[i] = ids_t[i - 1];           // duplicates
                 if (i == 0) ids_t[i] = 32'(idmax - 1);                              // the largest id
             end
             // rb: the CP's effective base (abase + id_0 x dyn_mul) with rebase set
             ix_cmd = {1'(rb), 20'(cnt), 32'(dstr), 32'(dbase), 21'(n), 27'(mul), 40'(rb ? abase + longint'(ids_t[0]) * mul : abase), f};
+            tgt = '1; dn = '0;
             @(negedge clk); ix_v = 1; t0 = cyc; while (!ix_rdy) begin @(negedge clk); if (cyc - t0 > 50000) $fatal(1, "FATAL front never ready (previous load stuck)"); end @(negedge clk); ix_v = 0; t0 = cyc;
             k = 0;
             while (!mv_done && !mv_fault && cyc - t0 < 50000) begin
@@ -186,10 +248,11 @@ module tb_hgi_dma_front;
                 end
                 begin : untouched
                     integer w, bad; bad = 0;
-                    for (w = 0; w < 262144; w = w + 1)
+                    for (w = 0; w < VMW; w = w + 1)
                         if (!(w >= dbase && (w - dbase) % dstr < n && (w - dbase) / dstr < cnt) && vm[w] !== 32'hA5A5_0000 + w) bad = bad + 1;
                     if (bad != 0) begin $display("FAIL iload f %0d: %0d words outside the destination changed", f, bad); errs = errs + 1; end
                 end
+                vhash();
                 if (errs != e0) $display("  iload f %0d: %0d errors", f, errs - e0);
                 $display("ILOAD f %0d rows %0d n %0d: %0d cycles, %0.1f destination B / cycle, %0.1f source B / cycle = %0.1f %% of 3.80 TB/s",
                          f, cnt, n, cyc - t0, (cnt * n * 4.0) / (cyc - t0), (cnt * n * es * 1.0) / (cyc - t0), 100.0 * (cnt * n * es * 1.0) / (cyc - t0) / 3166.7);
@@ -213,6 +276,30 @@ module tb_hgi_dma_front;
         load(0, 64'h0, 64'(SB), 0, 16384, 4, 16384);                    // FP32 striped, 4 x 64 KB (steady state)
         load(1, 64'h0, 64'(SB), 100000, 32768, 4, 32768);               // BF16 striped, 4 x 64 KB raw -> 512 KB VM
         iload(0, 64'h0, 4096, 1024, 0, 1024, 256, 1024, 0);                  // FP32 4 KB rows by id (steady-state indexed rate)
+        if (AP != 0) begin : aperture
+            integer t0;
+            for (integer p = 0; p < NB; p = p + 1) rlow[p] = 0;
+            load(0, 64'h3000, 16384, 262144, 4096, 8, 4096);            // slot 0: 8 banks x 4,096 FP32 (m 8, dst stride 4,096)
+            load(1, 64'h0, 64'(SB), 294912, 4096, 8, 4096);              // slot 1: BF16 striped
+            // past the two slots: must fault
+            mv = 0; mv[4:2] = 0; mv[44:5] = 0; mv[76:45] = 32; mv[92:77] = 1; mv[94:93] = 1; mv[137:98] = 40'd327680;
+            mv[169:138] = 8; mv[185:170] = 1; mv[205:186] = 1; mv[226:206] = 8;
+            @(negedge clk); mv_v = 1; while (!mv_rdy) @(negedge clk); @(negedge clk); mv_v = 0; t0 = cyc;
+            while (!mv_fault && cyc - t0 < 5000) @(negedge clk);
+            if (!mv_fault) begin $display("FAIL a load past the aperture did not fault"); errs = errs + 1; end
+            else $display("APERTURE: a load past the two slots faults");
+        end
+        if (B2 != 0) begin : b2flt                                 // B2: a code-0 move with a row on another stack faults
+            integer t0;
+            mv[44:42] = 3'd0; mv[44:5] = 40'h0; mv[76:45] = 32'(SB); mv[205:186] = 20'd2; mv[226:206] = 21'd8;
+            mv[137:98] = 40'd0; mv[169:138] = 32'd8;
+            tgt = route(mv); dn = '0;
+            @(negedge clk); mv_v = 1; while (!mv_rdy) @(negedge clk); @(negedge clk); mv_v = 0; t0 = cyc;
+            while (!mv_fault && cyc - t0 < 5000) @(negedge clk);
+            if (!mv_fault || !q_fault[0]) begin $display("FAIL B2: a linear move onto another stack did not fault"); errs = errs + 1; end
+            else $display("B2: a linear move onto another stack faults (fail-closed)");
+        end
+        $display("HASH %016h", vh);
         if (errs == 0) $display("PASS HGI_DMA_FRONT %0d B in %0d cycles (%0.1f B / cycle overall)", tbytes, tcyc, (1.0 * tbytes) / tcyc);
         else $display("FATAL HGI_DMA_FRONT errors=%0d", errs);
         $finish;

@@ -184,6 +184,26 @@ table.t tr.cl:hover{background:#121a30}
 .unpl .why{display:block;color:var(--dim);font-size:11px;margin-left:16px;white-space:normal}
 .rcs{font-size:12px;color:var(--muted);margin:2px 0 8px}.rcs .rc{padding:2px 0}.rcs b{color:var(--ink);font-weight:600}
 .role{font-weight:600;font-size:11.5px;color:var(--accent)}.role.r-lineage{color:var(--dim)}
+/* element page navigation (explorer-nav-1011): one primary action per element, open links in lists and search */
+.primary{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+.btn-primary{display:inline-flex;align-items:center;gap:4px;background:var(--accent);color:#04121a;border-radius:9px;padding:9px 16px;font:700 14px var(--sans);text-decoration:none;box-shadow:0 2px 10px #5ee7ff33}
+.btn-primary:hover{filter:brightness(1.08)} .btn-primary:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.primary .pnote{font-size:12px;color:var(--dim)}
+.card .csum{margin:6px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink)}
+.openel{flex:none;margin-left:6px;font:600 10.5px var(--sans);color:var(--accent);text-decoration:none;border:1px solid #5ee7ff44;border-radius:6px;padding:1px 6px;opacity:.55;white-space:nowrap}
+.openel:hover,.openel:focus-visible{opacity:1;border-color:var(--accent);background:#5ee7ff1a}
+.item:hover .openel,.item.sel .openel,.item:focus-within .openel,.sr.on .openel,.sr:hover .openel{opacity:1}
+.item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.item .nm{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.item .isum{font:11px var(--sans);color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item.has-sum{padding-top:3px;padding-bottom:3px}
+#sres .sr{display:flex;align-items:center;padding-right:8px}
+#sres .sr.on{background:#16244a}
+#sres .sr button{flex:1 1 auto;min-width:0}
+#tip .s{font-size:12px;color:var(--ink);margin-top:4px;line-height:1.4}
+#tip .hint{color:var(--accent);margin-top:4px}
+.stel{display:inline-flex;align-items:center;gap:2px;margin-right:8px}
+@media (hover:none){ .openel{opacity:1} }
 </style>
 </head>
 <body>
@@ -211,12 +231,13 @@ table.t tr.cl:hover{background:#121a30}
     <div class="hud" id="hud"></div>
     <div class="busy" id="busy">Loading die geometry&hellip;</div>
   </main>
-  <aside class="pane" id="right"><div id="card"><div class="empty">Click any instance on the die, a row in the hierarchy, or search for an element. Every element has a card: what it is, where it sits, its interfaces, and its full closure history.</div></div></aside>
+  <aside class="pane" id="right"><div id="flowtrk" class="fvf-box" aria-label="Flow progress"></div><div id="card"><div class="empty">Click any instance on the die, a row in the hierarchy, or search for an element. Every element has a card: what it is, where it sits, its interfaces, and its full closure history.</div></div></aside>
 </div>
 <div id="tip" hidden></div>
 <div id="story" hidden><div class="in"><button class="btn x" type="button" id="storyX">Close</button><div id="storyC"></div></div></div>
 <script src="/fv_stale.js"></script>
 <script src="/explorer_story.js"></script>
+<script src="/fv_flow.js"></script>
 <script src="/explorer.js"></script>
 </body>
 </html>

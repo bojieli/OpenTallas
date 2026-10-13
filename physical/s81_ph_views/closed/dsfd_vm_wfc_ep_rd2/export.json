@@ -1,0 +1,60 @@
+{
+  "name": "dsfd_vm_wfc_ep",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/mtp-vm_wfc_ep-rd2-9c9ac6963-tc/routes/mtp_vm_wfc_ep_rd2_9c9ac6963_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-vm_wfc_ep-rd2-9c9ac6963-tc/routes/mtp_vm_wfc_ep_rd2_9c9ac6963_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-vm_wfc_ep-rd2-9c9ac6963-tc/routes/mtp_vm_wfc_ep_rd2_9c9ac6963_tc/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-vm_wfc_ep-rd2-9c9ac6963-tc/routes/mtp_vm_wfc_ep_rd2_9c9ac6963_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-vm_wfc_ep-rd2-9c9ac6963-tc/routes/mtp_vm_wfc_ep_rd2_9c9ac6963_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-vm_wfc_ep-rd2-9c9ac6963-tc/routes/mtp_vm_wfc_ep_rd2_9c9ac6963_tc/view:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/mtp-vm_wfc_ep-rd2-9c9ac6963-tc/routes/mtp_vm_wfc_ep_rd2_9c9ac6963_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_vm_wfc_ep.lef": "ed3d482d53c84ec3188e4d28a1483c77cb2d021b5a5ea412dc66c377824541c5",
+    "dsfd_vm_wfc_ep_ff.lib": "a85bd8f6c1ee04b1d515b01e55998e8dc9da4a9d7ce70923ea28e7322504763c",
+    "dsfd_vm_wfc_ep_ss.lib": "f93cfde3601d3478f816259a17fb6b73ce68d04522938116f0e30c7f1419a51f"
+  },
+  "ok": true
+}

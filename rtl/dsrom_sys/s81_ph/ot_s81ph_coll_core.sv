@@ -75,7 +75,24 @@ module ot_s81ph_coll_core #(
     parameter integer OQX = 0,
     parameter integer OQX_D = 16,
     // EPULL (ds-1010 2026-10-10, default 0): engine receive FIFOs feed central landing queues (ot_w15 PULL)
-    parameter integer EPULL = 0
+    parameter integer EPULL = 0,
+    // EPCOPY (fe-push-ds-1010 2026-10-10, default 0): engine per-source pop copies (ot_w15 PCOPY; EPULL only)
+    parameter integer EPCOPY = 0,
+    // el1011-ds-coll 2026-10-11 (default 1/1/0 = unchanged): EPSL / ELQW = engine PSL (pop-control copies per s0 slice)
+    // and landing-queue WFREE.  ORX = the engine's reduce word is REGISTERED here (r_v / r_d from out_red / out_rdat,
+    // +1 cycle on reduce words only) and the packer's 2,048-bit word select and pk_d slot enables are built per
+    // 128-bit slice from KS kept copies of {r_v, hm, pk_n} (ce pre-route crpr -1,594 = adder valid_out -> o_v ->
+    // in_red -> pk_emit -> 2,099-bit b_word -> bw_d in one cycle).  Safe: a gather pop needs inflight == 0 (decremented
+    // at the engine's red_out), so a gather beat reaches the core >= 3 cycles after the last reduce word, which the
+    // register has consumed 1 cycle after it; a reduce pop needs the gather beat accepted (g_stall), as before.
+    parameter integer EPSL = 1,
+    parameter integer ELQW = 1,
+    parameter integer ORX = 0,
+    // ORC (el1011-ds-coll 2026-10-11, default 0): output-credit reservation for reduce words (OQX only).  Reduce words
+    // reach the output unthrottled, so a slowly draining VM overflowed the remote queue (wrong results at 1-in-8 take).
+    // w_r = reduce words popped by the engine and not yet emitted; every push other than a reduce emit and every reduce
+    // pop (engine red_hold) needs ok2 = (cred - w_r) >= 2 (registered from the next values), so cred - w_r >= 0 always.
+    parameter integer ORC = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -205,12 +222,14 @@ module ot_s81ph_coll_core #(
     wire [4*PW-1:0] rx_rec_f = {rx_rec3, rx_rec2, rx_rec1, {PW{1'b0}}};
     wire [3:1]    sk_flt_v;
     wire          o_v, o_last, o_err; wire [1:0] o_rank; wire [4*FW-1:0] o_d;
+    wire          o_red; wire [FW-1:0] o_rdat; wire [4*FW-1:0] o_gdat;
+    wire          e_rhold, e_rpop;
     reg           o_rdy;
     wire          e_flt; wire [2:0] e_code;
     assign q_pop[0] = e_iv && e_ir;
     ot_w15_rom_oneshot_die_px_acceptedpop #(.FIX_ACCEPTED_POP(1), .N(4), .RANK(0), .LANES(16), .TAGW(TAGW),
         .DEPTH(EDEPTH), .PKG_DIES(2), .RELAY(0), .ADD_LAT(3), .PAIRWISE(1), .GW(4), .OUT_BP(1),
-        .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL)) u_eng (
+        .FIFO_SRAM(SRAM), .SRAM_MACRO(EMACRO), .PULL(EPULL), .PCOPY(EPCOPY), .PSL(EPSL), .LQW(ELQW), .RHOLD(ORC)) u_eng (
         .clk(clk), .rst_n(erst_n),
         .in_valid(e_iv), .in_ready(e_ir), .in_data(q_hd[0][FW-1:0]), .in_last(q_hd[0][W+33]),
         .in_mode(q_hd[0][W+32]), .in_tag(q_hd[0][W +: TAGW]),
@@ -218,6 +237,8 @@ module ot_s81ph_coll_core #(
         .rx_valid(rx_valid), .rx_rec(rx_rec_f), .cr_out(cr_out),
         .rl_tx_valid(), .rl_tx_rec(), .rl_rx_valid(4'd0), .rl_rx_rec({4*PW{1'b0}}),
         .out_valid(o_v), .out_ready(o_rdy), .out_data(o_d), .out_last(o_last), .out_rank(o_rank), .out_err(o_err),
+        .out_red(o_red), .out_rdat(o_rdat), .out_gdat(o_gdat), .red_hold(e_rhold), .out_rpop(e_rpop),
+        .xl_v(8'd0), .xl_d({8*PW{1'b0}}), .xl_cr(),
         .fault(e_flt), .fault_code(e_code));
     assign tx_ready[0] = 1'b1;
     assign cr_in[1:0] = 2'b00;
@@ -294,16 +315,26 @@ module ot_s81ph_coll_core #(
     reg          pk_err;
     reg  [2:0]   pk_n;
     wire         oq_room2, oq_hv; wire [2099:1] oq_hd; wire oq_flt;
-    wire         in_red = o_v && !hmode;
+    // ORX: the registered reduce word
+    reg          r_v, r_last, r_err;
+    reg  [FW-1:0] r_d;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) r_v <= 1'b0; else r_v <= (ORX != 0) && o_red;
+    always @(posedge clk) begin r_d <= o_rdat; r_last <= o_last; r_err <= o_err; end
+    wire         in_red = (ORX != 0) ? (r_v && !hmode) : (o_v && !hmode);
+    wire [FW-1:0] rd_d  = (ORX != 0) ? r_d : o_d[FW-1:0];
+    wire         rd_l   = (ORX != 0) ? r_last : o_last;
+    wire         rd_e   = (ORX != 0) ? r_err : o_err;
     always @(*) o_rdy = hmode && (pk_n == 0) && oq_room2;
-    wire         in_gat = o_v && hmode && o_rdy;
+    wire         in_gat = o_v && ((ORX == 0) || !o_red) && hmode && o_rdy;
     wire         o_take = in_red || in_gat;
     // gather beat in absolute rank order
     reg  [4*FW-1:0] gat_d;
 `ifdef OT_S81PH_MUT_NOREORDER
     always @(*) gat_d = o_d;                               // negative control: no rank relabel of the gather beat
 `else
-    always @(*) for (integer i = 0; i < 4; i = i + 1) gat_d[i*FW +: FW] = o_d[(i ^ rank)*FW +: FW];
+    wire [4*FW-1:0] o_gsrc = (ORX != 0) ? o_gdat : o_d;
+    always @(*) for (integer i = 0; i < 4; i = i + 1) gat_d[i*FW +: FW] = o_gsrc[(i ^ rank)*FW +: FW];
 `endif
     wire         pk_emit = (pk_n != 0) && (pk_n == 4 || !in_red);
     // pass-through receive: round robin over lanes 3..7 when no engine beat is pushed this cycle
@@ -334,7 +365,45 @@ module ot_s81ph_coll_core #(
     wire [3:0]   b_mask = pk_emit ? ((pk_n == 4) ? 4'hF : (pk_n == 3) ? 4'h7 : (pk_n == 2) ? 4'h3 : 4'h1) :
                           in_gat ? 4'hF : 4'h0;
     wire [3:0]   b_last = pk_emit ? pk_l : in_gat ? {o_last, 3'b000} : 4'h0;
-    wire [4*FW-1:0] b_d = pk_emit ? pk_d : in_gat ? gat_d : pt_push ? {{(4*FW-W){1'b0}}, ep_od[3 + pt_l]} : {4*FW{1'b0}};
+    wire [4*FW-1:0] b_d;
+    wire [2:0]   pk_n_nx = in_red ? (pk_emit ? 3'd1 : pk_n + 1'b1) : (pk_emit ? 3'd0 : pk_n);
+    generate if (ORX == 0) begin : g_bd
+        assign b_d = pk_emit ? pk_d : in_gat ? gat_d : pt_push ? {{(4*FW-W){1'b0}}, ep_od[3 + pt_l]} : {4*FW{1'b0}};
+        always @(posedge clk) if (in_red) pk_d[(pk_emit ? 0 : pk_n) * FW +: FW] <= rd_d;
+    end else begin : g_bdx
+        localparam integer KS = 16, SW = 4 * FW / KS;                  // 128-bit slices, 4 per pk_d slot
+        // the pass-through lane the round robin would pick, without its enable (pt_sel = its one-hot when pt_push)
+        reg  [2:0] pt_lx;
+        always @(*) begin
+            pt_lx = 3'd0;
+            for (integer i = 4; i >= 0; i = i - 1) if (ep_ov[3 + ((rr + i) % 5)]) pt_lx = (rr + i) % 5;
+        end
+        wire [4*FW-1:0] ptd = {{(4*FW-W){1'b0}}, ep_od[3 + pt_lx]};
+        wire pt_any = |ep_ov[7:3];
+        for (j = 0; j < KS; j = j + 1) begin : g_k
+            (* keep *) reg rv_k, hm_k;
+            (* keep *) reg [2:0] pkn_k;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin rv_k <= 1'b0; hm_k <= 1'b0; pkn_k <= 3'd0; end
+                else begin
+`ifdef OT_S81PH_MUT_ORX
+                    rv_k <= o_red && (j != 5);                                // negative control: slice 5 misses words
+`else
+                    rv_k <= o_red;
+`endif
+                    hm_k <= o_take ? mq[mq_r1[MQB-1:0]] : mq[mq_r[MQB-1:0]];
+                    pkn_k <= pk_n_nx;
+                end
+            wire ir_s  = rv_k && !hm_k;
+            wire pke_s = (pkn_k != 0) && (pkn_k == 4 || !ir_s);
+            wire ing_s = o_v && !o_red && hm_k && (pkn_k == 0) && oq_room2;
+            wire ptp_s = !pke_s && !ing_s && oq_room2 && pt_any;
+            assign b_d[j*SW +: SW] = pke_s ? pk_d[j*SW +: SW] : ing_s ? gat_d[j*SW +: SW] : ptp_s ? ptd[j*SW +: SW]
+                                                                                            : {SW{1'b0}};
+            always @(posedge clk) if (ir_s && (pke_s ? (j / 4) == 0 : pkn_k == (j / 4)))
+                pk_d[j*SW +: SW] <= r_d[(j % 4)*SW +: SW];
+        end
+    end endgenerate
     wire [23:0]  b_cr = {qf[5], qf[4], qf[3], qf[2], qf[1], qf[0]};
     // header [51:1] (bit 0 = valid at the pin)
     wire [2099:1] b_word = {b_d, rank, fv_flt, fault, b_cr, pk_emit ? pk_err : 1'b0, in_gat && !pk_emit,
@@ -356,15 +425,36 @@ module ot_s81ph_coll_core #(
                 bw_v <= oq_push;
             end
         always @(posedge clk) bw_d <= b_word;
-        assign oq_room2 = cred >= 8'sd2;
+        if (ORC != 0) begin : g_orc
+            reg [7:0] w_r; reg ok2;
+            wire [7:0] w_nx = w_r + (e_rpop ? 8'd1 : 8'd0) - (pk_emit ? {5'd0, pk_n} : 8'd0);
+            wire signed [8:0] c_nx = cred - (oq_push ? 9'sd1 : 9'sd0) + (bw_cr ? 9'sd1 : 9'sd0);
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin w_r <= 8'd0; ok2 <= 1'b1; end
+                else begin
+                    w_r <= w_nx;
+`ifdef OT_S81PH_MUT_ORC
+                    ok2 <= c_nx >= 9'sd2;                                   // negative control: no reservation
+`else
+                    ok2 <= (c_nx - $signed({1'b0, w_nx})) >= 9'sd2;
+`endif
+                end
+            assign oq_room2 = ok2;
+            assign e_rhold = !ok2;
+        end else begin : g_norc
+            assign oq_room2 = cred >= 8'sd2;
+            assign e_rhold = 1'b0;
+        end
         assign oq_hv = 1'b0;
         assign oq_hd = {2099{1'b0}};
         assign oq_flt = bw_flt;
     end else if (OQPIPE == 0) begin : g_oq0
+        assign e_rhold = 1'b0;
         always @(*) begin bw_v = 1'b0; bw_d = {2099{1'b0}}; end
         ot_s81ph_rfifo #(.W(2099), .D(4)) u_oq (.clk(clk), .rst_n(rst_n), .push(oq_push), .wd(b_word),
             .pop(oq_hv && ts[0]), .hv(oq_hv), .hd(oq_hd), .room(), .room2(oq_room2), .fault(oq_flt));
     end else begin : g_oqp
+        assign e_rhold = 1'b0;
         always @(*) begin bw_v = 1'b0; bw_d = {2099{1'b0}}; end
         localparam integer OSW = 256, ONS = (2099 + OSW - 1) / OSW;     // 9 queue slices (the last one 51 b)
         reg  [2099:1]  wq;                                              // registered packer word
@@ -413,14 +503,13 @@ module ot_s81ph_coll_core #(
             if (o_take) begin mq_r <= mq_r + 1'b1; mq_r1 <= mq_r1 + 1'b1; end
             hm <= o_take ? mq[mq_r1[MQB-1:0]] : mq[mq_r[MQB-1:0]];
             mq_ok <= (mq_occ + (e_fire ? 1'b1 : 1'b0) - (o_take ? 1'b1 : 1'b0)) <= MQD - 2;
-            if (o_v && mq_w == mq_r) mq_flt <= 1'b1;
+            if (((ORX != 0) ? (r_v || (o_v && !o_red)) : o_v) && mq_w == mq_r) mq_flt <= 1'b1;
             if (e_fire && mq_occ == MQD) mq_flt <= 1'b1;
             // packer
             if (pk_emit) begin pk_n <= 0; pk_l <= 0; pk_err <= 1'b0; end
             if (in_red) begin
-                pk_d[(pk_emit ? 0 : pk_n) * FW +: FW] <= o_d[FW-1:0];
-                if (pk_emit) begin pk_n <= 1; pk_l <= {3'b000, o_last}; pk_err <= o_err; end
-                else begin pk_n <= pk_n + 1'b1; pk_l[pk_n] <= o_last; pk_err <= pk_err | o_err; end
+                if (pk_emit) begin pk_n <= 1; pk_l <= {3'b000, rd_l}; pk_err <= rd_e; end
+                else begin pk_n <= pk_n + 1'b1; pk_l[pk_n] <= rd_l; pk_err <= pk_err | rd_e; end
             end
             if (pt_push) rr <= (pt_l == 4) ? 0 : pt_l + 1'b1;
             for (integer i = 0; i < 6; i = i + 1)

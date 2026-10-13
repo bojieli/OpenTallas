@@ -36,7 +36,14 @@ module ot_hgi_dma_record #(
     parameter integer MUT_EARLY = 0,      // mutant: retire on issue
     parameter integer LEGACY = 1,
     parameter integer POSTED = 1,
-    parameter integer MUT_FENCE = 0
+    parameter integer MUT_FENCE = 0,
+    parameter integer B2 = 0,             // el1011-hbm-b2 (2026-10-12): 1 = the DMA unit of B2 cluster QID (one a stack).  The B2
+                                          //   dispatcher sends a record to onehot(stack of its HBM-side descriptor (A if A is HBM,
+                                          //   else O)) or, STRIPE4 (base[39:37] = 1) / the indexed stream form, to all four; this
+                                          //   unit faults (fail-closed, before any move) on any other record whose HBM side sits on
+                                          //   a stack != QID.  The engines serve only stack QID (ot_hgi_dma_engines B2 / QID).
+    parameter integer QID = 0,
+    parameter integer SBIT = 35           // stack = HBM byte address [SBIT+1:SBIT] (B2 only)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -111,7 +118,11 @@ module ot_hgi_dma_record #(
     wire str        = (op == 6'd0) && a_q[6] && a_q[206:201] == 6'd63;     // the indexed stream form
     wire str_ok     = opnd[6] && as == 2'd0 && na_q <= {1'b0, om} && na_q != 21'd0;
     wire kv_ok      = (om != 20'd0) && ((om & (om - 20'd1)) == 20'd0) && (na_q == no_q) && (a_q[87:68] == 20'd1);
-    wire bad = (hdr_q[127:124] != 4'd8) || (op > 6'd3) ||
+    // B2: the HBM-side descriptor's stack / stripe code (HBM byte base = d[47:8])
+    wire [255:0] hsd = (as == 2'd0) ? a_q : o_q;
+    wire hs_v = (as == 2'd0) || (os == 2'd0);
+    wire b2_bad = (B2 != 0) && (op != 6'd2) && hs_v && hsd[47:45] != 3'd1 && !str && hsd[8 + SBIT +: 2] != 2'(QID);
+    wire bad = b2_bad || (hdr_q[127:124] != 4'd8) || (op > 6'd3) ||
                (op == 6'd0 && !(opnd[0] && opnd[4] && a_ok_load && o_ok_load && (str ? str_ok : shape_ok))) ||
                (op == 6'd1 && !(opnd[0] && opnd[4] && a_ok_store && o_ok_store && shape_ok)) ||
                (op == 6'd3 && !(opnd[0] && opnd[4] && a_ok_store && o_ok_store && kv_ok));

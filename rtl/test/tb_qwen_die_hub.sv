@@ -20,6 +20,7 @@ module tb_qwen_die_hub;
         .x3_tag(x3_tag), .x3_cr(x3_cr), .ar_v(ar_v), .ar_d(ar_d), .ar_cr(ar_cr), .fault(fault));
     function [3:0] g2b(input [3:0] g); g2b = {g[3], g[3]^g[2], g[3]^g[2]^g[1], g[3]^g[2]^g[1]^g[0]}; endfunction
     reg go = 0; integer bad = 0, seed = 9;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 9; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     // ---- remotes ----
     reg [511:0] lsent [0:NL-1][0:N-1]; integer lns [0:NL-1]; integer lnr [0:NL-1];   // link -> hub words
     reg [509:0] xsent [0:NL-1][0:4*N-1]; integer xns [0:NL-1]; integer xnr [0:NL-1]; // x3 -> link words

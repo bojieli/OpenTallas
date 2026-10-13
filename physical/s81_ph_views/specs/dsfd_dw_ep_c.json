@@ -1,0 +1,63 @@
+{
+ "master": "dsfd_dw_ep_c",
+ "w_um": 64.8,
+ "h_um": 64.8,
+ "domain": "stream_1p2",
+ "note": "N = vd snoop, S = engine die nets + clock / reset, M5, pitch 2 tracks",
+ "ports": [
+  [
+   "vh",
+   26,
+   "input",
+   "N",
+   "M5",
+   2,
+   0.5
+  ],
+  [
+   "c_cmd",
+   85,
+   "input",
+   "S",
+   "M5",
+   2,
+   0.3
+  ],
+  [
+   "c_done",
+   9,
+   "output",
+   "S",
+   "M5",
+   2,
+   0.66
+  ],
+  [
+   "c_st",
+   2,
+   "output",
+   "S",
+   "M5",
+   2,
+   0.74
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.82
+  ],
+  [
+   "rst",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.86
+  ]
+ ]
+}

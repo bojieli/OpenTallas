@@ -37,6 +37,9 @@
 // valid (lockstep check) and raises fault on a mismatch.
 // Every block input lands in a flop at the pin, every output leaves a station flop (no logic between pin and flop).
 // MUT = 1 (band): level 9 pairs (0,2)(1,3) instead of (0,1)(2,3); MUT = 2 (upper): level 11 pairs (b0,b3)(b1,b4)(b2,b5).
+// MUT = 3 (upper): band words taken in reverse band order (band-index mutant; MUT 2 is a no-op at NB = 3).
+// TP8 (results/arch/qwen_tp8_1012): ot_qfd_band_upper NB = 3, LG = 12 (GT 3,072): level 11 = 1 adder (b0+b1), b2 held,
+// level 12 no adders (GT >> 12 = 0 groups); a parameter setting, TP4 (NB 6, LG 13) unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 
 // NLV tree levels over GI positions of one lane (ot_qwen_me_sptree_w12 g_lvl with HOLD_TO = GI): level j (1..NLV)
@@ -45,7 +48,9 @@ module ot_qfd_bt_levels #(
     parameter integer GI = 8,
     parameter integer NLV = 3,
     parameter integer TREE_LAT = 7,
-    parameter integer MUTLV = 0          // > 0: level MUTLV pairs (p, p + R0) instead of (2p, 2p+1) (negative mutant)
+    parameter integer MUTLV = 0,         // > 0: level MUTLV pairs (p, p + R0) instead of (2p, 2p+1) (negative mutant)
+    parameter integer RDMEM = 0,         // el1011-q-seq: u_hold in SRAM (rdelay MEM)
+    parameter integer BANR = 0           // el1011-q-seq: level adders with valid-only resets (tadd ANR, bit-identical)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -65,7 +70,7 @@ module ot_qfd_bt_levels #(
         reg  [GI*32-1:0] lq;
         wire [GI*32-1:0] held;
         wire [(R0 > 0 ? R0 : 1)-1:0] pfj;
-        ot_qwen_me_rdelay_w12 #(.W(GI*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n),
+        ot_qwen_me_rdelay_w12 #(.W(GI*32), .D(TA), .MEM(RDMEM)) u_hold (.clk(clk), .rst_n(rst_n),
             .d(lvf[(j-1)*GI*32 +: GI*32]), .q(held));
         if (R0 == 0) begin : g_nopf
             assign pfj = 1'b0;
@@ -74,7 +79,7 @@ module ot_qfd_bt_levels #(
             localparam integer IA = (MUTLV == j) ? p : 2 * p;
             localparam integer IB = (MUTLV == j) ? p + R0 : 2 * p + 1;
             wire [31:0] s_out;
-            ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_n, tv_r[j-1],
+            ot_qwen_w12_tadd #(.LAT(TREE_LAT), .ANR(BANR)) u_add (clk, rst_n, tv_r[j-1],
                 lvf[(j-1)*GI*32 + 32*IA +: 32], lvf[(j-1)*GI*32 + 32*IB +: 32], s_out, pfj[p]);
             always @(posedge clk) lq[32*p +: 32] <= sel_r[j-1] ? s_out : held[32*p +: 32];
         end
@@ -96,7 +101,9 @@ module ot_qfd_band_lanes #(
     // qwen-band-integrate: the tree geometry (default = the Qwen die: GT 6,144, TCUT 7, LG 13).  The band holds levels
     // TCUT+1..TCUT+3, the tree top TCUT+4..TCUT+5; GT = 48 << TCUT, LG = TCUT + 6 (a reduced bench uses TCUT 3).
     parameter integer TCUT = 7,
-    parameter integer LG = TCUT + 6
+    parameter integer LG = TCUT + 6,
+    parameter integer RDMEM = 0,         // el1011-q-seq: u_hold / u_wait delay lines in SRAM (rdelay MEM)
+    parameter integer BANR = 0           // el1011-q-seq: level adders with valid-only resets (tadd ANR)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -138,7 +145,7 @@ module ot_qfd_band_lanes #(
             assign li[32*k +: 32] = tin_q[32*(k*NL + l) +: 32];
             assign l10[32*(k*NL + l) +: 32] = lo[32*k +: 32];
         end
-        ot_qfd_bt_levels #(.GI(8), .NLV(3), .TREE_LAT(TREE_LAT), .MUTLV(MUT == 1 ? 2 : 0)) u_lv (
+        ot_qfd_bt_levels #(.GI(8), .NLV(3), .TREE_LAT(TREE_LAT), .MUTLV(MUT == 1 ? 2 : 0), .RDMEM(RDMEM), .BANR(BANR)) u_lv (
             .clk(clk), .rst_n(rst_n), .l0(li), .sel_r(sel_r), .tv_r(tv_r), .lo(lo), .pf(lpf[l]));
     end endgenerate
     // -- band word: level 10 position 0 + the op's level-11 valid, through the pin station --------------------------
@@ -149,7 +156,7 @@ module ot_qfd_band_lanes #(
     assign pw = pw_s; assign pw_v = pw_vs;
     // -- the band's own words wait for the round trip (the lane's level-11/12 holds + 4 + 2 LNK) ---------------------
     wire [8*NL*32-1:0] lw;
-    ot_qwen_me_rdelay_w12 #(.W(8*NL*32), .D(DU)) u_wait (.clk(clk), .rst_n(rst_n), .d(l10), .q(lw));
+    ot_qwen_me_rdelay_w12 #(.W(8*NL*32), .D(DU), .MEM(RDMEM)) u_wait (.clk(clk), .rst_n(rst_n), .d(l10), .q(lw));
     wire vexp;          // the op's level-11 valid, aligned with tt_v_q (lockstep check)
     ot_hdc_delay #(.W(1), .D(DU), .RESET(1)) u_vexp (.clk(clk), .rst_n(rst_n), .d(tv11_r), .q(vexp));
     // -- result slots: band 0 slots 0..2 take the tree top's words at split >= 11 ----------------------------------
@@ -217,7 +224,8 @@ module ot_qfd_band_upper #(
         always @(posedge clk) sl <= sel_d;
         always @(posedge clk or negedge rst_n) if (!rst_n) tl <= 2'b00; else tl <= tv_d;
         for (b = 0; b < NB; b = b + 1) begin : g_b
-            assign li[32*b +: 32] = pw_q[32*(b*NL + l) +: 32];
+            // MUT = 3 (band-index mutant, TP8 qwen_tp8_1012): band b's slot reads band NB-1-b's word
+            assign li[32*b +: 32] = pw_q[32*(((MUT == 3) ? (NB - 1 - b) : b)*NL + l) +: 32];
         end
         for (b = 0; b < 3; b = b + 1) begin : g_o
             assign y[32*(b*NL + l) +: 32] = lo[32*b +: 32];

@@ -34,6 +34,9 @@ module ot_qwen_rom_core_ctrl_x_bi #(
     parameter integer ICUT = 0,       // qwen-1010/a: registered readiness (ctrl_icut)
     parameter integer PRL = 1,        // qwen-1010/a: program read latency (ctrl_prl)
     parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)
+                                     // 2 (hardcore-1010 fe-h): two head words written in turn while fewer than 2 are held
+                                     // (fill enable from registers only: fq_n, hc), decode reads hq / hq1 by a registered
+                                     // pointer.  Same words, same edges as FQ_HEAD 1 (lockstep bench)
     parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
     parameter integer W    = 16,
     parameter integer G    = 4,
@@ -84,6 +87,8 @@ module ot_qwen_rom_core_ctrl_x_bi #(
     // engine instruction reaches NEXT, before its go, so issue timing is
     // unchanged.  0 keeps the engine clock free-running.
     parameter integer ME_IDLE_GATE = 0,
+    parameter integer PCUT = 0,       // el1011-q-seq: exact path cuts (ctrl_pcut)
+    parameter integer OLAG = 0,       // el1011-q-seq: lagged other-unit counter (ctrl_olag)
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0, // element address of embedding row 0 in the program
     parameter integer SMIN = 0,
@@ -474,7 +479,11 @@ localparam integer W_ME_AMC = 1;
     reg        pend2;                     // PRL 2: ... the cycle after
     reg  [INSTR_BITS-1:0] hq;            // FQ_HEAD: registered head word
     reg                   hq_v;
-    wire [INSTR_BITS-1:0] ir = (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
+    reg  [INSTR_BITS-1:0] hq1;           // FQ_HEAD 2: second head word
+    reg                   h_rd, h_wr;    // FQ_HEAD 2: head read / write pointers
+    reg  [1:0]            hc;            // FQ_HEAD 2: head words held
+    wire                  hv = (FQ_HEAD >= 2) ? (hc != 2'd0) : hq_v;
+    wire [INSTR_BITS-1:0] ir = (FQ_HEAD >= 2) ? (h_rd ? hq1 : hq) : (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
     reg        nx_v;                      // NEXT holds a decoded instruction
     wire       me_go, su_go;
     wire       me_ready, me_idle, su_ready, su_idle;
@@ -487,8 +496,24 @@ localparam integer W_ME_AMC = 1;
     ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_dyn_tiles_zero (
         .pos(pos_r),.split_log2(4'd0),.rounds(dyn_tiles_zero),.invalid_split());
     ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_dyn_tiles_split (
-        .pos(pos_r),.split_log2(`F(ME_SPLIT)),.rounds(dyn_tiles_split),
-        .invalid_split(dyn_tiles_invalid));
+        .pos(pos_r),.split_log2(`F(ME_SPLIT)),.rounds(dyn_tiles_split_c),
+        .invalid_split(dyn_tiles_invalid_c));
+    wire [NW-1:0] dyn_tiles_split_c; wire dyn_tiles_invalid_c;
+    generate if (PCUT != 0) begin : g_dtab
+        wire [16*NW-1:0] dts; wire [15:0] dti;
+        genvar ds;
+        for (ds = 0; ds < 16; ds = ds + 1) begin : g_ds
+            wire [NW-1:0] r_w; wire i_w; reg [NW-1:0] r_q; reg i_q;
+            ot_hdc_dyn_ttiles #(.W(W),.G(G),.NW(NW)) u_t (.pos(pos_r),.split_log2(4'(ds)),.rounds(r_w),.invalid_split(i_w));
+            always @(posedge clk) if (st == S_DYN) begin r_q <= r_w; i_q <= i_w; end
+            assign dts[ds*NW +: NW] = r_q; assign dti[ds] = i_q;
+        end
+        wire [3:0] dsel = 4'(`F(ME_SPLIT)) + ((PCUT == 4) ? 4'd1 : 4'd0);
+        assign dyn_tiles_split = dts[dsel*NW +: NW];
+        assign dyn_tiles_invalid = dti[dsel];
+    end else begin : g_dcomb
+        assign dyn_tiles_split = dyn_tiles_split_c; assign dyn_tiles_invalid = dyn_tiles_invalid_c;
+    end endgenerate
     wire dyn_tiles_bad_instruction = load && `F(ME_D_TILES) == 3'd6 && dyn_tiles_invalid;
 
     // decoded, DYN-adjusted fields
@@ -546,7 +571,7 @@ localparam integer W_ME_AMC = 1;
     wire o_drained = osync && x_oidle;
     wire x_drained = own_idle && o_drained && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
     wire [15:0] x_och = (OWN == 1) ? (d_chase_rows ? x_orows : x_oprog) : x_oprog;
-    wire chased = osync && (x_och >= d_chase_n);
+    wire chased = osync && ((PCUT != 0) ? uge16(x_och, d_chase_n) : (x_och >= d_chase_n));
     wire wait_o = (OWN == 1) ? d_wait_su : d_wait_me;
     wire wait_u = (OWN == 1) ? d_wait_me : d_wait_su;
     wire xdep_ok = (XMUT == 1 && OWN == 1) ? 1'b1 :
@@ -568,24 +593,55 @@ localparam integer W_ME_AMC = 1;
         else if (start && st == S_IDLE) fin_seen <= 1'b0;
         else if (fin) fin_seen <= 1'b1;
     assign o_fin = fin_seen;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) o_cnt <= {XW{1'b0}};
-        else if (skip) o_cnt <= o_cnt + 1'b1;
     reg [XW-1:0] o_cnt1;                       // o_cnt + 1, kept in step
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};
-        else if (skip) o_cnt1 <= o_cnt1 + 1'b1;
+    reg ol_sq; reg [XW-1:0] ol_c0, ol_c1, ol_c2;   // OLAG: registered skip, count + 0 / 1 / 2
+    generate if (OLAG != 0) begin : g_olag
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin ol_sq <= 1'b0; ol_c0 <= {XW{1'b0}}; ol_c1 <= XW'(1); ol_c2 <= XW'(2); end
+            else begin ol_sq <= skip; if (ol_sq) begin ol_c0 <= ol_c0 + 1'b1; ol_c1 <= ol_c1 + 1'b1; ol_c2 <= ol_c2 + 1'b1; end end
+        always @(*) begin o_cnt = ol_sq ? ol_c1 : ol_c0; o_cnt1 = ol_sq ? ol_c2 : ol_c1; end
+    end else begin : g_ocnt
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) o_cnt <= {XW{1'b0}};
+            else if (skip) o_cnt <= o_cnt + 1'b1;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) o_cnt1 <= {{(XW-1){1'b0}}, 1'b1};
+            else if (skip) o_cnt1 <= o_cnt1 + 1'b1;
+    end endgenerate
     wire [XW-1:0] o_dif0 = x_oacc - o_cnt, o_dif1 = x_oacc - o_cnt1;
-    wire o_eq0 = (o_dif0 == {XW{1'b0}}), o_eq1 = (o_dif1 == {XW{1'b0}});
-    wire o_pa0 = !o_eq0 && !o_dif0[XW-1], o_pa1 = !o_eq1 && !o_dif1[XW-1];
+    wire o_eq0, o_eq1, o_pa0, o_pa1;
+    generate if (OLAG != 0) begin : g_oleq
+        wire e0 = (x_oacc == ol_c0), e1 = (x_oacc == ol_c1), e2 = (x_oacc == ol_c2);
+        wire [XW-1:0] d0 = x_oacc - ol_c0, d1 = x_oacc - ol_c1, d2 = x_oacc - ol_c2;
+        wire p0 = !e0 && !d0[XW-1], p1 = !e1 && !d1[XW-1], p2 = !e2 && !d2[XW-1];
+        assign o_eq0 = (OLAG == 2 || PCUT == 2) ? (ol_sq ? e0 : e1) : (ol_sq ? e1 : e0);   // PCUT 2 / OLAG 2: negative controls
+        assign o_eq1 = ol_sq ? e2 : e1;
+        assign o_pa0 = ol_sq ? p1 : p0; assign o_pa1 = ol_sq ? p2 : p1;
+    end else begin : g_oeq
+        assign o_eq0 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt1 : o_cnt)) : (o_dif0 == {XW{1'b0}});
+        assign o_eq1 = (PCUT != 0) ? (x_oacc == ((PCUT == 2) ? o_cnt : o_cnt1)) : (o_dif1 == {XW{1'b0}});
+        assign o_pa0 = !o_eq0 && !o_dif0[XW-1]; assign o_pa1 = !o_eq1 && !o_dif1[XW-1];
+    end endgenerate
+    // PCUT: unsigned a >= b as a log-depth prefix tree (no carry chain); PCUT 3 = strict > (negative control)
+    function automatic uge16(input [15:0] a, input [15:0] b);
+        reg [15:0] g, e; integer k, sp;
+        begin
+            g = a & ~b; e = ~(a ^ b);
+            for (sp = 1; sp < 16; sp = sp * 2)
+                for (k = 15; k >= 0; k = k - 1)
+                    if ((k % (2 * sp)) == (2 * sp - 1)) begin g[k] = g[k] | (e[k] & g[k - sp]); e[k] = e[k] & e[k - sp]; end
+            uge16 = g[15] | ((PCUT == 3) ? 1'b0 : e[15]);
+        end
+    endfunction
     wire [XW-1:0] o_dif_n = x_oacc - (o_cnt + {{(XW-1){1'b0}}, skip});
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin osync_r <= 1'b1; opast_r <= 1'b0; end
         else begin osync_r <= skip ? o_eq1 : o_eq0; opast_r <= skip ? o_pa1 : o_pa0; end
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
-    wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hq_v : (fq_n != 0)) && (!nx_v || issue || skip);
+    wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hv : (fq_n != 0)) && (!nx_v || issue || skip);
     // FQ_HEAD: the FIFO pops into hq when hq is empty or being loaded into NEXT
-    wire hq_fill = (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
+    wire hq_fill = (FQ_HEAD >= 2) ? ((st == S_RUN) && (fq_n != 0) && (hc != ((FQ_HEAD == 3) ? 2'd3 : 2'd2))) :
+                  (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
     wire fq_pop = (FQ_HEAD != 0) ? hq_fill : load;
     wire push = (st == S_RUN) && ((PRL > 1) ? pend2 : pend1);
     // ICUT: the readiness of the op at NEXT after this edge, against the status predicted after this edge
@@ -598,7 +654,8 @@ localparam integer W_ME_AMC = 1;
     function automatic rdy_x(input [1:0] u, input bar, input ch, input chr, input [15:0] chn, input wme, input wsu);
         reg chd, wo, wu, xd;
         begin
-            chd = osync_n && ((OWN == 1 && chr) ? (x_orows >= chn) : (x_oprog >= chn));
+            chd = osync_n && ((OWN == 1 && chr) ? ((PCUT != 0) ? uge16(x_orows, chn) : (x_orows >= chn))
+                                                : ((PCUT != 0) ? uge16(x_oprog, chn) : (x_oprog >= chn)));
             wo = (OWN == 1) ? wsu : wme;
             wu = (OWN == 1) ? wme : wsu;
             xd = (XMUT == 1 && OWN == 1) ? 1'b1 :
@@ -633,7 +690,7 @@ localparam integer W_ME_AMC = 1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; pc <= 0; fpc <= 0; done <= 1'b0; prog_re <= 1'b0; pend1 <= 1'b0; pend2 <= 1'b0;
-            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0;
+            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0; hc <= 2'd0; h_rd <= 1'b0; h_wr <= 1'b0;
             cycles <= 0; next_token <= 0;
         end else begin
             if (st != S_IDLE) cycles <= cycles + 1;
@@ -644,18 +701,25 @@ localparam integer W_ME_AMC = 1;
                 S_IDLE: if (start) begin
                     tok_r <= token; pos_r <= pos; pc <= 0; fpc <= 0; done <= 1'b0; cycles <= 0;
                     fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; pend1 <= 1'b0; pend2 <= 1'b0; hq_v <= 1'b0;
+                    hc <= 2'd0; h_rd <= 1'b0; h_wr <= 1'b0;
                     st <= S_DYN;
                 end
                 S_DYN: st <= S_RUN;
                 S_RUN: begin
                     // fetch: one word a cycle while fewer than NFQ are held or in flight
-                    if ({1'b0, fq_n} + ((FQ_HEAD != 0) ? hq_v : 1'b0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+                    if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
                         prog_re <= 1'b1; prog_addr <= fpc; fpc <= fpc + 1'b1;
                     end
                     if (push) begin fq[fq_wr] <= prog_q; fq_wr <= fq_wr + 1'b1; end
                     if (fq_pop) fq_rd <= fq_rd + 1'b1;
                     fq_n <= fq_n + (push ? 3'd1 : 3'd0) - (fq_pop ? 3'd1 : 3'd0);
-                    if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end
+                    if (FQ_HEAD >= 2) begin
+                        if (hq_fill && !h_wr) hq <= fq[fq_rd];
+                        if (hq_fill && h_wr) hq1 <= fq[fq_rd];
+                        if (hq_fill) h_wr <= !h_wr;
+                        if (load) h_rd <= !h_rd;
+                        hc <= hc + (hq_fill ? 2'd1 : 2'd0) - (load ? 2'd1 : 2'd0);
+                    end else if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end
                     else if (load && FQ_HEAD != 0) hq_v <= 1'b0;
                     if (issue || skip) pc <= pc + 1'b1;
                     if (load) nx_v <= 1'b1;
@@ -970,14 +1034,35 @@ endmodule
 `timescale 1ns/1ps
 // GENERATED by tools/redesign_qwen/split_ctrl.py emit_seq_su(): die master qfd_seq_su (option 4 SU side).
 module ot_qfd_seq_su_bi #(
+    parameter integer RRG = 0,   // el1011-q-seq: replicated tile reset (rst_regions); 0 = one u_rs copy
+    parameter integer PCUT = 0,  // el1011-q-seq: exact controller path cuts (ctrl_pcut)
+    parameter integer OLAG = 0,  // el1011-q-seq: lagged other-unit counter (ctrl_olag)
     parameter integer W = 16, parameter integer G = 6144, parameter integer AW = 24, parameter integer NW = 18,
     parameter integer PAW = 12, parameter integer SW = 64, parameter integer LV = 7, parameter integer D = 4,
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
-    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4
+    parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,
+    parameter integer RLY = 0, parameter integer CRED = 0,
+    // PSRAM = 1 (hardcore-1010 D fallback, 2026-10-10; 0 = unchanged): the 64 x 1,024 program store is two
+    // ot_sram_1r1w_64x512_m1_r2c2 macros (64 x 512, bit-masked 64-bit writes) instead of 65,536 flops; the read is
+    // issued at the prog_re edge with the unregistered address (12-bit add -> macro address pins), the macro output is
+    // captured in prog_q one edge later = the PRL 2 timing of the flop store (0 cycles).  Contract: the store is
+    // written only while no program read of the same word is in flight (boot load; read-before-write macro).
+    // PMUT = 1: bench negative control (the read issued one edge late, with the registered address).
+    parameter integer PSRAM = 0, parameter integer PMUT = 0,
+    // HQ2 = 1 (hardcore-1010 fe-h): the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2):
+    // fba-0ef4d7781 TT -131 / fbb post-CTS -537 on u_ctrl.st -> skip/issue -> load -> hq_fill -> hq[1023:0] enable (26 lv)
+    // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word)
+    parameter integer HQ2 = 0
 ) (
     input  wire clk,
     input  wire rst_n,
     input  wire [1-1:0] h_start,
+    input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs
+    input  wire [1-1:0] cb_st_rdy,        // constant buffer: stage cb_st_rdy_stage resident
+    input  wire [5:0] cb_st_rdy_stage,
+    output wire [5:0] cb_stage,           // to every constant-buffer group: the stage the SU runs
+    output wire [1-1:0] cb_tok_start,
+    output wire [NW-1:0] cb_tpos,
     input  wire [NW-1:0] tp_token,
     input  wire [NW-1:0] tp_pos,
     input  wire [1-1:0] kv_write_drained,
@@ -1069,198 +1154,250 @@ module ot_qfd_seq_su_bi #(
     output wire [24-1:0] su_acc_o,
     output wire [1-1:0] su_idle_o,
     output wire [16-1:0] su_prog_o,
-    output wire [16-1:0] su_rows_o
+    output wire [16-1:0] su_rows_o,
+    output wire [1-1:0] kvd_v,
+    output wire [AW-1:0] kvd_wbase,
+    output wire [AW-1:0] kvd_ts,
+    output wire [AW-1:0] kvd_ks,
+    output wire [AW-1:0] kvd_js,
+    output wire [AW-1:0] kvd_wcs,
+    output wire [4-1:0] kvd_split,
+    output wire [3-1:0] kvd_jsh,
+    output wire [NW-1:0] kvd_tiles,
+    output wire [NW-1:0] kvd_k,
+    output wire [NW-1:0] kvd_nout,
+    output wire [1-1:0] kvd_kindk,
+    output wire [NW-1:0] kvd_pos
 );
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
+    (* keep = "true" *) wire [8-1:0] rsv;   // RRG: one reset copy per region (el1011-q-seq)
+    generate if (RRG != 0 && IS > 0) begin : g_rrg
+        genvar rk;
+        for (rk = 0; rk < 8; rk = rk + 1) begin : g_r
+            (* keep = "true", dont_touch = "true" *) reg [IS-1:0] r;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) r <= {IS{1'b0}};
+                else r <= {r, 1'b1};
+            assign rsv[rk] = (RRG == 2 && rk == 0) ? 1'b0 : r[IS-1];   // RRG 2: negative control (u_seq copy held); RRG 3: vm_wdata bit flip only
+        end
+    end else begin : g_rr0
+        assign rsv = {8{rs}};
+    end endgenerate
     wire [1-1:0] q_h_start;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_h_start (.clk(clk), .rst_n(rs), .d(h_start), .q(q_h_start));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_h_start (.clk(clk), .rst_n(rsv[5]), .d(h_start), .q(q_h_start));
     wire [NW-1:0] q_tp_token;
-    ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_token (.clk(clk), .rst_n(rs), .d(tp_token), .q(q_tp_token));
+    ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_token (.clk(clk), .rst_n(rsv[5]), .d(tp_token), .q(q_tp_token));
     wire [NW-1:0] q_tp_pos;
-    ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_pos (.clk(clk), .rst_n(rs), .d(tp_pos), .q(q_tp_pos));
+    ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_pos (.clk(clk), .rst_n(rsv[5]), .d(tp_pos), .q(q_tp_pos));
     wire [1-1:0] q_kv_write_drained;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_kv_write_drained (.clk(clk), .rst_n(rs), .d(kv_write_drained), .q(q_kv_write_drained));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_kv_write_drained (.clk(clk), .rst_n(rsv[5]), .d(kv_write_drained), .q(q_kv_write_drained));
     wire [512-1:0] q_vm_rq;
-    ot_hdc_delay #(.W(512), .D(IS)) u_i_vm_rq (.clk(clk), .rst_n(rs), .d(vm_rq), .q(q_vm_rq));
+    ot_hdc_delay #(.W(512), .D(IS)) u_i_vm_rq (.clk(clk), .rst_n(rsv[5]), .d(vm_rq), .q(q_vm_rq));
     wire [1-1:0] q_c_ready;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_c_ready (.clk(clk), .rst_n(rs), .d(c_ready), .q(q_c_ready));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_c_ready (.clk(clk), .rst_n(rsv[5]), .d(c_ready), .q(q_c_ready));
     wire [1-1:0] q_r_valid;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_valid (.clk(clk), .rst_n(rs), .d(r_valid), .q(q_r_valid));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_valid (.clk(clk), .rst_n(rsv[5]), .d(r_valid), .q(q_r_valid));
     wire [512-1:0] q_r_data;
-    ot_hdc_delay #(.W(512), .D(IS)) u_i_r_data (.clk(clk), .rst_n(rs), .d(r_data), .q(q_r_data));
+    ot_hdc_delay #(.W(512), .D(IS)) u_i_r_data (.clk(clk), .rst_n(rsv[5]), .d(r_data), .q(q_r_data));
     wire [1-1:0] q_r_last;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_last (.clk(clk), .rst_n(rs), .d(r_last), .q(q_r_last));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_last (.clk(clk), .rst_n(rsv[5]), .d(r_last), .q(q_r_last));
     wire [2-1:0] q_r_rank;
-    ot_hdc_delay #(.W(2), .D(IS)) u_i_r_rank (.clk(clk), .rst_n(rs), .d(r_rank), .q(q_r_rank));
+    ot_hdc_delay #(.W(2), .D(IS)) u_i_r_rank (.clk(clk), .rst_n(rsv[5]), .d(r_rank), .q(q_r_rank));
     wire [1-1:0] q_r_err;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_err (.clk(clk), .rst_n(rs), .d(r_err), .q(q_r_err));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_err (.clk(clk), .rst_n(rsv[5]), .d(r_err), .q(q_r_err));
     wire [1-1:0] q_pw_v;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pw_v (.clk(clk), .rst_n(rs), .d(pw_v), .q(q_pw_v));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pw_v (.clk(clk), .rst_n(rsv[5]), .d(pw_v), .q(q_pw_v));
     wire [10-1:0] q_pw_addr;
-    ot_hdc_delay #(.W(10), .D(IS)) u_i_pw_addr (.clk(clk), .rst_n(rs), .d(pw_addr), .q(q_pw_addr));
+    ot_hdc_delay #(.W(10), .D(IS)) u_i_pw_addr (.clk(clk), .rst_n(rsv[5]), .d(pw_addr), .q(q_pw_addr));
     wire [64-1:0] q_pw_data;
-    ot_hdc_delay #(.W(64), .D(IS)) u_i_pw_data (.clk(clk), .rst_n(rs), .d(pw_data), .q(q_pw_data));
+    ot_hdc_delay #(.W(64), .D(IS)) u_i_pw_data (.clk(clk), .rst_n(rsv[5]), .d(pw_data), .q(q_pw_data));
     wire [1-1:0] q_dw_v;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_dw_v (.clk(clk), .rst_n(rs), .d(dw_v), .q(q_dw_v));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_dw_v (.clk(clk), .rst_n(rsv[5]), .d(dw_v), .q(q_dw_v));
     wire [3-1:0] q_dw_addr;
-    ot_hdc_delay #(.W(3), .D(IS)) u_i_dw_addr (.clk(clk), .rst_n(rs), .d(dw_addr), .q(q_dw_addr));
+    ot_hdc_delay #(.W(3), .D(IS)) u_i_dw_addr (.clk(clk), .rst_n(rsv[5]), .d(dw_addr), .q(q_dw_addr));
     wire [64-1:0] q_dw_data;
-    ot_hdc_delay #(.W(64), .D(IS)) u_i_dw_data (.clk(clk), .rst_n(rs), .d(dw_data), .q(q_dw_data));
+    ot_hdc_delay #(.W(64), .D(IS)) u_i_dw_data (.clk(clk), .rst_n(rsv[5]), .d(dw_data), .q(q_dw_data));
     wire [1-1:0] q_pi_su_rt_active;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_rt_active (.clk(clk), .rst_n(rs), .d(pi_su_rt_active), .q(q_pi_su_rt_active));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_rt_active (.clk(clk), .rst_n(rsv[3]), .d(pi_su_rt_active), .q(q_pi_su_rt_active));
     wire [8-1:0] q_pi_su_rt_inflight;
-    ot_hdc_delay #(.W(8), .D(IS)) u_i_pi_su_rt_inflight (.clk(clk), .rst_n(rs), .d(pi_su_rt_inflight), .q(q_pi_su_rt_inflight));
+    ot_hdc_delay #(.W(8), .D(IS)) u_i_pi_su_rt_inflight (.clk(clk), .rst_n(rsv[3]), .d(pi_su_rt_inflight), .q(q_pi_su_rt_inflight));
     wire [1-1:0] q_pi_su_ready;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_ready (.clk(clk), .rst_n(rs), .d(pi_su_ready), .q(q_pi_su_ready));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_ready (.clk(clk), .rst_n(rsv[3]), .d(pi_su_ready), .q(q_pi_su_ready));
     wire [1-1:0] q_pi_su_idle;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_idle (.clk(clk), .rst_n(rs), .d(pi_su_idle), .q(q_pi_su_idle));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_idle (.clk(clk), .rst_n(rsv[3]), .d(pi_su_idle), .q(q_pi_su_idle));
     wire [1-1:0] q_pi_su_wrom_re;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_wrom_re (.clk(clk), .rst_n(rs), .d(pi_su_wrom_re), .q(q_pi_su_wrom_re));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_wrom_re (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_re), .q(q_pi_su_wrom_re));
     wire [AW-1:0] q_pi_su_wrom_addr;
-    ot_hdc_delay #(.W(AW), .D(IS)) u_i_pi_su_wrom_addr (.clk(clk), .rst_n(rs), .d(pi_su_wrom_addr), .q(q_pi_su_wrom_addr));
+    ot_hdc_delay #(.W(AW), .D(IS)) u_i_pi_su_wrom_addr (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_addr), .q(q_pi_su_wrom_addr));
     wire [SW-1:0] q_pi_su_kv_we;
-    ot_hdc_delay #(.W(SW), .D(IS)) u_i_pi_su_kv_we (.clk(clk), .rst_n(rs), .d(pi_su_kv_we), .q(q_pi_su_kv_we));
+    ot_hdc_delay #(.W(SW), .D(IS)) u_i_pi_su_kv_we (.clk(clk), .rst_n(rsv[3]), .d(pi_su_kv_we), .q(q_pi_su_kv_we));
     wire [16-1:0] q_pi_su_progress;
-    ot_hdc_delay #(.W(16), .D(IS), .RESET(1)) u_i_pi_su_progress (.clk(clk), .rst_n(rs), .d(pi_su_progress), .q(q_pi_su_progress));
+    ot_hdc_delay #(.W(16), .D(IS), .RESET(1)) u_i_pi_su_progress (.clk(clk), .rst_n(rsv[3]), .d(pi_su_progress), .q(q_pi_su_progress));
     wire [16-1:0] q_pi_su_progress_rows;
-    ot_hdc_delay #(.W(16), .D(IS), .RESET(1)) u_i_pi_su_progress_rows (.clk(clk), .rst_n(rs), .d(pi_su_progress_rows), .q(q_pi_su_progress_rows));
+    ot_hdc_delay #(.W(16), .D(IS), .RESET(1)) u_i_pi_su_progress_rows (.clk(clk), .rst_n(rsv[3]), .d(pi_su_progress_rows), .q(q_pi_su_progress_rows));
     wire [1-1:0] q_pi_su_fault;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_fault (.clk(clk), .rst_n(rs), .d(pi_su_fault), .q(q_pi_su_fault));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_fault (.clk(clk), .rst_n(rsv[3]), .d(pi_su_fault), .q(q_pi_su_fault));
     wire [24-1:0] q_x_oacc;
-    ot_hdc_delay #(.W(24), .D(IS)) u_i_x_oacc (.clk(clk), .rst_n(rs), .d(x_oacc), .q(q_x_oacc));
+    ot_hdc_delay #(.W(24), .D(IS)) u_i_x_oacc (.clk(clk), .rst_n(rsv[4]), .d(x_oacc), .q(q_x_oacc));
     wire [1-1:0] q_x_oidle;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_x_oidle (.clk(clk), .rst_n(rs), .d(x_oidle), .q(q_x_oidle));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_x_oidle (.clk(clk), .rst_n(rsv[4]), .d(x_oidle), .q(q_x_oidle));
     wire [16-1:0] q_x_oprog;
-    ot_hdc_delay #(.W(16), .D(IS)) u_i_x_oprog (.clk(clk), .rst_n(rs), .d(x_oprog), .q(q_x_oprog));
+    ot_hdc_delay #(.W(16), .D(IS)) u_i_x_oprog (.clk(clk), .rst_n(rsv[4]), .d(x_oprog), .q(q_x_oprog));
     wire [1-1:0] q_x_ofin;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_x_ofin (.clk(clk), .rst_n(rs), .d(x_ofin), .q(q_x_ofin));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_x_ofin (.clk(clk), .rst_n(rsv[4]), .d(x_ofin), .q(q_x_ofin));
     wire [NW-1:0] q_x_fidx;
-    ot_hdc_delay #(.W(NW), .D(IS)) u_i_x_fidx (.clk(clk), .rst_n(rs), .d(x_fidx), .q(q_x_fidx));
+    ot_hdc_delay #(.W(NW), .D(IS)) u_i_x_fidx (.clk(clk), .rst_n(rsv[4]), .d(x_fidx), .q(q_x_fidx));
     wire [32-1:0] q_x_fval;
-    ot_hdc_delay #(.W(32), .D(IS)) u_i_x_fval (.clk(clk), .rst_n(rs), .d(x_fval), .q(q_x_fval));
+    ot_hdc_delay #(.W(32), .D(IS)) u_i_x_fval (.clk(clk), .rst_n(rsv[4]), .d(x_fval), .q(q_x_fval));
     wire [24-1:0] q_pi_su_acc;
-    ot_hdc_delay #(.W(24), .D(IS), .RESET(1)) u_i_pi_su_acc (.clk(clk), .rst_n(rs), .d(pi_su_acc), .q(q_pi_su_acc));
+    ot_hdc_delay #(.W(24), .D(IS), .RESET(1)) u_i_pi_su_acc (.clk(clk), .rst_n(rsv[3]), .d(pi_su_acc), .q(q_pi_su_acc));
     wire [1-1:0] b_s_done;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_s_done (.clk(clk), .rst_n(rs), .d(b_s_done), .q(s_done));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_s_done (.clk(clk), .rst_n(rsv[6]), .d(b_s_done), .q(s_done));
     wire [NW-1:0] b_seq_ntok;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_seq_ntok (.clk(clk), .rst_n(rs), .d(b_seq_ntok), .q(seq_ntok));
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_seq_ntok (.clk(clk), .rst_n(rsv[6]), .d(b_seq_ntok), .q(seq_ntok));
     wire [32-1:0] b_seq_nval;
-    ot_hdc_delay #(.W(32), .D(OS)) u_o_seq_nval (.clk(clk), .rst_n(rs), .d(b_seq_nval), .q(seq_nval));
+    ot_hdc_delay #(.W(32), .D(OS)) u_o_seq_nval (.clk(clk), .rst_n(rsv[6]), .d(b_seq_nval), .q(seq_nval));
     wire [1-1:0] b_s_fault;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_s_fault (.clk(clk), .rst_n(rs), .d(b_s_fault), .q(s_fault));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_s_fault (.clk(clk), .rst_n(rsv[6]), .d(b_s_fault), .q(s_fault));
     wire [1-1:0] b_core_fault;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_core_fault (.clk(clk), .rst_n(rs), .d(b_core_fault), .q(core_fault));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_core_fault (.clk(clk), .rst_n(rsv[6]), .d(b_core_fault), .q(core_fault));
     wire [1-1:0] b_coll_busy;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_coll_busy (.clk(clk), .rst_n(rs), .d(b_coll_busy), .q(coll_busy));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_coll_busy (.clk(clk), .rst_n(rsv[6]), .d(b_coll_busy), .q(coll_busy));
     wire [1-1:0] b_kv_write_flush;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kv_write_flush (.clk(clk), .rst_n(rs), .d(b_kv_write_flush), .q(kv_write_flush));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kv_write_flush (.clk(clk), .rst_n(rsv[5]), .d(b_kv_write_flush), .q(kv_write_flush));
     wire [1-1:0] b_vm_re;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_re (.clk(clk), .rst_n(rs), .d(b_vm_re), .q(vm_re));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_re (.clk(clk), .rst_n(rsv[6]), .d(b_vm_re), .q(vm_re));
     wire [8-1:0] b_vm_raddr;
-    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rs), .d(b_vm_raddr), .q(vm_raddr));
+    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_raddr), .q(vm_raddr));
     wire [1-1:0] b_vm_we;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_we (.clk(clk), .rst_n(rs), .d(b_vm_we), .q(vm_we));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_we (.clk(clk), .rst_n(rsv[6]), .d(b_vm_we), .q(vm_we));
     wire [8-1:0] b_vm_waddr;
-    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_waddr (.clk(clk), .rst_n(rs), .d(b_vm_waddr), .q(vm_waddr));
+    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_waddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_waddr), .q(vm_waddr));
     wire [512-1:0] b_vm_wdata;
-    ot_hdc_delay #(.W(512), .D(OS)) u_o_vm_wdata (.clk(clk), .rst_n(rs), .d(b_vm_wdata), .q(vm_wdata));
+    ot_hdc_delay #(.W(512), .D(OS)) u_o_vm_wdata (.clk(clk), .rst_n(rsv[6]), .d(b_vm_wdata), .q(vm_wdata));
     wire [1-1:0] b_c_valid;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_valid (.clk(clk), .rst_n(rs), .d(b_c_valid), .q(c_valid));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_valid (.clk(clk), .rst_n(rsv[6]), .d(b_c_valid), .q(c_valid));
     wire [512-1:0] b_c_data;
-    ot_hdc_delay #(.W(512), .D(OS)) u_o_c_data (.clk(clk), .rst_n(rs), .d(b_c_data), .q(c_data));
+    ot_hdc_delay #(.W(512), .D(OS)) u_o_c_data (.clk(clk), .rst_n(rsv[6]), .d(b_c_data), .q(c_data));
     wire [1-1:0] b_c_last;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_last (.clk(clk), .rst_n(rs), .d(b_c_last), .q(c_last));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_last (.clk(clk), .rst_n(rsv[6]), .d(b_c_last), .q(c_last));
     wire [1-1:0] b_c_mode;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_mode (.clk(clk), .rst_n(rs), .d(b_c_mode), .q(c_mode));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_mode (.clk(clk), .rst_n(rsv[6]), .d(b_c_mode), .q(c_mode));
     wire [32-1:0] b_c_tag;
-    ot_hdc_delay #(.W(32), .D(OS)) u_o_c_tag (.clk(clk), .rst_n(rs), .d(b_c_tag), .q(c_tag));
+    ot_hdc_delay #(.W(32), .D(OS)) u_o_c_tag (.clk(clk), .rst_n(rsv[6]), .d(b_c_tag), .q(c_tag));
     wire [1-1:0] b_rom_fault;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_rom_fault (.clk(clk), .rst_n(rs), .d(b_rom_fault), .q(rom_fault));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_rom_fault (.clk(clk), .rst_n(rsv[6]), .d(b_rom_fault), .q(rom_fault));
     wire [1-1:0] b_su_asrc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_su_asrc (.clk(clk), .rst_n(rs), .d(b_su_asrc), .q(su_asrc));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_su_asrc (.clk(clk), .rst_n(rsv[3]), .d(b_su_asrc), .q(su_asrc));
     wire [NW-1:0] b_su_tok;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_su_tok (.clk(clk), .rst_n(rs), .d(b_su_tok), .q(su_tok));
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_su_tok (.clk(clk), .rst_n(rsv[3]), .d(b_su_tok), .q(su_tok));
     wire [1-1:0] b_po_su_go;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_go (.clk(clk), .rst_n(rs), .d(b_po_su_go), .q(po_su_go));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_go (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_go), .q(po_su_go));
     wire [NW-1:0] b_po_su_i_nout;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_po_su_i_nout (.clk(clk), .rst_n(rs), .d(b_po_su_i_nout), .q(po_su_i_nout));
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_po_su_i_nout (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_nout), .q(po_su_i_nout));
     wire [NW-1:0] b_po_su_i_nin;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_po_su_i_nin (.clk(clk), .rst_n(rs), .d(b_po_su_i_nin), .q(po_su_i_nin));
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_po_su_i_nin (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_nin), .q(po_su_i_nin));
     wire [1-1:0] b_po_su_i_asrc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_asrc (.clk(clk), .rst_n(rs), .d(b_po_su_i_asrc), .q(po_su_i_asrc));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_asrc (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_asrc), .q(po_su_i_asrc));
     wire [AW-1:0] b_po_su_i_abase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_abase (.clk(clk), .rst_n(rs), .d(b_po_su_i_abase), .q(po_su_i_abase));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_abase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_abase), .q(po_su_i_abase));
     wire [AW-1:0] b_po_su_i_aso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_aso (.clk(clk), .rst_n(rs), .d(b_po_su_i_aso), .q(po_su_i_aso));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_aso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_aso), .q(po_su_i_aso));
     wire [AW-1:0] b_po_su_i_asi;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_asi (.clk(clk), .rst_n(rs), .d(b_po_su_i_asi), .q(po_su_i_asi));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_asi (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_asi), .q(po_su_i_asi));
     wire [1-1:0] b_po_su_i_bsrc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_bsrc (.clk(clk), .rst_n(rs), .d(b_po_su_i_bsrc), .q(po_su_i_bsrc));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_bsrc (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_bsrc), .q(po_su_i_bsrc));
     wire [AW-1:0] b_po_su_i_bbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bbase (.clk(clk), .rst_n(rs), .d(b_po_su_i_bbase), .q(po_su_i_bbase));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bbase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_bbase), .q(po_su_i_bbase));
     wire [AW-1:0] b_po_su_i_bso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bso (.clk(clk), .rst_n(rs), .d(b_po_su_i_bso), .q(po_su_i_bso));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_bso), .q(po_su_i_bso));
     wire [AW-1:0] b_po_su_i_bsi;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bsi (.clk(clk), .rst_n(rs), .d(b_po_su_i_bsi), .q(po_su_i_bsi));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bsi (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_bsi), .q(po_su_i_bsi));
     wire [1-1:0] b_po_su_i_csrc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_csrc (.clk(clk), .rst_n(rs), .d(b_po_su_i_csrc), .q(po_su_i_csrc));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_csrc (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_csrc), .q(po_su_i_csrc));
     wire [AW-1:0] b_po_su_i_cbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_cbase (.clk(clk), .rst_n(rs), .d(b_po_su_i_cbase), .q(po_su_i_cbase));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_cbase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_cbase), .q(po_su_i_cbase));
     wire [AW-1:0] b_po_su_i_cso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_cso (.clk(clk), .rst_n(rs), .d(b_po_su_i_cso), .q(po_su_i_cso));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_cso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_cso), .q(po_su_i_cso));
     wire [AW-1:0] b_po_su_i_csi;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_csi (.clk(clk), .rst_n(rs), .d(b_po_su_i_csi), .q(po_su_i_csi));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_csi (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_csi), .q(po_su_i_csi));
     wire [2-1:0] b_po_su_i_ma;
-    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_ma (.clk(clk), .rst_n(rs), .d(b_po_su_i_ma), .q(po_su_i_ma));
+    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_ma (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_ma), .q(po_su_i_ma));
     wire [2-1:0] b_po_su_i_mb;
-    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_mb (.clk(clk), .rst_n(rs), .d(b_po_su_i_mb), .q(po_su_i_mb));
+    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_mb (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_mb), .q(po_su_i_mb));
     wire [3-1:0] b_po_su_i_ad;
-    ot_hdc_delay #(.W(3), .D(OS)) u_o_po_su_i_ad (.clk(clk), .rst_n(rs), .d(b_po_su_i_ad), .q(po_su_i_ad));
+    ot_hdc_delay #(.W(3), .D(OS)) u_o_po_su_i_ad (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_ad), .q(po_su_i_ad));
     wire [3-1:0] b_po_su_i_sfu;
-    ot_hdc_delay #(.W(3), .D(OS)) u_o_po_su_i_sfu (.clk(clk), .rst_n(rs), .d(b_po_su_i_sfu), .q(po_su_i_sfu));
+    ot_hdc_delay #(.W(3), .D(OS)) u_o_po_su_i_sfu (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_sfu), .q(po_su_i_sfu));
     wire [1-1:0] b_po_su_i_mc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_mc (.clk(clk), .rst_n(rs), .d(b_po_su_i_mc), .q(po_su_i_mc));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_mc (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_mc), .q(po_su_i_mc));
     wire [1-1:0] b_po_su_i_md;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_md (.clk(clk), .rst_n(rs), .d(b_po_su_i_md), .q(po_su_i_md));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_md (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_md), .q(po_su_i_md));
     wire [2-1:0] b_po_su_i_dst;
-    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_dst (.clk(clk), .rst_n(rs), .d(b_po_su_i_dst), .q(po_su_i_dst));
+    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_dst (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_dst), .q(po_su_i_dst));
     wire [AW-1:0] b_po_su_i_dbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dbase (.clk(clk), .rst_n(rs), .d(b_po_su_i_dbase), .q(po_su_i_dbase));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dbase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_dbase), .q(po_su_i_dbase));
     wire [AW-1:0] b_po_su_i_dso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dso (.clk(clk), .rst_n(rs), .d(b_po_su_i_dso), .q(po_su_i_dso));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_dso), .q(po_su_i_dso));
     wire [AW-1:0] b_po_su_i_dsi;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dsi (.clk(clk), .rst_n(rs), .d(b_po_su_i_dsi), .q(po_su_i_dsi));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dsi (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_dsi), .q(po_su_i_dsi));
     wire [2-1:0] b_po_su_i_red;
-    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_red (.clk(clk), .rst_n(rs), .d(b_po_su_i_red), .q(po_su_i_red));
+    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_red (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_red), .q(po_su_i_red));
     wire [1-1:0] b_po_su_i_redsq;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_redsq (.clk(clk), .rst_n(rs), .d(b_po_su_i_redsq), .q(po_su_i_redsq));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_redsq (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_redsq), .q(po_su_i_redsq));
     wire [AW-1:0] b_po_su_i_rbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_rbase (.clk(clk), .rst_n(rs), .d(b_po_su_i_rbase), .q(po_su_i_rbase));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_rbase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_rbase), .q(po_su_i_rbase));
     wire [AW-1:0] b_po_su_i_rso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_rso (.clk(clk), .rst_n(rs), .d(b_po_su_i_rso), .q(po_su_i_rso));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_rso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_rso), .q(po_su_i_rso));
     wire [32-1:0] b_po_su_i_imm1;
-    ot_hdc_delay #(.W(32), .D(OS)) u_o_po_su_i_imm1 (.clk(clk), .rst_n(rs), .d(b_po_su_i_imm1), .q(po_su_i_imm1));
+    ot_hdc_delay #(.W(32), .D(OS)) u_o_po_su_i_imm1 (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_imm1), .q(po_su_i_imm1));
     wire [32-1:0] b_po_su_i_imm2;
-    ot_hdc_delay #(.W(32), .D(OS)) u_o_po_su_i_imm2 (.clk(clk), .rst_n(rs), .d(b_po_su_i_imm2), .q(po_su_i_imm2));
+    ot_hdc_delay #(.W(32), .D(OS)) u_o_po_su_i_imm2 (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_imm2), .q(po_su_i_imm2));
     wire [1-1:0] b_me_start_o;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_me_start_o (.clk(clk), .rst_n(rs), .d(b_me_start_o), .q(me_start_o));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_me_start_o (.clk(clk), .rst_n(rsv[4]), .d(b_me_start_o), .q(me_start_o));
     wire [NW-1:0] b_me_token_o;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_me_token_o (.clk(clk), .rst_n(rs), .d(b_me_token_o), .q(me_token_o));
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_me_token_o (.clk(clk), .rst_n(rsv[4]), .d(b_me_token_o), .q(me_token_o));
     wire [NW-1:0] b_me_pos_o;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_me_pos_o (.clk(clk), .rst_n(rs), .d(b_me_pos_o), .q(me_pos_o));
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_me_pos_o (.clk(clk), .rst_n(rsv[4]), .d(b_me_pos_o), .q(me_pos_o));
     wire [12-1:0] b_me_prog_base_o;
-    ot_hdc_delay #(.W(12), .D(OS)) u_o_me_prog_base_o (.clk(clk), .rst_n(rs), .d(b_me_prog_base_o), .q(me_prog_base_o));
+    ot_hdc_delay #(.W(12), .D(OS)) u_o_me_prog_base_o (.clk(clk), .rst_n(rsv[4]), .d(b_me_prog_base_o), .q(me_prog_base_o));
     wire [24-1:0] b_su_acc_o;
-    ot_hdc_delay #(.W(24), .D(OS), .RESET(1)) u_o_su_acc_o (.clk(clk), .rst_n(rs), .d(b_su_acc_o), .q(su_acc_o));
+    ot_hdc_delay #(.W(24), .D(OS), .RESET(1)) u_o_su_acc_o (.clk(clk), .rst_n(rsv[4]), .d(b_su_acc_o), .q(su_acc_o));
     wire [1-1:0] b_su_idle_o;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_su_idle_o (.clk(clk), .rst_n(rs), .d(b_su_idle_o), .q(su_idle_o));
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_su_idle_o (.clk(clk), .rst_n(rsv[4]), .d(b_su_idle_o), .q(su_idle_o));
     wire [16-1:0] b_su_prog_o;
-    ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_prog_o (.clk(clk), .rst_n(rs), .d(b_su_prog_o), .q(su_prog_o));
+    ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_prog_o (.clk(clk), .rst_n(rsv[4]), .d(b_su_prog_o), .q(su_prog_o));
     wire [16-1:0] b_su_rows_o;
-    ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_rows_o (.clk(clk), .rst_n(rs), .d(b_su_rows_o), .q(su_rows_o));
+    wire [1-1:0] b_kvd_v;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_v (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_v), .q(kvd_v));
+    wire [AW-1:0] b_kvd_wbase;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wbase (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_wbase), .q(kvd_wbase));
+    wire [AW-1:0] b_kvd_ts;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ts (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_ts), .q(kvd_ts));
+    wire [AW-1:0] b_kvd_ks;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ks (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_ks), .q(kvd_ks));
+    wire [AW-1:0] b_kvd_js;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_js (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_js), .q(kvd_js));
+    wire [AW-1:0] b_kvd_wcs;
+    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wcs (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_wcs), .q(kvd_wcs));
+    wire [4-1:0] b_kvd_split;
+    ot_hdc_delay #(.W(4), .D(OS)) u_o_kvd_split (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_split), .q(kvd_split));
+    wire [3-1:0] b_kvd_jsh;
+    ot_hdc_delay #(.W(3), .D(OS)) u_o_kvd_jsh (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_jsh), .q(kvd_jsh));
+    wire [NW-1:0] b_kvd_tiles;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_tiles (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_tiles), .q(kvd_tiles));
+    wire [NW-1:0] b_kvd_k;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_k (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_k), .q(kvd_k));
+    wire [NW-1:0] b_kvd_nout;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_nout (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_nout), .q(kvd_nout));
+    wire [1-1:0] b_kvd_kindk;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_kindk (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_kindk), .q(kvd_kindk));
+    wire [NW-1:0] b_kvd_pos;
+    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_pos (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_pos), .q(kvd_pos));
+    ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_rows_o (.clk(clk), .rst_n(rsv[4]), .d(b_su_rows_o), .q(su_rows_o));
     wire s_su_ready, s_su_idle; wire [15:0] s_su_progress, s_su_progress_rows; reg [NW-1:0] tok_l; wire es_re_w;
-        ot_qfd_issue_shell #(.RT_ME(0), .RT_SU(RT), .COMP(1)) u_shell (.clk(clk), .rst_n(rs),
+        ot_qfd_issue_shell #(.RT_ME(0), .RT_SU(RT), .COMP(1)) u_shell (.clk(clk), .rst_n(rsv[7]),
         .me_go(1'b0), .su_go(b_po_su_go), .me_en(1'b1), .su_sfu(b_po_su_i_sfu), .me_amax(1'b0),
         .d_me_ready(1'b0), .d_me_idle(1'b0), .d_me_progress(16'd0),
         .d_su_ready(q_pi_su_ready), .d_su_idle(q_pi_su_idle), .d_su_active(q_pi_su_rt_active),
@@ -1272,22 +1409,56 @@ module ot_qfd_seq_su_bi #(
     assign b_su_tok = tok_l;
     wire prog_re; wire [11:0] prog_addr, prog_base; reg [1023:0] prog_q;
     wire desc_re; wire [5:0] desc_addr; reg [63:0] desc_q;
-    reg [1023:0] prog_mem [0:63];
+    reg [1023:0] prog_mem [0:63];                       // PSRAM 0 (the flop store)
     reg [63:0] desc_mem [0:7];
     wire [11:0] prog_a = prog_base + prog_addr;
     reg prog_re_r; reg [11:0] prog_a_r;                 // PRL 2: the read address registered
-    always @(posedge clk or negedge rs) if (!rs) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
+    always @(posedge clk or negedge rsv[7]) if (!rsv[7]) prog_re_r <= 1'b0; else prog_re_r <= prog_re;
     always @(posedge clk) prog_a_r <= prog_a;
+    reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;
     always @(posedge clk) begin
-        if (q_pw_v) prog_mem[q_pw_addr[9:4]][q_pw_addr[3:0]*64 +: 64] <= q_pw_data;
         if (q_dw_v) desc_mem[q_dw_addr] <= q_dw_data;
-        if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;
         if (desc_re) desc_q <= (desc_addr < 8) ? desc_mem[desc_addr[2:0]] : 64'd0;
     end
+    generate if (PSRAM != 0) begin : g_psram
+        //: the program store as two 64 x 512 SRAM macros (bit-masked 64-bit slice writes); prog_q = the captured output
+        reg rng_r;                                       // the read word is inside the store (else prog_q = 0)
+        always @(posedge clk) rng_r <= (PMUT != 0) ? (prog_a_r < 64) : (prog_a < 64);
+        wire [1023:0] p_rd;
+        wire p_rce = (PMUT != 0) ? prog_re_r : prog_re;
+        wire [5:0] p_ra = (PMUT != 0) ? prog_a_r[5:0] : prog_a[5:0];
+        genvar m;
+        for (m = 0; m < 2; m = m + 1) begin : g_m
+            wire w_ce = q_pw_v && (q_pw_addr[3] == ((m != 0) ? 1'b1 : 1'b0));
+            wire [511:0] w_mask = {448'd0, {64{1'b1}}} << (64 * q_pw_addr[2:0]);
+            ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(clk), .r_ce_in(p_rce), .r_addr_in(p_ra), .rd_out(p_rd[512*m +: 512]),
+                .w_ce_in(w_ce), .w_addr_in(q_pw_addr[9:4]), .wd_in({8{q_pw_data}}), .w_mask_in(w_mask),
+                .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+        end
+        if (PMUT != 0) begin : g_pmut
+            reg pre_rr;
+            always @(posedge clk or negedge rsv[7]) if (!rsv[7]) pre_rr <= 1'b0; else pre_rr <= prog_re_r;
+            always @(posedge clk) if (pre_rr) prog_q <= rng_r ? p_rd : 1024'd0;
+        end else begin : g_pq
+            always @(posedge clk) if (prog_re_r) prog_q <= rng_r ? p_rd : 1024'd0;
+        end
+    end else begin : g_pflop
+        always @(posedge clk) begin
+            if (pw_row2 != 64'd0) for (pw_r = 0; pw_r < 64; pw_r = pw_r + 1) for (pw_w = 0; pw_w < 16; pw_w = pw_w + 1)
+                if (pw_row2[pw_r] && pw_word2[pw_w]) prog_mem[pw_r][pw_w*64 +: 64] <= pw_d2;
+        end
+        // program writes: one-hot row / word selects registered one edge before the store (65,536 enables)
+        always @(posedge clk) begin
+            pw_row2 <= q_pw_v ? (64'd1 << q_pw_addr[9:4]) : 64'd0;
+            pw_word2 <= 16'd1 << q_pw_addr[3:0];
+            pw_d2 <= q_pw_data;
+            if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;
+        end
+    end endgenerate
     wire wrom_re_w; assign b_rom_fault = wrom_re_w; assign b_core_fault = core_fault_w;
-    ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(1)) u_ctrl (
+    ot_qwen_rom_core_ctrl_x_bi #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT), .OLAG(OLAG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl (
         .clk(clk),
-        .rst_n(rs),
+        .rst_n(rsv[2]),
         .start(core_start),
         .token(core_tokw),
         .pos(core_pos),
@@ -1347,19 +1518,19 @@ module ot_qfd_seq_su_bi #(
         .vw_mx_mask(),
         .vw_mx_data(),
         .me_ov(),
-        .kvd_v(),
-        .kvd_wbase(),
-        .kvd_ts(),
-        .kvd_ks(),
-        .kvd_js(),
-        .kvd_wcs(),
-        .kvd_split(),
-        .kvd_jsh(),
-        .kvd_tiles(),
-        .kvd_k(),
-        .kvd_nout(),
-        .kvd_kindk(),
-        .kvd_pos(),
+        .kvd_v(b_kvd_v),
+        .kvd_wbase(b_kvd_wbase),
+        .kvd_ts(b_kvd_ts),
+        .kvd_ks(b_kvd_ks),
+        .kvd_js(b_kvd_js),
+        .kvd_wcs(b_kvd_wcs),
+        .kvd_split(b_kvd_split),
+        .kvd_jsh(b_kvd_jsh),
+        .kvd_tiles(b_kvd_tiles),
+        .kvd_k(b_kvd_k),
+        .kvd_nout(b_kvd_nout),
+        .kvd_kindk(b_kvd_kindk),
+        .kvd_pos(b_kvd_pos),
         .kv_ok(1'b0),
         .wrom_su(),
         .wd_v(),
@@ -1472,9 +1643,17 @@ module ot_qfd_seq_su_bi #(
         .o_fin(),
         .o_fidx(),
         .o_fval());
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
-        .QWEN_FULLSHAPE(1), .ENABLE_AR256(1)) u_seq (
-        .clk(clk), .rst_n(rs), .start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .done(b_s_done),
+    wire [5:0] q_stage_in, q_cb_st_rdy_stage; wire q_cb_st_rdy;
+    ot_hdc_delay #(.W(12), .D(IS)) u_i_cbs (.clk(clk), .rst_n(rsv[6]), .d({stage_in, cb_st_rdy_stage}), .q({q_stage_in, q_cb_st_rdy_stage}));
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rsv[6]), .d(cb_st_rdy), .q(q_cb_st_rdy));
+    wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;
+    ot_qfd_stage_gate #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rsv[7]), .h_start(q_h_start), .stage(q_stage_in),
+        .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
+        .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
+    ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
+    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
+        .QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG >= 2 ? 1 : 0)) u_seq (
+        .clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
         .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),
@@ -1490,6 +1669,26 @@ module ot_qfd_seq_su_bi #(
     assign b_su_idle_o = q_pi_su_idle;
     assign b_su_prog_o = q_pi_su_progress;
     assign b_su_rows_o = q_pi_su_progress_rows;
+endmodule
+
+// qwen-1010/a: the stage start waits for the SU-local constant buffer (ot_qfd_su_cbuf_g st_rdy / st_rdy_stage): a stage
+// (one layer program, or HEAD) starts only when the buffer reports that stage resident.  The prefetcher fills stage s + 1
+// during stage s, so the wait is normally only at the token's first stage.  MUT 1 (NOWAIT): starts without the buffer.
+module ot_qfd_stage_gate #(parameter integer SW_ = 6, parameter integer NW = 18, parameter integer MUT = 0) (
+    input  wire clk, input wire rst_n,
+    input  wire h_start, input wire [SW_-1:0] stage, input wire [NW-1:0] token, input wire [NW-1:0] pos,
+    input  wire st_rdy, input wire [SW_-1:0] st_rdy_stage,
+    output wire go, output reg [NW-1:0] go_token, output reg [NW-1:0] go_pos,
+    output reg [SW_-1:0] cur_stage, output wire tok_start
+);
+    reg pend;
+    assign go = pend && !h_start && ((MUT != 0) || (st_rdy && st_rdy_stage == cur_stage));
+    assign tok_start = h_start && (stage == {SW_{1'b0}});
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin pend <= 1'b0; cur_stage <= {SW_{1'b0}}; end
+        else if (h_start) begin pend <= 1'b1; cur_stage <= stage; end
+        else if (go) pend <= 1'b0;
+    always @(posedge clk) if (h_start) begin go_token <= token; go_pos <= pos; end
 endmodule
 
 `timescale 1ns/1ps
@@ -1526,6 +1725,8 @@ endmodule
 // ---------------------------------------------------------------------------
 module ot_qwen_tp_seq_w12_vrl #(
     parameter integer VRL = 1,     // vre -> vrq edges
+    parameter integer RMUT = 0,    // el1011-q-seq negative control: vm_wdata bit 0 flipped on the AR write
+    parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits
     parameter integer ENABLE_AR256 = 0,
     parameter integer N    = 4,
     parameter integer NW   = 16,
@@ -1541,6 +1742,7 @@ module ot_qwen_tp_seq_w12_vrl #(
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input  wire              rst_nw,      // vm_wdata reset copy (el1011-q-seq RRG; logically rst_n)
     // package controller side (the core's handshake)
     input  wire              start,
     input  wire [NW-1:0]     token,
@@ -1616,11 +1818,15 @@ module ot_qwen_tp_seq_w12_vrl #(
     wire          rd_v = rd_p[VRL-1];
     integer       rd_i, rd_n;
     always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end
-    assign c_valid = (st == S_COLL) && (q_n != 0);
+    reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)
+    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
-    wire   c_fire  = c_valid && c_ready;
+    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) c_cred <= 8'(CRED);
+        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);
     wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rd_n) < QD;
 
     reg [NW-1:0] best_i;
@@ -1639,7 +1845,7 @@ module ot_qwen_tp_seq_w12_vrl #(
             st <= S_IDLE; done <= 1'b0; fault <= 1'b0; next_token <= 0; next_val <= 0;
             tok_r <= 0; pos_r <= 0; seg <= 0; kind <= K_END; vw <= 0; nw <= 0; row0 <= 0;
             prog_base <= 0; desc_re <= 1'b0; desc_addr <= 0;
-            vm_we <= 1'b0; vm_waddr <= 0; vm_wdata <= 0;
+            vm_we <= 1'b0; vm_waddr <= 0;
             q_w <= 0; q_r <= 0; q_n <= 0; rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};
             best_i <= 0; best_v <= 0;
         end else begin
@@ -1689,7 +1895,7 @@ module ot_qwen_tp_seq_w12_vrl #(
                         rx_k <= rx_k + 1'b1;
                         if (r_last != (rx_k == rx_total - 1'b1)) fault <= 1'b1;
                         if (kind == K_AR) begin
-                            vm_we <= 1'b1; vm_waddr <= vw + rx_k; vm_wdata <= r_data;
+                            vm_we <= 1'b1; vm_waddr <= vw + rx_k;
                         end else begin
                             if (r_rank != rx_k[RB-1:0]) fault <= 1'b1;
                             if (rx_k == 0 || okey(g_val) > okey(best_v)) begin
@@ -1714,4 +1920,8 @@ module ot_qwen_tp_seq_w12_vrl #(
             endcase
         end
     end
+    // vm_wdata: the AR receive word (the S_COLL / r_valid / K_AR edge of the main block), own reset copy
+    always @(posedge clk or negedge rst_nw)
+        if (!rst_nw) vm_wdata <= {FW{1'b0}};
+        else if (st == S_COLL && r_valid && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);
 endmodule

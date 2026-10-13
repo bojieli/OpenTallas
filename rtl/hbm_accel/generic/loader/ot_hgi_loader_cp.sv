@@ -23,6 +23,11 @@
 //       cpl_status [79:76], cpl_cycles [111:80], cpl_tokx [112], f_req_v [113], f_req_addr [153:114],
 //       cfg_loaded [154], cfg_err [157:155], cfg_cp_act [221:158] (CF-0 read-back)
 // The record-ring fetch (f_req / f_rsp) rides the loader's memory lane 1 (ot_hfd_loader_kport), read only.
+// MTPH = 1 (hgi-1010/h, MTP collar host side on the loader link): a write to 0xE00 + 4 w (w < 64) goes to the CP die as
+//   lcp [459:419] = {data 32, w 8, we} (ot_hgi_cp_die MTP = 2: w 0..5 the MTP job config, 6 job, 7 gen, 8 START, 9 / 10
+//   prompt / forced-token table {index [29:24], token [16:0]}); 0xE40 R = cpl [229:222] = {drained, abort, t_host, 0}.
+//   The emitted tokens arrive as completions (tokx = 1, pos = the token's index); the job's done is a completion with
+//   tokx = 0, token = the accepted count, cycles = the stop status.
 // BURST = 1 (hgi-1010 2026-10-10; svc F5(3) native bursts, hbm-phys [svc]): the fetch queue is 16 deep and the head
 // run of contiguous sector addresses (up to 8) leaves as ONE lane request with m_req_len = run length (the kport answers
 // every sector as its own in-order response); the CP's queue credits return one f_req_ack pulse per popped entry (a
@@ -30,7 +35,12 @@
 module ot_hgi_loader_cp #(
     parameter integer CPL_DEPTH = 4,
     parameter integer BURST = 0,
-    parameter integer MUT = 0          // bench mutant: 1 a burst one sector longer than its contiguous run
+    parameter integer RUNPRE = 0,      // fe-push-hgi-1010 (feasibility (b)): 1 = contiguity bit computed at push (entry ==
+                                       //   previous push + 32 B) and the head run is a leading-ones count of those bits,
+                                       //   instead of 7 chained 16:1 x 37-b selects + 37-b add / compare in one cycle
+    parameter integer MUT = 0,         // bench mutant: 1 a burst one sector longer than its contiguous run
+    parameter integer MTPH = 0,        // 1 (hgi-1010/h): the MTP host window 0xE00-0xEFF for ot_hgi_cp_die MTP = 2 (below)
+    parameter integer LX = MTPH ? 41 : 0, parameter integer CX = MTPH ? 8 : 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -47,8 +57,8 @@ module ot_hgi_loader_cp #(
     output wire          c_arvalid, input  wire c_arready, output wire [11:0] c_araddr,
     input  wire          c_rvalid,  output wire c_rready,  input  wire [31:0] c_rdata,
     // command-processor link
-    output reg  [418:0]  lcp,
-    input  wire [221:0]  cpl,
+    output wire [418+LX:0] lcp,
+    input  wire [221+CX:0] cpl,
     // record-ring fetch on memory lane 1 (to ot_hfd_loader_kport)
     output reg           m_req_v, input wire m_req_rdy, output reg [36:0] m_req_addr,
     output reg  [3:0]    m_req_len,             // BURST: sectors in this request (1 .. 8); 1 when BURST = 0
@@ -56,8 +66,23 @@ module ot_hgi_loader_cp #(
     output reg           fault
 );
     // ---------------------------------------------------------------- AXI-lite window split
-    wire w_loc = s_awaddr[11:9] == 3'b110;               // 0xC00-0xDFF
-    wire r_loc = s_araddr[11:9] == 3'b110;
+    reg [418:0] lcp_r;
+    wire [7:0] mstat;
+    generate if (MTPH != 0) begin : g_mtph
+        reg [40:0] mtp_l;                                   // {data 32, w 8, we pulse}
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) mtp_l <= 41'd0;
+            else mtp_l <= (s_awvalid && s_wvalid && w_mtp && !lb_v) ? {s_wdata, 2'd0, s_awaddr[7:2], 1'b1} : {mtp_l[40:1], 1'b0};
+        assign lcp = {mtp_l, lcp_r};
+        assign mstat = cpl[221 + CX:222];
+    end else begin : g_nomtph
+        assign lcp = lcp_r;
+        assign mstat = 8'd0;
+    end endgenerate
+    wire w_mtp = MTPH != 0 && s_awaddr[11:8] == 4'hE;   // 0xE00-0xEFF (MTPH)
+    wire r_mtp = MTPH != 0 && s_araddr[11:8] == 4'hE;
+    wire w_loc = s_awaddr[11:9] == 3'b110 || w_mtp;      // 0xC00-0xDFF (+ 0xE00-0xEFF)
+    wire r_loc = s_araddr[11:9] == 3'b110 || r_mtp;
     reg  lb_v; reg lr_v; reg [31:0] lr_d;
     wire lw_take = s_awvalid && s_wvalid && w_loc && !lb_v;  // local write: address and data together
     assign s_awready = w_loc ? lw_take : c_awready;
@@ -93,36 +118,46 @@ module ot_hgi_loader_cp #(
     reg [36:0] fq [0:15]; reg [3:0] fq_h, fq_t; reg [4:0] fq_n; reg [4:0] ack_bl;
     // BURST: the run of contiguous sectors at the head (1 .. 8, at most fq_n)
     reg [3:0] run; integer j;
+    // RUNPRE: fq_c[k] = entry k is the previous push + 32 (registered at push; a head's own bit is never read, and a
+    // non-head entry's predecessor in the queue is exactly the push before it, so the chain equals the head compare)
+    reg [15:0] fq_c; reg [36:0] fq_nx;
     always @* begin
         run = (fq_n != 5'd0) ? 4'd1 : 4'd0;
         if (BURST) for (j = 1; j < 8; j = j + 1)
-            if (run == 4'(j) && fq_n > 5'(j) && fq[4'(fq_h + 4'(j))] == fq[fq_h] + 37'(32 * j)) run = 4'(j + 1);
+            if (run == 4'(j) && fq_n > 5'(j) && (RUNPRE != 0 ? fq_c[4'(fq_h + 4'(j))] :
+                                                  fq[4'(fq_h + 4'(j))] == fq[fq_h] + 37'(32 * j))) run = 4'(j + 1);
+    end
+    always @(posedge clk) if (RUNPRE != 0 && c_freq_v) begin
+        fq_c[FQD == 4 ? {2'd0, fq_t[1:0]} : fq_t] <= c_freq_a[36:0] == fq_nx;
+        fq_nx <= c_freq_a[36:0] + 37'd32;
     end
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            lb_v <= 1'b0; lr_v <= 1'b0; db_pend <= 1'b0; cq_n <= 3'd0; cq_h <= 2'd0; cq_t <= 2'd0; lcp <= 419'd0;
+            lb_v <= 1'b0; lr_v <= 1'b0; db_pend <= 1'b0; cq_n <= 3'd0; cq_h <= 2'd0; cq_t <= 2'd0; lcp_r <= 419'd0;
             m_req_v <= 1'b0; m_req_len <= 4'd1; fq_h <= 4'd0; fq_t <= 4'd0; fq_n <= 5'd0; ack_bl <= 5'd0; fault <= 1'b0;
             d_tok <= 18'd0; d_pos <= 20'd0; d_job <= 32'd0; d_gen <= 4'd0; d_ent <= 2'd0; d_ncol <= 4'd0;
         end else begin
-            lcp[0] <= 1'b0; lcp[71] <= 1'b0; lcp[148] <= 1'b0; lcp[406] <= 1'b0;   // pulses
+            lcp_r[0] <= 1'b0; lcp_r[71] <= 1'b0; lcp_r[148] <= 1'b0; lcp_r[406] <= 1'b0;   // pulses
             // local write
             if (lb_v && s_bready) lb_v <= 1'b0;
-            if (lw_take) begin
+            if (lw_take && w_mtp) begin
+                lb_v <= 1'b1;                                       // (the MTP window: mtp_l below)
+            end else if (lw_take) begin
                 lb_v <= 1'b1;
                 case (s_awaddr[8:0])
                     9'h000: d_tok <= s_wdata[17:0];
                     9'h004: d_pos <= s_wdata[19:0];
                     9'h008: d_job <= s_wdata;
                     9'h00C: begin d_gen <= s_wdata[3:0]; d_ent <= s_wdata[5:4]; d_ncol <= s_wdata[11:8]; end
-                    9'h014: lcp[414:407] <= s_wdata[7:0];
+                    9'h014: lcp_r[414:407] <= s_wdata[7:0];
                     9'h010: if (!db_pend) begin
                         db_pend <= 1'b1;
-                        lcp[147:71] <= {d_ent, d_gen, d_job, d_pos, d_tok, 1'b1}; lcp[418:415] <= d_ncol;
+                        lcp_r[147:71] <= {d_ent, d_gen, d_job, d_pos, d_tok, 1'b1}; lcp_r[418:415] <= d_ncol;
                     end
                     default: if (s_awaddr[8]) begin                      // 0xD00-0xDFF CFG window
                         if (!s_awaddr[2]) cfg_lo[s_awaddr[7:3]] <= s_wdata;
-                        else lcp[70:0] <= {s_wdata, cfg_lo[s_awaddr[7:3]], 1'b1, s_awaddr[7:3], 1'b1};
+                        else lcp_r[70:0] <= {s_wdata, cfg_lo[s_awaddr[7:3]], 1'b1, s_awaddr[7:3], 1'b1};
                     end
                 endcase
             end
@@ -136,7 +171,8 @@ module ot_hgi_loader_cp #(
             if (lr_v && s_rready) lr_v <= 1'b0;
             if (lr_take) begin
                 lr_v <= 1'b1;
-                if (s_araddr[8]) lr_d <= 32'd0;
+                if (r_mtp) lr_d <= (s_araddr[7:0] == 8'h40) ? {24'd0, mstat} : 32'd0;
+                else if (s_araddr[8]) lr_d <= 32'd0;
                 else case (s_araddr[7:0])
                     8'h20: lr_d <= {21'd0, cq_n, 7'd0, db_pend};
                     8'h24: lr_d <= {28'd0, cpl[157:154]};
@@ -153,16 +189,16 @@ module ot_hgi_loader_cp #(
             begin : occ
                 reg push, pop;
                 push = c_cpl_v && cq_n != CPL_DEPTH;
-                pop  = lr_take && !s_araddr[8] && s_araddr[7:0] == 8'h50 && cq_n != 0;
-                if (pop) begin cq_h <= cq_h + 2'd1; lcp[148] <= 1'b1; end      // cpl_ack: the CP may send the next
+                pop  = lr_take && !r_mtp && !s_araddr[8] && s_araddr[7:0] == 8'h50 && cq_n != 0;
+                if (pop) begin cq_h <= cq_h + 2'd1; lcp_r[148] <= 1'b1; end      // cpl_ack: the CP may send the next
                 cq_n <= cq_n + push - pop;
             end
             // record-ring fetch: request queue -> memory lane 1 (one request register, refilled the cycle it is taken)
             begin : fetch
                 reg take; reg [4:0] npop; take = m_req_v && m_req_rdy; npop = 5'd0;
-                if (!BURST) begin if (take) lcp[406] <= 1'b1; end                 // f_req_ack: a credit back to the CP
+                if (!BURST) begin if (take) lcp_r[406] <= 1'b1; end                 // f_req_ack: a credit back to the CP
                 else begin                                                       // BURST: one ack a popped entry
-                    if (ack_bl != 5'd0) lcp[406] <= 1'b1;
+                    if (ack_bl != 5'd0) lcp_r[406] <= 1'b1;
                 end
                 if ((!m_req_v || take) && fq_n != 5'd0) begin
                     m_req_v <= 1'b1; m_req_addr <= fq[fq_h]; m_req_len <= BURST ? ((MUT == 1 && run < 4'd8) ? run + 4'd1 : run) : 4'd1;
@@ -177,8 +213,8 @@ module ot_hgi_loader_cp #(
                 end
                 fq_n <= fq_n + {4'd0, c_freq_v} - npop;
             end
-            if (m_rsp_v) begin lcp[149] <= 1'b1; lcp[405:150] <= m_rsp_data; end
-            else lcp[149] <= 1'b0;
+            if (m_rsp_v) begin lcp_r[149] <= 1'b1; lcp_r[405:150] <= m_rsp_data; end
+            else lcp_r[149] <= 1'b0;
         end
     end
 endmodule

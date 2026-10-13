@@ -32,9 +32,13 @@ p.add_argument('--tag', default='tk_W2_rb')
 p.add_argument('--half', action='store_true', help='half-rate shell top')
 p.add_argument('--phase-seat', action='store_true', help='localphase and real kept hold/reset delay seats')
 p.add_argument('--safe', action='store_true', help='SAFE=1 station (registered permission decision)')
+p.add_argument('--grant-seat', action='store_true', help='GRANT_SEAT=1: in_v pin lands in one flop, seat words written on grant')
 p.add_argument('--post-route-ff-hold', action='store_true',
                help='SS-only setup optimization at CTS/GRT; strict FF hold repair/signoff remains required after route')
+p.add_argument('--hier', action='store_true', help='HIER=1 station: payload in word-group slice tiles (el1011-hbm-no3)')
 p.add_argument('--hold-margin-ns', type=float, default=0.01)
+p.add_argument('--cts-cluster-size', type=int, default=24)
+p.add_argument('--cts-cluster-diameter', type=float, default=40.0)
 a, passthrough = p.parse_known_args()
 for k, e in (('l_max', 'CK_SS_MAX'), ('l_min', 'CK_SS_MIN'), ('l_ff_min', 'CK_FF_MIN'), ('l_ff_max', 'CK_FF_MAX')):
     if os.environ.get(e):
@@ -144,9 +148,14 @@ HQ = 'physical/hbm_die_abstracts_20261006/links/native_quarter/ot_hbm_native_fra
 argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb_half' if a.half else 'ot_hbm_native_frame_station_rb',
         '--source', rel+'/bank_veto_static.sv', '--source', 'rtl/common/ot_fwd_link_stage.sv',
         '--source', rel+'/station_rb_static.sv',
+        *(['--source', rel+'/slice_static.sv'] if a.hier else []),
         *(['--source', HQ] if a.half else []),
         '--param', 'ENABLE=1', '--param', f'NO={a.no}', *([] if a.half else ['--param', 'REL_REG=1', '--param', f'SAFE={int(a.safe)}']),
         *(['--param','LOCAL_PHASE=1','--param','HOLD_SEAT=1','--param','RESET_SEAT=1'] if a.phase_seat else []),
+        *(['--param','GRANT_SEAT=1'] if a.grant_seat else []),
+        *(['--param','HIER=1'] if a.hier else []),
+        # flat structural line (DUAL TRACK): local clock leaf groups so the slice-internal direct Q->D pairs share a leaf
+        *(['--orfs-var', f'CTS_CLUSTER_SIZE={a.cts_cluster_size}', '--orfs-var', f'CTS_CLUSTER_DIAMETER={a.cts_cluster_diameter}'] if a.hier else []),
         '--clock-port', 'clk_sm', '--clock-period-ns', f'{a.period_ps/1000:.6f}',
         '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', '0.025',
         '--orfs-corner', 'WC', '--hold-corners', ('WC' if a.post_route_ff_hold else 'WC,BC'), '--hold-margin-ns', str(a.hold_margin_ns),

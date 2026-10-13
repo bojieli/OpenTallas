@@ -2,7 +2,7 @@
  "schema": "opentallas.qwen-kv-die.rom-r22k.v1",
  "recipe": "r22ko4 (tools/die_top_lint.py QWEN_RECIPES)",
  "generator_sha256": "6e40ce155e29e0c9dd3f053669def62788c8dd87a0575b8840f290a8ef94b5c3",
- "surgery_sha256": "5b2ce3c83d3be6e1c1d3b8bee725d91f3cbe7e0a31528d4ddf317af7c527ca60",
+ "surgery_sha256": "77262a34d44ef3f631f38cb20b91aa1cb86010e4a9a401b3fdf6f7dd56b5eb9a",
  "die_um": [
   23484.384,
   32801.76
@@ -11,14 +11,14 @@
  "reticle_mm2": 858.0,
  "margin_mm2": 87.671,
  "r21c_die_mm2": 846.792,
- "instances": 13179,
- "buses": 16378,
- "instance_mm2": 609.181,
+ "instances": 13082,
+ "buses": 16278,
+ "instance_mm2": 609.2,
  "area_by_kind_mm2": {
   "tile": 529.628,
   "spine_block": 34.667,
   "io": 17.6,
-  "relay": 16.743,
+  "relay": 16.762,
   "station": 8.387,
   "xfifo": 0.626,
   "phy_d2d": 0.605,
@@ -77,6 +77,8 @@
   "d2d_fdi": 0,
   "pll_fwd": 0,
   "rst_fwd": 0,
+  "coll_seq": 0,
+  "coll_seq_x": 53,
   "d2d_flt": 26,
   "o4_cb_a_0": 0,
   "o4_cb_a_1": 0,
@@ -88,12 +90,12 @@
   "o4_cb_a_7": 0,
   "o4_cb_ctl_0": 12,
   "o4_cb_ctl_1": 6,
-  "o4_cb_ctl_2": 5,
-  "o4_cb_ctl_3": 5,
+  "o4_cb_ctl_2": 6,
+  "o4_cb_ctl_3": 6,
   "o4_cb_ctl_4": 13,
-  "o4_cb_ctl_5": 7,
+  "o4_cb_ctl_5": 6,
   "o4_cb_ctl_6": 7,
-  "o4_cb_ctl_7": 7,
+  "o4_cb_ctl_7": 8,
   "o4_cb_q_0": 0,
   "o4_cb_q_1": 0,
   "o4_cb_q_2": 0,
@@ -102,16 +104,16 @@
   "o4_cb_q_5": 0,
   "o4_cb_q_6": 0,
   "o4_cb_q_7": 0,
-  "o4_cb_rdy_0": 12,
+  "o4_cb_rdy_0": 13,
   "o4_cb_rdy_1": 6,
   "o4_cb_rdy_2": 6,
   "o4_cb_rdy_3": 5,
-  "o4_cb_rdy_4": 15,
+  "o4_cb_rdy_4": 14,
   "o4_cb_rdy_5": 6,
   "o4_cb_rdy_6": 7,
-  "o4_cb_rdy_7": 6,
+  "o4_cb_rdy_7": 8,
   "o4_cf_a_0": 3,
-  "o4_cf_a_1": 8,
+  "o4_cf_a_1": 3,
   "o4_cf_a_2": 3,
   "o4_cf_a_3": 3,
   "o4_cf_a_4": 0,
@@ -119,46 +121,45 @@
   "o4_cf_a_6": 0,
   "o4_cf_a_7": 0,
   "o4_cf_q_0": 7,
-  "o4_cf_q_1": 4,
+  "o4_cf_q_1": 3,
   "o4_cf_q_2": 3,
   "o4_cf_q_3": 3,
   "o4_cf_q_4": 0,
   "o4_cf_q_5": 0,
   "o4_cf_q_6": 0,
   "o4_cf_q_7": 0,
-  "o4_kok": 44,
-  "o4_kvd": 43,
+  "o4_kvd": 25,
   "o4_me_snap": 16,
   "o4_me_start": 16,
   "o4_meok": 0,
-  "o4_pw": 43,
+  "o4_pw": 44,
   "o4_sel": 0,
   "o4_su_acc": 0,
   "o4_su_iss": 0,
   "o4_su_snap": 16,
   "o4_su_st": 0,
   "o4_upf": 0,
-  "pword_0": 47,
-  "pword_1": 31,
-  "pword_2": 18,
+  "pword_0": 46,
+  "pword_1": 32,
+  "pword_2": 19,
   "pword_3": 6,
-  "pword_4": 14,
+  "pword_4": 15,
   "pword_5": 25,
-  "seq_coll": 51,
+  "seq_coll": 52,
   "seq_coll_x": 0,
   "seq_ib": 1,
   "seq_vrd": 1,
   "seq_vwr": 1,
   "tt_c0": 40,
-  "tt_c1": 30,
+  "tt_c1": 29,
   "tt_c2": 17,
   "tt_c3": 5,
   "tt_c4": 9,
   "tt_c5": 19,
-  "tt_f0": 41,
+  "tt_f0": 40,
   "tt_f1": 30,
   "tt_f2": 17,
-  "tt_f3": 6,
+  "tt_f3": 5,
   "tt_f4": 8,
   "tt_f5": 19,
   "tt_land": 0,
@@ -171,30 +172,30 @@
   "tt_lf0": 44,
   "tt_lf1": 33,
   "tt_lf2": 18,
-  "tt_lf3": 7,
+  "tt_lf3": 5,
   "tt_lf4": 14,
   "tt_lf5": 27,
   "tt_mx": 14,
-  "tt_ty": 42,
-  "tt_xd": 17,
-  "tt_xr": 17,
+  "tt_ty": 43,
+  "tt_xd": 16,
+  "tt_xr": 16,
   "vm_seq_q": 1
  },
  "stage_note": "relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is registered as well (the stage the r21 token-cost counts as one per die hop)",
  "r22k": {
   "removed_instances": {
-   "qfd_hub": 1,
-   "qfd_cdc": 128,
-   "qfd_ctrl": 4,
-   "qfd_lst_h_e": 10,
-   "qfd_lst_v": 3,
-   "qfd_lst_c": 1,
    "qfd_lst_v_split": 6,
-   "qfd_kvc": 2,
-   "qfd_lst_h_w": 10,
-   "ot_hbm3e_phy": 4,
+   "qfd_cdc": 128,
    "qfd_kvc_n": 2,
-   "qfd_lst_c_split": 2
+   "qfd_lst_c_split": 2,
+   "ot_hbm3e_phy": 4,
+   "qfd_lst_c": 1,
+   "qfd_lst_h_w": 10,
+   "qfd_hub": 1,
+   "qfd_lst_h_e": 10,
+   "qfd_ctrl": 4,
+   "qfd_lst_v": 3,
+   "qfd_kvc": 2
   },
   "dropped_buses": {
    "link_channel": 24,
@@ -421,6 +422,10 @@
     "sp_constants_sequencer"
    ],
    "removed_buses": [
+    "coll_tx",
+    "coll_tx_x",
+    "coll_rx",
+    "coll_rx_x",
     "pword_0",
     "pword_1",
     "pword_2",
@@ -775,27 +780,12 @@
      201,
      [
       [
-       "tt_ctlm",
+       "seq_su",
        "kvd"
       ],
       [
        "d2d_rom",
        "kvd"
-      ]
-     ]
-    ],
-    [
-     "o4_kok",
-     "sequencer",
-     1,
-     [
-      [
-       "d2d_rom",
-       "kok"
-      ],
-      [
-       "tt_ctlm",
-       "kok"
       ]
      ]
     ],
@@ -1853,7 +1843,7 @@
    },
    "notes": [
     "tt_c<b> / tt_f<b> / tt_lc<b> / tt_xd / tt_xr / tt_mx / tt_land keep their widths, now on tt_ctlm",
-    "seq_ib / seq_coll / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su",
+    "seq_ib / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su; seq_coll carries the all-reduce words (548 b, native) and coll_seq returns them (518 b); coll_tx / coll_rx (VM <-> collective) removed",
     "the KV descriptor (kvd_*) and kv_ok leave the sequencer word for the control tile (o4_kvd / o4_kok); seq_d2d keeps its r22k width (not reduced here)",
     "cbuf stage / tok_start / tpos (o4_cb_ctl) and st_rdy / fault (o4_cb_rdy) have no consumer port in the released seq_su / SU RTL yet (the token vehicle prices the buffer as SU ML 7)",
     "up4 sel words o4_sel_u: the up4 is built with DLY = CLNK + 2 + LNK - CR (closed view DLY 1); its relay count here sets CR"
@@ -1871,11 +1861,333 @@
     "rq": 512,
     "wr": 521
    }
-  }
+  },
+  "despan": [
+   [
+    "qfd_sp_vector_memory",
+    "mx",
+    "W",
+    "M4",
+    295.032,
+    322.576
+   ],
+   [
+    "qfd_sp_vector_memory",
+    "xd",
+    "N",
+    "M5",
+    640.0,
+    643.544
+   ],
+   [
+    "qfd_sp_vector_memory",
+    "xr",
+    "N",
+    "M5",
+    670.0,
+    670.608
+   ],
+   [
+    "qfd_sp_vector_memory",
+    "rk5",
+    "N",
+    "M5",
+    671.608,
+    672.704
+   ],
+   [
+    "qfd_sp_vector_memory",
+    "rc5",
+    "N",
+    "M5",
+    673.656,
+    673.752
+   ],
+   [
+    "qfd_sp_vector_memory",
+    "svr",
+    "E",
+    "M4",
+    300.0,
+    301.432
+   ],
+   [
+    "qfd_sp_vector_memory",
+    "svq",
+    "E",
+    "M4",
+    360.0,
+    385.576
+   ],
+   [
+    "qfd_sp_vector_memory",
+    "svw",
+    "E",
+    "M4",
+    420.0,
+    446.008
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "acc",
+    "E",
+    "M4",
+    1828.468,
+    1831.772
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "eq",
+    "W",
+    "M4",
+    1300.0,
+    1325.624
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ea",
+    "W",
+    "M4",
+    1500.0,
+    1503.496
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ecr",
+    "W",
+    "M4",
+    1520.0,
+    1521.096
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ca0",
+    "S",
+    "M5",
+    40.0,
+    50.888
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "cq0",
+    "S",
+    "M5",
+    70.0,
+    95.576
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ca4",
+    "S",
+    "M5",
+    120.0,
+    130.888
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "cq4",
+    "S",
+    "M5",
+    150.0,
+    175.576
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ca1",
+    "S",
+    "M5",
+    234.4,
+    245.288
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "cq1",
+    "S",
+    "M5",
+    264.4,
+    289.976
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ca5",
+    "S",
+    "M5",
+    314.4,
+    325.288
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "cq5",
+    "S",
+    "M5",
+    344.4,
+    369.976
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ca2",
+    "S",
+    "M5",
+    428.8,
+    439.688
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "cq2",
+    "S",
+    "M5",
+    458.8,
+    484.376
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ca6",
+    "S",
+    "M5",
+    508.8,
+    519.688
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "cq6",
+    "S",
+    "M5",
+    538.8,
+    564.376
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ca3",
+    "S",
+    "M5",
+    623.2,
+    634.088
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "cq3",
+    "S",
+    "M5",
+    653.2,
+    678.776
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "ca7",
+    "S",
+    "M5",
+    703.2,
+    714.088
+   ],
+   [
+    "qfd_sp_su64_sfu",
+    "cq7",
+    "S",
+    "M5",
+    733.2,
+    758.776
+   ],
+   [
+    "qfd_port_tiles_2",
+    "tc",
+    "E",
+    "M4",
+    400.0,
+    417.464
+   ],
+   [
+    "qfd_port_tiles_2",
+    "tf",
+    "E",
+    "M4",
+    420.8,
+    429.264
+   ],
+   [
+    "qfd_port_tiles_3",
+    "tc",
+    "E",
+    "M4",
+    400.0,
+    417.464
+   ],
+   [
+    "qfd_port_tiles_3",
+    "tf",
+    "E",
+    "M4",
+    420.8,
+    429.264
+   ],
+   [
+    "qfd_port_tiles_4",
+    "tc",
+    "E",
+    "M4",
+    400.0,
+    417.464
+   ],
+   [
+    "qfd_port_tiles_4",
+    "tf",
+    "E",
+    "M4",
+    420.8,
+    429.264
+   ],
+   [
+    "qfd_port_tiles_1",
+    "tc",
+    "E",
+    "M4",
+    400.0,
+    417.464
+   ],
+   [
+    "qfd_port_tiles_1",
+    "tf",
+    "E",
+    "M4",
+    420.8,
+    429.264
+   ],
+   [
+    "qfd_port_tiles_0",
+    "tc",
+    "E",
+    "M4",
+    400.0,
+    417.464
+   ],
+   [
+    "qfd_port_tiles_0",
+    "tf",
+    "E",
+    "M4",
+    420.8,
+    429.264
+   ],
+   [
+    "qfd_port_tiles_5",
+    "tc",
+    "E",
+    "M4",
+    400.0,
+    417.464
+   ],
+   [
+    "qfd_port_tiles_5",
+    "tf",
+    "E",
+    "M4",
+    420.8,
+    429.264
+   ]
+  ]
  },
  "margin_lint": {
   "mode": "chains",
-  "chains": 2703,
+  "chains": 2699,
   "reach_um": 504.0,
   "reach_violations": 1,
   "far_side_relays": 31,
@@ -1883,7 +2195,7 @@
    {
     "chain": "cbuf_g_5->seq_su",
     "seg": "rly_o4_cb_rdy_5_0->rly_o4_cb_rdy_5_1",
-    "um": 515.4,
+    "um": 550.0,
     "hops": 1
    }
   ],
@@ -1891,12 +2203,17 @@
    {
     "chain": "tt_ctlm->sp_port_tiles_3",
     "relay": "rly_tt_c3_4",
-    "back_um": 421.2
+    "back_um": 419.0
    },
    {
     "chain": "tt_ctlm->sp_port_tiles_0",
     "relay": "rly_tt_c0_39",
     "back_um": 419.0
+   },
+   {
+    "chain": "sp_vector_memory->tt_ctlm",
+    "relay": "rly_tt_xr_15",
+    "back_um": 410.4
    },
    {
     "chain": "t_31_1->sp_port_tiles_0",
@@ -1922,11 +2239,6 @@
     "chain": "tt_ctlm->sp_vector_memory",
     "relay": "rly_tt_mx_13",
     "back_um": 410.4
-   },
-   {
-    "chain": "sp_vector_memory->tt_ctlm",
-    "relay": "rly_tt_xr_16",
-    "back_um": 345.6
    },
    {
     "chain": "t_31_13->sp_port_tiles_3",
@@ -1959,9 +2271,9 @@
     "back_um": 226.8
    },
    {
-    "chain": "sp_band_lanes_2->tt_up4_0",
-    "relay": "rly_tt_lf2_17",
-    "back_um": 124.8
+    "chain": "tt_ctlm->sp_port_tiles_1",
+    "relay": "rly_tt_c1_28",
+    "back_um": 146.9
    },
    {
     "chain": "d2d_rom->sp_su64_sfu",
@@ -1969,24 +2281,24 @@
     "back_um": 110.2
    },
    {
+    "chain": "sp_band_lanes_4->tt_up4_0",
+    "relay": "rly_pword_4_13",
+    "back_um": 82.1
+   },
+   {
     "chain": "tt_ctlm->sp_port_tiles_2",
     "relay": "rly_tt_c2_16",
-    "back_um": 107.6
+    "back_um": 74.7
    },
    {
-    "chain": "sp_port_tiles_3->tt_ctlm",
-    "relay": "rly_tt_f3_5",
-    "back_um": 97.2
+    "chain": "sp_band_lanes_2->tt_up4_0",
+    "relay": "rly_pword_2_17",
+    "back_um": 60.0
    },
    {
-    "chain": "crom_g_1->cbuf_g_1",
-    "relay": "rly_o4_cf_q_1_2",
-    "back_um": 92.0
-   },
-   {
-    "chain": "sp_band_lanes_0->tt_up4_0",
-    "relay": "rly_pword_0_46",
-    "back_um": 86.4
+    "chain": "sp_band_lanes_5->tt_up4_0",
+    "relay": "rly_tt_lf5_25",
+    "back_um": 51.8
    }
   ],
   "verdict": "FAIL"
@@ -1994,5 +2306,16 @@
  "margin_note": "data buses only: clock / reset trunks are CTS / reset trees (their relay-row sinks are clock pins)",
  "relay_kinds": [
   "relay"
- ]
+ ],
+ "collective_credit": {
+  "round_trip_edges": 121,
+  "credits": 121,
+  "receiver_buffer_words": 121,
+  "receiver_buffer_bits": 61952,
+  "one_way_edges": {
+   "fwd": 60,
+   "ret": 61
+  },
+  "note": "the die streams all-reduce words seq_su (tp_seq_vrl reads / writes the VM over seq_vrd / vm_seq_q / seq_vwr) -> io_xfifo -> io_collective on seq_coll (548 b) and back on coll_seq (518 b); no VM <-> collective words.  Credits = round trip (relays both ways + 8 port stations + 2 CDCs of 4 edges) keep one word a cycle; the collective input buffer holds that many words.  The token vehicle carries the same one-way edges as relay stations on the sequencer <-> collective words (option4_die --crly)."
+ }
 }

@@ -61,6 +61,7 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import macro_clk
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -248,6 +249,11 @@ def host_cfg(name):
     return next(h for h in hosts_table() if h["name"] == name)
 
 
+def host_label(name):
+    """Display label; a host retired from hosts.json (EPYC2/3, 10-12) shows its name instead of crashing status."""
+    return next((h["label"] for h in hosts_table() if h["name"] == name), name) if name else "-"
+
+
 # ------------------------------------------------------------------------------------------------- job specs
 def validate(spec: dict) -> list[str]:
     e = []
@@ -283,6 +289,14 @@ def validate(spec: dict) -> list[str]:
     for b in st.get("bench", []) if isinstance(st, dict) else []:
         if b.get("expect") not in ("pass", "fail") or not b.get("cmd") or not b.get("name"):
             e.append(f"bench entry needs name, cmd and expect pass|fail: {b}")
+        mcr = b.get("min_count_regex") if isinstance(b, dict) else None
+        if mcr:
+            try:
+                ng = re.compile(mcr).groups
+            except re.error as x:
+                ng = -1; e.append(f"bench {b.get('name')}: min_count_regex does not compile: {x}")
+            if ng == 0:   # bench_work counts the captured group: without one every pass reads as vacuous (suctlw r2 10-11)
+                e.append(f"bench {b.get('name')}: min_count_regex needs one capture group around the count: {mcr!r}")
     benches = st.get("bench", []) if isinstance(st, dict) else []
     if not spec.get("no_bench_reason") and not (any(b.get("expect") == "pass" for b in benches)
                                                 and any(b.get("expect") == "fail" for b in benches)):
@@ -773,12 +787,107 @@ def lint_at_submit(j):
         ledger(j, f"SUBMIT_LINT {res['fix']} applied: {res['message'][:300]}")
     elif v == "REFUSE":
         j["status"] = "REFUSED"
-        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN"
+        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else (
+            "PIN_TRACK" if (res.get("pin_track") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN")
         j["reason"] = f"SUBMIT_LINT {kind}: {res['message']}"[:1500]
         j["submit_lint"] = res
         event(j, j["reason"])
         ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
 
+
+# HIER-LINT + MACRO-GRID (owner 2026-10-11, TOP-DOWN HIERARCHY CONTRACT; tools/hier_contract/):
+#  * hier lint: every hard-child view (LEF + libs) a parent job names must pass tools/hier_contract/child_lint.py
+#    (bloat / full-length PG stripes / strap layer clear / TT-FF-SS libs / face-pin access / clock insertion).  Mode
+#    from STATE/hier_lint.json {"mode": "warn"|"refuse"} (default warn: event + daemon log + j["submit_checks"]["hier_lint"],
+#    which the verdict carries), spec "hier_lint": false | {"mode", "skip"} per job; main flips it without a restart.
+#  * macro grid: macro placement scripts are executed against a mock OpenDB and every placed macro's signal pins must
+#    sit on the asap7 tracks (DRT-0419 -> DRT-0255: hcoll-port g4, hbm_sfu_lane r4mpa/b).  REFUSE by default
+#    (STATE/macro_grid_lint.json {"mode": "warn"|"refuse"}; spec "macro_grid_lint": false opts out).
+def _state_mode(fname, default):
+    try:
+        return str(json.loads((STATE / fname).read_text()).get("mode", default))
+    except (OSError, ValueError, AttributeError):
+        return default
+
+
+def hier_lint_at_submit(j):
+    """run the hierarchy-contract child lint and the macro-grid lint on a freshly ingested QUEUED job"""
+    try:
+        sys.path.insert(0, str(HERE.parent / "hier_contract"))
+        import hier_submit  # noqa: E402
+        import macro_grid_lint  # noqa: E402
+    except Exception as ex:  # noqa: BLE001  (never block intake on the hook's own failure)
+        event(j, f"hier lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    g = hier_submit.Git(REPO)
+    for key, fn, mode in (("macro_grid", macro_grid_lint.check, _state_mode("macro_grid_lint.json", "refuse")),
+                          ("hier_lint", hier_submit.check, _state_mode("hier_lint.json", "warn"))):
+        if j["status"] != "QUEUED" or mode == "off":
+            continue
+        try:
+            res = fn(j["spec"], g) if key == "macro_grid" else fn(j["spec"], g, mode)
+        except Exception as ex:  # noqa: BLE001
+            event(j, f"{key} lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+            continue
+        v = res.get("verdict")
+        if v == "SKIP":
+            continue
+        if v == "REFUSE" and key == "macro_grid" and mode != "refuse":
+            v = "WARN"
+        j.setdefault("submit_checks", {})[key] = {"verdict": v, "mode": mode, "message": res.get("message", "")[:1500]}
+        if v == "REFUSE":
+            j["status"] = "REFUSED"
+            j["reason"] = f"SUBMIT_LINT {'MACRO_GRID' if key == 'macro_grid' else 'HIER_LINT'}: {res['message']}"[:1500]
+            event(j, j["reason"])
+            ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+        elif v == "WARN":
+            event(j, f"{key.upper()} WARN ({mode}): {res['message'][:1200]}")
+            log(f"[{j['name']}] {key} WARN: {res['message'][:300]}")
+        else:
+            event(j, f"{key} PASS: {res.get('message', '')[:300]}")
+
+
+# REF-TILE GATE (owner 2026-10-11, agent ref-flow-1011; tools/ref_tile/pre_route_gate.py submit_check): the LOCAL part of
+# the pre-route gate at intake, on the job's source commit.  A spec with "ref_tile": true (generated by
+# tools/ref_tile/ref_tile.py) gets the full kit check (floorplan / layer contract / pin plan vs RTL ports / RTL lint /
+# child_lint on hard children / every referenced file inside the synced source paths); every other job gets the
+# source-sync check only (the hbm-no3 "No rule to make target /src/physical/redesign_ds/..." class).  Modes from
+# STATE/ref_gate.json {"mode": "refuse"|"warn"|"off" (ref_tile jobs, default refuse), "other": ... (default warn)};
+# spec "ref_gate": false opts out.  Never blocks intake on the gate's own error (verdict SKIP).
+def ref_gate_at_submit(j):
+    if j["status"] != "QUEUED" or j["spec"].get("ref_gate") is False:
+        return
+    try:
+        cfg = json.loads((STATE / "ref_gate.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    mode = str(cfg.get("mode", "refuse") if j["spec"].get("ref_tile") else cfg.get("other", "warn"))
+    if mode == "off":
+        return
+    try:
+        sys.path.insert(0, str(HERE.parent / "ref_tile"))
+        import pre_route_gate  # noqa: E402
+        res = pre_route_gate.submit_check(j["spec"], str(REPO))
+    except Exception as ex:  # noqa: BLE001
+        event(j, f"ref gate skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    v = res.get("verdict")
+    if v == "SKIP":
+        event(j, f"ref gate: {res.get('message', '')[:300]}")
+        return
+    if v == "REFUSE" and mode != "refuse":
+        v = "WARN"
+    j.setdefault("submit_checks", {})["ref_gate"] = {"verdict": v, "mode": mode, "message": res.get("message", "")[:1500]}
+    if v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT REF_GATE: {res['message']}"[:1500]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    elif v == "WARN":
+        event(j, f"REF_GATE WARN ({mode}): {res['message'][:1200]}")
+        log(f"[{j['name']}] ref gate WARN: {res['message'][:300]}")
+    else:
+        event(j, f"ref gate PASS: {res.get('message', '')[:200]}")
 
 def ingest():
     try:
@@ -836,6 +945,10 @@ def ingest():
             else:
                 event(j, f"ingested from {origin}")
                 lint_at_submit(j)
+                if j["status"] == "QUEUED":
+                    hier_lint_at_submit(j)
+                if j["status"] == "QUEUED":
+                    ref_gate_at_submit(j)
                 if j["status"] == "QUEUED":
                     bench_paths_at_submit(j)
         save_job(j)
@@ -1171,7 +1284,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
 
 
-TOOL_REF_HOST = "ot-epyc3"
+TOOL_REF_HOST = "ot-epyc1tb"  # 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
 PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
 TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
@@ -1793,15 +1906,18 @@ def corner_sta_compat(j, host, run, full):
     event(j, f"corner_sta.py replaced by {CORNER_STA_COMPAT_REF}'s (generator passes --sdc-name)")
 
 
-HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
+HELPERS = ("eco_recovery.py", "path_summary.py", "macro_views.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
-           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
-           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py",
+           "../preroute_gate.py", "../preroute_gate.tcl", "../textbook_lint.py", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
+           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py", "../hier_contract/child_lint.py",
+           "../hier_contract/abstract_pin_stub.py", "../../physical/common_flow/grt_macro_top_layer.tcl",
+           "../../physical/common_flow/grt_macro_top_layer_post.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
-                                                          "macro_sliver_block.tcl", "edge_sliver_block.tcl")))
+                                                          "macro_sliver_block.tcl", "edge_sliver_block.tcl",
+                                                          "macro_cts_cluster.tcl")))
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1821,6 +1937,148 @@ CAL_OWNER_ACTION = {
 }
 
 
+def verdict_macros(j):
+    """verdict.macros as src-relative view dirs (macro_views.py).  MACRO-VIEW (el1011-ds-misc 2026-10-11): a bare SRAM
+    master there made every hold ECO / path summary / re-export die ORD-0001 on /src/<name>/<name>.lef.  Resolved
+    against the job's pinned commit (git ls-tree, cached per commit); on failure the raw list is returned with an event
+    and the remote helpers (hold_eco.sh / vtswap_eco.sh / path_summary.py) re-resolve against the snapshot or fail loudly."""
+    raw = list(((j.get("spec") or {}).get("verdict") or {}).get("macros") or [])
+    if not raw:
+        return []
+    commit = str(((j.get("spec") or {}).get("source") or {}).get("commit", ""))
+    c = j.get("macro_views") or {}
+    if c.get("commit") == commit and c.get("in") == raw and c.get("out"):
+        return list(c["out"])
+    if str(HERE) not in sys.path:
+        sys.path.insert(0, str(HERE))
+    import macro_views
+    try:
+        r = sh(["git", "-C", str(REPO), "ls-tree", "-r", "--name-only", commit], timeout=120)
+        if r.returncode:
+            raise macro_views.MacroViewError(f"git ls-tree {commit[:12]} failed rc={r.returncode}")
+        out, rw = macro_views.resolve(raw, r.stdout.splitlines())
+    except Exception as ex:   # noqa: BLE001 -- never block the stage on resolution; the helpers re-check remotely
+        if c.get("error") != str(ex):
+            event(j, f"MACRO-VIEW: verdict.macros {raw} not resolved at the daemon ({ex}); remote helpers re-resolve")
+        j["macro_views"] = dict(commit=commit, error=str(ex))
+        return raw
+    if rw:
+        event(j, "MACRO-VIEW: verdict.macros resolved " + ", ".join(f"{a} -> {b}" for a, b in rw))
+    j["macro_views"] = dict(commit=commit, **{"in": raw, "out": out})
+    return list(out)
+
+
+# OVERLAY-TRACKS-MAIN (el1012-daemon-overlay 2026-10-12): ship_helpers tars HELPERS from the DAEMON's tree (HERE) into every
+# job's {CL}, and stages copy them over the job's synced src (orfs_hold_mm.tcl, io_ref_routed.sdc, link_budget_consistent.sdc,
+# cg_pushdown.tcl, ...).  The daemon tree is a worktree pinned at an old commit, so flow fixes on main (de53a3b7c, e409d530a,
+# 3fd51709d, 1bfd5f1d2) never reached loop routes.  Each helper is now resolved against origin/main (fetched by the loop):
+#   local == main tip                    -> local
+#   local == an OLDER main version       -> main's tip blob (stale daemon copy; logged once per main tip)
+#   local not any main version (daemon-only edit) -> local, with an OVERLAY-DRIFT alert (shared-tool rule: land it on main)
+# overlay_drift_check() logs every differing helper (and the in-process imports) at startup and hourly.
+OVERLAY_CHECK_EXTRA = ("tools/textbook_lint.py", "tools/fp_margin_lint.py", "tools/ref_tile/pre_route_gate.py",
+                       "tools/closure_loop/submit_lint.py", "tools/closure_loop/macro_views.py")
+_OVL = {"head": None, "head_at": 0.0, "hist": {}, "said": set(), "check_at": 0.0}
+
+
+def _ovl_head():
+    if time.time() - _OVL["head_at"] > 60 or not _OVL["head"]:
+        r = sh(["git", "-C", str(REPO), "rev-parse", "refs/remotes/origin/main"], timeout=60)
+        _OVL["head"] = r.stdout.strip() if r.returncode == 0 else None
+        _OVL["head_at"] = time.time()
+    return _OVL["head"]
+
+
+def _ovl_blob_id(data):
+    import hashlib
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def _ovl_resolve(rel):
+    """(bytes to ship, state) for repo path rel; state in same|stale|daemon_only|not_on_main|no_git"""
+    local = (HERE.parents[1] / rel).read_bytes()
+    head = _ovl_head()
+    if not head:
+        return local, "no_git"
+    key = (rel, head)
+    if key not in _OVL["hist"]:
+        tip = sh(["git", "-C", str(REPO), "rev-parse", f"{head}:{rel}"], timeout=60)
+        _OVL["hist"][key] = tip.stdout.strip() if tip.returncode == 0 else None
+    tip = _OVL["hist"][key]
+    lid = _ovl_blob_id(local)
+    if tip is None:
+        return local, "not_on_main"
+    if lid == tip:
+        return local, "same"
+    # is the daemon copy an OLDER main version?  (a blob once in main's history stays there: cached per blob)
+    hk = ("inhist", rel, lid)
+    if not _OVL["hist"].get(hk):
+        r = sh(["git", "-C", str(REPO), "log", "--format=", "--raw", "--no-abbrev", "--no-renames", head, "--", rel],
+               timeout=180)
+        _OVL["hist"][hk] = r.returncode == 0 and lid in {ln.split()[3] for ln in r.stdout.splitlines()
+                                                          if ln.startswith(":") and len(ln.split()) >= 5}
+    if _OVL["hist"][hk]:
+        data = subprocess.run(["git", "-C", str(REPO), "cat-file", "blob", tip], capture_output=True, timeout=60)
+        if data.returncode == 0:
+            if ("stale", rel, head) not in _OVL["said"]:
+                _OVL["said"].add(("stale", rel, head))
+                log(f"OVERLAY-TRACKS-MAIN: daemon copy of {rel} is an old main version; shipping origin/main {head[:9]}'s")
+            return data.stdout, "stale"
+        return local, "no_git"
+    if ("daemon_only", rel, lid) not in _OVL["said"]:
+        _OVL["said"].add(("daemon_only", rel, lid))
+        log(f"OVERLAY-DRIFT ALERT: {rel} in the daemon tree has edits NOT on origin/main ({head[:9]}); shipping the daemon's "
+            f"copy -- commit it to main (shared-tool rule)")
+    return local, "daemon_only"
+
+
+def overlay_helper_bytes(helper):
+    rel = os.path.normpath(f"tools/closure_loop/{helper}")
+    try:
+        return _ovl_resolve(rel)[0]
+    except Exception as ex:  # noqa: BLE001 -- never block a launch on the resolver: ship the daemon's copy
+        log(f"OVERLAY-TRACKS-MAIN: {rel} unresolved ({type(ex).__name__}: {ex}); shipping the daemon's copy")
+        return (HERE / helper).read_bytes()
+
+
+def overlay_drift_check(force=False):
+    """startup + hourly: log every overlay / in-process file whose daemon copy differs from origin/main"""
+    if not force and time.time() - _OVL["check_at"] < 3600:
+        return
+    _OVL["check_at"] = time.time()
+    try:
+        gfetch("main", timeout=300)
+        _OVL["head_at"] = 0.0
+        rows = []
+        for rel in [os.path.normpath(f"tools/closure_loop/{h}") for h in HELPERS] + list(OVERLAY_CHECK_EXTRA):
+            if not (HERE.parents[1] / rel).is_file():
+                rows.append(f"{rel}: missing in daemon tree"); continue
+            st = _ovl_resolve(rel)[1]
+            if st != "same":
+                rows.append(f"{rel}: {st}")
+        hd = (_OVL["head"] or "?")[:9]
+        if rows:
+            log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: {len(rows)} file(s) differ (stale = main's copy is shipped; "
+                f"daemon_only = commit to main; in-process imports need a restart): " + "; ".join(rows))
+        else:
+            log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: all overlay files equal main")
+    except Exception:  # noqa: BLE001
+        log("overlay_drift_check error:\n" + traceback.format_exc())
+
+
+# LOOP-PIN-STUB: stdin script patching a stale ref_tile.py export (pre-ba4d5d136) to run abstract_pin_stub.py before the lint
+PINSTUB_PATCH = r"""import sys
+p = sys.argv[1]
+t = open(p).read()
+a = '    res = child_lint.lint(str(lef), str(o)) if lef.exists() else'
+if "abstract_pin_stub" not in t and t.count(a) == 1:
+    t = t.replace(a, '    if lef.exists():  # LOOP-PIN-STUB (closure loop, = ba4d5d136)\n'
+                     '        subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])\n' + a)
+    open(p, "w").write(t)
+    print("LOOP-PIN-STUB: patched", p)
+"""
+
+
 def ship_helpers(host, run):
     """(re)write the loop's helper scripts into {CL}: jobs synced before a helper existed get it too"""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
@@ -1828,7 +2086,9 @@ def ship_helpers(host, run):
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
         for helper in HELPERS:
-            tf.add(str(HERE / helper), arcname=Path(helper).name)
+            data = overlay_helper_bytes(helper)
+            ti = tarfile.TarInfo(Path(helper).name); ti.size = len(data); ti.mode = (HERE / helper).stat().st_mode & 0o777
+            ti.mtime = int(time.time()); tf.addfile(ti, io.BytesIO(data))
     if is_local(host):
         os.makedirs(f"{run}/cl", exist_ok=True)
         with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
@@ -1839,6 +2099,13 @@ def ship_helpers(host, run):
                            input=buf.getvalue(), capture_output=True, timeout=120)
     if r.returncode:
         raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
+
+
+def route_cfg_of(rb):
+    """the ORFS config.mk of the route whose base dir is rb (results/asap7/<d>/base -> <orfs>/config.mk): a stacked ECO
+    (hold on a VT-swap / combo base) passes it as ROUTE_CFG so hold_eco.sh keeps the route's layer cap + face keepout"""
+    ps = Path(str(rb)).parents
+    return str((ps[3] if len(ps) > 3 else Path(str(rb))) / "config.mk")
 
 
 def tag(st, j):
@@ -1860,14 +2127,15 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
+    # MACRO-CLK (macro-clk-1010): OT_CTS_MACRO_CLUSTER / _SIZE / _DIAM reach physical/common_flow/macro_cts_cluster.tcl
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
     # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
     # OOM-IN-CONTAINER (drive-1010 2026-10-10): the container's own processes (openroad / yosys) get the loop stage's +500
     # too; at 0 the kernel killed ~20 tiny +500 wrappers first (AGIdock 05:17-05:21) before reaching the 17 GB openroad.
     # The host probe still lowers die containers to -900 after start.
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1988,10 +2256,11 @@ def snapshot_refresh_sh(run):
 def fp_lint_env(j, t, lint=True, prg=False):
     run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
     env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
-           f"preroute_gate.py preroute_gate.tcl; do "
+           f"preroute_gate.py preroute_gate.tcl textbook_lint.py; do "
            f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; "
            f"{snapshot_refresh_sh(run)}true; }}\nship_fpl\n"
-           f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
+           f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n"
+           f"printf '%s\\n' {shlex.quote(json.dumps(textbook_cfg(j)))} > {d}/textbook_cfg.json\n")
     if lint:
         env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "
                 f"OT_FP_LINT_ARGS={shlex.quote(gate_args(j['spec'].get('fp_lint', True)))}\n")
@@ -1999,6 +2268,56 @@ def fp_lint_env(j, t, lint=True, prg=False):
         env += (f"export OT_PREROUTE_GATE=1 "
                 f"OT_PREROUTE_GATE_ARGS={shlex.quote(gate_args(j['spec'].get('preroute_gate', True)))}\n")
     return env
+
+
+# TEXTBOOK-LINT (owner 2026-10-11, tools/textbook_lint.py): classic unclosable structures (clock root size, high fanout,
+# unregistered boundaries, logic depth, wire reach, util / channels) checked on the synthesis netlist + floorplan inside
+# the floorplan-lint hook (fp_margin_lint.tcl ot_textbook_lint, ORFS PRE GLOBAL_PLACE).  Config per stage in
+# {CL}/fplint/<tag>/textbook_cfg.json (mounted /ot_fplint): mode from spec "textbook_lint" (false = off, {"mode",
+# "set", "waive"}), else STATE/textbook_lint.json {"mode": "warn"|"refuse", "refuse_checks": [...]} (main flips it to
+# refuse without a restart), else WARN.  WARN: the lines are logged to the job events + daemon log (textbook_note);
+# REFUSE: the hook writes FAIL "FLOORPLAN_MARGIN: textbook_lint: ..." and the job finishes FLOORPLAN_MARGIN as for the
+# floorplan lint (no placement / route spent).
+TEXTBOOK_NOTE_S = 600
+
+
+def textbook_cfg(j):
+    try:
+        cfg = json.loads((STATE / "textbook_lint.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    cfg = {"mode": cfg.get("mode", "warn"), **({"refuse_checks": cfg["refuse_checks"]} if cfg.get("refuse_checks") else {})}
+    sp = j["spec"].get("textbook_lint", True)
+    if sp is False:
+        cfg["mode"] = "off"
+    elif isinstance(sp, dict):
+        cfg.update({k: sp[k] for k in ("mode", "set", "waive", "refuse_checks") if k in sp})
+    return cfg
+
+
+def textbook_note(j, force=False):
+    """log the in-flow textbook lint's result for the current stage once (job event + daemon log)"""
+    tag_ = j.get("stage_tag")
+    if not tag_ or not j.get("host") or not j.get("run"):
+        return
+    seen = j.setdefault("textbook_seen", {})
+    if tag_ in seen or (not force and time.time() - j.get("textbook_checked", 0) < TEXTBOOK_NOTE_S):
+        return
+    j["textbook_checked"] = time.time()
+    try:
+        r = ssh(j["host"], f"cat {j['run']}/cl/fplint/{tag_}/TEXTBOOK 2>/dev/null", timeout=60)
+    except Exception:  # noqa: BLE001
+        return
+    lines = [l for l in (r.stdout or "").splitlines() if l.startswith(("textbook_lint:", "TEXTBOOK_LINT:"))]
+    if r.returncode or not lines:
+        return
+    seen[tag_] = lines[0][len("textbook_lint: "):][:120]
+    j["textbook_lint"] = {"tag": tag_, "lines": lines[:12]}
+    head = lines[0]
+    if len(lines) > 1:
+        event(j, f"TEXTBOOK-LINT {tag_}: {head[15:200]} || " + " || ".join(l[15:400] for l in lines[1:8])[:1800])
+    else:
+        event(j, f"TEXTBOOK-LINT {tag_}: {head[15:300]}")
 
 
 def fp_lint_failed(host, run, tag):
@@ -2044,7 +2363,10 @@ def fp_lint_finish(j, tag, text):
            f"report {j['run']}/cl/fplint/{tag}/fp_margin_lint.json)\n" +
            "\n".join(l for l in text.splitlines() if l.startswith("fp_margin_lint:"))[:1500] +
            "\nFIX (REDESIGN_RULES 'floorplan margin targets'): <= 55-60% util, <= 6 bits/um/layer, PDN-clear pin "
-           "columns, channels sized to the crossing nets; spec fp_lint:false opts out")
+           "columns, channels sized to the crossing nets; spec fp_lint:false opts out" +
+           ("\nTEXTBOOK: the textbook lint refused a classic unclosable structure (report "
+            f"{j['run']}/cl/fplint/{tag}/textbook_lint.json; tools/closure_loop/README.md 'Textbook lint'): restructure "
+            "it; spec textbook_lint: {\"waive\": [\"<check>\"]} waives one check" if "textbook_lint" in reasons else ""))
 
 
 # MEM-CAP (drive-0849 2026-10-09, coordinator URGENT "die routes SIGKILLed"): both full-die Qwen r22k GRTs (EPYC3
@@ -2083,6 +2405,34 @@ def launch_stage(j, st, cmd):
     # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
     # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
     env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj 2>/dev/null || true\n"
+    if st["kind"] == "bench":
+        # Benches use the fleet's pinned tools (Verilator 5.050, yosys 0.68), the same ones every agent gate runs
+        # under. The non-login ssh PATH picked Debian /usr/bin/verilator 5.032, so loop benches disagreed with the
+        # gates (s81vm-*-e66305b64: gold_s1 PASS under 5.050, FAIL under 5.032 on identical sources).
+        env += ('for _d in "$HOME/.local/opentallas-tools/verilator-5.050/bin" "$HOME/.local/opentallas-tools/yosys-0.68/bin"; '
+                'do [ -d "$_d" ] && export PATH="$_d:$PATH"; done\n')
+    if st["kind"] != "bench" and j["spec"].get("ref_tile"):
+        # LOOP-CHILD-LINT (2026-10-12): ref_tile.py export (collect / hold-ECO re-export) imports child_lint from the job's
+        # synced src, so a job synced before a child_lint fix (888b49460 EDGE_INSET_UM: thin tiles' edge-inset PG stripes)
+        # kept failing export on a lint bug, and every retry re-synced the old commit.  The lint is the loop's gate, not
+        # the design: run the loop's own child_lint (CHILD_LINT_DIR, shipped to {CL}); the job's views stay the input.
+        ship_helpers(j["host"], j["run"])
+        _src = j.get("stage_source", f"{j['run']}/src")
+        env += (f"[ -f {_src}/tools/hier_contract/child_lint.py ] && ! [ -f {_src}/tools/hier_contract/child_lint.py.job ] && "
+                f"cp {_src}/tools/hier_contract/child_lint.py {_src}/tools/hier_contract/child_lint.py.job; "
+                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py\n")
+        # LOOP-PIN-STUB (2026-10-12): the loop's child_lint (ba4d5d136) refuses a pin's own same-layer route stub written as
+        # OBS; ref_tile export runs abstract_pin_stub.py on the view before the lint, but only from ba4d5d136 on.  A job
+        # synced earlier got the new lint WITHOUT the view fix (smh_fcbc_ref_p40-r1-9214bae8b: 10 stub pins, collect
+        # crashed twice on a route that closed).  The fix and the lint travel together: ship abstract_pin_stub.py (it also
+        # writes atomically now: the exported LEF is root-owned) and add the pre-lint call to a stale ref_tile.py export.
+        env += (f"cp -f {j['run']}/cl/abstract_pin_stub.py {_src}/tools/hier_contract/abstract_pin_stub.py; "
+                f"python3 - {_src}/tools/ref_tile/ref_tile.py <<'OT_PINSTUB_PATCH' || true\n{PINSTUB_PATCH}OT_PINSTUB_PATCH\n")
+        # GRT-TOP-RESTORE (2026-10-12): grt_macro_top_layer.tcl (d36d0b234) left the block's max routing layer at MAX+1 in
+        # 5_1_grt.odb, so DRT routed M6 under the M5 cap (hgi_topk_heap_rt_m5-h3m5-6d8d554ba: 190 um M6, child_lint (c)
+        # FAIL at collect).  Jobs synced before the fix get the fixed hook + its POST_GLOBAL_ROUTE restore.
+        env += (f"[ -f {_src}/physical/common_flow/grt_macro_top_layer.tcl ] && for f in grt_macro_top_layer.tcl "
+                f"grt_macro_top_layer_post.tcl; do cp -f {j['run']}/cl/$f {_src}/physical/common_flow/$f; done; true\n")
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
         cap = stage_mem_cap(j, st)
@@ -2115,6 +2465,11 @@ def launch_stage(j, st, cmd):
             # recipes); the verdict re-STA and ECO sessions never see this variable
             env += "export OT_IOREF_INPUT_PF=1\n"
             j["pinflop_ref_applied"] = True       # LOOP-AUTO class c: this job's route used the pin-flop reference
+        if j["spec"].get("macro_cts") is False:
+            # MACRO-CLK (macro-clk-1010 2026-10-10): the macro clock clustering default (physical/common_flow/
+            # macro_cts_cluster.tcl via tools/orfs_hold_mm.tcl) is on for every block with 2+ clocked macros; spec
+            # "macro_cts": false keeps TritonCTS's own macro clustering
+            env += "export OT_CTS_MACRO_CLUSTER=0\n"
         if j["spec"].get("sliver_block"):
             # LOOP-AUTO class d (auto-react successor of a sliver-only FLOORPLAN_MARGIN): the macro-to-macro and
             # macro-to-core-edge sliver hard placement blockages run at ORFS PRE GLOBAL_PLACE, before the floorplan lint
@@ -2225,10 +2580,16 @@ def launch_stage(j, st, cmd):
     if st["kind"] == "bench":
         private = shlex.quote(j["stage_source"])
         original = shlex.quote(f"{j['run']}/src")
-        env += (f"if [ ! -d {private} ]; then\n"
-                f"  test ! -e {private}.tmp || exit 9\n"
+        # Parallel bench stages of one attempt share the private copy: serialise the copy with a lock instead of
+        # refusing on an existing .tmp.  A copy that died (ENOSPC on AGIdock, hfd_lk_ep-b46a972cd-cc 10-11) left a
+        # stale .tmp that made every retry exit 9 (NEEDS_RTL with no bench run); under the lock a leftover .tmp is
+        # always stale, so it is removed and the copy redone.
+        env += (f"exec 9>{private}.lock || exit $?\nflock 9 || exit $?\n"
+                f"if [ ! -d {private} ]; then\n"
+                f"  rm -rf {private}.tmp\n"
                 f"  cp -a --reflink=auto {original} {private}.tmp || exit $?\n"
                 f"  mv {private}.tmp {private} || exit $?\nfi\n"
+                f"flock -u 9; exec 9>&-\n"
                 f"cd {private} || exit $?\n")
         # A few legacy recipes spell {RUN}/src instead of using {SRC}.
         cmd = cmd.replace("{RUN}/src", "{SRC}")
@@ -2353,9 +2714,15 @@ def get_metrics(j, tt_resta=True):
             raise RuntimeError(f"verdict metrics_cmd produced no JSON (command failed rc={r.returncode}): "
                                f"{(r.stderr or r.stdout).strip()[-300:]}")
         m = json.loads(last[-1]) if last else {}
-        return dict(ss_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"), orfs_dir=m.get("orfs_dir"),
-                    setup_corner=m.get("setup_corner"), clock_periods_ps=m.get("clock_periods_ps"),
-                    ss_sensitivity_ps=m.get("ss_sensitivity_ps"), raw=m)
+        out = dict(ss_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"), orfs_dir=m.get("orfs_dir"),
+                   setup_corner=m.get("setup_corner"), clock_periods_ps=m.get("clock_periods_ps"),
+                   ss_sensitivity_ps=m.get("ss_sensitivity_ps"), raw=m)
+        # The post-route hold ECO / re-STA paths read these from the metrics; a custom metrics_cmd that reports them
+        # must not lose them here (W2 station jobs went NEEDS_RTL with no hold ECO ever attempted, el1011-hbm-no3 10-11).
+        for k in ("drc_metrics", "corner_sta", "post_sdc"):
+            if m.get(k) is not None:
+                out[k] = m[k]
+        return out
     py = r"""
 import glob,json,sys,re
 cs=sorted(glob.glob(sys.argv[1])); dm=sorted(glob.glob(sys.argv[2])) if sys.argv[2] else []
@@ -2635,6 +3002,9 @@ def schedule_deferred_record_merges():
         _DEFERRED_MERGE_FUTURE = _DEFERRED_MERGE_POOL.submit(retry_deferred_record_merges)
 
 
+RECORD_MAX_FILE_BYTES = 90 << 20
+
+
 def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
@@ -2656,6 +3026,7 @@ def publish(j, metrics):
                 base = source_branch
         gfetch(base, timeout=600)
         wt_add(cwt, f"origin/{base}", sparse)
+        big_remote = []
         for r in spec.get("record", []):
             src = subst(r["from"], j)
             dst = cwt / r["to"]
@@ -2666,10 +3037,30 @@ def publish(j, metrics):
                 remote_shell = [] if is_local(j['host']) else ["-e", shlex.join(base[:-1])]
                 if isdir:
                     dst.mkdir(parents=True, exist_ok=True)
-                    sh(["rsync", "-a", *remote_shell, *excl, rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
+                    # never pull files git cannot take: a 3.9 GB record (hbm_vm8bfq_nwe lvt, 10-11) held the single-threaded
+                    # daemon in one rsync at ~0.25 MB/s and stopped all intake; oversized files stay on the run host
+                    sh(["rsync", "-a", f"--max-size={RECORD_MAX_FILE_BYTES}", *remote_shell, *excl,
+                        rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
+                    r_big = ssh(j["host"], f"find {shlex.quote(src.rstrip('/'))} -type f -size +{RECORD_MAX_FILE_BYTES // 1024}k "
+                                           f"-printf '%P %s\\n' 2>/dev/null | head -200", timeout=60)
+                    for ln in (r_big.stdout or "").splitlines():
+                        if ln.strip():
+                            big_remote.append(f"{r['to']}/{ln.split()[0]} {ln.split()[-1]} B (kept on {j['host']}:{src})")
                 else:
                     sh(["rsync", "-a", *remote_shell, rpath(j['host'], src), str(dst)], timeout=1800, check=True)
+        # GitHub rejects files > 100 MB (pre-receive hook): drop oversized record files (they stay on the run host) and
+        # list them, so one huge route artefact can never wedge the publish loop.
+        big = list(big_remote)
+        for r in spec.get("record", []):
+            d = cwt / r["to"]
+            for f in ([d] if d.is_file() else (d.rglob("*") if d.is_dir() else [])):
+                if f.is_file() and f.stat().st_size > RECORD_MAX_FILE_BYTES:
+                    big.append(f"{f.relative_to(cwt)} {f.stat().st_size} B (kept on {j['host']}:{j['run']})")
+                    f.unlink()
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
+        if big:
+            (cwt / rec_dir / "LARGE_FILES_EXCLUDED.txt").write_text("\n".join(big) + "\n")
+            log(f"[{j['name']}] record: {len(big)} file(s) > {RECORD_MAX_FILE_BYTES >> 20} MB left out of git")
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=source_branch, record_branch=branch, source_commit=j["commit_full"],
                        host=j["host"], run_dir=j["run"], acceptance=dict(setup_corner=setup_corner_label(metrics), setup_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0, clock_periods_ps=metrics.get("clock_periods_ps"),
@@ -2678,7 +3069,7 @@ def publish(j, metrics):
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "clock_periods_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
                        benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
-                       checks=j.get("checks", {}), calibration=j.get("calibration"), cycles_added=spec.get("cycles_added"), status="CLOSED",
+                       checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
@@ -2741,7 +3132,7 @@ def write_status(fleet_note="", fleet=None):
          f"Active {len(act)} | terminal {len(rows) - len(act)} | ledger {LEDGER} | how-to {REVIEW}/CLOSURE_LOOP_HOWTO.md",
          fleet_note, "", "## Active"]
     for r in act:
-        h = host_cfg(r["host"])["label"] if r.get("host") else "-"
+        h = host_label(r.get("host"))
         stage = r.get("stage_key", "-")
         if r["status"] == "READY":
             stages = stage_list(r["spec"])
@@ -2793,6 +3184,54 @@ def finish(j, status, reason, ledger_text):
     term = {"CLOSED": "completed: CLOSED", "NEEDS_RTL": "failed: NEEDS_RTL", "NEEDS_HUMAN": "failed: NEEDS_HUMAN",
             "NEEDS_BUDGET": "failed: NEEDS_BUDGET", "CANCELLED": "cancelled"}.get(status, "stopped: " + status)
     experiment(j, f"{term} {reason[:120]}")
+    if status == "CLOSED":
+        viz_elem_export(j)
+        os.environ.get("CL_CLOSED_ARCHIVE", "1") != "0" and os.path.exists(CLOSED_ARCHIVE_HOOK) and os.system(f"setsid -f {CLOSED_ARCHIVE_HOOK} {shlex.quote(j['name'])} >/dev/null 2>&1 </dev/null")  # closed-archive-1011
+
+
+# VIZ-ELEM (owner 2026-10-10, viz-elem-1010): every CLOSED job gets its Chip Explorer element page.  finish() starts
+# tools/explorer_elem_export.py auto --job <name> detached (own session, nice 19; the heavy OpenROAD export runs on the
+# job's host under ot-heavy), so a closure never waits on it and an exporter failure only lands in its marker
+# ~/.local/state/viz-elem/<job>.json and VIZ_ELEM_LOG.  Deep release keeps the run dir while the marker says running.
+# CL_VIZ_ELEM=0 disables.  Backlog / retries: explorer_elem_export.py batch.
+VIZ_ELEM_MARKS = Path.home() / ".local/state/viz-elem"
+CLOSED_ARCHIVE_HOOK = "/home/ubuntu/closed_archive/_tools/hook.sh"   # closed-archive-1011: archives every CLOSED job's final files
+VIZ_ELEM_LOG = STATE / "viz_elem.log"
+
+
+def viz_elem_export(j):
+    if os.environ.get("CL_VIZ_ELEM", "1") == "0" or not j.get("host") or not j.get("run"):
+        return
+    tool = HERE.parent / "explorer_elem_export.py"
+    if not tool.exists():
+        return
+    try:
+        VIZ_ELEM_MARKS.mkdir(parents=True, exist_ok=True)
+        (VIZ_ELEM_MARKS / (j["name"] + ".json")).write_text(json.dumps(dict(state="running", queued_by="closure_loop",
+                                                                            updated=now_iso())))
+        with open(VIZ_ELEM_LOG, "a") as lg:
+            lg.write(f"{now_iso()} {j['name']}: export started\n")
+            lg.flush()
+            subprocess.Popen(["nice", "-n", "19", sys.executable, str(tool), "auto", "--job", j["name"]],
+                             stdout=lg, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, start_new_session=True,
+                             env=dict(os.environ, CL_REPO=str(REPO)))
+        event(j, "viz-elem: element page export started (explorer_elem_export.py auto)")
+        if (lvh := Path.home() / ".local/share/fleet-viz/layout_viewer/lv_post_record.sh").exists(): subprocess.Popen([str(lvh), j["name"]], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)  # layout viewer static export (layout-viewer-1011)
+    except Exception as e:      # never into the caller
+        event(j, f"viz-elem: export not started ({type(e).__name__}: {str(e)[:120]})")
+
+
+def viz_elem_running(j):
+    try:
+        m = json.loads((VIZ_ELEM_MARKS / (j["name"] + ".json")).read_text())
+    except (OSError, ValueError):
+        return False
+    if m.get("state") != "running":
+        return False
+    try:                        # a marker older than 12 h is a dead exporter, not a live one
+        return (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(m.get("updated"))).total_seconds() < 12 * 3600
+    except (TypeError, ValueError):
+        return False
 
 
 def preserve_completed_route(j, st, why):
@@ -2933,6 +3372,11 @@ def first_error(j, st):
 
 
 def crash(j, st, fleet, why):
+    if st["kind"] in ("route", "calibrate"):
+        try:
+            textbook_note(j, force=True)
+        except Exception:  # noqa: BLE001
+            pass
     if preserve_completed_route(j, st, why):
         return
     if st["kind"] in ("calibrate", "route") and j.get("stage_tag") and j.get("host"):
@@ -3004,7 +3448,7 @@ def summarize_failure(j, fleet, metrics):
     if not fail_corners or (not base and not orfs):
         return False
     basearg = f"--base $(ls -d {base} | tail -1)" if base else f"--orfs-dir {orfs}"
-    extra = "".join(f" --macro {m}" for m in v.get("macros", [])) + \
+    extra = "".join(f" --macro {m}" for m in verdict_macros(j)) + \
         "".join(f" --post-sdc {p}" for p in v.get("post_sdc", []))
     cmd = (f"python3 {j['run']}/cl/path_summary.py {basearg} --src {j['run']}/src{extra} --corners "
            f"{','.join(fail_corners)} --output {j['run']}/cl/path_summary.json")
@@ -3069,6 +3513,25 @@ def yield_to_priority(j, fleet, host=None):
                                if fleet.compatible(h["name"], j["spec"]))
 
 
+def move_to_other_host(j, fleet, spec, stl, reason):
+    """move a job with nothing in flight to another allowed host (fleet.choose excluding the current one): claim the
+    target, re-sync there and restart from the calibrate stage.  Shared by launch_ready's capacity move and
+    handle_transient's ssh-failure move.  Returns True when moved."""
+    h, _ = fleet.choose(spec, exclude=[j["host"]])
+    if not h:
+        return False
+    fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32), j["name"])  # 2026-10-08: claim, no herd moves
+    event(j, f"{reason}; moving to {host_cfg(h)['label']}")
+    j["hosts_tried"].append(h)
+    j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
+    j.pop("wait_since", None)
+    cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+    if cal is not None and j.get("stage_idx", 0) > cal:
+        j["stage_idx"] = cal
+    experiment(j, f"running: moved to {host_cfg(h)['label']}")
+    return True
+
+
 def launch_ready(j, fleet, spec, stl, st):
     """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
     OUTSIDE the lock (launch_now) or None."""
@@ -3085,16 +3548,7 @@ def launch_ready(j, fleet, spec, stl, st):
             j.setdefault("wait_since", time.time())
         if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
-            h, _ = fleet.choose(spec, exclude=[j["host"]])
-            if h:
-                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32), j["name"])  # 2026-10-08: claim, no herd moves
-                event(j, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why}); moving to {host_cfg(h)['label']}")
-                j["hosts_tried"].append(h)
-                j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
-                j.pop("wait_since", None)
-                cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
-                j["stage_idx"] = cal if cal is not None else j["stage_idx"]
-                experiment(j, f"running: moved to {host_cfg(h)['label']}")
+            if move_to_other_host(j, fleet, spec, stl, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why})"):
                 return
         if not ok:
             if j.get("wait") != why:
@@ -3781,6 +4235,7 @@ def cal_track(j, fleet, stl):
     try:
         cj = json.loads(r.stdout)
         j["calibration"] = {k: cj[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+        macro_clk_flag(j, cj)
     except (ValueError, KeyError, TypeError) as ex:
         if r.returncode == 255:
             return
@@ -3924,6 +4379,8 @@ def step(j, fleet):
                 event(j, f"{j['host']} reachable again; {st['key']} still running")
                 j["unreachable"] = 0
             stuck_watchdog(j, st)
+            if st["kind"] in ("route", "calibrate") and state == "RUNNING" and j["spec"].get("fp_lint", True) is not False:
+                textbook_note(j)
             if st["kind"] == "route" and state == "RUNNING":
                 early_fail_gate(j, st)
             return
@@ -3973,6 +4430,7 @@ def step(j, fleet):
                         raise ValueError(f"artifact read exited {r.returncode}")
                     c = json.loads(r.stdout)
                     j["calibration"] = {k: c[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+                    macro_clk_flag(j, c)
                     if not isinstance(c["env"], dict):
                         raise ValueError("calibration env must be an object")
                 except (ValueError, KeyError, TypeError) as ex:
@@ -4369,7 +4827,7 @@ def start_vtswap_eco(j, fleet, m):
     out = f"{j['run']}/cl/eco-vtswap-t{target:g}" + (f"-r{len(j.get('eco_history') or []) + 1}" if j.get("eco_history") else "")
     env = (f"TARGET={target:g} CAP_PCT={cap:g} DRC0={int(m['drc'])} ACC_SS={SS_MIN:g} ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} "
            f"SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')} THREADS=8 "
-           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
+           f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
     if m.get("setup_post_sdc"):
         env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
     cmd = f"{env} bash {{CL}}/vtswap_eco.sh {rb} {ob} {out} {j['spec']['block']} " + " ".join(shlex.quote(p) for p in post_sdcs)
@@ -4415,13 +4873,14 @@ def start_combo_hold_retry(j, fleet, m, prev):
     post = list(prev.get("post_sdc") or [])
     pq = " ".join(shlex.quote(p) for p in post)
     sdcn = shlex.quote(prev.get("sdc_name") or "6_final.sdc")
-    mac = shlex.quote(" ".join(v.get("macros", [])))
+    mac = shlex.quote(" ".join(verdict_macros(j)))
     blk = j["spec"]["block"]
     out = prev["out"] + "-h"
     henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=0 ALLOW=4 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
             f"ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} KEEPCLK=0 BUF=30 MACROS={mac} THREADS=8 SDC_NAME={sdcn} ECO_RB_DB=6_final.odb")
     cmd = (f"VB=$(ls -d {prev['out']}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo no combo base; exit 3; }}; "
-           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} ROUTE_CFG={shlex.quote(route_cfg_of(prev['rb']))} "
+           f"bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
     ship_helpers(j["host"], j["run"])
     prev["hold_retry"] = True
     j.setdefault("eco_history", []).append(prev)
@@ -4478,7 +4937,7 @@ def start_combo_eco(j, fleet, m):
     n = len(j.get("eco_history") or []) + 1
     outv, out = f"{j['run']}/cl/eco-combo{n}-vt", f"{j['run']}/cl/eco-combo{n}"
     sdcn = shlex.quote(m.get("sdc_name") or "6_final.sdc")
-    mac = shlex.quote(" ".join(v.get("macros", [])))
+    mac = shlex.quote(" ".join(verdict_macros(j)))
     cap = float(he.get("vtswap_cap_pct", VTSWAP_CAP_PCT))
     blk = j["spec"]["block"]
     venv = (f"TARGET=10 CAP_PCT={cap:g} DRC0=1 ACC_SS={SS_MIN:g} ACC_FF={COMBO_FF_FLOOR:g} SETUP_LIB={SETUP_LIB} SDC_NAME={sdcn} "
@@ -4490,7 +4949,7 @@ def start_combo_eco(j, fleet, m):
     cmd = (f"{venv} bash {{CL}}/vtswap_eco.sh {rb} {ob} {outv} {blk} {pq}; "
            f"VB=$(ls -d {outv}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo COMBO: no vtswap base; exit 3; }}; "
            f"[ -f $VB/{sdcn} ] || cp {ob}/{sdcn} $VB/; "
-           f"{henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+           f"{henv} ROUTE_CFG={shlex.quote(route_cfg_of(rb))} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
     ship_helpers(j["host"], j["run"])
     tt, ff = m["ss_ps"], m["ff_ps"]
     j["eco"] = dict(tried=True, kind="combo", rb=rb, ob=ob, combo_vtswap=outv, out=out, post_sdc=post,
@@ -4577,7 +5036,7 @@ def start_hold_eco(j, fleet, m):
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
-          f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
+          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS=8"
     keepwires = bool(he.get("keep_wires") or j.get("auto_react_keepwires"))
     if keepwires:
         # LOOP-AUTO class a: narrow re-route -- every net the ECO did not touch keeps its detailed wires (hold_eco.sh
@@ -4651,7 +5110,7 @@ def eco_install_cmd(j):
         lines.append(he["reexport"])                                      # crashed join(); non-str -> the default re-export
     else:
         W = "/".join(rb.split("/")[:-6])     # <route>/work/orfs/results/asap7/<d>/base -> <route>
-        macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
+        macs = " ".join(f"--macro-view {x}" for x in verdict_macros(j))
         isdc = f" --interface-sdc {ob}/6_final.sdc" if ob != rb else ""
         lines.append(f"if [ -f {W}/view/{blk}.lef ]; then mv {W}/view {W}/view.pre_eco; python3 tools/hbm_fmax_attn_abstract.py "
                      f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; "
@@ -4661,10 +5120,107 @@ def eco_install_cmd(j):
     return "\n".join(lines)
 
 
+# CHILD-LINT GATE (preamble HOLD ECO KEEPOUT, 2026-10-12): a tile / leaf counts as CLOSED only with child_lint (c) strap
+# layer and (f) face-pin access clean on its EXPORTED view.  blocked_pin_sweep.json: the 4 closed tiles with (f) blocked
+# face pins were exactly the 4 hold-ECO'd ones (ECO DRT re-routed over the face pins after the keepout was removed,
+# fixed a804fc09b); nothing checked the exported view before publish.  Applies to every job whose collected record holds
+# a view LEF of its block (a hard child some parent will place); a job without one is not a tile view and passes.
+# spec "hier_lint": {"skip": "f", "why": "..."} skips a check only with a written reason; {"gate": false, "why": ...} all.
+CHILD_LINT_DIR = Path(__file__).resolve().parents[1] / "hier_contract"
+CHILD_LINT_CHECKS = ("c", "f")
+
+
+def child_lint_gate_checks(spec):
+    hl = spec.get("hier_lint") or {}
+    if not str(hl.get("why") or "").strip():
+        return set(CHILD_LINT_CHECKS)
+    if hl.get("gate") is False:
+        return set()
+    return set(CHILD_LINT_CHECKS) - {x.strip() for x in str(hl.get("skip") or "").split(",")}
+
+
+def pick_view_lef(paths, block):
+    """the block's own view among the record's LEFs (not bloat / macro copies of its children)"""
+    cand = [p for p in paths if p.endswith(".lef") and "_bloat" not in p and "/macros/" not in p]
+    return next((p for p in cand if Path(p).stem == block), None)
+
+
+def child_lint_view(lef_text, checks):
+    """child_lint on a view LEF text: (fails restricted to checks, summary)"""
+    if str(CHILD_LINT_DIR) not in sys.path:
+        sys.path.insert(0, str(CHILD_LINT_DIR))
+    import child_lint  # noqa: E402
+    with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as fh:
+        fh.write(lef_text)
+        tmp = fh.name
+    try:
+        res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks))
+    finally:
+        os.unlink(tmp)
+    return [x for x in res["fails"] if x[1:2] in checks], res.get("summary", "")
+
+
+def pin_stub_fix(lef_text):
+    """(text, note): tools/hier_contract/abstract_pin_stub.py applied to a view LEF text; note '' when nothing moved"""
+    with tempfile.TemporaryDirectory() as td:
+        a, b = Path(td) / "in.lef", Path(td) / "out.lef"
+        a.write_text(lef_text)
+        r = subprocess.run([sys.executable, str(CHILD_LINT_DIR / "abstract_pin_stub.py"), str(a), str(b)],
+                           capture_output=True, text=True, timeout=600)
+        m = re.search(r"pinstub: (\d+) OBS rects moved into (\d+) pins", r.stdout or "")
+        if r.returncode != 0 or not m or not b.exists():
+            return lef_text, ""
+        if m.group(1) == "0":
+            return lef_text, ""
+        return b.read_text(), f"{m.group(1)} OBS stubs of {m.group(2)} pins"
+
+
+def child_lint_gate(j):
+    """None = pass / not a tile view; else the (c)/(f) failure text.  Raises on ssh failure (the commit is re-tried)."""
+    checks = child_lint_gate_checks(j["spec"])
+    if not checks:
+        return None
+    blk = j["spec"]["block"]
+    r = ssh(j["host"], f"find {j['run']}/record -name '*.lef' 2>/dev/null | head -200", timeout=120)
+    if r.returncode != 0 and TRANSIENT_RE.search((r.stderr or "") + (r.stdout or "")):
+        raise RuntimeError(f"child-lint gate: ssh failure: {(r.stderr or '')[-200:]}")
+    lef = pick_view_lef(r.stdout.split(), blk)
+    if not lef:
+        if j["spec"].get("ref_tile"):
+            return f"ref_tile job exported no view LEF {blk}.lef under {{RUN}}/record"
+        return None
+    t = ssh(j["host"], f"cat {shlex.quote(lef)}", timeout=300)
+    if t.returncode != 0 or "MACRO" not in t.stdout:
+        raise RuntimeError(f"child-lint gate: could not read {lef}: {(t.stderr or '')[-200:]}")
+    text, moved = pin_stub_fix(t.stdout)
+    if moved:
+        # PIN-STUB (73e17f447, ot_qkvd_sbuf DRT-0073): write_abstract_lef writes a face pin's own same-layer route stub
+        # as OBS over the pin; child_lint (f) now refuses that.  Moving the stub into the pin's PORT is the exact view
+        # (in a DRC-clean route, metal touching a pin on its layer is the pin's net), so fix the record's view in place.
+        w = ssh(j["host"], f"cat > {shlex.quote(lef)}.pinstub && mv {shlex.quote(lef)}.pinstub {shlex.quote(lef)}",
+                timeout=300, input=text)
+        if w.returncode != 0:
+            raise RuntimeError(f"child-lint gate: could not write the pin-stub view {lef}: {(w.stderr or '')[-200:]}")
+        event(j, f"child-lint gate: abstract_pin_stub moved {moved} into their pins' PORTs in {lef}")
+    fails, summ = child_lint_view(text, checks)
+    j["child_lint"] = dict(lef=lef, checks="".join(sorted(checks)), fails=fails, summary=summ[:400], at=now_iso())
+    return "; ".join(fails) if fails else None
+
+
 def do_commit(j):
     if adoption_held(j):
         return
     m = j["metrics"]
+    if not j.get("spec", {}).get("smoke") and (j.get("child_lint") or {}).get("fails") != []:
+        g = child_lint_gate(j)
+        if g:
+            finish(j, "NEEDS_HUMAN", f"CHILD-LINT: exported view fails {g}"[:300],
+                   f"NEEDS_HUMAN: timing closed ({setup_corner_label(m)} {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC "
+                   f"{m.get('drc')}) but the exported view fails child_lint -> not CLOSED (a parent cannot reach its "
+                   f"pins / straps). Fix the view (ref_tile.py export) or re-route with the above-only keepout:\n{g}"[:3000])
+            return
+        if j.get("child_lint"):
+            event(j, f"child-lint gate ({j['child_lint']['checks']}) PASS on {j['child_lint']['lef']}")
     try:
         with PUBLISH_LOCK:
             out = publish(j, m)
@@ -4992,7 +5548,7 @@ def is_transient(ex):
 
 def handle_transient(j, fleet, ex):
     """robustness (2026-10-07): transient ssh errors back off (2, 4, 8, 15, 30 min); after 3 at a stage that has
-    nothing in flight on the host (QUEUED / SYNC / READY before the first launch, or READY at calibrate/bench) the job
+    nothing in flight on the host (QUEUED / SYNC / READY before the first launch, or READY at calibrate/route/bench) the job
     moves to another host; a job whose results live on the host (verdict, ECO) keeps backing off and goes NEEDS_HUMAN
     only after 12 consecutive failures (~5 h).  Returns True when handled."""
     n = j.get("transient", 0) + 1
@@ -5001,18 +5557,15 @@ def handle_transient(j, fleet, ex):
     event(j, f"transient ssh/network error #{n} on {j.get('host')} ({type(ex).__name__}: {str(ex)[:160]}); backing off")
     stl = stage_list(j["spec"])
     st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
-    movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and st["kind"] in ("calibrate", "bench")
-                                                     and not j.get("stage_tag"))
+    # 2026-10-11: READY at calibrate/route is movable as in launch_ready's capacity move (READY = this stage has not
+    # launched; stage_tag is the previous stage's and is never cleared, and the move re-runs calibrate) -- on an
+    # overloaded host (load 500+) the loop's own ssh calls time out, and such a job otherwise backed off there for ever
+    movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and (
+        st["kind"] in ("calibrate", "route") or (st["kind"] == "bench" and not j.get("stage_tag"))))
     if n >= 3 and movable and j.get("host") and not checkpoint_location(j):
-        h, _ = fleet.choose(j["spec"], exclude=[j["host"]])
-        if h:
-            event(j, f"{n} transient errors on {host_cfg(j['host'])['label']}: moving to {host_cfg(h)['label']}")
-            j["hosts_tried"].append(h)
-            j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", transient=0)
+        if move_to_other_host(j, fleet, j["spec"], stl, f"{n} transient errors on {host_cfg(j['host'])['label']}"):
+            j["transient"] = 0
             j.pop("transient_next", None)
-            cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
-            if cal is not None and j.get("stage_idx", 0) > cal:
-                j["stage_idx"] = cal
             return True
     if n >= 12:
         return False                     # falls through to the ordinary error accounting
@@ -5398,6 +5951,8 @@ def deep_release_mode(j, closed, ev, now=None):
         return None
     if _terminal_age_h(j, now) < DEEP_RELEASE_AGE_H:
         return None
+    if viz_elem_running(j):                             # VIZ-ELEM: the element page export still reads the DB
+        return None
     if j["status"] == "CLOSED":
         if closure_counts(j):
             return "closed" if closure_on_main(j, ev) else None
@@ -5626,6 +6181,11 @@ def release_deep(jobs, now=None):
 #   d  FLOORPLAN_MARGIN whose only failing lint check is "sliver" -> successor <job>-ard with "sliver_block": true (the
 #      macro + core-edge sliver blockage hooks at PRE GLOBAL_PLACE, before the lint);
 #   e  DRT-0073 (no access point) -> successor <job>-are with the recipe's min-width / pin-keepout knob (DRT_RECIPES).
+#   f  MACRO-CLK (macro-clk-1010): EARLY_FAIL_HOLD, or a NEEDS_RTL FF hold miss, whose CTS built the SRAM-macro clock as
+#      a leaf-less shallow tree (CTS log: macro net with 3+ sinks on 0 leaf buffers, >= 150 um average sink wire) or whose
+#      calibrate flagged macro clock-pin slew / lateness (calib.json macro_clk), and whose CTS ran WITHOUT the macro
+#      clustering default -> successor <job>-arf, same commit: the default (macro_cts_cluster.tcl, shipped into the
+#      snapshot by hold_corners_patch.py) now applies.  Checked before c (the macro clock is the root of the stall).
 # A successor is a new spec dropped into DROP: intake (validate, route key, submit lint) applies as for any job.  Never
 # loosens a constraint (no clock / uncertainty / margin / SDC change; hold margins stay the existing defaults).  At most
 # one action per job per class (j["auto_react"] = {class: successor or "in-place"}); a successor (spec
@@ -5640,6 +6200,7 @@ READY_NEXT = Path(os.environ.get("CL_READY_NEXT_DIR", str(TAKEOVER / "READY_NEXT
 AUTO_REACT_FAIL = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
 AUTO_REACT_MAX_AGE_H = 6.0          # < DEEP_RELEASE_AGE_H: an in-place ECO needs the route products
 AR_HOLD_FF_FLOOR = -30.0
+AR_MACRO_TT_FLOOR = -45.0           # class f on a NEEDS_RTL: TT no worse than the combo band
 PINFLOP_SINCE = "2026-10-10T03:05"  # PINFLOP-REF overlay deployed (36795a58e): a route started later used it
 FP_LINT_CHECKS = ("bank_distance", "channel", "macro_edge", "pin_density", "pin_width", "sliver", "util")
 # (cmd regex the recipe must match, env knob, repo file at the job commit that must honour it, marker text in that file)
@@ -5792,6 +6353,56 @@ def _prefix_env(spec, knob):
             st["cmd"] = f"export {knob}=1; " + st["cmd"]
 
 
+def macro_clk_flag(j, calib):
+    """MACRO-CLK after CTS: keep the calibrate's macro clock verdict with the job and flag outliers in its events"""
+    mc = calib.get("macro_clk") if isinstance(calib, dict) else None
+    if not isinstance(mc, dict):
+        return
+    j["calibration"]["macro_clk"] = mc
+    txt = macro_clk.calib_flag_text(mc)
+    if txt:
+        event(j, txt)
+        ledger(j, txt)
+
+
+def macro_clk_sig(j):
+    """macro_clk.signature() of this job's CTS logs (+ calibrate verdict), cached per verdict (one ssh per failure)"""
+    key = str(j.get("finished_at"))
+    c = j.get("macro_clk_sig")
+    if isinstance(c, dict) and c.get("at") == key:
+        return c
+    mc = (j.get("calibration") or {}).get("macro_clk")
+    logs = []
+    if j.get("host") and j.get("run"):
+        try:
+            r = ssh(j["host"], macro_clk.scan_cmd(j["run"]), timeout=120)
+            logs = macro_clk.parse_cts_logs(r.stdout) if r.returncode == 0 else []
+        except Exception as ex:  # noqa: BLE001
+            log(f"[{j['name']}] macro-clk scan failed: {type(ex).__name__}: {str(ex)[:160]}")
+    sig = dict(macro_clk.signature(logs, mc), at=key)
+    j["macro_clk_sig"] = sig
+    return sig
+
+
+def ar_macro_clk(j):
+    """class f applies: (True, detail) / (False, why-not or None when there is no macro clock signature)"""
+    m = j.get("metrics") or {}
+    ff, tt = m.get("ff_ps"), m.get("ss_ps")
+    num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)  # noqa: E731
+    # a NEEDS_RTL counts only when hold is its problem (FF < 0, TT within the combo band): a deep setup miss is not
+    hold_fail = j["status"] == "EARLY_FAIL_HOLD" or (
+        j["status"] == "NEEDS_RTL" and num(ff) and ff < FF_MIN and num(tt) and tt >= AR_MACRO_TT_FLOOR)
+    if not hold_fail or j["spec"].get("macro_cts") is False:
+        return False, None
+    sig = macro_clk_sig(j)
+    if not sig["hit"]:
+        return False, None
+    if sig["clustered"]:
+        return False, f"macro clock outlier WITH the clustering default on ({sig['why']}): structural -- launch the SRAM " \
+                      f"inputs from a flop on the macro's leaf / lockup, or re-place the macros"
+    return True, f"macro clock on a shallow leaf-less tree ({sig['why']}) -> requeue under the macro clustering default"
+
+
 def ar_plan(j):
     """(class, kind, detail) for the first recipe that applies, else (None, None, why)"""
     spec = j["spec"]
@@ -5800,6 +6411,12 @@ def ar_plan(j):
     if ar_combo_window(j):
         return "b", "in-place", "thin TT and FF miss -> combo ECO"
     succ_ok = not spec.get("auto_react_parent")
+    if j["status"] in ("EARLY_FAIL_HOLD", "NEEDS_RTL"):
+        mf, mwhy = ar_macro_clk(j)
+        if mf and succ_ok:
+            return "f", "successor", mwhy
+        if mwhy:
+            return None, None, mwhy if succ_ok else f"auto-react successor (class {spec.get('auto_react_class')}); {mwhy}"
     if j["status"] == "EARLY_FAIL_HOLD":
         if not succ_ok:
             return None, None, "auto-react successor failed again (EARLY_FAIL_HOLD)"
@@ -5970,6 +6587,9 @@ def auto_react(jobs, now=None):
                 elif cls == "d":
                     def mut(s):
                         s["sliver_block"] = True
+                elif cls == "f":
+                    def mut(s):
+                        s["macro_cts"] = True        # marker only: the clustering default applies to every job
                 else:
                     knob = drt_recipe(j)
 
@@ -6055,6 +6675,7 @@ def host_down_requeue(j, kind, now=None):
 
 
 def tick(fleet):
+    overlay_drift_check()
     try:
         ingest()
     except Exception:  # noqa: BLE001
@@ -6229,7 +6850,7 @@ def cmd_daemon(a):
 
 def cmd_status(a):
     for r in all_jobs():
-        h = host_cfg(r["host"])["label"] if r.get("host") else "-"
+        h = host_label(r.get("host"))
         print(f"{r['name']:40s} {r['status']:12s} {r.get('stage_key', '-'):16s} {h:8s} "
               f"{(r.get('reason') or r.get('wait') or '')[:90]}")
     hb = STATE / "heartbeat"

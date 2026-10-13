@@ -10,7 +10,11 @@ module tb_hgi_mover_record;
 `else
     localparam integer VMUT = 0;
 `endif
-`ifdef MUT_DROP
+`ifdef MUT_BEAT
+    localparam integer MD = 3;      // a burst's beats all land in its first slot
+`elsif MUT_STRIPE
+    localparam integer MD = 4;      // STRIPE4 reads every row from stack base[36:35]
+`elsif MUT_DROP
     localparam integer MD = 2;      // the sector engine drops a row's last partial sector
 `else
     localparam integer MD = 0;
@@ -45,6 +49,7 @@ module tb_hgi_mover_record;
         $readmemh({dir, "/mo_hbi.mem"}, hbim); $readmemh({dir, "/mo_hbe.mem"}, hbem);
     end
     integer errors = 0, seed = 5;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 5; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     reg rst_n = 0; reg [702:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted, mv_v, mv_rdy, mv_done, mv_fault, mv_src, fence_v, fence_rdy, fence_done;
     wire [226:0] mv;
@@ -60,11 +65,26 @@ module tb_hgi_mover_record;
         .mv_done(mv_done), .mv_fault(mv_fault), .mv_src(mv_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_addr), .k_req_wdata(k_wd),
         .k_req_wstrb(k_ws), .k_req_tag(k_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-        .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr0), .wl(wl), .wl_done(wl_done));
+.k_rsp_data(k_rsp_data), .k_fault(1'b0),
+        .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb),
+        .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .vr2q(), .vr2r(8257'd0),
+        .vmq(vmq), .vmr(vmr0), .wl(wl), .wl_done(wl_done));
+    // hgi-1010/c: the mover's four HBM read lanes (bursts, in order a lane) on a behavioural model over the same memory
+    wire [3:0] r_req_v, r_req_rdy, r_rsp_v, r_rsp_rdy, r_rsp_last; wire [4*37-1:0] r_req_addr, la; wire [15:0] r_req_len;
+    wire [63:0] r_req_tag, r_rsp_tag; wire [1023:0] r_rsp_data, r_req_wdata; wire [3:0] r_req_we, r_rsp_we; wire [127:0] r_req_wstrb; reg [1023:0] ld; integer hgen = 0; wire [3:0] wv; wire [4*37-1:0] wa; wire [1023:0] wd; wire [127:0] ws;
+    tb_hgi_rlanes #(.LAT(6)) u_rl (.clk(clk), .rst_n(rst_n), .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr),
+        .r_req_len(r_req_len), .r_req_tag(r_req_tag), .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we), .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag),
+        .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data), .la(la), .ld(ld), .wv(wv), .wa(wa), .wd(wd), .ws(ws));
     wire [279:0] wl; wire wl_done;   // the VM wide write port (hgi-takeover 2026-10-10)
     ot_hgi_vm_unit #(.NC(2), .WP(1), .MUT(VMUT)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, vmq}), .cr({vmr1, vmr0}), .status(), .wq(wl), .wq_done(wl_done));
     // ---- kport lane HBM model
     reg [31:0] hbm [longint];
+    always @(posedge clk) for (integer l = 0; l < 4; l = l + 1) if (wv[l]) for (integer q = 0; q < 8; q = q + 1)
+        hbm[(longint'(wa[l*37 +: 37]) >> 2) + q] = wd[l*256 + 32*q +: 32];      // full sectors (the lanes refuse partial ones)
+    always @(la or hgen) for (integer l = 0; l < 4; l = l + 1) for (integer q = 0; q < 8; q = q + 1) begin
+        longint wa; wa = (longint'(la[l*37 +: 37]) >> 2) + q;
+        ld[l*256 + 32*q +: 32] = hbm.exists(wa) ? hbm[wa] : 32'd0;
+    end
     integer klat = -1, q; reg pend = 0, pwe; reg [36:0] pa; reg [255:0] pd; reg [31:0] ps;
     always @(posedge clk) begin
         k_rsp_v <= 0;
@@ -75,6 +95,7 @@ module tb_hgi_mover_record;
         else if (pend) begin
             for (q = 0; q < 8; q = q + 1) begin
                 if (pwe) begin
+                    hgen = hgen + 1;
                     hbm[(pa >> 2) + q] = {ps[4*q+3] ? pd[32*q+24 +: 8] : (hbm.exists((pa >> 2) + q) ? hbm[(pa >> 2) + q][31:24] : 8'd0),
                                           ps[4*q+2] ? pd[32*q+16 +: 8] : (hbm.exists((pa >> 2) + q) ? hbm[(pa >> 2) + q][23:16] : 8'd0),
                                           ps[4*q+1] ? pd[32*q+8 +: 8] : (hbm.exists((pa >> 2) + q) ? hbm[(pa >> 2) + q][15:8] : 8'd0),
@@ -107,6 +128,7 @@ module tb_hgi_mover_record;
             rst_n = 0; hbm.delete(); repeat (3) @(posedge clk); rst_n = 1; repeat (2) @(posedge clk);
             for (j = 0; j < nvi; j = j + 1) vm_req(1'b1, vmim[vi0 + j][63:32], vmim[vi0 + j][31:0], qd);
             for (j = 0; j < nhi; j = j + 1) hbm[hbim[hi0 + j][71:32]] = hbim[hi0 + j][31:0];
+            hgen = hgen + 1;
             k = 0; nf = 0; c0 = cyc;
             for (j = 0; j < nr; j = j + 1) begin
                 @(negedge clk); cur = recm[r0 + j]; rec_v = 1;

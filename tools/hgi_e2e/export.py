@@ -19,6 +19,7 @@ keeps rank 0's view:
   vmw.bin        per record: {u32 addr, u32 value} for every VM word the record writes (diff U output footprint)
   hbmw.bin       per record: {u64 addr, u64 len, bytes} for every HBM range the record changes
   coll_<k>.bin   per COLL record: every rank's A operand as FP32 words, rank-major (the collective model's peers)
+  collb_<k>.bin  per COLL.TOPK_MERGE record: every rank's B operand (the ids, U32), rank-major (hgi-1010/k)
 """
 from __future__ import annotations
 
@@ -40,6 +41,8 @@ import hbm_generic_iface as HGI  # noqa: E402
 from hgi_sim import machine as MC  # noqa: E402
 from hgi_sim.records import encode_program, decode_program, OPND  # noqa: E402
 
+ARGV0 = list(sys.argv)                # export_ds overwrites sys.argv for ds_native: pass 2 re-invokes with THIS
+B2 = None                             # --layout b2: the hgi_b2 pass wrapper (pass 1 Collect, pass 2 Check), innermost
 IMAGE_PAGE = 0x10                     # image at HBM byte 0x10000 (free in both models' maps)
 ESZ = MC.ESIZE
 
@@ -71,7 +74,9 @@ class Capture:
         self.vmw = bytearray()
         self.hbmw = bytearray()
         self.touch = []                      # HBM byte intervals read or written by rank 0
+        self.ik_touch = []                   # IDX.INDEX operand-I spans (the --iks key image supplies their bytes)
         self.coll = {}
+        self.collb = {}
 
     def wrap(self, key, fn):
         def run(M, r, L):
@@ -93,19 +98,26 @@ class Capture:
                     eff[nm] = [int(b), int(n), int(m), int(st), int(ist), d.space, d.fmt]
                     if d.space == "HBM" and (r0.unit != "SM" or nm != "B" or self.sm_weights):
                         sp = hbm_span(M, d, die0, L)
-                        if sp:
+                        if sp and r0.unit == "IDX" and nm == "I":
+                            self.ik_touch.append(sp)
+                        elif sp:
                             self.touch.append(sp)
                     elif d.space == "HBM" and r0.unit == "SM":
                         pass
                 coll_parts = None
+                coll_b = None
                 if r0.unit == "COLL":
                     coll_parts = []
+                    coll_b = [] if (r0.op == "TOPK_MERGE" and "B" in r0.desc) else None
                     for dd in dies_save:
                         rr = M.rec_of(dd, r)
                         M.dies, M.cur = [dd], rr
                         a = rr.desc["A"]
                         coll_parts.append(np.asarray(M.read(a, dd, L), dtype=np.float32).view(np.uint32).copy()
                                           if a.space == "VM" else np.zeros(0, np.uint32))
+                        if coll_b is not None:
+                            b0, nb, _, _, _ = M.eff(rr.desc["B"], dd, L)
+                            coll_b.append(dd.vm[b0:b0 + nb].astype(np.uint32).copy())
                 # footprint of the VM outputs
                 M.dies, M.cur = [die0], r0
                 fp = []
@@ -142,6 +154,8 @@ class Capture:
             k = len(self.recs)
             if coll_parts is not None:
                 self.coll[k] = coll_parts
+            if coll_b is not None:
+                self.collb[k] = coll_b
             self.recs.append(dict(k=k, unit=r0.unit, op=r0.op, tag=getattr(r0, "tag", ""), L=int(L),
                                   hdr=f"{r0.encode()[:16][::-1].hex()}", eff=eff, vm_off=off_vm // 8,
                                   vm_n=int(len(addrs)), hbm_off=off_h, hbm_n=nh))
@@ -178,6 +192,8 @@ def write_out(out, cap, M_dies, die0, image, words, dyn, meta, hbm_pre):
     (out / "vm_final.bin").write_bytes(die0.vm.astype("<u4").tobytes())
     for k, parts in cap.coll.items():
         (out / f"coll_{k}.bin").write_bytes(b"".join(p.astype("<u4").tobytes() for p in parts))
+    for k, parts in getattr(cap, "collb", {}).items():
+        (out / f"collb_{k}.bin").write_bytes(b"".join(p.astype("<u4").tobytes() for p in parts))
     meta.update(md_words=words, dyn=dyn, records=cap.recs, image_bytes=len(image),
                 image_sha256=hashlib.sha256(image).hexdigest(), image_base_bytes=IMAGE_PAGE * 4096)
     (out / "meta.json").write_text(json.dumps(meta, indent=1, default=int) + "\n")
@@ -197,12 +213,20 @@ def export_qwen(a):
     layer, pos = a.layer, a.position
     g = QC.Geometry(cfg, 8192)
     md = QC.qwen_params(cfg)
-    Kc, Vc = R.synthetic_kv(model, layer, pos)
-    x = R.synthetic_x(model, layer)
     tr = {}
-    x_out = model.layer(layer, x, pos, Kc.copy(), Vc.copy(), tr)
-    hbms, _ = QC.build_images(model, g, [layer], kv_state={layer: (Kc, Vc)}.get)
-    recs = QC.program(g, md, 1, parts=("layers",))
+    if a.head:
+        # diesim-1012: the LM head vehicle (final RMSNorm -> head MATVEC -> SU row scale -> ARGMAX.LOCAL ->
+        # COLL.ARGMAX_MERGE -> CTL.END token), input = the realistic deep residual qwen_proof's head stage uses
+        x = R.synthetic_x(model, 1)
+        _, gold_tok = model.head(x, tr)
+        hbms, _ = QC.build_images(model, g, [])
+        recs = QC.program(g, md, 0, parts=("head",))
+    else:
+        Kc, Vc = R.synthetic_kv(model, layer, pos)
+        x = R.synthetic_x(model, layer)
+        x_out = model.layer(layer, x, pos, Kc.copy(), Vc.copy(), tr)
+        hbms, _ = QC.build_images(model, g, [layer], kv_state={layer: (Kc, Vc)}.get)
+        recs = QC.program(g, md, 1, parts=("layers",))
     image = encode_program(recs)
     dies = [Die(d, hbms[d]) for d in range(QC.TP)]
     words = md_words(cfg["vocab_size"], 40960, QC.TP, len(image))
@@ -215,7 +239,7 @@ def export_qwen(a):
     regions = list(die0.hbm.regions)
     vm0 = die0.vm.copy()
     cap = Capture(M, die0, a.sm_weights)
-    M.units = {k: cap.wrap(k, fn) for k, fn in M.units.items()}
+    M.units = {k: cap.wrap(k, B2.wrap(k, fn) if B2 else fn) for k, fn in M.units.items()}
     dr = decode_program(image)
     for r, r0 in zip(dr, recs):
         r.tag, r.family = r0.tag, r0.family
@@ -223,8 +247,11 @@ def export_qwen(a):
     tok, trace = M.run(image, 0, pos, hash_bufs=False, recs=dr)
     wall = time.time() - t0
     # golden check: the layer output on rank 0 equals qwen_r25
-    xo = die0.vm[g.vm["X"]:g.vm["X"] + g.H]
-    ok = bool(np.array_equal(xo, np.asarray(x_out, np.float32).view(np.uint32)))
+    if a.head:                                       # every rank's merged token == the CPU golden's argmax
+        ok = int(tok) == gold_tok and all(int(d.vm[g.vm["TOK"]]) == gold_tok for d in dies)
+    else:
+        xo = die0.vm[g.vm["X"]:g.vm["X"] + g.H]
+        ok = bool(np.array_equal(xo, np.asarray(x_out, np.float32).view(np.uint32)))
     sch = T.schedule(recs, pos, "S2")
     sch_nw = T.schedule(recs, pos, "S2", wires=False)
     ex = sch["ex"]
@@ -244,8 +271,9 @@ def export_qwen(a):
     vm0_path = a.out / "vm0.bin"
     a.out.mkdir(parents=True, exist_ok=True)
     vm0_path.write_bytes(vm0.astype("<u4").tobytes())
-    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="Qwen3-8B", vehicle=f"qwen_L{layer}_P{pos}", layer=layer,
-                position=pos, rank=0, group=QC.TP, token=0, layer_out_exact_vs_qwen_r25=ok,
+    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="Qwen3-8B", vehicle=(f"qwen_head_P{pos}" if a.head else f"qwen_L{layer}_P{pos}"),
+                layer=(None if a.head else layer), position=pos, rank=0, group=QC.TP,
+                token=(gold_tok if a.head else 0), layer_out_exact_vs_qwen_r25=ok,
                 layer_out_vm=[g.vm["X"], g.H], sim_wall_s=round(wall, 1),
                 s2_cycles=round(sch["total_cycles"], 1), s2_no_wires_cycles=round(sch_nw["total_cycles"], 1),
                 timing_grade="hgi_sim.timing S2 (calibration.json; SM / SU / HBM first access measured, rest estimates)",
@@ -254,12 +282,18 @@ def export_qwen(a):
                     "hgi_sim/machine.py", "hgi_sim/qwen_compiler.py", "hgi_sim/records.py", "hgi_sim/lib.py",
                     "hgi_sim/timing.py", "qwen_r25_golden.py", "hgi_e2e/export.py")})
     write_out(a.out, cap, dies, die0, image, words, [0, pos, pos + 1, 0, 0, 0, 0, pos], meta, hbm_pre)
-    print(f"qwen L{layer} P{pos}: {len(cap.recs)} dispatched records, layer out exact {ok}, S2 {sch['total_cycles']:.0f}")
+    print(f"qwen {'head' if a.head else f'L{layer}'} P{pos}: {len(cap.recs)} dispatched records, layer out exact {ok}, S2 {sch['total_cycles']:.0f}")
     return 0 if ok else 1
 
 
 # --------------------------------------------------------------------------------------------------------------- DS
 def export_ds(a):
+    # el1011-hbm-fused: the e2e FUSED slot (rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv hgi_e2e_fused_slot) runs the
+    # micro-op lowering, not the lane-local HC engine, so it reads the d = 5120 gain LINEAR: export without the GPK /
+    # bank-phase rules unless the harness builds the slot with the engine (then HGI_FUSED_HLL=1).  The die (hfd_quant
+    # HCE 2 + hfd_hc_eng) and its die-master bench use HLL 1.
+    import os
+    os.environ.setdefault("HGI_FUSED_HLL", "0")
     from hgi_sim import ds_native as DN
     from hgi_sim import timing as T
     from hgi_sim.ds_native_timing import NativeCost
@@ -274,23 +308,41 @@ def export_ds(a):
                   snap={id(dat): dat.copy() for b, dat, nm in regions if dat.size <= (1 << 28)},
                   image=encode_program(progs[0]), pos=pos, token=token, die0=die0)
         cap = Capture(Mach, die0, a.sm_weights)
-        wrapped = {k: (cap.wrap(k, fn) if isinstance(k, tuple) else fn) for k, fn in units.items()}
+        wrapped = {k: (cap.wrap(k, B2.wrap(k, fn) if B2 else fn) if isinstance(k, tuple) else fn)
+                   for k, fn in units.items()}
         st["units"] = units
         st["cap"] = cap
         t0 = time.time()
         orig(Mach, progs, wrapped, pos, token, hook, trace)
         st["wall"] = time.time() - t0
     DN.run_per_die = run_per_die
+    if a.iks:
+        # hgi-1010/g3: the keys every rank-0 IDX.INDEX frame scores (the golden's own key rows, captured at the call)
+        from hgi_sim import machine as MC_
+        orig_ix = MC_.u_idx_index
+
+        def u_ix(M, r, L):
+            kf = M.index_keys
+
+            def keys(die, layer, ids):
+                k = kf(die, layer, ids)
+                if die.rank == 0:
+                    st.setdefault("ik", []).append((M.rec_of(die, r), np.asarray(ids).copy(), np.asarray(k).copy()))
+                return k
+            M.index_keys = keys
+            return orig_ix(M, r, L)
+        MC_.u_idx_index = u_ix
     prog = a.out / "ds_program.json"
     a.out.mkdir(parents=True, exist_ok=True)
     argv = ["ds_native", "--layers", str(a.layer), "--refs", str(a.refs), "--out", str(a.out / "ds_native_run.json"),
-            "--program-out", str(prog)]
+            "--program-out", str(prog)] + (["--iks"] if a.iks else []) + (["--head"] if a.head else [])
     sys.argv = argv
     rc = DN.main()
     run = json.loads((a.out / "ds_native_run.json").read_text())
     cap, die0 = st["cap"], st["die0"]
     d = json.loads(prog.read_text())
-    lay = d["layers"][0]
+    # the vehicle is the LAST layer run (--head: L39 runs to enter the head; run_per_die keeps the last layer's state)
+    lay = d["layers"][-1]
     recs = []
     for x in lay["records"]:
         r, _ = decode_one(bytes.fromhex(x["hex"]), 0)
@@ -338,6 +390,39 @@ def export_ds(a):
             sm_img.append((bb, img.reshape(-1).tobytes()))
             cap.touch.append((bb, bb + bm * bst))
 
+    for b0, img in getattr(die0, "synth_hbm", {}).items():      # e.g. the STRIPE4 HC weight rows
+        sm_img.append((b0, img))
+        cap.touch.append((b0, b0 + len(img)))
+
+    # --iks (hgi-1010/g3): the rank-0 index-key image of every IDX.INDEX frame in the IKS layout the issuer streams
+    # (ot_hgi_idx_iks_issue): die-local key k (ascending owned id) -> stack q = (k div 8) div 342, slot s = k - 2,736 q, at
+    # HBM byte (q << 35) | I.base + 68 s, the 544-b key word {4 UE8M0 scale bytes, 128 FP4 codes} little-endian (the
+    # scorer's line = 2 keys); a stack's image covers its B_q blocks (rounded up to even) x 544 B (pad keys zero)
+    if not st.get("ik"):
+        cap.touch += cap.ik_touch                # no key image: keep the sim's own operand-I bytes
+    for rd, ids, keys in st.get("ik", []):
+        import hbm_idx_die_bench as IB
+        ib = rd.desc["I"].base
+        n = len(ids)
+        want = np.array([8 * (96 * (k // 8)) + k % 8 for k in range(n)], dtype=np.int64)    # rank 0's owned ids
+        assert np.array_equal(np.asarray(ids, np.int64), want), "IKS image: rank-0 key ids"
+        codes, ue = IB.qdq_codes(np.asarray(keys, np.float32))
+        nb = -(-n // 8)
+        for q in range(4):
+            bq = max(0, min(342, nb - 342 * q))
+            bq += bq & 1                          # the issuer's EVEN rule: whole scorer beats (2 blocks), pad keys zero
+            if bq == 0:
+                continue
+            img = bytearray(bq * 544)
+            for s_ in range(min(2736, n - 2736 * q)):
+                k = 2736 * q + s_
+                img[68 * s_:68 * s_ + 68] = IB.key_word(codes[k], ue[k]).to_bytes(68, "little")
+            b0 = (q << 35) | ib
+            for lo, hi in cap.touch:
+                assert hi <= b0 or lo >= b0 + len(img), f"IKS image {b0:#x} overlaps a touched range {lo:#x}"
+            sm_img.append((b0, bytes(img)))
+            cap.touch.append((b0, b0 + len(img)))
+
     def hbm_pre(addr, n):
         out = bytearray(region_bytes(st["regions"], st["snap"], addr, n))
         for b0, img in sm_img:
@@ -346,8 +431,8 @@ def export_ds(a):
                 out[lo - addr:hi - addr] = img[lo - b0:hi - b0]
         return bytes(out)
     (a.out / "vm0.bin").write_bytes(st["vm0"].astype("<u4").tobytes())
-    res = run["results"][0]
-    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=f"ds_L{a.layer}_1M",
+    res = run["results"][-1]
+    meta = dict(schema="opentallas.hgi_e2e.export.v1", model="DeepSeek-V4.1-Flash", vehicle=("ds_head_1M" if a.head else f"ds_L{a.layer}_1M"),
                 layer=a.layer, position=st["pos"], rank=0, group=96, token=int(st["token"]),
                 layer_verdict_sim_vs_golden=res["verdict"], sim_regions=[(x.get("region"), x.get("bit_exact"))
                                                                          for x in res.get("regions", [])],
@@ -497,9 +582,83 @@ def main():
     ap.add_argument("--layer", type=int, default=0)
     ap.add_argument("--position", type=int, default=8191)
     ap.add_argument("--sm-weights", action="store_true", help="also export the SM weight bytes (real SM runs)")
+    ap.add_argument("--head", action="store_true", help="ds / qwen: the vehicle is the LM head (+ ARGMAX.LOCAL / COLL.ARGMAX_MERGE); ds: "
+                    "--layer 39 is run first to enter it")
+    ap.add_argument("--iks", action="store_true", help="ds: IKS key regions + IDX.INDEX operand I, and the rank-0 key image "
+                    "in the IKS layout (native IDX.INDEX runs)")
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--layout", choices=("flat", "b2"), default="flat",
+                    help="flat (default, the one-VM die: fallback) or b2 (4 clusters, distributed VM: also writes OUT/b2/)")
+    ap.add_argument("--b2-pass", type=int, default=1, help=argparse.SUPPRESS)
+    ap.add_argument("--b2-mutant", choices=("stale_mirror", "chain_naive", "alias_dead"), help="b2: a broken B2 machine the check must refuse")
+    ap.add_argument("--b2-allow", action="store_true", help="b2: write the verdict but do not refuse a placement violation")
     a = ap.parse_args()
+    if a.layout == "b2":
+        return export_b2(a)
     return export_qwen(a) if a.model == "qwen" else export_ds(a) if a.model == "ds" else export_dflash(a)
+
+
+def export_b2(a):
+    """--layout b2: pass 1 = the normal export + hgi_b2.Collect (who needs every VM word) -> placement; pass 2 (a fresh
+    process: the DS run keeps module state) = the same run under hgi_b2.Check (placement asserts, per-cluster masked
+    execution on every rank, chained reductions vs the golden order) -> OUT/b2/.  Refuses (rc 3) on a violation."""
+    global B2
+    import subprocess
+    from hgi_b2 import b2 as B
+    run = export_qwen if a.model == "qwen" else export_ds if a.model == "ds" else None
+    if run is None:
+        raise SystemExit("--layout b2: qwen or ds")
+    b2o = a.out / "b2"
+    b2o.mkdir(parents=True, exist_ok=True)
+    if a.b2_pass == 1:
+        B2 = B.Collect(mutant=a.b2_mutant)
+        t0 = time.time()
+        rc = run(a)
+        B2.placement().save(b2o / "cls_per_die.npz")
+        (b2o / "pass1.json").write_text(json.dumps(dict(rc=rc, wall_s=round(time.time() - t0, 1), promoted=B2.promoted,
+                                                        modes={f"{k[0]}:{k[1]}": n for k, n in B2.modes.items()},
+                                                        subs=sum(len(D["subs"]) for D in B2.rk.values()), dies=len(B2.rk)), indent=1) + "\n")
+        if rc:
+            return rc
+        argv = [x for x in ARGV0[1:]] + ["--b2-pass", "2"]
+        return subprocess.run([sys.executable, "-m", "hgi_e2e.export"] + argv, cwd=str(TOOLS)).returncode
+    pl = B.PlacementSet.load(b2o / "cls_per_die.npz")
+    p1 = json.loads((b2o / "pass1.json").read_text())
+
+    class _C:                                   # the pass-1 mode counts for the verdict
+        modes = {tuple(k.split(":", 1)): n for k, n in p1["modes"].items()}
+    B2 = B.Check(pl, None, mutant=a.b2_mutant)
+    t0 = time.time()
+    rc = run(a)
+    vm0 = np.fromfile(a.out / "vm0.bin", "<u4")
+    vmf = np.fromfile(a.out / "vm_final.bin", "<u4")
+    meta = json.loads((a.out / "meta.json").read_text())
+    v = B.write(b2o, pl, B2, _C, vm0, vmf, dict(vehicle=meta.get("vehicle"), model=meta.get("model"),
+                                                 mutant=a.b2_mutant, golden_rc=rc, pass2_wall_s=round(time.time() - t0, 1),
+                                                 promoted_to_mirror=p1["promoted"]))
+    # the B2 dispatch on the vector: each meta record's cluster (a list for a split record) + the slice map, so the
+    # verification harness places records and words as this pass did (b2/slice.npy: slice per logical word, -1 mirror)
+    recs = meta["records"]
+    if len(recs) == len(B2.recs) and all((x["unit"], x["op"]) == (y["unit"], y["op"]) for x, y in zip(recs, B2.recs)):
+        for x, y in zip(recs, B2.recs):
+            x["cluster"] = y["cluster"]
+            x["b2mode"] = y["mode"]                 # REPLX / QSPLIT: mirror words written locally on every cluster
+        meta["b2"] = dict(slice_map="b2/slice.npy", placement="b2/placement.json", records="b2/records_b2.json",
+                          ring_cycles=v["ring_cycles"])
+        (a.out / "meta.json").write_text(json.dumps(meta, indent=1, default=int) + "\n")
+    else:
+        print(f"b2: meta records ({len(recs)}) do not pair with B2 records ({len(B2.recs)}): no cluster field")
+        v["violations"] += 1
+        v["first_violations"].append("meta/B2 record pairing failed: the vector carries no cluster field")
+        v["exact"] = False
+        (b2o / "verdict.json").write_text(json.dumps(v, indent=1, default=int) + "\n")
+    rc_ = v["ring_cycles"]
+    print(f"b2 {meta.get('vehicle')}: exact {v['exact']} violations {v['violations']} capacity {v['capacity']} "
+          f"ring {v['ring_words']} ring_cycles/layer max {rc_['max_layer_cycles']} budget {rc_['budget_cycles_per_layer']}")
+    if v["violations"] and not a.b2_allow:
+        print("B2 placement REFUSED:\n  " + "\n  ".join(v["first_violations"][:10]))
+        return 3
+    return rc
 
 
 if __name__ == "__main__":

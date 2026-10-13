@@ -35,7 +35,9 @@ SRC_BASE = [
     "rtl/hbm_accel/loader/service_native/ot_hbm_loader_native_endpoint.sv",
 ]
 SRC_REAL = {
-    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv"],
+    "dma": ["rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_back.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_engines.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_kvw.sv",
+            # hgi-1010/c: the mover's landing RAM (a 256 x 256 macro; the sequencer ring stays USE_MACRO 0)
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"],
     "quant": ["rtl/hbm_accel/generic/ot_hgi_quant_unit.sv", "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
               "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv", "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
               "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"],
@@ -57,7 +59,7 @@ SRC_REAL["hc"] = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/o
                   "rtl/hdc/v41/ot_hdc_softplus.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
                   "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv", "rtl/hdc/v41/ot_hdc_sk_arith.sv",
                   "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv", "rtl/hdc/v41/ot_hdc_sinkhorn.sv", "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
-                  "rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv"]
+                  "rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv", "rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv"]
 SRC_REAL["su"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
 SRC_REAL["sfu"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv", "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
 SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
@@ -65,11 +67,19 @@ SRC_REAL["coll"] = ["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv", "rtl/h
                     "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv", "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
                     "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
                     "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv", "rtl/hbm_accel/tu/ot_hcoll_port.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-                    "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv"]
+                    "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+                    "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv", "rtl/lib/ot_rst_relay.sv"]       # hgi-1010/k hardware TOPK_MERGE
 SRC_REAL["fused"] = VEC + ["rtl/hbm_accel/generic/adapters/ot_hgi_fused_record.sv", "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv",
                            "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv", "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv",
                            "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"]
-TB = ["rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
+# hgi-1010/g3: --real idxn = REAL_IDX with IDX_NATIVE 1 (IDX.INDEX through the die's selector, 4 stack scorers and 4 svc
+# IKS stripes; tb_hgi_e2e / hgi_e2e_idxn.sv); the selector's SRAM line memories need the macro models
+SRC_REAL["idxn"] = SRC_REAL["idx"] + ["rtl/hbm_accel/generic/idx/ot_hgi_idx_iks_issue.sv",
+                                      "rtl/hbm_accel/generic/e2e/hgi_e2e_idxn.sv",
+                                      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+                                      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"]
+TB = ["rtl/hbm_accel/generic/peers/tb_hgi_rlanes.sv",   # hgi-1010/c: the mover's HBM lane model (hgi_e2e_rlanes)
+      "rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv", "rtl/hbm_accel/generic/e2e/hgi_e2e_slots.sv",
       "rtl/hbm_accel/generic/e2e/hgi_e2e_dpi.cpp"]
 
 
@@ -158,11 +168,12 @@ def prep(d: Path):
     # the FUSED unit's compiler-reserved scratch: the largest VM range no record of this layer touches (>= 16 Ki words)
     import numpy as np
     used = np.zeros(1 << 18, bool)
-    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4") != 0
-    used[np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]] = True
+    used |= np.frombuffer((d / "vm0.bin").read_bytes(), "<u4")[:1 << 18] != 0      # (words past 2^18: the HC aperture)
+    wa = np.frombuffer((d / "vmw.bin").read_bytes(), "<u4").reshape(-1, 2)[:, 0]
+    used[wa[wa < (1 << 18)]] = True
     for r in meta["records"]:
         for e in r["eff"].values():
-            if e[5] == "VM":
+            if e[5] == "VM" and e[0] < (1 << 18):
                 b_, n_, m_, st_, ist_ = e[:5]
                 used[b_:b_ + (max(m_, 1) - 1) * st_ + (max(n_, 1) - 1) * max(ist_, 1) + 1] = True
     used[END_TOKEN_VM] = True
@@ -178,7 +189,13 @@ def prep(d: Path):
             i = j
         else:
             i += 1
-    scr = (best[1] + 7) & ~7
+    # bank phase 0 (word base a multiple of 256): the DS HC buffers sit at phase 0 (ds_native rule A), and the lane-local
+    # HC_PRE_NORM puts its gain at the scratch base, which must share O's bank phase
+    scr = (best[1] + 255) & ~255
+    if any(r.unit == "FUSED" and r.op == "HC_PRE_NORM" for r in recs):
+        from hgi_sim import ds_native as DN
+        for r in recs:
+            DN.assert_fused_fast_path(r, scratch=scr, check_gain=False)
     assert best[0] - (scr - best[1]) >= 16384, f"no 16 Ki-word free VM range for the FUSED scratch ({best})"
     tk = meta.get("tokx_golden") or []                # DFlash step: the CPU golden's committed tokens (CTL.TOKX beats)
     # host words (tb_hgi_e2e, non-MTP): 64 token, 65 pos, 66 expected token, 67 rank, 68 ncol, 69 FUSED scratch;
@@ -214,7 +231,8 @@ def script(a):
     if mtp:
         src = list(dict.fromkeys(src + mtp_sources()))
     src = list(dict.fromkeys(src + closure(src)))
-    gp = " ".join(f"-G{'REAL_' + x.upper()}=1" for x in real) + "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG"))
+    gp = " ".join(f"-G{'REAL_' + ('idx' if x == 'idxn' else x).upper()}=1" for x in real)
+    gp += "".join(f" -G{g}" for g in a.g if not g.startswith("E2E_DBG")) + (" -GIDX_NATIVE=1" if "idxn" in real else "")
     gp += (" +define+E2E_COLL_DEBUG +define+E2E_FUSED_DEBUG" if any(g.startswith("E2E_DBG") for g in a.g) else "")
     gp += (" +define+E2E_VEC" if {"su", "sfu"} & set(real) else "") + (" +define+E2E_COLL" if "coll" in real else "")
     gp += " +define+E2E_FUSED" if "fused" in real else ""
@@ -244,6 +262,8 @@ def script(a):
         srcs = srcs.replace("$S/" + TOKEDGE, "$O/token_edge.sv") + " $O/collar_mtp.sv"
     LAST_SRC[:] = [x for x in src if x != "WHATIF"] + (["rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv"]
                                                        if "WHATIF" in src else []) + ([COLLAR] if mtp else [])
+    b2 = int(gd.get("B2", "0"))
+    b2pre = (f"${{PY:-python3}} $S/tools/hgi_e2e/b2.py traffic $V --out $O/b2_traffic.json > $O/b2.log 2>&1\n" if b2 else "")
     return f"""#!/bin/bash
 # hgi-e2e run: vehicle {a.vehicle}, real units [{', '.join(real) or 'none'}]; FLAT {a.flat} KLAT {a.klat} VLAT {a.vlat}
 set -e
@@ -252,11 +272,11 @@ mkdir -p $O
 {mtp_pre}{wi}VER=${{VERILATOR:-verilator}}
 $VER --binary -j 16 --top-module tb_hgi_e2e -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-BLKSEQ --timing -O2 \\
   {gp} -GFLAT={a.flat} -GKLAT={a.klat} -GVLAT={a.vlat} \\
-  -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb \\
+  -I$S/rtl/hbm_accel/generic -I$S/rtl/hbm_accel/generic/tb{' -I$S/rtl/common' if 'idxn' in real else ''} \\
   {srcs} \\
   {' '.join('$S/' + t for t in TB)} --Mdir $O/obj -o tb > $O/build.log 2>&1
 set +e
-$O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt ${{E2E_PLUS:-}} > $O/run.log 2>&1; rc=$?
+{b2pre}$O/obj/tb +DIR=$V +OUT=$O/e2e_records.txt ${{E2E_PLUS:-}} > $O/run.log 2>&1; rc=$?
 echo "rc=$rc" >> $O/run.log
 """
 
@@ -268,10 +288,16 @@ def report(run: Path, vec: Path | None):
     for line in (run / "e2e_records.txt").read_text().splitlines():
         if line.startswith("#"):
             continue
+        if line.startswith("B2"):
+            t = line.split()
+            b2r = summ.setdefault("b2", {}) if t[0] == "B2" else summ.setdefault("b2_units", {}).setdefault(t[1], {})
+            for i in range(1 if t[0] == "B2" else 2, len(t) - 1, 2):
+                b2r[t[i]] = int(t[i + 1])
+            continue
         if line.startswith("SUMMARY"):
             t = line.split()[1:]
-            summ = {t[i]: (int(t[i + 1]) if re.fullmatch(r"-?\d+", t[i + 1]) else t[i + 1]) for i in range(0, len(t) - 1, 2)
-                    if not t[i].startswith("dispatched")}
+            summ = {**{k_: v_ for k_, v_ in summ.items() if k_.startswith("b2")}, **{t[i]: (int(t[i + 1]) if re.fullmatch(r"-?\d+", t[i + 1]) else t[i + 1]) for i in range(0, len(t) - 1, 2)
+                    if not t[i].startswith("dispatched")}}
             m = re.search(r"dispatched (\d+)/(\d+)", line)
             summ["dispatched"], summ["golden_records"] = int(m.group(1)), int(m.group(2))
             continue
@@ -295,6 +321,8 @@ def report(run: Path, vec: Path | None):
                                     r"doorbell->completion (-?\d+)", log).groups() if "E2E completion" in log else None,
                per_unit={k: dict(v, sim_cost=round(v["sim_cost"], 1)) for k, v in per_unit.items()},
                records=rows, first_dispatch_cycle=t0,
+               b2_traffic=({k_: v_ for k_, v_ in json.loads((run / "b2_traffic.json").read_text()).items() if k_ != "rows"}
+                           if (run / "b2_traffic.json").exists() else None),
                rtl_lines=[x for x in log.splitlines() if x.startswith("E2E") or "HGI_E2E" in x][:200])
     return out
 

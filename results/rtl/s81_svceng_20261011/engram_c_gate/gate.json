@@ -1,0 +1,242 @@
+{
+ "base": {
+  "crc_injection": {
+   "all_dumps_present": true,
+   "bench_pass": true,
+   "cycles": 118165,
+   "dumps": 740,
+   "dumps_compared": 740,
+   "element_mismatches": 0,
+   "elements_compared": 3895296,
+   "engine_faults": "00010001",
+   "injected_tokens": 53,
+   "latency_cycles_window_to_slot_ready": {
+    "layer_1": {
+     "max": 20432,
+     "mean": 18282.3,
+     "min": 524
+    },
+    "layer_14": {
+     "max": 20405,
+     "mean": 18347.9,
+     "min": 491
+    }
+   },
+   "model": {
+    "AGJIT": 40,
+    "AGLAT": 20,
+    "BUB": 30,
+    "CDEL": 100,
+    "ERR": 1,
+    "GAP": 20,
+    "JIT": 200,
+    "LAT": 60,
+    "REORD": 1,
+    "STALL": 20
+   },
+   "pass": true,
+   "poisoned_as_injected": true,
+   "poisoned_dumps": 106,
+   "rewinds": 30,
+   "tokens": 370,
+   "window_errors": 0,
+   "windows": 370,
+   "xrank_errors": 0
+  },
+  "ideal_hbm_200ns": {
+   "all_dumps_present": true,
+   "bench_pass": true,
+   "cycles": 205909,
+   "dumps": 1200,
+   "dumps_compared": 1200,
+   "element_mismatches": 0,
+   "elements_compared": 7372800,
+   "engine_faults": "00000000",
+   "injected_tokens": 0,
+   "latency_cycles_window_to_slot_ready": {
+    "layer_1": {
+     "max": 22308,
+     "mean": 20611.3,
+     "min": 534
+    },
+    "layer_14": {
+     "max": 22216,
+     "mean": 20520.4,
+     "min": 533
+    }
+   },
+   "model": {
+    "LAT": 240
+   },
+   "pass": true,
+   "poisoned_as_injected": true,
+   "poisoned_dumps": 0,
+   "rewinds": 38,
+   "tokens": 600,
+   "window_errors": 0,
+   "windows": 600,
+   "xrank_errors": 0
+  },
+  "isolated_local_ag": {
+   "all_dumps_present": true,
+   "bench_pass": true,
+   "cycles": 39508,
+   "dumps": 114,
+   "dumps_compared": 114,
+   "element_mismatches": 0,
+   "elements_compared": 700416,
+   "engine_faults": "00000000",
+   "injected_tokens": 0,
+   "latency_cycles_window_to_slot_ready": {
+    "layer_1": {
+     "max": 534,
+     "mean": 495.7,
+     "min": 495
+    },
+    "layer_14": {
+     "max": 533,
+     "mean": 495.7,
+     "min": 495
+    }
+   },
+   "model": {
+    "AGLAT": 4,
+    "LAT": 240,
+    "SPACED": 1
+   },
+   "pass": true,
+   "poisoned_as_injected": true,
+   "poisoned_dumps": 0,
+   "rewinds": 3,
+   "tokens": 57,
+   "window_errors": 0,
+   "windows": 57,
+   "xrank_errors": 0
+  },
+  "stressed": {
+   "all_dumps_present": true,
+   "bench_pass": true,
+   "cycles": 226752,
+   "dumps": 932,
+   "dumps_compared": 932,
+   "element_mismatches": 0,
+   "elements_compared": 5726208,
+   "engine_faults": "00000000",
+   "injected_tokens": 0,
+   "latency_cycles_window_to_slot_ready": {
+    "layer_1": {
+     "max": 31567,
+     "mean": 28711.9,
+     "min": 687
+    },
+    "layer_14": {
+     "max": 31411,
+     "mean": 28414.6,
+     "min": 707
+    }
+   },
+   "model": {
+    "AGJIT": 60,
+    "AGLAT": 20,
+    "BUB": 10,
+    "CDEL": 300,
+    "GAP": 30,
+    "JIT": 400,
+    "LAT": 60,
+    "REORD": 1,
+    "STALL": 30
+   },
+   "pass": true,
+   "poisoned_as_injected": true,
+   "poisoned_dumps": 0,
+   "rewinds": 34,
+   "tokens": 466,
+   "window_errors": 0,
+   "windows": 466,
+   "xrank_errors": 0
+  },
+  "throughput_b2b": {
+   "all_dumps_present": true,
+   "bench_pass": true,
+   "cycles": 127249,
+   "dumps": 740,
+   "dumps_compared": 740,
+   "element_mismatches": 0,
+   "elements_compared": 4546560,
+   "engine_faults": "00000000",
+   "injected_tokens": 0,
+   "latency_cycles_window_to_slot_ready": {
+    "layer_1": {
+     "max": 22308,
+     "mean": 19940.2,
+     "min": 534
+    },
+    "layer_14": {
+     "max": 22216,
+     "mean": 19849.9,
+     "min": 533
+    }
+   },
+   "model": {
+    "AGLAT": 4,
+    "LAT": 240
+   },
+   "pass": true,
+   "poisoned_as_injected": true,
+   "poisoned_dumps": 0,
+   "rewinds": 30,
+   "tokens": 370,
+   "window_errors": 0,
+   "windows": 370,
+   "xrank_errors": 0
+  }
+ },
+ "budget_lookup_local_cycles": 500,
+ "negatives": {
+  "droppeddone": {
+   "all_dumps_present": false,
+   "bench_pass": true,
+   "build_failed": null,
+   "dumps": 254,
+   "element_mismatches": 0
+  },
+  "dropstart": {
+   "all_dumps_present": false,
+   "bench_pass": true,
+   "build_failed": null,
+   "dumps": 15,
+   "element_mismatches": 0
+  },
+  "earlydone": {
+   "all_dumps_present": false,
+   "bench_pass": false,
+   "build_failed": null,
+   "dumps": 10,
+   "element_mismatches": 60564
+  },
+  "wrongdesc": {
+   "all_dumps_present": false,
+   "bench_pass": false,
+   "build_failed": null,
+   "dumps": 15,
+   "element_mismatches": 0
+  },
+  "wrongtag": {
+   "all_dumps_present": false,
+   "bench_pass": false,
+   "build_failed": null,
+   "dumps": 0,
+   "element_mismatches": 0
+  }
+ },
+ "negatives_caught": {
+  "droppeddone": true,
+  "dropstart": true,
+  "earlydone": true,
+  "wrongdesc": true,
+  "wrongtag": true
+ },
+ "schema": "opentallas.s81.engram-c-gate.v1",
+ "throughput_b2b_cycles_per_token": 343.9,
+ "verdict": "PASS"
+}

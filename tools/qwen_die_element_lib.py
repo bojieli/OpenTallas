@@ -26,6 +26,13 @@ CORNERS = dict(  # setup, hold, clk->q base, ps/fF output slope, output transiti
     ff=dict(setup=12.0, hold=12.0, cq=32.0, k=0.35, tr=10.0, tk=0.7, cin=0.6, volt=0.77, temp=0))
 # TT (owner option B setup corner): the SS constants, PESSIMISTIC and disclosed (no characterised TT placeholder exists)
 CORNERS['tt'] = dict(CORNERS['ss'], volt=0.7, temp=25)
+# qwen-1010/b 2026-10-10 (KV die die_kv14 FF hold -5.74 ps on every abutted element hop): the pin flop of a routed
+# element reaches its face pin through the port buffer every ORFS route inserts (buffer_ports: an output BUF after the
+# launching flop, an input BUF before the capturing flop) -- the single-flop view had neither, so two abutted views
+# met hold with a bare clk->q against a bare hold time.  The views now carry that buffer stage (ASAP7 BUFx2 class:
+# SS 25 ps, FF 12 ps): + on clk->out, + on setup, - on hold.  The closed ETMs carry far more (qkd_ectl_b FF: clk->out
+# 477 ps vs hold 257 ps, insertion included).
+PORT_BUF = dict(ss=25.0, tt=25.0, ff=12.0)
 LOADS = (0.5, 5.0, 20.0, 80.0, 300.0, 1200.0)      # fF
 SLEWS = (5.0, 20.0, 80.0, 300.0)                   # ps
 
@@ -111,7 +118,8 @@ def write_lib(corner, lef, stubs, path):
     for w in widths:
         L.append(f'  type (b{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1};'
                  f' bit_to : 0; downto : true; }}')
-    cq = lambda load: c['cq'] + c['k'] * load            # noqa: E731
+    pb = PORT_BUF.get(corner, 0.0)
+    cq = lambda load: c['cq'] + pb + c['k'] * load       # noqa: E731
     trn = lambda load: c['tr'] + c['tk'] * load          # noqa: E731
     for master, ports in sorted(lef.items()):
         if master == 'ot_hbm3e_phy':
@@ -142,7 +150,7 @@ def write_lib(corner, lef, stubs, path):
                     return ' '.join(b)
                 b = [f'direction : input; capacitance : {c["cin"]};']
                 if arcs:
-                    for tt, v in (('setup_rising', c['setup']), ('hold_rising', c['hold'])):
+                    for tt, v in (('setup_rising', c['setup'] + pb), ('hold_rising', c['hold'] - pb)):
                         f = (lambda a, s_, v=v: v + 0.1 * s_)
                         b.append(f'timing () {{ related_pin : "{rel}"; timing_type : {tt}; '
                                  f'rise_constraint (cons2) {{ {table(f, SLEWS, SLEWS)} }} '

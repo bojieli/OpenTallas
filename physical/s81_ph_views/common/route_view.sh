@@ -44,7 +44,7 @@ rc=0
   --orfs-var PDN_TCL=/src/${PDN:-physical/s81_ph_views/common/pdn_view.tcl} --orfs-var IO_CONSTRAINTS=/src/.views/$lab/io_place.tcl \
   --orfs-var ADDER_MAP_FILE= ${CTSA:+--orfs-var "CTS_ARGS=$CTSA"} ${STEPS:-} \
   --step-tcl PRE_CTS=${PRECTS:-physical/s81_ph_views/common/pre_cts_fclk_root_buf.tcl} --step-tcl POST_CTS=${POSTCTS:-physical/s81_ph_views/common/post_cts_vclk.tcl} \
-  --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
+  --step-tcl PRE_GLOBAL_ROUTE=${PREGRT:-physical/abi3/v41x_karb_repair_buffer_cap.tcl} \
   --slew-margin-percent 60 --hold-margin-ns ${HM:-0.035} --purpose signoff_target --nickname-tag s81ph_$(echo $lab | tr -c "A-Za-z0-9_\n" "_") \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1 || rc=$?
@@ -52,8 +52,9 @@ echo "rc=$rc" > $W/exit
 if (( rc != 0 )); then exit "$rc"; fi
 # CTS-only calibration run (closure loop: --pnr-stop-after cts): no sign-off / export
 case " $* " in *" --pnr-stop-after "*) echo DONE >> $W/exit; exit 0;; esac
-mac1=$(echo ${MACROS:-} | awk '{print $1}' | cut -d= -f2)
-python3 tools/w18/corner_sta.py ${mac1:+--macro $mac1} --post-sdc physical/s81_ph_views/common/signoff_unc60.sdc --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1 || rc=$?
+# every macro view (memory macros AND hardened leaves) is timed with its own liberty at sign-off
+macs=""; for mv in ${MACROS:-}; do macs="$macs --macro $(echo $mv | cut -d= -f2)"; done
+python3 tools/w18/corner_sta.py $macs --post-sdc physical/s81_ph_views/common/signoff_unc60.sdc --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1 || rc=$?
 echo "corner_rc=$rc" >> $W/exit
 if (( rc != 0 )); then exit "$rc"; fi
 mvx=""; for mv in ${MACROS:-}; do mvx="$mvx --macro-view $(echo $mv | cut -d= -f2)"; done

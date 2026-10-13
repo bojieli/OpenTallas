@@ -26,6 +26,11 @@ module ot_sc_pfifo #(
     // PINREG=1 (sys-takeover 2026-10-10, opt-in): in_valid / in_data are captured by a bare pin flop first and pushed one
     // edge later (no handshake logic between the pin and a flop: collvmpub rsp_valid pin -> we copies 11 levels); in_ready
     // reserves room for that in-flight word (ready while count + in-flight < S; use S >= 3 for full rate).
+    // PINREG=2 (el1011-ds-mtp 2026-10-12, opt-in): READY-LATENCY receiver for a sender that registers in_ready before
+    // using it (ot_p2h_rltx: the sender sees in_ready two edges late and asserts in_valid only for a beat it has already
+    // committed).  The pin flop captures EVERY in_valid (no handshake at the pin); in_ready reserves room for the beats the
+    // last two in_ready values may still authorise: ready while n_nx + in_valid + rd1 + rd2 + 1 <= S (rd1/rd2 = the
+    // previous two in_ready values).  Full rate needs S >= 6.  Overflow is impossible by construction (sim assertion).
     parameter integer PINREG = 0
 ) (
     input  wire         clk,
@@ -44,7 +49,7 @@ module ot_sc_pfifo #(
     reg [SB-1:0] w, r;
     reg          pv; reg [W-1:0] pd;
     always @(posedge clk) begin
-        if (!rst_n) pv <= 1'b0; else pv <= in_valid && in_ready;
+        if (!rst_n) pv <= 1'b0; else pv <= (PINREG == 2) ? in_valid : (in_valid && in_ready);
         pd <= in_data;
     end
     wire push = PINREG ? pv : (in_valid && in_ready);
@@ -54,11 +59,31 @@ module ot_sc_pfifo #(
     wire [SB-1:0] w_nx = push ? ((w == S - 1) ? {SB{1'b0}} : w + 1'b1) : w;
     wire [SB-1:0] r_nx = pop  ? ((r == S - 1) ? {SB{1'b0}} : r + 1'b1) : r;
     wire full_nx = (n_nx == S);
+    // PINREG in_ready = (n_nx + accepted-this-edge) < S, with the pin handshake as the LAST select (fence-1011: the folded
+    // sum widened to 32 bits read 32 gate levels from in_valid in the boundary lint; exact same function).
+    wire rdy_acc  = ({1'b0, n_nx} + 1'b1) < S;
+    wire rdy_idle = n_nx < S;
+    reg rd2;                                   // PINREG=2: in_ready one edge earlier
+`ifdef OT_SC_PFIFO_RL_MUT
+    // bench mutant: forget the older in-flight authorisation (rd2) -> a stalled receiver overflows
+    wire [CB+2:0] occ2 = {3'b000, n_nx} + {{(CB+2){1'b0}}, in_ready} + 1'b1;
+`else
+    wire [CB+2:0] occ2 = {3'b000, n_nx} + {{(CB+2){1'b0}}, in_ready} + {{(CB+2){1'b0}}, rd2} + 1'b1;
+`endif
+    wire rdy2_v1 = (occ2 + 1'b1) <= S;
+    wire rdy2_v0 = occ2 <= S;
+    always @(posedge clk) begin
+        if (!rst_n) rd2 <= 1'b0; else rd2 <= in_ready;
+    end
+`ifdef OT_SIM_ASSERT   // sim-only overflow check (benches pass -DOT_SIM_ASSERT; never seen by synthesis)
+    always @(posedge clk) if (rst_n && PINREG == 2 && push && !pop && n == S) $fatal(1, "ot_sc_pfifo PINREG=2 overflow");
+`endif
     always @(posedge clk) begin
         if (!rst_n) begin n <= 0; w <= 0; r <= 0; in_ready <= 1'b1; out_valid <= 1'b0; end   // empty after reset: ready at once
         else begin
             n <= n_nx; w <= w_nx; r <= r_nx;
-            in_ready <= PINREG ? (({1'b0, n_nx} + {{CB{1'b0}}, in_valid && in_ready}) < S) : !full_nx;
+            in_ready <= (PINREG == 2) ? (in_valid ? rdy2_v1 : rdy2_v0)
+                      : PINREG ? ((in_valid && in_ready) ? rdy_acc : rdy_idle) : !full_nx;
             out_valid <= (n_nx != 0);
         end
     end

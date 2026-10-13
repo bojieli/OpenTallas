@@ -16,12 +16,26 @@ PERIOD_PS = {'clk_stream': 833.333, 'clk_serial': 1111.111,
              'clk_hbm': 1024.0, 'clk_link': 833.333}
 
 
+def clock_domain(region):
+    """Map generated CTS branch identities to their unchanged PLL domain."""
+    tree = region.split(':', 1)[0]
+    if tree in PERIOD_PS:
+        return tree
+    # hbm_accel_die_fp clock relays split a trunk into clk_<domain>_ck_* nets.
+    # Keep each branch's measured insertion/region; only its clock identity is
+    # shared, so synchronous paths between branches remain timed.
+    for domain in PERIOD_PS:
+        if tree.startswith(domain + '_ck_'):
+            return domain
+    raise ValueError(f'unknown clock tree {tree}')
+
+
 def read(path):
     p = Path(path)
     return json.loads(gzip.decompress(p.read_bytes()) if p.suffix == '.gz' else p.read_bytes())
 
 
-def contract(model, plan, sheets):
+def contract(model, plan, sheets, no_sheet_ok=False):
     by = {i[0]: i for i in model['insts']}
     sinks, missing = {}, []
     targets = defaultdict(lambda: [0.0, 0.0])
@@ -31,10 +45,14 @@ def contract(model, plan, sheets):
             missing.append({'sink': key, 'reason': 'clock plan instance absent from die model'})
             continue
         master = by[inst][1]
-        if master not in sheets:
+        if master not in sheets and not no_sheet_ok:
             missing.append({'sink': key, 'reason': 'no block insertion sheet', 'master': master})
             continue
-        ins = sheets[master]['clock']['internal_insertion']
+        # --no-sheet-ok (hbmdie-v10-sta 2026-10-12): a planned sink whose master has no budget sheet (v10: the chain
+        #   stations hfd_stn_q* etc.) stays clocked at its region target with zero planned insertion; the relay STA
+        #   (tools/hbm_die_relay_sta.py compose) replaces that by the view Liberty's own insertion when the view has one
+        ins = sheets[master]['clock']['internal_insertion'] if master in sheets else dict(
+            ss=0.0, ff=0.0, grade='no_sheet', source='no budget sheet: zero planned insertion (view Liberty replaces it)')
         raw = plan['sink_insertion'][key]
         early = plan['regions'][region].get('early_branch_ps', 0.0)
         # Same compensation equation as budget_sheet.py. Preserve its FF early
@@ -42,7 +60,7 @@ def contract(model, plan, sheets):
         for n, c in enumerate(('ss', 'ff')):
             targets[region][n] = max(targets[region][n], raw[n] + ins[c] + early)
         sinks[key] = dict(instance=inst, port=port, master=master, region=region,
-                          domain=region.split(':', 1)[0], raw_cts_ps=raw,
+                          domain=clock_domain(region), raw_cts_ps=raw,
                           internal_ps={c: ins[c] for c in ('ss', 'ff')},
                           insertion_grade=ins['grade'], insertion_source=ins['source'])
     for key, sink in sinks.items():
@@ -159,15 +177,16 @@ def main():
     ap.add_argument('--pin-map', help='JSON object mapping planned sinks to actual netlist clock pins')
     ap.add_argument('--sta-base', help='existing die STA Tcl; preserve its loading, geometry and parasitics prefix')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--no-sheet-ok', action='store_true', help='clock planned sinks of masters without a budget sheet (zero planned insertion)')
     a = ap.parse_args()
     paths = [Path(a.die_model), Path(a.clock_plan)]
     sheets = {p.stem: read(p) for p in Path(a.sheets).glob('*.json')}
-    rec = contract(read(a.die_model), read(a.clock_plan), sheets)
+    rec = contract(read(a.die_model), read(a.clock_plan), sheets, a.no_sheet_ok)
     bind_pin_names(rec, read(a.pin_map) if a.pin_map else {})
     if a.pin_map:
         paths.append(Path(a.pin_map))
     used = sorted({s['master'] for s in rec['sinks'].values()})
-    paths += [Path(a.sheets) / (m + '.json') for m in used]
+    paths += [Path(a.sheets) / (m + '.json') for m in used if (Path(a.sheets) / (m + '.json')).exists()]
     if a.sta_base:
         paths += [Path(a.sta_base)]
     rec['input_sha256'] = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}

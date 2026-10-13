@@ -27,7 +27,44 @@ foreach c [all_clocks] {
 if {[info exists ot_lb_fwd]} { puts "OT_LINK_BUDGET forwarded clocks (own SDC kept, srcsync model): $ot_lb_fwd" }
 if {[llength $ot_lb_clks] < 1} { puts "OT_LINK_BUDGET: no common port clock (all forwarded): nothing to apply" } else {
 # one virtual clock per port-sourced clock, at that clock's measured mid insertion
+# q-kvd 2026-10-12 (qkd_d2d_ref-q8-aeca40e24): with hard macros (block masters: SRAMs, hardened sub-tiles) the clock's
+# sinks include the macros' clock pins, which arrive EARLY by design (their internal insertion is folded into the
+# view's arcs / max_clock_tree_path; the parent spine targets pin + internal = flop arrival).  report_clock_latency's
+# min..max then spans macro pin .. register (qkd_d2d: 1,139 .. 1,706 -> L 1,422.5, ~280 ps below the face registers at
+# ~1,700), so every face output failed falsely (-122 ps on ot_lb_v) and every input gained the same.  The reference is
+# the boundary registers' clock: when the block has a block-master instance, L is the mid of the standard-cell
+# REGISTER clock-pin arrivals of that clock (min of the rise/fall arrival = the tree insertion on either edge; the
+# arrival carries any source latency once), macro / hard-child pins excluded.  Macro-free blocks are unchanged.
+proc ot_lb_reg_lat {} {
+  set has_block 0; set pins {}
+  foreach inst [[ord::get_db_block] getInsts] {
+    set m [$inst getMaster]
+    if {[$m isBlock]} { set has_block 1; continue }
+    if {![regexp {^(DFF|DHL|DLL|SDF|ASYNC)} [$m getName]]} continue
+    foreach cp {CLK clk CK ck} {
+      set ck [get_pins -quiet "[string map {/ .} [$inst getName]]/$cp"]
+      if {[llength $ck] == 0} { set ck [get_pins -quiet "[$inst getName]/$cp"] }
+      if {[llength $ck]} { lappend pins $ck; break }
+    }
+  }
+  set r [dict create]
+  if {!$has_block} { return $r }
+  foreach ck $pins {
+    set a {}
+    foreach pr {arrival_max_rise arrival_max_fall} { set v [get_property $ck $pr]; if {[string is double -strict $v]} { lappend a $v } }
+    if {![llength $a]} continue
+    set a [tcl::mathfunc::min {*}$a]
+    foreach c [get_property $ck clocks] {
+      set n [get_full_name $c]
+      if {![dict exists $r $n]} { dict set r $n [list $a $a 1]; continue }
+      lassign [dict get $r $n] lo hi k
+      dict set r $n [list [expr {min($lo, $a)}] [expr {max($hi, $a)}] [incr k]]
+    }
+  }
+  return $r
+}
 set ot_lb_vmap [dict create]
+catch {unset ot_lb_reglat}
 foreach c $ot_lb_clks {
   set cn [get_full_name $c]
   set T [get_property $c period]
@@ -44,20 +81,29 @@ foreach c $ot_lb_clks {
   if {[regexp {([0-9.]+)\s+([0-9.]+)\s+source latency} $rs -> slo shi] && ($slo + $shi) > 0.0} {
     set L [expr {$L - ($slo + $shi) / 2.0}]
   }
+  set ot_lb_ref "clock_latency"
+  # read pin arrivals only after report_clock_latency has built the timing graph (get_property arrival_* on a session
+  # with no graph yet segfaults in Graph::pinVertices)
+  if {![info exists ot_lb_reglat]} { set ot_lb_reglat [ot_lb_reg_lat] }
+  if {[dict exists $ot_lb_reglat $cn]} {
+    lassign [dict get $ot_lb_reglat $cn] lo hi ot_lb_nreg
+    set L [expr {($lo + $hi) / 2.0}]
+    set ot_lb_ref "std_regs $ot_lb_nreg (macro pins excluded)"
+  }
   set B [expr {$T - 60.0 - $ot_lb_skew - $ot_lb_link}]
   set S [expr {$ot_lb_sfrac * $B}]; set R [expr {$B - $S}]
   create_clock -name ot_lb_v_$cn -period $T
   set_clock_latency $L [get_clocks ot_lb_v_$cn]
   set_clock_uncertainty -setup 60 [get_clocks ot_lb_v_$cn]
   dict set ot_lb_vmap $cn [list ot_lb_v_$cn [expr {$T - 60.0 - $R}] [expr {$T - 60.0 - $S}]]
-  puts [format "OT_LINK_BUDGET clock %s T %.3f L %.1f (%.1f..%.1f) skew %s link %s -> S %.1f R %.1f; in max %.1f out max %.1f" $cn $T $L $lo $hi $ot_lb_skew $ot_lb_link $S $R [expr {$T - 60.0 - $R}] [expr {$T - 60.0 - $S}]]
+  puts [format "OT_LINK_BUDGET clock %s T %.3f L %.1f (%.1f..%.1f %s) skew %s link %s -> S %.1f R %.1f; in max %.1f out max %.1f" $cn $T $L $lo $hi $ot_lb_ref $ot_lb_skew $ot_lb_link $S $R [expr {$T - 60.0 - $R}] [expr {$T - 60.0 - $S}]]
 }
 if {[dict size $ot_lb_vmap] == 0} { error "OT_LINK_BUDGET: no measured clock" }
 set ot_lb_default [lindex [dict keys $ot_lb_vmap] 0]
 # the port-sourced clock of the first register reached from a port through combinational cells (odb walk; a
 # generated clock maps to its master's port clock)
 proc ot_lb_clk_of_inst {inst} {
-  foreach cp {CLK clk CK} {
+  foreach cp {CLK clk CK ck} {
     set ck [get_pins -quiet "[string map {/ .} [$inst getName]]/$cp"]
     if {[llength $ck] == 0} { set ck [get_pins -quiet "[$inst getName]/$cp"] }
     if {[llength $ck] == 0} continue
@@ -70,13 +116,21 @@ proc ot_lb_clk_of_inst {inst} {
   }
   return ""
 }
-proc ot_lb_is_seq {inst} { return [regexp {^(DFF|DHL|DLL|SDF|ASYNC|ICG)} [[$inst getMaster] getName]] }
+# a hard macro (block master: SRAM, register bank, hardened sub-tile) is a timing endpoint like a register; walking
+# through it as combinational fanned every port across all macro outputs (hfd_attn_half 2026-10-11: ~5k ports x 4,000
+# nets each through the 544-bit banks kept cts.tcl in this Tcl loop for 10 h after CTS)
+proc ot_lb_is_seq {inst} {
+  set m [$inst getMaster]
+  if {[$m isBlock]} { return 1 }
+  return [regexp {^(DFF|DHL|DLL|SDF|ASYNC|ICG)} [$m getName]]
+}
 proc ot_lb_domain {portname dir} {
   set bt [[ord::get_db_block] findBTerm $portname]
   if {$bt eq "NULL" || $bt eq ""} { return "" }
   set nets [list [$bt getNet]]; set seen [dict create]; set k 0
-  while {[llength $nets] && $k < 4000} {
-    set n [lindex $nets 0]; set nets [lrange $nets 1 end]; incr k
+  set qi 0
+  while {$qi < [llength $nets] && $k < 4000} {
+    set n [lindex $nets $qi]; incr qi; incr k
     if {$n eq "NULL" || [dict exists $seen [$n getName]]} continue
     dict set seen [$n getName] 1
     foreach it [$n getITerms] {
