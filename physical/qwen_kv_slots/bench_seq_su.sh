@@ -15,7 +15,7 @@ grep -q 'qfd_seq_su_bodyview' "$OUT/tb_slot.sv" || { echo "FAIL kv_slots seq_su 
 L=$(grep -o 'L="[^"]*"' rtl/test/run_seq_su_bi_lockstep.sh | sed -e 's/^L="//' -e 's/"$//' -e 's#rtl/test/tb_qfd_seq_su_bi_psram.sv##')
 D=""; [ -n "$MUT" ] && D="-DOT_QFD_SEQ_SU_SLOT_MUT"
 "$V" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -CFLAGS -O1 --x-assign fast --x-initial fast \
-    --top-module tb_qfd_seq_su_bi_psram -GU1_HQ2=1 -GARCOV=1 -GPCOV=1 -GMINVW=20 $D --Mdir "$OUT/obj" "$OUT/tb_slot.sv" rtl/test/qfd_seq_su_slot_shim.sv \
+    --top-module tb_qfd_seq_su_bi_psram -GU1_HQ2=1 -GU1_RRG=1 -GU1_PCUT=1 -GARCOV=1 -GPCOV=1 -GMINVW=20 $D --Mdir "$OUT/obj" "$OUT/tb_slot.sv" rtl/test/qfd_seq_su_slot_shim.sv \
     rtl/physical/ot_qfd_seq_su_slot.sv $L > "$OUT/build.log" 2>&1 || { tail -5 "$OUT/build.log"; echo "FAIL kv_slots seq_su build"; exit 1; }
 "$OUT/obj/Vtb_qfd_seq_su_bi_psram" > "$OUT/run.log" 2>&1
 L1=$(grep -E '^(PASS|FAIL) seq_su_bi_psram' "$OUT/run.log" | tail -1)

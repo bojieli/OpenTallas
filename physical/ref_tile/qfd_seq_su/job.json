@@ -1,0 +1,110 @@
+{
+ "name": "qfd_seq_su-sl1-COMMIT",
+ "block": "qfd_seq_su",
+ "ref_tile": true,
+ "owner": "Claude:el1013-qwen-romspine",
+ "purpose": "Qwen ROM TP8 contract v4b slot cell qfd_seq_su (1 instance seq_su, 518.376^2): first slot-shaped view under the die master name. Body = ot_qfd_seq_su_bi PSRAM 1 / HQ2 1 / RRG 1 / PCUT 1 unchanged (closed as qfd_seq_su_bi-febra-dace0dae3 at 518.4^2, M8 era); the wrapper is WIRING ONLY (generated from the packing table), every body port is an IS/OS = 1 pin flop. 2 x ot_sram_1r1w_64x512_m1_r2c2 program store. Cut: 3,593 pin bits over 4 faces of 518 um (N 1,651 b on M5 = 0.31 of the 10,799 N-face M3/M5 tracks at 48 nm; the widest internal cut is the 1,024-b program word between the two SRAMs and the head FIFO, 1,024 b over ~4 x 518 um / 0.048 um x 0.5 usable = 0.05) <= 0.60. Clock: sinks per root measured by the --cts gate (gate_result.json).",
+ "threads": 8,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/el1013-qwen-romspine",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_seq_su u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qfd_seq_su_slot.sv rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv rtl/rom/ot_qwen_tp_seq_w12.sv rtl/rom/ot_rom_pkg_link.sv rtl/rom/ot_rom_pkg_ctrl.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_dyn_ttiles.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_cg.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "slot_exact",
+    "cmd": "bash physical/qwen_kv_slots/bench_seq_su.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "pass_regex": "^PASS kv_slots seq_su",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the body's exact lockstep bench (tb_qfd_seq_su_bi_psram, u0 = reference body PSRAM 0 / HQ2 0) with u1 = this cell driven and observed through its contract bundles (unpacked by the packing table): 20,997 cycles, 400 VM writes, 786 collective beats, every output bit compared every cycle"
+   },
+   {
+    "name": "slot_mutant",
+    "cmd": "bash physical/qwen_kv_slots/bench_seq_su.sh {RUN}/bench/neg mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL kv_slots seq_su mutant detected",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "OT_QFD_SEQ_SU_SLOT_MUT swaps vwr bits 0 / 1 inside the cell (a packing error): 9,144 mismatches"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_seq_su/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_seq_su/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_seq_su --out {RUN}/record/views/qfd_seq_su --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_seq_su/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_seq_su/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_seq_su/qfd_seq_su-sl1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "vs the 4 closed M8-era routes and 10 setup early-fails of ot_qfd_seq_su_bi (fea/feb/bi-fearl/bi-febra at 518.4^2, pins M4-M7, PG M6/M7): (1) NEW top = slot cell qfd_seq_su with the 33 contract bundles on the v3 faces (W su/sd/acc/cb, N vm + tt_ctlm, S d2d, E collective) instead of the old left/top/bottom/right pin regions; (2) layer cap M5 for signals and PG, pins M4 E/W + M5 N/S only (was M4/M6 + M5/M7); (3) rsi moves from an M8 area pin to an N-face pin flop; (4) kit recipe 2: hold margin 30 ps, macro halo 5.4 um, pin hold cells, every port flop FIRM at its pin (4 staggered rows); (5) body configuration = the last closed one (PSRAM 1, HQ2 1, RRG 1 replicated reset, PCUT 1 exact controller path cuts)."
+}

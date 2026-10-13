@@ -3,7 +3,9 @@
  "body": "ot_qfd_seq_su_bi",
  "body_params": {
   "PSRAM": 1,
-  "HQ2": 1
+  "HQ2": 1,
+  "RRG": 1,
+  "PCUT": 1
  },
  "order": "LSB-first",
  "clock": "ck -> clk",

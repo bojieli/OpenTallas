@@ -1,0 +1,122 @@
+{
+ "name": "qfd_seq_su",
+ "top": "qfd_seq_su",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qfd_seq_su_slot.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv",
+  "rtl/rom/ot_qwen_tp_seq_w12.sv",
+  "rtl/rom/ot_rom_pkg_link.sv",
+  "rtl/rom/ot_rom_pkg_ctrl.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rsi"
+ ],
+ "contract": {
+  "file": "results/arch/hier_contract_1012/qwen_rom_tp8.json",
+  "slot": "seq_su"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 2
+  }
+ ],
+ "pins": {
+  "N": [
+   "vrd",
+   "vrq",
+   "vwr",
+   "st",
+   "xs",
+   "xm",
+   "ck",
+   "rsi"
+  ],
+  "S": [
+   "kvd",
+   "dc",
+   "dh"
+  ],
+  "W": [
+   "su",
+   "sd",
+   "acc",
+   "cbc0",
+   "cbr0",
+   "cbc1",
+   "cbc2",
+   "cbc3",
+   "cbc4",
+   "cbc5",
+   "cbc6",
+   "cbc7"
+  ],
+  "E": [
+   "cd_d",
+   "cd_cr",
+   "cc_d"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "slot_change_request": "el1013-qwen-romspine 10-13: PACKING TABLE physical/qwen_kv_slots/qfd_seq_su_pack.json (33 contract bundles, LSB-first field order; posted in el1011-qwen-tp8.log 08:01; the far-side masters must unpack the same order). Outline, faces, layers and clock entry as the v4b slot. Pin delta: cd[547:0] is built as cd_d[546:0] (out) + cd_cr (c_ready credit, in, against the flow); cc[517:0] as cc_d[516:0] (the body has no r_ready); dc[529:0] as dc[55:0] and dh[529:0] as dh[186:0] (the body binds 56 / 187 bits); cbr0[9:0] kept (bits 2:0 unbound inside); bundles ib[381:0], dflt[8:0], cbr1..7[9:0] have NO body port and are NOT pins of this cell (not tied off): contract v5 must drop or re-home them. cbc1..7 are copies of the cbc0 register set. rsi = the tile's registered reset input.",
+ "structural_change": "vs the 4 closed M8-era routes and 10 setup early-fails of ot_qfd_seq_su_bi (fea/feb/bi-fearl/bi-febra at 518.4^2, pins M4-M7, PG M6/M7): (1) NEW top = slot cell qfd_seq_su with the 33 contract bundles on the v3 faces (W su/sd/acc/cb, N vm + tt_ctlm, S d2d, E collective) instead of the old left/top/bottom/right pin regions; (2) layer cap M5 for signals and PG, pins M4 E/W + M5 N/S only (was M4/M6 + M5/M7); (3) rsi moves from an M8 area pin to an N-face pin flop; (4) kit recipe 2: hold margin 30 ps, macro halo 5.4 um, pin hold cells, every port flop FIRM at its pin (4 staggered rows); (5) body configuration = the last closed one (PSRAM 1, HQ2 1, RRG 1 replicated reset, PCUT 1 exact controller path cuts).",
+ "job": {
+  "owner": "Claude:el1013-qwen-romspine",
+  "branch": "claude/el1013-qwen-romspine",
+  "tag": "sl1",
+  "purpose": "Qwen ROM TP8 contract v4b slot cell qfd_seq_su (1 instance seq_su, 518.376^2): first slot-shaped view under the die master name. Body = ot_qfd_seq_su_bi PSRAM 1 / HQ2 1 / RRG 1 / PCUT 1 unchanged (closed as qfd_seq_su_bi-febra-dace0dae3 at 518.4^2, M8 era); the wrapper is WIRING ONLY (generated from the packing table), every body port is an IS/OS = 1 pin flop. 2 x ot_sram_1r1w_64x512_m1_r2c2 program store. Cut: 3,593 pin bits over 4 faces of 518 um (N 1,651 b on M5 = 0.31 of the 10,799 N-face M3/M5 tracks at 48 nm; the widest internal cut is the 1,024-b program word between the two SRAMs and the head FIFO, 1,024 b over ~4 x 518 um / 0.048 um x 0.5 usable = 0.05) <= 0.60. Clock: sinks per root measured by the --cts gate (gate_result.json).",
+  "benches": [
+   {
+    "name": "slot_exact",
+    "cmd": "bash physical/qwen_kv_slots/bench_seq_su.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "pass_regex": "^PASS kv_slots seq_su",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the body's exact lockstep bench (tb_qfd_seq_su_bi_psram, u0 = reference body PSRAM 0 / HQ2 0) with u1 = this cell driven and observed through its contract bundles (unpacked by the packing table): 20,997 cycles, 400 VM writes, 786 collective beats, every output bit compared every cycle"
+   },
+   {
+    "name": "slot_mutant",
+    "cmd": "bash physical/qwen_kv_slots/bench_seq_su.sh {RUN}/bench/neg mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL kv_slots seq_su mutant detected",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "note": "OT_QFD_SEQ_SU_SLOT_MUT swaps vwr bits 0 / 1 inside the cell (a packing error): 9,144 mismatches"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}
