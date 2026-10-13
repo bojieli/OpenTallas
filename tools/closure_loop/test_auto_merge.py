@@ -1,4 +1,4 @@
-"""AUTO-MERGE (owner 2026-10-10): CLOSED + benches as expected + claude/* source -> verified commit + record merged to main."""
+"""AUTO-MERGE (owner 2026-10-10): CLOSED + behavioral/mutant benches + claude/* or codex/* source -> verified commit + record merged to main."""
 import json
 import os
 import subprocess
@@ -61,12 +61,28 @@ class AutoMerge(unittest.TestCase):
         self.assertNotIn("rtl/b.sv", files)                      # the unverified later commit stays off main
         self.assertIn("wire v", run("show", "origin/main:rtl/a.sv", cwd=self.repo))
 
+    def test_codex_merges_only_verified_source_and_marks_codex(self):
+        j = self.job(spec={"block": "a", "source": {"branch": "codex/feat"}})
+        st = cl.auto_merge_closure(j, {"branch_commit": self.record}, ["results/closure_loop/job1"])
+        self.assertTrue(st.startswith("AUTO-MERGED"), st)
+        self.assertNotIn("rtl/b.sv", self.main_tree())
+        message = run("log", "-2", "--format=%B", "origin/main", cwd=self.repo)
+        self.assertIn("Coordinated by: Codex", message)
+        self.assertNotIn("Co-Authored-By: Claude", message)
+
+    def test_lint_is_not_exactness_and_positive_needs_mutant(self):
+        lint = self.job(benches={"bench_lint": {"expect": "pass", "ok": True},
+                                "mut": {"expect": "fail", "ok": True}})
+        self.assertIn("no behavioral positive", cl.auto_merge_guard(lint))
+        positive = self.job(benches={"exact": {"expect": "pass", "ok": True}})
+        self.assertIn("no negative bench", cl.auto_merge_guard(positive))
+
     def test_guards(self):
         out = {"branch_commit": self.record}
         bad_bench = self.job(benches={"pos": {"expect": "pass", "ok": False}})
         self.assertIn("benches not as expected", cl.auto_merge_closure(bad_bench, out, ["results/closure_loop/job1"]))
-        codex = self.job(spec={"block": "a", "source": {"branch": "codex/x"}})
-        self.assertIn("not claude/*", cl.auto_merge_closure(codex, out, ["results/closure_loop/job1"]))
+        other = self.job(spec={"block": "a", "source": {"branch": "feature/x"}})
+        self.assertIn("not claude/* or codex/*", cl.auto_merge_closure(other, out, ["results/closure_loop/job1"]))
         held = self.job(spec={"block": "a", "source": {"branch": "claude/feat"}, "hold_merge": "svc scoreboard"})
         self.assertIn("opts out", cl.auto_merge_closure(held, out, ["results/closure_loop/job1"]))
         self.assertIn("no loop benches", cl.auto_merge_closure(self.job(benches={}), out, ["results/closure_loop/job1"]))

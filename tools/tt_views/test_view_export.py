@@ -1,0 +1,151 @@
+#!/usr/bin/env python3
+"""view_export constraint sequence = the routed verdict's (export-sdc 2026-10-13).
+
+Unit tests need nothing.  The re-export test needs docker and a CLOSED closure-loop route on this host:
+
+    OT_VIEW_EXPORT_ORFS=<RUN>/routes/<LABEL>/work/orfs OT_VIEW_EXPORT_NAME=<block> [OT_VIEW_EXPORT_OUT=<scratch dir>]
+    [OT_VIEW_EXPORT_MACRO_VIEWS=dir:dir] python3 tools/tt_views/test_view_export.py
+
+It re-exports the route's 6_final ODB at TT and FF and requires the export session's TT setup / FF hold slack to equal
+the route's routed_ioref verdict within 0.05 ps (reference: s81su_smt_hb1_ref-v2-hb1-ab43f2fe0 on ot-epyc1tb, verdict
+TT +11.51 / FF +3.66; the kit-SDC-instead-of-routed-SDC export read FF -19.69).
+"""
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import view_export as ve  # noqa: E402
+
+NICK = "results/asap7/blk/base"
+MEAS = """read_lef /p/tech.lef
+read_liberty /p/x_{C}.lib
+read_db /work/%s/6_final.odb
+read_sdc /work/%s/6_final.sdc
+read_spef /work/%s/6_final.spef
+set_propagated_clock [all_clocks]
+read_sdc /src/physical/ref_tile/k/signoff.sdc
+read_sdc /src/physical/common_flow/io_ref_routed.sdc
+read_sdc /meas/app0_io_ref_routed.sdc
+puts "OT_REGS [llength [all_registers]]"
+if {[llength [all_clocks]]} { puts "OT_REGS_CLOCKED 1" } else { puts "OT_REGS_CLOCKED 0" }
+puts "OT_CORNER {c}"
+puts "OT_WS [sta::worst_slack_cmd max]"
+""" % (NICK, NICK, NICK)
+
+
+def mkrun(root, eco=None, json_orfs=False):
+    """a closure-loop run tree: route ORFS (+ optional hold-ECO ORFS with other content) and a routed_ioref verdict"""
+    run = root / "run"
+    orfs = run / "routes/L/work/orfs"
+    for d, tag in [(orfs, "route")] + ([(run / "cl/eco/orfs", eco)] if eco else []):
+        (d / NICK).mkdir(parents=True)
+        for n in ("6_final.odb", "6_final.spef", "6_final.sdc"):
+            (d / NICK / n).write_text(f"{n} of {tag}\n")
+    for f in ("physical/ref_tile/k/signoff.sdc", "physical/common_flow/io_ref_routed.sdc"):
+        (run / "src" / f).parent.mkdir(parents=True, exist_ok=True)
+        (run / "src" / f).write_text(f + "\n")
+    meas = run / "cl/routed_ioref.a1_meas"
+    meas.mkdir(parents=True, exist_ok=True)
+    (meas / "app0_io_ref_routed.sdc").write_text("ioref\n")
+    for c, lab in (("ss", "tt"), ("ff", "ff")):
+        (meas / f"meas_{c}.tcl").write_text(MEAS.replace("{C}", lab.upper()).replace("{c}", lab))
+    res = dict(setup_tt=dict(worst_slack_ps=11.51, errors=[], rc=0), hold_ff=dict(worst_slack_ps=3.66, errors=[], rc=0))
+    if json_orfs:
+        res["orfs"] = str(orfs)
+    (run / "cl/routed_ioref.a1.json").write_text(json.dumps(res))
+    return run, orfs
+
+
+class Sequence(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+
+    def test_section_is_the_verdict_order(self):
+        sec = ve.verdict_section(MEAS)
+        self.assertEqual([l.split()[0] for l in sec],
+                         ["read_db", "read_sdc", "read_spef", "set_propagated_clock", "read_sdc", "read_sdc", "read_sdc"])
+        self.assertTrue(sec[1].endswith("/6_final.sdc") and sec[-1] == "read_sdc /meas/app0_io_ref_routed.sdc")
+        with self.assertRaises(ve.VerdictError):
+            ve.verdict_section("read_db x\nread_spef y\n")
+
+    def test_discovery_and_replay_roots(self):
+        run, orfs = mkrun(self.tmp)
+        vj = ve.find_verdict(orfs)
+        self.assertEqual(vj, (run / "cl/routed_ioref.a1.json").resolve())
+        vd = ve.load_verdict(vj, orfs, orfs / NICK)
+        self.assertEqual(vd["expect"], {"tt": 11.51, "ff": 3.66})
+        self.assertEqual(vd["work"], orfs.resolve())
+        self.assertEqual(vd["sec"]["ff"][1], f"read_sdc /work/{NICK}/6_final.sdc")
+        self.assertIn("/src/physical/ref_tile/k/signoff.sdc", vd["files"])
+        self.assertIsNone(ve.find_verdict(self.tmp / "a/b/c/d/orfs"))
+
+    def test_installed_eco_dir_is_the_verdict_dir(self):
+        # ECO installed: its odb / spef were copied into the route base, the verdict was timed in the ECO dir
+        run, orfs = mkrun(self.tmp, eco="eco")
+        for n in ("6_final.odb", "6_final.spef"):
+            shutil.copy(run / "cl/eco/orfs" / NICK / n, orfs / NICK / n)
+        vd = ve.load_verdict(ve.find_verdict(orfs), orfs, orfs / NICK)
+        self.assertEqual(vd["work"], (run / "cl/eco/orfs").resolve())
+
+    def test_untried_eco_dir_is_not_used(self):
+        run, orfs = mkrun(self.tmp, eco="eco-not-installed")
+        vd = ve.load_verdict(ve.find_verdict(orfs), orfs, orfs / NICK)
+        self.assertEqual(vd["work"], orfs.resolve())
+
+    def test_stale_verdict_is_refused(self):
+        run, orfs = mkrun(self.tmp, json_orfs=True)
+        (orfs / NICK / "6_final.odb").write_text("a later ECO\n")
+        other = self.tmp / "base"
+        other.mkdir()
+        (other / "6_final.odb").write_text("exported db\n")
+        (other / "6_final.spef").write_text("6_final.spef of route\n")
+        with self.assertRaises(ve.VerdictError):
+            ve.load_verdict(ve.find_verdict(orfs), orfs, other)
+
+    def test_unclean_verdict_is_refused(self):
+        run, orfs = mkrun(self.tmp)
+        vj = run / "cl/routed_ioref.a1.json"
+        d = json.loads(vj.read_text())
+        d["hold_ff"]["errors"] = ["[ERROR STA-1]"]
+        vj.write_text(json.dumps(d))
+        with self.assertRaises(ve.VerdictError):
+            ve.load_verdict(vj, orfs, orfs / NICK)
+
+    def test_ws(self):
+        self.assertEqual(ve.ws_ps("OT_WS max 1.15e-11 min -2e-12"), (11.5, -2.0))
+
+
+@unittest.skipUnless(os.environ.get("OT_VIEW_EXPORT_ORFS") and shutil.which("docker"),
+                     "set OT_VIEW_EXPORT_ORFS / OT_VIEW_EXPORT_NAME to a closed loop route on this host")
+class ReexportMatchesVerdict(unittest.TestCase):
+    def test_tt_ff_match_the_routed_verdict(self):
+        orfs = Path(os.environ["OT_VIEW_EXPORT_ORFS"])
+        out = Path(os.environ.get("OT_VIEW_EXPORT_OUT") or tempfile.mkdtemp())
+        vj = ve.find_verdict(orfs.resolve())
+        self.assertIsNotNone(vj, "the route has no routed_ioref verdict")
+        want = json.loads(vj.read_text())
+        cmd = [sys.executable, str(HERE / "view_export.py"), "--orfs-dir", str(orfs), "--name",
+               os.environ["OT_VIEW_EXPORT_NAME"], "--out", str(out), "--corners", "tt,ff", "--tmp-dir", str(out / "tmp")]
+        for d in filter(None, os.environ.get("OT_VIEW_EXPORT_MACRO_VIEWS", "").split(":")):
+            cmd += ["--macro-view", d]
+        rc = subprocess.run(cmd).returncode
+        rec = json.loads((out / "abstract.json").read_text())
+        chk = rec["verdict"]["check"]
+        print("EXPORT_VS_VERDICT", json.dumps(chk))
+        for c, key in (("tt", "setup_tt"), ("ff", "hold_ff")):
+            self.assertEqual(rec["sdc_sequence"][c]["mode"], "verdict")
+            self.assertAlmostEqual(chk[c]["export_ps"], want[key]["worst_slack_ps"], delta=0.055)
+            self.assertTrue(chk[c]["ok"])
+        self.assertEqual(rc, 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -211,6 +211,53 @@ proc ot_sp_emit {n innet px py} {
   }
 }
 
+# Opt-in safe balancing keeps a measured best clock topology.  Rollback reconnects
+# each surviving leaf to its old input net, then deletes ONLY subsequently added
+# pad instances/nets.  No ODB reload: all surviving Tcl object handles stay valid.
+proc ot_sp_checkpoint {} {
+  set inputs [dict create]
+  # every node that can carry pads (leaves; all tree nodes under OT_SPINE_TREE_PAD)
+  foreach n [dict keys $::ot_sp_npad] {
+    set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    if {$b eq "NULL"} continue
+    dict set inputs $n [[$b findITerm $::ot_sp_in] getNet]
+  }
+  return [dict create inputs $inputs insts $::ot_sp_insts nbuf $::ot_sp_nbuf npad $::ot_sp_npad used $::ot_sp_used]
+}
+proc ot_sp_restore {saved} {
+  dict for {n net} [dict get $saved inputs] {
+    set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    set p [$b findITerm $::ot_sp_in]
+    $p disconnect; $p connect $net
+  }
+  set added [lrange $::ot_sp_insts [llength [dict get $saved insts]] end]
+  set nets {}
+  foreach b $added { lappend nets [[$b findITerm $::ot_sp_out] getNet] }
+  # Destroy instances first: no net is destroyed while a pad pin still references it.
+  foreach b [lreverse $added] { odb::dbInst_destroy $b }
+  foreach net [lreverse $nets] { odb::dbNet_destroy $net }
+  set ::ot_sp_insts [dict get $saved insts]
+  set ::ot_sp_nbuf [dict get $saved nbuf]
+  set ::ot_sp_npad [dict get $saved npad]
+  set ::ot_sp_used [dict get $saved used]
+  puts "OT_SPINE restored best checkpoint; removed [llength $added] pad cells"
+}
+proc ot_sp_keep_best {a} {
+  set vals [dict values $a]
+  set spread [expr {[tcl::mathfunc::max {*}$vals] - [tcl::mathfunc::min {*}$vals]}]
+  if {![info exists ::ot_sp_best_spread] || $spread < $::ot_sp_best_spread} {
+    set ::ot_sp_best_spread $spread
+    set ::ot_sp_best_state [ot_sp_checkpoint]
+    return 1
+  }
+  if {$spread > $::ot_sp_best_spread + 0.001} {
+    puts "OT_SPINE overshoot $spread ps vs best $::ot_sp_best_spread ps; restoring measured best"
+    ot_sp_restore $::ot_sp_best_state
+    return 0
+  }
+  return 1
+}
+
 # insert `count` pad buffers in front of leaf n's buffer (between its driver net and its A pin)
 proc ot_sp_pad {n count} {
   set lb [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
@@ -226,6 +273,35 @@ proc ot_sp_pad {n count} {
   $ait connect $net
 }
 
+# Opt-in subtree-common padding (OT_SPINE_TREE_PAD=1).  Per-leaf padding spends one pad chain per leaf even when a whole
+# subtree is early by the same amount: qw_h3/qw_h3p (777.6 x 691.2 um, 4,05x leaves, 31,912 sinks) grew from 8,1xx to
+# 165,891 / 190,931 spine cells, the pads no longer found sites near their leaves, their wire delay overshot the measured
+# pad delay, and the latest arrival ran from 1,413 to 4,428 ps (spread 136 -> 1,200 ps, hold -764.7 ps).  Here the delay a
+# subtree needs in common (the minimum need of its leaves) is inserted ONCE at the subtree's node buffer and only the
+# remainder goes further down, so the pad count follows the tree imbalance, not the leaf count.
+proc ot_sp_tree_min {n need} {
+  if {[dict exists $::ot_sp_kids $n]} {
+    set m ""
+    foreach c [dict get $::ot_sp_kids $n] { set v [ot_sp_tree_min $c $need]; if {$m eq "" || $v < $m} { set m $v } }
+  } else {
+    set m [expr {[dict exists $need $n] ? max(0, [dict get $need $n]) : 0}]
+  }
+  dict set ::ot_sp_tmin $n $m
+  return $m
+}
+proc ot_sp_tree_apply {n above} {
+  set c [expr {[dict get $::ot_sp_tmin $n] - $above}]
+  if {$c > 0} { ot_sp_pad $n $c; incr ::ot_sp_tpads $c }
+  if {[dict exists $::ot_sp_kids $n]} {
+    foreach k [dict get $::ot_sp_kids $n] { ot_sp_tree_apply $k [dict get $::ot_sp_tmin $n] }
+  }
+}
+proc ot_sp_tree_pad {root need} {
+  set ::ot_sp_tmin [dict create]; set ::ot_sp_tpads 0
+  ot_sp_tree_min $root $need
+  ot_sp_tree_apply $root 0
+  return $::ot_sp_tpads
+}
 proc ot_sp_leaf_arrivals {} {
   estimate_parasitics -placement
   # build the timing graph for the new cells before reading pin properties (pinArrival on an un-graphed pin segfaults)
@@ -402,6 +478,8 @@ proc ot_clock_spine {} {
   if {$::ot_sp_root_xy ne ""} { lassign $::ot_sp_root_xy px py }
   set ::ot_sp_leafnet [dict create]; set ::ot_sp_npad [dict create]
   foreach n [dict keys $::ot_sp_members] { dict set ::ot_sp_npad $n 0 }
+  set treepad [expr {[ot_sp_env OT_SPINE_TREE_PAD 0] eq "1"}]
+  if {$treepad} { foreach n [dict keys $::ot_sp_kids] { if {![dict exists $::ot_sp_npad $n]} { dict set ::ot_sp_npad $n 0 } } }
   ot_sp_emit $root $net0 [expr {min(max($px, $::ot_sp_cx0), $::ot_sp_cx1 - $::ot_sp_cw)}] [expr {min(max($py, $::ot_sp_cy0), $::ot_sp_cy1 - $::ot_sp_rh)}]
   set_propagated_clock [all_clocks]
   # equalise measured leaf arrivals with pad cells; the per-pad delay is learned from the previous round
@@ -410,6 +488,8 @@ proc ot_clock_spine {} {
   set fstage [ot_sp_env OT_SPINE_FINE_PS 14]
   set tol [ot_sp_env OT_SPINE_TOL_PS 25]
   set prev ""; set padded [dict create]; set mode coarse
+  set safe [expr {[ot_sp_env OT_SPINE_SAFE_BALANCE 0] eq "1"}]
+  unset -nocomplain ::ot_sp_best_spread ::ot_sp_best_state
   for {set it 0} {$it <= $iters} {incr it} {
     set a [ot_sp_leaf_arrivals]
     set vals [dict values $a]
@@ -422,13 +502,32 @@ proc ot_clock_spine {} {
       if {$mode eq "coarse"} { set stage $m } else { set fstage $m }
     }
     puts [format "OT_SPINE iter %d (%s) leaves %d sinks %d cells %d leaf arrival %.1f..%.1f ps (spread %.1f) pad %.1f / %.1f ps" $it $mode $nl $ns $::ot_sp_nbuf $mn $mx [expr {$mx - $mn}] $stage $fstage]
+    if {$safe && ![ot_sp_keep_best $a]} {
+      set restored [ot_sp_leaf_arrivals]
+      set rv [dict values $restored]
+      set rsp [expr {[tcl::mathfunc::max {*}$rv] - [tcl::mathfunc::min {*}$rv]}]
+      puts "OT_SPINE restored measured spread $rsp ps (best $::ot_sp_best_spread)"
+      if {$rsp > $::ot_sp_best_spread + 1.0} { error "OT_SPINE best-checkpoint restore changed measured spread" }
+      break
+    }
     if {$it == $iters || $mx - $mn <= $tol} break
     if {$mode eq "coarse" && $mx - $mn < 1.6 * $stage} { set mode fine; set ::ot_sp_pm $::ot_sp_pmf }
     set st [expr {$mode eq "coarse" ? $stage : $fstage}]
     set prev $a; set padded [dict create]
+    set need [dict create]
     dict for {n v} $a {
       set c [expr {int(floor(($mx - $v - 0.5 * $tol) / $st))}]
-      if {$c > 0} { ot_sp_pad $n $c; dict set padded $n $c }
+      # Small measured steps prevent a noisy fine-delay estimate from inserting
+      # a long chain in one round.  Record the ACTUAL count for the next estimate.
+      if {$safe} { set c [expr {min($c, $mode eq "fine" ? 1 : 3)}] }
+      if {$c > 0} { dict set need $n $c; dict set padded $n $c }
+    }
+    if {$treepad} {
+      # a leaf's pads are the sum along its root path = its need, so the per-pad delay estimate above is unchanged
+      set np [ot_sp_tree_pad $root $need]
+      puts "OT_SPINE tree pad: [dict size $need] early leaves served by $np pad cells"
+    } else {
+      dict for {n c} $need { ot_sp_pad $n $c }
     }
     if {[dict size $padded] == 0} break
   }
