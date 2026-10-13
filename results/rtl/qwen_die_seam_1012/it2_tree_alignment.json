@@ -1,0 +1,89 @@
+{
+  "nodes": 720,
+  "misaligned": 590,
+  "skew_histogram": {
+    "-21": 1,
+    "-19": 1,
+    "-18": 1,
+    "-17": 3,
+    "-16": 3,
+    "-15": 4,
+    "-14": 1,
+    "-13": 4,
+    "-12": 3,
+    "-10": 2,
+    "-9": 3,
+    "-8": 97,
+    "-7": 11,
+    "-5": 7,
+    "-4": 28,
+    "-3": 17,
+    "-2": 3,
+    "-1": 193,
+    "0": 130,
+    "1": 195,
+    "2": 3,
+    "3": 5,
+    "4": 2,
+    "5": 3
+  },
+  "examples": [
+    {
+      "node": "t_0_0",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_1",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_2",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_3",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_4",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_5",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_6",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_7",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_8",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_9",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_10",
+      "skew_cycles": 1
+    },
+    {
+      "node": "t_0_11",
+      "skew_cycles": 1
+    }
+  ],
+  "corridor_roots": [
+    "n_head_23",
+    "n_head_24"
+  ],
+  "relay_count": 10111,
+  "node_latency_cycles": 3,
+  "limitation": "Static bus arrival model only; does not prove bit exactness, relay clock presence, STA, or die closure.",
+  "source": "f259899e0",
+  "die_sha256": "2dfba028dfeca00849fd61739568baf75c3d068bed03cb346c8fb1199227d8d7"
+}

@@ -581,7 +581,7 @@ HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 def gen_hooks(s: dict, kd: str) -> dict:
     fwd = bool(s.get("forwarded_clock"))
-    spine = s["kind"] == "cluster" and s.get("clock", "spine") == "spine"
+    spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
                + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
                + ("; cluster: balanced clock spine with child-insertion leaf targets (sourced FIRST, so the io_ref wrapper"
@@ -656,7 +656,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
         h = float(s["route"].get("macro_halo_um", HALO_UM))
         extra.append(f"--macro-place-halo {h} {h}")
-    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+    if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
         # child's internal insertion, so the flops next to it ran one insertion EARLY: qkd_d2d_ref (sbuf 505 ps) left 499
@@ -797,7 +797,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(s["post_synth_tcl"])
     if s["route"].get("hold_delay"):
         out.append(HDLY_TCL)
-    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+    if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
