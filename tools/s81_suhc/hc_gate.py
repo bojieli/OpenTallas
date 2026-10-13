@@ -79,6 +79,101 @@ VL = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/opentall
 VERILATOR = str(VL) if VL.exists() else "verilator"
 
 
+# ---- per-tile qualification of the hard HC leaves (s81hc-1013 r5) ---------------------------------------------------
+# A hard tile with no golden of its own is qualified by the composition: the gate is built with a PROBE in the tile's
+# module (an initial $display of every instance path and parameter tuple: the bench must elaborate the routed module at
+# the routed parameters, TILES[..]["routed"]) and must pass bit-exact; the mutant is ONE edit inside that module's own
+# text (TILES[..]["mut"]) and the same gate must then fail.  Both edits are made on a copy in the build directory; the
+# tree is not touched.  --pad-hard defines OT_S81_HC_PAD_HARD: the pad leaves are then instantiated with their default
+# (hardened) parameters and the parents $fatal unless the production tuple holds.
+_CTNL_MUT = ("=fdx[O_D+rp*P_BITS+PBIT];", "=fdx[O_D+rp*P_BITS+PBIT]^(b==94);")
+_PADS, _CTH, _CRY = ("rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+                     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv")
+TILES = {
+    "ot_s81_hc_pad_f8":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
+    "ot_s81_hc_pad_f5r1":  dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
+    "ot_s81_hc_pad_r6":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
+    "ot_s81_hc_pad_r5":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
+    "ot_s81_hc_pad_meta2": dict(src=_PADS, routed=[{}], mut=(".D(DEPTH),.RESET(1))u_v", ".D(DEPTH-1),.RESET(1))u_v")),
+    "ot_s81_hc_ctnl_l0":   dict(src=_CTH, routed=[dict(PIN_STAGE=1, CHAIN_STEP=6)], mut=_CTNL_MUT),
+    "ot_s81_hc_ctnl_l1":   dict(src=_CTH, routed=[dict(PIN_STAGE=1, CHAIN_STEP=6)], mut=_CTNL_MUT),
+    "ot_s81_hc_ctnl_l2":   dict(src=_CTH, routed=[dict(PIN_STAGE=1, CHAIN_STEP=6)], mut=_CTNL_MUT),
+    "ot_s81_hc_ctnl_l3":   dict(src=_CTH, routed=[dict(PIN_STAGE=1, CHAIN_STEP=6)], mut=_CTNL_MUT),
+    "ot_s81_hc_crooty_w":  dict(src=_CRY, routed=[dict(C=0), dict(C=2)],
+                                mut=("wq_row[14 * s +: 14] <= w_c[WSL * s + 1 +: 14];",
+                                     "wq_row[14 * s +: 14] <= w_c[WSL * s + 1 +: 14] ^ 14'd1;")),
+}
+TILE_RE = re.compile(r"^HCTILE (\w+) (\S+) (.*)$", re.M)
+
+
+def tile_block(text, mod):
+    """(start, end) of module `mod` in text, `module` .. `endmodule` inclusive"""
+    m = re.search(r"(?m)^module\s+%s\b" % re.escape(mod), text)
+    if not m:
+        sys.exit(f"tile {mod}: module not found")
+    e = text.index("endmodule", m.start())
+    return m.start(), e + len("endmodule")
+
+
+def tile_params(text, mod):
+    """{name: default} of the module's header parameters (plain integers in every hard HC leaf)"""
+    a, b = tile_block(text, mod)
+    blk = text[a:b]
+    head = blk[blk.index("#(") + 2:blk.index("input")]
+    return {k: int(v) for k, v in re.findall(r"(\w+)\s*=\s*(-?\d+)", head)}
+
+
+def tile_sha(text, mod):
+    a, b = tile_block(text, mod)
+    return hashlib.sha256(text[a:b].encode()).hexdigest()
+
+
+def tile_edit(srcs, obj, probes, tmut):
+    """source list with the probed / mutated files replaced by edited copies under obj"""
+    edits = {}
+    for mod in probes:
+        edits.setdefault(TILES[mod]["src"], []).append(("probe", mod))
+    if tmut:
+        edits.setdefault(TILES[tmut]["src"], []).append(("mut", tmut))
+    for rel, ops in edits.items():
+        text = (ROOT / rel).read_text()
+        for op, mod in ops:
+            a, b = tile_block(text, mod)
+            blk = text[a:b]
+            if op == "mut":
+                old, new = TILES[mod]["mut"]
+                if blk.count(old) < 1:
+                    sys.exit(f"tile mutant {mod}: site not found")
+                blk = blk.replace(old, new)
+            else:
+                names = list(tile_params(text, mod))
+                fmt = " ".join(f"{n}=%0d" for n in names)
+                blk = blk[:-len("endmodule")] + f'    initial $display("HCTILE {mod} %m {fmt}", {", ".join(names)});\nendmodule'
+            text = text[:a] + blk + text[b:]
+        dst = obj / ("tileedit_" + Path(rel).name)
+        dst.write_text(text)
+        srcs = [dst if Path(x) == ROOT / rel else x for x in srcs]
+    return srcs
+
+
+def tile_check(stdout, probes):
+    """per probed tile: the instances the bench elaborated, and whether each is a routed parameter tuple (all seen)"""
+    seen = {}
+    for mod, path, kv in TILE_RE.findall(stdout):
+        seen.setdefault(mod, []).append((path, {k: int(v) for k, v in (x.split("=") for x in kv.split())}))
+    rep = {}
+    for mod in probes:
+        dflt = tile_params((ROOT / TILES[mod]["src"]).read_text(), mod)
+        want = [dict(dflt, **o) for o in TILES[mod]["routed"]]
+        inst = seen.get(mod, [])
+        rep[mod] = dict(instances=len(inst), routed_params=want, params_seen=[p for p in want if any(q == p for _, q in inst)],
+                        foreign=[dict(path=a, params=q) for a, q in inst if q not in want][:4],
+                        example=inst[0][0] if inst else None,
+                        module_sha256=tile_sha((ROOT / TILES[mod]["src"]).read_text(), mod),
+                        ok=bool(inst) and all(q in want for _, q in inst) and all(any(q == p for _, q in inst) for p in want))
+    return rep
+
+
 def dpi_rest(obj):
     """The RTL helpers the DPI float models do not replace (f12 cuts / l6 / l7 variants, lzc / ksa / mul24 rows):
     rtl/hdc/ot_hdc_fp32_f12.sv and rtl/hdc/ot_hdc_fastfp.sv minus every module a DPI source defines."""
@@ -320,11 +415,12 @@ HCG = re.compile(r"HCG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) co
 JOB = re.compile(r"HCJ op=(\d+) kind=(\d+) start=(\d+) done=(\d+)")
 
 
-def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0):
+def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0, pad_hard=0, probes=(), tmut=None):
     # hier: 1 = root split + column chains of octet sub-tiles; 2 = the structural variant (half-octet sub-tiles, split
     # column roots)
     tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + {0: "", 1: "_hier", 2: "_hier2", 3: "_hier3tail"}[hier]
     tag += f"_cp{cnl_pin}_cs{chain_step}_ls{lane_specialize}"
+    tag += ("_ph" if pad_hard else "") + ("_probe" if probes else "") + (f"_tm-{tmut}" if tmut else "")
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_hc_master"
     if not exe.exists():
@@ -332,9 +428,10 @@ def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, la
         srcs = [ROOT / s for s in FP[fp] + RTL + [TB]]
         if fp == "dpi":
             srcs = dpi_rest(obj) + srcs
+        srcs = tile_edit(srcs, obj, probes, tmut)
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
-               f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *(["+define+OT_S81_HC_PAD_HARD"] if pad_hard else []), *map(str, srcs), "-CFLAGS", "-O1"]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode != 0:
@@ -344,11 +441,20 @@ def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, la
 
 def cmd_run(a):
     out = Path(a.out)
-    exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier, a.cnl_pin, a.chain_step, a.lane_specialize)
+    probes = [x for x in (a.tile_probe or "").split(",") if x]
+    probes = list(TILES) if probes == ["all"] else probes
+    for x in probes + ([a.tile_mut] if a.tile_mut else []):
+        if x not in TILES:
+            sys.exit(f"unknown tile {x}: {', '.join(TILES)}")
+    exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier, a.cnl_pin, a.chain_step, a.lane_specialize,
+                     a.pad_hard, probes, a.tile_mut)
     res = []
+    tiles = None
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
         d = out / "runs" / meta["run"]
         r = subprocess.run([str(exe)], cwd=d, capture_output=True, text=True)
+        if probes and tiles is None:
+            tiles = tile_check(r.stdout, probes)
         m = HCG.search(r.stdout)
         jobs = [dict(op=int(x[0]), kind=int(x[1]), start=int(x[2]), done=int(x[3])) for x in JOB.findall(r.stdout)]
         if not m:
@@ -364,10 +470,14 @@ def cmd_run(a):
               "cyc", row["cycles"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
                ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, cnl_pin=a.cnl_pin, chain_step=a.chain_step, lane_specialize=a.lane_specialize, runs=res,
-               status="pass" if res and all(x["ok"] for x in res) else "fail",
+               status="pass" if res and all(x["ok"] for x in res) and all(t["ok"] for t in (tiles or {}).values()) else "fail",
+               pad_hard=a.pad_hard, tile_mut=a.tile_mut, tile_mut_edit=list(TILES[a.tile_mut]["mut"]) if a.tile_mut else None,
+               tiles=tiles,
                simulator=subprocess.run([VERILATOR, "--version"], capture_output=True, text=True).stdout.strip(),
                source_sha256={s: sha(ROOT / s) for s in FP[a.fp] + RTL + [TB]})
     (out / f"run_{tag}.json").write_text(json.dumps(rec, indent=1) + "\n")
+    for mod, t in (tiles or {}).items():
+        print("TILE", mod, "ok" if t["ok"] else "PARAM-MISMATCH", "instances", t["instances"], "routed", t["params_seen"], flush=True)
     print("RUN", tag, rec["status"])
     return 0 if rec["status"] == "pass" else 1
 
@@ -390,6 +500,9 @@ def main():
     p.add_argument("--cnl-pin", type=int, default=0)
     p.add_argument("--chain-step", type=int, default=4)
     p.add_argument("--lane-specialize", type=int, default=0)
+    p.add_argument("--pad-hard", type=int, default=0, help="1: define OT_S81_HC_PAD_HARD (pad leaves at their hardened defaults)")
+    p.add_argument("--tile-probe", default="", help="comma list of TILES (or all): report every instance + parameters; the run fails unless all are routed tuples")
+    p.add_argument("--tile-mut", default=None, help="one of TILES: build with that module's mutant (the run must fail)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
 
