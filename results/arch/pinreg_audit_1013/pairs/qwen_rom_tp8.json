@@ -2,7 +2,7 @@
  "schema": "opentallas.pinreg_pairs.v1",
  "die": "qwen_rom_tp8",
  "tool": "tools/hier_contract/pinreg_pairs.py",
- "source_commit": "93338b757",
+ "source_commit": "050b83a05",
  "case": {
   "source": "results/arch/pinreg_audit_1013/pairs/qwen_rom_tp8_plan.json.gz",
   "instances": 11902,
@@ -66,9 +66,9 @@
    "DEFAULT": 10782
   },
   "port_binding_of_judged_real_hops": {
-   "prefix": 2358,
+   "prefix": 2357,
    "exact": 288,
-   "direction": 1312
+   "direction": 1313
   },
   "setup_fail": 711,
   "hold_only": 0,
@@ -16185,7 +16185,7 @@
    "dst_pin": "fdi",
    "model": "TREE",
    "real_ends": 1,
-   "bind": "prefix",
+   "bind": "direction",
    "hops": 1,
    "bits": 2085,
    "max_um": 326.5,

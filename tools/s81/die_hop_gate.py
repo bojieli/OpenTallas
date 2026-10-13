@@ -124,6 +124,7 @@ def gate(insts, buses, lef_texts, pslice, limit_um=600.0, ss_um=504.0, exempt_cl
                pair_check=None if pair is None else dict(
                    table_masters=len(pair.t), pairs=len(pair.pairs), hops=dict(pair.used),
                    bits_over_pair_limit=sum(pair_over.values()),
+                   candidates_bound_by_direction=[dict(src=k[0] + '.' + k[1], dst=k[2] + '.' + k[3], limit_um=v) for k, v in sorted(pair.candidates.items(), key=lambda kv: kv[1])][:top],
                    hold_fail=[dict(src=k[0] + '.' + k[1], dst=k[2] + '.' + k[3], model=k[4], hold_ps=v) for k, v in sorted(pair.hold.items(), key=lambda kv: kv[1])],
                    tightest=sorted(((round(v, 1), k[0], k[1]) for k, v in lim_of.items() if v < limit_um))[:top],
                    rule='per pair min(limit_um, reach of the two real views); flat limit_um without views '

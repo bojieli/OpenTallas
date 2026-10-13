@@ -168,7 +168,7 @@ def check(die, hop):
     A, B = side(t, ma, pa, 'O', how), side(t, mb, pb, 'S', how)
     rec = dict(real=(A is not None) + (B is not None))
     if any(not h_.startswith('exact') for h_ in how):
-        rec['bind'] = 'direction' if any(h_ == 'direction' for h_ in how) else 'prefix'
+        rec['bind'] = 'direction' if any(h_.startswith('direction') for h_ in how) else 'prefix'
     if L is None:
         return dict(rec, model='NOPIN', status='n/e', note='no pin geometry on one end (abutted / generated master)')
     if (A is None or B is None) and A != [] and B != [] and ((ia, ib) in die.fwd_pairs or (ib, ia) in die.fwd_pairs):
@@ -278,10 +278,12 @@ class Gate:
     """the generators' per-pair hop gate: limit(drv inst, drv master, drv pin, load inst, load master, load pin) -> um,
     = min(default_um, the reach of that pair's real views under its link model); default_um (the flat 500 um rule) when
     neither end has a view, the pair is a clock crossing, or a view has no clocked arc / no measured insertion there.
+    A pair whose die port is bound to the view only by direction (pair_check.side) keeps default_um and is listed in
+    .candidates (judge_direction=True judges it on that upper bound).
     `buses`: the generator's bus list [(bus, cls, bits, [(inst, pin), ...driver first])]: its clock-class buses give
     the clock drivers (forwarded links); `clock_net`: {(inst, pin): tree net} for tree leaf nets without a driver."""
 
-    def __init__(self, table=None, default_um=DEFAULT_UM, buses=None, clock_net=None):
+    def __init__(self, table=None, default_um=DEFAULT_UM, buses=None, clock_net=None, judge_direction=False):
         self.t = load_table() if table is None else table
         self.default = default_um
         drv = {}
@@ -292,6 +294,8 @@ class Gate:
         self.die = Die(self.t, {}, drv, clock_net or {})
         self.used = dict(real=0, half=0, default=0, not_judged=0)
         self.pairs = {}
+        self.judge_direction = judge_direction
+        self.candidates = {}    # pairs whose port binding is by direction (an upper bound): reported, flat limit kept
         self.hold = {}          # pair -> worst FF hold margin (< 0) at zero wire: the hop fails whatever its length
 
     def limit(self, ia, ma, pa, ib, mb, pb):
@@ -302,9 +306,16 @@ class Gate:
         if r.get('reach_um') is None or r['model'] == 'DEFAULT':
             self.used['not_judged'] += 1
             return self.default
-        self.used['real' if r['real'] == 2 else 'half'] += 1
         lim = round(min(self.default, r['reach_um']), 1)
         k = (ma, bus_of(pa), mb, bus_of(pb), r['model'])
+        if r.get('bind') == 'direction' and not self.judge_direction:
+            # the die master's port names are not the view's: the worst bus of that direction is an UPPER BOUND, not
+            # this port's arc.  It does not fail a build; it is listed until a bind map names the pins.
+            self.used['not_judged'] += 1
+            if lim < self.default:
+                self.candidates[k] = min(lim, self.candidates.get(k, lim))
+            return self.default
+        self.used['real' if r['real'] == 2 else 'half'] += 1
         if r.get('hold_ps') is not None and r['hold_ps'] < 0:      # FF hold with no wire at all: no length repairs it
             self.hold[k] = min(r['hold_ps'], self.hold.get(k, 0.0))
         self.pairs[k] = min(lim, self.pairs.get(k, lim))

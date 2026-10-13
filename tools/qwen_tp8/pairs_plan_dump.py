@@ -35,5 +35,5 @@ with gzip.open(sys.argv[1], 'wt') as f:
                    insts=[[i.name, getattr(i, 'master', ''), round(i.x, 3), round(i.y, 3), round(i.w, 3), round(i.h, 3), i.orient,
                            getattr(i, 'kind', ''), ''] for i in m['insts']],
                    hops=hops, clock_nets=clock, stage_of=m.get('r21_stage_of'),
-                   relays={k: r.get(k) for k in ('relays', 'max_pin_to_pin_um', 'reach_um', 'unrepaired')}), f)
+                   relays={k: r.get(k) for k in ('relays', 'max_pin_to_pin_um', 'reach_um', 'unrepaired', 'over_reach', 'pair_check')}), f)
 print(json.dumps(dict(insts=len(m['insts']), hops=len(hops), clock_nets=len(clock), build_s=round(time.time() - t))))

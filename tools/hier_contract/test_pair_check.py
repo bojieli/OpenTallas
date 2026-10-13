@@ -132,5 +132,11 @@ lef2 = lambda m, o, i: f"MACRO {m}\n SIZE 10 BY 10 ;\n PIN {o}[0]\n PORT\n RECT 
 hz = HG.gate([It('a', 'STN', 0.0), It('b', 'RXR', 200.0)], bz, [lef2('STN', 'do', 'di'), lef2('RXR', 'q', 'xd')], ps, limit_um=500.0,
              pair=P.Gate(table=T, default_um=500.0, buses=bz))
 expect('pair gate fails a hold race although the hop is 190 um', (hz['verdict'], hz['bits_over_limit'], len(hz['pair_check']['hold_fail'])), ('FAIL', 0, 1))
+# a die master whose port names are not the view's: bound by direction = an upper bound, listed, never a build failure
+gd = P.Gate(table=T, default_um=500.0)
+expect('gate: direction-bound pair keeps the flat limit', (gd.limit('a', 'SLOW', 'zz', 'b', 'PIN', 'i'), len(gd.candidates)), (500.0, 1))
+expect('gate: ... unless asked to judge the upper bound', P.Gate(table=T, default_um=500.0, judge_direction=True).limit('a', 'SLOW', 'zz', 'b', 'PIN', 'i'), 149.1)
+r = P.check(die, hop('SLOW', 'PIN', 100.0, pa='zz'))
+expect('check: direction binding is marked', r.get('bind'), 'direction')
 print(f'{ok} passed, {fail} failed')
 sys.exit(1 if fail else 0)
