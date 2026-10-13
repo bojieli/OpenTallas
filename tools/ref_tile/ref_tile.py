@@ -913,6 +913,11 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
         spec["benched_by"] = j["benched_by"]
     if j.get("hold_merge"):     # a physical probe that never merges (not a closure candidate)
         spec["hold_merge"] = j["hold_merge"]
+    # closure loop STRUCTURE_REPEAT lint (owner 10-13): after two failed routes the next submission states what changed
+    # in the structure; the sentence is written once in the tile spec (top level, or under "job") and must reach job.json
+    sc = s.get("structural_change") or j.get("structural_change")
+    if isinstance(sc, str) and sc.strip():
+        spec["structural_change"] = sc.strip()
     return spec
 
 
