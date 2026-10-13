@@ -77,9 +77,104 @@
   "macro_views": [],
   "files": {
     "ot_qfd_band_upper.lef": "f55bb4b9253316b8a960d2225287b594214cdeb4e8d5d6828438bb7f361d810a",
-    "ot_qfd_band_upper_ff.lib": "846682f4b87efc3673dedda4b4964780244eb1cdf56f2ccbdc646a4d55254b8b",
-    "ot_qfd_band_upper_ss.lib": "4544bec378cdf644f2154e95aa9dc29e4a3c083bd5eb6974278ee528f4da311f",
-    "ot_qfd_band_upper_tt.lib": "68b38b3ace0319b5fb228d669ef4e17e2145b4fb71420a77423058942d0b2b31"
+    "ot_qfd_band_upper_ff.lib": "26bf5c181de1b9e1a8ceccbab636e40813842255615ab149426ed9f36628599e",
+    "ot_qfd_band_upper_ss.lib": "e11b3caf64872dfc1b6ed7a24e808b60dadecbaca23aa679d979da75587a6e01",
+    "ot_qfd_band_upper_tt.lib": "f5580c8126f611769a05918ddf1d775edad3d2832f2c42bc74d3899bbab6704c"
   },
-  "ok": true
+  "ok": true,
+  "reexport_1013": {
+    "why": "export replayed at the routed verdict's SDC sequence (main abc334b14 / 56328a88a); libraries replaced, LEF kept",
+    "verdict": {
+      "json": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/cl/routed_ioref.a1.json",
+      "sha256": "d05da83c54d03dff596842acf430d3fae15b7247ee8328ddedf03ce74dfa08bb",
+      "expect_ps": {
+        "tt": 97.7,
+        "ff": 19.29
+      },
+      "tol_ps": 0.05,
+      "work": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/cl/eco/pass1/orfs",
+      "files": {
+        "/meas/app0_io_ref_routed.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+          "sha256": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+        },
+        "/src/physical/common_flow/io_ref_routed.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/src/physical/common_flow/io_ref_routed.sdc",
+          "sha256": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+        },
+        "/src/physical/ref_tile/qfd_tt_up4_tp8/signoff.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/src/physical/ref_tile/qfd_tt_up4_tp8/signoff.sdc",
+          "sha256": "da23cfffc134d4c45fe838786830f766b95d61833f5796b80619730ef89c7f52"
+        },
+        "/work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.odb": {
+          "host": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/cl/eco/pass1/orfs/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.odb",
+          "sha256": "b40e852a8d0b1e555064d944d219d35c8d368a294c630a018d8186b5b4c4778d"
+        },
+        "/work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.sdc": {
+          "host": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/cl/eco/pass1/orfs/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.sdc",
+          "sha256": "85f10bef40614d2df548a932ea016f4efb48fbad9671a87db0df26ea16369c13"
+        },
+        "/work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.spef": {
+          "host": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/cl/eco/pass1/orfs/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.spef",
+          "sha256": "97072e54f0f809e4d88f5bcc56738491794c0c5924f3519d11e3c38b474d2790"
+        }
+      },
+      "check": {
+        "ff": {
+          "export_ps": 19.287210717422454,
+          "verdict_ps": 19.29,
+          "ok": true
+        },
+        "tt": {
+          "export_ps": 97.69945963356008,
+          "verdict_ps": 97.7,
+          "ok": true
+        }
+      }
+    },
+    "sdc_sequence": {
+      "ss": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/qfd_tt_up4_tp8/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      },
+      "ff": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/qfd_tt_up4_tp8/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      },
+      "tt": {
+        "mode": "verdict",
+        "tcl": [
+          "read_db /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.odb",
+          "read_sdc /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.sdc",
+          "read_spef /work/results/asap7/opentallas_ot_qfd_band_upper_asap7_ref_qfd_tt_up4_tp8_rt1_ef228d3d0/base/6_final.spef",
+          "set_propagated_clock [all_clocks]",
+          "read_sdc /src/physical/ref_tile/qfd_tt_up4_tp8/signoff.sdc",
+          "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+          "read_sdc /meas/app0_io_ref_routed.sdc"
+        ]
+      }
+    },
+    "orfs_dir": "/home/ubuntu/xsdc1013/stage/qfd_tt_up4_tp8-rt1-ef228d3d0/cl/eco/pass1/orfs",
+    "old_lib_sha256": {
+      "ss": "4544bec378cdf644f2154e95aa9dc29e4a3c083bd5eb6974278ee528f4da311f",
+      "ff": "846682f4b87efc3673dedda4b4964780244eb1cdf56f2ccbdc646a4d55254b8b",
+      "tt": "68b38b3ace0319b5fb228d669ef4e17e2145b4fb71420a77423058942d0b2b31"
+    }
+  }
 }
