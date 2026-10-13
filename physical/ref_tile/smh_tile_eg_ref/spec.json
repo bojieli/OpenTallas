@@ -218,7 +218,7 @@
  "job": {
   "owner": "Codex:hbm-sm-cluster",
   "branch": "codex/hbm-sm-cluster",
-  "tag": "r2",
+  "tag": "r3",
   "purpose": "[smmv-b/smt] ot_hbm_accel_smh_tile_eg: SM tile as ONE ref_tile cluster (owner contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles (pt_w p45h, pt_e p40s, xs p50, bdc p50, tcl p45, tct p45), floorplan re-derived from their LEFs on the 43.2-um lattice (630.72 x 1252.8, landing channels 58-60 um, cut 0.59), clock spine through the tile ICG, exact abutment pin plan. Five registered regional static-strap stages per leaf (260 DFFs), zero data latency; production NC8 active8 lockstep exactness plus strap-offset/late32/hold0 mutants must fail.",
   "benches": [
    {

@@ -154,7 +154,7 @@ def spec(variant):
         "orfs_vars": {"POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
         "refglob": "*",
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96},
-        "job": {"owner": "Codex:hbm-sm-cluster", "branch": "codex/hbm-sm-cluster", "tag": "r2",
+        "job": {"owner": "Codex:hbm-sm-cluster", "branch": "codex/hbm-sm-cluster", "tag": "r3",
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p50, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
@@ -178,9 +178,9 @@ def strap_regions(variant):
         for stage, (x,y) in enumerate(ps):
             if variant == "wg": x = W-x
             name=f"strap_l{leaf}_s{stage}"
-            lines += [f"set rg [odb::dbRegion_create $sb {name}]", "$rg setRegionType FENCE",
+            lines += [f"set rg [odb::dbRegion_create $sb {name}]", "$rg setRegionType EXCLUSIVE",
                       f"odb::dbBox_create $rg [expr {{round({x-8}*$su)}}] [expr {{round({y-4}*$su)}}] [expr {{round({x+8}*$su)}}] [expr {{round({y+4}*$su)}}]",
-                      f"set gr [odb::dbGroup_create $sb {name}]", "$gr setRegion $rg", "set nc 0",
+                      f"set gr [odb::dbGroup_create $sb {name}]", "$rg addGroup $gr", "set nc 0",
                       "foreach net [$sb getNets] {", "  set nm [string map {\\ {}} [$net getName]]",
                       f"  if {{[string first {{g_strap[{leaf}].u_sr.s{stage}[}} $nm] >= 0 }} {{ foreach it [$net getITerms] {{ set si [$it getInst]; if {{[$it isOutputSignal] && [string match *DFF* [[$si getMaster] getName]]}} {{ $gr addInst $si; incr nc; incr sn }} }} }}",
                       "}", f"if {{$nc != 26}} {{error \"STRAP_REGION {name}: expected 26 DFFs, got $nc\"}}"]
