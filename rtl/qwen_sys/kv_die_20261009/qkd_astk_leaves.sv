@@ -14,8 +14,8 @@
 //                 streams that run cell to cell through registered lanes (4 up, 4 down, lane = head).  The level-7
 //                 cells put the result on a 256-b lane as the hub's P.V beats, in beat order (a token walks the
 //                 heads).  A cut of the strip carries 2 x (8 x 134 + 263) = 2,670 b of P.V traffic.
-//   qkd_astk_ep   one row engine's stack slice: the engine port (si / so of qkd_ectl), its score memory and e-row
-//                 memory (4 x ot_sram_1r1w_128x256, 94.8 um wide: a column leaf), its copy of M, a station of the stack's command chain (start, T, q beats, M words,
+//   qkd_astk_ep   one row engine's stack slice: the engine port (si / so of qkd_ectl), its score memory (2 x 256x128)
+//                 and e-row memory (4 x 64x128; 57 um macros compiled for this column leaf), its copy of M, a station of the stack's command chain (start, T, q beats, M words,
 //                 K-pass done), of the return chain (score count, running maximum, fault), of the chunk chain and of
 //                 the e-row chain.  The golden's 8-write x 8-read score memory does not exist as a macro, and the
 //                 engines' K pass (positions j = engine) and V pass (groups gam = engine mod 8) slice the positions
@@ -42,7 +42,7 @@
 // P.V word     PW = {d 256, g, beat 5, v}  (8 lanes = half a hub beat; X and Y cells emit the two halves together)
 // Node control nc = {gam 4, g, beat 4, v}  (qkd_ectl so[421:412])      ci = {gmax 5, start}
 // Bench mutants (`KVD_AKMUT): 1 pv: operand b of lane 3 taken from lane 2; 2 ep: e rows written one address off;
-// 3 zn: the right operand dropped; 4 ctl: the two halves of a P.V beat swapped.
+// 3 zn: the right operand dropped; 4 ctl: the two halves of a P.V beat swapped; 5 ex: e one ulp off.
 // ---------------------------------------------------------------------------------------------------------------------
 `ifndef KVD_AKMUT
 `define KVD_AKMUT 0
@@ -380,7 +380,7 @@ module qkd_astk_ex (
             if ((vo && err != 2'd0) || (vD && posD && xf)) f <= 1'b1;
             xe[0] <= vD; xe[1] <= f;
         end
-    always @(posedge ck) xe[33:2] <= e;
+    always @(posedge ck) xe[33:2] <= e ^ ((`KVD_AKMUT == 5) ? 32'd1 : 32'd0);
 endmodule
 
 // ---- the sequence of one pass: the nonempty chunks (gam, k), gam-major; the same in every slice ---------------------
@@ -523,20 +523,18 @@ module qkd_astk_ep (
     qkd_astk_seq u_sb (.ck(ck), .rn(rn_q), .start(start), .trig(trig_b), .T(T), .S(S), .v(b_v), .g(b_g), .gam(b_gam), .k(b_k),
                        .klst(b_kl), .busy(b_busy), .sg_o(b_sg));
     // ---- score memory (this engine's positions j = Q), the read towards the exp datapath -------------------------------
-    // two 128 x 256 macros (one a pass g), two entries a word: address {g, k, gam} = {macro, word 7, half}
+    // two 256 x 128 macros, one a pass g (a pass is written by the K pass and read by its exp pass: never both), {k, gam}
     wire [8:0]   sc_wa = sc_a[11:3];
-    wire [8:0]   sc_ra = {a_g, a_k, a_gam};
-    wire [255:0] sc_q0, sc_q1;
-    reg  [1:0]   sc_rs;                                // {g, half} of the read
-    always @(posedge ck) sc_rs <= {sc_ra[8], sc_ra[0]};
-    ot_sram_1r1w_128x256_m1_r2c2 u_sc0 (.clk(ck), .r_ce_in(a_v && !sc_ra[8]), .r_addr_in(sc_ra[7:1]), .rd_out(sc_q0),
-        .w_ce_in(sc_v && !sc_wa[8]), .w_addr_in(sc_wa[7:1]), .wd_in({sc_d, sc_d}),
-        .w_mask_in({{128{sc_wa[0]}}, {128{!sc_wa[0]}}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_128x256_m1_r2c2 u_sc1 (.clk(ck), .r_ce_in(a_v && sc_ra[8]), .r_addr_in(sc_ra[7:1]), .rd_out(sc_q1),
-        .w_ce_in(sc_v && sc_wa[8]), .w_addr_in(sc_wa[7:1]), .wd_in({sc_d, sc_d}),
-        .w_mask_in({{128{sc_wa[0]}}, {128{!sc_wa[0]}}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    wire [255:0] sc_qw = sc_rs[1] ? sc_q1 : sc_q0;
-    wire [127:0] sc_rd = sc_rs[0] ? sc_qw[255:128] : sc_qw[127:0];
+    wire [127:0] sc_q0, sc_q1;
+    reg          sc_rg;
+    always @(posedge ck) sc_rg <= a_g;
+    ot_sram_1r1w_256x128_m1_r2c2 u_sc0 (.clk(ck), .r_ce_in(a_v && !a_g), .r_addr_in({a_k, a_gam}), .rd_out(sc_q0),
+        .w_ce_in(sc_v && !sc_wa[8]), .w_addr_in(sc_wa[7:0]), .wd_in(sc_d), .w_mask_in({128{1'b1}}),
+        .rr_en(2'b00), .rr_addr(16'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    ot_sram_1r1w_256x128_m1_r2c2 u_sc1 (.clk(ck), .r_ce_in(a_v && a_g), .r_addr_in({a_k, a_gam}), .rd_out(sc_q1),
+        .w_ce_in(sc_v && sc_wa[8]), .w_addr_in(sc_wa[7:0]), .wd_in(sc_d), .w_mask_in({128{1'b1}}),
+        .rr_en(2'b00), .rr_addr(16'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    wire [127:0] sc_rd = sc_rg ? sc_q1 : sc_q0;
     reg          a_v1, a_g1, a_p1;
     wire         a_pos = {1'b0, a_k, S, a_gam, Q} < T;
     always @(posedge ck or negedge rn_q)
@@ -583,14 +581,21 @@ module qkd_astk_ep (
     wire [511:0] e_row;
     reg  [2:0]   jq;
     always @(posedge ck) jq <= so[3:1];
-    wire [6:0]   e_wa = {1'b0, rq[1], rq[5:2], rq[9]} + ((`KVD_AKMUT == 2) ? 7'd1 : 7'd0);
-    wire [6:0]   e_ra = {1'b0, so[12], so[11:8], so[7]};
-    ot_sram_1r1w_128x256_m1_r2c2 u_e0 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[255:0]),
-        .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[265:10]), .w_mask_in({256{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_128x256_m1_r2c2 u_e1 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[511:256]),
-        .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[521:266]), .w_mask_in({256{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    // four 64 x 128 macros side by side in address: a quarter of the row each, {g, k, gam[3]}
+    wire [5:0]   e_wa = {rq[1], rq[5:2], rq[9]} + ((`KVD_AKMUT == 2) ? 6'd1 : 6'd0);
+    wire [5:0]   e_ra = {so[12], so[11:8], so[7]};
+    ot_sram_1r1w_64x128_m1_r2c2 u_e0 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[127:0]),
+        .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[137:10]), .w_mask_in({128{1'b1}}),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    ot_sram_1r1w_64x128_m1_r2c2 u_e1 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[255:128]),
+        .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[265:138]), .w_mask_in({128{1'b1}}),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    ot_sram_1r1w_64x128_m1_r2c2 u_e2 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[383:256]),
+        .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[393:266]), .w_mask_in({128{1'b1}}),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    ot_sram_1r1w_64x128_m1_r2c2 u_e3 (.clk(ck), .r_ce_in(so[0]), .r_addr_in(e_ra), .rd_out(e_row[511:384]),
+        .w_ce_in(r_me), .w_addr_in(e_wa), .wd_in(rq[521:394]), .w_mask_in({128{1'b1}}),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(14'd0));
     wire [63:0]  e_rd = (jq == 3'd0) ? e_row[0 +: 64] : (jq == 3'd1) ? e_row[64 +: 64] : (jq == 3'd2) ? e_row[128 +: 64] :
                         (jq == 3'd3) ? e_row[192 +: 64] : (jq == 3'd4) ? e_row[256 +: 64] : (jq == 3'd5) ? e_row[320 +: 64] :
                         (jq == 3'd6) ? e_row[384 +: 64] : e_row[448 +: 64];
@@ -847,7 +852,8 @@ module qkd_astk_ctl (
         co[5:1] <= gmax_c;
         ap[564:46] <= {pvw, 1'b0, pxq[5:1], pxq[6]};
         // {so_data 32, so_any, so_k 4, so_hh 2, so_g, so_type 2}
-        if (l_pend) ap[42:1] <= {lm_s, xq[9 + lg], 4'd0, lh[1:0], lg, 2'd0};
+        // a stack without a position has no maximum (the return chain may still hold the last layer's)
+        if (l_pend) ap[42:1] <= {lm_s, xq[9 + lg] && n_s != 12'd0, 4'd0, lh[1:0], lg, 2'd0};
         else if (z_ne) ap[42:1] <= {z_s, 1'b1, z_hd[4:1], zh, z_hd[0], 2'd1};
         else ap[42:1] <= {32'd0, 1'b1, 4'd0, 2'd0, zd1, 2'd2};
     end

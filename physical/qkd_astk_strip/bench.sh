@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Aggregator strip masters (el1013-qwen-kvstrips): exact bench against the golden aggregator (stack_h minus engines).
-#   bench.sh OUT_DIR [MUT [RL [STACKS]]]   MUT 0 | 1 pv | 2 ep | 3 zn | 4 ctl; RL relay stations a die net (1);
-#                                         STACKS "0 1 2 3" (mutant runs: stack 0 only)
+#   bench.sh OUT_DIR [MUT [RL [STACKS]]]   MUT 0 | 1 pv | 2 ep | 3 zn | 4 ctl | 5 ex; RL relay stations a die net (1);
+#                                         STACKS "0 1 2 3" (mutant runs: stack 0, the T = 8192 layer only)
 # Prints "PASS qkd_astk all <n> stacks exact" (rc 0) or "FAIL qkd_astk mutant <m> detected ..." (rc 1).
 set -u
 OUT=$1; MUT=${2:-0}; RL=${3:-1}; STACKS=${4:-"0 1 2 3"}; [ "$MUT" != 0 ] && STACKS=${4:-0}
+[ "$MUT" != 0 ] && TARG=${TARG:-8192}        # a mutant: one full layer of stack 0
 R=$(cd "$(dirname "$0")/../.." && pwd)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 [ -x "$V" ] || V=$(command -v verilator)
@@ -18,6 +19,8 @@ SRC="$W/test/qwen_kv_die/tb_qkd_astk.sv $OUT/ot_qkd_astk_gold.sv $W/test/qwen_kv
  $OUT/nr_rest.sv $W/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv $W/test/nearhbm/sim_nhb_fp_lat_dpi.sv $W/hdc/ot_hdc_delay.sv $W/hdc/ot_hdc_sfu.sv
  $W/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv $W/hdc/ot_hdc_prefix.sv $OUT/lzc.sv $W/hdc/nearhbm/ot_qwen_nearhbm_prod.sv $W/hdc/ot_hdc_sfu_q.sv
  $W/hdc/ot_hdc_fpu.sv $W/hdc/ot_hdc_fp32_mul_pipe.sv $W/proto/ot_fp32_add_rne_pipe.sv $W/test/sim_hdc_v41x_fastfp_dpi.sv $W/test/sim_hdc_v41x_fastfp_wrap.sv
+ $R/physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v
+ $R/physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v
  $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
  $R/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
 CPP="$W/test/nearhbm/sim_nhb_fp_lat_dpi.cpp $W/test/sim_hdc_v41x_fastfp_dpi.cpp"
