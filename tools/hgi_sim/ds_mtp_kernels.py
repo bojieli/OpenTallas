@@ -1114,6 +1114,16 @@ def sim(a):
             stage_out[(K_cur["L"] - 40, c - PMAX)] = [col_read(d, c) for d in dies]
         if e["kind"] == "swapin":
             K_cur["L"] = e["pos"]
+            # swap round trip: the working h after a swap-in is the slot's h in the HBM image (rank 0)
+            hv = K.V("h", HSTRIPE * SW)
+            got_h = dies[0].vm[hv.base:hv.base + HSTRIPE * SW]
+            nbad = int(np.count_nonzero(got_h != col_read(dies[0], e["token"])[:HSTRIPE * SW]))
+            swapchk["n"] += 1
+            if nbad:
+                swapchk["bad"] += 1
+                if len(swapchk["first"]) < 8:
+                    swapchk["first"].append(dict(launch=len(eng.launches) - 1, slot=e["token"], Lp=e["pos"],
+                                                 words_differing=nbad))
         if spec and e["kind"] in ("dsa", "dsb") and not K_cur.get("dbg_" + e["kind"] + str(e["token"])) and K_cur["L"] == 40:
             K_cur["dbg_" + e["kind"] + str(e["token"])] = 1
             d0 = dies[0]
@@ -1124,6 +1134,7 @@ def sim(a):
         if e["kind"] in ("dsa", "dsb"):
             K_cur["phase_b"] = e["kind"] == "dsb"
     K_cur = {"L": -1, "phase_b": False}
+    swapchk = dict(n=0, bad=0, first=[])
     dbg = {}
     eng.on_launch = on_launch
     plen = len(gd["prompt"])
@@ -1279,7 +1290,9 @@ def sim(a):
     r0_kern = {}
     for x in per_launch:
         r0_kern.setdefault(f"{x['kind']}{'' if x['Lp'] == 0 else x['Lp']}", x["s2_cycles"])
-    ok_all = bool(accept_ok and all(c["bit_exact_all_ranks"] for c in colres) and (not spec or draft_checks["all_ok"]))
+    print(f"swap-in round trip (rank 0, working h == slot h): {swapchk['n']} swap-ins, {swapchk['bad']} bad, first "
+          f"{swapchk['first']}", flush=True)
+    ok_all = bool(swapchk["bad"] == 0 and accept_ok and all(c["bit_exact_all_ranks"] for c in colres) and (not spec or draft_checks["all_ok"]))
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_sim.v2", golden=str(a.golden),
                drafter="dspark (real, lowered)" if spec else "FORCED (golden drafts; draft kinds END stubs)",
                golden_summary={k_: gd[k_] for k_ in ("prompt", "y", "verify_tokens", "drafts", "targets", "accepted",
@@ -1287,6 +1300,7 @@ def sim(a):
                machine_tokens=tok, steps=steps, accept_stream_equals_golden=bool(accept_ok),
                l0_columns=colres, l0_all_bit_exact=all(c["bit_exact_all_ranks"] for c in colres),
                draft_checks=draft_checks, verdict="PASS" if ok_all else "FAIL", step1_diverged=diverged,
+               swapin_round_trip=swapchk,
                launches=len(eng.launches), s2_job_cycles=round(t_launch, 1),
                s2_l0_cycles=[x["s2_cycles"] for x in l0],
                s2_by_kind={k_: round(sum(x["s2_cycles"] for x in per_launch if x["kind"] == k_), 1)
