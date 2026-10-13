@@ -1,0 +1,281 @@
+{
+ "name": "dsfd_vm_bgq28h_a",
+ "top": "dsfd_vm_bgq28h",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 622.08
+ },
+ "child_lattice_um": 8.64,
+ "children": [
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_a/views/dsfd_vm_bgl28",
+   "count": 1,
+   "inst": "*g_l?0?.u_l",
+   "at": [
+    0.0,
+    544.32
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_a/views/dsfd_vm_bgl28",
+   "count": 1,
+   "inst": "*g_l?1?.u_l",
+   "at": [
+    0.0,
+    466.56
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_a/views/dsfd_vm_bgl28",
+   "count": 1,
+   "inst": "*g_l?2?.u_l",
+   "at": [
+    0.0,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_a/views/dsfd_vm_bgl28",
+   "count": 1,
+   "inst": "*g_l?3?.u_l",
+   "at": [
+    0.0,
+    311.04
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_a/views/dsfd_vm_bgl28",
+   "count": 1,
+   "inst": "*g_l?4?.u_l",
+   "at": [
+    0.0,
+    233.28
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_a/views/dsfd_vm_bgl28",
+   "count": 1,
+   "inst": "*g_l?5?.u_l",
+   "at": [
+    0.0,
+    155.52
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_a/views/dsfd_vm_bgl28",
+   "count": 1,
+   "inst": "*g_l?6?.u_l",
+   "at": [
+    0.0,
+    77.76
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_a/views/dsfd_vm_bgl28",
+   "count": 1,
+   "inst": "*g_l?7?.u_l",
+   "at": [
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "i_v",
+   "i_we",
+   "i_row",
+   "i_mask",
+   "i_d",
+   "r_v",
+   "r_d",
+   "r_f",
+   "r_o"
+  ],
+  "S": [
+   "f_v",
+   "f_we",
+   "f_row",
+   "f_mask",
+   "f_d",
+   "o_v",
+   "o_d",
+   "o_f",
+   "o_o"
+  ],
+  "W": [
+   "ck",
+   "rs",
+   "grp"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgq28h_pins.tcl",
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_v": "M3 M5",
+  "pin_h": "M4"
+ },
+ "structural_change": "the flat 8-bank tile dsfd_vm_bgr (63,416 sinks on one root, 5,441 feed-through bits over an 8-macro column, GRT 20,000 markers) is replaced by 8 identical one-bank hard leaves dsfd_vm_bgl28, every N/S bit registered at both pin faces (leaf hop 2), one SRAM and one clock root of ~14.5k sinks a leaf, under a wires-only parent",
+ "why_floorplan": "wires-only parent of 8 abutted one-bank leaves (8 x 77.76 = 622.08): the N/S buses connect by abutment at the same x / layer per bit, the parent's own nets are ck / rs / grp (W) and the 3-bit bank-index straps",
+ "open_points": [
+  "ZERO channel area: the 8 leaves fill the outline, so the parent has no row for the bi tie cells or for clock-spine buffers. Either (a) a 21.6 um strap column on the W side (slot 367.2 wide, N/S pin x unchanged, slot change request) or (b) no hardened parent: the 8 leaves are die-placed in the slot, the die delivers ck at each leaf's W pin (die clock rule: phi - R, R = leaf boundary mean 329.8 ps TT) and ties bi / grp.  Decide when the leaf view exists; NOT gated (ref_tile gen reads the child LEF).",
+  "slot 345.6 x 622.08 requested in el1011-s81die.log 07:58 (not yet granted)"
+ ],
+ "job": {
+  "owner": "Claude:el1013-s81-bgq28",
+  "branch": "claude/s81-bgq28-1013",
+  "tag": "r1",
+  "purpose": "el1013-s81-bgq28: VM bank tile dsfd_vm_bgq28h = 8 hard one-bank leaves dsfd_vm_bgl28 under a wires-only parent (replaces the flat dsfd_vm_bgr28 tile in the 16 bgq28 slots)",
+  "benches": [
+   {
+    "name": "exact_gold",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold gold",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_gold_s2",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold_s2 gold_s2",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold_s2: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_stress",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/stress stress",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_stress: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_trace_master_gold",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/trace trace",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_trace: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_trace_master_tp",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/trace_tp trace_tp",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_trace_tp: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "neg_coverage_refused",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/cov_refuse cov_refuse",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_cov_refuse: FAIL"
+   },
+   {
+    "name": "neg_relay",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_RELAY mut_RELAY",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_RELAY: FAIL"
+   },
+   {
+    "name": "neg_id",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ID mut_ID",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ID: FAIL"
+   },
+   {
+    "name": "neg_j0",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_J0 mut_J0",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_J0: FAIL"
+   },
+   {
+    "name": "neg_order",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ORDER mut_ORDER",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ORDER: FAIL"
+   },
+   {
+    "name": "neg_mask",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_MASK mut_MASK",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_MASK: FAIL"
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/common",
+   "tools/s81_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile_specs/ds_vm"
+  ],
+  "views_to": "physical/ref_tile/dsfd_vm_bgq28h_a/views",
+  "record_to": "results/rtl/ref_tile/dsfd_vm_bgq28h_a"
+ }
+}
