@@ -3,8 +3,8 @@
  "die": "s81_layer1",
  "case": "v14",
  "mode": "contract",
- "source": "main a17ddd16e + outline tol",
- "when": "2026-10-13 04:27 PDT",
+ "source": "main 8773fa426",
+ "when": "2026-10-13 07:28 PDT",
  "roots": [
   "/home/ubuntu/wt/claude-s81-elements-r3-1013"
  ],
@@ -13,22 +13,22 @@
  },
  "rule": "real = exact LEF macro + exact Liberty cell of a view directory holding <master>.lef and <master>_<corner>.lib",
  "summary": {
-  "instances": 166,
-  "real": 21,
+  "instances": 165,
+  "real": 35,
   "lef_only": 0,
   "etm_only": 0,
   "hard_macro": 0,
-  "placeholder": 145,
-  "real_frac": 0.126506,
-  "masters": 46,
+  "placeholder": 130,
+  "real_frac": 0.212121,
+  "masters": 45,
   "masters_by_class": {
-   "real": 10,
+   "real": 14,
    "lef_only": 0,
    "etm_only": 0,
    "hard_macro": 0,
-   "placeholder": 36
+   "placeholder": 31
   },
-  "placeholder_with_view": 11,
+  "placeholder_with_view": 3,
   "top_placeholders": [
    [
     "ot_s81_hc_cth",
@@ -37,10 +37,6 @@
    [
     "dsfd_vm_bgq28",
     16
-   ],
-   [
-    "dsfd_coll_lane_w",
-    8
    ],
    [
     "dsfd_su_t_sw",
@@ -59,24 +55,28 @@
     2
    ],
    [
-    "ot_s81_hc_crootr_f",
-    2
-   ],
-   [
-    "ot_s81_hc_crootr_r",
-    2
-   ],
-   [
-    "ot_s81_hc_crootr_w",
-    2
-   ],
-   [
     "ot_s81_hc_crooty",
     2
    ],
    [
     "ot_s81_hc_crooty_w",
     2
+   ],
+   [
+    "ot_s81_hc_crooty_y",
+    2
+   ],
+   [
+    "dsfd_bf",
+    1
+   ],
+   [
+    "dsfd_mtp_hrow banks",
+    1
+   ],
+   [
+    "dsfd_sp_capture_c",
+    1
    ]
   ]
  },
@@ -160,28 +160,15 @@
    "lef_near": false
   },
   "dsfd_coll_lane_w": {
-   "class": "placeholder",
-   "view": "physical/s81_ph_views/closed/dsfd_coll_lane_w",
+   "class": "real",
+   "view": "physical/ref_tile/dscoll_lane_w_cxea/views/dsfd_coll_lane_w",
    "view_exists": true,
-   "lef": "none",
-   "etm": "none",
+   "lef": "outline",
+   "etm": "by name",
    "instances": 8,
    "size": [
     432.0,
     336.96
-   ],
-   "lef_near": false
-  },
-  "dsfd_hc_post_stn": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
-   "etm": "none",
-   "instances": 1,
-   "size": [
-    518.4,
-    216.0
    ],
    "lef_near": false
   },
@@ -550,11 +537,11 @@
    "lef_near": false
   },
   "ot_s81_hc_crootr_f": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
-   "etm": "none",
+   "class": "real",
+   "view": "physical/ref_tile/s81hc_crrfw_ref/views/ot_s81_hc_crootr_f",
+   "view_exists": true,
+   "lef": "outline",
+   "etm": "by name",
    "instances": 2,
    "size": [
     276.48,
@@ -563,11 +550,11 @@
    "lef_near": false
   },
   "ot_s81_hc_crootr_r": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
-   "etm": "none",
+   "class": "real",
+   "view": "physical/ref_tile/s81hc_crrre_ref/views/ot_s81_hc_crootr_r",
+   "view_exists": true,
+   "lef": "outline",
+   "etm": "by name",
    "instances": 2,
    "size": [
     276.48,
@@ -589,11 +576,11 @@
    "lef_near": false
   },
   "ot_s81_hc_crootr_w": {
-   "class": "placeholder",
-   "view": null,
-   "view_exists": false,
-   "lef": "none",
-   "etm": "none",
+   "class": "real",
+   "view": "physical/ref_tile/s81hc_crrww_ref/views/ot_s81_hc_crootr_w",
+   "view_exists": true,
+   "lef": "outline",
+   "etm": "by name",
    "instances": 2,
    "size": [
     276.48,
