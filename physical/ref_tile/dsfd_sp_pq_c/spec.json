@@ -363,7 +363,7 @@
   "views_to": "physical/ref_tile/dsfd_sp_pq_c/views",
   "record_to": "results/rtl/ref_tile/dsfd_sp_pq_c"
  },
- "slot_change_request": "el1011-s81die.log 10-13 [s81-sppq]: dsfd_sp_pq real view 1671.84 x 449.28 (2.16 lattice; slot 1672.272 x 449.28 less the 0.024 shave), R0; faces S = x_q / r_* / o_w_*, N = issuer + VM-read scalars, ROM ports, clk, rst_n, E = o_bus; signals M2-M7 inside (ref_tile cluster), PG M7 stripes as pins",
+ "slot_change_request": "el1011-s81die.log 10-13 [s81-sppq]: dsfd_sp_pq real view 1667.52 x 449.28 (8.64 cluster lattice; slot 1672.272 x 449.28 less the 0.024 shave), R0; faces S = x_q / r_* / o_w_*, N = issuer + VM-read scalars, ROM ports, clk, rst_n, E = o_bus; signals M2-M7 inside (ref_tile cluster), PG M7 stripes as pins",
  "macros": [],
  "inter": []
 }
