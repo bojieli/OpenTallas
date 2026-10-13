@@ -1,0 +1,6 @@
+Source: codex/hbm-sm-cluster, ot_hbm_accel_smh_strap_region W26, five ungated stages.
+Host ot-epyc4; Verilator5.032; admitted ot-heavy --mem4.
+Base: SMT_STRAP_PASS 33 offset vectors five-edge settle, rc0.
+Negative control final offset-bit corruption: SMT_STRAP_FAIL startup, rc134.
+This establishes only strap startup/stability, not complete cluster datapath exactness or physical closure.
+Full production lockstep and late32/hold0/new strap mutants remain closure-job gates.

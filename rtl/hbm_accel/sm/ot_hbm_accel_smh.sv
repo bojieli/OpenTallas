@@ -3282,9 +3282,25 @@ module ot_hbm_accel_smh_tile_g #(
 );
     wire gclk;
     ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE), .ENREG(ENREG)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
+    // Static slice positions settle on the ungated clock before reset/wake.
+    // Five regional stations avoid a raw north-face wire crossing the cluster.
+    localparam integer STRAPW = A1B + 5 + A2B + 5;
+    wire [RPT*A1B-1:0] sx_a1;
+    wire [RPT*5-1:0] sx_g1, sx_g2;
+    wire [RPT*A2B-1:0] sx_a2;
+    genvar sr;
+    generate for (sr = 0; sr < RPT; sr = sr + 1) begin : g_strap
+        wire [STRAPW-1:0] d = {xs_g2[sr*5 +: 5], xs_a2[sr*A2B +: A2B],
+                                  xs_g1[sr*5 +: 5], xs_a1[sr*A1B +: A1B]};
+        wire [STRAPW-1:0] q;
+        ot_hbm_accel_smh_strap_region #(.W(STRAPW),
+            .MUT(`ifdef OT_SMH_MUT_STRAP_REGION (sr == 1) `else 0 `endif)) u_sr (.clk(clk), .d(d), .q(q));
+        assign {sx_g2[sr*5 +: 5], sx_a2[sr*A2B +: A2B],
+                sx_g1[sr*5 +: 5], sx_a1[sr*A1B +: A1B]} = q;
+    end endgenerate
     ot_hbm_accel_smh_tile #(.SUB(SUB), .RPT(RPT), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW), .XD(XD),
                             .NBEAT(NBEAT), .TCK(TCK), .NMG(NMG), .A1B(A1B), .A2B(A2B), .PT4(PT4)) u (
-        .clk(gclk), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2), .rin(rin), .bin(bin),
+        .clk(gclk), .rst_n(rst_n), .xs_a1(sx_a1), .xs_g1(sx_g1), .xs_a2(sx_a2), .xs_g2(sx_g2), .rin(rin), .bin(bin),
         .rout(rout), .bout(bout), .gin(gin), .gout(gout));
 endmodule
 module ot_hbm_accel_smh_be_g #(
@@ -3347,4 +3363,16 @@ module ot_hbm_accel_smh_result_valid #(
     wire partial_valid = (|valids) && !all_valid;
     assign row_valid = ENABLE ? all_valid : valids[0];
     assign fault_event = ENABLE ? ((|(faults & valids)) | partial_valid) : (|faults);
+endmodule
+
+// Static configuration only: no reset/enable, so startup settles even while the tile is gated.
+module ot_hbm_accel_smh_strap_region #(parameter integer W = 26, parameter integer MUT = 0) (
+    input wire clk, input wire [W-1:0] d, output wire [W-1:0] q
+);
+    (* keep *) reg [W-1:0] s0, s1, s2, s3, s4;
+    always @(posedge clk) begin
+        s0 <= d; s1 <= s0; s2 <= s1; s3 <= s2; s4 <= s3;
+    end
+    // Negative control corrupts one offset bit at the final regional station.
+    assign q = s4 ^ {{(W-1){1'b0}}, (MUT != 0)};
 endmodule

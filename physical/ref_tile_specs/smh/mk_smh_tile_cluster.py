@@ -152,21 +152,46 @@ def spec(variant):
         "pins": {fin: ["rin", "bin"], fout: ["rout", "bout"], "S": ["gout"],
                  "N": ["gin", "xs_a1", "xs_g1", "xs_a2", "xs_g2", "clk", "rst_n", "cgi", "cgo"]},
         "io_tcl": io,
+        "orfs_vars": {"POST_TAPCELL_TCL": f"physical/ref_tile_specs/smh/{name}_strap_regions.tcl"},
         "refglob": "*",
         "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 96},
-        "job": {"owner": "Claude:el1011-hbm-smmv-b", "branch": "claude/el1011-hbm-smt", "tag": "r1",
+        "job": {"owner": "Codex:hbm-sm-cluster", "branch": "codex/hbm-sm-cluster", "tag": "r2",
                 "purpose": (f"[smmv-b/smt] ot_hbm_accel_smh_tile_{variant}: SM tile as ONE ref_tile cluster (owner "
                             "contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles "
                             "(pt_w p45h, pt_e p40s, xs p50, bdc p50, tcl p45, tct p45), floorplan re-derived from their "
                             "LEFs on the 43.2-um lattice (630.72 x 1252.8, landing channels 58-60 um, cut 0.59), clock "
                             "spine through the tile ICG, exact abutment pin plan. Benches: lockstep_enreg_xlk (exact, "
                             "8270 cycles with the gather relays) + mut_late32 / mut_hold0 must fail."),
-                "benches": BENCHES},
+                "benches": BENCHES + [{"name": "mut_strap_region", "expect": "fail",
+                "fail_regex": "CG_LOCKSTEP mismatches [1-9]", "threads": 8, "peak_ram_gb": 24,
+                "cmd": BENCH.format(n="mut_strap_region", mut="--define OT_SMH_MUT_STRAP_REGION ",
+                    tail="test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log")} ]},
     }
+
+
+def strap_regions(variant):
+    # Five physical stages per leaf, kept on the ungated cluster clock.
+    points = [[(300,H-12),(365,1100),(365,1060),(300,1060),(260,Y_XS0+DIM["xs"][1]+12)],
+              [(340,H-12),(365,950),(365,650),(365,350),(260,Y_XS1-16)]]
+    lines = ["# Generated kept strap-stage fences: no child/clock/pin budget change.",
+             "set sb [ord::get_db_block]", "set su [[ord::get_db_tech] getDbUnitsPerMicron]", "set sn 0"]
+    for leaf, ps in enumerate(points):
+        for stage, (x,y) in enumerate(ps):
+            if variant == "wg": x = W-x
+            name=f"strap_l{leaf}_s{stage}"
+            lines += [f"set rg [odb::dbRegion_create $sb {name}]", "$rg setRegionType FENCE",
+                      f"odb::dbBox_create $rg [expr {{round({x-8}*$su)}}] [expr {{round({y-4}*$su)}}] [expr {{round({x+8}*$su)}}] [expr {{round({y+4}*$su)}}]",
+                      f"set gr [odb::dbGroup_create $sb {name}]", "$gr setRegion $rg", "set nc 0",
+                      "foreach net [$sb getNets] {", "  set nm [string map {\\ {}} [$net getName]]",
+                      f"  if {{[string first {{g_strap[{leaf}].u_sr.s{stage}[}} $nm] >= 0 }} {{ foreach it [$net getITerms] {{ set si [$it getInst]; if {{[$it isOutputSignal] && [string match *DFF* [[$si getMaster] getName]]}} {{ $gr addInst $si; incr nc; incr sn }} }} }}",
+                      "}", f"if {{$nc != 26}} {{error \"STRAP_REGION {name}: expected 26 DFFs, got $nc\"}}"]
+    lines += ["if {$sn != 260} {error \"STRAP_REGION expected 260 DFFs\"}", "puts \"STRAP_REGION_FENCES 10 DFFS $sn\""]
+    (OUT/f"smh_tile_{variant}_ref_strap_regions.tcl").write_text("\n".join(lines)+"\n")
 
 
 def main():
     for v in sys.argv[1:] or ["eg", "wg"]:
+        strap_regions(v)
         s = spec(v)
         p = OUT / f"{s['name']}.json"
         p.write_text(json.dumps(s, indent=1) + "\n")
