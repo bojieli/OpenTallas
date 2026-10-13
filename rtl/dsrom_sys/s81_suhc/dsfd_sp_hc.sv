@@ -17,8 +17,11 @@ module dsfd_sp_hc #(
     parameter integer HALF = 0,                          // HIER structural variant: half-octet sub-tiles (2 an octet)
     parameter integer CSPLIT = 0,                        // HIER structural variant: column roots split N-S (ot_s81_hc_crooty
                                                          //    pins / y FIFO + ot_s81_hc_crootr chain root)
+    parameter integer TAIL_SPLIT = 0, HEAD_ROWS = 10,
     parameter integer RLY = HALF ? 2 : 1                 // sub-tile relays a hop
 ) (
+    output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
+    input  wire [TRW-1:0] f_tr0, f_tr1, f_tr2,
     input  wire                cck, crs,                 // controller clock / reset (dsfd_sp_ctrl domain)
     input  wire                sk, srs,                  // slab clock / reset
     input  wire                c_cmd_v,
@@ -42,6 +45,8 @@ module dsfd_sp_hc #(
     output wire [3:0]          fcode
 );
     // hierarchical slab layout (HIER=1)
+    localparam integer TFW = 104 + ((S_RD*512 > ((NG/GS+NCOL-1)/NCOL)*GS*32) ? S_RD*512 : ((NG/GS+NCOL-1)/NCOL)*GS*32) + S_RD+5+1+128;
+    localparam integer TRW = S_RT+4 + S_RT+24*S_RT+8+512*S_RT;
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32;
     localparam integer L0 = NP, L1 = (NS - 2 * NP > 0) ? NS - 2 * NP : 0, L2 = NP;
     localparam integer B0 = 0, B1 = NP, B2 = NP + L1;
@@ -181,6 +186,8 @@ module dsfd_sp_hc #(
             .ch_fd(ch_fd[CC * FDW +: FDW]), .ch_rv(ch_rv[CC * RVW +: RVW]), .ch_rd(ch_rd[CC * RDW +: RDW]));
     end
     end
+    if (TAIL_SPLIT == 0) begin : g_unsplit
+    assign {t_tf2,t_tf1,t_tf0} = 0;
     for (c = 0; c < NCOL; c = c + 1) begin : g_c
         localparam integer LC = ((c == 0) ? L0 : (c == 1) ? L1 : L2) * (HALF ? 2 : 1);   // sub-tiles of the chain
         localparam integer BC = ((c == 0) ? B0 : (c == 1) ? B1 : B2) * (HALF ? 2 : 1);
@@ -226,6 +233,37 @@ module dsfd_sp_hc #(
             assign ch_rd[c * RDW +: RDW] = 0;
         end
     end
+    end else begin : g_split
+        wire [NCOL*TFW-1:0] sf;
+        wire [NCOL*TRW-1:0] sr;
+        assign {t_tf2,t_tf1,t_tf0} = sf;
+        if (TAIL_SPLIT == 1) begin : g_external
+            assign sr = {f_tr2,f_tr1,f_tr0};
+        end else begin : g_composed
+            wire [NCOL*TFW-1:0] tf;
+            wire [NCOL*TRW-1:0] tr;
+            dsfd_sp_hc_t #(.NG(NG),.D(D),.S_RD(S_RD),.S_RT(S_RT),.WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),
+                          .NCOL(NCOL),.GS(GS),.RLY(RLY),.HEAD_ROWS(HEAD_ROWS)) u_tail (
+                .sk(sk),.f_sf0(tf[0+:TFW]),.f_sf1(tf[TFW+:TFW]),.f_sf2(tf[2*TFW+:TFW]),
+                .t_sr0(tr[0+:TRW]),.t_sr1(tr[TRW+:TRW]),.t_sr2(tr[2*TRW+:TRW]));
+            // Models the die's existing seven common-clock stations; reset is an in-band forward bit.
+            ot_hdc_delay #(.W(NCOL*TFW),.D(7),.RESET(0)) u_fwd (.clk(sk),.rst_n(srs),.d(sf),.q(tf));
+            ot_hdc_delay #(.W(NCOL*TRW),.D(7),.RESET(0)) u_ret (.clk(sk),.rst_n(srs),.d(tr),.q(sr));
+        end
+        for (c=0;c<NCOL;c=c+1) begin : g_c
+            localparam integer LC=((c==0)?L0:(c==1)?L1:L2)*2;
+            localparam integer BC=((c==0)?B0:(c==1)?B1:B2)*2;
+            localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
+            wire [127:0] cy;
+            ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
+                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.BC(BC),.LC(LC),.START(0),.COUNT(NH)) u_head (
+                .sk(sk),.rst_in(ch_rst[c]),.fv_in(ch_fv[c*FVW+:FVW]),.fd_in(ch_fd[c*FDW+:FDW]),.cy_in(128'd0),
+                .rv_in(sr[c*TRW+RDW+:RVW]),.rd_in(sr[c*TRW+:RDW]),
+                .rst_out(sf[c*TFW+128+FDW+FVW]),.fv_out(sf[c*TFW+128+FDW+:FVW]),
+                .fd_out(sf[c*TFW+128+:FDW]),.cy_out(sf[c*TFW+:128]),
+                .rv_out(ch_rv[c*RVW+:RVW]),.rd_out(ch_rd[c*RDW+:RDW]));
+        end
+    end
 `ifndef SYNTHESIS
     // bench observability (tb job start cycles)
     assign e_v = u_cb.e_v; assign e_r = u_cb.e_r; assign e_d = u_cb.e_d;
@@ -258,5 +296,70 @@ module dsfd_sp_hc #(
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .busy(bsy), .fault(c_flt), .fault_code(fcode),
         .st_jobs(jobs));
     assign flt = a_flt | c_flt | y_ov | y_un;
+    end endgenerate
+endmodule
+
+// Wire-only chain assembly; each cth instance retains its existing hardened local roots.
+module ot_s81_hc_chain_segment #(
+    parameter integer NG=256,D=5120,NCOL=3,GS=8,S_RD=2,S_RT=2,WIN=2,WOUT=2,ML=5,AL=4,RLY=2,
+    parameter integer BC=0,LC=22,START=0,COUNT=10,
+    parameter integer FVW=S_RD+5, RVW=S_RT+4,
+    parameter integer FDW=104+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
+    parameter integer RDW=S_RT+24*S_RT+8+512*S_RT
+)( input wire sk,rst_in, input wire [FVW-1:0] fv_in,input wire [FDW-1:0] fd_in,
+   input wire [127:0] cy_in,input wire [RVW-1:0] rv_in,input wire [RDW-1:0] rd_in,
+   output wire rst_out,output wire [FVW-1:0] fv_out,output wire [FDW-1:0] fd_out,
+   output wire [127:0] cy_out,output wire [RVW-1:0] rv_out,output wire [RDW-1:0] rd_out);
+    genvar p;
+    generate if(COUNT>0) begin : g_live
+            wire [FVW-1:0] fvo [0:COUNT-1];
+            wire [FDW-1:0] fdo [0:COUNT-1];
+            wire [RVW-1:0] rvo [0:COUNT-1];
+            wire [RDW-1:0] rdo [0:COUNT-1];
+            wire           rso [0:COUNT-1];
+            wire [127:0]   cyo [0:COUNT-1];
+            for (p = 0; p < COUNT; p = p + 1) begin : g_p
+                localparam [7:0] TID = BC + START + p;
+                if (1) begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
+                ot_s81_hc_cth #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
+                                .ML(ML), .AL(AL), .RLY(RLY)) u_t (
+                    .clk(sk), .rst_in(p == 0 ? rst_in : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
+                    .last(START + p == LC - 1),
+                    .fv_in(p == 0 ? fv_in : fvo[p > 0 ? p - 1 : 0]),
+                    .fd_in(p == 0 ? fd_in : fdo[p > 0 ? p - 1 : 0]),
+                    .fv_out(fvo[p]), .fd_out(fdo[p]),
+                    .rv_in(p == COUNT - 1 ? rv_in : rvo[p < COUNT-1 ? p+1 : 0]),
+                    .rd_in(p == COUNT - 1 ? rd_in : rdo[p < COUNT-1 ? p+1 : 0]),
+                    .rv_out(rvo[p]), .rd_out(rdo[p]),
+                    .cy_out(cyo[p]), .cy_in(p == 0 ? cy_in : cyo[p > 0 ? p - 1 : 0]));
+                end
+            end
+            assign rv_out=rvo[0]; assign rd_out=rdo[0];
+                assign rst_out=rso[COUNT-1];
+            assign fv_out=fvo[COUNT-1]; assign fd_out=fdo[COUNT-1]; assign cy_out=cyo[COUNT-1];
+    end else begin : g_empty
+        assign {rst_out,fv_out,fd_out,cy_out}={rst_in,fv_in,fd_in,cy_in};
+        assign rv_out=rv_in; assign rd_out=rd_in;
+    end endgenerate
+endmodule
+
+module dsfd_sp_hc_t #(
+    parameter integer NG=256,D=5120,S_RD=2,S_RT=2,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,
+    parameter integer FDW=104+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
+    parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW
+)(input wire sk,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2);
+    localparam integer NS=NG/GS,NP=(NS+NCOL-1)/NCOL,L1=(NS-2*NP>0)?NS-2*NP:0;
+    wire [NCOL*TFW-1:0] sf={f_sf2,f_sf1,f_sf0};
+    wire [NCOL*TRW-1:0] sr;
+    assign {t_sr2,t_sr1,t_sr0}=sr;
+    genvar c;
+    generate for(c=0;c<NCOL;c=c+1) begin:g_c
+        localparam integer LC=((c==1)?L1:NP)*2,BC=((c==0)?0:(c==1)?NP:NP+L1)*2;
+        localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
+        ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
+            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH)) u_tail (
+            .sk(sk),.rst_in(sf[c*TFW+128+FDW+FVW]),.fv_in(sf[c*TFW+128+FDW+:FVW]),
+            .fd_in(sf[c*TFW+128+:FDW]),.cy_in(sf[c*TFW+:128]),.rv_in({RVW{1'b0}}),.rd_in({RDW{1'b0}}),
+            .rst_out(),.fv_out(),.fd_out(),.cy_out(),.rv_out(sr[c*TRW+RDW+:RVW]),.rd_out(sr[c*TRW+:RDW]));
     end endgenerate
 endmodule
