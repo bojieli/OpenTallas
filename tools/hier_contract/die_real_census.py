@@ -219,7 +219,9 @@ def census_contract(contract: Path, roots: list[Path], macro_re=MACRO_RE) -> dic
         r = {"class": "placeholder", "view": None, "view_exists": bool(idx.get(m)), "lef": "none", "etm": "none"}
         for vd in idx.get(m, []):
             vl = lef_macros(vd / f"{m}.lef", {m}).get(m)
-            fit = bool(vl and vl["size"] and (round(vl["size"][0], 3), round(vl["size"][1], 3)) in outline[m])
+            # a LEF SIZE carries 6 significant digits (1036.776 is written 1036.78): compare within 0.006 um
+            fit = bool(vl and vl["size"] and any(abs(vl["size"][0] - w) <= 0.006 and abs(vl["size"][1] - h) <= 0.006
+                                                 for w, h in outline[m]))
             if fit or r["view"] is None:
                 view = str(vd)
                 for root in roots:
