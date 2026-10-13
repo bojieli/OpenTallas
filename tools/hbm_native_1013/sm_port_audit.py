@@ -8,7 +8,8 @@ for c in m['children']:
  typ=c['logical_module']
  if typ in rows: continue
  expected=set()
- for port,p in c['boundary_ports'].items(): expected.update(port if p['width']==1 else f'{port}[{i}]' for i in range(p['width'])) if p['width']>1 else expected.add(port)
+ for port,p in c['boundary_ports'].items():
+  expected.update([port] if p['width']==1 else [f'{port}[{i}]' for i in range(p['width'])])
  row={'logical_module':typ,'production_params':m['parameters'],'defines':m['defines'],'source_commit':m['source_commit'],'source_expected_bits':len(expected),'view_source_commit':c.get('view_source_commit'),'record_job':c.get('view_job'),'closed':False,'note':'Exact physical pin census is necessary; recorded default parameter/define/dependency provenance and production arithmetic remain separate gates.'}
  lef=c['view_lef']
  if not lef: row['status']='OPEN_NO_NATIVE_EXPORT'; rows[typ]=row; continue

@@ -1,0 +1,23 @@
+{
+  "rtl_source_commit": "49b00f711ce5613322f3c0d011f109c78894d1de",
+  "tool_override_commit": "9924bab30",
+  "testbench_override_commit": "910bd0dd5",
+  "host": "ot-epyc4",
+  "root": "/srv/opentallas-scratch/claude/codex-sm-native-fch49",
+  "positive": {
+    "status": "RUNNING",
+    "log": "positive/run.log",
+    "result": "positive/result.json",
+    "rc": "positive/run.exit",
+    "expected": "status=pass, mismatching_ops=0, timeout=null, SM_NATIVE_DEFAULTS_PASS NC8 RMAX4096 REQCR1 TAGW16, CG_LOCKSTEP mismatches0"
+  },
+  "mutant": {
+    "status": "RUNNING",
+    "log": "mutant/run.log",
+    "result": "mutant/result.json",
+    "rc": "mutant/run.exit",
+    "expected": "exit0 under expect-fail, status=fail, mismatching_ops>0, timeout=null, production-default assertion present, no compile/runtime setup failure"
+  },
+  "admission": "ot-heavy --mem64 each; measured880GiB EPYC4 available,259GiB scratchfree atlaunch",
+  "source_note": "All RTL/tools archivedfrom49, only tool--rmax/cache patch9924 and TBDEFassert910 overrides; no live physical RTL edits."
+}

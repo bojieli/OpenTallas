@@ -5,9 +5,21 @@
   "source_commit": "49b00f711ce5613322f3c0d011f109c78894d1de",
   "source_file": "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
   "source_sha256": "97bfc3e0da370f90fc0f43a7be751db804296efa48f5bf2e5ac813e8d9f4452b",
+  "boundary_elaboration_defines": [
+    "OT_SMH_CG",
+    "OT_SMH_FC_HIER",
+    "SYNTHESIS"
+  ],
   "defines": [
     "OT_SMH_CG",
     "OT_SMH_FC_HIER",
+    "OT_SMH_CG_ENREG",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY",
+    "OT_SMH_HIER",
+    "OT_SMH_PTW_OHDLY",
     "SYNTHESIS"
   ],
   "parameters": {
@@ -343,7 +355,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -466,7 +479,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
       "xy_um": [
         0.0,
         1347.84
@@ -542,7 +556,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -665,7 +680,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
       "xy_um": [
         0.0,
         86.4
@@ -806,7 +822,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -929,7 +946,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
       "xy_um": [
         639.36,
         1347.84
@@ -1005,7 +1023,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -1128,7 +1147,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
       "xy_um": [
         639.36,
         86.4
@@ -1269,7 +1289,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -1392,7 +1413,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
       "xy_um": [
         1278.72,
         1347.84
@@ -1468,7 +1490,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -1591,7 +1614,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
       "xy_um": [
         1278.72,
         86.4
@@ -1732,7 +1756,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -1855,7 +1880,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
       "xy_um": [
         1918.08,
         1347.84
@@ -1931,7 +1957,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_wg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -2054,7 +2081,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_wg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_wg_ref/floorplan.json",
       "xy_um": [
         1918.08,
         86.4
@@ -2195,7 +2223,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -2318,7 +2347,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
       "xy_um": [
         3464.64,
         1347.84
@@ -2394,7 +2424,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -2517,7 +2548,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
       "xy_um": [
         3464.64,
         86.4
@@ -2658,7 +2690,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -2781,7 +2814,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
       "xy_um": [
         4104.0,
         1347.84
@@ -2857,7 +2891,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -2980,7 +3015,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
       "xy_um": [
         4104.0,
         86.4
@@ -3121,7 +3157,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -3244,7 +3281,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
       "xy_um": [
         4743.36,
         1347.84
@@ -3320,7 +3358,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -3443,7 +3482,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
       "xy_um": [
         4743.36,
         86.4
@@ -3584,7 +3624,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -3707,7 +3748,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
       "xy_um": [
         5382.72,
         1347.84
@@ -3783,7 +3825,8 @@
       "h_um": 1252.8,
       "pg_top": "M7",
       "closure_status": "OPEN_NATIVE_TILE_R5",
-      "physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
+      "physical_spec": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.spec.json",
+      "original_physical_spec": "physical/ref_tile_specs/smh/smh_tile_eg_ref.json",
       "inherited_children": [
         {
           "view": "physical/ref_tile/smh_pt_w_ref_p45h/views/ot_hbm_accel_smh_pt_w",
@@ -3906,7 +3949,8 @@
           "inst": "*g_lf?1?.u_lh.u_tcc.u_h1"
         }
       ],
-      "child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
+      "child_manifest": "results/arch/hbm_native_1013/sm/inherited_tile_manifests/smh_tile_eg_ref.floorplan.json",
+      "original_child_manifest": "physical/ref_tile/smh_tile_eg_ref/floorplan.json",
       "xy_um": [
         5382.72,
         86.4
