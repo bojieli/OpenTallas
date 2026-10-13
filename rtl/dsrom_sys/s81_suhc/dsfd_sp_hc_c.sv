@@ -32,7 +32,7 @@ module dsfd_sp_hc_c #(
     output wire [S_WR*16-1:0]  wq_mask,
     output wire [S_WR*512-1:0] wq_d
 );
-    localparam integer TFW=104+((S_RD*512>((NG/8+2)/3)*8*32)?S_RD*512:((NG/8+2)/3)*8*32)+S_RD+5+129;
+    localparam integer TFW=(72+16*S_RD)+((S_RD*512>((NG/8+2)/3)*8*32)?S_RD*512:((NG/8+2)/3)*8*32)+S_RD+5+129;
     localparam integer TRW=S_RT+24*S_RT+8+512*S_RT+S_RT+4;
     // the slab's fault code stays inside (diagnostic); the die fault is c_st[0] -> the sequencer's s<e> (no die sink
     // exists for a per-slab code: keeping it a pin left it unbound in the die port audit)

@@ -17,6 +17,8 @@ module dsfd_sp_hc #(
     parameter integer HALF = 0,                          // HIER structural variant: half-octet sub-tiles (2 an octet)
     parameter integer CSPLIT = 0,                        // HIER structural variant: column roots split N-S (ot_s81_hc_crooty
                                                          //    pins / y FIFO + ot_s81_hc_crootr chain root)
+    // 0: existing chain; 1: expose upper seam to die stations + dsfd_sp_hc_t;
+    // 2: compose upper/stations/tail for transaction-level exactness (never harden this wrapper).
     parameter integer TAIL_SPLIT = 0, HEAD_ROWS = 10,
     parameter integer RLY = HALF ? 2 : 1                 // sub-tile relays a hop
 ) (
@@ -45,7 +47,7 @@ module dsfd_sp_hc #(
     output wire [3:0]          fcode
 );
     // hierarchical slab layout (HIER=1)
-    localparam integer TFW = 104 + ((S_RD*512 > ((NG/GS+NCOL-1)/NCOL)*GS*32) ? S_RD*512 : ((NG/GS+NCOL-1)/NCOL)*GS*32) + S_RD+5+1+128;
+    localparam integer TFW = (72+16*S_RD) + ((S_RD*512 > ((NG/GS+NCOL-1)/NCOL)*GS*32) ? S_RD*512 : ((NG/GS+NCOL-1)/NCOL)*GS*32) + S_RD+5+1+128;
     localparam integer TRW = S_RT+4 + S_RT+24*S_RT+8+512*S_RT;
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32;
     localparam integer L0 = NP, L1 = (NS - 2 * NP > 0) ? NS - 2 * NP : 0, L2 = NP;
@@ -82,6 +84,10 @@ module dsfd_sp_hc #(
         integer t, cc;
         begin t = 0; for (cc = 0; cc < c; cc = cc + 1) t = t + necnt(cc); imoff = t; end
     endfunction
+`ifndef SYNTHESIS
+    initial if (TAIL_SPLIT && (!HIER || !HALF || NCOL != 3 || HEAD_ROWS < 1))
+        $fatal(1,"HC tail split requires hierarchical half-octets, three columns and positive head rows");
+`endif
     wire e_v, e_r;
     wire [83:0] e_d;
     generate if (HIER) begin : g_hier
@@ -269,6 +275,7 @@ module dsfd_sp_hc #(
     assign e_v = u_cb.e_v; assign e_r = u_cb.e_r; assign e_d = u_cb.e_d;
 `endif
     end else begin : g_flat
+    assign {t_tf2,t_tf1,t_tf0}=0;
     wire d_v, a_flt, c_flt;
     wire [7:0]  d_t;
     reg inp_q;
@@ -304,7 +311,7 @@ module ot_s81_hc_chain_segment #(
     parameter integer NG=256,D=5120,NCOL=3,GS=8,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,RLY=2,
     parameter integer BC=0,LC=22,START=0,COUNT=10,
     parameter integer FVW=S_RD+5, RVW=S_RT+4,
-    parameter integer FDW=104+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
+    parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer RDW=S_RT+24*S_RT+8+512*S_RT
 )( input wire sk,rst_in, input wire [FVW-1:0] fv_in,input wire [FDW-1:0] fd_in,
    input wire [127:0] cy_in,input wire [RVW-1:0] rv_in,input wire [RDW-1:0] rd_in,
@@ -345,7 +352,7 @@ endmodule
 
 module dsfd_sp_hc_t #(
     parameter integer NG=256,D=5120,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,
-    parameter integer FDW=104+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
+    parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW
  )(input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2);
     localparam integer NS=NG/GS,NP=(NS+NCOL-1)/NCOL,L1=(NS-2*NP>0)?NS-2*NP:0;
