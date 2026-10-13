@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_link_adp512",
+ "verdict": "WARN",
+ "generated": "2026-10-13T08:29:39-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "ec0788e47",
+ "clock": {
+  "max_root_sinks": 14484,
+  "root": "port:ck",
+  "cts": true,
+  "tt_insertion_ps": 518.0,
+  "tt_spread_ps": 146.1,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "14,484 sinks on the largest root <= 15,000; measured TT insertion 518.0 ps, leaf spread 146.1 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 7810 um2 + macros 41421 in core 135041: util 36%",
+   "fix": "set \"std_area_um2\": 7810 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net u_body.ib_rp[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 4,098 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net u_body.sk_rp[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 4,098 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 36.5% outside 45%-65% (std 7900 + macro 41421 um2 in 135041 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ]
+}

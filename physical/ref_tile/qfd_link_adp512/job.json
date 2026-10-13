@@ -1,5 +1,5 @@
 {
- "name": "qfd_link_adp512-m5a-COMMIT",
+ "name": "qfd_link_adp512-m5a-ec0788e47",
  "block": "qfd_link_adp512",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-romio",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1013-qwen-romio",
-  "commit": "COMMIT"
+  "commit": "ec0788e47"
  },
  "stages": {
   "bench": [
@@ -121,7 +121,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_link_adp512/qfd_link_adp512-m5a-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_link_adp512/qfd_link_adp512-m5a-ec0788e47"
   }
  ],
  "cycles_added": 0,
