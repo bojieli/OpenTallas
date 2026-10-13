@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.s81hc.production_baseline.v1",
+  "source": "3c62573d5",
+  "shape": {
+    "D": 5120,
+    "HC": 4,
+    "NG": 256,
+    "output_lanes_per_beat": 1024,
+    "input_y_beats": 20
+  },
+  "current_post_cycles": {
+    "minimum": 286,
+    "maximum": 287,
+    "source": "hc_physical_ng256_m0.json source-matched existing production gate; final operation extracts supplied by HC owner"
+  },
+  "immutable_price": {
+    "id": "L0.attn.hc_post",
+    "label": "L0.attn.hc_post",
+    "group": "S000",
+    "cls": "su",
+    "op": "attn.hc_post",
+    "kind": "fused_fast",
+    "base_cycles": 112.9,
+    "cycles": 112.9,
+    "adders": [],
+    "src": {
+      "grade": "measured",
+      "record": "tools/dsrom_1m_allmeasured.py patch",
+      "note": "su_hcpost: ot_dsrom_su_hcpost (NG 256 groups x 4 lanes = 1,024 outputs/cycle, mul_f12 L5 / add_f12 L5): go -> last of 20 output beats landed 103 cycles at 1.2 GHz incl. hub in 33 / out 23 register stages; bit-exact on the 8 golden 1M hc_post chains (L0/L3/L20/L24 attn+ffn) + 32 stress cases + r8 hub-slab stations 0...."
+    },
+    "critical": true,
+    "start": 8930.8,
+    "end": 9043.7,
+    "layer": 0,
+    "slack": 0.0,
+    "share": 0.000136
+  },
+  "required_max_cycles": 124.19000000000001,
+  "current_ratio_range": [
+    2.5332152347209917,
+    2.5420726306465897
+  ],
+  "clock_units": {
+    "model_hz": 1200000000.0,
+    "bench_slab_halfperiod_ns": 0.4255,
+    "bench_controller_halfperiod_ns": 0.4165,
+    "comparison": "Engine start/done counter is slab cycles. Independent bench clock phases exercise CDC; target physical period833.333ps. Wall-clock bench duration is not a measured physical frequency qualification."
+  },
+  "rejected_qualification": "6392/6018=1.062 only tests regression against an older vehicle, not immutable production price.",
+  "initial_source_hypothesis": {
+    "max_half_octets_per_column": 22,
+    "registers_per_hop": 4,
+    "full_forward_chain": 88,
+    "full_return_chain": 88,
+    "tail_split": "serial physical assembly split; does not parallelize POST service"
+  },
+  "trace_job": {
+    "host": "ot-epyc4",
+    "unit": "codex-s81hc-post-trace-3c",
+    "path": "/srv/opentallas-scratch/claude/s81-suhc/throughput-trace-3c",
+    "admission_gb": 80,
+    "reuse": "copied completed630MB Verilator objects and189MB immutable source snapshot; simulation-only cseq/ctpl event prints",
+    "status": "verified running MainPID2348856; existing golden_L0_L2 vectors"
+  },
+  "prices_changed": false
+}
