@@ -49,7 +49,8 @@
   "ANR": 1,
   "TOREG": 1,
   "TIDR": 1,
-  "LRR": 1
+  "LRR": 1,
+  "XTX": 2
  },
  "clock_port": "clk",
  "reset_ports": [
@@ -87,7 +88,7 @@
    "count": 1,
    "at": [
     22.464,
-    444.96
+    421.2
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[0].g_bank[0].u_rom"
@@ -97,7 +98,7 @@
    "count": 1,
    "at": [
     164.592,
-    444.96
+    421.2
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[1].g_bank[0].u_rom"
@@ -107,7 +108,7 @@
    "count": 1,
    "at": [
     22.464,
-    529.2
+    516.24
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[0].g_bank[1].u_rom"
@@ -117,7 +118,7 @@
    "count": 1,
    "at": [
     164.592,
-    529.2
+    516.24
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[1].g_bank[1].u_rom"
@@ -127,7 +128,7 @@
    "count": 1,
    "at": [
     22.464,
-    613.44
+    611.28
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[0].g_bank[2].u_rom"
@@ -137,7 +138,7 @@
    "count": 1,
    "at": [
     164.592,
-    613.44
+    611.28
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[1].g_bank[2].u_rom"
@@ -147,7 +148,7 @@
    "count": 1,
    "at": [
     22.464,
-    697.68
+    706.32
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[0].g_bank[3].u_rom"
@@ -157,7 +158,7 @@
    "count": 1,
    "at": [
     164.592,
-    697.68
+    706.32
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[1].g_bank[3].u_rom"
@@ -167,7 +168,7 @@
    "count": 1,
    "at": [
     22.464,
-    781.92
+    801.36
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[0].g_bank[4].u_rom"
@@ -177,7 +178,7 @@
    "count": 1,
    "at": [
     164.592,
-    781.92
+    801.36
    ],
    "orient": "R0",
    "inst": "u_tile.g_col[1].g_bank[4].u_rom"
@@ -314,8 +315,8 @@
  "job": {
   "owner": "Claude:el1011-q-tile",
   "branch": "claude/el1011-q-tile",
-  "tag": "r2",
-  "purpose": "q-tile structural fix of qfd_tile_h3-8c1e8805e EARLY_FAIL_CONGESTION (GRT-0116, 134 overflow gcells, all at x 30-40 / 120-130 / 180-190, y 590-880 = the W/E face pin bands (n_a/n_b/t_out/n_y 300-880, ib/xl 450-850) sat abreast the hard leaf columns, whose OBS M1-M6 leave only M7 (vertical) over them, so ~3,000 face pins escaped through 29 um side gaps; ROM banks split top/bottom also sent the south group up through the leaf band). Redesign: ref_tile cluster at the TP8 slot width 311.04 x 1291.656; ROM 2x5 rows + KV in ONE central band (y 445-927) with the W/E pin bands (pin_ranges 356-946) abreast it (M5-M7 free over ROM/SRAM -> M6 horizontal escape across the tile, li->lo straight across); 8 lsl leaves on the 43.2 lattice in two rows below and two above, so each leaf half only carries its own 4 leaves' traffic to the centre; leaf pin faces OUTWARD (left MY / right R0): each leaf column escapes into its own 38-41 um edge channel, the 29.8 um spine carries only the ROM/x broadcast. Same RTL/params/benches as h3 (lsl6 keepout-ECO views 8c1e8805e). Pins: balanced placer (32-pin layer alternation M4/M6, min 1 track; h3 placed li at 4.9 pins/um this way), ~5.1 pins/um = ~0.56 of M4+M6 face capacity. M5 TILE CAP (main 7e582db75): face pins on M4 only (W/E faces: M4 is the only horizontal pin layer <= M5), ~5.1 pins/um = ~0.25-0.3 of M4 face tracks; cluster internals stay at the contract-v6 cluster rule (signals <= M7, PG M7, children <= M6) pending the die lead's recorded M6/M7 grant (ROM/SRAM OBS M1-M4 over the 268-um central band leave M6 as the only horizontal layer across it).",
+  "tag": "r3",
+  "purpose": "q-tile r3 structural fix of r2 (h3c-r2 GRT repair_timing stuck at TT -233 ps on u_me g_hier g_sl[*].g_hd.u_lh/x_d, h3s GRT -126 / CTS -201 on the same x_d path: s2_x -> BF16 round (32-b kept add) + mask/mux -> unregistered broadcast of 128 b to all 8 hard leaves spread over y 43-1264 um (up to ~640 um from the S2 band), i.e. logic + >500 um wire in one stage). RTL: XTX=2 registered transmit rungs per leaf (ot_qwen_tx_ff, keep_hierarchy, one copy per leaf and rung; rung 1 takes the ROUNDED x; v/first/split/w delayed with it; XDD += XTX so the valid/tag/split lines meet the leaves' results; +2 cycles latency, arithmetic and order unchanged). Floorplan: ROM row pitch 84.24 -> 95.04 um (row gaps 21.3 -> 32.1 um, band y 421.2-864.3) for the macro-leaf clock spine buffers and ROM-edge escape where h3s-r2 hit DRT-0255 (n_b[106] at x 7-11 y 478, clkbuf_sp nets at x 31-35 in the col-0 row gaps y 518/693). Pins, leaves, outline unchanged.",
   "benches": [
    {
     "name": "tile_die_glue_exact",
@@ -342,7 +343,7 @@
    },
    {
     "name": "rom_pipe_exact_anr",
-    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=1 --workdir {RUN}/bench/rom_pipe_exact_anr --result {RUN}/bench/rom_pipe_exact_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param SEED=1 --workdir {RUN}/bench/rom_pipe_exact_anr --result {RUN}/bench/rom_pipe_exact_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
     "expect": "pass",
     "pass_regex": "^PASS rom_pipe",
     "threads": 8,
@@ -353,7 +354,7 @@
    },
    {
     "name": "rom_pipe_exact_anr_s5",
-    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=5 --workdir {RUN}/bench/rom_pipe_exact_anr_s5 --result {RUN}/bench/rom_pipe_exact_anr_s5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr_s5.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param SEED=5 --workdir {RUN}/bench/rom_pipe_exact_anr_s5 --result {RUN}/bench/rom_pipe_exact_anr_s5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr_s5.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
     "expect": "pass",
     "pass_regex": "^PASS rom_pipe",
     "threads": 8,
@@ -364,7 +365,7 @@
    },
    {
     "name": "rom_pipe_tmut3_anr",
-    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=2 --param TMUT=3 --workdir {RUN}/bench/rom_pipe_tmut3_anr --result {RUN}/bench/rom_pipe_tmut3_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_tmut3_anr.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param SEED=2 --param TMUT=3 --workdir {RUN}/bench/rom_pipe_tmut3_anr --result {RUN}/bench/rom_pipe_tmut3_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_tmut3_anr.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
     "expect": "fail",
     "fail_regex": "MUTVERDICT FAIL",
     "threads": 8,
