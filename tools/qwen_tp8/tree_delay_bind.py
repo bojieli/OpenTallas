@@ -7,7 +7,7 @@ each master it names has a closed LEF + ETM view.  Usage: tree_delay_bind.py <le
 """
 import argparse, collections, json
 
-OUTLINE = {1: (12.96, 64.8), 2: (17.28, 64.8), 3: (21.6, 64.8), 4: (28.08, 64.8), 8: (49.68, 64.8), 16: (92.88, 64.8),
+OUTLINE = {1: (17.28, 64.8), 2: (17.28, 64.8), 3: (21.6, 64.8), 4: (28.08, 64.8), 8: (49.68, 64.8), 16: (92.88, 64.8),
            21: (129.6, 259.2)}     # um: ot_qwen_tree_delay<N>_t kits (baaa52fff, util ~0.52); 21 = the bf10180f4 outline
 FLOP_UM2 = 209.0 / 512                                                   # measured d1 gate: 209 um2 std for 512 flops
 RELAY_FRAME = 52.68 * 30.216                                             # existing single-cycle 512-bit relay frame

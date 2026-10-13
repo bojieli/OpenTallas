@@ -11,7 +11,7 @@ import argparse, collections, json, math, re, sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'qwen_die_seam'))
 import extract,tree_alignment
-ap=argparse.ArgumentParser();ap.add_argument('physical_model');ap.add_argument('die_v');ap.add_argument('out');ap.add_argument('--views',default='physical/ref_tile');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('physical_model');ap.add_argument('die_v');ap.add_argument('out');ap.add_argument('--views',default='physical/ref_tile');ap.add_argument('--keepout',action='append',default=[],help='x0,y0,x1,y1 (um): reserved region, no pad / delay tile may enter (contract v3 rev 2026-10-13: the VM envelope)');a=ap.parse_args()
 out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
 D=json.load(open(a.physical_model));I={i['n']:i for i in D['insts']};P=D['endpoint_pos'];original=Path(a.die_v).read_text();inst,bus=extract.parse(a.die_v)
 chains={};width={}
@@ -27,6 +27,8 @@ def add(i):
  for gx in range(int(x//250),int(X//250)+1):
   for gy in range(int(y//250),int(Y//250)+1):G[gx,gy].append((x,y,X,Y))
 for i in I.values():add(i)
+for k in a.keepout:
+ x0,y0,x1,y1=map(float,k.split(','));add(dict(x=x0,y=y0,w=x1-x0,h=y1-y0))
 
 def free(i):
  x,y,X,Y=rect(i)

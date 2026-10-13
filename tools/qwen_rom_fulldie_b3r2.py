@@ -375,6 +375,20 @@ def _tp8b_kv(v, m):
     Wk, Hk = mk['die']['w'], mk['die']['h']
     W, H = m['die']['w'], m['die']['h']
     kby = {i.name: i for i in mk['insts']}
+    # contract v3 rev 2026-10-13: slots touched by this revision take the outline of their closed / kit view on the
+    # 0.216 grid (the wrapper frames are 0.024 under it, so no closed view binds by name: bind sub-stream census)
+    vo = TP8['f2'].get('view_outline') or {}
+    for i in list(m['insts']) + list(mk['insts']):
+        if i.master in vo:
+            i.w, i.h = vo[i.master]
+    if TP8['f2'].get('ahub'):
+        # contract v3 rev 2026-10-13 (slot change 3): the KV hub slot takes the live kit outline (qkd_ahub_ref-q13,
+        # 1175.04 x 760.32; the 647.976 sq frame could not hold hub logic + 12 children + the reciprocal leaf).  The KV
+        # die is built on its own frames (its pin plan decides every centre block's faces); only the hub's master and
+        # instance are resized here -- face ports keep their offset along the face, N / E faces move with the outline
+        aw, ah = TP8['f2']['ahub']
+        KM['qkd_ahub'].w, KM['qkd_ahub'].h = aw, ah
+        kby['ahub'].w, kby['ahub'].h = aw, ah
     xs = [(i.x, i.x + i.w) for i in mk['insts'] if i.name not in KV_DROP + KV_CENTRE and not i.master.startswith('qkd_rly')]
     w_end = max(b for a, b in xs if a < Wk / 2)
     e_beg = min(a for a, b in xs if a >= Wk / 2)
@@ -466,7 +480,10 @@ def _tp8b_kv(v, m):
         i = kby[n]
         y = v.dn(y - i.h, v.GY)
         xc_ = x1 - 120.0 - 389.0 if TP8['f2'].get('kvc_east') else (x0 + x1) / 2   # it3: E-aligned centre stack
-        i.x, i.y = round(v.dn(xc_ - i.w / 2, v.GX), 4), round(y, 4)
+        # a block wider than the 777.6 column keeps the column's E edge (E corridor to the tile field untouched)
+        # and grows W into the spine | KV-centre relay channel
+        xl_ = min(xc_ - i.w / 2, x1 - 120.0 - i.w - 0.2) if TP8['f2'].get('kvc_east') else xc_ - i.w / 2
+        i.x, i.y = round(v.dn(xl_, v.GX), 4), round(y, 4)
         y -= gap
         new.append(i)
     gone = [i for i in m['insts'] if i.name in ROM_DROP]
@@ -494,6 +511,8 @@ def _tp8b_kv(v, m):
     m['regions'] += [dict(name='kv_w', kind='kv_half', rect=[0.0, dy, w_end, dy + Hk]),
                      dict(name='kv_e', kind='kv_half', rect=[e_beg + dxe, dy, W, dy + Hk]),
                      dict(name='kv_centre', kind='kv_centre', rect=[x0, y, x1, y + tot + gap])]
+    # reserved regions (no hard slot may enter; checked below and by tools/qwen_tp8/contract_v3_slots.py)
+    m['regions'] += [dict(name=r_['name'], kind='reserved', rect=list(r_['rect'])) for r_ in TP8['f2'].get('reserve', [])]
     m['tp8b_kv'] = dict(kv_die_um=[Wk, Hk], dy=dy, dxe=dxe, w_end=round(w_end, 3), e_beg=round(e_beg + dxe, 3),
                         kept_relays=len(keep_rly), insts=len(new), buses=len(nb), short=sorted(short), emb_ingress_b=1024)
     # qwen-tp8/die it3 (coordinator 10-12, single die type): EVERY die carries the KV host SerDes slot (serdes_host,
@@ -555,6 +574,8 @@ def _tp8b_kv(v, m):
         o = base_m(dict(model, insts=list(model['insts']) + gone), k, port_bits)
         for name, q in KM.items():
             o.setdefault(name, q)
+        for name, wh in (TP8['f2'].get('view_outline') or {}).items():
+            o[name].w, o[name].h = wh       # the closed view outline (0.216 grid), not the wrapper frame - 0.024
         sq, eg = o['qkd_seq'], o['qkd_embgw']
         ref = sq.ports.get('rf') or sq.ports.get('d2df')
         lay = ref[3] if ref and ref[0] == 'face' else 'M5'

@@ -19,6 +19,7 @@ from hier_contract_export import parse_lef  # noqa: E402
 import hier_contract_migrate as MG  # noqa: E402
 
 RELAY = re.compile(r'^q[fk]d_rly')
+DELAY_T = re.compile(r'^ot_qwen_tree_delay(\d+)_t$')
 HARD_IP = ('ot_hbm3e_phy', 'qfd_io_serdes', 'qfd_io_ucie', 'qkd_pll', 'qfd_clkrx', 'ot_qfd_serdes_112g_x12_phy')
 CLUSTER = ('qfd_tile_nk', 'qfd_tile_h3c', 'qfd_tile_h3s')
 CLUSTER_SLOT = (311.04, 1296.0)
@@ -39,8 +40,16 @@ SLOT_REQ = {
     # failed at util 0.90 in 648 x 648).  KV-centre sub-column fit (it25 plan): column x 17589.3-18366.9 is free W of
     # 17589 at that height and N of pll 15163 -> keep the E edge at 18366.9 (E corridor to tile col 18487 untouched),
     # grow W by 112.3 (x0 17477.0) and push seq/embgw/pll N by 112.3 (pll top 15275.5); re-run the KVc fine cuts.
-    'qkd_ahub': dict(outline_req=(889.92, 760.32, 'coordinator 15:30: qkd_ahub_ref 124.8k hub + 274.3k children; '
-                                                  'E edge fixed at 18366.9, W +112.3, seq/embgw/pll N +112.3')),
+    # contract v3 rev 2026-10-13: the LIVE kit is qkd_ahub_ref-q13-44e42d6e9 (main 44e42d6e9 / 3d01df897): floorplan
+    # 1175.04 x 760.32 (+1 east column for the hard reciprocal leaf; spec.json 'outline' still says 1170.72, the kit
+    # floorplan.json die is 1175.04).  Reserved = 1175.04 x 760.32 by the generator (tp8b f2 'ahub': E edge of the
+    # KV-centre column kept, W growth into the spine | KV-centre relay channel, centre stack re-centred).
+    'qkd_ahub': dict(outline_req=(1175.04, 760.32, 'q-kvd 10-13 02:40: qkd_ahub_ref-q13 (hard reciprocal leaf column); '
+                                                   'earlier request 889.92 x 760.32 (q8b, 10-12 13:08) superseded'),
+                     note='slot = live kit qkd_ahub_ref-q13-44e42d6e9 floorplan 1175.04 x 760.32 (requests: 743.04 x 604.8 '
+                          '-> 889.92 x 760.32 -> 1175.04 x 760.32; spec.json outline 1170.72 x 760.32 fits inside). Kit pin '
+                          'faces: S inputs, N outputs, W clk/rst_n -- the generated pin plan here is the KV-die plan '
+                          '(re-pin to the kit faces with the routed view)'),
     'qfd_io_collective': dict(outline_req=(1166.4, 950.4, 'qwen-tp8/coll 07:11: W up/dp y 43-475, ur/dr y 475-907; S in_* '
                                                          'x 43-302; N out_*/fault* x 43-302, clk/rst_n x 562-605')),
     # Owner 19:00 narrowed M5: crom_g/cbuf_g growth requests are withdrawn.
@@ -48,6 +57,16 @@ SLOT_REQ = {
     'qfd_tile_nk': dict(note='q-tile 10:03 face pins: W n_a 356-456 n_b 457-557 t_out 557-657 n_y 658-758 li 758-946; E ib '
                              '400-520 ib_go 520-524 xl 524-580 tile_id 580-600 fault 600-604 rst_n 640-644 clk 660-664 lo '
                              '758-946 (M4)'),
+}
+RESERVED_NOTES = {
+    'vm_envelope': 'RESERVED, VM leaves not yet contract slots. The vector memory (qfd_sp_vector_memory, one 2332.776 x '
+                   '2073.576 slot) becomes 4 x 2 regions of 1166.4 x 1080 um + a 187.92-um x-plane band: core envelope '
+                   '4708.8 x 2347.92 um at (13284.0, 17249.76) = 11.06 mm2 (bbox with the centre relief bays 4702.32 x '
+                   '2890.08 at (13288.32, 16977.6)); origin claude/qwen-tp8-vm-1013 results/arch/qwen_tp8_1012/'
+                   'vm_leaf_plan_claude.json (LEAF_PLAN_ONLY, measured against the it2 case; no slot request posted in '
+                   'el1013-qwen-vm.log as of 2026-10-13). No hard slot may enter; the relay objects inside are spine '
+                   'N-S chains that the VM plan regenerates with its leaves; the old qfd_sp_vector_memory / '
+                   'qfd_sp_su64_sfu slots stay until the VM leaves are contract slots',
 }
 TP8_DELTAS = [
     dict(id='T1', slots=['qfd_tile_nk', 'qfd_cst_n', 'qfd_cst_s'], status='decided v1',
@@ -88,6 +107,8 @@ def main():
     ap.add_argument('--recipe', default='tp8a')
     ap.add_argument('--tile-cap', default=None, help='v3: tile layer cap (M5): slot signals + PG <= cap, strap cap+1; '
                     'the die top owns cap+1 .. M9 (M6 / M7 over tiles, M8 / M9 die-only); hard IP keeps its layers')
+    ap.add_argument('--slot-rev', help='SLOT_REV.json of tools/qwen_tp8/contract_v3_slots.py (reserved regions, delay masters)')
+    ap.add_argument('--change', help='changelog text of this revision (appended to the derived entry)')
     ap.add_argument('--prev', default=None, help='the previous version of this contract (its changelog is kept)')
     a = ap.parse_args()
     C = json.load(open(a.v5))
@@ -162,6 +183,7 @@ def main():
                   notes='TP8 track-A ROM die (results/arch/qwen_tp8_1012/SPEC.md section 5): die top M8/M9 only; relays '
                         '(die_top_logic) are its only logic; paired 1:1 with the unchanged qwen_kv die on the S edge')]
     relays, kept, rederived, open_items = collections.Counter(), set(), {}, {}
+    rev = json.load(open(a.slot_rev)) if a.slot_rev else {}
     for inst in sorted(master, key=lambda n: (master[n], n)):
         cell = master[inst]
         if RELAY.search(cell):
@@ -190,6 +212,17 @@ def main():
             rederived[cell] = why
             if opn:
                 open_items[cell] = opn
+        if DELAY_T.match(cell):
+            # contract v3 rev 2026-10-13: right-sized tree delay tiles (512 b, LAT N; d W face, q E face, clk S face)
+            dm = rev.get('delay_masters', {}).get(cell, {})
+            ckp = M['pins']['clk']['shapes'][0]
+            s.update(kind='tile', clock_entry=dict(pin='clk', face='S', layer=ckp[0], offset=round((ckp[1] + ckp[3]) / 2, 3)),
+                     pin_layers=sorted({p_['shapes'][0][0] for n_, p_ in M['pins'].items()
+                                        if p_['shapes'] and p_['use'] not in ('POWER', 'GROUND')}),
+                     notes=f"tree delay tile LAT {DELAY_T.match(cell).group(1)} (ot_qwen_tree_delay*_t, 512 b): "
+                           f"{dm.get('status', '?')}; kit {dm.get('kit', '?')}; LEF {dm.get('lef', '?')}; placed by "
+                           'tools/qwen_tp8/frozen_tree_delay_pads.py (post-pass tools/qwen_tp8/contract_v3_slots.py)')
+            rederived[cell] = 'new cell (tree delay tile)'
         s = dict(name=inst, **{k: v for k, v in s.items() if k != 'parent'}, parent=die)
         s['origin'] = dict(x=x, y=y, orient=o if o in ('R0', 'MX', 'MY', 'R180') else 'R0')
         s['version'] = a.version
@@ -274,7 +307,8 @@ def main():
            'changelog': prevlog + [dict(version=a.version, when=a.when, change=f'TP8 ROM die from the {a.recipe} generator case (' +
                               a.source + '): qwen_rom v5 slot templates for unchanged cells, LEF re-derived for '
                               + ', '.join(sorted(rederived)) + '; v5 deltas D1-D6 inherited; TP8 deltas T1-T6' +
-                              (f'; new leaf default {a.tile_cap}; existing view layers preserved (owner 19:00 narrowed reroute policy)' if a.tile_cap else ''))],
+                              (f'; new leaf default {a.tile_cap}; existing view layers preserved (owner 19:00 narrowed reroute policy)' if a.tile_cap else '')) +
+                              (' | ' + a.change if a.change else ''))],
            'slots': slots, 'source': a.source, 'derived_from': dict(contract=a.v5, version=C['version']),
            'fixed': C.get('fixed'), 'deltas': deltas + TP8_DELTAS,
            'seam_check': C.get('seam_check'), 'die_closure': C.get('die_closure'),
@@ -284,6 +318,13 @@ def main():
                              slots_by_cell_mm2={k: round(v, 3) for k, v in sorted(area.items())},
                              rederived_cells=rederived),
            'open_items': {k: sorted(v) for k, v in sorted(open_items.items())}}
+    if rev.get('reserved'):
+        out['reserved_regions'] = [dict(name=r['name'], rect_um=r['rect'], mm2=r['mm2'], kind='reserved',
+                                        relay_objects_inside=r.get('relay_objects_inside'),
+                                        notes=RESERVED_NOTES.get(r['name'], 'reserved: no hard slot may enter'))
+                                   for r in rev['reserved']]
+        out['floorplan'].update(reserved_mm2=round(sum(r['mm2'] for r in rev['reserved']), 3),
+                                slot_plus_reserved_share=round((slot_mm2 + sum(r['mm2'] for r in rev['reserved'])) / die_mm2, 4))
     Path(a.out).write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps(dict(slots=len(slots), relays=sum(relays.values()), kept=len(kept), rederived=sorted(rederived),
                           slot_share=out['floorplan']['slot_share'], die_um=[dw, dh])))

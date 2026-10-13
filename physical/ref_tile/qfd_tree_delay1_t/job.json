@@ -1,14 +1,14 @@
 {
- "name": "qfd_tree_delay1_t-w13-7b028e3cb",
+ "name": "qfd_tree_delay1_t-w17-499ba7b21",
  "block": "ot_qwen_tree_delay1_t",
  "ref_tile": true,
  "owner": "Claude:qwen-tp8-die-1013",
- "purpose": "512-bit fixed 1-cycle tree pad tile, 12.96 x 64.8 (u52 at 10.8 wide failed DPL-0038 at CTS: 6.48-um core has no room after taps/clock cells); own master name",
+ "purpose": "512-bit fixed 1-cycle tree pad tile at the closed delay2_t outline 17.28 x 64.8 (u52 10.8 wide failed DPL-0038 at CTS; w13 12.96 wide routed TT +277.18 / FF +7.39 / DRC 0 but its exported view FAILED child_lint: PG stripes span 42% of the macro and 1024/1025 face pins under an M4 OBS band); own master name",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/qwen-tp8-die-1013",
-  "commit": "7b028e3cb",
+  "branch": "claude/qwen-tp8-delay1-1013",
+  "commit": "499ba7b21",
   "extra_paths": [
    "tools/qwen_die_seam"
   ]
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tree_delay1_t/qfd_tree_delay1_t-w13-7b028e3cb"
+   "to": "results/rtl/ref_tile/qfd_tree_delay1_t/qfd_tree_delay1_t-w17-499ba7b21"
   }
  ],
  "cycles_added": 1,
