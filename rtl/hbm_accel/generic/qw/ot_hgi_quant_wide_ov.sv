@@ -40,12 +40,22 @@ module ot_hgi_quant_wide_ov #(
     wire d_rst_n, c_gv, c_mw_v, c_busy, d_wf, d_bad, dec_rst_n, x_v, d_vo, d_f, d_df;
     wire [17:0] c_gh, x_hd; wire [5:0] c_mw_a; wire [14:0] c_mw_sec; wire [2:0] c_mw_n; wire [1023:0] x; wire [511:0] d_y;
     wire [127:0] beat_header = {x_hd[17:8], 46'd0, x_hd[7:0], 64'd0};   // the decode's only header fields (constants are wires)
-    ot_hgi_qw_ovc #(.NB(NB), .LQ(LQ), .MUT(MUT)) u_c (.clk(clk), .rst_n(rst_n), .go(go), .cmd(cmd),
+`ifdef OT_HARD_CHILDREN
+    ot_hgi_qw_ovc u_c (
+`else
+    ot_hgi_qw_ovc #(.NB(NB), .LQ(LQ), .MUT(MUT)) u_c (
+`endif
+        .clk(clk), .rst_n(rst_n), .go(go), .cmd(cmd),
         .idle(idle), .drained(drained), .done(done), .fault(fault), .l_rst_n(l_rst_n), .l_hit_r(l_hit_r),
         .l_hit_p(l_hit_p), .l_rs(l_rs), .l_sl(l_sl), .l_push(l_push), .l_rcr(l_rcr), .l_done(l_done),
         .d_rst_n(d_rst_n), .c_gv(c_gv), .c_gh(c_gh), .c_mw_v(c_mw_v), .c_mw_a(c_mw_a), .c_mw_sec(c_mw_sec),
         .c_mw_n(c_mw_n), .c_busy(c_busy), .d_wf(d_wf), .d_bad(d_bad), .rg_req(rg_req), .rg_gnt(rg_gnt));
-    ot_hgi_qw_ovd #(.LQ(LQ)) u_d (.clk(clk), .rst_n(d_rst_n), .l_gp(l_gp), .l_wcr(l_wcr), .l_wv(l_wv), .l_wsec(l_wsec),
+`ifdef OT_HARD_CHILDREN
+    ot_hgi_qw_ovd u_d (
+`else
+    ot_hgi_qw_ovd #(.LQ(LQ)) u_d (
+`endif
+        .clk(clk), .rst_n(d_rst_n), .l_gp(l_gp), .l_wcr(l_wcr), .l_wv(l_wv), .l_wsec(l_wsec),
         .l_ws(l_ws), .l_wy(l_wy), .c_gv(c_gv), .c_gh(c_gh), .c_mw_v(c_mw_v), .c_mw_a(c_mw_a), .c_mw_sec(c_mw_sec),
         .c_mw_n(c_mw_n), .c_busy(c_busy), .d_wf(d_wf), .d_bad(d_bad), .dec_rst_n(dec_rst_n), .x_v(x_v), .x_hd(x_hd),
         .x(x), .d_vo(d_vo), .d_f(d_f), .d_df(d_df), .d_y(d_y), .wg_req(wg_req), .wg_gnt(wg_gnt));
