@@ -1,0 +1,103 @@
+{
+ "name": "dsfd_vm_fxs_m5",
+ "top": "dsfd_vm_fxs",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv",
+  "rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv"
+ ],
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "rtl/dsrom_sys/s81_ph/vm"
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rni"
+ ],
+ "outline": {
+  "w": 241.92,
+  "h": 23.76
+ },
+ "pins": {
+  "N": [
+   "w_v",
+   "w_row",
+   "w_m",
+   "w_d",
+   "w_flt",
+   "sok_o",
+   "rn_o"
+  ],
+  "S": [
+   "s_o",
+   "k_o",
+   "clf_o"
+  ],
+  "W": [
+   "ck",
+   "rni"
+  ]
+ },
+ "pin_ranges": {
+  "w_d": [
+   20.0,
+   226.0
+  ],
+  "s_o": [
+   2.4,
+   225.6
+  ],
+  "k_o": [
+   226.0,
+   236.4
+  ],
+  "clf_o": [
+   236.6,
+   239.4
+  ]
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:el1013-s81-vmfe/B5",
+  "branch": "claude/el1013-s81-vmfe",
+  "tag": "p1",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/mtp",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/lib",
+   "rtl/common",
+   "tools/s81_vm",
+   "tools/s81_ph",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/s81_ph_views/vm_master",
+   "results/arch"
+  ],
+  "benched_by": "s81_vm_fe_h_lockstep",
+  "purpose": "el1013-s81-vmfe/B5 dsfd_vm_fe_h leaf dsfd_vm_fxs at M5 (order tile of 4 capture lanes: clt words in on N, 4 kept slice copies + counter copy out on S); RTL FROZEN 693940a56 (lockstep 9/9 bit-exact, 4 hierarchy mutants fail, pin-register check PASS); 4686 mapped flops, std 1571.46 um2 measured, outline 241.92 x 23.76.  ck signed off at 833.3 ps (VM serial clock is 1,111.1 ps: stricter). PIN FACES by data flow, bit-ordered ranges; the exact abutment plan waits for a passing parent floorplan (results/arch/s81_vm_fe_h_plan_1013.json: FAIL at 1,520.064 x 691.20, 8 of 10 lanes), so this route is first closure evidence of the leaf and is re-routed if its faces move."
+ },
+ "recipe": 1,
+ "inhold": true,
+ "inhold_drv": "BUFx4f_ASAP7_75t_R"
+}
