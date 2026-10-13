@@ -34,9 +34,11 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `pg_layer` | leaf: derived from `layer_cap` (legacy kits only: M6 or M7); cluster: M7 |
 | `inhold` | true: one dont_touch hold buffer per data input -> capture flop before global placement (leaf_inhold.tcl; hold-only input-capture misses on a sound tile) |
 | `outhold` | true: flop-driven outputs get lead BUF -> HB4 -> BUF FIRM at the pin before global placement (leaf_iohold.tcl, runs leaf_inhold.tcl too when `inhold`; hold-only reg->output misses at the routed IO ref) |
+| `io_flop_at_pins` | `{"cols": N}`: every port's single launch/capture flop FIRM at its own pin before global placement, N staggered rows per face (qwen_die_masters/io_flop_at_pins.tcl, released to DPL by out_flop_release.tcl); for RTL that already registers every port at the face but whose face registers GPL pulls into the core (qkd_d2d_ref reg->out -740 ps). Not combinable with outhold/inhold |
 | `sdc_extra` | repo SDC files inlined at the end of clock.sdc and signoff.sdc (a second clock domain, e.g. a CDC adapter's controller clock; s81 hc cseq) |
 | `inter`, `refglob`, `io_budget {in,out}` | die-context IO (io_ref_skew.sdc), 0.2 / 0.2 T default |
 | `forwarded_clock` | cluster with a forwarded-clock subtree (keeps the forwarding inverter, own root) |
+| `spine_through_icg` | cluster whose clock port enters ONE tile clock gate (ICG) that clocks the rest (SM tile `ot_cg_tile`): the spine is built on the ICG output net (`OT_SPINE_THROUGH_ICG=1`, log `OT_SPINE through ICG`) |
 | `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v, pin_balance}` | route knobs (770 ps over-constraint); `pin_balance: true` places pins uniformly over each face region alternating the pin_h / pin_v layers per 32-pin chunk (OT_PIN_BALANCE_H/V) for dense faces |
 | `job {owner, branch, tag, purpose, benches, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields |
 

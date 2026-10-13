@@ -229,7 +229,7 @@ set_voltage_domain -name {{CORE}} -power {{VDD}} -ground {{VSS}}
 define_pdn_grid -name {{top}} -voltage_domains {{CORE}} -pins {{{pg}}}
 add_pdn_stripe -grid {{top}} -layer {{M1}} -width {{0.018}} -pitch {{0.54}} -offset {{0}} -followpins
 add_pdn_stripe -grid {{top}} -layer {{M2}} -width {{0.018}} -pitch {{0.54}} -offset {{0}} -followpins
-add_pdn_stripe -grid {{top}} -layer {{M5}} -width {{0.12}} -spacing {{0.072}} -pitch {{5.4}} -offset {{0.300}}
+add_pdn_stripe -grid {{top}} -layer {{M5}} -width {{0.12}} -spacing {{0.072}} -pitch {{{m5_pitch}}} -offset {{0.300}}
 """
 # Macro grids exist ONLY for masters present in the block (PDN-0217 'No grid found with name' otherwise: a macro grid
 # with no matching instance is never created and its add_pdn_connect aborts).
@@ -272,7 +272,12 @@ def gen_pdn(s: dict, lc: dict) -> str:
                 "add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}\n"
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
                 "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n")
-    t = PDN_HEAD.format(name=s["name"], kind=s["kind"], pg=pg, note=note) + body + PDN_GUARD
+    # route.m5_pg_pitch (5.4 default, or 2.7: every other stripe still on the 5.4 lattice): a narrow M5-cap tile (< ~3
+    # pitches wide) gets only 2 stripes per net at 5.4, so its M5 PG pins span < 50% of the width and the export
+    # child_lint (b) fails (qfd_embed_ingress_code/scale_m5 at 15.12 um: 36%, 2026-10-12)
+    m5p = float(s.get("route", {}).get("m5_pg_pitch", 5.4))
+    assert m5p in (2.7, 5.4), "route.m5_pg_pitch must be 2.7 or 5.4"
+    t = PDN_HEAD.format(name=s["name"], kind=s["kind"], pg=pg, note=note, m5_pitch=f"{m5p:g}") + body + PDN_GUARD
     by_layer: dict = {}
     for cell, top in lc["children"].items():
         by_layer.setdefault(top, []).append(cell)
@@ -478,7 +483,9 @@ def gen_place(s: dict, blocks: list) -> str:
              "  foreach i [dict get $by $master] {",
              "    set n [ot_ref_strip [$i getName]]",
              "    if {[lsearch -exact $used $n] >= 0} continue",
-             "    if {$pat ne \"\" && ![string match [ot_ref_strip $pat] $n]} continue",
+             "    set sp [ot_ref_strip $pat]",
+             "    # exact name first: a generate name g_q[0].u_rq is a glob char class to string match (never matches)",
+             "    if {$pat ne \"\" && $sp ne $n && ![string match $sp $n]} continue",
              "    lappend used $n; return $i", "  }",
              "  error \"ref_tile place: no unplaced instance of $master matching '$pat'\"", "}",
              "set ot_ref_n 0"]
@@ -574,7 +581,7 @@ HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 def gen_hooks(s: dict, kd: str) -> dict:
     fwd = bool(s.get("forwarded_clock"))
-    spine = s["kind"] == "cluster" and s.get("clock", "spine") == "spine"
+    spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
                + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
                + ("; cluster: balanced clock spine with child-insertion leaf targets (sourced FIRST, so the io_ref wrapper"
@@ -585,15 +592,23 @@ def gen_hooks(s: dict, kd: str) -> dict:
         ins = child_insertions(s)
         files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())))
     pre_cts.append(f"source /src/{QDM}/pre_cts_skew.tcl")
+    # spec "boundary_tcl": repo Tcl files that re-apply a second-domain boundary after every io_ref switch (post-CTS
+    # wrapper, pre-GRT, post-DRT), so the route times those ports against their own propagated clock, not only sign-off
+    btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])]
+    pre_cts += btcl
     if fwd:
         pre_cts.append("source /src/physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
                "# column; created here, removed by post_drt.tcl, so the abstract carries only real metal: DRT-0073 at the parent)",
                f"source /src/{QDM}/pre_ref_skew.tcl",
-               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
+               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+               # el1011-ds-mtp-cbw 2026-10-12: with MAX_ROUTING_LAYER as GRT's top layer FastRoute zeroes that layer over
+               # every hard macro (M5 cap + SRAM OBS M1-M4 = full wall; hrow5_cbw-r5b / hgi_seq v2.4 GRT-0116); GRT to
+               # MAX+1 at zero capacity restores it, detailed route still stops at MAX (no-op without macros)
+               "source /src/physical/common_flow/grt_macro_top_layer.tcl"] + btcl
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
-                f"source /src/{QDM}/post_plain.tcl"]
+                f"source /src/{QDM}/post_plain.tcl"] + btcl
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
             "post_drt.tcl": "\n".join(post_drt) + "\n", **files}
 
@@ -623,6 +638,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
                 lo, hi = rng[n]
                 regs.append(pin_regex([n]) + "=" + FACES[f] + f":{float(lo):g}-{float(hi):g}")
     pins = " ".join(f"--pin-region {shq(r)}" for r in regs)
+    if s.get("io_tcl"):
+        # el1011-hbm-smh 2026-10-12: run_abi3_physical writes its own IO_CONSTRAINTS (/work/io_constraints.tcl) for any
+        # --pin-region, AFTER the --orfs-var one, so the region groups of OT_PIN_GROUP_MAX replaced io_tcl at 3_2: with the
+        # M5 cap (one horizontal pin layer) smh_pt_w_ref_p45h's 3,705 W pins at 2 tracks left max 22 contiguous slots and
+        # place_pins aborted (PPL-0093, group of 25).  io_tcl alone places every port; the spec "pins" faces still drive
+        # the gate's checks.
+        pins = ""
     views = sorted({b["view"] for b in blocks})
     extra = ["--orfs-var ADDER_MAP_FILE=", f"--orfs-var PDN_TCL=/src/{kd}/pdn.tcl",
              f"--orfs-var OT_PK_FRAC={s.get('pin_access', {}).get('frac', 0.5)}",
@@ -634,13 +656,17 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra += [f"--macro-view {view_name(v)}={v}" for v in views]
         h = float(s["route"].get("macro_halo_um", HALO_UM))
         extra.append(f"--macro-place-halo {h} {h}")
-    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+    if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
         # child's internal insertion, so the flops next to it ran one insertion EARLY: qkd_d2d_ref (sbuf 505 ps) left 499
         # sbuf read-data flops r_d at TT 1,050 vs 1,560 ps -> R2O FF hold -318 ps that hold repair cannot move.
         if views and s.get("spine_macro_leaf", True):
             extra.append("--orfs-var OT_SPINE_MACRO_LEAF=1")
+        # spec "spine_through_icg": the cluster clock enters ONE tile clock gate (ICG) that clocks the rest (SM tile
+        # ot_cg_tile): the spine is built on the ICG output net (clock_spine.tcl OT_SPINE_THROUGH_ICG)
+        if s.get("spine_through_icg"):
+            extra.append("--orfs-var OT_SPINE_THROUGH_ICG=1")
     # spec "defines": RTL defines the top's synthesis needs (e.g. the hardened-child body selected by `ifdef); written after
     # run_abi3's own "VERILOG_DEFINES = -DSYNTHESIS", so it keeps -DSYNTHESIS explicitly (the lint bench uses the same set).
     if s.get("defines"):
@@ -662,6 +688,11 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # placed pins at floorplan: W 3705 / E 3705).  The kit's post_tapcell.tcl places the exact pins first.
             vv = f"/src/{kd}/post_tapcell.tcl"
         extra.append(f"--orfs-var {k}={vv}")
+    # spec "post_synth_tcl": a repo POST_SYNTH hook, e.g. physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl
+    # for a top with inout terminals (ORFS never buffers an inout: the post-GRT repair stops with RSZ-0074 "found route to
+    # 2 pins, expected 1" and CTS misbehaves; the closed die-view routes ran it by default through route_view.sh POSTSYN)
+    if s.get("post_synth_tcl"):
+        extra.append(f"--step-tcl POST_SYNTH={s['post_synth_tcl']}")
     if s["route"].get("hold_delay"):
         # deterministic hold fix by construction (owner 10-10): the RTL's *u_hdly_* HB delay cells are dont_touch'ed at
         # PRE_FLOORPLAN so remove_buffers / repair passes keep them (tputx-cpf hgi_seq v2.3)
@@ -673,6 +704,23 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         extra.append("--orfs-var PLACE_DENSITY_LB_ADDON=")
     else:
         extra.append(f"--orfs-var PLACE_DENSITY_LB_ADDON={float(s['route']['lb_addon'])}")
+    if s.get("io_flop_at_pins"):
+        # spec "io_flop_at_pins" {"cols": N} (el1011-q-kvd 2026-10-12): every port's single launch / capture flop FIRM at its
+        # own pin (qwen_die_masters/io_flop_at_pins.tcl, N staggered rows per face), released to DPL before detailed placement.
+        # qkd_d2d_ref-q8-2f8712b99-hs: all 2,674 output face registers (r_d / tx_flit, already relayed from the buffers in RTL)
+        # were pulled 200-345 um into the core by timing-driven GPL -> reg->out TT -740 at 770 against the 0.2 T link budget.
+        if s.get("outhold") or s.get("inhold"):
+            raise SpecError("spec: io_flop_at_pins and outhold/inhold both use PRE_GLOBAL_PLACE")
+        extra.append("--step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl")
+        extra.append("--step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl")
+        extra.append(f"--orfs-var OT_OFLOP_COLS={int(s['io_flop_at_pins'].get('cols', 4))}")
+        # "macro_pins": ["pop", ...] -> OT_MPFLOP_PINS: the flop driving each such hard-child input pin is anchored at the pin too
+        # (el1011-q-kvd 2026-10-12: sbuf pop is a ~660 ps internal cone; ot_qkvd_d2d PQ drives it from a dedicated flop)
+        mp = s["io_flop_at_pins"].get("macro_pins") or []
+        if mp:
+            if not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", x) for x in mp):
+                raise SpecError("spec: io_flop_at_pins.macro_pins must be plain pin names")
+            extra.append(f"--orfs-var OT_MPFLOP_PINS={','.join(mp)}")
     if s.get("outhold"):
         # spec 'outhold' (hc-cpin 2026-10-12): flop-driven outputs get lead BUF -> HB4 -> BUF FIRM at the pin (R2O hold-only
         # miss at the routed IO ref); with 'inhold' the same hook first runs leaf_inhold.tcl (one PRE_GLOBAL_PLACE hook)
@@ -697,10 +745,21 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     return "\n".join([
         f"# generated by tools/ref_tile/ref_tile.py from {kd}/spec.json -- do not edit; re-run gen",
         f"TOP={s['top']}", f"SRCS={shq(srcs)}", f"PARAMS=({params})", f"FW={W}", f"FH={H}", f"PINS=({pins})",
-        f"PINEX={0 if s['pins'].get('ANY') else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
+        f"PINEX={0 if (s['pins'].get('ANY') or s.get('io_tcl')) else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc), ""])
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
+        *cts_sink_env(r), ""])
+
+
+def cts_sink_env(r: dict) -> list:
+    """optional route.cts_sink {size, diameter_um}: explicit TritonCTS register-sink clustering (CTSA -> ref_route.sh
+    CTS_ARGS).  ORFS CTS_CLUSTER_* are ignored once CTS_ARGS is set, and the automatic choice on small macro tiles
+    (qfd_vm_bank_t: 32 sinks / 82 um, 2 buffers per path) leaves long leaf nets: TT insertion 243-403 ps."""
+    cs = r.get("cts_sink")
+    if not cs:
+        return []
+    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size ' + str(int(cs['size'])) + ' -sink_clustering_max_diameter ' + str(int(cs['diameter_um'])))}"]
 
 
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:
@@ -716,25 +775,29 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
-           "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"]
+           "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
         out.append(s["io_tcl"])
     out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and os.path.isfile(str(v)))
+    if s.get("io_flop_at_pins"):
+        out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]
     if s.get("outhold"):
         out += ["physical/dsrom_window_source/leaf_iohold.tcl", "physical/dsrom_window_source/leaf_inhold_release.tcl"]
     if s.get("inhold"):
         out.append("physical/dsrom_window_source/leaf_inhold.tcl")
         if s.get("inhold_drv", "BUFx4f_ASAP7_75t_R"):
             out.append("physical/dsrom_window_source/leaf_inhold_release.tcl")
+    if s.get("post_synth_tcl"):
+        out.append(s["post_synth_tcl"])
     if s["route"].get("hold_delay"):
         out.append(HDLY_TCL)
-    if s["kind"] == "cluster" and s.get("clock", "spine") == "spine":
+    if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
@@ -889,6 +952,10 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--output", str(o / "insertion.json")])
     lef = o / f"{top}.lef"
+    if lef.exists():
+        # PIN-STUB (73e17f447): write_abstract_lef writes a face pin's own same-layer route stub as OBS over the pin
+        # (ot_qkvd_sbuf DRT-0073); move it into the pin's PORT before the lint (child_lint (f) refuses it)
+        subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])
     res = child_lint.lint(str(lef), str(o)) if lef.exists() else {"verdict": "FAIL", "fails": ["no LEF exported"]}
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "

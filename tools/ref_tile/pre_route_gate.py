@@ -75,6 +75,35 @@ class Gate:
 
 
 # --------------------------------------------------------------------------------------------- pins
+def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
+    """Yosys chip area includes each hard instance's Liberty area.
+
+    A hardened child's Liberty area is its occupied logical area; its LEF
+    rectangle includes whitespace. Subtract the Liberty areas before adding
+    the physical envelopes to utilization, otherwise children count twice.
+    Preserve the conservative old behavior when a library area is unavailable.
+    """
+    logical = 0.0
+    for b in blocks:
+        view = b.get("view")
+        if not view:
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        directory = root / view
+        lib = directory / (directory.name + "_tt.lib")
+        if not lib.exists():
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        match = re.search(r"\barea\s*:\s*([\d.eE+-]+)", lib.read_text())
+        if not match:
+            envelope = sum(x["w"] * x["h"] for x in blocks)
+            return chip_area - envelope if chip_area > envelope else chip_area
+        logical += float(match.group(1))
+    if logical > chip_area + 0.01:
+        raise ValueError(f"synthesis chip area {chip_area} is smaller than summed macro Liberty area {logical}")
+    return max(0.0, chip_area - logical)
+
+
 def rtl_ports(sources, top, root=None):
     root = root or ROOT
     texts = []
@@ -82,6 +111,9 @@ def rtl_ports(sources, top, root=None):
         p = root / f
         if p.exists():
             texts.append(p.read_text(errors="replace"))
+    # a module named through a macro (`define X top ... module `X: dsfd_coll_cb / cbf) is not seen by the text parser
+    texts = [re.sub(r"\bmodule\s+`(\w+)", lambda m: f"module {top}" if re.search(
+        rf"`define\s+{m.group(1)}\s+{re.escape(top)}\b", tx) else m.group(0), tx) for tx in texts]
     mods = TL.rtl_modules(texts)
     if top not in mods:
         return None
@@ -400,8 +432,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         W, H = fp["die"][2], fp["die"][3]
         core = (W - 2 * RT.CORE_MARGIN) * (H - 2 * RT.CORE_MARGIN)
         mac = sum(b["w"] * b["h"] for b in fp["blocks"])
-        if area > mac:          # yosys' chip area counts the black-box macros' liberty area
-            area -= mac
+        area = synthesis_std_area(area, fp["blocks"])
         u = (area + mac) / core
         # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
         sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
