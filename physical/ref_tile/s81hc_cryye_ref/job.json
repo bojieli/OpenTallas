@@ -1,5 +1,5 @@
 {
- "name": "s81hc_cryye_ref-v6-myrd-strip12-COMMIT",
+ "name": "s81hc_cryye_ref-v6-myrd-strip12-878a52bf0",
  "block": "ot_s81_hc_crooty_y",
  "ref_tile": true,
  "owner": "Claude:s81hc-1013",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81hc-1013",
-  "commit": "COMMIT"
+  "commit": "878a52bf0"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_cryye_ref/s81hc_cryye_ref-v6-myrd-strip12-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_cryye_ref/s81hc_cryye_ref-v6-myrd-strip12-878a52bf0"
   }
  ],
  "cycles_added": 0,
