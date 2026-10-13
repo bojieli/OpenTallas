@@ -16,6 +16,10 @@ MACRO dsfd_mtp_hrow_bank
       LAYER M5 ;
         RECT  323.52 202.848 323.544 203.04 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  323.52 202.549 323.544 202.896 ;
+    END
   END ck[0]
   PIN f_r[0]
     DIRECTION INPUT ;
@@ -8391,6 +8395,10 @@ MACRO dsfd_mtp_hrow_bank
     PORT
       LAYER M5 ;
         RECT  325.824 202.848 325.848 203.04 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  325.824 200.819 325.848 202.896 ;
     END
   END rst[0]
   PIN t_d[0]
@@ -43149,8 +43157,6 @@ MACRO dsfd_mtp_hrow_bank
      RECT  158.352 201.973 258.264 202.667 ;
      RECT  158.352 202.667 257.64 202.896 ;
      RECT  286.032 201.733 287.016 202.896 ;
-     RECT  323.52 202.549 323.544 202.896 ;
-     RECT  325.824 200.819 325.848 202.896 ;
     LAYER M6 ;
      RECT  0 114.396 11.509 115.26 ;
      RECT  0 184.596 11.509 185.46 ;

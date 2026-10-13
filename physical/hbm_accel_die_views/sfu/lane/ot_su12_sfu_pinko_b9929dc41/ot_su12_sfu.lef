@@ -1480,6 +1480,10 @@ MACRO ot_su12_sfu
       LAYER M4 ;
         RECT  0 135.024 0.084 135.048 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 135.024 0.06 135.048 ;
+    END
   END cs_imm2[0]
   PIN cs_imm2[10]
     DIRECTION INPUT ;
@@ -2712,6 +2716,10 @@ MACRO ot_su12_sfu
       LAYER M4 ;
         RECT  0 327.648 0.084 327.672 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 327.648 0.248 327.672 ;
+    END
   END kv_wdata[11]
   PIN kv_wdata[12]
     DIRECTION OUTPUT ;
@@ -2783,6 +2791,10 @@ MACRO ot_su12_sfu
     PORT
       LAYER M4 ;
         RECT  0 29.28 0.084 29.304 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 29.28 0.248 29.304 ;
     END
   END kv_wdata[1]
   PIN kv_wdata[20]
@@ -2927,6 +2939,10 @@ MACRO ot_su12_sfu
     PORT
       LAYER M4 ;
         RECT  0 326.592 0.084 326.616 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 326.592 0.248 326.616 ;
     END
   END kv_wdata[7]
   PIN kv_wdata[8]
@@ -15560,6 +15576,10 @@ MACRO ot_su12_sfu
       LAYER M4 ;
         RECT  0 282.528 0.084 282.552 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 282.528 0.248 282.552 ;
+    END
   END rst_n
   PIN side_v
     DIRECTION OUTPUT ;
@@ -15576,6 +15596,10 @@ MACRO ot_su12_sfu
       LAYER M4 ;
         RECT  0 12.144 0.084 12.168 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 12.144 0.248 12.168 ;
+    END
   END side_x[0]
   PIN side_x[10]
     DIRECTION OUTPUT ;
@@ -15591,6 +15615,10 @@ MACRO ot_su12_sfu
     PORT
       LAYER M4 ;
         RECT  0 10.368 0.084 10.392 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 10.368 0.248 10.392 ;
     END
   END side_x[11]
   PIN side_x[12]
@@ -27285,7 +27313,6 @@ MACRO ot_su12_sfu
      RECT  37.044 329.909 37.062 330.071 ;
      RECT  41.688 329.909 41.706 330.071 ;
     LAYER M4 ;
-     RECT  0.025 135.024 0.06 135.048 ;
      RECT  0.06 30.336 0.133 31.08 ;
      RECT  0.06 45.072 0.133 50.568 ;
      RECT  0.133 44.928 0.205 50.568 ;
@@ -27296,11 +27323,8 @@ MACRO ot_su12_sfu
      RECT  0.06 0.816 0.248 1.176 ;
      RECT  0.06 3.216 0.248 3.336 ;
      RECT  0.06 6.24 0.248 7.032 ;
-     RECT  0.06 10.368 0.248 10.392 ;
-     RECT  0.06 12.144 0.248 12.168 ;
      RECT  0.06 15.6 0.248 16.296 ;
      RECT  0.06 19.536 0.248 27.96 ;
-     RECT  0.06 29.28 0.248 29.304 ;
      RECT  0.133 30.336 0.248 31.416 ;
      RECT  0.06 33.312 0.248 43.656 ;
      RECT  0.205 44.928 0.248 127.896 ;
@@ -27321,10 +27345,7 @@ MACRO ot_su12_sfu
      RECT  0.205 266.304 0.248 266.328 ;
      RECT  0.241 267.648 0.248 267.672 ;
      RECT  0.205 275.472 0.248 275.496 ;
-     RECT  0.06 282.528 0.248 282.552 ;
      RECT  0.06 290.832 0.248 291.336 ;
-     RECT  0.06 326.592 0.248 326.616 ;
-     RECT  0.06 327.648 0.248 327.672 ;
      RECT  0.06 329.328 0.248 329.496 ;
      RECT  0.248 0.528 0.352 329.952 ;
      RECT  0.352 0.798 0.544 329.682 ;

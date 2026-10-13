@@ -57,7 +57,7 @@ TB = "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_master.sv"
 # the hierarchical slab (s81-suhc-hier-1011): control tile + engine tiles on registered chains, same pins
 HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_norm_lg.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_tile.sv",
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv", "rtl/hdc/ot_sram_dline.sv",
-        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv", "rtl/hdc/ot_sram_bank.sv",
+        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv", "rtl/hdc/ot_sram_bank.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
         "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits

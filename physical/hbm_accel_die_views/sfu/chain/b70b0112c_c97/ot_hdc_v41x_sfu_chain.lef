@@ -16,6 +16,10 @@ MACRO ot_hdc_v41x_sfu_chain
       LAYER M4 ;
         RECT  0 268.752 0.084 268.776 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 268.752 0.851 268.776 ;
+    END
   END clk
   PIN f_den
     DIRECTION OUTPUT ;
@@ -39,6 +43,10 @@ MACRO ot_hdc_v41x_sfu_chain
     PORT
       LAYER M4 ;
         RECT  0 139.104 0.084 139.128 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 139.104 1.969 139.128 ;
     END
   END f_e
   PIN is_exp
@@ -319,6 +327,10 @@ MACRO ot_hdc_v41x_sfu_chain
     PORT
       LAYER M4 ;
         RECT  0 266.592 0.084 266.616 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 266.4 0.137 266.616 ;
     END
   END rst_n
   PIN silu
@@ -807,6 +819,10 @@ MACRO ot_hdc_v41x_sfu_chain
     PORT
       LAYER M4 ;
         RECT  0 32.064 0.084 32.088 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.06 32.064 0.205 32.088 ;
     END
   END y_exp[4]
   PIN y_exp[5]
@@ -9085,10 +9101,8 @@ MACRO ot_hdc_v41x_sfu_chain
      RECT  0.025 266.4 0.06 266.424 ;
      RECT  0.06 46.944 0.137 50.088 ;
      RECT  0.06 55.392 0.137 55.896 ;
-     RECT  0.06 266.4 0.137 266.616 ;
      RECT  0.06 87.072 0.169 92.28 ;
      RECT  0.06 29.472 0.205 29.544 ;
-     RECT  0.06 32.064 0.205 32.088 ;
      RECT  0.06 64.608 0.205 66.696 ;
      RECT  0.06 68.016 0.205 71.064 ;
      RECT  0.06 76.464 0.205 78.12 ;
@@ -9161,7 +9175,6 @@ MACRO ot_hdc_v41x_sfu_chain
      RECT  0.709 70.416 0.821 72.456 ;
      RECT  0.371 76.464 0.821 77.832 ;
      RECT  0.757 115.152 0.821 115.176 ;
-     RECT  0.06 268.752 0.851 268.776 ;
      RECT  0.529 25.008 0.853 25.032 ;
      RECT  0.707 26.4 0.853 30.312 ;
      RECT  0.613 205.728 0.853 205.752 ;
@@ -9355,7 +9368,6 @@ MACRO ot_hdc_v41x_sfu_chain
      RECT  1.897 124.368 1.957 124.392 ;
      RECT  1.933 177.264 1.957 190.44 ;
      RECT  1.825 61.536 1.969 61.56 ;
-     RECT  0.06 139.104 1.969 139.128 ;
      RECT  1.969 61.488 2.005 61.56 ;
      RECT  1.753 62.688 2.005 62.712 ;
      RECT  1.825 151.008 2.005 152.904 ;

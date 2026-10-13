@@ -7,13 +7,13 @@
   0,
   0,
   142.56,
-  108.0
+  118.8
  ],
  "core": [
   2.16,
   2.16,
   140.4,
-  105.84
+  116.64
  ],
  "why": "spec outline",
  "std_area_um2": 8492,
@@ -98,6 +98,7 @@
   "physical/qwen_die_masters/pre_cts_skew.tcl",
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
-  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl"
  ]
 }

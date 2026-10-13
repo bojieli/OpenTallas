@@ -1,0 +1,90 @@
+{
+ "name": "qdq_q_ref",
+ "top": "ot_hgi_qdq_q",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/link/ot_fifo_sram_fwft.sv",
+  "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "DEC3": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 45000,
+ "util": 0.52,
+ "pg_layer": "M7",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_od.g_tile[0].g_m0.u_m"
+  }
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
+   "count": 1,
+   "inst": "g_d3.u_dec.u_dxl"
+  },
+  {
+   "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
+   "count": 1,
+   "inst": "g_d3.u_dec.u_dbq"
+  },
+  {
+   "view": "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq",
+   "count": 1,
+   "inst": "g_d3.u_dec.u_daq"
+  }
+ ],
+ "pins": {
+  "W": [
+   "wrq",
+   "wrq_cr",
+   "wrr",
+   "rg_req",
+   "rg_gnt"
+  ],
+  "N": [
+   "wwq",
+   "wwq_cr",
+   "wwq_done",
+   "wg_req",
+   "wg_gnt"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "rec",
+   "ret"
+  ]
+ },
+ "refglob": "*f_rec*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-hbm-sfu",
+  "branch": "claude/el1011-qdqtput",
+  "tag": "q1",
+  "views_to": "physical/ref_tile/qdq_q_ref/views",
+  "record_to": "results/rtl/ref_tile/qdq_q_ref",
+  "purpose": "ot_hgi_qdq_q B2 quarter cluster via ref_tile: track-B decoder (dxl/dbq/daq hard tiles, CLOSED views) + result FIFO on one 64x512 SRAM macro (2-entry registered prefetch; was a 64x512 flop array read 64:1), W face = slice read lanes, N face = slice write lanes, S = dispatch rec/ret, clock spine",
+  "no_bench_reason": "bench = tools/hgi_unit_tput/run_qdq_q.sh (needs the B2 slice + qdqvec vectors) S=3 PASS 169/168 = 1.006x, S=1 161/168, m1/m2 FAIL at the source commit; record results/rtl/tput_map_1011/ds_qdq_b2"
+ },
+ "defines": [
+  "OT_HARD_CHILDREN"
+ ],
+ "hard_define": "OT_HARD_CHILDREN",
+ "inter": []
+}

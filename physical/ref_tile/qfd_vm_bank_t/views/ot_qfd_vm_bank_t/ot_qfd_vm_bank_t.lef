@@ -16,6 +16,10 @@ MACRO ot_qfd_vm_bank_t
       LAYER M5 ;
         RECT  104.016 0 104.04 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  104.016 0.016 104.04 2.137 ;
+    END
   END clk
   PIN q[0]
     DIRECTION OUTPUT ;
@@ -4191,6 +4195,10 @@ MACRO ot_qfd_vm_bank_t
     PORT
       LAYER M5 ;
         RECT  60.048 0 60.072 0.084 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  60.048 0.016 60.072 0.131 ;
     END
   END rst_n
   PIN wd[0]
@@ -18308,8 +18316,6 @@ MACRO ot_qfd_vm_bank_t
      RECT  218.051 102.864 218.124 121.992 ;
      RECT  218.045 125.136 218.124 131.208 ;
     LAYER M5 ;
-     RECT  60.048 0.016 60.072 0.131 ;
-     RECT  104.016 0.016 104.04 2.137 ;
      RECT  2.4 2.137 2.52 2.151 ;
      RECT  7.8 2.137 7.92 2.151 ;
      RECT  13.2 2.137 13.32 2.151 ;
