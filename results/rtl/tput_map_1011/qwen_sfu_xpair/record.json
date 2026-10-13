@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.tput-pair-evidence.v1",
+  "class": "SFU.GLU",
+  "model": "Qwen AR 8K (HBM)",
+  "kind": "pair evidence, NOT a qualification record",
+  "elements": ["ot_hgi_sfu_record", "hfd_sfu_tile", "hfd_sfu"],
+  "price": {"cycles": 120.0, "per": "record (swiglu, one a layer)", "src": "results/arch/throughput_budget_20261010/budget.json SFU.GLU (immutable)"},
+  "bench": "bash rtl/hbm_accel/generic/adapters/tb/run_sfu_xpair.sh (tb_hgi_sfu_xpair: actual ot_hgi_su_unit GLU=1 WIDE=1 STREAM_WM=1 producer, actual ot_hgi_sm_xload FW8/BW8/SFU_STREAM consumer, GLU 3,072 words, XFMT 0)",
+  "source_commit": "d27cf80e6 (codex/hbm-sfu-1012; consumer source b0efe3e9b from the hbm_smmv owner)",
+  "host": "ot-epyc1tb:/srv/opentallas-scratch/claude/sfu-pair-codex (Verilator 5.050, build 60 GB / 1,004 s, run 10 s)",
+  "measured": {"sfu_cycles": 186, "pair_streamed": 371, "pair_serial": 395, "beats": "96/96", "errors": 0},
+  "exact": true,
+  "exactness": "SFU_XPAIR PASS: streamed fragment captures = the serial (wait-for-SFU-done) loader, final SFU sinks = golden, 0 errors",
+  "mutant": "MUT_WM=1 (issue the prefix before it is committed): errors=8, SFU_XPAIR FAIL",
+  "labels": [
+    "32 producer drain lanes; the B2 SFU quarter has 8 (SLICES != 0 is refused by STREAM_WM pending the 8-lane integration)",
+    "shared VM model with a SYNTHETIC 24-cycle write-commit latency; not the B2 slice backend",
+    "x-load only; not a full matvec"
+  ],
+  "ratio_standalone": 1.55,
+  "verdict": "UNQUALIFIED. Streaming saves 24 cycles on the pair (395 -> 371) and is bit-exact with a failing mutant, but SFU alone is 186 vs 120 in this bench (1.55x; the standalone s512 record is 169 = 1.41x), and charging the pair saving to the SFU gives 371 - (395 - 186) = 162 = 1.35x. The lane depth (~110, the bit-exact Horner exp sequence) plus 24 issue cycles is 134 > 132 by itself, so SFU.GLU can only meet the gate as a streamed pair measured against a published pair budget; none exists in budget.json (the x-load is inside SM.MATVEC). No re-pricing was done.",
+  "next": "8-lane (SLICES) producer on the B2 local slice with the real slice commit latency; the die/throughput lead must name the pair budget (SFU.GLU 120 + the x-load share of SM.MATVEC) before any qualification claim"
+}

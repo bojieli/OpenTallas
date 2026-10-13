@@ -1,0 +1,16 @@
+REC 0 0 accept 0 retire 560
+CASE 0 service 561 span 13 stage 267 compute 292 drain 537 other 0
+ERR case 0 VM[131072] = 00000000 expected 3f380000
+ERR case 0 VM[196609] = 00000000 expected 3e7f0f78
+ERR case 0 VM[196610] = 00000000 expected 3f0faf9c
+ERR case 0 VM[196611] = 00000000 expected 3e289a71
+ERR case 0 VM[196612] = 00000000 expected c01e3966
+ERR case 0 VM[196613] = 00000000 expected 3eb4bf17
+ERR case 0 VM[196614] = 00000000 expected c0120cae
+ERR case 0 VM[196615] = 00000000 expected bf78fad4
+summary: 1 production-shape cases, 65544 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD FAIL errors=8
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_prod.sv:375: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 345us; walltime 4429.359 s; speed 77.942 ns/s
+- Verilator: cpu 4429.117 s on 1 threads; allocated 423 MB

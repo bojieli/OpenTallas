@@ -1,0 +1,4 @@
+PAIR fmt=0 SFU=180 streamed=345 serial=389 beats=96/96 errors=8
+[3990000] %Fatal: tb_hgi_sfu_xpair.sv:109: Assertion failed in tb_hgi_sfu_xpair: SFU_XPAIR FAIL
+%Error: rtl/hbm_accel/generic/adapters/tb/tb_hgi_sfu_xpair.sv:109: Verilog $stop
+Aborting...

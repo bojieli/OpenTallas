@@ -1,0 +1,19 @@
+PROGRESS cyc 150000 retired 5
+REC 0 0 accept 0 retire 87
+REC 0 1 accept 3 retire 124
+REC 0 2 accept 48 retire 160
+REC 0 3 accept 88 retire 210
+REC 0 4 accept 122 retire 554
+REC 0 5 accept 169 retire 1197
+REC 0 6 accept 453 retire 1484
+REC 0 7 accept 732 retire 1505
+REC 0 8 accept 1185 retire 1538
+REC 0 9 accept 1344 retire 1628
+REC 0 10 accept 1485 retire 1676
+CASE 0 service 1677 span 143 stage 1081 compute 1573 drain 1594 other 0
+summary: 1 production-shape cases, 80656 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_prod.sv:375: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 443us; walltime 5734.844 s; speed 77.274 ns/s
+- Verilator: cpu 5734.426 s on 1 threads; allocated 424 MB
