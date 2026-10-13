@@ -2550,6 +2550,12 @@ def run_pin_align(die, out, tag='', views_json=None):
     """mode pin_align: build the die model, write <out>/<die><tag>_pin_align.json; exit code 1 on FAIL (gate mode fail)"""
     m, pw, M, tool = build(die)
     R8_ACTIVE[0] = die.startswith('s81r8')
+    GLUE_CASE[0] = None
+    if R8_ACTIVE[0]:          # as run_lint: the r8 glue masters are bound from the case's own glue RTL
+        out.mkdir(parents=True, exist_ok=True)
+        gp_ = (out / f'{die}{tag}_glue.sv').resolve()
+        gp_.write_text(S.glue_rtl(m))
+        GLUE_CASE[0] = str(gp_)
     real = real_blocks(die, m)
     views = {}
     if views_json:

@@ -7,8 +7,8 @@
 //   four REAL ot_hgi_dma_back NS 1 / NB 8 engines.
 //   Program = [mtp-rtl] ENCODING: 4 x DMA.STORE h (param GRP, the last GRP | GLAST; HBM O base (q << 35) | COLB + 64 q,
 //   dyn_sel TOKEN, dyn_mul 131072), DMA.STORE PRE (GRP | GLAST), CTL.FENCE, CTL.END.  The doorbell token = the column slot.
-//   Oracle = the LOGICAL legacy STRIPE4 image only (as tb_hgi_b2_swap_grp): h row o on stack o mod 4 at stack-local
-//   COLB + slot x CSTR + o x 64; PRE on stack 0 at COLB + slot x CSTR + 81920.
+//   Oracle = the LOGICAL native slot image only (as tb_hgi_b2_swap_grp): h row 80q + j on stack q at stack-local
+//   COLB + slot x CSTR + 64 q + 256 j; PRE on stack 0 at COLB + slot x CSTR + 81920.
 //   PASS = every expected HBM word exact, no stray word, completion status 0 with 5 DMA retires, no retire before its
 //   engine's src, wr_quiet / the completion never before the last acknowledged sector, and first DMA dispatch ->
 //   wr_quiet (the CTL.FENCE answer at the unit pin) <= LIMIT in every run; then two NEGATIVE programs (a duplicate
@@ -31,7 +31,7 @@ module tb_hgi_b2_swap_rec;
     parameter integer LIMIT = 272;       // 1.10 x 248 (immutable price)
     parameter integer SEED = 1;
     localparam integer NB = 8, NL = 8, SBIT = 35;
-    localparam longint COLB = 64'h180000000, CSTR = 64'd131072;
+    localparam longint COLB = 64'h510000000, CSTR = 64'd131072;
     localparam integer VMW = 98304;
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     wire [4*129-1:0] vr2q; reg [4*2065-1:0] vr2r = 0; wire [4*2312-1:0] wd; wire [31:0] wd_cr; reg [15:0] wa = 0;
@@ -206,15 +206,15 @@ module tb_hgi_b2_swap_rec;
         for (integer c = 0; c < 4; c++) begin sv_k[c] = 0; sv_t[c] = 0; for (integer i = 0; i < VMW; i++) vm[c][i] = $urandom; end
         for (integer o = 0; o < 320; o++) for (integer i = 0; i < 64; i++) h[o][i] = $urandom;
         for (integer i = 0; i < 8; i++) pre[i] = $urandom;
-        // ORACLE: the legacy STRIPE4 image, from the logical h / PRE and the slot only
+        // ORACLE: the NATIVE slot image (logical row 80q + j on stack q at slot row q + 4j), from the logical h / PRE and the slot only
         for (integer o = 0; o < 320; o++) for (integer i = 0; i < 64; i++)
-            exp_w[((longint'(o % 4) << SBIT) | (loc + o * 64)) / 4 + i] = h[o][i];
+            exp_w[((longint'(o / 80) << SBIT) | (loc + 64 * (o / 80) + 256 * (o % 80))) / 4 + i] = h[o][i];
         for (integer i = 0; i < 8; i++) exp_w[(loc + 81920) / 4 + i] = pre[i];
         exp_sec = 4 * 640 + 1;
         for (integer c = 0; c < 4; c++) begin
-            sv_b[c][0] = mirror ? 65536 + 64 * c : 128 + 1024 * c; sv_s[c][0] = mirror ? 256 : 64; sv_m[c][0] = 80; sv_n[c][0] = 64; sv_t[c] = 1;
+            sv_b[c][0] = mirror ? 65536 + 5120 * c : 128 + 1024 * c; sv_s[c][0] = 64; sv_m[c][0] = 80; sv_n[c][0] = 64; sv_t[c] = 1;
             if (mirror) begin for (integer o = 0; o < 320; o++) for (integer i = 0; i < 64; i++) vm[c][65536 + 64 * o + i] = h[o][i]; end
-            else for (integer j = 0; j < 80; j++) for (integer i = 0; i < 64; i++) vm[c][sv_b[c][0] + 64 * j + i] = h[c + 4 * j][i];
+            else for (integer j = 0; j < 80; j++) for (integer i = 0; i < 64; i++) vm[c][sv_b[c][0] + 64 * j + i] = h[80 * c + j][i];
         end
         sv_b[0][1] = mirror ? 65536 + 20480 : 8192; sv_s[0][1] = 64; sv_m[0][1] = 1; sv_n[0][1] = 8; sv_t[0] = 2;
         for (integer i = 0; i < 8; i++) vm[0][sv_b[0][1] + i] = pre[i];
