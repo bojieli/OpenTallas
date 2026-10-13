@@ -151,39 +151,140 @@
     "name": "exact_gold",
     "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold gold",
     "expect": "pass",
-    "pass_regex": "BGL_gold: PASS",
-    "min_count_regex": "returned (\\d+)",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold: PASS",
+    "min_count_regex": "returned (\\d+)"
    },
    {
-    "name": "exact_trace",
+    "name": "exact_gold_s2",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold_s2 gold_s2",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold_s2: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_stress",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/stress stress",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_stress: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_trace_master_gold",
     "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/trace trace",
     "expect": "pass",
-    "pass_regex": "BGL_trace: PASS",
-    "min_count_regex": "returned (\\d+)",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_trace: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_trace_master_tp",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/trace_tp trace_tp",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_trace_tp: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "neg_coverage_refused",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/cov_refuse cov_refuse",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_cov_refuse: FAIL"
    },
    {
     "name": "neg_relay",
     "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_RELAY mut_RELAY",
     "expect": "fail",
-    "fail_regex": "BGL_mut_RELAY: FAIL",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_RELAY: FAIL"
+   },
+   {
+    "name": "neg_id",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ID mut_ID",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ID: FAIL"
+   },
+   {
+    "name": "neg_j0",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_J0 mut_J0",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_J0: FAIL"
    },
    {
     "name": "neg_order",
     "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ORDER mut_ORDER",
     "expect": "fail",
-    "fail_regex": "BGL_mut_ORDER: FAIL",
     "threads": 8,
-    "peak_ram_gb": 16
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ORDER: FAIL"
+   },
+   {
+    "name": "neg_mask",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_MASK mut_MASK",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_MASK: FAIL"
    }
   ],
   "views_to": "physical/ref_tile/dsfd_vm_bgl28_a/views",
-  "record_to": "results/rtl/ref_tile/dsfd_vm_bgl28_a"
+  "record_to": "results/rtl/ref_tile/dsfd_vm_bgl28_a",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/common",
+   "tools/s81_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile_specs/ds_vm"
+  ]
  },
  "layer_cap": "M5",
  "recipe": 2,
