@@ -85,6 +85,12 @@ COLL = ["-GN=4", "-GLANES=16", "-GTAGW=32", "-GDEPTH=256", "-GLAT=339", "-GBPC_N
 TILE = ["-GGT=6144", "-GNW=18", "-GSMIN=7", "-GCODE_BANKS=5", "-GMEM_EXTRA=1", "-GKV_VB=131072", "-GKV_NH=2"]
 LINK_DEFINES = ["-DGROUPS=6144", "-DCOUNTWIDTH=18", "-DSWIDTH=64", "-DSMAXB=11", "-DTCUTL=7", "-DNWSD=5", "-DXVMD=1",
                 "-DTPD=4", "-DCBANKS=5", "-DSMINV=7"]
+# rom-layer-tput 10-13: QROM_XVM=<n> builds the die with the VM x-read transport at n edges (published selection: 1);
+# a measurement knob for the per-layer cost of extra x-read stages (the TP8 bit-plane VM adds 10), never a release shape
+if os.environ.get("QROM_XVM"):
+    _xvm = int(os.environ["QROM_XVM"])
+    DIE = [f"-GXVM={_xvm}" if g == "-GXVM=1" else g for g in DIE]
+    LINK_DEFINES = [f"-DXVMD={_xvm}" if g == "-DXVMD=1" else g for g in LINK_DEFINES]
 VFLAGS = ["--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
           "-Wno-PINMISSING", "-Wno-LATCH", "-Wno-MULTIDRIVEN"]
 
