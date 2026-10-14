@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.slot_partition_request.v1",
+  "source_commit": "68f13267b",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "f44350897d0c6d771992d7dbe96f79e8aa667085225b0de57e40d598a7f76dec",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "93f112cf07ecf8cfc71d65d10ad4a3e659fd8dba1869e0376e3d717ff069e3e6",
+    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "eb23a2a630d368bce0d00cb0072bd7163f2e648a1ced385681749d7512d50b3c"
+  },
+  "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
+  "contract_version": 12,
+  "published_contract_changed": false,
+  "requests": [
+    {
+      "master": "native_hc_b2",
+      "replaces": [
+        "hfd_hc_eng",
+        "hfd_hgi_hc interface formerly routed on hfd_hc quarters"
+      ],
+      "slot_status": "NO_NATIVE_SLOT",
+      "logical_composition": {
+        "ot_hgi_hc_ctl_b2": 1,
+        "ot_hgi_hc_qst_b2": 4,
+        "ot_hgi_hc_lane_b2": 32,
+        "ot_hgi_hc_lane_sl": 256,
+        "ot_hgi_hc_cat_b2": 4,
+        "ot_hgi_hc_coll_b2": 1
+      },
+      "hierarchy_note": "Counts include transitive children; do not add their outlines or area twice. qst and lane wrappers are candidate RTL, not closed macros. Die may flatten accepted slice leaves and hardened new control leaves into direct die composition, avoiding a third hard hierarchy.",
+      "requirements": [
+        "Use the 4 LOCAL8 native VM slice endpoints with real 17/281-bit addresses and configured ten credits at relay3",
+        "Exact D5120 and detected association/arithmetic/retirement/gain mutants before adoption",
+        "Per-child clock entries for every closed arithmetic slice and hardened new own-logic leaf, using real insertion metadata",
+        "Assign outline, pin order/face/layer and adjacent native VM reach from classified die path/cut geometry",
+        "Publish slots for window/control scalar SYS bank and residual child masters together; 88 legacy shells are not coverage"
+      ],
+      "outline_um": null,
+      "clock_evidence": "Arithmetic slice is historically CLOSED job hgi_hc_lanesl_b-6656b8688-tc-cl; published source-matched LEF/ETM/insertion must be recovered. New control/collector sink evidence not measured."
+    },
+    {
+      "master": "ot_hbm_norm_split_view_g8p",
+      "slot_status": "NO_SLOT_IN_V12",
+      "candidate_outline_um": [
+        1612.656,
+        972.0
+      ],
+      "accepted_children": {
+        "master": "ot_hbm_norm_gtile8",
+        "count": 8,
+        "outline_um": [
+          365.04,
+          365.04
+        ],
+        "origins": "results/arch/hier_contract_1011/handoff/r25gq_norm_g8p_child_origins.json"
+      },
+      "requirements": [
+        "First confirm the norm engine is instantiated by actual native production decode",
+        "Reserve die slot and publish assigned pins before a route",
+        "Keep accepted gtile8 routes unchanged",
+        "Harden split-core own logic into bounded leaves; expand parent with independent child clock pins",
+        "Audit MX power-pin mirror or use legal new parent orientations without changing child abstract geometry",
+        "Exact composition and all protocol mutants; measure throughput at native VM endpoint composition"
+      ]
+    }
+  ]
+}
