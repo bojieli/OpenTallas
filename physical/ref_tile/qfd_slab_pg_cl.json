@@ -33,17 +33,89 @@
  ],
  "hard_define": "OT_SLAB_PG_HARD",
  "outline": {
-  "w": 777.576,
-  "h": 455.76
+  "w": 777.6,
+  "h": 691.2
  },
  "children": [
   {
    "view": "physical/ref_tile/qfd_slab_pg_col/views/ot_qwen_slab_pg_col",
-   "count": 4
+   "count": 1,
+   "inst": "g_col[0].u_col",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_col/views/ot_qwen_slab_pg_col",
+   "count": 1,
+   "inst": "g_col[1].u_col",
+   "at": [
+    410.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_col/views/ot_qwen_slab_pg_col",
+   "count": 1,
+   "inst": "g_col[2].u_col",
+   "at": [
+    43.2,
+    432.0
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_col/views/ot_qwen_slab_pg_col",
+   "count": 1,
+   "inst": "g_col[3].u_col",
+   "at": [
+    410.4,
+    432.0
+   ],
+   "orient": "MX"
   },
   {
    "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
-   "count": 4
+   "count": 1,
+   "inst": "g_mul[0].u_ln",
+   "at": [
+    129.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "count": 1,
+   "inst": "g_mul[1].u_ln",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "count": 1,
+   "inst": "g_mul[2].u_ln",
+   "at": [
+    432.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+   "count": 1,
+   "inst": "g_mul[3].u_ln",
+   "at": [
+    561.6,
+    302.4
+   ],
+   "orient": "R0"
   }
  ],
  "pins": {
@@ -97,10 +169,10 @@
   "hold_margin_ns": 0.01
  },
  "job": {
-  "owner": "Claude:qwen-tp8/slab3",
-  "branch": "claude/el1011-qwen-slab2",
-  "tag": "cl1",
-  "purpose": "qwen-tp8/slab3 2026-10-12: ot_qwen_slab_port_group (s14o TP8 GT 3072 GID 47) v1-v3 EARLY_FAIL_HOLD at 4_1_cts (-77 -> -55 -> -30.8 flat, 24,483 register sinks + 16 ROM clock pins on ONE root over 777x456 um, TT clock latency 610..963 ps). Structural fix: the group becomes a cluster of hardened sub-tiles, each with its own pin-flop row and local clock root: 4x ot_qwen_slab_pg_col (one ROM column: R2 copy, 4 x decode+ROM+C4 capture, M5 merge, registered m5 face) and 4x ot_qwen_slab_pg_lanes (4 FP32 multiplier lanes, IN_STAGE face registers); the cluster keeps request/tag/cacc/argmax/oreg on the clock spine. Same cycles, bit-exact benches unchanged (TP4 + TP8 PASS, 3 mutants FAIL). | this kit: the cluster (clock spine, child insertion targets) over the two hardened sub-tile views.",
+  "owner": "Claude:el1013-qwen-small-masters r3b",
+  "branch": "claude/el1013-qwen-r3b-spine",
+  "tag": "cl2",
+  "purpose": "qwen-tp8/slab3 2026-10-12: ot_qwen_slab_port_group (s14o TP8 GT 3072 GID 47) v1-v3 EARLY_FAIL_HOLD at 4_1_cts (-77 -> -55 -> -30.8 flat, 24,483 register sinks + 16 ROM clock pins on ONE root over 777x456 um, TT clock latency 610..963 ps). Structural fix: the group becomes a cluster of hardened sub-tiles, each with its own pin-flop row and local clock root: 4x ot_qwen_slab_pg_col (one ROM column: R2 copy, 4 x decode+ROM+C4 capture, M5 merge, registered m5 face) and 4x ot_qwen_slab_pg_lanes (4 FP32 multiplier lanes, IN_STAGE face registers); the cluster keeps request/tag/cacc/argmax/oreg on the clock spine. Same cycles, bit-exact benches unchanged (TP4 + TP8 PASS, 3 mutants FAIL). | this kit: the cluster (clock spine, child insertion targets) over the two hardened sub-tile views. | r3b 10-13: first submission of the cluster over the CLOSED children qfd_slab_pg_col_mgc-c5c (TT +141.97 / FF +1.69) and qfd_slab_pg_lanes-l1 (TT +197.43 / FF +6.22); this is the hardened unit of the six qfd_port_tiles_* slots (8 groups a slot, GID strap).",
   "extra_paths": [
    "src",
    "results/floorplan/qwen_o4_rom_placement_w12_tp8_g3072.json",
@@ -178,5 +250,7 @@
   ],
   "views_to": "physical/ref_tile/qfd_slab_pg_cl/views",
   "record_to": "results/rtl/ref_tile/qfd_slab_pg_cl"
- }
+ },
+ "structural_change": "flat ot_qwen_slab_port_group (v1-v3: 24,483 sinks on one root, hold stuck at 4_1_cts) -> cluster: 4 hardened ROM-column tiles + 4 hardened multiplier-lane tiles with their own roots; the parent keeps request/tag/cacc/argmax/oreg on the balanced spine",
+ "slot_change_request": "r3b 10-13: one port group = 4 closed ROM-column tiles 324 x 216 + 4 closed lane tiles 71.28^2 = 300,259 um2 of hard children: it cannot sit in the 777.576 x 455.76 TP4 slab outline (354,388 um2). Cluster outline 777.6 x 691.2 (cols 2 x 2, lower row R0 / upper row MX so all four m5 faces meet the lane row in the 172.8-um middle band). The six qfd_port_tiles_* slots (777.576 x 1,840.296, 8 groups each) must become regions of 8 such clusters (777.6 x 5,529.6) or the column tile must be re-cut: packing table in el1011-qwen-tp8.log."
 }

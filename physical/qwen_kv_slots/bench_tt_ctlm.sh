@@ -18,7 +18,7 @@ L=$(grep -o 'L="[^"]*"' rtl/test/run_tt_ctlm_i_lockstep.sh | sed -e 's/^L="//' -
 D=""; [ "$MUT" = mut ] && D="-DOT_QFD_TT_CTLM_SLOT_MUT"
 "$V" --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -CFLAGS -O1 --x-assign fast --x-initial fast \
     +define+OT_ICUT_NONFATAL --top-module tb_qfd_tt_ctlm_i_psram -GNCYC=20000 -GMINRD=200 -GSEED=1 -GU1_HQ2=1 -GU1_RRG=1 -GU1_PCUT=1 \
-    -GMOK=1 -GPFMASK=1 -GU1_AUD=33975 -GU1_MEREG=3 -GTXN=1 -GTBG=3072 $D --Mdir "$OUT/obj" "$OUT/tb_slot.sv" \
+    -GMOK=1 -GPFMASK=1 -GU1_AUD=33975 -GU1_MEREG=3 -GTXN=1 -GTBG=3072 ${TT_XG:-} $D --Mdir "$OUT/obj" "$OUT/tb_slot.sv" \
     rtl/test/qfd_tt_ctlm_slot_shim.sv rtl/physical/ot_qfd_tt_ctlm_slot.sv rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm.sv \
     rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm_tp8.sv $L > "$OUT/build.log" 2>&1 || { grep -m5 '%Error' "$OUT/build.log"; echo "FAIL kv_slots tt_ctlm build"; exit 1; }
 "$OUT/obj/Vtb_qfd_tt_ctlm_i_psram" > "$OUT/run.log" 2>&1
