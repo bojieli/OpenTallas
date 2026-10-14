@@ -50,6 +50,8 @@ module ot_hgi_xp_rd_ln #(parameter integer CR = 16) (
     reg [1:0] rs_vq, lpop_q; reg pop_q; reg [255:0] rs_dq [0:1];
     reg [255:0] lf [0:31];                          // lane l entry e at 16 l + e
     reg [3:0] lf_r [0:1]; reg [3:0] lf_w [0:1]; reg [4:0] lf_n [0:1];
+    // four kept copies of a lane's read pointer, one a 64-b quarter of the 256-b read mux (one copy drove 3,578 loads)
+    (* keep = 1 *) reg [3:0] lf_ra [0:1]; (* keep = 1 *) reg [3:0] lf_rb [0:1]; (* keep = 1 *) reg [3:0] lf_rc [0:1]; (* keep = 1 *) reg [3:0] lf_rd [0:1];
     integer l;
     always @(posedge clk) begin
         wrq <= rq_i; cr_o <= wrq_cr; rsv_o <= rs_vq; pop_q <= pop_i; lpop_q <= lpop_i;
@@ -61,15 +63,23 @@ module ot_hgi_xp_rd_ln #(parameter integer CR = 16) (
             end
             lf_n[l] <= lf_n[l] + {4'd0, rs_vq[l]} - {4'd0, lpop_q[l]};
             if (lpop_q[l]) begin
-                lf_r[l] <= lf_r[l] + 4'd1;
+                lf_r[l] <= lf_r[l] + 4'd1; lf_ra[l] <= lf_ra[l] + 4'd1; lf_rb[l] <= lf_rb[l] + 4'd1;
+                lf_rc[l] <= lf_rc[l] + 4'd1; lf_rd[l] <= lf_rd[l] + 4'd1;
                 if (lf_n[l] == 5'd0) fault <= 1'b1;                         // pop of an empty lane
             end
-            if (pop_q) wave_d[256*l +: 256] <= lpop_q[l] ? lf[{l[0], lf_r[l]}] : 256'd0;
+            if (pop_q) begin
+                wave_d[256*l +: 64]       <= lpop_q[l] ? lf[{l[0], lf_ra[l]}][63:0]    : 64'd0;
+                wave_d[256*l + 64 +: 64]  <= lpop_q[l] ? lf[{l[0], lf_rb[l]}][127:64]  : 64'd0;
+                wave_d[256*l + 128 +: 64] <= lpop_q[l] ? lf[{l[0], lf_rc[l]}][191:128] : 64'd0;
+                wave_d[256*l + 192 +: 64] <= lpop_q[l] ? lf[{l[0], lf_rd[l]}][255:192] : 64'd0;
+            end
         end
         if (rs) begin
             wrq[15] <= 1'b0; wrq[31] <= 1'b0; cr_o <= 2'd0; rsv_o <= 2'd0; pop_q <= 1'b0; lpop_q <= 2'd0; rs_vq <= 2'd0;
             fault <= 1'b0;
-            for (l = 0; l < 2; l = l + 1) begin lf_r[l] <= 4'd0; lf_w[l] <= 4'd0; lf_n[l] <= 5'd0; end
+            for (l = 0; l < 2; l = l + 1) begin
+                lf_r[l] <= 4'd0; lf_ra[l] <= 4'd0; lf_rb[l] <= 4'd0; lf_rc[l] <= 4'd0; lf_rd[l] <= 4'd0; lf_w[l] <= 4'd0; lf_n[l] <= 5'd0;
+            end
         end
     end
 endmodule
