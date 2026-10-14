@@ -1,0 +1,139 @@
+{
+  "schema": "opentallas.hbm.xp_recovery.v1",
+  "predecessor_source": "0ee901d5a",
+  "predecessor_frozen_regen": "9b7c6e4ab",
+  "frozen_main": "22c97227f",
+  "owner": "/root/hbm_vm_sm_2240",
+  "elements": [
+    {
+      "element": "ot_hdc_actquant",
+      "kit": "physical/ref_tile/hgi_xp_aq",
+      "params": {},
+      "outline_um": {
+        "w": 172.8,
+        "h": 86.4
+      },
+      "sources": [
+        "rtl/hdc/v41/ot_hdc_actquant.sv",
+        "rtl/hdc/ot_hdc_fpu.sv",
+        "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "rtl/hdc/ot_hdc_delay.sv",
+        "rtl/proto/ot_fp32_add_rne_pipe.sv"
+      ],
+      "old_job": "hgi_xp_aq-r0-0ee901d5a",
+      "old_status": "REFUSED source_binding; preserved",
+      "job_template": "hgi_xp_aq-r0-COMMIT",
+      "actual_slot_fit": "pending requested guides, no invented coordinates",
+      "gate_action": "current frozen main helpers regenerated; exact CTS pending"
+    },
+    {
+      "element": "ot_hgi_xp_bfm",
+      "kit": "physical/ref_tile/hgi_xp_bfm",
+      "params": {},
+      "outline_um": {
+        "w": 172.8,
+        "h": 54.0
+      },
+      "sources": [
+        "rtl/hbm_accel/generic/xp/ot_hgi_xp_tiles.sv"
+      ],
+      "old_job": "hgi_xp_bfm-r0-0ee901d5a",
+      "old_status": "REFUSED source_binding; preserved",
+      "job_template": "hgi_xp_bfm-r0-COMMIT",
+      "actual_slot_fit": "pending requested guides, no invented coordinates",
+      "gate_action": "current frozen main helpers regenerated; exact CTS pending"
+    },
+    {
+      "element": "ot_hgi_xp_buf",
+      "kit": "physical/ref_tile/hgi_xp_buf",
+      "params": {},
+      "outline_um": {
+        "w": 172.8,
+        "h": 108.0
+      },
+      "sources": [
+        "rtl/hbm_accel/generic/xp/ot_hgi_xp_tiles.sv"
+      ],
+      "old_job": "hgi_xp_buf-r0-0ee901d5a",
+      "old_status": "REFUSED source_binding; preserved",
+      "job_template": "hgi_xp_buf-r0-COMMIT",
+      "actual_slot_fit": "pending requested guides, no invented coordinates",
+      "gate_action": "current frozen main helpers regenerated; exact CTS pending"
+    },
+    {
+      "element": "ot_hgi_xp_rd_ln",
+      "kit": "physical/ref_tile/hgi_xp_rd_ln",
+      "params": {
+        "CR": 16
+      },
+      "outline_um": {
+        "w": 237.6,
+        "h": 54.0
+      },
+      "sources": [
+        "rtl/hbm_accel/generic/xp/ot_hgi_xp_tiles.sv"
+      ],
+      "old_job": "hgi_xp_rd_ln-r0-0ee901d5a",
+      "old_status": "REFUSED source_binding; preserved",
+      "job_template": "hgi_xp_rd_ln-r0-COMMIT",
+      "actual_slot_fit": "pending requested guides, no invented coordinates",
+      "gate_action": "current frozen main helpers regenerated; exact CTS pending"
+    },
+    {
+      "element": "ot_hgi_xp_rdc",
+      "kit": "physical/ref_tile/hgi_xp_rdc",
+      "params": {
+        "CR": 16,
+        "RQC": 10,
+        "XQ": 4,
+        "XDD": 63
+      },
+      "outline_um": {
+        "w": 54.0,
+        "h": 43.2
+      },
+      "sources": [
+        "rtl/hbm_accel/generic/xp/ot_hgi_xp_tiles.sv"
+      ],
+      "old_job": "hgi_xp_rdc-r0-0ee901d5a",
+      "old_status": "REFUSED source_binding; preserved",
+      "job_template": "hgi_xp_rdc-r0-COMMIT",
+      "actual_slot_fit": "pending requested guides, no invented coordinates",
+      "gate_action": "current frozen main helpers regenerated; exact CTS pending"
+    },
+    {
+      "element": "ot_hgi_xp_sps",
+      "kit": "physical/ref_tile/hgi_xp_sps",
+      "params": {},
+      "outline_um": {
+        "w": 172.8,
+        "h": 21.6
+      },
+      "sources": [
+        "rtl/hbm_accel/generic/xp/ot_hgi_xp_tiles.sv"
+      ],
+      "old_job": "hgi_xp_sps-r0-0ee901d5a",
+      "old_status": "REFUSED source_binding; preserved",
+      "job_template": "hgi_xp_sps-r0-COMMIT",
+      "actual_slot_fit": "pending requested guides, no invented coordinates",
+      "gate_action": "current frozen main helpers regenerated; exact CTS pending"
+    },
+    {
+      "element": "ot_hgi_xp_xwm",
+      "kit": "physical/ref_tile/hgi_xp_xwm",
+      "params": {},
+      "outline_um": {
+        "w": 345.6,
+        "h": 43.2
+      },
+      "sources": [
+        "rtl/hbm_accel/generic/xp/ot_hgi_xp_tiles.sv"
+      ],
+      "old_job": "hgi_xp_xwm-r0-0ee901d5a",
+      "old_status": "REFUSED source_binding; preserved",
+      "job_template": "hgi_xp_xwm-r0-COMMIT",
+      "actual_slot_fit": "pending requested guides, no invented coordinates",
+      "gate_action": "current frozen main helpers regenerated; exact CTS pending"
+    }
+  ]
+}
