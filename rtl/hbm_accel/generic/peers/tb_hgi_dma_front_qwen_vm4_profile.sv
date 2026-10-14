@@ -52,12 +52,16 @@ module tb_hgi_dma_front_qwen_vm4_profile;
     reg [31:0] vm [0:VMW-1];
     // Observational throughput counters: no changes to grants, credits or fixture stimuli.
     longint prof_active=0,prof_hbm_req=0,prof_hbm_beats=0,prof_issue=0,prof_fmt=0,prof_credit=0,prof_done=0;
+    longint prof_hbm_queued_lane=0,prof_hbm_wait_credit=0,prof_hbm_starved_cycles=0,prof_hbm_dq_stall=0;
     longint prof_pending=0,prof_cap_candidates=0,prof_conflict_candidates=0,prof_epoch_wait=0;
     longint prof_no_pick=0,prof_pure_cap=0,prof_req_fire=0,prof_req_bubble=0,prof_req_ft_full=0;
     longint prof_phase[0:3];initial for(integer p=0;p<4;p++)prof_phase[p]=0;
     integer prof_min_credit=10,prof_max_capacity=0,prof_max_outstanding=0;
     always @(posedge clk)if(rst_n)begin
-      bit pending;pending=0;
+      bit pending,offered;pending=0;offered=0;
+      for(integer i=0;i<32;i++)if(lt[i]>lh[i])begin offered=1;prof_hbm_queued_lane++;if(cr[i]==0)prof_hbm_wait_credit++;end
+      if(leasebusy&&!dut.core.u_ctrl.r_done&&!offered)prof_hbm_starved_cycles++;
+      for(integer h=0;h<4;h++)if(dq[h*51+50]&&!dq_rdy[h])prof_hbm_dq_stall++;
       if(leasebusy)prof_active++;
       for(integer s=0;s<4;s++)if(dq[s*51+50]&&dq_rdy[s])prof_hbm_req++;
       for(integer b=0;b<32;b++)if(dd[b*270+269])prof_hbm_beats++;
@@ -112,6 +116,7 @@ module tb_hgi_dma_front_qwen_vm4_profile;
     end
     task automatic print_profile;
       $display("PROFILE src_active=%0d hbm_req=%0d hbm_beats=%0d issue=%0d fmt=%0d credit=%0d done=%0d pending_candidates=%0d cap_candidates=%0d conflict_candidates=%0d epoch_wait=%0d no_pick=%0d pure_cap=%0d req_fire=%0d req_bubble=%0d req_ft_full=%0d phases=%0d/%0d/%0d/%0d min_credit=%0d max_capacity=%0d max_outstanding=%0d",prof_active,prof_hbm_req,prof_hbm_beats,prof_issue,prof_fmt,prof_credit,prof_done,prof_pending,prof_cap_candidates,prof_conflict_candidates,prof_epoch_wait,prof_no_pick,prof_pure_cap,prof_req_fire,prof_req_bubble,prof_req_ft_full,prof_phase[0],prof_phase[1],prof_phase[2],prof_phase[3],prof_min_credit,prof_max_capacity,prof_max_outstanding);
+      $display("PROFILEHBM raw_offer_ceiling_srcB_per_source_cycle=256 PCX4=%0d scheduled_sectors=%0d queued_lane_cycles=%0d lane_credit_blocked=%0d no_scheduled_data_cycles=%0d dq_stall=%0d",PCX4,sched,prof_hbm_queued_lane,prof_hbm_wait_credit,prof_hbm_starved_cycles,prof_hbm_dq_stall);
       for(integer b=0;b<8;b++)$display("PROFILEBANK b=%0d queue_full=%0d loadhead=%0d router_grants=%0d router_pending=%0d router_idle=%0d ticket_full=%0d max_queue=%0d max_head=%0d max_ticket=%0d",b,prof_qfull[b],prof_loadhead[b],prof_router_grant[b],prof_router_pending[b],prof_router_idle[b],prof_ticket_full[b],prof_max_q[b],prof_max_head[b],prof_max_ticket[b]);
     endtask
     // Actual native B2/SECDED vehicle pinned to 64fced1f9. No behavioral VM writer.
