@@ -17,7 +17,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 86.4,
+  "w": 90.72,
   "h": 129.6
  },
  "layer_cap": "M5",
@@ -116,12 +116,12 @@
    "diameter_um": 60
   }
  },
- "structural_change": "Native TP8 partition: die lead accepted TWO UCIe P/R channels in each direction plus three SerDes directions,10 hardened W546 leaves. P and SerDes546, R514 zero-padded32, unchanged credit CDC PIPE2, own writer/reader roots, kept pin capture/launch. No serializer, lost bit, clock relaxation or repricing. Dense86.4x129.6 leaf targets<=15000sinks/root; CTS gate required.",
- "slot_change_request": "Die lead accepted native10-channel partition2026-10-13: io_xfifo700.248x1563.816,10x86.4x129.6 in2columnsx5rows. Exact placement and port maps physical/qwen_romio_slots/xf_native_partition_1013.json. Die tools assign per-master pins; kit consumes current leaf request until assigned file publishes.",
+ "structural_change": "Native TP8 partition: die lead accepted TWO UCIe P/R channels in each direction plus three SerDes directions,10 hardened W546 leaves. P and SerDes546, R514 zero-padded32, unchanged credit CDC PIPE2, own writer/reader roots, kept pin capture/launch. No serializer, lost bit, clock relaxation or repricing. Dense86.4x129.6 leaf targets<=15000sinks/root; CTS gate required. n1 terminal FLOORPLAN_MARGIN hold-buffer area67.1%; n2 grows width to90.72um (hold allowance63.7%) without changing RTL or port ranges.",
+ "slot_change_request": "Die lead accepted native10-channel partition2026-10-13: io_xfifo700.248x1563.816,10x90.72x129.6 in2columnsx5rows. Exact placement and port maps physical/qwen_romio_slots/xf_native_partition_1013.json. Die tools assign per-master pins; kit consumes current leaf request until assigned file publishes.",
  "job": {
   "owner": "Codex:qwen_small/io",
   "branch": "claude/el1013-qwen-r3b-io",
-  "tag": "n1",
+  "tag": "n2",
   "purpose": "Native TP8 W546 credit CDC leaf for10-channel IO partition; die-approved UCIeP/R split",
   "extra_paths": [
    "physical/qwen_romio_slots"

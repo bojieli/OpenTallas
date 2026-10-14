@@ -168,9 +168,13 @@
    "group_max": 1,
    "h": "M4",
    "v": "M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30
   }
  },
- "structural_change": "n1 gate REFUSED:CKD20,310flops,17,472ofthese are SQIBUF32x546; ir[1]17475loads. Actuallargest-root CKDTTmax506/spread99(scopedprobe), primaryCK458/spread93. n2 replaces ONLY synchronous SQreceive store with real32x5461R1WSRAM, lookahead head read+same-write bypass, preserving everyexternal valid/credit/data/fault edge; paired oldflopstore/newmacrostore bench verifies. SameCR32/ENG_IB32/LCR32/N8/CQ_AD256, no newcycles,no clock changes,no reprice. Rootcount expected<15000; coreIOreference nowCK-specific u_cq.g_ipr.pd, CKDreference remains domain-specific. 3SRAMs with2.16um M5edgeguards, OBSunchanged.",
+ "structural_change": "n1 gate REFUSED:CKD20,310flops,17,472ofthese are SQIBUF32x546; ir[1]17475loads. Actuallargest-root CKDTTmax506/spread99(scopedprobe), primaryCK458/spread93. n2 replaces ONLY synchronous SQreceive store with real32x5461R1WSRAM, lookahead head read+same-write bypass, preserving everyexternal valid/credit/data/fault edge; paired oldflopstore/newmacrostore bench verifies. SameCR32/ENG_IB32/LCR32/N8/CQ_AD256, no newcycles,no clock changes,no reprice. Rootcount expected<15000; coreIOreference nowCK-specific u_cq.g_ipr.pd, CKDreference remains domain-specific. 3SRAMs with2.16um M5edgeguards, OBSunchanged. n2 CK boundaryspread101.5ps is a defect; n3 uses explicit CTS sink clusters16/30um to balance the physical tree, unchanged clocks and RTL.",
  "reroute_reason": {
   "kind": "param_change",
   "params": {
@@ -189,7 +193,7 @@
  "job": {
   "owner": "Codex:qwen_small/io",
   "branch": "claude/el1013-qwen-r3b-io",
-  "tag": "n2",
+  "tag": "n3",
   "purpose": "Native TP8 local port credit reservation and posted-return macro leaf; qualifies only with seq_su CRED32 composition",
   "extra_paths": [
    "physical/qwen_romio_slots",
