@@ -1,0 +1,4 @@
+TB_S81_QUEUED_HEAD mut=0 starts=2 returns=2 head_cycles=21 errors=0 fault=0 PASS
+TB_S81_QUEUED_HEAD mut=0 starts=2 returns=2 head_cycles=22 errors=0 fault=0 PASS
+TB_S81_QUEUED_HEAD mut=1 starts=1 returns=1 head_cycles=72 errors=3 fault=1 FAIL
+TB_S81_QUEUED_HEAD mut=2 starts=2 returns=2 head_cycles=2 errors=1 fault=0 FAIL

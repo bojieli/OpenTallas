@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.s81.native-stage-lowering-progress.v1",
+  "candidate_only": true,
+  "adopted": false,
+  "queue_head_gate": {
+    "source": "e09629ae5",
+    "unit": "oth-ubuntu-259865-1791946966",
+    "host": "ot-epyc1tb",
+    "exit": 0,
+    "positive": "blocked oldest slot and unseeded landing head",
+    "negative": [
+      "circular e_cmd_v input gating",
+      "latest submitted command opens older queued command"
+    ],
+    "limits": "Adapter mechanism; cseq snapshot and full hierarchy gates separately required"
+  },
+  "slot_program_gate": {
+    "source": "f0f4ddfb9",
+    "unit": "oth-ubuntu-265456-1791947189",
+    "host": "ot-epyc1tb",
+    "exit": 0,
+    "actual_accepted_loads": 2,
+    "actual_accepted_stores": 2,
+    "jobs_done": 2,
+    "negative": "HC_SLOT_REBASE disabled: four observed descriptor mismatches",
+    "limits": "Two real stage sequencer jobs through actual adapter; not a production token or full native stage execution"
+  },
+  "restored_allocation": {
+    "source": "32d20f79c",
+    "path": "results/uarch/dsrom_s81_field_phases_1792_20261007/binding/half_dedicated_ksplit/matrix_map.jsonl.gz",
+    "sha256": "d9f84be93d9d701b445ffd70d0c2f3f54e78d1b2f9a54111a22355abc540da56",
+    "recovered_from": "ot-pve1:/srv/opentallas-scratch/claude/s81-gather-1013/bind/half_dedicated_ksplit/matrix_map.jsonl.gz",
+    "candidate_adopted": false
+  },
+  "full_native_executed_transfer_count": null,
+  "missing": [
+    "complete native operation placement and endpoint descriptors for current physical mapping",
+    "full package/stage/hop finite stream integration",
+    "true startup GAIN readiness with no arbitrary PGAP",
+    "native BF broadcast lane binding",
+    "full source-pinned relevant production exact and mutants",
+    "real field/collective/link cycle comparison to immutable price",
+    "physical current slots/pins/clock/view qualification"
+  ],
+  "raw_log_sha256": {
+    "slot_gate/verdicts.log": "510400c26fb1403e892abe65651793ea7168263daf18b1583a49574d28f7cc37",
+    "slot_gate/base.log": "78125d0e890b84ed314351b4bc8feb3903d2131b5e57147e9e4b274b3fff3e30",
+    "slot_gate/unrebase.log": "56a076641bfbf90099ee050d6205ca3056060e41ee3bee326d5f6b62ea42a1a2",
+    "head_gate/base_early.log": "cf330066c0a33054ca8e2db514ac52a206a11b43e900abaa3a52ede05b7af949",
+    "head_gate/latest.log": "522497e4b242cffc7e78d3c2d66e43186af3d7e7834397d989f6327b303e5e5f",
+    "head_gate/verdicts.log": "6ded746dd0c1891b261a26f99f99791a5a08478c2f94d5bedbfe3b874254a1a3",
+    "head_gate/circular.log": "1c9067838fdc21f32316c77e4ce0bb212d6941a51e5c497e7814bdf3122a2640",
+    "head_gate/base_latest.log": "80190a8c12148b6ce64dc085cedc08234d476de3b5d75cb9da9570cf22871662"
+  }
+}

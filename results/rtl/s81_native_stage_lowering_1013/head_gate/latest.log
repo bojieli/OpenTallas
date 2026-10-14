@@ -1,0 +1,5 @@
+TB_S81_QUEUED_HEAD mut=2 starts=2 returns=2 head_cycles=2 errors=1 fault=0 FAIL
+- /srv/opentallas-scratch/codex/s81-native-head/src/rtl/dsrom_sys/s81_ctrl/test/tb_s81_queued_head.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 96ns; walltime 0.000 s; speed 668.213 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
