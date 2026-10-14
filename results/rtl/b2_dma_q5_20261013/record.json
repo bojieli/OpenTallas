@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.dma_q5_gate.v1",
   "branch": "claude/el1013-dma-q5",
-  "source_commit": "ea656e923",
+  "source_commit": "f24c88250",
   "status": "RTL BENCHED; PHYSICAL/LOCAL8/BACK1 INTEGRATION INCOMPLETE",
   "flat_reference_commit": "6403f77f2",
   "port_gate": {
@@ -36,7 +36,8 @@
     "checked": 115282,
     "records": 244,
     "pass": true,
-    "log": "logs/serial_go_pin_partition.log"
+    "log": "logs/serial_go_pin_partition.log",
+    "source_snapshot": "src_v14; identical RTL at84ae58513 throughf24c88250"
   },
   "seam_mutants": [
     {
@@ -104,12 +105,13 @@
     "top-down assigned pins pending die guides",
     "VM local8 read-group interface not published; current32lane group retained",
     "BACK1 explicit integration with separateNS1/NB8 back engine owed",
-    "serial-go pin adds one MV FF vs measured root; latest source exact+mutant7 PASS/FAIL; gate currentsource refresh owed"
+    "MV gate sourceea656e923 differs only serial-go valid+1FF versus current; final job reruns gate onf24c88250",
+    "final job all7 mutants bound f24c88250; sourceea656e923 negative evidence retained and current serial-go mutant7 FAILerrors2"
   ],
   "sources": {
     "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_q.sv": "70add28a906de75502ca2a59c90a5db2c06d65c992b90b3c90343abcdb78d75c",
     "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_rq.sv": "04db6b85f9432cd4d3074dc47e8063944aa1856198cb1004216123bd6e297dba",
-    "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_mv.sv": "1499eaa64db1d106bde73987632a5b62811a69ade2827c4cda8c59911c336a64",
+    "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_mv.sv": "c6e4e0f093da11b54f3d7919920af9534350baf766801d0e834d811ce81b534d",
     "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_q_flat.sv": "33b6981d95757e0375f64d31c986ece75ea1323672fd1e6ecf84ead1b9a38e3e",
     "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_serial.sv": "b10077cb58ccafda3f5e1a7e0b312470b9ffacf9ca348d8c92dbcf68ddec9dc4"
   },
@@ -127,6 +129,20 @@
       "tt_insertion_ps": 565.9,
       "evidence": "failures/sram_mv_gate_result.json",
       "action": "serial moved to separate child"
+    }
+  ],
+  "clock_passes": [
+    {
+      "leaf": "serial",
+      "shape": [
+        129.6,
+        86.4
+      ],
+      "sinks": 3503,
+      "tt_insertion_ps": 314.5,
+      "tt_spread_ps": 30.4,
+      "evidence": "serial_large_cts_gate_result.json",
+      "note": "clock rulePASS; actualstd2003/util19%, compact56.16x86.4 shapegate live"
     }
   ]
 }
