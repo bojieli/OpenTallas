@@ -1,5 +1,5 @@
 {
- "name": "qfd_bl_lane_cs-cs1-COMMIT",
+ "name": "qfd_bl_lane_cs-cs1-3bab77f91",
  "block": "qfd_bl_lane",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-small-masters r3b",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1013-qwen-r3b-spine",
-  "commit": "COMMIT"
+  "commit": "3bab77f91"
  },
  "stages": {
   "bench": [
@@ -131,7 +131,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_bl_lane_sq/qfd_bl_lane_cs-cs1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_bl_lane_cs/qfd_bl_lane_cs-cs1-3bab77f91"
   }
  ],
  "cycles_added": 0,
