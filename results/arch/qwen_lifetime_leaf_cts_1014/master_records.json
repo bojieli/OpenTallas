@@ -1,0 +1,442 @@
+{
+  "status": "EXACT_FROZEN_CTS_PROTOTYPES_NO_ASSIGNED_MASTERS_OR_SEQ40_ADOPTION",
+  "records": [
+    {
+      "kit": "ot_qwen_tile_ctl_tp8_ctx_compact",
+      "top": "ot_qwen_tile_ctl_tp8_ctx",
+      "outline_um": {
+        "w": 77.76,
+        "h": 129.6
+      },
+      "actual_clock_pin": "clk",
+      "domain": "COHERENT_CORE",
+      "clock_name": "core_clk (flowname;architecturedomain determinedbyactualpin above)",
+      "gate_receipt": "physical/ref_tile/ot_qwen_tile_ctl_tp8_ctx_compact/gate_result.json",
+      "gate_sha256": "3c31f738a5c25931e2e3f962d5879579b69a0dff6f1c1985302f0115d45c11b4",
+      "clock_receipt": "results/arch/qwen_lifetime_leaf_cts_1014/ot_qwen_tile_ctl_tp8_ctx_compact_ck.json",
+      "clock_sha256": "ac768d4217b9029cf1693c67f1cf6b1c25096636643f1a37ab48a83af1d03a3b",
+      "frozen_start_commit": "00f91fe809bdb6d20d00af3f1654f4f13d62ca61",
+      "archive_sha256": "840e1b7e6377a787b2d4efe5d98477087c001a1fc5fb62d8912d25cabb867c7e",
+      "manifest_sha256": "5688eefb2fe35d1392387c0c07ed628e0c99b03e1bb59062f757c0487def6373",
+      "remote_script_sha256": "d69a7e5c98cef6693648375b089ed2dfc10f6d163e0b776b146fde3af6a543b8",
+      "frozen_remote": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_ctl_tp8_ctx_compact-20261014-012740",
+      "pins": "ANY_UNASSIGNED",
+      "hardviews": "NOT_EXPORTED",
+      "gate_verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 9209,
+        "root": "port:clk",
+        "cts": true,
+        "tt_insertion_ps": 192.4,
+        "tt_spread_ps": 18.7,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "clk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 5586,
+                "mean": 182.7,
+                "min": 173.8,
+                "max": 192.4
+              },
+              "all": {
+                "n": 8223,
+                "mean": 182.2,
+                "min": 173.7,
+                "max": 192.4
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "9,209 sinks on the largest root <= 15,000; measured TT insertion 192.4 ps, leaf spread 18.7 ps"
+      },
+      "refusing_findings": [],
+      "scope": "frozenoriginalsourceonly;laterseq40 state/IO changed,noHEADrelabelling",
+      "setup_WNS_ps": -30.780378246220153,
+      "hold_WNS_ps": 24.80618488398534,
+      "path_classes": [
+        "GATE INFO path_classes: reg->out      250 paths, worst slack -30.8 ps (e.g. cx_accepted_ib[331])",
+        "GATE INFO path_classes: reg->reg       58 paths, worst slack 11.7 ps (e.g. u_logic.u_me.x_addr[47]$_DFF_P_/D)",
+        "GATE INFO path_classes: in->reg        87 paths, worst slack 455.9 ps (e.g. u_logic.u_me.u_v.line[4]$_DFF_PN0_/RESETN)",
+        "GATE INFO path_classes: setup WNS -3.078037824622015e-11 hold WNS 2.4806184883985338e-11"
+      ]
+    },
+    {
+      "kit": "ot_qwen_tile_ctl_tp8_admit_compact",
+      "top": "ot_qwen_tile_ctl_tp8_ctx",
+      "outline_um": {
+        "w": 77.76,
+        "h": 129.6
+      },
+      "actual_clock_pin": "clk",
+      "domain": "COHERENT_CORE",
+      "clock_name": "core_clk (flowname;architecturedomain determinedbyactualpin above)",
+      "gate_receipt": "physical/ref_tile/ot_qwen_tile_ctl_tp8_admit_compact/gate_result.json",
+      "gate_sha256": "19aeeac5adb3090ecc87f26e0157aeaebfda18ff0652ddbe8d12c482491360a1",
+      "clock_receipt": "results/arch/qwen_lifetime_leaf_cts_1014/ot_qwen_tile_ctl_tp8_admit_compact_ck.json",
+      "clock_sha256": "dbaf1ac4918f7f0afa27413b3e8e0c112b3d37998ec735ec36b0da1e077b8109",
+      "frozen_start_commit": "4511e6ee403de4820e7916bbfa9c5624327973cb",
+      "archive_sha256": "57464aa143989f51cf5b6cba956a0fe6d76f0c28a034ffba7d2ef0fb76694969",
+      "manifest_sha256": "5125a2452b3f27c08ec5b4fe903803a4b66214960b8ca5d99d276fa61c9ae5d7",
+      "remote_script_sha256": "e45593f530746c857ea639bf892458536b9bbfad7219c5accdf6f3c4709bd7e5",
+      "frozen_remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_ctl_tp8_admit_compact-20261014-013619",
+      "pins": "ANY_UNASSIGNED",
+      "hardviews": "NOT_EXPORTED",
+      "gate_verdict": "FAIL",
+      "clock": {
+        "max_root_sinks": 9212,
+        "root": "port:clk",
+        "cts": true,
+        "tt_insertion_ps": 191.7,
+        "tt_spread_ps": 18.8,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "clk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 5601,
+                "mean": 180.9,
+                "min": 173.2,
+                "max": 191.7
+              },
+              "all": {
+                "n": 8226,
+                "mean": 180.4,
+                "min": 172.9,
+                "max": 191.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "9,212 sinks on the largest root <= 15,000; measured TT insertion 191.7 ps, leaf spread 18.8 ps"
+      },
+      "refusing_findings": [
+        {
+          "severity": "FAIL",
+          "check": "util",
+          "message": "synthesized std area 6466 um2 + macros 0 in core 9201: util 70%",
+          "fix": "set \"std_area_um2\": 6466 and drop 'outline' (gen sizes to util 0.52)"
+        }
+      ],
+      "scope": "frozenoriginalsourceonly;laterseq40 state/IO changed,noHEADrelabelling",
+      "setup_WNS_ps": -23.78081065401716,
+      "hold_WNS_ps": 24.497917583410356,
+      "path_classes": [
+        "GATE INFO path_classes: reg->out      240 paths, worst slack -23.8 ps (e.g. cx_accepted_ib[125])",
+        "GATE INFO path_classes: reg->reg       68 paths, worst slack -0.1 ps (e.g. u_logic.u_me.x_addr[65]$_DFF_P_/D)",
+        "GATE INFO path_classes: in->reg        90 paths, worst slack 406.2 ps (e.g. u_logic.u_me.u_v.line[27]$_DFF_PN0_/RESETN)",
+        "GATE INFO path_classes: setup WNS -2.378081065401716e-11 hold WNS 2.4497917583410356e-11"
+      ]
+    },
+    {
+      "kit": "ot_qwen_xcache_context32_events_store",
+      "top": "ot_qwen_xcache_context32_events_store",
+      "outline_um": {
+        "w": 77.76,
+        "h": 216
+      },
+      "actual_clock_pin": "load_clk",
+      "domain": "LIVE_LOADER",
+      "clock_name": "core_clk (flowname;architecturedomain determinedbyactualpin above)",
+      "gate_receipt": "physical/ref_tile/ot_qwen_xcache_context32_events_store/gate_result.json",
+      "gate_sha256": "22b1f7785c6dfae2682a16febf537aeb6c9aa587e2752e5e14c054c3ade8e6ff",
+      "clock_receipt": "results/arch/qwen_lifetime_leaf_cts_1014/ot_qwen_xcache_context32_events_store_ck.json",
+      "clock_sha256": "5d39fae375b01c66a5f573f53682eee2582ce62c4be111b0aa9b55aca87a2f1b",
+      "frozen_start_commit": "2e5f86940343c8076c5f91bcce8ed3909482cdda",
+      "archive_sha256": "5b15cfd3e127d2aa3a3e33552f066154866d6845cb334ca70d912b5c267aa48d",
+      "manifest_sha256": "99705dad14295c923dd0c1366d344d86dc278327c0113d5529cba0c23ba3c442",
+      "remote_script_sha256": "ab5d86caee7f9b0325fb4be048e60b1b0254053a7a058504a808386b128cfbec",
+      "frozen_remote": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_xcache_context32_events_store-20261014-013939",
+      "pins": "ANY_UNASSIGNED",
+      "hardviews": "NOT_EXPORTED",
+      "gate_verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 10960,
+        "root": "port:load_clk",
+        "cts": true,
+        "tt_insertion_ps": 248.4,
+        "tt_spread_ps": 13.1,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "load_clk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 10960,
+                "mean": 239.6,
+                "min": 235.3,
+                "max": 248.4
+              },
+              "all": {
+                "n": 10960,
+                "mean": 239.6,
+                "min": 235.3,
+                "max": 248.4
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "10,960 sinks on the largest root <= 15,000; measured TT insertion 248.4 ps, leaf spread 13.1 ps"
+      },
+      "refusing_findings": [],
+      "scope": "frozenoriginalsourceonly;laterseq40 state/IO changed,noHEADrelabelling",
+      "setup_WNS_ps": -398.85911240489236,
+      "hold_WNS_ps": -9.313466664551129,
+      "path_classes": [
+        "GATE INFO path_classes: in->out       170 paths, worst slack -398.9 ps (e.g. found)",
+        "GATE INFO path_classes: reg->out      130 paths, worst slack -56.3 ps (e.g. fill_toggle)",
+        "GATE INFO path_classes: in->reg        33 paths, worst slack 636.3 ps (e.g. valid[6]$_DFFE_PN0P_/RESETN)",
+        "GATE INFO path_classes: setup WNS -3.9885911240489236e-10 hold WNS -9.313466664551129e-12"
+      ]
+    },
+    {
+      "kit": "ot_qwen_xcache_context32_events_response",
+      "top": "ot_qwen_xcache_context32_events_response",
+      "outline_um": {
+        "w": 43.2,
+        "h": 64.8
+      },
+      "actual_clock_pin": "core_clk",
+      "domain": "COHERENT_CORE",
+      "clock_name": "core_clk (flowname;architecturedomain determinedbyactualpin above)",
+      "gate_receipt": "physical/ref_tile/ot_qwen_xcache_context32_events_response/gate_result.json",
+      "gate_sha256": "0ad32f130902965f93edf25e8b399e03805be20213929865a633292f96dc78e9",
+      "clock_receipt": "results/arch/qwen_lifetime_leaf_cts_1014/ot_qwen_xcache_context32_events_response_ck.json",
+      "clock_sha256": "492ee1b19667b694e54d40432bdfe2922a8adb015c0eac5214b62e747d369290",
+      "frozen_start_commit": "2e5f86940343c8076c5f91bcce8ed3909482cdda",
+      "archive_sha256": "1832e3160524f350252659b97888603eef60a2e2110f31c76a6945790bb889be",
+      "manifest_sha256": "032df908a4db8a22eaeb41000c0c356959147024f0c048f3ddf5c3ffaa7101e2",
+      "remote_script_sha256": "e42974eff32d86b646bb7419d4b0bcc249ccb714dc90a9d23ec9578d17569331",
+      "frozen_remote": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_xcache_context32_events_response-20261014-013939",
+      "pins": "ANY_UNASSIGNED",
+      "hardviews": "NOT_EXPORTED",
+      "gate_verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 337,
+        "root": "port:core_clk",
+        "cts": true,
+        "tt_insertion_ps": 91.7,
+        "tt_spread_ps": 8.0,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "core_clk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 337,
+                "mean": 89.1,
+                "min": 83.7,
+                "max": 91.7
+              },
+              "all": {
+                "n": 337,
+                "mean": 89.1,
+                "min": 83.7,
+                "max": 91.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "337 sinks on the largest root <= 15,000; measured TT insertion 91.7 ps, leaf spread 8.0 ps"
+      },
+      "refusing_findings": [],
+      "scope": "frozenoriginalsourceonly;laterseq40 state/IO changed,noHEADrelabelling",
+      "setup_WNS_ps": 165.4716641485976,
+      "hold_WNS_ps": 30.422789287776197,
+      "path_classes": [
+        "GATE INFO path_classes: reg->out      300 paths, worst slack 165.5 ps (e.g. response_toggle)",
+        "GATE INFO path_classes: in->reg       130 paths, worst slack 390.3 ps (e.g. q_x[102]$_DFFE_PN0P_/RESETN)",
+        "GATE INFO path_classes: setup WNS 1.654716641485976e-10 hold WNS 3.04227892877762e-11"
+      ]
+    },
+    {
+      "kit": "ot_qwen_tile_local_drain",
+      "top": "ot_qwen_tile_local_drain",
+      "outline_um": {
+        "w": 21.6,
+        "h": 43.2
+      },
+      "actual_clock_pin": "core_clk",
+      "domain": "COHERENT_CORE",
+      "clock_name": "core_clk (flowname;architecturedomain determinedbyactualpin above)",
+      "gate_receipt": "physical/ref_tile/ot_qwen_tile_local_drain/gate_result.json",
+      "gate_sha256": "2b62a6d31e027193ed03fd618a97b1ef3ff3850dfcba16e906f5a92f4effd068",
+      "clock_receipt": "results/arch/qwen_lifetime_leaf_cts_1014/ot_qwen_tile_local_drain_ck.json",
+      "clock_sha256": "d57bb9bcd3c6a9917c933cbc6e5d0bad0272c573e7b0b9b5c4fb7db995a6df37",
+      "frozen_start_commit": "2e5f86940343c8076c5f91bcce8ed3909482cdda",
+      "archive_sha256": "7ba99731c629e14487efcbb3edb62f52dbc2bd4e8d05c5c979735726c6f4591f",
+      "manifest_sha256": "aef70af0b3f15b6eb0823d8e31a6aee322a81d925947212c8101dcf66974343c",
+      "remote_script_sha256": "c3b06f05619a8d03252536464bbfc11ad3c3af6acf517ba86fb7d9db0229f85a",
+      "frozen_remote": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_local_drain-20261014-013939",
+      "pins": "ANY_UNASSIGNED",
+      "hardviews": "NOT_EXPORTED",
+      "gate_verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 225,
+        "root": "port:core_clk",
+        "cts": true,
+        "tt_insertion_ps": 80.7,
+        "tt_spread_ps": 1.7,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "core_clk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 225,
+                "mean": 79.7,
+                "min": 79.0,
+                "max": 80.7
+              },
+              "all": {
+                "n": 225,
+                "mean": 79.7,
+                "min": 79.0,
+                "max": 80.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "225 sinks on the largest root <= 15,000; measured TT insertion 80.7 ps, leaf spread 1.7 ps"
+      },
+      "refusing_findings": [],
+      "scope": "frozenoriginalsourceonly;laterseq40 state/IO changed,noHEADrelabelling",
+      "setup_WNS_ps": 171.93910184509775,
+      "hold_WNS_ps": 31.065927608153743,
+      "path_classes": [
+        "GATE INFO path_classes: reg->out      197 paths, worst slack 171.9 ps (e.g. drain_toggle[1])",
+        "GATE INFO path_classes: in->reg       112 paths, worst slack 234.3 ps (e.g. identities[1][12]$_DFFE_PP_/D)",
+        "GATE INFO path_classes: setup WNS 1.7193910184509775e-10 hold WNS 3.106592760815374e-11"
+      ]
+    },
+    {
+      "kit": "ot_qwen_tile_node_lifetime",
+      "top": "ot_qwen_tile_node_lifetime",
+      "outline_um": {
+        "w": 43.2,
+        "h": 64.8
+      },
+      "actual_clock_pin": "core_clk",
+      "domain": "COHERENT_CORE",
+      "clock_name": "core_clk (flowname;architecturedomain determinedbyactualpin above)",
+      "gate_receipt": "physical/ref_tile/ot_qwen_tile_node_lifetime/gate_result.json",
+      "gate_sha256": "0b9c523dc935f213bd713e3ffd4003464d579cce74bf36eeec3f325be244a1fd",
+      "clock_receipt": "results/arch/qwen_lifetime_leaf_cts_1014/ot_qwen_tile_node_lifetime_ck.json",
+      "clock_sha256": "3a15e0f4b564a5b84db3753dca6d056dda88e8b168f304336550851986d0899d",
+      "frozen_start_commit": "2e5f86940343c8076c5f91bcce8ed3909482cdda",
+      "archive_sha256": "486dd80372ae08af4fa54462e5ef17684cd27bf4635576b509ed339996c690fb",
+      "manifest_sha256": "34833bae1b2564f5f8ebcdf77f0c70174dc17ad44f2e32906541c35258452054",
+      "remote_script_sha256": "4353e81f2794eb7c0798028b5aee1916df94e8525294de6f0548b31024c15209",
+      "frozen_remote": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_node_lifetime-20261014-013939",
+      "pins": "ANY_UNASSIGNED",
+      "hardviews": "NOT_EXPORTED",
+      "gate_verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 784,
+        "root": "port:core_clk",
+        "cts": true,
+        "tt_insertion_ps": 94.8,
+        "tt_spread_ps": 4.8,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "core_clk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 784,
+                "mean": 92.6,
+                "min": 90.0,
+                "max": 94.8
+              },
+              "all": {
+                "n": 784,
+                "mean": 92.6,
+                "min": 90.0,
+                "max": 94.8
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "784 sinks on the largest root <= 15,000; measured TT insertion 94.8 ps, leaf spread 4.8 ps"
+      },
+      "refusing_findings": [],
+      "scope": "frozenoriginalsourceonly;laterseq40 state/IO changed,noHEADrelabelling",
+      "setup_WNS_ps": 146.6301247088353,
+      "hold_WNS_ps": 27.170987682012537,
+      "path_classes": [
+        "GATE INFO path_classes: reg->out      245 paths, worst slack 146.6 ps (e.g. node_active_identity[11])",
+        "GATE INFO path_classes: in->out         2 paths, worst slack 183.5 ps (e.g. node_credit)",
+        "GATE INFO path_classes: in->reg        85 paths, worst slack 204.1 ps (e.g. node_active_identity[28]$_DFFE_PP_/D)",
+        "GATE INFO path_classes: setup WNS 1.466301247088353e-10 hold WNS 2.7170987682012537e-11"
+      ]
+    }
+  ]
+}

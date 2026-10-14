@@ -1,0 +1,19 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 9 port group(s) left to the IO placer (ANY): ['core_clk', 'rst_n', 'issue_last', 'issue_context']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO remote: ot-run selected ot-epyc4 for 12 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_ot_qwen_tile_local_drain_20261014-013939.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_ot_qwen_tile_local_drain_20261014-013939.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_local_drain-20261014-013939
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 20 s (gate total 85 s)
+GATE WARN pins: 9 port group(s) left to the IO placer (ANY): ['core_clk', 'rst_n', 'issue_last', 'issue_context']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE WARN util: synthesized std area 133 um2 + macros 0 in core 672: util 20%  -> FIX: set "std_area_um2": 133 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_qwen_tile_local_drain cells 1,030 flops 225 depth 193.4 ps util 0.1978 reach 18.8 um (0.0 s)
+GATE WARN textbook.boundary: 219 input->register endpoint(s) > 3 levels (worst drain_ack_toggle[1]->remaining[2][5]$_DFFE_PP_/D 4 lv, drain_ack_toggle[1]->remaining[1][5]$_DFFE_PP_/D 4 lv, drain_ack_toggle[1]->remaining[1][4]$_DFFE_PP_/D 4 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 19.8% outside 45%-65% (std 133 + macro 0 um2 in 672 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 113.0..114.7 ps (spread 1.7), boundary mean 113.8; tt insertion all 79.0..80.7 ps (spread 1.7), boundary mean 79.7; ff insertion all 59.8..61.6 ps (spread 1.8), boundary mean 60.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: reg->out      197 paths, worst slack 171.9 ps (e.g. drain_toggle[1])
+GATE INFO path_classes: in->reg       112 paths, worst slack 234.3 ps (e.g. identities[1][12]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS 1.7193910184509775e-10 hold WNS 3.106592760815374e-11
+GATE INFO clock_rule: root port:core_clk: 225 sinks on the largest root <= 15,000; measured TT insertion 80.7 ps, leaf spread 1.7 ps
+PRE_ROUTE_GATE: WARN (0 fail, 5 warn)
+GATE: ot_qwen_tile_local_drain/gate_result.json written (exact staged source binding; commit it with the kit)

@@ -1,0 +1,22 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 26 port group(s) left to the IO placer (ANY): ['load_clk', 'rst_n', 'clear', 'load_v']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO remote: ot-run selected ot-epyc4 for 12 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_ot_qwen_xcache_context32_events_store_20261014-013939.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_ot_qwen_xcache_context32_events_store_20261014-013939.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_xcache_context32_events_store-20261014-013939
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 142 s (gate total 687 s)
+GATE WARN pins: 26 port group(s) left to the IO placer (ANY): ['load_clk', 'rst_n', 'clear', 'load_v']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE WARN util: synthesized std area 6567 um2 + macros 0 in core 15546: util 42%  -> FIX: set "std_area_um2": 6567 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_qwen_xcache_context32_events_store cells 46,500 flops 10,960 depth 288.4 ps util 0.4246 reach 123.7 um (0.9 s)
+GATE WARN textbook.boundary: 337 output bit(s) combinational from input ports (e.g. read_j_repeat->found 13 lv, read_j_repeat->resident_tuple[38] 8 lv, read_j_repeat->resident_tuple[34] 8 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.boundary: 10960 input->register endpoint(s) > 3 levels (worst fill_ack_toggle->versions[27][9]$_DFFE_PP_/D 8 lv, fill_ack_toggle->versions[27][8]$_DFFE_PP_/D 8 lv, fill_ack_toggle->versions[27][7]$_DFFE_PP_/D 8 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.boundary: 170 register->output bit(s) > 3 levels (worst contexts[7][3]$_DFFE_PP_->found 12 lv, tokens[13][9]$_DFFE_PP_->resident_tuple[34] 5 lv, tokens[13][13]$_DFFE_PP_->resident_tuple[38] 5 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 42.5% outside 45%-65% (std 6601 + macro 0 um2 in 15546 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 302.4..316.6 ps (spread 14.2), boundary mean 307.6; tt insertion all 235.3..248.4 ps (spread 13.1), boundary mean 239.6; ff insertion all 193.6..206.6 ps (spread 13.0), boundary mean 197.9; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: in->out       170 paths, worst slack -398.9 ps (e.g. found)
+GATE INFO path_classes: reg->out      130 paths, worst slack -56.3 ps (e.g. fill_toggle)
+GATE INFO path_classes: in->reg        33 paths, worst slack 636.3 ps (e.g. valid[6]$_DFFE_PN0P_/RESETN)
+GATE INFO path_classes: setup WNS -3.9885911240489236e-10 hold WNS -9.313466664551129e-12
+GATE INFO clock_rule: root port:load_clk: 10,960 sinks on the largest root <= 15,000; measured TT insertion 248.4 ps, leaf spread 13.1 ps
+PRE_ROUTE_GATE: WARN (0 fail, 7 warn)
+GATE: ot_qwen_xcache_context32_events_store/gate_result.json written (exact staged source binding; commit it with the kit)
