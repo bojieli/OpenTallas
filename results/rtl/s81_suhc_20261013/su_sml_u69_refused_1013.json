@@ -1,0 +1,45 @@
+{
+ "name": "s81su_sml_u69_ref-v1-6494b8a37",
+ "status": "FLOORPLAN_MARGIN",
+ "reason": "util: utilisation 61.3% > 60% (std 9952 + macro 0 um2 in 16241 um2): grow the outline to <= 55-60%",
+ "events": [
+  "2026-10-13T18:47:01-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81su_sml_u69_ref-v1-6494b8a37.json",
+  "2026-10-13T18:47:01-07:00 CLOSED-STANDS PASS: dsfd_su_t_sml is CLOSED with a published view (s81su_sml_ref-v1-47c31b637 @ 47c31b637); reroute_reason slot_change: outline / pin faces differ from the closed view per 'el1011-s81die.log 2026-10-13 [s81su -> s81-die] SU SLAB FIT, FIRM PROPOSAL (sml 151.2 sq -> util 0.65 outline; die contract v17 sp_su_s_v17_decision authorisation)'",
+  "2026-10-13T18:47:01-07:00 bench gate PASS: benched_by s81su_full (s81su_full_exact, s81su_full_mutant)",
+  "2026-10-13T18:47:01-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/s81su_sml_u69_ref/pre_gpl.tcl'] but no macro LEF resolved from the commands",
+  "2026-10-13T18:47:04-07:00 CLOCK-RULE at submit: 10,803 sinks on the largest root <= 15,000; measured TT insertion 225.6 ps, leaf spread 21.2 ps",
+  "2026-10-13T18:47:04-07:00 REF_GATE WARN (refuse): util: utilisation 67% outside 45%-60% (std 10949 + macro 0 in core 16241 um2) (fix: resize the outline to util 0.50-0.55 (drop 'outline', set util))",
+  "2026-10-13T18:47:04-07:00 bench needs repo paths outside the source sync: added ['results/rtl/hbm_su_fused_compiler_20261005'] to source.extra_paths",
+  "2026-10-13T18:47:14-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+  "2026-10-13T18:47:35-07:00 git-mirror sync 6494b8a37e71 via upstream in 1s + extract 9s; 2742 views / 5.1 GB hard-linked from the host view store",
+  "2026-10-13T18:47:39-07:00 source 6494b8a37e71 synced to ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81su_sml_u69_ref-v1-6494b8a37/src",
+  "2026-10-13T18:47:42-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+  "2026-10-13T18:47:47-07:00 launched route (attempt 1) on ot-epyc4",
+  "2026-10-13T18:48:22-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+  "2026-10-13T18:48:26-07:00 bench track: launched bench_s81su_full_exact (bench_s81su_full_exact.a1b1) beside route",
+  "2026-10-13T18:53:09-07:00 bench track: bench_s81su_full_exact PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+  "2026-10-13T18:53:12-07:00 bench track: launched bench_s81su_full_mutant (bench_s81su_full_mutant.a1b1) beside route",
+  "2026-10-13T18:55:07-07:00 TEXTBOOK-LINT route.a1: PASS dsfd_su_t_sml cells 91,025 flops 10,803 depth 571.8 ps util 0.6128 reach 0.0 um (4.3 s) || INFO clock_roots max_root_sinks=10803 root=port:ck rule=PASS: 10,803 sinks on the largest root <= 15,000; measured TT insertion 225.6 ps, leaf spread 21.2 ps",
+  "2026-10-13T18:55:10-07:00 FLOORPLAN_MARGIN: util: utilisation 61.3% > 60% (std 9952 + macro 0 um2 in 16241 um2): grow the outline to <= 55-60%",
+  "2026-10-13T18:57:05-07:00 auto-react: block dsfd_su_t_sml has a live or closed sibling job; no action"
+ ],
+ "host": "ot-epyc4",
+ "run": "/srv/opentallas-scratch2/claude/closure-loop/s81su_sml_u69_ref-v1-6494b8a37",
+ "commit_full": "6494b8a37e713302625feabe2b609b1ece083479",
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 2.641 MB sources in 94 modules, into 0.009 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 2.658 s (elab=0.220, cvt=2.371, bld=0.000); cpu 2.653 s on 1 threads; allocated 204.391 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_s81su_full_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "golden_L0 11 jobs 1722 rows\ngolden_L2 11 jobs 1722 rows\nstress_0 11 jobs 1722 rows\ngolden_L0 PASS 0 / 1722 done 11 / 11 fault 0 0 cyc 3149 early 0\ngolden_L2 PASS 0 / 1722 done 11 / 11 fault 0 0 cyc 3149 early 0\nstress_0 PASS 0 / 1722 done 11 / 11 fault 0 0 cyc 3149 early 0\nRUN full_dpi_m0_a0_h pass\n",
+   "track": "parallel"
+  }
+ }
+}
