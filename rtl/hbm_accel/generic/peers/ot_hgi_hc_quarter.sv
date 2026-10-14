@@ -1,8 +1,10 @@
 // Genuine B2 HC quarter: two bank stages of the original eight-bank SYS chain.
 // Both children expose their complete production operands; grouping adds no cycles.
-module ot_hgi_hc_quarter #(parameter integer WINPART=0,W=32, RMAX=128, SPL=4, AW=16, HAW=35, RTW=7, TG=11, WMACRO=1, LM=8, LA=7, NVW=$clog2(W)+1, CWW=$clog2(RMAX+1), NXM=W/16) (
+module ot_hgi_hc_quarter #(parameter integer WINPART=0,WINCLOCKS=0,W=32, RMAX=128, SPL=4, AW=16, HAW=35, RTW=7, TG=11, WMACRO=1, LM=8, LA=7, NVW=$clog2(W)+1, CWW=$clog2(RMAX+1), NXM=W/16) (
     input wire  clk,
     input wire  rst_n,
+    input wire [2*SPL-1:0] clk_win_ctl,
+    input wire [2*SPL*4-1:0] clk_win_mem,
     input wire  first,
     input wire  d_v,
     input wire  d_ss,
@@ -67,8 +69,9 @@ module ot_hgi_hc_quarter #(parameter integer WINPART=0,W=32, RMAX=128, SPL=4, AW
     assign f_mid = chain_f_out[0];
     assign f_out = chain_f_out[1];
     for (genvar t=0;t<2;t=t+1) begin : g_tile
-        ot_hgi_hc_tile #(.W(W),.RMAX(RMAX),.SPL(SPL),.AW(AW),.HAW(HAW),.RTW(RTW),.TG(TG),.WMACRO(WMACRO),.WINPART(WINPART),.LM(LM),.LA(LA)) u_tile (
+        ot_hgi_hc_tile #(.W(W),.RMAX(RMAX),.SPL(SPL),.AW(AW),.HAW(HAW),.RTW(RTW),.TG(TG),.WMACRO(WMACRO),.WINPART(WINPART),.WINCLOCKS(WINCLOCKS),.LM(LM),.LA(LA)) u_tile (
             .clk(clk),
+            .clk_win_ctl(clk_win_ctl[t*SPL +: SPL]), .clk_win_mem(clk_win_mem[t*SPL*4 +: SPL*4]),
             .rst_n(rst_n),
             .first(first && t==0),
             .d_v(t==0 ? d_v : v_mid),

@@ -119,13 +119,16 @@ module tb_hgi_hc_unit;
 `ifdef HWINPART
         , .WINPART(1)
 `endif
+`ifdef HWINCLOCKS
+        , .WINCLOCKS(1)
+`endif
 `ifdef SYS
         , .SYS(1)
 `ifdef QPAIR
         , .QPAIR(1)
 `endif
 `endif
-        ) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .rec_v(rec_v), .rec_rdy(rec_rdy),
+        ) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .clk_win_ctl({8*SPLN{clk}}), .clk_win_mem({32*SPLN{clk}}), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]),
         .rec_n_a(cur[916:896]), .rec_n_o(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted),
         .vmq(uq), .vmr(ur), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag),
@@ -147,7 +150,7 @@ module tb_hgi_hc_unit;
 `ifdef MUT_HL
         , .MUT_HL(1)
 `endif
-        ) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .rec_v(rec_v), .rec_rdy(rec_rdy),
+        ) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .clk_win_ctl({8*SPLN{clk}}), .clk_win_mem({32*SPLN{clk}}), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]),
         .rec_n_a(cur[916:896]), .rec_n_o(cur[937:917]), .rec_done(done), .rec_fault(fault), .halted(halted),
         .vmq(uq), .vmr(ur), .hq_v(hq_v), .hq_rdy(hq_rdy), .hq_addr(hq_addr), .hq_len(hq_len), .hq_tag(hq_tag),

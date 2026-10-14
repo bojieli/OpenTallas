@@ -64,6 +64,7 @@ module ot_hgi_hc_unit #(
     // HCP stage k) chained by registered partial-sum seams; no 8x8 bank->group rotation.  Needs HSRC 0, HL = 8 SPL,
     // XMACRO 1.
     parameter integer WINPART = 0,
+    parameter integer WINCLOCKS = 0,         // explicit related clocks for32controller+128SRAM leaves
     parameter integer SYS = 0,
     parameter integer QPAIR = 0,           // opt-in: group the same SYS banks as four B2 two-bank quarters
     parameter integer XRLY = 4,             // relay stages ctl -> tile (window control, x writes) and back
@@ -79,6 +80,8 @@ module ot_hgi_hc_unit #(
 ) (
     input  wire          clk,
     input  wire          rst_n,
+    input  wire [8*SPL-1:0] clk_win_ctl,
+    input  wire [8*SPL*4-1:0] clk_win_mem,
     input  wire [31:0]   cfg_norm_eps,
     input  wire          rec_v,
     output wire          rec_rdy,
@@ -468,7 +471,8 @@ module ot_hgi_hc_unit #(
             end
             assign xl[g*2*NXM*150 +: 2*NXM*150] = xl_g;
             if (QPAIR == 0) begin : g_unpaired
-            ot_hgi_hc_tile #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .WINPART(WINPART), .LM(SLM), .LA(SLA)) u_t (
+            ot_hgi_hc_tile #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .WINPART(WINPART), .WINCLOCKS(WINCLOCKS), .LM(SLM), .LA(SLA)) u_t (
+                .clk_win_ctl(clk_win_ctl[g*SPL +: SPL]), .clk_win_mem(clk_win_mem[g*SPL*4 +: SPL*4]),
                 .clk(clk), .rst_n(rst_n), .first(g == 0),
                 .d_v(cv[g]), .d_ss(css[g]), .d_nv(cnv[g*(LW+1) +: LW+1]), .d_wa(cwa[g*AW +: AW]), .d_xa(cxa[g*AW +: AW]),
                 .o_v(cv[g+1]), .o_ss(css[g+1]), .o_nv(cnv[(g+1)*(LW+1) +: LW+1]), .o_wa(cwa[(g+1)*AW +: AW]),
@@ -482,7 +486,8 @@ module ot_hgi_hc_unit #(
                 .hq_len(t_hql[g*SPL*3 +: SPL*3]), .hq_tag(t_hqt[g*SPL*TG +: SPL*TG]), .hr_v(hr_v[g*SPL +: SPL]),
                 .hr_tag(hr_tag[g*SPL*TG +: SPL*TG]), .hr_beat(hr_beat[g*SPL*2 +: SPL*2]), .hr_data(hr_data[g*SPL*256 +: SPL*256]));
             end else if ((g % 2) == 0) begin : g_pair
-            ot_hgi_hc_quarter #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .WINPART(WINPART), .LM(SLM), .LA(SLA)) u_q (
+            ot_hgi_hc_quarter #(.W(W), .RMAX(RMAX), .SPL(SPL), .AW(AW), .HAW(HAW), .RTW(RTW), .TG(TG), .WMACRO(WMACRO), .WINPART(WINPART), .WINCLOCKS(WINCLOCKS), .LM(SLM), .LA(SLA)) u_q (
+                .clk_win_ctl(clk_win_ctl[g*SPL +: 2*SPL]), .clk_win_mem(clk_win_mem[g*SPL*4 +: 2*SPL*4]),
                 .clk(clk), .rst_n(rst_n), .first(g == 0),
                 .d_v(cv[g]), .d_ss(css[g]), .d_nv(cnv[g*(LW+1) +: LW+1]), .d_wa(cwa[g*AW +: AW]), .d_xa(cxa[g*AW +: AW]),
                 .o_v(cv[g+2]), .o_ss(css[g+2]), .o_nv(cnv[(g+2)*(LW+1) +: LW+1]), .o_wa(cwa[(g+2)*AW +: AW]),
