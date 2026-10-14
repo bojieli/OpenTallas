@@ -222,6 +222,11 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
         reg [4:0] d_off [0:1]; reg [8:0] d_k [0:1], d_rem [0:1]; reg [14:0] d_ll [0:1]; reg [9:0] d_rv [0:1];
         reg [DB:0] d_out [0:1]; reg [5:0] d_need [0:1];
         reg [QB-1:0] wcr; reg [5:0] wpend; reg [DD-1:0] dff; reg [DB:0] dfn;
+        // Local bank reads reserve local storage, never a remote VM credit. Four sectors cover the local
+        // read/pin pipeline; the eight VM credits are consumed only when a write enters the VM wire.
+        localparam integer PF = 4;
+        reg [1:0] pf_wp, pf_rp; reg [2:0] pf_n;
+        reg [255:0] pf_d [0:PF-1]; reg [7:0] pf_m [0:PF-1]; reg [9:0] pf_s [0:PF-1]; reg [PF-1:0] pf_slot;
         for (genvar q = 0; q < NSJ; q = q + 1) begin : g_sb
             assign ln_sbusy[g][q] = s_rem[q] != 9'd0 || s_out[q] != '0;
         end
@@ -236,9 +241,9 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                 for (integer q = 0; q < 2; q = q + 1) begin d_rem[q] <= 9'd0; d_out[q] <= '0; d_need[q] <= 6'd0; end
                 rr <= 3'd0; cr <= QB'(LQ); fn <= '0; wcr <= QB'(LQ); wpend <= 6'd0; dfn <= '0;
                 wrq_vf[g] <= 1'b0; lsw_v_f[g] <= 1'b0; lsw_scrub_f[g] <= 1'b0; ldr_v_f[g] <= 1'b0; wwq_vf[g] <= 1'b0;
-                ln_err[g] <= 1'b0; ln_shome[g] <= 1'b1; ln_dhome[g] <= 1'b1;
+                ln_err[g] <= 1'b0; ln_shome[g] <= 1'b1; ln_dhome[g] <= 1'b1; pf_wp <= 2'd0; pf_rp <= 2'd0; pf_n <= 3'd0;
             end else begin : ln
-                reg iss, land, found, sfound, dr, ret, wsend, wfree, c0, c1, di, ds, ok;
+                reg iss, land, found, sfound, dr, ret, wsend, wfree, c0, c1, di, ds, ps, enq, ok;
                 reg [2:0] qi, qq, lr, sq; reg [7:0] mk; reg [FB:0] wi; reg [DB:0] dwi;
                 iss = 1'b0; land = 1'b0; found = 1'b0; sfound = 1'b0; qi = 3'd0; sq = 3'd0;
                 wrq_vf[g] <= 1'b0; lsw_v_f[g] <= 1'b0; lsw_scrub_f[g] <= 1'b0; ldr_v_f[g] <= 1'b0; wwq_vf[g] <= 1'b0;
@@ -284,10 +289,10 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                 if (wrq_cr_q[g] && !iss && cr == QB'(LQ)) ln_err[g] <= 1'b1;      // credit overflow
                 ln_shome[g] <= (cr == QB'(LQ)) && (fn == '0);
                 // ================= DRAIN: one read an edge under the slot's frontier, slot 0 first
-                dr = 1'b0; ret = 1'b0; wsend = 1'b0; wfree = 1'b0; di = 1'b0;
+                dr = 1'b0; ret = 1'b0; wsend = 1'b0; wfree = 1'b0; di = 1'b0; enq = 1'b0; ps = pf_slot[pf_rp];
                 c0 = d_rem[0] != 9'd0 && ((MUT_V == 5) ? {d_k[0], d_off[0]} <= dfr_s[0] : {d_k[0], d_off[0]} < dfr_s[0]);
                 c1 = d_rem[1] != 9'd0 && ((MUT_V == 5) ? {d_k[1], d_off[1]} <= dfr_s[1] : {d_k[1], d_off[1]} < dfr_s[1]);
-                if (wcr != '0 && (c0 || c1)) begin
+                if ((MUT_V == 9 || (32'(pf_n) + 32'(dfn)) < PF) && (c0 || c1)) begin
                     dr = 1'b1; di = !c0;
                     ldr_v_f[g] <= 1'b1; ldr_sec_f[g] <= d_ll[di];
                     d_ll[di] <= d_ll[di] + 15'd32; d_k[di] <= d_k[di] + 9'd1; d_rem[di] <= d_rem[di] - 9'd1;
@@ -305,11 +310,19 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                         $display("SV leaf lane %0d CHK drain slot %0d vm sector %0d em %h want ep %0d", {lid_q, 1'(g)}, ds, {d_rv[ds], B}, ldr_em_q[g*12 +: 12], d_ep[ds]);
 `endif
                     if (mk != 8'd0) begin
-                        wsend = 1'b1; wwq_vf[g] <= 1'b1;
-                        wwq_sf[g] <= d_rv[ds]; wwq_df[g] <= ldr_d_q[g*256 +: 256]; wwq_mf[g] <= mk;
+                        enq = 1'b1;
+                        pf_d[pf_wp] <= ldr_d_q[g*256 +: 256]; pf_m[pf_wp] <= mk;
+                        pf_s[pf_wp] <= d_rv[ds]; pf_slot[pf_wp] <= ds; pf_wp <= pf_wp + 2'd1;
                     end else wfree = 1'b1;
                     d_rv[ds] <= d_rv[ds] + 10'd1;
                 end
+                if (pf_n != 3'd0 && wcr != '0) begin
+                    wsend = 1'b1; wwq_vf[g] <= 1'b1;
+                    wwq_sf[g] <= pf_s[pf_rp]; wwq_df[g] <= pf_d[pf_rp]; wwq_mf[g] <= pf_m[pf_rp];
+                    pf_rp <= pf_rp + 2'd1;
+                end
+                pf_n <= pf_n + 3'(enq) - 3'(wsend);
+                if (enq && pf_n == 3'(PF) && !wsend) ln_err[g] <= 1'b1;
                 dwi = dfn - (DB+1)'(ret);
                 for (integer k = 0; k < DD; k = k + 1) begin
                     if (dr && dwi == (DB+1)'(k)) dff[k] <= di;
@@ -317,15 +330,16 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                 end
                 dfn <= dfn + (DB+1)'(dr) - (DB+1)'(ret && dfn != '0);
                 for (integer q = 0; q < 2; q = q + 1) begin
-                    d_out[q] <= d_out[q] + (DB+1)'(dr && di == 1'(q)) - (DB+1)'(ret && ds == 1'(q));
+                    d_out[q] <= d_out[q] + (DB+1)'(dr && di == 1'(q)) - (DB+1)'(wsend && ps == 1'(q)) - (DB+1)'(wfree && ds == 1'(q));
                     // writes still owed to this slot: every write up to its last one must be done (done is in order)
-                    if (wsend && ds == 1'(q)) d_need[q] <= wpend + 6'd1 - 6'(wwq_done_q[g]);
+                    if (wsend && ps == 1'(q)) d_need[q] <= wpend + 6'd1 - 6'(wwq_done_q[g]);
                     else if (wwq_done_q[g] && d_need[q] != 6'd0) d_need[q] <= d_need[q] - 6'd1;
                 end
-                wcr <= wcr - QB'(dr) + QB'(wfree) + QB'(wwq_cr_q[g]);
+                wcr <= wcr - QB'(wsend) + QB'(wwq_cr_q[g]);
+                if (wwq_cr_q[g] && !wsend && wcr == QB'(LQ)) ln_err[g] <= 1'b1;
                 wpend <= wpend + 6'(wsend) - 6'(wwq_done_q[g]);
                 if (wpend == 6'd63 && wsend && !wwq_done_q[g]) ln_err[g] <= 1'b1;
-                ln_dhome[g] <= (wcr == QB'(LQ)) && (wpend == 6'd0) && (dfn == '0);
+                ln_dhome[g] <= (wcr == QB'(LQ)) && (wpend == 6'd0) && (dfn == '0) && (pf_n == 3'd0);
                 // ================= job load (the slot is idle: nothing above touched it)
                 if (ld_v && !ld_kind) begin
                     for (integer q = 0; q < NSJ; q = q + 1) if (ld_slot == 3'(q)) begin
