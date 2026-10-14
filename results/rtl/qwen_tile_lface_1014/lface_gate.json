@@ -1,0 +1,148 @@
+{
+ "sources": [
+  "rtl/hdc/ot_qwen_me_array_w12.sv",
+  "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+  "rtl/hdc/ot_hdc_matvec.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/physical/ot_qwen_tile_lsl.sv",
+  "rtl/physical/ot_qwen_tile_node.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/physical/ot_qwen_tile_kids.sv",
+  "rtl/physical/ot_qwen_tile_ctl.sv",
+  "rtl/physical/ot_qwen_rom_tile_nkt.sv",
+  "rtl/physical/ot_qwen_tile_rpair.sv",
+  "rtl/physical/ot_qwen_tile_tp8_cached_split.sv",
+  "rtl/physical/ot_qwen_xcache_split32.sv",
+  "rtl/physical/ot_qwen_rom_tile_nkt_tp8_core_ctx.sv",
+  "rtl/physical/ot_qwen_context_admission.sv",
+  "rtl/physical/ot_qwen_xcache_context32.sv",
+  "rtl/physical/ot_qwen_live_face.sv",
+  "rtl/physical/ot_qwen_tile_ctl_lface.sv",
+  "rtl/test/qwen_kv_die/tb_qwen_tile_lface.sv",
+  "rtl/physical/ot_qwen_tile_numeric_output_metadata.sv",
+  "rtl/physical/ot_qwen_live_face.sv",
+  "rtl/physical/ot_qwen_tile_numeric_output_metadata.sv",
+  "rtl/physical/ot_qwen_tile_ctl_lface.sv",
+  "rtl/test/qwen_kv_die/tb_qwen_tile_lface.sv"
+ ],
+ "cases": [
+  {
+   "case": "pos_lat2_d5_stall",
+   "params": {
+    "LAT": 2,
+    "DEPTH": 5,
+    "STALL": 1
+   },
+   "rc": 0,
+   "expected_failure": null,
+   "lines": [
+    "LFACE LAT=2 DEPTH=5 STALL=1 base_edges=4577 core_edges=2631 credit_paused_base_edges=719 paused_with_ack_in_flight=67 max_query_queue=5 (mailbox bench: 4568 base edges, 871 pending edges)",
+    "PASS lface registered faces GT3072 ops=6 arithmetic=680 requests=680 misses=144 streamed_queries=680 streamed_words=680 no_fault no_deadlock"
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "case": "pos_lat6_d9_stall",
+   "params": {
+    "LAT": 6,
+    "DEPTH": 9,
+    "STALL": 1
+   },
+   "rc": 0,
+   "expected_failure": null,
+   "lines": [
+    "LFACE LAT=6 DEPTH=9 STALL=1 base_edges=4577 core_edges=2367 credit_paused_base_edges=983 paused_with_ack_in_flight=67 max_query_queue=9 (mailbox bench: 4568 base edges, 871 pending edges)",
+    "PASS lface registered faces GT3072 ops=6 arithmetic=680 requests=680 misses=144 streamed_queries=680 streamed_words=680 no_fault no_deadlock"
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "case": "rate_lat2_d5",
+   "params": {
+    "LAT": 2,
+    "DEPTH": 5,
+    "STALL": 0
+   },
+   "rc": 0,
+   "expected_failure": null,
+   "lines": [
+    "LFACE LAT=2 DEPTH=5 STALL=0 base_edges=4574 core_edges=3394 credit_paused_base_edges=4 paused_with_ack_in_flight=1 max_query_queue=1 (mailbox bench: 4568 base edges, 871 pending edges)",
+    "PASS lface registered faces GT3072 ops=6 arithmetic=680 requests=680 misses=143 streamed_queries=680 streamed_words=680 no_fault no_deadlock"
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "case": "rate_lat6_d9",
+   "params": {
+    "LAT": 6,
+    "DEPTH": 9,
+    "STALL": 0
+   },
+   "rc": 0,
+   "expected_failure": null,
+   "lines": [
+    "LFACE LAT=6 DEPTH=9 STALL=0 base_edges=4574 core_edges=3386 credit_paused_base_edges=12 paused_with_ack_in_flight=1 max_query_queue=1 (mailbox bench: 4568 base edges, 871 pending edges)",
+    "PASS lface registered faces GT3072 ops=6 arithmetic=680 requests=680 misses=143 streamed_queries=680 streamed_words=680 no_fault no_deadlock"
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "case": "mut_margin",
+   "params": {
+    "LAT": 2,
+    "DEPTH": 5,
+    "STALL": 1,
+    "QMUT": 1
+   },
+   "rc": 1,
+   "expected_failure": "live queue overflow fault",
+   "lines": [
+    "[506000] %Fatal: tb_qwen_tile_lface.sv:114: Assertion failed in tb_qwen_tile_lface: live queue overflow fault (credit loop broken) q=1 n=0",
+    "%Error: rtl/test/qwen_kv_die/tb_qwen_tile_lface.sv:114: Verilog $stop"
+   ],
+   "verdict": "MUTANT_FAILS"
+  },
+  {
+   "case": "mut_heldlevel",
+   "params": {
+    "LAT": 2,
+    "DEPTH": 5,
+    "STALL": 1,
+    "QMUT": 2
+   },
+   "rc": 1,
+   "expected_failure": "live ",
+   "lines": [
+    "[396000] %Fatal: tb_qwen_tile_lface.sv:114: Assertion failed in tb_qwen_tile_lface: live queue overflow fault (credit loop broken) q=1 n=0",
+    "%Error: rtl/test/qwen_kv_die/tb_qwen_tile_lface.sv:114: Verilog $stop"
+   ],
+   "verdict": "MUTANT_FAILS"
+  },
+  {
+   "case": "mut_accept_unaligned",
+   "params": {
+    "LAT": 2,
+    "DEPTH": 5,
+    "STALL": 1,
+    "MUT": 2
+   },
+   "rc": 1,
+   "expected_failure": "production accepted context mismatch",
+   "lines": [
+    "[326000] %Fatal: tb_qwen_tile_lface.sv:155: Assertion failed in tb_qwen_tile_lface: production accepted context mismatch",
+    "%Error: rtl/test/qwen_kv_die/tb_qwen_tile_lface.sv:155: Verilog $stop"
+   ],
+   "verdict": "MUTANT_FAILS"
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+LFACE LAT=2 DEPTH=5 STALL=1 base_edges=4577 core_edges=2631 credit_paused_base_edges=719 paused_with_ack_in_flight=67 max_query_queue=5 (mailbox bench: 4568 base edges, 871 pending edges)
+PASS lface registered faces GT3072 ops=6 arithmetic=680 requests=680 misses=144 streamed_queries=680 streamed_words=680 no_fault no_deadlock
+- rtl/test/qwen_kv_die/tb_qwen_tile_lface.sv:231: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 46us; walltime 0.481 s; speed 95.059 us/s
+- Verilator: cpu 0.481 s on 1 threads; allocated 22 MB
