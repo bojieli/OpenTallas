@@ -97,5 +97,22 @@
     "exact": "other-slot STORE allowed with old read queued; same-slot STORE refusal fault4",
     "negative": "MUT2 ignoring same-slot reuse fails",
     "record_directory": "slot_ownership"
+  },
+  "sram_controller_gate": {
+    "source": "7bb996e02",
+    "unit": "oth-ubuntu-466909-1791951727",
+    "host": "ot-epyc1tb",
+    "exit": 0,
+    "actual_hloads": 2,
+    "actual_hstores": 2,
+    "messages": 2,
+    "errors": 0,
+    "early_reads": 0,
+    "faults": "0000",
+    "first": 1378,
+    "last": 2790,
+    "prior_flop4_first": 1377,
+    "prior_flop4_last": 7783,
+    "scope": "Pure H two-job protocol only; no full token price/adoption claim; stalled and mutants in flight"
   }
 }
