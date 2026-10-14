@@ -6352,7 +6352,7 @@ def helper_provenance_retained(j):
         return False
     reason = j.get("reason") or ""
     pending = j.get("status") not in TERMINAL
-    text = (reason or (j.get("errors") or [""])[-1]) if pending else reason
+    text = ((j.get("errors") or [""])[-1] or reason) if pending else reason
     return any(tag in text for tag in (
         "FROZEN_HELPER_OVERLAY", "effective route helper drift", "helper overlay drift",
         "frozen helper", "frozen-helper", "FROZEN_HELPER_RECOVERY", "original remote helper verification"))

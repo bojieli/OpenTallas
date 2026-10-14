@@ -1,5 +1,6 @@
 """Helper refusal preserves evidence and does not reconsume a failed ECO."""
 import copy
+from contextlib import nullcontext
 import json
 from pathlib import Path
 import tempfile
@@ -29,7 +30,7 @@ class RetentionTests(unittest.TestCase):
         self.assertNotIn('deep_released', j)
 
     def test_pending_unknown_physics_retained_but_design_verdict_not_relabelled(self):
-        j = blocked('READY'); j.update(reason=None, metrics={}, errors=['ValueError: FROZEN_HELPER_OVERLAY: missing bytes'])
+        j = blocked('READY'); j.update(reason='explicit recovery queued', metrics={}, errors=['ValueError: FROZEN_HELPER_OVERLAY: missing bytes'])
         self.assertTrue(cl.helper_provenance_retained(j))
         j.update(status='NEEDS_RTL', reason='TT -341ps / FF -13ps')
         self.assertFalse(cl.helper_provenance_retained(j))
@@ -37,6 +38,23 @@ class RetentionTests(unittest.TestCase):
         self.assertFalse(cl.helper_provenance_retained(j))
         j.update(status='NEEDS_HUMAN', reason='route rc=1')
         self.assertFalse(cl.helper_provenance_retained(j))
+
+    def test_completed_receipt_helper_failure_is_bounded_and_retained(self):
+        j = blocked('ECO_RESULT')
+        j.update(reason=None, errors=[], eco=dict(rc=9, result=dict(tt_ps=-10.45, ff_ps=8.35, drc=1)))
+        def finish(x, status, reason, text):
+            x.update(status=status, reason=reason)
+        with patch.object(cl, 'job_lock', return_value=nullcontext()), patch.object(cl, 'load_job', return_value=j), \
+                patch.object(cl, 'save_job'), patch.object(cl, 'is_transient', return_value=False), \
+                patch.object(cl, 'step', side_effect=ValueError('FROZEN_HELPER_OVERLAY: original bytes missing')) as step, \
+                patch.object(cl, 'finish', side_effect=finish), patch.object(cl, 'log'):
+            for _ in range(11):
+                cl.advance_job(j['name'], Mock())
+            self.assertEqual(step.call_count,10)
+        self.assertEqual(j['status'],'NEEDS_HUMAN')
+        self.assertEqual(j['eco']['rc'],9)
+        self.assertTrue(cl.helper_provenance_retained(j))
+        self.assertFalse(cl.eco_passes(j['eco']['result'],9))
 
     def test_actual_q8e_rc9_failure_is_consumed_once_before_helper_refusal(self):
         # Actual q8e least-bad receipt: no clean pass and one DRC; never install it.
