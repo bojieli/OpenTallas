@@ -3,7 +3,4 @@
 module dsfd_rly_283_EW (input wire ck, input wire rs, input wire [282:0] i, output wire [282:0] o);
     ot_s81_rly #(.W(283)) u (.ck(ck), .rs(rs), .i(i), .o(o));
 endmodule
-module dsfd_rly_266_EW (input wire ck, input wire rs, input wire [265:0] i, output wire [265:0] o);
-    ot_s81_rly #(.W(266)) u (.ck(ck), .rs(rs), .i(i), .o(o));
-endmodule
 `default_nettype wire

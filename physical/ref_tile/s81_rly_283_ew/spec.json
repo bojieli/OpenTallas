@@ -12,7 +12,7 @@
   "rs"
  ],
  "outline": {
-  "w": 21.6,
+  "w": 23.76,
   "h": 30.24
  },
  "macros": [],
@@ -39,8 +39,8 @@
  "job": {
   "owner": "Claude:s81-die",
   "branch": "claude/el1011-s81dieit",
-  "tag": "v1",
-  "purpose": "S81 die relay master dsfd_rly_283_EW (512 instances in the v16 (g16a/d5) placement, generated outline + interim timing there): real hard tile, 283 b in E / out W, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget",
+  "tag": "v2",
+  "purpose": "S81 die relay master dsfd_rly_283_EW (512 instances in the v17 (g17/p2) placement, generated outline + interim timing there): real hard tile, 283 b in E / out W, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget",
   "benches": [
    {
     "name": "exact_words",

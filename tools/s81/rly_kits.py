@@ -49,6 +49,9 @@ def main() -> int:
                     "kits) are left untouched")
     ap.add_argument("--rtl-file", default="dsfd_rly_masters.sv", help="masters file under rtl/dsrom_sys/s81_glue")
     ap.add_argument("--case", default="c5", help="die case named in the job purpose")
+    ap.add_argument("--outline", help="W,H (um) for the --only masters instead of the class outline (2026-10-13: the E/W wide "
+                    "class 21.6 x 30.24 is 62-66 % utilised with the hold cells = refused at floorplan; 23.76 x 30.24 = 55-59 %)")
+    ap.add_argument("--tag", help="job tag for the --only masters")
     a = ap.parse_args()
     if a.only:
         assert a.rtl_file != "dsfd_rly_masters.sv", "--only needs its own --rtl-file"
@@ -78,14 +81,15 @@ def main() -> int:
             "name": name, "top": mst, "kind": "tile",
             "sources": [f"{RTL}/ot_s81_rly.sv", f"{RTL}/{a.rtl_file}"],
             "params": {}, "clock_port": "ck", "reset_ports": ["rs"],
-            "outline": outline(w, fi, fo), "macros": [],
+            "outline": ({"w": float(a.outline.split(",")[0]), "h": float(a.outline.split(",")[1])} if a.only and a.outline
+                        else outline(w, fi, fo)), "macros": [],
             "pins": {f: p for f, p in pins.items() if p},
             "outhold": True,
             # small tiles (<= 15.12 um): M5 PG at 2.7 um so each net has >= 2 full-length stripes spanning > 50% of the tile
             # (v1 export child_lint (b): 1 stripe a net at 8.64, 36% span at 15.12; the 21.6 / 34.56 um masters closed at 5.4)
             "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8, **({"m5_pg_pitch": 2.7} if small else {})},
             "job": {
-                "owner": a.owner, "branch": a.branch, "tag": ("v3" if w <= 15 else "v2") if small else "v1",
+                "owner": a.owner, "branch": a.branch, "tag": a.tag or (("v3" if w <= 15 else "v2") if small else "v1"),
                 "purpose": f"S81 die relay master {mst} ({n} instances in the {a.case} placement, generated outline + interim "
                            f"timing there): real hard tile, {w} b in {fi} / out {fo}, ck+rs {cf}, scalar ck/rs, M5 cap, one "
                            "register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps "
