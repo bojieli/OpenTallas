@@ -100,8 +100,9 @@ def _split_top(expr, ch):
     return -1
 
 
-def to_py(expr: str) -> str:
-    e = expr.strip()
+def _ternary(e: str) -> str:
+    """Verilog ?: -> Python conditional expressions, at every nesting level (inside parentheses too)"""
+    e = e.strip()
     q = _split_top(e, '?')
     if q >= 0:
         rest = e[q + 1:]
@@ -120,13 +121,34 @@ def to_py(expr: str) -> str:
                     break
                 nest -= 1
         if col >= 0:
-            return f'(({to_py(rest[:col])}) if ({to_py(e[:q])}) else ({to_py(rest[col + 1:])}))'
+            return f'(({_ternary(rest[:col])}) if ({_ternary(e[:q])}) else ({_ternary(rest[col + 1:])}))'
+    out, i = [], 0
+    while i < len(e):                       # recurse into each top-level parenthesised group
+        if e[i] == '(':
+            depth, k = 0, i
+            while k < len(e):
+                if e[k] == '(':
+                    depth += 1
+                elif e[k] == ')':
+                    depth -= 1
+                    if depth == 0:
+                        break
+                k += 1
+            out.append('(' + _ternary(e[i + 1:k]) + ')')
+            i = k + 1
+        else:
+            out.append(e[i]); i += 1
+    return ''.join(out)
+
+
+def to_py(expr: str) -> str:
+    e = _ternary(expr)
     e = re.sub(r"(\d+)?'[sS]?([dDhHbBoO])([0-9a-fA-F_xXzZ]+)",
                lambda m: str(int(m.group(3).replace('_', '').replace('x', '0').replace('X', '0').replace('z', '0')
                                  .replace('Z', '0'), {'d': 10, 'h': 16, 'b': 2, 'o': 8}[m.group(2).lower()])), e)
     e = e.replace('$clog2', '_clog2').replace('&&', ' and ').replace('||', ' or ')
     e = re.sub(r'!(?!=)', ' not ', e)
-    e = re.sub(r'(?<![<>!=])/(?!/)', '//', e)
+    e = re.sub(r'(?<![<>!=/])/(?!/)', '//', e)
     return e
 
 
@@ -171,7 +193,7 @@ class Module:
 
     def children(self, idx):
         out = set()
-        for m in re.finditer(r'(?:^|;|\bbegin\b|\bend\b|\)|:)\s*(\w+)\s*(?:#\s*\()?', self.body, re.M):
+        for m in re.finditer(r'(?:^|;|\bbegin\b|\bend\b|\)|:)\s*(\w+)', self.body, re.M):
             if m.group(1) in idx and m.group(1) != self.name:
                 out.add(m.group(1))
         return out
@@ -262,8 +284,11 @@ def parse_modules(text: str, path: str):
         else:
             body = seg[i:]
         # localparams / body parameters (non-ANSI parameter declarations)
-        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:integer\s+|int\s+|\[[^\]]*\]\s*)?(\w+)\s*=\s*([^;,]+)', body):
-            params.setdefault(pm.group(1), pm.group(2).strip())
+        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:integer\s+|int\s+|\[[^\]]*\]\s*)?([^;]+);', body):
+            for item in _split_commas(pm.group(1)):          # a declaration list: localparam A = .., B = .., C = ..;
+                im = re.match(r'\s*(\w+)\s*=\s*(.+)$', item, re.S)
+                if im:
+                    params.setdefault(im.group(1), im.group(2).strip())
         # non-ANSI port declarations in the body
         for pm in re.finditer(r'\b(input|output|inout)\s+(?:wire\s+|reg\s+|logic\s+)?(?:signed\s+)?((?:\[[^\]]+\]\s*)*)([^;]+);', body):
             for pn in _split_commas(pm.group(3)):
@@ -468,6 +493,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
     mparams = mparams or {}
     drv = defaultdict(int)       # (net) -> bitmask of driven bits (by count via lists below)
     drv_cnt = defaultdict(lambda: defaultdict(int))
+    io_cnt = defaultdict(lambda: defaultdict(int))
     rd = defaultdict(set)
     for n in tin:
         w, lo = nets[n]
@@ -529,8 +555,9 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
                     drv_cnt[b[0]][b[1]] += 1
                 elif d == 'input':
                     rd[b[0]].add(b[1])
-                else:                                   # inout: both
-                    drv_cnt[b[0]][b[1]] += 1
+                else:                                   # inout (a bundled pass-through face, e.g. a PHY DFI bundle):
+                    io_cnt[b[0]][b[1]] += 1             # drives a bit only where no output port drives it
+                    rd[b[0]].add(b[1])
         for pn, (d, _) in mod.ports.items():
             if pn not in cm:
                 if d == 'input':
@@ -540,6 +567,10 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
     for n in tout:
         w, lo = nets[n]
         rd[n].update(range(lo, lo + w))
+    for n, dc in io_cnt.items():
+        for i, c in dc.items():
+            if drv_cnt[n].get(i, 0) == 0:
+                drv_cnt[n][i] += c
     undriven, multi = defaultdict(int), defaultdict(int)
     for n, bs in rd.items():
         dc = drv_cnt.get(n, {})

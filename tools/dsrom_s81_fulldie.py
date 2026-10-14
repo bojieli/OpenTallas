@@ -270,6 +270,17 @@ def real_lef(rel):
     return _REAL[rel]
 
 
+def _real_pin_dirs(master):
+    """{pin: INPUT | OUTPUT | INOUT} of a real LEF macro by its master name ({} for a generated master)"""
+    for rec in _REAL.values():
+        if rec['name'] == master:
+            if 'dirs' not in rec:
+                rec['dirs'] = {pm.group(1): (re.search(r'DIRECTION (\w+)', pm.group(2)) or [None, None])[1]
+                               for pm in re.finditer(r'\n  PIN (\S+)\n(.*?)\n  END \1', rec['text'], re.S)}
+            return rec['dirs']
+    return {}
+
+
 def q_pq():
     """True when the q abstract carries the PQ pins (go_tag / bank_free / sh_free / walking): ot_v41_rom_elem_q_qxpq_w10"""
     return 'go_tag[0]' in real_lef(Q_LEF)['pins']
@@ -1354,6 +1365,7 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                 conns[inst].append((base, net, n, lo if k == 1 else lo // k))
             else:
                 conns[inst].append((port, net, n))
+    open_bits = {}
     for it in m['insts']:
         parts = []
         bus_bits = defaultdict(dict)
@@ -1380,9 +1392,29 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
-            cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))
+            if RTL_BIND and k == 1:
+                # s81-die-rtl-bind 2026-10-14: a real macro port is bound at its FULL width (e.g. ot_rom_4096x72_m8
+                # rd_out[71:0] of which the cfg sequencer reads [47:0]): unused OUTPUT bits land on this instance's
+                # declared open net (one driver, no load), unused INPUT bits stay 1'bz and fail the port-bind gate
+                pd_ = _real_pin_dirs(it.master)
+                hi = max([hi] + [int(mm_.group(1)) for pn_ in pd_ for mm_ in [re.match(re.escape(base) + r'\[(\d+)\]$', pn_)] if mm_])
+                cat_ = []
+                for j in range(hi, -1, -1):
+                    if j in bits_:
+                        cat_.append(bits_[j])
+                    elif pd_.get(f'{base}[{j}]') == 'OUTPUT':
+                        open_bits[it.name] = open_bits.get(it.name, 0) + 1
+                        cat_.append(f'n_open_{it.name}[{open_bits[it.name] - 1}]')
+                    else:
+                        cat_.append("1'bz")
+                cat = ', '.join(cat_)
+            else:
+                cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))
             parts.append(f'.{Q.esc(base)}({{{cat}}})')
         V.append(f'  {it.master} {it.name} (' + ', '.join(parts) + ');')
+    if open_bits:      # --rtl-bind: the declared open nets of real-macro output bits no die bus reads
+        at_ = next(i for i, v in enumerate(V) if v.startswith('  wire ') or v.startswith('  ') and ' (' in v)
+        V[at_:at_] = [f'  wire [{n_ - 1}:0] n_open_{nm_};' for nm_, n_ in open_bits.items()]
     V.append('endmodule\n')
     Path(path).write_text('\n'.join(V))
     if k == 1:
@@ -1425,6 +1457,9 @@ def die_master_params(m):
     ch = m.get('ctrl_host')
     if ch and ch.get('master') in used:
         out[ch['master']] = dict(NS=ch['ns'], _source='die stacks %s' % ','.join(ch['stacks']))
+    if 'ot_s81_cfg7_seq' in used and q_pq():
+        # TA-10: the PQ q element's loader handshake (ef / go_tag) is the PQ 1 loader (tb_ot_s81_cfg7_seq.sv PQ 1)
+        out['ot_s81_cfg7_seq'] = dict(PQ=1, _source='q element %s carries go_tag / sh_free / bank_free' % real_lef(Q_LEF)['name'])
     for mst in ('dsfd_bk_selector_c', 'dsfd_bk_collector_c'):
         if mst in used:      # stack lanes present on this die (F5: distinct per-stack streams, absent stacks have no port)
             sts = list(m.get('svcs', {})) or list(STACKS.get(DIE_KIND, ()))
@@ -2800,6 +2835,7 @@ ENG_BUSES = (
     ('host', 't_eng', 'eng', 'f_cfg', 3, 'cfg_layer + cfg_rank (boot CSR)'),
 )
 HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
+HOST_CF_BITS, HOST_TC_BITS = 514, 130   # collective -> host / host -> collective (--rtl-bind: dsfd_host_c 516 / 81)
 CTRL_RQ = False                # --ctrl-rq (implied by layer1e)
 FWD_IFACE = False              # --fwd-iface: host-write / Engram die interfaces as forwarded lanes
 Q_X1B = False                  # --q-x1b: option-B q pin plan (x1 on the S-face east end, own bank; right lane MY)
@@ -3079,6 +3115,7 @@ def bf_flavour_capacity(sl, sh):
     slot_geometry()
     return out
 CFG7_RTL = 'rtl/v41die/ot_s81_cfg7_seq.sv'
+CFG7_MASTERS = ('ot_s81_cfg7_seq', 'ot_s81_cfg7_seq_bf')     # q pairs (PQ per the q element) / BF pairs (PQ 0)
 POWER8 = dict(
     seq=(80 * FLOP_CLK_W * 1.5, 'DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)'),
     sstn=(LSW * FLOP_CLK_W * 1.5, 'DERIVED 564 stage flops x W18 per-flop clock x 1.5'),
@@ -3642,7 +3679,11 @@ def build_r8(variant=None):
                 gx_ = (CFG_RGAP if (ln == 'R' and j >= CFG_RGAP_AT) else 0.0) + (XB_RGAP if ln == 'R' else 0.0)
                 insts.append(Inst(f'c{p}_{j}', rc['name'], cx0 + j * CFG_PITCH + gx_, sy + CFG_DY, rc['w'], rc['h'], ro,
                                   kind='cfg', region=f'frame_{r}'))
-            insts.append(Inst(f's{p}', 'ot_s81_cfg7_seq', sx, sy + CFG_DY, SEQ_WH[0] - SHAVE, SEQ_WH[1] - SHAVE, so,
+            # s81-die-rtl-bind 2026-10-14: the BF pair's element (ot_s81_bf_front) has no PQ loader handshake, so its
+            # sequencer is the PQ 0 loader master ot_s81_cfg7_seq_bf (no ef / go_tag pins); q pairs keep
+            # ot_s81_cfg7_seq, elaborated PQ 1 when the q element is the PQ element (die.v.params.json)
+            seq_m_ = 'ot_s81_cfg7_seq_bf' if (RTL_BIND and kind == 'BF') else 'ot_s81_cfg7_seq'
+            insts.append(Inst(f's{p}', seq_m_, sx, sy + CFG_DY, SEQ_WH[0] - SHAVE, SEQ_WH[1] - SHAVE, so,
                               kind='seq', region=f'frame_{r}'))
         # slot stations (one per used slot), above the NV extension in an NV slot
         nvslots = {s + 1 for p, kind, s, ln in elems if kind == 'NV'}
@@ -4562,8 +4603,8 @@ def buses_r8(m):
             (SUHC_BUSES if SUHC_1011 and not SUHC_V2 else ()) + (SUHC_V2_BUSES if SUHC_V2 else ()) + \
             ((HRTX_BUSES + (HRTX_KIT_BUSES if 'wfc' in hub else ()) + (HRTX_HOST_BUSES if 'host' in hub else ()))
              if 'hrtx' in hub else ()) + \
-            ((('collective', 'host', 514, 't_host', 'f_collective'),
-              ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
+            ((('collective', 'host', HOST_CF_BITS, 't_host', 'f_collective'),
+              ('host', 'collective', HOST_TC_BITS, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
             (ctrl_adapter_buses(hb) if CTRL_ADAPTERS else ()) + \
             (RTL_HUB_EXTRA if RTL_HUB_WIDTHS else ()) + \
             (tuple(b_ for k in range(HC_T_COLS) for b_ in (('hc_s', 'hc_t', HC_T_FWD, f't_tf{k}', f'f_sf{k}'),
@@ -4669,7 +4710,8 @@ def buses_r8(m):
         elif it.kind in ('hub', 'band_blk') and it.name != col:
             d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
             dom[d_].append((it.name, 'ck'))
-            rst[d_].append((it.name, 'rst'))
+            if not (RTL_BIND and it.master == 'dsfd_sp_hc_t'):     # F9: hc_t's reset is in-band (f_sf reset bit)
+                rst[d_].append((it.name, 'rst'))
         elif it.kind == 'hstn':
             dom[HSTN_DOM[it.domain]].append((it.name, 'ck'))
         elif it.kind == 'pqrom':
@@ -4900,7 +4942,7 @@ RTL_HUB_BITS = {('gather', 'capture'): 6947, ('capture', 'vm'): 13376, ('collect
 RTL_ABUT_GAP = 21.6             # um between the abutting wide pairs (pin flops on both faces; no logic between)
 RTL_HUB_EXTRA = (('vm', 'collective', 592, 't_collective', 'f_vm'), ('vm', 'collective', 3, 'tcs', 'ts'))
 RTL_BIND = False                # --rtl-bind (s81-die-rtl-bind 2026-10-14)
-DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8')
+DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8', 'dsfd_host_c')
 CTRL_SVC_MASTER = 'dsfd_svc_c'        # svc_<st> under --ctrl-adapters: j / jd job pins from dsfd_svc_join (engine 4)
 CTRL_SVC_JOIN = 'dsfd_svc_join'
 
@@ -6790,8 +6832,12 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
             # per-stack host writes (s81-svceng host interface, ds-1010.log: host master dsfd_host_s #(NS); svc side
             # dsfd_svc_c hw / hc, claude/el1011-s81svch eccab9f14): host hw[292 s +: 292] = {cls 2, we, addr 32, d 256, v}
             # -> svc_<st> hw; svc hc {ack 8, cr} -> host hc[9 s +: 9]; forwarded lanes as the old 578 / 18-b host lanes
-            hub['host'].master = 'dsfd_host_s'
-            m.setdefault('ctrl_host', dict(master='dsfd_host_s', ns=len(sts), stacks=sts))
+            # s81-die-rtl-bind 2026-10-14 (F6): a layer die's host master is dsfd_host_c (rtl/dsrom_sys/s81_ingest:
+            # the ingest behind the collective's host channel + the sequencer program / status faces); dsfd_host_s
+            # (host-link face h_v / h_cls / h_d) stays the head-die master
+            hm_ = 'dsfd_host_c' if (RTL_BIND and DIE_KIND in ('layer', 'layer1', 'layer1e')) else 'dsfd_host_s'
+            hub['host'].master = hm_
+            m.setdefault('ctrl_host', dict(master=hm_, ns=len(sts), stacks=sts))
             for i_, st in enumerate(sts):
                 sd_ = 'W' if st[1] == 'W' else 'E'
                 ctrl_lane(f'hw{st}', 292, hub['host'], f'hw[{292 * i_}:{292 * i_ + 291}]', svcs[st], 'hw', sd_)
@@ -7278,7 +7324,7 @@ def masters_r8(m, k=1):
         if mst in REAL_FILES:
             continue
         ports = pdir.get(mst, {})
-        Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst == 'ot_s81_cfg7_seq' else 7, f'r8 {it.kind}')
+        Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst in CFG7_MASTERS else 7, f'r8 {it.kind}')
         M[mst] = Mx
         _faces_r8(m, Mx, it, ports)
         if k == 1:
@@ -8404,8 +8450,18 @@ def apply_options(a):
     FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
-    global RTL_BIND
+    global RTL_BIND, HC_T_FWD, HC_T_RET, HOST_CF_BITS, HOST_TC_BITS
     RTL_BIND = bool(getattr(a, 'rtl_bind', False))
+    if RTL_BIND:
+        # F6: the collective <-> layer-die host channel at dsfd_host_c's RTL widths: collective -> host {t_cr, h_cls 2,
+        # h_d 512, h_v} = 516, host -> collective {st 11, h_crn 5, t_v, t_d 64} = 81 (were 514 / 130 placeholders)
+        HOST_CF_BITS, HOST_TC_BITS = 516, 81
+        # F9 (s81-die-rtl-bind 2026-10-14): the hc_s <-> hc_t column buses at the RTL widths of the production HC
+        # (dsfd_sp_hc_c / dsfd_sp_hc_t localparams at NG 256, S_RD 2, S_RT 4, ot_s81_hc_cth FDW / RDW):
+        # TFW = (72 + 16 S_RD) + max(512 S_RD, ceil(NG/8/3) 8 32) + S_RD + 5 + 129 = 3,056 (in-band reset bit included),
+        # TRW = S_RT + 24 S_RT + 8 + 512 S_RT + S_RT + 4 = 2,164.  The 1,264 / 1,090 of contract v12 were an NG <= 96
+        # cth: 3 x (3,056 + 2,164) = 15,660 crossing bits (was 7,062) -> die cut analysis owed (die lead + el1013-s81hc)
+        HC_T_FWD, HC_T_RET = 3056, 2164
     assert not WFC_PRICED or (WFC_KIT and not getattr(a, 'wfc_crp', False)), '--wfc-priced: the --wfc-kit stage / source kit (not --wfc-crp)'
     global WFC_CRP, STAGE_SEQ
     WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT

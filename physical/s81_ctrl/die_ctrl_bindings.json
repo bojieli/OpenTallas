@@ -6,7 +6,8 @@
  "rule": "sequencer port c<e>[84:0] -> slab c_cmd, slab c_done[8:0] -> d<e>, slab c_st[1:0] -> s<e>; a slab master is listed for an engine only when its RTL carries the pinned endpoint (ot_s81_slab_ep / ot_s81_engine_adapter) wired to its datapath AND its gate passed. An empty list = UNBOUND = die gate FAIL.",
  "sequencers": [
   "dsfd_stage_seq",
-  "dsfd_stage_seq_c"
+  "dsfd_stage_seq_c",
+  "dsfd_stage_seq_c8"
  ],
  "engines": {
   "fld": {
