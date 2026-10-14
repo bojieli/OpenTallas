@@ -1,0 +1,54 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc-20261013-235221
+ot-run: ot-epyc4       admits   503 GB (avail 730, growth 129, headroom 48, waiters 0/0 GB) load 24/128 running 15 disk 1202 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc-20261013-235221
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc-20261013-235221
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-754562-1791961888 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+RET_OUTLIER 368.480469 {u.rst_ret_s[0]$_DFF_PN0_/CLK}
+RET_OUTLIER 368.475922 {u.rst_ret_s[1]$_DFF_PN0_/CLK}
+RET_OUTLIER 274.611298 {u.o_d[1277]$_DFF_P_/CLK}
+RET_OUTLIER 274.591949 {u.o_d[1278]$_DFF_P_/CLK}
+RET_OUTLIER 274.581055 {u.o_f[0]$_DFF_PN0_/CLK}
+RET_OUTLIER 274.546509 {u.o_d[1279]$_DFF_P_/CLK}
+RET_OUTLIER 274.455566 {u.o_d[1240]$_DFF_P_/CLK}
+RET_OUTLIER 273.298676 {u.o_d[188]$_DFF_P_/CLK}
+RET_OUTLIER 273.294525 {u.o_d[187]$_DFF_P_/CLK}
+RET_OUTLIER 273.184082 {u.o_d[225]$_DFF_P_/CLK}
+RET_OUTLIER 273.042450 {u.o_d[263]$_DFF_P_/CLK}
+RET_OUTLIER 272.910675 {u.o_d[304]$_DFF_P_/CLK}
+RET_OUTLIER 272.383667 {u.o_d[386]$_DFF_P_/CLK}
+RET_OUTLIER 272.309143 {u.o_d[380]$_DFF_P_/CLK}
+RET_OUTLIER 272.282959 {u.o_d[385]$_DFF_P_/CLK}
+RET_EARLY 260.737610 {u.o_d[398]$_DFF_P_/CLK}
+RET_EARLY 260.689178 {u.o_d[367]$_DFF_P_/CLK}
+RET_EARLY 260.685516 {u.o_d[330]$_DFF_P_/CLK}
+RET_EARLY 260.673950 {u.o_d[331]$_DFF_P_/CLK}
+RET_EARLY 260.580811 {u.o_d[335]$_DFF_P_/CLK}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-754562-1791961888): exit 0

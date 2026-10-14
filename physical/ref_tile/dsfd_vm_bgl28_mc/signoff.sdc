@@ -150,7 +150,7 @@ proc ot_bgl_mc_ports {patterns} {
     return $result
 }
 proc ot_bgl_mc_mean {clock patterns} {
-    set values {}
+    set values {}; set best_values {}
     set pins {}
     if {$patterns eq {ALL}} {
         set pins [all_registers -clock_pins -clock [get_clocks $clock]]
@@ -163,15 +163,24 @@ proc ot_bgl_mc_mean {clock patterns} {
     }
     foreach p $pins {
         set a [get_property $p arrival_max_rise]
-        if {[string is double -strict $a]} { lappend values $a }
+        set best [get_property $p arrival_min_rise]
+        if {[string is double -strict $a] && [string is double -strict $best]} {
+            lappend values $a; lappend best_values $best
+        }
     }
     if {![llength $values]} { error "BGL_MC: no measured reference for $clock ($patterns)" }
     set sum 0.0
     foreach a $values { set sum [expr {$sum+$a}] }
     set mean [expr {$sum/[llength $values]}]
-    set sorted [lsort -real $values]
-    puts "BGL_MC_RAW root=$clock n=[llength $values] mean=$mean min=[lindex $sorted 0] max=[lindex $sorted end]"
-    return $mean
+    set best_sum 0.0
+    foreach a $best_values { set best_sum [expr {$best_sum+$a}] }
+    set best_mean [expr {$best_sum/[llength $best_values]}]
+    set sorted [lsort -real $values]; set best_sorted [lsort -real $best_values]
+    # Positive-edge DFFs only. In the route's two loaded scenes, arrival_max
+    # is the actual configured setup scene (TC=TT), arrival_min is BC=FF.
+    # Single-corner replay/export measures that actual corner on both senses.
+    puts "BGL_MC_RAW root=$clock n=[llength $values] max_mean=$mean max_min=[lindex $sorted 0] max_max=[lindex $sorted end] min_mean=$best_mean min_min=[lindex $best_sorted 0] min_max=[lindex $best_sorted end]"
+    return [list $mean $best_mean]
 }
 # Pin ownership is explicit. Request input/output share rb0; return input/output
 # use rt/so in H1. Bank input straps/reset reference bank rst/gidq clocks.
@@ -186,9 +195,9 @@ if {$ot_mc_post} { set_propagated_clock $ot_mc_physical; catch {sta::worst_slack
 set ot_mc_refs [dict create]
 foreach owner $ot_mc_owners {
     lassign $owner clock inputs outputs refs
-    set R 0.0
-    if {$ot_mc_post} { set R [ot_bgl_mc_mean $clock $refs] }
-    dict set ot_mc_refs $clock $R
+    set R 0.0; set Rmin 0.0
+    if {$ot_mc_post} { lassign [ot_bgl_mc_mean $clock $refs] R Rmin }
+    dict set ot_mc_refs $clock [list $R $Rmin]
     set ii [ot_bgl_mc_ports $inputs]; set oo [ot_bgl_mc_ports $outputs]
     set sk [expr {$ot_mc_post ? 90.0 : 0.0}]
     set hk [expr {$ot_mc_post ? 50.0 : 0.0}]
@@ -207,12 +216,16 @@ unset_input_delay [get_ports {ck ck_req ck_ret}]
 # The RAW mean/min/max records above are the root R evidence. Saved SDC / generic
 # clock insertion reports include this source compensation; they are NOT raw R.
 if {$ot_mc_post} {
-    dict for {clock R} $ot_mc_refs {
-        set_clock_latency -source [expr {-$R}] [get_clocks $clock]
-        puts "BGL_MC_DELIVERY root=$clock period=$ot_mc_period phi=0 R=$R source_latency=[expr {-$R}]"
+    dict for {clock references} $ot_mc_refs {
+        lassign $references R Rmin
+        set_clock_latency -source -max [expr {-$R}] [get_clocks $clock]
+        set_clock_latency -source -min [expr {-$Rmin}] [get_clocks $clock]
+        puts "BGL_MC_DELIVERY root=$clock period=$ot_mc_period phi=0 R_max=$R R_min=$Rmin source_max=[expr {-$R}] source_min=[expr {-$Rmin}]"
     }
-    dict for {from Rf} $ot_mc_refs {
-        dict for {to Rt} $ot_mc_refs {
+    dict for {from refs_from} $ot_mc_refs {
+        set Rf [lindex $refs_from 0]
+        dict for {to refs_to} $ot_mc_refs {
+            set Rt [lindex $refs_to 0]
             if {$from eq $to} { continue }
             set skew [expr {$Rf > 300.0 || $Rt > 300.0 ? 150.0 : 90.0}]
             set_clock_uncertainty -setup [expr {60.0+$skew}] -from [get_clocks $from] -to [get_clocks $to]

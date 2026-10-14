@@ -9,6 +9,8 @@ set moved {}
 set j 0
 foreach i [$b getInsts] {
     if {![string match {u.rst_ret_s*} [$i getName]]} { continue }
+    # Recipe2 hold buffers inherit the flop's base name; move only real DFFs.
+    if {![string match DFF* [[$i getMaster] getName]]} { continue }
     $i setLocation [expr {round((288.0+1.08*$j)*$dbu)}] [expr {round(20.52*$dbu)}]
     $i setPlacementStatus FIRM
     lappend moved [$i getName]
