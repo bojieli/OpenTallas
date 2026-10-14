@@ -33,6 +33,8 @@ module tb_native;
  always @(negedge clk)begin cr=returns[0];end
  always @(posedge clk)if(rst_n)begin
   cyc=cyc+1;returns=returns>>1;
+  if(cyc%1000==0)$display("PROGRESS cycles%0d ep%0d ready%0d active%0d sent%h issued%h seen%0d ff%0d fc%h nq%0d nkv%0d credits%0d",cyc,ep,ready,u.active,u.sent,u.issued,$countones(u.seen),ff,fc,nq,nkv,c.credits);
+  if(cyc>20000)begin $display("NATIVE_KV_FAIL no retirement within 40 epochs * (40 words + 80 credit latency + 16 producer stages) * 3 slack");$finish;end
   if(xv)begin
    // A consumed wire word returns exactly one credit after arbitrary latency.
    returns[79]=1;
