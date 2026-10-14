@@ -1,5 +1,5 @@
 {
- "name": "dsfd_capt_cd-v1-COMMIT",
+ "name": "dsfd_capt_cd-v1-dac9ba962",
  "block": "dsfd_capt_cd",
  "ref_tile": true,
  "owner": "Claude:el1013-s81-capture",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "s81-spwfc-1013",
-  "commit": "COMMIT",
+  "commit": "dac9ba962",
   "extra_paths": [
    "tools/s81_ph",
    "rtl/v41rom",
@@ -105,7 +105,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_capt_cd/dsfd_capt_cd-v1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_capt_cd/dsfd_capt_cd-v1-dac9ba962"
   }
  ],
  "cycles_added": 0,
