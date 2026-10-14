@@ -2814,6 +2814,8 @@ HC_V2_UM = (1727.976, 9640.0)
 HC_T_UM = None                  # contract v12 sp_hc_t: the HC chain tails in the E-column floor slot below the corridor
 HC_T_COLS = 3                   # HC columns (one chain each); v12 hc_s <-> hc_t crossing buses per column
 HC_T_FWD, HC_T_RET = 1264, 1090   # per column: fd 1128 + fv 7 + rst 1 + cy 128 / rd 1082 + rv 8 (ot_s81_hc_cth ports)
+HUB_SOUTH_SHIFT = 0.0           # v18 geometry trial: reserve south corridor explicitly
+ASSIGNED_PINS_DIR = None       # exact die-assigned parent pins + per-child clock entries
 CONTRACT_SLABS = {}             # --contract FILE (s81-die-iter): centre slab outlines {name: (w, h)} from the hier contract
 SUHC_V2_HC_N = False            # --suhc-v2-hc-north: the v2 HC in the slot above the corridor (default: hc_s floor slot)
 SUHC_V2 = False                 # --suhc-v2 (s81die-1011/ctrl, die lead decision 3): su_hc contract v2 = ONE SU master
@@ -3749,6 +3751,9 @@ def build_r8(variant=None):
         if SUHC_V2:     # the one v2 SU: its hierarchical outline (the su_s W-floor slot)
             su_lo = SU_V2_UM[0] * SU_V2_UM[1] / 1e6
         yc = up(band + SPINE_GAP + 4.32 + up(su_lo * 1e6 / su_w_, GY) + SPINE_GAP, GY)
+    if HUB_SOUTH_SHIFT:
+        assert SU_E and SUHC_V2, '--hub-south-shift requires --su-e and --suhc-v2'
+        yc -= HUB_SOUTH_SHIFT
     # --rtl-hub-widths (order A): the SU's VM row slots (~17.1 kb) are face-to-face with the VM right above it
     su_gap = RTL_ABUT_GAP if (RTL_HUB_WIDTHS and SUHC_V2 and centre and centre[0] == 'vm') else SPINE_GAP
     slab('su_s', su_lo, su_x_, dn(yc - su_gap - up(su_lo * 1e6 / su_w_, GY), GY), su_w_, dom=SUHC_DOM)
@@ -4497,6 +4502,12 @@ def buses_r8(m):
         elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2'):   # mtp-wfc: the kit's vmx slow side is the serial domain
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
+        elif _assigned_clock_entries(it):
+            for domain_, names_ in _assigned_clock_entries(it).items():
+                dom[domain_] += [(it.name, name_) for name_ in names_]
+            rst['stream'].append((it.name, 'rst'))
+            if 'rsv' in _assigned_record(it.master)['ports']:
+                rst['serial'].append((it.name, 'rsv'))
         elif it.kind in ('hub', 'band_blk') and it.name != col:
             d_ = 'serial' if it.domain == 'serial_0p9' else 'stream'
             dom[d_].append((it.name, 'ck'))
@@ -6962,6 +6973,54 @@ def _peer_face(m, it, port):
     return f
 
 
+_ASSIGNED_PIN_CACHE = {}
+
+
+def _assigned_record(master):
+    if not ASSIGNED_PINS_DIR:
+        return None
+    if master not in _ASSIGNED_PIN_CACHE:
+        path = ROOT / ASSIGNED_PINS_DIR / (master + '.json')
+        rec = json.loads(path.read_text()) if path.exists() else None
+        if rec:
+            assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
+        _ASSIGNED_PIN_CACHE[master] = rec
+    return _ASSIGNED_PIN_CACHE[master]
+
+
+def _assigned_clock_entries(it):
+    rec = _assigned_record(it.master)
+    return rec.get('clock_entries', {}) if rec else {}
+
+
+def _assigned_physical_pins(Mx, ports):
+    """Apply exact die-owned bit rectangles; missing/extra data bits are defects, never width-clamped.
+    Closed bound macros are excluded by write_lefs and still stand at their measured pins.
+    """
+    rec = _assigned_record(Mx.name)
+    if not rec:
+        return
+    assert all(abs(x - y) <= 0.025 for x, y in zip(rec['outline_um'], (Mx.w, Mx.h))), (Mx.name, 'assigned outline differs')
+    for port, spec in rec['ports'].items():
+        assert port in ports, (Mx.name, port, 'assigned port absent from die buses')
+        assert spec['bits'] == ports[port][1], (Mx.name, port, spec['bits'], ports[port])
+        coords = spec.get('per_bit')
+        if coords is None:
+            at = spec['at']
+            cs = [at[0] + i * at[1] for i in range(spec['bits'])] if spec['uniform'] else at
+            coords = [[spec['face'], spec['layer'], c, spec['depth']] for c in cs]
+        rects = []
+        for i, (face, layer, c, depth) in enumerate(coords):
+            assert layer in TRK and face in 'NSEW', (Mx.name, port, i)
+            assert 0.012 <= c <= (Mx.h if face in 'EW' else Mx.w) - 0.012, (Mx.name, port, i, c)
+            rect = {'N': (c-.012, Mx.h-depth, c+.012, Mx.h), 'S': (c-.012, 0, c+.012, depth),
+                    'W': (0, c-.012, depth, c+.012), 'E': (Mx.w-depth, c-.012, Mx.w, c+.012)}[face]
+            rects.append((f'{port}[{i}]', layer, rect))
+        Mx.ports[port] = ('rects', rects)
+        if port not in Mx.order:
+            Mx.order.append(port)
+
+
 def masters_r8(m, k=1):
     pdir = m.get('pdir') or finalize_r8(m)
     if '_by' not in m:
@@ -6988,6 +7047,8 @@ def masters_r8(m, k=1):
         Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst == 'ot_s81_cfg7_seq' else 7, f'r8 {it.kind}')
         M[mst] = Mx
         _faces_r8(m, Mx, it, ports)
+        if k == 1:
+            _assigned_physical_pins(Mx, ports)
         if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
             m['_laid_all'][mst] = Mx
         if CK_RULE:
@@ -7828,6 +7889,8 @@ def die_options(ap):
                     '(default 259.2 each)')
     ap.add_argument('--vch-w', type=float, help='r9: VCH width in um (default 1209.6)')
     ap.add_argument('--hc-corr', type=float, help='r9: HC crossing corridor height in um (default 1209.6)')
+    ap.add_argument('--hub-south-shift', type=float, default=0.0, help='v18 geometry trial: move W-column SU and centre stack south by UM; legality and hop gates remain binding')
+    ap.add_argument('--assigned-pins-dir', help='consume die-assigned pin JSON files for parent data and per-child clock entries')
     ap.add_argument('--hub-column-width', type=float, help='r9: each hub column width in um; spends existing die horizontal slack; default unchanged')
     ap.add_argument('--su-mm2', type=float, help='r9: SU total reservation area in mm2, split north/south; requires sizing record; default unchanged')
     ap.add_argument('--vm-face-mm2', type=float, help='r9: minimum VM slab area in mm2 on every die (spreads its pin '
@@ -8168,6 +8231,10 @@ def apply_options(a):
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
     COL_W8 = LANES_W + NS_W + RSC_W
     COL_PITCH8 = COL_W8 + 8.64
+    global HUB_SOUTH_SHIFT, ASSIGNED_PINS_DIR
+    HUB_SOUTH_SHIFT = float(getattr(a, 'hub_south_shift', 0.0))
+    ASSIGNED_PINS_DIR = getattr(a, 'assigned_pins_dir', None)
+    _ASSIGNED_PIN_CACHE.clear()
     global SUHC_1011, SUHC_DOM, SUHC_HC_VM, VM_SLAB, COLL_SLAB_H
     COLL_SLAB_H = getattr(a, 'coll_slab_h', None)
     global SU_V2_UM, HC_V2_UM, HROW_UM, HC_T_UM, P2_OUTLINE_UM, P2_SLAB_MM2
