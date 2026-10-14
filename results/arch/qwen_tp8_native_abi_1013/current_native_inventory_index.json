@@ -191,6 +191,11 @@
           "global_seals": 0
         },
         "physical_scope": "Source frame601=word512+atomic89, numeric_valid and output_step separate. Metadata4094Q+queue4820Q=8914Q; live queue clock beyond23 parent entries. Combinational reserved credit remains unclosed; no free registered return latency, no full-field COUNT7 adequacy or throughput qualification."
+      },
+      "initialization_barrier_candidate": {
+        "path": "results/arch/qwen_delivery_lifetime_1014/init_barrier/receipt.json",
+        "sha256": "4156727ff36c36aef456e13fc2dc2745132c62870a1dc875ee5d06cbb4f8cee7",
+        "status": "Distinct default-off controller waits matching actual-bank context/version/participant receipts before dispatch; real vector-bank receipt wrapper tested separately. Three positives/seven observed mutants, admitted1GB/1thread unit2403436. Analytical1584statebit increment for16x48, not measuredcensus. Physical BEGIN/receipt/ACK transport, fullfieldcomposition, assignedpins, clock/resetdelivery and cost remain unbound."
       }
     },
     {
