@@ -1,0 +1,110 @@
+{
+  "component": "a95a4adfc",
+  "canonical_children": "8c33fcd81",
+  "CG": 1,
+  "params": {
+    "LNK": 3,
+    "LNC": 1,
+    "LNR": 2,
+    "LPMID": 3,
+    "LNFR": 4,
+    "LNXP": 3,
+    "XPX": 2,
+    "LLDKR": 16
+  },
+  "test": "Full padded-native low/high pair vs independently original one-piece reference at every output bit, role4 with LDK1; MUT1 flipped xp link bit",
+  "scope": "Component functional pair only; no whole ATT producer/PS/CDF/die/physical clock/route qualification",
+  "files": [
+    {
+      "path": "rtl/test/tb_hfd_attn_half_b.sv",
+      "source_commit": "derived8c bench plus independent entry-credit observation",
+      "sha256": "8cf1c468ae4ada58eaa08e306e84711228dc620759c844f177f746b3102fecfa"
+    },
+    {
+      "path": "rtl/common/ot_fwd_link_stage.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_bank.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "9defbfad53ae5b50be20aba873fdde00c7308d5daa24051cf704dd8f41a1dab4"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_m6h1r.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "1b9bd77a6ae4eec1503d1a8510d7cba6f3d28b16676ee7f07b0703f3909c7277"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_m8_phys.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "bb941d9a2efccf5c2b8c869863cb3c978c79fc24012f70c88924a1a5ed9d6ba5"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "60c209c729d899e399f01239a8b67f936ef82c9778bdb35f85e5ae4bf7908fba"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "99ef793b16f7e41868214ce0d99f82eb6a5b7d4b60aa2bcc141c4b5448d64e84"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "fe3864d30e2eee9daf8bef2f26f7b0a558235674ef3b156df703aab4c6d02ef7"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_cg.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    {
+      "path": "rtl/hbm_accel/cg/ot_cg_tile.sv",
+      "source_commit": "8c33fcd81",
+      "sha256": "040e213a6cbffb2f02e300c0d995d8de323386a984bc5ea695b6c73d5a0b19c9"
+    },
+    {
+      "path": "rtl/test/hdc_v41_harness.cpp",
+      "source_commit": "8c33fcd81",
+      "sha256": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1"
+    },
+    {
+      "path": "rtl/test/attention_native_pair_overlay.sv",
+      "source_commit": "derived exact a95 native +8c closed glue +independent8c reference helpers",
+      "sha256": "c130e9f8977373f94f12cb027a2e04d2ff176e897c26e8250cd019f29e715f98"
+    }
+  ],
+  "entry_credit_test": "Independent posted-row/returned-credit stream ledger at actual forwarded-clock capture"
+}

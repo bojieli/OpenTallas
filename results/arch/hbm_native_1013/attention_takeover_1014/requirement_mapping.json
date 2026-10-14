@@ -57,5 +57,30 @@
   "cancelled_or_refused_rows_retired": false,
   "native_whole_attention_qualified": false,
   "physical_qualified": false,
-  "ledger_eligible": false
+  "ledger_eligible": false,
+  "native_pair_jobs": {
+    "host": "ot-epyc4",
+    "root": "/srv/opentallas-scratch/claude/codex-attention-native-pair-1014",
+    "exact": {
+      "session": 71370,
+      "unit": "oth-ubuntu-2636308-1791982055"
+    },
+    "xp_mutant": {
+      "session": 37496,
+      "unit": "oth-ubuntu-2636297-1791982055"
+    },
+    "status": "building; no verdict yet"
+  },
+  "no_overlap": "Confirmed current Qwen native_service_glue owns IDX, no HBM half edits/jobs",
+  "quad_clock_tree_arcs_ps": {
+    "rise": [
+      560.83252,
+      635.93365
+    ],
+    "fall": [
+      294.45663,
+      699.34161
+    ],
+    "actual_sink_root_population": "requested from clock inventory; no inference from merged edge range"
+  }
 }
