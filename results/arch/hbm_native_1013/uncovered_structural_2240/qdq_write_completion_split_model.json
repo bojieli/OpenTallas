@@ -108,5 +108,17 @@
     "macro_changed": false,
     "write_launch_gain_edges_if_empty": 1,
     "qualification": "VO/Y keepfirstcapture; occupancy rails equal actual SRAM+prefetch+readpending obligations; suppress FIFOpush only real bypassfire; block same-edge fault; gaingenericunclaimed; actualnative target184 with capturedACK FIN mustmeasure"
+  },
+  "pay_explicit_launch_alternative": {
+    "kept_output_bits": 2240,
+    "worst_case_extra_constant_ff_bits": 1088,
+    "new_wg_req_copy_ff_bits": 1,
+    "wg_req_pin_range_um": [
+      4.32,
+      16.2
+    ],
+    "estimated_root_sinks_upper": 5260,
+    "added_edges": 0,
+    "status": "Unqualified explicit launch-copy/pin move; Q307.6 motivates real source change; inputi_act W112.284 vsoldoutputWG N227.1, noM6grant"
   }
 }
