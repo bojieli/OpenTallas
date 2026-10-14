@@ -51,7 +51,7 @@ module tb_qkd_ahub_d_eq;
         .fault(flt_d), .ev(ev_d));
 `ifdef TB_MUT
     initial begin
-        #1; force u_d.u_core.pl_rz[3] = 1'b1;
+        #1; force u_d.u_die.u_core.pl_rz[3] = 1'b1;
     end
 `endif
     // ---- output logs -----------------------------------------------------------------------------------------------

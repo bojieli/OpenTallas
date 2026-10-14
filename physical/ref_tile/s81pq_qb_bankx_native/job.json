@@ -1,5 +1,5 @@
 {
- "name": "s81pq_qb_bankx_native-one1-012d2f6e1",
+ "name": "s81pq_qb_bankx_native-one1-63801f479",
  "block": "ot_s81_pq_qb_bankx_native",
  "ref_tile": true,
  "owner": "Claude:s81-romB2-1014",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/s81-romB-1014",
-  "commit": "012d2f6e1",
+  "commit": "63801f479a1ee0a18e2d39e09f1daa6a894008b3",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/test/dsrom_sys",
@@ -114,7 +114,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_qb_bankx_native/s81pq_qb_bankx_native-one1-012d2f6e1"
+   "to": "results/rtl/ref_tile/s81pq_qb_bankx_native/s81pq_qb_bankx_native-one1-63801f479"
   }
  ],
  "cycles_added": 0,

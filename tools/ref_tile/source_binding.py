@@ -105,33 +105,74 @@ def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_reco
         except (OSError, ValueError, subprocess.SubprocessError) as ex:
             return False, f"cannot resolve effective route helpers: {ex}"
         if frozen and not frozen_recovery:
-            ok, why = HO.compare_plans(frozen, current)
-            if not ok:
-                return False, why
+            # Precise binding (2026-10-14): the gate is bound to what it EXECUTED -- the staged working-tree files
+            # (checked against the route source commit below) and the daemon overlays it shipped (entries with
+            # source "daemon_overlay", checked against today's effective bytes below).  The frozen route plan's other
+            # helpers are route-only: their drift is reported, never a reason to invalidate the gate.  The frozen plan
+            # itself must still be intact and agree with what the gate shipped.
+            try:
+                rows = {r["path"]: r for r in HO.frozen_rows(frozen)}
+            except ValueError as ex:
+                return False, str(ex)
+            for e in entries:
+                if e["source"] == "daemon_overlay" and e["path"] in rows and rows[e["path"]]["sha256"] != e["sha256"]:
+                    return False, f"frozen route plan disagrees with the gate's staged overlay: {e['path']}"
+    overlay_diff, source_diff, missing = [], [], []
     for e in entries:
         p = Path(e["path"])
         if p.is_absolute() or ".." in p.parts:
             return False, "unsafe manifest path"
         if e["source"] == "daemon_overlay" and route_overlay:
-            if hashlib.sha256(effective[str(p)]).hexdigest() != e["sha256"]:
-                return False, f"effective route overlay differs from staged snapshot: {p}"
+            if str(p) not in effective or hashlib.sha256(effective[str(p)]).hexdigest() != e["sha256"]:
+                overlay_diff.append(str(p))
             continue
         if e["source"] == "daemon_overlay":
             f = daemon / p
         elif tree is not None:
             if tree.get(str(p)) != e["git_blob"]:
-                return False, f"route source differs from staged snapshot: {p}"
+                source_diff.append(str(p))
             continue
         else:
             f = root / p
         try:
             payload = str(f.readlink()).encode() if e["kind"] == "symlink" else f.read_bytes()
         except OSError:
-            return False, f"staged source missing: {p}"
+            missing.append(str(p))
+            continue
         if hashlib.sha256(payload).hexdigest() != e["sha256"]:
-            return False, f"route source differs from staged snapshot: {p}"
+            (overlay_diff if e["source"] == "daemon_overlay" else source_diff).append(str(p))
+    if overlay_diff or source_diff or missing:
+        def name(files):
+            return ", ".join(files[:6]) + (f" (+{len(files) - 6} more)" if len(files) > 6 else "")
+        parts = ([f"gate-executed daemon overlay changed: {name(overlay_diff)}"] if overlay_diff else []) + \
+                ([f"route source differs from staged snapshot: {name(source_diff)}"] if source_diff else []) + \
+                ([f"staged source missing: {name(missing)}"] if missing else [])
+        return False, "; ".join(parts)
+    if route_overlay and not frozen_recovery and binding.get("route_overlay_plan"):
+        drift = route_only_drift(binding["route_overlay_plan"], current, entries)
+        if drift:
+            return True, "exact staged source and gate-executed overlays match; route-only helper drift (not gate-relevant): " + \
+                ", ".join(drift)
     return True, ("exact original source and committed executed helpers match; current helpers unchanged"
                   if frozen_recovery else "exact staged source and daemon overlay match")
+
+
+def gate_overlay_paths(binding):
+    """The daemon overlays the gate shipped and executed (orfs_hold_mm, fp_margin_lint, textbook_lint,
+    macro_cts_cluster: pre_route_gate.SHIP_HELPERS).  Every other route-plan helper is route-only for the gate; a
+    gate-run helper that is not an overlay (ck_insertion.py, path_classes.tcl, ref_route.sh) is a working-tree entry
+    bound to the route source commit."""
+    return sorted(e["path"] for e in binding.get("files", []) if e.get("source") == "daemon_overlay")
+
+
+def route_only_drift(frozen, current, entries):
+    """Route-plan helpers whose effective content changed since the gate and that the gate did not execute."""
+    gate = {e["path"] for e in entries if e.get("source") == "daemon_overlay"}
+    old = {r["path"]: r for r in frozen.get("files", [])}
+    new = {r["path"]: r for r in (current or {}).get("files", [])}
+    keys = ("sha256", "git_blob", "mode")
+    return sorted(p for p in set(old) | set(new) if p not in gate
+                  and tuple((old.get(p) or {}).get(k) for k in keys) != tuple((new.get(p) or {}).get(k) for k in keys))
 
 
 def recover_verified_snapshot(binding, staged_root, log_bytes, script_bytes):

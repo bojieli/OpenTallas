@@ -40,6 +40,10 @@ module ot_coll_tp8_die #(
     parameter integer WT      = 0,       // opt-in wrapper column leaves: 1 = ot_coll_tp8_col_tile (unchanged edge timing),
                                          // 2 = ot_coll_tp8_col_tile_r (registered returns, qwen-coll-io 10-14: EQ/LQ/TQ
                                          //     writes +1 edge, no data word leaves a leaf to come back)
+                                         // 3 = pin-registered data leaves ot_coll_tp8_col_tile_r3 (x4, every input
+                                         //     in a pin flop: each leaf = the WT 2 column one edge late, s_lo / s_hi
+                                         //     two) + the metadata column flat beside the controller (MEM 2 core);
+                                         //     every parent signal paired with a leaf output is delayed to match
     parameter integer CT      = 1,       // qwen-tp8/coll4: engine column datapath in hardened ot_coll_col_tile leaves
     parameter integer ICR     = 32,      // credits held by the die's sequencer (<= LBD, <= PQD)
     parameter integer LBD     = 64,      // local partial buffer (words), 32 * k with QMEM 1
@@ -98,6 +102,7 @@ module ot_coll_tp8_die #(
 );
     localparam integer N  = 4;
     localparam integer SL = 3 * 7 + 2;      // hardened slice latency (N 4, ADD_LAT 7, SEAM 1): red_in -> v_out
+    localparam integer SLX = SL + ((WT == 3) ? 2 : 0);   // WT 3: s_lo / s_hi reach the slices two edges late
     localparam integer LW = FW + 5;         // LQ entry {mode, rank[1:0], err, last, data}
     localparam integer NS = FW / 128;
     initial if (FW % 128 != 0 || DIE > 1 || PKG > 3 || ICR > LBD || ICR > PQD) $error("ot_coll_tp8_die: FW multiple of 128, DIE 0..1, PKG 0..3, ICR <= LBD, PQD");
@@ -134,7 +139,9 @@ module ot_coll_tp8_die #(
             cr_b <= cr_b + (upc_q ? 7'd1 : 7'd0) - (cr_go ? 7'd1 : 7'd0);
         end
     assign in_cr = icr_q;
-    assign up_valid = upv_q;
+    reg upv_q2;
+    always @(posedge clk or negedge rs_a) if (!rs_a) upv_q2 <= 1'b0; else upv_q2 <= upv_q;
+    assign up_valid = (WT == 3) ? upv_q2 : upv_q;
     assign up_rec = uprec_q;
     wire up_bad = rl_v && !upr_q;   // a send against the link layer's registered may-send
     wire lb_hv, lb_ovf; wire [PW-1:0] lb_hd;
@@ -168,11 +175,11 @@ module ot_coll_tp8_die #(
     reg        wpar, gh_v;
     reg [PW-1:0] gh_w;
     reg [FW-1:0] hl_lo, hl_hi;
-    reg [SL-1:0] ml_v, ml_last;
-    reg [TAGW-1:0] ml_tag [0:SL-1];
+    reg [SLX-1:0] ml_v, ml_last;
+    reg [TAGW-1:0] ml_tag [0:SLX-1];
     wire [NS-1:0] sl_v, sl_e;
     wire [FW-1:0] sl_sum;
-    wire sl_tail = ml_v[SL-1];
+    wire sl_tail = ml_v[SLX-1];
     wire pr_ok  = lb_hv && pq_hv && !gh_v && (eq_res + 8'd2 <= EQD);
     wire pr_red = pr_ok && !p_mode;
     wire pr_gat = pr_ok && p_mode && (infl == 0) && !sl_tail;
@@ -184,14 +191,19 @@ module ot_coll_tp8_die #(
     localparam integer HELD = (DIE == 0);          // die 0 owns the even word (held), die 1 the odd word (current)
 `endif
     wire [FW-1:0] s_lo, s_hi;
-    generate if (WT != 2) begin : g_slo
+    // WT 3: the slices take red_in two edges late, with the leaves' s_lo / s_hi
+    reg iss_d1, iss_d2;
+    always @(posedge clk or negedge rs) if (!rs) begin iss_d1 <= 1'b0; iss_d2 <= 1'b0; end
+        else begin iss_d1 <= issue; iss_d2 <= iss_d1; end
+    wire red_x = (WT == 3) ? iss_d2 : issue;
+    generate if (WT < 2) begin : g_slo
         assign s_lo = HELD ? hl_lo : lo;
         assign s_hi = HELD ? hl_hi : hi;
     end endgenerate
     genvar gs;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_pf
         (* keep_hierarchy *) ot_coll_fold_slice u_fs (   // the hardened N 4 / ADD_LAT 7 / SEAM 1 master, no override
-            .clk(clk), .rst_n(rst_n), .red_in(issue),
+            .clk(clk), .rst_n(rst_n), .red_in(red_x),
             .src({256'd0, s_hi[gs*128 +: 128], s_lo[gs*128 +: 128]}),
             .sum(sl_sum[gs*128 +: 128]), .v_out(sl_v[gs]), .e_out(sl_e[gs]));
     end endgenerate
@@ -199,7 +211,7 @@ module ot_coll_tp8_die #(
     always @(posedge clk) begin
         if (WT == 0 && pr_red && !wpar) begin hl_lo <= lo; hl_hi <= hi; end
         ml_tag[0] <= p_tag;
-        for (k = 1; k < SL; k = k + 1) ml_tag[k] <= ml_tag[k-1];
+        for (k = 1; k < SLX; k = k + 1) ml_tag[k] <= ml_tag[k-1];
 `ifdef OT_TP8_MUT_GATHER
         if (WT == 0) gh_w <= {p_tag, 1'b1, p_last, lo};
 `else
@@ -209,8 +221,8 @@ module ot_coll_tp8_die #(
     always @(posedge clk or negedge rs)
         if (!rs) begin ml_v <= 0; ml_last <= 0; wpar <= 1'b0; gh_v <= 1'b0; end
         else begin
-            ml_v <= {ml_v[SL-2:0], issue};
-            ml_last <= {ml_last[SL-2:0], p_last};
+            ml_v <= {ml_v[SLX-2:0], issue};
+            ml_last <= {ml_last[SLX-2:0], p_last};
             if (pr_red) wpar <= p_last ? 1'b0 : !wpar;
             gh_v <= pr_gat;
         end
@@ -228,7 +240,7 @@ module ot_coll_tp8_die #(
         assign sl_sum_f[gs*128 +: 128] = sl_e[gs] ? {4{32'h7fc00000}} : sl_sum[gs*128 +: 128];
     end endgenerate
     wire          eq_push = sl_tail || pr_gat || gh_v;
-    wire [PW-1:0] eq_wd = sl_tail ? {ml_tag[SL-1], 1'b0, ml_last[SL-1], sl_sum_f}
+    wire [PW-1:0] eq_wd = sl_tail ? {ml_tag[SLX-1], 1'b0, ml_last[SLX-1], sl_sum_f}
                         : pr_gat  ? {p_tag, 1'b1, 1'b0, g_first} : gh_w;
 
     // ---------------- E: engine feed ----------------
@@ -269,6 +281,18 @@ module ot_coll_tp8_die #(
     reg  [2:0]    sxr_q, sxc_q, srv_q, src_q;
     reg  [3*PW-1:0] srr_q, sxrec_q;
     reg  [2:0]    sxv_q;
+    reg  [2:0]    sxr_q2, sxc_q2, srv_q2, sxv_q2;   // WT 3: one more edge (paired with the leaves' sr / sx)
+    always @(posedge clk or negedge rs)
+        if (!rs) begin sxr_q2 <= 0; sxc_q2 <= 0; srv_q2 <= 0; sxv_q2 <= 0; end
+        else begin sxr_q2 <= sxr_q; sxc_q2 <= sxc_q; srv_q2 <= srv_q; sxv_q2 <= sxv_q; end
+    // WT 3 engine feed: eq_pop and the EQ head metadata one edge late, with the leaves' EQ head data
+    reg           eqp_q; reg [TAGW+1:0] eqm_q;
+    always @(posedge clk or negedge rs) if (!rs) eqp_q <= 1'b0; else eqp_q <= eq_pop;
+    always @(posedge clk) eqm_q <= eq_hd[FW +: TAGW + 2];
+    wire          e_iv  = (WT == 3) ? eqp_q : eq_pop;
+    wire          e_il  = (WT == 3) ? eqm_q[0] : eq_last;
+    wire          e_im  = (WT == 3) ? eqm_q[1] : eq_mode;
+    wire [TAGW-1:0] e_itg = (WT == 3) ? eqm_q[2 +: TAGW] : eq_hd[FW+2 +: TAGW];
     wire          e_txv;
     wire [PW-1:0] e_txr;
     wire [N-1:0]  e_txrdy, e_crin, e_rxv, e_crout;
@@ -280,7 +304,9 @@ module ot_coll_tp8_die #(
             assign e_rxr[gq*PW +: PW] = {PW{1'b0}};
         end else begin : g_sx
             localparam integer J = (gq - PKG + 3) % 4;   // gq = (PKG + 1 + J) mod 4
-            assign e_txrdy[gq] = sxr_q[J]; assign e_crin[gq] = sxc_q[J]; assign e_rxv[gq] = srv_q[J];
+            assign e_txrdy[gq] = (WT == 3) ? sxr_q2[J] : sxr_q[J];
+            assign e_crin[gq]  = (WT == 3) ? sxc_q2[J] : sxc_q[J];
+            assign e_rxv[gq]   = (WT == 3) ? srv_q2[J] : srv_q[J];
             assign e_rxr[gq*PW +: PW] = srr_q[J*PW +: PW];
             always @(posedge clk or negedge rs) if (!rs) src_q[J] <= 1'b0; else src_q[J] <= e_crout[gq];
         end
@@ -292,12 +318,12 @@ module ot_coll_tp8_die #(
     always @(posedge clk or negedge rs)
         if (!rs) begin sxv_q <= 0; sxr_q <= 0; sxc_q <= 0; srv_q <= 0; end
         else begin sxv_q <= {3{e_txv}}; sxr_q <= sx_ready; sxc_q <= sx_cr_in; srv_q <= sr_valid; end
-    assign sx_valid = sxv_q; assign sx_rec = sxrec_q; assign sr_cr_out = src_q;
+    assign sx_valid = (WT == 3) ? sxv_q2 : sxv_q; assign sx_rec = sxrec_q; assign sr_cr_out = src_q;
     ot_rom_oneshot_die_m #(.N(N), .RANK(PKG), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .ADD_LAT(ADD_LAT), .IB(4),
         .PR(PR), .OPQ(0), .TXK(TXK), .FPIPE(FPIPE), .HDLO(HDLO), .MEMM(MEMM), .FSL(FSL), .IBH(IBH), .CT(CT)) u_eng (
         .clk(clk), .rst_n(rst_n),
-        .in_valid(eq_pop), .in_cr(e_icr), .in_data(eq_hd[FW-1:0]), .in_last(eq_last), .in_mode(eq_mode),
-        .in_tag(eq_hd[FW+2 +: TAGW]),
+        .in_valid(e_iv), .in_cr(e_icr), .in_data(eq_hd[FW-1:0]), .in_last(e_il), .in_mode(e_im),
+        .in_tag(e_itg),
         .tx_valid(e_txv), .tx_rec(e_txr), .tx_ready(e_txrdy), .cr_in(e_crin),
         .rx_valid(e_rxv), .rx_rec(e_rxr), .cr_out(e_crout),
         .out_valid(e_ov), .out_data(e_od), .out_last(e_ol), .out_rank(e_or), .out_err(e_oe),
@@ -328,7 +354,9 @@ module ot_coll_tp8_die #(
             urr_q <= ur_ready; urc_q <= ur_cr_in; urv_q <= tq_pop;
             rcred <= rcred - (tq_pop ? 9'd1 : 9'd0) + (urc_q ? 9'd1 : 9'd0);
         end
-    assign ur_valid = urv_q; assign ur_rec = urrec_q;
+    reg urv_q2;
+    always @(posedge clk or negedge rs_m) if (!rs_m) urv_q2 <= 1'b0; else urv_q2 <= urv_q;
+    assign ur_valid = (WT == 3) ? urv_q2 : urv_q; assign ur_rec = urrec_q;
 
     // ---------------- H: peer results receive ----------------
     reg drv_q, drc_q; reg [RW-1:0] drr_q;
@@ -367,7 +395,11 @@ module ot_coll_tp8_die #(
                 mc <= m_lst ? 16'd0 : mc + 16'd1;
             end
         end
-    assign out_valid = ov_q; assign out_data = od_q; assign out_last = ol_q; assign out_rank = or_q; assign out_err = oe_q;
+    reg ov_q2, ol_q2, oe_q2; reg [2:0] or_q2;
+    always @(posedge clk) begin ol_q2 <= ol_q; oe_q2 <= oe_q; or_q2 <= or_q; end
+    always @(posedge clk or negedge rs_m) if (!rs_m) ov_q2 <= 1'b0; else ov_q2 <= ov_q;
+    assign out_valid = (WT == 3) ? ov_q2 : ov_q; assign out_data = od_q;
+    assign out_last = (WT == 3) ? ol_q2 : ol_q; assign out_rank = (WT == 3) ? or_q2 : or_q; assign out_err = (WT == 3) ? oe_q2 : oe_q;
 
     // WT factors the existing register/queue datapath into five 128-bit leaves.
     // Metadata occupies the fifth column; every leaf advances on the identical
@@ -441,7 +473,7 @@ module ot_coll_tp8_die #(
         wire [639:0] ind = {{(640-PW){1'b0}}, in_tag, in_mode, in_last, in_data};
         wire [639:0] dpd = {{(640-PW){1'b0}}, dp_rec};
         wire [639:0] drd = {{(640-RW){1'b0}}, dr_rec};
-        wire [639:0] smd = {94'd0, ml_tag[SL-1], 1'b0, ml_last[SL-1], sl_sum_f};
+        wire [639:0] smd = {94'd0, ml_tag[SLX-1], 1'b0, ml_last[SLX-1], sl_sum_f};
         wire [639:0] lwc = {{(640-LW){1'b0}}, mf_hd, e_or, e_oe, e_ol, e_od};
         wire [639:0] tw = {{(640-RW){1'b0}}, e_oe, e_ol, e_od};
         wire [639:0] et = {{(640-PW){1'b0}}, e_txr};
@@ -485,6 +517,71 @@ module ot_coll_tp8_die #(
         // control sits beside one leaf); overflow is the OR over all five replicas
         assign {rq_hv,tq_hv,lq_hv,eq_hv,pq_hv,lb_hv}=hv[29:24];
         assign {rq_ovf,tq_ovf,lq_ovf,eq_ovf,pq_ovf,lb_ovf}=ovf[29:24]|ovf[23:18]|ovf[17:12]|ovf[11:6]|ovf[5:0];
+    end endgenerate
+
+    // WT 3 (qwen-coll-io r2 2026-10-14): four pin-registered data leaves (ot_coll_tp8_col_tile_r3, each the WT 2 column
+    // one edge late) + the metadata column flat beside the controller (ot_coll_tp8_col_core, MEM 2 flop storage with
+    // the macro's read timing).  The controller reads only the metadata column; leaf outputs pair with parent
+    // valids / metadata delayed by the same edge (up / ur / out / sx valid, engine port inputs and feed above; the
+    // metadata halves of up / ur / od / sr / sx here).
+    generate if (WT == 3) begin : g_wrapper_cols_r3
+        initial if (FW != 512 || TAGW != 32 || LBD != 64 || PQD != 64 || EQD != 32 || LQD != 128 || TQD != 128 || RQD != 32 || QMEM != 1)
+            $error("WT 3 requires the production 512b, LB/PQ/EQ/LQ/TQ/RQ 64/64/32/128/128/32 queue shape");
+        localparam integer MW = PW - FW;          // 34: {tag, mode, last}
+        wire [MW-1:0] m_ind = {in_tag, in_mode, in_last};
+        wire [MW-1:0] m_smd = {ml_tag[SLX-1], 1'b0, ml_last[SLX-1]};
+        wire [MW-1:0] m_lwc = {{(MW-5){1'b0}}, mf_hd, e_or, e_oe, e_ol};
+        wire [MW-1:0] m_tw  = {{(MW-2){1'b0}}, e_oe, e_ol};
+        wire [MW-1:0] m_dr  = {{(MW-2){1'b0}}, dr_rec[FW +: 2]};
+        wire [MW-1:0] m_up, m_ur, m_od, m_lb, m_pq, m_eq, m_lq, m_tq, m_rq, m_slo, m_shi;
+        wire [3*MW-1:0] m_sr, m_sx;
+        wire [5:0] m_hv, m_ovf;
+        ot_coll_tp8_col_core #(.W(MW), .WLQ(5), .WTQ(2), .WRQ(2), .MEM(2)) u_meta (.clk(clk), .rst_n(rst_n),
+            .die_s(DIE[0]), .meta_s(1'b1),
+            .in_d(m_ind), .dp_d(dp_rec[FW +: MW]), .dr_d(m_dr),
+            .sr_d({sr_rec[2*PW+FW +: MW], sr_rec[PW+FW +: MW], sr_rec[FW +: MW]}),
+            .sum_d(m_smd), .lq_wd(m_lwc), .tq_wd(m_tw), .e_tx(e_txr[FW +: MW]),
+            .c_push({drv_q,e_ov&&!mf_hd,e_ov,eq_push,dpv_q,rl_v}),
+            .c_pop({rq_pop,tq_pop,lq_pop,eq_pop,pair_pop,pair_pop}),.c_hold(pr_red&&!wpar),
+            .c_sel({sl_tail,pr_gat}),.c_takel(take_l),
+            .up(m_up), .ur(m_ur), .od(m_od), .sr(m_sr), .sx(m_sx), .s_lo(m_slo), .s_hi(m_shi),
+            .lb_hd(m_lb), .pq_hd(m_pq), .eq_hd(m_eq), .lq_hd(m_lq), .tq_hd(m_tq), .rq_hd(m_rq), .hv(m_hv), .ovf(m_ovf));
+        // metadata halves of the leaf-paired outputs, one edge late
+        reg [MW-1:0] m_up_q, m_ur_q, m_od_q; reg [3*MW-1:0] m_sr_q, m_sx_q;
+        always @(posedge clk) begin m_up_q <= m_up; m_ur_q <= m_ur; m_od_q <= m_od; m_sr_q <= m_sr; m_sx_q <= m_sx; end
+        wire [511:0] d_up, d_ur, d_od, d_eq, d_slo, d_shi;
+        wire [1535:0] d_sr, d_sx;
+        wire [23:0] d_ovf;
+        for (genvar c=0;c<4;c=c+1) begin : g_col
+            wire [383:0] sri = {sr_rec[2*PW+c*128 +: 128], sr_rec[PW+c*128 +: 128], sr_rec[c*128 +: 128]};
+            wire [383:0] sro, sxo;
+            ot_coll_tp8_col_tile_r3 u_wc (.clk(clk),.rst_n(rst_n),.die_s(DIE[0]),
+                .in_d(in_data[c*128 +: 128]),.dp_d(dp_rec[c*128 +: 128]),.dr_d(dr_rec[c*128 +: 128]),.sr_d(sri),
+                .sum_d(sl_sum_f[c*128 +: 128]),.lq_wd(e_od[c*128 +: 128]),.tq_wd(e_od[c*128 +: 128]),
+                .e_tx(e_txr[c*128 +: 128]),
+                .c_push({drv_q,e_ov&&!mf_hd,e_ov,eq_push,dpv_q,rl_v}),
+                .c_pop({rq_pop,tq_pop,lq_pop,eq_pop,pair_pop,pair_pop}),.c_hold(pr_red&&!wpar),
+                .c_sel({sl_tail,pr_gat}),.c_takel(take_l),
+                .up(d_up[c*128 +: 128]),.ur(d_ur[c*128 +: 128]),.od(d_od[c*128 +: 128]),
+                .sr(sro),.sx(sxo),.s_lo(d_slo[c*128 +: 128]),.s_hi(d_shi[c*128 +: 128]),
+                .eq_hd(d_eq[c*128 +: 128]),.ovf(d_ovf[c*6 +: 6]));
+            for (genvar j=0;j<3;j=j+1) begin : g_unpad_sr
+                assign d_sr[j*512+c*128 +: 128] = sro[j*128 +: 128];
+                assign d_sx[j*512+c*128 +: 128] = sxo[j*128 +: 128];
+            end
+        end
+        assign uprec_q = {m_up_q, d_up}; assign urrec_q = {m_ur_q[1:0], d_ur}; assign od_q = d_od;
+        assign s_lo = d_slo; assign s_hi = d_shi;
+        for (genvar j=0;j<3;j=j+1) begin : g_sx
+            assign srr_q[j*PW +: PW]   = {m_sr_q[j*MW +: MW], d_sr[j*512 +: 512]};
+            assign sxrec_q[j*PW +: PW] = {m_sx_q[j*MW +: MW], d_sx[j*512 +: 512]};
+        end
+        // controller view: metadata column heads (data bits of the heads are not used by the controller in WT >= 2;
+        // the engine's in_data takes the leaves' EQ head, one edge late, with eqp_q / eqm_q)
+        assign lb_hd = {m_lb, {FW{1'b0}}}; assign pq_hd = {m_pq, {FW{1'b0}}}; assign eq_hd = {m_eq, d_eq};
+        assign lq_hd = {m_lq[4:0], {FW{1'b0}}}; assign tq_hd = {m_tq[1:0], {FW{1'b0}}}; assign rq_hd = {m_rq[1:0], {FW{1'b0}}};
+        assign {rq_hv,tq_hv,lq_hv,eq_hv,pq_hv,lb_hv} = m_hv;
+        assign {rq_ovf,tq_ovf,lq_ovf,eq_ovf,pq_ovf,lb_ovf} = m_ovf|d_ovf[23:18]|d_ovf[17:12]|d_ovf[11:6]|d_ovf[5:0];
     end endgenerate
 
     // ---------------- faults ----------------

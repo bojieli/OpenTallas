@@ -18,18 +18,18 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_lb_v_ser_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ser_clk can not be propagated.
-QDM PINFLOP reference: 188 input pin flops, median arrival 273.455658 (range 135.409012 .. 276.948486)
-QDM reference pin fv[83]$_DFF_PN0_/CLK clock arrival max 273.455658 min 98.939178 skew 90 hold 50
+QDM PINFLOP reference: 139 input pin flops, median arrival 273.660065 (range 137.604599 .. 277.268280)
+QDM reference pin fv[42]$_DFF_PN0_/CLK clock arrival max 273.660065 min 98.966522 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
-QDM PINFLOP reference: 160 input pin flops, median arrival 274.109222 (range 267.136414 .. 276.948486)
-OT_SER_BOUNDARY referenced: ser pin flop fv[57]$_DFF_PN0_/CLK arrival max 274.109222 min 99.454147, 320 in / 0 out
+QDM PINFLOP reference: 123 input pin flops, median arrival 273.865326 (range 267.626801 .. 277.268280)
+OT_SER_BOUNDARY referenced: ser pin flop fv[123]$_DFF_PN0_/CLK arrival max 273.865326 min 99.006355, 320 in / 0 out
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_ser_clk can not be propagated.
 OT_IOREF clock-port ck (core_clk): data input delays dropped
 OT_IOREF clock-port ckv (ser_clk): data input delays dropped
-OT_IOREF_EDGE core_clk boundary 265 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE core_clk boundary 320 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ser_clk boundary 160 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 141.0 min 135.4 max 146.0 n 265 boundary
-OT_IOREF ot_lb_v_ser_clk ser_clk mean 106.5 min 100.5 max 110.3 n 160 boundary
-OT_WS max 4.9955400927004234e-11 min 5.151044868423327e-11
+OT_IOREF ot_lb_v_core_clk core_clk mean 143.6 min 134.4 max 152.4 n 320 boundary
+OT_IOREF ot_lb_v_ser_clk ser_clk mean 107.2 min 101.0 max 110.6 n 160 boundary
+OT_WS max 4.526945485139322e-11 min 4.7793033419729625e-11
 OT_EXPORT_DONE

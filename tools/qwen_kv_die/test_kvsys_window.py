@@ -23,5 +23,16 @@ class SignalWindows(unittest.TestCase):
         r=self.scan((20,20),(700,20))
         self.assertGreater(r["max_util_h"],0)
         self.assertEqual(r["max_util_v"],0)
+    def test_face_bits_route_from_their_own_pins(self):
+        # two 1,000-bit faces facing each other across a 10-um gap: per-bit routes are short horizontal wires (no V)
+        M=SimpleNamespace(ports={"p":("face",1000,"E","M4",500.0,20)},w=10,h=1000)
+        N=SimpleNamespace(ports={"p":("face",1000,"W","M4",500.0,20)},w=10,h=1000)
+        ins=[SimpleNamespace(name="a",master="A",x=0,y=0,w=10,h=1000,orient="R0"),
+             SimpleNamespace(name="b",master="B",x=20,y=0,w=10,h=1000,orient="R0")]
+        model=dict(die=dict(w=1000,h=1000),insts=ins,buses=[("dfi","phy_dfi",1000,[("a","p"),("b","p")])])
+        r=W.scan(model,{"A":M,"B":N},260)
+        self.assertEqual(r["max_util_v"],0)
+        r0=W.scan(model,{"A":M,"B":N},260,per_bit=False)
+        self.assertEqual(r0["max_util_v"],0)
 
 if __name__ == "__main__":unittest.main()
