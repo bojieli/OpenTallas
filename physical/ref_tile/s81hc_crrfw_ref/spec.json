@@ -50,9 +50,9 @@
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_tile_benches_crrfw.json",
-  "owner": "Codex:s81-hc-su",
-  "branch": "claude/s81-suhc-r9",
-  "tag": "v3-pinreg-spine",
+  "owner": "Claude:s81-romB2-1014",
+  "branch": "claude/s81-romB2-crrf",
+  "tag": "v3-pinreg",
   "purpose": "[hc-crootr r10] forward column root, pin-register form (die hop gate against the closed y slice leaf): RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog)",
   "views_to": "physical/ref_tile/s81hc_crrfw_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_crrfw_ref",
@@ -83,5 +83,10 @@
  "why_floorplan": "slot unchanged (276.48 x 598.32, contract v16/v17 sp_hc_s/crootr_c*/f); only the N pin plan changes: the face is the S face of the die-placed y slice leaves (physical/s81_hc_pinplan/crrf_w.tcl, tools/s81_suhc/crr_pinplan.py crrf_n_plan)",
  "clock": "spine",
  "children": [],
- "inter": []
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

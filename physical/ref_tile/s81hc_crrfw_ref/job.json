@@ -1,13 +1,13 @@
 {
- "name": "s81hc_crrfw_ref-v3-pinreg-spine-COMMIT",
+ "name": "s81hc_crrfw_ref-v3-pinreg-COMMIT",
  "block": "ot_s81_hc_crootr_f",
  "ref_tile": true,
- "owner": "Codex:s81-hc-su",
+ "owner": "Claude:s81-romB2-1014",
  "purpose": "[hc-crootr r10] forward column root, pin-register form (die hop gate against the closed y slice leaf): RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog)",
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
-  "branch": "claude/s81-suhc-r9",
+  "branch": "claude/s81-romB2-crrf",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_suhc/test",
@@ -133,7 +133,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_crrfw_ref/s81hc_crrfw_ref-v3-pinreg-spine-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_crrfw_ref/s81hc_crrfw_ref-v3-pinreg-COMMIT"
   }
  ],
  "cycles_added": 0,
