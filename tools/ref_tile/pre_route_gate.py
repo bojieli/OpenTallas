@@ -610,7 +610,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
     secs = round(time.time() - t0)
-    kv = dict(re.findall(r"\b(GATE_[A-Z_]+)=(\S+)", out))
+    kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if kv.get("GATE_SOURCE_ARCHIVE_SHA256") != binding["archive_sha256"]:
         g.add("FAIL", "source_binding", "remote did not verify the staged source archive", "preserve log; rerun gate")

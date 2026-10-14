@@ -83,6 +83,39 @@ class SourceBindingTest(unittest.TestCase):
             self.assertEqual(gate.verdict, 'FAIL')
             self.assertIsNone(PG.kit_clock_evidence(kd))
 
+    def test_complete_remote_path_parses_digit_bearing_archive_key_and_clock(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as td:
+            root, daemon = Path(td) / 'repo', Path(td) / 'daemon'
+            self.init(root)
+            daemon.mkdir()
+            (root / 'kit/floorplan.json').write_text(json.dumps({'referenced': ['kit/input.v'], 'die': [0, 0, 80, 80], 'blocks': []}))
+            staged = {}
+            real_run = subprocess.run
+            def run(cmd, **kw):
+                if cmd[0] == 'git':
+                    return real_run(cmd, **kw)
+                if cmd[0] == 'ssh' and '.tgz' in cmd[-1]:
+                    staged['archive'] = kw['input']
+                if cmd[0] == 'ssh' and 'ot-heavy' in cmd[-1]:
+                    out = ('GATE_SOURCE_ARCHIVE_SHA256=' + hashlib.sha256(staged['archive']).hexdigest() + '\n'
+                           'GATE_FLOW_RC=0 GATE_FLOW_S=1\nGATE_IOP_RC=0\nGATE_CTS_RC=0\n'
+                           'GATE_CK_RC=0\nGATE_DONE\n'
+                           'GATE_TB textbook_lint: INFO clock_roots max_root_sinks=48000 root=port:clk\n'
+                           'GATE_CK tt insertion all 210.0..280.0 ps\n')
+                    return subprocess.CompletedProcess(cmd, 0, out.encode(), b'')
+                return subprocess.CompletedProcess(cmd, 0, b'', b'')
+            spec = {'name': 'probe', 'top': 'probe', 'kind': 'tile', 'clock_port': 'clk', 'route': {'pd': .5}}
+            with patch.object(PG, 'ROOT', root), patch.object(PG, 'DAEMON_TREE', daemon), patch.object(PG, 'SHIP_HELPERS', ()), \
+                    patch.object(PG, 'referenced_closure', return_value=({'kit/input.v'}, set(), set())), \
+                    patch.object(PG.subprocess, 'run', side_effect=run):
+                g = PG.Gate()
+                PG.remote(g, root / 'kit', spec, 'test-host', 10, 1, True)
+                self.assertTrue(g.source_binding['remote_archive_verified'])
+                self.assertEqual(g.clock['tt_insertion_ps'], 280.)
+                self.assertEqual(g.clock['tt_spread_ps'], 70.)
+                self.assertEqual(g.verdict, 'PASS')
+
     def test_remote_script_verifies_archive_before_extracting(self):
         script = PG.REMOTE_SH.format(R='/tmp/test', ARCHIVE_SHA256='a' * 64, COMMIT='snapshot-sha256:abc', CAP=1,
                                     KIT='kit', IMG='unused', RC='', TOP='test', CTS=0, PGM=1, CLK='clk')
