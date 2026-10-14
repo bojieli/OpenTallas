@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_native;
- parameter HEADS=1,MUT_LANE=0,MUT_TAG=0,MUT_MASK=0;
+ parameter HEADS=1,MUT_LANE=0,MUT_TAG=0,MUT_MASK=0,FAULTCASE=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,epoch_begin=0,issue_v=0;reg [17:0] epoch_pos=0;
  reg [1:0] issue_kind=0;reg [17:0] issue_nout=HEADS,issue_nin=128;
@@ -67,6 +67,16 @@ module tb_native;
  end endtask
  initial begin
   repeat(3)step();rst_n=1;
+  if(FAULTCASE!=0)begin
+   epoch_begin=1;step();epoch_begin=0;send_issue(0,128);
+   kv_we=1;kv_waddr[23:0]=address(1,0,0);kv_wdata[31:0]=decode(8'h38);
+   case(FAULTCASE)1:kv_waddr[23:0]=kv_waddr[23:0]+128;2:kv_wdata[31:0]=32'h3f812345;3:begin step();end
+    4:begin kv_we=0;issue_v=1;issue_nout=HEADS+1;end endcase
+   step();kv_we=0;issue_v=0;repeat(6)step();
+   if(ff&&total==0)$display("NATIVE_KV_REJECT_PASS case=%0d code=%h",FAULTCASE,fc);
+   else $display("NATIVE_KV_REJECT_FAIL case=%0d ff=%0d words=%0d",FAULTCASE,ff,total);
+   $finish;
+  end
   for(ep=0;ep<40;ep=ep+1)begin
    wait(ready);step();tags=0;qtags=0;nkv=0;nq=0;
    case(ep%4)0:epoch_pos=0;1:epoch_pos=15;2:epoch_pos=16;3:epoch_pos=8191;endcase
@@ -82,7 +92,7 @@ module tb_native;
    qv=0;
    wait(drained);repeat(4)step();
    if(nkv!=4*HEADS||nq!=32||ff||cf)begin errors=errors+1;$display("epoch%0d nkv%0d nq%0d ff%0d fc%h cf%0d",ep,nkv,nq,ff,fc,cf);end
-   while(returns!=0||cr)step();repeat(2)step();
+   repeat(2)step();
   end
   if(errors==0)$display("NATIVE_KV_PASS heads=%0d epochs=40 uniqueKVbytes=%0d words=%0d cycles=%0d",HEADS,40*256*HEADS,total,cyc);
   else $display("NATIVE_KV_FAIL data_errors=%0d",errors);
