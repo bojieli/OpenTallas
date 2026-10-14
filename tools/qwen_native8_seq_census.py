@@ -95,7 +95,9 @@ def main():
     params = {'G': 3072, 'D': 8, 'NW': 18, 'SW': 64, 'CRED': 32, 'RB': 3,
               'IS': 1, 'OS': 1, 'RT': 4, 'PSRAM': a.psram, 'RRG': 0,
               'PCUT': 0, 'OLAG': 0, 'HQ2': 0, 'PMUT': 0, 'RLY': 0}
-    script = 'read_verilog -sv -D SYNTHESIS ' + ' '.join(SOURCES) + '\n'
+    # Defer elaboration: eager processing plus top parameter overrides causes
+    # Yosys to rederive the controller before its shared helper is available.
+    script = 'read_verilog -defer -sv -D SYNTHESIS ' + ' '.join(SOURCES) + '\n'
     script += 'read_verilog -lib -sv ' + MACRO + '\n'
     script += 'hierarchy -check -top ' + TOP + ' ' + ' '.join('-chparam %s %d' % p for p in params.items()) + '\n'
     script += 'proc\nopt\nmemory_dff\nmemory_collect\nopt_clean\n'
