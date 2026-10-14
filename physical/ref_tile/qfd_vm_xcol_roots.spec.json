@@ -66,8 +66,8 @@
  "job": {
   "owner": "Codex:qwen_vm",
   "branch": "claude/qwen-tp8-vm-phys",
-  "tag": "rt2",
-  "purpose": "Replace full-array replication and two arbitrary line selectors with32 parallel fixed cyclic quad-line roots (quad=32phase+root), constant-entry split/phase mux ranks,3 enabled-edge tagged outputs;128 outputbits per column,4096 sourcepayload per band. Split constant-root ranks into32four-bit modules to bound frontend elaboration (monolithicbaseline still running at10min).",
+  "tag": "rt3",
+  "purpose": "Replace full-array replication and two arbitrary line selectors with32 parallel fixed cyclic quad-line roots (quad=32phase+root), constant-entry split/phase mux ranks,3 enabled-edge tagged outputs;128 outputbits per column,4096 sourcepayload per band. Split constant-root ranks into32four-bit modules to bound frontend elaboration (monolithicbaseline still running at10min). Also preserveall4-bit split codes0..15 inclidentityaboveSMAX; actualtimingmeasuredroute.",
   "views_to": "physical/ref_tile/qfd_vm_xcol_roots/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_xcol_roots",
   "cycles_added": 3,
@@ -142,5 +142,5 @@
  },
  "inhold": true,
  "outhold": true,
- "structural_change": "Replace full-array replication and two arbitrary line selectors with32 parallel fixed cyclic quad-line roots (quad=32phase+root), constant-entry split/phase mux ranks,3 enabled-edge tagged outputs;128 outputbits per column,4096 sourcepayload per band. Split constant-root ranks into32four-bit modules to bound frontend elaboration (monolithicbaseline still running at10min)."
+ "structural_change": "Replace full-array replication and two arbitrary line selectors with32 parallel fixed cyclic quad-line roots (quad=32phase+root), constant-entry split/phase mux ranks,3 enabled-edge tagged outputs;128 outputbits per column,4096 sourcepayload per band. Split constant-root ranks into32four-bit modules to bound frontend elaboration (monolithicbaseline still running at10min). Completelegacyfullsplit0..15selectorcontract."
 }

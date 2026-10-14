@@ -30,11 +30,11 @@ module tb_qfd_vm_xcol_roots;
     integer cyc,w,k,errors=0,checks=0,stalls=0,valids=0,changes=0;reg [127:0] lastq=0;
     reg [PHW-1:0] ph1,ph2,ph3;reg [15:0] ep1,ep2,ep3;
     reg [3:0] split=0;reg me=0;reg [127:0] exp2,exp3;reg v1=0,v2=0,v3=0;
-    integer indices[0:127];integer root_changes[0:31];reg [(1<<PHW)-1:0] phase_seen=0;
+    integer indices[0:127];integer root_changes[0:31];reg [(1<<PHW)-1:0] phase_seen=0;reg [15:0] split_seen=0;
     always @(posedge clk) begin
       me<=me_e;
       if(me) begin
-        if(o_v) split<=o_sp;
+        if(o_v)begin split<=o_sp;split_seen[o_sp]=1;end
         for(k=0;k<128;k=k+1) begin
           indices[k]<=((32*phase+k/4)*4+k%4) % (1<<split);
           exp2[k]<=ref_l.line[indices[k]];
@@ -51,7 +51,7 @@ module tb_qfd_vm_xcol_roots;
         me_e=(rnd(0)%4)!=0;if(!me_e)stalls=stalls+1;
         for(w=0;w<NRB/2;w=w+1)d[w*32+:32]=rnd(0);
         c_a=rnd(0);c_nv=BEAT;c_v=(rnd(0)%2)==0;c_d=1<<(rnd(0)%ND);c_j=rnd(0)%(BMAX+1);
-        c_sp=SMIN+rnd(0)%(SMAX-SMIN+1);o_sp=c_sp;o_v=(rnd(0)%8)==0;
+        c_sp=SMIN+rnd(0)%(SMAX-SMIN+1);o_sp=rnd(0)%16;o_v=(rnd(0)%8)==0;
         phase=rnd(0);epoch=rnd(0);sel_v=(rnd(0)%3)!=0;
         @(posedge clk);#1;
         if(cyc>32)begin
@@ -63,7 +63,7 @@ module tb_qfd_vm_xcol_roots;
         end
       end
       for(w=0;w<32;w=w+1)if(root_changes[w]<16)errors=errors+1;
-      if(phase_seen!=={(1<<PHW){1'b1}})errors=errors+1;
+      if(phase_seen!=={(1<<PHW){1'b1}} || split_seen!==16'hffff)errors=errors+1;
       if(errors || checks<CYCLES/2 || stalls<CYCLES/8 || valids<CYCLES/3 || changes<CYCLES/8)begin
         $display("FAIL xcol_roots MUT=%0d errors=%0d checks=%0d changes=%0d",MUT,errors,checks,changes);$fatal(1,"FAIL");end
       $display("PASS xcol_roots SMAX=%0d seed=%0d checks=%0d valids=%0d changes=%0d roots=32 all_phase=%h",SMAX,SEED,checks,valids,changes,phase_seen);$finish;

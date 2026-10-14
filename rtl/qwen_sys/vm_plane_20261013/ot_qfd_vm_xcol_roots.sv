@@ -52,10 +52,10 @@ module ot_qfd_vm_root_rank #(
   reg pick;integer p,s;
   always @*begin
    pick=0;
-   for(p=0;p<(1<<PHW);p=p+1)for(s=0;s<=SMAX;s=s+1)
+   for(p=0;p<(1<<PHW);p=p+1)for(s=0;s<16;s=s+1)
     if(phase==p && split==s)pick=line_bits[
      ((NROOT*((MUT==1)?((p+1)%(1<<PHW)):p)+(MUT==2?(ROOT_ID+1)%NROOT:ROOT_ID))*4+k)
-     &((1<<(MUT==3?((s+1)%(SMAX+1)):s))-1)];
+     &((1<<(MUT==3?((s+1)%16):s))-1)];
   end
   assign q[k]=pick;
  end endgenerate
