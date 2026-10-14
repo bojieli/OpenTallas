@@ -70,8 +70,13 @@ def main():
         net+=r['master']+f' child_{i}('+connections(r['master'],'clk',f'gc_{i}')+');\n'
     net+='endmodule\n';(a.out/'gating.v').write_text(net)
     for c in ('tt','ff','ss'):
-        text=f"read_liberty /probe/SEQ/{Path(plan['SEQ_sources'][c]['path']).name}\n"
-        for v in views:text+=f"read_liberty /probe/{v['master']}/{v['master']}_{c}.lib\n"
+        text='''set plat /OpenROAD-flow-scripts/flow/platforms/asap7
+read_lef $plat/lef/asap7_tech_1x_201209.lef
+read_lef $plat/lef/asap7sc7p5t_28_R_1x_220121a.lef
+'''
+        text+=f"read_liberty /probe/SEQ/{Path(plan['SEQ_sources'][c]['path']).name}\n"
+        for v in views:
+            text+=f"read_lef /probe/{v['master']}/{v['master']}.lef\nread_liberty /probe/{v['master']}/{v['master']}_{c}.lib\n"
         text+='read_verilog /probe/gating.v\nlink_design gating\n'
         text+='create_clock -name OWN_RAW -period 833.333 -waveform {0 416.6665} [get_ports clk]\n'
         for i,r in enumerate(row['child_clocks']):
