@@ -1,0 +1,19 @@
+{
+  "source_commit": "68f13267b",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "f44350897d0c6d771992d7dbe96f79e8aa667085225b0de57e40d598a7f76dec",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "93f112cf07ecf8cfc71d65d10ad4a3e659fd8dba1869e0376e3d717ff069e3e6",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_eng_b2.sv": "c80e3ebb98b201f0e9e5705577746e5338b4c3f08381e27d8d9dd4ee5194e90f"
+  },
+  "positive": "FAIL",
+  "POST": "HANG after4000 cycles; missing scalar returns0/3",
+  "PRE_cycles": [
+    481,
+    481
+  ],
+  "exact_total_errors": 5122,
+  "mutants_valid": false,
+  "gate_qualification": "NOT_QUALIFIED",
+  "root_cause": "Receive-credit return precedes response; LQ-sized tag ring can overwrite scalar association during POST prefetch. Separate occupancy-bounded response-tag ring and retained scalar request implemented43fb197fd.",
+  "ledger_eligible": false
+}
