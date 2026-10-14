@@ -6,12 +6,15 @@ import engram_c_gate as G
 ROOT=G.ROOT
 
 def main():
-    a=argparse.ArgumentParser(); a.add_argument('--out',type=Path,required=True); args=a.parse_args()
+    a=argparse.ArgumentParser(); a.add_argument('--out',type=Path,required=True); a.add_argument('--top',default='dsfd_engram_c_rso',choices=['dsfd_engram_c_rso','dsfd_engram_c_hl']); args=a.parse_args()
     args.out.mkdir(parents=True,exist_ok=True)
     candidate=ROOT/'rtl/dsrom_sys/engram/rso_candidate'
     sources=G.SRC+sorted(p for p in candidate.glob('*.sv') if not p.name.startswith('tb_'))
     tb=candidate/'tb_engram_rso.sv'
-    receipt={'schema':'opentallas.s81.engram.rso_ack_gate.v1','admission':False,'source_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources+[tb]},'cases':{}}
+    if args.top!='dsfd_engram_c_rso':
+        txt=tb.read_text().replace('dsfd_engram_c_rso dut(',args.top+' dut(')
+        tb=args.out/('tb_engram_rso_'+args.top+'.sv'); tb.write_text(txt)
+    receipt={'schema':'opentallas.s81.engram.rso_ack_gate.v1','top':args.top,'admission':False,'source_sha256':{str(p.relative_to(ROOT)) if ROOT in p.parents else str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources+[tb]},'cases':{}}
     for case,flags in [('exact',[]),('missing_pb2',['-DOT_ENGC_RSO_MUT_MISSING_PB2']),('missing_fifo_rd',['-DOT_ENGC_RSO_MUT_MISSING_FIFO_RD'])]:
         obj=args.out/('obj_'+case)
         cmd=['verilator','--binary','--timing','-Wno-fatal','--top-module','tb_engram_rso','-j','4','-Mdir',str(obj),*flags,*map(str,sources),str(tb)]

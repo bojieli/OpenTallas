@@ -40,6 +40,10 @@ module ot_hdc_vstream #(
                                       // kept relay copy per group of 8 lanes first); requires LOFF = 1.  Lanes see the
                                       // memories 2 + 2*RD edges later (their ML grows by that); outputs leave 1 + RD later.
     parameter integer RD = 2,         // LT: relay stages each way between the vstream ports / control and each lane tile
+    parameter integer LOREG = 0,      // LT (r6 2026-10-14): the lane cluster registers its outputs (lane_t OREG = 1): every
+                                      // lane output leaves 1 edge later (2 + RD); the memory answers (va/vb/vc/crom per lane,
+                                      // the wrom row on the group broadcast) come back over RD - 1 relay stages instead of
+                                      // RD, so the read round trip -- and the closed head's ML alignment -- is unchanged.
     parameter integer RED_ENTRIES = 0 // opt-in functional regional64 reducer; physical top supplies nine distinct clocks
 ) (
     input  wire              clk,
@@ -248,12 +252,22 @@ module ot_hdc_vstream #(
             wire [2:0]     bv_q;
             wire           lv_q;
             wire [PDW-1:0] p_q;
-            ot_hdc_delay #(.W(GBW), .D(RD - 1)) u_bd (.clk(clk), .rst_n(rst_l), .d(b_d), .q(b_q));
+`ifdef OT_LOREG_MUT
+            localparam integer AC = 0;   // bench mutant: the answers keep RD stages under LOREG (one edge late: must FAIL)
+`else
+            localparam integer AC = LOREG;
+`endif
+            //: the wrom row (the broadcast's low WR*16 bits) and the per-lane answers: RD - LOREG stages in all
+            ot_hdc_delay #(.W(GBW - WR*16), .D(RD - 1)) u_bd (.clk(clk), .rst_n(rst_l), .d(b_d[GBW-1:WR*16]),
+                .q(b_q[GBW-1:WR*16]));
+            ot_hdc_delay #(.W(WR*16), .D(RD - 1 - AC)) u_bw (.clk(clk), .rst_n(rst_l), .d(b_d[WR*16-1:0]),
+                .q(b_q[WR*16-1:0]));
             ot_hdc_delay #(.W(3), .D(RD - 1), .RESET(1)) u_bv (.clk(clk), .rst_n(rst_l), .d(b_v), .q(bv_q));
             ot_hdc_delay #(.W(1), .D(RD), .RESET(1)) u_lv (.clk(clk), .rst_n(rst_l), .d(live), .q(lv_q));
-            ot_hdc_delay #(.W(PDW), .D(RD)) u_pd (.clk(clk), .rst_n(rst_l),
-                .d({tcura, tcurb, tcurc, tcurd, va_q[32*l +: 32], vb_q[32*l +: 32], vc_q[32*l +: 32], crom_q[64*l +: 64]}),
-                .q(p_q));
+            ot_hdc_delay #(.W(4*AW), .D(RD)) u_pd (.clk(clk), .rst_n(rst_l), .d({tcura, tcurb, tcurc, tcurd}),
+                .q(p_q[PDW-1 -: 4*AW]));
+            ot_hdc_delay #(.W(3*32 + 64), .D(RD - AC)) u_pa (.clk(clk), .rst_n(rst_l),
+                .d({va_q[32*l +: 32], vb_q[32*l +: 32], vc_q[32*l +: 32], crom_q[64*l +: 64]}), .q(p_q[3*32 + 64 - 1:0]));
             wire [NW-1:0] t_i; wire [NW:0] t_fin; wire [AW-1:0] t_rrow, t_asi, t_bsi, t_csi, t_dsi;
             wire t_asrc, t_bsrc, t_csrc, t_mc, t_md, t_redsq; wire [1:0] t_ma, t_mb, t_dst, t_red;
             wire [2:0] t_ad, t_cls, t_isfu; wire [31:0] t_imm1, t_imm2; wire [WR*16-1:0] t_wrom;
@@ -264,7 +278,7 @@ module ot_hdc_vstream #(
             localparam integer ODW = 7*AW + 2*32 + 32 + 2 + 1 + AW;
             wire [OVW-1:0] o_v, o_vq;
             wire [ODW-1:0] o_d, o_dq;
-            ot_hdc_vstream_lane_t #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD)) u_tile (
+            ot_hdc_vstream_lane_t #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD), .OREG(LOREG)) u_tile (
                 .clk(clk), .rst_n(rst_l), .emit0(bv_q[2]), .live(lv_q), .i(t_i), .fin_th(t_fin), .i_last_r(bv_q[0]),
                 .cura0(p_q[PDW-1 -: AW]), .curb0(p_q[PDW-1-AW -: AW]), .curc0(p_q[PDW-1-2*AW -: AW]),
                 .curd0(p_q[PDW-1-3*AW -: AW]), .rrow(t_rrow),

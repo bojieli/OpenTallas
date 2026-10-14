@@ -7,7 +7,8 @@ horizontally (H demand: tracks on M4 / M6 / M8) and vertically (V demand: M5 / M
 Capacity per window and direction (the TP8 SPEC cut rule, results/arch/qwen_tp8_1012/cuts.py): over a hard block only the
 die layer (M8 H / M9 V) at 75 % after the die PDN = 9.375 tracks/um; in a channel add M6/M7 at 75 % and M4/M5 at 50 % =
 31.5 tracks/um; a window mixes the two by its block-covered fraction across the direction of travel.
-Target <= 0.55 (owner: 0.55-0.60).  Clock / reset / constant nets are CTS / reset-tree routed and not counted.
+Target <= 0.55 (owner: 0.55-0.60). Clock / reset / constant nets are CTS / reset-tree routed.
+Every nonzero signal segment is counted, including classes intended to abut.
 
     python3 tools/qwen_kv_die/kvsys_window.py [--split] [--fine 260] [--coarse 1040] --out OUT.json
 """
@@ -57,6 +58,8 @@ def scan(m, M, win):
             return (it.x + it.w / 2, it.y + it.h / 2)
 
     def hseg(x0, x1, y, bits, bid):
+        if abs(x1 - x0) < 1e-6:
+            return
         if x1 < x0:
             x0, x1 = x1, x0
         gy = min(ny - 1, max(0, int(y // win)))
@@ -65,6 +68,8 @@ def scan(m, M, win):
             who_h[(gx, gy)][bid] += bits
 
     def vseg(y0, y1, x, bits, bid):
+        if abs(y1 - y0) < 1e-6:
+            return
         if y1 < y0:
             y0, y1 = y1, y0
         gx = min(nx - 1, max(0, int(x // win)))
