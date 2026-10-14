@@ -1,0 +1,204 @@
+{
+ "name": "dsfd_wfc_vmx_r",
+ "top": "dsfd_wfc_vmx_r",
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "sdc_extra": [
+  "physical/s81_ph_views/mtp/wfc_ser_ref.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_ph_views/mtp/wfc_ser_ref.tcl"
+ ],
+ "sources": [
+  "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv",
+  "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv",
+  "rtl/link/ot_fifo_sram_fwft.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "outline": {
+  "w": 509.76,
+  "h": 224.64
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    23.76
+   ],
+   "inst": "*u_se"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    123.12
+   ],
+   "inst": "*u_so"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    276.48,
+    23.76
+   ],
+   "inst": "*u_rq.g_tile?0?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    276.48,
+    86.4
+   ],
+   "inst": "*u_rq.g_tile?1?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    276.48,
+    149.04
+   ],
+   "inst": "*u_rq.g_tile?2?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    391.392,
+    23.76
+   ],
+   "inst": "*u_rq.g_tile?3?.*u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    391.392,
+    86.4
+   ],
+   "inst": "*u_rq.g_tile?4?.*u_m"
+  }
+ ],
+ "pins": {
+  "W": [
+   "t_vq",
+   "f_vr",
+   "f_cst",
+   "t_cd",
+   "t_rf"
+  ],
+  "E": [
+   "t_srv",
+   "t_srd",
+   "f_srr",
+   "f_srq",
+   "f_kd"
+  ],
+  "S": [
+   "ck",
+   "ckv",
+   "rst",
+   "rsv"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48
+ },
+ "job": {
+  "owner": "Claude:el1013-s81-wfcstg",
+  "branch": "claude/el1013-s81-wfcstg",
+  "tag": "p1",
+  "purpose": "S81 sp_wfc priced kit: the VM -> WFC outbound prefetch / DONE half of dsfd_wfc_vmx as its own leaf. Response pin flops (1,026 b), prefetch control, 64 x 1032 response queue in 5 x ot_sram_1r1w_128x256, read-request skid + grant link, slow -> fast ratio FIFO, the staging buffer in 2 x ot_sram_1r1w_64x512 (even / odd words) behind a registered look-ahead (was 64 x 512 flops and a 64:1 x 512 mux), predicted read register at the pin, DONE. Two related clocks (as dsfd_wfc_vmx_w). 0 cycles added: cycle-exact with the one-tile kit in the cluster lockstep bench.",
+  "structural_change": "the one-tile vmx split by binding into two leaves (this: read / DONE path, ~11.6k + 9.0k sinks on its two roots) and the 32.8k-flop staging buffer moved into two 1R1W macros",
+  "benches": [
+   {
+    "name": "lock_stg_r1",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_stg_r1 --case lock_stg_r1 --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "lock_stg_vmnat",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_stg_vmnat --case lock_stg_vmnat --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cl_stg_r2_slowvm",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/cl_stg_r2_slowvm --case cl_stg_r2_slowvm --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "lock_neg_noadv",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_neg_noadv --case lock_neg_noadv --snap --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cl_neg_swap",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/cl_neg_swap --case cl_neg_swap --snap --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cl_neg_predoff",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/cl_neg_predoff --case cl_neg_predoff --snap --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/dsfd_wfc_vmx_r/views",
+  "record_to": "results/rtl/ref_tile/dsfd_wfc_vmx_r"
+ },
+ "floorplan_why": "7 macros (2 x 171.3 x 77.8 staging, 5 x 94.8 x 41.1 response queue = 46k um2) + ~20.6k flops. Flow E -> W: VM response pins (1,026 b) on E -> response queue macros -> ratio FIFO -> staging macros -> vm_rq flops and the WFC pins (584 b) on W. >= 20 um channels around every macro; the tile is macro-bound (std utilisation low by construction). Placement W -> E: staging macros stacked at x 22.5 (rd_out on their W face, 20 um from the W pins), a ~82 um standard-cell band (ratio FIFO, output buffer), response-queue macros in two columns at x 276.5 / 391.4, the E 20 um strip for the 1,026 response pin flops."
+}

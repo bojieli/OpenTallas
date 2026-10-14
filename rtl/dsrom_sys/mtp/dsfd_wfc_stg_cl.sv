@@ -2,19 +2,20 @@
 // ---------------------------------------------------------------------------
 // dsfd_wfc_stg_cl: the S81 sp_wfc slot as a hardened cluster (el1013-s81-wfcstg, 2026-10-13) at the PRICED kit
 // configuration of dsfd_wfc_stg (VM_LINK 1, POSTED 1, RD2 1, VMRQ 64, WOUTW 8, HEP 1): a wires-only parent over
-//   u_wfc  ot_dsrom_wfc_tokpipe_stg   closed 9f7a7f35e (module defaults = physical/dsrom_wfc_tokpipe/stg_basis.json)
-//   u_lnk  dsfd_wfc_lnk               closed b-0cd6caa1b
-//   u_vw   dsfd_wfc_vmx_w             NEW leaf: the WFC -> VM write / START transport (fast -> slow)
-//   u_vr   dsfd_wfc_vmx_r             NEW leaf: the VM -> WFC outbound prefetch / DONE transport (slow -> fast)
-//   u_hep  dsfd_wfc_hep_t             NEW leaf: the issue-epoch table (one SRAM macro), dsfd_wfc_kit.sv
-// Why two vmx leaves: the one-tile dsfd_wfc_vmx at these parameters is ~66k flops on two roots (the default-set
-// closure had 63k in one tile, clock insertion 341 ps; the priced routes rq64w8 / rd2s stalled on hold / setup).  Its
-// two bindings share nothing but the stage core's done pulse, so they are two tiles with every port at a register:
-//   vmx_w  fast 7.0k / slow 5.9k sinks: pin flops, pre-queue, fast -> slow ratio FIFO, write issue + START doorbell,
-//          write skid + grant link (VM_LINK), write-credit return, the kit's fault register, the HEP start register.
-//   vmx_r  slow 11.6k / fast 9.0k sinks + 7 macros: response pin flops, prefetch, the 64 x 1032 response queue
-//          (5 x ot_sram_1r1w_128x256), slow -> fast ratio FIFO, the staging buffer as two 1R1W macros (even / odd
-//          words) behind a registered look-ahead, the predicted read register, DONE.
+//   u_wfc  ot_dsrom_wfc_tokpipe_stg   the stage WFC (module defaults = physical/dsrom_wfc_tokpipe/stg_basis.json)
+//   u_lnk  dsfd_wfc_lnk               the link bridge
+//   u_vp   dsfd_wfc_vmx_p             NEW: the VM / stage-core port tile = the three blocks below, one hard tile
+//            dsfd_wfc_vmx_w           the WFC -> VM write / START transport (fast -> slow)
+//            dsfd_wfc_vmx_r           the VM -> WFC outbound prefetch / DONE transport (slow -> fast)
+//            dsfd_wfc_hep_t           the issue-epoch table (one SRAM macro), dsfd_wfc_kit.sv
+// Why: the one-tile dsfd_wfc_vmx at these parameters is ~66k flops on two roots (the default-set closure had 63k in
+// one tile, clock insertion 341 ps; the priced routes rq64w8 / rd2s stalled on hold / setup).  Its two bindings share
+// nothing but the stage core's done pulse, so they are written as two blocks with every port at a register:
+//   vmx_w  pin flops, pre-queue, fast -> slow ratio FIFO, write issue + START doorbell, write skid + grant link
+//          (VM_LINK), write-credit return, the kit's fault register, the HEP start register.
+//   vmx_r  response pin flops, prefetch, the 64 x 1032 response queue (5 x ot_sram_1r1w_128x256), slow -> fast ratio
+//          FIFO, the staging buffer as two 1R1W macros (even / odd words) behind a registered look-ahead (was 32.8k
+//          flops and a 64:1 x 512 mux), the predicted read register, DONE.
 // The cluster is the one-tile kit CYCLE FOR CYCLE on every die port (bench tools/dsrom_wfc_cl_bench.py: lockstep
 // against dsfd_wfc_stg at the priced parameters + the kit's own system cases on the cluster): 0 cycles added.
 //
@@ -29,7 +30,8 @@
 // vm_rq at the WFC's sampling edge (one edge after vm_re) is the flop table's value; in cycles the WFC does not
 // sample (VM_REG contract) it may differ.
 // Mutants: OT_WFCVMX_MUT_RD2_SWAP, OT_WFCVMX_MUT_PREDOFF, OT_WFCVMX_MUT_NOPCHK, OT_WFCVMX_MUT_DONEEARLY (as the
-// one-tile vmx), OT_WFCVMXR_MUT_NOADV (a bank is not re-read after its word was taken: stale outbound words).
+// one-tile vmx), OT_WFCVMXR_MUT_NOADV (a bank is not re-read after its word was taken: stale outbound words),
+// OT_WFCVMXW_MUT_DOORBELL (the START doorbell written to a data row: the VM endpoint never starts the core).
 // ---------------------------------------------------------------------------
 module dsfd_wfc_vmx_w #(
     parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10, parameter integer VWA = 15,
@@ -111,7 +113,11 @@ module dsfd_wfc_vmx_w #(
 `endif
     wire s_mark = POSTED && s_is_s && !busy && !k_start;     // the START doorbell rides the write channel
     assign sw_valid = s_is_w || s_mark;
+`ifdef OT_WFCVMXW_MUT_DOORBELL
+    wire [VWA-1:0] sw_addr = s_mark ? {{(VWA-1){1'b1}}, 1'b0} : s_d[FLIT +: VWA];   // MUTANT: START on a data row
+`else
     wire [VWA-1:0] sw_addr = s_mark ? {VWA{1'b1}} : s_d[FLIT +: VWA];
+`endif
     wire [FLIT-1:0] sw_data = s_mark ? FLIT'(s_d[SP-1:0]) : s_d[FLIT-1:0];
     wire sw_fire = sw_valid && sw_ready;
     assign s_rdy = POSTED ? sw_fire : (sw_fire || s_go);
@@ -346,6 +352,45 @@ module dsfd_wfc_vmx_r #(
     assign t_rf = fb;
 endmodule
 
+// dsfd_wfc_vmx_p: the VM / stage-core port tile of the sp_wfc slot = dsfd_wfc_vmx_w + dsfd_wfc_vmx_r + dsfd_wfc_hep_t in ONE
+// hard tile (flattened in synthesis).  Why one tile and not three (floorplan, el1013-s81-wfcstg 2026-10-13): every die
+// pin of the slot is on its E face (328 um) and hard children sit on a 43.2 um origin lattice, so only TWO tiles can
+// own that face: the link bridge (151.2 um) and one VM-port tile (>= 147 um: two rows of response-queue macros).  All
+// VM / core pins (write link, read link, responses, done, HEP epochs) therefore leave from this tile.  The clock rule is
+// met by structure instead of by tile count: staging buffer in macros, and the slow -> fast ratio FIFO at RDEPTH 4.
+//   RDEPTH 4 is cycle-exact with the kit's 8: its reader pops on every fast edge (r_rdy = 1) and its writer pushes at
+//   most once a serial cycle, so at most 3 entries are outstanding (written, not yet seen retired by the writer: read
+//   <= 1.5 T_s after the write, pointer back <= 1 T_s later) and w_rdy never drops at depth 4 either (lockstep bench).
+//   Sinks: ck ~11.9k (pin flops 0.6k, pre-queue 2.1k, f2s 4.2k, s2f shadow 4.1k, read register / staging control 0.9k),
+//   ckv ~14.6k (f2s shadow 4.2k, write skid + link 1.6k, response pin flops 1.1k, queue output buffer 2.1k, s2f 4.1k,
+//   HEP 1.2k, control 0.3k); 8 macros.
+module dsfd_wfc_vmx_p (
+    input  wire [0:0]    ck, ckv, rst, rsv,
+    input  wire [527:0]  f_vw,           // {we, waddr, wdata} from the WFC
+    input  wire [52:0]   f_cs,           // {start, user, token, pos} from the WFC
+    input  wire [15:0]   f_vr,           // {re, raddr} from the WFC
+    output wire [511:0]  t_vq,           // the WFC's read data (one edge after re)
+    output wire [53:0]   t_cd,           // {done, next_token, next_val} to the WFC
+    output wire [0:0]    t_vc,           // VM write credit return (to dsfd_wfc_lnk)
+    input  wire [0:0]    f_pf, f_lf,     // faults of the WFC and dsfd_wfc_lnk
+    output wire [0:0]    t_swv, output wire [526:0] t_swd, input wire [0:0] f_swr, input wire [0:0] f_swa,
+    output wire [0:0]    t_srv, output wire [30:0] t_srd, input wire [0:0] f_srr,
+    input  wire [1025:0] f_srq,
+    output wire [52:0]   t_ks, input wire [53:0] f_kd,
+    output wire [35:0]   t_hep,
+    output wire [3:0]    t_ft
+);
+    wire [31:0] hks; wire [0:0] vr_ft;
+    dsfd_wfc_vmx_w u_vw (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+        .f_vw(f_vw), .f_cs(f_cs), .t_vc(t_vc),
+        .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .f_kdv(f_kd[53]), .t_ks(t_ks), .t_hks(hks),
+        .f_pf(f_pf), .f_lf(f_lf), .f_rf(vr_ft), .t_ft(t_ft));
+    dsfd_wfc_vmx_r #(.RDEPTH(4)) u_vr (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+        .f_vr(f_vr), .t_vq(t_vq), .f_cst(f_cs[52]), .t_cd(t_cd),
+        .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr), .f_srq(f_srq), .f_kd(f_kd), .t_rf(vr_ft));
+    dsfd_wfc_hep_t u_hep (.ckv(ckv), .rsv(rsv), .f_hks(hks), .t_hep(t_hep));
+endmodule
+
 // the cluster parent: wires and five constant ties (the WFC's unused SOURCE inputs); every net child pin -> child pin
 // or child pin -> cluster pin, driven and captured by registers inside the children
 module dsfd_wfc_stg_cl (
@@ -363,7 +408,7 @@ module dsfd_wfc_stg_cl (
     wire [511:0] w_in_data, w_out_data;
     wire core_start; wire [20:0] core_token, core_pos; wire [9:0] core_user;
     wire vm_we, vm_re; wire [14:0] vm_waddr, vm_raddr; wire [511:0] vm_wdata, vm_rq;
-    wire [53:0] cd; wire proto_fault, lnk_ft; wire [0:0] vc_ret, vr_ft; wire [31:0] hks;
+    wire [53:0] cd; wire proto_fault, lnk_ft; wire [0:0] vc_ret;
     wire [29:0] kv_base_nc; wire pr_re_nc; wire [9:0] pr_user_nc; wire [20:0] pr_pos_nc; wire [3:0] pr_blk_nc;
     wire core_busy_nc, tok_valid_nc, wf_issue_nc, wf_reject_nc, wf_squash_nc;
     wire [9:0] tok_user_nc, users_done_nc; wire [20:0] tok_pos_nc, tok_id_nc; wire [512:0] dw_nc;
@@ -383,12 +428,9 @@ module dsfd_wfc_stg_cl (
         .t_wiv(w_in_valid), .t_wid({w_in_last, w_in_data}), .f_wig(w_in_ready),
         .f_wov(w_out_valid), .f_wod({w_out_last, w_out_data}), .t_wog(w_out_ready),
         .t_lov(t_lov), .t_lod(t_lod), .f_lor(f_lor), .t_dw(dw_nc), .f_vc(vc_ret), .t_ft(lnk_ft));
-    dsfd_wfc_vmx_w u_vw (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
-        .f_vw({vm_we, vm_waddr, vm_wdata}), .f_cs({core_start, core_user, core_token, core_pos}), .t_vc(vc_ret),
-        .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .f_kdv(f_kd[53]), .t_ks(t_ks), .t_hks(hks),
-        .f_pf(proto_fault), .f_lf(lnk_ft), .f_rf(vr_ft), .t_ft(t_ft));
-    dsfd_wfc_vmx_r u_vr (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
-        .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq), .f_cst(core_start), .t_cd(cd),
-        .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr), .f_srq(f_srq), .f_kd(f_kd), .t_rf(vr_ft));
-    dsfd_wfc_hep_t u_hep (.ckv(ckv), .rsv(rsv), .f_hks(hks), .t_hep(t_hep));
+    dsfd_wfc_vmx_p u_vp (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+        .f_vw({vm_we, vm_waddr, vm_wdata}), .f_cs({core_start, core_user, core_token, core_pos}),
+        .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq), .t_cd(cd), .t_vc(vc_ret), .f_pf(proto_fault), .f_lf(lnk_ft),
+        .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr),
+        .f_srq(f_srq), .t_ks(t_ks), .f_kd(f_kd), .t_hep(t_hep), .t_ft(t_ft));
 endmodule

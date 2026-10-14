@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Gate of the S81 sp_wfc cluster dsfd_wfc_stg_cl (rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv: closed WFC + closed link bridge
-+ the new leaves dsfd_wfc_vmx_w / dsfd_wfc_vmx_r / dsfd_wfc_hep_t) at the PRICED kit configuration.
++ the new VM-port tile dsfd_wfc_vmx_p = dsfd_wfc_vmx_w + dsfd_wfc_vmx_r + dsfd_wfc_hep_t) at the PRICED kit configuration.
 
 Two kinds of case, both on the kit system bench of tools/dsrom_wfc_kit_bench.py (stage TB, VM behind 13 / 13 hub
 stations + dsfd_vm_wfc_ep, posted writes, 2-port prefetch, HEP checks):
@@ -71,6 +71,8 @@ CASES = {  # name -> (base stage case, mode, extra defines, expect)
     'cl_neg_predoff': ('stg_r1', 'cl', ['OT_WFCVMX_MUT_PREDOFF'], 'fail'),
     'cl_neg_doneearly': ('stg_r1', 'cl', ['OT_WFCVMX_MUT_DONEEARLY'], 'fail'),
     'lock_neg_noadv': ('stg_r1', 'lock', ['OT_WFCVMXR_MUT_NOADV'], 'fail'),
+    'cl_neg_doorbell': ('stg_r1', 'cl', ['OT_WFCVMXW_MUT_DOORBELL'], 'fail'),
+    'lock_neg_doorbell': ('stg_r1', 'lock', ['OT_WFCVMXW_MUT_DOORBELL'], 'fail'),
 }
 
 
@@ -151,7 +153,8 @@ def run(name, out, snap):
         return dict(case=name, expect=expect, verdict='BUILD_ERROR', log=b.stderr[-1500:])
     r = subprocess.run(['vvp', '-n', str(d / 'sim.vvp')], capture_output=True, text=True, cwd=d)
     (d / 'run.log').write_text(r.stdout + r.stderr)
-    m = re.search(r'^MTP_STG (PASS|FAIL).*$', r.stdout, re.M) or re.search(r'^LINK_REG (FAIL).*$', r.stdout, re.M)
+    m = re.search(r'^MTP_STG (PASS|FAIL).*$', r.stdout, re.M) or re.search(r'^LINK_REG (FAIL).*$', r.stdout, re.M) \
+        or re.search(r'^(FAIL): VM write address.*$', r.stdout, re.M)      # the bench's VM port model (untagged line)
     got = m.group(1).lower() if m else 'nolog'
     lk = re.search(r'^WFC_CL_LOCK .*$', r.stdout, re.M)
     return dict(case=name, base=base, mode=mode, defines=list(spec.get('defines', [])) + defs, expect=expect, got=got,
