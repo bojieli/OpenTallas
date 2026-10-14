@@ -53,6 +53,35 @@ proc ot_engc_place_output_cone {seed x y} {
   return $moved
 }
 
+# Resolve each relay bit to its actual hard-child destination pin through
+# mapped inversion/transport cells. A bus-wide anchor is not enough when the
+# parent's assigned pins span a long face.
+proc ot_engc_relay_target {seed macro fallback_x fallback_y} {
+  set pending [list $seed]; set seen [dict create]
+  while {[llength $pending]} {
+    set inst [lindex $pending 0]; set pending [lrange $pending 1 end]
+    if {[dict exists $seen [$inst getName]]} continue
+    dict set seen [$inst getName] 1
+    foreach out [$inst getITerms] {
+      if {[$out getIoType] ne "OUTPUT"} continue
+      set net [$out getNet]
+      if {$net eq "NULL" || $net eq ""} continue
+      foreach load [$net getITerms] {
+        if {[$load getIoType] ne "INPUT"} continue
+        set next [$load getInst]
+        if {$next eq $macro} {
+          set bb [$load getBBox]
+          return [list [expr {([$bb xMin]+[$bb xMax])/2}] [expr {([$bb yMin]+[$bb yMax])/2}]]
+        }
+        set master [$next getMaster]
+        if {![$master isBlock] && [regexp {^(INV|BUF|HB)} [$master getName]]} { lappend pending $next }
+      }
+    }
+  }
+  # A retained constant/unused bit has no active output path.
+  return [list $fallback_x $fallback_y]
+}
+
 # Local reset conditioners sit in legal rows beside each macro reset pin.
 foreach ot_child {win io ws pb1 pb0 pb2 lkp sink} {
   set ot_macro [$ot_cp_b findInst u_$ot_child]
@@ -82,7 +111,8 @@ set ot_y [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
 set ot_status_cells 0
 foreach ot_i [$ot_cp_b getInsts] {
   if {![string match *u_status_win* [$ot_i getName]]} continue
-  ot_engc_place_output_cone $ot_i $ot_x $ot_y
+  lassign [ot_engc_relay_target $ot_i $ot_win $ot_x $ot_y] ot_tx ot_ty
+  ot_engc_place_output_cone $ot_i $ot_tx $ot_ty
   incr ot_status_cells
 }
 if {$ot_status_cells < 16} { error "ENGC status stage cells missing" }
@@ -97,7 +127,8 @@ set ot_y [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
 set ot_trans_cells 0
 foreach ot_i [$ot_cp_b getInsts] {
   if {![string match *u_xtrans_pb0* [$ot_i getName]]} continue
-  ot_engc_place_output_cone $ot_i $ot_x $ot_y
+  lassign [ot_engc_relay_target $ot_i $ot_pb0 $ot_x $ot_y] ot_tx ot_ty
+  ot_engc_place_output_cone $ot_i $ot_tx $ot_ty
   incr ot_trans_cells
 }
 if {$ot_trans_cells < 334} { error "ENGC coherent transit registers missing" }
