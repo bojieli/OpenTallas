@@ -1,14 +1,14 @@
 {
- "name": "s81hc_pad_fv4fd5r2_ref-v4-nativeM2-initial-pinwindows-5f45e038d",
+ "name": "s81hc_pad_fv4fd5r2_ref-v5-nativeM2-HB1-outputstrip-96e4fad4f",
  "block": "ot_s81_hc_pad_fv4fd5r2",
  "ref_tile": true,
  "owner": "Codex:s81_hc_ccf",
- "purpose": "Exact unique native M2 assignment and initial+propagated MAX-only pin windows, with original MIN/hold constraints; real fresh physical proof required.",
+ "purpose": "R2 input capture passes136/146ps; actual return outputdriver-to-pin wire116ps remains. Existing outputstrip recipe with smaller HB1 fixes driverlocation while preserving all hold constraints and native assigned pins; fresh actualTT/FF proof required.",
  "threads": 8,
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex-s81-ccf-pinreg-1013",
-  "commit": "5f45e038d"
+  "commit": "96e4fad4f"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref/s81hc_pad_fv4fd5r2_ref-v4-nativeM2-initial-pinwindows-5f45e038d"
+   "to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref/s81hc_pad_fv4fd5r2_ref-v5-nativeM2-HB1-outputstrip-96e4fad4f"
   }
  ],
  "cycles_added": 0,
