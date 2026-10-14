@@ -45,8 +45,8 @@
     "benches_from": "tools/s81_suhc/hc_tile_benches_fv4fd5r2.json",
     "owner": "Codex:s81_hc_ccf",
     "branch": "codex-s81-ccf-pinreg-1013",
-    "tag": "v4-nativeM2-initial-pinwindows",
-    "purpose": "Exact unique native M2 assignment and initial+propagated MAX-only pin windows, with original MIN/hold constraints; real fresh physical proof required.",
+    "tag": "v5-nativeM2-HB1-outputstrip",
+    "purpose": "R2 input capture passes136/146ps; actual return outputdriver-to-pin wire116ps remains. Existing outputstrip recipe with smaller HB1 fixes driverlocation while preserving all hold constraints and native assigned pins; fresh actualTT/FF proof required.",
     "views_to": "physical/ref_tile/s81hc_pad_fv4fd5r2_ref/views",
     "record_to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref"
   },
@@ -57,7 +57,7 @@
   },
   "recipe": 2,
   "inhold": false,
-  "outhold": false,
+  "outhold": true,
   "boundary_tcl": [
     "physical/s81_hc_pinplan/pin_window_max.sdc"
   ],
@@ -69,5 +69,9 @@
   },
   "sdc_extra": [
     "physical/s81_hc_pinplan/pin_window_initial_max.sdc"
-  ]
+  ],
+  "orfs_vars": {
+    "OT_INHOLD_MASTER": "HB1xp67_ASAP7_75t_R"
+  },
+  "boundary_hold_experiment": "Inputs remain no fixedHB4 (fresh measuredcapture<=146.1). Outputs use existingrecipe2 leadBUF/HB1/BUF pin strip rather than130psHB4. All MIN/hold/uncertainty/period unchanged; HB1 is a physical delaycell candidate needing actual hold/window proof."
 }

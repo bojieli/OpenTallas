@@ -83,6 +83,10 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r2.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81hc_pad_fv4fd5r2_ref/pre_gpl.tcl",
+  "physical/ref_tile/s81hc_pad_fv4fd5r2_ref/pre_dpl.tcl"
  ]
 }
