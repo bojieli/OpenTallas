@@ -61,7 +61,18 @@
    "mv_src",
    "fence_v",
    "fence_rdy",
-   "fence_done",
+   "fence_done"
+  ],
+  "N": [
+   "il_active",
+   "il_vmq",
+   "il_vmr",
+   "vr2q",
+   "vr2r_ctrl",
+   "vmq",
+   "vmr",
+   "wl",
+   "wl_done",
    "ser_mv_v",
    "ser_mv",
    "ser_mv_rdy",
@@ -82,17 +93,6 @@
    "ser_k_fault",
    "ser_vmq",
    "ser_vmr"
-  ],
-  "N": [
-   "il_active",
-   "il_vmq",
-   "il_vmr",
-   "vr2q",
-   "vr2r_ctrl",
-   "vmq",
-   "vmr",
-   "wl",
-   "wl_done"
   ],
   "S": [
    "k_req_v",
