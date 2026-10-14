@@ -10,130 +10,98 @@
     {
       "instances": 918,
       "master": "dsfd_rly_15_SN",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 640,
       "master": "dsfd_rly_2_ES",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 290,
       "master": "dsfd_rly_2_NE",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 1118,
       "master": "dsfd_rly_2_NS",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 512,
       "master": "dsfd_rly_2_NW",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 512,
       "master": "dsfd_rly_2_WE",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 640,
       "master": "dsfd_rly_2_WS",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 896,
       "master": "dsfd_rly_63_NE",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 3968,
       "master": "dsfd_rly_63_NS",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 128,
       "master": "dsfd_rly_63_SE",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 8192,
       "master": "dsfd_rly_63_WE",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 384,
       "master": "dsfd_rly_63_WN",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 3584,
       "master": "dsfd_rly_63_WS",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 896,
       "master": "dsfd_rly_66_NS",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 512,
       "master": "dsfd_rly_66_SN",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 256,
       "master": "dsfd_rly_68_EW",
-      "passed": false,
-      "reasons": [
-        "missing source-bound internal receipt"
-      ]
+      "passed": true,
+      "reasons": []
     },
     {
       "instances": 1,
@@ -172,7 +140,9 @@
       "master": "ot_v41_rom_elem_q_qxpq_w10",
       "passed": false,
       "reasons": [
-        "missing source-bound internal receipt"
+        "ss: constrained endpoint slack missing or negative",
+        "ss: internal max negative or missing",
+        "ss: minimum-period/pulse review missing"
       ]
     }
   ],
