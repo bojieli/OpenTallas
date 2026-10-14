@@ -25,7 +25,7 @@ def build(path):
         sc.extend(R.G.bits(s));ex.extend(R.G.bits(R.G.to_bf16(e))>>16)
         ma.append(R.G.bits(m));ze.append(R.G.bits(R.G.lane_sum(e)))
     hashes={}
-    for name,arr in [('score',sc),('exp_bf16',ex),('max',ma),('denom',ze)]:
+    for name,arr in [('score',sc),('exp_bf16',ex),('max',ma),('denom',ze),('recip',R.G.bits(R.G.reciprocal(np.asarray(ze,dtype=np.uint32).view(np.float32))))]:
         p=path/(name+'.hex');p.write_text(''.join(f'{int(x):08x}\n' for x in arr));hashes[p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
     record=dict(scope='QK_EXP_Z_PHASE_ONLY',ctx=t,score_split=128,denominator_chunk=8,score_words=4*t,exponent_words=4*t,maxima=4,denominators=4,input_hashes=meta['hashes'],phase_hashes=hashes)
     (path/'phase_meta.json').write_text(json.dumps(record,indent=2)+'\n');print(json.dumps(record))
