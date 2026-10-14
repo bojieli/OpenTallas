@@ -1,5 +1,5 @@
 {
- "name": "qkd_ectl_a-q17-COMMIT",
+ "name": "qkd_ectl_a-q17-7eb95c2b1",
  "block": "qkd_ectl_a",
  "ref_tile": true,
  "owner": "Claude:q13-kvleaves",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q17-ectl",
-  "commit": "COMMIT",
+  "commit": "7eb95c2b1",
   "extra_paths": [
    "rtl/hdc",
    "rtl/test/qwen_kv_die",
@@ -114,7 +114,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ectl_a/qkd_ectl_a-q17-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ectl_a/qkd_ectl_a-q17-7eb95c2b1"
   }
  ],
  "cycles_added": 0,
