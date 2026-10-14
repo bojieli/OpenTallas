@@ -260,9 +260,16 @@ module ot_hgi_b2_dma_mv #(
     always @(posedge clk or negedge rn) if (!rn) kv_idle_q <= 1'b1; else kv_idle_q <= kv_idle_w;
     wire kv_idle = (KVW != 0) ? kv_idle_q && !kc_pending && !kc_v : 1'b1;
     reg [1:0] qid_q; always @(posedge clk) qid_q <= (MUT_SEAM == 6) ? qid + 2'd1 : qid;
-    wire [273:0] vmr_local = il_active ? 274'd0 : vmr;
-    always @(posedge clk or negedge rn) if (!rn) il_vmr[273] <= 1'b0; else il_vmr[273] <= il_active && vmr[273];
-    always @(posedge clk) il_vmr[272:0] <= il_active ? (vmr[272:0] ^ ((MUT_SEAM == 2) ? 273'd1 : 273'd0)) : 273'd0;
+    // I-list ownership and packet payload cross the face together. The raw owner
+    // pin drives one flop; the registered owner selects both packet directions.
+    reg il_active_q; reg [337:0] il_vmq_q;
+    always @(posedge clk or negedge rn)
+      if (!rn) begin il_active_q <= 0; il_vmq_q[337] <= 0; end
+      else begin il_active_q <= il_active; il_vmq_q[337] <= il_vmq[337]; end
+    always @(posedge clk) il_vmq_q[336:0] <= il_vmq[336:0];
+    wire [273:0] vmr_local = il_active_q ? 274'd0 : vmr;
+    always @(posedge clk or negedge rn) if (!rn) il_vmr[273] <= 1'b0; else il_vmr[273] <= il_active_q && vmr[273];
+    always @(posedge clk) il_vmr[272:0] <= il_active_q ? (vmr[272:0] ^ ((MUT_SEAM == 2) ? 273'd1 : 273'd0)) : 273'd0;
     // B2: refused at the command station (fail-closed, no request): a linear HBM side starting on another stack (the KV
     // engine streams a move on its row-0 stack), a strided move with a STRIPE4 side (the serial engine addresses linearly)
     wire b2_bad = B2 != 0 && ((cm_q[1:0] == 2'd0 && cm_q[44:42] == 3'd0 && cm_q[41:40] != 2'(QID)) ||
@@ -733,16 +740,38 @@ module ot_hgi_b2_dma_mv #(
     // ---- read lanes: requests, the registered landing grant (one sector a cycle), the landing RAM
     wire [3:0] l_take = ir_rsp_v & ((B2 != 0) ? 4'b1111 : lg) & ~ir_rsp_we;               // read sectors on the landing grant
     wire [3:0] w_ack = ir_rsp_v & ir_rsp_we & l_wo;                // write acknowledgements (taken on a lane with writes in flight)
+    // Two requests of credit absorb the registered ready round trip. Register
+    // every KV write at the input face before selecting the HBM lane payload.
+    // The core retires only after HBM acknowledgements, so its idle cannot rise
+    // while a request remains in this station or the downstream lane station.
+    wire [3:0] kv_pin_v;
+    wire [147:0] kv_pin_a;
+    wire [1023:0] kv_pin_d;
+    for (genvar kp = 0; kp < 4; kp = kp + 1) begin : g_kv_pin
+      if (KVW != 0 && (B2 == 0 || kp == QID)) begin : used
+        wire [292:0] request_head;
+        ot_hgi_b2_dma_cmd_pin #(.W(293)) u_pin(.clk(clk), .rst_n(rn),
+          .in_v(kv_wv[kp]), .in_data({kv_wa[kp*37 +: 37],kv_wd[kp*256 +: 256]}),
+          .in_ready(kc_wrdy[kp]), .out_v(kv_pin_v[kp]), .out_data(request_head),
+          .out_ready(!kv_idle && ir_req_rdy[kp]));
+        assign {kv_pin_a[kp*37 +: 37],kv_pin_d[kp*256 +: 256]} = request_head;
+      end else begin : unused
+        assign kc_wrdy[kp] = 1'b0;
+        assign kv_pin_v[kp] = 1'b0;
+        assign kv_pin_a[kp*37 +: 37] = 37'd0;
+        assign kv_pin_d[kp*256 +: 256] = 256'd0;
+      end
+    end
     genvar gl;
     for (gl = 0; gl < 4; gl = gl + 1) begin : g_rl
         // KVW: the KV engine's write requests share the lane (the engines never run together)
         // (selected by the KV engine's registered busy, not by its valid: registered outputs + one mux)
-        assign ir_req_v[gl] = kv_idle ? lq_v[gl] : kv_wv[gl];
-        assign ir_req_addr[gl*37 +: 37] = kv_idle ? lq_a[gl] : kv_wa[gl*37 +: 37];
+        assign ir_req_v[gl] = kv_idle ? lq_v[gl] : kv_pin_v[gl];
+        assign ir_req_addr[gl*37 +: 37] = kv_idle ? lq_a[gl] : kv_pin_a[gl*37 +: 37];
         assign ir_req_len[gl*4 +: 4] = kv_idle ? lq_n[gl] : 4'd1;
         assign ir_req_tag[gl*16 +: 16] = {8'h52, kv_idle ? lq_t[gl] : 8'd0};
         assign ir_req_we[gl] = kv_idle ? lq_we[gl] : 1'b1;
-        assign ir_req_wdata[gl*256 +: 256] = kv_idle ? lq_d[gl] : kv_wd[gl*256 +: 256];
+        assign ir_req_wdata[gl*256 +: 256] = kv_idle ? lq_d[gl] : kv_pin_d[gl*256 +: 256];
         assign ir_req_wstrb[gl*32 +: 32] = kv_idle ? lq_s[gl] : 32'hFFFF_FFFF;
     end
     reg [3:0] l_wo;                                        // lanes with writes in flight (their responses are all write acks)
@@ -766,7 +795,6 @@ module ot_hgi_b2_dma_mv #(
     for (genvar gc = 0; gc < 32; gc = gc + 1) begin : g_kc_cr
        assign kc_cr[gc*6 +: 6] = g_cr[gc];
     end
-    assign kc_wrdy = ir_req_rdy;
     assign kb_we = 1'b0; assign kb_re = 1'b0; assign kb_wa = 8'd0; assign kb_ra = 8'd0; assign kb_wd = 256'd0;
     reg [5:0] l_wn [0:3];
     reg [3:0] w_acc_q, w_ack_q;                            // write accepted / acknowledged a lane (pin flops of the handshakes)
@@ -1137,8 +1165,8 @@ module ot_hgi_b2_dma_mv #(
     assign k_req_v = ko_v; assign k_req_we = ko_we; assign k_req_addr = ko_a; assign k_req_wdata = ko_d; assign k_req_wstrb = ko_s;
     generate if (PX != 0) begin : g_vmo
         reg [337:0] vmq_r;                                  // registered output (sel_s fanned out over 338 bits to the pins)
-        always @(posedge clk or negedge rn) if (!rn) vmq_r[337] <= 1'b0; else vmq_r[337] <= il_active ? il_vmq[337] : (sel_s ? s_vmq[337] : f_vmq[337]);
-        always @(posedge clk) vmq_r[336:0] <= il_active ? il_vmq[336:0] : (sel_s ? s_vmq[336:0] : f_vmq[336:0]);
+        always @(posedge clk or negedge rn) if (!rn) vmq_r[337] <= 1'b0; else vmq_r[337] <= il_active_q ? il_vmq_q[337] : (sel_s ? s_vmq[337] : f_vmq[337]);
+        always @(posedge clk) vmq_r[336:0] <= il_active_q ? il_vmq_q[336:0] : (sel_s ? s_vmq[336:0] : f_vmq[336:0]);
         assign vmq = vmq_r;
     end else begin : g_vmc
         assign vmq = sel_s ? s_vmq : f_vmq;

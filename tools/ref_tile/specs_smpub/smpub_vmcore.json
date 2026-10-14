@@ -11,7 +11,7 @@
     "rn"
   ],
   "outline": {
-    "w": 172.8,
+    "w": 86.4,
     "h": 129.6
   },
   "pins": {
@@ -38,7 +38,7 @@
   "job": {
     "owner": "Codex:sm_pub_parent",
     "branch": "codex/smpub-parent-1013",
-    "tag": "r1",
+    "tag": "r3",
     "purpose": "Real die-wire split of existing publication stages; original CLOSED merged master retained, every cycle preserved",
     "extra_paths": [
       "rtl/hbm_accel/generic/adapters/tb/smpub_parent",
@@ -67,7 +67,13 @@
     ],
     "views_to": "physical/ref_tile/smpub_vmcore/views",
     "record_to": "results/rtl/ref_tile/smpub_vmcore",
-    "structural_change": "move existing capture/launch stages into separate own-root hard stations to satisfy actual legacy W/E die-port reach"
+    "structural_change": "real pin-column keepout extends6.48um over the routing layer above expanded face pin stubs; VMcore capture-to-launch width172.8\u219286.4um reduces actual internal wire and corrects SS\u221227.27ps"
   },
-  "io_tcl": "physical/hgi_sm_pub_parent_stations/vmcore_pins.tcl"
+  "io_tcl": "physical/hgi_sm_pub_parent_stations/vmcore_pins.tcl",
+  "pin_access": {
+    "frac": 0.0
+  },
+  "orfs_vars": {
+    "OT_PK_HALO": "6.48"
+  }
 }
