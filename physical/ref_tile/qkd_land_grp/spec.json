@@ -125,6 +125,11 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 48,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
@@ -133,7 +138,7 @@
  "job": {
   "owner": "Claude:el1013-qwen-kvstrips",
   "branch": "claude/el1013-qwen-kvstrips",
-  "tag": "ks1",
+  "tag": "ks2",
   "purpose": "Qwen ROM TP8 (track B) KV landing strip leaf qkd_land_grp (8 a strip, one a row engine): four PC ports (4-word queues under credits), the row matcher of the landing crossbar (stream order vs the engine's requests: deliver / drop unrequested, stale or beyond T / hold the next layer) and the KV merge slice ot_qkvd_kv_merge E 1 unchanged (requests, write-then-read fence, kept rows).  ~13.8k sinks on one root; 1 row a cycle.",
   "extra_paths": [
    "physical/qkd_land_strip",
@@ -182,6 +187,7 @@
    }
   ]
  },
+ "structural_change": "ks2 pin plan: the ks1 route crashed twice in pin placement (PPL-0093: an ordered group of 32 of rs[1024:0] did not fit its LEFT span 34-134 um on M4 at 2 tracks). The ranged ports are now placed pin by pin (place_pin, uniform over each port's own range, >= 2 M4 tracks apart; no PPL ordered groups). RTL, outline and ranges unchanged.",
  "children": [],
  "inter": [],
  "io_flop_at_pins": {
