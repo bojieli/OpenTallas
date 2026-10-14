@@ -43,9 +43,9 @@
  },
  "job": {
   "owner": "Codex:s81-capture",
-  "branch": "s81-spwfc-1013",
-  "tag": "v3",
-  "purpose": "Actual assigned-pin repair after wide v2 DRC1: CK61.548 conflicts with f_w24861.596 on M5 (spacing bbox61.560,0..61.584,0.227). Die-reviewed6e20fb09c relocates scalar controls to vacant east centres114.012/114.204/114.396, actual44M5PG rectangles clear both faces and1.392um nearest stripe clearance (reviewda5faf138). Outline123.12x136.08, data pins and transaction semantics retained. Corrected golden-bench monitor indices isolate timeout counter; exact9PASS and observed KSWAP121697 mismatches/zero timeouts at b2b1fc71a.",
+  "branch": "codex-s81-capture-ss-1013",
+  "tag": "v4ss",
+  "purpose": "SS structural control/read repair after actual v2 SS cones: pointer-full equality replaces subtract; exact hold-ready Boolean replaces subtract; complemented same-epoch state sampler removes crossing polarity inversion; local16bit onehot read-bank selectors registered from same rp_next replace high-fanout binary select. No added data/valid cycle or clock root; default FIFO mode retained. a8620c02e focused four-phase reset/backpressure equivalence PASS, capture exact9 PASS0 and observedKSWAP121697/zero timeouts. Native SS/FF actual context qualification remains required.",
   "extra_paths": [
    "tools/s81_ph",
    "rtl/dsrom_sys/s81_ph",
@@ -79,12 +79,16 @@
  ],
  "recipe": 2,
  "clock": "cts",
- "structural_change": "Actual assigned-pin repair after wide v2 DRC1: CK61.548 conflicts with f_w24861.596 on M5 (spacing bbox61.560,0..61.584,0.227). Die-reviewed6e20fb09c relocates scalar controls to vacant east centres114.012/114.204/114.396, actual44M5PG rectangles clear both faces and1.392um nearest stripe clearance (reviewda5faf138). Outline123.12x136.08, data pins and transaction semantics retained. Corrected golden-bench monitor indices isolate timeout counter; exact9PASS and observed KSWAP121697 mismatches/zero timeouts at b2b1fc71a.",
+ "structural_change": "SS structural control/read repair after actual v2 SS cones: pointer-full equality replaces subtract; exact hold-ready Boolean replaces subtract; complemented same-epoch state sampler removes crossing polarity inversion; local16bit onehot read-bank selectors registered from same rp_next replace high-fanout binary select. No added data/valid cycle or clock root; default FIFO mode retained. a8620c02e focused four-phase reset/backpressure equivalence PASS, capture exact9 PASS0 and observedKSWAP121697/zero timeouts. Native SS/FF actual context qualification remains required.",
  "slot_change_request": "Die authoritative scalar pin repair6e20fb09c + actual PG reviewda5faf138; parent ck_x/ckv_x projection updated, parent1728x561.6 retained",
  "boundary_tcl": [
   "physical/s81_ph_views/capture/x8_dual_boundary.tcl"
  ],
  "io_tcl": "physical/s81_die_pins/v18/dsfd_capt_x8_dual.tcl",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "change": "SS structural control/read repair after actual v2 SS cones: pointer-full equality replaces subtract; exact hold-ready Boolean replaces subtract; complemented same-epoch state sampler removes crossing polarity inversion; local16bit onehot read-bank selectors registered from same rp_next replace high-fanout binary select. No added data/valid cycle or clock root; default FIFO mode retained. a8620c02e focused four-phase reset/backpressure equivalence PASS, capture exact9 PASS0 and observedKSWAP121697/zero timeouts. Native SS/FF actual context qualification remains required."
+ },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
