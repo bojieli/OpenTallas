@@ -5,6 +5,9 @@ set ::ot_wc_ins [dict create dsfd_coll_cesx {ck 123.0 131.0} dsfd_coll_cescn {ck
 
 proc ot_wc_apply {} {
   set mx {}; set mn {}; set raw {}
+  # arrivals need an updated timing graph (as io_ref_skew.sdc ot_pf_ref): without it get_property arrival_* on a child pin
+  # segfaults OpenSTA at the first read_sdc of a wires-only netlist (synth_odb, dscoll_ces0_sp gate 2026-10-13)
+  catch {sta::worst_slack_cmd max}
   foreach c [get_cells -quiet -hierarchical *] {
     set m [get_property $c ref_name]
     if {![dict exists $::ot_wc_ins $m]} { continue }
