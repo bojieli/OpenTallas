@@ -30,6 +30,8 @@ module ot_hgi_fused_record #(
     parameter integer UNIT = 0,            // 1: the D1 die body: the micro-ops run on an internal ot_hgi_su_unit (stage /
                                            //    vec / drain through the vmq / vmr VM client); 0: the vec op port (op_*)
     parameter integer UN = 32, UM = 8, ULV = 7,
+    parameter integer USV = 0,             // explicit SV record-body binding; requires UNIT/UWIDE1 and ULWB18
+    parameter integer USV_MUT = 0,         // source-bound native SV negative proof only
     parameter integer SCR_WORDS = 0,       // F10: words reserved at cfg_scratch (0 = up to the end of VM); over -> fault
     parameter integer UWIDE = 0,           // hgi-unitrate: 1 = the internal die body is the wide successor (32-lane VM stage
                                            //    / drain, record pipeline: ot_hgi_su_unit WIDE); its lanes leave on wrq / wwq
@@ -191,7 +193,17 @@ module ot_hgi_fused_record #(
     end endgenerate
     reg s_v; reg [127:0] s_hdr; reg [255:0] s_sut, s_a, s_b, s_c, s_o, s_r; reg [20:0] s_n;
     wire s_rdy, s_done, s_fault, s_halt, s_drained;
-    generate if (UNIT) begin : g_unit
+    generate if (UNIT && USV) begin : g_sv
+        initial if (UWIDE != 1 || ULWB != 18) $fatal(1,"FUSED SV body requires UWIDE1 and ULWB18");
+        ot_hgi_sv_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV), .LWB(ULWB), .LQ(ULQ), .MUT_V(USV_MUT)) u_su (
+            .clk(clk), .rst_n(rr[2]), .rec_v(s_v), .rec_rdy(s_rdy),
+            .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o),
+            .rec_r(s_r), .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt),
+            .vmq(vmq), .vmr(vmr), .s0_v(1'b0), .s0_idx(20'd0), .s0_data(32'd0), .am_stream(), .am_rdy(1'b0),
+            .wrq(u_wrq), .wrq_cr(own ? 32'd0 : wrq_cr), .wrr(own ? '0 : wrr), .wwq(u_wwq), .wwq_cr(own ? 32'd0 : wwq_cr),
+            .wwq_done(own ? 32'd0 : wwq_done), .rg_req(u_rg), .rg_gnt(rg_gnt), .wg_req(u_wg), .wg_gnt(wg_gnt));
+        assign s_drained = 1'b1; assign op_v = 1'b0; assign op_w = 670'd0;
+    end else if (UNIT) begin : g_unit
         ot_hgi_su_unit #(.PAYLOAD_RESET(PAYLOAD_RESET), .N(UN), .M(UM), .LV(ULV), .WIDE(UWIDE), .LWB(ULWB), .RWB(URWB), .LQ(ULQ)) u_su (.clk(clk), .rst_n(rr[2]), .rec_v(s_v), .rec_rdy(s_rdy),
             .rec_hdr(s_hdr), .rec_sut(s_sut), .rec_a(s_a), .rec_b(s_b), .rec_c(s_c), .rec_d(256'd0), .rec_o(s_o),
             .rec_r(s_r), .rec_i(256'd0), .rec_n_a(s_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halt),
