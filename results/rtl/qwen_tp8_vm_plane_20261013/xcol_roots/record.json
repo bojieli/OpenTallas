@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.vm-xcol-roots.v1",
-  "status": "BENCHED_CTS_GATE_RUNNING",
+  "status": "BENCHED_MONOLITHIC_CTS_PASSED_SUPERSEDED",
   "NROOT": 32,
   "quad_assignment": "quad=NROOT*phase+root; element=(4*quad+k) mod2^split",
   "data_bits_per_column": 128,
@@ -49,5 +49,16 @@
       "name": "mut3",
       "verdict": "FAIL xcol_roots MUT=3 errors=1720 checks=3967 changes=1507"
     }
-  ]
+  ],
+  "cts_scope": {
+    "source": "9597071bc",
+    "root_sinks": 8011,
+    "tt_max_ps": 236.2,
+    "tt_spread_ps": 35.8,
+    "setup_ps": 143.55,
+    "hold_ps": 19.11,
+    "synth_floorplan_seconds": 1459,
+    "total_gate_seconds": 2215,
+    "limit": "Monolithicrank source; legacyspaboveSMAXfixnotyetincluded; notfinalclosure."
+  }
 }

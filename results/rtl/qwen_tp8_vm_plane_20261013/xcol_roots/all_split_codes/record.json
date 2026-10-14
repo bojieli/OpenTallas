@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.vm-xcol-roots.v1",
-  "status": "BENCHED_ALL_SPLIT_CODES_ROUTE_NEXT",
+  "status": "BENCHED_ROUTE_RUNNING",
   "NROOT": 32,
   "quad_assignment": "quad=NROOT*phase+root; element=(4*quad+k) mod2^split",
   "data_bits_per_column": 128,
@@ -77,5 +77,7 @@
     "setup_ps": 143.39,
     "hold_ps": 24.33,
     "limit": "PREVIOUSselector-source; currentextraSPcase decode is not an exact-source CTS verdict. RoutemustmeasureactualcurrentTT/FF/DRC."
-  }
+  },
+  "job": "qfd_vm_xcol_roots-rt3-d49fc5849",
+  "route_source": "d49fc58494bd68db5bc21c4f43ce00aeacee8327"
 }

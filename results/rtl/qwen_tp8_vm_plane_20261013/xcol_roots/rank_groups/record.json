@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.vm-xcol-roots.v1",
-  "status": "BENCHED_RANK_GROUP_CTS_GATE_NEXT",
+  "status": "BENCHED_RANK_CTS_PASSED_SUPERSEDED_BY_ALL_SPLIT_SOURCE",
   "NROOT": 32,
   "quad_assignment": "quad=NROOT*phase+root; element=(4*quad+k) mod2^split",
   "data_bits_per_column": 128,
@@ -50,5 +50,16 @@
       "verdict": "FAIL xcol_roots MUT=3 errors=1720 checks=3967 changes=1507"
     }
   ],
-  "structural_change": "Rankmux split into32four-output modules to bound Yosys frontend parameter derivation; bits and3enabled-edge latency unchanged."
+  "structural_change": "Rankmux split into32four-output modules to bound Yosys frontend parameter derivation; bits and3enabled-edge latency unchanged.",
+  "cts_scope": {
+    "source": "7d7af057d",
+    "root_sinks": 8011,
+    "tt_max_ps": 226.7,
+    "tt_spread_ps": 26.3,
+    "setup_ps": 143.39,
+    "hold_ps": 24.33,
+    "synth_floorplan_seconds": 334,
+    "total_gate_seconds": 789,
+    "limit": "Pre-allsplit source; currentphysicalkitdoesnotretainstalegate_result."
+  }
 }
