@@ -59,6 +59,7 @@ module ot_s81_ctrl #(
     input  wire                  clk,
     input  wire                  rst_n,
     input  wire                  startup_ready,
+    output wire                  startup_local_ready,
     input wire source_token_dead,
     input wire eng_rb_v,
     input wire [11:0] eng_rb_user,
@@ -127,10 +128,21 @@ module ot_s81_ctrl #(
     wire g_v, g_r, g_l; wire [FLIT-1:0] g_d;
     wire g_f; wire [3:0] g_fc; wire [127:0] g_fh; wire [31:0] g_msgs, g_flits;
     wire [7:0] cfg_users;
+    wire ctrl_rst_n;
+    generate if (STARTUP_BARRIER != 0) begin : g_startup_reset
+        (* keep = 1 *) reg [1:0] local_release;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) local_release <= 2'b00;
+            else local_release <= {local_release[0], 1'b1};
+        assign ctrl_rst_n = local_release[1];
+    end else begin : g_legacy_reset
+        assign ctrl_rst_n = rst_n;
+    end endgenerate
+    assign startup_local_ready = ctrl_rst_n;
     ot_s81_stage_guard #(.FLIT(FLIT), .NW(NW), .MAXU(MAXU), .MY_ID(MY_ID), .SRC_LO(SRC_LO), .SRC_HI(SRC_HI),
         .SRC2_LO(SRC2_LO), .SRC2_HI(SRC2_HI), .GRP_LO(GRP_LO), .GRP_HI(GRP_HI), .TYPE_MASK(TYPE_MASK),
         .LEN_HID(XW), .LEN_SIDE_MAX(LEN_SIDE_MAX)) u_guard (
-        .clk(clk), .rst_n(rst_n), .cfg_users(SOURCE ? {4'b0, cfg_users} : cfg_users_static),
+        .clk(clk), .rst_n(ctrl_rst_n), .cfg_users(SOURCE ? {4'b0, cfg_users} : cfg_users_static),
         .in_valid(in_valid), .in_ready(in_ready), .in_data(in_data), .in_last(in_last),
         .out_valid(g_v), .out_ready(g_r), .out_data(g_d), .out_last(g_l),
         .fault(g_f), .fault_code(g_fc), .fault_hdr(g_fh), .st_msgs(g_msgs), .st_flits(g_flits));
@@ -144,7 +156,7 @@ module ot_s81_ctrl #(
         wire [31:0] s1, s2, s3, s4;
         ot_s81_host_cq #(.MAXU(MAXU), .PMAX(PMAX), .NW(NW), .TAGW(8), .CQ_DEPTH(CQ_DEPTH), .CAUSEW(32), .WDOG(WDOG),
                          .UCW(8)) u_hq (
-            .clk(clk), .rst_n(rst_n), .cmd_valid(hc_valid), .cmd_ready(hc_ready), .cmd_op(hc_op), .cmd_tag(hc_tag),
+            .clk(clk), .rst_n(ctrl_rst_n), .cmd_valid(hc_valid), .cmd_ready(hc_ready), .cmd_op(hc_op), .cmd_tag(hc_tag),
             .cmd_user(hc_user), .cmd_pos(hc_pos), .cmd_token(hc_token), .cpl_valid(cpl_valid), .cpl_ready(cpl_ready),
             .cpl_data(cpl_data), .cfg_users(cfg_users), .cfg_prompt_len(cfg_plen), .cfg_gen_len(cfg_glen),
             .cfg_max_len(cfg_maxl), .cfg_eos_en(cfg_eos_en), .cfg_eos_id(cfg_eos_id), .boot_ok(boot_ok),
@@ -163,15 +175,15 @@ module ot_s81_ctrl #(
     wire jw_v,jw_dead;wire [67:0] jw_ids;
     wire producer_ready,producer_fault;
     reg window_slot;
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n) window_slot<=0;
+    always @(posedge clk or negedge ctrl_rst_n)
+        if(!ctrl_rst_n) window_slot<=0;
         else if(j_v && j_r) window_slot<=!window_slot;
     // Program/config traffic may arrive during startup. Only operation admission waits
     // for the actual reset-release acknowledgments; an accepted message remains queued.
     assign j_r=seq_ready && (!WINDOW_CONTEXT || !SOURCE || producer_ready)
                && (STARTUP_BARRIER == 0 || startup_ready);
     generate if(WINDOW_CONTEXT && SOURCE) begin:g_window_source
-        ot_dsrom_engram_lead_producer u_lead(.clk(clk),.rst_n(rst_n),
+        ot_dsrom_engram_lead_producer u_lead(.clk(clk),.rst_n(ctrl_rst_n),
             .t_v(j_v && j_r),.t_ready(producer_ready),.t_user(j_u),.t_pos(j_p),.t_tok(j_t),
             .t_first(j_p==0),.t_dead(source_token_dead),.t_slot(window_slot),
             .rb_v(eng_rb_v),.rb_user(eng_rb_user),.rb_n(eng_rb_n),.rb_ready(eng_rb_ready),
@@ -189,7 +201,7 @@ module ot_s81_ctrl #(
     wire p_f; wire [3:0] p_fc; wire [31:0] p_jd;
     ot_s81_pkg_ctrl #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .MAXU(MAXU), .VWA(VWA), .RXB(RXB), .RXW(XW),
         .WINDOW_CONTEXT(WINDOW_CONTEXT),.SOURCE(SOURCE), .SIDE_USH(SIDE_USH), .SIDE_BASE(SIDE_BASE), .MUT(MUT)) u_pkg (
-        .clk(clk), .rst_n(rst_n), .cfg_users(cfg_users), .cfg_prompt_len(cfg_plen), .cfg_gen_len(cfg_glen),
+        .clk(clk), .rst_n(ctrl_rst_n), .cfg_users(cfg_users), .cfg_prompt_len(cfg_plen), .cfg_gen_len(cfg_glen),
         .cfg_max_len(cfg_maxl), .cfg_eos_en(cfg_eos_en), .cfg_eos_id(cfg_eos_id), .boot_ok(SOURCE ? boot_ok : 1'b1),
         .in_valid(g_v), .in_ready(g_r), .in_data(g_d), .in_last(g_l),
         .job_v(j_v), .job_rdy(j_r), .job_user(j_u), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
@@ -203,7 +215,7 @@ module ot_s81_ctrl #(
     wire [NENG-1:0] s_cv; wire [NENG*CMDW-1:0] s_cd; wire [NENG-1:0] s_dv; wire [NENG*TAGW-1:0] s_dt;
     wire s_busy, s_f; wire [3:0] s_fc; wire [31:0] s_cmds, s_cs;
     ot_s81_stage_seq #(.NOPS(NOPS), .NENG(NENG), .ARGW(ARGW), .USER_W(SUW), .NW(NW), .QD(QD)) u_seq (
-        .clk(clk), .rst_n(rst_n), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d), .prog_len(prog_len),
+        .clk(clk), .rst_n(ctrl_rst_n), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d), .prog_len(prog_len),
         .job_v(j_v && j_r), .job_rdy(seq_ready), .job_user(j_u[SUW-1:0]), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
         .cmd_v(s_cv), .cmd_d(s_cd), .dn_v(s_dv), .dn_tag(s_dt), .busy(s_busy), .fault(s_f), .fault_code(s_fc),
         .st_jobs(st_jobs), .st_cmds(s_cmds), .st_credit_stall(s_cs));
@@ -212,7 +224,7 @@ module ot_s81_ctrl #(
     wire r_v, r_stop; wire [NW-1:0] r_tok; wire [31:0] r_val;
     generate if (ROLE == 2) begin : g_head
         wire [31:0] se, sm;
-        ot_s81_stop #(.NW(NW)) u_stop (.clk(clk), .rst_n(rst_n), .am_v(am_v), .am_pos(am_pos), .am_tok(am_tok),
+        ot_s81_stop #(.NW(NW)) u_stop (.clk(clk), .rst_n(ctrl_rst_n), .am_v(am_v), .am_pos(am_pos), .am_tok(am_tok),
             .am_val(am_val), .run_eosen(run_eosen), .run_eos(run_eos), .run_maxl(run_maxl),
             .res_v(r_v), .res_tok(r_tok), .res_val(r_val), .res_stop(r_stop), .st_eos(se), .st_maxl(sm));
     end else begin : g_nhead
@@ -220,13 +232,13 @@ module ot_s81_ctrl #(
     end endgenerate
     // the RESULT framer consumes the held sampler result
     reg rh_v; reg [NW-1:0] rh_tok; reg [31:0] rh_val; reg rh_stop;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rh_v <= 1'b0; rh_tok <= 0; rh_val <= 0; rh_stop <= 1'b0; end
+    always @(posedge clk or negedge ctrl_rst_n)
+        if (!ctrl_rst_n) begin rh_v <= 1'b0; rh_tok <= 0; rh_val <= 0; rh_stop <= 1'b0; end
         else if (r_v) begin rh_v <= 1'b1; rh_tok <= r_tok; rh_val <= r_val; rh_stop <= r_stop; end
     generate if (HOP_TX != 0) begin : g_hoptx
     ot_s81_hop_tx #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .VWA(VWA), .XW(XW), .TXB(TXB),
         .SIDE_TXB(SIDE_TXB), .SIDE_RXB(SIDE_RXB), .CMDW(CMDW), .OPW(OPW), .ARGW(ARGW), .SUW(SUW), .USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .QD(QD)) u_hop (
-        .clk(clk), .rst_n(rst_n), .cmd_v(s_cv[ENG_HOP]), .cmd_d(s_cd[ENG_HOP*CMDW +: CMDW]), .dn_v(h_dv), .dn_tag(h_dt),
+        .clk(clk), .rst_n(ctrl_rst_n), .cmd_v(s_cv[ENG_HOP]), .cmd_d(s_cd[ENG_HOP*CMDW +: CMDW]), .dn_v(h_dv), .dn_tag(h_dt),
         .win_ctx_v(native_win_v),.win_ctx_slot(native_win_slot),.win_ctx_user(native_win_user),
         .win_ctx_pos(native_win_pos),.win_ctx_tok(native_win_tok),.win_ctx_ids(native_win_ids),.win_ctx_dead(native_win_dead),
         .go(hop_go || (ROLE == 2 && r_v)), .res_v(r_v || rh_v || ROLE != 2), .res_tok(r_v ? r_tok : rh_tok),
@@ -256,7 +268,7 @@ module ot_s81_ctrl #(
     wire progress = (|s_cv) || (|s_dv) || (in_valid && in_ready) || (out_valid && out_ready) || j_done;
     wire [16*32-1:0] scnt; wire [31:0] scyc, idle_run, idle_max, tdrop; wire tv; wire [47:0] tdat;
     ot_dsrom_stall_export #(.NC(16), .STUCK(STUCK), .TRACE_DEPTH(16)) u_stall (
-        .clk(clk), .rst_n(rst_n), .active(s_busy || hq_act), .progress(progress), .cause(cause), .cnt(scnt),
+        .clk(clk), .rst_n(ctrl_rst_n), .active(s_busy || hq_act), .progress(progress), .cause(cause), .cnt(scnt),
         .stuck(stuck), .stuck_snap(snap), .stuck_cycle(scyc), .idle_run(idle_run), .idle_max(idle_max),
         .trace_valid(tv), .trace_ready(1'b1), .trace_data(tdat), .trace_drops(tdrop));
     assign stuck_snap = snap;
