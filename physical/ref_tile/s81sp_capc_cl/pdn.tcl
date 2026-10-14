@@ -25,7 +25,7 @@ proc ot_ref_has_master {pats} {
   return 0
 }
 proc ot_ref_present {cells} { set out {}; foreach c $cells { if {[ot_ref_has_master $c]} { lappend out $c } }; return $out }
-set ot_c [ot_ref_present {dsfd_capt_ctl dsfd_capt_g2 dsfd_capt_x}]
+set ot_c [ot_ref_present {dsfd_capt_cd dsfd_capt_ctl dsfd_capt_g2 dsfd_capt_x dsfd_rly_15_SN dsfd_rly_2_EW dsfd_rly_2_WE dsfd_rly_54_EW dsfd_rly_63_WE dsfd_rly_68_EW}]
 if {[llength $ot_c]} {
   define_pdn_grid -name {hard_m5} -voltage_domains {CORE} -macro -cells $ot_c -orient {R0 R180 MX MY} -halo {2.0 2.0 2.0 2.0}
   add_pdn_connect -grid {hard_m5} -layers {M5 M6}

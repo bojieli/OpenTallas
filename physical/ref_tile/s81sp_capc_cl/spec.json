@@ -6,17 +6,21 @@
   "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv"
  ],
  "params": {},
- "clock_port": "ck",
+ "clock_port": "ck_c",
  "reset_ports": [
   "rst",
   "rsv"
  ],
+ "clock": "cts",
+ "child_lattice_um": 0.576,
  "outline": {
-  "w": 1727.976,
+  "w": 1728.0,
   "h": 561.6
  },
- "why_floorplan": "slot change requested (el1011-s81die.log [s81-spwfc/sp3] 10-13): contract v14 slot 1727.976 x 129.576 = 0.224 mm2 cannot hold the capture (closed leaves 8 x g2 118.8x162 + 8 x x 118.8x270 + ctl 86.4x324 = 0.439 mm2 of outline, ~0.17 mm2 of std cells). Children MX (inputs N, outputs S): g2 row over x row, 8 columns at 172.8 um pitch (43.2 um child lattice, >= 20 um channels and edge margins), 54 um bus channel under the N face, ctl in the centre gap; ctl <-> group buses take the KST = 1 station (two hops <= 400 um).",
- "slot_change_request": "el1011-s81die.log line 326 [s81-spwfc/sp3] 10-13 + coordinator ruling 10-13 (option A): slot 1727.976 x 129.576 -> 1727.976 x 561.6 (kit outline 1728.0 x 561.6 on the 8.64 um cluster lattice, +0.024 um); f_gather as 8 bundles on N over the g2 columns + 163 b over the ctl, t_vm on S under the x columns, t_cd N, ckv / rsv on S (v14 lists neither)",
+ "sdc_extra": [
+  "physical/s81_ph_views/capture/capc_clocks.sdc"
+ ],
+ "io_tcl": "physical/s81_ph_views/capture/capc_pins.tcl",
  "children": [
   {
    "view": "physical/ref_tile/dsfd_capt_ctl_m5/views/dsfd_capt_ctl",
@@ -34,7 +38,7 @@
    "inst": "*g_t?0?*u_g",
    "at": [
     129.6,
-    345.6
+    336.96
    ],
    "orient": "MX"
   },
@@ -54,7 +58,7 @@
    "inst": "*g_t?1?*u_g",
    "at": [
     302.4,
-    345.6
+    336.96
    ],
    "orient": "MX"
   },
@@ -74,7 +78,7 @@
    "inst": "*g_t?2?*u_g",
    "at": [
     475.2,
-    345.6
+    336.96
    ],
    "orient": "MX"
   },
@@ -94,7 +98,7 @@
    "inst": "*g_t?3?*u_g",
    "at": [
     648.0,
-    345.6
+    336.96
    ],
    "orient": "MX"
   },
@@ -114,7 +118,7 @@
    "inst": "*g_t?4?*u_g",
    "at": [
     950.4,
-    345.6
+    336.96
    ],
    "orient": "MX"
   },
@@ -134,7 +138,7 @@
    "inst": "*g_t?5?*u_g",
    "at": [
     1123.2,
-    345.6
+    336.96
    ],
    "orient": "MX"
   },
@@ -154,7 +158,7 @@
    "inst": "*g_t?6?*u_g",
    "at": [
     1296.0,
-    345.6
+    336.96
    ],
    "orient": "MX"
   },
@@ -174,7 +178,7 @@
    "inst": "*g_t?7?*u_g",
    "at": [
     1468.8,
-    345.6
+    336.96
    ],
    "orient": "MX"
   },
@@ -187,18 +191,266 @@
     43.2
    ],
    "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/dsfd_capt_cd/views/dsfd_capt_cd",
+   "count": 1,
+   "inst": "u_cd",
+   "at": [
+    842.4,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
+   "count": 1,
+   "inst": "*g_t?0?*u_ka",
+   "at": [
+    435.456,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+   "count": 1,
+   "inst": "*g_t?0?*u_kb",
+   "at": [
+    470.592,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+   "count": 1,
+   "inst": "*g_t?0?*u_sb",
+   "at": [
+    505.728,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
+   "count": 1,
+   "inst": "*g_t?1?*u_ka",
+   "at": [
+    540.864,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+   "count": 1,
+   "inst": "*g_t?1?*u_kb",
+   "at": [
+    576.0,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+   "count": 1,
+   "inst": "*g_t?1?*u_sb",
+   "at": [
+    611.136,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
+   "count": 1,
+   "inst": "*g_t?2?*u_ka",
+   "at": [
+    646.272,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+   "count": 1,
+   "inst": "*g_t?2?*u_kb",
+   "at": [
+    681.408,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+   "count": 1,
+   "inst": "*g_t?2?*u_sb",
+   "at": [
+    716.544,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
+   "count": 1,
+   "inst": "*g_t?3?*u_ka",
+   "at": [
+    751.68,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+   "count": 1,
+   "inst": "*g_t?3?*u_kb",
+   "at": [
+    786.816,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+   "count": 1,
+   "inst": "*g_t?3?*u_sb",
+   "at": [
+    821.952,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
+   "count": 1,
+   "inst": "u_sn",
+   "at": [
+    857.088,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_15_sn/views/dsfd_rly_15_SN",
+   "count": 1,
+   "inst": "u_cr",
+   "at": [
+    907.776,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "count": 1,
+   "inst": "*g_t?4?*u_ka",
+   "at": [
+    942.912,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "count": 1,
+   "inst": "*g_t?4?*u_kb",
+   "at": [
+    978.048,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+   "count": 1,
+   "inst": "*g_t?4?*u_sb",
+   "at": [
+    1013.184,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "count": 1,
+   "inst": "*g_t?5?*u_ka",
+   "at": [
+    1048.32,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "count": 1,
+   "inst": "*g_t?5?*u_kb",
+   "at": [
+    1083.456,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+   "count": 1,
+   "inst": "*g_t?5?*u_sb",
+   "at": [
+    1118.592,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "count": 1,
+   "inst": "*g_t?6?*u_ka",
+   "at": [
+    1153.728,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "count": 1,
+   "inst": "*g_t?6?*u_kb",
+   "at": [
+    1188.864,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+   "count": 1,
+   "inst": "*g_t?6?*u_sb",
+   "at": [
+    1224.0,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "count": 1,
+   "inst": "*g_t?7?*u_ka",
+   "at": [
+    1259.136,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "count": 1,
+   "inst": "*g_t?7?*u_kb",
+   "at": [
+    1294.272,
+    519.552
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+   "count": 1,
+   "inst": "*g_t?7?*u_sb",
+   "at": [
+    1329.408,
+    519.552
+   ]
   }
  ],
  "pins": {
   "N": [
-   "ck",
    "f_gather",
-   "t_cd"
+   "t_cd",
+   "ck_g",
+   "ck_x",
+   "ck_c",
+   "ck_s",
+   "ckv_r"
   ],
   "S": [
-   "rst",
    "t_vm",
-   "ckv",
+   "ckv_x",
+   "ckv_d",
+   "rst",
    "rsv"
   ]
  },
@@ -211,11 +463,14 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
+ "slot_change_request": "el1011-s81die.log 2026-10-13 17:58 PT [el1013 capture -> s81-die lead]: per-child clock entry pins (ck_g / ck_x / ck_c / ck_s on N, ckv_x / ckv_d on S, ckv_r on N) instead of one ck pin, t_cd on N at x ~915, outline 1728.0 x 561.6 on the 8.64-um cluster lattice, cluster layer rule (signals <= M6, PG M7), pin bundles in front of the child pins (physical/s81_ph_views/capture/capc_pins.tcl)",
+ "structural_change": "the cluster has no logic and no clock tree: 872 station flops -> closed die relay masters, DONE word -> leaf dsfd_capt_cd + one relay stage, one clock entry pin per child (the single-pin spine of the first cluster measured 1,222 ps insertion / 226 ps spread)",
+ "why_floorplan": "1728.0 x 561.6 (contract v16 + 0.024). 8 columns at 172.8 pitch: dsfd_capt_x MX at y 43.2, dsfd_capt_g2 MX at y 336.96 (23.76 over the x row; 8.64 lower than v16 so the N channel is 62.6 um: a 15.12-um relay needs 55.2), control tile in the centre gap; 26 relays in one row at y 519.552 between the control tile's N-face pins and the g2 N-face pins (hops <= ~450 um each side), dsfd_capt_cd under the control tile with its relay beside it. Cluster wires: N channel 62.6 um (k buses 8 x 99 b + status, f_gather drops straight onto the g2 pins), g2 -> x abutting columns (832 b each over 23.8 um), t_vm straight down 43 um. Cut of the N channel W-E at the control tile: 4 x 101 b each way over ~4k M2 / M4 / M6 tracks: 0.10.",
  "job": {
-  "owner": "Claude:s81-spwfc",
+  "owner": "Claude:el1013-s81-capture",
   "branch": "s81-spwfc-1013",
-  "tag": "v1",
-  "purpose": "S81 die master dsfd_sp_capture_c as a cluster over the CLOSED M5 capture leaves (dsfd_capt_ctl/g2/x -m5-5b76815db); cluster logic = 872 station flops + t_cd; lockstep bench vs ctrl_c/dsfd_sp_capture_c.sv under the gather->capture golden",
+  "tag": "v2",
+  "purpose": "S81 capture element dsfd_sp_capture_c as a hardened cluster over the CLOSED M5 leaves (8 x dsfd_capt_g2, 8 x dsfd_capt_x, dsfd_capt_ctl, dsfd_capt_cd) and 26 closed die relay masters: wires only, one clock entry pin per child (the die delivers each at phi - R), no cluster tree.",
   "benches": [
    {
     "name": "capc_lockstep_exact",
@@ -249,7 +504,9 @@
    "rtl/hdc",
    "rtl/common",
    "rtl/dsrom_sys/rd64_capture",
-   "rtl/dsrom_sys/s81_ph"
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_glue",
+   "physical/s81_ph_views/capture"
   ],
   "views_to": "physical/ref_tile/s81sp_capc_cl/views",
   "record_to": "results/rtl/ref_tile/s81sp_capc_cl"
