@@ -442,7 +442,10 @@ module ot_hgi_topk_mnode #(parameter bit UNARY=0) (
    end
   end
  end
- always @(posedge clk) if (fire) begin if (wp) e1 <= x; else e0 <= x; end
+ // rt_i (Claude group-B4 10-14, rt_h gate 'g_rel en -> e0/e1' -63 ps, 218 endpoints): the free slot at wp is written
+ // whenever the node is not full (!pv, a register decode), not on fire: while cnt < 2 the slot at wp holds no entry and
+ // is never read before a fire advances cnt, so loading it every such edge stores the same value on the fire edge.
+ always @(posedge clk) if (!pv) begin if (wp) e1 <= x; else e0 <= x; end
 endmodule
 
 // Wide engine: IW scores a beat (in_nw valid, the row's last beat may be partial), W heaps (W a multiple of IW).
@@ -530,7 +533,9 @@ module ot_hgi_idx_topk_hw #(
  end
  always @* gth = gt[WL][0];
  // ---------------------------------------------------------------- front end: F1 (beat) -> F2 (keys, compares) -> lanes
- assign in_ready = ENABLE && st == FILL && in_ok;
+ // rt_i (rt_h gate 'st -> s_valid' -126 ps): FILL is a registered flag loaded with the state's next value (st_n).
+ reg fill_q;
+ assign in_ready = ENABLE && fill_q && in_ok;
  wire beat = in_valid && in_ready;
  reg f1_v; reg [$clog2(IW+1)-1:0] f1_nw; reg [$clog2(G+1)-1:0] f1_g, grp;
  wire f1_nan; wire [53:0] f1_e [0:IW-1]; wire [IW-1:0] f1_nl;
@@ -725,7 +730,12 @@ module ot_hgi_idx_topk_hw #(
  end
  reg [KW-1:0] emitted;
  reg [53:0] of [0:3]; reg of_l [0:3]; reg [2:0] oc; reg [1:0] ow, orp;
- wire mg_go = st == MERGE && emitted != k && tv[TL][0] && oc <= 3'd2;     // root pop
+ // rt_i (rt_h gate classes 'k -> out_row / st / emitted / of' -289..-72 ps: the 12-b emitted != k compare sat in front of
+ // the root pop and every state / FIFO enable): a REMAINING count rem = k - emitted with registered flags rz (rem == 0)
+ // and r1 (rem == 1), loaded at EXT -> MERGE (rem = k) and stepped by the pop; lr_q = (row + 1 == m) registered (row and
+ // m are stable >= S_SET cycles before any MERGE exit).  emitted == k <=> rz; emitted + 1 == k <=> r1.
+ reg [KW-1:0] rem; reg rz, r1, lr_q, mrg_q;
+ wire mg_go = mrg_q && !rz && tv[TL][0] && oc <= 3'd2;     // root pop
  wire [53:0] mg_e = td[TL][0];
  assign tp[TL][0] = mg_go;
  wire [53:0] oe = of[orp];
@@ -739,15 +749,37 @@ module ot_hgi_idx_topk_hw #(
  assign out_values_valid = out_valid && values_enabled;
  wire o_pop = out_valid && out_ready;
  assign cmd_ready = st == IDLE && up;
- always @(posedge clk) if (mg_go) begin of[ow] <= mg_e; of_l[ow] <= emitted + 1'b1 == k; end
+ always @(posedge clk) if (mg_go) begin of[ow] <= mg_e; of_l[ow] <= r1; end
  // ---------------------------------------------------------------- control
  reg [3:0] sct;
  wire act = beat || f1_v || f2_v;
+ // next state of st (same decisions as the sequential case below, which now assigns st <= st_n)
+ reg [2:0] st_n;
+ always @* begin
+  st_n = st;
+  if (beat && cursor + in_nw >= n) st_n = FLUSH;
+  case (st)
+   IDLE: if (cmd_valid && ENABLE && cmd_unit == 9 && cmd_op == 2 && !(cmd_param[24:12] != 0 || cmd_param[11:0] == 0 ||
+            cmd_param[11:0] > MAX_K || cmd_param[11:0] > cmd_n || cmd_n == 0 || cmd_n > 1048576 || cmd_m == 0)) st_n = START;
+   START: if (r_q && sct >= S_SET) st_n = FILL;
+   FILL, FLUSH: begin
+    if (f1_nan) st_n = ABORT;
+    else if (st == FLUSH && !act && r_q && sct >= S_SET) st_n = EXT;
+   end
+   EXT: if (r_x) st_n = MERGE;
+   MERGE: if (rz && oc == 0) st_n = lr_q ? FIN : START;
+   ABORT: if (r_q && sct >= S_SET) st_n = IDLE;
+   FIN: st_n = IDLE;
+   default: st_n = IDLE;
+  endcase
+ end
  always @(posedge clk or negedge rn) begin
   if (!rn) begin
    st <= IDLE; pst <= IDLE; done <= 1'b0; error <= 4'd0; n <= 0; m <= 0; k <= 0; row <= 0; cursor <= 0; values_enabled <= 1'b0;
    f1_v <= 1'b0; f2_v <= 1'b0; grp <= 0; clr_go <= 1'b0; emitted <= 0; oc <= 0; ow <= 0; orp <= 0; sct <= 0;
+   rem <= 0; rz <= 1'b1; r1 <= 1'b0; lr_q <= 1'b0; mrg_q <= 1'b0; fill_q <= 1'b0;
   end else begin
+   lr_q <= row + 1 == m; mrg_q <= st_n == MERGE; fill_q <= st_n == FILL;
    done <= 1'b0; clr_go <= 1'b0; pst <= st;
    sct <= (act || !r_q || pst != st) ? 4'd0 : (sct == 4'd15 ? sct : sct + 4'd1);
    f1_v <= beat;
@@ -772,9 +804,9 @@ module ot_hgi_idx_topk_hw #(
      if (f1_nan) begin error <= 4'd3; done <= 1'b1; st <= ABORT; f1_v <= 1'b0; f2_v <= 1'b0; end
      else if (st == FLUSH && !act && r_q && sct >= S_SET) st <= EXT;
     end
-    EXT: if (r_x) begin st <= MERGE; clr_go <= 1'b1; emitted <= 0; end
-    MERGE: if (emitted == k && oc == 0) begin
-     if (row + 1 == m) begin st <= FIN; end
+    EXT: if (r_x) begin st <= MERGE; clr_go <= 1'b1; emitted <= 0; rem <= k; rz <= k == 0; r1 <= k == 1; end
+    MERGE: if (rz && oc == 0) begin
+     if (lr_q) begin st <= FIN; end
      else begin row <= row + 1; st <= START; end
     end
     ABORT: if (r_q && sct >= S_SET) begin clr_go <= 1'b1; st <= IDLE; end
@@ -782,7 +814,8 @@ module ot_hgi_idx_topk_hw #(
     default: st <= IDLE;
    endcase
    // output FIFO
-   if (mg_go) begin ow <= ow + 1'b1; emitted <= emitted + 1'b1; end
+   if (mg_go) begin ow <= ow + 1'b1; emitted <= emitted + 1'b1; rem <= rem - 1'b1; rz <= r1; r1 <= rem == 2; end
+   st <= st_n;
    if (o_pop) orp <= orp + 1'b1;
    oc <= oc + mg_go - o_pop;
   end

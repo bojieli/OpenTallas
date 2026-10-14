@@ -79,7 +79,11 @@ module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integ
  // All regions release on the same edge (+3 cycles); the hub keeps its own internal relay, so hub-vs-children release
  // order is unchanged.
  wire [10:0] rr;
- ot_rst_relay #(.REGIONS(11), .SYNC_STAGES(2), .TREE_STAGES(1)) u_crr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+ // rt_i (Claude group-B4 10-14, rt_h gate in->reg 'rst_n -> u_crr relay RESETN' -251 ps on a 1.3-mm cluster): the port
+ // reaches ONE synchroniser at the pin (u_crp); the region relay is cleared from that flop, not from the port.
+ wire rp_n;
+ ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_crp (.clk(clk), .rst_n_in(rst_n), .rst_n(rp_n));
+ ot_rst_relay #(.REGIONS(11), .SYNC_STAGES(2), .TREE_STAGES(1)) u_crr (.clk(clk), .rst_n_in(rp_n), .rst_n(rr));
  wire [23:0] l_ph; wire [95:0] l_k; wire [7:0] l_clr, l_pv, l_mcr, l_q, l_x, l_ok, l_mv, l_me;
  wire [431:0] l_pd, l_md; wire [423:0] l_root;
  // r7 (el1011-hbm-idx, w8c df02eb521 textbook lint): REGISTERED cluster boundary.  Every valid/ready port goes through a
@@ -94,7 +98,7 @@ module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integ
   .o_d({hc_unit, hc_op, hc_param, hc_n, hc_m, hc_values}));
  ot_hgi_w8_bfifo #(.W(260)) u_bi (.clk(clk), .rst_n(rr[8]), .i_v(in_valid), .i_r(in_ready), .i_d({in_score, in_nw}),
   .o_v(hi_v), .o_r(hi_r), .o_d({hi_score, hi_nw}));
- ot_hgi_w8_bfifo #(.W(98)) u_bo (.clk(clk), .rst_n(rr[9]), .i_v(ho_v), .i_r(ho_r),
+ ot_hgi_w8_bfifo #(.W(98), .RIR(1)) u_bo (.clk(clk), .rst_n(rr[9]), .i_v(ho_v), .i_r(ho_r),
   .i_d({ho_id, ho_score, ho_row, ho_last, ho_vv}), .o_v(out_valid), .o_r(out_ready),
   .o_d({out_id, out_score, out_row, out_last, out_values_valid}));
  // done is the core's one-cycle completion pulse: hold it pending until the registered out FIFO has drained, so the
@@ -186,7 +190,7 @@ endmodule
 // The pending input beat counts against capacity, so registered ingress never
 // overwrites an entry during a downstream stall. Sustained service stays one
 // beat/cycle; the input register adds one edge compared with the two-bank FIFO.
-module ot_hgi_w8_bfifo #(parameter integer W=32) (
+module ot_hgi_w8_bfifo #(parameter integer W=32, parameter integer RIR=0) (
  input wire clk, rst_n,
  input wire i_v, output wire i_r, input wire [W-1:0] i_d,
  output wire o_v, input wire o_r, output wire [W-1:0] o_d
@@ -199,7 +203,18 @@ module ot_hgi_w8_bfifo #(parameter integer W=32) (
  reg [2:0] cnt;
  wire push = i_v && i_r, pop = o_v && o_r;
  wire [3:0] occupied = {1'b0, cnt} + {3'b0, pin_v};
- assign i_r = up && occupied < 4;
+ // rt_i RIR=1 (rt_h gate 'u_bo.pin_v -> u_hub.active / c_valid / b_r' -67..-38 ps): i_r is a REGISTER holding the same
+ // value (up && cnt + pin_v < 4 of this edge), loaded from the next state; the o_r pin only picks between the two
+ // registered-state candidates (pop / no pop).
+ generate if (RIR != 0) begin : g_rir
+  reg ir_q;
+  wire [3:0] occ_np = {1'b0, cnt} + {3'b0, pin_v} + {3'b0, push};     // next cnt + next pin_v without a pop
+  wire ir_np = occ_np < 4, ir_p = occ_np - 4'd1 < 4;
+  always @(posedge clk or negedge rst_n) if (!rst_n) ir_q <= 1'b0; else ir_q <= pop ? ir_p : ir_np;
+  assign i_r = ir_q;
+ end else begin : g_cir
+  assign i_r = up && occupied < 4;
+ end endgenerate
  assign o_v = cnt != 0;
  assign o_d = head_d;
 `ifdef OT_TOPK_FIFO_HEAD_MUT
