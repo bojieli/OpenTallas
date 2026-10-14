@@ -1,0 +1,14 @@
+{
+  "jobs": [
+    "dsfd_capt_x8_dual-v2-bc2c93f92-arg1",
+    "dsfd_capt_x8_dual-v2-bc2c93f92-arg2"
+  ],
+  "source_commit": "bc2c93f92",
+  "defective_tb_sha256": "bcdcb5975a61e29b20630ccae1c13eb895da0e3b665dc55e9e1555be2eeee8d7",
+  "physical_failure": "Both actual DRC1: M5 spacing between ck[0] and f_w[248] at the superseded61.548 clock assignment.",
+  "bench_failure": "Shared global k monitor overwrites timeout index; both mutants had no output writes for3h. SIGTERM produces wrapper failure, not an observed mutant verdict.",
+  "status": "CANCELLED through supported loop CLI before PID-bound simulation termination; no source relabel or qualification.",
+  "process_guard": "Source SHA, exact simulation command/cwd, process start ticks, pidfd SIGTERM; both exited; no useful dependent processes.",
+  "cleanup": "Only variant src,bench_src_a1,bench,routes after live=[] guard. Original V2 baseline and all surviving V3 receipts preserved.",
+  "successor": "Fresh dsfd_capt_x8_dual-v4ss-fa0792786 uses corrected normal exact/mutant source and structural repair."
+}
