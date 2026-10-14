@@ -38,10 +38,10 @@ def main():
     mv = " ".join("--macro-view " + m.split("=")[1] for m in MACROS.split())
     spec = {
         "name": name, "block": "dsfd_engram_c", "element": "dsfd_engram_c", "owner": "Claude:el1013-s81-engram",
-        "purpose": "S81 layer1e Engram cluster dsfd_engram_c, ALL-TILE composition (slot 1188 x 432): the top holds local reset synchronizers and a coherent return-status stage; "
+        "purpose": "S81 layer1e Engram cluster dsfd_engram_c, ALL-TILE composition (slot 1188 x 432): the top holds 16 reset and 350 data relay flops; "
                    "8 hardened children (closed lkp / sink leaves + T_WIN / T_IO / T_WS / T_PBB / T_PBC x2, all views child_lint clean) "
                    "clocked by a pre-placed balanced spine with a separate leaf at each child clock pin. CTS-stop gate: "
-                   f"{C}/gate (leaf spread <= 80 ps TT and FF). IO against the fixed vclk {a.vclk} ps (no top register to measure).",
+                   f"{C}/gate. Diagnostic IO virtual references {a.vclk}/{a.vclk_ff} ps remain unqualified until actual native source binding; positive-edge child boundary means replace fall-max/hand-offset targets.",
         "hosts": ["ot-epyc4", "ot-epyc1tb", "ot-agidock128"], "threads": 16, "peak_ram_gb": 32,
         "source": {"branch": a.branch, "commit": a.commit},
         "stages": {
@@ -50,8 +50,7 @@ def main():
                  "expect": "pass", "pass_regex": "^ENGRAM_C_GATE PASS", "threads": 8, "peak_ram_gb": 16, "needs": ["verilator"], "timeout_s": 10800},
                 {"name": "engram_c_neg_earlydone", "cmd": "python3 tools/s81_svceng/engram_c_gate.py --quick --neg earlydone --out {RUN}/bench_engc_neg",
                  "expect": "fail", "fail_regex": "ENGRAM_C_NEG earlydone FAIL", "threads": 2, "peak_ram_gb": 6, "needs": ["verilator"], "timeout_s": 10800}],
-            "calibrate": {"enabled": False, "reason": "no top-level register (all-tile): the IO reference is the fixed ENGC_VCLK_PS, chosen from the "
-                                                      "CTS-stop gate's measured per-child IO slacks (" + C + "/gate)"},
+            "calibrate": {"enabled": False, "reason": "diagnostic only: 16 reset and 350 data flops are present. Actual child and parent logic insertion, corner source driver and native reset/clock binding are required before closure submission; scalar ENGC_VCLK_PS is not adopted"},
             "route": {"cmd": route,
                       "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
                       "logs": ["{RUN}/routes/{LABEL}/run.log"], "threads": 16, "peak_ram_gb": 32},
@@ -67,11 +66,7 @@ def main():
                     "checks": [{"name": "lef_check_MATCH", "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""}],
                     "post_sdc": ["physical/s81_ph_views/common/signoff_unc60.sdc"]},
         "record": [{"from": "{RUN}/record", "to": "physical/s81_ph_views/closed/dsfd_engram_c"}],
-        "structural_change": "all-tile cluster with local reset synchronizers and 8 hard clock pins; replaces the soft-tree monolith (12 failed routes: hold stalled "
-                             "-206.5 ps at 16,258 sinks/root, SRAM read path -1568.6 ps). New in this submission: pre-placed clock spine with per-child insertion targets "
-                             "(g13 measured leaf spread 67.4 ps TT / 64.8 ps FF after CTS, max clock-pin slew 21.7 ps, "
-                             "was 400 ps with the bare top tree), children re-routed with face-pin keepout (child_lint 0 pins blocked), sliver rows "
-                             "removed before the PDN, child seams that hold rows opened to >= 12 um (io +4.32 / lkp -4.32 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, local per-child kept reset synchronizers, coherent SINK-to-WIN status pipeline (strict setup150 bidirectional deficit105.2ps), PB1-to-PB0 coherent write transit stage, data relays on ordinary functional-edge spine leaves, full local clock loads included before spine balancing, H1 hold100, no reset multicycle exceptions, fixed vclk.",
+        "structural_change": "unqualified diagnostic candidate: positive-edge TT boundary means from seven exact original child routes replace fall-edge maximum insertion targets; all hand offsets removed. The parent owns 16 kept local reset flops and 350 coherent status/write transit flops. Reset conditioners share exact child clock branches; data relays use ordinary spine leaves and each bit is placed with its mapped output cone at the actual destination pin. Child face keepouts and own-M7 pocket normalization are preserved; row-bearing seams >=12um and sliver-row removal preserve power access. Normal recovery/removal and H1 hold100 remain; no reset timing exception. Actual native clock source, corner driver, reset lifecycle and assigned pins still need binding before closure submission.",
     }
     print(json.dumps(spec, indent=1))
 

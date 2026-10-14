@@ -1,11 +1,11 @@
-# dsfd_engram_c cluster clock (el1013-s81-engram 2026-10-13): the pre-placed balanced SPINE of
-# physical/common_flow/clock_spine.tcl (one leaf per child clock pin, OT_SPINE_MACRO_LEAF=1) in place of TritonCTS + the
-# per-child delay chains.  Listed FIRST in OT_CTS_FIX_HOOKS.  Leaf target = clock-pin arrival + the child's TARGET below:
-# its internal insertion (TT liberty max_clock_tree_path) plus the entry offset solved from the measured launch -> capture
-# pair slacks of the balanced run (gate/spine_solve.py; 0 = plain balance).  Per INSTANCE (pb0 / pb2 share a master).
+# Engram diagnostic spine: align functional positive-edge boundary means,
+# not fall-edge ETM maxima or hand offsets. TT route geometry is built with
+# actual TT references; FF/SS delivery must be measured independently.
+# External source/reset phase remains unbound; this is not qualification.
 source /src/physical/common_flow/clock_spine.tcl
-set ::ot_engc_ck_target [dict create u_win 181.8 u_io 280.5 u_ws 297.1 u_pb1 461.6 u_pb0 453.8 u_pb2 453.8 u_lkp 366.7 u_sink 282.0]
-set ::ot_engc_ck_offset [dict create u_win -30 u_io 0 u_ws -30 u_pb1 10 u_pb0 -10 u_pb2 0 u_lkp 0 u_sink 0]
+source /src/physical/s81_engc_tiles/compose/child_clock_refs.tcl
+set ::ot_engc_ck_target $::ot_engc_boundary_tt
+set ::ot_engc_ck_offset [dict create u_win 0 u_io 0 u_ws 0 u_pb1 0 u_pb0 0 u_pb2 0 u_lkp 0 u_sink 0]
 proc ot_sp_leaf_arrivals {} {
   ot_engc_attach_local_clocks
   estimate_parasitics -placement
