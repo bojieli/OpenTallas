@@ -1,0 +1,22 @@
+{
+  "source_commit": "90c0b7d64",
+  "native_common": "64fced1f9",
+  "clock_ABI": "56explicitengineleafclockinputs (14perquarter); software tiedsameedge; CDC/ledgercclkseparate",
+  "reset_ABI": "literal parentreset graph quant_leaf_clock_reset_abi.json; no addedresetstate",
+  "exact_phases": [
+    61,
+    487
+  ],
+  "records": 32,
+  "words": 13312,
+  "wrong": 0,
+  "cycles": 184,
+  "immutable_price": 168,
+  "all_client_VM_drains": 32,
+  "all_record_drains": 4,
+  "mutants": {
+    "header": "actualfatal0dones",
+    "assembly": "actual11592wrong"
+  },
+  "limits": "No privatephysicalclockarrival/slew/rootassignment orphaseentrydelivery qualified. FINACKP190fail remains. Actualownedmuxmaychangeprice; mirrored/aperture release requires its vehicle proof."
+}
