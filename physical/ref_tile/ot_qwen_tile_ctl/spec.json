@@ -1,0 +1,98 @@
+{
+ "name": "ot_qwen_tile_ctl",
+ "top": "ot_qwen_tile_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_tile_ctl.sv",
+  "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+  "rtl/physical/ot_qwen_tile_node.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_qwen_me_array_w12.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_matvec.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 648.0
+ },
+ "pins": {
+  "W": [
+   "ib",
+   "ib_go",
+   "tile_id",
+   "xl",
+   "fault",
+   "cx_lq"
+  ],
+  "E": [
+   "cx_ld",
+   "cx_td",
+   "cx_tvd",
+   "cx_nfault"
+  ],
+  "N": [
+   "cx_rreq",
+   "cx_rq",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "inter": [
+  "cx_rreq",
+  "cx_rq",
+  "cx_ld",
+  "cx_lq",
+  "cx_td",
+  "cx_tvd",
+  "cx_nfault"
+ ],
+ "refglob": "*u_wv*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "std_area_um2_measured": 8875,
+ "job": {
+  "owner": "Codex:q19-tile",
+  "branch": "claude/q14-tile-parent",
+  "tag": "c1",
+  "purpose": "Control hardened leaf removing every own register from the thin parent; pin geometry provisional until die v5 assigned."
+ },
+ "structural_change": "Harden 14034 tile parent flops under one independent leaf root; parent wires only.",
+ "params": {},
+ "macros": [],
+ "children": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

@@ -1,0 +1,139 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qfd_tile_nk_ckskel_n",
+ "top": "ot_qwen_tile_nk_ckskel_rows",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  362.88,
+  1442.88
+ ],
+ "core": [
+  2.16,
+  2.16,
+  360.71999999999997,
+  1440.72
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "ot_qwen_tile_rpair": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "W": [
+   "rst_n",
+   "clk"
+  ],
+  "E": [
+   "fault"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "master": "ot_qwen_tile_rpair",
+   "inst": "g_rp[0].u_rp",
+   "idx": 0,
+   "x": 22.464,
+   "y": 982.824,
+   "w": 311.04,
+   "h": 129.6,
+   "orient": "MX",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "master": "ot_qwen_tile_rpair",
+   "inst": "g_rp[1].u_rp",
+   "idx": 0,
+   "x": 22.464,
+   "y": 1134.024,
+   "w": 311.04,
+   "h": 129.6,
+   "orient": "MX",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "master": "ot_qwen_tile_rpair",
+   "inst": "g_rp[2].u_rp",
+   "idx": 0,
+   "x": 22.464,
+   "y": 1285.224,
+   "w": 311.04,
+   "h": 129.6,
+   "orient": "MX",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "ot_qwen_tile_rpair#0: origin (22.464, 982.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_qwen_tile_rpair#0: origin (22.464, 1134.024) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_qwen_tile_rpair#0: origin (22.464, 1285.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ]
+ ],
+ "referenced": [
+  "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v",
+  "rtl/physical/ot_qwen_tile_nk_ckskel.sv",
+  "rtl/physical/bb/ot_qwen_tile_rpair_bb.v",
+  "rtl/physical/bb/ot_qwen_tile_node_bb.v",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/kit.env",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/clock.sdc",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/signoff.sdc",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/pdn.tcl",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/pre_cts.tcl",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/pre_grt.tcl",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/spine_ins.tcl",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ss.lib",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ss.lib",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ss.lib",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib",
+  "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib",
+  "physical/ref_tile/qfd_tile_nk_ckskel_n/place.tcl"
+ ]
+}

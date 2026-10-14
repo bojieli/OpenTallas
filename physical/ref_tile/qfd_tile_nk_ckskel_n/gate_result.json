@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_tile_nk_ckskel_n",
+ "verdict": "WARN",
+ "generated": "2026-10-13T18:48:32-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "19208e0b0",
+ "clock": {
+  "max_root_sinks": 3,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": 123.5,
+  "tt_spread_ps": 4.3,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "3 sinks on the largest root <= 15,000; measured TT insertion 123.5 ps, leaf spread 4.3 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_rpair#0: origin (22.464, 982.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_rpair#0: origin (22.464, 1134.024) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_rpair#0: origin (22.464, 1285.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_rpair: (f) face-pin access: 1040 of 1040 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ad_d[0] M4 (0.060,28.272), ad_d[10] M4 (0.060,28.272), ad_d[11] M4 (0.060,28.272))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_rpair: (f) face-pin access: 1040 of 1040 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ad_d[0] M4 (0.060,28.272), ad_d[10] M4 (0.060,28.272), ad_d[11] M4 (0.060,28.272))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_rpair: (f) face-pin access: 1040 of 1040 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ad_d[0] M4 (0.060,28.272), ad_d[10] M4 (0.060,28.272), ad_d[11] M4 (0.060,28.272))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 0 um2 + macros 120932 in core 515810: util 23%",
+   "fix": "set \"std_area_um2\": 0 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 23.4% outside 45%-65% (std 2 + macro 120932 um2 in 515810 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ]
+}

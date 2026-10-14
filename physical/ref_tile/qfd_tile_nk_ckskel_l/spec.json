@@ -1,0 +1,171 @@
+{
+ "name": "qfd_tile_nk_ckskel_l",
+ "top": "ot_qwen_tile_nk_ckskel_lane",
+ "kind": "cluster",
+ "sources": [
+  "physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v",
+  "rtl/physical/ot_qwen_tile_nk_ckskel.sv",
+  "rtl/physical/bb/ot_qwen_tile_rpair_bb.v",
+  "rtl/physical/bb/ot_qwen_tile_node_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 362.88,
+  "h": 1442.88
+ },
+ "pins": {
+  "E": [
+   "rst_n",
+   "clk"
+  ],
+  "W": [
+   "fault"
+  ]
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+   "count": 1,
+   "at": [
+    22.464,
+    345.6
+   ],
+   "orient": "R0",
+   "inst": "u_node"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    103.68,
+    328.32
+   ],
+   "orient": "MY",
+   "inst": "g_sl[0].u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    233.28,
+    328.32
+   ],
+   "orient": "R0",
+   "inst": "g_sl[4].u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    103.68,
+    492.48
+   ],
+   "orient": "MY",
+   "inst": "g_sl[1].u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    233.28,
+    492.48
+   ],
+   "orient": "R0",
+   "inst": "g_sl[5].u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    103.68,
+    656.64
+   ],
+   "orient": "MY",
+   "inst": "g_sl[2].u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    233.28,
+    656.64
+   ],
+   "orient": "R0",
+   "inst": "g_sl[6].u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    103.68,
+    820.8
+   ],
+   "orient": "MY",
+   "inst": "g_sl[3].u_lh"
+  },
+  {
+   "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+   "count": 1,
+   "at": [
+    233.28,
+    820.8
+   ],
+   "orient": "R0",
+   "inst": "g_sl[7].u_lh"
+  }
+ ],
+ "child_lattice_um": 0.024,
+ "pg_layer": "M7",
+ "inter": [],
+ "refglob": "*",
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "pin_min_tracks": 1,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_ranges": {
+  "clk": [
+   643.0,
+   647.0
+  ],
+  "rst_n": [
+   623.0,
+   627.0
+  ],
+  "fault": [
+   700.0,
+   704.0
+  ]
+ },
+ "job": {
+  "owner": "Claude:q18-tile",
+  "branch": "claude/q14-tile-parent",
+  "tag": "m1",
+  "purpose": "measurement vehicle: per-group clock skeleton of the thin qfd_tile_nk (one clock entry per child group); --cts gate only, never routed"
+ },
+ "child_insertion": "boundary_mean",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_ITERS": "12"
+ },
+ "io_flop_at_pins": false,
+ "inhold": false,
+ "outhold": false,
+ "macros": [],
+ "recipe": 2
+}
