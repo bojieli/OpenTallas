@@ -833,8 +833,8 @@
  "job": {
   "owner": "Codex:sm_pub_parent",
   "branch": "codex/smpub-parent-1013",
-  "tag": "r1",
-  "purpose": "Actual wires-only publication parent: 69 own clock entries, immutable CLOSED leaves, every production native pin and regional reset explicitly bound, directed signal reach <=500um and channels >=20um",
+  "tag": "r2",
+  "purpose": "Actual wires-only publication parent with finite exact propagated entry-clock arrival query; preserve immutable R1 failure and CLOSED leaves. Fresh source-bound exact/mutant and routed own-root clock/native/internal coverage required.",
   "extra_paths": [
    "rtl/hbm_accel/generic/adapters/tb/smpub_parent",
    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",

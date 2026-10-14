@@ -1,0 +1,351 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice/ot_hgi_sm_pub_slice_tt.lib
+read_liberty /src/physical/ref_tile/smpub_cmd_quiet/views/ot_hgi_sm_pub_cmd_quiet/ot_hgi_sm_pub_cmd_quiet_tt.lib
+read_liberty /src/physical/ref_tile/smpub_cmd_relay/views/ot_hgi_sm_pub_cmd_relay/ot_hgi_sm_pub_cmd_relay_tt.lib
+read_liberty /src/physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4/ot_hgi_sm_pub_credit4_tt.lib
+read_liberty /src/physical/ref_tile/smpub_reset/views/ot_hgi_sm_pub_reset/ot_hgi_sm_pub_reset_tt.lib
+read_liberty /src/physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop/ot_hgi_sm_pub_reset_hop_tt.lib
+read_liberty /src/physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1/ot_hgi_sm_pub_return_d1_tt.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1/ot_hgi_sm_pub_smrg_l1_tt.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l2/views/ot_hgi_sm_pub_smrg_l2/ot_hgi_sm_pub_smrg_l2_tt.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l3/views/ot_hgi_sm_pub_smrg_l3/ot_hgi_sm_pub_smrg_l3_tt.lib
+read_liberty /src/physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge/ot_hgi_sm_pub_stream_edge_tt.lib
+read_liberty /src/physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/ot_hgi_sm_pub_vmcore_tt.lib
+read_liberty /src/physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/ot_hgi_sm_pub_vmport_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice/ot_hgi_sm_pub_slice_ff.lib
+read_liberty /src/physical/ref_tile/smpub_cmd_quiet/views/ot_hgi_sm_pub_cmd_quiet/ot_hgi_sm_pub_cmd_quiet_ff.lib
+read_liberty /src/physical/ref_tile/smpub_cmd_relay/views/ot_hgi_sm_pub_cmd_relay/ot_hgi_sm_pub_cmd_relay_ff.lib
+read_liberty /src/physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4/ot_hgi_sm_pub_credit4_ff.lib
+read_liberty /src/physical/ref_tile/smpub_reset/views/ot_hgi_sm_pub_reset/ot_hgi_sm_pub_reset_ff.lib
+read_liberty /src/physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop/ot_hgi_sm_pub_reset_hop_ff.lib
+read_liberty /src/physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1/ot_hgi_sm_pub_return_d1_ff.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1/ot_hgi_sm_pub_smrg_l1_ff.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l2/views/ot_hgi_sm_pub_smrg_l2/ot_hgi_sm_pub_smrg_l2_ff.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l3/views/ot_hgi_sm_pub_smrg_l3/ot_hgi_sm_pub_smrg_l3_ff.lib
+read_liberty /src/physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge/ot_hgi_sm_pub_stream_edge_ff.lib
+read_liberty /src/physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/ot_hgi_sm_pub_vmcore_ff.lib
+read_liberty /src/physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/ot_hgi_sm_pub_vmport_ff.lib
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice/ot_hgi_sm_pub_slice.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_cmd_quiet/views/ot_hgi_sm_pub_cmd_quiet/ot_hgi_sm_pub_cmd_quiet.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_cmd_relay/views/ot_hgi_sm_pub_cmd_relay/ot_hgi_sm_pub_cmd_relay.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4/ot_hgi_sm_pub_credit4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_reset/views/ot_hgi_sm_pub_reset/ot_hgi_sm_pub_reset.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop/ot_hgi_sm_pub_reset_hop.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1/ot_hgi_sm_pub_return_d1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1/ot_hgi_sm_pub_smrg_l1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_smrg_l2/views/ot_hgi_sm_pub_smrg_l2/ot_hgi_sm_pub_smrg_l2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_smrg_l3/views/ot_hgi_sm_pub_smrg_l3/ot_hgi_sm_pub_smrg_l3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge/ot_hgi_sm_pub_stream_edge.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/ot_hgi_sm_pub_vmcore.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/ot_hgi_sm_pub_vmport.lef, created 1 library cells
+link_design ot_hgi_sm_pub_parent
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/1_2_yosys.sdc
+OT_ENTRIES LEVEL clk_vm_core[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_core[0] -> g_c[0].u_core/clk wire=-INF R=117.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_port[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_port[0] -> g_c[0].u_port/clk wire=-INF R=80.6 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_core[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_core[1] -> g_c[1].u_core/clk wire=-INF R=117.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_port[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_port[1] -> g_c[1].u_port/clk wire=-INF R=80.6 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_core[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_core[2] -> g_c[2].u_core/clk wire=-INF R=117.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_port[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_port[2] -> g_c[2].u_port/clk wire=-INF R=80.6 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_core[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_core[3] -> g_c[3].u_core/clk wire=-INF R=117.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_port[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_port[3] -> g_c[3].u_port/clk wire=-INF R=80.6 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_cmd_relay[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cmd_relay[0] -> g_cmd[1].u/clk wire=-INF R=51.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_cmd_relay[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cmd_relay[1] -> g_cmd[2].u/clk wire=-INF R=51.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_cmd_relay[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cmd_relay[2] -> g_cmd[3].u/clk wire=-INF R=51.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[0] -> g_credit[0].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[1] -> g_credit[1].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[2] -> g_credit[2].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[3] -> g_credit[3].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[4] -> g_credit[4].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[5] -> g_credit[5].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[6] -> g_credit[6].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[7] -> g_credit[7].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[0] -> g_l[1].g_n[0].g_h1.u/clk wire=-INF R=106.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[1] -> g_l[1].g_n[1].g_h1.u/clk wire=-INF R=106.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[2] -> g_l[1].g_n[2].g_h1.u/clk wire=-INF R=106.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[3] -> g_l[1].g_n[3].g_h1.u/clk wire=-INF R=106.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[4] -> g_l[2].g_n[0].genblk1.g_h2.u/clk wire=-INF R=103.1 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[5] -> g_l[2].g_n[1].genblk1.g_h2.u/clk wire=-INF R=103.1 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[6] -> g_l[3].g_n[0].genblk1.genblk1.g_h3.u/clk wire=-INF R=102.1 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[0] -> g_ret[0].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[1] -> g_ret[1].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[2] -> g_ret[1].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[3] -> g_ret[2].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[4] -> g_ret[2].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[5] -> g_ret[2].g_hop[2].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[6] -> g_ret[3].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[7] -> g_ret[3].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[8] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[8] -> g_ret[3].g_hop[2].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[9] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[9] -> g_ret[3].g_hop[3].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[10] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[10] -> g_ret[4].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[11] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[11] -> g_ret[5].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[12] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[12] -> g_ret[5].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[13] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[13] -> g_ret[6].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[14] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[14] -> g_ret[6].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[15] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[15] -> g_ret[6].g_hop[2].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[16] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[16] -> g_ret[7].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[17] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[17] -> g_ret[7].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[18] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[18] -> g_ret[7].g_hop[2].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[19] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[19] -> g_ret[7].g_hop[3].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[3] -> g_rst_region[0].u_n/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[7] -> g_rst_region[0].u_s/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[0] -> g_rst_region[1].g_h.u/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[4] -> g_rst_region[1].u_n/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[8] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[8] -> g_rst_region[1].u_s/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[1] -> g_rst_region[2].g_h.u/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[5] -> g_rst_region[2].u_n/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[9] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[9] -> g_rst_region[2].u_s/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[2] -> g_rst_region[3].g_h.u/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[6] -> g_rst_region[3].u_n/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[10] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[10] -> g_rst_region[3].u_s/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[0] -> g_s[0].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[1] -> g_s[1].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[2] -> g_s[2].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[3] -> g_s[3].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[4] -> g_s[4].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[5] -> g_s[5].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[6] -> g_s[6].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[7] -> g_s[7].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_cmd deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cmd -> u_cmd/clk wire=-INF R=82.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_rst deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_rst -> u_rst/clk wire=-INF R=44.1 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_stream_edge[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_stream_edge[1] -> u_stream_port/clk wire=-INF R=53.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_stream_edge[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_stream_edge[0] -> u_stream_relay/clk wire=-INF R=53.0 latency=Inf phi=0
+OT_ENTRIES DOMAIN core 770.000000ps IO9826/1440 boundary=-21.599999999999966..41.60000000000002
+OT_ENTRIES COMP DONE tt 69 entries phi=0 boundary=-21.599999999999966..41.60000000000002
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/1_2_yosys.sdc
+OT_ENTRIES LEVEL clk_vm_core[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_core[0] -> g_c[0].u_core/clk wire=-INF R=117.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_port[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_port[0] -> g_c[0].u_port/clk wire=-INF R=80.6 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_core[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_core[1] -> g_c[1].u_core/clk wire=-INF R=117.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_port[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_port[1] -> g_c[1].u_port/clk wire=-INF R=80.6 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_core[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_core[2] -> g_c[2].u_core/clk wire=-INF R=117.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_port[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_port[2] -> g_c[2].u_port/clk wire=-INF R=80.6 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_core[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_core[3] -> g_c[3].u_core/clk wire=-INF R=117.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_vm_port[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_vm_port[3] -> g_c[3].u_port/clk wire=-INF R=80.6 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_cmd_relay[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cmd_relay[0] -> g_cmd[1].u/clk wire=-INF R=51.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_cmd_relay[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cmd_relay[1] -> g_cmd[2].u/clk wire=-INF R=51.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_cmd_relay[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cmd_relay[2] -> g_cmd[3].u/clk wire=-INF R=51.5 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[0] -> g_credit[0].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[1] -> g_credit[1].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[2] -> g_credit[2].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[3] -> g_credit[3].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[4] -> g_credit[4].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[5] -> g_credit[5].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[6] -> g_credit[6].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_credit[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_credit[7] -> g_credit[7].u/clk wire=-INF R=42.4 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[0] -> g_l[1].g_n[0].g_h1.u/clk wire=-INF R=106.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[1] -> g_l[1].g_n[1].g_h1.u/clk wire=-INF R=106.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[2] -> g_l[1].g_n[2].g_h1.u/clk wire=-INF R=106.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[3] -> g_l[1].g_n[3].g_h1.u/clk wire=-INF R=106.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[4] -> g_l[2].g_n[0].genblk1.g_h2.u/clk wire=-INF R=103.1 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[5] -> g_l[2].g_n[1].genblk1.g_h2.u/clk wire=-INF R=103.1 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_tree[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tree[6] -> g_l[3].g_n[0].genblk1.genblk1.g_h3.u/clk wire=-INF R=102.1 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[0] -> g_ret[0].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[1] -> g_ret[1].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[2] -> g_ret[1].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[3] -> g_ret[2].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[4] -> g_ret[2].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[5] -> g_ret[2].g_hop[2].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[6] -> g_ret[3].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[7] -> g_ret[3].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[8] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[8] -> g_ret[3].g_hop[2].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[9] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[9] -> g_ret[3].g_hop[3].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[10] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[10] -> g_ret[4].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[11] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[11] -> g_ret[5].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[12] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[12] -> g_ret[5].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[13] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[13] -> g_ret[6].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[14] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[14] -> g_ret[6].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[15] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[15] -> g_ret[6].g_hop[2].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[16] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[16] -> g_ret[7].g_hop[0].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[17] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[17] -> g_ret[7].g_hop[1].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[18] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[18] -> g_ret[7].g_hop[2].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_return[19] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_return[19] -> g_ret[7].g_hop[3].u/clk wire=-INF R=42.7 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[3] -> g_rst_region[0].u_n/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[7] -> g_rst_region[0].u_s/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[0] -> g_rst_region[1].g_h.u/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[4] -> g_rst_region[1].u_n/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[8] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[8] -> g_rst_region[1].u_s/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[1] -> g_rst_region[2].g_h.u/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[5] -> g_rst_region[2].u_n/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[9] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[9] -> g_rst_region[2].u_s/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[2] -> g_rst_region[3].g_h.u/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[6] -> g_rst_region[3].u_n/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_reset_hops[10] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_reset_hops[10] -> g_rst_region[3].u_s/clk wire=-INF R=0.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[0] -> g_s[0].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[1] -> g_s[1].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[2] -> g_s[2].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[3] -> g_s[3].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[4] -> g_s[4].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[5] -> g_s[5].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[6] -> g_s[6].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_slice[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_slice[7] -> g_s[7].u/clk wire=-INF R=384.2 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_cmd deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cmd -> u_cmd/clk wire=-INF R=82.3 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_rst deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_rst -> u_rst/clk wire=-INF R=44.1 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_stream_edge[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_stream_edge[1] -> u_stream_port/clk wire=-INF R=53.0 latency=Inf phi=0
+OT_ENTRIES LEVEL clk_stream_edge[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_stream_edge[0] -> u_stream_relay/clk wire=-INF R=53.0 latency=Inf phi=0
+OT_ENTRIES DOMAIN core 770.000000ps IO9826/1440 boundary=-21.599999999999966..41.60000000000002
+OT_ENTRIES COMP DONE tt 69 entries phi=0 boundary=-21.599999999999966..41.60000000000002
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/1_2_yosys.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+eliminate_dead_logic
+Removed 0 unused instances and 0 unused nets.
+Design area 1030463 um^2 100% utilization.
+write_db /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/1_synth.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/1_synth.sdc
+Elapsed time: 0:02.95[h:]min:sec. CPU time: user 2.92 sys 0.32 (110%). Peak memory: 407696KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb            2            398 9d875a7cd027b0f5ffc7
+1_synth                   .sdc                             53bf49050fc53f9f7af2

@@ -1,0 +1,124 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice/ot_hgi_sm_pub_slice_tt.lib
+read_liberty /src/physical/ref_tile/smpub_cmd_quiet/views/ot_hgi_sm_pub_cmd_quiet/ot_hgi_sm_pub_cmd_quiet_tt.lib
+read_liberty /src/physical/ref_tile/smpub_cmd_relay/views/ot_hgi_sm_pub_cmd_relay/ot_hgi_sm_pub_cmd_relay_tt.lib
+read_liberty /src/physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4/ot_hgi_sm_pub_credit4_tt.lib
+read_liberty /src/physical/ref_tile/smpub_reset/views/ot_hgi_sm_pub_reset/ot_hgi_sm_pub_reset_tt.lib
+read_liberty /src/physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop/ot_hgi_sm_pub_reset_hop_tt.lib
+read_liberty /src/physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1/ot_hgi_sm_pub_return_d1_tt.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1/ot_hgi_sm_pub_smrg_l1_tt.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l2/views/ot_hgi_sm_pub_smrg_l2/ot_hgi_sm_pub_smrg_l2_tt.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l3/views/ot_hgi_sm_pub_smrg_l3/ot_hgi_sm_pub_smrg_l3_tt.lib
+read_liberty /src/physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge/ot_hgi_sm_pub_stream_edge_tt.lib
+read_liberty /src/physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/ot_hgi_sm_pub_vmcore_tt.lib
+read_liberty /src/physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/ot_hgi_sm_pub_vmport_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice/ot_hgi_sm_pub_slice_ff.lib
+read_liberty /src/physical/ref_tile/smpub_cmd_quiet/views/ot_hgi_sm_pub_cmd_quiet/ot_hgi_sm_pub_cmd_quiet_ff.lib
+read_liberty /src/physical/ref_tile/smpub_cmd_relay/views/ot_hgi_sm_pub_cmd_relay/ot_hgi_sm_pub_cmd_relay_ff.lib
+read_liberty /src/physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4/ot_hgi_sm_pub_credit4_ff.lib
+read_liberty /src/physical/ref_tile/smpub_reset/views/ot_hgi_sm_pub_reset/ot_hgi_sm_pub_reset_ff.lib
+read_liberty /src/physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop/ot_hgi_sm_pub_reset_hop_ff.lib
+read_liberty /src/physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1/ot_hgi_sm_pub_return_d1_ff.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1/ot_hgi_sm_pub_smrg_l1_ff.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l2/views/ot_hgi_sm_pub_smrg_l2/ot_hgi_sm_pub_smrg_l2_ff.lib
+read_liberty /src/physical/ref_tile/smpub_smrg_l3/views/ot_hgi_sm_pub_smrg_l3/ot_hgi_sm_pub_smrg_l3_ff.lib
+read_liberty /src/physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge/ot_hgi_sm_pub_stream_edge_ff.lib
+read_liberty /src/physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore/ot_hgi_sm_pub_vmcore_ff.lib
+read_liberty /src/physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport/ot_hgi_sm_pub_vmport_ff.lib
+read_db /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+fp_margin_lint: PASS  util 44.1% (+hold 44.1%), pins 11335, max pin density 6.97 b/um, macros 69, slivers 0, channel worst 0.138
+fp_margin_lint: WARN pin_density: pin density above the 6.0 bits/um/layer target: N/M5 7.0 b/um, S/M5 7.0 b/um, W/M4 6.7 b/um
+fp_margin_lint: WARN pin_width: 69 pin shape(s) off the WIDTHTABLE with free via access (closed DRC 0 in hbm_svc_SE_s0 r18b): clk_cmd M7 w=0.064; clk_cmd_relay[0] M7 w=0.064; clk_cmd_relay[1] M7 w=0.064; clk_cmd_relay[2] M7 w=0.064
+OT_FP_LINT: 13 s
+textbook_lint: WARN ot_hgi_sm_pub_parent cells 71 flops 0 depth 0.0 ps util 0.4407 reach 0.0 um (0.7 s)
+textbook_lint: INFO clock_roots max_root_sinks=1 root=port:clk_vm_core[0] rule=PASS: 1 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+textbook_lint: WARN util_channel: utilisation 44.1% outside 45%-65% (std 3 + macro 1030463 um2 in 2338044 um2): shrink the outline (long wires / sparse placement)
+OT_TEXTBOOK_LINT: 1 s
+[INFO RSZ-0026] Removed 0 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 9826 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 1440 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 1812.240 1293.840 ) um
+[INFO GPL-0016] Core area:                  2338044.134 um^2
+[INFO GPL-0036] Movable instances area:        824.441 um^2
+[INFO GPL-0037] Total instances area:       1035416.050 um^2
+[INFO GPL-0035] Pin density area adjust:         0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            192273
+[INFO GPL-0007] Movable instances:               11338
+[INFO GPL-0008] Fixed instances:                139731
+[INFO GPL-0009] Dummy instances:                 41204
+[INFO GPL-0010] Number of nets:                  27323
+[INFO GPL-0011] Number of pins:                  55223
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 1814.400 1296.000 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 1812.240 1293.840 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                2338044.134 um^2
+[INFO GPL-0017] Fixed instances area:       1080097.539 um^2
+[INFO GPL-0018] Movable instances area:        824.441 um^2
+[INFO GPL-0019] Utilization:                     0.066 %
+[INFO GPL-0020] Standard cells area:           824.441 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 11338	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00000007 HPWL: 10983979092
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00000003 HPWL: 10900457479
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000001 HPWL: 10900457471
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000001 HPWL: 10900457466
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000001 HPWL: 10900457466
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.073 um^2
+[INFO GPL-0025] Ideal bin area:                  0.145 um^2
+[INFO GPL-0026] Ideal bin count:              16076987
+[INFO GPL-0027] Total bin area:             2338044.134 um^2
+[INFO GPL-0028] Bin count (X, Y):        2048 ,   2048
+[INFO GPL-0029] Bin size (W * H):       0.884 *  0.631 um
+[INFO GPL-0030] Number of bins:                4194304
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.1962 |  2.303241e+06 |   +0.00% |  8.88e-16 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 1, overflow: 0.196, keep resizer changes at: 1, HPWL: 2303241379
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     27324
+    final |     +0.3% |       0 |   11285 |          3889 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 3845 slew violations.
+[INFO RSZ-0037] Found 3676 long wires.
+[INFO RSZ-0038] Inserted 11285 buffers in 3889 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     17356
+[ERROR RSZ-1008] FixedDelay conversion out of range: -INF
+write_db /work/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/3_3_place_gp-failed.odb
+Error: global_place.tcl, 69 RSZ-1008
+Elapsed time: 0:43.50[h:]min:sec. CPU time: user 45.38 sys 4.13 (113%). Peak memory: 3464008KB.

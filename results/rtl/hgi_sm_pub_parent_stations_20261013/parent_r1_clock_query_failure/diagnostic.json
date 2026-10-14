@@ -1,0 +1,18 @@
+{
+  "original_job": "smpub_parent-r1-490ae2be6",
+  "original_job_immutable": true,
+  "diagnostic_only": true,
+  "routed_qualification": false,
+  "root_cause": "clock-only pin DATA arrival query gives -INF; numeric sentinel accepted and emitted as source Inf",
+  "original_floorplan_sdc_sha256": "84e428eafdee2252a36fd9dd0d92e3ff2e68a5ac5d9e015d9b886de10acae7b5",
+  "candidate_helper": "tools/ref_tile/clock_entry_constraints.py",
+  "strict_probe": {
+    "source": "actual original failed-placement ODB plus placement parasitics, original source-bound child libs",
+    "entry_count": 69,
+    "tt": "finite exact-scene exact-clock paths; reference 384.466033 ps",
+    "ff": "finite exact-scene exact-clock paths; reference 311.671329 ps",
+    "negative": "wrong entry clock rejected",
+    "dynamic_vmq100": "TT setup 250.19ps, FF hold 176.15ps; prior failing-driver rebuffer succeeds"
+  },
+  "policy": "No period, phase formula, child R, wire, gate or false-path relaxation. Pre-CTS zero labeled diagnostic cannot qualify final routed wire."
+}
