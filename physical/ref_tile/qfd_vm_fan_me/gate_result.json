@@ -2,10 +2,10 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "qfd_vm_fan_me",
  "verdict": "WARN",
- "generated": "2026-10-13T17:35:03-0700",
+ "generated": "2026-10-13T18:03:34-0700",
  "host": "ot-epyc4",
  "cts": true,
- "commit": "2cb084863",
+ "commit": "e2c5d47be",
  "clock": {
   "max_root_sinks": 1,
   "root": "port:clk",
@@ -31,13 +31,13 @@
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 0 um2 + macros 0 in core 19: util 2%",
+   "message": "synthesized std area 0 um2 + macros 0 in core 37: util 1%",
    "fix": "set \"std_area_um2\": 0 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 2.0% outside 45%-65% (std 0 + macro 0 um2 in 19 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 1.0% outside 45%-65% (std 0 + macro 0 um2 in 37 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]

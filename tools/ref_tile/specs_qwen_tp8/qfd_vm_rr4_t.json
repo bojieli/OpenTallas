@@ -15,7 +15,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 51.84,
+  "w": 17.28,
   "h": 216.0
  },
  "layer_cap": "M5",
@@ -46,8 +46,8 @@
  "job": {
   "owner": "Claude:qwen_tp8_vm_plan",
   "branch": "claude/qwen-tp8-vm-phys",
-  "tag": "r42",
-  "purpose": "Qwen TP8 VM row-read 4:1 rung (2 per region, 16 per die): 16 FSW-32 slices, select replicas + one AND-OR level over four banks' bx into t1, own row tag chain; 603 flops, one root; 2,048 bx pins on the W face, beside the four bx relays of its unit column (was rowrd_t: 4,096 pins, no legal place). Bench = region-leaf miter + the two rr4 mutants. Second cut 51.84 um wide (first cut 17.28 um: global-route congestion on the vertical layers).",
+  "tag": "r43",
+  "purpose": "Qwen TP8 VM row-read 4:1 rung (2 per region, 16 per die): 16 FSW-32 slices, select replicas + one AND-OR level over four banks' bx into t1, own row tag chain; 603 flops, one root; 2,048 bx pins on the W face, beside the four bx relays of its unit column (was rowrd_t: 4,096 pins, no legal place). Bench = region-leaf miter + the two rr4 mutants. Third cut: kept AND-OR tree at the first outline (first cut: star mapping, GRT-0116; the 51.84-um second cut blocked the whole relay strip and broke the lane plan).",
   "views_to": "physical/ref_tile/qfd_vm_rr4_t/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_rr4_t",
   "cycles_added": 0,
@@ -91,6 +91,6 @@
     ]
    }
   ],
-  "structural_change": "outline 17.28 -> 51.84 um wide: the 4:1 rung gathers every t1 bit from four bank quarters of the W face (bank-major bx pins), i.e. >= 1,024 vertical crossings at mid height against ~460 usable M3 + M5 tracks in 17.28 um (GRT-0116: M3 77 %, 4,226 overflow); three times the vertical tracks, pins and logic unchanged"
+  "structural_change": "the one-hot 4:1 AND-OR is a KEPT TREE in RTL (banks 0 | 1 and 2 | 3 on kept nets, then the OR): one net a bit across every horizontal cut of the leaf (512) instead of up to two (1,024, the star mapping that ended in GRT-0116 at M3 77 %); outline back to the one-tile-column 17.28 x 216 um the strip plan needs; function unchanged (region miter 3 PASS / 12 mutants FAIL)"
  }
 }

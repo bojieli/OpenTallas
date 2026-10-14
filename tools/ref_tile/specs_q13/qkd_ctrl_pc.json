@@ -115,14 +115,19 @@
  "route": {
   "pd": 0.5,
   "threads": 16,
-  "peak_ram_gb": 32
+  "peak_ram_gb": 32,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
  },
  "recipe": 2,
  "slot_change_request": "el1013-qwen-kvstrips 2026-10-13 (coordinator-accepted; table in el1011-qwen-tp8.log): qwen_rom_tp8 strip slots ctrl_<q> (cells qkd_ctrl / qkd_ctrl_n, 247.512 x 12,141.336) are replaced by 32 die slots ctrlpc_<q>_<k> of ONE master qkd_ctrl_pc (tile 246.24 x 172.8 on the 2.16 grid inside the 247.512 x 378 slot, PC k at strip y = 378 k + 190.08 beside its CDC, pc[4:0] strapped at the die top) + one slot ctrlkc_<q> of qkd_ctrl_kc (64.8 x 43.2 at strip x = 86.4, y = 12,096: its ko / fi pins sit over PC 31's ki / fo).  Pins: ci[318:0] / co[293:0] W/M4 = the CDC ho / hi buses of that PC (unchanged content); phy[9206:0] is replaced per PC by po[327:0] / pi[288:0] E/M4 (the stream scheduler's row / column commands + 288-b side-band data: the ot_hbm3e_phy abstract must be re-generated with this per-PC port list, its own abstract is a shared request port + per-PC responses); NEW es[287:0] / er[260:0] W/M4 on the core clock = the embedding static port to / from the strip engine in qkd_land (no die bus carried it); kc[32:0] enters qkd_ctrl_kc at the strip's N end and runs N -> S through ki / ko by abutment; NEW kf (strip fault, core clock) leaves qkd_ctrl_kc; pll_hbm (hclk) N/M5, ck N/M5, hrst / rsi W/M4 per leaf (hrst hclk-synchronous, the same cycle at every leaf of a stack).",
  "job": {
   "owner": "Claude:el1013-qwen-kvstrips",
   "branch": "claude/el1013-qwen-kvstrips",
-  "tag": "ks1",
+  "tag": "ks2",
   "purpose": "Qwen ROM TP8 (track B) HBM controller strip master qkd_ctrl_pc: ONE hardened per-PC leaf replaces the 12 mm qkd_ctrl / qkd_ctrl_n strip (32 slots a strip + qkd_ctrl_kc).  Tap station + ot_qwen_ctrl_pc_emb built for PC 0 with a strapped reset delay (cycle-exact to the parameterised scheduler) + pcport KVW 2 + landing ECC + embedding static crossing + command arbiter / read tags / write-done glue; registers at every pin; two roots (pll_hbm ~10k sinks, ck ~3k).  core_clk = ck (the embedding static crossing's core side, 833.333 ps); the HBM controller clock pll_hbm is the second root at its real 1,024 ps (sdc_extra, the form of qkd_cdc_wleaf).",
   "extra_paths": [
    "physical/qkd_ctrl_strip",

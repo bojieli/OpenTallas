@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_fan_pc-fp2-COMMIT",
+ "name": "qfd_vm_fan_pc-fp2-422b0e7ba",
  "block": "ot_qfd_vm_fan_t",
  "ref_tile": true,
  "owner": "Claude:qwen_tp8_vm_plan",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-tp8-vm-phys",
-  "commit": "COMMIT",
+  "commit": "422b0e7ba",
   "extra_paths": [
    "rtl/qwen_sys/vm_me_20261008",
    "rtl/qwen_sys/vm_die_split_20261012",
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_fan_pc/qfd_vm_fan_pc-fp2-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_fan_pc/qfd_vm_fan_pc-fp2-422b0e7ba"
   }
  ],
  "cycles_added": 0,

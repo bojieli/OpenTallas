@@ -1,16 +1,16 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_ctl_bin-sl1-ecdaf6345/record/views/qkd_kvwq_ctl_bin/qkd_kvwq_ctl_bin.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvwq_ctl_bin-sl2-41cb45a13/record/views/qkd_kvwq_ctl_bin/qkd_kvwq_ctl_bin.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 2254 of 2254 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M5 (19.248,518.245), f3[0] M5 (19.248,518.245), f3[100] M5 (19.248,518.245))"
+  "(f) face-pin access: 2250 of 2254 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. durable[0] M4 (171.529,60.096), durable[10] M4 (171.529,60.096), durable[11] M4 (171.529,60.096))"
  ],
- "summary": "qkd_kvwq_ctl_bin 172.776 x 518.376: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 2254 blocked-above 0 blocked-same 0; clock ck insertion 462 ps; pockets M5 0 (closed)",
+ "summary": "qkd_kvwq_ctl_bin 172.8 x 129.6: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 2254 blocked-above 0 blocked-same 0; clock ck insertion 230 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_kvwq_ctl_bin",
-  "W": 172.776,
-  "H": 518.376,
+  "W": 172.8,
+  "H": 129.6,
   "pg": {
    "nets": {
     "VDD": {
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 2254,
    "blocked_above": 0,
-   "covered_below": 3,
+   "covered_below": 219,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 2254,
+   "band_same": 2250,
    "band_examples": [
-    "ck M5 (19.248,518.245)",
-    "f3[0] M5 (19.248,518.245)",
-    "f3[100] M5 (19.248,518.245)",
-    "f3[101] M5 (19.248,518.245)",
-    "f3[102] M5 (19.248,518.245)",
-    "f3[103] M5 (19.248,518.245)"
+    "durable[0] M4 (171.529,60.096)",
+    "durable[10] M4 (171.529,60.096)",
+    "durable[11] M4 (171.529,60.096)",
+    "durable[12] M4 (171.529,60.096)",
+    "durable[13] M4 (171.529,60.096)",
+    "durable[14] M4 (171.529,60.096)"
    ]
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 462.23,
-    "min_ps": 349.61
+    "max_ps": 229.99,
+    "min_ps": 164.34
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 1019
+    "added": 583
    },
    "count": 0,
    "area_um2": 0,

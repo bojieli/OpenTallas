@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 16,
+ "version": 17,
  "owner": "s81die-1011",
- "updated": "2026-10-13 PT",
+ "updated": "2026-10-13 PT (evening)",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "rule": "m5_tile_cap_20261012",
@@ -146,6 +146,11 @@
    "version": 16,
    "when": "2026-10-13 PT",
    "change": "s81-die: (1) hrow: 4 die-placed leaf slots ing 129.6 sq x3 / hub 216 sq x1 / cbe, cbw 475.2 x 216 x15 each (coordinator 07:55), rep/hrow = container. (2) sp_collective: ce_s0 (ces0, closed) + ce_s1..3 (cesn parent) 302.4 x 341.28 as a 2 x 2 block. (3) sp_capture 129.576 -> 561.6 tall cluster (+432.024). (4) q element row: real view + libs + bound PQ1 bench; M7 pockets kept. (5) pq_root 131.76 x 211.68, ports 68 / 71. (6) bgq28 501.12 -> 622.08 (16 slots re-stacked), new FE slot 1520.064 x 695.52, sp_vm 2730.216 -> 3343.656 (+613.44 N). (7) sp_wfc priced-kit pins t_srd 31 / f_srq 1026 / t_ft 4 / t_hep 36. (8) SU: 14 legacy kv / qb / sw lane-tile slots -> 10 per-master rows (kvt, kvq, kve, kvp, kvr, qbt, qbe, swt reserve, swe) inside the same regions. (9) HC W face on the VM / collective lanes (--lane-pins 2). (10) gather pending, slot unchanged. (11) seam_rules.clock = die clock delivery rule (insertion-compensated entry, tap levels at 300 ps, SKEW 150 on deep-tile hops). NEIGHBOUR COST: the hub column stack above the VM moves N by +613.44 (VM) and the stack above the capture by a further +432.024 (total +1,045.464 for gather / pq / wfc / collective): taken from the free band of the hub column, which is now FULL (v16 GEN: host top y 22,746.9 of 22,749.1; station pockets of ~172 um between pq / wfc / sseq / collective / host kept), die 33 x 26 mm unchanged; the hc_s <-> vm / collective straight lanes move with their slabs (GEN v16: hop gate 500 um, 0 overlaps). No price changed; no closed tile re-shaped. (12) die_pin_audit block (main 7a0c0d10c): pin re-plan list, pin_align 0-FAIL rule for the release GRT, legacy-M7 window decision rule, closed_stands reroute_reason."
+  },
+  {
+   "version": 17,
+   "when": "2026-10-13 PT",
+   "change": "s81-die: (1) sp_capture slot = its cluster kit: 1728 x 561.6, + ckv / rsv (S, M5), cluster layers (PG M7, strap M8, signals <= M6), clock entry N / M5, clock level early_tap owed with spread <= 80 ps. (2) field plan v17: q-bank pins on the q element pins, node pins in fixed slots, x relay site beside the slot station, station xai / xbi at the E end, falling-edge capture at the forwarded-lane ends. (3) relay masters dsfd_rly_283_EW / 266_EW (kits submitted). (4) SU does not fit (fill 1.117): the column gives at most +2.45 mm2 below the slab (v18 trial), wings beyond; bgq28 height not taken (column full); capture per-child clock pins, hub cluster rule, crooty_y 11 slices, ce_s clusters taken. (5) c6p pathfinding STA read by path class: real to real TT +169.3 / FF +131.1; every violator is a placeholder lib. NEIGHBOUR COST: none (no slab moved; the capture slot is 0.024 um wider inside the 1,728-um hub column). No price changed; cfifo: -1 cycle on the field round trip."
   }
  ],
  "slots": [
@@ -1993,12 +1998,12 @@
    "notes": "v13 crooty v3 REGION 575.992 x 300.24 (unchanged): 2 die-placed hard tiles T_y ot_s81_hc_crooty_y 369.792 x 300.24 (11 SRAM, 14.1k flops) | 10.936 | T_w ot_s81_hc_crooty_w 195.264 x 300.24 (4.3k flops); c2 mirrored in x; kits s81hc_cry{y,w}{w,e}_ref (claude/el1011-s81hc-crooty 56634d4ff); wrapper port list unchanged."
   },
   {
-   "name": "sp_hc_s/crooty_c0/y",
-   "cell": "ot_s81_hc_crooty_y",
+   "name": "sp_hc_s/crooty_c0/ys0",
+   "cell": "ot_s81_hc_cryys",
    "kind": "tile",
    "parent": "sp_hc_s/crooty_c0",
    "outline": {
-    "w": 369.792,
+    "w": 32.4,
     "h": 300.24
    },
    "origin": {
@@ -2021,7 +2026,7 @@
     "corner": "SE (tile frame)"
    },
    "target_insertion_ps": 250.0,
-   "version": 14,
+   "version": 17,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
@@ -2033,10 +2038,459 @@
    },
    "view_cap": "M7",
    "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "notes": "v13 crooty v3 sub-tile (kit s81hc_cryyw_ref); N y_s, S p_y/p_req/p_flt/yacc/sk/srs | v14: clock / control (sk, srs) enter on S at tile x 367.356..368.7 (M5, E edge = SE corner; was SW) per the v4-ctl-east kits (claude/s81hc-1013 65a659a58; W channel GRT-0116 relieved); kit outline 369.36 x 300.24 inside the 369.792 slot; the die clock plan targets this pin.",
-   "kit": "s81hc_crrrw_ref",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_hc_s/crootr_c0; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys1",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 32.4,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys2",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 64.8,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys3",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 97.2,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys4",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 129.6,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys5",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 162.0,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys6",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 194.4,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys7",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 226.8,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys8",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 259.2,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys9",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 291.6,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c0/ys10",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c0",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 324.0,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrrw_ref"
   },
   {
    "name": "sp_hc_s/crooty_c0/w",
@@ -2320,18 +2774,18 @@
    "notes": "v13 crooty v3 REGION 575.992 x 300.24 (unchanged): 2 die-placed hard tiles T_y ot_s81_hc_crooty_y 369.792 x 300.24 (11 SRAM, 14.1k flops) | 10.936 | T_w ot_s81_hc_crooty_w 195.264 x 300.24 (4.3k flops); c2 mirrored in x; kits s81hc_cry{y,w}{w,e}_ref (claude/el1011-s81hc-crooty 56634d4ff); wrapper port list unchanged."
   },
   {
-   "name": "sp_hc_s/crooty_c2/y",
-   "cell": "ot_s81_hc_crooty_y",
+   "name": "sp_hc_s/crooty_c2/ys0",
+   "cell": "ot_s81_hc_cryys",
    "kind": "tile",
    "parent": "sp_hc_s/crooty_c2",
    "outline": {
-    "w": 369.792,
+    "w": 32.4,
     "h": 300.24
    },
    "origin": {
     "x": 206.2,
     "y": 0.0,
-    "orient": "MY"
+    "orient": "R0"
    },
    "io_budget": {
     "in_delay_frac": 0.2,
@@ -2348,7 +2802,7 @@
     "corner": "SE (tile frame)"
    },
    "target_insertion_ps": 250.0,
-   "version": 14,
+   "version": 17,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
@@ -2360,10 +2814,459 @@
    },
    "view_cap": "M7",
    "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M6",
-   "notes": "v13 crooty v3 sub-tile (kit s81hc_cryye_ref); N y_s, S p_y/p_req/p_flt/yacc/sk/srs | v14: clock / control (sk, srs) enter on S at tile x 367.356..368.7 (M5, E edge = SE corner; was SW) per the v4-ctl-east kits (claude/s81hc-1013 65a659a58; W channel GRT-0116 relieved); this instance is MY, so the entry is at the region's W side in the die frame; kit outline 369.36 x 300.24 inside the 369.792 slot; the die clock plan targets this pin.",
-   "kit": "s81hc_crrre_ref",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_hc_s/crootr_c2; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys1",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 238.6,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys2",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 271.0,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys3",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 303.4,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys4",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 335.8,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys5",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 368.2,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys6",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 400.6,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys7",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 433.0,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys8",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 465.4,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys9",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 497.8,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
+  },
+  {
+   "name": "sp_hc_s/crooty_c2/ys10",
+   "cell": "ot_s81_hc_cryys",
+   "kind": "tile",
+   "parent": "sp_hc_s/crooty_c2",
+   "outline": {
+    "w": 32.4,
+    "h": 300.24
+   },
+   "origin": {
+    "x": 530.2,
+    "y": 0.0,
+    "orient": "R0"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2,
+    "registered_in": true,
+    "registered_out": true
+   },
+   "clock_entry": {
+    "pin": "sk",
+    "face": "S",
+    "layer": "M5",
+    "offset": 367.356,
+    "width": 1.344,
+    "corner": "SE (tile frame)"
+   },
+   "target_insertion_ps": 250.0,
+   "version": 17,
+   "pg_layer": "M6",
+   "strap_layer": "M7",
+   "signal_max_layer": "M6",
+   "layer_rule": "cluster_child",
+   "view_layers": {
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "signal_max_layer": "M6"
+   },
+   "view_cap": "M7",
+   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+   "layer_cap": "M5",
+   "notes": "v17: slice k of the y tile (11 x 32.4 = 356.4 in the 369.36-um rectangle, 12.96 um spare at the E end); y_s / p_y[256 k +: 256] N / S at the same x (M5 / M3); own sk / srs / yacc / p_req pins and clock root; p_flt from slice 0 only; insertion 260 ps, spread 23 ps (pre-route)",
+   "kit": "s81hc_crrre_ref"
   },
   {
    "name": "sp_hc_s/crooty_c2/w",
@@ -6554,19 +7457,19 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 16,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
+   "version": 17,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
    "layer_cap": "M5",
-   "layer_rule": "tile_m5",
+   "layer_rule": "cluster",
    "name": "sp_collective/ce_s0",
    "cell": "dsfd_coll_ces0",
    "kind": "tile",
    "parent": "sp_collective",
    "outline": {
-    "w": 302.4,
-    "h": 341.28
+    "w": 432.0,
+    "h": 345.6
    },
    "origin": {
     "x": 604.8,
@@ -6574,7 +7477,7 @@
     "orient": "R0"
    },
    "owner": "el1013-s81-cesn",
-   "notes": "v16 engine lane-slice 0: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage).",
+   "notes": "v16 engine lane-slice 0: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage). v17: 302.4 x 341.28 flat -> 432.0 x 345.6 cluster (2 x 2 block re-pitched to 453.6 / 388.8 inside sp_collective; the collective owner's sub_layout must confirm the neighbours); pins N q_* / W xl_* / E pt_*, tx_*, cr_* / S bw_*.",
    "kit": "dscoll_ces0_cxsp",
    "view_status": "CLOSED cxsp d8b0f7a0e, view physical/ref_tile/dscoll_ces0_cxsp/views/dsfd_coll_ces0",
    "target_insertion_ps": 431.8,
@@ -6585,6 +7488,13 @@
     "level": "early tap, R - 300 = 131.8 ps before the common level; its hops at SKEW 150",
     "spread_ok": false,
     "source": "physical/ref_tile/dscoll_ces0_cxsp/views/dsfd_coll_ces0/insertion.json"
+   },
+   "assembly": "cluster",
+   "clock_level": {
+    "level": "early_tap",
+    "R_tt_ps": 700.0,
+    "hop_skew_ps": 150.0,
+    "child_arrival_spread_ps": 24.7
    }
   },
   {
@@ -6599,29 +7509,35 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 16,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
+   "version": 17,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
    "layer_cap": "M5",
-   "layer_rule": "tile_m5",
+   "layer_rule": "cluster",
    "name": "sp_collective/ce_s1",
    "cell": "dsfd_coll_cesn",
    "kind": "parent",
    "parent": "sp_collective",
    "outline": {
-    "w": 302.4,
-    "h": 341.28
+    "w": 432.0,
+    "h": 345.6
    },
    "origin": {
-    "x": 950.4,
+    "x": 1058.4,
     "y": 1017.36,
     "orient": "R0"
    },
    "owner": "el1013-s81-cesn",
-   "notes": "v16 engine lane-slice 1: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage).",
+   "notes": "v16 engine lane-slice 1: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage). v17: 302.4 x 341.28 flat -> 432.0 x 345.6 cluster (2 x 2 block re-pitched to 453.6 / 388.8 inside sp_collective; the collective owner's sub_layout must confirm the neighbours); pins N q_* / W xl_* / E pt_*, tx_*, cr_* / S bw_*.",
    "assembly": "cluster",
-   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts"
+   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts",
+   "clock_level": {
+    "level": "early_tap",
+    "R_tt_ps": 700.0,
+    "hop_skew_ps": 150.0,
+    "child_arrival_spread_ps": 24.7
+   }
   },
   {
    "io_budget": {
@@ -6635,29 +7551,35 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 16,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
+   "version": 17,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
    "layer_cap": "M5",
-   "layer_rule": "tile_m5",
+   "layer_rule": "cluster",
    "name": "sp_collective/ce_s2",
    "cell": "dsfd_coll_cesn",
    "kind": "parent",
    "parent": "sp_collective",
    "outline": {
-    "w": 302.4,
-    "h": 341.28
+    "w": 432.0,
+    "h": 345.6
    },
    "origin": {
     "x": 604.8,
-    "y": 1401.84,
+    "y": 1406.16,
     "orient": "R0"
    },
    "owner": "el1013-s81-cesn",
-   "notes": "v16 engine lane-slice 2: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage).",
+   "notes": "v16 engine lane-slice 2: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage). v17: 302.4 x 341.28 flat -> 432.0 x 345.6 cluster (2 x 2 block re-pitched to 453.6 / 388.8 inside sp_collective; the collective owner's sub_layout must confirm the neighbours); pins N q_* / W xl_* / E pt_*, tx_*, cr_* / S bw_*.",
    "assembly": "cluster",
-   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts"
+   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts",
+   "clock_level": {
+    "level": "early_tap",
+    "R_tt_ps": 700.0,
+    "hop_skew_ps": 150.0,
+    "child_arrival_spread_ps": 24.7
+   }
   },
   {
    "io_budget": {
@@ -6671,29 +7593,35 @@
     "face": "N",
     "layer": "M4"
    },
-   "version": 16,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
+   "version": 17,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
    "layer_cap": "M5",
-   "layer_rule": "tile_m5",
+   "layer_rule": "cluster",
    "name": "sp_collective/ce_s3",
    "cell": "dsfd_coll_cesn",
    "kind": "parent",
    "parent": "sp_collective",
    "outline": {
-    "w": 302.4,
-    "h": 341.28
+    "w": 432.0,
+    "h": 345.6
    },
    "origin": {
-    "x": 950.4,
-    "y": 1401.84,
+    "x": 1058.4,
+    "y": 1406.16,
     "orient": "R0"
    },
    "owner": "el1013-s81-cesn",
-   "notes": "v16 engine lane-slice 3: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage).",
+   "notes": "v16 engine lane-slice 3: 2 x 2 block (pitch 345.6 x 384.48, 43.2 channels) centred in the core band between the cb row (top 381.24) and ct (2381.376), 172.8 um E of the lane column. Lane -> slice hops inside the cluster are up to ~1,020 um in y: the collective owner plans registered lane relays (<= 500 um a stage). v17: 302.4 x 341.28 flat -> 432.0 x 345.6 cluster (2 x 2 block re-pitched to 453.6 / 388.8 inside sp_collective; the collective owner's sub_layout must confirm the neighbours); pins N q_* / W xl_* / E pt_*, tx_*, cr_* / S bw_*.",
    "assembly": "cluster",
-   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts"
+   "view_status": "NOT BUILT: the flat cesn (22.6k sinks on one root) is refused by the clock rule; wires-only parent on this outline over hardened leaves cesl / cesx / ceso / cespn / cescn (own roots; kits physical/ref_tile/dscoll_ces{l,x,o,pn,cn}); child slots follow the leaf verdicts",
+   "clock_level": {
+    "level": "early_tap",
+    "R_tt_ps": 700.0,
+    "hop_skew_ps": 150.0,
+    "child_arrival_spread_ps": 24.7
+   }
   },
   {
    "name": "sp_vm",
@@ -6987,7 +7915,7 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 1727.976,
+    "w": 1728.0,
     "h": 561.6
    },
    "origin": {
@@ -7002,23 +7930,15 @@
     "registered_out": true
    },
    "clock_entry": {
-    "pin": "ck",
-    "face": "N",
-    "layer": "M4"
+    "pins": "ck_g[7:0], ck_x[7:0], ck_c, ck_s[8:0], ckv_r (N, M5); ckv_x[7:0], ckv_d (S, M5)",
+    "delivery": "the die delivers each pin at phi - R of its child: g2 208, x 269, ctl 90, relays 32-62 ps (TT, routed): one clock level"
    },
    "target_insertion_ps": 250.0,
-   "version": 16,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
+   "version": 17,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
    "pins": [
-    {
-     "name": "ck",
-     "face": "N",
-     "layer": "M5",
-     "offset": 1727.532,
-     "width": 0.024
-    },
     {
      "name": "f_gather[6946:0]",
      "face": "N",
@@ -7034,32 +7954,283 @@
      "width": 0.024
     },
     {
-     "name": "t_cd[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 1032.996,
-     "width": 0.552
-    },
-    {
      "name": "t_vm[13375:0]",
      "face": "S",
      "layer": "M5",
      "offset": 863.988,
      "width": 642.024
+    },
+    {
+     "name": "rsv",
+     "face": "S",
+     "layer": "M5",
+     "offset": 866.16,
+     "width": 0.024
+    },
+    {
+     "name": "ck_g[0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 189.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_g[1]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 361.8,
+     "width": 0.024
+    },
+    {
+     "name": "ck_g[2]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 534.6,
+     "width": 0.024
+    },
+    {
+     "name": "ck_g[3]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 707.4,
+     "width": 0.024
+    },
+    {
+     "name": "ck_g[4]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1009.8,
+     "width": 0.024
+    },
+    {
+     "name": "ck_g[5]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1182.6,
+     "width": 0.024
+    },
+    {
+     "name": "ck_g[6]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1355.4,
+     "width": 0.024
+    },
+    {
+     "name": "ck_g[7]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1528.2,
+     "width": 0.024
+    },
+    {
+     "name": "ck_x[0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 191.16,
+     "width": 0.024
+    },
+    {
+     "name": "ck_x[1]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 363.96000000000004,
+     "width": 0.024
+    },
+    {
+     "name": "ck_x[2]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 536.76,
+     "width": 0.024
+    },
+    {
+     "name": "ck_x[3]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 709.56,
+     "width": 0.024
+    },
+    {
+     "name": "ck_x[4]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1011.9599999999999,
+     "width": 0.024
+    },
+    {
+     "name": "ck_x[5]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1184.76,
+     "width": 0.024
+    },
+    {
+     "name": "ck_x[6]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1357.5600000000002,
+     "width": 0.024
+    },
+    {
+     "name": "ck_x[7]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1530.3600000000001,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 470.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[1]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 576.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[2]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 681.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[3]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 787.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[4]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1013.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[5]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1118.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[6]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1224.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[7]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 1329.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_s[8]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 865.0,
+     "width": 0.024
+    },
+    {
+     "name": "ck_c",
+     "face": "N",
+     "layer": "M5",
+     "offset": 852.0,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_r",
+     "face": "N",
+     "layer": "M5",
+     "offset": 925.0,
+     "width": 0.024
+    },
+    {
+     "name": "t_cd[11:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 915.0,
+     "width": 0.552
+    },
+    {
+     "name": "ckv_d",
+     "face": "S",
+     "layer": "M5",
+     "offset": 850.0,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_x[0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 189.0,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_x[1]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 361.8,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_x[2]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 534.6,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_x[3]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 707.4,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_x[4]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1009.8,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_x[5]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1182.6,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_x[6]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1355.4,
+     "width": 0.024
+    },
+    {
+     "name": "ckv_x[7]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 1528.2,
+     "width": 0.024
     }
    ],
    "assembly": "cluster",
    "owner": "el1011 s81 ctrl",
-   "notes": "v16: 1727.976 x 561.6 cluster over CLOSED M5 views, children MX (inputs N, outputs S): 8 x dsfd_capt_g2 at y 345.6, 8 x dsfd_capt_x at y 43.2 (x 129.6, 302.4, 475.2, 648.0 | 950.4, 1123.2, 1296.0, 1468.8), dsfd_capt_ctl at (820.8, 172.8); cluster logic = 872 station flops + t_cd. 0.439 mm2 of closed leaf outline cannot fit 129.6 um in any partition. Clocks: ck N (17 child pins), ckv S (8 child pins): ckv / rsv are NEW die pins. Spec tools/ref_tile/specs_s81sp/s81sp_capc_cl.json (branch s81-spwfc-1013).",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M7",
-   "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
-   "layer_cap": "M5",
+   "notes": "v16: 1727.976 x 561.6 cluster over CLOSED M5 views, children MX (inputs N, outputs S): 8 x dsfd_capt_g2 at y 345.6, 8 x dsfd_capt_x at y 43.2 (x 129.6, 302.4, 475.2, 648.0 | 950.4, 1123.2, 1296.0, 1468.8), dsfd_capt_ctl at (820.8, 172.8); cluster logic = 872 station flops + t_cd. 0.439 mm2 of closed leaf outline cannot fit 129.6 um in any partition. Clocks: ck N (17 child pins), ckv S (8 child pins): ckv / rsv are NEW die pins. Spec tools/ref_tile/specs_s81sp/s81sp_capc_cl.json (branch s81-spwfc-1013). v17: slot = the kit's 1728 x 561.6 (0.024 um wider than the generated slab frame: the hub column is 1,728 wide, the column's neighbours are routing corridors); ckv / rsv are slot pins (S, M5); cluster layers (PG M7 pins, die strap M8, signals <= M6: the kit routed M2-M7 and must cap signals at M6); clock entry N / M5. v17 (17:58 request): the cluster has NO clock tree (the one-pin spine measured 1,029 ps / spread 226 ps): one clock entry pin per child; t_cd leaves from a dsfd_rly_15_SN stage at x ~915 (+1 serial cycle on the DONE word, once a field phase); g2 row y 336.96, relay row y 519.552, dsfd_capt_cd at (842.4, 86.4).",
+   "layer_rule": "cluster",
    "pin_request": {
     "f_gather[53*16*g +: 848]": "8 bundles on N centred at x 189, 361.8, 534.6, 707.4, 1009.8, 1182.6, 1355.4, 1528.2",
     "f_gather[6946:6784]": "163 b on N over the ctl, x 864",
@@ -7067,7 +8238,7 @@
     "t_vm[13375:13312]": "S under column 3, x 707.4",
     "t_cd": "N near x 707",
     "ckv, rsv": "S",
-    "status": "OPEN in the generator: v16 GEN still lays f_gather / t_vm as one centred group each (pins below = the generated ones); the bundle split is a generator change owed before the cluster routes"
+    "status": "OPEN in the generator (v17): f_gather / t_vm are still one centred group each; the 8-bundle split at the g2 / x column centres + ckv / rsv die pins are owed before the cluster binds"
    }
   },
   {
@@ -7076,7 +8247,7 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 1727.976,
+    "w": 1728.0,
     "h": 803.496
    },
    "origin": {
@@ -7096,10 +8267,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 16,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
+   "version": 17,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
    "pins": [
     {
      "name": "c_cmd[84:0]",
@@ -7265,16 +8436,8 @@
    ],
    "assembly": "element",
    "owner": "el1011 s81 ctrl",
-   "notes": "single hard element (dsfd_sp_gather_c)",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M7",
-   "view_status": "PENDING (s81-gather): the slot 1727.976 x 803.496 cannot hold the flat cell (2,907,531 flops, 1.61 mm2 of std cells). Storage redesign: step A (queue / pairing data in per-root 1r1w macros) needs 1727.976 x ~1,230 (+~430 N); step B (pairing store indexed by {open-row slot, tree node}) fits THIS slot (~1.15 mm2) if <= 8 rows are open per root. Measured on the die-layer vehicle: queue peak 10 of 128, pairing buffer peak 5 of 128 (synthetic field order). DIE LEAD: slot UNCHANGED in v16 (step B is the design to build; capacity fault stays sticky / fail-closed); if the real field order shows > 8 open rows, step A needs +430 um N and the hub column has NO such room after v16 (v16 GEN: VM top 16,757, capture .. host stacked to y 22,746.9 of the 22,749.1 N strip; only the five ~172-um station pockets between the slabs remain): it would cost the SU / VM stack or the pockets. Pins: t_capture as 8 bundles on S at the capture's f_gather x centres (generator change owed with the capture bundle split).",
-   "layer_cap": "M5"
+   "notes": "single hard element (dsfd_sp_gather_c) v17: hub cluster over M5 leaves: 8.64-um lattice outline, signals <= M6, PG M7 pins, strap M8.",
+   "layer_rule": "cluster"
   },
   {
    "name": "sp_wfc",
@@ -7282,8 +8445,8 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 1727.976,
-    "h": 328.296
+    "w": 1728.0,
+    "h": 328.32
    },
    "origin": {
     "x": 13942.8,
@@ -7302,10 +8465,10 @@
     "layer": "M4"
    },
    "target_insertion_ps": 250.0,
-   "version": 16,
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
+   "version": 17,
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
    "pins": [
     {
      "name": "ck",
@@ -7450,16 +8613,8 @@
    ],
    "assembly": "element",
    "owner": "el1011-ds-wfc",
-   "notes": "WFC kit stage (dsfd_wfc_stg)",
-   "layer_rule": "tile_m5",
-   "view_layers": {
-    "pg_layer": "M7",
-    "strap_layer": "M8",
-    "signal_max_layer": "M6"
-   },
-   "view_cap": "M7",
-   "view_status": "no cluster: the three closed children (tokpipe_stg 190.41 sq, lnk 216 x 151.2, vmx 291.6 x 280.8) route M1..M7 and vmx is closed only at the DEFAULT pins; vmx at the priced parameters is being rebuilt split <= 15k sinks per root. Die M6 / M7 treat the three child footprints (698 um at the E end) as blocked; no hot die window over the slot (c5: hub W face 0.022, E face 0.128), so no M5 re-route is asked.",
-   "layer_cap": "M5",
+   "notes": "WFC kit stage (dsfd_wfc_stg) v17: hub cluster over M5 leaves: 8.64-um lattice outline, signals <= M6, PG M7 pins, strap M8.",
+   "layer_rule": "cluster",
    "kit_of_record": "dsfd_wfc_stg #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1), .HEP(layer in 37/38/39)) = the PRICED kit (tb_mtp_wave_dies.sv:96)",
    "pin_changes_v16": {
     "t_srd": "15 -> 31 b ({v1, a1[14:0], a0[14:0]}); group t_sw_sr 544 -> 560",
@@ -7467,6 +8622,11 @@
     "t_ft[3:0]": "NEW: kit fault flags to the die fault collector (host f_wfc_ft); was a tied-off functional port",
     "t_hep[35:0]": "NEW on the layer 37 / 38 / 39 stage dies only (HEP 1), to ot_dsrom_mtp_hrow_tx",
     "generator": "--wfc-priced (tools/dsrom_s81_fulldie.py): WFC_FIELD_SPLIT + wfc_kit_buses at RD2 1"
+   },
+   "pin_request": {
+    "E face by tile": "y 216..324 f_lid f_liv t_lir t_lod t_lov f_lor (dsfd_wfc_lnk_e); y 43..216 every other die pin (dsfd_wfc_vmx_p), t_ks / f_kd moved under y 216, t_hep[35:0] / t_ft[3:0] in the vmx_p range",
+    "width": "full slot width kept (the 1,123.2-um option is not taken in v17: the slab stack and its lanes stay)",
+    "status": "OPEN in the generator"
    }
   },
   {
@@ -11952,6 +13112,18 @@
     "sw": 8.364
    },
    "verdict": "MEASURED from the closed outlines x the posted counts: the kv and sw tile sets do NOT fit the legacy regions (fill > 1); sp_su_s (1,890 x 10,022.4) is NOT grown in v16 because no sub_layout was posted and the growth direction (N into the hub stack / corridor, or the --su-e E column) is a floorplan decision that needs it. The rows are reservations by master; the slab outline change is owed with the SU owner's sub_layout (v17)."
+  },
+  "sp_su_s_v17_options": {
+   "measured": "SU owner 2026-10-13 17:45 (el1011-s81-suhc-hier-1011.log (8)): routed tile bill 21.151 mm2 (KV 2.276, QN 2.204, QB 0.571, SW 6.543, SM 8.346, IO 1.212) in the 1,890 x 10,022.4 slab = 18.942 mm2: fill 1.117; standard-cell content 9.66 mm2",
+   "options": {
+    "A_grow_N": "+7.5 mm2 at fill 0.80 = +3,950 um of slab length: NOT available (hub column full: host top 22,746.9 of 22,749.1)",
+    "B_resize_util_0p65": "swe, sml, smd, qne, kve re-routed at util 0.65 (closed at 0.46-0.52): 17.013 mm2 = fill 0.898",
+    "C_pin_tile": "dsfd_su_t_pin x4 572.4 x 475.2 (util 0.033) -> 572.4 x 64.8 with the buses on N / S (M3 + M5): -0.94 mm2",
+    "D_B_plus_C": "16.07 mm2 = fill 0.848 in the unchanged slab",
+    "E_grow_S": "sp_su_s south edge 3,369.6 -> 2,073.6 (600 rows) under its own footprint: +2.45 mm2 -> slab 21.39 mm2; with D: fill 0.751.  The band below (gapS, x 11.39-21.63 mm, y 1.81-3.05 mm) is free on the 1- and 2-stack layer dies; the S strip / tier channel 0 crossing at the hub column is not yet checked by a GEN",
+    "F_annex": "sw lanes (swe x128) in a second slab in gapS: fits (14.8 mm2 free) but adds 4-12 relay stages per sw lane; not priced"
+   },
+   "recommendation": "coordinator 18:10: slab growth preferred over re-routing closed SU tiles.  Growth first (E + wings, v18 GEN trial); C (pin tile re-shape, a new slot shape, no closed engine touched) with it; B (five util-0.65 re-routes) only if the wing lanes price above 5 % of the SU path.  A is impossible."
   }
  },
  "layer_cap_grants": {
@@ -12431,7 +13603,23 @@
     "status": "kit + bench + mutant; route pending",
     "kit_tag": "v2"
    }
-  ]
+  ],
+  "v17_added": {
+   "dsfd_rly_283_EW": {
+    "instances": 512,
+    "job": "s81_rly_283_ew-v2-4a5563ab5",
+    "kit": "physical/ref_tile/s81_rly_283_ew",
+    "outline_um": [
+     23.76,
+     30.24
+    ],
+    "area_mm2_x512": 0.368,
+    "why": "v1 at the E/W class outline 21.6 x 30.24 was refused at floorplan (util 66.3 % with the hold cells, limit 60 / 65); 23.76 x 30.24 = 58.9 %; it stands in the 25.49 x 62.95 x relay site (two stacked: 60.48), +0.196 mm2 against the generated 17.256 x 19.416 outline, inside the sites"
+   },
+   "dsfd_rly_266_EW": "withdrawn: not in the v17 plan (the xb relay of the site is dsfd_rly_266_WE)",
+   "note": "RTL rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv; the closed _WE / _SN wide masters (62-66 % by the same count) stand",
+   "real_dims_owed": "the generator still places W >= 266 relays as 17.256 x 19.416: binding the 6 wide masters (3,584 instances) needs the real 21.6 x 30.24 (E/W) / 34.56 x 19.44 (N/S) outlines in _col_relays; the x relay site (25.92 x 62.95) holds two E/W relays stacked (2 x 30.24)"
+  }
  },
  "open_items": [
   "coll_ces",
@@ -12444,7 +13632,6 @@
   "hc_post_midpoint",
   "v15 fadd16: closed view routes signals on M7 above its cap M6 (view_status INVALID stands); t_y on the far face (MX slot).",
   "v15 layer1e die case (Engram home) missing from the real-view census.",
-  "v16 capture / gather bundle pins (f_gather, t_capture as 8 bundles at the g2 column centres; t_vm under the x columns): generator change owed.",
   "v16 pq_root ports 68 / 71: generator PQ_TI / PQ_RO still 66 / 68; +3 b status relay to the column fault collector owed.",
   "v16 SU sub_layout origins (kvt / kvq / kve / kvp / kvr, qbt / qbe, swt / swe) owed by the SU owner; swt not closed (two half-tap split); qbt spread / pin-register defects. MISFIT: {\"kv\": {\"fill\": 1.733, \"region_mm2\": 0.6924, \"tiles_mm2\": 1.1998}, \"qb\": {\"fill\": 0.546, \"region_mm2\": 1.4589, \"tiles_mm2\": 0.7971}, \"short_mm2_at_0p60_fill\": {\"kv\": 1.307, \"sw\": 8.364}, \"sw\": {\"fill\": 2.32, \"region_mm2\": 2.9179, \"tiles_mm2\": 6.7691}, \"verdict\": \"MEASURED from the closed outlines x the posted counts: the kv and sw tile sets do NOT fit the legacy regions (fill > 1); sp_su_s (1,890 x 10,022.4) is NOT grown in v16 because no sub_layout was posted and the growth direction (N into the hub stack / corridor, or the --su-e E column) is a floorplan decision that needs it. The rows are ",
   "v16 sp_collective ce_s1..3 (cesn) child leaf slots follow the leaf verdicts; lane -> slice relays inside the cluster owed.",
@@ -12452,7 +13639,12 @@
   "v16 dsfd_bf (s81-bf 07:39): tiles_direct request (2 x bf_col 450.144 + bf_front 100.224 in the same frame, two 1.188 um seam channels) NOT folded: LEF / lib exports and the compact199 compose STA are owed first.",
   "v16 no closed slot-shaped view by name for dsfd_bf, dsfd_pq_root, dsfd_sp_pq.",
   "v16 pin readiness (die_pin_audit): pin_align 0 FAIL owed before the release GRT; 28 masters / 1,316 instances FIX BY PIN RE-PLAN to post to the element streams; legacy-M7 windows to be decided on the v16 model.",
-  "v16 pair gate (pinreg pairs) not passed: x_lane relay re-plan (512 hops), 1,153 pin re-plans, cfifo / end-relay capture-edge re-routes."
+  "v16 pair gate (pinreg pairs) not passed: x_lane relay re-plan (512 hops), 1,153 pin re-plans, cfifo / end-relay capture-edge re-routes.",
+  "v17 capture / gather bundle pins (8 f_gather bundles over the g2 columns, t_vm under the x columns, ckv / rsv die pins): generator change owed.",
+  "v17 capture cluster clock: boundary spread 226 ps > 80 (tile defect); R ~1,029 ps accepted as an early tap only with spread <= 80 and insertion.json.",
+  "v17 wide relays at real dims (--rly-real-dims) + binding of dsfd_rly_266 / 283 _{SN,WE,EW} (3,584 instances).",
+  "v17 SU: slab growth first (v18 GEN trial: S growth 1,296 um + wings); v17_queue.su_what_the_floorplan_gives; bgq28 height waits for the same move.",
+  "v17 capture-edge re-routes: dsfd_cfifo x128 and 8 m221pq end relays (hl_E0 / E2 / W1, hco / hix / hqe_SW, hcol, hsel) on the --fwd-negcap RTL."
  ],
  "m6_pin_grants": {
   "rule": "tools/hier_contract/M6_PIN_GRANT.md: exact master, source commit, physical-spec digest, exact bits / face / span; signals and PG stay <= M5",
@@ -13334,6 +14526,42 @@
    "pin re-plan on 1,153 hops: generator pin placement",
    "dsfd_cfifo + 8 m221pq end relays: re-route with a capture-edge fix, reroute_reason die_window (s81-die / s81-rerun own these masters)"
   ],
-  "v16": "NOT run on the v16 case yet"
+  "v16": "NOT run on the v16 case yet",
+  "v17": "plan v17 (GEN g17): see results/physical/die_iter_1012/s81/v17_plan_1013/README.md for the measured pin_align and per-pair figures; hold races of dsfd_cfifo x128 and the 8 m221pq end relays stay until their --fwd-negcap re-routes close"
+ },
+ "v17_queue": {
+  "taken": [
+   "capture per-child clock pins + cluster rule",
+   "gather / wfc cluster rule and 1728.0 (wfc 328.32) outlines",
+   "crooty_y -> 11 x ot_s81_hc_cryys",
+   "ce_s0..3 432.0 x 345.6 clusters",
+   "dsfd_rly_283_EW 23.76 x 30.24"
+  ],
+  "bf_tiles_direct": "views physical/s81_die_views/bf_compact199 + compose_1013 are on main: rows dsfd_bf_col (450.144 x 198.72, x1024, R 499-681 ps = early tap) and dsfd_bf_front (100.224 x 198.72, x512, R 237-307) with two 1.188-um seams fold into the FRAME generator (--bf-hier-compact) in v18: the v17 GEN still places the one-piece dsfd_bf frame",
+  "bgq28_NOT_TAKEN": "367.2 x 725.76 x16 (4 x 4 in sp_vm) needs sp_vm +414.72 um N (4 x 103.68); the hub column has 2.2 um left (host top 22,746.9 of 22,749.1).  The +21.6-um W strap column fits (4 x 367.2 = 1,468.8 <= 1,520.064).  Height comes only with the v18 column move below.",
+  "hub_column_v18": "the only free length is BELOW sp_su_s: its S edge 3,369.6 can go to 2,073.6 (1,296 um, above the selector band at y 1,464-1,786) if the S strip / tier channel 0 crossing at x 13.78-15.67 mm stays legal (GEN trial owed). Budget of those 1,296 um: VM +414.72 (bgq28) leaves 881.28 um = +1.666 mm2 of SU slab",
+  "su_what_the_floorplan_gives": "bill 21.151 mm2, slab 18.942.  Slab growth in the column: at most +2.449 mm2 (1,296 x 1,890), +1.666 with the bgq28 height = 20.608 mm2: still under the bill (fill 1.026).  At fill 0.80 the bill needs 26.44 mm2 (+7.50): the rest (5.05-5.83 mm2) exists only as wings of the slab in the free S band (x 11.39-21.63 mm, y 1.81-3.05 mm: ~10 mm2 beside the footprint), 2-10 relay stages from the SU lanes, unpriced.  So: slab growth alone does NOT close SU; growth + the pin-tile re-shape (-0.94) gives 20.21 in 20.61-21.39 (fill 0.94-0.98, no channels): not buildable either.  The die lead takes growth FIRST (v18 GEN: S growth + wings for the swe rows) and keeps the util-0.65 re-routes (-4.14 mm2) as the fallback if the wing lanes price above 5 % of the SU path"
+ },
+ "field_plan_v17": {
+  "options": "s81_layer1_v17.opts = v16 + --pin-align --xb-rgap-first --fwd-negcap, --rly-face-reach 450 -> 400",
+  "qbank": "dsfd_qbank_S / _N element-side pins (o_x0, o_x1, o_cfg, o_go / e_r0, e_r1, e_st) at the EXACT x of the q element pin of the same bit (M5, exact rectangles); the bank stands under the extent of its pins (S bank 213.84 -> 225.07 from the element origin)",
+  "node": "dsfd_node_*: fixed slots on the N / S faces (child o <-> parent a / b at w/2 - 12, fault chain fo <-> fi at w/2, own o at w/2 + 12): the abutted stack is bit-aligned",
+  "x_relay_site": "right lane cfg row: slot station | x relay site (25.92) | pair sequencer | ROM 0..6 (was station | sequencer | site | ROMs): the x relays stand 38 um nearer the next station and the left bank; the station takes xbi / xai at the E end of its S face",
+  "sstn_relay": "a station port whose one load is a column relay within 30 um of its N face takes the relay's pin x and pitch",
+  "link_end": "hend face with one port toward stations: on the stations' pin group; un-split UCIe end stations 10 um farther out",
+  "fwd_negcap": "dsfd_cfifo.xd and the m2l / r2l end relays' di<j> are captured on the FALLING forwarded-clock edge (half-cycle hop as station -> station; the posedge capture coincided with the station's launch: FF hold -94..-206 ps).  cfifo: the FIFO write is half a cycle after the pin register = 1 cycle less than v16 (field round trip -1); end relays: same write edge as before",
+  "why": "pin_align gate: v16 7,045 FAIL bundles in 19 classes, all on generated field-frame pins; per-pair gate: 128 hops y_xa.o -> bank i_x0 at 440 um against 406.5, hr_E3.o 147.9 against 92.9; and with the EW relay kits bound 1,024 hops relay -> next station at 490.1 / 426.4 um against 398-401"
+ },
+ "die_timing_v16_pathfinding": {
+  "source": "results/physical/die_iter_1012/s81/c6p_sta_classes_1013/README.md (c6p: GRT congestion 0, 6,136,530 nets)",
+  "tt_setup_ps": -1426.8,
+  "ff_hold_ps": -576.9,
+  "real_to_real": {
+   "tt_setup_worst_ps": 169.3,
+   "ff_hold_worst_ps": 131.1,
+   "endpoints": 882944
+  },
+  "placeholder": "all 9,071 TT violators and the 72,192 FF endpoints below -500 ps end on / start from the interim single-clock dsfd_cfifo; 1.01 M FF endpoints at >= -33.3 ps are the interim cq 32 ps against hold 15 + 50",
+  "next": "bind the colck cfifo view after its capture-edge re-route; interim lib FF clk->q >= 65 ps (contract minimum of a pin-registered tile) so a placeholder hop is not reported as a die hold failure"
  }
 }

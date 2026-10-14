@@ -229,7 +229,11 @@ module ot_hdc_vstream #(
                 .vm_we(vm_we[l]), .vm_waddr(vm_waddr[l*AW +: AW]), .vm_wdata(vm_wdata[32*l +: 32]),
                 .kv_we(kv_we[l]), .kv_waddr(kv_waddr[l*AW +: AW]), .kv_wdata(kv_wdata[32*l +: 32]),
                 .l_ov(l_ov[l]), .l_out(l_out[32*l +: 32]), .l_red(l_red[2*l +: 2]), .l_redsq(l_redsq[l]),
-                .l_raddr(l_raddr[l*AW +: AW]), .l_last(l_last[l]), .retire(l_retire[l]), .l_fault(l_fault[l]));
+                .l_raddr(l_raddr[l*AW +: AW]), .l_last(l_last[l]), .retire(l_retire[l]), .l_fault(l_fault[l]),
+                //: SFH = 0: the special-function pipelines are inside the lane (the external-tile ports are unused)
+                .sx_exp_v(), .sx_exp_x(), .sy_exp_y(32'd0), .sy_exp_vo(1'b0), .sy_exp_f(1'b0),
+                .sx_rcp_v(), .sx_rcp_x(), .sy_rcp_y(32'd0), .sy_rcp_f(1'b0),
+                .sx_rsq_v(), .sx_rsq_x(), .sy_rsq_y(32'd0), .sy_rsq_f(1'b0));
         end else begin : g_tile
             //: inbound -- broadcast fields from this lane's group relay (stage 1), then RD - 1 per-lane stages; per-lane
             //: fields (live, offsets, memory answers) RD per-lane stages; the tile adds its pin flop.

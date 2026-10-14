@@ -54,13 +54,18 @@
   "peak_ram_gb": 32,
   "pin_h": "M4",
   "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:el1013-qwen-kvcentre",
   "branch": "claude/qwen-kvcentre-1013",
-  "tag": "kc2",
+  "tag": "kc4",
   "purpose": "Qwen ROM TP8 track B: quadrant pin-register leaf of the qkd_seq cluster (one master, 4 instances WS / WN / ES(MY) / EN(MY)): aq 540 + kvn 1,047 + kc 33 captured on the inner face and launched at the slot face, row credit + 2 fault bits back; 3,249 flops, own root, tile along the face (51.84 x 162: 1,623 face pins on M4 at two tracks a pin; recipe-2 pin hold stages are 2.6x the flop area). M5 leaf, recipe 2.",
   "benches": [
    {
@@ -109,7 +114,7 @@
     "needs": [
      "verilator"
     ],
-    "note": "the KV-end attention layer step through the CLUSTER (Verilator, STACK=h): 7 vectors x VM stall 0/1 x launch by dc ATTN / by kvd descriptor, bit-exact against tools/qwen_nearhbm_attn_ref.py"
+    "note": "the KV-end attention layer step as a whole decode step through the CLUSTER (Verilator, STACK=h): 7 vectors x VM stall 0 / 1 = 14 runs, all bit-exact against the golden; step 1,794 cycles at context 8192 (two-die 1,842); measured 10-13 on ot-agidock128"
    },
    {
     "name": "layer_cluster_wire_mutant",
@@ -125,13 +130,83 @@
    }
   ]
  },
+ "pin_ranges": {
+  "aq": [
+   1.0,
+   53.0
+  ],
+  "kvn": [
+   54.0,
+   155.0
+  ],
+  "kvn_cr": [
+   155.3,
+   155.5
+  ],
+  "kc": [
+   156.0,
+   159.4
+  ],
+  "af": [
+   159.8,
+   160.0
+  ],
+  "mf": [
+   160.4,
+   160.6
+  ],
+  "q": [
+   1.0,
+   50.3
+  ],
+  "aqm": [
+   50.3,
+   53.0
+  ],
+  "kw": [
+   54.0,
+   152.7
+  ],
+  "kwm": [
+   152.7,
+   155.0
+  ],
+  "cr_o": [
+   155.3,
+   155.5
+  ],
+  "kc_i": [
+   156.0,
+   159.4
+  ],
+  "af_o": [
+   159.8,
+   160.0
+  ],
+  "mf_o": [
+   160.4,
+   160.6
+  ],
+  "ck": [
+   25.8,
+   26.0
+  ],
+  "rst_n": [
+   25.8,
+   26.0
+  ]
+ },
+ "structural_change": "kc3 pin plan: the kc2 route crashed twice in pin placement (PPL-0093: an ordered group of 23, kvn[1046:1024], did not fit the LEFT region: 1,623 pins x 2 M4 tracks = 155.8 um of the 162 um face left no contiguous run after the corner bands). Every port now has its own disjoint range on its face and the pins are placed one by one (place_pin, uniform, >= 2 M4 tracks apart) on the spans the qkd_seq cluster's W / E pins use (aq 1.0-53.0, kvn 54.0-155.0 = cluster span minus the fan origin), E face in the same bit order straight across the tile; no PPL groups. RTL unchanged. kc4: kc3 placed its pins and passed CTS, then failed global route by ONE track in 66 gcells, all in the column x 7.98-8.55 um behind the W (output) face (GRT-0116; M2 54 % / M4 24 % overall): at 2.8 pins per cell row the FIRM pin flops (4 columns, x 3.2-8.3) sat on top of the three FIRM hold-stage cells of every output pin (BUF -> HB4 -> BUF, 1.4 um a pin), and legalisation interleaved them, so every flop -> hold -> pin chain crossed that column more than once. Now the pin flops start 4.5 um inside the core (OT_OFLOP_GAP) in 6 columns: hold stages at the pins (x 2.2-6.7), flops behind them (x 6.7-14.3), one monotonic crossing per net. RTL, outline and pin positions unchanged.",
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "orfs_vars": {
+  "OT_OFLOP_GAP": "4.5"
+ },
  "children": [],
  "inter": [],
  "recipe": 2,
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- },
  "inhold": true,
  "outhold": true
 }

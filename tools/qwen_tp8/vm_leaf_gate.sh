@@ -9,10 +9,11 @@
 #            system bench cannot see), -GRMUT=1 (one relay free-runs).
 #   xplane16 the same bench at the bench shape NRB 16 / ELEMS 16,384 (the committed leaf_miter record's shape).
 #   region   tb_qfd_vm_region_leaf at DEPTH 174 / LAW 8 / DEPTHS 695 / LAWS 10 with the delay leaves bound to the
-#            ROUTED delay tiles ot_qwen_tree_delay1_t / delay2_t: ot_qfd_vm_region_leaf (gctl_t, rowrd_t, 8 x bank_t,
-#            6 x su_t, xfifo8_t, 3 x su1024_t, delay tiles) against the flat ot_qfd_vm_region_quarter, every clock.
-#            Mutants: -GLEAF_MUT=1 (rowrd_t) 2 / 3 / 7 / 8 (gctl_t) 4 (bank_t 5's write-data pin: delay1 for delay2)
-#            5 (bank 2's q relay) 6 (su_t's write-data pin), -GROW_MUT=1 (rowrd_t), -GSU_MUT=1 (su1024_t).
+#            ROUTED delay tiles ot_qwen_tree_delay1_t / delay2_t: ot_qfd_vm_region_leaf (8 x bctl_t, 6 x sctl_t, 2 x rr4_t,
+#            rr2_t, 8 x bank_t, 6 x su_t, 16 x xfifo8_t, 3 x su1024_t, delay tiles) against the flat
+#            ot_qfd_vm_region_quarter, every clock.  Mutants: -GLEAF_MUT=1 / 2 (rr4_t) 3 / 9 / 11 (bctl_t) 8 / 10 (sctl_t)
+#            7 / 12 (rr2_t) 4 (bank_t 5's write-data pin: delay1 for delay2) 5 (bank 2's q relay) 6 (su_t's write-data
+#            pin), -GROW_MUT=1 (rr2_t half select), -GSU_MUT=1 (su1024_t).
 #   region8  the same bench at the bench shape (DEPTH 8 / LAW 3, soft delay leaves): the committed record's shape.
 # Prints "<name> rc=<rc> <PASS|FAIL line> maxrss_kb=.. wall=.. build_s=.." and exits 0 on a PASS line, 1 on a FAIL
 # line, 2 when the build failed or no verdict line was printed (a build failure is never a killed mutant).

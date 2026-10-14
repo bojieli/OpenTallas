@@ -215,7 +215,8 @@
  "route": {
   "pd": 0.3,
   "threads": 8,
-  "peak_ram_gb": 32
+  "peak_ram_gb": 32,
+  "pin_h": "M4"
  },
  "structural_change": "flat lane-slice (22,816 sinks on one clock root; three routes missed hold) split into hardened leaves with their own roots under a wires-only parent: 4 FP32 lane leaves, 3 xl relay leaves, 1 pass-through relay leaf, 1 output-stage leaf and the core (ces0 14,519 / cesn 13,919 sinks); one seam latency LSEAM in all four slices (lockstep asserted); every seam is leaf flop -> wire -> leaf flop",
  "child_clock_ref": "boundary",
