@@ -33,10 +33,11 @@ module ot_s81ph_root_leaf #(
     input  wire [69*(NRT+NLT)-1:0]    li,
     output reg  [69*NLT-1:0]          lo,
     input  wire [53*NCI-1:0]          ci,
-    output reg  [53*(NCI+NRT)-1:0]    co,
+    output wire [53*(NCI+NRT)-1:0]    co,
     input  wire [1:0]                 fi,
     output reg  [1:0]                 fo
 );
+    reg [53*(NCI+NRT)-1:0] co_state;
     reg [1:0] rst_s;                         // rst_s[1]: the margin SDC's rst_mcp2 cell name
     always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rl = rst_s[1];
@@ -51,9 +52,9 @@ module ot_s81ph_root_leaf #(
             lv <= {NRT{1'b0}}; busy_l <= {NRT{1'b0}}; flt_l <= 1'b0; fo <= 2'b00;
             for (j = 0; j < NLT; j = j + 1) lo[69*j] <= 1'b0;
             `ifdef S81PH_GTH_SSA2
-            for (j = NRT; j < NCI + NRT; j = j + 1) co[53*j] <= 1'b0;
+            for (j = NRT; j < NCI + NRT; j = j + 1) co_state[53*j] <= 1'b0;
 `else
-            for (j = 0; j < NCI + NRT; j = j + 1) co[53*j] <= 1'b0;
+            for (j = 0; j < NCI + NRT; j = j + 1) co_state[53*j] <= 1'b0;
 `endif
         end else begin
             for (j = 0; j < NRT; j = j + 1) begin
@@ -62,14 +63,14 @@ module ot_s81ph_root_leaf #(
                 if (rf[j] || (lv[j] && lw[68*j + 67])) flt_l <= 1'b1;
 `ifndef S81PH_GTH_SSA2
 `ifdef S81PH_MUT_CHAIN
-                co[53*j] <= rv[j ^ 1];       // MUTANT: own results of roots 2 i / 2 i + 1 leave in swapped chain slots
+                co_state[53*j] <= rv[j ^ 1];       // MUTANT: own results of roots 2 i / 2 i + 1 leave in swapped chain slots
 `else
-                co[53*j] <= rv[j];
+                co_state[53*j] <= rv[j];
 `endif
 `endif
             end
             for (j = 0; j < NLT; j = j + 1) lo[69*j] <= li[69*(NRT+j)];
-            for (j = 0; j < NCI; j = j + 1) co[53*(NRT+j)] <= ci[53*j];      // slot valids: reset (no start-up garbage)
+            for (j = 0; j < NCI; j = j + 1) co_state[53*(NRT+j)] <= ci[53*j];      // slot valids: reset (no start-up garbage)
             fo <= fi | {|busy_l, flt_l};
         end
     always @(posedge ck) begin
@@ -77,19 +78,19 @@ module ot_s81ph_root_leaf #(
             lw[68*j +: 68] <= li[69*j + 1 +: 68];
 `ifndef S81PH_GTH_SSA2
 `ifdef S81PH_MUT_CHAIN
-            co[53*j + 1 +: 52] <= {re[j ^ 1], rpos[3*(j ^ 1) +: 3], rrow[16*(j ^ 1) +: 16], rfp[32*(j ^ 1) +: 32]};
+            co_state[53*j + 1 +: 52] <= {re[j ^ 1], rpos[3*(j ^ 1) +: 3], rrow[16*(j ^ 1) +: 16], rfp[32*(j ^ 1) +: 32]};
 `else
-            co[53*j + 1 +: 52] <= {re[j], rpos[3*j +: 3], rrow[16*j +: 16], rfp[32*j +: 32]};
+            co_state[53*j + 1 +: 52] <= {re[j], rpos[3*j +: 3], rrow[16*j +: 16], rfp[32*j +: 32]};
 `endif
 `endif
         end
         for (j = 0; j < NLT; j = j + 1) lo[69*j + 1 +: 68] <= li[69*(NRT+j) + 1 +: 68];
-        for (j = 0; j < NCI; j = j + 1) co[53*(NRT+j) + 1 +: 52] <= ci[53*j + 1 +: 52];
+        for (j = 0; j < NCI; j = j + 1) co_state[53*(NRT+j) + 1 +: 52] <= ci[53*j + 1 +: 52];
     end
 `ifdef S81PH_GTH_SSA2
     // Keep the genuine own-result output sampling role separate from the
     // internal core delay-line state; sample the same D at the original edge.
-    wire [53*NRT-1:0] own_result_D;
+    wire [53*NRT-1:0] own_result_D, own_result_Q;
     genvar own;
     generate for (own=0; own<NRT; own=own+1) begin : g_own_D
 `ifdef S81PH_MUT_CHAIN
@@ -102,7 +103,10 @@ module ot_s81ph_root_leaf #(
     end endgenerate
     (* keep_hierarchy = 1, dont_touch = 1 *)
     ot_s81ph_own_output_role #(.NRT(NRT)) u_own_output
-        (.ck(ck), .rl(rl), .d(own_result_D), .q(co[53*NRT-1:0]));
+        (.ck(ck), .rl(rl), .d(own_result_D), .q(own_result_Q));
+    assign co = {co_state[53*NRT +: 53*NCI], own_result_Q};
+`else
+    assign co = co_state;
 `endif
     genvar g;
     generate for (g = 0; g < NRT; g = g + 1) begin : g_r
