@@ -1,0 +1,25 @@
+{
+  "fleet_unit": "oth-ubuntu-1684489-1791970546",
+  "actual_exit": 0,
+  "host": "ot-epyc4",
+  "directory": "/srv/opentallas-scratch/codex/native59-helper-lib-c0e0fc0c4",
+  "archive": "native59-helper-lib.tar.gz",
+  "source_commit": "c0e0fc0c4",
+  "helper_sha256": "ee1e6b76dd86c17f806aea9a62d748bdf915a6880985b30da5e63942730c8f3f",
+  "header_sha256": "ee92f1b81bf50de3bd6654469e8b4b7c53f583ec143b499cd60290c15c740e34",
+  "static_library_sha256": "b62426615fb282f14feeaf0162cc22ced4705e8b0666095274c937324b00206a",
+  "prefix": "Vot_qwen_native59",
+  "parameters": {
+    "N": 8,
+    "NW": 18,
+    "RB": 3,
+    "QWEN_FULLSHAPE": 1,
+    "CRED": 32,
+    "ENABLE_AR256": 1,
+    "VRL": 1,
+    "TAGW": 59
+  },
+  "verilator": "5.050",
+  "compile_kind": "--cc --build -j2 -O1 -CFLAGS -O1",
+  "scope": "Standalone compiled helper library for actual composition; build completion is not composition or physical proof."
+}
