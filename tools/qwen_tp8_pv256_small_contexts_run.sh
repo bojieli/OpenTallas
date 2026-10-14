@@ -13,6 +13,7 @@ for tree in 0 1; do
    for ctx in 129 257 8192; do "$obj/Vot_qwen_tp8_pv256_pair_tb" vectors "$pair" "$mode" "$ctx" > "t${tree}-p${pair}-${mode}-${ctx}.json"; done
   done
   for ctx in 1 129 8192; do "$obj/Vot_qwen_tp8_pv256_pair_tb" vectors "$pair" restart "$ctx" > "t${tree}-p${pair}-restart-${ctx}.json"; done
+  "$obj/Vot_qwen_tp8_pv256_pair_tb" vectors "$pair" reframe 8192 > "t${tree}-p${pair}-reframe.json"
   for ctx in 0 8193; do "$obj/Vot_qwen_tp8_pv256_pair_tb" vectors "$pair" context "$ctx" > "t${tree}-p${pair}-invalid-${ctx}.json"; done
  done
 done
