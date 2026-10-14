@@ -109,7 +109,37 @@ module dsfd_gth_ctl #(parameter integer MUT = 0) (
             if (dbad) sf <= 1'b1;
         end
     assign tc = {tr[162:160], cq, cqv};
-    ot_s81_slab_ep #(.QD(8), .JQ(1), .MUT(MUT)) u_ep (.c_clk(ck), .c_rst_n(rst), .c_cmd(c_cmd), .c_done(c_done),
-        .c_st(c_st), .e_clk(ck), .e_rst_n(rst), .j_v(jv), .j_d(jd), .j_new(jnew), .j_new_d(jnd),
-        .j_present(sn != 0), .j_done(dn), .slab_fault(sf), .ep_fault(epf));
+    // Public reset/start contract: the adapter's two-edge local reset must not
+    // discard a command captured on the first post-deassert edge. Preserve the
+    // producer's eight outstanding credits; queued commands return no credit.
+    // The normal online, empty-queue path keeps the original command cycle.
+    reg [84:0] boot_q [0:7];
+    reg [2:0] boot_wp, boot_rp; reg [3:0] boot_n; reg boot_fault;
+    wire [1:0] ep_st;
+    wire boot_bypass = ep_st[1] && boot_n == 0;
+    wire boot_pop = ep_st[1] && boot_n != 0;
+    wire boot_capture = c_cmd[84] && !boot_bypass;
+    wire boot_push = boot_capture && (boot_n < 8 || boot_pop);
+    wire [84:0] ep_cmd = boot_bypass ? c_cmd : boot_pop ? boot_q[boot_rp] : 85'd0;
+    always @(posedge ck or negedge rst)
+        if (!rst) begin boot_wp <= 0; boot_rp <= 0; boot_n <= 0; boot_fault <= 0; end
+        else begin
+            if (boot_capture && !boot_push) boot_fault <= 1'b1;
+`ifdef S81PH_GTH_MUT_BOOTDROP
+            // Negative control: lose every command buffered before online.
+            if (boot_push) begin boot_q[boot_wp] <= 85'd0; boot_wp <= boot_wp + 1'b1; end
+`else
+            if (boot_push) begin boot_q[boot_wp] <= c_cmd; boot_wp <= boot_wp + 1'b1; end
+`endif
+            if (boot_pop) boot_rp <= boot_rp + 1'b1;
+            case ({boot_push, boot_pop})
+                2'b10: boot_n <= boot_n + 1'b1;
+                2'b01: boot_n <= boot_n - 1'b1;
+                default: boot_n <= boot_n;
+            endcase
+        end
+    assign c_st = ep_st;
+    ot_s81_slab_ep #(.QD(8), .JQ(1), .MUT(MUT)) u_ep (.c_clk(ck), .c_rst_n(rst), .c_cmd(ep_cmd), .c_done(c_done),
+        .c_st(ep_st), .e_clk(ck), .e_rst_n(rst), .j_v(jv), .j_d(jd), .j_new(jnew), .j_new_d(jnd),
+        .j_present(sn != 0), .j_done(dn), .slab_fault(sf | boot_fault), .ep_fault(epf));
 endmodule
