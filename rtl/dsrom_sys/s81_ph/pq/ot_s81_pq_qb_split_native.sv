@@ -109,10 +109,19 @@ module ot_s81_pq_qb_bank_native #(parameter integer B=0) (
             if (!rst_l[0]) begin written <= 0; checked <= 0; sticky <= 0; end
             else begin
                 if (we && wa < 96) begin exponent[wa] <= ew; parity[wa] <= wp; written[wa] <= 1'b1; end
+                `ifdef OT_S81_PQ_QB_BANK_MUT_K
                 if (re && ra < 96) begin erd <= exponent[ra]; expected <= parity[ra]; end
-                checked <= re && ra < 96 && written[ra];
+`elsif OT_S81_PQ_QB_MUT_ROW
+                if (re && ra < 96) begin erd <= exponent[ra]; expected <= parity[ra]; end
+`else
+                // Select the original two row values after local metadata reads.
+                // This removes bank-selection decode from the address-mux tree,
+                // while preserving the exact selected row and capture edge.
+                if (re && (r0 ? row0 < 96 : row1 < 96)) begin erd <= r0 ? exponent[row0] : exponent[row1]; expected <= r0 ? parity[row0] : parity[row1]; end
+`endif
+                checked <= re && (r0 ? (row0 < 96 && written[row0]) : (row1 < 96 && written[row1]));
                 if (checked && expected != rp) sticky <= 1'b1;
-                if (re && (ra >= 96 || !written[ra])) sticky <= 1'b1;
+                if (re && (r0 ? (row0 >= 96 || !written[row0]) : (row1 >= 96 || !written[row1]))) sticky <= 1'b1;
             end
         end
         assign fault = sticky;
