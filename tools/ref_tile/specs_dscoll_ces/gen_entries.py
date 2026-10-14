@@ -56,5 +56,23 @@ for zero in [True, False]:
         'dict for {entry cname} $::ot_wc_clocks { set_clock_latency -source 0.0 -clock [get_clocks $cname] [get_ports $entry] }')
     generated = generated.replace('set_clock_latency -source $lat -clock [get_clocks core_clk] $tp',
         'set_clock_latency -source $lat -clock [get_clocks [dict get $::ot_wc_clocks $tn]] $tp')
+    # Enforce the fixed die budget in the actual route/signoff constraints, not only in the probe.
+    generated += r"""
+catch {rename ot_wc_apply_before_pair_budget {}}
+rename ot_wc_apply ot_wc_apply_before_pair_budget
+proc ot_wc_apply {} {
+    ot_wc_apply_before_pair_budget
+    foreach a [all_clocks] {
+      foreach b [all_clocks] {
+        if {$a eq $b} continue
+        set an [get_full_name $a]; set bn [get_full_name $b]
+        set skew [expr {$an eq "core_clk" || $bn eq "core_clk" ? 150.0 : 90.0}]
+        set_clock_uncertainty -setup [expr {60.0 + $skew}] -from $a -to $b
+      }
+    }
+}
+# Apply the pair budget with the same hook lifecycle as the child reference.
+if {$ot_wc_stage ne "skip"} { ot_wc_apply }
+"""
     (ROOT/ref).write_text('\n'.join(constraint) + '\n' + generated)
     print(path)
