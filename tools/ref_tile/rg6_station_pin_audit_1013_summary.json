@@ -1,0 +1,122 @@
+{
+  "scope": "Actual per-bit ETM first-load-table-point normalization; candidate-only, no SS wire coefficient, no physical timing qualification. Both O-R/S+R direct and producer boundary-extrema extras independently checked.",
+  "inputs": {
+    "/home/ubuntu/wt/codex-qwen-vm-rg6/results/arch/qwen_tp8_1012/vm_joint_g1_boundary_station_candidate.json": "b48c892db9c1b54fc5ec775a99714b5440695211f0807faecbb27e1df3352bfe",
+    "/home/ubuntu/wt/codex-qwen-vm-band/results/arch/qwen_tp8_1012/vm_band_boundary_packet_codex.json.gz": "6cb591c95470eda5e21952f1bb649a6f2001107cc8558b2850003fdc9971bc10",
+    "/home/ubuntu/wt/codex-qwen-vm-band/results/arch/qwen_tp8_1012/vm_band_joint_selected_pinmap_codex.json": "ee2ec85bed862ccdf2f68469a75426e83da09449bdcd586ac2ba36180098f270"
+  },
+  "actual_view_hashes": {
+    "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t/ot_qfd_vm_xrelay_t_tt.lib": "7886f25f6d6eb08e068fa1bd6f32017e547ba69d10952e4601a09b349db65cad",
+    "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t/insertion.json": "f074edc5c5cc64e50d77d3e7d956be241a4d999e076cde8b4e28209abad51248",
+    "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w_tt.lib": "a36ff0b5962b9e632051322520274ac5874b28f10180c437322fcd91d1893721",
+    "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/insertion.json": "1c09aafeb0a3eabe4e941b3292d8c10acc387b1a5c85fdc79a1972c0e192f243",
+    "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t/ot_qfd_vm_xpad2_t_tt.lib": "c3edcef1817b2b67a79ce2e8c7a9e03a8c98bed26c1408cb338e03eaa518313c",
+    "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t/insertion.json": "e7107d511203056efef2cec88d74b420502a27a235d28755b729af2c3ec5501f",
+    "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t/ot_qfd_vm_xrelay_t_ff.lib": "98c70c13159946493b0930217403da70327998a8f802558e50bfabe99a9c5783",
+    "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w_ff.lib": "c0fdef9173d89b5c4b8e42b8b3a5d252af655876eb5b46ca06de6226e5b20702",
+    "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t/ot_qfd_vm_xpad2_t_ff.lib": "0ef3c7bce17f823a5cbdb0478d6fbbd2d975a113c7ef7bdcb1a85621339796e3",
+    "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t/ot_qfd_vm_xrelay_t_ss.lib": "c99c0111ffbcbf3ecaf7bb7374f044b39991988a623e30ac4094323e3d7a9144",
+    "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w_ss.lib": "9013cd51f4be0f354437aaa927ced7db451217625a89644e43cfc3ffa1154918",
+    "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t/ot_qfd_vm_xpad2_t_ss.lib": "83dc1637e452d982f2f74a757295f461644694bf722b173f92e52b9c14148267"
+  },
+  "minima": {
+    "regional_input": {
+      "bits": 688,
+      "actual_first_loadpoint_TT_launch_gt220": 12,
+      "actual_first_loadpoint_TT_max_launch_ps": 224.54026,
+      "actual_first_loadpoint_TT_capture_gt190": 0,
+      "actual_first_loadpoint_TT_max_capture_ps": 133.44858,
+      "metrics": {
+        "TT_calibrated_0.76_setup_ps": {
+          "margin_ps": 82.57103999999907,
+          "lane": "vm_g1_b4_xf0>p12",
+          "bit": 6,
+          "length_um": 268.45200000000114,
+          "row_index": 134
+        },
+        "FF_ideal_0.112_hold_ps": {
+          "margin_ps": 107.00810800000018,
+          "lane": "vm_g1_b6_xf1>p12",
+          "bit": 2,
+          "length_um": 176.78400000000147,
+          "row_index": 482
+        },
+        "actual_zero_wire_setup_ps": {
+          "margin_ps": 120.52607999999998,
+          "lane": "vm_g1_b6_xf0>p11",
+          "bit": 3,
+          "length_um": 214.6919999999991,
+          "row_index": 403
+        }
+      },
+      "max_length_um": 272.2920000000049
+    },
+    "regional_to_bandstation": {
+      "bits": 688,
+      "actual_first_loadpoint_TT_launch_gt220": 13,
+      "actual_first_loadpoint_TT_max_launch_ps": 224.54026,
+      "actual_first_loadpoint_TT_capture_gt190": 0,
+      "actual_first_loadpoint_TT_max_capture_ps": 133.44858,
+      "metrics": {
+        "TT_calibrated_0.76_setup_ps": {
+          "margin_ps": 53.504199999998946,
+          "lane": "vm_g3_b1_xf0>p11",
+          "bit": 4,
+          "length_um": 308.6760000000013,
+          "row_index": 1080
+        },
+        "FF_ideal_0.112_hold_ps": {
+          "margin_ps": 115.8731359999999,
+          "lane": "vm_g1_b3_xf1>p15",
+          "bit": 3,
+          "length_um": 207.887999999999,
+          "row_index": 1926
+        },
+        "actual_zero_wire_setup_ps": {
+          "margin_ps": 113.57679000000002,
+          "lane": "vm_g1_b3_xf1>p29",
+          "bit": 5,
+          "length_um": 248.59199999999691,
+          "row_index": 1834
+        }
+      },
+      "max_length_um": 308.6760000000013
+    },
+    "bandstation_to_target": {
+      "bits": 688,
+      "actual_first_loadpoint_TT_launch_gt220": 14,
+      "actual_first_loadpoint_TT_max_launch_ps": 227.40184,
+      "actual_first_loadpoint_TT_capture_gt190": 0,
+      "actual_first_loadpoint_TT_max_capture_ps": 131.76388,
+      "metrics": {
+        "TT_calibrated_0.76_setup_ps": {
+          "margin_ps": 42.59667000000161,
+          "lane": "vm_g1_b3_xf1>p31",
+          "bit": 7,
+          "length_um": 326.8199999999979,
+          "row_index": 1823
+        },
+        "FF_ideal_0.112_hold_ps": {
+          "margin_ps": 73.89487200000019,
+          "lane": "vm_g1_b4_xf1>p11",
+          "bit": 4,
+          "length_um": 63.69600000000173,
+          "row_index": 1113
+        },
+        "actual_zero_wire_setup_ps": {
+          "margin_ps": 104.70936999999998,
+          "lane": "vm_g2_b1_xf1>p11",
+          "bit": 2,
+          "length_um": 99.37199999999939,
+          "row_index": 1429
+        }
+      },
+      "max_length_um": 338.7240000000038
+    }
+  },
+  "detail": {
+    "path": "/tmp/rg6-station-audit/pin_audit.json.gz",
+    "sha256": "b1a537e4ba199659ec8fbb06d0709131ab2f67c88be9000b5038d67f4e94c6c7"
+  },
+  "actual_SS_wire_status": "OPEN; no SS wire coefficient or credit invented"
+}
