@@ -49,6 +49,37 @@ CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # 
             'qfd_xcol_e': [f'ck{k}' for k in range(9)], 'qfd_xcol_w': [f'ck{k}' for k in range(9)]}   # DIE REQUEST: scalar ck0..ck8
 
 
+# ---- C10 (compute lead r3): the link words at their REAL RTL widths (die-bus audit, link rows; owner no-stub rule):
+# qfd_d2d_rom = ot_qfd_split_romlink + ot_qkvd_d2d_llr (rtl/qwen_split/qfd_link_slots.sv).  Bundles pack LSB first in
+# the listed order, the same order at both ends (the SU / VM wrappers take the same packing).
+LINK_BITS = dict(x3=524, attn_ret=520, d2d_fdi=1169, o4_kvd=44)
+LINK_SPLIT = {
+    'qfd_d2d_rom': dict(
+        x3=[('x3_d', 512), ('x3_tag', 11), ('x3_v', 1)],
+        ar=[('ar_d', 519), ('ar_v', 1)],
+        ea=[('ea_addr', 24), ('ea_kind', 1), ('ea_v', 1)],
+        ecr=[('ea_cr', 1)],
+        eq=[('eq_d', 512), ('eq_v', 1)],
+        fdi=[('fdi_tx_up', 1), ('fdi_tx_v', 1), ('fdi_tx_flit', 583), ('fdi_rx_v', 1), ('fdi_rx_flit', 583)]),
+    # the PHY hard macro (allowed behavioural model, its LEF ports): same FDI bit order as the adapter's bundle
+    'ot_qkvd_ucie_x64_phy': dict(
+        fdi=[('tx_up', 1), ('tx_v', 1), ('tx_flit', 583), ('rx_v', 1), ('rx_flit', 583)]),
+}
+LINK_CREDITS = [('x3_cr', 'spine_local', 1, [('d2d_rom', 'x3_cr'), ('sp_su64_sfu', 'q_cr')]),
+                ('ar_cr', 'spine_local', 1, [('sp_vector_memory', 'ar_cr'), ('d2d_rom', 'ar_cr')])]
+
+
+def _link_words(m, rec):
+    if os.environ.get('OT_SPLIT_LINK_WORDS', '1') == '0':
+        return
+    have = {b for b, _, _, _ in m['buses']}
+    m['buses'] = [(b, c, LINK_BITS.get(b, n), e) for b, c, n, e in m['buses']] + [x for x in LINK_CREDITS if x[0] not in have]
+    split = m.setdefault('port_split', {})
+    for mst, d in LINK_SPLIT.items():
+        split.setdefault(mst, {}).update({k: list(q) for k, q in d.items()})
+    rec['link_words'] = dict(bits=LINK_BITS, credits=[x[0] for x in LINK_CREDITS], rtl='rtl/qwen_split/qfd_link_slots.sv')
+
+
 def _child_clocks(m, rec):
     n_of = {i.name: CHILD_CK[i.master] for i in m['insts'] if i.master in CHILD_CK}
     nb = []
@@ -322,6 +353,7 @@ def place(v, m, G):
     if bad:
         raise SystemExit(f'split compute spine: slots outside the spine: {bad[:8]}')
     _child_clocks(m, rec)
+    _link_words(m, rec)
     if os.environ.get('OT_SPLIT_TREE_VF', '1') != '0':
         _tree_widths(m, rec)
     if os.environ.get('OT_SPLIT_DUMP'):

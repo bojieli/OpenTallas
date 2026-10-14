@@ -1412,8 +1412,9 @@ def _wrap(v, m, G, peers):
             if SPLIT_COMPUTE and 'ar' in n.ports and _os.environ.get('OT_SPLIT_VM_AR_N', '1') != '0':
                 sp = n.ports['ar']
                 n.ports['ar'] = ('face', sp[1], 'N', 'M5', round(n.w - 100.0, 4), 1)
-                if 'ar_r' in n.ports:
-                    n.ports['ar_r'] = ('face', 1, 'N', 'M5', round(n.w - 100.0 + sp[1] * 0.048 / 2 + 0.6, 4), 1)
+                n.ports['ar_cr'] = ('face', 1, 'N', 'M5', round(n.w - 100.0 + sp[1] * 0.048 / 2 + 0.6, 4), 1)
+                if 'ar_cr' not in n.order:
+                    n.order.append('ar_cr')
         for inst, mn, kw in (('seq_su', 'qfd_seq_su', {}),
                              ('sp_su64_sfu', 'qfd_sp_su64_sfu', dict(ports=('si', 'sd', 'acc', 'q', 'eq', 'ea', 'ecr'))),
                              ('tt_ctlm', 'qfd_tt_ctlm', None)):
@@ -1436,6 +1437,37 @@ def _wrap(v, m, G, peers):
                 kw = dict(ports=tuple(p for p in q.ports if 'sp_vector_memory' in peers.get((inst, p), ())
                                       or 'xs_tap' in peers.get((inst, p), ()) or p.startswith(('mer', 'rf'))))
             replan(model, M, inst, **kw)
+        if SPLIT_COMPUTE and _os.environ.get('OT_SPLIT_LINK_WORDS', '1') != '0':
+            # split compute C10 (compute lead r3): link words at the real RTL widths (compute_spine.LINK_BITS) and the
+            # two word credits as their own 1-b pins beside their words (qfd_d2d_rom = romlink + llr)
+            lb = dict(x3=524, ar=520, fdi=1169, kvd=44)
+            d2 = M.get('qfd_d2d_rom')
+            if d2 is not None:
+                for p_, nb_ in lb.items():
+                    if p_ in d2.ports:
+                        d2.ports[p_] = (d2.ports[p_][0], nb_) + tuple(d2.ports[p_][2:])
+                for p_, w_ in (('x3', 'x3_cr'), ('ar', 'ar_cr')):
+                    sp = d2.ports[p_]
+                    d2.ports[w_] = ('face', 1, sp[2], sp[3], round(sp[4] + sp[1] * 0.048 * sp[5] / 2 + 0.6, 4), 1)
+                    if w_ not in d2.order:
+                        d2.order.append(w_)
+            ph_ = M.get('ot_qkvd_ucie_x64_phy')
+            if ph_ is not None and 'fdi' in ph_.ports:
+                ph_.ports['fdi'] = (ph_.ports['fdi'][0], 1169) + tuple(ph_.ports['fdi'][2:])
+            su_ = M.get('qfd_sp_su64_sfu')
+            if su_ is not None and 'q' in su_.ports:
+                sp = su_.ports['q']
+                su_.ports['q'] = (sp[0], 524) + tuple(sp[2:])
+                if sp[0] == 'face':
+                    su_.ports['q_cr'] = ('face', 1, sp[2], sp[3], round(sp[4] + 524 * 0.048 * sp[5] / 2 + 0.6, 4), 1)
+                    if 'q_cr' not in su_.order:
+                        su_.order.append('q_cr')
+            sq_ = M.get('qfd_seq_su')
+            if sq_ is not None and 'kvd' in sq_.ports:
+                sq_.ports['kvd'] = (sq_.ports['kvd'][0], 44) + tuple(sq_.ports['kvd'][2:])
+            vmm_ = M.get('qfd_sp_vector_memory')
+            if vmm_ is not None and 'ar' in vmm_.ports:
+                vmm_.ports['ar'] = (vmm_.ports['ar'][0], 520) + tuple(vmm_.ports['ar'][2:])
         final(model, M, k)
         return M
 
