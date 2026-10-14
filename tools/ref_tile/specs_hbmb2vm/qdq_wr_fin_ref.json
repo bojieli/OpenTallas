@@ -48,11 +48,11 @@
     }
   },
   "recipe": 2,
-  "structural_change": "Registered finish pin becomes queue-pop token next edge; remove raw ACK->head/flag feedback entirely, retain same last-ACK completion edge with one bubble between adjacent finishes",
+  "structural_change": "Exact factored final ACK selector: kept captured-ACK no-raw/with-raw masks before final raw ACK mux; eliminates raw XOR/multi-selection path at first-capture output register. No edge/queue/counter changes. CLOSED f2 routed inputP216.2>190 retained; firstcapture must pass new routed pin audit.",
   "job": {
     "owner": "Codex:qdq-write-completion-split",
     "branch": "codex-qdq-write-completion-split",
-    "tag": "f2",
+    "tag": "f3",
     "views_to": "physical/ref_tile/qdq_wr_fin_ref/views",
     "record_to": "results/rtl/ref_tile/qdq_wr_fin_ref",
     "purpose": "Opt-in completion-only leaf; standalone scoreboard does not qualify actual native production price or parent geometry. Native actual4 gate required before adoption.",
@@ -83,5 +83,8 @@
         "fail_regex": "FIN head diverged"
       }
     ]
+  },
+  "reroute_reason": {
+    "kind": "rtl_change"
   }
 }

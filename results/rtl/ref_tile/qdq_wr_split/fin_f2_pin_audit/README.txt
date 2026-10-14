@@ -1,0 +1,1 @@
+Immutable de1974858 f2 source route qdq_wr_fin_ref-f2log-de1974858 closed TT74.79 FF28.82 DRC0, but actual all8 ACK pins P216.2>190. View remains CLOSED; not native qualified. Audit uses exact exported ETM/insertion at phi-R, SKEW150, P190,Q220,H100. New f3 exact combinational factorization will reroute distinct RTL source; no waiver.

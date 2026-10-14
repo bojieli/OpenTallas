@@ -1,109 +1,112 @@
 {
-  "name": "qdq_wr_fin_ref-f2log-de1974858",
-  "block": "ot_hgi_qdq_wr_fin",
-  "ref_tile": true,
-  "owner": "Codex:qdq-write-completion-split",
-  "purpose": "Opt-in completion-only leaf; standalone scoreboard does not qualify actual native production price or parent geometry. Native actual4 gate required before adoption. Negative-control job command prints immutable failing run.log after expected nonzero runner exit; prior f2 stopped by daemon because stdout was empty.",
-  "threads": 8,
-  "peak_ram_gb": 12,
-  "source": {
-    "branch": "codex-qdq-write-completion-split",
-    "commit": "de1974858e61e1e957e3f8312f44ea5a19a30070"
-  },
-  "stages": {
-    "bench": [
-      {
-        "name": "lint",
-        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_qdq_wr_fin u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_fin.sv && echo lint-ok",
-        "expect": "pass",
-        "threads": 1,
-        "peak_ram_gb": 4,
-        "needs": [
-          "verilator"
-        ]
-      },
-      {
-        "name": "posted_snapshot_exact",
-        "cmd": "MUT=0 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m0",
-        "expect": "pass",
-        "threads": 2,
-        "peak_ram_gb": 1,
-        "pass_regex": "PASS QDQ_WR_FIN records=866",
-        "min_count_regex": "records=([1-9][0-9]*)"
-      },
-      {
-        "name": "fabricated_ack_mutant",
-        "cmd": "if MUT=1 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m1; then exit 0; else bench_rc=$?; cat {RUN}/fin_m1/run.log; exit \"$bench_rc\"; fi",
-        "expect": "fail",
-        "threads": 2,
-        "peak_ram_gb": 1,
-        "fail_regex": "FIN scoreboard mismatch"
-      },
-      {
-        "name": "snapshot_mutant",
-        "cmd": "if MUT=2 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m2; then exit 0; else bench_rc=$?; cat {RUN}/fin_m2/run.log; exit \"$bench_rc\"; fi",
-        "expect": "fail",
-        "threads": 2,
-        "peak_ram_gb": 1,
-        "fail_regex": "FIN head diverged"
-      }
-    ],
-    "calibrate": {
-      "enabled": false,
-      "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
-    },
-    "route": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qdq_wr_fin_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qdq_wr_fin_ref/kit.env {LABEL} {RUN}/routes",
-      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
-      "logs": [
-        "{RUN}/routes/{LABEL}/flow.log"
-      ],
-      "threads": 8,
-      "peak_ram_gb": 12
-    },
-    "collect": {
-      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qdq_wr_fin_ref --out {RUN}/record/views/ot_hgi_qdq_wr_fin  > {RUN}/record/route/export.log 2>&1"
-    }
-  },
-  "verdict": {
-    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
-    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
-    "checks": [
-      {
-        "name": "ttb_routed_at_TC",
-        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
-      }
-    ],
-    "post_sdc": [
-      "physical/ref_tile/qdq_wr_fin_ref/signoff.sdc",
-      "physical/common_flow/link_budget_consistent.sdc"
-    ],
-    "macros": []
-  },
-  "hold_eco": {
-    "enabled": true,
-    "session": "mm",
-    "reason": "ref_tile: corrected FF hold flow"
-  },
-  "budget": {
-    "enabled": false,
-    "reason": "ref_tile: boundary budget 0.2 T applied in-run"
-  },
-  "record": [
-    {
-      "from": "{RUN}/record/views",
-      "to": "physical/ref_tile/qdq_wr_fin_ref/views"
-    },
-    {
-      "from": "{RUN}/record/route",
-      "to": "results/rtl/ref_tile/qdq_wr_fin_ref/qdq_wr_fin_ref-f2-de1974858"
-    }
+ "name": "qdq_wr_fin_ref-f3-COMMIT",
+ "block": "ot_hgi_qdq_wr_fin",
+ "ref_tile": true,
+ "owner": "Codex:qdq-write-completion-split",
+ "purpose": "Opt-in completion-only leaf; standalone scoreboard does not qualify actual native production price or parent geometry. Native actual4 gate required before adoption.",
+ "threads": 8,
+ "peak_ram_gb": 12,
+ "source": {
+  "branch": "codex-qdq-write-completion-split",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_qdq_wr_fin u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_fin.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "posted_snapshot_exact",
+    "cmd": "MUT=0 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "pass_regex": "PASS QDQ_WR_FIN records=866",
+    "min_count_regex": "records=([1-9][0-9]*)"
+   },
+   {
+    "name": "fabricated_ack_mutant",
+    "cmd": "MUT=1 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m1",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "FIN scoreboard mismatch"
+   },
+   {
+    "name": "snapshot_mutant",
+    "cmd": "MUT=2 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m2",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "FIN head diverged"
+   }
   ],
-  "cycles_added": 0,
-  "route_hold_corners": "mm",
-  "route_hold_margin_ns": 0.03,
-  "route_corner": "TC",
-  "notes": "generated by tools/ref_tile/ref_tile.py",
-  "merge_target": null,
-  "structural_change": "Registered finish pin becomes queue-pop token next edge; remove raw ACK->head/flag feedback entirely, retain same last-ACK completion edge with one bubble between adjacent finishes"
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qdq_wr_fin_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qdq_wr_fin_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 12
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qdq_wr_fin_ref --out {RUN}/record/views/ot_hgi_qdq_wr_fin  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qdq_wr_fin_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qdq_wr_fin_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qdq_wr_fin_ref/qdq_wr_fin_ref-f3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Exact factored final ACK selector: kept captured-ACK no-raw/with-raw masks before final raw ACK mux; eliminates raw XOR/multi-selection path at first-capture output register. No edge/queue/counter changes. CLOSED f2 routed inputP216.2>190 retained; firstcapture must pass new routed pin audit.",
+ "reroute_reason": {
+  "kind": "rtl_change"
+ }
 }

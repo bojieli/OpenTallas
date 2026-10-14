@@ -20,7 +20,11 @@ module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
  wire [QW-1:0] head1=head+1'b1;
  (* keep=1 *) wire [63:0] hs0=sq[head],hs1=sq[head1];
  wire [7:0] raw_ack=MUT==1?8'hff:wwq_done;
- wire [7:0] selected_neg=(neg0&~(ack|raw_ack))|(neg1&(ack^raw_ack))|(neg2&ack&raw_ack);
+ // Cut the combinational raw ACK boundary after captured-ACK state select.
+ // These are retained internal ABC boundaries, not predictive ACKs or flops.
+ (* keep=1 *) wire [7:0] bad_without_raw=(neg0&~ack)|(neg1&ack);
+ (* keep=1 *) wire [7:0] bad_with_raw=(neg1&~ack)|(neg2&ack);
+ wire [7:0] selected_neg=(bad_without_raw&~raw_ack)|(bad_with_raw&raw_ack);
  wire fin=(count!=0)&&!o_fin&&!(|selected_neg);
  // The registered finish pin is also the local queue-pop token next edge.
  // Raw ACKs never feed snapshot-head or comparison-flag registers.
