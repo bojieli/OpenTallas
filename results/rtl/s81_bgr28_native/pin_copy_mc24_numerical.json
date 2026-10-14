@@ -1,0 +1,370 @@
+{
+  "schema": "s81.bgl28.pin_copy_mc24_numerical_evidence.v1",
+  "status": "EXACT_NUMERICAL_ONLY",
+  "source_commit": "2d2ad4933",
+  "source_files": [
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv",
+      "git_blob": "0a9f8f0df6bc5b327d867d60c5586650464c7035",
+      "sha256": "1a2a3252fd29fbb366e4ed1de2f52b9671fa2be57fa59dbfe0ef7969d2eeca95"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq28h_mc24.sv",
+      "git_blob": "2ada945f42b54a452a14b57f83184c142ddfe5e5",
+      "sha256": "a09da816aceb10b7d1d9518ea4b443224c7484b585cecb2d149dba1babeb8b9f"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv",
+      "git_blob": "822e0e74898654caf72492e517a6ddc96a684a25",
+      "sha256": "aac58e0a3b71c86469ac6d1812ca9b9f216f725c3345b3136e23fc2efc74c7b3"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bgl_lockstep.sv",
+      "git_blob": "bc3ee386759f27a2ef44462fb9de3a63fdf75fd1",
+      "sha256": "509fb3459d8e1531969ba7624d5a0cffa5d14791684c94fb0184e2f058c18a2e"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh",
+      "git_blob": "126af0b6c4541527e1a8074e2808b7ac4019ffe8",
+      "sha256": "76131a54a4919532cf1e7fad2b2dbf55f6781bd226c6a1b3bcc938a78f4efb2a"
+    }
+  ],
+  "source_archive_sha256": "2eb3cc39ab30853ad09f8c33645642861812efbad5ad4db724e844b362276f9e",
+  "source_host": "ot-epyc4",
+  "admission": "ot-run16GB8threads epcy4 unitoth-ubuntu-1686911-1791970587 exit0",
+  "pipeline": {
+    "bank_ED": 3,
+    "BE_MD_unit_reference": 12,
+    "H1_tile_forward": 8,
+    "H2_tile_forward": 16,
+    "added_cycles_by_pin_copy": 0,
+    "full_native_parent": "separate proof required, not inferred from MC24 unit"
+  },
+  "defines": [
+    "OT_VMBGL_HOP1",
+    "OT_VMBGL_MC_PARENT",
+    "OT_VMBGL_FLOPMEM"
+  ],
+  "cases": [
+    {
+      "case": "gold",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "counts": {
+        "cycles": 200000,
+        "ops": 700875,
+        "own_reads": 31253,
+        "returned": 124712,
+        "same_cycle_same_bank_reads": 305,
+        "errors": 0
+      },
+      "log_sha256": "386b260a0353b94ab4e83f3ee2dd31ba3cd030bae3711104b22d6db319fb0654",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "gold_s2",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "counts": {
+        "cycles": 200000,
+        "ops": 700874,
+        "own_reads": 31147,
+        "returned": 124723,
+        "same_cycle_same_bank_reads": 292,
+        "errors": 0
+      },
+      "log_sha256": "e33918c92e4c258b1165cbd7af0ad0640d09fbd75e74e5b05d78712137edee21",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "stress",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "counts": {
+        "cycles": 200000,
+        "ops": 1866279,
+        "own_reads": 83250,
+        "returned": 333854,
+        "same_cycle_same_bank_reads": 1919,
+        "errors": 0
+      },
+      "log_sha256": "978b11ba8e52af336eb7ef071ad8e583a8c47651ccd622d11dbef0d4da8ed586",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "cov_refuse",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 300,
+        "ops": 1057,
+        "own_reads": 50,
+        "returned": 211,
+        "same_cycle_same_bank_reads": 0,
+        "errors": 0
+      },
+      "log_sha256": "9ca71b5450ec28bd5e5776aa99731040465467ff555ac094a7a03286ec74f7a2",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_RELAY",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 161886,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 219589
+      },
+      "log_sha256": "03f67f9846fc6cb249b1ce4e3ebc3a90c9bb7b47420493b1981f6e1291d24870",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_ID",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 740
+      },
+      "log_sha256": "2f8785250cdbd80343deed32459b395a97d47f47cb16a8819debdcd852c5582a",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_J0",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 62
+      },
+      "log_sha256": "f87b4bca5cef5dc398e0c246e5c96bb0db5d2419c99ed5658c2fd4769d8312dd",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_ORDER",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 82
+      },
+      "log_sha256": "8284e5d8b0256932da2372d7a6f2c801839eac7e0f63a6949e01d2ab815e7541",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_MASK",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 5429
+      },
+      "log_sha256": "30571036af5b60825787d15c349e10afbf97adcc6c14e0e91730a722c7d90a6f",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_HIT",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 10631
+      },
+      "log_sha256": "4c8fe37a9fbca57f0a41e590451b84af04e0488eb129cd70a5ed949c2589a05a",
+      "hop": 1,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "gold",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "counts": {
+        "cycles": 200000,
+        "ops": 700875,
+        "own_reads": 31253,
+        "returned": 124712,
+        "same_cycle_same_bank_reads": 305,
+        "errors": 0
+      },
+      "log_sha256": "386b260a0353b94ab4e83f3ee2dd31ba3cd030bae3711104b22d6db319fb0654",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "gold_s2",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "counts": {
+        "cycles": 200000,
+        "ops": 700874,
+        "own_reads": 31147,
+        "returned": 124723,
+        "same_cycle_same_bank_reads": 292,
+        "errors": 0
+      },
+      "log_sha256": "e33918c92e4c258b1165cbd7af0ad0640d09fbd75e74e5b05d78712137edee21",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "stress",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "counts": {
+        "cycles": 200000,
+        "ops": 1866279,
+        "own_reads": 83250,
+        "returned": 333854,
+        "same_cycle_same_bank_reads": 1919,
+        "errors": 0
+      },
+      "log_sha256": "978b11ba8e52af336eb7ef071ad8e583a8c47651ccd622d11dbef0d4da8ed586",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "cov_refuse",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 300,
+        "ops": 1057,
+        "own_reads": 50,
+        "returned": 211,
+        "same_cycle_same_bank_reads": 0,
+        "errors": 0
+      },
+      "log_sha256": "9ca71b5450ec28bd5e5776aa99731040465467ff555ac094a7a03286ec74f7a2",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_RELAY",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 161886,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 219598
+      },
+      "log_sha256": "e9cc55f09d63aec02f4baa1ff1c65106f7ecfd330ce9aba531de45a69e909181",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_ID",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 740
+      },
+      "log_sha256": "da7c50ba259807536a95175255cc88fd7c0058b195c2809825f4a567a9da3b9d",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_J0",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 62
+      },
+      "log_sha256": "9ff7ece498eb371b8dd0747e29140164910ded4ada619149e397706a395375ed",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_ORDER",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 82
+      },
+      "log_sha256": "b56f7b5e380e12d67096bfef768102b4e712a9713858bcd057889ae138d435c2",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_MASK",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 5429
+      },
+      "log_sha256": "f641c104227bf98899e09b1be579a196a536a6d55fd9e7fd834fe1df847cd92b",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    },
+    {
+      "case": "mut_HIT",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 10631
+      },
+      "log_sha256": "e92687c4ffaa7d5c889d6a47ea42c0e2132e2125aa2abdc102ef0843e28587f3",
+      "hop": 2,
+      "PIN_OUTPUT_COPY": 1
+    }
+  ]
+}

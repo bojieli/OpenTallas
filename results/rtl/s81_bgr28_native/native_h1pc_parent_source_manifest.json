@@ -1,0 +1,21 @@
+{
+  "status": "FUNCTIONAL_PROBE_PHYSICAL_CLOCK_DELIVERY_OPEN",
+  "owner_commit": "55740b8837221de797e670ba82471774527466af",
+  "successor_commit": "4b6eb972dc169a3e36fb42f72da78e4d89a0e951",
+  "owner_parent_sha256": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
+  "probe_parent_sha256": "46a99bb787f1019cb8a797c2f582551f5a82321191bdb27b8d77aca168d3edd9",
+  "only_parent_change": "NP28 BGR child replacement with MC24 (=24 roots, not NP24), H2; all roots tied numerically",
+  "NP": 28,
+  "NPR": 10,
+  "children": 16,
+  "forward_hop_per_tile": 8,
+  "PIN_OUTPUT_COPY": 1,
+  "bank_EP": 2,
+  "bank_ED": 3,
+  "BE_definition": "unchanged owner source, dynamic MD",
+  "physical_clock_delivery": "OPEN",
+  "files": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv": "1a2a3252fd29fbb366e4ed1de2f52b9671fa2be57fa59dbfe0ef7969d2eeca95",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq28h_mc24.sv": "a09da816aceb10b7d1d9518ea4b443224c7484b585cecb2d149dba1babeb8b9f"
+  }
+}
