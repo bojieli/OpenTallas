@@ -45,18 +45,14 @@ module ot_s81_su_rxt #(
     always @(posedge clk or negedge rst_n) if (!rst_n) begin dq_st <= 1'b0; dq_v <= 0; end
                                            else begin dq_st <= dn_st_i; dq_v <= dn_v_i; end
 
-    // ------------------------------------------------------------------ the row arriving this cycle (at most one)
-    reg  [511:0] xin;
+    // ------------------------------------------------------------------ rows of this cycle, numbered from the announce
+    // (the descriptor + parameter rows may arrive several a cycle; operand rows arrive one a cycle)
+    reg  [511:0] xin;                         // the operand row of this cycle
     reg          xv, xtwo;
-    always @(*) begin : pick
-        integer i;
-        xin = 512'd0; xv = 1'b0; xtwo = 1'b0;
-        for (i = 0; i < S_RD; i = i + 1)
-            if (dq_v[i]) begin
-                if (xv) xtwo = 1'b1;
-                xv = 1'b1; xin = dq_d[512 * i +: 512];
-            end
-    end
+    reg  [15:0]  nrc;                         // rows of the job after this cycle
+    reg  [15:0]  xidx;                        // the operand row's number from the announce
+    reg  [S_RD-1:0]    sv;                    // slot s carries a parameter row
+    reg  [S_RD*3-1:0]  sj;                    // ... its parameter index
 
     // ------------------------------------------------------------------ job context: rows numbered from the announce
     reg  [3:0]   jk;
@@ -65,19 +61,38 @@ module ot_s81_su_rxt #(
     reg  [511:0] prow [0:MAXP-1];
     reg  [511:0] hold;                        // RB: the score row waiting for its bias row
     wire [3:0]   np = (jk == K_QR) ? 4'd5 : 4'd1;
-    wire         isop = xv && mine && rc >= np;
-    wire [15:0]  oi = rc - np;                // operand index
+    always @(*) begin : pick
+        integer i;
+        reg [15:0] c;
+        xin = 512'd0; xv = 1'b0; xtwo = 1'b0; xidx = 16'd0; sv = 0; sj = 0;
+        c = rc;
+        for (i = 0; i < S_RD; i = i + 1)
+            if (dq_v[i]) begin
+                if (c < np) begin sv[i] = 1'b1; sj[3 * i +: 3] = c[2:0]; end
+                else begin
+                    if (xv) xtwo = 1'b1;
+                    xv = 1'b1; xin = dq_d[512 * i +: 512]; xidx = c;
+                end
+                c = c + 1;
+            end
+        nrc = c;
+    end
+    wire         isop = xv && mine;
+    wire [15:0]  oi = xidx - np;              // operand index
     wire [13:0]  obase = prow[0][13:0];
     integer j;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin jk <= 0; mine <= 0; rc <= 0; end
         else if (dq_st) begin jk <= dq_kind; mine <= (dq_kind == K_RA || dq_kind == K_RB || dq_kind == K_QR); rc <= 0; end
-        else if (xv && mine) rc <= rc + 1;
+        else if (mine) rc <= nrc;
     end
     always @(posedge clk)
-        if (xv && mine && !dq_st) begin
-            for (j = 0; j < MAXP; j = j + 1) if (rc == j && rc < np) prow[j] <= xin;
-            if (rc >= np && jk == K_RB && !oi[0]) hold <= xin;
+        if (mine && !dq_st) begin : cap
+            integer i;
+            for (i = 0; i < S_RD; i = i + 1)
+                for (j = 0; j < MAXP; j = j + 1)
+                    if (sv[i] && sj[3 * i +: 3] == j) prow[j] <= dq_d[512 * i +: 512];
+            if (xv && jk == K_RB && !oi[0]) hold <= xin;
         end
 
     // ------------------------------------------------------------------ engine
