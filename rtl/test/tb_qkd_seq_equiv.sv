@@ -41,7 +41,7 @@ module tb_qkd_seq_equiv;
     wire         c_x3cr, c_hs;
     wire [519:0] c_tar;  wire [186:0] c_tds;  wire [92:0] c_tk;  wire [74:0] c_tpw;  wire [9:0] c_kst;
     wire [4*540-1:0] c_aq;  wire [4*1047-1:0] c_kvn;  wire [4*33-1:0] c_kc;
-    qkd_seq u_cl (.ck(clk), .rst_n(rst_n), .r_x3_d({x3_v, x3_tag, x3_d}), .r_x3_cr(c_x3cr), .r_sd(sd),
+    qkd_seq u_cl (.ck_core(clk), .ck_xs0(clk), .ck_xs1(clk), .ck_xs2(clk), .ck_xs3(clk), .ck_fan_WS(clk), .ck_fan_WN(clk), .ck_fan_ES(clk), .ck_fan_EN(clk), .rst_n(rst_n), .r_x3_d({x3_v, x3_tag, x3_d}), .r_x3_cr(c_x3cr), .r_sd(sd),
         .r_kvd(kvd), .t_ar_d(c_tar), .t_ar_cr(ar_cr), .t_ds(c_tds), .t_pw(c_tpw),
         .aq_WS(c_aq[0 +: 540]), .aq_WN(c_aq[540 +: 540]), .aq_ES(c_aq[1080 +: 540]), .aq_EN(c_aq[1620 +: 540]),
         .kvn_WS_d(c_kvn[0 +: 1047]), .kvn_WN_d(c_kvn[1047 +: 1047]), .kvn_ES_d(c_kvn[2094 +: 1047]), .kvn_EN_d(c_kvn[3141 +: 1047]),

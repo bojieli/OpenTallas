@@ -101,7 +101,7 @@ module ot_qkvd_layer_m_tb #(
 `ifdef KVD_CLUSTER
     wire [9:0]    kst;
     wire [519:0]  t_ar_w;
-    qkd_seq u_seq (.ck(clk), .rst_n(rst_n), .r_x3_d({x3_v_r, x3_r}), .r_x3_cr(x3_cr_r), .r_sd(sd_r),
+    qkd_seq u_seq (.ck_core(clk), .ck_xs0(clk), .ck_xs1(clk), .ck_xs2(clk), .ck_xs3(clk), .ck_fan_WS(clk), .ck_fan_WN(clk), .ck_fan_ES(clk), .ck_fan_EN(clk), .rst_n(rst_n), .r_x3_d({x3_v_r, x3_r}), .r_x3_cr(x3_cr_r), .r_sd(sd_r),
         .r_kvd({kv_v_r, kv_r}), .t_ar_d(t_ar_w), .t_ar_cr(ar_cr_r), .t_ds(ds_r), .t_pw(pw_r),
         .aq_WS(aq[0 +: 540]), .aq_WN(aq[540 +: 540]), .aq_ES(aq[1080 +: 540]), .aq_EN(aq[1620 +: 540]),
         .kvn_WS_d(kvn[0 +: 1047]), .kvn_WN_d(kvn[1047 +: 1047]), .kvn_ES_d(kvn[2094 +: 1047]), .kvn_EN_d(kvn[3141 +: 1047]),

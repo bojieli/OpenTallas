@@ -125,8 +125,7 @@ endmodule
 
 // wires-only parent on the contract slot `seq`: no cell, no flop of its own
 module qkd_seq (
-`ifdef OT_QKD_SEQ_CK_ENTRIES
-    // hardened cluster (ref_tile "clock": "entries"): no tree in a wires-only parent -- every leaf takes its clock from
+    // clock ENTRIES (ref_tile "clock": "entries"): a wires-only parent has no tree -- every leaf takes its clock from
     // its own entry pin on the cluster face; the die delivers phi - R_i there (R_i = entry wire + the leaf's insertion)
     input  wire          ck_core,
     input  wire          ck_xs0,
@@ -137,9 +136,6 @@ module qkd_seq (
     input  wire          ck_fan_WN,
     input  wire          ck_fan_ES,
     input  wire          ck_fan_EN,
-`else
-    input  wire          ck,
-`endif
     input  wire          rst_n,
     input  wire [523:0]  r_x3_d,
     output wire          r_x3_cr,
@@ -180,15 +176,9 @@ module qkd_seq (
     output wire [92:0]   tk,
     output wire [9:0]    kst
 );
-`ifdef OT_QKD_SEQ_CK_ENTRIES
     wire          c_core = ck_core;
     wire [3:0]    c_xs   = {ck_xs3, ck_xs2, ck_xs1, ck_xs0};
     wire [3:0]    c_fan  = {ck_fan_EN, ck_fan_ES, ck_fan_WN, ck_fan_WS};
-`else
-    wire          c_core = ck;
-    wire [3:0]    c_xs   = {4{ck}};
-    wire [3:0]    c_fan  = {4{ck}};
-`endif
     wire          s_qpop, s_kpop, s_kwgo;
     wire [2:0]    s_kidx;
     wire [1:0]    s_kwn;
