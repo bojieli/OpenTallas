@@ -131,5 +131,6 @@
   ],
   "views_to": "physical/ref_tile/hgi_sv_head/views",
   "record_to": "results/rtl/ref_tile/hgi_sv_head"
- }
+ },
+ "structural_change": "Per-region span and extent are registered in the existing classification edges, and bump placement uses page carry plus the low offset byte instead of subtraction followed by addition. This removes the 21-level rk-to-table-write allocator path (~847 ps) without adding service cycles. Physical master is ot_hgi_sv_head as granted in the current die contract; dense-face placement uses measured hold-strip spread."
 }

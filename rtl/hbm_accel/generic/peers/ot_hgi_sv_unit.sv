@@ -720,6 +720,13 @@ module ot_hgi_sv_head #(
         m_badv[k] = c_used[k] && (c_base[k][23:18] != 6'd0 || pacc[k][39:18] != 22'd0 || mhi[k][18]);
     end
     reg [17:0] lo [0:5]; reg [17:0] hi [0:5]; reg [5:0] rv;
+    // Parallel with the existing classification edges: no allocation-side subtract/add chain.
+    // hi/lo already include the pair-mode alignment; these payload registers need no reset.
+    reg [17:0] alloc_span [0:5]; reg [18:0] alloc_ext [0:5];
+    always @(posedge clk) begin
+        if (dstt == D_CL0) for (integer k = 0; k < 6; k = k + 1) alloc_span[k] <= hi[k] - lo[k];
+        if (dstt == D_CL1) for (integer k = 0; k < 6; k = k + 1) alloc_ext[k] <= {1'b0, alloc_span[k]} + {11'd0, lo[k][7:0]};
+    end
     reg [7:0] h_in [0:3]; reg [7:0] h_eq [0:3]; reg [7:0] h_ov [0:3]; reg [7:0] s_ov [0:1]; reg [7:0] s_ovs [0:1];
     reg [7:0] o_eq; reg [3:0] sv_s;
     reg [3:0] f_hit, f_ipc; reg [2:0] f_e [0:3]; reg ip_c, ip_on; reg [2:0] ip_e; reg [7:0] f_used;
@@ -736,12 +743,12 @@ module ot_hgi_sv_head #(
     wire [1:0]  aq = rk[1:0];
     wire        cur_used = rv[rk];
     wire [17:0] cur_lo = lo[rk], cur_hi = hi[rk];
-    wire [17:0] span = cur_hi - cur_lo;
+    wire [17:0] span = alloc_span[rk];
     wire        a_large = span[17:15] != 3'd0;                                   // > 32,767 words: a dedicated frame
     // a region placed at its lo[7:0] offset in a dedicated frame: past 65,535 it runs on into the NEXT frame (the
     // local address space is contiguous): frames f and f + 1 are taken together, f + 1 as the TAIL of f (same epoch,
     // freed with f, no pins or table entries of its own).  More than two frames does not fit (capacity gap).
-    wire [18:0] ext = {1'b0, span} + {11'd0, cur_lo[7:0]};
+    wire [18:0] ext = alloc_ext[rk];
     wire        a_two = a_large && ext > 19'd65535;
     wire        too_big = ext > 19'd131071;
     wire [2:0]  fe = f_e[aq];
@@ -763,8 +770,10 @@ module ot_hgi_sv_head #(
     wire [2:0] ffr = a_two ? ffr2 : ffr1;               // the dedicated frame (pair) of a large region
     wire [1:0] ffn = ffr[1:0] + 2'd1;
     wire [3:0] ep_two = ((fr_ep[ffr2[1:0]] > fr_ep[ffr2[1:0] + 2'd1]) ? fr_ep[ffr2[1:0]] : fr_ep[ffr2[1:0] + 2'd1]) + 4'd1;
-    wire [7:0]  boff = cur_lo[7:0] - bp[7:0];
-    wire [16:0] lbk = bp + {9'd0, boff};                                          // lb == lo (mod 256 words)
+    // The old bp + ((lo - bp) mod 256) was an 8-bit subtract followed by a 17-bit add.
+    // Same modulo-2^17 address: preserve the requested low byte and advance one page on wrap.
+    wire [8:0] lb_page = bp[16:8] + 9'(cur_lo[7:0] < bp[7:0]);
+    wire [16:0] lbk = {lb_page, cur_lo[7:0]};                                    // lb == lo (mod 256 words)
     wire        fits = ({2'b00, lbk} + {1'b0, span}) <= 19'd65535;
     wire [16:0] bp_n = lbk + span[16:0] + 17'd9;                                  // + 1 + an 8-word gap: no shared sector
     wire        ra_ok = a_large ? ffr[2] : (open_v && fits);
