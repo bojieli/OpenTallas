@@ -1,0 +1,139 @@
+{
+ "schema": "opentallas.vm-producer-epoch-binding-candidate.v1",
+ "status": "PROPOSED_MISSING_BINDINGS_NOT_149_ABI_ADOPTION",
+ "source_hashes": {
+  "results/arch/qwen_tp8_1012/vm_rg6.json": "7d5c388cb79d0ee333451d123e5371af3e79cf524fdb9bca57a30657e7facfb4",
+  "results/arch/qwen_tp8_1012/rg6_bank_command_station_candidate.json": "b60711edc8050d738bdc0fedf0384826f25218877f6dbba953321787f4924dfd",
+  "results/arch/qwen_tp8_1012/rg6_row_station_candidate.json": "c66c71ed3868efd28ac1445237889dd86a8402ecae5c695d7077ec12712d1a5f",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "31ec2d3d9b5d33780357698bbbedf66fbd36b3e8d572657c10dd9dcc2f32cea3"
+ },
+ "actual_current_source": {
+  "module": "ot_qfd_vm_region_leaf",
+  "native_context_token_port": null,
+  "native_output_valid_port": null,
+  "native_consumer_ack_port": null,
+  "data_outputs": [
+   "xo[4095:0]",
+   "ro[511:0]",
+   "so[3071:0]",
+   "ovf"
+  ],
+  "producer_commands": [
+   "re",
+   "ra",
+   "we",
+   "wl",
+   "wm",
+   "wd",
+   "xv",
+   "pop",
+   "rq",
+   "rqb",
+   "sre",
+   "sra",
+   "sv",
+   "swe",
+   "swl",
+   "swm",
+   "swd",
+   "me_in",
+   "rst_n"
+  ],
+  "load_step_port": null
+ },
+ "new_clock_roots_proposed": 27,
+ "new_clock_entry_bindings_implemented": false,
+ "clock_data_stage_proposal": [
+  {
+   "bundle": "bank write and request",
+   "signals": [
+    "wd[511:0]",
+    "re",
+    "we",
+    "ra[7:0]",
+    "wl[7:0]",
+    "wm[15:0]"
+   ],
+   "delta_CLOCK": 1,
+   "instances": 8
+  },
+  {
+   "bundle": "row low selector",
+   "signals": [
+    "rqb[1:0]"
+   ],
+   "delta_CLOCK": 2,
+   "instances": 2,
+   "physical_path_bound": false
+  },
+  {
+   "bundle": "row response valid/high selector",
+   "signals": [
+    "rq",
+    "rqb[2]"
+   ],
+   "delta_CLOCK": 3,
+   "instances": 1,
+   "physical_path_bound": false
+  }
+ ],
+ "open_engine_alignment": [
+  {
+   "signals": [
+    "bctl.xg",
+    "bctl.pgw",
+    "xfifo.me_in",
+    "rr2.me_in",
+    "rr2.xv",
+    "rr2.pop"
+   ],
+   "reason": "Bank data CLOCK shift1 must preserve exact ENGINE dequeue/enqueue and occupancy epochs; no physical/cycle binding yet"
+  },
+  {
+   "signals": [
+    "lane me_e",
+    "source snapshot/load qualifiers",
+    "root output-fire",
+    "collector/cache read tags"
+   ],
+   "reason": "Global ENGINE pause must freeze the entire issue-to-consume epoch while loader/load_step remains live; held outputs consumed once"
+  }
+ ],
+ "required_source_context": {
+  "opaque_token_bits": 16,
+  "source_context_fields": [
+   "source bank/FIFO identity",
+   "logical phase",
+   "loader version",
+   "snapshot version",
+   "read tag"
+  ],
+  "actual_fields_bound": false,
+  "source_lifetime": "Persist through all selected consumer ACKs; cannot reuse held valid as a new source transaction",
+  "actual_output_fire_binding": null
+ },
+ "return_graph": {
+  "owner": "/root/qwen_vm/band_plan",
+  "artifact": "vm_band_source_return_graph_codex.json",
+  "proposed_roots": 32,
+  "proposed_half_consumers": 64,
+  "source_binding_owner": "/root/qwen_vm",
+  "ack_logic_implemented": false
+ },
+ "reset_policy": {
+  "actual": "Native asynchronous reset relay paths retained",
+  "new_pipeline_reset_release_proof": false,
+  "reason": "Free-running closedD1 has no reset; stale delayed commands at reset release require exact behavioral proof before adoption"
+ },
+ "missing_controls": [
+  "Source context token/phase/version snapshot capture event",
+  "Actual output-valid and output-fire port binding",
+  "32-root/64-consumer ACK return fabric and context retirement",
+  "Per-consumer ME early enable paths at their adopted CLOCK/ENGINE epochs",
+  "Physical row rq/rqb tag delay stations",
+  "Actual loader request/response and write-data alignment with added bank CLOCK stage",
+  "FIFO xg/pgw/pop/occupancy alignment",
+  "Reset release behavior of added free-running delay stations"
+ ],
+ "adoption": "None; no RTL or kit changed, no source provenance or slot fit asserted for unresolved signals"
+}
