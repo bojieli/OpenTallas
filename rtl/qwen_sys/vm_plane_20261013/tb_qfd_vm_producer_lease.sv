@@ -6,14 +6,14 @@ reg rst_n=0,acquire_v=0,commit_v=0,commit_pending=0,read_ready=0,response_v=0,q_
 reg [378:0] ib=0; reg mode=0; reg [15:0] ctx=0,release_ctx=0;
 reg [31:0] release_ver=0; reg [3:0] phase=0;
 reg [95:0] address=0; reg [4:0] root=0; reg [15:0] recipient=0;
-reg [511:0] data=0; reg query=0; wire query_ready;
+reg [511:0] data=0; reg query=0,bad_identity=0; wire query_ready;
 wire ar,wa,rv,rr,qv,relready,drained,fa,fault;
 wire [31:0] ver,qver,blocked,leased;
 wire [378:0] rib; wire rmode,qmode; wire [511:0] qdata;
 wire [15:0] qctx,qrec; wire [3:0] qp; wire [95:0] qa; wire [4:0] qr;
 ot_qfd_vm_producer_lease #(.ENABLE(1),.MUT(MUT)) dut(
 .clk(clk),.rst_n(rst_n),.acquire_v(acquire_v),.acquire_ready(ar),.held_ib(ib),.held_mode(mode),.held_context(ctx),
-.query_v(query),.query_ready(query_ready),.request_phase(phase),.request_address(address),.request_root(root),.request_recipient(recipient),
+.query_v(query),.query_ready(query_ready),.query_context(ctx ^ (bad_identity ? 16'h1 : 16'h0)),.query_version(expected_ver ^ (bad_identity ? 32'h1 : 32'h0)),.request_phase(phase),.request_address(address),.request_root(root),.request_recipient(recipient),
 .commit_v(commit_v),.commit_pending(commit_pending),.native_write_allowed(wa),.acquire_version(ver),
 .read_v(rv),.read_ready(read_ready),.read_ib(rib),.read_mode(rmode),.response_v(response_v),.response_ready(rr),.response_data(data),
 .q_v(qv),.q_ready(q_ready),.q_data(qdata),.q_context(qctx),.q_version(qver),.q_mode(qmode),.q_phase(qp),.q_address(qa),.q_root(qr),.q_recipient(qrec),
@@ -28,7 +28,9 @@ initial begin
   ib={379{1'b1}} ^ op; ctx=op+16'hb000; mode=op[0]; phase=op[3:0]; address=96'hfeed0000+op; root=op; recipient=16'h1200+op;
   acquire_v=1; commit_pending=1; commit_v=1; tick(); commit_v=0;
   ck(!ar&&!wa,"acquire drains accepted commits and blocks new writes"); tick(); commit_pending=0; #1; expected_ver=ver; ck(ar,"drained ready");
-  tick(); acquire_v=0; ck(rv,"one native read request"); ib=0; tick(); ck(rib==({379{1'b1}} ^ op),"immutable descriptor");
+  tick(); acquire_v=0; ck(!rv&&query_ready,"acquire reserves only; no synthetic read");
+  bad_identity=1; query=1; #1; ck(!query_ready,"stale query context/version rejected"); tick();
+  bad_identity=0; tick(); query=0; ck(rv,"explicit accepted native read request"); ib=0; tick(); ck(rib==({379{1'b1}} ^ op),"immutable descriptor");
   read_ready=1; tick(); read_ready=0; ck(rr&&!wa,"wait actual response reserves writes");
   expected=0; for(i=0;i<512;i=i+1) expected[i]=((i+op)%3)==0;
   data=expected; response_v=1; tick(); response_v=0; ck(qv&&!wa,"operation reservation survives private capture");

@@ -7,10 +7,10 @@
   "adopted_149_abi": false,
   "physical_qualification": false,
   "sources": {
-    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease.sv": "428acd33fb2320b9edcc7da4cb13f66df4ee49238169f7c7f80cb090bbe818a5",
-    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_lease.sv": "ccc20399f28b0268e5d0d2f9ddb5ab5c74443d45cfbaa8bf4d4d9adc7018ef9e",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease.sv": "0e8b02ad6744a96a940951408c6006e536dba9fddbd59b96307d4cdb9b6e4b0b",
+    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_lease.sv": "46678de2f72e41c8fd5f7233c6aec19d0e6a413fc81611eaacfe78a0ce09906f",
     "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_row.sv": "94302ca2d21aa1c2d0d137519e11a97fabf23d3100ba2d6086a3f2e01498801c",
-    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_row_lease.sv": "34ad2d7d8b37f6d6b493365f56ecc80960104fc73a85412468020cbac72d5f44",
+    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_row_lease.sv": "8d0f38e855be0a965a74c56dbc58d954c7b6acced41c835d1e72a530e6f328dd",
     "tools/qwen_tp8/vm_producer_row_gate.sh": "7e488a5802296b270e4fd41b999515754f4704d4fbf97d091b1b7179ca8e00a7",
     "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "31ec2d3d9b5d33780357698bbbedf66fbd36b3e8d572657c10dd9dcc2f32cea3",
     "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
@@ -36,7 +36,7 @@
   },
   "integrated_gate": {
     "host": "ot-epyc4",
-    "unit": "oth-ubuntu-1281165-1791966604",
+    "unit": "oth-ubuntu-1301927-1791966930",
     "ot_run_exit": 0,
     "positive_reads": 64,
     "operations": 32,
@@ -58,5 +58,8 @@
     "pair": "bank0 q286 \u2192 BX d219",
     "SS_setup_ps": -6.373402,
     "scope": "specific36.564um nominal M5 model; not extracted SS/full-region/M9"
-  }
+  },
+  "acquire_semantics": "reservation only; never emits read; every first/subsequent read requires accepted query context/version",
+  "query_identity": "context16/version32 must match lease before ready",
+  "supersedes": "b7a82d759 acquisition synthesized first read; corrected followup API"
 }

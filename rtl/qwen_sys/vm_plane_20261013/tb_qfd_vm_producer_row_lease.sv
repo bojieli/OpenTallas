@@ -12,7 +12,7 @@ ot_qfd_vm_producer_lease #(.ENABLE(1)) lease(
  .clk(clk),.rst_n(rst_n),.acquire_v(acquire),.acquire_ready(acquire_ready),
  .held_ib(descriptor),.held_mode(1'b0),.held_context(context_id),
  .request_phase({1'b0,bank}),.request_address({85'b0,bank,row}),.request_root(5'b0),.request_recipient(16'b1),
- .query_v(query),.query_ready(query_ready),.commit_v(commit),.commit_pending(pending),
+ .query_v(query),.query_ready(query_ready),.query_context(context_id),.query_version(leased_version),.commit_v(commit),.commit_pending(pending),
  .native_write_allowed(write_allowed),.acquire_version(version),
  .read_v(request_v),.read_ready(request_ready),.read_ib(),.read_mode(),.read_phase(read_phase),.read_address(read_address),.read_root(),.read_recipient(),
  .response_v(response_v),.response_ready(response_ready),.response_data(data),
@@ -53,7 +53,9 @@ initial begin
   if(i%2==0) begin
    context_id=i+100; descriptor=i+379'h1234567; acquire=1;
    if(!acquire_ready) $fatal(1,"acquire not ready"); leased_version=version; tick(); acquire=0;
-  end else begin query=1; if(!query_ready) $fatal(1,"query not ready"); tick(); query=0; end
+  end
+  if(request_v) $fatal(1,"acquisition synthesizes a query");
+  query=1; if(!query_ready) $fatal(1,"query not ready"); tick(); query=0;
   elapsed=0;
   while(!qvalid) begin
    if(write_allowed) $fatal(1,"write reservation lost during native query");

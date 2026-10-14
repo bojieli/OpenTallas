@@ -13,6 +13,7 @@ module ot_qfd_vm_producer_lease #(
     input wire [95:0] request_address, input wire [4:0] request_root,
     input wire [15:0] request_recipient,
     input wire query_v, output wire query_ready,
+    input wire [15:0] query_context, input wire [31:0] query_version,
     input wire commit_v, commit_pending,
     output wire native_write_allowed,
     output wire [31:0] acquire_version,
@@ -62,7 +63,8 @@ module ot_qfd_vm_producer_lease #(
     assign q_context = context_id; assign q_version = snapshot_version;
     assign q_mode=mode; assign q_phase=phase; assign q_address=address;
     assign q_root=root; assign q_recipient=recipient;
-    assign query_ready = ENABLE && state==RETAIN && !release_v && !transport_flush_req;
+    assign query_ready = ENABLE && state==RETAIN && !release_v && !transport_flush_req &&
+                         query_context==context_id && query_version==snapshot_version;
     assign source_output_drained = !ENABLE || (state==RETAIN && !query_v);
     assign release_ready = ENABLE && state==RETAIN && !query_v && match_release &&
                            (recipients_quiescent || MUT==4);
@@ -86,8 +88,7 @@ module ot_qfd_vm_producer_lease #(
             case (state)
                 IDLE: if (acquire_v && acquire_ready) begin
                     descriptor<=held_ib; mode<=held_mode; context_id<=held_context;
-                    phase<=request_phase; address<=request_address; root<=request_root;
-                    recipient<=request_recipient; snapshot_version<=version; state<=REQUEST;
+                    snapshot_version<=version; state<=RETAIN;
                 end
                 REQUEST: if (read_v && read_ready) state<=RESPONSE;
                 RESPONSE: if (response_v && response_ready) begin payload<=response_data; state<=OUTPUT; end
