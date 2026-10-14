@@ -29,6 +29,7 @@ module ot_s81_htransfer #(
  reg [VWA-1:0] queue[0:DEPTH-1];
  reg [QB-1:0] rp,wp;
  reg [QB:0] n;
+ reg [QB:0] queued_h[0:1];
  integer i,s,row,c0,c1;
  reg [XW-1:0] next_ready[0:1];
  reg [VWA-1:0] a;
@@ -36,6 +37,9 @@ module ot_s81_htransfer #(
  wire is_h=head>=TXB && head<TXB+2*XW;
  wire hs=(head-TXB)>=XW;
  wire [VWA-1:0] hr=head-TXB-(hs ? XW : 0);
+ wire push_ok=hop_re && (n<DEPTH || pop);
+ wire push_h=hop_ra>=TXB && hop_ra<TXB+2*XW;
+ wire push_slot=(hop_ra-TXB)>=XW;
  wire pop=n!=0 && (!is_h || MUT==1 || ready[hs][hr]);
  initial begin
    if (HWM<1 || HWM>XW || DEPTH<2 || (1<<QB)!=DEPTH)
@@ -45,7 +49,7 @@ module ot_s81_htransfer #(
  if(!rst_n) begin
    ready[0]<=0;ready[1]<=0;active<=0;launched<=0;
    hop_go<=0;vm_re<=0;vm_ra<=0;fault<=0;fault_code<=0;
-   rp<=0;wp<=0;n<=0;committed_rows<=0;
+   rp<=0;wp<=0;n<=0;committed_rows<=0;queued_h[0]<=0;queued_h[1]<=0;
  end else begin
    hop_go<=0;vm_re<=pop;
    if(pop) begin vm_ra<=head;rp<=rp+1'b1;end
@@ -56,12 +60,23 @@ module ot_s81_htransfer #(
    case({hop_re && (n<DEPTH || pop),pop})
     2'b10:n<=n+1'b1;2'b01:n<=n-1'b1;default:;
    endcase
+   for(integer qs=0;qs<2;qs=qs+1)begin
+     case({push_ok && push_h && push_slot==qs,pop && is_h && hs==qs})
+       2'b10:queued_h[qs]<=queued_h[qs]+1'b1;
+       2'b01:queued_h[qs]<=queued_h[qs]-1'b1;
+       default:;
+     endcase
+   end
    next_ready[0]=ready[0];next_ready[1]=ready[1];
    c0=committed_rows[0+:CW];c1=committed_rows[CW+:CW];
    if(store_begin) begin
      next_ready[store_slot]=0;active[store_slot]<=1;
      if(store_slot) c1=0;else c0=0;
-     if(n!=0) begin fault<=1;fault_code<=4;end
+     // A new store may overlap queued reads of the OTHER job slot. Only
+     // reusing the slot whose old reads remain queued violates ownership.
+     if(queued_h[store_slot]!=0 || (push_ok && push_h && push_slot==store_slot))begin
+       fault<=1;fault_code<=4;
+     end
      launched[store_slot]<=0;
    end
    for(i=0;i<S_WR;i=i+1) if(wr_v[i]) begin
