@@ -26,9 +26,15 @@
    "ratio": 0.613,
    "open": [
     "k > 8 and non-unit inner stride stay on the old engine",
-    "no die top sets TK2: the die e2e route.top6 still measures the old default reader (1,267 cycles)",
-    "physical: job hgi_idx_tk2-r1-171a475eb submitted, not closed"
-   ]
+    "Final ix2 + TK2 die e2e (IDX_TK2=1) running; unit throughput 173.5 is measured, die route.top6 cycles pending."
+   ],
+   "physical": {
+    "job": "hgi_idx_tk2-r1-171a475eb",
+    "status": "CLOSED",
+    "tt_setup_ps": 70.95,
+    "ff_hold_ps": 23.66,
+    "drc": 0
+   }
   },
   {
    "class": "IDX.INDEX",
@@ -37,11 +43,10 @@
     "ot_hgi_idx_ix2",
     "ot_hgi_idx_ix2_lane",
     "ot_hgi_idx_ix2_kp",
-    "ot_hgi_idx_ix2_ks",
+    "ot_hgi_idx_ix2_kc",
     "ot_hgi_idx_ix2_qa",
     "ot_hgi_idx_ix2_pk",
-    "ot_hgi_idx_ix2_wp",
-    "ot_hgi_idx_ix2_ct"
+    "ot_hgi_idx_ix2_wp"
    ],
    "exact": true,
    "source_commit": "a9135c386 (branch claude/hbm-redesign-idx)",
@@ -74,10 +79,72 @@
    "e2e_loss_pct": 0.282,
    "e2e_src": "tools/throughput/accepted_cost.py compute r25gq --unit IDX.INDEX --op IDX.INDEX --price 7513.6 --measured 9144 (8 records a token)",
    "open": [
-    "L2 1.336x and L20 1.545x over the 1.10x limit: selector-side redesign or an accepted-cost row (0.282 % measured-model loss)",
-    "ix2 is wires + 15 leaf instances with per-instance parameters (lane index): not yet in hardened-once tile form, no kits",
-    "ix2 equivalence gate (run_ix2_equiv.sh) re-run with the fixed exit status still queued"
-   ]
+    "Final ix2 + TK2 production die e2e exact base / failing mutant pending; previous exact baseline retained above, no current cost acceptance claimed.",
+    "lane/kc/pk/wp resized r1 routes queued; qa r0 route running; kp CLOSED stands.",
+    "Pin faces pending die assigned pin files / next daily contract revision; each changed outline has slot_change_request.",
+    "L20 proper vector re-export still owed by DS exporter; documented same-pair ascending-id correction has 3756/3756 exact and final mismatch0 on previous source.",
+    "IDX.INDEX accepted-cost row remains pending final e2e evidence / coordinator review (0.282% is computed model loss; do not mislabel as newly measured die throughput)."
+   ],
+   "leaf_instances": {
+    "lane": 8,
+    "kp": 2,
+    "kc": 1,
+    "qa": 1,
+    "pk": 1,
+    "wp": 1
+   },
+   "equivalence": {
+    "source_commit": "fe9c3811d",
+    "bench": "run_ix2_equiv.sh all",
+    "exact": "3 seeds x 100 frames zero mismatches, PASS",
+    "mutants": "MUT1/2/3 FAIL; divide 32896 PASS / mutant FAIL",
+    "front_rt8_L24": 217,
+    "front_rt16_L24": 277,
+    "back_L24": 37,
+    "back_L20": 30,
+    "back_L2": 44
+   },
+   "current_e2e": {
+    "status": "RUNNING",
+    "source": "449f87c8b plus final QA B pin-flop correction (fe9c3811d RTL)",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/idx-redesign-1013b",
+    "flags": "REAL_IDX=1 IDX_IXW=3 IDX_TK2=1 IDX_NATIVE=1 FLAT=40 KLAT=40 VLAT=6",
+    "base_pid": 3872619,
+    "mutant_note": "original MUT2 terminated rc143; confirmed dead/no descendants; incomplete MUT2 output deleted and resubmitted via ot-run 19:26 PT (local launcher PID2594451)"
+   },
+   "physical": {
+    "kp": {
+     "job": "hgi_ix2_kp-r0-d0ac43800",
+     "status": "CLOSED",
+     "tt_setup_ps": 165.88,
+     "ff_hold_ps": 20.97,
+     "drc": 0
+    },
+    "qa": {
+     "job": "hgi_ix2_qa-r0-d0ac43800",
+     "status": "RUNNING",
+     "final_gate_sinks": 8449,
+     "final_gate_insertion_ps": 211.5,
+     "final_gate_spread_ps": 18.0
+    },
+    "rebuilds": {
+     "jobs": [
+      "hgi_ix2_lane-r1-ced6bef1d",
+      "hgi_ix2_kc-r1-ced6bef1d",
+      "hgi_ix2_pk-r1-ced6bef1d",
+      "hgi_ix2_wp-r1-ced6bef1d"
+     ],
+     "source_commit": "ced6bef1d",
+     "changes": {
+      "lane": "64.8 x 54 um; r0 util64.3% refused",
+      "kc": "64.8 x 54 um; r0 util64.3% refused",
+      "pk": "129.6 x 86.4 um; r0 util63.4% refused",
+      "wp": "259.2 x 75.6 um; VM cut0.423; core+57%; r0 GRT1693 stagnant markers"
+     },
+     "clock_evidence_note": "RTL unchanged; existing CTS clock sinks remain <15000; insertion/spread measurements are for r0 outlines, pending r1 routed evidence"
+    }
+   }
   }
  ]
 }
