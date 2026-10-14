@@ -67,6 +67,11 @@ VIEWS = {
     'qkd_rstseq': 'physical/ref_tile/qkd_rstseq/views/qkd_rstseq',
 }
 RSTSEQ_KV = 21.6
+# T22b (el1013-qwen-kvcentre r3, 10-13 14:05; coordinator: merged KV sequencer slot): cluster 604.8 x 475.2, centred in x
+# and S-aligned in the v4 slot 777.6 x 518.4 (the hub abuts below as before; 47.5 um open to the gateway above)
+SEQ_WH, SEQ_OLD_W = (604.8, 475.2), 777.6
+SEQ_BITS = dict(hc=182, tk=93, x3=525, attn_ret=521, o4_kvd=44, ares=520)     # x3 = r_x3_d 524 + cr, attn_ret = t_ar_d 520 + cr
+SEQ_DROP = ('gq', 'gr')                                                        # no producer / consumer on one die
 _VP = {}
 
 
@@ -146,6 +151,9 @@ SPLIT = {
     # closed qkd_kvwq_ctl_bin-sl1-ecdaf6345 (rtl/physical/ot_qwen_kv_slot_wrappers.sv)
     'qkd_kvwq_ctl_bin': dict(kvn=[('kvn_d', 1047), ('kvn_cr', 1)]),
     'qfd_seq_su': dict(cd=[('cd_d', 547), ('cd_cr', 1)]),
+    # T22b: the merged sequencer's credit pins stand beside their words (with the flow _d, against it _cr)
+    'qkd_seq': dict(r_x3=[('r_x3_d', 524), ('r_x3_cr', 1)], t_ar=[('t_ar_d', 520), ('t_ar_cr', 1)],
+                    **{f'kvn_{st}': [(f'kvn_{st}_d', 1047), (f'kvn_{st}_cr', 1)] for st in ('WS', 'WN', 'ES', 'EN')}),
     # T21: the host PHY abstract's own FDI pins (physical/qwen_missing_phy/tp8_1013, flit 1,043 b at RXD 512)
     'ot_qfd_serdes_112g_x12_phy': dict(fdi=[('tx_up', 1), ('tx_v', 1), ('tx_flit', 1043), ('rx_v', 1), ('rx_flit', 1043)]),
 }
@@ -282,6 +290,17 @@ def apply(v, m, G):
     B.append(('tt_ib', 'tree_spine', 380, [('tt_ctlm', 'ib'), ('sp_vector_memory', 'ib')]))
     rec['seq_su'] = dict(dropped=['seq_ib', 'd2d_flt'], dc=56, dh=187, cc=517, cd='cd_d[546:0] + cd_cr',
                          ib='tt_ctlm.ib[379:0] -> sp_vector_memory.ib (head root)')
+
+    # ---------------------------------------------------------------- T22b merged KV sequencer slot
+    sq = by.get('seq')
+    if sq is not None:
+        B = [(b, c, SEQ_BITS.get(b, n), e) for b, c, n, e in B if b not in SEQ_DROP]
+        old = [sq.x, sq.y, sq.w, sq.h]
+        sq.x = round(sq.x + (SEQ_OLD_W - SEQ_WH[0]) / 2, 4)
+        sq.w, sq.h = SEQ_WH
+        rec['seq'] = dict(old=old, new=[sq.x, sq.y, sq.w, sq.h], dropped=list(SEQ_DROP), bits=SEQ_BITS,
+                          x3_credits=40, note='ROM-side words on N beside the gateway, quadrant words W / E, hub S, '
+                          'host words (hc 182 b / tk 93 b / kst) on E at the S end: the hub abuts the whole S face')
 
     # ---------------------------------------------------------------- T10 / T14 VM envelope, SU group follows
     vm, su = by['sp_vector_memory'], by['sp_su64_sfu']
@@ -849,6 +868,68 @@ def _wrap(v, m, G, peers):
                              ('e1', xe - 11.0), ('e2', xe - 11.0), ('s1', xe - 7.0), ('s2', xe - 7.0)):
                     sp = ec.ports[p]
                     ec.ports[p] = sp[:4] + (round(c, 4),) + sp[5:]
+        # ---- T22b merged KV sequencer (cluster 604.8 x 475.2, leaves M5, parent M6 / M7)
+        q, it = M.get('qkd_seq'), byi.get('seq')
+        if q is not None and it is not None and abs(it.w - SEQ_WH[0]) < 0.1:
+            r = Master('qkd_seq', SEQ_WH[0], SEQ_WH[1], 7, q.note + ' | contract v5 T22b: merged-die sequencer cluster '
+                       '604.8 x 475.2 (core + 4 xs + 4 fan leaves M5, parent wires M6 / M7); gq / gr / rf / tf / d2df / '
+                       't_flt dropped; hc 182 b / tk 93 b raw step pins; x3 one pool of 40 credits')
+            nbits = lambda p: (SEQ_BITS.get({'r_x3': 'x3', 't_ar': 'attn_ret', 'r_kvd': 'o4_kvd', 'ar': 'ares'}.get(p, p))
+                               or (q.ports[p][1] if p in q.ports else 1))
+            PB = dict(r_sd=56, t_ds=187, t_pw=75, kst=10, hf=1, hs=1)
+
+            def run(face, at, names, step=1, pitch=2):
+                # consecutive face groups from `at` (step +1: upward, -1: downward along the face), 2.0 um apart
+                for p in names:
+                    n = PB.get(p) or nbits(p)
+                    span = n * 0.048 * pitch
+                    c = at + step * span / 2
+                    r.face(p, n, face, lay(face), round(c, 4), pitch)
+                    at += step * (span + 2.0)
+                return at
+            eg = byi.get('embgw')
+            lo = (eg.x - it.x) if eg is not None and eg.y > it.y else SEQ_WH[0] / 2
+            hi = (eg.x + eg.w - it.x) if eg is not None and eg.y > it.y else SEQ_WH[0] / 2
+            # N: ROM-side words on either side of the gateway (W of it the two 0.5-kb words, E of it the control words)
+            e1 = run('N', lo - 1.5, ('t_ar', 'r_x3'), -1)
+            assert e1 >= 1.0, e1
+            e2 = run('N', hi + 3.0, ('r_sd', 'r_kvd', 't_ds', 't_pw'))
+            r.face('ck', 1, 'N', 'M7', round(e2 + 6.0, 4), 1)
+            assert e2 + 8.0 <= SEQ_WH[0], e2
+            # W / E: quadrant words, the S quadrant's below the N quadrant's; E starts above the host words
+            for f, y0 in (('W', 6.0), ('E', 6.0)):
+                if f == 'E':
+                    y0 = run('E', y0, ('tk', 'hc', 'kst')) + 6.0
+                y1 = run(f, y0, (f'kc_{f}S', f'kvn_{f}S', f'aq_{f}S', f'af_{f}S', f'mf_{f}S'))
+                y2 = run(f, y1 + 8.0, (f'mf_{f}N', f'af_{f}N', f'aq_{f}N', f'kvn_{f}N', f'kc_{f}N'))
+                assert y2 <= SEQ_WH[1] - 2.0, (f, y2)
+            # S: the hub's words (ar follows the hub's ao pins: align_abutted), reset beside them
+            ah, hub = byi.get('ahub'), M.get('qkd_ahub')
+            if ah is not None and hub is not None and hub.ports.get('ao', ('',))[0] == 'face' and hub.ports['ao'][2] == 'N':
+                d = it.x - ah.x                       # hub-local x - d = sequencer-local x (the cluster is narrower)
+                ao = hub.ports['ao']
+                c = ao[4] - d
+                assert c - ao[1] * 0.048 * ao[5] / 2 >= 1.0, c
+                r.face('ar', ao[1], 'S', 'M5', round(c, 4), ao[5])
+                hx = ao[4] + ao[1] * 0.048 * ao[5] / 2 + 3.0
+                for k_, p_ in enumerate(('hf', 'hs')):          # single wires: both ends at one x inside the cluster's span
+                    add_face(hub, p_, 1, 'N', round(hx + 2.0 * k_, 4), 1)
+                    r.face(p_, 1, 'S', 'M5', round(hx + 2.0 * k_ - d, 4), 1)
+            else:
+                run('S', 30.0, ('hf', 'hs', 'ar'), pitch=1)
+            r.face('rst_n', 1, 'S', 'M5', 100.0, 1)
+            M['qkd_seq'] = r
+            # the host's step words leave on its E face too (its N face is abutted by the hub: no relay site in front),
+            # below the ingest words; one relay beside the hub joins the two E faces
+            hm = M.get('qkd_host')
+            if hm is not None:
+                occ = [sp[4] - sp[1] * 0.048 * sp[5] / 2 for p_, sp in hm.ports.items()
+                       if sp[0] == 'face' and sp[2] == 'E' and p_ not in ('hc', 'tk', 'kst')]
+                at = min(occ, default=hm.h - 6.0) - 4.0
+                for p_, n_ in (('hc', 182), ('tk', 93), ('kst', 10)):
+                    span = n_ * 0.096
+                    add_face(hm, p_, n_, 'E', round(at - span / 2, 4), 2)
+                    at -= span + 2.0
         for mn in ('qkd_astk', 'qkd_astk_n'):
             q = M.get(mn)
             hh = {round(i.h, 4) for i in model['insts'] if i.master == mn}
