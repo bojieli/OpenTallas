@@ -58,14 +58,16 @@ BF16 exp values8B. Responses may arrive out of order, but downstream emission
 follows issue order. The per-residue scoreboard refuses anything other than
 ascending `c+256n`. Request and returned data are stored before presentation.
 Output backpressure holds data/tags stable; duplicate, unsolicited, wrong-position
-and stale-epoch returns fault. A new epoch begins only after all rows drain.
+and stale-epoch returns fault. A new epoch begins only after all rows drain. A stale response coincident
+with the new start faults rather than being discarded.
 
 The positive row gate feeds actual FP8 V and BF16 e to the real
 `ot_qwen_nearhbm_prod` RTL, four query heads x128 dimensions per row. Pair0 passes
 4096rows/2097152 product words in8034cycles, with2760 out-of-order responses.
 Pair1 passes the same count in8105cycles, with2757 out-of-order responses. Both
 data mutants produce four incorrect actual RTL product words. Position ordering,
-return tag and epoch mutations each fault. These cycles measure this component's
+return tag and epoch mutations each fault. Stale-return-at-restart mutants fault
+after the full positive run on both pairs (8035/8106cycles). These cycles measure this component's
 finite synthetic memory responder, not the real HBM controller or a priced layer.
 All8192 rows and4194304 products are covered; QK and exp are still scalar inputs.
 
@@ -83,3 +85,9 @@ positive and intentional-mutant observations. Source manifests, actual binary
 hashes and raw verdicts live in `results/arch/qwen_tp8_pv256_ordered_1013`.
 The two admitted units exited0: `oth-ubuntu-3381924-1791951952` and
 `oth-ubuntu-3400082-1791952338`, each requested8GB/fourthreads on AGI.
+
+The corrected row gate re-ran unchanged positives and all six observation modes
+in admitted unit `oth-ubuntu-3882689-1791952465`, exit0. Raw payload counts exclude
+slot/t/epoch request and response headers, credits, physical relays and link coding.
+Each cross-stack row also needs two33-bit headers (request and reply), so4096
+cross-stack rows add270336 header bits before those remaining overheads.
