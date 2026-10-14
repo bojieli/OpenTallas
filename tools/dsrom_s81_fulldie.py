@@ -6288,6 +6288,20 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         x, y = face_pt(sv, off)
         yy = y + h / 2 + 6.0 if sv.orient == 'R0' else y - h / 2 - 6.0
         pl = P.near(x, yy, w, h, [cor['stripS'] if sv.orient == 'R0' else cor['stripN']], horiz=True, span=400.0)
+        if not pl and BF_SEAM_UM:
+            # The compact BF frame changes the shoreline strip's available
+            # sites. Place the receiver on the service's complete physical
+            # face, then let its generated peer pins and normal reach gates
+            # judge the connection; never force it into the old 400-um pocket.
+            strip_ = cor['stripS'] if sv.orient == 'R0' else cor['stripN']
+            face_ = (max(strip_[0],sv.x), strip_[1], min(strip_[2],sv.x+sv.w), strip_[3])
+            pl = P.near(x, yy, w, h, [face_], horiz=True, span=sv.w,
+                        rows=max(1, int((face_[3]-face_[1])/max(h,4.32))))
+            if pl:
+                m.setdefault('compact_bf_service_sites', {})[name] = dict(rect=[*pl,w,h], service=sv.name, corridor=face_)
+            else:
+                raise RuntimeError(('no service-facing receiver site',name,'leaf_um',(w,h),'corridor',face_,
+                                    'service_rect',sv.rect))
         assert pl, name
         return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
 
