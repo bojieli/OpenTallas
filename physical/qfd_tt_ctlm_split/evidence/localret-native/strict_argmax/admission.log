@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     admits   436 GB (avail 663, growth 116, headroom 64, waiters 0/0 GB) load 66/128 running 22 disk 698 GB 
+ot-run: ot-epyc4       admits   609 GB (avail 835, growth 153, headroom 48, waiters 0/0 GB) load 57/128 running 28 disk 780 GB 
+ot-run: ot-pve1        admits   159 GB (avail 206, growth 12, headroom 32, waiters 0/0 GB) load 43/28 running 5 disk 1311 GB 
+ot-run: ot-agidock128  admits   -91 GB (avail 86, growth 4, headroom 24, waiters 2/152 GB) load 16/64 running 2 disk 275 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-634358-1791960255 after 0 s
+PASS tt_ctlm_split strict_argmax PASS tt_ctlm_i_psram cycles=20639 program_reads=435 loads=238 icut_stim=0 dyn_tiles_ld=0 chase_eq=0 pf_invalid_diffs=0
+TXN STREAMS s0 kvd=1/1 s1 argmax=14/14 s2 acc=1/1 s5 scale=0/0 s6 xdesc=16/16 s8 pword=16/16 s9 ov=16/16 s10 mx=1/1 s19..23 tree=16/16 16/16 16/16 0/0 0/0
+TXN events u0=113 u1=113 windows=16 mismatches=0
+NATIVE_STATION_PROOF enable_checks=20638 station_checks=20638
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-634358-1791960255): exit 0

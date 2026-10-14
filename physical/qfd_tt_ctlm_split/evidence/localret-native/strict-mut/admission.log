@@ -1,0 +1,20 @@
+ot-run: ot-epyc1tb     admits   438 GB (avail 664, growth 108, headroom 64, waiters 0/0 GB) load 66/128 running 21 disk 698 GB 
+ot-run: ot-epyc4       admits   610 GB (avail 836, growth 153, headroom 48, waiters 0/0 GB) load 57/128 running 28 disk 780 GB 
+ot-run: ot-pve1        admits   159 GB (avail 206, growth 12, headroom 32, waiters 0/0 GB) load 43/28 running 5 disk 1311 GB 
+ot-run: ot-agidock128  admits   -91 GB (avail 86, growth 4, headroom 24, waiters 2/152 GB) load 16/64 running 2 disk 275 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1256022-1791960254 after 0 s
+WAITSTATE i=390 st=2 nx_v=1 unit=1 ur=1 mr=1 men=1 xdep=0 bar=0 ch=0 wu=0 wo=1 oi=1 od=0
+WAITSTATE i=790 st=2 nx_v=1 unit=0 ur=0 mr=1 men=0 xdep=1 bar=0 ch=0 wu=0 wo=0 oi=1 od=0
+WAITSTATE i=1190 st=2 nx_v=1 unit=1 ur=1 mr=1 men=1 xdep=0 bar=0 ch=1 wu=0 wo=0 oi=1 od=0
+WAITSTATE i=1590 st=2 nx_v=1 unit=0 ur=0 mr=1 men=0 xdep=1 bar=0 ch=0 wu=0 wo=0 oi=1 od=0
+WAITSTATE i=1990 st=2 nx_v=1 unit=1 ur=1 mr=1 men=1 xdep=0 bar=0 ch=1 wu=1 wo=1 oi=1 od=0
+  DIFF x_dv u0=0 u1=1 v=0
+MISMATCH cyc=3070 outputs=1 prog_q=0
+  DIFF x_dv u0=0 u1=1 v=0
+  DIFF x_dc u0=989922 u1=37664f v=0
+MISMATCH cyc=3071 outputs=1 prog_q=0
+  DIFF x_dv u0=0 u1=1 v=0
+  DIFF x_dc u0=989922 u1=d6337c v=0
+FAIL tt_ctlm_split strict mut FAIL tt_ctlm_i_psram mismatches=52960 program_reads=822 (min 200) loads=222
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1256022-1791960254): exit 1

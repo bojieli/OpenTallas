@@ -51,8 +51,8 @@ head=re.sub(r'ot_hdc_delay([^;]+?)\.clk\(c_me_clk\)',lambda m:'ot_tt_ce_delay'+m
 shadow_inputs=[n for n in headnames if ports[n][0]=='input']
 tree='    wire rs;\n    ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk),.rst_n(rst_n),.rst_q(rs));\n    wire local_en, ec;\n'
 # qfd_tt_ctlm_head has no clock output port: its internal gate stays internal.
-tree+='    qfd_tt_ctlm_head #('+', '.join('.'+p+'('+p+')' for p in ['DCU_M','DUC_M','XW','IS','OS','PSRAM','PMUT','HQ2','MEREG','RRG','PCUT','G','TPMUT','AUD'])+') u_shadow (\n'
-tree+=',\n'.join('        .'+n+'('+n+')' for n in shadow_inputs)+',\n        .cmd(),.ret(ret),.me_clk_en(local_en));\n'
+tree+='    qfd_tt_ctlm_gate_predictor #('+', '.join('.'+p+'('+p+')' for p in ['DCU_M','DUC_M','XW','IS','OS','PSRAM','PMUT','HQ2','MEREG','RRG','PCUT','G','TPMUT','AUD'])+') u_shadow (\n'
+tree+=',\n'.join('        .'+n+'('+n+')' for n in shadow_inputs)+',\n        .cmd(),.ret(ret),.ret_clk(ec),.me_clk_en(local_en));\n'
 tree+='    ot_hdc_cg u_cg (.clk(clk),.en(local_en),.gclk(ec));\n'+dpin
 for n,w in zip(cmdnames,cmdwidth):tree+=f'    wire [{w-1}:0] u_me_{n};\n'
 for n,w in zip(retnames,retwidth):tree+=f'    wire [{w-1}:0] u_me_{n};\n'
@@ -90,6 +90,14 @@ text='''`timescale 1ns/1ps
 // Full G3072 tree control, tag SRAMs, all operation fields/18-bit rows retained.
 '''
 text+=emit('qfd_tt_ctlm_head',headnames,[f'    output wire [{CW-1}:0] cmd',f'    input wire [{RW-1}:0] ret'],head)
+# The gate predictor's live return station uses the existing leaf-local
+# native gated clock. This is the same one-edge/pre-edge-enable update as
+# head CE, with no new public port or external clock/enable forwarding.
+shadow='\n'.join(line.replace('ot_tt_ce_delay', 'ot_hdc_delay').replace('.clk(clk), .en(me_clk_en)', '.clk(ret_clk)')
+                 if 'u_su_me_' in line else line for line in head.split('\n'))
+text+=emit('qfd_tt_ctlm_gate_predictor',headnames,
+           [f'    output wire [{CW-1}:0] cmd',f'    input wire [{RW-1}:0] ret',
+            '    input wire ret_clk'],shadow)
 text+=emit('qfd_tt_ctlm_tree',treenames,[f'    input wire [{CW-1}:0] cmd',f'    output wire [{RW-1}:0] ret'],tree)
 pp=[]
 for n in ports:

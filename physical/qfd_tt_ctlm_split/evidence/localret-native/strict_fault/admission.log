@@ -1,0 +1,8 @@
+ot-run: ot-epyc4       admits   613 GB (avail 840, growth 144, headroom 48, waiters 0/0 GB) load 45/128 running 27 disk 779 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-640607-1791960371 after 0 s
+PASS tt_ctlm_split strict_fault PASS tt_ctlm_i_psram cycles=59839 program_reads=822 loads=222 icut_stim=0 dyn_tiles_ld=48 chase_eq=37 pf_invalid_diffs=0
+TXN events u0=3431 u1=3431 windows=72 mismatches=0
+NATIVE_STATION_PROOF enable_checks=59838 station_checks=59838
+FAULT_PROOF active_fault_checks=22269
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-640607-1791960371): exit 0

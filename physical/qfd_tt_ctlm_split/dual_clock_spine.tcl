@@ -7,7 +7,17 @@ rename ot_clock_spine ::ot_tt_spine_native
 proc ot_clock_spine {} {
   if {[ot_sp_env OT_SPINE_THROUGH_ICG 0] ne "1"} {error "TT dual spine needs the native ICG pass"}
   set ::env(OT_SPINE_CTS_REST) 0
-  if {![::ot_tt_spine_native]} {error "TT native GCLK spine was not built"}
+  # The primary branch has its own balanced spine below. Its FFs and the
+  # ICG therefore retain the original GPL data placement instead of being
+  # packed at an unbuffered port. Use the standard builder with relocation
+  # disabled; all geometry, sink grouping, and measured balancing are shared.
+  set original [info body ::ot_tt_spine_native]
+  set move {if {![[$i getMaster] isBlock] && [lsearch -exact $::ot_sp_icg_move $i] < 0} { lappend ::ot_sp_icg_move $i }}
+  if {[string first $move $original] < 0} {error "TT primary relocation dependency changed"}
+  proc ::ot_tt_spine_native {} [string map [list $move {if {0} { lappend ::ot_sp_icg_move $i }}] $original]
+  try {
+    if {![::ot_tt_spine_native]} {error "TT native GCLK spine was not built"}
+  } finally {proc ::ot_tt_spine_native {} $original}
   set gated [ot_sp_leaf_arrivals]
   set gate $::ot_sp_icg
   set master [[$gate getMaster] getName]
@@ -18,9 +28,8 @@ proc ot_clock_spine {} {
   set insertion [expr {$latest - $ck}]
   if {$insertion <= 0 || $insertion > 5000} {error "TT invalid measured native subtree insertion $insertion"}
   puts "TT_DUAL_SPINE gated latest $latest ICG_CLK $ck measured subtree $insertion ps"
-  # Every gated sink is already behind its dedicated spine. Primary cells were
-  # kept FIRM by the native through-ICG placement and must permit reconnection
-  # before the second spine fixes their completed connections again.
+  # Every gated sink is behind its dedicated spine. Permit primary reconnection
+  # before the second spine fixes its completed clock connections.
   set block [ord::get_db_block]
   set port [$block findBTerm [ot_sp_env OT_SPINE_PORT clk]]
   set primary [$port getNet]
