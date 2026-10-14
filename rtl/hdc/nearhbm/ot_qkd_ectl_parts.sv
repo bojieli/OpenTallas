@@ -119,6 +119,7 @@ module ot_qkd_ectl_part #(
     // seams: the E-face control word west (C pin flops -> B pin flops -> A pin flops), the row response east
     input  wire [51:0]          x_i,
     output wire [51:0]          x_o,
+    output wire [51:0]          x2_o,        // optional stage-2 launch: direct C -> A seam, existing x2 state
     input  wire                 rsv_i,        // rsp_valid: A stage 2 -> B pin (B) | B feed-through -> C pin (C)
     output wire                 rsv_o,        // A: stage 2 (E-face flop); B: the feed-through flop (to C)
     input  wire                 rvm_i,        // B: A's second capture flop of rsp_valid (stage 1) -> the feed-through
@@ -205,6 +206,7 @@ module ot_qkd_ectl_part #(
     wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? x2 : x1;
 `endif
     assign x_o = x1;
+    assign x2_o = x2;
     wire        start      = xv[0];
     wire [13:0] T          = xv[14:1];
     wire [2:0]  cyc8_r     = xv[17:15];
