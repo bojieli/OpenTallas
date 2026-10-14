@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """Generate an unassigned lo-only alignment request from accepted pin authority."""
-import copy,gzip,hashlib,json,math
+import copy,gzip,hashlib,json,math,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 SRC=ROOT/'physical/s81_die_pins/v18/gather_leaves'
-OUT=SRC/'requests/lo_input_alignment';OUT.mkdir(parents=True,exist_ok=True)
+OUT=SRC/'requests/ssa2_lo_input_alignment';OUT.mkdir(parents=True,exist_ok=True)
 PROOF=ROOT/'results/rtl/s81_ph_20261006/gather/pins_v18'
 def write(name,data):
  raw=(json.dumps(data,indent=1)+'\n').encode();(OUT/name).write_bytes(gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw)
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
-parent_path=OUT/'parent_assignment.json'
+parent_path=SRC/'requests/lo_input_alignment/parent_assignment.json'
 parent=json.loads(parent_path.read_text())
 baseline_parent=json.loads((PROOF/'parent_assignment.json').read_text())
 for name,port in baseline_parent['ports'].items():
  assert parent['ports'][name]==port,(name,'existing parent assignment changed')
 masters={};changes=[];fail=[];counts={}
 for side in ['rw','re']:
- p=SRC/f'dsfd_gth_{side}.json';d=json.loads(p.read_text());pins=copy.deepcopy(d['pins']);old=copy.deepcopy(pins)
+ p=SRC/f'dsfd_gth_{side}.json';original=subprocess.check_output(['git','show',f'0ef156eff:physical/s81_die_pins/v18/gather_leaves/dsfd_gth_{side}.json'],cwd=ROOT);d=json.loads(original);pins=copy.deepcopy(d['pins']);old=copy.deepcopy(pins)
  for b in range(828):
   out=pins[f'lo[{b}]'];desired=pins[f'li[{276+b}]']['point'][2];delta=round(desired-out['point'][2],6)
   out['point'][2]=desired;out['rect'][1]=round(out['rect'][1]+delta,6);out['rect'][3]=round(out['rect'][3]+delta,6)
@@ -44,7 +44,7 @@ for side in ['rw','re']:
    z=item[3]
    if max(r[0],z[0])<min(r[2],z[2]) and max(r[1],z[1])<min(r[3],z[3]):pg_overlaps.append([name,item])
  fail.extend([side,'signal overlap',z] for z in overlaps);fail.extend([side,'PG overlap',z] for z in pg_overlaps)
- d.update(status='REQUEST_NOT_ASSIGNED',pins=pins,authority='Pending explicit die owner assignment; accepted0ef156eff remains authoritative',baseline_manifest_sha256=sha(p),requested_change='Only lo[827:0] ordinate aligned with corresponding source li[1103:276]; all co own/forward points preserved')
+ d.update(status='REQUEST_NOT_ASSIGNED',pins=pins,authority='Pending explicit die owner assignment; accepted0ef156eff remains authoritative',baseline_manifest_sha256=hashlib.sha256(original).hexdigest(),requested_change='Only lo[827:0] ordinate aligned with corresponding source li[1103:276]; all co own/forward points preserved')
  masters[side]=pins;write(f'dsfd_gth_{side}.json',d)
  lines=['# PIN REPAIR REQUEST ONLY: NOT DIE ASSIGNED; do not submit this plan']
  for name,x in sorted(pins.items()):
