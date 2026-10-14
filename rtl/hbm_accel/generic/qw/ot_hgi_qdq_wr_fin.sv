@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 `default_nettype none
 // Private completion root. PAY snapshot and committed ACKs each first capture
-// at their face. Raw ACK lookahead is consumed only by the registered done pin.
+// at their face. Every ACK captures directly before any completion logic;
+// output launch and private queue-pop state use distinct reset regions.
 // Counter arithmetic is modulo256; maximum outstanding per lane must be <128.
 module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
  input wire clk,rst_n,
@@ -11,20 +12,18 @@ module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
 );
  localparam QW=$clog2(RQ);
  reg f_rst,s_v;reg [63:0] s;reg [7:0] ack;
- always @(posedge clk)begin f_rst<=rst_n;s<=snapshot;ack<=wwq_done;end
- wire [0:0] rr_n;
- ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk),.rst_n_in(f_rst),.rst_n(rr_n));
+ always @(posedge clk)begin f_rst<=rst_n;s<=snapshot;ack<=MUT==1?8'hff:wwq_done;end
+ wire [1:0] rr_n;
+ ot_rst_relay #(.REGIONS(2)) u_rst(.clk(clk),.rst_n_in(f_rst),.rst_n(rr_n));
  always @(posedge clk or negedge rr_n[0])if(!rr_n[0])s_v<=0;else s_v<=snapshot_v;
  reg [63:0] sq[0:RQ-1];reg [QW-1:0] tail,head;reg [QW:0] count;
- reg [63:0] sh;reg [7:0] dc[0:7];reg [7:0] neg0,neg1,neg2;
+ reg [63:0] sh;reg has_snapshot;reg [7:0] dc[0:7];reg [7:0] neg0,neg1,neg2;
  wire [QW-1:0] head1=head+1'b1;
  (* keep=1 *) wire [63:0] hs0=sq[head],hs1=sq[head1];
- wire [7:0] raw_ack=MUT==1?8'hff:wwq_done;
- wire [7:0] selected_neg=(neg0&~(ack|raw_ack))|(neg1&(ack^raw_ack))|(neg2&ack&raw_ack);
- wire fin=(count!=0)&&!o_fin&&!(|selected_neg);
- // The registered finish pin is also the local queue-pop token next edge.
- // Raw ACKs never feed snapshot-head or comparison-flag registers.
- wire pop=o_fin;
+ (* keep="true",dont_touch="true" *) reg pop_pending;
+ (* keep=1 *) wire [7:0] captured_bad=(neg0&~ack)|(neg1&ack);
+ wire fin=has_snapshot&&!pop_pending&&!(|captured_bad);
+ wire pop=pop_pending;
  wire pushed_head=s_v&&count==(QW+1)'(pop);
  for(genvar b=0;b<8;b=b+1)begin:g_lane
      wire [7:0] dn=dc[b]+8'(ack[b]);
@@ -46,21 +45,25 @@ module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
 `endif
  end
  always @(posedge clk or negedge rr_n[0])begin
-     if(!rr_n[0])begin tail<=0;head<=0;count<=0;o_fin<=0;o_bad<=0;o_idle<=0;end
+     if(!rr_n[0])begin tail<=0;head<=0;count<=0;has_snapshot<=0;pop_pending<=0;o_bad<=0;o_idle<=0;end
      else begin
          if(s_v)tail<=tail+1'b1;
          if(pop)head<=head+1'b1;
          count<=count+(QW+1)'(s_v)-(QW+1)'(pop);
-         o_fin<=fin;
+         has_snapshot <= (count+(QW+1)'(s_v)-(QW+1)'(pop))!=0;
+         pop_pending<=fin;
          if(s_v&&count==(QW+1)'(RQ)&&!pop)o_bad<=1;
          o_idle<=count==0&&!s_v&&!snapshot_v;
      end
  end
+ // Separate physical launch flop at E face; internal pop feedback stays private.
+ always @(posedge clk or negedge rr_n[1])if(!rr_n[1])o_fin<=0;else o_fin<=fin;
  always @(posedge clk)begin
      if(s_v)sq[tail]<=MUT==2?s^64'd1:s;
      if(pushed_head)sh<=s;
      else sh<=pop?hs1:hs0;
 `ifndef SYNTHESIS
+     if(rr_n[0]&&has_snapshot!==(count!=0))$fatal(1,"FIN nonempty state mismatch");
      if(rr_n[0]&&count!=0&&sh!==sq[head])$fatal(1,"FIN head diverged");
 `endif
  end

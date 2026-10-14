@@ -5,7 +5,7 @@
 // not qualify clock delivery, reset routing, parent pins or absolute placement.
 // Fixed production state LQ10/LD16/NB32/OD64/RQ16/SPAN1, frontend FACE_FF1,
 // CORE FIN1 and write PAY/FIN split. FIN boundary remains unqualified.
-module ot_hgi_qdq_q_pin4_clocks #(parameter integer MUT=0) (
+module ot_hgi_qdq_q_pin4_clocks #(parameter integer MUT=0,PAYBYPASS=0) (
     input  wire [13:0]       leaf_clk,
     input  wire              rst_n,
     input  wire [682:0]      rec,          // {n_O, n_A, desc_O, desc_A, header, valid} (hgi_die_dispatch 'quant')
@@ -47,7 +47,7 @@ module ot_hgi_qdq_q_pin4_clocks #(parameter integer MUT=0) (
         .hq_p2(hq[1535:1024]), .hq_p3(hq[2047:1536]), .e_push(e_push), .e_ovf(e_ovf), .c_pop(c_pop),
         .lq_rst_n(lq_rst_n), .dec_rst_n(dec_rst_n), .wr_rst_n(wr_rst_n), .d_v(d_v), .d_hd(d_hd), .d_x(d_x), .o_pop(a_pop),
         .o_fire(a_fire), .o_bad_c(a_bad_c), .o_idle(a_idle), .m_v(m_v), .m(m), .o_bad_w(a_bad_w), .i_wf(w_wf));
-    ot_hgi_qdq_wr_split #(.LQ(10),.OD(64),.RQ(16))u_wr(
+    ot_hgi_qdq_wr_split #(.LQ(10),.OD(64),.RQ(16),.EMPTY_BYPASS(PAYBYPASS))u_wr(
         .clk_pay(leaf_clk[12]),.clk_fin(leaf_clk[13]),.rst_n(wr_rst_n),.m_v(m_v),.m(m),.i_bad(a_bad_w),.vo(vo),.qfault(qfault),.dfault(dfault),.y(y),
         .wwq(wwq),.wwq_cr(wwq_cr),.wwq_done(wwq_done),.wg_req(wg_req),.wg_gnt(wg_gnt),.i_act(c_act),.o_wf(w_wf),
         .o_fin(w_fin),.o_bad(w_bad),.o_idle(w_idle),.pay_bad(),.fin_bad());

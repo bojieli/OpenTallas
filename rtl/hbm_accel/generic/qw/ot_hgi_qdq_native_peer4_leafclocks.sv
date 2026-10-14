@@ -5,7 +5,7 @@
 // Engine CK833.333ps -> VM CKV1111.111ps; no pulse crosses these ports directly.
 // permit/mirror must remain owned and stable until the actual endpoint and CDC
 // queues drain. Exclusive read/write grants are supplied by the parent arbiter.
-module ot_hgi_qdq_native_peer4_leafclocks #(parameter integer MUT_QDQ=0, MUT_CDC=0) (
+module ot_hgi_qdq_native_peer4_leafclocks #(parameter integer MUT_QDQ=0, MUT_CDC=0,PAYBYPASS=0) (
  input wire [3:0] cclk,
  input wire [55:0] q_leaf_clk, // 14 explicit engine leaf roots per quadrant
  input wire vclk, rst_n,
@@ -42,7 +42,7 @@ module ot_hgi_qdq_native_peer4_leafclocks #(parameter integer MUT_QDQ=0, MUT_CDC
   // Record format, descriptor/shape validation and fault retirement stay in FR.
   // Physical FR/CORE hard-child defaults are SPANPIPE1. The software qpin4
   // default0 is an unselected alternative and cannot qualify those real views.
-  ot_hgi_qdq_q_pin4_clocks #(.MUT(MUT_QDQ)) endpoint(
+  ot_hgi_qdq_q_pin4_clocks #(.MUT(MUT_QDQ),.PAYBYPASS(PAYBYPASS)) endpoint(
    .leaf_clk(q_leaf_clk[q*14+:14]),.rst_n(rst_n),.rec(rec[q*683+:683]),.ret(ret[q*3+:3]),
    .wrq(rq),.wrq_cr(rq_credit),
    .wrr_p0(rr[0+:514]),.wrr_p1(rr[514+:514]),

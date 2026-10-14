@@ -39,7 +39,7 @@ if [ -n "${QDQ_BASELINE_DIR:-}" ];then
  done
 fi
 m=${MUT:-0}
-"$VL" --binary --timing -O2 -CFLAGS -O0 -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT="$m" -GFASTFIN="${FASTFIN:-0}" -GFRONTFAST="${FRONTFAST:-0}" -GDRAIN="${DRAIN:-0}" -GFINFLAGS="${FINFLAGS:-0}" -GWRSPLIT="${WRSPLIT:-0}" -GLEAFCLOCK="${LEAFCLOCK:-0}" --top-module tb_hgi_qdq_native_peer4 -Mdir "$out/obj" -o sim "${src[@]}" > "$out/build.log" 2>&1 || { tail -30 "$out/build.log";exit 2; }
+"$VL" --binary --timing -O2 -CFLAGS -O0 -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT="$m" -GFASTFIN="${FASTFIN:-0}" -GFRONTFAST="${FRONTFAST:-0}" -GDRAIN="${DRAIN:-0}" -GFINFLAGS="${FINFLAGS:-0}" -GWRSPLIT="${WRSPLIT:-0}" -GLEAFCLOCK="${LEAFCLOCK:-0}" -GPAYBYPASS="${PAYBYPASS:-0}" --top-module tb_hgi_qdq_native_peer4 -Mdir "$out/obj" -o sim "${src[@]}" > "$out/build.log" 2>&1 || { tail -30 "$out/build.log";exit 2; }
 set +e
 "$out/obj/sim" +DIR="$vec" +PHASE="${PHASE:-61}" > "$out/run.log" 2>&1
 rc=$?
