@@ -59,6 +59,8 @@ CASES = {
 REF = ['OT_SPVM_REF_FRL']; LK = REF + ['OT_SPVM_FE_H']; SUB = LK + ['OT_SPVM_FE_H_SUBST']
 LOCK_SET = ['gold_s1', 'gold_s2', 'tp', 'burst_r128', 'burst_r128_np2', 'land_attn', 'land_hc', 'land_bp', 'align_neg']
 _base = dict(CASES)
+for _bgl_case in ['bgl_gold_s1','bgl_gold_s2','bgl_tp','bgl_burst_r128','bgl_mut_stale','bgl_mut_id']:
+    CASES['h1_' + _bgl_case] = dict(CASES[_bgl_case], defines=CASES[_bgl_case]['defines'] + ['OT_VMBGL_HOP1'])
 CASES['ref_gold_s1'] = dict(_base['gold_s1'], defines=REF)
 CASES['ref_tp'] = dict(_base['tp'], defines=REF)
 CASES['ref_land_attn'] = dict(_base['land_attn'], defines=REF)

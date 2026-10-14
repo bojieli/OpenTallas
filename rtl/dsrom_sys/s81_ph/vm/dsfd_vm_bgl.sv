@@ -63,6 +63,12 @@ module dsfd_vm_bgl #(
     localparam integer KW = (KQ > 1) ? $clog2(KQ) : 1;
     localparam integer ED = 3;                     // = dsfd_vm_bgr EP 2
     localparam integer HL = QD + 4 + ED;
+`ifdef OT_VMBGL_HOP1
+    localparam integer HOP1 = 1;
+`else
+    localparam integer HOP1 = 0;
+`endif
+    localparam integer HHL = HL - HOP1;
     localparam integer MW = DW / 32, NW = DW / 32;
     localparam integer OW = $clog2(QD) + 1;
     localparam [NP-1:0] RMASK = {NP{1'b1}} >> (NP - NPR);
@@ -94,9 +100,14 @@ module dsfd_vm_bgl #(
         rb1_we <= rb0_we; rb1_row <= rb0_row; rb1_m <= rb0_m; rb1_d <= rb0_d;
     end
 `ifdef OT_VMBGL_MUT_RELAY
-    assign f_v = rb0_v; assign f_we = rb0_we; assign f_row = rb0_row; assign f_mask = rb0_m; assign f_d = rb0_d;  // MUTANT
+    // Mutate the relay by one cycle in either implementation.
+    assign f_v = HOP1 ? rb1_v : rb0_v; assign f_we = HOP1 ? rb1_we : rb0_we;
+    assign f_row = HOP1 ? rb1_row : rb0_row; assign f_mask = HOP1 ? rb1_m : rb0_m;
+    assign f_d = HOP1 ? rb1_d : rb0_d;
 `else
-    assign f_v = rb1_v; assign f_we = rb1_we; assign f_row = rb1_row; assign f_mask = rb1_m; assign f_d = rb1_d;
+    assign f_v = HOP1 ? rb0_v : rb1_v; assign f_we = HOP1 ? rb0_we : rb1_we;
+    assign f_row = HOP1 ? rb0_row : rb1_row; assign f_mask = HOP1 ? rb0_m : rb1_m;
+    assign f_d = HOP1 ? rb0_d : rb1_d;
 `endif
     wire wo_rd_any = |(rb0_v & ~rb0_we & ~RMASK);
 
@@ -280,17 +291,17 @@ module dsfd_vm_bgl #(
     always @(posedge clk) begin m_p <= s_p; r_p <= m_p; r2_p <= r_p; r_dd <= rd; r2_d <= r_dd; end
 
     // ------------------------------------------------------------------ local read history (own ports only)
-    reg [NPR-1:0] lh_v [0:HL-1];                   // read issued on port p (any bank): the return-valid slot
-    reg [NPR-1:0] lh_o [0:HL-1];                   // ... and it is this bank's
+    reg [NPR-1:0] lh_v [0:HHL-1];                   // read issued on port p (any bank): the return-valid slot
+    reg [NPR-1:0] lh_o [0:HHL-1];                   // ... and it is this bank's
     integer hh, p;
     always @(posedge clk or negedge rst_i)
-        if (!rst_i) for (hh = 0; hh < HL; hh = hh + 1) begin lh_v[hh] <= {NPR{1'b0}}; lh_o[hh] <= {NPR{1'b0}}; end
+        if (!rst_i) for (hh = 0; hh < HHL; hh = hh + 1) begin lh_v[hh] <= {NPR{1'b0}}; lh_o[hh] <= {NPR{1'b0}}; end
         else begin
             lh_v[0] <= rb0_v[NPR-1:0] & ~rb0_we[NPR-1:0];
             lh_o[0] <= hit[NPR-1:0] & ~rb0_we[NPR-1:0];
-            for (hh = 1; hh < HL; hh = hh + 1) begin lh_v[hh] <= lh_v[hh-1]; lh_o[hh] <= lh_o[hh-1]; end
+            for (hh = 1; hh < HHL; hh = hh + 1) begin lh_v[hh] <= lh_v[hh-1]; lh_o[hh] <= lh_o[hh-1]; end
         end
-    wire [NPR-1:0] hz_v = lh_v[HL-1], hz_o = lh_o[HL-1];
+    wire [NPR-1:0] hz_v = lh_v[HHL-1], hz_o = lh_o[HHL-1];
     reg [KW-1:0] jc [0:NPR-1];
     reg [PW:0] dcnt;
     integer q;
@@ -315,6 +326,11 @@ module dsfd_vm_bgl #(
             d_j[p] <= jc[p];
 `endif
 
+    // HOP1 removes one forwarding stage and advances the due slot and FIFO write together.
+    // Local E1/E2/E3 selection stays identical; rb1 is an internal movable bank-data stage.
+    wire fifo_v = HOP1 ? r_vv : r2_v;
+    wire [DW-1:0] fifo_d = HOP1 ? r_dd : r2_d;
+    wire [PW-1:0] fifo_p = HOP1 ? r_p : r2_p;
     // ------------------------------------------------------------------ return FIFO + due slots (= dsfd_vm_bgr bank)
     reg [DW-1:0] f_dd [0:RQ-1];
     reg [PW-1:0] f_p [0:RQ-1];
@@ -328,14 +344,14 @@ module dsfd_vm_bgl #(
     always @(posedge clk or negedge rst_i)
         if (!rst_i) begin fh <= 0; ft <= 0; fn <= 0; und <= 1'b0; for (wf = 0; wf < NW; wf = wf + 1) fhr[wf] <= 0; end
         else begin
-            if (r2_v) ft <= ft + 1'b1;
+            if (fifo_v) ft <= ft + 1'b1;
             fh <= fh + dcnt;
             for (wf = 0; wf < NW; wf = wf + 1) fhr[wf] <= fhr[wf] + dcnt;
-            fn <= fn + r2_v - dcnt;
+            fn <= fn + fifo_v - dcnt;
             if (dcnt > fn) und <= 1'b1;
         end
     always @(posedge clk) begin
-        if (r2_v) begin f_dd[ft] <= r2_d; f_p[ft] <= r2_p; end
+        if (fifo_v) begin f_dd[ft] <= fifo_d; f_p[ft] <= fifo_p; end
         for (kk = 0; kk < KQ; kk = kk + 1) begin
             for (wf2 = 0; wf2 < NW; wf2 = wf2 + 1)
                 ds[kk][32*wf2 +: 32] <= f_dd[(fhr[wf2] + kk) & (RQ-1)][32*wf2 +: 32];
@@ -350,8 +366,8 @@ module dsfd_vm_bgl #(
     always @* for (p = 0; p < NPR; p = p + 1) part[p*DW +: DW] = own[p] ? ds[d_j[p]] : {DW{1'b0}};
     always @(posedge clk or negedge rst_i)
         if (!rst_i) begin ra_v <= {NPR{1'b0}}; rt_v <= {NPR{1'b0}}; end
-        else begin ra_v <= r_v; rt_v <= ra_v | d_v; end
-    always @(posedge clk) begin ra_d <= r_d; rt_d <= ra_d | part; end
+        else begin ra_v <= r_v; rt_v <= (HOP1 ? r_v : ra_v) | d_v; end
+    always @(posedge clk) begin ra_d <= r_d; rt_d <= (HOP1 ? r_d : ra_d) | part; end
     assign o_v = rt_v;
     assign o_d = rt_d;
 
@@ -371,8 +387,8 @@ module dsfd_vm_bgl #(
             stf <= stf | und | mis_r | ovf | wo_rd_any;
             if (occ > sto) sto <= occ;
             sq_f <= r_f; sq_o <= r_o;
-            so_f <= sq_f | {stf, stc};
-            so_o <= (sto > sq_o) ? sto : sq_o;
+            so_f <= (HOP1 ? r_f : sq_f) | {stf, stc};
+            so_o <= (sto > (HOP1 ? r_o : sq_o)) ? sto : (HOP1 ? r_o : sq_o);
         end
     assign o_f = so_f;
     assign o_o = so_o;

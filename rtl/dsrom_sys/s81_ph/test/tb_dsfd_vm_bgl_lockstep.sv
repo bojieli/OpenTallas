@@ -6,7 +6,12 @@
 // +define+OT_SPVM_BGTRACE; lines "cycle v we row mask d", idle cycles omitted).  PASS is refused without coverage.
 module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer NCYC = 200000, parameter integer GRP = 1,
                                  parameter integer RATE = 8, parameter integer TRACE = 0);
-    localparam integer NP = 28, NPR = 10, RA = 14, DL = 10;
+    localparam integer NP = 28, NPR = 10, RA = 14;
+`ifdef OT_VMBGL_HOP1
+    localparam integer DL = 2; // 8 one-cycle leaves versus the six-cycle flat reference.
+`else
+    localparam integer DL = 10;
+`endif
     reg clk = 0, rs = 0; always #5 clk = ~clk;
     reg [NP-1:0] i_v = 0, i_we = 0; reg [NP*RA-1:0] i_row = 0; reg [NP*4-1:0] i_m = 0; reg [NP*128-1:0] i_d = 0;
     wire [NP-1:0] av, awe, bv, bwe; wire [NP*RA-1:0] arow, brow; wire [NP*4-1:0] am, bm; wire [NP*128-1:0] ad, bd;
