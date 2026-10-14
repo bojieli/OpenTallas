@@ -36,7 +36,8 @@ module ot_qwen_die_cdc_ch #(
     parameter integer RXP = 0,
     // NativeTP8 opt-in: registered-read receive SRAM instead of32x546 flop store. Read the NEXT head each edge;
     // a same-row write bypass supplies the just-written head. The FIFO sees identical words/credits on every edge.
-    parameter integer IBMEM = 0
+    parameter integer IBMEM = 0,
+    parameter integer WR_FREE = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -198,7 +199,7 @@ module ot_qwen_die_cdc_ch #(
     wire         af_drained;              // bench view: both FIFO pointers equal (whichever FIFO is built)
 `endif
     generate if (PIPE != 0 || AFW != 0) begin : g_afw
-        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0), .MEMM(MEMM)) u_af (
+        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0), .MEMM(MEMM), .WR_FREE(WR_FREE)) u_af (
             .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS

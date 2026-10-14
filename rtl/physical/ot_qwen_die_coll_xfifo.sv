@@ -35,7 +35,8 @@ module ot_qwen_die_coll_xfifo #(
     // MEMM = 1 (el1011-q-coll 2026-10-11, textbook class 1): both CDC FIFO bodies (sq 16 x 546, cq 64 x 516) are dual-clock
     // 1R1W macros instead of ~41k flops on the ck / ckd roots; needs PIPE = 2.
     parameter integer MEMM = 0,
-    parameter integer SQ_IBMEM = 0
+    parameter integer SQ_IBMEM = 0,
+    parameter integer WR_FREE = 0
 ) (
     input  wire ck, input wire ckd, input wire rst_n,
     input  wire i_seq_coll_v,  input  wire [WSQ-1:0] i_seq_coll,  output wire i_seq_coll_cr,
@@ -57,10 +58,10 @@ module ot_qwen_die_coll_xfifo #(
     localparam integer CQ_IB = 4;
     localparam integer RRES = CQ_IB + CQ_AD;              // return words the path holds without overflow
     wire sq_icr, wf_sq, rf_sq, wf_cq, rf_cq;
-    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE), .MEMM(MEMM), .IBMEM(SQ_IBMEM), .IBUF(CR), .OCRED(ENG_IB), .AD((2 * CR > 8) ? 2 * CR : 8)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(x_i_seq_coll_v), .i_d(x_i_seq_coll),
+    ot_qwen_die_cdc_ch #(.W(WSQ), .PIPE(PIPE), .MEMM(MEMM), .IBMEM(SQ_IBMEM), .WR_FREE(WR_FREE), .IBUF(CR), .OCRED(ENG_IB), .AD((2 * CR > 8) ? 2 * CR : 8)) u_sq (.wclk(ckd), .wrst_n(rst_n), .i_v(x_i_seq_coll_v), .i_d(x_i_seq_coll),
         .i_cr(sq_icr), .w_fault(wf_sq), .rclk(ck), .rrst_n(rst_n), .o_v(x_o_seq_coll_v), .o_d(x_o_seq_coll),
         .o_cr(x_o_seq_coll_cr), .r_fault(rf_sq));
-    ot_qwen_die_cdc_ch #(.W(WCQ), .PIPE(PIPE), .MEMM(MEMM), .IBUF(CQ_IB), .OCRED(LCR), .AD(CQ_AD)) u_cq (.wclk(ck), .wrst_n(rst_n), .i_v(x_i_coll_seq_v),
+    ot_qwen_die_cdc_ch #(.W(WCQ), .PIPE(PIPE), .MEMM(MEMM), .WR_FREE(WR_FREE), .IBUF(CQ_IB), .OCRED(LCR), .AD(CQ_AD)) u_cq (.wclk(ck), .wrst_n(rst_n), .i_v(x_i_coll_seq_v),
         .i_d(x_i_coll_seq), .i_cr(), .w_fault(wf_cq), .rclk(ckd), .rrst_n(rst_n), .o_v(x_o_coll_seq_v), .o_d(x_o_coll_seq),
         .o_cr(x_o_coll_seq_cr), .r_fault(rf_cq));
     // ckd credit gate (pins registered first: refunds and releases land one edge late, which is conservative)

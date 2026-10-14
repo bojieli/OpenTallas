@@ -16,7 +16,7 @@ module tb_qfd_coll_xfifo_native;
         .i_coll_seq_v(rv),.i_coll_seq(rd),.o_coll_seq_v(ov),.o_coll_seq(od),.fault_ck(fc),.fault_ckd(fd));
     wire sc_ref,ev_ref,ov_ref,fc_ref,fd_ref;
     wire [545:0] ed_ref;wire [516:0] od_ref;
-    qfd_coll_xfifo_native #(.IBMEM(0)) ref_reg_store(.ck(ck),.ckd(ckd),.rst_n(rst_n),
+    qfd_coll_xfifo_native #(.IBMEM(0),.WR_FREE(0)) ref_reg_store(.ck(ck),.ckd(ckd),.rst_n(rst_n),
         .i_seq_coll_v(sv),.i_seq_coll(sd),.i_seq_coll_cr(sc_ref),
         .o_seq_coll_v(ev_ref),.o_seq_coll(ed_ref),.o_seq_coll_cr(ec),
         .i_coll_seq_v(rv),.i_coll_seq(rd),.o_coll_seq_v(ov_ref),.o_coll_seq(od_ref),.fault_ck(fc_ref),.fault_ckd(fd_ref));

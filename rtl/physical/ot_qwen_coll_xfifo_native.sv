@@ -2,7 +2,7 @@
 // Native TP8 local port: sequencer32 credits, engine32 credits, return rank3. Return is posted: the consumer
 // must accept EVERY valid beat while its operation is active. This leaf returns a registered credit for that
 // accepted beat. Source/consumer integration is separately qualified by the composition bench.
-module qfd_coll_xfifo_native #(parameter integer IBMEM = 1) (
+module qfd_coll_xfifo_native #(parameter integer IBMEM = 1, WR_FREE = 1) (
     input wire ck, ckd, rst_n,
     input wire i_seq_coll_v, input wire [545:0] i_seq_coll, output wire i_seq_coll_cr,
     output wire o_seq_coll_v, output wire [545:0] o_seq_coll, input wire o_seq_coll_cr,
@@ -15,7 +15,7 @@ module qfd_coll_xfifo_native #(parameter integer IBMEM = 1) (
         if (!rst_n) posted_credit <= 1'b0; else posted_credit <= o_coll_seq_v;
     wire [516:0] ret;
     ot_qwen_die_coll_xfifo #(.WSQ(546),.WCQ(517),.N(8),.CR(32),.ENG_IB(32),.LCR(32),
-        .CQ_AD(256),.PIPE(2),.MEMM(1),.SQ_IBMEM(IBMEM)) u_port (
+        .CQ_AD(256),.PIPE(2),.MEMM(1),.SQ_IBMEM(IBMEM),.WR_FREE(WR_FREE)) u_port (
         .ck(ck),.ckd(ckd),.rst_n(rst_n),
         .i_seq_coll_v(i_seq_coll_v),.i_seq_coll(i_seq_coll),.i_seq_coll_cr(i_seq_coll_cr),
         .o_seq_coll_v(o_seq_coll_v),.o_seq_coll(o_seq_coll),.o_seq_coll_cr(o_seq_coll_cr),
