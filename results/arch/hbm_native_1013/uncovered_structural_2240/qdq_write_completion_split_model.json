@@ -76,5 +76,18 @@
   "communication_intensity_bits_per_payload_byte": 1.015625,
   "fanout": "eight local count comparators; snapshot 64bits two FIFO candidate reads, no payload clock/control feedback",
   "area_status": "estimated; SRAM macro unchanged, route validates actual cell area/outline/pins",
-  "single_user_latency_status": "must measure on actual 4-quadrant 13312-word driver, both phases and negatives"
+  "single_user_latency_status": "must measure on actual 4-quadrant 13312-word driver, both phases and negatives",
+  "fin_compact_alternative": {
+    "outline_um": [
+      54,
+      54
+    ],
+    "std_area_um2_estimate": 994,
+    "core_area_um2_estimate": 2468,
+    "util_estimate": 0.403,
+    "added_state_bits": 1,
+    "mechanism": "Registered queue-nonempty derived from captured snapshot/pop state removes count decode at raw ACK capture; compact private root shortens ACK-to-finish path",
+    "added_edges": 0,
+    "status": "unassigned alternative; actual routed pins and slot approval required"
+  }
 }
