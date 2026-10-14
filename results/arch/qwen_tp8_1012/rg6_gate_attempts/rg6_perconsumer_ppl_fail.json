@@ -1,0 +1,266 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_vm_rg6",
+ "verdict": "FAIL",
+ "generated": "2026-10-13T20:03:25-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "d612de244",
+ "clock": {
+  "max_root_sinks": null,
+  "root": null,
+  "cts": true,
+  "tt_insertion_ps": null,
+  "tt_spread_ps": null,
+  "declared_clock": "entries",
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "UNKNOWN",
+  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_rr4_t#0: origin (453.6, 302.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_rr4_t#0: origin (902.88, 302.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_rr2_t#0: origin (779.76, 399.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay2_t#0: origin (69.12, 71.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bank_t#0: origin (90.72, 10.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bctl_t#0: origin (313.2, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay1_t#0: origin (313.2, 71.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (328.32, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (328.32, 140.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay2_t#0: origin (69.12, 276.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bank_t#0: origin (90.72, 216.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bctl_t#0: origin (313.2, 228.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay1_t#0: origin (313.2, 276.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (328.32, 228.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (328.32, 345.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay2_t#0: origin (69.12, 481.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bank_t#0: origin (90.72, 421.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bctl_t#0: origin (313.2, 434.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay1_t#0: origin (313.2, 481.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (328.32, 434.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (328.32, 550.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay2_t#0: origin (69.12, 686.88) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bank_t#0: origin (90.72, 626.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bctl_t#0: origin (313.2, 639.36) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay1_t#0: origin (313.2, 686.88) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (328.32, 639.36) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (328.32, 756.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay2_t#0: origin (518.4, 71.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bank_t#0: origin (540.0, 10.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bctl_t#0: origin (762.48, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay1_t#0: origin (762.48, 71.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (777.6, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (777.6, 140.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay2_t#0: origin (518.4, 276.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bank_t#0: origin (540.0, 216.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bctl_t#0: origin (762.48, 228.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tree_delay1_t#0: origin (762.48, 276.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_xfifo8_t#0: origin (777.6, 228.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bank_t#0: origin (540.0, 421.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_vm_bctl_t#0: origin (762.48, 434.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  }
+ ]
+}

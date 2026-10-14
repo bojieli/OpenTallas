@@ -146,8 +146,8 @@ set i [ot_ref_pick $ot_ref_by ot_qfd_vm_xfifo8_t {u_core.g_fifo16[11].u_fifo}]
 $i setOrient R0; $i setLocation [expr {round(777.6 * $dbu)}] [expr {round(345.6 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qfd_vm_xfifo8_t at 777.6 345.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_qwen_tree_delay2_t {u_core.g_b[6].g_wd.u_wd}]
-$i setOrient R0; $i setLocation [expr {round(518.4 * $dbu)}] [expr {round(388.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_qwen_tree_delay2_t at 518.4 388.8 R0"
+$i setOrient R0; $i setLocation [expr {round(518.4 * $dbu)}] [expr {round(345.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_qwen_tree_delay2_t at 518.4 345.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_qfd_vm_bank_t {u_core.g_b[6].u_bt}]
 $i setOrient R0; $i setLocation [expr {round(540.0 * $dbu)}] [expr {round(421.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_qfd_vm_bank_t at 540.0 421.2 R0"
