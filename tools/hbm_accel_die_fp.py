@@ -1261,7 +1261,16 @@ def build_r25gq_net(variant):
     G = RP.Grid(probe)
     rings, pcache = {}, {}
     # rf2: with physical relays every route that carries stations avoids long block crossings (phys_block_cost)
-    A = G.graph(1.0 + (V.get('phys_block_cost') or RP.BLOCK_COST) * G.blocked)
+    # v13 window congestion (tools/hbm_r25gq_windows.py --cost-out): a (ny, nx) route-cell cost from the window check of
+    # the previous build of this preset (demand / tracks per 2-D window, history-summed).  Every chain / relay /
+    # pin-repair route pays it, so the buses that only PASS THROUGH a hot window (v12: the N link chains, the TKM stream
+    # and the NW lane group through x 12-15 / y 14-17 mm) take the emptier channels; a bus that ends there cannot.
+    CG_ = 0.0
+    if V.get('cong'):
+        import numpy as _npc
+        CG_ = _npc.load(ROOT / V['cong'])
+        assert CG_.shape == (G.ny, G.nx), ('window congestion cost is not on this die\'s route grid', CG_.shape, (G.ny, G.nx))
+    A = G.graph(1.0 + (V.get('phys_block_cost') or RP.BLOCK_COST) * G.blocked + CG_)
     from scipy.sparse.csgraph import dijkstra as _dj
 
     spt_ = {}
@@ -1290,7 +1299,7 @@ def build_r25gq_net(variant):
         if not V.get('phys_block_cost'):
             return gpath(a, b)
         if A_p is None:
-            A_p = G.graph(1.0 + V['phys_block_cost'] * (G.free < V.get('phys_free_min', 0.2)))
+            A_p = G.graph(1.0 + V['phys_block_cost'] * (G.free < V.get('phys_free_min', 0.2)) + CG_)
         if (a, b) not in pcache_p:
             ra = rings.setdefault(a, G.ring(a))
             rb = rings.setdefault(b, G.ring(b))
@@ -2088,7 +2097,7 @@ def build_r25gq_net(variant):
                         if 0 <= i_ < G.nx and 0 <= j_ < G.ny:
                             occ_[j_, i_] += it_.w * it_.h / RP.CELL ** 2
                 free_ = _np.maximum(G.free, 0.05)
-                A_p = G.graph(1.0 + V['phys_block_cost'] * (G.free < V.get('phys_free_min', 0.2)) + 40.0 * _np.minimum(occ_ / free_, 2.0))
+                A_p = G.graph(1.0 + V['phys_block_cost'] * (G.free < V.get('phys_free_min', 0.2)) + 40.0 * _np.minimum(occ_ / free_, 2.0) + CG_)
                 spt_p.clear()
                 pcache_p.clear()
             nb_ = []
@@ -2228,7 +2237,7 @@ def build_r25gq_net(variant):
             print('pin_repair start', len(insts), 'insts', len(buses), 'buses', file=sys.stderr, flush=True)
         SL_ = float(V.get('pin_repair_slack', 12.0))
         pin_rec = dict(reach_um=PLIM, rounds=[], stations=0)
-        Ag_ = G.graph(1.0 + V['phys_block_cost'] * (G.free < V.get('phys_free_min', 0.2)))
+        Ag_ = G.graph(1.0 + V['phys_block_cost'] * (G.free < V.get('phys_free_min', 0.2)) + CG_)
         cell_k = lambda q_: min(G.ny - 1, max(0, int(q_[1] // RP.CELL))) * G.nx + min(G.nx - 1, max(0, int(q_[0] // RP.CELL)))
         cell_c = lambda k_: ((k_ % G.nx + .5) * RP.CELL, (k_ // G.nx + .5) * RP.CELL)
         hp_ = lambda ps_: max(q_[0] for q_ in ps_) - min(q_[0] for q_ in ps_) + max(q_[1] for q_ in ps_) - min(q_[1] for q_ in ps_)
@@ -2264,7 +2273,7 @@ def build_r25gq_net(variant):
             ow_ = occ_.reshape(G.ny, f_, G.nx, f_).mean(axis=(1, 3))
             fill_ = _np.minimum(1.0, ow_ / _np.maximum(G.free, 0.05))
             Ao_[0] = G.graph(1.0 + V['phys_block_cost'] * (G.free < V.get('phys_free_min', 0.2)) +
-                             8.0 * _np.maximum(0.0, fill_ - 0.25) / 0.75)
+                             8.0 * _np.maximum(0.0, fill_ - 0.25) / 0.75 + CG_)
             Ao_[1] = len(insts)
             sp_d.clear()
 
