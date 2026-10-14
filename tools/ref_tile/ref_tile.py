@@ -25,6 +25,7 @@ regeneration; a NEW kit takes RECIPE_LATEST; spec "recipe" overrides (see apply_
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -265,6 +266,53 @@ def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
     return "M5", "contract"
 
 
+def cluster_signal_cap(s: dict, slot: dict | None = None) -> tuple[str, dict | None]:
+    """Upper cluster metals require a digest-bound die contract, never a text waiver.
+
+The grant carries the no-through-traffic and phase-aligned PG obligations. A
+probe may measure routing before the phase audit exists, but cannot auto-merge.
+"""
+    cap = s.get("signal_max_layer", "M7")
+    if cap == "M7":
+        return cap, None
+    if cap not in ("M8", "M9"):
+        raise SpecError(f"cluster signal cap must be M7, or die-granted M8/M9, not {cap}")
+    g = s.get("cluster_layer_grant") or (slot or {}).get("cluster_layer_grant")
+    if not isinstance(g, dict) or not g.get("source") or not g.get("sha256"):
+        raise SpecError("cluster M8/M9 needs cluster_layer_grant {source, sha256}")
+    p = (ROOT / g["source"]).resolve()
+    if not p.is_relative_to(ROOT.resolve()) or not p.is_file():
+        raise SpecError("cluster layer grant source must be an existing repository file")
+    if hashlib.sha256(p.read_bytes()).hexdigest() != g["sha256"]:
+        raise SpecError("cluster layer grant source digest mismatch")
+    try:
+        rec = json.loads(p.read_text())
+    except (ValueError, OSError) as ex:
+        raise SpecError("cluster layer grant source is not a JSON contract") from ex
+    if rec.get("schema") != "opentallas.cluster-layer-grant.v1" or rec.get("signal_cap") != cap:
+        raise SpecError("cluster layer grant schema/cap mismatch")
+    if s["name"] not in rec.get("masters", []):
+        raise SpecError("cluster layer grant does not name this master")
+    if rec.get("no_die_signal_through_traffic") is not True or rec.get("die_pg_layers") != ["M8", "M9"]:
+        raise SpecError("upper cluster grant must reserve die M8/M9 for PG only over its rectangle")
+    pg = rec.get("die_pg", {})
+    if not all(isinstance(pg.get(k), (int, float)) and pg[k] > 0 for k in ("width_um", "pitch_um")):
+        raise SpecError("cluster grant must declare the die PG width and pitch")
+    if rec.get("requires_phase_aligned_die_pg") is not True:
+        raise SpecError("cluster grant must require die-core phase aligned PG")
+    if not s.get("job", {}).get("hold_merge"):
+        audit = s.get("die_pg_phase_audit", {})
+        ap = (ROOT / audit.get("source", "")).resolve()
+        if not ap.is_relative_to(ROOT.resolve()) or not ap.is_file() or not audit.get("sha256"):
+            raise SpecError("production upper cluster requires digest-bound die_pg_phase_audit; use hold_merge for a probe")
+        if hashlib.sha256(ap.read_bytes()).hexdigest() != audit["sha256"]:
+            raise SpecError("die PG phase audit digest mismatch")
+        ar = json.loads(ap.read_text())
+        if ar.get("verdict") != "PASS" or ar.get("master") != s["name"] or ar.get("grant_sha256") != g["sha256"]:
+            raise SpecError("die PG phase audit does not prove this master and grant")
+    return cap, {"source": g["source"], "sha256": g["sha256"], "obligations": rec}
+
+
 def layer_contract(s: dict, slot: dict | None) -> dict:
     """leaf tile: signals AND PG <= layer_cap (M5 default, M6 granted), PG = full-length stripes on the cap layer as pins,
     parent strap = cap + 1; legacy kits: signals M2-M6, PG M6 or M7.
@@ -296,7 +344,10 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
     pg = pg or "M7"
     if pg != "M7":
         raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
-    out.update(pg_layer="M7", rlayers=("M2", s.get("signal_max_layer", "M7")), strap_layer="M8")
+    cap, grant = cluster_signal_cap(s, slot)
+    out.update(pg_layer="M7", rlayers=("M2", cap), strap_layer="M8")
+    if grant:
+        out["cluster_layer_grant"] = grant
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
         raise SpecError(f"layer contract: spec PG {out['pg_layer']} != contract slot PG {slot['pg_layer']}")
     return out

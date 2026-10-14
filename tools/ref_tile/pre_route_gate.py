@@ -257,9 +257,9 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
         g.add("FAIL", "density", "kit leaves ORFS's PLACE_DENSITY_LB_ADDON in force: the placer target becomes lower-bound + "
               "0.05, not the spec PD (qkd_nhb_pbst 0.50 -> 0.1075, GPL-0305)", "re-run ref_tile.py gen")
     lc = fp["layer_contract"]
-    rl = re.search(r"^RLAYERS='M2 (M[5-7])'$", env, re.M)
+    rl = re.search(r"^RLAYERS='M2 (M[5-9])'$", env, re.M)
     if not rl:
-        g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M5/M6/M7 (a script default would override the "
+        g.add("FAIL", "layer", "kit.env has no explicit RLAYERS M2..M5/M6/M7/M8/M9 (a script default would override the "
               "layer contract)", "re-run ref_tile.py gen")
     elif spec["kind"] == "tile":
         fresh_lc = RT.layer_contract(spec, RT.contract_slot(spec))
@@ -276,6 +276,12 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
         if over and not (over == ["M6"] and fresh_lc.get("m6_pin_grant")):
             g.add("FAIL", "layer", f"pin layers {over} above the tile cap {rl.group(1)}: the parent strap layer would "
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
+    elif spec["kind"] == "cluster":
+        cap, grant = RT.cluster_signal_cap(spec, RT.contract_slot(spec))
+        if rl.group(1) != cap or lc.get("pg_layer") != "M7":
+            g.add("FAIL", "layer", "cluster kit signals/PG differ from its audited layer contract", "re-run ref_tile.py gen")
+        if grant:
+            g.add("INFO", "layer_grant", f"digest-bound {cap} grant {grant['source']}; no die signals through rectangle; phase-aligned die PG required")
     g.add("INFO", "layer", f"{spec['kind']}: PG {lc['pg_layer']} stripes as pins, signals {lc['rlayers'][0]}-"
           f"{lc['rlayers'][1]}, parent strap {lc['strap_layer']}"
           + (f", cap {lc['layer_cap']} ({lc.get('cap_basis')})" if lc.get("layer_cap") else "")
