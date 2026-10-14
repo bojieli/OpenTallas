@@ -30,7 +30,7 @@ module hfd_lk_ep_face #(parameter integer MUT_FACE=0)(input wire clk, input wire
                                                       t_cr_o <= t_cr_m2; fault_q <= fault; locked_q <= locked; end
     always @(posedge clk) begin r_flit_m1 <= r_flit; r_flit_m2 <= r_flit_m1; r_flit_o <= r_flit_m2; end
     assign f_lk[547] = r_v_o;
-    assign f_lk[1092:548] = r_flit_o ^ (MUT_FACE != 0 ? 545'd1 : 545'd0);
+    assign f_lk[1092:548] = r_flit_o ^ (MUT_FACE != 0 && r_v_o ? 545'd1 : 545'd0);
     assign f_lk[1093] = t_cr_o;
     assign f_lk[1119:1118] = {locked_q, fault_q};
 
