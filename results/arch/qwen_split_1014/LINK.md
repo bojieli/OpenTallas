@@ -30,7 +30,7 @@ Faces that stay on one die:
 | Raw rate | 64 + 64 lanes at 16 GT/s = 1,024 Gb/s each way |
 | Load | One 548-b flit per 1.2 GHz cycle each way = 657.6 Gb/s (64 % of raw) |
 | FDI-to-far-FDI latency | 3 / 5 / 9 cycles (best / typical / worst). The measured sweep covers all three. |
-| CRC / retry | Inside the vendor adapter in the macro. Our adapter (`ot_qkvd_d2d`) checks the sequence and fails closed. |
+| CRC / retry / FEC | **Owed as real RTL** (owner 08:05 PT, no stubs: only the PHY analog may be a behavioural model). v1 assumed them inside the vendor macro. Our adapter (`ot_qkvd_d2d`) checks the sequence and fails closed. The CRC / retry layer goes between `ot_qkvd_d2d` and the PHY model at both ends, and the link cost is re-measured with it. |
 | Placement | KV/system die: the macro on the N short edge at the centre column. Both long edges are HBM shoreline (2 x 12 mm PHYs each), so the link cannot go there. Compute die: on the edge that faces the KV/system die (compute lead). |
 | Clock | One 1.2 GHz domain. The system-die PLL forwards the clock and reset on a bump pair beside the macro (`qkd_ckbump` -> compute `qfd_clkrx`). The dies are mesochronous. There is no CDC in our logic; the HBM CDC stays on the system die. |
 
@@ -137,6 +137,8 @@ saving: about 38 x 91 = 3,460 cycles/token, about 1.7 %. It needs an RTL change 
 plus a re-route.
 
 ## 6. Open items (owner: this stream unless named)
+
+0. **Release blocker (no stubs):** CRC / retry / FEC digital layer as real RTL at both link ends, plus a re-measure.
 
 1. Link faults must reach the host status (`kst` / `tk` fault code). The merged sequencer dropped `d2df`. Sources:
    `qkd_d2d` fault, `qkd_lnk` fault, and `qfd_d2d_rom` fault (over SCTL).
