@@ -44,7 +44,7 @@ module ot_qfd_su_kv_native_posted #(
  wire take=word_v&&word_ready;
  assign epoch_ready=ENABLE!=0&&!active&&!word_v&&!fault;
  assign drained=!active&&!word_v;
- always @* begin
+ always_comb begin
   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=0;
   allowed=issued;
   if(issue_v&&issue_kind<3)allowed[issue_kind]=1;
