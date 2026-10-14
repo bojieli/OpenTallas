@@ -37,9 +37,9 @@
   "reset_ports": [
     "srs"
   ],
-  "std_area_um2": 6553,
+  "std_area_um2": 7212,
   "util": 0.52,
-  "pg_layer": "M6",
+  "pg_layer": "M5",
   "macros": [
     {
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
@@ -114,7 +114,7 @@
     "benches_from": "tools/s81_suhc/hc_tile_benches_ccf.json",
     "owner": "Codex:s81_hc_ccf",
     "branch": "codex-s81-ccf-pinreg-1013",
-    "tag": "v6-facecapture",
+    "tag": "v6-facecapture-m5",
     "purpose": "Kept first-stage fv/fd face capture isolates fv_i from distributed pop replicas. One forward stage transfers from pad_f5r1 to the new pad_f4r1 leaf; chain issue and completion latency unchanged.",
     "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
     "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
@@ -134,8 +134,7 @@
     "Y_RELAY": 1,
     "PIN_CAPTURE": 1
   },
-  "layer_cap": "M6",
-  "layer_cap_grant": "S81 contract v13 sp_hc_s/comb: cluster_child grant coordinator2026-10-12 11:40; same M6 as prior ccf, no cap increase",
+  "layer_cap": "M5",
   "orfs_vars": {
     "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff"
   },
