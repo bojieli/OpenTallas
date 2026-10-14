@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/s81-native-parent-h1pc-rs/src
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/s81-native-parent-h1pc-rs/src
+ot-run: ot-pve1        admits   161 GB (avail 208, growth 6, headroom 32, waiters 0/0 GB) load 36/28 running 2 disk 1312 GB 
+ot-run: ot-agidock128  admits   -96 GB (avail 81, growth 10, headroom 24, waiters 2/152 GB) load 26/64 running 4 disk 253 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-704248-1791973232 after 1 s
+RESULT cyc=64000 checked=42692 mismatches_or_fails=0 phases=132 arm=132 p2rd=509 done=7020 rows_ready=71 starts=474 p2_words=13222 ctrl_reads=3188 el=209504/209504 cap_ops=12510 max_occ=3 mirror_max=3 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1
+PASS
+SPVM_gold_s1: PASS (expect pass) -> OK
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-704248-1791973232): exit 0

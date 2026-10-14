@@ -1,0 +1,33 @@
+{
+  "status": "UNQUALIFIED_OUTPUT_PROFILE_FAIL_NO_ROUTE",
+  "source_commit": "50373a397",
+  "nominal_phase_reference": "old prototype, not fresh candidate binding",
+  "raw_source_latency": 0,
+  "load": 0,
+  "parasitics": "placement",
+  "TT_roots": {
+    "bank": {
+      "n": 9,
+      "mean_ps": 392.192359,
+      "spread_ps": 38.96518
+    },
+    "request": {
+      "n": 8206,
+      "mean_ps": 276.890862,
+      "spread_ps": 31.913636
+    },
+    "return": {
+      "n": 1299,
+      "mean_ps": 265.543253,
+      "spread_ps": 10.069733
+    }
+  },
+  "max_source_normalized_output_ps": {
+    "f": 272.201738,
+    "o": 252.776347
+  },
+  "budget_ps": 220,
+  "actual_driver_swaps": 5396,
+  "setup_ps": 66.048833,
+  "hold_ps": 5.322409
+}

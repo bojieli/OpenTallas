@@ -1,0 +1,20 @@
+{
+  "status": "SOURCE_CANDIDATE_PHYSICAL_OPEN",
+  "source_commit": "227effe76",
+  "cases": {
+    "gold": "PASS",
+    "forward_mutant": "EXPECTED_FAIL",
+    "no_witness_mutant": "EXPECTED_FAIL"
+  },
+  "native_bank_final_release": [
+    "rst_i",
+    "rst_hist"
+  ],
+  "raw_epoch_request": "rs[0]",
+  "flat_selected_consumers": 16,
+  "native_candidate_consumers": 384,
+  "ACK_state_per_consumer": 2,
+  "native_history_conditioner_extra_FFs": 256,
+  "aggregate_parent_connection": "UNCONNECTED",
+  "log_sha256": "798bc48269b40a57afffb011797873536710b0da93d22da1986a21e0feaf1c65"
+}
