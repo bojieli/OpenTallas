@@ -11,7 +11,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 86.4,
+  "w": 172.8,
   "h": 388.8
  },
  "util": 0.52,
@@ -52,12 +52,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "ovd w2 failed GRT with about17000markers at SRAM west edge, crossing gather escape and read-output fanout. Remove all gather state and decoder launch outputs from SRAM leaf; make independent no-macro gather leaf. Existing state/register edges unchanged; preserve closed decoder and lane constituents.",
+ "structural_change": "ovd w2 failed GRT with about17000markers at SRAM west edge, crossing gather escape and read-output fanout. Remove all gather state and decoder launch outputs from SRAM leaf; make independent no-macro gather leaf. Existing state/register edges unchanged; preserve closed decoder and lane constituents. Gather86.4um width leaves three1024-bit vertical streams above low decoder-aligned output: conservative M3+M5 capacity about2940 afterderate, >1.0cut. Width172.8 supplies about5880 beforePGreserve; all-fanout placement atoldwidth diverged twice. Widened leaf and parent alternative864um, no added edge.",
  "job": {
   "owner": "Codex:hbm_quant_sfu_2240",
   "branch": "codex/hbm-quant-sfu-2240",
-  "tag": "s2",
-  "purpose": "Alternative WQ3 data-head structural split: gather and SRAM/write state are separate leaves, existing registers reassigned with zero additional edges; no native die adoption claimed. Pin-bound 4096-bit W input face and1024-bit E output face fixes388.8um height despite measured1711um2 standard area; sparse placement target0.15 avoids filler-dominated GPL divergence seen at0.50.",
+  "tag": "s3",
+  "purpose": "Alternative WQ3 data-head structural split: gather and SRAM/write state are separate leaves, existing registers reassigned with zero additional edges; no native die adoption claimed. Pin-bound 4096-bit W input face and1024-bit E output face fixes388.8um height despite measured1711um2 standard area; sparse placement target0.15 avoids filler-dominated GPL divergence seen at0.50. Width172.8 provides routing capacity for3\u00d71024 vertical streams; source area remains pin/channel-bound.",
   "benched_by": "quant_wide_ov",
   "extra_paths": [
    "rtl",

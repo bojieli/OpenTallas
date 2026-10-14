@@ -23,7 +23,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 777.6,
+  "w": 864,
   "h": 691.2
  },
  "pg_layer": "M7",
@@ -43,7 +43,7 @@
    "count": 1,
    "inst": "g_lg[0].u_lg.u_w",
    "at": [
-    725.76,
+    812.16,
     21.6
    ]
   },
@@ -61,7 +61,7 @@
    "count": 1,
    "inst": "g_lg[1].u_lg.u_w",
    "at": [
-    725.76,
+    812.16,
     189.36
    ]
   },
@@ -79,7 +79,7 @@
    "count": 1,
    "inst": "g_lg[2].u_lg.u_w",
    "at": [
-    725.76,
+    812.16,
     357.12
    ]
   },
@@ -97,7 +97,7 @@
    "count": 1,
    "inst": "g_lg[3].u_lg.u_w",
    "at": [
-    725.76,
+    812.16,
     524.88
    ]
   },
@@ -124,7 +124,7 @@
    "count": 1,
    "inst": "u_d.u_w",
    "at": [
-    293.76,
+    380.15999999999997,
     120.96
    ]
   },
@@ -133,7 +133,7 @@
    "count": 1,
    "inst": "g_d3.u_dec.u_daq",
    "at": [
-    570.24,
+    656.64,
     86.4
    ]
   },
@@ -142,7 +142,7 @@
    "count": 1,
    "inst": "g_d3.u_dec.u_dxl",
    "at": [
-    570.24,
+    656.64,
     259.2
    ]
   },
@@ -151,7 +151,7 @@
    "count": 1,
    "inst": "g_d3.u_dec.u_dbq",
    "at": [
-    570.24,
+    656.64,
     432.0
    ]
   }
@@ -294,5 +294,18 @@
   "worst_ratio": 0.71,
   "longest_hop_um": 600
  },
- "candidate_only": true
+ "candidate_only": true,
+ "slot_change_request": {
+  "scope": "unselected WQ3 alternative",
+  "old_outline_um": [
+   777.6,
+   691.2
+  ],
+  "requested_outline_um": [
+   864,
+   691.2
+  ],
+  "reason": "SRAM-free gather verticalcut requires172.8um width; assigned pins and native selection remain pending",
+  "source": "results/arch/hbm_native_1013/uncovered_structural_2240/hbm_quant_ov_gather_write_split_model.json"
+ }
 }

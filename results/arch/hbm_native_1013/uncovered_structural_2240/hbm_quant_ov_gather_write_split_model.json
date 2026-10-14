@@ -21,7 +21,7 @@
   "decoder_result_bits_per_cycle": 515,
   "write_row_output_bits_per_cycle": 2688,
   "gather_outline_um": [
-    86.4,
+    172.8,
     388.8
   ],
   "write_outline_um": [
@@ -29,7 +29,7 @@
     177.12
   ],
   "proposed_parent_outline_um": [
-    777.6,
+    864,
     691.2
   ],
   "gather_origin_um": [
@@ -37,10 +37,10 @@
     259.2
   ],
   "write_origin_um": [
-    293.76,
+    380.16,
     120.96
   ],
-  "closed_decoder_column_x_um": 570.24,
+  "closed_decoder_column_x_um": 656.64,
   "horizontal_clear_channels_um": [
     28.08,
     25.92,
@@ -61,5 +61,16 @@
     "decoder internal seam cuts",
     "physical leaf CTS",
     "native alternative selection"
-  ]
+  ],
+  "cut_capacity_analysis": {
+    "vertical_bits_upper_bound": 3072,
+    "old_width_um": 86.4,
+    "old_derated_M3_M5_tracks": 2940,
+    "old_cut": 1.0448979591836736,
+    "new_width_um": 172.8,
+    "new_derated_M3_M5_tracks_before_PG": 5880,
+    "new_cut_before_PG": 0.5224489795918368,
+    "actual_PG_and_clock_reserve_pending": true
+  },
+  "slot_fit": "explicit alternative slot request864x691.2; not native adopted"
 }
