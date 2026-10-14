@@ -1,5 +1,5 @@
 {
- "name": "qfd_su_lane_t_io-io1-COMMIT",
+ "name": "qfd_su_lane_t_io-io1-3174f9c28",
  "block": "ot_hdc_vstream_lane_t",
  "ref_tile": true,
  "owner": "Claude:q14-r7-compute",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q14-r6-compute",
-  "commit": "COMMIT",
+  "commit": "3174f9c28",
   "extra_paths": [
    "physical/qwen_su_lane_oreg"
   ]
@@ -145,7 +145,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_su_lane_t_io/qfd_su_lane_t_io-io1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_su_lane_t_io/qfd_su_lane_t_io-io1-3174f9c28"
   }
  ],
  "cycles_added": 0,
