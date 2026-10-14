@@ -1,14 +1,14 @@
 {
- "name": "dsfd_su_t_pin_rt-rt2-COMMIT",
+ "name": "dsfd_su_t_pin_rt-rt3-57ee0354e",
  "block": "dsfd_su_t_pin",
  "ref_tile": true,
  "owner": "Claude:el1013-s81su-qual",
- "purpose": "SU pin owner rt2, pin-register defect (pinreg audit 10-13: clk->pin 376.5 ps on dn_d, pin->flop 348 ps on up_d against 166.7 ps): the RTL is two registers pin to pin (pin flop, output flop); rt's placer put both mid-tile (572.4 um wide, W <-> E). Kit recipe 2: pin flops and hold stages FIRM at the pins, hold 30 ps. Same RTL, outline, pins, cycles (rt CLOSED TT +132.69 / FF +20.92)",
+ "purpose": "SU pin owner rt2, pin-register defect (pinreg audit 10-13: clk->pin 376.5 ps on dn_d, pin->flop 348 ps on up_d against 166.7 ps): the RTL is two registers pin to pin (pin flop, output flop); rt's placer put both mid-tile (572.4 um wide, W <-> E). Kit recipe 2: pin flops and hold stages FIRM at the pins, hold 30 ps. Same RTL, outline, pins, cycles (rt CLOSED TT +132.69 / FF +20.92) | rt3: rt2 (recipe 2, pin flops at the pins) routed TT -10.55 / FF +28.02 / DRC 0: the miss is c_rf[63] flop -> c_rf port over 213 ps of wire + the output hold stage, because synthesis had merged the c_rf / dn_d (and dn_v / c_rv, wq_v / c_uv) twin registers into one flop serving two faces; RTL: the twins are keep registers, one flop a pin.",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1013-s81su-qual",
-  "commit": "COMMIT",
+  "commit": "57ee0354e",
   "extra_paths": [
    "results/rtl/hbm_su_fused_compiler_20261005"
   ]
@@ -90,7 +90,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_su_t_pin_rt/dsfd_su_t_pin_rt-rt2-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_su_t_pin_rt/dsfd_su_t_pin_rt-rt3-57ee0354e"
   }
  ],
  "cycles_added": 0,
@@ -104,6 +104,6 @@
   "source": "results/arch/pinreg_audit_1013/s81_compensated.json",
   "cell": "dsfd_su_t_pin",
   "pair_cost_ps": 724.8,
-  "fix": "kit recipe 2 (pin flops and hold stages FIRM at the pins) and PG pins M7 -> M6: the tile is two registers pin to pin, the closed route placed them ~193 um from the faces (dn_d leaves 327 ps after the boundary clock, up_d 348 ps before it)"
+  "fix": "kit recipe 2 (pin flops and hold stages FIRM at the pins) and PG pins M7 -> M6: the tile is two registers pin to pin, the closed route placed them ~193 um from the faces (dn_d leaves 327 ps after the boundary clock, up_d 348 ps before it); rt3 RTL: twin output registers kept (one flop a pin)"
  }
 }

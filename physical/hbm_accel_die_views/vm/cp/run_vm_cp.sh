@@ -10,11 +10,11 @@
 # env and 0x7ff in the other on identical in-range data. The copy keeps that chunk in range ([2062:2016]) for BOTH designs.
 O=${1:?}; VL=${2:-verilator}; mkdir -p $O; V=physical/hbm_accel_die_views; T=$V/vm/tiles; C=$V/vm/cp
 SR1=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
-BASE="$V/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv $SR1 $V/vm/rtl/ot_hbm_die_vm_multicast_root.sv $V/vm/rtl/hfd_vm.sv $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv"
+BASE="$V/common/ot_hfd_oreg1.sv rtl/common/ot_fwd_link_stage.sv $SR1 $V/vm/rtl/ot_hbm_die_vm_multicast_root.sv $V/vm/rtl/hfd_vm.sv $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv $T/ot_hfd_vm_root_p.sv"
 TILES=$(ls $C/rtl/vm_cp_*.sv | tr '\n' ' ')
 ok=1; $VL --version
 for f in $TILES; do m=$(basename $f .sv)
-  $VL --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module $m rtl/common/ot_fwd_link_stage.sv $SR1 $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_x.sv $f > $O/lint_$m.log 2>&1 || { echo "lint $m FAIL"; ok=0; }
+  $VL --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module $m rtl/common/ot_fwd_link_stage.sv $SR1 $T/ot_hfd_vm_slice.sv $T/ot_hfd_vm_root_p.sv $f > $O/lint_$m.log 2>&1 || { echo "lint $m FAIL"; ok=0; }
 done
 # VM_CP_MUT=<XBUS|RELAY>: build EVERY mode with that mutant (the loop's expect=fail bench: mode 1 must DIFF -> FAIL)
 MUTD=${VM_CP_MUT:+-DMUT_$VM_CP_MUT}

@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  302.4,
+  280.8,
   21.6
  ],
  "core": [
   2.16,
   2.16,
-  300.23999999999995,
+  278.64,
   19.44
  ],
  "why": "spec outline",
@@ -31,20 +31,20 @@
  "pins": {
   "N": [
    "rx_v",
-   "rx_flit"
+   "rx_flit",
+   "clk",
+   "rst_n"
   ],
   "S": [
    "w1",
    "w3",
    "w0",
-   "w2",
+   "w2"
+  ],
+  "W": [
    "psh",
    "rqv",
    "rqh"
-  ],
-  "W": [
-   "clk",
-   "rst_n"
   ]
  },
  "clock_port": "clk",
@@ -69,6 +69,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile_specs/qkd_ke/qkd_ke_rq_pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
