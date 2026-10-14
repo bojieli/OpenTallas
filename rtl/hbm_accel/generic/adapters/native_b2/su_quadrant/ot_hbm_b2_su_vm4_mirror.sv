@@ -3,8 +3,9 @@
 // Four actual native B2 slices. Group0 has an exclusive per-quadrant client.
 // Group1 and DMA are exported in the VM domain for independent real endpoint binding.
 // Client offsets are local13-bit sectors; mirror aperture remains explicit per beat.
-module ot_hbm_b2_su_vm4_mirror #(parameter integer MUT=0, NC=4, HARD_CLOCKS=0)(
+module ot_hbm_b2_su_vm4_mirror #(parameter integer MUT=0, NC=4, HARD_CLOCKS=0, SCALAR_CQ_ENABLE=0)(
  input wire [3:0] cclk,input wire vclk,rst_n,input wire [3:0] permit,mirror,
+ input wire [4*NC*338-1:0] scalar_cq,output wire [4*NC*274-1:0] scalar_cr,
  input wire [51:0] vm_child_clk,vm_child_rst_n,
  input wire [23:0] relay_clk,relay_rst_n,
  input wire [4*8*16-1:0] crq,output wire [31:0] crq_credit,output wire [32*257-1:0] crr,
@@ -29,10 +30,10 @@ module ot_hbm_b2_su_vm4_mirror #(parameter integer MUT=0, NC=4, HARD_CLOCKS=0)(
    assign fault[q*8+b]=lf|af;
   end
   wire [16*257-1:0] allrr;wire [15:0] allrc,allwc,alld;wire [7:0] kd;wire vc;wire [2:0] hs;wire [1:0] mb;wire [NC*274-1:0] unused_cr;
-  assign mirror_busy[q*2+:2]=mb;
+  assign mirror_busy[q*2+:2]=mb;assign scalar_cr[q*NC*274+:NC*274]=unused_cr;
   assign rr=allrr[8*257-1:0];assign rqcr=allrc[7:0];assign wqcr=allwc[7:0];assign wd=alld[7:0];
   assign peer_rr[q*8*257+:8*257]=allrr[8*257+:8*257];assign peer_rq_credit[q*8+:8]=allrc[15:8];assign peer_wq_credit[q*8+:8]=allwc[15:8];assign peer_wq_done[q*8+:8]=alld[15:8];
-  ot_hbm_b2_slice_owned #(.NC(NC),.HARD_CLOCKS(HARD_CLOCKS),.RG(2),.WG(2),.RRS(8'h33),.WRS(8'h33)) vm(.clk(vclk),.rst_n(rst_n),.child_clk(vm_child_clk[q*13+:13]),.child_rst_n(vm_child_rst_n[q*13+:13]),.sid(2'(q)),.cq({NC*338{1'b0}}),.cr(unused_cr),
+  ot_hbm_b2_slice_owned #(.NC(NC),.HARD_CLOCKS(HARD_CLOCKS),.RG(2),.WG(2),.RRS(8'h33),.WRS(8'h33)) vm(.clk(vclk),.rst_n(rst_n),.child_clk(vm_child_clk[q*13+:13]),.child_rst_n(vm_child_rst_n[q*13+:13]),.sid(2'(q)),.cq(SCALAR_CQ_ENABLE?scalar_cq[q*NC*338+:NC*338]:{NC*338{1'b0}}),.cr(unused_cr),
    .rq({peer_rq[q*8*17+:8*17],rq}),.rq_cr(allrc),.rr(allrr),.wq({peer_wq[q*8*281+:8*281],wq}),.wq_cr(allwc),.wq_done(alld),
    .dq(dma_q[q*8*281+:8*281]),.dq_done(dma_done[q*8+:8]),.vcb(2130'b0),.vcb_cr(vc),.kq_done(kd),
    .cw_in(cwi[q]),.cw_in_cr(cwicr[q]),.cw_out(cw[q]),.cw_out_cr(cwcr[q]),.ccw_in(ccwi[q]),.ccw_in_cr(ccwicr[q]),.ccw_out(ccw[q]),.ccw_out_cr(ccwcr[q]),
