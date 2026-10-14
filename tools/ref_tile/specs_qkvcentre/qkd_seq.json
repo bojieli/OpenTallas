@@ -13,7 +13,7 @@
   "rtl/lib/ot_reset_sync.sv"
  ],
  "params": {},
- "clock_port": "ck",
+ "clock_port": "ck_core",
  "reset_ports": [
   "rst_n"
  ],
@@ -114,13 +114,15 @@
   "N": [
    "r_x3_d",
    "r_x3_cr",
-   "ck",
    "t_ar_d",
    "t_ar_cr",
    "r_sd",
    "r_kvd",
    "t_ds",
-   "t_pw"
+   "t_pw",
+   "ck_core",
+   "ck_xs2",
+   "ck_xs3"
   ],
   "S": [
    "ar",
@@ -129,7 +131,9 @@
    "hc",
    "tk",
    "kst",
-   "rst_n"
+   "rst_n",
+   "ck_xs0",
+   "ck_xs1"
   ],
   "W": [
    "aq_WS",
@@ -143,7 +147,9 @@
    "kvn_WN_cr",
    "kc_WN",
    "af_WN",
-   "mf_WN"
+   "mf_WN",
+   "ck_fan_WS",
+   "ck_fan_WN"
   ],
   "E": [
    "aq_ES",
@@ -157,7 +163,9 @@
    "kvn_EN_cr",
    "kc_EN",
    "af_EN",
-   "mf_EN"
+   "mf_EN",
+   "ck_fan_ES",
+   "ck_fan_EN"
   ]
  },
  "pin_ranges": {
@@ -265,10 +273,6 @@
    247.0,
    247.2
   ],
-  "ck": [
-   266.4,
-   266.6
-  ],
   "t_ar_d": [
    276.4,
    326.4
@@ -320,6 +324,42 @@
   "rst_n": [
    298.4,
    298.6
+  ],
+  "ck_core": [
+   329.4,
+   329.8
+  ],
+  "ck_xs0": [
+   201.0,
+   201.4
+  ],
+  "ck_xs1": [
+   319.8,
+   320.2
+  ],
+  "ck_xs2": [
+   194.0,
+   194.4
+  ],
+  "ck_xs3": [
+   327.4,
+   327.8
+  ],
+  "ck_fan_WS": [
+   226.6,
+   227.0
+  ],
+  "ck_fan_WN": [
+   399.4,
+   399.8
+  ],
+  "ck_fan_ES": [
+   226.6,
+   227.0
+  ],
+  "ck_fan_EN": [
+   399.4,
+   399.8
   ]
  },
  "outline": {
@@ -739,5 +779,28 @@
     "note": "control mutant: Q beats 0 / 1 swapped"
    }
   ]
- }
+ },
+ "clock": "entries",
+ "clock_ports": [
+  "ck_core",
+  "ck_xs0",
+  "ck_xs1",
+  "ck_xs2",
+  "ck_xs3",
+  "ck_fan_WS",
+  "ck_fan_WN",
+  "ck_fan_ES",
+  "ck_fan_EN"
+ ],
+ "defines": [
+  "OT_QKD_SEQ_CK_ENTRIES"
+ ],
+ "child_clock_ref": "boundary",
+ "sdc_extra": [
+  "physical/qwen_kv_centre/qkd_seq_child_ioref.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/qwen_kv_centre/qkd_seq_child_ioref.sdc"
+ ],
+ "clock_note": "clock entries (coordinator 10-13: a wires-only parent has no tree): one entry pin per leaf at the face nearest the leaf's ck pin -- fans 69 um (W / E M4, beside mf / above kc), store slices xs0 / xs1 171 um from S, xs2 / xs3 110 um from N, core ~250 um from N (its ck pin is on its N face, mid-cluster); the die delivers phi - R_i at each entry, R_i = entry wire + the leaf's routed boundary insertion (OT_WC entry lines of the gate / route log)."
 }
