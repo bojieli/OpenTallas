@@ -17,3 +17,5 @@ python3 tools/hgi_unit_tput/snapshot_qdq_core_fin2_oracle.py 80e1681e0 /tmp/core
 ```
 
 Ship the snapshot, bench and runner to each eligible fleet host, then submit via `ot-run` with `CORE_SOURCE_DIR` naming the pinned directory and `OUT` a fresh evidence directory. The runner verifies every source SHA256 before compilation. `CORE_SPANPIPE=0 FR_SPANPIPE=0` selects the diagnostic; `MUT_CAND=2` selects the expected negative. No arithmetic word-golden, native 184/168 price, placement, or timing qualification is claimed here; the parent owns those separate gates.
+
+The unchanged oracle also passes exact final source `3cfca21b7` in unique r4 directories: both positive configurations have the same control coverage and reuse minima; the same real MUT=2 fails at the same actual beat output on cycle 36210. This source gives dep_clear its own equal-phase reset region6 and prepares the head increment before FIN selection. Full SHA256 manifests and logs are in r4; `matched_3cfca21b7_report.json` binds those results separately without replacing the original 80e proof.
