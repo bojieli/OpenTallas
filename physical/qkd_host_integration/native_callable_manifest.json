@@ -1,6 +1,6 @@
 {
   "top": "qkd_host_token_service",
-  "status": "DEFAULT_OFF functional candidate; new full assembly not yet behaviorally composed",
+  "status": "DEFAULT_OFF functional candidate; three selected assembly modes elaborate; actual whole-token composition pending",
   "io_commit": "0d401fc0b",
   "build_recipe": "tools/qwen_host/native_callable_build.sh",
   "live_host_builds": [],
@@ -64,5 +64,12 @@
     "rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv": "aef489bf2ecf88b88dc6287b115bd0a4744dc1dac490b0e0034e6d18bacf7b15",
     "rtl/qwen_sys/host_20261013/qkd_host_phy_cdc5.sv": "777dd2634771a7d72f2db4c144e76056c9c57eb17ff4c638b433cbe2c56bfcef",
     "rtl/qwen_sys/host_20261013/qkd_host_control_prompt_capture_token_service.sv": "5d3401f5368c2558e0118594f645beca2279930652f6eed8aa43e33a537acdb0"
-  }
+  },
+  "elaboration": {
+    "gate": "tools/qwen_host/token_service_elaborate.sh",
+    "ot_run_unit": "oth-ubuntu-2151102-1791976321",
+    "exit_code": 0,
+    "proof_scope": "ELABORATION_ONLY"
+  },
+  "recipe_sha256": "9f64835663d8cca39c54d27c433306e9bd90465800a219d5f783d4fee6d230f0"
 }

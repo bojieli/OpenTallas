@@ -4879,6 +4879,526 @@
       "alternative_to": "qkd_host_ctrl_packet"
     },
     {
+      "master": "qkd_host_ctrl_token_service_packet",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_ctrl_token_service_packet.sv",
+      "source_revision": "b8d9486c7",
+      "source_sha256": "cca15c4e0496efe087bc911924b9b0aeaf00dad9f0a9440032dea51bdd8e9c75",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "die_id",
+          "direction": "input",
+          "width": 3,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_d",
+          "direction": "input",
+          "width": 512,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_d",
+          "direction": "output",
+          "width": 512,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_tk",
+          "direction": "input",
+          "width": 93,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_kst",
+          "direction": "input",
+          "width": 10,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_boot",
+          "direction": "input",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cmd_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cmd_hc",
+          "direction": "input",
+          "width": 182,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cmd_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "hc",
+          "direction": "output",
+          "width": 182,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tk8",
+          "direction": "output",
+          "width": 744,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "kst8",
+          "direction": "output",
+          "width": 80,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "boot8",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "seen",
+          "direction": "output",
+          "width": 8,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "startup_allowed",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_service_ready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_service_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "begin_available",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_begin_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_begin_epoch",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "pending_advertised",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "pending_epoch",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_ready8",
+          "direction": "output",
+          "width": 8,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "pending_ack8",
+          "direction": "output",
+          "width": 8,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_epoch8",
+          "direction": "output",
+          "width": 128,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "ingest_permission",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "por_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "token_wrap_fence_valid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_wrap_drained",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_wrap_link_reset_seen",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_wrap_retraining_done",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_allocator_fault",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "package_abort",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "abort_drained",
+          "direction": "input",
+          "width": 4,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_request_valid",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "token_request_ready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_request_token",
+          "direction": "output",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "token_request_position",
+          "direction": "output",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "token_request_generation",
+          "direction": "output",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "token_grant_valid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_grant_ready",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "token_grant_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_grant_token",
+          "direction": "input",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_grant_position",
+          "direction": "input",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_grant_generation",
+          "direction": "input",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_grant_tag",
+          "direction": "input",
+          "width": 59,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "allocated_valid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "allocated_delivered",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "allocated_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "allocated_token",
+          "direction": "input",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "allocated_position",
+          "direction": "input",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "allocated_generation",
+          "direction": "input",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "token_epoch_valid",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "token_epoch",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "cancel_valid",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "cancel_tag",
+          "direction": "output",
+          "width": 59,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "cancel_generation",
+          "direction": "output",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "cancel_done",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "cancel_fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "cancel_drained",
+          "direction": "output",
+          "width": 4,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "terminal_accepted",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        }
+      ],
+      "flop_bits": 6245,
+      "clock_entries": [
+        "ck"
+      ],
+      "instances_per_die": 0,
+      "candidate_instances_per_die": 1,
+      "outline_status": "PENDING_MAPPED_AREA_PIN_CAPACITY",
+      "physical_qualified": false,
+      "default_off_protocol_candidate": true,
+      "params": {
+        "ENABLE_SERVICE": 0,
+        "ENABLE_TOKEN": 0
+      },
+      "alternative_to": "qkd_host_ctrl_service_packet",
+      "identity": "HC22v2 token epoch230:245 validity246 service epoch247:262; sole external central allocator; POR-retained rank witness and held cancellation"
+    },
+    {
       "master": "qfd_xf_ch546",
       "source": "rtl/physical/ot_qwen_die_cdc_ch.sv",
       "params": {
@@ -21251,6 +21771,66 @@
       "clock_family": "CORE833"
     },
     {
+      "source": "host.CTRL.token_request_valid/token/position/generation",
+      "destination": "native_allocator.request",
+      "bits": 39,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "native_allocator.request_ready",
+      "destination": "host.CTRL.token_request_ready",
+      "bits": 1,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "native_allocator.grant_valid/epoch/token/position/generation/tag",
+      "destination": "host.CTRL.grant",
+      "bits": 114,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.CTRL.token_grant_ready",
+      "destination": "native_allocator.grant_ready",
+      "bits": 1,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "native_allocator.allocated_valid/delivered/epoch/token/position/generation",
+      "destination": "host.CTRL.allocated_witness",
+      "bits": 56,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.CTRL.cancel_valid/tag/generation/done/fault/drained",
+      "destination": "native_terminal_collector.cancel",
+      "bits": 68,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "native_terminal_collector.identity_qualified_cancel_accepted",
+      "destination": "host.CTRL.terminal_accepted",
+      "bits": 1,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "native_terminal_collector.actual_KV_VM_collective_HOST_drains",
+      "destination": "host.CTRL.abort_drained",
+      "bits": 4,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "native_allocator.identity_fault",
+      "destination": "host.CTRL.token_allocator_fault",
+      "bits": 1,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "native_links.qualified_wrap_fence/drained/reset_seen/retrained",
+      "destination": "host.CTRL.token_wrap_fence",
+      "bits": 4,
+      "clock_family": "CORE833"
+    },
+    {
       "source": "host.CTRL.genuine_hc",
       "destination": "host.NATIVE.hc",
       "bits": 182,
@@ -21260,7 +21840,7 @@
       "source": "host.CTRL.token_epoch_valid/epoch",
       "destination": "host.NATIVE.shared_epoch_valid/epoch",
       "bits": 17,
-      "clock_family": "CORE833_TOKEN_VARIANT_PENDING"
+      "clock_family": "CORE833_TOKEN_VARIANT_FUNCTIONAL_COMPONENT_PROVEN_COMPOSITION_PENDING"
     },
     {
       "source": "host.NATIVE.request_v/tag/gen",
