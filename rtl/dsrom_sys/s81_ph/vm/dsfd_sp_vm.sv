@@ -1714,6 +1714,17 @@ module dsfd_sp_vm_m #(
         assign coo[0] = {OW{1'b0}};
         for (t = 0; t < NT; t = t + 1) begin : g_t
             wire [1:0] gid = t;
+`ifdef OT_SPVM_BGL
+            // el1013-s81-bgq28: 8 one-bank leaves dsfd_vm_bgl28 under the wires-only dsfd_vm_bgq28h (hop 16, same
+            // o_* -> f_* skew HL + 1, so MD and the BE are unchanged).  Fixed parameters: QD 4, EP 2.
+            initial if (QD != 4 || EP != 2) $error("dsfd_sp_vm_m: dsfd_vm_bgq28h is QD 4 / EP 2");
+            dsfd_vm_bgq28h u_bg (
+                .ck(ck), .rs(rst), .grp(gid),
+                .i_v(cv_[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cm[t]), .i_d(cd_[t]),
+                .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),
+                .r_v(cov[t]), .r_d(cod[t]), .r_f(cof[t]), .r_o(coo[t]),
+                .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1]));
+`else
             // = dsfd_vm_bgq28 (the hard tile) at the default parameters
             // v4 (el1011-ds-vm/bgq28 2026-10-12): dsfd_vm_bgr, 4 bank-pair stages + 2-stage control lead (hop 6); its
             // o_* -> f_* skew is HL + 1 = QD + 5 + ED, the MD below (NSTG-independent), so the BE is unchanged
@@ -1723,6 +1734,18 @@ module dsfd_sp_vm_m #(
                 .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),
                 .r_v(cov[t]), .r_d(cod[t]), .r_f(cof[t]), .r_o(coo[t]),
                 .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1]));
+`endif
+`ifdef OT_SPVM_BGTRACE
+            // simulation only: the production request trace at the head of slice 0 (replayed by tb_dsfd_vm_bgl_lockstep)
+            if (h == 0 && t == 0) begin : g_tr
+                integer fd, cy;
+                initial begin fd = $fopen("bg_trace.txt", "w"); cy = 0; end
+                always @(posedge ck[0]) begin
+                    cy <= cy + 1;
+                    if (|cv_[0]) $fwrite(fd, "%0d %h %h %h %h %h\n", cy, cv_[0], cwe[0], crow[0], cm[0], cd_[0]);
+                end
+            end
+`endif
         end
         assign ov[h*NPR +: NPR] = cov[NT]; assign od[h*NPR*128 +: NPR*128] = cod[NT]; assign of[h*4 +: 4] = cof[NT];
         assign oo[h*3 +: 3] = coo[NT];
