@@ -1,0 +1,10 @@
+{
+  "source_commit": "beb8ed39e",
+  "default_enabled": false,
+  "trigger": "Original final ODB/SPEF SS k2_g[6][1] -> t_rdy[1], serial core_clk1111.111ps, slack -356.0112205ps",
+  "repair": "Register four K2 group-sum reduction before wide accumulated count/compare, align read hit and all counter-half ARM metadata at K3",
+  "nominal_added_ff": 85,
+  "candidate_completion_delta_serial_cycles": 1,
+  "physical_geometry": "unassigned; previous cmdpipe CLOSED preserved",
+  "native_gold_tp_mutant": "launching fresh remote proof"
+}
