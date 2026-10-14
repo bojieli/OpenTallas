@@ -37,7 +37,10 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / 'hier_contract'))
 
 DW = 508
-VM_ENV = dict(x=13284.0, y=17249.76, w=4708.8, h=2347.92)
+VM_ENV = dict(x=13284.0, y=17051.04, w=4838.4, h=2546.64)   # r11 / contract v5: VM slot change request v2 (VM3 10-13 18:08) ACCEPTED
+VM_OBS_TOP = 9                         # r11: region / band clusters are M9-capped; the die keeps only its M8 / M9 PG straps there
+RHEAD_LAT_Y = 8.64                     # r11: legal origin lattice of the head frame in y (M6 nb pins + site rows; ot_mts::place)
+WCTL_H = 129.6                         # r11 / v5: closed qkd_kvwq_ctl_bin-sl2 is 172.8 x 129.6, N-aligned in the old 518.4 slot
 SU_X = 16424.64                      # the VM stream's SU reservation column (el1011-qwen-tp8.log 04:20)
 RHEAD_WH, RHEAD_OLD_W = (712.8, 453.6), 648.0   # coordinator 10-13: qkh_head_hs grant (v4 T9 was 691.2)
 CDC_WH = 183.6
@@ -359,6 +362,41 @@ def apply(v, m, G):
             if i.orient in ('R0', 'MX'):
                 i.x = round(i.x + i.w + (RHEAD_OLD_W - i.w) - RHEAD_WH[0], 4)
             i.w, i.h = RHEAD_WH
+        elif i.master == 'qkd_kvwq_ctl_bin' and i.h > WCTL_H + 1.0:
+            # v5: the closed sl2 view; N-aligned (keeps the kvn / f3 hops), the freed 388.8 um takes the f0 / f1 relays
+            top = i.y + i.h
+            i.w, i.h = 172.8, WCTL_H
+            i.y = round(v.dn(top - WCTL_H, v.GY), 4)
+    # r11 (chain r10a real case FAIL: 'no legal, non-overlapping origin for ectl_WS_2'): the head frame's legal origins are
+    # an 8.64-um lattice in y; a head half a step off was snapped up, its neighbour down, and the 131.76-um ectl gap
+    # closed to 125.28.  Every engine is packed on the lattice here: heads 1 / 0 downward from the ectl, 2 / 3 upward.
+    eng = {}
+    for i in m['insts']:
+        if i.master == 'qkd_rhead':
+            st, e, h = i.name.split('_')[1:4]
+            eng.setdefault((st, e), {})[int(h)] = i
+    L = RHEAD_LAT_Y
+    lat_moves = 0
+    for (st, e), hd in sorted(eng.items()):
+        ec = by.get(f'ectl_{st}_{e}')
+        if ec is None or len(hd) != 4:
+            continue
+        o = sorted(hd.values(), key=lambda q: q.y)
+        lo = [q for q in o if q.y < ec.y]
+        hi = [q for q in o if q.y > ec.y]
+        lim = ec.y - 2.16
+        for q in reversed(lo):
+            y = math.floor((lim - q.h) / L + 1e-9) * L
+            lat_moves += abs(y - q.y) > 1e-6
+            q.y = round(y, 4)
+            lim = q.y - 2.16
+        lim = ec.y + ec.h + 2.16
+        for q in hi:
+            y = math.ceil(lim / L - 1e-9) * L
+            lat_moves += abs(y - q.y) > 1e-6
+            q.y = round(y, 4)
+            lim = q.y + q.h + 2.16
+    rec['rhead_lattice'] = dict(lattice_y=L, heads_moved=int(lat_moves))
 
     # ---------------------------------------------------------------- r9 pin alignment at the die (pin_align FAIL classes)
     # (1) the attention stack is as tall as the head column it serves (4 engines x (4 heads + ectl) = 8,164.8 um; the
@@ -1071,7 +1109,7 @@ def _wrap(v, m, G, peers):
         if vmm is not None:
             vi, si = byi['sp_vector_memory'], byi['sp_su64_sfu']
             sx, sy = VM_ENV['w'] / vmm.w, VM_ENV['h'] / vmm.h
-            n = Master(vmm.name, VM_ENV['w'], VM_ENV['h'], vmm.obs_top, vmm.note + ' | contract v4 T10: region of hardened '
+            n = Master(vmm.name, VM_ENV['w'], VM_ENV['h'], VM_OBS_TOP, vmm.note + ' | contract v4 T10: region of hardened '
                        'leaves 4708.8 x 2347.92; pins toward their peers (faces provisional until the leaves close)')
             for p in dict.fromkeys(vmm.order):
                 sp = vmm.ports.get(p)
