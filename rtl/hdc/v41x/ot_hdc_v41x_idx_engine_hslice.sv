@@ -4,7 +4,8 @@
 // with real head-key hslice composition through chunk_el. FPL+16 extra edges
 // are explicitly carried by keep metadata, in-flight sizing and the tail.
 // Existing closed constituents and legacy functional engine stay unchanged.
-// MUT1 swaps runtime chunk head straps (proof-only, default0).
+// MUT1 swaps both sibling chunk pairs (a symmetric diagnostic).
+// MUT2 duplicates heads8..15 in chunk0, omitting heads0..7 (proof-only).
 module ot_hdc_v41x_idx_engine_hslice #(
     parameter integer NK = 8,          // keys per cycle
     parameter integer IH = 32,         // index heads
@@ -59,7 +60,7 @@ module ot_hdc_v41x_idx_engine_hslice #(
     generate
         for (c = 0; c < NCH; c = c + 1) begin : g_ch
             ot_hdc_v41x_idx_chunk_el #(.NB(NB), .NKT(NK), .FPL(FPL), .FML(FML), .QL(QL)) u_c (
-                .clk(clk), .rst_n(rst_n), .hb(8'(8 * ((MUT == 1) ? (c ^ 1) : c))), .ql_v(ql_v), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc),
+                .clk(clk), .rst_n(rst_n), .hb(8'(8 * ((MUT == 1) ? (c ^ 1) : ((MUT == 2 && c == 0) ? 1 : c)))), .ql_v(ql_v), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc),
                 .ql_w(ql_w), .k_v(take), .k_kv(k_kv), .k_key(k_key),
                 .c_v(cv[c]), .c_kv(ckv[c]), .c_sum(csum[c]), .c_fault(cfl[c]));
         end
