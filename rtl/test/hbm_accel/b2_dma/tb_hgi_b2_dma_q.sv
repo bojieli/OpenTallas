@@ -31,6 +31,9 @@ module tb_hgi_b2_dma_q;
     parameter integer FLAT = 0;
     parameter integer CLOCK_ENTRIES = 0;
     parameter integer MUT_SEAM = 0;
+    parameter integer MUT_CORE_PIN = 0;
+    parameter integer MUT_CORE_LOOK = 0;
+    longint core_pin_checked=0,core_pin_reset=0,core_pin_invalid=0;
     parameter integer NREC = 40;                        // random records per qid
     parameter integer SEED = 20261013;
     parameter integer LAT = 12;                         // HBM lane request -> first beat (cycles)
@@ -74,7 +77,7 @@ module tb_hgi_b2_dma_q;
     // VM-side adapter, deliberately OUTSIDE the tile: expand one pin lane into its bank.
     always @* begin vm_wl = '0; if (q5_wl[279]) vm_wl[q5_bank*280 +: 280] = q5_wl; end
     assign wl = vm_wl;
-    ot_hgi_b2_dma_q #(.HARD_CLOCKS(CLOCK_ENTRIES), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .leaf_clk({10{clk}}), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
+    ot_hgi_b2_dma_q #(.HARD_CLOCKS(CLOCK_ENTRIES), .MUT_CORE_PIN(MUT_CORE_PIN),.MUT_CORE_LOOK(MUT_CORE_LOOK), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .leaf_clk({10{clk}}), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data),
@@ -82,6 +85,20 @@ module tb_hgi_b2_dma_q;
         .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we),
         .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data),
         .vmq(vmq), .vmr(vmr), .vr2q(vr2q), .vr2r(vr2r), .wl(q5_wl), .wl_bank(q5_bank), .wl_done(|wl_done));
+    // Immutable legacy core shadow consumes exactly the actual candidate inputs.
+    // Full encoded512 bits are compared including every invalid/reset payload.
+    wire [511:0] core_kq_gold;
+    ot_hgi_dma_kvw_core #(.OWN_B0(1)) core_gold(.clk(clk),.rn(rst_n),
+      .c_v(dut.kc_v),.c_vs(dut.kc_vs),.c_vst(dut.kc_vst),.c_ds(dut.kc_ds),
+      .c_dst(dut.kc_dst),.c_ns(dut.kc_ns),.c_m(dut.kc_m),.g_gnt(dut.kc_gnt),.g_cr(dut.kc_cr),
+      .h_v(dut.hv),.h_d(dut.hd),.b0_rd(256'd0),.kw_rdy(dut.kc_wrdy),
+      .r_rsp_v({3'd0,r_rsp_v}),.r_rsp_we({3'd0,r_rsp_we}),.kq(core_kq_gold));
+    always @(negedge clk)begin
+      core_pin_checked=core_pin_checked+512;
+      if(!rst_n)core_pin_reset=core_pin_reset+1;
+      for(integer lane=0;lane<32;lane=lane+1)if(!core_kq_gold[lane*16+15])core_pin_invalid=core_pin_invalid+1;
+      if(core_kq_gold !== dut.kc_kq)bad("core registered encoded512 disagrees with immutable legacy mask");
+    end
     end endgenerate
     wire rec_rdy = dma_ret[0], rec_done = dma_ret[1], rec_fault = dma_ret[2];
     bit trace_abort = 0;
@@ -276,6 +293,20 @@ module tb_hgi_b2_dma_q;
                 end
             end
         end
+    end
+    integer boundary_pending[0:31],boundary_peak[0:31];integer boundary_peak_all=0;
+    longint boundary_requests=0,boundary_responses=0;
+    initial for(integer b=0;b<32;b=b+1)begin boundary_pending[b]=0;boundary_peak[b]=0;end
+    always @(posedge clk)begin
+      if(!rst_n)for(integer b=0;b<32;b=b+1)boundary_pending[b]=0;
+      else for(integer b=0;b<32;b=b+1)begin
+        boundary_pending[b]=boundary_pending[b]+int'(vr2q[b*16+15])-int'(vr2r[b*257+256]);
+        if(vr2q[b*16+15])boundary_requests++;
+        if(vr2r[b*257+256])boundary_responses++;
+        if(boundary_pending[b]>boundary_peak[b])boundary_peak[b]=boundary_pending[b];
+        if(boundary_pending[b]>boundary_peak_all)boundary_peak_all=boundary_pending[b];
+        if(boundary_pending[b]<0)bad("group boundary response without outstanding request");
+      end
     end
     // ---- VM wide write port model (32 lanes; done one edge later)
     always @(posedge clk) begin
@@ -533,6 +564,8 @@ module tb_hgi_b2_dma_q;
                  tp_ld, tp_ld / 640.0, 20480.0 / tp_ld, tp_st, tp_st / 640.0, 20480.0 / tp_st, tp_sf, tp_sf / 640.0, 20480.0 / tp_sf, tp_sl, tp_sl / 1024.0);
         $display("B2_DMA_Q STATS records=%0d faults=%0d resets=%0d burst_reqs=%0d kport_reqs=%0d vm_packets=%0d group_reads=%0d wide_writes=%0d cycles=%0d",
                  n_rec, n_fault, n_rst, n_rreq, n_kreq, n_vpk, n_g, n_wl, cyc);
+        $display("DMA_GROUP_BOUNDARY peak=%0d requests=%0d responses=%0d GLAT=%0d",boundary_peak_all,boundary_requests,boundary_responses,GLAT);
+        if(FLAT==0)$display("KQ_PIN_GOLD bits=%0d reset_edges=%0d invalid_lanes=%0d mutant=%0d",core_pin_checked,core_pin_reset,core_pin_invalid,MUT_CORE_PIN);
         if (errs == 0 && checked > 0) $display("B2_DMA_Q PASS checked=%0d records=%0d MUT_B2=%0d", checked, n_rec, MUT_B2);
         else $display("B2_DMA_Q FAIL errors=%0d checked=%0d records=%0d MUT_B2=%0d", errs, checked, n_rec, MUT_B2);
         $finish;

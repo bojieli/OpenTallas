@@ -103,7 +103,7 @@ module ot_hgi_b2_dma_mv #(
     output wire ser_k_fault,
     output wire [273:0] ser_vmr,
     input wire kv_c_rdy, kv_idle_w, kv_creq, kv_src, kv_done,
-    input wire [511:0] kv_kq, input wire [3:0] kv_wv, kv_wo,
+    input wire [31:0] kv_req_v, input wire [3:0] kv_wv, kv_wo,
     input wire [147:0] kv_wa, input wire [1023:0] kv_wd,
     output reg kc_v, output reg [14:0] kc_vs, kc_vst,
     output reg [31:0] kc_ds, kc_dst, output reg [17:0] kc_ns, output reg [19:0] kc_m,
@@ -394,14 +394,8 @@ module ot_hgi_b2_dma_mv #(
     reg [31:0] g_busy, g_hv; reg [7:0] g_slot [0:31]; reg [255:0] g_d [0:31]; reg [5:0] g_cr [0:31]; reg [4:0] g_rr;
     // pin flops (registered boundary: route lint 98f8152b3 counted 96 levels from c_gnt through the reader issue)
     reg g_gnt; reg [31:0] g_crp; reg [512:0] s_vr2q;
-    reg [512:0] group_q;
-    wire [512:0] group_next = {s_vr2q[512],s_vr2q[511:0] | kv_kq} ^ ((MUT_SEAM == 3 && |kv_kq) ? 513'd1 : 513'd0);
-    always @(posedge clk or negedge rn) begin
-       if (!rn) begin group_q[512] <= 0; for (integer b=0;b<32;b=b+1) group_q[b*16+15] <= 0; end
-       else begin group_q[512] <= group_next[512]; for (integer b=0;b<32;b=b+1) group_q[b*16+15] <= group_next[b*16+15]; end
-    end
-    always @(posedge clk) for (integer b=0;b<32;b=b+1) group_q[b*16 +: 15] <= group_next[b*16 +: 15];
-    assign vr2q = group_q;
+    // Registered source seam; masking/OR is captured in the independent group face.
+    assign vr2q = s_vr2q;
     always @(posedge clk or negedge rn) if (!rn) begin g_gnt <= 1'b0; g_crp <= 32'd0; end
                                         else begin g_gnt <= vr2r[8256]; g_crp <= vr2r[8255:8224]; end
     reg g_dv; reg [4:0] g_di;                               // the held response drained into the landing RAM this cycle
@@ -675,7 +669,7 @@ module ot_hgi_b2_dma_mv #(
       if(!rn)wq_pending_push<=0;else wq_pending_push<=p3_v&&p3_fl&&p3_keep;
     always @(posedge clk)if(p3_v&&p3_fl&&p3_keep)begin wq_pending_slot<=p3_sl;wq_pending_dest<=p3_dsec;end
     wire [324:0] wq_push_data = {wq_pending_dest,db_strb[wq_pending_slot],db_dat[wq_pending_slot]};
-    ot_hgi_b2_dma_fifo #(.W(325), .DEPTH(16), .MACRO(0)) u_wq_mem(.clk(clk), .rst_n(rn),
+    ot_hgi_b2_dma_fifo #(.W(325), .DEPTH(16), .MACRO(0), .ESL(32)) u_wq_mem(.clk(clk), .rst_n(rn),
        .push(wq_pending_push), .wdata(wq_push_data), .pop(iss_kw || iss_vw), .hv(wq_hv), .head(wq_head), .ovf(wq_ovf));
     wire [59:0] cf_push_data = {r_k,q_rend[r_k],1'b0,rdd[r_k][4:0],q_ds[r_k],rsa[r_k][4:0],9'(q_by[r_k] >> sl2)};
     ot_hgi_b2_dma_fifo #(.W(60), .DEPTH(64), .MACRO(3)) u_cf_mem(.clk(clk), .rst_n(rn),
@@ -996,7 +990,7 @@ module ot_hgi_b2_dma_mv #(
                 for (integer b = 0; b < 32; b = b + 1) begin
                     if (SV != 0 && vr2r[b*257 + 256] && kv_idle) g_hv[b] <= 1'b1;     // KVW: the KV engine's responses are its own
                     g_cr[b] <= g_cr[b] + 6'(g_crp[b]) - 6'((r_go && !src_hbm && SV != 0 && rsa[r_k][9:5] == 5'(b)) ? 1 : 0)
-                               - 6'(kv_kq[b*16 + 15]);                // the KV engine's requests (hbm-fq/dma)
+                               - 6'(kv_req_v[b]);                // the KV engine's requests (hbm-fq/dma)
                 end
                 if (SV != 0 && g_dv) begin g_hv[g_di] <= 1'b0; g_busy[g_di] <= 1'b0; g_rr <= g_di + 5'd1; end
                 s_vr2q[511:0] <= '0;

@@ -6,6 +6,8 @@
 // BACK1 belongs to its separate CLOSED NS1/NB8 engine beside each VM slice; integration is still owed.
 // No physical qualification until child views, assigned pins, slot/hop gates and measured CTS have passed.
 module ot_hgi_b2_dma_q #(
+    parameter integer MUT_CORE_PIN = 0,
+    parameter integer MUT_CORE_LOOK = 0,
     parameter integer HARD_CLOCKS = 0, // physical parent: ten independent die-compensated clock entries
     parameter integer FRONT = 0,
     parameter integer VR2 = 1,
@@ -88,6 +90,8 @@ module ot_hgi_b2_dma_q #(
     wire [337:0] ser_vmq;
     wire [273:0] ser_vmr;
     wire [36:0] ka;
+    wire [31:0] kc_req_valid;
+    for(genvar kr=0;kr<32;kr=kr+1)assign kc_req_valid[kr]=kc_kq[kr*16+15];
     wire [512:0] group_request;
     wire [342:0] mv_k_request; wire mv_k_ready; wire [257:0] mv_k_response;
     wire [337:0] fast_packet; wire packet_serial_owner; wire [273:0] packet_mover_return;
@@ -134,13 +138,13 @@ module ot_hgi_b2_dma_q #(
       .r_req_v(rv), .r_req_rdy({3'd0,r_req_rdy}), .r_req_addr(ra), .r_req_len(rl), .r_req_tag(rt), .r_req_we(rwe), .r_req_wdata(rwd), .r_req_wstrb(rws),
       .r_rsp_v({3'd0,r_rsp_v}), .r_rsp_we({3'd0,r_rsp_we}), .r_rsp_rdy(rrr), .r_rsp_tag({48'd0,r_rsp_tag}), .r_rsp_last({3'd0,r_rsp_last}), .r_rsp_data({768'd0,r_rsp_data}),
       .vr2q(group_request), .vr2r_ctrl(vr2r[8256:8224]), .vmq(fast_packet), .vmr(packet_mover_return), .wl(wl), .wl_done(wl_done),
-      .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_kq(kc_kq),
+      .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_req_v(kc_req_valid),
       .kv_wv(kc_wv), .kv_wo(kc_wo), .kv_wa(kc_wa), .kv_wd(kc_wd), .kc_v(kc_v), .kc_vs(kc_vs), .kc_vst(kc_vst), .kc_ds(kc_ds),
       .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .credit_source(credit_source), .kc_wrdy(kc_wrdy));
 `ifndef OT_B2_DMA_Q5_HARD
-    ot_hgi_dma_kvw_core #(.OWN_B0(1))
+    ot_hgi_dma_kvw_core_reg_kq #(.OWN_B0(1),.MUT_KQ_ZERO(MUT_CORE_PIN),.MUT_LOOKAHEAD(MUT_CORE_LOOK))
 `else
-    ot_hgi_dma_kvw_core
+    ot_hgi_dma_kvw_core_reg_kq
 `endif
     u_kc(.clk(q5_clock[2]), .rn(rst_n), .c_v(kc_v), .c_rdy(kc_rdy), .c_vs(kc_vs), .c_vst(kc_vst),
       .c_ds(kc_ds), .c_dst(kc_dst), .c_ns(kc_ns), .c_m(kc_m), .g_gnt(kc_gnt), .g_cr(kc_cr), .kq(kc_kq), .kq_creq(kc_creq),
@@ -204,6 +208,6 @@ module ot_hgi_b2_dma_q #(
     assign wl_bank = wl[268:264];
     assign r_req_v=rv[0]; assign r_req_len=rl[3:0]; assign r_req_tag=rt[15:0]; assign r_req_we=rwe[0];
     assign r_req_wdata=rwd[255:0]; assign r_req_wstrb=rws[31:0]; assign r_rsp_rdy=rrr[0];
-    ot_hgi_b2_dma_groupface u_groupface(.clk(q5_clock[9]),.rst_n(rst_n),.request(group_request),.vr2q(vr2q));
+    ot_hgi_b2_dma_groupface #(.MUT_SEAM(MUT_SEAM)) u_groupface(.clk(q5_clock[9]),.rst_n(rst_n),.request(group_request),.kv_request(kc_kq),.vr2q(vr2q));
 endmodule
 `default_nettype wire
