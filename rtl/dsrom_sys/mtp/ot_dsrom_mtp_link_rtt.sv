@@ -15,17 +15,31 @@ module ot_dsrom_mtp_lrx_rtt #(
     output wire c_valid,
     input wire c_ready,
     output wire [W-1:0] c_data
+`ifdef OT_HROW_RESET_ACK
+    ,output wire rst_live
+`endif
 );
     generate if (ENABLE_RTT && ALWAYS_READY) begin: g_ar
         ot_dsrom_mtp_lrx_rtt_ar #(.W(W),.D(D),.FORWARD_HOPS(FORWARD_HOPS),.RETURN_HOPS(RETURN_HOPS)) u_rx
             (.clk(clk),.rst_n(rst_n),.l_valid(l_valid),.l_ready(l_ready),
-             .l_data(l_data),.c_valid(c_valid),.c_ready(c_ready),.c_data(c_data));
+             .l_data(l_data),.c_valid(c_valid),.c_ready(c_ready),.c_data(c_data)
+`ifdef OT_HROW_RESET_ACK
+             ,.rst_live(rst_live)
+`endif
+);
     end else if (ENABLE_RTT) begin: g_rtt
         ot_dsrom_mtp_lrx_rtt_core #(.W(W),.D(D),.SEL(SEL),
             .FORWARD_HOPS(FORWARD_HOPS),.RETURN_HOPS(RETURN_HOPS),.OUTPUT_PIPE(OUTPUT_PIPE)) u_rx
             (.clk(clk),.rst_n(rst_n),.l_valid(l_valid),.l_ready(l_ready),
-             .l_data(l_data),.c_valid(c_valid),.c_ready(c_ready),.c_data(c_data));
+             .l_data(l_data),.c_valid(c_valid),.c_ready(c_ready),.c_data(c_data)
+`ifdef OT_HROW_RESET_ACK
+             ,.rst_live(rst_live)
+`endif
+);
     end else begin: g_legacy
+`ifdef OT_HROW_RESET_ACK
+        assign rst_live=1'b0;
+`endif
         ot_dsrom_mtp_lrx #(.W(W),.D(D),.SEL(SEL)) u_rx
             (.clk(clk),.rst_n(rst_n),.l_valid(l_valid),.l_ready(l_ready),
              .l_data(l_data),.c_valid(c_valid),.c_ready(c_ready),.c_data(c_data));
@@ -42,6 +56,9 @@ module ot_dsrom_mtp_lrx_rtt_core #(parameter integer W = 513, parameter integer 
     output wire         c_valid,
     input  wire         c_ready,
     output wire [W-1:0] c_data
+`ifdef OT_HROW_RESET_ACK
+    ,output wire rst_live
+`endif
 );
     localparam integer ACTUAL_HISTORY = FORWARD_HOPS + RETURN_HOPS + 3;
 `ifdef OT_MTP_NEG_SHORT_RTT
@@ -55,6 +72,9 @@ module ot_dsrom_mtp_lrx_rtt_core #(parameter integer W = 513, parameter integer 
     end
     reg live;
     always @(posedge clk) live <= rst_n;
+`ifdef OT_HROW_RESET_ACK
+    assign rst_live=live;
+`endif
     reg pv; reg [W-1:0] pd;
     always @(posedge clk) begin pv <= l_valid; pd <= l_data; end   // pin flops
     wire pvl = pv && live;
@@ -156,6 +176,9 @@ module ot_dsrom_mtp_lrx_rtt_ar #(parameter integer W = 513, parameter integer D 
     output wire         c_valid,
     input  wire         c_ready,
     output wire [W-1:0] c_data
+`ifdef OT_HROW_RESET_ACK
+    ,output wire rst_live
+`endif
 );
     initial begin
         if (D < 2 || FORWARD_HOPS < 0 || RETURN_HOPS < 0 || FORWARD_HOPS + RETURN_HOPS + 3 > D - 1)
@@ -163,6 +186,9 @@ module ot_dsrom_mtp_lrx_rtt_ar #(parameter integer W = 513, parameter integer D 
     end
     reg live;
     always @(posedge clk) live <= rst_n;
+`ifdef OT_HROW_RESET_ACK
+    assign rst_live=live;
+`endif
     reg pv; reg [W-1:0] pd;
     always @(posedge clk) begin pv <= l_valid; pd <= l_data; end   // pin flops
     reg grant;

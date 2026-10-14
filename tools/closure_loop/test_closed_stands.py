@@ -169,6 +169,13 @@ class Gate(unittest.TestCase):
         r = self.run_(spec(reroute_reason=dict(ok, pair_cost_ps=640.0)))            # closes a hop within its reach
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("closed view stands", r["message"])
+        tile = {a: b for a, b in ok.items() if a != "pair_cost_ps"}
+        r = self.run_(spec(reroute_reason=dict(tile, launch_ps=331.4)))              # view launch > 220: tile defect
+        self.assertEqual(r["verdict"], "PASS")
+        self.assertIn("tile defect", r["message"])
+        self.assertEqual(self.run_(spec(reroute_reason=dict(tile, capture_ps=197.9)))["verdict"], "PASS")
+        self.assertEqual(self.run_(spec(reroute_reason=dict(tile, launch_ps=210.0, capture_ps=150.0)))["verdict"], "REFUSE")
+        self.assertEqual(self.run_(spec(reroute_reason=dict(tile, launch_ps=331.4, fix="x")))["verdict"], "REFUSE")
         r = self.run_(spec(reroute_reason=dict(ok, source="results/arch/missing.json")))
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("does not exist", r["message"])
