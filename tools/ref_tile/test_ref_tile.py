@@ -25,6 +25,33 @@ def spec(_ex, **kw):
 
 
 class Gen(unittest.TestCase):
+    def test_ordered_pin_group_limit_reaches_gate_and_route(self):
+        s = RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": 16}))
+        r = RT.gen(spec("nhb_pbst_ref", route={"pin_group_max": 16}), write=False)
+        blocks = RT.place_blocks(s, *r["outline"], RT.blocks_of(s))
+        env = RT.gen_env(s, "k", *r["outline"], RT.layer_contract(s, None), blocks)
+        self.assertIn("export OT_PIN_GROUP_MAX=16", env)
+        self.assertIn("PIN_MIN_TRACKS=2", env)
+        self.assertIn("OT_PIN_GROUP_MAX=16", RT.gen_job(s, "k", "deadbeef", blocks)["stages"]["route"]["cmd"])
+        s["route"].pop("pin_group_max")
+        self.assertEqual(RT.pin_group_max(s), 32)
+
+    def test_invalid_ordered_pin_group_limit_refused(self):
+        for value in (0, -1, 33, True, 16.5, "16"):
+            with self.assertRaises(RT.SpecError):
+                RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": value}))
+    def test_secondary_clock_is_declared_before_data_slew(self):
+        s = {"name": "two_root", "clock_port": "ck",
+             "sdc_extra": ["physical/qwen_romio_slots/qfd_coll_xfifo_native.sdc"]}
+        text = RT.gen_sdc(s, 770)
+        self.assertLess(text.index("create_clock -name ckd"),
+                        text.index("set_input_transition 150 [all_inputs -no_clocks]"))
+        # Source slew stays explicit, and data arrival tags are removed before
+        # measuring the secondary boundary reference in the extra SDC.
+        self.assertIn("set_input_transition 150 [get_ports ckd]", text)
+        self.assertLess(text.index("unset_input_delay -clock $ot_xf_refclk"),
+                        text.index("arrival_max_rise"))
+
     def test_pbst_kit(self):
         r = RT.gen(spec("nhb_pbst_ref"), write=False)
         self.assertEqual([f for f in r["findings"] if f[0] == "FAIL"], [])

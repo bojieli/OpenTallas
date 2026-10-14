@@ -115,11 +115,19 @@ class GateClock(unittest.TestCase):
         kd = Path(td) / "kit"
         kd.mkdir(exist_ok=True)
         if clock is not None:
-            (kd / PG.CLOCK_RESULT).write_text(json.dumps({"clock": clock}))
+            import hashlib
+            payload = b"module fixture; endmodule\n"
+            (kd / "fixture.v").write_bytes(payload)
+            entries = [{"path": "kit/fixture.v", "kind": "file", "sha256": hashlib.sha256(payload).hexdigest(),
+                        "git_blob": PG.SB.blob_hash(payload), "source": "working_tree"}]
+            binding = {"schema": PG.SB.SCHEMA, "files": entries, "manifest_sha256": PG.SB.canonical_digest(entries),
+                       "remote_archive_verified": True}
+            (kd / PG.CLOCK_RESULT).write_text(json.dumps({"clock": clock, "source_binding": binding}))
         return kd
 
     def test_submit_side(self):
-        with tempfile.TemporaryDirectory() as td:
+        with tempfile.TemporaryDirectory() as td, patch.object(PG, "ROOT", None):
+            PG.ROOT = Path(td)
             sev = lambda kd, **kw: (lambda g: (PG.check_clock_evidence(g, kd, **kw), g.verdict)[1])(PG.Gate())  # noqa: E731
             self.assertEqual(sev(self.kit(td)), "PASS")                            # nothing known: in-flow lint judges
             self.assertEqual(sev(self.kit(td), known_sinks=48000), "FAIL")         # history says big, no evidence
@@ -229,3 +237,24 @@ class StructureRepeat(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MultiDomainClockEvidence(unittest.TestCase):
+    def output(self, source="cks[0]", hi=250):
+        rows = [{"source": "ck[0]", "clock": "core_clk", "tt": {"all": {"min": 100, "max": 120}}},
+                {"source": source, "clock": "str_clk", "tt": {"all": {"min": 190, "max": hi}}}]
+        return ("GATE_TB textbook_lint: INFO clock_roots max_root_sinks=17460 root=port:cks[0]\n"
+                "GATE_CK tt insertion all 100..120 ps (spread 20)\n" +
+                "\n".join("GATE_CK_DOMAIN " + json.dumps(r) for r in rows))
+
+    def test_largest_root_uses_its_own_tree(self):
+        r = PG.clock_record(self.output(), True)
+        self.assertEqual(r["measured_clock"], "str_clk")
+        self.assertEqual((r["tt_insertion_ps"], r["tt_spread_ps"]), (250, 60))
+        self.assertEqual(r["verdict"], "PASS")
+
+    def test_secondary_domain_cannot_borrow_primary_domain_exception(self):
+        self.assertEqual(PG.clock_record(self.output(hi=301), True)["verdict"], "REFUSE")
+        r = PG.clock_record(self.output(source="other"), True)
+        self.assertIsNone(r["tt_insertion_ps"])
+        self.assertEqual(r["verdict"], "REFUSE")
