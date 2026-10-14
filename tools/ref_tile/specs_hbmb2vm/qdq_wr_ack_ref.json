@@ -1,0 +1,150 @@
+{
+  "name": "qdq_wr_ack_ref",
+  "top": "ot_hgi_qdq_wr",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/link/ot_fifo_sram_fwft.sv",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 259.2,
+    "h": 125.28
+  },
+  "util": 0.52,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "count": 1,
+      "inst": "u_od.g_tile[0].g_m0.u_m"
+    }
+  ],
+  "pins": {
+    "N": [
+      "wwq",
+      "wwq_cr",
+      "wwq_done",
+      "wg_req",
+      "wg_gnt"
+    ],
+    "S": [
+      "y",
+      "vo",
+      "qfault",
+      "dfault",
+      "clk"
+    ],
+    "W": [
+      "m_v",
+      "m",
+      "i_bad",
+      "rst_n",
+      "i_act",
+      "o_wf",
+      "o_fin",
+      "o_bad",
+      "o_idle"
+    ]
+  },
+  "refglob": "*y_f*",
+  "io_flop_at_pins": {
+    "cols": 12,
+    "allow_none": true
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "pin_min_tracks": 1
+  },
+  "job": {
+    "owner": "Codex:hbm_quant_sfu_2240",
+    "branch": "codex/hbm-quant-sfu-2240",
+    "tag": "n1",
+    "views_to": "physical/ref_tile/qdq_wr_ack_ref/views",
+    "record_to": "results/rtl/ref_tile/qdq_wr_ack_ref",
+    "purpose": "Real nativeSPAN1 immutableprice repair: {'ACK_LOOKAHEAD': 1}; candidate changes completionedges while retainingregisteredtransactionboundaries. Actual4B2 production32records13312words184/168 phases61/487 exact andheader/assemblymutants fail. Existing CLOSEDdefaultCORE andfailedq8eWR retained; newsource-matchedbody needed before any hardparentadoption.",
+    "extra_paths": [
+      "rtl",
+      "compiler",
+      "physical/hbm_accel_die_views",
+      "physical/asap7_memory_macros",
+      "results/rtl/ref_tile/qdq_native_peer4"
+    ],
+    "benches": [
+      {
+        "name": "exact61",
+        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=1 MUT=0 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_exact61",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 12,
+        "timeout_s": 7200,
+        "pass_regex": "^NATIVE_QDQ_TPUT PASS$",
+        "min_count_regex": "NATIVE_QDQ_EXACT PASS quadrants=4 records=32 words=(13312) cycles=184 priced_per_quarter=168"
+      },
+      {
+        "name": "exact487",
+        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=1 MUT=0 PHASE=487 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_exact487",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 12,
+        "timeout_s": 7200,
+        "pass_regex": "^NATIVE_QDQ_TPUT PASS$",
+        "min_count_regex": "NATIVE_QDQ_EXACT PASS quadrants=4 records=32 words=(13312) cycles=184 priced_per_quarter=168"
+      },
+      {
+        "name": "mut_header",
+        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=1 MUT=1 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_mut_header",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 12,
+        "timeout_s": 7200,
+        "fail_regex": "FATAL quadrant0 fault after0 dones MUT1"
+      },
+      {
+        "name": "mut_assembly",
+        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=1 MUT=2 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_mut_assembly",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 12,
+        "timeout_s": 7200,
+        "fail_regex": "FATAL 11592 of 13312 words mismatch"
+      }
+    ]
+  },
+  "pin_ranges": {
+    "y": [
+      95.0,
+      185.0
+    ]
+  },
+  "orfs_vars": {
+    "OT_MEG_MASTER": "ot_sram_1r1w_64x512_m1_r2c2",
+    "OT_MEG_EXPECT": 1,
+    "OT_MEG_BAND": "2.16",
+    "OT_MEG_EDGES": "EW"
+  },
+  "boundary_tcl": [
+    "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+  ],
+  "structural_change": "Real nativeSPAN1 immutableprice repair: {'ACK_LOOKAHEAD': 1}; candidate changes completionedges while retainingregisteredtransactionboundaries. Actual4B2 production32records13312words184/168 phases61/487 exact andheader/assemblymutants fail. Existing CLOSEDdefaultCORE andfailedq8eWR retained; newsource-matchedbody needed before any hardparentadoption.",
+  "clock": "spine",
+  "recipe": 1,
+  "params": {
+    "ACK_LOOKAHEAD": 1
+  },
+  "slot_change_request": {
+    "parent": "ot_hgi_qdq_q_pin4",
+    "selected": false,
+    "outline_um": [
+      259.2,
+      125.28
+    ],
+    "reason": "Distinct semanticcompletioncandidate, sameoutlineproposal; exactparentCLOCK/pins/reach andhardbinding mustbeapprovedbefore nativephysicaladoption."
+  }
+}
