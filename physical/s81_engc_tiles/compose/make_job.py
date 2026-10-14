@@ -25,7 +25,7 @@ def main():
     route = (
         f"export ENGC_VCLK_PS={a.vclk}; (cd physical/s81_ph_views/common && ./make_io_vclk_margin.sh $ENGC_VCLK_PS); "
         "export OT_ORFS_CORNER_OVERRIDE=TC; "
-        f"export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl {K}'; "
+        f"export OT_CTS_FIX_HOOKS='{C}/spine_engc.tcl physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl {K}'; "
         "export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; "
         "SDCM=physical/s81_ph_views/common/io_vclk_m_${ENGC_VCLK_PS}.sdc " f"SDCX={C}/engc_io.sdc HM=0.05 PD=0.45 SRC={{SRC}} OUT={{RUN}}/routes CORES=16 NEED=32 "
         f"SRCS='{C}/ot_engc_tiles_bb.v rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/lib/ot_hdly.sv' MACROS='{MACROS}' "
@@ -33,7 +33,7 @@ def main():
         "CTSA='-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 -macro_clustering_size 1 -macro_clustering_max_diameter 20' CLK=ck "
         "bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_engram_c rtl/dsrom_sys/engram/dsfd_engram_c.sv "
         f"--orfs-var MACRO_PLACEMENT_TCL=/src/{C}/macro_place.tcl --orfs-var DONT_BUFFER_PORTS=1 "
-        f"--orfs-var ENGC_VCLK_PS={a.vclk} --orfs-var ENGC_VCLK_FF_PS={a.vclk_ff} "
+        "--orfs-var OT_SPINE_PORT=ck --orfs-var OT_SPINE_MACRO_LEAF=1 " f"--orfs-var ENGC_VCLK_PS={a.vclk} --orfs-var ENGC_VCLK_FF_PS={a.vclk_ff} "
         f"--step-tcl PRE_FLOORPLAN={K} --step-tcl PRE_GLOBAL_PLACE={K} --step-tcl PRE_RESIZE={K} --step-tcl PRE_DETAIL_PLACE={C}/ck_entry_place.tcl $CL_STOP_AFTER")
     mv = " ".join("--macro-view " + m.split("=")[1] for m in MACROS.split())
     spec = {

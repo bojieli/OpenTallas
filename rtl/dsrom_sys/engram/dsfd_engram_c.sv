@@ -78,7 +78,11 @@ module dsfd_engram_c #(
     // (physical/s81_engc_tiles/compose/ck_entry_{keep,place}.tcl).  N = (latest child - this child) / stage delay,
     // "child" = top-tree arrival + internal insertion, so every child's flops see the clock at the same time
     // (pin arrival + insertion spread <= 80 ps, measured in the CTS-stop gate).  A wire in simulation.
-    localparam integer CKN_WIN = 7, CKN_IO = 5, CKN_SINK = 3, CKN_WS = 5, CKN_LKP = 4, CKN_PB0 = 2, CKN_PB1 = 2, CKN_PB2 = 0;
+    // 2026-10-13 (after CTS-stop runs g3..g8): the entry chains are EMPTY and the children hang on the ck port net itself.
+    // TritonCTS re-drew the top tree at every floorplan or chain-count change (child pin arrivals moved +-100 ps, so the
+    // counts never held); the cluster clock is now the pre-placed balanced spine (physical/common_flow/clock_spine.tcl,
+    // one leaf per child clock pin) padded to per-child targets (physical/s81_engc_tiles/compose/spine_engc.tcl).
+    localparam integer CKN_WIN = 0, CKN_IO = 0, CKN_SINK = 0, CKN_WS = 0, CKN_LKP = 0, CKN_PB0 = 0, CKN_PB1 = 0, CKN_PB2 = 0;
     wire ck_win, ck_io, ck_sink, ck_ws, ck_lkp, ck_pb0, ck_pb2, ck_pb1;
     ot_engc_ck_entry #(.N(CKN_WIN))  u_hdly_ck_win  (.a(ck[0]), .y(ck_win));
     ot_engc_ck_entry #(.N(CKN_IO))   u_hdly_ck_io   (.a(ck[0]), .y(ck_io));
@@ -146,9 +150,13 @@ endmodule
 module ot_engc_ck_entry #(parameter integer N = 0) (input wire a, output wire y);
     wire d;
     ot_hdly #(.W(1), .N(N)) u_dly (.a(a), .y(d));
+    generate if (N > 0) begin : g_drv
 `ifdef SYNTHESIS
-    (* keep *) BUFx12_ASAP7_75t_R u_drv (.A(d), .Y(y));
+        (* keep *) BUFx12_ASAP7_75t_R u_drv (.A(d), .Y(y));
 `else
-    assign y = d;
+        assign y = d;
 `endif
+    end else begin : g_w
+        assign y = a;          // N = 0: a wire (the spine's leaf buffer drives the child clock pin)
+    end endgenerate
 endmodule

@@ -1,0 +1,29 @@
+# dsfd_engram_c cluster clock (el1013-s81-engram 2026-10-13): the pre-placed balanced SPINE of
+# physical/common_flow/clock_spine.tcl (one leaf per child clock pin, OT_SPINE_MACRO_LEAF=1) in place of TritonCTS + the
+# per-child delay chains.  Listed FIRST in OT_CTS_FIX_HOOKS.  Leaf target = clock-pin arrival + the child's TARGET below:
+# its internal insertion (TT liberty max_clock_tree_path) plus the entry offset solved from the measured launch -> capture
+# pair slacks of the balanced run (gate/spine_solve.py; 0 = plain balance).  Per INSTANCE (pb0 / pb2 share a master).
+source /src/physical/common_flow/clock_spine.tcl
+set ::ot_engc_ck_target [dict create u_win 181.8 u_io 280.5 u_ws 297.1 u_pb1 461.6 u_pb0 453.8 u_pb2 453.8 u_lkp 366.7 u_sink 282.0]
+set ::ot_engc_ck_offset [dict create u_win 0 u_io 0 u_ws 0 u_pb1 0 u_pb0 0 u_pb2 0 u_lkp 0 u_sink 0]
+proc ot_sp_leaf_arrivals {} {
+  estimate_parasitics -placement
+  sta::find_timing_paths -path_delay max -group_path_count 1
+  set a [dict create]
+  dict for {n net} $::ot_sp_leafnet {
+    set v 0.0
+    foreach pin [get_pins -quiet -of_objects [get_nets -quiet [$net getName]] -filter "direction==input"] {
+      set x [get_property $pin arrival_max_rise]
+      if {$x eq "" || $x eq "INF" || $x eq "-INF"} continue
+      set c [get_cells -quiet -of_objects $pin]
+      if {[llength $c]} {
+        set m [get_full_name $c]
+        if {[dict exists $::ot_engc_ck_target $m]} { set x [expr {$x + [dict get $::ot_engc_ck_target $m] - [dict get $::ot_engc_ck_offset $m]}] }
+      }
+      if {$x > $v} { set v $x }
+    }
+    dict set a $n $v
+  }
+  return $a
+}
+puts "ENGC spine: per-child targets $::ot_engc_ck_target offsets $::ot_engc_ck_offset"
