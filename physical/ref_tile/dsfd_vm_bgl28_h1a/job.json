@@ -16,7 +16,9 @@
    "tools/s81_vm",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "physical/ref_tile_specs/ds_vm"
+   "physical/ref_tile_specs/ds_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
   ]
  },
  "stages": {
@@ -156,6 +158,78 @@
      "verilator"
     ],
     "fail_regex": "BGL_mut_MASK: FAIL"
+   },
+   {
+    "name": "master_h1_bgl_gold_s1",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one h1_bgl_gold_s1 --out {RUN}/master_h1_bgl_gold_s1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 20,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SPVM_h1_bgl_gold_s1: PASS .* -> OK",
+    "min_count_regex": "checked=(\\d+)"
+   },
+   {
+    "name": "master_h1_bgl_gold_s2",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one h1_bgl_gold_s2 --out {RUN}/master_h1_bgl_gold_s2",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 20,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SPVM_h1_bgl_gold_s2: PASS .* -> OK",
+    "min_count_regex": "checked=(\\d+)"
+   },
+   {
+    "name": "master_h1_bgl_tp",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one h1_bgl_tp --out {RUN}/master_h1_bgl_tp",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 20,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SPVM_h1_bgl_tp: PASS .* -> OK",
+    "min_count_regex": "checked=(\\d+)"
+   },
+   {
+    "name": "master_h1_bgl_burst_r128",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one h1_bgl_burst_r128 --out {RUN}/master_h1_bgl_burst_r128",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 20,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SPVM_h1_bgl_burst_r128: PASS .* -> OK",
+    "min_count_regex": "checked=(\\d+)"
+   },
+   {
+    "name": "master_h1_bgl_mut_stale",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one h1_bgl_mut_stale --out {RUN}/master_h1_bgl_mut_stale",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 20,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SPVM_h1_bgl_mut_stale: FAIL .* -> OK",
+    "min_count_regex": "mismatches_or_fails=(\\d+)"
+   },
+   {
+    "name": "master_h1_bgl_mut_id",
+    "cmd": "python3 tools/s81_vm/s81_vm_gate.py one h1_bgl_mut_id --out {RUN}/master_h1_bgl_mut_id",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 20,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SPVM_h1_bgl_mut_id: FAIL .* -> OK",
+    "min_count_regex": "mismatches_or_fails=(\\d+)"
    }
   ],
   "calibrate": {
