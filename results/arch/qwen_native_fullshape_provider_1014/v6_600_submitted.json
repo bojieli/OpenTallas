@@ -1,0 +1,15 @@
+{
+  "status": "IN_FLIGHT_NOT_QUALIFIED",
+  "source": "EXACT_FROZEN_V5",
+  "source_manifest": "v5_oom/source_pins.json",
+  "mem_GiB": 600,
+  "threads": 8,
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-1392525-1791962656.scope",
+  "session": 23163,
+  "build_work": "/srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v6_600/full_g3072_su64",
+  "source_directory": "/srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v5/src",
+  "prior_failure": "v5_oom/receipt.json",
+  "kernel_known_prior_anon_RSS_KiB": 399756040,
+  "payload_KV_format": "FP8 E4M3: matches actual input oracle; unchanged KV_FP8=1"
+}
