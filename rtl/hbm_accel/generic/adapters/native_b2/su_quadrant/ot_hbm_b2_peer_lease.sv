@@ -16,7 +16,7 @@ module ot_hbm_b2_peer_lease #(parameter integer NSRC=3,MUT=0)(
  reg [NSRC-1:0] grant_n,ack_r,ack_n;
  wire [NSRC-1:0] grant_bus=(MUT==1)?{vm_grant[NSRC-2:0],vm_grant[NSRC-1]}:vm_grant;
  reg vf;wire [NSRC-1:0] cf;
- reg active;reg [$clog2(NSRC)-1:0] owner,last;
+ reg active,active_n;reg [$clog2(NSRC)-1:0] owner,last,owner_n,last_n;
  for(genvar s=0;s<NSRC;s=s+1)begin:source
   (* async_reg="true" *)reg g1,g2,gn1,gn2,a1,a2,an1,an2;reg sf;
   always @(posedge cclk[s] or negedge rst_n)if(!rst_n)begin
@@ -35,14 +35,16 @@ module ot_hbm_b2_peer_lease #(parameter integer NSRC=3,MUT=0)(
  end
  always @(posedge vclk or negedge rst_n)if(!rst_n)begin
   rq1<=0;rq2<=0;rn1<='1;rn2<='1;id1<='1;id2<='1;in1<=0;in2<=0;
-  vm_grant<=0;grant_n<='1;ack_r<='1;ack_n<=0;active<=0;owner<=0;last<=NSRC-1;vf<=0;
+  vm_grant<=0;grant_n<='1;ack_r<='1;ack_n<=0;active<=0;active_n<=1;owner<=0;owner_n<='1;last<=NSRC-1;last_n<=~($clog2(NSRC)'(NSRC-1));vf<=0;
  end else begin
   rq1<=req_r;rq2<=rq1;rn1<=req_n;rn2<=rn1;id1<=idle_r;id2<=id1;in1<=idle_n;in2<=in1;
-  if(vm_grant!=~grant_n||ack_r!=~ack_n)vf<=1;
+  if(vm_grant!=~grant_n||ack_r!=~ack_n||active!=~active_n||owner!=~owner_n||last!=~last_n)begin
+   vf<=1;vm_grant<=0;grant_n<='1;
+  end else
   if(!vf&&rq2==~rn2&&id2==~in2)begin
    if(active)begin
     if(!rq2[owner]&&id2[owner]&&vm_drained[owner])begin
-     vm_grant<=0;grant_n<='1;ack_r[owner]<=1;ack_n[owner]<=0;active<=0;last<=owner;
+     vm_grant<=0;grant_n<='1;ack_r[owner]<=1;ack_n[owner]<=0;active<=0;active_n<=1;last<=owner;last_n<=~owner;
     end
    end else begin:choose
     integer pick,index;pick=-1;
@@ -51,7 +53,7 @@ module ot_hbm_b2_peer_lease #(parameter integer NSRC=3,MUT=0)(
      if(pick<0&&rq2[index]&&id2[index]&&vm_drained[index])pick=index;
     end
     if(pick>=0)begin
-     owner<=pick;active<=1;vm_grant<=NSRC'(1)<<pick;grant_n<=~(NSRC'(1)<<pick);ack_r[pick]<=0;ack_n[pick]<=1;
+     owner<=pick;owner_n<=~($clog2(NSRC)'(pick));active<=1;active_n<=0;vm_grant<=NSRC'(1)<<pick;grant_n<=~(NSRC'(1)<<pick);ack_r[pick]<=0;ack_n[pick]<=1;
     end
    end
   end
