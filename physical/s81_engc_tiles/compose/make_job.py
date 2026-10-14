@@ -34,7 +34,7 @@ def main():
         "bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_engram_c rtl/dsrom_sys/engram/dsfd_engram_c.sv "
         f"--orfs-var MACRO_PLACEMENT_TCL=/src/{C}/macro_place.tcl --orfs-var DONT_BUFFER_PORTS=1 "
         f"--orfs-var ENGC_VCLK_PS={a.vclk} --orfs-var ENGC_VCLK_FF_PS={a.vclk_ff} "
-        f"--step-tcl PRE_FLOORPLAN={K} --step-tcl PRE_GLOBAL_PLACE={C}/sliver_block_engc.tcl --step-tcl PRE_RESIZE={K} --step-tcl PRE_DETAIL_PLACE={C}/ck_entry_place.tcl $CL_STOP_AFTER")
+        f"--step-tcl PRE_FLOORPLAN={K} --step-tcl PRE_GLOBAL_PLACE={K} --step-tcl PRE_RESIZE={K} --step-tcl PRE_DETAIL_PLACE={C}/ck_entry_place.tcl $CL_STOP_AFTER")
     mv = " ".join("--macro-view " + m.split("=")[1] for m in MACROS.split())
     spec = {
         "name": name, "block": "dsfd_engram_c", "element": "dsfd_engram_c", "owner": "Claude:el1013-s81-engram",
@@ -59,13 +59,13 @@ def main():
                                "{RUN}/routes/{LABEL}/args {RUN}/record/ && (python3 tools/tt_views/view_export.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs "
                                f"--name dsfd_engram_c --out {{RUN}}/record --corners tt {mv} --image openroad/orfs:asap7lock "
                                "> {RUN}/record/export_tt_collect.log 2>&1 || echo TT_EXPORT_FAILED > {RUN}/record/TT_EXPORT_FAILED)"}},
-        # floorplan lint (FLOORPLAN_MARGIN of el1013-engc-compose-d21a6cf78): the seams are blocked by
-        # sliver_block_engc.tcl; util is (std + macro) / core, and this cluster is 8 hard children + 37 clock entry
+        # floorplan lint (FLOORPLAN_MARGIN of el1013-engc-compose-d21a6cf78): the row-holding seams are >= 12 um
+        # (macro_place.tcl); util is (std + macro) / core, and this cluster is 8 hard children + 37 clock entry
         # cells (16 um2 of standard cells in 73,300 um2 of free floor = 0.02 %), so the 60 % placement-room limit has
         # nothing to protect here; the channel (cut) check stays on
         "fp_lint": {"set": {"util_max": 0.88, "util_hold_max": 0.88},
                     "why": "all-tile cluster in the 1188 x 432 contract slot: macro 438,609 um2 of 511,933 um2 (85.7 %), "
-                           "standard cells 16 um2 (the clock entry chains); child-to-child seams < 12 um hard-blocked"},
+                           "standard cells 16 um2 (the clock entry chains); row-holding child seams opened to >= 12 um"},
         "cycles_added": 0,
         "cycles_note": "no cycle change by the composition; isolated window->slot-ready 508.7 cycles vs 500 priced (1.017x), engram_c_gate isolated_local_ag",
         "merge_target": "main", "route_hold_corners": "mm", "route_corner": "TC", "route_hold_margin_ns": 0.05,
@@ -78,7 +78,7 @@ def main():
                              "-206.5 ps at 16,258 sinks/root, SRAM read path -1568.6 ps). New in this submission: per-child clock entry delay "
                              "(kept HB4 chain + BUFx12 driver placed at each child's clock pin, leaf spread 64 ps TT / 66 ps FF measured after CTS, "
                              "was 400 ps with the bare top tree), children re-routed with face-pin keepout (child_lint 0 pins blocked), sliver rows "
-                             "removed before the PDN, child seams < 12 um hard-blocked for placement (12-um pocket at the pb2 clock pin), no port buffers, leaf / die reset release multicycle 2 (rst_mcp2 intent), fixed vclk.",
+                             "removed before the PDN, child seams that hold rows opened to >= 12 um (win / io +3.456 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, leaf / die reset release multicycle 2 (rst_mcp2 intent), fixed vclk.",
     }
     print(json.dumps(spec, indent=1))
 
