@@ -5,7 +5,7 @@
 # pair slacks of the balanced run (gate/spine_solve.py; 0 = plain balance).  Per INSTANCE (pb0 / pb2 share a master).
 source /src/physical/common_flow/clock_spine.tcl
 set ::ot_engc_ck_target [dict create u_win 181.8 u_io 280.5 u_ws 297.1 u_pb1 461.6 u_pb0 453.8 u_pb2 453.8 u_lkp 366.7 u_sink 282.0]
-set ::ot_engc_ck_offset [dict create u_win -40 u_io 0 u_ws -30 u_pb1 10 u_pb0 0 u_pb2 0 u_lkp 0 u_sink 0]
+set ::ot_engc_ck_offset [dict create u_win -30 u_io 0 u_ws -30 u_pb1 10 u_pb0 -10 u_pb2 0 u_lkp 0 u_sink 0]
 proc ot_sp_leaf_arrivals {} {
   estimate_parasitics -placement
   sta::find_timing_paths -path_delay max -group_path_count 1
