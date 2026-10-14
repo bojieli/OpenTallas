@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 output=${1:?fresh output directory}
-front=/srv/opentallas-scratch/codex/native-services-front59-1014/library-v1/obj
+front=${FRONT59_OBJ:-/srv/opentallas-scratch/codex/native-services-front59-1014/v2/library/obj}
 kernel=/srv/opentallas-scratch/codex/qwen-composed-harness-f460-1014/kernel
 vroot=/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator
 [[ ! -e "$output" ]];mkdir -p "$output"

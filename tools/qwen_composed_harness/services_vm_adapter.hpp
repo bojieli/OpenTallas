@@ -10,24 +10,27 @@
 #include <type_traits>
 #include <utility>
 namespace qwen_native_services {
-struct Ack {uint64_t due;unsigned beat,epoch,layer;};
+template<class T,class=void>struct HasAttnTag:std::false_type{};
+template<class T>struct HasAttnTag<T,std::void_t<decltype(std::declval<T>().attn_vm_tag),decltype(std::declval<T>().attn_commit_tag)>>:std::true_type{};
+struct Ack {uint64_t due;unsigned beat,epoch,layer;uint64_t captured_write_tag=0;};
 template<class T,class=void>struct HasQTag:std::false_type{};
 template<class T>struct HasQTag<T,std::void_t<decltype(std::declval<T>().q_vm_req_tag),decltype(std::declval<T>().q_vm_rsp_tag)>>:std::true_type{};
 struct QResponse {uint64_t due;unsigned epoch,chunk;std::array<uint32_t,64> data;uint64_t accepted_request_tag=0;};
-struct Write {uint64_t edge;unsigned address,beat,epoch,layer;std::array<uint32_t,16> data;};
+struct Write {uint64_t edge;unsigned address,beat,epoch,layer;std::array<uint32_t,16> data;uint64_t accepted_write_tag=0;};
+struct AttnTagEvent {uint64_t edge,tag;unsigned address,beat;bool ack;};
 struct QTagEvent {uint64_t edge,tag;unsigned epoch,chunk;bool response;};
 class VmReceiver {
 public:
  std::vector<uint32_t>& vm;std::bitset<512> qr_written;
  std::deque<Ack> acks;std::deque<QResponse> responses;
- std::vector<Write> writes;std::vector<QTagEvent> q_tag_events;
- uint64_t edge=0,q_requests=0,q_responses=0,commit_acks=0,q_tag_captures=0,q_tag_returns=0;
- unsigned epoch=0,layer=0;bool reserved=false,stalls=false;
+ std::vector<Write> writes;std::vector<QTagEvent> q_tag_events;std::vector<AttnTagEvent> attn_tag_events;
+ uint64_t edge=0,q_requests=0,q_responses=0,commit_acks=0,q_tag_captures=0,q_tag_returns=0,attn_tag_writes=0,attn_tag_acks_offered=0;
+ unsigned epoch=0,layer=0,token=0,position=255;bool reserved=false,stalls=false;
  unsigned ack_delay=1; // registered ACK after an actual write edge; no inferred commit
  explicit VmReceiver(std::vector<uint32_t>& values):vm(values){}
- void reserve(unsigned e,unsigned l){
+ void reserve(unsigned e,unsigned l,unsigned t=0,unsigned p=255){
   if(!acks.empty()||!responses.empty())throw std::runtime_error("new VM identity before drain");
-  epoch=e;layer=l;reserved=true;qr_written.reset();q_tag_events.clear();
+  epoch=e;layer=l;token=t;position=p;reserved=true;qr_written.reset();q_tag_events.clear();attn_tag_events.clear();
  }
  void observe_write(unsigned address){if(address>=13696&&address<14208)qr_written.set(address-13696);}
  template<class Front> void drive(Front& f){
@@ -44,19 +47,23 @@ public:
    for(unsigned i=0;i<64;i++)f.q_vm_rsp_data[i]=r.data[i];
   }
   if(!acks.empty()&&acks.front().due<=edge){auto&a=acks.front();
-   f.attn_commit_valid=1;f.attn_commit_beat=a.beat;f.attn_commit_epoch=a.epoch;f.attn_commit_layer=a.layer;
+   f.attn_commit_valid=1;f.attn_commit_beat=a.beat;
+   if constexpr(HasAttnTag<Front>::value)f.attn_commit_tag=a.captured_write_tag;
+   else{f.attn_commit_epoch=a.epoch;f.attn_commit_layer=a.layer;}
   }
  }
  // Call after all low-phase model interfaces settle, before rising eval.
  template<class Front> void sample(Front& f){
   if(f.q_vm_rsp_v){if(responses.empty())throw std::runtime_error("unowned Q VM response");responses.pop_front();++q_responses;if constexpr(HasQTag<Front>::value){++q_tag_returns;q_tag_events.push_back({edge,uint64_t(f.q_vm_rsp_tag),unsigned(uint64_t(f.q_vm_rsp_tag)>>43),unsigned(f.q_vm_rsp_chunk),true});}}
-  if(f.attn_commit_valid){if(acks.empty())throw std::runtime_error("unowned attention ACK");acks.pop_front();++commit_acks;}
+  if(f.attn_commit_valid){if(acks.empty())throw std::runtime_error("unowned attention ACK");acks.pop_front();++commit_acks;if constexpr(HasAttnTag<Front>::value){++attn_tag_acks_offered;attn_tag_events.push_back({edge,uint64_t(f.attn_commit_tag),3167*16+16*unsigned(f.attn_commit_beat),unsigned(f.attn_commit_beat),true});}}
   if(f.q_vm_req_v&&f.q_vm_req_ready){
    if(!reserved||f.q_vm_req_epoch!=epoch||f.q_vm_req_chunk>7||
       f.q_vm_req_a0!=13696+64*f.q_vm_req_chunk||f.q_vm_req_a1!=f.q_vm_req_a0+1)
     throw std::runtime_error("Q VM request ownership/address mismatch");
    QResponse r{edge+1,unsigned(f.q_vm_req_epoch),unsigned(f.q_vm_req_chunk),{}};
-   if constexpr(HasQTag<Front>::value){r.accepted_request_tag=f.q_vm_req_tag;++q_tag_captures;q_tag_events.push_back({edge,r.accepted_request_tag,r.epoch,r.chunk,false});}
+   if constexpr(HasQTag<Front>::value){r.accepted_request_tag=f.q_vm_req_tag;
+    if(r.accepted_request_tag!=((uint64_t(epoch)<<43)|(uint64_t(layer+1)<<37)|(uint64_t(token)<<19)|(uint64_t(position)<<6)))throw std::runtime_error("actual QVM request fullTAG59 differs from reserved identity");
+    ++q_tag_captures;q_tag_events.push_back({edge,r.accepted_request_tag,r.epoch,r.chunk,false});}
    for(unsigned i=0;i<64;i++)r.data[i]=vm.at(f.q_vm_req_a0+i);
    responses.push_back(r);++q_requests;
   }
@@ -65,6 +72,11 @@ public:
       f.attn_vm_word_addr!=3167+f.attn_vm_beat)
     throw std::runtime_error("attention VM ownership/address mismatch");
    Write w{edge,unsigned(f.attn_vm_word_addr)*16,unsigned(f.attn_vm_beat),epoch,layer,{}};
+   if constexpr(HasAttnTag<Front>::value){
+    w.accepted_write_tag=f.attn_vm_tag;
+    if(w.accepted_write_tag!=((uint64_t(epoch)<<43)|(uint64_t(layer+1)<<37)|(uint64_t(token)<<19)|(uint64_t(position)<<6)))throw std::runtime_error("actual ATT VM write fullTAG59 differs from reserved identity");
+    ++attn_tag_writes;attn_tag_events.push_back({edge,w.accepted_write_tag,w.address,w.beat,false});
+   }
    for(unsigned i=0;i<16;i++)w.data[i]=f.attn_vm_data[i];
    writes.push_back(w); // store_after_edge commits exactly this captured transaction
   }
@@ -72,7 +84,7 @@ public:
  void store_after_edge(){
   if(!writes.empty()&&writes.back().edge==edge){auto&w=writes.back();
    for(unsigned i=0;i<16;i++)vm.at(w.address+i)=w.data[i];
-   acks.push_back({edge+ack_delay,w.beat,w.epoch,w.layer});
+   acks.push_back({edge+ack_delay,w.beat,w.epoch,w.layer,w.accepted_write_tag});
   }
   ++edge;
  }
