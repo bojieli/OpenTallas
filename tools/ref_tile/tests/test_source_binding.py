@@ -16,6 +16,20 @@ import source_binding as SB
 
 
 class SourceBindingTest(unittest.TestCase):
+    def test_remote_sha256_receipt_is_parsed_with_other_statuses(self):
+        digest = "083f8575af36b60465bef1514c455caaecca55fffb011014deae06541eb6275e"
+        values = PG.parse_remote_values("GATE_SOURCE_ARCHIVE_SHA256=" + digest +
+                                        "\nGATE_FLOW_RC=0 GATE_FLOW_S=47\nGATE_CTS_RC=0\n")
+        self.assertEqual(values["GATE_SOURCE_ARCHIVE_SHA256"], digest)
+        self.assertEqual(values["GATE_FLOW_RC"], "0")
+        self.assertEqual(values["GATE_FLOW_S"], "47")
+        self.assertEqual(values["GATE_CTS_RC"], "0")
+
+    def test_remote_wrong_digest_remains_distinct_from_expected_digest(self):
+        expected = "a" * 64
+        values = PG.parse_remote_values("GATE_SOURCE_ARCHIVE_SHA256=" + "b" * 64)
+        self.assertNotEqual(values["GATE_SOURCE_ARCHIVE_SHA256"], expected)
+
     def git(self, root, *args):
         return subprocess.check_output(['git', '-C', str(root), *args], stderr=subprocess.DEVNULL).decode().strip()
 
