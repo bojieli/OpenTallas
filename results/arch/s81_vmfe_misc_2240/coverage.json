@@ -37,7 +37,21 @@
       ],
       "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv",
       "state": "OPEN",
-      "note": "R3 (+2 capture cycles), KD3 (+1 counter alignment stage), XRT1 and CCA1. Current v18 FE requested outline1520.064x889.92 not allocated/adopted. Hand A fresh replay FAIL82 placement and11 hop classes; no pin/reach/cut waiver."
+      "note": "R3 (+2 capture cycles), KD3 (+1 counter alignment stage), XRT1 and CCA1. Current v18 FE requested outline1520.064x889.92 allocated by contract_trial da5faf138 but native FE/client/clock pins pending. Hand A fresh replay FAIL82 placement and11 hop classes; no pin/reach/cut waiver.",
+      "slot": {
+        "allocated_geometry_candidate": true,
+        "contract_source": "da5faf138:physical/s81_die_pins/v18/contract_trial.json",
+        "vm_local_origin_um": [
+          21.6,
+          3060.72
+        ],
+        "outline_um": [
+          1520.064,
+          889.92
+        ],
+        "native_pin_assignment": false,
+        "native_parent_closed": false
+      }
     },
     {
       "element": "dsfd_vm_fcc",

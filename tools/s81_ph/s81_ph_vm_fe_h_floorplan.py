@@ -80,6 +80,29 @@ def master_pins():
 MP = master_pins()
 
 
+def reposition(plan, positions, derive_external=False):
+    """Rebase every stored bit pin when searching or replaying a placement.
+
+    Assigned external pins stay fixed. Deriving external pins is only a proposed
+    slot pin table, and must be identified as such by the caller.
+    """
+    delta = {n: (positions[n][0] - v[1], positions[n][1] - v[2])
+             for n, v in plan.inst.items() if n in positions}
+    new = []
+    for cls, a, b, aa, bb in plan.hops:
+        da, db = delta.get(a, (0, 0)), delta.get(b, (0, 0))
+        if derive_external and a.startswith('FE.'):
+            da = (db[0], 0)
+        if derive_external and b.startswith('FE.'):
+            db = (da[0], 0)
+        move = lambda pins, d: [(x+d[0], y+d[1], f, l) for x, y, f, l in pins]
+        new.append((cls, a, b, move(aa, da), move(bb, db)))
+    plan.hops = new
+    for n, (dx, dy) in delta.items():
+        m, x, y = plan.inst[n]
+        plan.inst[n] = (m, round(x+dx, 3), round(y+dy, 3))
+
+
 class Plan:
     def __init__(self, variant):
         self.variant, self.inst, self.hops, self.ext = variant, {}, [], {}
@@ -339,10 +362,15 @@ class Plan:
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--variant', default='B'); ap.add_argument('--height', type=float, default=695.52); ap.add_argument('--out', default=None)
+    ap.add_argument('--placements', help='replay a source-bound search placement JSON')
     a = ap.parse_args()
     global H
     H = a.height
     p = Plan(a.variant)
+    if a.placements:
+        proposed = json.loads(Path(a.placements).read_text())
+        reposition(p, {n: (v['x'], v['y']) for n, v in proposed['instances'].items()},
+                   proposed.get('derive_external_pins', False))
     place = p.check_place(); hops = p.check_hops(); cuts = p.check_cuts()
     over = {c: r['len_max'] for c, r in hops.items() if r['len_max'] > HOP_MAX}
     pa_fail = {c: r['verdict'].get('FAIL', 0) for c, r in hops.items() if r['verdict'].get('FAIL')}

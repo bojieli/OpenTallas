@@ -65,7 +65,7 @@ FEH_SRC = 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv'
 COVER = ['rd', 'wr', 'drain', 'cap', 'cts_low', 'cw_stall', 'rdy', 'dv', 'ks']   # every bin must be hit over the lockstep set
 
 
-for _n in ('gold_s1','tp','mut_stale'):
+for _n in ('gold_s1','tp','mut_stale','h_gold_s1','h_tp','h_mut_stale'):
     _c=CASES[_n]
     CASES['be_hard_'+_n]=dict(_c,defines=_c.get('defines',[])+['OT_SPVM_BE_HARD_RELAYS'])
 
