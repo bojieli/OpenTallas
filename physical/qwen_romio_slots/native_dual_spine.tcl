@@ -7,15 +7,20 @@ if {![info exists ::ot_native_dual_spine_installed]} {
   }
   set ot_native_body [info body ot_clock_spine]
   set ot_native_needle {set ::ot_sp_nn 0}
-  if {[regexp -all {set ::ot_sp_nn 0} $ot_native_body] != 1} {
+  set ot_native_leaf_needle {set id "L[incr nl]"}
+  if {[regexp -all {set ::ot_sp_nn 0} $ot_native_body] != 1 ||
+      [string first $ot_native_leaf_needle $ot_native_body] < 0} {
     error "NATIVE_DUAL_SPINE unsupported clock_spine node initialization"
   }
   rename ot_clock_spine ot_native_original_spine
-  proc ot_native_one_spine {} [string map [list $ot_native_needle {set ::ot_sp_nn $::ot_native_spine_nodebase}] $ot_native_body]
+  proc ot_native_one_spine {} [string map [list \
+    $ot_native_needle {set ::ot_sp_nn $::ot_native_spine_nodebase} \
+    $ot_native_leaf_needle {incr nl; set id "L[expr {$nl + $::ot_native_spine_leafbase}]"}] $ot_native_body]
   proc ot_clock_spine {} {
     set have_port [info exists ::env(OT_SPINE_PORT)]
     if {$have_port} { set old_port $::env(OT_SPINE_PORT) }
     set ::ot_native_spine_nodebase 0
+    set ::ot_native_spine_leafbase 0
     try {
       foreach port {ck ckd} {
         set ::env(OT_SPINE_PORT) $port
@@ -24,6 +29,7 @@ if {![info exists ::ot_native_dual_spine_installed]} {
           error "NATIVE_DUAL_SPINE root $port did not build; no CTS fallback"
         }
         set ::ot_native_spine_nodebase $::ot_sp_nn
+        incr ::ot_native_spine_leafbase [dict size $::ot_sp_members]
         puts "NATIVE_DUAL_SPINE root $port nodes $first..$::ot_native_spine_nodebase built independently"
       }
     } finally {
