@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     admits    82 GB (avail 420, growth 322, headroom 64, waiters 0/0 GB) load 132/128 running 40 disk 1159 GB 
+ot-run: ot-epyc4       admits  -106 GB (avail 523, growth 201, headroom 48, waiters 1/380 GB) load 104/128 running 26 disk 1282 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81bf-direct-1013
+ot-run: ot-agidock128  admits    -4 GB (avail 70, growth 25, headroom 24, waiters 1/40 GB) load 31/64 running 7 disk 375 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-137613-1791945606 after 1 s
+PQ_QB_SRAM PASS checks=343672 logical_words=384 rows=96 macros=4 exponent_fault=1
+rtl/test/dsrom_sys/tb_s81_pq_qb_sram.sv:68: $finish called at 12580000 (1ps)
+PQ_QB_SRAM FAIL cycle=603 q0=9f1347919f13438e9f134f879f134bfc9f1357f59f1353f29f135feb9f135be0 ref0=9f1347919f13438e9f134f879f134bfc9f1357f59f1353f29f135feb9f135be0 q1=9f137b199f1347169f13430f9f134f049f134b7d9f13577a9f1353739f135f68 ref1=9f1370299f137c269f13781f9f1344149f13400d9f134c0a9f1348039f135478
+FATAL: rtl/test/dsrom_sys/tb_s81_pq_qb_sram.sv:25: bit-exact mismatch
+       Time: 6030000  Scope: tb_s81_pq_qb_sram
+PQ_QB_SRAM_GATE PASS positive=1 mutant_row=FAIL production_KMAX=6144 macros=4
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-137613-1791945606): exit 0
