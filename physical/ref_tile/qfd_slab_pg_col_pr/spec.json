@@ -131,14 +131,14 @@
  "inter": [],
  "recipe": 2,
  "io_flop_at_pins": {
-  "cols": 6
+  "cols": 21
  },
  "inhold": true,
  "orfs_vars": {
   "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R",
   "OT_OFLOP_GAP": "4.5"
  },
- "structural_change": "pr1 a68762924 routed TT +102.95 / FF -14.49 / DRC 24. DRC: all 24 markers are M4 Short/Spacing/EOL at the ROM macros east OBS lip (x 151.19..151.56 = g_bank[0]/[2] u_rom edge; nets jog on M4 through the OBS from an over-macro M5 track): add the shared whole-GCell macro-edge via guard (sram_edge_guard.tcl, as qfd_bl_lane_ce / qkd_sbufp). FF: the misses are INTERNAL reg->reg (ce3->sel4 -14.5, cap4->m5s -9.5, m5n->m5 pin flop -8.8; no port pad is involved, so HB4 on ports would not help): CTS repair reached +30.0 and the routed clock to the face-anchored pin flops moved them by ~44 ps; pin flops spread over 6 columns with 4.5 um gaps leave room for hold cells at the face, CTS hold margin 60 ps covers the measured CTS->route loss. Same RTL, outline, pins, clock.",
+ "structural_change": "pr1 a68762924 routed TT +102.95 / FF -14.49 / DRC 24. DRC: all 24 markers are M4 Short/Spacing/EOL at the ROM macros east OBS lip (x 151.19..151.56 = g_bank[0]/[2] u_rom edge; nets jog on M4 through the OBS from an over-macro M5 track): add the shared whole-GCell macro-edge via guard (sram_edge_guard.tcl, as qfd_bl_lane_ce / qkd_sbufp). FF: the misses are INTERNAL reg->reg (ce3->sel4 -14.5, cap4->m5s -9.5, m5n->m5 pin flop -8.8; no port pad is involved, so HB4 on ports would not help): CTS repair reached +30.0 and the routed clock to the face-anchored pin flops moved them by ~44 ps; pin flops spread over 21 columns (gate: 10.5 pins/um on the N face) with 4.5 um gaps leave room for hold cells at the face, CTS hold margin 60 ps covers the measured CTS->route loss. Same RTL, outline, pins, clock.",
  "reroute_reason": {
   "kind": "pin_register",
   "source": "results/rtl/qwen_edge_pin_audit_1014/slab_pin_budget_summary_8f20ee74b.json",
