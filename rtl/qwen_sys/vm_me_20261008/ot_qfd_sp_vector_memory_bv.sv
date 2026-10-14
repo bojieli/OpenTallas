@@ -1,4 +1,15 @@
 `timescale 1ns/1ps
+// OT_QFD_VM_NOX (2026-10-14, owner 08:20 PT: distributed x slices, el1014-qwen-dvm-build.log): the TRIMMED central VM.
+// The x read is REMOVED from the port list (me_en_t, x_dv / x_dc / x_dcs / x_dsp, x_q, x_rdy, x_fault, x_hazard) and
+// the region tile is ot_qfd_vm_region_nx (rtl/qwen_sys/vm_nox_20261014: no x FIFOs, no xv / pop / me_in / xo / ovf).
+// Inside, the x descriptor is the constant "no tuple" (an internal wire, not a port), so the x schedule, rotation,
+// planes and line logic never issue and synthesis removes them; banks, SU reads / writes, row reads, skid writes, the
+// merge of the ME result links and me_en (maxima writes, row-read admission) are unchanged edge for edge.
+`ifdef OT_QFD_VM_NOX
+`ifndef OT_QFD_VM_TILE_MOD
+`define OT_QFD_VM_TILE_MOD ot_qfd_vm_region_nx
+`endif
+`endif
 `ifndef OT_QFD_VM_TILE_MOD
 `define OT_QFD_VM_TILE_MOD ot_qfd_vm_grp
 `endif
@@ -167,6 +178,7 @@ module ot_qfd_sp_vector_memory_bv #(
     input  wire                    rst_n,
     input  wire                    me_en,
     input  wire                    me_en_e,        // MEE: me_en one edge early
+`ifndef OT_QFD_VM_NOX
     input  wire                    me_en_t,        // XMK: me_en (XMK + 1) edges early (unused when XMK = 0)
     // x descriptor (tree top)
     input  wire                    x_dv,
@@ -177,6 +189,7 @@ module ot_qfd_sp_vector_memory_bv #(
     output wire                    x_rdy,
     output reg                     x_fault,
     output reg                     x_hazard,
+`endif
     // SU lane reads (operand o = 0 a, 1 b, 2 c): descriptors, answers 1 + VL edges later
     input  wire [NSU-1:0]          s_re0,
     input  wire [NSU-1:0]          s_re1,
@@ -221,6 +234,19 @@ module ot_qfd_sp_vector_memory_bv #(
     output reg                     w_fault,
     output reg                     w_hazard
 );
+`ifdef OT_QFD_VM_NOX
+    // no x read: the descriptor is the constant "no tuple"; x_q / x_rdy / x_fault / x_hazard have no consumer
+    wire                    me_en_t = 1'b0;
+    wire                    x_dv = 1'b0;
+    wire [AW-1:0]           x_dc = {AW{1'b0}};
+    wire [AW-1:0]           x_dcs = {AW{1'b0}};
+    wire [3:0]              x_dsp = 4'd0;
+    wire [(1<<SMAX)*32-1:0] x_q;
+    wire                    x_rdy;
+    reg                     x_fault, x_hazard;
+    initial if (XPR != 0 || XTK != 0 || XMK != 0 || XLO != 0 || VMT == 0)
+        $fatal(1, "ot_qfd_sp_vector_memory_bv OT_QFD_VM_NOX: needs VMT 1 and XPR / XTK / XMK / XLO 0");
+`endif
     localparam integer RW = AW - 4;
     localparam integer NX = 1 << SMAX;
     localparam integer LNRB = $clog2(NRB);
@@ -807,12 +833,23 @@ module ot_qfd_sp_vector_memory_bv #(
                 assign pw[kq] = r;
             end
             wire [8*512-1:0] xo; wire [511:0] ro_t; wire [NSU*NSB*512-1:0] so_t; wire ovf_t;
+`ifdef OT_QFD_VM_NOX
+            `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
+                .USE_MACRO(USE_MACRO), .NRI(TNI), .NRX(TNX), .NRS(TNS)) u_t (
+                .clk(clk), .rst_n(rst_n),
+                .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .rq(d_rq), .rqb(d_rqb),
+                .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
+                .ro(ro_t), .so(so_t));
+            assign xo = {8*512{1'b0}};
+            assign ovf_t = 1'b0;
+`else
             `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
                 .USE_MACRO(USE_MACRO), .NPP(NPP), .MEREG((MEE != 0) ? 1 : 0), .NRI(TNI), .NRX(TNX), .NRS(TNS)) u_t (
                 .clk(clk), .rst_n(rst_n), .me_in(me_lf[g*MCG]),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .xv(d_xv), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
                 .pop(pw[RO-1]), .xo(xo), .ro(ro_t), .so(so_t), .ovf(ovf_t));
+`endif
             wire [(XRN+1)*8*512-1:0] xw;         // x words: tile register, then XRN engine-edge relays
             assign xw[0 +: 8*512] = xo;
             if (XPR == 0) begin : g_xsoft
