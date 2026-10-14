@@ -241,6 +241,8 @@ module ot_qwen_w12_matvec_part #(
     parameter integer LEXT = 0,
     // Fused carry-save local-X address, same request edge and full AW-bit stride semantics.
     parameter integer XADDR_FAST = 0,
+    parameter integer XMODE_EXPORT = 0,
+    parameter integer XCONTEXT_EXPORT = 0,
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
@@ -290,6 +292,14 @@ module ot_qwen_w12_matvec_part #(
     output reg  [G-1:0]      x_re,
     output reg  [G*AW-1:0]   x_addr,
     output reg [NW+$clog2(IL)-1:0] x_epoch,
+    output reg x_jrepeat,
+    input wire [15:0] i_op_context,
+    input wire [31:0] i_vm_version,
+    output reg [15:0] x_op_context,
+    output reg [31:0] x_vm_version,
+    output wire [15:0] accepted_op_context,
+    output wire [31:0] accepted_vm_version,
+    output reg op_accept,
     input  wire [G*32-1:0]   x_q,
     // result words, one port per group
     output wire              ov,          // a result round-slot (whether or not written)
@@ -389,6 +399,22 @@ module ot_qwen_w12_matvec_part #(
     reg [3:0]        pcnt;
 
     assign ready = !active && !pend;
+    // External instruction-context namespace is distinct from per-read source
+    // dictionary tokens. Data has no reset; acceptance/read-valid qualifies it.
+    reg [15:0] op_context_r;
+    reg [31:0] vm_version_r;
+    assign accepted_op_context = (XCONTEXT_EXPORT != 0)?op_context_r:16'd0;
+    assign accepted_vm_version = (XCONTEXT_EXPORT != 0)?vm_version_r:32'd0;
+    always @(posedge clk) begin
+      if(XCONTEXT_EXPORT != 0 && rst_n && go && ready) begin
+        op_context_r<=i_op_context;vm_version_r<=i_vm_version;
+      end
+    end
+    always @(posedge clk or negedge rst_n) begin
+      if(!rst_n)op_accept<=0;
+      else op_accept <= (XCONTEXT_EXPORT != 0) && go && ready;
+    end
+
 
 generate if (FAST_ISSUE == 0) begin : g_issue_legacy
     // tiles one round covers: GT/S (the whole engine's groups)
@@ -630,6 +656,10 @@ end endgenerate
     always @(posedge clk) begin
         // Pre-update k/j correspond to this exact registered request, including arbitrary xjs.
         x_epoch <= {k, j};
+        // Mode belongs to this pre-update request, not the newest accepted IB.
+        x_jrepeat <= (XMODE_EXPORT != 0) && (xjs_r == 0);
+        x_op_context <= (XCONTEXT_EXPORT != 0)?op_context_r:16'd0;
+        x_vm_version <= (XCONTEXT_EXPORT != 0)?vm_version_r:32'd0;
         for (gi = 0; gi < NPX; gi = gi + 1)
             x_addr[gi*AW +: AW] <= (XADDR_FAST != 0) ? x_fast_addr[gi*AW+:AW] :
                                      xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;

@@ -127,6 +127,8 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer CEXT = 0,
     // Local cache already supplies a one-edge registered VM response; bypass ONLY the XL pin register.
     parameter integer XLOCAL = 0,
+    parameter integer XMODE_EXPORT = 0,
+    parameter integer XCONTEXT_EXPORT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
@@ -177,6 +179,15 @@ module ot_qwen_rom_tile_logic_w12 #(
     output wire [TG-1:0] cx_xre,
     output wire [TG*AW-1:0] cx_xaddr,
     output wire [NW+$clog2(IL)-1:0] cx_xepoch,
+    output wire cx_xjrepeat,
+    input wire [15:0] op_context,
+    input wire [31:0] vm_version,
+    output wire [15:0] cx_xcontext,
+    output wire [31:0] cx_xversion,
+    output wire cx_op_accept,
+    output wire [15:0] cx_accepted_context,
+    output wire [31:0] cx_accepted_version,
+    output wire cx_core_idle,
     // CEXT seams (width 1 and unused when CEXT = 0)
     output wire [((CEXT != 0) ? CODE_BANKS * 14 : 1)-1:0]     cx_rreq,
     input  wire [((CEXT != 0) ? CODE_BANKS * 64 * W : 1)-1:0] cx_rq,
@@ -199,6 +210,13 @@ module ot_qwen_rom_tile_logic_w12 #(
     reg  [TG*32-1:0] xl_q;
     wire             go_i  = IREG ? go_q : ib_go;
     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
+    wire [47:0] op_meta_i;
+    generate if (XCONTEXT_EXPORT != 0) begin:g_op_meta
+      ot_hdc_delay #(.W(48),.D(IREG?1:0),.RESET(0)) u_meta (
+        .clk(clk),.rst_n(rst_n),.d({vm_version,op_context}),.q(op_meta_i));
+    end else begin:g_op_meta_unused
+      assign op_meta_i=48'd0;
+    end endgenerate
     wire [TG*32-1:0] xl_r  = (IREG && XLOCAL == 0) ? xl_q : xl;
     wire [TG*32-1:0] xl_i;
     ot_hdc_delay #(.W(TG*32), .D(ME_EXTRA)) u_xm (.clk(clk), .rst_n(rst_n), .d(xl_r), .q(xl_i));
@@ -256,9 +274,9 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign t_vout = t_vout_i;
     end endgenerate
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX((XLOCAL != 0) ? TG : 0), .XADDR_FAST(XLOCAL != 0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX), .LEXT(CEXT),
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX((XLOCAL != 0) ? TG : 0), .XADDR_FAST(XLOCAL != 0), .XMODE_EXPORT(XMODE_EXPORT), .XCONTEXT_EXPORT(XCONTEXT_EXPORT), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX), .LEXT(CEXT),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
-        .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
+        .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(cx_core_idle),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
         .i_xbase(b_xbase), .i_xks(b_xks), .i_xjs(b_xjs), .i_xcs(b_xcs),
@@ -268,7 +286,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .scale_re(), .scale_gre(), .scale_addr(), .scale_q({TG*W*16{1'b0}}),
         .kv_re(me_kv_re), .kv_addr(me_kv_addr), .kv_q(me_kv_q),
-        .x_re(cx_xre), .x_addr(cx_xaddr), .x_epoch(cx_xepoch), .x_q(xl_i),
+        .x_re(cx_xre), .x_addr(cx_xaddr), .x_epoch(cx_xepoch), .x_jrepeat(cx_xjrepeat), .i_op_context(op_meta_i[15:0]), .i_vm_version(op_meta_i[47:16]), .x_op_context(cx_xcontext), .x_vm_version(cx_xversion), .accepted_op_context(cx_accepted_context), .accepted_vm_version(cx_accepted_version), .op_accept(cx_op_accept), .x_q(xl_i),
         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
         .progress(), .fault(me_fault),
