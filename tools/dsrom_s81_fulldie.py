@@ -1383,6 +1383,51 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
         V.append(f'  {it.master} {it.name} (' + ', '.join(parts) + ');')
     V.append('endmodule\n')
     Path(path).write_text('\n'.join(V))
+    if k == 1:
+        # s81-die-rtl-bind 2026-10-14: the structural netlist names each hardened master by its base module (OpenSTA reads
+        # no #(...) overrides), so the elaboration parameters every master is built with go to a sidecar the RTL binders
+        # read (tools/die_port_bind.py --params, tools/die_top_lint.py): {master: {param: value}}.
+        Path(str(path) + '.params.json').write_text(json.dumps(dict(
+            schema='opentallas.die_params.v1', netlist=Path(path).name, masters=die_master_params(m)), indent=1, sort_keys=True) + '\n')
+
+
+# s81-die-rtl-bind 2026-10-14: elaboration parameters of the die's hardened masters (the die instantiates each master as
+# hardened; the netlist names the base module).  Bound views: the parameters of the CLOSED route (its launch receipt);
+# die-shaped masters: the die's own counts (stacks of this die kind).
+BOUND_VIEW_RECEIPTS = {
+    # q element view physical/s81_die_views/q_elem_qs5f_efs (route dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl)
+    'ot_v41_rom_elem_q_qxpq_w10': 'results/rtl/dsrom_qelem_pq_20261006/closed_qs5f/receipt.json',
+}
+
+
+def _receipt_params(rel):
+    d = json.loads((ROOT / rel).read_text())
+    a = d.get('driver_args') or []
+    out = {}
+    for i, x in enumerate(a):
+        if i and a[i - 1] == '--param':
+            k_, v_ = x.split('=', 1)
+            out[k_] = int(v_) if re.fullmatch(r'-?\d+', v_) else v_
+    return out
+
+
+def die_master_params(m):
+    used = {it.master for it in m['insts']}
+    out = {}
+    for mst, rel in BOUND_VIEW_RECEIPTS.items():
+        if mst in used:
+            out[mst] = dict(_receipt_params(rel), _source=rel)
+    sj = m.get('ctrl_svc_join')
+    if sj and CTRL_SVC_JOIN in used:
+        out[CTRL_SVC_JOIN] = dict(NS=sj['ns'], _source='die stacks %s' % ','.join(sj['stacks']))
+    ch = m.get('ctrl_host')
+    if ch and ch.get('master') in used:
+        out[ch['master']] = dict(NS=ch['ns'], _source='die stacks %s' % ','.join(ch['stacks']))
+    for mst in ('dsfd_bk_selector_c', 'dsfd_bk_collector_c'):
+        if mst in used:      # stack lanes present on this die (F5: distinct per-stack streams, absent stacks have no port)
+            sts = list(m.get('svcs', {})) or list(STACKS.get(DIE_KIND, ()))
+            out[mst] = dict(NST=len(sts), _source='die stacks %s' % ','.join(sts))
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ power model
@@ -8524,7 +8569,7 @@ def apply_options(a):
 def main(argv=None):
     global BF_EXPLICIT_IDS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'irm', 'psmt', 'record', 'check'])
+    ap.add_argument('mode', choices=['plan', 'real', 'netlist', 'grt', 'ir', 'irm', 'psmt', 'record', 'check'])
     ap.add_argument('--work', type=Path)
     ap.add_argument('--k', type=int, default=16)
     ap.add_argument('--tag', default='base')
@@ -8558,7 +8603,7 @@ def main(argv=None):
             if cg['verdict'] != 'PASS':
                 msg_ = 'DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40])
                 wv_ = os.environ.get('OT_S81_CTRL_GATE_WARN')
-                if (wv_ == '1' and a.mode == 'plan') or (wv_ == 'phys' and a.mode in ('plan', 'real', 'irm', 'check')):
+                if (wv_ == '1' and a.mode == 'plan') or (wv_ == 'phys' and a.mode in ('plan', 'real', 'netlist', 'irm', 'check')):
                     # s81-die-iter 2026-10-12 ('phys'): the die PHYSICAL chain (assembly / GRT / STA / IR) also proceeds;
                     # the RTL port-audit findings stay a FAIL record (<out>.ctrl_gate.json / the die README), not waived
                     # s81die-1011: geometry-only die-fit (plan) proceeds; the port-audit findings stay a FAIL record
@@ -8684,7 +8729,13 @@ def main(argv=None):
     if a.work is None:
         ap.error('--work required')
     work = a.work.resolve()
-    if a.mode == 'real':
+    if a.mode == 'netlist':      # s81-die-rtl-bind 2026-10-14: the structural die netlist only (port-bind / die-top lint)
+        work.mkdir(parents=True, exist_ok=True)
+        write_netlist(m, 1, work / 'die.v')
+        if GEN == 'r8':
+            (work / 'die_glue.sv').write_text(glue_rtl(m))    # this case's glue masters (die_port_bind --rtl-file)
+        print(json.dumps(dict(die_v=str(work / 'die.v'), insts=len(m['insts']))))
+    elif a.mode == 'real':
         print(json.dumps(case_real(m, work)))
     elif a.mode == 'grt':
         print(json.dumps(case_grt(m, work, a.k, a.tag, a.iters, cov, empty=a.empty)))  # variant carries die

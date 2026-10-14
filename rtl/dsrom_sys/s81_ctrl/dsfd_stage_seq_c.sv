@@ -22,7 +22,12 @@
 module dsfd_stage_seq_c #(
     parameter integer NOPS = 128, parameter integer NENG = 12, parameter integer ARGW = 24,
     parameter integer USER_W = 10, parameter integer NW = 21, parameter integer QD = 8, parameter integer FQ = 4,
-    parameter integer OPW = $clog2(NOPS), parameter integer PEW = 4 + ARGW
+    parameter integer OPW = $clog2(NOPS), parameter integer PEW = 4 + ARGW,
+    // s81-die-rtl-bind 2026-10-14 (die item F4): the engines this die HAS.  A die variant without engine e (layer1: no
+    // head 8 / emb 9 / Engram 10 / spare 11) instantiates this core through a variant master that has no c/d/s pins for
+    // e (dsfd_stage_seq_c8); here d<e> / s<e> of an absent engine are not read and c<e> stays 0.  A program op routed
+    // to an absent engine is a FAULT (code 8, sticky, fail closed: the op is never issued, the job never completes).
+    parameter [11:0] ENG_PRESENT = 12'hFFF
 ) (
     input  wire [0:0] ckv, rsv,                         // serial clock / reset (kit, program, status)
     input  wire [0:0] ck, rst,                          // stream clock / reset (engine command plane)
@@ -75,9 +80,9 @@ module dsfd_stage_seq_c #(
     integer i;
     always @(posedge ck[0]) begin
         for (i = 0; i < NENG; i = i + 1) begin
-            dnv_q[i] <= rn & d_w[9*i + 8];
+            dnv_q[i] <= rn & ENG_PRESENT[i] & d_w[9*i + 8];
             dnt_q[TAGW*i +: TAGW] <= d_w[9*i +: 8];
-            ef_q[i] <= rn & s_w[2*i];
+            ef_q[i] <= rn & ENG_PRESENT[i] & s_w[2*i];
         end
     end
     wire [NENG-1:0] cmd_v; wire [NENG*CMDW-1:0] cmd_d;
@@ -89,7 +94,14 @@ module dsfd_stage_seq_c #(
         .fault_code(fcode), .st_jobs(), .st_cmds(), .st_credit_stall());
     reg [NENG*85-1:0] c_q;
     always @(posedge ck[0])
-        for (i = 0; i < NENG; i = i + 1) c_q[85*i +: 85] <= {rn & cmd_v[i], cmd_d[CMDW*i +: CMDW]};
+        for (i = 0; i < NENG; i = i + 1) c_q[85*i +: 85] <= ENG_PRESENT[i] ? {rn & cmd_v[i], cmd_d[CMDW*i +: CMDW]} : 85'd0;
+    // an op issued to an engine this die does not have (F4): sticky fault, code 8
+    reg aerr;
+`ifdef OT_SSEQC_MUT_ABSENT
+    always @(posedge ck[0]) aerr <= 1'b0;                 // MUTANT: absent-engine issue not detected (silent hang)
+`else
+    always @(posedge ck[0]) if (!rn) aerr <= 1'b0; else if (|(cmd_v & ~ENG_PRESENT[NENG-1:0])) aerr <= 1'b1;
+`endif
     assign c_w = c_q;
     // ---------------- kit done: ck -> ckv (the oldest job's token rides with its done)
     reg [NW-1:0] tq [0:1]; reg tw, tr;
@@ -113,11 +125,38 @@ module dsfd_stage_seq_c #(
         else begin
             if (ks_unf || pw_unf || kd_ovf || kd_unf) xerr <= 1'b1;
             if (|ef_q) eerr <= 1'b1;
-            if (code == 0) code <= sfault ? fcode : (|ef_q) ? 4'd5 : (ks_unf || pw_unf || kd_ovf || kd_unf) ? 4'd6 : 4'd0;
+            if (code == 0) code <= sfault ? fcode : aerr ? 4'd8 : (|ef_q) ? 4'd5 : (ks_unf || pw_unf || kd_ovf || kd_unf) ? 4'd6 : 4'd0;
         end
     reg kv_err; always @(posedge ckv[0]) if (!rvn) kv_err <= 1'b0; else if (ks_ovf || pw_ovf || (ks_push && !ks_wr) || (pw_q[35] && !pw_wr)) kv_err <= 1'b1;
-    wire [5:0] st_c = {sfault | xerr | eerr, code, busy};
+    wire [5:0] st_c = {sfault | xerr | eerr | aerr, code, busy};
     reg [5:0] st_s0, st_s1, st_q;
     always @(posedge ckv[0]) begin st_s0 <= st_c; st_s1 <= st_s0; st_q <= {st_s1[5] | kv_err, st_s1[4:1] | (kv_err ? 4'd7 : 4'd0), st_s1[0]}; end
     assign t_st = st_q;
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------
+// dsfd_stage_seq_c8 (s81-die-rtl-bind 2026-10-14, die item F4): the stage sequencer master of a die with engines 0..7
+// only (S81 layer1: fld 0, su 1, hc 2, coll 3, svc 4, sel 5, col 6, hop 7 -- results/rtl/s81_ctrl_20261008/programs
+// engine_ports; head 8 / emb 9 / Engram 10 / spare 11 live on the head, source and Engram-home dies).  Same core and
+// cycles as dsfd_stage_seq_c; the absent engines have no die pins (an op routed to one faults, code 8).
+// ---------------------------------------------------------------------------------------------------------------
+module dsfd_stage_seq_c8 #(parameter integer NOPS = 128, parameter integer QD = 8, parameter integer FQ = 4) (
+    input  wire [0:0] ckv, rsv,
+    input  wire [0:0] ck, rst,
+    input  wire [52:0]  f_ks,
+    output wire [53:0]  t_kd,
+    input  wire [35:0]  f_pw,
+    input  wire [7:0]   f_plen,
+    output wire [5:0]   t_st,
+    output wire [84:0]  c0, c1, c2, c3, c4, c5, c6, c7,
+    input  wire [8:0]   d0, d1, d2, d3, d4, d5, d6, d7,
+    input  wire [1:0]   s0, s1, s2, s3, s4, s5, s6, s7
+);
+    // engines 8..11 do not exist on this die: their completion / status inputs are the constant "no engine" (never
+    // read: ENG_PRESENT masks them), their command outputs are left open inside this master
+    dsfd_stage_seq_c #(.NOPS(NOPS), .QD(QD), .FQ(FQ), .ENG_PRESENT(12'h0FF)) u_s (.ckv(ckv), .rsv(rsv), .ck(ck), .rst(rst),
+        .f_ks(f_ks), .t_kd(t_kd), .f_pw(f_pw), .f_plen(f_plen), .t_st(t_st),
+        .c0(c0), .c1(c1), .c2(c2), .c3(c3), .c4(c4), .c5(c5), .c6(c6), .c7(c7), .c8(), .c9(), .c10(), .c11(),
+        .d0(d0), .d1(d1), .d2(d2), .d3(d3), .d4(d4), .d5(d5), .d6(d6), .d7(d7), .d8(9'd0), .d9(9'd0), .d10(9'd0), .d11(9'd0),
+        .s0(s0), .s1(s1), .s2(s2), .s3(s3), .s4(s4), .s5(s5), .s6(s6), .s7(s7), .s8(2'd0), .s9(2'd0), .s10(2'd0), .s11(2'd0));
 endmodule
