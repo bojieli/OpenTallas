@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.dma_q5_gate.v1",
   "branch": "claude/el1013-dma-q5",
-  "source_commit": "49d9fbadc",
+  "source_commit": "f1a05657e",
   "status": "RTL BENCHED; PHYSICAL/LOCAL8/BACK1 INTEGRATION INCOMPLETE",
   "flat_reference_commit": "6403f77f2",
   "port_gate": {
@@ -105,8 +105,8 @@
     "top-down assigned pins pending die guides",
     "VM local8 read-group interface not published; current32lane group retained",
     "BACK1 explicit integration with separateNS1/NB8 back engine owed",
-    "MV gate sourceea656e923 differs only serial-go valid+1FF versus current; final job reruns gate onf24c88250",
-    "final job all7 mutants bound f24c88250; sourceea656e923 negative evidence retained and current serial-go mutant7 FAILerrors2"
+    "final job all7 mutants bound f24c88250; sourceea656e923 negative evidence retained and current serial-go mutant7 FAILerrors2",
+    "oldmanualRQ73980 andcompactserial66992 stilllive; finaldaemonroute gates/sourcebinding authoritative"
   ],
   "sources": {
     "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_q.sv": "70add28a906de75502ca2a59c90a5db2c06d65c992b90b3c90343abcdb78d75c",
@@ -142,12 +142,26 @@
       "tt_insertion_ps": 314.5,
       "tt_spread_ps": 30.4,
       "evidence": "serial_large_cts_gate_result.json",
-      "note": "clock rulePASS; actualstd2003/util19%, compact56.16x86.4 shapegate live"
+      "note": "clock rulePASS; actualstd2003/util19%, compact56.16x86.4 shapegate live",
+      "qualification_status": "unqualified legacyv1 noimmutable shipping receipt; descriptive only, noexceptioncredit"
     }
   ],
   "submitted": [
-    "b2_dma_rq_q5_ref-q5r1-49d9fbadc",
+    "b2_dma_rq_q5_ref-q5r1-f1a05657e",
     "b2_dma_mv_q5_ref-q5sram1-49d9fbadc",
     "b2_dma_serial_q5_ref-q5r1-49d9fbadc"
-  ]
+  ],
+  "intake": {
+    "rq49": "REFUSED stale unverified legacy gate cache, preserved original and replacementsourcefresh",
+    "rqf1": "SUBMITTED exact-source localgatePASS0fail0warn; fixedv2sourcebinding code merged",
+    "mv49": "QUEUED refgatePASS",
+    "serial49": "QUEUED refgatePASS"
+  },
+  "manual_mv_gate": {
+    "sinks": 13749,
+    "TT_insertion_ps": 625,
+    "TT_spread_ps": 29.1,
+    "qualification_status": "unqualifiedlegacyv1; actualearlierEface/no-goFF differsprintedcollecttimecommit",
+    "evidence": "mv_earlier_eface_unqualified_gate_result.json"
+  }
 }
