@@ -175,7 +175,9 @@ module tb_hgi_smmv_tput;
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
             .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]), .sm_cr(rv[cl*NSL +: NSL]));
         wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
-`ifdef XP
+`ifdef XPT
+        ot_hgi_xp_load_t #(.NXC(NXC), .CR(`XCR), .XDD(`XSPD + 12), .MUT_WDROP(MWD), .MUT_BEAT(MBT), .MUT_LANE(MLN)) u_x (
+`elsif XP
         ot_hgi_xp_load #(.NXC(NXC), .CR(`XCR), .XDD(`XSPD + 12), .MUT_WDROP(MWD), .MUT_BEAT(MBT), .MUT_LANE(MLN)) u_x (
 `else
         ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (
@@ -249,7 +251,12 @@ module tb_hgi_smmv_tput;
     wire [NREAL-1:0] sxw_en; wire [NREAL*7-1:0] sxw_addr, sxw_grp; wire [NREAL*2048-1:0] sxw_data;
 `ifdef XP
     wire [7:0] sp_en; wire [8*7-1:0] sp_addr, sp_grp; wire [8*2048-1:0] sp_data;
-    ot_hgi_xp_spine #(.NS(8), .PRE(`XSPD)) u_spine (.clk(clk), .rst(!rst_n), .i_en(xw_en), .i_addr(xw_addr), .i_grp(xw_grp), .i_data(xw_data),
+`ifdef XPT
+    ot_hgi_xp_spine_t #(.NS(8), .PRE(`XSPD)) u_spine (
+`else
+    ot_hgi_xp_spine #(.NS(8), .PRE(`XSPD)) u_spine (
+`endif
+       .clk(clk), .rst(!rst_n), .i_en(xw_en), .i_addr(xw_addr), .i_grp(xw_grp), .i_data(xw_data),
         .o_en(sp_en), .o_addr(sp_addr), .o_grp(sp_grp), .o_data(sp_data));
     assign sxw_en = sp_en[NREAL-1:0]; assign sxw_addr = sp_addr[NREAL*7-1:0]; assign sxw_grp = sp_grp[NREAL*7-1:0];
     assign sxw_data = sp_data[NREAL*2048-1:0];
