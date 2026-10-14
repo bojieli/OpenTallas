@@ -53,6 +53,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_b2_dma_mv #(
     parameter integer MUT_SEAM = 0,
+    parameter integer NATIVE_WL = 0, // opt-in native VM credit interface; successor physical view required
     parameter integer MUT_RNE = 0,        // mutant: BF16 store truncates (no round to nearest even)
     parameter integer MUT = 0,
     parameter integer KOUT = 64,          // HBM writes in flight (the per-stack lanes)
@@ -162,7 +163,8 @@ module ot_hgi_b2_dma_mv #(
     // destination sectors here, one a cycle, never back-pressured, {v, sector 15, wdata 256, word mask 8}; wl_done
     // returns when the write is in the macro (ot_hgi_vm_unit wq / wq_done)
     output reg  [279:0]  wl,
-    input  wire          wl_done
+    input  wire          wl_done,
+    input wire [31:0] wl_native_ready
 );
     wire command_valid, command_ready;
     wire [226:0] command_data;
@@ -240,6 +242,8 @@ module ot_hgi_b2_dma_mv #(
     // clears it)
     reg cv_q; reg [226:0] cm_q;
     reg kr_v, kr_we; reg [255:0] kr_d; reg [273:0] vr_q;
+    reg [31:0] wl_ready_q;
+    always @(posedge clk or negedge rn) if (!rn) wl_ready_q <= 0; else wl_ready_q <= wl_native_ready;
     reg wld_q; always @(posedge clk) wld_q <= wl_done;     // wide-port done pin flop (hgi-1010/c: wl_done -> wr_in was 17 levels)
     always @(posedge clk or negedge rn)
         if (!rn) begin kr_v <= 1'b0; vr_q[273] <= 1'b0; end
@@ -729,7 +733,7 @@ module ot_hgi_b2_dma_mv #(
         iss_kw = 1'b0; iss_kr = 1'b0; iss_vw = 1'b0; iss_vr = 1'b0;
         if (busy_f && go_q3 && !f_fault) begin
             if (wq_hv && dst_hbm && !lq_v[w_l] && wr_in < 9'(KOUT) && (B2 == 0 || w_l == 2'(QID))) iss_kw = 1'b1;   // a full sector to its stack's lane
-            if (wq_hv && !dst_hbm) iss_vw = 1'b1;                      // the wide port: no client slot
+            if (wq_hv && !dst_hbm && (NATIVE_WL == 0 || wl_ready_q[{wq_head[302:301],wq_head[290:288]}])) iss_vw = 1'b1;                      // the wide port: no client slot
         end
         iss_vr = r_go && !src_hbm && SV == 0; iss_kr = r_go && src_hbm;
     end

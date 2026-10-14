@@ -6,6 +6,7 @@
 // BACK1 belongs to its separate CLOSED NS1/NB8 engine beside each VM slice; integration is still owed.
 // No physical qualification until child views, assigned pins, slot/hop gates and measured CTS have passed.
 module ot_hgi_b2_dma_q #(
+    parameter integer NATIVE_WL = 0,
     parameter integer HARD_CLOCKS = 0, // physical parent: six independent die-compensated clock entries
     parameter integer FRONT = 0,
     parameter integer VR2 = 1,
@@ -55,7 +56,7 @@ module ot_hgi_b2_dma_q #(
     input  wire [8256:0] vr2r,
     output wire [279:0] wl,
     output wire [4:0] wl_bank,
-    input wire wl_done
+    input wire wl_done, input wire [31:0] wl_native_ready
 );
     wire [5:0] q5_clock = HARD_CLOCKS != 0 ? leaf_clk : {6{clk}};
     wire mover_v, mover_rdy, mover_done, mover_fault, mover_src, mover_fv, mover_frdy, mover_fdone, mover_wld;
@@ -98,7 +99,7 @@ module ot_hgi_b2_dma_q #(
       .mover_fv(mover_fv), .pin_m_fence_rdy(mover_frdy), .pin_m_fence_done(mover_fdone),
       .il_vmq(il_vmq), .il_active(il_active), .vmr(mover_vmr));
 `ifndef OT_B2_DMA_Q5_HARD
-    ot_hgi_b2_dma_mv #(.VR2(VR2), .KVW(KVW), .SVR2(0), .MUT_SEAM(MUT_SEAM), .PX(2), .B2(1), .QID(0), .MUT_B2(MUT_B2))
+    ot_hgi_b2_dma_mv #(.NATIVE_WL(NATIVE_WL), .VR2(VR2), .KVW(KVW), .SVR2(0), .MUT_SEAM(MUT_SEAM), .PX(2), .B2(1), .QID(0), .MUT_B2(MUT_B2))
 `else
     ot_hgi_b2_dma_mv
 `endif
@@ -130,6 +131,9 @@ module ot_hgi_b2_dma_q #(
       .r_req_v(rv), .r_req_rdy({3'd0,r_req_rdy}), .r_req_addr(ra), .r_req_len(rl), .r_req_tag(rt), .r_req_we(rwe), .r_req_wdata(rwd), .r_req_wstrb(rws),
       .r_rsp_v({3'd0,r_rsp_v}), .r_rsp_we({3'd0,r_rsp_we}), .r_rsp_rdy(rrr), .r_rsp_tag({48'd0,r_rsp_tag}), .r_rsp_last({3'd0,r_rsp_last}), .r_rsp_data({768'd0,r_rsp_data}),
       .vr2q(vr2q), .vr2r_ctrl(vr2r[8256:8224]), .vmq(vmq), .vmr(vmr), .wl(wl), .wl_done(wl_done),
+`ifndef OT_B2_DMA_Q5_HARD
+      .wl_native_ready(wl_native_ready),
+`endif
       .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_kq(kc_kq),
       .kv_wv(kc_wv), .kv_wo(kc_wo), .kv_wa(kc_wa), .kv_wd(kc_wd), .kc_v(kc_v), .kc_vs(kc_vs), .kc_vst(kc_vst), .kc_ds(kc_ds),
       .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .kc_cr(kc_cr), .kc_wrdy(kc_wrdy));

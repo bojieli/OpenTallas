@@ -39,5 +39,20 @@
   },
   "channel_budget": "M5 cap, M4/M5 face pins; target final segment<=100um, stage<=500um; coordinates and hop counts requested from die owner",
   "area_and_energy": "UNMEASURED; estimates are sizing only; no ledger/price credit",
-  "throughput": "UNMEASURED-vs-price; full production32lane KV+native8bank and BACK8lane benchmarks required"
+  "throughput": "UNMEASURED-vs-price; full production32lane KV+native8bank and BACK8lane benchmarks required",
+  "native_write_successor": {
+    "required_protocol_change": "optional native_wl_ready[32] captured at mover pin; iss_vw requires permission of head sector nativebank",
+    "default_behavior": "NATIVE_WL=0 maintains existing unconditional wide issue; opt-in successor needs new physical view/qualification",
+    "write_bank_leaf": {
+      "replicas": 32,
+      "entries": 8,
+      "payload_bits": 280,
+      "estimated_flops": 2550,
+      "ready_threshold": "next_count<4, four reserved slots cover three launch/capture feedback edges",
+      "initial_native_credits": 10,
+      "visibility": "only native wq_done decrements mover wr_in; wq_cr returns permission, never completion"
+    },
+    "latency_added_edges": 2,
+    "physical_status": "new bank leaves and modified mover physical views required; no closed-view equivalence claimed"
+  }
 }

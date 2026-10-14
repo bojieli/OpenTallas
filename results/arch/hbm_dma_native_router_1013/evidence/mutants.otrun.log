@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     admits   453 GB (avail 679, growth 125, headroom 64, waiters 0/0 GB) load 49/128 running 24 disk 973 GB 
+ot-run: ot-epyc4       admits   587 GB (avail 813, growth 144, headroom 48, waiters 0/0 GB) load 54/128 running 22 disk 1218 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex-dma-native-adf17d674
+ot-run: ot-agidock128  admits   -82 GB (avail 95, growth 4, headroom 24, waiters 2/152 GB) load 7/64 running 2 disk 284 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-594206-1791959599 after 0 s
+DMA_NATIVE FAIL errors=5841 checked=3639 sent=3667
+DMA_NATIVE_MUT1 OBSERVED_FAIL
+DMA_NATIVE FAIL errors=6338 checked=4116 sent=4119
+DMA_NATIVE_MUT2 OBSERVED_FAIL
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-594206-1791959599): exit 0
