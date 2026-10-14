@@ -2,6 +2,7 @@
  "name": "smpub_parent",
  "top": "ot_hgi_sm_pub_parent",
  "kind": "cluster",
+ "hard_define": "SYNTHESIS",
  "sources": [
   "rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv",
   "rtl/lib/ot_rst_relay.sv"
