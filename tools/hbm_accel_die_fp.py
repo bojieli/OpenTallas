@@ -7917,9 +7917,9 @@ def r25gq_v14():
     ds.append(dict(name='hb_ckgen', master='hfd_ckgen', xy=(15328.0, 11500.0), wh=CKGEN_WH, clear=20.0, no_tree=True))
     v['ck_root_inputs'] = dict(refclk=('refclk', 'CLOCK'), por_n=('por_n', 'SIGNAL'))
     nets = [n_ for n_ in v['die_slot_nets'] if not n_[0].startswith('tkm_')]
-    for l_, (q, k) in P2P_LINKS.items():        # hfd_lk_ep f_lk: [546:0] + [1117:1094] in, [1093:547] + [1119:1118] out
-        nets += [(f'llk_t_{l_}', 'hub', 571, (f'hb_coll_{q}', f'llk_t{k}'), (f'ep_{l_}', 'f_lk@0:546,1094:1117')),
-                 (f'llk_r_{l_}', 'hub', 549, (f'ep_{l_}', 'f_lk@547:1093,1118:1119'), (f'hb_coll_{q}', f'llk_r{k}'))]
+    for l_, (q, k) in P2P_LINKS.items():        # one hfd_lk_ep f_lk bundle a link (class link_flit: per-bit directions,
+        # endpoint 0 = the COLL engine): [546:0] + [1117:1094] COLL -> link, [1093:547] + [1119:1118] link -> COLL
+        nets.append((f'lkq_{l_}', 'link_flit', 1120, (f'hb_coll_{q}', f'llk{k}'), (f'ep_{l_}', 'f_lk')))
     for q in ('SW', 'SE', 'NW', 'NE'):
         c_, su_ = f'hb_coll_{q}', f'hb_su_{q}'
         nets += [(f'coll_inj_{q}', 'hub', 34, (c_, 't_inj'), (su_, 'f_coll_inj')),
@@ -7934,8 +7934,8 @@ def r25gq_v14():
                  (f'coll_cfg_{q}', 'hub', 40, ('hb_cmdproc', f't_coll_cfg_{q}'), (c_, 'f_hgi_cfg'))]
     nets.append(('coll_ret', 'hub', 3, ('hb_coll_SW', 't_hgi_ret'), ('hb_cmdproc', 'f_coll_ret')))
     for a_, b_ in P2P_RING:     # cw a -> b, ccw b -> a
-        nets += [(f'pr_cw_{a_}_{b_}', 'hub', PR_BITS, (f'hb_coll_{a_}', 'pr_cw_o'), (f'hb_coll_{b_}', 'pr_cw_i')),
-                 (f'pr_ccw_{b_}_{a_}', 'hub', PR_BITS, (f'hb_coll_{b_}', 'pr_ccw_o'), (f'hb_coll_{a_}', 'pr_ccw_i'))]
+        nets += [(f'pr_cw_{a_}_{b_}', 'hub', PR_BITS, (f'hb_coll_{a_}', 't_pr_cw'), (f'hb_coll_{b_}', 'f_pr_cw')),
+                 (f'pr_ccw_{b_}_{a_}', 'hub', PR_BITS, (f'hb_coll_{b_}', 't_pr_ccw'), (f'hb_coll_{a_}', 'f_pr_ccw'))]
     # SW only (QSOLO): TOPK_MERGE writes and the RGX lanes
     nets += [('coll_tkw', 'hub', 569, ('hb_coll_SW', 't_tkw'), ('hb_vms_SW', 'f_coll_tkw')),
              ('coll_tkw_rdy', 'hub', 1, ('hb_vms_SW', 't_coll_tkw_rdy'), ('hb_coll_SW', 'f_tkw_rdy')),

@@ -951,6 +951,7 @@ def dirs_hbm(bid, cls, bits, eps, j, port):
 def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('x_trunk', 'x_leaf', 'result_leaf', 'result_trunk', 'expert_req', 'kv_rows', 'attn_chain', 'attn_root',
                'idx_sel', 'kv_credit',       # R25GQ 10-10: one class a net type, endpoint 0 drives
+               'ctl_top',                    # v14: die top pin (bump) -> the clock root's refclk / por_n
                'attn_kv', 'attn_out', 'attn_operand', 'attn_input', 'attn_query', 'attn_packet'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'weight':     # line + tag + valid down, ready back (TF7 / r15 sm_rtl_w: no ready)

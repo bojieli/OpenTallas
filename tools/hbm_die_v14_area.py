@@ -29,6 +29,8 @@ def main(argv=None):
         kind_a[k] += w * h / 1e6
         mst_a[mst] += w * h / 1e6
         mst_n[mst] += 1
+        if k == 'waypoint':     # as the v13 table: relays / stations / clock pairs do not close a 100-um cell
+            continue
         occ[int(x // 100):int(np.ceil((x + w) / 100)), int(y // 100):int(np.ceil((y + h) / 100))] = True
     free = (~occ).sum() * 0.01
     blocks = sum(v for k, v in kind_a.items() if k != 'waypoint')

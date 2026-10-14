@@ -13,9 +13,10 @@
 //   t_inj  = {inj_rd[1:0], inj_idx[31:0]}, t_inj_addr, t_vmaddr, f_inj_d          own SU quarter: inject
 //   t_del  = {hgi_del_obase[159:0], del_flit[2179:0], del_valid[3:0]}             own SU quarter: delivery
 //   f_rc   = {rc_d[255:0], rc_mode, rc_tag[2:0], rc_v}, t_rr = {rc_rdy, rr_d[255:0], rr_tag[2:0], rr_v}  RED_CARRY
-//   llk_t<k> = {lk_session[24k +: 24], lk_rx_credit[k], lk_tx_flit[545k +: 545], lk_tx_v[k]}   to hfd_lk_ep f_lk[0 +: 547],[1094 +: 24]
-//   llk_r<k> = {lk_locked[k], lk_fault[k], lk_sw_cr[k], lk_rx_flit[545k +: 545], lk_rx_v[k]}  from f_lk[547 +: 547],[1118 +: 2]
-//   pr_cw_i / pr_cw_o / pr_ccw_i / pr_ccw_o              2 x 2 peer ring (280 b a direction)
+//   llk<k>[1119:0]  one link bundle, bit for bit the hfd_lk_ep f_lk bundle (die class link_flit, endpoint 0 = COLL):
+//                   [0] t_v, [545:1] t_flit, [546] r_cr, [1117:1094] session (COLL -> link);
+//                   [547] r_v, [1092:548] r_flit, [1093] t_cr, [1119:1118] {locked, fault} (link -> COLL)
+//   f_pr_cw / t_pr_cw / f_pr_ccw / t_pr_ccw              2 x 2 peer ring (280 b a direction)
 //   q3 only: t_tkw = {tk_w_data, tk_w_mask, tk_w_addr, tk_w_v}, f_tkw_rdy;  RGX lanes t_rgx_xq, f_rgx_xr, t_rgx_vmq,
 //            f_rgx_vmr, t_rgx_c = {rgx_c_q, rgx_c_req}, f_rgx_c = {rgx_c_rsp, rgx_c_cr, rgx_c_gnt}, t_rgx_xw, f_rgx_xwa
 //   fault, t_stat (status outputs)
@@ -36,12 +37,11 @@ module hfd_coll_q_die #(parameter integer NPT = 3, parameter integer TKM = 0) (
     output wire [2343:0]        t_del,
     input  wire [260:0]         f_rc,
     output wire [260:0]         t_rr,
-    output wire [NPT*571-1:0]   llk_t,
-    input  wire [NPT*549-1:0]   llk_r,
-    input  wire [279:0]         pr_cw_i,
-    output wire [279:0]         pr_cw_o,
-    input  wire [279:0]         pr_ccw_i,
-    output wire [279:0]         pr_ccw_o,
+    inout  wire [NPT*1120-1:0]  llk,
+    input  wire [279:0]         f_pr_cw,
+    output wire [279:0]         t_pr_cw,
+    input  wire [279:0]         f_pr_ccw,
+    output wire [279:0]         t_pr_ccw,
     output wire [568:0]         t_tkw,
     input  wire                 f_tkw_rdy,
     output wire [75:0]          t_rgx_xq,
@@ -61,8 +61,10 @@ module hfd_coll_q_die #(parameter integer NPT = 3, parameter integer TKM = 0) (
     wire [2*NPT-1:0] status_unused;
     genvar k;
     generate for (k = 0; k < NPT; k = k + 1) begin : g_lk
-        assign llk_t[571*k +: 571] = {session[24*k +: 24], rx_credit[k], tx_flit[545*k +: 545], tx_v[k]};
-        assign {locked[k], lfault[k], sw_cr[k], rx_flit[545*k +: 545], rx_v[k]} = llk_r[549*k +: 549];
+        assign llk[1120*k +: 547] = {rx_credit[k], tx_flit[545*k +: 545], tx_v[k]};
+        assign llk[1120*k + 1094 +: 24] = session[24*k +: 24];
+        assign {sw_cr[k], rx_flit[545*k +: 545], rx_v[k]} = llk[1120*k + 547 +: 547];
+        assign {locked[k], lfault[k]} = llk[1120*k + 1118 +: 2];
     end endgenerate
     wire [1:0] inj_rd; wire [31:0] inj_idx;
     wire [3:0] del_valid; wire [2179:0] del_flit; wire [159:0] del_obase;
@@ -83,7 +85,7 @@ module hfd_coll_q_die #(parameter integer NPT = 3, parameter integer TKM = 0) (
         .fault(fault), .stat_credit_stall(t_stat),
         .lk_tx_v(tx_v), .lk_tx_flit(tx_flit), .lk_rx_credit(rx_credit), .lk_rx_v(rx_v), .lk_rx_flit(rx_flit),
         .lk_sw_cr(sw_cr), .lk_session(session), .lk_fault(lfault), .lk_locked(locked), .lk_status(status_unused),
-        .pr_cw_i(pr_cw_i), .pr_cw_o(pr_cw_o), .pr_ccw_i(pr_ccw_i), .pr_ccw_o(pr_ccw_o),
+        .pr_cw_i(f_pr_cw), .pr_cw_o(t_pr_cw), .pr_ccw_i(f_pr_ccw), .pr_ccw_o(t_pr_ccw),
         .rc_v(f_rc[0]), .rc_rdy(rc_rdy), .rc_tag(f_rc[3:1]), .rc_mode(f_rc[4]), .rc_d(f_rc[260:5]),
         .rr_v(rr_v), .rr_tag(rr_tag), .rr_d(rr_d),
         .tk_w_v(tk_v), .tk_w_addr(tk_a), .tk_w_mask(tk_m), .tk_w_data(tk_d), .tk_w_rdy(f_tkw_rdy),
@@ -98,17 +100,16 @@ module hfd_coll_q3 (
     input  wire [967:0] f_hgi_rec, input wire [553:0] f_hgi_recx, input wire [39:0] f_hgi_cfg, output wire [2:0] t_hgi_ret,
     output wire [33:0] t_inj, output wire [159:0] t_inj_addr, output wire [79:0] t_vmaddr, input wire [1023:0] f_inj_d,
     output wire [2343:0] t_del, input wire [260:0] f_rc, output wire [260:0] t_rr,
-    output wire [570:0] llk_t0, output wire [570:0] llk_t1, output wire [570:0] llk_t2,
-    input  wire [548:0] llk_r0, input wire [548:0] llk_r1, input wire [548:0] llk_r2,
-    input  wire [279:0] pr_cw_i, output wire [279:0] pr_cw_o, input wire [279:0] pr_ccw_i, output wire [279:0] pr_ccw_o,
+    inout  wire [1119:0] llk0, inout wire [1119:0] llk1, inout wire [1119:0] llk2,
+    input  wire [279:0] f_pr_cw, output wire [279:0] t_pr_cw, input wire [279:0] f_pr_ccw, output wire [279:0] t_pr_ccw,
     output wire [568:0] t_tkw, input wire f_tkw_rdy,
     output wire [75:0] t_rgx_xq, input wire [513:0] f_rgx_xr, output wire [337:0] t_rgx_vmq, input wire [273:0] f_rgx_vmr,
     output wire [8960:0] t_rgx_c, input wire [64:0] f_rgx_c, output wire [651:0] t_rgx_xw, input wire [1:0] f_rgx_xwa,
     output wire fault, output wire [31:0] t_stat);
     hfd_coll_q_die #(.NPT(3), .TKM(1)) u (.ck(ck), .rst(rst), .qid(qid), .f_hgi_rec(f_hgi_rec), .f_hgi_recx(f_hgi_recx),
         .f_hgi_cfg(f_hgi_cfg), .t_hgi_ret(t_hgi_ret), .t_inj(t_inj), .t_inj_addr(t_inj_addr), .t_vmaddr(t_vmaddr),
-        .f_inj_d(f_inj_d), .t_del(t_del), .f_rc(f_rc), .t_rr(t_rr), .llk_t({llk_t2, llk_t1, llk_t0}),
-        .llk_r({llk_r2, llk_r1, llk_r0}), .pr_cw_i(pr_cw_i), .pr_cw_o(pr_cw_o), .pr_ccw_i(pr_ccw_i), .pr_ccw_o(pr_ccw_o),
+        .f_inj_d(f_inj_d), .t_del(t_del), .f_rc(f_rc), .t_rr(t_rr), .llk({llk2, llk1, llk0}),
+        .f_pr_cw(f_pr_cw), .t_pr_cw(t_pr_cw), .f_pr_ccw(f_pr_ccw), .t_pr_ccw(t_pr_ccw),
         .t_tkw(t_tkw), .f_tkw_rdy(f_tkw_rdy), .t_rgx_xq(t_rgx_xq), .f_rgx_xr(f_rgx_xr), .t_rgx_vmq(t_rgx_vmq),
         .f_rgx_vmr(f_rgx_vmr), .t_rgx_c(t_rgx_c), .f_rgx_c(f_rgx_c), .t_rgx_xw(t_rgx_xw), .f_rgx_xwa(f_rgx_xwa),
         .fault(fault), .t_stat(t_stat));
@@ -120,15 +121,14 @@ module hfd_coll_q2 (
     input  wire [967:0] f_hgi_rec, input wire [553:0] f_hgi_recx, input wire [39:0] f_hgi_cfg, output wire [2:0] t_hgi_ret,
     output wire [33:0] t_inj, output wire [159:0] t_inj_addr, output wire [79:0] t_vmaddr, input wire [1023:0] f_inj_d,
     output wire [2343:0] t_del, input wire [260:0] f_rc, output wire [260:0] t_rr,
-    output wire [570:0] llk_t0, output wire [570:0] llk_t1,
-    input  wire [548:0] llk_r0, input wire [548:0] llk_r1,
-    input  wire [279:0] pr_cw_i, output wire [279:0] pr_cw_o, input wire [279:0] pr_ccw_i, output wire [279:0] pr_ccw_o,
+    inout  wire [1119:0] llk0, inout wire [1119:0] llk1,
+    input  wire [279:0] f_pr_cw, output wire [279:0] t_pr_cw, input wire [279:0] f_pr_ccw, output wire [279:0] t_pr_ccw,
     output wire fault, output wire [31:0] t_stat);
     wire [568:0] idle_tkw; wire [75:0] idle_xq; wire [337:0] idle_vmq; wire [8960:0] idle_c; wire [651:0] idle_xw;
     hfd_coll_q_die #(.NPT(2), .TKM(0)) u (.ck(ck), .rst(rst), .qid(qid), .f_hgi_rec(f_hgi_rec), .f_hgi_recx(f_hgi_recx),
         .f_hgi_cfg(f_hgi_cfg), .t_hgi_ret(t_hgi_ret), .t_inj(t_inj), .t_inj_addr(t_inj_addr), .t_vmaddr(t_vmaddr),
-        .f_inj_d(f_inj_d), .t_del(t_del), .f_rc(f_rc), .t_rr(t_rr), .llk_t({llk_t1, llk_t0}), .llk_r({llk_r1, llk_r0}),
-        .pr_cw_i(pr_cw_i), .pr_cw_o(pr_cw_o), .pr_ccw_i(pr_ccw_i), .pr_ccw_o(pr_ccw_o),
+        .f_inj_d(f_inj_d), .t_del(t_del), .f_rc(f_rc), .t_rr(t_rr), .llk({llk1, llk0}),
+        .f_pr_cw(f_pr_cw), .t_pr_cw(t_pr_cw), .f_pr_ccw(f_pr_ccw), .t_pr_ccw(t_pr_ccw),
         .t_tkw(idle_tkw), .f_tkw_rdy(1'b1), .t_rgx_xq(idle_xq), .f_rgx_xr(514'd0), .t_rgx_vmq(idle_vmq), .f_rgx_vmr(274'd0),
         .t_rgx_c(idle_c), .f_rgx_c(65'd0), .t_rgx_xw(idle_xw), .f_rgx_xwa(2'd0), .fault(fault), .t_stat(t_stat));
 endmodule
