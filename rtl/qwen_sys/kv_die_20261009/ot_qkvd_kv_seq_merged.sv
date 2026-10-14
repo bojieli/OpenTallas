@@ -50,6 +50,10 @@
 //   ot_qkvd_seq_m_ctl    control: stage stepper, tag FIFOs, launcher, RES path, write relay, credit join
 //   ot_qkvd_seq_m_store  x3 data storage (Q FIFO, KVN FIFO, the 8 KVN words), DW bits wide (cluster: 4 x 128)
 //   ot_qkvd_seq_m_fan    one quadrant's pin registers (aq, kvn, kc out; credit and faults back)
+// HEADS=1 is an opt-in TP8 receiver profile: 4 KVN tags 0,1,4,5, 32 native FP32 Q words (Q_FP32=1),
+// 2 posted rows (vg=00/10), 32 FP32 RES words. The unchanged two-group attention
+// leaves must be adapted separately; this profile alone is transport/control proof.
+// No FP32-to-BF16 rounding is performed here.
 // Latency against ot_qkvd_kv_seq: aq / kvn words + 4 cycles (control out, store in, store out, fan in, fan out),
 // kc + 2, credits and faults back + 2.  Every hop is register -> wire -> register.
 // MUT (bench only): 2 Q beats 0 / 1 swapped, 3 launcher layer + 1, 4 credit join = OR, 5 the ROM sequencer's copy of a
@@ -58,6 +62,8 @@
 
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_seq_m_ctl #(
+    parameter integer Q_FP32 = 0,                 // explicit transport precision; no conversion
+    parameter integer HEADS  = 2,                 // historical two-KV-head profile; TP8 candidate is one
     parameter integer XS     = 40,                // x3 credits = Q FIFO depth (one layer: 8 KVN + 32 Q)
     parameter integer KD     = 8,
     parameter integer KWC    = 4,                 // row credits of each landing write queue
@@ -109,6 +115,12 @@ module ot_qkvd_seq_m_ctl #(
     output reg           fault,
     output reg  [8:0]    fault_cause
 );
+    localparam integer KWORDS = 4 * HEADS;
+    localparam integer QWORDS = 16 * HEADS * (Q_FP32 ? 2 : 1); // 32 BF16 or 16 FP32 values/word
+    localparam integer RWORDS = 32 * HEADS; // FP32, 16 values per word
+    localparam integer KROWS = 2 * HEADS;
+    wire [1:0] kw_vg = (HEADS == 1) ? {kw_n[0], 1'b0} : kw_n[1:0];
+    reg [7:0] kv_seen;
     // ---- boundary capture ----
     reg           xv, kv, ov, og, ucq, hfq;
     reg  [10:0]   xt;
@@ -199,7 +211,7 @@ module ot_qkvd_seq_m_ctl #(
     always @* begin
         // (the previous layer's four rows are all posted before its KVN words are replaced: ot_qkvd_kv_seq dropped the
         //  unposted rows when the row credits were late)
-        k_pop = (st == S_KV && kv_n < 4'd8 && !k_empty && kw_n == 3'd4);
+        k_pop = (st == S_KV && kv_n < 4'(KWORDS) && !k_empty && kw_n == 3'(KROWS));
         q_pop = (st == S_Q && !q_empty);
     end
     wire [13:0] go_T  = lq0[19:6];
@@ -207,9 +219,9 @@ module ot_qkvd_seq_m_ctl #(
     always @(posedge clk) begin
         if (q_pop) a_q_beat <= (MUT == 2 && q_tag < 6'd2) ? (q_tag ^ 6'd1) : q_tag;
         if (ov) ar_d <= {og, ob, od};
-        if (kw_go) begin kvw_vg <= kw_n[1:0]; kvw_t <= a_T - 1'b1; kvw_layer <= layer; end
+        if (kw_go) begin kvw_vg <= kw_vg; kvw_t <= a_T - 1'b1; kvw_layer <= layer; end
         s_kidx <= k_tag;
-        s_kwn  <= kw_n[1:0];
+        s_kwn  <= kw_vg;
     end
     // ---- stream descriptors to the HBM controllers (as ot_qkvd_kv_seq KDESC) ----
     wire        kd_fault, kd_v;
@@ -217,7 +229,7 @@ module ot_qkvd_seq_m_ctl #(
     generate if (KDESC != 0) begin : g_kd
         ot_qkvd_kv_desc #(.NL(36)) u_kd (.clk(clk), .rst_n(rst_n), .p_mid_init(20'(KD_PMID)), .p_tok_init(20'(KD_PTOK)),
             .attn_v(go), .attn_layer(go_L), .attn_T(go_T),
-            .done_v(st == S_RUN && ov && r_n == 7'd63), .k_v(kd_v), .k_d(kd_d), .k_ready(1'b1), .fault(kd_fault));
+            .done_v(st == S_RUN && ov && r_n == 7'(RWORDS - 1)), .k_v(kd_v), .k_d(kd_d), .k_ready(1'b1), .fault(kd_fault));
     end else begin : g_nkd
         assign kd_v = 1'b0; assign kd_d = 32'd0; assign kd_fault = 1'b0;
     end endgenerate
@@ -241,9 +253,9 @@ module ot_qkvd_seq_m_ctl #(
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; layer <= 0; kv_n <= 0; q_n <= 0; r_n <= 0; a_start <= 1'b0; a_T <= 14'd0; a_q_valid <= 1'b0;
+            kv_seen <= 8'd0; st <= S_IDLE; layer <= 0; kv_n <= 0; q_n <= 0; r_n <= 0; a_start <= 1'b0; a_T <= 14'd0; a_q_valid <= 1'b0;
             x3_cr <= 1'b0; uc0 <= 8'(OCR_AR); ar_v <= 1'b0;
-            kw_n <= 3'd4; kwc <= 8'(KWC); kw_go <= 1'b0; kvw_v <= 1'b0; kwq <= 1'b0;
+            kw_n <= 3'(KROWS); kwc <= 8'(KWC); kw_go <= 1'b0; kvw_v <= 1'b0; kwq <= 1'b0;
             s_qpop <= 1'b0; s_kpop <= 1'b0; s_kwgo <= 1'b0; hs <= 1'b0; hsd <= 3'd0;
             aq1[27] <= 1'b0; aq1[6] <= 1'b0; f_aqm[27] <= 1'b0; f_aqm[6] <= 1'b0; f_aqm[55] <= 1'b0; f_aqm[34] <= 1'b0;
             kw1[22] <= 1'b0; f_kwm[22] <= 1'b0; f_kwm[45] <= 1'b0; f_kc[32] <= 1'b0; f_kc[65] <= 1'b0;
@@ -262,7 +274,7 @@ module ot_qkvd_seq_m_ctl #(
             pwc[74] <= hc[113]; dwc[67] <= hc[181]; pw[74] <= pwc[74]; pws[74] <= pwc[74]; dwo[67] <= dwc[67];
             cbq <= sd[53]; kfq <= sd[54];
             // every posted row stored (all four queues returned its credit), nothing launched or waiting
-            drn <= (st == S_IDLE) && (ln == 2'd0) && !kv && !xv && q_empty && k_empty && (kw_n == 3'd4) && !kw_go &&
+            drn <= (st == S_IDLE) && (ln == 2'd0) && !kv && !xv && q_empty && k_empty && (kw_n == 3'(KROWS)) && !kw_go &&
                    (kwc == 8'(KWC)) && !kwq;
             // launcher queue
             if (l_push) begin
@@ -279,30 +291,37 @@ module ot_qkvd_seq_m_ctl #(
             endcase
             case (st)
                 S_IDLE: if (go) begin
-                    a_T <= go_T; layer <= go_L; kv_n <= 0; q_n <= 0; r_n <= 0; st <= S_KV;
+                    kv_seen <= 8'd0; a_T <= go_T; layer <= go_L; kv_n <= 0; q_n <= 0; r_n <= 0; st <= S_KV;
                 end
                 S_KV: begin
-                    if (k_pop) kv_n <= kv_n + 1'b1;
+                    if (k_pop) begin
+                        kv_n <= kv_n + 1'b1;
+                        if (kv_seen[k_tag] || (HEADS == 1 && k_tag[1])) f_ord <= 1'b1;
+                        kv_seen[k_tag] <= 1'b1;
+                    end
                     // the hub has no ready: the layer starts with all of its 64 RES credits in hand
-                    if (kv_n == 4'd8 && uc0 >= 8'd64) begin st <= S_ST; a_start <= 1'b1; kw_n <= 3'd0; end
+                    if (kv_n == 4'(KWORDS) && uc0 >= 8'(RWORDS)) begin st <= S_ST; a_start <= 1'b1; kw_n <= 3'd0; end
                 end
                 S_ST: st <= S_Q;           // start leads the first q beat by one cycle (the stack's contract)
                 S_Q: begin
                     if (q_pop) begin
                         if (q_tag != q_n) f_ord <= 1'b1;
                         q_n <= q_n + 1'b1;
-                        if (q_n == 6'd31) st <= S_RUN;
+                        if (q_n == 6'(QWORDS - 1)) st <= S_RUN;
                     end
                 end
-                S_RUN: if (ov && r_n == 7'd63) st <= S_IDLE;
+                S_RUN: if (ov && r_n == 7'(RWORDS - 1)) st <= S_IDLE;
                 default: st <= S_IDLE;
             endcase
-            if (ov) r_n <= r_n + 1'b1;
+            if (ov) begin
+                r_n <= r_n + 1'b1;
+                if (HEADS == 1 && (og || ob != r_n[5:0] || st != S_RUN)) f_ord <= 1'b1;
+            end
             ar_v <= ov;
             if (ov && uc0 == 0) f_res <= 1'b1;
             uc0 <= uc0 - (ov ? 8'd1 : 8'd0) + (ucq ? 8'd1 : 8'd0);
             // KV write: post the four rows of the new position, one per (joined) credit
-            kw_go <= (kw_n < 3'd4) && (kwc != 0) && !kw_go;
+            kw_go <= (kw_n < 3'(KROWS)) && (kwc != 0) && !kw_go;
             if (kw_go) kw_n <= kw_n + 1'b1;
             kvw_v <= kw_go;
             kwc <= kwc - (kw_go ? 8'd1 : 8'd0) + (kwq ? 8'd1 : 8'd0);
@@ -329,8 +348,10 @@ module ot_qkvd_seq_m_ctl #(
     end
 `ifndef SYNTHESIS
     initial begin
-        if (OCR_AR < 64) $error("ot_qkvd_seq_m_ctl: OCR_AR must cover one layer (64 RES words)");
-        if (XS < 40) $error("ot_qkvd_seq_m_ctl: XS must cover one layer (8 KVN + 32 Q)");
+        if (Q_FP32 != 0 && Q_FP32 != 1) $error("ot_qkvd_seq_m_ctl: Q_FP32 must be 0 or 1");
+        if (HEADS != 1 && HEADS != 2) $error("ot_qkvd_seq_m_ctl: HEADS must be 1 or 2");
+        if (OCR_AR < RWORDS) $error("ot_qkvd_seq_m_ctl: OCR_AR must cover one layer");
+        if (XS < KWORDS + QWORDS || KD < KWORDS) $error("ot_qkvd_seq_m_ctl: input FIFO credits must cover one layer");
     end
 `endif
 endmodule
@@ -380,6 +401,7 @@ endmodule
 // pops arrive registered from the control.  q and kw leave as two registered copies (W / E fans).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_seq_m_store #(
+    parameter integer HEADS = 2,
     parameter integer DW = 512,
     parameter integer XS = 40,
     parameter integer KD = 8
@@ -410,9 +432,9 @@ module ot_qkvd_seq_m_store #(
     ot_qkvd_seq_m_sfifo #(.W(DW), .D(KD)) u_k (.clk(clk), .rst_n(rst_n), .push(xv && xc == 3'b010), .din(xd), .pop(kp), .dout(kh));
     reg [DW-1:0] kvn [0:7];
     always @(posedge clk) begin
-        if (kp) kvn[ki] <= kh;
+        if (kp) kvn[(HEADS == 1) ? {ki[2],1'b0,ki[0]} : ki] <= kh;
         if (qp) q <= {2{qh}};
-        if (kg) kw <= {2{kvn[{kn, 1'b1}], kvn[{kn, 1'b0}]}};
+        if (kg) kw <= {2{kvn[{kn[1], (HEADS == 1 ? 1'b0 : kn[0]), 1'b1}], kvn[{kn[1], (HEADS == 1 ? 1'b0 : kn[0]), 1'b0}]}};
     end
 endmodule
 
@@ -470,6 +492,8 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_kv_seq_merged #(
     parameter integer HD     = 128,
+    parameter integer Q_FP32 = 0,                 // explicit transport precision; no conversion
+    parameter integer HEADS  = 2,
     parameter integer XS     = 40,
     parameter integer KD     = 8,
     parameter integer KWC    = 4,
@@ -521,14 +545,14 @@ module ot_qkvd_kv_seq_merged #(
     wire [3:0]    f_cr, f_af, f_mf;
     wire [2*512-1:0]  sq;
     wire [4*512-1:0]  skw;
-    ot_qkvd_seq_m_ctl #(.XS(XS), .KD(KD), .KWC(KWC), .OCR_AR(OCR_AR), .NS(NS), .VOCAB(VOCAB), .WDOG(WDOG),
+    ot_qkvd_seq_m_ctl #(.Q_FP32(Q_FP32), .HEADS(HEADS), .XS(XS), .KD(KD), .KWC(KWC), .OCR_AR(OCR_AR), .NS(NS), .VOCAB(VOCAB), .WDOG(WDOG),
                         .KDESC(KDESC), .KD_PMID(KD_PMID), .KD_PTOK(KD_PTOK), .MUT(MUT)) u_ctl (
         .clk(clk), .rst_n(rst_n), .x3_v(x3_v), .x3_tag(x3_tag), .x3_cr(x3_cr), .sd(sd), .kvd(kvd), .ar_v(ar_v),
         .ar_d(ar_d), .ar_cr(ar_cr), .ds(ds), .pw(pw), .s_qpop(s_qpop), .s_kpop(s_kpop),
         .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm(f_aqm), .f_kwm(f_kwm), .f_kc(f_kc), .f_cr(f_cr),
         .f_af(f_af), .f_mf(f_mf), .hs(hs), .a_out_valid(a_out_valid), .a_out_g(a_out_g), .a_out_beat(a_out_beat),
         .a_out_data(a_out_data), .a_hub_fault(a_hub_fault), .hc(hc), .tk(tk), .fault(fault), .fault_cause(fault_cause));
-    ot_qkvd_seq_m_store #(.DW(512), .XS(XS), .KD(KD)) u_st (.clk(clk), .rst_n(rst_n), .x_v(x3_v), .x_cls(x3_tag[10:8]),
+    ot_qkvd_seq_m_store #(.HEADS(HEADS), .DW(512), .XS(XS), .KD(KD)) u_st (.clk(clk), .rst_n(rst_n), .x_v(x3_v), .x_cls(x3_tag[10:8]),
         .x_d(x3_d), .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q(sq), .kw(skw));
     genvar k;
     generate for (k = 0; k < 4; k = k + 1) begin : g_fan

@@ -29,7 +29,7 @@
 // OT_QKD_SEQ_MUT (bench only): the parent swaps two store slices on the E copies of the q word.
 // OT_QKD_RSTSEQ_MUT (bench only): the quadrant resets follow the die reset instead of the HBM reset.
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_seq_core (
+module qkd_seq_core #(parameter integer HEADS=2, Q_FP32=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          x3_v,
@@ -67,7 +67,7 @@ module qkd_seq_core (
 );
     wire rr;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
-    ot_qkvd_seq_m_ctl #(.XS(40), .KD(8), .KWC(4), .OCR_AR(64), .NS(38), .KDESC(1), .KD_PMID(0), .KD_PTOK(0), .MUT(0)) u_body (
+    ot_qkvd_seq_m_ctl #(.HEADS(HEADS), .Q_FP32(Q_FP32), .XS(40), .KD(8), .KWC(4), .OCR_AR(64), .NS(38), .KDESC(1), .KD_PMID(0), .KD_PTOK(0), .MUT(0)) u_body (
         .clk(ck), .rst_n(rr), .x3_v(x3_v), .x3_tag(x3_tag), .x3_cr(x3_cr), .sd(r_sd), .kvd(r_kvd),
         .ar_v(t_ar_d[519]), .ar_d(t_ar_d[518:0]), .ar_cr(t_ar_cr), .ds(t_ds), .pw(t_pw),
         .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo),
@@ -77,7 +77,7 @@ module qkd_seq_core (
         .hc(hc), .tk(tk), .fault(kst[9]), .fault_cause(kst[8:0]));
 endmodule
 
-module qkd_seq_xs (
+module qkd_seq_xs #(parameter integer HEADS=2) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          x_v,
@@ -95,7 +95,7 @@ module qkd_seq_xs (
 );
     wire rr;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
-    ot_qkvd_seq_m_store #(.DW(128), .XS(40), .KD(8)) u_body (.clk(ck), .rst_n(rr), .x_v(x_v), .x_cls(x_cls), .x_d(x_d),
+    ot_qkvd_seq_m_store #(.HEADS(HEADS), .DW(128), .XS(40), .KD(8)) u_body (.clk(ck), .rst_n(rr), .x_v(x_v), .x_cls(x_cls), .x_d(x_d),
         .qpop(qpop), .kpop(kpop), .kidx(kidx), .kwgo(kwgo), .kwn(kwn), .q({q_e, q_w}), .kw({kw_e, kw_w}));
 endmodule
 
@@ -124,7 +124,7 @@ module qkd_seq_fan (
 endmodule
 
 // wires-only parent on the contract slot `seq`: no cell, no flop of its own
-module qkd_seq (
+module qkd_seq #(parameter integer HEADS=2, Q_FP32=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [523:0]  r_x3_d,
@@ -175,7 +175,7 @@ module qkd_seq (
     wire [3:0]    f_cr, f_af, f_mf;
     wire [255:0]  sq  [0:3];
     wire [511:0]  skw [0:3];
-    qkd_seq_core u_core (.ck(ck), .rst_n(rst_n), .x3_v(r_x3_d[523]), .x3_tag(r_x3_d[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
+    qkd_seq_core #(.HEADS(HEADS), .Q_FP32(Q_FP32)) u_core (.ck(ck), .rst_n(rst_n), .x3_v(r_x3_d[523]), .x3_tag(r_x3_d[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
         .r_kvd(r_kvd), .t_ar_d(t_ar_d), .t_ar_cr(t_ar_cr), .t_ds(t_ds), .t_pw(t_pw),
         .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm_w(f_aqm[0]),
         .f_aqm_e(f_aqm[1]), .f_kwm_w(f_kwm[0]), .f_kwm_e(f_kwm[1]), .f_kc_w(f_kc[0]), .f_kc_e(f_kc[1]), .f_cr_w(f_cr[1:0]),
@@ -183,7 +183,7 @@ module qkd_seq (
         .tk(tk), .kst(kst));
     genvar s, k;
     generate for (s = 0; s < 4; s = s + 1) begin : g_xs
-        qkd_seq_xs u_xs (.ck(ck), .rst_n(rst_n), .x_v(r_x3_d[523]), .x_cls(r_x3_d[522:520]), .x_d(r_x3_d[128*s +: 128]),
+        qkd_seq_xs #(.HEADS(HEADS)) u_xs (.ck(ck), .rst_n(rst_n), .x_v(r_x3_d[523]), .x_cls(r_x3_d[522:520]), .x_d(r_x3_d[128*s +: 128]),
             .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q_w(sq[s][127:0]), .q_e(sq[s][255:128]), .kw_w(skw[s][255:0]), .kw_e(skw[s][511:256]));
     end endgenerate
     // the store slices' two copies -> the full words of the W (copy 0) and E (copy 1) fans

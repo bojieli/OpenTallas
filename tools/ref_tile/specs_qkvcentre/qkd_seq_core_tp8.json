@@ -1,0 +1,78 @@
+{
+ "name": "qkd_seq_core_tp8",
+ "top": "qkd_seq_core_tp8",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_kv_centre_slots.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+  "rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/physical/ot_qwen_kv_seq_tp8.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "x3_v",
+   "x3_tag",
+   "x3_cr",
+   "r_sd",
+   "r_kvd",
+   "t_ar_d",
+   "t_ar_cr",
+   "t_ds",
+   "t_pw",
+   "s_qpop",
+   "s_kpop",
+   "s_kidx",
+   "s_kwgo",
+   "s_kwn",
+   "ck"
+  ],
+  "S": [
+   "ar",
+   "hf",
+   "hs",
+   "hc",
+   "tk",
+   "kst",
+   "rst_n"
+  ],
+  "W": [
+   "f_aqm_w",
+   "f_kwm_w",
+   "f_kc_w",
+   "f_cr_w",
+   "f_af_w",
+   "f_mf_w"
+  ],
+  "E": [
+   "f_aqm_e",
+   "f_kwm_e",
+   "f_kc_e",
+   "f_cr_e",
+   "f_af_e",
+   "f_mf_e"
+  ]
+ },
+ "outline": {
+  "w": 108.0,
+  "h": 43.2
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M5"
+ },
+ "description": "Unsubmitted native TP8 candidate. Fixed HEADS1/Q_FP321 source wrapper; actual four KVN and 32 FP32 Q, 32 RES. Transport/control bench only; arithmetic, assigned pins, native view exports and parent per-child clock delivery pending."
+}
