@@ -37,6 +37,8 @@ G="python3 $P/test/gen_gather_cl_stim.py"
 SS=${SS:-8}; SDEF="+define+S81PH_GTH_S=$SS"
 if [ "${CONTROL_STRIP:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_CONTROL_STRIP"; fi
 if [ "${DIE_CLOCKS:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_DIE_CLOCKS"; fi
+# RSTREG=1 (s81 grpA 10-14): registered per-region reset release in every root leaf (+ its mutant mode rstreg)
+if [ "${RSTREG:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_RSTREG"; if [ -z "${RAW:-}" ]; then MODES="$MODES rstreg"; fi; fi
 $G stress 3 $OUT/stress.txt; $G ovf 3 $OUT/ovf.txt --S $SS; $G refuse 3 $OUT/refuse.txt
 REAL=""
 if [ -n "$TRACE" ]; then for L in $LAYERS; do $G real 0 $OUT/real_L$L.txt --trace $TRACE --layer $L && REAL="$REAL real_L$L"; done; fi
@@ -52,7 +54,7 @@ run() { # mode case expect need want
 }
 for m in $MODES; do
   case $m in base) X="";; lane) X="+define+S81PH_GTH_CL_MUT_LANE";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
-    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; select) X="+define+S81PH_MUT_SELECT_PHASE";; early) X="+define+S81PH_GTH_MUT_EARLYSTART";; esac
+    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; select) X="+define+S81PH_MUT_SELECT_PHASE";; early) X="+define+S81PH_GTH_MUT_EARLYSTART";; rstreg) X="+define+S81PH_GTH_MUT_RSTREG";; esac
   ( build $m "$X" ) &
 done
 wait

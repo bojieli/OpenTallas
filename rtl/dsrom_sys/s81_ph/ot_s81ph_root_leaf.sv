@@ -40,8 +40,30 @@ module ot_s81ph_root_leaf #(
     reg [53*(NCI+NRT)-1:0] co_state;
     reg [1:0] rst_s;                         // rst_s[1]: the margin SDC's rst_mcp2 cell name
     always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
-    wire rl = rst_s[1];
     assign rso = rst_s[1];
+`ifdef S81PH_GTH_RSTREG
+    // REGISTERED RESET TREE (s81 grpA 2026-10-14; the leaf's real defect: rst_s[1] drove 3,064 async-reset loads
+    // across the whole 190 x 164 um leaf).  One release flop per region -- each root (rl_g[g]) and the lane / chain
+    // block (rl) -- in its own kept hierarchy so synthesis cannot merge them: async ASSERT still from rs (same instant
+    // as before), RELEASE one cycle after rst_s[1].  Each copy fans out only inside its region.  rso (the leaf-to-leaf
+    // release chain) is unchanged.  Cost: +1 cycle of reset release inside the leaf; no steady-state cycle.
+    wire [NRT:0] rl_v;
+    genvar rg;
+    generate for (rg = 0; rg <= NRT; rg = rg + 1) begin : g_rst
+`ifdef S81PH_GTH_MUT_RSTREG
+        // MUTANT: root 0's region copy never asserts (its root keeps start-up / pre-reset state)
+        if (rg == 0) begin : g_mut assign rl_v[rg] = 1'b1; end
+        else begin : g_ok ot_s81ph_rst_region u_rr (.ck(ck), .rs(rs), .d(rst_s[1]), .q(rl_v[rg])); end
+`else
+        ot_s81ph_rst_region u_rr (.ck(ck), .rs(rs), .d(rst_s[1]), .q(rl_v[rg]));
+`endif
+    end endgenerate
+    wire rl = rl_v[NRT];
+    wire [NRT-1:0] rl_g = rl_v[NRT-1:0];
+`else
+    wire rl = rst_s[1];
+    wire [NRT-1:0] rl_g = {NRT{rst_s[1]}};
+`endif
     // lanes: own slots captured (valid reset), the others passed on (valid reset)
     reg [NRT-1:0] lv; reg [68*NRT-1:0] lw;
     wire [NRT-1:0] rv, re, rf; wire [16*NRT-1:0] rrow, rbf; wire [3*NRT-1:0] rpos; wire [32*NRT-1:0] rfp;
@@ -110,11 +132,17 @@ module ot_s81ph_root_leaf #(
 `endif
     genvar g;
     generate for (g = 0; g < NRT; g = g + 1) begin : g_r
-        ot_s81ph_ret_root_s #(.S(S), .QD(128), .SRAM(SRAM)) u_root (.clk(ck), .rst_n(rl),
+        ot_s81ph_ret_root_s #(.S(S), .QD(128), .SRAM(SRAM)) u_root (.clk(ck), .rst_n(rl_g[g]),
             .i_v(lv[g] & lw[68*g]), .i_t(lw[68*g + 1 +: 32]), .i_d(lw[68*g + 33 +: 32]), .i_e(lw[68*g + 65]),
             .r_v(rv[g]), .r_row(rrow[16*g +: 16]), .r_pos(rpos[3*g +: 3]), .r_fp32(rfp[32*g +: 32]),
             .r_bf16(rbf[16*g +: 16]), .r_e(re[g]), .fault(rf[g]));
     end endgenerate
+endmodule
+
+// One region's reset release flop (S81PH_GTH_RSTREG): async assert from rs, release = d one cycle later.
+(* keep_hierarchy = 1, dont_touch = 1 *)
+module ot_s81ph_rst_region (input wire ck, input wire rs, input wire d, output reg q);
+    always @(posedge ck or negedge rs) if (!rs) q <= 1'b0; else q <= d;
 endmodule
 
 // State used by external own-result outputs, independent of used core state.
