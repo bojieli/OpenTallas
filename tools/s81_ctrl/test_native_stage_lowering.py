@@ -20,7 +20,7 @@ class Lowering(unittest.TestCase):
         pins={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in self.binding.iterdir()}
         endpoint_sha=hashlib.sha256((self.root/'endpoint.sv').read_bytes()).hexdigest()
         def job(ident,engine,arg,**more):
-            return dict(source_id=ident,engine=engine,arg=arg,endpoint_source='endpoint.sv',endpoint_source_sha256=endpoint_sha,**more)
+            return dict(source_id=ident,engine=engine,arg=arg,vm_inputs=[],endpoint_source='endpoint.sv',endpoint_source_sha256=endpoint_sha,**more)
         self.req={'allocation_sha256':pins,'candidate_only':True,'hc_hwords':640,'source_jobs':['field','load','store'],
                   'stages':[{'stage':0,'boot':[{'engine':2,'arg':5<<20}],
                       'operations':[job('load',2,0,h_region_base=0,h_region_rows=640),

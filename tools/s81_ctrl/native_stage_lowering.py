@@ -54,6 +54,12 @@ def lower(request, directory, root=None):
     require(request.get('hc_hwords') == 640, 'actual H[4,5120] FP32 rows required')
     require(set(request['source_jobs']) and len(request['source_jobs']) == len(set(request['source_jobs'])),
             'explicit complete source job coverage required')
+    allocated = {}
+    for stage in stages:
+        for index, op in enumerate(stage['operations']):
+            key=(stage['stage'],op['source_id'])
+            require(key not in allocated, 'source operation duplicated on physical stage')
+            allocated[key]=(index,op)
     seen = set(); programs = []; descriptor_counts = {'hload':0,'hstore':0}
     for stage in sorted(stages,key=lambda s:s['stage']):
         boot, token = [], []
@@ -66,6 +72,24 @@ def lower(request, directory, root=None):
         for op in stage['operations']:
             ident=op['source_id'];require(ident in request['source_jobs'], 'invented source operation')
             seen.add(ident);engine,arg=op['engine'],op['arg']
+            require(isinstance(op.get('vm_inputs'),list), 'every operation must name its actual VM materialization inputs')
+            for dependency in op['vm_inputs']:
+                producer=allocated.get((stage['stage'],dependency['producer_source_id']))
+                require(producer is not None, 'VM operand producer absent from this actual stage')
+                materializer=allocated.get((stage['stage'],dependency['materializer_source_id']))
+                require(materializer is not None, 'VM operand has no actual materialization source')
+                pi,pop=producer;mi,mop=materializer
+                ci=next(i for i,x in enumerate(stage['operations']) if x is op)
+                # Resident HC POST changes H SRAM, not VM. A real spill must
+                # occur after POST and before every VM reader of that H.
+                if pop['engine']==2 and ((pop['arg']>>20)&7)==3:
+                    require(mop['engine']==2 and ((mop['arg']>>20)&7)==1 and pi<mi<ci,
+                            'resident HC POST requires an actual ordered H_STORE before its VM consumer')
+                    require(mop.get('h_region_base')==dependency['base'] and mop.get('h_region_rows')==dependency['rows'],
+                            'HC POST spill does not bind the consumed VM region')
+                else:
+                    require(pi<=mi<ci and mop.get('vm_output')=={'base':dependency['base'],'rows':dependency['rows']},
+                            'VM consumer lacks matching actual producer commit')
             require(type(engine) is int and 0<=engine<12 and type(arg) is int and 0<=arg<1<<24,
                     'real engine/arg24 contract required')
             rel=op.get('endpoint_source')
