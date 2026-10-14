@@ -7,6 +7,7 @@ module ot_qwen_numeric_output_queue #(
 )(
  input wire base_clk,rst_n,core_output_step,
  input wire numeric_v,input wire [511:0] numeric_word,
+ input wire [47:0] numeric_identity,
  input wire query_output_toggle,input wire [87:0] query_output_tuple,
  output reg query_output_ack_toggle,
  output wire core_credit,
@@ -35,7 +36,7 @@ module ot_qwen_numeric_output_queue #(
    if(pending_post)begin
     if(count==DEPTH&&!pop)fault<=1;
     else begin
-     entries[tail]<={numeric_word,query_pending,query_output_tuple,query_output_toggle};
+     entries[tail]<={numeric_word,query_pending,(query_pending?query_output_tuple:{numeric_identity,40'd0}),query_output_toggle};
      tail<=(tail==DEPTH-1)?{PW{1'b0}}:tail+1'b1;
     end
    end
