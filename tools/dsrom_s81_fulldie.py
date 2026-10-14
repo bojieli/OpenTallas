@@ -2852,6 +2852,7 @@ ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre s
 ECOL_W = 518.4
 CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
 HOP_GATE_UM = None             # --hop-gate UM (s81-die v14): real mode fails when any data bit's pin-to-pin hop > UM
+RLY_REAL_DIMS = False          # reserve native wide relay envelopes before choosing their faces
 RLY_FACE_REACH = 0.0           # --rly-face-reach UM (s81-die v16): last column relay's out face by its worst load
 HOP_EXTRA = 0                  # --hop-extra N: extra stations a hop may take when its planned count has no clean placement
 HOST_MM2 = 0.10
@@ -3224,6 +3225,19 @@ def stn_dims(lanes, horiz):
         w = up(max(face, 17.28), GX)
         h = up(max(17.28, bits * 0.7 / w), GY)
     return w - SHAVE, h - SHAVE
+
+
+def relay_dims(bits, horiz):
+    """Reserve all supported native orientations before placement selects faces.
+
+    The CLOSED wide SN master is 34.56 x 19.44 and WE is 21.6 x
+    30.24. Reserving their enclosing rectangle lets final view binding take
+    the exact real outline without growing a placed tile. Corner masters
+    still require their own real view; this does not alias them to a stand.
+    """
+    if RLY_REAL_DIMS and bits in (266, 283):
+        return 34.56, 30.24
+    return stn_dims([bits], horiz)
 
 
 def stn_master(lanes, horiz):
@@ -5187,7 +5201,7 @@ def _hop_fix(m, P):
                 last_nr = (R - 10.0) if (reg is not None and not fwd) else max(Lp - pos[k], PIN_SEG) + 40.0
                 NR = dict(nxt=b, nreach=last_nr if k == n - 1 else (n - k) * (R - 10.0)) \
                     if NXT_REACH else {}
-                w_, h_ = stn_dims([bits], horiz)
+                w_, h_ = stn_dims([bits], horiz) if fwd else relay_dims(bits, horiz)
                 if not fwd and (reg is not None or not GEOMETRY_FIX):  # frame relay faces chosen later -> square
                     w_ = h_ = max(w_, h_)
                 pl = None
@@ -5719,7 +5733,7 @@ def _col_relays(m, P):
             out.append((bid, cls, bits, eps))
             continue
         a, b = a0, ep_pt(fe, True)
-        w_, h_ = stn_dims([bits], True)
+        w_, h_ = relay_dims(bits, True)
 
         def _pick(path, cur, k, Lp, log=True):
             """one column relay on `path`: (placement, tier) -- tier 'first' = within the column reach of the previous
@@ -7972,6 +7986,7 @@ def die_options(ap):
     ap.add_argument('--vch-w', type=float, help='r9: VCH width in um (default 1209.6)')
     ap.add_argument('--hc-corr', type=float, help='r9: HC crossing corridor height in um (default 1209.6)')
     ap.add_argument('--hub-south-shift', type=float, default=0.0, help='v18 geometry trial: move W-column SU and centre stack south by UM; legality and hop gates remain binding')
+    ap.add_argument('--rly-real-dims', action='store_true', help='reserve the native wide relay envelope before placement; final closed view binding takes the exact outline, no master aliases')
     ap.add_argument('--assigned-pins-dir', help='consume die-assigned pin JSON files for parent data and per-child clock entries')
     ap.add_argument('--hub-column-width', type=float, help='r9: each hub column width in um; spends existing die horizontal slack; default unchanged')
     ap.add_argument('--su-mm2', type=float, help='r9: SU total reservation area in mm2, split north/south; requires sizing record; default unchanged')
@@ -8367,7 +8382,8 @@ def apply_options(a):
         assert (Q_ELEM_FRAME_H or 0) >= 0 and (getattr(a, 'elem_h', None) or ELEM_FRAME_H) >= BF_ROUTE_H + 8.64 - 1e-6, \
             '--bf-hier: the BF frame (--elem-h) must hold the routed BF blocks (BF_ROUTE_H) + halos'
     HOP_EXTRA = int(getattr(a, 'hop_extra', 0) or 0)
-    global RLY_FACE_REACH
+    global RLY_FACE_REACH, RLY_REAL_DIMS
+    RLY_REAL_DIMS = bool(getattr(a, "rly_real_dims", False))
     RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
