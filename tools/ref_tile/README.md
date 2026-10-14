@@ -26,9 +26,9 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 |---|---|
 | `name`, `top`, `kind` | kit name ([a-z0-9_]), top module, `tile` (leaf) or `cluster` (has hard children) |
 | `sources`, `params`, `clock_port`, `reset_ports` | RTL, top parameters, clock port, reset ports |
-| `outline {w,h}` / `std_area_um2` + `util` / `contract {file, slot}` | outline: explicit, sized to util (0.52 default), or the die contract slot |
+| `outline {w,h}` / `std_area_um2` + `util` / `contract {file, slot}` | outline: explicit (snapped up to the 2.16 lattice; `"exact": true` keeps the given size: a drop-in replacement inside a fixed sub-slot), sized to util (0.52 default), or the die contract slot |
 | `pins {N,S,E,W: [port base names]}` | per-face port groups; base names only (`ck`, never `ck[0]`); every port exactly once |
-| `macros [{view, count, at?, orient?, inst?}]` | SRAM/ROM views (DIR holds NAME.lef + NAME_{ss,ff,tt}.lib) |
+| `macros [{view, count, at?, at_exact?, orient?, inst?}]` | SRAM/ROM views (DIR holds NAME.lef + NAME_{ss,ff,tt}.lib); `at_exact: true` takes `at` unsnapped (an abutted N-S stack: pitch = array height + 0.024 um; off-track pins FAIL) |
 | `children [{view, count, at?, inst?}]` | hard children (cluster): views exported by this flow |
 | `layer_cap` | leaf (2026-10-12 contract, `results/arch/hier_contract_1011/layer_usage_1012.md`): signals AND PG stop at M5 (default; PG stripes on M5 as pins, pins on M4/M5, parent straps M6, die signals M6/M7 over the tile, M8/M9 die power + global). `M6` only as a die-lead exception with `layer_cap_grant: "<lead>: <reason>"` (pin-dense edge relays / stations). Kits generated before the cut (`legacy_layer_kits.json`) keep PG M6/M7, signals <= M6; a new spec with `pg_layer` M6/M7 and no grant is refused. Contract slots carry `layer_cap` (new routes) and `view_cap` (the closed view's own cap, valid while child_lint passes at it) |
 | `pg_layer` | leaf: derived from `layer_cap` (legacy kits only: M6 or M7); cluster: M7 |
@@ -38,8 +38,9 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `recipe` | kit recipe = the generator defaults (kit.env `RECIPE=<n>`, no line = 1). Not set: an existing kit keeps the recipe in its kit.env, a NEW kit takes 2. **1**: hold margin 10 ps, macro halo 2.16 um, no pin hook unless asked, `io_flop_at_pins` cannot be combined with `inhold` / `outhold`. **2** (owner 10-13 finishing recipe): `route.hold_margin_ns` 0.030, `route.macro_halo_um` 5.4, `inhold` + `outhold` + `io_flop_at_pins {"cols": 4}` on, combined through the kit files `pre_gpl.tcl` (hold stages, then pin flops traced through them: `OT_OFLOP_HOPS=8`) and `pre_dpl.tcl` (both releases). Each item is a default: the spec value wins, `false` switches a hook off; no default pin hooks when the spec owns a `POST_TAPCELL_TCL` / `PRE_GLOBAL_PLACE_TCL` hook, no default hold stages with `route.hold_delay`. `pin_balance` stays opt-in (needs per-port `pin_ranges`). M5 re-routes of closed tiles (reroute_batch.py) pin recipe 1. |
 | `sdc_extra` | repo SDC files inlined at the end of clock.sdc and signoff.sdc (a second clock domain, e.g. a CDC adapter's controller clock; s81 hc cseq) |
 | `inter`, `refglob`, `io_budget {in,out}` | die-context IO (io_ref_skew.sdc), 0.2 / 0.2 T default |
+| `abut_plan {channel_um, edge_um, why}` | PROBE cluster only (kind cluster + `job.hold_merge`): hard tiles at a planned channel narrower than 20 um, routed to measure it; gaps >= `channel_um` and tile-edge distances >= `edge_um` are WARN `abut_plan` instead of FAIL `channel` / `macro_edge`. A block that can merge always obeys the 20-um rule |
 | `forwarded_clock` | cluster with a forwarded-clock subtree (keeps the forwarding inverter, own root) |
-| `child_insertion`, `child_insertion_ps` | cluster spine leaf targets: default = each child's TT lib `max_clock_tree_path`; `"child_insertion": "boundary_mean"` takes the view's `insertion.json` TT boundary mean (the die clock rule's R) where the view has one; `child_insertion_ps {master: ps}` overrides a master explicitly |
+| `clock`, `clock_ports` | `spine` builds a balanced parent tree; `cts` uses TritonCTS. A wires-only `entries` parent takes one top port per actual hard-child clock pin. Generation automatically creates related per-entry clocks and a virtual IO clock, binds every pin to routed `insertion.json` boundary min/mean/max at TT/FF/SS, and remeasures entry wires after clearing source latency. Delivery is phi minus entry-wire delay minus child reference; ETM arcs are unchanged. Coverage or missing clock data fails. Same-level internal setup reserves 60+90 ps; cross-level (TT R above 300 ps) reserves 60+150 ps; internal hold reserves H1 50+50=100 ps. Its own flops belong in hardened leaves. Obsolete TT-only `wires_only_ioref` entry hooks are replaced automatically; the spine helper remains supported. `probe_clock_entries.py` provides an actual-ETM all-entry calibration probe; zero-wire calibration proves accounting, while routed parasitics and child clock checks remain required for closure. |
 | `spine_through_icg` | cluster whose clock port enters ONE tile clock gate (ICG) that clocks the rest (SM tile `ot_cg_tile`): the spine is built on the ICG output net (`OT_SPINE_THROUGH_ICG=1`, log `OT_SPINE through ICG`) |
 | `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v, pin_balance}` | route knobs (770 ps over-constraint); `pin_balance: true` places pins uniformly over each face region alternating the pin_h / pin_v layers per 32-pin chunk (OT_PIN_BALANCE_H/V) for dense faces |
 | `job {owner, branch, tag, purpose, benches, benched_by, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields; `benches` / `benched_by`: see "Behavioural bench at submit" |
@@ -64,7 +65,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | route script default overriding the kit's layers | ref_route.sh passes the kit's explicit `RLAYERS`; nothing else sets routing layers |
 | macro clock pins on unbuffered wires | loop default macro_cts_cluster.tcl (shipped; the remote gate ships it too) |
 | ORFS PLACE_DENSITY_LB_ADDON silently overrides the spec PD (pbst 0.50 -> 0.1075 target, GPL-0305) | every kit clears the addon (`route.lb_addon` re-enables it explicitly); gate FAILs a kit that leaves it, `--cts` WARNs when the placer's effective target differs from PD by > 0.05 |
-| util outside 45-60%, slivers, macro at a pin edge | outline from util 0.52; >= 20 um macro channels and core margin, 20 um from any pin face; gate FAILs < 30% / > 70%, WARNs outside 45-60% |
+| util outside 45-60%, slivers, macro at a pin edge | outline from util 0.52; >= 20 um macro channels and core margin (two R0 macros may instead be ABUTTED N-S, gap <= 0.1 um, when neither has a pin on the touching faces: a bank of arrays with W / E pins; `abutted_stack`), 20 um from any pin face; gate FAILs < 30% / > 70%, WARNs outside 45-60% |
 | one clock root over > 15k sinks / 600 um, high fanout, reset on datapath, logic behind pins, ICG enable from a port, > 500 um per stage | remote gate: textbook_lint on the synthesized netlist + placed-IO floorplan; clock_domain / high_fanout / wire_reach REFUSE-tier FAIL, boundary / logic_depth WARN (calibration below) |
 | runtime-indexed wide part-selects (yosys SHARE stall) | gate `rtl` WARN with the fix; the remote synthesis smoke runs under a time cap (2,700 s) and FAILs a stall |
 | spec does not list a directory the flow sources | gate `sources`: every file the job's commands, scripts, hooks and views reference (followed recursively, generators one level) must exist and lie in source.paths + extra_paths |
@@ -77,6 +78,23 @@ line per finding and `PRE_ROUTE_GATE: PASS|WARN|FAIL`. Local checks take seconds
 synthesis (time cap) + floorplan + PDN + IO placement on the host (ot-heavy, small slot), then the netlist textbook lint
 and the pin plan against the synthesized ports; `--cts` adds CTS, clock insertion spread (ck_insertion) and the worst
 setup path classes (in/reg/macro -> reg/out/macro). `--job SPEC` checks any loop spec's source-sync closure.
+
+Gate = route (2026-10-13, `tools/pin_fit.py`): the route's pin-placement settings have one source
+(`ref_tile.route_pin_settings`: `OT_PIN_GROUP_MAX` 32 unless `route.pin_balance` sets it, `pin_min_tracks`, pin layers;
+`ref_route.sh` applies the same group bound to the route, the floorplan smoke and `--cts`). Two local checks, also run
+at submit:
+- `pin_fit`: every `--pin-region` is cut into ordered groups of 32 and `place_pins` needs one 200-slot section on one
+  layer per group (six groups, 8 slots stranded), so a face filled above ~96 % of its slots FAILs here instead of in the
+  route at `[PPL-0093]` / `[PPL-0111]` / `[PPL-0086]` (qkd_seq_fan-kc2: 1,623 pins on 162 um, the 51st group of 23
+  pins). Port widths come from the top's header with the spec `params` applied; a header the parser cannot resolve is
+  not judged. Loop successors (`auto_react_parent`) are warned, not refused. Fix: disjoint `pin_ranges` +
+  `route.pin_balance`, or a longer edge / a second pin layer.
+- `oflop` (kit recipe 2): face density with the recipe's pin hold stages and flop columns. `io_flop_at_pins.tcl`
+  now derives the flop gap / columns per face from the FIRM hold cells (from 2 um of hold-stage depth, ~6 b/um:
+  10.4 b/um -> gap 4.5 um, 6 columns); `OT_OFLOP_GAP` set = exact, `OT_OFLOP_COLS` = minimum, `OT_OFLOP_AUTO=0` = no
+  derivation. WARN (never a refusal: the estimate assumes a stage and a flop on every port; it flags all 7 face
+  GRT-0116 routes of 10-12/13 but also 69 closed ones): a dense face on a source without the derivation and no explicit
+  gap, an explicit gap that stacks the flops on the stages, or a band deeper than 45 % of the core behind the face.
 
 Closure loop: at submit, a job with `"ref_tile": true` runs the local gate on its kit at the source commit (REFUSE on
 FAIL); every other job gets the source-sync check in WARN (mode file `~/.local/state/closure_loop/ref_gate.json`
@@ -116,7 +134,15 @@ plus one per hard-child or macro clock pin. A declared spine does not waive the 
 is hardened leaves with their own roots. CLOSED tiles are not re-judged.
 
 - The gate prints a `clock_rule` item for every kit, with the measured insertion and spread when `--cts` ran, and a
-  `--remote` run writes `<kit>/gate_result.json`. Commit that file with the kit: the submit gate reads it.
+  `--remote` run writes `<kit>/gate_result.json` v2. Commit that file with the kit: the submit gate reads it.
+  Its immutable source manifest binds the bytes actually shipped (generated kit, RTL, transitive hooks, macro views,
+  and effective daemon helper overlays), the archive SHA256 verified before remote extraction, and the generated
+  execution script. Start HEAD and daemon HEAD are provenance; `commit` is null when the effective contents do not
+  all match one commit. A later HEAD never changes the receipt's source identity. The remote adjacent
+  `<run>.source_snapshot.json` preserves the shipping manifest before execution; runtime image and environment
+  provenance appear in the completed receipt. Old receipts are preserved in `source_binding_history/` when replaced.
+  Legacy receipts or receipts whose contents differ from the submitted commit/current daemon overlay are refused
+  for unclosed tiles; regenerate their gate. CLOSED tiles continue to stand.
 - At submit a `ref_tile` job is REFUSED when the kit's gate result shows more than 15,000 sinks without passing
   numbers, or when the kit has no gate result and the block's latest synthesized design in the loop's history had more
   than 15,000 sinks.
@@ -133,3 +159,7 @@ EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec c
 ## Validation (2026-10-11)
 
 See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job names).
+
+For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host keeps the existing `ot-heavy` path.
+
+CTS gates measure every external clock from the actual CTS SDC. The measured clock exception uses the insertion and spread of the largest synthesized root's own source port. A secondary root cannot use the primary clock's measurement; an unmatched root has no measured exception.

@@ -1,5 +1,5 @@
 {
- "name": "qdq_core_ref-q8b-COMMIT",
+ "name": "qdq_core_ref-q8b-67a60693f",
  "block": "ot_hgi_qdq_core",
  "ref_tile": true,
  "owner": "Claude:hbm-qdq-q8",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbm-qdq-q8",
-  "commit": "COMMIT",
+  "commit": "67a60693f",
   "extra_paths": [
    "compiler",
    "results/rtl/tput_map_1011/ds_qdq_b2"
@@ -109,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qdq_core_ref/qdq_core_ref-q8b-COMMIT"
+   "to": "results/rtl/ref_tile/qdq_core_ref/qdq_core_ref-q8b-67a60693f"
   }
  ],
  "cycles_added": 0,

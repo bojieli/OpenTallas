@@ -6,7 +6,8 @@
 module ot_dsrom_mtp_lrx_rtt #(
     parameter integer W=513, D=4, SEL=0,
     parameter bit ENABLE_RTT=0, OUTPUT_PIPE=0,
-    parameter integer FORWARD_HOPS=0, RETURN_HOPS=0
+    parameter integer FORWARD_HOPS=0, RETURN_HOPS=0,
+    parameter bit ALWAYS_READY=0      // the consumer NEVER stalls (c_ready is tied high): receiver without slots
 ) (
     input wire clk, rst_n, l_valid,
     output wire l_ready,
@@ -15,7 +16,11 @@ module ot_dsrom_mtp_lrx_rtt #(
     input wire c_ready,
     output wire [W-1:0] c_data
 );
-    generate if (ENABLE_RTT) begin: g_rtt
+    generate if (ENABLE_RTT && ALWAYS_READY) begin: g_ar
+        ot_dsrom_mtp_lrx_rtt_ar #(.W(W),.D(D),.FORWARD_HOPS(FORWARD_HOPS),.RETURN_HOPS(RETURN_HOPS)) u_rx
+            (.clk(clk),.rst_n(rst_n),.l_valid(l_valid),.l_ready(l_ready),
+             .l_data(l_data),.c_valid(c_valid),.c_ready(c_ready),.c_data(c_data));
+    end else if (ENABLE_RTT) begin: g_rtt
         ot_dsrom_mtp_lrx_rtt_core #(.W(W),.D(D),.SEL(SEL),
             .FORWARD_HOPS(FORWARD_HOPS),.RETURN_HOPS(RETURN_HOPS),.OUTPUT_PIPE(OUTPUT_PIPE)) u_rx
             (.clk(clk),.rst_n(rst_n),.l_valid(l_valid),.l_ready(l_ready),
@@ -132,6 +137,49 @@ module ot_dsrom_mtp_lrx_rtt_core #(parameter integer W = 513, parameter integer 
     always @(posedge clk) if (live && push && cnt == CB'(D)) begin
         $display("LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)");
         $fatal(1, "LINK_REG overflow");
+    end
+`endif
+endmodule
+
+// ot_dsrom_mtp_lrx_rtt_ar (el1013-s81-vmfe): ot_dsrom_mtp_lrx_rtt_core for a consumer whose c_ready is tied high.
+// With c_ready = 1 the core never pushes (push = pvl && (ne || !c_ready) and cnt starts at 0, so ne stays 0): every
+// flit is taken straight from the pin flop and the D slots are written but never read.  The grant is then
+// (popcount of the H grants in flight) <= D - 1, constant 1 whenever H <= D - 1 (H = FORWARD_HOPS + RETURN_HOPS + 3).
+// This module is that reduced machine: pin flops + one grant flop, cycle-identical to the core at the pins (proven in
+// the dsfd_vm_fe_h lockstep against the flat front end, which keeps the core).  A consumer that stalls is an error.
+module ot_dsrom_mtp_lrx_rtt_ar #(parameter integer W = 513, parameter integer D = 4,
+    parameter integer FORWARD_HOPS = 0, RETURN_HOPS = 0) (
+    input  wire         clk, rst_n,
+    input  wire         l_valid,
+    output wire         l_ready,
+    input  wire [W-1:0] l_data,
+    output wire         c_valid,
+    input  wire         c_ready,
+    output wire [W-1:0] c_data
+);
+    initial begin
+        if (D < 2 || FORWARD_HOPS < 0 || RETURN_HOPS < 0 || FORWARD_HOPS + RETURN_HOPS + 3 > D - 1)
+            $fatal(1, "ot_dsrom_mtp_lrx_rtt_ar: needs H = FORWARD_HOPS + RETURN_HOPS + 3 <= D - 1 (grant constant)");
+    end
+    reg live;
+    always @(posedge clk) live <= rst_n;
+    reg pv; reg [W-1:0] pd;
+    always @(posedge clk) begin pv <= l_valid; pd <= l_data; end   // pin flops
+    reg grant;
+    always @(posedge clk) grant <= live;
+    assign l_ready = grant;
+`ifdef OT_VMFE_MUT_WNQDROP
+    reg [2:0] mut_n;                    // MUTANT: every 8th flit is dropped
+    always @(posedge clk) if (!live) mut_n <= 3'd0; else if (pv) mut_n <= mut_n + 3'd1;
+    assign c_valid = pv && live && mut_n != 3'd7;
+`else
+    assign c_valid = pv && live;
+`endif
+    assign c_data = pd;
+`ifndef SYNTHESIS
+    always @(posedge clk) if (live && pv && !c_ready) begin
+        $display("LINK_REG FAIL: always-ready receiver saw a stalled consumer");
+        $fatal(1, "LINK_REG stall");
     end
 `endif
 endmodule

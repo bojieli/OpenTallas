@@ -14,8 +14,20 @@ module ot_hdc_vstream_lane #(
     // cycle): QLA / QLM = the adder / multiplier latency (3 = ot_hdc_fastfp, unchanged; > 3 = the *_lat cuts, same
     // values).  Every internal schedule (taps, SFU depths, MC/MD) follows; results are tagged, so only latency moves.
     parameter integer QLA = 3,
-    parameter integer QLM = 3
+    parameter integer QLM = 3,
                                       // strobe (the element's tag and valid wait ML more cycles before S1); 0 = original
+    // el1013-qwen-stalls 2026-10-13 (ML15 lane tile: 51,612 sinks on one clock root -> split):
+    // SFH = 1: the three special-function pipelines live OUTSIDE this module, in hardened tiles (ot_hdc_sfu_exp_t /
+    //   _rcp_t / _rsq_t: pin flop in, pin flop out) reached over the sx_* / sy_* ports; this side launches every
+    //   operand from a flop at the port and captures every result in a flop at the port, so one SFU traversal is
+    //   SFX = 4 edges longer (launch | tile in | tile out | capture).  The class tap depths follow (results are
+    //   tagged): only the latency of the SFU classes moves, the values are the same.
+    // TLS = 1: the B / C / tail tapped line (126 b x TAPMAX stages, 16k flops) keeps only its first TAP0 stages in
+    //   flops (the non-SFU class tap); the SFU class taps are read from a 1R1W SRAM ring (ot_sram_1r1w_128x256_m1_r2c2,
+    //   written every cycle, read pointer = write pointer - (class depth - 2), macro read + one capture flop): the
+    //   same word on the same cycle as the flop line (cycle-exact, 0 cycles).
+    parameter integer SFH = 0,
+    parameter integer TLS = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -64,7 +76,21 @@ module ot_hdc_vstream_lane #(
     output wire [AW-1:0]     l_raddr,
     output wire              l_last,
     output wire              retire,
-    output wire              l_fault
+    output wire              l_fault,
+    // SFH = 1: the special-function tiles (launch flops out, capture flops in); unused (0 / ignored) at SFH = 0
+    output wire              sx_exp_v,
+    output wire [31:0]       sx_exp_x,
+    input  wire [31:0]       sy_exp_y,
+    input  wire              sy_exp_vo,
+    input  wire              sy_exp_f,
+    output wire              sx_rcp_v,
+    output wire [31:0]       sx_rcp_x,
+    input  wire [31:0]       sy_rcp_y,
+    input  wire              sy_rcp_f,
+    output wire              sx_rsq_v,
+    output wire [31:0]       sx_rsq_x,
+    input  wire [31:0]       sy_rsq_y,
+    input  wire              sy_rsq_f
 );
     wire emit = emit0 && live;
     wire [AW-1:0] cura = cura0 + LANE * asi;
@@ -78,7 +104,9 @@ module ot_hdc_vstream_lane #(
     localparam [2:0] SFU_NONE = 0, SFU_EXP = 1, SFU_RECIP = 2, SFU_RSQRT = 3, SFU_SIGM = 4;
     localparam integer LA = QLA, LM = QLM;        // ot_hdc_qadd / ot_hdc_qmul latency
     // ot_hdc_sfu_q DEPTHs (49 / 28 / 37 at LA = LM = 3)
-    localparam integer D_EXP = 7 * LM + 8 * LA + 4, D_RECIP = 1 + 3 * (2 * LM + LA), D_RSQRT = 1 + 3 * (3 * LM + LA);
+    localparam integer SFX = (SFH != 0) ? 4 : 0;  // launch | tile pin flop in | tile pin flop out | capture
+    localparam integer D_EXP = 7 * LM + 8 * LA + 4 + SFX, D_RECIP = 1 + 3 * (2 * LM + LA) + SFX,
+                       D_RSQRT = 1 + 3 * (3 * LM + LA) + SFX;
     localparam integer D_SIGM = D_EXP + LA + D_RECIP;   // exp, +1, reciprocal
     localparam integer TAP0 = LM + 1 + LA;        // S3 -> R (7)
     localparam integer TAPMAX = TAP0 + D_SIGM;
@@ -240,9 +268,9 @@ module ot_hdc_vstream_lane #(
 
     // -- R: special functions -------------------------------------------------------
     wire [31:0] y_exp, y_rcp, y_rsq;
-    wire vo_exp, vo_rcp, vo_rsq, f_exp, f_rcp, f_rsq;
-    ot_hdc_exp_q #(.LA(LA), .LM(LM)) u_exp (.clk(clk), .rst_n(rst_n), .v(v14 && (cls == SFU_EXP || cls == SFU_SIGM)), .x(r14),
-                        .y(y_exp), .vo(vo_exp), .fault(f_exp));
+    wire vo_exp, f_exp, f_rcp, f_rsq;
+    wire        exp_v = v14 && (cls == SFU_EXP || cls == SFU_SIGM);
+    wire        rsq_v = v14 && cls == SFU_RSQRT;
     // sigmoid denominator: exp(R) + 1, then the reciprocal
     wire [31:0] e1;
     wire f_e1;
@@ -251,14 +279,41 @@ module ot_hdc_vstream_lane #(
     ot_hdc_vline #(.D(LA)) u_ve1 (.clk(clk), .rst_n(rst_n), .v(vo_exp && cls == SFU_SIGM), .vd(ve1));
     wire        rcp_v = (cls == SFU_SIGM) ? ve1[LA] : (v14 && cls == SFU_RECIP);
     wire [31:0] rcp_x = (cls == SFU_SIGM) ? e1 : r14;
-    ot_hdc_recip_q #(.LA(LA), .LM(LM)) u_rcp (.clk(clk), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));
-    ot_hdc_rsqrt_q #(.LA(LA), .LM(LM)) u_rsq (.clk(clk), .rst_n(rst_n), .v(v14 && cls == SFU_RSQRT), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));
+    generate if (SFH == 0) begin : g_sfi
+        wire vo_rcp, vo_rsq;
+        ot_hdc_exp_q #(.LA(LA), .LM(LM)) u_exp (.clk(clk), .rst_n(rst_n), .v(exp_v), .x(r14),
+                            .y(y_exp), .vo(vo_exp), .fault(f_exp));
+        ot_hdc_recip_q #(.LA(LA), .LM(LM)) u_rcp (.clk(clk), .rst_n(rst_n), .v(rcp_v), .x(rcp_x), .y(y_rcp), .vo(vo_rcp), .fault(f_rcp));
+        ot_hdc_rsqrt_q #(.LA(LA), .LM(LM)) u_rsq (.clk(clk), .rst_n(rst_n), .v(rsq_v), .x(r14), .y(y_rsq), .vo(vo_rsq), .fault(f_rsq));
+        assign sx_exp_v = 1'b0; assign sx_exp_x = 32'd0;
+        assign sx_rcp_v = 1'b0; assign sx_rcp_x = 32'd0;
+        assign sx_rsq_v = 1'b0; assign sx_rsq_x = 32'd0;
+    end else begin : g_sfx
+        //: launch flops at the ports (one set per tile: no shared launch net between two tiles) ...
+        reg        lv_exp, lv_rcp, lv_rsq;
+        reg [31:0] lx_exp, lx_rcp, lx_rsq;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin lv_exp <= 1'b0; lv_rcp <= 1'b0; lv_rsq <= 1'b0; end
+            else begin lv_exp <= exp_v; lv_rcp <= rcp_v; lv_rsq <= rsq_v; end
+        always @(posedge clk) begin lx_exp <= r14; lx_rcp <= rcp_x; lx_rsq <= r14; end
+        assign sx_exp_v = lv_exp; assign sx_exp_x = lx_exp;
+        assign sx_rcp_v = lv_rcp; assign sx_rcp_x = lx_rcp;
+        assign sx_rsq_v = lv_rsq; assign sx_rsq_x = lx_rsq;
+        //: ... and capture flops at the ports
+        reg        cv_exp, cf_exp, cf_rcp, cf_rsq;
+        reg [31:0] cy_exp, cy_rcp, cy_rsq;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin cv_exp <= 1'b0; cf_exp <= 1'b0; cf_rcp <= 1'b0; cf_rsq <= 1'b0; end
+            else begin cv_exp <= sy_exp_vo; cf_exp <= sy_exp_f; cf_rcp <= sy_rcp_f; cf_rsq <= sy_rsq_f; end
+        always @(posedge clk) begin cy_exp <= sy_exp_y; cy_rcp <= sy_rcp_y; cy_rsq <= sy_rsq_y; end
+        assign y_exp = cy_exp; assign vo_exp = cv_exp; assign f_exp = cf_exp;
+        assign y_rcp = cy_rcp; assign f_rcp = cf_rcp;
+        assign y_rsq = cy_rsq; assign f_rsq = cf_rsq;
+    end endgenerate
 
     // B, C and the tail tag ride a tapped line from S3; the tap is the class depth.
     localparam integer LT = 32 + 32 + TT;
-    reg [LT*TAPMAX-1:0] tl;              // tap n (1-based) = tl[LT*n-1 -: LT]
     reg [TAPMAX:1] tlv;
-    always @(posedge clk) tl <= {tl[LT*(TAPMAX-1)-1:0], s3_blo, s3_c, s3_tail};
     always @(posedge clk or negedge rst_n) begin
         //: A class switch happens only with nothing in flight, but the line
         //: still holds the valid bits of retired elements beyond the old tap;
@@ -270,13 +325,65 @@ module ot_hdc_vstream_lane #(
     reg [LT-1:0] tap;
     reg          tapv;
     reg [31:0]   s_val;
+    generate if (TLS == 0) begin : g_tlf
+        reg [LT*TAPMAX-1:0] tl;              // tap n (1-based) = tl[LT*n-1 -: LT]
+        always @(posedge clk) tl <= {tl[LT*(TAPMAX-1)-1:0], s3_blo, s3_c, s3_tail};
+        always @(*) begin
+            case (cls)
+                SFU_EXP:   tap = tl[LT*(TAP0 + D_EXP)-1 -: LT];
+                SFU_RECIP: tap = tl[LT*(TAP0 + D_RECIP)-1 -: LT];
+                SFU_RSQRT: tap = tl[LT*(TAP0 + D_RSQRT)-1 -: LT];
+                SFU_SIGM:  tap = tl[LT*(TAP0 + D_SIGM)-1 -: LT];
+                default:   tap = tl[LT*(TAP0)-1 -: LT];
+            endcase
+        end
+    end else begin : g_tls
+        //: stages 1..TAP0 in flops (the non-SFU tap, as before); the SFU class taps TAP0 + D are the SRAM ring's
+        //: answer D edges after stage TAP0: written at wp every cycle, read at rp = wp - (D - 2), read registered in
+        //: the macro, then one capture flop at its output.  The class is constant while an element of it is in
+        //: flight (a class switch waits for the unit to drain), so rp has followed the class for >= D_RECIP - 3
+        //: cycles before the first valid tap.  D in [3, 129] (128 words, rp != wp).
+        reg [LT*TAP0-1:0] tl0;
+        always @(posedge clk) tl0 <= {tl0[LT*(TAP0-1)-1:0], s3_blo, s3_c, s3_tail};
+        wire [LT-1:0] t0 = tl0[LT*TAP0-1 -: LT];
+        reg [7:0] dsel;
+        always @(*) begin
+            case (cls)
+                SFU_EXP:   dsel = D_EXP;
+                SFU_RECIP: dsel = D_RECIP;
+                SFU_RSQRT: dsel = D_RSQRT;
+                default:   dsel = D_SIGM;
+            endcase
+        end
+        wire        ring_on = (cls == SFU_EXP) || (cls == SFU_RECIP) || (cls == SFU_RSQRT) || (cls == SFU_SIGM);
+        reg  [6:0]  wp, rp;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin wp <= 7'd0; rp <= 7'd0; end
+`ifdef OT_TLS_MUT   // bench mutant: the ring read one word late (must FAIL)
+            else begin wp <= wp + 7'd1; rp <= wp + 7'd2 - dsel[6:0]; end
+`else
+            else begin wp <= wp + 7'd1; rp <= wp + 7'd3 - dsel[6:0]; end      // rp(c+1) = wp(c+1) - (D - 2)
+`endif
+        wire [255:0] rq;
+        reg  [LT-1:0] cq;                                                     // capture flops at the macro outputs
+        always @(posedge clk) cq <= rq[LT-1:0];
+        ot_sram_1r1w_128x256_m1_r2c2 u_tlm (.clk(clk), .r_ce_in(ring_on), .r_addr_in(rp), .rd_out(rq),
+            .w_ce_in(ring_on), .w_addr_in(wp), .wd_in({{(256-LT){1'b0}}, t0}), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        always @(*) tap = ring_on ? cq : t0;
+`ifndef SYNTHESIS
+        initial if (LT > 256 || D_SIGM > 129 || D_RECIP < 3 || D_RSQRT < 3 || D_EXP < 3)
+            $fatal(1, "ot_hdc_vstream_lane TLS: line %0d b, class depths %0d/%0d/%0d/%0d outside the 128 x 256 ring",
+                   LT, D_EXP, D_RECIP, D_RSQRT, D_SIGM);
+`endif
+    end endgenerate
     always @(*) begin
         case (cls)
-            SFU_EXP:   begin tap = tl[LT*(TAP0 + D_EXP)-1 -: LT];   tapv = tlv[TAP0 + D_EXP];   s_val = y_exp; end
-            SFU_RECIP: begin tap = tl[LT*(TAP0 + D_RECIP)-1 -: LT]; tapv = tlv[TAP0 + D_RECIP]; s_val = y_rcp; end
-            SFU_RSQRT: begin tap = tl[LT*(TAP0 + D_RSQRT)-1 -: LT]; tapv = tlv[TAP0 + D_RSQRT]; s_val = y_rsq; end
-            SFU_SIGM:  begin tap = tl[LT*(TAP0 + D_SIGM)-1 -: LT];  tapv = tlv[TAP0 + D_SIGM];  s_val = y_rcp; end
-            default:   begin tap = tl[LT*(TAP0)-1 -: LT];           tapv = tlv[TAP0];           s_val = r14;   end
+            SFU_EXP:   begin tapv = tlv[TAP0 + D_EXP];   s_val = y_exp; end
+            SFU_RECIP: begin tapv = tlv[TAP0 + D_RECIP]; s_val = y_rcp; end
+            SFU_RSQRT: begin tapv = tlv[TAP0 + D_RSQRT]; s_val = y_rsq; end
+            SFU_SIGM:  begin tapv = tlv[TAP0 + D_SIGM];  s_val = y_rcp; end
+            default:   begin tapv = tlv[TAP0];           s_val = r14;   end
         endcase
     end
 

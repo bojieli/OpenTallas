@@ -235,6 +235,26 @@ def ccf_plan(lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot
     return txt, chk, len(pins)
 
 
+def cryys_plan():
+    """ot_s81_hc_cryys (32.4 x 300.24 y slice leaf, r8): y_s[i] on N exactly above p_y[i] on S, same layer and track,
+    M5 + M3 alternating over x 2.16 .. 27.9 (256 b, 5.0 b/um/layer); sk / srs / yacc / p_req / p_flt on S at the E end
+    (M5).  Every bit is a vertical feed-through through its own pipeline (yp -> yp2 -> store -> rq -> b -> p_y): the leaf
+    has no horizontal bus."""
+    global W
+    keep, W = W, 32.4
+    H = 300.24
+    top = face_plan("N", [bits("y_s", 256)], H, ["M5", "M3"], lo=MARGIN, hi=27.9)
+    pins = top + [("S", f"p_y[{i}]", L, x) for i, (_, _, L, x) in enumerate(top)]
+    ctl = tracks("M5", 28.2, W - MARGIN)
+    pins += [("S", nm, "M5", ctl[4 * i]) for i, nm in enumerate(["sk", "srs", "yacc", "p_req", "p_flt"])]
+    names = [p[1] for p in pins]
+    assert len(names) == len(set(names)) == 2 * 256 + 5
+    txt = emit(pins, H, "S81 HC cryys: bit-aligned N/S feed-through pin plan (p_y[i] under y_s[i]), M5+M3; control on S at the E end")
+    chk = check(pins, H, "cryys")
+    W = keep
+    return txt, chk, len(pins)
+
+
 def main():
     out = Path(sys.argv[1] if len(sys.argv) > 1 else "physical/s81_hc_pinplan")
     for side, mirror in (("e", False), ("w", True)):
@@ -246,6 +266,9 @@ def main():
     txt, chk, n = ctrn_plan()
     print("ctrn", n, chk)
     (out / "ctrn.tcl").write_text(txt)
+    txt, chk, n = cryys_plan()
+    print("cryys", n, chk)
+    (out / "cryys.tcl").write_text(txt)
     txt, chk, n = ccf_plan()
     print("ccf", n, chk)
     (out / "ccf.tcl").write_text(txt)

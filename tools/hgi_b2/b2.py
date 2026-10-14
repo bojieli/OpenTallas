@@ -24,6 +24,10 @@ compiler emitted, where every logical word lives and which cluster computes what
               SU.VOP      RSPLIT (rows) or ESPLIT (elements); a reduction across the split is a CHAIN.
               SFU.GLU     RSPLIT / ESPLIT, elementwise.
               others      CENTRAL ring clients (FUSED, COLL, IDX, HC, ARGMAX, DMA, SIMT): read and write any slice.
+              DMA group   NATIVE: a member of a native dispatch group (header parameter bit 0, hgi_b2.mtp_swap: the
+                          MTP column swap) is cluster q's own linear record (q = its HBM stack): its VM operand is
+                          needed by cluster q and is ONE physical descriptor there (LOCAL q or MIRROR); it never
+                          rides the ring.  Refused if any of its words is LOCAL to another cluster.
   chain       a reduction split across clusters is combined cluster 0 -> 1 -> 2 -> 3 carrying the golden csum8
               binary-counter state (hgi_b2.reduce): bit-exact for any split.  MAX is order-free.  The result is MIRROR.
 
@@ -43,6 +47,7 @@ import numpy as np
 from hgi_sim import machine as MC
 from hgi_sim import lib as A
 from hgi_b2 import reduce as RD
+from hgi_b2 import mtp_swap as MS
 
 NQ = 4
 VMW = MC.VM_WORDS
@@ -396,6 +401,17 @@ class Collect:
         all of A as read made every gathered buffer live-in from -1 (DS L14: expert intermediate 15,960, eg_kv 9,974,
         iq, qa, y, yf ... mirror words held through the whole layer)"""
         xs, rd, wr = [], [], []
+        gq = MS.group_cluster(r)
+        if gq is not None:                      # NATIVE: cluster gq's own record; its VM operand is one sub-descriptor
+            D = self._r(die.rank)
+            for nm, d in r.desc.items():
+                if d.space == "VM":
+                    a = M.vm_addrs(d, die, L)
+                    D["need"][a] |= np.uint8(1 << gq)
+                    D["subs"].add(tuple(int(x) for x in M.eff(d, die, L)))
+                    (wr if nm == "O" else rd).append(a)
+            cat = lambda xs_: np.concatenate(xs_) if xs_ else np.zeros(0, np.int64)   # noqa: E731
+            return self._touch(D, cat(rd), cat(wr))
         for nm, d in r.desc.items():
             if d.space == "VM":
                 try:
@@ -427,7 +443,8 @@ class Collect:
                         a = self._central(M, M.cur, die, L, seg=(k % g, min(g, len(dies))))
                         if die.rank == 0:
                             t0 = (die, a)
-                    self.modes[(r.unit, "CENTRAL" if r.unit not in SPLIT_UNITS else "HOME")] += 1
+                    self.modes[(r.unit, "NATIVE" if MS.group_cluster(M.rec_of(dies[0], r)) is not None else
+                                "CENTRAL" if r.unit not in SPLIT_UNITS else "HOME")] += 1
                 else:
                     for die in dies:
                         M.dies, M.cur = [die], M.rec_of(die, r)
@@ -910,6 +927,10 @@ class Check:
                 continue
             self._use(0)
             M.dies, M.cur = [die], M.rec_of(die, r)
+            gq = MS.group_cluster(M.cur)
+            if gq is not None:
+                self._native(M, M.cur, die, L, gq)
+                continue
             rd = wr = 0
             ops = []
             for nm, d in M.cur.desc.items():
@@ -953,6 +974,40 @@ class Check:
             self.recs.append(dict(unit=r.unit, op=r.op, tag=getattr(M.cur, "tag", ""), L=int(L),
                                   mode="HOME" if r.unit in SPLIT_UNITS else "CENTRAL",
                                   cluster=home, ring_read=rd, ring_write=wr, mirror_write=bc, **cyc))
+
+    def _native(self, M, r, die, L, q):
+        """a native dispatch-group member: every VM word in cluster q's slice (LOCAL q or MIRROR), one affine physical
+        descriptor in one region; no ring word.  A LOAD into MIRROR words is the mirror-write broadcast of that
+        cluster's part (the other three slices' copies), as for any mirror write."""
+        tag = f"{r.unit}.{r.op}[{getattr(r, 'tag', '')}]@L{L}"
+        sub, bc = {}, 0
+        for nm, d in r.desc.items():
+            if d.space != "VM":
+                continue
+            b, n, m, st, ist = (int(x) for x in M.eff(d, die, L))
+            la = ga(b, st, ist, range(m), range(n))
+            if la.min() < 0 or la.max() >= VMW:
+                self.fail(f"rank {die.rank} {tag} {nm}: native group operand outside the VM")
+                continue
+            cl, ph = self.pl.cls[la], self.pl.phys[la]
+            if not np.all(self.avail[q][la]):
+                self.fail(f"rank {die.rank} {tag} {nm}: native member of cluster {q} touches "
+                          f"{int((~self.avail[q][la]).sum())} words outside slice {q} / mirror")
+                continue
+            af = affine(ph, m, n)
+            region = int(cl[0])
+            if af is None or not np.all(cl == region):
+                self.fail(f"rank {die.rank} {tag} {nm}: cluster {q} native operand not affine in slice space")
+                continue
+            if nm == "O":
+                bc += int(np.sum(cl == MIR))
+            sub[f"{nm}{q}"] = dict(logical=[b, n, m, st, ist], region=region, phys=[af[0], n, m, af[1], af[2]],
+                                   spec=[int(spec_addr(region, af[0])), n, m, af[1], af[2]])
+        self.ring["native_group_words"] += sum(v["logical"][1] * v["logical"][2] for v in sub.values())
+        self.ring["central_mirror_write"] += bc
+        self.recs.append(dict(unit=r.unit, op=r.op, tag=getattr(r, "tag", ""), L=int(L), mode="NATIVE", cluster=q,
+                              group_last=bool(r.param & MS.GLAST), sub=sub, ring_read=0, ring_write=0,
+                              mirror_write=bc, **self._cycles(Counter(), bc, 0)))
 
     def _cycles(self, pair, bcast, chain_hop):
         """the harness's per-record cost: ring = slowest (src, dst) pair, broadcast tree, plus the chained-reduction

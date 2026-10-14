@@ -5,10 +5,11 @@
 // record faults.  topk_k512_n4096_m1_asc expects a FAULT here: order = 1 is legal only for k <= 8 (HGI-1 G15, spec
 // c80ed5d7c; the hbm-sim vector predates the confirmation).
 module tb_hgi_idx_unit;
- parameter integer MUT = 0, PREF = 0, TOPKW = 0, TWIW = 4;   // TOPKW: opt-in heap engine + packed writes (hgi-1010/g2)
+ parameter integer MUT = 0, PREF = 0, TOPKW = 0, TWIW = 4, TK2 = 0, MUT_TK2 = 0;   // TK2: ot_hgi_idx_tk2 for k <= 8 (el1013)
+    // TOPKW: opt-in heap engine + packed writes (hgi-1010/g2)
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
  reg [2074:0] rec = 0; wire [2:0] ret; wire [337:0] vmq; reg [273:0] vmr = 0;
- ot_hgi_idx_unit #(.MUT(MUT), .PREF(PREF), .TOPKW(TOPKW), .TWIW(TWIW)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .vmq(vmq), .vmr(vmr),
+ ot_hgi_idx_unit #(.MUT(MUT), .PREF(PREF), .TOPKW(TOPKW), .TWIW(TWIW), .TK2(TK2), .MUT_TK2(MUT_TK2)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .vmq(vmq), .vmr(vmr),
   .sel_fs(), .sel_qb(), .sel_qbr(1'b0), .sel_kin(), .sel_to(612'd0), .sel_toc(), .sel_co(72'd0), .sel_coc(), .sel_ev(2'b00));
  // the vectors carry the v1 ABOR record; the unit takes {die, pos, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, hdr, v}
  function automatic [2074:0] widen(input [1236:0] o);

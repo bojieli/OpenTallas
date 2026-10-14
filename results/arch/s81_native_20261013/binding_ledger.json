@@ -2,39 +2,41 @@
  "schema": "s81-binding-ledger-v1",
  "table": "results/arch/s81_native_20261013/view_binding.json",
  "qualification": "results/arch/s81_native_20261013/qualification.json",
- "qualification_sha256": "b8a69bcd82d916fc50d6e922030d5ff8781b97a41aaff0175733a4d2ee285c46",
+ "qualification_sha256": "1628b7914fa10b9c3f2324989c1c9d9e555e3f02b2a26d6a8e1651f77328d099",
  "census": "results/physical/die_iter_1012/s81/real_view_census_20261013/c5_census.json",
  "census_run": "c5",
  "census_source_sha": "2fa1d3e09b6bc12b093777d15712dcc2521c490e",
  "qualification_summary": {
-  "bundles": 21,
-  "qualified_masters": 0,
-  "qualified_instances": 0
+  "bundles": 48,
+  "qualified_masters": 27,
+  "qualified_instances": 29184
  },
  "summary": {
+  "BOUND_instances": 25600,
+  "BOUND_masters": 21,
   "CONSTANT_HARD_MACRO_instances": 13836,
   "CONSTANT_HARD_MACRO_masters": 5,
-  "PLACEHOLDER_instances": 43179,
-  "PLACEHOLDER_masters": 207
+  "PLACEHOLDER_instances": 17579,
+  "PLACEHOLDER_masters": 186
  },
  "placeholder_instances_by_reason": {
-  "relay kit not routed / no view exported": 29184,
   "no routed view (no kit / not hardened)": 12302,
-  "gate thr failed": 1683,
+  "gate placer_fit failed": 2560,
+  "gate pair open": 1681,
   "gate export open": 1548,
-  "gate pair failed": 1547,
   "gate lint failed": 1299,
-  "gate pair open": 135,
+  "gate export_fix failed": 1024,
   "gate clock failed": 128,
   "no complete native bundle (missing corner / LEF)": 10,
   "gate bench failed": 5,
-  "gate current failed": 3
+  "gate current failed": 3,
+  "gate pair failed": 1
  },
  "placer_assumptions": [
-  "tools/dsrom_s81_fulldie.py: _hop_fix.find (line 5019) and _col_relays (line 5469, _pick line 5565) choose every relay site from stn_dims([bits], horiz) (line 3132): the GENERATED outline (max(face need, 17.28) - SHAVE = 17.256 um minimum), before the relay's face pair is known.",
-  "The relay master name dsfd_rly_<W>_<fi><fo> (hence which real outline applies: 8.64 / 10.8 / 15.12 square; W 266 / 283: 34.56 x 19.44 N/S or 21.6 x 30.24 E/W) is assigned AFTER placement from the neighbours' directions (end of _hop_fix, line 4974; end of _col_relays), so the placer cannot size the site from the real LEF without a second placement pass.",
-  "apply_view_binding (line 466, end of finalize_r8 line 6571) therefore does not re-place: a bound instance keeps its slot ORIGIN (lower-left), takes the real LEF SIZE, must be R0 and must fit the slot; a larger real outline or a non-R0 instance is a hard error (and view_binding.py placer_fit keeps such a master a placeholder).  The slot remainder is left unused; occupancy / reach / --nxt-reach decisions were taken on the generated outline.",
-  "Real pin positions: k = 1 LEF (case_real line 1666: bound_views.lef, read before elements.lef) and tools/s81/die_hop_gate.py use the real pins.  masters_r8 / _faces_r8 (lines 6653 / 6750) still build a generated-face Master for a bound master at the real SIZE: the k > 1 bundled GRT view (case_grt line 1780) and the IR windows (case_irm line 2273) use those generated faces, and _lint_pin_pt (line 1479, --pin-need) returns the instance centre for a bound master (it reads real pins only for REAL_FILES hard macros).",
+  "tools/dsrom_s81_fulldie.py: _hop_fix.find (line 5088) and _col_relays (line 5538, _pick line 5634) choose every relay site from stn_dims([bits], horiz) (line 3185): the GENERATED outline (max(face need, 17.28) - SHAVE = 17.256 um minimum), before the relay's face pair is known.",
+  "The relay master name dsfd_rly_<W>_<fi><fo> (hence which real outline applies: 8.64 / 10.8 / 15.12 square; W 266 / 283: 34.56 x 19.44 N/S or 21.6 x 30.24 E/W) is assigned AFTER placement from the neighbours' directions (end of _hop_fix, line 5043; end of _col_relays), so the placer cannot size the site from the real LEF without a second placement pass.",
+  "apply_view_binding (line 466, end of finalize_r8 line 6724) therefore does not re-place: a bound instance keeps its slot ORIGIN (lower-left), takes the real LEF SIZE, must be R0 and must fit the slot; a larger real outline or a non-R0 instance is a hard error (and view_binding.py placer_fit keeps such a master a placeholder).  The slot remainder is left unused; occupancy / reach / --nxt-reach decisions were taken on the generated outline.",
+  "Real pin positions: k = 1 LEF (case_real line 1712: bound_views.lef, read before elements.lef) and tools/s81/die_hop_gate.py use the real pins.  masters_r8 / _faces_r8 (lines 6806 / 6909) still build a generated-face Master for a bound master at the real SIZE: the k > 1 bundled GRT view (case_grt line 1832) and the IR windows (case_irm line 2325) use those generated faces, and _lint_pin_pt (line 1479, --pin-need) returns the instance centre for a bound master (it reads real pins only for REAL_FILES hard macros).",
   "The neighbours' generated pin faces (_faces_r8) aim at the bound instance's centre, not at its real pin face.",
   "--gen r7 never calls finalize_r8: nothing binds there.  tools/budgets/extract_die.py (clock plan) was not changed or checked against bound masters."
  ],
@@ -57,48 +59,45 @@
    "instances": 7808,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_63_we exists; no views/dsfd_rly_63_WE/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "lef": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE/dsfd_rly_63_WE.lef",
+   "job": "s81_rly_63_we-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_63_we",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_63_WE/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_63_NS",
    "instances": 3968,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_63_ns exists; no views/dsfd_rly_63_NS/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_63_ns/views/dsfd_rly_63_NS",
+   "lef": "physical/ref_tile/s81_rly_63_ns/views/dsfd_rly_63_NS/dsfd_rly_63_NS.lef",
+   "job": "s81_rly_63_ns-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_63_ns",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_63_NS/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_63_WS",
    "instances": 3456,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_63_ws exists; no views/dsfd_rly_63_WS/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS",
+   "lef": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS/dsfd_rly_63_WS.lef",
+   "job": "s81_rly_63_ws-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_63_ws",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_63_WS/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "ot_s81_cfg7_seq",
@@ -120,8 +119,8 @@
    "instances": 1280,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
-   "owner_source": "default",
+   "owner": "ds-1010",
+   "owner_source": "hier contract slot owner",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -135,8 +134,8 @@
    "instances": 1280,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
-   "owner_source": "default",
+   "owner": "ds-1010",
+   "owner_source": "hier contract slot owner",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -150,8 +149,8 @@
    "instances": 1280,
    "c5_physical": "source_abstract",
    "c5_timing": "interim",
-   "owner": "Claude:ds-1010",
-   "owner_source": "element registry",
+   "owner": "hard-macro owner (generator constant)",
+   "owner_source": "default",
    "binding": "CONSTANT_HARD_MACRO",
    "view": "q_elem.lef",
    "failing_gates": {},
@@ -163,32 +162,30 @@
    "instances": 1118,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_2_ns exists; no views/dsfd_rly_2_NS/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_2_ns/views/dsfd_rly_2_NS",
+   "lef": "physical/ref_tile/s81_rly_2_ns/views/dsfd_rly_2_NS/dsfd_rly_2_NS.lef",
+   "job": "s81_rly_2_ns-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_2_ns",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_2_NS/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_15_SN",
    "instances": 918,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_15_sn exists; no views/dsfd_rly_15_SN/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_15_sn/views/dsfd_rly_15_SN",
+   "lef": "physical/ref_tile/s81_rly_15_sn/views/dsfd_rly_15_SN/dsfd_rly_15_SN.lef",
+   "job": "s81_rly_15_sn-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_15_sn",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_15_SN/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_node_LLfd",
@@ -225,32 +222,30 @@
    "instances": 896,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_63_ne exists; no views/dsfd_rly_63_NE/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_63_ne/views/dsfd_rly_63_NE",
+   "lef": "physical/ref_tile/s81_rly_63_ne/views/dsfd_rly_63_NE/dsfd_rly_63_NE.lef",
+   "job": "s81_rly_63_ne-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_63_ne",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_63_NE/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_66_NS",
    "instances": 896,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_66_ns exists; no views/dsfd_rly_66_NS/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_66_ns/views/dsfd_rly_66_NS",
+   "lef": "physical/ref_tile/s81_rly_66_ns/views/dsfd_rly_66_NS/dsfd_rly_66_NS.lef",
+   "job": "s81_rly_66_ns-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_66_ns",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_66_NS/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_node_LLfu",
@@ -287,182 +282,186 @@
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_1_we exists; no views/dsfd_rly_1_WE/ export yet (not routed)"
+    "export_fix": "dsfd_rly_1_WE.lef on disk is not the file the verdict-replay export recorded"
    },
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_1_we",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_1_WE/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "candidate_view": "physical/ref_tile/s81_rly_1_we/views/dsfd_rly_1_WE",
+   "job": "s81_rly_1_we-v3-faf093855",
+   "qualifier_verdict": "QUALIFIED",
+   "to_qualify": "export_fix: re-export after main abc334b14 so abstract.json records verdict.check tt/ff ok for the files on disk"
   },
   {
    "master": "dsfd_rly_266_SN",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_266_sn exists; no views/dsfd_rly_266_SN/ export yet (not routed)"
+    "placer_fit": "real outline 34.56 x 19.44 um exceeds the generated slot 17.256 x 19.416 um (instance y_xb_0_0_0)"
    },
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_266_sn",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_266_SN/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "candidate_view": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN",
+   "job": "s81_rly_266_sn-v1-05805dc84",
+   "qualifier_verdict": "QUALIFIED",
+   "to_qualify": "placer_fit: the generator must place the master at its real outline (see BINDING.md, placer assumptions), or the kit outline must fit the generated slot at R0"
   },
   {
    "master": "dsfd_rly_266_WE",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_266_we exists; no views/dsfd_rly_266_WE/ export yet (not routed)"
+    "placer_fit": "real outline 21.6 x 30.24 um exceeds the generated slot 17.256 x 19.416 um (instance y_xb_0_9_0)"
    },
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_266_we",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_266_WE/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "candidate_view": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE",
+   "job": "s81_rly_266_we-v1-05805dc84",
+   "qualifier_verdict": "QUALIFIED",
+   "to_qualify": "placer_fit: the generator must place the master at its real outline (see BINDING.md, placer assumptions), or the kit outline must fit the generated slot at R0"
   },
   {
    "master": "dsfd_rly_283_SN",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_283_sn exists; no views/dsfd_rly_283_SN/ export yet (not routed)"
+    "placer_fit": "real outline 34.56 x 19.44 um exceeds the generated slot 17.256 x 19.416 um (instance y_xa_0_0_0)"
    },
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_283_sn",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_283_SN/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "candidate_view": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN",
+   "job": "s81_rly_283_sn-v1-05805dc84",
+   "qualifier_verdict": "QUALIFIED",
+   "to_qualify": "placer_fit: the generator must place the master at its real outline (see BINDING.md, placer assumptions), or the kit outline must fit the generated slot at R0"
   },
   {
    "master": "dsfd_rly_283_WE",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_283_we exists; no views/dsfd_rly_283_WE/ export yet (not routed)"
+    "placer_fit": "real outline 21.6 x 30.24 um exceeds the generated slot 17.256 x 19.416 um (instance y_xa_0_9_0)"
    },
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_283_we",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_283_WE/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "candidate_view": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE",
+   "job": "s81_rly_283_we-v1-05805dc84",
+   "qualifier_verdict": "QUALIFIED",
+   "to_qualify": "placer_fit: the generator must place the master at its real outline (see BINDING.md, placer assumptions), or the kit outline must fit the generated slot at R0"
   },
   {
    "master": "dsfd_rly_2_ES",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_2_es exists; no views/dsfd_rly_2_ES/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_2_es/views/dsfd_rly_2_ES",
+   "lef": "physical/ref_tile/s81_rly_2_es/views/dsfd_rly_2_ES/dsfd_rly_2_ES.lef",
+   "job": "s81_rly_2_es-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_2_es",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_2_ES/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_2_EW",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_2_ew exists; no views/dsfd_rly_2_EW/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+   "lef": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW/dsfd_rly_2_EW.lef",
+   "job": "s81_rly_2_ew-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_2_ew",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_2_EW/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_2_WE",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_2_we exists; no views/dsfd_rly_2_WE/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+   "lef": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE/dsfd_rly_2_WE.lef",
+   "job": "s81_rly_2_we-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_2_we",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_2_WE/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_2_WS",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_2_ws exists; no views/dsfd_rly_2_WS/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_2_ws/views/dsfd_rly_2_WS",
+   "lef": "physical/ref_tile/s81_rly_2_ws/views/dsfd_rly_2_WS/dsfd_rly_2_WS.lef",
+   "job": "s81_rly_2_ws-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_2_ws",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_2_WS/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_54_EW",
    "instances": 640,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_54_ew exists; no views/dsfd_rly_54_EW/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+   "lef": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW/dsfd_rly_54_EW.lef",
+   "job": "s81_rly_54_ew-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_54_ew",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_54_EW/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_stnh_512x1",
    "instances": 598,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-rerun",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "pair": "['dsfd_stnh_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
-    "lint": "dsfd_stnh_512x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1026 blocked-above 352 blocked-same 1; clock fi0[0] insertion 102 ps | (b) pg: VDD: 1 full-length stripes",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_stnh_512x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1026 blocked-above 352 blocked-same 1; clock fi0[0] insertion 105 ps; pockets M7 6 (legacy view) | (b) pg"
    },
    "open_gates": {
+    "pair": "['dsfd_stnh_512x1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_stnh_512x1.lef', 'dsfd_stnh_512x1_ff.lib', 'dsfd_stnh_512x1_ss.lib']); no ODB hash links it to the LEF",
     "export": "export minus verdict: FF +16.38 ps"
    },
    "candidate_view": "physical/s81_die_views/views/dsfd_stnh_512x1",
    "job": "s81-dsfd-stnh-512x1-b85da0774-c-arch",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_bf",
@@ -484,64 +483,60 @@
    "instances": 512,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_2_nw exists; no views/dsfd_rly_2_NW/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_2_nw/views/dsfd_rly_2_NW",
+   "lef": "physical/ref_tile/s81_rly_2_nw/views/dsfd_rly_2_NW/dsfd_rly_2_NW.lef",
+   "job": "s81_rly_2_nw-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_2_nw",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_2_NW/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_2_SN",
    "instances": 512,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_2_sn exists; no views/dsfd_rly_2_SN/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_2_sn/views/dsfd_rly_2_SN",
+   "lef": "physical/ref_tile/s81_rly_2_sn/views/dsfd_rly_2_SN/dsfd_rly_2_SN.lef",
+   "job": "s81_rly_2_sn-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_2_sn",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_2_SN/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_63_WN",
    "instances": 512,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_63_wn exists; no views/dsfd_rly_63_WN/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN",
+   "lef": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN/dsfd_rly_63_WN.lef",
+   "job": "s81_rly_63_wn-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_63_wn",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_63_WN/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_66_SN",
    "instances": 512,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_66_sn exists; no views/dsfd_rly_66_SN/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_66_sn/views/dsfd_rly_66_SN",
+   "lef": "physical/ref_tile/s81_rly_66_sn/views/dsfd_rly_66_SN/dsfd_rly_66_SN.lef",
+   "job": "s81_rly_66_sn-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_66_sn",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_66_SN/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_sstn_e0e1c0c1si",
@@ -563,54 +558,54 @@
    "instances": 391,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-rerun",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "pair": "['dsfd_stnh_566x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
-    "lint": "dsfd_stnh_566x1 17.256 x 32.376: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1134 blocked-above 396 blocked-same 0; clock fi0[0] insertion 111 ps | (b) pg: VDD: 1 full-length stripes",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_stnh_566x1 17.256 x 32.376: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1134 blocked-above 396 blocked-same 0; clock fi0[0] insertion 108 ps; pockets M7 4 (legacy view) | (b) pg"
    },
    "open_gates": {
+    "pair": "['dsfd_stnh_566x1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_stnh_566x1.lef', 'dsfd_stnh_566x1_ff.lib', 'dsfd_stnh_566x1_ss.lib']); no ODB hash links it to the LEF",
     "export": "export minus verdict: FF +15.61 ps"
    },
    "candidate_view": "physical/s81_die_views/views/dsfd_stnh_566x1",
    "job": "s81-dsfd-stnh-566x1-2e2d7aa3f-arch",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_rly_1_EW",
    "instances": 384,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_1_ew exists; no views/dsfd_rly_1_EW/ export yet (not routed)"
+    "export_fix": "dsfd_rly_1_EW.lef on disk is not the file the verdict-replay export recorded"
    },
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_1_ew",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_1_EW/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "candidate_view": "physical/ref_tile/s81_rly_1_ew/views/dsfd_rly_1_EW",
+   "job": "s81_rly_1_ew-v3-faf093855",
+   "qualifier_verdict": "QUALIFIED",
+   "to_qualify": "export_fix: re-export after main abc334b14 so abstract.json records verdict.check tt/ff ok for the files on disk"
   },
   {
    "master": "dsfd_rly_63_SE",
    "instances": 384,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_63_se exists; no views/dsfd_rly_63_SE/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE",
+   "lef": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE/dsfd_rly_63_SE.lef",
+   "job": "s81_rly_63_se-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_63_se",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_63_SE/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_sstn_e0c0si",
@@ -632,53 +627,49 @@
    "instances": 383,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-rerun",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
-   "failing_gates": {
-    "pair": "['dsfd_stnv_512x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
-   },
+   "failing_gates": {},
    "open_gates": {
+    "pair": "['dsfd_stnv_512x1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_stnv_512x1.lef', 'dsfd_stnv_512x1_ff.lib', 'dsfd_stnv_512x1_ss.lib']); no ODB hash links it to the LEF",
     "export": "export minus verdict: FF +15.66 ps"
    },
    "candidate_view": "physical/s81_die_views/views/dsfd_stnv_512x1",
    "job": "s81-dsfd-stnv-512x1-2e2d7aa3f-arch",
-   "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "qualifier_verdict": "NOT_ESTABLISHED",
+   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_rly_2_NE",
    "instances": 290,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_2_ne exists; no views/dsfd_rly_2_NE/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_2_ne/views/dsfd_rly_2_NE",
+   "lef": "physical/ref_tile/s81_rly_2_ne/views/dsfd_rly_2_NE/dsfd_rly_2_NE.lef",
+   "job": "s81_rly_2_ne-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_2_ne",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_2_NE/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rly_68_EW",
    "instances": 256,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_68_ew exists; no views/dsfd_rly_68_EW/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW",
+   "lef": "physical/ref_tile/s81_rly_68_ew/views/dsfd_rly_68_EW/dsfd_rly_68_EW.lef",
+   "job": "s81_rly_68_ew-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_68_ew",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_68_EW/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rstg",
@@ -700,16 +691,15 @@
    "instances": 234,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_15_en exists; no views/dsfd_rly_15_EN/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_15_en/views/dsfd_rly_15_EN",
+   "lef": "physical/ref_tile/s81_rly_15_en/views/dsfd_rly_15_EN/dsfd_rly_15_EN.lef",
+   "job": "s81_rly_15_en-v3-faf093855",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_15_en",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_15_EN/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_stnv_10x1",
@@ -731,36 +721,34 @@
    "instances": 129,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-rerun",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "pair": "['dsfd_stnv_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:09): it is the extraction of an earlier ODB",
-    "lint": "dsfd_stnv_514x1 30.216 x 17.256: PG M7 VDD 3 stripes (72% spread, 100% cov) / VSS 3 stripes (72% spread, 100% cov); strap M8; face pins 1030 blocked-above 68 blocked-same 0; clock fi0[0] insertion 105 ps | (f) face-pin access: 68 of 1030 fa",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_stnv_514x1 30.216 x 17.256: PG M7 VDD 3 stripes (72% spread, 100% cov) / VSS 3 stripes (72% spread, 100% cov); strap M8; face pins 1030 blocked-above 68 blocked-same 0; clock fi0[0] insertion 103 ps; pockets M7 14 (legacy view) | (f) f"
    },
    "open_gates": {
+    "pair": "['dsfd_stnv_514x1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_stnv_514x1.lef', 'dsfd_stnv_514x1_ff.lib', 'dsfd_stnv_514x1_ss.lib']); no ODB hash links it to the LEF",
     "export": "export minus verdict: FF +17.29 ps"
    },
    "candidate_view": "physical/s81_die_views/views/dsfd_stnv_514x1",
    "job": "s81-dsfd-stnv-514x1-b85da0774-c-arch",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_cfifo",
    "instances": 128,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:setup-triage (block owner claude/s81-rerun-20261006 / Claude:s81-rerun)",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "lint": "dsfd_cfifo 431.976 x 95.016: PG M7 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M8; face pins 1277 blocked-above 1058 blocked-same 5; clock cr[0] insertion 315 ps; clock xf[0] insertion 296 ps | (f) f",
-    "clock": "clock pins ['ck[0]', 'cr[0]', 'xf[0]']; no FF min/max_clock_tree_path on ['ck[0]']",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_cfifo 431.976 x 95.016: PG M7 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M8; face pins 1277 blocked-above 1058 blocked-same 5; clock cr[0] insertion 315 ps; clock xf[0] insertion 296 ps; pocket",
+    "clock": "clock pins ['ck[0]', 'cr[0]', 'xf[0]']; no FF min/max_clock_tree_path on ['ck[0]']"
    },
    "open_gates": {
     "pair": "['dsfd_cfifo_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_cfifo.lef', 'dsfd_cfifo_ff.lib', 'dsfd_cfifo_ss.lib']); no ODB hash links it to the LEF"
@@ -768,7 +756,7 @@
    "candidate_view": "physical/s81_die_views/views_colck/dsfd_cfifo",
    "job": "s81-dsfd-cfifo-colck-a6ca75fbe-tt-srcfix",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); clock: FF ETM with clock pins that all carry min/max_clock_tree_path; thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); clock: FF ETM with clock pins that all carry min/max_clock_tree_path; pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
   },
   {
    "master": "dsfd_node_LLd",
@@ -790,8 +778,8 @@
    "instances": 128,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
-   "owner_source": "default",
+   "owner": "el1011-ds-misc",
+   "owner_source": "hier contract slot owner",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -805,24 +793,23 @@
    "instances": 128,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
-   "binding": "PLACEHOLDER",
-   "view": null,
-   "failing_gates": {
-    "no_view": "kit physical/ref_tile/s81_rly_63_es exists; no views/dsfd_rly_63_ES/ export yet (not routed)"
-   },
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit), relay kits (tools/s81/rly_kits.py)",
+   "owner_source": "kit generator",
+   "binding": "BOUND",
+   "view": "physical/ref_tile/s81_rly_63_es/views/dsfd_rly_63_ES",
+   "lef": "physical/ref_tile/s81_rly_63_es/views/dsfd_rly_63_ES/dsfd_rly_63_ES.lef",
+   "job": "s81_rly_63_es-v2-88e22fcbf",
+   "failing_gates": {},
    "open_gates": {},
-   "kit": "physical/ref_tile/s81_rly_63_es",
-   "to_qualify": "route the kit to closure, export views/dsfd_rly_63_ES/ with view_export.py, then every native_view_qualify gate; the binding picks the directory up by name"
+   "to_qualify": "qualified"
   },
   {
    "master": "dsfd_rstg_pq66",
    "instances": 128,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
-   "owner_source": "default",
+   "owner": "el1011-ds-misc",
+   "owner_source": "hier contract slot owner",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -836,8 +823,8 @@
    "instances": 128,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
-   "owner_source": "default",
+   "owner": "el1011-ds-misc",
+   "owner_source": "hier contract slot owner",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -1046,22 +1033,21 @@
    "instances": 43,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-rerun",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "pair": "['dsfd_stnh_514x1_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:14): it is the extraction of an earlier ODB",
-    "lint": "dsfd_stnh_514x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1030 blocked-above 367 blocked-same 1; clock fi0[0] insertion 104 ps | (b) pg: VDD: 1 full-length stripes",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_stnh_514x1 17.256 x 30.216: PG M7 VDD 1 stripes (0% spread, 100% cov) / VSS 2 stripes (63% spread, 100% cov); strap M8; face pins 1030 blocked-above 367 blocked-same 1; clock fi0[0] insertion 101 ps; pockets M7 8 (legacy view) | (b) pg"
    },
    "open_gates": {
+    "pair": "['dsfd_stnh_514x1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_stnh_514x1.lef', 'dsfd_stnh_514x1_ff.lib', 'dsfd_stnh_514x1_ss.lib']); no ODB hash links it to the LEF",
     "export": "export minus verdict: FF +16.34 ps"
    },
    "candidate_view": "physical/s81_die_views/views/dsfd_stnh_514x1",
    "job": "s81-dsfd-stnh-514x1-b85da0774-c-arch",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_stnv_293x1",
@@ -1981,8 +1967,8 @@
    "instances": 3,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-tail",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2354,8 +2340,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2372,13 +2358,12 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "lint": "dsfd_l2r_vr_564x1__hx_E 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 760 blocked-same 1; clock ck[0] insertion 146 ps; clock cks[0] insertion 142 ",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_l2r_vr_564x1__hx_E 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 760 blocked-same 1; clock ck[0] insertion 146 ps; clock cks[0] insertion 142 "
    },
    "open_gates": {
     "pair": "['dsfd_l2r_vr_564x1__hx_E_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_E.lef', 'dsfd_l2r_vr_564x1__hx_E_ff.lib', 'dsfd_l2r_vr_564x1__hx_E_ss.lib']); no ODB hash lin"
@@ -2386,27 +2371,27 @@
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_E",
    "job": "s81-hend-m221pq-hx-E-pinreg-m5w-9ec0460c9-tt",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
   },
   {
    "master": "dsfd_l2r_vr_564x1__hx_W",
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "pair": "['dsfd_l2r_vr_564x1__hx_W_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-11 22:32): it is the extraction of an earlier ODB",
-    "lint": "dsfd_l2r_vr_564x1__hx_W 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 697 blocked-same 2; clock ck[0] insertion 134 ps; clock cks[0] insertion 133 ",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_l2r_vr_564x1__hx_W 69.528 x 71.256: PG M7 VDD 6 stripes (78% spread, 100% cov) / VSS 7 stripes (93% spread, 100% cov); strap M8; face pins 1139 blocked-above 697 blocked-same 2; clock ck[0] insertion 135 ps; clock cks[0] insertion 134 "
    },
-   "open_gates": {},
+   "open_gates": {
+    "pair": "['dsfd_l2r_vr_564x1__hx_W_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_l2r_vr_564x1__hx_W.lef', 'dsfd_l2r_vr_564x1__hx_W_ff.lib', 'dsfd_l2r_vr_564x1__hx_W_ss.lib']); no ODB hash lin"
+   },
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_W",
    "job": "s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt-arch",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price)"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
   },
   {
    "master": "dsfd_l2r_vr_84x1__hs_c4_svcj",
@@ -2548,14 +2533,13 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
     "bench": "pass benches NONE; failing mutants NONE (no bench record)",
-    "lint": "dsfd_m2l_raw_512x1__hl_E0 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 648 blocked-same 2; clock ck[0] insertion 189 ps; clock fi0[0] insertion",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_m2l_raw_512x1__hl_E0 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 648 blocked-same 2; clock ck[0] insertion 189 ps; clock fi0[0] insertion"
    },
    "open_gates": {
     "pair": "['dsfd_m2l_raw_512x1__hl_E0_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E0.lef', 'dsfd_m2l_raw_512x1__hl_E0_ff.lib', 'dsfd_m2l_raw_512x1__hl_E0_ss.lib']); no ODB "
@@ -2563,15 +2547,15 @@
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E0",
    "job": "s81-hend-m221pq-hl-E0-a1f23fa0b-mm",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
+   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
   },
   {
    "master": "dsfd_m2l_raw_512x1__hl_E1",
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2585,14 +2569,13 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
     "bench": "pass benches NONE; failing mutants NONE (no bench record)",
-    "lint": "dsfd_m2l_raw_512x1__hl_E2 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 382 blocked-same 0; clock ck[0] insertion 186 ps; clock fi0[0] insertion",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_m2l_raw_512x1__hl_E2 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 382 blocked-same 0; clock ck[0] insertion 186 ps; clock fi0[0] insertion"
    },
    "open_gates": {
     "pair": "['dsfd_m2l_raw_512x1__hl_E2_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_E2.lef', 'dsfd_m2l_raw_512x1__hl_E2_ff.lib', 'dsfd_m2l_raw_512x1__hl_E2_ss.lib']); no ODB ",
@@ -2601,15 +2584,15 @@
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_E2",
    "job": "s81-hend-m221pq-hl-E2-a1f23fa0b-mm",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_m2l_raw_512x1__hl_E3",
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2623,8 +2606,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2638,14 +2621,13 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
     "bench": "pass benches NONE; failing mutants NONE (no bench record)",
-    "lint": "dsfd_m2l_raw_512x1__hl_W1 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 710 blocked-same 0; clock ck[0] insertion 191 ps; clock fi0[0] insertion",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_m2l_raw_512x1__hl_W1 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1030 blocked-above 710 blocked-same 0; clock ck[0] insertion 191 ps; clock fi0[0] insertion"
    },
    "open_gates": {
     "pair": "['dsfd_m2l_raw_512x1__hl_W1_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_m2l_raw_512x1__hl_W1.lef', 'dsfd_m2l_raw_512x1__hl_W1_ff.lib', 'dsfd_m2l_raw_512x1__hl_W1_ss.lib']); no ODB ",
@@ -2654,15 +2636,15 @@
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_m2l_raw_512x1__hl_W1",
    "job": "s81-hend-m221pq-hl-W1-a1f23fa0b-mm",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_m2l_raw_512x1__hl_W2",
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2676,8 +2658,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2751,8 +2733,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2769,14 +2751,13 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
     "bench": "pass benches NONE; failing mutants NONE (no bench record)",
     "lint": "dsfd_m2l_vr_512x1__hix_SW 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1032 blocked-above 1008 blocked-same 1; clock ck[0] insertion 193 ps; clock fi0[0] insertio",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED",
     "current": "registry adopted job dsfd_m2l_vr_512x1__hix_sw_m5-m5-5b76815db != bundle job s81-hend-m221pq-hix-SW-a1f23fa0b-mm"
    },
    "open_gates": {
@@ -2785,21 +2766,20 @@
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hix_SW",
    "job": "s81-hend-m221pq-hix-SW-a1f23fa0b-mm",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); current: the view exported from the registry's adopted (best) closure of the master; pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
+   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); current: the view exported from the registry's adopted (best) closure of the master; pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
   },
   {
    "master": "dsfd_m2l_vr_512x1__hqe_SW",
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
     "bench": "pass benches NONE; failing mutants NONE (no bench record)",
     "lint": "dsfd_m2l_vr_512x1__hqe_SW 128.28 x 131.736: PG M7 VDD 12 stripes (93% spread, 100% cov) / VSS 12 stripes (93% spread, 100% cov); strap M8; face pins 1032 blocked-above 750 blocked-same 1; clock ck[0] insertion 198 ps; clock fi0[0] insertion",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED",
     "current": "registry adopted job dsfd_m2l_vr_512x1__hqe_sw_m5-m5-5b76815db != bundle job s81-hend-m221pq-hqe-SW-a1f23fa0b-mm"
    },
    "open_gates": {
@@ -2809,15 +2789,15 @@
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_m2l_vr_512x1__hqe_SW",
    "job": "s81-hend-m221pq-hqe-SW-a1f23fa0b-mm",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); current: the view exported from the registry's adopted (best) closure of the master; pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "to_qualify": "bench: a behavioural bench that passes AND a mutant that fails, recorded on the job; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); current: the view exported from the registry's adopted (best) closure of the master; pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_m2l_vr_68x10__hr_E0",
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2831,8 +2811,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2846,8 +2826,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2861,8 +2841,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2879,8 +2859,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2894,8 +2874,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2909,8 +2889,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2927,8 +2907,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2942,8 +2922,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2957,8 +2937,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2972,8 +2952,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -2987,8 +2967,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -3107,13 +3087,12 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "lint": "dsfd_r2l_vr_1024x1__ha_SW 112.296 x 112.296: PG M7 VDD 10 stripes (87% spread, 100% cov) / VSS 11 stripes (96% spread, 100% cov); strap M8; face pins 2056 blocked-above 1021 blocked-same 0; clock ck[0] insertion 184 ps; clock fi0[0] inserti",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_r2l_vr_1024x1__ha_SW 112.296 x 112.296: PG M7 VDD 10 stripes (87% spread, 100% cov) / VSS 11 stripes (96% spread, 100% cov); strap M8; face pins 2056 blocked-above 1021 blocked-same 0; clock ck[0] insertion 184 ps; clock fi0[0] inserti"
    },
    "open_gates": {
     "pair": "['dsfd_r2l_vr_1024x1__ha_SW_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_r2l_vr_1024x1__ha_SW.lef', 'dsfd_r2l_vr_1024x1__ha_SW_ff.lib', 'dsfd_r2l_vr_1024x1__ha_SW_ss.lib']); no ODB "
@@ -3121,48 +3100,47 @@
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_1024x1__ha_SW",
    "job": "s81-hend-m221pq-ha-SW-pinreg-f1b64667d-tt",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
   },
   {
    "master": "dsfd_r2l_vr_512x1__hcol",
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:s81-die",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
-    "pair": "['dsfd_r2l_vr_512x1__hcol_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 04:02): it is the extraction of an earlier ODB",
-    "lint": "dsfd_r2l_vr_512x1__hcol 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 553 blocked-same 0; clock ck[0] insertion 134 ps; clock fi0[0] insertion 133 ",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
+    "lint": "dsfd_r2l_vr_512x1__hcol 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 553 blocked-same 0; clock ck[0] insertion 133 ps; clock fi0[0] insertion 133 "
    },
-   "open_gates": {},
+   "open_gates": {
+    "pair": "['dsfd_r2l_vr_512x1__hcol_tt.lib'] written by a separate later extraction, not by the recorded export (abstract.json lists ['dsfd_r2l_vr_512x1__hcol.lef', 'dsfd_r2l_vr_512x1__hcol_ff.lib', 'dsfd_r2l_vr_512x1__hcol_ss.lib']); no ODB hash lin"
+   },
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hcol",
    "job": "s81-hend-m221pq-hcol-pinreg-f1b64667d-tt",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price)"
+   "to_qualify": "lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair"
   },
   {
    "master": "dsfd_r2l_vr_512x1__hsel",
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1011-reroute-m5",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
     "pair": "['dsfd_r2l_vr_512x1__hsel_tt.lib'] committed 10-07 22:10, BEFORE the LEF + listed ETMs (10-08 03:38): it is the extraction of an earlier ODB",
     "lint": "dsfd_r2l_vr_512x1__hsel 63.048 x 64.776: PG M7 VDD 6 stripes (86% spread, 100% cov) / VSS 6 stripes (86% spread, 100% cov); strap M8; face pins 1032 blocked-above 283 blocked-same 4; clock ck[0] insertion 131 ps; clock fi0[0] insertion 130 ",
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED",
     "current": "registry adopted job dsfd_r2l_vr_512x1__hsel_m5-m5-5b76815db != bundle job s81-hend-m221pq-hsel-pinreg-f1b64667d-tt"
    },
    "open_gates": {},
    "candidate_view": "physical/s81_die_views/views/m221pq/dsfd_r2l_vr_512x1__hsel",
    "job": "s81-hend-m221pq-hsel-pinreg-f1b64667d-tt",
    "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); current: the view exported from the registry's adopted (best) closure of the master"
+   "to_qualify": "pair: one view_export run (LEF + TT/FF/SS ETM) from the orfs directory of the job's closing verdict; an ECO pass or a later single-corner extraction breaks the pair; lint: tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins); current: the view exported from the registry's adopted (best) closure of the master"
   },
   {
    "master": "dsfd_sp_capture_c",
@@ -3244,8 +3222,8 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "interim",
-   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
-   "owner_source": "default",
+   "owner": "el1011-ds-misc",
+   "owner_source": "hier contract slot owner",
    "binding": "PLACEHOLDER",
    "view": null,
    "failing_gates": {
@@ -3319,20 +3297,18 @@
    "instances": 1,
    "c5_physical": "generated_placeholder",
    "c5_timing": "closed",
-   "owner": "Claude:el1012-svcjoin-ck",
-   "owner_source": "element registry",
+   "owner": "S81 DIE stream lead (claude/el1011-s81dieit) -- no hardening kit assigned",
+   "owner_source": "default",
    "binding": "PLACEHOLDER",
    "view": null,
-   "failing_gates": {
-    "thr": "registry gate CLOSED-TIMING, THROUGHPUT-UNMEASURED"
-   },
+   "failing_gates": {},
    "open_gates": {
     "export": "no export-side corner STA record to compare with the verdict"
    },
    "candidate_view": "physical/ref_tile/s81_svcjoin_ref/views/dsfd_svc_join",
    "job": "s81_svcjoin_ref-v1-b3c4341ce",
-   "qualifier_verdict": "NOT_QUALIFIED",
-   "to_qualify": "thr: registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price); export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
+   "qualifier_verdict": "NOT_ESTABLISHED",
+   "to_qualify": "export: re-export with tools/tt_views/view_export.py (main abc334b14): export-side STA within 1 ps of the verdict"
   },
   {
    "master": "dsfd_wfc_stg",
@@ -3374,11 +3350,10 @@
    },
    "open_gates": {
     "pair": "verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c/routes/s81hc_ctfn_ref_v1_4c6ea9b8c/w",
-    "export": "no export-side corner STA record to compare with the verdict",
-    "thr": "no budget row for this master: its parent element's production bench must cover it"
+    "export": "no export-side corner STA record to compare with the verdict"
    },
    "candidate_view": "physical/ref_tile/s81hc_ctfn_ref/views/ot_s81_hc_ctfn",
-   "owner": "Claude:el1011-s81hc-ctile",
+   "owner": "hc-ctile (claude/el1011-s81hc-ctile)",
    "why_not_bound": "the die netlist of the census has no instance of this master (its parent slab is one generated master); binding needs the generator to instantiate it"
   },
   {
@@ -3391,11 +3366,10 @@
    },
    "open_gates": {
     "pair": "verdict on the ECO pass /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/cl/eco/pass2/orfs; view exported from the route dir /srv/opentallas/claude/closure-loop/s81hc_ctfs_ref-v1-a9cfb97b9/routes/s81hc_ctfs_ref_v1_a9cfb97b9/w",
-    "export": "no export-side corner STA record to compare with the verdict",
-    "thr": "no budget row for this master: its parent element's production bench must cover it"
+    "export": "no export-side corner STA record to compare with the verdict"
    },
    "candidate_view": "physical/ref_tile/s81hc_ctfs_ref/views/ot_s81_hc_ctfs",
-   "owner": "Claude:el1011-s81hc-ctile",
+   "owner": "hc-ctile (claude/el1011-s81hc-ctile)",
    "why_not_bound": "the die netlist of the census has no instance of this master (its parent slab is one generated master); binding needs the generator to instantiate it"
   },
   {
@@ -3407,11 +3381,10 @@
     "bench": "pass benches NONE; failing mutants NONE"
    },
    "open_gates": {
-    "export": "no export-side corner STA record to compare with the verdict",
-    "thr": "no budget row for this master: its parent element's production bench must cover it"
+    "export": "no export-side corner STA record to compare with the verdict"
    },
    "candidate_view": "physical/ref_tile/s81hc_ctfx_ref/views/ot_s81_hc_ctfx",
-   "owner": "Claude:el1011-s81hc-ctile",
+   "owner": "hc-ctile (claude/el1011-s81hc-ctile)",
    "why_not_bound": "the die netlist of the census has no instance of this master (its parent slab is one generated master); binding needs the generator to instantiate it"
   },
   {
@@ -3423,11 +3396,10 @@
     "bench": "pass benches NONE; failing mutants NONE"
    },
    "open_gates": {
-    "export": "no export-side corner STA record to compare with the verdict",
-    "thr": "no budget row for this master: its parent element's production bench must cover it"
+    "export": "no export-side corner STA record to compare with the verdict"
    },
    "candidate_view": "physical/ref_tile/s81hc_ctpl_ref/views/ot_s81_hc_ctpl",
-   "owner": "Claude:el1011-s81hc-ctile",
+   "owner": "hc-ctile (claude/el1011-s81hc-ctile)",
    "why_not_bound": "the die netlist of the census has no instance of this master (its parent slab is one generated master); binding needs the generator to instantiate it"
   }
  ]

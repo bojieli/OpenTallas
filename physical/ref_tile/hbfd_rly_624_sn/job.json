@@ -1,14 +1,14 @@
 {
- "name": "hbfd_rly_624_sn-v1-2d0c1a8ac",
+ "name": "hbfd_rly_624_sn-v2-COMMIT",
  "block": "hbfd_rly_624_SN",
  "ref_tile": true,
  "owner": "Claude:hbmdie-lead",
- "purpose": "HBM R25GQ die relay family: hbfd_rly_624_SN, one register stage of width class 624 b (in S / out N, ck + rs W), 64.8 x 21.6 um, M5 cap, pins at 2 tracks on one layer a face, flops at the pins, minimum output delay at the pin (outhold); replaces the generated per-instance relay station placeholders of its class (tools/hbm_die_rly_kits.py --map)",
+ "purpose": "HBM R25GQ die relay family: hbfd_rly_624_SN, one register stage of width class 624 b (in S / out N, ck + rs W), 64.8 x 23.76 um, M5 cap, pins at 2 tracks on one layer a face, flops at the pins, minimum output delay at the pin (outhold); replaces the generated per-instance relay station placeholders of its class (tools/hbm_die_rly_kits.py --map)",
  "threads": 4,
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/hbm-native-die-1013",
-  "commit": "2d0c1a8ac"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -93,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbfd_rly_624_sn/hbfd_rly_624_sn-v1-2d0c1a8ac"
+   "to": "results/rtl/ref_tile/hbfd_rly_624_sn/hbfd_rly_624_sn-v2-COMMIT"
   }
  ],
  "cycles_added": 0,

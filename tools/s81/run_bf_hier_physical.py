@@ -65,6 +65,14 @@ def command(a):
         # closed column's E-face pins: tools/s81/bf_front_aligned_pins.py)
         assert pins and cmd[-len(pins):] == pins, 'pin regions not at the tail'
         cmd = cmd[:-len(pins)] + ['--orfs-var', f'IO_CONSTRAINTS=/src/{a.io_tcl}']
+    if a.pin_keepout:
+        # s81-bf 2026-10-13: face-pin access for the parent / die (child_lint (f): the aligned front closed with 367 face
+        # pins under its own metal on the layer above).  pin_access_pregrt.tcl = the repair-buffer cap hook + the keepout on
+        # the layer above the outer half of every face pin; the same keepout file removes it after detail route.
+        i = cmd.index('PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl')
+        cmd[i] = 'PRE_GLOBAL_ROUTE=physical/redesign_ds/coll_split/pin_access_pregrt.tcl'
+        cmd += ['--step-tcl', 'POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl',
+                '--orfs-var', 'OT_PK_ABOVE_ONLY=1', '--orfs-var', 'OT_PK_FRAC=0.5']
     if a.block == 'front' and a.pinlat:
         cmd += ['--param', f'PINLAT={a.pinlat}']
     cmd += ['--clock-uncertainty-ns', '.060', '--clock-uncertainty-hold-ns', '.025', '--orfs-corner', 'WC',
@@ -94,6 +102,7 @@ def main():
     p.add_argument('--local-clock-pin', action='store_true', help='root at middle of long right face; compact hierarchy model, default off')
     p.add_argument('--pinlat', type=int, choices=(0,1), default=0)
     p.add_argument('--io-tcl', default='', help='repo place_pin file replacing the face pin regions (exact abutment pins)')
+    p.add_argument('--pin-keepout', action='store_true', help='face-pin access keepout before GRT, removed after DRT')
     p.add_argument('--bxst', type=int, default=2); p.add_argument('--fxst', type=int, default=2); p.add_argument('--extra', default='')
     a = p.parse_args()
     if not a.die_w:

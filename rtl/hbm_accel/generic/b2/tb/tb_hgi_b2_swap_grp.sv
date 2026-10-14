@@ -1,11 +1,13 @@
 `timescale 1ns/1ps
 `default_nettype none
 // tb_hgi_b2_swap_grp ([mtp-dispatch] 2026-10-13): the native B2 MTP swap-out group (ot_hgi_b2_swap_disp + four REAL
-// ot_hgi_dma_back NS 1 / NB 8 engines) against an INDEPENDENT oracle of the legacy STRIPE4 image.
+// ot_hgi_dma_back NS 1 / NB 8 engines) against an INDEPENDENT oracle of the NATIVE slot image
+// (tools/hgi_b2/mtp_swap.py NATIVE LAYOUT, 2026-10-13: cluster q moves ITS quarter of h, logical rows 80q .. 80q + 79, where the B2
+// allocator holds it, to stack q's slot rows q + 4j; the STRIPE4 footprint with rows permuted by owner).
 //   Stimulus = what tools/hgi_b2/mtp_swap.py emits: four linear own-stack h records (cluster q: 80 rows x 64 words, HBM
 //   base (q << 35) | COLB + slot x CSTR + 64 q, row stride 256 B; VM descriptor = the cluster's allocation, compact LOCAL
-//   base / stride 64 or MIRROR base 65536 + 64 q / stride 256) as ONE group, then PRE (8 words, cluster 0).
-//   Oracle = the LOGICAL legacy rule only: h row o on stack o mod 4 at stack-local COLB + slot x CSTR + o x 64; PRE on
+//   base / stride 64 or MIRROR base 65536 + 5120 q / stride 64) as ONE group, then PRE (8 words, cluster 0).
+//   Oracle = the LOGICAL native rule only: h row 80q + j on stack q at stack-local COLB + slot x CSTR + 64 q + 256 j; PRE on
 //   stack 0 at COLB + slot x CSTR + 81920.  It never sees the native descriptors.
 //   Cluster models (as tb_hgi_dma_back, production settings): VM slice wide READ group 8 lanes, LAT + 0..JIT, credits
 //   VCR; svc WRITE HOPS stages each way, written counts back ALAT edges later.  At every engine src the bench overwrites
@@ -23,7 +25,7 @@ module tb_hgi_b2_swap_grp;
     parameter integer LIMIT = 272;       // 1.10 x 248 (immutable price)
     parameter integer SEED = 1;
     localparam integer NB = 8, NL = 8, SBIT = 35;
-    localparam longint COLB = 64'h180000000, CSTR = 64'd131072;
+    localparam longint COLB = 64'h510000000, CSTR = 64'd131072;
     localparam integer VMW = 98304;
     reg clk = 0; always #1 clk = ~clk; reg rst_n = 0;
     reg g_v = 0, g_last = 0; reg [1:0] g_q = 0; reg [226:0] g_mv = 0;
@@ -141,16 +143,16 @@ module tb_hgi_b2_swap_grp;
         for (integer c = 0; c < 4; c++) begin sv_k[c] = 0; sv_t[c] = 0; for (integer i = 0; i < VMW; i++) vm[c][i] = $urandom; end
         for (integer o = 0; o < 320; o++) for (integer i = 0; i < 64; i++) h[o][i] = $urandom;
         for (integer i = 0; i < 8; i++) pre[i] = $urandom;
-        // ORACLE: the legacy STRIPE4 image, from the logical h / PRE only
+        // ORACLE: the NATIVE slot image (logical row 80q + j on stack q at slot row q + 4j), from the logical h / PRE only
         for (integer o = 0; o < 320; o++) for (integer i = 0; i < 64; i++)
-            exp_w[((longint'(o % 4) << SBIT) | (loc + o * 64)) / 4 + i] = h[o][i];
+            exp_w[((longint'(o / 80) << SBIT) | (loc + 64 * (o / 80) + 256 * (o % 80))) / 4 + i] = h[o][i];
         for (integer i = 0; i < 8; i++) exp_w[(loc + 81920) / 4 + i] = pre[i];
         exp_sec = 4 * 640 + 1;
-        // the clusters' allocations: compact LOCAL (rows q + 4j packed at 128 + 64 j) or MIRROR (the whole h at 65536)
+        // the clusters' allocations: compact LOCAL (the cluster's quarter, rows 80q + j, packed at 128 + 64 j) or MIRROR (the whole h at 65536: quarter q at 65536 + 5120 q)
         for (integer c = 0; c < 4; c++) begin
-            sv_b[c][0] = mirror ? 65536 + 64 * c : 128 + 1024 * c; sv_s[c][0] = mirror ? 256 : 64; sv_m[c][0] = 80; sv_n[c][0] = 64; sv_t[c] = 1;
+            sv_b[c][0] = mirror ? 65536 + 5120 * c : 128 + 1024 * c; sv_s[c][0] = 64; sv_m[c][0] = 80; sv_n[c][0] = 64; sv_t[c] = 1;
             if (mirror) begin for (integer o = 0; o < 320; o++) for (integer i = 0; i < 64; i++) vm[c][65536 + 64 * o + i] = h[o][i]; end
-            else for (integer j = 0; j < 80; j++) for (integer i = 0; i < 64; i++) vm[c][sv_b[c][0] + 64 * j + i] = h[c + 4 * j][i];
+            else for (integer j = 0; j < 80; j++) for (integer i = 0; i < 64; i++) vm[c][sv_b[c][0] + 64 * j + i] = h[80 * c + j][i];
         end
         sv_b[0][1] = mirror ? 65536 + 20480 : 8192; sv_s[0][1] = 64; sv_m[0][1] = 1; sv_n[0][1] = 8; sv_t[0] = 2;
         for (integer i = 0; i < 8; i++) vm[0][sv_b[0][1] + i] = pre[i];

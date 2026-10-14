@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Region leaf miter (claude/qwen-tp8-vm-rtl, RTL-B 2026-10-13): ot_qfd_vm_region_leaf (leaf instances and wires only:
-// gctl_t, rowrd_t, delay1_t / delay2_t and the closed bank_t / su_t / xfifo8_t / su1024_t) against the FLAT REFERENCE
+// bctl_t, sctl_t, rr4_t, rr2_t, delay1_t / delay2_t and the closed bank_t / su_t / xfifo8_t / su1024_t) against the FLAT REFERENCE
 // ot_qfd_vm_region_quarter, same xorshift64 stimulus on every input, xo / ro / so / ovf compared on EVERY clock
 // from the first one (reset included).
 //   main run      random reads / writes / masks / data on all 8 banks and both SU row banks, random row reads and SU
@@ -11,10 +11,16 @@
 //                 rise, on the same clock in both.
 // Non-vacuity refusal: a run with too few pushes / pops / row reads / SU answers / stalls / output changes / nonzero
 // compared words, or whose ovf never rose in the overflow run, prints FAIL.
-// LEAF_MUT 1..8 (see ot_qfd_vm_region_leaf) must FAIL.
+// LEAF_MUT 1..12 (see ot_qfd_vm_region_leaf) must FAIL.
+// DEPTH / LAW / DEPTHS / LAWS (2026-10-13 VERIF): the memory depths of the region.  Defaults 8 / 3 / 8 / 3 = the bench
+// shape (same stimulus stream as before); 174 / 8 / 695 / 10 = the ROUTED parameters of the leaves (bctl_t LAW 8, sctl_t
+// LAWS 10, bank_t DEPTH 174 LAW 8, su_t DEPTHS 695 LAWS 10): every line address is then drawn per bank below the depth.
+// The overflow run must see ovf rise, not start with it: at most 158 of its 160 clocks (a FIFO left one beat deep by
+// the main run underflows after 4 pops: 156 clocks, seen at the routed depths with SEED 2; the bound was 150).
+// ROW_MUT / SU_MUT: the rr2_t (half select) / su1024_t leaf mutants of ot_qfd_vm_region_leaf (must FAIL).
 module tb_qfd_vm_region_leaf;
     parameter integer CYCLES = 6000, SEED = 1, LEAF_MUT = 0, OVFMODE = 0, NPP = 12;
-    localparam integer LAW = 3, LAWS = 3;
+    parameter integer DEPTH = 8, LAW = 3, DEPTHS = 8, LAWS = 3, ROW_MUT = 0, SU_MUT = 0;
     reg clk = 0; always #5 clk = ~clk;
     reg rst_n = 0, me_in = 0;
     reg [7:0] re = 0, we = 0;
@@ -24,9 +30,9 @@ module tb_qfd_vm_region_leaf;
     reg [5:0] sre = 0; reg [6*LAWS-1:0] sra = 0; reg [2:0] sv = 0;
     reg [1:0] swe = 0; reg [2*LAWS-1:0] swl = 0; reg [31:0] swm = 0; reg [1023:0] swd = 0;
     wire [4095:0] xo, r_xo; wire [511:0] ro, r_ro; wire [3071:0] so, r_so; wire ovf, r_ovf;
-    ot_qfd_vm_region_leaf #(.DEPTH(8), .LAW(LAW), .DEPTHS(8), .LAWS(LAWS), .USE_MACRO(0), .NPP(NPP), .MEREG(1),
-        .LEAF_MUT(LEAF_MUT)) candidate (.*);
-    ot_qfd_vm_region_quarter #(.DEPTH(8), .LAW(LAW), .DEPTHS(8), .LAWS(LAWS), .USE_MACRO(0), .NPP(NPP), .MEREG(1)) reference (
+    ot_qfd_vm_region_leaf #(.DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(0), .NPP(NPP), .MEREG(1),
+        .LEAF_MUT(LEAF_MUT), .ROW_MUT(ROW_MUT), .SU_MUT(SU_MUT)) candidate (.*);
+    ot_qfd_vm_region_quarter #(.DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(0), .NPP(NPP), .MEREG(1)) reference (
         .clk(clk), .rst_n(rst_n), .me_in(me_in), .re(re), .ra(ra), .we(we), .wl(wl), .wm(wm), .wd(wd),
         .xv(xv), .rq(rq), .rqb(rqb), .sre(sre), .sra(sra), .sv(sv), .swe(swe), .swl(swl), .swm(swm), .swd(swd),
         .pop(pop), .xo(r_xo), .ro(r_ro), .so(r_so), .ovf(r_ovf));
@@ -52,6 +58,11 @@ module tb_qfd_vm_region_leaf;
             for (w = 0; w < 128; w = w + 1) wd[w*32 +: 32] = rnd(0);
             rq = ((rnd(0) % 3) == 0); rqb = rnd(0);
             sre = rnd(0); sra = rnd(0); swe = rnd(0); swl = rnd(0); swm = rnd(0) | rnd(0);
+            if (DEPTH != 8 || DEPTHS != 8) begin      // routed depths: one in-range line per bank port
+                for (w = 0; w < 8; w = w + 1) begin ra[w*LAW +: LAW] = rnd(0) % DEPTH; wl[w*LAW +: LAW] = rnd(0) % DEPTH; end
+                for (w = 0; w < 6; w = w + 1) sra[w*LAWS +: LAWS] = rnd(0) % DEPTHS;
+                for (w = 0; w < 2; w = w + 1) swl[w*LAWS +: LAWS] = rnd(0) % DEPTHS;
+            end
             sv = ((rnd(0) % 3) == 0) ? rnd(0) : 3'd0;
             for (w = 0; w < 32; w = w + 1) swd[w*32 +: 32] = rnd(0);
             if (rq) rowreads = rowreads + 1;
@@ -117,17 +128,17 @@ module tb_qfd_vm_region_leaf;
         if (sched_err != 0) begin $display("FAIL qfd_vm_region_leaf BENCH schedule raised ovf in the main run (%0d)", sched_err); $fatal(1, "FAIL"); end
         if (pushes < CYCLES / 16 || pops < CYCLES / 16 || rowreads < CYCLES / 8 || suans < CYCLES / 8 || stalls < CYCLES / 8
             || moves < CYCLES / 2 || garbage < CYCLES / 32 || deep < CYCLES / 64 || xo_chg < pops / 2 || ro_chg < rowreads / 2
-            || so_chg < suans / 2 || nonzero < 64 * CYCLES || ovf_cmp < 8 || ovf_cmp > 150) begin
+            || so_chg < suans / 2 || nonzero < 64 * CYCLES || ovf_cmp < 8 || ovf_cmp > 158) begin
             $display("FAIL qfd_vm_region_leaf VACUOUS pushes=%0d pops=%0d row_reads=%0d su_answers=%0d stalls=%0d moves=%0d pop_garbage=%0d deep=%0d xo_chg=%0d ro_chg=%0d so_chg=%0d nonzero_words=%0d ovf_cycles=%0d",
                 pushes, pops, rowreads, suans, stalls, moves, garbage, deep, xo_chg, ro_chg, so_chg, nonzero, ovf_cmp);
             $fatal(1, "FAIL");
         end
         if (errors != 0) begin
-            $display("FAIL qfd_vm_region_leaf LEAF_MUT=%0d errors=%0d of %0d (xo %0d ro %0d so %0d ovf %0d)", LEAF_MUT, errors, checks, e_xo, e_ro, e_so, e_ovf);
+            $display("FAIL qfd_vm_region_leaf LEAF_MUT=%0d ROW_MUT=%0d SU_MUT=%0d errors=%0d of %0d (xo %0d ro %0d so %0d ovf %0d)", LEAF_MUT, ROW_MUT, SU_MUT, errors, checks, e_xo, e_ro, e_so, e_ovf);
             $fatal(1, "FAIL");
         end
-        $display("PASS qfd_vm_region_leaf SEED=%0d OVFMODE=%0d exact %0d checks: pushes=%0d pops=%0d row_reads=%0d su_answers=%0d stalls=%0d pop_garbage=%0d deep=%0d xo_chg=%0d ro_chg=%0d so_chg=%0d nonzero_words=%0d ovf_cycles=%0d",
-            SEED, OVFMODE, checks, pushes, pops, rowreads, suans, stalls, garbage, deep, xo_chg, ro_chg, so_chg, nonzero, ovf_cmp);
+        $display("PASS qfd_vm_region_leaf DEPTH=%0d LAW=%0d DEPTHS=%0d LAWS=%0d SEED=%0d OVFMODE=%0d exact %0d checks: pushes=%0d pops=%0d row_reads=%0d su_answers=%0d stalls=%0d pop_garbage=%0d deep=%0d xo_chg=%0d ro_chg=%0d so_chg=%0d nonzero_words=%0d ovf_cycles=%0d",
+            DEPTH, LAW, DEPTHS, LAWS, SEED, OVFMODE, checks, pushes, pops, rowreads, suans, stalls, garbage, deep, xo_chg, ro_chg, so_chg, nonzero, ovf_cmp);
         $finish;
     end
 endmodule

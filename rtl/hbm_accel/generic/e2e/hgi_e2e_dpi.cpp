@@ -30,6 +30,7 @@ static std::vector<uint32_t> vm_final;
 static std::unordered_map<uint64_t, std::vector<uint8_t>> hbm;   // sector index -> 32 bytes
 static std::string dir;
 static FILE* logf = nullptr;
+static bool reclog = false;        // env E2E_RECLOG: "E2E REC <k> <tag> unit <u> disp <cyc> ret <cyc> real <0|1> s2 <disp> <end>" at every retire
 
 struct Op { bool p; uint64_t base; uint32_t n; };
 struct Rec {
@@ -135,6 +136,7 @@ extern "C" int e2e_init(const char* d, const char* outp) {
     }
     fclose(f);
     logf = fopen(outp, "w");
+    reclog = getenv("E2E_RECLOG") != nullptr;                 // live per-record timing on stderr (a long job read before it ends)
     fprintf(stderr, "E2E: %zu golden records, %zu HBM sectors loaded\n", recs.size(), hbm.size());
     return (int)recs.size();
 }
@@ -268,6 +270,7 @@ extern "C" void e2e_stub_retire(int k, long long cyc) {
     if (k < 0 || k >= (int)recs.size()) return;
     Rec& r = recs[k];
     r.ret = cyc; r.real = 0; n_ret++;
+    if (reclog) fprintf(stderr, "E2E REC %d %s unit %d disp %lld ret %lld real 0 s2 %.1f %.1f\n", k, r.tag.c_str(), r.unit, r.disp, cyc, r.s2d, r.s2e);
     apply(r);
 }
 
@@ -317,6 +320,7 @@ extern "C" int e2e_real_retire(int k, long long cyc) {
     if (k < 0 || k >= (int)recs.size()) return 1;
     Rec& r = recs[k];
     r.ret = cyc; r.real = 1; n_ret++;
+    if (reclog) fprintf(stderr, "E2E REC %d %s unit %d disp %lld ret %lld real 1 s2 %.1f %.1f\n", k, r.tag.c_str(), r.unit, r.disp, cyc, r.s2d, r.s2e);
     std::unordered_set<uint32_t> gold;
     int bad = 0;
     if (posted_dma && r.unit == 8 && r.op == 2) {                // DMA.FENCE (op 2): the posted writes before it must be visible

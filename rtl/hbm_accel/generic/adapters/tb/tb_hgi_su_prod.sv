@@ -9,7 +9,20 @@
 // (span / stage / compute / drain), so the measured cost compares against timing.py's price (N1024 / M256 vec).
 // Defines: N, M, LV, LWB (local memory), SFU (run the SFU cases on the GLU body, else the SU cases), WIDE (the wide
 // stage / drain successor: VM wide read lanes + second wide write group), MUT_DIRTY (drain mutant).
-`ifdef WIDE2
+// SV (el1013-hbm-redesign-suvop): the unit is ot_hgi_sv_unit (ports = ot_hgi_su_unit WIDE = 1; parameters N, M, LV, LWB,
+// LQ, MUT_V); MUT_V = 1..6 its mutants.  The phase census reads `CTLP.a_span / a_stage / a_run / a_drain (1 b each;
+// CTLP defaults to u.u_ctl, override with -DSV_CTLP=<path>); -DSV_WALK=<path> names its strided-sink frame-walk
+// counter: printed a case, and an error when the production chain (CASE 0) used the fallback.
+// SU_AUX (the vector set carries su_aux.svh / su_price.mem / su_vmg.mem): the summary adds the priced cost of each
+// case's records (read from the vectors, never computed here) and service / price, and every case reports its
+// mismatches split into written words and guard words (unwritten words of its sink sectors: SINK_UNSTAGED).
+`ifdef SV
+`ifdef SV_CTLP
+`define CTLP `SV_CTLP
+`else
+`define CTLP u.u_ctl
+`endif
+`elsif WIDE2
 `define CTLP u.g_xctl.u_ctl
 `elsif WIDE
 `define CTLP u.g_wctl.u_ctl
@@ -48,6 +61,10 @@ module tb_hgi_su_prod;
 `endif
     localparam integer RPL = WD ? 32 : 1;
     `include "su_sizes.svh"
+`ifdef SU_AUX
+    `include "su_aux.svh"
+    reg [31:0] pricem [0:NREC-1]; reg [7:0] vmgm [0:NVME-1];
+`endif
     reg clk = 0; always #1 clk = ~clk;
     reg [2196:0] recm [0:NREC-1]; reg [223:0] casem [0:NCASE-1];
     reg [287:0] vmim [0:NVMI-1]; reg [287:0] vmem [0:NVME-1];
@@ -56,14 +73,32 @@ module tb_hgi_su_prod;
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
         $readmemh({dir, "/su_rec.mem"}, recm); $readmemh({dir, "/su_case.mem"}, casem);
         $readmemh({dir, "/su_vmi.mem"}, vmim); $readmemh({dir, "/su_vme.mem"}, vmem);
+`ifdef SU_AUX
+        $readmemh({dir, "/su_price.mem"}, pricem); $readmemh({dir, "/su_vmg.mem"}, vmgm);
+`endif
     end
     integer errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0; reg [2196:0] cur; reg rec_v = 0;
     wire rec_rdy, done, fault, halted; wire [18:0] vm_status; wire [337:0] uq; wire [273:0] ur, tr; reg [337:0] tq = 0;
     wire [RPL*16-1:0] rq; wire [RPL-1:0] rq_cr; wire [RPL*257-1:0] rr;
     wire [RPL*280-1:0] w2q; wire [RPL-1:0] w2_done, w2_cr;
+`ifdef SV
+`ifndef LQ
+`define LQ 8
+`endif
+`ifndef MUT_V
+`define MUT_V 0
+`endif
+    ot_hgi_sv_unit #(.N(`N), .M(`M), .LV(`LV), .LWB(`LWB), .LQ(`LQ), .MUT_V(`MUT_V)
+`ifdef EP0
+        , .EP0(`EP0)
+`endif
+       
+`else
     ot_hgi_su_unit #(.N(`N), .M(`M), .LV(`LV), .LWB(`LWB), .GLU(GL), .MUT_DIRTY(MD)
-`ifdef WIDE2
+`endif
+`ifdef SV
+`elsif WIDE2
         , .WIDE(2), .MACRO(0)
 `ifdef MUT_X
         , .MUT_X(`MUT_X)
@@ -155,10 +190,14 @@ module tb_hgi_su_prod;
         .g_rsp(g_wdone));
 `endif
     assign rq_cr = c_rcr[31:0]; assign rr = c_rr[0 +: 32*257]; assign w2_cr = c_wcr[31:0]; assign w2_done = c_wdone[31:0];
-    ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(`LQ)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}),
+    ot_hgi_vm_unit #(.NC(2), .RP(32), .W2(32), .LQ(1 << $clog2(`LQ))) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, uq}), .cr({tr, ur}),
         .status(vm_status), .wq(280'd0), .wq_done(), .rq(g_rq), .rq_cr(g_rcr), .rr(g_rr), .w2q(g_wq), .w2q_cr(g_wcr), .w2q_done(g_wdone));
     // ---- agents: bursts of 8 sectors a lane on the free region (sectors AR0.. read-only, AW0.. written), checked
+`ifdef SU_AUX
+    localparam integer AN = 2048;                        // AR0 / AW0: su_aux.svh (clear of the vectors' sectors)
+`else
     localparam integer AR0 = 14336, AW0 = 18432, AN = 2048;
+`endif
     function automatic [255:0] apat(input integer sct, input integer it);
         for (integer w = 0; w < 8; w = w + 1) apat[32*w +: 32] = 32'(sct * 7919 + w * 131 + it * 1000003) ^ 32'hC3C3_0000;
     endfunction
@@ -290,6 +329,25 @@ module tb_hgi_su_prod;
     always @(posedge clk) begin if (rst_n && done) begin t_ret[k] = cyc; k = k + 1; end if (rst_n && fault) nf = nf + 1; end
     // controller phase census (st sampled each edge while a record is in the unit)
     integer ph [0:4]; reg inrec = 0;
+`ifdef SV
+`ifdef SVDBG
+    // ot_hgi_sv_unit diagnosis: every fault source at its first edge, and the controller state every 5,000 edges of a stall
+    reg svf_seen = 0;
+    always @(posedge clk) if (rst_n && !svf_seen && (`CTLP.dfault || `CTLP.rnfault || `CTLP.bkfault || `CTLP.lm_err_q || `CTLP.st_err || `CTLP.ad_fault)) begin
+        svf_seen <= 1;
+        $display("SVFAULT cyc %0d retired %0d d %0d rn %0d bk %0d lm %0d st %0d ad %0d | dstt %0d rk %0d lo %0d hi %0d too_big %0d a_two %0d ffr %b free %b stallc %0d cnt %0d rs %0d",
+                 cyc, k, `CTLP.dfault, `CTLP.rnfault, `CTLP.bkfault, `CTLP.lm_err_q, `CTLP.st_err, `CTLP.ad_fault, `CTLP.dstt, `CTLP.rk,
+                 `CTLP.cur_lo, `CTLP.cur_hi, `CTLP.too_big, `CTLP.a_two, `CTLP.ffr, `CTLP.fr_free, `CTLP.stallc, `CTLP.cnt, `CTLP.rs_r);
+        $fflush;
+    end
+    always @(posedge clk) if (inrec && cyc - last_prog > 4000 && cyc % 5000 == 0) begin
+        $display("SVSTALL cyc %0d retired %0d dstt %0d rk %0d rs %0d cnt %0d hfault %0d halted %0d fr_st %0d%0d%0d%0d fr_pin %0d %0d %0d %0d tail %b open %0d hst %h go %0d idle %0d x_cnt %0d cr_cnt %0d",
+                 cyc, k, `CTLP.dstt, `CTLP.rk, `CTLP.rs_r, `CTLP.cnt, `CTLP.hfault, halted, `CTLP.fr_st[3], `CTLP.fr_st[2], `CTLP.fr_st[1], `CTLP.fr_st[0],
+                 `CTLP.fr_pin[3], `CTLP.fr_pin[2], `CTLP.fr_pin[1], `CTLP.fr_pin[0], `CTLP.fr_tail, `CTLP.open_v, `CTLP.hst, `CTLP.go, `CTLP.idle, `CTLP.x_cnt, `CTLP.cr_cnt);
+        $fflush;
+    end
+`endif
+`endif
 `ifdef WIDE
     // the wide unit pipelines records: count each slot's busy edges (they overlap)
     always @(posedge clk) if (inrec) begin
@@ -298,6 +356,15 @@ module tb_hgi_su_prod;
         if (`CTLP.a_run) ph[2] = ph[2] + 1;
         if (`CTLP.a_drain) ph[3] = ph[3] + 1;
     end
+`ifdef PHTRACE
+`ifndef SV
+    // el1011-sutput diagnosis: the record pipeline every 4 edges (FRONT state, RUN / DRAIN slots, streamed prefix)
+    always @(posedge clk) if (inrec && cyc % 4 == 0)
+        $display("PT %0d st %0d r %0d/%0d gop %0d cd %0d d %0d/%0d q1 %0d x %0d fs %0d lo %b idle %0d go %0d", cyc, `CTLP.st, `CTLP.r_v,
+                 `CTLP.r_tag, `CTLP.r_gop, `CTLP.r_cdone, `CTLP.d_v, `CTLP.d_tag, `CTLP.q1_v, `CTLP.x_cnt, `CTLP.fs_on,
+                 `CTLP.late_open, `CTLP.idle_q, `CTLP.go);
+`endif
+`endif
 `else
     always @(posedge clk) if (inrec) begin
         case (`CTLP.st)
@@ -310,7 +377,7 @@ module tb_hgi_su_prod;
     end
 `endif
     integer c, j, t, cid, sfu, r0, nr, vi0, nvi, ve0, nve, cases = 0, words = 0, t0, t1, w;
-    reg [255:0] qd;
+    reg [255:0] qd; integer e_wr, e_gd, n_gd, e0, pr, walk0 = 0;
     initial begin
         repeat (3) @(posedge clk);
 `ifdef SHARED
@@ -322,10 +389,19 @@ module tb_hgi_su_prod;
             nvi = casem[c][127:96]; ve0 = casem[c][95:64]; nve = casem[c][63:32]; cid = casem[c][30:0]; sfu = casem[c][31];
             if (sfu != GL) continue;
 `ifndef SHARED
+`ifdef SU_AUX
+            // SINK_UNSTAGED runs on the unit as the previous case left it (its local memory holds that case's data)
+            if (cid != SU_CASE || c == 0) begin rst_n = 0; repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk); end
+`else
             rst_n = 0; repeat (3) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk);
+`endif
 `endif
             for (j = 0; j < nvi; j = j + 1) vm_sec(1'b1, vmim[vi0 + j][287:256], vmim[vi0 + j][255:0], qd);
             k = 0; nf = 0; for (j = 0; j < 5; j = j + 1) ph[j] = 0;
+            e0 = errors; e_wr = 0; e_gd = 0; n_gd = 0;
+`ifdef SV_WALK
+            walk0 = `SV_WALK;
+`endif
 `ifdef SHARED
             a_on = 1;
 `endif
@@ -349,6 +425,18 @@ module tb_hgi_su_prod;
             for (j = 0; j < k; j = j + 1) $display("REC %0d %0d accept %0d retire %0d", cid, j, t_acc[j] - t0, t_ret[j] - t0);
             $display("CASE %0d service %0d span %0d stage %0d compute %0d drain %0d other %0d", cid, t1 - t0, ph[0], ph[1],
                      ph[2], ph[3], ph[4]); $fflush;
+`ifdef SU_AUX
+            // the priced cost of this case's records (su_prod.json 'priced' x 10, generated: the bench never prices)
+            pr = 0; for (j = 0; j < nr; j = j + 1) pr = pr + pricem[r0 + j];
+            for (j = 0; j < nr; j = j + 1) $display("PRICE %0d %0d priced %0d.%0d", cid, j, pricem[r0 + j] / 10, pricem[r0 + j] % 10);
+            $display("THROUGHPUT case %0d: service %0d price sum %0d.%0d (%0d records) ratio service/price %0.3f", cid,
+                     t1 - t0, pr / 10, pr % 10, nr, (t1 - t0) * 10.0 / pr);
+            if (cid == SU_CASE) $display("THROUGHPUT case %0d is SINK_UNSTAGED: exactness only, not a production price", cid);
+`endif
+`ifdef SV_WALK
+            $display("WALK case %0d strided-sink frame walks %0d", cid, `SV_WALK - walk0);
+            if (cid == 0 && `SV_WALK != walk0) begin errors = errors + 1; $display("ERR case 0 used the frame-walk drain fallback"); end
+`endif
             for (j = 0; j < nve; j = j + 1) begin
                 vm_sec(1'b0, vmem[ve0 + j][287:256], 256'd0, qd);
                 for (w = 0; w < 8; w = w + 1)
@@ -356,9 +444,20 @@ module tb_hgi_su_prod;
                         if (errors < 20) $display("ERR case %0d VM[%0d] = %h expected %h", cid, vmem[ve0 + j][287:256] * 8 + w,
                                                   qd[32*w +: 32], vmem[ve0 + j][32*w +: 32]);
                         errors = errors + 1;
+`ifdef SU_AUX
+                        if (vmgm[ve0 + j][w]) e_wr = e_wr + 1; else e_gd = e_gd + 1;
+`endif
                     end
+`ifdef SU_AUX
+                for (w = 0; w < 8; w = w + 1) if (!vmgm[ve0 + j][w]) n_gd = n_gd + 1;
+`endif
                 words = words + 8;
             end
+`ifdef SU_AUX
+            $display("CASECHK %0d: %0d sink sectors, %0d guard words; errors %0d (written words %0d, guard words %0d)", cid,
+                     nve, n_gd, errors - e0, e_wr, e_gd);
+            if (cid == SU_CASE) $display("CASECHK %0d is SINK_UNSTAGED", cid);
+`endif
             cases = cases + 1;
         end
         if (vm_status[18]) begin errors = errors + 1; $display("ERR VM status fault %b", vm_status[18:16]); end

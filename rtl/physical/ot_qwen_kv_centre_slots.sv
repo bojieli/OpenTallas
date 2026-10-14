@@ -8,16 +8,21 @@
 //                 qkd_seq_xs   x 4   x3 data storage, bit slice s = word bits [128 s +: 128] (ot_qkvd_seq_m_store)
 //                 qkd_seq_fan  x 4   quadrant pin registers WS / WN / ES / EN (ot_qkvd_seq_m_fan)
 //               Flat reference: ot_qkvd_kv_seq_merged (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv).
-//               Pin bundles (first field = MSB):
-//                 r_x3[523:0]  {v, tag 11, d 512} in      r_x3_cr  out     r_sd[528:0] {v, d 528} in   r_sd_cr out
+//               Pin bundles (first field = MSB; x_d with the flow + x_cr against it):
+//                 r_x3_d[523:0] {v, tag 11, d 512} in     r_x3_cr out
+//                 r_sd[55:0]   {rom_fault, kv_write_flush, coll_busy, core_fault, s_fault, s_done, ntok 18, nval 32} in
 //                 r_kvd[43:0]  {v, kindk, pos 18, wbase 24} in
-//                 t_ar[519:0]  {v, g, beat 6, 16 FP32} out  t_ar_cr in     t_ds[528:0] {v, d 528} out  t_ds_cr in
-//                 t_pw[74:0]   {v, addr 10, data 64} out    t_flt[8:0] {fault, cause 8} out
+//                 t_ar_d[519:0] {v, g, beat 6, 16 FP32} out   t_ar_cr in
+//                 t_ds[186:0]  {dw_v, dw_addr 3, dw_data 64, pw_v, pw_addr 10, pw_data 64, kv_write_drained, h_start,
+//                               stage 6, tp_token 18, tp_pos 18} out
+//                 t_pw[74:0]   {v, addr 10, data 64} out
 //                 aq_<q>[539:0] {start, T 14, layer 6, q valid, beat 6, data 512} out
-//                 kvn_<q>[1046:0] {v, vg 2, t 14, layer 6, row 1024} out   kvn_<q>_cr in
+//                 kvn_<q>_d[1046:0] {v, vg 2, t 14, layer 6, row 1024} out   kvn_<q>_cr in
 //                 kc_<q>[32:0] {v, d 32} out    af_<q>, mf_<q> in
 //                 ar[519:0] {valid, g, beat 6, data 512} in   hf in   hs out
-//                 hc[528:0] {v, d 528} in   hc_cr out   tk[528:0] {v, d 528} out   tk_cr in
+//                 hc[181:0] {dw 68, pw 75, d_start, d_gen 2, d_token 18, d_pos 18} in
+//                 tk[92:0] {d_done, gen 2, drained, fault, code 4, coll_busy, kv_write_flush, next_token 18,
+//                           next_val 32, cycles 32} out
 //                 kst[9:0] {fault, cause 9} out
 // qkd_rstseq    the die's reset sequencer (ot_qwen_sys_rst_seq) as its own small M5 leaf beside the PLL hard macro.
 //
@@ -30,15 +35,12 @@ module qkd_seq_core (
     input  wire          x3_v,
     input  wire [10:0]   x3_tag,
     output wire          x3_cr,
-    input  wire [528:0]  r_sd,
-    output wire          r_sd_cr,
+    input  wire [55:0]   r_sd,
     input  wire [43:0]   r_kvd,
-    output wire [519:0]  t_ar,
+    output wire [519:0]  t_ar_d,
     input  wire          t_ar_cr,
-    output wire [528:0]  t_ds,
-    input  wire          t_ds_cr,
+    output wire [186:0]  t_ds,
     output wire [74:0]   t_pw,
-    output wire [8:0]    t_flt,
     output wire          s_qpop,
     output wire          s_kpop,
     output wire [2:0]    s_kidx,
@@ -59,25 +61,20 @@ module qkd_seq_core (
     output wire          hs,
     input  wire [519:0]  ar,
     input  wire          hf,
-    input  wire [528:0]  hc,
-    output wire          hc_cr,
-    output wire [528:0]  tk,
-    input  wire          tk_cr,
+    input  wire [181:0]  hc,
+    output wire [92:0]   tk,
     output wire [9:0]    kst
 );
     wire rr;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
-    ot_qkvd_seq_m_ctl #(.W(528), .XS(40), .KD(8), .CD(4), .HCD(4), .TKC(4), .KWC(4), .OCR_AR(64), .OCR_DH(4), .KDESC(1),
-                        .KD_PMID(0), .KD_PTOK(0), .MUT(0)) u_body (
-        .clk(ck), .rst_n(rr), .x3_v(x3_v), .x3_tag(x3_tag), .x3_cr(x3_cr), .dc_v(r_sd[528]), .dc_d(r_sd[527:0]),
-        .dc_cr(r_sd_cr), .kvd(r_kvd), .ar_v(t_ar[519]), .ar_d(t_ar[518:0]), .ar_cr(t_ar_cr), .dh_v(t_ds[528]),
-        .dh_d(t_ds[527:0]), .dh_cr(t_ds_cr), .pw_v(t_pw[74]), .pw_addr(t_pw[73:64]), .pw_data(t_pw[63:0]),
-        .rflt(t_flt[8]), .rflt_cause(t_flt[7:0]), .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo),
+    ot_qkvd_seq_m_ctl #(.XS(40), .KD(8), .KWC(4), .OCR_AR(64), .NS(38), .KDESC(1), .KD_PMID(0), .KD_PTOK(0), .MUT(0)) u_body (
+        .clk(ck), .rst_n(rr), .x3_v(x3_v), .x3_tag(x3_tag), .x3_cr(x3_cr), .sd(r_sd), .kvd(r_kvd),
+        .ar_v(t_ar_d[519]), .ar_d(t_ar_d[518:0]), .ar_cr(t_ar_cr), .ds(t_ds), .pw(t_pw),
+        .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo),
         .s_kwn(s_kwn), .f_aqm({f_aqm_e, f_aqm_w}), .f_kwm({f_kwm_e, f_kwm_w}), .f_kc({f_kc_e, f_kc_w}), .f_cr({f_cr_e, f_cr_w}),
         .f_af({f_af_e, f_af_w}), .f_mf({f_mf_e, f_mf_w}), .hs(hs),
         .a_out_valid(ar[519]), .a_out_g(ar[518]), .a_out_beat(ar[517:512]), .a_out_data(ar[511:0]), .a_hub_fault(hf),
-        .hc_v(hc[528]), .hc_d(hc[527:0]), .hc_cr(hc_cr), .tok_v(tk[528]), .tok_d(tk[527:0]), .tok_cr(tk_cr),
-        .fault(kst[9]), .fault_cause(kst[8:0]));
+        .hc(hc), .tk(tk), .fault(kst[9]), .fault_cause(kst[8:0]));
 endmodule
 
 module qkd_seq_xs (
@@ -130,25 +127,22 @@ endmodule
 module qkd_seq (
     input  wire          ck,
     input  wire          rst_n,
-    input  wire [523:0]  r_x3,
+    input  wire [523:0]  r_x3_d,
     output wire          r_x3_cr,
-    input  wire [528:0]  r_sd,
-    output wire          r_sd_cr,
+    input  wire [55:0]   r_sd,
     input  wire [43:0]   r_kvd,
-    output wire [519:0]  t_ar,
+    output wire [519:0]  t_ar_d,
     input  wire          t_ar_cr,
-    output wire [528:0]  t_ds,
-    input  wire          t_ds_cr,
+    output wire [186:0]  t_ds,
     output wire [74:0]   t_pw,
-    output wire [8:0]    t_flt,
     output wire [539:0]  aq_WS,
     output wire [539:0]  aq_WN,
     output wire [539:0]  aq_ES,
     output wire [539:0]  aq_EN,
-    output wire [1046:0] kvn_WS,
-    output wire [1046:0] kvn_WN,
-    output wire [1046:0] kvn_ES,
-    output wire [1046:0] kvn_EN,
+    output wire [1046:0] kvn_WS_d,
+    output wire [1046:0] kvn_WN_d,
+    output wire [1046:0] kvn_ES_d,
+    output wire [1046:0] kvn_EN_d,
     input  wire          kvn_WS_cr,
     input  wire          kvn_WN_cr,
     input  wire          kvn_ES_cr,
@@ -168,10 +162,8 @@ module qkd_seq (
     input  wire [519:0]  ar,
     input  wire          hf,
     output wire          hs,
-    input  wire [528:0]  hc,
-    output wire          hc_cr,
-    output wire [528:0]  tk,
-    input  wire          tk_cr,
+    input  wire [181:0]  hc,
+    output wire [92:0]   tk,
     output wire [9:0]    kst
 );
     wire          s_qpop, s_kpop, s_kwgo;
@@ -183,15 +175,15 @@ module qkd_seq (
     wire [3:0]    f_cr, f_af, f_mf;
     wire [255:0]  sq  [0:3];
     wire [511:0]  skw [0:3];
-    qkd_seq_core u_core (.ck(ck), .rst_n(rst_n), .x3_v(r_x3[523]), .x3_tag(r_x3[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
-        .r_sd_cr(r_sd_cr), .r_kvd(r_kvd), .t_ar(t_ar), .t_ar_cr(t_ar_cr), .t_ds(t_ds), .t_ds_cr(t_ds_cr), .t_pw(t_pw),
-        .t_flt(t_flt), .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm_w(f_aqm[0]),
+    qkd_seq_core u_core (.ck(ck), .rst_n(rst_n), .x3_v(r_x3_d[523]), .x3_tag(r_x3_d[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
+        .r_kvd(r_kvd), .t_ar_d(t_ar_d), .t_ar_cr(t_ar_cr), .t_ds(t_ds), .t_pw(t_pw),
+        .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm_w(f_aqm[0]),
         .f_aqm_e(f_aqm[1]), .f_kwm_w(f_kwm[0]), .f_kwm_e(f_kwm[1]), .f_kc_w(f_kc[0]), .f_kc_e(f_kc[1]), .f_cr_w(f_cr[1:0]),
         .f_cr_e(f_cr[3:2]), .f_af_w(f_af[1:0]), .f_af_e(f_af[3:2]), .f_mf_w(f_mf[1:0]), .f_mf_e(f_mf[3:2]), .hs(hs), .ar(ar), .hf(hf), .hc(hc),
-        .hc_cr(hc_cr), .tk(tk), .tk_cr(tk_cr), .kst(kst));
+        .tk(tk), .kst(kst));
     genvar s, k;
     generate for (s = 0; s < 4; s = s + 1) begin : g_xs
-        qkd_seq_xs u_xs (.ck(ck), .rst_n(rst_n), .x_v(r_x3[523]), .x_cls(r_x3[522:520]), .x_d(r_x3[128*s +: 128]),
+        qkd_seq_xs u_xs (.ck(ck), .rst_n(rst_n), .x_v(r_x3_d[523]), .x_cls(r_x3_d[522:520]), .x_d(r_x3_d[128*s +: 128]),
             .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q_w(sq[s][127:0]), .q_e(sq[s][255:128]), .kw_w(skw[s][255:0]), .kw_e(skw[s][511:256]));
     end endgenerate
     // the store slices' two copies -> the full words of the W (copy 0) and E (copy 1) fans
@@ -220,7 +212,7 @@ module qkd_seq (
             .mf(mf[k]), .cr_o(f_cr[k]), .af_o(f_af[k]), .mf_o(f_mf[k]));
     end endgenerate
     assign aq_WS = aq[0];   assign aq_WN = aq[1];   assign aq_ES = aq[2];   assign aq_EN = aq[3];
-    assign kvn_WS = kvn[0]; assign kvn_WN = kvn[1]; assign kvn_ES = kvn[2]; assign kvn_EN = kvn[3];
+    assign kvn_WS_d = kvn[0]; assign kvn_WN_d = kvn[1]; assign kvn_ES_d = kvn[2]; assign kvn_EN_d = kvn[3];
     assign kc_WS = kc[0];   assign kc_WN = kc[1];   assign kc_ES = kc[2];   assign kc_EN = kc[3];
 endmodule
 

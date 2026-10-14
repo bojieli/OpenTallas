@@ -10,7 +10,10 @@
 // producing stage, s81-ctl); it is a die pin, never tied here.  Latency vs dsfd_sp_hc: +1 cycle each way.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_hc_c #(
-    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, S_RT = 4, HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, MUT = 0, AMUT = 0
+    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, S_RT = 4, HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, MUT = 0, AMUT = 0,
+    // pass-through of the slab's remaining structural parameters (defaults = dsfd_sp_hc's own: no change unless set)
+    parameter integer HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4,
+    parameter integer PIPE = 0, PIPE_PD = 40             // POST issue-order done (hierarchical slab; see ot_s81_hc_cseq)
 ) (
     output wire [TFW-1:0] t_tf0,t_tf1,t_tf2,
     input wire [TRW-1:0] f_tr0,f_tr1,f_tr2,
@@ -46,7 +49,8 @@ module dsfd_sp_hc_c #(
     always @(posedge ck[0]) cd_q <= c_cmd[83:0];
     wire dv, flt, onl;
     wire [7:0] dt;
-    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT),.S_RT(S_RT),.HIER(HIER),.HALF(HALF),.CSPLIT(CSPLIT),.TAIL_SPLIT(TAIL_SPLIT)) u_hc (
+    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT),.S_RT(S_RT),.HIER(HIER),.HALF(HALF),.CSPLIT(CSPLIT),.TAIL_SPLIT(TAIL_SPLIT),
+                 .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.PIPE(PIPE),.PIPE_PD(PIPE_PD)) u_hc (
         .t_tf0(t_tf0),.t_tf1(t_tf1),.t_tf2(t_tf2),.f_tr0(f_tr0),.f_tr1(f_tr1),.f_tr2(f_tr2),
         .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
         .inp(f_inp[0]), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),

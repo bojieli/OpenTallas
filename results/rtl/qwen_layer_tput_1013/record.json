@@ -509,8 +509,28 @@
    "bound_cycles": 2170,
    "bound_loss_pct": 0.862,
    "unit_bench": "tb_qfd_vm_bv_ports: XVM 22 -> 32 on r21 (measured by the VM stream); pop / SU / row / write paths + 0",
-   "measured": null,
-   "status": "UNMEASURED per layer (bound only)"
+   "measured": {
+    "vehicle": "the same vehicle built with QROM_XVM=11 (VM x-read transport 1 -> 11 edges)",
+    "exact": true,
+    "layer_x_mismatches": 0,
+    "kv_mismatches": 0,
+    "stage_cycles": {
+     "L0": 6201,
+     "L1": 5540,
+     "L2": 5540
+    },
+    "delta_per_layer": {
+     "L0": 50,
+     "L1": 60,
+     "L2": 60
+    },
+    "head_delta_bound": 10,
+    "added_cycles_per_token": 2160,
+    "e2e_loss_pct": 0.859,
+    "x_reads_on_critical_path_per_layer": 6.0,
+    "executable_sha256": "62aeb20b603c8f1f76bb7e8b20b996b12828ce87852e104eb31082f0f4722e44"
+   },
+   "status": "MEASURED per layer"
   },
   "reset_tree": {
    "per_token_cycles": 0,
@@ -544,16 +564,18 @@
     "grade": "measured"
    },
    {
-    "item": "VM bit-plane x read + 10 edges (XPR 10)",
-    "added_cycles": 2170,
-    "grade": "bound (217 x reads x 10, all on the critical path)"
+    "item": "VM bit-plane x read + 10 edges (latency probe)",
+    "per_layer": 60,
+    "l0": 50,
+    "added_cycles": 2160,
+    "grade": "measured layers + head bound"
    }
   ],
-  "added_cycles": 2220.0,
-  "cycles": 251651.0,
-  "e2e_loss_pct": 0.882,
+  "added_cycles": 2210.0,
+  "cycles": 251641.0,
+  "e2e_loss_pct": 0.878,
   "tok_s_price": 4810.9,
-  "tok_s": 4768.5
+  "tok_s": 4768.7
  },
  "unmeasured_per_layer": {
   "cycles_per_layer": 1089.0,

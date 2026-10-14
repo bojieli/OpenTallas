@@ -21,13 +21,10 @@ one() {
     echo "$n rc=$? $(grep -E '^(PASS|FAIL)' $B/$n.log | head -1) $(grep maxrss $B/$n.log)"
 }
 flops() {   # exact flop bits per new leaf at the production shape (module defaults): yosys proc + simplemap, no merging
-    for m in ot_qfd_vm_gctl_t ot_qfd_vm_rowrd_t ot_qfd_vm_delay1_t ot_qfd_vm_delay2_t; do
+    for m in ot_qfd_vm_bctl_t ot_qfd_vm_sctl_t ot_qfd_vm_rr4_t ot_qfd_vm_rr2_t ot_qfd_vm_delay1_t ot_qfd_vm_delay2_t; do
         yosys -q -p "read_verilog -sv $P/ot_qfd_vm_region_leaf.sv rtl/hdc/ot_hdc_delay.sv; hierarchy -top $m; proc; flatten; opt_clean; simplemap; tee -o $B/stat_$m.txt stat" > $B/yosys_$m.log 2>&1
         echo "$m flops=$(awk '/DFF/ {for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+$/) s += $i} END {print s+0}' $B/stat_$m.txt) cells: $(grep -E '\$_[A-Z]*DFF' $B/stat_$m.txt | tr -s ' ' | tr '\n' ';')"
     done
-    m=ot_qfd_vm_gctl_t
-    yosys -q -p "read_verilog -sv $P/ot_qfd_vm_region_leaf.sv rtl/hdc/ot_hdc_delay.sv; synth -flatten -top $m; tee -o $B/stat_synth_$m.txt stat" > $B/yosys_synth_$m.log 2>&1
-    echo "$m after_synth_opt_merge flops=$(awk '/DFF/ {for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+$/) s += $i} END {print s+0}' $B/stat_synth_$m.txt)"
 }
 sys() {
     n=$1; t=$2; shift 2
@@ -47,7 +44,7 @@ all)
     one ok          -GSEED=1 &
     one ok_s2       -GSEED=2 -GOVFMODE=1 &
     one ok_s3_tree  -GSEED=3 +define+OT_QFD_VM_DELAY1_MOD=ot_qwen_tree_delay1_t +define+OT_QFD_VM_DELAY2_MOD=ot_qwen_tree_delay2_t &
-    for m in 1 2 3 4 5 6 7 8; do one mut$m -GLEAF_MUT=$m & done
+    for m in 1 2 3 4 5 6 7 8 9 10 11 12; do one mut$m -GLEAF_MUT=$m & done
     flops > $B/flops.txt &
     wait
     } | sort | tee $B/summary.txt

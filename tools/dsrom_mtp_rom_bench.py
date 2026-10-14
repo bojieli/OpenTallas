@@ -34,7 +34,8 @@ COMMON = [f"{M}/ot_dsrom_mtp_skid.sv", f"{M}/ot_dsrom_mtp_link_pair.sv", f"{M}/o
           f"{M}/ot_dsrom_wfc_vmx.sv", f"{M}/ot_dsrom_drf_fan.sv", f"{M}/dsfd_mtp_tops.sv", "rtl/common/ot_ratio_cdc_fifo.sv",
           "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv", "rtl/link/ot_fifo_sram_fwft.sv",   # vmx RQ x RWE > 32 kbit -> SRAM queue
           "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
-          "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"]
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+          "physical/s81_ph_views/mtp/macros/ot_sram_1r1w_512x64_m4_r2c2/ot_sram_1r1w_512x64_m4_r2c2.v"]
 
 
 def trace_hex(cfg: Path, out: Path):

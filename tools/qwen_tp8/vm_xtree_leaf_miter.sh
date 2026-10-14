@@ -1,6 +1,7 @@
 #!/bin/bash
 # Leaf miter of ot_qfd_vm_xtree.sv, run ON the build host inside a synced tree (never localhost):
-#   ssh ot-epyc1tb 'cd ~/claude-vm-rtl-1013/L/wt && ot-heavy --mem 8 -- tools/qwen_tp8/vm_xtree_leaf_miter.sh all'
+#   ssh ot-epyc1tb 'cd ~/claude-vm-rtl-1013/L/wt && ot-heavy --mem 96 -- bash -c "tools/qwen_tp8/vm_xtree_leaf_miter.sh all < /dev/null"'
+# (16 parallel builds: under --mem 16 / 24 the builds are killed, leaving EMPTY build logs and no result line)
 # one run: vm_xtree_leaf_miter.sh <name> [-G...]; `all` runs the recorded set in parallel into ../b.
 B=${B:-$(cd .. && pwd)/b}; mkdir -p $B
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
