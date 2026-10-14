@@ -65,6 +65,31 @@ class NativeOracleMachine(DieMachine):
             raise ValueError('unsupported dynamic attention instruction')
 
 
+def operation_destinations(fields, dynamic, machine, *, native=False):
+    """Complete addressed effect catalog from accepted source semantics."""
+    if native:
+        return {'NATIVE_ATTN': list(range(50672,51184))}
+    ports = {}
+    if fields['unit'] == I.UNIT_ME:
+        if fields['me_wsrc']:
+            raise ValueError('unlowered attention has no native VM effect catalog')
+        ports['ME'] = sorted(P.me_write_slots(fields, groups=GROUPS))
+        if fields['me_rmax'] or fields['me_amax']:
+            raise ValueError('layer ROM profile must not expose an unsupported max effect')
+    elif fields['unit'] == I.UNIT_SU:
+        nout=fields['su_nout'];nin=fields['su_nin']+dynamic[fields['su_d_nin']]
+        if fields['dst']:
+            port='SU' if fields['dst']==I.DST_VM else 'KV'
+            addresses=machine.stream(fields,dynamic,'d',nout,nin)
+            ports[port]=[int(a) for a in addresses]
+        if fields['red']:
+            ports['REDUCER']=[int(fields['r_base']+o*fields['r_so']) for o in range(nout)]
+    for port,addresses in ports.items():
+        if len(addresses)!=len(set(addresses)):
+            raise ValueError(f'operation has repeated {port} destinations requiring explicit multiplicity')
+    return ports
+
+
 def production_tp8_fold(partials):
     """Existing TP8 rank=4*DIE+PKG contract; preserve every FP32 add."""
     if len(partials) != 8:
@@ -72,7 +97,7 @@ def production_tp8_fold(partials):
     return G.fold([G.add(partials[p], partials[p+4]) for p in range(4)])
 
 
-def generate(image_root, snapshot, out, position=255, token=0, collective_profile='legacy_linear8', layer=0, x_input=None):
+def generate(image_root, snapshot, out, position=255, token=0, collective_profile='legacy_linear8', layer=0, x_input=None, previous_vm=None):
     if collective_profile not in ('legacy_linear8', 'production_tp8_two_level'):
         raise ValueError('unknown collective reference profile')
     if TP != 8 or GROUPS != 3072 or I.SU_WIDTH != 64 or G.KV_FMT != 'fp8':
@@ -125,7 +150,33 @@ def generate(image_root, snapshot, out, position=255, token=0, collective_profil
             'package_fold': '((P0+P1)+P2)+P3',
             'rtl/rom/ot_coll_tp8_die.sv': sha(ROOT/'rtl/rom/ot_coll_tp8_die.sv'),
             'tools/qwen_coll_tp8_bench.py': sha(ROOT/'tools/qwen_coll_tp8_bench.py')}
+    previous_report = None
+    if previous_vm is not None:
+        if layer == 0:
+            raise ValueError('previous-layer VM requires a later payload layer')
+        previous_report = json.loads((Path(previous_vm)/'oracle.json').read_text())
+        if previous_report.get('collective_reference_profile') != collective_profile:
+            raise ValueError('previous-layer collective reference profile mismatch')
+        if previous_report.get('payload_layer',0) != layer-1:
+            raise ValueError('previous-layer VM provenance mismatch')
+        report['previous_reference_VM'] = {'oracle_sha256':sha(Path(previous_vm)/'oracle.json'),
+                                         'kind':'independent_expected_state_not_RTL_preload'}
+    if layer:
+        report['input_policy'] = 'Previous independent layer-reference X; declared deterministic FP8 past cache with a distinct layer seed. No model-generated prefill or observed RTL previous-layer carry.'
     for die, machine in enumerate(machines):
+        if previous_report is not None:
+            effects=previous_report['ranks'][str(die)]['effects']
+            last=max(map(int,effects))
+            state_path=Path(previous_vm)/f'die{die}'/f'candidate_pc{last}_vm.npz'
+            if sha(state_path)!=effects[str(last)]['full_VM_sha256']:
+                raise ValueError('previous expected VM snapshot digest mismatch')
+            with np.load(state_path) as state:
+                bits=state['vm_bits']
+                if bits.shape != machine.vm.shape:
+                    raise ValueError('previous expected VM geometry mismatch')
+                machine.vm[:]=G.from_bits(bits)
+            if not np.array_equal(G.bits(machine.vm[vm_map['X']:vm_map['X']+4096]),G.bits(x_initial)):
+                raise ValueError('previous expected VM X differs from declared layer input')
         machine.pos = position
         machine.vm[vm_map['X']:vm_map['X']+4096] = x_initial
         directory = out / f'die{die}'; directory.mkdir(exist_ok=True)
@@ -142,7 +193,7 @@ def generate(image_root, snapshot, out, position=255, token=0, collective_profil
         report['ranks'][str(die)] = {'image_sha256': images[die].manifest['image_sha256'],
                                     'lowered_program_sha256': lowered[die]['candidate_program_sha256'],
                                     'prior_K_sha256': sha(directory / 'prior_K_fp8.bin'),
-                                    'prior_V_sha256': sha(directory / 'prior_V_fp8.bin'), 'effects': {}}
+                                    'prior_V_sha256': sha(directory / 'prior_V_fp8.bin'), 'effects': {}, 'operation_destinations': {}}
     descriptors = images[0].descriptors
     with FP.program_geometry(vm_map):
         dynamics = [P.dyn_values(machine.lay, token=token, pos=position) for machine in machines]
@@ -159,6 +210,7 @@ def generate(image_root, snapshot, out, position=255, token=0, collective_profil
                         machine.su(fields, dynamic)
                     if pc not in range(11, 15) and fields['unit']:
                         candidate_pc = lowered[die]['original_to_candidate_pc'][11 if pc == 15 else pc]
+                        report['ranks'][str(die)]['operation_destinations'][str(candidate_pc)] = operation_destinations(fields,dynamic,machine,native=pc==15)
                         path = directory / f'candidate_pc{candidate_pc}_vm.npz'
                         np.savez_compressed(path, vm_bits=G.bits(machine.vm), defined_effect_mask=effect_mask)
                         report['ranks'][str(die)]['effects'][str(candidate_pc)] = {'source_pc': pc, 'full_VM_sha256': sha(path)}
@@ -203,9 +255,10 @@ def main():
     parser.add_argument('--token', type=int, default=0)
     parser.add_argument('--layer', type=int, choices=range(36), default=0)
     parser.add_argument('--x-input', type=Path)
+    parser.add_argument('--previous-vm', type=Path)
     parser.add_argument('--collective-profile', choices=('legacy_linear8', 'production_tp8_two_level'), default='legacy_linear8')
     args = parser.parse_args()
-    generate(args.image_root, args.snapshot, args.out, args.position, args.token, args.collective_profile, args.layer, args.x_input)
+    generate(args.image_root, args.snapshot, args.out, args.position, args.token, args.collective_profile, args.layer, args.x_input, args.previous_vm)
 
 if __name__ == '__main__':
     main()
