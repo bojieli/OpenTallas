@@ -1,0 +1,512 @@
+{
+  "view": "/tmp/qdq-pay-p3arg2-view",
+  "setup_corner": "tt",
+  "hold_corner": "ff",
+  "libs": {
+    "ff": "ot_hgi_qdq_wr_pay_ff.lib",
+    "ss": "ot_hgi_qdq_wr_pay_ss.lib",
+    "tt": "ot_hgi_qdq_wr_pay_tt.lib"
+  },
+  "export_sdc_corrected": "verdict",
+  "committed_before_export_sdc_fix": false,
+  "exported_before_export_sdc_fix": false,
+  "lib_cell": "ot_hgi_qdq_wr_pay",
+  "clocks": {
+    "clk": {
+      "ref_ps": 536.6,
+      "min_ps": 496.2,
+      "max_ps": 572.2,
+      "src": "insertion.json boundary mean",
+      "boundary_min_ps": 513.0,
+      "boundary_max_ps": 572.2,
+      "boundary_spread_ps": 59.2,
+      "boundary_n": 1761
+    }
+  },
+  "clocks_ff": {
+    "clk": {
+      "ref_ps": 418.7,
+      "boundary_min_ps": 400.5,
+      "boundary_max_ps": 460.9,
+      "src": "insertion.json boundary mean"
+    }
+  },
+  "die_clock": {
+    "clock_pin": "clk",
+    "corner": "tt",
+    "reference_ps": 536.6,
+    "reference_src": "insertion.json boundary mean",
+    "entry_offset_ps": -536.6,
+    "entry_offset_ff_ps": -418.7,
+    "boundary_min_ps": 513.0,
+    "boundary_max_ps": 572.2,
+    "boundary_spread_ps": 59.2,
+    "boundary_n": 1761,
+    "all_sinks_min_ps": 496.2,
+    "all_sinks_max_ps": 572.2,
+    "residual_out_ps": 343.2,
+    "residual_in_ps": 187.3,
+    "balanced_entry_offset_ps": -614.5,
+    "signoff_allow_ps": 516.7,
+    "note": "entry_offset = required die clock arrival at this clock pin relative to the common boundary phase; balanced_entry_offset equalises o and s (hold must then be re-checked: l and h move with it)"
+  },
+  "notes": [
+    "reach_limited"
+  ],
+  "fix": [
+    "output pin register missing or far: 23 bits (wwq, wg_req), worst wwq leaves 308 ps after the latest boundary clock = 128 ps over a pin flop (logic, or ~168 um of wire, after the flop): add / move the output register to the pin"
+  ],
+  "summary": {
+    "pins": 2858,
+    "buses": 20,
+    "comb_bits": 0,
+    "out_over_bits": 1215,
+    "in_over_bits": 547,
+    "no_clock_arc_out_bits": 1094,
+    "no_setup_arc_in_bits": 2,
+    "worst_out_ps": 343.2,
+    "worst_out_bus": "wwq",
+    "worst_in_ps": 187.3,
+    "worst_in_bus": "y",
+    "L_min_ps": 115.3,
+    "L_min_bus": "snapshot",
+    "H_max_ps": -78.6,
+    "H_max_bus": "y",
+    "min_delay_margin_ps": 193.9,
+    "min_delay_bits_out": 0,
+    "min_delay_bits_in": 0,
+    "pair_cost_ps": 530.5,
+    "reach_self_um": 122.1,
+    "side_budget_ps": 121.7,
+    "pair_available_ps": 623.3,
+    "q_lb_ps": 307.6,
+    "q_lb_bus": "wwq",
+    "p_lb_ps": 163.7,
+    "p_lb_bus": "y",
+    "out_unreg_bits": 23,
+    "in_unreg_bits": 0,
+    "out_unreg_buses": [
+      "wwq",
+      "wg_req"
+    ],
+    "in_unreg_buses": [],
+    "clock_out_bits": 0
+  },
+  "flags": [
+    "out_unreg"
+  ],
+  "buses": {
+    "dfault": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": 153.0,
+      "L_ps": null,
+      "H_ps": -79.7,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 1,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "dfault",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 129.4,
+      "in_unreg_bits": 0
+    },
+    "i_act": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": 171.3,
+      "L_ps": null,
+      "H_ps": -106.7,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 1,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "i_act",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 147.7,
+      "in_unreg_bits": 0
+    },
+    "i_bad": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": 171.9,
+      "L_ps": null,
+      "H_ps": -105.7,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 1,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "i_bad",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 148.3,
+      "in_unreg_bits": 0
+    },
+    "m_v": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": 166.5,
+      "L_ps": null,
+      "H_ps": -102.1,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 1,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "m_v",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 142.9,
+      "in_unreg_bits": 0
+    },
+    "o_bad": {
+      "dir": "output",
+      "bits": 1,
+      "out_ps": 227.3,
+      "in_ps": null,
+      "L_ps": 144.3,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 1,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": "o_bad",
+      "worst_in_pin": null,
+      "clocks": [
+        "clk"
+      ],
+      "q_lb_ps": 191.7,
+      "out_unreg_bits": 0
+    },
+    "o_idle": {
+      "dir": "output",
+      "bits": 1,
+      "out_ps": 221.3,
+      "in_ps": null,
+      "L_ps": 140.2,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 1,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": "o_idle",
+      "worst_in_pin": null,
+      "clocks": [
+        "clk"
+      ],
+      "q_lb_ps": 185.7,
+      "out_unreg_bits": 0
+    },
+    "o_wf": {
+      "dir": "output",
+      "bits": 1,
+      "out_ps": 228.3,
+      "in_ps": null,
+      "L_ps": 144.5,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 1,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": "o_wf",
+      "worst_in_pin": null,
+      "clocks": [
+        "clk"
+      ],
+      "q_lb_ps": 192.7,
+      "out_unreg_bits": 0
+    },
+    "qfault": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": 153.3,
+      "L_ps": null,
+      "H_ps": -79.0,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 1,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "qfault",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 129.7,
+      "in_unreg_bits": 0
+    },
+    "rst_n": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": 172.1,
+      "L_ps": null,
+      "H_ps": -105.0,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 1,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "rst_n",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 148.5,
+      "in_unreg_bits": 0
+    },
+    "snapshot_v": {
+      "dir": "output",
+      "bits": 1,
+      "out_ps": 217.1,
+      "in_ps": null,
+      "L_ps": 137.5,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 1,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": "snapshot_v",
+      "worst_in_pin": null,
+      "clocks": [
+        "clk"
+      ],
+      "q_lb_ps": 181.5,
+      "out_unreg_bits": 0
+    },
+    "vo": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": 154.8,
+      "L_ps": null,
+      "H_ps": -80.8,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 1,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "vo",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 131.2,
+      "in_unreg_bits": 0
+    },
+    "wg_gnt": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": 154.7,
+      "L_ps": null,
+      "H_ps": -83.8,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 1,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "wg_gnt",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 131.1,
+      "in_unreg_bits": 0
+    },
+    "wg_req": {
+      "dir": "output",
+      "bits": 1,
+      "out_ps": 304.1,
+      "in_ps": null,
+      "L_ps": 220.6,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 1,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": "wg_req",
+      "worst_in_pin": null,
+      "clocks": [
+        "clk"
+      ],
+      "q_lb_ps": 268.5,
+      "out_unreg_bits": 1
+    },
+    "VDD": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": null,
+      "L_ps": null,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 1,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": null,
+      "clocks": []
+    },
+    "VSS": {
+      "dir": "input",
+      "bits": 1,
+      "out_ps": null,
+      "in_ps": null,
+      "L_ps": null,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 1,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": null,
+      "clocks": []
+    },
+    "m": {
+      "dir": "input",
+      "bits": 19,
+      "out_ps": null,
+      "in_ps": 181.0,
+      "L_ps": null,
+      "H_ps": -99.7,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 19,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "m[8]",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 157.4,
+      "in_unreg_bits": 0
+    },
+    "snapshot": {
+      "dir": "output",
+      "bits": 64,
+      "out_ps": 224.3,
+      "in_ps": null,
+      "L_ps": 115.3,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 64,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": "snapshot[16]",
+      "worst_in_pin": null,
+      "clocks": [
+        "clk"
+      ],
+      "q_lb_ps": 188.7,
+      "out_unreg_bits": 0
+    },
+    "wwq": {
+      "dir": "output",
+      "bits": 2240,
+      "out_ps": 343.2,
+      "in_ps": null,
+      "L_ps": 118.8,
+      "H_ps": null,
+      "comb_bits": 0,
+      "out_over_bits": 1146,
+      "in_over_bits": 0,
+      "no_clock_arc_bits": 1094,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": "wwq[441]",
+      "worst_in_pin": null,
+      "clocks": [
+        "clk"
+      ],
+      "q_lb_ps": 307.6,
+      "out_unreg_bits": 22
+    },
+    "wwq_cr": {
+      "dir": "input",
+      "bits": 8,
+      "out_ps": null,
+      "in_ps": 171.5,
+      "L_ps": null,
+      "H_ps": -88.1,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 8,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "wwq_cr[6]",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 147.9,
+      "in_unreg_bits": 0
+    },
+    "y": {
+      "dir": "input",
+      "bits": 512,
+      "out_ps": null,
+      "in_ps": 187.3,
+      "L_ps": null,
+      "H_ps": -78.6,
+      "comb_bits": 0,
+      "out_over_bits": 0,
+      "in_over_bits": 512,
+      "no_clock_arc_bits": 0,
+      "no_setup_arc_bits": 0,
+      "comb_from": [],
+      "worst_out_pin": null,
+      "worst_in_pin": "y[481]",
+      "clocks": [
+        "clk"
+      ],
+      "p_lb_ps": 163.7,
+      "in_unreg_bits": 0
+    }
+  }
+}

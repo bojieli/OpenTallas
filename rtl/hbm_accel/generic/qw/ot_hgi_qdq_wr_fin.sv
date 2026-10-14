@@ -53,7 +53,7 @@ module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
          has_snapshot <= (count+(QW+1)'(s_v)-(QW+1)'(pop))!=0;
          pop_pending<=fin;
          if(s_v&&count==(QW+1)'(RQ)&&!pop)o_bad<=1;
-         o_idle<=count==0&&!s_v&&!snapshot_v;
+         o_idle<=count==0&&!s_v; // idle reports captured obligations; no raw input path
      end
  end
  // Separate physical launch flop at E face; internal pop feedback stays private.

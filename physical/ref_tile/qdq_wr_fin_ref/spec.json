@@ -50,11 +50,11 @@
   "macro_halo_um": 5.4
  },
  "recipe": 2,
- "structural_change": "Dedicated ACK face capture, no raw ACK logic path; separate interior poptoken and o_fin output launch register/reset regions prevents feedback from pulling launch away from pin. Adds1completionedge, projectednative185 vs168 price unqualified until measured/recovered. Restores86.4sq to preserveclock/holdspace; priorf2/f3/f4 failedP190 retained.",
+ "structural_change": "Remove raw snapshot_v from o_idle predicate: every input now first captures at its own face flop; idle reports captured obligations (one-edge response), splitwrapper does not useFINidle for ownershiprelease. FIN/counter/queue completion semantics identicalcapturedACKf5; no additionalcompletionedge. Priorf5 ACK/Qclean butsnapshot_vP207.1>190 retained.",
  "job": {
   "owner": "Codex:qdq-write-completion-split",
   "branch": "codex-qdq-write-completion-split",
-  "tag": "f5",
+  "tag": "f6",
   "views_to": "physical/ref_tile/qdq_wr_fin_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_wr_fin_ref",
   "purpose": "Opt-in completion-only leaf; standalone scoreboard does not qualify actual native production price or parent geometry. Native actual4 gate required before adoption.",
