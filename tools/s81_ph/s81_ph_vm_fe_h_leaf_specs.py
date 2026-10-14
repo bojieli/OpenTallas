@@ -193,8 +193,8 @@ L = {
                    'W': [(v('ret', 0, 526) + ['av', 'ok', 'ovf', 'sflt', 'g', 'arm_v'] + v('arm_base', 0, 14), 8.0, 121.0),
                          (['rni', 'rn_o', 'ck'] + v('stride', 0, 3) + v('off', 0, 2), 122.0, 126.0)]}, {}, {'peak_ram_gb': 32},
          'landing lane: 64 x 512 SRAM + row relay; producer word in on N, return word + control on the side face towards its relay tile (W, or E mirrored MY)'),
- 'fcc': ((181.44, 112.32), {'N': ['vwe', 'vwa', 'vwd', 'vre', 'vra', 'cks', 'rss'], 'S': ['s_o'], 'E': ['k_o', 'so_o', 'rn_o'], 'W': ['ck', 'rni']}, ['rni', 'rss'],
-         None, {'vwd': [20.0, 160.0], 's_o': [2.4, 179.0]}, {'peak_ram_gb': 48, 'threads': 16}, 'ctrl ratio CDC (cks -> ck), ports 3 / 4 order registers'),
+ 'fcc': ((181.44, 112.32), {'N': ['vwe', 'vwa', 'vwd', 'vre', 'vra', 'cks', 'rss', 'rst'], 'S': ['s_o'], 'E': ['k_o', 'so_o', 'rn_o'], 'W': ['ck', 'rni']}, ['rni', 'rss', 'rst'],
+         None, {'vwd': [20.0, 160.0], 's_o': [2.4, 179.0]}, {'peak_ram_gb': 48, 'threads': 16}, 'ctrl VM crossing cks -> ck as a real two-clock CDC (2 x ot_async_fifo 527 x 16, Gray pointers through 2-flop synchronisers; B8), ports 3 / 4 order registers'),
  'fcw': ((151.2, 38.88), {'N': ['f_swv', 'f_swd', 't_swg', 'f_srv', 'f_srd', 't_srg', 't_ks', 'rst'], 'S': ['s_o'], 'E': ['k_o', 'err_o', 'rn_o'], 'W': ['ck', 'rni']},
          ['rni', 'rst'], None, {'f_swd': [10.0, 130.0], 's_o': [2.4, 148.8]}, DENSE, 'WFC endpoint without the dead write queue, ports 0 / 1 order registers'),
  'fcn': ((239.76, 51.84), {'N': ['cv', 'cd', 'dv', 'dt', 'f_cq', 'c_wv', 'c_wd', 'c_wr', 't_rdy', 'rst', 'rss', 'cks', 'k_i', 'clf_i'],
@@ -202,7 +202,9 @@ L = {
          None, {'k_i': [2.4, 150.0], 's_o': [2.4, 120.0], 'x_o': [122.0, 160.0]}, {**DENSE, 'peak_ram_gb': 48},
          'central: command decode, counter K, done mux, ports 2 / 5 .. 9 order registers, reset root; dv / dt on a stream pin register'),
 }
-STRUCT = {'fld': 'bit-sliced pin plan (lanes bit-major on N / S, drained words on W / E) on a 172.8 x 69.12 outline: no word crosses the core sideways (p1 lane-major face groups: GRT congestion 10,019 markers)',
+STRUCT = {'fcc': 'B8, coordinator decision 10-13 (b): the ctrl VM crossing is rebuilt as a real two-clock CDC (2 x ot_async_fifo 527 x 16 EXT_RST: storage written and held in the stream domain, Gray pointers through 2-flop synchronisers, entry read only after the synchronised pointer; one reset synchroniser a domain on rst & rss + a registered stage). p1 (3 routes): ot_ratio_cdc_fifo rewrote the read-domain shadow sh[] from mem[] every cycle = 8,432 flop -> flop arcs between two independent clock trees (hold -46 .. -56 ps stalled; at the true periods setup -140.7 ps and 2,039 stalled hold arcs)',
+          'fcn': 'B8, coordinator decision 10-13 (a): engine adapter XRT 1 = one reset synchroniser a clock domain on the pin-level AND rst & rss, then a registered reset tree (3 kept copies a domain); its two ot_async_fifo build no conditioner (EXT_RST), so no flop of one domain reaches a reset pin of the other (gate 172927: recovery -334.3 ps on u_er.reset_pipe -> wr_reset_conditioner); KD 3 pre-stages for the own ports / ARM ops',
+          'fld': 'bit-sliced pin plan (lanes bit-major on N / S, drained words on W / E) on a 172.8 x 69.12 outline: no word crosses the core sideways (p1 lane-major face groups: GRT congestion 10,019 markers)',
           'fxs': 'outline 322.56 x 19.44 = the clt quad, clt words straight N -> S per lane (p1: slice-major S pins, every lane word crossed the core, GRT-0116)'}
 CLOSED_BEFORE = {'clt': 'the closed clt8a view is M6; S3 re-routes it at M5 with the RT 1 match stage (die window sp_vm/u_fe: M6 over the clt row is the parent\'s)',
                  'fxr': 'p1-dcf82afbe closed the 592-b tile; S2 trims it to the 588 non-constant bits', 'fcw': 'p1-dcf82afbe closed with 1,184 s_o pins; S2: 636'}
@@ -229,7 +231,8 @@ def main(argv):
              'outline': {'w': w, 'h': h, **({'exact': True} if leaf in ('clt', 'fxs') else {})}, 'pins': pins, 'pin_ranges': rng,
              'macros': [{'view': SRAM, 'count': 1, 'at': [22.464, 25.92]}] if leaf == 'flt' else [],
              'route': {'pd': 0.5, 'threads': 8, 'peak_ram_gb': 24, 'hold_margin_ns': 0.03 if leaf == 'flt' else 0.01, **rx},
-             'job': {'owner': 'Claude:el1013-s81-vmfe/B6', 'branch': 'claude/el1013-s81-vmfe', 'tag': 'p2', 'extra_paths': EXTRA,
+             'job': {'owner': 'Claude:el1013-s81-vmfe/B8' if leaf in TWO else 'Claude:el1013-s81-vmfe/B6', 'branch': 'claude/el1013-s81-vmfe',
+                     'tag': 'p3' if leaf in TWO else 'p2', 'extra_paths': EXTRA,
                      'purpose': f'el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf {top} at M5 ({what}); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only '
                                 f'non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline {w} x {h}; '
                                 + ('EXACT pin plan (io_tcl, bit-ordered by data flow). ' if exact else 'pin faces by data flow, bit-ordered ranges. ')

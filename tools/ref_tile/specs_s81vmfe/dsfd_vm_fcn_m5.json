@@ -92,9 +92,9 @@
   }
  },
  "job": {
-  "owner": "Claude:el1013-s81-vmfe/B6",
+  "owner": "Claude:el1013-s81-vmfe/B8",
   "branch": "claude/el1013-s81-vmfe",
-  "tag": "p2",
+  "tag": "p3",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/mtp",
@@ -111,6 +111,7 @@
   "purpose": "el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf dsfd_vm_fcn at M5 (central: command decode, counter K, done mux, ports 2 / 5 .. 9 order registers, reset root; dv / dt on a stream pin register); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline 239.76 x 51.84; pin faces by data flow, bit-ordered ranges. TWO clocks at their TRUE periods: ck 1,111.1 ps / cks 833.3 ps (base = the stream clock), each domain referenced to its own propagated tree, inter-clock insertion balanced (fe_h_str_boundary.tcl). ",
   "benched_by": "s81_vm_fe_h_lockstep"
  },
+ "structural_change": "B8, coordinator decision 10-13 (a): engine adapter XRT 1 = one reset synchroniser a clock domain on the pin-level AND rst & rss, then a registered reset tree (3 kept copies a domain); its two ot_async_fifo build no conditioner (EXT_RST), so no flop of one domain reaches a reset pin of the other (gate 172927: recovery -334.3 ps on u_er.reset_pipe -> wr_reset_conditioner); KD 3 pre-stages for the own ports / ARM ops",
  "sdc_extra": [
   "physical/s81_ph_views/vm_master/fe_h_str_clock_ref.sdc"
  ],

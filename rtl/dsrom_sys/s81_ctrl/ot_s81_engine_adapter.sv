@@ -3,18 +3,19 @@
 // Both queues have depth8; the sequencer's8 outstanding credits cover queued,
 // executing and completed-but-not-returned descriptors together. Neither FIFO
 // capacity nor a buffered command returns a credit: only a validated done does.
-module ot_s81_pulse_cdc #(parameter integer W=84, QD=8)(
+module ot_s81_pulse_cdc #(parameter integer W=84, QD=8, XR=0)(
  input wire s_clk,s_rst_n, input wire i_v,input wire[W-1:0] i_d,
  output wire i_accept,output reg fault,
  input wire d_clk,d_rst_n,output wire o_v,input wire o_r,output wire[W-1:0] o_d
 );
+ // XR 1: s_rst_n / d_rst_n are the two domains' conditioned resets (ot_async_fifo EXT_RST 1)
  localparam integer AW=$clog2(QD);
  reg[W-1:0] q[0:QD-1]; reg[AW-1:0] wp,rp;reg[AW:0] count;
  wire fready;wire pop=(count!=0)&&fready;
  assign i_accept=(count<QD)||pop;
  wire push=i_v&&i_accept;
  wire unused_over,unused_under;
- ot_async_fifo #(.WIDTH(W),.DEPTH(QD)) u_fifo(
+ ot_async_fifo #(.WIDTH(W),.DEPTH(QD),.EXT_RST(XR)) u_fifo(
  .wr_clk(s_clk),.wr_rst_n(s_rst_n),.wr_valid(count!=0),.wr_ready(fready),.wr_data(q[rp]),.wr_overflow(unused_over),
  .rd_clk(d_clk),.rd_rst_n(d_rst_n),.rd_valid(o_v),.rd_ready(o_r),.rd_data(o_d),.rd_underflow(unused_under));
  always @(posedge s_clk or negedge s_rst_n) begin
@@ -28,7 +29,12 @@ module ot_s81_pulse_cdc #(parameter integer W=84, QD=8)(
  end
 endmodule
 
-module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0)(
+// XRT 1 (el1013-s81-vmfe/B8, coordinator decision 10-13 on dsfd_vm_fcn): ONE reset synchroniser per clock domain (u_cr /
+// u_er, both cleared by the pin-level AND of the two asynchronous resets), then a REGISTERED reset tree per domain (kept
+// copies, one more cycle of staged release): copy 0 -> this module's state, copy 1 / 2 -> the two CDC FIFOs, which build
+// no conditioner of their own (EXT_RST).  No flop of one domain reaches a reset pin of the other (XRT 0: the FIFOs'
+// conditioners were cleared by c_run && e_run: a serial-domain flop -> stream-domain RESETN recovery arc, -334 ps).
+module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
  input wire c_clk,c_rst_n,input wire c_cmd_v,input wire[83:0] c_cmd_d,
  output reg c_done_v,output reg[7:0] c_done_tag,output wire fault,output wire online,
  input wire e_clk,e_rst_n,output wire e_cmd_v,output wire[83:0] e_cmd_d,
@@ -37,9 +43,20 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0)(
 );
  localparam integer CW=$clog2(QD+1);
  wire arst_n=c_rst_n&&e_rst_n;
- wire c_run,e_run;
- ot_reset_sync u_cr(.clk(c_clk),.async_rst_n(arst_n),.sync_rst_n(c_run));
- ot_reset_sync u_er(.clk(e_clk),.async_rst_n(arst_n),.sync_rst_n(e_run));
+ wire c_run,e_run,c_run0,e_run0;
+ wire c_rcmd,c_rdone,e_rcmd,e_rdone;   // FIFO-side reset copies
+ ot_reset_sync u_cr(.clk(c_clk),.async_rst_n(arst_n),.sync_rst_n(c_run0));
+ ot_reset_sync u_er(.clk(e_clk),.async_rst_n(arst_n),.sync_rst_n(e_run0));
+ generate if(XRT!=0) begin:g_xrt
+  (* keep=1 *) reg[2:0] c_rt; (* keep=1 *) reg[2:0] e_rt;
+  always @(posedge c_clk or negedge c_run0) if(!c_run0) c_rt<=3'b000; else c_rt<=3'b111;
+  always @(posedge e_clk or negedge e_run0) if(!e_run0) e_rt<=3'b000; else e_rt<=3'b111;
+  assign c_run=c_rt[0]; assign c_rcmd=c_rt[1]; assign c_rdone=c_rt[2];
+  assign e_run=e_rt[0]; assign e_rcmd=e_rt[1]; assign e_rdone=e_rt[2];
+ end else begin:g_nxrt
+  assign c_run=c_run0; assign c_rcmd=c_run0; assign c_rdone=c_run0;
+  assign e_run=e_run0; assign e_rcmd=e_run0; assign e_rdone=e_run0;
+ end endgenerate
  reg[255:0] cpending,epending;reg[CW-1:0] cused,eused;
  reg cf,ef;
  (* async_reg="true" *) reg ef_c1,ef_c2,eonline_c1,eonline_c2;
@@ -55,9 +72,9 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0)(
  wire return_ok=dq_v&&cpending[dq_t]&&(cused!=0);
  wire admit=c_cmd_v&&cmd_accept&&!cpending[ctag]&&((cused<QD)||return_ok);
  wire[83:0] payload=(MUT==1)?(c_cmd_d^(84'd1<<73)):c_cmd_d;
- ot_s81_pulse_cdc #(.W(84),.QD(QD)) u_cmd(
- .s_clk(c_clk),.s_rst_n(c_run),.i_v(admit),.i_d(payload),.i_accept(cmd_accept),.fault(cmd_fault),
- .d_clk(e_clk),.d_rst_n(e_run),.o_v(cv),.o_r(cr),.o_d(cd));
+ ot_s81_pulse_cdc #(.W(84),.QD(QD),.XR(XRT)) u_cmd(
+ .s_clk(c_clk),.s_rst_n(c_rcmd),.i_v(admit),.i_d(payload),.i_accept(cmd_accept),.fault(cmd_fault),
+ .d_clk(e_clk),.d_rst_n(e_rcmd),.o_v(cv),.o_r(cr),.o_d(cd));
  // s81-ctl-1011 timing (dsfd_dw_ep_s TT -297: CDC read pointer -> rd_data mux -> epending[tag] 256:1 -> 20 levels):
  // the command leaves the CDC FIFO into a register first (+1 cycle); the pending lookup starts from that register
  reg rv; reg[83:0] rq;
@@ -70,9 +87,9 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0)(
  always @(posedge e_clk) if(cr&&cv) rq<=cd;
  wire complete=e_done_v&&epending[e_done_tag]&&(eused!=0)&&done_accept;
  wire[7:0] completion=(MUT==2)?(e_done_tag^8'h80):e_done_tag;
- ot_s81_pulse_cdc #(.W(8),.QD(QD)) u_done(
- .s_clk(e_clk),.s_rst_n(e_run),.i_v(complete),.i_d(completion),.i_accept(done_accept),.fault(done_fault),
- .d_clk(c_clk),.d_rst_n(c_run),.o_v(dv),.o_r(dr),.o_d(dt));
+ ot_s81_pulse_cdc #(.W(8),.QD(QD),.XR(XRT)) u_done(
+ .s_clk(e_clk),.s_rst_n(e_rdone),.i_v(complete),.i_d(completion),.i_accept(done_accept),.fault(done_fault),
+ .d_clk(c_clk),.d_rst_n(c_rdone),.o_v(dv),.o_r(dr),.o_d(dt));
  assign dr=1'b1;
  always @(posedge c_clk or negedge c_run) begin
   if(!c_run) begin cpending<=0;cused<=0;cf<=0;c_done_v<=0;c_done_tag<=0;ef_c1<=0;ef_c2<=0;eonline_c1<=0;eonline_c2<=0;end

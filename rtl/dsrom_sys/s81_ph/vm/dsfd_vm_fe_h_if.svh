@@ -13,9 +13,11 @@
 `define VMFE_LW      526         // landing return word {row 14, d 512} (dd_r / dr_r)
 // ---- stage counts.  Flat: FRL 2, KD 1, LAL 2, LGL 2, LDL 2.  The hierarchy only ADDS uniform stages on these four
 // parameterised relays, so the flat module instantiated with the same numbers is the CYCLE-EXACT reference.
-`define VMFE_R       2           // fxr relay TILES in series on every b -> slice path (2 flops each)  [R 1 needs a 2nd H layer]
+`define VMFE_R       3           // bundle relay TILES in series on every b -> slice path (2 flops each).  B8 (coordinator decision 10-13 (d)): 3, was 2:
+                                 // lane 0 -> slice 3 row bits are 1,682 um pin to pin with the clt row centred and 1,797 um as planned (R 2 reaches 1,500 + 65)
 `define VMFE_FRL     (2 + 2*`VMFE_R)   // order register -> slice pins: s0, [fxr in, fxr out] x R, fsr v1, fsr o
-`define VMFE_KD      2           // b (leaf out-pin) -> [relay] -> kq in-pin of fcn; ARM ops delayed alike (kq_arm*)
+`define VMFE_KD      3           // B8: 3 (was 2) = source out pin -> ONE mid-hop relay tile (dsfd_vm_frm u_kl / u_kr in the parent) -> fcn in pin
+                                 // (the 16 lanes' copies span 1,212 um); ARM ops and fcn's own ports delayed alike inside fcn (KP = KD - 2)
 // STAGE OWNERS (coordinator decision 2026-10-13: LGL 3, LDL 3, LAL 3; B6: LVX 1; the parent holds 0 cells): first stage =
 // out-pin flop of the source leaf, LAST stage = in-pin flop of the receiving leaf, the mid-hop stage of all four lane
 // relays = ONE relay tile a lane, dsfd_vm_frm (546 b, a single flop a bit, placed mid-way, no reset pin):
@@ -32,6 +34,8 @@
 `define VMFE_LAL     3           // LARM arm (and the lane's row relay)
 `define VMFE_LVX     1           // mid-hop stage (in dsfd_vm_frm) on av / ok / ovf / sflt lane -> fld: 2 wires, as g / arm / ret (flat LVX 1)
 `define VMFE_RTH     18          // landing room threshold = the flat 14 + LAL + LVX (+1 row in flight per input / flag stage)
+`define VMFE_XRT     1           // B8: fcn engine adapter = one reset synchroniser a clock domain at the pin + registered reset tree (flat XRT 1)
+`define VMFE_CCA     1           // B8: fcc ctrl VM crossing = Gray-pointer 2-flop-synchroniser FIFO, DEPTH 16 (flat CCA 1: +2 serial cycles a ctrl VM op)
 `define VMFE_DVR     1           // engine done dv / dt on a stream-domain pin register in fcn (flat DVR 1: +1 stream cycle on a done)
 // ---- leaves (each: own ck root <= 15,000 sinks MEASURED by yosys, every pin registered, hop <= 500 um)
 // ---- S2 / S3 (coordinator decision 2026-10-13 14:00, el1013-s81-vmfe/B6; ports FROZEN again after them)

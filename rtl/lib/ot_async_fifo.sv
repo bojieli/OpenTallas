@@ -6,7 +6,12 @@
 // not reset, because validity is carried solely by synchronized pointers.
 module ot_async_fifo #(
     parameter integer WIDTH = 32,
-    parameter integer DEPTH = 4
+    parameter integer DEPTH = 4,
+    // EXT_RST 1 (el1013-s81-vmfe/B8, coordinator decision 10-13): wr_rst_n / rd_rst_n are ALREADY the two domains' own
+    // conditioned resets (each the output of that domain's reset synchroniser + registered tree, both synchronisers
+    // cleared by the SAME asynchronous source, so an assertion still flushes both sides together).  No conditioner is
+    // built here and no flop of one domain reaches a reset pin of the other: every recovery / removal arc is same-clock.
+    parameter integer EXT_RST = 0
 ) (
     input  wire             wr_clk,
     input  wire             wr_rst_n,
@@ -31,12 +36,17 @@ module ot_async_fifo #(
     wire fifo_async_rst_n = wr_rst_n && rd_rst_n;
     wire wr_domain_rst_n;
     wire rd_domain_rst_n;
-    ot_reset_sync wr_reset_conditioner (
-        .clk(wr_clk), .async_rst_n(fifo_async_rst_n),
-        .sync_rst_n(wr_domain_rst_n));
-    ot_reset_sync rd_reset_conditioner (
-        .clk(rd_clk), .async_rst_n(fifo_async_rst_n),
-        .sync_rst_n(rd_domain_rst_n));
+    generate if (EXT_RST != 0) begin : g_xr
+        assign wr_domain_rst_n = wr_rst_n;
+        assign rd_domain_rst_n = rd_rst_n;
+    end else begin : g_ir
+        ot_reset_sync wr_reset_conditioner (
+            .clk(wr_clk), .async_rst_n(fifo_async_rst_n),
+            .sync_rst_n(wr_domain_rst_n));
+        ot_reset_sync rd_reset_conditioner (
+            .clk(rd_clk), .async_rst_n(fifo_async_rst_n),
+            .sync_rst_n(rd_domain_rst_n));
+    end endgenerate
 
     reg [WIDTH-1:0] mem [0:DEPTH-1];
     reg [PTR_W-1:0] wr_bin, wr_gray;
