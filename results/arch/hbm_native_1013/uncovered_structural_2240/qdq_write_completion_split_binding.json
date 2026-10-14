@@ -96,5 +96,22 @@
     "real parent slot pin cut<=0.60 and clock root binding",
     "production exact + actual mutants + <=184 cycles at phases61/487",
     "drain and ownership release evidence by native owner"
-  ]
+  ],
+  "pay_deterministic_pins": {
+    "count": 2857,
+    "north": 2250,
+    "south": 516,
+    "west": 91,
+    "N_S_layer": "M5",
+    "W_layer": "M4",
+    "wg_req_xy_um": [
+      10.044,
+      125.28
+    ],
+    "i_act_xy_um": [
+      0,
+      112.284
+    ],
+    "status": "unassigned alternative after PPL32packing failures; actualPG/pin audits required"
+  }
 }
