@@ -184,7 +184,8 @@ module ot_hgi_coll_pring #(
                 end
             end
             // -- fold issue: at most one add (or one raw send) per edge, lowest ready tag first
-            for (i = 0; i < NT; i = i + 1) if (!issued && lpv[i]) begin : fold
+            // a partial / carry / tree sum is folded from the edge after it landed (its data is a non-blocking write)
+            for (i = 0; i < NT; i = i + 1) if (!issued && lpv[i] && lp_v[i]) begin : fold
                 reg [1:0] src_c; reg mode_; reg [255:0] carry_d;
                 mode_ = lp_m[i];
                 if (!mode_) begin                                                         // SERIAL
@@ -192,7 +193,7 @@ module ot_hgi_coll_pring #(
                         dir = is_ccw(me, nxt(me)) ? 2'd1 : 2'd0;
                         iq[dir][qt[dir]] <= mk(K_CARRY, me, nxt(me), 2'd0, 3'(i), 1'b0, 11'd0, lp_d[i]);
                         qt[dir] = inc(qt[dir]); qn[dir] = qn[dir] + 1'b1; lpv[i] = 1'b0; issued = 1'b1;
-                    end else if (cv[i][prv(me)] || MUT_CARRY != 0) begin
+                    end else if ((cv[i][prv(me)] && c_v[i][prv(me)]) || MUT_CARRY != 0) begin
                         src_c = prv(me);
                         a_iv <= 1'b1; a_a <= (MUT_CARRY != 0) ? 256'd0 : c_d[i][src_c]; a_b <= lp_d[i]; a_it <= 3'(i);
                         a_is <= (me == last) ? 2'd1 : 2'd0;
@@ -206,11 +207,11 @@ module ot_hgi_coll_pring #(
                             iq[dir][qt[dir]] <= mk(K_CARRY, me, dq, 2'd0, 3'(i), 1'b1, 11'd0, lp_d[i]);
                             qt[dir] = inc(qt[dir]); qn[dir] = qn[dir] + 1'b1; lpv[i] = 1'b0; issued = 1'b1;
                         end
-                        2'd1: if (cv[i][0] || MUT_CARRY != 0) begin                       // P0 + P1 -> q3
+                        2'd1: if ((cv[i][0] && c_v[i][0]) || MUT_CARRY != 0) begin                       // P0 + P1 -> q3
                             a_iv <= 1'b1; a_a <= (MUT_CARRY != 0) ? 256'd0 : c_d[i][0]; a_b <= lp_d[i]; a_it <= 3'(i); a_is <= 2'd0;
                             lpv[i] = 1'b0; cv[i][0] = 1'b0; issued = 1'b1;
                         end
-                        default: if (cv[i][2] || MUT_CARRY != 0) begin                    // q3: P2 + P3 first
+                        default: if ((cv[i][2] && c_v[i][2]) || MUT_CARRY != 0) begin                    // q3: P2 + P3 first
                             a_iv <= 1'b1; a_a <= (MUT_CARRY != 0) ? 256'd0 : c_d[i][2]; a_b <= lp_d[i]; a_it <= 3'(i); a_is <= 2'd2;
                             lpv[i] = 1'b0; cv[i][2] = 1'b0; issued = 1'b1;
                         end
@@ -218,7 +219,7 @@ module ot_hgi_coll_pring #(
                 end
             end
             // q3 TREE second add: (P0 + P1) + (P2 + P3)
-            for (i = 0; i < NT; i = i + 1) if (!issued && tv[i] && cv[i][1]) begin
+            for (i = 0; i < NT; i = i + 1) if (!issued && tv[i] && t_v[i] && cv[i][1] && c_v[i][1]) begin
                 a_iv <= 1'b1; a_a <= c_d[i][1]; a_b <= t_d[i]; a_it <= 3'(i); a_is <= 2'd1;
                 tv[i] = 1'b0; cv[i][1] = 1'b0; issued = 1'b1;
             end
@@ -242,7 +243,8 @@ module ot_hgi_coll_pring #(
             // -- outputs: transit first, else the queue head
             for (integer d = 0; d < 2; d = d + 1) begin
                 if (fo[d][RW-1]) begin if (d == 0) cw_o <= fo[d]; else ccw_o <= fo[d]; end
-                else if (qn[d] != 0) begin
+                else if (iq_n[d] != 0) begin       // entries written before this edge only (an entry queued this edge is
+                                                     // a non-blocking write: it can leave from the next edge on)
                     if (d == 0) cw_o <= iq[d][qh[d]]; else ccw_o <= iq[d][qh[d]];
                     qh[d] = inc(qh[d]); qn[d] = qn[d] - 1'b1;
                 end else begin if (d == 0) cw_o <= '0; else ccw_o <= '0; end
