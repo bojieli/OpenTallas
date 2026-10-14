@@ -15,6 +15,8 @@ sys.path.insert(0, sys.argv[1] + '/tools/qwen_kv_die')
 import kv_die
 W = dict(ci=319, co=294, es=288, er=261, po=328, pi=289, ki=33, ko=33, kc=33)
 for mst, buses in kv_die.STRIP_FIELDS.items():
+    if mst not in ('qkd_ctrl_pc', 'qkd_ctrl_kc'):   # STRIP_FIELDS also holds the landing / aggregator strip masters (their own benches)
+        continue
     for bus, fields in buses.items():
         o = 0
         for f, w in fields:

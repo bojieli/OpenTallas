@@ -25,6 +25,14 @@ elif [ "${STACK:-p}" = h ]; then
   # q13-kvleaves: env ECTL3=1 -> the row-engine control cell as its three hard die leaves (qkd_ectl_a / _b / _c,
   # rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv; slot timing, DQ 128 only)
   if [ -n "${ECTL3:-}" ]; then DEFS="$DEFS +define+KVD_ECTL3"; STK="$STK $W/hdc/nearhbm/ot_qkd_ectl_parts.sv"; fi
+elif [ "${STACK:-p}" = k ]; then
+  # STACK=k (el1013-qwen-kvstrips): re-cut H engines + the aggregator strip built from its die masters (qkd_astk_pv /
+  # _ep / _ex / _zn / _ctl, rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv) in the die wiring of
+  # rtl/test/qwen_kv_die/ot_qwen_nearhbm_attn_stack_k.sv.  env AKMUT=1..4: one leaf mutant; AKRL: relay stations a net.
+  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_k.sv $W/test/qwen_kv_die/ot_qwen_nearhbm_attn_stack_k.sv $W/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv $W/hdc/nearhbm/ot_qkh_subtiles.sv $P/physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v $P/physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v"
+  DEFS="+define+KVD_LFB=4 +define+KVD_ND=1 +define+KVD_ERL=3 +define+KVD_AKMUT=${AKMUT:-0} +define+KVD_AKRL=${AKRL:-1} ${AKDBG:++define+KVD_AKDBG} ${HSUB:++define+KVD_HSUB}"
+  mkdir -p $OUT && awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > $OUT/ot_hdc_lzc32_x.sv
+  STK="$STK $OUT/ot_hdc_lzc32_x.sv"
 elif [ "${STACK:-p}" = e ]; then
   # STACK=e: re-cut E (D with levels 1-3 on the lane loop adders; rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv)
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_e.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv"
@@ -67,7 +75,7 @@ SRC="$SRC $OUT/ot_hdc_lzc32_only.sv"
 # (sim_nhb_fp_lat_dpi.sv), the bench runs the DPI stand-in rtl/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv, checked
 # cycle-exact against the real unit by rtl/test/nearhbm/run_nr_standin_equiv.sh; the rest of the real file
 # (ot_hdc_fp32_add_lat_sel, ot_hdc_w11_cut_v, ot_hdc_add_hcopy36) is kept.  NR_REAL=1 forces the real units.
-if [ -n "${HSUB:-}" ] && [ -z "${NR_REAL:-}" ]; then
+if { [ -n "${HSUB:-}" ] || [ "${STACK:-p}" = k ]; } && [ -z "${NR_REAL:-}" ]; then   # STACK=k: 2,112 ANR adders in the tree cells
   awk '/^module ot_hdc_fp32_add_lat_nr /{s=1} !s{print} s&&/^endmodule/{s=0}' $W/hdc/ot_hdc_fp32_add_lat_nr.sv > $OUT/ot_hdc_fp32_add_lat_nr_rest.sv
   SRC="${SRC/$W\/hdc\/ot_hdc_fp32_add_lat_nr.sv/$OUT/ot_hdc_fp32_add_lat_nr_rest.sv $W/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv}"
 fi

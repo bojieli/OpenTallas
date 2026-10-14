@@ -68,6 +68,7 @@ for _n in LOCK_SET:
 CASES['lk_mut_fxr1'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_VMFE_MUT_FXR1'], expect='fail', regex='LOCKSTEP_BAD')
 CASES['lk_mut_gbyp'] = dict(params=dict(MODE=4), defines=LK + ['OT_VMFE_MUT_GBYP'], expect='fail', regex='LOCKSTEP_BAD')
 CASES['lk_mut_kqskip'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_VMFE_MUT_KQSKIP'], expect='fail', regex='LOCKSTEP_BAD')
+CASES['lk_mut_avbyp'] = dict(params=dict(MODE=4), defines=LK + ['OT_VMFE_MUT_AVBYP'], expect='fail', regex='LOCKSTEP_BAD')
 CASES['lk_mut_wnqdrop'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_VMFE_MUT_WNQDROP'], expect='fail', regex='LOCKSTEP_BAD')
 for _n, _c in _base.items():
     CASES['h_' + _n] = dict(_c, defines=_c.get('defines', []) + SUB, **({'regex2': 'LOCKSTEP_OK'} if _c['expect'] == 'pass' else {}))
