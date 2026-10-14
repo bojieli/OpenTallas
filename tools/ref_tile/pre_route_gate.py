@@ -877,7 +877,14 @@ def main(argv=None) -> int:
     if a.remote and getattr(g, "clock", None) and "kd" in locals():
         write_gate_result(g, kd, a.cts, a.remote)
     if a.json:
-        Path(a.json).write_text(json.dumps({"verdict": g.verdict, "items": g.items}, indent=1) + "\n")
+        destination = Path(a.json)
+        canonical = kd / CLOCK_RESULT if "kd" in locals() else None
+        # The canonical file carries immutable source and clock evidence. A
+        # common --json <kit>/gate_result.json invocation must not immediately
+        # replace that record with the short, unbound CLI report. Local-only
+        # diagnostics must also leave an existing measured record intact.
+        if canonical is None or destination.resolve() != canonical.resolve():
+            destination.write_text(json.dumps({"verdict": g.verdict, "items": g.items}, indent=1) + "\n")
     return 1 if g.verdict == "FAIL" else 0
 
 
