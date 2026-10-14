@@ -1,5 +1,5 @@
 {
- "name": "qfd_su_cbuf_native_l0_p13_l12_r3-p13r3-COMMIT",
+ "name": "qfd_su_cbuf_native_l0_p13_l12_r3-p13r3-47eaab9b4",
  "block": "qfd_su_cbuf_native_l0_p13_l12_r3",
  "ref_tile": true,
  "owner": "Claude:q14-edge-r3",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "claude/q14-edge-r3",
-  "commit": "COMMIT"
+  "commit": "47eaab9b4"
  },
  "stages": {
   "bench": [
@@ -172,7 +172,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_su_cbuf_native_l0_p13_l12_r3/qfd_su_cbuf_native_l0_p13_l12_r3-p13r3-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_su_cbuf_native_l0_p13_l12_r3/qfd_su_cbuf_native_l0_p13_l12_r3-p13r3-47eaab9b4"
   }
  ],
  "cycles_added": 0,
