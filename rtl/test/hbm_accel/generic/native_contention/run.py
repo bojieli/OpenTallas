@@ -3,9 +3,9 @@
 Use through ot-run --mem 32 --threads 4; immutable prices are never rewritten.
 """
 import argparse,hashlib,json,os,pathlib,subprocess,sys,re
-ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='ba12d099a');ap.add_argument('--front12',action='store_true');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');ap.add_argument('--smoke',action='store_true');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='ba12d099a');ap.add_argument('--scalar',action='store_true');ap.add_argument('--front12',action='store_true');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');ap.add_argument('--smoke',action='store_true');a=ap.parse_args()
 root=pathlib.Path(__file__).resolve().parents[5];out=pathlib.Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
-parent=a.parent;common='64fced1f9';quant='88b62f789';dma='552786d9c' if a.front12 else '4a49c18bc';vectors='7027d3ab1'
+parent='ddadedbe6' if a.scalar and a.parent=='ba12d099a' else a.parent;common='64fced1f9';quant='88b62f789';dma='552786d9c' if a.front12 else '4a49c18bc';vectors='7027d3ab1'
 graph={}
 def add(commit,prefix,names):
  for name in names.split():graph[f'{prefix}/{name}.sv']=commit
@@ -54,16 +54,23 @@ def freeze(path,commit,data):
  target=out/'src'/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
  receipt.append({'path':path,'source_commit':commit,'sha256':hashlib.sha256(data).hexdigest()});return str(target)
 for path,commit in graph.items():
- data=subprocess.check_output(['git','show',f'{commit}:{path}'],cwd=root);sources.append(freeze(path,commit,data))
+ data=subprocess.check_output(['git','show',f'{commit}:{path}'],cwd=root)
+ if a.scalar and path.endswith('/ot_vms_hub.sv') and a.mut in [30,32]:
+  original=hashlib.sha256(data).hexdigest();txt=data.decode()
+  before,after=('e_tag[gc2][k], e_we[gc2][k]',"(e_tag[gc2][k]^16'h0001), e_we[gc2][k]") if a.mut==30 else ("? 3'd4 : 3'd1","? 3'd1 : 3'd1")
+  if txt.count(before)!=1:raise SystemExit('source-bound scalar mutation target not unique')
+  data=txt.replace(before,after).encode()
+  sources.append(freeze(path,commit,data));receipt[-1].update(original_sha256=original,source_mutation='actual hub wrong echoed tag' if a.mut==30 else 'actual hub mirror completion counts only local response')
+ else:sources.append(freeze(path,commit,data))
 bench=pathlib.Path(__file__).resolve().parent
 sources.append(freeze(f'{p}/ot_hgi_dma_native_read_owned.sv','fixture-worktree',(root/p/'ot_hgi_dma_native_read_owned.sv').read_bytes()))
-for name in ['ot_native_quant_stimulus.sv','ot_native_dma_core_stimulus.sv','tb_hbm_native_threeproducer.sv']:
+for name in ['ot_native_quant_stimulus.sv','ot_native_dma_core_stimulus.sv','tb_hbm_native_threeproducer.sv']+(['ot_native_scalar_stimulus.sv'] if a.scalar else []):
  path=str((bench/name).relative_to(root));sources.append(freeze(path,'fixture-worktree', (bench/name).read_bytes()))
 vecdir=out/'vectors';vecdir.mkdir(exist_ok=True)
 for name in ['recs.txt','meta.json']+[f'{kind}_{k}.hex' for kind in ['in','out'] for k in range(8)]:
  path=f'results/rtl/ref_tile/qdq_native_peer4/vectors/{name}';data=subprocess.check_output(['git','show',f'{vectors}:{path}'],cwd=root)
  (vecdir/name).write_bytes(data);receipt.append({'path':'vectors/'+name,'source_commit':vectors,'sha256':hashlib.sha256(data).hexdigest()})
-(out/'sourcegraph.json').write_text(json.dumps({'parent':parent,'common':common,'quant':quant,'dma_front':dma,'front12':a.front12,'DMA_read_core':core,'vectors':vectors,'phase':a.phase,'mut':a.mut,'clocks_ps':{'engine':833.33325,'VM':1111.111},'physical_clock_delivery_and_reset_phase_qualification':'OPEN: explicit nominal clock/global reset bindings only', 'hard_clock_ports':{'station':32,'VM_NC':4,'VM_children':52,'relay':24,'CDC_source':96,'CDC_VM':96,'commit':32,'DMA_bridge':64,'DMA_producer':10},'immutable_prices':{'quant_per_quarter':168,'DMA147':15674.320143998484},'scope':'actual SU native_h stage/drain; actual quant qpin4; actual DMAfront DQ; actual source39 q10 STORE/FENCE on32-reservation native read bridge, all4 held R owners; fullSUarithmetic/productionDMAcore workload/physical bridge qualification not proven','files':receipt},indent=2)+'\n')
+(out/'sourcegraph.json').write_text(json.dumps({'parent':parent,'common':common,'quant':quant,'dma_front':dma,'front12':a.front12,'scalar_VM_domain':a.scalar,'scalar_source_contract':{'NC_per_hub':4,'hubs':4,'max_outstanding_per_client':4,'request':338,'response':274,'domain':'VM; production C/V bridge and scalar-client assignment OPEN','CP19_status_AP_upper_range_compatibility':'OPEN'} if a.scalar else None,'DMA_read_core':core,'vectors':vectors,'phase':a.phase,'mut':a.mut,'clocks_ps':{'engine':833.33325,'VM':1111.111},'physical_clock_delivery_and_reset_phase_qualification':'OPEN: explicit nominal clock/global reset bindings only', 'hard_clock_ports':{'station':32,'VM_NC':4,'VM_children':52,'relay':24,'CDC_source':96,'CDC_VM':96,'commit':32,'DMA_bridge':64,'DMA_producer':10},'immutable_prices':{'quant_per_quarter':168,'DMA147':15674.320143998484},'scope':'actual SU native_h stage/drain; actual quant qpin4; actual DMAfront DQ; actual source39 q10 STORE/FENCE on32-reservation native read bridge, all4 held R owners; fullSUarithmetic/productionDMAcore workload/physical bridge qualification not proven','files':receipt},indent=2)+'\n')
 frozen_runner = r'''#!/usr/bin/env python3
 import json,pathlib,os,subprocess,sys,hashlib
 out=pathlib.Path(__file__).resolve().parent
@@ -73,7 +80,7 @@ for entry in meta['files']:
  if hashlib.sha256(path.read_bytes()).hexdigest()!=entry['sha256']:raise SystemExit(f"frozen source mismatch {entry['path']}")
 v=os.environ.get('VERILATOR',str(pathlib.Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
 src=[str(out/'src'/f['path']) for f in meta['files'] if not f['path'].startswith('vectors/')]
-cmd=[v,'--lint-only' if '--lint-only' in sys.argv else '--binary','--timing','-O2','-CFLAGS','-O0','-j','4','-Wno-fatal','-Wno-lint','-Wno-style','--top-module','tb_hbm_native_threeproducer',f"-GMUT={meta['mut']}",f"-GPHASE={meta['phase']}",'--Mdir',str(out/'obj'),'-o','sim']+(['+define+FRONT12'] if meta.get('front12',False) else [])+src
+cmd=[v,'--lint-only' if '--lint-only' in sys.argv else '--binary','--timing','-O2','-CFLAGS','-O0','-j','4','-Wno-fatal','-Wno-lint','-Wno-style','--top-module','tb_hbm_native_threeproducer',f"-GMUT={meta['mut']}",f"-GPHASE={meta['phase']}",'--Mdir',str(out/'obj'),'-o','sim']+(['+define+FRONT12'] if meta.get('front12',False) else [])+(['+define+SCALAR_VM'] if meta.get('scalar_VM_domain',False) else [])+src
 (out/'build-command.json').write_text(json.dumps(cmd,indent=2)+'\n')
 with (out/'build.log').open('w') as f:rc=subprocess.call(cmd,stdout=f,stderr=subprocess.STDOUT)
 if rc:print((out/'build.log').read_text()[-7000:]);sys.exit(rc)
@@ -86,7 +93,7 @@ print((out/'run.log').read_text()[-7000:]);sys.exit(rc)
 (out/'run_frozen.py').write_text(frozen_runner)
 if a.prepare_only:sys.exit(0)
 v=os.environ.get('VERILATOR',str(pathlib.Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
-cmd=[v,'--lint-only' if a.lint_only else '--binary','--timing','-O2','-CFLAGS','-O0','-j','4','-Wno-fatal','-Wno-lint','-Wno-style','--top-module','tb_hbm_native_threeproducer',f'-GMUT={a.mut}',f'-GPHASE={a.phase}','--Mdir',str(out/'obj'),'-o','sim']+(['+define+FRONT12'] if a.front12 else [])+sources
+cmd=[v,'--lint-only' if a.lint_only else '--binary','--timing','-O2','-CFLAGS','-O0','-j','4','-Wno-fatal','-Wno-lint','-Wno-style','--top-module','tb_hbm_native_threeproducer',f'-GMUT={a.mut}',f'-GPHASE={a.phase}','--Mdir',str(out/'obj'),'-o','sim']+(['+define+FRONT12'] if a.front12 else [])+(['+define+SCALAR_VM'] if a.scalar else [])+sources
 (out/'build-command.json').write_text(json.dumps(cmd,indent=2)+'\n')
 with (out/'build.log').open('w') as f:rc=subprocess.call(cmd,stdout=f,stderr=subprocess.STDOUT)
 if rc:print((out/'build.log').read_text()[-7000:]);sys.exit(rc)

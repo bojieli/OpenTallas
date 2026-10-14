@@ -1,0 +1,29 @@
+{
+  "parent": "ddadedbe6",
+  "scalar_CQ_ENABLE": 1,
+  "hub_NC": 4,
+  "hubs": 4,
+  "clients": 16,
+  "ABI": {
+    "request": 338,
+    "response": 274,
+    "max_outstanding_each": 4
+  },
+  "positive": "r14p61 PASS2304requests=responses,12288goldreadwords,256mirroredcompletions after all4actual Ccopywrites1024,3700VMcycles",
+  "negative_observed": {
+    "r14m30": "actual hub echoedtag XOR1;client0 tag0001 expected0000 fatal",
+    "r14m32": "actual hub mirror response count4\u21921;client3 tag3400 prematurelyreturned beforeactualCcopy1 offset96"
+  },
+  "healthy_hub": "literal64fced1f9 unchanged; negative sourcegraph records original andmutatedSHA",
+  "parallel": "actual quant32/13312 exact but192/168PRICEFAIL; actualsource39q10STORE4FENCE4 128native reads1024goldwords; actualSU_h stage/read; actualfirstDMAfront12LOAD; distinctnativeWRS mirror64word ACKdrain",
+  "contention": "concurrentactualwide/DQ; next r15 adds exact actualbank overlap counters",
+  "qualification_open": [
+    "production scalar C/V bridge and assigned clients",
+    "independent packet producer physical clocks/reset phases",
+    "CP19statusaggregate/CDC",
+    "APservice",
+    "upper-address-range compatibility",
+    "fullSUarith",
+    "whole-native price"
+  ]
+}

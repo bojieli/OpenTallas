@@ -74,7 +74,14 @@ module tb_hbm_native_threeproducer;
     for(genvar aq=0;aq<4;aq++)for(genvar ab=0;ab<8;ab++)begin:admission_mutant
       assign admitted_su_wq[(aq*8+ab)*280+:280]={su_wq[(aq*8+ab)*280+279]&&((MUT!=11)||su_wg[aq]),su_wq[(aq*8+ab)*280+:279]};
     end
-    ot_hbm_b2_native_owned4 #(.MUT(MUT==10?1:MUT==13?3:0),.FASTFIN(1),.FRONTFAST(1),.HARD_CLOCKS(1),.HARD_VM_CLOCKS(1),.HARD_CDC_CLOCKS(1),.HARD_COMMIT_CLOCKS(1),.VM_NC(4)) vehicle(
+    ot_hbm_b2_native_owned4 #(.MUT(MUT==10?1:MUT==13?3:0),.FASTFIN(1),.FRONTFAST(1),.HARD_CLOCKS(1),.HARD_VM_CLOCKS(1),.HARD_CDC_CLOCKS(1),.HARD_COMMIT_CLOCKS(1),.VM_NC(4)
+`ifdef SCALAR_VM
+      ,.SCALAR_CQ_ENABLE(1)
+`endif
+      ) vehicle(
+      `ifdef SCALAR_VM
+      .scalar_cq(scalar_cq),.scalar_cr(scalar_cr),
+`endif
       .su_clk(cclk),.quant_clk(cclk),.dma_clk({4{clk}}),.vclk(vmclk),.rst_n(rst_n),.station_clk({32{vmclk}}),.commit_clk({32{vmclk}}),.commit_rst_n({32{rst_n}}),
       .cdc_cclk(cdc_source_clocks),.cdc_vclk({96{vmclk}}),.cdc_crst_n({96{rst_n}}),.cdc_vrst_n({96{rst_n}}),
       .vm_child_clk({52{vmclk}}),.vm_child_rst_n({52{rst_n}}),.relay_clk({24{vmclk}}),.relay_rst_n({24{rst_n}}),
@@ -88,6 +95,34 @@ module tb_hbm_native_threeproducer;
       .probe_rq(512'b0),.probe_rcredit(),.probe_rr(),.probe_wq(8960'b0),.probe_wcredit(),.probe_done(),
       .su_cdrained(su_cd),.su_vdrained(su_vd),.dma_cdrained(dma_cd),.dma_vdrained(dma_vd),
       .vm_rgrant(owner_r),.vm_wgrant(owner_w),.bank_status(bank_status),.fault(parent_fault));
+`ifdef SCALAR_VM
+    wire [16*338-1:0] scalar_cq;wire [16*274-1:0] scalar_cr;
+    wire scalar_done;wire [11:0] scalar_hub_status;
+    wire [31:0] scalar_requests,scalar_responses,scalar_words,scalar_mirror_completions;
+    reg [2047:0] scalar_mirror_seen=0;integer scalar_macro_writes=0,scalar_DQ_overlap=0,scalar_wide_overlap=0;
+    ot_native_scalar_stimulus #(.MUT(MUT)) scalar(.clk(vmclk),.rst_n(rst_n),.go(quant_go),.cq(scalar_cq),.cr(scalar_cr),
+      .hub_status(scalar_hub_status),.mirror_seen(scalar_mirror_seen),.done(scalar_done),.requests(scalar_requests),
+      .responses(scalar_responses),.checked_words(scalar_words),.mirror_completions(scalar_mirror_completions));
+    for(genvar sq=0;sq<4;sq++)begin:scalar_observe
+      assign scalar_hub_status[sq*3+:3]=vehicle.vm.quad[sq].hs;
+      for(genvar sb=0;sb<8;sb++)begin:bank
+        always @(posedge vmclk)if(rst_n&&vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.pqn!=0)begin
+          if(vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.dma_v)scalar_DQ_overlap++;
+          if(vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.rqn[0]!=0||vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.rqn[1]!=0||vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.wqn[0]!=0||vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.wqn[1]!=0)scalar_wide_overlap++;
+        end
+        always @(posedge vmclk)if(rst_n&&vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.m_wC&&vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.m_wa>=896)begin
+          integer offset,sourceq,client,slot;
+          offset=vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.m_wa*8+sb-7168;
+          sourceq=offset/128;client=(offset%128)/32;slot=offset%32;
+          if(slot<16)begin
+            if(vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.m_mC!==8'hff||vehicle.vm.quad[sq].vm.g_bank[sb].u_bank.wdat!==scalar.data(2,sourceq,client,slot))$fatal(1,"SCALAR actual C macro write mismatch copy%0d offset%0d",sq,offset);
+            if(scalar_mirror_seen[sq*512+offset])$fatal(1,"SCALAR duplicate actual C macro write copy%0d offset%0d",sq,offset);
+            scalar_mirror_seen[sq*512+offset]=1;scalar_macro_writes++;
+          end
+        end
+      end
+    end
+`endif
     assign vehicle_fault=parent_fault[31:0];
     reg quant_go=0,quant_seed=0,quant_check=0,dma_core_go=0;
     wire [4*683-1:0] quant_rec;wire [11:0] quant_ret;
@@ -314,7 +349,11 @@ module tb_hbm_native_threeproducer;
                 dma_cycles=cyc-t0;dma_ok=mv_done;
               end
             join
-            if(load_count==0)wait(quant_done&&dma_core_done);
+            if(load_count==0)begin wait(quant_done&&dma_core_done);
+`ifdef SCALAR_VM
+              wait(scalar_done);$display("SCALAR_ACTUAL_BANKS mirror_C_writes%0d packet_DQ_contention_edges%0d packet_wide_contention_edges%0d",scalar_macro_writes,scalar_DQ_overlap,scalar_wide_overlap);if(scalar_DQ_overlap==0||scalar_wide_overlap==0)$fatal(1,"SCALAR actual packet/wide/DQ contention not observed");if(scalar_macro_writes!=1024)$fatal(1,"SCALAR actual four-copy mirror macro count%0d expected1024",scalar_macro_writes);
+`endif
+            end;
             if (!dma_ok) begin $display("FAIL load f %0d m %0d n %0d: done %0d fault %0d", f, m, n, mv_done, mv_fault); errs = errs + 1; end
             else begin
                 tcyc = tcyc + dma_cycles;
@@ -337,7 +376,11 @@ module tb_hbm_native_threeproducer;
                     for (w = 0; w < VMW; w = w + 1) begin
                         hit = 0;
                         for (o2 = 0; o2 < m; o2 = o2 + 1) if (w >= dbase + o2 * dstr && w < dbase + o2 * dstr + n) hit = 1;
-                        if (!hit && vm[w] !== (load_count==0?quant.expected_word(w%65536,32'hA5A5_0000+w):32'hA5A5_0000+w)) bad = bad + 1;
+                        if (!hit && vm[w] !== (
+`ifdef SCALAR_VM
+                            load_count==0?scalar.expected_word(w,quant.expected_word(w%65536,32'hA5A5_0000+w)):
+`endif
+                            load_count==0?quant.expected_word(w%65536,32'hA5A5_0000+w):32'hA5A5_0000+w)) bad = bad + 1;
                     end
                     if (bad != 0) begin $display("FAIL f %0d: %0d words outside the destination changed", f, bad); errs = errs + 1; end
                 end
