@@ -71,7 +71,8 @@
     "No actual Q VM reader/arbitration integration; fixture Q tests shared transport only",
     "No synthesis/CTS/SS/FF/GRT/pin contract qualification",
     "No immutable-price or end-to-end throughput claim",
-    "HEADS2 is historical diagnostic only; no second head filled for TP8"
+    "HEADS2 is historical diagnostic only; no second head filled for TP8",
+    "Credit sender ready/valid inputs are local combinational connections, not a separately hardened pin-registered leaf. A combined physical leaf or separately captured elastic input station is required; only formatter arriving KV/control face is registered."
   ],
   "synthesis": {
     "source": "e7720a19d",
@@ -86,6 +87,9 @@
     "registered_input_bits": 3706,
     "all_input_bits": 3709,
     "all_output_bits": 535,
-    "limitations": "Generic arbitrary-address scatter includes large shift/mux fabric. State census is not area or timing or clock measurement; actual native fixed-lane-stripe partition remains a physical design requirement."
+    "limitations": "Generic arbitrary-address scatter includes large shift/mux fabric. State census is not area or timing or clock measurement; actual native fixed-lane-stripe partition remains a physical design requirement.",
+    "sender_state_Q_bits": 532,
+    "sender_unit": "oth-ubuntu-475075-1791951769",
+    "sender_exit": 0
   }
 }
