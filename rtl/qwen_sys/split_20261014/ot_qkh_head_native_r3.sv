@@ -2,14 +2,15 @@
 // Native head r3: 83 independent entries = front/ktree/score + 16*(stin/stk/nb1/nb2/lane).
 // The former stout's KP path remains D2; its NB D2 becomes two independently placed D1 leaves.
 // No data stage or FP32 operation is added, removed, or reordered.
-module ot_qkh_head_stk_native (
+module ot_qkh_head_stk_native #(parameter integer MUT=0) (
   input wire clk,rst_n,
   input wire [31:0] kp_i,input wire kpv_i,gf_i,
   output wire [31:0] kp_o,output wire kpv_o,gf_o);
   wire [0:0] rr;
   ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst
     (.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
-  ot_qkh_relay #(.W(32),.D(2)) u_rkd (.clk(clk),.rst_n(rr[0]),.d(kp_i),.q(kp_o));
+  ot_qkh_relay #(.W(32),.D(2)) u_rkd (.clk(clk),.rst_n(rr[0]),
+    .d(MUT==5 ? {kp_i[15:0],kp_i[31:16]} : kp_i),.q(kp_o));
   ot_qkh_relay #(.W(2),.D(2),.RST(1)) u_rkv (.clk(clk),.rst_n(rr[0]),.d({kpv_i,gf_i}),.q({kpv_o,gf_o}));
 endmodule
 
@@ -44,7 +45,7 @@ module ot_qkh_head_native_r3 #(
     ot_qkh_head_stin_native #(.MUT(MUT)) u_stin
       (.clk(ck_stin[t]),.rst_n(rst_n),.cr_i(f_t[t][232:217]),.dr_i(f_t[t][216:0]),.cr_o(cr_o),.dr_o(dr_o),
        .lane_rst_n(lane_rst_n[t]));
-    ot_qkh_head_stk_native u_stk
+    ot_qkh_head_stk_native #(.MUT(MUT)) u_stk
       (.clk(ck_stk[t]),.rst_n(rst_n),.kp_i(kp_t[32*t +:32]),.kpv_i(kpv_t[t]),.gf_i(gf_t[t]),
        .kp_o(kp_k[32*t +:32]),.kpv_o(kpv_k[t]),.gf_o(gf_k[t]));
     wire [63:0] nb_mid;
