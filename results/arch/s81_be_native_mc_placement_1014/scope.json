@@ -1,0 +1,36 @@
+{
+  "status": "REQUESTED_UNQUALIFIED_NOT_ADOPTED",
+  "command": "python3 tools/s81_ph/s81_be_native_mc_placement.py",
+  "expected_exit": 1,
+  "configuration": {
+    "NS": 4,
+    "HARD_RELAYS": 1,
+    "QD": 4,
+    "NSTG": 2,
+    "EP": 2,
+    "ED": 3,
+    "MD": 12,
+    "XT": 2,
+    "KX": 4,
+    "DR": 3,
+    "DIE_D": 6,
+    "defines": [
+      "OT_SPVM_BE_HARD_RELAYS"
+    ],
+    "derivation": "4 * NSTG + QD + 9 - 4 * (NSTG + 1) + ED; DIE_D=MD-KX-XT",
+    "adoption": "candidate selection requested; production source remains flatBGR"
+  },
+  "partial_candidate_geometry_pass": true,
+  "actual_relay_be_pairs": 1356,
+  "unqualified_BGR_requested_pairs": 220,
+  "actual_qualified_source_debt": 226,
+  "qualification": "Partialcandidategeometry/cuts; actualBE_SL exactLEFfailsM6childlint; BGRcc460pinsUNQUALIFIED; actualsourceclock/resetdriverreferenceabsent; allparenttraffic/pinalignunproven",
+  "area": {
+    "old_vm_um2": 6094326.7923840005,
+    "requested_vm_um2": 7574555.162304,
+    "delta_vm_um2": 1480228.3699199995,
+    "extra_over_prior_MC_request_um2": 81534.9888
+  },
+  "latency_delta_from_geometry_cycles": 0,
+  "source_correction": "MC H1 meansforwardhop1, notEP1: provenED3/HL11/o-fskew12 requiresEP2/MD12/DIE_D6;50EP1variantunselected,42MD9standaloneinvalidW/Echannels. Allpreviousrecords preserved."
+}

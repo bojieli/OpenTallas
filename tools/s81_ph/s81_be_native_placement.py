@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Place existing BE hard ownstate; audit real candidate pin pairs without inventing die bindings.
+"""HISTORICAL standalone MD9 experiment; selected parent requires H1 checker.
+
+The2.16um W/E gaps violate the adopted20um channel rule. Reports generated
+here remain invalid for parent adoption; preserved original records are history.
 
 The default report is a slot request and exits 1 while source/view debts remain.
 --bindings accepts explicit external pins and clock/reset driver provenance. It never
@@ -199,12 +202,14 @@ def build(bindings):
         cut_scope='partial ownstate traffic only; missing source pairs and all BE unrelated buses excluded; endpoint macro landings excluded',
         clock_bindings=bindings.get('clocks',{}),reset_bindings=bindings.get('resets',{}),clock_debts=clock_debts,reset_debts=reset_debts,
         required_before_submit=['die adopts slot and actual per-bit pins','production BGR qualified leaf view','BE_SL selected view/source binding','actual clock/reset source binding','all parent traffic cuts and pin alignment'],
-        partial_known_ownstate_pass=bool(not violations and not over and not zero_capacity and all(p['routed_length_um']<=500 for p in pairs) and all(cuts[k]<=.6 for k in ['full_vertical','full_horizontal','window_vertical','window_horizontal'])),
+        historical_scope='standaloneMD9 only; productionEP2 requires54cells and H1EP1 requires50cells',
+        channel_rule_violations=dict(actual_faces=['W','E'],required_min_gap_um=20,planned_gap_um=2.16,invalid=True),
+        partial_known_ownstate_pass=bool(False and not violations and not over and not zero_capacity and all(p['routed_length_um']<=500 for p in pairs) and all(cuts[k]<=.6 for k in ['full_vertical','full_horizontal','window_vertical','window_horizontal'])),
         pass_=False)
 
 def main():
     global H
-    ap=argparse.ArgumentParser();ap.add_argument('--be-height',type=float,default=153.36);ap.add_argument('--bindings',type=Path);ap.add_argument('--out',type=Path,default=BASE/'request.json');a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--be-height',type=float,default=153.36);ap.add_argument('--bindings',type=Path);ap.add_argument('--out',type=Path,default=BASE/'standalone_recheck_invalid.json');a=ap.parse_args()
     H=a.be_height
     d=build(json.loads(a.bindings.read_text()) if a.bindings else {})
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(d,indent=2)+'\n')

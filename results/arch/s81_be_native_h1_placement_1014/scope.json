@@ -1,0 +1,37 @@
+{
+  "status": "REQUESTED_UNQUALIFIED_NOT_ADOPTED",
+  "command": "python3 tools/s81_ph/s81_be_native_h1_placement.py",
+  "expected_exit": 1,
+  "configuration": {
+    "NS": 4,
+    "HARD_RELAYS": 1,
+    "QD": 4,
+    "NSTG": 2,
+    "EP": 1,
+    "ED": 2,
+    "MD": 11,
+    "XT": 2,
+    "KX": 4,
+    "DR": 3,
+    "DIE_D": 5,
+    "defines": [
+      "OT_VM28_EP1",
+      "OT_SPVM_BE_HARD_RELAYS"
+    ],
+    "derivation": "4 * NSTG + QD + 9 - 4 * (NSTG + 1) + ED; DIE_D=MD-KX-XT",
+    "adoption": "candidate selection requested; production source remains flatBGR"
+  },
+  "partial_candidate_geometry_pass": true,
+  "actual_relay_be_pairs": 1136,
+  "unqualified_BGR_requested_pairs": 220,
+  "actual_qualified_source_debt": 226,
+  "qualification": "Geometry and partial ownstate cuts only; selected BE_SL actualLEFchildlintFAIL atM6; BGRpins onlyunqualifiedcc460927f request; sourceclock/resetdriverrefclkunbound; fullparenttraffic/pinalignmentunproven",
+  "area": {
+    "old_vm_um2": 6094326.7923840005,
+    "requested_vm_um2": 7558248.164544,
+    "delta_vm_um2": 1463921.3721599998,
+    "extra_over_prior_H1_request_um2": 65227.99104000001
+  },
+  "latency_delta_from_geometry_cycles": 0,
+  "correction": "Sourceparameters derived from actualparent preprocessor branchOT_VM28_EP1; MD=QD+5+ED; DIE_D=MD-KX-XT. Old42cellrecords preservedasstandaloneinvalidchannelhistory."
+}
