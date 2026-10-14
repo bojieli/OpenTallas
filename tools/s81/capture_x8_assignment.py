@@ -47,14 +47,14 @@ def main(request):
     rows=[None]*13376
     for g,x in enumerate(xg):
         for h in range(2):
-            lx=x-11.088+h*80.496
+            lx=x-11.52+h*80.64
             for i,(_,ly,c,d) in enumerate(ports['t_vm']['per_bit']):
                 rows[1664*g+832*h+i]=['S',ly,round(lx+c,3),d]
             k=2*g+h
             capture['ports']['ck_x']['per_bit'][k]=['N','M5',round(lx+55.02,3),.192]
             capture['ports']['ckv_x']['per_bit'][k]=['S','M5',round(lx+55.02,3),.192]
     for i,(_,ly,c,d) in enumerate(ports['t_st']['per_bit']):
-        rows[13312+i]=['S',ly,round(xg[3]-11.088+c,3),d]
+        rows[13312+i]=['S',ly,round(xg[3]-11.52+c,3),d]
     assert all(rows)
     capture['ports']['t_vm']=spec(rows)
     capture['data_clock_bits'] = {
