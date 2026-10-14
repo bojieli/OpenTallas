@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "dsfd_vm_fcc_m5",
+ "verdict": "WARN",
+ "generated": "2026-10-13T17:40:24-0700",
+ "host": "ot-epyc4",
+ "cts": true,
+ "commit": "d621c73fe",
+ "clock": {
+  "max_root_sinks": 10708,
+  "root": "port:ck[0]",
+  "cts": true,
+  "tt_insertion_ps": null,
+  "tt_spread_ps": null,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "10,708 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['ck', 'cks', 'rss', 'vwe', 'vre']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])",
+   "fix": "declare them scalar in RTL"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=0 ck_insertion rc=1",
+   "fix": ""
+  }
+ ]
+}

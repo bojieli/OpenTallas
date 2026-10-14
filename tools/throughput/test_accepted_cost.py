@@ -186,3 +186,17 @@ def test_committed_ledger_is_valid():
         led = AC.load_ledger()
         assert led["schema"] == AC.SCHEMA and AC.check(led) == []
         assert led["totals"] == AC.totals(led)
+
+
+def test_unpriced_serial_job_has_no_ratio_and_is_judged_by_its_loss():
+    """a job the token path does not hold (price 0): node_delta on the nodes it delays, ratio None, loss counted"""
+    r = AC.rom_loss(path(), r"\.b$", 0, 0, node_delta=5)
+    assert r["added_cycles"] == 10 and r["runs_per_token"] == 2
+    assert AC.unit_ratio(0, 5) is None
+    led = AC.empty_ledger()
+    ok = AC.make_row("s81", "unpriced", 0, 5.0, {"ar": dict(e2e_loss_pct=3.0)}, "AGENTS.md", "committed_bench")
+    assert ok["unit_ratio"] is None and AC.refusal(led, ok) is None
+    over = AC.make_row("s81", "unpriced big", 0, 50.0, {"ar": dict(e2e_loss_pct=6.0)}, "AGENTS.md", "committed_bench")
+    assert "unit limit" in AC.refusal(led, over)
+    led["rows"] += [ok, over]
+    assert AC.check(led) == [] and "unpriced" in AC.table(led)
