@@ -1,0 +1,7 @@
+payload mismatch cycle=2 queue=0
+payload mismatch cycle=3 queue=0
+flags mismatch cycle=4 hv=0000 golden=0001
+payload mismatch cycle=4 queue=0
+[160160000] %Fatal: tb_hgi_coll_park_split.sv:52: Assertion failed in tb_hgi_coll_park_split: PARK_SPLIT FAIL errors=61837 checked=16000 pushed=19889 popped=19889
+%Error: rtl/hbm_accel/generic/collective/tb_hgi_coll_park_split.sv:52: Verilog $stop
+Aborting...
