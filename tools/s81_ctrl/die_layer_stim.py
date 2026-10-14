@@ -166,14 +166,58 @@ def partition(y):
 
 
 def layer_ops(progdir, L):
+    """The committed stage-program ops of layer L.  Raises if the program directory is missing or holds no op of L:
+    a source snapshot without results/rtl/s81_ctrl_20261008/programs used to yield an empty layer, whose H_STORE then
+    waited on a node that never existed and the topological sort died with a bare 'AssertionError: cycle'."""
+    files = sorted(Path(progdir).glob('S*.json'))
+    if not files:
+        raise SystemExit(f'die_layer_stim: no stage programs (S*.json) under {progdir}: the source snapshot must carry '
+                         f'results/rtl/s81_ctrl_20261008/programs (or pass --programs)')
     ops = []
-    for f in sorted(progdir.glob('S*.json')):
+    for f in files:
         p = json.loads(f.read_text())
         loc = {o['op']: o['id'] for o in p['ops']}
         for o in p['ops']:
             if o['id'].startswith((f'{L}.attn.', f'{L}.ffn.', f'{L}.eng.')):
                 ops.append(dict(o, preds_id=[loc[q] for q in o['preds']]))
+    if not ops:
+        raise SystemExit(f'die_layer_stim: layer {L} has no ops in the stage programs under {progdir}')
     return ops
+
+
+def apply_dur(src, L, items):
+    """--dur OP=CYCLES: set the duration of behavioural ops of layer L in src (in place); returns {op id: cycles}."""
+    dur_ov = {}
+    for kv in items:
+        k, v = kv.split('=')
+        dur_ov[f'{L}.{k}'] = int(v)
+    miss = sorted(set(dur_ov) - {o['id'] for o in src})
+    if miss:
+        raise SystemExit(f'die_layer_stim: --dur names ops not in layer {L}: {miss}')
+    for o in src:
+        if o['id'] in dur_ov:
+            if o['eng'] in ('hc', 'coll', 'fld'):
+                raise SystemExit(f"die_layer_stim: --dur {o['id']}: a real master's op, its cycles are measured, not set")
+            o['dur'] = dur_ov[o['id']]
+    return dur_ov
+
+
+def topo_order(nodes):
+    """Kahn's order of the rewritten layer program, ties broken by the source program order.  A predecessor that is
+    not a node, and a true dependency cycle, are reported by name (both used to surface as 'AssertionError: cycle')."""
+    dangling = sorted({(n['id'], p) for n in nodes.values() for p in n['preds'] if p not in nodes})
+    if dangling:
+        raise ValueError('die_layer_stim: predecessors that are not program nodes: '
+                         + ', '.join(f'{n} <- {p}' for n, p in dangling))
+    prog, done = [], set()
+    while len(prog) < len(nodes):
+        ready = [n for n in nodes.values() if n['id'] not in done and all(p in done for p in n['preds'])]
+        if not ready:
+            raise ValueError('die_layer_stim: dependency cycle among ' + ', '.join(
+                sorted(k for k in nodes if k not in done)))
+        n = min(ready, key=lambda x: x['order'])
+        prog.append(n); done.add(n['id'])
+    return prog
 
 
 def main():
@@ -198,6 +242,10 @@ def main():
                     'their start on an engine of unlimited concurrency, so a critical SU job queues behind long '
                     'off-critical ones (kv_rope_qdq before q_rope, the shared-expert jobs before swiglu).  The search '
                     'simulates every in-order port with duration estimates and moves SU jobs while the layer end improves')
+    ap.add_argument('--dur', action='append', default=[], metavar='OP=CYCLES',
+                    help='override the program duration of a BEHAVIOURAL op of the layer (OP = the id after "<L>.", e.g. '
+                    'attn.q_rope=123): a measured unit latency in place of the priced one, to see what the layer '
+                    'makes of it.  Real-master ops (hc / coll / fld) are refused; recorded in meta.json dur_override')
     ap.add_argument('--seed', type=int, default=11)
     ap.add_argument('--programs', type=Path, default=ROOT / 'results/rtl/s81_ctrl_20261008/programs')
     a = ap.parse_args()
@@ -206,6 +254,8 @@ def main():
     a.out.mkdir(parents=True, exist_ok=True)
 
     # ------------------------------------------------------------------ golden chain (hc_gate.chains_golden)
+    src = layer_ops(a.programs, a.layer)              # fail fast on a snapshot without the stage programs
+    dur_ov = apply_dur(src, a.layer, a.dur)
     cases = pickle.loads(Path(a.cases).read_bytes())
     fx = None
     if a.layer in PINNED:
@@ -262,7 +312,6 @@ def main():
             else:
                 coef[E_BASE + 2 * b + 1] = e1
     # ------------------------------------------------------------------ program rewrite (by name, then topological)
-    src = layer_ops(a.programs, a.layer)
     eng_ops = [o['id'] for o in src if o['id'].startswith(f'{a.layer}.eng.')]
     assert bool(eng_ops) == (eng_rows is not None), (a.layer, eng_ops, 'Engram ops need an Engram chain fixture')
     if eng_ops:
@@ -333,14 +382,9 @@ def main():
         else:
             add(nm, o['port'], o['dur'], preds, eng=o['eng'], order=i)
     add(f'{L}.hc.h_store', HC_PORT, 0, [f'{L}.ffn.hc_post'], hc_arg(1, S_BASE), eng='hc', order=1e9)
+    topo_order(nodes)                                  # dangling predecessor / cycle: named, before the SU search
     sched = su_schedule(nodes, a, f'{L}.hc.h_store') if a.su_sched else None
-    # Kahn, ties broken by the source program order
-    prog, done = [], set()
-    while len(prog) < len(nodes):
-        ready = [n for n in nodes.values() if n['id'] not in done and all(p in done for p in n['preds'])]
-        assert ready, 'cycle'
-        n = min(ready, key=lambda x: x['order'])
-        prog.append(n); done.add(n['id'])
+    prog = topo_order(nodes)
     idx = {n['id']: k for k, n in enumerate(prog)}
     stim = open(a.out / 'stim.txt', 'w')
     nph, cm = 0, {m['op']: k for k, m in enumerate(msgs)}
@@ -401,7 +445,7 @@ def main():
     meta = dict(layer=a.layer, ng=a.ng, ops=len(prog), field_phases=nph, coll_messages=msgs, coll_records=len(own),
                 y_words=len(ygold), exp_rows=len(run.exp), hstore_rows=nst, golden_checks_vs_pickle=4,
                 program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'], preds=o['preds']) for k, o in enumerate(prog)],
-                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched)
+                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched, dur_override=dur_ov or None)
     if fx is not None:
         meta.update(chain_fixture_sha256=HG.sha(a.chain), chain_schema=fx['schema'], chain_checks=fx['checks'],
                     shard=fx['shard'], shard_sha256=fx['shard_sha256'], golden_checks_vs_pickle=0,

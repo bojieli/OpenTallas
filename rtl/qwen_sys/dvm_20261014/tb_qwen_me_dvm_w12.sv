@@ -13,13 +13,17 @@
 // operand bits s3_x[31:16] of each group dvm == ref; (3) no fault, no x_fault.  DROP = 1 omits one write of op 3: the
 // slice must raise x_fault (fail-loud), the run then PASSES only if it did.
 // Mutants (must FAIL): TAP_MUT 1 (no rounding), LEAF_MUT 2 (swapped tile), HEAD_MUT 3 (wrong station / line),
-// HEAD_MUT 4 (other epoch = stale buffer).
+// HEAD_MUT 4 (other epoch = stale buffer), TAP_MUT 5 (stale write ownership: the previous epoch stays armed).
 module tb_qwen_me_dvm_w12;
     parameter integer NCOL = 2, NH = 8, TG = 4;
     parameter integer GT = NCOL * 2 * NH * TG;
     parameter integer SMIN = 4, SMAX = 7, TCUT = 3;
-    parameter integer HB = 3, DX = 8, XOFF = 3, XVMR = 12;
+    parameter integer HB = 3, DX = 9, XOFF = 3, XVMR = 12;
     parameter integer NOPS = 40, SEED = 1, GAP = 4, DROP = 0;
+    // REUSE: 1 in REUSE ops starts INSIDE the previous op's x range (address reuse, as production: qkv / gate_up share
+    // xbase 4096, o / down re-read the attention / act outputs): the previous epoch is still being read while this
+    // op's producer writes the same addresses, so a tap that leaves the old epoch armed (TAP_MUT 5) faults or corrupts.
+    parameter integer REUSE = 3;
     parameter integer TAP_MUT = 0, LEAF_MUT = 0, HEAD_MUT = 0;
     parameter integer MAXCYC = 2000000;
     localparam integer W = 16, IL = 8, AW = 24, NW = 16, XCW = 12;
@@ -249,6 +253,7 @@ module tb_qwen_me_dvm_w12;
     reg [NW-1:0] o_nout, o_tiles, o_k; reg o_round, o_amax, o_oen;
     reg [AW-1:0] o_wbase, o_ts, o_ks, o_js, o_wcs, o_obase, o_ots, o_ojs, o_mbase, o_xbase;
     reg [2:0] o_jsh; reg [3:0] o_split; reg [AW-1:0] o_xcs, o_xks;
+    integer p_lo = -1, p_hi = -1, reused = 0;
     task automatic r(output integer v, input integer m);
         begin v = $urandom(seed) % m; seed = seed + 1; end
     endtask
@@ -267,6 +272,11 @@ module tb_qwen_me_dvm_w12;
                 r(t0, 2); xks = 1 + t0; r(t0, 4); kc = 1 + t0; r(t0, 3); xcs = kc * xks + t0; r(t1, 60000); o_xbase = t1;
             end
             if (kc > 16 && (o_xbase % 64) != 0) o_xbase = o_xbase - (o_xbase % 64);
+            // address reuse: start inside the previous op's range (any-alignment shapes only, kc <= 16)
+            r(t0, REUSE);
+            if (REUSE > 0 && t0 == 0 && p_lo >= 0 && mode != 1 && kc <= 16) begin
+                r(t1, (p_hi - p_lo < 8) ? p_hi - p_lo : 8); o_xbase = p_lo + t1; reused = reused + 1;
+            end
             per_round = GT >> sp;
             o_split = sp; o_k = kc; o_xcs = xcs; o_xks = xks;
             r(t0, 3); o_tiles = 1 + t0;
@@ -277,6 +287,7 @@ module tb_qwen_me_dvm_w12;
             maxrows = o_tiles * per_round * W * IL;
             r(t0, maxrows); o_nout = 1 + t0;
             lo = o_xbase; hi = o_xbase + ((1 << sp) - 1) * xcs + (kc - 1) * xks + 1;
+            p_lo = lo; p_hi = hi;
         end
     endtask
     task automatic idle_writes;
@@ -363,9 +374,9 @@ module tb_qwen_me_dvm_w12;
             if (xf_seen) $display("PASS drop-detect NCOL=%0d NH=%0d GT=%0d dropped=%0d: x_fault raised (no silent stale read)", NCOL, NH, GT, dropped);
             else $display("FAIL drop-detect: a write was dropped and x_fault was NOT raised");
         end else if (errors == 0 && nqr > 0 && opnd_checks > 0)
-            $display("PASS dvm NCOL=%0d NH=%0d GT=%0d SMIN=%0d SMAX=%0d HB=%0d DX=%0d XOFF=%0d XVMR=%0d GAP=%0d ops=%0d cycles=%0d result_writes=%0d operand_checks=%0d fills=%0d sw_beats=%0d aw_beats=%0d bd_ref=%0d bd_dvm=%0d first_result_delta=%0d",
-                NCOL, NH, GT, SMIN, SMAX, HB, DX, XOFF, XVMR, GAP, ops, cyc, nqr, opnd_checks, fills, sw_beats, aw_beats, BDR, BDD, first_ov_d - first_ov_r);
-        else $display("FAIL errors=%0d writes=%0d operand_checks=%0d", errors, nqr, opnd_checks);
+            $display("PASS dvm NCOL=%0d NH=%0d GT=%0d SMIN=%0d SMAX=%0d HB=%0d DX=%0d XOFF=%0d XVMR=%0d GAP=%0d ops=%0d cycles=%0d result_writes=%0d operand_checks=%0d fills=%0d sw_beats=%0d aw_beats=%0d bd_ref=%0d bd_dvm=%0d first_result_delta=%0d reused=%0d",
+                NCOL, NH, GT, SMIN, SMAX, HB, DX, XOFF, XVMR, GAP, ops, cyc, nqr, opnd_checks, fills, sw_beats, aw_beats, BDR, BDD, first_ov_d - first_ov_r, reused);
+        else $display("FAIL errors=%0d writes=%0d operand_checks=%0d reused=%0d", errors, nqr, opnd_checks, reused);
         $finish;
     end
 endmodule

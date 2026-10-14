@@ -16,8 +16,9 @@
 // 4 KVN + 32 Q words on x3 + the score / weighted-sum descriptors on kvd, wait for the 32 RES at the VM face, POST
 // cycles, s_done; H after H_CYC with {ntok, nval}.  Host (on the KV/system die): one d_start, waits d_done.
 // Reported: STEP cycles (d_start -> d_done) and per layer ATT cycles (first x3 word -> last RES at the VM face).
-// MUT: 1 = one flit dropped in the PHY (C->S) | 2 = Q beats 0/1 swapped in the bridge (via seq MUT 2 path) |
-//      3 = kvlink KVN tag bit 2 dropped (V rows posted as K)
+// MUT: 1 = one flit dropped in the PHY (C->S; with LLR it is replayed: must PASS) | 2 = Q beats 0/1 swapped (seq MUT 2) |
+//      3 = kvlink KVN tag bit 2 dropped (V rows posted as K) | 4 = LLR CRC never checked (with ERRP: must FAIL) |
+//      5 = LLR nak ignored (with ERRP: must FAIL)
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_qwen_split_link;
     parameter integer SPLIT   = 1;
@@ -34,6 +35,8 @@ module tb_qwen_split_link;
     parameter integer H_CYC   = 80;
     parameter integer KVE_SPL = 0;
     parameter integer MUT     = 0;
+    parameter integer LLR     = 1;      // 1 = link-level retry + CRC (ot_qkvd_d2d_llr) at both ends
+    parameter integer ERRP    = 0;      // > 0: flip one PHY bit every ERRP cycles in each direction (needs LLR)
     localparam integer W = 528, FW = 548, HD = 128;
     localparam integer NQ = 32, NK = 4, NR = 32, NL = 36;   // the stepper runs 38 stages: E, L0..L35, H
 
@@ -69,7 +72,8 @@ module tb_qwen_split_link;
         ot_hdc_delay #(.W(262), .D(C_ST), .RESET(1)) u_c8 (.clk(clk), .rst_n(rst_n), .d(c_sc), .q({rs_pw, rs_ds}));
         // ---- compute die link end ----
         wire c_up, c_txv, c_rxv, c_lv, k_up, k_txv, k_rxv, k_lv;
-        wire [FW-1:0] c_txf, c_rxf, c_lf, k_txf, k_rxf, k_lf;
+        wire [FW-1:0] c_txf, c_rxf, k_txf, k_rxf;
+        wire [1:0] llr_f;
         wire [7:0] c_fc; wire [4:0] k_fc;
         wire [186:0] c_ds; wire [74:0] c_pw;
         assign c_sc = {c_pw, c_ds};
@@ -78,12 +82,30 @@ module tb_qwen_split_link;
             .ar_v(c_ar_v), .ar_d(c_ar), .ar_cr(c_ar_cr), .ea_v(1'b0), .ea_kind(1'b0), .ea_addr(24'd0), .ea_cr(),
             .eq_v(), .eq_d(), .sd(c_sd), .kvd(c_kvd), .ds(c_ds), .pw(c_pw),
             .tx_up(c_up), .tx_v(c_txv), .tx_flit(c_txf), .rx_v(c_rxv), .rx_flit(c_rxf), .fault(faults_link[0]), .fault_cause(c_fc));
-        // ---- package: the two macros ----
+        // ---- package: the two macros (+ the link-level retry layer at each end when LLR) ----
+        localparam integer PW = LLR ? FW + 35 : FW;
         wire drop = (MUT == 1) && c_lv && (cyc == 32'd3000);
-        ot_qkvd_ucie_x64_phy_model #(.LAT(PHY_LAT)) u_pc (.clk(clk), .rst_n(rst_n), .tx_up(c_up), .tx_v(c_txv), .tx_flit(c_txf),
-            .rx_v(c_rxv), .rx_flit(c_rxf), .link_v(c_lv), .link_flit(c_lf), .far_v(k_lv), .far_flit(k_lf));
-        ot_qkvd_ucie_x64_phy_model #(.LAT(PHY_LAT)) u_pk (.clk(clk), .rst_n(rst_n), .tx_up(k_up), .tx_v(k_txv), .tx_flit(k_txf),
-            .rx_v(k_rxv), .rx_flit(k_rxf), .link_v(k_lv), .link_flit(k_lf), .far_v(c_lv && !drop), .far_flit(c_lf));
+        wire c_pup, c_ptv, c_prv, k_pup, k_ptv, k_prv;
+        wire [PW-1:0] c_ptf, c_prf, k_ptf, k_prf, c_plf, k_plf;
+        wire [PW-1:0] c_flip = (ERRP > 0 && cyc % ERRP == 0) ? (PW'(1) << (cyc % PW)) : {PW{1'b0}};
+        wire [PW-1:0] k_flip = (ERRP > 0 && (cyc + 37) % ERRP == 0) ? (PW'(1) << ((cyc * 3) % PW)) : {PW{1'b0}};
+        ot_qkvd_ucie_x64_phy_model #(.LAT(PHY_LAT), .FW(PW)) u_pc (.clk(clk), .rst_n(rst_n), .tx_up(c_pup), .tx_v(c_ptv), .tx_flit(c_ptf),
+            .rx_v(c_prv), .rx_flit(c_prf), .link_v(c_lv), .link_flit(c_plf), .far_v(k_lv), .far_flit(k_plf ^ k_flip));
+        ot_qkvd_ucie_x64_phy_model #(.LAT(PHY_LAT), .FW(PW)) u_pk (.clk(clk), .rst_n(rst_n), .tx_up(k_pup), .tx_v(k_ptv), .tx_flit(k_ptf),
+            .rx_v(k_prv), .rx_flit(k_prf), .link_v(k_lv), .link_flit(k_plf), .far_v(c_lv && !drop), .far_flit(c_plf ^ c_flip));
+        if (LLR) begin : g_llr
+            wire [2:0] fc0, fc1;
+            ot_qkvd_d2d_llr #(.FW(FW), .MUT(MUT == 4 ? 1 : (MUT == 5 ? 2 : 0))) u_lc (.clk(clk), .rst_n(rst_n),
+                .a_tx_up(c_up), .a_tx_v(c_txv), .a_tx_flit(c_txf), .a_rx_v(c_rxv), .a_rx_flit(c_rxf),
+                .p_tx_up(c_pup), .p_tx_v(c_ptv), .p_tx_flit(c_ptf), .p_rx_v(c_prv), .p_rx_flit(c_prf), .fault(llr_f[0]), .fault_cause(fc0));
+            ot_qkvd_d2d_llr #(.FW(FW), .MUT(MUT == 4 ? 1 : (MUT == 5 ? 2 : 0))) u_lk (.clk(clk), .rst_n(rst_n),
+                .a_tx_up(k_up), .a_tx_v(k_txv), .a_tx_flit(k_txf), .a_rx_v(k_rxv), .a_rx_flit(k_rxf),
+                .p_tx_up(k_pup), .p_tx_v(k_ptv), .p_tx_flit(k_ptf), .p_rx_v(k_prv), .p_rx_flit(k_prf), .fault(llr_f[1]), .fault_cause(fc1));
+        end else begin : g_nollr
+            assign c_up = c_pup; assign c_ptv = c_txv; assign c_ptf = c_txf; assign c_rxv = c_prv; assign c_rxf = c_prf;
+            assign k_up = k_pup; assign k_ptv = k_txv; assign k_ptf = k_txf; assign k_rxv = k_prv; assign k_rxf = k_prf;
+            assign llr_f = 2'b00;
+        end
         // ---- KV/system die link end + bridge ----
         wire [3:0] kr_v, kr_cr; wire [4*W-1:0] kr_d; wire [2:0] kt_v, kt_cr; wire [3*W-1:0] kt_d;
         ot_qkvd_kv_end #(.QD(8), .UCX(64), .FCR_RES(32), .SPL(KVE_SPL)) u_ke (.clk(clk), .rst_n(rst_n),
@@ -106,7 +128,7 @@ module tb_qwen_split_link;
         ot_hdc_delay #(.W(519), .D(K_ST))            u_k6 (.clk(clk), .rst_n(rst_n), .d(q_ar_d), .q(b_ar_d));
         ot_hdc_delay #(.W(1),   .D(K_ST), .RESET(1)) u_k7 (.clk(clk), .rst_n(rst_n), .d(b_ar_cr), .q(q_ar_cr));
         ot_hdc_delay #(.W(262), .D(K_ST), .RESET(1)) u_k8 (.clk(clk), .rst_n(rst_n), .d({q_pw, q_ds}), .q({b_pw, b_ds}));
-        assign faults_link[3] = 1'b0;
+        assign faults_link[3] = |llr_f;
     end else begin : g_merged
         ot_hdc_delay #(.W(1),   .D(ROM_ST), .RESET(1)) u_r1 (.clk(clk), .rst_n(rst_n), .d(su_x3_v), .q(q_x3_v));
         ot_hdc_delay #(.W(523), .D(ROM_ST))            u_r2 (.clk(clk), .rst_n(rst_n), .d({su_x3_tag, su_x3_d}), .q({q_x3_tag, q_x3_d}));

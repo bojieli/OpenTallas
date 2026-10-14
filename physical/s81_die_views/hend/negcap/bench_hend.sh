@@ -46,7 +46,7 @@ always @(posedge fi) begin
   else begin
     di[513:2]<=w;
     // R2L consumer is slower: send sparse words, no backpressure at this boundary.
-    di[1]<=di[0] && launches>60 && launches<8000 && (dense || (launches % 4)==0);
+    di[1]<=di[0] && launches>60 && launches<8000 && (dense ? (KIND!=2 || (launches % 2)==0) : (launches % 4)==0);
   end
 end
 always @(negedge fi) cap=di;
@@ -71,7 +71,9 @@ fail=0
 # HEND_DENSE=1 (s81 grpA 10-14, meso VR only): also a back-to-back stream (a valid word on every forwarded cycle
 # after start-up) at every phase, so the ring's chunked every-cycle write and the no-backpressure output are
 # exercised at full rate, not only one word in four
-dl="0"; [ "${HEND_DENSE:-0}" = 1 ] && [ "$K" = 1 ] && dl="0 1"
+# r2l (K 2, s81 grpA r3): dense = a word every 2nd forwarded cycle, the densest rate the 4:3 consumer drains
+# (exercises the ratio-FIFO write-always full check every cycle)
+dl="0"; [ "${HEND_DENSE:-0}" = 1 ] && [ "$K" != 0 ] && dl="0 1"
 for dn in $dl; do
 for ph in 0 200 416 600 820; do
  "$O/obj/tb" +PH=$ph +DENSE=$dn +verilator+rand+reset+2 +verilator+seed+$((ph+1)) > "$O/run_${dn}_$ph.log" 2>&1

@@ -68,6 +68,7 @@ import helper_overlay as HO
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
 STATE = Path(os.environ.get("CL_STATE", str(Path.home() / ".local/state/closure_loop")))
+HELPER_STORE = STATE / "frozen_helpers"   # content-addressed frozen helper bytes (sha256); no cleanup touches STATE
 REVIEW = Path(os.environ.get("CL_REVIEW", "/tmp/claude-review-20261003"))
 DROP = REVIEW / "closure_jobs"
 LEDGER = REVIEW / "CLOSURE_LOOP_LEDGER.md"
@@ -2507,7 +2508,7 @@ def ship_helpers(host, run, job=None):
             try:
                 receipt = installed_helper_receipt(host, run, frozen)
                 if receipt["status"] == "verified_original":
-                    HO.committed_frozen_payloads(REPO, frozen)
+                    HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
                                                                host=host, run=run, mutation=False)
                     return
@@ -2522,7 +2523,20 @@ def ship_helpers(host, run, job=None):
                     modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
                     job["bench_helper_origin_verification"] = dict(original, **origin, verified_at=now_iso())
                 elif job.get("source_synced") or job.get("helper_overlay_installed") or job.get("helper_overlay_verification"):
-                    raise ValueError("previously installed frozen helper directory is missing")
+                    # FROZEN-HELPER-REINSTALL (el1014-root-frozen-helper, 2026-10-14): an installed job whose run
+                    # directory has NO helpers is a fresh location -- move_to_other_host (AGIdock run root < 200 GB
+                    # -> EPYC1/EPYC4) or a cleaned run root.  Six jobs stopped NEEDS_HUMAN here.  Re-install the
+                    # exact frozen bytes (committed origin tree, else the content-addressed store), each verified
+                    # against the plan; a partially present or changed directory still refuses (verify above).
+                    try:
+                        payloads, source = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                    except ValueError as ex:
+                        raise ValueError(f"previously installed frozen helper directory is missing and its exact "
+                                         f"bytes are not recoverable ({ex})") from ex
+                    modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+                    job.setdefault("helper_overlay_reinstalls", []).append(dict(
+                        host=host, run=run, source=source, content_sha256=frozen.get("content_sha256"),
+                        origin_main=frozen.get("origin_main"), verified_at=now_iso()))
             except (ValueError, OSError, subprocess.SubprocessError) as ex:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
         if payloads is None:
@@ -2532,6 +2546,7 @@ def ship_helpers(host, run, job=None):
             ok, why = HO.compare_plans(frozen, current)
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            HO.store_payloads(HELPER_STORE, frozen, payloads)
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
         for helper in HELPERS:

@@ -378,7 +378,111 @@ module ot_qkd_drly #(parameter integer W = 1, parameter integer N = 0) (
     end endgenerate
 endmodule
 
-// ---- the die composition (reference for the KV/system die binding; same ports as ot_qwen_nearhbm_attn_hub_t) -------
+// ---- the die composition (kvsys-elements r2 2026-10-14; KV/system die qkd_ahub, lead queue v1.1 rank 5) ----------------
+// Wires only: the hard core qkd_ahub_core + the 13 closed tiles (4 ot_nhb_zh, ot_qkh_recip_leaf, 4 ot_nhb_pbst,
+// 4 ot_nhb_pvlg), each on its OWN clock entry (the die delivers phi - R_child), and the die relay stages between them
+// (ot_qkd_drly N = the die's relay count on that bus, clocked here by the entry of the leaf they feed).  am[143:0] = the
+// core's four registered per-stack lmax copies {am_EN, am_ES, am_WN, am_WS} = copies 3..0 (contract am_<st> 36 b each).
+// ot_qwen_nearhbm_attn_hub_d (below) is this module with every entry on one clock and mo = copy 0 (the hub_t ports).
+module ot_qkd_ahub_die #(
+    parameter integer HD = 128,
+    parameter integer ADD_LAT = 7,
+    parameter integer MUL_LAT = 6,
+    parameter integer ZW = 4,
+    parameter integer ZW_RLY = 0,
+    parameter integer ZR_RLY = 0,
+    parameter integer RA_RLY = 0,
+    parameter integer SR_RLY = 1,
+    parameter integer PV_RLY = 0,
+    parameter integer Y_RLY = 0,
+    parameter integer RX_RLY = 1,
+    parameter integer RY_RLY = 1,
+    parameter integer PI_RLY = 0       // extra stages of pi_* to the beat stores beyond the core's copy (0..3)
+) (
+    input  wire          ck_core,
+    input  wire [3:0]    ck_zh,
+    input  wire          ck_recip,
+    input  wire [3:0]    ck_pbst,
+    input  wire [3:0]    ck_pvlg,
+    input  wire          rst_n,
+    input  wire          start,
+    input  wire [3:0]    si_valid,
+    input  wire [7:0]    si_type,
+    input  wire [3:0]    si_g,
+    input  wire [7:0]    si_hh,
+    input  wire [15:0]   si_k,
+    input  wire [3:0]    si_any,
+    input  wire [127:0]  si_data,
+    input  wire [3:0]    pi_valid,
+    input  wire [3:0]    pi_g,
+    input  wire [23:0]   pi_beat,
+    input  wire [2047:0] pi_data,
+    output wire [143:0]  am,
+    output wire          out_valid,
+    output wire          out_g,
+    output wire [5:0]    out_beat,
+    output wire [511:0]  out_data,
+    output wire          fault,
+    output wire [7:0]    ev
+);
+    wire [3:0]   zh_start;  wire [511:0] zh_we, zh_sid;  wire [15:0] zh_iv;  wire [3:0] zh_g;  wire [23:0] zh_p;
+    wire [255:0] zh_root;   wire [15:0]  zh_err;
+    wire         rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
+    wire [23:0]  pb_ra;     wire [3:0] pl_v;  wire [127:0] pl_rz;  wire [511:0] pl_y;  wire [15:0] pl_pf;
+    qkd_ahub_core #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY),
+                    .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY)) u_core (
+        .clk(ck_core), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
+        .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g),
+        .am(am), .out_valid(out_valid), .out_g(out_g),
+        .out_beat(out_beat), .out_data(out_data), .fault(fault), .ev(ev),
+        .zh_start(zh_start), .zh_we(zh_we), .zh_sid(zh_sid), .zh_iv(zh_iv), .zh_g(zh_g), .zh_p(zh_p),
+        .zh_root(zh_root), .zh_err(zh_err), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
+        .pb_ra(pb_ra), .pl_v(pl_v), .pl_rz(pl_rz), .pl_y(pl_y), .pl_pf(pl_pf));
+    // Z heads
+    genvar g;
+    generate for (g = 0; g < 4; g = g + 1) begin : g_zh
+        wire [267:0] zi;  wire [67:0] zo;  wire [67:0] zo_t;
+        ot_qkd_drly #(.W(268), .N(ZW_RLY)) u_ri (.clk(ck_zh[g]),
+            .d({zh_start[g], zh_we[128*g +: 128], zh_sid[128*g +: 128], zh_iv[4*g +: 4], zh_g[g], zh_p[6*g +: 6]}), .q(zi));
+        ot_nhb_zh u_zh (.clk(ck_zh[g]), .rst_n(rst_n), .start(zi[267]), .zs_we(zi[266:139]), .sid(zi[138:11]), .ziv(zi[10:7]),
+                        .zg(zi[6]), .zp(zi[5:0]), .root(zo_t[63:0]), .zerr(zo_t[67:64]));
+        ot_qkd_drly #(.W(68), .N(ZR_RLY)) u_ro (.clk(ck_core), .d(zo_t), .q(zo));
+        assign zh_root[64*g +: 64] = zo[63:0];
+        assign zh_err[4*g +: 4] = zo[67:64];
+    end endgenerate
+    // reciprocal leaf
+    wire [32:0] rxi, ryo_t, ryo;  wire rf_t, rf;
+    ot_qkd_drly #(.W(33), .N(RX_RLY)) u_rxi (.clk(ck_recip), .d({rc_v, rc_x}), .q(rxi));
+    ot_qkh_recip_leaf u_recip (.clk(ck_recip), .rst_n(rst_n), .v(rxi[32]), .x(rxi[31:0]), .y(ryo_t[31:0]), .vo(ryo_t[32]),
+                               .fault(rf_t));
+    ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ryo (.clk(ck_core), .d({rf_t, ryo_t}), .q({rf, ryo}));
+    assign rc_y = ryo[31:0];  assign rc_vo = ryo[32];  assign rc_fault = rf;
+    // beat stores and lane groups
+    wire [2047:0] sr_t, sr;
+    generate for (g = 0; g < 4; g = g + 1) begin : g_s
+        wire [5:0] ra;  wire [519:0] pin;
+        ot_qkd_drly #(.W(6), .N(RA_RLY)) u_ra (.clk(ck_pbst[g]), .d(pb_ra[6*g +: 6]), .q(ra));
+        // pi_* to the tile: the core captures pi_valid / pi_g in its pin flop, the tile in its own pin flop (= hub_p _b)
+        ot_qkd_drly #(.W(520), .N(PI_RLY)) u_pi (.clk(ck_pbst[g]),
+            .d({pi_valid[g], pi_g[g], pi_beat[6*g +: 6], pi_data[512*g +: 512]}), .q(pin));
+        ot_nhb_pbst u_pbst (.clk(ck_pbst[g]), .rst_n(rst_n), .pv(pin[519]), .pgi(pin[518]), .pbeat(pin[517:512]),
+                            .pdata(pin[511:0]), .ra(ra), .sr(sr_t[512*g +: 512]));
+        ot_qkd_drly #(.W(512), .N(SR_RLY)) u_sr (.clk(ck_pvlg[g]), .d(sr_t[512*g +: 512]), .q(sr[512*g +: 512]));
+    end endgenerate
+    generate for (g = 0; g < 4; g = g + 1) begin : g_pv
+        wire [32:0] vi;  wire [131:0] yo_t, yo;
+        ot_qkd_drly #(.W(33), .N(PV_RLY)) u_vi (.clk(ck_pvlg[g]), .d({pl_v[g], pl_rz[32*g +: 32]}), .q(vi));
+        ot_nhb_pvlg u_pv (.clk(ck_pvlg[g]), .rst_n(rst_n), .v(vi[32]),
+            .s0(sr[0    + 128*g +: 128]), .s1(sr[512  + 128*g +: 128]),
+            .s2(sr[1024 + 128*g +: 128]), .s3(sr[1536 + 128*g +: 128]),
+            .rz(vi[31:0]), .y(yo_t[127:0]), .pf(yo_t[131:128]));
+        ot_qkd_drly #(.W(132), .N(Y_RLY)) u_yo (.clk(ck_core), .d(yo_t), .q(yo));
+        assign pl_y[128*g +: 128] = yo[127:0];
+        assign pl_pf[4*g +: 4] = yo[131:128];
+    end endgenerate
+endmodule
+
+// ---- the die composition on ONE clock with the hub_t ports (mo = am copy 0): the reference every hub bench binds ---
 module ot_qwen_nearhbm_attn_hub_d #(
     parameter integer HD = 128,
     parameter integer ADD_LAT = 7,
@@ -419,65 +523,15 @@ module ot_qwen_nearhbm_attn_hub_d #(
     output wire          fault,
     output wire [7:0]    ev
 );
-    wire [143:0] am;       // the four per-stack lmax copies; the hub's mo_* is copy 0 (the bench checks all four agree)
+    wire [143:0] am;
     assign {mo_valid, mo_g, mo_hh, mo_data} = am[35:0];
 `ifndef SYNTHESIS
     always @(posedge clk) if (am[35:0] !== am[71:36] || am[35:0] !== am[107:72] || am[35:0] !== am[143:108])
         $display("AHUB_D am copies disagree at %0t", $time);
 `endif
-    wire [3:0]   zh_start;  wire [511:0] zh_we, zh_sid;  wire [15:0] zh_iv;  wire [3:0] zh_g;  wire [23:0] zh_p;
-    wire [255:0] zh_root;   wire [15:0]  zh_err;
-    wire         rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
-    wire [23:0]  pb_ra;     wire [3:0] pl_v;  wire [127:0] pl_rz;  wire [511:0] pl_y;  wire [15:0] pl_pf;
-    qkd_ahub_core #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY),
-                    .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY)) u_core (
-        .clk(clk), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
-        .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g),
-        .am(am), .out_valid(out_valid), .out_g(out_g),
-        .out_beat(out_beat), .out_data(out_data), .fault(fault), .ev(ev),
-        .zh_start(zh_start), .zh_we(zh_we), .zh_sid(zh_sid), .zh_iv(zh_iv), .zh_g(zh_g), .zh_p(zh_p),
-        .zh_root(zh_root), .zh_err(zh_err), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
-        .pb_ra(pb_ra), .pl_v(pl_v), .pl_rz(pl_rz), .pl_y(pl_y), .pl_pf(pl_pf));
-    // Z heads
-    genvar g;
-    generate for (g = 0; g < 4; g = g + 1) begin : g_zh
-        wire [267:0] zi;  wire [67:0] zo;  wire [67:0] zo_t;
-        ot_qkd_drly #(.W(268), .N(ZW_RLY)) u_ri (.clk(clk),
-            .d({zh_start[g], zh_we[128*g +: 128], zh_sid[128*g +: 128], zh_iv[4*g +: 4], zh_g[g], zh_p[6*g +: 6]}), .q(zi));
-        ot_nhb_zh u_zh (.clk(clk), .rst_n(rst_n), .start(zi[267]), .zs_we(zi[266:139]), .sid(zi[138:11]), .ziv(zi[10:7]),
-                        .zg(zi[6]), .zp(zi[5:0]), .root(zo_t[63:0]), .zerr(zo_t[67:64]));
-        ot_qkd_drly #(.W(68), .N(ZR_RLY)) u_ro (.clk(clk), .d(zo_t), .q(zo));
-        assign zh_root[64*g +: 64] = zo[63:0];
-        assign zh_err[4*g +: 4] = zo[67:64];
-    end endgenerate
-    // reciprocal leaf
-    wire [32:0] rxi, ryo_t, ryo;  wire rf_t, rf;
-    ot_qkd_drly #(.W(33), .N(RX_RLY)) u_rxi (.clk(clk), .d({rc_v, rc_x}), .q(rxi));
-    ot_qkh_recip_leaf u_recip (.clk(clk), .rst_n(rst_n), .v(rxi[32]), .x(rxi[31:0]), .y(ryo_t[31:0]), .vo(ryo_t[32]),
-                               .fault(rf_t));
-    ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ryo (.clk(clk), .d({rf_t, ryo_t}), .q({rf, ryo}));
-    assign rc_y = ryo[31:0];  assign rc_vo = ryo[32];  assign rc_fault = rf;
-    // beat stores and lane groups
-    wire [2047:0] sr_t, sr;
-    generate for (g = 0; g < 4; g = g + 1) begin : g_s
-        wire [5:0] ra;  wire [519:0] pin;
-        ot_qkd_drly #(.W(6), .N(RA_RLY)) u_ra (.clk(clk), .d(pb_ra[6*g +: 6]), .q(ra));
-        // pi_* to the tile: the core captures pi_valid / pi_g in its pin flop, the tile in its own pin flop (= hub_p _b)
-        ot_qkd_drly #(.W(520), .N(PI_RLY)) u_pi (.clk(clk),
-            .d({pi_valid[g], pi_g[g], pi_beat[6*g +: 6], pi_data[512*g +: 512]}), .q(pin));
-        ot_nhb_pbst u_pbst (.clk(clk), .rst_n(rst_n), .pv(pin[519]), .pgi(pin[518]), .pbeat(pin[517:512]),
-                            .pdata(pin[511:0]), .ra(ra), .sr(sr_t[512*g +: 512]));
-        ot_qkd_drly #(.W(512), .N(SR_RLY)) u_sr (.clk(clk), .d(sr_t[512*g +: 512]), .q(sr[512*g +: 512]));
-    end endgenerate
-    generate for (g = 0; g < 4; g = g + 1) begin : g_pv
-        wire [32:0] vi;  wire [131:0] yo_t, yo;
-        ot_qkd_drly #(.W(33), .N(PV_RLY)) u_vi (.clk(clk), .d({pl_v[g], pl_rz[32*g +: 32]}), .q(vi));
-        ot_nhb_pvlg u_pv (.clk(clk), .rst_n(rst_n), .v(vi[32]),
-            .s0(sr[0    + 128*g +: 128]), .s1(sr[512  + 128*g +: 128]),
-            .s2(sr[1024 + 128*g +: 128]), .s3(sr[1536 + 128*g +: 128]),
-            .rz(vi[31:0]), .y(yo_t[127:0]), .pf(yo_t[131:128]));
-        ot_qkd_drly #(.W(132), .N(Y_RLY)) u_yo (.clk(clk), .d(yo_t), .q(yo));
-        assign pl_y[128*g +: 128] = yo[127:0];
-        assign pl_pf[4*g +: 4] = yo[131:128];
-    end endgenerate
+    ot_qkd_ahub_die #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY), .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY), .RX_RLY(RX_RLY), .RY_RLY(RY_RLY), .PI_RLY(PI_RLY)) u_die (.ck_core(clk), .ck_zh({4{clk}}), .ck_recip(clk), .ck_pbst({4{clk}}),
+        .ck_pvlg({4{clk}}), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
+        .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g), .pi_beat(pi_beat),
+        .pi_data(pi_data), .am(am), .out_valid(out_valid), .out_g(out_g), .out_beat(out_beat), .out_data(out_data),
+        .fault(fault), .ev(ev));
 endmodule
