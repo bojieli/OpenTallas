@@ -26,7 +26,8 @@ module ot_hbm_b2_peer_lease #(parameter integer NSRC=3,MUT=0)(
    req_r[s]<=src_req[s];req_n[s]<=~src_req[s];idle_r[s]<=src_drained[s];idle_n[s]<=~src_drained[s];
    g1<=grant_bus[s];g2<=g1;gn1<=grant_n[s];gn2<=gn1;
    a1<=ack_r[s];a2<=a1;an1<=ack_n[s];an2<=an1;
-   if(g2!=~gn2||a2!=~an2)sf<=1;
+   // Transport rail disagreement refuses a transfer; local mutable mismatch is sticky.
+   if(req_r[s]!=~req_n[s]||idle_r[s]!=~idle_n[s])sf<=1;
   end
   assign src_grant[s]=g2&&(g2==~gn2)&&!sf;
   assign src_drain_ack[s]=a2&&(a2==~an2)&&!sf;
@@ -37,7 +38,7 @@ module ot_hbm_b2_peer_lease #(parameter integer NSRC=3,MUT=0)(
   vm_grant<=0;grant_n<='1;ack_r<='1;ack_n<=0;active<=0;owner<=0;last<=NSRC-1;vf<=0;
  end else begin
   rq1<=req_r;rq2<=rq1;rn1<=req_n;rn2<=rn1;id1<=idle_r;id2<=id1;in1<=idle_n;in2<=in1;
-  if(rq2!=~rn2||id2!=~in2||vm_grant!=~grant_n||ack_r!=~ack_n)vf<=1;
+  if(vm_grant!=~grant_n||ack_r!=~ack_n)vf<=1;
   if(!vf&&rq2==~rn2&&id2==~in2)begin
    if(active)begin
     if(!rq2[owner]&&id2[owner]&&vm_drained[owner])begin
