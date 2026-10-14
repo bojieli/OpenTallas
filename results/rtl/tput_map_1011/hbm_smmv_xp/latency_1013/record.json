@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.hbm_smmv.latency_evidence.v1",
   "source": "el1013-hbm-redesign-smmv.log + preserved authoritative run logs",
-  "adoption": "Stacked expert records adopted 2026-10-13 18:33 PT; compiler implementation 54a1a08b3 still requires full checkpoint validation",
+  "adoption": "Stacked expert records adopted 2026-10-13 18:33 PT; compiler implementation 54a1a08b3 validated by full-checkpoint DS L0/L1 proof at 125e122bc (compiler_stacked_1013/proof.json); routed tile and die qualification remain open",
   "price_cycles": {
     "L0": 2950.4,
     "L1": 3689.1
