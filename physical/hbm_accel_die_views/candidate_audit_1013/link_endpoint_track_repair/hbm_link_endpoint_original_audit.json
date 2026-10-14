@@ -1,0 +1,433 @@
+{
+ "macros": [
+  {
+   "allowed_orientations": [
+    "R0",
+    "MX",
+    "MY",
+    "R180"
+   ],
+   "dimension_parity": {
+    "M4": {
+     "axis_dim_nm": 830000,
+     "dim_mod_track_pitch_nm": 32,
+     "fix": {
+      "grow_dimension_free": {
+       "area_delta_pct": 0.005,
+       "area_delta_um2": 104.0,
+       "delta_nm": 40,
+       "new_dim_nm": 830040
+      },
+      "grow_dimension_on_snap_grid": {
+       "area_delta_pct": 0.063,
+       "area_delta_um2": 1352.0,
+       "delta_nm": 520,
+       "new_dim_nm": 830520,
+       "snap_nm": 270
+      },
+      "needed": true,
+      "shift_pins_keep_dim": {
+       "note": "zero area; unmirrored origin residue changes by -shift",
+       "pin_shift_options_nm": [
+        -20,
+        4
+       ]
+      }
+     },
+     "mirror_residue_shift_nm": 8,
+     "orientation_flipping_this_axis": [
+      "MX",
+      "R180"
+     ],
+     "row_or_site_multiple": false,
+     "track_pitch_nm": 48
+    },
+    "M5": {
+     "axis_dim_nm": 2600000,
+     "dim_mod_track_pitch_nm": 32,
+     "fix": {
+      "grow_dimension_free": {
+       "area_delta_pct": 0.002,
+       "area_delta_um2": 33.2,
+       "delta_nm": 40,
+       "new_dim_nm": 2600040
+      },
+      "grow_dimension_on_snap_grid": {
+       "area_delta_pct": 0.016,
+       "area_delta_um2": 351.92,
+       "delta_nm": 424,
+       "new_dim_nm": 2600424,
+       "snap_nm": 216
+      },
+      "needed": true,
+      "shift_pins_keep_dim": {
+       "note": "zero area; unmirrored origin residue changes by -shift",
+       "pin_shift_options_nm": [
+        -20,
+        4
+       ]
+      }
+     },
+     "mirror_residue_shift_nm": 8,
+     "orientation_flipping_this_axis": [
+      "MY",
+      "R180"
+     ],
+     "row_or_site_multiple": false,
+     "track_pitch_nm": 48
+    }
+   },
+   "findings": [
+    "M4: same-layer OBS within min spacing of pins",
+    "M5: same-layer OBS within min spacing of pins",
+    "M4: origin-0 track snap leaves pins off-track in ['MX', 'R180']",
+    "M5: origin-0 track snap leaves pins off-track in ['MY', 'R180']"
+   ],
+   "lef": "/tmp/hbm_link_endpoint_original.lef",
+   "macro": "hfd_lk_ep",
+   "orientations": {
+    "M4": {
+     "MX": {
+      "adjacent_layer_via_access": {
+       "M3": "blocked by OBS over every pin",
+       "M5": "blocked by OBS over every pin"
+      },
+      "joint_with_row": {
+       "joint_period_nm": 2160,
+       "legal_fraction_of_sites": 0.0,
+       "legal_origins_mod_joint_nm": [],
+       "site_pitch_nm": 270
+      },
+      "legal_origin_residues_mod_track_nm": [
+       40
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 8.0,
+       "offtrack_pins": 2094
+      },
+      "pin_centre_residues_nm": [
+       20
+      ],
+      "pref_axis": "y",
+      "track_period_nm": 48,
+      "uniform": true
+     },
+     "MY": {
+      "adjacent_layer_via_access": {
+       "M3": "blocked by OBS over every pin",
+       "M5": "blocked by OBS over every pin"
+      },
+      "joint_with_row": {
+       "joint_period_nm": 2160,
+       "legal_fraction_of_sites": 0.125,
+       "legal_origins_mod_joint_nm": [
+        0
+       ],
+       "site_pitch_nm": 270
+      },
+      "legal_origin_residues_mod_track_nm": [
+       0
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 0.0,
+       "offtrack_pins": 0
+      },
+      "pin_centre_residues_nm": [
+       12
+      ],
+      "pref_axis": "y",
+      "track_period_nm": 48,
+      "uniform": true
+     },
+     "R0": {
+      "adjacent_layer_via_access": {
+       "M3": "blocked by OBS over every pin",
+       "M5": "blocked by OBS over every pin"
+      },
+      "joint_with_row": {
+       "joint_period_nm": 2160,
+       "legal_fraction_of_sites": 0.125,
+       "legal_origins_mod_joint_nm": [
+        0
+       ],
+       "site_pitch_nm": 270
+      },
+      "legal_origin_residues_mod_track_nm": [
+       0
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 0.0,
+       "offtrack_pins": 0
+      },
+      "pin_centre_residues_nm": [
+       12
+      ],
+      "pref_axis": "y",
+      "track_period_nm": 48,
+      "uniform": true
+     },
+     "R180": {
+      "adjacent_layer_via_access": {
+       "M3": "blocked by OBS over every pin",
+       "M5": "blocked by OBS over every pin"
+      },
+      "joint_with_row": {
+       "joint_period_nm": 2160,
+       "legal_fraction_of_sites": 0.0,
+       "legal_origins_mod_joint_nm": [],
+       "site_pitch_nm": 270
+      },
+      "legal_origin_residues_mod_track_nm": [
+       40
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 8.0,
+       "offtrack_pins": 2094
+      },
+      "pin_centre_residues_nm": [
+       20
+      ],
+      "pref_axis": "y",
+      "track_period_nm": 48,
+      "uniform": true
+     }
+    },
+    "M5": {
+     "MX": {
+      "adjacent_layer_via_access": {
+       "M4": "blocked by OBS over every pin",
+       "M6": "blocked by OBS over every pin"
+      },
+      "joint_with_site": {
+       "joint_period_nm": 432,
+       "legal_fraction_of_sites": 0.125,
+       "legal_origins_mod_joint_nm": [
+        0
+       ],
+       "site_pitch_nm": 54
+      },
+      "legal_origin_residues_mod_track_nm": [
+       0
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 0.0,
+       "offtrack_pins": 0
+      },
+      "pin_centre_residues_nm": [
+       12
+      ],
+      "pref_axis": "x",
+      "track_period_nm": 48,
+      "uniform": true
+     },
+     "MY": {
+      "adjacent_layer_via_access": {
+       "M4": "blocked by OBS over every pin",
+       "M6": "blocked by OBS over every pin"
+      },
+      "joint_with_site": {
+       "joint_period_nm": 432,
+       "legal_fraction_of_sites": 0.0,
+       "legal_origins_mod_joint_nm": [],
+       "site_pitch_nm": 54
+      },
+      "legal_origin_residues_mod_track_nm": [
+       40
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 8.0,
+       "offtrack_pins": 2
+      },
+      "pin_centre_residues_nm": [
+       20
+      ],
+      "pref_axis": "x",
+      "track_period_nm": 48,
+      "uniform": true
+     },
+     "R0": {
+      "adjacent_layer_via_access": {
+       "M4": "blocked by OBS over every pin",
+       "M6": "blocked by OBS over every pin"
+      },
+      "joint_with_site": {
+       "joint_period_nm": 432,
+       "legal_fraction_of_sites": 0.125,
+       "legal_origins_mod_joint_nm": [
+        0
+       ],
+       "site_pitch_nm": 54
+      },
+      "legal_origin_residues_mod_track_nm": [
+       0
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 0.0,
+       "offtrack_pins": 0
+      },
+      "pin_centre_residues_nm": [
+       12
+      ],
+      "pref_axis": "x",
+      "track_period_nm": 48,
+      "uniform": true
+     },
+     "R180": {
+      "adjacent_layer_via_access": {
+       "M4": "blocked by OBS over every pin",
+       "M6": "blocked by OBS over every pin"
+      },
+      "joint_with_site": {
+       "joint_period_nm": 432,
+       "legal_fraction_of_sites": 0.0,
+       "legal_origins_mod_joint_nm": [],
+       "site_pitch_nm": 54
+      },
+      "legal_origin_residues_mod_track_nm": [
+       40
+      ],
+      "n_distinct_centre_phases": 1,
+      "naive_snap_origin_0_mod_track": {
+       "max_offset_nm": 8.0,
+       "offtrack_pins": 2
+      },
+      "pin_centre_residues_nm": [
+       20
+      ],
+      "pref_axis": "x",
+      "track_period_nm": 48,
+      "uniform": true
+     }
+    }
+   },
+   "pg_pins": [],
+   "pin_checks": {
+    "M4": {
+     "adjacent_layer_obs_covers_pin": {
+      "M3": 2094,
+      "M5": 2094
+     },
+     "below_min_area": 0,
+     "below_min_width": 0,
+     "min_area_nm2": 2000,
+     "min_width_nm": 24,
+     "pin_area_nm2": [
+      4608,
+      4608
+     ],
+     "pin_centre_steps_nm": [
+      192,
+      426912
+     ],
+     "pin_width_nm": [
+      24,
+      24
+     ],
+     "pins_on_macro_edge": 2094,
+     "pref_track_pitch_nm": 48,
+     "preferred_direction": "H",
+     "same_layer_obs_min_gap_nm": 0,
+     "same_layer_obs_overlap_or_within_spacing": 2094
+    },
+    "M5": {
+     "adjacent_layer_obs_covers_pin": {
+      "M4": 2,
+      "M6": 2
+     },
+     "below_min_area": 0,
+     "below_min_width": 0,
+     "min_area_nm2": 2000,
+     "min_width_nm": 24,
+     "pin_area_nm2": [
+      4608,
+      4608
+     ],
+     "pin_centre_steps_nm": [
+      384
+     ],
+     "pin_width_nm": [
+      24,
+      24
+     ],
+     "pins_on_macro_edge": 2,
+     "pref_track_pitch_nm": 48,
+     "preferred_direction": "V",
+     "same_layer_obs_min_gap_nm": 0,
+     "same_layer_obs_overlap_or_within_spacing": 2
+    }
+   },
+   "pin_layers": {
+    "M4": 2094,
+    "M5": 2
+   },
+   "signal_pins": 2096,
+   "size_um": [
+    2600.0,
+    830.0
+   ],
+   "summary": {
+    "M4": {
+     "no_legal_origin": [],
+     "offtrack_under_origin_0_snap": [
+      "MX",
+      "R180"
+     ],
+     "orientation_invariant": false,
+     "origin_rule_mod_track_nm": {
+      "MX": [
+       40
+      ],
+      "MY": [
+       0
+      ],
+      "R0": [
+       0
+      ],
+      "R180": [
+       40
+      ]
+     }
+    },
+    "M5": {
+     "no_legal_origin": [],
+     "offtrack_under_origin_0_snap": [
+      "MY",
+      "R180"
+     ],
+     "orientation_invariant": false,
+     "origin_rule_mod_track_nm": {
+      "MX": [
+       0
+      ],
+      "MY": [
+       40
+      ],
+      "R0": [
+       0
+      ],
+      "R180": [
+       40
+      ]
+     }
+    }
+   },
+   "symmetry": [
+    "X",
+    "Y"
+   ]
+  }
+ ],
+ "schema": "opentallas.macro_track_alignment.v1",
+ "site_nm": [
+  54,
+  270
+ ],
+ "tracks_source": "ORFS flow/platforms/asap7/openRoad/make_tracks.tcl"
+}

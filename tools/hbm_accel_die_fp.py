@@ -7090,6 +7090,11 @@ def r25gq_v13():
       tracks a bit on one layer, buildable under the M5 cap; v12 stations had 0.048-0.071), ck / rst on a third face,
       a bus wider than 1,136 b as class tiles side by side (2,068 b = 2 x 1136 = 228.96 um)."""
     v = r25gq_v12()
+    # Unpublished v13 endpoint placeholder: 830 um cannot be placed MX on
+    # the 270 nm row / 48 nm M4 lattice. 830.52 is a row multiple with
+    # H mod 48 nm = 24 nm, preserving the local 12 nm pin phase under MX.
+    # This is a candidate slot change (+0.52 um), not a v12 contract edit.
+    v['link_ep_v2'] = dict(v['link_ep_v2'], wh=(2600.0, 830.52))
     v['pin_reach'] = PIN_REACH_UM
     v['rly_family'] = True
     return v

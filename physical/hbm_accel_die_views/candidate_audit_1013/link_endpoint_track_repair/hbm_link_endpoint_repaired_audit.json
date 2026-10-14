@@ -1,0 +1,413 @@
+{
+  "schema": "opentallas.macro_track_alignment.v1",
+  "tracks_source": "ORFS flow/platforms/asap7/openRoad/make_tracks.tcl",
+  "site_nm": [
+    54,
+    270
+  ],
+  "macros": [
+    {
+      "macro": "hfd_lk_ep",
+      "lef": "/tmp/hbm_link_endpoint_repaired.lef",
+      "size_um": [
+        2600.0,
+        830.52
+      ],
+      "symmetry": [
+        "X",
+        "Y"
+      ],
+      "allowed_orientations": [
+        "R0",
+        "MX",
+        "MY",
+        "R180"
+      ],
+      "signal_pins": 2096,
+      "pg_pins": [],
+      "pin_layers": {
+        "M4": 2094,
+        "M5": 2
+      },
+      "orientations": {
+        "M4": {
+          "R0": {
+            "pref_axis": "y",
+            "track_period_nm": 48,
+            "pin_centre_residues_nm": [
+              12
+            ],
+            "n_distinct_centre_phases": 1,
+            "legal_origin_residues_mod_track_nm": [
+              0
+            ],
+            "uniform": true,
+            "naive_snap_origin_0_mod_track": {
+              "offtrack_pins": 0,
+              "max_offset_nm": 0.0
+            },
+            "joint_with_row": {
+              "joint_period_nm": 2160,
+              "site_pitch_nm": 270,
+              "legal_origins_mod_joint_nm": [
+                0
+              ],
+              "legal_fraction_of_sites": 0.125
+            },
+            "adjacent_layer_via_access": {
+              "M5": "blocked by OBS over every pin",
+              "M3": "blocked by OBS over every pin"
+            }
+          },
+          "MX": {
+            "pref_axis": "y",
+            "track_period_nm": 48,
+            "pin_centre_residues_nm": [
+              12
+            ],
+            "n_distinct_centre_phases": 1,
+            "legal_origin_residues_mod_track_nm": [
+              0
+            ],
+            "uniform": true,
+            "naive_snap_origin_0_mod_track": {
+              "offtrack_pins": 0,
+              "max_offset_nm": 0.0
+            },
+            "joint_with_row": {
+              "joint_period_nm": 2160,
+              "site_pitch_nm": 270,
+              "legal_origins_mod_joint_nm": [
+                0
+              ],
+              "legal_fraction_of_sites": 0.125
+            },
+            "adjacent_layer_via_access": {
+              "M5": "blocked by OBS over every pin",
+              "M3": "blocked by OBS over every pin"
+            }
+          },
+          "MY": {
+            "pref_axis": "y",
+            "track_period_nm": 48,
+            "pin_centre_residues_nm": [
+              12
+            ],
+            "n_distinct_centre_phases": 1,
+            "legal_origin_residues_mod_track_nm": [
+              0
+            ],
+            "uniform": true,
+            "naive_snap_origin_0_mod_track": {
+              "offtrack_pins": 0,
+              "max_offset_nm": 0.0
+            },
+            "joint_with_row": {
+              "joint_period_nm": 2160,
+              "site_pitch_nm": 270,
+              "legal_origins_mod_joint_nm": [
+                0
+              ],
+              "legal_fraction_of_sites": 0.125
+            },
+            "adjacent_layer_via_access": {
+              "M5": "blocked by OBS over every pin",
+              "M3": "blocked by OBS over every pin"
+            }
+          },
+          "R180": {
+            "pref_axis": "y",
+            "track_period_nm": 48,
+            "pin_centre_residues_nm": [
+              12
+            ],
+            "n_distinct_centre_phases": 1,
+            "legal_origin_residues_mod_track_nm": [
+              0
+            ],
+            "uniform": true,
+            "naive_snap_origin_0_mod_track": {
+              "offtrack_pins": 0,
+              "max_offset_nm": 0.0
+            },
+            "joint_with_row": {
+              "joint_period_nm": 2160,
+              "site_pitch_nm": 270,
+              "legal_origins_mod_joint_nm": [
+                0
+              ],
+              "legal_fraction_of_sites": 0.125
+            },
+            "adjacent_layer_via_access": {
+              "M5": "blocked by OBS over every pin",
+              "M3": "blocked by OBS over every pin"
+            }
+          }
+        },
+        "M5": {
+          "R0": {
+            "pref_axis": "x",
+            "track_period_nm": 48,
+            "pin_centre_residues_nm": [
+              12
+            ],
+            "n_distinct_centre_phases": 1,
+            "legal_origin_residues_mod_track_nm": [
+              0
+            ],
+            "uniform": true,
+            "naive_snap_origin_0_mod_track": {
+              "offtrack_pins": 0,
+              "max_offset_nm": 0.0
+            },
+            "joint_with_site": {
+              "joint_period_nm": 432,
+              "site_pitch_nm": 54,
+              "legal_origins_mod_joint_nm": [
+                0
+              ],
+              "legal_fraction_of_sites": 0.125
+            },
+            "adjacent_layer_via_access": {
+              "M6": "blocked by OBS over every pin",
+              "M4": "blocked by OBS over every pin"
+            }
+          },
+          "MX": {
+            "pref_axis": "x",
+            "track_period_nm": 48,
+            "pin_centre_residues_nm": [
+              12
+            ],
+            "n_distinct_centre_phases": 1,
+            "legal_origin_residues_mod_track_nm": [
+              0
+            ],
+            "uniform": true,
+            "naive_snap_origin_0_mod_track": {
+              "offtrack_pins": 0,
+              "max_offset_nm": 0.0
+            },
+            "joint_with_site": {
+              "joint_period_nm": 432,
+              "site_pitch_nm": 54,
+              "legal_origins_mod_joint_nm": [
+                0
+              ],
+              "legal_fraction_of_sites": 0.125
+            },
+            "adjacent_layer_via_access": {
+              "M6": "blocked by OBS over every pin",
+              "M4": "blocked by OBS over every pin"
+            }
+          },
+          "MY": {
+            "pref_axis": "x",
+            "track_period_nm": 48,
+            "pin_centre_residues_nm": [
+              20
+            ],
+            "n_distinct_centre_phases": 1,
+            "legal_origin_residues_mod_track_nm": [
+              40
+            ],
+            "uniform": true,
+            "naive_snap_origin_0_mod_track": {
+              "offtrack_pins": 2,
+              "max_offset_nm": 8.0
+            },
+            "joint_with_site": {
+              "joint_period_nm": 432,
+              "site_pitch_nm": 54,
+              "legal_origins_mod_joint_nm": [],
+              "legal_fraction_of_sites": 0.0
+            },
+            "adjacent_layer_via_access": {
+              "M6": "blocked by OBS over every pin",
+              "M4": "blocked by OBS over every pin"
+            }
+          },
+          "R180": {
+            "pref_axis": "x",
+            "track_period_nm": 48,
+            "pin_centre_residues_nm": [
+              20
+            ],
+            "n_distinct_centre_phases": 1,
+            "legal_origin_residues_mod_track_nm": [
+              40
+            ],
+            "uniform": true,
+            "naive_snap_origin_0_mod_track": {
+              "offtrack_pins": 2,
+              "max_offset_nm": 8.0
+            },
+            "joint_with_site": {
+              "joint_period_nm": 432,
+              "site_pitch_nm": 54,
+              "legal_origins_mod_joint_nm": [],
+              "legal_fraction_of_sites": 0.0
+            },
+            "adjacent_layer_via_access": {
+              "M6": "blocked by OBS over every pin",
+              "M4": "blocked by OBS over every pin"
+            }
+          }
+        }
+      },
+      "pin_checks": {
+        "M4": {
+          "preferred_direction": "H",
+          "pin_width_nm": [
+            24,
+            24
+          ],
+          "min_width_nm": 24,
+          "below_min_width": 0,
+          "pin_area_nm2": [
+            4608,
+            4608
+          ],
+          "min_area_nm2": 2000,
+          "below_min_area": 0,
+          "pins_on_macro_edge": 2094,
+          "same_layer_obs_min_gap_nm": 0,
+          "same_layer_obs_overlap_or_within_spacing": 2094,
+          "adjacent_layer_obs_covers_pin": {
+            "M5": 2094,
+            "M3": 2094
+          },
+          "pin_centre_steps_nm": [
+            192,
+            426912
+          ],
+          "pref_track_pitch_nm": 48
+        },
+        "M5": {
+          "preferred_direction": "V",
+          "pin_width_nm": [
+            24,
+            24
+          ],
+          "min_width_nm": 24,
+          "below_min_width": 0,
+          "pin_area_nm2": [
+            4608,
+            4608
+          ],
+          "min_area_nm2": 2000,
+          "below_min_area": 0,
+          "pins_on_macro_edge": 2,
+          "same_layer_obs_min_gap_nm": 0,
+          "same_layer_obs_overlap_or_within_spacing": 2,
+          "adjacent_layer_obs_covers_pin": {
+            "M6": 2,
+            "M4": 2
+          },
+          "pin_centre_steps_nm": [
+            384
+          ],
+          "pref_track_pitch_nm": 48
+        }
+      },
+      "dimension_parity": {
+        "M4": {
+          "axis_dim_nm": 830520,
+          "dim_mod_track_pitch_nm": 24,
+          "track_pitch_nm": 48,
+          "row_or_site_multiple": true,
+          "orientation_flipping_this_axis": [
+            "MX",
+            "R180"
+          ],
+          "mirror_residue_shift_nm": 0,
+          "fix": {
+            "needed": false
+          }
+        },
+        "M5": {
+          "axis_dim_nm": 2600000,
+          "dim_mod_track_pitch_nm": 32,
+          "track_pitch_nm": 48,
+          "row_or_site_multiple": false,
+          "orientation_flipping_this_axis": [
+            "MY",
+            "R180"
+          ],
+          "mirror_residue_shift_nm": 8,
+          "fix": {
+            "needed": true,
+            "grow_dimension_on_snap_grid": {
+              "new_dim_nm": 2600424,
+              "delta_nm": 424,
+              "area_delta_pct": 0.016,
+              "area_delta_um2": 352.14,
+              "snap_nm": 216
+            },
+            "grow_dimension_free": {
+              "new_dim_nm": 2600040,
+              "delta_nm": 40,
+              "area_delta_pct": 0.002,
+              "area_delta_um2": 33.221
+            },
+            "shift_pins_keep_dim": {
+              "pin_shift_options_nm": [
+                -20,
+                4
+              ],
+              "note": "zero area; unmirrored origin residue changes by -shift"
+            }
+          }
+        }
+      },
+      "findings": [
+        "M4: same-layer OBS within min spacing of pins",
+        "M5: same-layer OBS within min spacing of pins",
+        "M5: origin-0 track snap leaves pins off-track in ['MY', 'R180']"
+      ],
+      "summary": {
+        "M4": {
+          "no_legal_origin": [],
+          "offtrack_under_origin_0_snap": [],
+          "origin_rule_mod_track_nm": {
+            "R0": [
+              0
+            ],
+            "MX": [
+              0
+            ],
+            "MY": [
+              0
+            ],
+            "R180": [
+              0
+            ]
+          },
+          "orientation_invariant": true
+        },
+        "M5": {
+          "no_legal_origin": [],
+          "offtrack_under_origin_0_snap": [
+            "MY",
+            "R180"
+          ],
+          "origin_rule_mod_track_nm": {
+            "R0": [
+              0
+            ],
+            "MX": [
+              0
+            ],
+            "MY": [
+              40
+            ],
+            "R180": [
+              40
+            ]
+          },
+          "orientation_invariant": false
+        }
+      }
+    }
+  ]
+}
