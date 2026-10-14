@@ -1,11 +1,12 @@
 `timescale 1ns/1ps
 module tb_hgi_coll_tkm_packer;
- parameter MUT=0;
+ parameter MUT=0,ACK_SEAM=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,start=0,cv=0,last=0,hasr=0,ready=0;
  reg[12:0]nout;reg[39:0]ob,rb;reg[339:0]ct;reg[1:0]slot;
+ reg ack=0;wire seq;
  wire wv,empty;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;wire[3:0]queued;wire[9:0]lp;
- ot_hgi_coll_tkm_packer #(.MUT(MUT))dut(.clk(clk),.rst_n(rst_n),.start(start),.cfg_nout(nout),.cfg_obase(ob),.cfg_rbase(rb),.cfg_has_r(hasr),.cell_v(cv),.cell_t(ct),.cell_slot(slot),.cell_last(last),.w_rdy(ready),.w_v(wv),.w_addr(wa),.w_mask(wm),.w_data(wd),.queued(queued),.lines_pushed(lp),.empty(empty));
+ ot_hgi_coll_tkm_packer #(.MUT(MUT),.ACK_SEAM(ACK_SEAM))dut(.clk(clk),.rst_n(rst_n),.start(start),.cfg_nout(nout),.cfg_obase(ob),.cfg_rbase(rb),.cfg_has_r(hasr),.cell_v(cv),.cell_t(ct),.cell_slot(slot),.cell_last(last),.w_rdy(ready),.w_ack(ack),.w_seq(seq),.w_v(wv),.w_addr(wa),.w_mask(wm),.w_data(wd),.queued(queued),.lines_pushed(lp),.empty(empty));
  integer run=0,cycles=0,accepted=0,checked=0,nlines,ix,ln,lane,idx,cellno,expected_lines;
  reg[31:0]prng=32'h6a77e8f1,expected;
  reg[39:0]addr_expected;reg[15:0]mask_expected;
@@ -13,7 +14,8 @@ module tb_hgi_coll_tkm_packer;
  always @(posedge clk)begin
   cycles=cycles+1;
   if(cycles>50000)$fatal(1,"PACKER FAIL timeout");
-  if(wv&&ready)begin
+  if(wv&&ready&&(!ACK_SEAM||(seq!=ack)))begin
+   if(ACK_SEAM)ack<=seq;
    ln=hasr?(accepted/2):accepted;
    addr_expected=(hasr&&accepted%2)?rb+16*ln:ob+16*ln;
    mask_expected=((nout-16*ln)>=16)?16'hffff:((17'd1<<(nout-16*ln))-1);

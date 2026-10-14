@@ -57,7 +57,7 @@ module ot_hgi_coll_tkm_seq_split #(
  ot_hgi_coll_tkm_packer #(.FW(FW),.MUT(MUT))u_packer(.clk(packer_clk),.rst_n(rst_n),
  .start(ps),.cfg_nout(pnout),.cfg_obase(pob),.cfg_rbase(prb),.cfg_has_r(phr),
  .cell_v(pcv),.cell_t(pcell),.cell_slot(pslot),.cell_last(plast),.w_rdy(w_rdy),
- .w_v(w_v),.w_addr(w_addr),.w_mask(w_mask),.w_data(w_data),.queued(pq),.lines_pushed(pl),.empty(pempty));
+ .w_ack(1'b0),.w_seq(),.w_v(w_v),.w_addr(w_addr),.w_mask(w_mask),.w_data(w_data),.queued(pq),.lines_pushed(pl),.empty(pempty));
  assign del_permit=perm;
  ot_hgi_coll_tkm_seq_lane_core #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_core(
    .lane_d0v(d0v),.lane_d1v(d1v),.lane_permit(perm),.lane_fault(ft),.lane_dv(dv),.lane_fe(fe),.lane_ldv(ldv),

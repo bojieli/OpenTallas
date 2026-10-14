@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
 // Own-flop output leaf. Every related input is captured at its actual boundary.
 // One pending cell stage is included in empty; lp counts completed lines, not admission.
-module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0)(
+module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0, ACK_SEAM=0)(
  input wire clk,rst_n,start,
  input wire [12:0] cfg_nout,input wire [39:0] cfg_obase,cfg_rbase,input wire cfg_has_r,
  input wire cell_v,input wire [339:0] cell_t,input wire [1:0] cell_slot,input wire cell_last,
- input wire w_rdy,
+ input wire w_rdy,input wire w_ack,output reg w_seq,
  output reg w_v,output reg[39:0] w_addr,output reg[15:0] w_mask,output reg[FW-1:0] w_data,
  output wire[3:0] queued,output wire[9:0] lines_pushed,output wire empty
 );
@@ -17,7 +17,9 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0)(
  reg[12:0] nout_pin,nout_q,outn;reg[39:0]ob_pin,rb_pin,ob_q,rb_q,ob_next,rb_next;reg hr_pin,hr_q;
  reg[EW-1:0]lb[0:15];reg[9:0]lp;reg[8:0]line;
  reg[FW-1:0]lq_d[0:7];reg[39:0]lq_a[0:7];reg[15:0]lq_m[0:7];reg[3:0]lq_n;reg[2:0]lq_h,lq_t;
- wire lq_pop=(lq_n!=0)&&(!w_v||w_rdy);
+ reg ack_pin;always @(posedge clk)ack_pin<=w_ack;
+ wire accepted=ACK_SEAM?(w_v&&(ack_pin==w_seq)):(w_v&&w_rdy);
+ wire lq_pop=(lq_n!=0)&&(!w_v||accepted);
  assign queued=lq_n;assign lines_pushed=lp;
  assign empty=(lq_n==0)&&!cell_v_q&&!w_v;
  integer i,s;
@@ -39,9 +41,10 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0)(
             tinv = !t[84] ? {EW{1'b0}} : (!t[83] ? {1'b1, 1'b1, b_[49:18], b_[81:50], b_[17:0], t[0]} : {1'b0, 1'b1, b_, t[0]});
         end
     endfunction
+ always @(posedge clk)if(lq_pop)begin w_addr<=lq_a[lq_h];w_mask<=lq_m[lq_h];w_data<=lq_d[lq_h];end
  always @(posedge clk or negedge rn)begin
   if(!rn)begin
-   w_v<=0;w_addr<=0;w_mask<=0;w_data<=0;
+   w_seq<=0;w_v<=0;
    nout_q<=1;ob_q<=0;rb_q<=0;ob_next<=0;rb_next<=0;hr_q<=0;
    outn<=0;line<=0;lp<=0;lq_n<=0;lq_h<=0;lq_t<=0;
   end else begin
@@ -50,9 +53,9 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0)(
                 reg [EW-1:0] lx [0:15];
                 n_ = lq_n; t_ = lq_t;
                 if (lq_pop) begin
-                    w_v <= 1'b1; w_addr <= lq_a[lq_h]; w_mask <= lq_m[lq_h]; w_data <= lq_d[lq_h];
+                    w_seq<=!w_seq;w_v <= 1'b1;
                     lq_h <= lq_h + 3'd1; n_ = n_ - 4'd1;
-                end else if (w_v && w_rdy) w_v <= 1'b0;
+                end else if (accepted) w_v <= 1'b0;
                 if (cell_v_q) begin
                     for (i = 0; i < 16; i = i + 1) lx[i] = lb[i];
                     for (s = 0; s < 4; s = s + 1) begin lx[4 * slot_q + s] = tinv(cell_q[EW*s +: EW]); lb[4 * slot_q + s] <= tinv(cell_q[EW*s +: EW]); end
