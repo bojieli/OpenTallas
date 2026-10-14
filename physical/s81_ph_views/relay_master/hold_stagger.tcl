@@ -33,6 +33,8 @@ foreach rs_bt [$rs_blk getBTerms] {
     set rs_px [expr {[$rs_ca xMax]-($rs_depth+0.864*$rs_col)*$rs_u-$rs_w}]
     set rs_py [expr {max([$rs_ca yMin],min($rs_y,[$rs_ca yMax]-$rs_h))}]
     if {$rs_px < [$rs_ca xMin]} { error "output hold bands exceed selected core" }
+    # iohold already marks these cells FIRM; OpenDB refuses moving a FIRM instance.
+    $rs_i setPlacementStatus PLACED
     $rs_i setLocation [expr {round($rs_px)}] [expr {round($rs_py)}]
     $rs_i setPlacementStatus FIRM
     incr rs_count
