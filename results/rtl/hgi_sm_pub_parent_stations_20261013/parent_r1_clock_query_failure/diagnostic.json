@@ -14,5 +14,15 @@
     "negative": "wrong entry clock rejected",
     "dynamic_vmq100": "TT setup 250.19ps, FF hold 176.15ps; prior failing-driver rebuffer succeeds"
   },
-  "policy": "No period, phase formula, child R, wire, gate or false-path relaxation. Pre-CTS zero labeled diagnostic cannot qualify final routed wire."
+  "policy": "No period, phase formula, child R, wire, gate or false-path relaxation. Pre-CTS zero labeled diagnostic cannot qualify final routed wire.",
+  "final_helper_replay": {
+    "source_commit": "b757e8460",
+    "helper_sha256": "7ce021b8fc3c53bc683fec7679b89f4ca40b8734fdaea2bd22191c557244f96a",
+    "generated_candidate_sha256": "72814e53d5dc0a4111600624cbaf810a407837a75a88e52e92f05a7722bcc079",
+    "result": "FAILED_BEFORE_TIMING_LOAD",
+    "cause": "Original remote R1 src empty and failed placement ODB absent; TT stops first child Liberty load, FF/negative not run",
+    "new_timing_proof": false,
+    "prior_probes_preserved": true,
+    "original_job_mutated": false
+  }
 }
