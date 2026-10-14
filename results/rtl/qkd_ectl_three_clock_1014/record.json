@@ -1,0 +1,35 @@
+{
+  "source_commit": "6eaf57c6b3c4c7c07a631abad86b57b4564150a3",
+  "sha256": {
+    "rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv": "c3b355dd7dd91823c298d9ec4529ce132ef6c34f490973c937d4501c1932e158",
+    "rtl/test/qwen_kv_die/tb_qkd_ectl3.sv": "b3951b0b063426af290e8311bc20155dd7c81e6653cb443d05ba5919ba1f496c",
+    "tools/qwen_kv_die/ectl3_tp8_bench.sh": "51be508e23c9c3a58339724e33d6ad93fb8509d089e40251fe67940f0e4d4bed"
+  },
+  "profile": {
+    "HEADS": 1,
+    "Q_FP32": 1,
+    "S": 1,
+    "E": 3,
+    "NL": 4
+  },
+  "exact": {
+    "compares": 3705,
+    "rows": 1005,
+    "vrows": 504,
+    "nodes": 6,
+    "verdict": "PASS"
+  },
+  "mutant": {
+    "leaf": "C",
+    "lockstep_errors": 172,
+    "verdict": "FAIL"
+  },
+  "clock_entries": [
+    "A",
+    "B",
+    "C"
+  ],
+  "clock_in_bench": "equal logical phases; actual die phi-R delivery unmeasured",
+  "implementation_bound": false,
+  "physical_qualification": "pending die pin/clock assignment and native integration"
+}
