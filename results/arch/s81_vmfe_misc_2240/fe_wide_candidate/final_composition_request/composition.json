@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.vmfe-source-composition-request.v1",
+  "status": "UNALLOCATED_SOURCE_CANDIDATE",
+  "defines": [
+    "OT_VMFE_FCC_PIPE",
+    "OT_S81_ADAPTER_CMD_PIPE",
+    "OT_VMFE_FLD_PARALLEL_ARB"
+  ],
+  "fsr": "Actual M5 port-major same8293FF/twostages",
+  "excluded_successor_flags": [
+    "OT_VMFE_FCN_SUM_PIPE",
+    "OT_VMFE_FLD_PARALLEL_RANKS",
+    "OT_SPVM_RESET_ACK"
+  ],
+  "candidate_fe_outline_um": [
+    1865.664,
+    889.92
+  ],
+  "candidate_vm_outline_um": [
+    1887.384,
+    4013.256
+  ],
+  "actual_wholefield_allocation": null,
+  "physical_reset_ack_graph": "OPEN; ACKoff leaves are not ACK-qualified",
+  "native_source_clock_reset_binding": "OPEN",
+  "prior_combined_functional_evidence": "combined_vm_proof has these functional options plus ACK; no physical closure inferred"
+}
