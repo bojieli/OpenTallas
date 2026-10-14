@@ -5,6 +5,11 @@
   "remote_gates": {
     "cmd_relay": "WARN 0fail; stdarea28um2 reach26.6um"
   },
-  "parent": "unqualified; requires all station routes, real child views, production throughput and die integration",
-  "added_cycles": 0
+  "parent": "unqualified until composed route, pin hop audit, real die VM endpoint binding and native timing",
+  "added_cycles": 0,
+  "element_gate": "latest owner 2026-10-13: TT>=0 FF>=0 DRC0; SS remains final native context requirement",
+  "station_routes": "13/13 CLOSED R3",
+  "station_exact_mutant": "13/13 actual daemon snapshots PASS and FAIL-as-expected",
+  "station_views": "13 real TT/SS/FF LEF/insertion/childlint export sets",
+  "STREAM_throughput": "1024 words/1059 cycles both FP32 and BF16, 3.42% over1word/cycle ideal"
 }

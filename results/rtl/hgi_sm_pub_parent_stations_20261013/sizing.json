@@ -58,5 +58,19 @@
     "fp32": 293,
     "bf16": 309
   },
-  "throughput_scope": "publication station composition with matching external response traces, not whole SM MATVEC throughput"
+  "throughput_scope": "publication station composition with matching external response traces, not whole SM MATVEC throughput",
+  "parent_die_wire_candidate": {
+    "outline_um": [
+      1771.2,
+      1296
+    ],
+    "slice_column_pitch_um": 432,
+    "VM_existing_stages_split": "n_p in local arbiter; vq_p/vq_v and va_q at real VM port station",
+    "STREAM_existing_stages_split": "r1_d/r1_v/agg_r at hop1; s0 data/valid at hop2 by die edge",
+    "added_cycles": 0,
+    "clock_entries": 46,
+    "physical_added_busy_flops": 1,
+    "prior_view_defect": "legacy W/E parent VM client1 output >500um; original grouped2stageSTREAM egress could not land both incoming and outer faces within the die hop bounds",
+    "qualification": "candidate prebuild; original13 CLOSED views unchanged; new3stationtypes need real routes+exact/mutant; parent context and actual external VM destinations remain required"
+  }
 }
