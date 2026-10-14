@@ -1,0 +1,31 @@
+SEED=3
+case 0: 1 records in 1385 cycles (HC engine 0, mover 575)
+ERR case 1: retired 0 of 1, faults 1
+case 1: 0 records in 13 cycles (HC engine 0, mover 0)
+ERR case 1 VM[11264] = 00000000 expected bf41dfa4
+ERR case 1 VM[11265] = 00000000 expected bf875d3c
+ERR case 1 VM[11266] = 00000000 expected 3eb45315
+ERR case 1 VM[11267] = 00000000 expected 3ef240aa
+ERR case 1 VM[11268] = 00000000 expected 3f8bae99
+ERR case 1 VM[11269] = 00000000 expected 3e5ce75a
+ERR case 1 VM[11270] = 00000000 expected 3e18f29d
+ERR case 1 VM[11271] = 00000000 expected 3edb6e8f
+ERR case 1 VM[11272] = 00000000 expected 401d4e94
+ERR case 1 VM[11273] = 00000000 expected 3e7d60ee
+ERR case 1 VM[11274] = 00000000 expected 3fc122be
+ERR case 1 VM[11275] = 00000000 expected beb3c5ad
+ERR case 1 VM[11276] = 00000000 expected bf49ada3
+ERR case 1 VM[11277] = 00000000 expected befa0150
+ERR case 1 VM[11278] = 00000000 expected 3ccd650d
+ERR case 1 VM[11279] = 00000000 expected beca0a54
+ERR case 1 VM[11280] = 00000000 expected 3f6ad14d
+ERR case 1 VM[11281] = 00000000 expected 3f5a9461
+ERR case 1 VM[11282] = 00000000 expected 3d853db0
+ERR case 2: retired 0 of 1, faults 1
+case 2: 0 records in 13 cycles (HC engine 0, mover 0)
+summary: 3 FUSED data cases through the D1 unit, 5376 VM words exact
+HGI_FUSED_NATIVE_SV FAIL errors=1282
+- /srv/opentallas-scratch/claude/codex-fused-native-sv-05d/src/rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_native_sv.sv:248: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 288us; walltime 9951.807 s; speed 28.931 ns/s
+- Verilator: cpu 9763.508 s on 1 threads; allocated 441 MB

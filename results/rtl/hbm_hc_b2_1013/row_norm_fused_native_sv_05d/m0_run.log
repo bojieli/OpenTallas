@@ -1,0 +1,10 @@
+SEED=3
+case 0: 1 records in 1385 cycles (HC engine 0, mover 575)
+case 1: 1 records in 701 cycles (HC engine 0, mover 80)
+case 2: 1 records in 631 cycles (HC engine 0, mover 79)
+summary: 3 FUSED data cases through the D1 unit, 5376 VM words exact
+HGI_FUSED_NATIVE_SV PASS
+- /srv/opentallas-scratch/claude/codex-fused-native-sv-05d/src/rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_native_sv.sv:248: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 289us; walltime 10040.446 s; speed 28.784 ns/s
+- Verilator: cpu 9820.323 s on 1 threads; allocated 441 MB
