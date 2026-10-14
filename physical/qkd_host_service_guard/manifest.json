@@ -1,0 +1,32 @@
+{
+  "source_sha256": {
+    "rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv": "c92557210430437e1ed00033dabaf0be4b912e58a4357c2aa18c23e165003e70",
+    "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv": "bb321da2993a6de061bc1e772618579849d74061acccbf1afc7500e1648789d7",
+    "rtl/test/qwen_host/tb_qkd_host_service_guard.sv": "276ec2551a8f510c28e79a54adf39d9ef37f519419a416a7f63a19a9d926d57f",
+    "tools/qwen_host/service_guard_gate.sh": "ced070c953fba7e310a5032276ea5747aa34ed36ca26dfdafc6d44058f926d98",
+    "tools/qwen_host/service_guard_census.sh": "e737bf56e33c09d2c2f2e78750ce60f9904e1b86f3be2dc52f8aee6c27ddc91a"
+  },
+  "candidate_only": true,
+  "clock": {
+    "name": "ck_guard",
+    "period_ps": 833,
+    "ff_sinks_coarse_yosys": 12561
+  },
+  "pins": 479,
+  "requested_outline_um": [
+    633.6,
+    633.6
+  ],
+  "outline_status": "UNVERIFIED request, no die slot or price assigned",
+  "functional_checks": 162,
+  "mutants_expected_fail": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "physical_timing": "UNMEASURED",
+  "production_throughput": "UNMEASURED",
+  "global_begin_transport": "OPEN",
+  "csr_binding": "OPEN"
+}
