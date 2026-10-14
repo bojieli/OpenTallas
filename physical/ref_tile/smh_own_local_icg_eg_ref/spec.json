@@ -683,7 +683,7 @@
  "layer_cap": "M5",
  "signal_max_layer": "M5",
  "pg_layer": "M5",
- "structural_change": "Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.",
+ "structural_change": "Six retained BUFx6f stages on auxiliary mirror clock branch; real generated GCLK exported at clock ports. Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.",
  "slot_change_request": {
   "kind": "local_clock_entry",
   "parent": "native SM compact tile",
@@ -723,7 +723,7 @@
   "owner": "Codex:sm_gate_structural",
   "branch": "codex/sm-gate-structural-1014",
   "tag": "localicg1",
-  "purpose": "Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.",
+  "purpose": "Six retained BUFx6f stages on auxiliary mirror clock branch; real generated GCLK exported at clock ports. Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm_local_icg_1014"
   ],

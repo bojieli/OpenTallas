@@ -36,7 +36,12 @@ for v in ('eg','wg'):
     aux_commit=nxt;aux_qn=nxt+1;aux_ena=nxt+2;nxt+=3
     leaf['ports']['local_enable_commit_aux']={'direction':'input','bits':[aux_commit]}
     own['port_directions']['local_enable_commit_aux']='input';own['connections']['local_enable_commit_aux']=own['connections']['cut_2'][:]
-    aux=copy.deepcopy(mirror);aux['connections']['CLK']=[aux_commit];aux['connections']['QN']=[aux_qn];leaf['cells']['u_enable_aux_mirror']=aux
+    aux_clock=aux_commit
+    for stage in range(6):
+        delayed=nxt;nxt+=1
+        leaf['cells'][f'u_enable_aux_clock_delay_{stage}']={'hide_name':0,'type':'BUFx6f_ASAP7_75t_R','parameters':{},'attributes':{'keep':'1','dont_touch':'1'},'port_directions':{'A':'input','Y':'output'},'connections':{'A':[aux_clock],'Y':[delayed]}}
+        aux_clock=delayed
+    aux=copy.deepcopy(mirror);aux['connections']['CLK']=[aux_clock];aux['connections']['QN']=[aux_qn];leaf['cells']['u_enable_aux_mirror']=aux
     auxinv=copy.deepcopy(direct);auxinv['connections']={'A':[aux_qn],'Y':[aux_ena]};leaf['cells']['u_enable_aux_inv']=auxinv
     leaf['netnames']['local_enable_aux']={'hide_name':0,'bits':[aux_ena],'attributes':{'keep':'1'}}
     clockports=[]
@@ -58,7 +63,7 @@ for v in ('eg','wg'):
     (OUT/f'{v}_mut.json').write_text(json.dumps(mutant)+'\n')
     for name in [f'{v}_gold.json',f'{v}_surrogates.sv',f'{v}_tb.sv','retention_cell_models.sv']:
         shutil.copy2(SRC/name,OUT/name)
-    with (OUT/'retention_cell_models.sv').open('a') as f: f.write('\nmodule INVx4_ASAP7_75t_R(input A, output Y); assign Y=~A; endmodule\n')
+    with (OUT/'retention_cell_models.sv').open('a') as f: f.write('\nmodule INVx4_ASAP7_75t_R(input A, output Y); assign Y=~A; endmodule\nmodule BUFx6f_ASAP7_75t_R(input A, output Y); assign Y=A; endmodule\n')
     gold=json.loads((OUT/f'{v}_gold.json').read_text())
     for mod in gold['modules'].values():
         mod['cells']={n:c for n,c in mod['cells'].items() if c['type']!='$scopeinfo'}
@@ -70,7 +75,7 @@ for v in ('eg','wg'):
     spec['pins']['N']+=['local_enable_commit','local_enable_commit_aux']
     spec['pins']['N']+=sum(([p['raw'],p['gclk']] for p in clockports),[])
     spec['sdc_extra']=[str((OUT/'local_generated_clocks.sdc').relative_to(ROOT))]
-    spec['structural_change']='Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.'
+    spec['structural_change']='Six retained BUFx6f stages on auxiliary mirror clock branch; real generated GCLK exported at clock ports. Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.'
     spec['slot_change_request']={'kind':'local_clock_entry','parent':'native SM compact tile','outline_um':[84.24,73.44],'additional_clock_pins':26,'enable_commit_clock':{'logical_source':'original raw bit2','delivered_phase':'phi-Rown, same tap as own raw input','critical_group_indices':[4,9,10,11],'critical_insertion_max_ps':20,'auxiliary_insertion_min_ps':55,'auxiliary_group_indices':[0,1,2,3,5,6,7,8],'auxiliary_insertion_target_ps':80,'required_gate':'Measured mirror launch CLK arrival and D setup/hold from original own state + all original cgi/reset/pause source pins; no zero-wire or zero-slew assumption'},'status':'PENDING_REAL_MULTICLOCK_CTS_GATING_PULSE_AND_DIE_REACH','source':str((OUT/'manifest.json').relative_to(ROOT))}
     spec['job'].update(branch='codex/sm-gate-structural-1014',owner='Codex:sm_gate_structural',tag='localicg1',purpose=spec['structural_change'],extra_paths=[str(OUT.relative_to(ROOT))])
     for b in spec['job']['benches']:b['cmd']=b['cmd'].replace('sm_own_logic/','sm_local_icg_1014/')
@@ -84,10 +89,10 @@ sdc+='set local_icg_corner tt\nforeach local_lib [get_libs *] {set local_ln [get
 for i,row in enumerate(plan['child_instances']):
     caps=row['corners']
     sdc+=f'set local_clock_cap_{i}(tt) {caps["tt"]["child_clock_cap_fF"]}\nset local_clock_cap_{i}(ff) {caps["ff"]["child_clock_cap_fF"]}\nset local_clock_cap_{i}(ss) {caps["ss"]["child_clock_cap_fF"]}\nset_load $local_clock_cap_{i}($local_icg_corner) [get_ports local_gclk_{i}]\n'
-sdc+='create_clock -name enable_commit -period 833.333 [get_ports local_enable_commit]\ncreate_clock -name enable_commit_aux -period 833.333 [get_ports local_enable_commit_aux]\n'
+sdc+='set local_icg_period [get_property [get_clocks core_clk] period]\ncreate_clock -name enable_commit -period $local_icg_period [get_ports local_enable_commit]\ncreate_clock -name enable_commit_aux -period $local_icg_period [get_ports local_enable_commit_aux]\nunset_input_delay [get_ports {local_enable_commit local_enable_commit_aux local_raw_*}]\n'
 for i in range(12):
     sdc+=f'unset_output_delay [get_ports local_gclk_{i}]\n'
 for i in range(12):
-    sdc+=f'create_clock -name child_raw_{i} -period 833.333 [get_ports local_raw_{i}]\ncreate_generated_clock -name child_gclk_{i} -master_clock child_raw_{i} -source [get_ports local_raw_{i}] -divide_by 1 [get_pins u_child_icg_{i}/GCLK]\n'
+    sdc+=f'create_clock -name child_raw_{i} -period $local_icg_period [get_ports local_raw_{i}]\ncreate_generated_clock -name child_gclk_{i} -master_clock child_raw_{i} -source [get_ports local_raw_{i}] -divide_by 1 [get_ports local_gclk_{i}]\n'
 (OUT/'local_generated_clocks.sdc').write_text(sdc)
 (OUT/'manifest.json').write_text(json.dumps({'status':'RTL_CANDIDATE_NOT_PHYSICALLY_QUALIFIED','records':records,'original_states_preserved':995,'added_mirror_flops':2,'gating_data_exceptions':[],'required_physical_checks':['actual phi-R every gate RAW and child clock','gating setup+hold all3corners','real conditional pulse width','source slew recalibration','ordinary data TT FF DRC and registered seams','native pause/epoch/reset bit7768 semantics']},indent=2)+'\n')

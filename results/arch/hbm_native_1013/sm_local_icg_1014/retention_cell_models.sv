@@ -199,3 +199,4 @@ module XNOR2xp5_ASAP7_75t_R (
 endmodule
 
 module INVx4_ASAP7_75t_R(input A, output Y); assign Y=~A; endmodule
+module BUFx6f_ASAP7_75t_R(input A, output Y); assign Y=A; endmodule
