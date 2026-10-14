@@ -20,7 +20,7 @@ module ot_s81_hc_ccf #(
     output wire                 ch_rst,
     output reg  [FVW-1:0]       ch_fv,
     output reg  [FDW-1:0]       ch_fd,
-    output reg                  yfl
+    output wire                 yfl
 );
     // Production hard-master defaults match the routed NG256 HIER3 tuple; soft parents pass their tuple.
     localparam integer NS = NG / GS;
@@ -113,14 +113,19 @@ module ot_s81_hc_ccf #(
     end else begin : g_nyf
         assign yf_head = {YS1{1'b0}}; assign yf_hv = 1'b0; assign yf_ovf = 1'b0;
     end endgenerate
+    // The pin-only fault copy captures the same next sticky state, with no extra epoch.
+    // Its Q has no internal feedback consumer, so its inverter/driver can remain at the N pin.
+    (* keep="true" *) reg yfl_state;
+    wire fault_event = L1 > 0 && ((ya && !pop && yn1 == YDC) || (pop && yn1 == 0) || (pop && !yf_hv) || yf_ovf);
+    ot_s81_hc_ccf_keep_ff u_fault_pin(.clk(sk),.rst_n(rs_n),.d(yfl_state | fault_event),.q(yfl));
     always @(posedge sk or negedge rs_n)
-        if (!rs_n) begin ch_fv <= 0; yn1 <= 0; yw <= 0; yr <= 0; yfl <= 1'b0; end
+        if (!rs_n) begin ch_fv <= 0; yn1 <= 0; yw <= 0; yr <= 0; yfl_state <= 1'b0; end
         else begin
             ch_fv <= (L1 > 0) ? fv_p : {FVW{1'b0}};
             if (ya) yw <= yw + 1'b1;
             if (pop) yr <= yr + 1'b1;
             yn1 <= yn1 + ya - pop;
-            if (L1 > 0 && ((ya && !pop && yn1 == YDC) || (pop && yn1 == 0) || (pop && !yf_hv) || yf_ovf)) yfl <= 1'b1;
+            if (fault_event) yfl_state <= 1'b1;
         end
     always @(posedge sk) begin
         ch_fd[O_D-1:0] <= fd_p[O_D-1:0];

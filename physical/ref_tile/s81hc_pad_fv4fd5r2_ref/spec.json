@@ -46,7 +46,7 @@
   "benches_from": "tools/s81_suhc/hc_tile_benches_fv4fd5r2.json",
   "owner": "Codex:s81_hc_ccf",
   "branch": "codex-s81-ccf-pinreg-1013",
-  "tag": "v2-pd42",
+  "tag": "v3-pinwindows",
   "purpose": "Actual return pin capture and launch with two stages; downstream R6 replaced by existing closed R5, preserving total return epochs.",
   "views_to": "physical/ref_tile/s81hc_pad_fv4fd5r2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref"
@@ -59,6 +59,15 @@
  "recipe": 2,
  "inhold": false,
  "outhold": false,
+ "boundary_tcl": [
+  "physical/s81_hc_pinplan/pin_window_max.sdc"
+ ],
+ "pin_window_candidate": {
+  "capture_owner_ps": 190,
+  "launch_owner_ps": 220,
+  "implementation_margin_ps": 10,
+  "scope": "MAX constraints only; existing MIN/hold, uncertainty and period preserved"
+ },
  "params": {},
  "children": [],
  "inter": []

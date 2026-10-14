@@ -115,8 +115,8 @@
   "benches_from": "tools/s81_suhc/hc_tile_benches_ccf.json",
   "owner": "Codex:s81_hc_ccf",
   "branch": "codex-s81-ccf-pinreg-1013",
-  "tag": "v8-fv-facecapture-minhold",
-  "purpose": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with measured 14,196 sinks. Balanced clock spine repairs the measured 171 ps spread. Final actual hop audit is required.",
+  "tag": "v9-sym-pinwindows",
+  "purpose": "Actual FV capture plus same-epoch pin-only fault copy; published symmetric collapsed spine and strict actual pin-window MAX budgets. Final TT/FF arcs and assigned hops remain required.",
   "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
  },
@@ -137,13 +137,17 @@
  },
  "layer_cap": "M5",
  "orfs_vars": {
-  "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff"
+  "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff",
+  "OT_SPINE_SYM": 1,
+  "OT_SPINE_SYM_MERGE": 80,
+  "OT_SPINE_SYM_FAN": 16
  },
  "io_tcl": "physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl",
  "structural_change": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with measured 14,196 sinks. Balanced clock spine repairs the measured 171 ps spread. Final actual hop audit is required.",
  "recipe": 2,
  "boundary_tcl": [
-  "physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl"
+  "physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl",
+  "physical/s81_hc_pinplan/pin_window_max.sdc"
  ],
  "reroute_reason": {
   "kind": "rtl_change"
@@ -155,6 +159,12 @@
  "inhold": false,
  "outhold": false,
  "boundary_hold_experiment": "Keep all existing hold constraints and automatic repair; omit fixed HB4 input/output stages whose measured chains put FV at281ps and forward outputs at285ps. This is a physical candidate requiring fresh CTS and TT/FF pin-window proof, never a relaxed timing budget.",
+ "pin_window_candidate": {
+  "capture_owner_ps": 190,
+  "launch_owner_ps": 220,
+  "implementation_margin_ps": 10,
+  "scope": "MAX constraints only; existing MIN/hold, uncertainty and period preserved"
+ },
  "children": [],
  "inter": []
 }
