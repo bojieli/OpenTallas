@@ -289,7 +289,13 @@ class Plan:
             else:
                 if mid is None: vs(ax, ay, by); hs(by, ax, bx)
                 else: hs(ay, ax, mid); vs(mid, ay, by); hs(by, mid, bx)
-            return c
+            # Only the source/sink gcell can be a pin landing. A blocked interior
+            # gcell remains in the demand: deleting it would hide through-tile routes.
+            ends = {(ay, ax), (by, bx)}
+            return [(y, x, d) for y, x, d in c
+                    if (y, x) not in ends or
+                    ((capH if d == 'H' else capV)[y, x] >
+                     0.05 * (H_FREE if d == 'H' else V_FREE) * G * USABLE)]
 
         def cost(c, bits):
             t = 0.0
@@ -314,10 +320,8 @@ class Plan:
                 cands += [path(x0, y0, x1, y1, m, 'VH') for m in range(min(ax, bx), max(ax, bx) + 1, 4)]
                 best = min(cands, key=lambda c: cost(c, bits)); chosen[i] = best
                 for y, x, d in best: (useH if d == 'H' else useV)[y, x] += bits
-        # a cell with (almost) no parent track is a pin LANDING inside a leaf footprint (dsfd_vm_fsr carries no parent
-        # layer; a face pin is reached on the leaf's own pin layer): the wire ends there, it is not a cut (B7 reported 1e9)
-        okH, okV = capH > 0.05 * H_FREE * G * USABLE, capV > 0.05 * V_FREE * G * USABLE
-        useH, useV = np.where(okH, useH, 0.0), np.where(okV, useV, 0.0); capH, capV = np.where(okH, capH, 0.0), np.where(okV, capV, 0.0)
+        # Interior zero-capacity crossings are real violations. Endpoint pin landings
+        # alone were excluded in path(); retain all remaining demand and capacity.
         rH, rV = useH / np.maximum(capH, 1e-6), useV / np.maximum(capV, 1e-6)
         full_v = useH.sum(axis=0) / np.maximum(capH.sum(axis=0), 1e-6)      # vertical cut at column ix: H wires / H tracks
         full_h = useV.sum(axis=1) / np.maximum(capV.sum(axis=1), 1e-6)
@@ -325,6 +329,7 @@ class Plan:
         win_v = max(float((np.convolve(useH[:, ix], k, 'valid') / np.maximum(np.convolve(capH[:, ix], k, 'valid'), 1e-6)).max()) for ix in range(nx))
         win_h = max(float((np.convolve(useV[iy, :], k, 'valid') / np.maximum(np.convolve(capV[iy, :], k, 'valid'), 1e-6)).max()) for iy in range(ny))
         return {'gcell_um': G, 'window_um': G * WIN,
+                'blocked_interior_cells': int(((capH <= 1e-6) & (useH > 0)).sum() + ((capV <= 1e-6) & (useV > 0)).sum()),
                 'full_vertical_cut_max': [round(float(full_v.max()), 3), round(float(full_v.argmax() * G), 1)],
                 'full_horizontal_cut_max': [round(float(full_h.max()), 3), round(float(full_h.argmax() * G), 1)],
                 'window_vertical_cut_max': round(win_v, 3), 'window_horizontal_cut_max': round(win_h, 3),
