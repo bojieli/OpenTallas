@@ -17,6 +17,15 @@ set ot_oh_blk [ord::get_db_block]
 set ot_oh_hb [[ord::get_db] findMaster [expr {[info exists ::env(OT_INHOLD_MASTER)] ? $::env(OT_INHOLD_MASTER) : "HB4xp67_ASAP7_75t_R"}]]
 set ot_oh_bf [[ord::get_db] findMaster [expr {([info exists ::env(OT_INHOLD_DRV)] && $::env(OT_INHOLD_DRV) ne "") ? $::env(OT_INHOLD_DRV) : "BUFx4f_ASAP7_75t_R"}]]
 if {$ot_oh_hb eq "NULL" || $ot_oh_bf eq "NULL"} { error "OUTHOLD: master missing" }
+# per-port strong pad (el1014-root-recipe2; see leaf_inhold.tcl): OT_HOLD_PAD_STRONG_RE ports take
+# OT_HOLD_PAD_STRONG_MASTER (default HB4xp67), every other output the default pad above (recipe 2: HB2xp67)
+set ot_oh_sre [expr {[info exists ::env(OT_HOLD_PAD_STRONG_RE)] ? $::env(OT_HOLD_PAD_STRONG_RE) : ""}]
+set ot_oh_shb "NULL"
+if {$ot_oh_sre ne ""} {
+  set ot_oh_shb [[ord::get_db] findMaster [expr {([info exists ::env(OT_HOLD_PAD_STRONG_MASTER)] && $::env(OT_HOLD_PAD_STRONG_MASTER) ne "") ? $::env(OT_HOLD_PAD_STRONG_MASTER) : "HB4xp67_ASAP7_75t_R"}]]
+  if {$ot_oh_shb eq "NULL"} { error "OUTHOLD: strong pad master missing" }
+}
+set ot_oh_ns 0
 set ot_oh_ca [$ot_oh_blk getCoreArea]
 set ot_oh_firm {}; set ot_oh_dt {}; set ot_oh_n 0; set ot_oh_skip 0
 foreach bt [$ot_oh_blk getBTerms] {
@@ -39,12 +48,14 @@ foreach bt [$ot_oh_blk getBTerms] {
     set x [expr {([$bx xMin] + [$bx xMax]) / 2}]; set y [expr {([$bx yMin] + [$bx yMax]) / 2}]; break }; break }
   set x [expr {max([$ot_oh_ca xMin], min($x, [$ot_oh_ca xMax] - [$ot_oh_hb getWidth]))}]
   set y [expr {max([$ot_oh_ca yMin], min($y, [$ot_oh_ca yMax] - [$ot_oh_hb getHeight]))}]
+  set hb $ot_oh_hb
+  if {$ot_oh_shb ne "NULL" && [regexp -- $ot_oh_sre [$bt getName]]} { set hb $ot_oh_shb; incr ot_oh_ns }
   set pn [odb::dbNet_create $ot_oh_blk [format "ot_outhold_p%05d" $ot_oh_n]]
   $bt disconnect
   $bt connect $pn
   set cur $net; set k 0
-  foreach m [list $ot_oh_bf $ot_oh_hb $ot_oh_bf] {
-    set hold [expr {$m eq $ot_oh_hb}]
+  foreach m [list $ot_oh_bf $hb $ot_oh_bf] {
+    set hold [expr {$m eq $hb}]
     set nm [format "%s_%05d_%d" [expr {$hold ? "ot_outhold" : "ot_ohdrv"}] $ot_oh_n $k]
     set i [odb::dbInst_create $ot_oh_blk $m $nm]
     [$i findITerm A] connect $cur
@@ -69,4 +80,4 @@ if {$ot_oh_n > 0} {
 if {[info exists ::env(RESULTS_DIR)]} {
   set fh [open $::env(RESULTS_DIR)/ot_inhold_firm.txt a]; if {[llength $ot_oh_firm]} { puts $fh [join $ot_oh_firm "\n"] }; close $fh
 }
-puts "OUTHOLD: $ot_oh_n output hold stages (BUF + [$ot_oh_hb getName] + BUF FIRM at the pin, hold cell dont_touch), $ot_oh_skip outputs skipped (not flop-driven)"
+puts "OUTHOLD: $ot_oh_n output hold stages (BUF + [$ot_oh_hb getName] + BUF FIRM at the pin, $ot_oh_ns with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), $ot_oh_skip outputs skipped (not flop-driven)"

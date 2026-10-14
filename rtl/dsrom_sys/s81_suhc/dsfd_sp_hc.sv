@@ -21,7 +21,7 @@ module dsfd_sp_hc #(
     // 2: compose upper/stations/tail for transaction-level exactness (never harden this wrapper).
     parameter integer TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0,
     parameter integer RLY = HALF ? 2 : 1,                // sub-tile relays a hop
-    parameter integer PIPE = 0, PIPE_PD = 40             // HIER: POST issue-order done (ot_s81_hc_cseq PIPE / PD)
+    parameter integer PIPE = 1, PIPE_PD = 40             // HIER: POST issue-order done (ot_s81_hc_cseq PIPE / PD)
 ) (
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
     input  wire [TRW-1:0] f_tr0, f_tr1, f_tr2,

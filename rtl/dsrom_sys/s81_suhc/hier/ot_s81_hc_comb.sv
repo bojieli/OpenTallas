@@ -23,7 +23,7 @@ module ot_s81_hc_comb #(
     parameter integer WIN = 2, WOUT = 2, MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16,
     parameter integer HALF = 0, RLY = 1,            // the chains' sub-tiles: half octets (2 a slot), RLY relays a hop
     parameter integer DW = 3 + RW, RET_EXTRA = 0,   // the write path to the pins (send + capture + relays + pin flop)
-    parameter integer PIPE = 0, PIPE_PD = 40        // ot_s81_hc_cseq: POST issue-order done (0 = return-event done)
+    parameter integer PIPE = 1, PIPE_PD = 40        // ot_s81_hc_cseq: POST issue-order done (0 = return-event done)
 ) (
     input  wire                 cck, crs, sk, srs,
     // centre pin tile seam

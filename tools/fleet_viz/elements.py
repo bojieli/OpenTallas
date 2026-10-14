@@ -16,7 +16,7 @@ twins, _s2/_t/_split/... alternatives) folded into their master. Each element ge
   cancelled only             every job was cancelled
   superseded                 listed in $FLEET_VIZ_SUPERSEDED (default ~/claude-takeover-20261007/superseded_elements.json,
                              {element: {by, reason}}): replaced by another element or not used by any die; overrides every
-                             category (closed included, owner 10-11) and is excluded from every count; 'cancelled only' is also excluded
+                             category (closed included, owner 10-11) and is excluded from totals; cancelled jobs retain the requirement in totals
 
 Overrides from $FLEET_VIZ_OVERRIDES (default ~/claude-takeover-20261007/element_overrides.json):
   variants   {block: {of, kind, reason}}: fold a differently named block into element `of` (checked before the VARIANT
@@ -43,8 +43,10 @@ import collections, datetime, glob, json, os, pathlib, re, subprocess, threading
 import flow_state
 
 T0 = datetime.datetime.fromisoformat('2026-10-07T20:45:00-07:00').timestamp()   # option-B (TT) switch
-LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'MIGRATING'}
-FAIL = {'NEEDS_RTL', 'NEEDS_HUMAN', 'INVALID', 'NEEDS_BUDGET', 'REFUSED'}
+LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'ECO_RESULT', 'ECO_INSTALL', 'SUMMARY', 'MIGRATING'}
+REDESIGN = {'NEEDS_RTL', 'NEEDS_BUDGET', 'FLOORPLAN_MARGIN', 'PREROUTE_MARGIN',
+            'EARLY_FAIL_SETUP', 'EARLY_FAIL_HOLD', 'EARLY_FAIL_CONGESTION', 'EARLY_FAIL_DRC', 'EARLY_FAIL_STALL'}
+FAIL = REDESIGN | {'NEEDS_HUMAN', 'INVALID', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
         'cancelled only', 'superseded', 'implementation recorded (no physical job)']
@@ -517,8 +519,11 @@ class Elements:
             r['owner'] = ov['owners'].get(m) or self.remap_owner(r['owner'] or '', ov)
             sv = sup.get(m) or next((sup[b] for b in [m] + r['variants'] if b in sup), None)
             r['superseded'] = None
+            r['supersession_source_evidence_missing'] = None
             if sv:   # owner 10-11: superseded overrides closed too; such rows are not counted anywhere
                 r['category'] = 'superseded'; r['superseded'] = dict(by=sv.get('by'), reason=sv.get('reason'))
+                # Preserve historical declarations, expose their proof gap; never invent a successor.
+                r['supersession_source_evidence_missing'] = not isinstance(sv.get('source_evidence'), dict)
                 r['via'] = 'superseded by %s' % sv.get('by')
             tq = tput.get(m) or next((tput[b] for b in r['variants'] if b in tput), None)
             r['throughput'] = tq
@@ -550,7 +555,10 @@ class Elements:
             r = rest.get(j['name'])
             if r and j['tt'] is None:
                 j['tt'] = _f(r.get('setup_verdict_ws_ps') if r.get('setup_verdict_ws_ps') is not None else r.get('ttlb_ws_ps'))
-        live = [j for j in g if j['status'] in LIVE]; failed = [j for j in g if j['status'] in FAIL]
+        live = [j for j in g if j['status'] in LIVE]
+        # An unknown/diagnostic status is a coverage gap, never evidence of cancellation.
+        unclassified = [j for j in g if j['status'] not in LIVE | FAIL | {'CLOSED', 'CANCELLED'}]
+        failed = [j for j in g if j['status'] in FAIL] + unclassified
         closed = [j for j in g if j['status'] == 'CLOSED']
         job_rev = [j for j in closed if j['name'] in rj]   # per-job revocations (any era)
         closed_ok = [j for j in closed if j['name'] not in rj]
@@ -580,8 +588,11 @@ class Elements:
         elif live and not failed: cat = CATS[3]
         elif live: cat = CATS[4]
         elif failed:
-            cat = CATS[7] if any(j['status'] in ('NEEDS_RTL', 'NEEDS_BUDGET') for j in failed) else CATS[8]
-        else: cat = CATS[9]
+            cat = CATS[7] if any(j['status'] in REDESIGN for j in failed) else CATS[8]
+            if unclassified: via = 'unclassified job states: ' + ', '.join(sorted({j['status'] for j in unclassified}))
+        elif g and all(j['status'] == 'CANCELLED' for j in g): cat = CATS[9]
+        else:
+            cat = CATS[8]; via = 'no classified physical job evidence'
         jr = max(job_rev, key=lambda j: j['closed_t'] or 0) if job_rev else None
         if best is None and jr and cat in CATS[5:7]:   # show the revoked closure with its re-timed FF
             best = dict(jr, ff=_f(rj[jr['name']].get('ff_ps')))

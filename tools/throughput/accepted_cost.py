@@ -285,7 +285,9 @@ def totals(led):
         t[d] = dict(accepted_pct=round(acc, 3), proposed_pct=round(pro, 3), accepted_plus_proposed_pct=round(acc + pro, 3),
                     limit_pct=DESIGN_LIMIT, accepted_rows=sum(r["status"] == "accepted" for r in rows),
                     proposed_rows=sum(r["status"] == "proposed" for r in rows),
-                    headroom_pct=round(DESIGN_LIMIT - acc, 3))
+                    headroom_pct=round(DESIGN_LIMIT - acc, 3),
+                    owner_exception_rows=sum(bool(r.get("owner_exception")) for r in rows if r["status"] == "accepted"),
+                    over_limit_by_owner_exception=acc > DESIGN_LIMIT)
     return t
 
 
@@ -302,9 +304,14 @@ def find(led, design, unit):
     return None
 
 
-def propose(led, row):
+def propose(led, row, supersede_accepted=""):
+    """supersede_accepted: the decision (owner, date) that replaces an accepted row with a new measurement."""
     old = find(led, row["design"], row["unit"])
-    if old and old["status"] == "accepted":
+    if old and old["status"] == "accepted" and supersede_accepted:
+        row["supersedes"] = {k: old.get(k) for k in ("measured", "price", "unit_ratio", "e2e_loss_pct", "status",
+                                                        "accepted_date", "acceptance_note")}
+        row["supersedes"]["by"] = supersede_accepted
+    elif old and old["status"] == "accepted":
         raise LedgerError(f"{row['design']} {row['unit']} is already accepted; a new measurement needs a new decision")
     if old:
         led["rows"].remove(old)
@@ -312,15 +319,16 @@ def propose(led, row):
     return row
 
 
-def refusal(led, row, root=ROOT):
-    """Why this row may not be marked accepted (None = it may)."""
+def refusal(led, row, root=ROOT, waive_limits=False):
+    """Why this row may not be marked accepted (None = it may). waive_limits (an OWNER exception) skips only the
+    5 %/unit and 15 %/design limits; the qualify and committed-bench rules still apply."""
     if row["unit_ratio"] is not None and row["unit_ratio"] <= QUALIFY:
         return f"unit ratio {row['unit_ratio']} is within {QUALIFY}: it qualifies, no acceptance is needed"
-    if row["e2e_loss_pct"] > UNIT_LIMIT:
+    if row["e2e_loss_pct"] > UNIT_LIMIT and not waive_limits:
         return f"end-to-end loss {row['e2e_loss_pct']} % is over the {UNIT_LIMIT} % unit limit"
     acc = sum(r["e2e_loss_pct"] for r in led["rows"]
               if r["design"] == row["design"] and r["status"] == "accepted" and r is not row)
-    if acc + max(row["e2e_loss_pct"], 0.0) > DESIGN_LIMIT:
+    if acc + max(row["e2e_loss_pct"], 0.0) > DESIGN_LIMIT and not waive_limits:
         return (f"design total would be {acc + row['e2e_loss_pct']:.3f} %, over the {DESIGN_LIMIT} % limit "
                 f"({acc:.3f} % already accepted)")
     if row.get("evidence_grade") != "committed_bench":
@@ -331,15 +339,26 @@ def refusal(led, row, root=ROOT):
     return None
 
 
-def accept(led, design, unit, root=ROOT):
+def accept(led, design, unit, root=ROOT, note="", owner_exception=""):
+    """Mark a row accepted (the refusal rules apply). `note` records the decision (who, when, on what basis); an
+    already-accepted row only gets the note added, its accepted_date stays.
+    owner_exception: an explicit OWNER decision that accepts the row above the 5 %/unit or 15 %/design limit. It
+    waives only those two limits (a committed bench record is still required) and is written on the row; `check`
+    then reports the over-limit total as an owner exception instead of a violation."""
     row = find(led, design, unit)
     if row is None:
         raise LedgerError(f"no row {design} {unit}")
-    why = refusal(led, row, root)
-    if why:
-        raise LedgerError(f"REFUSED {design} {unit}: {why}")
-    row["status"] = "accepted"
-    row["accepted_date"] = datetime.date.today().isoformat()
+    if row["status"] != "accepted" or owner_exception:
+        why = refusal(led, row, root, waive_limits=bool(owner_exception))
+        if why:
+            raise LedgerError(f"REFUSED {design} {unit}: {why}")
+        if row["status"] != "accepted":
+            row["status"] = "accepted"
+            row["accepted_date"] = datetime.date.today().isoformat()
+    if owner_exception:
+        row["owner_exception"] = owner_exception
+    if note:
+        row["acceptance_note"] = note
     return row
 
 
@@ -349,10 +368,10 @@ def check(led, root=ROOT):
     for d in DESIGNS:
         acc = [r for r in led["rows"] if r["design"] == d and r["status"] == "accepted"]
         tot = sum(r["e2e_loss_pct"] for r in acc)
-        if tot > DESIGN_LIMIT:
+        if tot > DESIGN_LIMIT and not any(r.get("owner_exception") for r in acc):
             bad.append(f"{d}: accepted total {tot:.3f} % over {DESIGN_LIMIT} %")
         for r in acc:
-            if r["e2e_loss_pct"] > UNIT_LIMIT:
+            if r["e2e_loss_pct"] > UNIT_LIMIT and not r.get("owner_exception"):
                 bad.append(f"{d} {r['unit']}: accepted at {r['e2e_loss_pct']} % over {UNIT_LIMIT} %")
             if r.get("evidence_grade") != "committed_bench":
                 bad.append(f"{d} {r['unit']}: accepted without a committed bench record")
@@ -375,11 +394,12 @@ def table(led):
         out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price'] or 'unpriced'} | "
                    f"{r['unit_ratio'] if r['unit_ratio'] is not None else '-'} | "
                    f"{r['e2e_loss_pct']:.3f} | {r['binding_workload']} | {'yes' if r['within_unit_limit'] else 'NO'} | "
-                   f"{r['evidence_grade']} | {r['status']} |")
+                   f"{r['evidence_grade']} | {r['status']}{' (owner exception)' if r.get('owner_exception') else ''} |")
     out.append("")
     for d, t in totals(led).items():
         out.append(f"{d}: accepted {t['accepted_pct']} % + proposed {t['proposed_pct']} % = "
-                   f"{t['accepted_plus_proposed_pct']} % of {DESIGN_LIMIT} %")
+                   f"{t['accepted_plus_proposed_pct']} % of {DESIGN_LIMIT} %"
+                   + (" -- OVER THE LIMIT BY OWNER EXCEPTION" if t.get("over_limit_by_owner_exception") else ""))
     return "\n".join(out)
 
 
@@ -409,6 +429,8 @@ def main(argv=None):
     p = sub.add_parser("accept")
     p.add_argument("design", choices=DESIGNS)
     p.add_argument("unit")
+    p.add_argument("--note", default="", help="the acceptance decision: who, when, basis")
+    p.add_argument("--owner-exception", default="", help="OWNER decision accepting above the unit/design limit")
     sub.add_parser("table")
     sub.add_parser("check")
     a = ap.parse_args(argv)
@@ -426,7 +448,7 @@ def main(argv=None):
                 save_ledger(led, a.ledger)
             print(json.dumps(row, indent=1))
         elif a.cmd == "accept":
-            accept(led, a.design, a.unit)
+            accept(led, a.design, a.unit, note=a.note, owner_exception=a.owner_exception)
             save_ledger(led, a.ledger)
             print(f"ACCEPTED {a.design} {a.unit}")
         elif a.cmd == "table":

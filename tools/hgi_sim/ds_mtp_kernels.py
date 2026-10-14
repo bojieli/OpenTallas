@@ -1501,6 +1501,8 @@ def export_bench(a, K, cap, die0, regions0, snap0, vm0, costs, gd, simrec):
     for i, t in enumerate(em[:8]):
         host[88 + i] = t
     (out / "host.mem").write_text("\n".join(f"{x & 0xFFFFFFFF:08x}" for x in host) + "\n")
+    from hgi_e2e.scratch import bind_mtp_directory
+    bind_mtp_directory(out)
     print(f"export {out}: {len(lines)} dispatched records, image {len(img)} B (kstride {ks}, kent {kent})")
 
 # =================================================================================================================
