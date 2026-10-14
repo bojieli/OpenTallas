@@ -1,0 +1,17 @@
+ot-run: ot-epyc4       admits   772 GB (avail 999, growth 53, headroom 48, waiters 0/0 GB) load 28/128 running 14 disk 1233 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-372279-1791956319 after 0 s
+MISMATCH idx=0 got=429c4eec exp=4295c3ea addr=018000/018000 delta=22
+MISMATCH idx=1 got=40d32786 exp=407edf58 addr=018001/018001 delta=22
+MISMATCH idx=2 got=43f0a944 exp=43e5c5f9 addr=018002/018002 delta=22
+MISMATCH idx=3 got=43958158 exp=43936e16 addr=018003/018003 delta=22
+MISMATCH idx=4 got=40b0d178 exp=407f9a62 addr=018004/018004 delta=22
+MISMATCH idx=5 got=44816371 exp=4474d587 addr=018005/018005 delta=22
+MISMATCH idx=6 got=4402f2ea exp=44018998 addr=018006/018006 delta=22
+MISMATCH idx=7 got=40f667e1 exp=407720a0 addr=018007/018007 delta=22
+MISMATCH idx=8 got=439e88ca exp=43957398 addr=018008/018008 delta=22
+MISMATCH idx=9 got=436231a2 exp=435f3443 addr=018009/018009 delta=22
+FAIL VRED errors=120
+FATAL: rtl/test/tb_hdc_vreduce_entries64.sv:42: 
+       Time: 155540000  Scope: tb_hdc_vreduce_entries64
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-372279-1791956319): exit 1

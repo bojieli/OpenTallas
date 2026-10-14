@@ -1,0 +1,16 @@
+{
+  "source_commit": "a515cfa65",
+  "params": {
+    "QLA": 4,
+    "QLM": 5,
+    "DRST": 0
+  },
+  "exact_segments": 120,
+  "exact_lane_values": 30528,
+  "measured_latency_delta": 22,
+  "data_mutant_errors": 120,
+  "phase_mutant_errors": 474,
+  "reset_valid_samples": 2654,
+  "asynchronous_pipeline_resets": 130,
+  "physical_qualification": "fresh gates live from0d07a64b3 with deployed46-helper plan; not submitted"
+}
