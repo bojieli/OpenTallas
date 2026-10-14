@@ -1,0 +1,739 @@
+{
+  "schema": "ot.qwen.adapter.candidate-placement.v1",
+  "status": "DIE_ACCEPTED_GEOMETRY_REQUEST_ONLY_UNQUALIFIED",
+  "parent": "qfd_link_adp512_split",
+  "outline_um": [
+    237.6,
+    842.4
+  ],
+  "unassigned_die_coordinates": true,
+  "unassigned_pg_phase": true,
+  "interleaf_channels_um": 21.6,
+  "original_requested_777_6_fit": false,
+  "external_ABI": {
+    "payload_bits": 1024,
+    "FDI_flit_bits": 1043,
+    "RXD": 512,
+    "initial_die_credits": 4,
+    "externalheader": "1valid+1024payload+10credit+8sequence"
+  },
+  "children": [
+    {
+      "instance": "g_slice[0].u_slice",
+      "master": "qfd_link_adp128",
+      "at_um": [
+        0,
+        0
+      ],
+      "outline_um": [
+        237.6,
+        86.4
+      ],
+      "clock_entry": "ck[0]",
+      "payload_range": [
+        0,
+        127
+      ],
+      "flit_payload_range": [
+        18,
+        145
+      ],
+      "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+      "pins": {
+        "S": {
+          "c_v": [
+            8,
+            8.4
+          ],
+          "c_d": [
+            9,
+            105
+          ],
+          "c_cr": [
+            106,
+            106.4
+          ],
+          "r_v": [
+            120,
+            120.4
+          ],
+          "r_d": [
+            121,
+            217
+          ],
+          "r_cr": [
+            218,
+            218.4
+          ]
+        },
+        "E": {
+          "tx_up": [
+            2,
+            2.4
+          ],
+          "tx_v": [
+            3,
+            3.4
+          ],
+          "tx_flit": [
+            4,
+            34
+          ],
+          "rx_v": [
+            35,
+            35.4
+          ],
+          "rx_flit": [
+            36,
+            66
+          ]
+        },
+        "W": {
+          "ck": [
+            40,
+            40.4
+          ],
+          "rst_n": [
+            44,
+            44.4
+          ],
+          "fault": [
+            48,
+            48.4
+          ]
+        }
+      },
+      "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+      "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+    },
+    {
+      "instance": "g_slice[1].u_slice",
+      "master": "qfd_link_adp128",
+      "at_um": [
+        0,
+        108
+      ],
+      "outline_um": [
+        237.6,
+        86.4
+      ],
+      "clock_entry": "ck[1]",
+      "payload_range": [
+        128,
+        255
+      ],
+      "flit_payload_range": [
+        146,
+        273
+      ],
+      "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+      "pins": {
+        "S": {
+          "c_v": [
+            8,
+            8.4
+          ],
+          "c_d": [
+            9,
+            105
+          ],
+          "c_cr": [
+            106,
+            106.4
+          ],
+          "r_v": [
+            120,
+            120.4
+          ],
+          "r_d": [
+            121,
+            217
+          ],
+          "r_cr": [
+            218,
+            218.4
+          ]
+        },
+        "E": {
+          "tx_up": [
+            2,
+            2.4
+          ],
+          "tx_v": [
+            3,
+            3.4
+          ],
+          "tx_flit": [
+            4,
+            34
+          ],
+          "rx_v": [
+            35,
+            35.4
+          ],
+          "rx_flit": [
+            36,
+            66
+          ]
+        },
+        "W": {
+          "ck": [
+            40,
+            40.4
+          ],
+          "rst_n": [
+            44,
+            44.4
+          ],
+          "fault": [
+            48,
+            48.4
+          ]
+        }
+      },
+      "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+      "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+    },
+    {
+      "instance": "g_slice[2].u_slice",
+      "master": "qfd_link_adp128",
+      "at_um": [
+        0,
+        216
+      ],
+      "outline_um": [
+        237.6,
+        86.4
+      ],
+      "clock_entry": "ck[2]",
+      "payload_range": [
+        256,
+        383
+      ],
+      "flit_payload_range": [
+        274,
+        401
+      ],
+      "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+      "pins": {
+        "S": {
+          "c_v": [
+            8,
+            8.4
+          ],
+          "c_d": [
+            9,
+            105
+          ],
+          "c_cr": [
+            106,
+            106.4
+          ],
+          "r_v": [
+            120,
+            120.4
+          ],
+          "r_d": [
+            121,
+            217
+          ],
+          "r_cr": [
+            218,
+            218.4
+          ]
+        },
+        "E": {
+          "tx_up": [
+            2,
+            2.4
+          ],
+          "tx_v": [
+            3,
+            3.4
+          ],
+          "tx_flit": [
+            4,
+            34
+          ],
+          "rx_v": [
+            35,
+            35.4
+          ],
+          "rx_flit": [
+            36,
+            66
+          ]
+        },
+        "W": {
+          "ck": [
+            40,
+            40.4
+          ],
+          "rst_n": [
+            44,
+            44.4
+          ],
+          "fault": [
+            48,
+            48.4
+          ]
+        }
+      },
+      "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+      "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+    },
+    {
+      "instance": "g_slice[3].u_slice",
+      "master": "qfd_link_adp128",
+      "at_um": [
+        0,
+        324
+      ],
+      "outline_um": [
+        237.6,
+        86.4
+      ],
+      "clock_entry": "ck[3]",
+      "payload_range": [
+        384,
+        511
+      ],
+      "flit_payload_range": [
+        402,
+        529
+      ],
+      "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+      "pins": {
+        "S": {
+          "c_v": [
+            8,
+            8.4
+          ],
+          "c_d": [
+            9,
+            105
+          ],
+          "c_cr": [
+            106,
+            106.4
+          ],
+          "r_v": [
+            120,
+            120.4
+          ],
+          "r_d": [
+            121,
+            217
+          ],
+          "r_cr": [
+            218,
+            218.4
+          ]
+        },
+        "E": {
+          "tx_up": [
+            2,
+            2.4
+          ],
+          "tx_v": [
+            3,
+            3.4
+          ],
+          "tx_flit": [
+            4,
+            34
+          ],
+          "rx_v": [
+            35,
+            35.4
+          ],
+          "rx_flit": [
+            36,
+            66
+          ]
+        },
+        "W": {
+          "ck": [
+            40,
+            40.4
+          ],
+          "rst_n": [
+            44,
+            44.4
+          ],
+          "fault": [
+            48,
+            48.4
+          ]
+        }
+      },
+      "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+      "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+    },
+    {
+      "instance": "g_slice[4].u_slice",
+      "master": "qfd_link_adp128",
+      "at_um": [
+        0,
+        432
+      ],
+      "outline_um": [
+        237.6,
+        86.4
+      ],
+      "clock_entry": "ck[4]",
+      "payload_range": [
+        512,
+        639
+      ],
+      "flit_payload_range": [
+        530,
+        657
+      ],
+      "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+      "pins": {
+        "S": {
+          "c_v": [
+            8,
+            8.4
+          ],
+          "c_d": [
+            9,
+            105
+          ],
+          "c_cr": [
+            106,
+            106.4
+          ],
+          "r_v": [
+            120,
+            120.4
+          ],
+          "r_d": [
+            121,
+            217
+          ],
+          "r_cr": [
+            218,
+            218.4
+          ]
+        },
+        "E": {
+          "tx_up": [
+            2,
+            2.4
+          ],
+          "tx_v": [
+            3,
+            3.4
+          ],
+          "tx_flit": [
+            4,
+            34
+          ],
+          "rx_v": [
+            35,
+            35.4
+          ],
+          "rx_flit": [
+            36,
+            66
+          ]
+        },
+        "W": {
+          "ck": [
+            40,
+            40.4
+          ],
+          "rst_n": [
+            44,
+            44.4
+          ],
+          "fault": [
+            48,
+            48.4
+          ]
+        }
+      },
+      "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+      "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+    },
+    {
+      "instance": "g_slice[5].u_slice",
+      "master": "qfd_link_adp128",
+      "at_um": [
+        0,
+        540
+      ],
+      "outline_um": [
+        237.6,
+        86.4
+      ],
+      "clock_entry": "ck[5]",
+      "payload_range": [
+        640,
+        767
+      ],
+      "flit_payload_range": [
+        658,
+        785
+      ],
+      "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+      "pins": {
+        "S": {
+          "c_v": [
+            8,
+            8.4
+          ],
+          "c_d": [
+            9,
+            105
+          ],
+          "c_cr": [
+            106,
+            106.4
+          ],
+          "r_v": [
+            120,
+            120.4
+          ],
+          "r_d": [
+            121,
+            217
+          ],
+          "r_cr": [
+            218,
+            218.4
+          ]
+        },
+        "E": {
+          "tx_up": [
+            2,
+            2.4
+          ],
+          "tx_v": [
+            3,
+            3.4
+          ],
+          "tx_flit": [
+            4,
+            34
+          ],
+          "rx_v": [
+            35,
+            35.4
+          ],
+          "rx_flit": [
+            36,
+            66
+          ]
+        },
+        "W": {
+          "ck": [
+            40,
+            40.4
+          ],
+          "rst_n": [
+            44,
+            44.4
+          ],
+          "fault": [
+            48,
+            48.4
+          ]
+        }
+      },
+      "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+      "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+    },
+    {
+      "instance": "g_slice[6].u_slice",
+      "master": "qfd_link_adp128",
+      "at_um": [
+        0,
+        648
+      ],
+      "outline_um": [
+        237.6,
+        86.4
+      ],
+      "clock_entry": "ck[6]",
+      "payload_range": [
+        768,
+        895
+      ],
+      "flit_payload_range": [
+        786,
+        913
+      ],
+      "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+      "pins": {
+        "S": {
+          "c_v": [
+            8,
+            8.4
+          ],
+          "c_d": [
+            9,
+            105
+          ],
+          "c_cr": [
+            106,
+            106.4
+          ],
+          "r_v": [
+            120,
+            120.4
+          ],
+          "r_d": [
+            121,
+            217
+          ],
+          "r_cr": [
+            218,
+            218.4
+          ]
+        },
+        "E": {
+          "tx_up": [
+            2,
+            2.4
+          ],
+          "tx_v": [
+            3,
+            3.4
+          ],
+          "tx_flit": [
+            4,
+            34
+          ],
+          "rx_v": [
+            35,
+            35.4
+          ],
+          "rx_flit": [
+            36,
+            66
+          ]
+        },
+        "W": {
+          "ck": [
+            40,
+            40.4
+          ],
+          "rst_n": [
+            44,
+            44.4
+          ],
+          "fault": [
+            48,
+            48.4
+          ]
+        }
+      },
+      "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+      "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+    },
+    {
+      "instance": "g_slice[7].u_slice",
+      "master": "qfd_link_adp128",
+      "at_um": [
+        0,
+        756
+      ],
+      "outline_um": [
+        237.6,
+        86.4
+      ],
+      "clock_entry": "ck[7]",
+      "payload_range": [
+        896,
+        1023
+      ],
+      "flit_payload_range": [
+        914,
+        1041
+      ],
+      "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+      "pins": {
+        "S": {
+          "c_v": [
+            8,
+            8.4
+          ],
+          "c_d": [
+            9,
+            105
+          ],
+          "c_cr": [
+            106,
+            106.4
+          ],
+          "r_v": [
+            120,
+            120.4
+          ],
+          "r_d": [
+            121,
+            217
+          ],
+          "r_cr": [
+            218,
+            218.4
+          ]
+        },
+        "E": {
+          "tx_up": [
+            2,
+            2.4
+          ],
+          "tx_v": [
+            3,
+            3.4
+          ],
+          "tx_flit": [
+            4,
+            34
+          ],
+          "rx_v": [
+            35,
+            35.4
+          ],
+          "rx_flit": [
+            36,
+            66
+          ]
+        },
+        "W": {
+          "ck": [
+            40,
+            40.4
+          ],
+          "rst_n": [
+            44,
+            44.4
+          ],
+          "fault": [
+            48,
+            48.4
+          ]
+        }
+      },
+      "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+      "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+    }
+  ],
+  "cuts": {
+    "leaf_S_pins_bits": 260,
+    "leaf_E_pins_bits": 297,
+    "horizontal_payload_bits": 256,
+    "note": "Leafonlypotentialcutnotfinaldieproof; remainingchannel/headerdistribution/c_r/Strunk cut and perpairreach awaitregistered distribution. No sourceonlywaiver."
+  },
+  "unresolved": [
+    "All data/header/control replicas must represent equal logicaledges; no partialwholewordcommit permitted.",
+    "Current source directwires fromcommonC/R Sface do notprove<=500um span over842.4stack; needs actualregistereddistribution and clockphase budget.",
+    "Header0output unusedcopies retainedonlycontrol, currentRTLfaultfromslice0 justifiedonlypayloadindependentcontrollerstateinvariants; physicalreceiverfault/header alignment mustprove.",
+    "Actual PHYframe margins/neighbors/pins notfullymeasured; no fitclaim inside1563.816frame.",
+    "Any added externalpayload/header relaystages require measuredLAT/rate and nativewholelayerpricing."
+  ]
+}
