@@ -1,5 +1,5 @@
 {
- "name": "s81pq_ix_rb_native-esc1-COMMIT",
+ "name": "s81pq_ix_rb_native-esc2-COMMIT",
  "block": "ot_s81_pq_ix_rb_native",
  "ref_tile": true,
  "owner": "Codex:s81-rom-2250",
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_ix_rb_native/s81pq_ix_rb_native-esc1-COMMIT"
+   "to": "results/rtl/ref_tile/s81pq_ix_rb_native/s81pq_ix_rb_native-esc2-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -115,6 +115,6 @@
  "structural_change": "Native57clock PQ: one original SRAM bank per physical read leaf, own original rounding, metadata, parity/written state, selector and final captured32bits. No parent mux/register, no new logical cycle,44SRAM unchanged. Replaces two-SRAM group failing actual100.1ps spread; new CTS and routed parent joins owed. Local real SRAM east M3/M5 via escape keepout .144in/.288out forces pin exits on M4 before via; repairs actual3macro-edgeDRC, no layer/gate waiver.",
  "reroute_reason": {
   "kind": "slot_change",
-  "why": "Actual bank g1 TT116.88/FF23.36 but DRC3 at real SRAM M4eastOBS; add M3/M5 local via escape keepout, realLEF and macro/data pins/epochs unchanged"
+  "why": "Actual bank g1 TT116.88/FF23.36 but DRC3 at real SRAM M4eastOBS; add M3/M5 local via escape keepout, realLEF and macro/data pins/epochs unchanged; esc1 crashed actual ORFS optional vt_swap/reroute WNS optimization invalidating route state before ANT0008. Disable optional OPT_POST_GRT_WNS only; retain ordinary design/timing repair, recover_power incremental global_route, antenna checks and all final timing/DRC."
  }
 }

@@ -102,12 +102,13 @@
     "bank_fault"
    ]
   },
-  "reason": "nativeIXphysicalclockpartition; actualdieassignment pending measured primitive views"
+  "reason": "nativeIXphysicalclockpartition; actualdieassignment pending measured primitive views",
+  "tag": "esc2"
  },
  "job": {
   "owner": "Codex:s81-rom-2250",
   "branch": "codex/s81-rom-2250",
-  "tag": "esc1",
+  "tag": "esc2",
   "purpose": "Actual native one-SRAM IX bank with unchanged selector and final capture epochs",
   "benches": [
    {
@@ -163,11 +164,12 @@
  ],
  "reroute_reason": {
   "kind": "slot_change",
-  "why": "Actual bank g1 TT116.88/FF23.36 but DRC3 at real SRAM M4eastOBS; add M3/M5 local via escape keepout, realLEF and macro/data pins/epochs unchanged"
+  "why": "Actual bank g1 TT116.88/FF23.36 but DRC3 at real SRAM M4eastOBS; add M3/M5 local via escape keepout, realLEF and macro/data pins/epochs unchanged; esc1 crashed actual ORFS optional vt_swap/reroute WNS optimization invalidating route state before ANT0008. Disable optional OPT_POST_GRT_WNS only; retain ordinary design/timing repair, recover_power incremental global_route, antenna checks and all final timing/DRC."
  },
  "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_rb_split_pins.tcl",
  "orfs_vars": {
-  "POST_TAPCELL_TCL": "physical/ref_tile_specs/s81pq_native/ix_rb_macro_escape.tcl"
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/s81pq_native/ix_rb_macro_escape.tcl",
+  "OPT_POST_GRT_WNS": "0"
  },
  "params": {},
  "children": [],
