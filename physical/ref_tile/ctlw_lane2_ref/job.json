@@ -1,5 +1,5 @@
 {
- "name": "ctlw_lane2_ref-l3-COMMIT",
+ "name": "ctlw_lane2_ref-l3-281763d84",
  "block": "ot_hgi_su_ctlw_lane2",
  "ref_tile": true,
  "owner": "Codex:hbm-qdq-physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/hbm-qdq-physical",
-  "commit": "COMMIT"
+  "commit": "281763d84"
  },
  "stages": {
   "bench": [
@@ -96,7 +96,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ctlw_lane2_ref/ctlw_lane2_ref-l3-COMMIT"
+   "to": "results/rtl/ref_tile/ctlw_lane2_ref/ctlw_lane2_ref-l3-281763d84"
   }
  ],
  "cycles_added": 0,

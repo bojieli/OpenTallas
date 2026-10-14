@@ -1,11 +1,11 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "qfd_vm_xqface_t",
- "verdict": "FAIL",
- "generated": "2026-10-13T07:42:12-0700",
+ "verdict": "WARN",
+ "generated": "2026-10-13T12:33:20-0700",
  "host": "ot-epyc1tb",
  "cts": true,
- "commit": "159504fe9",
+ "commit": "fa285224b",
  "clock": {
   "max_root_sinks": 1025,
   "root": "port:clk",
@@ -25,25 +25,19 @@
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 552 um2 + macros 0 in core 1344: util 41%",
+   "message": "synthesized std area 552 um2 + macros 0 in core 2239: util 25%",
    "fix": "set \"std_area_um2\": 552 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 42.2% outside 45%-65% (std 566 + macro 0 um2 in 1344 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 25.3% outside 45%-65% (std 566 + macro 0 um2 in 2239 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
-  },
-  {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR GPL-0301] Utilization 105.900 % exceeds 100%.",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
   },
   {
    "severity": "WARN",
    "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
+   "message": "CTS rc=0 ck_insertion rc=1",
    "fix": ""
   }
  ]
