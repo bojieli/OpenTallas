@@ -5975,6 +5975,11 @@ def _col_relays(m, P):
                         m.setdefault('rly_face_reach', []).append((it.name, fi + fo, fi2_ + fb_, round(wl_[fo], 1),
                                                                    round(wl_[fb_], 1)))
                         fi, fo = fi2_, fb_
+            if own_ is not None and k == 1 and (round(it.x, 3), round(it.y, 3)) == (round(own_[0], 3), round(own_[1], 3)):
+                # --x-site-pair: the owned-site relay is the STRAIGHT E->W master (dsfd_rly_<b>_EW): out on the W face
+                # (worst load = the W bank, <= ~340 um pin to pin on native207 geometry, all 2,304 lanes), in on the E face
+                # from the station beside it; no corner master (WN) that would need its own real view
+                fi, fo = 'E', 'W'
             it.master = f'dsfd_rly_{bits}_{fi}{fo}'
             RLY_FACES[it.master] = (fi, fo)
         out.append((bid, cls, bits, [prev] + list(eps[1:])))
