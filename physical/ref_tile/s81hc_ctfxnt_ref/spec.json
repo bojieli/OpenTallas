@@ -69,7 +69,8 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.03
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_ntree_benches.json",
@@ -84,5 +85,12 @@
  },
  "params": {},
  "children": [],
- "inter": []
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
 }
