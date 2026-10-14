@@ -13,7 +13,7 @@
  ],
  "outline": {
   "w": 64.8,
-  "h": 43.2
+  "h": 64.8
  },
  "layer_cap": "M5",
  "pins": {
@@ -176,7 +176,12 @@
  "children": [],
  "route": {
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "inter": [],
  "io_flop_at_pins": {
@@ -185,6 +190,6 @@
  },
  "inhold": true,
  "outhold": true,
- "slot_change_request": "UNASSIGNED64.8x43.2 two registered incoming payload seams; own literal groupclock root9. No assignment, parentfit, clockphase or reused old one-input groupview.",
+ "slot_change_request": "UNASSIGNED64.8x64.8 two registered incoming payload seams; actual512-bit east seam exceeded43.2um edge capacity at local gate. Own literal groupclock root9. No assignment, parentfit, clockphase or reused old one-input groupview.",
  "structural_change": "Distinct source successor: core sector FFs clear invalid payload and expose full registered KQ; original group_q edge moved into independent two-seam group face with no added request edge. MV receives only32 registered valid credit bits. WQ existing control replication ESL32 preserves queue edges and reservations. Descriptor FIFO lookahead captures at original enqueue; dispatch selects precomputed registers. Physical slot and parent phases remain UNASSIGNED."
 }
