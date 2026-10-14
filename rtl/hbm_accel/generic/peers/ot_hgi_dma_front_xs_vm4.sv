@@ -108,6 +108,17 @@ module ot_hgi_dma_front_xs_vm4 #(
     end else begin : g_preg
         reg [NIN*277-1:0] ls_q;
         always @(posedge clk) ls_q <= ls;                      // one pin flop per ls bit, no enable
+        // per lane x quarter: the format-selected payload word and the sector, computed ONCE and shared by the 8 banks
+        wire [NIN*4*256-1:0] lw;
+        wire [NIN*4*18-1:0]  ls_sec;
+        for(genvar i=0;i<NIN;i++)begin:lane
+          wire [2:0] lf=ls_q[i*277+274+:3];
+          for(genvar q=0;q<4;q++)begin:quarter
+            assign ls_sec[(i*4+q)*18+:18]=ls_q[i*277+256+:18]+18'(q);
+            assign lw[(i*4+q)*256+:256]=(lf==3'd1)?((q<2)?{128'd0,ls_q[i*277+q*128+:128]}:256'd0):
+                            (lf==3'd2||lf==3'd4)?{192'd0,ls_q[i*277+q*64+:64]}:ls_q[i*277+:256];
+          end
+        end
         for(genvar b=0;b<NBS;b++)begin:bk
           reg [NIN*4-1:0] qsel;reg x_v,w_v,w_bad;reg [279:0] wl_d;
           assign wd[b*280+:280]=wl_d;assign v_o[b]=w_v;assign bad_o[b]=w_bad;
@@ -121,14 +132,7 @@ module ot_hgi_dma_front_xs_vm4 #(
             selected=0;f=0;sector=0;
             for(integer i=0;i<NIN;i++)begin
               if(qsel[i*4+:4]!='0)f=f|ls_q[i*277+274+:3];
-              for(integer q=0;q<4;q++)if(qsel[i*4+q])begin
-                sector=sector|(ls_q[i*277+256+:18]+18'(q));
-                case(ls_q[i*277+274+:3])
-                  3'd1:if(q<2)selected=selected|{128'd0,ls_q[i*277+q*128+:128]};
-                  3'd2,3'd4:selected=selected|{192'd0,ls_q[i*277+q*64+:64]};
-                  default:selected=selected|ls_q[i*277+:256];
-                endcase
-              end
+              for(integer q=0;q<4;q++)if(qsel[i*4+q])begin sector=sector|ls_sec[(i*4+q)*18+:18];selected=selected|lw[(i*4+q)*256+:256];end
             end
             w_v<=x_v;w_bad<=x_v&&sector>=18'd36864;
             wl_d<={(MUT==8)?1'b0:(sector>=18'd32768&&sector<18'd36864),sector[14:0],conv(selected,f,2'd0),sector>=18'd36864 ? 8'h00 : 8'hff};
