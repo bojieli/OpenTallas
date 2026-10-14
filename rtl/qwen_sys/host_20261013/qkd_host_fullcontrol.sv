@@ -5,7 +5,8 @@ module qkd_host_fullcontrol #(
     parameter integer PROMPT_VALID_ONLY = 1, // mutant switch; gate unwritten prompt reads
     parameter integer MUT_DIAG = 0,
     parameter integer MUT_DONE_GUARD = 0,
-    parameter integer MUT_FMT = 0, // opt-in until exact/physical gates pass
+    parameter integer MUT_FMT = 0,
+    parameter integer PROMPT_READ_LATENCY = 1, // external SRAM response edges after request pin // opt-in until exact/physical gates pass
     parameter integer D       = 8,
     parameter integer NW      = 18,
     parameter integer AW      = 24,
@@ -103,7 +104,7 @@ module qkd_host_fullcontrol #(
     wire boot_fault, soft_rst;
     wire [3:0] boot_state, boot_err;
     wire [31:0] boot_cycles;
-    ot_qwen_sys_rst_seq #(.NL(NL), .ND(D), .T_LINK(T_LINK), .T_HBM(T_HBM)) u_rst (
+    qkd_host_rst_pins #(.NL(NL), .ND(D), .T_LINK(T_LINK), .T_HBM(T_HBM)) u_rst (
         .clk(ck_rst), .por_n(por_n), .soft_rst(soft_rst), .link_up(link_up), .boot_done(boot_done), .boot_ok(boot_ok),
         .host_rst_n(host_rst_n), .link_rst_n(link_rst_n), .hbm_rst_n(hbm_rst_n), .boot_go(boot_go),
         .die_rst_n(die_rst_n), .sys_ready(sys_ready), .boot_fault(boot_fault), .boot_state(boot_state),
@@ -122,11 +123,10 @@ module qkd_host_fullcontrol #(
     // user-state clear (ENG_CTX = NSLOT = 1): nothing to clear -- a step at position p reads KV positions 0..p only,
     // every one rewritten by the current request (prompt steps or ingest) before it is read; acknowledged next edge
     wire clr_req;
-    reg  clr_ack;
-    always @(posedge ck_host or negedge host_rst_n) if (!host_rst_n) clr_ack <= 1'b0; else clr_ack <= clr_req && !clr_ack;
-    ot_host_if #(.PB_VALID_ONLY(PROMPT_VALID_ONLY), .NSLOT(NSLOT), .MODE(0), .ENG_CTX(NSLOT), .NW(NW), .PLB(PLB), .CTX_MAX(CTX), .AW(AW),
+    wire clr_ack=1'b0; // acknowledgement now owned by host hardened leaf
+    qkd_host_if_pins #(.PB_READ_PIPE(1+PROMPT_READ_LATENCY),.MUT_DONE_GUARD(MUT_DONE_GUARD),.PB_VALID_ONLY(PROMPT_VALID_ONLY), .NSLOT(NSLOT), .MODE(0), .ENG_CTX(NSLOT), .NW(NW), .PLB(PLB), .CTX_MAX(CTX), .AW(AW),
                  .KVW(KVW), .FMT(MUT_FMT?0:1)) u_host (
-        .clk(ck_host), .rst_n(host_rst_n && die_id==0),
+        .clk(ck_host), .rst_n(host_rst_n), .die_id(die_id),
         .s_awvalid(h_awvalid), .s_awready(h_awready), .s_awaddr(h_awaddr),
         .s_wvalid(h_wvalid), .s_wready(h_wready), .s_wdata(h_wdata), .s_wstrb(h_wstrb),
         .s_bvalid(h_bvalid), .s_bready(h_bready), .s_bresp(),
@@ -150,25 +150,17 @@ module qkd_host_fullcontrol #(
     wire disagree, wdog_fault, start_unready, die_fault;
     wire [31:0] n_steps;
     wire [119:0] ctl_res;
-    qkd_host_ctl #(.ND(8),.WDOG(WDOG)) u_pkg(
-        .ck(ck_ctl),.rst_n(host_rst_n),.ready(sys_ready && !pb_fault && die_id==0),
+    qkd_host_ctl_pins #(.WDOG(WDOG)) u_pkg(
+        .ck(ck_ctl),.rst_n(host_rst_n),.sys_ready(sys_ready),.pb_fault(pb_fault),.die_id(die_id),
         .req({kv_base,eng_pos,eng_token,eng_start}),.pr(pr),.tk(tk8),.hc(hc),.res(ctl_res));
-    // qkd_host_ctl adds request/result pin stations to a LEVEL completion.
-    // The original host's one-edge !eng_start guard cannot hide that latency.
-    // Re-arm only after the controller acknowledges the new step by done-low.
-    reg completion_armed;
-    always @(posedge ck_host or negedge host_rst_n)
-        if(!host_rst_n) completion_armed<=0;
-        else if(eng_start) completion_armed<=0;
-        else if(!ctl_res[0]) completion_armed<=1;
-    assign eng_done=(MUT_DONE_GUARD || completion_armed) && ctl_res[0]; assign eng_fault=ctl_res[1];
+    assign eng_done=ctl_res[0]; assign eng_fault=ctl_res[1];
     assign eng_next_token=ctl_res[19:2];assign eng_next_val=ctl_res[51:20];
     assign eng_cycles=ctl_res[83:52];assign disagree=ctl_res[84];
     assign wdog_fault=ctl_res[85];assign start_unready=ctl_res[86];
     assign die_fault=ctl_res[87];assign n_steps=ctl_res[119:88];
     assign c_start=hc[38];assign c_gen=hc[37:36];
     assign c_token=hc[35:18];assign c_pos=hc[17:0];assign c_kv_base=kv_base;
-    initial if (D!=8 || NW!=18 || AW!=24 || NSLOT!=1 || PLB!=13 || CTX!=8192)
+    initial if (PROMPT_READ_LATENCY<1 || D!=8 || NW!=18 || AW!=24 || NSLOT!=1 || PLB!=13 || CTX!=8192)
         $fatal(1,"full-control physical shape mismatch");
     // ---- CSRs, faults, interrupt ----
     assign fault_src = {9'd0, pb_fault, crom_fault, die_fault, boot_fault, start_unready, wdog_fault, disagree,
@@ -180,7 +172,7 @@ module qkd_host_fullcontrol #(
         cnt[32*12 +: 32] = n_steps;
         cnt[32*13 +: 32] = eng_cycles;
     end
-    qkd_host_sys_csr #(.NCNT(16),.MUT_DIAG(MUT_DIAG)) u_csr (
+    qkd_host_csr_pins #(.NCNT(16),.MUT_DIAG(MUT_DIAG)) u_csr (
         .clk(ck_csr), .rst_n(host_rst_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(s_wstrb),
