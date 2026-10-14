@@ -6,7 +6,7 @@
 // Ingress capacity must be reserved by the real producer before posting.
 // Protected pointer rails come from the real HBM CDC primitive. No pulse crosses directly.
 // Each payload FIFO is a distinct physical requirement; this RTL is not a closed SRAM view.
-module ot_hbm_b2_lane_cdc_owned #(parameter integer LQ=10, MAX_PENDING=48, MUT=0)(
+module ot_hbm_b2_lane_cdc_owned #(parameter integer LQ=10, MAX_PENDING=80, MUT=0)(
  input wire cclk,vclk,rst_n,permit,vrpermit,vwpermit,
  input wire [16:0] crq,output reg crq_credit,output reg [256:0] crr,
  input wire [280:0] cwq,output reg cwq_credit,cwq_done,
@@ -18,7 +18,7 @@ module ot_hbm_b2_lane_cdc_owned #(parameter integer LQ=10, MAX_PENDING=48, MUT=0
  wire [15:0] rqdata;wire [279:0] wqdata;wire [255:0] rrdata;
  wire [11:0] faults; wire [2:0] unused_freed[0:5];wire unused1,unused2,unused3;
  reg [4:0] rcredit,wcredit,rcredit_n,wcredit_n;reg cf,vf;
- wire rpop=!rdempty&&rcredit!=0&&vrpermit,wpop=!wdempty&&wcredit!=0&&vwpermit;
+ wire rpop=!rdempty&&rcredit!=0&&vrpermit&&vrpending<48,wpop=!wdempty&&wcredit!=0&&vwpermit&&vwpending<48;
  ot_hbm_accel_cdc_fifo_p2 #(.W(16),.AW(4)) rqfifo(.wclk(cclk),.wrst_n(rst_n),.we(crq[16]),.wdata(crq[15:0]),.full(rf),.rd_freed(unused_freed[0]),.w_fault(faults[0]),.rclk(vclk),.rrst_n(rst_n),.re(rpop),.rdata(rqdata),.empty(rdempty),.r_fault(faults[1]));
  ot_hbm_accel_cdc_fifo_p2 #(.W(280),.AW(4)) wqfifo(.wclk(cclk),.wrst_n(rst_n),.we(cwq[280]),.wdata(cwq[279:0]),.full(wf),.rd_freed(unused_freed[1]),.w_fault(faults[2]),.rclk(vclk),.rrst_n(rst_n),.re(wpop),.rdata(wqdata),.empty(wdempty),.r_fault(faults[3]));
  wire rrfull,rcfull,wcfull,wdfull;wire rdummy,cdummy,wdummy;
@@ -36,20 +36,21 @@ module ot_hbm_b2_lane_cdc_owned #(parameter integer LQ=10, MAX_PENDING=48, MUT=0
  end
  // Source obligations count accepted beats until each real returned event is consumed.
  // Credit return and commit/response are independent obligations.
- // Private local lane bound: requestFIFO16 + registered bank ingress1 + bankqueue10
- // + read/commit pipeline4 + returnFIFO16 + registered return1 =48.
+ // Owned-parent bound80 reserves48 admitted VM obligations +16 sourceFIFO
+ // +10 unused servercredits +6 registered handoff slots. Dequeue pauses
+ // at48 VM obligations, allowing mirror ACK batches to quiesce without overflow.
  // Ten bank credits return on dequeue, before response/commit; they are not this bound.
  localparam integer CB=$clog2(MAX_PENDING+1);
  reg [CB-1:0] rresp,rcred,wcred,wcommit,rresp_n,rcred_n,wcred_n,wcommit_n;
- reg df;reg [5:0] vrpending,vwpending,vrpending_n,vwpending_n;
- wire [6:0] nvrpending={1'b0,vrpending}+vrq[16]-vrr[256];
- wire [6:0] nvwpending={1'b0,vwpending}+vwq[280]-vwq_done;
+ reg df;reg [6:0] vrpending,vwpending,vrpending_n,vwpending_n;
+ wire [7:0] nvrpending={1'b0,vrpending}+vrq[16]-vrr[256];
+ wire [7:0] nvwpending={1'b0,vwpending}+vwq[280]-vwq_done;
  reg pf;
  always @(posedge vclk or negedge rst_n)if(!rst_n)begin
-  vrpending<=0;vwpending<=0;vrpending_n<=6'h3f;vwpending_n<=6'h3f;pf<=0;
+  vrpending<=0;vwpending<=0;vrpending_n<=7'h7f;vwpending_n<=7'h7f;pf<=0;
  end else begin
-  if(vrpending!=~vrpending_n||vwpending!=~vwpending_n||nvrpending>32||nvwpending>32)pf<=1;
-  vrpending<=nvrpending[5:0];vrpending_n<=~nvrpending[5:0];vwpending<=nvwpending[5:0];vwpending_n<=~nvwpending[5:0];
+  if(vrpending!=~vrpending_n||vwpending!=~vwpending_n||nvrpending>64||nvwpending>64)pf<=1;
+  vrpending<=nvrpending[6:0];vrpending_n<=~nvrpending[6:0];vwpending<=nvwpending[6:0];vwpending_n<=~nvwpending[6:0];
  end
  wire racc=crq[16],wacc=cwq[280];
  wire [CB:0] nrresp={1'b0,rresp}+racc-crr[256];

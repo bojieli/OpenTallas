@@ -21,7 +21,7 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0)(
  input wire [32*280-1:0] probe_wq,output wire [31:0] probe_wcredit,probe_done,
  output wire [31:0] su_cdrained,su_vdrained,dma_cdrained,dma_vdrained,
  output wire [11:0] vm_rgrant,vm_wgrant,
- output wire [4*8*18-1:0] bank_status,output wire [127:0] fault
+ output wire [4*8*18-1:0] bank_status,output wire [159:0] fault
 );
  wire [32*17-1:0] qrq;wire [32*281-1:0] qwq;wire [32*257-1:0] qrr;
  wire [31:0] qrc,qwc,qd,qcd,qvd,qrrdy,qwrdy,qfault;
@@ -31,7 +31,7 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0)(
   .rg_req(qreqr),.wg_req(qreqw),.rg_gnt(qrg),.wg_gnt(qwg),.vm_rg_gnt(qvgr),.vm_wg_gnt(qvgw),
   .peer_rq(qrq),.peer_rq_credit(qrc),.peer_rr(qrr),.peer_wq(qwq),.peer_wq_credit(qwc),.peer_wq_done(qd),
   .adapter_fault(qfault),.cdrained(qcd),.vdrained(qvd),.rready(qrrdy),.wready(qwrdy),.qdrained(quant_drained),.qbusy(qbusy));
- wire [32*17-1:0] brq;wire [32*281-1:0] bwq;wire [32*257-1:0] brr;wire [31:0] brc,bwc,bd;
+ wire [32*17-1:0] brq;wire [32*281-1:0] bwq;wire [32*257-1:0] brr;wire [31:0] brc,bwc,bd,local_bd,vf;wire [7:0] mirror_busy;wire [31:0] mirror_fault;
  for(genvar q=0;q<4;q=q+1)begin:quad
   wire [3*8*17-1:0] srq;wire [3*8*281-1:0] swq;wire [3*8*257-1:0] srr;
   wire [23:0] src,swc,sd,rrdy,wrdy,vd,cd;wire [2:0] rg,wg,rack,wack,vrg,vwg;wire mf;
@@ -70,8 +70,12 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0)(
   assign vm_rgrant[q*3+:3]=vrg;assign vm_wgrant[q*3+:3]=vwg;assign fault[96+q*8+:8]={8{mf}};
  end
  assign fault[64+:32]=qfault;
- ot_hbm_b2_su_vm4 vm(.cclk(probe_clk),.vclk(vclk),.rst_n(rst_n),.permit(probe_permit),.mirror(probe_mirror),
+ assign fault[128+:32]=vf|mirror_fault;
+ for(genvar b=0;b<32;b=b+1)begin:global_commit
+  ot_hbm_b2_mirror_commit #(.MUT(MUT==3?1:0)) commit(.clk(vclk),.rst_n(rst_n),.posted(bwq[b*281+280]),.mirror(bwq[b*281+279]),.local_done(local_bd[b]),.global_busy(|mirror_busy),.done(bd[b]),.fault(mirror_fault[b]));
+ end
+ ot_hbm_b2_su_vm4_mirror vm(.cclk(probe_clk),.vclk(vclk),.rst_n(rst_n),.permit(probe_permit),.mirror(probe_mirror),
   .crq(probe_rq),.crq_credit(probe_rcredit),.crr(probe_rr),.cwq(probe_wq),.cwq_credit(probe_wcredit),.cwq_done(probe_done),
-  .peer_rq(brq),.peer_rq_credit(brc),.peer_rr(brr),.peer_wq(bwq),.peer_wq_credit(bwc),.peer_wq_done(bd),.dma_q(dma_dq),.dma_done(dma_dq_done),.fault(),.bank_status(bank_status));
+  .peer_rq(brq),.peer_rq_credit(brc),.peer_rr(brr),.peer_wq(bwq),.peer_wq_credit(bwc),.peer_wq_done(local_bd),.dma_q(dma_dq),.dma_done(dma_dq_done),.fault(vf),.mirror_busy(mirror_busy),.bank_status(bank_status));
 endmodule
 `default_nettype wire
