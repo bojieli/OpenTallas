@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.s81_hrow_native_change_request.v1",
- "status": "OPEN not a passing floorplan",
+ "status": "Partial PASS: geometry/pin alignment/local grid cuts; physical wire/timing/global driver bindings OPEN",
  "outline_um": [
   2998.08,
   1769.04
@@ -11,44 +11,60 @@
   "CQ": 3,
   "WK": 7,
   "P": 2,
-  "UT": 1
+  "UT": 2,
+  "DISTRIBUTED_RST": 1
  },
- "relay_bits": 12660,
- "reset_sync_bits": 2,
+ "relay_bits": 18897,
+ "reset_sync_bits": 54,
  "current_geometry": {
-  "instances": 59,
+  "instances": 88,
   "placement_violations": 0,
-  "data_hop_max_um": 498.519
+  "bank_row_minimum_measured_um": 56.16,
+  "W_E_minimum_required_um": 20,
+  "data_pair_max_manhattan_um": 489.348,
+  "local_rn_max_manhattan_um": 212.571
  },
  "routing": {
+  "schema": "opentallas.hrow_grid_edge_routes.v1",
   "gcell_um": 10.8,
   "window_um": 54.0,
-  "blocked_interior_cells": 0,
+  "groups": 12498,
+  "chunk_max_bits": 8,
+  "passes": "A* repeated rip-up; up to16",
+  "pin_normal_escape": true,
+  "capacity": "M2-M7 only;80% usable;overM5 M6(H),85%M7(V)",
   "full_vertical_cut_max": [
-   0.182,
-   1695.6
+   0.1312,
+   1674.0
   ],
   "full_horizontal_cut_max": [
-   0.346,
-   1026.0
+   0.1492,
+   151.2
   ],
-  "window_vertical_cut_max": 3.175,
-  "window_horizontal_cut_max": 1.813,
-  "gcells_over_0p60": 1580,
-  "gcells": 45592,
+  "window_vertical_cut_max": 0.5972,
+  "window_horizontal_cut_max": 0.5943,
+  "window_vertical_worst_gcell": [
+   146,
+   211
+  ],
+  "window_horizontal_worst_gcell": [
+   137,
+   142
+  ],
   "gcell_max": [
-   8.178,
-   5.028
-  ]
+   0.9926,
+   0.9958
+  ],
+  "pass_": true,
+  "route_segments": 153913,
+  "grid_route_path_max_um": 702.0
  },
  "requests": [
-  "Place explicit channels between bank rows; abutted banks fail exact pin-alignment jog checks. Preserve closed child RTL/LEFs.",
-  "Try MY on all five west banks to remove bank5-to6 mirrored bit-order reversal; rerun actual per-bit hop and overlap checks.",
-  "Spread return/event/control relay landing traffic and prove each local54um cut <=0.60 on current M2-M7 parent layer budget. No M8 grant requested.",
-  "Adopt production dsfd_mtp_hrow_td HARD_RELAYS=1 binder with actual ck/rst driver identity, domain period, phase, insertion/skew; current td integration is bench only.",
-  "Implement actual physical combinational rn reset-buffer tree. Direct source RTL rn fanout currently reaches2461.671um; buffers must retain source reset semantics.",
-  "Revalidate pin locations and per-pair lengths against final routed relay LEFs; current relay pins are CTS candidates.",
-  "Bind assigned external f_hp/t_hpg/f_vrq/t_vrq/t_vrs/f_clr/t_flt pins and tie-cell placement."
+  "Bind actual per-pair driver/load RC and routed wire budgets from final relay ETMs; constrain explicit routes to min(actual budget,500um). Exact over-budget pin pairs retained in route_length_over500.json.",
+  "Bind actual production reference clock and asynchronous reset driver identities/physical delivery to all88 clock roots and all local reset conditioners. No destination clock used as source.",
+  "Collect final routed relay LEFs/SS/FF clock insertion and timing qualification; CTS pin geometry alone does not qualify timing.",
+  "Bind assigned external hrow boundary pins and tie-cell placement.",
+  "Price measured UT2/DISTRIBUTED_RST production completion deltas +26/+26/+4 against full model; ownstate18897relaybits+54resetFF retained; defaults unchanged."
  ],
  "evidence": [
   "tools/s81_ph/s81_ph_hrow_native_placement.py",
