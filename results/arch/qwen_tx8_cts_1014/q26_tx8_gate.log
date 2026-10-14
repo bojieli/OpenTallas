@@ -1,0 +1,18 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 4 port group(s) left to the IO placer (ANY): ['clk', 'rst_n', 'd', 'q']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_ot_qwen_tile_tx8_capture_20261014-000645.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_ot_qwen_tile_tx8_capture_20261014-000645.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_tx8_capture-20261014-000645
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 20 s (gate total 240 s)
+GATE WARN pins: 4 port group(s) left to the IO placer (ANY): ['clk', 'rst_n', 'd', 'q']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE WARN util: synthesized std area 1047 um2 + macros 0 in core 6028: util 17%  -> FIX: set "std_area_um2": 1047 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_qwen_tile_tx8_capture cells 6,241 flops 3,120 depth 0.0 ps util 0.1737 reach 59.6 um (0.1 s)
+GATE WARN textbook.util_channel: utilisation 17.4% outside 45%-65% (std 1047 + macro 0 um2 in 6028 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 171.7..180.8 ps (spread 9.1), boundary mean 175.8; tt insertion all 126.7..133.9 ps (spread 7.2), boundary mean 130.2; ff insertion all 100.9..107.3 ps (spread 6.4), boundary mean 104.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: reg->out      300 paths, worst slack -38.7 ps (e.g. q[253])
+GATE INFO path_classes: in->reg         8 paths, worst slack 562.5 ps (e.g. q[1949]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -3.8731351459375674e-11 hold WNS 9.291682701029202e-11
+GATE INFO clock_rule: root port:clk: 3,120 sinks on the largest root <= 15,000; measured TT insertion 133.9 ps, leaf spread 7.2 ps
+PRE_ROUTE_GATE: WARN (0 fail, 4 warn)
+GATE: ot_qwen_tile_tx8_capture/gate_result.json written (exact staged source binding; commit it with the kit)
