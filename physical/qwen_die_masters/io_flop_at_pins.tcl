@@ -25,6 +25,26 @@ set ot_cols [expr {[info exists ::env(OT_OFLOP_COLS)] ? $::env(OT_OFLOP_COLS) : 
 #     port -> HB4 -> BUF -> flop D) the default stops inside the stage and the flop stays unanchored.
 #   OT_OFLOP_ALLOW_NONE=1: finding no pin flop is reported, not an error (a default-on hook on a tile whose ports all
 #     feed macros / hard children).
+# AUTO SPREAD (flowfix 2026-10-13; the same model as tools/pin_fit.py oflop_plan, constants kept equal by
+# tools/closure_loop/test_pin_fit.py).  With the pin hold stages of kit recipe 2 FIRM at the pins (leaf_iohold.tcl: BUF +
+# HB4 + BUF per output, leaf_inhold.tcl: HB4 + BUF per input) the default gap puts the flops ON the stages: at ~10 b/um
+# (2.8 pins per cell row) the legalised stages take x 2.2-6.7, the flops x 3.2-8.3, they interleave and every flop ->
+# stage -> pin chain crosses the column behind the face more than once (qkd_seq_fan-kc3 GRT-0116, one track short in 66
+# gcells at x 7.98-8.55; s81su swtl / swth / qbtl; closed by hand with OT_OFLOP_GAP 4.5 and 6 columns, kc4).
+# Per face, over the densest ot_au_win um: hold depth = FIRM chain-cell width x row height / window.  From ot_au_dense um
+# the flops start behind the stages (gap = depth x ot_au_slack) in enough columns for one flop per pin (W / E: 2 x pins
+# per row; N / S: 1.5 x pins per flop pitch).  A face without FIRM hold cells, or a sparse one, keeps gap / columns.
+#   OT_OFLOP_GAP set: that gap on every face (no derivation).  OT_OFLOP_COLS: the minimum column count.
+#   OT_OFLOP_AUTO=0: no derivation at all (gap / columns exactly as given).
+set ot_au_on [expr {!([info exists ::env(OT_OFLOP_AUTO)] && $::env(OT_OFLOP_AUTO) eq "0")}]
+set ot_au_gap_set [expr {[info exists ::env(OT_OFLOP_GAP)] && $::env(OT_OFLOP_GAP) ne ""}]
+set ot_au_win 10.0
+set ot_au_row 0.27
+set ot_au_dense 2.0
+set ot_au_slack 1.28
+set ot_au_cols_v 2.0
+set ot_au_cols_h 1.5
+set ot_au_depth_max 0.45
 set ot_hops [expr {[info exists ::env(OT_OFLOP_HOPS)] && $::env(OT_OFLOP_HOPS) ne "" ? $::env(OT_OFLOP_HOPS) : 4}]
 set ot_allow_none [expr {[info exists ::env(OT_OFLOP_ALLOW_NONE)] && $::env(OT_OFLOP_ALLOW_NONE) eq "1"}]
 proc ot_of_drv {net} {
@@ -73,13 +93,14 @@ foreach bt [$ot_blk getBTerms] {
   set io [$bt getIoType]
   if {$ot_port_re ne "" && ![regexp -- $ot_port_re [$bt getName]]} continue
   set net [$bt getNet]; if {$net eq "NULL"} continue
-  set ff ""
+  set ff ""; set hw 0.0
   if {$io eq "OUTPUT"} {
     set d [ot_of_drv $net]; if {$d eq ""} { incr ot_skip; continue }
     set inst [$d getInst]
     for {set hop 0} {$hop < $ot_hops} {incr hop} {
       if {[ot_of_isff $inst]} { set ff $inst; break }
       if {![ot_of_isbuf $inst]} break
+      if {[$inst getPlacementStatus] eq "FIRM"} { set hw [expr {$hw + double([[$inst getMaster] getWidth]) / $ot_dbu}] }
       set nxt ""
       foreach it [$inst getITerms] {
         if {![$it isInputSignal]} continue
@@ -100,6 +121,7 @@ foreach bt [$ot_blk getBTerms] {
         break
       }
       if {![ot_of_isbuf $inst]} break
+      if {[$inst getPlacementStatus] eq "FIRM"} { set hw [expr {$hw + double([[$inst getMaster] getWidth]) / $ot_dbu}] }
       set on ""
       foreach it [$inst getITerms] { if {[$it isOutputSignal]} { set on [$it getNet] } }
       if {$on eq "" || $on eq "NULL"} break
@@ -120,19 +142,58 @@ foreach bt [$ot_blk getBTerms] {
   set dl [expr {$px - $dx0}]; set dr [expr {$dx1 - $px}]; set dbo [expr {$py - $dy0}]; set dt [expr {$dy1 - $py}]
   set dm [expr {min($dl, $dr, $dbo, $dt)}]
   if {$dl == $dm} { set side L } elseif {$dr == $dm} { set side R } elseif {$dbo == $dm} { set side B } else { set side T }
-  lappend cand [list $side [expr {($side eq "L" || $side eq "R") ? $py : $px}] $ff $px $py $io]
+  lappend cand [list $side [expr {($side eq "L" || $side eq "R") ? $py : $px}] $ff $px $py $io $hw]
 }
-foreach side {L R B T} { set ot_k($side) 0 }
-foreach c [lsort -real -index 1 $cand] {
+set cand [lsort -real -index 1 $cand]
+# >>> auto spread (extracted and run under tclsh by tools/closure_loop/test_pin_fit.py)
+foreach side {L R B T} {
+  set ot_k($side) 0; set ot_sgap($side) $ot_gap; set ot_scols($side) $ot_cols
+  if {!$ot_au_on} continue
+  # densest ot_au_win um of this face: pin flops (cnt) and FIRM hold-cell width (hw) between the pins and their flops
+  set pts {}; set fw 1.08
+  foreach c $cand {
+    if {[lindex $c 0] ne $side} continue
+    lappend pts [list [lindex $c 1] [lindex $c 6]]
+    set fw [expr {double([[[lindex $c 2] getMaster] getWidth]) / $ot_dbu}]
+  }
+  set n [llength $pts]; if {$n == 0} continue
+  set j 0; set hw 0.0; set mhw 0.0; set mcnt 0
+  for {set i 0} {$i < $n} {incr i} {
+    set hw [expr {$hw + [lindex $pts $i 1]}]
+    while {[lindex $pts $i 0] - [lindex $pts $j 0] > $ot_au_win} { set hw [expr {$hw - [lindex $pts $j 1]}]; incr j }
+    if {$hw > $mhw} { set mhw $hw }
+    if {$i - $j + 1 > $mcnt} { set mcnt [expr {$i - $j + 1}] }
+  }
+  set depth [expr {$mhw * $ot_au_row / $ot_au_win}]
+  if {$depth < $ot_au_dense} continue
+  set vert [expr {$side eq "L" || $side eq "R"}]
+  if {!$ot_au_gap_set} { set ot_sgap($side) [expr {max($ot_gap, round($depth * $ot_au_slack * 10.0) / 10.0)}] }
+  set dens [expr {$mcnt / $ot_au_win}]
+  set need [expr {$vert ? int(ceil($ot_au_cols_v * $dens * $ot_au_row - 1e-9)) : int(ceil($ot_au_cols_h * $dens * ($fw + 0.2) - 1e-9))}]
+  if {$need > $ot_scols($side)} { set ot_scols($side) $need }
+  # the stages + flop band stay inside ot_au_depth_max of the core behind the face (fewer columns, never a negative site)
+  set pitch [expr {$vert ? $fw + 0.2 : $ot_au_row}]
+  set room [expr {$ot_au_depth_max * ($vert ? $cx1 - $cx0 : $cy1 - $cy0)}]
+  set fit [expr {int(floor(($room - $ot_sgap($side)) / $pitch))}]
+  if {$fit < $ot_scols($side)} {
+    puts "OT_IOFLOP auto WARNING side $side: gap $ot_sgap($side) um + $ot_scols($side) columns exceed [format %.1f $room] um of core: [expr {max(1, $fit)}] columns (face too dense for this tile depth)"
+    set ot_scols($side) [expr {max(1, $fit)}]
+  }
+  puts [format "OT_IOFLOP auto side %s: %d pin flops / %.0f um, FIRM hold cells %.2f um deep -> gap %.1f um, %d columns (default %s / %d)" \
+          $side $mcnt $ot_au_win $depth $ot_sgap($side) $ot_scols($side) $ot_gap $ot_cols]
+}
+# <<< auto spread
+foreach c $cand {
   lassign $c side pos ff px py io
-  set col [expr {$ot_k($side) % $ot_cols}]; incr ot_k($side)
+  set col [expr {$ot_k($side) % $ot_scols($side)}]; incr ot_k($side)
   set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]
   set h [expr {double([[$ff getMaster] getHeight]) / $ot_dbu}]
+  set sg $ot_sgap($side)
   switch $side {
-    L { set x [expr {$cx0 + $ot_gap + $col * ($w + 0.2)}]; set y $py }
-    R { set x [expr {$cx1 - $ot_gap - ($col + 1) * ($w + 0.2)}]; set y $py }
-    B { set x $px; set y [expr {$cy0 + $ot_gap + $col * $h}] }
-    T { set x $px; set y [expr {$cy1 - $ot_gap - ($col + 1) * $h}] }
+    L { set x [expr {$cx0 + $sg + $col * ($w + 0.2)}]; set y $py }
+    R { set x [expr {$cx1 - $sg - ($col + 1) * ($w + 0.2)}]; set y $py }
+    B { set x $px; set y [expr {$cy0 + $sg + $col * $h}] }
+    T { set x $px; set y [expr {$cy1 - $sg - ($col + 1) * $h}] }
   }
   $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
   $ff setPlacementStatus FIRM

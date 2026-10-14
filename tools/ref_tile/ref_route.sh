@@ -15,6 +15,12 @@ SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
 OT_ENV_PD=${PD:-}; OT_ENV_NC=${NC:-}
 source $KITENV
 [ -n "$OT_ENV_PD" ] && PD=$OT_ENV_PD; [ -n "$OT_ENV_NC" ] && NC=$OT_ENV_NC
+# PIN GROUPS (flowfix 2026-10-13): every run of this script -- the route, the gate's floorplan smoke and its --cts run --
+# chunks the --pin-region groups alike.  The job's route command set OT_PIN_GROUP_MAX=32 and the gate did not, so a
+# full face passed the gate as one group and died in the route at 3_2_place_iop (PPL-0093: qkd_seq_fan-kc2, ...).
+# The kit.env's own `export OT_PIN_GROUP_MAX=` (route.pin_balance) wins, then the caller's, then the route default
+# (tools/pin_fit.py ROUTE_PIN_GROUP_MAX; test_pin_fit.py keeps the two equal).
+export OT_PIN_GROUP_MAX=${OT_PIN_GROUP_MAX:-32}
 K=${KIT#/src/}
 D=/src/physical/qwen_die_masters
 S=(); for f in $SRCS; do S+=(--source $f); done
