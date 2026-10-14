@@ -19,9 +19,7 @@ module ot_engc_pbank_rso #(
     // SRAM clk slew 239 ps FF -> slew-dependent library hold 42-61 ps on every wd_in / addr pin; CTS macro-clustering
     // options do not change it, CTS-stop x1-x3).  An explicit clock cell per group gives each SRAM its own short driver:
     //   (gated off while the tile is in reset: only valid-reset / unreset data flops sit on it, no observable change)
-    //   0 = none (T_PBB as closed,
-    output wire rso
-);  1 = per-group ICG drives only the SRAM clk;
+    //   0 = none (T_PBB as closed);  1 = per-group ICG drives only the SRAM clk;
     //   2 = per-group ICG drives the SRAM clk AND its access (W3 / R2) and capture flops (macro + launch flops on one leaf).
     parameter integer CKL = 0
 ) (
@@ -36,7 +34,8 @@ module ot_engc_pbank_rso #(
     output wire [XW-1:0] x_do,
     input  wire [5:0]    r_oh,
     input  wire [7:0]    r_a,
-    output reg  [BW-1:0] r_d
+    output reg  [BW-1:0] r_d,
+    output wire rso
 );
     localparam integer NG = 6;
     reg [1:0] rs_q;
