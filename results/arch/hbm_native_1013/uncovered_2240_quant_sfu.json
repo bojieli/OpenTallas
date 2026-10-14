@@ -115,7 +115,12 @@
       ],
       "successor_owner": "/root/hbm_hc_norm",
       "proof": "SVROW_NORM/head physicalsourcebinding ownedhc_norm; distinctnative_q controller LQ10 actual4B2pair proof ownedVM. CLOSEDctlwLQ8 stands. Noalias/historicalctlwbench nativeparentcredit.",
-      "native_controller_owner": "/root/hbm_vm_sm_2240"
+      "native_controller_owner": "/root/hbm_vm_sm_2240",
+      "accountable_owner": "/root/hbm_quant_sfu_2240",
+      "actual_source_actions": [
+        "CurrentSV microsequence successorproof ownedhc_norm, newdefaultoff FUSEDUSV source integration, no closedLQ8alias for nativeLQ10.",
+        "VMowneractual4B2native_q extractedcontroller fixesstride8/modulo8andLQ10pointerwrap; realphase61/487actual2048sectors16384words pairproofsource64fced1f9 +drainsdb3, not full arithmeticSVhead/cache parent closure."
+      ]
     },
     {
       "element": "ot_hgi_su_ctlw_slice",
@@ -144,7 +149,12 @@
       ],
       "successor_owner": "/root/hbm_hc_norm",
       "proof": "SVROW_NORM/head physicalsourcebinding ownedhc_norm; distinctnative_q controller LQ10 actual4B2pair proof ownedVM. CLOSEDctlwLQ8 stands. Noalias/historicalctlwbench nativeparentcredit.",
-      "native_controller_owner": "/root/hbm_vm_sm_2240"
+      "native_controller_owner": "/root/hbm_vm_sm_2240",
+      "accountable_owner": "/root/hbm_quant_sfu_2240",
+      "actual_source_actions": [
+        "CurrentSV microsequence successorproof ownedhc_norm, newdefaultoff FUSEDUSV source integration, no closedLQ8alias for nativeLQ10.",
+        "VMowneractual4B2native_q extractedcontroller fixesstride8/modulo8andLQ10pointerwrap; realphase61/487actual2048sectors16384words pairproofsource64fced1f9 +drainsdb3, not full arithmeticSVhead/cache parent closure."
+      ]
     },
     {
       "element": "hfd_sfu",
@@ -465,6 +475,20 @@
       "successor_source": "fbc154dfd",
       "successor_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter",
       "status": "REAL_FOUR_ROOT_FROZEN_WORD_PROOF_NATIVE_CACHE_PARENT_OPEN"
+    },
+    {
+      "element": "ot_hgi_qw_ovw",
+      "owner": "/root/hbm_quant_sfu_2240",
+      "snapshot_category": "newfullfailedledger row",
+      "snapshot_status": "NEEDS_RTL",
+      "requiredness": "UNSELECTED_WQ3_ALTERNATIVE_NOT_CANCELLED_AWAY",
+      "source": "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovw.sv",
+      "successor": "ot_hgi_qw_ovr +4ot_hgi_qw_ovmeta, shared512payload fromRF",
+      "source_clock_candidate": "ot_hgi_qw_ovw_clocks,5explicitprivateleafclks",
+      "evidence": "625 threeCLOSEDrouteviews; actualRF row_rst_nQ382.8 andMETA i_nP201.4/i_secP228.7 fail. FullWQ3gold/mutants sources625/143/fd3 preserved; nativeparent/clock/PGcut/source-selection open.",
+      "structural_next_action": "Move META sector/slot/valid computation toprior RF registered producer edge then pure160bit META captures, preservingexistingtwoedges; replace RF resetexport with source-identicallocalreset clones. New source/model/golden/reset/pin proof needed before anyroute/adoption.",
+      "M6_PORT_grant": false,
+      "current_parent_closure": false
     }
   ],
   "notes": {
