@@ -1,3 +1,11 @@
+CRITICAL SCOPE CORRECTION (2026-10-13): this unit protocol proves one snapshot
+of512quad lines only. It is NOT a full matvec delivery implementation.
+ot_qwen_w12_matvec.sv changes x_addr on every active issue edge according to
+xbase+c*xcs+k*xks+j*xjs. Holding one xl perEXEC gives incorrect products for
+nonconstant k/j addresses. Production integration must wait for a multiepoch
+cache/replay or sufficient parallel continuous delivery, plus exact full ME
+bench. The measured515+D_t is one snapshot latency, not full instruction cost.
+
 TP8 distinct x-line delivery (2026-10-13)
 ======================================
 
