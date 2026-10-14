@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.s81_hrow_native_change_request.v1",
+ "status": "OPEN not a passing floorplan",
+ "outline_um": [
+  2998.08,
+  1769.04
+ ],
+ "outline_change_requested": false,
+ "parameters": {
+  "HARD_RELAYS": 1,
+  "CQ": 3,
+  "WK": 7,
+  "P": 2,
+  "UT": 1
+ },
+ "relay_bits": 12660,
+ "reset_sync_bits": 2,
+ "current_geometry": {
+  "instances": 59,
+  "placement_violations": 0,
+  "data_hop_max_um": 498.519
+ },
+ "routing": {
+  "gcell_um": 10.8,
+  "window_um": 54.0,
+  "blocked_interior_cells": 0,
+  "full_vertical_cut_max": [
+   0.182,
+   1695.6
+  ],
+  "full_horizontal_cut_max": [
+   0.346,
+   1026.0
+  ],
+  "window_vertical_cut_max": 3.175,
+  "window_horizontal_cut_max": 1.813,
+  "gcells_over_0p60": 1580,
+  "gcells": 45592,
+  "gcell_max": [
+   8.178,
+   5.028
+  ]
+ },
+ "requests": [
+  "Place explicit channels between bank rows; abutted banks fail exact pin-alignment jog checks. Preserve closed child RTL/LEFs.",
+  "Try MY on all five west banks to remove bank5-to6 mirrored bit-order reversal; rerun actual per-bit hop and overlap checks.",
+  "Spread return/event/control relay landing traffic and prove each local54um cut <=0.60 on current M2-M7 parent layer budget. No M8 grant requested.",
+  "Adopt production dsfd_mtp_hrow_td HARD_RELAYS=1 binder with actual ck/rst driver identity, domain period, phase, insertion/skew; current td integration is bench only.",
+  "Implement actual physical combinational rn reset-buffer tree. Direct source RTL rn fanout currently reaches2461.671um; buffers must retain source reset semantics.",
+  "Revalidate pin locations and per-pair lengths against final routed relay LEFs; current relay pins are CTS candidates.",
+  "Bind assigned external f_hp/t_hpg/f_vrq/t_vrq/t_vrs/f_clr/t_flt pins and tie-cell placement."
+ ],
+ "evidence": [
+  "tools/s81_ph/s81_ph_hrow_native_placement.py",
+  "results/arch/s81_hrow_native_placement_1013/candidate.json",
+  "results/arch/s81_hrow_native_placement_1013/searched_positions.json"
+ ],
+ "parent_release": "Hold parent submission/closure until all routing, external pin, real clock/reset source and final-view checks pass"
+}
