@@ -1,0 +1,149 @@
+{
+  "schema": "ot.qwen.edge-coverage.v1",
+  "snapshot": "/home/ubuntu/claude-takeover-20261007/gaps/codex-uncovered-20261013-2240.json",
+  "native_profile": "HEADS1/Q_FP32=1/QK_ONLY1/GT3072, S128/PV256",
+  "final_native_v5_contract_exists": false,
+  "qualification_policy": "all old statuses stand; no sourcealias promotes native qualification; everyrow owned/actively audited or concretehandoff",
+  "rows": [
+    {
+      "element": "qfd_link_adp512",
+      "actual_owner": "Codex:qwen_edge_coverage_2240",
+      "state": "ACTIVE_SOURCE_AND_CTS",
+      "current_source": "rtl/physical/ot_qfd_link_adp512_split.sv @2aa3e0423",
+      "evidence": "exact1500/rate2000/stall3000 complete; mutants1125/11900 errors; exploratoryleaf1933sinksR245.5boundaryspread58.9setup125.75hold27.09",
+      "next_action": "Fresh frozen source-binding gate, actual die slot/pins + wholeword compensated clock proof before route.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qfd_sysctl_sram",
+      "actual_owner": "Codex:qwen_edge_coverage_2240 + accepted host integration source owner",
+      "state": "ACTIVE_HARDENING",
+      "current_source": "codex/qwen-host-integrate-1013@94b28c9ce rtl/qwen_sys/host_20261013/qkd_host_prompt_pins.sv +qkd_host_control_prompt.sv",
+      "evidence": "Host explicitaccepted ND8+SECDED8192x18 mapping; productionPROMPT_READ_LATENCY3/PB_READ_PIPE4;20480reads+2400ECCcases+actualpacketUEguard; no routedstore",
+      "next_action": "Build byteidentical source kit/CTS, candidate237.6x129.6; explicit slot/pin request, keep fullcontrol roots sourceownedhost.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qfd_su_cbuf",
+      "actual_owner": "Codex:qwen_edge_coverage_2240",
+      "state": "ACTIVE_REUSE_AUDIT",
+      "current_source": "rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv SW8/SRAM2/PINREG1/FLS1/RSTR1 viaot_qfd_su_cbuf_g",
+      "evidence": "ExistingCLOSED qfd_su_cbuf_g_m5-q13b TT26.98 FF11.14; actualgenerator tp8b_v5 T14 reuses8views M5; alllegacyviews preserved",
+      "next_action": "Prove full64-lane legacy\u21928group production equivalence/cROM native checkpoint addresses; bind actualgen pin/latency evidence; no gratuitousreroute.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qfd_sp_tree_top_b",
+      "actual_owner": "Codex:qwen_edge_coverage_2240 + accepted physical children qwen_small/host",
+      "state": "ACTIVE_SUCCESSOR_AUDIT",
+      "current_source": "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv ->qfd_tt_ctlm_head/tree +qfd_tt_up4",
+      "evidence": "Originalmonolithcombinedcontrol/upperlevels/landing. Native33975 strict59839cycles3387events/0diff+mutant52960; headlive qfd_tt_ctlm_head-native-s1-daf5f1142 andtreegatebd4ef2fec; oldF1pinvariants notnativequalifiers",
+      "next_action": "Record actualnative split fieldwidthGT3072 + realclosedupperviews and noforwardedclock; no oldparampromotion/no duplicatedroutes.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qfd_sp_tree_top_b_f1a",
+      "actual_owner": "Codex:qwen_edge_coverage_2240 + accepted physical children qwen_small/host",
+      "state": "ACTIVE_SUCCESSOR_AUDIT",
+      "current_source": "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv ->qfd_tt_ctlm_head/tree +qfd_tt_up4",
+      "evidence": "Originalmonolithcombinedcontrol/upperlevels/landing. Native33975 strict59839cycles3387events/0diff+mutant52960; headlive qfd_tt_ctlm_head-native-s1-daf5f1142 andtreegatebd4ef2fec; oldF1pinvariants notnativequalifiers",
+      "next_action": "Record actualnative split fieldwidthGT3072 + realclosedupperviews and noforwardedclock; no oldparampromotion/no duplicatedroutes.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qfd_sp_tree_top_b_f1b",
+      "actual_owner": "Codex:qwen_edge_coverage_2240 + accepted physical children qwen_small/host",
+      "state": "ACTIVE_SUCCESSOR_AUDIT",
+      "current_source": "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv ->qfd_tt_ctlm_head/tree +qfd_tt_up4",
+      "evidence": "Originalmonolithcombinedcontrol/upperlevels/landing. Native33975 strict59839cycles3387events/0diff+mutant52960; headlive qfd_tt_ctlm_head-native-s1-daf5f1142 andtreegatebd4ef2fec; oldF1pinvariants notnativequalifiers",
+      "next_action": "Record actualnative split fieldwidthGT3072 + realclosedupperviews and noforwardedclock; no oldparampromotion/no duplicatedroutes.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qfd_sp_constants_sequencer_nc",
+      "actual_owner": "Codex:qwen_edge_coverage_2240",
+      "state": "ACTIVE_SUCCESSOR_AUDIT",
+      "current_source": "tools/qwen_missing/emit_partition.py legacy ->qfd_seq_su/current native dispatch",
+      "evidence": "NativecollectiveCRED32posteddiscipline remainsqwen_small/rootdependency; actualseqCDF546 forward andCQ517 return; oldCRED0readywrapper is insufficient",
+      "next_action": "Verify actualnative source producer lowering and currentcore/constants partitions, harden missing state leaves after countedroot/pincontract; no aliases.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "ot_qkvd_kv_end",
+      "actual_owner": "Codex:qwen_tp8_attention_native/native_service_glue +edge accountability",
+      "state": "ACTIVE_NATIVE_SUCCESSOR_SOURCE",
+      "current_source": "codex/qwen-native-service-glue-1013@93798282b HEADS1/Q_FP32=1/QK_ONLY1/ECTL3 S128/PV256 GT3072",
+      "evidence": "ActualH+hub+PV source4cf EPYC4session61702 compiling; no native physicalclosed end",
+      "next_action": "Document actualnative child+seam pins/results; oldTP4KVdie price proof doesnot qualify current service.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qfd_kv_row",
+      "actual_owner": "Codex:qwen_su_kv_formatter +edge accountability",
+      "state": "ACTIVE_NATIVE_FORMATTER_MAPPING",
+      "current_source": "nativeformatterc8d25629c actual4KVN+32QFP32+32RES",
+      "evidence": "Oldfull32PC281rowROMside tile hadno adoptedr22ko4 instance; currentnativeplacement notyetclosed",
+      "next_action": "Prove adoptednative source absence and actualformat/ingest owner, keep oldcancelled evidence, no blanket EXEMPTpromotion.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qkd_astk_ep",
+      "actual_owner": "Codex:qwen_tp8_attention_native/native_service_glue +edge accountability",
+      "state": "ACTIVE_NATIVE_SUCCESSOR_SOURCE",
+      "current_source": "nativeH+e_mem+PV256 service profile93798282b",
+      "evidence": "Old512lanePV/ECTLVgeneration noton nativeQK_ONLYdata path peractualowner; no nativephysical successor",
+      "next_action": "Explicit adopted source proof required before historicalreplacement; remainuncloseduntil native relevant leavesclose.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "qkd_ectl",
+      "actual_owner": "Codex:qwen_tp8_attention_native/native_service_glue +edge accountability",
+      "state": "ACTIVE_SOURCE_PIN_MAPPING",
+      "current_source": "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv ->CLOSED legacyABC, new nativeQK_ONLYprofile",
+      "evidence": "LegacyABC closedTT/FF A61.58/19.45 B132.78/13.68 C38.71/17.38 views physical/ref_tile/qkd_ectl_{a,b,c}/views; currentnativeprofilechanges cannotreuse qualification",
+      "next_action": "Explicit CLOSEDABC historicalmapping only; nativeparameterchange newqualification; preserveclosedviews/sourcepinfiles.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "ot_coll_tp8_die",
+      "actual_owner": "Codex:qwen_small/io_partition",
+      "state": "ACTIVE_ASSIGNED_COMPOSITION",
+      "current_source": "ot_coll_tp8_die WT1/CT1/ICR32/u_engot_rom_oneshot_die_mN4",
+      "evidence": "Ownerconfirmed independent_entries_plan18CLOSEDchildren+2unextractedglue; c_pop/c_l1firstcapture+returnheadABI defects; native no hardenedparentsuccessor",
+      "next_action": "Owneracceptedactivehandoff; finish nativeposted composition+pinnedcontrol extraction/cut timing. Do not blindroutecancelledTP4/oldparent.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "ot_rom_oneshot_die_m",
+      "actual_owner": "Codex:qwen_small/io_partition",
+      "state": "ACTIVE_ASSIGNED_COMPOSITION",
+      "current_source": "ot_coll_tp8_die WT1/CT1/ICR32/u_engot_rom_oneshot_die_mN4",
+      "evidence": "Ownerconfirmed independent_entries_plan18CLOSEDchildren+2unextractedglue; c_pop/c_l1firstcapture+returnheadABI defects; native no hardenedparentsuccessor",
+      "next_action": "Owneracceptedactivehandoff; finish nativeposted composition+pinnedcontrol extraction/cut timing. Do not blindroutecancelledTP4/oldparent.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    },
+    {
+      "element": "QwenIOcollective",
+      "actual_owner": "Codex:qwen_small/io_partition",
+      "state": "ACTIVE_ASSIGNED_COMPOSITION",
+      "current_source": "ot_coll_tp8_die WT1/CT1/ICR32/u_engot_rom_oneshot_die_mN4",
+      "evidence": "Ownerconfirmed independent_entries_plan18CLOSEDchildren+2unextractedglue; c_pop/c_l1firstcapture+returnheadABI defects; native no hardenedparentsuccessor",
+      "next_action": "Owneracceptedactivehandoff; finish nativeposted composition+pinnedcontrol extraction/cut timing. Do not blindroutecancelledTP4/oldparent.",
+      "historical_status_preserved": true,
+      "registry_superseded": false
+    }
+  ]
+}
