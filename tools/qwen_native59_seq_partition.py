@@ -155,8 +155,8 @@ endmodule
     tb=tb.replace('wire [32-1:0] c_tag_0, c_tag_1;', 'wire [59-1:0] c_tag_0, c_tag_1;')
     tb=tb.replace('.stage_in(6\'d0),', '.coll_epoch(16\'d17), .r_tag(c_tag_0), .cb_st_rdy_tpos(tp_pos), .stage_in(6\'d1),')
     tb=tb.replace('.cb_st_rdy_stage(6\'d0)', '.cb_st_rdy_stage(6\'d1)')
-    tb=re.sub(r'(tp_token = [^;]+;)', r'\1 tp_token=tp_token%151936;',tb)
-    tb=re.sub(r'(tp_pos = [^;]+;)', r'\1 tp_pos=tp_pos%8192;',tb)
+    tb=re.sub(r'(^            tp_token = [^;]+;)', r'\1 tp_token=tp_token%151936;',tb,flags=re.M)
+    tb=re.sub(r'(^            tp_pos = [^;]+;)', r'\1 tp_pos=tp_pos%8192;',tb,flags=re.M)
     tb = tb.replace('module tb_qfd_seq_su_native8_candidate;', 'module tb_qfd_native59_retained_partition;')
     tb, count = re.subn(r'ot_qfd_seq_su_bi_native8_tag59_candidate #\([^\n]+\) u1 \(',
                        'ot_qfd_native59_retained_partition_candidate u1 (', tb)
