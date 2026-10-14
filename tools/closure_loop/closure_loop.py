@@ -1659,18 +1659,32 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         allh = [h for h in allh if not host_down(h)]       # HOST-DOWN: smoke_only-equivalent while it is down
         order = [h for h in allh if h not in exclude and self.compatible(h, spec)]
 
-        def score(h):
-            """higher = better: free cores and free RAM after this job, both as fractions of the host; spillover-only
-            hosts (EPYC3, die-top) rank after every other host; listed hosts get a small preference"""
+        def cpu_ratio(h):
+            """projected CPU load of h with this job on it, in units of its cores (None: no probe)"""
             info, cfg = self.probe(h), host_cfg(h)
             if info is None:
+                return None
+            return (info["load1"] + self.own_pending(h)[0] + threads) / host_cores(cfg)
+
+        # OWNER 2026-10-13 17:55 (EPYC1 at load 259 on 128 cores while EPYC4 ran at 39): a job goes to the host with the
+        # lowest projected load1 / cores among those that can admit it, so the big hosts fill evenly before either
+        # passes 1.0 x cores; a host with fewer than SMALL_HOST_CORES cores (PVE1, localhost) never gets a job of more
+        # than SMALL_HOST_THREADS threads while a larger host still has cores.  Memory alone decides ADMISSION (fits).
+        ratios = {h: cpu_ratio(h) for h in order}
+        big_has_cores = any(r is not None and r <= 1.0 and host_cores(host_cfg(h)) >= SMALL_HOST_CORES
+                            and not host_cfg(h).get("spillover_only") for h, r in ratios.items())
+
+        def score(h):
+            """higher = better: lowest projected CPU load first (free RAM only breaks near-ties); spillover-only hosts
+            rank after every other host; listed hosts get a small preference"""
+            info, cfg = self.probe(h), host_cfg(h)
+            if info is None or ratios.get(h) is None:
                 return -9e9
             pt, pr = self.own_pending(h)
-            fc = (cfg["cap"] - info["load1"] - pt - threads) / cfg["cap"]
             fr = (info["mem_gb"] - pr - ram) / cfg.get("ram_gb", 1133)
-            # OWNER 2026-10-08: memory is the only ADMISSION limit; ranking sends a job where it runs fastest among hosts
-            # that fit -- free CPU weighs 0.5 (was 0.1: AGIdock sat at load 15/64 with 67 GB free while EPYCs ran 4x over)
-            return fr + 0.5 * max(fc, -1.0) + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
+            small = host_cores(cfg) < SMALL_HOST_CORES and threads > SMALL_HOST_THREADS and big_has_cores
+            return -ratios[h] + 0.05 * fr + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0) \
+                - (5 if small else 0)
         order.sort(key=score, reverse=True)
         why = []
         for h in order:
@@ -1679,6 +1693,13 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return h, None
             why.append(msg)
         return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
+
+
+SMALL_HOST_CORES, SMALL_HOST_THREADS = 48, 8   # see Fleet._choose
+
+
+def host_cores(cfg):
+    return max(1, cfg.get("cores") or cfg.get("cap") or 1)
 
 
 TOOL_REF_HOST = "ot-epyc1tb"  # 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34

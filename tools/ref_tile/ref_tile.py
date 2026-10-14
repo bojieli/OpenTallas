@@ -394,6 +394,8 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     og = TRACK_LATTICE_UM if s["kind"] == "cluster" else GRID_Y
     if s.get("outline"):
         o = s["outline"]
+        if o.get("exact"):      # a drop-in replacement of a closed view inside a fixed sub-slot (dsfd_vm_clt 80.64 x 230.04)
+            return float(o["w"]), float(o["h"]), "spec outline (exact: the closed view's sub-slot)"
         return snap_up(float(o["w"]), og), snap_up(float(o["h"]), og), "spec outline"
     area = area_um2 or s.get("std_area_um2")
     if not area:
@@ -419,7 +421,7 @@ def blocks_of(s: dict) -> list:
             m = read_view_lef(it["view"])
             out.append({"kind": kind, "view": it["view"], "master": m["name"], "inst": it.get("inst"),
                         "w": m["W"], "h": m["H"], "at": it.get("at"), "orient": it.get("orient", "R0"),
-                        "count": int(it.get("count", 1))})
+                        "count": int(it.get("count", 1)), "exact": bool(it.get("at_exact"))})
     # expand counts (identical instances placed in a row)
     exp = []
     for b in out:
@@ -430,6 +432,32 @@ def blocks_of(s: dict) -> list:
                 raise SpecError(f"{b['master']}: count > 1 with a fixed 'at' -- give one entry per instance")
             exp.append(c)
     return exp
+
+
+ABUT_UM = 0.1           # two macros this close in one axis (and overlapping in the other) are one abutted stack
+
+
+def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
+    """two MACROS stacked N-S with no cell row between them (0 <= gap <= ABUT_UM, overlapping in x) and no signal /
+    clock pin of either on the two touching faces (memory arrays with their pins on W / E: a bank of arrays).  Only R0;
+    hard children and side-by-side macros keep the channel rule (their touching faces carry pins / need straps)."""
+    if a["kind"] != "macro" or b["kind"] != "macro" or a.get("orient", "R0") != "R0" or b.get("orient", "R0") != "R0":
+        return False
+    if not (-1e-6 <= gy <= ABUT_UM + 1e-6 and gx < -1e-6):
+        return False
+    lo, hi = (a, b) if a["y"] < b["y"] else (b, a)
+    for blk, edge in ((lo, "top"), (hi, "bottom")):
+        if blk.get("_tm") is None:
+            blk["_tm"] = track_macro(blk["view"])
+        tm = blk["_tm"]
+        for pin in tm["pins"]:
+            if pin["use"] not in ("SIGNAL", "CLOCK"):
+                continue
+            for _layer, (x0, y0, x1, y1) in pin["rects"]:
+                on_w_e = x0 <= 200 or x1 >= tm["W"] - 200          # nm: a W / E face pin reaches the side edge
+                if (y1 >= tm["H"] - 200 if edge == "top" else y0 <= 200) and not on_w_e:
+                    return False
+    return True
 
 
 def on_track(b: dict, x: float, y: float) -> tuple[float, float, int]:
@@ -489,6 +517,13 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
             off = sum(v["offtrack"] for v in r["layers"].values())
             if off:   # off-lattice view (not built by this flow): nearest on-track origin instead
                 bx, by, off = on_track(b, bx, by)
+        elif b.get("exact") and b.get("at"):
+            # macro item "at_exact": the origin as given, not snapped to the (0.432, 2.16) macro lattice: an abutted
+            # N-S stack needs pitch = array height + 0.024 (abutted_stack); the pins must already be on track there
+            bx, by = float(b["at"][0]), float(b["at"][1])
+            r = cmta.check_placement(track_macro(b["view"]) if b.get("_tm") is None else b["_tm"], b["orient"],
+                                     round(bx * 1000), round(by * 1000))
+            off = sum(v["offtrack"] for v in r["layers"].values())
         else:
             bx, by = snap(b["_xy"][0], GRID_X), snap(b["_xy"][1], GRID_Y)
             bx, by, off = on_track(b, bx, by)
@@ -526,9 +561,11 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gx = max(b["x"] - (a["x"] + a["w"]), a["x"] - (b["x"] + b["w"]))
             gy = max(b["y"] - (a["y"] + a["h"]), a["y"] - (b["y"] + b["h"]))
             gap = max(gx, gy)
+            if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
+                continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
-                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros or abut them deliberately (gap 0, no cells)"))
+                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"))
     core = (x1c - x0c) * (y1c - y0c)
     mac = sum(b["w"] * b["h"] for b in blocks)
     if std_area:
