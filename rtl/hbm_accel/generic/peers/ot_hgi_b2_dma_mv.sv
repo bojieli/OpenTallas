@@ -79,6 +79,10 @@ module ot_hgi_b2_dma_mv #(
     parameter integer QID = 0,            // B2: this quadrant = its HBM stack (0..3)
     parameter integer MUT_B2 = 0          // B2 bench mutant: 1 rows of stack QID + 1 on lane QID; 2 lane QID driven on lane QID + 1
 ) (
+    output wire [264:0] land_write,
+    output wire [63:0] land_read,
+    output wire [6:0] source_format,
+    input wire [306:0] decoded,
     output wire ser_mv_v,
     output wire [226:0] ser_mv,
     input wire ser_mv_rdy,
@@ -97,16 +101,15 @@ module ot_hgi_b2_dma_mv #(
     output wire ser_k_rsp_we,
     output wire [255:0] ser_k_rsp_data,
     output wire ser_k_fault,
-    input wire [337:0] ser_vmq,
     output wire [273:0] ser_vmr,
     input wire kv_c_rdy, kv_idle_w, kv_creq, kv_src, kv_done,
     input wire [511:0] kv_kq, input wire [3:0] kv_wv, kv_wo,
     input wire [147:0] kv_wa, input wire [1023:0] kv_wd,
     output reg kc_v, output reg [14:0] kc_vs, kc_vst,
     output reg [31:0] kc_ds, kc_dst, output reg [17:0] kc_ns, output reg [19:0] kc_m,
-    output wire kc_gnt, output wire [191:0] kc_cr,
+    output wire kc_gnt, output wire [191:0] credit_source,
     output wire [3:0] kc_wrdy,
-    input wire [1:0] qid, input wire il_active, input wire [337:0] il_vmq, output reg [273:0] il_vmr,
+    input wire [1:0] qid, output wire vm_serial_owner,
     input  wire          clk,
     input  wire          rst_n,
     input  wire          mv_v,
@@ -260,16 +263,7 @@ module ot_hgi_b2_dma_mv #(
     always @(posedge clk or negedge rn) if (!rn) kv_idle_q <= 1'b1; else kv_idle_q <= kv_idle_w;
     wire kv_idle = (KVW != 0) ? kv_idle_q && !kc_pending && !kc_v : 1'b1;
     reg [1:0] qid_q; always @(posedge clk) qid_q <= (MUT_SEAM == 6) ? qid + 2'd1 : qid;
-    // I-list ownership and packet payload cross the face together. The raw owner
-    // pin drives one flop; the registered owner selects both packet directions.
-    reg il_active_q; reg [337:0] il_vmq_q;
-    always @(posedge clk or negedge rn)
-      if (!rn) begin il_active_q <= 0; il_vmq_q[337] <= 0; end
-      else begin il_active_q <= il_active; il_vmq_q[337] <= il_vmq[337]; end
-    always @(posedge clk) il_vmq_q[336:0] <= il_vmq[336:0];
-    wire [273:0] vmr_local = il_active_q ? 274'd0 : vmr;
-    always @(posedge clk or negedge rn) if (!rn) il_vmr[273] <= 1'b0; else il_vmr[273] <= il_active_q && vmr[273];
-    always @(posedge clk) il_vmr[272:0] <= il_active_q ? (vmr[272:0] ^ ((MUT_SEAM == 2) ? 273'd1 : 273'd0)) : 273'd0;
+    wire [273:0] vmr_local = vmr; // already owned and registered by the packet-face leaf
     // B2: refused at the command station (fail-closed, no request): a linear HBM side starting on another stack (the KV
     // engine streams a move on its row-0 stack), a strided move with a STRIPE4 side (the serial engine addresses linearly)
     wire b2_bad = B2 != 0 && ((cm_q[1:0] == 2'd0 && cm_q[44:42] == 3'd0 && cm_q[41:40] != 2'(QID)) ||
@@ -284,20 +278,16 @@ module ot_hgi_b2_dma_mv #(
     wire s_mv_rdy, s_mv_done, s_mv_fault, s_fence_rdy, s_fence_done;
     wire s_kv, s_kwe; wire [36:0] s_ka;
     wire b2_kx;                                                         // B2: the serial engine's lane request is off stack QID
-    wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
+    wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr;
     reg  f_fault;
     assign command_ready = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
     wire pin_s_kv, pin_s_kwe, s_pin_ready; wire [36:0] pin_s_ka;
     wire [255:0] pin_s_kd; wire [31:0] pin_s_ks; wire [15:0] pin_s_kt;
-    wire [337:0] pin_s_vmq; reg [337:0] s_vmq_pin;
     wire [341:0] serial_head;
     ot_hgi_b2_dma_cmd_pin #(.W(342)) u_serial_kpin(.clk(clk), .rst_n(rn), .in_v(pin_s_kv),
       .in_data({pin_s_kwe,pin_s_ka,pin_s_kd,pin_s_ks,pin_s_kt}), .in_ready(s_pin_ready),
       .out_v(s_kv), .out_data(serial_head), .out_ready(ko_ld && sel_s && !b2_kx));
     assign {s_kwe,s_ka,s_kd,s_ks,s_kt}=serial_head;
-    always @(posedge clk or negedge rn) if (!rn) s_vmq_pin[337]<=0; else s_vmq_pin[337]<=pin_s_vmq[337];
-    always @(posedge clk) s_vmq_pin[336:0]<=pin_s_vmq[336:0];
-    assign s_vmq=s_vmq_pin;
     reg ser_go;
     always @(posedge clk or negedge rn) if (!rn) ser_go<=0; else ser_go<=cv_go && !fast_cmd && cm_q[94:93] != 2'd0;
     assign ser_mv_v = ser_go;
@@ -323,7 +313,7 @@ module ot_hgi_b2_dma_mv #(
         if (!rn) ser_k_fault_q <= 1'b0;
         else ser_k_fault_q <= (k_fault && sel_s) || b2_kx;
     assign ser_k_fault = ser_k_fault_q;
-    assign pin_s_vmq = ser_vmq;
+    assign vm_serial_owner = sel_s;
     assign ser_vmr = sel_s ? vr_q : 274'd0;
     reg fence_pending;
     wire fence_available = !busy_f && s_mv_rdy && s_fence_rdy && kv_idle && !cv_q && !command_valid;
@@ -338,28 +328,6 @@ module ot_hgi_b2_dma_mv #(
     // ================================================================ sector engine
     function automatic [2:0] esz(input [2:0] f);
         esz = (f == 3'd0 || f == 3'd5) ? 3'd4 : (f == 3'd1) ? 3'd2 : 3'd1;
-    endfunction
-    function automatic [31:0] i8_f(input [7:0] c);               // INT8 -> binary32 (exact)
-        reg [7:0] a; reg [2:0] p; integer k;
-        begin
-            a = c[7] ? (~c + 8'd1) : c; p = 3'd0;
-            for (k = 0; k < 8; k = k + 1) if (a[k]) p = k[2:0];
-            i8_f = (a == 8'd0) ? 32'd0 : {c[7], 8'd127 + {5'd0, p}, ({15'd0, a} << (5'd23 - {2'd0, p})) & 23'h7FFFFF};
-        end
-    endfunction
-    function automatic [31:0] e4m3_f(input [7:0] c);             // FP8 E4M3 -> binary32 (exact; NaN code -> qNaN)
-        reg [3:0] e; reg [2:0] m; reg [1:0] p;
-        begin
-            e = c[6:3]; m = c[2:0];
-            if (e == 4'hF && m == 3'h7) e4m3_f = 32'h7FC00000;
-            else if (e == 4'd0) begin
-                if (m == 3'd0) e4m3_f = {c[7], 31'd0};
-                else begin
-                    p = m[2] ? 2'd2 : m[1] ? 2'd1 : 2'd0;
-                    e4m3_f = {c[7], 8'd127 - 8'd9 + {6'd0, p}, ({20'd0, m} << (5'd23 - {3'd0, p})) & 23'h7FFFFF};
-                end
-            end else e4m3_f = {c[7], 8'd120 + {4'd0, e}, m, 20'd0};
-        end
     endfunction
     function automatic [15:0] to_bf16(input [31:0] x);           // RNE (hdc_golden to_bf16), NaN kept quiet
         reg [31:0] r;
@@ -453,7 +421,6 @@ module ot_hgi_b2_dma_mv #(
     localparam integer SB = 8;
     reg [SB-1:0] sf_h, sf_a, v_ptr; reg [8:0] sf_n; reg [SFD-1:0] lv;
     reg lw_v; reg [SB-1:0] lw_a; reg [255:0] lw_d;          // landing write stage
-    wire [255:0] lr_d;                                      // the landing RAM's read register (PR stage)
     // ---- port in-flight accounting
     reg [7:0] k_in; reg [2:0] v_in; reg [7:0] v_kind;      // lane 2 (writes) / VM client (reads), kinds oldest at [0]
     reg [8:0] rd_in;                                        // source sectors issued, not landed
@@ -465,10 +432,8 @@ module ot_hgi_b2_dma_mv #(
     // the slot address, the PR stage reads the slot from that register (+1 cycle); the reader stops 2 slots short of
     // full, so a popped slot is not rewritten before PR has read it
     reg        p1_v; reg [3:0] p1_k; reg [SB-1:0] p1_h; reg [4:0] p1_sp; reg [5:0] p1_dp; reg [36:0] p1_dsec; reg p1_fl;
-    reg        pr_v; reg [3:0] pr_k; wire [255:0] p1_sec = lr_d; reg [4:0] pr_sp; reg [5:0] pr_dp; reg [36:0] pr_dsec; reg pr_fl;
     // extract (px) and convert (p2) are separate stages; encode (pe) and byte placement (p3) are separate stages
     // (route 51ae5ce55: p2_w / des -> p3_d, 31 levels: the encoders and the variable placement in one cycle)
-    reg        px_v; reg [3:0] px_k; reg [255:0] px_r; reg [5:0] px_dp; reg [36:0] px_dsec; reg px_fl;
     reg        p2_v; reg [3:0] p2_k; reg [255:0] p2_w; reg [5:0] p2_dp; reg [36:0] p2_dsec; reg p2_fl;
     reg        pe_v; reg [7:0] pe_lv; reg [255:0] pe_e; reg [5:0] pe_dp; reg [36:0] pe_dsec; reg pe_fl, pe_keep;
     reg        p3_v; reg [255:0] p3_d; reg [31:0] p3_s; reg [36:0] p3_dsec; reg p3_fl, p3_keep;
@@ -477,7 +442,7 @@ module ot_hgi_b2_dma_mv #(
     // one 32-byte barrel shift by pe_dp and the byte mask with it).  +1 cycle in the pipe.
     reg        pk_v; reg [255:0] pk_d; reg [31:0] pk_s; reg [5:0] pk_dp; reg [36:0] pk_dsec; reg pk_fl, pk_keep;
     reg [255:0] db_dat [0:3]; reg [31:0] db_strb [0:3]; reg [3:0] db_dirty;   // a merge buffer a reader slot (rows interleave)
-    reg [1:0] p1_sl, pr_sl, px_sl, p2_sl, pa_sl, pe_sl, pk_sl, p3_sl, u_sl;
+    reg [1:0] p1_sl, p2_sl, pa_sl, pe_sl, pk_sl, p3_sl, u_sl;
     // ---- source sector issue
     wire src_hbm = (ssp == 2'd0), dst_hbm = (dsp == 2'd0);
     // ---- unpack decision (combinational on registered state)
@@ -623,33 +588,12 @@ module ot_hgi_b2_dma_mv #(
     // slots reserved = queued + flushes in the pipe, kept as a register (a popcount over the 8 stages sat in u_go)
     reg [4:0] wq_res;
     wire wq_room = wq_res < 5'd15;
-    // ---- extract (p1 -> px): lane j's raw element, right-aligned (word / half / byte at offset sp + j << sl2)
-    reg [255:0] ext_r;
-    always @* begin
-        ext_r = 256'd0;
-        for (integer j = 0; j < 8; j = j + 1) begin : xl
-            reg [4:0] off; reg [31:0] w;
-            off = pr_sp + (5'(j) << sl2);
-            w = p1_sec[{off[4:2], 5'd0} +: 32];
-            ext_r[32*j +: 32] = (sl2 == 2'd2) ? w : (sl2 == 2'd1) ? {16'd0, off[1] ? w[31:16] : w[15:0]}
-                                                             : {24'd0, w[{off[1:0], 3'd0} +: 8]};
-        end
-    end
-    // ---- convert (px -> p2): source format -> binary32 (VM source: the word)
-    reg [255:0] dec_w;
-    always @* begin
-        dec_w = 256'd0;
-        for (integer j = 0; j < 8; j = j + 1) begin : dl
-            reg [31:0] r; r = px_r[32*j +: 32];
-            if (ssp == 2'd1) dec_w[32*j +: 32] = r;
-            else case (sf)
-                3'd1: dec_w[32*j +: 32] = {r[15:0], 16'd0};
-                3'd2: dec_w[32*j +: 32] = e4m3_f(r[7:0]);
-                3'd4: dec_w[32*j +: 32] = i8_f(r[7:0]);
-                default: dec_w[32*j +: 32] = r;
-            endcase
-        end
-    end
+    // The landing/decode leaf is independent. Keep every read reservation
+    // charged across its five in-flight stages, including the return pin edge.
+    reg [4:0] land_pending;
+    assign land_write={lw_v,lw_a,lw_d};
+    assign land_read={p1_v,p1_h,p1_k,p1_sp,p1_dp,p1_dsec,p1_fl,p1_sl};
+    assign source_format={ssp,sf,sl2};
     // ---- encode, two stages (hgi-1010/c, route f628d5015: p2_w -> pe_e 20 levels = E4M3 variable shift + sticky + round +
     //      code assembly in one edge).  ENC A (p2 -> pa): BF16 complete (one 32-bit add); E4M3 to the pre-round quotient,
     //      its round-up bit and the exponent class.  ENC B (pa -> pe): E4M3 round add + code.  +1 cycle in the pipe.
@@ -715,11 +659,15 @@ module ot_hgi_b2_dma_mv #(
        wl[278:0] <= {wq_head[302:288] ^ ((MUT_SEAM == 5) ? 15'd1 : 15'd0),wq_head[255:0],mask_words};
     end
     // Native memory queues with two registered head entries. Their credits include pipe reservations.
-    wire [324:0] wq_push_data = {p3_dsec,
-       (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s,
-       ((db_dirty[p3_sl] ? db_dat[p3_sl] : 256'd0) & ~mk(p3_s)) | p3_d};
+    // Keep the flush reservation charged at p3; enqueue the registered bank on the next edge.
+    // A same-bank update on that edge occurs after the FIFO samples the previous assembled payload.
+    reg wq_pending_push;reg [1:0] wq_pending_slot;reg [36:0] wq_pending_dest;
+    always @(posedge clk or negedge rn)
+      if(!rn)wq_pending_push<=0;else wq_pending_push<=p3_v&&p3_fl&&p3_keep;
+    always @(posedge clk)if(p3_v&&p3_fl&&p3_keep)begin wq_pending_slot<=p3_sl;wq_pending_dest<=p3_dsec;end
+    wire [324:0] wq_push_data = {wq_pending_dest,db_strb[wq_pending_slot],db_dat[wq_pending_slot]};
     ot_fifo_sram_fwft #(.W(325), .DEPTH(16), .MACRO(0)) u_wq_mem(.clk(clk), .rst_n(rn),
-       .push(p3_v && p3_fl && p3_keep), .wdata(wq_push_data), .pop(iss_kw || iss_vw), .hv(wq_hv), .head(wq_head), .ovf(wq_ovf));
+       .push(wq_pending_push), .wdata(wq_push_data), .pop(iss_kw || iss_vw), .hv(wq_hv), .head(wq_head), .ovf(wq_ovf));
     wire [59:0] cf_push_data = {r_k,q_rend[r_k],1'b0,rdd[r_k][4:0],q_ds[r_k],rsa[r_k][4:0],9'(q_by[r_k] >> sl2)};
     ot_fifo_sram_fwft #(.W(60), .DEPTH(64), .MACRO(3)) u_cf_mem(.clk(clk), .rst_n(rn),
        .push(r_go), .wdata(cf_push_data), .pop(cf_hv && (!cd_v || (cd_v && (!u_cv || (u_go && u_end))))), .hv(cf_hv), .head(cf_head), .ovf(cf_ovf));
@@ -792,8 +740,8 @@ module ot_hgi_b2_dma_mv #(
        end
     end
     assign kc_gnt = g_gnt;
-    for (genvar gc = 0; gc < 32; gc = gc + 1) begin : g_kc_cr
-       assign kc_cr[gc*6 +: 6] = g_cr[gc];
+    for (genvar gc = 0; gc < 32; gc = gc + 1) begin : g_credit_source
+       assign credit_source[gc*6 +: 6] = g_cr[gc]; // registered counter source; output pin capture is in Kface
     end
     assign kb_we = 1'b0; assign kb_re = 1'b0; assign kb_wa = 8'd0; assign kb_ra = 8'd0; assign kb_wd = 256'd0;
     reg [5:0] l_wn [0:3];
@@ -830,9 +778,6 @@ module ot_hgi_b2_dma_mv #(
     // KVW: bank 0 of the KV engine's buffer (the sector engine is idle while it runs; its enables pick the port)
     // (textbook audit 10-11: the KV engine owns both its buffer banks, OWN_B0 1: no shared macro port across the split)
     wire kb_we, kb_re; wire [7:0] kb_wa, kb_ra; wire [255:0] kb_wd;
-    ot_sram_1r1w_256x256_m2_r2c2 u_land (.clk(clk), .r_ce_in(p1_v), .r_addr_in(p1_h), .rd_out(lr_d),
-        .w_ce_in(lw_v), .w_addr_in(lw_a), .wd_in(lw_d), .w_mask_in({256{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     always @(posedge clk) begin : lwd
         lw_a <= lt_v ? lt_tag + ((MUT == 3) ? 8'd0 : {5'd0, lt_bt}) : (SV != 0) ? g_slot[g_di] : v_ptr;
         lw_d <= lt_v ? lt_d : (SV != 0) ? g_d[g_di] : vr_q[255:0];
@@ -849,7 +794,7 @@ module ot_hgi_b2_dma_mv #(
             w_acc_q <= 4'd0; w_ack_q <= 4'd0; for (integer l = 0; l < 4; l = l + 1) l_wn[l] <= 6'd0;
             for (integer l = 0; l < 4; l = l + 1) lbc[l] <= 3'd0;
             wq_n <= 5'd0; wq_hl <= 2'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
-            p1_v <= 1'b0; pr_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pa_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 4'd0;
+            p1_v <= 1'b0; land_pending <= 0; p2_v <= 1'b0; pa_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 4'd0;
         end else begin
             mv_done <= 1'b0; fence_done <= 1'b0; mv_src <= 1'b0;
             if (fence_pending && fence_available) fence_done <= 1'b1;
@@ -1095,12 +1040,11 @@ module ot_hgi_b2_dma_mv #(
                 cf_n <= cf_n + {6'd0, r_go} - {6'd0, cf_hv && (!cd_v || take_cd)};
             end
             // ---- extract (p1 -> px), convert (px -> p2), encode (p2 -> pe), place (pe -> p3), merge (p3)
-            pr_v <= p1_v;
-            if (p1_v) begin pr_k <= p1_k; pr_sp <= p1_sp; pr_dp <= p1_dp; pr_dsec <= p1_dsec; pr_fl <= p1_fl; pr_sl <= p1_sl; end
-            px_v <= pr_v;
-            if (pr_v) begin px_k <= pr_k; px_r <= ext_r; px_dp <= pr_dp; px_dsec <= pr_dsec; px_fl <= pr_fl; px_sl <= pr_sl; end
-            p2_v <= px_v;
-            if (px_v) begin p2_k <= px_k; p2_w <= dec_w; p2_dp <= px_dp; p2_dsec <= px_dsec; p2_fl <= px_fl; p2_sl <= px_sl; end
+            land_pending <= {land_pending[3:0],p1_v};
+            p2_v <= decoded[306];
+            if(decoded[306])begin
+              {p2_k,p2_dp,p2_dsec,p2_fl,p2_sl,p2_w} <= decoded[305:0];
+            end
             pa_v <= p2_v;
             if (p2_v) begin
                 pa_k <= p2_k; pa_e <= enc_a; pa_q <= ea_q; pa_inc <= ea_inc; pa_big <= ea_big; pa_sat <= ea_sat; pa_sign <= ea_sign;
@@ -1117,18 +1061,15 @@ module ot_hgi_b2_dma_mv #(
             p3_v <= pk_v;
             if (pk_v) begin p3_d <= put_d; p3_s <= put_s; p3_dsec <= pk_dsec; p3_fl <= pk_fl; p3_keep <= pk_keep; p3_sl <= pk_sl; end
             if (p3_v) begin
-                if (p3_fl && p3_keep) begin
-                    db_dirty[p3_sl] <= 1'b0;
-                end else if (p3_fl) db_dirty[p3_sl] <= 1'b0;                  // MUT 2: the partial sector is lost
-                else begin
-                    db_dat[p3_sl] <= ((db_dirty[p3_sl] ? db_dat[p3_sl] : 256'd0) & ~mk(p3_s)) | p3_d;
-                    db_strb[p3_sl] <= (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s; db_dirty[p3_sl] <= 1'b1;
-                end
+                // Final assembly lands in the existing bank even on flush, before pending enqueue.
+                db_dat[p3_sl] <= ((db_dirty[p3_sl] ? db_dat[p3_sl] : 256'd0) & ~mk(p3_s)) | p3_d;
+                db_strb[p3_sl] <= (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s;
+                db_dirty[p3_sl] <= !p3_fl;
             end
             wq_n <= wq_n + {4'd0, p3_v && p3_fl && p3_keep} - {4'd0, iss_kw | iss_vw};
             wq_res <= wq_res + {4'd0, u_go && u_fl} - {4'd0, iss_kw | iss_vw} - {4'd0, p3_v && p3_fl && !p3_keep};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
-            if (busy_f && go_q4 && !f_fault && r_done && !u_cv && !cd_v && cf_n == 7'd0 && !lw_v && lq_v == 4'd0 && !p1_v && !pr_v && !px_v && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 &&
+            if (busy_f && go_q4 && !f_fault && r_done && !u_cv && !cd_v && cf_n == 7'd0 && !lw_v && lq_v == 4'd0 && !p1_v && land_pending == 0 && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 &&
                 !(iss_kw | iss_vw) && rd_in == 9'd0 && sf_n == 9'd0) begin
                 busy_f <= 1'b0; mv_done <= 1'b1;
             end
@@ -1163,14 +1104,7 @@ module ot_hgi_b2_dma_mv #(
             ko_d <= sel_s ? s_kd : f_kd; ko_s <= sel_s ? s_ks : f_ks;
         end
     assign k_req_v = ko_v; assign k_req_we = ko_we; assign k_req_addr = ko_a; assign k_req_wdata = ko_d; assign k_req_wstrb = ko_s;
-    generate if (PX != 0) begin : g_vmo
-        reg [337:0] vmq_r;                                  // registered output (sel_s fanned out over 338 bits to the pins)
-        always @(posedge clk or negedge rn) if (!rn) vmq_r[337] <= 1'b0; else vmq_r[337] <= il_active_q ? il_vmq_q[337] : (sel_s ? s_vmq[337] : f_vmq[337]);
-        always @(posedge clk) vmq_r[336:0] <= il_active_q ? il_vmq_q[336:0] : (sel_s ? s_vmq[336:0] : f_vmq[336:0]);
-        assign vmq = vmq_r;
-    end else begin : g_vmc
-        assign vmq = sel_s ? s_vmq : f_vmq;
-    end endgenerate
+    assign vmq = f_vmq; // fast-engine registered producer; owner mux lives in independent packet face
     wire unused_ok = &{1'b0, s_kt, s_krr, s_fence_done};
 `ifndef SYNTHESIS
     // a refused move names itself (bench / e2e debugging)

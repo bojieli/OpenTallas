@@ -41,8 +41,12 @@ module tb_hgi_b2_dma_q;
     reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     integer errs = 0; longint checked = 0; integer n_rec = 0, n_fault = 0, n_rst = 0;
-    integer rseed = SEED;
-    function automatic integer rnd(input integer n); rnd = int'($unsigned($random(rseed)) % $unsigned(n)); endfunction
+    // Explicit independent streams: $random(seed) uses shared simulator RNG state,
+    // which made the first descriptor depend on the DUT hierarchy under Verilator5.050.
+    reg [31:0] rseed = 32'(SEED);
+    function automatic integer rnd(input integer n);
+        begin rseed = rseed ^ (rseed << 13); rseed = rseed ^ (rseed >> 17); rseed = rseed ^ (rseed << 5); rnd = int'(rseed % $unsigned(n)); end
+    endfunction
     task automatic bad(input string s);
         begin if (errs < 12) $display("B2_DMA_Q ERR @%0d: %s", cyc, s); errs = errs + 1; end
     endtask
@@ -70,7 +74,7 @@ module tb_hgi_b2_dma_q;
     // VM-side adapter, deliberately OUTSIDE the tile: expand one pin lane into its bank.
     always @* begin vm_wl = '0; if (q5_wl[279]) vm_wl[q5_bank*280 +: 280] = q5_wl; end
     assign wl = vm_wl;
-    ot_hgi_b2_dma_q #(.HARD_CLOCKS(CLOCK_ENTRIES), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .leaf_clk({6{clk}}), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
+    ot_hgi_b2_dma_q #(.HARD_CLOCKS(CLOCK_ENTRIES), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .leaf_clk({9{clk}}), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data),
@@ -111,10 +115,12 @@ module tb_hgi_b2_dma_q;
     integer bp = 0;                                             // back-pressure: 0 none, 1 light, 2 heavy
     integer n_rreq = 0, n_kreq = 0, n_vpk = 0, n_g = 0, n_wl = 0;
     bit quiet = 1;                                              // no record outstanding: any request is an error
-    integer bp_seed = SEED ^ 32'h7a1bfc03;
-    function automatic integer bp_rnd(input integer n); bp_rnd = int'($unsigned($random(bp_seed)) % $unsigned(n)); endfunction
+    reg [31:0] bp_seed = 32'(SEED) ^ 32'h7a1bfc03;
+    function automatic integer bp_rnd(input integer n);
+        begin bp_seed = bp_seed ^ (bp_seed << 13); bp_seed = bp_seed ^ (bp_seed >> 17); bp_seed = bp_seed ^ (bp_seed << 5); bp_rnd = int'(bp_seed % $unsigned(n)); end
+    endfunction
     function automatic bit hold;
-       integer br; begin br = int'($unsigned($random(bp_seed)) % 4); hold = bp == 1 ? br == 0 : bp == 2 ? br != 0 : 0; end
+       integer br; begin br = bp_rnd(4); hold = bp == 1 ? br == 0 : bp == 2 ? br != 0 : 0; end
     endfunction
     task automatic vm_write(input integer a, input [31:0] d, input string via);
         begin
