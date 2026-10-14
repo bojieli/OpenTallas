@@ -6,7 +6,11 @@
 // Both queues have depth8; the sequencer's8 outstanding credits cover queued,
 // executing and completed-but-not-returned descriptors together. Neither FIFO
 // capacity nor a buffered command returns a credit: only a validated done does.
-module ot_s81_pulse_cdc #(parameter integer W=84, QD=8, XR=0)(
+module ot_s81_pulse_cdc #(parameter integer W=84, QD=8, XR=0
+`ifdef OT_S81_ADAPTER_CMD_PIPE
+ , parameter integer INPUT_PIPE=0
+`endif
+)(
  input wire s_clk,s_rst_n, input wire i_v,input wire[W-1:0] i_d,
  output wire i_accept,output reg fault,
  input wire d_clk,d_rst_n,output wire o_v,input wire o_r,output wire[W-1:0] o_d
@@ -18,8 +22,31 @@ module ot_s81_pulse_cdc #(parameter integer W=84, QD=8, XR=0)(
  localparam integer AW=$clog2(QD);
  reg[W-1:0] q[0:QD-1]; reg[AW-1:0] wp,rp;reg[AW:0] count;
  wire fready;wire pop=(count!=0)&&fready;
- assign i_accept=(count<QD)||pop;
  wire push=i_v&&i_accept;
+`ifdef OT_S81_ADAPTER_CMD_PIPE
+ wire queue_push;wire[W-1:0] queue_data;
+ generate if(INPUT_PIPE!=0) begin:g_input_pipe
+  reg pending;reg[W-1:0] data_q;
+  // The input stage reserves one of the original QD slots. It does not
+  // increase outstanding capacity or return a command credit.
+  assign i_accept=((count+pending)<QD)||pop;
+  always @(posedge s_clk or negedge s_rst_n)
+   if(!s_rst_n) pending<=1'b0;else pending<=push;
+  always @(posedge s_clk) data_q<=i_d;
+  assign queue_push=pending;
+`ifdef OT_S81_MUT_ADAPTER_CMD_PIPE
+  assign queue_data=data_q ^ ({{(W-1){1'b0}},1'b1} << 73);
+`else
+  assign queue_data=data_q;
+`endif
+ end else begin:g_no_input_pipe
+  assign i_accept=(count<QD)||pop;
+  assign queue_push=push;assign queue_data=i_d;
+ end endgenerate
+`else
+ assign i_accept=(count<QD)||pop;
+ wire queue_push=push;wire[W-1:0] queue_data=i_d;
+`endif
  wire unused_over,unused_under;
  ot_async_fifo #(.WIDTH(W),.DEPTH(QD),.EXT_RST(XR)) u_fifo(
  .wr_clk(s_clk),.wr_rst_n(s_rst_n),.wr_valid(count!=0),.wr_ready(fready),.wr_data(q[rp]),.wr_overflow(unused_over),
@@ -32,9 +59,9 @@ module ot_s81_pulse_cdc #(parameter integer W=84, QD=8, XR=0)(
   if(!s_rst_n) begin wp<=0;rp<=0;count<=0;fault<=0;end
   else begin
    if(i_v&&!i_accept) fault<=1;
-   if(push) begin q[wp]<=i_d;wp<=wp+1'b1;end
+   if(queue_push) begin q[wp]<=queue_data;wp<=wp+1'b1;end
    if(pop) rp<=rp+1'b1;
-   case({push,pop}) 2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:count<=count;endcase
+   case({queue_push,pop}) 2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:count<=count;endcase
   end
  end
 endmodule
@@ -102,7 +129,11 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
 `endif
  wire admit=c_cmd_v&&cmd_accept&&!cpending[ctag]&&((cused<QD)||return_ok);
  wire[83:0] payload=(MUT==1)?(c_cmd_d^(84'd1<<73)):c_cmd_d;
- ot_s81_pulse_cdc #(.W(84),.QD(QD),.XR(XRT)) u_cmd(
+ ot_s81_pulse_cdc #(.W(84),.QD(QD),.XR(XRT)
+`ifdef OT_S81_ADAPTER_CMD_PIPE
+ ,.INPUT_PIPE(1)
+`endif
+ ) u_cmd(
  .s_clk(c_clk),.s_rst_n(c_rcmd),.i_v(admit),.i_d(payload),.i_accept(cmd_accept),.fault(cmd_fault),
  .d_clk(e_clk),.d_rst_n(e_rcmd),.o_v(cv),.o_r(cr),.o_d(cd)
 `ifdef OT_SPVM_RESET_ACK
