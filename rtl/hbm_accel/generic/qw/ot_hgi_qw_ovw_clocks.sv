@@ -1,10 +1,11 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Wires-only compatibility wrapper over result SRAM and four existing row stages.
+// Explicit five-root wrapper over the actual result SRAM and four metadata stages.
+// Tied-clock logic is equivalent to OVW; physical phase/reset delivery remains open.
 module ot_hgi_qw_ovw_clocks #(
     parameter integer LQ = 16
 ) (
-    input  wire          clk,
+    input  wire [4:0]    leaf_clk,
     input  wire          rst_n,
     // lane-group leaves
     // lane-group leaves, one port set a leaf row (each on the face toward its row; the write data has one kept copy a row)
