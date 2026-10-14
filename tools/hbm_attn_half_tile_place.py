@@ -76,6 +76,7 @@ class Pins:
                                      else (a, 0.096 if face == 'S' else round(self.h - 0.096, 3))))]
 
     def tcl(self, head):
+        self.align_tracks()
         L = [head]
         for port, lst in self.p.items():
             for b, ly, x, y in sorted(lst):
@@ -84,12 +85,30 @@ class Pins:
         return '\n'.join(L) + '\n'
 
     def record(self, master, half, dirs):
+        self.align_tracks()
         ports = {}
         for port, lst in self.p.items():
             xs, ys = [x for _, _, x, _ in lst], [y for _, _, _, y in lst]
             ports[port] = dict(bits=len(lst), direction=dirs[port], layer=lst[0][1], x=[min(xs), max(xs)], y=[min(ys), max(ys)])
         return dict(master=master, kind='attn_half', w_um=TW, h_um=self.h, obs_top=7, parent='hfd_attn_tile', half=half,
                     generator='tools/hbm_attn_half_tile_place.py', ports=ports)
+
+    def align_tracks(self):
+        """Put each face pin on the local ASAP7 preferred track, independent of bank phase.
+
+        Bank origins use the placement lattice and can differ by 12 nm from the
+        routing lattice. This moves only the parent contact, not a hardened bank.
+        The connecting stub must still be routed and checked in the real parent.
+        """
+        for port, pins in self.p.items():
+            aligned = []
+            for bit, layer, x, y in pins:
+                if layer == 'M5':
+                    x = (12 + 48 * round((round(x * 1000) - 12) / 48)) / 1000
+                elif layer == 'M4':
+                    y = (12 + 48 * round((round(y * 1000) - 12) / 48)) / 1000
+                aligned.append((bit, layer, x, y))
+            self.p[port] = aligned
 
 
 def mids(P, name, n, src, q_in_y, cc_x, dx_row, hops, tag):
