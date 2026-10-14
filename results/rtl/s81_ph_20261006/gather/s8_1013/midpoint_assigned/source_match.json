@@ -17,5 +17,14 @@
   "current_die_parent_port_audit": "All prior ports including data32leaf2ctl exactly equal previous parent file;133ck_r added",
   "qualification": false,
   "route_eligible": false,
-  "status": "ACCEPTED_PIN_CANDIDATE_FRESH_IOP_CTS_SS_FF_PENDING"
+  "status": "ACCEPTED_PIN_CANDIDATE_FRESH_IOP_CTS_SS_FF_PENDING",
+  "fullbench_source_inputs_match": 27,
+  "forwarding_extra_cycles": 0,
+  "forwarding_extra_registers": 0,
+  "complete_preGPL_probe": {
+    "real_used_forwarding_FFs": 1464,
+    "max_center_manhattan_um": 99.048,
+    "above_100_count": 0,
+    "scope": "IOP/probe only; actual legalized D/Q pin reach and SS timing still owed"
+  }
 }

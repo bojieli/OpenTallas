@@ -46,6 +46,7 @@ foreach mp_key [lsort [dict keys $mp_map]] {
       if {($mp_x0+$mp_x1)/2.0 > ($mp_ax+$mp_bx)/2.0} { set mp_x [expr {$mp_x0-$mp_w}] } else { set mp_x $mp_x1 }
     }
   }
+  $mp_inst setPlacementStatus PLACED
   $mp_inst setLocation [expr {round($mp_x*$mp_dbu)}] [expr {round($mp_y*$mp_dbu)}]
   $mp_inst setPlacementStatus FIRM
   set mp_cx [expr {$mp_x+$mp_w/2.0}];set mp_cy [expr {$mp_y+$mp_h/2.0}]
