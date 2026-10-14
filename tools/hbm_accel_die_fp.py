@@ -1262,9 +1262,13 @@ def build_r25gq_net(variant):
         buses = [(b_, c_, w_, [e for e in eps if e[0] not in leaf]) for b_, c_, w_, eps in buses]
         buses = [b for b in buses if len(b[3]) >= 2 or (b[1].startswith(('clock', 'reset')) and b[3])]
         gone |= leaf
-    if V.get('p2p'):    # contract v14: a dropped chain's relays are on no bus at all (degree 0): they go too
-        used_ = {e[0] for b_ in buses for e in b_[3]}
-        gone |= {n for n, k_ in kind.items() if k_ == 'waypoint' and n not in used_}
+    if V.get('p2p'):    # contract v14: a dropped chain's relays are on no DATA bus any more: they go, and leave the
+        # clock / reset trees they were sinks of (v14 check: 70+ orphan lk_lk stations kept only by clk_link / rst_link)
+        used_ = {e[0] for b_ in buses if not b_[1].startswith(('clock', 'reset')) for e in b_[3]}
+        orph_ = {n for n, k_ in kind.items() if k_ == 'waypoint' and n not in used_}
+        gone |= orph_
+        buses = [(b_, c_, w_, [e for e in eps if e[0] not in orph_]) for b_, c_, w_, eps in buses]
+        buses = [b for b in buses if len(b[3]) >= 2 or (b[1].startswith(('clock', 'reset')) and b[3])]
     # ---- waypoints onto the R25GQ router paths
     wps = {it.name: it for it in base['insts'] if it.kind == 'waypoint' and it.name not in gone}
     adj = defaultdict(set)
@@ -7851,7 +7855,10 @@ def r25gq_v13():
     # (+108 um collides with hb_hc_eng's 100-um clearance in the E band): full leaf + cache 1.6688 mm2 fits the
     # 2.2079 mm2 slot once the SFU's internal ring corridor is <= 0.539 mm2 (today 0.755): a corridor repair (SFU owner)
     if os.environ.get('OT_HBMDIE_V13_AREA', '1') == '1':
-        v['idx_score_box'] = dict(w=2965.0, h=4374.0, x=dict(W=11175.0, E=17981.6))
+        # E x is the PRE col_split coordinate (col_split moves x >= 16,700 east by 1,250): 16,731.6 lands at 17,981.6,
+        # 43 um W of the SE / NE SM columns (v13 as committed gave 17,981.6 pre-split = 19,231.6: the E bands overlapped
+        # sm8 / sm11 / sm24 / sm27, svc_*E_s0 and phy_NE -- v14 check, 10-14)
+        v['idx_score_box'] = dict(w=2965.0, h=4374.0, x=dict(W=11175.0, E=16731.6))
     c_ = os.environ.get('OT_HBMDIE_CONG', V13_CONG)
     if c_:
         v['cong'] = c_
@@ -7895,6 +7902,9 @@ def r25gq_v14():
     v = r25gq_v13()
     v['p2p'] = True
     v['fwd_master_split'] = True
+    # the attention -> SU chains tr_SW0 / tr_SW1 ran through the SW COLL slot: re-placed around it, SU pins unchanged
+    # (tools/hbm_die_v14_att_relays.py; tr_SW0 +6 cycles, recorded)
+    v['att_su_relays'] = 'physical/hbm_accel_die_views/att_su_relay/relays_r25gq_v14.json'
     v['ck_root'] = 'hb_ckgen'
     v['drop_blocks'] = tuple(v['drop_blocks']) + ('hb_coll',)
     v['drop_buses'] = v['drop_buses'] + (r'|lk_lk_[NS]\d\w*|hb_su_[NS][EW]_coll\w*|hb_coll_su_[NS][EW]\w*|hgi_vmaddr_[NS][EW]\w*'
