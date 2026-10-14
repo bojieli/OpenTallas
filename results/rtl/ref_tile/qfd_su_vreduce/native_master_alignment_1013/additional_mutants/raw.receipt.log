@@ -1,0 +1,87 @@
+ot-run: ot-epyc4       admits   607 GB (avail 834, growth 128, headroom 48, waiters 0/0 GB) load 42/128 running 25 disk 1193 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-680018-1791960847 after 0 s
+vm answer mismatch op 1 operand 1 t=2409000
+vm answer mismatch op 1 operand 2 t=2409000
+vm answer mismatch op 1 operand 1 t=2410000
+  before op 4: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 4: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 4: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 5: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 5: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 5: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 6: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 6: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 6: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 7: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 7: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 7: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 8: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 8: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 8: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 9: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 9: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 9: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 10: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 10: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 10: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 11: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 11: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 11: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 12: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 12: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 12: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 13: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 13: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 13: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 14: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 14: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 14: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 15: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 15: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 15: vm diff @00000cc5 ref 55297fce dut 4b914476
+  before op 16: vm diff @00000cc3 ref c74dc3fd dut 4ccde57d
+  before op 16: vm diff @00000cc4 ref 4ccde57d dut 55297fce
+  before op 16: vm diff @00000cc5 ref 55297fce dut 4b914476
+operand event 0: operand 1 lane 0 ref 39832cce dut 3c72150a (mask ffffff) op 1 a-lane0 addr 004341 now vm_r bbbc7077 vm_m bbbc7077
+operand events ref 1191 dut 1191
+lane-out event 0 lane 0: ref ov 1 b423a6d5 dut ov 1 b8cd8414
+  ev 0 ref ffb4122692b384d900b4474d49b362cdddb423a6d5b3df97f9b3b767f8b423a6d5 | dut ffb82c9c1639646248b9602d393982bfc1b8cd84143893b3bc390e497bb8cd8414
+  ev 1 ref ffb3bde354b4390ab4b44c7cc5b43718e5b42c13feb40bab37b355d727b447f338 | dut ff39033fbcb92f9bf2b971d66ab928fc81b90374f9b7a89c44398844a1b962625f
+  op13 operand ev 105 mask 0000ff a c1c8c1473a2c188bbd68edd1c230c3d7c08525b8451227ddbb7ab06f40008561 | dut bc86df70c1c8c1473a2c188bbd68edd1c230c3d7c08525b8451227ddbb7ab06f
+  op13 operand ev 106 mask 0000ff a 42b5493bbb5c4f5c3807acd2bc2e4b3c3b44369b3bd740f8c656eb1bbc86df70 | dut b76292bf42b5493bbb5c4f5c3807acd2bc2e4b3c3b44369b3bd740f8c656eb1b
+  op13 operand ev 107 mask 0000ff a 460a1c7f3e60d9b544b9573945ebd43344dd69e74184d48f3745f694b76292bf | dut c2369060460a1c7f3e60d9b544b9573945ebd43344dd69e74184d48f3745f694
+  op13 operand ev 108 mask 000003 a 460a1c7f3e60d9b544b9573945ebd43344dd69e74184d48f40f58a92c2369060 | dut c2369060460a1c7f3e60d9b544b9573945ebd43344dd69e7b8bc106e40f58a92
+  op13 operand ev 109 mask 0000ff a be338dd7b9df9b60b8bc106e40f58a92c2369060460a1c7f3e60d9b544b95739 | dut b859ca6abe338dd7b9df9b60b8bc106e40f58a92c2369060460a1c7f3e60d9b5
+  op13 operand ev 110 mask 0000ff a 37c6b42743df05fb3a7765b9c6c46eccbc4944f5393e7dffbd8dd8d5b859ca6a | dut 37e5f6b737c6b42743df05fb3a7765b9c6c46eccbc4944f5393e7dffbd8dd8d5
+  op13 operand ev 111 mask 0000ff a bf5d0d4f39f5bfe8436814deb98362fa38218a0d3fe6012ebe57c00137e5f6b7 | dut b739bdc4bf5d0d4f39f5bfe8436814deb98362fa38218a0d3fe6012ebe57c001
+  op13 operand ev 112 mask 000003 a bf5d0d4f39f5bfe8436814deb98362fa38218a0d3fe6012e3b77fe1bb739bdc4 | dut b739bdc4bf5d0d4f39f5bfe8436814deb98362fa38218a0d404cbf1e3b77fe1b
+  op13 operand ev 113 mask 0000ff a c473989e3edad4b2404cbf1e3b77fe1bb739bdc4bf5d0d4f39f5bfe8436814de | dut c6a11192c473989e3edad4b2404cbf1e3b77fe1bb739bdc4bf5d0d4f39f5bfe8
+  op13 operand ev 114 mask 0000ff a be79b5c1c49540f0c201c35db7fe04753a018725c51a5d1cbc854beec6a11192 | dut 3d4ef4c3be79b5c1c49540f0c201c35db7fe04753a018725c51a5d1cbc854bee
+  op13 operand ev 115 mask 0000ff a c45c6656c4ea91bbc1b7f603bbc50315c6a0f43ebc93464e409c98173d4ef4c3 | dut 3c4a6052c45c6656c4ea91bbc1b7f603bbc50315c6a0f43ebc93464e409c9817
+  op13 operand ev 116 mask 000003 a c45c6656c4ea91bbc1b7f603bbc50315c6a0f43ebc93464e3f8798343c4a6052 | dut 3c4a6052c45c6656c4ea91bbc1b7f603bbc50315c6a0f43e46c1e3983f879834
+  op13 operand ev 117 mask 0000ff a 4531c691bf0f1e5c46c1e3983f8798343c4a6052c45c6656c4ea91bbc1b7f603 | dut 3e35f0304531c691bf0f1e5c46c1e3983f8798343c4a6052c45c6656c4ea91bb
+  op13 operand ev 118 mask 0000ff a c298629db8e1af13b9987bbb46f2c89bbec73e0cc28e86d8c0c5a9d73e35f030 | dut 40982a25c298629db8e1af13b9987bbb46f2c89bbec73e0cc28e86d8c0c5a9d7
+  op13 operand ev 119 mask 0000ff a c46289fc425e5d23bd373583b92673183df43863c2e04ff7b90a2e1940982a25 | dut 41752f58c46289fc425e5d23bd373583b92673183df43863c2e04ff7b90a2e19
+  op13 operand ev 120 mask 000003 a c46289fc425e5d23bd373583b92673183df43863c2e04ff7b80d12ab41752f58 | dut 41752f58c46289fc425e5d23bd373583b92673183df43863c2df141db80d12ab
+lane-out events 1191 / 1191, crom events 753 / 753
+reducer event 0: ref op 5 addr 00268d data d89ad4de | dut op 5 addr 00268d data d9936912
+first write diff event 0 (ref op 3, dut op 3): mask ff/ff addr 000cc3/000cc3
+  lane 0 ref c74dc3fd dut 4ccde57d
+  lane 1 ref 4ccde57d dut 55297fce
+  lane 2 ref 55297fce dut 4b914476
+  lane 3 ref 4b914476 dut 3e89c5b7
+  lane 4 ref 3e89c5b7 dut cac5cc1a
+  lane 5 ref cac5cc1a dut 541018f8
+  lane 6 ref 541018f8 dut 3838dd0c
+  lane 7 ref 3838dd0c dut b7c67645
+port stream 4 differs: ref 299 events, master 299
+port stream 5 differs: ref 214 events, master 214
+port stream 6 differs: ref 328 events, master 328
+SU_LAT ops=119 ref_avg=92.94 dut_avg=160.04 delta_min=36 delta_max=390 ref_min=24 ref_max=184 (SW=8 IS=1 OS=1 CRX=2 VL=7)
+FAIL qfd_su_vm_bv vm_answer_bad=2374 vm_mismatch=1751 port_streams_differing=3 faults r0 d0 vm w_fault 0 w_hazard 0 ops=120 vm_write_events=299 (floors: events x SW 2392 > 960 lanes, events > 60) x_fault 0 x_hazard 0
+- tb_acc_align_mut.sv:395: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 25us; walltime 9.604 s; speed 2.580 us/s
+- Verilator: cpu 9.604 s on 1 threads; allocated 34 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-680018-1791960847): exit 1
