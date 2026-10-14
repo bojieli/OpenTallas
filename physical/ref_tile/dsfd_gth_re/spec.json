@@ -132,7 +132,7 @@
   "branch": "codex/s81-gather-leaf-v18",
   "tag": "g2",
   "purpose": "S81 gather (dsfd_sp_gather_c, 2.9 M flops flat, does not fit its slot): hardened 4-root leaf of the gather cluster (E half: lanes enter E, leave W). Each root = ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4; S = 16 does not fit the slot: g1 stopped at FLOORPLAN_MARGIN, util 0.716): input queue in a 128 x 66 1R1W array, CAM-free pairing store {open-row slot, parent node} in a 256 x 34 array; cycle-identical to ot_s81ph_ret_root_p inside both capacities, sticky fault on a 9th open row. REAL field order (production binding d9f84be9, all 40 layers, golden experts): at most 4 (row, pos) open per root. Every port a flop at the pin; lanes passed on registered; column chain registered.",
-  "structural_change": "Zero-epoch SSA2 local bank decisions, genuine own co output register role, forwarding-only HB bypass with strong drivers retained, actual D/Q100um legal sites under unchanged die-owned lo alignment.",
+  "structural_change": "Zero-epoch real same-D/same-edge candidate SV copy and branch predecoding; genuine own co roles; forwarding-only HB bypass; existing forward lead BUF/polarity cells at real used FF; actual D/Q100 legal sites under exact die-owned pins. No waveform/IO budget change.",
   "benches": [
    {
     "name": "root_s_lockstep",
@@ -140,7 +140,7 @@
     "expect": "pass",
     "pass_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
     "min_count_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
-    "threads": 32,
+    "threads": 36,
     "peak_ram_gb": 32,
     "needs": [
      "verilator"
@@ -152,7 +152,7 @@
     "expect": "pass",
     "pass_regex": "GATHER_CL_GATE PASS",
     "min_count_regex": "GATHER_CL_GATE PASS \\(([0-9]+) runs\\)",
-    "threads": 36,
+    "threads": 40,
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
@@ -229,7 +229,8 @@
   "OT_INHOLD_DRV": "BUFx4f_ASAP7_75t_R",
   "OT_OFLOP_HOPS": "8",
   "OT_OFLOP_COLS": "4",
-  "OT_OFLOP_ALLOW_NONE": "1"
+  "OT_OFLOP_ALLOW_NONE": "1",
+  "S81_FORWARD_NS_ROWS": "21"
  },
  "children": [],
  "inter": [],

@@ -169,7 +169,29 @@ module ot_s81ph_ret_root_s #(
 
     // ------------------------------------------------------------ S1: candidate register, slot / entry look-ahead
     reg [31:0] cand;
-    wire [31:0] cand_next = dv[LAT-2] ? dtg_last : ((!hv || !sv) ? pq_t : h_t);
+    // Real candidate-only SV state samples the SAME D at the original SV edge.
+    // Both copies are used: core SV retains scheduling, local SV drives decoding.
+    wire cand_pick_sv;
+    wire [31:0] pick_dtg_oh, pick_pq_oh, pick_h_oh;
+    generate if (LOCAL_DECISIONS) begin : g_candidate_local
+`ifdef S81PH_MUT_SELECT_PHASE
+        wire sv_D = sv; // mutant: candidate selector lags the original state edge
+`else
+        wire sv_D = dv[LAT-2];
+`endif
+        (* keep_hierarchy = 1, dont_touch = 1 *)
+        ot_s81ph_candidate_valid u_sv (.clk(clk), .rst_n(rst_n), .d(sv_D), .q(cand_pick_sv));
+        (* keep_hierarchy = 1, dont_touch = 1 *)
+        ot_s81ph_heap_decode u_dtg (.t(dtg_last), .hot(pick_dtg_oh));
+        (* keep_hierarchy = 1, dont_touch = 1 *)
+        ot_s81ph_heap_decode u_pq (.t(pq_t), .hot(pick_pq_oh));
+        (* keep_hierarchy = 1, dont_touch = 1 *)
+        ot_s81ph_heap_decode u_h (.t(h_t), .hot(pick_h_oh));
+    end else begin : g_candidate_original
+        assign cand_pick_sv = sv;
+        assign pick_dtg_oh = 0; assign pick_pq_oh = 0; assign pick_h_oh = 0;
+    end endgenerate
+    wire [31:0] cand_next = dv[LAT-2] ? dtg_last : ((!hv || !cand_pick_sv) ? pq_t : h_t);
     always @(posedge clk) cand <= cand_next;
     // Decode in the existing candidate epoch. No additional decision/read edge.
     function automatic [4:0] heap_h(input [31:0] t);
@@ -191,7 +213,11 @@ module ot_s81ph_ret_root_s #(
 `ifdef S81PH_MUT_HEAP_PHASE
             cand_h_oh <= 32'd1 << heap_h(cand); // mutant: decode lags the candidate epoch
 `else
-            cand_h_oh <= 32'd1 << heap_h(cand_next);
+            // Decode each real source before the late choice. Kept branch
+            // hierarchy prevents refactoring control back through the decoder.
+            cand_h_oh <= LOCAL_DECISIONS ?
+                (dv[LAT-2] ? pick_dtg_oh : ((!hv || !cand_pick_sv) ? pick_pq_oh : pick_h_oh)) :
+                (32'd1 << heap_h(cand_next));
 `endif
         end
     end endgenerate
@@ -392,6 +418,32 @@ module ot_s81ph_ret_root_s #(
     end
     initial if ((S != 8 && S != 16) || QD != 128) $fatal(1, "ot_s81ph_ret_root_s: S / QD");
 `endif
+endmodule
+
+// Candidate-only valid copy: genuine consumed state, same D/reset/edge as SV.
+(* keep_hierarchy = 1, dont_touch = 1 *)
+module ot_s81ph_candidate_valid(input wire clk, input wire rst_n, input wire d,
+    (* keep = 1, dont_touch = 1 *) output reg q);
+`ifdef S81PH_MUT_SELECT_RESET_PHASE
+    always @(posedge clk) // mutant: misses a short asynchronous reset
+`else
+    always @(posedge clk or negedge rst_n)
+`endif
+        if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+
+// Exact parent-node one-hot, including original k=7 three-bit wrap semantics.
+(* keep_hierarchy = 1, dont_touch = 1 *)
+module ot_s81ph_heap_decode(input wire [31:0] t, output reg [31:0] hot);
+    always @* case (t[7:5])
+        3'd0: hot = 32'h00010000 << t[12:9];
+        3'd1: hot = 32'h00000100 << t[12:10];
+        3'd2: hot = 32'h00000010 << t[12:11];
+        3'd3: hot = 32'h00000004 << t[12];
+        3'd4: hot = 32'h00000002;
+        3'd7: hot = 32'h00000001 << t[12:8];
+        default: hot = 32'h00000001;
+    endcase
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------

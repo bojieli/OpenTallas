@@ -17,7 +17,7 @@ if [ "${LOCAL_BANKS:-0}" = 1 ]; then
 fi
 if [ "${SSA2:-0}" = 1 ]; then
  LOCAL_DEF="$LOCAL_DEF +define+S81PH_GTH_SSA2"
- if [ -z "${RAW:-}" ]; then MODES="$MODES decision own_co"; fi
+ if [ -z "${RAW:-}" ]; then MODES="$MODES decision own_co select"; fi
 fi
 mkdir -p $OUT
 P=$SRC/rtl/dsrom_sys/s81_ph; M=$SRC/physical/s81_ph_views/macros; C=$SRC/rtl/dsrom_sys/s81_ctrl
@@ -52,7 +52,7 @@ run() { # mode case expect need want
 }
 for m in $MODES; do
   case $m in base) X="";; lane) X="+define+S81PH_GTH_CL_MUT_LANE";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
-    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; early) X="+define+S81PH_GTH_MUT_EARLYSTART";; esac
+    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; select) X="+define+S81PH_MUT_SELECT_PHASE";; early) X="+define+S81PH_GTH_MUT_EARLYSTART";; esac
   ( build $m "$X" ) &
 done
 wait

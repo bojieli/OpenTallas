@@ -4,6 +4,8 @@
 set mp_block [ord::get_db_block]
 set mp_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set mp_limit [expr {100*$mp_dbu}]
+set mp_ns_rows [expr {[info exists ::env(S81_FORWARD_NS_ROWS)] ? $::env(S81_FORWARD_NS_ROWS) : 21}]
+if {$mp_ns_rows<1 || $mp_ns_rows%2==0} {error "S81_DQ_SITE NS row goal must be positive odd"}
 set mp_map [dict create]
 foreach mp_inst [$mp_block getInsts] {
   if {![[$mp_inst getMaster] isSequential]} continue
@@ -70,7 +72,7 @@ foreach mp_key $mp_order {
   set bx [expr {([$mp_b xMin]+[$mp_b xMax])/2.0}];set by [expr {([$mp_b yMin]+[$mp_b yMax])/2.0}]
   set w [$mp_master getWidth];set h [$mp_master getHeight]
   set tx [expr {($ax+$bx-$w)/2.0}];set ty [expr {($ay+$by-$h)/2.0}]
-  if {$mp_kind eq "lo"} {set tx [expr {$tx+($mp_bit%4-1.5)*($w+round(.216*$mp_dbu))}]} else {set ty [expr {$ty+($mp_bit%21-10)*round(.27*$mp_dbu)}]}
+  if {$mp_kind eq "lo"} {set tx [expr {$tx+($mp_bit%4-1.5)*($w+round(.216*$mp_dbu))}]} else {set ty [expr {$ty+($mp_bit%$mp_ns_rows-($mp_ns_rows-1)/2)*round(.27*$mp_dbu)}]}
   set best {};set best_score 1e30
   set ranked_rows {}
   foreach ry [dict keys $mp_rows] {lappend ranked_rows [list [expr {abs($ry-$ty)}] $ry]}
