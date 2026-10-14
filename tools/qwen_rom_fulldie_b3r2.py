@@ -1763,6 +1763,19 @@ RELAY_REACH_OK = 490.0
 RELAY_NEVER = ('clock_trunk', 'reset')
 
 
+def _relay_terminal_possible(centers, endpoint, reach_um, is_free, hop_ok=None):
+    """Necessary terminal condition for BFS, using the same centers and hop predicate.
+
+    An empty legal terminal set cannot be repaired by visiting more intermediate
+    sites. Use centers, not site origins: their offset can change reach eligibility.
+    """
+    import numpy as np
+    ids = np.flatnonzero(np.abs(centers[:, 0] - endpoint[0]) +
+                         np.abs(centers[:, 1] - endpoint[1]) <= reach_um)
+    return any(is_free(int(i)) and (hop_ok is None or hop_ok(
+        (float(centers[i][0]), float(centers[i][1])), endpoint)) for i in ids)
+
+
 def _relays(v, m, pitch=RELAY_PITCH_UM):
     """r21 (owner fast rule 2026-10-06): relay registers on every die wire longer than ~350 um, at <= `pitch` um along
     a rectilinear path.  A relay is one registered hop of the bus (the closed station family, ot_qwen_die_station
@@ -3048,6 +3061,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             return ok_cache[i]
         near_cons = near
         def bfs(De, mono):
+            if not _relay_terminal_possible(ctr, P1, De, ok, hop_chk[0]):
+                return None, {}, []
             start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i) and (
                 hop_chk[0] is None or hop_chk[0](P0, (float(ctr[i][0]), float(ctr[i][1]))))]
             par = {i: -1 for i in start}
