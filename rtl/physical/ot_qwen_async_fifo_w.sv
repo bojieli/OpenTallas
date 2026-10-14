@@ -161,6 +161,12 @@ module ot_qwen_async_fifo_w #(
         end else if (DEPTH == 128 && WIDTH == 516) begin : g_128x516
             ot_sram_1r1w2c_128x516_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
                 .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else if (DEPTH == 256 && WIDTH == 517) begin : g_256x517
+            ot_sram_1r1w2c_256x517_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
+        end else if (DEPTH == 64 && WIDTH == 546) begin : g_64x546
+            ot_sram_1r1w2c_64x546_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
+                .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));
         end else if (DEPTH == 32 && WIDTH == 546) begin : g_32x546
             ot_sram_1r1w2c_32x546_m1 u_m (.wclk(wr_clk), .rclk(rd_clk), .r_ce_in(1'b1), .r_addr_in(m_ra), .rd_out(m_rd),
                 .w_ce_in(wq_we), .w_addr_in(wq_addr), .wd_in(wq_data), .w_mask_in({WIDTH{1'b1}}));

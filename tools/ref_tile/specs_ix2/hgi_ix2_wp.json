@@ -50,13 +50,13 @@
   "pin_v": "M3 M5"
  },
  "outline": {
-  "w": 194.4,
-  "h": 64.8
+  "w": 259.2,
+  "h": 75.6
  },
  "job": {
-  "owner": "Claude:el1013-hbm-redesign-idx",
+  "owner": "Codex:el1013-hbm-redesign-idx",
   "branch": "claude/hbm-redesign-idx",
-  "tag": "r0",
+  "tag": "r1",
   "purpose": "IDX.INDEX redesign (owner 10-13) ix2 leaf wp: four sector packers + 8 write lanes (2,258 b on the 388.8 um S face = 0.56 of 10.3 slots/um; the flat adapter failed PPL at 1.03); M5 leaf, every pin a flop, one clock root; cluster production die e2e L24 1,158 (1.072x) exact, token 1.217x, e2e loss 0.282 %",
   "extra_paths": [
    "tools/hgi_unit_tput"
@@ -90,5 +90,8 @@
   ],
   "views_to": "physical/ref_tile/hgi_ix2_wp/views",
   "record_to": "results/rtl/ref_tile/hgi_ix2_wp"
- }
+ },
+ "std_area_um2": 6507,
+ "structural_change": "Outline 194.4 x 64.8 -> 259.2 x 75.6 um. Widen VM face by 33% (2258 bits / (259.2 um x 20.6 tracks/um) = 0.423), increase core area by 57%; failed GRT had 1693 markers and no decreasing trend. Separate pin-access demand from packer placement; no layer/timing gate changed.",
+ "slot_change_request": "el1013-hbm-redesign-idx 2026-10-13 Codex: ix2 leaf wp Outline 194.4 x 64.8 -> 259.2 x 75.6 um. Widen VM face by 33% (2258 bits / (259.2 um x 20.6 tracks/um) = 0.423), increase core area by 57%; failed GRT had 1693 markers and no decreasing trend. Separate pin-access demand from packer placement; no layer/timing gate changed. Same pin faces/layers; pending die lead assigned pin file / next daily contract revision."
 }

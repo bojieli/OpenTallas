@@ -16087,3 +16087,12 @@ def hbm_vm8_root_checker_bank_model():
     matched transaction timings and native ownership debt qualify the candidate.
     """
     return json.loads((ROOT / 'results/physical/vm8_root_checker_20261013/prebuild.json').read_text())
+
+
+def hbm_sm_pub_parent_stations_model():
+    """Production publication hierarchy: extraction retains every existing edge.
+
+    Physical areas and boundary-wire lengths qualify from the station routes;
+    none are inferred from a slice route or credited as timing closure here.
+    """
+    return json.loads((ROOT / 'results/rtl/hgi_sm_pub_parent_stations_20261013/sizing.json').read_text())
