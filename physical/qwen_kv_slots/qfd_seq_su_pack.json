@@ -1,0 +1,1515 @@
+{
+ "cell": "qfd_seq_su",
+ "body": "ot_qfd_seq_su_bi",
+ "body_params": {
+  "PSRAM": 1,
+  "HQ2": 1,
+  "RRG": 1,
+  "PCUT": 1,
+  "D": 8,
+  "G": 3072
+ },
+ "order": "LSB-first",
+ "clock": "ck -> clk",
+ "bundles": [
+  {
+   "bundle": "su",
+   "width": 476,
+   "flow": "out",
+   "peer": "sp_su64_sfu.si",
+   "fields": [
+    {
+     "port": "po_su_go",
+     "lsb": 0,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_nout",
+     "lsb": 1,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_nin",
+     "lsb": 19,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_asrc",
+     "lsb": 37,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_abase",
+     "lsb": 38,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_aso",
+     "lsb": 62,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_asi",
+     "lsb": 86,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_bsrc",
+     "lsb": 110,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_bbase",
+     "lsb": 111,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_bso",
+     "lsb": 135,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_bsi",
+     "lsb": 159,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_csrc",
+     "lsb": 183,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_cbase",
+     "lsb": 184,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_cso",
+     "lsb": 208,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_csi",
+     "lsb": 232,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_ma",
+     "lsb": 256,
+     "width": 2,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_mb",
+     "lsb": 258,
+     "width": 2,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_ad",
+     "lsb": 260,
+     "width": 3,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_sfu",
+     "lsb": 263,
+     "width": 3,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_mc",
+     "lsb": 266,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_md",
+     "lsb": 267,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_dst",
+     "lsb": 268,
+     "width": 2,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_dbase",
+     "lsb": 270,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_dso",
+     "lsb": 294,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_dsi",
+     "lsb": 318,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_red",
+     "lsb": 342,
+     "width": 2,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_redsq",
+     "lsb": 344,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_rbase",
+     "lsb": 345,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_rso",
+     "lsb": 369,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_imm1",
+     "lsb": 393,
+     "width": 32,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "po_su_i_imm2",
+     "lsb": 425,
+     "width": 32,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "su_asrc",
+     "lsb": 457,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "su_tok",
+     "lsb": 458,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "sd",
+   "width": 133,
+   "flow": "in",
+   "peer": "sp_su64_sfu.sd",
+   "fields": [
+    {
+     "port": "pi_su_rt_active",
+     "lsb": 0,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_rt_inflight",
+     "lsb": 1,
+     "width": 8,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_ready",
+     "lsb": 9,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_idle",
+     "lsb": 10,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_wrom_re",
+     "lsb": 11,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_wrom_addr",
+     "lsb": 12,
+     "width": 24,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_kv_we",
+     "lsb": 36,
+     "width": 64,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_progress",
+     "lsb": 100,
+     "width": 16,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_progress_rows",
+     "lsb": 116,
+     "width": 16,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pi_su_fault",
+     "lsb": 132,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "acc",
+   "width": 24,
+   "flow": "in",
+   "peer": "sp_su64_sfu.acc",
+   "fields": [
+    {
+     "port": "pi_su_acc",
+     "lsb": 0,
+     "width": 24,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbc0",
+   "width": 25,
+   "flow": "out",
+   "peer": "cbuf_g_0.ctl",
+   "fields": [
+    {
+     "port": "cb_tpos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_tok_start",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_stage",
+     "lsb": 19,
+     "width": 6,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbc1",
+   "width": 25,
+   "flow": "out",
+   "peer": "cbuf_g_1.ctl",
+   "fields": [
+    {
+     "port": "cb_tpos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_tok_start",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_stage",
+     "lsb": 19,
+     "width": 6,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbc2",
+   "width": 25,
+   "flow": "out",
+   "peer": "cbuf_g_2.ctl",
+   "fields": [
+    {
+     "port": "cb_tpos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_tok_start",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_stage",
+     "lsb": 19,
+     "width": 6,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbc3",
+   "width": 25,
+   "flow": "out",
+   "peer": "cbuf_g_3.ctl",
+   "fields": [
+    {
+     "port": "cb_tpos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_tok_start",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_stage",
+     "lsb": 19,
+     "width": 6,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbc4",
+   "width": 25,
+   "flow": "out",
+   "peer": "cbuf_g_4.ctl",
+   "fields": [
+    {
+     "port": "cb_tpos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_tok_start",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_stage",
+     "lsb": 19,
+     "width": 6,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbc5",
+   "width": 25,
+   "flow": "out",
+   "peer": "cbuf_g_5.ctl",
+   "fields": [
+    {
+     "port": "cb_tpos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_tok_start",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_stage",
+     "lsb": 19,
+     "width": 6,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbc6",
+   "width": 25,
+   "flow": "out",
+   "peer": "cbuf_g_6.ctl",
+   "fields": [
+    {
+     "port": "cb_tpos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_tok_start",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_stage",
+     "lsb": 19,
+     "width": 6,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbc7",
+   "width": 25,
+   "flow": "out",
+   "peer": "cbuf_g_7.ctl",
+   "fields": [
+    {
+     "port": "cb_tpos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_tok_start",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "cb_stage",
+     "lsb": 19,
+     "width": 6,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbr0",
+   "width": 10,
+   "flow": "in",
+   "peer": "cbuf_g_0.rdy",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 3
+    },
+    {
+     "port": "cb_st_rdy_stage",
+     "lsb": 3,
+     "width": 6,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "cb_st_rdy",
+     "lsb": 9,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cbr1",
+   "width": 10,
+   "flow": "in",
+   "peer": "cbuf_g_1.rdy",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 10
+    }
+   ]
+  },
+  {
+   "bundle": "cbr2",
+   "width": 10,
+   "flow": "in",
+   "peer": "cbuf_g_2.rdy",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 10
+    }
+   ]
+  },
+  {
+   "bundle": "cbr3",
+   "width": 10,
+   "flow": "in",
+   "peer": "cbuf_g_3.rdy",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 10
+    }
+   ]
+  },
+  {
+   "bundle": "cbr4",
+   "width": 10,
+   "flow": "in",
+   "peer": "cbuf_g_4.rdy",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 10
+    }
+   ]
+  },
+  {
+   "bundle": "cbr5",
+   "width": 10,
+   "flow": "in",
+   "peer": "cbuf_g_5.rdy",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 10
+    }
+   ]
+  },
+  {
+   "bundle": "cbr6",
+   "width": 10,
+   "flow": "in",
+   "peer": "cbuf_g_6.rdy",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 10
+    }
+   ]
+  },
+  {
+   "bundle": "cbr7",
+   "width": 10,
+   "flow": "in",
+   "peer": "cbuf_g_7.rdy",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 10
+    }
+   ]
+  },
+  {
+   "bundle": "st",
+   "width": 49,
+   "flow": "out",
+   "peer": "tt_ctlm.st",
+   "fields": [
+    {
+     "port": "me_prog_base_o",
+     "lsb": 0,
+     "width": 12,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_pos_o",
+     "lsb": 12,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_token_o",
+     "lsb": 30,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_start_o",
+     "lsb": 48,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "xs",
+   "width": 57,
+   "flow": "out",
+   "peer": "tt_ctlm.xs",
+   "fields": [
+    {
+     "port": "su_rows_o",
+     "lsb": 0,
+     "width": 16,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "su_prog_o",
+     "lsb": 16,
+     "width": 16,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "su_idle_o",
+     "lsb": 32,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "su_acc_o",
+     "lsb": 33,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "xm",
+   "width": 92,
+   "flow": "in",
+   "peer": "tt_ctlm.xm",
+   "fields": [
+    {
+     "port": "x_fval",
+     "lsb": 0,
+     "width": 32,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "x_fidx",
+     "lsb": 32,
+     "width": 18,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "x_ofin",
+     "lsb": 50,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "x_oprog",
+     "lsb": 51,
+     "width": 16,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "x_oidle",
+     "lsb": 67,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "x_oacc",
+     "lsb": 68,
+     "width": 24,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "vrd",
+   "width": 9,
+   "flow": "out",
+   "peer": "sp_vector_memory",
+   "fields": [
+    {
+     "port": "vm_raddr",
+     "lsb": 0,
+     "width": 8,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "vm_re",
+     "lsb": 8,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "vrq",
+   "width": 512,
+   "flow": "in",
+   "peer": "sp_vector_memory",
+   "fields": [
+    {
+     "port": "vm_rq",
+     "lsb": 0,
+     "width": 512,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "vwr",
+   "width": 521,
+   "flow": "out",
+   "peer": "sp_vector_memory",
+   "fields": [
+    {
+     "port": "vm_wdata",
+     "lsb": 0,
+     "width": 512,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "vm_waddr",
+     "lsb": 512,
+     "width": 8,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "vm_we",
+     "lsb": 520,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "ib",
+   "width": 382,
+   "flow": "out",
+   "peer": "sp_vector_memory.ib",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 382
+    }
+   ]
+  },
+  {
+   "bundle": "dc",
+   "width": 530,
+   "flow": "out",
+   "peer": "d2d_rom.dc",
+   "fields": [
+    {
+     "port": "seq_nval",
+     "lsb": 0,
+     "width": 32,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "seq_ntok",
+     "lsb": 32,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "s_done",
+     "lsb": 50,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "s_fault",
+     "lsb": 51,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "core_fault",
+     "lsb": 52,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "coll_busy",
+     "lsb": 53,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kv_write_flush",
+     "lsb": 54,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "rom_fault",
+     "lsb": 55,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 56,
+     "width": 474
+    }
+   ]
+  },
+  {
+   "bundle": "dh",
+   "width": 530,
+   "flow": "in",
+   "peer": "d2d_rom.dh",
+   "fields": [
+    {
+     "port": "tp_pos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "tp_token",
+     "lsb": 18,
+     "width": 18,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "stage_in",
+     "lsb": 36,
+     "width": 6,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "h_start",
+     "lsb": 42,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "kv_write_drained",
+     "lsb": 43,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pw_data",
+     "lsb": 44,
+     "width": 64,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pw_addr",
+     "lsb": 108,
+     "width": 10,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pw_v",
+     "lsb": 118,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "dw_data",
+     "lsb": 119,
+     "width": 64,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "dw_addr",
+     "lsb": 183,
+     "width": 3,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "dw_v",
+     "lsb": 186,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 187,
+     "width": 343
+    }
+   ]
+  },
+  {
+   "bundle": "dflt",
+   "width": 9,
+   "flow": "in",
+   "peer": "d2d_rom.flt",
+   "fields": [
+    {
+     "port": null,
+     "lsb": 0,
+     "width": 9
+    }
+   ]
+  },
+  {
+   "bundle": "kvd",
+   "width": 201,
+   "flow": "out",
+   "peer": "d2d_rom.kvd",
+   "fields": [
+    {
+     "port": "kvd_pos",
+     "lsb": 0,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_kindk",
+     "lsb": 18,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_nout",
+     "lsb": 19,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_k",
+     "lsb": 37,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_tiles",
+     "lsb": 55,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_jsh",
+     "lsb": 73,
+     "width": 3,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_split",
+     "lsb": 76,
+     "width": 4,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_wcs",
+     "lsb": 80,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_js",
+     "lsb": 104,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_ks",
+     "lsb": 128,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_ts",
+     "lsb": 152,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_wbase",
+     "lsb": 176,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "kvd_v",
+     "lsb": 200,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "cd",
+   "width": 548,
+   "flow": "out",
+   "peer": "io_xfifo.i_seq_coll",
+   "fields": [
+    {
+     "port": "c_data",
+     "lsb": 0,
+     "width": 512,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "c_last",
+     "lsb": 512,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "c_mode",
+     "lsb": 513,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "c_tag",
+     "lsb": 514,
+     "width": 32,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "c_valid",
+     "lsb": 546,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "c_ready",
+     "lsb": 547,
+     "width": 1,
+     "dir": "in",
+     "against_flow": true
+    }
+   ]
+  },
+  {
+   "bundle": "cc",
+   "width": 518,
+   "flow": "in",
+   "peer": "io_xfifo.o_coll_seq",
+   "fields": [
+    {
+     "port": "r_data",
+     "lsb": 0,
+     "width": 512,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "r_last",
+     "lsb": 512,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "r_rank",
+     "lsb": 513,
+     "width": 3,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "r_err",
+     "lsb": 516,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "r_valid",
+     "lsb": 517,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "rsi",
+   "width": 1,
+   "flow": "in",
+   "peer": "clk_rx.rso_seq",
+   "fields": [
+    {
+     "port": "rst_n",
+     "lsb": 0,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  }
+ ],
+ "unbound": [
+  {
+   "bundle": "cbr0",
+   "bits": [
+    2,
+    0
+   ],
+   "flow": "in",
+   "peer": "cbuf_g_0.rdy"
+  },
+  {
+   "bundle": "cbr1",
+   "bits": [
+    9,
+    0
+   ],
+   "flow": "in",
+   "peer": "cbuf_g_1.rdy"
+  },
+  {
+   "bundle": "cbr2",
+   "bits": [
+    9,
+    0
+   ],
+   "flow": "in",
+   "peer": "cbuf_g_2.rdy"
+  },
+  {
+   "bundle": "cbr3",
+   "bits": [
+    9,
+    0
+   ],
+   "flow": "in",
+   "peer": "cbuf_g_3.rdy"
+  },
+  {
+   "bundle": "cbr4",
+   "bits": [
+    9,
+    0
+   ],
+   "flow": "in",
+   "peer": "cbuf_g_4.rdy"
+  },
+  {
+   "bundle": "cbr5",
+   "bits": [
+    9,
+    0
+   ],
+   "flow": "in",
+   "peer": "cbuf_g_5.rdy"
+  },
+  {
+   "bundle": "cbr6",
+   "bits": [
+    9,
+    0
+   ],
+   "flow": "in",
+   "peer": "cbuf_g_6.rdy"
+  },
+  {
+   "bundle": "cbr7",
+   "bits": [
+    9,
+    0
+   ],
+   "flow": "in",
+   "peer": "cbuf_g_7.rdy"
+  },
+  {
+   "bundle": "ib",
+   "bits": [
+    381,
+    0
+   ],
+   "flow": "out",
+   "peer": "sp_vector_memory.ib"
+  },
+  {
+   "bundle": "dc",
+   "bits": [
+    529,
+    56
+   ],
+   "flow": "out",
+   "peer": "d2d_rom.dc"
+  },
+  {
+   "bundle": "dh",
+   "bits": [
+    529,
+    187
+   ],
+   "flow": "in",
+   "peer": "d2d_rom.dh"
+  },
+  {
+   "bundle": "dflt",
+   "bits": [
+    8,
+    0
+   ],
+   "flow": "in",
+   "peer": "d2d_rom.flt"
+  }
+ ],
+ "cell_ports": [
+  {
+   "port": "su",
+   "dir": "out",
+   "width": 476
+  },
+  {
+   "port": "sd",
+   "dir": "in",
+   "width": 133
+  },
+  {
+   "port": "acc",
+   "dir": "in",
+   "width": 24
+  },
+  {
+   "port": "cbc0",
+   "dir": "out",
+   "width": 25
+  },
+  {
+   "port": "cbc1",
+   "dir": "out",
+   "width": 25
+  },
+  {
+   "port": "cbc2",
+   "dir": "out",
+   "width": 25
+  },
+  {
+   "port": "cbc3",
+   "dir": "out",
+   "width": 25
+  },
+  {
+   "port": "cbc4",
+   "dir": "out",
+   "width": 25
+  },
+  {
+   "port": "cbc5",
+   "dir": "out",
+   "width": 25
+  },
+  {
+   "port": "cbc6",
+   "dir": "out",
+   "width": 25
+  },
+  {
+   "port": "cbc7",
+   "dir": "out",
+   "width": 25
+  },
+  {
+   "port": "cbr0",
+   "dir": "in",
+   "width": 10
+  },
+  {
+   "port": "st",
+   "dir": "out",
+   "width": 49
+  },
+  {
+   "port": "xs",
+   "dir": "out",
+   "width": 57
+  },
+  {
+   "port": "xm",
+   "dir": "in",
+   "width": 92
+  },
+  {
+   "port": "vrd",
+   "dir": "out",
+   "width": 9
+  },
+  {
+   "port": "vrq",
+   "dir": "in",
+   "width": 512
+  },
+  {
+   "port": "vwr",
+   "dir": "out",
+   "width": 521
+  },
+  {
+   "port": "dc",
+   "dir": "out",
+   "width": 56
+  },
+  {
+   "port": "dh",
+   "dir": "in",
+   "width": 187
+  },
+  {
+   "port": "kvd",
+   "dir": "out",
+   "width": 201
+  },
+  {
+   "port": "cd_d",
+   "dir": "out",
+   "width": 547
+  },
+  {
+   "port": "cd_cr",
+   "dir": "in",
+   "width": 1
+  },
+  {
+   "port": "cc",
+   "dir": "in",
+   "width": 518
+  },
+  {
+   "port": "rsi",
+   "dir": "in",
+   "width": 1
+  }
+ ]
+}

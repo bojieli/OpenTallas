@@ -31,6 +31,14 @@ module tb_qfd_tt_ctlm_i_psram;
     initial #0.1 rst_n = 0;
     always #0.5 clk = ~clk;
     integer ndt = 0, nceq = 0;
+    // qwen-tp8/seq (2026-10-12): TBG = the die's lane groups for BOTH instances (TP4 6,144 default; TP8 3,072), with the
+    // G-sized ports (NPG = TBG >> 7 scale groups, NPE = NPG / 4 argmax partials, LGT = $clog2(TBG) tile-select bits).
+    // GOLD (independent of the RTL's ot_hdc_dyn_ttiles): every u1 controller load of a DYN_TTILES ME op must set
+    // me_tiles = ME_TILES + floor(pos / (16 * TBG / 2^split)) + 1 (valid splits); MINGC = minimum such checks for a PASS.
+    // U1_TPMUT: ot_qfd_tt_ctlm_i TPMUT negative controls (1 = rounds at G 6144, 2 = controller at G 6144) must FAIL.
+    parameter integer TBG = 6144, U1_TPMUT = 0, MINGC = 0;
+    localparam integer NPG = TBG >> 7, NPE = NPG / 4, LGT = $clog2(TBG);
+    integer ngc = 0, ngbad = 0;
     integer seed = SEED, cyc = 0, bad = 0, nrd = 0, nld = 0, nicut = 0, k, i;
     reg [11:0] pbase = 0;
     reg [15:0] xprog = 0, xrows = 0, lcnt = 0;
@@ -59,8 +67,8 @@ module tb_qfd_tt_ctlm_i_psram;
     reg [15:0] land_cnt = 0;
     reg  x_rdy = 0;
     reg [16-1:0] tr_fault = 0;
-    reg [12*51-1:0] p_am = 0;
-    reg [12-1:0] p_fault = 0;
+    reg [NPE*51-1:0] p_am = 0;
+    reg [NPE-1:0] p_fault = 0;
     reg  fab_fault = 0;
     wire [24-1:0] me_acc_o_0, me_acc_o_1;
     wire  me_idle_o_0, me_idle_o_1;
@@ -84,14 +92,14 @@ module tb_qfd_tt_ctlm_i_psram;
     wire  me_clk_en_0, me_clk_en_1;
     wire  c_fault_0, c_fault_1;
     wire  scale_re_0, scale_re_1;
-    wire [48-1:0] scale_gre_0, scale_gre_1;
-    wire [48*24-1:0] scale_addr_0, scale_addr_1;
+    wire [NPG-1:0] scale_gre_0, scale_gre_1;
+    wire [NPG*24-1:0] scale_addr_0, scale_addr_1;
     wire  x_dv_0, x_dv_1;
     wire [24-1:0] x_dc_0, x_dc_1;
     wire [24-1:0] x_dcs_0, x_dcs_1;
     wire [3:0] x_dsp_0, x_dsp_1;
-    wire [13:0] t_sel_e_0, t_sel_e_1;
-    wire [13:0] t_tv_e_0, t_tv_e_1;
+    wire [LGT:0] t_sel_e_0, t_sel_e_1;
+    wire [LGT:0] t_tv_e_0, t_tv_e_1;
     wire  p_v_e2_0, p_v_e2_1;
     wire [113-1:0] p_f_e2_0, p_f_e2_1;
     wire  ov_0, ov_1;
@@ -139,20 +147,20 @@ module tb_qfd_tt_ctlm_i_psram;
         if ((TXPC != 0) ? me_clk_en_1 : ck1_q) begin pt1[0] <= {p_v_e2_1, p_f_e2_1}; for (ptk = 1; ptk < PL; ptk = ptk + 1) pt1[ptk] <= pt1[ptk-1]; end
         end
     end
-    function automatic [12*51-1:0] pam(input [113:0] tg);
+    function automatic [NPE*51-1:0] pam(input [113:0] tg);
         integer q; reg [31:0] h;
         begin
-            for (q = 0; q < 12; q = q + 1) begin
+            for (q = 0; q < NPE; q = q + 1) begin
                 h = tg[31:0] ^ tg[63:32] ^ tg[95:64] ^ {14'd0, tg[113:96]} ^ (32'h9e3779b9 * (q + 1));
                 pam[q*51 +: 51] = {tg[113] && h[0], h, tg[17:0] ^ 18'(q)};
             end
         end
     endfunction
-    wire [12*51-1:0] pam_tx0 = pam(pt0[PL-1]), pam_tx1 = pam(pt1[PL-1]);
+    wire [NPE*51-1:0] pam_tx0 = pam(pt0[PL-1]), pam_tx1 = pam(pt1[PL-1]);
     // el1011-q-seq AUD 32768 (coordinator 10-11: p_am pin register, argmax loop +1 cycle): the cycle-level golden u0 counts
     // the same +1 (u0 = the base with only the AMI bit); TXN keeps u0 the plain base (transaction-level, timing-free compare)
     localparam integer U0_AUD = ((U1_AUD & 32768) != 0 && TXN == 0) ? 32768 : 0;
-    ot_qfd_tt_ctlm_i #(.PSRAM(0), .PMUT(0), .HQ2(0), .AUD(U0_AUD)) u0 (
+    ot_qfd_tt_ctlm_i #(.PSRAM(0), .PMUT(0), .HQ2(0), .AUD(U0_AUD), .G(TBG)) u0 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .token(token),
@@ -212,7 +220,7 @@ module tb_qfd_tt_ctlm_i_psram;
         .mx_addr(mx_addr_0),
         .mx_mask(mx_mask_0),
         .mx_data(mx_data_0));
-    ot_qfd_tt_ctlm_i #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .MEREG(U1_MEREG), .RRG(U1_RRG), .PCUT(U1_PCUT), .AUD(U1_AUD)) u1 (
+    ot_qfd_tt_ctlm_i #(.PSRAM(U1_PSRAM), .PMUT(PMUT), .HQ2(U1_HQ2), .MEREG(U1_MEREG), .RRG(U1_RRG), .PCUT(U1_PCUT), .AUD(U1_AUD), .G(TBG), .TPMUT(U1_TPMUT)) u1 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
         .token(token),
@@ -358,7 +366,7 @@ module tb_qfd_tt_ctlm_i_psram;
                 // t_tv_e / t_sel_e are per-edge wave valids / selects of the split tree: the edge PATTERN depends on the gaps
                 // between waves (timing), so TXN compares, per level, the select carried by each wave (stream 11 + lv)
                 if (TXT == 0 && |t_tv_e_0) tpush0(7, {t_sel_e_0, t_tv_e_0});
-                if (TXT != 0) for (tlv = 0; tlv < 14; tlv = tlv + 1) if (t_tv_e_0[tlv]) tpush0(11 + tlv, t_sel_e_0[tlv]);
+                if (TXT != 0) for (tlv = 0; tlv <= LGT; tlv = tlv + 1) if (t_tv_e_0[tlv]) tpush0(11 + tlv, t_sel_e_0[tlv]);
                 if (p_v_e2_0) tpush0(8, p_f_e2_0);
                 if (ov_0) tpush0(9, 1'b1);
                 if (DBGMX != 0 && mx_we_0 && tc0[10] == 0) $display("MX0 c=%0d w=%0d a=%h m=%h d=%h", cyc, tw, mx_addr_0, mx_mask_0, mx_data_0 & mxm(mx_mask_0));
@@ -368,7 +376,7 @@ module tb_qfd_tt_ctlm_i_psram;
                 if (scale_re_1 || |scale_gre_1) tpush1(5, {scale_re_1, scale_gre_1, scale_addr_1});
                 if (x_dv_1) tpush1(6, {x_dc_1, x_dcs_1, x_dsp_1});
                 if (TXT == 0 && |t_tv_e_1) tpush1(7, {t_sel_e_1, t_tv_e_1});
-                if (TXT != 0) for (tlv = 0; tlv < 14; tlv = tlv + 1) if (t_tv_e_1[tlv]) tpush1(11 + tlv, t_sel_e_1[tlv]);
+                if (TXT != 0) for (tlv = 0; tlv <= LGT; tlv = tlv + 1) if (t_tv_e_1[tlv]) tpush1(11 + tlv, t_sel_e_1[tlv]);
                 if (p_v_e2_1) tpush1(8, p_f_e2_1);
                 if (ov_1) tpush1(9, 1'b1);
                 if (DBGMX != 0 && mx_we_1 && tc1[10] == 0) $display("MX1 c=%0d w=%0d a=%h m=%h d=%h", cyc, tw, mx_addr_1, mx_mask_1, mx_data_1 & mxm(mx_mask_1));
@@ -478,9 +486,31 @@ module tb_qfd_tt_ctlm_i_psram;
         if (TXN != 0) twin;
         if (TXN != 0 && (tbad != 0 || tt1 * 5 < tt0 * 4)) bad = bad + 1 + tbad;
         if (TXN != 0) $display("TXN events u0=%0d u1=%0d windows=%0d mismatches=%0d", tt0, tt1, tw, tbad);
+        $display("GOLD dyn_ttiles G=%0d checks=%0d bad=%0d (min %0d)", TBG, ngc, ngbad, MINGC);
+        if (ngbad != 0 || ngc < MINGC) bad = bad + 1 + ngbad;
         if (bad == 0 && nrd >= MINRD) $display("PASS tt_ctlm_i_psram cycles=%0d program_reads=%0d loads=%0d icut_stim=%0d dyn_tiles_ld=%0d chase_eq=%0d pf_invalid_diffs=%0d", cyc, nrd, nld, nicut, ndt, nceq, npfm);
         else $display("FAIL tt_ctlm_i_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d", bad, nrd, MINRD, nld);
         $finish;
+    end
+    // qwen-tp8/seq GOLD: DYN_TTILES rounds of TBG position tiles, from the instruction word and pos_r at u1's load edge
+    // (independent arithmetic: a plain divide by 16 * TBG / 2^split), compared with u1's me_tiles one edge later.
+    function automatic integer tz(input integer v); integer n; begin n = 0; while (v > 0 && (v & 1) == 0) begin v = v >> 1; n = n + 1; end tz = n; end endfunction
+    localparam integer GTZ = tz(TBG);
+    reg        gq_v = 0;
+    reg [17:0] gq_e = 0;
+    reg [3:0]  g_sp;
+    always @(posedge clk) begin
+        if (rst_n && gq_v) begin
+            ngc = ngc + 1;
+            if (18'(u1.u_ctrl_me.me_tiles) !== gq_e) begin
+                ngbad = ngbad + 1;
+                if (ngbad <= 5) $display("GOLDBAD cyc=%0d me_tiles=%0d exp=%0d", cyc, u1.u_ctrl_me.me_tiles, gq_e);
+            end
+        end
+        g_sp = u1.u_ctrl_me.ir[u1.u_ctrl_me.O_ME_SPLIT +: 4];
+        gq_v <= rst_n && u1.u_ctrl_me.load && u1.u_ctrl_me.ir[u1.u_ctrl_me.O_ME_D_TILES +: 3] == 3'd6 && g_sp <= GTZ;
+        gq_e <= 18'(u1.u_ctrl_me.ir[u1.u_ctrl_me.O_ME_TILES +: u1.u_ctrl_me.W_ME_TILES])
+              + 18'(u1.u_ctrl_me.pos_r / ((16 * TBG) >> g_sp)) + 18'd1;
     end
     // coverage note: where the controller waits when each token's window closes (cycle 390 of 400)
     always @(posedge clk) if (rst_n && ((i % TW) == TW - 10) && (i < 5 * TW))

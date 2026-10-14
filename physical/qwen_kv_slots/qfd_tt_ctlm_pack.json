@@ -1,0 +1,1063 @@
+{
+ "cell": "qfd_tt_ctlm",
+ "body": "ot_qfd_tt_ctlm_i_fpm_tp8",
+ "body_file": "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm_tp8.sv",
+ "order": "LSB-first",
+ "clock": "ck -> clk",
+ "bundles": [
+  {
+   "bundle": "c0",
+   "width": 343,
+   "flow": "out",
+   "peer": "sp_port_tiles_0.tc",
+   "fields": [
+    {
+     "port": "t_sel_e",
+     "plo": 0,
+     "lsb": 0,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "t_tv_e",
+     "plo": 0,
+     "lsb": 13,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "p_v_e2",
+     "plo": 0,
+     "lsb": 26,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "p_f_e2",
+     "plo": 0,
+     "lsb": 27,
+     "width": 113,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_re",
+     "plo": 0,
+     "lsb": 140,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_gre",
+     "plo": 0,
+     "lsb": 141,
+     "width": 8,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_addr",
+     "plo": 0,
+     "lsb": 149,
+     "width": 192,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 341,
+     "width": 2
+    }
+   ]
+  },
+  {
+   "bundle": "f0",
+   "width": 107,
+   "flow": "in",
+   "peer": "sp_port_tiles_0.tf",
+   "fields": [
+    {
+     "port": "p_am",
+     "plo": 0,
+     "lsb": 0,
+     "width": 102,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "p_fault",
+     "plo": 0,
+     "lsb": 102,
+     "width": 2,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 104,
+     "width": 3
+    }
+   ]
+  },
+  {
+   "bundle": "lc0",
+   "width": 28,
+   "flow": "out",
+   "peer": "sp_band_lanes_0.c",
+   "fields": [
+    {
+     "port": "t_sel_e",
+     "plo": 0,
+     "lsb": 0,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "t_tv_e",
+     "plo": 0,
+     "lsb": 13,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 26,
+     "width": 2
+    }
+   ]
+  },
+  {
+   "bundle": "c1",
+   "width": 343,
+   "flow": "out",
+   "peer": "sp_port_tiles_1.tc",
+   "fields": [
+    {
+     "port": "t_sel_e",
+     "plo": 0,
+     "lsb": 0,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "t_tv_e",
+     "plo": 0,
+     "lsb": 13,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "p_v_e2",
+     "plo": 0,
+     "lsb": 26,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "p_f_e2",
+     "plo": 0,
+     "lsb": 27,
+     "width": 113,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_re",
+     "plo": 0,
+     "lsb": 140,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_gre",
+     "plo": 8,
+     "lsb": 141,
+     "width": 8,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_addr",
+     "plo": 192,
+     "lsb": 149,
+     "width": 192,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 341,
+     "width": 2
+    }
+   ]
+  },
+  {
+   "bundle": "f1",
+   "width": 107,
+   "flow": "in",
+   "peer": "sp_port_tiles_1.tf",
+   "fields": [
+    {
+     "port": "p_am",
+     "plo": 102,
+     "lsb": 0,
+     "width": 102,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "p_fault",
+     "plo": 2,
+     "lsb": 102,
+     "width": 2,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 104,
+     "width": 3
+    }
+   ]
+  },
+  {
+   "bundle": "lc1",
+   "width": 28,
+   "flow": "out",
+   "peer": "sp_band_lanes_1.c",
+   "fields": [
+    {
+     "port": "t_sel_e",
+     "plo": 0,
+     "lsb": 0,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "t_tv_e",
+     "plo": 0,
+     "lsb": 13,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 26,
+     "width": 2
+    }
+   ]
+  },
+  {
+   "bundle": "c2",
+   "width": 343,
+   "flow": "out",
+   "peer": "sp_port_tiles_2.tc",
+   "fields": [
+    {
+     "port": "t_sel_e",
+     "plo": 0,
+     "lsb": 0,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "t_tv_e",
+     "plo": 0,
+     "lsb": 13,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "p_v_e2",
+     "plo": 0,
+     "lsb": 26,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "p_f_e2",
+     "plo": 0,
+     "lsb": 27,
+     "width": 113,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_re",
+     "plo": 0,
+     "lsb": 140,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_gre",
+     "plo": 16,
+     "lsb": 141,
+     "width": 8,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "scale_addr",
+     "plo": 384,
+     "lsb": 149,
+     "width": 192,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 341,
+     "width": 2
+    }
+   ]
+  },
+  {
+   "bundle": "f2",
+   "width": 107,
+   "flow": "in",
+   "peer": "sp_port_tiles_2.tf",
+   "fields": [
+    {
+     "port": "p_am",
+     "plo": 204,
+     "lsb": 0,
+     "width": 102,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "p_fault",
+     "plo": 4,
+     "lsb": 102,
+     "width": 2,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 104,
+     "width": 3
+    }
+   ]
+  },
+  {
+   "bundle": "lc2",
+   "width": 28,
+   "flow": "out",
+   "peer": "sp_band_lanes_2.c",
+   "fields": [
+    {
+     "port": "t_sel_e",
+     "plo": 0,
+     "lsb": 0,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "t_tv_e",
+     "plo": 0,
+     "lsb": 13,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": null,
+     "lsb": 26,
+     "width": 2
+    }
+   ]
+  },
+  {
+   "bundle": "ld",
+   "width": 16,
+   "flow": "in",
+   "peer": "sp_vector_memory.ld",
+   "fields": [
+    {
+     "port": "land_cnt",
+     "plo": 0,
+     "lsb": 0,
+     "width": 16,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "mee",
+   "width": 8,
+   "flow": "out",
+   "peer": "sp_vector_memory.mee",
+   "fields": [
+    {
+     "port": "me_clk_en",
+     "plo": 0,
+     "lsb": 0,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_clk_en",
+     "plo": 0,
+     "lsb": 1,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_clk_en",
+     "plo": 0,
+     "lsb": 2,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_clk_en",
+     "plo": 0,
+     "lsb": 3,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_clk_en",
+     "plo": 0,
+     "lsb": 4,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_clk_en",
+     "plo": 0,
+     "lsb": 5,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_clk_en",
+     "plo": 0,
+     "lsb": 6,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_clk_en",
+     "plo": 0,
+     "lsb": 7,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "meok",
+   "width": 1,
+   "flow": "in",
+   "peer": "sp_vector_memory.mo",
+   "fields": [
+    {
+     "port": "me_mem_ok",
+     "plo": 0,
+     "lsb": 0,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "mx",
+   "width": 553,
+   "flow": "out",
+   "peer": "sp_vector_memory.mx",
+   "fields": [
+    {
+     "port": "mx_data",
+     "plo": 0,
+     "lsb": 0,
+     "width": 512,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "mx_addr",
+     "plo": 0,
+     "lsb": 512,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "mx_mask",
+     "plo": 0,
+     "lsb": 536,
+     "width": 16,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "mx_we",
+     "plo": 0,
+     "lsb": 552,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "pw",
+   "width": 75,
+   "flow": "in",
+   "peer": "d2d_rom.pw",
+   "fields": [
+    {
+     "port": "pw_data",
+     "plo": 0,
+     "lsb": 0,
+     "width": 64,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pw_addr",
+     "plo": 0,
+     "lsb": 64,
+     "width": 10,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pw_v",
+     "plo": 0,
+     "lsb": 74,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "rsi",
+   "width": 1,
+   "flow": "in",
+   "peer": "clk_rx.rso_ctlm",
+   "fields": [
+    {
+     "port": "rst_n",
+     "plo": 0,
+     "lsb": 0,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "sel",
+   "width": 26,
+   "flow": "out",
+   "peer": "tt_up4_0.sel",
+   "fields": [
+    {
+     "port": "t_sel_e",
+     "plo": 0,
+     "lsb": 0,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "t_tv_e",
+     "plo": 0,
+     "lsb": 13,
+     "width": 13,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "st",
+   "width": 49,
+   "flow": "in",
+   "peer": "seq_su.st",
+   "fields": [
+    {
+     "port": "prog_base",
+     "plo": 0,
+     "lsb": 0,
+     "width": 12,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "pos",
+     "plo": 0,
+     "lsb": 12,
+     "width": 18,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "token",
+     "plo": 0,
+     "lsb": 30,
+     "width": 18,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "h_start",
+     "plo": 0,
+     "lsb": 48,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "uf",
+   "width": 1,
+   "flow": "in",
+   "peer": "tt_up4_0.flt",
+   "fields": [
+    {
+     "port": "up_fault",
+     "plo": 0,
+     "lsb": 0,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "xd",
+   "width": 53,
+   "flow": "out",
+   "peer": "sp_vector_memory.xd",
+   "fields": [
+    {
+     "port": "x_dc",
+     "plo": 0,
+     "lsb": 0,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "x_dcs",
+     "plo": 0,
+     "lsb": 24,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "x_dsp",
+     "plo": 0,
+     "lsb": 48,
+     "width": 4,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "x_dv",
+     "plo": 0,
+     "lsb": 52,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "xr",
+   "width": 1,
+   "flow": "in",
+   "peer": "sp_vector_memory.xr",
+   "fields": [
+    {
+     "port": "x_rdy",
+     "plo": 0,
+     "lsb": 0,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "xm",
+   "width": 92,
+   "flow": "out",
+   "peer": "seq_su.xm",
+   "fields": [
+    {
+     "port": "m_fval_o",
+     "plo": 0,
+     "lsb": 0,
+     "width": 32,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "m_fidx_o",
+     "plo": 0,
+     "lsb": 32,
+     "width": 18,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "m_fin_o",
+     "plo": 0,
+     "lsb": 50,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_prog_o",
+     "plo": 0,
+     "lsb": 51,
+     "width": 16,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_idle_o",
+     "plo": 0,
+     "lsb": 67,
+     "width": 1,
+     "dir": "out",
+     "against_flow": false
+    },
+    {
+     "port": "me_acc_o",
+     "plo": 0,
+     "lsb": 68,
+     "width": 24,
+     "dir": "out",
+     "against_flow": false
+    }
+   ]
+  },
+  {
+   "bundle": "xs",
+   "width": 57,
+   "flow": "in",
+   "peer": "seq_su.xs",
+   "fields": [
+    {
+     "port": "x_orows",
+     "plo": 0,
+     "lsb": 0,
+     "width": 16,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "x_oprog",
+     "plo": 0,
+     "lsb": 16,
+     "width": 16,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "x_oidle",
+     "plo": 0,
+     "lsb": 32,
+     "width": 1,
+     "dir": "in",
+     "against_flow": false
+    },
+    {
+     "port": "x_oacc",
+     "plo": 0,
+     "lsb": 33,
+     "width": 24,
+     "dir": "in",
+     "against_flow": false
+    }
+   ]
+  }
+ ],
+ "unbound": [
+  {
+   "bundle": "c0",
+   "bits": [
+    342,
+    341
+   ],
+   "flow": "out",
+   "peer": "sp_port_tiles_0.tc"
+  },
+  {
+   "bundle": "f0",
+   "bits": [
+    106,
+    104
+   ],
+   "flow": "in",
+   "peer": "sp_port_tiles_0.tf"
+  },
+  {
+   "bundle": "lc0",
+   "bits": [
+    27,
+    26
+   ],
+   "flow": "out",
+   "peer": "sp_band_lanes_0.c"
+  },
+  {
+   "bundle": "c1",
+   "bits": [
+    342,
+    341
+   ],
+   "flow": "out",
+   "peer": "sp_port_tiles_1.tc"
+  },
+  {
+   "bundle": "f1",
+   "bits": [
+    106,
+    104
+   ],
+   "flow": "in",
+   "peer": "sp_port_tiles_1.tf"
+  },
+  {
+   "bundle": "lc1",
+   "bits": [
+    27,
+    26
+   ],
+   "flow": "out",
+   "peer": "sp_band_lanes_1.c"
+  },
+  {
+   "bundle": "c2",
+   "bits": [
+    342,
+    341
+   ],
+   "flow": "out",
+   "peer": "sp_port_tiles_2.tc"
+  },
+  {
+   "bundle": "f2",
+   "bits": [
+    106,
+    104
+   ],
+   "flow": "in",
+   "peer": "sp_port_tiles_2.tf"
+  },
+  {
+   "bundle": "lc2",
+   "bits": [
+    27,
+    26
+   ],
+   "flow": "out",
+   "peer": "sp_band_lanes_2.c"
+  }
+ ],
+ "extra_pins": {
+  "kv_ok": "kok",
+  "kv_write_drained": "kwd",
+  "fab_fault": "fab",
+  "c_fault": "cf",
+  "ov": "ovf"
+ },
+ "tied": {
+  "tr_fault": [
+   "16'd0",
+   "retired: the band faults reach the control element through the upper tile (up_fault); as ot_qfd_spine_band"
+  ]
+ },
+ "not_pins": [
+  "kvd_v",
+  "kvd_wbase",
+  "kvd_ts",
+  "kvd_ks",
+  "kvd_js",
+  "kvd_wcs",
+  "kvd_split",
+  "kvd_jsh",
+  "kvd_tiles",
+  "kvd_k",
+  "kvd_nout",
+  "kvd_kindk",
+  "kvd_pos"
+ ],
+ "notes": "Body ports are pin flops in the body (AUD: die-input pin flops, kept output stations): no flop added.\nt_sel_e / t_tv_e / p_v_e2 / p_f_e2 / scale_re leave on every band bundle (c0..2, lc0..2, sel): copies of one\nbody output register set.  kvd_* (the ME-side KV descriptor) are not pins: the die takes the descriptor from\nseq_su (o4_kvd).  tr_fault is tied 0 (retired input).  kok / kwd / fab / cf / ovf: body ports with no bundle.",
+ "cell_ports": [
+  {
+   "port": "c0",
+   "dir": "out",
+   "width": 341
+  },
+  {
+   "port": "f0",
+   "dir": "in",
+   "width": 104
+  },
+  {
+   "port": "lc0",
+   "dir": "out",
+   "width": 26
+  },
+  {
+   "port": "c1",
+   "dir": "out",
+   "width": 341
+  },
+  {
+   "port": "f1",
+   "dir": "in",
+   "width": 104
+  },
+  {
+   "port": "lc1",
+   "dir": "out",
+   "width": 26
+  },
+  {
+   "port": "c2",
+   "dir": "out",
+   "width": 341
+  },
+  {
+   "port": "f2",
+   "dir": "in",
+   "width": 104
+  },
+  {
+   "port": "lc2",
+   "dir": "out",
+   "width": 26
+  },
+  {
+   "port": "ld",
+   "dir": "in",
+   "width": 16
+  },
+  {
+   "port": "mee",
+   "dir": "out",
+   "width": 8
+  },
+  {
+   "port": "meok",
+   "dir": "in",
+   "width": 1
+  },
+  {
+   "port": "mx",
+   "dir": "out",
+   "width": 553
+  },
+  {
+   "port": "pw",
+   "dir": "in",
+   "width": 75
+  },
+  {
+   "port": "rsi",
+   "dir": "in",
+   "width": 1
+  },
+  {
+   "port": "sel",
+   "dir": "out",
+   "width": 26
+  },
+  {
+   "port": "st",
+   "dir": "in",
+   "width": 49
+  },
+  {
+   "port": "uf",
+   "dir": "in",
+   "width": 1
+  },
+  {
+   "port": "xd",
+   "dir": "out",
+   "width": 53
+  },
+  {
+   "port": "xr",
+   "dir": "in",
+   "width": 1
+  },
+  {
+   "port": "xm",
+   "dir": "out",
+   "width": 92
+  },
+  {
+   "port": "xs",
+   "dir": "in",
+   "width": 57
+  },
+  {
+   "port": "kok",
+   "dir": "in",
+   "width": 1
+  },
+  {
+   "port": "kwd",
+   "dir": "in",
+   "width": 1
+  },
+  {
+   "port": "fab",
+   "dir": "in",
+   "width": 1
+  },
+  {
+   "port": "cf",
+   "dir": "out",
+   "width": 1
+  },
+  {
+   "port": "ovf",
+   "dir": "out",
+   "width": 1
+  }
+ ]
+}
