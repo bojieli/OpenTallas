@@ -124,5 +124,359 @@
       "not_fresh_gate": true,
       "timing_adoption": false
     }
+  },
+  "oldsource_plus_hook_clock_diagnostic": {
+    "rw": {
+      "tt": {
+        "root_sinks": 13077,
+        "all_min_ps": 221.296967,
+        "all_max_ps": 294.490143,
+        "spread_ps": 73.193176,
+        "macro_max_slew_ps": 17.527992,
+        "macro_pins": [
+          {
+            "pin": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 256.040375,
+            "slew_ps": 17.527992,
+            "net": "s81_macro_clock_leaf_0_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[0].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 229.008789,
+            "slew_ps": 15.28015,
+            "net": "s81_macro_clock_leaf_0_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 250.359573,
+            "slew_ps": 16.638926,
+            "net": "s81_macro_clock_leaf_1_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 223.316223,
+            "slew_ps": 14.862104,
+            "net": "s81_macro_clock_leaf_1_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 243.339905,
+            "slew_ps": 16.408262,
+            "net": "s81_macro_clock_leaf_2_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 221.296967,
+            "slew_ps": 17.283592,
+            "net": "s81_macro_clock_leaf_2_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 246.712875,
+            "slew_ps": 17.153704,
+            "net": "s81_macro_clock_leaf_3_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 224.414673,
+            "slew_ps": 15.429028,
+            "net": "s81_macro_clock_leaf_3_qm_clock"
+          }
+        ],
+        "not_fresh_gate": true
+      },
+      "ss": {
+        "root_sinks": 13077,
+        "all_min_ps": 290.613678,
+        "all_max_ps": 373.099579,
+        "spread_ps": 82.48590100000001,
+        "macro_max_slew_ps": 22.634867,
+        "macro_pins": [
+          {
+            "pin": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 327.355408,
+            "slew_ps": 22.634867,
+            "net": "s81_macro_clock_leaf_0_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[0].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 298.265991,
+            "slew_ps": 20.025503,
+            "net": "s81_macro_clock_leaf_0_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 321.24295,
+            "slew_ps": 21.697132,
+            "net": "s81_macro_clock_leaf_1_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 292.300507,
+            "slew_ps": 19.600519,
+            "net": "s81_macro_clock_leaf_1_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 313.852173,
+            "slew_ps": 21.337452,
+            "net": "s81_macro_clock_leaf_2_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 290.613678,
+            "slew_ps": 21.700989,
+            "net": "s81_macro_clock_leaf_2_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 317.222504,
+            "slew_ps": 22.046144,
+            "net": "s81_macro_clock_leaf_3_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 293.399658,
+            "slew_ps": 20.086266,
+            "net": "s81_macro_clock_leaf_3_qm_clock"
+          }
+        ],
+        "not_fresh_gate": true
+      },
+      "ff": {
+        "root_sinks": 13077,
+        "all_min_ps": 179.606476,
+        "all_max_ps": 246.708069,
+        "spread_ps": 67.10159300000001,
+        "macro_max_slew_ps": 15.87596,
+        "macro_pins": [
+          {
+            "pin": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 211.80513,
+            "slew_ps": 15.25447,
+            "net": "s81_macro_clock_leaf_0_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[0].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 187.009735,
+            "slew_ps": 13.416524,
+            "net": "s81_macro_clock_leaf_0_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 206.497375,
+            "slew_ps": 14.329659,
+            "net": "s81_macro_clock_leaf_1_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 181.576004,
+            "slew_ps": 13.06389,
+            "net": "s81_macro_clock_leaf_1_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 200.06842,
+            "slew_ps": 14.288879,
+            "net": "s81_macro_clock_leaf_2_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 179.606476,
+            "slew_ps": 15.87596,
+            "net": "s81_macro_clock_leaf_2_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 203.252426,
+            "slew_ps": 15.088236,
+            "net": "s81_macro_clock_leaf_3_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 182.756516,
+            "slew_ps": 13.706593,
+            "net": "s81_macro_clock_leaf_3_qm_clock"
+          }
+        ],
+        "not_fresh_gate": true
+      }
+    },
+    "re": {
+      "tt": {
+        "root_sinks": 13077,
+        "all_min_ps": 235.256348,
+        "all_max_ps": 297.279633,
+        "spread_ps": 62.02328499999999,
+        "macro_max_slew_ps": 17.704258,
+        "macro_pins": [
+          {
+            "pin": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 274.394745,
+            "slew_ps": 17.627874,
+            "net": "s81_macro_clock_leaf_0_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[0].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 242.432999,
+            "slew_ps": 14.636447,
+            "net": "s81_macro_clock_leaf_0_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 269.238983,
+            "slew_ps": 17.297739,
+            "net": "s81_macro_clock_leaf_1_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 239.591064,
+            "slew_ps": 14.910145,
+            "net": "s81_macro_clock_leaf_1_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 261.000458,
+            "slew_ps": 16.150513,
+            "net": "s81_macro_clock_leaf_2_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 238.296387,
+            "slew_ps": 17.704258,
+            "net": "s81_macro_clock_leaf_2_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 264.464172,
+            "slew_ps": 16.592522,
+            "net": "s81_macro_clock_leaf_3_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 241.495636,
+            "slew_ps": 15.043924,
+            "net": "s81_macro_clock_leaf_3_qm_clock"
+          }
+        ],
+        "not_fresh_gate": true
+      },
+      "ss": {
+        "root_sinks": 13077,
+        "all_min_ps": 310.348511,
+        "all_max_ps": 374.005493,
+        "spread_ps": 63.65698200000003,
+        "macro_max_slew_ps": 22.752729,
+        "macro_pins": [
+          {
+            "pin": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 354.660156,
+            "slew_ps": 22.752729,
+            "net": "s81_macro_clock_leaf_0_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[0].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 319.858887,
+            "slew_ps": 19.43045,
+            "net": "s81_macro_clock_leaf_0_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 349.092224,
+            "slew_ps": 22.325212,
+            "net": "s81_macro_clock_leaf_1_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 317.027039,
+            "slew_ps": 19.573925,
+            "net": "s81_macro_clock_leaf_1_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 340.365417,
+            "slew_ps": 21.120729,
+            "net": "s81_macro_clock_leaf_2_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 316.156891,
+            "slew_ps": 21.993122,
+            "net": "s81_macro_clock_leaf_2_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 343.888062,
+            "slew_ps": 21.598684,
+            "net": "s81_macro_clock_leaf_3_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 318.894318,
+            "slew_ps": 19.725376,
+            "net": "s81_macro_clock_leaf_3_qm_clock"
+          }
+        ],
+        "not_fresh_gate": true
+      },
+      "ff": {
+        "root_sinks": 13077,
+        "all_min_ps": 190.128082,
+        "all_max_ps": 249.994476,
+        "spread_ps": 59.866393999999985,
+        "macro_max_slew_ps": 16.328453,
+        "macro_pins": [
+          {
+            "pin": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 225.360947,
+            "slew_ps": 15.345675,
+            "net": "s81_macro_clock_leaf_0_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[0].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 196.206604,
+            "slew_ps": 12.850498,
+            "net": "s81_macro_clock_leaf_0_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 220.583038,
+            "slew_ps": 15.103158,
+            "net": "s81_macro_clock_leaf_1_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[1].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 193.359863,
+            "slew_ps": 13.141855,
+            "net": "s81_macro_clock_leaf_1_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 212.957993,
+            "slew_ps": 13.982448,
+            "net": "s81_macro_clock_leaf_2_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[2].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 192.122818,
+            "slew_ps": 16.328453,
+            "net": "s81_macro_clock_leaf_2_qm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+            "arrival_ps": 216.214951,
+            "slew_ps": 14.429895,
+            "net": "s81_macro_clock_leaf_3_bm_clock"
+          },
+          {
+            "pin": "u_l.g_r[3].u_root.u_qm.g_q.u_m/clk",
+            "arrival_ps": 195.31163,
+            "slew_ps": 13.284494,
+            "net": "s81_macro_clock_leaf_3_qm_clock"
+          }
+        ],
+        "not_fresh_gate": true
+      }
+    }
   }
 }
