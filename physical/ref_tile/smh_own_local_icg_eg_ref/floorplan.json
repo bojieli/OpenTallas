@@ -382,7 +382,8 @@
    "cut_8844",
    "cut_8845",
    "cut_8846",
-   "cut_8847"
+   "cut_8847",
+   "local_cgi"
   ],
   "E": [
    "cut_5",
@@ -693,6 +694,7 @@
  ],
  "referenced": [
   "results/arch/hbm_native_1013/sm_local_icg_1014/eg_leaf.sv",
+  "results/arch/hbm_native_1013/sm_local_icg_1014/local_clock_preserve.tcl",
   "physical/ref_tile/smh_own_local_icg_eg_ref/kit.env",
   "physical/ref_tile/smh_own_local_icg_eg_ref/clock.sdc",
   "physical/ref_tile/smh_own_local_icg_eg_ref/signoff.sdc",
@@ -721,6 +723,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/smh_own_local_icg_eg_ref/pre_gpl.tcl",
-  "physical/ref_tile/smh_own_local_icg_eg_ref/pre_dpl.tcl"
+  "physical/ref_tile/smh_own_local_icg_eg_ref/pre_dpl.tcl",
+  "results/arch/hbm_native_1013/sm_local_icg_1014/local_clock_preserve.tcl"
  ]
 }

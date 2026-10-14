@@ -23,12 +23,22 @@ for v in ('eg','wg'):
     launchname,launch=flops[0]
     bits=[b for c in leaf['cells'].values() for bs in c['connections'].values() for b in bs if isinstance(b,int)]
     nxt=max(bits)+1
+    gate_d=launch['connections']['D'][0]
+    nand_name,nand=next((n,c) for n,c in leaf['cells'].items() if c['connections'].get('Y')==[gate_d])
+    assert nand['type'].startswith('NAND5')
+    cgi_bit=leaf['ports']['cut_4']['bits'][0]
+    nor_name,nor=next((n,c) for n,c in leaf['cells'].items() if c['type'].startswith('NOR4') and cgi_bit in c['connections'].get('D',[]) and c['connections']['Y'] in nand['connections'].values())
+    local_cgi=nxt;local_nor=nxt+1;local_next=nxt+2;nxt+=3
+    leaf['ports']['local_cgi']={'direction':'input','bits':[local_cgi]}
+    own['port_directions']['local_cgi']='input';own['connections']['local_cgi']=own['connections']['cut_4'][:]
+    local_nor_cell=copy.deepcopy(nor);local_nor_cell['connections']['D']=[local_cgi];local_nor_cell['connections']['Y']=[local_nor];leaf['cells']['u_local_enable_nor']=local_nor_cell
+    local_nand_cell=copy.deepcopy(nand);local_nand_cell['connections']['E']=[local_nor];local_nand_cell['connections']['Y']=[local_next];leaf['cells']['u_local_enable_nand']=local_nand_cell
     dedicated_qn=nxt; dedicated_ena=nxt+1;nxt+=2
     commit=nxt;nxt+=1
     leaf['ports']['local_enable_commit']={'direction':'input','bits':[commit]}
     leaf['netnames']['local_enable_commit']={'hide_name':0,'bits':[commit],'attributes':{}}
     own['port_directions']['local_enable_commit']='input';own['connections']['local_enable_commit']=own['connections']['cut_2'][:]
-    mirror=copy.deepcopy(launch);mirror['connections']['CLK']=[commit];mirror['connections']['QN']=[dedicated_qn];mirror['attributes']={'keep':'1','dont_touch':'1'}
+    mirror=copy.deepcopy(launch);mirror['connections']['CLK']=[commit];mirror['connections']['D']=[local_next];mirror['connections']['QN']=[dedicated_qn];mirror['attributes']={'keep':'1','dont_touch':'1'}
     leaf['cells']['u_enable_mirror']=mirror
     direct=copy.deepcopy(inv);direct['type']='INVx4_ASAP7_75t_R';direct['connections']={'A':[dedicated_qn],'Y':[dedicated_ena]};direct['attributes']={'keep':'1','dont_touch':'1'}
     leaf['cells']['u_enable_local_inv']=direct
@@ -72,17 +82,20 @@ for v in ('eg','wg'):
     spec=json.loads((SRC/f'{v}_physical_spec.json').read_text())
     spec.update(name=f'smh_own_local_icg_{v}_ref',top=master,sources=[str((OUT/f'{v}_leaf.sv').relative_to(ROOT))],std_area_um2=spec['std_area_um2']+8.0)
     spec['outline']={'w':84.24,'h':73.44}
+    spec['pins']['W']+=['local_cgi']
     spec['pins']['N']+=['local_enable_commit','local_enable_commit_aux']
+    spec['post_synth_tcl']=str((OUT/'local_clock_preserve.tcl').relative_to(ROOT))
+    spec['pre_cts_extra']=[str((OUT/'local_clock_preserve.tcl').relative_to(ROOT))]
     spec['pins']['N']+=sum(([p['raw'],p['gclk']] for p in clockports),[])
     spec['sdc_extra']=[str((OUT/'local_generated_clocks.sdc').relative_to(ROOT))]
-    spec['structural_change']='Six retained BUFx6f stages on auxiliary mirror clock branch; real generated GCLK exported at clock ports. Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.'
-    spec['slot_change_request']={'kind':'local_clock_entry','parent':'native SM compact tile','outline_um':[84.24,73.44],'additional_clock_pins':26,'enable_commit_clock':{'logical_source':'original raw bit2','delivered_phase':'phi-Rown, same tap as own raw input','critical_group_indices':[4,9,10,11],'critical_insertion_max_ps':20,'auxiliary_insertion_min_ps':55,'auxiliary_group_indices':[0,1,2,3,5,6,7,8],'auxiliary_insertion_target_ps':80,'required_gate':'Measured mirror launch CLK arrival and D setup/hold from original own state + all original cgi/reset/pause source pins; no zero-wire or zero-slew assumption'},'status':'PENDING_REAL_MULTICLOCK_CTS_GATING_PULSE_AND_DIE_REACH','source':str((OUT/'manifest.json').relative_to(ROOT))}
+    spec['structural_change']='Duplicate original NOR4/NAND5 enable decode on dedicated local_cgi normal data pin (same original bit4 parent source), isolating mirror path from original late-register input hold buffers while retaining all original cut4 constraints. Six retained BUFx6f stages on auxiliary mirror clock branch; real generated GCLK exported at clock ports. Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.'
+    spec['slot_change_request']={'kind':'local_clock_entry','parent':'native SM compact tile','outline_um':[84.24,73.44],'additional_clock_pins':26,'additional_data_pin':{'local_cgi':'Original bit4 same parent source; separate normal IO constraints, registered ENA capture after duplicated original two-gate decode; original cut4 ordinary-data hold branch retained'},'enable_commit_clock':{'logical_source':'original raw bit2','delivered_phase':'phi-Rown, same tap as own raw input','critical_group_indices':[4,9,10,11],'critical_insertion_max_ps':20,'auxiliary_insertion_min_ps':55,'auxiliary_group_indices':[0,1,2,3,5,6,7,8],'auxiliary_insertion_target_ps':80,'required_gate':'Measured mirror launch CLK arrival and D setup/hold from original own state + all original cgi/reset/pause source pins; no zero-wire or zero-slew assumption'},'status':'PENDING_REAL_MULTICLOCK_CTS_GATING_PULSE_AND_DIE_REACH','source':str((OUT/'manifest.json').relative_to(ROOT))}
     spec['job'].update(branch='codex/sm-gate-structural-1014',owner='Codex:sm_gate_structural',tag='localicg1',purpose=spec['structural_change'],extra_paths=[str(OUT.relative_to(ROOT))])
     for b in spec['job']['benches']:b['cmd']=b['cmd'].replace('sm_own_logic/','sm_local_icg_1014/')
     spec['job']['benches'] += [{'name':'local_icg_functional_phase_ss','cmd':f'bash {OUT.relative_to(ROOT)}/phase_run.sh split ss','expect':'pass','pass_regex':'LOCAL_ICG_PHASE_ss checked=4096 enable_checks=4096 pulses=[1-9]','threads':4,'peak_ram_gb':4},{'name':'local_icg_mirror_mutant','cmd':f'bash {OUT.relative_to(ROOT)}/phase_run.sh mut ss','expect':'fail','fail_regex':'enable mirror state differs from original8870','threads':4,'peak_ram_gb':4}]
     spec['reroute_reason']={'kind':'rtl_change'}
     (OUT/f'{v}_physical_spec.json').write_text(json.dumps(spec,indent=2)+'\n')
-    records.append({'variant':v,'master':master,'original_enable_bit':8870,'original_gated_bit':7768,'launch_cell':launchname,'launch_D_bits':launch['connections']['D'],'raw_clock_bits':launch['connections']['CLK'],'mirror_type':mirror['type'],'mirror_count':2,'inverter_type':'INVx4_ASAP7_75t_R','critical_indices':[4,9,10,11],'local_gate_count':12,'ports':clockports,'source_split_sha256':hashlib.sha256((SRC/f'{v}_split.json').read_bytes()).hexdigest(),'logical_phase_and_latency':'UNCHANGED; all clocks common in exact functional bench; physical phi-R checks required separately'})
+    records.append({'variant':v,'master':master,'original_enable_bit':8870,'original_gated_bit':7768,'launch_cell':launchname,'launch_D_bits':launch['connections']['D'],'raw_clock_bits':launch['connections']['CLK'],'mirror_type':mirror['type'],'mirror_count':2,'original_decode_cells':[nor_name,nand_name],'local_decode_cgi_parent_bit':own['connections']['local_cgi'],'local_decode_D_bits':[local_next],'inverter_type':'INVx4_ASAP7_75t_R','critical_indices':[4,9,10,11],'local_gate_count':12,'ports':clockports,'source_split_sha256':hashlib.sha256((SRC/f'{v}_split.json').read_bytes()).hexdigest(),'logical_phase_and_latency':'UNCHANGED; all clocks common in exact functional bench; physical phi-R checks required separately'})
 plan=json.loads((OUT/'clock_baseline/plan.json').read_text())
 sdc=(SRC/'own_generated_clock.sdc').read_text()
 sdc+='set local_icg_corner tt\nforeach local_lib [get_libs *] {set local_ln [get_property $local_lib name]; if {[regexp {(^|_)SS($|_)} $local_ln]} {set local_icg_corner ss}; if {[regexp {(^|_)FF($|_)} $local_ln]} {set local_icg_corner ff}}\n'
