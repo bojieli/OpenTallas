@@ -21,7 +21,11 @@ module dsfd_sp_hc #(
     // 2: compose upper/stations/tail for transaction-level exactness (never harden this wrapper).
     parameter integer TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0,
     parameter integer RLY = HALF ? 2 : 1,                // sub-tile relays a hop
-    parameter integer PIPE = 1, PIPE_PD = 40             // HIER: POST issue-order done (ot_s81_hc_cseq PIPE / PD)
+    parameter integer PIPE = 1, PIPE_PD = 40,            // HIER: POST issue-order done (ot_s81_hc_cseq PIPE / PD)
+    // NORM tree variant (el1014-s81-norm-tree; hier/ot_s81_hc_ntree.sv): 0 = the closed serial-chain slab (default,
+    // unchanged); 1 = half-octets ot_s81_hc_cth_nt + the bottom region ot_s81_hc_cnbot (HIER, HALF, TAIL_SPLIT 0 / 2).
+    // NT_K: the bottom collectors' fire offset after the vector beat leaves the far tile (cycles).
+    parameter integer NTREE = 0, NT_K = 80
 ) (
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
     input  wire [TRW-1:0] f_tr0, f_tr1, f_tr2,
@@ -88,6 +92,8 @@ module dsfd_sp_hc #(
 `ifndef SYNTHESIS
     initial if (TAIL_SPLIT && (!HIER || !HALF || NCOL != 3 || HEAD_ROWS < 1))
         $fatal(1,"HC tail split requires hierarchical half-octets, three columns and positive head rows");
+    initial if (NTREE && (!HIER || !HALF || NCOL != 3 || TAIL_SPLIT == 1))
+        $fatal(1,"HC NTREE requires hierarchical half-octets, three columns and TAIL_SPLIT 0 or 2 (the die seam has no lane ports yet)");
 `endif
     wire e_v, e_r;
     wire [83:0] e_d;
@@ -193,8 +199,16 @@ module dsfd_sp_hc #(
             .ch_fd(ch_fd[CC * FDW +: FDW]), .ch_rv(ch_rv[CC * RVW +: RVW]), .ch_rd(ch_rd[CC * RDW +: RDW]));
     end
     end
+    localparam integer NTW = 2 * 137 + 1, O_NVX = 5 + S_RD * 16 + 20 + 6;
     if (TAIL_SPLIT == 0) begin : g_unsplit
     assign {t_tf2,t_tf1,t_tf0} = 0;
+    wire [3*FVW-1:0]   nt_fv;
+    wire [3*8-1:0]     nt_nv;
+    wire [O_D-1:0]     nt_fc0;
+    wire [S_RD*32-1:0] nt_eps0;
+    wire [3*NTW-1:0]   nt_dl;
+    wire [3*33-1:0]    nt_ul;
+    wire               nt_flt;
     for (c = 0; c < NCOL; c = c + 1) begin : g_c
         localparam integer LC = ((c == 0) ? L0 : (c == 1) ? L1 : L2) * (HALF ? 2 : 1);   // sub-tiles of the chain
         localparam integer BC = ((c == 0) ? B0 : (c == 1) ? B1 : B2) * (HALF ? 2 : 1);
@@ -205,9 +219,36 @@ module dsfd_sp_hc #(
             wire [RDW-1:0] rdo [0:LC-1];
             wire           rso [0:LC-1];
             wire [127:0]   cyo [0:LC-1];
+            wire [NTW-1:0] dlo [0:LC-1];
+            wire [32:0]    ulo [0:LC-1];
+            if (NTREE) begin : g_ntend
+                assign nt_fv[c * FVW +: FVW] = fvo[LC - 1];
+                assign nt_nv[c * 8 +: 8] = fdo[LC - 1][O_NVX +: 8];
+                assign nt_dl[c * NTW +: NTW] = dlo[LC - 1];
+                if (c == 0) begin : g_c0
+                    assign nt_fc0 = fdo[LC - 1][O_D - 1:0];
+                    for (genvar s_ = 0; s_ < S_RD; s_ = s_ + 1) begin : g_e
+                        assign nt_eps0[32 * s_ +: 32] = fdo[LC - 1][O_D + 512 * s_ + 256 +: 32];
+                    end
+                end
+            end
             for (p = 0; p < LC; p = p + 1) begin : g_p
                 localparam [7:0] TID = BC + p;
-                if (HALF) begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
+                if (HALF && NTREE) begin : g_hn   // NORM tree variant (ot_s81_hc_ntree.sv)
+                ot_s81_hc_cth_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
+                                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE)) u_t (
+                    .clk(sk), .rst_in(p == 0 ? ch_rst[c] : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
+                    .last(p == LC - 1),
+                    .fv_in(p == 0 ? ch_fv[c * FVW +: FVW] : fvo[p > 0 ? p - 1 : 0]),
+                    .fd_in(p == 0 ? ch_fd[c * FDW +: FDW] : fdo[p > 0 ? p - 1 : 0]),
+                    .fv_out(fvo[p]), .fd_out(fdo[p]),
+                    .rv_in(p == LC - 1 ? ((c == 0) ? {nt_flt, {(S_RT + 2){1'b0}}} : {RVW{1'b0}}) : rvo[p < LC - 1 ? p + 1 : 0]),
+                    .rd_in(p == LC - 1 ? {RDW{1'b0}} : rdo[p < LC - 1 ? p + 1 : 0]),
+                    .rv_out(rvo[p]), .rd_out(rdo[p]),
+                    .cy_out(cyo[p]), .cy_in(p == 0 ? 128'd0 : cyo[p > 0 ? p - 1 : 0]),
+                    .dl_in(p == 0 ? {NTW{1'b0}} : dlo[p > 0 ? p - 1 : 0]), .dl_out(dlo[p]),
+                    .ul_in(p == LC - 1 ? nt_ul[c * 33 +: 33] : ulo[p < LC - 1 ? p + 1 : 0]), .ul_out(ulo[p]));
+                end else if (HALF) begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
                 ot_s81_hc_cth #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
                                 .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE)) u_t (
                     .clk(sk), .rst_in(p == 0 ? ch_rst[c] : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
@@ -240,22 +281,41 @@ module dsfd_sp_hc #(
             assign ch_rd[c * RDW +: RDW] = 0;
         end
     end
+    if (NTREE) begin : g_ntb
+        ot_s81_hc_cnbot #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .NT_K(NT_K)) u_bot (
+            .sk(sk), .srs(srs), .f_fv(nt_fv), .f_nv(nt_nv), .f_fc0(nt_fc0), .f_eps0(nt_eps0), .dl(nt_dl), .ul(nt_ul),
+            .flt(nt_flt));
+    end
     end else begin : g_split
+        wire [3*NTW-1:0] hdl;                            // NORM tree lanes at the seam (NTREE only)
+        wire [3*33-1:0]  hul;
         wire [NCOL*TFW-1:0] sf;
         wire [NCOL*TRW-1:0] sr;
         assign {t_tf2,t_tf1,t_tf0} = sf;
         if (TAIL_SPLIT == 1) begin : g_external
             assign sr = {f_tr2,f_tr1,f_tr0};
+            assign hul = 0;
         end else begin : g_composed
             wire [NCOL*TFW-1:0] tf;
             wire [NCOL*TRW-1:0] tr;
+            wire [3*NTW-1:0] tdl;
+            wire [3*33-1:0]  tul;
             dsfd_sp_hc_t #(.NG(NG),.D(D),.S_RD(S_RD),.S_RT(S_RT),.WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),
-                          .NCOL(NCOL),.GS(GS),.RLY(RLY),.HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE)) u_tail (
+                          .NCOL(NCOL),.GS(GS),.RLY(RLY),.HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE),
+                          .NTREE(NTREE),.NT_K(NT_K)) u_tail (
                 .ck(sk),.f_sf0(tf[0+:TFW]),.f_sf1(tf[TFW+:TFW]),.f_sf2(tf[2*TFW+:TFW]),
-                .t_sr0(tr[0+:TRW]),.t_sr1(tr[TRW+:TRW]),.t_sr2(tr[2*TRW+:TRW]));
+                .t_sr0(tr[0+:TRW]),.t_sr1(tr[TRW+:TRW]),.t_sr2(tr[2*TRW+:TRW]),
+                .srs(srs),.f_dl(tdl),.t_ul(tul));
             // Models the die's existing seven common-clock stations; reset is an in-band forward bit.
             ot_hdc_delay #(.W(NCOL*TFW),.D(7),.RESET(0)) u_fwd (.clk(sk),.rst_n(srs),.d(sf),.q(tf));
             ot_hdc_delay #(.W(NCOL*TRW),.D(7),.RESET(0)) u_ret (.clk(sk),.rst_n(srs),.d(tr),.q(sr));
+            if (NTREE) begin : g_ntst
+                // the NORM tree lanes take the same seven stations (registered, reset: they carry valids)
+                ot_hdc_delay #(.W(3*NTW),.D(7),.RESET(1)) u_dl (.clk(sk),.rst_n(srs),.d(hdl),.q(tdl));
+                ot_hdc_delay #(.W(3*33),.D(7),.RESET(1)) u_ul (.clk(sk),.rst_n(srs),.d(tul),.q(hul));
+            end else begin : g_nnt
+                assign tdl = 0; assign hul = 0;
+            end
         end
         for (c=0;c<NCOL;c=c+1) begin : g_c
             localparam integer LC=((c==0)?L0:(c==1)?L1:L2)*2;
@@ -263,12 +323,13 @@ module dsfd_sp_hc #(
             localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
             wire [127:0] cy;
             ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
-                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(0),.COUNT(NH)) u_head (
+                .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(0),.COUNT(NH),.NTREE(NTREE)) u_head (
                 .sk(sk),.rst_in(ch_rst[c]),.fv_in(ch_fv[c*FVW+:FVW]),.fd_in(ch_fd[c*FDW+:FDW]),.cy_in(128'd0),
                 .rv_in(sr[c*TRW+RDW+:RVW]),.rd_in(sr[c*TRW+:RDW]),
                 .rst_out(sf[c*TFW+128+FDW+FVW]),.fv_out(sf[c*TFW+128+FDW+:FVW]),
                 .fd_out(sf[c*TFW+128+:FDW]),.cy_out(sf[c*TFW+:128]),
-                .rv_out(ch_rv[c*RVW+:RVW]),.rd_out(ch_rd[c*RDW+:RDW]));
+                .rv_out(ch_rv[c*RVW+:RVW]),.rd_out(ch_rd[c*RDW+:RDW]),
+                .dl_in({NTW{1'b0}}),.dl_out(hdl[c*NTW+:NTW]),.ul_in(hul[c*33+:33]),.ul_out());
         end
     end
 `ifndef SYNTHESIS
@@ -310,14 +371,16 @@ endmodule
 // Wire-only chain assembly; each cth instance retains its existing hardened local roots.
 module ot_s81_hc_chain_segment #(
     parameter integer NG=256,D=5120,NCOL=3,GS=8,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,RLY=2,
-    parameter integer BC=0,LC=22,START=0,COUNT=10,CNL_PIN=0,CHAIN_STEP=AL,LANE_SPECIALIZE=0,
-    parameter integer FVW=S_RD+5, RVW=S_RT+4,
+    parameter integer BC=0,LC=22,START=0,COUNT=10,CNL_PIN=0,CHAIN_STEP=AL,LANE_SPECIALIZE=0,NTREE=0,
+    parameter integer FVW=S_RD+5, RVW=S_RT+4, NTW=2*137+1,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer RDW=S_RT+24*S_RT+8+512*S_RT
 )( input wire sk,rst_in, input wire [FVW-1:0] fv_in,input wire [FDW-1:0] fd_in,
    input wire [127:0] cy_in,input wire [RVW-1:0] rv_in,input wire [RDW-1:0] rd_in,
    output wire rst_out,output wire [FVW-1:0] fv_out,output wire [FDW-1:0] fd_out,
-   output wire [127:0] cy_out,output wire [RVW-1:0] rv_out,output wire [RDW-1:0] rd_out);
+   output wire [127:0] cy_out,output wire [RVW-1:0] rv_out,output wire [RDW-1:0] rd_out,
+   // NORM tree lanes (NTREE only): partial lane in at the N end / out at the S end, scale lane in S / out N
+   input wire [NTW-1:0] dl_in,output wire [NTW-1:0] dl_out,input wire [32:0] ul_in,output wire [32:0] ul_out);
     genvar p;
     generate if(COUNT>0) begin : g_live
             wire [FVW-1:0] fvo [0:COUNT-1];
@@ -326,9 +389,25 @@ module ot_s81_hc_chain_segment #(
             wire [RDW-1:0] rdo [0:COUNT-1];
             wire           rso [0:COUNT-1];
             wire [127:0]   cyo [0:COUNT-1];
+            wire [NTW-1:0] dlo [0:COUNT-1];
+            wire [32:0]    ulo [0:COUNT-1];
             for (p = 0; p < COUNT; p = p + 1) begin : g_p
                 localparam [7:0] TID = BC + START + p;
-                if (1) begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
+                if (NTREE) begin : g_hn   // NORM tree variant (ot_s81_hc_ntree.sv)
+                ot_s81_hc_cth_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
+                                .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE)) u_t (
+                    .clk(sk), .rst_in(p == 0 ? rst_in : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
+                    .last(START + p == LC - 1),
+                    .fv_in(p == 0 ? fv_in : fvo[p > 0 ? p - 1 : 0]),
+                    .fd_in(p == 0 ? fd_in : fdo[p > 0 ? p - 1 : 0]),
+                    .fv_out(fvo[p]), .fd_out(fdo[p]),
+                    .rv_in(p == COUNT - 1 ? rv_in : rvo[p < COUNT-1 ? p+1 : 0]),
+                    .rd_in(p == COUNT - 1 ? rd_in : rdo[p < COUNT-1 ? p+1 : 0]),
+                    .rv_out(rvo[p]), .rd_out(rdo[p]),
+                    .cy_out(cyo[p]), .cy_in(p == 0 ? cy_in : cyo[p > 0 ? p - 1 : 0]),
+                    .dl_in(p == 0 ? dl_in : dlo[p > 0 ? p - 1 : 0]), .dl_out(dlo[p]),
+                    .ul_in(p == COUNT - 1 ? ul_in : ulo[p < COUNT-1 ? p+1 : 0]), .ul_out(ulo[p]));
+                end else begin : g_h   // el1011-s81hc-ctile: HALF sub-tile split into <=15k-sink hard tiles
                 ot_s81_hc_cth #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .WIN(WIN), .WOUT(WOUT),
                                 .ML(ML), .AL(AL), .RLY(RLY), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .LANE_SPECIALIZE(LANE_SPECIALIZE)) u_t (
                     .clk(sk), .rst_in(p == 0 ? rst_in : rso[p > 0 ? p - 1 : 0]), .rst_out(rso[p]), .tid(TID),
@@ -345,29 +424,63 @@ module ot_s81_hc_chain_segment #(
             assign rv_out=rvo[0]; assign rd_out=rdo[0];
                 assign rst_out=rso[COUNT-1];
             assign fv_out=fvo[COUNT-1]; assign fd_out=fdo[COUNT-1]; assign cy_out=cyo[COUNT-1];
+            if (NTREE) begin : g_nl
+                assign dl_out=dlo[COUNT-1]; assign ul_out=ulo[0];
+            end else begin : g_nnl
+                assign dl_out=0; assign ul_out=0;
+            end
     end else begin : g_empty
         assign {rst_out,fv_out,fd_out,cy_out}={rst_in,fv_in,fd_in,cy_in};
         assign rv_out=rv_in; assign rd_out=rd_in;
+        assign dl_out=dl_in; assign ul_out=ul_in;
     end endgenerate
 endmodule
 
 module dsfd_sp_hc_t #(
     parameter integer NG=256,D=5120,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,CNL_PIN=0,CHAIN_STEP=AL,LANE_SPECIALIZE=0,
+    parameter integer NTREE=0,NT_K=80,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
-    parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW
- )(input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2);
+    parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW,NTW=2*137+1
+ )(input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2,
+   // NORM tree (NTREE only): bottom reset, the partial lanes from the head segments, the scale lanes to them
+   input wire srs,input wire [3*NTW-1:0] f_dl,output wire [3*33-1:0] t_ul);
     localparam integer NS=NG/GS,NP=(NS+NCOL-1)/NCOL,L1=(NS-2*NP>0)?NS-2*NP:0;
     wire [NCOL*TFW-1:0] sf={f_sf2,f_sf1,f_sf0};
     wire [NCOL*TRW-1:0] sr;
     assign {t_sr2,t_sr1,t_sr0}=sr;
+    localparam integer O_D=5+S_RD*16+20+6+8+32+1, O_NVX=5+S_RD*16+20+6;
+    wire [3*FVW-1:0]   nt_fv;
+    wire [3*8-1:0]     nt_nv;
+    wire [3*NTW-1:0]   nt_dl;
+    wire [3*33-1:0]    nt_ul;
+    wire [O_D-1:0]     nt_fc0;
+    wire [S_RD*32-1:0] nt_eps0;
+    wire               nt_flt;
     genvar c;
     generate for(c=0;c<NCOL;c=c+1) begin:g_c
         localparam integer LC=((c==1)?L1:NP)*2,BC=((c==0)?0:(c==1)?NP:NP+L1)*2;
         localparam integer NH=(LC<HEAD_ROWS)?LC:HEAD_ROWS;
+        wire [FVW-1:0] fvf;
+        wire [FDW-1:0] fdf;
         ot_s81_hc_chain_segment #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
-            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH)) u_tail (
+            .WIN(WIN),.WOUT(WOUT),.ML(ML),.AL(AL),.RLY(RLY),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.BC(BC),.LC(LC),.START(NH),.COUNT(LC-NH),.NTREE(NTREE)) u_tail (
             .sk(ck),.rst_in(sf[c*TFW+128+FDW+FVW]),.fv_in(sf[c*TFW+128+FDW+:FVW]),
-            .fd_in(sf[c*TFW+128+:FDW]),.cy_in(sf[c*TFW+:128]),.rv_in({RVW{1'b0}}),.rd_in({RDW{1'b0}}),
-            .rst_out(),.fv_out(),.fd_out(),.cy_out(),.rv_out(sr[c*TRW+RDW+:RVW]),.rd_out(sr[c*TRW+:RDW]));
+            .fd_in(sf[c*TFW+128+:FDW]),.cy_in(sf[c*TFW+:128]),
+            .rv_in((NTREE && c==0) ? {nt_flt,{(S_RT+2){1'b0}}} : {RVW{1'b0}}),.rd_in({RDW{1'b0}}),
+            .rst_out(),.fv_out(fvf),.fd_out(fdf),.cy_out(),.rv_out(sr[c*TRW+RDW+:RVW]),.rd_out(sr[c*TRW+:RDW]),
+            .dl_in(f_dl[c*NTW+:NTW]),.dl_out(nt_dl[c*NTW+:NTW]),.ul_in(nt_ul[c*33+:33]),.ul_out(t_ul[c*33+:33]));
+        assign nt_fv[c*FVW+:FVW]=fvf; assign nt_nv[c*8+:8]=fdf[O_NVX+:8];
+        if (c==0) begin : g_c0
+            assign nt_fc0=fdf[O_D-1:0];
+            for (genvar s_=0;s_<S_RD;s_=s_+1) begin : g_e
+                assign nt_eps0[32*s_+:32]=fdf[O_D+512*s_+256+:32];
+            end
+        end
+    end
+    if (NTREE) begin : g_nt
+        ot_s81_hc_cnbot #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.NT_K(NT_K)) u_bot (
+            .sk(ck),.srs(srs),.f_fv(nt_fv),.f_nv(nt_nv),.f_fc0(nt_fc0),.f_eps0(nt_eps0),.dl(nt_dl),.ul(nt_ul),.flt(nt_flt));
+    end else begin : g_nnt
+        assign nt_ul=0; assign nt_flt=1'b0;
     end endgenerate
 endmodule
