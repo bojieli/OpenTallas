@@ -474,7 +474,7 @@ endmodule
 // =====================================================================================================================
 /* verilator lint_off UNUSEDSIGNAL */
 /* verilator lint_off UNUSEDPARAM */
-module ot_hgi_sv_ctl #(
+module ot_hgi_sv_head #(
     parameter integer N = 16, M = 8, LV = 6,
     parameter integer LWB = 18,
     parameter integer PAYLOAD_RESET = 1,
@@ -1602,7 +1602,7 @@ module ot_hgi_sv_unit #(
     wire [N*32-1:0] vm_wdata, kv_wdata; wire [NR-1:0] res_we; wire [NR*AW-1:0] res_addr; wire [NR*32-1:0] res_data;
     wire [7:0] cr_seq, cr_dseq, cr_rseq; wire [15:0] cr_cnt, emitted; wire de, dr, ds; wire [7:0] es, rsq, ss;
 
-    ot_hgi_sv_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .PAYLOAD_RESET(PAYLOAD_RESET), .GLU(GLU), .SLB(SLB), .LQ(LQ), .EP0(EP0),
+    ot_hgi_sv_head #(.N(N), .M(M), .LV(LV), .LWB(LWB), .PAYLOAD_RESET(PAYLOAD_RESET), .GLU(GLU), .SLB(SLB), .LQ(LQ), .EP0(EP0),
                     .MUT_V(MUT_V), .NSJ(NSJ)) u_ctl (
         .clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a),
         .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o), .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a),
@@ -1709,3 +1709,68 @@ endmodule
 /* verilator lint_on UNUSEDPARAM */
 /* verilator lint_on UNUSEDSIGNAL */
 `default_nettype wire
+
+// Legacy source name; the die contract and physical kit publish ot_hgi_sv_head.
+module ot_hgi_sv_ctl #(
+    parameter integer N = 16, M = 8, LV = 6,
+    parameter integer LWB = 18,
+    parameter integer PAYLOAD_RESET = 1,
+    parameter integer GLU = 0,
+    parameter integer SLB = 16,
+    parameter integer LQ = 8,              // ONE constant = ot_hgi_vm_unit LQ (VM lane queue depth, power of two) = the credits a lane holds
+    parameter integer EP0 = 0,             // frame epoch after a scrub (bench: 14 makes the chain's in-place sink wrap 15 -> 1)
+    parameter integer MUT_V = 0,          // 3 in-place gate off, 4 forward reader takes no pin, 6 scalar bypass slot ^ 1, 7 tail frame keeps its old write epoch, 8 no EXT stream credit (the vec runs ahead of the stage)
+    parameter integer NSJ = 6
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          rec_v,
+    output wire          rec_rdy,
+    input  wire [127:0]  rec_hdr,
+    input  wire [255:0]  rec_sut,
+    input  wire [255:0]  rec_a, rec_b, rec_c, rec_d, rec_o, rec_r, rec_i,
+    input  wire [20:0]   rec_n_a,
+    output wire           rec_done,
+    output wire           rec_fault,
+    output wire           halted,
+    output wire  [337:0]  vmq,
+    input  wire [273:0]  vmr,
+    input  wire          s0_v,
+    input  wire [19:0]   s0_idx,
+    input  wire [31:0]   s0_data,
+    output wire [522:0]  am_stream,
+    input  wire          am_rdy,
+    // the vec
+    output wire           go,
+    input  wire          ready,
+    input  wire          idle,
+    input  wire          vfault,
+    output wire [669:0]  wl,
+    output wire  [7:0]    x_seq,
+    output wire  [7:0]    x_dseq,
+    output wire  [15:0]   x_cnt,
+    input  wire [7:0]    cr_seq_i,
+    input  wire [7:0]    cr_dseq,
+    input  wire [15:0]   cr_cnt_i,
+    // the local memory
+    output wire  [15:0]   wep,
+    output wire  [3:0]    rf_clr,
+    output wire           rf_rv,
+    output wire  [4:0]    rf_rsec,
+    input  wire          rf_rrv,
+    input  wire [255:0]  rf_rd,
+    input  wire [7:0]    rf_rm,
+    input  wire          lm_err,
+    // shared lane groups
+    output wire           rg_req,
+    input  wire          rg_gnt,
+    output wire           wg_req,
+    input  wire          wg_gnt,
+    // the leaves: two registered copies of the cmd word (one a side: 4 near leaves each, which relay it to their far
+    // partner) and the 8 near leaves' status words (each already folded with its far partner's)
+    output wire [2*(83+NSJ)-1:0] lf_cmd,
+    input  wire [8*(NSJ+33)-1:0] lf_status,
+    output wire  [15:0]   walks                // non-dense O drains (frame walks) since reset
+);
+    ot_hgi_sv_head #(.N(N), .M(M), .LV(LV), .LWB(LWB), .PAYLOAD_RESET(PAYLOAD_RESET), .GLU(GLU), .SLB(SLB), .LQ(LQ), .EP0(EP0), .MUT_V(MUT_V), .NSJ(NSJ)) u_impl (.*);
+endmodule
