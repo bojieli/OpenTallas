@@ -105,7 +105,15 @@ module qkd_seq_xs_tp8 (
  .kw_e(kw_e));
 endmodule
 module qkd_seq_tp8 (
-    input  wire          ck,
+    input wire clk_core,
+input wire clk_xs0,
+input wire clk_xs1,
+input wire clk_xs2,
+input wire clk_xs3,
+input wire clk_fan0,
+input wire clk_fan1,
+input wire clk_fan2,
+input wire clk_fan3,
     input  wire          rst_n,
     input  wire [523:0]  r_x3_d,
     output wire          r_x3_cr,
@@ -155,7 +163,7 @@ module qkd_seq_tp8 (
     wire [3:0]    f_cr, f_af, f_mf;
     wire [255:0]  sq  [0:3];
     wire [511:0]  skw [0:3];
-    qkd_seq_core_tp8 u_core (.ck(ck), .rst_n(rst_n), .x3_v(r_x3_d[523]), .x3_tag(r_x3_d[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
+    qkd_seq_core_tp8 u_core (.ck(clk_core), .rst_n(rst_n), .x3_v(r_x3_d[523]), .x3_tag(r_x3_d[522:512]), .x3_cr(r_x3_cr), .r_sd(r_sd),
         .r_kvd(r_kvd), .t_ar_d(t_ar_d), .t_ar_cr(t_ar_cr), .t_ds(t_ds), .t_pw(t_pw),
         .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm_w(f_aqm[0]),
         .f_aqm_e(f_aqm[1]), .f_kwm_w(f_kwm[0]), .f_kwm_e(f_kwm[1]), .f_kc_w(f_kc[0]), .f_kc_e(f_kc[1]), .f_cr_w(f_cr[1:0]),
@@ -163,7 +171,7 @@ module qkd_seq_tp8 (
         .tk(tk), .kst(kst));
     genvar s, k;
     generate for (s = 0; s < 4; s = s + 1) begin : g_xs
-        qkd_seq_xs_tp8 u_xs (.ck(ck), .rst_n(rst_n), .x_v(r_x3_d[523]), .x_cls(r_x3_d[522:520]), .x_d(r_x3_d[128*s +: 128]),
+        qkd_seq_xs_tp8 u_xs (.ck(s==0 ? clk_xs0 : s==1 ? clk_xs1 : s==2 ? clk_xs2 : clk_xs3), .rst_n(rst_n), .x_v(r_x3_d[523]), .x_cls(r_x3_d[522:520]), .x_d(r_x3_d[128*s +: 128]),
             .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q_w(sq[s][127:0]), .q_e(sq[s][255:128]), .kw_w(skw[s][255:0]), .kw_e(skw[s][511:256]));
     end endgenerate
     // the store slices' two copies -> the full words of the W (copy 0) and E (copy 1) fans
@@ -187,7 +195,7 @@ module qkd_seq_tp8 (
     wire [3:0]    af = {af_EN, af_ES, af_WN, af_WS};
     wire [3:0]    mf = {mf_EN, mf_ES, mf_WN, mf_WS};
     generate for (k = 0; k < 4; k = k + 1) begin : g_fan
-        qkd_seq_fan u_fan (.ck(ck), .rst_n(rst_n), .aqm(f_aqm[k/2]), .q(fq[k/2]), .kwm(f_kwm[k/2]),
+        qkd_seq_fan u_fan (.ck(k==0 ? clk_fan0 : k==1 ? clk_fan1 : k==2 ? clk_fan2 : clk_fan3), .rst_n(rst_n), .aqm(f_aqm[k/2]), .q(fq[k/2]), .kwm(f_kwm[k/2]),
             .kw(fkw[k/2]), .kc_i(f_kc[k/2]), .aq(aq[k]), .kvn(kvn[k]), .kc(kc[k]), .kvn_cr(cr[k]), .af(af[k]),
             .mf(mf[k]), .cr_o(f_cr[k]), .af_o(f_af[k]), .mf_o(f_mf[k]));
     end endgenerate

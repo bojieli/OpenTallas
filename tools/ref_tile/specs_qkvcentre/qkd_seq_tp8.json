@@ -14,7 +14,7 @@
   "rtl/physical/ot_qwen_kv_seq_tp8.sv"
  ],
  "params": {},
- "clock_port": "ck",
+ "clock_port": "clk_core",
  "reset_ports": [
   "rst_n"
  ],
@@ -115,7 +115,15 @@
   "N": [
    "r_x3_d",
    "r_x3_cr",
-   "ck",
+   "clk_core",
+   "clk_xs0",
+   "clk_xs1",
+   "clk_xs2",
+   "clk_xs3",
+   "clk_fan0",
+   "clk_fan1",
+   "clk_fan2",
+   "clk_fan3",
    "t_ar_d",
    "t_ar_cr",
    "r_sd",
@@ -265,10 +273,6 @@
   "r_x3_cr": [
    247.0,
    247.2
-  ],
-  "ck": [
-   266.4,
-   266.6
   ],
   "t_ar_d": [
    276.4,
@@ -661,5 +665,17 @@
  "floorplan_note": "wires-only parent: core in the middle (ROM-side words from the N pins cross only the upper slice row, hub / host words from the S pins only the lower one), two store slices below and two above it, the four fans along the W / E faces (E pair MY). Every parent net is leaf register -> wire -> leaf register (or slot pin); physical/qwen_kv_centre/seq_cluster_cut.py gives the cuts and the worst hop.",
  "slot_change_request": "el1013-qwen-kvcentre 10-13 (contract v4 slot `seq`, cell qkd_seq), posted in el1011-qwen-tp8.log: (1) pin list of the merged die: rf / tf / d2df / gq / gr / t_flt dropped (no producer / consumer on one die), ROM-side words on the N face: r_x3_d 524 + r_x3_cr, r_sd 56 (qfd_seq_su dc[55:0]), r_kvd 44, t_ar_d 520 + t_ar_cr, t_ds 187 (qfd_seq_su dh[186:0]), t_pw 75; quadrant words aq / kvn_d (+ kvn_<q>_cr in) / kc / af / mf on W (WS, WN) and E (ES, EN); hub ar / hf / hs and host hc 182 / tk 93 / kst 10 on S; (2) outline 604.8 x 475.2 (0.287 mm2; slot 777.576 x 518.376): the merged sequencer is ~48k flops in nine small leaves, and a store in the middle of a 778-um slot cannot reach both pin faces in one <= 500 um hop; (3) cluster layers: leaves M5, parent signals M6 / M7, PG M7 (the slot says cap M5).",
  "structural_change": "first build: cluster of nine hardened leaves (three masters) instead of one 55k-flop tile",
- "description": "Unsubmitted native TP8 candidate. Fixed HEADS1/Q_FP321 source wrapper; actual four KVN and 32 FP32 Q, 32 RES. Transport/control bench only; arithmetic, assigned pins, native view exports and parent per-child clock delivery pending."
+ "description": "Unsubmitted native TP8 candidate. Fixed HEADS1/Q_FP321 source wrapper; actual four KVN and 32 FP32 Q, 32 RES. Transport/control bench only; arithmetic, assigned pins, native view exports and physical measured phi-R delivery per child pending. Nine explicit clock entries require fresh assigned clock pin ranges; legacy ck range removed.",
+ "clock": "entries",
+ "clock_ports": [
+  "clk_core",
+  "clk_xs0",
+  "clk_xs1",
+  "clk_xs2",
+  "clk_xs3",
+  "clk_fan0",
+  "clk_fan1",
+  "clk_fan2",
+  "clk_fan3"
+ ]
 }

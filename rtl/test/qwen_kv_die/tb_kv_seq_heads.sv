@@ -17,10 +17,12 @@ module tb_kv_seq_heads;
  wire[519:0] ret;wire[9:0] kst;
  `ifdef NATIVE_MASTER
  qkd_seq_tp8 dut(
+ .clk_core(clk),.clk_xs0(clk),.clk_xs1(clk),.clk_xs2(clk),.clk_xs3(clk),.clk_fan0(clk),.clk_fan1(clk),.clk_fan2(clk),.clk_fan3(clk),
 `else
  qkd_seq #(.HEADS(HEADS),.Q_FP32(Q_FP32)) dut(
+ .ck(clk),
 `endif
- .ck(clk),.rst_n(rst_n),.r_x3_d({xv,xt,xd}),.r_x3_cr(xc),.r_sd(56'd0),.r_kvd(kvd),
+ .rst_n(rst_n),.r_x3_d({xv,xt,xd}),.r_x3_cr(xc),.r_sd(56'd0),.r_kvd(kvd),
  .t_ar_d(ret),.t_ar_cr(ov),.t_ds(ds),.t_pw(),
  .aq_WS(aq[0+:540]),.aq_WN(aq[540+:540]),.aq_ES(aq[1080+:540]),.aq_EN(aq[1620+:540]),
  .kvn_WS_d(kvn[0+:1047]),.kvn_WN_d(kvn[1047+:1047]),.kvn_ES_d(kvn[2094+:1047]),.kvn_EN_d(kvn[3141+:1047]),
