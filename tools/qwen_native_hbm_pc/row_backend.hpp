@@ -94,6 +94,10 @@ class RowBackend {
    for(unsigned j=0;j<10;j++){m.ci[j]=0;m.pi[j]=0;}for(unsigned j=0;j<9;j++){m.host_es[j]=0;m.land_es[j]=0;}m.eval();
   }
  }
+ uint64_t enqueue_mapped_quarter(const QuarterIdentity&id,const Quarter&data,const Physical&observed){
+  auto p=native_map(id);if(p.index()!=observed.index()||p.address()!=observed.address())throw std::runtime_error("sector adapter physical mapping mismatch");
+  return enqueue_quarter(id,data);
+ }
  uint64_t enqueue_quarter(const QuarterIdentity& id,const Quarter& data){
   auto p=native_map(id);if(id.row.pos!=current_position)throw std::runtime_error("current-token writer position mismatch");
   if(!pending_writes.insert(ik(id)).second)throw std::runtime_error("duplicate in-flight quarter identity");
