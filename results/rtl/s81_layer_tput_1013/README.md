@@ -229,15 +229,21 @@ corrupts all 640 output flits and all 330 NORM rows. `r8_landing_schedule_gate.j
 binds source af72194a9 and the actual ot-run exit0.
 
 At PGAP600, the same binary with the original SU order takes adjusted xfer
-8533/17439 cycles; the searched order takes8210/16831. This isolates scheduling
-savings of323/608 cycles in the candidate bench. SU itself is still behavioral
+8533/17439 cycles; the searched order takes 8210/16831. This isolates scheduling
+savings of 323/608 cycles in the candidate bench. SU itself is still behavioral
 at program durations; this is not an accepted native cost or full die price
 qualification. Static GAIN initialization and early COEF/H_LOAD readiness must
 be proved in the steady-token native program: the artificial payload gap allows
 setup to finish before landing and is not a property of the production link.
 
 The watermark8 hand-off in this layer bench has a stall-free producer and a
-measured19-row lead. The native dispatcher adds committed-row checks, because
+measured 19-row lead. The native dispatcher adds committed-row checks, because
 watermark8 alone cannot protect reads if the producer later stalls. Its separate
 real VM/hop and landing fallback/reuse component gates are supporting component
 proofs, while full native lowering and physical adoption remain pending.
+
+The PIPE unit's 76-cycle interface completion cannot be compared directly to
+the immutable HC POST last-output endpoint as qualification: local write-back
+continues after issue-order completion. The gate proves dependent jobs remain
+exact, and the composed layer delta measures their overlap. The diagnostic
+76/112.9 ratio in the r7 record does not establish priced unit throughput.

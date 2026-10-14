@@ -41,7 +41,8 @@
    2.2007,
    2.2037
   ],
-  "qualifier": "Unit gate timing only; queued jobs prove ordered writeback dependencies and final VM exactness. Interface completion is not farthest-tile physical retirement. Full die production layer timing and measured tok/s loss remain unproven."
+  "qualifier": "Unit gate timing only; queued jobs prove ordered writeback dependencies and final VM exactness. Interface completion is not farthest-tile physical retirement. Full die production layer timing and measured tok/s loss remain unproven.",
+  "ratio_status": "Diagnostic interface ratio only, not unit throughput qualification: ordered issue completion is earlier than the priced last-output retirement endpoint. Measure the native composed dependency path before accepting throughput."
  },
  "ledger_changed": false
 }
