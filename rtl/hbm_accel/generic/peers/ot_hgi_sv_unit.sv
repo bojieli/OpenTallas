@@ -730,7 +730,7 @@ module ot_hgi_sv_head #(
     reg [7:0] h_in [0:3]; reg [7:0] h_eq [0:3]; reg [7:0] h_ov [0:3]; reg [7:0] s_ov [0:1]; reg [7:0] s_ovs [0:1];
     reg [7:0] o_eq; reg [3:0] sv_s;
     reg [3:0] f_hit, f_ipc; reg [2:0] f_e [0:3]; reg ip_c, ip_on; reg [2:0] ip_e; reg [7:0] f_used;
-    reg [17:0] a_lo; reg [18:0] a_lb; reg [3:0] a_ep; reg a_stg, a_big, a_tw;
+    reg [23:0] a_delta; reg [18:0] a_lb; reg [3:0] a_ep; reg a_stg, a_big, a_tw;
     // ---- region table
     reg [7:0] tb_v, tb_fok, tb_live, tb_dense, tb_stg;
     reg [1:0] tb_kind [0:7]; reg [17:0] tb_lo [0:7]; reg [17:0] tb_hi [0:7]; reg [18:0] tb_lb [0:7]; reg [2:0] tb_own [0:7];
@@ -973,7 +973,7 @@ module ot_hgi_sv_head #(
                     end else if (aa_fault) begin dfault <= 1'b1; dstt <= D_FAULT; end
                     else if (aa_go) begin
                         dstt <= D_AB; stallc <= 4'd0;
-                        a_stg <= is_src && !fw_ok; a_big <= a_large; a_lo <= cur_lo; a_tw <= ipnow ? ip_two : a_two;
+                        a_stg <= is_src && !fw_ok; a_big <= a_large; a_delta <= c_base[rk] - {6'd0, cur_lo}; a_tw <= ipnow ? ip_two : a_two;
                         if (ipnow) begin                                           // IN PLACE: e's local words, a new epoch
                             a_lb <= tb_lb[ip_e]; a_ep <= ip_ep; fr_ep[ip_f] <= ip_ep;
                             if (ip_two) begin fr_ep[ip_fn] <= ip_ep; if (ip_wrap) fr_wrap[ip_fn] <= 1'b1; end
@@ -991,7 +991,7 @@ module ot_hgi_sv_head #(
                             tb_stg[vic] <= 1'b1; tb_kind[vic] <= K_RS; tb_lo[vic] <= cur_lo; tb_hi[vic] <= cur_hi;
                             tb_lb[vic] <= {1'b1, 10'd0, rfs[1:0], 3'd0, cur_lo[2:0]}; tb_own[vic] <= dslot;
                         end else if (fw_ok) begin                                  // FORWARD: e's local words, pinned
-                            a_lo <= tb_lo[fe];
+                            a_delta <= c_base[rk] - {6'd0, tb_lo[fe]};
                             a_lb <= (fw_rs && MUT_V == 6) ? (tb_lb[fe] ^ 19'h00040) : tb_lb[fe];
                             if (fw_rs) begin
                                 if (!sl_rpin[dslot][tb_lb[fe][7:6]] && MUT_V != 4) begin
@@ -1034,15 +1034,16 @@ module ot_hgi_sv_head #(
                         end
                     end
                 end
+                // Relocation is split across the existing A/B edges: A registers base - origin, B adds local base.
                 // ALLOC edge B: relocate the region's base, write the descriptors, push the stage job
                 D_AB: if (ab_go) begin
                     case (rk)
-                        3'd0: w[40 +: 24]  <= w[40 +: 24]  - {6'd0, a_lo} + {5'd0, a_lb};
-                        3'd1: w[138 +: 24] <= w[138 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
-                        3'd2: w[211 +: 24] <= w[211 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
-                        3'd3: w[284 +: 24] <= w[284 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
-                        3'd4: w[382 +: 24] <= w[382 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
-                        default: w[484 +: 24] <= w[484 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
+                        3'd0: w[40 +: 24]  <= a_delta + {5'd0, a_lb};
+                        3'd1: w[138 +: 24] <= a_delta + {5'd0, a_lb};
+                        3'd2: w[211 +: 24] <= a_delta + {5'd0, a_lb};
+                        3'd3: w[284 +: 24] <= a_delta + {5'd0, a_lb};
+                        3'd4: w[382 +: 24] <= a_delta + {5'd0, a_lb};
+                        default: w[484 +: 24] <= a_delta + {5'd0, a_lb};
                     endcase
                     if (rk == 3'd4) begin
                         sl_ov[dslot] <= 1'b1; sl_opin[dslot] <= 1'b1; sl_ovsec[dslot] <= cur_lo[17:3];
