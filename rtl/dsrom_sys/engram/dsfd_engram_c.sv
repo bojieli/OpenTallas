@@ -67,8 +67,8 @@ module dsfd_engram_c #(
     wire [263:0] lk_od; wire [30:0] lk_hqa; wire [264:0] lk_hr;
     wire [7:0] s_rdy, s_perr, s_rdy_pipe, s_perr_pipe, rdy_w, perr_w; wire s_we; wire [10:0] s_wa; wire [511:0] s_wd;
     wire [17:0] jn; wire [15:0] wn;
-    wire [5:0] w_oh, x0_oh, x1_oh, r0_oh, r1_oh, r2_oh; wire [7:0] w_a, x0_a, x1_a, r0_a, r1_a, r2_a;
-    wire [255:0] b1_d, rd0, rd1, rd2w; wire [319:0] x_d, x0_d; wire [63:0] x1_d;
+    wire [5:0] w_oh, x0_oh, x0_pipe_oh, x1_oh, r0_oh, r1_oh, r2_oh; wire [7:0] w_a, x0_a, x0_pipe_a, x1_a, r0_a, r1_a, r2_a;
+    wire [255:0] b1_d, rd0, rd1, rd2w; wire [319:0] x_d, x0_d, x0_pipe_d; wire [63:0] x1_d;
 
     // ---------------- cluster clock entry (el1013-s81-engram 2026-10-13): the 8 hardened children have different
     // internal clock insertion (TT max_clock_tree_path of the installed views: win 182, io 281, sink 294, ws 297,
@@ -116,7 +116,7 @@ module dsfd_engram_c #(
 
     // Break the proven WIN<->SINK timing cycle at the returning status face.
     // Ready and parity-error belong to the same completed write and move together.
-    ot_engc_status_pipe u_status_win (.clk(ck_win), .rst_n(rst_win_n),
+    ot_engc_status_pipe u_status_win (.clk(ck[0]), .rst_n(rst_win_n),
         .rdy_i(s_rdy), .perr_i(s_perr), .rdy_o(s_rdy_pipe), .perr_o(s_perr_pipe));
 
     ot_engc_t_win u_win (
@@ -143,7 +143,12 @@ module dsfd_engram_c #(
     // prefetch banks: band tile = bank 1 (+ write transit {bank 2, bank 0}); columns = bank 0, bank 2
     ot_engc_t_pbb u_pb1 (.ck(ck_pb1), .rst(rst_pb1_n), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
         .x_oh(x0_oh), .x_a(x0_a), .x_do(x0_d), .r_oh(r1_oh), .r_a(r1_a), .r_d(rd1));
-    ot_engc_t_pbc u_pb0 (.ck(ck_pb0), .rst(rst_pb0_n), .w_oh(x0_oh), .w_a(x0_a), .w_d(x0_d[255:0]), .x_d(x0_d[319:256]),
+    // One coherent transit step: never retime the write data without its
+    // bank mask/address. It uses a normal soft-flop spine leaf, aligned with
+    // functional child clock edges rather than a child's earlier boundary pin.
+    ot_engc_xtrans_pipe u_xtrans_pb0 (.clk(ck[0]), .rst_n(rst_pb0_n),
+        .oh_i(x0_oh), .a_i(x0_a), .d_i(x0_d), .oh_o(x0_pipe_oh), .a_o(x0_pipe_a), .d_o(x0_pipe_d));
+    ot_engc_t_pbc u_pb0 (.ck(ck_pb0), .rst(rst_pb0_n), .w_oh(x0_pipe_oh), .w_a(x0_pipe_a), .w_d(x0_pipe_d[255:0]), .x_d(x0_pipe_d[319:256]),
         .x_oh(x1_oh), .x_a(x1_a), .x_do(x1_d), .r_oh(r0_oh), .r_a(r0_a), .r_d(rd0));
     ot_engc_t_pbc u_pb2 (.ck(ck_pb2), .rst(rst_pb2_n), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
         .x_oh(), .x_a(), .x_do(), .r_oh(r2_oh), .r_a(r2_a), .r_d(rd2w));
@@ -206,4 +211,14 @@ module ot_engc_status_pipe(input wire clk, rst_n, input wire [7:0] rdy_i, perr_i
         else begin rdy_q <= rdy_i; perr_q <= perr_i; end
     assign rdy_o = rdy_q;
     assign perr_o = perr_q;
+endmodule
+
+module ot_engc_xtrans_pipe(input wire clk, rst_n, input wire [5:0] oh_i,
+    input wire [7:0] a_i, input wire [319:0] d_i,
+    output wire [5:0] oh_o, output wire [7:0] a_o, output wire [319:0] d_o);
+    (* keep = "true", dont_touch = "true" *) reg [333:0] q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 334'b0;
+        else q <= {oh_i, a_i, d_i};
+    assign {oh_o, a_o, d_o} = q;
 endmodule

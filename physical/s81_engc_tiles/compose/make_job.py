@@ -60,7 +60,7 @@ def main():
                                f"--name dsfd_engram_c --out {{RUN}}/record --corners tt {mv} --image openroad/orfs:asap7lock "
                                "> {RUN}/record/export_tt_collect.log 2>&1 || echo TT_EXPORT_FAILED > {RUN}/record/TT_EXPORT_FAILED)"}},
         "cycles_added": 1,
-        "cycles_note": "one cycle on coherent SINK ready/parity return into WIN; production exact bench must measure current window-to-slot-ready against unchanged 500-cycle price",
+        "cycles_note": "one coherent SINK ready/parity return cycle and one PB1-to-PB0 mask/address/data transit cycle; production exact bench must measure current window-to-slot-ready against unchanged 500-cycle price",
         "merge_target": "main", "route_hold_corners": "mm", "route_corner": "TC", "route_hold_margin_ns": 0.05,
         "verdict": {"corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
                     "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
@@ -71,7 +71,7 @@ def main():
                              "-206.5 ps at 16,258 sinks/root, SRAM read path -1568.6 ps). New in this submission: pre-placed clock spine with per-child insertion targets "
                              "(g13 measured leaf spread 67.4 ps TT / 64.8 ps FF after CTS, max clock-pin slew 21.7 ps, "
                              "was 400 ps with the bare top tree), children re-routed with face-pin keepout (child_lint 0 pins blocked), sliver rows "
-                             "removed before the PDN, child seams that hold rows opened to >= 12 um (io +4.32 / lkp -4.32 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, local per-child kept reset synchronizers, coherent SINK-to-WIN status pipeline (strict setup150 bidirectional deficit105.2ps), full local clock loads included before spine balancing, H1 hold100, no reset multicycle exceptions, fixed vclk.",
+                             "removed before the PDN, child seams that hold rows opened to >= 12 um (io +4.32 / lkp -4.32 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, local per-child kept reset synchronizers, coherent SINK-to-WIN status pipeline (strict setup150 bidirectional deficit105.2ps), PB1-to-PB0 coherent write transit stage, data relays on ordinary functional-edge spine leaves, full local clock loads included before spine balancing, H1 hold100, no reset multicycle exceptions, fixed vclk.",
     }
     print(json.dumps(spec, indent=1))
 

@@ -87,3 +87,18 @@ foreach ot_i [$ot_cp_b getInsts] {
 }
 if {$ot_status_cells < 16} { error "ENGC status stage cells missing" }
 puts "ENGC status place cells=$ot_status_cells near WIN ready pin ($ot_x,$ot_y)"
+
+set ot_pb0 [$ot_cp_b findInst u_pb0]
+set ot_xpin [$ot_pb0 findITerm {w_oh[0]}]
+if {$ot_xpin eq "NULL"} { error "ENGC PB0 transit pin absent" }
+set ot_bb [$ot_xpin getBBox]
+set ot_x [expr {([$ot_bb xMin]+[$ot_bb xMax])/2}]
+set ot_y [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
+set ot_trans_cells 0
+foreach ot_i [$ot_cp_b getInsts] {
+  if {![string match *u_xtrans_pb0* [$ot_i getName]]} continue
+  ot_engc_place_output_cone $ot_i $ot_x $ot_y
+  incr ot_trans_cells
+}
+if {$ot_trans_cells < 334} { error "ENGC coherent transit registers missing" }
+puts "ENGC transit place cells=$ot_trans_cells near PB0 write pin ($ot_x,$ot_y)"

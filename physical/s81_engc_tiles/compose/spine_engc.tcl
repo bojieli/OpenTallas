@@ -37,7 +37,6 @@ proc clock_tree_synthesis {args} {
   foreach child {win io ws pb1 pb0 pb2 lkp sink} {
     foreach i [$b getInsts] {
       set belongs [string match *u_rst_${child}* [$i getName]]
-      if {$child eq "win" && [string match *u_status_win* [$i getName]]} { set belongs 1 }
       if {!$belongs} continue
       foreach it [$i getITerms] {
         set mt [$it getMTerm]
@@ -47,7 +46,7 @@ proc clock_tree_synthesis {args} {
       }
     }
   }
-  if {[llength $reconnect] != 32} { error "ENGC local clocks missing: [llength $reconnect] !=32" }
+  if {[llength $reconnect] != 16} { error "ENGC reset clocks missing: [llength $reconnect] !=16" }
   set ::ot_engc_pending_clocks $reconnect
   set ::ot_engc_clocks_attached 0
   ot_engc_spine_cts {*}$args
