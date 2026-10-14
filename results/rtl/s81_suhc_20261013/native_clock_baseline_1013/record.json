@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.s81.hc.native_child_clock_functional_baseline.v1",
+  "submitted_parent_source": "9dbe17d84",
+  "runner_commit": "4330719a9",
+  "scope": "original 14-child comb independent clock interface with old closed CCF/pad; NOT new named parent or FV successor qualification",
+  "positive": "3 production chains PASS, each 20 jobs, 1940 exact rows, 6392 cycles",
+  "negative": "actual sequencer leaf clock 3 stopped; all three chains FAIL, 1940 erroneous rows per chain at 40199 cycles",
+  "phys_clk": 1,
+  "clock_connections": {
+    "positive": "fourteen distinct interface entries tied to common ideal boundary phase",
+    "negative": "{{10{sk}}, 1'b0, {3{sk}}}"
+  },
+  "physical_timing_claim": false,
+  "new_named_parent_and_ccf_successor_proof": "new jobs e76ca29b5 pending"
+}
