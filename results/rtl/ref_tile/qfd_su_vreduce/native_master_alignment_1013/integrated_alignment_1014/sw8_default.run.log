@@ -1,0 +1,9 @@
+operand events ref 1191 dut 1191
+lane-out events 1191 / 1191, crom events 753 / 753
+SU_LAT ops=119 ref_avg=92.94 dut_avg=160.04 delta_min=36 delta_max=390 ref_min=24 ref_max=184 (SW=8 IS=1 OS=1 CRX=2 VL=7)
+SU_COMPONENT_CYCLES benchmark_cyc=177 accepted=120 samples=119 ref_sum=11060 dut_sum=19045
+PASS qfd_su_vm_bv SW=8 IS=1 OS=1 CRX=2 VL=7 ops=120 va/vb/vc/crom/vm/red/kv events 980/663/745/753/299/214/328
+- rtl/test/qwen_vm_me/tb_qfd_su_vm_bv_acc_align.sv:390: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 25us; walltime 12.890 s; speed 1.923 us/s
+- Verilator: cpu 12.890 s on 1 threads; allocated 34 MB
