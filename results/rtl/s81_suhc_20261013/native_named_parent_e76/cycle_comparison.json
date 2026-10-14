@@ -1,0 +1,603 @@
+{
+  "scope": "named native parent exact functional proof, no physical timing qualification",
+  "source_snapshot": "e76ca29b5",
+  "positive_status": "pass",
+  "cycles_by_chain": [
+    6388,
+    6388,
+    6388
+  ],
+  "baseline_cycles": [
+    6392,
+    6392,
+    6392
+  ],
+  "changed_job_timings": [
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 7,
+        "kind": 4,
+        "start": 1409,
+        "done": 2134
+      },
+      "original_baseline": {
+        "op": 7,
+        "kind": 4,
+        "start": 1409,
+        "done": 2136
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 8,
+        "kind": 2,
+        "start": 2121,
+        "done": 2152
+      },
+      "original_baseline": {
+        "op": 8,
+        "kind": 2,
+        "start": 2122,
+        "done": 2153
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 9,
+        "kind": 4,
+        "start": 2138,
+        "done": 2864
+      },
+      "original_baseline": {
+        "op": 9,
+        "kind": 4,
+        "start": 2139,
+        "done": 2866
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 10,
+        "kind": 3,
+        "start": 2850,
+        "done": 3137
+      },
+      "original_baseline": {
+        "op": 10,
+        "kind": 3,
+        "start": 2852,
+        "done": 3139
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 11,
+        "kind": 3,
+        "start": 3123,
+        "done": 3410
+      },
+      "original_baseline": {
+        "op": 11,
+        "kind": 3,
+        "start": 3125,
+        "done": 3412
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 12,
+        "kind": 2,
+        "start": 3396,
+        "done": 3426
+      },
+      "original_baseline": {
+        "op": 12,
+        "kind": 2,
+        "start": 3398,
+        "done": 3428
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 13,
+        "kind": 4,
+        "start": 3413,
+        "done": 4139
+      },
+      "original_baseline": {
+        "op": 13,
+        "kind": 4,
+        "start": 3415,
+        "done": 4142
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 14,
+        "kind": 2,
+        "start": 4125,
+        "done": 4156
+      },
+      "original_baseline": {
+        "op": 14,
+        "kind": 2,
+        "start": 4128,
+        "done": 4159
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 15,
+        "kind": 4,
+        "start": 4142,
+        "done": 4867
+      },
+      "original_baseline": {
+        "op": 15,
+        "kind": 4,
+        "start": 4145,
+        "done": 4872
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 16,
+        "kind": 3,
+        "start": 4854,
+        "done": 5140
+      },
+      "original_baseline": {
+        "op": 16,
+        "kind": 3,
+        "start": 4858,
+        "done": 5144
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 17,
+        "kind": 3,
+        "start": 5127,
+        "done": 5414
+      },
+      "original_baseline": {
+        "op": 17,
+        "kind": 3,
+        "start": 5131,
+        "done": 5418
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 18,
+        "kind": 1,
+        "start": 5400,
+        "done": 5801
+      },
+      "original_baseline": {
+        "op": 18,
+        "kind": 1,
+        "start": 5404,
+        "done": 5805
+      }
+    },
+    {
+      "chain": "golden_L0_L2",
+      "current": {
+        "op": 19,
+        "kind": 1,
+        "start": 5787,
+        "done": 6188
+      },
+      "original_baseline": {
+        "op": 19,
+        "kind": 1,
+        "start": 5791,
+        "done": 6192
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 7,
+        "kind": 4,
+        "start": 1409,
+        "done": 2134
+      },
+      "original_baseline": {
+        "op": 7,
+        "kind": 4,
+        "start": 1409,
+        "done": 2136
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 8,
+        "kind": 2,
+        "start": 2121,
+        "done": 2152
+      },
+      "original_baseline": {
+        "op": 8,
+        "kind": 2,
+        "start": 2122,
+        "done": 2153
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 9,
+        "kind": 4,
+        "start": 2138,
+        "done": 2864
+      },
+      "original_baseline": {
+        "op": 9,
+        "kind": 4,
+        "start": 2139,
+        "done": 2866
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 10,
+        "kind": 3,
+        "start": 2850,
+        "done": 3137
+      },
+      "original_baseline": {
+        "op": 10,
+        "kind": 3,
+        "start": 2852,
+        "done": 3139
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 11,
+        "kind": 3,
+        "start": 3123,
+        "done": 3410
+      },
+      "original_baseline": {
+        "op": 11,
+        "kind": 3,
+        "start": 3125,
+        "done": 3412
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 12,
+        "kind": 2,
+        "start": 3396,
+        "done": 3426
+      },
+      "original_baseline": {
+        "op": 12,
+        "kind": 2,
+        "start": 3398,
+        "done": 3428
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 13,
+        "kind": 4,
+        "start": 3413,
+        "done": 4139
+      },
+      "original_baseline": {
+        "op": 13,
+        "kind": 4,
+        "start": 3415,
+        "done": 4142
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 14,
+        "kind": 2,
+        "start": 4125,
+        "done": 4156
+      },
+      "original_baseline": {
+        "op": 14,
+        "kind": 2,
+        "start": 4128,
+        "done": 4159
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 15,
+        "kind": 4,
+        "start": 4142,
+        "done": 4867
+      },
+      "original_baseline": {
+        "op": 15,
+        "kind": 4,
+        "start": 4145,
+        "done": 4872
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 16,
+        "kind": 3,
+        "start": 4854,
+        "done": 5140
+      },
+      "original_baseline": {
+        "op": 16,
+        "kind": 3,
+        "start": 4858,
+        "done": 5144
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 17,
+        "kind": 3,
+        "start": 5127,
+        "done": 5414
+      },
+      "original_baseline": {
+        "op": 17,
+        "kind": 3,
+        "start": 5131,
+        "done": 5418
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 18,
+        "kind": 1,
+        "start": 5400,
+        "done": 5801
+      },
+      "original_baseline": {
+        "op": 18,
+        "kind": 1,
+        "start": 5404,
+        "done": 5805
+      }
+    },
+    {
+      "chain": "stress_0",
+      "current": {
+        "op": 19,
+        "kind": 1,
+        "start": 5787,
+        "done": 6188
+      },
+      "original_baseline": {
+        "op": 19,
+        "kind": 1,
+        "start": 5791,
+        "done": 6192
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 7,
+        "kind": 4,
+        "start": 1409,
+        "done": 2134
+      },
+      "original_baseline": {
+        "op": 7,
+        "kind": 4,
+        "start": 1409,
+        "done": 2136
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 8,
+        "kind": 2,
+        "start": 2121,
+        "done": 2152
+      },
+      "original_baseline": {
+        "op": 8,
+        "kind": 2,
+        "start": 2122,
+        "done": 2153
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 9,
+        "kind": 4,
+        "start": 2138,
+        "done": 2864
+      },
+      "original_baseline": {
+        "op": 9,
+        "kind": 4,
+        "start": 2139,
+        "done": 2866
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 10,
+        "kind": 3,
+        "start": 2850,
+        "done": 3137
+      },
+      "original_baseline": {
+        "op": 10,
+        "kind": 3,
+        "start": 2852,
+        "done": 3139
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 11,
+        "kind": 3,
+        "start": 3123,
+        "done": 3410
+      },
+      "original_baseline": {
+        "op": 11,
+        "kind": 3,
+        "start": 3125,
+        "done": 3412
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 12,
+        "kind": 2,
+        "start": 3396,
+        "done": 3426
+      },
+      "original_baseline": {
+        "op": 12,
+        "kind": 2,
+        "start": 3398,
+        "done": 3428
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 13,
+        "kind": 4,
+        "start": 3413,
+        "done": 4139
+      },
+      "original_baseline": {
+        "op": 13,
+        "kind": 4,
+        "start": 3415,
+        "done": 4142
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 14,
+        "kind": 2,
+        "start": 4125,
+        "done": 4156
+      },
+      "original_baseline": {
+        "op": 14,
+        "kind": 2,
+        "start": 4128,
+        "done": 4159
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 15,
+        "kind": 4,
+        "start": 4142,
+        "done": 4867
+      },
+      "original_baseline": {
+        "op": 15,
+        "kind": 4,
+        "start": 4145,
+        "done": 4872
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 16,
+        "kind": 3,
+        "start": 4854,
+        "done": 5140
+      },
+      "original_baseline": {
+        "op": 16,
+        "kind": 3,
+        "start": 4858,
+        "done": 5144
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 17,
+        "kind": 3,
+        "start": 5127,
+        "done": 5414
+      },
+      "original_baseline": {
+        "op": 17,
+        "kind": 3,
+        "start": 5131,
+        "done": 5418
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 18,
+        "kind": 1,
+        "start": 5400,
+        "done": 5801
+      },
+      "original_baseline": {
+        "op": 18,
+        "kind": 1,
+        "start": 5404,
+        "done": 5805
+      }
+    },
+    {
+      "chain": "stress_1",
+      "current": {
+        "op": 19,
+        "kind": 1,
+        "start": 5787,
+        "done": 6188
+      },
+      "original_baseline": {
+        "op": 19,
+        "kind": 1,
+        "start": 5791,
+        "done": 6192
+      }
+    }
+  ],
+  "note": "Current main composition changed since original baseline; -4 total cycles is measured, not attributed solely to the CCF local retime. No ledger row."
+}

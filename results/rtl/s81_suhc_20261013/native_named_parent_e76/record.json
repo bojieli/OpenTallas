@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.s81.hc.native_named_parent_functional.v1",
+  "source_snapshot": "e76ca29b5",
+  "parent": "dsfd_sp_hc_comb_native",
+  "parent_source_sha256": "6a0c1133557d594905354f24a1905c26417ad6ef272507de17a58400d41ae22c",
+  "actual_child_clock_entries": 14,
+  "parent_comb_data_logic": "zero: wires, constant clock selectors and elaboration-only geometry functions",
+  "positive": "three production chains exact, 1940 rows each, 6388 cycles",
+  "negative": "actual native sequencer clock input3 stopped, three chains fail1940 rows each",
+  "clock_scope": "functional common ideal boundary phase; physical delivery must use individual measured phi-R",
+  "timing_qualified": false,
+  "open_requirements": [
+    "successor CCF/pad physical closure",
+    "actual parent per-bit setup/hold and pin/route/cut closure",
+    "die binding of native clock ABI and all real child views",
+    "full external root/VM/chain/quant seams"
+  ]
+}

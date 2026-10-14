@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.s81.hc.provisional_cts_port_screen.v1",
+  "status": "PROVISIONAL CTS ONLY; not routed, not qualified, not release evidence",
+  "base": "/srv/opentallas-scratch/claude/ref_gate/s81hc_pad_fv4fd5r1_ref-20261013-212319/routes/gate/work/orfs/results/asap7/opentallas_ot_s81_hc_pad_fv4fd5r1_asap7_ref_gate/base",
+  "db": "4_1_cts.odb",
+  "sdc": "4_cts.sdc",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated",
+  "cell": "ot_s81_hc_pad_fv4fd5r1",
+  "input_sha256": {
+    "4_1_cts.odb": "ab2662c548dc05e2e43d2c9595dae2bf02da17fae1da13ef22b887a13aad5e6d",
+    "4_cts.sdc": "4a2ea7960891b153cd97d57f7c43c893e2700a0e577a11bc2e3e0435ecad756d"
+  },
+  "tt": {
+    "boundary": {
+      "n": 4427,
+      "mean": 194.0,
+      "min": 181.7,
+      "max": 206.3
+    },
+    "all": {
+      "n": 7826,
+      "mean": 191.9,
+      "min": 181.7,
+      "max": 206.3
+    }
+  },
+  "ff": {
+    "boundary": {
+      "n": 4427,
+      "mean": 159.1,
+      "min": 148.6,
+      "max": 170.0
+    },
+    "all": {
+      "n": 7826,
+      "mean": 157.3,
+      "min": 148.6,
+      "max": 170.0
+    }
+  },
+  "capture_ports": {
+    "srs": {
+      "bits": 1,
+      "min_ps": 153.09865,
+      "max_ps": 153.09865,
+      "worst_bits": [
+        "srs"
+      ]
+    },
+    "d_i": {
+      "bits": 1128,
+      "min_ps": 149.76039,
+      "max_ps": 209.92464,
+      "worst_bits": [
+        "d_i[1123]",
+        "d_i[1124]",
+        "d_i[1115]",
+        "d_i[1067]",
+        "d_i[1117]",
+        "d_i[1118]",
+        "d_i[1105]",
+        "d_i[1089]"
+      ]
+    },
+    "r_i": {
+      "bits": 2156,
+      "min_ps": 144.21054,
+      "max_ps": 264.22688,
+      "worst_bits": [
+        "r_i[1943]",
+        "r_i[2071]",
+        "r_i[2085]",
+        "r_i[2141]",
+        "r_i[2143]",
+        "r_i[1981]",
+        "r_i[2105]",
+        "r_i[1707]"
+      ]
+    },
+    "v_i": {
+      "bits": 7,
+      "min_ps": 159.20226,
+      "max_ps": 176.37367,
+      "worst_bits": [
+        "v_i[0]",
+        "v_i[6]",
+        "v_i[1]",
+        "v_i[3]",
+        "v_i[2]",
+        "v_i[4]",
+        "v_i[5]"
+      ]
+    }
+  }
+}

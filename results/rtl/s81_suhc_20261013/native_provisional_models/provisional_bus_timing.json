@@ -1,0 +1,277 @@
+{
+  "status": "placed CTS estimates only, no routed timing qualification",
+  "models": {
+    "ot_s81_hc_ccf": {
+      "view": "PROVISIONAL_CTS:results/rtl/s81_suhc_20261013/native_provisional_models/ccf",
+      "binding": null,
+      "cell": "ot_s81_hc_ccf",
+      "setup_corner": "tt",
+      "clocks": {
+        "sk": {
+          "R_tt": 689.8,
+          "R_ff": 556.4,
+          "spread": 31.9,
+          "n": 6370,
+          "src": "insertion.json"
+        }
+      },
+      "buses": {
+        "ch_rst": {
+          "dir": "output",
+          "bits": 1,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": 947.0,
+              "l": 734.7,
+              "S": null,
+              "h": null
+            }
+          ]
+        },
+        "n_yacc": {
+          "dir": "input",
+          "bits": 1,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": -437.0,
+              "h": 407.2
+            }
+          ]
+        },
+        "srs": {
+          "dir": "input",
+          "bits": 1,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": -437.5,
+              "h": 406.8
+            }
+          ]
+        },
+        "yfl": {
+          "dir": "output",
+          "bits": 1,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": 1119.5,
+              "l": 883.5,
+              "S": null,
+              "h": null
+            }
+          ]
+        },
+        "ch_fd": {
+          "dir": "output",
+          "bits": 2920,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": 974.6,
+              "l": 722.8,
+              "S": null,
+              "h": null
+            }
+          ]
+        },
+        "ch_fv": {
+          "dir": "output",
+          "bits": 7,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": 953.7,
+              "l": 734.4,
+              "S": null,
+              "h": null
+            }
+          ]
+        },
+        "fd_i": {
+          "dir": "input",
+          "bits": 1128,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": -388.7,
+              "h": 425.1
+            }
+          ]
+        },
+        "fv_i": {
+          "dir": "input",
+          "bits": 7,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": -408.5,
+              "h": 408.6
+            }
+          ]
+        },
+        "n_y": {
+          "dir": "input",
+          "bits": 2560,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": -381.6,
+              "h": 428.1
+            }
+          ]
+        }
+      },
+      "clock_out": {},
+      "pins_without_arc": [],
+      "provisional_not_qualified": true,
+      "source_lib_sha256": {
+        "tt": "3420dcb8d5131930470fdc589452d5e2bc7bd9febb2d21d5e262e66400a7ab20",
+        "ff": "53bfed92e8c01eddcada4ad28c615571822b357e8acba941302f0ec4cd765088"
+      }
+    },
+    "ot_s81_hc_pad_fv4fd5r1": {
+      "view": "PROVISIONAL_CTS:results/rtl/s81_suhc_20261013/native_provisional_models/pad",
+      "binding": null,
+      "cell": "ot_s81_hc_pad_fv4fd5r1",
+      "setup_corner": "tt",
+      "clocks": {
+        "sk": {
+          "R_tt": 194.0,
+          "R_ff": 159.1,
+          "spread": 24.6,
+          "n": 4427,
+          "src": "insertion.json"
+        }
+      },
+      "buses": {
+        "srs": {
+          "dir": "input",
+          "bits": 1,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": -40.9,
+              "h": 74.2
+            }
+          ]
+        },
+        "d_i": {
+          "dir": "input",
+          "bits": 1128,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": 15.9,
+              "h": 75.6
+            }
+          ]
+        },
+        "d_o": {
+          "dir": "output",
+          "bits": 1128,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": 739.7,
+              "l": 331.6,
+              "S": null,
+              "h": null
+            }
+          ]
+        },
+        "r_i": {
+          "dir": "input",
+          "bits": 2156,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": 70.2,
+              "h": 80.4
+            }
+          ]
+        },
+        "r_o": {
+          "dir": "output",
+          "bits": 2156,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": 1025.7,
+              "l": 394.8,
+              "S": null,
+              "h": null
+            }
+          ]
+        },
+        "v_i": {
+          "dir": "input",
+          "bits": 7,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": null,
+              "l": null,
+              "S": -17.6,
+              "h": 67.5
+            }
+          ]
+        },
+        "v_o": {
+          "dir": "output",
+          "bits": 7,
+          "arcs": [
+            {
+              "clk": "sk",
+              "edge": "r",
+              "O": 532.9,
+              "l": 378.7,
+              "S": null,
+              "h": null
+            }
+          ]
+        }
+      },
+      "clock_out": {},
+      "pins_without_arc": [],
+      "provisional_not_qualified": true,
+      "source_lib_sha256": {
+        "tt": "960956fd2c41a7070d0345a07242fdb4a688bad6560a1b0e5ac88b91406bbd88",
+        "ff": "bfe9bb754b1d698420cb75a6f650ff04b48f1632127174ef6941f860b643b6a3"
+      }
+    }
+  }
+}

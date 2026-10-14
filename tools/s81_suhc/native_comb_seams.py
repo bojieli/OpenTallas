@@ -28,10 +28,12 @@ def pins(leaf):
     return out
 
 
-def screen(plan):
+def screen(plan, model_overrides=None, geometry_overrides=None):
     by = {x['instance']:x for x in plan['instances']}
     geom = {k:pins(v) for k,v in by.items()}
     table = {v['cell']:pinreg_pairs.extract(v['view']) for v in by.values()}
+    table.update(model_overrides or {})
+    geom.update(geometry_overrides or {})
     assert all(table.values()), 'Missing measured timing view'
     die = pair_check.Die(table, {k:v['cell'] for k,v in by.items()})
     rows=[]
