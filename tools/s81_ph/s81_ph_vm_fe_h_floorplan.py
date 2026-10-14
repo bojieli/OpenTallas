@@ -333,8 +333,10 @@ class Plan:
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--variant', default='B'); ap.add_argument('--out', default=None)
+    ap = argparse.ArgumentParser(); ap.add_argument('--variant', default='B'); ap.add_argument('--height', type=float, default=695.52); ap.add_argument('--out', default=None)
     a = ap.parse_args()
+    global H
+    H = a.height
     p = Plan(a.variant)
     place = p.check_place(); hops = p.check_hops(); cuts = p.check_cuts()
     over = {c: r['len_max'] for c, r in hops.items() if r['len_max'] > HOP_MAX}
@@ -361,7 +363,7 @@ def main():
     for c, r in hops.items(): print(f'  {c:14s} hops {r["hops"]:3d} bits {r["bits"]:6d} len max {r["len_max"]:7.1f} ({r["worst"]}) jog max {r["jog_max"]:6.1f} jog cut {r["jog_cut_max"]:.2f} {r["verdict"]}')
     print('cuts', cuts)
     print('FLOORPLAN:', 'PASS' if res['pass'] else f'FAIL (placement {len(place)}, hop classes over {list(over)}, pin_align FAIL {pa_fail}, cuts {cut_bad}, not modelled {len(not_planned)})')
-    if ew: print(f"E-W necessary condition (s81_ph_vm_fe_h_ew_bound.py): best bound of ANY placement of the frozen structure {ew['frozen_structure_best_bound']} > {ew['limit']} => no placement passes; with no lane in the slot {ew['no_lane_bound']}")
+    if ew: print(f"E-W necessary condition (s81_ph_vm_fe_h_ew_bound.py): best optimistic bound found by finite search {ew['frozen_structure_best_bound']} vs {ew['limit']} (not a proof of global impossibility, current-height record only); with no lane in the slot {ew['no_lane_bound']}")
     if a.out: (ROOT / a.out).write_text(json.dumps(res, indent=1) + '\n')
     return 0 if res['pass'] else 1
 

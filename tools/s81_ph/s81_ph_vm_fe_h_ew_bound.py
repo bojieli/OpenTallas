@@ -157,7 +157,7 @@ def main():
     res = {'schema': 'opentallas.s81_vm_fe_h.ew_bound.v1', 'agent': 'el1013-s81-vmfe/B8', 'outline': [W, 695.52], 'limit': 0.60,
            'tracks_per_um_usable': {'free': round(HF, 2), 'over_m5_leaf': round(HL, 2), 'over_fsr': 0.0},
            'no_lane_in_slot_bound': round(nol, 3), 'cases': R,
-           'reading': 'bound = demand lower bound / supply upper bound of the worst vertical cut for the best placement found; > 0.60: no plan can pass; <= 0.60: NOT a pass (pin access, reach, local windows and the detour onto the clt-row M6 are not in it)'}
+           'reading': 'bound = demand lower bound / supply upper bound of the worst vertical cut for the best placement found; > 0.60: this searched candidate cannot pass; the finite hill-climb search does not prove global impossibility. <= 0.60: NOT a pass (pin access, reach, local windows and the detour onto the clt-row M6 are not in it)'}
     if a.out: (ROOT / a.out).write_text(json.dumps(res, indent=1) + '\n')
     return 0
 
