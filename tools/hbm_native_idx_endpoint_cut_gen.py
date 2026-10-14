@@ -29,7 +29,7 @@ s=s[:a]+s[a:b].replace('.clk(ck),','.clk(clk_top), .clk_ctl(clk_top_ctl), .clk_s
 s=s.replace('wire [Q*T-1:0] lne;', 'wire [Q*T-1:0] landing_fault;\n  wire [Q*T-1:0] lne;',1)
 s=s.replace('wire ovf_unused;', 'wire ovf_unused;\n        assign landing_fault[B]=ovf_unused;\n        wire [LA:0] cnt_;',1)
 s=s.replace('end else begin : g_ff','end else begin : g_ff\n        assign landing_fault[B]=0;',1)
-s=s.replace('if (qs_fault)', 'if (qs_fault || |landing_fault)',1)
+s=s.replace('if (qs_fault ||', 'if (qs_fault || |landing_fault ||',1)
 s=s.replace('ot_fifo_sram_fwft #(.W(SW-1), .DEPTH(1 << LA), .MACRO(2)) u_l (.clk(ck), .rst_n(rn), .push(siv[B]), .wdata(sid[B]),\n          .pop(pop[B]), .hv(lne[B]), .head(lrd[B]), .ovf(ovf_unused));','ot_hbm_idx_landing_fifo_native #(.W(SW-1), .AW(LA), .MACRO(1)) u_l (.clk(clk_score_fifo[B]), .clk_mem(clk_score_mem[B*3+:3]), .rst_n(rn), .we(siv[B]), .wd(sid[B]),\n          .re(pop[B]), .ne(lne[B]), .rd(lrd[B]), .cnt(cnt_), .fault(ovf_unused));',1)
 # TopK memories3macro/quarter, own externally driven memory+capture clock.
 s=s.replace('hfd_idx_mem #(.W(W*(17+IW))','ot_hbm_idx_line_memory_owned_native #(.W(W*(17+IW))',1)

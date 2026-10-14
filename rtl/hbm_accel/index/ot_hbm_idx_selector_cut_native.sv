@@ -250,7 +250,7 @@ module ot_hbm_idx_selector_cut_native #(
         else oq <= oq + 2'd1;
       end
       if (c_take && c_last[cq]) begin if (cq == 2'd3) cdone <= 1'b1; else cq <= cq + 2'd1; end
-      if (qs_fault || rep || ovf || crep || covf) fault <= 1'b1;
+      if (qs_fault || |landing_fault || rep || ovf || crep || covf) fault <= 1'b1;
       for (g = 0; g < Q; g = g + 1) if (fire[g] && |(f_fault[W*g +: W] & f_lv[W*g +: W])) fault <= 1'b1;
       for (g = 0; g < Q*T; g = g + 1) if (fire[g / T] && lrd[g][0] != lrd[(g / T) * T][0]) fault <= 1'b1;  // taps in step
       if (active && odone && (cdone || !cand_en) && !sel_busy && !cand_busy) begin active <= 1'b0; ev[0] <= 1'b1; end
