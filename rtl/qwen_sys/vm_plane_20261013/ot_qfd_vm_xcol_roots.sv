@@ -1,9 +1,13 @@
 // Cyclic root assignment: root r exports quad NROOT*phase+r (four elements).
 // Constant-entry mux ranks replace full-array replication. All roots stream in
 // parallel, native SMAX9 needs4 phases and full SMAX11 needs16 phases.
+// Unreplicated line snapshot follows the LEGACY registered-o_v capture edge;
+// nextline preparation may continue while the prior snapshotstreams. Producer
+// must avoid replacing the snapshot until its phase burst is drained.
 // Request -> local constant-index rank -> output:3 registered-me enabled edges.
 module ot_qfd_vm_xcol_roots #(
  parameter integer NRB=64,SMIN=7,SMAX=11,BMAX=8,ND=14,NROOT=32,
+ parameter integer SNAPSHOT=1,
  parameter integer PHW=(SMAX-2-$clog2(NROOT)>0?SMAX-2-$clog2(NROOT):1),
  parameter [ND*8-1:0] DSET={8'd96,8'd64,8'd48,8'd32,8'd24,8'd16,8'd12,8'd8,8'd6,8'd4,8'd3,8'd2,8'd1,8'd0},
  parameter integer MUT=0
@@ -23,7 +27,20 @@ module ot_qfd_vm_xcol_roots #(
  ot_qfd_vm_xline_t #(.NRB(NRB),.SMIN(SMIN),.SMAX(SMAX),.BMAX(BMAX),.ND(ND),.DSET(DSET),.SELECT_ONLY(1)) u_l(
  .clk(clk),.me_e(me_e),.d(bv),.c_v(c_v),.c_d(c_d),.c_j(c_j),.c_sp(c_sp),.o_v(o_v),.o_sp(o_sp),.q(),.line_data(line_bits));
  reg me=0;always @(posedge clk) me<=me_e;
- reg [3:0] split,sp1;
+ reg [3:0] split,sp1,os1;
+ localparam integer NSG=((1<<SMAX)+127)/128;
+ (* keep="true",dont_touch="true" *) reg [NSG-1:0] sov=0;
+ (* keep="true",dont_touch="true" *) reg [NSG-1:0] sme=0;
+ reg [(1<<SMAX)-1:0] snapshot;
+ always @(posedge clk) sme<={NSG{me_e}};
+ genvar sg;
+ generate for(sg=0;sg<NSG;sg=sg+1)begin:g_snapshot
+  always @(posedge clk) if(sme[sg])begin
+   sov[sg]<=o_v;
+   if(SNAPSHOT!=0 && (MUT==5?o_v:sov[sg]))snapshot[sg*128+:128]<=line_bits[sg*128+:128];
+  end
+ end endgenerate
+ wire [(1<<SMAX)-1:0] read_line=(SNAPSHOT!=0 && MUT!=4)?snapshot:line_bits;
  reg [PHW-1:0] ph1,ph2;
  reg [15:0] ep1,ep2;reg v1=0,v2=0;
  wire [NROOT*4-1:0] rank;
@@ -31,10 +48,12 @@ module ot_qfd_vm_xcol_roots #(
  genvar r;
  generate for(r=0;r<NROOT;r=r+1) begin:g_root
   ot_qfd_vm_root_rank #(.SMAX(SMAX),.NROOT(NROOT),.PHW(PHW),.ROOT_ID(r),.MUT(MUT)) u_rank(
-   .line_bits(line_bits),.phase(ph1),.split(sp1),.q(rank[r*4+:4]));
+   .line_bits(read_line),.phase(ph1),.split(SNAPSHOT!=0?split:sp1),.q(rank[r*4+:4]));
  end endgenerate
  always @(posedge clk) if(me) begin
-  if(o_v) split<=o_sp;
+  os1<=o_sp;
+  if(SNAPSHOT!=0)begin if(sov[0])split<=os1;end
+  else if(o_v)split<=o_sp;
   ph1<=phase;sp1<=split;ep1<=epoch;v1<=sel_v;
   rank2<=rank;ph2<=ph1;ep2<=ep1;v2<=v1;
   q<=rank2;q_phase<=ph2;q_epoch<=ep2;q_v<=v2;

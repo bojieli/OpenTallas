@@ -6,7 +6,7 @@
 // stalls 1 in 4).  Non-vacuity refusal: stalls, engine edges, q changes, line writes and replications below their
 // floors print FAIL.  PMUT 1..3 (plane) and LMUT 1..3 (line) inside the candidate must FAIL.
 module tb_qfd_vm_xcol_roots;
-    parameter integer NRB = 16, SMIN = 7, SMAX = 9, BMAX = 8, ND = 14, CYCLES = 4000, SEED = 1, PMUT = 0, LMUT = 0, MUT=0;
+    parameter integer NRB = 16, SMIN = 7, SMAX = 9, BMAX = 8, ND = 14, CYCLES = 4000, SEED = 1, PMUT = 0, LMUT = 0, MUT=0,SNAPSHOT=1;
     localparam integer LNRB = $clog2(NRB), BEAT = (NRB - 1) * 16, NVW = $clog2(BEAT + 1), LB = $clog2(BMAX) + 1, NX = 1 << SMAX;
     reg clk = 0; always #5 clk = ~clk;
     reg me_e = 0;
@@ -17,7 +17,7 @@ module tb_qfd_vm_xcol_roots;
     localparam PHW=SMAX-7;
     reg [PHW-1:0] phase=0;reg [15:0] epoch=0;reg sel_v=0;
     wire [127:0] q_roots; wire [PHW-1:0] q_phase;wire [15:0] q_epoch;wire q_v;
-    ot_qfd_vm_xcol_roots #(.NRB(NRB),.SMIN(SMIN),.SMAX(SMAX),.MUT(MUT)) candidate(
+    ot_qfd_vm_xcol_roots #(.NRB(NRB),.SMIN(SMIN),.SMAX(SMAX),.MUT(MUT),.SNAPSHOT(SNAPSHOT)) candidate(
       .clk(clk),.me_e(me_e),.d_lo(d[NRB*8-1:0]),.d_hi(d[NRB*16-1:NRB*8]),.c_a(c_a),.c_nv(c_nv),.c_v(c_v),.c_d(c_d),.c_j(c_j),.c_sp(c_sp),
       .o_v(o_v),.o_sp(o_sp),.phase(phase),.epoch(epoch),.sel_v(sel_v),.q(q_roots),.q_phase(q_phase),.q_epoch(q_epoch),.q_v(q_v));
     ot_qfd_vm_xplane_t #(.NRB(NRB)) ref_p (.clk(clk), .me_e(me_e), .d(d), .c_a(c_a), .c_nv(c_nv), .q(r_bv));
@@ -36,8 +36,8 @@ module tb_qfd_vm_xcol_roots;
       if(me) begin
         if(o_v)begin split<=o_sp;split_seen[o_sp]=1;end
         for(k=0;k<128;k=k+1) begin
-          indices[k]<=((32*phase+k/4)*4+k%4) % (1<<split);
-          exp2[k]<=ref_l.line[indices[k]];
+          indices[k]<=((32*phase+k/4)*4+k%4) % (SNAPSHOT!=0?NX:(1<<split));
+          exp2[k]<=(SNAPSHOT!=0)?r_q[indices[k]]:ref_l.line[indices[k]];
         end
         exp3<=exp2;v1<=sel_v;v2<=v1;v3<=v2;
         ph1<=phase;ph2<=ph1;ph3<=ph2;ep1<=epoch;ep2<=ep1;ep3<=ep2;
@@ -66,6 +66,6 @@ module tb_qfd_vm_xcol_roots;
       if(phase_seen!=={(1<<PHW){1'b1}} || split_seen!==16'hffff)errors=errors+1;
       if(errors || checks<CYCLES/2 || stalls<CYCLES/8 || valids<CYCLES/3 || changes<CYCLES/8)begin
         $display("FAIL xcol_roots MUT=%0d errors=%0d checks=%0d changes=%0d",MUT,errors,checks,changes);$fatal(1,"FAIL");end
-      $display("PASS xcol_roots SMAX=%0d seed=%0d checks=%0d valids=%0d changes=%0d roots=32 all_phase=%h",SMAX,SEED,checks,valids,changes,phase_seen);$finish;
+      $display("PASS xcol_roots SMAX=%0d seed=%0d checks=%0d valids=%0d changes=%0d roots=32 all_phase=%h snapshot=%0d",SMAX,SEED,checks,valids,changes,phase_seen,SNAPSHOT);$finish;
     end
 endmodule

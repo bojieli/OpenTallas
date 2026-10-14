@@ -8,4 +8,4 @@ one() { n=$1; shift
  echo "$n $(grep -E '^(PASS|FAIL)' "$B/$n.log" | head -1)"
 }
 one ok & one seed2 -GSEED=2 & one native -GNRB=64 -GSMAX=9 & one prod -GNRB=64 -GSMAX=11 &
-one mut1 -GMUT=1 & one mut2 -GMUT=2 & one mut3 -GMUT=3 & wait
+one live -GSNAPSHOT=0 -GNRB=64 -GSMAX=11 & one mut1 -GMUT=1 & one mut2 -GMUT=2 & one mut3 -GMUT=3 & one mut4 -GMUT=4 & one mut5 -GMUT=5 & wait
