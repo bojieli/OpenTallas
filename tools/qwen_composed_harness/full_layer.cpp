@@ -25,6 +25,7 @@ struct Rank {
  Vot_qwen_tp8_kv_sector_adapter sector;
  VmReceiver receiver;KernelRows reads;SectorWrites writes;
  struct Effect{unsigned pc,address,value;uint64_t edge;std::string port;};std::vector<Effect> effects;
+ struct Descriptor{unsigned pc;uint64_t edge;std::vector<unsigned> values;};std::vector<Descriptor> su_descriptors;
  struct KvCommit{unsigned pc,address,value;uint64_t edge;};std::vector<KvCommit> kv_commits;
  int su_owner=-1,rom_owner=-1;unsigned rom_written=0,rom_expected=0;
  bool epoch_reserved=false;uint64_t start_edge=0;
@@ -74,7 +75,9 @@ struct Rank {
   for(auto&w:vm.writes){int owner=(w.port=="SU"||w.port=="REDUCER")?su_owner:rom_owner;if(owner<0)throw std::runtime_error("unowned actual VM commit");effects.push_back({unsigned(owner),w.address,w.value,w.edge,w.port});if(w.port=="ME")++rom_written;}
   for(unsigned lane=0;lane<64;lane++)if(core.kv_we&(uint64_t(1)<<lane)){if(su_owner<0)throw std::runtime_error("unowned actual KV commit");kv_commits.push_back({unsigned(su_owner),get_bits(core.kv_waddr,24*lane,24),core.kv_wdata[lane],backend.core_edges});}
   if(core.instruction_issue){unsigned pc=vm.segment_base+core.instruction_pc;
-   if(core.instruction_unit==2){if(!core.su_is_idle)throw std::runtime_error("SU owner changed before actual idle/drain");su_owner=pc;}
+   if(core.instruction_unit==2){if(!core.su_is_idle)throw std::runtime_error("SU owner changed before actual idle/drain");su_owner=pc;
+    su_descriptors.push_back({pc,vm.edge,{core.su_desc_nout,core.su_desc_nin,core.su_desc_dst,core.su_desc_red,core.su_desc_ma,core.su_desc_mb,core.su_desc_sfu,core.su_desc_ad,core.su_desc_a_src,core.su_desc_b_src,core.su_desc_c_src,core.su_desc_mc,core.su_desc_md,core.su_desc_redsq,core.su_desc_imm1,core.su_desc_imm2,core.su_desc_a_base,core.su_desc_a_so,core.su_desc_a_si,core.su_desc_b_base,core.su_desc_b_so,core.su_desc_b_si,core.su_desc_c_base,core.su_desc_c_so,core.su_desc_c_si,core.su_desc_d_base,core.su_desc_d_so,core.su_desc_d_si,core.su_desc_r_base,core.su_desc_r_so}});
+   }
    else if(core.instruction_unit==1&&pc!=11){if(rom_owner>=0&&rom_written!=rom_expected)throw std::runtime_error("ROM owner changed before exact old output drain");rom_owner=pc;rom_written=0;rom_expected=pc==1?768:pc==16?3072:4096;}
   }
  }
@@ -114,13 +117,14 @@ int main(int argc,char**argv){try{
  fs::create_directories(argv[6]);for(unsigned rank=0;rank<8;rank++){
   auto&x=*r[rank];auto gold=qwen_native::read_hex<1>(std::string(argv[3])+"/die"+std::to_string(rank)+"/X_final_fp32.hex");if(gold.size()!=4096)throw std::runtime_error("final X observer dimensions");
   for(unsigned j=0;j<4096;j++)errors+=x.vm.vm[4096+j]!=gold[j][0];
-  if(x.vm.accepted.size()!=22||x.vm.retired!=std::vector<unsigned>{13,21,24}||x.receiver.commit_acks!=32||x.writes.committed!=8||!x.reads.drained()||!x.writes.drained())throw std::runtime_error("missing executed layer effects rank "+std::to_string(rank));
+  if(x.vm.accepted.size()!=22||x.vm.retired!=std::vector<unsigned>{13,21,24}||x.receiver.commit_acks!=32||x.writes.committed!=8||x.rom_written!=x.rom_expected||!x.reads.drained()||!x.writes.drained())throw std::runtime_error("missing executed layer effects rank "+std::to_string(rank));
   std::ofstream f(fs::path(argv[6])/("rank"+std::to_string(rank)+"_VM.hex"));for(auto bits:x.vm.vm)f<<std::hex<<std::setfill('0')<<std::setw(8)<<bits<<"\n";
   std::ofstream a(fs::path(argv[6])/("rank"+std::to_string(rank)+"_accepted.txt"));for(auto op:x.vm.accepted)a<<op.global_pc<<" "<<op.unit<<" "<<op.edge<<"\n";
   std::ofstream bits(fs::path(argv[6])/("rank"+std::to_string(rank)+"_accepted_source_words.hex"));for(auto op:x.vm.accepted){for(unsigned word=0;word<32;word++)bits<<std::hex<<std::setfill('0')<<std::setw(8)<<op.instruction[31-word];bits<<"\n";}
   std::ofstream k(fs::path(argv[6])/("rank"+std::to_string(rank)+"_KV.txt"));for(auto w:x.kv_commits)k<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.pc<<"\n";
   std::ofstream v(fs::path(argv[6])/("rank"+std::to_string(rank)+"_VM_commits.txt"));for(auto w:x.vm.commits)v<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
   std::ofstream e(fs::path(argv[6])/("rank"+std::to_string(rank)+"_operation_commits.txt"));for(auto w:x.effects)e<<w.pc<<" "<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
+  std::ofstream s(fs::path(argv[6])/("rank"+std::to_string(rank)+"_accepted_SU_descriptors.txt"));for(auto d:x.su_descriptors){s<<d.pc<<" "<<d.edge;for(auto value:d.values)s<<" "<<value;s<<"\n";}
  }
  std::cout<<"{\"scope\":\"ACTUAL_EIGHT_RANK_LAYER0_FUNCTIONAL_CANDIDATE\",\"instruction_issues_per_rank\":22,\"END_retirements_per_rank\":3,\"expected_X_words\":32768,\"errors\":"<<errors<<",\"past_cache_policy\":\"declared_synthetic_FP8_history_written_through_actual_controllers\",\"current_KV_policy\":\"actual_core_SU_writes_only\",\"layer_transitions_proved\":false,\"physical_VM_proved\":false,\"throughput_qualified\":false}\n";return errors?1:0;
  }catch(const std::exception&e){std::cerr<<"FAIL "<<e.what()<<"\n";return 2;}}

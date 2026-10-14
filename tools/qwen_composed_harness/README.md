@@ -47,3 +47,16 @@ that instruction's independent source snapshot, exact addressed current KV
 stores, all three quiescent END-boundary VM snapshots, final defined VM effects,
 and both collectives' complete returned payloads. It rejects the historical
 linear-eight-rank oracle. No verified output enters any DUT/provider input.
+
+Independent destination catalogs enforce exact per-operation/per-port address
+multisets. Actual accepted SU descriptors expose all 30 resolved selector,
+operand, immediate and reduction fields and are compared with the canonical
+source decoder plus the admitted fixed dynamics. Accepted source words are
+input provenance. The generic controller has no observed raw accepted IB379,
+context16 or version32 face; their production lifetime remains a contract gap.
+
+Separate f460 component receipts cover exact/stalled runs and the same-instance
+layer0→1 transition with no reset, including actual layer1 data mutation and
+stale old-epoch ACK rejection. These prove the kernel and functional transport
+composition on declared Q/SU fixtures. Actual core X carry, executed layers,
+physical timing, physical bandwidth and physical interconnect are unqualified.

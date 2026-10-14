@@ -9,15 +9,28 @@ import numpy as np
 def sha(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
-def verify(oracle, actual):
+def verify(oracle, actual, catalog_path=None, fields_path=None):
     oracle_report = json.loads((oracle / 'oracle.json').read_text())
     if oracle_report.get('collective_reference_profile') != 'production_tp8_two_level':
         raise ValueError('acceptance requires production two-level TP8 reference')
+    sidecar = json.loads(catalog_path.read_text()) if catalog_path else None
+    if fields_path is None:
+        raise ValueError('acceptance requires independently resolved accepted SU field expectations')
+    resolved_fields = json.loads(fields_path.read_text())
+    if resolved_fields['position'] != oracle_report['position']:
+        raise ValueError('resolved field catalog position differs')
+    if resolved_fields['decoder_sha256'] != oracle_report['source_sha256']['tools/hdc_isa.py']:
+        raise ValueError('resolved field catalog decoder pin differs from arithmetic source')
+    if sidecar and (sidecar['layer'] != oracle_report.get('payload_layer', 0) or
+                    sidecar['position'] != oracle_report['position']):
+        raise ValueError('destination sidecar belongs to a different layer/position')
     ranks = []
     for rank in range(8):
         source = oracle / f'die{rank}'
         vm_path = actual / f'rank{rank}_VM.hex'
         expected_path = source / 'candidate_pc23_vm.npz'
+        if sha(expected_path) != oracle_report['ranks'][str(rank)]['effects']['23']['full_VM_sha256']:
+            raise ValueError('final VM reference artifact digest differs')
         with np.load(expected_path) as expected:
             values = np.array([int(x, 16) for x in vm_path.read_text().split()], dtype=np.uint32)
             bits = expected['vm_bits']
@@ -30,6 +43,8 @@ def verify(oracle, actual):
         for segment, pc in enumerate((12, 20, 23)):
             boundary = actual / f'rank{rank}_segment{segment}_VM.hex'
             reference = source / f'candidate_pc{pc}_vm.npz'
+            if sha(reference) != oracle_report['ranks'][str(rank)]['effects'][str(pc)]['full_VM_sha256']:
+                raise ValueError('segment-boundary reference artifact digest differs')
             with np.load(reference) as expected:
                 boundary_bits = np.array([int(x, 16) for x in boundary.read_text().split()], dtype=np.uint32)
                 if boundary_bits.shape != expected['vm_bits'].shape:
@@ -41,6 +56,8 @@ def verify(oracle, actual):
         expected_kv = {}
         expected_kv_owner = {}
         for pc in (3, 8, 10):
+            if sha(source / f'candidate_pc{pc}_KV_commits.npz') != oracle_report['ranks'][str(rank)]['effects'][str(pc)]['KV_commit_sha256']:
+                raise ValueError('current KV reference artifact digest differs')
             with np.load(source / f'candidate_pc{pc}_KV_commits.npz') as commits:
                 # Exact stored FP32 represents the already-rounded FP8 value.
                 addresses = commits['element_addresses'].reshape(-1)
@@ -52,6 +69,7 @@ def verify(oracle, actual):
                     expected_kv[address] = value
                     expected_kv_owner[address] = pc
         observed_kv = {}
+        observed_destinations = {}
         for line in (actual / f'rank{rank}_KV.txt').read_text().splitlines():
             address, value, edge, owner_pc = line.split()
             address = int(address)
@@ -63,11 +81,26 @@ def verify(oracle, actual):
             if address in observed_kv:
                 raise ValueError(f'rank {rank}: duplicate actual KV write {address}')
             observed_kv[address] = int(value, 16)
+            observed_destinations.setdefault((owner_pc, 'KV'), []).append(address)
         kv_errors = sum(observed_kv.get(a) != v for a, v in expected_kv.items()) + len(observed_kv.keys() - expected_kv.keys())
         accepted = [tuple(map(int, l.split())) for l in (actual / f'rank{rank}_accepted.txt').read_text().splitlines()]
         expected_pcs = [pc for pc in range(25) if pc not in (13, 21, 24)]
         if [pc for pc, unit, edge in accepted] != expected_pcs:
             raise ValueError(f'rank {rank}: instruction order differs from actual 25-word image')
+        source_fields = resolved_fields['ranks'][str(rank)]
+        if source_fields['program_sha256'] != oracle_report['ranks'][str(rank)]['lowered_program_sha256']:
+            raise ValueError('resolved fields belong to a different input program')
+        observed_fields = {}
+        for line in (actual / f'rank{rank}_accepted_SU_descriptors.txt').read_text().splitlines():
+            parts = list(map(int, line.split()))
+            if len(parts) != 2 + len(resolved_fields['keys']):
+                raise ValueError('accepted SU descriptor observation width differs')
+            pc, edge = parts[:2]
+            if str(pc) in observed_fields:
+                raise ValueError('duplicate accepted SU descriptor observation')
+            observed_fields[str(pc)] = dict(zip(resolved_fields['keys'], parts[2:]))
+        if observed_fields != source_fields['resolved_SU_fields']:
+            raise ValueError(f'rank {rank}: actually accepted resolved SU fields differ from pinned source/dynamics')
         operation_counts = {}
         operation_errors = []
         operation_reference = {}
@@ -77,18 +110,39 @@ def verify(oracle, actual):
             if pc not in expected_pcs:
                 raise ValueError('actual VM commit has invalid accepted provider owner')
             if pc not in operation_reference:
+                if sha(source / f'candidate_pc{pc}_vm.npz') != oracle_report['ranks'][str(rank)]['effects'][str(pc)]['full_VM_sha256']:
+                    raise ValueError('operation reference artifact digest differs')
                 with np.load(source / f'candidate_pc{pc}_vm.npz') as expected:
                     operation_reference[pc] = (expected['vm_bits'].copy(), expected['defined_effect_mask'].copy())
             bits, mask = operation_reference[pc]
             if not 0 <= address < len(bits):
                 raise ValueError('actual operation commit is outside VM')
             operation_counts[pc] = operation_counts.get(pc, 0) + 1
+            observed_destinations.setdefault((pc, port), []).append(address)
             if mask[address] and bits[address] != value:
                 operation_errors.append({'pc': pc, 'address': address, 'actual': value,
                                          'expected': int(bits[address]), 'edge': int(edge), 'port': port})
         expected_vm_pcs = set(expected_pcs) - {3, 8, 10}
         if set(operation_counts) != expected_vm_pcs:
             raise ValueError(f'rank {rank}: missing actual operation commits {expected_vm_pcs-set(operation_counts)}')
+        for pc, count in ((1, 768), (12, 4096), (16, 3072), (20, 4096), (11, 512)):
+            if operation_counts.get(pc) != count:
+                raise ValueError(f'rank {rank}: exact output count differs for provider operation {pc}')
+        catalog = oracle_report['ranks'][str(rank)].get('operation_destinations')
+        if sidecar:
+            side_rank = sidecar['ranks'][str(rank)]
+            if side_rank['actual_image_sha256'] != oracle_report['ranks'][str(rank)]['image_sha256'] or side_rank['candidate_program_sha256'] != oracle_report['ranks'][str(rank)]['lowered_program_sha256']:
+                raise ValueError('destination sidecar source image/program digests differ')
+            catalog = side_rank['operations']
+        if not catalog:
+            raise ValueError('acceptance requires independent complete destination catalogs')
+        expected_destinations = {(int(pc), port): addresses for pc, ports in catalog.items()
+                                 for port, addresses in ports.items() if addresses}
+        if observed_destinations.keys() != expected_destinations.keys():
+            raise ValueError('actual committed provider/operation set differs from complete catalog')
+        for identity, addresses in observed_destinations.items():
+            if sorted(addresses) != sorted(expected_destinations[identity]):
+                raise ValueError(f'rank {rank}: missing/extra/duplicate commits for operation/port {identity}')
         ranks.append({'rank': rank, 'defined_VM_words': vm_words,
                       'VM_errors': len(mismatch), 'first_VM_error_addresses': mismatch[:16].tolist(),
                       'expected_KV_commits': len(expected_kv), 'actual_KV_commits': len(observed_kv),
@@ -124,6 +178,9 @@ def verify(oracle, actual):
                         all(b['errors'] == 0 for b in r['quiescent_segment_boundaries']) for r in ranks)
                     and all(c['errors'] == 0 for c in collectives),
               'oracle_receipt_sha256': sha(oracle / 'oracle.json')}
+    report['explicit_catalog_sha256'] = sha(catalog_path) if catalog_path else None
+    report['resolved_field_catalog_sha256'] = sha(fields_path)
+    report['accepted_raw_IB379_context16_version32_proved'] = False
     (actual / 'defined_effect_receipt.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report))
     return report['ok']
@@ -132,5 +189,7 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--oracle', type=Path, required=True)
     p.add_argument('--actual', type=Path, required=True)
+    p.add_argument('--catalog', type=Path)
+    p.add_argument('--fields', type=Path, required=True)
     a = p.parse_args()
-    raise SystemExit(0 if verify(a.oracle, a.actual) else 1)
+    raise SystemExit(0 if verify(a.oracle, a.actual, a.catalog, a.fields) else 1)
