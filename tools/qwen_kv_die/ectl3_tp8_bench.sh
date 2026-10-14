@@ -13,7 +13,7 @@ N=ectl3${MUT:+_$MUT}
 $V --binary --timing -j 4 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --x-assign 0 --x-initial 0 $DEF \
   -GS=${S:-1} -GE=${E:-3} -GNL=${NL:-4} --top-module tb_qkd_ectl3 -Mdir "$OUT/obj_$N" \
   rtl/test/qwen_kv_die/tb_qkd_ectl3.sv $EXTRA rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv rtl/hdc/nearhbm/qkd_ectl.sv \
-  rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/ot_hdc_delay.sv \
+  rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_relay.sv \
   physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > "$OUT/build_$N.log" 2>&1 || { tail -8 "$OUT/build_$N.log"; echo BUILD_FAIL; exit 3; }
 "$OUT/obj_$N/Vtb_qkd_ectl3" | tee "$OUT/$N.log" | tail -12
 grep -q "^ECTL3 PASS" "$OUT/$N.log"
