@@ -1,0 +1,86 @@
+{
+  "name": "norm_sum_node_ref",
+  "top": "ot_hbm_norm_sum_node",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 30.24,
+    "h": 25.92
+  },
+  "std_area_um2": 300,
+  "area_basis": "Temporary pre-synthesis estimate; no granted outline",
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "go",
+      "left_ready",
+      "left_data"
+    ],
+    "S": [
+      "right_ready",
+      "right_data"
+    ],
+    "E": [
+      "ready",
+      "published",
+      "fault",
+      "data"
+    ]
+  },
+  "macros": [],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 16
+  },
+  "job": {
+    "owner": "Codex:hbm_hc_norm",
+    "branch": "codex/hbm-hc-norm-takeover-1013",
+    "tag": "clockleaf",
+    "purpose": "Native norm registered binary heap state leaf, independent ownclock; candidate within dieleadSU-norm planningframe, no acceptedphysicalslot",
+    "extra_paths": [
+      "rtl/test",
+      "tools/run_hbm_norm_sum_node.sh"
+    ],
+    "benches": [
+      {
+        "name": "node_exact",
+        "cmd": "bash tools/run_hbm_norm_sum_node.sh {RUN}/bench/node_exact",
+        "expect": "pass",
+        "pass_regex": "NORM_SUM_NODE PASS",
+        "threads": 8,
+        "peak_ram_gb": 8
+      },
+      {
+        "name": "node_mut_association",
+        "cmd": "XDEF=-DNMUT=1 bash tools/run_hbm_norm_sum_node.sh {RUN}/bench/node_mut",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 8
+      }
+    ],
+    "views_to": "physical/ref_tile/norm_sum_node_ref/views",
+    "record_to": "results/rtl/ref_tile/norm_sum_node_ref"
+  }
+}
