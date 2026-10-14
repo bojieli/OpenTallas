@@ -1,6 +1,6 @@
 The native IDX parent requires four stack scorers. Each scorer has four engines,
 each engine scores four keys over four eight-head chunks, and each chunk contains
-four columns of eight unchanged head-key hslice leaves. The required count is
+four columns of eight head-key hslice leaves with a distinct registered reset-ready acknowledgment successor. The required count is
 512 leaves per scorer and 2,048 per die. The historical 32-child grid cannot be
 used as this parent or as its placement footprint.
 
@@ -16,7 +16,7 @@ an unbounded host array or precomputed output.
 A full-width arithmetic vehicle instantiates NS16/NK4 (all 2,048 real RTL hslice
 state objects) and compares actual output scores, flags, masks, global IDs and
 last tags against the canonical NumPy golden. Hierarchical compilation preserves
-the unchanged hslice RTL and compiles its implementation once. Source contains
+the real hslice arithmetic and compiles its implementation once; the distinct successor adds one actual rs/rn_p-qualified acknowledgment FF and pin. Source contains
 2,160 owned clock roots (16 state + 16 metadata + 16 tail + 64 chunk + 2,048 leaf).
 The functional vehicle ties those clocks to one common phase. It does not prove
 independent-clock delivery or four independently timed stack-service streams.
@@ -38,7 +38,9 @@ routing gutters and registered relays must increase that request. Existing
 Actual die windows must come from the die owner; no fabricated slots or legacy
 32-child macro aliases are accepted.
 
-Physical intake remains blocked on source-bound retained-state census, fixed
+The fresh source-bound glue census is 566,992 generic FF bits across112 roots: engine9,905, tail8,104, chunk3,551 and metadata3,224. An additional2,048 independently clocked ready-leaf instances produce2,160 total roots. The related old measured leaf has15,334 sinks; the new acknowledgment leaf requires a fresh physical view.
+
+Physical intake remains blocked on fixed
 named hard leaves, actual clock-root acceptance, registered pin/seam timing,
 source-derived die pin files, and an admitted placement/window from the die
 owner. The closed hslice, q-end pack and T4 join remain constituent evidence;
