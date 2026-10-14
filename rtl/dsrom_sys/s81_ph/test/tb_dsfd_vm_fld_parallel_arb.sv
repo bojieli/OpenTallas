@@ -10,8 +10,8 @@ endmodule
 module tb_dsfd_vm_fld_parallel_arb;
  reg[3:0] ptr;reg[9:0] requests;wire[9:0] take;wire[1:0] valid;wire[7:0] selected;
  fld_arb_probe dut(ptr,requests,take,valid,selected);
- integer p,r,i,j,k,count;reg[9:0] expected_take;reg[1:0] expected_valid;reg[3:0] s0,s1;
- initial begin count=0;
+ integer p,r,i,j,k;reg[9:0] expected_take;reg[1:0] expected_valid;reg[3:0] s0,s1;
+ initial begin
   for(p=0;p<16;p=p+1)for(r=0;r<1024;r=r+1)begin
    ptr=p;requests=r;expected_take=0;expected_valid=0;s0=0;s1=0;k=0;
    for(i=0;i<10;i=i+1)begin j=(p+i)%10;
@@ -22,8 +22,8 @@ module tb_dsfd_vm_fld_parallel_arb;
    end
    #1;
    if({take,valid,selected}!={expected_take,expected_valid,s1,s0})$fatal(1,"ARB_BAD ptr%0d req%h got%h/%b/%h expected%h/%b/%h",p,r,take,valid,selected,expected_take,expected_valid,{s1,s0});
-   count=count+1;
   end
-  $display("ARB_PASS checks=%0d all16pointer_values/all1024eligibility_sets",count);$finish;
+  if(p!=16 || r!=1024 || $time!=16384)$fatal(1,"ARB_INCOMPLETE p%0d r%0d elapsed%0t",p,r,$time);
+  $display("ARB_PASS checks=16384 finalptr=%0d finalreq=%0d elapsed=%0t",p,r,$time);$finish;
  end
 endmodule
