@@ -73,6 +73,8 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
     reg [175:0] sc; reg sq_act, sq_last, sq_mv_v, sq_wait; reg [226:0] sq_mv; reg [19:0] sq_e;
     reg sq_p0v; reg [59:0] sq_p0; reg [2:0] sq_ph; reg [59:0] sq_p; reg [42:0] sq_lo, sq_hi; reg [31:0] sq_id;
     reg [34:0] sq_pp [0:3];
+    reg [30:0] sq_nlo [0:3], sq_nhi [0:3];
+    reg [31:0] sq_dw; // modulo32 destination: base + row_index * stride
     reg sq_skd;                                                 // B2: the stream's last row was another stack's (done pulse)
     localparam integer QS = (MUT_B2 == 1) ? (QID + 1) % 4 : QID;
     assign il_vmq = r_vmq; assign il_active = rd_act;
@@ -109,7 +111,7 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
                 sc <= d_is_cmd[175:0]; rd_act <= d_is_cmd[174:155] != 20'd0; rd_w <= d_is_cmd[207:176]; rd_left <= d_is_cmd[174:155]; u_e <= 20'd0;
                 if (FRONT != 0) begin ixf_v <= 1'b1; ixf_cmd <= d_is_cmd[175:0]; end
                 else begin
-                    sq_act <= d_is_cmd[174:155] != 20'd0; sq_e <= 20'd0; sq_p0v <= 1'b0; sq_wait <= 1'b0; sq_ph <= 3'd0; sq_last <= 1'b0;
+                    sq_act <= d_is_cmd[174:155] != 20'd0; sq_e <= 20'd0; sq_dw <= d_is_cmd[122:91]; sq_p0v <= 1'b0; sq_wait <= 1'b0; sq_ph <= 3'd0; sq_last <= 1'b0;
                 end
             end
             if (iss_go) begin
@@ -139,7 +141,16 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
             if (sq_act) begin
                 if (sq_ph == 3'd0 && !sq_wait && s_id_v) begin sq_id <= idf[idf_h]; sq_ph <= 3'd1; end
                 if (sq_ph == 3'd1) begin
-                    for (integer pp=0;pp<4;pp=pp+1) sq_pp[pp] <= {27'd0,sq_id[pp*8 +: 8]} * {8'd0,sc[69:43]};
+                    // Capture two 4x27 products, then combine on a separate edge.
+                    for (integer pp=0;pp<4;pp=pp+1) begin
+                        sq_nlo[pp] <= {27'd0,sq_id[pp*8 +: 4]} * {4'd0,sc[69:43]};
+                        sq_nhi[pp] <= {27'd0,sq_id[pp*8+4 +: 4]} * {4'd0,sc[69:43]};
+                    end
+                    sq_ph <= 3'd5;
+                end
+                if (sq_ph == 3'd5) begin
+                    for (integer pp=0;pp<4;pp=pp+1)
+                        sq_pp[pp] <= {4'd0,sq_nlo[pp]} + {sq_nhi[pp],4'd0};
                     sq_ph <= 3'd2;
                 end
                 if (sq_ph == 3'd2) begin
@@ -156,12 +167,12 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
                 end
                 if (sq_ph == 3'd4) begin : mvw
                     reg [59:0] a; reg [31:0] dw;
-                    a = {20'd0, sc[42:3]} + sq_p; dw = sc[122:91] + sq_e * sc[154:123];
+                    a = {20'd0, sc[42:3]} + sq_p; dw = sq_dw;
                     // move word {n 21, m 20, dst istride 16, dst stride 32, dst base 40, dst fmt 3, dst space 2,
                     //            src istride 16, src stride 32, src base 40, src fmt 3, src space 2}
                     sq_mv <= {sc[90:70], 20'd1, 16'd1, 32'd0, {8'd0, dw}, (sc[2:0] == 3'd5) ? 3'd5 : 3'd0, 2'd1,
                               16'd1, 32'd0, a[39:0], sc[2:0], 2'd0};
-                    sq_ph <= 3'd0; sq_e <= sq_e + 20'd1;
+                    sq_ph <= 3'd0; sq_e <= sq_e + 20'd1; sq_dw <= sq_dw + sc[154:123];
                     if (B2 != 0 && a[SBIT +: 2] != 2'(QS)) begin          // B2: another stack's row: skipped
                         if (sq_e + 20'd1 == sc[174:155]) begin sq_act <= 1'b0; sq_skd <= 1'b1; end
                     end else begin
