@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81pq_qb_bank0_native",
  "verdict": "WARN",
- "generated": "2026-10-14T06:42:59-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-14T06:50:30-0700",
+ "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "39e3cd549214a9da123db7f560f2b092ffe4e26b",
+  "start_commit": "1134df4f0d86c8f1f03bb357a10ee5413ad05ad9",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "95414e379e6cc10174b033096c192a4803c24b24c262529f10bab855010c85b6",
-  "manifest_sha256": "2dcef72e933b11ab7d7fb3edec3fb8feb14c5625cae5c9a986321f146e992606",
+  "archive_sha256": "df5b8a106548d9d851dda8ec940b7ec58ad09ed21e820c59756f311eb694b85e",
+  "manifest_sha256": "e60f83801d207978dc48ab2eb17e93f6e8857248b2f387cbea6251f6b57de899",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17091,8 +17091,8 @@
    {
     "path": "physical/ref_tile_specs/s81pq_native/ctl_native_pins.tcl",
     "kind": "file",
-    "sha256": "6aaabaf573133b21b2da4ced33b427e5b7529fe07b641f3bea199ae3b9e7fd04",
-    "git_blob": "6b29350f288b4321793d67b7727ab1ddb7b78429",
+    "sha256": "d0c776938a38700148d6127c807e194b663bddfd224461554989fa8c6a26e3d5",
+    "git_blob": "a3b7c3eb05b399fc683d773eb4076806049133fe",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -112147,7 +112147,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "53d9a86f7a681b67107bd89556390e53e8aabfcd",
+   "origin_main": "bec9f720bd67467b8b00f9c025cd778e2cb3e66d",
    "content_sha256": "d422c33fd7fe5e4ebf90576f2a8c7ac9c2a4595707a1c3fb2709a6cc4610da04",
    "files": [
     {
@@ -112520,11 +112520,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T06:40:19-0700",
-  "remote_script_sha256": "5830586b64908c5b69521c49d39ed2369b19e5469a98064e72a1e6d20b4badb4",
+  "captured": "2026-10-14T06:47:20-0700",
+  "remote_script_sha256": "e367890460a49c227cd0688e26831e5bb0153a5b86cc114ddb00d11e79cc5201",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81pq_qb_bank0_native-20261014-063953",
+  "remote_host": "ot-epyc1tb",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81pq_qb_bank0_native-20261014-064649",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
