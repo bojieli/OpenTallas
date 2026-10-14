@@ -110,15 +110,14 @@ module ot_qwen_die_cdc_ch #(
     generate if (RXP == 0) begin : g_ibw
         if (IBMEM == 0) begin : g_store
             if (WR_FREE != 0) begin : g_local
-                // Current pointer/valid/full copies for each word slice. The
-                // next pointer values are captured on the SAME edge as iw/ir,
-                // so every bank write and head read preserves its old edge.
+                // Current pointer/valid copies for each word slice. Each local
+                // counter advances on the SAME accepted write/pop as iw/ir;
+                // its feedback stays local rather than loading global next-state.
+                // Every bank write and head read preserves its old edge.
                 // Bound each write-enable and read-select fanout to 64 bits.
                 // Keep the wrap bits locally too: computing current full from
                 // current pointers avoids a pop->next-pointer->full register path.
                 localparam integer NS = (W + 63) / 64;
-                wire [IA:0] iw_next = iw + {{IA{1'b0}}, x_wr};
-                wire [IA:0] ir_next = ir + {{IA{1'b0}}, pop};
                 for (genvar s = 0; s < NS; s = s + 1) begin : g_slice
                     localparam integer LO = s * 64;
                     localparam integer SW = (W - LO < 64) ? W - LO : 64;
@@ -131,9 +130,10 @@ module ot_qwen_die_cdc_ch #(
 `ifdef OT_CDC_IBPTR_MUT_CURRENT
                             // One-sided stale read pointer: moving both pointers
                             // together can merely rotate the physical rows.
-                            iw_c <= iw_next; ir_c <= ir;
+                            iw_c <= iw_c + {{IA{1'b0}}, x_wr}; ir_c <= ir;
 `else
-                            iw_c <= iw_next; ir_c <= ir_next;
+                            iw_c <= iw_c + {{IA{1'b0}}, x_wr};
+                            ir_c <= ir_c + {{IA{1'b0}}, pop};
 `endif
                             iv_c <= i_v_p;
                         end
