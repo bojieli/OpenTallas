@@ -631,6 +631,16 @@ def child_insertions(s: dict) -> dict:
     out = {}
     for ch in s["children"]:
         v = ch["view"]
+        # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
+        # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
+        # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
+        # which would hand the core its clock ~90 ps early against the leaves it talks to).  Lib max when no record exists.
+        ij = ROOT / v / "insertion.json"
+        if s.get("child_clock_ref") == "boundary" and ij.exists():
+            b = json.loads(ij.read_text()).get("tt", {}).get("boundary", {})
+            if b.get("n") and b.get("mean") is not None:
+                out[view_name(v)] = round(float(b["mean"]), 1)
+                continue
         p = ROOT / v / f"{view_name(v)}_tt.lib"
         ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
         vals = [x["max_ps"] for x in ins.values() if x]
