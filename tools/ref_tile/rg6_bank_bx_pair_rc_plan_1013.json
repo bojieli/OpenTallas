@@ -236,12 +236,26 @@
     "constraints": "Setup reserve210 (potential deep), hold100 across all clocks, all selected rise/fall max/min checked. No nominal DATA top ports, so no unconstrained top DATA IO. Actual ETM clock/table source slew basis retained and documented.",
     "RC": "Freeze actual platform setRC.tcl/tech LEF/layer values and source hashes. Nominal platform placementRC only; identify M4-access/M5 wire model. Same declared nominal RC each cell corner; actual SS driver/capture models, no invented SS-wire coefficient.",
     "oracles": "Report selected complete max/min paths and wire delay/cap; compare loaded macro CQ/setup model vs first-table-point zero-wire screen separately. First tablepoint is2.88fF, not zero actual load; use actual capture pin capacitance+wire cap in executable. Keep all negative results.",
-    "safety": "Copies of published libraries/LEFs; no sourcechild modifications, reroute, main edits, clock/reset/load waivers. Heavy job via ot-run only after plan review."
+    "safety": "Copies of published libraries/LEFs; no sourcechild modifications, reroute, main edits, clock/reset/load waivers. Heavy job via ot-run only after plan review.",
+    "static_pin_policy": {
+      "bank_rst_n": "1 (inactive active-low reset; no reset exception)",
+      "bank_re_we": "0 (unused opaque ETM controls; no functional activity/qualification claim)",
+      "bank_ra_wl_wm_wd": "0 on unused DATA inputs; selected output remains actual published clock-to-Q ETM arc",
+      "BX_d": "selected d[219] connected from bank q[286]; all remaining d bits static0",
+      "PG": "VDD1/VSS0 only as published PG pins; no DATA timing exception",
+      "ME": "No EN1 ME/ENGINE logic is replaced by this distinct existing BX D1 diagnostic"
+    }
   },
   "known_limits": [
     "SSzero18.10841ps is a small necessary-screen margin; any actual load/wire cost may consume it.",
     "Bank q286 TT firstpoint O-R351.00713ps>220; TT boundary spread137ps>80, independent physical limitations.",
     "Unbuffered36.564um local corridor does not model fullbank fanout or any buffered M9 parent network.",
     "Primitive placementRC can only diagnose nominal-model wire cost; cannot qualify extracted SS physical wire."
-  ]
+  ],
+  "actual_capture_pin_capacitance_fF": {
+    "tt": 1.1829,
+    "ff": 1.2256,
+    "ss": 1.1551
+  },
+  "load_model_note": "Capture input cap is below first output table point2.88fF before wire cap. Actual model lookup may extrapolate; report actual wire+pin cap and lookup result instead of assuming firstpoint is exactzero-wire load. No external80fF benchmark imposed or removed from published models."
 }
