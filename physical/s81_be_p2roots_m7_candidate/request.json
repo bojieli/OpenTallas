@@ -1,0 +1,118 @@
+{
+  "schema": "opentallas.be_p2_clock_root_interface_request.v1",
+  "status": "PREPARED_UNQUALIFIED_UNALLOCATED_NOT_LAUNCHED",
+  "source_commit": "767aae960",
+  "source_RTL_sha256": "06f35b1fb5f0341658a4ee46949c5850223e9ffe120ffd2a6edebe6b32585022",
+  "default_off_define": "OT_BE_P2_SPLIT_ROOTS",
+  "selected_candidate_defines": [
+    "OT_BE_RCDC_GRAY",
+    "OT_BE_P2_SPLIT_ROOTS"
+  ],
+  "top": "dsfd_vm_be_sl",
+  "signal_contacts": 4101,
+  "actual_cap": "M7",
+  "PG_top": "M7",
+  "parent_strap": "M8",
+  "outline_um": [
+    302.4,
+    92.88
+  ],
+  "new_clock_contacts": [
+    [
+      "ck_pf[0]",
+      "M4",
+      0,
+      6.288,
+      0.192,
+      6.312
+    ],
+    [
+      "ck_pf[1]",
+      "M4",
+      0,
+      6.384,
+      0.192,
+      6.408
+    ]
+  ],
+  "global_VM_origin_requested_um": [
+    14036.112,
+    12804.48
+  ],
+  "BE_origin_requested_um": [
+    64.752,
+    21.6
+  ],
+  "BE_pitch_um": 475.2,
+  "allocator_lattice_acceptance": null,
+  "current_serial_root_sinks": 15584,
+  "current_stream_root_sinks": 441,
+  "actual_current_P2_FF": [
+    3199,
+    3158
+  ],
+  "requested_original_root_sinks_before_mapping": 9227,
+  "requested_new_P2_root_sinks_before_mapping": [
+    3213,
+    3172
+  ],
+  "new_MVC_registered_copies": 28,
+  "implemented_new_FF_nominal": 28,
+  "original_MVC_retention_after_mapping": null,
+  "maximum_MVC_words_per_copy": 3,
+  "requested_maximum_MVC_loads": 231,
+  "current_control_loads": [
+    3080,
+    3040
+  ],
+  "new_source_clock_entries": [
+    {
+      "pin": "ck_pf[0]",
+      "logical_source": "parent clk serial",
+      "actual_producer_master": null,
+      "actual_producer_pin": null,
+      "actual_parent_net_assignment": null,
+      "actual_phase_R_slew_RC": null,
+      "owned_hierarchy": "g_pf[0]",
+      "ordinary_inter_root_timing": true,
+      "output_pins": "c_l0d[75:0]"
+    },
+    {
+      "pin": "ck_pf[1]",
+      "logical_source": "parent clk serial",
+      "actual_producer_master": null,
+      "actual_producer_pin": null,
+      "actual_parent_net_assignment": null,
+      "actual_phase_R_slew_RC": null,
+      "owned_hierarchy": "g_pf[1]",
+      "ordinary_inter_root_timing": true,
+      "output_pins": "c_l0d[150:76]"
+    }
+  ],
+  "unresolved_new_reset_consumers": "Existing forwarded rn_p is an ordinary source-owned reset/control path, not proof of stopped-clock raw epoch safety. Authoritative root2fd8 base ACK/conditioner source is a separate integration dependency. No new per-root conditioner/ACK fabricated in this source.",
+  "conditional_new_reset_conditioner_consumer_FF_per_leaf": 4,
+  "conditional_new_reset_ACK_signals_per_leaf": 2,
+  "conditional_new_controller_capture_FF_per_leaf": 4,
+  "conditional_total_reset_FF_four_leaves": 32,
+  "current_Gray_scoped_CDC_policy_preserved": "request only, no live exception",
+  "numerical_gates": "fresh frozen767 source gold/TP/observed early-MVC mutant and default/Gray references RUNNING",
+  "actual_ASAP7_new_root_load_census": null,
+  "fresh_helper_count": 46,
+  "fresh_helper_content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
+  "old_CLOSED_replaced": false,
+  "M6_eligibility_waived": false,
+  "physical_qualified": false,
+  "global_clock_reset_binding": false,
+  "source_slot_allocated": false,
+  "kit_sha256": {
+    "physical/s81_be_p2roots_m7_candidate/helper_overlay_plan.json": "2bde863502912aeda64b91f42c753c26c8460ff57821e76bc5ed19c48acae0fd",
+    "physical/s81_be_p2roots_m7_candidate/io_place.tcl": "26616e9f4552525016d5182042d9e5cb90131837c5ddcc87f34a7f71f340ead3",
+    "physical/s81_be_p2roots_m7_candidate/margin.sdc": "0b3fe2fcef3c0ae8edd046c858e8596c009625d5ce1ba953bc29dd03a2abd778",
+    "physical/s81_be_p2roots_m7_candidate/full_depth_keepout.tcl": "7c0e1621e7f8d197fedb8cc7c79591e4523e1b00369377a4b10baaf8e2e176b1",
+    "physical/s81_be_p2roots_m7_candidate/post_cts.tcl": "c4898d81a24e166939a26065e5b60f9af365d2d27534590a65f825c8bbcaaac3",
+    "physical/s81_be_p2roots_m7_candidate/pdn.tcl": "a7cd1702729a1b3cc352daa0d22e1341405e499a46dbefe10aa54747e0e4028a",
+    "physical/s81_be_p2roots_m7_candidate/target_contacts_unrouted.lef": "6cee67e14c3431c5eeb94e924a1c02572627555348492ccee574f90c543fd7f4",
+    "physical/s81_be_p2roots_m7_candidate/ports.json": "3018240c3187b1fe9a4f7c1fe2357d9a9559100cf76bc678d42546a191fe87bf",
+    "physical/s81_be_p2roots_m7_candidate/launch.sh": "7a3dac5e8e1c240597823e9195b2e4fdf69d57d82296e1c2b8d72ce3ea6a8d09"
+  }
+}
