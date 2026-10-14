@@ -37,7 +37,8 @@
     "extra_paths": [
       "rtl/dsrom_sys/s81_ph/relays"
     ],
-    "purpose": "Exact fixed hard master of existing BE/hrow die-ownstate; no extra latency/rounding; default-off parent HARD_RELAYS. Physical demand bit count 55, clock root<=2079. Sparse outline retains PG/pin-access pitch; actual placement/source clocks required in die integration."
+    "purpose": "Exact fixed hard master of existing BE/hrow die-ownstate; no extra latency/rounding; default-off parent HARD_RELAYS. Physical demand bit count 55, clock root<=2079. Sparse outline retains PG/pin-access pitch; actual placement/source clocks required in die integration.",
+    "benched_by": "s81_be_hard_relays"
   },
   "structural_change": "Move existing die relay bits into fixed hardchildren, preserving every original stage and reset bit; pin flop at each boundary; no hidden ownstate or asynchronous falsepath."
 }
