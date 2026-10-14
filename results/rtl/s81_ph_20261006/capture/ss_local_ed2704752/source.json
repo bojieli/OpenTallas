@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.capture.prototype_bench_source.v1",
+  "source_commit": "ed2704752548c4b6938def5ece64baefa0b656d5",
+  "archive_sha256": "0f48f984f4446cf3ad7e8d215006e69c8db9d09551e2da1063d5de1e45483e55",
+  "paths": {
+    "rtl/common/ot_ratio_cdc_fifo.sv": "534857c7e564c539af292e8d6543d1e9205908f707a61e8d57df44663e1adc4d",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv": "4de89421330bc153f936e225964944055d449d46e2ebc9c8d2bae3de5e1fd4b1",
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_dual.sv": "4a35aae313f79561b05f465337c52330e306e5035b36479fa451b7c9e9387a86",
+    "tools/s81_ph/capc_bench.sh": "eb9eda775f9a1c5af84eb82c785be25c25b2279c3e8438332b5215bfc2011749",
+    "tools/s81_ph/capc_local_ctrl_bench.sh": "1537c3e9a0bd758cfbafc447d35d34b67b227e0795d0b4028965159520a98e23",
+    "tools/s81_ph/tb_capc_local_ctrl.sv": "17b3d630f368d5330b81c7df7fddd3af4fe47568609659fcb734dad14c7bdbc3"
+  },
+  "scope": "isolated structural prototype; no physical/native qualification",
+  "actual_rtl_git_hashes_equal": 4669,
+  "bench": {
+    "exact_cases": 9,
+    "exact_mismatches": 0,
+    "focused_phases": 4,
+    "focused_mismatches": 0,
+    "mutant": "KSWAP",
+    "mutant_mismatches": 121697,
+    "mutant_mismatching_roots": 128,
+    "mutant_timeouts": 0
+  },
+  "gate_manifest_sha256": "1509d66405435b150d5b87b2a5ad7ada90e6690c2cb7254d3e76fb063197d4ce"
+}
