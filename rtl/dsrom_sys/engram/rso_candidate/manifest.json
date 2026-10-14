@@ -12,10 +12,10 @@
     "rtl/dsrom_sys/engram/tiles/ot_engc_t_ws.sv": "465040fa94fe404818552f1aca86287d7e8601bc1f570dfc12ed80426b988cfb",
     "rtl/dsrom_sys/engram/tiles/ot_engc_t_io.sv": "e44800cb3072cff19eb9408d945b66748f74b6c4ef34b928a0190cc7149b5e7f",
     "rtl/dsrom_sys/engram/tiles/ot_engc_pbank.sv": "e6956a55e008f12d2df42bd1d44b92a78dbe26378405bbfb2977dc63709b5194",
-    "rtl/dsrom_sys/engram/dsfd_engram_c.sv": "f8b033ee03c88ebd09beb40523aff2d133423497d9b5e9bd8d7bde5f45d101d5"
+    "rtl/dsrom_sys/engram/dsfd_engram_c.sv": "906adc894c9764ac7f0821d8f2db98177bb1e0c795214ce1f87fc7751ccdafc3"
   },
   "new_source_sha256": {
-    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "6a5e8802e4641ca8a77577abe0111816895e7e6369f840145b844eaec4cc4ef1",
+    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "5e53ecd18d93f064ff94b8e90c7cec077d477b8ee96ae842aeed7cf9d70a72fc",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_engine_adapter_rso.sv": "5ac1b628eff55eb35e480ea29255b5c5547b58eb6f80b3f5f50c33a2db52b584",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso.sv": "1f92e6dfc8327ec8612a1ea7bb9ec7cc15ce167424cecf0cf497600ccb698d2c",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_slab_ep_rso.sv": "598ae0b5912fac55018c48f92a22d8acc5164411aca3d117233cb178c830f9ed",
@@ -68,5 +68,11 @@
     "measure actual parent aggregate rso path and controller return crossing",
     "bind analog PLL/refclk reset producer phase/RC/corner driver",
     "derive field barrier from actual acknowledgment graph and re-reset epoch behavior"
-  ]
+  ],
+  "parent_data_relays": {
+    "status": 16,
+    "write_transit": 334,
+    "release": 4,
+    "total": 354
+  }
 }
