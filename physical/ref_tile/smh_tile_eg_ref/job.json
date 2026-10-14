@@ -1,5 +1,5 @@
 {
- "name": "smh_tile_eg_ref-r16-f6ee9d6d1",
+ "name": "smh_tile_eg_ref-r16-c363cffe3",
  "block": "ot_hbm_accel_smh_tile_eg",
  "ref_tile": true,
  "owner": "Claude:el1013-smh-r11",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/el1013-smh-r11",
-  "commit": "f6ee9d6d1"
+  "commit": "c363cffe3"
  },
  "stages": {
   "bench": [
@@ -110,7 +110,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_tile_eg_ref/smh_tile_eg_ref-r16-f6ee9d6d1"
+   "to": "results/rtl/ref_tile/smh_tile_eg_ref/smh_tile_eg_ref-r16-c363cffe3"
   }
  ],
  "cycles_added": 0,
