@@ -42,7 +42,7 @@
   "allow_none": true
  },
  "route": {
-  "pd": 0.5,
+  "pd": 0.15,
   "threads": 16,
   "peak_ram_gb": 24,
   "pin_min_tracks": 1,
@@ -56,8 +56,8 @@
  "job": {
   "owner": "Codex:hbm_quant_sfu_2240",
   "branch": "codex/hbm-quant-sfu-2240",
-  "tag": "s1",
-  "purpose": "Alternative WQ3 data-head structural split: gather and SRAM/write state are separate leaves, existing registers reassigned with zero additional edges; no native die adoption claimed.",
+  "tag": "s2",
+  "purpose": "Alternative WQ3 data-head structural split: gather and SRAM/write state are separate leaves, existing registers reassigned with zero additional edges; no native die adoption claimed. Pin-bound 4096-bit W input face and1024-bit E output face fixes388.8um height despite measured1711um2 standard area; sparse placement target0.15 avoids filler-dominated GPL divergence seen at0.50.",
   "benched_by": "quant_wide_ov",
   "extra_paths": [
    "rtl",
