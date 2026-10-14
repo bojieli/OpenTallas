@@ -1,0 +1,29 @@
+{
+  "scope": "IS1_FUNCTIONAL_WRITER_CERTIFICATE_NO_VM_COMMIT_OR_PHYSICAL_CLAIM",
+  "configuration": {
+    "SW": 8,
+    "IS": 1,
+    "OS": 1,
+    "VL": 7,
+    "CRX": 2,
+    "ML": 15,
+    "ALIGN_ENTRIES": 1,
+    "RED_ENTRIES": 0
+  },
+  "positive": {
+    "accepted_commands": 120,
+    "certified_samples": 5738,
+    "future_write_hazards": 0
+  },
+  "idle_only_mutant": {
+    "future_write_hazards": 513,
+    "detected": true
+  },
+  "sources": {
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_master_bv_acc.sv": "8a65fc0d4f1d90ed4c5c0c93bb3ff5bd3c127965fd5a48972b0c6b4c29d2613d",
+    "rtl/hdc/ot_hdc_vstream.sv": "11813ce7fc537e69f44fecd058c89dc1827991803cd297d459ef22c83fc898b0",
+    "rtl/physical/ot_hdc_vred_pending_guard.sv": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
+    "rtl/test/qwen_vm_me/tb_qfd_su_writer_quiescent.sv": "39cf10038f881404e37197df140c516786c0f6917b67aed1dc6b9a628a406bf9",
+    "rtl/test/qwen_vm_me/run_su_writer_quiescent.sh": "82b090d35c60970fcfd97f713243f6730f89fbd324bce60fd3448412dbb8d426"
+  }
+}

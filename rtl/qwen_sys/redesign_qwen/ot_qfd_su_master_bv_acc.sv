@@ -98,7 +98,8 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     input  wire              ea_cr,
     input  wire              eq_v,
     input  wire [511:0]      eq_data,
-    output wire              wrom_fault
+    output wire              wrom_fault,
+    output wire              writer_quiescent // IS1 functional certificate; caller must block new go
 );
     localparam integer MC = OS + IS + CRX;
     localparam integer MBASE = (VL > MC) ? VL : MC;
@@ -224,6 +225,12 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
         .red_we(red_we), .red_addr(red_addr), .red_data(red_data),
         .progress(s_progress), .progress_rows(s_rows), .fault(s_fault),
         .obs_active(s_active), .obs_inflight(s_inflight));
+    // Every asserted sw_mask lane and red_we is a posted write: never gate it away.
+    // Certify all accepted work and the IS1/prefetch command stations drained.
+    // Other IS values require an explicit complete input-pipeline census.
+    assign writer_quiescent = (IS == 1) && rst_n && rs && !go && !go_q && !go_s && !e_pend &&
+        s_idle && !s_active && (s_inflight == 0) && !(|sw_mask) && !red_we && !(|s_kv_we) &&
+        !s_fault && !e_fault;
     // Counter follows the actual vstream accept condition, after embedding
     // prefetch releases go_s. Controller go/go_q may precede this by many edges.
     reg [23:0] accepted_count;
