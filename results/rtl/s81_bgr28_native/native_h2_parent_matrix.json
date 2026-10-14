@@ -1,0 +1,253 @@
+{
+  "status": "EXACT_NUMERICAL_FULL_NATIVE_ONLY_PHYSICAL_OPEN",
+  "source_manifest": {
+    "status": "FUNCTIONAL_PROBE_PHYSICAL_CLOCK_DELIVERY_OPEN",
+    "owner_commit": "55740b8837221de797e670ba82471774527466af",
+    "successor_commit": "a182bc8122e2ce3401cfd426c6591e59afa94f14",
+    "owner_parent_sha256": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
+    "probe_parent_sha256": "df6d4c02a3ecd3a499c125cd9b8ac1d84455faa3177f1dbc4e3f934593eeae24",
+    "only_parent_change": "NP28 BGR child replacement with MC24 (=24 roots, not NP24), H2; all roots tied numerically",
+    "NP": 28,
+    "NPR": 10,
+    "children": 16,
+    "forward_hop_per_tile": 16,
+    "bank_EP": 2,
+    "bank_ED": 3,
+    "BE_definition": "unchanged owner source, dynamic MD",
+    "physical_clock_delivery": "OPEN",
+    "files": {
+      "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv": "0b6a78d513a395fe040f584925a7fcac396d3b66c68247203de8802651ba5378",
+      "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq28h_mc24.sv": "6185b27252d73805982836e31fb5a3568b94786464d76915db763f25e3b5e69d"
+    }
+  },
+  "source_archive_sha256": "85dc99b13f9cd29fad52e15296d60281863597bbc3adcfce7a0d161bc011fdad",
+  "functional_clock_tie": "all24 child roots totrueck, functionalonly",
+  "cases": [
+    {
+      "case": "gold_s1",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=64000 checked=41626 mismatches_or_fails=0 phases=132 arm=132 p2rd=344 done=6034 rows_ready=70 starts=454 p2_words=12275 ctrl_reads=3149 el=204608/204608 cap_ops=12305 max_occ=3 mirror_max=3 lat p0=81 p1=81 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ],
+      "host": "ot-epyc1tb"
+    },
+    {
+      "case": "gold_s2",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=64000 checked=42022 mismatches_or_fails=0 phases=135 arm=135 p2rd=347 done=6065 rows_ready=76 starts=475 p2_words=12522 ctrl_reads=3204 el=206784/206784 cap_ops=12628 max_occ=3 mirror_max=3 lat p0=81 p1=81 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "tp",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=721 checked=462 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=13 rows_ready=1 starts=0 p2_words=128 ctrl_reads=32 el=7168/7168 cap_ops=448 max_occ=3 mirror_max=3 lat p0=81 p1=81 p2=-1 p4=-1 p6=-1 p7=-1",
+        "THROUGHPUT mode=1 rows_per_root=56 positions=1 elements=7168 emit_cycles=44 (first 231 last 274) cap_ops=448 cap_write_span=43 landing_tail=20 (last element at the pins -> done) arm_to_done=94 p2_done=460 wfc_23pairs=170 x_ctrl=221 (serial cycles from t0 200)",
+        "PASS"
+      ],
+      "throughput": "THROUGHPUT mode=1 rows_per_root=56 positions=1 elements=7168 emit_cycles=44 (first 231 last 274) cap_ops=448 cap_write_span=43 landing_tail=20 (last element at the pins -> done) arm_to_done=94 p2_done=460 wfc_23pairs=170 x_ctrl=221 (serial cycles from t0 200)",
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "burst_r128",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=775 checked=128 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=9 rows_ready=0 starts=0 p2_words=128 ctrl_reads=0 el=16384/16384 cap_ops=1024 max_occ=1 mirror_max=1 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "THROUGHPUT mode=2 rows_per_root=128 positions=1 elements=16384 emit_cycles=99 (first 231 last 329) cap_ops=1024 cap_write_span=97 landing_tail=19 (last element at the pins -> done) arm_to_done=148 p2_done=514 wfc_23pairs=11 x_ctrl=0 (serial cycles from t0 200)",
+        "PASS"
+      ],
+      "throughput": "THROUGHPUT mode=2 rows_per_root=128 positions=1 elements=16384 emit_cycles=99 (first 231 last 329) cap_ops=1024 cap_write_span=97 landing_tail=19 (last element at the pins -> done) arm_to_done=148 p2_done=514 wfc_23pairs=11 x_ctrl=0 (serial cycles from t0 200)",
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "burst_r128_np2",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=871 checked=128 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=9 rows_ready=0 starts=0 p2_words=128 ctrl_reads=0 el=32768/32768 cap_ops=2048 max_occ=1 mirror_max=1 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "THROUGHPUT mode=2 rows_per_root=128 positions=2 elements=32768 emit_cycles=195 (first 231 last 425) cap_ops=2048 cap_write_span=192 landing_tail=19 (last element at the pins -> done) arm_to_done=244 p2_done=610 wfc_23pairs=11 x_ctrl=0 (serial cycles from t0 200)",
+        "PASS"
+      ],
+      "throughput": "THROUGHPUT mode=2 rows_per_root=128 positions=2 elements=32768 emit_cycles=195 (first 231 last 425) cap_ops=2048 cap_write_span=192 landing_tail=19 (last element at the pins -> done) arm_to_done=244 p2_done=610 wfc_23pairs=11 x_ctrl=0 (serial cycles from t0 200)",
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "land_attn",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=1747 checked=448 mismatches_or_fails=0 phases=0 arm=0 p2rd=4 done=40 rows_ready=0 starts=0 p2_words=448 ctrl_reads=0 el=19072/19072 cap_ops=0 max_occ=3 mirror_max=3 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "land_hc",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=756 checked=128 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=10 rows_ready=0 starts=0 p2_words=128 ctrl_reads=0 el=2048/2048 cap_ops=0 max_occ=1 mirror_max=1 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "land_bp",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=2014 checked=448 mismatches_or_fails=0 phases=0 arm=0 p2rd=4 done=40 rows_ready=0 starts=0 p2_words=448 ctrl_reads=0 el=30336/30336 cap_ops=0 max_occ=2 mirror_max=2 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "align_neg",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "FAULT first at cyc 235: fe_flt 0000000100000000 fvec 00000000000000000000000000000000",
+        "ALIGN_FAULT raised (fe_flt 0000000100000000)",
+        "RESULT cyc=3001 checked=0 mismatches_or_fails=0 phases=0 arm=0 p2rd=0 done=2 rows_ready=0 starts=0 p2_words=0 ctrl_reads=0 el=0/2048 cap_ops=0 max_occ=0 mirror_max=0 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "mut_stale",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "MISMATCH ctrl read 83",
+        "MISMATCH ctrl read 84",
+        "MISMATCH ctrl read 86",
+        "MISMATCH ctrl read 87",
+        "MISMATCH cyc 3677 port 0: got 589f66a512882667.. exp b1c19bc7a793bdfd..",
+        "MISMATCH ctrl read 255",
+        "MISMATCH ctrl read 256",
+        "MISMATCH ctrl read 493",
+        "MISMATCH ctrl read 494",
+        "MISMATCH ctrl read 604",
+        "RESULT cyc=24000 checked=14116 mismatches_or_fails=26 phases=50 arm=50 p2rd=108 done=1952 rows_ready=25 starts=151 p2_words=4529 ctrl_reads=1046 el=80352/80352 cap_ops=4944 max_occ=3 mirror_max=3 lat p0=81 p1=81 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "mut_dropw",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "FAIL: capture elements landed 49564 of 49568 (unsent 0)",
+        "FAIL: 4 engine dones never arrived (first tag 16)",
+        "FAIL: 2 rows-ready missing",
+        "RESULT cyc=24000 checked=12569 mismatches_or_fails=3 phases=34 arm=34 p2rd=123 done=1974 rows_ready=10 starts=155 p2_words=2780 ctrl_reads=1092 el=49564/49568 cap_ops=3008 max_occ=3 mirror_max=3 lat p0=81 p1=81 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "mut_early",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "FAIL cyc 13980: EARLY_DONE slot 0 tag 220 with 1 region elements not landed (first 78715)",
+        "FAIL cyc 15372: EARLY_DONE slot 2 tag 107 with 1 region elements not landed (first 82028)",
+        "FAIL cyc 15726: EARLY_DONE slot 1 tag 161 with 1 region elements not landed (first 88891)",
+        "FAIL cyc 17205: EARLY_DONE slot 0 tag 64 with 1 region elements not landed (first 94714)",
+        "FAIL cyc 17568: EARLY_DONE slot 2 tag 87 with 1 region elements not landed (first 99572)",
+        "FAIL cyc 18182: EARLY_DONE slot 3 tag 181 with 1 region elements not landed (first 103773)",
+        "FAIL cyc 18900: EARLY_DONE slot 2 tag 245 with 1 region elements not landed (first 107831)",
+        "FAIL cyc 19316: EARLY_DONE slot 3 tag 34 with 1 region elements not landed (first 110260)",
+        "FAIL cyc 19458: EARLY_DONE slot 1 tag 43 with 1 region elements not landed (first 111296)",
+        "FAIL cyc 19817: EARLY_DONE slot 0 tag 86 with 1 region elements not landed (first 114127)",
+        "RESULT cyc=24000 checked=14124 mismatches_or_fails=27 phases=44 arm=44 p2rd=124 done=2120 rows_ready=20 starts=169 p2_words=4046 ctrl_reads=1055 el=65728/65728 cap_ops=3996 max_occ=3 mirror_max=3 lat p0=81 p1=81 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "neg_early_consumer",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "[858000] %Error: dsfd_sp_vm.sv:1122: Assertion failed in tb_dsfd_sp_vm.dut.u_fe: SPVM EARLY_READ: read into slot 0 range [1024, +80) at 0 of 1152 elements (ports 0000000000000000000000100000)",
+        "%Error: /srv/opentallas-scratch/codex/s81-native-parent-h2/src/rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1122: Verilog $stop"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "mut_noalign",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "FAIL cyc 254: capture element 35063 not expected",
+        "FAIL cyc 254: capture element 35064 not expected",
+        "FAIL cyc 254: capture element 35065 not expected",
+        "FAIL cyc 254: capture element 35066 not expected",
+        "FAIL cyc 254: capture element 35067 not expected",
+        "FAIL cyc 254: capture element 35068 not expected",
+        "FAIL cyc 254: capture element 35069 not expected",
+        "FAIL cyc 254: capture element 35070 not expected",
+        "FAIL cyc 254: capture element 35071 not expected",
+        "FAIL: misaligned capture phase NOT flagged (fe_flt 0000000000000000)",
+        "RESULT cyc=3001 checked=0 mismatches_or_fails=2049 phases=0 arm=0 p2rd=0 done=2 rows_ready=0 starts=0 p2_words=0 ctrl_reads=0 el=2016/2048 cap_ops=128 max_occ=1 mirror_max=1 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ],
+      "host": "ot-epyc4"
+    },
+    {
+      "case": "mut_rlat",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "FAIL cyc 20250: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20260: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20305: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20311: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20320: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20326: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20339: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20342: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20346: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20350: P2 beat without ready 4 cycles earlier",
+        "RESULT cyc=24000 checked=14379 mismatches_or_fails=577 phases=43 arm=43 p2rd=113 done=2009 rows_ready=26 starts=152 p2_words=4320 ctrl_reads=1055 el=74464/74464 cap_ops=4425 max_occ=3 mirror_max=3 lat p0=81 p1=81 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ],
+      "host": "ot-epyc4"
+    }
+  ],
+  "cycle_evidence": {
+    "constant_read_p0_p1": 81,
+    "P2_done_production_shape": 460,
+    "H1_pin_copy_native_read": 49,
+    "H1_pin_copy_P2_done": 332,
+    "original_bank_EP": 2,
+    "original_bank_ED": 3,
+    "BE_MD": "owner definition unmodified; fullgold/P2/statusfunctionalchecks passed",
+    "immutable_cost_and_layer_tok_s": "OPEN; latencybench not layercost proof"
+  }
+}

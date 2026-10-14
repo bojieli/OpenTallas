@@ -1,0 +1,194 @@
+ot-run: ot-epyc1tb     admits   473 GB (avail 700, growth 55, headroom 64, waiters 0/0 GB) load 73/128 running 10 disk 868 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc_h1pc-20261014-023854
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc_h1pc-20261014-023854
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc_h1pc-20261014-023854
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2256225-1791972162 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef, created 1 library cells
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock ot_bgl_io can not be propagated.
+NOMINAL_BOUNDARY clock=core_clk n=7 mean=391.7486441428572 min=383.889557 max=394.905731
+NOMINAL_BOUNDARY clock=req_clk n=8206 mean=277.93766379527216 min=262.050598 max=292.322693
+NOMINAL_BOUNDARY clock=ret_clk n=1299 mean=265.56937904926855 min=260.133484 max=272.239380
+PIN_O_REFERENCE req_clk R=277.93766379527216 n=8206 load0 placementRC rawsource0
+Startpoint: u.g_pin_copy.qb_d[1070]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by req_clk)
+Endpoint: f_d[1070] (output port clocked by ot_bgl_io)
+Path Group: ot_bgl_io
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock req_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ ck_req (in)
+ 100.7127  100.7127 ^ clkbuf_0_ck_req/Y (BUFx24_ASAP7_75t_R)
+  33.3522  134.0648 ^ clkbuf_1_0_0_ck_req/Y (BUFx24_ASAP7_75t_R)
+  32.5912  166.6560 ^ clkbuf_2_1_0_ck_req/Y (BUFx24_ASAP7_75t_R)
+  37.5706  204.2266 ^ clkbuf_4_6_0_ck_req/Y (BUFx24_ASAP7_75t_R)
+  32.7481  236.9747 ^ clkbuf_5_12__f_ck_req/Y (BUFx24_ASAP7_75t_R)
+  46.0279  283.0026 ^ clkbuf_leaf_70_ck_req/Y (BUFx24_ASAP7_75t_R)
+   1.5155  284.5180 ^ u.g_pin_copy.qb_d[1070]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  71.7077  356.2258 v u.g_pin_copy.qb_d[1070]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  32.9327  389.1584 v ot_ohdrv_00078_0/Y (BUFx4f_ASAP7_75t_R)
+  92.0149  481.1734 v ot_outhold_00078_1/Y (HB4xp67_ASAP7_75t_R)
+  39.3546  520.5280 v ot_ohdrv_00078_2/Y (BUFx4f_ASAP7_75t_R)
+  29.8830  550.4110 v wire14815/Y (BUFx24_ASAP7_75t_R)
+   0.1258  550.5368 v f_d[1070] (out)
+           550.5368   data arrival time
+
+ 770.0000  770.0000   clock ot_bgl_io (rise edge)
+   0.0000  770.0000   clock network delay (ideal)
+ -60.0000  710.0000   clock uncertainty
+   0.0000  710.0000   clock reconvergence pessimism
+-256.6670  453.3330   output external delay
+           453.3330   data required time
+-------------------------------------------------------------
+           453.3330   data required time
+          -550.5368   data arrival time
+-------------------------------------------------------------
+           -97.2038   slack (VIOLATED)
+
+
+Startpoint: u.g_pin_copy.qb_d[1645]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by req_clk)
+Endpoint: f_d[1645] (output port clocked by ot_bgl_io)
+Path Group: ot_bgl_io
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock req_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ ck_req (in)
+ 100.7127  100.7127 ^ clkbuf_0_ck_req/Y (BUFx24_ASAP7_75t_R)
+  33.3522  134.0648 ^ clkbuf_1_0_0_ck_req/Y (BUFx24_ASAP7_75t_R)
+  33.7875  167.8524 ^ clkbuf_2_0_0_ck_req/Y (BUFx24_ASAP7_75t_R)
+  36.8319  204.6843 ^ clkbuf_4_2_0_ck_req/Y (BUFx24_ASAP7_75t_R)
+  32.8093  237.4936 ^ clkbuf_5_4__f_ck_req/Y (BUFx24_ASAP7_75t_R)
+  47.7623  285.2559 ^ clkbuf_leaf_290_ck_req/Y (BUFx24_ASAP7_75t_R)
+   0.8727  286.1286 ^ u.g_pin_copy.qb_d[1645]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  76.2155  362.3441 v u.g_pin_copy.qb_d[1645]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  33.6305  395.9746 v ot_ohdrv_00716_0/Y (BUFx4f_ASAP7_75t_R)
+  85.6567  481.6313 v ot_outhold_00716_1/Y (HB4xp67_ASAP7_75t_R)
+  34.6999  516.3312 v ot_ohdrv_00716_2/Y (BUFx4f_ASAP7_75t_R)
+  26.8243  543.1555 v wire14177/Y (BUFx24_ASAP7_75t_R)
+   0.4850  543.6404 v f_d[1645] (out)
+           543.6404   data arrival time
+
+ 770.0000  770.0000   clock ot_bgl_io (rise edge)
+   0.0000  770.0000   clock network delay (ideal)
+ -60.0000  710.0000   clock uncertainty
+   0.0000  710.0000   clock reconvergence pessimism
+-256.6670  453.3330   output external delay
+           453.3330   data required time
+-------------------------------------------------------------
+           453.3330   data required time
+          -543.6404   data arrival time
+-------------------------------------------------------------
+           -90.3075   slack (VIOLATED)
+
+
+PIN_O_REFERENCE ret_clk R=265.56937904926855 n=1299 load0 placementRC rawsource0
+Startpoint: u.rt_d[701]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ret_clk)
+Endpoint: o_d[701] (output port clocked by ot_bgl_io)
+Path Group: ot_bgl_io
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock ret_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ ck_ret (in)
+  59.8119   59.8119 ^ wire15302/Y (BUFx12f_ASAP7_75t_R)
+  50.7667  110.5786 ^ wire15301/Y (BUFx24_ASAP7_75t_R)
+  80.6726  191.2512 ^ clkbuf_0_ck_ret/Y (BUFx24_ASAP7_75t_R)
+  36.6119  227.8631 ^ clkbuf_2_3__f_ck_ret/Y (BUFx24_ASAP7_75t_R)
+  37.3199  265.1830 ^ clkbuf_leaf_22_ck_ret/Y (BUFx24_ASAP7_75t_R)
+   0.9209  266.1039 ^ u.rt_d[701]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  70.3544  336.4583 v u.rt_d[701]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  32.5907  369.0490 v ot_ohdrv_05092_0/Y (BUFx4f_ASAP7_75t_R)
+  79.7682  448.8172 v ot_outhold_05092_1/Y (HB4xp67_ASAP7_75t_R)
+  31.4623  480.2795 v ot_ohdrv_05092_2/Y (BUFx4f_ASAP7_75t_R)
+  27.6149  507.8943 v wire9801/Y (BUFx24_ASAP7_75t_R)
+   0.6732  508.5676 v o_d[701] (out)
+           508.5676   data arrival time
+
+ 770.0000  770.0000   clock ot_bgl_io (rise edge)
+   0.0000  770.0000   clock network delay (ideal)
+ -60.0000  710.0000   clock uncertainty
+   0.0000  710.0000   clock reconvergence pessimism
+-256.6670  453.3330   output external delay
+           453.3330   data required time
+-------------------------------------------------------------
+           453.3330   data required time
+          -508.5676   data arrival time
+-------------------------------------------------------------
+           -55.2346   slack (VIOLATED)
+
+
+Startpoint: u.rt_d[174]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ret_clk)
+Endpoint: o_d[174] (output port clocked by ot_bgl_io)
+Path Group: ot_bgl_io
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock ret_clk (rise edge)
+   0.0000    0.0000   clock source latency
+   0.0000    0.0000 ^ ck_ret (in)
+  59.8119   59.8119 ^ wire15302/Y (BUFx12f_ASAP7_75t_R)
+  50.7667  110.5786 ^ wire15301/Y (BUFx24_ASAP7_75t_R)
+  80.6726  191.2512 ^ clkbuf_0_ck_ret/Y (BUFx24_ASAP7_75t_R)
+  35.8407  227.0919 ^ clkbuf_2_0__f_ck_ret/Y (BUFx24_ASAP7_75t_R)
+  43.0464  270.1383 ^ clkbuf_leaf_8_ck_ret/Y (BUFx24_ASAP7_75t_R)
+   0.7777  270.9160 ^ u.rt_d[174]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  68.5404  339.4565 v u.rt_d[174]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  31.0718  370.5282 v ot_ohdrv_04506_0/Y (BUFx4f_ASAP7_75t_R)
+  78.5329  449.0611 v ot_outhold_04506_1/Y (HB4xp67_ASAP7_75t_R)
+  30.8745  479.9356 v ot_ohdrv_04506_2/Y (BUFx4f_ASAP7_75t_R)
+  26.8387  506.7743 v wire10387/Y (BUFx24_ASAP7_75t_R)
+   0.3827  507.1570 v o_d[174] (out)
+           507.1570   data arrival time
+
+ 770.0000  770.0000   clock ot_bgl_io (rise edge)
+   0.0000  770.0000   clock network delay (ideal)
+ -60.0000  710.0000   clock uncertainty
+   0.0000  710.0000   clock reconvergence pessimism
+-256.6670  453.3330   output external delay
+           453.3330   data required time
+-------------------------------------------------------------
+           453.3330   data required time
+          -507.1570   data arrival time
+-------------------------------------------------------------
+           -53.8240   slack (VIOLATED)
+
+
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2256225-1791972162): exit 0

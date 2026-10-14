@@ -1,0 +1,23 @@
+{
+  "status": "UNQUALIFIED_MEASURED_SOURCE_OUTPUT_DEFECT",
+  "source_commit": "4b6eb972d",
+  "roots_TT_boundary_mean_ps": {
+    "bank": 391.7486441428572,
+    "req": 277.93766379527216,
+    "ret": 265.56937904926855
+  },
+  "counts": {
+    "bank_boundary": 7,
+    "req_boundary": 8206,
+    "ret_boundary": 1299
+  },
+  "source_normalized_load0_o_ps": {
+    "f": 272.5991362047278,
+    "o": 242.99822095073148
+  },
+  "limit_ps": 220,
+  "setup_ps": 62.36233751621967,
+  "hold_ps": -0.017937040741600185,
+  "fresh_root_phase_qualification": "OPEN; oldH1nominalR remains prototype",
+  "remaining_path": "outputonlyrealQN FF71ps +leadBUF33+HB79..92+finalBUF31..39+resizerBUF24driver28..30. Fresh physical source driver repair required; no IO/clock exceptions."
+}
