@@ -1,0 +1,26 @@
+{
+  "status": "OBSERVED_FULL_SHAPE_MISMATCH_FIX_PENDING_RTL_PROOF",
+  "record": 7,
+  "tag": "attn_norm",
+  "unit": "FUSED.HC_PRE_NORM",
+  "D": 5120,
+  "observed_disp": 2376,
+  "observed_retire": 2389,
+  "observed_output": "VM[41216..41223] zero vs nonzero golden",
+  "cause": {
+    "scratch_base": 256064,
+    "required_words": 10242,
+    "end_exclusive": 266306,
+    "vm_capacity": 262144,
+    "source": "ot_hgi_fused_record S_G4 k_scr / S_DEC rejects range before issuing compute"
+  },
+  "fix": "Reserve whole-program VM scratch; export base/size in MTP host96/97; harness validates then consumes it",
+  "new_scratch": {
+    "base": 94464,
+    "words": 16384,
+    "first_record_end_exclusive": 104706
+  },
+  "verified": "All 315 v6/v7 vectors compared; only metadata fused_scratch and host96/97 change; image and all golden artifacts unchanged",
+  "tests": "tests/test_hgi_e2e_scratch.py 3 PASS; source proof and observed old mismatch do not qualify fixed full vehicle",
+  "pending": "full-shape D exact plus valid observed mutant; C/E original jobs unchanged"
+}
