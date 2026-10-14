@@ -1,0 +1,20 @@
+{
+ "classification": "UNQUALIFIED_SETUP_NEGATIVE",
+ "source": "1fc9f2336",
+ "TT_setup_ps": -3.813727,
+ "FF_hold_ps": 11.6665,
+ "roots": 13182,
+ "TT_insertion_max_ps": 648.1,
+ "spread_ps": 29.5,
+ "fixed": [
+  "registeredWL wideoutput nowpositive",
+  "KVownership inputcontrol removed; worstinputreg+31.8ps",
+  "CFregmacro+29.2ps"
+ ],
+ "residual": [
+  "serialreturn262 registeredoutput\u22123.8137ps",
+  "lq_a0[3] internal\u22122.6ps"
+ ],
+ "all11_functional_proof": "608d1d8e2:group_owned_0d4cfabff",
+ "native_parent_release": false
+}
