@@ -28,7 +28,7 @@ int main(int argc,char**argv){try{
   if(h.fault())throw std::runtime_error("actual allocator/cohort identity fault");
   for(unsigned r=0;r<8;r++)if(h.hosts[r]->service_abort||h.hosts[r]->service_faults||h.boards[r]->faults)throw std::runtime_error("actual HOST/board fault");
   if(begun)t.after_rise(h);
-  if(n%50000==0)std::cout<<"PROGRESS core="<<h.core_edges<<" pre="<<pre.latched<<"("<<pre.first<<") phase="<<t.phase<<" post_block="<<t.post_block<<" cr="<<t.result_credits<<"\n"<<std::flush;
+  if(n%20000==0)std::cout<<"PROGRESS core="<<h.core_edges<<" pre="<<pre.latched<<"("<<pre.first<<") phase="<<t.phase<<" post_block="<<t.post_block<<" cr="<<t.result_credits<<" cq="<<h.router.completions().size()<<" irq0="<<h.router.irq(0)<<" dmaw="<<h.router.dma_writes()<<" ctrl="<<h.router.ctrl_forwarded()<<" internal="<<qkd_host_fixture::host_last_descriptor_retired(*h.hosts[0],true,true,true).first<<" irqpin="<<unsigned(h.hosts[0]->irq)<<"\n"<<std::flush;
   if(t.done()){
    bool warm=h.hosts[0]->service_ready&&!h.awaiting_post_terminal_retirement();
    std::ofstream f(out+"/receipt.json");

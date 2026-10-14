@@ -77,12 +77,14 @@ struct Terminal {
  enum Phase {RESULT,ACCEPT,POST,DONE} phase=RESULT;
  uint64_t head_tag=0,result_edge=0,terminal_edge=0,post_edge=0,retired_edge=0;unsigned generation=0,token=0,value=0,cycles=0;
  unsigned result_credits=0;bool pulsed=false,certified=false,retire_sent=false,cq=false,irq=false;
- size_t completions_at_result=0;std::string post_block;
+ size_t completions_at_result=0;uint64_t dma_writes_at_result=0,cq_word0=0,cq_word1=0;std::string post_block;
+ // FMT1 CQ ring base programmed by the board BAR writes 0x24/0x28 (0x800).
+ static constexpr uint64_t cq_base=0x800;
  // Negative controls: corrupt POST certificate identity / suppress drains.
  bool stale_certificate=false;
  void begin(const HostOwner&h,unsigned tok,unsigned val,unsigned cyc){
   head_tag=h.tag()|(uint64_t(37)<<37);generation=h.generation();token=tok;value=val;cycles=cyc;
-  completions_at_result=h.router.completions().size();phase=RESULT;
+  completions_at_result=h.router.completions().size();dma_writes_at_result=h.router.dma_writes();phase=RESULT;
  }
  void before_low(const HostOwner&h,Inputs&in){
   in.result_valid=false;in.post_terminal_retired=false;
@@ -97,7 +99,10 @@ struct Terminal {
   }
  }
  bool post_predicate(const HostOwner&h){
-  cq=h.router.completions().size()>completions_at_result;irq=h.router.irq(0);
+  // CQ publication = the original word1 then word0 DMA writes landing in board
+  // RAM at the programmed ring base (not the separate class5 completion word).
+  cq_word0=h.router.load64(cq_base);cq_word1=h.router.load64(cq_base+8);
+  cq=h.router.dma_writes()>=dma_writes_at_result+2&&cq_word0!=0;irq=h.router.irq(0);
   bool ok=h.router.router_empty()&&h.router.fdi_pipelines_empty();post_block.clear();if(!ok)post_block="router/FDI";
   for(unsigned id=0;id<8;id++){
    auto d=id==0?qkd_host_fixture::host_last_descriptor_retired(*h.hosts[0],result_credits>=8,cq,irq):qkd_host_fixture::host_transport_drain(*h.hosts[id]);
@@ -121,7 +126,7 @@ struct Terminal {
    ",\"token\":"+std::to_string(token)+",\"value_bits\":"+std::to_string(value)+",\"result_core_edge\":"+std::to_string(result_edge)+
    ",\"terminal_accepted_core_edge\":"+std::to_string(terminal_edge)+",\"post_certificate_core_edge\":"+std::to_string(post_edge)+
    ",\"retired_core_edge\":"+std::to_string(retired_edge)+",\"native_result_credits\":"+std::to_string(result_credits)+
-   ",\"cq_completion\":"+(cq?"true":"false")+",\"irq_host0\":"+(irq?"true":"false")+"}";
+   ",\"cq_published\":"+(cq?"true":"false")+",\"cq_word0\":"+std::to_string(cq_word0)+",\"cq_word1\":"+std::to_string(cq_word1)+",\"dma_writes_after_result\":"+std::to_string(dma_writes_at_result)+",\"irq_host0\":"+(irq?"true":"false")+"}";
  }
 };
 } // namespace qwen_native_host
