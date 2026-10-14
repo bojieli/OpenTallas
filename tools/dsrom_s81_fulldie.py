@@ -7165,21 +7165,31 @@ def _faces_r8(m, Mx, it, ports):
             need = sum(max(1, math.ceil(b / K)) * K * 0.048 + max(0.144, 0.0576 * K) for _, b in lst) + 1.0
             if need > L:
                 raise ValueError(f'{Mx.name}: face {f} needs {need:.1f} um > {L:.1f}')
-            if os.environ.get('OT_S81_PADBG') and 'hr_E3' in Mx.name:
-                print('PADBG face', Mx.name, f, lst, K, PIN_ALIGN, file=sys.stderr)
-            if PIN_ALIGN and K == 1 and len(lst) == 1:
-                # --pin-align: a face with ONE port whose peers are all stations stands on the stations' pin group, not on
-                # the face centre (v16: hr_E3.o 110 um beside its first station f_hr_E3_o_1 across a 37.9-um gap:
-                # 761 jog wires, cut 0.64, and 147.9 um pin to pin against the pair reach of 92.9 um)
-                p1_, b1_ = lst[0]
-                pe_ = {i_ for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p1_), []) for i_, _q in eps_
-                       if i_ != it.name and i_ in m['_by']}
-                if os.environ.get('OT_S81_PADBG'):
-                    print('PADBG hend', Mx.name, f, p1_, b1_, sorted((i_, m['_by'][i_].kind) for i_ in pe_), file=sys.stderr)
-                if pe_ and all(m['_by'][i_].kind in ('hstn', 'stn', 'xstg') for i_ in pe_):
-                    bw_ = b1_ * 0.048
-                    c_ = min(max(_peer_pos(m, it, p1_, f), bw_ / 2 + 0.4), L - bw_ / 2 - 0.4)
-                    Mx.face(p1_, b1_, f, 'M4' if f in 'EW' else 'M5', c_, 1)
+            if PIN_ALIGN and K == 1:
+                # --pin-align: a port whose peers are all stations stands on the stations' pin group, the other ports of
+                # the face around it (v16: hr_E3.o packed first on a face it shares with 11 lane inputs, 110 um beside
+                # its first station f_hr_E3_o_1 across a 37.9-um gap: 761 jog wires, cut 0.64, 147.9 um pin to pin
+                # against the pair reach of 92.9 um)
+                fx_ = {}
+                for p1_, b1_ in lst:
+                    pe_ = {i_ for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p1_), []) for i_, _q in eps_
+                           if i_ != it.name and i_ in m['_by']}
+                    if b1_ >= 64 and pe_ and all(m['_by'][i_].kind in ('hstn', 'stn', 'xstg') for i_ in pe_) and \
+                            ports[p1_][0] == 'output':
+                        bw_ = b1_ * 0.048
+                        c_ = min(max(_peer_pos(m, it, p1_, f), bw_ / 2 + 0.4), L - bw_ / 2 - 0.4)
+                        if all(abs(c_ - c2_) >= (bw_ + ports[q_][1] * 0.048) / 2 + 0.3 for q_, (c2_, _p) in fx_.items()):
+                            fx_[p1_] = (c_, 1)
+                if fx_ and len(fx_) < len(lst):
+                    try:
+                        _lay_fixed(Mx, f, lst, 'M4' if f in 'EW' else 'M5', 1, fx_, gap=0.144)
+                        continue
+                    except AssertionError:
+                        for q_ in [q_ for q_, _b in lst if q_ in Mx.ports]:      # no room around the pinned port: packed as before
+                            del Mx.ports[q_]; Mx.order.remove(q_)
+                elif fx_:
+                    (p1_, (c_, _p)), = fx_.items()
+                    Mx.face(p1_, ports[p1_][1], f, 'M4' if f in 'EW' else 'M5', c_, 1)
                     continue
             _lay(Mx, f, lst, 'M4' if f in 'EW' else 'M5', gap=0.0)
     elif kind == 'bf' and BF_HIER:   # dsfd_bf_front: x stream N, control S, column interfaces W / E (abutted)
