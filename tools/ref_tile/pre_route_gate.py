@@ -968,7 +968,10 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else [])
          # cluster M8/M9 grant (VM6 10-14): ref_tile reads it at ROOT; without it every granted cluster (qfd_vm_rg* /
          # qfd_vm_band and their probes) was REFUSED "cluster layer grant source must be an existing repository file"
-         + ([sp["cluster_layer_grant"]["source"]] if (sp.get("cluster_layer_grant") or {}).get("source") else []))
+         + ([sp["cluster_layer_grant"]["source"]] if (sp.get("cluster_layer_grant") or {}).get("source") else [])
+         # pin_hook_before_flops (claude s81-grpA r4, 10-14): ref_tile gen checks each hook exists at ROOT; without it
+         # dsfd_vm_be_sl r5 (besl_xhold.tcl, committed at the source commit) was REFUSED "missing pin hook"
+         + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)])
 
 
 def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:
