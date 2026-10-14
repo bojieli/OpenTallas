@@ -121,7 +121,7 @@ def build(assigned):
             pin_arg = "{" + name + "}"
             if port in {"rst", "rsv"}:  # vector or scalar form may survive synthesis
                 tcl.append(f"set capc_reset_pin {{{port}[0]}}")
-                tcl.append(f"if {{![llength [get_ports -quiet $capc_reset_pin]]}} {{set capc_reset_pin {{{port}}}}")
+                tcl.append("if {![llength [get_ports -quiet $capc_reset_pin]]} {set capc_reset_pin {" + port + "}}")
                 pin_arg = "$capc_reset_pin"
             tcl.append(f"place_pin -pin_name {pin_arg} -layer {layer} "
                        f"-location {{{along:.3f} {H_CL if face == 'N' else 0.0}}} "
