@@ -62,6 +62,18 @@
         "clock_family": "CORE833 synchronous compensated family, actualdelivery unbound",
         "transported_HC182": "unchanged plus tokenEpoch[245:230]/valid246/distinctServiceEpoch[262:247]",
         "binding": "No localoperationcontextcounter substitutesactualsharedHOSTepoch; sourceleaseheldtokeninput remainsunbounduntilactualcomposition."
+      },
+      "current_controller_census": {
+        "path": "results/arch/qwen_host_controller_census_1014/census.json",
+        "source_commit": "2cec08fb0fbcdf25bee4ab77b21d9c89cd83ab2c",
+        "Q_bits": 12719,
+        "Q_by_clock_port": {
+          "pll_hbm": 9780,
+          "ck": 2939
+        },
+        "ports_input": 939,
+        "ports_output": 920,
+        "status": "Distinct actual controller variant generic sourcecensus. No mappedoutline/CTS/assignedpins or legacyviewalias; co0 has three generic comb cells and needs actual budget measurement. Real WDONE17 observer, notearlycredit/timerACK."
       }
     },
     {

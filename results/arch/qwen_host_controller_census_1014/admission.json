@@ -1,0 +1,16 @@
+{
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-3139789-1791979111",
+  "exit": 0,
+  "request_GB": 4,
+  "threads": 1,
+  "staging": "/srv/opentallas-scratch/codex/qwen-host-controller-census-1014",
+  "Yosys_version": "0.52 fee39a3284c90249e1d9684cf6944ffbbcbb8f90",
+  "tool_version_observation": "Verified immediately after admitted run; script selects /usr/bin/yosys on this host",
+  "script_sha256": "a26374db3667cb17655e228b577086a887be5dab0ad7d4bb6292c681c756cd02",
+  "outputs": {
+    "census.json": "e1d290506414f8c04fac8f63bdceac3eb10532615e494069455be2f2d26cbc5d",
+    "source_manifest.json": "bf58f66294b82e5ef101aa5890146a509fa4f8818de022391ccbd807f0df7e28",
+    "synthesis.log": "6199bf26bb65b5df8b08d6ac4d619d52715ca871f7764fad9c458566d8904239"
+  }
+}
