@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.hbm_sfu_fixed_lane_mapper.v1",
+  "default_OFF": true,
+  "closed_arithmetic_master": "ot_su12_sfu",
+  "closed_lane_index": 5,
+  "desired_lane_index_bits": 4,
+  "desired_lane_range": [
+    0,
+    15
+  ],
+  "replicas_per_quarter": 16,
+  "raw_offset_terms_bits": 480,
+  "closed_offset_bus_bits": 1200,
+  "payload_passthrough_bits": 461,
+  "input_metadata_bits": 85,
+  "offset_datapath_register_bits": 1320,
+  "passthrough_register_bits": 1844,
+  "metadata_register_bits": 340,
+  "estimated_register_bits": 3504,
+  "pipeline_edges": 4,
+  "arithmetic_ops_added": 0,
+  "mapping": "desired offset in bit0 coefficient, other closed lane5 coefficients zero; o_v/i_v/krow compensate desired j versus5; emit masks desired lin; lvw>=3 so fixed5 is live",
+  "quarter_phase_cost": "four explicit mapper edges; native controller phase and retire/ACK lifecycle must account for them, no zero-cycle claim",
+  "proposed_outline_um": [
+    172.8,
+    64.8
+  ],
+  "proposed_pins": "S480offset terms, W546metadata/payload, N1200closed coefficients, E542mappedmetadata/payload",
+  "clock_rule": "new root <=15000 sinks; actual CTS and boundary spread<=80 required",
+  "physical_closed": false,
+  "composed_bench": false,
+  "token_rate_credit": 0,
+  "required": "frozen closed source lane_id dependency equivalence plus actual16-lane GLU quarter exact/mutant gate"
+}

@@ -16145,3 +16145,22 @@ def hbm_sfu_b2_quarter_requirements_model():
         clock_rule='closed lanes stand; each new memory/control/ACK root <=15000 or actual300/80 CTS',
         latency_credit=0, repriced=False, physical_closed=False,
         required_gates=['exact STRIPE4 sub-record ownership/local mapping','real16-lane c12 quarter arithmetic','actual8-lane stage/drain','O-only committed prefix plus early-issue mutant','registered per-pair reach L-H>=100um','actual pin files and cut<=0.60'])
+
+
+def hbm_sfu_fixed_lane_mapper_model():
+    """Port adapter for the real CLOSED lane5 master; before mapper RTL."""
+    return dict(schema='opentallas.hbm_sfu_fixed_lane_mapper.v1', default_OFF=True,
+        closed_arithmetic_master='ot_su12_sfu', closed_lane_index=5,
+        desired_lane_index_bits=4, desired_lane_range=[0,15], replicas_per_quarter=16,
+        raw_offset_terms_bits=5*4*24, closed_offset_bus_bits=5*10*24,
+        payload_passthrough_bits=461, input_metadata_bits=85,
+        offset_datapath_register_bits=480+480+240+120,
+        passthrough_register_bits=4*461, metadata_register_bits=4*85,
+        estimated_register_bits=480+480+240+120+4*461+4*85,
+        pipeline_edges=4, arithmetic_ops_added=0,
+        mapping='desired offset in bit0 coefficient, other closed lane5 coefficients zero; o_v/i_v/krow compensate desired j versus5; emit masks desired lin; lvw>=3 so fixed5 is live',
+        quarter_phase_cost='four explicit mapper edges; native controller phase and retire/ACK lifecycle must account for them, no zero-cycle claim',
+        proposed_outline_um=[172.8,64.8], proposed_pins='S480offset terms, W546metadata/payload, N1200closed coefficients, E542mappedmetadata/payload',
+        clock_rule='new root <=15000 sinks; actual CTS and boundary spread<=80 required',
+        physical_closed=False, composed_bench=False, token_rate_credit=0,
+        required='frozen closed source lane_id dependency equivalence plus actual16-lane GLU quarter exact/mutant gate')
