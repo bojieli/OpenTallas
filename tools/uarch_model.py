@@ -16233,6 +16233,11 @@ def hbm_quant_native_completion_front_model():
         'physical': 'unassigned newslots, ownroots, M5 and actualperpin clocks/cuts/reach/hold required',
         'release': 'no mainadoption before actualmaster-param exact+mutant/throughput/physical gates',
     }
+
+
+def hbm_sm_pub_parent_stations_model():
+    """Production publication hierarchy: extraction retains every existing edge.
+
     Physical areas and boundary-wire lengths qualify from the station routes;
     none are inferred from a slice route or credited as timing closure here.
     """
