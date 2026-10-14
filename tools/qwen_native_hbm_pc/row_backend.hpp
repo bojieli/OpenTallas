@@ -38,7 +38,7 @@ class RowBackend {
  std::deque<WriteAck> completed_writes;
  std::deque<RowReturn> completed_rows;
  using IdentityKey=std::tuple<uint32_t,uint32_t,uint32_t,uint32_t,unsigned>;
- std::set<IdentityKey> acknowledged;
+ std::set<IdentityKey> acknowledged,pending_writes;
  VerilatedContext& ctx;
  unsigned current_position;
  uint64_t ticket_next=1,core_next=553667,hbm_next=512000;
@@ -54,7 +54,7 @@ class RowBackend {
     auto w=c.issued_writes.front();auto address=native_map(w.id).address();
     if(c.ack_index>=c.phy.written_keys.size()||c.phy.written_keys[c.ack_index]!=address)throw std::runtime_error("ACK physical quarter identity mismatch");
     if(hbm_edges<c.phy.written_at[c.ack_index]+12)throw std::runtime_error("host ACK before actual WDONE17");
-    ++c.ack_index;c.issued_writes.pop_front();acknowledged.insert(ik(w.id));
+    ++c.ack_index;c.issued_writes.pop_front();acknowledged.insert(ik(w.id));pending_writes.erase(ik(w.id));
     completed_writes.push_back({w.ticket,w.id,core_edges,hbm_edges});++write_acks;
    }
    if(bits(m.land_er.data(),0,1)){
@@ -96,7 +96,8 @@ class RowBackend {
  }
  uint64_t enqueue_quarter(const QuarterIdentity& id,const Quarter& data){
   auto p=native_map(id);if(id.row.pos!=current_position)throw std::runtime_error("current-token writer position mismatch");
-  uint64_t t=ticket_next++;channels[p.index()].writes.push_back({t,id,data});return t;
+  if(!pending_writes.insert(ik(id)).second)throw std::runtime_error("duplicate in-flight quarter identity");
+  acknowledged.erase(ik(id));uint64_t t=ticket_next++;channels[p.index()].writes.push_back({t,id,data});return t;
  }
  // Prior-cache preload is an explicit harness operation. Caller supplies a
  // declared ECC288 DRAM image; no current-token preload is accepted.
@@ -120,17 +121,23 @@ class RowBackend {
  // Independent edge hooks let a parent join other compiled RTL models. Calls
  // must preserve rising/falling sequence and monotonic context time.
  void core_edge(bool high){
+  if(high==core_high)throw std::runtime_error("duplicate core edge hook");
   if(high){++core_edges;observe_core();}
   for(auto&c:channels){c.model->ck=high;c.model->eval();}
   if(!high){drive_core_falling();for(auto&c:channels)c.model->eval();}
   core_high=high;
  }
  void hbm_edge(bool high){
+  if(high==hbm_high)throw std::runtime_error("duplicate HBM edge hook");
   if(high){++hbm_edges;
    for(auto&c:channels){auto pi=c.phy.sample_hbm(*c.model);c.model->pll_hbm=1;c.model->eval();for(unsigned j=0;j<10;j++)c.model->pi[j]=pi[j];c.model->eval();}
    if(hbm_edges==8)for(auto&c:channels){c.model->rst_n=1;c.model->hrst=1;c.model->eval();}
   }else for(auto&c:channels){c.model->pll_hbm=0;c.model->eval();}
   hbm_high=high;
+ }
+ void begin_token(unsigned position){
+  if(position>=8192||position<=current_position||!pending_writes.empty()||!assembling.empty())throw std::runtime_error("token advance before drain or invalid position");
+  current_position=position;
  }
  uint64_t next_event_fs()const{return std::min(core_next,hbm_next);}
  void advance_one_event(){auto t=next_event_fs();ctx.time(t);if(core_next<=hbm_next){core_next+=416667;core_edge(!core_high);}else{hbm_next+=512000;hbm_edge(!hbm_high);}}
