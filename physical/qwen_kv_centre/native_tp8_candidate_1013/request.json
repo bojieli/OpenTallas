@@ -68,8 +68,22 @@
       ]
     },
     "xs_remote": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qkd_seq_xs_tp8-20261013-213421",
-    "xs_status": "RUNNING",
-    "xs_remote_script_pid": 216237
+    "xs_status": "TERMINAL_EXIT0_WARN",
+    "xs_remote_script_pid": 216237,
+    "xs_result": {
+      "mapped_sinks": 7646,
+      "std_area_um2": 5100,
+      "TT_max_ps": 187.9,
+      "TT_spread_ps": 7.9,
+      "TT_mean_ps": 183.7,
+      "SS_mean_ps": 240.4,
+      "FF_mean_ps": 149.7,
+      "setup_wns_ps": 15.0428,
+      "hold_wns_ps": 26.5524,
+      "warnings": [
+        "optional station hook absent in sparse local tree; native tile flow/PDN/CTS completed"
+      ]
+    }
   },
   "requirements": [
     "Use real native core/xs LEF and TT/FF/SS insertion before parent clock generation.",
@@ -77,5 +91,91 @@
     "Actual pin-by-pin launch/capture reach and registered boundary audit required.",
     "Copied bundle-based cut script is a candidate screen, not actual native pin or PG proof.",
     "Native control/transport component gate does not prove attention arithmetic or end-to-end production rate."
-  ]
+  ],
+  "measured_pre_route_clock_pins": {
+    "qkd_seq_core_tp8": {
+      "status": "MEASURED_PRE_ROUTE_CTS_NOT_ROUTED_VIEW",
+      "clock_port": "ck",
+      "rectangles": [
+        [
+          "M5",
+          [
+            65.808,
+            43.116,
+            65.832,
+            43.2
+          ]
+        ]
+      ],
+      "rectangle_center_um": [
+        65.82,
+        43.158
+      ],
+      "pins_sha256": "c232a3fa742398a4eee54d2000127fa97fb8513b3e7233bd377970ba1f72fcd2",
+      "insertion_file": "physical/qwen_kv_centre/native_tp8_candidate_1013/core/ck.json",
+      "insertion_sha256": "6218c71866c0e193d540a9ba76c2ed279fbbbc1d63c58d77f5466f1c827ad1b3",
+      "boundary_corners": {
+        "tt": {
+          "n": 1805,
+          "mean": 129.1,
+          "min": 125.2,
+          "max": 135.3
+        },
+        "ff": {
+          "n": 1805,
+          "mean": 103.1,
+          "min": 99.2,
+          "max": 109.4
+        },
+        "ss": {
+          "n": 1805,
+          "mean": 174.2,
+          "min": 170.3,
+          "max": 180.2
+        }
+      }
+    },
+    "qkd_seq_xs_tp8": {
+      "status": "MEASURED_PRE_ROUTE_CTS_NOT_ROUTED_VIEW",
+      "clock_port": "ck",
+      "rectangles": [
+        [
+          "M5",
+          [
+            12.048,
+            105.756,
+            12.072,
+            105.84
+          ]
+        ]
+      ],
+      "rectangle_center_um": [
+        12.059999999999999,
+        105.798
+      ],
+      "pins_sha256": "975edc1133d84d918ffab3b2d2147e0125c4099a7fa8cd457060e5ebd037c61f",
+      "insertion_file": "physical/qwen_kv_centre/native_tp8_candidate_1013/xs/ck.json",
+      "insertion_sha256": "8a89e7ca14101067aa27ab7b9c983a6192a9084999bfc9aa524b076221fc4aea",
+      "boundary_corners": {
+        "tt": {
+          "n": 909,
+          "mean": 183.7,
+          "min": 180.3,
+          "max": 186.9
+        },
+        "ff": {
+          "n": 909,
+          "mean": 149.7,
+          "min": 146.5,
+          "max": 152.6
+        },
+        "ss": {
+          "n": 909,
+          "mean": 240.4,
+          "min": 236.6,
+          "max": 243.9
+        }
+      }
+    }
+  }
 }
