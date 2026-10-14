@@ -86,10 +86,10 @@ class RowBackend {
  }
  public:
  uint64_t core_edges=0,hbm_edges=0,write_issues=0,write_acks=0,read_issues=0,read_quarters=0,row_returns=0,declared_preloads=0;
- explicit RowBackend(VerilatedContext& context,unsigned token_position):ctx(context),current_position(token_position){
+ explicit RowBackend(VerilatedContext& context,unsigned token_position,const std::string& prefix="actual_pc_"):ctx(context),current_position(token_position){
   if(token_position>=8192)throw std::runtime_error("current token out of bounds");
   for(unsigned i=0;i<128;i++){
-   auto&c=channels[i];auto name="actual_pc_"+std::to_string(i);c.model=std::make_unique<Vqwen_native_hbm_pc_provider>(&ctx,name.c_str());auto&m=*c.model;
+   auto&c=channels[i];auto name=prefix+std::to_string(i);c.model=std::make_unique<Vqwen_native_hbm_pc_provider>(&ctx,name.c_str());auto&m=*c.model;
    m.pc=i%32;m.ck=0;m.pll_hbm=0;m.rst_n=0;m.hrst=0;m.fi=0;m.ki=0;
    for(unsigned j=0;j<10;j++){m.ci[j]=0;m.pi[j]=0;}for(unsigned j=0;j<9;j++){m.host_es[j]=0;m.land_es[j]=0;}m.eval();
   }

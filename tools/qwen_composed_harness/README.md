@@ -31,3 +31,19 @@ Copied transport helpers originate in native dispatch (services VM adapter
 commit `31b7c1b4b` and the parent's kernel/sector helper snapshot). Physical PC
 headers originate in `674847d6f` / `25244646a`. Every admitted execution records
 the exact helper, archive and vector hashes in `out/inputs.sha256`.
+
+`full_layer.cpp` and `run_full_layer.sh` are an **unexecuted integration draft**
+until a real fullshape core archive exists. They replace all fixture current
+transactions with actual core instructions, QR writes and SU KV outputs, run
+eight distinct kernel instances, and carry mutable VM across segments 0/14/22.
+The two actual collective invocations consume the produced VM partials only.
+Every actual VM write carries the previous accepted provider PC: SU/reducer
+ownership changes only at an accepted, fully idle SU descriptor; ROM ownership
+changes only after the previous instruction's exact output count drains. Writes
+on an issue edge are sampled before owner replacement. Native writes carry PC11.
+
+`verify_full_layer.py` is an observer. It compares every operation commit against
+that instruction's independent source snapshot, exact addressed current KV
+stores, all three quiescent END-boundary VM snapshots, final defined VM effects,
+and both collectives' complete returned payloads. It rejects the historical
+linear-eight-rank oracle. No verified output enters any DUT/provider input.
