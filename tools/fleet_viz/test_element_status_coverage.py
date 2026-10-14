@@ -47,6 +47,20 @@ class StatusCoverageTests(unittest.TestCase):
         self.assertEqual(model().element('parent',[],{}, {})['category'],'flow failure (no live job)')
         self.assertEqual(model().element('parent',[job('CANCELLED')],{}, {})['category'],'cancelled only')
 
+    def test_cancelled_successor_audit_covers_every_original_requirement(self):
+        fixture=json.loads((Path(__file__).parent/'fixtures/cancelled_label_audit_20261014.json').read_text())
+        audit=json.loads((Path(__file__).resolve().parents[2]/'results/fleet_viz/cancelled_requirements_20261014.json').read_text())
+        expected={r['element']:r['source_commit'] for r in fixture if r['actual_state']=='CANCELLED'}
+        self.assertEqual(len(audit['rows']),19)
+        self.assertEqual({r['element']:r['source_commit'] for r in audit['rows']},expected)
+        for row in audit['rows']:
+            self.assertEqual(row['requirement_status'],'OPEN')
+            self.assertFalse(row['retired'])
+            self.assertFalse(row['parent_qualified'])
+            self.assertTrue(row['missing'])
+            self.assertTrue(row['evidence'])
+        self.assertEqual(set(audit['missing_successor']),{r['element'] for r in audit['rows'] if not r['successors']})
+
     def test_frontend_totals_include_cancelled_requirements(self):
         node=shutil.which('node')
         self.assertIsNotNone(node,'frontend count regression requires node')
