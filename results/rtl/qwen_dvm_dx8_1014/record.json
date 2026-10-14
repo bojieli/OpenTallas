@@ -1,6 +1,5 @@
 {
   "source_commit": "4b0b59d26a4bbe134ff1998c7f22b687687e4048",
-  "adopted": false,
   "qualification": "behavioral evidence only; assigned slots, native pin timing, physical closure, binding and measured cost pending",
   "body_proof_source": "f94f35d92",
   "wrapper_lint_source": "4b0b59d26",
@@ -18,5 +17,8 @@
     "wrong_line_mutant": "FAIL 1572048 errors / 1572864 checks"
   },
   "delta_vs_XVM12": -4,
-  "cost_ledger_accepted": false
+  "cost_ledger_accepted": false,
+  "architecture_adopted": true,
+  "architecture_authority": "HANDOFF.md 0aa: owner adopted Qwen distributed VM",
+  "implementation_bound": false
 }
