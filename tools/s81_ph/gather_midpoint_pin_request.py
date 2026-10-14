@@ -9,6 +9,11 @@ PROOF=ROOT/'results/rtl/s81_ph_20261006/gather/pins_v18'
 def write(name,data):
  raw=(json.dumps(data,indent=1)+'\n').encode();(OUT/name).write_bytes(gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw)
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+parent_path=OUT/'parent_assignment.json'
+parent=json.loads(parent_path.read_text())
+baseline_parent=json.loads((PROOF/'parent_assignment.json').read_text())
+for name,port in baseline_parent['ports'].items():
+ assert parent['ports'][name]==port,(name,'existing parent assignment changed')
 masters={};changes=[];fail=[];counts={}
 for side in ['rw','re']:
  p=SRC/f'dsfd_gth_{side}.json';d=json.loads(p.read_text());pins=copy.deepcopy(d['pins']);old=copy.deepcopy(pins)
@@ -49,7 +54,11 @@ for side in ['rw','re']:
 instances=json.loads((PROOF/'leaf_instances.json').read_text());imap={x['clock_pin']['instance']:x for x in instances}
 def updated(ep):
  ep=copy.deepcopy(ep)
- if ep['instance']!='PARENT':
+ if ep['instance']=='PARENT':
+  name,bit=ep['port'].rsplit('[',1);bit=int(bit[:-1]);face,layer,t,_=parent['ports'][name]['per_bit'][bit];w,h=parent['outline_um'];pt=[layer,0 if face=='W' else w if face=='E' else t,0 if face=='S' else h if face=='N' else t]
+  assert ep['point']==pt,(ep,pt,'parent projection changed')
+  ep['point']=pt
+ else:
   inst=imap[ep['instance']];side=inst['master'].rsplit('_',1)[1];layer,x,y=masters[side][ep['port']]['point'];ox,oy=inst['origin_um'];ep['point']=[layer,round(x+ox,6),round(y+oy,6)]
  return ep
 links=json.load(gzip.open(PROOF/'bit_links.json.gz'));summary={}
@@ -59,5 +68,5 @@ for link in links:
 bindings=json.load(gzip.open(PROOF/'whole_leaf_port_bindings.json.gz'));bindings=[updated(x) for x in bindings]
 assert len(bindings)==109536
 write('bit_links.json.gz',links);write('whole_leaf_port_bindings.json.gz',bindings);write('master_port_changes.json',changes)
-write('proof.json',{'status':'REQUEST_NOT_ASSIGNED','source_generator_sha256':sha(Path(__file__)),'parent_assignment_sha256':sha(PROOF/'parent_assignment.json'),'RTL_mapping_sha256':sha(ROOT/'rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv'),'baseline_accepted_commit':'0ef156eff','master_audit':counts,'instances':32,'whole_signal_bits':len(bindings),'links':summary,'failures':fail,'projection':'All existing logical per-bit links and parent coordinates preserved. Every leaf endpoint regenerated from its requested master point and accepted native origin. No source or consumed bit order change.','seam_effect':'EW seam channel horizontal26.004um plus ordinate26.496um =52.500um Manhattan, compared with39.156/39.348um baseline. Faces/layers unchanged; real route cut/PG/slew/reach/hold still owed.','owed':['Explicit die owner acceptance before any use','Actual pin-stage IOP/PG/LEF and native lattice validation','Placement legalizes staggered real FF D/Q positions; ideal94.998um midpoint is not physical reach proof','SS60/25/833.333 normalized per-bit setup/output max and hold/min pair budgets','Existing SS internal EV failure and macro214.4ps slew remain unresolved','No routed/adopted/qualified claim']})
+write('proof.json',{'status':'REQUEST_NOT_ASSIGNED','source_generator_sha256':sha(Path(__file__)),'parent_assignment_sha256':sha(parent_path),'parent_assignment_source':'die owner c1c8cc079; prior data/leaf/control coordinates verified unchanged;133ck_r added','baseline_parent_assignment_sha256':sha(PROOF/'parent_assignment.json'),'RTL_mapping_sha256':sha(ROOT/'rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv'),'baseline_accepted_commit':'0ef156eff','master_audit':counts,'instances':32,'whole_signal_bits':len(bindings),'links':summary,'failures':fail,'projection':'All existing logical per-bit links and parent coordinates preserved. Every leaf endpoint regenerated from its requested master point and accepted native origin. No source or consumed bit order change.','seam_effect':'EW seam channel horizontal26.004um plus ordinate26.496um =52.500um Manhattan, compared with39.156/39.348um baseline. Faces/layers unchanged; real route cut/PG/slew/reach/hold still owed.','owed':['Explicit die owner acceptance before any use','Actual pin-stage IOP/PG/LEF and native lattice validation','Placement legalizes staggered real FF D/Q positions; ideal94.998um midpoint is not physical reach proof','SS60/25/833.333 normalized per-bit setup/output max and hold/min pair budgets','Existing SS internal EV failure and macro214.4ps slew remain unresolved','No routed/adopted/qualified claim']})
 print('REQUEST',counts,'links',summary,'failures',len(fail))
