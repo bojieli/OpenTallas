@@ -93,7 +93,14 @@
         "path": "results/rtl/qwen_vm_provenance_1014/component/receipt.json",
         "sha256": "de4511110f0cd194f2a1fd015637590f654e8a4e22a4f6accf4d85766ea120ff"
       },
-      "full_provenance_scope": "Default-off full247 logicalmetadata includingretained token16/epoch21;39analyticalstatebits notmapped. Actual64nativeROW reads512+247 andearlycapturemutant validated; trustedactualHOSTtoken ingress, actualXnormalize/32roots and realpostedwriterfence/commits remain unbound. Fulloutput759b/selected375b arefields only, no assignedphysicalchannel/compression."
+      "full_provenance_scope": "Default-off full247 logicalmetadata includingretained token16/epoch21;39analyticalstatebits notmapped. Actual64nativeROW reads512+247 andearlycapturemutant validated; trustedactualHOSTtoken ingress, actualXnormalize/32roots and realpostedwriterfence/commits remain unbound. Fulloutput759b/selected375b arefields only, no assignedphysicalchannel/compression.",
+      "full_provenance_census": {
+        "source_commit": "5b9e9859d",
+        "path": "results/rtl/qwen_vm_provenance_1014/census",
+        "provenance_Q_bits": 1241,
+        "row_binding_Q_bits": 597,
+        "scope": "Exactgenericcurrentproc/opt/flatten/memory_map state, notmappedarea/CTS/physicalclockdelivery"
+      }
     },
     {
       "name": "VM_band_pockets_ACK",
