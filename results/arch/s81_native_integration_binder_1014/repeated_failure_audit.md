@@ -109,9 +109,9 @@ L directions with real trial occupancy and unchanged register count. It records
 selected direction and non-first search tiers. This is a search repair, not a
 claim that centroid placement satisfies every actual bit.
 
-`dc2847ae1` adds an independent retained-frame0 endpoint screen using final LEF
+`dc2847ae1` adds an independent retained-frame0 endpoint screen using retained elements LEF
 rectangles, source/load bit identity and recorded pair limits. It checks 41
-operand relays, **23,856 unique bound bit pairs and zero missing pins**. Before:
+operand relays, **23,856 unique bit pairs with resolved pin rectangles and zero missing pins**. Before:
 4,791 pair violations. Simultaneous requests from independent per-relay optima:
 1,525 pair violations, maximum 552.262 µm; 37/41 requests overlap retained cells.
 Fallback classes explicitly use only the flat ceiling and remain unqualified
@@ -209,3 +209,5 @@ six stopped-clock reset epochs and a held genuine tree reset pass. The omitted
 tree contributor mutant fails, and all five existing PQ0 numerical cases pass.
 Full production PQ1 arithmetic/field-operation comparison, new physical ACK
 pins, source clock delivery and per-corner physical checks remain open.
+
+In this necessary endpoint screen, `bound_bits` means resolved geometric pin rectangles in retained `elements.lef`, which includes placeholders. It does not mean CLOSED native source/view binding; fallback 500 µm endpoints and the native207 1,729,687-bit source debt remain unqualified.

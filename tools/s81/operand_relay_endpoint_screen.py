@@ -201,6 +201,7 @@ def main():
                    joint_request=dict(bound_bits=joint_bound, unbound_bits=joint_missing,
                                       before_over_pair_limit=before_unique_over, after_over_pair_limit=joint_over,
                                       max_um=round(joint_max, 6), occupancy_blocked_requests=sum(r.get('retained_occupancy_blocker_count', 0)>0 for r in rows)),
+                   resolved_pin_semantics='bound_endpoint_bits and joint bound_bits mean endpoint rectangles resolved in retained elements.lef; this is not CLOSED native source/view binding. Placeholder and fallback endpoints remain unqualified.',
                    pair_limit_provenance=dict(recorded_class_limits=limits.__len__(), fallback_ceiling_hops=fallback_hops, fallback_rule='flat ceiling only; missing per-pair table lookup remains unqualified'),
                    rows=rows, bound_endpoint_bits=sum(r.get('bound_endpoint_bits', 0) for r in rows),
                    unbound_endpoint_bits=sum(r['unbound_bits'] for r in rows),

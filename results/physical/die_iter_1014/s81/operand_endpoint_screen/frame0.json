@@ -2108,5 +2108,6 @@
     "pin access/alignment",
     "full and local corridor cuts",
     "registered-stage cost and source proof"
-  ]
+  ],
+  "resolved_pin_semantics": "bound_endpoint_bits and joint bound_bits mean endpoint rectangles resolved in retained elements.lef; this is not CLOSED native source/view binding. Placeholder and fallback endpoints remain unqualified."
 }
