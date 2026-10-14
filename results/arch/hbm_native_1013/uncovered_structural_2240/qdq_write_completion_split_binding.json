@@ -31,8 +31,9 @@
     "tt_hold_ps": 26.667,
     "input_slack_ps": 224.4,
     "output_slack_ps": 118.1,
-    "route_job": "qdq_wr_fin_ref-f2-de1974858",
-    "route_verdict": "pending"
+    "route_job": "qdq_wr_fin_ref-f2log-de1974858",
+    "route_verdict": "pending",
+    "prior_job_failure": "qdq_wr_fin_ref-f2-de1974858 terminal daemon-stop: actual mutant failed correctly, runner did not print failure log to stdout"
   },
   "pay_p1_cts": {
     "sinks": 4171,
@@ -45,7 +46,18 @@
   "pay_p2_cts": {
     "source": "85a0a4d05",
     "actual_clock": "spine",
-    "status": "running; no RTL/data edge change"
+    "sinks": 4171,
+    "tt_boundary_mean_ps": 440.0,
+    "tt_boundary": {
+      "n": 1761,
+      "mean": 440.0,
+      "min": 422.8,
+      "max": 451.7
+    },
+    "tt_all_spread_ps": 28.9,
+    "tt_setup_ps": 74.543,
+    "tt_hold_ps": 26.038,
+    "status": "CTS PASS, native bench and routed pin/slot audits pending"
   },
   "behavior": {
     "fin_scoreboard_records": 866,
