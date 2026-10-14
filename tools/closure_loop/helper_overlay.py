@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
+import stat
 import subprocess
 from pathlib import Path
 
@@ -102,3 +104,120 @@ def compare_plans(frozen, effective):
         if old.get(rel) != new.get(rel):
             return False, f"effective route helper drift: {rel} (frozen {old.get(rel)}, current {new.get(rel)})"
     return True, "effective route helper bytes and modes match frozen plan"
+
+
+def frozen_rows(plan):
+    """Validate the recorded plan without consulting today's helper resolution."""
+    if not isinstance(plan, dict) or plan.get("schema") != SCHEMA:
+        raise ValueError("missing frozen effective helper plan")
+    try:
+        rows = content_rows(plan["files"])
+        if not rows or digest(rows) != plan.get("content_sha256"):
+            raise ValueError("frozen helper plan digest mismatch")
+        paths, names = set(), set()
+        for row in rows:
+            path = Path(row["path"])
+            if path.is_absolute() or ".." in path.parts or str(path) != row["path"]:
+                raise ValueError("unsafe frozen helper path")
+            if row["path"] in paths or path.name in names:
+                raise ValueError("duplicate frozen helper path or transport basename")
+            paths.add(row["path"])
+            names.add(path.name)
+            if not re.fullmatch(r"[0-9a-f]{64}", row["sha256"]) or not re.fullmatch(r"[0-9a-f]{40}", row["git_blob"]):
+                raise ValueError("invalid frozen helper hash")
+            if type(row["mode"]) is not int or not 0 <= row["mode"] <= 0o777:
+                raise ValueError("invalid frozen helper mode")
+        return rows
+    except (KeyError, TypeError, AttributeError) as ex:
+        raise ValueError("malformed frozen helper plan") from ex
+
+
+def committed_frozen_payloads(repo, plan):
+    """Recover only bytes committed at each original path in the recorded tree.
+
+    Git records the executable bit; the plan records the full transported POSIX
+    mode (e.g. 0664). Both are checked independently of current main or daemon.
+    Daemon-only/uncommitted content cannot enter this recovery path.
+    """
+    rows = frozen_rows(plan)
+    head = plan.get("origin_main")
+    if not isinstance(head, str) or not re.fullmatch(r"[0-9a-f]{40}", head):
+        raise ValueError("frozen helper origin must be an explicit committed tree")
+    kind = subprocess.run(["git", "-C", str(repo), "cat-file", "-t", head], capture_output=True, timeout=60)
+    if kind.returncode or kind.stdout.strip() != b"commit":
+        raise ValueError("frozen helper committed tree unavailable")
+    lineage = subprocess.run(["git", "-C", str(repo), "merge-base", "--is-ancestor", head,
+                              "refs/remotes/origin/main"], capture_output=True, timeout=60)
+    if lineage.returncode:
+        raise ValueError("frozen helper origin is not retained main history")
+    tree = subprocess.run(["git", "-C", str(repo), "ls-tree", "-rz", head], capture_output=True, timeout=60)
+    if tree.returncode:
+        raise ValueError("frozen helper committed tree unavailable")
+    entries = {}
+    for item in tree.stdout.split(b"\0"):
+        if item:
+            meta, path = item.split(b"\t", 1)
+            entries[path.decode()] = meta.decode().split()
+    payloads = {}
+    for row in rows:
+        mode, kind, blob = entries.get(row["path"], (None, None, None))
+        if kind != "blob" or mode not in ("100644", "100755") or blob != row["git_blob"]:
+            raise ValueError(f"frozen helper committed tree mismatch: {row['path']}")
+        if bool(row["mode"] & 0o111) != (mode == "100755"):
+            raise ValueError(f"frozen helper committed executable mode mismatch: {row['path']}")
+        data = subprocess.run(["git", "-C", str(repo), "cat-file", "blob", blob], capture_output=True, timeout=60)
+        if data.returncode or blob_id(data.stdout) != blob or hashlib.sha256(data.stdout).hexdigest() != row["sha256"]:
+            raise ValueError(f"frozen helper committed bytes missing or tampered: {row['path']}")
+        payloads[row["path"]] = data.stdout
+    return payloads
+
+
+def verify_installed_plan(directory, plan):
+    """Read-only verification of the original flattened route helper directory."""
+    rows = frozen_rows(plan)
+    directory = Path(directory)
+    sidecar = directory / "helper_overlay_plan.json"
+    if not sidecar.exists():
+        if any((directory / Path(row["path"]).name).exists() for row in rows):
+            raise ValueError("original helper files exist but frozen sidecar is missing")
+        return {"status": "not_installed"}
+    if not stat.S_ISREG(sidecar.lstat().st_mode):
+        raise ValueError("original helper sidecar is not a regular file")
+    if json.loads(sidecar.read_text()) != plan:
+        raise ValueError("original helper sidecar differs from job frozen plan")
+    for row in rows:
+        path = directory / Path(row["path"]).name
+        try:
+            info = path.lstat()
+            if not stat.S_ISREG(info.st_mode):
+                raise ValueError(f"original helper is not a regular file: {row['path']}")
+            if stat.S_IMODE(info.st_mode) != row["mode"]:
+                raise ValueError(f"original helper mode mismatch: {row['path']}")
+            data = path.read_bytes()
+        except OSError as ex:
+            raise ValueError(f"original helper missing: {row['path']}") from ex
+        if hashlib.sha256(data).hexdigest() != row["sha256"] or blob_id(data) != row["git_blob"]:
+            raise ValueError(f"original helper bytes mismatch: {row['path']}")
+    return {"status": "verified_original", "origin_main": plan["origin_main"],
+            "content_sha256": plan["content_sha256"], "files": len(rows)}
+
+
+def verify_staged_helpers(directory, plan, paths):
+    """Verify the helpers actually shipped into an immutable gate source tree."""
+    rows = {row["path"]: row for row in frozen_rows(plan)}
+    if not paths or len(set(paths)) != len(paths) or any(path not in rows for path in paths):
+        raise ValueError("gate executed helper paths missing or outside frozen plan")
+    for rel in paths:
+        row = rows[rel]
+        path = Path(directory) / rel
+        try:
+            info = path.lstat()
+            if not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) != row["mode"]:
+                raise ValueError(f"original gate helper kind/mode mismatch: {rel}")
+            data = path.read_bytes()
+        except OSError as ex:
+            raise ValueError(f"original gate helper missing: {rel}") from ex
+        if hashlib.sha256(data).hexdigest() != row["sha256"] or blob_id(data) != row["git_blob"]:
+            raise ValueError(f"original gate helper bytes mismatch: {rel}")
+    return {"status": "verified_original_gate", "origin_main": plan["origin_main"],
+            "content_sha256": plan["content_sha256"], "executed_paths": sorted(paths)}

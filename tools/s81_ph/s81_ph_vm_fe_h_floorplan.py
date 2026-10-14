@@ -78,6 +78,27 @@ def master_pins():
 
 
 MP = master_pins()
+PIN_RECEIPTS = {}
+
+
+def load_actual_master_pins(directory):
+    """Use actual source-bound IOP/CTS rectangles; final abstract/timing stays pending."""
+    for f in sorted(Path(directory).glob('*/pins.json')):
+        master = f.parent.name
+        if master not in MP:
+            raise ValueError(f'unknown FE master: {master}')
+        rec = json.loads(f.read_text()); w,h = rec['outline_um']
+        if abs(w-MP[master][0]) > .001 or abs(h-MP[master][1]) > .001:
+            raise ValueError(f'{master}: actual outline {w,h} differs from selected kit {MP[master][:2]}')
+        pins = {}
+        for name, v in rec['pins'].items():
+            if name in ('VDD','VSS') or not v['boxes']: continue
+            box=v['boxes'][0]; x0,y0,x1,y1=box['rect_um']; x,y=(x0+x1)/2,(y0+y1)/2
+            face=min((x,'W'),(w-x,'E'),(y,'S'),(h-y,'N'))[1]
+            pins[name]=(x,y,face,box['layer'])
+        MP[master]=(w,h,pins,True)
+        PIN_RECEIPTS[master]={k:rec.get(k) for k in ('schema','odb_source','odb_sha256','status')}
+
 
 
 def reposition(plan, positions, derive_external=False):
@@ -358,6 +379,7 @@ class Plan:
                 pa, pb = A[k:k + 64], B[k:k + 64]
                 segs.append((len(pa), np.mean([p[0] for p in pa]), np.mean([p[1] for p in pa]), np.mean([p[0] for p in pb]), np.mean([p[1] for p in pb])))
         chosen = [None] * len(segs)
+        unresolved = set()
         for it in range(3):
             for i, (bits, x0, y0, x1, y1) in enumerate(segs):
                 if chosen[i] is not None:
@@ -366,7 +388,18 @@ class Plan:
                 cands = [path(x0, y0, x1, y1, None, 'HV'), path(x0, y0, x1, y1, None, 'VH')]
                 cands += [path(x0, y0, x1, y1, m, 'HV') for m in range(min(ay, by), max(ay, by) + 1, 2)]
                 cands += [path(x0, y0, x1, y1, m, 'VH') for m in range(min(ax, bx), max(ax, bx) + 1, 4)]
-                best = min(cands, key=lambda c: cost(c, bits)); chosen[i] = best
+                def legal(c):
+                    return all((capH if d == 'H' else capV)[y,x] > 1e-6 for y,x,d in c)
+                valid = [c for c in cands if legal(c)]
+                if not valid:
+                    # A direct L/Z witness may cross a full-cap legacy macro.
+                    # Search the whole slot for legal three-segment detours; never delete blocked demand.
+                    extra = [path(x0,y0,x1,y1,m,'HV') for m in range(ny)]
+                    extra += [path(x0,y0,x1,y1,m,'VH') for m in range(nx)]
+                    valid = [c for c in extra if legal(c)]
+                if valid: unresolved.discard(i)
+                else: unresolved.add(i)
+                best = min(valid or cands, key=lambda c: cost(c, bits)); chosen[i] = best
                 for y, x, d in best: (useH if d == 'H' else useV)[y, x] += bits
         # Interior zero-capacity crossings are real violations. Endpoint pin landings
         # alone were excluded in path(); retain all remaining demand and capacity.
@@ -377,6 +410,10 @@ class Plan:
         win_v = max(float((np.convolve(useH[:, ix], k, 'valid') / np.maximum(np.convolve(capH[:, ix], k, 'valid'), 1e-6)).max()) for ix in range(nx))
         win_h = max(float((np.convolve(useV[iy, :], k, 'valid') / np.maximum(np.convolve(capV[iy, :], k, 'valid'), 1e-6)).max()) for iy in range(ny))
         return {'gcell_um': G, 'window_um': G * WIN,
+                'routing_model': 'finite L/Z plus full-slot legal detours; every blocked crossing retained',
+                'unroutable_bundle_segments': len(unresolved),
+                'route_segments_over_500_um': sum(len(c)*G > HOP_MAX for c in chosen),
+                'longest_grid_route_um': max(len(c)*G for c in chosen),
                 'blocked_interior_cells': int(((capH <= 1e-6) & (useH > 0)).sum() + ((capV <= 1e-6) & (useV > 0)).sum()),
                 'full_vertical_cut_max': [round(float(full_v.max()), 3), round(float(full_v.argmax() * G), 1)],
                 'full_horizontal_cut_max': [round(float(full_h.max()), 3), round(float(full_h.argmax() * G), 1)],
@@ -387,12 +424,18 @@ class Plan:
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--variant', default='B'); ap.add_argument('--height', type=float, default=695.52); ap.add_argument('--out', default=None)
+    ap.add_argument('--master-pins', help='actual source-bound master/pins.json directory; never a final closure claim')
+    ap.add_argument('--width', type=float, default=1520.064)
+    ap.add_argument('--fsr-pitch', type=float, default=388.8)
     ap.add_argument('--placements', help='replay a source-bound search placement JSON')
     ap.add_argument('--assigned-capture', help='actual die-lead VM per-bit capture assignment')
     a = ap.parse_args()
-    global H
+    global H, W
     H = a.height
+    W = a.width
+    if a.master_pins: load_actual_master_pins(a.master_pins)
     p = Plan(a.variant)
+    reposition(p, {f'fsr{i}': (a.fsr_pitch*i,p.inst[f'fsr{i}'][2]) for i in range(4)})
     if a.placements:
         proposed = json.loads(Path(a.placements).read_text())
         reposition(p, {n: (v['x'], v['y']) for n, v in proposed['instances'].items()},
@@ -402,7 +445,7 @@ def main():
     place = p.check_place(); hops = p.check_hops(); cuts = p.check_cuts()
     over = {c: r['len_max'] for c, r in hops.items() if r['len_max'] > HOP_MAX}
     pa_fail = {c: r['verdict'].get('FAIL', 0) for c, r in hops.items() if r['verdict'].get('FAIL')}
-    cut_bad = [k for k in ('full_vertical_cut_max', 'full_horizontal_cut_max') if cuts[k][0] > CUT_MAX] + \
+    cut_bad = (['unroutable_bundle_segments'] if cuts.get('unroutable_bundle_segments') else []) + [k for k in ('full_vertical_cut_max', 'full_horizontal_cut_max') if cuts[k][0] > CUT_MAX] + \
               [k for k in ('window_vertical_cut_max', 'window_horizontal_cut_max') if cuts[k] > CUT_MAX]
     not_planned = []
     ew = None
@@ -413,7 +456,7 @@ def main():
     except Exception:
         pass
     res = {'schema': 'opentallas.s81_vm_fe_h.floorplan.v1', 'agent': 'el1013-s81-vmfe/B8', 'rtl': 'B8 (R 3, KD 3, XRT 1, CCA 1)', 'variant': a.variant,
-           'outline': [W, H], 'limits': {'hop_um': HOP_MAX, 'cut': CUT_MAX, 'usable_tracks': USABLE},
+           'outline': [W, H], 'actual_pin_receipts': PIN_RECEIPTS, 'limits': {'hop_um': HOP_MAX, 'cut': CUT_MAX, 'usable_tracks': USABLE},
            'instances': {n: {'master': m, 'x': x, 'y': y, 'w': MP[m][0], 'h': MP[m][1]} for n, (m, x, y) in sorted(p.inst.items())},
            'masters_with_exact_pins': sorted(m for m, v in MP.items() if v[3]), 'masters_with_planned_pins': sorted(m for m, v in MP.items() if not v[3]),
            'placement_violations': place, 'hops': hops, 'hops_over_limit': over, 'pin_align_fail': pa_fail, 'cuts': cuts, 'cuts_over_limit': cut_bad,

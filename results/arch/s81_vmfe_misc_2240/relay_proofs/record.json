@@ -94,5 +94,13 @@
     "native_added_cycles": 0,
     "immutable_price_status": "Parent ROM per-layer price remains required; this is a measured zero-cycle delta, not a new price."
   },
-  "verdict": "PASS"
+  "verdict": "PASS",
+  "actual_BE_shape": {
+    "MD": 12,
+    "DIE_D": 6,
+    "relay_bits": 1348,
+    "reset_synchroniser_bits": 4,
+    "hard_cells": 54,
+    "source": "dsfd_sp_vm_m EP2/ED3/QD4; H1MC preserves skew12"
+  }
 }

@@ -193,7 +193,7 @@ L = {
                    'W': [(v('ret', 0, 526) + ['av', 'ok', 'ovf', 'sflt', 'g', 'arm_v'] + v('arm_base', 0, 14), 8.0, 121.0),
                          (['rni', 'rn_o', 'ck'] + v('stride', 0, 3) + v('off', 0, 2), 122.0, 126.0)]}, {}, {'peak_ram_gb': 32},
          'landing lane: 64 x 512 SRAM + row relay; producer word in on N, return word + control on the side face towards its relay tile (W, or E mirrored MY)'),
- 'fcc': ((181.44, 112.32), {'N': ['vwe', 'vwa', 'vwd', 'vre', 'vra', 'cks', 'rss', 'rst'], 'S': ['s_o'], 'E': ['k_o', 'so_o', 'rn_o'], 'W': ['ck', 'rni']}, ['rni', 'rss', 'rst'],
+ 'fcc': ((181.44, 129.6), {'N': ['vwe', 'vwa', 'vwd', 'vre', 'vra', 'cks', 'rss', 'rst'], 'S': ['s_o'], 'E': ['k_o', 'so_o', 'rn_o'], 'W': ['ck', 'rni']}, ['rni', 'rss', 'rst'],
          None, {'vwd': [20.0, 160.0], 's_o': [2.4, 179.0]}, {'peak_ram_gb': 48, 'threads': 16}, 'ctrl VM crossing cks -> ck as a real two-clock CDC (2 x ot_async_fifo 527 x 16, Gray pointers through 2-flop synchronisers; B8), ports 3 / 4 order registers'),
  'fcw': ((151.2, 38.88), {'N': ['f_swv', 'f_swd', 't_swg', 'f_srv', 'f_srd', 't_srg', 't_ks', 'rst'], 'S': ['s_o'], 'E': ['k_o', 'err_o', 'rn_o'], 'W': ['ck', 'rni']},
          ['rni', 'rst'], None, {'f_swd': [10.0, 130.0], 's_o': [2.4, 148.8]}, DENSE, 'WFC endpoint without the dead write queue, ports 0 / 1 order registers'),

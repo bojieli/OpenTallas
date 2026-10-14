@@ -1182,10 +1182,10 @@ module ot_hgi_sm_pub_parent #(
 
     wire [NCOL*75-1:0] cfd; wire [NCOL-1:0] cgo;
     wire r1_v, agg_r;
-`ifdef SYNTHESIS
-    ot_hgi_sm_pub_cmd_quiet
-`else
+`ifndef SYNTHESIS
     ot_hgi_sm_pub_cmd_quiet #(.NSL(NSL),.NPC(NPC),.NC(NC),.LV(LV))
+`else
+    ot_hgi_sm_pub_cmd_quiet
 `endif
     u_cmd (
       .clk(clk_cmd),.rn(rn),.pub_v(pub_v),.pub_base(pub_base),.pub_stride(pub_stride),
@@ -1222,10 +1222,10 @@ module ot_hgi_sm_pub_parent #(
         localparam integer NE_ = (NSM - gk * NSS >= NSS) ? NSS : NSM - gk * NSS;
         localparam [NSS-1:0] EN = NSS'((1 << NE_) - 1);
         wire [CW-1:0] ci = {cgo[COL], cfd[COL*(CW-1) +: CW-1]};
-`ifdef SYNTHESIS
-        ot_hgi_sm_pub_slice u (
-`else
+`ifndef SYNTHESIS
         ot_hgi_sm_pub_slice #(.NSS(NSS), .NC(NC), .SD(SD), .AD(AD), .MUT_ROW(MUT_ROW), .MUT_PAR(MUT_PAR)) u (
+`else
+        ot_hgi_sm_pub_slice u (
 `endif
             .clk(clk_slice[gk]), .rst_n(rst_slice[gk]), .sid(3'(gk)), .sm_en(EN), .c_go(ci[CW-1]), .c_sm(ci[CW-2]), .c_bf(ci[CW-3]),
             .c_ob(ci[72:55]), .c_ost(ci[54:37]), .c_mm(ci[36:17]), .c_qq(ci[16:4]), .c_pp(ci[3:0]),
@@ -1254,10 +1254,10 @@ module ot_hgi_sm_pub_parent #(
     generate for (gc = 0; gc < NPC; gc = gc + 1) begin : g_c
         wire [NIN-1:0] i_v,ak; wire [NIN*279-1:0] i_pkt;
             wire n_v,ack_q;wire [278:0] n_p;
-`ifdef SYNTHESIS
-        ot_hgi_sm_pub_vmcore u_core
-`else
+`ifndef SYNTHESIS
         ot_hgi_sm_pub_vmcore #(.NIN(NIN)) u_core
+`else
+        ot_hgi_sm_pub_vmcore u_core
 `endif
         (.clk(clk_vm_core[gc]),.rn(rn_mid[gc]),.i_v(i_v),.i_pkt(i_pkt),.ack_q(ack_q),.ack(ak),.n_v(n_v),.n_p(n_p));
         ot_hgi_sm_pub_vmport u_port (.clk(clk_vm_port[gc]),.rn((gc<2)?rn_mid[0]:rn_mid[NCOL-1]),.n_v(n_v),.n_p(n_p),
