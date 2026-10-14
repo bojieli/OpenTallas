@@ -76,7 +76,7 @@
       "extra": "-distance_between_buffers 20 -macro_clustering_size 1 -macro_clustering_max_diameter 16"
     }
   },
-  "structural_change": "Genuine QB4real SRAM bank masters B0..3 and one original admission/head/finalcapture master; old logical epochs and44SRAM unchanged. Distinct bank clocks prevent optimizer merging bank metadata; native source77root fullshape exact+ownedmutants. Production QONLY1 keeps all CLOSEDmathports but ties unused Y-only s15_e0 from proven q/qp cone; no input threshold/falsepath/MCP waiver.",
+  "structural_change": "ActualTT i0[3]/i0[0] bankselect to metadata erd/expected paths \u221276..\u2212162ps. Select independent original row metadata values after rowreads, factor originalread enable/written predicate. SameFF/clock/SRAM/capture epochs, CLOSEDhead untouched. Narrowlegalvia escape guard repairs actualSRAMM4WDedgeDRC; immutable realLEF/20umguards/pins unchanged.",
   "slot_change_request": {
     "name": "s81pq_qb_bank2_native-0320",
     "outline": [
@@ -113,7 +113,7 @@
   "job": {
     "owner": "Codex:s81-rom-2250",
     "branch": "codex/s81-rom-2250",
-    "tag": "g1",
+    "tag": "fac1",
     "purpose": "Native QB bank2 exact physical ownership and original epochs",
     "benches": [
       {
@@ -169,7 +169,11 @@
   ],
   "reroute_reason": {
     "kind": "rtl_change",
-    "why": "Real QB clock ownership partition preserving original storage/finalcapture epochs; old wholeQB151.1ps boundary spread held"
+    "why": "ActualTT i0[3]/i0[0] bankselect to metadata erd/expected paths \u221276..\u2212162ps. Select independent original row metadata values after rowreads, factor originalread enable/written predicate. SameFF/clock/SRAM/capture epochs, CLOSEDhead untouched. Narrowlegalvia escape guard repairs actualSRAMM4WDedgeDRC; immutable realLEF/20umguards/pins unchanged."
   },
-  "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_bank2_split_pins.tcl"
+  "io_tcl": "physical/ref_tile_specs/s81pq_native/qb_bank2_split_pins.tcl",
+  "orfs_vars": {
+    "POST_TAPCELL_TCL": "physical/ref_tile_specs/s81pq_native/qb_macro_escape.tcl",
+    "OPT_POST_GRT_WNS": "0"
+  }
 }
