@@ -905,7 +905,7 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
         return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
     bid = bid[:-2] if bid.endswith('_x') else bid      # r18: second half of a bus through a CDC cluster
     if cls in ('tree_block', 'tree_spine', 'spine_local', 'hbm_read', 'crom', 'clock_trunk', 'reset', 'kv_land',
-               'stack_local'):
+               'stack_local', 'kv_oneway'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'io':
         if bid in ('ucie_tx', 'serdes_tx', 'ucie_rx', 'serdes_rx'):          # 2 x IO_BITS: the collective's link word, 512 tx + 512 rx

@@ -28,8 +28,13 @@ module qkd_kvwq_leaf_s_w129_m (
     input  wire [10:0]  wr
 );
     wire [289:0] w_i;
+    // kvsys-elements r2 2026-10-14 (native pin audit: capture 365.5 ps at lane[0], budget 190): the static lane strap is
+    // captured by one flop at its pin (no reset: it is stable from power-up, long before rst_n releases), so the body's
+    // lane compares no longer hang off the E-face pin.  No cycle changes on any data path.
+    reg  [2:0]   lane_q;
+    always @(posedge ck) lane_q <= lane;
     ot_qkvd_kv_wq_leaf #(.TAGW(9)) u_leaf (
-        .clk(ck), .rst_n(rst_n), .lane(lane),
+        .clk(ck), .rst_n(rst_n), .lane(lane_q),
         .c_v(c[0]), .c_d(c[256:1]), .c_sec(c[280:257]), .c_lane(c[283:281]), .c_tag(c[292:284]),
         .n_v(n[0]), .n_d(n[256:1]), .n_sec(n[280:257]), .n_lane(n[283:281]), .n_tag(n[292:284]),
         .dn_v(dn[0]), .dn_bad(dn[1]), .dp_v(dp[0]), .dp_bad(dp[1]),

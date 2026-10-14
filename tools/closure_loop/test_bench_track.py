@@ -91,6 +91,24 @@ class BenchTrack(unittest.TestCase):
         dv.assert_not_called()
         self.assertEqual(j["wait"], "benches")
 
+    def test_missing_predecessor_does_not_starve_running_completion(self):
+        j = job(bench_par=True, btrack={"bench_neg": dict(
+            state="running", host="producer", run="/producer", tag="neg.a1", n=1)})
+        launched = []
+        def launch(v, st, cmd):
+            launched.append(st["key"])
+            v["stage_tag"] = "exact.a2"
+        with patch.object(cl, "poll_stage", return_value=("RC", 1)) as poll, \
+                patch.object(cl, "remote_ok", return_value=(True, "")), \
+                patch.object(cl, "stage_tail", return_value="expected mutant failure"), \
+                patch.object(cl, "bench_outcome", return_value=True), \
+                patch.object(cl, "launch_stage", side_effect=launch), patch.object(cl, "log"):
+            self.assertTrue(cl.bench_track(j, Fleet(), cl.stage_list(SPEC)))
+        self.assertEqual(poll.call_args.args[0]["run"], "/producer")
+        self.assertTrue(j["benches"]["bench_neg"]["ok"])
+        self.assertEqual(j["btrack"]["bench_neg"]["state"], "done")
+        self.assertEqual(launched, ["bench_exact"])
+
     def test_route_keys_allow_three(self):
         keys = {"b@c": ["a", "b"]}
         self.assertIsNone(cl.route_key_full(keys, "b@c", "x"))
@@ -202,6 +220,42 @@ class Transient(unittest.TestCase):
             for _ in range(3):
                 cl.handle_transient(j3, fleet, ex)
         self.assertEqual(j3["host"], "h")
+
+
+class MemoryOffload(unittest.TestCase):
+    """HBM group A 2026-10-14: a bench that never fits the artifact host's memory moves after the wait, chain restarts."""
+
+    class Tight(Fleet):
+        def fits(self, host, *a):
+            return (host != "h"), "h MemAvailable 88 GB < 96+2"
+
+    def _run(self, since):
+        j = job(bench_par=True, status="RUNNING", stage_idx=1, bench_location=dict(host="h", run="/r", attempt=1),
+                btrack={"bench_exact": dict(state="done", host="h", run="/r", tag="bench_exact.a1b1", n=1)},
+                benches={"bench_exact": dict(ok=True)}, bwait="x", bwait_since=since)
+        launched = []
+
+        def launch(v, st, cmd):
+            v["stage_tag"] = f"{st['key']}.a{v['attempt']}"
+            launched.append((v["host"], st["key"]))
+        off = dict(host="h2", run="/b/t-bench", attempt=1)
+        with patch.object(cl, "launch_stage", launch), patch.object(cl, "offload_bench_location", return_value=off), \
+                patch.object(cl, "vanished_bench_location", return_value=False), patch.object(cl, "log"), \
+                patch.object(cl, "hosts_table", return_value=[dict(name="h", caps=[]), dict(name="h2", caps=[])]):
+            cl.bench_track(j, self.Tight(), cl.stage_list(SPEC))
+        return j, launched
+
+    def test_waits_before_the_threshold(self):
+        j, launched = self._run(cl.now_iso())
+        self.assertEqual(launched, [])
+        self.assertEqual(j["bench_location"]["host"], "h")
+
+    def test_moves_after_the_threshold_and_restarts_the_chain(self):
+        j, launched = self._run("2026-10-14T00:00:00-07:00")
+        self.assertEqual(launched, [("h2", "bench_neg")])
+        self.assertEqual(j["bench_location"]["host"], "h2")
+        self.assertNotIn("bench_exact", j["benches"])
+        self.assertNotIn("bwait_since", j)
 
 
 if __name__ == "__main__":

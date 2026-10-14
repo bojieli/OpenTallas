@@ -20,6 +20,8 @@ st "GEN_DONE $(grep -a OT_HOP_GATE $M/real_gen.log | tail -1) $(grep -a OT_VIEW_
     /srv/opentallas-scratch/admit.sh 60 -- docker run --rm --name dieit_${TAG}_ir_$w --cpus=16 --memory=120g -v $I:/work -w /work openroad/orfs:asap7lock \
       bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -threads 16 -no_init -exit /work/run.tcl > /work/run.log 2>&1; chmod -R a+rwX /work"
     st "IR $w $(grep -h 'OT_IR_INNER\|Worstcase IR drop\|OT_IR ' $I/run.log | tr '\n' ' ')"
+    # r5 2026-10-14: the IR release gate judges the COMBINED loss VDD(inst) - VSS(inst) per instance, not the sum of two rail maxima
+    st "IR_COMBINED $w $(python3 tools/s81/ir_combined.py $I --json $I/ir_combined.json)"
   done ) &
 C=$M/clock; mkdir -p $C
 ( /srv/opentallas-scratch/admit.sh 40 -- python3 tools/budgets/extract_die.py --src $S --die s81r8_$KIND --s81-opts "$AK" --out $C/model.json.gz > $C/extract.log 2>&1 || { st CLOCK_EXTRACT_FAIL; exit 1; }
@@ -44,6 +46,9 @@ wait $CK || { st CLOCK_OR_KIT_FAIL; exit 1; }
 [ "$(cat $D/run.log.exit)" = 0 ] || { st PLACE_FAIL; exit 1; }
 sed -e "s/--name s81_grt_/--name dieit_grt_/" -e "s/--name s81_sta_/--name dieit_sta_/" $S/physical/s81_die_views/dietop/dietop_grt_sta.sh > $M/dietop_grt_sta.sh; chmod +x $M/dietop_grt_sta.sh
 # OT_GRT_ITERS (s81-die v16): global_route -congestion_iterations (default 30; the v16 release case runs 12)
+# r5 2026-10-14: die GRT reserves M8/M9 for the die PDN at the recipe's field coverage (--pdn-field-cov c: 0.146 + 2 (c - 0.0439))
+CF=$(echo "$A" | grep -o -- '--pdn-field-cov [0-9.]*' | awk '{print $2}')
+[ -n "$CF" ] && export OT_M89_ADJ=$(python3 -c "print(round(max(0.146, 0.146 + 2 * ($CF - 0.0439)), 4))")
 cd $M && /srv/opentallas-scratch/admit.sh 120 -- $M/dietop_grt_sta.sh a_real grt kit 48 400 9.6 ${OT_GRT_ITERS:-30} || { st GRT_STA_FAIL; exit 1; }
 grep -q OT_SPEF $M/grt/sta_tt.log || { st STA_NO_SPEF; exit 1; }
 for c in tt ff ss; do echo "$c $(grep -E "^(worst slack|tns)" $M/grt/sta_$c.log | tr "\n" " ")"; done > $M/grt/summary.txt

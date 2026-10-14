@@ -64,7 +64,11 @@ module ot_qkd_astk_strip #(
     wire [262:0] px, py;
     wire [137:0] czi;
     wire         cfx, cfy, cfz, af;
-    qkd_astk_ctl u_ctl (.ck(clk), .rst_n(rst_n), .st(SS), .aq({q_data, q_beat, q_valid, 6'd0, T, start}), .lt(),
+`ifdef KVD_ASTK_TP8
+    qkd_astk_ctl_tp8 u_ctl (.ck(clk),   // native TP8 master (bench: ASTK_DEFS adds +define+KVD_ASTK_TP8 with KVD_HEADS=1)
+`else
+    qkd_astk_ctl u_ctl (.ck(clk),
+`endif .rst_n(rst_n), .st(SS), .aq({q_data, q_beat, q_valid, 6'd0, T, start}), .lt(),
         .am({mi_data, mi_hh, mi_g, mi_valid}), .ap(ap), .af(af), .qo(cq_o), .xi(cx_i), .co(cco), .px(px), .py(py),
         .zi(czi), .fx(cfx), .fy(cfy), .fz(cfz));
     assign so_valid = ap[0]; assign so_type = ap[2:1]; assign so_g = ap[3]; assign so_hh = ap[5:4]; assign so_k = ap[9:6];
@@ -157,7 +161,11 @@ module ot_qkd_astk_strip #(
                 // A: y to the B cell above (rows 0, 2) or into the down lane (rows 1, 3)
                 localparam [1:0] YM_A = (r == 1 || r == 3) ? 2'd2 : 2'd0;
                 localparam [2:0] ATH_A = 2 * r, BTH_A = 2 * r + 1;
-                qkd_astk_pv u_a (.ck(clk), .rst_n(rst_n),
+`ifdef KVD_ASTK_TP8
+                qkd_astk_pv_tp8 u_a (.ck(clk),
+`else
+                qkd_astk_pv u_a (.ck(clk),
+`endif .rst_n(rst_n),
                     .cfg({1'b0, 1'(FAR), BTH_A, ATH_A, YM_A, 2'd0, 2'd0, 2'd0, 2'(hp)}),
                     .wa(wa), .wb(wb), .nc(nc), .nd(nd), .nco(nco_w[hp]), .ndo(ndo_w[hp]), .cra(cra_h[hp]), .crb(crb_h[hp]),
                     .li(134'd0), .lo(lo_a), .ui(U[c][ST]), .uo(U[c][ST+1]), .di(D[c][ST+1]), .do_(D[c][ST]),
@@ -172,7 +180,11 @@ module ot_qkd_astk_strip #(
                 localparam [1:0] YM_B = (r == 0 || r == 1) ? 2'd1 : (r == 2) ? 2'd2 : 2'd0;
                 localparam [2:0] ATH_B = (r == 2) ? 3'd4 : 3'd0;
                 localparam [2:0] BTH_B = (r == 0) ? 3'd2 : (r == 1) ? 3'd4 : (r == 2) ? 3'd6 : 3'd0;
-                qkd_astk_pv u_b (.ck(clk), .rst_n(rst_n),
+`ifdef KVD_ASTK_TP8
+                qkd_astk_pv_tp8 u_b (.ck(clk),
+`else
+                qkd_astk_pv u_b (.ck(clk),
+`endif .rst_n(rst_n),
                     .cfg({1'b0, 1'b0, BTH_B, ATH_B, YM_B, BM_B, AM_B, LVL_B, 2'(hp)}),
                     .wa(512'd0), .wb(512'd0), .nc(10'd0), .nd(10'd0), .nco(), .ndo(), .cra(), .crb(),
                     .li(lo_a), .lo(lo_b), .ui(U[c][ST+1]), .uo(U[c][ST+2]), .di(D[c][ST+2]), .do_(D[c][ST+1]),

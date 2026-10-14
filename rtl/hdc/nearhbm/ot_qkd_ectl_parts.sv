@@ -64,6 +64,8 @@ module ot_qkd_fifo2_sh #(parameter integer D = 128, parameter integer D1 = 8) (
 endmodule
 
 module ot_qkd_ectl_part #(
+    parameter integer HEADS = `KVD_HEADS,
+    parameter integer Q_FP32 = `KVD_Q_FP32,
     parameter integer PART = 1,          // 1 = A (W leaf), 2 = B (middle leaf), 3 = C (E leaf)
     parameter integer HD = 128,
     parameter integer R = 8,             // row engines in the stack
@@ -117,6 +119,7 @@ module ot_qkd_ectl_part #(
     // seams: the E-face control word west (C pin flops -> B pin flops -> A pin flops), the row response east
     input  wire [51:0]          x_i,
     output wire [51:0]          x_o,
+    output wire [51:0]          x2_o,        // optional stage-2 launch: direct C -> A seam, existing x2 state
     input  wire                 rsv_i,        // rsp_valid: A stage 2 -> B pin (B) | B feed-through -> C pin (C)
     output wire                 rsv_o,        // A: stage 2 (E-face flop); B: the feed-through flop (to C)
     input  wire                 rvm_i,        // B: A's second capture flop of rsp_valid (stage 1) -> the feed-through
@@ -162,24 +165,30 @@ module ot_qkd_ectl_part #(
     localparam integer GPH = HD / 16;                      // 16-lane groups per head
     localparam integer NG = 4 * GPH;
     // ---- reset tree: root, central control leaf, halves, heads, groups -----------------------------------------------
+    // kvsys-elements r2 2026-10-14 (native pin audit, qkd_ectl_b_tp8: rst_n capture 307.0 ps > 190): ONE synchroniser at
+    // the rst_n pin (ot_rst_relay 2 + 1); every reset leaf and pin-register block below takes rp, not the raw pin.
+    // Release is 3 cycles later in all three leaves alike (the copies still agree from the first start).
+    wire [0:0] rp_v;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rpin (.clk(clk), .rst_n_in(rst_n), .rst_n(rp_v));
+    wire rp = rp_v[0];
     wire r0, rc;
     wire [1:0] rhalf;
     wire [3:0] rhead;
     wire [NG-1:0] rgrp;
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_r0 (.clk(clk), .arst_n(rst_n), .d(1'b1), .q(r0));
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_r0 (.clk(clk), .arst_n(rp), .d(1'b1), .q(r0));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rp), .d(r0), .q(rc));
     wire rsc;                                                         // the score / running-max block's own leaf
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rsc));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rp), .d(r0), .q(rsc));
     genvar gr;
     generate
         for (gr = 0; gr < 2; gr = gr + 1) begin : g_rhalf
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(r0), .q(rhalf[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(r0), .q(rhalf[gr]));
         end
         for (gr = 0; gr < 4; gr = gr + 1) begin : g_rhead
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rhalf[gr / 2]), .q(rhead[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(rhalf[gr / 2]), .q(rhead[gr]));
         end
         for (gr = 0; gr < NG; gr = gr + 1) begin : g_rgrp
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rhead[gr / GPH]), .q(rgrp[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(rhead[gr / GPH]), .q(rgrp[gr]));
         end
     endgenerate
     // ---- registered boundary: every control copy sees each die input THREE flops after its pin ----------------------------
@@ -188,8 +197,8 @@ module ot_qkd_ectl_part #(
     localparam integer XW = 52;
     reg  [XW-1:0] x1, x2, x3;
     wire [XW-1:0] x_d = (PART == 3) ? {q_valid_in, nb_cr, exp_done, cyc8_in, T_in, start_in} : x_i;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin x1 <= {XW{1'b0}}; x2 <= {XW{1'b0}}; x3 <= {XW{1'b0}}; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin x1 <= {XW{1'b0}}; x2 <= {XW{1'b0}}; x3 <= {XW{1'b0}}; end
         else begin x1 <= x_d; x2 <= x1; x3 <= x2; end
 `ifdef KVD_ECTL3_MUT_B
     wire [XW-1:0] xv = (PART == 3) ? x3 : x1;            // mutant: leaf B's control one cycle early
@@ -197,6 +206,7 @@ module ot_qkd_ectl_part #(
     wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? x2 : x1;
 `endif
     assign x_o = x1;
+    assign x2_o = x2;
     wire        start      = xv[0];
     wire [13:0] T          = xv[14:1];
     wire [2:0]  cyc8_r     = xv[17:15];
@@ -212,8 +222,8 @@ module ot_qkd_ectl_part #(
     reg  [511:0]    rse;                                  // A: E-face flops of B's half (stage 2)
     reg  [RWD-1:0]  rd2, rd3;
     wire            rv_d = (PART == 1) ? rsp_valid_in : rsv_i;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rv1 <= 1'b0; rv2 <= 1'b0; rv3 <= 1'b0; rvm <= 1'b0; bf <= 1'b0; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin rv1 <= 1'b0; rv2 <= 1'b0; rv3 <= 1'b0; rvm <= 1'b0; bf <= 1'b0; end
         else begin rv1 <= rv_d; rv2 <= rv1; rv3 <= rv2; rvm <= rsp_valid_in; bf <= rvm_i; end
     wire            rsp_valid = (PART == 1) ? rv3 : rv1;
     assign rsv_o = (PART == 1) ? rv2 : bf;
@@ -236,12 +246,12 @@ module ot_qkd_ectl_part #(
     reg  [1:0]      er_pd;                      // the push follows the word through both pin stages
     assign er_valid = er_valid_o;
     assign er_addr = er_addr_o;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin er_valid_o <= 1'b0; er_pd <= 2'b00; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin er_valid_o <= 1'b0; er_pd <= 2'b00; end
         else begin er_valid_o <= er_valid_g; er_pd <= {er_pd[0], er_valid_g}; end
     always @(posedge clk) begin er_addr_o <= er_addr_g; er_data_p <= er_data; end
     // the q beat (leaf C): pin flops, mid stage, third stage (with qv_r of the control word), then the S1b copies
-    localparam integer NQB = 4 * `KVD_HEADS * HD * (`KVD_Q_FP32 ? 32 : 16) / 512;
+    localparam integer NQB = 4 * HEADS * HD * (Q_FP32 ? 32 : 16) / 512;
     reg  [5:0]        qb_p, qb_m, qb_r;
     reg  [511:0]      qd_p, qd_m, qd_r;
     reg  [6:0]        qcnt;
@@ -253,8 +263,8 @@ module ot_qkd_ectl_part #(
         qd_r <= qd_m;
 `endif
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) qcnt <= 7'd0;
+    always @(posedge clk or negedge rp)
+        if (!rp) qcnt <= 7'd0;
         else if (start) qcnt <= 7'd0;
         else if (qv_r) qcnt <= qcnt + 7'd1;
     wire q_ready = (qcnt == NQB);
@@ -323,7 +333,7 @@ module ot_qkd_ectl_part #(
                         rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
                         rg_idx <= rg_idx + R;
                     end
-                end else if (`KVD_HEADS == 2 && !rg_g) begin
+                end else if (HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_idx <= E;
                 end else begin
                     if (`KVD_QK_ONLY) rg_run <= 1'b0;
@@ -345,7 +355,7 @@ module ot_qkd_ectl_part #(
                             end else rg_k <= rg_k + 4'd1;
                         end
                     end
-                end else if (`KVD_HEADS == 2 && !rg_g) begin
+                end else if (HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_gam <= E; rg_k <= 0; rg_j <= 0;
                 end else rg_run <= 1'b0;
             end
@@ -449,7 +459,7 @@ module ot_qkd_ectl_part #(
                             c_idx <= c_idx + R;
                             if (c_idx == E && !c_g) ev_k_first <= 1'b1;
                         end
-                    end else if (`KVD_HEADS == 2 && !c_g) begin
+                    end else if (HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_idx <= E;
                     end else begin
                         k_done <= 1'b1;
@@ -466,7 +476,7 @@ module ot_qkd_ectl_part #(
                                 else c_k <= c_k + 4'd1;
                             end
                         end
-                    end else if (`KVD_HEADS == 2 && !c_g) begin
+                    end else if (HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_gam <= E; c_k <= 0; c_j <= 0;
                     end else begin
                         c_fin <= 1'b1; v_done <= 1'b1;
