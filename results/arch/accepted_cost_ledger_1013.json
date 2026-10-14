@@ -144,9 +144,11 @@
    "evidence": "results/rtl/s81_layer_tput_1013/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
+   "status": "accepted",
    "note": "per-layer die run at production shape: COEF 17 cycles, serial in front of every NORM (hc_pre node), with the --coef-split program (COEF-a reads the previous block's pre row; COEF-b after the NORM is off the NORM's start). The die program and the coefficient producers' row map MUST be written as --coef-split: the single-COEF program of the first bench serialises the block's whole coefficient chain in front of its NORM (1,555-1,560 cycles, 11.7 % AR) and is not accepted",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -178,9 +180,11 @@
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
-   "status": "proposed",
+   "status": "accepted",
    "note": "COUNT (fact): 2 a token (L1, L14 Engram layers: S001 / S020 hold Ln.ffn.hc_post -> L(n+1).eng.dot / eng.hh reading raw h from the VM, and eng.add -> attn.hc_pre needs the Engram-updated h reloaded into the HC cache); both on the critical path. Cost per pair = the measured store-and-forward H_STORE 387 + H_LOAD 336 (r6 pA, production shape): the streaming landing and the cut-through do not serve this path (the Engram writes are not the landing tee). Modelled share: node delta on L1/L14.eng.add (the chain is serial). Removal: a POST -> VM row tap (the POST write-back emits the h rows the hop store would) and a tee of the Engram VM writes into the landing streamer.",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -226,9 +230,11 @@
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
-   "status": "proposed",
+   "status": "accepted",
    "note": "MEASURED AFTER THE STRUCTURAL FIX (main: cseq PIPE default 1 + FD16 registered H landing streamer ot_s81_hc_hland + cut-through hand-off at an 8-row ARMN watermark): per h transfer H_STORE head 233 + H_LOAD tail 5 = 238 (r6 pC, 64-row landing) + 8 (FD16 pin registers: r8 original order 8,060 / 16,966 vs pC 8,052 / 16,970) = 246 cycles, was 723 (store-and-forward, r6 pA). Production shape NG 256 hierarchical HC, bit-exact NORM rows + 640 H_STORE rows + 640 hand-off flits; mutants mut_hl / mut_tx / HLMUT FAIL. COUNT (fact, round_1014.json h_transfer_count): 41 hop transfers a token on the critical path (40 substage_hop0 + head.hop; programs results/rtl/s81_ctrl_20261008 + h_materialization_audit.json); the 2 Engram materializations are row HC.H_MAT_ENGRAM; the 37 same-stage coefficient materializations are off-critical (>= 6,483 cycles slack, 0 e2e if issued after the NORM). QUALIFIER: streaming needs H_LOAD issued before the 16-row FIFO fills (r8 used PGAP 600; a cold payload falls back to the VM path at 723) and the native 120-stage programs do not exist yet; cseq/comb have no CLOSED view and no die slot (v17): the route waits for the S81 die lead's slot.",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -263,7 +269,8 @@
    "status": "accepted",
    "note": "wave bench charge p2.core_transaction 6,092 measured / 5,467 price; the step charges it three times (mtp.0-2 rank prefixes, node mc.p2.selected_path = 3 x (5,467 - 348)), on the critical path; MTP only",
    "accepted_date": "2026-10-13",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -312,7 +319,8 @@
    "status": "accepted",
    "note": "twelve production POST jobs at 286-287 cycles against the immutable 112.9 (source 3c62573d5); 80 runs a token (attn + ffn x 40 layers), all on the critical path; in MTP the slowest verify stage holds two, paid again at each of the 5 wave positions; the 6 draft-block hc_post nodes (641.3, another vehicle) are not touched.  CURRENT BASELINE: to be replaced by the POST express measurement (post_express_spec.json).",
    "accepted_date": "2026-10-13",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -358,9 +366,11 @@
    "evidence": "results/rtl/s81_layer_tput_1013/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
+   "status": "accepted",
    "note": "per-layer die run tb_s81_die_layer HCH=1 NG=256 nominal link, L0 / L2 / L14 bit-exact, mut_hc + mut_coll fail: NORM 713 cycles in all 6 jobs against the fused price 327.0-333.9 (hc_pre + quant [+ norm.scale]); hc_gate --hier 3 unit bench 727. REPLACES the row at 449 (1.361x, 1.178 %), which was the FLAT engine at the reduced NG 16 shape; the flat engine at NG 256 measures 235-237 (0.71x): the excess is the hierarchical slab's serial forward / return chains, not arithmetic DECOMPOSITION (Codex trace 7eb398556, hc_gate NG 256 hier3, 4 NORMs identical, exact 0/1940): accept -> sum_return 339 (mix forward + partial sums back over the 22-half-tile chain) + rsqrt 74 + rsqrt -> first row 238 (scale broadcast forward + scaled rows back) + 40 rows 39 + writer 22 + done 15 = 727; the two chain traversal pairs are 577 of 727. Structural fix (not built): registered regional reduction collectors + a narrow registered rsqrt broadcast tree instead of the serial chains (no FP reassociation).",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -409,7 +419,8 @@
    "status": "accepted",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.z_quant) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -458,7 +469,8 @@
    "status": "accepted",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.normalize) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -507,7 +519,43 @@
    "status": "accepted",
    "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.ffn.quant2) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
    "accepted_date": "2026-10-13",
-   "share_basis": "modelled"
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+  },
+  {
+   "design": "s81",
+   "unit": "VM.READ (VM read latency at the leaf chain: bgq28 leaf hop 1 (+8 a read round trip) + dsfd_vm_fe_h FRL 6 (+4); flat 41 -> 53 cycles)",
+   "group": "VM.READ",
+   "measured": 53.0,
+   "price": 41.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.2927,
+   "e2e_loss_pct": 2.654,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path, node deltas by class",
+     "base_cycles": 828866.4,
+     "added_cycles": 22602.0,
+     "e2e_loss_pct": 2.654,
+     "delta": "field +12 a critical field node, SU +24 a critical SU node (2 serial VM reads a job), hc_pre +18"
+    },
+    "mtp": {
+     "model": "token-path longest path, node deltas by class",
+     "base_cycles": 1177516.1,
+     "added_cycles": 26250.0,
+     "e2e_loss_pct": 2.181
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-14",
+   "status": "accepted",
+   "note": "MEASURED unit latency: flat dsfd_vm_bgr read latency 41 (master gate s81_vm_gate tp, price basis) -> 81 at leaf hop 2 (claude/s81-bgq28-1013 1640f47fb), 49 at leaf hop 1 (a841984b9 one-cycle bank relay, exact + mutants), + 4 from the vm_fe hierarchy FRL 6 (693940a56) = 53 at hop 1. Per-layer MEASURED part: tb_s81_die_layer LVM 10/30/54 shows 3 serial HC reads a layer (+60 / +139 a layer at +20 / +44); su_gate --lvm 30 / 54 shows TWO serial VM read round trips per SU job. Token share MODELLED (upper bound): every critical field node +12, every critical SU node +24 (2 reads; the slab fuses some nodes into one job, so this over-counts), hc_pre +18. At leaf hop 2 (+44) the same model gives 9.09 % AR (over the 5 % unit limit): LEAF HOP 1 IS REQUIRED, not optional. Remaining removal: XGO prefetch of the next op's operand stream on the producer's ARMN event and SU descriptor prefetch (the first of the two SU round trips), not built.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); accepted ONLY at leaf hop 1 (flat 41 -> 53 cycles, bgq28 a841984b9 +8); hop 2 (+44, ~9.09%) is NOT accepted and would break 15%"
   },
   {
    "design": "r25gq",
@@ -928,39 +976,6 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "structural design first (next fetch overlapped under the drain: period 1.0143x <= 1.10; dispatch two edges after the final release on the measured write-before-read lead 6-9 edges); what remains is +29/30 edges start-to-dispatch a record (worst record 169 / 139 = 1.2158x), of which 16 = the closed root composition's measured accept -> release latency (results/rtl/vm8_service_root_1013/root_latency_closed_1013.json: WR +4 / RD +12, hash MATCH) and 13/14 the tracker tail; charged as 30 fixed cycles on every SM.MATVEC record of the S2 schedule (DS 1,095 records, Qwen 5); without the root 0.87 % / 0.16 %, a full 27-edge drain would be 3.79 %"
-  },
-  {
-   "design": "s81",
-   "unit": "VM.READ (VM read latency at the leaf chain: bgq28 leaf hop 1 (+8 a read round trip) + dsfd_vm_fe_h FRL 6 (+4); flat 41 -> 53 cycles)",
-   "group": "VM.READ",
-   "measured": 53.0,
-   "price": 41.0,
-   "unit_of_measure": "cycles",
-   "unit_ratio": 1.2927,
-   "e2e_loss_pct": 2.654,
-   "binding_workload": "ar",
-   "per_workload": {
-    "ar": {
-     "model": "token-path longest path, node deltas by class",
-     "base_cycles": 828866.4,
-     "added_cycles": 22602.0,
-     "e2e_loss_pct": 2.654,
-     "delta": "field +12 a critical field node, SU +24 a critical SU node (2 serial VM reads a job), hc_pre +18"
-    },
-    "mtp": {
-     "model": "token-path longest path, node deltas by class",
-     "base_cycles": 1177516.1,
-     "added_cycles": 26250.0,
-     "e2e_loss_pct": 2.181
-    }
-   },
-   "within_unit_limit": true,
-   "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
-   "evidence_grade": "committed_bench",
-   "date": "2026-10-14",
-   "status": "proposed",
-   "note": "MEASURED unit latency: flat dsfd_vm_bgr read latency 41 (master gate s81_vm_gate tp, price basis) -> 81 at leaf hop 2 (claude/s81-bgq28-1013 1640f47fb), 49 at leaf hop 1 (a841984b9 one-cycle bank relay, exact + mutants), + 4 from the vm_fe hierarchy FRL 6 (693940a56) = 53 at hop 1. Per-layer MEASURED part: tb_s81_die_layer LVM 10/30/54 shows 3 serial HC reads a layer (+60 / +139 a layer at +20 / +44); su_gate --lvm 30 / 54 shows TWO serial VM read round trips per SU job. Token share MODELLED (upper bound): every critical field node +12, every critical SU node +24 (2 reads; the slab fuses some nodes into one job, so this over-counts), hc_pre +18. At leaf hop 2 (+44) the same model gives 9.09 % AR (over the 5 % unit limit): LEAF HOP 1 IS REQUIRED, not optional. Remaining removal: XGO prefetch of the next op's operand stream on the producer's ARMN event and SU descriptor prefetch (the first of the two SU round trips), not built.",
-   "share_basis": "modelled"
   }
  ],
  "totals": {
@@ -974,13 +989,13 @@
    "headroom_pct": 15.0
   },
   "s81": {
-   "accepted_pct": 3.286,
-   "proposed_pct": 7.76,
+   "accepted_pct": 11.046,
+   "proposed_pct": 0,
    "accepted_plus_proposed_pct": 11.046,
    "limit_pct": 15.0,
-   "accepted_rows": 5,
-   "proposed_rows": 5,
-   "headroom_pct": 11.714
+   "accepted_rows": 10,
+   "proposed_rows": 0,
+   "headroom_pct": 3.954
   },
   "r25gq": {
    "accepted_pct": 0,
