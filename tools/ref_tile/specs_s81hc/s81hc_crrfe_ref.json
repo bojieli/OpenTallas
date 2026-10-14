@@ -42,19 +42,43 @@
   "pd": 0.45,
   "threads": 16,
   "peak_ram_gb": 40,
-  "hold_margin_ns": 0.01,
-  "pin_min_tracks": 1
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 1,
+  "pin_v": "M3 M5",
+  "pin_h": "M4"
  },
  "job": {
-  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:s81hc-1013",
-  "branch": "claude/s81hc-1013",
-  "tag": "v2-pinplan",
-  "purpose": "[hc-crootr] crootr v2 4-tile split, C=2 (comb W): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootre_ref (one 34.6k-sink root, hold WNS frozen -102 ps); v2 pin plan (tools/s81_suhc/crr_pinplan.py, v1 FLOORPLAN_MARGIN 20 b/um on one layer): N/S buses over the full face on M5+M3 (5.2-5.4 b/um/layer), f_* on M4 at 180-368.4 (6.0); slot unchanged",
-  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
+  "benches_from": "tools/s81_suhc/hc_tile_benches_crrfe.json",
+  "owner": "Codex:s81-hc-su",
+  "branch": "claude/s81-suhc-r9",
+  "tag": "v3-pinreg-spine",
+  "purpose": "[hc-crootr r10] forward column root, pin-register form (die hop gate against the closed y slice leaf): RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog)",
   "views_to": "physical/ref_tile/s81hc_crrfe_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_crrfe_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_crrfe_ref",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc/test",
+   "rtl/link",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
  },
  "inhold": true,
- "io_tcl": "physical/s81_hc_pinplan/crrf_e.tcl"
+ "io_tcl": "physical/s81_hc_pinplan/crrf_e.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 24,
+  "allow_none": true
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/s81_suhc_20261013/cryys_composition_1013/pair_audit.json",
+  "cell": "ot_s81_hc_crootr_f",
+  "pair_cost_ps": 926.2,
+  "fix": "RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog)",
+  "die_window": "die hop gate ot_s81_hc_cryys p_y -> ot_s81_hc_crootr_f p_y 694.3 ps at zero wire (limit 683.3); crootr_f p_req o 381.9 ps reaches 192 um against a 324-um pin span"
+ },
+ "structural_change": "v2 (CLOSED) left the port flops to timing-driven placement: p_y captured ~439 um behind the N pins (s 497.0 ps), ch_fd launched 372 ps after the boundary clock, one p_req flop for 11 leaf pins over 324 um. RTL: p_req is 11 kept pin flops (one a y slice leaf) fed from the W-face capture of f_fv, the mid-height y relay is removed (0 cycles added at the chain face; lockstep 0 / 60,000); kit recipe 2: every port flop FIRM at its pin in 24 staggered rows (io_flop_at_pins), in-hold stages kept, out-hold off (S face 10.8 b/um); N pins on the pins of the 11 closed leaves (8 abutted, 3 on one 97.2-um jog); planned balanced clock spine replaces CTS after measured flat CTS spread 238.4 ps (control 59 ps), die spread budget 80 ps",
+ "why_floorplan": "slot unchanged (276.48 x 598.32, contract v16/v17 sp_hc_s/crootr_c*/f); only the N pin plan changes: the face is the S face of the die-placed y slice leaves (physical/s81_hc_pinplan/crrf_e.tcl, tools/s81_suhc/crr_pinplan.py crrf_n_plan)",
+ "clock": "spine"
 }
