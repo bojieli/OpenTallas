@@ -87,7 +87,13 @@
         "path": "results/rtl/qwen_vm_producer_seq40_1014/component/receipt.json",
         "sha256": "ea679f6aff25075d5a3801d4283fb2ea20ec92306b0f89df30482e436ca2d956",
         "status": "Distinct default-off canonical nativeIB379 xjs[179:156] mode and fullquery_seq40. Component32ops2queries1positive10observedmutants, defaultoff and actualnativeROW64reads512bits/provenance plus earlycapturemutant pass. Old9110 dependencies source-hashed, no viewalias. Real postedSUwriter admission/commit drain, X source/normalization/32roots, TAG59 sharedtoken and physicalinterface/census/nativecost remain unbound."
-      }
+      },
+      "full_provenance_successor": {
+        "commit": "5b9e9859d",
+        "path": "results/rtl/qwen_vm_provenance_1014/component/receipt.json",
+        "sha256": "de4511110f0cd194f2a1fd015637590f654e8a4e22a4f6accf4d85766ea120ff"
+      },
+      "full_provenance_scope": "Default-off full247 logicalmetadata includingretained token16/epoch21;39analyticalstatebits notmapped. Actual64nativeROW reads512+247 andearlycapturemutant validated; trustedactualHOSTtoken ingress, actualXnormalize/32roots and realpostedwriterfence/commits remain unbound. Fulloutput759b/selected375b arefields only, no assignedphysicalchannel/compression."
     },
     {
       "name": "VM_band_pockets_ACK",
@@ -148,6 +154,11 @@
         "path": "results/arch/qwen_delivery_lifetime_1014/start_event_fence/receipt.json",
         "sha256": "7ba4884e88bf481e5a5ee63515b500c782770ce304c3cbe2f1a6c5fe89b8c90b",
         "status": "Default-off successor rejects begin simultaneous issue/retire/seal;14cases=2positives12observedmutants, admitted1GB1thread gate. No fresh successor census/CTS; f9 generic census remains old exact source."
+      },
+      "actual_numeric_join": {
+        "commit": "b66fe0230",
+        "path": "results/rtl/qwen_numeric_delivery_lifetime_1014",
+        "status": "Actual36f everymathidentity+20d ledger+livebase D2queue delivers936numeric words,872orderedqueryretirements;47ledgerpeak/2queuepeak/zerooutstanding/zero seals. Actualnonqueryctx/ver andhigh32version retained. Isolatedprofile resetafterlocaldrain; no sharedHOSTTAG59/fullprovider/aggregatepeer/reset/fieldseal/physicalphase/nativeperf qualification. Exactreceipt hashes undernamedpath."
       }
     },
     {
