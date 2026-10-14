@@ -2,7 +2,7 @@
 // Opt-in raw-row candidate, one pair owns 128 canonical c residues.
 // Rows are n-major, c-minor, preserving each c's serial FP32 addition order.
 // Readout occurs after drain; retained SRAM supplies stable backpressured leaves.
-module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0)(
+module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0, parameter integer TREE=0)(
  input wire clk,rst_n,start,input wire[13:0] context_len,input wire[15:0] epoch,
  input wire in_valid,output wire in_ready,input wire[1023:0] in_v,input wire[63:0] in_e,
  input wire[6:0] in_c,input wire[13:0] in_t,input wire[15:0] in_epoch,
@@ -12,14 +12,15 @@ module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0)(
  output reg fault,output wire busy,output reg[31:0] accepted,committed,
  output reg[7:0] peak_inflight
 );
- localparam IDLE=0,FEED=1,DRAIN=2,READ=3,WAIT=4,OUT=5,BAD=6;
- reg[2:0] state;reg[13:0] lim,next_t;reg[15:0] ep;
+ localparam IDLE=0,FEED=1,DRAIN=2,READ=3,WAIT=4,OUT=5,BAD=6,TRA=7,TRB=8,TRADD=9,TRDRAIN=10;
+ reg[3:0] state;reg[7:0] nodes;reg[6:0] ti;wire[16383:0] raw_leaf,tree_sum;reg[13:0] lim,next_t;reg[15:0] ep;
  reg[127:0] pending;reg[6:0] rc;reg[7:0] inflight;
  wire[31:0] sf,cv;wire[6:0] cc[0:31];
  wire good=in_epoch==ep && in_t==next_t && in_c==next_t[6:0]
   && in_first==(next_t<256) && in_last==(next_t+256>=lim);
  assign in_ready=state==FEED&&!pending[in_c]&&!fault;
  wire take=in_valid&&in_ready&&good;
+ assign out_leaf=TREE?tree_sum:raw_leaf;
  assign out_valid=state==OUT;assign out_c=rc;assign out_epoch=ep;
  assign busy=state!=IDLE;
  genvar h,b;
@@ -27,8 +28,9 @@ module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0)(
   for(b=0;b<8;b=b+1)begin:gb
    localparam S=h*8+b;
    ot_qwen_tp8_pv256_slice u_slice(.clk(clk),.rst_n(rst_n),.take(take),.c(in_c),.first(in_first),
-    .v(in_v[128*b+:128]),.e(in_e[16*h+:16]),.read_leaf(state==READ),.leaf_c(rc),
-    .leaf(out_leaf[512*S+:512]),.commit(cv[S]),.commit_c(cc[S]),.fault(sf[S]));
+    .v(in_v[128*b+:128]),.e(in_e[16*h+:16]),.read_leaf(state==READ||state==TRA||state==TRB),.leaf_c((state==TRA||state==TRB)?((ti<<1)+(state==TRB)):rc),
+    .reduce_issue(state==TRADD),.reduce_capture(state==TRB),.reduce_last(nodes==2),.reduce_dst(ti),.tree_sum(tree_sum[512*S+:512]),
+    .leaf(raw_leaf[512*S+:512]),.commit(cv[S]),.commit_c(cc[S]),.fault(sf[S]));
   end
  end endgenerate
  wire retire=cv[0];
@@ -39,8 +41,8 @@ module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0)(
    state<=BAD;fault<=1;
   end else begin
    if(take)begin pending[in_c]<=1;accepted<=accepted+1;end
-   if(retire)begin pending[cc[0]]<=0;committed<=committed+1;end
-   case({take,retire}) 2'b10:inflight<=inflight+1;2'b01:inflight<=inflight-1;default:;endcase
+   if(retire&&(state==FEED||state==DRAIN))begin pending[cc[0]]<=0;committed<=committed+1;end
+   case({take,retire&&(state==FEED||state==DRAIN)}) 2'b10:inflight<=inflight+1;2'b01:inflight<=inflight-1;default:;endcase
    if(inflight>peak_inflight)peak_inflight<=inflight;
    case(state)
     IDLE:if(start)begin
@@ -57,10 +59,14 @@ module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0)(
      end else if(next_t+1>=lim)state<=DRAIN;
      else next_t<=next_t+1;
     end
-    DRAIN:if(inflight==0)state<=READ;
+    DRAIN:if(inflight==0)begin if(TREE)begin nodes<=128;ti<=0;rc<=0;state<=TRA;end else state<=READ;end
     READ:state<=WAIT;
     WAIT:state<=OUT;
-    OUT:if(out_ready)begin if(rc==127)state<=IDLE;else begin rc<=rc+1;state<=READ;end end
+    TRA:state<=TRB;
+    TRB:state<=TRADD;
+    TRADD:if(ti+1==nodes/2)state<=TRDRAIN;else begin ti<=ti+1;state<=TRA;end
+    TRDRAIN:if(retire&&cc[0]+1==nodes/2)begin if(nodes==2)state<=OUT;else begin nodes<=nodes/2;ti<=0;state<=TRA;end end
+    OUT:if(out_ready)begin if(TREE||rc==127)state<=IDLE;else begin rc<=rc+1;state<=READ;end end
     default:;
    endcase
   end
