@@ -8,7 +8,6 @@ import subprocess
 import sys
 from types import SimpleNamespace
 import qwen_slab_structural_run as R
-from uarch_model import qwen_slab_m3_closure_model
 ROOT=Path(__file__).resolve().parents[1]
 S='physical/qwen_slab_structural'
 BENCH_SOURCES=['rtl/test/tb_qwen_slab_port_group.sv','rtl/physical/ot_qwen_slab_port_group.sv',
@@ -71,7 +70,9 @@ def main():
     p.add_argument('--mutant',choices=sorted(MUTANTS),help='bench: a TP8 mutant that must FAIL (implies --negative)')
     p.add_argument('--variant',choices=sorted(VARIANTS),default='m3');a=p.parse_args()
     v=VARIANTS[a.variant]
-    if a.mode=='model':print(json.dumps(qwen_slab_m3_closure_model(),indent=2));return
+    if a.mode=='model':
+        from uarch_model import qwen_slab_m3_closure_model
+        print(json.dumps(qwen_slab_m3_closure_model(),indent=2));return
     a.out.mkdir(parents=True,exist_ok=False)
     if a.mode=='bench':
         cmd=['iverilog','-g2012','-s','tb_qwen_slab_port_group','-o',str(a.out/'bench.vvp')]
