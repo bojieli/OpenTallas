@@ -1,0 +1,97 @@
+{
+  "status": "AUDIT_ONLY_BLOCKING_CONTRACT",
+  "source_inventory": [
+    {
+      "path": "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv",
+      "sha256": "85321e898e6ebf1fcd63b0641715c985122a4edbd69f38a0ba3a32345b785c66",
+      "commit": "eed16e1bd955e45f4e8a5446daf9a8634de23cf4"
+    },
+    {
+      "path": "rtl/rom/ot_qwen_tp_seq_w12_fs.sv",
+      "sha256": "4bec84cae996c2c877c224d65e09fb7e043b41f33a430a35369f3eec967cae1f",
+      "commit": "eed16e1bd955e45f4e8a5446daf9a8634de23cf4"
+    },
+    {
+      "path": "rtl/rom/ot_coll_tp8_die.sv",
+      "sha256": "a4e1f5249c81f5f6f8e3f6886ba15eeae4292b75f8d8f3549fc4eaf471edf628",
+      "commit": "eed16e1bd955e45f4e8a5446daf9a8634de23cf4"
+    },
+    {
+      "path": "rtl/rom/ot_rom_oneshot_die_m.sv",
+      "sha256": "c8c43f1045c53a9201f1f02ee0f33fc407bf28a589e4bcaa337cb5d123b49cf4",
+      "commit": "eed16e1bd955e45f4e8a5446daf9a8634de23cf4"
+    },
+    {
+      "path": "rtl/physical/ot_qwen_coll_xfifo_native.sv",
+      "sha256": "06972853127dc81f303fdbe4c3a04d11f21ea7031240ce78bd07f15cb5d5da4d",
+      "commit": "eed16e1bd955e45f4e8a5446daf9a8634de23cf4"
+    },
+    {
+      "path": "rtl/physical/ot_qwen_die_coll_xfifo.sv",
+      "sha256": "93d337fb7bd2bcf28c35e50a2744ec709d6afa1b618c772df18fafce1ccc5460",
+      "commit": "eed16e1bd955e45f4e8a5446daf9a8634de23cf4"
+    },
+    {
+      "path": "rtl/physical/ot_qfd_seq_su_bi_native8_candidate.sv",
+      "sha256": "d4fcfff07bbeb45ad40a659034172ba348d6fe3763ed45b777fd16cdc46d3db7",
+      "commit": "797fdd5ac6c119bbac4d7fdccd0eba225e82ff2c"
+    }
+  ],
+  "old_tag": {
+    "concatenation_bits": 34,
+    "assignment_bits": 32,
+    "fields": [
+      "token18",
+      "position_low8",
+      "pad2",
+      "segment6"
+    ],
+    "collision_tokens": [
+      0,
+      65536,
+      131072
+    ]
+  },
+  "compact32_candidate": {
+    "fields": [
+      "token18",
+      "position_low8",
+      "segment6"
+    ],
+    "vocabulary_roundtrip_count": 151936,
+    "position_collisions": [
+      [
+        0,
+        256
+      ],
+      [
+        255,
+        8191
+      ]
+    ],
+    "stage_collision": "same token/position/segment at distinct layer stages",
+    "no_source_proven_lifecycle": true
+  },
+  "transport": {
+    "ingress_bits": 546,
+    "peer_partial_bits": 546,
+    "peer_result_bits": 514,
+    "local_return_bits": 517,
+    "tagged_return": false,
+    "fifo_generic_width_parameters": [
+      "WSQ",
+      "WCQ"
+    ],
+    "fixed_physical_wrapper_restriction": "WT=1 requires TAGW=32; changed tag width has no CLOSED view alias"
+  },
+  "minimum_explicit_identity_bits": {
+    "token18_position13_segment6": 37,
+    "plus_stage6": 43,
+    "epoch_width": "owner choice; lifetime/wrap proof required"
+  },
+  "limitations": [
+    "Arithmetic, physical timing and whole-token run not tested by this audit.",
+    "Input tag agreement does not associate untagged late result with active context.",
+    "No existing routed source or CLOSED profile changed."
+  ]
+}
