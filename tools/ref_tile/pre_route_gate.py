@@ -589,7 +589,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
-    sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=cap, KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
+    sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     import hashlib
@@ -643,7 +643,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     if kv.get("GATE_FLOW_RC") != "0":
         why = "; ".join(errs[:4]) or "see gate_remote.log"
         stall = any(re.search(r"tim(ed)? ?out|TimeoutExpired|exceeded", e, re.I) for e in errs) or \
-            int(kv.get("GATE_FLOW_S", 0)) >= cap
+            (cap > 0 and int(kv.get("GATE_FLOW_S", 0)) >= cap)
         g.add("FAIL", "synth_smoke" if stall else "floorplan_run",
               (f"ORFS synthesis did not finish within {cap} s (yosys SHARE / ABC stall class): " if stall else
                "synthesis + floorplan + PDN failed: ") + why[:600],
@@ -819,7 +819,7 @@ def main(argv=None) -> int:
     ap.add_argument("--commit", help="check source paths at this commit (default: working tree)")
     ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (auto: ot-run admission and placement)")
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
-    ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700)")
+    ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700; <=0 means unlimited)")
     ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
