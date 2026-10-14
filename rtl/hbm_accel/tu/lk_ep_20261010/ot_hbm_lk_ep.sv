@@ -217,6 +217,8 @@ module ot_lkep_sinkq #(parameter integer W = 545, parameter integer D = 4, param
 endmodule
 
 module ot_hbm_lk_ep #(
+    parameter integer MUT_TX_SHARED = 0,
+    parameter integer HARD_CLOCKS = 0,     // physical parent delivers one compensated clock at each hard child pin
     parameter integer NS     = 3,          // retry pipelines (sub-channels) per link, 1..3
     parameter integer W      = 545,
     parameter integer TXQ    = 32,         // local TX queue depth (= the die sender's credits; covers the ~24-cycle die credit loop)
@@ -237,6 +239,8 @@ module ot_hbm_lk_ep #(
     parameter integer MAX_RETRY = 8
 ) (
     input  wire            clk,
+    input  wire [NS*4-1:0] clk_sub,
+    input  wire            clk_tx_shared,
     input  wire            rst_n,
     input  wire [23:0]     session,
     input  wire            t_v,
@@ -315,8 +319,10 @@ module ot_hbm_lk_ep #(
         ot_lkep_sub #(.W(W), .SW(SW), .EW(EW), .QD(QD), .RL(RL), .PBD(PBD), .TFD(TFD), .OFD(OFD), .SQ(SQ), .SL(SL),
             .TIMEOUT(TIMEOUT), .MAX_RETRY(MAX_RETRY), .NAKH_HW(NAKH_HW)) u_t (
 `endif
-            .clk(clk), .rst_n(rst_n), .session(session),
-            .clk_ti(clk), .clk_ts(clk), .clk_rp(clk),       // el1013-lkep-split: one clock entry per hard child of the sub
+            .clk(HARD_CLOCKS != 0 ? clk_sub[g*4] : clk), .rst_n(rst_n), .session(session),
+            .clk_ti(HARD_CLOCKS != 0 ? clk_sub[g*4+1] : clk),
+            .clk_ts(HARD_CLOCKS != 0 ? clk_sub[g*4+2] : clk),
+            .clk_rp(HARD_CLOCKS != 0 ? clk_sub[g*4+3] : clk),       // el1013-lkep-split: one clock entry per hard child of the sub
             .rst_n_r(rst_n), .session_r(session),           // N-face copies for the RX leaf
             .w_d(w_d), .w_oh(w_oh[g*NSL*QD +: NSL*QD]), .adm(l0_v[g]), .icr_ret(icr_ret[g]),
             .tx_v(th_vt[g]), .tx_d(th_dt[g]), .tx_cr(tcrq[g]),
@@ -386,54 +392,21 @@ module ot_hbm_lk_ep #(
             fc <= fc + {1'b0, fc_add} - {6'b0, nadm};
         end
 
-    // ---------------------------------------------------------------- TX out: tile sink stage 1 -> consumer FIFO -> grant
-    wire [NS-1:0]    th_v;
-    wire [TW-1:0]    th_d [0:NS-1];
-    reg  [NS-1:0]    gnt;
-    generate for (g = 0; g < NS; g = g + 1) begin : g_to
-        ot_lkep_sinkc #(.W(TW), .D(TFD), .N(RL), .SL(SL)) u_q (.clk(clk), .rst_c(rto), .i_v(th_vt[g]), .i_d(th_dt[g]),
-            .h_v(th_v[g]), .h_d(th_d[g]), .pop(gnt[g]), .crq(tcrq[g]));
+    // Existing TX consumer FIFOs and the shared capture/CRC pipeline are one
+    // hard leaf. All outward packet and credit pins leave existing registers.
+    wire b_v;
+    wire [FFW-1:0] b_f;
+    wire [NS*TW-1:0] th_dt_flat;
+    generate for(g=0;g<NS;g=g+1) begin:g_th_flat
+      assign th_dt_flat[g*TW +: TW]=th_dt[g];
     end endgenerate
-
-    // ---------------------------------------------------------------- gearbox pacer (exact mirror of its slot FIFO)
-    reg  [9:0]    m_ic; reg m_idle; reg [1:0] m_ph; reg [2:0] m_sn;
-    reg           a_v, x_v, b_v;                        // grant -> A (select) -> X (CRC partials) -> B (CRC) -> gearbox push
-    wire          m_need = !m_idle && (m_ph != 2'd3);
-    wire          m_take = m_need && (m_sn != 0);
-    wire [1:0]    pend = {1'b0, a_v} + {1'b0, x_v} + {1'b0, b_v};
-    wire          room = ({1'b0, m_sn} + {2'b0, pend}) <= 4'd3;
-    reg  [1:0]    tsel;                                 // round-robin start for the tx grant
-    integer       k, j;
-    always @(*) begin
-        gnt = 0;
-        if (room)
-            for (k = NS - 1; k >= 0; k = k - 1) begin
-                j = (tsel + k) % NS;
-                if (th_v[j]) gnt = {{(NS-1){1'b0}}, 1'b1} << j;
-            end
-    end
-    reg  [HB-1:0] a_h, x_h;
-    wire [13:0]   x_crc;
-    reg  [FFW-1:0] b_f;
-    integer i2;
-    always @(posedge clk) begin
-        for (i2 = 0; i2 < NS; i2 = i2 + 1)
-            if (gnt[i2]) a_h <= {th_d[i2][TW-1:W], i2[1:0], th_d[i2][W-1:0]};
-        x_h <= a_h;
-        b_f <= {x_crc, x_h};
-    end
-    ot_crc_pipe #(.W(HB), .N(14), .POLY(14'h0805), .INIT(14'h3FFF), .NP(4)) u_crc_t (.clk(clk), .d(a_h), .crc(x_crc));
-    always @(posedge clk or negedge rto)
-        if (!rto) begin
-            m_ic <= 0; m_idle <= (IDLE_P == 1); m_ph <= 0; m_sn <= 0; a_v <= 0; x_v <= 0; b_v <= 0; tsel <= 0;
-        end else begin
-            m_ic <= m_idle ? 10'd0 : m_ic + 1'b1;
-            m_idle <= !m_idle && (m_ic == IDLE_P - 2);
-            if (!m_idle) m_ph <= m_ph + 1'b1;
-            m_sn <= m_sn + (b_v ? 3'd1 : 3'd0) - (m_take ? 3'd1 : 3'd0);
-            a_v <= |gnt; x_v <= a_v; b_v <= x_v;
-            if (|gnt) tsel <= (tsel == NS - 1) ? 2'd0 : tsel + 1'b1;
-        end
+`ifdef OT_LKEP_HARD_LEAVES
+    ot_lkep_tx_shared u_tx_shared(
+`else
+    ot_lkep_tx_shared #(.NS(NS),.W(W),.TFD(TFD),.RL(RL),.SL(SL),.IDLE_P(IDLE_P),.MUT_TX(MUT_TX_SHARED)) u_tx_shared(
+`endif
+      .clk(HARD_CLOCKS != 0 ? clk_tx_shared : clk),.rst_n(rst_n),
+      .th_vt(th_vt),.th_dt_flat(th_dt_flat),.tcrq(tcrq),.b_v(b_v),.b_f(b_f));
 
     // ---------------------------------------------------------------- reverse frame out (acks + credit count)
     reg  [1:0]    rsub;
