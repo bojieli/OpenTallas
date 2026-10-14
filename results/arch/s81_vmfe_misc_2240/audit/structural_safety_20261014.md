@@ -42,3 +42,9 @@ The canonical contribution tree is `/home/ubuntu/wt/codex-s81-vmfe-misc-2240`.
 | Closure-loop live states | `/home/ubuntu/.local/state/closure_loop/jobs/dsfd_vm_fcc_m5_pipe-p6-649efc5a0.json`; `dsfd_vm_fcn_m5_cmdpipe-p6-99faef982.json`; FSR `dsfd_vm_fsr_m5_pm-pm1r-f135bf060.json` |
 
 As of this timestamp, FCC ECO continues; FCN record-only collection and actual-SS successor diagnosis continue; FLD fresh gate/intake continues; FE joint placement/exact routing, BE Gray/fault-reset proofs, BGR true port/root coverage, and hrow default/ACK/source-delivery work run independently. Root publication must intake record-only changes without restoring old runtime helpers or silently adopting candidate source/geometry.
+
+### BGR collection update after the initial table
+
+The child corrected CTS12 ownership and verified **4,144 forwarding / 1,297 return ports** on the existing five-root ODB. Its raw TT profiles are fwd0 **219.1688**, fwd1 **209.6763**, return **220.1113 ps** (return still exceeds 220). Complete matching-corner replay with one fixed actual TT reference reports TT setup/hold **+39.3754/−27.9790**, FF **+158.8536/−13.7541**, and FF output-only, zero-load hold **−32.6983**. SS diagnostic setup/hold **−236.4705/−103.2437** remains explicit.
+
+TT failure includes external `rs → request conditioner` removal; FF includes genuine `rst_hist_b[1] → lh_o` removal and forwarding data boundary hold. External raw reset is still missing its actual refclk producer/phase/entry-wire contract; these prototype checks must not be relabeled or declared native-qualified. The next structural physical candidate moves actual forwarding/return clock-entry pins nearer the consumers and explicitly treats reset/history hold paths, retaining roots, periods, numerical stages and the fixed-TT reference rule. It is an unallocated clock-face request, not a clock-phase repricing or a route-ready result.
