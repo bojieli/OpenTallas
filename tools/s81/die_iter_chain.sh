@@ -15,6 +15,13 @@ st(){ echo "$(date -u +%FT%TZ) $*" >> $M/STATUS.log; }
 st "start src $(cat $S/SOURCE_SHA) recipe $R kind $KIND"
 /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py real $A --work $M/a_real > $M/real_gen.log 2>&1 || { st "GEN_FAIL $(grep -a 'OT_HOP_GATE\|hop gate' $M/real_gen.log | tail -1)"; exit 1; }
 st "GEN_DONE $(grep -a OT_HOP_GATE $M/real_gen.log | tail -1) $(grep -a OT_VIEW_BINDING $M/real_gen.log | tail -1)"
+# r6 2026-10-14 (owner 08:05 NO STUBS): every die chain carries the port-bind check of its own netlist (netlist mode of the
+# same recipe: die.v + die_glue.sv + params sidecar, tools/die_port_bind.py on the die RTL manifest). Recorded, not a GEN stop:
+# a chain whose PORT_BIND is FAIL is PATHFINDING, never a die result.
+( NA="$(echo "$A" | sed 's/--pdn-field-cov [0-9.]*//')"
+  /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py netlist $NA --work $M/nl --out $M/nl/gen > $M/nl_gen.log 2>&1 \
+    && python3 tools/die_port_bind.py $M/nl/die.v --rtl-file $M/nl/die_glue.sv -f physical/s81_die_rtl/layer1.f --out $M/port_bind.json > $M/port_bind.txt 2>&1
+  st "PORT_BIND rc=$? $(grep -a -m1 -i 'verdict\|FAIL\|PASS' $M/port_bind.txt | head -c 300)" ) &
 ( for w in spine field; do
     I=$M/ir_$w; /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py irm $A --work $I --window $w > $M/ir_gen_$w.log 2>&1 || { st IR_GEN_FAIL $w; continue; }
     /srv/opentallas-scratch/admit.sh 60 -- docker run --rm --name dieit_${TAG}_ir_$w --cpus=16 --memory=120g -v $I:/work -w /work openroad/orfs:asap7lock \
