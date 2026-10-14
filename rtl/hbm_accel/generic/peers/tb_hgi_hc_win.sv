@@ -9,8 +9,9 @@ module tb_hgi_hc_win;
  wire rv,hqv,ready,fault;wire[1023:0]rom;wire[34:0]ha;wire[2:0]hl;wire[10:0]ht;
  ot_hgi_hc_win #(.MUT(`WMUT)) dut(.clk(clk),.rst_n(rst_n),.c_start(start),.c_rel(rel),
   .c_base(35'd123),.c_soff(35'd77),.c_nwords(6'd32),.c_bound(16'd64),.c_limit(16'd96),
-  .hr_v(hr_v),.hr_tag(hr_tag),.hr_beat(hr_beat),.hr_data(hr_data),.rom_re(re),.rom_addr(addr),
-  .rom_v(rv),.rom_data(rom),.hq_v(hqv),.hq_addr(ha),.hq_len(hl),.hq_tag(ht),.hq_cr(hq_cr),.ready(ready),.fault(fault));
+  .hr_v(hr_v),.hr_tag(hr_tag),.hr_beat(hr_beat),.hr_data_lo(hr_data[127:0]),.hr_data_hi(hr_data[255:128]),.rom_re(re),.rom_addr(addr),
+  .rom_v(rv),.rom_0(rom[127:0]),.rom_1(rom[255:128]),.rom_2(rom[383:256]),.rom_3(rom[511:384]),
+  .rom_4(rom[639:512]),.rom_5(rom[767:640]),.rom_6(rom[895:768]),.rom_7(rom[1023:896]),.hq_v(hqv),.hq_addr(ha),.hq_len(hl),.hq_tag(ht),.hq_cr(hq_cr),.ready(ready),.fault(fault));
  reg[34:0]requests[0:31];reg[10:0]tags[0:31];
  integer req=0,errors=0,seats=1,credit_wait=0,checks=0,t,word_,beat;
  reg[1023:0]expected[0:31];

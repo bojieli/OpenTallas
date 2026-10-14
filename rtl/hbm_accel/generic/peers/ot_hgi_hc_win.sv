@@ -14,9 +14,10 @@ module ot_hgi_hc_win #(
     input wire [CW-1:0] c_nwords,
     input wire [AW-1:0] c_bound,c_limit,
     input wire hr_v,input wire [TG-1:0] hr_tag,
-    input wire [1:0] hr_beat,input wire [255:0] hr_data,
+    input wire [1:0] hr_beat,input wire [127:0] hr_data_lo,hr_data_hi,
     input wire rom_re,input wire [AW-1:0] rom_addr,
-    output reg rom_v,output reg [W*32-1:0] rom_data,
+    output reg rom_v,
+    output wire [127:0] rom_0,rom_1,rom_2,rom_3,rom_4,rom_5,rom_6,rom_7,
     output reg hq_v,output reg [HAW-1:0] hq_addr,
     output reg [2:0] hq_len,output reg [TG-1:0] hq_tag,
     input wire hq_cr,
@@ -24,6 +25,9 @@ module ot_hgi_hc_win #(
 );
     wire [0:0] rn;
     ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
+    initial if(W!=32)$fatal(1,"HC window leaf requires32 lanes");
+    reg [1023:0] rom_data;
+    assign {rom_7,rom_6,rom_5,rom_4,rom_3,rom_2,rom_1,rom_0}=rom_data;
     reg start_q,rel_q,start_qq,rel_qq,rv_q,re_q,credit_q;
     reg [HAW-1:0] base_q,soff_q,hbase;
     reg [CW-1:0] n_q,n_qq;
@@ -32,7 +36,7 @@ module ot_hgi_hc_win #(
     always @(posedge clk)begin
         base_q<=c_base;soff_q<=c_soff;hbase<=base_q+soff_q;
         n_q<=c_nwords;n_qq<=n_q;bound_q<=c_bound;limit_q<=c_limit;
-        addr_q<=rom_addr;tag_q<=hr_tag;beat_q<=hr_beat;data_q<=hr_data;
+        addr_q<=rom_addr;tag_q<=hr_tag;beat_q<=hr_beat;data_q<={hr_data_hi,hr_data_lo};
     end
     always @(posedge clk or negedge rn[0])begin
         if(!rn[0])begin start_q<=0;rel_q<=0;start_qq<=0;rel_qq<=0;rv_q<=0;re_q<=0;credit_q<=0;end

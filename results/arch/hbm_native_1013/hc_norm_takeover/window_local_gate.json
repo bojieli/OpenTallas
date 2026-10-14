@@ -1,0 +1,41 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "utilisation 43% outside 45%-60% (std 3000 + macro 15575 in core 43157 um2)",
+   "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (rom_re, rom_addr, rom_v): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "N face 10.5 pins/um (hr_v, hr_tag, hr_beat): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "S face 10.5 pins/um (c_start, c_rel, c_base): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "rtl",
+   "message": "runtime_partselect: 1 runtime-indexed part-select(s), 1,024 bits (1 >= 64 b; e.g. ot_hdc_v41x_weight_window: ][(segment*BURST_MAX+beat)*SB +: SB] (1024 b write)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory",
+   "fix": "decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
+  }
+ ]
+}

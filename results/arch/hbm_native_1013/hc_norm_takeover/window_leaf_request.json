@@ -3,7 +3,7 @@
   "master": "ot_hgi_hc_win",
   "state": "RTL_CANDIDATE_NOT_ROUTED",
   "source_sha256": {
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win.sv": "b2ac9c84ad692fc29294e707f3fa24cb3e0438e21bb6bb98759c0e371a083a95"
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win.sv": "6d8b867853cf6c7896e6a65418f93860f0ded67dccf269b8df66c41261246d5c"
   },
   "replaces": "Each g_win[k] window state and raw capture in native ot_hgi_hc_tile",
   "instances_per_sys_bank": 4,
@@ -11,10 +11,10 @@
   "quarters": 4,
   "total": 32,
   "candidate_outline_um": [
-    216.0,
-    151.2
+    273.024,
+    164.16
   ],
-  "outline_status": "Predecessor macro arithmetic estimate; must fit assigned die frame and measured synth; not a slot",
+  "outline_status": "Generator passes0hardlocalfail; actual synth/CTS pending, no adopted slot",
   "hard_macros": {
     "master": "ot_sram_1r1w_128x256_m1_r2c2",
     "count": 4
@@ -45,5 +45,23 @@
     "Measure sinks and assigned-pin pre-route clock",
     "Bind leaf into parent with explicit observed read latency and independent child clocks",
     "Measure exact scalar HC cycle count and physical parent"
+  ],
+  "kit": "physical/ref_tile/hc_win_ref",
+  "output_ports": [
+    "rom_0[127:0]",
+    "rom_1[127:0]",
+    "rom_2[127:0]",
+    "rom_3[127:0]",
+    "rom_4[127:0]",
+    "rom_5[127:0]",
+    "rom_6[127:0]",
+    "rom_7[127:0]",
+    "rom_v",
+    "hq_v",
+    "hq_addr[34:0]",
+    "hq_len[2:0]",
+    "hq_tag[10:0]",
+    "ready",
+    "fault"
   ]
 }
