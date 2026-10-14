@@ -1,0 +1,63 @@
+{
+  "source_commit": "f2b3e8bec",
+  "helper_sha256": "0eaf31d8b6dbecf6cb264accae7c273b60a7793ea94ad846909f24c97ceb6e44",
+  "identity_layout": "{epoch16,stage6,token18,position13,segment6}",
+  "fleet_job": "oth-ubuntu-1524720-1791969488",
+  "fleet_host": "ot-epyc4",
+  "actual_exit": 0,
+  "positive": {
+    "frames": 3,
+    "actual_vm_writes": 384,
+    "depleted_credit_edges": 384,
+    "same_epoch_different_stage_no_reset": true,
+    "reset_new_epoch": true
+  },
+  "mutations": {
+    "epoch": {
+      "fault": true,
+      "writes": 0,
+      "rx_count": 0
+    },
+    "stage": {
+      "fault": true,
+      "writes": 0,
+      "rx_count": 0
+    },
+    "token_top_bit": {
+      "fault": true,
+      "writes": 0,
+      "rx_count": 0
+    },
+    "position_bit8": {
+      "fault": true,
+      "writes": 0,
+      "rx_count": 0
+    },
+    "segment": {
+      "fault": true,
+      "writes": 0,
+      "rx_count": 0
+    },
+    "return_outside_coll": {
+      "fault": true,
+      "writes": 0
+    },
+    "extra_credit_after_reset": {
+      "fault": true,
+      "credit": 32
+    }
+  },
+  "scope": "Actual new helper arithmetic/control mechanism with descriptor/core/VM input fixtures. No transport, allocator, production program or physical qualification.",
+  "residual_gap": "Untagged delayed credit while outstanding remains indistinguishable; actual allocator/reset/drain fence must prevent old-credit injection.",
+  "artifacts": {
+    "run7.log": "c8e87a53f820dbc1fc7cbf57ee6198dddf42e105953df10f7690c7aa4b8e41d7",
+    "run1.log": "2b582e15e00af7ddbf7a1bf63bcbc14bdd3daa765a9f9f9e75920e964ff19446",
+    "run3.log": "1a57450b55e36db39c8d567d72a44084f1e3eaeaa11710387da8f24cc3d7f4c2",
+    "run5.log": "31beb05fed0f458d5d0a66bda9127f2dd53c2f2319684d7a1a49529cdd816d38",
+    "run0.log": "015f9f5be97cf1778c261dfdb5d45cc79022c8b508ae7adb9b4413f2e383196f",
+    "run2.log": "7e7cfbfcf292a8e6f459752cf7a46aa5bf7666fffd424a4ee2db4849d0ac785e",
+    "run6.log": "a751f0686129e021fa8a3dc03212adc20af2731f568f18a208f288ba55e56c9c",
+    "source_binary.sha256": "330d1d78be9ae44f48d45f51a96b7b141586abdf05ff1e113535bf5ab4fd8b6d",
+    "run4.log": "bda2e7532b1ed5b0196aa01204e7f38ac3e1f3a0ad152add8bfead911c47bd1a"
+  }
+}

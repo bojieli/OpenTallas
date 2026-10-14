@@ -1,0 +1,23 @@
+{
+  "fleet_job": "oth-ubuntu-1950100-1791969347",
+  "actual_exit": 0,
+  "scope": "Existing shared VRL helper; actual source, fixture descriptors/VM/core.",
+  "positive_frames": 3,
+  "words_per_frame": 128,
+  "depleted_edges_per_frame": 128,
+  "continuous_ready_input_mutant_violations": 771,
+  "honest_gap": {
+    "extra_stale_credit_after_reset": 33,
+    "fault": false
+  },
+  "initial_fixture_failure": {
+    "unit": "oth-ubuntu-1943859-1791969235",
+    "exit": 1,
+    "reason": "Driver returned credits before first32 posts, so it never reached intended depletion. Fixed independent fixture; original failure retained remotely."
+  },
+  "artifacts": {
+    "run1.log": "cf7addb50e7913597c6c8142eec29eaecd10ed7198d041527cc238bb89cef9bf",
+    "run0.log": "9e4f871d7fe04e3b9a6d04c0eb4efd7f4304ff0f7c2571c640be61b91b33b623",
+    "run2.log": "2057411fbe1b08ebef4f6567e8646fbea9d2ebcaa546b4195864a094ae6790c1"
+  }
+}
