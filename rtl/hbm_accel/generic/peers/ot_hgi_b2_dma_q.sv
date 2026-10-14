@@ -6,7 +6,7 @@
 // BACK1 belongs to its separate CLOSED NS1/NB8 engine beside each VM slice; integration is still owed.
 // No physical qualification until child views, assigned pins, slot/hop gates and measured CTS have passed.
 module ot_hgi_b2_dma_q #(
-    parameter integer HARD_CLOCKS = 0, // physical parent: nine independent die-compensated clock entries
+    parameter integer HARD_CLOCKS = 0, // physical parent: ten independent die-compensated clock entries
     parameter integer FRONT = 0,
     parameter integer VR2 = 1,
     parameter integer KVW = 1,
@@ -16,7 +16,7 @@ module ot_hgi_b2_dma_q #(
     parameter integer MUT_B2 = 0
 ) (
     input  wire          clk,
-    input wire [8:0] leaf_clk, // rq,mv,kc,h0,h1,serial,dp,kface,vmface; functional wrapper shares clk only when HARD_CLOCKS=0
+    input wire [9:0] leaf_clk, // rq,mv,kc,h0,h1,serial,dp,kface,vmface,groupface; functional wrapper shares clk only when HARD_CLOCKS=0
     input  wire          rst_n,
     input  wire [1:0]    qid,            // strap: this cluster's HBM stack (0..3); ONE hardened unit for all four
     input  wire [703:0]  dma_rec,        // {pos1, n_O, n_A, O, A, header, valid}; A[255:239,7] = the I-list address
@@ -57,7 +57,7 @@ module ot_hgi_b2_dma_q #(
     output wire [4:0] wl_bank,
     input wire wl_done
 );
-    wire [8:0] q5_clock = HARD_CLOCKS != 0 ? leaf_clk : {9{clk}};
+    wire [9:0] q5_clock = HARD_CLOCKS != 0 ? leaf_clk : {10{clk}};
     wire [264:0] land_write;wire [63:0] land_read;wire [6:0] source_format;wire [306:0] decoded;
     wire mover_v, mover_rdy, mover_done, mover_fault, mover_src, mover_fv, mover_frdy, mover_fdone, mover_wld;
     wire [226:0] mover_cmd; wire [337:0] mover_vmq; wire [273:0] mover_vmr; wire il_active; wire [337:0] il_vmq; wire [279:0] mover_wl;
@@ -88,6 +88,7 @@ module ot_hgi_b2_dma_q #(
     wire [337:0] ser_vmq;
     wire [273:0] ser_vmr;
     wire [36:0] ka;
+    wire [512:0] group_request;
     wire [342:0] mv_k_request; wire mv_k_ready; wire [257:0] mv_k_response;
     wire [337:0] fast_packet; wire packet_serial_owner; wire [273:0] packet_mover_return;
 `ifndef OT_B2_DMA_Q5_HARD
@@ -132,7 +133,7 @@ module ot_hgi_b2_dma_q #(
       .k_req_wstrb(mv_k_request[47:16]), .k_req_tag(mv_k_request[15:0]), .k_rsp_v(mv_k_response[257]), .k_rsp_rdy(), .k_rsp_we(mv_k_response[256]), .k_rsp_data(mv_k_response[255:0]), .k_fault(1'b0),
       .r_req_v(rv), .r_req_rdy({3'd0,r_req_rdy}), .r_req_addr(ra), .r_req_len(rl), .r_req_tag(rt), .r_req_we(rwe), .r_req_wdata(rwd), .r_req_wstrb(rws),
       .r_rsp_v({3'd0,r_rsp_v}), .r_rsp_we({3'd0,r_rsp_we}), .r_rsp_rdy(rrr), .r_rsp_tag({48'd0,r_rsp_tag}), .r_rsp_last({3'd0,r_rsp_last}), .r_rsp_data({768'd0,r_rsp_data}),
-      .vr2q(vr2q), .vr2r_ctrl(vr2r[8256:8224]), .vmq(fast_packet), .vmr(packet_mover_return), .wl(wl), .wl_done(wl_done),
+      .vr2q(group_request), .vr2r_ctrl(vr2r[8256:8224]), .vmq(fast_packet), .vmr(packet_mover_return), .wl(wl), .wl_done(wl_done),
       .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_kq(kc_kq),
       .kv_wv(kc_wv), .kv_wo(kc_wo), .kv_wa(kc_wa), .kv_wd(kc_wd), .kc_v(kc_v), .kc_vs(kc_vs), .kc_vst(kc_vst), .kc_ds(kc_ds),
       .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .credit_source(credit_source), .kc_wrdy(kc_wrdy));
@@ -203,5 +204,6 @@ module ot_hgi_b2_dma_q #(
     assign wl_bank = wl[268:264];
     assign r_req_v=rv[0]; assign r_req_len=rl[3:0]; assign r_req_tag=rt[15:0]; assign r_req_we=rwe[0];
     assign r_req_wdata=rwd[255:0]; assign r_req_wstrb=rws[31:0]; assign r_rsp_rdy=rrr[0];
+    ot_hgi_b2_dma_groupface u_groupface(.clk(q5_clock[9]),.rst_n(rst_n),.request(group_request),.vr2q(vr2q));
 endmodule
 `default_nettype wire

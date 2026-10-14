@@ -524,12 +524,11 @@ module ot_hgi_b2_dma_mv #(
     always @* begin : csa
         reg [41:0] b, x, a1, a2; reg ci; integer m;
         for (integer v = 0; v < 4; v = v + 1) for (integer k = 0; k < 4; k = k + 1) begin
-            b = (v < 2) ? sbase : dbase; a1 = op_a1[v][k]; a2 = op_a2[v][k]; ci = op_ci[v][k];
-            cs_s[v][k] = b ^ a1 ^ a2; cs_k[v][k] = ((b & a1) | (b & a2) | (a1 & a2)) << 1; cs_i[v][k] = ci;
+            cs_s[v][k] = op_a1[v][k]; cs_k[v][k] = op_a2[v][k]; cs_i[v][k] = op_ci[v][k];
         end
     end
     always @(posedge clk) if (cv_go && fast_cmd) begin : csa_op     // the addends, registered with the command fields
-        reg [41:0] x, a1, a2; reg ci, st4; integer m;
+        reg [41:0] x, a1, a2, b; reg ci, st4; integer m;
         st4 = (cm_q[1:0] == 2'd0 && cm_q[44:42] == 3'd1) || (cm_q[94:93] == 2'd0 && cm_q[137:135] == 3'd1);
         ro_inc <= st4 ? 20'd4 : 20'd1;
         for (integer v = 0; v < 4; v = v + 1) for (integer k = 0; k < 4; k = k + 1) begin
@@ -547,7 +546,17 @@ module ot_hgi_b2_dma_mv #(
                 6: begin a1 = x << 2;   a2 = x << 1; end
                 default: begin a1 = x << 3; a2 = ~x; ci = 1'b1; end
             endcase
-            op_a1[v][k] <= a1; op_a2[v][k] <= a2; op_ci[v][k] <= ci;
+            // Capture the carry-save operands on the existing command edge.
+            if(v<2)begin
+                b=(cm_q[1:0]==2'd1)?{cm_q[44:5],2'b00}:{2'd0,cm_q[44:5]};
+                if(cm_q[1:0]==2'd0 && cm_q[44:42]==3'd1)b={7'd0,cm_q[39:5]};
+            end else begin
+                b=(cm_q[94:93]==2'd1)?{cm_q[137:98],2'b00}:{2'd0,cm_q[137:98]};
+                if(cm_q[94:93]==2'd0 && cm_q[137:135]==3'd1)b={7'd0,cm_q[132:98]};
+            end
+            op_a1[v][k] <= b ^ a1 ^ a2;
+            op_a2[v][k] <= ((b & a1) | (b & a2) | (a1 & a2)) << 1;
+            op_ci[v][k] <= ci;
         end
     end
     always @(posedge clk) begin
@@ -666,10 +675,10 @@ module ot_hgi_b2_dma_mv #(
       if(!rn)wq_pending_push<=0;else wq_pending_push<=p3_v&&p3_fl&&p3_keep;
     always @(posedge clk)if(p3_v&&p3_fl&&p3_keep)begin wq_pending_slot<=p3_sl;wq_pending_dest<=p3_dsec;end
     wire [324:0] wq_push_data = {wq_pending_dest,db_strb[wq_pending_slot],db_dat[wq_pending_slot]};
-    ot_fifo_sram_fwft #(.W(325), .DEPTH(16), .MACRO(0)) u_wq_mem(.clk(clk), .rst_n(rn),
+    ot_hgi_b2_dma_fifo #(.W(325), .DEPTH(16), .MACRO(0)) u_wq_mem(.clk(clk), .rst_n(rn),
        .push(wq_pending_push), .wdata(wq_push_data), .pop(iss_kw || iss_vw), .hv(wq_hv), .head(wq_head), .ovf(wq_ovf));
     wire [59:0] cf_push_data = {r_k,q_rend[r_k],1'b0,rdd[r_k][4:0],q_ds[r_k],rsa[r_k][4:0],9'(q_by[r_k] >> sl2)};
-    ot_fifo_sram_fwft #(.W(60), .DEPTH(64), .MACRO(3)) u_cf_mem(.clk(clk), .rst_n(rn),
+    ot_hgi_b2_dma_fifo #(.W(60), .DEPTH(64), .MACRO(3)) u_cf_mem(.clk(clk), .rst_n(rn),
        .push(r_go), .wdata(cf_push_data), .pop(cf_hv && (!cd_v || (cd_v && (!u_cv || (u_go && u_end))))), .hv(cf_hv), .head(cf_head), .ovf(cf_ovf));
     // ---- port issue selection
     reg iss_kw, iss_kr, iss_vw, iss_vr;
