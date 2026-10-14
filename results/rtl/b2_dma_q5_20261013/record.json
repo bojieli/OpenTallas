@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.dma_q5_gate.v1",
   "branch": "claude/el1013-dma-q5",
-  "source_commit": "f1a05657e",
+  "source_commit": "7f8248f3f",
   "status": "RTL BENCHED; PHYSICAL/LOCAL8/BACK1 INTEGRATION INCOMPLETE",
   "flat_reference_commit": "6403f77f2",
   "port_gate": {
@@ -149,13 +149,14 @@
   "submitted": [
     "b2_dma_rq_q5_ref-q5r1-f1a05657e",
     "b2_dma_mv_q5_ref-q5sram1-49d9fbadc",
-    "b2_dma_serial_q5_ref-q5r1-49d9fbadc"
+    "b2_dma_serial_q5_ref-q5r2-7f8248f3f"
   ],
   "intake": {
     "rq49": "REFUSED stale unverified legacy gate cache, preserved original and replacementsourcefresh",
-    "rqf1": "SUBMITTED exact-source localgatePASS0fail0warn; fixedv2sourcebinding code merged",
-    "mv49": "QUEUED refgatePASS",
-    "serial49": "QUEUED refgatePASS"
+    "rqf1": "RUNNING routeAGI",
+    "mv49": "RUNNING route+benchtrack",
+    "serial49": "FLOORPLAN_MARGIN pin_density14.5bits/um/100um E/M4 >12",
+    "serial7f": "SUBMITTED replacement E836bits+N612bits pinfaces; localgatePASS0fail0warn"
   },
   "manual_mv_gate": {
     "sinks": 13749,
