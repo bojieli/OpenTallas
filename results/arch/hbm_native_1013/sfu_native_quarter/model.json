@@ -26,8 +26,8 @@
     "DENR": 1,
     "DRING": 3,
     "SFUT": 0,
-    "BCAST_STAGES": 0,
-    "RET_STAGES": 4
+    "BCAST_STAGES": 1,
+    "RET_STAGES": 5
   },
   "latency": {
     "mapper": 4,
@@ -43,8 +43,10 @@
     "e1": 7,
     "e2": 6,
     "out_retire": 1,
-    "control_note": "cx/cp/cm/ca/ci/cs/ce/co are already staged by real insertion pipes, then all are shifted4 by mapper; no extra BCAST4",
-    "return_note": "retirement metadata shifted4; mapper-shifted write payload bypasses old RET4 payload stages"
+    "control_note": "BCAST1 t_emit prices original LEAF1; mapper4 and CLOSED b_q1 shift every raw/staged control together by5",
+    "return_note": "retirement metadata RET5; write payload bypasses old RET5 because mapper4+b_q1 already shifts actual lane data5",
+    "closed_input_register": 1,
+    "closed_leaf_register": 1
   },
   "boundaries": {
     "controller_to_grid_bits": 1742,
@@ -69,7 +71,8 @@
       5
     ],
     "supported_destination": "VM only",
-    "opt_in": false
+    "opt_in": false,
+    "operand_sources": "VM0 only: CLOSED cx_srcs tied0"
   },
   "lifetime_source": {
     "path": "rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv",

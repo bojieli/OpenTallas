@@ -1,12 +1,12 @@
 {
   "source_sha256": "2ee06447a5adbf1b8ba3cd40ba0b856d97292e2eba5a2b2d7bd70be26e95b6a3",
-  "candidate_sha256": "3309d97218be67d0f4f814468adfa1fe8bf854294969d1d79976df65622265b6",
+  "candidate_sha256": "d280eba9d391de9fc664c054914d5e79995510c5cce2ff83af6e6b5e472adec1",
   "changes": [
     "module rename and exact physical defaults",
     "ENABLE_NATIVE default0 and refuse reduction/side/unsupported destination",
     "external real-lane interface",
     "LN4 to LN10 zero-padding",
-    "RET4 metadata but RET0 payload because grid adds4"
+    "RET5 metadata but RET0 payload because grid adds5 plus original LEAF1"
   ],
   "control_fields": [
     "tr_ld",

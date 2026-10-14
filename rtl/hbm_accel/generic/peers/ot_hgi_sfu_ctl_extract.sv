@@ -9,8 +9,8 @@ module ot_hgi_sfu_ctl_extract #(
     parameter integer AW = 24,
     parameter integer NW = 16,
     parameter integer KVT_SH = 9,
-    parameter integer BCAST_STAGES = 0, // register stages of the pipelined controller -> lane broadcast tree
-    parameter integer RET_STAGES = 4,   // register stages of the lane / reducer -> vector-memory write path
+    parameter integer BCAST_STAGES = 1, // register stages of the pipelined controller -> lane broadcast tree
+    parameter integer RET_STAGES = 5,   // register stages of the lane / reducer -> vector-memory write path
     parameter integer MLAT = 6,         // multiplier latency (ot_hdc_qmul_lat): 3, 4 or 5 (W11 serial domain)
     parameter integer ALAT = 6,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
     parameter integer OPR = 1,          // c12: lane operand registers (M1, AD, E1) and gather word register
@@ -100,7 +100,7 @@ module ot_hgi_sfu_ctl_extract #(
     output reg admission_fault
 );
     initial begin
-        if (N != 16 || M != 16 || AW != 24 || BCAST_STAGES != 0 || RET_STAGES != 4 ||
+        if (N != 16 || M != 16 || AW != 24 || BCAST_STAGES != 1 || RET_STAGES != 5 ||
             MLAT != 6 || ALAT != 6 || OPR != 1 || DDIV != 21 || CAPR != 1 ||
             GSH != 1 || KIMM != 1 || DENR != 1 || SFUT != 0 || DRING != 3)
             $fatal(1, "SFU controller extraction requires exact CLOSED lane and mapper params");
@@ -190,7 +190,7 @@ module ot_hgi_sfu_ctl_extract #(
     // offset bank -> pending, ready to start
     // =========================================================================================
     reg  [1:0]  pst;                     // 0 empty, 1 S1, 2 S2 done (lanes load), 3 ready
-    wire instruction_supported = i_red == RED_NONE && (i_dst == DST_NONE || i_dst == 2'd1) &&
+    wire instruction_supported = i_red == RED_NONE && i_asrc == 0 && i_bsrc == 0 && i_csrc == 0 && i_dsrc == 0 && (i_dst == DST_NONE || i_dst == 2'd1) &&
         (i_sfu == SFU_NONE || i_sfu == SFU_EXP || i_sfu == SFU_SIGM || i_sfu == SFU_SILU);
     assign ready = ENABLE_NATIVE && (pst == 2'd0) && instruction_supported;
     always @(posedge clk or negedge rst_n)
@@ -1190,7 +1190,7 @@ module ot_hgi_sfu_ctl_extract #(
     // =========================================================================================
     // Lanes
     // =========================================================================================
-    // Lane array is external: sixteen unchanged CLOSED lanes behind four-edge mappers.
+    // Lane array is external: sixteen unchanged CLOSED lanes behind four-edge mappers plus CLOSED b_q input stage.
     wire [1199:0] padded_terms;
     for (genvar stream = 0; stream < 5; stream = stream + 1) begin:g_term_pad
         for (genvar bit_j = 0; bit_j < 10; bit_j = bit_j + 1) begin:g_term
