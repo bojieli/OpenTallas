@@ -132,7 +132,7 @@
  "job": {
   "owner": "Claude:qwen_tp8_vm4",
   "branch": "claude/qwen-tp8-vm-phys",
-  "tag": "bp1",
+  "tag": "bp2",
   "purpose": "Qwen TP8 VM lane-bay PILOT (vm_pad_15_S0, the fullest pad-row bay: 6 closed tiles in 6 slots at the plan pitch 21.6 um, 4.32-um channels, 200 lanes of 8 b, 3520 stage bits; wires + hard children only): measures the real congestion / DRC / timing of abutted relay and pad tiles with their closed pins before the band and region clusters are cut. Bench = every lane against its planned me-enabled stage count, every clock; mutants: one lane a tile short, two lanes swapped.",
   "hold_merge": "physical probe of one lane bay (congestion pilot): the die sees the band cluster, never this block",
   "extra_paths": [
