@@ -1,16 +1,16 @@
 {
   "status": "BENCHED_COMPONENT_NOT_INTEGRATED_NOT_ROUTED",
-  "source_commit": "2685dedbb",
+  "source_commit": "3cc5d4a1f",
   "source_sha256": {
     "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv": "4a07c1012e003571f6fe263e06d72e757907c7eb683f29542cfc0fad99811c30",
-    "rtl/test/qwen_su_kv_native/tb_native.sv": "c52e8f79695cf6f3948969fbadfe7f9886107136b444a043b187a8b6ff1cc088",
+    "rtl/test/qwen_su_kv_native/tb_native.sv": "fef416044dfdd66f962d10db5b3895260da72d1c3b94de29ec6f82d5c7f4589d",
     "rtl/test/qwen_su_kv_native/run.sh": "f861b1c8b703a4fffe508daf36f4274e5d78a92baf114225bccbf2ac1dc6f4df"
   },
   "remote": {
     "host": "ot-epyc1tb",
-    "unit": "oth-ubuntu-450129-1791951381",
+    "unit": "oth-ubuntu-457963-1791951538",
     "exit": 0,
-    "directory": "/srv/opentallas-scratch/codex/qwen-su-kv-native-r10"
+    "directory": "/srv/opentallas-scratch/codex/qwen-su-kv-native-r11"
   },
   "native_candidate": {
     "tp": 8,
@@ -26,14 +26,20 @@
     "epochs": 40,
     "kv_bytes_checked": 10240,
     "words_checked": 1440,
-    "cycles": 2999
+    "cycles": 2999,
+    "zero_credit_cycles": 793,
+    "kv_stall_cycles": 136,
+    "q_stall_cycles": 639
   },
   "historical_control": {
     "heads": 2,
     "epochs": 40,
     "kv_bytes_checked": 20480,
     "words_checked": 1600,
-    "cycles": 3278
+    "cycles": 3278,
+    "zero_credit_cycles": 1401,
+    "kv_stall_cycles": 769,
+    "q_stall_cycles": 742
   },
   "mutant_data_errors": {
     "lane_swap": 160,
