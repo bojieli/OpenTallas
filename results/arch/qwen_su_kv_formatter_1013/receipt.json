@@ -1,16 +1,16 @@
 {
   "status": "BENCHED_COMPONENT_NOT_INTEGRATED_NOT_ROUTED",
-  "source_commit": "3cc5d4a1f",
+  "source_commit": "e7720a19d",
   "source_sha256": {
-    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv": "4a07c1012e003571f6fe263e06d72e757907c7eb683f29542cfc0fad99811c30",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv": "dea18a2fc95179cb4aa17c7474b7e3b097f4d19d4e12f47568d39d01c1d9ee8c",
     "rtl/test/qwen_su_kv_native/tb_native.sv": "fef416044dfdd66f962d10db5b3895260da72d1c3b94de29ec6f82d5c7f4589d",
     "rtl/test/qwen_su_kv_native/run.sh": "f861b1c8b703a4fffe508daf36f4274e5d78a92baf114225bccbf2ac1dc6f4df"
   },
   "remote": {
     "host": "ot-epyc1tb",
-    "unit": "oth-ubuntu-457963-1791951538",
+    "unit": "oth-ubuntu-459405-1791951644",
     "exit": 0,
-    "directory": "/srv/opentallas-scratch/codex/qwen-su-kv-native-r11"
+    "directory": "/srv/opentallas-scratch/codex/qwen-su-kv-native-r12"
   },
   "native_candidate": {
     "tp": 8,
@@ -56,11 +56,11 @@
     "posted_producer_bits_per_edge": 3648,
     "encoded_kv_bytes_per_edge": 64,
     "raw_input_face_register_bits": 3648,
-    "assembly_storage_bits_conservative": 4096,
-    "assembly_seen_bits": 512,
+    "assembly_storage_bits_conservative": 2048,
+    "assembly_seen_bits": 256,
     "boundary_output_bits": 524,
     "max_qualified_published_roots": 0,
-    "clock_sink_bound_estimate": "approximately 9400 flops for formatter plus local credit sender; synthesis/CTS not measured",
+    "clock_sink_bound_estimate": "6555 post-proc optimized state Q bits in formatter, single root, NOT mapped CTS sink evidence; credit sender separate approximately532state bits",
     "route_track_model": "524 output bits /12 bits per micron requires >=43.67 microns at full track occupancy; 0.60 target requires >=72.78 microns, before PG/keepout. Input must remain beside distributed SU producer, not one long 3648-bit die bus."
   },
   "limitations": [
@@ -72,5 +72,20 @@
     "No synthesis/CTS/SS/FF/GRT/pin contract qualification",
     "No immutable-price or end-to-end throughput claim",
     "HEADS2 is historical diagnostic only; no second head filled for TP8"
-  ]
+  ],
+  "synthesis": {
+    "source": "e7720a19d",
+    "unit": "oth-ubuntu-462164-1791951677",
+    "exit": 0,
+    "peak_MB": 1002.69,
+    "yosys": "0.52 fee39a3284c90249e1d9684cf6944ffbbcbb8f90",
+    "post_proc_state_Q_bits": 6555,
+    "generic_mux_cells": 1951,
+    "shift_cells": 194,
+    "shiftx_cells": 130,
+    "registered_input_bits": 3706,
+    "all_input_bits": 3709,
+    "all_output_bits": 535,
+    "limitations": "Generic arbitrary-address scatter includes large shift/mux fabric. State census is not area or timing or clock measurement; actual native fixed-lane-stripe partition remains a physical design requirement."
+  }
 }
