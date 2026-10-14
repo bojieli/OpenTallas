@@ -1,5 +1,5 @@
 {
- "name": "qkd_host_ctl-hc1-COMMIT",
+ "name": "qkd_host_ctl-hc1-HEAD",
  "block": "qkd_host_ctl",
  "ref_tile": true,
  "owner": "Codex:el1013-qwen-host",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1013-qwen-r3b-host",
-  "commit": "COMMIT",
+  "commit": "HEAD",
   "extra_paths": [
    "physical/qkd_host_ctl",
    "rtl/test/tb_qkd_host_ctl.sv"
@@ -91,7 +91,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_host_ctl/qkd_host_ctl-hc1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_host_ctl/qkd_host_ctl-hc1-HEAD"
   }
  ],
  "cycles_added": 0,
