@@ -3,7 +3,7 @@ set -euo pipefail
 out=$1; mut=${2:-0}; shift 2;mkdir -p "$out"
 VER=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 b=rtl/hbm_accel/tu/lk_ep_20261010
-"$VER" --binary --timing -O2 -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hfd_lk_ep_shared -GMUT_TX_SHARED="$mut" --Mdir "$out/obj" -o sim \
+"$VER" -Irtl/common --binary --timing -O2 -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hfd_lk_ep_shared -GMUT_TX_SHARED="$mut" --Mdir "$out/obj" -o sim \
  rtl/common/ot_secded.sv rtl/common/ot_secded_dec_dp.sv \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
  rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv \
