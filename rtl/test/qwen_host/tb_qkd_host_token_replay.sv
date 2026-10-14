@@ -8,7 +8,7 @@ module tb_qkd_host_token_replay;
  .ck(ck),.rst_n(rst),.por_n(por),.die_id(3'd7),.rx_v(rv),.rx_d(rd),.tx_v(tx),.tx_cr(txcr),
  .local_tk({1'b1,2'b0,1'b1,89'b0}),.local_kst(10'b0),.local_boot(2'b11),.cmd_v(1'b0),.cmd_hc(182'b0),.hc(hc),.fault(fault),
  .startup_allowed(1'b1),.local_service_ready(1'b1),.local_service_epoch(16'b0),.begin_v(1'b0),.begin_epoch(16'b0),
- .package_abort(1'b0),.abort_drained(4'b0),.token_request_ready(1'b0),.token_grant_valid(1'b0),.token_grant_epoch(16'b0),.token_grant_token(18'b0),.token_grant_position(18'b0),.token_grant_generation(2'b0),.token_grant_tag(59'b0),
+ .token_allocator_fault(1'b0),.package_abort(1'b0),.abort_drained(4'b0),.token_request_ready(1'b0),.token_grant_valid(1'b0),.token_grant_epoch(16'b0),.token_grant_token(18'b0),.token_grant_position(18'b0),.token_grant_generation(2'b0),.token_grant_tag(59'b0),
  .allocated_valid(1'b0),.allocated_delivered(1'b0),.allocated_epoch(16'b0),.allocated_token(18'b0),.allocated_position(18'b0),.allocated_generation(2'b0),.terminal_accepted(1'b0),
  .token_wrap_fence_valid(wv),.token_wrap_drained(wd),.token_wrap_link_reset_seen(wr),.token_wrap_retraining_done(wt),.token_epoch_valid(tev),.token_epoch(epoch));
  always @(negedge ck)begin txcr=tx;if(hc[38])begin starts++;if(!tev)$fatal(1,"received start missing explicit token epoch");end end

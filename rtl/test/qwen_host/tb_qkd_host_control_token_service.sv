@@ -85,7 +85,7 @@ wire begin_v,begin_cr,begin_available,begin_fault,epoch_busy,startup_allowed;
 wire[15:0]begin_epoch,service_begin_epoch,pending_epoch;
 wire service_begin_v,pending_advertised,ingest_permission;
 wire[7:0]service_ready8,pending_ack8;wire[127:0]service_epoch8;
-wire token_wrap_fence_valid=0,token_wrap_drained=0,token_wrap_link_reset_seen=0,token_wrap_retraining_done=0;wire package_abort;wire[3:0]abort_drained;wire token_request_valid,token_request_ready,token_grant_valid,token_grant_ready;
+wire token_allocator_fault=allocfault;wire token_wrap_fence_valid=0,token_wrap_drained=0,token_wrap_link_reset_seen=0,token_wrap_retraining_done=0;wire package_abort;wire[3:0]abort_drained;wire token_request_valid,token_request_ready,token_grant_valid,token_grant_ready;
 wire[17:0]token_request_token,token_request_position,token_grant_token,token_grant_position;
 wire[1:0]token_request_generation,token_grant_generation;wire[15:0]token_grant_epoch;wire[58:0]token_grant_tag;
 wire allocated_valid,allocated_delivered;wire[15:0]allocated_epoch;wire[17:0]allocated_token,allocated_position;wire[1:0]allocated_generation;
@@ -111,6 +111,12 @@ always @(negedge clk)begin:terminal_provider_model
   all_done=all_done&&dut.tk8[rank*93+92]&&dut.tk8[rank*93+89]&&dut.tk8[rank*93+90+:2]==token_grant_generation;
   dr=dr&provider_drained[rank];
  end
+ // HOST drain comes from actual source station, CTRL reservations, TX queue
+ // and every addressed recipient. The held cancel record is not a data queue.
+ dr[3]=dr[3]&&!dut.u_packet.u_ctrl.busy&&dut.u_packet.u_ctrl.cn==0&&!dut.u_packet.u_ctrl.cv&&
+  dut.u_packet.u_tx.count[1]==0&&!dut.u_packet.u_tx.cv&&!dut.u_packet.ct&&
+  !(tx_v&&tx_d[527:524]==1)&&local_command_count==expected_count&&credit_count==expected_count;
+ for(integer rank=1;rank<8;rank++)dr[3]=dr[3]&&(peer_command_count[rank]==expected_count);
  normal_terminal_drains=dr;
  if(terminal_accepted)normal_terminal_valid=0;
  else if(all_done&&(&dr))begin normal_terminal_valid=1;normal_terminal_tag={token_grant_epoch,6'd37,token_grant_token,token_grant_position[12:0],6'd0};normal_terminal_gen=token_grant_generation;end
@@ -122,7 +128,7 @@ reg[24:0]service_raw_faults=0;reg root_barrier_v=0;
 qkd_host_service_guard #(.MUT(0))root_guard(.ck_guard(clk),.rst_n(host_rst_n),.raw_faults(service_raw_faults),.service_protocol_fault(begin_fault),.die_id(3'd0),.physical_faults(8'b0),.transport_faults(8'b0),
 .accepted_ing_v(ing_v),.accepted_ing_cls(ing_cls),.accepted_ing_header(ing_d[15:0]),.done_v(1'b0),.done_d(64'b0),.boot_barrier_v(root_barrier_v),.boot_barrier_target(32'b0),
 .begin_v(service_begin_v),.begin_epoch(service_begin_epoch),.pending_advertised(pending_advertised),.pending_epoch(pending_epoch),.local_tk(raw_local_tk),.guarded_tk(local_tk),.abort(service_abort),.service_ready(service_ready),.service_epoch(local_service_epoch),.diag_raw(service_diag_raw),.status(service_status),.groups(),.physical_diag(),.transport_diag());
-qkd_host_control_packet_capture_token_service #(.ENABLE_SERVICE(1),.ENABLE_TOKEN(1),.T_LINK(1000),.T_HBM(10000),.WDOG(10000),.HC_MUT(FAULT==0&&MUT==2),.PROMPT_MUT(MUT==3?3:MUT==4?2:0),.PROMPT_BIND_LATENCY(MUT==5?3:4))dut(.*);
+qkd_host_control_packet_capture_token_service #(.ENABLE_SERVICE(1),.ENABLE_TOKEN(1),.T_LINK(1000),.T_HBM(10000),.WDOG(10000),.TOKEN_MUT(MUT==9?18:0),.HC_MUT(FAULT==0&&MUT==2),.PROMPT_MUT(MUT==3?3:MUT==4?2:0),.PROMPT_BIND_LATENCY(MUT==5?3:4))dut(.*);
 assign c_start=dut.raw_hc[38];assign c_token=dut.raw_hc[35:18];assign c_pos=dut.raw_hc[17:0];assign c_gen=dut.raw_hc[37:36];
 reg[7:1]peer_rx_v=0;reg[511:0]peer_rx_d[1:7];wire[7:1]peer_tx_v;wire[511:0]peer_tx_d[1:7];reg[7:1]peer_tx_cr=0;
 reg[92:0]peer_tk[1:7];reg[9:0]peer_kst[1:7];reg[1:0]peer_boot[1:7];wire[181:0]peer_hc[1:7];wire[7:1]peer_fault;
@@ -163,7 +169,7 @@ for(genvar pd=1;pd<7;pd=pd+1)begin:g_peer
  .startup_allowed(1'b1),.local_service_ready(peer_service_ready[pd]),.local_service_epoch(peer_epoch[pd]),.begin_v(1'b0),.begin_epoch(16'b0),
  .service_begin_v(peer_begin[pd]),.service_begin_epoch(peer_begin_epoch[pd]),.pending_advertised(peer_advert[pd]),.pending_epoch(peer_advert_epoch[pd]),
  .local_tk(peer_guarded_tk[pd]),.local_kst(peer_kst[pd]),.local_boot(peer_boot[pd]),.cmd_v(1'b0),.cmd_hc(182'b0),.cmd_cr(),
- .por_n(por_n),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.package_abort(1'b0),.abort_drained(4'b0),.token_request_ready(1'b0),.token_grant_valid(1'b0),.token_grant_epoch(16'b0),.token_grant_token(18'b0),.token_grant_position(18'b0),.token_grant_generation(2'b0),.token_grant_tag(59'b0),.allocated_valid(1'b0),.allocated_delivered(1'b0),.allocated_epoch(16'b0),.allocated_token(18'b0),.allocated_position(18'b0),.allocated_generation(2'b0),.terminal_accepted(1'b0),.token_epoch_valid(peer_token_epoch_valid[pd]),.token_epoch(peer_token_epoch[pd]),
+ .por_n(por_n),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.token_allocator_fault(1'b0),.package_abort(1'b0),.abort_drained(4'b0),.token_request_ready(1'b0),.token_grant_valid(1'b0),.token_grant_epoch(16'b0),.token_grant_token(18'b0),.token_grant_position(18'b0),.token_grant_generation(2'b0),.token_grant_tag(59'b0),.allocated_valid(1'b0),.allocated_delivered(1'b0),.allocated_epoch(16'b0),.allocated_token(18'b0),.allocated_position(18'b0),.allocated_generation(2'b0),.terminal_accepted(1'b0),.token_epoch_valid(peer_token_epoch_valid[pd]),.token_epoch(peer_token_epoch[pd]),
  .hc(peer_hc[pd]),.tk8(),.kst8(),.boot8(),.seen(),.fault(peer_fault[pd]));
 end
 wire follower_available,follower_source_cr,follower_source_fault,follower_tx_v,follower_ready,follower_die_rst;reg follower_tx_cr=0;wire[181:0]follower_hc;wire[527:0]follower_tx_d;wire[3:0]follower_packet_faults;
@@ -178,7 +184,7 @@ qkd_host_control_packet_capture_token_service #(.ENABLE_SERVICE(1),.ENABLE_TOKEN
  .service_abort(peer_abort[7]),.service_ready(peer_service_ready[7]),.local_service_epoch(peer_epoch[7]),.service_diag_raw(26'b0),.service_status(32'b0),
  .service_begin_v(peer_begin[7]),.service_begin_epoch(peer_begin_epoch[7]),.pending_advertised(peer_advert[7]),.pending_epoch(peer_advert_epoch[7]),.begin_fault(follower_begin_fault),
  .ing_v(follower_ing_v),.ing_cls(follower_ing_cls),.ing_d(follower_ing_d),.local_tk(peer_guarded_tk[7]),.local_kst(peer_kst[7]),.local_boot(peer_boot[7]),.sys_ready(follower_ready),.die_rst_n(follower_die_rst),.packet_faults(follower_packet_faults),.hc(follower_hc),.source_cr(follower_source_cr),.available(follower_available),.source_fault(follower_source_fault),
- .token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.abort_drained(4'b0),.token_request_ready(1'b0),.token_grant_valid(1'b0),.token_grant_epoch(16'b0),.token_grant_token(18'b0),.token_grant_position(18'b0),.token_grant_generation(2'b0),.token_grant_tag(59'b0),.allocated_valid(1'b0),.allocated_delivered(1'b0),.allocated_epoch(16'b0),.allocated_token(18'b0),.allocated_position(18'b0),.allocated_generation(2'b0),.terminal_accepted(1'b0),.token_epoch_valid(peer_token_epoch_valid[7]),.token_epoch(peer_token_epoch[7]),
+ .token_allocator_fault(1'b0),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.abort_drained(4'b0),.token_request_ready(1'b0),.token_grant_valid(1'b0),.token_grant_epoch(16'b0),.token_grant_token(18'b0),.token_grant_position(18'b0),.token_grant_generation(2'b0),.token_grant_tag(59'b0),.allocated_valid(1'b0),.allocated_delivered(1'b0),.allocated_epoch(16'b0),.allocated_token(18'b0),.allocated_position(18'b0),.allocated_generation(2'b0),.terminal_accepted(1'b0),.token_epoch_valid(peer_token_epoch_valid[7]),.token_epoch(peer_token_epoch[7]),
  .ing_crn(5'd0),.ing_t_v(1'b0),.ing_t_d(64'b0));
 always @(negedge clk)begin
  follower_tx_cr=follower_tx_v;follower_rx_v=0;
@@ -222,7 +228,7 @@ always @(posedge clk)begin
  end
  if(dut.raw_hc[38]||dut.raw_hc[113]||dut.raw_hc[181])begin expected_commands[expected_count]=dut.raw_hc;expected_count=expected_count+1;end
  if(hc[38]||hc[113]||hc[181])begin
-  if(hc!==expected_commands[local_command_count])$fatal(1,"local rawhc mismatch");local_command_count=local_command_count+1;
+  if(hc!==(STALL_GRANT?expected_commands[local_command_count]&~(182'd1<<38):expected_commands[local_command_count]))$fatal(1,"local rawhc mismatch");local_command_count=local_command_count+1;
   if(hc[38])begin
    if(!token_epoch_valid||token_epoch!==token_grant_epoch||(!allocated_delivered&&!(token_grant_valid&&token_grant_ready)))$fatal(1,"local start before genuinely consumed grant");
    allocated_starts=allocated_starts+1;provider_drained[0]=15;
@@ -231,7 +237,7 @@ always @(posedge clk)begin
  end
  for(integer pd=1;pd<8;pd=pd+1)begin
   if(peer_hc[pd][38]||peer_hc[pd][113]||peer_hc[pd][181])begin
-   if(peer_hc[pd]!==expected_commands[peer_command_count[pd]])$fatal(1,"remote rawhc/PW/DW mismatch die%d",pd);
+   if(peer_hc[pd]!==(STALL_GRANT?expected_commands[peer_command_count[pd]]&~(182'd1<<38):expected_commands[peer_command_count[pd]]))$fatal(1,"remote rawhc/PW/DW mismatch die%d",pd);
    peer_command_count[pd]=peer_command_count[pd]+1;
    if(peer_hc[pd][113]||peer_hc[pd][181])peer_meta[pd]=peer_meta[pd]+1;
    if(peer_hc[pd][38])begin
@@ -343,7 +349,8 @@ initial begin
  if(cq_writes!=2||mem[256]!==64'h00000000cafe0075||!irq||allocated_starts!=0||allocation_requests!=1||step_count!=1)$fatal(1,"actual package watchdog cancellation ring CQ/IRQ/start counts");
  repeat(200)tick;
  if(allocated_valid||allocbusy||allocfault||cancel_valid||!cancel_fault||cancel_done||allocated_starts!=0)$fatal(1,"hidden actual allocation not fault-retired after genuine idle provider/link drain model");
- for(i=1;i<8;i++)if(peer_starts[i]!=0)$fatal(1,"delayed grant package abort emitted peer start");
+ if(local_command_count!=4||credit_count!=4)$fatal(1,"aborted START/PW/DW metadata not genuinely drained");
+ for(i=1;i<8;i++)if(peer_meta[i]!=4||peer_command_count[i]!=4||peer_starts[i]!=0)$fatal(1,"delayed grant package abort emitted peer start");
  $display("PASS actual FMT1/q4 ND8 watchdog abort hidden allocated epoch0 genuine fault-terminal no-local/no-peer start CQ=%h",mem[256]);$finish;
  end
  if(FAULT==3)begin

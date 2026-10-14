@@ -3,8 +3,8 @@
   "period_ps": 833,
   "new_master": "qkd_host_ctrl_token_service_packet",
   "new_master_clock": "ck_ctrl",
-  "ff": 6227,
-  "port_bits": 2876,
+  "ff": 6245,
+  "port_bits": 2877,
   "macros": 0,
   "outline": "PENDING_MAPPED_AREA_AND_PIN_CAPACITY",
   "physical_or_price_qualification": false,
@@ -291,6 +291,10 @@
         },
         "startup_allowed": {
           "direction": "output",
+          "width": 1
+        },
+        "token_allocator_fault": {
+          "direction": "input",
           "width": 1
         },
         "token_wrap_fence_valid": {
@@ -1503,6 +1507,10 @@
           "direction": "output",
           "width": 1
         },
+        "token_allocator_fault": {
+          "direction": "input",
+          "width": 1
+        },
         "token_wrap_fence_valid": {
           "direction": "input",
           "width": 1
@@ -1639,7 +1647,7 @@
     },
     "top.u_packet.u_ctrl": {
       "module": "$paramod$043162fd35ea4f5ebbab9a380c3509a8edb558ee\\qkd_host_ctrl_token_service_packet",
-      "own_ff": 6227,
+      "own_ff": 6245,
       "ports": {
         "ck": {
           "direction": "input",
@@ -1802,6 +1810,10 @@
           "width": 1
         },
         "token_wrap_retraining_done": {
+          "direction": "input",
+          "width": 1
+        },
+        "token_allocator_fault": {
           "direction": "input",
           "width": 1
         },

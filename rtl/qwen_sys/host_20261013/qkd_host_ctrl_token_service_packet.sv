@@ -28,6 +28,7 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
  output reg[7:0]service_ready8,pending_ack8,
  output reg[127:0]service_epoch8,output reg ingest_permission,
  input wire por_n,token_wrap_fence_valid,token_wrap_drained,token_wrap_link_reset_seen,token_wrap_retraining_done,
+ input wire token_allocator_fault,
  input wire package_abort,input wire[3:0]abort_drained,
  output reg token_request_valid,input wire token_request_ready,
  output reg[17:0]token_request_token,token_request_position,output reg[1:0]token_request_generation,
@@ -53,10 +54,11 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
  reg[3:0]drain_q;reg[15:0]grant_epoch_q,allocated_epoch_q;
  reg[17:0]grant_token_q,grant_position_q,allocated_token_q,allocated_position_q;
  reg[1:0]grant_generation_q,allocated_generation_q;reg[58:0]grant_tag_q;
- reg allocator_sampled;reg wrap_vq,wrap_dq,wrap_rq,wrap_tq;reg peer_epoch_seen;reg[15:0]peer_last_epoch;
+ reg allocator_fault_q,local_emitted;reg allocator_sampled;reg wrap_vq,wrap_dq,wrap_rq,wrap_tq;reg peer_epoch_seen;reg[15:0]peer_last_epoch;
  wire peer_epoch_fresh=MUT==11||!peer_epoch_seen||h[245:230]>peer_last_epoch;
- wire peer_token_frame=ENABLE_TOKEN&&role!=0&&src==0&&h[7:0]==8'h22&&h[15:8]==2&&h[86]&&h[246]&&h[511:247]==0&&h[65:61]==0&&h[83:66]<18'd151936;
- wire peer_token_accept=rst_n&&take&&hdr&&sequence_ok&&peer_token_frame&&peer_epoch_fresh&&!(abort_seen||abort_q||reset_abort_seen);
+ wire peer_service_fresh=MUT==20||(!ENABLE_SERVICE?h[262:247]==0:(h[262:247]==epoch&&lepoch==epoch&&lready&&((!epoch_active&&startup_q)||pending_ack8[role])));
+ wire peer_token_frame=ENABLE_TOKEN&&role!=0&&src==0&&h[7:0]==8'h22&&h[15:8]==2&&h[86]&&h[246]&&h[511:263]==0&&h[65:61]==0&&h[83:66]<18'd151936;
+ wire peer_token_accept=rst_n&&take&&hdr&&sequence_ok&&peer_token_frame&&peer_epoch_fresh&&peer_service_fresh&&!(abort_seen||abort_q||reset_abort_seen);
  always @(posedge ck or negedge por_n)begin
   if(!por_n)begin retained_request<=0;retained_allocated_seen<=0;reset_abort_seen<=0;job_token<=0;job_position<=0;job_generation<=0;end
   else begin
@@ -76,7 +78,7 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
   else if(peer_token_accept)begin peer_epoch_seen<=1;peer_last_epoch<=h[245:230];end
  end
  reg grant_wait,request_accepted,cancel_consumed;reg[17:0]job_token,job_position;reg[1:0]job_generation;reg retained_request,retained_allocated_seen,reset_abort_seen;reg[15:0]active_epoch;
- reg active_epoch_valid;
+ reg active_epoch_valid;reg[15:0]active_service_epoch;
  wire tuple_ok=grant_token_q==active[35:18]&&grant_position_q==active[17:0]&&grant_generation_q==active[37:36]&&
   grant_tag_q=={grant_epoch_q,6'd0,active[35:18],active[12:0],6'd0};
  wire allocated_match=allocated_token_q==job_token&&allocated_position_q==job_position&&allocated_generation_q==job_generation;
@@ -89,7 +91,7 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
  wire stale_service=ENABLE_SERVICE&&h[7:0]==8'h21&&h[15:8]==2&&role==0&&src!=0&&h[511:170]==0&&(h[169:154]!=epoch||(!epoch_active&&!startup_q));
  wire send=!fault&&credits!=0&&!tx_v;
  wire load_begin=ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&cn==0&&!cv&&begin_pending&&!fault;
- wire load_cmd=(role==0)&&!(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen)&&cq[cr][38])&&!busy&&!begin_busy&&!load_begin&&cn!=0&&!fault;
+ wire load_cmd=(role==0)&&!busy&&!begin_busy&&!load_begin&&cn!=0&&!fault;
  wire status_changed=!sent_once||lt[92:32]!=last_tk[92:32]||lb!=last_boot||lk!=last_kst||(ENABLE_SERVICE&&(lready!=last_ready||lepoch!=last_epoch));
  always @(posedge ck)begin
   rd<=rx_d;cd<=cmd_hc;
@@ -105,14 +107,14 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
    begin_pending<=0;begin_busy<=0;epoch_active<=0;begin_cr<=0;begin_available<=ENABLE_SERVICE;
    service_begin_v<=0;service_begin_epoch<=0;pending_advertised<=0;pending_epoch<=0;
    service_ready8<=0;pending_ack8<=0;service_epoch8<=0;ingest_permission<=0;
-   allocator_sampled<=0;wrap_vq<=0;wrap_dq<=0;wrap_rq<=0;wrap_tq<=0;abort_q<=0;abort_seen<=0;request_ready_q<=0;grant_valid_q<=0;grant_low<=0;allocated_vq<=0;allocated_dq<=0;terminal_ack_q<=0;
+   allocator_fault_q<=0;local_emitted<=0;allocator_sampled<=0;wrap_vq<=0;wrap_dq<=0;wrap_rq<=0;wrap_tq<=0;abort_q<=0;abort_seen<=0;request_ready_q<=0;grant_valid_q<=0;grant_low<=0;allocated_vq<=0;allocated_dq<=0;terminal_ack_q<=0;
    drain_q<=0;grant_epoch_q<=0;allocated_epoch_q<=0;grant_token_q<=0;grant_position_q<=0;allocated_token_q<=0;allocated_position_q<=0;
    grant_generation_q<=0;allocated_generation_q<=0;grant_tag_q<=0;grant_wait<=0;request_accepted<=0;cancel_consumed<=0;
-   active_epoch<=0;active_epoch_valid<=0;token_request_valid<=0;token_request_token<=0;token_request_position<=0;token_request_generation<=0;
+   active_epoch<=0;active_service_epoch<=0;active_epoch_valid<=0;token_request_valid<=0;token_request_token<=0;token_request_position<=0;token_request_generation<=0;
    token_grant_ready<=0;token_epoch_valid<=0;token_epoch<=0;cancel_valid<=0;cancel_tag<=0;cancel_generation<=0;cancel_done<=0;cancel_fault<=0;cancel_drained<=0;
    hc<=0;tk8<=0;kst8<=0;boot8<=0;seen<=0;fault<=0;
   end else begin
-   allocator_sampled<=1;wrap_vq<=token_wrap_fence_valid;wrap_dq<=token_wrap_drained;wrap_rq<=token_wrap_link_reset_seen;wrap_tq<=token_wrap_retraining_done;
+   allocator_fault_q<=token_allocator_fault;if(ENABLE_TOKEN&&allocator_fault_q&&MUT!=17)fault<=1;allocator_sampled<=1;wrap_vq<=token_wrap_fence_valid;wrap_dq<=token_wrap_drained;wrap_rq<=token_wrap_link_reset_seen;wrap_tq<=token_wrap_retraining_done;
    if(ENABLE_TOKEN&&wrap_vq&&!(wrap_dq&&wrap_rq&&wrap_tq))fault<=1;
    abort_q<=package_abort;drain_q<=abort_drained;request_ready_q<=token_request_ready;
    grant_valid_q<=token_grant_valid;grant_epoch_q<=token_grant_epoch;grant_token_q<=token_grant_token;
@@ -156,7 +158,7 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
    if(ENABLE_TOKEN&&grant_wait&&request_accepted&&grant_valid_q&&grant_low&&!fault&&(MUT==12||!(abort_seen||abort_q||reset_abort_seen)))begin
     if(MUT!=10&&(!tuple_ok||!allocated_vq||allocated_dq||!allocated_match||allocated_epoch_q!=grant_epoch_q))fault<=1;
     else begin token_grant_ready<=1;grant_wait<=0;active_epoch<=grant_epoch_q;active_epoch_valid<=1;
-     hc<=active;token_epoch_valid<=MUT!=14;token_epoch<=grant_epoch_q;
+     hc<=active;local_emitted<=1;token_epoch_valid<=MUT!=14;token_epoch<=grant_epoch_q;
     end
    end
    // The central allocator owns an accepted identity even when warm readiness
@@ -171,15 +173,29 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
    end
    if(cancel_valid)cancel_drained<=drain_q;
    if(cancel_valid&&terminal_ack_q)begin cancel_valid<=0;cancel_consumed<=1;end
+   // Abort separates the retained cancel identity from real queued metadata.
+   // Recipients already sent the whole event are not sent it twice. Remaining
+   // copies and an as-yet undelivered local event retain PW/DW with START low.
+   if(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen)&&busy&&active[38]&&MUT!=12)begin
+    active[38]<=0;active_epoch_valid<=0;grant_wait<=0;
+    if(active[113]||active[181])begin
+     if(!local_emitted)begin hc<=active;hc[38]<=0;if(MUT==18)begin hc[113]<=0;hc[181]<=0;end local_emitted<=1;end
+    end else begin busy<=0;cmd_cr<=1;end
+   end
    if(load_cmd)begin
-    active<=cq[cr];busy<=1;dst<=1;cr<=cr+1'b1;
+    active<=cq[cr];active_service_epoch<=ENABLE_SERVICE?epoch:16'd0;local_emitted<=0;busy<=1;dst<=1;cr<=cr+1'b1;
     active_epoch_valid<=0;
     if(ENABLE_TOKEN&&cq[cr][38])begin
-     request_accepted<=0;cancel_consumed<=0;
-     if(cq[cr][17:13]!=0||cq[cr][35:18]>=18'd151936)fault<=1;
-     else begin grant_wait<=1;token_request_valid<=1;token_request_token<=cq[cr][35:18];
-      token_request_position<=cq[cr][17:0];token_request_generation<=cq[cr][37:36];end
-    end else begin hc<=cq[cr];grant_wait<=0;end
+     if(abort_seen||abort_q||reset_abort_seen)begin
+      active<=cq[cr]&~(182'd1<<38);hc<=cq[cr]&~(182'd1<<38);local_emitted<=1;grant_wait<=0;
+      if(!cq[cr][113]&&!cq[cr][181])begin busy<=0;cmd_cr<=1;end
+     end else begin
+      request_accepted<=0;cancel_consumed<=0;
+      if(cq[cr][17:13]!=0||cq[cr][35:18]>=18'd151936)fault<=1;
+      else begin grant_wait<=1;token_request_valid<=1;token_request_token<=cq[cr][35:18];
+       token_request_position<=cq[cr][17:0];token_request_generation<=cq[cr][37:36];end
+     end
+    end else begin hc<=cq[cr];local_emitted<=1;grant_wait<=0;end
    end
    case({cv&&!fault&&role==0&&cn<4,load_cmd})2'b10:cn<=cn+1'b1;2'b01:cn<=cn-1'b1;default:;endcase
    if(take)begin
@@ -212,8 +228,8 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
     end else if(h[7:0]==8'h22&&role!=0&&src==0&&
       ((!ENABLE_TOKEN&&h[15:8]==1&&h[511:230]==0)||
        (ENABLE_TOKEN&&((!h[86]&&h[15:8]==1&&h[511:230]==0)||
-        (h[86]&&h[15:8]==2&&h[246]&&h[511:247]==0&&h[65:61]==0&&h[83:66]<18'd151936)))))begin
-     if(ENABLE_TOKEN&&h[86]&&((abort_seen||abort_q||reset_abort_seen)||!peer_epoch_fresh))fault<=1;
+        (h[86]&&h[15:8]==2&&h[246]&&h[511:263]==0&&h[65:61]==0&&h[83:66]<18'd151936)))))begin
+     if(ENABLE_TOKEN&&h[86]&&((abort_seen||abort_q||reset_abort_seen)||!peer_epoch_fresh||!peer_service_fresh))fault<=1;
      else begin hc<=h[229:48];token_epoch_valid<=ENABLE_TOKEN&&h[246];token_epoch<=h[245:230];end
      seq_seen[src]<=1;seq_rx[src*16+:16]<=rs;
     end else fault<=1;
@@ -225,7 +241,7 @@ module qkd_host_ctrl_token_service_packet #(parameter integer DIE=0,MUT=0,STRAPP
      if(dst==7)begin begin_busy<=0;begin_cr<=1;seq_tx<=seq_tx+1'b1;end else dst<=dst+1'b1;
     end else if(role==0&&busy&&!grant_wait&&!(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen)&&active[38]))begin
      tx_v<=1;tx_d<=(ENABLE_TOKEN&&active_epoch_valid?512'h0222:512'h0122)|((512'd1<<dst)<<24)|(512'(seq_tx)<<32)|(512'(active)<<48)|
-      (ENABLE_TOKEN&&active_epoch_valid?((512'(active_epoch^(MUT==15?16'd1:16'd0))<<230)|(512'd1<<246)):512'd0);
+      (ENABLE_TOKEN&&active_epoch_valid?((512'(active_epoch^(MUT==15?16'd1:16'd0))<<230)|(512'd1<<246)|(512'(active_service_epoch)<<247)):512'd0);
      credits<=credits+8'(tc)-1'b1;
      // Each recipient sees consecutive command sequence numbers, not the
      // sequence of all seven copies. Increment once per broadcast.
