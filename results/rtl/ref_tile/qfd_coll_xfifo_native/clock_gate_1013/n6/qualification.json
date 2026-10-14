@@ -1,0 +1,11 @@
+{
+  "qualification": "NOT_SUBMITTABLE",
+  "clock_rule": "PASS4846largest",
+  "TT_boundary_spread_ps": {
+    "ck": 24.4,
+    "ckd": 26.3
+  },
+  "setup_ps": -249.5,
+  "hold_ps": -231.9,
+  "reason": "QDM primary boundary resets all IO clocks after CTS; secondary CKD boundary not reread. Cross-domain IO references incorrect; next gate explicitly reapplies unchanged secondary SDC."
+}

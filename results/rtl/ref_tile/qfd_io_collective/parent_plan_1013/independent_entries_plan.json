@@ -1,0 +1,360 @@
+{
+  "schema": "opentallas.collective_independent_entries_plan.v1",
+  "state": "NOT_SUBMITTABLE",
+  "native_params": {
+    "PKG": 0,
+    "DIE": 0,
+    "LANES": 16,
+    "TAGW": 32,
+    "DEPTH": 32,
+    "ADD_LAT": 7,
+    "PR": 2,
+    "TXK": 1,
+    "FPIPE": 2,
+    "HDLO": 0,
+    "MEMM": 1,
+    "FSL": 1,
+    "IBH": 1,
+    "WT": 1,
+    "CT": 1,
+    "ICR": 32,
+    "LBD": 64,
+    "PQD": 64,
+    "EQD": 32,
+    "LQD": 64,
+    "TQD": 32,
+    "RQD": 32,
+    "QMEM": 1
+  },
+  "parent": "wires only after actual control-leaf extraction; never a common clock tree",
+  "entries": [
+    {
+      "name": "pf0",
+      "clock_port": "ck_pf0",
+      "child_master": "ot_coll_fold_slice",
+      "rtl_instance": "g_pf[0].u_fs",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "source_reference_ps": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED corrected view preserved"
+    },
+    {
+      "name": "pf1",
+      "clock_port": "ck_pf1",
+      "child_master": "ot_coll_fold_slice",
+      "rtl_instance": "g_pf[1].u_fs",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "source_reference_ps": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED corrected view preserved"
+    },
+    {
+      "name": "pf2",
+      "clock_port": "ck_pf2",
+      "child_master": "ot_coll_fold_slice",
+      "rtl_instance": "g_pf[2].u_fs",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "source_reference_ps": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED corrected view preserved"
+    },
+    {
+      "name": "pf3",
+      "clock_port": "ck_pf3",
+      "child_master": "ot_coll_fold_slice",
+      "rtl_instance": "g_pf[3].u_fs",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "source_reference_ps": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED corrected view preserved"
+    },
+    {
+      "name": "ef0",
+      "clock_port": "ck_ef0",
+      "child_master": "ot_coll_fold_slice",
+      "rtl_instance": "u_eng.g_fsl.g_sl[0].u_fs",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "source_reference_ps": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED corrected view preserved"
+    },
+    {
+      "name": "ef1",
+      "clock_port": "ck_ef1",
+      "child_master": "ot_coll_fold_slice",
+      "rtl_instance": "u_eng.g_fsl.g_sl[1].u_fs",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "source_reference_ps": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED corrected view preserved"
+    },
+    {
+      "name": "ef2",
+      "clock_port": "ck_ef2",
+      "child_master": "ot_coll_fold_slice",
+      "rtl_instance": "u_eng.g_fsl.g_sl[2].u_fs",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "source_reference_ps": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED corrected view preserved"
+    },
+    {
+      "name": "ef3",
+      "clock_port": "ck_ef3",
+      "child_master": "ot_coll_fold_slice",
+      "rtl_instance": "u_eng.g_fsl.g_sl[3].u_fs",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "source_reference_ps": {
+        "tt": 200.4,
+        "ff": 163.3,
+        "ss": 263.1
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED corrected view preserved"
+    },
+    {
+      "name": "ec0",
+      "clock_port": "ck_ec0",
+      "child_master": "ot_coll_col_tile",
+      "rtl_instance": "u_eng.g_s0r2.g_ct.g_c[0].u_ct",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_col_tile_rt/views/ot_coll_col_tile",
+      "source_reference_ps": {
+        "tt": 205.3,
+        "ff": 168.4,
+        "ss": 268.2
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "ec1",
+      "clock_port": "ck_ec1",
+      "child_master": "ot_coll_col_tile",
+      "rtl_instance": "u_eng.g_s0r2.g_ct.g_c[1].u_ct",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_col_tile_rt/views/ot_coll_col_tile",
+      "source_reference_ps": {
+        "tt": 205.3,
+        "ff": 168.4,
+        "ss": 268.2
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "ec2",
+      "clock_port": "ck_ec2",
+      "child_master": "ot_coll_col_tile",
+      "rtl_instance": "u_eng.g_s0r2.g_ct.g_c[2].u_ct",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_col_tile_rt/views/ot_coll_col_tile",
+      "source_reference_ps": {
+        "tt": 205.3,
+        "ff": 168.4,
+        "ss": 268.2
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "ec3",
+      "clock_port": "ck_ec3",
+      "child_master": "ot_coll_col_tile",
+      "rtl_instance": "u_eng.g_s0r2.g_ct.g_c[3].u_ct",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_col_tile_rt/views/ot_coll_col_tile",
+      "source_reference_ps": {
+        "tt": 205.3,
+        "ff": 168.4,
+        "ss": 268.2
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "ec4",
+      "clock_port": "ck_ec4",
+      "child_master": "ot_coll_col_tile",
+      "rtl_instance": "u_eng.g_s0r2.g_ct.g_c[4].u_ct",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_col_tile_rt/views/ot_coll_col_tile",
+      "source_reference_ps": {
+        "tt": 205.3,
+        "ff": 168.4,
+        "ss": 268.2
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "wc0",
+      "clock_port": "ck_wc0",
+      "child_master": "ot_coll_tp8_col_tile",
+      "rtl_instance": "g_wrapper_cols.g_col[0].u_wc",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_tp8_col_cx/views/ot_coll_tp8_col_tile",
+      "source_reference_ps": {
+        "tt": 311.2,
+        "ff": 258.9,
+        "ss": 398.0
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "wc1",
+      "clock_port": "ck_wc1",
+      "child_master": "ot_coll_tp8_col_tile",
+      "rtl_instance": "g_wrapper_cols.g_col[1].u_wc",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_tp8_col_cx/views/ot_coll_tp8_col_tile",
+      "source_reference_ps": {
+        "tt": 311.2,
+        "ff": 258.9,
+        "ss": 398.0
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "wc2",
+      "clock_port": "ck_wc2",
+      "child_master": "ot_coll_tp8_col_tile",
+      "rtl_instance": "g_wrapper_cols.g_col[2].u_wc",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_tp8_col_cx/views/ot_coll_tp8_col_tile",
+      "source_reference_ps": {
+        "tt": 311.2,
+        "ff": 258.9,
+        "ss": 398.0
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "wc3",
+      "clock_port": "ck_wc3",
+      "child_master": "ot_coll_tp8_col_tile",
+      "rtl_instance": "g_wrapper_cols.g_col[3].u_wc",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_tp8_col_cx/views/ot_coll_tp8_col_tile",
+      "source_reference_ps": {
+        "tt": 311.2,
+        "ff": 258.9,
+        "ss": 398.0
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "wc4",
+      "clock_port": "ck_wc4",
+      "child_master": "ot_coll_tp8_col_tile",
+      "rtl_instance": "g_wrapper_cols.g_col[4].u_wc",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/coll_tp8_col_cx/views/ot_coll_tp8_col_tile",
+      "source_reference_ps": {
+        "tt": 311.2,
+        "ff": 258.9,
+        "ss": 398.0
+      },
+      "required_delivery": "phi minus own per-corner source_reference_ps",
+      "clock_entry_arc_rule": "ETM retains actual clock insertion; source compensation exactly once",
+      "qualification": "CLOSED source preserved; current face-timing defects in engine/wrapper remain blocked"
+    },
+    {
+      "name": "wrapper_control",
+      "clock_port": "ck_wrapper_control",
+      "mapped_control_bits_estimate": 1930,
+      "required_delivery": "phi minus fresh routed leaf reference",
+      "qualification": "PLANNED; glue RTL not yet extracted or physically qualified"
+    },
+    {
+      "name": "engine_control",
+      "clock_port": "ck_engine_control",
+      "mapped_control_bits_estimate": 706,
+      "required_delivery": "phi minus fresh routed leaf reference",
+      "qualification": "PLANNED; glue RTL not yet extracted or physically qualified"
+    }
+  ],
+  "existing_hard_child_area_lowerbound_um2": 767248.5888,
+  "existing_child_count": 18,
+  "planned_control_leaves": 2,
+  "blockers": [
+    {
+      "requirement": "native die-assigned pin file",
+      "evidence": "die lead 19:31 confirms NATIVE_COLL=False leaves stale sequencer66; native forward548 and return518",
+      "next": "die lead switches native ports and publishes assigned file; slot wrapper consumes exact pin plan"
+    },
+    {
+      "requirement": "pin-registered internal control seams",
+      "evidence": "corrected-child pinreg audit: wrapper c_pop capture residual453.5ps, input beyond boundary408.3ps; c_pop,c_push,c_hold,lq_wd affected289bits; wrapper outputs lq_hd,hv,rq_hd,eq_hd beyond boundary276.4ps for40bits; wrapper boundaryspread101.9ps",
+      "next": "structural RTL/pin-flop pipeline with native exact+mutant regression; classify actual connected paths before routing; closed child reroute only with justified RTL/die-window reason"
+    },
+    {
+      "requirement": "all children compose within parent layer contract",
+      "evidence": "fold accepted CLOSED view signals/PG M6; parent slot new capM5",
+      "next": "consume closed view_cap and explicit parent/die placement layer proof; do not wholesale reroute or alter OBS"
+    },
+    {
+      "requirement": "parent physical gate and throughput",
+      "evidence": "native WT1/CT1 exact positive 494/862/90cycles observed by throughput stream; its mutant/evidence still collecting; no physical parent route exists",
+      "next": "bind exact and mutant from throughput stream, slot_fit and CTS gate, measured layer comparison before qualification"
+    }
+  ],
+  "scope_limit": "Planning artifact only; no RTL parent, no generated job, no slot/pin/physical qualification. Each hierarchy path must be checked during actual extraction."
+}
