@@ -102,7 +102,7 @@
      "setup_rising"
     ]
    },
-   "async_reset_qualification": "OPEN; exported reset constraints carry setup_rising/hold_rising labels, no explicit recovery/removal types. Preserve raw labels; require validated export interpretation or explicit routed recovery/removal evidence.",
+   "async_reset_qualification": "Actual mapped RESETN async endpoints confirmed; explicit original CLOSED routed SS/FF recovery/removal reports cover every active endpoint with positive leaf-interface slack. Exported ETM labels remain unchanged. Production parent clock/reset delivery and per-pair reset budgets remain OPEN.",
    "raw_lookup_extrema_ps": {
     "ss": {
      "rising_edge": {
@@ -133,7 +133,24 @@
      }
     }
    },
-   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred."
+   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred.",
+   "active_mapped_async_endpoint_count": 2,
+   "routed_recovery_removal": {
+    "ss": {
+     "report": {
+      "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_die_rstsync_reset_ss.rpt",
+      "sha256": "d01b43943c4f12486d7d0bca20e1018475d0ce8e8a2894e6597030ef3c879170"
+     },
+     "worst_slack_ps": 105.8266
+    },
+    "ff": {
+     "report": {
+      "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_die_rstsync_reset_ff.rpt",
+      "sha256": "427c0989d58c97d4f2146e0583c4a6833aae1181813e90bf75646199bec72514"
+     },
+     "worst_slack_ps": 38.6637
+    }
+   }
   },
   "dsfd_hrow_r15": {
    "record_commit": "b4e5e2af3",
@@ -191,7 +208,7 @@
      "setup_rising"
     ]
    },
-   "async_reset_qualification": "OPEN; exported reset constraints carry setup_rising/hold_rising labels, no explicit recovery/removal types. Preserve raw labels; require validated export interpretation or explicit routed recovery/removal evidence.",
+   "async_reset_qualification": "Actual mapped RESETN async endpoints confirmed; explicit original CLOSED routed SS/FF recovery/removal reports cover every active endpoint with positive leaf-interface slack. Exported ETM labels remain unchanged. Production parent clock/reset delivery and per-pair reset budgets remain OPEN.",
    "raw_lookup_extrema_ps": {
     "ss": {
      "hold_rising": {
@@ -222,7 +239,24 @@
      }
     }
    },
-   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred."
+   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred.",
+   "active_mapped_async_endpoint_count": 1,
+   "routed_recovery_removal": {
+    "ss": {
+     "report": {
+      "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_hrow_r15_reset_ss.rpt",
+      "sha256": "c6c27c390ee5b48c35cbb1189de7ab0b4f16ee811c260106e0803d3936471c0b"
+     },
+     "worst_slack_ps": 87.6619
+    },
+    "ff": {
+     "report": {
+      "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_hrow_r15_reset_ff.rpt",
+      "sha256": "a7d677fd78f792c4c9fdfa8af41afd33a28eecc7caf9d63acb00ffcf45c25927"
+     },
+     "worst_slack_ps": 30.6145
+    }
+   }
   },
   "dsfd_hrow_r23": {
    "record_commit": "16f451be6",
@@ -280,7 +314,7 @@
      "setup_rising"
     ]
    },
-   "async_reset_qualification": "OPEN; exported reset constraints carry setup_rising/hold_rising labels, no explicit recovery/removal types. Preserve raw labels; require validated export interpretation or explicit routed recovery/removal evidence.",
+   "async_reset_qualification": "Actual mapped RESETN async endpoints confirmed; explicit original CLOSED routed SS/FF recovery/removal reports cover every active endpoint with positive leaf-interface slack. Exported ETM labels remain unchanged. Production parent clock/reset delivery and per-pair reset budgets remain OPEN.",
    "raw_lookup_extrema_ps": {
     "ss": {
      "hold_rising": {
@@ -311,7 +345,24 @@
      }
     }
    },
-   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred."
+   "extrema_scope": "Across all exported pin lookup entries, including load range and leaf clock boundary paths. No operating load, insertion compensation, async semantics, per-pair timing or wire budget inferred.",
+   "active_mapped_async_endpoint_count": 2,
+   "routed_recovery_removal": {
+    "ss": {
+     "report": {
+      "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_hrow_r23_reset_ss.rpt",
+      "sha256": "dd332da99652b48962d399733a35c980b0e454979beb8711b4d5c9d226fffe58"
+     },
+     "worst_slack_ps": 87.4534
+    },
+    "ff": {
+     "report": {
+      "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/dsfd_hrow_r23_reset_ff.rpt",
+      "sha256": "c6d9025ee69b3864c9f7a394f360074dd707391ff2f40c5b6d7ea0f00c13a6ed"
+     },
+     "worst_slack_ps": 30.6845
+    }
+   }
   }
  },
  "raw_timing_facts": {
@@ -333,5 +384,9 @@
   "structural_ut_extra_edges": 1,
   "full_unit_price": "PENDING actual parent measurement"
  },
- "source_binding_prerequisite": "Root must instantiate production TD and bind actual clock/reset producers before allocator delivery; native207 has no hrow instance"
+ "source_binding_prerequisite": "Root must instantiate production TD and bind actual clock/reset producers before allocator delivery; native207 has no hrow instance",
+ "actual_mapped_reset_classification": {
+  "path": "results/arch/s81_hrow_native_placement_1013/reset_classification/mapped_reset_classification.json",
+  "sha256": "d72e250776e4f962acf7f2dbb68f102179a9560ecf954f8e735d52740a1bbe78"
+ }
 }

@@ -52,8 +52,18 @@ def main():
  pairpath=OUT/'partial_final_etm_pairs.json.gz'
  with gzip.GzipFile(filename=str(pairpath),mode='wb',mtime=0) as f:f.write(json.dumps(pairs,separators=(',',':')).encode())
  status={'schema':'opentallas.native_hrow_final_relay_intake.v1','status':'PARTIAL final ETM evidence; no parent route/timing qualification','historical_placement_commit':'5281a6feb','historical_candidate':ref(P.OUT/'candidate.json'),'large_master_status':{m:'EARLY_FAIL_CONGESTION GRT0116; old129.6x129.6 CTS geometry historical; successor outline/pins pending' for m in ['dsfd_hrow_r1025','dsfd_hrow_r2079']},'final_small_masters':intake,'raw_timing_facts':ref(fp),'per_pair_partial_etm_mapping':ref(pairpath),'pair_counts':dict(counts),'actual_per_pair_rc_budget_status':'OPEN; actual producer clock/refclk ABI and delivery absent, large ETMs absent','immutable_price':{'relay_ff':18897,'reset_ff':54,'structural_ut_extra_edges':1,'full_unit_price':'PENDING actual parent measurement'},'source_binding_prerequisite':'Root must instantiate production TD and bind actual clock/reset producers before allocator delivery; native207 has no hrow instance'}
+ classification=P.OUT/'reset_classification/mapped_reset_classification.json'
+ if classification.exists():
+  mapped=json.load(open(classification));status['actual_mapped_reset_classification']=ref(classification)
+  for ma,v in intake.items():
+   actual=mapped['masters'][ma]
+   v['async_reset_qualification']='Actual mapped RESETN async endpoints confirmed; explicit original CLOSED routed SS/FF recovery/removal reports cover every active endpoint with positive leaf-interface slack. Exported ETM labels remain unchanged. Production parent clock/reset delivery and per-pair reset budgets remain OPEN.'
+   v['active_mapped_async_endpoint_count']=actual['active_resetn_endpoint_count']
+   v['routed_recovery_removal']={c:dict(report=actual['routed_recovery_removal'][c]['report'],worst_slack_ps=actual['routed_recovery_removal'][c]['worst_slack_ps']) for c in ['ss','ff']}
  write('final_relay_intake.json',status)
- packet=json.load(open(OUT/'packet.json'));packet.update(status='OPEN production source ABI; 88-instance geometry historical pending large relay successors',final_relay_intake=ref(OUT/'final_relay_intake.json'),missing_final_relay_timing_masters=['dsfd_hrow_r1025','dsfd_hrow_r2079'],rc_budget_status=status['actual_per_pair_rc_budget_status']);
+ packet=json.load(open(OUT/'packet.json'));
+ if classification.exists():packet['actual_mapped_reset_classification']=ref(classification)
+ packet.update(status='OPEN production source ABI; 88-instance geometry historical pending large relay successors',final_relay_intake=ref(OUT/'final_relay_intake.json'),missing_final_relay_timing_masters=['dsfd_hrow_r1025','dsfd_hrow_r2079'],rc_budget_status=status['actual_per_pair_rc_budget_status']);
  for ma,v in intake.items():packet['master_evidence'][ma].update(status='CLOSED final relay views; historical CTS pin geometry retained separately; parent delivery/timing OPEN',final_view_record_commit=v['record_commit'],final_lef=v['final_lef'],insertion=v['insertion'],insertion_corners=v['insertion_corners'],final_ss_lib=facts[ma]['ss']['liberty'],final_ff_lib=facts[ma]['ff']['liberty'])
  write('packet.json',packet)
  print(json.dumps({'pin_changes':{m:v['changed_pin_count'] for m,v in intake.items()},'pair_counts':dict(counts)}))
