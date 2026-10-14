@@ -27,7 +27,7 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
  wire [32*17-1:0] qrq;wire [32*281-1:0] qwq;wire [32*257-1:0] qrr;
  wire [31:0] qrc,qwc,qd,qcd,qvd,qrrdy,qwrdy,qfault;
  wire [3:0] qrg,qwg,qreqr,qreqw,qbusy,qvgr,qvgw,qrack,qwack;
- wire [3:0] smeta,qmeta,scfg_fault,qcfg_fault;wire [11:0] qret_raw;
+ wire [3:0] smeta,qmeta,scfg_fault,qcfg_fault,qquiet;wire [31:0] squiet;wire [11:0] qret_raw;
  wire [4*683-1:0] qrec_admitted;
  for(genvar z=0;z<4;z=z+1)begin:aperture
   reg sa,san,sm,smn,sf,qa,qan,qm,qmn,qf;
@@ -37,9 +37,11 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
   end
   wire svalid=|sv;
   wire sstart=su_rreq[z]||su_wreq[z]||!su_drained[z]||svalid;
-  wire qallow=!qa||quant_mirror[z]==qm;
+  wire sreleased=(&squiet[z*8+:8])&&su_rack[z]&&su_wack[z]&&!su_rgrant[z]&&!su_wgrant[z];
+  wire qreleased=qquiet[z]&&qrack[z]&&qwack[z]&&!qrg[z]&&!qwg[z];
+  wire qallow=!qa||qreleased||quant_mirror[z]==qm;
   wire qaccept=qrec_admitted[z*683]&&qret_raw[z*3];
-  assign smeta[z]=sa?sm:su_mirror[z];assign qmeta[z]=qa?qm:quant_mirror[z];
+  assign smeta[z]=sa&&!sreleased?sm:su_mirror[z];assign qmeta[z]=qa&&!qreleased?qm:quant_mirror[z];
   assign scfg_fault[z]=sf;assign qcfg_fault[z]=qf;
   assign qrec_admitted[z*683+1+:682]=quant_rec[z*683+1+:682];
   assign qrec_admitted[z*683]=quant_rec[z*683]&&qallow&&!qf;
@@ -47,22 +49,22 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
   assign quant_ret[z*3+1]=qret_raw[z*3+1];assign quant_ret[z*3+2]=qret_raw[z*3+2]|qf;
   always @(posedge su_clk[z] or negedge rst_n)if(!rst_n)begin sa<=0;san<=1;sm<=0;smn<=1;sf<=0;end
   else begin
-   if(sa!=~san||sm!=~smn||sa&&!SU_NATIVE_RAW&&su_mirror[z]!=sm)sf<=1;
-   if(!sa&&sstart)begin sa<=1;san<=0;sm<=su_mirror[z];smn<=~su_mirror[z];end
-   else if(sa&&!sstart&&su_drained[z]&&(&su_cdrained[z*8+:8])&&su_rack[z]&&su_wack[z]&&!su_rgrant[z]&&!su_wgrant[z])begin sa<=0;san<=1;end
+   if(sa!=~san||sm!=~smn||sa&&!sreleased&&!SU_NATIVE_RAW&&su_mirror[z]!=sm)sf<=1;
+   if((!sa||sreleased)&&sstart)begin sa<=1;san<=0;sm<=su_mirror[z];smn<=~su_mirror[z];end
+   else if(sa&&sreleased&&!sstart)begin sa<=0;san<=1;end
   end
   always @(posedge quant_clk[z] or negedge rst_n)if(!rst_n)begin qa<=0;qan<=1;qm<=0;qmn<=1;qf<=0;end
   else begin
-   if(qa!=~qan||qm!=~qmn||qa&&quant_mirror[z]!=qm)qf<=1;
-   if(!qa&&qaccept)begin qa<=1;qan<=0;qm<=quant_mirror[z];qmn<=~quant_mirror[z];end
-   else if(qa&&quant_drained[z]&&qrack[z]&&qwack[z]&&!qrg[z]&&!qwg[z]&&!qaccept)begin qa<=0;qan<=1;end
+   if(qa!=~qan||qm!=~qmn||qa&&!qreleased&&quant_mirror[z]!=qm)qf<=1;
+   if((!qa||qreleased)&&qaccept)begin qa<=1;qan<=0;qm<=quant_mirror[z];qmn<=~quant_mirror[z];end
+   else if(qa&&qreleased&&!qaccept)begin qa<=0;qan<=1;end
   end
  end
  ot_hgi_qdq_native_peer4_owned #(.MUT_QDQ(MUT==2?1:0),.FASTFIN(FASTFIN),.FRONTFAST(FRONTFAST)) quant(
   .cclk(quant_clk),.vclk(vclk),.rst_n(rst_n),.permit(qrg|qwg),.mirror(qmeta),.rec(qrec_admitted),.ret(qret_raw),
   .rg_req(qreqr),.wg_req(qreqw),.rg_gnt(qrg),.wg_gnt(qwg),.vm_rg_gnt(qvgr),.vm_wg_gnt(qvgw),
   .peer_rq(qrq),.peer_rq_credit(qrc),.peer_rr(qrr),.peer_wq(qwq),.peer_wq_credit(qwc),.peer_wq_done(qd),
-  .adapter_fault(qfault),.cdrained(qcd),.vdrained(qvd),.rready(qrrdy),.wready(qwrdy),.qdrained(quant_drained),.qbusy(qbusy));
+  .adapter_fault(qfault),.cdrained(qcd),.vdrained(qvd),.rready(qrrdy),.wready(qwrdy),.qdrained(quant_drained),.qbusy(qbusy),.qquiescent(qquiet));
  wire [32*17-1:0] brq;wire [32*281-1:0] bwq;wire [32*257-1:0] brr;wire [31:0] brc,bwc,bd,local_bd,vf;wire [7:0] mirror_busy;wire [31:0] mirror_fault;
  for(genvar q=0;q<4;q=q+1)begin:quad
   wire [3*8*17-1:0] srq;wire [3*8*281-1:0] swq;wire [3*8*257-1:0] srr;
@@ -82,7 +84,7 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
     .crq(SU_NATIVE_RAW?su_native_rq[(q*8+b)*17+:17]:{r[15],smeta[q],smeta[q]?2'b00:2'(q),r[12:0]}),.crq_credit(su_rcredit[q*8+b]),.crr(su_rr[(q*8+b)*257+:257]),
     .cwq(SU_NATIVE_RAW?su_native_wq[(q*8+b)*281+:281]:{w[279],smeta[q],smeta[q]?2'b00:2'(q),w[276:264],w[263:0]}),.cwq_credit(su_wcredit[q*8+b]),.cwq_done(su_done[q*8+b]),
     .vrq(srq[b*17+:17]),.vrq_credit(src[b]),.vrr(srr[b*257+:257]),.vwq(swq[b*281+:281]),.vwq_credit(swc[b]),.vwq_done(sd[b]),
-    .fault(lf),.cdrained(cd[b]),.vdrained(vd[b]),.rready(rrdy[b]),.wready(wrdy[b]));
+    .fault(lf),.cdrained(cd[b]),.vdrained(vd[b]),.rready(rrdy[b]),.wready(wrdy[b]),.cquiescent(squiet[q*8+b]));
    assign fault[q*8+b]=lf|af|scfg_fault[q];assign su_cdrained[q*8+b]=cd[b];assign su_vdrained[q*8+b]=vd[b];
    ot_hbm_b2_lane_cdc_owned dlink(.cclk(dma_clk[q]),.vclk(vclk),.rst_n(rst_n),.permit(rg[2]|wg[2]),.vrpermit(vrg[2]),.vwpermit(vwg[2]),
     .crq(dma_rq[(q*8+b)*17+:17]),.crq_credit(dma_rcredit[q*8+b]),.crr(dma_rr[(q*8+b)*257+:257]),

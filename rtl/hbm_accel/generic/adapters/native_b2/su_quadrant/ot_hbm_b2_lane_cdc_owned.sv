@@ -12,7 +12,7 @@ module ot_hbm_b2_lane_cdc_owned #(parameter integer LQ=10, MAX_PENDING=80, MUT=0
  input wire [280:0] cwq,output reg cwq_credit,cwq_done,
  output reg [16:0] vrq,input wire vrq_credit,input wire [256:0] vrr,
  output reg [280:0] vwq,input wire vwq_credit,vwq_done,
- output wire fault,output wire cdrained,vdrained,rready,wready
+ output wire fault,output wire cdrained,vdrained,rready,wready,cquiescent
 );
  wire rf,wf,rdempty,wdempty,retempty,crempty,wcempt,wdempt;
  wire [15:0] rqdata;wire [279:0] wqdata;wire [255:0] rrdata;
@@ -68,8 +68,9 @@ module ot_hbm_b2_lane_cdc_owned #(parameter integer LQ=10, MAX_PENDING=80, MUT=0
   wcred<=nwcred[CB-1:0];wcred_n<=~nwcred[CB-1:0];
   wcommit<=nwcommit[CB-1:0];wcommit_n<=~nwcommit[CB-1:0];
  end
- assign cdrained=(MUT==2)?1'b1:!df&&!cf&&!(|faults)&&rresp==~rresp_n&&rcred==~rcred_n&&wcred==~wcred_n&&wcommit==~wcommit_n&&rresp==0&&rcred==0&&wcred==0&&wcommit==0&&
-  !crq[16]&&!cwq[280]&&!crr[256]&&!crq_credit&&!cwq_credit&&!cwq_done;
+ assign cquiescent=!df&&!cf&&!(|faults)&&rresp==~rresp_n&&rcred==~rcred_n&&wcred==~wcred_n&&wcommit==~wcommit_n&&rresp==0&&rcred==0&&wcred==0&&wcommit==0&&
+  !crr[256]&&!crq_credit&&!cwq_credit&&!cwq_done;
+ assign cdrained=(MUT==2)?1'b1:cquiescent&&!crq[16]&&!cwq[280];
  // This VM-local predicate must be combined with the synchronized source predicate
  // by the held-owner lease. It cannot by itself prove returned queues consumed.
  assign vdrained=rready&&wready&&!pf&&!vf&&!(|faults)&&rcredit==~rcredit_n&&wcredit==~wcredit_n&&rdempty&&wdempty&&rcredit==LQ&&wcredit==LQ&&

@@ -20,13 +20,13 @@ module ot_hgi_qdq_native_peer4_owned #(parameter integer MUT_QDQ=0, MUT_CDC=0, F
  input wire [31:0] peer_wq_credit, peer_wq_done,
  output wire [31:0] adapter_fault,
  output wire [31:0] cdrained, vdrained,rready,wready,
- output wire [3:0] qdrained,qbusy
+ output wire [3:0] qdrained,qbusy,qquiescent
 );
  for(genvar q=0;q<4;q=q+1)begin:quad
   wire [8*16-1:0] rq;
   wire [8*280-1:0] wq;
   wire [8*257-1:0] rr;
-  wire [7:0] rq_credit,wq_credit,wq_done;
+  wire [7:0] rq_credit,wq_credit,wq_done,cquiet;
   reg [5:0] rec_pending,rec_pending_n;reg ledger_fault;
   wire accepted=rec[q*683]&&ret[q*3];
   wire [6:0] next_pending={1'b0,rec_pending}+accepted-ret[q*3+1];
@@ -37,6 +37,7 @@ module ot_hgi_qdq_native_peer4_owned #(parameter integer MUT_QDQ=0, MUT_CDC=0, F
     rec_pending<=next_pending[5:0];rec_pending_n<=~next_pending[5:0];
    end
   assign qbusy[q]=rec_pending!=0||accepted||ret[q*3+1]||rg_req[q]||wg_req[q];
+  assign qquiescent[q]=!(|adapter_fault[q*8+:8])&&(&cquiet)&&!ledger_fault&&rec_pending==0&&rec_pending==~rec_pending_n&&!ret[q*3+1]&&!rg_req[q]&&!wg_req[q];
   assign qdrained[q]=!(|adapter_fault[q*8+:8])&&(&cdrained[q*8+:8])&&!ledger_fault&&rec_pending==0&&rec_pending==~rec_pending_n&&!accepted&&!ret[q*3+1]&&!rg_req[q]&&!wg_req[q];
   // qpin4 preserves the actual q8 LQ10 credit counts and LD16 storage.
   // Record format, descriptor/shape validation and fault retirement stay in FR.
@@ -75,7 +76,7 @@ module ot_hgi_qdq_native_peer4_owned #(parameter integer MUT_QDQ=0, MUT_CDC=0, F
     .vrq(peer_rq[(q*8+b)*17+:17]),.vrq_credit(peer_rq_credit[q*8+b]),
     .vrr(peer_rr[(q*8+b)*257+:257]),
     .vwq(peer_wq[(q*8+b)*281+:281]),.vwq_credit(peer_wq_credit[q*8+b]),
-    .vwq_done(peer_wq_done[q*8+b]),.fault(cdc_fault),.cdrained(cdrained[q*8+b]),.vdrained(vdrained[q*8+b]),.rready(rready[q*8+b]),.wready(wready[q*8+b]));
+    .vwq_done(peer_wq_done[q*8+b]),.fault(cdc_fault),.cdrained(cdrained[q*8+b]),.vdrained(vdrained[q*8+b]),.rready(rready[q*8+b]),.wready(wready[q*8+b]),.cquiescent(cquiet[b]));
    assign adapter_fault[q*8+b]=aperture_fault|cdc_fault|ledger_fault;
   end
  end
