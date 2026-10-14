@@ -1,0 +1,58 @@
+{
+  "source": "625507b68",
+  "scope": "Unselected WQ3 alternative. All three views CLOSED TT/FF/DRC; actual P190/Q220 inspection still rejects this composition. Preserve views; repair real state/control placement rather than adopt slot.",
+  "defects": {
+    "ot_hgi_qw_ovg": {
+      "flags": [
+        "out_unreg",
+        "in_unreg"
+      ],
+      "buses": {
+        "x_v": {
+          "p_lb_ps": null,
+          "q_lb_ps": 243.7,
+          "in_unreg_bits": null,
+          "out_unreg_bits": 1
+        },
+        "c_gh": {
+          "p_lb_ps": 194.2,
+          "q_lb_ps": null,
+          "in_unreg_bits": 7,
+          "out_unreg_bits": null
+        }
+      }
+    },
+    "ot_hgi_qw_ovr": {
+      "flags": [
+        "out_unreg"
+      ],
+      "buses": {
+        "row_rst_n": {
+          "p_lb_ps": null,
+          "q_lb_ps": 382.8,
+          "in_unreg_bits": null,
+          "out_unreg_bits": 1
+        }
+      }
+    },
+    "ot_hgi_qw_ovmeta": {
+      "flags": [
+        "in_unreg"
+      ],
+      "buses": {
+        "i_n": {
+          "p_lb_ps": 201.4,
+          "q_lb_ps": null,
+          "in_unreg_bits": 3,
+          "out_unreg_bits": null
+        },
+        "i_sec": {
+          "p_lb_ps": 228.7,
+          "q_lb_ps": null,
+          "in_unreg_bits": 14,
+          "out_unreg_bits": null
+        }
+      }
+    }
+  }
+}
