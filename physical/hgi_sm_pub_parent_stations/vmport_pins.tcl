@@ -1,7 +1,7 @@
 # Exact production station pins; M4 E/W, M5 N/S, coordinates on the native tracks.
 place_pin -pin_name {clk} -layer M5 -location {8.652 0.000}
 place_pin -pin_name {rn} -layer M5 -location {10.812 0.000}
-place_pin -pin_name {n_v} -layer M4 -location {43.200 14.412}
+place_pin -pin_name {n_v} -layer M5 -location {43.200 14.412}
 place_pin -pin_name {ack_q} -layer M4 -location {43.200 68.268}
 place_pin -pin_name {n_p[0]} -layer M4 -location {43.200 29.868}
 place_pin -pin_name {n_p[1]} -layer M4 -location {43.200 29.964}
