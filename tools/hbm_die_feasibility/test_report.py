@@ -59,6 +59,8 @@ class GeometryTests(unittest.TestCase):
         self.assertAlmostEqual(d['right_control_column_to_left_mapper_face_lower_bound_um'],1641.6)
         self.assertIsNone(d['actual_RC_delay_ps']);self.assertIsNone(d['actual_launch_capture_window_ps'])
         self.assertFalse(d['qualified']);self.assertFalse(d['new_mapper_physical_pins_bound'])
+        self.assertEqual(d['remaining_controller_declared_post_S_FF_upper'],2674)
+        self.assertFalse(d['trial_includes_remaining_controller_master']);self.assertIsNone(d['remaining_controller_total_FF_count'])
 
     def test_actual_clock_probe_retains_negative_paths_and_offset_conservation(self):
         import gzip

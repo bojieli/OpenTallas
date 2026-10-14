@@ -16,5 +16,32 @@
   "actual_launch_capture_window_ps": null,
   "new_mapper_physical_pins_bound": false,
   "assumption": "Each corresponding input uses identical local coordinates on sixteen identically oriented requested mapper masters. This is a trial geometry condition; new mapper physical views and actual remaining E1/E2 launch pins are unbound.",
-  "required_next_action": "Bind exact E1/E2 source endpoints and actual mapper views; compare every dynamic bit to actual corner timing windows; derive coherent registered distribution if required without assuming extra edge acceptance."
+  "required_next_action": "Bind exact E1/E2 source endpoints and actual mapper views; compare every dynamic bit to actual corner timing windows; derive coherent registered distribution if required without assuming extra edge acceptance.",
+  "remaining_controller_census_revision": "528a4990f",
+  "remaining_controller_census_sha256": "08909cbb2ece7497883eef7c357dcf812cce3e0810107df080de66c437a64608",
+  "remaining_controller_source_sha256_verified": "3fc0bb819d323aee35281e2f24c8d54e5c99ad4e415130ecd3079f170b5dbe61",
+  "remaining_controller_declared_post_S_FF_upper": 2674,
+  "remaining_controller_total_FF_count": null,
+  "remaining_controller_total_count_scope": "All u_ce/u_co/u_cr/u_vsl still on original clk. Not separated/hardened or measured; total remaining-controller root also includes genuine setup/broadcast/M1/AD/credit loops not covered by2674 count.",
+  "trial_includes_remaining_controller_master": false,
+  "full_quarter_fit_proven": false,
+  "mixed_stage_broadcast_source_statement": "cws is135 live-field logical result with55 reconstruction zeros;1022dynamic mapper ingress is the full mixed-stage grid bus, not all fromcws. Grid source concatenates rawbroadcast, cwx/cwp/cwm/cwa/cwi/cws/cwe/cwo uniformly before existing4 mapper edges.",
+  "unregistered_E1_source_field_bits": 38,
+  "remaining_controller_physical_pins_bound": false,
+  "C2_terminal_boundary_R_ps": {
+    "75lo": 486.5,
+    "75hi": 441.8,
+    "60lo": 512.8,
+    "60hi": 547.1
+  },
+  "C3_live_handles_last_reported": {
+    "source": "a06bd8569",
+    "live_sessions": {
+      "75lo": 89890,
+      "75hi": 59615,
+      "60lo": 54174,
+      "60hi": 80433
+    },
+    "scope": "reset-safe unreset snapshot candidate, immutable cap0 CTS gates; no native clock/PG/shape/grant selection"
+  }
 }
