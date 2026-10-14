@@ -141,7 +141,11 @@ proc ot_ce_clock_wire {pin clock} {
           [lindex $tag 3] ne $clock_name || [lindex $tag 4] ne "^" ||
           [string first "(clock prop)" $tag] < 0} continue
       set arrival [sta::time_sta_ui [$path arrival]]
-      if {[ot_ce_finite $arrival]} { lappend values $arrival }
+      if {![ot_ce_finite $arrival]} {
+        $paths finish
+        error "OT_ENTRIES: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+      }
+      lappend values $arrival
     }
     $paths finish
   }
