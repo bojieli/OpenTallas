@@ -14,8 +14,8 @@
   "reach_rule_um": 500,
   "valid": true,
   "worst_hop": {
-    "name": "lane15->nb1_15",
-    "um": 438.6
+    "name": "lane0->stk0",
+    "um": 470.754
   },
   "overlaps": [],
   "outside": [],
@@ -66,13 +66,13 @@
       ],
       "stin": [
         869.4,
-        167.4,
+        189.0,
         32.4,
         43.2
       ],
       "stk": [
         696.6,
-        340.2,
+        297.0,
         32.4,
         21.6
       ],
@@ -97,25 +97,25 @@
       ],
       "stin": [
         869.4,
-        70.2,
+        91.8,
         32.4,
         43.2
       ],
       "stk": [
         696.6,
-        313.2,
+        189.0,
         32.4,
         21.6
       ],
       "nb1": [
-        923.4,
-        340.2,
+        869.4,
+        253.8,
         32.4,
         10.8
       ],
       "nb2": [
-        961.2,
-        340.2,
+        869.4,
+        156.6,
         32.4,
         10.8
       ]
@@ -133,14 +133,14 @@
         43.2
       ],
       "stk": [
-        696.6,
-        81.0,
+        626.4,
+        91.8,
         32.4,
         21.6
       ],
       "nb1": [
         999.0,
-        27.0,
+        21.6,
         32.4,
         10.8
       ],
@@ -159,13 +159,13 @@
       ],
       "stin": [
         696.6,
-        205.2,
+        216.0,
         32.4,
         43.2
       ],
       "stk": [
         523.8,
-        405.0,
+        394.2,
         32.4,
         21.6
       ],
@@ -189,25 +189,25 @@
         205.2
       ],
       "stin": [
-        685.8,
-        108.0,
+        691.2,
+        124.2,
         32.4,
         43.2
       ],
       "stk": [
-        648.0,
-        151.2,
+        653.4,
+        162.0,
         32.4,
         21.6
       ],
       "nb1": [
         869.4,
-        216.0,
+        172.8,
         32.4,
         10.8
       ],
       "nb2": [
-        977.4,
+        982.8,
         189.0,
         32.4,
         10.8
@@ -220,14 +220,14 @@
         54.0
       ],
       "stin": [
-        642.6,
+        664.2,
         54.0,
         32.4,
         43.2
       ],
       "stk": [
-        631.8,
-        102.6,
+        621.0,
+        118.8,
         32.4,
         21.6
       ],
@@ -251,20 +251,20 @@
         356.4
       ],
       "stin": [
-        556.2,
+        545.4,
         156.6,
         32.4,
         43.2
       ],
       "stk": [
-        664.2,
-        178.2,
+        523.8,
+        291.6,
         32.4,
         21.6
       ],
       "nb1": [
         696.6,
-        280.8,
+        275.4,
         32.4,
         10.8
       ],
@@ -283,24 +283,24 @@
       ],
       "stin": [
         545.4,
-        102.6,
+        108.0,
         32.4,
         43.2
       ],
       "stk": [
-        604.8,
-        162.0,
+        588.6,
+        151.2,
         32.4,
         21.6
       ],
       "nb1": [
-        750.6,
+        756.0,
         189.0,
         32.4,
         10.8
       ],
       "nb2": [
-        939.6,
+        945.0,
         189.0,
         32.4,
         10.8
@@ -313,19 +313,19 @@
         356.4
       ],
       "stin": [
-        415.8,
+        378.0,
         156.6,
         32.4,
         43.2
       ],
       "stk": [
         523.8,
-        248.4,
+        226.8,
         32.4,
         21.6
       ],
       "nb1": [
-        648.0,
+        653.4,
         340.2,
         32.4,
         10.8
@@ -344,26 +344,26 @@
         205.2
       ],
       "stin": [
-        453.6,
+        459.0,
         156.6,
         32.4,
         43.2
       ],
       "stk": [
         502.2,
-        162.0,
+        156.6,
         32.4,
         21.6
       ],
       "nb1": [
-        696.6,
-        297.0,
+        648.0,
+        189.0,
         32.4,
         10.8
       ],
       "nb2": [
-        869.4,
-        253.8,
+        907.2,
+        189.0,
         32.4,
         10.8
       ]
@@ -376,18 +376,18 @@
       ],
       "stin": [
         351.0,
-        221.4,
+        253.8,
         32.4,
         43.2
       ],
       "stk": [
         351.0,
-        270.0,
+        226.8,
         32.4,
         21.6
       ],
       "nb1": [
-        529.2,
+        534.6,
         340.2,
         32.4,
         10.8
@@ -406,19 +406,19 @@
         205.2
       ],
       "stin": [
-        351.0,
-        167.4,
+        178.2,
+        48.6,
         32.4,
         43.2
       ],
       "stk": [
         351.0,
-        140.4,
+        129.6,
         32.4,
         21.6
       ],
       "nb1": [
-        513.0,
+        507.6,
         189.0,
         32.4,
         10.8
@@ -443,20 +443,20 @@
         43.2
       ],
       "stk": [
-        351.0,
-        313.2,
+        583.2,
+        102.6,
         32.4,
         21.6
       ],
       "nb1": [
         583.2,
-        135.0,
+        129.6,
         32.4,
         10.8
       ],
       "nb2": [
         869.4,
-        151.2,
+        140.4,
         32.4,
         10.8
       ]
@@ -469,13 +469,13 @@
       ],
       "stin": [
         178.2,
-        194.4,
+        232.2,
         32.4,
         43.2
       ],
       "stk": [
-        351.0,
-        367.2,
+        178.2,
+        151.2,
         32.4,
         21.6
       ],
@@ -500,25 +500,25 @@
       ],
       "stin": [
         178.2,
-        140.4,
+        178.2,
         32.4,
         43.2
       ],
       "stk": [
-        178.2,
-        113.4,
+        351.0,
+        302.4,
         32.4,
         21.6
       ],
       "nb1": [
-        351.0,
-        297.0,
+        421.2,
+        189.0,
         32.4,
         10.8
       ],
       "nb2": [
-        696.6,
-        264.6,
+        793.8,
+        189.0,
         32.4,
         10.8
       ]
@@ -530,7 +530,7 @@
         54.0
       ],
       "stin": [
-        108.0,
+        75.6,
         5.4,
         32.4,
         43.2
@@ -542,14 +542,14 @@
         21.6
       ],
       "nb1": [
-        583.2,
-        118.8,
+        421.2,
+        172.8,
         32.4,
         10.8
       ],
       "nb2": [
-        788.4,
-        189.0,
+        696.6,
+        324.0,
         32.4,
         10.8
       ]
@@ -576,13 +576,13 @@
     ],
     "stin13": [
       178.2,
-      194.4,
+      232.2,
       32.4,
       43.2
     ],
     "stk13": [
-      351.0,
-      367.2,
+      178.2,
+      151.2,
       32.4,
       21.6
     ],
@@ -606,18 +606,18 @@
     ],
     "stin10": [
       351.0,
-      221.4,
+      253.8,
       32.4,
       43.2
     ],
     "stk10": [
       351.0,
-      270.0,
+      226.8,
       32.4,
       21.6
     ],
     "nb1_10": [
-      529.2,
+      534.6,
       340.2,
       32.4,
       10.8
@@ -635,19 +635,19 @@
       129.6
     ],
     "stin8": [
-      415.8,
+      378.0,
       156.6,
       32.4,
       43.2
     ],
     "stk8": [
       523.8,
-      248.4,
+      226.8,
       32.4,
       21.6
     ],
     "nb1_8": [
-      648.0,
+      653.4,
       340.2,
       32.4,
       10.8
@@ -665,20 +665,20 @@
       129.6
     ],
     "stin6": [
-      556.2,
+      545.4,
       156.6,
       32.4,
       43.2
     ],
     "stk6": [
-      664.2,
-      178.2,
+      523.8,
+      291.6,
       32.4,
       21.6
     ],
     "nb1_6": [
       696.6,
-      280.8,
+      275.4,
       32.4,
       10.8
     ],
@@ -696,13 +696,13 @@
     ],
     "stin3": [
       696.6,
-      205.2,
+      216.0,
       32.4,
       43.2
     ],
     "stk3": [
       523.8,
-      405.0,
+      394.2,
       32.4,
       21.6
     ],
@@ -726,13 +726,13 @@
     ],
     "stin0": [
       869.4,
-      167.4,
+      189.0,
       32.4,
       43.2
     ],
     "stk0": [
       696.6,
-      340.2,
+      297.0,
       32.4,
       21.6
     ],
@@ -756,25 +756,25 @@
     ],
     "stin14": [
       178.2,
-      140.4,
+      178.2,
       32.4,
       43.2
     ],
     "stk14": [
-      178.2,
-      113.4,
+      351.0,
+      302.4,
       32.4,
       21.6
     ],
     "nb1_14": [
-      351.0,
-      297.0,
+      421.2,
+      189.0,
       32.4,
       10.8
     ],
     "nb2_14": [
-      696.6,
-      264.6,
+      793.8,
+      189.0,
       32.4,
       10.8
     ],
@@ -785,19 +785,19 @@
       129.6
     ],
     "stin11": [
-      351.0,
-      167.4,
+      178.2,
+      48.6,
       32.4,
       43.2
     ],
     "stk11": [
       351.0,
-      140.4,
+      129.6,
       32.4,
       21.6
     ],
     "nb1_11": [
-      513.0,
+      507.6,
       189.0,
       32.4,
       10.8
@@ -815,26 +815,26 @@
       129.6
     ],
     "stin9": [
-      453.6,
+      459.0,
       156.6,
       32.4,
       43.2
     ],
     "stk9": [
       502.2,
-      162.0,
+      156.6,
       32.4,
       21.6
     ],
     "nb1_9": [
-      696.6,
-      297.0,
+      648.0,
+      189.0,
       32.4,
       10.8
     ],
     "nb2_9": [
-      869.4,
-      253.8,
+      907.2,
+      189.0,
       32.4,
       10.8
     ],
@@ -846,24 +846,24 @@
     ],
     "stin7": [
       545.4,
-      102.6,
+      108.0,
       32.4,
       43.2
     ],
     "stk7": [
-      604.8,
-      162.0,
+      588.6,
+      151.2,
       32.4,
       21.6
     ],
     "nb1_7": [
-      750.6,
+      756.0,
       189.0,
       32.4,
       10.8
     ],
     "nb2_7": [
-      939.6,
+      945.0,
       189.0,
       32.4,
       10.8
@@ -875,25 +875,25 @@
       129.6
     ],
     "stin4": [
-      685.8,
-      108.0,
+      691.2,
+      124.2,
       32.4,
       43.2
     ],
     "stk4": [
-      648.0,
-      151.2,
+      653.4,
+      162.0,
       32.4,
       21.6
     ],
     "nb1_4": [
       869.4,
-      216.0,
+      172.8,
       32.4,
       10.8
     ],
     "nb2_4": [
-      977.4,
+      982.8,
       189.0,
       32.4,
       10.8
@@ -906,25 +906,25 @@
     ],
     "stin1": [
       869.4,
-      70.2,
+      91.8,
       32.4,
       43.2
     ],
     "stk1": [
       696.6,
-      313.2,
+      189.0,
       32.4,
       21.6
     ],
     "nb1_1": [
-      923.4,
-      340.2,
+      869.4,
+      253.8,
       32.4,
       10.8
     ],
     "nb2_1": [
-      961.2,
-      340.2,
+      869.4,
+      156.6,
       32.4,
       10.8
     ],
@@ -935,7 +935,7 @@
       129.6
     ],
     "stin15": [
-      108.0,
+      75.6,
       5.4,
       32.4,
       43.2
@@ -947,14 +947,14 @@
       21.6
     ],
     "nb1_15": [
-      583.2,
-      118.8,
+      421.2,
+      172.8,
       32.4,
       10.8
     ],
     "nb2_15": [
-      788.4,
-      189.0,
+      696.6,
+      324.0,
       32.4,
       10.8
     ],
@@ -971,20 +971,20 @@
       43.2
     ],
     "stk12": [
-      351.0,
-      313.2,
+      583.2,
+      102.6,
       32.4,
       21.6
     ],
     "nb1_12": [
       583.2,
-      135.0,
+      129.6,
       32.4,
       10.8
     ],
     "nb2_12": [
       869.4,
-      151.2,
+      140.4,
       32.4,
       10.8
     ],
@@ -995,14 +995,14 @@
       129.6
     ],
     "stin5": [
-      642.6,
+      664.2,
       54.0,
       32.4,
       43.2
     ],
     "stk5": [
-      631.8,
-      102.6,
+      621.0,
+      118.8,
       32.4,
       21.6
     ],
@@ -1031,14 +1031,14 @@
       43.2
     ],
     "stk2": [
-      696.6,
-      81.0,
+      626.4,
+      91.8,
       32.4,
       21.6
     ],
     "nb1_2": [
       999.0,
-      27.0,
+      21.6,
       32.4,
       10.8
     ],
@@ -1066,13 +1066,21 @@
       "child": "ktree",
       "rtl_clock": "ck_kt",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        388.842,
+        126.156
+      ]
     },
     {
       "child": "score",
       "rtl_clock": "ck_score",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        572.268,
+        54.042
+      ]
     },
     {
       "child": "stin13",
@@ -1102,7 +1110,11 @@
       "child": "lane13",
       "rtl_clock": "ck_lane[13]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        43.242,
+        423.852
+      ]
     },
     {
       "child": "stin10",
@@ -1132,7 +1144,11 @@
       "child": "lane10",
       "rtl_clock": "ck_lane[10]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        216.042,
+        423.852
+      ]
     },
     {
       "child": "stin8",
@@ -1162,7 +1178,11 @@
       "child": "lane8",
       "rtl_clock": "ck_lane[8]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        388.842,
+        423.852
+      ]
     },
     {
       "child": "stin6",
@@ -1192,7 +1212,11 @@
       "child": "lane6",
       "rtl_clock": "ck_lane[6]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        561.642,
+        423.852
+      ]
     },
     {
       "child": "stin3",
@@ -1222,7 +1246,11 @@
       "child": "lane3",
       "rtl_clock": "ck_lane[3]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        734.442,
+        423.852
+      ]
     },
     {
       "child": "stin0",
@@ -1252,7 +1280,11 @@
       "child": "lane0",
       "rtl_clock": "ck_lane[0]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        907.242,
+        423.852
+      ]
     },
     {
       "child": "stin14",
@@ -1282,7 +1314,11 @@
       "child": "lane14",
       "rtl_clock": "ck_lane[14]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        43.242,
+        272.652
+      ]
     },
     {
       "child": "stin11",
@@ -1312,7 +1348,11 @@
       "child": "lane11",
       "rtl_clock": "ck_lane[11]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        216.042,
+        272.652
+      ]
     },
     {
       "child": "stin9",
@@ -1342,7 +1382,11 @@
       "child": "lane9",
       "rtl_clock": "ck_lane[9]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        388.842,
+        272.652
+      ]
     },
     {
       "child": "stin7",
@@ -1372,7 +1416,11 @@
       "child": "lane7",
       "rtl_clock": "ck_lane[7]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        561.642,
+        272.652
+      ]
     },
     {
       "child": "stin4",
@@ -1402,7 +1450,11 @@
       "child": "lane4",
       "rtl_clock": "ck_lane[4]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        734.442,
+        272.652
+      ]
     },
     {
       "child": "stin1",
@@ -1432,7 +1484,11 @@
       "child": "lane1",
       "rtl_clock": "ck_lane[1]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        907.242,
+        272.652
+      ]
     },
     {
       "child": "stin15",
@@ -1462,7 +1518,11 @@
       "child": "lane15",
       "rtl_clock": "ck_lane[15]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        43.242,
+        121.452
+      ]
     },
     {
       "child": "stin12",
@@ -1492,7 +1552,11 @@
       "child": "lane12",
       "rtl_clock": "ck_lane[12]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        216.042,
+        121.452
+      ]
     },
     {
       "child": "stin5",
@@ -1522,7 +1586,11 @@
       "child": "lane5",
       "rtl_clock": "ck_lane[5]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        734.442,
+        121.452
+      ]
     },
     {
       "child": "stin2",
@@ -1552,7 +1620,11 @@
       "child": "lane2",
       "rtl_clock": "ck_lane[2]",
       "child_clock_pin": "clk",
-      "clock_pin_assignment": "actual leaf pin required at hardening"
+      "clock_pin_assignment": "exported closed-view pin",
+      "slot_xy_um": [
+        907.242,
+        121.452
+      ]
     }
   ],
   "parent_data_pin_assignments": {
@@ -1567,10 +1639,10 @@
       ]
     },
     "front_pack_fault_N": [
-      550.8,
+      573.42,
       37.8
     ],
-    "score_output_S": [
+    "parent_score_output_S": [
       [
         706.092,
         0.0
@@ -1579,29 +1651,48 @@
         709.26,
         0.0
       ]
-    ]
+    ],
+    "closed_score_outputs_face": "E"
   },
   "reset_rule": "preserve the RTL reset topology; assign the external asynchronous reset distribution and measure recovery/removal and native reset paths before physical qualification",
+  "closed_pin_sources": {
+    "lane": {
+      "path": "/srv/opentallas-scratch/codex/head-plan-r3-1014-pm/closed-pins/ot_qkh_lane8.lef",
+      "sha256": "2cd38b6f4ffba2b51429d7c9290ba81573d84c2ca21153eb06fafbbbd592982f"
+    },
+    "ktree": {
+      "path": "/srv/opentallas-scratch/codex/head-plan-r3-1014-pm/closed-pins/ot_qkh_ktree.lef",
+      "sha256": "a2a3dd4b53d162a79640fa8b659a94fefe46064e7772dff3aa2b94ef03094e43"
+    },
+    "score": {
+      "path": "/srv/opentallas-scratch/codex/head-plan-r3-1014-pm/closed-pins/ot_qkh_head_score_native.lef",
+      "sha256": "f5e38a151e88ff1cc8bbcf06d07facfd1ad9bf48d287ee056db955287fe10272"
+    }
+  },
   "hops": [
     {
       "name": "front->stin13",
-      "um": 326.7
+      "um": 364.5
     },
     {
       "name": "stin13->lane13",
-      "um": 328.7
+      "um": 290.91
+    },
+    {
+      "name": "stin13.reset->lane13",
+      "um": 359.106
     },
     {
       "name": "lane13->stk13",
-      "um": 271.2
+      "um": 314.238
     },
     {
       "name": "stk13->ktree",
-      "um": 275.14
+      "um": 311.694
     },
     {
       "name": "lane13->nb1_13",
-      "um": 346.8
+      "um": 343.566
     },
     {
       "name": "nb1_13->nb2_13",
@@ -1613,27 +1704,31 @@
     },
     {
       "name": "front->stin10",
-      "um": 302.4
+      "um": 334.8
     },
     {
       "name": "stin10->lane10",
-      "um": 301.7
+      "um": 269.31
+    },
+    {
+      "name": "stin10.reset->lane10",
+      "um": 337.506
     },
     {
       "name": "lane10->stk10",
-      "um": 195.6
+      "um": 238.638
     },
     {
       "name": "stk10->ktree",
-      "um": 197.14
+      "um": 214.206
     },
     {
       "name": "lane10->nb1_10",
-      "um": 292.8
+      "um": 294.966
     },
     {
       "name": "nb1_10->nb2_10",
-      "um": 297.0
+      "um": 291.6
     },
     {
       "name": "nb2_10->die_nb",
@@ -1641,27 +1736,31 @@
     },
     {
       "name": "front->stin8",
-      "um": 253.8
+      "um": 291.6
     },
     {
       "name": "stin8->lane8",
-      "um": 258.5
+      "um": 234.606
+    },
+    {
+      "name": "stin8.reset->lane8",
+      "um": 288.906
     },
     {
       "name": "lane8->stk8",
-      "um": 217.2
+      "um": 238.638
     },
     {
       "name": "stk8->ktree",
-      "um": 217.66
+      "um": 234.63
     },
     {
       "name": "lane8->nb1_8",
-      "um": 238.8
+      "um": 240.966
     },
     {
       "name": "nb1_8->nb2_8",
-      "um": 243.0
+      "um": 237.6
     },
     {
       "name": "nb2_8->die_nb",
@@ -1669,27 +1768,31 @@
     },
     {
       "name": "front->stin6",
-      "um": 194.4
+      "um": 205.2
     },
     {
       "name": "stin6->lane6",
-      "um": 229.2
+      "um": 240.006
+    },
+    {
+      "name": "stin6.reset->lane6",
+      "um": 283.59
     },
     {
       "name": "lane6->stk6",
-      "um": 276.6
+      "um": 303.354
     },
     {
       "name": "stk6->ktree",
-      "um": 275.06
+      "um": 307.11
     },
     {
       "name": "lane6->nb1_6",
-      "um": 174.0
+      "um": 176.166
     },
     {
       "name": "nb1_6->nb2_6",
-      "um": 194.4
+      "um": 189.0
     },
     {
       "name": "nb2_6->die_nb",
@@ -1697,23 +1800,27 @@
     },
     {
       "name": "front->stin3",
-      "um": 237.6
+      "um": 248.4
     },
     {
       "name": "stin3->lane3",
-      "um": 213.0
+      "um": 202.206
+    },
+    {
+      "name": "stin3.reset->lane3",
+      "um": 245.79
     },
     {
       "name": "lane3->stk3",
-      "um": 363.0
+      "um": 373.554
     },
     {
       "name": "stk3->ktree",
-      "um": 342.26
+      "um": 368.238
     },
     {
       "name": "lane3->nb1_3",
-      "um": 130.8
+      "um": 127.566
     },
     {
       "name": "nb1_3->nb2_3",
@@ -1725,23 +1832,27 @@
     },
     {
       "name": "front->stin0",
-      "um": 251.1
+      "um": 272.7
     },
     {
       "name": "stin0->lane0",
-      "um": 250.8
+      "um": 229.206
+    },
+    {
+      "name": "stin0.reset->lane0",
+      "um": 272.79
     },
     {
       "name": "lane0->stk0",
-      "um": 427.8
+      "um": 470.754
     },
     {
       "name": "stk0->ktree",
-      "um": 431.06
+      "um": 466.206
     },
     {
       "name": "lane0->nb1_0",
-      "um": 147.0
+      "um": 143.682
     },
     {
       "name": "nb1_0->nb2_0",
@@ -1753,55 +1864,63 @@
     },
     {
       "name": "front->stin14",
-      "um": 232.2
+      "um": 270.0
     },
     {
       "name": "stin14->lane14",
-      "um": 231.5
+      "um": 193.71
+    },
+    {
+      "name": "stin14.reset->lane14",
+      "um": 261.906
     },
     {
       "name": "lane14->stk14",
-      "um": 201.0
+      "um": 281.094
     },
     {
       "name": "stk14->ktree",
-      "um": 263.34
+      "um": 290.19
     },
     {
       "name": "lane14->nb1_14",
-      "um": 232.8
+      "um": 354.366
     },
     {
       "name": "nb1_14->nb2_14",
-      "um": 356.4
+      "um": 351.0
     },
     {
       "name": "nb2_14->die_nb",
-      "um": 375.54
+      "um": 353.94
     },
     {
       "name": "front->stin11",
-      "um": 207.9
+      "um": 261.9
     },
     {
       "name": "stin11->lane11",
-      "um": 204.5
+      "um": 218.406
+    },
+    {
+      "name": "stin11.reset->lane11",
+      "um": 261.99
     },
     {
       "name": "lane11->stk11",
-      "um": 174.0
+      "um": 184.638
     },
     {
       "name": "stk11->ktree",
-      "um": 82.74
+      "um": 160.218
     },
     {
       "name": "lane11->nb1_11",
-      "um": 276.6
+      "um": 267.966
     },
     {
       "name": "nb1_11->nb2_11",
-      "um": 297.0
+      "um": 302.4
     },
     {
       "name": "nb2_11->die_nb",
@@ -1809,51 +1928,59 @@
     },
     {
       "name": "front->stin9",
-      "um": 189.0
-    },
-    {
-      "name": "stin9->lane9",
-      "um": 145.1
-    },
-    {
-      "name": "lane9->stk9",
-      "um": 130.8
-    },
-    {
-      "name": "stk9->ktree",
-      "um": 116.06
-    },
-    {
-      "name": "lane9->nb1_9",
-      "um": 232.8
-    },
-    {
-      "name": "nb1_9->nb2_9",
       "um": 194.4
     },
     {
+      "name": "stin9->lane9",
+      "um": 150.51
+    },
+    {
+      "name": "stin9.reset->lane9",
+      "um": 218.706
+    },
+    {
+      "name": "lane9->stk9",
+      "um": 136.038
+    },
+    {
+      "name": "stk9->ktree",
+      "um": 139.758
+    },
+    {
+      "name": "lane9->nb1_9",
+      "um": 235.566
+    },
+    {
+      "name": "nb1_9->nb2_9",
+      "um": 237.6
+    },
+    {
       "name": "nb2_9->die_nb",
-      "um": 190.38
+      "um": 209.82
     },
     {
       "name": "front->stin7",
-      "um": 145.8
+      "um": 151.2
     },
     {
       "name": "stin7->lane7",
-      "um": 142.8
+      "um": 137.406
+    },
+    {
+      "name": "stin7.reset->lane7",
+      "um": 180.99
     },
     {
       "name": "lane7->stk7",
-      "um": 201.0
+      "um": 227.754
     },
     {
       "name": "stk7->ktree",
-      "um": 205.86
+      "um": 229.974
     },
     {
       "name": "lane7->nb1_7",
-      "um": 168.6
+      "um": 170.766
     },
     {
       "name": "nb1_7->nb2_7",
@@ -1861,91 +1988,103 @@
     },
     {
       "name": "nb2_7->die_nb",
-      "um": 165.132
+      "um": 159.732
     },
     {
       "name": "front->stin4",
-      "um": 170.1
+      "um": 191.7
     },
     {
       "name": "stin4->lane4",
-      "um": 169.8
+      "um": 148.206
+    },
+    {
+      "name": "stin4.reset->lane4",
+      "um": 191.79
     },
     {
       "name": "lane4->stk4",
-      "um": 341.4
+      "um": 324.954
     },
     {
       "name": "stk4->ktree",
-      "um": 219.06
+      "um": 287.91
     },
     {
       "name": "lane4->nb1_4",
-      "um": 87.6
+      "um": 127.566
     },
     {
       "name": "nb1_4->nb2_4",
-      "um": 113.4
+      "um": 108.0
     },
     {
       "name": "nb2_4->die_nb",
-      "um": 108.9
+      "um": 103.5
     },
     {
       "name": "front->stin1",
-      "um": 194.4
+      "um": 216.0
     },
     {
       "name": "stin1->lane1",
-      "um": 196.8
+      "um": 175.206
+    },
+    {
+      "name": "stin1.reset->lane1",
+      "um": 218.79
     },
     {
       "name": "lane1->stk1",
-      "um": 421.8
+      "um": 427.554
     },
     {
       "name": "stk1->ktree",
-      "um": 410.46
+      "um": 318.174
     },
     {
       "name": "lane1->nb1_1",
-      "um": 211.2
+      "um": 208.482
     },
     {
       "name": "nb1_1->nb2_1",
-      "um": 16.2
+      "um": 140.4
     },
     {
       "name": "nb2_1->die_nb",
-      "um": 234.132
+      "um": 230.868
     },
     {
       "name": "front->stin15",
-      "um": 148.5
+      "um": 180.9
     },
     {
       "name": "stin15->lane15",
-      "um": 145.1
+      "um": 112.71
+    },
+    {
+      "name": "stin15.reset->lane15",
+      "um": 180.906
     },
     {
       "name": "lane15->stk15",
-      "um": 233.4
+      "um": 233.238
     },
     {
       "name": "stk15->ktree",
-      "um": 94.94
+      "um": 187.602
     },
     {
       "name": "lane15->nb1_15",
-      "um": 438.6
+      "um": 329.502
     },
     {
       "name": "nb1_15->nb2_15",
-      "um": 253.8
+      "um": 405.0
     },
     {
       "name": "nb2_15->die_nb",
-      "um": 365.484
+      "um": 396.516
     },
     {
       "name": "front->stin12",
@@ -1953,47 +2092,55 @@
     },
     {
       "name": "stin12->lane12",
-      "um": 166.7
+      "um": 166.71
+    },
+    {
+      "name": "stin12.reset->lane12",
+      "um": 234.906
     },
     {
       "name": "lane12->stk12",
-      "um": 270.6
+      "um": 292.638
     },
     {
       "name": "stk12->ktree",
-      "um": 227.54
+      "um": 239.298
     },
     {
       "name": "lane12->nb1_12",
-      "um": 281.4
+      "um": 275.502
     },
     {
       "name": "nb1_12->nb2_12",
-      "um": 280.8
+      "um": 275.4
     },
     {
       "name": "nb2_12->die_nb",
-      "um": 303.852
+      "um": 314.652
     },
     {
       "name": "front->stin5",
-      "um": 113.4
+      "um": 135.0
     },
     {
       "name": "stin5->lane5",
-      "um": 115.8
+      "um": 94.206
+    },
+    {
+      "name": "stin5.reset->lane5",
+      "um": 137.79
     },
     {
       "name": "lane5->stk5",
-      "um": 255.0
+      "um": 281.01
     },
     {
       "name": "stk5->ktree",
-      "um": 257.86
+      "um": 283.938
     },
     {
       "name": "lane5->nb1_5",
-      "um": 114.6
+      "um": 111.366
     },
     {
       "name": "nb1_5->nb2_5",
@@ -2009,23 +2156,27 @@
     },
     {
       "name": "stin2->lane2",
-      "um": 80.3
+      "um": 80.31
+    },
+    {
+      "name": "stin2.reset->lane2",
+      "um": 148.506
     },
     {
       "name": "lane2->stk2",
-      "um": 384.6
+      "um": 443.754
     },
     {
       "name": "stk2->ktree",
-      "um": 325.06
+      "um": 274.098
     },
     {
       "name": "lane2->nb1_2",
-      "um": 157.8
+      "um": 159.882
     },
     {
       "name": "nb1_2->nb2_2",
-      "um": 21.6
+      "um": 16.2
     },
     {
       "name": "nb2_2->die_nb",
@@ -2041,19 +2192,19 @@
     },
     {
       "name": "ktree->score",
-      "um": 108.0
+      "um": 69.264
     },
     {
       "name": "front.pack_fault->score",
-      "um": 102.6
+      "um": 59.358
     },
     {
       "name": "score->die_s",
-      "um": 212.46
+      "um": 195.282
     },
     {
       "name": "score.kt_rst_n->ktree",
-      "um": 108.0
+      "um": 213.936
     }
   ],
   "qualification": "geometry assignment proposal; fresh leaf physical views, actual clock pins and native pair reach required"
