@@ -1,3 +1,31 @@
+`ifdef OT_HROW_RESET_ACK
+// Epoch request is upstream of the conditioner. Actual local reset LOW and
+// consumer initialization must be observed at a consumer edge in this epoch.
+module dsfd_mtp_reset_ack #(parameter integer N=1)(
+ input wire clk,request_n,input wire [N-1:0] local_release,
+ input wire consumer_live,reset_initialized,output wire ack);
+ reg reset_seen,ack_q;
+ always @(posedge clk or negedge request_n)
+   if(!request_n) begin reset_seen<=0;ack_q<=0;end
+   else begin
+`ifdef OT_HROW_MUT_ACK_WRONG_WITNESS
+     if(!consumer_live) reset_seen<=1;
+`else
+     if(!( |local_release) && reset_initialized) reset_seen<=1;
+`endif
+`ifdef OT_HROW_MUT_ACK_NO_EPOCH
+     ack_q<=(&local_release)&&consumer_live;
+`else
+     ack_q<=reset_seen&&(&local_release)&&consumer_live;
+`endif
+   end
+`ifdef OT_HROW_MUT_ACK_MIRROR
+ assign ack=request_n;
+`else
+ assign ack=ack_q&&(&local_release)&&consumer_live;
+`endif
+endmodule
+`endif
 // dsfd_mtp_hrow as hardened tiles placed directly by the S81 die (el1011-ds-mtp; rev 5 hrow-r5 2026-10-12, owner GLUE
 // PLACEMENT: per-bank glue inside the bank tiles, no tile over 15k clock sinks).
 //   dsfd_mtp_hrow_ing x 3  beside part link pin p: drain link receiver + ingress header / beat FSM + WK-edge write
@@ -39,6 +67,9 @@ module dsfd_mtp_hrow_ing #(
     output wire [1038:0] t_wc,                 // write command {d 1024, a 14, v}
     output wire [20:0]   t_ev,                 // event {kind, v, slot 7, pos 8, epoch 4}
     output wire [1:0]    t_flt
+`ifdef OT_HROW_RESET_ACK
+    ,output wire rst_ack
+`endif
 );
     localparam integer UB = (MAXU > 1) ? $clog2(MAXU) : 1;
     localparam integer SB = $clog2(RS);
@@ -58,7 +89,11 @@ module dsfd_mtp_hrow_ing #(
     // holds a flit (cnt stays 0, every grant is 1): ot_dsrom_mtp_hrow_drx is that receiver with the dead queue removed
     // (identical l_ready / c_valid / c_data sequences; -11.3k flops a part)
     ot_dsrom_mtp_hrow_drx #(.W(514)) u_rx (
-        .clk(ck), .rst_n(rn), .l_valid(f_hp[0]), .l_ready(t_hpg), .l_data(f_hp[514:1]), .c_valid(iv), .c_data(d));
+        .clk(ck), .rst_n(rn), .l_valid(f_hp[0]), .l_ready(t_hpg), .l_data(f_hp[514:1]), .c_valid(iv), .c_data(d)
+`ifdef OT_HROW_RESET_ACK
+        ,.rst_live(rx_live)
+`endif
+);
     reg inh, ihalf; reg [SW-1:0] islot; reg [6:0] ibeat; reg [511:0] ilo; reg [1:0] flt;
     reg [EV-1:0] ev0; reg [WC-1:0] wc0;
     wire [1:0] hq = d[1:0]; wire [3:0] he = d[5:2]; wire [NW-1:0] hp = d[6 +: NW]; wire [UB-1:0] hu = d[6 + NW +: UB];
@@ -101,6 +136,10 @@ module dsfd_mtp_hrow_ing #(
     always @(posedge ck) if (kq[0]) ilo <= kq[KW-1 -: 512];
     always @(posedge ck) if (kq[1]) wc0[WC-1:1] <= {kq[KW-1 -: 512], ilo, kq[2 +: DB]};
     assign t_wc = wc0; assign t_ev = ev0; assign t_flt = flt;
+`ifdef OT_HROW_RESET_ACK
+    wire rx_live;
+    dsfd_mtp_reset_ack #(.N(2)) u_ack(.clk(ck),.request_n(rst),.local_release({rn,rx_live}),.consumer_live(rx_live),.reset_initialized(1'b1),.ack(rst_ack));
+`endif
 endmodule
 
 module dsfd_mtp_hrow_hub #(
@@ -117,6 +156,9 @@ module dsfd_mtp_hrow_hub #(
     input  wire [1:0]      f_if0, f_if1, f_if2,    // part ingress faults
     output wire [14:0]     t_rc0, t_rc1, t_rc2,    // read commands {a 14, v} to the part's pairs
     input  wire [1024:0]   f_pr0, f_pr1, f_pr2     // part results {d, v} (from dsfd_mtp_hrow_por)
+`ifdef OT_HROW_RESET_ACK
+    ,output wire [6:0] rst_ack
+`endif
 );
     localparam integer NP = 3;
     localparam integer UB = (MAXU > 1) ? $clog2(MAXU) : 1;
@@ -136,7 +178,11 @@ module dsfd_mtp_hrow_hub #(
     ot_dsrom_mtp_lrx_rtt #(.W(AW), .D(FWD_Q + RET_Q + 4), .ENABLE_RTT(1), .OUTPUT_PIPE(1),
                            .FORWARD_HOPS(FWD_Q), .RETURN_HOPS(RET_Q)) u_q (
         .clk(clk), .rst_n(rn_c), .l_valid(f_vrq[0]), .l_ready(t_vrq), .l_data(f_vrq[AW:1]),
-        .c_valid(q_v), .c_ready(q_r), .c_data(q_a));
+        .c_valid(q_v), .c_ready(q_r), .c_data(q_a)
+`ifdef OT_HROW_RESET_ACK
+        ,.rst_live(q_live)
+`endif
+);
     // pin flops
     reg [USER_W:0] i_clr;
     always @(posedge clk or negedge rn_c) if (!rn_c) i_clr[0] <= 1'b0; else i_clr[0] <= f_clr[0];
@@ -295,6 +341,13 @@ module dsfd_mtp_hrow_hub #(
     reg [2:0] o_flt;
     always @(posedge clk or negedge rn_c) if (!rn_c) o_flt <= 3'd0; else o_flt <= fq;
     assign t_flt = o_flt;
+`ifdef OT_HROW_RESET_ACK
+    wire q_live;
+    dsfd_mtp_reset_ack #(.N(2)) u_ack_c(.clk(ck),.request_n(rst),.local_release({rn_c,q_live}),.consumer_live(q_live),.reset_initialized(1'b1),.ack(rst_ack[0]));
+    for(genvar ai=0;ai<6;ai=ai+1) begin:g_ack_a
+      dsfd_mtp_reset_ack u_ack(.clk(ck),.request_n(rst),.local_release(rn_a[ai]),.consumer_live(1'b1),.reset_initialized(1'b1),.ack(rst_ack[ai+1]));
+    end
+`endif
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -320,6 +373,9 @@ module ot_dsrom_mtp_hrow_drx #(parameter integer W = 514) (
     input  wire [W-1:0] l_data,
     output wire         c_valid,
     output wire [W-1:0] c_data
+`ifdef OT_HROW_RESET_ACK
+    ,output wire rst_live
+`endif
 );
     reg live, g0, pv, valid; reg [W-1:0] pd, data;
     always @(posedge clk) live <= rst_n;
@@ -330,6 +386,9 @@ module ot_dsrom_mtp_hrow_drx #(parameter integer W = 514) (
         if (live && pv) data <= pd;
     end
     assign l_ready = g0; assign c_valid = valid; assign c_data = data;
+`ifdef OT_HROW_RESET_ACK
+ assign rst_live=live;
+`endif
 endmodule
 
 // chain bank core: one bank (4 x ot_sram_1r1w_1024x256 side by side in bits) + its chain stage
@@ -386,20 +445,34 @@ endmodule
 module dsfd_mtp_hrow_cbe (
     input  wire       ck, rst, input wire [3:0] f_bid,
     input  wire [1038:0] f_w, output wire [1038:0] t_w, input wire [14:0] f_r, output wire [14:0] t_r,
-    input  wire [1024:0] f_d, output wire [1024:0] t_d);
+    input  wire [1024:0] f_d, output wire [1024:0] t_d
+`ifdef OT_HROW_RESET_ACK
+    ,output wire rst_ack
+`endif
+);
     wire rn;
     ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn));
     ot_dsrom_mtp_hrow_cbcore u_c (.clk(ck), .rn(rn), .bid(f_bid), .f_w(f_w), .t_w(t_w), .f_r(f_r), .t_r(t_r),
                                   .f_d(f_d), .t_d(t_d));
+`ifdef OT_HROW_RESET_ACK
+    dsfd_mtp_reset_ack u_ack(.clk(ck),.request_n(rst),.local_release(rn),.consumer_live(1'b1),.reset_initialized(1'b1),.ack(rst_ack));
+`endif
 endmodule
 module dsfd_mtp_hrow_cbw (
     input  wire       ck, rst, input wire [3:0] f_bid,
     input  wire [1038:0] f_w, output wire [1038:0] t_w, input wire [14:0] f_r, output wire [14:0] t_r,
-    input  wire [1024:0] f_d, output wire [1024:0] t_d);
+    input  wire [1024:0] f_d, output wire [1024:0] t_d
+`ifdef OT_HROW_RESET_ACK
+    ,output wire rst_ack
+`endif
+);
     wire rn;
     ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn));
     ot_dsrom_mtp_hrow_cbcore u_c (.clk(ck), .rn(rn), .bid(f_bid), .f_w(f_w), .t_w(t_w), .f_r(f_r), .t_r(t_r),
                                   .f_d(f_d), .t_d(t_d));
+`ifdef OT_HROW_RESET_ACK
+    dsfd_mtp_reset_ack u_ack(.clk(ck),.request_n(rst),.local_release(rn),.consumer_live(1'b1),.reset_initialized(1'b1),.ack(rst_ack));
+`endif
 endmodule
 
 // composition model (the die): tiles + die relays.  Die contract (ordering, exact as rev 3):

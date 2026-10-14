@@ -30,10 +30,20 @@ module dsfd_mtp_hrow_td #(
     output wire [1024:0]  t_vrs,
     input  wire [USER_W:0] f_clr,
     output wire [2:0]     t_flt
+`ifdef OT_HROW_RESET_ACK
+    ,output wire [39:0] rst_ack_leaf,
+    output wire [3*(UT+2*CQ-1+P)-1:0] rst_ack_relay,
+    output wire [3*(UT+2*CQ-1+P)-1:0] rst_ack_conditioner
+`endif
 );
+    localparam integer ACK_PER_PART = UT+2*CQ-1+P;
     localparam integer WD = 2 * CQ + 1 - WK;
     initial if (CQ < 1 || WD < 0) $fatal(1, "hrow_td: CQ >= 1 and WK <= 2 CQ + 1");
     initial if (DISTRIBUTED_RST != 0 && HARD_RELAYS == 0) $fatal(1, "distributed reset requires fixed hard relays");
+`ifdef OT_HROW_RESET_ACK
+    // Candidate ABI is sized for the actual selected fixed/distributed WD0 graph.
+    initial if(!HARD_RELAYS || !DISTRIBUTED_RST || WD!=0) $fatal(1,"HROW ACK requires fixed distributed WD0 graph");
+`endif
     wire rn;
     generate if (HARD_RELAYS != 0 && DISTRIBUTED_RST == 0) begin : g_hrst
         dsfd_die_rstsync u_rs (.ck(ck), .rst(rst), .rn(rn));
@@ -58,9 +68,21 @@ module dsfd_mtp_hrow_td #(
             for(genvar ri=0; ri<UT; ri=ri+1) begin : g_r
                 wire lrn;
                 if (DISTRIBUTED_RST != 0) begin : g_rst
-                    dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(lrn));
+                    dsfd_die_rstsync
+`ifdef OT_HROW_RESET_ACK
+                    #(.RESET_ACK(1))
+`endif
+                    u_rs(.ck(ck),.rst(rst),.rn(lrn)
+`ifdef OT_HROW_RESET_ACK
+                        ,.rst_ack(rst_ack_conditioner[gp*ACK_PER_PART+ri])
+`endif
+);
                 end else assign lrn=rn;
-                dsfd_hrow_r2079 u_r(.ck(ck),.rn(lrn),.i(q[ri]),.o(q[ri+1]));
+                dsfd_hrow_r2079 u_r(.ck(ck),.rn(lrn),.i(q[ri]),.o(q[ri+1])
+`ifdef OT_HROW_RESET_ACK
+                    ,.reset_epoch_n(rst),.rst_ack(rst_ack_relay[gp*ACK_PER_PART+ri])
+`endif
+);
             end
             assign {cd[5],cr[5],cw[5]}=q[UT];
         end else begin : g_ut
@@ -69,29 +91,61 @@ module dsfd_mtp_hrow_td #(
         ot_dsrom_mtp_hrow_rly #(.W(1025), .N(UT)) u_ud (.clk(ck), .rst_n(rn), .i(ud), .o(cd[5]));
         end
         dsfd_mtp_hrow_ing #(.NW(NW), .USER_W(USER_W), .MAXU(MAXU), .RS(RS), .FWD_P(FWD_P), .RET_P(RET_P), .WK(WK)) u_ig (
-            .ck(ck), .rst(rst), .f_hp(fin[gp]), .t_hpg(t_hpg[gp]), .f_pid(gp[1:0]), .t_wc(wc), .t_ev(ev[gp]), .t_flt(ifl[gp]));
+            .ck(ck), .rst(rst), .f_hp(fin[gp]), .t_hpg(t_hpg[gp]), .f_pid(gp[1:0]), .t_wc(wc), .t_ev(ev[gp]), .t_flt(ifl[gp])
+`ifdef OT_HROW_RESET_ACK
+            ,.rst_ack(rst_ack_leaf[gp*11])
+`endif
+);
         if (HARD_RELAYS != 0) begin : g_hev
             wire [22:0] eq[0:CQ-1]; wire [14:0] rq[0:CQ];
             assign eq[0]={ifl[gp],ev[gp]}; assign rq[0]=rc[gp];
             for(genvar ri=0; ri<CQ-1; ri=ri+1) begin : g_ev
                 wire lrn;
                 if (DISTRIBUTED_RST != 0) begin : g_rst
-                    dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(lrn));
+                    dsfd_die_rstsync
+`ifdef OT_HROW_RESET_ACK
+                    #(.RESET_ACK(1))
+`endif
+                    u_rs(.ck(ck),.rst(rst),.rn(lrn)
+`ifdef OT_HROW_RESET_ACK
+                        ,.rst_ack(rst_ack_conditioner[gp*ACK_PER_PART+UT+ri])
+`endif
+);
                 end else assign lrn=rn;
-                dsfd_hrow_r23 u_r(.ck(ck),.rn(lrn),.i(eq[ri]),.o(eq[ri+1]));
+                dsfd_hrow_r23 u_r(.ck(ck),.rn(lrn),.i(eq[ri]),.o(eq[ri+1])
+`ifdef OT_HROW_RESET_ACK
+                    ,.reset_epoch_n(rst),.rst_ack(rst_ack_relay[gp*ACK_PER_PART+UT+ri])
+`endif
+);
             end
             for(genvar ri=0; ri<CQ; ri=ri+1) begin : g_rc
                 wire lrn;
                 if (DISTRIBUTED_RST != 0) begin : g_rst
-                    dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(lrn));
+                    dsfd_die_rstsync
+`ifdef OT_HROW_RESET_ACK
+                    #(.RESET_ACK(1))
+`endif
+                    u_rs(.ck(ck),.rst(rst),.rn(lrn)
+`ifdef OT_HROW_RESET_ACK
+                        ,.rst_ack(rst_ack_conditioner[gp*ACK_PER_PART+UT+CQ-1+ri])
+`endif
+);
                 end else assign lrn=rn;
-                dsfd_hrow_r15 u_r(.ck(ck),.rn(lrn),.i(rq[ri]),.o(rq[ri+1]));
+                dsfd_hrow_r15 u_r(.ck(ck),.rn(lrn),.i(rq[ri]),.o(rq[ri+1])
+`ifdef OT_HROW_RESET_ACK
+                    ,.reset_epoch_n(rst),.rst_ack(rst_ack_relay[gp*ACK_PER_PART+UT+CQ-1+ri])
+`endif
+);
             end
             assign {iflh[gp],evh[gp]}=eq[CQ-1]; assign cr[0]=rq[CQ];
             // Default WD0 has no state. Other parameter sets retain their exact existing write-delay line.
             wire wrn;
             if (DISTRIBUTED_RST != 0 && WD > 0) begin : g_wdrst
-                dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(wrn));
+                dsfd_die_rstsync
+`ifdef OT_HROW_RESET_ACK
+                    #(.RESET_ACK(1))
+`endif
+                    u_rs(.ck(ck),.rst(rst),.rn(wrn));
             end else assign wrn=rn;
             ot_dsrom_mtp_hrow_rly #(.W(1039),.N(WD)) u_wd(.clk(ck),.rst_n(wrn),.i(wc),.o(cw[0]));
         end else begin : g_ev
@@ -104,13 +158,25 @@ module dsfd_mtp_hrow_td #(
         for (gk = 0; gk < 10; gk = gk + 1) begin : g_c
             if (gk == 4) begin : g_e
                 dsfd_mtp_hrow_cbe u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(uw), .f_r(cr[gk]),
-                                       .t_r(ur), .f_d(cd[gk]), .t_d(ud));
+                                       .t_r(ur), .f_d(cd[gk]), .t_d(ud)
+`ifdef OT_HROW_RESET_ACK
+                                       ,.rst_ack(rst_ack_leaf[gp*11+1+gk])
+`endif
+);
             end else if (gk < 4) begin : g_e
                 dsfd_mtp_hrow_cbe u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(cw[gk+1]), .f_r(cr[gk]),
-                                       .t_r(cr[gk+1]), .f_d(cd[gk]), .t_d(cd[gk+1]));
+                                       .t_r(cr[gk+1]), .f_d(cd[gk]), .t_d(cd[gk+1])
+`ifdef OT_HROW_RESET_ACK
+                                       ,.rst_ack(rst_ack_leaf[gp*11+1+gk])
+`endif
+);
             end else begin : g_w
                 dsfd_mtp_hrow_cbw u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(cw[gk+1]), .f_r(cr[gk]),
-                                       .t_r(cr[gk+1]), .f_d(cd[gk]), .t_d(cd[gk+1]));
+                                       .t_r(cr[gk+1]), .f_d(cd[gk]), .t_d(cd[gk+1])
+`ifdef OT_HROW_RESET_ACK
+                                       ,.rst_ack(rst_ack_leaf[gp*11+1+gk])
+`endif
+);
             end
         end
         if (HARD_RELAYS != 0) begin : g_hrp
@@ -118,9 +184,21 @@ module dsfd_mtp_hrow_td #(
             for(genvar ri=0; ri<P; ri=ri+1) begin : g_r
                 wire lrn;
                 if (DISTRIBUTED_RST != 0) begin : g_rst
-                    dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(lrn));
+                    dsfd_die_rstsync
+`ifdef OT_HROW_RESET_ACK
+                    #(.RESET_ACK(1))
+`endif
+                    u_rs(.ck(ck),.rst(rst),.rn(lrn)
+`ifdef OT_HROW_RESET_ACK
+                        ,.rst_ack(rst_ack_conditioner[gp*ACK_PER_PART+UT+2*CQ-1+ri])
+`endif
+);
                 end else assign lrn=rn;
-                dsfd_hrow_r1025 u_r(.ck(ck),.rn(lrn),.i(q[ri]),.o(q[ri+1]));
+                dsfd_hrow_r1025 u_r(.ck(ck),.rn(lrn),.i(q[ri]),.o(q[ri+1])
+`ifdef OT_HROW_RESET_ACK
+                    ,.reset_epoch_n(rst),.rst_ack(rst_ack_relay[gp*ACK_PER_PART+UT+2*CQ-1+ri])
+`endif
+);
             end
             assign pph[gp]=q[P];
         end else begin : g_rp
@@ -130,5 +208,9 @@ module dsfd_mtp_hrow_td #(
     dsfd_mtp_hrow_hub #(.USER_W(USER_W), .MAXU(MAXU), .RS(RS), .AW(AW), .FWD_Q(FWD_Q), .RET_Q(RET_Q)) u_hub (
         .ck(ck), .rst(rst), .f_vrq(f_vrq), .t_vrq(t_vrq), .t_vrs(t_vrs), .f_clr(f_clr), .t_flt(t_flt),
         .f_ev0(evh[0]), .f_ev1(evh[1]), .f_ev2(evh[2]), .f_if0(iflh[0]), .f_if1(iflh[1]), .f_if2(iflh[2]),
-        .t_rc0(rc[0]), .t_rc1(rc[1]), .t_rc2(rc[2]), .f_pr0(pph[0]), .f_pr1(pph[1]), .f_pr2(pph[2]));
+        .t_rc0(rc[0]), .t_rc1(rc[1]), .t_rc2(rc[2]), .f_pr0(pph[0]), .f_pr1(pph[1]), .f_pr2(pph[2])
+`ifdef OT_HROW_RESET_ACK
+        ,.rst_ack(rst_ack_leaf[39:33])
+`endif
+);
 endmodule
