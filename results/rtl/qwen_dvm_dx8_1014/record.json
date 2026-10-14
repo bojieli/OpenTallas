@@ -20,5 +20,21 @@
   "cost_ledger_accepted": false,
   "architecture_adopted": true,
   "architecture_authority": "HANDOFF.md 0aa: owner adopted Qwen distributed VM",
-  "implementation_bound": false
+  "implementation_bound": false,
+  "rounding_mutant": {
+    "source_body": "f94f35d92",
+    "TAP_MUT": 1,
+    "GAP": 0,
+    "verdict": "FAIL",
+    "errors": 123800,
+    "operand_checks": 125952
+  },
+  "ownership_small_case": {
+    "TAP_MUT": 5,
+    "GAP": 0,
+    "verdict": "PASS (insufficient mutation coverage)",
+    "operand_checks": 125952,
+    "not_accepted_as_failing_mutant": true,
+    "production_followup": "ot-epyc4:/srv/opentallas-scratch/codex/dvm-repair-f94f35d92/dx8_prod_stale"
+  }
 }

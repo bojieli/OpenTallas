@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 // qwen-split/kvsys 2026-10-14 (owner 08:05 PT: no stubs): the row-engine control cell of the KV/system die as the
-// hardened-once cluster of its three native TP8 leaves qkd_ectl_a_tp8 | qkd_ectl_b_tp8 | qkd_ectl_c_tp8 (rtl/hdc/nearhbm/
+// wires-only cluster candidate of its three native TP8 leaves qkd_ectl_a_tp8 | qkd_ectl_b_tp8 | qkd_ectl_c_tp8 (rtl/hdc/nearhbm/
 // ot_qkd_ectl_parts.sv), wires only, with the die's ectl ports (si / so / t0 / t1 / e0..e3 / s0..s3 / rq / rs).  Identical
-// to qkd_ectl3 except that the {engine, stack} index is a strap PORT (cfg, tied by the die per instance) instead of a
+// to the native TP8 control profile; the {engine, stack} index is a strap PORT (cfg, tied by the die per instance) instead of a
 // parameter, so one master serves all 32 slots.  t[1558:0] = {q_data 512, q_beat 6, q_valid, lt 12, row 1024, c 4}.
 // ck[0], ck[1], ck[2] are independently compensated entries for leaves A, B, C.
 // This implementation still requires matching three-entry die clock/pin assignment.
