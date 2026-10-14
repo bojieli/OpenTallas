@@ -162,7 +162,11 @@ def main():
             print(f"ot-run: {h:14s} skipped: {note}", file=sys.stderr)
     if not ok:
         sys.exit("ot-run: no host qualifies")
-    best = max(ok, key=ok.get)
+    # v3 (coordinator 2026-10-13): among hosts that can admit the request now, take the least CPU-loaded one
+    # (load1 / cores); memory still decides admission.  Picking by free memory alone kept sending work to the
+    # 28-core host while it ran at four times its core count.
+    fits = [h for h in ok if ok[h] >= mem and res[h].get("ncpu")]
+    best = min(fits, key=lambda h: res[h].get("load1", 0) / res[h]["ncpu"]) if fits else max(ok, key=ok.get)
     print(f"ot-run: -> {best}" + ("" if ok[best] >= mem else f" (will queue: {ok[best]} GB free < {mem} GB)"), file=sys.stderr)
     if pick:
         print(best)

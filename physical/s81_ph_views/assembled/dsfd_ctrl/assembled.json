@@ -26,8 +26,8 @@
     "rd": {
      "rising_edge/cks": {
       "tile": "dsfd_ctrl_pc",
-      "bit": "r_tag[7]",
-      "ps_at_5p76fF": 486.7
+      "bit": "r_data[173]",
+      "ps_at_5p76fF": 478.6
      }
     },
     "rst": {}
@@ -59,28 +59,28 @@
  },
  "glue": [
   {
-   "tt_wire_ratio": 0.778,
+   "tt_wire_ratio": 0.783,
    "what": "status chain PC p -> p+1",
    "launch": "dsfd_ctrl_pc.co_w",
    "capture": "dsfd_ctrl_pc.ci_w",
    "length_um": 144.5,
    "stations": 0,
-   "tt_setup": 235.5,
-   "tt_setup_bal": 235.5,
+   "tt_setup": 230.5,
+   "tt_setup_bal": 230.5,
    "ss_setup": 58.4,
    "ss_setup_bal": 58.4,
    "ff_hold": 135.9,
    "ff_hold_bal": 135.9
   },
   {
-   "tt_wire_ratio": 0.778,
+   "tt_wire_ratio": 0.783,
    "what": "PC 15/16 -> ctr",
    "launch": "dsfd_ctrl_pc.co_w",
    "capture": "dsfd_ctrl_ctr.co_w",
    "length_um": 50.7,
    "stations": 0,
-   "tt_setup": 111.4,
-   "tt_setup_bal": 318.3,
+   "tt_setup": 160.7,
+   "tt_setup_bal": 369.3,
    "ss_setup": -25.3,
    "ss_setup_bal": 235.4,
    "ff_hold": 254.3,
@@ -88,10 +88,10 @@
   }
  ],
  "glue_worst_ps": {
-  "tt_setup": 111.4,
+  "tt_setup": 160.7,
   "ss_setup": -25.3,
   "ff_hold": 135.9,
-  "tt_setup_bal": 235.5,
+  "tt_setup_bal": 230.5,
   "ss_setup_bal": 58.4,
   "ff_hold_bal": 112.9
  }

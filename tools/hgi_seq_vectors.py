@@ -318,11 +318,13 @@ def sim_check(words, entry, trace, recs, pos, token, rank):
     return n
 
 
-def synth_program(rng, stale=False):
+def synth_program(rng, stale=False, drained=False):
     """CF-LOOP2 + CF-IDXD + DS DYN + every unit class; stale=True drops the IDX wait of the indexed readers (the
-    CF-IDXD stale-table negative: must FAIL)"""
+    CF-IDXD stale-table negative: must FAIL).  drained=True is the compiler's drain rule (HGI-1 4.1): a DMA.FENCE right
+    after IDX.TOPK carries the IDX wait, so the indexed readers behind it carry none ("since that unit last drained");
+    in order they read the fresh table (the DS route.gather shape; mutant OT_HGI_SEQ_MUT_DRAIN must FAIL)."""
     W = []
-    wIDX = 0 if stale else (1 << UNIT['IDX'])
+    wIDX = 0 if (stale or drained) else (1 << UNIT['IDX'])
     R = lambda *a, **k: W.extend(record(*a, **k))  # noqa: E731
     R(header('DMA', 'LOAD', param=0), descs=dict(
         A=mdesc(space=0, fmt=1, base=0x1000, n=4096, dyn_sel=DYN['TOKEN'], dyn_mul=8192),
@@ -349,6 +351,8 @@ def synth_program(rng, stale=False):
     # CF-IDXD: IDX.TOPK writes the I table (k ids + count row); expert fetch by id in a LOOP over k (L); n from VM
     R(header('IDX', 'TOPK', param=6), descs=dict(A=mdesc(space=1, base=0xE000, n=256),
                                                  O=mdesc(space=1, fmt=5, base=0xF000, n=6)))
+    if drained:
+        R(header('DMA', 'FENCE', wait=1 << UNIT['IDX']))
     R(header('CTL', 'LOOP', param=6))
     R(header('SM', 'MATVEC', wait=wIDX, param=3), descs=dict(
         A=mdesc(space=2, n=4096),
@@ -465,6 +469,7 @@ def main():
     # 2. synthetic CF-LOOP2 / CF-IDXD / DS DYN program, and its stale-table negative
     se = add_prog('synth', synth_program(random.Random(5)))
     sse = add_prog('synth_stale', synth_program(random.Random(5), stale=True))
+    sde = add_prog('synth_drained', synth_program(random.Random(5), drained=True))
     ids = [7, 0, 63, 12, 5, 1000]
 
     def synth_disp(k, u, o):
@@ -482,7 +487,9 @@ def main():
             ('synth_ds_p1048575_r2', se, 3, (1 << 20) - 1, 2, D, synth_disp, False),
             ('synth_ds_p20_r0', se, 129279, 20, 0, D, synth_disp, False),
             ('synth_ds_p777_r3', se, 5, 777, 3, D, synth_disp, False),
-            ('synth_qwen_p0', se, 131072, 0, 1, Q, synth_disp, False)]
+            ('synth_qwen_p0', se, 131072, 0, 1, Q, synth_disp, False),
+            ('synth_drained_p9_r0', sde, 3, 9, 0, D, synth_disp, False),
+            ('synth_drained_p777_r3', sde, 5, 777, 3, D, synth_disp, False)]
     plan += [(n, e, 1, 100, 0, Q, lambda k, u, o: [], False) for n, e in fps.items()]
     NCOL = {n: (4 if n == 'tokx_k_gt_ncol' else 0 if n == 'tokx_16' else 15) for n in fps if n.startswith('tokx')}
     plan += [('db_token_range', qe, 151936, 5, 0, Q, qwen_disp, False),
