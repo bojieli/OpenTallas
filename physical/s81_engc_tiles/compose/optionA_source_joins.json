@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.s81.engram.optionA.source_joins.v1",
   "admission": false,
-  "source_commit": "980d05e1e",
+  "source_commit": "0547f25b37677b5bcdf6d3cfc654bebaeeae4a6d",
   "parent_module": "dsfd_engram_c_rso",
   "parent_source": "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv",
   "source_sha256": {
@@ -23,7 +23,7 @@
     "rtl/dsrom_sys/engram/tiles/ot_engc_pbank.sv": "e6956a55e008f12d2df42bd1d44b92a78dbe26378405bbfb2977dc63709b5194",
     "rtl/dsrom_sys/engram/dsfd_engram_c.sv": "906adc894c9764ac7f0821d8f2db98177bb1e0c795214ce1f87fc7751ccdafc3",
     "physical/s81_engc_tiles/compose/ck_entry_place.tcl": "cfdd4431e90128109b70ae6009cba14204ada726a1ac75071e716ccfbeb0c06f",
-    "rtl/dsrom_sys/engram/rso_candidate/manifest.json": "86f6e628ada505a708ed1ac2e70ec4c41821f1351187a5e09bfd6d51b827c43b",
+    "rtl/dsrom_sys/engram/rso_candidate/manifest.json": "26c8b74cc796cee1399c926e488f2e226e24a3cc173ad3cfa427adbe312aecd2",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_pbank_rso_xt.sv": "9e95aee176bc7466b5d8cdde1b16e0231fd0aa0e70ef76533b099129af51bbdc"
   },
   "source_only": true,
@@ -5937,7 +5937,7 @@
     "capture_latency_change": 0,
     "extra_child_flops": 14,
     "native_slots": null,
-    "closed_views": null
+    "closed_views": "physical/s81_engc_tiles/rso_views/ot_engc_t_pbb_rso_xt"
   },
   "standalone_closed_view_candidates": {
     "ot_engc_t_io_rso_r1": {
@@ -5987,10 +5987,21 @@
       },
       "strict_pocket_lint": "PASS",
       "native_admission": false
+    },
+    "ot_engc_t_pbb_rso_xt": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_pbb_rso_xt",
+      "source_commit": "862423c656482994ee50a2c1e03c70ebf47cb9df",
+      "file_sha256": {
+        "ot_engc_t_pbb_rso_xt.lef": "908177504ec8e27c44a9f17329709f8d1ff5bba91b27d7d697268208820f56ad",
+        "ot_engc_t_pbb_rso_xt_ff.lib": "64df96bf0b74bf207dbefd75871379a7adf95a65a1dd8c29a49abcf4d93918a4",
+        "ot_engc_t_pbb_rso_xt_ss.lib": "546446ad5c2cd020d4fd1c2c6c75fea397c41979e0908be672e364fc4b332a56",
+        "ot_engc_t_pbb_rso_xt_tt.lib": "63833722aa8111526a1d8fe03be8d2aab1c4c32338c0d06f79ae32a00cee0e63"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
     }
   },
   "physical_binding_open": [
-    "ot_engc_t_pbb_rso_xt unclosed",
     "parent ordinary ownstate has no native leaf slots",
     "native actual clock/reset producer physical driver/phase proof",
     "native per-bit slot pin assignment and loaded paired endpoint closure"

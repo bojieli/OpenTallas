@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.s81.engram.rso_source_candidate.v1",
   "admission": false,
-  "reason": "Four distinct RSO masters have independent standalone source0 TT/FF/DRC closure and strict abstract views; distinct PBB_XT and parent remain unclosed. Native source/driver/phase, actual slot pins and ownstate leaf binding remain open.",
+  "reason": "All five distinct RSO hard master variants have real standalone source0 TT/FF/DRC closure and strict views. Parent native ownstate leaves/slots, physical source/driver/phase and actual paired endpoint/pin binding remain open.",
   "parent": "dsfd_engram_c_rso",
   "output": "rso = AND14 explicit release_states",
   "original_source_sha256": {
@@ -95,7 +95,8 @@
     "extra_flops": 14,
     "capture_edge": "same edge as original wa_p/woh_p",
     "purpose": "dedicated near-port output copies without SRAM fanout",
-    "admission": false
+    "admission": false,
+    "closed_view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_pbb_rso_xt"
   },
   "standalone_closed_view_candidates": {
     "ot_engc_t_io_rso_r1": {
@@ -142,6 +143,18 @@
         "ot_engc_t_pbc_rso_ff.lib": "25932d2b4199780a333b183389b98e6557fa7a5e2f6c43022df1b08f1111c83c",
         "ot_engc_t_pbc_rso_ss.lib": "aa59077458880174663d28fe82a2556bafe83dbb1b2c82320c90ae6d7ae8efa4",
         "ot_engc_t_pbc_rso_tt.lib": "5f9c5639acd437743fe93ff4ca0e58ff2f8e951cf1916a145a76f8624b38deec"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    },
+    "ot_engc_t_pbb_rso_xt": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_pbb_rso_xt",
+      "source_commit": "862423c656482994ee50a2c1e03c70ebf47cb9df",
+      "file_sha256": {
+        "ot_engc_t_pbb_rso_xt.lef": "908177504ec8e27c44a9f17329709f8d1ff5bba91b27d7d697268208820f56ad",
+        "ot_engc_t_pbb_rso_xt_ff.lib": "64df96bf0b74bf207dbefd75871379a7adf95a65a1dd8c29a49abcf4d93918a4",
+        "ot_engc_t_pbb_rso_xt_ss.lib": "546446ad5c2cd020d4fd1c2c6c75fea397c41979e0908be672e364fc4b332a56",
+        "ot_engc_t_pbb_rso_xt_tt.lib": "63833722aa8111526a1d8fe03be8d2aab1c4c32338c0d06f79ae32a00cee0e63"
       },
       "strict_pocket_lint": "PASS",
       "native_admission": false
