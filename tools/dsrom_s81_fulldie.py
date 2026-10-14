@@ -2776,7 +2776,19 @@ RSV_ALLOW = None               # the tag whose sites the relay being placed may 
 # took extra hop relays x0 did not).  The site sits on the station -> right bank / next-station path.  Default 0 = off.
 XB_RGAP = 0.0
 XB_RGAP_FIRST = False          # --xb-rgap-first (s81-die v17): the x relay site beside the slot station, the sequencer E of it
-CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
+# --x-site-pair (s81-die v18, frame-template relay-site repair, owner 10-14): the --xb-rgap gap E of every slot station
+# (60.48 x 62.95 um between the station's E edge and the R-lane sequencer) holds TWO stacked relay sites, each owned by ONE
+# net: the lower one by xa_<r>_<s+1>, the upper one by xb_<r>_<s+1>, i.e. the lanes the station s itself drives into slot
+# s's banks and up to station s+1.  Root cause (v18 native207 hop gate, 545,152 x_lane bits over reach, all in-frame,
+# ~4.3k a frame on all 128 frames): the one shared 'x' site was taken first-come by the relay of the PREVIOUS slot's lane
+# (its midpoint lies inside the element above the band, nearest free box = the next band's site), so every later lane's
+# relay landed one band too far north (y_xa_0_2_0 beside t0_2 instead of t0_1) and the hop fix chained g_ relays to sites
+# up to 1,244 um from the banks.  An owned site beside the DRIVER station reaches both banks of its slot (<= ~360 um, bank
+# pair limit 407) and the next station's E-end xai / xbi (<= ~290 um, limit 500).  Register counts (cycles) unchanged.
+X_SITE_PAIR = False
+HOP_PAIR = 0.0                 # --hop-pair UM: hop-fix plans each hop against its real pair limit minus UM (pin spread margin)
+XSITES = {}                    # (frame, slot) -> [(x, y) xa site, (x, y) xb site]  (lower-left corners)
+CK_RULE = False               # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
 COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
 COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
 COLL_SPLIT3_CR = False         # explicit planning candidate, never a closure claim
@@ -3448,6 +3460,16 @@ def hop_plan(m):
     M = masters(m, 1)
     by = {it.name: it for it in m['insts']}
     plan = {}
+    pair = None
+    if HOP_PAIR:
+        # --hop-pair (s81-die v18, 10-14): plan against the hop's OWN pair limit (pair_check.Gate on the real views, the
+        # limit the gate judges), not only the flat --hop-r-cc.  xsp1: 36,224 ret_leaf bits between two CLOSED rly_63
+        # relays were 472.8-500 um (anchors under 500, real pair reach 472-478) and got no stage.  The margin covers the
+        # pin spread around the anchor (gate = worst bit, plan = group anchor).
+        sys.path.insert(0, str(ROOT / 'tools' / 'hier_contract'))
+        import pair_check as PC
+        pair = PC.Gate(default_um=HOP_GATE_UM or 500.0,
+                       buses=[(b_, c_, n_, [(e_[0], pslice(e_[1])[0]) for e_ in eps_]) for b_, c_, n_, eps_ in m['buses']])
     for bid, cls, bits, eps in m['buses']:
         if cls in HOP_SKIP or len(eps) < 2 or eps[0][0] == 'TOP':
             continue
@@ -3463,6 +3485,10 @@ def hop_plan(m):
             hard = PIN_RELAY and not (is_glue(d.master) and is_glue(l_.master))
             # --hop-r-hub: only the BRIDGES (a slab pin at one end); station-to-station hops of a chain keep --hop-r-cc
             R = HOP_R_HUB if (cls == 'hub' and HOP_R_HUB and not (is_glue(d.master) and is_glue(l_.master))) else R0_
+            if pair is not None and cls not in HOP_FWD_CLS:
+                lim_ = pair.limit(d.name, d.master, pslice(eps[0][1])[0], l_.name, l_.master, pslice(e[1])[0])
+                if lim_ < pair.default:          # a real (judged) pair limit; placeholders keep the flat rule
+                    R = min(R, lim_ - HOP_PAIR)
             if L > R or (hard and L > PIN_SEG):
                 plan[(eps[0][0], eps[0][1], e[0], e[1])] = (round(L, 1), a, b, cls)
     return plan
@@ -3515,6 +3541,7 @@ def build_r8(variant=None):
     assert len(order) == ROOTS
     rng, hbf = frame_plan_r8()
     RSV_RECTS.clear()
+    XSITES.clear()
     for r, (half, t, c) in enumerate(order):
         x0, y0 = col_x(half, c), tier_y[t]
         frames[r] = dict(half=half, tier=t, col=c, x=x0, y=y0)
@@ -3608,6 +3635,18 @@ def build_r8(variant=None):
             yy = sy + CFG_DY if s not in nvslots else sy + CFG_DY + up(NVX_UM2 / 1002.888, GY) + 4.32
             insts.append(Inst(f't{r}_{s}', 'dsfd_sstn', x0 + SSTN_X, yy, SSTN_WH[0] - SHAVE, SSTN_WH[1] - SHAVE,
                               kind='sstn', region=f'frame_{r}'))
+            if X_SITE_PAIR and s not in nvslots:
+                # --x-site-pair: two owned relay sites in the gap E of the station (lower = xa, upper = xb)
+                rw_, rh_ = relay_dims(X0B, True)
+                sx_ = up(x0 + SSTN_X + SSTN_WH[0] + 0.432, GX)
+                ylo_ = yy
+                yhi_ = up(ylo_ + rh_ + 0.432, GY)
+                assert XB_RGAP, '--x-site-pair needs --xb-rgap'
+                assert sx_ + rw_ + 0.432 <= x0 + LANE_W + R_CFGX + XB_RGAP + 1e-6, ('--x-site-pair: gap too narrow', r, s, sx_)
+                assert yhi_ + rh_ <= sy + CFG_DY + rc['h'] + 1e-6, ('--x-site-pair: band too short', r, s, yhi_)
+                XSITES[(r, s)] = [(sx_, ylo_), (sx_, yhi_)]
+                for xs_, ys_ in XSITES[(r, s)]:
+                    RSV_RECTS.append((xs_, ys_, xs_ + rw_, ys_ + rh_, 'xs'))
         if REV == 'r9':
             for p, kind, s, ln in elems:
                 if kind == 'q':
@@ -5801,10 +5840,24 @@ def _col_relays(m, P):
             continue
         a, b = a0, ep_pt(fe, True)
         w_, h_ = relay_dims(bits, True)
+        own_ = None
+        if X_SITE_PAIR:
+            mx_ = re.fullmatch(r'(xa|xb)_(\d+)_(\d+)', bid)
+            if mx_ and int(mx_.group(3)) >= 1 and eps[0][0] == f't{r}_{int(mx_.group(3)) - 1}':
+                st_ = XSITES.get((r, int(mx_.group(3)) - 1))
+                if st_ is not None:
+                    own_ = st_[0 if mx_.group(1) == 'xa' else 1]
 
         def _pick(path, cur, k, Lp, log=True):
             """one column relay on `path`: (placement, tier) -- tier 'first' = within the column reach of the previous
             point (and the load-side reach under --nxt-reach / --relay-progress); later tiers are the TT / legacy ones"""
+            if k == 0 and own_ is not None:
+                # --x-site-pair: the lane's first relay takes its owned site beside the driving station
+                bx_ = (own_[0], own_[1], own_[0] + w_, own_[1] + h_)
+                if P.occ.free(bx_, 0.432) and _mh(cur, (own_[0] + w_ / 2, own_[1] + h_ / 2)) <= BANK_RULE_UM + 40.0:
+                    m.setdefault('x_site_pair', []).append(bid)
+                    return own_, 'first'
+                m.setdefault('x_site_pair_miss', []).append(bid)
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
             pg = _mh(cur, b) + 15.0 if RELAY_PROGRESS else None     # --relay-progress: never behind the driver
@@ -8214,6 +8267,11 @@ def die_options(ap):
                     'bridges; default = --hop-r-cc')
     ap.add_argument('--xb-rgap-first', action='store_true', help='s81-die v17: the --xb-rgap relay site stands beside the slot '
                     'station (station | site | sequencer | ROMs) and the station takes xai / xbi at the E end of its S face')
+    ap.add_argument('--hop-pair', type=float, default=0.0, help='s81-die v18: hop-fix plans every common-clock hop against its '
+                    'real pair limit (pair_check, the gate\'s limit) minus UM of pin-spread margin; 0 = flat --hop-r-cc only')
+    ap.add_argument('--x-site-pair', action='store_true', help='s81-die v18 frame-template relay-site repair: two owned relay '
+                    'sites in the --xb-rgap gap E of every slot station, lower = xa_<r>_<s+1>, upper = xb_<r>_<s+1> (the lanes '
+                    'that station drives); needs --xb-rgap-first')
     ap.add_argument('--pin-align', action='store_true', help='s81-die v17: q-bank pins at the q element pin of the same bit, '
                     'return-tree node pins in fixed slots (abutted stack bit-aligned), slot-station xa / xb on the pins of '
                     'their abutting column relay (pin_align gate: 0 FAIL in the field frames)')
@@ -8318,8 +8376,12 @@ def apply_options(a):
     PEER_PIN_POS = bool(getattr(a, 'peer_pin_pos', False))
     global PIN_ALIGN, FWD_NEGCAP
     PIN_ALIGN = bool(getattr(a, 'pin_align', False))
-    global XB_RGAP_FIRST
+    global XB_RGAP_FIRST, X_SITE_PAIR
     XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
+    X_SITE_PAIR = bool(getattr(a, 'x_site_pair', False))
+    global HOP_PAIR
+    HOP_PAIR = float(getattr(a, 'hop_pair', 0.0) or 0.0)
+    assert not X_SITE_PAIR or XB_RGAP_FIRST, '--x-site-pair needs --xb-rgap-first (and --xb-rgap)'
     FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
     assert not WFC_PRICED or (WFC_KIT and not getattr(a, 'wfc_crp', False)), '--wfc-priced: the --wfc-kit stage / source kit (not --wfc-crp)'
