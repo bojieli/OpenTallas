@@ -22,5 +22,10 @@
     "Registered status integration into quarter retire",
     "CTS pins/clock/shape/cut/hop/slot",
     "Production measurement"
-  ]
+  ],
+  "behavioral_gate": {
+    "exact": "PASS481 checks,67 returns,68 committed writes,six LQ10 wraps,early credit/delayed ACK/externaldrain,warmreset,invalidbank",
+    "genuine_mutant": "EXPECTED FAIL EARLY_OWNER_RELEASE before committed ACK; actual owner fence predicate mutated",
+    "native_scope": "actual bank/CDC integration not yet tested"
+  }
 }
