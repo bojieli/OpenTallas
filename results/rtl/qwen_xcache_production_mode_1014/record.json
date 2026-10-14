@@ -1,0 +1,28 @@
+{
+  "status": "PASS scoped actual production acceptance/query binding",
+  "parent_commit": "06cf43243",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1102524-1791964837",
+  "exit": 0,
+  "cases": 5,
+  "native_outputs": 680,
+  "native_nonzero_requests": 684,
+  "raw_split_outputs": 936,
+  "raw_split_nonzero_requests": 876,
+  "reactive_misses": 143,
+  "mode_context_version_source": "actual cx_xjrepeat/cx_xcontext/cx_xversion ports; independent reference pre-update oracle",
+  "acceptance_source": "actual cx_op_accept/cx_accepted_context/cx_accepted_version",
+  "negative_cases": [
+    "original live-mode arithmetic failure",
+    "live-mode query loss",
+    "resident context/version wrong hit"
+  ],
+  "unqualified": [
+    "actual VM version/reservation source",
+    "all768 tile acceptance/distribution",
+    "consumer retirement/seals",
+    "registered physical hit/credit CDC",
+    "full native layer cycles",
+    "149-bit ABI"
+  ]
+}
