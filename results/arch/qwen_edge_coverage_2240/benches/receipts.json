@@ -1,0 +1,66 @@
+{
+  "adapter_exact": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-382071-1791956711",
+    "observed_exit": 0,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "a6f662ef3cd60f0c8d5a189c92e6fa5bd24050b5296387c5fa75fad114d22b0d"
+  },
+  "adapter_rate": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-712578-1791956811",
+    "observed_exit": 0,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "5b2b72f4541cc24cb4c5384d43dc32f3e4822b4ab3f53920fc0896266fbdd730"
+  },
+  "adapter_stall": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-712620-1791956812",
+    "observed_exit": 0,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "03d193a3a1b84b856f85330216fdb9d4127f9d64367c9b2afafaac605563113a"
+  },
+  "adapter_credit_mut": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-384860-1791956813",
+    "observed_exit": 1,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "dfe0057dac74d2f74a33470ac07df34eb72de7287781ad7e73946f8859db2e7e"
+  },
+  "adapter_slice_mut": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-385003-1791956815",
+    "observed_exit": 1,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "25605d6bd1dbe204e3bc65cdc229fec19388bb9bc5c495daec0e75feac3beaf5"
+  },
+  "cbuf_exact": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-831109",
+    "observed_exit": 0,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "e5270cae5208be4ca21b358ccf816c80cd8a30b3afa2389acdf4d58a540133a3"
+  },
+  "cbuf_row_mut": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-831143",
+    "observed_exit": 1,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "633129bad3ee32bf51271da95be312a980bb768509847ba9361fbe56ea3cf670"
+  },
+  "cbuf_bank_mut": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-831175",
+    "observed_exit": 1,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "e0732e443e8b10f7602eaa1a5522748f27f074be47b0ccada7b6f24d423582da"
+  },
+  "cbuf_latency_mut": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-831398",
+    "observed_exit": 1,
+    "receipt": "ot-run RAN as reported in tool call",
+    "log_sha256": "ecbfd4f437425abf30c5cbec266e20d7bed664fc84137bb500ea759f45c633cc"
+  },
+  "native_crom_sha256": "bbcb28143ffe62f1850ee5a5e05d87650c07271002baba5f520588fcd514a164"
+}

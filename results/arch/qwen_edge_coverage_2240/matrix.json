@@ -21,17 +21,17 @@
       "state": "ACTIVE_HARDENING",
       "current_source": "codex/qwen-host-integrate-1013@94b28c9ce rtl/qwen_sys/host_20261013/qkd_host_prompt_pins.sv +qkd_host_control_prompt.sv",
       "evidence": "Host explicitaccepted ND8+SECDED8192x18 mapping; productionPROMPT_READ_LATENCY3/PB_READ_PIPE4;20480reads+2400ECCcases+actualpacketUEguard; no routedstore",
-      "next_action": "Build byteidentical source kit/CTS, candidate237.6x129.6; explicit slot/pin request, keep fullcontrol roots sourceownedhost.",
+      "next_action": "RealpromptleafCTSgate63923 live underbyteidentical818e86975source, dieapprovedgate-onlyWrequest/Eresponse/Nck237.6x129.6. Actualparentcoordinates/PGphase remainUNASSIGNED; fullcontrolsourceownedhostintegration.",
       "historical_status_preserved": true,
       "registry_superseded": false
     },
     {
       "element": "qfd_su_cbuf",
       "actual_owner": "Codex:qwen_edge_coverage_2240",
-      "state": "ACTIVE_REUSE_AUDIT",
-      "current_source": "rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv SW8/SRAM2/PINREG1/FLS1/RSTR1 viaot_qfd_su_cbuf_g",
-      "evidence": "ExistingCLOSED qfd_su_cbuf_g_m5-q13b TT26.98 FF11.14; actualgenerator tp8b_v5 T14 reuses8views M5; alllegacyviews preserved",
-      "next_action": "Prove full64-lane legacy\u21928group production equivalence/cROM native checkpoint addresses; bind actualgen pin/latency evidence; no gratuitousreroute.",
+      "state": "ACTIVE_NATIVE_PARAM_CHANGE_AND_CTS",
+      "current_source": "rtl/physical/ot_qfd_su_cbuf_native_l0.sv @23e6b338c",
+      "evidence": "Closedoldcbufbody stands. Actualcheckpoint basesPOST4736QS8832ROPE8833OSC533121DSC537217END541313 requireQKR10/NWIN138; nativeHEAD36retained. Realcrom.hex golden38152stage0reads PASS all8groups; mutantsrow6204/bank19188/latency25088 FAIL.",
+      "next_action": "NativecbufCTSgate67079 live. No full36layer/headpayloadqualification; no alias oldclosedbody. Complete actualdieassignedpins/corner/DRC/prodthroughput beforeadoption.",
       "historical_status_preserved": true,
       "registry_superseded": false
     },
@@ -144,6 +144,28 @@
       "next_action": "Owneracceptedactivehandoff; finish nativeposted composition+pinnedcontrol extraction/cut timing. Do not blindroutecancelledTP4/oldparent.",
       "historical_status_preserved": true,
       "registry_superseded": false
+    }
+  ],
+  "new_actual_masters_absent_from_old_registry": [
+    {
+      "master": "qfd_link_adp128",
+      "owner": "Codex:qwen_edge_coverage_2240",
+      "status": "ACTIVE_CTS_UNQUALIFIED"
+    },
+    {
+      "master": "qfd_link_adp512_split",
+      "owner": "Codex:qwen_edge_coverage_2240",
+      "status": "ACTIVE_CTS_UNQUALIFIED"
+    },
+    {
+      "master": "qfd_su_cbuf_native_l0",
+      "owner": "Codex:qwen_edge_coverage_2240",
+      "status": "ACTIVE_CTS_UNQUALIFIED"
+    },
+    {
+      "master": "qkd_host_prompt_pins",
+      "owner": "Codex:qwen_edge_coverage_2240",
+      "status": "ACTIVE_CTS_UNQUALIFIED"
     }
   ]
 }
