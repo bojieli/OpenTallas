@@ -87,8 +87,17 @@ module tb_qwen_slab_port_group;
     wire [W-1:0] o_mask;
     wire [W*32-1:0] o_data, tw_d;
     wire [1+32+NW-1:0] am_top;
-    ot_qwen_slab_port_group #(.GID(GID_D), .GT(GT_D), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
+`ifdef OT_SLAB_ENTRIES
+    ot_qwen_slab_pg_entries #(
+`else
+    ot_qwen_slab_port_group #(
+`endif
+        .GID(GID_D), .GT(GT_D), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
         .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP)) dut (
+`ifdef OT_SLAB_ENTRIES
+        .ck_col0(clk),.ck_col1(clk),.ck_col2(clk),.ck_col3(clk),
+        .ck_lane0(clk),.ck_lane1(clk),.ck_lane2(clk),.ck_lane3(clk),
+`endif
         .clk(clk), .rst_n(rst_n), .bw_clk(clk), .bw_rst_n(rst_n), .bw_v(1'b0), .bw_rdy(bw_rdy), .bw_d({W*32{1'b0}}),
         .tw_v(tw_v), .tw_rdy(1'b1), .tw_d(tw_d),
         .p_v(p_v), .p_last(p_last), .p_oen(p_oen), .p_amax(p_amax), .p_rmax(p_rmax), .p_wsrc(p_wsrc),

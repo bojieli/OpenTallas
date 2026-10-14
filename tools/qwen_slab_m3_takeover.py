@@ -65,6 +65,8 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('mode',choices=['model','bench','route'])
     p.add_argument('--out',type=Path);p.add_argument('--name');p.add_argument('--threads',type=int,default=16)
     p.add_argument('--negative',action='store_true')
+    p.add_argument('--entries',action='store_true',help='use core-leaf/eight-child clock-entry slab parent (same cycles)')
+    p.add_argument('--entry-mutant',action='store_true',help='swap two scale-return bits in the entries wrapper')
     p.add_argument('--tp',type=int,choices=(4,8),default=4,help='bench: die cut (8: GT 3072, GID 47; see TP8)')
     p.add_argument('--mutant',choices=sorted(MUTANTS),help='bench: a TP8 mutant that must FAIL (implies --negative)')
     p.add_argument('--variant',choices=sorted(VARIANTS),default='m3');a=p.parse_args()
@@ -73,9 +75,12 @@ def main():
     a.out.mkdir(parents=True,exist_ok=False)
     if a.mode=='bench':
         cmd=['iverilog','-g2012','-s','tb_qwen_slab_port_group','-o',str(a.out/'bench.vvp')]
+        if a.entries: cmd += ['-DOT_SLAB_ENTRIES','rtl/physical/ot_qwen_slab_pg_entries.sv']
+        if a.entry_mutant: cmd += ['-DOT_SLAB_ENTRIES_MUT']; a.negative=True
         bf=v.get('extra',[])
         if a.tp==8 and bf: raise SystemExit('--tp 8 is the BANDF 0 frame (the band-lane frame is re-cut separately)')
         if a.mutant: a.negative=True;neg=MUTANTS[a.mutant]
+        elif a.entry_mutant: neg=['LEAD=9']
         else: neg=(['BMUT=1','LEAD=9'] if bf else ['LEAD=8']) if a.negative else ['LEAD=9']
         for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+(TP8 if a.tp==8 else [])+neg:
             cmd+=['-P','tb_qwen_slab_port_group.'+kv]

@@ -37,17 +37,57 @@
   "rsi"
  ],
  "outline": {
-  "w": 475.2,
-  "h": 475.2
+  "w": 388.8,
+  "h": 280.8
  },
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
-   "count": 2
+   "count": 1,
+   "at": [
+    30.24,
+    30.24
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    30.24,
+    129.6
+   ]
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "count": 4
+   "count": 1,
+   "at": [
+    226.8,
+    28.08
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    226.8,
+    90.72
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    226.8,
+    153.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    226.8,
+    216.0
+   ]
   }
  ],
  "pins": {

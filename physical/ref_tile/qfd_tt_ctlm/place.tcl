@@ -29,22 +29,22 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(136.08 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 56.16 136.08 R0"
+$i setOrient R0; $i setLocation [expr {round(30.24 * $dbu)}] [expr {round(30.24 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 30.24 30.24 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(247.536 * $dbu)}] [expr {round(136.08 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 247.536 136.08 R0"
+$i setOrient R0; $i setLocation [expr {round(30.24 * $dbu)}] [expr {round(129.6 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 30.24 129.6 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(235.44 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 56.16 235.44 R0"
+$i setOrient R0; $i setLocation [expr {round(226.8 * $dbu)}] [expr {round(28.08 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 226.8 28.08 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(171.072 * $dbu)}] [expr {round(235.44 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 171.072 235.44 R0"
+$i setOrient R0; $i setLocation [expr {round(226.8 * $dbu)}] [expr {round(90.72 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 226.8 90.72 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(285.984 * $dbu)}] [expr {round(235.44 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 285.984 235.44 R0"
+$i setOrient R0; $i setLocation [expr {round(226.8 * $dbu)}] [expr {round(153.36 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 226.8 153.36 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(56.16 * $dbu)}] [expr {round(298.08 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 56.16 298.08 R0"
+$i setOrient R0; $i setLocation [expr {round(226.8 * $dbu)}] [expr {round(216.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 226.8 216.0 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 6} { error "ref_tile place: expected 6 macros, netlist has $nb" }

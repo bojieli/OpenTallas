@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_bl_lane",
+ "verdict": "WARN",
+ "generated": "2026-10-13T19:19:33-0700",
+ "host": "ot-pve1",
+ "cts": true,
+ "commit": "cb6fbcb41",
+ "clock": {
+  "max_root_sinks": 7692,
+  "root": "port:ck",
+  "cts": true,
+  "tt_insertion_ps": 477.9,
+  "tt_spread_ps": 188.8,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "7,692 sinks on the largest root <= 15,000; measured TT insertion 477.9 ps, leaf spread 188.8 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 4722 um2 + macros 15566 in core 52553: util 39%",
+   "fix": "set \"std_area_um2\": 4722 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset port rst_n: 433 loads (433 flops, e.g. u_l.f_q$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 37.6% outside 45%-65% (std 4185 + macro 15566 um2 in 52553 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ]
+}

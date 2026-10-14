@@ -1,0 +1,183 @@
+{
+ "name": "qfd_tt_ctlm_gb",
+ "top": "qfd_tt_ctlm",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qfd_tt_ctlm_slot.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm_tp8.sv",
+  "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv",
+  "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+  "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fp.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_tt_ctlm_i_fpm.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rsi"
+ ],
+ "outline": {
+  "w": 345.6,
+  "h": 302.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    30.24,
+    30.24
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    30.24,
+    129.6
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    226.8,
+    28.08
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    226.8,
+    90.72
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    226.8,
+    153.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    226.8,
+    216.0
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "c0",
+   "f0",
+   "lc0",
+   "c1",
+   "f1",
+   "lc1",
+   "c2",
+   "f2",
+   "lc2"
+  ],
+  "S": [
+   "xd",
+   "xr",
+   "mee",
+   "mx",
+   "ovf",
+   "ld"
+  ],
+  "N": [
+   "sel",
+   "uf",
+   "meok",
+   "pw",
+   "xm",
+   "xs",
+   "st",
+   "ck"
+  ],
+  "E": [
+   "rsi",
+   "kok",
+   "kwd",
+   "fab",
+   "cf"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "slot_change_request": "el1013-qwen-romspine 10-13: (1) OUTLINE 475.2 x 475.2 instead of the 777.576 x 1,814.376 budget placeholder (contract v5 note on tt_ctlm: 'slot updates when it closes'; the body closed at 475.2^2 as qfd_tt_ctlm_i-fpbam-150a27450, and at the placeholder outline the utilisation is 8.9 % with 414 ps of wire from a pin flop to its consumer); faces, layers and clock entry (ck N M5) kept, pin spans re-planned from the exported LEF. (2) PACKING TABLE physical/qwen_kv_slots/qfd_tt_ctlm_pack.json (22 bundles, LSB-first; posted in el1011-qwen-tp8.log), TP8 widths: c<b>[340:0] (343 in the contract: t_sel_e / t_tv_e are 13 b at G 3,072), lc<b>[25:0] (28), f<b>[103:0] (107: the 3 lane-fault bits have no body port; tr_fault is retired, tied 0 as in ot_qfd_spine_band). (3) EXTRA 1-bit pins for body ports with no contract bundle: kok (kv_ok, in), kwd (kv_write_drained, in), fab (fab_fault, in), cf (c_fault, out) on E, ovf (ov, out) on S. (4) kvd_* (201 b ME-side KV descriptor) are NOT pins: the die takes the descriptor from seq_su (o4_kvd).",
+ "structural_change": "vs 61 loop rows of ot_qfd_tt_ctlm_i (1 CLOSED fpbam-150a27450 at 475.2^2, M8 era; 9 setup + 2 hold early-fails; fpamh / pk hold stalls on I2R / R2O windows): (1) NEW top = slot cell qfd_tt_ctlm with the contract bundles on the v4b faces (band control W, VM words S, sequencer / up4 words N) instead of the old top / left / bottom / right regions; (2) TP8 body ot_qfd_tt_ctlm_i_fpm_tp8 (G 3,072): the G-sized buses halve (scale 24 groups, 6 argmax partials, 13-b selects), ~1.1k fewer pin flops; (3) layer cap M5 for signals and PG, pins M4 E/W + M5 N/S (was M4/M6 + M5/M7); (4) kit recipe 2: hold margin 30 ps, macro halo 5.4 um, pin hold cells on every data input and output (the I2R / R2O hold windows that stalled fpbamh2 / fpapk / fpbpk), every port flop FIRM at its pin.",
+ "job": {
+  "owner": "Claude:el1013-qwen-romspine",
+  "branch": "claude/el1013-qwen-romspine",
+  "tag": "sl1",
+  "purpose": "Qwen ROM TP8 slot cell qfd_tt_ctlm (1 instance tt_ctlm): first view under the die master name. Body = ot_qfd_tt_ctlm_i_fpm_tp8 (ot_qfd_tt_ctlm_i PSRAM 1 / HQ2 1 / MEREG 3 / RRG 1 / PCUT 1 / AUD 33975 at G 3,072; TP4 body closed as qfd_tt_ctlm_i-fpbam-150a27450 at 475.2^2); the wrapper is WIRING ONLY (generated from the packing table): body ports are pin flops (AUD die-input pin flops, kept output stations). 2 x ot_sram_1r1w_64x512 (program store) + 4 x ot_sram_1r1w_128x256 (tag delays). Cut: 2,351 pin bits on 4 faces of 475 um (W 1,410 b on M4 = 0.14 of the 9,900 W-face M2/M4 tracks); widest internal cut = the 1,024-b program word, < 0.10 of any 475-um cut on M2-M5. Clock: sinks per root measured by the --cts gate (gate_result.json).",
+  "benches": [
+   {
+    "name": "slot_txn_exact",
+    "cmd": "bash physical/qwen_kv_slots/bench_tt_ctlm.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "pass_regex": "^PASS kv_slots tt_ctlm",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the body's own TP8 bench (tb_qfd_tt_ctlm_i_psram TBG 3,072, MEREG 3, TXN 1: per-interface event streams per reset window against the reference ot_qfd_tt_ctlm_i PSRAM 0 / HQ2 0) with u1 = this cell driven and observed through its contract bundles"
+   },
+   {
+    "name": "slot_mutant",
+    "cmd": "bash physical/qwen_kv_slots/bench_tt_ctlm.sh {RUN}/bench/neg mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL kv_slots tt_ctlm mutant detected",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ],
+    "note": "OT_QFD_TT_CTLM_SLOT_MUT swaps mx bits 0 / 1 inside the cell (a packing error)"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}
